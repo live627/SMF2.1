@@ -54,8 +54,6 @@ if (!defined('SMF'))
 		  and setting requirements as it does.
 		- accessed through ?action=reporttm when posting.
 
-	void BrowseMessageReports()
-		// !!!
 */
 
 // The main handling function for sending specialist (Or otherwise) emails to a user.
@@ -136,7 +134,7 @@ function SendTopic()
 		fatal_lang_error('no_name', false);
 	if (!isset($_POST['y_email']) || $_POST['y_email'] == '')
 		fatal_lang_error('no_email', false);
-	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['y_email'])) == 0)
+	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['y_email']) == 0)
 		fatal_lang_error('email_invalid_character', false);
 
 	// The receiver should be valid to.
@@ -144,7 +142,7 @@ function SendTopic()
 		fatal_lang_error('no_name', false);
 	if (!isset($_POST['r_email']) || $_POST['r_email'] == '')
 		fatal_lang_error('no_email', false);
-	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['r_email'])) == 0)
+	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['r_email']) == 0)
 		fatal_lang_error('email_invalid_character', false);
 
 	// Emails don't like entities...
@@ -189,9 +187,9 @@ function CustomEmail()
 		$request = $smfFunc['db_query']('', '
 			SELECT email_address AS email, member_name AS name, id_member, hide_email
 			FROM {db_prefix}members
-			WHERE id_member = {int:inject_int_1}',
+			WHERE id_member = {int:id_member}',
 			array(
-				'inject_int_1' => (int) $_REQUEST['uid'],
+				'id_member' => (int) $_REQUEST['uid'],
 			)
 		);
 
@@ -203,9 +201,9 @@ function CustomEmail()
 			SELECT IFNULL(mem.email_address, m.poster_email) AS email, m.poster_name AS name, IFNULL(mem.id_member, 0) AS id_member, hide_email
 			FROM {db_prefix}messages AS m
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-			WHERE m.id_msg = {int:inject_int_1}',
+			WHERE m.id_msg = {int:id_msg}',
 			array(
-				'inject_int_1' => (int) $_REQUEST['msg'],
+				'id_msg' => (int) $_REQUEST['msg'],
 			)
 		);
 
@@ -244,7 +242,7 @@ function CustomEmail()
 				fatal_lang_error('no_name', false);
 			if (empty($_POST['y_email']))
 				fatal_lang_error('no_email', false);
-			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['y_email'])) == 0)
+			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['y_email']) == 0)
 				fatal_lang_error('email_invalid_character', false);
 
 			$from_name = trim($_POST['y_name']);
@@ -312,12 +310,12 @@ function ReportToModerator()
 		SELECT m.id_msg, m.id_member, t.id_member_started
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-		WHERE m.id_msg = {int:inject_int_1}
+		WHERE m.id_msg = {int:id_msg}
 			AND m.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $_GET['msg'],
+			'id_msg' => $_GET['msg'],
 		)
 	);
 	if ($smfFunc['db_num_rows']($result) == 0)
@@ -358,12 +356,12 @@ function ReportToModerator2()
 		SELECT m.id_topic, m.id_board, m.subject, m.body, m.id_member AS id_poster, m.poster_name, mem.real_name
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (m.id_member = mem.id_member)
-		WHERE m.id_msg = {int:inject_int_1}
+		WHERE m.id_msg = {int:id_msg}
 			AND m.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $_POST['msg'],
+			'id_msg' => $_POST['msg'],
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -382,12 +380,12 @@ function ReportToModerator2()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, email_address, lngfile, mod_prefs
 		FROM {db_prefix}members
-		WHERE id_member IN ({array_int:inject_array_int_1})
-			AND notify_types != {int:inject_int_1}
+		WHERE id_member IN ({array_int:moderator_list})
+			AND notify_types != {int:notify_types}
 		ORDER BY lngfile',
 		array(
-			'inject_array_int_1' => $moderators,
-			'inject_int_1' => 4,
+			'moderator_list' => $moderators,
+			'notify_types' => 4,
 		)
 	);
 
@@ -401,13 +399,13 @@ function ReportToModerator2()
 		$request2 = $smfFunc['db_query']('', '
 			SELECT id_report, ignore_all
 			FROM {db_prefix}log_reported
-			WHERE id_msg = {int:inject_int_1}
-				AND (closed = {int:inject_int_2} OR ignore_all = {int:inject_int_3})
+			WHERE id_msg = {int:id_msg}
+				AND (closed = {int:not_closed} OR ignore_all = {int:ignored})
 			ORDER BY ignore_all DESC',
 			array(
-				'inject_int_1' => $_POST['msg'],
-				'inject_int_2' => 0,
-				'inject_int_3' => 1,
+				'id_msg' => $_POST['msg'],
+				'not_closed' => 0,
+				'ignored' => 1,
 			)
 		);
 		if ($smfFunc['db_num_rows']($request2) != 0)
@@ -422,11 +420,11 @@ function ReportToModerator2()
 		if (!empty($id_report))
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_reported
-				SET num_reports = num_reports + 1, time_updated = {int:inject_int_1}
-				WHERE id_report = {int:inject_int_2}',
+				SET num_reports = num_reports + 1, time_updated = {int:current_time}
+				WHERE id_report = {int:id_report}',
 				array(
-					'inject_int_1' => time(),
-					'inject_int_2' => $id_report,
+					'current_time' => time(),
+					'id_report' => $id_report,
 				)
 			);
 		// Otherwise, we shall make one!
@@ -437,15 +435,18 @@ function ReportToModerator2()
 			if (empty($message['real_name']))
 				$message['real_name'] = $message['poster_name'];
 
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}log_reported
-					(id_msg, id_topic, id_board, id_member, membername, subject, body, time_started, time_updated,
-						num_reports, closed)
-				VALUES
-					(' . $_POST['msg'] . ', ' . $message['id_topic'] . ', ' . $message['id_board'] . ', ' . $message['id_poster'] . ', \'' . $message['real_name'] . '\', \'' . $message['subject'] . '\', \'' . $message['body'] . '\', ' . time() . ',
-						' . time() . ', 1, 0)',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'log_reported',
 				array(
-				)
+					'id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member' => 'int', 'membername' => 'string',
+					'subject' => 'string', 'body' => 'string', 'time_started' => 'int', 'time_updated' => 'int',
+					'num_reports' => 'int', 'closed' => 'int',
+				),
+				array(
+					$_POST['msg'], $message['id_topic'], $message['id_board'], $message['id_poster'], $message['real_name'],
+					$message['subject'], $message['body'] , time(), time(), 1, 0,
+				),
+				array('id_report')
 			);
 			$id_report = $smfFunc['db_insert_id']( $db_prefix . 'log_reported', 'id_report');
 		}
@@ -455,13 +456,15 @@ function ReportToModerator2()
 		{
 			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}log_reported_comments
-					(id_report, id_member, membername, comment, time_sent)
-				VALUES
-					(' . $id_report . ', ' . $user_info['id'] . ', \'' . $user_info['name'] . '\', \'' . $posterComment . '\', ' . time() . ')',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'log_reported_comments',
 				array(
-				)
+					'id_report' => 'int', 'id_member' => 'int', 'membername' => 'string', 'comment' => 'string', 'time_sent' => 'int',
+				),
+				array(
+					$id_report, $user_info['id'], $user_info['name'], $posterComment, time(),
+				),
+				array('id_comment')
 			);
 		}
 	}
@@ -512,11 +515,6 @@ function ReportToModerator2()
 
 	// Back to the board! (you probably don't want to see the post anymore..)
 	redirectexit('board=' . $board . '.0');
-}
-
-// This function shows all the reported messages, and plenty more ontop.
-function BrowseMessageReports()
-{
 }
 
 ?>

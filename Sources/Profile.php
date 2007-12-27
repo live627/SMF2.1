@@ -482,7 +482,7 @@ function loadCustomFields($memID, $area = 'summary')
 	if ($area == 'register')
 		$where .= ' AND show_reg != 0';
 	elseif ($area != 'summary')
-		$where .= ' AND show_profile = \'' . $area . '\'';
+		$where .= ' AND show_profile = {string:area}';
 
 	// Load all the relevant fields - and data.
 	$request = $smfFunc['db_query']('', '
@@ -491,6 +491,7 @@ function loadCustomFields($memID, $area = 'summary')
 		FROM {db_prefix}custom_fields
 		WHERE ' . $where,
 		array(
+			'area' => $area,
 		)
 	);
 	$context['custom_fields'] = array();

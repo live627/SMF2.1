@@ -794,7 +794,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 			$db_prefix . 'mail_queue',
 			array('
 				time_sent' => 'int', 'recipient' => 'string-255', 'body' => 'string-65534', 'subject' => 'string-255',
-				'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int'
+				'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int',
 			),
 			$cur_insert,
 			array('id_mail')

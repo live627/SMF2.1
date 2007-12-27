@@ -121,7 +121,7 @@ function AutoTask()
 					AND next_time = {int:current_next_time}',
 				array(
 					'next_time' => $next_time,
-					'inject_int_2' => $row['id_task'],
+					'id_task' => $row['id_task'],
 					'current_next_time' => $row['next_time'],
 				)
 			);
@@ -145,7 +145,7 @@ function AutoTask()
 							'id_task' => 'int', 'time_run' => 'int', 'time_taken' => 'int',
 						),
 						array(
-							$row['id_task'], time(), $total_time,
+							$row['id_task'], time(), (int) $total_time,
 						),
 						array()
 					);

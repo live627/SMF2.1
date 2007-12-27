@@ -511,11 +511,15 @@ function loadProfileFields($force_reload = false)
 
 				if ($cur_profile[\'pm_ignore_list\'] != \'*\')
 				{
-					$result = $smfFunc[\'db_query\'](\'\', "
+					$result = $smfFunc[\'db_query\'](\'\', \'
 						SELECT real_name
-						FROM {$db_prefix}members
-						WHERE FIND_IN_SET(id_member, \'" . $cur_profile[\'pm_ignore_list\'] . "\')
-						LIMIT " . (substr_count($cur_profile[\'pm_ignore_list\'], \',\') + 1), __FILE__, __LINE__);
+						FROM {db_prefix}members
+						WHERE FIND_IN_SET(id_member, {string:pm_ignore_list})
+						LIMIT \' . (substr_count($cur_profile[\'pm_ignore_list\'], \',\') + 1),
+						array(
+							\'pm_ignore_list\' => $cur_profile[\'pm_ignore_list\'],
+						)
+					);
 					$pm_ignore_list = \'\';
 					while ($row = $smfFunc[\'db_fetch_assoc\']($result))
 						$pm_ignore_list .= "\n" . $row[\'real_name\'];
@@ -532,49 +536,30 @@ function loadProfileFields($force_reload = false)
 			'input_validate' => create_function('&$value', '
 				global $smfFunc, $db_prefix;
 
-<<<<<<< .mine
-				// Validate and set the ignorelist...
-				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
-				$value = strtr(trim($value), array(\'\\\\\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
-
-				if (preg_match(\'~(\A|,)\*(\Z|,)~s\', $value) == 0)
-				{
-					$result = $smfFunc[\'db_query\'](\'\', "
-						SELECT id_member
-						FROM {$db_prefix}members
-						WHERE member_name IN (\'$value\') OR real_name IN (\'$value\')
-						LIMIT " . (substr_count($value, \'\\\', \\\'\') + 1), __FILE__, __LINE__);
-					$value = \'\';
-					while ($row = $smfFunc[\'db_fetch_assoc\']($result))
-						$value .= $row[\'id_member\'] . \',\';
-					$smfFunc[\'db_free_result\']($result);
-
-					// !!! Did we find all the members?
-					$value = substr($value, 0, -1);
-				}
-				else
-=======
 				// Validate and set the ignorelist...
 				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
 				$value = strtr(trim($value), array(\'\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
 
 				if (preg_match(\'~(\A|,)\*(\Z|,)~s\', $value) == 0)
 				{
-					$result = $smfFunc[\'db_query\'](\'\', "
+					$result = $smfFunc[\'db_query\'](\'\', \'
 						SELECT id_member
-						FROM {$db_prefix}members
-						WHERE member_name IN (\'$value\') OR real_name IN (\'$value\')
-						LIMIT " . (substr_count($value, \'\\\', \\\'\') + 1), __FILE__, __LINE__);
+						FROM {db_prefix}members
+						WHERE member_name IN ({raw:name}) OR real_name IN ({raw:name})
+						LIMIT \' . (substr_count($value, \'\\\', \\\'\') + 1),
+						array(
+							\'name\' => \'\\\'\' . $value . \'\\\'\',
+						)
+					);
 					$value = \'\';
 					while ($row = $smfFunc[\'db_fetch_assoc\']($result))
 						$value .= $row[\'id_member\'] . \',\';
 					$smfFunc[\'db_free_result\']($result);
-		
+
 					// !!! Did we find all the members?
 					$value = substr($value, 0, -1);
 				}
 				else
->>>>>>> .r6372
 					$value = \'*\';
 
 				return true;
@@ -1180,7 +1165,7 @@ function makeCustomFieldChanges($memID, $area)
 {
 	global $db_prefix, $context, $smfFunc, $user_profile;
 
-	$where = $area == 'register' ? 'show_reg != 0' : 'show_profile = \'' . $area . '\'';
+	$where = $area == 'register' ? 'show_reg != 0' : 'show_profile = {string:area}';
 
 	// Load the fields we are saving too - make sure we save valid data (etc).
 	$request = $smfFunc['db_query']('', '
@@ -1190,6 +1175,7 @@ function makeCustomFieldChanges($memID, $area)
 			AND active = {int:inject_int_1}',
 		array(
 			'inject_int_1' => 1,
+			'area' => $area,
 		)
 	);
 	$changes = array();
