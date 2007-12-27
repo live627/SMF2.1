@@ -1070,9 +1070,9 @@ WHERE attachment_type = 3
 // Don't ever bother doing this twice.
 if (@$modSettings['smfVersion'] < '2.0')
 {
-	$request = $smfFunc['db_query']('', "
+	$request = upgrade_query("
 		SELECT MAX(id_attach)
-		FROM {$db_prefix}attachments", false, false);
+		FROM {$db_prefix}attachments");
 	list ($step_progress['total']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1124,12 +1124,12 @@ if (@$modSettings['smfVersion'] < '2.0')
 	{
 		nextSubStep($substep);
 
-		$request = $smfFunc['db_query']('', "
+		$request = upgrade_query("
 			SELECT id_attach, filename, fileext
 			FROM {$db_prefix}attachments
 			WHERE fileext != ''
 				AND mime_type = ''
-			LIMIT $_GET[a], 100", false, false);
+			LIMIT $_GET[a], 100");
 		// Finished?
 		if ($smfFunc['db_num_rows']($request) == 0)
 			$is_done = true;
@@ -1167,10 +1167,10 @@ if (@$modSettings['smfVersion'] < '2.0')
 		// Do the updates?
 		foreach ($ext_updates as $key => $update)
 		{
-			$smfFunc['db_query']('', "
+			upgrade_query("
 				UPDATE {$db_prefix}attachments
 				SET mime_type = '$update[mime]'
-				WHERE id_attach IN (" . implode(',', $update[files]) . ")", false, false);
+				WHERE id_attach IN (" . implode(',', $update[files]) . ")");
 
 			// Remove it.
 			unset($ext_updates[$key]);
@@ -1602,16 +1602,16 @@ $read_only_reg = array(
 );
 
 // Clear all the current predefined profiles.
-$smfFunc['db_query']('', "
+upgrade_query("
 	DELETE FROM {$db_prefix}board_permissions
-	WHERE id_profile IN (2,3,4)", __FILE__, __LINE__);
+	WHERE id_profile IN (2,3,4)");
 
 // Get all the membergroups - cheating to use the fact id_group = 1 exists to get a group of 0.
-$request = $smfFunc['db_query']('', "
+$request = upgrade_query("
 	SELECT IF(id_group = 1, 0, id_group) AS id_group
 	FROM {$db_prefix}membergroups
 	WHERE id_group != 0
-		AND min_posts = -1", __FILE__, __LINE__);
+		AND min_posts = -1");
 $inserts = array();
 while ($row = mysql_fetch_assoc($request))
 {
@@ -1636,13 +1636,13 @@ while ($row = mysql_fetch_assoc($request))
 }
 mysql_free_result($request);
 
-$smfFunc['db_query']('', "
+upgrade_query("
 	INSERT INTO {$db_prefix}board_permissions
 		(id_group, id_profile, permission)
 	VALUES (-1, 2, 'poll_view'),
 		(-1, 3, 'poll_view'),
 		(-1, 4, 'poll_view'),
-		" . implode(', ', $inserts), __FILE__, __LINE__);
+		" . implode(', ', $inserts));
 
 ---}
 ---#
@@ -2117,17 +2117,7 @@ INSERT IGNORE INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_reg
 /******************************************************************************/
 
 ---# Adding pruning option...
-INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30,0');
----#
-
----# Adding search engine pruning option...
----{
-if (!empty($modSettings['pruningOptions']) && substr_count($modSettings['pruningOptions'], ',') < 5)
-	upgrade_query("
-		UPDATE {$db_prefix}settings
-		SET value = CONCAT(value, ',0')
-		WHERE variable = 'pruningOptions'");
----}
+INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
 ---#
 
 /******************************************************************************/
