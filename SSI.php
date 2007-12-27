@@ -255,14 +255,14 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 	}
 
 	// Let's restrict the query boys (and girls)
-	$query_where = "
-		m.id_msg >= " . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . "
-		" . (empty($exclude_boards) ? '' : "
-		AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
-		" . ($include_boards === null ? '' : "
-		AND b.id_board IN (" . implode(', ', $include_boards) . ")") . "
-		AND $user_info[query_wanna_see_board]
-		AND m.approved = 1";
+	$query_where = '
+		m.id_msg >= ' . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . '
+		' . (empty($exclude_boards) ? '' : '
+		AND b.id_board NOT IN (' . implode(', ', $exclude_boards) . ')') . '
+		' . ($include_boards === null ? '' : '
+		AND b.id_board IN (' . implode(', ', $include_boards) . ')') . '
+		AND ' . $user_info['query_wanna_see_board'] . '
+		AND m.approved = 1';
 
 	// Past to this simpleton of a function...
 	return ssi_queryPosts($query_where, $num_recent, 'm.id_msg DESC', $output_method, true);
@@ -277,10 +277,10 @@ function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method
 	$post_ids = is_array($post_ids) ? $post_ids : array($post_ids);
 
 	// Restrict the posts required...
-	$query_where = "
-		m.id_msg IN (" . implode(', ', $post_ids) . ")
-		" . ($override_permissions ? '' : "AND $user_info[query_wanna_see_board]") . "
-		AND m.approved = 1";
+	$query_where = '
+		m.id_msg IN (' . implode(', ', $post_ids) . ')
+		' . ($override_permissions ? '' : 'AND ' . $user_info['query_wanna_see_board']) . '
+		AND m.approved = 1';
 
 	// Then make the query and dump the data.
 	return ssi_queryPosts($query_where, '', 'm.id_msg DESC', $output_method);
@@ -293,20 +293,24 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 	global $modSettings, $smfFunc;
 
 	// Find all the posts. Newer ones will have higher IDs.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
-			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", " . ($limit_body ? 'SUBSTRING(m.body, 1, 384) AS body' : 'm.body') . ", m.smileys_enabled
-		FROM {$db_prefix}messages AS m
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = m.id_topic AND lt.id_member = $user_info[id])
-			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = m.id_board AND lmr.id_member = $user_info[id])" : '') . "
-		WHERE $query_where
-		ORDER BY $query_order
-		" . ($query_limit == '' ? '' : "LIMIT $query_limit"), __FILE__, __LINE__);
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ', ' . ($limit_body ? 'SUBSTRING(m.body, 1, 384) AS body' : 'm.body') . ', m.smileys_enabled
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!$user_info['is_guest'] ? '
+			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = m.id_topic AND lt.id_member = {int:current_member})
+			LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = m.id_board AND lmr.id_member = {int:current_member})' : '') . '
+		WHERE ' . $query_where . '
+		ORDER BY ' . $query_order . '
+		' . ($query_limit == '' ? '' : 'LIMIT ' . $query_limit),
+		array(
+			'current_member' => $user_info['id'],
+		)
+	);
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -400,29 +404,36 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 		$icon_sources[$icon] = 'images_url';
 
 	// Find all the posts in distinct topics.  Newer ones will have higher IDs.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			m.poster_time, ms.subject, m.id_topic, m.id_member, m.id_msg, b.id_board, b.name AS board_name, t.num_replies, t.num_views,
-			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", SUBSTRING(m.body, 1, 384) AS body, m.smileys_enabled, m.icon
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
-			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $user_info[id])" : '') . "
-		WHERE t.id_last_msg >= " . ($modSettings['maxMsgID'] - 35 * min($num_recent, 5)) . "
-			" . (empty($exclude_boards) ? '' : "
-			AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
-			" . (empty($include_boards) ? '' : "
-			AND b.id_board IN (" . implode(', ', $include_boards) . ")") . "
-			AND $user_info[query_wanna_see_board]
-			AND t.approved = 1
-			AND m.approved = 1
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ', SUBSTRING(m.body, 1, 384) AS body, m.smileys_enabled, m.icon
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+			INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (!$user_info['is_guest'] ? '
+			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
+			LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = {int:current_member})' : '') . '
+		WHERE t.id_last_msg >= {int:inject_int_1}
+			' . (empty($exclude_boards) ? '' : '
+			AND b.id_board NOT IN (' . implode(', ', $exclude_boards) . ')') . '
+			' . (empty($include_boards) ? '' : '
+			AND b.id_board IN ({array_int:inject_array_int_1})') . '
+			AND ' . $user_info['query_wanna_see_board'] . '
+			AND t.approved = {int:inject_int_2}
+			AND m.approved = {int:inject_int_2}
 		ORDER BY t.id_last_msg DESC
-		LIMIT $num_recent", __FILE__, __LINE__);
+		LIMIT ' . $num_recent,
+		array(
+			'current_member' => $user_info['id'],
+			'inject_array_int_1' => $include_boards,
+			'inject_int_1' => $modSettings['maxMsgID'] - 35 * min($num_recent, 5),
+			'inject_int_2' => 1,
+		)
+	);
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -499,11 +510,14 @@ function ssi_topPoster($topNumber = 1, $output_method = 'echo')
 	global $db_prefix, $scripturl, $smfFunc;
 
 	// Find the latest poster.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, posts
-		FROM {$db_prefix}members
+		FROM {db_prefix}members
 		ORDER BY posts DESC
-		LIMIT $topNumber", __FILE__, __LINE__);
+		LIMIT ' . $topNumber,
+		array(
+		)
+	);
 	$return = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$return[] = array(
@@ -533,16 +547,21 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 	global $context, $settings, $db_prefix, $txt, $scripturl, $user_info, $modSettings, $smfFunc;
 
 	// Find boards with lots of posts.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
-			b.name, b.num_topics, b.num_posts, b.id_board," . (!$user_info['is_guest'] ? ' 1 AS isRead' : '
-			(IFNULL(lb.id_msg, 0) >= b.id_last_msg) AS isRead') . "
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
-		WHERE $user_info[query_wanna_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != " . (int) $modSettings['recycle_board'] : '') . "
+			b.name, b.num_topics, b.num_posts, b.id_board,' . (!$user_info['is_guest'] ? ' 1 AS isRead' : '
+			(IFNULL(lb.id_msg, 0) >= b.id_last_msg) AS isRead') . '
+		FROM {db_prefix}boards AS b
+			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
+		WHERE ' . $user_info['query_wanna_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_1}' : '') . '
 		ORDER BY b.num_posts DESC
-		LIMIT $num_top", __FILE__, __LINE__);
+		LIMIT ' . $num_top,
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => (int) $modSettings['recycle_board'],
+		)
+	);
 	$boards = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[] = array(
@@ -585,13 +604,17 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 
 	if ($modSettings['totalMessages'] > 100000)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
-			FROM {$db_prefix}topics
-			WHERE num_" . ($type != 'replies' ? 'views' : 'replies') . " != 0
-				AND approved = 1
-			ORDER BY num_" . ($type != 'replies' ? 'views' : 'replies') . " DESC
-			LIMIT 100", __FILE__, __LINE__);
+			FROM {db_prefix}topics
+			WHERE num_' . ($type != 'replies' ? 'views' : 'replies') . ' != 0
+				AND approved = {int:inject_int_1}
+			ORDER BY num_' . ($type != 'replies' ? 'views' : 'replies') . ' DESC
+			LIMIT 100',
+			array(
+				'inject_int_1' => 1,
+			)
+		);
 		$topic_ids = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$topic_ids[] = $row['id_topic'];
@@ -600,17 +623,23 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 	else
 		$topic_ids = array();
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT m.subject, m.id_topic, t.num_views, t.num_replies
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE t.approved = 1" . (!empty($topic_ids) ? "
-			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : '') . "
-			AND $user_info[query_wanna_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . "
-		ORDER BY t.num_" . ($type != 'replies' ? 'views' : 'replies') . " DESC
-		LIMIT $num_topics", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE t.approved = {int:inject_int_1}' . (!empty($topic_ids) ? '
+			AND t.id_topic IN ({array_int:inject_array_int_1})' : '') . '
+			AND ' . $user_info['query_wanna_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_2}' : '') . '
+		ORDER BY t.num_' . ($type != 'replies' ? 'views' : 'replies') . ' DESC
+		LIMIT ' . $num_topics,
+		array(
+			'inject_array_int_1' => $topic_ids,
+			'inject_int_1' => 1,
+			'inject_int_2' => $modSettings['recycle_board'],
+		)
+	);
 	$topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -689,18 +718,18 @@ function ssi_randomMember($random_type = '', $output_method = 'echo')
 	// Get the lowest ID we're interested in.
 	$member_id = rand(0, $modSettings['latestMember']);
 
-	$where_query = "
-		id_member >= $member_id
-		AND is_activated = 1";
+	$where_query = '
+		id_member >= ' . $member_id . '
+		AND is_activated = 1';
 
 	$result = ssi_queryMembers($where_query, 1, 'id_member ASC', $output_method);
 
 	// If we got nothing do the reverse - in case of unactivated members.
 	if (empty($result))
 	{
-		$where_query = "
-			id_member <= $member_id
-			AND is_activated = 1";
+		$where_query = '
+			id_member <= ' . $member_id . '
+			AND is_activated = 1';
 
 		$result = ssi_queryMembers($where_query, 1, 'id_member DESC', $output_method);
 	}
@@ -719,8 +748,8 @@ function ssi_fetchMember($member_ids, $output_method = 'echo')
 	$member_ids = is_array($member_ids) ? $member_ids : array($member_ids);
 
 	// Restrict it right!
-	$query_where = "
-		id_member IN (" . implode(', ', $member_ids) . ")";
+	$query_where = '
+		id_member IN (' . implode(', ', $member_ids) . ')';
 
 	// Then make the query and dump the data.
 	return ssi_queryMembers($query_where, '', 'id_member', $output_method);
@@ -729,10 +758,10 @@ function ssi_fetchMember($member_ids, $output_method = 'echo')
 // Get all members of a group.
 function ssi_fetchGroupMembers($group_id, $output_method = 'echo')
 {
-	$query_where = "
-		id_group = $group_id
-		OR id_post_group = $group_id
-		OR FIND_IN_SET($group_id, additional_groups)";
+	$query_where = '
+		id_group = ' . $group_id . '
+		OR id_post_group = ' . $group_id . '
+		OR FIND_IN_SET(' . $group_id . ', additional_groups)';
 
 	return ssi_queryMembers($query_where, '', 'member_name', $output_method);
 }
@@ -744,12 +773,15 @@ function ssi_queryMembers($query_where, $query_limit = '', $query_order = 'id_me
 	global $modSettings, $smfFunc, $memberContext;
 
 	// Fetch the members in question.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member
-		FROM {$db_prefix}members
-		WHERE $query_where
-		ORDER BY $query_order
-		" . ($query_limit == '' ? '' : "LIMIT $query_limit"), __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE ' . $query_where . '
+		ORDER BY ' . $query_order . '
+		' . ($query_limit == '' ? '' : 'LIMIT ' . $query_limit),
+		array(
+		)
+	);
 	$members = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$members[] = $row['id_member'];
@@ -804,15 +836,21 @@ function ssi_boardStats($output_method = 'echo')
 		'topics' => $modSettings['totalTopics']
 	);
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}boards", __FILE__, __LINE__);
+		FROM {db_prefix}boards',
+		array(
+		)
+	);
 	list ($totals['boards']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}categories", __FILE__, __LINE__);
+		FROM {db_prefix}categories',
+		array(
+		)
+	);
 	list ($totals['categories']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -930,20 +968,28 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 	if (empty($boardsAllowed))
 		return array();
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT p.id_poll, p.question, t.id_topic, p.max_votes, p.guest_vote, p.hide_results, p.expire_time
-		FROM {$db_prefix}polls AS p
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_poll = p.id_poll AND t.approved = 1)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)" . ($topPollInstead ? "
-			INNER JOIN {$db_prefix}poll_choices AS pc ON (pc.id_poll = p.id_poll)" : '') . "
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member > 0 AND lp.id_member = $user_info[id])
-		WHERE p.voting_locked = 0
-			AND " . ($user_info['is_guest'] ? 'p.guest_vote = 1' : 'lp.id_choice IS NULL') . "
-			AND $user_info[query_wanna_see_board]" . (!in_array(0, $boardsAllowed) ? "
-			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . "
-		ORDER BY " . ($topPollInstead ? 'pc.votes' : 'p.id_poll') . " DESC
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}polls AS p
+			INNER JOIN {db_prefix}topics AS t ON (t.id_poll = p.id_poll AND t.approved = {int:inject_int_1})
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)' . ($topPollInstead ? '
+			INNER JOIN {db_prefix}poll_choices AS pc ON (pc.id_poll = p.id_poll)' : '') . '
+			LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member > {int:inject_int_2} AND lp.id_member = {int:current_member})
+		WHERE p.voting_locked = {int:inject_int_2}
+			AND ' . ($user_info['is_guest'] ? 'p.guest_vote = {int:inject_int_1}' : 'lp.id_choice IS NULL') . '
+			AND ' . $user_info['query_wanna_see_board'] . (!in_array(0, $boardsAllowed) ? '
+			AND b.id_board IN ({array_int:inject_array_int_1})' : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_3}' : '') . '
+		ORDER BY ' . ($topPollInstead ? 'pc.votes' : 'p.id_poll') . ' DESC
+		LIMIT 1',
+		array(
+			'current_member' => $user_info['id'],
+			'inject_array_int_1' => $boardsAllowed,
+			'inject_int_1' => 1,
+			'inject_int_2' => 0,
+			'inject_int_3' => $modSettings['recycle_board'],
+		)
+	);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -955,17 +1001,25 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 	if ($user_info['is_guest'] && (!$row['guest_vote'] || (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))))
 		return ssi_showPoll($row['id_topic'], $output_method);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(DISTINCT id_member)
-		FROM {$db_prefix}log_polls
-		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+		FROM {db_prefix}log_polls
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $row['id_poll'],
+		)
+	);
 	list ($total) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_choice, label, votes
-		FROM {$db_prefix}poll_choices
-		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+		FROM {db_prefix}poll_choices
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $row['id_poll'],
+		)
+	);
 	$options = array();
 	while ($rowChoice = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -1055,17 +1109,23 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 	else
 		$topic = (int) $topic;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			p.id_poll, p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes, p.guest_vote, b.id_board
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE t.id_topic = $topic
-			AND $user_info[query_see_board]" . (!in_array(0, $boardsAllowed) ? "
-			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
-			AND t.approved = 1
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE t.id_topic = {int:current_topic}
+			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
+			AND b.id_board IN ({array_int:inject_array_int_1})' : '') . '
+			AND t.approved = {int:inject_int_1}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+			'inject_array_int_1' => $boardsAllowed,
+			'inject_int_1' => 1,
+		)
+	);
 
 	// Either this topic has no poll, or the user cannot view it.
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -1085,12 +1145,17 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 		$allow_vote = false;
 	else
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}log_polls
-			WHERE id_poll = $row[id_poll]
-				AND id_member = $user_info[id]
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}log_polls
+			WHERE id_poll = {int:inject_int_1}
+				AND id_member = {int:current_member}
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $row['id_poll'],
+			)
+		);
 		$allow_vote = $smfFunc['db_num_rows']($request) == 0;
 		$smfFunc['db_free_result']($request);
 	}
@@ -1099,17 +1164,25 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 	$is_expired = !empty($row['expire_time']) && $row['expire_time'] < time();
 	$allow_view_results = allowedTo('moderate_board') || $row['hide_results'] == 0 || ($row['hide_results'] == 1 && !$allow_vote) || $is_expired;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(DISTINCT id_member)
-		FROM {$db_prefix}log_polls
-		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+		FROM {db_prefix}log_polls
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $row['id_poll'],
+		)
+	);
 	list ($total) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_choice, label, votes
-		FROM {$db_prefix}poll_choices
-		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+		FROM {db_prefix}poll_choices
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $row['id_poll'],
+		)
+	);
 	$options = array();
 	$total_votes = 0;
 	while ($rowChoice = $smfFunc['db_fetch_assoc']($request))
@@ -1228,16 +1301,22 @@ function ssi_pollVote()
 	$_POST['poll'] = (int) $_POST['poll'];
 
 	// Check if they have already voted, or voting is locked.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.expire_time, p.max_votes, p.guest_vote, t.id_topic
-		FROM {$db_prefix}polls AS p
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_poll = $_POST[poll])
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = $user_info[id])
-		WHERE p.id_poll = $_POST[poll]
-			AND $user_info[query_see_board]
-			AND t.approved = 1
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}polls AS p
+			INNER JOIN {db_prefix}topics AS t ON (t.id_poll = {int:inject_int_1})
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+			LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = {int:current_member})
+		WHERE p.id_poll = {int:inject_int_1}
+			AND ' . $user_info['query_see_board'] . '
+			AND t.approved = {int:inject_int_2}
+		LIMIT 1',
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => $_POST['poll'],
+			'inject_int_2' => 1,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		die;
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -1260,10 +1339,14 @@ function ssi_pollVote()
 		elseif (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))
 			redirectexit('topic=' . $row['id_topic'] . '.0');
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT MIN(id_member)
-			FROM {$db_prefix}log_polls
-			WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+			FROM {db_prefix}log_polls
+			WHERE id_poll = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $row['id_poll'],
+			)
+		);
 		list ($guest_id) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 	}
@@ -1280,16 +1363,21 @@ function ssi_pollVote()
 
 	// Add their vote in to the tally.
 	$smfFunc['db_insert']('insert',
-		"{$db_prefix}log_polls",
+		$db_prefix . 'log_polls',
 		array('id_poll' => 'int', 'id_member' => 'int', 'id_choice' => 'int'),
 		$inserts,
 		array('id_poll', 'id_member', 'id_choice')
 	);
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}poll_choices
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}poll_choices
 		SET votes = votes + 1
-		WHERE id_poll = $_POST[poll]
-			AND id_choice IN (" . implode(', ', $options) . ")", __FILE__, __LINE__);
+		WHERE id_poll = {int:inject_int_1}
+			AND id_choice IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $options,
+			'inject_int_1' => $_POST['poll'],
+		)
+	);
 
 	// Track the vote if a guest.
 	if ($user_info['is_guest'])
@@ -1468,12 +1556,16 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	$start = max(0, $start);
 
 	// Make sure guests can see this board.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_board
-		FROM {$db_prefix}boards
-		WHERE " . ($board === null ? '' : "id_board = $board
-			AND ") . "FIND_IN_SET(-1, member_groups)
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}boards
+		WHERE ' . ($board === null ? '' : 'id_board = {int:current_board}
+			AND ') . 'FIND_IN_SET(-1, member_groups)
+		LIMIT 1',
+		array(
+			'current_board' => $board,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		if ($output_method == 'echo')
@@ -1491,13 +1583,18 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 		$icon_sources[$icon] = 'images_url';
 
 	// Find the post ids.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_first_msg
-		FROM {$db_prefix}topics
-		WHERE id_board = $board
-			AND approved = 1
+		FROM {db_prefix}topics
+		WHERE id_board = {int:current_board}
+			AND approved = {int:inject_int_1}
 		ORDER BY id_first_msg DESC
-		LIMIT $start, $limit", __FILE__, __LINE__);
+		LIMIT ' . $start . ', ' . $limit,
+		array(
+			'current_board' => $board,
+			'inject_int_1' => 1,
+		)
+	);
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$posts[] = $row['id_first_msg'];
@@ -1507,16 +1604,20 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 		return array();
 
 	// Find the posts.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			m.icon, m.subject, m.body, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
 			t.num_replies, t.id_topic, m.id_member, m.smileys_enabled, m.id_msg, t.locked
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE t.id_first_msg IN (" . implode(', ', $posts) . ")
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE t.id_first_msg IN ({array_int:inject_array_int_1})
 		ORDER BY t.id_first_msg DESC
-		LIMIT " . count($posts), __FILE__, __LINE__);
+		LIMIT ' . count($posts),
+		array(
+			'inject_array_int_1' => $posts,
+		)
+	);
 	$return = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -1600,18 +1701,23 @@ function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 	global $db_prefix, $user_info, $scripturl, $modSettings, $txt, $sc, $smfFunc;
 
 	// Find all events which are happening in the near future that the member can see.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			cal.id_event, cal.start_date, cal.end_date, cal.title, cal.id_member, cal.id_topic,
 			cal.id_board, t.id_first_msg, t.approved
-		FROM {$db_prefix}calendar AS cal
-			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = cal.id_board)
-			LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
-		WHERE cal.start_date <= '" . strftime('%Y-%m-%d', forum_time(false)) . "'
-			AND cal.end_date >= '" . strftime('%Y-%m-%d', forum_time(false)) . "'
-			AND (cal.id_board = 0 OR $user_info[query_wanna_see_board])
+		FROM {db_prefix}calendar AS cal
+			LEFT JOIN {db_prefix}boards AS b ON (b.id_board = cal.id_board)
+			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+		WHERE cal.start_date <= {date:inject_date_1}
+			AND cal.end_date >= {date:inject_date_1}
+			AND (cal.id_board = {int:inject_int_1} OR ' . $user_info['query_wanna_see_board'] . ')
 		ORDER BY cal.start_date DESC
-		LIMIT $max_events", __FILE__, __LINE__);
+		LIMIT ' . $max_events,
+		array(
+			'inject_date_1' => strftime('%Y-%m-%d', forum_time(false)),
+			'inject_int_1' => 0,
+		)
+	);
 	$return = array();
 	$duplicates = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1679,11 +1785,14 @@ function ssi_checkPassword($id = null, $password = null, $is_username = false)
 	if ($id === null)
 		return;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT passwd, member_name, is_activated
-		FROM {$db_prefix}members
-		WHERE " . ($is_username ? 'member_name' : 'id_member') . " = '$id'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE ' . ($is_username ? 'member_name' : 'id_member') . ' = \'' . $id . '\'
+		LIMIT 1',
+		array(
+		)
+	);
 	list ($pass, $user, $active) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 

@@ -74,10 +74,14 @@ $ID_SUB = (int) $ID_SUB;
 $ID_MEMBER = (int) $ID_MEMBER;
 
 // Verify the member.
-$request = $smfFunc['db_query']('', "
+$request = $smfFunc['db_query']('', '
 	SELECT id_member, member_name, real_name, email_address
-	FROM {$db_prefix}members
-	WHERE id_member = $ID_MEMBER", __FILE__, __LINE__);
+	FROM {db_prefix}members
+	WHERE id_member = {int:inject_int_1}',
+	array(
+		'inject_int_1' => $ID_MEMBER,
+	)
+);
 // Didn't find them?
 if ($smfFunc['db_num_rows']($request) == 0)
 	generateSubscriptionError(sprintf($txt['paid_could_not_find_member'], $ID_MEMBER));
@@ -85,10 +89,14 @@ list ($ID_MEMBER, $username, $name, $email) = $smfFunc['db_fetch_row']($request)
 $smfFunc['db_free_result']($request);
 
 // Get the subscription details.
-$request = $smfFunc['db_query']('', "
+$request = $smfFunc['db_query']('', '
 	SELECT cost, active, length, name, email_complete
-	FROM {$db_prefix}subscriptions
-	WHERE id_subscribe = $ID_SUB", __FILE__, __LINE__);
+	FROM {db_prefix}subscriptions
+	WHERE id_subscribe = {int:inject_int_1}',
+	array(
+		'inject_int_1' => $ID_SUB,
+	)
+);
 
 // Didn't find it?
 if ($smfFunc['db_num_rows']($request) == 0)
@@ -98,12 +106,17 @@ list ($cost, $active, $length, $subname, $emaildata) = $smfFunc['db_fetch_row'](
 $smfFunc['db_free_result']($request);
 
 // We wish to check the pending payments to make sure we are expecting this.
-$request = $smfFunc['db_query']('', "
+$request = $smfFunc['db_query']('', '
 	SELECT id_sublog, payments_pending, pending_details
-	FROM {$db_prefix}log_subscribed
-	WHERE id_subscribe = $ID_SUB
-		AND id_member = $ID_MEMBER
-	LIMIT 1", __FILE__, __LINE__);
+	FROM {db_prefix}log_subscribed
+	WHERE id_subscribe = {int:inject_int_1}
+		AND id_member = {int:inject_int_2}
+	LIMIT 1',
+	array(
+		'inject_int_1' => $ID_SUB,
+		'inject_int_2' => $ID_MEMBER,
+	)
+);
 if ($smfFunc['db_num_rows']($request) == 0)
 	generateSubscriptionError(sprintf($txt['paid_count_not_find_subscription_log'], $ID_MEMBER, $ID_SUB));
 list ($id_sublog, $payments_pending, $pending_details) = $smfFunc['db_fetch_row']($request);
@@ -116,12 +129,19 @@ if ($gatewayClass->isRefund())
 	removeSubscription($ID_SUB, $ID_MEMBER);
 
 	// Mark it as complete so we have a record.
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}log_subscribed
-		SET end_time = " . time() . "
-		WHERE id_subscribe = $ID_SUB
-			AND id_member = $ID_MEMBER
-			AND status = 0", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}log_subscribed
+		SET end_time = {int:inject_int_1}
+		WHERE id_subscribe = {int:inject_int_2}
+			AND id_member = {int:inject_int_3}
+			AND status = {int:inject_int_4}',
+		array(
+			'inject_int_1' => time(),
+			'inject_int_2' => $ID_SUB,
+			'inject_int_3' => $ID_MEMBER,
+			'inject_int_4' => 0,
+		)
+	);
 
 	// Receipt?
 	if (!empty($modSettings['paid_email']) && $modSettings['paid_email'] == 2)
@@ -159,10 +179,16 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 		}
 		$pending_details = empty($real_details) ? '' : $smfFunc['db_escape_string'](serialize($real_details));
 
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_subscribed
-			SET payments_pending = $payments_pending, pending_details = '$pending_details'
-			WHERE id_sublog = $id_sublog", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_subscribed
+			SET payments_pending = {int:inject_int_1}, pending_details = {string:inject_string_1}
+			WHERE id_sublog = {int:inject_int_2}',
+			array(
+				'inject_int_1' => $payments_pending,
+				'inject_int_2' => $id_sublog,
+				'inject_string_1' => $pending_details,
+			)
+		);
 	}
 
 	// Is this flexible?
@@ -207,7 +233,7 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 		$emailbody .= "\n\t" . $txt['paid_new_sub_body_name'] . ' ' . $name . ' (' . $username . ')';
 		$emailbody .= "\n\t" . $txt['paid_new_sub_body_email'] . ' ' . $email;
 		$emailbody .= "\n\t" . $txt['paid_new_sub_body_date'] . ' ' . timeformat(time(), false);
-		$emailbody .= "\n" . $txt['paid_new_sub_body_link'] . ":\n\t" . $scripturl . '?action=profile;u=' . $ID_MEMBER;
+		$emailbody .= "\n" . $txt['paid_new_sub_body_link'] . ':' . "\n\t" . $scripturl . '?action=profile;u=' . $ID_MEMBER;
 
 		paidAdminEmail($txt['paid_new_sub_subject'], $emailbody);
 	}
@@ -239,7 +265,7 @@ function generateSubscriptionError($text, $notify = true)
 
 	// Send an email?
 	if (!empty($modSettings['paid_email']))
-		paidAdminEmail($txt['paid_error_subject'], $txt['paid_error_body'] . "\n" . 	"---------------------------------------------\n" . $text);
+		paidAdminEmail($txt['paid_error_subject'], $txt['paid_error_body'] . "\n" . 	'---------------------------------------------' . "\n" . $text);
 
 	// Otherwise log and die.
 	log_error($text);
@@ -252,10 +278,14 @@ function paidAdminEmail($subject, $body)
 	global $sourcedir, $db_prefix, $mbname, $modSettings, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT email_address, real_name
-		FROM {$db_prefix}members
-		WHERE id_group = 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE id_group = {int:inject_int_1}',
+		array(
+			'inject_int_1' => 1,
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		sendmail($row['email_address'], $subject, $row['real_name'] . "\n\n" . $body . "\n\n" . $mbname);
 	$smfFunc['db_free_result']($request);
