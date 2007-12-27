@@ -591,10 +591,12 @@ if (isset($modSettings['smfVersion']))
 	$request = $smfFunc['db_query']('', '
 		SELECT variable, value
 		FROM {db_prefix}themes
-		WHERE id_theme = {int:inject_int_1}
-			AND variable IN (\'theme_url\', \'images_url\')',
+		WHERE id_theme = {int:id_theme}
+			AND variable IN ({string:theme_url}, {string:images_url})',
 		array(
-			'inject_int_1' => 1,
+			'id_theme' => 1,
+			'theme_url' => 'theme_url',
+			'images_url' => 'images_url',
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -788,6 +790,9 @@ function loadEssentialData()
 		// Oh dear god!!
 		if ($db_connection === null)
 			die('Unable to connect to database - please check username and password are correct in Settings.php');
+
+		// Make sure we get failure notices.
+		$smfFunc['db_error_handler_return'] = true;
 
 		if ($db_type == 'mysql' && isset($db_character_set) && preg_match('~^\w+$~', $db_character_set) === 1)
 			$smfFunc['db_query']('', '
@@ -1014,8 +1019,9 @@ function checkLogin()
 			$request = $smfFunc['db_query']('', '
 				SHOW COLUMNS
 				FROM {db_prefix}members
-				LIKE \'memberName\'',
+				LIKE {string:member_name}',
 				array(
+					'member_name' => 'memberName',
 				)
 			);
 			if ($smfFunc['db_num_rows']($request) != 0)
@@ -1031,17 +1037,18 @@ function checkLogin()
 					SELECT id_member, memberName AS member_name, passwd, id_group,
 					additionalGroups AS additional_groups
 					FROM {db_prefix}members
-					WHERE memberName = \'' . $smfFunc['db_escape_string']($_POST['user']) . '\'',
+					WHERE memberName = {string:member_name}',
 					array(
+						'member_name' => $_POST['user'],
 					)
 				);
 			else
 				$request = $smfFunc['db_query']('', '
 					SELECT id_member, member_name, passwd, id_group, additional_groups
 					FROM {db_prefix}members
-					WHERE member_name = {string:inject_string_1}',
+					WHERE member_name = {string:member_name}',
 					array(
-						'inject_string_1' => $smfFunc['db_escape_string']($_POST['user']),
+						'member_name' => $_POST['user'],
 					)
 				);
 			if ($smfFunc['db_num_rows']($request) != 0)
@@ -1104,11 +1111,11 @@ function checkLogin()
 					$request = $smfFunc['db_query']('', '
 						SELECT permission
 						FROM {db_prefix}permissions
-						WHERE id_group IN ({array_int:inject_array_int_1})
-							AND permission = {string:inject_string_1}',
+						WHERE id_group IN ({array_int:groups})
+							AND permission = {string:admin_forum}',
 						array(
-							'inject_array_int_1' => $groups,
-							'inject_string_1' => 'admin_forum',
+							'groups' => $groups,
+							'admin_forum' => 'admin_forum',
 						)
 					);
 					if ($smfFunc['db_num_rows']($request) == 0)
@@ -1188,9 +1195,9 @@ function UpgradeOptions()
 	else
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}settings
-			WHERE variable = {string:inject_string_1}',
+			WHERE variable = {string:allow_sm_stats}',
 			array(
-				'inject_string_1' => 'allow_sm_stats',
+				'allow_sm_stats' => 'allow_sm_stats',
 			)
 		);
 
@@ -1482,10 +1489,12 @@ function CleanupMods()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
-		WHERE id_member = {int:inject_int_1}
-			AND variable IN (\'theme_dir\', \'images_url\')',
+		WHERE id_member = {int:id_member}
+			AND variable IN ({string:theme_dir}, {string:images_url})',
 		array(
-			'inject_int_1' => 0,
+			'id_member' => 0,
+			'theme_dir' => 'theme_dir',
+			'images_url' => 'images_url',
 		)
 	);
 	$theme_paths = array();
@@ -1502,10 +1511,10 @@ function CleanupMods()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_install, filename, name, themes_installed, version
 		FROM {db_prefix}log_packages
-		WHERE install_state = {int:inject_int_1}
+		WHERE install_state = {int:installed}
 		ORDER BY time_installed DESC',
 		array(
-			'inject_int_1' => 1,
+			'installed' => 1,
 		)
 	);
 	$upcontext['packages'] = array();
@@ -1806,11 +1815,11 @@ function UpgradeTemplate()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, value
 		FROM {db_prefix}themes
-		WHERE id_member = {int:inject_int_1}
-			AND variable = {string:inject_string_1}',
+		WHERE id_member = {int:id_member}
+			AND variable = {string:theme_dir}',
 		array(
-			'inject_int_1' => 0,
-			'inject_string_1' => 'theme_dir',
+			'id_member' => 0,
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	$theme_dirs = array();
@@ -2008,10 +2017,11 @@ function UpgradeTemplate()
 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}settings
-			SET value = CONCAT(value, \',' . $id_theme . '\')
-			WHERE variable = {string:inject_string_1}',
+			SET value = CONCAT(value, {string:new_theme})
+			WHERE variable = {string:knownThemes}',
 			array(
-				'inject_string_1' => 'knownThemes',
+				'knownThemes' => 'knownThemes',
+				'new_theme' => ',' . $id_theme,
 			)
 		);
 
@@ -2162,17 +2172,21 @@ function convertSettingstoOptions()
 		$smfFunc['db_query']('', '
 			INSERT IGNORE INTO {db_prefix}themes
 				(id_member, id_theme, variable, value)
-			SELECT id_member, 1, \'' . $variable . '\', \'' . $modSettings[$value[0]] . '\'
+			SELECT id_member, 1, {string:variable}, {string:value}
 			FROM {db_prefix}members',
 			array(
+				'variable' => $variable,
+				'value' => $modSettings[$value[0]],
 			)
 		);
 
 		$smfFunc['db_query']('', '
 			INSERT IGNORE INTO {db_prefix}themes
 				(id_member, id_theme, variable, value)
-			VALUES (-1, 1, \'' . $variable . '\', \'' . $modSettings[$value[0]] . '\')',
+			VALUES (-1, 1, {string:variable}, {string:value})',
 			array(
+				'variable' => $variable,
+				'value' => $modSettings[$value[0]],
 			)
 		);
 	}
@@ -2278,10 +2292,10 @@ function getMemberGroups()
 	$request = $smfFunc['db_query']('', '
 		SELECT group_name, id_group
 		FROM {db_prefix}membergroups
-		WHERE id_group = {int:inject_int_1} OR id_group > {int:inject_int_2}',
+		WHERE id_group = {int:admin_group} OR id_group > {int:old_group}',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => 7,
+			'admin_group' => 1,
+			'old_group' => 7,
 		)
 	);
 	if ($request === false)
@@ -2289,10 +2303,10 @@ function getMemberGroups()
 		$request = $smfFunc['db_query']('', '
 			SELECT membergroup, id_group
 			FROM {db_prefix}membergroups
-			WHERE id_group = {int:inject_int_1} OR id_group > {int:inject_int_2}',
+			WHERE id_group = {int:admin_group} OR id_group > {int:old_group}',
 			array(
-				'inject_int_1' => 1,
-				'inject_int_2' => 7,
+				'admin_group' => 1,
+				'old_group' => 7,
 			)
 		);
 	}
@@ -2365,8 +2379,9 @@ function parse_sql($filename)
 	{
 		$request = $smfFunc['db_query']('', '
 			SHOW TABLE STATUS
-			LIKE \'{db_prefix}members\'',
+			LIKE {string:table_name}',
 			array(
+				'table_name' => "{$db_prefix}members",
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) === 0)
@@ -2378,8 +2393,9 @@ function parse_sql($filename)
 		{
 			$request = $smfFunc['db_query']('', '
 				SHOW COLLATION
-				LIKE \'' . $table_status['Collation'] . '\'',
+				LIKE {string:collation}',
 				array(
+					'collation' => $table_status['Collation'],
 				)
 			);
 			// Got something?
@@ -2548,6 +2564,7 @@ function parse_sql($filename)
 				$current_data = strtr(substr(rtrim($current_data), 0, -1), array('{$db_prefix}' => $db_prefix, '{$boarddir}' => $boarddir, '{$sboarddir}' => addslashes($boarddir), '{$boardurl}' => $boardurl, '{$db_collation}' => $db_collation));
 
 				upgrade_query($current_data);
+
 				// !!! This will be how it kinda does it once mysql all stripped out - needed for postgre (etc).
 				/*
 				$result = $smfFunc['db_query']('', $current_data, false, false);
@@ -2592,13 +2609,10 @@ function upgrade_query($string, $unbuffered = false)
 	global $db_connection, $db_server, $db_user, $db_passwd, $db_type, $command_line, $upcontext, $upgradeurl, $modSettings;
 	global $db_name, $db_unbuffered, $smfFunc;
 
-	// Get the query result - working around some SMF specific ideas!
+	// Get the query result - working around some SMF specific security - just this once!
 	$modSettings['disableQueryCheck'] = true;
 	$db_unbuffered = $unbuffered;
-	$result = $smfFunc['db_query']('', $string,
-		array(
-		)
-	);
+	$result = $smfFunc['db_query']('', $string, 'security_override');
 	$db_unbuffered = false;
 
 	// Failure?!
@@ -2836,8 +2850,9 @@ function textfield_alter($change, $substep)
 		$request = $smfFunc['db_query']('', '
 			SHOW FULL COLUMNS
 			FROM {db_prefix}' . $change['table'] . '
-			LIKE \'' . $change['column'] . '\'',
+			LIKE {string:column}',
 			array(
+				'column' => $change['column'],
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) === 0)
@@ -2856,8 +2871,9 @@ function textfield_alter($change, $substep)
 		{
 			$request = $smfFunc['db_query']('', '
 				SHOW COLLATION
-				LIKE \'' . $table_row['Collation'] . '\'',
+				LIKE {string:collation}',
 				array(
+					'collation' => $table_row['Collation'],
 				)
 			);
 			// No results? Just forget it all together.
@@ -2875,17 +2891,19 @@ function textfield_alter($change, $substep)
 		if ($null_fix)
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}' . $change['table'] . '
-				SET ' . $change['column'] . ' = \'' . (isset($change['default']) ? $smfFunc['db_escape_string']($change['default']) : '') . '\'
+				SET ' . $change['column'] . ' = {string:default}
 				WHERE ' . $change['column'] . ' IS NULL',
 				array(
+					'default' => isset($change['default']) ? $change['default'] : '',
 				)
 			);
 
 		// Do the actual alteration.
 		$smfFunc['db_query']('', '
 			ALTER TABLE {db_prefix}' . $change['table'] . '
-			CHANGE COLUMN ' . $change['column'] . ' ' . $change['column'] . ' ' . $change['type'] . (isset($collation_info['Charset']) ? ' CHARACTER SET ' . $collation_info['Charset'] . ' COLLATE ' . $collation_info['Collation'] : '') . ($change['null_allowed'] ? '' : ' NOT NULL') . (isset($change['default']) ? ' default \'' . $smfFunc['db_escape_string']($change['default']) . '\'' : ''),
+			CHANGE COLUMN ' . $change['column'] . ' ' . $change['column'] . ' ' . $change['type'] . (isset($collation_info['Charset']) ? ' CHARACTER SET ' . $collation_info['Charset'] . ' COLLATE ' . $collation_info['Collation'] : '') . ($change['null_allowed'] ? '' : ' NOT NULL') . (isset($change['default']) ? ' default {string:default}' : ''),
 			array(
+				'default' => isset($change['default']) ? $change['default'] : '',
 			)
 		);
 	}

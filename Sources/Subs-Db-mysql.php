@@ -430,6 +430,10 @@ function db_error($db_string, $connection = null)
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
 	global $smfFunc;
 
+	// If we're being asked to return error information then do this right away (For upgrade etc).
+	if (!empty($smfFunc['db_error_handler_return']))
+		return false;
+
 	// We'll try recovering the file and line number the original db query was called from.
 	if (function_exists('debug_backtrace'))
 	{
