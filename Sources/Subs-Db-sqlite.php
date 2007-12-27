@@ -48,6 +48,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'sqlite_fetch_array')
 		$smfFunc += array(
 			'db_query' => 'smf_db_query',
+			'db_quote' => 'smf_db_quote',
 			'db_fetch_assoc' => 'sqlite_fetch_array',
 			'db_fetch_row' => 'smf_sqlite_fetch_row',
 			'db_free_result' => 'smf_sqlite_free_result',
@@ -122,10 +123,136 @@ function db_fix_prefix (&$db_prefix, $db_name)
 	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
 }
 
-// Do a query.  Takes care of errors too.
-function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
+function smf_db_replacement__callback($matches)
 {
-	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings;
+	global $db_callback, $db_prefix;
+
+	list ($values, $connection) = $db_callback;
+
+	// !!! REMOVE ME. Temporary code to filter out old type queries.
+	if (!is_resource($connection))
+		var_dump(debug_backtrace());
+
+	if ($matches[1] === 'db_prefix')
+		return $db_prefix;
+
+	if (!isset($matches[2]))
+		trigger_error('Invalid value injected or no type specified.', E_USER_ERROR);
+
+	if (!isset($values[$matches[2]]))
+		trigger_error(var_dump(debug_backtrace()) . 'The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), E_USER_ERROR);
+
+	$replacement = $values[$matches[2]];
+
+	switch ($matches[1])
+	{
+		case 'int':
+			if (!is_numeric($replacement) || (string) $replacement !== (string) (int) $replacement)
+				trigger_error(var_dump(debug_backtrace()) . 'Wrong value type sent to the database. Integer expected.', E_USER_ERROR);
+			return (string) (int) $replacement;
+		break;
+
+		case 'string':
+		case 'text':
+			return sprintf('\'%1$s\'', sqlite_escape_string($replacement));
+		break;
+
+		case 'array_int':
+			if (is_array($replacement))
+			{
+				if (empty($replacement))
+					trigger_error('Database error, given array of integer values is empty.', E_USER_ERROR);
+
+				foreach ($replacement as $key => $value)
+				{
+					if (!is_numeric($value) || (string) $value !== (string) (int) $value)
+						trigger_error('Wrong value type sent to the database. Array of integers expected.', E_USER_ERROR);
+
+					$replacement[$key] = (string) (int) $value;
+				}
+
+				return implode(', ', $replacement);
+			}
+			else
+				trigger_error('Wrong value type sent to the database. Array of integers expected.', E_USER_ERROR);
+		break;
+
+		case 'array_string':
+			if (is_array($replacement))
+			{
+				if (empty($replacement))
+					trigger_error('Database error, given array of string values is empty.', E_USER_ERROR);
+
+				foreach ($replacement as $key => $value)
+					$replacement[$key] = sprintf('\'%1$s\'', sqlite_escape_string($value));
+
+				return implode(', ', $replacement);
+			}
+			else
+				trigger_error('Wrong value type sent to the database. Array of strings expected.', E_USER_ERROR);
+		break;
+
+		case 'date':
+			if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
+				return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
+			else
+				trigger_error('Wrong value type sent to the database. Date expected.', E_USER_ERROR);
+		break;
+
+		case 'float':
+			if (!is_numeric($replacement))
+				trigger_error('Wrong value type sent to the database. Floating point number expected.', E_USER_ERROR);
+			return (string) (float) $replacement;
+		break;
+
+		case 'identifier':
+			// Backticks inside identifiers are supported as of MySQL 4.1. We don't need them for SMF.
+			return '`' . strtr($replacement, array('`' => '', '.' => '')) . '`';
+		break;
+
+		case 'raw':
+			return $replacement;
+		break;
+
+		default:
+			trigger_error('Undefined type used in the database query');
+		break;
+	}
+}
+
+// Just like the db_query, escape and quote a string, but not executing the query.
+function smf_db_quote($db_string, $db_values, $connection = null)
+{
+	global $db_callback, $db_connection;
+
+	// With nothing to quote/escape, simply return.
+	if (empty($db_values))
+		return $db_string;
+
+	// This is needed by the callback function.
+	$db_callback = array($db_values, $connection == null ? $db_connection : $connection);
+
+	// Do the quoting and escaping
+	$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
+
+	// Clear this global variable.
+	$db_callback = array();
+
+	return $db_string;
+}
+
+// Do a query.  Takes care of errors too.
+function smf_db_query($identifier, $db_string, $db_values = array(), $connection = null)
+{
+	global $db_cache, $db_count, $db_connection, $db_show_debug;
+	global $db_unbuffered, $db_callback, $modSettings;
+
+	// !!! REMOVE ME. Temporary code to filter out old type queries.
+	if (is_int($connection))
+	{
+		echo '<pre>OLD TYPE QUERY ALERT', "\n";
+		var_dump(debug_backtrace());
+	}
 
 	// Decide which connection to use.
 	$connection = $connection == null ? $db_connection : $connection;
@@ -174,12 +301,50 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 	$db_string = trim($db_string);
 	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
 
+	$db_string = preg_replace('~SUBSTRING\(\s*\'~', 'SUBSTR(\'', $db_string);
+
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
+
+	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && $db_values !== 'security_override')
+	{
+		//!!! TEMP.
+		var_dump(debug_backtrace());
+		fatal_error('Hacking attempt...', false);
+	}
+	elseif ($db_values === 'security_override')
+		$db_values = array();
+
+	if (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false)
+	{
+		// Pass some values to the global space for use in the callback function.
+		$db_callback = array($db_values, $connection);
+
+		// Inject the values passed to this function.
+		$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
+
+		// This shouldn't be residing in global space any longer.
+		$db_callback = array();
+	}
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
 	{
+		// Get the file and line number this function was called.
+		if (function_exists('debug_backtrace'))
+		{
+			$backtrace = debug_backtrace();
+			$file = $backtrace[0]['file'];
+			$line = $backtrace[0]['line'];
+		}
+
+		// For PHP < 4.3, this will have to do.
+		else
+		{
+			$file = __FILE__;
+			$line = __LINE__;
+		}
+
 		// Initialize $db_cache if not already initialized.
 		if (!isset($db_cache))
 			$db_cache = array();
@@ -198,15 +363,9 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 		$st = microtime();
 	}
 
-	// Do most of the substrings!
-	//!!! This is no good - must not act on strings!
-	$db_string = preg_replace('~SUBSTRING\(\s*\'~', 'SUBSTR(\'', $db_string);
-
 	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);
-	if ($ret === false && $file !== false)
-	{
-		$ret = db_error($db_string . '#!#' . $err_msg, $file, $line, $connection);
-	}
+	if ($ret === false)
+		$ret = db_error($db_string . '#!#' . $err_msg, $connection);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -268,7 +427,7 @@ function smf_db_transaction($type = 'commit', $connection)
 }
 
 // Database error!
-function db_error($db_string, $file, $line, $connection = null)
+function db_error($db_string, $connection = null)
 {
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
@@ -278,6 +437,21 @@ function db_error($db_string, $file, $line, $connection = null)
 	// If we're being asked to return error information then do this right away (For upgrade etc).
 	if (!empty($smfFunc['db_error_handler_return']))
 		return false;
+
+	// We'll try recovering the file and line number the original db query was called from.
+	if (function_exists('debug_backtrace'))
+	{
+		$backtrace = debug_backtrace();
+		$file = isset($backtrace[1]) ? $backtrace[1]['file'] : __FILE__;
+		$line = isset($backtrace[1]) ? $backtrace[1]['line'] : __LINE__;
+	}
+
+	// For PHP < 4.3, this will have to do.
+	else
+	{
+		$file = __FILE__;
+		$line = __LINE__;
+	}
 
 	// Decide which connection to use
 	$connection = $connection == null ? $db_connection : $connection;
@@ -291,161 +465,9 @@ function db_error($db_string, $file, $line, $connection = null)
 	$query_error .= '<br />' . substr($db_string, $errStart + 3);
 	$db_string = substr($db_string, 0, $errStart);
 
-	// Error numbers:
-	//    1016: Can't open file '....MYI'
-	//    1030: Got error ??? from table handler.
-	//    1034: Incorrect key file for table.
-	//    1035: Old key file for table.
-	//    1205: Lock wait timeout exceeded.
-	//    1213: Deadlock found.
-	//    2006: Server has gone away.
-	//    2013: Lost connection to server during query.
-
 	// Log the error.
-	if ($query_errno != 1213 && $query_errno != 1205 && function_exists('log_error'))
+	if (function_exists('log_error'))
 		log_error($txt['database_error'] . ': ' . $query_error . (!empty($modSettings['enableErrorQueryLogging']) ? "\n\n" .$db_string : ''), 'database', $file, $line);
-
-	// Database error auto fixing ;).
-	if (function_exists('cache_get_data') && (!isset($modSettings['autoFixDatabase']) || $modSettings['autoFixDatabase'] == '1'))
-	{
-		// Force caching on, just for the error checking.
-		$old_cache = @$modSettings['cache_enable'];
-		$modSettings['cache_enable'] = '1';
-
-		if (($temp = cache_get_data('db_last_error', 600)) !== null)
-			$db_last_error = max(@$db_last_error, $temp);
-
-		if (@$db_last_error < time() - 3600 * 24 * 3)
-		{
-			// We know there's a problem... but what?  Try to auto detect.
-			if ($query_errno == 1030 && strpos($query_error, ' 127 ') !== false)
-			{
-				preg_match_all('~(?:[\n\r]|^)[^\']+?(?:FROM|JOIN|UPDATE|TABLE) ((?:[^\n\r(]+?(?:, )?)*)~s', $db_string, $matches);
-
-				$fix_tables = array();
-				foreach ($matches[1] as $tables)
-				{
-					$tables = array_unique(explode(',', $tables));
-					foreach ($tables as $table)
-					{
-						// Now, it's still theoretically possible this could be an injection.  So backtick it!
-						if (trim($table) != '')
-							$fix_tables[] = '`' . strtr(trim($table), array('`' => '')) . '`';
-					}
-				}
-
-				$fix_tables = array_unique($fix_tables);
-			}
-			// Table crashed.  Let's try to fix it.
-			elseif ($query_errno == 1016)
-			{
-				if (preg_match('~\'([^\.\']+)~', $query_error, $match) != 0)
-					$fix_tables = array('`' . $match[1] . '`');
-			}
-			// Indexes crashed.  Should be easy to fix!
-			elseif ($query_errno == 1034 || $query_errno == 1035)
-			{
-				preg_match('~\'([^\']+?)\'~', $query_error, $match);
-				$fix_tables = array('`' . $match[1] . '`');
-			}
-		}
-
-		// Check for errors like 145... only fix it once every three days, and send an email. (can't use empty because it might not be set yet...)
-		if (!empty($fix_tables))
-		{
-			// Subs-Admin.php for updateSettingsFile(), Subs-Post.php for sendmail().
-			require_once($sourcedir . '/Subs-Admin.php');
-			require_once($sourcedir . '/Subs-Post.php');
-
-			// Make a note of the REPAIR...
-			cache_put_data('db_last_error', time(), 600);
-			if (($temp = cache_get_data('db_last_error', 600)) === null)
-				updateSettingsFile(array('db_last_error' => time()));
-
-			// Attempt to find and repair the broken table.
-			foreach ($fix_tables as $table)
-				$smfFunc['db_query']('', '
-					REPAIR TABLE ' . $table,
-					array(
-					)
-				);
-
-			// And send off an email!
-			sendmail($webmaster_email, $txt['database_error'], $txt['tried_to_repair']);
-
-			$modSettings['cache_enable'] = $old_cache;
-
-			// Try the query again...?
-			$ret = $smfFunc['db_query']('', $db_string,
-		array(
-		)
-	);
-			if ($ret !== false)
-				return $ret;
-		}
-		else
-			$modSettings['cache_enable'] = $old_cache;
-
-		// Check for the "lost connection" or "deadlock found" errors - and try it just one more time.
-		if (in_array($query_errno, array(1205, 1213, 2006, 2013)))
-		{
-			if (in_array($query_errno, array(2006, 2013)) && $db_connection == $connection)
-			{
-				// Are we in SSI mode?  If so try that username and password first
-				if (SMF == 'SSI' && !empty($ssi_db_user) && !empty($ssi_db_passwd))
-				{
-					if (empty($db_persist))
-						$db_connection = @mysql_connect($db_server, $ssi_db_user, $ssi_db_passwd);
-					else
-						$db_connection = @mysql_pconnect($db_server, $ssi_db_user, $ssi_db_passwd);
-				}
-				// Fall back to the regular username and password if need be
-				if (!$db_connection)
-				{
-					if (empty($db_persist))
-						$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
-					else
-						$db_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
-				}
-
-				if (!$db_connection || !@mysql_select_db($db_name, $db_connection))
-					$db_connection = false;
-			}
-
-			if ($db_connection)
-			{
-				// Try a deadlock more than once more.
-				for ($n = 0; $n < 4; $n++)
-				{
-					$ret = $smfFunc['db_query']('', $db_string,
-		array(
-		)
-	);
-
-					$new_errno = mysql_errno($db_connection);
-					if ($ret !== false || in_array($new_errno, array(1205, 1213)))
-						break;
-				}
-
-				// If it failed again, shucks to be you... we're not trying it over and over.
-				if ($ret !== false)
-					return $ret;
-			}
-		}
-		// Are they out of space, perhaps?
-		elseif ($query_errno == 1030 && (strpos($query_error, ' -1 ') !== false || strpos($query_error, ' 28 ') !== false || strpos($query_error, ' 12 ') !== false))
-		{
-			if (!isset($txt))
-				$query_error .= ' - check database storage space.';
-			else
-			{
-				if (!isset($txt['mysql_error_space']))
-					loadLanguage('Errors');
-
-				$query_error .= !isset($txt['mysql_error_space']) ? ' - check database storage space.' : $txt['mysql_error_space'];
-			}
-		}
-	}
 
 	// Nothing's defined yet... just die with it.
 	if (empty($context) || empty($txt))

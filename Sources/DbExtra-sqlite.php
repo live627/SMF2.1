@@ -63,8 +63,9 @@ function smf_db_backup_table($table, $backup_table)
 	global $smfFunc;
 
 	$result = $smfFunc['db_query']('', '
-		SHOW CREATE TABLE ' . $table,
+		SHOW CREATE TABLE {raw:table}',
 		array(
+			'table' => $table,
 		)
 	);
 	list (, $create) = $smfFunc['db_fetch_row']($result);
@@ -116,17 +117,24 @@ function smf_db_backup_table($table, $backup_table)
 		$create = '';
 
 	$smfFunc['db_query']('', '
-		DROP TABLE IF EXISTS ' . $backup_table,
+		DROP TABLE IF EXISTS {raw:backup_table}',
 		array(
+			'backup_table' => $backup_table,
 		)
 	);
 
 	$request = $smfFunc['db_query']('', '
-		CREATE TABLE ' . $backup_table . ' ' . $create . '
-		TYPE=' . $engine . (empty($charset) ? '' : ' CHARACTER SET ' . $charset . (empty($collate) ? '' : ' COLLATE ' . $collate)) . '
+		CREATE TABLE {raw:backup_table} {raw:create}
+		TYPE={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
 		SELECT *
-		FROM ' . $table,
+		FROM {raw:table}',
 		array(
+			'backup_table' => $backup_table,
+			'table' => $table,
+			'create' => $create,
+			'engine' => $engine,
+			'charset' => empty($charset) ? '' : $charset,
+			'collate' => empty($collate) ? '' : $collate,
 		)
 	);
 
@@ -136,9 +144,12 @@ function smf_db_backup_table($table, $backup_table)
 			$auto_inc = substr($auto_inc, 0, -1);
 
 		$smfFunc['db_query']('', '
-			ALTER TABLE ' . $backup_table . '
-			CHANGE COLUMN ' . $match[1] . ' ' . $auto_inc,
+			ALTER TABLE {raw:backup_table}
+			CHANGE COLUMN {raw:column_detail} {raw:auto_inc}',
 			array(
+				'backup_table' => $backup_table,
+				'column_detail' => $match[1],
+				'auto_inc' => $auto_inc,
 			)
 		);
 	}
@@ -164,10 +175,12 @@ function smf_db_list_tables($db = false, $filter = false)
 	$request = $smfFunc['db_query']('', '
 		SELECT name
 		FROM sqlite_master
-		WHERE type = \'table\'
-		' . $filter . '
+		WHERE type = {string:type}
+		{raw:filter}
 		ORDER BY name',
 		array(
+			'type' => 'table',
+			'filter' => $filter,
 		)
 	);
 	$tables = array();
@@ -189,8 +202,9 @@ function smf_db_insert_sql($tableName)
 	// Get everything from the table.
 	$result = $smfFunc['db_query']('', '
 		SELECT
-		FROM ' . $tableName,
+		FROM {raw:table}',
 		array(
+			'table' => $tableName,
 		)
 	);
 
@@ -252,9 +266,10 @@ function smf_db_table_sql($tableName)
 	$result = $smfFunc['db_query']('', '
 		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
 		FROM information_schema.columns
-		WHERE table_name = \'' . $tableName . '\'
+		WHERE table_name = {string:table}
 		ORDER BY ordinal_position',
 		array(
+			'table' => $tableName,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -279,9 +294,11 @@ function smf_db_table_sql($tableName)
 			{
 				// Get to find the next variable first!
 				$count_req = $smfFunc['db_query']('', '
-					SELECT MAX(' . $row['column_name'] . ')
-					FROM ' . $tableName,
+					SELECT MAX({raw:column})
+					FROM {raw:table}',
 					array(
+						'column' => $row['column_name'],
+						'table' => $tableName,
 					)
 				);
 				list ($max_ind) = $smfFunc['db_fetch_row']($count_req);
@@ -301,10 +318,11 @@ function smf_db_table_sql($tableName)
 	$result = $smfFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
 		FROM pg_class AS c, pg_class AS c2, pg_index AS i
-		WHERE c.relname = \'' . $tableName . '\'
+		WHERE c.relname = {string:table}
 			AND c.oid = i.indrelid
 			AND i.indexrelid = c2.oid',
 		array(
+			'table' => $tableName,
 		)
 	);
 	$indexes = array();

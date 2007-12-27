@@ -66,22 +66,27 @@ function smf_db_backup_table($table, $backup_table)
 	$tables = smf_db_list_tables(false, $backup_table);
 	if (!empty($tables))
 		$smfFunc['db_query']('', '
-			DROP TABLE ' . $backup_table,
+			DROP TABLE {raw:backup_table}',
 			array(
+				'backup_table' => $backup_table,
 			)
 		);
 
 	//!!! Does not work at the moment!
 	$smfFunc['db_query']('', '
-		CREATE TABLE ' . $backup_table . '
-		AS SELECT * FROM ' . $table,
+		CREATE TABLE {raw:backup_table}
+		AS SELECT * FROM {raw:table}',
 		array(
+			'backup_table' => $backup_table,
+			'table' => $table,
 		)
 	);
 	$smfFunc['db_query']('', '
-		INSERT INTO ' . $backup_table . '
-		SELECT * FROM ' . $table,
+		INSERT INTO {raw:backup_table}
+		SELECT * FROM {raw:table}',
 		array(
+			'backup_table' => $backup_table,
+			'table' => $table,
 		)
 	);
 }
@@ -92,8 +97,9 @@ function smf_db_optimize_table($table)
 	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
-			VACUUM ANALYZE ' . $table,
+			VACUUM ANALYZE {raw:table}',
 			array(
+				'table' => $table,
 			)
 		);
 	if (!$request)
@@ -118,9 +124,10 @@ function smf_db_list_tables($db = false, $filter = false)
 	$request = $smfFunc['db_query']('', '
 		SELECT relname
 		FROM pg_stat_user_tables
-		' . $filter . '
+		{raw:filter}
 		ORDER BY relname',
 		array(
+			'filter' => $filter,
 		)
 	);
 	$tables = array();
@@ -142,8 +149,9 @@ function smf_db_insert_sql($tableName)
 	// Get everything from the table.
 	$result = $smfFunc['db_query']('', '
 		SELECT
-		FROM ' . $tableName,
+		FROM {raw:table}',
 		array(
+			'table' => $tableName,
 		)
 	);
 
@@ -205,9 +213,10 @@ function smf_db_table_sql($tableName)
 	$result = $smfFunc['db_query']('', '
 		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
 		FROM information_schema.columns
-		WHERE table_name = \'' . $tableName . '\'
+		WHERE table_name = {string:table}
 		ORDER BY ordinal_position',
 		array(
+			'table' => $tableName,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -232,9 +241,11 @@ function smf_db_table_sql($tableName)
 			{
 				// Get to find the next variable first!
 				$count_req = $smfFunc['db_query']('', '
-					SELECT MAX(' . $row['column_name'] . ')
-					FROM ' . $tableName,
+					SELECT MAX({raw:column})
+					FROM {raw:table}',
 					array(
+						'column' => $row['column_name'],
+						'table' => $tableName,
 					)
 				);
 				list ($max_ind) = $smfFunc['db_fetch_row']($count_req);
@@ -254,10 +265,11 @@ function smf_db_table_sql($tableName)
 	$result = $smfFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
 		FROM pg_class AS c, pg_class AS c2, pg_index AS i
-		WHERE c.relname = \'' . $tableName . '\'
+		WHERE c.relname = {string:table}
 			AND c.oid = i.indrelid
 			AND i.indexrelid = c2.oid',
 		array(
+			'table' => $tableName,
 		)
 	);
 	$indexes = array();

@@ -63,8 +63,9 @@ function smf_db_backup_table($table, $backup_table)
 	global $smfFunc;
 
 	$result = $smfFunc['db_query']('', '
-		SHOW CREATE TABLE ' . $table,
+		SHOW CREATE TABLE {raw:table}',
 		array(
+			'table' => $table,
 		)
 	);
 	list (, $create) = $smfFunc['db_fetch_row']($result);
@@ -116,17 +117,24 @@ function smf_db_backup_table($table, $backup_table)
 		$create = '';
 
 	$smfFunc['db_query']('', '
-		DROP TABLE IF EXISTS ' . $backup_table,
+		DROP TABLE IF EXISTS {raw:backup_table}',
 		array(
+			'backup_table' => $backup_table,
 		)
 	);
 
 	$request = $smfFunc['db_query']('', '
-		CREATE TABLE ' . $backup_table . ' ' . $create . '
-		TYPE=' . $engine . (empty($charset) ? '' : ' CHARACTER SET ' . $charset . (empty($collate) ? '' : ' COLLATE ' . $collate)) . '
+		CREATE TABLE {raw:backup_table} {raw:create}
+		TYPE={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
 		SELECT *
-		FROM ' . $table,
+		FROM {raw:table}',
 		array(
+			'backup_table' => $backup_table,
+			'table' => $table,
+			'create' => $create,
+			'engine' => $engine,
+			'charset' => empty($charset) ? '' : $charset,
+			'collate' => empty($collate) ? '' : $collate,
 		)
 	);
 
@@ -136,9 +144,12 @@ function smf_db_backup_table($table, $backup_table)
 			$auto_inc = substr($auto_inc, 0, -1);
 
 		$smfFunc['db_query']('', '
-			ALTER TABLE ' . $backup_table . '
-			CHANGE COLUMN ' . $match[1] . ' ' . $auto_inc,
+			ALTER TABLE {raw:backup_table}
+			CHANGE COLUMN {raw:column_detail} {raw:auto_inc}',
 			array(
+				'backup_table' => $backup_table,
+				'column_detail' => $match[1],
+				'auto_inc' => $auto_inc,
 			)
 		);
 	}
@@ -153,8 +164,9 @@ function smf_db_optimize_table($table)
 
 	// Get how much overhead there is.
 	$request = $smfFunc['db_query']('', '
-			SHOW TABLE STATUS LIKE \'' . str_replace('_', '\_', $table) . '\'',
+			SHOW TABLE STATUS LIKE {string:table_name}',
 			array(
+				'table_name' => str_replace('_', '\_', $table),
 			)
 		);
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -162,8 +174,9 @@ function smf_db_optimize_table($table)
 
 	$data_before = isset($row['Data_free']) ? $row['Data_free'] : 0;
 	$request = $smfFunc['db_query']('', '
-			OPTIMIZE TABLE `' . $table . '`',
+			OPTIMIZE TABLE `{raw:table}`',
 			array(
+				'table' => $table,
 			)
 		);
 	if (!$request)
@@ -171,8 +184,9 @@ function smf_db_optimize_table($table)
 
 	// How much left?
 	$request = $smfFunc['db_query']('', '
-			SHOW TABLE STATUS LIKE \'' . str_replace('_', '\_', $table) . '\'',
+			SHOW TABLE STATUS LIKE {string:table}',
 			array(
+				'table' => str_replace('_', '\_', $table),
 			)
 		);
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -193,9 +207,11 @@ function smf_db_list_tables($db = false, $filter = false)
 
 	$request = $smfFunc['db_query']('', '
 		SHOW TABLES
-		FROM ' . $db . '
-		' . $filter,
+		FROM {raw:db}
+		{raw:filter}',
 		array(
+			'db' => $db,
+			'filter' => $filter,
 		)
 	);
 	$tables = array();
@@ -217,8 +233,9 @@ function smf_db_insert_sql($tableName)
 	// Get everything from the table.
 	$result = $smfFunc['db_query']('', '
 		SELECT /*!40001 SQL_NO_CACHE */ *
-		FROM `' . $tableName . '`',
+		FROM `{raw:table}`',
 		array(
+			'table' => $tableName,
 		)
 	);
 
@@ -289,8 +306,9 @@ function smf_db_table_sql($tableName)
 	// Find all the fields.
 	$result = $smfFunc['db_query']('', '
 		SHOW FIELDS
-		FROM `' . $tableName . '`',
+		FROM `{raw:table}`',
 		array(
+			'table' => $tableName,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -319,8 +337,9 @@ function smf_db_table_sql($tableName)
 	// Find the keys.
 	$result = $smfFunc['db_query']('', '
 		SHOW KEYS
-		FROM `' . $tableName . '`',
+		FROM `{raw:table}`',
 		array(
+			'table' => $tableName,
 		)
 	);
 	$indexes = array();
@@ -353,8 +372,9 @@ function smf_db_table_sql($tableName)
 	// Now just get the comment and type... (MyISAM, etc.)
 	$result = $smfFunc['db_query']('', '
 		SHOW TABLE STATUS
-		LIKE \'' . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . '\'',
+		LIKE {string:table}',
 		array(
+			'table' => strtr($tableName, array('_' => '\\_', '%' => '\\%')),
 		)
 	);
 	$row = $smfFunc['db_fetch_assoc']($result);

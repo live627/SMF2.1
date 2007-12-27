@@ -53,7 +53,7 @@ function smf_db_search_support($search_type)
 }
 
 // Returns the correct query for this search type.
-function smf_db_search_query($identifier, $db_string, $file, $line, $connection = null)
+function smf_db_search_query($identifier, $db_string, $db_values = array(), $connection = null)
 {
 	global $smfFunc;
 
@@ -79,7 +79,7 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 		// Don't fail on this query?
 		if (isset($replacements[$identifier]['on_fail']))
 		{
-			$file = false;
+			$smfFunc['db_error_handler_return'] = true;
 			unset($replacements[$identifier]['on_fail']);
 		}
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
@@ -88,17 +88,19 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 	{
 		$db_string = preg_replace('~^\s*INSERT\sIGNORE~i', 'INSERT', $db_string);
 		// Don't error on multi-insert.
-		$file = false;
+		$smfFunc['db_error_handler_return'] = true;
 	}
 
 	// Should we not error on this?
 	if (in_array($identifier, $nonFatal))
-		$file = false;
+		$smfFunc['db_error_handler_return'] = true;
 
-	return $smfFunc['db_query']('', $db_string,
-		array(
-		)
+	$return = $smfFunc['db_query']('', $db_string,
+		$db_values, $connection
 	);
+	$smfFunc['db_error_handler_return'] = false;
+
+	return $return;
 }
 
 // Highly specific - create the custom word index table!
@@ -110,11 +112,13 @@ function smf_db_create_word_search($size)
 
 	$smfFunc['db_query']('', '
 		CREATE TABLE {db_prefix}log_search_words (
-			id_word ' . $size . ' NOT NULL default \'0\',
-			id_msg int(10) NOT NULL default \'0\',
+			id_word {raw:size} NOT NULL default {string:string_zero},
+			id_msg int(10) NOT NULL default {string:string_zero},
 			PRIMARY KEY (id_word, id_msg)
 		)',
 		array(
+			'size' => $size,
+			'string_zero' => '0',
 		)
 	);
 }
