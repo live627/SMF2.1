@@ -53,14 +53,14 @@ function getLastPost()
 		FROM {db_prefix}boards AS b
 			INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = b.id_last_msg)
 		WHERE ' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			b.id_board != {int:inject_int_1}' : '1=1 ') . '
+			b.id_board != {int:recycle_board}' : '1=1 ') . '
 			AND ' . $user_info['query_wanna_see_board'] . '
-			AND ml.approved = {int:inject_int_2}
+			AND ml.approved = {int:is_approved}
 		ORDER BY b.id_msg_updated DESC
 		LIMIT 1',
 		array(
-			'inject_int_1' => $modSettings['recycle_board'],
-			'inject_int_2' => 1,
+			'recycle_board' => $modSettings['recycle_board'],
+			'is_approved' => 1,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -100,6 +100,7 @@ function RecentPosts()
 	if (isset($_REQUEST['start']) && $_REQUEST['start'] > 95)
 		$_REQUEST['start'] = 95;
 
+	$query_parameters = array();
 	if (!empty($_REQUEST['c']) && empty($board))
 	{
 		$_REQUEST['c'] = explode(',', $_REQUEST['c']);
@@ -111,10 +112,10 @@ function RecentPosts()
 			$request = $smfFunc['db_query']('', '
 				SELECT name
 				FROM {db_prefix}categories
-				WHERE id_cat = {int:inject_int_1}
+				WHERE id_cat = {int:id_cat}
 				LIMIT 1',
 				array(
-					'inject_int_1' => $_REQUEST['c'][0],
+					'id_cat' => $_REQUEST['c'][0],
 				)
 			);
 			list ($name) = $smfFunc['db_fetch_row']($request);
@@ -132,10 +133,10 @@ function RecentPosts()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
-			WHERE b.id_cat IN ({array_int:inject_array_int_1})
+			WHERE b.id_cat IN ({array_int:category_list})
 				AND ' . $user_info['query_see_board'],
 			array(
-				'inject_array_int_1' => $_REQUEST['c'],
+				'category_list' => $_REQUEST['c'],
 			)
 		);
 		$total_cat_posts = 0;
@@ -150,12 +151,16 @@ function RecentPosts()
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'b.id_board IN ({array_int:boards})';
+		$query_parameters['boards'] = $boards;
 
 		// If this category has a significant number of posts in it...
 		if ($total_cat_posts > 100 && $total_cat_posts > $modSettings['totalMessages'] / 15)
+		{
 			$query_this_board .= '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_REQUEST['start'] * 7);
+			AND m.id_msg >= {int:max_id_msg}';
+			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 400 - $_REQUEST['start'] * 7);
+		}
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;c=' . implode(',', $_REQUEST['c']), $_REQUEST['start'], min(100, $total_cat_posts), 10, false);
 	}
@@ -168,11 +173,11 @@ function RecentPosts()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
-			WHERE b.id_board IN ({array_int:inject_array_int_1})
+			WHERE b.id_board IN ({array_int:board_list})
 				AND ' . $user_info['query_see_board'] . '
 			LIMIT ' . count($_REQUEST['boards']),
 			array(
-				'inject_array_int_1' => $_REQUEST['boards'],
+				'board_list' => $_REQUEST['boards'],
 			)
 		);
 		$total_posts = 0;
@@ -187,12 +192,16 @@ function RecentPosts()
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'b.id_board IN ({array_int:boards})';
+		$query_parameters['boards'] = $boards;
 
 		// If these boards have a significant number of posts in them...
 		if ($total_posts > 100 && $total_posts > $modSettings['totalMessages'] / 12)
+		{
 			$query_this_board .= '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_REQUEST['start'] * 9);
+			AND m.id_msg >= {int:max_id_msg}';
+			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 500 - $_REQUEST['start'] * 9);
+		}
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;boards=' . implode(',', $_REQUEST['boards']), $_REQUEST['start'], min(100, $total_posts), 10, false);
 	}
@@ -210,20 +219,26 @@ function RecentPosts()
 		list ($total_posts) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
-		$query_this_board = 'b.id_board = ' . $board;
+		$query_this_board = 'b.id_board = {int:board}';
+		$query_parameters['board'] = $board;
 
 		// If this board has a significant number of posts in it...
 		if ($total_posts > 80 && $total_posts > $modSettings['totalMessages'] / 10)
+		{
 			$query_this_board .= '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_REQUEST['start'] * 10);
+			AND m.id_msg >= {int:max_id_msg}';
+			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 600 - $_REQUEST['start'] * 10);
+		}
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%d', $_REQUEST['start'], min(100, $total_posts), 10, true);
 	}
 	else
 	{
 		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != ' . $modSettings['recycle_board'] : ''). '
-			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_REQUEST['start'] * 6);
+			AND b.id_board != {int:recycle_board}' : ''). '
+			AND m.id_msg >= {int:max_id_msg}';
+		$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 100 - $_REQUEST['start'] * 6);
+		$query_parameters['recycle_board'] = $modSettings['recycle_board'];
 
 		// !!! This isn't accurate because we ignore the recycle bin.
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent', $_REQUEST['start'], min(100, $modSettings['totalMessages']), 10, false);
@@ -241,12 +256,12 @@ function RecentPosts()
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE ' . $query_this_board . '
-			AND m.approved = {int:inject_int_1}
+			AND m.approved = {int:is_approved}
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $_REQUEST['start'] . ', 10',
-		array(
-			'inject_int_1' => 1,
-		)
+		array_merge($query_parameters, array(
+			'is_approved' => 1,
+		))
 	);
 	$messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -274,11 +289,11 @@ function RecentPosts()
 			INNER JOIN {db_prefix}messages AS m2 ON (m2.id_msg = t.id_first_msg)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {db_prefix}members AS mem2 ON (mem2.id_member = m2.id_member)
-		WHERE m.id_msg IN ({array_int:inject_array_int_1})
+		WHERE m.id_msg IN ({array_int:message_list})
 		ORDER BY m.id_msg DESC
 		LIMIT ' . count($messages),
 		array(
-			'inject_array_int_1' => $messages,
+			'message_list' => $messages,
 		)
 	);
 	$counter = $_REQUEST['start'] + 1;
@@ -415,6 +430,9 @@ function UnreadTopics()
 	elseif ($_REQUEST['action'] != 'unread' && !empty($context['load_average']) && !empty($modSettings['loadavg_unreadreplies']) && $context['load_average'] >= $modSettings['loadavg_unreadreplies'])
 		fatal_lang_error('loadavg_unreadreplies_disabled', false);
 
+	// Parameters for the main query.
+	$query_parameters = array();
+
 	// Are we specifying any specific board?
 	if (isset($_REQUEST['children']) && (!empty($board) || !empty($_REQUEST['boards'])))
 	{
@@ -435,12 +453,13 @@ function UnreadTopics()
 			SELECT b.id_board, b.id_parent
 			FROM {db_prefix}boards AS b
 			WHERE ' . $user_info['query_wanna_see_board'] . '
-				AND b.child_level > {int:inject_int_1}
-				AND b.id_board NOT IN (' . implode(', ', $boards) . ')
+				AND b.child_level > {int:no_child}
+				AND b.id_board NOT IN ({array_int:boards})
 			ORDER BY child_level ASC
 			',
 			array(
-				'inject_int_1' => 0,
+				'no_child' => 0,
+				'boards' => $boards,
 			)
 		);
 
@@ -453,12 +472,14 @@ function UnreadTopics()
 		if(empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN ({array_int:boards})';
+		$query_parameters['boards'] = $boards;
 		$context['querystring_board_limits'] = ';boards=' . implode(',', $boards) . ';start=%d';
 	}
 	elseif (!empty($board))
 	{
-		$query_this_board = 'id_board = ' . $board;
+		$query_this_board = 'id_board = {int:board}';
+		$query_parameters['board'] = $board;
 		$context['querystring_board_limits'] = ';board=' . $board . '.%d';
 	}
 	elseif (!empty($_REQUEST['boards']))
@@ -471,9 +492,9 @@ function UnreadTopics()
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
 			WHERE ' . $user_info['query_see_board'] . '
-				AND b.id_board IN ({array_int:inject_array_int_1})',
+				AND b.id_board IN ({array_int:board_list})',
 			array(
-				'inject_array_int_1' => $_REQUEST['boards'],
+				'board_list' => $_REQUEST['boards'],
 			)
 		);
 		$boards = array();
@@ -484,7 +505,8 @@ function UnreadTopics()
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN ({array_int:boards})';
+		$query_parameters['boards'] = $boards;
 		$context['querystring_board_limits'] = ';boards=' . implode(',', $boards) . ';start=%d';
 	}
 	elseif (!empty($_REQUEST['c']))
@@ -498,9 +520,9 @@ function UnreadTopics()
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
 			WHERE ' . $user_info[$see_board] . '
-				AND b.id_cat IN ({array_int:inject_array_int_1})',
+				AND b.id_cat IN ({array_int:id_cat})',
 			array(
-				'inject_array_int_1' => $_REQUEST['c'],
+				'id_cat' => $_REQUEST['c'],
 			)
 		);
 		$boards = array();
@@ -511,7 +533,8 @@ function UnreadTopics()
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN ({array_int:boards})';
+		$query_parameters['boards'] = $boards;
 		$context['querystring_board_limits'] = ';c=' . implode(',', $_REQUEST['c']) . ';start=%d';
 	}
 	else
@@ -522,9 +545,9 @@ function UnreadTopics()
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
 			WHERE ' . $user_info[$see_board] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-				AND b.id_board != {int:inject_int_1}' : ''),
+				AND b.id_board != {int:recycle_board}' : ''),
 			array(
-				'inject_int_1' => (int) $modSettings['recycle_board'],
+				'recycle_board' => (int) $modSettings['recycle_board'],
 			)
 		);
 		$boards = array();
@@ -535,7 +558,8 @@ function UnreadTopics()
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN ({array_int:boards})';
+		$query_parameters['boards'] = $boards;
 		$context['querystring_board_limits'] = ';start=%d';
 		$context['no_board_limits'] = true;
 	}
@@ -574,10 +598,10 @@ function UnreadTopics()
 		$request = $smfFunc['db_query']('', '
 			SELECT name
 			FROM {db_prefix}categories
-			WHERE id_cat = {int:inject_int_1}
+			WHERE id_cat = {int:id_cat}
 			LIMIT 1',
 			array(
-				'inject_int_1' => (int) $_REQUEST['c'][0],
+				'id_cat' => (int) $_REQUEST['c'][0],
 			)
 		);
 		list ($name) = $smfFunc['db_fetch_row']($request);
@@ -713,13 +737,13 @@ function UnreadTopics()
 				INNER JOIN {db_prefix}log_topics AS lt (lt.id_topic = t.id_topic)
 			WHERE lt.id_member = {int:current_member}
 				AND t.' . $query_this_board . (!empty($earliest_msg) ? '
-				AND t.id_last_msg > {int:inject_int_1}' : '') . '
+				AND t.id_last_msg > {int:earliest_msg}' : '') . '
 				AND t.approved = {int:inject_int_2}',
-			array(
+			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $earliest_msg,
-				'inject_int_2' => 1,
-			)
+				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
+				'is_approved' => 1,
+			))
 		);
 		list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -763,37 +787,37 @@ function UnreadTopics()
 				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 			WHERE t.' . $query_this_board . '
-				AND t.id_last_msg >= {int:inject_int_1}
+				AND t.id_last_msg >= {int:min_message}
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-				AND t.approved = {int:inject_int_2}
+				AND t.approved = {int:is_approved}
 			ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
 			LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
-			array(
+			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $min_message,
-				'inject_int_2' => 1,
-			)
+				'min_message' => $min_message,
+				'is_approved' => 1,
+			))
 		);
 	}
 	elseif ($is_topics)
 	{
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*), MIN(t.id_last_msg)
-			FROM {db_prefix}topics AS t' . ($have_temp_table ? '
+			FROM {db_prefix}topics AS t' . (!empty($have_temp_table) ? '
 				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)' : '
 				LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})') . '
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 			WHERE t.' . $query_this_board . ($context['showing_all_topics'] && !empty($earliest_msg) ? '
-				AND t.id_last_msg > {int:inject_int_1}' : '
-				AND t.id_last_msg > {int:inject_int_2}') . '
+				AND t.id_last_msg > {int:earliest_msg}' : '
+				AND t.id_last_msg > {int:id_msg_last_visit}') . '
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-				AND t.approved = {int:inject_int_3}',
-			array(
+				AND t.approved = {int:is_approved}',
+			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $earliest_msg,
-				'inject_int_2' => $_SESSION['id_msg_last_visit'],
-				'inject_int_3' => 1,
-			)
+				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
+				'id_msg_last_visit' => $_SESSION['id_msg_last_visit'],
+				'is_approved' => 1,
+			))
 		);
 		list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -833,21 +857,21 @@ function UnreadTopics()
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 				LEFT JOIN {db_prefix}members AS mems ON (mems.id_member = ms.id_member)
-				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)' . ($have_temp_table ? '
+				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)' . (!empty($have_temp_table) ? '
 				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)' : '
 				LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})') . '
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 			WHERE t.' . $query_this_board . '
-				AND t.id_last_msg >= {int:inject_int_1}
+				AND t.id_last_msg >= {int:min_message}
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < ml.id_msg
-				AND t.approved = {int:inject_int_2}
+				AND t.approved = {int:is_approved}
 			ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
 			LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
-			array(
+			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $min_message,
-				'inject_int_2' => 1,
-			)
+				'min_message' => $min_message,
+				'is_approved' => 1,
+			))
 		);
 	}
 	else
@@ -868,19 +892,19 @@ function UnreadTopics()
 
 			$sortKey_joins = array(
 				'ms.subject' => '
-					INNER JOIN ' . $db_prefix . 'messages AS ms ON (ms.id_msg = t.id_first_msg)',
+					INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)',
 				'IFNULL(mems.real_name, ms.poster_name)' => '
-					INNER JOIN ' . $db_prefix . 'messages AS ms ON (ms.id_msg = t.id_first_msg)
-					LEFT JOIN ' . $db_prefix . 'members AS mems ON (mems.id_member = ms.id_member)',
+					INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
+					LEFT JOIN {db_prefix}members AS mems ON (mems.id_member = ms.id_member)',
 			);
 
 			// The main benefit of this temporary table is not that it's faster; it's that it avoids locks later.
 			$have_temp_table = $smfFunc['db_query']('', '
 				CREATE TEMPORARY TABLE {db_prefix}topics_posted_in (
-					id_topic mediumint(8) unsigned NOT NULL default \'0\',
-					id_board smallint(5) unsigned NOT NULL default \'0\',
-					id_last_msg int(10) unsigned NOT NULL default \'0\',
-					id_msg int(10) unsigned NOT NULL default \'0\',
+					id_topic mediumint(8) unsigned NOT NULL default {string:string_zero},
+					id_board smallint(5) unsigned NOT NULL default {string:string_zero},
+					id_last_msg int(10) unsigned NOT NULL default {string:string_zero},
+					id_msg int(10) unsigned NOT NULL default {string:string_zero},
 					PRIMARY KEY (id_topic)
 				)
 				SELECT t.id_topic, t.id_board, t.id_last_msg, IFNULL(lmr.id_msg, 0) AS id_msg' . (!in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? ', ' . $_REQUEST['sort'] . ' AS sortKey' : '') . '
@@ -889,12 +913,13 @@ function UnreadTopics()
 					LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})' . (isset($sortKey_joins[$_REQUEST['sort']]) ? $sortKey_joins[$_REQUEST['sort']] : '') . '
 				WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
 					AND t.id_board = {int:current_board}' : '') . '
-					AND t.approved = {int:inject_int_1}
+					AND t.approved = {int:is_approved}
 				GROUP BY m.id_topic',
 				array(
 					'current_board' => $board,
 					'current_member' => $user_info['id'],
-					'inject_int_1' => 1,
+					'is_approved' => 1,
+					'string_zero' => '0',
 				)
 			);
 			list ($num_topics) = $smfFunc['db_fetch_row']($request);
@@ -911,11 +936,11 @@ function UnreadTopics()
 				WHERE t.' . $query_this_board . '
 					AND m.id_member = {int:current_member}
 					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-					AND t.approved = {int:inject_int_1}',
-				array(
+					AND t.approved = {int:is_approved}',
+				array_merge($query_parameters, array(
 					'current_member' => $user_info['id'],
-					'inject_int_1' => 1,
-				)
+					'is_approved' => 1,
+				))
 			);
 			list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -956,8 +981,7 @@ function UnreadTopics()
 					AND IFNULL(lt.id_msg, t.id_msg) < t.id_last_msg
 				ORDER BY ' . (in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? $_REQUEST['sort'] : 't.sortKey') . ($ascending ? '' : ' DESC') . '
 				LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
-				array(
-				)
+				$query_parameters
 			);
 		else
 			$request = $smfFunc['db_query']('', '
@@ -969,16 +993,16 @@ function UnreadTopics()
 					LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
 					LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 				WHERE t.' . $query_this_board . '
-					AND t.id_last_msg >= {int:inject_int_1}
+					AND t.id_last_msg >= {int:min_message}
 					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-					AND t.approved = {int:inject_int_2}
+					AND t.approved = {int:is_approved}
 				ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
 				LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
-				array(
+				array_merge($query_parameters, array(
 					'current_member' => $user_info['id'],
-					'inject_int_1' => (int) $min_message,
-					'inject_int_2' => 1,
-				)
+					'min_message' => (int) $min_message,
+					'is_approved' => 1,
+				))
 			);
 
 		$topics = array();
@@ -1007,12 +1031,12 @@ function UnreadTopics()
 				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)
 				LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
-			WHERE t.id_topic IN ({array_int:inject_array_int_1})
+			WHERE t.id_topic IN ({array_int:topic_list})
 			ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
 			LIMIT ' . count($topics),
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $topics,
+				'topic_list' => $topics,
 			)
 		);
 	}
@@ -1156,11 +1180,11 @@ function UnreadTopics()
 		$result = $smfFunc['db_query']('', '
 			SELECT id_topic
 			FROM {db_prefix}messages
-			WHERE id_topic IN ({array_int:inject_array_int_1})
+			WHERE id_topic IN ({array_int:topic_list})
 				AND id_member = {int:current_member}',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $topic_ids,
+				'topic_list' => $topic_ids,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))

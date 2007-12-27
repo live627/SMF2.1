@@ -363,14 +363,14 @@ function determineActions($urls)
 					SELECT m.id_topic, m.subject
 					FROM {db_prefix}messages AS m
 						INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = {int:inject_int_1})
-					WHERE m.id_msg = {int:inject_int_2}
+						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = {int:is_approved})
+					WHERE m.id_msg = {int:id_msg}
 						AND ' . $user_info['query_see_board'] . '
-						AND m.approved = {int:inject_int_1}
+						AND m.approved = {int:is_approved}
 					LIMIT 1',
 					array(
-						'inject_int_1' => 1,
-						'inject_int_2' => $msgid,
+						'is_approved' => 1,
+						'id_msg' => $msgid,
 					)
 				);
 				list ($id_topic, $subject) = $smfFunc['db_fetch_row']($result);
@@ -406,12 +406,12 @@ function determineActions($urls)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			WHERE ' . $user_info['query_see_board'] . '
-				AND t.id_topic IN ({array_int:inject_array_int_1})
-				AND t.approved = {int:inject_int_1}
+				AND t.id_topic IN ({array_int:topic_list})
+				AND t.approved = {int:is_approved}
 			LIMIT ' . count($topic_ids),
 			array(
-				'inject_array_int_1' => array_keys($topic_ids),
-				'inject_int_1' => 1,
+				'topic_list' => array_keys($topic_ids),
+				'is_approved' => 1,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -430,10 +430,10 @@ function determineActions($urls)
 			SELECT b.id_board, b.name
 			FROM {db_prefix}boards AS b
 			WHERE ' . $user_info['query_see_board'] . '
-				AND b.id_board IN ({array_int:inject_array_int_1})
+				AND b.id_board IN ({array_int:board_list})
 			LIMIT ' . count($board_ids),
 			array(
-				'inject_array_int_1' => array_keys($board_ids),
+				'board_list' => array_keys($board_ids),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -451,10 +451,10 @@ function determineActions($urls)
 		$result = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
 			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:inject_array_int_1})
+			WHERE id_member IN ({array_int:member_list})
 			LIMIT ' . count($profile_ids),
 			array(
-				'inject_array_int_1' => array_keys($profile_ids),
+				'member_list' => array_keys($profile_ids),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
