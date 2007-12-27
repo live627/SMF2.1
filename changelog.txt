@@ -5,7 +5,6 @@ SMF 2.0 Beta 2                                                               ???
 ================================================================================
 December 2007
 --------------------------------------------------------------------------------
- + Add the ability to use multiple attachment paths. (Display.php, ManageAttachments.php, ManageServer.php, Post.php, Subs-Post.php, Subs.php, Admin template, ManageAttachments template, Admin language files, install, upgrade)
  ! Rich text editor works again in Firefox. (Subs-Editor.php, script.js)
  + Added new auto suggest control for easily adding an auto suggest box. (index.php, suggest.js, Subs-Editor.php, GenericControls template)
  ! Changed the personal message sending template to use auto suggest. (PersonalMessage.php, PersonalMessage template, PersonalMessage language files)
@@ -133,6 +132,7 @@ December 2007
  ! Use the generic list function for the user notification lists. (Profile-Modify.php, Profile template)
  ! Ordered lists weren't necessarily getting converted back to BBC as one might like. (Subs-Editor.php)
  ! Use the generic list function for viewing group requests and watched members. (Groups.php, ModerationCenter.php, ModerationCenter template, ManageMembergroups template)
+ + Add the ability to use multiple attachment paths. (Display.php, ManageAttachments.php, ManageServer.php, Post.php, Subs-Post.php, Subs.php, Admin template, ManageAttachments template, Admin language files, install, upgrade)
  ! Add an option for showing search engines on the board index and who's online list. (Subs-MembersOnline.php, Who.php, SSI.php, ManageSearchEngines.php, upgrade and install scripts)
  ! Upgrade wasn't checking for a 2.0 specific file when trying to find out of date ones. (upgrade.php) [Bug 1150]
  ! If anything other than null is passed as include_boards in SSI recentTopics use it in the query. (SSI.php) [Bug 1152]
