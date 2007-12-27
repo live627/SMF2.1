@@ -126,12 +126,12 @@ function UnapprovedPosts()
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			LEFT JOIN {db_prefix}boards AS b ON (t.id_board = b.id_board)
-			WHERE m.id_msg IN ({array_int:inject_array_int_1})
-				AND m.approved = {int:inject_int_1}
+			WHERE m.id_msg IN ({array_int:message_list})
+				AND m.approved = {int:not_approved}
 				AND ' . $user_info['query_see_board'],
 			array(
-				'inject_array_int_1' => $toAction,
-				'inject_int_1' => 0,
+				'message_list' => $toAction,
+				'not_approved' => 0,
 			)
 		);
 		$toAction = array();
@@ -197,11 +197,11 @@ function UnapprovedPosts()
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.id_first_msg != m.id_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE m.approved = {int:inject_int_1}
+		WHERE m.approved = {int:not_approved}
 			AND ' . $user_info['query_see_board'] . '
 			' . $approve_query,
 		array(
-			'inject_int_1' => 0,
+			'not_approved' => 0,
 		)
 	);
 	list ($context['total_unapproved_posts']) = $smfFunc['db_fetch_row']($request);
@@ -212,11 +212,11 @@ function UnapprovedPosts()
 		SELECT COUNT(m.id_topic)
 		FROM {db_prefix}topics AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE m.approved = {int:inject_int_1}
+		WHERE m.approved = {int:not_approved}
 			AND ' . $user_info['query_see_board'] . '
 			' . $approve_query,
 		array(
-			'inject_int_1' => 0,
+			'not_approved' => 0,
 		)
 	);
 	list ($context['total_unapproved_topics']) = $smfFunc['db_fetch_row']($request);
@@ -253,13 +253,13 @@ function UnapprovedPosts()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE m.approved = {int:inject_int_1}
+		WHERE m.approved = {int:not_approved}
 			AND t.id_first_msg ' . ($context['current_view'] == 'topics' ? '=' : '!=') . ' m.id_msg
 			AND ' . $user_info['query_see_board'] . '
 			' . $approve_query . '
 		LIMIT ' . $context['start'] . ', 10',
 		array(
-			'inject_int_1' => 0,
+			'not_approved' => 0,
 		)
 	);
 	$context['unapproved_items'] = array();
@@ -355,14 +355,15 @@ function UnapprovedAttachments()
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				LEFT JOIN {db_prefix}boards AS board ON (m.id_board = b.id_board)
-			WHERE a.id_attach IN ({array_int:inject_array_int_1})
-				AND a.approved = {int:inject_int_1}
-				AND a.attachment_type = {int:inject_int_1}
+			WHERE a.id_attach IN ({array_int:attachments})
+				AND a.approved = {int:not_approved}
+				AND a.attachment_type = {int:attachment_type}
 				AND ' . $user_info['query_see_board'] . '
 				' . $approve_query,
 			array(
-				'inject_array_int_1' => $attachments,
-				'inject_int_1' => 0,
+				'attachments' => $attachments,
+				'not_approved' => 0,
+				'attachment_type' => 0,
 			)
 		);
 		$attachments = array();
@@ -386,12 +387,13 @@ function UnapprovedAttachments()
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE a.approved = {int:inject_int_1}
-			AND a.attachment_type = {int:inject_int_1}
+		WHERE a.approved = {int:not_approved}
+			AND a.attachment_type = {int:attachment_type}
 			AND ' . $user_info['query_see_board'] . '
 			' . $approve_query,
 		array(
-			'inject_int_1' => 0,
+			'not_approved' => 0,
+			'attachment_type' => 0,
 		)
 	);
 	list ($context['total_unapproved_attachments']) = $smfFunc['db_fetch_row']($request);
@@ -411,13 +413,14 @@ function UnapprovedAttachments()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE a.approved = {int:inject_int_1}
-			AND a.attachment_type = {int:inject_int_1}
+		WHERE a.approved = {int:not_approved}
+			AND a.attachment_type = {int:attachment_type}
 			AND ' . $user_info['query_see_board'] . '
 			' . $approve_query . '
 		LIMIT ' . $context['start'] . ', 10',
 		array(
-			'inject_int_1' => 0,
+			'not_approved' => 0,
+			'attachment_type' => 0,
 		)
 	);
 	$context['unapproved_items'] = array();
@@ -476,12 +479,12 @@ function ApproveMessage()
 		SELECT t.id_member_started, t.id_first_msg, m.id_member, m.subject, m.approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-		WHERE m.id_msg = {int:inject_int_1}
+		WHERE m.id_msg = {int:id_msg}
 			AND m.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $_REQUEST['msg'],
+			'id_msg' => $_REQUEST['msg'],
 		)
 	);
 	list ($starter, $first_msg, $poster, $subject, $approved) = $smfFunc['db_fetch_row']($request);

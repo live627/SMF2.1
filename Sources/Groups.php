@@ -98,13 +98,13 @@ function GroupList()
 			mg.stars, IFNULL(gm.id_member, 0) AS can_moderate
 		FROM {db_prefix}membergroups AS mg
 			LEFT JOIN {db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = {int:current_member})
-		WHERE mg.min_posts = {int:inject_int_1}
-			AND mg.id_group != {int:inject_int_2}
+		WHERE mg.min_posts = {int:min_posts}
+			AND mg.id_group != {int:mod_group}
 		ORDER BY group_name',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_int_1' => -1,
-			'inject_int_2' => 3,
+			'min_posts' => -1,
+			'mod_group' => 3,
 		)
 	);
 	// This is where we store our groups.
@@ -140,10 +140,10 @@ function GroupList()
 		$query = $smfFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS num_members
 			FROM {db_prefix}members
-			WHERE id_group IN ({array_int:inject_array_int_1})
+			WHERE id_group IN ({array_int:group_list})
 			GROUP BY id_group',
 			array(
-				'inject_array_int_1' => $group_ids,
+				'group_list' => $group_ids,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -156,14 +156,14 @@ function GroupList()
 			$query = $smfFunc['db_query']('', '
 				SELECT mg.id_group, COUNT(*) AS num_members
 				FROM {db_prefix}membergroups AS mg
-					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:inject_string_1}
+					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_screen}
 						AND mem.id_group != mg.id_group
 						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
-				WHERE mg.id_group IN ({array_int:inject_array_int_1})
+				WHERE mg.id_group IN ({array_int:group_list})
 				GROUP BY mg.id_group',
 				array(
-					'inject_array_int_1' => $group_ids,
-					'inject_string_1' => '',
+					'group_list' => $group_ids,
+					'blank_screen' => '',
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -189,14 +189,14 @@ function MembergroupMembers()
 
 	// Load up the group details.
 	$request = $smfFunc['db_query']('', '
-		SELECT id_group AS id, group_name AS name, min_posts = {int:inject_int_1} AS assignable, hidden, online_color,
-			stars, description, min_posts != {int:inject_int_1} AS is_post_group
+		SELECT id_group AS id, group_name AS name, min_posts = {int:min_posts} AS assignable, hidden, online_color,
+			stars, description, min_posts != {int:min_posts} AS is_post_group
 		FROM {db_prefix}membergroups
-		WHERE id_group = {int:inject_int_2}
+		WHERE id_group = {int:id_group}
 		LIMIT 1',
 		array(
-			'inject_int_1' => -1,
-			'inject_int_2' => $_REQUEST['group'],
+			'min_posts' => -1,
+			'id_group' => $_REQUEST['group'],
 		)
 	);
 	// Doesn't exist?
@@ -220,9 +220,9 @@ function MembergroupMembers()
 		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}group_moderators AS mods
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-		WHERE mods.id_group = {int:inject_int_1}',
+		WHERE mods.id_group = {int:id_group}',
 		array(
-			'inject_int_1' => $_REQUEST['group'],
+			'id_group' => $_REQUEST['group'],
 		)
 	);
 	$context['group']['moderators'] = array();
@@ -267,6 +267,7 @@ function MembergroupMembers()
 		checkSession();
 
 		$member_query = array();
+		$member_parameters = array();
 
 		// Get all the members to be added... taking into account names can be quoted ;)
 		$_REQUEST['toAdd'] = strtr($smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['toAdd']), ENT_QUOTES)), array('&quot;' => '"'));
@@ -290,11 +291,15 @@ function MembergroupMembers()
 
 		// Construct the query pelements.
 		if (!empty($member_ids))
-			$member_query[] = 'id_member IN (' . implode(',', $member_ids) . ')';
+		{
+			$member_query[] = 'id_member IN ({array_int:member_ids})';
+			$member_parameters['member_ids'] = $member_ids;
+		}
 		if (!empty($member_names))
 		{
-			$member_query[] = 'LOWER(member_name) IN (\'' . implode('\', \'', $member_names) . '\')';
-			$member_query[] = 'LOWER(real_name) IN (\'' . implode('\', \'', $member_names) . '\')';
+			$member_query[] = 'LOWER(member_name) IN ({array_string:member_names})';
+			$member_query[] = 'LOWER(real_name) IN ({array_string:member_names})';
+			$member_parameters['member_names'] = $member_names;
 		}
 
 		$members = array();
@@ -304,12 +309,11 @@ function MembergroupMembers()
 				SELECT id_member
 				FROM {db_prefix}members
 				WHERE (' . implode(' OR ', $member_query) . ')
-					AND id_group != {int:inject_int_1}
-					AND NOT FIND_IN_SET({string:inject_string_1}, additional_groups)',
-				array(
-					'inject_int_1' => $_REQUEST['group'],
-					'inject_string_1' => $_REQUEST['group'],
-				)
+					AND id_group != {int:id_group}
+					AND NOT FIND_IN_SET({int:id_group}, additional_groups)',
+				array_merge($member_parameters, array(
+					'id_group' => $_REQUEST['group'],
+				))
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$members[] = $row['id_member'];
@@ -352,9 +356,9 @@ function MembergroupMembers()
 
 	// The where on the query is interesting. Non-moderators should only see people who are in this group as primary.
 	if ($context['group']['can_moderate'])
-		$where = $context['group']['is_post_group'] ? 'id_post_group = ' . $_REQUEST['group'] : 'id_group = ' . $_REQUEST['group'] . ' OR FIND_IN_SET(' . $_REQUEST['group'] . ', additional_groups)';
+		$where = $context['group']['is_post_group'] ? 'id_post_group = {int:group}' : 'id_group = {int:group} OR FIND_IN_SET({int:group}, additional_groups)';
 	else
-		$where = $context['group']['is_post_group'] ? 'id_post_group = ' . $_REQUEST['group'] : 'id_group = ' . $_REQUEST['group'];
+		$where = $context['group']['is_post_group'] ? 'id_post_group = {int:group}' : 'id_group = {int:group}';
 
 	// Count members of the group.
 	$request = $smfFunc['db_query']('', '
@@ -362,6 +366,7 @@ function MembergroupMembers()
 		FROM {db_prefix}members
 		WHERE ' . $where,
 		array(
+			'group' => $_REQUEST['group'],
 		)
 	);
 	list ($context['total_members']) = $smfFunc['db_fetch_row']($request);
@@ -381,6 +386,7 @@ function MembergroupMembers()
 		ORDER BY ' . $querySort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . '
 		LIMIT ' . $context['start'] . ', ' . $modSettings['defaultMaxMembers'],
 		array(
+			'group' => $_REQUEST['group'],
 		)
 	);
 	$context['members'] = array();
@@ -435,6 +441,7 @@ function GroupRequests()
 
 	// Normally, we act normally...
 	$where = $user_info['mod_cache']['gq'] == '1=1' || $user_info['mod_cache']['gq'] == '0=1' ? $user_info['mod_cache']['gq'] : 'lgr.' . $user_info['mod_cache']['gq'];
+	$where_parameters = array();
 
 	// We've submitted?
 	if (isset($_POST['sc']) && !empty($_POST['groupr']) && !empty($_POST['req_action']))
@@ -451,7 +458,8 @@ function GroupRequests()
 			// Different sub template...
 			$context['sub_template'] = 'group_request_reason';
 			// And a limitation. We don't care that the page number bit makes no sense, as we don't need it!
-			$where .= ' AND lgr.id_request IN (' . implode(',', $_POST['groupr']) . ')';
+			$where .= ' AND lgr.id_request IN ({array_int:request_ids})';
+			$where_parameters['request_ids'] = $_POST['groupr'];
 		}
 		// Otherwise we do something!
 		else
@@ -465,10 +473,10 @@ function GroupRequests()
 					INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 					INNER JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 				WHERE ' . $where . '
-					AND lgr.id_request IN ({array_int:inject_array_int_1})
+					AND lgr.id_request IN ({array_int:request_list})
 				ORDER BY mem.lngfile',
 				array(
-					'inject_array_int_1' => $_POST['groupr'],
+					'request_list' => $_POST['groupr'],
 				)
 			);
 			$email_details = array();
@@ -521,9 +529,9 @@ function GroupRequests()
 			// Remove the evidence...
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_group_requests
-				WHERE id_request IN ({array_int:inject_array_int_1})',
+				WHERE id_request IN ({array_int:request_list})',
 				array(
-					'inject_array_int_1' => $_POST['groupr'],
+					'request_list' => $_POST['groupr'],
 				)
 			);
 
@@ -621,12 +629,14 @@ function GroupRequests()
 			'function' => 'list_getGroupRequests',
 			'params' => array(
 				$where,
+				$where_parameters,
 			),
 		),
 		'get_count' => array(
 			'function' => 'list_getGroupRequestCount',
 			'params' => array(
 				$where,
+				$where_parameters,
 			),
 		),
 		'columns' => array(
@@ -711,7 +721,7 @@ function GroupRequests()
 	$context['default_list'] = 'group_request_list';
 }
 
-function list_getGroupRequestCount($where)
+function list_getGroupRequestCount($where, $where_parameters)
 {
 	global $smfFunc, $db_prefix;
 
@@ -720,6 +730,7 @@ function list_getGroupRequestCount($where)
 		FROM {db_prefix}log_group_requests AS lgr
 		WHERE ' . $where,
 		array(
+			$where_parameters
 		)
 	);
 	list ($totalRequests) = $smfFunc['db_fetch_row']($request);
@@ -728,7 +739,7 @@ function list_getGroupRequestCount($where)
 	return $totalRequests;
 }
 
-function list_getGroupRequests($start, $items_per_page, $sort, $where)
+function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_parameters)
 {
 	global $smfFunc, $db_prefix, $txt, $scripturl;
 
@@ -739,10 +750,11 @@ function list_getGroupRequests($start, $items_per_page, $sort, $where)
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 			INNER JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 		WHERE ' . $where . '
-		ORDER BY ' . $sort . '
+		ORDER BY {raw:sort}
 		LIMIT ' . $start . ', ' . $items_per_page,
-		array(
-		)
+		array_merge($where_parameters, array(
+			'sort' => $sort,
+		))
 	);
 	$group_requests = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))

@@ -234,11 +234,11 @@ function ModBlockWatchedUsers()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name, last_login
 			FROM {db_prefix}members
-			WHERE warning >= {int:inject_int_1}
+			WHERE warning >= {int:warning_watch}
 			ORDER BY last_login DESC
 			LIMIT 10',
 			array(
-				'inject_int_1' => $modSettings['warning_watch'],
+				'warning_watch' => $modSettings['warning_watch'],
 			)
 		);
 		$watched_users = array();
@@ -279,13 +279,16 @@ function ModBlockNotes()
 		if (!empty($_POST['new_note']) && $_POST['new_note'] !== $txt['mc_click_add_note'])
 		{
 			// Insert it into the database then!
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}log_comments
-					(id_member, member_name, comment_type, recipient_name, body, log_time)
-				VALUES
-					(' . $user_info['id'] . ', \'' . $user_info['name'] . '\', \'modnote\', \'\', \'' . $_POST['new_note'] . '\', ' . time() . ')',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'log_comments',
 				array(
-				)
+					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'recipient_name' => 'string',
+					'body' => 'string', 'log_time' => 'int',
+				),
+				array(
+					$user_info['id'], $user_info['name'], 'modnote', '', $_POST['new_note'], time(),
+				),
+				array('id_comment')
 			);
 
 			// Clear the cache.
@@ -301,11 +304,11 @@ function ModBlockNotes()
 				lc.log_time, lc.body
 			FROM {db_prefix}log_comments AS lc
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
-			WHERE lc.comment_type = {string:inject_string_1}
+			WHERE lc.comment_type = {string:modnote}
 			ORDER BY id_comment DESC
 			LIMIT 0, 15',
 			array(
-				'inject_string_1' => 'modnote',
+				'modnote' => 'modnote',
 			)
 		);
 		$moderator_notes = array();
@@ -353,12 +356,13 @@ function ModBlockReportedPosts()
 			FROM {db_prefix}log_reported AS lr
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 			WHERE ' . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . '
-				AND lr.closed = {int:inject_int_1}
-				AND lr.ignore_all = {int:inject_int_1}
+				AND lr.closed = {int:not_closed}
+				AND lr.ignore_all = {int:not_ignored}
 			ORDER BY lr.time_updated DESC
 			LIMIT 10',
 			array(
-				'inject_int_1' => 0,
+				'not_closed' => 0,
+				'not_ignored' => 0,
 			)
 		);
 		$reported_posts = array();
@@ -477,13 +481,13 @@ function ReportedPosts()
 		// Update the report...
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_reported
-			SET ' . (isset($_GET['ignore']) ? 'ignore_all = {int:inject_int_1}' : 'closed = {int:inject_int_2}') . '
-			WHERE id_report = {int:inject_int_3}
+			SET ' . (isset($_GET['ignore']) ? 'ignore_all = {int:ignore_all}' : 'closed = {int:closed}') . '
+			WHERE id_report = {int:id_report}
 				AND ' . $user_info['mod_cache']['bq'],
 			array(
-				'inject_int_1' => (int) $_GET['ignore'],
-				'inject_int_2' => (int) $_GET['close'],
-				'inject_int_3' => $_GET['rid'],
+				'ignore_all' => (int) $_GET['ignore'],
+				'closed' => (int) $_GET['close'],
+				'id_report' => $_GET['rid'],
 			)
 		);
 
@@ -504,12 +508,12 @@ function ReportedPosts()
 		{
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_reported
-				SET closed = {int:inject_int_1}
-				WHERE id_report IN ({array_int:inject_array_int_1})
+				SET closed = {int:is_closed}
+				WHERE id_report IN ({array_int:report_list})
 					AND ' . $user_info['mod_cache']['bq'],
 				array(
-					'inject_array_int_1' => $toClose,
-					'inject_int_1' => 1,
+					'report_list' => $toClose,
+					'is_closed' => 1,
 				)
 			);
 
@@ -523,10 +527,10 @@ function ReportedPosts()
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_reported AS lr
-		WHERE lr.closed = {int:inject_int_1}
+		WHERE lr.closed = {int:view_closed}
 			AND ' . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']),
 		array(
-			'inject_int_1' => $context['view_closed'],
+			'view_closed' => $context['view_closed'],
 		)
 	);
 	list ($context['total_reports']) = $smfFunc['db_fetch_row']($request);
@@ -543,12 +547,12 @@ function ReportedPosts()
 			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
 		FROM {db_prefix}log_reported AS lr
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
-		WHERE lr.closed = {int:inject_int_1}
+		WHERE lr.closed = {int:view_closed}
 			AND ' . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . '
 		ORDER BY lr.time_updated DESC
 		LIMIT ' . $context['start'] . ', 10',
 		array(
-			'inject_int_1' => $context['view_closed'],
+			'view_closed' => $context['view_closed'],
 		)
 	);
 	$context['reports'] = array();
@@ -586,9 +590,9 @@ function ReportedPosts()
 				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 			FROM {db_prefix}log_reported_comments AS lrc
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
-			WHERE lrc.id_report IN ({array_int:inject_array_int_1})',
+			WHERE lrc.id_report IN ({array_int:report_list})',
 			array(
-				'inject_array_int_1' => $report_ids,
+				'report_list' => $report_ids,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -646,10 +650,11 @@ function recountOpenReports()
 		SELECT COUNT(*)
 		FROM {db_prefix}log_reported
 		WHERE ' . $user_info['mod_cache']['bq'] . '
-			AND closed = {int:inject_int_1}
-			AND ignore_all = {int:inject_int_1}',
+			AND closed = {int:not_closed}
+			AND ignore_all = {int:not_ignored}',
 		array(
-			'inject_int_1' => 0,
+			'not_closed' => 0,
+			'not_ignored' => 0,
 		)
 	);
 	list ($open_reports) = $smfFunc['db_fetch_row']($request);
@@ -682,11 +687,11 @@ function ModReport()
 			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
 		FROM {db_prefix}log_reported AS lr
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
-		WHERE lr.id_report = {int:inject_int_1}
+		WHERE lr.id_report = {int:id_report}
 			AND ' . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . '
 		LIMIT 1',
 		array(
-			'inject_int_1' => $_REQUEST['report'],
+			'id_report' => $_REQUEST['report'],
 		)
 	);
 
@@ -728,9 +733,9 @@ function ModReport()
 			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 		FROM {db_prefix}log_reported_comments AS lrc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
-		WHERE lrc.id_report = {int:inject_int_1}',
+		WHERE lrc.id_report = {int:id_report}',
 		array(
-			'inject_int_1' => $context['report']['id'],
+			'id_report' => $context['report']['id'],
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -779,9 +784,9 @@ function ShowNotice()
 	$request = $smfFunc['db_query']('', '
 		SELECT body, subject
 		FROM {db_prefix}log_member_notices
-		WHERE id_notice = {int:inject_int_1}',
+		WHERE id_notice = {int:id_notice}',
 		array(
-			'inject_int_1' => $id_notice,
+			'id_notice' => $id_notice,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -1010,9 +1015,9 @@ function list_getWatchedUserCount($approve_query)
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}members
-		WHERE warning >= {int:inject_int_1}',
+		WHERE warning >= {int:warning_watch}',
 		array(
-			'inject_int_1' => $modSettings['warning_watch'],
+			'warning_watch' => $modSettings['warning_watch'],
 		)
 	);
 	list ($totalMembers) = $smfFunc['db_fetch_row']($request);
@@ -1028,11 +1033,12 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, last_login, posts, warning
 		FROM {db_prefix}members
-		WHERE warning >= {int:inject_int_1}
-		ORDER BY ' . $sort . '
+		WHERE warning >= {int:warning_watch}
+		ORDER BY {raw:sort}
 		LIMIT ' . $start . ', ' . $items_per_page,
 		array(
-			'inject_int_1' => $modSettings['warning_watch'],
+			'warning_watch' => $modSettings['warning_watch'],
+			'sort' => $sort,
 		)
 	);
 	$watched_users = array();
@@ -1058,14 +1064,14 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 			SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE m.id_member IN ({array_int:inject_array_int_1})
+			WHERE m.id_member IN ({array_int:member_list})
 				AND ' . $user_info['query_see_board'] . '
-				AND m.approved = {int:inject_int_1}
+				AND m.approved = {int:is_approved}
 			GROUP BY m.id_member
 			ORDER BY m.poster_time DESC',
 			array(
-				'inject_array_int_1' => $members,
-				'inject_int_1' => 1,
+				'member_list' => $members,
+				'is_approved' => 1,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1088,11 +1094,11 @@ function list_getWatchedUserPostsCount($approve_query)
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE mem.warning >= {int:inject_int_1}
+			WHERE mem.warning >= {int:warning_watch}
 				AND ' . $user_info['query_see_board'] . '
 				' . $approve_query,
 		array(
-			'inject_int_1' => $modSettings['warning_watch'],
+			'warning_watch' => $modSettings['warning_watch'],
 		)
 	);
 	list ($totalMemberPosts) = $smfFunc['db_fetch_row']($request);
@@ -1111,13 +1117,13 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE mem.warning >= {int:inject_int_1}
+		WHERE mem.warning >= {int:warning_watch}
 			AND ' . $user_info['query_see_board'] . '
 			' . $approve_query . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $start . ', ' . $items_per_page,
 		array(
-			'inject_int_1' => $modSettings['warning_watch'],
+			'warning_watch' => $modSettings['warning_watch'],
 		)
 	);
 	$member_posts = array();
@@ -1158,9 +1164,9 @@ function ViewWarningLog()
 	$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}log_comments
-			WHERE comment_type = {string:inject_string_1}',
+			WHERE comment_type = {string:warning}',
 			array(
-				'inject_string_1' => 'warning',
+				'warning' => 'warning',
 			)
 		);
 	list ($context['total_warnings']) = $smfFunc['db_fetch_row']($request);
@@ -1179,11 +1185,11 @@ function ViewWarningLog()
 		FROM {db_prefix}log_comments AS lc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
 			LEFT JOIN {db_prefix}members AS mem2 ON (mem2.id_member = lc.id_recipient)
-		WHERE lc.comment_type = {string:inject_string_1}
+		WHERE lc.comment_type = {string:warning}
 		ORDER BY lc.log_time DESC
 		LIMIT ' . $context['start'] . ', ' . $perPage,
 		array(
-			'inject_string_1' => 'warning',
+			'warning' => 'warning',
 		)
 	);
 	$context['warnings'] = array();
