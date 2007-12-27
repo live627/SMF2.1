@@ -164,7 +164,7 @@ if (!function_exists('text2words'))
 			$word = trim($word, '-_\'');
 
 			if ($word != '')
-				$returned_words[] = $smfFunc['db_escape_string'](substr($word, 0, 20));
+				$returned_words[] = substr($word, 0, 20);
 		}
 
 		return array_unique($returned_words);
@@ -1066,7 +1066,7 @@ function checkLogin()
 						$sha_passwd = $password;
 				}
 				else
-					$sha_passwd = sha1(strtolower($name) . un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd'])));
+					$sha_passwd = sha1(strtolower($name) . un_htmlspecialchars($_REQUEST['passwrd']));
 			}
 			else
 				$upcontext['username_incorrect'] = true;
@@ -1213,8 +1213,8 @@ function UpgradeOptions()
 
 		if (!empty($_POST['maintitle']))
 		{
-			$changes['mtitle'] = '\'' . addslashes($smfFunc['db_unescape_string']($_POST['maintitle'])) . '\'';
-			$changes['mmessage'] = '\'' . addslashes($smfFunc['db_unescape_string']($_POST['mainmessage'])) . '\'';
+			$changes['mtitle'] = '\'' . addslashes($_POST['maintitle']) . '\'';
+			$changes['mmessage'] = '\'' . addslashes($_POST['mainmessage']) . '\'';
 		}
 		else
 		{

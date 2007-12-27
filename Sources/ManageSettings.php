@@ -164,7 +164,7 @@ function ModifyCoreFeatures($return_config = false)
 				{
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}custom_fields
-						SET active = 0", __FILE__, __LINE__);
+						SET active = 0");
 				}
 			'),
 			'setting_callback' => create_function('$value', '

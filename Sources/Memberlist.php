@@ -381,7 +381,7 @@ function MLAll()
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_id_group} THEN mem.id_post_group ELSE mem.id_group END)' : '') . '
 		WHERE mem.is_activated = {int:is_activated}' . (empty($where) ? '' : '
 			AND ' . $where) . '
-		ORDER BY {string:sort}
+		ORDER BY {raw:sort}
 		LIMIT ' . $limit . ', ' . $modSettings['defaultMaxMembers'],
 		$query_parameters
 	);
