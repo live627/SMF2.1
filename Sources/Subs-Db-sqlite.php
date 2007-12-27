@@ -494,9 +494,11 @@ function db_error($db_string, $connection = null)
 }
 
 // Insert some data...
-function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection=null)
+function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
-	global $db_in_transact, $smfFunc;
+	global $db_in_transact, $db_connection, $smfFunc;
+
+	$connection = $connection === null ? $db_connection : $connection;
 
 	if (empty($data))
 		return;
@@ -514,24 +516,35 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $fil
 	// SQLite doesn't support replace or insert ignore so we need to work around it.
 	if ($method == 'replace')
 	{
+		// Setup an UPDATE template.
+		$updateData = '';
+		$where = ' ';
+		$count = 0;
+		foreach ($columns as $columnName => $type)
+		{
+			// Are we restricting the length?
+			if (strpos($type, 'string-') !== false)
+				$updateData .= sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count++);
+			else
+				$updateData .= sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count++);
+
+			// Has it got a key?
+			if (in_array($columnName, $keys))
+				$where .= (empty($where) ? '' : ' AND') . ' ' . $columnName . ' = ' . sprintf('{%1$s:%2$s}', $type, $count);
+		}
+		$updateData = substr($insertData, 0, -2);
+
 		// Try and update the entries.
 		foreach ($data as $k => $entry)
 		{
-			$sql = 'UPDATE ' . $table . ' SET';
-			$where = '';
-			foreach ($columns as $k1 => $v)
-			{
-				$sql .= ' ' . $v . ' = ' . $entry[$k1] . ', ';
-				// Has it got a key?
-				if (in_array($v, $keys))
-					$where .= (empty($where) ? '' : ' AND') . ' ' . $v . ' = ' . $entry[$k1];
-			}
-			$sql = substr($sql, 0, -2) . ' WHERE ' . $where;
+			$smfFunc['db_query']('', '
+				UPDATE ' . $table . '
+				SET ' . $updateData . '
+				' . $where,
+				$entry, $connection
+			);
 
-			$smfFunc['db_query']('', $sql,
-		array(
-		), $line
-	);
+			// Make a note that the replace actually overwrote.
 			if (smf_db_affected_rows() != 0)
 				unset($data[$k]);
 		}
@@ -539,15 +552,41 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $fil
 
 	if (!empty($data))
 	{
-		foreach ($data as $entry)
+		// Create the mold for a single row insert.
+		$insertData = '(';
+		foreach ($columns as $columnName => $type)
+		{
+			// Are we restricting the length?
+			if (strpos($type, 'string-') !== false)
+				$insertData .= sprintf('SUBSTR({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
+			else
+				$insertData .= sprintf('{%1$s:%2$s}, ', $type, $columnName);
+		}
+		$insertData = substr($insertData, 0, -2) . ')';
+
+		// Create an array consisting of only the columns.
+		$indexed_columns = array_keys($columns);
+
+		// Here's where the variables are injected to the query.
+		$insertRows = array();
+		foreach ($data as $dataRow)
+			$insertRows[] = smf_db_quote($insertData, array_combine($indexed_columns, $dataRow), $connection);
+
+		// Can't error on this if ignore.
+		if ($method == 'ignore')
+			$smfFunc['db_error_handler_return'] = false;
+
+		foreach ($insertRows as $entry)
+			// Do the insert.
 			$smfFunc['db_query']('', '
-				INSERT INTO ' . $table . '
-					(' . implode(', ', $columns) . ')
+				INSERT INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
 				VALUES
-					(' . implode(', ', $entry) . ')',
-				array(
-				), $line
+					' . $entry, 'security_override',
+				$connection
 			);
+
+		if ($method == 'ignore')
+			$smfFunc['db_error_handler_return'] = true;
 	}
 
 	if ($priv_trans)
