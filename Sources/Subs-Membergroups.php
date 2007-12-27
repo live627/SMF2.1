@@ -87,63 +87,63 @@ function deleteMembergroups($groups)
 	// Remove the membergroups themselves.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}membergroups
-		WHERE id_group IN ({array_int:inject_array_int_1})',
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
+			'group_list' => $groups,
 		)
 	);
 
 	// Remove the permissions of the membergroups.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}permissions
-		WHERE id_group IN ({array_int:inject_array_int_1})',
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
+			'group_list' => $groups,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}board_permissions
-		WHERE id_group IN ({array_int:inject_array_int_1})',
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
+			'group_list' => $groups,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}group_moderators
-		WHERE id_group IN ({array_int:inject_array_int_1})',
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
+			'group_list' => $groups,
 		)
 	);
 
 	// Delete any outstanding requests.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_group_requests
-		WHERE id_group IN ({array_int:inject_array_int_1})',
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
+			'group_list' => $groups,
 		)
 	);
 
 	// Update the primary groups of members.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}members
-		SET id_group = {int:inject_int_1}
-		WHERE id_group IN ({array_int:inject_array_int_1})',
+		SET id_group = {int:regular_group}
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
-			'inject_int_1' => 0,
+			'group_list' => $groups,
+			'regular_group' => 0,
 		)
 	);
 
 	// Update any inherited groups (Lose inheritance).
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}membergroups
-		SET id_parent = {int:inject_int_1}
-		WHERE id_parent IN ({array_int:inject_array_int_1})',
+		SET id_parent = {int:uninherited}
+		WHERE id_parent IN ({array_int:group_list})',
 		array(
-			'inject_array_int_1' => $groups,
-			'inject_int_1' => -2,
+			'group_list' => $groups,
+			'uninherited' => -2,
 		)
 	);
 
@@ -151,9 +151,9 @@ function deleteMembergroups($groups)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, additional_groups
 		FROM {db_prefix}members
-		WHERE FIND_IN_SET({string:inject_string_1}, additional_groups)',
+		WHERE FIND_IN_SET({raw:additional_groups_explode}, additional_groups)',
 		array(
-			'inject_string_1' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+			'additional_groups_explode' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
 		)
 	);
 	$updates = array();
@@ -168,9 +168,9 @@ function deleteMembergroups($groups)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_board, member_groups
 		FROM {db_prefix}boards
-		WHERE FIND_IN_SET({string:inject_string_1}, member_groups)',
+		WHERE FIND_IN_SET({raw:member_groups_explode}, member_groups)',
 		array(
-			'inject_string_1' => implode(', member_groups) OR FIND_IN_SET(', $groups),
+			'member_groups_explode' => implode(', member_groups) OR FIND_IN_SET(', $groups),
 		)
 	);
 	$updates = array();
@@ -181,11 +181,11 @@ function deleteMembergroups($groups)
 	foreach ($updates as $member_groups => $boardArray)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}boards
-			SET member_groups = {string:inject_string_1}
-			WHERE id_board IN ({array_int:inject_array_int_1})',
+			SET member_groups = {string:member_groups}
+			WHERE id_board IN ({array_int:board_lists})',
 			array(
-				'inject_array_int_1' => $boardArray,
-				'inject_string_1' => implode(',', array_diff(explode(',', $member_groups), $groups)),
+				'board_lists' => $boardArray,
+				'member_groups' => implode(',', array_diff(explode(',', $member_groups), $groups)),
 			)
 		);
 
@@ -237,16 +237,16 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET
-				id_group = {int:inject_int_1},
-				additional_groups = {string:inject_string_1}
-			WHERE id_member IN ({array_int:inject_array_int_1})' . (allowedTo('admin_forum') ? '' : '
-				AND id_group != {int:inject_int_2}
+				id_group = {int:regular_member},
+				additional_groups = {string:blank_string}
+			WHERE id_member IN ({array_int:member_list})' . (allowedTo('admin_forum') ? '' : '
+				AND id_group != {int:admin_group}
 				AND NOT FIND_IN_SET(1, additional_groups)'),
 			array(
-				'inject_array_int_1' => $members,
-				'inject_int_1' => 0,
-				'inject_int_2' => 1,
-				'inject_string_1' => '',
+				'member_list' => $members,
+				'regular_member' => 0,
+				'admin_group' => 1,
+				'blank_string' => '',
 			)
 		);
 
@@ -270,9 +270,9 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group
 		FROM {db_prefix}membergroups
-		WHERE min_posts != {int:inject_int_1}',
+		WHERE min_posts != {int:min_posts}',
 		array(
-			'inject_int_1' => -1,
+			'min_posts' => -1,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -293,13 +293,13 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	// First, reset those who have this as their primary group - this is the easy one.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}members
-		SET id_group = {int:inject_int_1}
-		WHERE id_group IN ({array_int:inject_array_int_1})
-			AND id_member IN ({array_int:inject_array_int_2})',
+		SET id_group = {int:regular_member}
+		WHERE id_group IN ({array_int:group_list})
+			AND id_member IN ({array_int:member_list})',
 		array(
-			'inject_array_int_1' => $groups,
-			'inject_array_int_2' => $members,
-			'inject_int_1' => 0,
+			'group_list' => $groups,
+			'member_list' => $members,
+			'regular_member' => 0,
 		)
 	);
 
@@ -307,12 +307,12 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, additional_groups
 		FROM {db_prefix}members
-		WHERE (FIND_IN_SET({string:inject_string_1}, additional_groups))
-			AND id_member IN ({array_int:inject_array_int_1})
+		WHERE (FIND_IN_SET({raw:additional_groups_implode}, additional_groups))
+			AND id_member IN ({array_int:member_list})
 		LIMIT ' . count($members),
 		array(
-			'inject_array_int_1' => $members,
-			'inject_string_1' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+			'member_list' => $members,
+			'additional_groups_implode' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
 		)
 	);
 	$updates = array();
@@ -323,11 +323,11 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	foreach ($updates as $additional_groups => $memberArray)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
-			SET additional_groups = {string:inject_string_1}
-			WHERE id_member IN ({array_int:inject_array_int_1})',
+			SET additional_groups = {string:additional_groups}
+			WHERE id_member IN ({array_int:member_list})',
 			array(
-				'inject_array_int_1' => $memberArray,
-				'inject_string_1' => implode(',', array_diff(explode(',', $additional_groups), $groups)),
+				'member_list' => $memberArray,
+				'additional_groups' => implode(',', array_diff(explode(',', $additional_groups), $groups)),
 			)
 		);
 
@@ -376,9 +376,9 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group
 		FROM {db_prefix}membergroups
-		WHERE min_posts != {int:inject_int_1}',
+		WHERE min_posts != {int:min_posts}',
 		array(
-			'inject_int_1' => -1,
+			'min_posts' => -1,
 		)
 	);
 	$implicitGroups = array(-1, 0, 3);
@@ -398,48 +398,49 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 	if ($type == 'only_additional')
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
-			SET additional_groups = CASE WHEN additional_groups = {string:inject_string_1} THEN \'' . $group . '\' ELSE CONCAT(additional_groups, \',' . $group . '\') END
-			WHERE id_member IN ({array_int:inject_array_int_1})
-				AND id_group != {int:inject_int_1}
-				AND NOT FIND_IN_SET({string:inject_string_2}, additional_groups)',
+			SET additional_groups = CASE WHEN additional_groups = {string:blank_string} THEN {string:id_group_string} ELSE CONCAT(additional_groups, {string:id_group_string_extend}) END
+			WHERE id_member IN ({array_int:member_list})
+				AND id_group != {int:id_group}
+				AND NOT FIND_IN_SET({int:id_group}, additional_groups)',
 			array(
-				'inject_array_int_1' => $members,
-				'inject_int_1' => $group,
-				'inject_string_1' => '',
-				'inject_string_2' => $group,
+				'member_list' => $members,
+				'id_group' => $group,
+				'id_group_string' => (string) $group,
+				'id_group_string_extend' => ',' . $group,
+				'blank_string' => '',
 			)
 		);
 	elseif ($type == 'only_primary' || $type == 'force_primary')
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
-			SET id_group = {int:inject_int_1}
-			WHERE id_member IN ({array_int:inject_array_int_1})' . ($type == 'force_primary' ? '' : '
-				AND id_group = {int:inject_int_2}
-				AND NOT FIND_IN_SET({string:inject_string_1}, additional_groups)'),
+			SET id_group = {int:id_group}
+			WHERE id_member IN ({array_int:member_list})' . ($type == 'force_primary' ? '' : '
+				AND id_group = {int:regular_group}
+				AND NOT FIND_IN_SET({int:id_group}, additional_groups)'),
 			array(
-				'inject_array_int_1' => $members,
-				'inject_int_1' => $group,
-				'inject_int_2' => 0,
-				'inject_string_1' => $group,
+				'member_list' => $members,
+				'id_group' => $group,
+				'regular_group' => 0,
 			)
 		);
 	elseif ($type == 'auto')
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET
-				additional_groups = CASE WHEN id_group = {int:inject_int_1} THEN additional_groups
-					WHEN additional_groups = {string:inject_string_1} THEN \'' . $group . '\'
-					ELSE CONCAT(additional_groups, \',' . $group . '\') END,
-				id_group = CASE WHEN id_group = {int:inject_int_1} THEN ' . $group . ' ELSE id_group END
-			WHERE id_member IN ({array_int:inject_array_int_1})
-				AND id_group != {int:inject_int_2}
-				AND NOT FIND_IN_SET({string:inject_string_2}, additional_groups)',
+				additional_groups = CASE WHEN id_group = {int:id_group} THEN additional_groups
+					WHEN additional_groups = {string:blank_string} THEN {string:id_group_string}
+					ELSE CONCAT(additional_groups, {string:id_group_string_extend}) END,
+				id_group = CASE WHEN id_group = {int:regular_group} THEN {int:id_group} ELSE id_group END
+			WHERE id_member IN ({array_int:member_list})
+				AND id_group != {int:id_group}
+				AND NOT FIND_IN_SET({int:id_group}, additional_groups)',
 			array(
-				'inject_array_int_1' => $members,
-				'inject_int_1' => 0,
-				'inject_int_2' => $group,
-				'inject_string_1' => '',
-				'inject_string_2' => $group,
+				'member_list' => $members,
+				'regular_group' => 0,
+				'id_group' => $group,
+				'blank_string' => '',
+				'id_group_string' => (string) $group,
+				'id_group_string_extend' => ',' . $group,
 			)
 		);
 	// Ack!!?  What happened?
@@ -459,11 +460,10 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name
 		FROM {db_prefix}members
-		WHERE id_group = {int:inject_int_1} OR FIND_IN_SET({string:inject_string_1}, additional_groups)' . ($limit === null ? '' : '
+		WHERE id_group = {int:id_group} OR FIND_IN_SET({int:id_group}, additional_groups)' . ($limit === null ? '' : '
 		LIMIT ' . ($limit + 1)),
 		array(
-			'inject_int_1' => $membergroup,
-			'inject_string_1' => $membergroup,
+			'id_group' => $membergroup,
 		)
 	);
 	$members = array();
@@ -489,15 +489,15 @@ function cache_getMembergroupList()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name, online_color
 		FROM {db_prefix}membergroups
-		WHERE min_posts = {int:inject_int_1}
-			AND hidden = {int:inject_int_2}
-			AND id_group != {int:inject_int_3}
-			AND online_color != {string:inject_string_1}',
+		WHERE min_posts = {int:min_posts}
+			AND hidden = {int:not_hidden}
+			AND id_group != {int:mod_group}
+			AND online_color != {string:blank_string}',
 		array(
-			'inject_int_1' => -1,
-			'inject_int_2' => 0,
-			'inject_int_3' => 3,
-			'inject_string_1' => '',
+			'min_posts' => -1,
+			'not_hidden' => 0,
+			'mod_group' => 3,
+			'blank_string' => '',
 		)
 	);
 	$groupCache = array();
@@ -523,8 +523,9 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 		SELECT id_group, group_name, min_posts, online_color, stars, 0 as num_members
 		FROM {db_prefix}membergroups
 		WHERE min_posts ' . ($membergroup_type === 'post_count' ? '!=' : '=') . ' -1
-		ORDER BY ' . $sort,
+		ORDER BY {raw:sort}',
 		array(
+			'sort' => $sort,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -539,10 +540,10 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 			$query = $smfFunc['db_query']('', '
 				SELECT id_post_group AS id_group, COUNT(*) AS num_members
 				FROM {db_prefix}members
-				WHERE id_post_group IN ({array_int:inject_array_int_1})
+				WHERE id_post_group IN ({array_int:group_list})
 				GROUP BY id_post_group',
 				array(
-					'inject_array_int_1' => array_keys($groups),
+					'group_list' => array_keys($groups),
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -555,10 +556,10 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 			$query = $smfFunc['db_query']('', '
 				SELECT id_group, COUNT(*) AS num_members
 				FROM {db_prefix}members
-				WHERE id_group IN ({array_int:inject_array_int_1})
+				WHERE id_group IN ({array_int:group_list})
 				GROUP BY id_group',
 				array(
-					'inject_array_int_1' => array_keys($groups),
+					'group_list' => array_keys($groups),
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -568,14 +569,14 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 			$query = $smfFunc['db_query']('', '
 				SELECT mg.id_group, COUNT(*) AS num_members
 				FROM {db_prefix}membergroups AS mg
-					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:inject_string_1}
+					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
 						AND mem.id_group != mg.id_group
 						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
-				WHERE mg.id_group IN ({array_int:inject_array_int_1})
+				WHERE mg.id_group IN ({array_int:group_list})
 				GROUP BY mg.id_group',
 				array(
-					'inject_array_int_1' => array_keys($groups),
-					'inject_string_1' => '',
+					'group_list' => array_keys($groups),
+					'blank_string' => '',
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
