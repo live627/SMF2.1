@@ -104,18 +104,18 @@ function PlushSearch1()
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
-			$context['search_params'][$k] = $smfFunc['db_unescape_string']($v);
+			$context['search_params'][$k] = $v;
 		}
 		if (isset($context['search_params']['brd']))
 			$context['search_params']['brd'] = $context['search_params']['brd'] == '' ? array() : explode(',', $context['search_params']['brd']);
 	}
 	if (isset($_REQUEST['search']))
-		$context['search_params']['search'] = $smfFunc['db_unescape_string'](un_htmlspecialchars($_REQUEST['search']));
+		$context['search_params']['search'] = un_htmlspecialchars($_REQUEST['search']);
 
 	if (isset($context['search_params']['search']))
 		$context['search_params']['search'] = htmlspecialchars($context['search_params']['search']);
 	if (isset($context['search_params']['userspec']))
-		$context['search_params']['userspec'] = htmlspecialchars($smfFunc['db_unescape_string']($context['search_params']['userspec']));
+		$context['search_params']['userspec'] = htmlspecialchars($context['search_params']['userspec']);
 	if (!empty($context['search_params']['searchtype']))
 		$context['search_params']['searchtype'] = 2;
 	if (!empty($context['search_params']['minage']))
@@ -216,13 +216,14 @@ function PlushSearch1()
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
-			WHERE t.id_topic = {int:inject_int_1}
-				AND ' . $user_info['query_see_board'] . '
-				AND t.approved = {int:inject_int_2}
+			WHERE t.id_topic = {int:search_topic_id}
+				AND {raw:boards_allowed_to_see}
+				AND t.approved = {int:is_approved_true}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $context['search_params']['topic'],
-				'inject_int_2' => 1,
+				'is_approved_true' => 1,
+				'boards_allowed_to_see' => $user_info['query_see_board'],
+				'search_topic_id' => $context['search_params']['topic'],
 			)
 		);
 
@@ -313,8 +314,9 @@ function PlushSearch2()
 		// Try to determine the minimum number of letters for a fulltext search.
 		$request = $smfFunc['db_search_query']('max_fulltext_length', '
 			SHOW VARIABLES
-			LIKE \'ft_min_word_len\'',
+			LIKE {string:fulltext_minimum_word_length}',
 			array(
+				'fulltext_minimum_word_length' => 'ft_min_word_len',
 			)
 		);
 		if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
@@ -352,7 +354,7 @@ function PlushSearch2()
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
-			$search_params[$k] = $smfFunc['db_unescape_string']($v);
+			$search_params[$k] = $v;
 		}
 		if (isset($search_params['brd']))
 			$search_params['brd'] = empty($search_params['brd']) ? array() : explode(',', $search_params['brd']);
@@ -388,13 +390,13 @@ function PlushSearch2()
 		$request = $smfFunc['db_query']('', '
 			SELECT ' . (empty($search_params['maxage']) ? '0, ' : 'IFNULL(MIN(id_msg), -1), ') . (empty($search_params['minage']) ? '0' : 'IFNULL(MAX(id_msg), -1)') . '
 			FROM {db_prefix}messages
-			WHERE ' . (empty($search_params['minage']) ? '1' : 'poster_time <= {int:inject_int_1}') . (empty($search_params['maxage']) ? '' : '
-				AND poster_time >= {int:inject_int_2}') . '
-				AND approved = {int:inject_int_3}',
+			WHERE approved = {int:is_approved_true}' . (empty($search_params['minage']) ? '' : '
+				poster_time <= {int:timestamp_minimum_age}') . (empty($search_params['maxage']) ? '' : '
+				AND poster_time >= {int:timestamp_maximum_age}'),
 			array(
-				'inject_int_1' => time() - 86400 * $search_params['minage'],
-				'inject_int_2' => time() - 86400 * $search_params['maxage'],
-				'inject_int_3' => 1,
+				'timestamp_minimum_age' => time() - 86400 * $search_params['minage'],
+				'timestamp_maximum_age' => time() - 86400 * $search_params['maxage'],
+				'is_approved_true' => 1,
 			)
 		);
 		list ($minMsgID, $maxMsgID) = $smfFunc['db_fetch_row']($request);
@@ -412,7 +414,7 @@ function PlushSearch2()
 		$userQuery = '';
 	else
 	{
-		$userString = strtr($smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($search_params['userspec']), ENT_QUOTES)), array('&quot;' => '"'));
+		$userString = strtr($smfFunc['htmlspecialchars']($search_params['userspec'], ENT_QUOTES), array('&quot;' => '"'));
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
@@ -426,12 +428,23 @@ function PlushSearch2()
 				unset($possible_users[$k]);
 		}
 
+		// Create a list of database-escaped search names.
+		$realNameMatches = array();
+		foreach ($possible_users as $possible_user)
+			$realNameMatches[] = $smfFunc['db_quote'](
+				'{string:possible_user}', 
+				array(
+					'possible_user' => $possible_user
+				)
+			);
+			
 		// Retrieve a list of possible members.
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
-			WHERE real_name LIKE \'' . implode('\' OR real_name LIKE \'', $possible_users) . '\'',
+			WHERE {raw:match_possible_users}',
 			array(
+				'match_possible_users' => 'real_name LIKE ' . implode(' OR real_name LIKE ', $realNameMatches),
 			)
 		);
 		// Simply do nothing if there're too many members matching the criteria.
@@ -444,7 +457,14 @@ function PlushSearch2()
 			$memberlist = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$memberlist[] = $row['id_member'];
-			$userQuery = '(m.id_member IN (' . implode(', ', $memberlist) . ') OR (m.id_member = 0 AND (m.poster_name LIKE \'' . implode('\' OR m.poster_name LIKE \'', $possible_users) . '\')))';
+			$userQuery = $smfFunc['db_quote'](
+				'(m.id_member IN ({array_int:matched_members}) OR (m.id_member = {int:id_member_guest} AND ({raw:match_possible_guest_names})))',
+				 array(
+				 	'matched_members' => $memberlist, 
+				 	'id_member_guest' => 0,
+				 	'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
+				 )
+			);
 		}
 		$smfFunc['db_free_result']($request);
 	}
@@ -469,13 +489,13 @@ function PlushSearch2()
 			SELECT b.id_board
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-			WHERE t.id_topic = {int:inject_int_1}
+			WHERE t.id_topic = {int:search_topic_id}
 				AND ' . $user_info['query_see_board'] . '
-				AND t.approved = {int:inject_int_2}
+				AND t.approved = {int:is_approved_true}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $search_params['topic'],
-				'inject_int_2' => 1,
+				'search_topic_id' => $search_params['topic'],
+				'is_approved_true' => 1,
 			)
 		);
 
@@ -495,12 +515,13 @@ function PlushSearch2()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
-			WHERE ' . $user_info[$see_board] . (empty($_REQUEST['brd']) ? (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-				AND b.id_board != {int:inject_int_1}' : '') : '
-				AND b.id_board IN ({array_int:inject_array_int_1})'),
+			WHERE {raw:boards_allowed_to_see}' . (empty($_REQUEST['brd']) ? (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+				AND b.id_board != {int:recycle_board_id}' : '') : '
+				AND b.id_board IN ({array_int:selected_search_boards})'),
 			array(
-				'inject_array_int_1' => empty($_REQUEST['brd']) ? array() : $_REQUEST['brd'],
-				'inject_int_1' => $modSettings['recycle_board'],
+				'boards_allowed_to_see' => $user_info[$see_board],
+				'selected_search_boards' => empty($_REQUEST['brd']) ? array() : $_REQUEST['brd'],
+				'recycle_board_id' => $modSettings['recycle_board'],
 			)
 		);
 		$search_params['brd'] = array();
@@ -575,7 +596,7 @@ function PlushSearch2()
 		if (isset($_GET['search']))
 			$search_params['search'] = un_htmlspecialchars($_GET['search']);
 		elseif (isset($_POST['search']))
-			$search_params['search'] = $smfFunc['db_unescape_string']($_POST['search']);
+			$search_params['search'] = $_POST['search'];
 		else
 			$search_params['search'] = '';
 	}
@@ -620,7 +641,7 @@ function PlushSearch2()
 		if ($word === '-')
 		{
 			if (($word = trim($phraseArray[$index], '-_\' ')) !== '' && !in_array($word, $blacklisted_words))
-				$excludedWords[] = $smfFunc['db_escape_string']($word);
+				$excludedWords[] = $word;
 			unset($phraseArray[$index]);
 		}
 
@@ -629,7 +650,7 @@ function PlushSearch2()
 		if (strpos(trim($word), '-') === 0)
 		{
 			if (($word = trim($word, '-_\' ')) !== '' && !in_array($word, $blacklisted_words))
-				$excludedWords[] = $smfFunc['db_escape_string']($word);
+				$excludedWords[] = $word;
 			unset($wordArray[$index]);
 		}
 
@@ -648,7 +669,7 @@ function PlushSearch2()
 			unset($searchArray[$index]);
 		}
 		else
-			$searchArray[$index] = $smfFunc['db_escape_string']($searchArray[$index]);
+			$searchArray[$index] = $searchArray[$index];
 	}
 	$searchArray = array_slice(array_unique($searchArray), 0, 10);
 
@@ -734,7 +755,7 @@ function PlushSearch2()
 					$relyOnIndex = true;
 					foreach ($subwords as $subword)
 					{
-						if (($modSettings['search_index'] === 'custom' || strlen($smfFunc['db_unescape_string']($subword)) >= $min_word_length) && !in_array($subword, $banned_words))
+						if (($modSettings['search_index'] === 'custom' || strlen($subword) >= $min_word_length) && !in_array($subword, $banned_words))
 						{
 							$searchWords[$orIndex]['indexed_words'][] = $subword;
 							if ($is_excluded)
@@ -788,7 +809,7 @@ function PlushSearch2()
 			if (empty($pspell_link))
 				continue;
 
-			$word = $smfFunc['db_unescape_string']($word);
+			$word = $word;
 			// Don't check phrases.
 			if (preg_match('~^\w+$~', $word) === 0)
 			{
@@ -839,7 +860,7 @@ function PlushSearch2()
 			$temp_excluded = array('search' => array(), 'display' => array());
 			foreach ($excludedWords as $word)
 			{
-				$word = $smfFunc['db_unescape_string']($word);
+				$word = $word;
 
 				if (preg_match('~^\w+$~', $word) == 0)
 				{
@@ -862,7 +883,7 @@ function PlushSearch2()
 				$temp_params['brd'] = implode(',', $temp_params['brd']);
 			$context['params'] = array();
 			foreach ($temp_params as $k => $v)
-				$context['did_you_mean_params'][] = $k . '|\'|' . $smfFunc['db_escape_string']($v);
+				$context['did_you_mean_params'][] = $k . '|\'|' . $v;
 			$context['did_you_mean_params'] = base64_encode(implode('|"|', $context['did_you_mean_params']));
 			$context['did_you_mean'] = implode(' ', $did_you_mean['display']);
 		}
@@ -893,7 +914,7 @@ function PlushSearch2()
 		$temp_params['brd'] = implode(',', $temp_params['brd']);
 	$context['params'] = array();
 	foreach ($temp_params as $k => $v)
-		$context['params'][] = $k . '|\'|' . $smfFunc['db_escape_string']($v);
+		$context['params'][] = $k . '|\'|' . $v;
 	$context['params'] = base64_encode(implode('|"|', $context['params']));
 
 	// ... and add the links to the link tree.
@@ -950,9 +971,10 @@ function PlushSearch2()
 
 		// Clear the previous cache of the final results cache.
 		$smfFunc['db_search_query']('delete_log_search_results', '
-			DELETE FROM ' . $db_prefix . 'log_search_results
-			WHERE id_search = ' . $_SESSION['search_cache']['id_search'],
+			DELETE FROM {db_prefix}log_search_results
+			WHERE id_search = {int:search_id}',
 			array(
+				'search_id' => $_SESSION['search_cache']['id_search'],
 			)
 		);
 
@@ -963,7 +985,7 @@ function PlushSearch2()
 			foreach ($searchWords as $orIndex => $words)
 			{
 				$subject_query = array(
-					'from' => $db_prefix . 'topics AS t',
+					'from' => '{db_prefix}topics AS t',
 					'inner_join' => array(),
 					'left_join' => array(),
 					'where' => array(
@@ -979,12 +1001,12 @@ function PlushSearch2()
 					$numTables++;
 					if (in_array($subjectWord, $excludedSubjectWords))
 					{
-						$subject_query['left_join'][] = $db_prefix . 'log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE \'%' . $subjectWord . '%\'' : '= \'' . $subjectWord . '\'') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
+						$subject_query['left_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE \'%' . $subjectWord . '%\'' : '= \'' . $subjectWord . '\'') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
 						$subject_query['where'][] = '(subj' . $numTables . '.word IS NULL)';
 					}
 					else
 					{
-						$subject_query['inner_join'][] = $db_prefix . 'log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.id_topic = ' . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
+						$subject_query['inner_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.id_topic = ' . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
 						$subject_query['where'][] = 'subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE \'%' . $subjectWord . '%\'' : '= \'' . $subjectWord . '\'');
 						$prev_join = $numTables;
 					}
@@ -992,9 +1014,9 @@ function PlushSearch2()
 
 				if (!empty($userQuery))
 				{
-					if ($subject_query['from'] != $db_prefix . 'messages AS m')
+					if ($subject_query['from'] != '{db_prefix}messages AS m')
 					{
-						$subject_query['inner_join'][] = $db_prefix . 'messages AS m ON (m.id_topic = t.id_topic)';
+						$subject_query['inner_join'][] = '{db_prefix}messages AS m ON (m.id_topic = t.id_topic)';
 					}
 					$subject_query['where'][] = $userQuery;
 				}
@@ -1008,9 +1030,9 @@ function PlushSearch2()
 					$subject_query['where'][] = 't.id_board ' . $boardQuery;
 				if (!empty($excludedPhrases))
 				{
-					if ($subject_query['from'] != $db_prefix . 'messages AS m')
+					if ($subject_query['from'] != '{db_prefix}messages AS m')
 					{
-						$subject_query['inner_join'][] = $db_prefix . 'messages AS m ON (m.id_msg = t.id_first_msg)';
+						$subject_query['inner_join'][] = '{db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)';
 					}
 					foreach ($excludedPhrases as $phrase)
 						$subject_query['where'][] = 'm.subject NOT ' . (empty($modSettings['search_match_words']) || $no_regexp ? ' LIKE \'%' . strtr($phrase, array('_' => '\\_', '%' => '\\%')) . '%\'' : ' RLIKE \'[[:<:]]' . addcslashes(preg_replace(array('/([\[\]$.+*?|{}()])/'), array('[$1]'), $phrase), '\\\'') . '[[:>:]]\'');
@@ -1018,21 +1040,21 @@ function PlushSearch2()
 
 				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_subject',
 					($smfFunc['db_support_ignore'] ? '
-					INSERT IGNORE INTO ' . $db_prefix . 'log_search_results
+					INSERT IGNORE INTO {db_prefix}log_search_results
 						(id_search, id_topic, relevance, id_msg, num_matches)' : '') . '
 					SELECT
-						' . $_SESSION['search_cache']['id_search'] . ',
+						{int:id_search},
 						t.id_topic,
 						1000 * (
-							' . $weight['frequency'] . ' / (t.num_replies + 1) +
-							' . $weight['age'] . ' * CASE WHEN t.id_first_msg < ' . $minMsg . ' THEN 0 ELSE (t.id_first_msg - ' . $minMsg . ') / ' . $recentMsg . ' END +
-							' . $weight['length'] . ' * CASE WHEN t.num_replies < ' . $humungousTopicPosts . ' THEN t.num_replies / ' . $humungousTopicPosts . ' ELSE 1 END +
-							' . $weight['subject'] . ' +
-							' . $weight['sticky'] . ' * t.is_sticky
-						) / ' . $weight_total . ' AS relevance,
+							{int:weight_frequency} / (t.num_replies + 1) +
+							{int:weight_age} * CASE WHEN t.id_first_msg < ' . $minMsg . ' THEN 0 ELSE (t.id_first_msg - ' . $minMsg . ') / ' . $recentMsg . ' END +
+							{int:weight_length} * CASE WHEN t.num_replies < ' . $humungousTopicPosts . ' THEN t.num_replies / ' . $humungousTopicPosts . ' ELSE 1 END +
+							{int:weight_subject} +
+							{int:weight_sticky} * t.is_sticky
+						) / {int:weight_total} AS relevance,
 						' . (empty($userQuery) ? 't.id_first_msg' : 'm.id_msg') . ',
 						1
-					FROM ' . $subject_query['from'] . (empty($subject_query['inner_join']) ? '' : '
+					FROM {query_from}' . (empty($subject_query['inner_join']) ? '' : '
 						INNER JOIN ' . implode('
 						INNER JOIN ', $subject_query['inner_join'])) . (empty($subject_query['left_join']) ? '' : '
 						LEFT JOIN ' . implode('
@@ -1041,6 +1063,14 @@ function PlushSearch2()
 						AND ', $subject_query['where']) . (empty($modSettings['search_max_results']) ? '' : '
 					LIMIT ' . ($modSettings['search_max_results'] - $numSubjectResults)),
 					array(
+						'id_search' => $_SESSION['search_cache']['id_search'],
+						'query_from' => $subject_query['from'],
+						'weight_age' => $weight['age'],
+						'weight_frequency' => $weight['frequency'],
+						'weight_length' => $weight['frequency'],
+						'weight_sticky' => $weight['frequency'],
+						'weight_subject' => $weight['frequency'],
+						'weight_total' => $weight_total,
 					)
 				);
 
