@@ -35,7 +35,7 @@ if (!defined('SMF'))
 		- uses the Modlog template, main sub template.
 		- is accessed via ?action=moderate;area=modlog.
 
-	void getModLogEntries($search_param = '', $order= '', $limit = 0)
+	void getModLogEntries($query_string = '', $query_params = array(), $order= '', $limit = 0)
 		- Gets the moderation log entries that match the specified paramaters
 		- limit can be an array with two values
 		- search_param and order should be proper SQL strings or blank.  If blank they are not used.
@@ -62,18 +62,19 @@ function ViewModlog()
 	if (isset($_POST['removeall']) && $context['can_delete'])
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_actions
-			WHERE log_time < {int:inject_int_1}',
+			WHERE log_time < {int:twenty_four_hours_wait}',
 			array(
-				'inject_int_1' => time() - $context['hoursdisable'] * 3600,
+				'twenty_four_hours_wait' => time() - $context['hoursdisable'] * 3600,
 			)
 		);
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_actions
-			WHERE id_action IN (\'' . implode('\', \'', array_unique($_POST['delete'])) . '\')
-				AND log_time < {int:inject_int_1}',
+			WHERE id_action IN ({array_string:delete_actions})
+				AND log_time < {int:twenty_four_hours_wait}',
 			array(
-				'inject_int_1' => time() - $context['hoursdisable'] * 3600,
+				'twenty_four_hours_wait' => time() - $context['hoursdisable'] * 3600,
+				'delete_actions' => array_unique($_POST['delete']),
 			)
 		);
 
@@ -99,10 +100,6 @@ function ViewModlog()
 	{
 		$search_params = base64_decode(strtr($_REQUEST['params'], array(' ' => '+')));
 		$search_params = @unserialize($search_params);
-
-		// To be sure, let's slash all the elements.
-		foreach ($search_params as $key => $value)
-			$search_params[$key] = $smfFunc['db_escape_string']($value);
 	}
 
 	// If we have no search, a broken search, or a new search - then create a new array.
@@ -127,7 +124,7 @@ function ViewModlog()
 	// Setup the search context.
 	$context['search_params'] = empty($search_params['string']) ? '' : base64_encode(serialize($search_params));
 	$context['search'] = array(
-		'string' => $smfFunc['db_unescape_string']($search_params['string']),
+		'string' => $search_params['string'],
 		'type' => $search_params['type'],
 		'label' => $search_params['type_label']
 	);
@@ -181,11 +178,13 @@ function ViewModlog()
 		SELECT COUNT(*)
 		FROM {db_prefix}log_actions AS lm
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)
-		WHERE' . (!empty($search_params['string']) ? ' INSTR(' . $search_params['type_sql'] . ', \'' . $search_params['string'] . '\')
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_member_id} THEN mem.id_post_group ELSE mem.id_group END)
+		WHERE' . (!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string})
 			AND' : '') . ' ' . $user_info['modlog_query'],
 		array(
-			'inject_int_1' => 0,
+			'reg_member_id' => 0,
+			'sql_type' => $search_params['type_sql'],
+			'search_string' => $search_params['string'],
 		)
 	);
 	list ($context['entry_count']) = $smfFunc['db_fetch_row']($result);
@@ -195,11 +194,11 @@ function ViewModlog()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=modlog;order=' . $context['order'] . $context['dir'] . (!empty($context['search_params']) ? ';params=' . $context['search_params'] : ''), $_REQUEST['start'], $context['entry_count'], $context['displaypage']);
 	$context['start'] = $_REQUEST['start'];
 
-	getModLogEntries((!empty($search_params['string']) ? ' INSTR(' . $search_params['type_sql'] . ', \'' . $search_params['string'] . '\') AND ' : '') . $user_info['modlog_query'], $orderType . (isset($_REQUEST['d']) ? '' : ' DESC'), array($context['start'], $context['displaypage']));
+	getModLogEntries((!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : '') . $user_info['modlog_query'], array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']), $orderType . (isset($_REQUEST['d']) ? '' : ' DESC'), array($context['start'], $context['displaypage']));
 }
 
 
-function getModLogEntries($search_param = '', $order= '', $limit = 0)
+function getModLogEntries($query_string = '', $query_params = array(), $order= '', $limit = 0)
 {
 	global $db_prefix, $context, $scripturl, $txt, $smfFunc, $user_info, $modlog_descriptions;
 
@@ -225,14 +224,14 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			mem.real_name, mg.group_name
 		FROM {db_prefix}log_actions AS lm
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)'
-			. (!empty($search_param) ? '
-			WHERE ' . $search_param : '') . (!empty($order) ? '
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)'
+			. (!empty($query_string) ? '
+			WHERE ' . $query_string : '') . (!empty($order) ? '
 		ORDER BY ' . $order : '') . '
 		' . $limit,
-		array(
-			'inject_int_1' => 0,
-		)
+		array_merge($query_params, array(
+			'reg_group_id' => 0,
+		))
 	);
 
 	// Arrays for decoding objects into.
@@ -315,10 +314,10 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_board, name
 			FROM {db_prefix}boards
-			WHERE id_board IN ({array_int:inject_array_int_1})
+			WHERE id_board IN ({array_int:board_list})
 			LIMIT ' . count(array_keys($boards)),
 			array(
-				'inject_array_int_1' => array_keys($boards),
+				'board_list' => array_keys($boards),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -343,10 +342,10 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			SELECT ms.subject, t.id_topic
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
-			WHERE t.id_topic IN ({array_int:inject_array_int_1})
+			WHERE t.id_topic IN ({array_int:topic_list})
 			LIMIT ' . count(array_keys($topics)),
 			array(
-				'inject_array_int_1' => array_keys($topics),
+				'topic_list' => array_keys($topics),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -378,10 +377,10 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		$request = $smfFunc['db_query']('', '
 			SELECT real_name, id_member
 			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:inject_array_int_1})
+			WHERE id_member IN ({array_int:member_list})
 			LIMIT ' . count(array_keys($members)),
 			array(
-				'inject_array_int_1' => array_keys($members),
+				'member_list' => array_keys($members),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))

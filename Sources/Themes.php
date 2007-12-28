@@ -203,12 +203,12 @@ function ThemeAdmin()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, value AS name
 			FROM {db_prefix}themes
-			WHERE variable = {string:inject_string_1}
-				AND id_member = {int:inject_int_1}
+			WHERE variable = {string:name}
+				AND id_member = {int:no_member}
 			ORDER BY id_theme',
 			array(
-				'inject_int_1' => 0,
-				'inject_string_1' => 'name',
+				'no_member' => 0,
+				'name' => 'name',
 			)
 		);
 		$context['themes'] = array();
@@ -273,10 +273,16 @@ function ThemeList()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
-			WHERE variable IN (\'theme_dir\', \'theme_url\', \'images_url\', \'base_theme_dir\', \'base_theme_url\', \'base_images_url\')
-				AND id_member = {int:inject_int_1}',
+			WHERE variable IN ({string:theme_dir}, {string:theme_url}, {string:images_url}, {string:base_theme_dir}, {string:base_theme_url}, {string:base_images_url})
+				AND id_member = {int:no_member}',
 			array(
-				'inject_int_1' => 0,
+				'no_member' => 0,
+				'theme_dir' => 'theme_dir',
+				'theme_url' => 'theme_url',
+				'images_url' => 'images_url',
+				'base_theme_dir' => 'base_theme_dir',
+				'base_theme_url' => 'base_theme_url',
+				'base_images_url' => 'base_images_url',
 			)
 		);
 		$themes = array();
@@ -324,10 +330,14 @@ function ThemeList()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
-		WHERE variable IN (\'name\', \'theme_dir\', \'theme_url\', \'images_url\')
-			AND id_member = {int:inject_int_1}',
+		WHERE variable IN ({string:name}, {string:theme_dir}, {string:theme_url}, {string:images_url})
+			AND id_member = {int:no_member}',
 		array(
-			'inject_int_1' => 0,
+			'no_member' => 0,
+			'name' => 'name',
+			'theme_dir' => 'theme_dir',
+			'theme_url' => 'theme_url',
+			'images_url' => 'images_url',
 		)
 	);
 	$context['themes'] = array();
@@ -382,10 +392,12 @@ function SetThemeOptions()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
-			WHERE variable IN (\'name\', \'theme_dir\')
-				AND id_member = {int:inject_int_1}',
+			WHERE variable IN ({string:name}, {string:theme_dir})
+				AND id_member = {int:no_member}',
 			array(
-				'inject_int_1' => 0,
+				'no_member' => 0,
+				'name' => 'name',
+				'theme_dir' => 'theme_dir',
 			)
 		);
 		$context['themes'] = array();
@@ -404,10 +416,10 @@ function SetThemeOptions()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, COUNT(*) AS value
 			FROM {db_prefix}themes
-			WHERE id_member = {int:inject_int_1}
+			WHERE id_member = {int:guest_member}
 			GROUP BY id_theme',
 			array(
-				'inject_int_1' => -1,
+				'guest_member' => -1,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -425,16 +437,17 @@ function SetThemeOptions()
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$customFields[] = $row['col_name'];
 		$smfFunc['db_free_result']($request);
-		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN (\'' . implode('\', \'', $customFields) . '\')');
+		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN ({array_string:custom_fields})');
 
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(DISTINCT id_member) AS value, id_theme
 			FROM {db_prefix}themes
-			WHERE id_member > {int:inject_int_1}
+			WHERE id_member > {int:no_member}
 				' . $customFieldsQuery . '
 			GROUP BY id_theme',
 			array(
-				'inject_int_1' => 0,
+				'no_member' => 0,
+				'custom_fields' => empty($customFields) ? array() : $customFields,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -485,12 +498,13 @@ function SetThemeOptions()
 			if (!empty($old_settings))
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE id_theme != {int:inject_int_1}
-						AND id_member = {int:inject_int_2}
-						AND variable IN (\'' . implode('\', \'', $old_settings) . '\')',
+					WHERE id_theme != {int:default_theme}
+						AND id_member = {int:guest_member}
+						AND variable IN ({array_string:old_settings})',
 					array(
-						'inject_int_1' => 1,
-						'inject_int_2' => -1,
+						'default_theme' => 1,
+						'guest_member' => -1,
+						'old_settings' => $old_settings,
 					)
 				);
 
@@ -526,20 +540,23 @@ function SetThemeOptions()
 				// Delete then insert for ease of database compatibility!
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE id_theme = {int:inject_int_1}
-						AND id_member != {int:inject_int_2}
-						AND variable = SUBSTRING(\'' . $opt . '\', 1, 255)',
+					WHERE id_theme = {int:default_theme}
+						AND id_member != {int:no_member}
+						AND variable = SUBSTRING({string:option}, 1, 255)',
 					array(
-						'inject_int_1' => 1,
-						'inject_int_2' => 0,
+						'default_theme' => 1,
+						'no_member' => 0,
+						'option' => $opt,
 					)
 				);
 				$smfFunc['db_query']('', '
 					INSERT INTO {db_prefix}themes
 						(id_member, id_theme, variable, value)
-					SELECT id_member, 1, SUBSTRING(\'' . $opt . '\', 1, 255), SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)
+					SELECT id_member, 1, SUBSTRING({string:option}, 1, 255), SUBSTRING({string:value}, 1, 65534)
 					FROM {db_prefix}members',
 					array(
+						'option' => $opt,
+						'value' => (is_array($val) ? implode(',', $val) : $val),
 					)
 				);
 
@@ -549,11 +566,11 @@ function SetThemeOptions()
 			{
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE variable = {string:inject_string_1}
-						AND id_member > {int:inject_int_1}',
+					WHERE variable = {string:option_name}
+						AND id_member > {int:no_member}',
 					array(
-						'inject_int_1' => 0,
-						'inject_string_1' => $opt,
+						'no_member' => 0,
+						'option_name' => $opt,
 					)
 				);
 			}
@@ -563,12 +580,13 @@ function SetThemeOptions()
 		if (!empty($old_settings))
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}themes
-				WHERE id_theme != {int:inject_int_1}
-					AND id_member > {int:inject_int_2}
-					AND variable IN (\'' . implode('\', \'', $old_settings) . '\')',
+				WHERE id_theme != {int:default_theme}
+					AND id_member > {int:no_member}
+					AND variable IN ({array_string:old_settings})',
 				array(
-					'inject_int_1' => 1,
-					'inject_int_2' => 0,
+					'default_theme' => 1,
+					'no_member' => 0,
+					'old_settings' => $old_settings,
 				)
 			);
 
@@ -581,20 +599,24 @@ function SetThemeOptions()
 				// Delete then insert for ease of database compatibility - again!
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE id_theme = {int:inject_int_1}
-						AND id_member != {int:inject_int_2}
-						AND variable = SUBSTRING(\'' . $opt . '\', 1, 255)',
+					WHERE id_theme = {int:current_theme}
+						AND id_member != {int:no_member}
+						AND variable = SUBSTRING({string:option}, 1, 255)',
 					array(
-						'inject_int_1' => $_GET['th'],
-						'inject_int_2' => 0,
+						'current_theme' => $_GET['th'],
+						'no_member' => 0,
+						'option' => $opt,
 					)
 				);
 				$smfFunc['db_query']('', '
 					INSERT INTO {db_prefix}themes
 						(id_member, id_theme, variable, value)
-					SELECT id_member, ' . $_GET['th'] . ', SUBSTRING(\'' . $opt . '\', 1, 255), SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)
+					SELECT id_member, {int:current_theme}, SUBSTRING({string:option}, 1, 255), SUBSTRING({string:value}, 1, 65534)
 					FROM {db_prefix}members',
 					array(
+						'current_theme' => $_GET['th'],
+						'option' => $opt,
+						'value' => (is_array($val) ? implode(',', $val) : $val),
 					)
 				);
 			}
@@ -602,13 +624,13 @@ function SetThemeOptions()
 			{
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE variable = {string:inject_string_1}
-						AND id_member > {int:inject_int_1}
-						AND id_theme = {int:inject_int_2}',
+					WHERE variable = {string:option}
+						AND id_member > {int:no_member}
+						AND id_theme = {int:current_theme}',
 					array(
-						'inject_int_1' => 0,
-						'inject_int_2' => $_GET['th'],
-						'inject_string_1' => $opt,
+						'no_member' => 0,
+						'current_theme' => $_GET['th'],
+						'option' => $opt,
 					)
 				);
 			}
@@ -634,16 +656,17 @@ function SetThemeOptions()
 				$customFields[] = $row['col_name'];
 			$smfFunc['db_free_result']($request);
 		}
-		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN (\'' . implode('\', \'', $customFields) . '\')');
+		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN ({array_string:custom_fields})');
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}themes
-			WHERE id_member > {int:inject_int_1}
-				AND id_theme = {int:inject_int_2}
+			WHERE id_member > {int:no_member}
+				AND id_theme = {int:current_theme}
 				' . $customFieldsQuery,
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => $_GET['th'],
+				'no_member' => 0,
+				'current_theme' => $_GET['th'],
+				'custom_fields' => empty($customFields) ? array() : $customFields,
 			)
 		);
 
@@ -676,10 +699,11 @@ function SetThemeOptions()
 		$request = $smfFunc['db_query']('', '
 			SELECT variable, value
 			FROM {db_prefix}themes
-			WHERE id_theme IN (1, ' . $_GET['th'] . ')
-				AND id_member = {int:inject_int_1}',
+			WHERE id_theme IN (1, {int:current_theme})
+				AND id_member = {int:guest_member}',
 			array(
-				'inject_int_1' => -1,
+				'current_theme' => $_GET['th'],
+				'guest_member' => -1,
 			)
 		);
 		$context['theme_options'] = array();
@@ -882,19 +906,19 @@ function RemoveTheme()
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}themes
-		WHERE id_theme = {int:inject_int_1}',
+		WHERE id_theme = {int:current_theme}',
 		array(
-			'inject_int_1' => $_GET['th'],
+			'current_theme' => $_GET['th'],
 		)
 	);
 
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}members
-		SET id_theme = {int:inject_int_1}
-		WHERE id_theme = {int:inject_int_2}',
+		SET id_theme = {int:default_theme}
+		WHERE id_theme = {int:current_theme}',
 		array(
-			'inject_int_1' => 0,
-			'inject_int_2' => $_GET['th'],
+			'default_theme' => 0,
+			'current_theme' => $_GET['th'],
 		)
 	);
 
@@ -986,10 +1010,10 @@ function PickTheme()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme
 			FROM {db_prefix}members
-			WHERE id_member = {int:inject_int_1}
+			WHERE id_member = {int:current_member}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $context['current_member'],
+				'current_member' => $context['current_member'],
 			)
 		);
 		list ($context['current_theme']) = $smfFunc['db_fetch_row']($request);
@@ -999,17 +1023,20 @@ function PickTheme()
 	$context['available_themes'] = array();
 	if (!empty($modSettings['knownThemes']))
 	{
-		$knownThemes = implode('\', \'', explode(',', $modSettings['knownThemes']));
-
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
-			WHERE variable IN (\'name\', \'theme_url\', \'theme_dir\', \'images_url\')' . (!allowedTo('admin_forum') ? '
-				AND id_theme IN (\'' . $knownThemes . '\')' : '') . '
-				AND id_theme != {int:inject_int_1}
+			WHERE variable IN ({string:name}, {string:theme_url}, {string:theme_dir}, {string:images_url})' . (!allowedTo('admin_forum') ? '
+				AND id_theme IN ({array_string:known_themes})' : '') . '
+				AND id_theme != {int:default_theme}
 			LIMIT ' . count(explode(',', $modSettings['knownThemes'])) * 8,
 			array(
-				'inject_int_1' => 0,
+				'default_theme' => 0,
+				'name' => 'name',
+				'theme_url' => 'theme_url',
+				'theme_dir' => 'theme_dir',
+				'images_url' => 'images_url',
+				'known_themes' => explode(',', $modSettings['knownThemes']),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1123,14 +1150,14 @@ function ThemeInstall()
 		$result = $smfFunc['db_query']('', '
 			SELECT value
 			FROM {db_prefix}themes
-			WHERE id_theme = {int:inject_int_1}
-				AND id_member = {int:inject_int_2}
-				AND variable = {string:inject_string_1}
+			WHERE id_theme = {int:current_theme}
+				AND id_member = {int:no_member}
+				AND variable = {string:name}
 			LIMIT 1',
 			array(
-				'inject_int_1' => (int) $_GET['theme_id'],
-				'inject_int_2' => 0,
-				'inject_string_1' => 'name',
+				'current_theme' => (int) $_GET['theme_id'],
+				'no_member' => 0,
+				'name' => 'name',
 			)
 		);
 		list ($theme_name) = $smfFunc['db_fetch_row']($result);
@@ -1148,7 +1175,7 @@ function ThemeInstall()
 
 	if ((!empty($_FILES['theme_gz']) && (!isset($_FILES['theme_gz']['error']) || $_FILES['theme_gz']['error'] != 4)) || !empty($_REQUEST['theme_gz']))
 		$method = 'upload';
-	elseif (isset($_REQUEST['theme_dir']) && realpath($smfFunc['db_unescape_string']($_REQUEST['theme_dir'])) != realpath($boarddir . '/Themes') && file_exists($smfFunc['db_unescape_string']($_REQUEST['theme_dir'])))
+	elseif (isset($_REQUEST['theme_dir']) && realpath($_REQUEST['theme_dir']) != realpath($boarddir . '/Themes') && file_exists($_REQUEST['theme_dir']))
 		$method = 'path';
 	else
 		$method = 'copy';
@@ -1182,11 +1209,11 @@ function ThemeInstall()
 	}
 	elseif (isset($_REQUEST['theme_dir']) && $method == 'path')
 	{
-		if (!is_dir($smfFunc['db_unescape_string']($_REQUEST['theme_dir'])) || !file_exists($smfFunc['db_unescape_string']($_REQUEST['theme_dir']) . '/theme_info.xml'))
+		if (!is_dir($_REQUEST['theme_dir']) || !file_exists($_REQUEST['theme_dir'] . '/theme_info.xml'))
 			fatal_lang_error('theme_install_error', false);
 
 		$theme_name = basename($_REQUEST['theme_dir']);
-		$theme_dir = $smfFunc['db_unescape_string']($_REQUEST['theme_dir']);
+		$theme_dir = $_REQUEST['theme_dir'];
 	}
 	elseif ($method = 'upload')
 	{
@@ -1266,20 +1293,22 @@ function ThemeInstall()
 					SELECT th.value AS base_theme_dir, th2.value AS base_theme_url' . (!empty($explicit_images) ? '' : ', th3.value AS images_url') . '
 					FROM {db_prefix}themes AS th
 						INNER JOIN {db_prefix}themes AS th2 ON (th2.id_theme = th.id_theme
-							AND th2.id_member = {int:inject_int_1}
-							AND th2.variable = {string:inject_string_1})' . (!empty($explicit_images) ? '' : '
+							AND th2.id_member = {int:no_member}
+							AND th2.variable = {string:theme_url})' . (!empty($explicit_images) ? '' : '
 						INNER JOIN {db_prefix}themes AS th3 ON (th3.id_theme = th.id_theme
-							AND th3.id_member = {int:inject_int_1}
-							AND th3.variable = {string:inject_string_2})') . '
-					WHERE th.id_member = {int:inject_int_1}
-						AND (th.value LIKE \'%/' . $install_info['based_on'] . '\' OR th.value LIKE \'%' . "\\" .$install_info['based_on'] .'\')
-						AND th.variable = {string:inject_string_3}
+							AND th3.id_member = {int:no_member}
+							AND th3.variable = {string:images_url})') . '
+					WHERE th.id_member = {int:no_member}
+						AND (th.value LIKE {string:based_on} OR th.value LIKE {string:based_on_path})
+						AND th.variable = {string:theme_dir}
 					LIMIT 1',
 					array(
-						'inject_int_1' => 0,
-						'inject_string_1' => 'theme_url',
-						'inject_string_2' => 'images_url',
-						'inject_string_3' => 'theme_dir',
+						'no_member' => 0,
+						'theme_url' => 'theme_url',
+						'images_url' => 'images_url',
+						'theme_dir' => 'theme_dir',
+						'based_on' => '%/' . $install_info['based_on'],
+						'based_on_path' => '%' . "\\" . $install_info['based_on'],
 					)
 				);
 				$temp = $smfFunc['db_fetch_assoc']($request);
@@ -1393,7 +1422,7 @@ function SetJavaScript()
 			$options['admin_preferences'][$_GET['admin_key']] = $_GET['val'];
 
 		// Change the value to be something nice,
-		$_GET['val'] = $smfFunc['db_escape_string'](serialize($options['admin_preferences']));
+		$_GET['val'] = serialize($options['admin_preferences']);
 	}
 
 	// Update the option.
@@ -1432,12 +1461,16 @@ function EditTheme()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
-			WHERE variable IN (\'name\', \'theme_dir\', \'theme_templates\', \'theme_layers\')
-				AND id_member = {int:inject_int_1}
-				AND id_theme != {int:inject_int_2}',
+			WHERE variable IN ({string:name}, {string:theme_dir}, {string:theme_templates}, {string:theme_layers})
+				AND id_member = {int:no_member}
+				AND id_theme != {int:default_theme}',
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => 1,
+				'name' => 'name',
+				'theme_dir' => 'theme_dir',
+				'theme_templates' => 'theme_templates',
+				'theme_layers' => 'theme_layers',
+				'no_member' => 0,
+				'default_theme' => 1,
 			)
 		);
 		$context['themes'] = array();
@@ -1497,12 +1530,12 @@ function EditTheme()
 	$request = $smfFunc['db_query']('', '
 		SELECT value, id_theme
 		FROM {db_prefix}themes
-		WHERE variable = {string:inject_string_1}
-			AND id_theme = {int:inject_int_1}
+		WHERE variable = {string:theme_dir}
+			AND id_theme = {int:current_theme}
 		LIMIT 1',
 		array(
-			'inject_int_1' => $_GET['th'],
-			'inject_string_1' => 'theme_dir',
+			'current_theme' => $_GET['th'],
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	list ($theme_dir, $context['theme_id']) = $smfFunc['db_fetch_row']($request);
@@ -1570,7 +1603,7 @@ function EditTheme()
 		{
 			if (is_array($_POST['entire_file']))
 				$_POST['entire_file'] = implode("\n", $_POST['entire_file']);
-			$_POST['entire_file'] = rtrim(strtr($smfFunc['db_unescape_string']($_POST['entire_file']), array("\r" => '', '   ' => "\t")));
+			$_POST['entire_file'] = rtrim(strtr($_POST['entire_file'], array("\r" => '', '   ' => "\t")));
 
 			// Check for a parse error!
 			if (substr($_REQUEST['filename'], -13) == '.template.php' && is_writable($theme_dir) && @ini_get('display_errors'))
@@ -1578,12 +1611,12 @@ function EditTheme()
 				$request = $smfFunc['db_query']('', '
 					SELECT value
 					FROM {db_prefix}themes
-					WHERE variable = {string:inject_string_1}
-						AND id_theme = {int:inject_int_1}
+					WHERE variable = {string:theme_url}
+						AND id_theme = {int:current_theme}
 					LIMIT 1',
 					array(
-						'inject_int_1' => $_GET['th'],
-						'inject_string_1' => 'theme_url',
+						'current_theme' => $_GET['th'],
+						'theme_url' => 'theme_url',
 					)
 				);
 				list ($theme_url) = $smfFunc['db_fetch_row']($request);
@@ -1619,7 +1652,7 @@ function EditTheme()
 			$context['sub_template'] = 'edit_file';
 
 			// Recycle the submitted data.
-			$context['entire_file'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['entire_file']));
+			$context['entire_file'] = htmlspecialchars($_POST['entire_file']);
 
 			// You were able to submit it, so it's reasonable to assume you are allowed to save.
 			$context['allow_save'] = true;
@@ -1753,14 +1786,14 @@ function CopyTemplate()
 	$request = $smfFunc['db_query']('', '
 		SELECT th1.value, th1.id_theme, th2.value
 		FROM {db_prefix}themes AS th1
-			LEFT JOIN {db_prefix}themes AS th2 ON (th2.variable = {string:inject_string_1} AND th2.id_theme = {int:inject_int_1})
-		WHERE th1.variable = {string:inject_string_2}
-			AND th1.id_theme = {int:inject_int_1}
+			LEFT JOIN {db_prefix}themes AS th2 ON (th2.variable = {string:base_theme_dir} AND th2.id_theme = {int:current_theme})
+		WHERE th1.variable = {string:theme_dir}
+			AND th1.id_theme = {int:current_theme}
 		LIMIT 1',
 		array(
-			'inject_int_1' => $_GET['th'],
-			'inject_string_1' => 'base_theme_dir',
-			'inject_string_2' => 'theme_dir',
+			'current_theme' => $_GET['th'],
+			'base_theme_dir' => 'base_theme_dir',
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	list ($theme_dir, $context['theme_id'], $base_theme_dir) = $smfFunc['db_fetch_row']($request);

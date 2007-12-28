@@ -2782,7 +2782,7 @@ function logAction($action, $extra = array())
 
 	$smfFunc['db_insert']('',
 		$db_prefix . 'log_actions',
-		array('log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action', 'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534'),
+		array('log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string', 'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534'),
 		array(time(), $user_info['id'], $user_info['ip'], $action, $board_id, $topic_id, $msg_id, serialize($extra)),
 		array('id_action')
 	);

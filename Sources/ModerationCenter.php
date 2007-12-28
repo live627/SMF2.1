@@ -759,7 +759,7 @@ function ModReport()
 	// !!! Should this limit the results to the boards the mod can see or not?
 
 	require_once($sourcedir . '/Modlog.php');
-	getModLogEntries('lm.id_msg = ' . $context['report']['message_id']);
+	getModLogEntries('lm.id_msg = {int:id_msg}', array('id_msg' => $context['report']['message_id']));
 
 	// Finally we are done :P
 	loadTemplate('ModerationCenter');
