@@ -704,6 +704,9 @@ function doStep1()
 		$smfFunc = array();
 	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
+	// Don't let SMF try to jump in with some error messages.
+	$smfFunc['db_error_handler_return'] = true;
+
 	// Attempt a connection.
 	$needsDB = !empty($databases[$db_type]['always_has_db']);
 	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
@@ -753,13 +756,13 @@ function doStep1()
 	if ($db_name != '' && !$needsDB)
 	{
 		$smfFunc['db_query']('', "
-			CREATE DATABASE IF NOT EXISTS `$db_name`", false, false, $db_connection);
+			CREATE DATABASE IF NOT EXISTS `$db_name`", 'security_override', $db_connection);
 
 		// Okay, let's try the prefix if it didn't work...
 		if (!$smfFunc['db_select_db']($db_name, $db_connection) && $db_name != '')
 		{
 			$smfFunc['db_query']('', "
-				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`", false, false, $db_connection);
+				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`", 'security_override', $db_connection);
 
 			if ($smfFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
 			{
@@ -783,11 +786,15 @@ function doStep1()
 	}
 
 	// Before running any of the queries, let's make sure another version isn't already installed.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT value
-		FROM {$db_prefix}settings
-		WHERE variable = 'smfVersion'
-		LIMIT 1", false, false);
+		FROM {db_prefix}settings
+		WHERE variable = {string:version}
+		LIMIT 1',
+		array(
+			'version' => 'smfVersion',
+		)
+	);
 	if ($result !== false)
 	{
 		list ($database_version) = $smfFunc['db_fetch_row']($result);
@@ -824,8 +831,11 @@ function doStep1()
 		else
 		{
 			updateSettingsFile(array('db_character_set' => 'utf8'));
-			$smfFunc['db_query']('', "
-				SET NAMES utf8", false, false);
+			$smfFunc['db_query']('', '
+				SET NAMES utf8',
+				array(
+				),
+			);
 		}
 	}
 
@@ -874,7 +884,7 @@ function doStep1()
 			continue;
 		}
 
-		if ($smfFunc['db_query']('', $current_statement, false, false, $db_connection) === false)
+		if ($smfFunc['db_query']('', $current_statement, 'security_override', $db_connection) === false)
 		{
 			// Error 1050: Table already exists!
 			//!!! Needs to be made better!
@@ -891,10 +901,16 @@ function doStep1()
 
 	// Make sure UTF will be used globally.
 	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}settings
-				(variable, value)
-			VALUES ('global_character_set', 'UTF-8')", false, false);
+		$smfFunc['db_insert']('',
+			$db_prefix . 'settings',
+			array(
+				'variable' => 'string-255', 'value' => 'string-65534',
+			),
+			array(
+				'global_character_set', 'UTF-8',
+			),
+			array('variable')
+		);
 
 	// Maybe we can auto-detect better cookie settings?
 	preg_match('~^http[s]?://([^\.]+?)([^/]*?)(/.*)?$~', $_POST['boardurl'], $matches);
@@ -913,15 +929,15 @@ function doStep1()
 
 		$rows = array();
 		if ($globalCookies)
-			$rows[] = array('\'globalCookies\'', 1);
+			$rows[] = array('globalCookies', '1');
 		if ($localCookies)
-			$rows[] = array('\'localCookies\'', 1);
+			$rows[] = array('localCookies', '1');
 
 		if (!empty($rows))
 		{
 			$smfFunc['db_insert']('replace',
-				"{$db_prefix}settings",
-				array('variable' => 'string', 'value' => 'string'),
+				{$db_prefix} . 'settings',
+				array('variable' => 'string-255', 'value' => 'string-65534'),
 				$rows,
 				array('variable')
 			);
@@ -950,11 +966,16 @@ function doStep1()
 			preg_match('~SITE-ID:\s(\w{10})~', $return_data, $ID);
 
 			if (!empty($ID[1]))
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}settings
-						(variable, value)
-					VALUES
-						('allow_sm_stats', '$ID[1]')", false, false);
+				$smfFunc['db_insert']('',
+					$db_prefix . 'settings',
+					array(
+						'variable' => 'string-255', 'value' => 'string-65534',
+					),
+					array(
+						'allow_sm_stats', $ID[1],
+					),
+					array('variable')
+				);
 		}
 	}
 
@@ -964,11 +985,16 @@ function doStep1()
 		$server_offset = mktime(0, 0, 0, 1, 1, 1970);
 		$timezone_id = 'Etc/GMT' . ($server_offset > 0 ? '+' : '') . ($server_offset / 3600);
 		if (date_default_timezone_set($timezone_id))
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}settings
-					(variable, value)
-				VALUES
-					('default_timezone', '$timezone_id')", false, false);
+			$smfFunc['db_insert']('',
+				$db_prefix . 'settings',
+				array(
+					'variable' => 'string-255', 'value' => 'string-65534',
+				),
+				array(
+					'default_timezone', $timezone_id,
+				),
+				array('variable')
+			);
 	}
 
 	// Let's optimize those new tables.
@@ -1005,7 +1031,7 @@ function doStep1()
 	}
 
 	// Check for the ALTER privilege.
-	if (!empty($databases[$db_type]['alter_support']) && $smfFunc['db_query']('', "ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD", false, false) === false)
+	if (!empty($databases[$db_type]['alter_support']) && $smfFunc['db_query']('', "ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD", 'security_override') === false)
 	{
 		echo '
 				<div class="error_message">
@@ -1181,14 +1207,23 @@ function doStep2()
 		require_once($sourcedir . '/Subs-Compat.php');
 
 	if (isset($db_character_set))
-		$smfFunc['db_query']('', "
-			SET NAMES $db_character_set", false, false);
+		$smfFunc['db_query']('', '
+			SET NAMES {raw:db_character_set}',
+			array(
+				'db_character_set' => $db_character_set,
+			)
+		);
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT id_member, password_salt
-		FROM {$db_prefix}members
-		WHERE member_name = '$_POST[username]' OR email_address = '$_POST[email]'
-		LIMIT 1", false, false);
+		FROM {db_prefix}members
+		WHERE member_name = {string:username} OR email_address = {string:email}
+		LIMIT 1',
+		array(
+			'username' => stripslashes($_POST['username']),
+			'email' => stripslashes($_POST['email']),
+		)
+	);
 	if ($smfFunc['db_num_rows']($result) != 0)
 	{
 		list ($id, $salt) = $smfFunc['db_fetch_row']($result);
@@ -1257,10 +1292,28 @@ function doStep2()
 		$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? $smfFunc['db_escape_string'](substr($smfFunc['db_unescape_string']($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
 
-		$request = $smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}members
-				(member_name, real_name, passwd, email_address, id_group, posts, date_registered, hide_email, password_salt, lngfile, personal_text, avatar, member_ip, member_ip2, buddy_list, pm_ignore_list, message_labels, website_title, website_url, location, icq, msn, signature, usertitle, secret_question, additional_groups, ignore_boards, openid_uri)
-			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '$ip', '$ip', '', '', '', '', '', '', '', '', '', '', '', '', '', '')", false, false);
+		$smfFunc['db_insert']('',
+			$db_prefix . 'members',
+			array(
+				'member_name' => 'string-25', 'real_name' => 'string-25', 'passwd' => 'string', 'email_address' => 'string',
+				'id_group' => 'int', 'posts' => 'int', 'date_registered' => 'int', 'hide_email' => 'int',
+				'password_salt' => 'string', 'lngfile' => 'string', 'personal_text' => 'string', 'avatar' => 'string',
+				'member_ip' => 'string', 'member_ip2' => 'string', 'buddy_list' => 'string', 'pm_ignore_list' => 'string',
+				'message_labels' => 'string', 'website_title' => 'string', 'website_url' => 'string', 'location' => 'string',
+				'icq' => 'string', 'msn' => 'string', 'signature' => 'string', 'usertitle' => 'string', 'secret_question' => 'string',
+				'additional_groups' => 'string', 'ignore_boards' => 'string', 'openid_uri' => 'string',
+			),
+			array(
+				stripslashes($_POST['username']), stripslashes($_POST['username']), sha1(strtolower(stripslashes($_POST['username'])) . stripslashes($_POST['password1'])), stripslashes($_POST['email']),
+				1, 0, time(), 0,
+				$salt, '', '', '',
+				$ip, $ip, '', '',
+				'', '', '', '',
+				'', '', '', '', '',
+				'', '', '',
+			),
+			array('id_member')
+		);
 
 		// Awww, crud!
 		if ($request === false)
@@ -1284,10 +1337,14 @@ function doStep2()
 	if (isset($id) && isset($salt))
 		setLoginCookie(3153600 * 60, $id, sha1(sha1(strtolower($_POST['username']) . $_POST['password1']) . $salt));
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT value
-		FROM {$db_prefix}settings
-		WHERE variable = 'databaseSession_enable'", false, false);
+		FROM {db_prefix}settings
+		WHERE variable = {string:db_sessions}',
+		array(
+			'db_sessions' => 'databaseSession_enable',
+		)
+	);
 	if ($smfFunc['db_num_rows']($result) != 0)
 		list ($db_sessions) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
@@ -1300,13 +1357,18 @@ function doStep2()
 	}
 	else
 	{
-		$_SERVER['HTTP_USER_AGENT'] = $smfFunc['db_escape_string'](substr($_SERVER['HTTP_USER_AGENT'], 0, 211));
+		$_SERVER['HTTP_USER_AGENT'] = substr($_SERVER['HTTP_USER_AGENT'], 0, 211);
 
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}sessions
-				(session_id, last_update, data)
-			VALUES ('" . session_id() . "', " . time() . ",
-				'USER_AGENT|s:" . strlen($smfFunc['db_unescape_string']($_SERVER['HTTP_USER_AGENT'])) . ":\"$_SERVER[HTTP_USER_AGENT]\";admin_time|i:" . time() . ";')", false, false);
+		$smfFunc['db_insert']('',
+			$db_prefix . 'sessions',
+			array(
+				'session_id' => 'string', 'last_update' => 'int', 'data' => 'string',
+			),
+			array(
+				session_id(), time(), 'USER_AGENT|s:' . strlen($_SERVER['HTTP_USER_AGENT']) . ':"' . $_SERVER['HTTP_USER_AGENT'] . '";admin_time|i:' . time() . ';',
+			),
+			array('session_id')
+		);
 	}
 	updateStats('member');
 	updateStats('message');
@@ -1316,12 +1378,15 @@ function doStep2()
 	$smfFunc['strtolower'] = $db_character_set === 'utf8' || $txt['lang_character_set'] === 'UTF-8' ? create_function('$string', '
 		return $string;') : 'strtolower';
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_msg
-		FROM {$db_prefix}messages
+		FROM {db_prefix}messages
 		WHERE id_msg = 1
 			AND modified_time = 0
-		LIMIT 1", false, false);
+		LIMIT 1',
+		array(
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) > 0)
 		updateStats('subject', 1, $smfFunc['db_escape_string'](htmlspecialchars($txt['default_topic_subject'])));
 	$smfFunc['db_free_result']($request);
@@ -1366,9 +1431,12 @@ function doStep2()
 	// Now is the perfect time to fetch the SM files.
 	require_once($sourcedir . '/ScheduledTasks.php');
 	// Need to make sure all the settings are loaded.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT variable, value
-		FROM {$db_prefix}settings", false, false);
+		FROM {db_prefix}settings',
+		array(
+		)
+	);
 	if ($request) // Only proceed if we can load the data.
 	{
 		$modSettings = array();

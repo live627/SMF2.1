@@ -83,7 +83,7 @@ function ViewErrorLog()
 		$filter = array(
 			'variable' => $_GET['filter'],
 			'value' => array(
-				'sql' => $smfFunc['db_escape_string'](in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%'))
+				'sql' => in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%')
 			),
 			'href' => ';filter=' . $_GET['filter'] . ';value=' . $_GET['value'],
 			'entity' => $filters[$_GET['filter']]
@@ -97,8 +97,9 @@ function ViewErrorLog()
 	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_errors' . (isset($filter) ? '
-		WHERE ' . $filter['variable'] . ' LIKE \'' . $filter['value']['sql'] . '\'' : ''),
+		WHERE ' . $filter['variable'] . ' LIKE {string:filter}' : ''),
 		array(
+			'filter' => isset($filter) ? $filter['value']['sql'] : '',
 		)
 	);
 	list ($num_errors) = $smfFunc['db_fetch_row']($result);
@@ -123,10 +124,11 @@ function ViewErrorLog()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_error, id_member, ip, url, log_time, message, session, error_type, file, line
 		FROM {db_prefix}log_errors' . (isset($filter) ? '
-		WHERE ' . $filter['variable'] . ' LIKE \'' . $filter['value']['sql'] . '\'' : '') . '
+		WHERE ' . $filter['variable'] . ' LIKE {string:filter}' : '') . '
 		ORDER BY id_error ' . ($context['sort_direction'] == 'down' ? 'DESC' : '') . '
 		LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'],
 		array(
+			'filter' => isset($filter) ? $filter['value']['sql'] : '',
 		)
 	);
 	$context['errors'] = array();
@@ -188,10 +190,10 @@ function ViewErrorLog()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, member_name, real_name
 			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:inject_array_int_1})
+			WHERE id_member IN ({array_int:member_list})
 			LIMIT ' . count($members),
 			array(
-				'inject_array_int_1' => $members,
+				'member_list' => $members,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -229,10 +231,10 @@ function ViewErrorLog()
 			$context['filter']['value']['html'] = '<a href="' . $scripturl . '?action=profile;u=' . $id . '">' . $user_profile[$id]['real_name'] . '</a>';
 		}
 		elseif ($filter['variable'] == 'url')
-			$context['filter']['value']['html'] = '\'' . htmlspecialchars($scripturl . $smfFunc['db_unescape_string']($filter['value']['sql'])) . '\'';
+			$context['filter']['value']['html'] = '\'' . htmlspecialchars($scripturl . $filter['value']['sql']) . '\'';
 		elseif ($filter['variable'] == 'message')
 		{
-			$context['filter']['value']['html'] = '\'' . strtr(htmlspecialchars($smfFunc['db_unescape_string']($filter['value']['sql'])), array("\n" => '<br />', '&lt;br /&gt;' => '<br />', "\t" => '&nbsp;&nbsp;&nbsp;', '\_' => '_', '\\%' => '%', '\\\\' => '\\')) . '\'';
+			$context['filter']['value']['html'] = '\'' . strtr(htmlspecialchars($filter['value']['sql']), array("\n" => '<br />', '&lt;br /&gt;' => '<br />', "\t" => '&nbsp;&nbsp;&nbsp;', '\_' => '_', '\\%' => '%', '\\\\' => '\\')) . '\'';
 			$context['filter']['value']['html'] = preg_replace('~&amp;lt;span class=&amp;quot;remove&amp;quot;&amp;gt;(.+?)&amp;lt;/span&amp;gt;~', '$1', $context['filter']['value']['html']);
 		}
 		else
@@ -261,9 +263,9 @@ function ViewErrorLog()
 		SELECT error_type, COUNT(*) AS num_errors
 		FROM {db_prefix}log_errors
 		GROUP BY error_type
-		ORDER BY error_type = {string:inject_string_1} DESC, error_type ASC',
+		ORDER BY error_type = {string:critical_type} DESC, error_type ASC',
 		array(
-			'inject_string_1' => 'critical',
+			'critical_type' => 'critical',
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -275,7 +277,7 @@ function ViewErrorLog()
 			'label' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
 			'description' => isset($txt['errortype_' . $row['error_type'] . '_desc']) ? $txt['errortype_' . $row['error_type'] . '_desc'] : '',
 			'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
-			'is_selected' => isset($filter) && $filter['value']['sql'] == $smfFunc['db_escape_string'](addcslashes($row['error_type'], '\\_%')),
+			'is_selected' => isset($filter) && $filter['value']['sql'] == addcslashes($row['error_type'], '\\_%'),
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -314,8 +316,9 @@ function deleteErrors()
 	elseif (isset($_POST['delall']) && isset($filter))
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_errors
-			WHERE ' . $filter['variable'] . ' LIKE \'' . $filter['value']['sql'] . '\'',
+			WHERE ' . $filter['variable'] . ' LIKE {string:filter}',
 			array(
+				'filter' => $filter['value']['sql'],
 			)
 		);
 	// Just specific errors?
@@ -323,9 +326,9 @@ function deleteErrors()
 	{
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_errors
-			WHERE id_error IN ({array_int:inject_array_int_1})',
+			WHERE id_error IN ({array_int:error_list})',
 			array(
-				'inject_array_int_1' => array_unique($_POST['delete']),
+				'error_list' => array_unique($_POST['delete']),
 			)
 		);
 

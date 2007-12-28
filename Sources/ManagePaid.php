@@ -372,10 +372,10 @@ function ModifySubscription()
 	{
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}subscriptions
-			WHERE id_subscribe = {int:inject_int_1}
+			WHERE id_subscribe = {int:current_subscription}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $context['sub_id'],
+				'current_subscription' => $context['sub_id'],
 			)
 		);
 
@@ -425,13 +425,19 @@ function ModifySubscription()
 		// Is it new?!
 		if ($context['action_type'] == 'add')
 		{
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}subscriptions
-					(name, description, active, length, cost, id_group, add_groups, repeatable, allow_partial, email_complete, reminder)
-				VALUES
-					(\'' . $_POST['name'] . '\', \'' . $_POST['desc'] . '\', ' . $isActive . ', \'' . $span . '\', \'' . $cost . '\', ' . $_POST['prim_group'] . ', \'' . $addgroups . '\', ' . $isRepeatable . ', ' . $allowpartial . ', \'' . $emailComplete . '\', ' . $reminder . ')',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'subscriptions',
 				array(
-				)
+					'name' => 'string-60', 'description' => 'string-255', 'active' => 'int', 'length' => 'string-4', 'cost' => 'string',
+					'id_group' => 'int', 'add_groups' => 'string-40', 'repeatable' => 'int', 'allow_partial' => 'int', 'email_complete' => 'string',
+					'reminder' => 'int',
+				),
+				array(
+					$_POST['name'], $_POST['desc'], $isActive, $span, $cost,
+					$_POST['prim_group'], $addgroups, $isRepeatable, $allowpartial, $emailComplete,
+					$reminder,
+				),
+				array('id_subscribe')
 			);
 		}
 		// Otherwise must be editing.
@@ -441,11 +447,11 @@ function ModifySubscription()
 			$request = $smfFunc['db_query']('', '
 				SELECT COUNT(*)
 				FROM {db_prefix}log_subscribed
-				WHERE id_subscribe = {int:inject_int_1}
-					AND status = {int:inject_int_2}',
+				WHERE id_subscribe = {int:current_subscription}
+					AND status = {int:is_active}',
 				array(
-					'inject_int_1' => $context['sub_id'],
-					'inject_int_2' => 1,
+					'current_subscription' => $context['sub_id'],
+					'is_active' => 1,
 				)
 			);
 			list ($disableGroups) = $smfFunc['db_fetch_row']($request);
@@ -453,23 +459,24 @@ function ModifySubscription()
 
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}subscriptions
-					SET name = {string:inject_string_1}, description = {string:inject_string_2}, active = {int:inject_int_1}, length = {string:inject_string_3},
-					cost = {string:inject_string_4}' . ($disableGroups ? '' : ', id_group = {int:inject_int_2}, add_groups = {string:inject_string_5}') . ',
-					repeatable = {int:inject_int_3}, allow_partial = {int:inject_int_4}, email_complete = {string:inject_string_6}, reminder = {int:inject_int_5}
-				WHERE id_subscribe = {int:inject_int_6}',
+					SET name = SUBSTRING({string:name}, 1, 60), description = SUBSTRING({string:description}, 1, 255), active = {int:is_active},
+					length = SUBSTRING({string:length}, 1, 4), cost = {string:cost}' . ($disableGroups ? '' : ', id_group = {int:id_group},
+					add_groups = {string:additional_groups}') . ', repeatable = {int:repeatable}, allow_partial = {int:allow_partial},
+					email_complete = {string:email_complete}, reminder = {int:reminder}
+				WHERE id_subscribe = {int:current_subscription}',
 				array(
-					'inject_int_1' => $isActive,
-					'inject_int_2' => $_POST['prim_group'],
-					'inject_int_3' => $isRepeatable,
-					'inject_int_4' => $allowpartial,
-					'inject_int_5' => $reminder,
-					'inject_int_6' => $context['sub_id'],
-					'inject_string_1' => $_POST['name'],
-					'inject_string_2' => $_POST['desc'],
-					'inject_string_3' => $span,
-					'inject_string_4' => $cost,
-					'inject_string_5' => $addgroups,
-					'inject_string_6' => $emailComplete,
+					'is_active' => $isActive,
+					'id_group' => !empty($_POST['prim_group']) ? $_POST['prim_group'] : 0,
+					'repeatable' => $isRepeatable,
+					'allow_partial' => $allowpartial,
+					'reminder' => $reminder,
+					'current_subscription' => $context['sub_id'],
+					'name' => $_POST['name'],
+					'description' => $_POST['desc'],
+					'length' => $span,
+					'cost' => $cost,
+					'additional_groups' => !empty($addgroups) ? $addgroups : '',
+					'email_complete' => $emailComplete,
 				)
 			);
 		}
@@ -506,10 +513,10 @@ function ModifySubscription()
 		$request = $smfFunc['db_query']('', '
 			SELECT name, description, cost, length, id_group, add_groups, active, repeatable, allow_partial, email_complete, reminder
 			FROM {db_prefix}subscriptions
-			WHERE id_subscribe = {int:inject_int_1}
+			WHERE id_subscribe = {int:current_subscription}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $context['sub_id'],
+				'current_subscription' => $context['sub_id'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -557,11 +564,11 @@ function ModifySubscription()
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}log_subscribed
-			WHERE id_subscribe = {int:inject_int_1}
-				AND status = {int:inject_int_2}',
+			WHERE id_subscribe = {int:current_subscription}
+				AND status = {int:is_active}',
 			array(
-				'inject_int_1' => $context['sub_id'],
-				'inject_int_2' => 1,
+				'current_subscription' => $context['sub_id'],
+				'is_active' => 1,
 			)
 		);
 		list ($context['disable_groups']) = $smfFunc['db_fetch_row']($request);
@@ -572,11 +579,11 @@ function ModifySubscription()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name
 		FROM {db_prefix}membergroups
-		WHERE id_group != {int:inject_int_1}
-			AND min_posts = {int:inject_int_2}',
+		WHERE id_group != {int:moderator_group}
+			AND min_posts = {int:min_posts}',
 		array(
-			'inject_int_1' => 3,
-			'inject_int_2' => -1,
+			'moderator_group' => 3,
+			'min_posts' => -1,
 		)
 	);
 	$context['groups'] = array();
@@ -600,9 +607,9 @@ function ViewSubscribedUsers()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_subscribe, name, description, cost, length, id_group, add_groups, active
 		FROM {db_prefix}subscriptions
-		WHERE id_subscribe = {int:inject_int_1}',
+		WHERE id_subscribe = {int:current_subscription}',
 		array(
-			'inject_int_1' => $context['sub_id'],
+			'current_subscription' => $context['sub_id'],
 		)
 	);
 	// Something wrong?
@@ -619,7 +626,8 @@ function ViewSubscribedUsers()
 	$smfFunc['db_free_result']($request);
 
 	// Are we searching for people?
-	$search_string = isset($_POST['ssearch']) && !empty($_POST['sub_search']) ? ' AND IFNULL(mem.real_name, \'$txt[guest]\') LIKE \'%' . $smfFunc['db_escape_string']($_POST['sub_search']) . '%\'' : '';
+	$search_string = isset($_POST['ssearch']) && !empty($_POST['sub_search']) ? ' AND IFNULL(mem.real_name, {string:guest}) LIKE {string:search}' : '';
+	$search_vars = empty($_POST['sub_search']) ? array() : array('search' => '%' . $_POST['sub_search'] . '%', 'guest' => $txt['guest']);
 
 	$listOptions = array(
 		'id' => 'subscribed_users_list',
@@ -631,6 +639,7 @@ function ViewSubscribedUsers()
 			'params' => array(
 				$context['sub_id'],
 				$search_string,
+				$search_vars,
 			),
 		),
 		'get_count' => array(
@@ -638,6 +647,7 @@ function ViewSubscribedUsers()
 			'params' => array(
 				$context['sub_id'],
 				$search_string,
+				$search_vars,
 			),
 		),
 		'columns' => array(
@@ -780,7 +790,7 @@ function ViewSubscribedUsers()
 }
 
 // Returns how many people are subscribed to a paid subscription.
-function list_getSubscribedUserCount($id_sub, $search_string)
+function list_getSubscribedUserCount($id_sub, $search_string, $search_vars = array())
 {
 	global $smfFunc, $db_prefix;
 
@@ -789,12 +799,13 @@ function list_getSubscribedUserCount($id_sub, $search_string)
 		SELECT COUNT(*) AS total_subs
 		FROM {db_prefix}log_subscribed AS ls
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-		WHERE ls.id_subscribe = {int:inject_int_1} ' . $search_string . '
-			AND (ls.end_time != {int:inject_int_2} OR ls.payments_pending != {int:inject_int_2})',
-		array(
-			'inject_int_1' => $id_sub,
-			'inject_int_2' => 0,
-		)
+		WHERE ls.id_subscribe = {int:current_subscription} ' . $search_string . '
+			AND (ls.end_time != {int:no_end_time} OR ls.payments_pending != {int:no_pending_payments})',
+		array_merge($search_vars, array(
+			'current_subscription' => $id_sub,
+			'no_end_time' => 0,
+			'no_pending_payments' => 0,
+		))
 	);
 	list ($memberCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -802,23 +813,25 @@ function list_getSubscribedUserCount($id_sub, $search_string)
 	return $memberCount;
 }
 
-function list_getSubscribedUsers($start, $items_per_page, $sort, $id_sub, $search_string)
+function list_getSubscribedUsers($start, $items_per_page, $sort, $id_sub, $search_string, $search_vars = array())
 {
 	global $smfFunc, $db_prefix, $txt;
 
 	$request = $smfFunc['db_query']('', '
-		SELECT ls.id_sublog, IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, \'' . $txt['guest'] . '\') AS name, ls.start_time, ls.end_time,
+		SELECT ls.id_sublog, IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, {string:guest}) AS name, ls.start_time, ls.end_time,
 			ls.status, ls.payments_pending
 		FROM {db_prefix}log_subscribed AS ls
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-		WHERE ls.id_subscribe = {int:inject_int_1} ' . $search_string . '
-			AND (ls.end_time != {int:inject_int_2} OR ls.payments_pending != {int:inject_int_2})
+		WHERE ls.id_subscribe = {int:current_subscription} ' . $search_string . '
+			AND (ls.end_time != {int:no_end_time} OR ls.payments_pending != {int:no_payments_pending})
 		ORDER BY ' . $sort . '
 		LIMIT ' . $start . ', ' . $items_per_page,
-		array(
-			'inject_int_1' => $id_sub,
-			'inject_int_2' => 0,
-		)
+		array_merge($search_vars, array(
+			'current_subscription' => $id_sub,
+			'no_end_time' => 0,
+			'no_payments_pending' => 0,
+			'guest' => $txt['guest'],
+		))
 	);
 	$subscribers = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -858,9 +871,9 @@ function ModifyUserSubscription()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_subscribe
 			FROM {db_prefix}log_subscribed
-			WHERE id_sublog = {int:inject_int_1}',
+			WHERE id_sublog = {int:current_log_item}',
 			array(
-				'inject_int_1' => $context['log_id'],
+				'current_log_item' => $context['log_id'],
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -895,10 +908,10 @@ function ModifyUserSubscription()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_member, id_group
 				FROM {db_prefix}members
-				WHERE real_name = {string:inject_string_1}
+				WHERE real_name = {string:name}
 				LIMIT 1',
 				array(
-					'inject_string_1' => $_POST['name'],
+					'name' => $_POST['name'],
 				)
 			);
 			if ($smfFunc['db_num_rows']($request) == 0)
@@ -911,11 +924,11 @@ function ModifyUserSubscription()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_subscribe
 				FROM {db_prefix}log_subscribed
-				WHERE id_subscribe = {int:inject_int_1}
-					AND id_member = {int:inject_int_2}',
+				WHERE id_subscribe = {int:current_subscription}
+					AND id_member = {int:current_member}',
 				array(
-					'inject_int_1' => $context['sub_id'],
-					'inject_int_2' => $id_member,
+					'current_subscription' => $context['sub_id'],
+					'current_member' => $id_member,
 				)
 			);
 			if ($smfFunc['db_num_rows']($request) != 0)
@@ -927,13 +940,17 @@ function ModifyUserSubscription()
 				addSubscription($context['sub_id'], $id_member, 0, $starttime, $endtime);
 			else
 			{
-				$smfFunc['db_query']('', '
-					INSERT INTO {db_prefix}log_subscribed
-						(id_subscribe, id_member, old_id_group, start_time, end_time, status)
-					VALUES
-						(' . $context['sub_id'] . ', ' . $id_member . ', ' . $id_group . ', ' . $starttime . ', ' . $endtime . ', ' . $status . ')',
+				$smfFunc['db_insert']('',
+					$db_prefix . 'log_subscribed',
 					array(
-					)
+						'id_subscribe' => 'int', 'id_member' => 'int', 'old_id_group' => 'int', 'start_time' => 'int',
+						'end_time' => 'int', 'status' => 'int',
+					),
+					array(
+						$context['sub_id'], $id_member, $id_group, $starttime,
+						$endtime, $status,
+					),
+					array('id_sublog')
 				);
 			}
 		}
@@ -943,9 +960,9 @@ function ModifyUserSubscription()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_member, status
 				FROM {db_prefix}log_subscribed
-				WHERE id_sublog = {int:inject_int_1}',
+				WHERE id_sublog = {int:current_log_item}',
 				array(
-					'inject_int_1' => $context['log_id'],
+					'current_log_item' => $context['log_id'],
 				)
 			);
 			if ($smfFunc['db_num_rows']($request) == 0)
@@ -965,13 +982,13 @@ function ModifyUserSubscription()
 			{
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}log_subscribed
-					SET start_time = {int:inject_int_1}, end_time = {int:inject_int_2}, status = {int:inject_int_3}
-					WHERE id_sublog = {int:inject_int_4}',
+					SET start_time = {int:start_time}, end_time = {int:end_time}, status = {int:status}
+					WHERE id_sublog = {int:current_log_item}',
 					array(
-						'inject_int_1' => $starttime,
-						'inject_int_2' => $endtime,
-						'inject_int_3' => $status,
-						'inject_int_4' => $context['log_id'],
+						'start_time' => $starttime,
+						'end_time' => $endtime,
+						'status' => $status,
+						'current_log_item' => $context['log_id'],
 					)
 				);
 			}
@@ -993,9 +1010,9 @@ function ModifyUserSubscription()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_subscribe, id_member
 				FROM {db_prefix}log_subscribed
-				WHERE id_sublog IN ({array_int:inject_array_int_1})',
+				WHERE id_sublog IN ({array_int:subscription_list})',
 				array(
-					'inject_array_int_1' => $toDelete,
+					'subscription_list' => $toDelete,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1036,9 +1053,9 @@ function ModifyUserSubscription()
 			$request = $smfFunc['db_query']('', '
 				SELECT real_name
 				FROM {db_prefix}members
-				WHERE id_member = {int:inject_int_1}',
+				WHERE id_member = {int:current_member}',
 				array(
-					'inject_int_1' => (int) $_GET['uid'],
+					'current_member' => (int) $_GET['uid'],
 				)
 			);
 			list ($context['sub']['username']) = $smfFunc['db_fetch_row']($request);
@@ -1052,13 +1069,14 @@ function ModifyUserSubscription()
 	{
 		$request = $smfFunc['db_query']('', '
 			SELECT ls.id_sublog, ls.id_subscribe, ls.id_member, start_time, end_time, status, payments_pending, pending_details,
-				IFNULL(mem.real_name, \'\') AS username
+				IFNULL(mem.real_name, {string:blank_string}) AS username
 			FROM {db_prefix}log_subscribed AS ls
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-			WHERE ls.id_sublog = {int:inject_int_1}
+			WHERE ls.id_sublog = {int:current_subscription_item}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $context['log_id'],
+				'current_subscription_item' => $context['log_id'],
+				'blank_string' => '',
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -1111,16 +1129,16 @@ function ModifyUserSubscription()
 							addSubscription($context['current_subscription']['id'], $row['id_member'], $context['current_subscription']['real_length'] == 'F' ? strtoupper(substr($pending[2], 0, 1)) : 0);
 						unset($pending_details[$id]);
 
-						$new_details = $smfFunc['db_escape_string'](serialize($pending_details));
+						$new_details = serialize($pending_details);
 
 						// Update the entry.
 						$smfFunc['db_query']('', '
 							UPDATE {db_prefix}log_subscribed
-							SET payments_pending = payments_pending - 1, pending_details = {string:inject_string_1}
-							WHERE id_sublog = {int:inject_int_1}',
+							SET payments_pending = payments_pending - 1, pending_details = {string:pending_details}
+							WHERE id_sublog = {int:current_subscription_item}',
 							array(
-								'inject_int_1' => $context['log_id'],
-								'inject_string_1' => $new_details,
+								'current_subscription_item' => $context['log_id'],
+								'pending_details' => $new_details,
 							)
 						);
 
@@ -1172,9 +1190,9 @@ function reapplySubscriptions($users)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, id_group, additional_groups
 		FROM {db_prefix}members
-		WHERE id_member IN ({array_int:inject_array_int_1})',
+		WHERE id_member IN ({array_int:user_list})',
 		array(
-			'inject_array_int_1' => $users,
+			'user_list' => $users,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1190,11 +1208,11 @@ function reapplySubscriptions($users)
 		SELECT ls.id_member, ls.old_id_group, s.id_group, s.add_groups
 		FROM {db_prefix}log_subscribed AS ls
 			INNER JOIN {db_prefix}subscriptions AS s ON (s.id_subscribe = ls.id_subscribe)
-		WHERE ls.id_member IN ({array_int:inject_array_int_1})
-			AND ls.end_time > {int:inject_int_1}',
+		WHERE ls.id_member IN ({array_int:user_list})
+			AND ls.end_time > {int:current_time}',
 		array(
-			'inject_array_int_1' => $users,
-			'inject_int_1' => time(),
+			'user_list' => $users,
+			'current_time' => time(),
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1225,13 +1243,13 @@ function reapplySubscriptions($users)
 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
-			SET id_group = {int:inject_int_1}, additional_groups = {string:inject_string_1}
-			WHERE id_member = {int:inject_int_2}
+			SET id_group = {int:primary_group}, additional_groups = {string:additional_groups}
+			WHERE id_member = {int:current_member}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $group['primary'],
-				'inject_int_2' => $id,
-				'inject_string_1' => $addgroups,
+				'primary_group' => $group['primary'],
+				'current_member' => $id,
+				'additional_groups' => $addgroups,
 			)
 		);
 	}
@@ -1280,13 +1298,13 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 	$request = $smfFunc['db_query']('', '
 		SELECT id_sublog, end_time, start_time
 		FROM {db_prefix}log_subscribed
-		WHERE id_subscribe = {int:inject_int_1}
-			AND id_member = {int:inject_int_2}
-			AND status = {int:inject_int_3}',
+		WHERE id_subscribe = {int:current_subscription}
+			AND id_member = {int:current_member}
+			AND status = {int:is_active}',
 		array(
-			'inject_int_1' => $id_subscribe,
-			'inject_int_2' => $id_member,
-			'inject_int_3' => 1,
+			'current_subscription' => $id_subscribe,
+			'current_member' => $id_member,
+			'is_active' => 1,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) != 0)
@@ -1308,12 +1326,12 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 		// As everything else should be good, just update!
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_subscribed
-			SET end_time = {int:inject_int_1}, start_time = {int:inject_int_2}
-			WHERE id_sublog = {int:inject_int_3}',
+			SET end_time = {int:end_time}, start_time = {int:start_time}
+			WHERE id_sublog = {int:current_subscription_item}',
 			array(
-				'inject_int_1' => $endtime,
-				'inject_int_2' => $starttime,
-				'inject_int_3' => $id_sublog,
+				'end_time' => $endtime,
+				'start_time' => $starttime,
+				'current_subscription_item' => $id_sublog,
 			)
 		);
 
@@ -1325,9 +1343,9 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 	$request = $smfFunc['db_query']('', '
 		SELECT m.id_group, m.additional_groups
 		FROM {db_prefix}members AS m
-		WHERE m.id_member = {int:inject_int_1}',
+		WHERE m.id_member = {int:current_member}',
 		array(
-			'inject_int_1' => $id_member,
+			'current_member' => $id_member,
 		)
 	);
 	// Just in case the member doesn't exist.
@@ -1365,12 +1383,12 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 	// Store the new settings.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}members
-		SET id_group = {int:inject_int_1}, additional_groups = {string:inject_string_1}
-		WHERE id_member = {int:inject_int_2}',
+		SET id_group = {int:primary_group}, additional_groups = {string:additional_groups}
+		WHERE id_member = {int:current_member}',
 		array(
-			'inject_int_1' => $id_group,
-			'inject_int_2' => $id_member,
-			'inject_string_1' => $newAddGroups,
+			'primary_group' => $id_group,
+			'current_member' => $id_member,
+			'additional_groups' => $newAddGroups,
 		)
 	);
 
@@ -1378,11 +1396,11 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 	$request = $smfFunc['db_query']('', '
 		SELECT id_sublog, end_time, start_time
 		FROM {db_prefix}log_subscribed
-		WHERE id_subscribe = {int:inject_int_1}
-			AND id_member = {int:inject_int_2}',
+		WHERE id_subscribe = {int:current_subscription}
+			AND id_member = {int:current_member}',
 		array(
-			'inject_int_1' => $id_subscribe,
-			'inject_int_2' => $id_member,
+			'current_subscription' => $id_subscribe,
+			'current_member' => $id_member,
 		)
 	);
 	//!!! Don't really need to do this twice...
@@ -1405,16 +1423,16 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 		// As everything else should be good, just update!
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_subscribed
-			SET start_time = {int:inject_int_1}, end_time = {int:inject_int_2}, old_id_group = {int:inject_int_3}, status = {int:inject_int_4},
-				reminder_sent = {int:inject_int_5}
-			WHERE id_sublog = {int:inject_int_6}',
+			SET start_time = {int:start_time}, end_time = {int:end_time}, old_id_group = {int:old_id_group}, status = {int:is_active},
+				reminder_sent = {int:no_reminder_sent}
+			WHERE id_sublog = {int:current_subscription_item}',
 			array(
-				'inject_int_1' => $starttime,
-				'inject_int_2' => $endtime,
-				'inject_int_3' => $old_id_group,
-				'inject_int_4' => 1,
-				'inject_int_5' => 0,
-				'inject_int_6' => $id_sublog,
+				'start_time' => $starttime,
+				'end_time' => $endtime,
+				'old_id_group' => $old_id_group,
+				'is_active' => 1,
+				'no_reminder_sent' => 0,
+				'current_subscription_item' => $id_sublog,
 			)
 		);
 
@@ -1432,13 +1450,17 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 	else
 		$starttime = $forceStartTime;
 
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}log_subscribed
-			(id_subscribe, id_member, old_id_group, start_time, end_time, status)
-		VALUES
-			(' . $id_subscribe . ', ' . $id_member . ', ' . $old_id_group . ', ' . $starttime . ', ' . $endtime . ', 1)',
+	$smfFunc['db_insert']('',
+		$db_prefix . 'log_subscribed',
 		array(
-		)
+			'id_subscribe' => 'int', 'id_member' => 'int', 'old_id_group' => 'int', 'start_time' => 'int',
+			'end_time' => 'int', 'status' => 'int',
+		),
+		array(
+			$id_subscribe, $id_member, $old_id_group, $starttime,
+			$endtime, 1,
+		),
+		array('id_sublog')
 	);
 }
 
@@ -1453,9 +1475,9 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	$request = $smfFunc['db_query']('', '
 		SELECT m.id_group, m.additional_groups
 		FROM {db_prefix}members AS m
-		WHERE m.id_member = {int:inject_int_1}',
+		WHERE m.id_member = {int:current_member}',
 		array(
-			'inject_int_1' => $id_member,
+			'current_member' => $id_member,
 		)
 	);
 
@@ -1464,9 +1486,9 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	{
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_subscribed
-			WHERE id_member = {int:inject_int_1}',
+			WHERE id_member = {int:current_member}',
 			array(
-				'inject_int_1' => $id_member,
+				'current_member' => $id_member,
 			)
 		);
 		return;
@@ -1478,11 +1500,11 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_subscribe, old_id_group
 		FROM {db_prefix}log_subscribed
-		WHERE id_member = {int:inject_int_1}
-			AND status = {int:inject_int_2}',
+		WHERE id_member = {int:current_member}
+			AND status = {int:is_active}',
 		array(
-			'inject_int_1' => $id_member,
-			'inject_int_2' => 1,
+			'current_member' => $id_member,
+			'is_active' => 1,
 		)
 	);
 
@@ -1556,12 +1578,12 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	// Update the member
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}members
-		SET id_group = {int:inject_int_1}, additional_groups = {string:inject_string_1}
-		WHERE id_member = {int:inject_int_2}',
+		SET id_group = {int:primary_group}, additional_groups = {string:existing_groups}
+		WHERE id_member = {int:current_member}',
 		array(
-			'inject_int_1' => $id_group,
-			'inject_int_2' => $id_member,
-			'inject_string_1' => $existingGroups,
+			'primary_group' => $id_group,
+			'current_member' => $id_member,
+			'existing_groups' => $existingGroups,
 		)
 	);
 
@@ -1569,24 +1591,24 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	if (!$delete)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_subscribed
-			SET status = {int:inject_int_1}
-			WHERE id_member = {int:inject_int_2}
-				AND id_subscribe = {int:inject_int_3}',
+			SET status = {int:not_active}
+			WHERE id_member = {int:current_member}
+				AND id_subscribe = {int:current_subscription}',
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => $id_member,
-				'inject_int_3' => $id_subscribe,
+				'not_active' => 0,
+				'current_member' => $id_member,
+				'current_subscription' => $id_subscribe,
 			)
 		);
 	// Otherwise delete it!
 	else
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_subscribed
-			WHERE id_member = {int:inject_int_1}
-				AND id_subscribe = {int:inject_int_2}',
+			WHERE id_member = {int:current_member}
+				AND id_subscribe = {int:current_subscription}',
 			array(
-				'inject_int_1' => $id_member,
-				'inject_int_2' => $id_subscribe,
+				'current_member' => $id_member,
+				'current_subscription' => $id_subscribe,
 			)
 		);
 }

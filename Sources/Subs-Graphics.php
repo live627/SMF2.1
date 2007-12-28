@@ -124,13 +124,16 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	unset($testGD);
 
 	require_once($sourcedir . '/ManageAttachments.php');
-	removeAttachments(array('members' => $memID));
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}attachments
-			(id_member, attachment_type, filename, fileext, size)
-		VALUES (' . $memID . ', ' . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ', \'' . $destName . '\', \'' . $ext . '\', 1)',
+	removeAttachments(array('id_member' => $memID));
+	$smfFunc['db_insert']('',
+		$db_prefix . 'attachments',
 		array(
-		)
+			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'int', 'fileext' => 'int', 'size' => 'int',
+		),
+		array(
+			$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $ext, 1,
+		),
+		array('id_attach')
 	);
 	$attachID = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
 	// Retain this globally in case the script wants it.
@@ -198,15 +201,15 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			// Write filesize in the database.
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}attachments
-				SET size = {int:inject_int_1}, width = {int:inject_int_2}, height = {int:inject_int_3},
-					mime_type = {string:inject_string_1}
-				WHERE id_attach = {int:inject_int_4}',
+				SET size = {int:filesize}, width = {int:width}, height = {int:height},
+					mime_type = {string:mime_type}
+				WHERE id_attach = {int:current_attachment}',
 				array(
-					'inject_int_1' => filesize($destName),
-					'inject_int_2' => (int) $width,
-					'inject_int_3' => (int) $height,
-					'inject_int_4' => $attachID,
-					'inject_string_1' => $mime_type,
+					'filesize' => filesize($destName),
+					'width' => (int) $width,
+					'height' => (int) $height,
+					'current_attachment' => $attachID,
+					'mime_type' => $mime_type,
 				)
 			);
 			return true;
@@ -218,9 +221,9 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	{
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}attachments
-			WHERE id_attach = {int:inject_int_1}',
+			WHERE id_attach = {int:current_attachment}',
 			array(
-				'inject_int_1' => $attachID,
+				'current_attachment' => $attachID,
 			)
 		);
 

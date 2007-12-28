@@ -787,7 +787,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	$query_parameter = array(
 		'thumb_attachment_type' => 3,
 	);
-
+print_r($condition);
 	if (is_array($condition))
 	{
 		foreach ($condition as $real_type => $restriction)
@@ -796,7 +796,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			$is_not = substr($real_type, 0, 4) == 'not_';
 			$type = $is_not ? substr($real_type, 4) : $real_type;
 
-			if (in_array($type, array('member', 'id_attach', 'id_msg')))
+			if (in_array($type, array('id_member', 'id_attach', 'id_msg')))
 				$new_condition[] = 'a.' . $type . ($is_not ? ' NOT' : '') . ' IN (' . (is_array($restriction) ? '{array_int:' . $real_type . '}' : '{int:' . $real_type . '}') . ')';
 			elseif ($type == 'attachment_type')
 				$new_condition[] = 'a.attachment_type = {int:' . $real_type . '}';
@@ -814,7 +814,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 		}
 		$condition = implode(' AND ', $new_condition);
 	}
-
+print_r($new_condition);
 	// Delete it only if it exists...
 	$msgs = array();
 	$attach = array();

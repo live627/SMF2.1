@@ -279,12 +279,12 @@ function showPosts($memID)
 		FROM {db_prefix}messages AS m' . ($context['is_topics'] ? '
 			INNER JOIN {db_prefix}topics AS t ON (t.id_first_msg = m.id_msg)' : '') . '
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
-		WHERE m.id_member = {int:inject_int_1}
+		WHERE m.id_member = {int:current_member}
 			' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:inject_int_2}'),
+			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => 1,
+			'current_member' => $memID,
+			'is_approved' => 1,
 		)
 	);
 	list ($msgCount) = $smfFunc['db_fetch_row']($request);
@@ -293,12 +293,12 @@ function showPosts($memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {db_prefix}messages AS m
-		WHERE m.id_member = {int:inject_int_1}
+		WHERE m.id_member = {int:current_member}
 			' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:inject_int_2}'),
+			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => 1,
+			'current_member' => $memID,
+			'is_approved' => 1,
 		)
 	);
 	list ($min_msg_member, $max_msg_member) = $smfFunc['db_fetch_row']($request);
@@ -347,17 +347,17 @@ function showPosts($memID)
 				INNER JOIN {db_prefix}topics AS t ON (' . ($context['is_topics'] ? 't.id_first_msg = m.id_msg' : 't.id_topic = m.id_topic') . ')
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-			WHERE m.id_member = {int:inject_int_1}
+			WHERE m.id_member = {int:current_member}
 				' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
 				' . (empty($range_limit) ? '' : '
 				AND ' . $range_limit) . '
 				AND ' . $user_info['query_see_board'] . '
-				' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:inject_int_2} AND t.approved = {int:inject_int_2}') . '
+				' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
 			ORDER BY m.id_msg ' . ($reverse ? 'ASC' : 'DESC') . '
 			LIMIT ' . $start . ', ' . $maxIndex,
 			array(
-				'inject_int_1' => $memID,
-				'inject_int_2' => 1,
+				'current_member' => $memID,
+				'is_approved' => 1,
 			)
 		);
 
@@ -488,17 +488,18 @@ function showAttachments($memID)
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE a.attachment_type = {int:inject_int_1}
-			AND a.id_msg != {int:inject_int_1}
-			AND m.id_member = {int:inject_int_2}
+		WHERE a.attachment_type = {int:attachment_type}
+			AND a.id_msg != {int:no_message}
+			AND m.id_member = {int:current_member}
 			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:inject_array_int_1})' : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:inject_int_3}'),
+			AND b.id_board IN ({array_int:boards_list})' : '') . '
+			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
 		array(
-			'inject_array_int_1' => $boardsAllowed,
-			'inject_int_1' => 0,
-			'inject_int_2' => $memID,
-			'inject_int_3' => 1,
+			'boards_list' => $boardsAllowed,
+			'attachment_type' => 0,
+			'no_message' => 0,
+			'current_member' => $memID,
+			'is_approved' => 1,
 		)
 	);
 	list ($attachCount) = $smfFunc['db_fetch_row']($request);
@@ -528,19 +529,20 @@ function showAttachments($memID)
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE a.attachment_type = {int:inject_int_1}
-			AND a.id_msg != {int:inject_int_1}
-			AND m.id_member = {int:inject_int_2}
+		WHERE a.attachment_type = {int:attachment_type}
+			AND a.id_msg != {int:no_message}
+			AND m.id_member = {int:current_member}
 			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:inject_array_int_1})' : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:inject_int_3}') . '
+			AND b.id_board IN ({array_int:boards_list})' : '') . '
+			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}') . '
 		ORDER BY ' . $sort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . '
 		LIMIT ' . $context['start'] . ', ' . $maxIndex,
 		array(
-			'inject_array_int_1' => $boardsAllowed,
-			'inject_int_1' => 0,
-			'inject_int_2' => $memID,
-			'inject_int_3' => 1,
+			'boards_list' => $boardsAllowed,
+			'attachment_type' => 0,
+			'no_message' => 0,
+			'current_member' => $memID,
+			'is_approved' => 1,
 		)
 	);
 	$context['attachments'] = array();
@@ -580,11 +582,11 @@ function statPanel($memID)
 	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}topics
-		WHERE id_member_started = {int:inject_int_1}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND id_board != {int:inject_int_2}' : ''),
+		WHERE id_member_started = {int:current_member}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND id_board != {int:recycle_board}' : ''),
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => $modSettings['recycle_board'],
+			'current_member' => $memID,
+			'recycle_board' => $modSettings['recycle_board'],
 		)
 	);
 	list ($context['num_topics']) = $smfFunc['db_fetch_row']($result);
@@ -594,13 +596,13 @@ function statPanel($memID)
 	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}topics
-		WHERE id_member_started = {int:inject_int_1}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND id_board != {int:inject_int_2}' : '') . '
-			AND id_poll != {int:inject_int_3}',
+		WHERE id_member_started = {int:current_member}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND id_board != {int:recycle_board}' : '') . '
+			AND id_poll != {int:no_poll}',
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => $modSettings['recycle_board'],
-			'inject_int_3' => 0,
+			'current_member' => $memID,
+			'recycle_board' => $modSettings['recycle_board'],
+			'no_poll' => 0,
 		)
 	);
 	list ($context['num_polls']) = $smfFunc['db_fetch_row']($result);
@@ -610,9 +612,9 @@ function statPanel($memID)
 	$result = $smfFunc['db_query']('distinct_poll_votes', '
 		SELECT COUNT(DISTINCT id_poll)
 		FROM {db_prefix}log_polls
-		WHERE id_member = {int:inject_int_1}',
+		WHERE id_member = {int:current_member}',
 		array(
-			'inject_int_1' => $memID,
+			'current_member' => $memID,
 		)
 	);
 	list ($context['num_votes']) = $smfFunc['db_fetch_row']($result);
@@ -629,13 +631,13 @@ function statPanel($memID)
 			b.id_board, MAX(b.name) AS name, MAX(b.num_posts) AS num_posts, COUNT(*) AS message_count
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE m.id_member = {int:inject_int_1}
+		WHERE m.id_member = {int:current_member}
 			AND ' . $user_info['query_see_board'] . '
 		GROUP BY b.id_board
 		ORDER BY message_count DESC
 		LIMIT 10',
 		array(
-			'inject_int_1' => $memID,
+			'current_member' => $memID,
 		)
 	);
 	$context['popular_boards'] = array();
@@ -665,13 +667,13 @@ function statPanel($memID)
 			b.id_board, MAX(b.name) AS name, CASE WHEN COUNT(*) > MAX(b.num_posts) THEN 1 ELSE COUNT(*) / MAX(b.num_posts) END * 100 AS percentage
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE m.id_member = {int:inject_int_1}
+		WHERE m.id_member = {int:current_member}
 			AND ' . $user_info['query_see_board'] . '
 		GROUP BY b.id_board
 		ORDER BY percentage DESC
 		LIMIT 10',
 		array(
-			'inject_int_1' => $memID,
+			'current_member' => $memID,
 		)
 	);
 	$context['board_activity'] = array();
@@ -697,15 +699,16 @@ function statPanel($memID)
 	// Posting activity by time.
 	$result = $smfFunc['db_query']('user_activity_by_time', '
 		SELECT
-			HOUR(FROM_UNIXTIME(poster_time + ' . (($user_info['time_offset'] + $modSettings['time_offset']) * 3600) . ')) AS hour,
+			HOUR(FROM_UNIXTIME(poster_time + {int:time_offset})) AS hour,
 			COUNT(*) AS post_count
 		FROM {db_prefix}messages
-		WHERE id_member = {int:inject_int_1}' . ($modSettings['totalMessages'] > 100000 ? '
-			AND id_topic > {int:inject_int_2}' : '') . '
+		WHERE id_member = {int:current_member}' . ($modSettings['totalMessages'] > 100000 ? '
+			AND id_topic > {int:top_ten_thousand_topics}' : '') . '
 		GROUP BY hour',
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => $modSettings['totalTopics'] - 10000,
+			'current_member' => $memID,
+			'top_ten_thousand_topics' => $modSettings['totalTopics'] - 10000,
+			'time_offset' => (($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
 		)
 	);
 	$maxPosts = 0;
@@ -765,13 +768,15 @@ function trackUser($memID)
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
 			'params' => array(
-				'le.id_member = ' . $memID,
+				'le.id_member = {int:current_member}',
+				array('current_member' => $memID),
 			),
 		),
 		'get_count' => array(
 			'function' => 'list_getUserErrorCount',
 			'params' => array(
-				'id_member = ' . $memID,
+				'id_member = {int:current_member}',
+				array('current_member' => $memID),
 			),
 		),
 		'columns' => array(
@@ -839,9 +844,9 @@ function trackUser($memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT MAX(id_msg)
 			FROM {db_prefix}messages AS m
-			WHERE m.id_member = {int:inject_int_1}',
+			WHERE m.id_member = {int:current_member}',
 			array(
-				'inject_int_1' => $memID,
+				'current_member' => $memID,
 			)
 		);
 		list ($max_msg_member) = $smfFunc['db_fetch_row']($request);
@@ -861,14 +866,14 @@ function trackUser($memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT poster_ip
 		FROM {db_prefix}messages
-		WHERE id_member = {int:inject_int_1}
+		WHERE id_member = {int:current_member}
 		' . (isset($min_msg_member) ? '
-			AND id_msg >= {int:inject_int_2} AND id_msg <= {int:inject_int_3}' : '') . '
+			AND id_msg >= {int:min_msg_member} AND id_msg <= {int:max_msg_member}' : '') . '
 		GROUP BY poster_ip',
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => $min_msg_member,
-			'inject_int_3' => $max_msg_member,
+			'current_member' => $memID,
+			'min_msg_member' => !empty($min_msg_member) ? $min_msg_member : 0,
+			'max_msg_member' => !empty($max_msg_member) ? $max_msg_member : 0,
 		)
 	);
 	$context['ips'] = array();
@@ -883,10 +888,10 @@ function trackUser($memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS error_count, ip
 		FROM {db_prefix}log_errors
-		WHERE id_member = {int:inject_int_1}
+		WHERE id_member = {int:current_member}
 		GROUP BY ip',
 		array(
-			'inject_int_1' => $memID,
+			'current_member' => $memID,
 		)
 	);
 	$context['error_ips'] = array();
@@ -905,10 +910,11 @@ function trackUser($memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
 			FROM {db_prefix}members
-			WHERE id_member != {int:inject_int_1}
-				AND member_ip IN (\'' . implode('\', \'', $ips) . '\')',
+			WHERE id_member != {int:current_member}
+				AND member_ip IN ({array_string:ip_list})',
 			array(
-				'inject_int_1' => $memID,
+				'current_member' => $memID,
+				'ip_list' => $ips,
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) > 0)
@@ -919,10 +925,11 @@ function trackUser($memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT mem.id_member, mem.real_name
 			FROM {db_prefix}messages AS m
-				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member AND mem.id_member != {int:inject_int_1})
-			WHERE m.poster_ip IN (\'' . implode('\', \'', $ips) . '\')',
+				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member AND mem.id_member != {int:current_member})
+			WHERE m.poster_ip IN ({array_string:ip_list})',
 			array(
-				'inject_int_1' => $memID,
+				'current_member' => $memID,
+				'ip_list' => $ips,
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) > 0)
@@ -932,7 +939,7 @@ function trackUser($memID)
 	}
 }
 
-function list_getUserErrorCount($where)
+function list_getUserErrorCount($where, $where_vars = array())
 {
 	global $smfFunc, $db_prefix;
 
@@ -940,8 +947,7 @@ function list_getUserErrorCount($where)
 		SELECT COUNT(*) AS error_count
 		FROM {db_prefix}log_errors
 		WHERE ' . $where,
-		array(
-		)
+		$where_vars
 	);
 	list ($count) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -949,7 +955,7 @@ function list_getUserErrorCount($where)
 	return $count;
 }
 
-function list_getUserErrors($start, $items_per_page, $sort, $where)
+function list_getUserErrors($start, $items_per_page, $sort, $where, $where_vars = array())
 {
 	global $smfFunc, $db_prefix, $txt, $scripturl;
 
@@ -957,14 +963,15 @@ function list_getUserErrors($start, $items_per_page, $sort, $where)
 	$request = $smfFunc['db_query']('', '
 		SELECT
 			le.log_time, le.ip, le.url, le.message, IFNULL(mem.id_member, 0) AS id_member,
-			IFNULL(mem.real_name, \'' . $txt['guest_title'] . '\') AS display_name, mem.member_name
+			IFNULL(mem.real_name, {string:guest_title}) AS display_name, mem.member_name
 		FROM {db_prefix}log_errors AS le
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = le.id_member)
 		WHERE ' . $where . '
 		ORDER BY ' . $sort . '
 		LIMIT ' . $start . ', ' . $items_per_page,
-		array(
-		)
+		array_merge($where_vars, array(
+			'guest_title' => $txt['guest_title'],
+		))
 	);
 	$error_messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -981,7 +988,7 @@ function list_getUserErrors($start, $items_per_page, $sort, $where)
 	return $error_messages;
 }
 
-function list_getIPMessageCount($where)
+function list_getIPMessageCount($where, $where_vars = array())
 {
 	global $smfFunc, $db_prefix;
 
@@ -989,8 +996,7 @@ function list_getIPMessageCount($where)
 		SELECT COUNT(*) AS messageCount
 		FROM {db_prefix}messages
 		WHERE ' . $where,
-		array(
-		)
+		$where_vars
 	);
 	list ($count) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -998,7 +1004,7 @@ function list_getIPMessageCount($where)
 	return $count;
 }
 
-function list_getIPMessages($start, $items_per_page, $sort, $where)
+function list_getIPMessages($start, $items_per_page, $sort, $where, $where_vars = array())
 {
 	global $smfFunc, $db_prefix, $txt, $scripturl;
 
@@ -1013,8 +1019,8 @@ function list_getIPMessages($start, $items_per_page, $sort, $where)
 		WHERE ' . $where . '
 		ORDER BY ' . $sort . '
 		LIMIT ' . $start . ', ' . $items_per_page,
-		array(
-		)
+		array_merge($where_vars, array(
+		))
 	);
 	$messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1058,16 +1064,17 @@ function TrackIP($memID = 0)
 	if (preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $context['ip']) == 0)
 		fatal_lang_error('invalid_ip', false);
 
-	$dbip = str_replace('*', '%', $context['ip']);
-	$dbip = strpos($dbip, '%') === false ? '= \'' . $dbip . '\'' : 'LIKE \'' . $dbip . '\'';
+	$ip_var = str_replace('*', '%', $context['ip']);
+	$ip_string = strpos($ip_var, '%') === false ? '= {string:ip_address}' : 'LIKE {string:ip_address}';
 
 	$context['page_title'] = $txt['trackIP'] . ' - ' . $context['ip'];
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name AS display_name, member_ip
 		FROM {db_prefix}members
-		WHERE member_ip ' . $dbip,
+		WHERE member_ip ' . $ip_string,
 		array(
+			'ip_address' => $ip_var,
 		)
 	);
 	$context['ips'] = array();
@@ -1093,13 +1100,15 @@ function TrackIP($memID = 0)
 		'get_items' => array(
 			'function' => 'list_getIPMessages',
 			'params' => array(
-				'm.poster_ip ' . $dbip,
+				'm.poster_ip ' . $ip_string,
+				array('ip_address' => $ip_var),
 			),
 		),
 		'get_count' => array(
 			'function' => 'list_getIPMessageCount',
 			'params' => array(
-				'poster_ip ' . $dbip,
+				'poster_ip ' . $ip_string,
+				array('ip_address' => $ip_var),
 			),
 		),
 		'columns' => array(
@@ -1182,13 +1191,15 @@ function TrackIP($memID = 0)
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
 			'params' => array(
-				'le.ip ' . $dbip,
+				'le.ip ' . $ip_string,
+				array('ip_address' => $ip_var),
 			),
 		),
 		'get_count' => array(
 			'function' => 'list_getUserErrorCount',
 			'params' => array(
-				'ip ' . $dbip,
+				'ip ' . $ip_string,
+				array('ip_address' => $ip_var),
 			),
 		),
 		'columns' => array(
@@ -1332,12 +1343,12 @@ function showPermissions($memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT b.id_board, b.name, b.id_profile, b.member_groups
 		FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:inject_int_1})
+			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
 		WHERE ' . $user_info['query_see_board'] . '
-			AND b.id_profile != {int:inject_int_2}',
+			AND b.id_profile != {int:default_profile}',
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => 1,
+			'current_member' => $memID,
+			'default_profile' => 1,
 		)
 	);
 	$context['boards'] = array();
@@ -1384,11 +1395,11 @@ function showPermissions($memID)
 		SELECT p.permission, p.add_deny, mg.group_name, p.id_group
 		FROM {db_prefix}permissions AS p
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = p.id_group)
-		WHERE p.id_group IN ({array_int:inject_array_int_1})
-		ORDER BY p.add_deny DESC, p.permission, mg.min_posts, CASE WHEN mg.id_group < {int:inject_int_1} THEN mg.id_group ELSE 4 END, mg.group_name',
+		WHERE p.id_group IN ({array_int:group_list})
+		ORDER BY p.add_deny DESC, p.permission, mg.min_posts, CASE WHEN mg.id_group < {int:newbie_group} THEN mg.id_group ELSE 4 END, mg.group_name',
 		array(
-			'inject_array_int_1' => $curGroups,
-			'inject_int_1' => 4,
+			'group_list' => $curGroups,
+			'newbie_group' => 4,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -1433,17 +1444,17 @@ function showPermissions($memID)
 			b.id_profile, CASE WHEN mods.id_member IS NULL THEN 0 ELSE 1 END AS is_moderator') . '
 		FROM {db_prefix}board_permissions AS bp' . (empty($board) ? '' : '
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = {int:current_board})
-			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:inject_int_1})') . '
+			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})') . '
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = bp.id_group)
-		WHERE bp.id_profile = {int:inject_int_2}
-			AND bp.id_group IN ({array_int:inject_array_int_1}' . (empty($board) ? ')' : ', 3)
-			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:inject_int_3})'),
+		WHERE bp.id_profile = {int:current_profile}
+			AND bp.id_group IN ({array_int:group_list}' . (empty($board) ? ')' : ', {int:moderator_group})
+			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})'),
 		array(
 			'current_board' => $board,
-			'inject_array_int_1' => $curGroups,
-			'inject_int_1' => $memID,
-			'inject_int_2' => empty($board) ? '1' : 'b.id_profile',
-			'inject_int_3' => 3,
+			'group_list' => $curGroups,
+			'current_member' => $memID,
+			'current_profile' => empty($board) ? '1' : 'b.id_profile',
+			'moderator_group' => 3,
 		)
 	);
 

@@ -295,7 +295,7 @@ function smf_main()
 		'stats' => array('Stats.php', 'DisplayStats'),
 		'sticky' => array('LockTopic.php', 'Sticky'),
 		'theme' => array('Themes.php', 'ThemesMain'),
-		'trackip' => array('Profile.php', 'trackIP'),
+		'trackip' => array('Profile-View.php', 'trackIP'),
 		'about:mozilla' => array('Karma.php', 'BookOfUnknown'),
 		'about:unknown' => array('Karma.php', 'BookOfUnknown'),
 		'unread' => array('Recent.php', 'UnreadTopics'),

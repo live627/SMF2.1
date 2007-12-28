@@ -106,15 +106,15 @@ function issueWarning($memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT SUM(counter)
 			FROM {db_prefix}log_comments
-			WHERE id_recipient = {int:inject_int_1}
+			WHERE id_recipient = {int:selected_member}
 				AND id_member = {int:current_member}
-				AND comment_type = {string:inject_string_1}
-				AND log_time > {int:inject_int_2}',
+				AND comment_type = {string:warning}
+				AND log_time > {int:day_time_period}',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $memID,
-				'inject_int_2' => time() - 86400,
-				'inject_string_1' => 'warning',
+				'selected_member' => $memID,
+				'day_time_period' => time() - 86400,
+				'warning' => 'warning',
 			)
 		);
 		list ($current_applied) = $smfFunc['db_fetch_row']($request);
@@ -160,19 +160,21 @@ function issueWarning($memID)
 			require_once($sourcedir . '/Subs-Post.php');
 			$from = array(
 				'id' => 0,
-				'name' => $smfFunc['db_escape_string']($context['forum_name']),
-				'username' => $smfFunc['db_escape_string']($context['forum_name']),
+				'name' => $context['forum_name'],
+				'username' => $context['forum_name'],
 			);
 			sendpm(array('to' => array($memID), 'bcc' => array()), $_POST['warn_sub'], $_POST['warn_body'], false, $from);
 
 			// Log the notice!
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}log_member_notices
-					(subject, body)
-				VALUES
-					(SUBSTRING(\'' . $_POST['warn_sub'] . '\', 1, 255), SUBSTRING(\'' . $_POST['warn_body'] . '\', 1, 65534))',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'log_member_notices',
 				array(
-				)
+					'subject' => 'string-255', 'body' => 'string-65534',
+				),
+				array(
+					$_POST['warn_sub'], $_POST['warn_body'],
+				),
+				array('id_notice')
 			);
 			$id_notice = $smfFunc['db_insert_id']( $db_prefix . 'log_member_notices', 'id_notice');
 		}
@@ -184,16 +186,17 @@ function issueWarning($memID)
 		$level_change = $_POST['warning_level'] - $cur_profile['warning'];
 
 		// Log what we've done!
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}log_comments
-				(id_member, member_name, comment_type, id_recipient, recipient_name, log_time, id_notice,
-					counter, body)
-			VALUES
-				(' . $user_info['id'] . ', \'' . $smfFunc['db_escape_string']($user_info['name']) . '\', \'warning\',
-				' . $memID . ', \'' . $smfFunc['db_escape_string']($cur_profile['real_name']) . '\', ' . time() . ',
-				' . $id_notice . ', ' . $level_change . ', SUBSTRING(\'' . $_POST['warn_reason'] . '\', 1, 65534))',
+		$smfFunc['db_insert']('',
+			$db_prefix . 'log_comments',
 			array(
-			)
+				'id_member' => 'int', 'member_name' => 'int', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
+				'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
+			),
+			array(
+				$user_info['id'], $user_info['name'], 'warning', $memID, $cur_profile['real_name'],
+				time(), $id_notice, $level_change, $_POST['warn_reason'],
+			),
+			array('id_comment')
 		);
 
 		// Make the change.
@@ -220,11 +223,11 @@ function issueWarning($memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_comments
-		WHERE id_recipient = {int:inject_int_1}
-			AND comment_type = {string:inject_string_1}',
+		WHERE id_recipient = {int:selected_member}
+			AND comment_type = {string:warning}',
 		array(
-			'inject_int_1' => $memID,
-			'inject_string_1' => 'warning',
+			'selected_member' => $memID,
+			'warning' => 'warning',
 		)
 	);
 	list ($context['total_warnings']) = $smfFunc['db_fetch_row']($request);
@@ -241,13 +244,13 @@ function issueWarning($memID)
 			lc.log_time, lc.body, lc.counter, lc.id_notice
 		FROM {db_prefix}log_comments AS lc
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
-		WHERE lc.id_recipient = {int:inject_int_1}
-			AND lc.comment_type = {string:inject_string_1}
+		WHERE lc.id_recipient = {int:selected_member}
+			AND lc.comment_type = {string:warning}
 		ORDER BY log_time DESC
 		LIMIT ' . $context['start'] . ', ' . $perPage,
 		array(
-			'inject_int_1' => $memID,
-			'inject_string_1' => 'warning',
+			'selected_member' => $memID,
+			'warning' => 'warning',
 		)
 	);
 	$context['previous_warnings'] = array();
@@ -317,12 +320,12 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
-			WHERE (id_group = {int:inject_int_1} OR FIND_IN_SET(1, additional_groups))
-				AND id_member != {int:inject_int_2}
+			WHERE (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups))
+				AND id_member != {int:selected_member}
 			LIMIT 1',
 			array(
-				'inject_int_1' => 1,
-				'inject_int_2' => $memID,
+				'admin_group' => 1,
+				'selected_member' => $memID,
 			)
 		);
 		list ($another) = $smfFunc['db_fetch_row']($request);
@@ -354,9 +357,9 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 				$request = $smfFunc['db_query']('', '
 					SELECT t.id_topic
 					FROM {db_prefix}topics AS t
-					WHERE t.id_member_started = {int:inject_int_1}',
+					WHERE t.id_member_started = {int:selected_member}',
 					array(
-						'inject_int_1' => $memID,
+						'selected_member' => $memID,
 					)
 				);
 				$topicIDs = array();
@@ -375,9 +378,9 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic
 						AND t.id_first_msg != m.id_msg)
-				WHERE m.id_member = {int:inject_int_1}',
+				WHERE m.id_member = {int:selected_member}',
 				array(
-					'inject_int_1' => $memID,
+					'selected_member' => $memID,
 				)
 			);
 			// This could take a while... but ya know it's gonna be worth it in the end.
@@ -464,9 +467,9 @@ function subscriptions($memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_sublog, id_subscribe, start_time, end_time, status, payments_pending, pending_details
 		FROM {db_prefix}log_subscribed
-		WHERE id_member = {int:inject_int_1}',
+		WHERE id_member = {int:selected_member}',
 		array(
-			'inject_int_1' => $memID,
+			'selected_member' => $memID,
 		)
 	);
 	$context['current'] = array();
@@ -502,7 +505,7 @@ function subscriptions($memID)
 		if (isset($context['current'][$_GET['sub_id']]))
 		{
 			// What are the details like?
-			$current_pending = @unserialize(stripslashes($context['current'][$_GET['sub_id']]['pending_details']));
+			$current_pending = @unserialize($context['current'][$_GET['sub_id']]['pending_details']);
 			if (!empty($current_pending))
 			{
 				$current_pending = array_reverse($current_pending);
@@ -517,17 +520,17 @@ function subscriptions($memID)
 				}
 
 				// Save the details back.
-				$pending_details = addslashes(serialize($current_pending));
+				$pending_details = serialize($current_pending);
 
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}log_subscribed
-					SET payments_pending = payments_pending + 1, pending_details = {string:inject_string_1}
-					WHERE id_sublog = {int:inject_int_1}
-						AND id_member = {int:inject_int_2}',
+					SET payments_pending = payments_pending + 1, pending_details = {string:pending_details}
+					WHERE id_sublog = {int:current_subscription_id}
+						AND id_member = {int:selected_member}',
 					array(
-						'inject_int_1' => $context['current'][$_GET['sub_id']]['id'],
-						'inject_int_2' => $memID,
-						'inject_string_1' => $pending_details,
+						'current_subscription_id' => $context['current'][$_GET['sub_id']]['id'],
+						'selected_member' => $memID,
+						'pending_details' => $pending_details,
 					)
 				);
 			}
@@ -600,7 +603,7 @@ function subscriptions($memID)
 			// What are the details like?
 			$current_pending = array();
 			if ($context['current'][$context['sub']['id']]['pending_details'] != '')
-				$current_pending = @unserialize(stripslashes($context['current'][$context['sub']['id']]['pending_details']));
+				$current_pending = @unserialize($context['current'][$context['sub']['id']]['pending_details']);
 			// Don't get silly.
 			if (count($current_pending) > 9)
 				$current_pending = array();
@@ -613,18 +616,18 @@ function subscriptions($memID)
 			if (!in_array($new_data, $current_pending))
 			{
 				$current_pending[] = $new_data;
-				$pending_details = addslashes(serialize($current_pending));
+				$pending_details = serialize($current_pending);
 
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}log_subscribed
-					SET payments_pending = {int:inject_int_1}, pending_details = {string:inject_string_1}
-					WHERE id_sublog = {int:inject_int_2}
-						AND id_member = {int:inject_int_3}',
+					SET payments_pending = {int:pending_count}, pending_details = {string:pending_details}
+					WHERE id_sublog = {int:current_subscription_item}
+						AND id_member = {int:selected_member}',
 					array(
-						'inject_int_1' => $pending_count,
-						'inject_int_2' => $context['current'][$context['sub']['id']]['id'],
-						'inject_int_3' => $memID,
-						'inject_string_1' => $pending_details,
+						'pending_count' => $pending_count,
+						'current_subscription_item' => $context['current'][$context['sub']['id']]['id'],
+						'selected_member' => $memID,
+						'pending_details' => $pending_details,
 					)
 				);
 			}
@@ -633,14 +636,18 @@ function subscriptions($memID)
 		// Never had this before, lovely.
 		else
 		{
-			$pending_details = addslashes(serialize(array($new_data)));
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}log_subscribed
-					(id_subscribe, id_member, status, payments_pending, pending_details, start_time, vendor_ref)
-				VALUES
-					(' . $context['sub']['id'] . ', ' . $memID . ', 0, 0, \'' . $pending_details . '\', ' . time() . ', \'\')',
+			$pending_details = serialize(array($new_data));
+			$smfFunc['db_insert']('',
+				$db_prefix . 'log_subscribed',
 				array(
-				)
+					'id_subscribe' => 'int', 'id_member' => 'int', 'status' => 'int', 'payments_pending' => 'int', 'pending_details' => 'string-65534',
+					'start_time' => 'int', 'vendor_ref' => 'string-255',
+				),
+				array(
+					$context['sub']['id'], $memID, 0, 0, $pending_details,
+					time(), '',
+				),
+				array('id_sublog')
 			);
 		}
 

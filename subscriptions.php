@@ -77,9 +77,9 @@ $ID_MEMBER = (int) $ID_MEMBER;
 $request = $smfFunc['db_query']('', '
 	SELECT id_member, member_name, real_name, email_address
 	FROM {db_prefix}members
-	WHERE id_member = {int:inject_int_1}',
+	WHERE id_member = {int:current_member}',
 	array(
-		'inject_int_1' => $ID_MEMBER,
+		'current_member' => $ID_MEMBER,
 	)
 );
 // Didn't find them?
@@ -92,9 +92,9 @@ $smfFunc['db_free_result']($request);
 $request = $smfFunc['db_query']('', '
 	SELECT cost, active, length, name, email_complete
 	FROM {db_prefix}subscriptions
-	WHERE id_subscribe = {int:inject_int_1}',
+	WHERE id_subscribe = {int:current_subscription}',
 	array(
-		'inject_int_1' => $ID_SUB,
+		'current_subscription' => $ID_SUB,
 	)
 );
 
@@ -109,12 +109,12 @@ $smfFunc['db_free_result']($request);
 $request = $smfFunc['db_query']('', '
 	SELECT id_sublog, payments_pending, pending_details
 	FROM {db_prefix}log_subscribed
-	WHERE id_subscribe = {int:inject_int_1}
-		AND id_member = {int:inject_int_2}
+	WHERE id_subscribe = {int:current_subscription}
+		AND id_member = {int:current_member}
 	LIMIT 1',
 	array(
-		'inject_int_1' => $ID_SUB,
-		'inject_int_2' => $ID_MEMBER,
+		'current_subscription' => $ID_SUB,
+		'current_member' => $ID_MEMBER,
 	)
 );
 if ($smfFunc['db_num_rows']($request) == 0)
@@ -131,15 +131,15 @@ if ($gatewayClass->isRefund())
 	// Mark it as complete so we have a record.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_subscribed
-		SET end_time = {int:inject_int_1}
-		WHERE id_subscribe = {int:inject_int_2}
-			AND id_member = {int:inject_int_3}
-			AND status = {int:inject_int_4}',
+		SET end_time = {int:current_time}
+		WHERE id_subscribe = {int:current_subscription}
+			AND id_member = {int:current_member}
+			AND status = {int:not_active}',
 		array(
-			'inject_int_1' => time(),
-			'inject_int_2' => $ID_SUB,
-			'inject_int_3' => $ID_MEMBER,
-			'inject_int_4' => 0,
+			'current_time' => time(),
+			'current_subscription' => $ID_SUB,
+			'current_member' => $ID_MEMBER,
+			'not_active' => 0,
 		)
 	);
 
@@ -177,16 +177,16 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 				$payments_pending--;
 			break;
 		}
-		$pending_details = empty($real_details) ? '' : $smfFunc['db_escape_string'](serialize($real_details));
+		$pending_details = empty($real_details) ? '' : serialize($real_details);
 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_subscribed
-			SET payments_pending = {int:inject_int_1}, pending_details = {string:inject_string_1}
-			WHERE id_sublog = {int:inject_int_2}',
+			SET payments_pending = {int:payments_pending}, pending_details = {string:pending_details}
+			WHERE id_sublog = {int:current_subscription_item}',
 			array(
-				'inject_int_1' => $payments_pending,
-				'inject_int_2' => $id_sublog,
-				'inject_string_1' => $pending_details,
+				'payments_pending' => $payments_pending,
+				'current_subscription_item' => $id_sublog,
+				'pending_details' => $pending_details,
 			)
 		);
 	}
@@ -281,9 +281,9 @@ function paidAdminEmail($subject, $body)
 	$request = $smfFunc['db_query']('', '
 		SELECT email_address, real_name
 		FROM {db_prefix}members
-		WHERE id_group = {int:inject_int_1}',
+		WHERE id_group = {int:admin_group}',
 		array(
-			'inject_int_1' => 1,
+			'admin_group' => 1,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))

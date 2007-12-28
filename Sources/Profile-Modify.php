@@ -1130,11 +1130,11 @@ function makeNotificationChanges($memID)
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_notify
-			WHERE id_board IN ({array_int:inject_array_int_1})
-				AND id_member = {int:inject_int_1}',
+			WHERE id_board IN ({array_int:board_list})
+				AND id_member = {int:selected_member}',
 			array(
-				'inject_array_int_1' => $_POST['notify_boards'],
-				'inject_int_1' => $memID,
+				'board_list' => $_POST['notify_boards'],
+				'selected_member' => $memID,
 			)
 		);
 	}
@@ -1150,11 +1150,11 @@ function makeNotificationChanges($memID)
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_notify
-			WHERE id_topic IN ({array_int:inject_array_int_1})
-				AND id_member = {int:inject_int_1}',
+			WHERE id_topic IN ({array_int:topic_list})
+				AND id_member = {int:selected_member}',
 			array(
-				'inject_array_int_1' => $_POST['notify_topics'],
-				'inject_int_1' => $memID,
+				'topic_list' => $_POST['notify_topics'],
+				'selected_member' => $memID,
 			)
 		);
 	}
@@ -1172,9 +1172,9 @@ function makeCustomFieldChanges($memID, $area)
 		SELECT col_name, field_name, field_desc, field_type, field_length, field_options, default_value, mask, private
 		FROM {db_prefix}custom_fields
 		WHERE ' . $where . '
-			AND active = {int:inject_int_1}',
+			AND active = {int:is_active}',
 		array(
-			'inject_int_1' => 1,
+			'is_active' => 1,
 			'area' => $area,
 		)
 	);
@@ -1321,9 +1321,10 @@ function editBuddies($memID)
 			$request = $smfFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}members
-				WHERE member_name IN (\'' . implode('\',\'', $new_buddies) . '\') OR real_name IN (\'' . implode('\',\'', $new_buddies) . '\')
+				WHERE member_name IN ({array_string:new_buddies}) OR real_name IN ({array_string:new_buddies})
 				LIMIT ' . count($new_buddies),
 				array(
+					'new_buddies' => $new_buddies,
 				)
 			);
 
@@ -1349,11 +1350,11 @@ function editBuddies($memID)
 		$result = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:inject_array_int_1})
+			WHERE id_member IN ({array_int:buddy_list})
 			ORDER BY real_name
 			LIMIT ' . (substr_count($user_profile[$memID]['buddy_list'], ',') + 1),
 			array(
-				'inject_array_int_1' => $buddiesArray,
+				'buddy_list' => $buddiesArray,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -1753,12 +1754,12 @@ function list_getTopicNotificationCount($memID)
 		FROM {db_prefix}log_notify AS ln
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE ln.id_member = {int:inject_int_1}
+		WHERE ln.id_member = {int:selected_member}
 			AND ' . $user_info['query_see_board'] . '
-			AND t.approved = {int:inject_int_2}',
+			AND t.approved = {int:is_approved}',
 		array(
-			'inject_int_1' => $memID,
-			'inject_int_2' => 1,
+			'selected_member' => $memID,
+			'is_approved' => 1,
 		)
 	);
 	list ($totalNotifications) = $smfFunc['db_fetch_row']($request);
@@ -1779,7 +1780,7 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 			ml.id_msg_modified, ml.poster_time, ml.id_member AS id_member_updated,
 			IFNULL(mem2.real_name, ml.poster_name) AS last_real_name
 		FROM {db_prefix}log_notify AS ln
-			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic AND t.approved = {int:inject_int_1})
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic AND t.approved = {int:is_approved})
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND ' . $user_info['query_see_board'] . ')
 			INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
@@ -1787,13 +1788,13 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 			LEFT JOIN {db_prefix}members AS mem2 ON (mem2.id_member = ml.id_member)
 			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
 			LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = {int:current_member})
-		WHERE ln.id_member = {int:inject_int_2}
+		WHERE ln.id_member = {int:selected_member}
 		ORDER BY ' . $sort . '
 		LIMIT ' . $start . ', ' . $items_per_page,
 		array(
 			'current_member' => $user_info['id'],
-			'inject_int_1' => 1,
-			'inject_int_2' => $memID,
+			'is_approved' => 1,
+			'selected_member' => $memID,
 		)
 	);
 	$notification_topics = array();
@@ -1830,12 +1831,12 @@ function list_getBoardNotifications($start, $items_per_page, $sort, $memID)
 		FROM {db_prefix}log_notify AS ln
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = ln.id_board)
 			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
-		WHERE ln.id_member = {int:inject_int_1}
+		WHERE ln.id_member = {int:selected_member}
 			AND ' . $user_info['query_see_board'] . '
 		ORDER BY ' . $sort,
 		array(
 			'current_member' => $user_info['id'],
-			'inject_int_1' => $memID,
+			'selected_member' => $memID,
 		)
 	);
 	$notification_boards = array();
@@ -1871,9 +1872,11 @@ function loadThemeOptions($memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, variable, value
 			FROM {db_prefix}themes
-			WHERE id_theme IN (1, ' . (int) $cur_profile['id_theme'] . ')
-				AND id_member IN (-1, ' . $memID . ')',
+			WHERE id_theme IN (1, {int:member_theme})
+				AND id_member IN (-1, {int:selected_member})',
 			array(
+				'member_theme' => (int) $cur_profile['id_theme'],
+				'selected_member' => $memID,
 			)
 		);
 		$temp = array();
@@ -1911,12 +1914,12 @@ function ignoreboards($memID)
 	// Find all the boards this user is allowed to see.
 	$request = $smfFunc['db_query']('', '
 		SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level,
-			'. (!empty($cur_profile['ignore_boards']) ? 'b.id_board IN ({array_int:inject_array_int_1})' : 'false') . ' AS is_ignored
+			'. (!empty($cur_profile['ignore_boards']) ? 'b.id_board IN ({array_int:ignore_boards})' : 'false') . ' AS is_ignored
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE ' . $user_info['query_see_board'],
 		array(
-			'inject_array_int_1' => $cur_profile['ignore_boards'],
+			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? $cur_profile['ignore_boards'] : array(),
 		)
 	);
 	$context['num_boards'] = $smfFunc['db_num_rows']($request);
@@ -2029,13 +2032,13 @@ function profileLoadGroups()
 	$request = $smfFunc['db_query']('', '
 		SELECT group_name, id_group, hidden
 		FROM {db_prefix}membergroups
-		WHERE id_group != {int:inject_int_1}
-			AND min_posts = {int:inject_int_2}
-		ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_3} THEN id_group ELSE 4 END, group_name',
+		WHERE id_group != {int:moderator_group}
+			AND min_posts = {int:min_posts}
+		ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
-			'inject_int_1' => 3,
-			'inject_int_2' => -1,
-			'inject_int_3' => 4,
+			'moderator_group' => 3,
+			'min_posts' => -1,
+			'newbie_group' => 4,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2201,12 +2204,12 @@ function profileSaveGroups(&$value)
 			$request = $smfFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}members
-				WHERE (id_group = {int:inject_int_1} OR FIND_IN_SET(1, additional_groups))
-					AND id_member != {int:inject_int_2}
+				WHERE (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups))
+					AND id_member != {int:selected_member}
 				LIMIT 1',
 				array(
-					'inject_int_1' => 1,
-					'inject_int_2' => $context['id_member'],
+					'admin_group' => 1,
+					'selected_member' => $context['id_member'],
 				)
 			);
 			list ($another) = $smfFunc['db_fetch_row']($request);
@@ -2370,12 +2373,17 @@ function profileSaveAvatarData(&$value)
 				if (!rename($_FILES['attachment']['tmp_name'], $uploadDir . '/' . $destName))
 					fatal_lang_error('attach_timeout', 'critical');
 
-				$smfFunc['db_query']('', '
-					INSERT INTO {db_prefix}attachments
-						(id_member, attachment_type, filename, fileext, size, width, height, mime_type)
-					VALUES (' . $memID . ', ' . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ', \'' . $destName . '\', \'' . $extension . '\', ' . filesize($uploadDir . '/' . $destName) . ', ' . (int) $width . ', ' . (int) $height . ', \'' . $mime_type . '\')',
+				$smfFunc['db_insert']('',
+					$db_prefix . 'attachments',
 					array(
-					)
+						'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'fileext' => 'string', 'size' => 'int',
+						'width' => 'int', 'height' => 'int', 'mime_type' => 'string',
+					),
+					array(
+						$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $extension, filesize($uploadDir . '/' . $destName),
+						(int) $width, (int) $height, $mime_type,
+					),
+					array('id_attach')
 				);
 
 				$cur_profile['id_attach'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
@@ -2572,7 +2580,7 @@ function profileValidateSignature(&$value)
 	return true;
 }
 
-// Validate an email address - requires email to have been escaped!
+// Validate an email address.
 function profileValidateEmail($email, $memID = 0)
 {
 	global $smfFunc, $db_prefix, $context;
@@ -2589,12 +2597,12 @@ function profileValidateEmail($email, $memID = 0)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}members
-		WHERE ' . ($memID != 0 ? 'id_member != {int:inject_int_1} AND ' : '') . '
-			email_address = {string:inject_string_1}
+		WHERE ' . ($memID != 0 ? 'id_member != {int:selected_member} AND ' : '') . '
+			email_address = {string:email_address}
 		LIMIT 1',
 		array(
-			'inject_int_1' => $memID,
-			'inject_string_1' => $email,
+			'selected_member' => $memID,
+			'email_address' => $email,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) > 0)
@@ -2643,9 +2651,9 @@ function profileSendActivation()
 	// Log the user out.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_online
-		WHERE id_member = {int:inject_int_1}',
+		WHERE id_member = {int:selected_member}',
 		array(
-			'inject_int_1' => $context['id_member'],
+			'selected_member' => $context['id_member'],
 		)
 	);
 	$_SESSION['log_time'] = 0;
@@ -2701,18 +2709,18 @@ function groupMembership($memID)
 		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
 			IFNULL(lgr.id_member, 0) AS pending
 		FROM {db_prefix}membergroups AS mg
-			LEFT JOIN {db_prefix}log_group_requests AS lgr ON (lgr.id_member = {int:inject_int_1} AND lgr.id_group = mg.id_group)
-		WHERE (mg.id_group IN ({array_int:inject_array_int_1})
-			OR mg.group_type > {int:inject_int_2})
-			AND mg.min_posts = {int:inject_int_3}
-			AND mg.id_group != {int:inject_int_4}
+			LEFT JOIN {db_prefix}log_group_requests AS lgr ON (lgr.id_member = {int:selected_member} AND lgr.id_group = mg.id_group)
+		WHERE (mg.id_group IN ({array_int:group_list})
+			OR mg.group_type > {int:nonjoin_group_id})
+			AND mg.min_posts = {int:min_posts}
+			AND mg.id_group != {int:moderator_group}
 		ORDER BY group_name',
 		array(
-			'inject_array_int_1' => $groups,
-			'inject_int_1' => $memID,
-			'inject_int_2' => 0,
-			'inject_int_3' => -1,
-			'inject_int_4' => 3,
+			'group_list' => $groups,
+			'selected_member' => $memID,
+			'nonjoin_group_id' => 0,
+			'min_posts' => -1,
+			'moderator_group' => 3,
 		)
 	);
 	// This beast will be our group holder.
@@ -2795,9 +2803,10 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_type, hidden, group_name
 		FROM {db_prefix}membergroups
-		WHERE id_group IN ({array_int:inject_array_int_1}, ' . $old_profile['id_group'] . ')',
+		WHERE id_group IN ({array_int:group_list}, {int:current_group})',
 		array(
-			'inject_array_int_1' => $group_id,
+			'group_list' => $group_id,
+			'current_group' => $old_profile['id_group'],
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2846,13 +2855,13 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(permission)
 			FROM {db_prefix}permissions
-			WHERE id_group = {int:inject_int_1}
-				AND permission = {string:inject_string_1}
-				AND add_deny = {int:inject_int_2}',
+			WHERE id_group = {int:selected_group}
+				AND permission = {string:admin_forum}
+				AND add_deny = {int:not_denied}',
 			array(
-				'inject_int_1' => $group_id,
-				'inject_int_2' => 1,
-				'inject_string_1' => 'admin_forum',
+				'selected_group' => $group_id,
+				'not_denied' => 1,
+				'admin_forum' => 'admin_forum',
 			)
 		);
 		list ($disallow) = $smfFunc['db_fetch_row']($request);
@@ -2870,11 +2879,11 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}log_group_requests
-			WHERE id_member = {int:inject_int_1}
-				AND id_group = {int:inject_int_2}',
+			WHERE id_member = {int:selected_member}
+				AND id_group = {int:selected_group}',
 			array(
-				'inject_int_1' => $memID,
-				'inject_int_2' => $group_id,
+				'selected_member' => $memID,
+				'selected_group' => $group_id,
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) != 0)
@@ -2882,13 +2891,15 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		$smfFunc['db_free_result']($request);
 
 		// Log the request.
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}log_group_requests
-				(id_member, id_group, time_applied, reason)
-			VALUES
-				(' . $memID . ', ' . $group_id . ', ' . time() . ', \'' . $reason . '\')',
+		$smfFunc['db_insert']('',
+			$db_prefix . 'log_group_requests',
 			array(
-			)
+				'id_member' => 'int', 'id_group' => 'int', 'time_applied' => 'int', 'reason' => 'string-65534',
+			),
+			array(
+				$memID, $group_id, time(), $reason,
+			),
+			array('id_request')
 		);
 
 		// Send an email to all group moderators etc.
@@ -2898,9 +2909,9 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}group_moderators
-			WHERE id_group = {int:inject_int_1}',
+			WHERE id_group = {int:selected_group}',
 			array(
-				'inject_int_1' => $group_id,
+				'selected_group' => $group_id,
 			)
 		);
 		$moderators = array();
@@ -2920,12 +2931,12 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 			$request = $smfFunc['db_query']('', '
 				SELECT id_member, email_address, lngfile, member_name
 				FROM {db_prefix}members
-				WHERE id_member IN ({array_int:inject_array_int_1})
-					AND notify_types != {int:inject_int_1}
+				WHERE id_member IN ({array_int:moderator_list})
+					AND notify_types != {int:no_notifications}
 				ORDER BY lngfile',
 				array(
-					'inject_array_int_1' => $moderators,
-					'inject_int_1' => 4,
+					'moderator_list' => $moderators,
+					'no_notifications' => 4,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))

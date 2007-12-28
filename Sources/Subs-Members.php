@@ -324,7 +324,7 @@ function deleteMembers($users)
 
 	// Delete avatar.
 	require_once($sourcedir . '/ManageAttachments.php');
-	removeAttachments(array('members' => $users));
+	removeAttachments(array('id_member' => $users));
 
 	// It's over, no more moderation for you.
 	$smfFunc['db_query']('', '

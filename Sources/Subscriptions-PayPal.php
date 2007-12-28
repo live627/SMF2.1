@@ -267,14 +267,14 @@ class paypal_payment
 		// If it's a subscription record the reference.
 		if ($_POST['txn_type'] == 'subscr_payment' && !empty($_POST['subscr_id']))
 		{
-			$_POST['subscr_id'] = $smfFunc['db_escape_string']($_POST['subscr_id']);
+			$_POST['subscr_id'] = $_POST['subscr_id'];
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_subscribed
-				SET vendor_ref = {string:inject_string_1}
-				WHERE id_sublog = {int:inject_int_1}',
+				SET vendor_ref = {string:vendor_ref}
+				WHERE id_sublog = {int:current_subscription}',
 				array(
-					'inject_int_1' => $ID_SUB,
-					'inject_string_1' => $_POST['subscr_id'],
+					'current_subscription' => $ID_SUB,
+					'vendor_ref' => $_POST['subscr_id'],
 				)
 			);
 		}
@@ -290,16 +290,15 @@ class paypal_payment
 		// Assume we have this?
 		if (empty($_POST['subscr_id']))
 			return false;
-		$_POST['subscr_id'] = $smfFunc['db_escape_string']($_POST['subscr_id']);
 
 		// Do we have this in the database?
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, id_subscribe
 			FROM {db_prefix}log_subscribed
-			WHERE vendor_ref = {string:inject_string_1}
+			WHERE vendor_ref = {string:vendor_ref}
 			LIMIT 1',
 			array(
-				'inject_string_1' => $_POST['subscr_id'],
+				'vendor_ref' => $_POST['subscr_id'],
 			)
 		);
 		// No joy?
@@ -309,15 +308,14 @@ class paypal_payment
 			if (!empty($_POST['payer_email']))
 			{
 				$smfFunc['db_free_result']($request);
-				$_POST['payer_email'] = addslashes($_POST['payer_email']);
 				$request = $smfFunc['db_query']('', '
 					SELECT ls.id_member, ls.id_subscribe
 					FROM {db_prefix}log_subscribed AS ls
 						INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-					WHERE mem.email_address = {string:inject_string_1}
+					WHERE mem.email_address = {string:payer_email}
 					LIMIT 1',
 					array(
-						'inject_string_1' => $_POST['payer_email'],
+						'payer_email' => $_POST['payer_email'],
 					)
 				);
 				if ($smfFunc['db_num_rows']($request) == 0)
