@@ -243,13 +243,14 @@ function BoardReport()
 	// Go through each board!
 	$request = $smfFunc['db_query']('', '
 		SELECT b.id_board, b.name, b.num_posts, b.num_topics, b.count_posts, b.member_groups, b.override_theme, b.id_profile,
-			c.name AS cat_name, IFNULL(par.name, \'' . $txt['none'] . '\') AS parent_name, IFNULL(th.value, \'' . $txt['none'] . '\') AS theme_name
+			c.name AS cat_name, IFNULL(par.name, {string:text_none}) AS parent_name, IFNULL(th.value, {string:text_none}) AS theme_name
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 			LEFT JOIN {db_prefix}boards AS par ON (par.id_board = b.id_parent)
-			LEFT JOIN {db_prefix}themes AS th ON (th.id_theme = b.id_theme AND th.variable = {string:inject_string_1})',
+			LEFT JOIN {db_prefix}themes AS th ON (th.id_theme = b.id_theme AND th.variable = {string:name})',
 		array(
-			'inject_string_1' => 'name',
+			'name' => 'name',
+			'text_none' => $txt['none'],
 		)
 	);
 	$boards = array(0 => array('name' => $txt['global_boards']));
@@ -263,10 +264,6 @@ function BoardReport()
 
 		// Format the profile name.
 		$profile_name = $context['profiles'][$row['id_profile']]['name'];
-
-		// If it has a parent format the text accordingly.
-		if ($context['profiles'][$row['id_profile']]['parent'])
-			$profile_name = '<i>' . sprintf($txt['permissions_profile_' . ($context['profiles'][$row['id_profile']]['parent'] == $row['id_board'] ? 'custom' : 'as_board')], $profile_name) . '</i>';
 
 		// Create the main data array.
 		$boardData = array(
@@ -313,7 +310,7 @@ function BoardPermissionsReport()
 		foreach ($_REQUEST['boards'] as $k => $dummy)
 			$_REQUEST['boards'][$k] = (int) $dummy;
 
-		$board_clause = 'id_board IN (' . implode(', ', $_REQUEST['boards']) . ')';
+		$board_clause = 'id_board IN ({array_int:boards})';
 	}
 	else
 		$board_clause = '1=1';
@@ -325,7 +322,7 @@ function BoardPermissionsReport()
 		foreach ($_REQUEST['groups'] as $k => $dummy)
 			$_REQUEST['groups'][$k] = (int) $dummy;
 
-		$group_clause = 'id_group IN (' . implode(', ', $_REQUEST['groups']) . ')';
+		$group_clause = 'id_group IN ({array_int:groups})';
 	}
 	else
 		$group_clause = '1=1';
@@ -337,6 +334,7 @@ function BoardPermissionsReport()
 		WHERE ' . $board_clause . '
 		ORDER BY id_board',
 		array(
+			'boards' => isset($_REQUEST['boards']) ? $_REQUEST['boards'] : array(),
 		)
 	);
 	$profiles = array();
@@ -355,13 +353,14 @@ function BoardPermissionsReport()
 		SELECT id_group, group_name
 		FROM {db_prefix}membergroups
 		WHERE ' . $group_clause . '
-			AND id_group != {int:inject_int_1}' . (empty($modSettings['permission_enable_postgroups']) ? '
-			AND min_posts = {int:inject_int_2}' : '') . '
-		ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_3} THEN id_group ELSE 4 END, group_name',
+			AND id_group != {int:admin_group}' . (empty($modSettings['permission_enable_postgroups']) ? '
+			AND min_posts = {int:min_posts}' : '') . '
+		ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => -1,
-			'inject_int_3' => 4,
+			'admin_group' => 1,
+			'min_posts' => -1,
+			'newbie_group' => 4,
+			'groups' => isset($_REQUEST['groups']) ? $_REQUEST['groups'] : array(),
 		)
 	);
 	if (!isset($_REQUEST['groups']) || in_array(-1, $_REQUEST['groups']) || in_array(0, $_REQUEST['groups']))
@@ -381,13 +380,14 @@ function BoardPermissionsReport()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_profile, id_group, add_deny, permission
 		FROM {db_prefix}board_permissions
-		WHERE id_profile IN ({array_int:inject_array_int_1})
+		WHERE id_profile IN ({array_int:profile_list})
 			AND ' . $group_clause . (empty($modSettings['permission_enable_deny']) ? '
-			AND add_deny = {int:inject_int_1}' : '') . '
+			AND add_deny = {int:not_deny}' : '') . '
 		ORDER BY id_profile, permission',
 		array(
-			'inject_array_int_1' => $profiles,
-			'inject_int_1' => 1,
+			'profile_list' => $profiles,
+			'not_deny' => 1,
+			'groups' => isset($_REQUEST['groups']) ? $_REQUEST['groups'] : array(),
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -523,14 +523,15 @@ function MemberGroupsReport()
 	// Now start cycling the membergroups!
 	$request = $smfFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.online_color, mg.min_posts, mg.max_messages, mg.stars,
-			CASE WHEN bp.permission IS NOT NULL OR mg.id_group = {int:inject_int_1} THEN 1 ELSE 0 END AS can_moderate
+			CASE WHEN bp.permission IS NOT NULL OR mg.id_group = {int:admin_group} THEN 1 ELSE 0 END AS can_moderate
 		FROM {db_prefix}membergroups AS mg
-			LEFT JOIN {db_prefix}board_permissions AS bp ON (bp.id_group = mg.id_group AND bp.id_profile = {int:inject_int_1} AND bp.permission = {string:inject_string_1})
-		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:inject_int_2} THEN mg.id_group ELSE 4 END, mg.group_name',
+			LEFT JOIN {db_prefix}board_permissions AS bp ON (bp.id_group = mg.id_group AND bp.id_profile = {int:default_profile} AND bp.permission = {string:moderate_board})
+		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:newbie_group} THEN mg.id_group ELSE 4 END, mg.group_name',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => 4,
-			'inject_string_1' => 'moderate_board',
+			'admin_group' => 1,
+			'default_profile' => 1,
+			'newbie_group' => 4,
+			'moderate_board' => 'moderate_board',
 		)
 	);
 
@@ -590,23 +591,25 @@ function GroupPermissionsReport()
 			$_REQUEST['groups'][$k] = (int) $dummy;
 		$_REQUEST['groups'] = array_diff($_REQUEST['groups'], array(3));
 
-		$clause = 'id_group IN (' . implode(', ', $_REQUEST['groups']) . ')';
+		$clause = 'id_group IN ({array_int:groups})';
 	}
 	else
-		$clause = 'id_group != 3';
+		$clause = 'id_group != {int:moderator_group}';
 
 	// Get all the possible membergroups, except admin!
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name
 		FROM {db_prefix}membergroups
 		WHERE ' . $clause . '
-			AND id_group != {int:inject_int_1}' . (empty($modSettings['permission_enable_postgroups']) ? '
-			AND min_posts = {int:inject_int_2}' : '') . '
-		ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_3} THEN id_group ELSE 4 END, group_name',
+			AND id_group != {int:admin_group}' . (empty($modSettings['permission_enable_postgroups']) ? '
+			AND min_posts = {int:min_posts}' : '') . '
+		ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => -1,
-			'inject_int_3' => 4,
+			'admin_group' => 1,
+			'min_posts' => -1,
+			'newbie_group' => 4,
+			'moderator_group' => 3,
+			'groups' => isset($_REQUEST['groups']) ? $_REQUEST['groups'] : array(),
 		)
 	);
 	if (!isset($_REQUEST['groups']) || in_array(-1, $_REQUEST['groups']) || in_array(0, $_REQUEST['groups']))
@@ -634,10 +637,12 @@ function GroupPermissionsReport()
 		SELECT id_group, add_deny, permission
 		FROM {db_prefix}permissions
 		WHERE ' . $clause . (empty($modSettings['permission_enable_deny']) ? '
-			AND add_deny = {int:inject_int_1}' : '') . '
+			AND add_deny = {int:not_denied}' : '') . '
 		ORDER BY permission',
 		array(
-			'inject_int_1' => 1,
+			'not_denied' => 1,
+			'moderator_group' => 3,
+			'groups' => isset($_REQUEST['groups']) ? $_REQUEST['groups'] : array(),
 		)
 	);
 	$lastPermission = null;
@@ -743,10 +748,10 @@ function StaffReport()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, id_group, posts, last_login
 		FROM {db_prefix}members
-		WHERE id_member IN ({array_int:inject_array_int_1})
+		WHERE id_member IN ({array_int:staff_list})
 		ORDER BY real_name',
 		array(
-			'inject_array_int_1' => $allStaff,
+			'staff_list' => $allStaff,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))

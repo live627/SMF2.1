@@ -274,7 +274,7 @@ function template_print()
 				{
 					echo '
 					<td colspan="', $table['column_count'], '" class="catbg">
-						<b>', $data['value'], ':</b>
+						<b>', $data['v'], ':</b>
 					</td>';
 					break;
 				}
@@ -283,12 +283,12 @@ function template_print()
 				if ($column_number == 0 && !empty($table['shading']['left']))
 					echo '
 					<td align="', $table['align']['shaded'], '" class="titlebg" ', $table['width']['shaded'] != 'auto' ? 'width="' . $table['width']['shaded'] . '"' : '', '>
-						', $data['value'] == $table['default_value'] ? '' : ($data['value'] . (empty($data['value']) ? '' : ':')), '
+						', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
 					</td>';
 				else
 					echo '
 					<td align="', $table['align']['normal'], '" ', $table['width']['normal'] != 'auto' ? 'width="' . $table['width']['normal'] . '"' : '', ' ', !empty($data['style']) ? 'style="' . $data['style'] . '"' : '', '>
-						', $data['value'], '
+						', $data['v'], '
 					</td>';
 
 				$column_number++;
