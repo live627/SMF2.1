@@ -1074,7 +1074,7 @@ function BuddyListToggle()
 	redirectexit('action=profile;u=' . $_REQUEST['u']);
 }
 
-function list_getMembers($start, $items_per_page, $sort, $where)
+function list_getMembers($start, $items_per_page, $sort, $where, $where_params = array())
 {
 	global $smfFunc, $db_prefix;
 
@@ -1084,15 +1084,14 @@ function list_getMembers($start, $items_per_page, $sort, $where)
 			mg.group_name
 		FROM {db_prefix}members AS mem
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)
-		WHERE {raw:where}
+		WHERE ' . $where . '
 		ORDER BY {raw:sort}
 		LIMIT {int:start}, {int:per_page}',
-		array(
+		array_merge($where_params, array(
 			'sort' => $sort,
-			'where' => $where,
 			'start' => $start,
 			'per_page' => $items_per_page,
-		)
+		))
 	);
 
 	$members = array();
@@ -1103,7 +1102,7 @@ function list_getMembers($start, $items_per_page, $sort, $where)
 	return $members;
 }
 
-function list_getNumMembers($where)
+function list_getNumMembers($where, $where_params = array())
 {
 	global $smfFunc, $db_prefix, $modSettings;
 
@@ -1117,10 +1116,9 @@ function list_getNumMembers($where)
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}members
-			WHERE {raw:where}',
-			array(
-				'where' => $where,
-			)
+			WHERE ' . $where,
+			array_merge($where_params, array(
+			))
 		);
 		list ($num_members) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
