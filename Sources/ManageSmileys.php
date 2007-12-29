@@ -247,7 +247,7 @@ function EditSmileySets()
 					fatal_lang_error('smiley_set_path_already_used');
 
 				$set_paths[$_POST['set']] = $_POST['smiley_sets_path'];
-				$set_names[$_POST['set']] = ($_POST['smiley_sets_name'];
+				$set_names[$_POST['set']] = $_POST['smiley_sets_name'];
 				updateSettings(array(
 					'smiley_sets_known' => implode(',', $set_paths),
 					'smiley_sets_names' => implode("\n", $set_names),

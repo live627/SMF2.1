@@ -787,7 +787,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	$query_parameter = array(
 		'thumb_attachment_type' => 3,
 	);
-print_r($condition);
+
 	if (is_array($condition))
 	{
 		foreach ($condition as $real_type => $restriction)
@@ -814,7 +814,7 @@ print_r($condition);
 		}
 		$condition = implode(' AND ', $new_condition);
 	}
-print_r($new_condition);
+
 	// Delete it only if it exists...
 	$msgs = array();
 	$attach = array();
