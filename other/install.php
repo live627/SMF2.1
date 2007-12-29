@@ -834,7 +834,7 @@ function doStep1()
 			$smfFunc['db_query']('', '
 				SET NAMES utf8',
 				array(
-				),
+				)
 			);
 		}
 	}
@@ -936,7 +936,7 @@ function doStep1()
 		if (!empty($rows))
 		{
 			$smfFunc['db_insert']('replace',
-				{$db_prefix} . 'settings',
+				$db_prefix . 'settings',
 				array('variable' => 'string-255', 'value' => 'string-65534'),
 				$rows,
 				array('variable')
