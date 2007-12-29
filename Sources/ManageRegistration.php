@@ -164,17 +164,17 @@ function AdminRegister()
 	$request = $smfFunc['db_query']('', '
 		SELECT group_name, id_group
 		FROM {db_prefix}membergroups
-		WHERE id_group != {int:inject_int_1}
-			AND min_posts = {int:inject_int_2}' . (allowedTo('admin_forum') ? '' : '
-			AND id_group != {int:inject_int_3}') . '
-			AND hidden != {int:inject_int_4}
-		ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_5} THEN id_group ELSE 4 END, group_name',
+		WHERE id_group != {int:moderator_group}
+			AND min_posts = {int:min_posts}' . (allowedTo('admin_forum') ? '' : '
+			AND id_group != {int:admin_group}') . '
+			AND hidden != {int:hidden_group}
+		ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
-			'inject_int_1' => 3,
-			'inject_int_2' => -1,
-			'inject_int_3' => 1,
-			'inject_int_4' => 2,
-			'inject_int_5' => 4,
+			'moderator_group' => 3,
+			'min_posts' => -1,
+			'admin_group' => 1,
+			'hidden_group' => 2,
+			'newbie_group' => 4,
 		)
 	);
 	$context['member_groups'] = array(0 => &$txt['admin_register_group_none']);
@@ -227,7 +227,7 @@ function EditAgreement()
 
 		// Off it goes to the agreement file.
 		$fp = fopen($boarddir . '/agreement' . $context['current_agreement'] . '.txt', 'w');
-		fwrite($fp, str_replace("\r", '', $smfFunc['db_unescape_string']($_POST['agreement'])));
+		fwrite($fp, str_replace("\r", '', $_POST['agreement']));
 		fclose($fp);
 
 		updateSettings(array('requireAgreement' => !empty($_POST['requireAgreement'])));

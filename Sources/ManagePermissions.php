@@ -163,9 +163,9 @@ function PermissionIndex()
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}members
-		WHERE id_group = {int:inject_int_1}',
+		WHERE id_group = {int:regular_group}',
 		array(
-			'inject_int_1' => 0,
+			'regular_group' => 0,
 		)
 	);
 	list ($num_members) = $smfFunc['db_fetch_row']($request);
@@ -220,12 +220,12 @@ function PermissionIndex()
 	$query = $smfFunc['db_query']('', '
 		SELECT id_group, id_parent, group_name, min_posts, online_color, stars
 		FROM {db_prefix}membergroups' . (empty($modSettings['permission_enable_postgroups']) ? '
-		WHERE min_posts = {int:inject_int_1}' : '') . '
-		ORDER BY id_parent = {int:inject_int_2} DESC, min_posts, CASE WHEN id_group < {int:inject_int_3} THEN id_group ELSE 4 END, group_name',
+		WHERE min_posts = {int:min_posts}' : '') . '
+		ORDER BY id_parent = {int:not_inherited} DESC, min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 		array(
-			'inject_int_1' => -1,
-			'inject_int_2' => -2,
-			'inject_int_3' => 4,
+			'min_posts' => -1,
+			'not_inherited' => -2,
+			'newbie_group' => 4,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -273,10 +273,10 @@ function PermissionIndex()
 		$query = $smfFunc['db_query']('', '
 			SELECT id_post_group AS id_group, COUNT(*) AS num_members
 			FROM {db_prefix}members
-			WHERE id_post_group IN ({array_int:inject_array_int_1})
+			WHERE id_post_group IN ({array_int:post_group_list})
 			GROUP BY id_post_group',
 			array(
-				'inject_array_int_1' => $postGroups,
+				'post_group_list' => $postGroups,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -290,10 +290,10 @@ function PermissionIndex()
 		$query = $smfFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS num_members
 			FROM {db_prefix}members
-			WHERE id_group IN ({array_int:inject_array_int_1})
+			WHERE id_group IN ({array_int:normal_group_list})
 			GROUP BY id_group',
 			array(
-				'inject_array_int_1' => $normalGroups,
+				'normal_group_list' => $normalGroups,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -304,14 +304,14 @@ function PermissionIndex()
 		$query = $smfFunc['db_query']('', '
 			SELECT mg.id_group, COUNT(*) AS num_members
 			FROM {db_prefix}membergroups AS mg
-				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:inject_string_1}
+				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
 					AND mem.id_group != mg.id_group
 					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
-			WHERE mg.id_group IN ({array_int:inject_array_int_1})
+			WHERE mg.id_group IN ({array_int:normal_group_list})
 			GROUP BY mg.id_group',
 			array(
-				'inject_array_int_1' => $normalGroups,
-				'inject_string_1' => '',
+				'normal_group_list' => $normalGroups,
+				'blank_string' => '',
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -330,9 +330,10 @@ function PermissionIndex()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS num_permissions, add_deny
 			FROM {db_prefix}permissions
-			' . (empty($context['hidden_permissions']) ? '' : ' WHERE permission NOT IN (\'' . implode('\', \'', $context['hidden_permissions']) . '\')') . '
+			' . (empty($context['hidden_permissions']) ? '' : ' WHERE permission NOT IN ({array_string:hidden_permissions})') . '
 			GROUP BY id_group, add_deny',
 			array(
+				'hidden_permissions' => !empty($context['hidden_permissions']) ? $context['hidden_permissions'] : array(),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -344,11 +345,12 @@ function PermissionIndex()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_profile, id_group, COUNT(*) AS num_permissions, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE id_profile = {int:inject_int_1}
-			' . (empty($context['hidden_permissions']) ? '' : ' AND permission NOT IN (\'' . implode('\', \'', $context['hidden_permissions']) . '\')') . '
+			WHERE id_profile = {int:default_profile}
+			' . (empty($context['hidden_permissions']) ? '' : ' AND permission NOT IN ({array_string:hidden_permissions})') . '
 			GROUP BY id_profile, id_group, add_deny',
 			array(
-				'inject_int_1' => 1,
+				'default_profile' => 1,
+				'hidden_permissions' => !empty($context['hidden_permissions']) ? $context['hidden_permissions'] : array(),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -371,10 +373,10 @@ function PermissionIndex()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_profile, id_group, COUNT(*) AS num_permissions, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE id_profile = {int:inject_int_1}
+			WHERE id_profile = {int:current_profile}
 			GROUP BY id_profile, id_group, add_deny',
 			array(
-				'inject_int_1' => $_REQUEST['pid'],
+				'current_profile' => $_REQUEST['pid'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -420,11 +422,11 @@ function PermissionByBoard()
 			foreach ($changes as $profile => $boards)
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET id_profile = {int:inject_int_1}
-					WHERE id_board IN ({array_int:inject_array_int_1})',
+					SET id_profile = {int:current_profile}
+					WHERE id_board IN ({array_int:board_list})',
 					array(
-						'inject_array_int_1' => $boards,
-						'inject_int_1' => $profile,
+						'board_list' => $boards,
+						'current_profile' => $profile,
 					)
 				);
 		}
@@ -494,7 +496,7 @@ function SetQuickGroups()
 	$bid = max(1, $_REQUEST['pid']);
 
 	// No modifying the predefined profiles.
-	if ($_REQUEST['pid'] > 1 || $_REQUEST['pid'] < 5)
+	if ($_REQUEST['pid'] > 1 && $_REQUEST['pid'] < 5)
 		fatal_lang_error('no_access');
 
 	// Clear out any cached authority.
@@ -539,9 +541,9 @@ function SetQuickGroups()
 			$request = $smfFunc['db_query']('', '
 				SELECT permission, add_deny
 				FROM {db_prefix}permissions
-				WHERE id_group = {int:inject_int_1}',
+				WHERE id_group = {int:copy_from}',
 				array(
-					'inject_int_1' => $_POST['copy_from'],
+					'copy_from' => $_POST['copy_from'],
 				)
 			);
 			$target_perm = array();
@@ -563,10 +565,11 @@ function SetQuickGroups()
 			// Delete the previous permissions...
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}permissions
-				WHERE id_group IN ({array_int:inject_array_int_1})
-					' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'),
+				WHERE id_group IN ({array_int:group_list})
+					' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN ({array_string:illegal_permissions})'),
 				array(
-					'inject_array_int_1' => $_POST['group'],
+					'group_list' => $_POST['group'],
+					'illegal_permissions' => !empty($context['illegal_permissions']) ? $context['illegal_permissions'] : array(),
 				)
 			);
 
@@ -586,11 +589,11 @@ function SetQuickGroups()
 		$request = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE id_group = {int:inject_int_1}
-				AND id_profile = {int:inject_int_2}',
+			WHERE id_group = {int:copy_from}
+				AND id_profile = {int:current_profile}',
 			array(
-				'inject_int_1' => $_POST['copy_from'],
-				'inject_int_2' => $bid,
+				'copy_from' => $_POST['copy_from'],
+				'current_profile' => $bid,
 			)
 		);
 		$target_perm = array();
@@ -606,11 +609,11 @@ function SetQuickGroups()
 		// Delete the previous global board permissions...
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}board_permissions
-			WHERE id_group IN ({array_int:inject_array_int_1})
-				AND id_profile = {int:inject_int_1}',
+			WHERE id_group IN ({array_int:current_group_list})
+				AND id_profile = {int:current_profile}',
 			array(
-				'inject_array_int_1' => $_POST['group'],
-				'inject_int_1' => $bid,
+				'current_group_list' => $_POST['group'],
+				'current_profile' => $bid,
 			)
 		);
 
@@ -644,24 +647,25 @@ function SetQuickGroups()
 			if ($permissionType == 'membergroup')
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}permissions
-					WHERE id_group IN ({array_int:inject_array_int_1})
-						AND permission = {string:inject_string_1}
-						' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'),
+					WHERE id_group IN ({array_int:current_group_list})
+						AND permission = {string:current_permission}
+						' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN ({array_string:illegal_permissions})'),
 					array(
-						'inject_array_int_1' => $_POST['group'],
-						'inject_string_1' => $permission,
+						'current_group_list' => $_POST['group'],
+						'current_permission' => $permission,
+						'illegal_permissions' => !empty($context['illegal_permissions']) ? $context['illegal_permissions'] : array(),
 					)
 				);
 			else
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}board_permissions
-					WHERE id_group IN ({array_int:inject_array_int_1})
-						AND id_profile = {int:inject_int_1}
-						AND permission = {string:inject_string_1}',
+					WHERE id_group IN ({array_int:current_group_list})
+						AND id_profile = {int:current_profile}
+						AND permission = {string:current_permission}',
 					array(
-						'inject_array_int_1' => $_POST['group'],
-						'inject_int_1' => $bid,
-						'inject_string_1' => $permission,
+						'current_group_list' => $_POST['group'],
+						'current_profile' => $bid,
+						'current_permission' => $permission,
 					)
 				);
 		}
@@ -735,10 +739,10 @@ function ModifyMembergroup()
 		$result = $smfFunc['db_query']('', '
 			SELECT group_name, id_parent
 			FROM {db_prefix}membergroups
-			WHERE id_group = {int:inject_int_1}
+			WHERE id_group = {int:current_group}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $context['group']['id'],
+				'current_group' => $context['group']['id'],
 			)
 		);
 		list ($context['group']['name'], $parent) = $smfFunc['db_fetch_row']($result);
@@ -776,9 +780,9 @@ function ModifyMembergroup()
 		$result = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}permissions
-			WHERE id_group = {int:inject_int_1}',
+			WHERE id_group = {int:current_group}',
 			array(
-				'inject_int_1' => $_GET['group'],
+				'current_group' => $_GET['group'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -791,11 +795,11 @@ function ModifyMembergroup()
 		$result = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE id_group = {int:inject_int_1}
-				AND id_profile = {int:inject_int_2}',
+			WHERE id_group = {int:current_group}
+				AND id_profile = {int:current_profile}',
 			array(
-				'inject_int_1' => $context['group']['id'],
-				'inject_int_2' => $context['profile']['id'],
+				'current_group' => $context['group']['id'],
+				'current_profile' => $context['profile']['id'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -859,10 +863,10 @@ function ModifyMembergroup2()
 		$result = $smfFunc['db_query']('', '
 			SELECT id_parent
 			FROM {db_prefix}membergroups
-			WHERE id_group = {int:inject_int_1}
+			WHERE id_group = {int:current_group}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $_GET['group'],
+				'current_group' => $_GET['group'],
 			)
 		);
 		list ($parent) = $smfFunc['db_fetch_row']($result);
@@ -899,10 +903,11 @@ function ModifyMembergroup2()
 	{
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}permissions
-			WHERE id_group = {int:inject_int_1}
-			' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'),
+			WHERE id_group = {int:current_group}
+			' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN ({array_string:illegal_permissions})'),
 			array(
-				'inject_int_1' => $_GET['group'],
+				'current_group' => $_GET['group'],
+				'illegal_permissions' => !empty($context['illegal_permissions']) ? $context['illegal_permissions'] : array(),
 			)
 		);
 
@@ -921,11 +926,11 @@ function ModifyMembergroup2()
 	$profileid = max(1, $_GET['pid']);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}board_permissions
-		WHERE id_group = {int:inject_int_1}
-			AND id_profile = {int:inject_int_2}',
+		WHERE id_group = {int:current_group}
+			AND id_profile = {int:current_profile}',
 		array(
-			'inject_int_1' => $_GET['group'],
-			'inject_int_2' => $profileid,
+			'current_group' => $_GET['group'],
+			'current_profile' => $profileid,
 		)
 	);
 	if (!empty($givePerms['board']))
@@ -988,16 +993,16 @@ function GeneralPermissionSettings($return_config = false)
 		{
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}permissions
-				WHERE add_deny = {int:inject_int_1}',
+				WHERE add_deny = {int:denied}',
 				array(
-					'inject_int_1' => 0,
+					'denied' => 0,
 				)
 			);
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}board_permissions
-				WHERE add_deny = {int:inject_int_1}',
+				WHERE add_deny = {int:denied}',
 				array(
-					'inject_int_1' => 0,
+					'denied' => 0,
 				)
 			);
 		}
@@ -1010,9 +1015,9 @@ function GeneralPermissionSettings($return_config = false)
 			$request = $smfFunc['db_query']('', '
 				SELECT id_group
 				FROM {db_prefix}membergroups
-				WHERE min_posts != {int:inject_int_1}',
+				WHERE min_posts != {int:min_posts}',
 				array(
-					'inject_int_1' => -1,
+					'min_posts' => -1,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1022,25 +1027,25 @@ function GeneralPermissionSettings($return_config = false)
 			// Remove'em.
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}permissions
-				WHERE id_group IN ({array_int:inject_array_int_1})',
+				WHERE id_group IN ({array_int:post_group_list})',
 				array(
-					'inject_array_int_1' => $post_groups,
+					'post_group_list' => $post_groups,
 				)
 			);
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}board_permissions
-				WHERE id_group IN ({array_int:inject_array_int_1})',
+				WHERE id_group IN ({array_int:post_group_list})',
 				array(
-					'inject_array_int_1' => $post_groups,
+					'post_group_list' => $post_groups,
 				)
 			);
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}membergroups
-				SET id_parent = {int:inject_int_1}
-				WHERE id_parent IN ({array_int:inject_array_int_1})',
+				SET id_parent = {int:not_inherited}
+				WHERE id_parent IN ({array_int:post_group_list})',
 				array(
-					'inject_array_int_1' => $post_groups,
-					'inject_int_1' => -2,
+					'post_group_list' => $post_groups,
+					'not_inherited' => -2,
 				)
 			);
 		}
@@ -1221,19 +1226,20 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}permissions
-			WHERE id_group = {int:inject_int_1}
-			' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'),
+			WHERE id_group = {int:current_group}
+			' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN ({array_string:illegal_permissions})'),
 			array(
-				'inject_int_1' => $group,
+				'current_group' => $group,
+				'illegal_permissions' => !empty($context['illegal_permissions']) ? $context['illegal_permissions'] : array(),
 			)
 		);
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}board_permissions
-			WHERE id_group = {int:inject_int_1}
-				AND id_profile = {int:inject_int_2}',
+			WHERE id_group = {int:current_group}
+				AND id_profile = {int:default_profile}',
 			array(
-				'inject_int_1' => $group,
-				'inject_int_2' => 1,
+				'current_group' => $group,
+				'default_profile' => 1,
 			)
 		);
 
@@ -1269,11 +1275,11 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		{
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}board_permissions
-				WHERE id_group = {int:inject_int_1}
-					AND id_profile = {int:inject_int_2}',
+				WHERE id_group = {int:current_group}
+					AND id_profile = {int:current_profile}',
 				array(
-					'inject_int_1' => $group,
-					'inject_int_2' => $profile,
+					'current_group' => $group,
+					'current_profile' => $profile,
 				)
 			);
 		}
@@ -1299,9 +1305,9 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}board_permissions
-			WHERE id_profile = {int:inject_int_1}',
+			WHERE id_profile = {int:current_profile}',
 			array(
-				'inject_int_1' => $profile,
+				'current_profile' => $profile,
 			)
 		);
 
@@ -1312,11 +1318,11 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		$query = $smfFunc['db_query']('', '
 			SELECT id_group
 			FROM {db_prefix}membergroups
-			WHERE id_group > {int:inject_int_1}
-			ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_2} THEN id_group ELSE 4 END, group_name',
+			WHERE id_group > {int:moderator_group}
+			ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
 			array(
-				'inject_int_1' => 3,
-				'inject_int_2' => 4,
+				'moderator_group' => 3,
+				'newbie_group' => 4,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_row']($query))
@@ -1682,12 +1688,15 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 		);
 
 	$request = $smfFunc['db_query']('', '
-		SELECT id_group, CASE WHEN add_deny = {int:inject_int_1} THEN \'deny\' ELSE \'on\' END AS status, permission
+		SELECT id_group, CASE WHEN add_deny = {int:denied} THEN {string:deny} ELSE {string:on} END AS status, permission
 		FROM {db_prefix}permissions
 		WHERE id_group IN (-1, 0)
-			AND permission IN (\'' . implode('\', \'', $permissions) . '\')',
+			AND permission IN ({array_string:permissions})',
 		array(
-			'inject_int_1' => 0,
+			'denied' => 0,
+			'permissions' => $permissions,
+			'deny' => 'deny',
+			'on' => 'on',
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1697,15 +1706,16 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 	$request = $smfFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.min_posts, IFNULL(p.add_deny, -1) AS status, p.permission
 		FROM {db_prefix}membergroups AS mg
-			LEFT JOIN {db_prefix}permissions AS p ON (p.id_group = mg.id_group AND p.permission  IN (\'' . implode('\', \'', $permissions) . '\'))
+			LEFT JOIN {db_prefix}permissions AS p ON (p.id_group = mg.id_group AND p.permission  IN ({array_string:permissions}))
 		WHERE mg.id_group NOT IN (1, 3)
-			AND mg.id_parent = {int:inject_int_1}' . (empty($modSettings['permission_enable_postgroups']) ? '
-			AND mg.min_posts = {int:inject_int_2}' : '') . '
-		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:inject_int_3} THEN mg.id_group ELSE 4 END, mg.group_name',
+			AND mg.id_parent = {int:not_inherited}' . (empty($modSettings['permission_enable_postgroups']) ? '
+			AND mg.min_posts = {int:min_posts}' : '') . '
+		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:newbie_group} THEN mg.id_group ELSE 4 END, mg.group_name',
 		array(
-			'inject_int_1' => -2,
-			'inject_int_2' => -1,
-			'inject_int_3' => 4,
+			'not_inherited' => -2,
+			'min_posts' => -1,
+			'newbie_group' => 4,
+			'permissions' => $permissions,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1774,9 +1784,11 @@ function save_inline_permissions($permissions)
 	// Remove the old permissions...
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}permissions
-		WHERE permission IN (\'' . implode('\', \'', $permissions) . '\')
-		' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (\'' . implode('\', \'', $context['illegal_permissions']) . '\')'),
+		WHERE permission IN ({array_string:permissions})
+		' . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN ({array_string:illegal_permissions})'),
 		array(
+			'illegal_permissions' => !empty($context['illegal_permissions']) ? $context['illegal_permissions'] : array(),
+			'permissions' => $permissions,
 		)
 	);
 
@@ -1843,13 +1855,15 @@ function EditPermissionProfiles()
 		$_POST['copy_from'] = (int) $_POST['copy_from'];
 
 		// Insert the profile itself.
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}permission_profiles
-				(profile_name)
-			VALUES
-				(\'' . $_POST['profile_name'] . '\')',
+		$smfFunc['db_insert']('',
+			$db_prefix . 'permission_profiles',
 			array(
-			)
+				'profile_name' => 'string',
+			),
+			array(
+				$_POST['profile_name'],
+			),
+			array('id_profile')
 		);
 		$profile_id = $smfFunc['db_insert_id']( $db_prefix . 'permission_profiles', 'id_profile');
 
@@ -1857,9 +1871,9 @@ function EditPermissionProfiles()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_group, permission, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE id_profile = {int:inject_int_1}',
+			WHERE id_profile = {int:copy_from}',
 			array(
-				'inject_int_1' => $_POST['copy_from'],
+				'copy_from' => $_POST['copy_from'],
 			)
 		);
 		$inserts = array();
@@ -1888,11 +1902,11 @@ function EditPermissionProfiles()
 				if (trim($value) != '' && $id > 4)
 					$smfFunc['db_query']('', '
 						UPDATE {db_prefix}permission_profiles
-						SET profile_name = {string:inject_string_1}
-						WHERE id_profile = {int:inject_int_1}',
+						SET profile_name = {string:profile_name}
+						WHERE id_profile = {int:current_profile}',
 						array(
-							'inject_int_1' => (int) $id,
-							'inject_string_1' => $value,
+							'current_profile' => (int) $id,
+							'profile_name' => $value,
 						)
 					);
 			}
@@ -1912,10 +1926,10 @@ function EditPermissionProfiles()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_board
 			FROM {db_prefix}boards
-			WHERE id_profile IN ({array_int:inject_array_int_1})
+			WHERE id_profile IN ({array_int:profile_list})
 			LIMIT 1',
 			array(
-				'inject_array_int_1' => $profiles,
+				'profile_list' => $profiles,
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) != 0 || $_GET['pid'] == 1)
@@ -1925,9 +1939,9 @@ function EditPermissionProfiles()
 		// Oh well, delete.
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}permission_profiles
-			WHERE id_profile IN ({array_int:inject_array_int_1})',
+			WHERE id_profile IN ({array_int:profile_list})',
 			array(
-				'inject_array_int_1' => $profiles,
+				'profile_list' => $profiles,
 			)
 		);
 	}
@@ -1979,11 +1993,11 @@ function updateChildPermissions($parents, $profile = null)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_parent, id_group
 		FROM {db_prefix}membergroups
-		WHERE id_parent != {int:inject_int_1}
-			' . (empty($parents) ? '' : 'AND id_parent IN ({array_int:inject_array_int_1})'),
+		WHERE id_parent != {int:not_inherited}
+			' . (empty($parents) ? '' : 'AND id_parent IN ({array_int:parent_list})'),
 		array(
-			'inject_array_int_1' => $parents,
-			'inject_int_1' => -2,
+			'parent_list' => $parents,
+			'not_inherited' => -2,
 		)
 	);
 	$children = array();
@@ -2010,9 +2024,9 @@ function updateChildPermissions($parents, $profile = null)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_group, permission, add_deny
 			FROM {db_prefix}permissions
-			WHERE id_group IN ({array_int:inject_array_int_1})',
+			WHERE id_group IN ({array_int:parent_list})',
 			array(
-				'inject_array_int_1' => $parents,
+				'parent_list' => $parents,
 			)
 		);
 		$permissions = array();
@@ -2023,9 +2037,9 @@ function updateChildPermissions($parents, $profile = null)
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}permissions
-			WHERE id_group IN ({array_int:inject_array_int_1})',
+			WHERE id_group IN ({array_int:child_groups})',
 			array(
-				'inject_array_int_1' => $child_groups,
+				'child_groups' => $child_groups,
 			)
 		);
 
@@ -2036,7 +2050,7 @@ function updateChildPermissions($parents, $profile = null)
 				$db_prefix . 'permissions',
 				array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$permissions,
-				array('id_group', 'permission'), __FILE__, __LINE__
+				array('id_group', 'permission')
 			);
 		}
 	}
@@ -2044,16 +2058,17 @@ function updateChildPermissions($parents, $profile = null)
 	// Then, what about board profiles?
 	if ($profile != -1)
 	{
-		$profileQuery = $profile === null ? '' : ' AND id_profile = ' . ($profile ? $profile : 1);
+		$profileQuery = $profile === null ? '' : ' AND id_profile = {int:current_profile}';
 
 		// Again, get all the parent permissions.
 		$request = $smfFunc['db_query']('', '
 			SELECT id_profile, id_group, permission, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE id_group IN ({array_int:inject_array_int_1})
+			WHERE id_group IN ({array_int:parent_groups})
 				' . $profileQuery,
 			array(
-				'inject_array_int_1' => $parents,
+				'parent_groups' => $parents,
+				'current_profile' => $profile !== null && $profile ? $profile : 1,
 			)
 		);
 		$permissions = array();
@@ -2064,10 +2079,11 @@ function updateChildPermissions($parents, $profile = null)
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}board_permissions
-			WHERE id_group IN ({array_int:inject_array_int_1})
+			WHERE id_group IN ({array_int:child_groups})
 				' . $profileQuery,
 			array(
-				'inject_array_int_1' => $child_groups,
+				'child_groups' => $child_groups,
+				'current_profile' => $profile !== null && $profile ? $profile : 1,
 			)
 		);
 
@@ -2149,12 +2165,12 @@ function ModifyPostModeration()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name, online_color, id_parent
 		FROM {db_prefix}membergroups
-		WHERE id_group != {int:inject_int_1}
-			' . (empty($modSettings['permission_enable_postgroups']) ? ' AND min_posts = {int:inject_int_2}' : '') . '
+		WHERE id_group != {int:admin_group}
+			' . (empty($modSettings['permission_enable_postgroups']) ? ' AND min_posts = {int:min_posts}' : '') . '
 		ORDER BY id_parent ASC',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => -1,
+			'admin_group' => 1,
+			'min_posts' => -1,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2177,19 +2193,24 @@ function ModifyPostModeration()
 	}
 	$smfFunc['db_free_result']($request);
 
+	// What are the permissions we are querying?
+	$all_permissions = array();
+	foreach ($mappings as $perm_set)
+		$all_permissions = array_merge($all_permissions, $perm_set);
+
 	// If we're saving the changes then do just that - save them.
-	if (!empty($_POST['save_changes']) && ($context['current_profile'] == 0 || $context['current_profile'] > 4))
+	if (!empty($_POST['save_changes']) && ($context['current_profile'] == 1 || $context['current_profile'] > 4))
 	{
 		// Start by deleting all the permissions relevant.
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}board_permissions
-			WHERE id_profile = {int:inject_int_1}
-				AND permission IN (\'post_unapproved_replies_own\', \'post_unapproved_replies_any\', \'post_unapproved_topics\', \'post_unapproved_attachments\',
-					\'post_reply_own\', \'post_reply_any\', \'post_new\', \'post_attachment\')
-				AND id_group IN ({array_int:inject_array_int_1})',
+			WHERE id_profile = {int:current_profile}
+				AND permission IN ({array_string:permissions})
+				AND id_group IN ({array_int:profile_group_list})',
 			array(
-				'inject_array_int_1' => array_keys($context['profile_groups']),
-				'inject_int_1' => $context['current_profile'],
+				'profile_group_list' => array_keys($context['profile_groups']),
+				'current_profile' => $context['current_profile'],
+				'permissions' => $all_permissions,
 			)
 		);
 
@@ -2227,13 +2248,13 @@ function ModifyPostModeration()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, permission, add_deny
 		FROM {db_prefix}board_permissions
-		WHERE id_profile = {int:inject_int_1}
-			AND permission IN (\'post_unapproved_replies_own\', \'post_unapproved_replies_any\', \'post_unapproved_topics\', \'post_unapproved_attachments\',
-				\'post_reply_own\', \'post_reply_any\', \'post_new\', \'post_attachment\')
-			AND id_group IN ({array_int:inject_array_int_1})',
+		WHERE id_profile = {int:current_profile}
+			AND permission IN ({array_string:permissions})
+			AND id_group IN ({array_int:profile_group_list})',
 		array(
-			'inject_array_int_1' => array_keys($context['profile_groups']),
-			'inject_int_1' => $context['current_profile'],
+			'profile_group_list' => array_keys($context['profile_groups']),
+			'current_profile' => $context['current_profile'],
+			'permissions' => $all_permissions,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
