@@ -216,11 +216,13 @@ function PackageInstallTest()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
-		WHERE (id_theme = {int:inject_int_1} OR id_theme IN ({array_int:inject_array_int_1}))
-			AND variable IN (\'name\', \'theme_dir\')',
+		WHERE (id_theme = {int:default_theme} OR id_theme IN ({array_int:known_theme_list}))
+			AND variable IN ({string:name}, {string:theme_dir})',
 		array(
-			'inject_array_int_1' => $modSettings['knownThemes'],
-			'inject_int_1' => 1,
+			'known_theme_list' => $modSettings['knownThemes'],
+			'default_theme' => 1,
+			'name' => 'name',
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	$theme_paths = array();
@@ -245,11 +247,11 @@ function PackageInstallTest()
 	$request = $smfFunc['db_query']('', '
 		SELECT version, themes_installed, db_changes
 		FROM {db_prefix}log_packages
-		WHERE package_id = {string:inject_string_1}
-			AND install_state = {int:inject_int_1}',
+		WHERE package_id = {string:current_package}
+			AND install_state = {int:installed}',
 		array(
-			'inject_int_1' => 1,
-			'inject_string_1' => $smfFunc['db_escape_string']($packageInfo['id']),
+			'installed' => 1,
+			'current_package' => $packageInfo['id'],
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -632,10 +634,12 @@ function PackageInstall()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
-		WHERE id_theme IN ({array_int:inject_array_int_1})
-			AND variable IN (\'name\', \'theme_dir\')',
+		WHERE id_theme IN ({array_int:custom_themes})
+			AND variable IN ({string:name}, {string:theme_dir})',
 		array(
-			'inject_array_int_1' => $custom_themes,
+			'custom_themes' => $custom_themes,
+			'name' => 'name',
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	$theme_paths = array();
@@ -667,11 +671,11 @@ function PackageInstall()
 	$request = $smfFunc['db_query']('', '
 		SELECT version, themes_installed, db_changes
 		FROM {db_prefix}log_packages
-		WHERE package_id = {string:inject_string_1}
-			AND install_state = {int:inject_int_1}',
+		WHERE package_id = {string:current_package}
+			AND install_state = {int:installed}',
 		array(
-			'inject_int_1' => 1,
-			'inject_string_1' => $smfFunc['db_escape_string']($packageInfo['id']),
+			'installed' => 1,
+			'current_package' => $packageInfo['id'],
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -809,15 +813,15 @@ function PackageInstall()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_install, install_state
 			FROM {db_prefix}log_packages
-			WHERE install_state != {int:inject_int_1}
-				AND package_id = {string:inject_string_1}
-				' . ($context['install_id'] ? ' AND id_install = {int:inject_int_2} ' : '') . '
+			WHERE install_state != {int:not_installed}
+				AND package_id = {string:current_package}
+				' . ($context['install_id'] ? ' AND id_install = {int:install_id} ' : '') . '
 			ORDER BY time_installed DESC
 			LIMIT 1',
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => $context['install_id'],
-				'inject_string_1' => $smfFunc['db_escape_string']($packageInfo['id']),
+				'not_installed' => 0,
+				'install_id' => $context['install_id'],
+				'current_package' => $packageInfo['id'],
 			)
 		);
 		$is_upgrade = false;
@@ -828,15 +832,15 @@ function PackageInstall()
 			{
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}log_packages
-					SET install_state = {int:inject_int_1}, member_removed = {string:inject_string_1}, id_member_removed = {int:current_member},
-						time_removed = {int:inject_int_2}
-					WHERE id_install = {int:inject_int_3}',
+					SET install_state = {int:not_installed}, member_removed = {string:member_name}, id_member_removed = {int:current_member},
+						time_removed = {int:current_time}
+					WHERE id_install = {int:install_id}',
 					array(
 						'current_member' => $user_info['id'],
-						'inject_int_1' => 0,
-						'inject_int_2' => time(),
-						'inject_int_3' => $row['id_install'],
-						'inject_string_1' => $user_info['name'],
+						'not_installed' => 0,
+						'current_time' => time(),
+						'install_id' => $row['id_install'],
+						'member_name' => $user_info['name'],
 					)
 				);
 			}
@@ -867,7 +871,7 @@ function PackageInstall()
 					elseif (in_array($log[1], $tables))
 						unset($db_package_log[$k]);
 				}
-				$db_changes = $smfFunc['db_escape_string'](serialize($db_package_log));
+				$db_changes = serialize($db_package_log);
 			}
 			else
 				$db_changes = '';
@@ -877,19 +881,23 @@ function PackageInstall()
 			$themes_installed = implode(',', $themes_installed);
 
 			// What failed steps?
-			$failed_step_insert = $smfFunc['db_escape_string'](serialize($failed_steps));
+			$failed_step_insert = serialize($failed_steps);
 
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}log_packages
-					(filename, name, package_id, version, id_member_installed, member_installed, time_installed,
-					install_state, failed_steps, themes_installed, member_removed, db_changes)
-				VALUES
-					(\'' . $smfFunc['db_escape_string']($packageInfo['filename']) . '\', \'' . $smfFunc['db_escape_string']($packageInfo['name']) . '\',
-					\'' . $smfFunc['db_escape_string']($packageInfo['id']) . '\', \'' . $smfFunc['db_escape_string']($packageInfo['version']) . '\',
-					' . $user_info['id'] . ', \'' . $user_info['name'] . '\', ' . time() . ', ' . ($is_upgrade ? 2 : 1) . ', \'' . $failed_step_insert . '\',
-					\'' . $themes_installed . '\', 0, \'' . $db_changes . '\')',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'log_packages',
 				array(
-				)
+					'filename' => 'string', 'name' => 'string', 'package_id' => 'string', 'version' => 'string',
+					'id_member_installed' => 'int', 'member_installed' => 'string','time_installed' => 'int',
+					'install_state' => 'int', 'failed_steps' => 'string', 'themes_installed' => 'string',
+					'member_removed' => 'int', 'db_changes' => 'string',
+				),
+				array(
+					$packageInfo['filename'], $packageInfo['name'], $packageInfo['id'], $packageInfo['version'],
+					$user_info['id'], $user_info['name'], time(),
+					$is_upgrade ? 2 : 1, $failed_step_insert, $themes_installed,
+					0, $db_changes,
+				),
+				array('id_install')
 			);
 		}
 		$smfFunc['db_free_result']($request);
@@ -1034,9 +1042,9 @@ function FlushInstall()
 	// Set everything as uninstalled.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_packages
-		SET install_state = {int:inject_int_1}',
+		SET install_state = {int:not_installed}',
 		array(
-			'inject_int_1' => 0,
+			'not_installed' => 0,
 		)
 	);
 

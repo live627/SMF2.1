@@ -511,12 +511,12 @@ function registerMember(&$regOptions, $return_errors = false)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}members
-		WHERE email_address = {string:inject_string_1}
-			OR email_address = {string:inject_string_2}
+		WHERE email_address = {string:email_address}
+			OR email_address = {string:username}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $regOptions['email'],
-			'inject_string_2' => $regOptions['username'],
+			'email_address' => $regOptions['email'],
+			'username' => $regOptions['username'],
 		)
 	);
 	// !!! Separate the sprintf?
@@ -618,9 +618,9 @@ function registerMember(&$regOptions, $return_errors = false)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_group
 			FROM {db_prefix}membergroups
-			WHERE min_posts != {int:inject_int_1}',
+			WHERE min_posts != {int:min_posts}',
 			array(
-				'inject_int_1' => -1,
+				'min_posts' => -1,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))

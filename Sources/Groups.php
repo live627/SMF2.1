@@ -555,12 +555,12 @@ function GroupRequests()
 
 						$smfFunc['db_query']('', '
 							UPDATE {db_prefix}members
-							SET id_group = {int:inject_int_1}, additional_groups = {string:inject_string_1}
-							WHERE id_member = {int:inject_int_2}',
+							SET id_group = {int:primary_group}, additional_groups = {string:additional_groups}
+							WHERE id_member = {int:selected_member}',
 							array(
-								'inject_int_1' => $groups['primary'],
-								'inject_int_2' => $id,
-								'inject_string_1' => implode(',', $groups['add']),
+								'primary_group' => $groups['primary'],
+								'selected_member' => $id,
+								'additional_groups' => implode(',', $groups['add']),
 							)
 						);
 					}

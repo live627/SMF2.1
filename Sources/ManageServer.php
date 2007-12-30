@@ -651,12 +651,13 @@ function DownloadLanguage()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, value
 			FROM {db_prefix}themes
-			WHERE id_member = {int:inject_int_1}
-				AND variable = {string:inject_string_1}
-				AND (value LIKE \'%' . implode('\' OR value LIKE \'%', $indexes) . '\')',
+			WHERE id_member = {int:no_member}
+				AND variable = {string:theme_dir}
+				AND ({raw:index_compare_explode})',
 			array(
-				'inject_int_1' => 0,
-				'inject_string_1' => 'theme_dir',
+				'no_member' => 0,
+				'theme_dir' => 'theme_dir',
+				'index_compare_explode' => 'value LIKE \'%' . implode('\' OR value LIKE \'%', $indexes),
 			)
 		);
 		$themes = array();
@@ -675,13 +676,13 @@ function DownloadLanguage()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_theme, value
 				FROM {db_prefix}themes
-				WHERE id_member = {int:inject_int_1}
-					AND variable = {string:inject_string_1}
-					AND id_theme IN ({array_int:inject_array_int_1})',
+				WHERE id_member = {int:no_member}
+					AND variable = {string:name}
+					AND id_theme IN ({array_int:theme_list})',
 				array(
-					'inject_array_int_1' => array_keys($themes),
-					'inject_int_1' => 0,
-					'inject_string_1' => 'name',
+					'theme_list' => array_keys($themes),
+					'no_member' => 0,
+					'name' => 'name',
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1075,12 +1076,14 @@ function ModifyLanguage()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
-		WHERE id_theme != {int:inject_int_1}
-			AND id_member = {int:inject_int_2}
-			AND variable IN (\'name\', \'theme_dir\')',
+		WHERE id_theme != {int:default_theme}
+			AND id_member = {int:no_member}
+			AND variable IN ({string:name}, {string:theme_dir})',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => 0,
+			'default_theme' => 1,
+			'no_member' => 0,
+			'name' => 'name',
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	$themes = array(

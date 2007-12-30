@@ -1193,9 +1193,9 @@ function EditCustomProfiles()
 			SELECT id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
 				show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask
 			FROM {db_prefix}custom_fields
-			WHERE id_field = {int:inject_int_1}',
+			WHERE id_field = {int:current_field}',
 			array(
-				'inject_int_1' => $context['fid'],
+				'current_field' => $context['fid'],
 			)
 		);
 		$context['field'] = array();
@@ -1332,9 +1332,9 @@ function EditCustomProfiles()
 				$request = $smfFunc['db_query']('', '
 					SELECT id_field
 					FROM {db_prefix}custom_fields
-					WHERE col_name = {string:inject_string_1}',
+					WHERE col_name = {string:current_column}',
 					array(
-						'inject_string_1' => $colname,
+						'current_column' => $colname,
 					)
 				);
 				if ($smfFunc['db_num_rows']($request) == 0)
@@ -1357,11 +1357,11 @@ function EditCustomProfiles()
 			{
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE variable = {string:inject_string_1}
-						AND id_member > {int:inject_int_1}',
+					WHERE variable = {string:current_column}
+						AND id_member > {int:no_member}',
 					array(
-						'inject_int_1' => 0,
-						'inject_string_1' => $context['field']['colname'],
+						'no_member' => 0,
+						'current_column' => $context['field']['colname'],
 					)
 				);
 			}
@@ -1382,9 +1382,6 @@ function EditCustomProfiles()
 						$takenKeys[] = $k;
 						continue;
 					}
-
-					// Damn - it's gone!
-					$optionChanges[$k] = strtr($option, array('\'' => '\\\''));
 				}
 
 				// Finally - have we renamed it - or is it really gone?
@@ -1394,15 +1391,15 @@ function EditCustomProfiles()
 					if (!in_array($k, $takenKeys) && !empty($newOptions[$k]))
 						$smfFunc['db_query']('', '
 							UPDATE {db_prefix}themes
-							SET value = {string:inject_string_1}
-							WHERE variable = {string:inject_string_2}
-								AND value = {string:inject_string_3}
-								AND id_member > {int:inject_int_1}',
+							SET value = {string:new_value}
+							WHERE variable = {string:current_column}
+								AND value = {string:old_value}
+								AND id_member > {int:no_member}',
 							array(
-								'inject_int_1' => 0,
-								'inject_string_1' => $newOptions[$k],
-								'inject_string_2' => $context['field']['colname'],
-								'inject_string_3' => $option,
+								'no_member' => 0,
+								'new_value' => $newOptions[$k],
+								'current_column' => $context['field']['colname'],
+								'old_value' => $option,
 							)
 						);
 				}
@@ -1415,28 +1412,28 @@ function EditCustomProfiles()
 		{
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}custom_fields
-				SET field_name = {string:inject_string_1}, field_desc = {string:inject_string_2},
-					field_type = {string:inject_string_3}, field_length = {int:inject_int_1},
-					field_options = {string:inject_string_4}, show_reg = {int:inject_int_2}, show_display = {int:inject_int_3},
-					show_profile = {string:inject_string_5}, private = {int:inject_int_4}, active = {int:inject_int_5}, default_value = {string:inject_string_6},
-					can_search = {int:inject_int_6}, bbc = {int:inject_int_7}, mask = {string:inject_string_7}
-				WHERE id_field = {int:inject_int_8}',
+				SET field_name = {string:field_name}, field_desc = {string:field_desc},
+					field_type = {string:field_type}, field_length = {int:field_length},
+					field_options = {string:field_options}, show_reg = {int:show_reg}, show_display = {int:show_display},
+					show_profile = {string:show_profile}, private = {int:private}, active = {int:active}, default_value = {string:default_value},
+					can_search = {int:can_search}, bbc = {int:bbc}, mask = {string:mask}
+				WHERE id_field = {int:current_field}',
 				array(
-					'inject_int_1' => $field_length,
-					'inject_int_2' => $show_reg,
-					'inject_int_3' => $show_display,
-					'inject_int_4' => $private,
-					'inject_int_5' => $active,
-					'inject_int_6' => $can_search,
-					'inject_int_7' => $bbc,
-					'inject_int_8' => $context['fid'],
-					'inject_string_1' => $_POST['field_name'],
-					'inject_string_2' => $_POST['field_desc'],
-					'inject_string_3' => $_POST['field_type'],
-					'inject_string_4' => $field_options,
-					'inject_string_5' => $show_profile,
-					'inject_string_6' => $default,
-					'inject_string_7' => $mask,
+					'field_length' => $field_length,
+					'show_reg' => $show_reg,
+					'show_display' => $show_display,
+					'private' => $private,
+					'active' => $active,
+					'can_search' => $can_search,
+					'bbc' => $bbc,
+					'current_field' => $context['fid'],
+					'field_name' => $_POST['field_name'],
+					'field_desc' => $_POST['field_desc'],
+					'field_type' => $_POST['field_type'],
+					'field_options' => $field_options,
+					'show_profile' => $show_profile,
+					'default_value' => $default,
+					'mask' => $mask,
 				)
 			);
 
@@ -1444,27 +1441,33 @@ function EditCustomProfiles()
 			if (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && !empty($newOptions))
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
-					WHERE variable = {string:inject_string_1}
-						AND value NOT IN (\'' . implode('\', \'', $newOptions) . '\')
-						AND id_member > {int:inject_int_1}',
+					WHERE variable = {string:current_column}
+						AND value NOT IN ({array_string:new_option_values})
+						AND id_member > {int:no_member}',
 					array(
-						'inject_int_1' => 0,
-						'inject_string_1' => $context['field']['colname'],
+						'no_member' => 0,
+						'new_option_values' => $newOptions,
+						'current_column' => $context['field']['colname'],
 					)
 				);
 		}
 		else
 		{
-			$smfFunc['db_query']('', '
-				INSERT INTO {db_prefix}custom_fields
-					(col_name, field_name, field_desc, field_type, field_length, field_options,
-					show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask)
-				VALUES
-					(\'' . $colname . '\', \'' . $_POST['field_name'] . '\', \'' . $_POST['field_desc'] . '\', \'' . $_POST['field_type'] . '\',
-					' . $field_length . ', \'' . $field_options . '\', ' . $show_reg . ', ' . $show_display . ', \'' . $show_profile . '\', ' . $private . ',
-					' . $active . ', \'' . $default . '\', ' . $can_search . ', ' . $bbc . ', \'' . $mask . '\')',
+			$smfFunc['db_insert']('',
+				$db_prefix . 'custom_fields',
 				array(
-				)
+					'col_name' => 'string', 'field_name' => 'string', 'field_desc' => 'string', 'field_type' => 'string',
+					'field_length' => 'string', 'field_options' => 'string', 'show_reg' => 'int', 'show_display' => 'int',
+					'show_profile' => 'string', 'private' => 'int', 'active' => 'int', 'default_value' => 'string',
+					'can_search' => 'int', 'bbc' => 'int', 'mask' => 'string',
+				),
+				array(
+					$colname, $_POST['field_name'], $_POST['field_desc'], $_POST['field_type'],
+					$field_length, $field_options, $show_reg, $show_display,
+					$show_profile, $private, $active, $default,
+					$can_search, $bbc, $mask,
+				),
+				array('id_field')
 			);
 		}
 	}
@@ -1476,19 +1479,19 @@ function EditCustomProfiles()
 		// Delete the user data first.
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}themes
-			WHERE variable = {string:inject_string_1}
-				AND id_member > {int:inject_int_1}',
+			WHERE variable = {string:current_column}
+				AND id_member > {int:no_member}',
 			array(
-				'inject_int_1' => 0,
-				'inject_string_1' => $context['field']['colname'],
+				'no_member' => 0,
+				'current_column' => $context['field']['colname'],
 			)
 		);
 		// Finally - the field itself is gone!
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}custom_fields
-			WHERE id_field = {int:inject_int_1}',
+			WHERE id_field = {int:current_field}',
 			array(
-				'inject_int_1' => $context['fid'],
+				'current_field' => $context['fid'],
 			)
 		);
 	}
@@ -1501,12 +1504,13 @@ function EditCustomProfiles()
 		$request = $smfFunc['db_query']('', '
 			SELECT col_name, field_name
 			FROM {db_prefix}custom_fields
-			WHERE show_display = {int:inject_int_1}
-				AND active = {int:inject_int_1}
-				AND private != {int:inject_int_2}',
+			WHERE show_display = {int:is_displayed}
+				AND active = {int:active}
+				AND private != {int:not_admin_only}',
 			array(
-				'inject_int_1' => 1,
-				'inject_int_2' => 2,
+				'is_displayed' => 1,
+				'active' => 2,
+				'not_admin_only' => 2,
 			)
 		);
 		$fields = array();

@@ -1471,7 +1471,7 @@ function scheduled_paid_subscriptions()
 			INNER JOIN {db_prefix}subscriptions AS s ON (s.id_subscribe = ls.id_subscribe)
 			INNER JOIN {db_prefix}members AS m ON (m.id_member = ls.id_member)
 		WHERE ls.status = {int:is_active}
-			AND ls.reminder_sent = {int:inject_int_2}
+			AND ls.reminder_sent = {int:reminder_sent}
 			AND s.reminder > {int:reminder_wanted}
 			AND ls.end_time < ({int:time_now} + s.reminder * 86400)',
 		array(

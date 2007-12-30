@@ -2013,10 +2013,10 @@ function MessagePost2()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:inject_array_int_1})
+			WHERE id_member IN ({array_int:user_list})
 			LIMIT ' . count($_REQUEST['u']),
 			array(
-				'inject_array_int_1' => $_REQUEST['u'],
+				'user_list' => $_REQUEST['u'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2193,11 +2193,11 @@ function WirelessAddBuddy()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
 			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:inject_array_int_1})
+			WHERE id_member IN ({array_int:buddy_list})
 			ORDER BY real_name
 			LIMIT ' . count($user_info['buddies']),
 			array(
-				'inject_array_int_1' => $user_info['buddies'],
+				'buddy_list' => $user_info['buddies'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2274,11 +2274,11 @@ function MessageActionsApply()
 			SELECT id_pm, labels
 			FROM {db_prefix}pm_recipients
 			WHERE id_member = {int:current_member}
-				AND id_pm IN ({array_int:inject_array_int_1})
+				AND id_pm IN ({array_int:to_label})
 			LIMIT ' . count($to_label),
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => array_keys($to_label),
+				'to_label' => array_keys($to_label),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))

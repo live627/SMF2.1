@@ -342,11 +342,11 @@ function updateAdminPreferences()
 	// Just check we haven't ended up with something theme exclusive somehow.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}themes
-		WHERE id_theme != {int:inject_int_1}
-		AND variable = {string:inject_string_1}',
+		WHERE id_theme != {int:default_theme}
+		AND variable = {string:admin_preferences}',
 		array(
-			'inject_int_1' => 1,
-			'inject_string_1' => 'admin_preferences',
+			'default_theme' => 1,
+			'admin_preferences' => 'admin_preferences',
 		)
 	);
 

@@ -734,9 +734,9 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	if (!$split2_approved)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}messages
-			SET approved = {int:inject_int_1}
-			WHERE id_msg = {int:inject_int_2}
-				AND id_topic = {int:inject_int_3}',
+			SET approved = {int:approved}
+			WHERE id_msg = {int:id_msg}
+				AND id_topic = {int:id_topic}',
 			array(
 				'approved' => 0,
 				'id_msg' => $split2_first_msg,

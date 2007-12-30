@@ -489,9 +489,9 @@ function loadInstalledPackages()
 	{
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_packages
-			SET install_state = {int:inject_int_1}',
+			SET install_state = {int:not_installed}',
 			array(
-				'inject_int_1' => 0,
+				'not_installed' => 0,
 			)
 		);
 
@@ -503,10 +503,10 @@ function loadInstalledPackages()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_install, package_id, filename, name, version
 		FROM {db_prefix}log_packages
-		WHERE install_state != {int:inject_int_1}
+		WHERE install_state != {int:not_installed}
 		ORDER BY time_installed DESC',
 		array(
-			'inject_int_1' => 0,
+			'not_installed' => 0,
 		)
 	);
 	$installed = array();
@@ -2208,11 +2208,11 @@ function package_create_backup($id = 'backup')
 	$request = $smfFunc['db_query']('', '
 		SELECT value
 		FROM {db_prefix}themes
-		WHERE id_member = {int:inject_int_1}
-			AND variable = {string:inject_string_1}',
+		WHERE id_member = {int:no_member}
+			AND variable = {string:theme_dir}',
 		array(
-			'inject_int_1' => 0,
-			'inject_string_1' => 'theme_dir',
+			'no_member' => 0,
+			'theme_dir' => 'theme_dir',
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**********************************************************************************
 * Subs-Charset.php                                                                *
 ***********************************************************************************
@@ -573,8 +573,10 @@ function fix_serialized_columns()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_action, extra
 		FROM {db_prefix}log_actions
-		WHERE action IN (\'remove\', \'delete\')',
+		WHERE action IN ({string:remove}, {string:delete})',
 		array(
+			'remove' => 'remove',
+			'delete' => 'delete',
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -582,11 +584,11 @@ function fix_serialized_columns()
 		if (@unserialize($row['extra']) === false && preg_match('~^(a:3:{s:5:"topic";i:\d+;s:7:"subject";s:)(\d+):"(.+)"(;s:6:"member";s:5:"\d+";})$~', $row['extra'], $matches) === 1)
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_actions
-				SET extra = {string:inject_string_1}
-				WHERE id_action = {int:inject_int_1}',
+				SET extra = {string:extra}
+				WHERE id_action = {int:current_action}',
 				array(
-					'inject_int_1' => $row['id_action'],
-					'inject_string_1' => $matches[1] . strlen($matches[3]) . ':"' . $matches[3] . '"' . $matches[4],
+					'current_action' => $row['id_action'],
+					'extra' => $matches[1] . strlen($matches[3]) . ':"' . $matches[3] . '"' . $matches[4],
 				)
 			);
 	}

@@ -738,7 +738,7 @@ function UnreadTopics()
 			WHERE lt.id_member = {int:current_member}
 				AND t.' . $query_this_board . (!empty($earliest_msg) ? '
 				AND t.id_last_msg > {int:earliest_msg}' : '') . '
-				AND t.approved = {int:inject_int_2}',
+				AND t.approved = {int:is_approved}',
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,

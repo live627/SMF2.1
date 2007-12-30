@@ -1217,7 +1217,7 @@ function makeCustomFieldChanges($memID, $area)
 		}
 
 		$user_profile[$memID]['options'][$row['col_name']] = $value;
-		$changes[] = array(1, '\'' . $row['col_name'] . '\'', '\'' . $value . '\'', $memID);
+		$changes[] = array(1, $row['col_name'], $value, $memID);
 	}
 	$smfFunc['db_free_result']($request);
 

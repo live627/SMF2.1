@@ -1032,10 +1032,10 @@ function RepairAttachments()
 				FROM {db_prefix}attachments AS a
 					LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)
 				WHERE a.id_attach BETWEEN {int:substep} AND {int:substep} + 499
-					AND a.id_thumb != {int:inject_int_1}
+					AND a.id_thumb != {int:no_thumb}
 					AND thumb.id_attach IS NULL',
 				array(
-					'inject_int_1' => 0,
+					'no_thumb' => 0,
 					'substep' => $_GET['substep'],
 				)
 			);

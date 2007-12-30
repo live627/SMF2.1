@@ -149,12 +149,12 @@ function Who()
 			lo.id_spider
 		FROM {db_prefix}log_online AS lo
 			LEFT JOIN {db_prefix}members AS mem ON (lo.id_member = mem.id_member)
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)' . (!empty($conditions) ? '
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_member} THEN mem.id_post_group ELSE mem.id_group END)' . (!empty($conditions) ? '
 		WHERE ' . implode(' AND ', $conditions) : '') . '
 		ORDER BY ' . $_REQUEST['sort'] . ' ' . (isset($_REQUEST['asc']) ? 'ASC' : 'DESC') . '
 		LIMIT ' . $context['start'] . ', ' . $modSettings['defaultMaxMembers'],
 		array(
-			'inject_int_1' => 0,
+			'regular_member' => 0,
 		)
 	);
 	$context['members'] = array();

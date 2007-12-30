@@ -222,10 +222,10 @@ function PackageGBrowse()
 		$request = $smfFunc['db_query']('', '
 			SELECT name, url
 			FROM {db_prefix}package_servers
-			WHERE id_server = {int:inject_int_1}
+			WHERE id_server = {int:current_server}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $server,
+				'current_server' => $server,
 			)
 		);
 		list ($name, $url) = $smfFunc['db_fetch_row']($request);
@@ -536,10 +536,10 @@ function PackageDownload()
 		$request = $smfFunc['db_query']('', '
 			SELECT name, url
 			FROM {db_prefix}package_servers
-			WHERE id_server = {int:inject_int_1}
+			WHERE id_server = {int:current_server}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $server,
+				'current_server' => $server,
 			)
 		);
 		list ($name, $url) = $smfFunc['db_fetch_row']($request);
@@ -691,12 +691,15 @@ function PackageServerAdd()
 	if (substr($_POST['serverurl'], -1) == '/')
 		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}package_servers
-			(name, url)
-		VALUES (SUBSTRING(\'' . $_POST['servername'] . '\', 1, 255), SUBSTRING(\'' . $_POST['serverurl'] . '\', 1, 255))',
+	$smfFunc['db_insert']('',
+		$db_prefix . 'package_servers',
 		array(
-		)
+			'name' => 'string-255', 'url' => 'string-255',
+		),
+		array(
+			$_POST['servername'], $_POST['serverurl'],
+		),
+		array('id_server')
 	);
 
 	redirectexit('action=admin;area=packages;get');
@@ -709,9 +712,9 @@ function PackageServerRemove()
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}package_servers
-		WHERE id_server = {int:inject_int_1}',
+		WHERE id_server = {int:current_server}',
 		array(
-			'inject_int_1' => (int) $_GET['server'],
+			'current_server' => (int) $_GET['server'],
 		)
 	);
 
