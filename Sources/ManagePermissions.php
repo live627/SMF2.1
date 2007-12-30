@@ -578,7 +578,9 @@ function SetQuickGroups()
 				// ..and insert the new ones.
 				$smfFunc['db_insert']('',
 					$db_prefix . 'permissions',
-					array('permission' => 'string', 'id_group' => 'int', 'add_deny' => 'int'),
+					array(
+						'permission' => 'string', 'id_group' => 'int', 'add_deny' => 'int',
+					),
 					$inserts,
 					array('permission', 'id_group')
 				);

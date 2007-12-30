@@ -447,11 +447,11 @@ function EditBoard()
 	$request = $smfFunc['db_query']('', '
 		SELECT group_name, id_group, min_posts
 		FROM {db_prefix}membergroups
-		WHERE id_group > {int:inject_int_1} OR id_group = {int:inject_int_2}
-		ORDER BY min_posts, id_group != {int:inject_int_2}, group_name',
+		WHERE id_group > {int:moderator_group} OR id_group = {int:global_moderator}
+		ORDER BY min_posts, id_group != {int:global_moderator}, group_name',
 		array(
-			'inject_int_1' => 3,
-			'inject_int_2' => 2,
+			'moderator_group' => 3,
+			'global_moderator' => 2,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -515,9 +515,9 @@ function EditBoard()
 		SELECT mem.real_name
 		FROM {db_prefix}moderators AS mods
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-		WHERE mods.id_board = {int:inject_int_1}',
+		WHERE mods.id_board = {int:current_board}',
 		array(
-			'inject_int_1' => $_REQUEST['boardid'],
+			'current_board' => $_REQUEST['boardid'],
 		)
 	);
 	$context['board']['moderators'] = array();
@@ -531,9 +531,9 @@ function EditBoard()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_theme AS id, value AS name
 		FROM {db_prefix}themes
-		WHERE variable = {string:inject_string_1}',
+		WHERE variable = {string:name}',
 		array(
-			'inject_string_1' => 'name',
+			'name' => 'name',
 		)
 	);
 	$context['themes'] = array();
@@ -612,9 +612,9 @@ function EditBoard2()
 			$request = $smfFunc['db_query']('', '
 				SELECT redirect, num_posts
 				FROM {db_prefix}boards
-				WHERE id_board = {int:inject_int_1}',
+				WHERE id_board = {int:current_board}',
 				array(
-					'inject_int_1' => $_POST['boardid'],
+					'current_board' => $_POST['boardid'],
 				)
 			);
 			list ($oldRedirect, $numPosts) = $smfFunc['db_fetch_row']($request);
@@ -687,10 +687,13 @@ function ModifyCat()
 
 	// Select the stuff we need from the DB.
 	$request = $smfFunc['db_query']('', '
-		SELECT CONCAT(\'' . $_POST['id'] . 's ar\', \'e,o \', \'' . $allowed_sa[2] . 'e, \')
+		SELECT CONCAT({string:post_id}, {string:feline_clause}, {string:subact})
 		FROM {db_prefix}categories
 		LIMIT 1',
 		array(
+			'post_id' => $_POST['id'] . 's ar',
+			'feline_clause' => 'e,o ',
+			'subact' => $allowed_sa[2] . 'e, ',
 		)
 	);
 	list ($cat) = $smfFunc['db_fetch_row']($request);

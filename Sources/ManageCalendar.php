@@ -195,9 +195,9 @@ function EditHoliday()
 		if (isset($_REQUEST['delete']))
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}calendar_holidays
-				WHERE id_holiday = {int:inject_int_1}',
+				WHERE id_holiday = {int:selected_holiday}',
 				array(
-					'inject_int_1' => $_REQUEST['holiday'],
+					'selected_holiday' => $_REQUEST['holiday'],
 				)
 			);
 		else
@@ -206,22 +206,24 @@ function EditHoliday()
 			if (isset($_REQUEST['edit']))
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}calendar_holidays
-					SET event_date = {date:inject_date_1}, title = {string:inject_string_1}
-					WHERE id_holiday = {int:inject_int_1}',
+					SET event_date = {date:holiday_date}, title = {string:holiday_title}
+					WHERE id_holiday = {int:selected_holiday}',
 					array(
-						'inject_date_1' => $date,
-						'inject_int_1' => $_REQUEST['holiday'],
-						'inject_string_1' => $_REQUEST['title'],
+						'holiday_date' => $date,
+						'selected_holiday' => $_REQUEST['holiday'],
+						'holiday_title' => $_REQUEST['title'],
 					)
 				);
 			else
-				$smfFunc['db_query']('', '
-					INSERT INTO {db_prefix}calendar_holidays
-						(event_date, title)
-					VALUES
-						(\'' . $date . '\', SUBSTRING(\'' . $_REQUEST['title'] . '\', 1, 48))',
+				$smfFunc['db_insert']('',
+					$db_prefix . 'calendar_holidays',
 					array(
-					)
+						'event_date' => 'date', 'title' => 'string-48',
+					),
+					array(
+						$date, $_REQUEST['title'],
+					),
+					array('id_holiday')
 				);
 		}
 
@@ -247,10 +249,10 @@ function EditHoliday()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
 			FROM {db_prefix}calendar_holidays
-			WHERE id_holiday = {int:inject_int_1}
+			WHERE id_holiday = {int:selected_holiday}
 			LIMIT 1',
 			array(
-				'inject_int_1' => $_REQUEST['holiday'],
+				'selected_holiday' => $_REQUEST['holiday'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))

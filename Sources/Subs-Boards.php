@@ -109,20 +109,20 @@ function markBoardsRead($boards, $unread = false)
 		// !! Maybe not log_mark_read?
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_mark_read
-			WHERE id_board IN ({array_int:inject_array_int_1})
+			WHERE id_board IN ({array_int:board_list})
 				AND id_member = {int:current_member}',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $boards,
+				'board_list' => $boards,
 			)
 		);
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_boards
-			WHERE id_board IN ({array_int:inject_array_int_1})
+			WHERE id_board IN ({array_int:board_list})
 				AND id_member = {int:current_member}',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $boards,
+				'board_list' => $boards,
 			)
 		);
 	}
@@ -169,13 +169,13 @@ function markBoardsRead($boards, $unread = false)
 		SELECT lt.id_topic
 		FROM {db_prefix}log_topics AS lt
 			INNER JOIN {db_prefix}topics AS t /*!40000 USE INDEX (PRIMARY) */ ON (t.id_topic = lt.id_topic
-				AND t.id_board IN ({array_int:inject_array_int_1}))
+				AND t.id_board IN ({array_int:board_list}))
 		WHERE lt.id_member = {int:current_member}
-			AND lt.id_topic >= {int:inject_int_1}',
+			AND lt.id_topic >= {int:lowest_topic}',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_array_int_1' => $boards,
-			'inject_int_1' => $lowest_topic,
+			'board_list' => $boards,
+			'lowest_topic' => $lowest_topic,
 		)
 	);
 	$topics = array();
@@ -187,10 +187,10 @@ function markBoardsRead($boards, $unread = false)
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_topics
 			WHERE id_member = {int:current_member}
-				AND id_topic IN ({array_int:inject_array_int_1})',
+				AND id_topic IN ({array_int:topic_list})',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $topics,
+				'topic_list' => $topics,
 			)
 		);
 }
@@ -263,10 +263,10 @@ function MarkRead()
 				SELECT MAX(id_msg)
 				FROM {db_prefix}messages
 				WHERE id_topic = {int:current_topic}
-					AND id_msg < {int:inject_int_1}',
+					AND id_msg < {int:topic_msg_id}',
 				array(
 					'current_topic' => $topic,
-					'inject_int_1' => (int) $_GET['t'],
+					'topic_msg_id' => (int) $_GET['t'],
 				)
 			);
 			list ($earlyMsg) = $smfFunc['db_fetch_row']($result);
@@ -330,12 +330,13 @@ function MarkRead()
 				SELECT b.id_board, b.id_parent
 				FROM {db_prefix}boards AS b
 				WHERE ' . $user_info['query_see_board'] . '
-					AND b.child_level > {int:inject_int_1}
-					AND b.id_board NOT IN (' . implode(', ', $boards) . ')
+					AND b.child_level > {int:no_parents}
+					AND b.id_board NOT IN ({array_int:board_list})
 				ORDER BY child_level ASC
 				',
 				array(
-					'inject_int_1' => 0,
+					'no_parents' => 0,
+					'board_list' => $boards,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -345,10 +346,17 @@ function MarkRead()
 		}
 
 		$clauses = array();
+		$clauseParameters = array();
 		if (!empty($categories))
-			$clauses[] = 'id_cat IN (' . implode(', ', $categories) . ')';
+		{
+			$clauses[] = 'id_cat IN ({array_int:category_list})';
+			$clauseParameters['category_list'] = $categories;
+		}
 		if (!empty($boards))
-			$clauses[] = 'id_board IN (' . implode(', ', $boards) . ')';
+		{
+			$clauses[] = 'id_board IN ({array_int:board_list})';
+			$clauseParameters['board_list'] = $boards;
+		}
 
 		if (empty($clauses))
 			redirectexit();
@@ -358,8 +366,8 @@ function MarkRead()
 			FROM {db_prefix}boards AS b
 			WHERE ' . $user_info['query_see_board'] . '
 				AND b.' . implode(' OR b.', $clauses),
-			array(
-			)
+			array_merge($clauseParameters, array(
+			))
 		);
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -383,10 +391,10 @@ function MarkRead()
 			$result = $smfFunc['db_query']('', '
 				SELECT b.id_board
 				FROM {db_prefix}boards AS b
-				WHERE b.id_parent IN ({array_int:inject_array_int_1})
+				WHERE b.id_parent IN ({array_int:parent_list})
 					AND ' . $user_info['query_see_board'],
 				array(
-					'inject_array_int_1' => $boards,
+					'parent_list' => $boards,
 				)
 			);
 			if ($smfFunc['db_num_rows']($result) > 0)
@@ -429,10 +437,10 @@ function getMsgMemberID($messageID)
 		SELECT IFNULL(mem.id_member, 0)
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg = {int:inject_int_1}
+		WHERE m.id_msg = {int:selected_message}
 		LIMIT 1',
 		array(
-			'inject_int_1' => (int) $messageID,
+			'selected_message' => (int) $messageID,
 		)
 	);
 	if ($smfFunc['db_num_rows']($result) > 0)
@@ -459,6 +467,7 @@ function modifyBoard($board_id, &$boardOptions)
 
 	// All things that will be updated in the database will be in $boardUpdates.
 	$boardUpdates = array();
+	$boardUpdateParameters = array();
 
 	// In case the board has to be moved
 	if (isset($boardOptions['move_to']))
@@ -523,9 +532,9 @@ function modifyBoard($board_id, &$boardOptions)
 		$childUpdates = array();
 		$levelDiff = $child_level - $boards[$board_id]['level'];
 		if ($levelDiff != 0)
-			$childUpdates[] = 'child_level = child_level ' . ($levelDiff > 0 ? '+ ' : '') . $levelDiff;
+			$childUpdates[] = 'child_level = child_level ' . ($levelDiff > 0 ? '+ ' : '') . '{int:level_diff}';
 		if ($id_cat != $boards[$board_id]['category'])
-			$childUpdates[] = 'id_cat = ' . $id_cat;
+			$childUpdates[] = 'id_cat = {int:category}';
 
 		// Fix the children of this board.
 		if (!empty($childList) && !empty($childUpdates))
@@ -533,60 +542,96 @@ function modifyBoard($board_id, &$boardOptions)
 				UPDATE {db_prefix}boards
 				SET ' . implode(',
 					', $childUpdates) . '
-				WHERE id_board IN ({array_int:inject_array_int_1})',
+				WHERE id_board IN ({array_int:board_list})',
 				array(
-					'inject_array_int_1' => $childList,
+					'board_list' => $childList,
+					'category' => $id_cat,
+					'level_diff' => $levelDiff,
 				)
 			);
 
 		// Make some room for this spot.
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}boards
-			SET board_order = board_order + ' . (1 + count($childList)) . '
-			WHERE board_order > {int:inject_int_1}
-				AND id_board != {int:inject_int_2}',
+			SET board_order = board_order + {int:new_order}
+			WHERE board_order > {int:insert_after}
+				AND id_board != {int:selected_board}',
 			array(
-				'inject_int_1' => $after,
-				'inject_int_2' => $board_id,
+				'insert_after' => $after,
+				'selected_board' => $board_id,
+				'new_order' => 1 + count($childList),
 			)
 		);
 
-		$boardUpdates[] = 'id_cat = ' . $id_cat;
-		$boardUpdates[] = 'id_parent = ' . $id_parent;
-		$boardUpdates[] = 'child_level = ' . $child_level;
-		$boardUpdates[] = 'board_order = ' . ($after + 1);
+		$boardUpdates[] = 'id_cat = {int:id_cat}';
+		$boardUpdates[] = 'id_parent = {int:id_parent}';
+		$boardUpdates[] = 'child_level = {int:child_level}';
+		$boardUpdates[] = 'board_order = {int:board_order}';
+		$boardUpdateParameters += array(
+			'id_cat' => $id_cat,
+			'id_parent' => $id_parent,
+			'child_level' => $child_level,
+			'board_order' => $after + 1,
+		);
 	}
 
 	// This setting is a little twisted in the database...
 	if (isset($boardOptions['posts_count']))
-		$boardUpdates[] = 'count_posts = ' . ($boardOptions['posts_count'] ? '0' : '1');
+	{
+		$boardUpdates[] = 'count_posts = {int:count_posts}';
+		$boardUpdateParameters['count_posts'] = $boardOptions['posts_count'] ? 0 : 1;
+	}
 
 	// Set the theme for this board.
 	if (isset($boardOptions['board_theme']))
-		$boardUpdates[] = 'id_theme = ' . (int) $boardOptions['board_theme'];
+	{
+		$boardUpdates[] = 'id_theme = {int:id_theme}';
+		$boardUpdateParameters['id_theme'] = (int) $boardOptions['board_theme'];
+	}
 
 	// Should the board theme override the user preferred theme?
 	if (isset($boardOptions['override_theme']))
-		$boardUpdates[] = 'override_theme = ' . ($boardOptions['override_theme'] ? '1' : '0');
+	{
+		$boardUpdates[] = 'override_theme = {int:override_theme}';
+		$boardUpdateParameters['override_theme'] = $boardOptions['override_theme'] ? 1 : 0;
+	}
 
 	// Who's allowed to access this board.
 	if (isset($boardOptions['access_groups']))
-		$boardUpdates[] = 'member_groups = \'' . implode(',', $boardOptions['access_groups']) . '\'';
+	{
+		$boardUpdates[] = 'member_groups = {string:member_groups}';
+		$boardUpdateParameters['member_groups'] = implode(',', $boardOptions['access_groups']);
+	}
 
 	if (isset($boardOptions['board_name']))
-		$boardUpdates[] = 'name = \'' . $boardOptions['board_name'] . '\'';
+	{
+		$boardUpdates[] = 'name = {string:board_name}';
+		$boardUpdateParameters['board_name'] = $boardOptions['board_name'];
+	}
 
 	if (isset($boardOptions['board_description']))
-		$boardUpdates[] = 'description = \'' . $boardOptions['board_description'] . '\'';
+	{
+		$boardUpdates[] = 'description = {string:board_description}';
+		$boardUpdateParameters['board_description'] = $boardOptions['board_description'];
+	}
 
 	if (isset($boardOptions['profile']))
-		$boardUpdates[] = 'id_profile = ' . $boardOptions['profile'];
+	{
+		$boardUpdates[] = 'id_profile = {int:profile}';
+		$boardUpdateParameters['profile'] = (int) $boardOptions['profile'];
+	}
 
 	if (isset($boardOptions['redirect']))
-		$boardUpdates[] = 'redirect = \'' . $boardOptions['redirect'] . '\'';
+	{
+		$boardUpdates[] = 'redirect = {string:redirect}';
+		$boardUpdateParameters['redirect'] = $boardOptions['redirect'];
+	}
 
 	if (isset($boardOptions['num_posts']))
-		$boardUpdates[] = 'num_posts = ' . $boardOptions['num_posts'];
+	{
+		$boardUpdates[] = 'num_posts = {int:num_posts}';
+		$boardUpdateParameters['num_posts'] = (int) $boardOptions['num_posts'];
+	}
 
 	// Do the updates (if any).
 	if (!empty($boardUpdates))
@@ -595,10 +640,10 @@ function modifyBoard($board_id, &$boardOptions)
 			SET
 				' . implode(',
 				', $boardUpdates) . '
-			WHERE id_board = {int:inject_int_1}',
-			array(
-				'inject_int_1' => $board_id,
-			)
+			WHERE id_board = {int:selected_board}',
+			array_merge($boardUpdateParameters, array(
+				'selected_board' => $board_id,
+			))
 		);
 
 	// Set moderators of this board.
@@ -607,9 +652,9 @@ function modifyBoard($board_id, &$boardOptions)
 		// Reset current moderators for this board - if there are any!
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}moderators
-			WHERE id_board = {int:inject_int_1}',
+			WHERE id_board = {int:board_list}',
 			array(
-				'inject_int_1' => $board_id,
+				'board_list' => $board_id,
 			)
 		);
 
@@ -617,7 +662,7 @@ function modifyBoard($board_id, &$boardOptions)
 		if (isset($boardOptions['moderator_string']) && trim($boardOptions['moderator_string']) != '')
 		{
 			// Divvy out the usernames, remove extra space.
-			$moderator_string = strtr($smfFunc['db_unescape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($boardOptions['moderator_string']), ENT_QUOTES)), array('&quot;' => '"'));
+			$moderator_string = strtr($smfFunc['htmlspecialchars']($boardOptions['moderator_string'], ENT_QUOTES), array('&quot;' => '"'));
 			preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
 			$moderators = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $moderator_string)));
 			for ($k = 0, $n = count($moderators); $k < $n; $k++)
@@ -635,9 +680,10 @@ function modifyBoard($board_id, &$boardOptions)
 				$request = $smfFunc['db_query']('', '
 					SELECT id_member
 					FROM {db_prefix}members
-					WHERE member_name IN (\'' . implode('\',\'', $moderators) . '\') OR real_name IN (\'' . implode('\',\'', $moderators) . '\')
+					WHERE member_name IN ({array_string:moderator_list}) OR real_name IN ({array_string:moderator_list})
 					LIMIT ' . count($moderators),
 					array(
+						'moderator_list' => $moderators,
 					)
 				);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -694,12 +740,17 @@ function createBoard($boardOptions)
 	);
 
 	// Insert a board, the settings are dealt with later.
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}boards
-			(id_cat, name, description, board_order, member_groups, redirect)
-		VALUES (' . $boardOptions['target_category'] . ', SUBSTRING(\'' . $boardOptions['board_name'] . '\', 1, 255), \'\', 0, \'-1,0\', \'\')',
+	$smfFunc['db_insert']('',
+		$db_prefix . 'boards',
 		array(
-		)
+			'id_cat' => 'int', 'name' => 'string-255', 'description' => 'string', 'board_order' => 'int',
+			'member_groups' => 'string', 'redirect' => 'string',
+		),
+		array(
+			$boardOptions['target_category'], $boardOptions['board_name'] , '', 0,
+			'-1,0', '',
+		),
+		array('id_board')
 	);
 	$board_id = $smfFunc['db_insert_id']( $db_prefix . 'boards', 'id_board');
 
@@ -719,10 +770,10 @@ function createBoard($boardOptions)
 			$request = $smfFunc['db_query']('', '
 				SELECT id_profile
 				FROM {db_prefix}boards
-				WHERE id_board = {int:inject_int_1}
+				WHERE id_board = {int:board_parent}
 				LIMIT 1',
 				array(
-					'inject_int_1' => (int) $boards[$board_id]['parent'],
+					'board_parent' => (int) $boards[$board_id]['parent'],
 				)
 			);
 			list ($boardOptions['profile']) = $smfFunc['db_fetch_row']($request);
@@ -730,11 +781,11 @@ function createBoard($boardOptions)
 
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}boards
-				SET id_profile = {int:inject_int_1}
-				WHERE id_board = {int:inject_int_2}',
+				SET id_profile = {int:new_profile}
+				WHERE id_board = {int:current_board}',
 				array(
-					'inject_int_1' => $boardOptions['profile'],
-					'inject_int_2' => $board_id,
+					'new_profile' => $boardOptions['profile'],
+					'current_board' => $board_id,
 				)
 			);
 		}
@@ -784,9 +835,9 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	$request = $smfFunc['db_query']('', '
 		SELECT id_topic
 		FROM {db_prefix}topics
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 	$topics = array();
@@ -800,113 +851,61 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	// Delete the board's logs.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_mark_read
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_boards
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_notify
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 
 	// Delete this board's moderators.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}moderators
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 
 	// Delete any extra events in the calendar.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}calendar
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 
 	// Delete any message icons that only appear on these boards.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}message_icons
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
 
 	// Delete the boards.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}boards
-		WHERE id_board IN ({array_int:inject_array_int_1})',
+		WHERE id_board IN ({array_int:boards_to_remove})',
 		array(
-			'inject_array_int_1' => $boards_to_remove,
+			'boards_to_remove' => $boards_to_remove,
 		)
 	);
-
-	// Sort out any permission profiles.
-	$profiles = array();
-	foreach ($boards as $id => $board)
-	{
-		// One we're removing?
-		if (in_array($id, $boards_to_remove))
-			$profiles[] = $board['profile'];
-	}
-
-	// Make sure we only delete profiles not in use, and not predefined.
-	if (!empty($profiles))
-	{
-		$request = $smfFunc['db_query']('', '
-			SELECT p.id_profile, b.id_parent, IFNULL(b.id_board, 0) AS remainingBoard
-			FROM {db_prefix}permission_profiles AS p
-				LEFT JOIN {db_prefix}boards AS b ON (b.id_profile = p.id_profile AND b.id_board NOT IN (' . implode(', ', $boards_to_remove) . '))
-			GROUP BY id_profile',
-			array(
-			)
-		);
-		$profiles = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-		{
-			// Nothing left, and can be deleted?
-			if (empty($row['remainingBoard']) && $row['id_parent'])
-				$profiles['delete'][] = $row['id_profile'];
-			// It's old parent is gonna be gone - find a new!
-			elseif ($row['id_parent'] && in_array($row['id_parent'], $boards_to_remove))
-				$profiles['update'][$row['id_profile']] = $row['remainingBoard'];
-		}
-		$smfFunc['db_free_result']($request);
-
-		// Delete now defunct ones.
-		if (!empty($profiles['delete']))
-		{
-			$smfFunc['db_query']('', '
-				DELETE FROM {db_prefix}permission_profiles
-				WHERE id_profile IN ({array_int:inject_array_int_1})',
-				array(
-					'inject_array_int_1' => $profiles['delete'],
-				)
-			);
-			$smfFunc['db_query']('', '
-				DELETE FROM {db_prefix}board_permissions
-				WHERE id_profile IN ({array_int:inject_array_int_1})',
-				array(
-					'inject_array_int_1' => $profiles['delete'],
-				)
-			);
-		}
-	}
 
 	// Latest message/topic might not be there anymore.
 	updateStats('message');
@@ -936,11 +935,11 @@ function reorderBoards()
 			if ($boards[$boardID]['order'] != ++$board_order)
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET board_order = {int:inject_int_1}
-					WHERE id_board = {int:inject_int_2}',
+					SET board_order = {int:new_order}
+					WHERE id_board = {int:selected_board}',
 					array(
-						'inject_int_1' => $board_order,
-						'inject_int_2' => $boardID,
+						'new_order' => $board_order,
+						'selected_board' => $boardID,
 					)
 				);
 	}
@@ -964,9 +963,9 @@ function fixChildren($parent, $newLevel, $newParent)
 	$result = $smfFunc['db_query']('', '
 		SELECT id_board
 		FROM {db_prefix}boards
-		WHERE id_parent = {int:inject_int_1}',
+		WHERE id_parent = {int:parent_board}',
 		array(
-			'inject_int_1' => $parent,
+			'parent_board' => $parent,
 		)
 	);
 	$children = array();
@@ -977,12 +976,12 @@ function fixChildren($parent, $newLevel, $newParent)
 	// ...and set it to a new parent and child_level.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}boards
-		SET id_parent = {int:inject_int_1}, child_level = {int:inject_int_2}
-		WHERE id_parent = {int:inject_int_3}',
+		SET id_parent = {int:new_parent}, child_level = {int:new_child_level}
+		WHERE id_parent = {int:parent_board}',
 		array(
-			'inject_int_1' => $newParent,
-			'inject_int_2' => $newLevel,
-			'inject_int_3' => $parent,
+			'new_parent' => $newParent,
+			'new_child_level' => $newLevel,
+			'parent_board' => $parent,
 		)
 	);
 
@@ -1075,11 +1074,11 @@ function getBoardTree()
 				if ($boards[$row['id_parent']]['tree']['node']['level'] != $row['child_level'] - 1)
 					$smfFunc['db_query']('', '
 						UPDATE {db_prefix}boards
-						SET child_level = {int:inject_int_1}
-						WHERE id_board = {int:inject_int_2}',
+						SET child_level = {int:new_child_level}
+						WHERE id_board = {int:selected_board}',
 						array(
-							'inject_int_1' => $boards[$row['id_parent']]['tree']['node']['level'] + 1,
-							'inject_int_2' => $row['id_board'],
+							'new_child_level' => $boards[$row['id_parent']]['tree']['node']['level'] + 1,
+							'selected_board' => $row['id_board'],
 						)
 					);
 
