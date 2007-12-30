@@ -205,12 +205,12 @@ function SelectMailingMembers()
 	$request = $smfFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.min_posts
 		FROM {db_prefix}membergroups AS mg' . (empty($modSettings['permission_enable_postgroups']) ? '
-		WHERE mg.min_posts = {int:inject_int_1}' : '') . '
+		WHERE mg.min_posts = {int:min_posts}' : '') . '
 		GROUP BY mg.id_group, mg.min_posts, mg.group_name
-		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:inject_int_2} THEN mg.id_group ELSE 4 END, mg.group_name',
+		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:newbie_group} THEN mg.id_group ELSE 4 END, mg.group_name',
 		array(
-			'inject_int_1' => -1,
-			'inject_int_2' => 4,
+			'min_posts' => -1,
+			'newbie_group' => 4,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -234,10 +234,10 @@ function SelectMailingMembers()
 		$query = $smfFunc['db_query']('', '
 			SELECT mem.id_post_group AS id_group, COUNT(*) AS member_count
 			FROM {db_prefix}members AS mem
-			WHERE mem.id_post_group IN ({array_int:inject_array_int_1})
+			WHERE mem.id_post_group IN ({array_int:post_group_list})
 			GROUP BY mem.id_post_group',
 			array(
-				'inject_array_int_1' => $postGroups,
+				'post_group_list' => $postGroups,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -251,10 +251,10 @@ function SelectMailingMembers()
 		$query = $smfFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS member_count
 			FROM {db_prefix}members
-			WHERE id_group IN ({array_int:inject_array_int_1})
+			WHERE id_group IN ({array_int:normal_group_list})
 			GROUP BY id_group',
 			array(
-				'inject_array_int_1' => $normalGroups,
+				'normal_group_list' => $normalGroups,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -265,14 +265,14 @@ function SelectMailingMembers()
 		$query = $smfFunc['db_query']('', '
 			SELECT mg.id_group, COUNT(*) AS member_count
 			FROM {db_prefix}membergroups AS mg
-				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:inject_string_1}
+				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
 					AND mem.id_group != mg.id_group
 					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
-			WHERE mg.id_group IN ({array_int:inject_array_int_1})
+			WHERE mg.id_group IN ({array_int:normal_group_list})
 			GROUP BY mg.id_group',
 			array(
-				'inject_array_int_1' => $normalGroups,
-				'inject_string_1' => '',
+				'normal_group_list' => $normalGroups,
+				'blank_string' => '',
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
@@ -339,11 +339,12 @@ function ComposeMailing()
 		FROM {db_prefix}ban_groups AS bg
 			INNER JOIN {db_prefix}ban_items AS bi ON (bg.id_ban_group = bi.id_ban_group)
 			INNER JOIN {db_prefix}members AS mem ON (bi.id_member = mem.id_member)
-		WHERE (bg.cannot_access = {int:inject_int_1} OR bg.cannot_login = {int:inject_int_1})
-			AND (ISNULL(bg.expire_time) OR bg.expire_time > {int:inject_int_2})',
+		WHERE (bg.cannot_access = {int:cannot_access} OR bg.cannot_login = {int:cannot_login})
+			AND (ISNULL(bg.expire_time) OR bg.expire_time > {int:current_time})',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => time(),
+			'cannot_access' => 1,
+			'cannot_login' => 1,
+			'current_time' => time(),
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -354,18 +355,24 @@ function ComposeMailing()
 		SELECT DISTINCT bi.email_address
 		FROM {db_prefix}ban_items AS bi
 			INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
-		WHERE (bg.cannot_access = {int:inject_int_1} OR bg.cannot_login = {int:inject_int_1})
-			AND (ISNULL(bg.expire_time) OR bg.expire_time > {int:inject_int_2})
-			AND bi.email_address != {string:inject_string_1}',
+		WHERE (bg.cannot_access = {int:cannot_access} OR bg.cannot_login = {int:cannot_login})
+			AND (ISNULL(bg.expire_time) OR bg.expire_time > {int:current_time})
+			AND bi.email_address != {string:blank_string}',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => time(),
-			'inject_string_1' => '',
+			'cannot_access' => 1,
+			'cannot_login' => 1,
+			'current_time' => time(),
+			'blank_string' => '',
 		)
 	);
 	$condition_array = array();
+	$condition_array_params = array();
+	$count = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$condition_array[] = 'email_address LIKE \'' . $row['email_address'] . '\'';
+	{
+		$condition_array[] = 'email_address LIKE {string:email_' . $count . '}';
+		$condition_array_params['email_' . $count++] = $row['email_address'];
+	}
 
 	if (!empty($condition_array))
 	{
@@ -373,8 +380,7 @@ function ComposeMailing()
 			SELECT id_member
 			FROM {db_prefix}members
 			WHERE ' . implode(' OR ', $condition_array),
-			array(
-			)
+			$condition_array_params
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['recipients']['exclude_members'][] = $row['id_member'];
@@ -387,9 +393,9 @@ function ComposeMailing()
 			SELECT DISTINCT mem.id_member AS identifier
 			FROM {db_prefix}members AS mem
 				INNER JOIN {db_prefix}moderators AS mods ON (mods.id_member = mem.id_member)
-			WHERE mem.is_activated = {int:inject_int_1}',
+			WHERE mem.is_activated = {int:is_activated}',
 			array(
-				'inject_int_1' => 1,
+				'is_activated' => 1,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -616,24 +622,29 @@ function SendMailing($clean_only = false)
 	{
 		// Need to build quite a query!
 		$sendQuery = '(';
+		$sendParams = array();
 		if (!empty($context['recipients']['groups']))
 		{
 			// Take the long route...
 			$queryBuild = array();
 			foreach ($context['recipients']['groups'] as $group)
 			{
-				$queryBuild[] = 'mem.id_group = ' . $group;
+				$sendParams['group_' . $group] = $group;
+				$queryBuild[] = 'mem.id_group = {int:group_' . $group . '}';
 				if (!empty($group))
 				{
-					$queryBuild[] = 'FIND_IN_SET(' . $group . ', mem.additional_groups)';
-					$queryBuild[] = 'mem.id_post_group = ' . $group;
+					$queryBuild[] = 'FIND_IN_SET({int:group_' . $group . '}, mem.additional_groups)';
+					$queryBuild[] = 'mem.id_post_group = {int:group_' . $group . '}';
 				}
 			}
 			if (!empty($queryBuild))
 			$sendQuery .= implode(' OR ', $queryBuild);
 		}
 		if (!empty($context['recipients']['members']))
-			$sendQuery .= ($sendQuery == '(' ? '' : ' OR ') . 'mem.id_member IN (' . implode(',', $context['recipients']['members']) . ')';
+		{
+			$sendQuery .= ($sendQuery == '(' ? '' : ' OR ') . 'mem.id_member IN ({array_int:members})';
+			$sendParams['members'] = $context['recipients']['members'];
+		}
 
 		$sendQuery .= ')';
 
@@ -643,29 +654,34 @@ function SendMailing($clean_only = false)
 
 		// Anything to exclude?
 		if (!empty($context['recipients']['exclude_groups']) && in_array(0, $context['recipients']['exclude_groups']))
-			$sendQuery .= ' AND mem.id_group != 0';
+			$sendQuery .= ' AND mem.id_group != {int:regular_group}';
 		if (!empty($context['recipients']['exclude_members']))
-			$sendQuery .= ' AND mem.id_member NOT IN (' . implode(',', $context['recipients']['exclude_members']) . ')';
+		{
+			$sendQuery .= ' AND mem.id_member NOT IN ({array_int:exclude_members})';
+			$sendParams['exclude_members'] = $context['recipients']['exclude_members'];
+		}
 
 		// Force them to have it?
 		if (empty($context['email_force']))
-			$sendQuery .= ' AND mem.notify_announcements = 1';
+			$sendQuery .= ' AND mem.notify_announcements = {int:notify_announcements}';
 
 		// Get the smelly people - note we respect the id_member range as it gives us a quicker query.
 		$result = $smfFunc['db_query']('', '
 			SELECT mem.id_member, mem.email_address, mem.real_name, mem.id_group, mem.additional_groups, mem.id_post_group
 			FROM {db_prefix}members AS mem
-			WHERE mem.id_member > {int:inject_int_1}
-				AND mem.id_member < {int:inject_int_2}
+			WHERE mem.id_member > {int:min_id_member}
+				AND mem.id_member < {int:max_id_member}
 				AND ' . $sendQuery . '
-				AND mem.is_activated = {int:inject_int_3}
+				AND mem.is_activated = {int:is_activated}
 			ORDER BY mem.id_member ASC
 			LIMIT ' . ($num_at_once - $i),
-			array(
-				'inject_int_1' => $context['start'],
-				'inject_int_2' => $context['start'] + $num_at_once - $i,
-				'inject_int_3' => 1,
-			)
+			array_merge($sendParams, array(
+				'min_id_member' => $context['start'],
+				'max_id_member' => $context['start'] + $num_at_once - $i,
+				'regular_group' => 0,
+				'notify_announcements' => 1,
+				'is_activated' => 1,
+			))
 		);
 
 		while ($row = $smfFunc['db_fetch_assoc']($result))

@@ -95,9 +95,9 @@ function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
 		// Delete the already expired assocations.
 		$smfFunc['db_query']('openid_delete_assoc_old', '
 			DELETE FROM {db_prefix}openid_assoc
-			WHERE expires <= {int:inject_int_1}',
+			WHERE expires <= {int:current_time}',
 			array(
-				'inject_int_1' => time(),
+				'current_time' => time(),
 			)
 		);
 	}
@@ -106,13 +106,13 @@ function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
 	$request = $smfFunc['db_query']('openid_select_assoc', '
 		SELECT server_url, handle, secret, issued, expires, assoc_type
 		FROM {db_prefix}openid_assoc
-		WHERE server_url = {string:inject_string_1}' . ($handle === null ? '' : '
-			AND handle = {string:inject_string_2}') . '
+		WHERE server_url = {string:server_url}' . ($handle === null ? '' : '
+			AND handle = {string:handle}') . '
 		ORDER BY expires DESC
 		LIMIT 1',
 		array(
-			'inject_string_1' => $server,
-			'inject_string_2' => $handle,
+			'server_url' => $server,
+			'handle' => $handle,
 		)
 	);
 
@@ -185,10 +185,10 @@ function smf_openID_removeAssocation($handle)
 
 	$smfFunc['db_query']('openid_remove_assocation', '
 		DELETE FROM {db_prefix}openid_assoc
-		WHERE handle = {string:inject_string_1}
+		WHERE handle = {string:handle}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $handle,
+			'handle' => $handle,
 		)
 	);
 }
@@ -249,10 +249,10 @@ function smf_openID_return()
 	$result = $smfFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 		FROM {db_prefix}members
-		WHERE openid_uri = {string:inject_string_1}
+		WHERE openid_uri = {string:openid_uri}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $openid_uri,
+			'openid_uri' => $openid_uri,
 		)
 	);
 
@@ -321,10 +321,10 @@ function smf_openid_member_exists($url)
 	$result = $smfFunc['db_query']('openid_member_exists', '
 		SELECT id_member, member_name
 		FROM {db_prefix}members AS mem
-		WHERE mem.openid_uri = {string:inject_string_1}
+		WHERE mem.openid_uri = {string:openid_uri}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $url,
+			'openid_uri' => $url,
 		)
 	);
 

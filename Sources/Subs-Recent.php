@@ -45,18 +45,18 @@ function getLastPosts($latestPostOptions)
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg >= {int:inject_int_1}' .
+		WHERE m.id_msg >= {int:likely_max_msg}' .
 			(!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != {int:inject_int_2}' : '') . '
+			AND b.id_board != {int:recycle_board}' : '') . '
 			AND ' . $user_info['query_wanna_see_board'] . '
-			AND t.approved = {int:inject_int_3}
-			AND m.approved = {int:inject_int_3}
+			AND t.approved = {int:is_approved}
+			AND m.approved = {int:is_approved}
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $latestPostOptions['number_posts'],
 		array(
-			'inject_int_1' => max(0, $modSettings['maxMsgID'] - 20 * $latestPostOptions['number_posts']),
-			'inject_int_2' => $modSettings['recycle_board'],
-			'inject_int_3' => 1,
+			'likely_max_msg' => max(0, $modSettings['maxMsgID'] - 20 * $latestPostOptions['number_posts']),
+			'recycle_board' => $modSettings['recycle_board'],
+			'is_approved' => 1,
 		)
 	);
 	$posts = array();

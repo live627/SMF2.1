@@ -538,11 +538,11 @@ function AdminHome()
 					$_SESSION['copy_expire'] = '';
 					$smfFunc['db_query']('', '
 						DELETE FROM {db_prefix}settings
-						WHERE variable = {string:inject_string_1}
-							OR variable = {string:inject_string_2}',
+						WHERE variable = {string:copy_settings}
+							OR variable = {string:copyright_key}',
 						array(
-							'inject_string_1' => 'copy_settings',
-							'inject_string_2' => 'copyright_key',
+							'copy_settings' => 'copy_settings',
+							'copyright_key' => 'copyright_key',
 						)
 					);
 				}
@@ -766,10 +766,10 @@ function DisplayAdminFile()
 	$request = $smfFunc['db_query']('', '
 		SELECT data, filetype
 		FROM {db_prefix}admin_info_files
-		WHERE filename = {string:inject_string_1}
+		WHERE filename = {string:current_filename}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $_REQUEST['filename'],
+			'current_filename' => $_REQUEST['filename'],
 		)
 	);
 

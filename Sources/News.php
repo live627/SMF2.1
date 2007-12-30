@@ -97,9 +97,9 @@ function ShowXmlFeed()
 			$request = $smfFunc['db_query']('', '
 				SELECT name
 				FROM {db_prefix}categories
-				WHERE id_cat = {int:inject_int_1}',
+				WHERE id_cat = {int:current_category}',
 				array(
-					'inject_int_1' => (int) $_REQUEST['c'][0],
+					'current_category' => (int) $_REQUEST['c'][0],
 				)
 			);
 			list ($feed_title) = $smfFunc['db_fetch_row']($request);
@@ -111,10 +111,10 @@ function ShowXmlFeed()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
-			WHERE b.id_cat IN ({array_int:inject_array_int_1})
+			WHERE b.id_cat IN ({array_int:current_category_list})
 				AND ' . $user_info['query_see_board'],
 			array(
-				'inject_array_int_1' => $_REQUEST['c'],
+				'current_category_list' => $_REQUEST['c'],
 			)
 		);
 		$total_cat_posts = 0;
@@ -143,11 +143,11 @@ function ShowXmlFeed()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts, b.name
 			FROM {db_prefix}boards AS b
-			WHERE b.id_board IN ({array_int:inject_array_int_1})
+			WHERE b.id_board IN ({array_int:board_list})
 				AND ' . $user_info['query_see_board'] . '
 			LIMIT ' . count($_REQUEST['boards']),
 			array(
-				'inject_array_int_1' => $_REQUEST['boards'],
+				'board_list' => $_REQUEST['boards'],
 			)
 		);
 
@@ -548,12 +548,12 @@ function getXmlNews($xml_format)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE ' . $query_this_board . '
 			' . (empty($board) ? '' : 'AND t.id_board = {int:current_board}') . '
-			AND t.approved = {int:inject_int_1}
+			AND t.approved = {int:is_approved}
 		ORDER BY t.id_first_msg DESC
 		LIMIT ' . $_GET['limit'],
 		array(
 			'current_board' => $board,
-			'inject_int_1' => 1,
+			'is_approved' => 1,
 		)
 	);
 	$data = array();
@@ -639,12 +639,12 @@ function getXmlRecent($xml_format)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE ' . $query_this_board . '
 			' . (empty($board) ? '' : 'AND m.id_board = {int:current_board}') . '
-			AND m.approved = {int:inject_int_1}
+			AND m.approved = {int:is_approved}
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $_GET['limit'],
 		array(
 			'current_board' => $board,
-			'inject_int_1' => 1,
+			'is_approved' => 1,
 		)
 	);
 	$messages = array();
@@ -669,13 +669,13 @@ function getXmlRecent($xml_format)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)
-		WHERE m.id_msg IN ({array_int:inject_array_int_1})
+		WHERE m.id_msg IN ({array_int:message_list})
 			' . (empty($board) ? '' : 'AND t.id_board = {int:current_board}') . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $_GET['limit'],
 		array(
 			'current_board' => $board,
-			'inject_array_int_1' => $messages,
+			'message_list' => $messages,
 		)
 	);
 	$data = array();
