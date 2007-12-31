@@ -247,9 +247,9 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	// "Read" the filename and comment. // !!! Might be mussed.
 	if ($flags & 12)
 	{
-		while ($flags & 8 && $data{$offset++} != '\0')
+		while ($flags & 8 && $data{$offset++} != "\0")
 			continue;
-		while ($flags & 4 && $data{$offset++} != '\0')
+		while ($flags & 4 && $data{$offset++} != "\0")
 			continue;
 	}
 

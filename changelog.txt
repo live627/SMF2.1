@@ -154,6 +154,7 @@ December 2007
  * Link (!) in child board lists to the mod center. (BoardIndex and MessageIndex template) [Bug 1172]
  ! Magic quotes removal wasn't working properly, causing login to fail. (QueryString.php)
  ! Applications can now request that the database error handler return immediately for the purposes of upgrade etc where a visual error is not appropriate. (Subs-Db-xxx.php)
+ ! Package manager correctly extracts files from archives again. (Subs-Package.php) [Bug 1184]
  
 
 November 2007
