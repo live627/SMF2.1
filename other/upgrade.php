@@ -865,8 +865,8 @@ function initialize_inputs()
 		{
 			if (preg_match('~upgrade_\d-\d_([A-Za-z])+\.sql~i', $file, $matches) && isset($matches[1]))
 				@unlink(dirname(__FILE__) . '/' . $file);
-  		}
-  		closedir($dh);
+		}
+		closedir($dh);
 
 		header('Location: http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']) . dirname($_SERVER['PHP_SELF']) . '/Themes/default/images/blank.gif');
 		exit;

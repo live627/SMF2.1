@@ -265,7 +265,7 @@ function generateSubscriptionError($text, $notify = true)
 
 	// Send an email?
 	if (!empty($modSettings['paid_email']))
-		paidAdminEmail($txt['paid_error_subject'], $txt['paid_error_body'] . "\n" . 	'---------------------------------------------' . "\n" . $text);
+		paidAdminEmail($txt['paid_error_subject'], $txt['paid_error_body'] . "\n" . '---------------------------------------------' . "\n" . $text);
 
 	// Otherwise log and die.
 	log_error($text);

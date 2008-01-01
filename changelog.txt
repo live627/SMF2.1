@@ -14,6 +14,7 @@ January 2008
  ! Always put the admin features into context. (Load.php)
  ! Removed old compatibility function, doUBBC. (Subs.php)
  ! No longer allow author names in quotes to contain BBC. (Subs.php) [Bug 1179]
+ ! Many asthetic typos and the like within the code. (Several files) [Bug 1167]
 
 
 December 2007

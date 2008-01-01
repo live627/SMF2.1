@@ -431,7 +431,7 @@ function loadUserSettings()
 		foreach ($user_info['groups'] as $k => $v)
 			$user_info['groups'][$k] = (int) $v;
 
-		//this is a logged in user, so definitely not a spider
+		// This is a logged in user, so definitely not a spider.
 		$user_info['possibly_robot'] = false;
 	}
 	// If the user is a guest, initialize all the critical user settings.

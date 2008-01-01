@@ -308,8 +308,8 @@ function smfSuggest(sessionID, textID)
 			suggestDivHandle.childNodes[0].removeEventListener('mouseout', itemMouseOut, false);
 			suggestDivHandle.childNodes[0].removeEventListener('click', itemClicked, false);
 
-    			suggestDivHandle.removeChild(suggestDivHandle.childNodes[0]);
-    		}
+			suggestDivHandle.removeChild(suggestDivHandle.childNodes[0]);
+		}
 
 		// Something to display?
 		if (typeof(results) == 'undefined')

@@ -42,8 +42,8 @@ function smf_openID_validate($openid_uri, $return = false)
 
 	$response_data = smf_openID_getServerInfo($openid_url);
 
-	if (($assoc = smf_openID_getAssocation($response_data['server'])) == null)
-		$assoc = smf_openID_makeAssocation($response_data['server']);
+	if (($assoc = smf_openID_getAssociation($response_data['server'])) == null)
+		$assoc = smf_openID_makeAssociation($response_data['server']);
 
 	// Before we go wherever it is we are going, store the GET and POST data, because it might be useful when we get back.
 	$request_time = time();
@@ -83,7 +83,7 @@ function smf_openID_validate($openid_uri, $return = false)
 		redirectexit($redir_url);
 }
 
-function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
+function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 {
 	global $smfFunc, $db_prefix;
 
@@ -92,7 +92,7 @@ function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
 
 	if (!$no_delete)
 	{
-		// Delete the already expired assocations.
+		// Delete the already expired associations.
 		$smfFunc['db_query']('openid_delete_assoc_old', '
 			DELETE FROM {db_prefix}openid_assoc
 			WHERE expires <= {int:current_time}',
@@ -102,7 +102,7 @@ function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
 		);
 	}
 
-	// Get the assocation that has the longest lifetime from now.
+	// Get the association that has the longest lifetime from now.
 	$request = $smfFunc['db_query']('openid_select_assoc', '
 		SELECT server_url, handle, secret, issued, expires, assoc_type
 		FROM {db_prefix}openid_assoc
@@ -125,7 +125,7 @@ function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
 	return $return;
 }
 
-function smf_openID_makeAssocation($server)
+function smf_openID_makeAssociation($server)
 {
 	global $smfFunc, $db_prefix, $modSettings;
 
@@ -177,13 +177,13 @@ function smf_openID_makeAssocation($server)
 	);
 }
 
-function smf_openID_removeAssocation($handle)
+function smf_openID_removeAssociation($handle)
 {
 	global $smfFunc, $db_prefix;
 
 	$handle = $smfFunc['db_escape_string']($handle);
 
-	$smfFunc['db_query']('openid_remove_assocation', '
+	$smfFunc['db_query']('openid_remove_association', '
 		DELETE FROM {db_prefix}openid_assoc
 		WHERE handle = {string:handle}
 		LIMIT 1',
@@ -209,14 +209,14 @@ function smf_openID_return()
 		if (isset($_GET[$key]))
 			$_GET[$key] = str_replace(' ', '+', $_GET[$key]);
 
-	// Did they tell us to remove any assocations?
+	// Did they tell us to remove any associations?
 	if (!empty($_GET['openid_invalidate_handle']))
-		smf_openid_removeAssocation($_GET['openid_invalidate_handle']);
+		smf_openid_removeAssociation($_GET['openid_invalidate_handle']);
 
 	$server_info = smf_openid_getServerInfo($_GET['openid_identity']);
 
-	// Get the assocation data.
-	$assoc = smf_openid_getAssocation($server_info['server'], $_GET['openid_assoc_handle'], true);
+	// Get the association data.
+	$assoc = smf_openID_getAssociation($server_info['server'], $_GET['openid_assoc_handle'], true);
 	if ($assoc === null)
 		fatal_lang_error('openid_no_assoc');
 

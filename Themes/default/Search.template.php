@@ -165,7 +165,7 @@ function template_main()
 						</table>
 					</div>
 					<div style="text-align: center; padding: 1em;">
-						<b>', $txt['search_post_age'], ': </b> 	', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
+						<b>', $txt['search_post_age'], ': </b> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
 					</div>';
 
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.

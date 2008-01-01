@@ -616,7 +616,7 @@ function MoveAvatars()
 		// Try to fix it.
 		@chmod($modSettings['custom_avatar_dir'], 0777);
 
-		// Guess that didn't work :/?
+		// Guess that didn't work?
 		if (!is_writable($modSettings['custom_avatar_dir']))
 			fatal_lang_error('attachments_no_write', 'critical');
 	}
