@@ -1363,7 +1363,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'quote',
 				'parameters' => array(
-					'author' => array('match' => '(.{1,192}?)', 'quoted' => true, 'validate' => 'parse_bbc'),
+					'author' => array('match' => '(.{1,192}?)', 'quoted' => true),
 				),
 				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><div class="quote">',
 				'after' => '</div>',
@@ -1371,7 +1371,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'quote',
-				'type' => 'parsed_equals',
+				'type' => 'unparsed_equals',
 				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': $1</div><div class="quote">',
 				'after' => '</div>',
 				'quoted' => 'optional',
@@ -1391,7 +1391,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'quote',
 				'parameters' => array(
-					'author' => array('match' => '(.{1,192}?)', 'validate' => 'parse_bbc'),
+					'author' => array('match' => '(.{1,192}?)'),
 				),
 				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><div class="quote">',
 				'after' => '</div>',
