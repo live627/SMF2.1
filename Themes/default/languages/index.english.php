@@ -374,7 +374,7 @@ $txt['moved'] = 'MOVED';
 $txt['moved_why'] = 'Please enter a brief description as to<br />why this topic is being moved.';
 $txt['board'] = 'Board';
 $txt['in'] = 'in';
-$txt['smf96'] = 'Sticky Topic';
+$txt['sticky_topic'] = 'Sticky Topic';
 
 $txt['delete'] = 'Delete';
 

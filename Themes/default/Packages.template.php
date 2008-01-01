@@ -1211,7 +1211,7 @@ function template_downloaded()
 			</tr>
 			<tr>
 				<td width="100%" align="left" valign="middle" class="windowbg2">
-					' . (!isset($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['smf193']) . '<br /><br />
+					' . (!isset($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']) . '<br /><br />
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td valign="middle">' . $context['package']['name'] . '</td>

@@ -972,7 +972,7 @@ function UnreadTopics()
 			return;
 		}
 
-		if ($have_temp_table)
+		if (!empty($have_temp_table))
 			$request = $smfFunc['db_query']('', '
 				SELECT t.id_topic
 				FROM {db_prefix}topics_posted_in AS t

@@ -51,9 +51,8 @@ $txt['digits_only'] = 'The \'number of posts\' box can only contain digits.';
 $txt['language'] = 'Language';
 $txt['avatar_too_big'] = 'Avatar image is too big, please resize it and try again (max';
 $txt['invalid_registration'] = 'Invalid Date Registered value, valid example:';
-$txt['smf237'] = 'Your MSN messenger email address';
+$txt['msn_email_address'] = 'Your MSN messenger email address';
 $txt['current_password'] = 'Current Password';
-$txt['smf243'] = 'You haven\'t entered your current password.';
 // Don't use entities in the below string, except the main ones. (lt, gt, quot.)
 $txt['required_security_reasons'] = 'For security reasons, your current password is required to make changes to your account.';
 
