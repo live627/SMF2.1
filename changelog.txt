@@ -3,6 +3,18 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
+January 2008
+--------------------------------------------------------------------------------
+ ! Renamed some remaining language strings. (Various files)
+ * Removed the Recent template from the classic and babylon themes, and added a new image to classic to make it work. (Recent templates, last_post.gif)
+ * The moderations setting list box didn't have a size stated. (ModerationCenter template)
+ ! Don't store the session id in the cache for the menu buttons. (Subs.php) [MotM]
+ ! Give the translators the credit they deserve. (Admin.php) [MotM]
+ ! Add option to allow BBC in "text" type custom fields, and allow loadMemberContext to optionally load display fields of a member into context. (Load.php, Display.php, ManageSettings.php, Display templates) [Bug 1131]
+ ! Always put the admin features into context. (Load.php)
+ ! Removed old compatibility function, doUBBC. (Subs.php)
+
+
 December 2007
 --------------------------------------------------------------------------------
  ! Rich text editor works again in Firefox. (Subs-Editor.php, script.js)
@@ -155,14 +167,6 @@ December 2007
  ! Magic quotes removal wasn't working properly, causing login to fail. (QueryString.php)
  ! Applications can now request that the database error handler return immediately for the purposes of upgrade etc where a visual error is not appropriate. (Subs-Db-xxx.php)
  ! Package manager correctly extracts files from archives again. (Subs-Package.php) [Bug 1184]
- ! Renamed some remaining language strings. (Various files)
- * Removed the Recent template from the classic and babylon themes, and added a new image to classic to make it work. (Recent templates, last_post.gif)
- * The moderations setting list box didn't have a size stated. (ModerationCenter template)
- ! Don't store the session id in the cache for the menu buttons. (Subs.php) [MotM]
- ! Give the translators the credit they deserve. (Admin.php) [MotM]
- ! Add option to allow BBC in "text" type custom fields, and allow loadMemberContext to optionally load display fields of a member into context. (Load.php, Display.php, ManageSettings.php, Display templates) [Bug 1131]
- ! Always put the admin features into context. (Load.php)
- ! Removed old compatibility function, doUBBC. (Subs.php)
  
 
 November 2007
