@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; MessageIndex
+// Version: 2.0 Beta 2; MessageIndex
 
 function template_main()
 {

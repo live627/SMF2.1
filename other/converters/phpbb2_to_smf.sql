@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "phpBB2"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 1"
+---~ version: "SMF 2.0 Beta 2"
 ---~ settings: "/extension.inc", "/config.php"
 ---~ defines: IN_PHPBB
 ---~ from_prefix: "`$dbname`.$table_prefix"

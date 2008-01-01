@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; Modlog
+// Version: 2.0 Beta 2; Modlog
 
 function template_main()
 {

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1.1                                    *
+* Software Version:           SMF 2.0 Beta 2                                    *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -1739,16 +1739,19 @@ function PlushSearch2()
 			$context['can_merge'] = in_array(0, $boards_can['merge_any']);
 		}
 
+		// What messages are we using?
+		$msg_list = array_keys($context['topics']);
+
 		// Load the posters...
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}messages
-			WHERE id_member != {int:inject_int_1}
-				AND id_msg IN ({array_int:inject_array_int_1})
+			WHERE id_member != {int:no_member}
+				AND id_msg IN ({array_int:message_list})
 			LIMIT ' . count($context['topics']),
 			array(
-				'inject_array_int_1' => array_keys($context['topics']),
-				'inject_int_1' => 0,
+				'message_list' => $msg_list,
+				'no_member' => 0,
 			)
 		);
 		$posters = array();
@@ -1778,14 +1781,14 @@ function PlushSearch2()
 				INNER JOIN {db_prefix}messages AS last_m ON (last_m.id_msg = t.id_last_msg)
 				LEFT JOIN {db_prefix}members AS first_mem ON (first_mem.id_member = first_m.id_member)
 				LEFT JOIN {db_prefix}members AS last_mem ON (last_mem.id_member = first_m.id_member)
-			WHERE m.id_msg IN ({array_int:inject_array_int_1})
-				AND m.approved = {int:inject_int_1}
-			ORDER BY FIND_IN_SET(m.id_msg, {string:inject_string_1})
+			WHERE m.id_msg IN ({array_int:message_list})
+				AND m.approved = {int:is_approved}
+			ORDER BY FIND_IN_SET(m.id_msg, {string:message_list_in_set})
 			LIMIT ' . count($context['topics']),
 			array(
-				'inject_array_int_1' => array_keys($context['topics']),
-				'inject_int_1' => 1,
-				'inject_string_1' => implode(',', array_keys($context['topics'])),
+				'message_list' => $msg_list,
+				'is_approved' => 1,
+				'message_list_in_set' => implode(',', $msg_list),
 			)
 		);
 		// Note that the reg-exp slows things alot, but makes things make a lot more sense.
@@ -1796,13 +1799,13 @@ function PlushSearch2()
 			$result = $smfFunc['db_query']('', '
 				SELECT id_topic
 				FROM {db_prefix}messages
-				WHERE id_topic IN ({array_int:inject_array_int_1})
+				WHERE id_topic IN ({array_int:topic_list})
 					AND id_member = {int:current_member}
 				GROUP BY id_topic
 				LIMIT ' . count($participants),
 				array(
 					'current_member' => $user_info['id'],
-					'inject_array_int_1' => array_keys($participants),
+					'topic_list' => array_keys($participants),
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($result))

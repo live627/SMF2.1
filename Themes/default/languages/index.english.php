@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; index
+// Version: 2.0 Beta 2; index
 
 /* Important note about language files in SMF 2.0 upwards:
 	1) All language entries in SMF 2.0 are cached. All edits should therefore be made through the admin menu. If you do

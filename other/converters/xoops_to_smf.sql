@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "XOOPS & newBB 2"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 1"
+---~ version: "SMF 2.0 Beta 2"
 ---~ settings: "/mainfile.php"
 ---~ variable: "$xoopsOption['nocommon'] = 1;"
 ---~ from_prefix: "`" . XOOPS_DB_NAME . "`." . XOOPS_DB_PREFIX . "_"

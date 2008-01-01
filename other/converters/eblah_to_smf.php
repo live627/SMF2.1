@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1                                       *
+* Software Version:           SMF 2.0 Beta 2                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -27,7 +27,7 @@
 
 $convert_data = array(
 	'name' => 'E-Blah Platinum 9',
-	'version' => 'SMF 2.0 Beta 1',
+	'version' => 'SMF 2.0 Beta 2',
 	'flatfile' => true,
 	'settings' => array('/Settings.pl'),
 	'parameters' => array(

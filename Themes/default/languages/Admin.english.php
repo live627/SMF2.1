@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; Admin
+// Version: 2.0 Beta 2; Admin
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 

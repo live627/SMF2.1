@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; MoveTopic
+// Version: 2.0 Beta 2; MoveTopic
 
 // Show an interface for selecting which board to move a post to.
 function template_main()

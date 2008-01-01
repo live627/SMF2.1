@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "FUDforum 2.6.x"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 1"
+---~ version: "SMF 2.0 Beta 2"
 ---~ settings: "/GLOBALS.php"
 ---~ globals: MSG_STORE_DIR
 ---~ from_prefix: "`$DBHOST_DBNAME`.$DBHOST_TBL_PREFIX"

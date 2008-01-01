@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MyPHP Forum 3.0"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 1"
+---~ version: "SMF 2.0 Beta 2"
 ---~ settings: "/config.php"
 ---~ from_prefix: "`$dbname`.{$tablepre}"
 ---~ table_test: "{$from_prefix}member"

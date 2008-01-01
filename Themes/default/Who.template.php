@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; Who
+// Version: 2.0 Beta 2; Who
 
 // The only template in the file.
 function template_main()
