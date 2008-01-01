@@ -916,7 +916,7 @@ function fixLanguageFile($filename, $type, $lang, $test = false)
 	// The warning for editing files direct?
 	if ($type != 'index' && $type != 'Install' && preg_match('~//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*//\s[\w\d\s!\.&;]*index\.' . $lang . '\.php\.~', $fileContents, $matches) == false)
 	{
-		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" .'1// Important! Before editing these language files please read the text at the topic of index.' . $lang . '.php.' . "\n\n", $fileContents);
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" .'1// Important! Before editing these language files please read the text at the top of index.' . $lang . '.php.' . "\n\n", $fileContents);
 		$edit_count = 0;
 	}
 	// Instructions on index?

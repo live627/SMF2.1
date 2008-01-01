@@ -637,6 +637,8 @@ foreach ($upcontext['steps'] as $num => $step)
 	{
 		// The current weight of this step in terms of overall progress.
 		$upcontext['step_weight'] = $step[3];
+		// Make sure we reset the skip button.
+		$upcontext['skip'] = false;
 
 		// We cannot proceed if we're not logged in.
 		if ($num != 0 && !$disable_security && $upcontext['user']['pass'] != $upcontext['upgrade_status']['pass'])
@@ -906,7 +908,7 @@ function WelcomeLogin()
 	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 1.1)
 		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
 
-	if (!$check && !isset($modSettings['smfVersion']))
+	if (!$check)
 	{
 		// Don't tell them what files exactly because it's a spot check - just like teachers don't tell which problems they are spot checking, that's dumb.
 		throw_error('The upgrader was unable to find some crucial files.<br /><br />Please make sure you uploaded all of the files included in the package, including the Themes, Sources, and other directories.');
@@ -1469,8 +1471,11 @@ function CleanupMods()
 	$upcontext['sub_template'] = 'clean_mods';
 	$upcontext['page_title'] = 'Cleanup Modifications';
 
-	// If we're on the second redirect continue...
-	if (isset($_POST['cleandone2']))
+	// This can be skipped.
+	$upcontext['skip'] = true;
+
+	// If we're on the second redirect continue... or if we're skipping
+	if (isset($_POST['cleandone2']) || !empty($_POST['skip']))
 		return true;
 
 	// Do we already know about some writable files?
@@ -1761,6 +1766,11 @@ function UpgradeTemplate()
 	$upcontext['page_title'] = 'Upgrade Templates';
 	$upcontext['sub_template'] = 'upgrade_templates';
 	$endl = $command_line ? "\n" : '<br />' . "\n";
+
+	// This can also be skipped.
+	$upcontext['skip'] = true;
+	if (!empty($_POST['skip']))
+		return true;
 
 	// We'll want this.
 	require_once($sourcedir . '/FixLanguage.php');
@@ -3539,6 +3549,9 @@ function template_upgrade_below()
 	if (!empty($upcontext['continue']))
 		echo '
 				<input type="submit" id="contbutt" name="contbutt" value="Continue" ', $upcontext['continue'] == 2 ? 'disabled="disabled"' : '', '/>';
+	if (!empty($upcontext['skip']))
+		echo '
+				<input type="submit" id="skip" name="skip" value="Skip" onclick="dontSubmit = true; document.getElementById(\'contbutt\').disabled = \'disabled\'; return true;" />';
 
 	echo '
 		</div>
@@ -3558,10 +3571,11 @@ function template_upgrade_below()
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			window.onload = doAutoSubmit;
 			var countdown = 3;
+			var dontSubmit = false;
 
 			function doAutoSubmit()
 			{
-				if (countdown == 0)
+				if (countdown == 0 && !dontSubmit)
 					document.upform.submit();
 				else if (countdown == -1)
 					return;

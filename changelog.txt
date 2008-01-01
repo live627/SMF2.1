@@ -15,6 +15,7 @@ January 2008
  ! Removed old compatibility function, doUBBC. (Subs.php)
  ! No longer allow author names in quotes to contain BBC. (Subs.php) [Bug 1179]
  ! Many asthetic typos and the like within the code. (Several files) [Bug 1167]
+ ! Allow users to skip certain steps during upgrade, and fix a typo with the warning message inserted into language files. (FixLanguage.php, upgrade.php) [Bug 1171]
 
 
 December 2007
