@@ -124,9 +124,6 @@ if (!defined('SMF'))
 		- should not be called on huge arrays (bigger than like 10 elements.)
 		- returns an array containing each permutation.
 
-	string doUBBC(string message, bool enableSmileys = true)
-		- passes through parse_bbc(message, enableSmileys).
-		- available for older implementations.
 
 	string parse_bbc(string message, bool smileys = true, string cache_id = '', array parse_tags = null)
 		- this very hefty function parses bbc in message.
@@ -890,12 +887,6 @@ function permute($array)
 	}
 
 	return $orders;
-}
-
-// For old stuff still using doUBBC()...
-function doUBBC($message, $enableSmileys = true)
-{
-	return parse_bbc($message, $enableSmileys);
 }
 
 // Parse bulletin board code in a string, as well as smileys optionally.
