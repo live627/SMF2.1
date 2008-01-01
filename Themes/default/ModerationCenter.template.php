@@ -706,7 +706,7 @@ function template_moderation_settings()
 					<div class="smalltext">', $txt['mc_prefs_homepage_desc'], '</div>
 				</td>
 				<td width="50%">
-					<select name="mod_homepage[]" multiple="multiple">';
+					<select name="mod_homepage[]" size="8" multiple="multiple">';
 
 	foreach ($context['homepage_blocks'] as $k => $v)
 		echo '

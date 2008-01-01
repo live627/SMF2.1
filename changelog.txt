@@ -157,6 +157,7 @@ December 2007
  ! Package manager correctly extracts files from archives again. (Subs-Package.php) [Bug 1184]
  ! Renamed some remaining language strings. (Various files)
  * Removed the Recent template from the classic and babylon themes, and added a new image to classic to make it work. (Recent templates, last_post.gif)
+ * The moderations setting list box didn't have a size stated. (ModerationCentre template)
  
 
 November 2007
