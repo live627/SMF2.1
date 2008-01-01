@@ -161,6 +161,7 @@ December 2007
  ! Don't store the session id in the cache for the menu buttons. (Subs.php) [MotM]
  ! Give the translators the credit they deserve. (Admin.php) [MotM]
  ! Add option to allow BBC in "text" type custom fields, and allow loadMemberContext to optionally load display fields of a member into context. (Load.php, Display.php, ManageSettings.php, Display templates) [Bug 1131]
+ ! Always put the admin features into context. (Load.php)
  
 
 November 2007

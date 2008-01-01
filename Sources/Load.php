@@ -1560,6 +1560,9 @@ function loadTheme($id_theme = 0, $initialize = true)
 	if (!isset($settings['theme_version']))
 		$modSettings['memberCount'] = $modSettings['totalMembers'];
 
+	// This allows us to change the way things look for the admin.
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
+
 	// If we think we have mail to send, let's offer up some possibilities... robots get pain (Now with scheduled task support!)
 	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
 	{

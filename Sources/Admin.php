@@ -96,8 +96,7 @@ function AdminMain()
 
 	require_once($sourcedir . '/Subs-Menu.php');
 
-	// Some features and preferences.
-	$context['admin_features'] = explode(',', $modSettings['admin_features']);
+	// Some preferences.
 	$context['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
 
 	// Define all the menu structure - see Subs-Menu.php for details!
