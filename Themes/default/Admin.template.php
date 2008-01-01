@@ -997,7 +997,7 @@ function template_edit_profile_field()
 			curType = document.getElementById("field_type").value;
 			document.getElementById("max_length_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
 			document.getElementById("dimension_div").style.display = curType == "textarea" ? "" : "none";
-			document.getElementById("bbc_div").style.display = curType == "textarea" ? "" : "none";
+			document.getElementById("bbc_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
 			document.getElementById("options_div").style.display = curType == "select" || curType == "radio" ? "" : "none";
 			document.getElementById("default_div").style.display = curType == "check" ? "" : "none";
 			document.getElementById("mask_div").style.display = curType == "text" ? "" : "none";

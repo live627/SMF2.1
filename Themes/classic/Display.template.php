@@ -309,15 +309,11 @@ function template_main()
 								', $txt['member_postcount'], ': ', $message['member']['posts'], '<br />';
 
 			// Any custom fields?
-			if (!empty($modSettings['displayFields']))
+			if (!empty($message['member']['custom_fields']))
 			{
-				foreach (explode('|', $modSettings['displayFields']) as $custom)
-				{
-					@list ($field, $title) = explode(';', $custom);
-					if (!empty($title) && !empty($message['member']['options'][$field]))
-						echo '
-								', $title, ': ', $message['member']['options'][$field], '<br />';
-				}
+				foreach ($message['member']['custom_fields'] as $custom)
+					echo '
+								', $custom['title'], ': ', $custom['value'], '<br />';
 			}
 
 			echo '<br />';

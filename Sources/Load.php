@@ -1022,7 +1022,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 }
 
 // Loads the user's basic values... meant for template/theme usage.
-function loadMemberContext($user)
+function loadMemberContext($user, $display_custom_fields = false)
 {
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
 	global $context, $modSettings, $board_info, $settings;
@@ -1166,6 +1166,22 @@ function loadMemberContext($user)
 		'warning_status' => !empty($modSettings['warning_mute']) && $modSettings['warning_mute'] <= $profile['warning'] ? 'mute' : (!empty($modSettings['warning_moderate']) && $modSettings['warning_moderate'] <= $profile['warning'] ? 'moderate' : (!empty($modSettings['warning_watch']) && $modSettings['warning_watch'] <= $profile['warning'] ? 'watch' : (''))),
 		'local_time' => timeformat(time() + ($profile['time_offset'] - $user_info['time_offset']) * 3600, false),
 	);
+
+	// Are we also loading the members custom fields into context?
+	if ($display_custom_fields && !empty($modSettings['displayFields']))
+	{
+		$memberContext[$user]['custom_fields'] = array();
+		if (!isset($context['display_fields']))
+			$context['display_fields'] = unserialize($modSettings['displayFields']);
+		foreach ($context['display_fields'] as $custom)
+		{
+			if (!empty($custom['f']) && !empty($profile['options'][$custom['c']]))
+				$memberContext[$user]['custom_fields'][] = array(
+					'title' => $custom['f'],
+					'value' => !empty($custom['b']) ? parse_bbc($profile['options'][$custom['c']]) : $profile['options'][$custom['c']],
+				);
+		}
+	}
 
 	return true;
 }

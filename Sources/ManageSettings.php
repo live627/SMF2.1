@@ -1502,26 +1502,30 @@ function EditCustomProfiles()
 		checkSession();
 
 		$request = $smfFunc['db_query']('', '
-			SELECT col_name, field_name
+			SELECT col_name, field_name, bbc
 			FROM {db_prefix}custom_fields
 			WHERE show_display = {int:is_displayed}
 				AND active = {int:active}
 				AND private != {int:not_admin_only}',
 			array(
 				'is_displayed' => 1,
-				'active' => 2,
+				'active' => 1,
 				'not_admin_only' => 2,
 			)
 		);
+
 		$fields = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$fields[] = strtr($row['col_name'], array('|' => '', ';' => '')) . ';' . strtr($row['field_name'], array('|' => '', ';' => ''));
+			$fields[] = array(
+				'c' => strtr($row['col_name'], array('|' => '', ';' => '')),
+				'f' => strtr($row['field_name'], array('|' => '', ';' => '')),
+				'b' => ($row['bbc'] ? '1' : '0')
+			);
 		}
 		$smfFunc['db_free_result']($request);
 
-		$fields = implode('|', $fields);
-		updateSettings(array('displayFields' => $fields));
+		updateSettings(array('displayFields' => serialize($fields)));
 		redirectexit('action=admin;area=featuresettings;sa=profile');
 	}
 }

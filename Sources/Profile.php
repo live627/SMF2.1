@@ -541,14 +541,17 @@ function loadCustomFields($memID, $area = 'summary')
 			$input_html .= '</fieldset>';
 		}
 		elseif ($row['field_type'] == 'text')
+		{
 			$input_html = '<input type="text" name="customfield[' . $row['col_name'] . ']" ' . ($row['field_length'] != 0 ? 'maxlength="' . $row['field_length'] . '"' : '') . ' value="' . $value . '" />';
+		}
 		else
 		{
 			@list ($rows, $cols) = @explode(',', $row['default_value']);
 			$input_html = '<textarea name="customfield[' . $row['col_name'] . ']" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $value . '</textarea>';
-			if ($row['bbc'])
-				$output_html = parse_bbc($output_html);
 		}
+
+		if ($row['bbc'])
+			$output_html = parse_bbc($output_html);
 
 		$context['custom_fields'][] = array(
 			'name' => $row['field_name'],

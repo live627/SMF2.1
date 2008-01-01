@@ -785,6 +785,35 @@ upgrade_query("
 ---}
 ---#
 
+---# Checking display fields setup correctly..
+---{
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta 1' && isset($modSettings['displayFields']) && @unserialize($modSettings['displayFields']) == false)
+{
+$request = upgrade_query("
+	SELECT col_name, field_name, bbc
+	FROM {$db_prefix}custom_fields
+	WHERE show_display = 1
+		AND active = 1
+		AND private != 2");
+$fields = array();
+while ($row = mysql_fetch_assoc($request))
+{
+	$fields[] = array(
+		'c' => strtr($row['col_name'], array('|' => '', ';' => '')),
+		'f' => strtr($row['field_name'], array('|' => '', ';' => '')),
+		'b' => ($row['bbc'] ? '1' : '0')
+	);
+}
+mysql_free_result($request);
+
+upgrade_query("
+	UPDATE {$db_prefix}settings
+	SET value = '" . mysql_real_escape_string(serialize($fields)) . "'
+	WHERE variable = 'displayFields'");
+}
+---}
+---#
+
 /******************************************************************************/
 --- Adding email digest functionality.
 /******************************************************************************/

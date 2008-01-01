@@ -1015,7 +1015,7 @@ function prepareDisplayContext($reset = false)
 	$context['can_remove_post'] |= allowedTo('delete_own') && (empty($modSettings['edit_disable_time']) || $message['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()) && $message['id_member'] == $user_info['id'];
 
 	// If it couldn't load, or the user was a guest.... someday may be done with a guest table.
-	if (!loadMemberContext($message['id_member']))
+	if (!loadMemberContext($message['id_member'], true))
 	{
 		// Notice this information isn't used anywhere else....
 		$memberContext[$message['id_member']]['name'] = $message['poster_name'];
