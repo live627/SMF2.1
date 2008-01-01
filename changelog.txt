@@ -157,7 +157,9 @@ December 2007
  ! Package manager correctly extracts files from archives again. (Subs-Package.php) [Bug 1184]
  ! Renamed some remaining language strings. (Various files)
  * Removed the Recent template from the classic and babylon themes, and added a new image to classic to make it work. (Recent templates, last_post.gif)
- * The moderations setting list box didn't have a size stated. (ModerationCentre template)
+ * The moderations setting list box didn't have a size stated. (ModerationCenter template)
+ ! Don't store the session id in the cache for the menu buttons. (Subs.php) [MotM]
+ ! Give the translators the credit they deserve. (Admin.php) [MotM]
  
 
 November 2007
@@ -228,7 +230,7 @@ October 2007
  * Placed the sort image after the column name for consistensy in Show Attachments section in Profile page. (Profile template)
  ! When deleting posts from the recent posts section, make sure that the modaction is logged. (Recent.php, RemoveTopic.php, Recent template)
  * Adding new images to permissions for membergroup screen (ManagePermissions.template, images from admin folder)
- + It is now possible to download and install language packs from the Simple Machines site via the admin centre. (ManageServer.php)
+ + It is now possible to download and install language packs from the Simple Machines site via the admin center. (ManageServer.php)
  ! Language files were getting truncated when settings were saved. (ManageServer.php)
  + Grab the SM Files automatically during the install or upgrade. (install.php, upgrade.php, ScheduledTasks.php)
  ! Birthday email setting needed a help text. (Help language file)

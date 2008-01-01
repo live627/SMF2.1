@@ -496,6 +496,7 @@ function AdminHome()
 <div style="margin-top: 1ex;"><b>Graphic Designers:</b> Bjoern &quot;Bloc&quot; Kristiansen, Alienine (Adrian), A.M.A, babylonking, BlackouT, Burpee, diplomat, Eren &quot;forsakenlad&quot; Yasarkurt, Hyper Piranha, Killer Possum, Mystica, Nico &quot;aliencowfarm&quot; Boer, Philip &quot;Meriadoc&quot; Renich and Tippmaster.</div>
 <div style="margin-top: 1ex;"><b>Site team:</b> dschwab9 and Tim.</div>
 <div style="margin-top: 1ex;"><b>Marketing:</b> Douglas &quot;The Bear&quot; Hazard, RickC and Trekkie101.</div>
+<div style="margin-top: 1ex;"><b>Translators:</b> Thank you for your efforts which make it possible for people all around the world to use SMF.</div>
 <div style="margin-top: 1ex;">And for anyone we may have missed, thank you!</div>';
 
 	// Copyright?

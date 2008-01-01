@@ -3647,7 +3647,7 @@ function setupMenuContext()
 	$cacheTime = $modSettings['lastActive'] * 60;
 
 	// All the buttons we can possible want and then some, try pulling the final list of buttons from cache first.
-	if (($buttonData = cache_get_data('menu_buttons-' . implode('_',$user_info['groups']) . $context['session_id'], $cacheTime)) === null || time() - $cacheTime <= $modSettings['settings_updated'])
+	if (($buttonData = cache_get_data('menu_buttons-' . implode('_',$user_info['groups']), $cacheTime)) === null || time() - $cacheTime <= $modSettings['settings_updated'])
 	{
 		$buttons = array(
 			'home' => array(
@@ -3678,22 +3678,22 @@ function setupMenuContext()
 				'sub_buttons' => array(
 					'featuresettings' => array(
 						'title' => $txt['modSettings_title'],
-						'href' => $scripturl . '?action=admin;area=featuresettings;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=featuresettings',
 						'show' => allowedTo('admin_forum'),
 					),
 					'packages' => array(
 						'title' => $txt['package'],
-						'href' => $scripturl . '?action=admin;area=packages;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=packages',
 						'show' => allowedTo('admin_forum'),
 					),
 					'errorlog' => array(
 						'title' => $txt['errlog'],
-						'href' => $scripturl . '?action=admin;area=errorlog;desc;sesc=' . $context['session_id'],
-						'show' => allowedTo('admin_forum'),
+						'href' => $scripturl . '?action=admin;area=errorlog;desc',
+						'show' => allowedTo('admin_forum') && !empty($modSettings['enableErrorLogging']),
 					),
 					'permissions' => array(
 						'title' => $txt['edit_permissions'],
-						'href' => $scripturl . '?action=admin;area=permissions;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=permissions',
 						'show' => allowedTo('manage_permissions'),
 					),
 				),
@@ -3705,22 +3705,22 @@ function setupMenuContext()
 				'sub_buttons' => array(
 					'modlog' => array(
 						'title' => $txt['modlog_view'],
-						'href' => $scripturl . '?action=moderate;area=modlog;sesc=' . $context['session_id'],
-						'show' => true,
+						'href' => $scripturl . '?action=moderate;area=modlog',
+						'show' => !empty($modSettings['modlog_enabled']),
 					),
 					'poststopics' => array(
 						'title' => $txt['mc_unapproved_poststopics'],
-						'href' => $scripturl . '?action=moderate;area=postmod;sa=posts;sesc=' . $context['session_id'],
-						'show' => true,
+						'href' => $scripturl . '?action=moderate;area=postmod;sa=posts',
+						'show' => in_array('pm', $context['admin_features']),
 					),
 					'attachments' => array(
 						'title' => $txt['mc_unapproved_attachments'],
-						'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments;sesc=' . $context['session_id'],
-						'show' => true,
+						'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments',
+						'show' => in_array('pm', $context['admin_features']),
 					),
 					'reports' => array(
 						'title' => $txt['mc_reported_posts'],
-						'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=moderate;area=reports',
 						'show' => true,
 					),
 				),
@@ -3760,7 +3760,7 @@ function setupMenuContext()
 					'pm_send' => array(
 						'title' => $txt['pm_menu_send'],
 						'href' => $scripturl . '?action=pm;sa=send',
-						'show' => true,
+						'show' => allowedTo('pm_send'),
 					),
 				),
 			),
@@ -3776,7 +3776,7 @@ function setupMenuContext()
 					),
 					'post' => array(
 						'title' => $txt['calendar_post_event'],
-						'href' => $scripturl . '?action=calendar;sa=post;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=calendar;sa=post',
 						'show' => allowedTo('calendar_post'),
 					),
 				),
@@ -3815,7 +3815,7 @@ function setupMenuContext()
 			),
 			'logout' => array(
 				'title' => $txt['logout'],
-				'href' => $scripturl . '?action=logout;sesc=' . $context['session_id'],
+				'href' => $scripturl . '?action=logout;sesc=%1$s',
 				'show' => !$user_info['is_guest'],
 				'sub_buttons' => array(
 				),
@@ -3858,7 +3858,12 @@ function setupMenuContext()
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 			cache_put_data('menu_buttons-' . implode('_',$user_info['groups']) . $context['session_id'], $buttonData, $cacheTime);
 	}
+
 	list($context['menu_buttons'], $context['load_menu_js']) = $buttonData;
+
+	// Logging out requires the session id in the url.
+	if (isset($context['menu_buttons']['logout']))
+		$context['menu_buttons']['logout']['href'] = sprintf($context['menu_buttons']['logout']['href'], $context['session_id']);
 
 	// Figure out which action we are doing so we can set the active tab.
 	// Default to home.
