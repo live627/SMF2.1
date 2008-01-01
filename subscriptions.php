@@ -65,13 +65,13 @@ if (empty($txnType))
 // Get the ID_SUB and ID_MEMBER amoungst others...
 @list ($ID_SUB, $ID_MEMBER) = $gatewayClass->precheck();
 
-// This would be bad...
-if (empty($ID_MEMBER))
-	generateSubscriptionError($txt['paid_empty_member']);
-
 // Integer these just in case.
 $ID_SUB = (int) $ID_SUB;
 $ID_MEMBER = (int) $ID_MEMBER;
+
+// This would be bad...
+if (empty($ID_MEMBER))
+	generateSubscriptionError($txt['paid_empty_member']);
 
 // Verify the member.
 $request = $smfFunc['db_query']('', '
