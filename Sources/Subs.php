@@ -3638,7 +3638,7 @@ function setupMenuContext()
 	$cacheTime = $modSettings['lastActive'] * 60;
 
 	// All the buttons we can possible want and then some, try pulling the final list of buttons from cache first.
-	if (($buttonData = cache_get_data('menu_buttons-' . implode('_',$user_info['groups']), $cacheTime)) === null || time() - $cacheTime <= $modSettings['settings_updated'])
+	if (($buttonData = cache_get_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $cacheTime)) === null || time() - $cacheTime <= $modSettings['settings_updated'])
 	{
 		$buttons = array(
 			'home' => array(
@@ -3847,7 +3847,7 @@ function setupMenuContext()
 		$buttonData = array($menu_buttons, $load_menu_js);
 
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-			cache_put_data('menu_buttons-' . implode('_',$user_info['groups']) . $context['session_id'], $buttonData, $cacheTime);
+			cache_put_data('menu_buttons-' . implode('_', $user_info['groups']) . '-' . $user_info['language'], $buttonData, $cacheTime);
 	}
 
 	list($context['menu_buttons'], $context['load_menu_js']) = $buttonData;
