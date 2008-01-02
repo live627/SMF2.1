@@ -424,6 +424,27 @@ function template_modify_group()
 	else
 		template_modify_group_classic($context['permission_type']);
 
+	// If this is general permissions also show the default profile.
+	if ($context['permission_type'] == 'membergroup')
+	{
+		echo '
+				<tr class="catbg">
+					<td colspan="2" align="center">
+						', $txt['permissions_board'], '
+					</td>
+				</tr>
+				<tr class="windowbg2">
+					<td colspan="2">
+						<span class="smalltext"><em>', $txt['permissions_board_desc'], '</em></span>
+					</td>
+				</tr>';
+
+		if ($context['view_type'] == 'simple')
+			template_modify_group_simple('board');
+		else
+			template_modify_group_classic('board');
+	}
+
 	if ($context['profile']['can_modify'])
 		echo '
 				<tr class="windowbg2">
@@ -556,13 +577,13 @@ function template_modify_group_simple($type)
 							</tr>';
 	}
 	echo '
-						</table>';
-
-	if ($context['profile']['can_modify'])
-	{
-		// Need to make stuff visible.
-		echo '
+						</table>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+
+	if ($context['profile']['can_modify'] && empty($context['simple_javascript_displayed']))
+	{
+		// Only show this once.
+		$context['simple_javascript_displayed'] = true;
 
 		// Manually toggle the breakdown.
 		echo '
@@ -648,7 +669,11 @@ function template_modify_group_simple($type)
 				toggleBreakdown(id_group, "none");';
 		echo '
 		}';
+	}
 
+	// Some more javascript to be displayed as long as we are editing.
+	if ($context['profile']['can_modify'])
+	{
 		foreach ($permission_data as $id_group => $permissionGroup)
 		{
 			if (empty($permissionGroup['permissions']))
@@ -704,12 +729,10 @@ function template_modify_group_simple($type)
 			determineGroupState(\'', $id_group, '\');';
 			}
 		}
-
-		echo '
-		// ]]></script>';
 	}
 
 	echo '
+		// ]]></script>
 					</td>
 				</tr>';
 }

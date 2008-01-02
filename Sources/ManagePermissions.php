@@ -760,7 +760,7 @@ function ModifyMembergroup()
 		$context['group']['name'] = &$txt['membergroups_members'];
 
 	$context['profile']['id'] = empty($_GET['pid']) ? 0 : (int) $_GET['pid'];
-	$context['permission_type'] = $context['profile']['id'] == 0 ? 'membergroup' : 'board';
+	$context['permission_type'] = empty($context['profile']['id']) ? 'membergroup' : 'board';
 	$context['profile']['can_modify'] = !$context['profile']['id'] || $context['profiles'][$context['profile']['id']]['can_modify'];
 
 	// Set up things a little nicer for board related stuff...
@@ -791,23 +791,21 @@ function ModifyMembergroup()
 			$permissions['membergroup'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['permission'];
 		$smfFunc['db_free_result']($result);
 	}
-	// Fetch current board permissions?
-	else
-	{
-		$result = $smfFunc['db_query']('', '
-			SELECT permission, add_deny
-			FROM {db_prefix}board_permissions
-			WHERE id_group = {int:current_group}
-				AND id_profile = {int:current_profile}',
-			array(
-				'current_group' => $context['group']['id'],
-				'current_profile' => $context['profile']['id'],
-			)
-		);
-		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$permissions['board'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['permission'];
-		$smfFunc['db_free_result']($result);
-	}
+
+	// Fetch current board permissions...
+	$result = $smfFunc['db_query']('', '
+		SELECT permission, add_deny
+		FROM {db_prefix}board_permissions
+		WHERE id_group = {int:current_group}
+			AND id_profile = {int:current_profile}',
+		array(
+			'current_group' => $context['group']['id'],
+			'current_profile' => $context['permission_type'] == 'membergroup' ? 1 : $context['profile']['id'],
+		)
+	);
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+		$permissions['board'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['permission'];
+	$smfFunc['db_free_result']($result);
 
 	// Loop through each permission and set whether it's checked.
 	foreach ($context['permissions'] as $permissionType => $tmp)
@@ -1376,7 +1374,7 @@ function loadAllPermissions($loadType = 'classic')
 				'edit_profile',
 				'delete_account',
 				'use_avatar',
-				'moderate',
+				'moderate_general',
 				'administrate',
 			),
 			'classic' => array(
@@ -1424,29 +1422,29 @@ function loadAllPermissions($loadType = 'classic')
 			'view_mlist' => array(false, 'general', 'view_basic_info'),
 			'who_view' => array(false, 'general', 'view_basic_info'),
 			'search_posts' => array(false, 'general', 'view_basic_info'),
-			'karma_edit' => array(false, 'general', 'moderate'),
+			'karma_edit' => array(false, 'general', 'moderate_general'),
 			'pm_read' => array(false, 'pm', 'use_pm_system'),
 			'pm_send' => array(false, 'pm', 'use_pm_system'),
 			'calendar_view' => array(false, 'calendar', 'view_basic_info'),
 			'calendar_post' => array(false, 'calendar', 'post_calendar'),
-			'calendar_edit' => array(true, 'calendar', 'post_calendar', 'moderate'),
+			'calendar_edit' => array(true, 'calendar', 'post_calendar', 'moderate_general'),
 			'admin_forum' => array(false, 'maintenance', 'administrate'),
 			'manage_boards' => array(false, 'maintenance', 'administrate'),
 			'manage_attachments' => array(false, 'maintenance', 'administrate'),
 			'manage_smileys' => array(false, 'maintenance', 'administrate'),
 			'edit_news' => array(false, 'maintenance', 'administrate'),
-			'access_mod_center' => array(false, 'maintenance', 'moderate'),
-			'moderate_forum' => array(false, 'member_admin', 'moderate'),
+			'access_mod_center' => array(false, 'maintenance', 'moderate_general'),
+			'moderate_forum' => array(false, 'member_admin', 'moderate_general'),
 			'manage_membergroups' => array(false, 'member_admin', 'administrate'),
 			'manage_permissions' => array(false, 'member_admin', 'administrate'),
 			'manage_bans' => array(false, 'member_admin', 'administrate'),
 			'send_mail' => array(false, 'member_admin', 'administrate'),
-			'issue_warning' => array(false, 'member_admin', 'moderate'),
+			'issue_warning' => array(false, 'member_admin', 'moderate_general'),
 			'profile_view' => array(true, 'profile', 'view_basic_info', 'view_basic_info'),
-			'profile_identity' => array(true, 'profile', 'edit_profile', 'moderate'),
-			'profile_extra' => array(true, 'profile', 'edit_profile', 'moderate'),
-			'profile_title' => array(true, 'profile', 'edit_profile', 'moderate'),
-			'profile_remove' => array(true, 'profile', 'delete_account', 'moderate'),
+			'profile_identity' => array(true, 'profile', 'edit_profile', 'moderate_general'),
+			'profile_extra' => array(true, 'profile', 'edit_profile', 'moderate_general'),
+			'profile_title' => array(true, 'profile', 'edit_profile', 'moderate_general'),
+			'profile_remove' => array(true, 'profile', 'delete_account', 'moderate_general'),
 			'profile_server_avatar' => array(false, 'profile', 'use_avatar'),
 			'profile_upload_avatar' => array(false, 'profile', 'use_avatar'),
 			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),

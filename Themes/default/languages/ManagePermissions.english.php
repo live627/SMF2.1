@@ -68,7 +68,8 @@ $txt['permissions_deny_dangerous'] = 'You are about to deny one or more permissi
 
 $txt['permissions_modify_group'] = 'Modify Group';
 $txt['permissions_general'] = 'General Permissions';
-$txt['permissions_board'] = 'Default Board Permissions';
+$txt['permissions_board'] = 'Default Board Profile Permissions';
+$txt['permissions_board_desc'] = 'Note that changing the default board permissions will affect all boards currently assigned the &quot;Default&quot; permissions profile.';
 $txt['permissions_commit'] = 'Save changes';
 $txt['permissions_on'] = 'in profile';
 $txt['permissions_local_for'] = 'Permissions for group';
@@ -268,7 +269,7 @@ $txt['permissiongroup_simple_post_calendar'] = 'Post events onto the calendar';
 $txt['permissiongroup_simple_edit_profile'] = 'Personalise their profile';
 $txt['permissiongroup_simple_delete_account'] = 'Delete their account';
 $txt['permissiongroup_simple_use_avatar'] = 'Select or upload an avatar';
-$txt['permissiongroup_simple_moderate'] = 'Moderate the entire forum';
+$txt['permissiongroup_simple_moderate_general'] = 'Moderate the entire forum';
 $txt['permissiongroup_simple_administrate'] = 'Carry out administrative duties';
 
 $txt['permissionname_simple_calendar_edit_own'] = 'Edit their own calendar events';
