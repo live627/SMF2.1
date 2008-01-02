@@ -327,7 +327,7 @@ function template_group_members()
 
 	echo '
 		<form action="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : '') , ';sa=members;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<table width="80%" cellpadding="4" cellspacing="0" border="0" class="tborder" align="center">
+			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="tborder" align="center">
 				<tr class="titlebg">
 					<td align="left">', $context['page_title'], '</td>
 				</tr>
@@ -462,7 +462,7 @@ function template_group_index()
 		<div style="padding: 3px;">', theme_linktree(), '</div>';
 
 	echo '
-		<table width="80%" cellpadding="4" cellspacing="1" border="0" class="bordercolor" align="center">
+		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="2" align="left">', $context['page_title'], '</td>
 			</tr>

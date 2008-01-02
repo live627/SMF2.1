@@ -451,7 +451,15 @@ function PlushSearch2()
 		if ($smfFunc['db_num_rows']($request) > $maxMembersToSearch)
 			$userQuery = '';
 		elseif ($smfFunc['db_num_rows']($request) == 0)
-			$userQuery = 'm.id_member = 0 AND (m.poster_name LIKE \'' . implode('\' OR m.poster_name LIKE \'', $possible_users) . '\')';
+		{
+			$userQuery = $smfFunc['db_quote'](
+				'm.id_member = {int:id_member_guest} AND ({raw:match_possible_guest_names})',
+				 array(
+				 	'id_member_guest' => 0,
+				 	'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
+				 )
+			);
+		}
 		else
 		{
 			$memberlist = array();
@@ -984,12 +992,13 @@ function PlushSearch2()
 			$inserts = array();
 			foreach ($searchWords as $orIndex => $words)
 			{
+				$subject_query_params = array();
 				$subject_query = array(
 					'from' => '{db_prefix}topics AS t',
 					'inner_join' => array(),
 					'left_join' => array(),
 					'where' => array(
-						't.approved = 1',
+						't.approved = {int:is_approved}',
 					),
 				);
 
@@ -1001,15 +1010,17 @@ function PlushSearch2()
 					$numTables++;
 					if (in_array($subjectWord, $excludedSubjectWords))
 					{
-						$subject_query['left_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE \'%' . $subjectWord . '%\'' : '= \'' . $subjectWord . '\'') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
+						$subject_query['left_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE {string:subject_words_' . $numTables . '_wild}' : '= {string:subject_words_' . $numTables . '}') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
 						$subject_query['where'][] = '(subj' . $numTables . '.word IS NULL)';
 					}
 					else
 					{
 						$subject_query['inner_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.id_topic = ' . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
-						$subject_query['where'][] = 'subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE \'%' . $subjectWord . '%\'' : '= \'' . $subjectWord . '\'');
+						$subject_query['where'][] = 'subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE {string:subject_words_' . $numTables . '_wild}' : '= {string:subject_words_' . $numTables . '}');
 						$prev_join = $numTables;
 					}
+					$subject_query_params['subject_words_' . $numTables] = $subjectWord;
+					$subject_query_params['subject_words_' . $numTables . '_wild'] = '%' . $subjectWord . '%';
 				}
 
 				if (!empty($userQuery))
@@ -1062,7 +1073,7 @@ function PlushSearch2()
 					WHERE ' . implode('
 						AND ', $subject_query['where']) . (empty($modSettings['search_max_results']) ? '' : '
 					LIMIT ' . ($modSettings['search_max_results'] - $numSubjectResults)),
-					array(
+					array_merge($subject_query_params, array(
 						'id_search' => $_SESSION['search_cache']['id_search'],
 						'query_from' => $subject_query['from'],
 						'weight_age' => $weight['age'],
@@ -1071,7 +1082,8 @@ function PlushSearch2()
 						'weight_sticky' => $weight['frequency'],
 						'weight_subject' => $weight['frequency'],
 						'weight_total' => $weight_total,
-					)
+						'is_approved' => 1,
+					))
 				);
 
 				// If the database doesn't support IGNORE to make this fast we need to do some tracking.
@@ -1166,25 +1178,27 @@ function PlushSearch2()
 				$inserts = array();
 				// Create a temporary table to store some preliminary results in.
 				$smfFunc['db_search_query']('drop_tmp_log_search_topics', '
-					DROP TABLE IF EXISTS ' . $db_prefix . 'tmp_log_search_topics',
+					DROP TABLE IF EXISTS {db_prefix}tmp_log_search_topics',
 					array(
 					)
 				);
 				$createTemporary = $smfFunc['db_search_query']('create_tmp_log_search_topics', '
-					CREATE TEMPORARY TABLE ' . $db_prefix . 'tmp_log_search_topics (
-						id_topic mediumint(8) unsigned NOT NULL default \'0\',
+					CREATE TEMPORARY TABLE {db_prefix}tmp_log_search_topics (
+						id_topic mediumint(8) unsigned NOT NULL default {string:string_zero},
 						PRIMARY KEY (id_topic)
 					) TYPE=HEAP',
 					array(
+						'string_zero' => '0',
 					)
 				) !== false;
 
 				// Clean up some previous cache.
 				if (!$createTemporary)
 					$smfFunc['db_search_query']('delete_log_search_topics', '
-						DELETE FROM ' . $db_prefix . 'log_search_topics
-						WHERE id_search = ' . $_SESSION['search_cache']['id_search'],
+						DELETE FROM {db_prefix}log_search_topics
+						WHERE id_search = {int:search_id},
 						array(
+							'search_id' => $_SESSION['search_cache']['id_search'],
 						)
 					);
 

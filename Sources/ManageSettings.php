@@ -963,7 +963,7 @@ function ShowCustomProfiles()
 					'style' => 'text-align: left;',
 				),
 				'data' => array(
-					'db_htmlsafe' => 'label',
+					'db' => 'label',
 					'style' => 'width: 60%;',
 				),
 			),

@@ -253,6 +253,30 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30
 /******************************************************************************/
 
 ---# Adding multiple attachment path functionality.
-ALTER TABLE {$db_prefix}attachments
-ADD COLUMN id_folder smallint NOT NULL default '1';
+---{
+if ($smfFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}attachments
+		ADD COLUMN id_folder smallint");
+
+	upgrade_query("
+		UPDATE {$db_prefix}attachments
+		SET id_folder = 1");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}attachments
+		ALTER COLUMN id_folder SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}attachments
+		ALTER COLUMN id_folder SET default '1'");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}attachments
+		ADD COLUMN id_folder smallint NOT NULL default '1'");
+}
+---}
 ---#

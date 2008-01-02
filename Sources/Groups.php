@@ -620,7 +620,7 @@ function GroupRequests()
 	$listOptions = array(
 		'id' => 'group_request_list',
 		'title' => $txt['mc_group_requests'],
-		'width' => '85%',
+		'width' => '100%',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['mc_groupr_none_found'],
 		'base_href' => $scripturl . '?action=groups;sa=requests',

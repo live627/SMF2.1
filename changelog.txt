@@ -19,6 +19,9 @@ January 2008
  - Undid the JS solution open external links in a new window. (Lots of files) [MotM]
  + Added a theme setting to let SMF know that the theme is using the strict doctype. (index template) [MotM]
  ! When using the strict doctype replace target="_blank" with a javascript solution to maintain validation. (Subs.php) [MotM]
+ ! The installer wasn't quite working right at user account creation. (install.php) [Bug 1188]
+ * All Moderation Centre templates should be at 100% width to look right with the top bar. (Several files) [Bug 1156]
+ ! Few errors with the PostgreSQL and SQLite implementations. (Subs-Db-xxx.php) [Bug 1193]
 
 
 December 2007

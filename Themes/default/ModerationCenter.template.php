@@ -689,7 +689,7 @@ function template_moderation_settings()
 
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=settings" method="post" accept-charset="', $context['character_set'], '">
-		<table width="80%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder">
+		<table width="100%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['mc_prefs_title'], '</td>
 			</tr>

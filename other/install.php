@@ -1292,7 +1292,7 @@ function doStep2()
 		$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? $smfFunc['db_escape_string'](substr($smfFunc['db_unescape_string']($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
 
-		$smfFunc['db_insert']('',
+		$request = $smfFunc['db_insert']('',
 			$db_prefix . 'members',
 			array(
 				'member_name' => 'string-25', 'real_name' => 'string-25', 'passwd' => 'string', 'email_address' => 'string',
@@ -1370,6 +1370,22 @@ function doStep2()
 			array('session_id')
 		);
 	}
+
+	// We're going to want our lovely $modSettings now.
+	$request = $smfFunc['db_query']('', '
+		SELECT variable, value
+		FROM {db_prefix}settings',
+		array(
+		)
+	);
+	// Only proceed if we can load the data.
+	if ($request)
+	{
+		while ($row = $smfFunc['db_fetch_row']($request))
+			$modSettings[$row[0]] = $row[1];
+		$smfFunc['db_free_result']($request);
+	}
+
 	updateStats('member');
 	updateStats('message');
 	updateStats('topic');
@@ -1430,19 +1446,9 @@ function doStep2()
 
 	// Now is the perfect time to fetch the SM files.
 	require_once($sourcedir . '/ScheduledTasks.php');
-	// Need to make sure all the settings are loaded.
-	$request = $smfFunc['db_query']('', '
-		SELECT variable, value
-		FROM {db_prefix}settings',
-		array(
-		)
-	);
-	if ($request) // Only proceed if we can load the data.
+	// Sanity check that they loaded earlier!
+	if (isset($modSettings['recycle_board']))
 	{
-		$modSettings = array();
-		while ($row = $smfFunc['db_fetch_row']($request))
-			$modSettings[$row[0]] = $row[1];
-		$smfFunc['db_free_result']($request);
 		$forum_version = $current_smf_version;  // The variable is usually defined in index.php so lets just use our variable to do it for us.
 		scheduled_fetchSMfiles(); // Now go get those files!
 	}

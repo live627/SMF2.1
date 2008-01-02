@@ -532,7 +532,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 			if (in_array($columnName, $keys))
 				$where .= (empty($where) ? '' : ' AND') . ' ' . $columnName . ' = ' . sprintf('{%1$s:%2$s}', $type, $count);
 		}
-		$updateData = substr($insertData, 0, -2);
+		$updateData = substr($updateData, 0, -2);
 
 		// Try and update the entries.
 		foreach ($data as $k => $entry)
