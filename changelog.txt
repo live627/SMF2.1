@@ -16,8 +16,9 @@ January 2008
  ! No longer allow author names in quotes to contain BBC. (Subs.php) [Bug 1179]
  ! Many asthetic typos and the like within the code. (Several files) [Bug 1167]
  ! Allow users to skip certain steps during upgrade, and fix a typo with the warning message inserted into language files. (FixLanguage.php, upgrade.php) [Bug 1171]
- + Added a theme setting to let SMF know that the theme is using the strict doctype. (index template)
- ! When using the strict doctype replace target="_blank" with a javascript solution to maintain validation. (Subs.php)
+ - Undid the JS solution open external links in a new window. (Lots of files) [MotM]
+ + Added a theme setting to let SMF know that the theme is using the strict doctype. (index template) [MotM]
+ ! When using the strict doctype replace target="_blank" with a javascript solution to maintain validation. (Subs.php) [MotM]
 
 
 December 2007
@@ -202,6 +203,7 @@ November 2007
  ! Make the rich editor it's own control to make it easier to deploy elsewhere. (Post.php, PersonalMessages.php, Subs-Editor.php, Post and PersonalMessages templates)
  * Added template for all future controls and used it for the Rich Edit. (GeneralControls.php)
  ! Don't use the characters S and Z in visual verification just like the comment told us. (MangeRegistration.php, PersonalMessage.php, Post.php, Register.php)
+ ! Removed target="_blank" from links and moved to a JS solution.  This should allow strict doc-type to be used. (Lots of files)
  * Change seperate to the correct spelling of separate.  Theme authors should note that this changed the setting name from 'seperate_sticky_lock' to 'separate_sticky_lock'. (index, Recent, PersonalMessage, BoardIndex, MessageIndex, Search template files, Reports.php, Subs-Post.php)
  ! Added the option to view user posts on a particular board. (Profile.php)
  ! Added a BBC tag to act like the bidirectional override tag. (Subs.php)
