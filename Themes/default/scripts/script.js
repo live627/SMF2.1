@@ -1049,18 +1049,6 @@ function smf_itemPos(itemHandle)
 	return [itemX, itemY];
 }
 
-function get_extern_links()
-{
-	var links = document.getElementsByTagName('a');
-	for (var i=0; i < links.length; i++)
-	{
-		if (links[i].rel.match('new_win'))
-		{
-			links[i].target = '_blank';
-		}
-	}
-}
-
 var onload_events = new Array();
 function add_load_event(func)
 {
@@ -1093,5 +1081,3 @@ function add_load_event(func)
 		// Ok just add it to the list of functions to call.
 		onload_events[onload_events.length] = func;
 }
-
-add_load_event(get_extern_links);

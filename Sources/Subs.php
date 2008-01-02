@@ -1178,13 +1178,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'ftp',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" class="bbc_ftp" rel="new_win">$1</a>',
+				'content' => '<a href="$1" class="bbc_ftp new_win" target="_blank">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'ftp',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" class="bbc_ftp" rel="new_win">',
+				'before' => '<a href="$1" class="bbc_ftp new_win" target="_blank">',
 				'after' => '</a>',
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
@@ -1200,11 +1200,11 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'flash',
 				'type' => 'unparsed_commas_content',
 				'test' => '\d+,\d+\]',
-				'content' => ($context['browser']['is_ie'] && !$context['browser']['is_mac_ie'] ? '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="$2" height="$3"><param name="movie" value="$1" /><param name="play" value="true" /><param name="loop" value="true" /><param name="quality" value="high" /><param name="AllowScriptAccess" value="never" /><embed src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" rel="new_win">$1</a></noembed></object>' : '<embed type="application/x-shockwave-flash" src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" rel="new_win">$1</a></noembed>'),
+				'content' => ($context['browser']['is_ie'] && !$context['browser']['is_mac_ie'] ? '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="$2" height="$3"><param name="movie" value="$1" /><param name="play" value="true" /><param name="loop" value="true" /><param name="quality" value="high" /><param name="AllowScriptAccess" value="never" /><embed src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" target="_blank" class="new_win">$1</a></noembed></object>' : '<embed type="application/x-shockwave-flash" src="$1" width="$2" height="$3" play="true" loop="true" quality="high" AllowScriptAccess="never" /><noembed><a href="$1" target="_blank" class="new_win">$1</a></noembed>'),
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					if (isset($disabled[\'url\']))
 						$tag[\'content\'] = \'$1\';'),
-				'disabled_content' => '<a href="$1" rel="new_win">$1</a>',
+				'disabled_content' => '<a href="$1" target="_blank" class="new_win">$1</a>',
 			),
 			array(
 				'tag' => 'green',
@@ -1519,13 +1519,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" class="bbc_link" rel="new_win">$1</a>',
+				'content' => '<a href="$1" class="bbc_link" target="_blank" class="new_win">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" class="bbc_link" rel="new_win">',
+				'before' => '<a href="$1" class="bbc_link" target="_blank" class="new_win">',
 				'after' => '</a>',
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
@@ -2705,6 +2705,21 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	// For session check verfication.... don't switch browsers...
 	$_SESSION['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
+	if (!empty($settings['strict_doctype']))
+	{		
+		// The theme author wants to use the STRICT doctype (only God knows why).
+		$temp = ob_get_contents();
+		if (function_exists('ob_clean'))
+			ob_clean();
+		else
+		{
+			ob_end_clean();
+			ob_start('ob_sessrewrite');
+		}
+
+		echo str_replace('target="_blank"', 'onclick="this.target=\'_blank\'"', $temp);
+	}
+
 	// Hand off the output to the portal, etc. we're integrated with.
 	if (isset($modSettings['integrate_exit']) && function_exists($modSettings['integrate_exit']))
 		call_user_func($modSettings['integrate_exit'], $do_footer && !WIRELESS);
@@ -3275,7 +3290,7 @@ function theme_copyright($get_it = false)
 	{
 		$found = true;
 		echo '
-			<div style="white-space: normal;">The administrator doesn\'t want a copyright notice saying this is copyright 2006 by <a href="http://www.simplemachines.org/about/copyright.php" rel="new_win">Simple Machines LLC</a>, and named <a href="http://www.simplemachines.org/">SMF</a>, so the forum will honor this request and be quiet.</div>';
+			<div style="white-space: normal;">The administrator doesn\'t want a copyright notice saying this is copyright 2006 by <a href="http://www.simplemachines.org/about/copyright.php" target="_blank" class="new_win">Simple Machines LLC</a>, and named <a href="http://www.simplemachines.org/">SMF</a>, so the forum will honor this request and be quiet.</div>';
 	}
 	//!!! Remove Lewis Media before release (Not yet as it'll break site language files!)
 	// If it's in the copyright, and we are outputting it... it's been found.
@@ -3391,7 +3406,7 @@ function db_debug_junk()
 	}
 
 	echo '
-	<a href="', $scripturl, '?action=viewquery" rel="new_win">Queries used: ', $db_count, $warnings == 0 ? '' : ', ' . $warnings . ' warning(s)', '</a>.<br />
+	<a href="', $scripturl, '?action=viewquery" target="_blank" class="new_win">Queries used: ', $db_count, $warnings == 0 ? '' : ', ' . $warnings . ' warning(s)', '</a>.<br />
 	<br />';
 
 	if ($_SESSION['view_queries'] == 1 && !empty($db_cache))
@@ -3400,7 +3415,7 @@ function db_debug_junk()
 			$is_select = substr(trim($qq['q']), 0, 6) == 'SELECT' || preg_match('~^INSERT(?: IGNORE)? INTO \w+(?:\s+\([^)]+\))?\s+SELECT .+$~s', trim($qq['q'])) != 0;
 
 			echo '
-	<b>', $is_select ? '<a href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '" rel="new_win" style="text-decoration: none;">' : '', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars(ltrim($qq['q'], "\n\r")))) . ($is_select ? '</a></b>' : '</b>') . '<br />
+	<b>', $is_select ? '<a href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '" target="_blank" class="new_win" style="text-decoration: none;">' : '', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars(ltrim($qq['q'], "\n\r")))) . ($is_select ? '</a></b>' : '</b>') . '<br />
 	&nbsp;&nbsp;&nbsp;';
 			if (!empty($qq['f']) && !empty($qq['l']))
 				echo 'in <i>' . $qq['f'] . '</i> line <i>' . $qq['l'] . '</i>, ';

@@ -237,15 +237,15 @@ function template_body_below()
 	<table cellspacing="0" cellpadding="3" border="0" align="center" width="95%" class="tborder">
 		<tr style="background-color: #ffffff;">
 			<td width="28%" valign="middle" align="right">
-				<a href="http://www.mysql.com/" rel="new_win"><img src="', $settings['images_url'], '/mysql.gif" alt="', $txt['powered_by_mysql'], '" width="88" height="31" border="0" /></a>
-				<a href="http://www.php.net/" rel="new_win"><img src="', $settings['images_url'], '/php.gif" alt="', $txt['powered_by_php'], '" width="88" height="31" border="0" /></a>
+				<a href="http://www.mysql.com/" target="_blank" class="new_win"><img src="', $settings['images_url'], '/mysql.gif" alt="', $txt['powered_by_mysql'], '" width="88" height="31" border="0" /></a>
+				<a href="http://www.php.net/" target="_blank" class="new_win"><img src="', $settings['images_url'], '/php.gif" alt="', $txt['powered_by_php'], '" width="88" height="31" border="0" /></a>
 			</td>
 			<td width="44%" valign="middle" align="center">
 				', theme_copyright(), '
 			</td>
 			<td width="28%" valign="middle" align="left">
-				<a href="http://validator.w3.org/check/referer" rel="new_win"><img src="', $settings['images_url'], '/valid-xhtml10.gif" alt="', $txt['valid_xhtml'], '" width="88" height="31" border="0" /></a>
-				<a href="http://jigsaw.w3.org/css-validator/check/referer" rel="new_win"><img src="', $settings['images_url'], '/valid-css.gif" alt="', $txt['valid_css'], '" width="88" height="31" border="0" /></a>
+				<a href="http://validator.w3.org/check/referer" target="_blank" class="new_win"><img src="', $settings['images_url'], '/valid-xhtml10.gif" alt="', $txt['valid_xhtml'], '" width="88" height="31" border="0" /></a>
+				<a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank" class="new_win"><img src="', $settings['images_url'], '/valid-css.gif" alt="', $txt['valid_css'], '" width="88" height="31" border="0" /></a>
 			</td>
 		</tr>
 	</table>';

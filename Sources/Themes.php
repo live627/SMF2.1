@@ -2006,7 +2006,7 @@ function template_menu()
 	// Show the [home] and [help] buttons.
 	echo \'
 				<a href="\', $scripturl, \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[\'home\'] . \'" border="0" />\' : $txt[\'home\']), \'</a>\', $context[\'menu_separator\'], \'
-				<a href="\', $scripturl, \'?action=help" rel="new_win">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/help.gif" alt="\' . $txt[\'help\'] . \'" border="0" />\' : $txt[\'help\']), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'?action=help" target="_blank" class="new_win">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/help.gif" alt="\' . $txt[\'help\'] . \'" border="0" />\' : $txt[\'help\']), \'</a>\', $context[\'menu_separator\'];
 
 	// How about the [search] button?
 	if ($context[\'allow_search\'])
