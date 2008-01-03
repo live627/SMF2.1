@@ -125,13 +125,17 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 	require_once($sourcedir . '/ManageAttachments.php');
 	removeAttachments(array('id_member' => $memID));
+
+	$id_folder = !empty($modSettings['currentAttachmentUploadDir']) ? $modSettings['currentAttachmentUploadDir'] : 1;
 	$smfFunc['db_insert']('',
 		$db_prefix . 'attachments',
 		array(
-			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'int', 'fileext' => 'int', 'size' => 'int',
+			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8', 'size' => 'int',
+			'id_folder' => 'int',
 		),
 		array(
 			$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $ext, 1,
+			$id_folder,
 		),
 		array('id_attach')
 	);
