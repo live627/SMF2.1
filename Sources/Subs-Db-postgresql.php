@@ -603,19 +603,23 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	{
 		// Setup an UPDATE template.
 		$updateData = '';
-		$where = ' ';
+		$where = '';
 		$count = 0;
 		foreach ($columns as $columnName => $type)
 		{
 			// Are we restricting the length?
 			if (strpos($type, 'string-') !== false)
-				$updateData .= sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count++);
+				$actualType = sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
 			else
-				$updateData .= sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count++);
+				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
+
+			$updateData .= $actualType;
 
 			// Has it got a key?
 			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND') . ' ' . $columnName . ' = ' . sprintf('{%1$s:%2$s}', $type, $count);
+				$where .= (empty($where) ? '' : ' AND') . ' ' . $columnName . ' = ' . $actualType;
+
+			$count++;
 		}
 		$updateData = substr($updateData, 0, -2);
 
@@ -625,7 +629,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 			$smfFunc['db_query']('', '
 				UPDATE ' . $table . '
 				SET ' . $updateData . '
-				' . $where,
+				' . (empty($where) ? '' : ' WHERE ' . $where),
 				$entry, $connection
 			);
 
