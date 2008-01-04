@@ -594,7 +594,7 @@ function loadBoard()
 		return;
 	}
 
-	if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] == 3))
+	if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] >= 3))
 	{
 		// !!! SLOW?
 		if (!empty($topic))
@@ -678,7 +678,7 @@ function loadBoard()
 			}
 			while ($row = $smfFunc['db_fetch_assoc']($request));
 
-			if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] == 3))
+			if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] >= 3))
 			{
 				// !!! SLOW?
 				if (!empty($topic))
@@ -877,7 +877,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	$users = !is_array($users) ? array($users) : array_unique($users);
 	$loaded_ids = array();
 
-	if (!$is_name && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] == 3)
+	if (!$is_name && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
 	{
 		$users = array_values($users);
 		for ($i = 0, $n = count($users); $i < $n; $i++)
@@ -978,7 +978,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 		$smfFunc['db_free_result']($request);
 	}
 
-	if (!empty($new_loaded_ids) && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] == 3)
+	if (!empty($new_loaded_ids) && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
 	{
 		for ($i = 0, $n = count($new_loaded_ids); $i < $n; $i++)
 			cache_put_data('member_data-' . $set . '-' . $new_loaded_ids[$i], $user_profile[$new_loaded_ids[$i]], 240);

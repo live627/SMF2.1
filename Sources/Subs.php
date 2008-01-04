@@ -565,7 +565,7 @@ function updateMemberData($members, $data)
 
 		foreach ($members as $member)
 		{
-			if ($modSettings['cache_enable'] == 3)
+			if ($modSettings['cache_enable'] >= 3)
 			{
 				cache_put_data('member_data-profile-' . $member, null, 120);
 				cache_put_data('member_data-normal-' . $member, null, 120);

@@ -25,6 +25,9 @@ January 2008
  ! When editing the general permissions also show the default board permission profile. (ManagePermissions.php, ManagePermissions template, ManagePermissions language file) [Bug 1166]
  ! Typo in the ConvertEntities was causing the progress bar in the not_done template to not show. (ManageMaintenance.php) [MotM]
  + Added the ability to move topics from one board to another in the maintenance section. (ManageMaintenance.php, ManageMaintenance template, ManageMaintenance and Help language files) [MotM]
+ ! Don't use all of $_GET in the xmlfeed cache key, it is full of dirty information. (News.php) [MotM]
+ ! When comparing against caching level 3 use an inequality instead of a strict check to allow for future expansion. (Subs.php, Load.php, MoveTopic.php)
+ ! Moved xmlfeed caching for guests from level 2 to level 3. (News.php) [MotM]
 
 
 December 2007

@@ -367,7 +367,7 @@ function MoveTopic2()
 	sendNotifications($topic, 'move');
 
 	// Update the cache?
-	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] == 3)
+	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
 		cache_put_data('topic_board-' . $topic, null, 120);
 
 	// Why not go back to the original board in case they want to keep moving?

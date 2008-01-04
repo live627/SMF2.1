@@ -588,7 +588,7 @@ function Display()
 	$context['mark_unread_time'] = $topicinfo['new_from'];
 
 	// For quick reply we need a response prefix in the default forum language.
-	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
+	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix', 600)))
 	{
 		if ($language === $user_info['language'])
 			$context['response_prefix'] = $txt['response_prefix'];

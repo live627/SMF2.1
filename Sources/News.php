@@ -220,15 +220,22 @@ function ShowXmlFeed()
 	if (empty($_GET['sa']) || !isset($subActions[$_GET['sa']]))
 		$_GET['sa'] = 'recent';
 
+	// We only want some information, not all of it.
+	$cachekey = array($_GET['type'], $_GET['action'], $_GET['limit'], $_GET['sa']);
+	foreach(array('board', 'boards', 'c') AS $var)
+		if (isset($_REQUEST[$var]))
+			$cachekey[] = $_REQUEST[$var];
+	$cachekey = md5(serialize($cachekey));
+
 	// Get the associative array representing the xml.
-	if ($user_info['is_guest'] && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-		$xml = cache_get_data('xmlfeed-' . $xml_format . ':' . md5(serialize($_GET)), 240);
+	if ($user_info['is_guest'] && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
+		$xml = cache_get_data('xmlfeed-' . $xml_format . ':' . $cachekey, 240);
 	if (empty($xml))
 	{
 		$xml = $subActions[$_GET['sa']][0]($xml_format);
 
-		if ($user_info['is_guest'] && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-			cache_put_data('xmlfeed-' . $xml_format . ':' . md5(serialize($_GET)), $xml, 240);
+		if ($user_info['is_guest'] && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
+			cache_put_data('xmlfeed-' . $xml_format . ':' . $cachekey, $xml, 240);
 	}
 
 	$feed_title = htmlspecialchars(strip_tags($context['forum_name'])) . (isset($feed_title) ? $feed_title : '');
