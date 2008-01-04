@@ -195,7 +195,54 @@ function template_maintain()
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					</form>
 				</td>
+			</tr>';
+	// We get to move topics around now.
+	echo '
+			<tr class="titlebg">
+				<td><a href="', $scripturl, '?action=helpadmin;help=move_topics_maintenance" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['move_topics_maintenance'], '</td>
 			</tr>
+			<tr>
+				<td class="windowbg2" style="padding-bottom: 1ex;">
+					<form action="', $scripturl, '?action=admin;area=maintain;sa=movetopics" method="post" accept-charset="', $context['character_set'], '" name="move_topics">
+						<label for="id_board_from">', $txt['move_topics_from'], ': </label>
+						<select name="id_board_from" id="id_board_from">';
+	// From boards.
+	foreach ($context['categories'] as $category)
+	{
+		echo '
+							<option disabled="disabled">----------------------------------------------------</option>
+							<option disabled="disabled">', $category['name'], '</option>
+							<option disabled="disabled">----------------------------------------------------</option>';
+		foreach ($category['boards'] as $board)
+			echo '
+							<option value="', $board['id'], '"> ' . str_repeat('--', $board['child_level']) . '&nbsp;' . $board['name'] . '</option>';
+	}
+	echo '
+						</select><br />
+						<label for="id_board_to">', $txt['move_topics_to'], ':</label>
+						<select name="id_board_to" id="id_board_to">';
+	// From boards.
+	foreach ($context['categories'] as $category)
+	{
+		echo '
+							<option disabled="disabled">----------------------------------------------------</option>
+							<option disabled="disabled">', $category['name'], '</option>
+							<option disabled="disabled">----------------------------------------------------</option>';
+		foreach ($category['boards'] as $board)
+			echo '
+							<option value="', $board['id'], '"> ' . str_repeat('--', $board['child_level']) . '&nbsp;' . $board['name'] . '</option>';
+	}
+	echo '
+						</select><br />
+						<div align="right" style="margin: 1ex;">
+							<input type="submit" value="', $txt['move_topics_now'], '" onclick="var confirmText = \'', $txt['move_topics_confirm'] . '\'; return confirm(confirmText.replace(/%board_from%/, document.forms.move_topics.id_board_from.options[document.forms.move_topics.id_board_from.selectedIndex].text.replace(/^--+/, \'\')).replace(/%board_to%/, document.forms.move_topics.id_board_to.options[document.forms.move_topics.id_board_to.selectedIndex].text.replace(/^--+/, \'\')));" />
+						</div>
+						<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					</form>
+				</td>
+			</tr>';
+
+	echo '
 		</table>';
 
 	// Pop up a box to say function completed if the user has been redirected back here from a function they ran.

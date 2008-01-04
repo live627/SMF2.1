@@ -22,7 +22,9 @@ January 2008
  ! The installer wasn't quite working right at user account creation. (install.php) [Bug 1188]
  * All Moderation Centre templates should be at 100% width to look right with the top bar. (Several files) [Bug 1156]
  ! Few errors with the PostgreSQL and SQLite implementations. (Subs-Db-xxx.php) [Bug 1193]
- ! When editing the general permissions also show the default board permission profile. (ManagePermissions.ph, ManagePermissions template, ManagePermissions language file) [Bug 1166]
+ ! When editing the general permissions also show the default board permission profile. (ManagePermissions.php, ManagePermissions template, ManagePermissions language file) [Bug 1166]
+ ! Typo in the ConvertEntities was causing the progress bar in the not_done template to not show. (ManageMaintenance.php) [MotM]
+ + Added the ability to move topics from one board to another in the maintenance section. (ManageMaintenance.php, ManageMaintenance template, ManageMaintenance and Help language files) [MotM]
 
 
 December 2007
@@ -177,7 +179,7 @@ December 2007
  ! Magic quotes removal wasn't working properly, causing login to fail. (QueryString.php)
  ! Applications can now request that the database error handler return immediately for the purposes of upgrade etc where a visual error is not appropriate. (Subs-Db-xxx.php)
  ! Package manager correctly extracts files from archives again. (Subs-Package.php) [Bug 1184]
- 
+
 
 November 2007
 --------------------------------------------------------------------------------

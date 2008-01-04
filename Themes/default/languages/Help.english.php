@@ -498,4 +498,5 @@ $helptxt['spider_group'] = 'By selecting a restrictive group, when a guest is de
 $helptxt['birthday_email'] = 'Choose the index of the birthday email message to use.  A preview will be shown in the Email Subject and Email Body fields.<br /><strong>Note:</strong> Setting this option does not automatically enable birthday emails.  To enable birthday emails use the <a href="%1$s?action=admin;area=maintain;sa=tasks;sesc=%2$s">Scheduled Tasks</a> page and enable the birthday email task.';
 $helptxt['pm_bcc'] = 'When sending a personal message you can choose to add a recipient as BCC or &quot;Blind Carbon Copy&quot;. BCC recipients do not have their identities revealed to other recipients of the message.';
 
+$helptxt['move_topics_maintenance'] = 'This will allow you to move all the posts from one board to another board.';
 ?>

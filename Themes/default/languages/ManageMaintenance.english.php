@@ -236,4 +236,11 @@ $txt['entity_convert_only_utf8'] = 'The database needs to be in UTF-8 format bef
 $txt['entity_convert_introduction'] = 'This function will convert all characters that are stored in the database as HTML-entities to UTF-8 characters. This is especially useful when you have just converted your forum from a character set like ISO-8859-1 while non-latin characters were used on the forum. The browser then sends all characters as HTML-entities. For example, the HTML-entity &amp;#945; represents the greek letter &#945; (alpha). Converting entities to UTF-8 will improve searching and sorting of text and reduce storage size.';
 $txt['entity_convert_proceed'] = 'Proceed';
 
+// Move topics out.
+$txt['move_topics_maintenance'] = 'Move Topics';
+$txt['move_topics_from'] = 'Move topics from';
+$txt['move_topics_to'] = 'Move topics to';
+$txt['move_topics_now'] = 'Move now';
+$txt['move_topics_confirm'] = 'Are you sure you want to move ALL the topics from \\\'%board_from%\\\' to \\\'%board_to%\\\' the selected board?';
+
 ?>

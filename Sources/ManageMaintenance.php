@@ -91,7 +91,11 @@ if (!defined('SMF'))
 		- accessed via ?action=admin;area=maintain;sa=recount.
 
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
-		// !!
+		// !!!
+
+	mixed MoveTopicsMaintenance()
+		- Moves topics from one board to another.
+		- User the not_done template to pause the process.
 */
 
 // The maintenance access point.
@@ -114,6 +118,7 @@ function ManageMaintenance()
 		'destroy' => 'Maintenance',
 		'logs' => 'Maintenance',
 		'general' => 'Maintenance',
+		'movetopics' => 'MoveTopicsMaintenance',
 		'optimize' => 'OptimizeTables',
 		'recount' => 'AdminBoardRecount',
 		'taskedit' => 'EditTask',
@@ -1159,7 +1164,7 @@ function ConvertEntities()
 			if (time() - $context['start_time'] > 10)
 			{
 				// Calculate an approximation of the percentage done.
-				$context['percent_done'] = round(100 * ($context['table'] + ($context['start'] / $max_value)) / $context['num_tables'], 1);
+				$context['continue_percent'] = round(100 * ($context['table'] + ($context['start'] / $max_value)) / $context['num_tables'], 1);
 				$context['continue_get_data'] = '?action=admin;area=maintain;sa=convertentities;table=' . $context['table'] . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
 				return;
 			}
@@ -1172,7 +1177,7 @@ function ConvertEntities()
 	fix_serialized_columns();
 
 	// If we're here, we must be done.
-	$context['percent_done'] = 100;
+	$context['continue_percent'] = 100;
 	$context['continue_get_data'] = '?action=admin;area=maintain';
 	$context['last_step'] = true;
 }
@@ -1795,6 +1800,102 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	}
 
 	return $do_include;
+}
+
+function MoveTopicsMaintenance()
+{
+	global $smfFunc, $sourcedir, $context, $txt;
+
+	// Only admins.
+	isAllowedTo('admin_forum');
+
+	checkSession('request');
+
+	// Set up to the context.
+	$context['page_title'] =  $txt['not_done_title'];
+	$context['continue_countdown'] = '3';
+	$context['continue_post_data'] = '';
+	$context['continue_get_data'] = '';
+	$context['sub_template'] = 'not_done';
+	$context['start'] = empty($_REQUEST['start']) ? 0 : (int) $_REQUEST['start'];
+	$context['start_time'] =  time();
+
+	// First time we do this?
+	$id_board_from = isset($_POST['id_board_from']) ? (int) $_POST['id_board_from'] : (int) $_REQUEST['id_board_from'];
+	$id_board_to = isset($_POST['id_board_to']) ? (int) $_POST['id_board_to'] : (int) $_REQUEST['id_board_to'];
+
+	// No boards then this is your stop.
+	if (empty($id_board_from) || empty($id_board_to))
+		return;
+
+	// How many topics are we converting?
+	if (!isset($_REQUEST['totaltopics']))
+	{
+		$request = $smfFunc['db_query']('', '
+			SELECT COUNT(*)
+			FROM {db_prefix}topics
+			WHERE id_board = {int:id_board_from}',
+			array(
+				'id_board_from' => $id_board_from,
+			)
+		);
+		list ($total_topics) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
+	}
+	else
+		$total_topics = (int) $_REQUEST['totaltopics'];
+
+	// Seems like we need this here.
+	$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
+
+	// We have topics to move so start the process.
+	if (!empty($total_topics))
+	{
+		while ($context['start'] <= $total_topics)
+		{
+			// Lets get the topics.
+			$request = $smfFunc['db_query']('', '
+				SELECT id_topic
+				FROM {db_prefix}topics
+				WHERE id_board = {int:id_board_from}
+				LIMIT 10',
+				array(
+					'id_board_from' => $id_board_from,
+				)
+			);
+
+			// Get the ids.
+			$topics = array();
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$topics[] = $row['id_topic'];
+
+			// Just return if we don't have any topics to move.
+			if (empty($topics) || count($topics) < 10)
+				redirectexit('action=admin;area=maintain;done');
+
+			// Lets move them.
+			require_once($sourcedir . '/MoveTopic.php');
+			moveTopics($topics, $id_board_to);
+
+			// More suckers.
+			$_REQUEST['start'] += 10;
+
+			// Lets wait a while.
+			if (time() - $context['start_time'] > 10)
+			{
+				// What's the percent?
+				$context['continue_percent'] = round(100 * ($context['start'] / $total_topics), 2);
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
+				return;
+			}
+		}
+		$context['start'] = 0;
+	}
+
+	// So fresh and so clean :P.
+	$context['continue_percent'] = 100;
+	$context['continue_get_data'] = '?action=admin;area=maintain;done';
+	$context['last_step'] = true;
 }
 
 ?>
