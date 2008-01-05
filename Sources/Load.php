@@ -140,7 +140,7 @@ function reloadSettings()
 	global $modSettings, $db_prefix, $boarddir, $smfFunc, $txt, $db_character_set;
 
 	// Most database systems have not set UTF-8 as their default input charset.
-	if (isset($db_character_set))
+	if (!empty($db_character_set))
 		$smfFunc['db_query']('', '
 			SET NAMES ' . $db_character_set,
 			array(

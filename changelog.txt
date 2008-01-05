@@ -33,6 +33,7 @@ January 2008
  * The default template was not applying labels to poll options correctly. (Display template) [Bug 1206]
  ! Package manager wasn't loading themes correctly. (Packages.php) [Bug 1210]
  ! Some menu items were not showing in the admin center even if you had the right permission. (Admin.php) [Bug 1209]
+ ! Installer wouldn't install on SQLite. (install.php, Subs-Db-sqlite.php) [Bug 1197]
 
 
 December 2007

@@ -1206,7 +1206,7 @@ function doStep2()
 	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
 
-	if (isset($db_character_set))
+	if (isset($db_character_set) && !empty($databases[$db_type]['utf8_support']))
 		$smfFunc['db_query']('', '
 			SET NAMES {raw:db_character_set}',
 			array(

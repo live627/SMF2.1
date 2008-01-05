@@ -1243,7 +1243,7 @@ CREATE TABLE {$db_prefix}log_subscribed (
   status smallint NOT NULL default '0',
   payments_pending smallint NOT NULL default '0',
   pending_details text NOT NULL,
-  reminder_sent NOT NOT NULL default '0',
+  reminder_sent smallint NOT NULL default '0',
   vendor_ref varchar(255) NOT NULL
 );
 

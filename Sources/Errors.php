@@ -141,7 +141,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	$smfFunc['db_insert']('',
 		$db_prefix . 'log_errors',
 		array('id_member' => 'int', 'log_time' => 'int', 'ip' => 'string-16', 'url' => 'string-65534', 'message' => 'string-65534', 'session' => 'string', 'error_type' => 'string', 'file' => 'string-255', 'line' => 'int'),
-		array($user_info['id'], time(), $user_info['ip'], $query_string, $error_message, $sc, $error_type, $file, $line),
+		array($user_info['id'], time(), $user_info['ip'], $query_string, $error_message, (string) $sc, $error_type, $file, $line),
 		array('id_error')
 	);
 

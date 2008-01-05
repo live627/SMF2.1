@@ -617,7 +617,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 
 			// Has it got a key?
 			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND') . ' ' . $columnName . ' = ' . $actualType;
+				$where .= (empty($where) ? '' : ' AND') . substr($actualType,0, -2);
 
 			$count++;
 		}

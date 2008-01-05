@@ -518,13 +518,13 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	{
 		// Setup an UPDATE template.
 		$updateData = '';
-		$where = ' ';
+		$where = '';
 		$count = 0;
 		foreach ($columns as $columnName => $type)
 		{
 			// Are we restricting the length?
 			if (strpos($type, 'string-') !== false)
-				$actualType = sprintf($columnName . ' = SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
+				$actualType = sprintf($columnName . ' = SUBSTR({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
 			else
 				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
 
@@ -532,7 +532,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 
 			// Has it got a key?
 			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND') . ' ' . $columnName . ' = ' . $actualType;
+				$where .= (empty($where) ? '' : ' AND') . substr($actualType,0, -2);
 
 			$count++;
 		}
