@@ -443,6 +443,11 @@ function ModifyCacheSettings($return_config = false)
 	if (isset($_GET['save']))
 	{
 		saveDBSettings($config_vars);
+
+		// We have to manually force the clearing of the cache otherwise the changed settings might not get noticed.
+		$modSettings['cache_enable'] = 1;
+		cache_put_data('modSettings', null, 90);
+
 		redirectexit('action=admin;area=serversettings;sa=cache;sesc=' . $sc);
 	}
 

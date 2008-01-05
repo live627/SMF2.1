@@ -3406,7 +3406,7 @@ function db_debug_junk()
 	}
 
 	echo '
-	<a href="', $scripturl, '?action=viewquery" target="_blank" class="new_win">Queries used: ', $db_count, $warnings == 0 ? '' : ', ' . $warnings . ' warning(s)', '</a>.<br />
+	<a href="', $scripturl, '?action=viewquery" target="_blank" class="new_win">Queries used: ', (int) $db_count, $warnings == 0 ? '' : ', ' . $warnings . ' warning(s)', '</a>.<br />
 	<br />';
 
 	if ($_SESSION['view_queries'] == 1 && !empty($db_cache))

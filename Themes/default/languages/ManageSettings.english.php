@@ -112,8 +112,8 @@ $txt['detected_Zend'] = '<b style="color: green">SMF has detected that your serv
 
 $txt['cache_enable'] = 'Caching Level';
 $txt['cache_off'] = 'No caching';
-$txt['cache_level1'] = 'Level 1 Caching';
-$txt['cache_level2'] = 'Level 2 Caching (Not Recommended)';
+$txt['cache_level1'] = 'Level 1 Caching (Recommended)';
+$txt['cache_level2'] = 'Level 2 Caching';
 $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
 
