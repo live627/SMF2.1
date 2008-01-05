@@ -281,7 +281,6 @@ function smf_main()
 		'register2' => array('Register.php', 'Register2'),
 		'reminder' => array('Reminder.php', 'RemindMe'),
 		'removetopic2' => array('RemoveTopic.php', 'RemoveTopic2'),
-		'removeoldtopics2' => array('RemoveTopic.php', 'RemoveOldTopics2'),
 		'removepoll' => array('Poll.php', 'RemovePoll'),
 		'reporttm' => array('SendTopic.php', 'ReportToModerator'),
 		'requestmembers' => array('Subs-Auth.php', 'RequestMembers'),

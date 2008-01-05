@@ -93,9 +93,25 @@ if (!defined('SMF'))
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
 		// !!!
 
-	mixed MoveTopicsMaintenance()
+	mixed activity_move_topics_maintenance(bool do_action = true)
 		- Moves topics from one board to another.
 		- User the not_done template to pause the process.
+
+	void activity_maintain_reattribute_posts(bool do_action = true)
+		// !!!
+
+	void activity_maintain_backup(bool do_action = true)
+		// !!!
+
+	void activity_maintain_members(bool do_action = true)
+		// !!!
+
+	void activity_maintain_old(bool do_action = true)
+		// !!!
+
+	void AdminTask()
+		- Handles minor maintenance tasks.
+		- Sets up a layer, some key context information, and passes execution to the task function.
 */
 
 // The maintenance access point.
@@ -112,13 +128,14 @@ function ManageMaintenance()
 
 	// So many things you can - but frankly I won't let you - just these!
 	$subActions = array(
+		'admintask' => 'AdminTask',
 		'cleancache' => 'Maintenance',
 		'convertentities' => 'ConvertEntities',
 		'convertutf8' => 'ConvertUtf8',
 		'destroy' => 'Maintenance',
 		'logs' => 'Maintenance',
 		'general' => 'Maintenance',
-		'movetopics' => 'MoveTopicsMaintenance',
+		'movetopics' => 'activity_move_topics_maintenance',
 		'optimize' => 'OptimizeTables',
 		'recount' => 'AdminBoardRecount',
 		'taskedit' => 'EditTask',
@@ -227,83 +244,6 @@ function Maintenance()
 			</body></html>';
 		obExit(false);
 	}
-	elseif (isset($_GET['sa']) && $_GET['sa'] == 'members')
-	{
-		checkSession();
-
-		$_POST['maxdays'] = (int) $_POST['maxdays'];
-		if (!empty($_POST['groups']) && $_POST['maxdays'])
-		{
-			$groups = array();
-			foreach ($_POST['groups'] as $id => $dummy)
-				$groups[] = (int) $id;
-			$time_limit = (time() - ($_POST['maxdays'] * 24 * 3600));
-			$where_vars = array(
-				'last_login' => $time_limit,
-			);
-			$where = 'mem.last_login < {int:last_login}';
-			if ($_POST['del_type'] == 'activated')
-			{
-				$where .= ' AND mem.is_activated = {int:is_activated}';
-				$where_vars['is_activated'] = 0;
-			}
-
-			// Need to get *all* groups then work out which (if any) we avoid.
-			$request = $smfFunc['db_query']('', '
-				SELECT id_group, group_name, min_posts
-				FROM {db_prefix}membergroups',
-				array(
-				)
-			);
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-			{
-				// Avoid this one?
-				if (!in_array($row['id_group'], $groups))
-				{
-					// Post group?
-					if ($row['min_posts'] != -1)
-					{
-						$where .= ' AND mem.id_post_group != {int:id_post_group_' . $row['id_group'] . '}';
-						$where_vars['id_post_group_' . $row['id_group']] = $row['id_group'];
-					}
-					else
-					{
-						$where .= ' AND mem.id_group != {int:id_group_' . $row['id_group'] . '} AND NOT FIND_IN_SET({int:id_group_' . $row['id_group'] . '}, mem.additional_groups)';
-						$where_vars['id_group_' . $row['id_group']] = $row['id_group'];
-					}
-				}
-			}
-			$smfFunc['db_free_result']($request);
-
-			// If we have ungrouped unselected we need to avoid those guys.
-			if (!in_array(0, $groups))
-			{
-				$where .= ' AND (mem.id_group != 0 OR mem.additional_groups != {string:blank_add_groups})';
-				$where_vars['blank_add_groups'] = '';
-			}
-
-			// Select all the members we're about to murder/remove...
-			$request = $smfFunc['db_query']('', '
-				SELECT mem.id_member, IFNULL(m.id_member, 0) AS is_mod
-				FROM {db_prefix}members AS mem
-					LEFT JOIN {db_prefix}moderators AS m ON (m.id_member = mem.id_member)
-				WHERE ' . $where,
-				$where_vars
-			);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-			{
-				if (!$row['is_mod'] || !in_array(3, $groups))
-					$members[] = $row['id_member'];
-			}
-			$smfFunc['db_free_result']($request);
-
-			require_once($sourcedir . '/Subs-Members.php');
-			deleteMembers($members);
-		}
-
-		$context['maintenance_finished'] = true;
-	}
 	elseif (isset($_GET['sa']) && $_GET['sa'] == 'cleancache' && is_dir($cachedir))
 	{
 		// Just wipe the whole cache directory!
@@ -313,54 +253,6 @@ function Maintenance()
 	}
 	else
 		$context['maintenance_finished'] = isset($_GET['done']);
-
-	// Grab some boards maintenance can be done on.
-	$result = $smfFunc['db_query']('', '
-		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
-		FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE ' . $user_info['query_see_board'],
-		array(
-		)
-	);
-	$context['categories'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-	{
-		if (!isset($context['categories'][$row['id_cat']]))
-			$context['categories'][$row['id_cat']] = array(
-				'name' => $row['cat_name'],
-				'boards' => array()
-			);
-
-		$context['categories'][$row['id_cat']]['boards'][] = array(
-			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'child_level' => $row['child_level']
-		);
-	}
-	$smfFunc['db_free_result']($result);
-
-	// Get membergroups - for deleting members.
-	$result = $smfFunc['db_query']('', '
-		SELECT id_group, group_name
-		FROM {db_prefix}membergroups',
-		array(
-		)
-	);
-	$context['membergroups'] = array(
-		array(
-			'id' => 0,
-			'name' => $txt['maintain_members_ungrouped']
-		),
-	);
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-	{
-		$context['membergroups'][] = array(
-			'id' => $row['id_group'],
-			'name' => $row['group_name']
-		);
-	}
-	$smfFunc['db_free_result']($result);
 
 	$context['convert_utf8'] = $db_type == 'mysql' && (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smfFunc['db_server_info']())) <= 0;
 	$context['convert_entities'] = $db_type == 'mysql' && isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
@@ -1802,9 +1694,242 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	return $do_include;
 }
 
-function MoveTopicsMaintenance()
+// Get things ready for minor admin tasks.
+function AdminTask()
+{
+	global $txt, $scripturl, $context, $helptxt, $user_info, $smfFunc;
+
+	checkSession('request');
+
+	loadLanguage('Help');
+
+	if (!isset($_GET['activity']) || !function_exists('activity_' . $_GET['activity']))
+		fatal_lang_error('no_access');
+
+	$context['maintain_activity'] = $_GET['activity'];
+
+	// Let's load up the boards in case they are useful.
+	$result = $smfFunc['db_query']('', '
+		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
+		FROM {db_prefix}boards AS b
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+		WHERE ' . $user_info['query_see_board'],
+		array(
+		)
+	);
+	$context['categories'] = array();
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+	{
+		if (!isset($context['categories'][$row['id_cat']]))
+			$context['categories'][$row['id_cat']] = array(
+				'name' => $row['cat_name'],
+				'boards' => array()
+			);
+
+		$context['categories'][$row['id_cat']]['boards'][] = array(
+			'id' => $row['id_board'],
+			'name' => $row['name'],
+			'child_level' => $row['child_level']
+		);
+	}
+	$smfFunc['db_free_result']($result);
+
+	// Get membergroups - for deleting members and the like.
+	$result = $smfFunc['db_query']('', '
+		SELECT id_group, group_name
+		FROM {db_prefix}membergroups',
+		array(
+		)
+	);
+	$context['membergroups'] = array(
+		array(
+			'id' => 0,
+			'name' => $txt['maintain_members_ungrouped']
+		),
+	);
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+	{
+		$context['membergroups'][] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name']
+		);
+	}
+	$smfFunc['db_free_result']($result);
+
+	// Just loading the template?
+	if (empty($_POST['do']))
+	{
+		$context['sub_template'] = 'activity_' . $context['maintain_activity'];
+	
+		// Help text or page title?
+		$context['help_text'] = isset($helptxt[$context['maintain_activity']]) ? $context['maintain_activity'] : false;
+		$context['page_title'] = isset($txt[$context['maintain_activity']]) ? $txt[$context['maintain_activity']] : $txt['maintain_general'];
+	
+		// Setup the layer.
+		$context['template_layers'][] = 'maintain';	
+	}
+
+	// Call the function - telling them what we're up to.
+	call_user_func_array('activity_' . $_GET['activity'], array('do_action' => !empty($_POST['do'])));
+
+	// If we're done then go away.
+	if (!empty($_POST['do']))
+		redirectexit('action=admin;area=maintain;done');
+}
+
+// Removing old posts doesn't take much as we really pass through.
+function activity_maintain_reattribute_posts($do_action = true)
+{
+	global $sourcedir, $context;
+
+	if (!$do_action || !isset($_POST['to']))
+		return true;
+
+	// Find the member.
+	require_once($sourcedir . '/Subs-Auth.php');
+	$members = findMembers($_POST['to']);
+
+	if (empty($members))
+		fatal_lang_error('reattribute_cannot_find_member');
+
+	$memID = array_shift($members);
+	$memID = $memID['id'];
+
+	$email = $_POST['type'] == 'email' ? $_POST['from_email'] : '';
+	$membername = $_POST['type'] == 'name' ? $_POST['from_name'] : '';
+
+	// Now call the reattribute function.
+	require_once($sourcedir . '/Subs-Members.php');
+	reattributePosts($memID, $email, $membername, !empty($_POST['posts']));
+}
+
+// Handling function for the backup stuff.
+function activity_maintain_backup($do_action = true)
+{
+	global $sourcedir, $context, $smfFunc;
+
+	if (!$do_action)
+	{
+		// Setup the help button.
+		$context['help_text'] = 'maintenance_backup';
+
+		return true;
+	}
+
+	require_once($sourcedir . '/DumpDatabase.php');
+	DumpDatabase2();
+}
+
+// Removing old members?
+function activity_maintain_members($do_action = true)
+{
+	global $sourcedir, $context, $smfFunc;
+
+	if (!$do_action)
+	{
+		// Setup the help button.
+		$context['help_text'] = 'maintenance_members';
+
+		return true;
+	}
+
+	$_POST['maxdays'] = (int) $_POST['maxdays'];
+	if (!empty($_POST['groups']) && $_POST['maxdays'])
+	{
+		$groups = array();
+		foreach ($_POST['groups'] as $id => $dummy)
+			$groups[] = (int) $id;
+		$time_limit = (time() - ($_POST['maxdays'] * 24 * 3600));
+		$where_vars = array(
+			'last_login' => $time_limit,
+		);
+		$where = 'mem.last_login < {int:last_login}';
+		if ($_POST['del_type'] == 'activated')
+		{
+			$where .= ' AND mem.is_activated = {int:is_activated}';
+			$where_vars['is_activated'] = 0;
+		}
+
+		// Need to get *all* groups then work out which (if any) we avoid.
+		$request = $smfFunc['db_query']('', '
+			SELECT id_group, group_name, min_posts
+			FROM {db_prefix}membergroups',
+			array(
+			)
+		);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			// Avoid this one?
+			if (!in_array($row['id_group'], $groups))
+			{
+				// Post group?
+				if ($row['min_posts'] != -1)
+				{
+					$where .= ' AND mem.id_post_group != {int:id_post_group_' . $row['id_group'] . '}';
+					$where_vars['id_post_group_' . $row['id_group']] = $row['id_group'];
+				}
+				else
+				{
+					$where .= ' AND mem.id_group != {int:id_group_' . $row['id_group'] . '} AND NOT FIND_IN_SET({int:id_group_' . $row['id_group'] . '}, mem.additional_groups)';
+					$where_vars['id_group_' . $row['id_group']] = $row['id_group'];
+				}
+			}
+		}
+		$smfFunc['db_free_result']($request);
+
+		// If we have ungrouped unselected we need to avoid those guys.
+		if (!in_array(0, $groups))
+		{
+			$where .= ' AND (mem.id_group != 0 OR mem.additional_groups != {string:blank_add_groups})';
+			$where_vars['blank_add_groups'] = '';
+		}
+
+		// Select all the members we're about to murder/remove...
+		$request = $smfFunc['db_query']('', '
+			SELECT mem.id_member, IFNULL(m.id_member, 0) AS is_mod
+			FROM {db_prefix}members AS mem
+				LEFT JOIN {db_prefix}moderators AS m ON (m.id_member = mem.id_member)
+			WHERE ' . $where,
+			$where_vars
+		);
+		$members = array();
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			if (!$row['is_mod'] || !in_array(3, $groups))
+				$members[] = $row['id_member'];
+		}
+		$smfFunc['db_free_result']($request);
+
+		require_once($sourcedir . '/Subs-Members.php');
+		deleteMembers($members);
+	}
+}
+
+// Removing old posts doesn't take much as we really pass through.
+function activity_maintain_old($do_action = true)
+{
+	global $sourcedir, $context;
+
+	if (!$do_action)
+	{
+		// We have a different help string.
+		$context['help_text'] = 'maintenance_rot';
+
+		return true;
+	}
+
+	// Actually do what we're told!
+	require_once($sourcedir . '/RemoveTopic.php');
+	RemoveOldTopics2();
+}
+
+function activity_move_topics_maintenance($do_action = true)
 {
 	global $smfFunc, $sourcedir, $context, $txt;
+
+	// Not doing it - nothing to do!
+	if (!$do_action)
+		return true;
 
 	// Only admins.
 	isAllowedTo('admin_forum');
@@ -1871,7 +1996,11 @@ function MoveTopicsMaintenance()
 
 			// Just return if we don't have any topics left to move.
 			if (empty($topics))
+			{
+				cache_put_data('board-' . $id_board_from, null, 120);
+				cache_put_data('board-' . $id_board_to, null, 120);
 				redirectexit('action=admin;area=maintain;done');
+			}
 
 			// Lets move them.
 			require_once($sourcedir . '/MoveTopic.php');
@@ -1893,7 +2022,10 @@ function MoveTopicsMaintenance()
 		}
 	}
 
-	// So fresh and so clean :P.
+	// Don't confuse admins by having an out of date cache.
+	cache_put_data('board-' . $id_board_from, null, 120);
+	cache_put_data('board-' . $id_board_to, null, 120);
+
 	redirectexit('action=admin;area=maintain;done');
 }
 

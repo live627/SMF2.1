@@ -406,7 +406,7 @@ function EditBoard()
 			'id' => 0,
 			'name' => $txt['mboards_new_board_name'],
 			'description' => '',
-			'count_posts' => 1,
+			'count_posts' => 0,
 			'posts' => 0,
 			'topics' => 0,
 			'theme' => 0,
@@ -422,7 +422,7 @@ function EditBoard()
 		// Just some easy shortcuts.
 		$curBoard = &$boards[$_REQUEST['boardid']];
 		$context['board'] = $boards[$_REQUEST['boardid']];
-		$context['board']['name'] = htmlspecialchars($context['board']['name']);
+		$context['board']['name'] = htmlspecialchars(strtr($context['board']['name'], array('&amp;' => '&')));
 		$context['board']['description'] = htmlspecialchars($context['board']['description']);
 		$context['board']['no_children'] = empty($boards[$_REQUEST['boardid']]['tree']['children']);
 	}

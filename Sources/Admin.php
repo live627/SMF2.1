@@ -421,11 +421,6 @@ function AdminMain()
 					'function' => 'ViewErrorLog',
 					'custom_url' => $scripturl . '?action=admin;area=errorlog;desc',
 				),
-				'dumpdb' => array(
-					'file' => 'DumpDatabase.php',
-					'function' => 'DumpDatabase2',
-					'select' => 'maintain',
-				),
 				'repairboards' => array(
 					'file' => 'RepairBoards.php',
 					'function' => 'RepairBoards',

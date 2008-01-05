@@ -236,13 +236,31 @@ $txt['entity_convert_only_utf8'] = 'The database needs to be in UTF-8 format bef
 $txt['entity_convert_introduction'] = 'This function will convert all characters that are stored in the database as HTML-entities to UTF-8 characters. This is especially useful when you have just converted your forum from a character set like ISO-8859-1 while non-latin characters were used on the forum. The browser then sends all characters as HTML-entities. For example, the HTML-entity &amp;#945; represents the greek letter &#945; (alpha). Converting entities to UTF-8 will improve searching and sorting of text and reduce storage size.';
 $txt['entity_convert_proceed'] = 'Proceed';
 
+$txt['maintain_common_task_database'] = 'Database';
+$txt['maintain_common_task_routine'] = 'Routine';
+$txt['maintain_common_task_members'] = 'Members';
+$txt['maintain_common_task_topics'] = 'Topics';
+$txt['maintain_common_task_misc'] = 'Miscellaneous';
+
 // Move topics out.
 $txt['move_topics_maintenance'] = 'Move Topics';
 $txt['move_topics_select_board'] = 'Select Board';
 $txt['move_topics_from'] = 'Move topics from';
 $txt['move_topics_to'] = 'to';
 $txt['move_topics_now'] = 'Move now';
-// Don't use entities in the below string.
 $txt['move_topics_confirm'] = 'Are you sure you want to move ALL the topics from &quot;%board_from%&quot; to &quot;%board_to%&quot;?';
+
+$txt['maintain_reattribute_posts'] = 'Reattribute User Posts';
+$txt['reattribute_guest_posts'] = 'Attribute guest posts made with';
+$txt['reattribute_email'] = 'Email address of';
+$txt['reattribute_username'] = 'Username of';
+$txt['reattribute_current_member'] = 'Attribute posts to member';
+$txt['reattribute_increase_posts'] = 'Add posts to users post count';
+$txt['reattribute'] = 'Reattribute';
+// Don't use entities in the below string.
+$txt['reattribute_confirm'] = 'Are you sure you want to attribute all guests post with %type% of "%find%" to member "%member_to%"?';
+$txt['reattribute_confirm_username'] = 'a username';
+$txt['reattribute_confirm_email'] = 'an email address';
+$txt['reattribute_cannot_find_member'] = 'Could not find member to attribute posts to.';
 
 ?>

@@ -244,10 +244,10 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			WHERE m.id_topic IN ({array_int:topics})
 				AND m.icon != {string:recycled}
-				AND b.count_posts = {int:dont_count_posts}
+				AND b.count_posts = {int:do_count_posts}
 			GROUP BY m.id_member',
 			array(
-				'dont_count_posts' => 0,
+				'do_count_posts' => 0,
 				'recycled' => 'recycled',
 				'topics' => $topics,
 			)

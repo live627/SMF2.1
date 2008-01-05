@@ -899,7 +899,7 @@ function Display()
 
 	$context['jump_to'] = array(
 		'label' => addslashes(un_htmlspecialchars($txt['jump_to'])),
-		'board_name' => un_htmlspecialchars($board_info['name']),
+		'board_name' => htmlspecialchars(strtr($board_info['name'], array('&amp;' => '&'))),
 		'child_level' => $board_info['child_level'],
 	);
 

@@ -34,8 +34,8 @@ if (!defined('SMF'))
 		- uses gzip compression if compress is set in the URL/post data.
 		- may possibly time out in some cases.
 		- the data dumped depends on whether "struct" and "data" are passed.
-		- requires an administrator and the session hash by get.
-		- is accessed via ?action=admin;area=dumpdb.
+		- requires an administrator and the session hash by post.
+		- is called from ManageMaintenance.php.
 
 */
 
@@ -52,7 +52,7 @@ function DumpDatabase2()
 	if (!isset($_GET['struct']) && !isset($_GET['data']))
 		$_GET['data'] = true;
 
-	checkSession('get');
+	checkSession('post');
 
 	// We will need this, badly!
 	db_extend();

@@ -73,7 +73,7 @@ if (!defined('SMF'))
 		- takes possible moderators (on board 'board_id') into account.
 		- returns an array containing member ID's.
 
-	int reattributePosts(int id_member, string email = none, bool add_to_post_count = false)
+	int reattributePosts(int id_member, string email = false, string membername = false, bool add_to_post_count = false)
 		- reattribute guest posts to a specified member.
 		- does not check for any permissions.
 		- returns the number of successful reattributed posts.
@@ -198,6 +198,7 @@ function deleteMembers($users)
 		WHERE id_member_updated IN ({array_int:users})',
 		array(
 			'guest_id' => 0,
+			'users' => $users,
 		)
 	);
 
@@ -990,17 +991,15 @@ function membersAllowedTo($permission, $board_id = null)
 }
 
 // This function is used to reassociate members with relevant posts.
-function reattributePosts($memID, $email = false, $post_count = false)
+function reattributePosts($memID, $email = false, $membername = false, $post_count = false)
 {
 	global $db_prefix, $smfFunc;
 
-	// !!! This should be done by member_name not email, or by both.
-
-	// Firstly, if $email isn't passed find out the members email address.
-	if ($email === false)
+	// Firstly, if email and username aren't passed find out the members email address and name.
+	if ($email === false && $membername === false)
 	{
 		$request = $smfFunc['db_query']('', '
-			SELECT email_address
+			SELECT email_address, member_name
 			FROM {db_prefix}members
 			WHERE id_member = {int:memID}
 			LIMIT 1',
@@ -1008,9 +1007,16 @@ function reattributePosts($memID, $email = false, $post_count = false)
 				'memID' => $memID,
 			)
 		);
-		list ($email) = $smfFunc['db_fetch_row']($request);
+		list ($email, $membername) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 	}
+
+	$query_parts = array();
+	if (!empty($email))
+		$query_parts[] = 'm.poster_email = {string:email_address}';
+	if (!empty($membername))
+		$query_parts[] = 'm.poster_name = {string:member_name}';
+	$query = implode(' AND ', $query_parts);
 
 	// If they want the post count restored then we need to do some research.
 	if ($post_count)
@@ -1020,12 +1026,13 @@ function reattributePosts($memID, $email = false, $post_count = false)
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND b.count_posts = {int:count_posts})
 			WHERE m.id_member = {int:guest_id}
-				AND m.poster_email = {string:email_address}
-				AND m.icon != {string:recycled_icon}',
+				AND m.icon != {string:recycled_icon}
+				AND ' . $query,
 			array(
-				'count_posts' => 1,
+				'count_posts' => 0,
 				'guest_id' => 0,
 				'email_address' => $email,
+				'member_name' => $membername,
 				'recycled_icon' => 'recycled',
 			)
 		);
@@ -1037,12 +1044,13 @@ function reattributePosts($memID, $email = false, $post_count = false)
 
 	// Finally, update the posts themselves!
 	$smfFunc['db_query']('', '
-		UPDATE {db_prefix}messages
-		SET id_member = {int:memID}
-		WHERE poster_email = {string:email}',
+		UPDATE {db_prefix}messages AS m
+		SET m.id_member = {int:memID}
+		WHERE ' . $query,
 		array(
 			'memID' => $memID,
-			'email' => $email,
+			'email_address' => $email,
+			'member_name' => $membername,
 		)
 	);
 
