@@ -36,6 +36,9 @@ January 2008
  ! Installer wouldn't install on SQLite. (install.php, Subs-Db-sqlite.php) [Bug 1197]
  ! If list is disabled, so is ordered list. (Subs-Editor.php) [Bug 1207]
  ! If you turned the cache off it would take 90 seconds before it looked like it had actioned it. (ManageServer.php) [Bug 1204]
+ ! The jump to box was not dealing with ampersands in board names very well. (Display.php, MessageIndex.php, ManageBoards.php)
+ + Added an interface to the reattribute posts function and made it work with user names and email addresses. (Subs-Members.php, ManageMaintenance.php) [Feature 1195]
+ * Changed the manage maintenance template around as it was getting too crowded. (ManageMaintenance.php, ManageMaintenance template, ManageMaintenance language files)
 
 
 December 2007
