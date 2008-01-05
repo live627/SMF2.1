@@ -499,4 +499,5 @@ $helptxt['birthday_email'] = 'Choose the index of the birthday email message to 
 $helptxt['pm_bcc'] = 'When sending a personal message you can choose to add a recipient as BCC or &quot;Blind Carbon Copy&quot;. BCC recipients do not have their identities revealed to other recipients of the message.';
 
 $helptxt['move_topics_maintenance'] = 'This will allow you to move all the posts from one board to another board.';
+
 ?>

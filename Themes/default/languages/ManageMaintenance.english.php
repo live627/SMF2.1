@@ -238,9 +238,11 @@ $txt['entity_convert_proceed'] = 'Proceed';
 
 // Move topics out.
 $txt['move_topics_maintenance'] = 'Move Topics';
+$txt['move_topics_select_board'] = 'Select Board';
 $txt['move_topics_from'] = 'Move topics from';
-$txt['move_topics_to'] = 'Move topics to';
+$txt['move_topics_to'] = 'to';
 $txt['move_topics_now'] = 'Move now';
-$txt['move_topics_confirm'] = 'Are you sure you want to move ALL the topics from \\\'%board_from%\\\' to \\\'%board_to%\\\' the selected board?';
+// Don't use entities in the below string.
+$txt['move_topics_confirm'] = 'Are you sure you want to move ALL the topics from &quot;%board_from%&quot; to &quot;%board_to%&quot;?';
 
 ?>

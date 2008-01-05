@@ -204,38 +204,40 @@ function template_maintain()
 			<tr>
 				<td class="windowbg2" style="padding-bottom: 1ex;">
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=movetopics" method="post" accept-charset="', $context['character_set'], '" name="move_topics">
-						<label for="id_board_from">', $txt['move_topics_from'], ': </label>
-						<select name="id_board_from" id="id_board_from">';
+						<label for="id_board_from">', $txt['move_topics_from'], ' </label>
+						<select name="id_board_from" id="id_board_from">
+							<option disabled="disabled">(', $txt['move_topics_select_board'], ')</option>';
 	// From boards.
 	foreach ($context['categories'] as $category)
 	{
 		echo '
-							<option disabled="disabled">----------------------------------------------------</option>
+							<option disabled="disabled">--------------------------------------</option>
 							<option disabled="disabled">', $category['name'], '</option>
-							<option disabled="disabled">----------------------------------------------------</option>';
+							<option disabled="disabled">--------------------------------------</option>';
 		foreach ($category['boards'] as $board)
 			echo '
-							<option value="', $board['id'], '"> ' . str_repeat('--', $board['child_level']) . '&nbsp;' . $board['name'] . '</option>';
+							<option value="', $board['id'], '"> ', str_repeat('==', $board['child_level']), '=&gt;&nbsp;', $board['name'], '</option>';
 	}
 	echo '
-						</select><br />
-						<label for="id_board_to">', $txt['move_topics_to'], ':</label>
-						<select name="id_board_to" id="id_board_to">';
+						</select>
+						<label for="id_board_to">', $txt['move_topics_to'], '</label>
+						<select name="id_board_to" id="id_board_to">
+							<option disabled="disabled">(', $txt['move_topics_select_board'], ')</option>';
 	// From boards.
 	foreach ($context['categories'] as $category)
 	{
 		echo '
-							<option disabled="disabled">----------------------------------------------------</option>
+							<option disabled="disabled">--------------------------------------</option>
 							<option disabled="disabled">', $category['name'], '</option>
-							<option disabled="disabled">----------------------------------------------------</option>';
+							<option disabled="disabled">--------------------------------------</option>';
 		foreach ($category['boards'] as $board)
 			echo '
-							<option value="', $board['id'], '"> ' . str_repeat('--', $board['child_level']) . '&nbsp;' . $board['name'] . '</option>';
+							<option value="', $board['id'], '"> ', str_repeat('==', $board['child_level']), '=&gt;&nbsp;', $board['name'], '</option>';
 	}
 	echo '
 						</select><br />
 						<div align="right" style="margin: 1ex;">
-							<input type="submit" value="', $txt['move_topics_now'], '" onclick="var confirmText = \'', $txt['move_topics_confirm'] . '\'; return confirm(confirmText.replace(/%board_from%/, document.forms.move_topics.id_board_from.options[document.forms.move_topics.id_board_from.selectedIndex].text.replace(/^--+/, \'\')).replace(/%board_to%/, document.forms.move_topics.id_board_to.options[document.forms.move_topics.id_board_to.selectedIndex].text.replace(/^--+/, \'\')));" />
+							<input type="submit" value="', $txt['move_topics_now'], '" onclick="if (document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_from\').selectedIndex].disabled || document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_to\').selectedIndex].disabled) return false; var confirmText = \'', $txt['move_topics_confirm'] . '\'; return confirm(confirmText.replace(/%board_from%/, document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_from\').selectedIndex].text.replace(/^=+&gt;&nbsp;/, \'\')).replace(/%board_to%/, document.getElementById(\'id_board_to\').options[document.getElementById(\'id_board_to\').selectedIndex].text.replace(/^=+&gt;&nbsp;/, \'\')));" />
 						</div>
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					</form>

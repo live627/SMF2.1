@@ -1846,7 +1846,7 @@ function MoveTopicsMaintenance()
 		$total_topics = (int) $_REQUEST['totaltopics'];
 
 	// Seems like we need this here.
-	$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
+	$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
 
 	// We have topics to move so start the process.
 	if (!empty($total_topics))
@@ -1869,33 +1869,32 @@ function MoveTopicsMaintenance()
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$topics[] = $row['id_topic'];
 
-			// Just return if we don't have any topics to move.
-			if (empty($topics) || count($topics) < 10)
+			// Just return if we don't have any topics left to move.
+			if (empty($topics))
 				redirectexit('action=admin;area=maintain;done');
 
 			// Lets move them.
 			require_once($sourcedir . '/MoveTopic.php');
 			moveTopics($topics, $id_board_to);
 
-			// More suckers.
-			$_REQUEST['start'] += 10;
+			// We've done at least ten more topics.
+			$context['start'] += 10;
 
 			// Lets wait a while.
-			if (time() - $context['start_time'] > 10)
+			if (time() - $context['start_time'] > 3)
 			{
 				// What's the percent?
-				$context['continue_percent'] = round(100 * ($context['start'] / $total_topics), 2);
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
+				$context['continue_percent'] = round(100 * ($context['start'] / $total_topics), 1);
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
+
+				// Let the template system do it's thang.
 				return;
 			}
 		}
-		$context['start'] = 0;
 	}
 
 	// So fresh and so clean :P.
-	$context['continue_percent'] = 100;
-	$context['continue_get_data'] = '?action=admin;area=maintain;done';
-	$context['last_step'] = true;
+	redirectexit('action=admin;area=maintain;done');
 }
 
 ?>
