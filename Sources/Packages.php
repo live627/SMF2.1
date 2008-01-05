@@ -219,7 +219,7 @@ function PackageInstallTest()
 		WHERE (id_theme = {int:default_theme} OR id_theme IN ({array_int:known_theme_list}))
 			AND variable IN ({string:name}, {string:theme_dir})',
 		array(
-			'known_theme_list' => $modSettings['knownThemes'],
+			'known_theme_list' => explode(',', $modSettings['knownThemes']),
 			'default_theme' => 1,
 			'name' => 'name',
 			'theme_dir' => 'theme_dir',
