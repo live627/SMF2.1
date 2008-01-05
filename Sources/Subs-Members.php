@@ -85,6 +85,9 @@ if (!defined('SMF'))
 		- called by ?action=buddy;u=x;sesc=y.
 		- redirects to ?action=profile;u=x.
 
+	void populateDuplicateMembers(&array members)
+		// !!!
+
 */
 
 // Delete a group of/single member.
@@ -1074,14 +1077,14 @@ function BuddyListToggle()
 	redirectexit('action=profile;u=' . $_REQUEST['u']);
 }
 
-function list_getMembers($start, $items_per_page, $sort, $where, $where_params = array())
+function list_getMembers($start, $items_per_page, $sort, $where, $where_params = array(), $get_duplicates = false)
 {
 	global $smfFunc, $db_prefix;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT
-			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.icq, mem.aim, mem.yim, mem.msn, mem.member_ip, mem.last_login, mem.posts, mem.is_activated, mem.date_registered,
-			mg.group_name
+			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.icq, mem.aim, mem.yim, mem.msn, mem.member_ip, mem.member_ip2, mem.last_login,
+			mem.posts, mem.is_activated, mem.date_registered, mg.group_name
 		FROM {db_prefix}members AS mem
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)
 		WHERE ' . $where . '
@@ -1098,6 +1101,10 @@ function list_getMembers($start, $items_per_page, $sort, $where, $where_params =
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$members[] = $row;
 	$smfFunc['db_free_result']($request);
+
+	// If we want duplicates pass the members array off.
+	if ($get_duplicates)
+		populateDuplicateMembers($members);
 
 	return $members;
 }
@@ -1125,6 +1132,120 @@ function list_getNumMembers($where, $where_params = array())
 	}
 
 	return $num_members;
+}
+
+function populateDuplicateMembers(&$members)
+{
+	global $smfFunc;
+
+	// This will hold all the ip addresses.
+	$ips = array();
+	foreach ($members as $key => $member)
+	{
+		// Create the duplicate_members element.
+		$members[$key]['duplicate_members'] = array();
+
+		// Store the IPs.
+		if (!empty($member['member_ip']))
+			$ips[] = $member['member_ip'];
+		if (!empty($member['member_ip2']))
+			$ips[] = $member['member_ip2'];
+	}
+
+	$ips = array_unique($ips);
+
+	if (empty($ips))
+		return false;
+
+	// Fetch all members with this IP address, we'll filter out the current ones in a sec.
+	$request = $smfFunc['db_query']('', '
+		SELECT
+			id_member, member_name, email_address, member_ip, member_ip2, is_activated
+		FROM {db_prefix}members
+		WHERE member_ip IN ({array_string:ips})
+			OR member_ip2 IN ({array_string:ips})',
+		array(
+			'ips' => $ips,
+		)
+	);
+	$duplicate_members = array();
+	$duplicate_ids = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		//$duplicate_ids[] = $row['id_member'];
+
+		$member_context = array(
+			'id' => $row['id_member'],
+			'name' => $row['member_name'],
+			'email' => $row['email_address'],
+			'is_banned' => $row['is_activated'] > 10,
+			'ip' => $row['member_ip'],
+			'ip2' => $row['member_ip2'],
+		);
+
+		if (in_array($row['member_ip'], $ips))
+			$duplicate_members[$row['member_ip']][] = $member_context;
+		if ($row['member_ip'] != $row['member_ip2'] && in_array($row['member_ip2'], $ips))
+			$duplicate_members[$row['member_ip2']][] = $member_context;
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Also try to get a list of messages using these ips.
+	$request = $smfFunc['db_query']('', '
+		SELECT
+			m.poster_ip, mem.id_member, mem.member_name, mem.email_address, mem.is_activated
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_member != 0
+			' . (!empty($duplicate_ids) ? 'AND m.id_member NOT IN ({array_int:duplicate_ids})' : '') . '
+			AND m.poster_ip IN ({array_string:ips})',
+		array(
+			'duplicate_ids' => $duplicate_ids,
+			'ips' => $ips,
+		)
+	);
+
+	$had_ips = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// Don't collect lots of the same.
+		if (isset($had_ips[$row['poster_ip']]) && in_array($row['id_member'], $had_ips[$row['poster_ip']]))
+			continue;
+		$had_ips[$row['poster_ip']][] = $row['id_member'];
+
+		$duplicate_members[$row['poster_ip']][] = array(
+			'id' => $row['id_member'],
+			'name' => $row['member_name'],
+			'email' => $row['email_address'],
+			'is_banned' => $row['is_activated'] > 10,
+			'ip' => $row['poster_ip'],
+			'ip2' => $row['poster_ip'],
+		);
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Now we have all the duplicate members, stick them with their respective member in the list.
+	if (!empty($duplicate_members))
+		foreach ($members as $key => $member)
+		{
+			if (isset($duplicate_members[$member['member_ip']]))
+				$members[$key]['duplicate_members'] = $duplicate_members[$member['member_ip']];
+			if ($member['member_ip'] != $member['member_ip2'] && isset($duplicate_members[$member['member_ip2']]))
+				$members[$key]['duplicate_members'] = array_merge($member['duplicate_members'], $duplicate_members[$member['member_ip2']]);
+
+			// Check we don't have lots of the same member.
+			$member_track = array();
+			foreach ($members[$key]['duplicate_members'] as $k => $m)
+			{
+				if (in_array($m['id'], $member_track))
+				{
+					unset($members[$key]['duplicate_members'][$k]);
+					continue;
+				}
+
+				$member_track[] = $m['id'];
+			}
+		}
 }
 
 ?>

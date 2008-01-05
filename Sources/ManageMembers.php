@@ -437,7 +437,6 @@ function ViewMemberlist()
 
 	// Get the title and sub template ready..
 	$context['page_title'] = $txt['admin_members'];
-	$context['sub_template'] = 'view_members';
 
 	$listOptions = array(
 		'id' => 'member_list',
@@ -732,6 +731,11 @@ function MembersAwaitingActivation()
 		'date_registered' => array('label' => $txt['admin_browse_registered']),
 	);
 
+	// Are we showing duplicate information?
+	if (isset($_GET['showdupes']))
+		$_SESSION['showdupes'] = (int) $_GET['showdupes'];
+	$context['show_duplicates'] = !empty($_SESSION['showdupes']);
+
 	// Determine which actions we should allow on this page.
 	if ($context['browse_type'] == 'approve')
 	{
@@ -812,6 +816,7 @@ function MembersAwaitingActivation()
 			'params' => array(
 				'is_activated = {int:activated_status}',
 				array('activated_status' => $context['current_filter']),
+				$context['show_duplicates'],
 			),
 		),
 		'get_count' => array(
@@ -890,6 +895,19 @@ function MembersAwaitingActivation()
 					'reverse' => 'member_ip DESC',
 				),
 			),
+			'hostname' => array(
+				'header' => array(
+					'value' => $txt['hostname'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $modSettings;
+
+						return host_from_ip($rowData[\'member_ip\']);
+					'),
+					'class' => 'smalltext',
+				),
+			),
 			'date_registered' => array(
 				'header' => array(
 					'value' => $txt['date_registered'],
@@ -902,6 +920,29 @@ function MembersAwaitingActivation()
 				'sort' =>  array(
 					'default' => 'date_registered DESC',
 					'reverse' => 'date_registered',
+				),
+			),
+			'duplicates' => array(
+				'header' => array(
+					'value' => $txt['duplicates'],
+					// Make sure it doesn't go too wide.
+					'style' => 'width: 20%',
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $scripturl, $txt;
+
+						$member_links = array();
+						foreach ($rowData[\'duplicate_members\'] as $member)
+						{
+							if ($member[\'id\'])
+								$member_links[] = \'<a href="\' . $scripturl . \'?action=profile;u=\' . $member[\'id\'] . \'" \' . (!empty($member[\'is_banned\']) ? \'style="color: red;"\' : \'\') . \'>\' . $member[\'name\'] . \'</a>\';
+							else
+								$member_links[] = $member[\'name\'] . \' (\' . $txt[\'guest\'] . \')\';
+						}
+						return implode (\', \', $member_links);
+					'),
+					'class' => 'smalltext',
 				),
 			),
 			'check' => array(
@@ -934,15 +975,29 @@ function MembersAwaitingActivation()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<select name="todo" onchange="onSelectChange();">
-						' . $allowed_actions . '
-					</select>
-					<noscript><input type="submit" value="' . $txt['go'] . '" /></noscript>',
+					<div style="float:left">
+						[<a href="' . $scripturl . '?action=admin;area=viewmembers;sa=browse;showdupes=' . ($context['show_duplicates'] ? 0 : 1) . ';type=' . $context['browse_type'] . (!empty($context['show_filter']) ? ';filter=' . $context['current_filter'] : '') . ';sesc=' . $context['session_id'] . '">' . ($context['show_duplicates'] ? $txt['dont_check_for_duplicate'] : $txt['check_for_duplicate']) . '</a>]
+					</div>
+					<div style="float:right;">
+						<select name="todo" onchange="onSelectChange();">
+							' . $allowed_actions . '
+						</select>
+						<noscript><input type="submit" value="' . $txt['go'] . '" /></noscript>
+					</div>',
 				'class' => 'titlebg',
-				'style' => 'text-align: right;',
 			),
 		),
 	);
+
+	// Pick what column to actually include if we're showing duplicates.
+	if ($context['show_duplicates'])
+		unset($listOptions['columns']['email']);
+	else
+		unset($listOptions['columns']['duplicates']);
+
+	// Only show hostname on duplicates as it takes a lot of time.
+	if (!$context['show_duplicates'] || !empty($modSettings['disableHostnameLookup']))
+		unset($listOptions['columns']['hostname']);
 
 	// Is there any need to show filters?
 	if (isset($context['available_filters']) && count($context['available_filters']) > 1)

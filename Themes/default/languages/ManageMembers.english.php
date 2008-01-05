@@ -129,4 +129,8 @@ $txt['admin_approve_remind_desc2'] = 'Please click the link below to activate yo
 $txt['admin_approve_accept_desc'] = 'Your account has been activated manually by the admin and you can now login and post.';
 $txt['admin_approve_require_activation'] = 'Your account on ' . $context['forum_name'] . ' has been approved by the forum administrator, and must now be activated before you can begin posting.';
 
+$txt['check_for_duplicate'] = 'Check for Duplicates';
+$txt['dont_check_for_duplicate'] = 'Don\'t Check for Duplicates';
+$txt['duplicates'] = 'Duplicates';
+
 ?>
