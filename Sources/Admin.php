@@ -130,7 +130,7 @@ function AdminMain()
 					'label' => $txt['package'],
 					'file' => 'Packages.php',
 					'function' => 'Packages',
-					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
+					'permission' => array('admin_forum'),
 					'icon' => 'packages.gif',
 					'subsections' => array(
 						'browse' => array($txt['browse_packages']),
@@ -317,7 +317,7 @@ function AdminMain()
 					'label' => $txt['admin_groups'],
 					'file' => 'ManageMembergroups.php',
 					'function' => 'ModifyMembergroups',
-					'permission' => array('moderate_forum'),
+					'permission' => array('manage_members'),
 					'subsections' => array(
 						'index' => array($txt['membergroups_edit_groups'], 'manage_membergroups'),
 						'add' => array($txt['membergroups_new_group'], 'manage_membergroups'),

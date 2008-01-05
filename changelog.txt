@@ -32,6 +32,7 @@ January 2008
  ! Give each search method it's own API file to better allow newer search methos - note this is currently only minimal abstraction. (Search.php, SearchAPI-Standard.php, SearchAPI-Fulltext.php, SearchAPI-Custom.php) [Bug 1189]
  * The default template was not applying labels to poll options correctly. (Display template) [Bug 1206]
  ! Package manager wasn't loading themes correctly. (Packages.php) [Bug 1210]
+ ! Some menu items were not showing in the admin center even if you had the right permission. (Admin.php) [Bug 1209]
 
 
 December 2007
