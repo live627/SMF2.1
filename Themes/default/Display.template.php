@@ -102,7 +102,7 @@ function template_main()
 			// Show each option with its button - a radio likely.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-							', $option['vote_button'], ' <label for="options-', $option['id'], '">', $option['option'], '</label><br />';
+							', $option['vote_button'], ' <label for="', $option['id'], '">', $option['option'], '</label><br />';
 
 			echo '
 						</td>

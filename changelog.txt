@@ -30,6 +30,7 @@ January 2008
  ! Moved xmlfeed caching for guests from level 2 to level 3. (News.php) [MotM]
  + When looked at members awaiting approval or activation allow you to check for duplicates and show their hostname. (Subs-Members.php, ManageMembers.php, ManageMembers language file) [Feature 1199]
  ! Give each search method it's own API file to better allow newer search methos - note this is currently only minimal abstraction. (Search.php, SearchAPI-Standard.php, SearchAPI-Fulltext.php, SearchAPI-Custom.php) [Bug 1189]
+ * The default template was not applying labels to poll options correctly. (Display template) [Bug 1206]
 
 
 December 2007
