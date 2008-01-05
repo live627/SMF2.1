@@ -1136,7 +1136,12 @@ function create_control_richedit($editorOptions)
 	{
 		$disabled_tags = explode(',', $modSettings['disabledBBC']);
 		foreach ($disabled_tags as $tag)
+		{
+			if ($tag == 'list')
+				$context['disabled_tags']['orderlist'] = true;
+
 			$context['disabled_tags'][trim($tag)] = true;
+		}
 	}
 
 	// Switch the URLs back... now we're back to whatever the main sub template is.  (like folder in PersonalMessage.)

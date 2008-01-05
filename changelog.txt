@@ -34,6 +34,7 @@ January 2008
  ! Package manager wasn't loading themes correctly. (Packages.php) [Bug 1210]
  ! Some menu items were not showing in the admin center even if you had the right permission. (Admin.php) [Bug 1209]
  ! Installer wouldn't install on SQLite. (install.php, Subs-Db-sqlite.php) [Bug 1197]
+ ! If list is disabled, so is ordered list. (Subs-Editor.php) [Bug 1207]
 
 
 December 2007
