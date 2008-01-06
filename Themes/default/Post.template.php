@@ -6,10 +6,6 @@ function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
-	if ($context['show_spellchecking'])
-		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
-
 	if ($context['visual_verification'])
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
@@ -439,8 +435,35 @@ function template_main()
 							</tr>';
 	}
 
-	// The below function prints the BBC, smileys and the message itself out.
-	template_control_richedit($context['post_box_name']);
+	// Show the actual posting area...
+	if ($context['show_bbc'])
+	{
+		echo '
+							<tr>
+								<td align="right"></td>
+								<td valign="middle">
+									', template_control_richedit($context['post_box_name'], 'bbc'), '
+								</td>
+							</tr>';
+	}
+
+	// What about smileys?
+	if (!empty($context['smileys']['postform']))
+		echo '
+							<tr>
+								<td align="right"></td>
+								<td valign="middle">
+									', template_control_richedit($context['post_box_name'], 'smileys'), '
+								</td>
+							</tr>';
+
+	echo '
+							<tr>
+								<td valign="top" align="right"></td>
+								<td>
+									', template_control_richedit($context['post_box_name'], 'message'), '
+								</td>
+							</tr>';
 
 	// If this message has been edited in the past - display when it was.
 	if (isset($context['last_modified']))
@@ -566,18 +589,12 @@ function template_main()
 							<tr>
 								<td align="center" colspan="2">
 									<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
-									<input type="submit" name="post" value="', $context['submit_label'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />
-									<input type="submit" name="preview" value="', $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="return event.ctrlKey || previewPost();" accesskey="p" />';
+									', template_control_richedit($context['post_box_name'], 'buttons');
 
 	// Option to delete an event if user is editing one.
 	if ($context['make_event'] && !$context['event']['new'])
 		echo '
 									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['event_delete_confirm'], '\');" />';
-
-	// Spell check button if the option is enabled.
-	if ($context['show_spellchecking'])
-		echo '
-									<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="editorHandle', $context['post_box_name'], '.spellCheckStart();" />';
 
 	echo '
 								</td>
@@ -749,13 +766,6 @@ function template_main()
 
 	echo '
 		// ]]></script>';
-
-	// A hidden form to post data to the spell checking window.
-	if ($context['show_spellchecking'])
-		echo '
-		<form action="', $scripturl, '?action=spellcheck" method="post" accept-charset="', $context['character_set'], '" name="spell_form" id="spell_form" target="spellWindow">
-			<input type="hidden" name="spellstring" value="" />
-		</form>';
 
 	// If the user is replying to a topic show the previous posts.
 	if (isset($context['previous_posts']) && count($context['previous_posts']) > 0)

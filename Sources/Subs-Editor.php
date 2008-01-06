@@ -949,7 +949,11 @@ function theme_postbox($msg)
 function create_control_richedit($editorOptions)
 {
 	global $txt, $modSettings, $db_prefix, $options, $smfFunc;
-	global $context, $settings, $user_info, $sourcedir;
+	global $context, $settings, $user_info, $sourcedir, $scripturl;
+
+	// Every control must have a ID!
+	assert(isset($editorOptions['id']));
+	assert(isset($editorOptions['value']));
 
 	// Is this the first richedit - if so we need to ensure some template stuff is initialised.
 	if (empty($context['controls']['richedit']))
@@ -961,17 +965,35 @@ function create_control_richedit($editorOptions)
 		// This really has some WYSIWYG stuff.
 		$context['html_headers'] .= '
 		<link rel="stylesheet" type="text/css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/editor.css" />
-
-
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
 		// ]]></script>
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js"></script>';
-	}
 
-	// Every control must have a ID!
-	assert(isset($editorOptions['id']));
-	assert(isset($editorOptions['value']));
+		$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
+		if ($context['show_spellchecking'])
+		{
+			$context['html_headers'] .= '
+				<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/spellcheck.js"></script>';
+
+			// Some hidden information is needed in order to make the spell checking work.
+			if (!isset($_REQUEST['xml']))
+				$context['insert_after_template'] .= '
+				<form name="spell_form" id="spell_form" method="post" accept-charset="' . $context['character_set'] . '" target="spellWindow" action="' . $scripturl . '?action=spellcheck">
+					<input type="hidden" name="spellstring" value="" />
+				</form>';
+
+			// Also make sure that spell check works with rich edit.
+			$context['html_headers'] .= '
+				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+				function spellCheckDone()
+				{
+					for (i = 0; i < smf_editorArray.length; i++)
+						smf_editorArray[i].spellCheckEnd();
+				}
+				// ]]></script>';
+		}
+	}
 
 	// Start off the editor...
 	$context['controls']['richedit'][$editorOptions['id']] = array(
@@ -986,6 +1008,8 @@ function create_control_richedit($editorOptions)
 		'height' => isset($editorOptions['height']) ? $editorOptions['height'] : '150px',
 		'form' => isset($editorOptions['form']) ? $editorOptions['form'] : 'postmodify',
 		'bbc_level' => !empty($editorOptions['bbc_level']) ? $editorOptions['bbc_level'] : 'full',
+		'preview_type' => isset($editorOptions['preview_type']) ? (int) $editorOptions['preview_type'] : 1,
+		'labels' => !empty($editorOptions['labels']) ? $editorOptions['labels'] : array(),
 	);
 
 	// Switch between default images and back... mostly in case you don't have an PersonalMessage template, but do have a Post template.

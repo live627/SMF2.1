@@ -41,6 +41,10 @@ January 2008
  * Changed the manage maintenance template around as it was getting too crowded. (ManageMaintenance.php, ManageMaintenance template, ManageMaintenance language files)
  * Don't show the warning icon for guest's posts. (Display template) [Bug 1212]
  + Try to detect when the user is using an iPhone. (Load.php) [MotM]
+ ! Moved spell checking functions into the rich edit control, and the ability to publish the buttons, to ensure it is more modular. (Subs-Editor.php, PersonalMessage.php, Post.php)
+ ! Spell check wasn't working in Personal Messages. (PersonalMessage template) [Bug 1214]
+ * Don't put layout HTML in the rich edit control, instead call the richedit template piecemeal (GenericControl, Post and PersonalMessage templates)
+ ! Added a new context variable called insert_after_template which will get echo'd after the main template in case you need to put elements somewhere form safe which isn't in the headers. (Load.php, Subs.php)
 
 
 December 2007

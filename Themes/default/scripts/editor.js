@@ -20,6 +20,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	var frameDocument = null;
 	var frameWindow = null;
 
+	// What is the ID of the form this control is in?
+	var formID = 'postmodify';
+
 	// These hold the breadcrumb.
 	var breadHandle = null;
 
@@ -39,6 +42,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	this.showMoreSmileys = showMoreSmileys;
 	this.resizeTextArea = resizeTextArea;
 	this.doSubmit = doSubmit;
+	this.setFormID = setFormID;
 
 	// Spellcheck functionaliy.
 	this.spellCheckStart = spellCheckStart;
@@ -1119,7 +1123,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		// Otherwise start spellchecking right away.
 		else
 		{
-			spellCheck('postmodify', 'message');
+			spellCheck(formID, uniqueId);
 		}
 	}
 
@@ -1135,7 +1139,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		text = text.replace(/&amp;/g, '&');
 
 		textHandle.value = text;
-		spellCheck('postmodify', 'message', 'spellCheckEnd');
+		spellCheck(formID, uniqueId, 'spellCheckEnd');
 	}
 
 	// Function called when the Spellchecker is finished and ready to pass back.
@@ -1206,6 +1210,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			new_size = (parseInt(curReg[1]) + (parseInt(changeReg[1]) / 10)).toString() + '%';
 
 		return new_size;
+	}
+
+	// Simply set the form ID.
+	function setFormID(newID)
+	{
+		formID = newID;
 	}
 
 	init(text, editWidth, editHeight);

@@ -99,8 +99,6 @@ function Post()
 
 	loadLanguage('Post');
 
-	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
-
 	// You can't reply with a poll... hacker.
 	if (isset($_REQUEST['poll']) && !empty($topic) && !isset($_REQUEST['msg']))
 		unset($_REQUEST['poll']);
@@ -1024,6 +1022,8 @@ function Post()
 	$editorOptions = array(
 		'id' => 'message',
 		'value' => $context['message'],
+		// We do XML preview here.
+		'preview_type' => 2,
 	);
 	create_control_richedit($editorOptions);
 

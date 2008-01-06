@@ -1443,8 +1443,6 @@ function MessagePost()
 	// Extract out the spam settings - cause it's neat.
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
 
-	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
-
 	// Set the title...
 	$context['page_title'] = $txt['send_message'];
 
@@ -1663,6 +1661,9 @@ function MessagePost()
 		'id' => 'message',
 		'value' => $context['message'],
 		'width' => '90%',
+		'labels' => array(
+			'post_button' => $txt['send_message'],
+		),
 	);
 	create_control_richedit($editorOptions);
 
@@ -1709,7 +1710,6 @@ function messagePostError($error_types, $to, $bcc)
 	global $txt, $context, $scripturl, $modSettings, $db_prefix;
 	global $smfFunc, $user_info, $sourcedir;
 
-	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 	$context['pm_area'] = 'send';
 
 	if (!WIRELESS)
@@ -1836,6 +1836,9 @@ function messagePostError($error_types, $to, $bcc)
 		'id' => 'message',
 		'value' => $context['message'],
 		'width' => '90%',
+		'labels' => array(
+			'post_button' => $txt['send_message'],
+		),
 	);
 	create_control_richedit($editorOptions);
 

@@ -2,20 +2,18 @@
 // Version: 2.0 Beta 2; GenericControls
 
 // This function displays all the stuff you get with a richedit box - BBC, smileys etc.
-function template_control_richedit($editor_id)
+function template_control_richedit($editor_id, $display_controls = 'all')
 {
-	global $context, $settings, $options, $txt, $modSettings;
+	global $context, $settings, $options, $txt, $modSettings, $scripturl;
 
 	$editor_context = &$context['controls']['richedit'][$editor_id];
 
-	// Assuming BBC code is enabled then print the buttons and some javascript to handle it.
-	if ($context['show_bbc'])
-	{
-		echo '
-			<tr>
-				<td align="right"></td>
-				<td valign="middle">';
+	if ($display_controls !== 'all' && !is_array($display_controls))
+		$display_controls = array($display_controls);
 
+	// Assuming BBC code is enabled then print the buttons and some javascript to handle it.
+	if ($context['show_bbc'] && ($display_controls == 'all' || in_array('bbc', $display_controls)))
+	{
 		$found_button = false;
 		// Here loop through the array, printing the images/rows/separators!
 		foreach ($context['bbc_tags'][0] as $image => $tag)
@@ -105,20 +103,11 @@ function template_control_richedit($editor_id)
 				$found_button = false;
 			}
 		}
-
-		echo '
-				</td>
-			</tr>';
 	}
 
 	// Now start printing all of the smileys.
-	if (!empty($context['smileys']['postform']) && !$editor_context['disable_smiley_box'])
+	if (!empty($context['smileys']['postform']) && !$editor_context['disable_smiley_box'] && ($display_controls == 'all' || in_array('smileys', $display_controls)))
 	{
-		echo '
-			<tr>
-				<td align="right"></td>
-				<td valign="middle">';
-
 		// Show each row of smileys ;).
 		foreach ($context['smileys']['postform'] as $smiley_row)
 		{
@@ -135,81 +124,89 @@ function template_control_richedit($editor_id)
 		if (!empty($context['smileys']['popup']))
 			echo '
 					<a href="javascript:editorHandle', $editor_id, '.showMoreSmileys(\'', $editor_id, '\', \'', $txt['more_smileys_title'], '\', \'', $txt['more_smileys_pick'], '\', \'', $txt['more_smileys_close_window'], '\', \'', $settings['theme_url'], '\');">[', $txt['more_smileys'], ']</a>';
-
-		echo '
-				</td>
-			</tr>';
 	}
 
 	// Finally the most important bit - the actual text box to write in!
-	echo '
-			<tr>
-				<td valign="top" align="right"></td>
-				<td>
+	if ($display_controls == 'all' || in_array('message', $display_controls))
+	{
+		echo '
 					<textarea class="editor" name="', $editor_id, '" id="', $editor_id, '" rows="', $editor_context['rows'], '" cols="', $editor_context['columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $editor_context['width'], '; height: ', $editor_context['height'], ';', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $editor_context['value'], '</textarea>
-					<input type="hidden" name="', $editor_id, '_mode" id="', $editor_id, '_mode" value="', $editor_context['rich_active'] ? 1 : 0, '" />
-				</td>
-			</tr>';
+					<input type="hidden" name="', $editor_id, '_mode" id="', $editor_id, '_mode" value="', $editor_context['rich_active'] ? 1 : 0, '" />';
 
-	// Now it's all drawn out we'll actually setup the box.
-	echo '
-			<tr><td colspan="2">
+		// Now it's all drawn out we'll actually setup the box.
+		echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var editorHandle', $editor_id, ' = new smfEditor(\'', $context['session_id'], '\', \'', $editor_id, '\', ', $editor_context['rich_active'] ? 'true' : 'false', ', \'', $editor_context['rich_active'] ? $editor_context['rich_value'] : '', '\', \'', $editor_context['width'], '\', \'', $editor_context['height'], '\');';
 
-	// Create the controls.
-	if (!empty($context['bbc_tags']))
-	{
-		foreach ($context['bbc_tags'] as $row)
-			foreach ($row as $image => $tag)
-			{
-				if (isset($tag['before']) && empty($context['disabled_tags'][$tag['code']]))
-					echo '
+		// Create the controls.
+		if (!empty($context['bbc_tags']))
+		{
+			foreach ($context['bbc_tags'] as $row)
+				foreach ($row as $image => $tag)
+				{
+					if (isset($tag['before']) && empty($context['disabled_tags'][$tag['code']]))
+						echo '
 					editorHandle', $editor_id, '.addButton(\'', $tag['code'], '\', \'', $tag['before'], '\', \'', empty($tag['after']) ? '' : $tag['after'], '\');';
-			}
-	}
+				}
+		}
 
-	// Setup the smileys.
-	if (!empty($context['smileys']['postform']) && !$editor_context['disable_smiley_box'])
-	{
-		foreach ($context['smileys']['postform'] as $row)
-			foreach ($row['smileys'] as $smiley)
-				echo '
+		// Setup the smileys.
+		if (!empty($context['smileys']['postform']) && !$editor_context['disable_smiley_box'])
+		{
+			foreach ($context['smileys']['postform'] as $row)
+				foreach ($row['smileys'] as $smiley)
+					echo '
 					editorHandle', $editor_id, '.addSmiley(\'', $smiley['code'], '\', \'', $smiley['filename'], '\', \'', $smiley['js_description'], '\');';
-	}
+		}
 
-	// Setup the data for the popup smileys.
-	if (!empty($context['smileys']['popup']) && !$editor_context['disable_smiley_box'])
-	{
-		echo '
-		var smileys = [';
-		foreach ($context['smileys']['popup'] as $smiley_row)
+		// Setup the data for the popup smileys.
+		if (!empty($context['smileys']['popup']) && !$editor_context['disable_smiley_box'])
 		{
 			echo '
-					[';
-			foreach ($smiley_row['smileys'] as $smiley)
+			var smileys = [';
+			foreach ($context['smileys']['popup'] as $smiley_row)
 			{
 				echo '
+					[';
+				foreach ($smiley_row['smileys'] as $smiley)
+				{
+					echo '
 						["', $smiley['code'], '","', $smiley['filename'], '","', $smiley['js_description'], '"]';
-				if (empty($smiley['last']))
+					if (empty($smiley['last']))
+						echo ',';
+				}
+
+				echo ']';
+				if (empty($smiley_row['last']))
 					echo ',';
 			}
-
 			echo ']';
-			if (empty($smiley_row['last']))
-				echo ',';
 		}
-		echo ']';
-	}
 
-	// Create the drop downs and then initialise my friend!
-	echo '
+		// Create the drop downs and then initialise my friend!
+		echo '
 		editorHandle', $editor_id, '.addSelect(\'face\');
 		editorHandle', $editor_id, '.addSelect(\'size\');
 		editorHandle', $editor_id, '.addSelect(\'color\');
+		editorHandle', $editor_id, '.setFormID(\'', $editor_context['form'], '\');
 		smf_editorArray[smf_editorArray.length] = editorHandle', $editor_id, ';
-	// ]]></script>
-			</td></tr>';
+	// ]]></script>';
+	}
+
+	// Are we showing the buttons too?
+	if ($display_controls == 'all' || in_array('buttons', $display_controls))
+	{
+		echo '
+			<input type="submit" value="', isset($editor_context['labels']['post_button']) ? $editor_context['labels']['post_button'] : $txt['post'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />';
+
+		if ($editor_context['preview_type'])
+			echo '
+			<input type="submit" name="preview" value="', isset($editor_context['labels']['preview_button']) ? $editor_context['labels']['preview_button'] : $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="', $editor_context['preview_type'] == 2 ? 'return event.ctrlKey || previewPost();' : 'return submitThisOnce(this);', '" accesskey="p" />';
+
+		if ($context['show_spellchecking'])
+			echo '
+			<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="editorHandle', $editor_id, '.spellCheckStart();" />';
+	}
 }
 
 // Display an auto suggest box.

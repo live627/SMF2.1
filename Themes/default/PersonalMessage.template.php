@@ -858,10 +858,6 @@ function template_send()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	if ($context['show_spellchecking'])
-		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
-
 	if ($context['visual_verification'])
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
@@ -1033,19 +1029,42 @@ function template_send()
 							</tr>';
 	}
 
+	// Showing BBC?
+	if ($context['show_bbc'])
+	{
+		echo '
+							<tr>
+								<td align="right"></td>
+								<td valign="middle">
+									', template_control_richedit($context['post_box_name'], 'bbc'), '
+								</td>
+							</tr>';
+	}
+
+	// What about smileys?
+	if (!empty($context['smileys']['postform']))
+		echo '
+							<tr>
+								<td align="right"></td>
+								<td valign="middle">
+									', template_control_richedit($context['post_box_name'], 'smileys'), '
+								</td>
+							</tr>';
+
 	// Show BBC buttons, smileys and textbox.
-	template_control_richedit($context['post_box_name']);
+	echo '
+							<tr>
+								<td valign="top" align="right"></td>
+								<td>
+									', template_control_richedit($context['post_box_name'], 'message'), '
+								</td>
+							</tr>';
 
 	// Send, Preview, spellcheck buttons.
 	echo '
 							<tr>
 								<td align="right" colspan="2">
-									<input type="submit" value="', $txt['send_message'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />
-									<input type="submit" name="preview" value="', $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="p" />';
-	if ($context['show_spellchecking'])
-		echo '
-									<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="spellCheck(\'postmodify\', \'message\');" />';
-	echo '
+									', template_control_richedit($context['post_box_name'], 'buttons'), '
 								</td>
 							</tr>
 							<tr>
@@ -1065,11 +1084,6 @@ function template_send()
 				</td>
 			</tr>
 		</table>';
-
-	// Some hidden information is needed in order to make the spell checking work.
-	if ($context['show_spellchecking'])
-		echo '
-		<form name="spell_form" id="spell_form" method="post" accept-charset="', $context['character_set'], '" target="spellWindow" action="', $scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value="" /></form>';
 
 	// Show the message you're replying to.
 	if ($context['reply'])
