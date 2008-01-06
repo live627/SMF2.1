@@ -45,6 +45,11 @@ January 2008
  ! Spell check wasn't working in Personal Messages. (PersonalMessage template) [Bug 1214]
  * Don't put layout HTML in the rich edit control, instead call the richedit template piecemeal (GenericControl, Post and PersonalMessage templates)
  ! Added a new context variable called insert_after_template which will get echo'd after the main template in case you need to put elements somewhere form safe which isn't in the headers. (Load.php, Subs.php)
+ ! Only delete unused settings weekly. (ScheduledTasks.php)
+ ! Added a new function to Subs-Admin.php to email every admin a message. (Subs-Admin.php)
+ ! Warn the admin if the attachment folder is getting full. (Subs-Post.php, EmailTemplates language files) [Feature 1201]
+ ! Paid subscriptions should use email templates. (subscriptions.php, EmailTemplates and ManagePaid language files)
+ ! Tidy up the paid subscriptions code and use the EmailAdmin function for sending out subscription details. (subscriptions.php)
 
 
 December 2007

@@ -764,6 +764,90 @@ Before this member can begin posting they must first have their account approved
 
 {REGARDS}',
 	),
+	'admin_attachments_full' => array(
+		/*
+			@additional_params: admin_attachments_full
+				REALNAME:
+			@description:
+		*/
+		'subject' => 'Urgent! Attachments folder almost full',
+		'body' => '{REALNAME},
+
+The attachments folder at {FORUMNAME} is almost full. Please visit the forum to resolve this problem.
+
+Once the attachments folder reaches it\'s maximum permitted size users will not be able to continue to post attachments or upload custom avatars (If enabled).
+
+{REGARDS}',
+	),
+	'paid_subscription_refund' => array(
+		/*
+			@additional_params: paid_subscription_refund
+				NAME: Subscription title.
+				REALNAME: Recipients name
+				REFUNDUSER: Username who took out the subscription.
+				REFUNDNAME: User's display name who took out the subscription.
+				DATE: Today's date.
+				PROFILELINK: Link to members profile.
+			@description:
+		*/
+		'subject' => 'Refunded Paid Subscription',
+		'body' => '{REALNAME},
+
+A member has received a refund on a paid subscription. Below are the details of this subscription:
+
+	Subscription: {NAME}
+	User Name: {REFUNDNAME} ({REFUNDUSER})
+	Date: {DATE}
+
+You can view this members profile by clicking the link below:
+{PROFILELINK}
+
+{REGARDS}',
+	),
+	'paid_subscription_new' => array(
+		/*
+			@additional_params: paid_subscription_new
+				NAME: Subscription title.
+				REALNAME: Recipients name
+				SUBEMAIL: Email address of the user who took out the subscription
+				SUBUSER: Username who took out the subscription.
+				SUBNAME: User's display name who took out the subscription.
+				DATE: Today's date.
+				PROFILELINK: Link to members profile.
+			@description:
+		*/
+		'subject' => 'New Paid Subscription',
+		'body' => '{REALNAME},
+
+A member has taken out a new paid subscription. Below are the details of this subscription:
+
+	Subscription: {NAME}
+	User Name: {SUBNAME} ({SUBUSER})
+	User Email: {SUBEMAIL}
+	Price: {PRICE}
+	Date: {DATE}
+
+You can view this members profile by clicking the link below:
+{PROFILELINK}
+
+{REGARDS}',
+	),
+	'paid_subscription_error' => array(
+		/*
+			@additional_params: paid_subscription_error
+				ERROR: Error message.
+				REALNAME: Recipients name
+			@description:
+		*/
+		'subject' => 'Paid Subscription Error Occured'',
+		'body' => '{REALNAME},
+
+The following error occured when processing a paid subscription
+---------------------------------------------------------------
+{ERROR}
+
+{REGARDS}',
+	),
 );
 
 /*

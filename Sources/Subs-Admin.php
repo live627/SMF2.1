@@ -50,6 +50,11 @@ if (!defined('SMF'))
 
 	void updateAdminPreferences()
 		- saves the admins current preferences to the database.
+
+	void emailAdmins(string $template, array $replacements = array(), additional_recipients = array())
+		- loads all users who are admins or have the admin forum permission.
+		- uses the email template and replacements passed in the parameters.
+		- sends them an email.
 */
 
 
@@ -360,6 +365,82 @@ function updateAdminPreferences()
 
 	// Make sure we invalidate any cache.
 	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 0);
+}
+
+// Send all the administrators a lovely email.
+function emailAdmins($template, $replacements = array(), $additional_recipients = array())
+{
+	global $smfFunc, $sourcedir, $language, $modSettings;
+
+	// We certainly want this.
+	require_once($sourcedir . '/Subs-Post.php');
+
+	// Load all groups which are effectively admins.
+	$request = $smfFunc['db_query']('', '
+		SELECT id_group
+		FROM {db_prefix}permissions
+		WHERE permission = {string:admin_forum}
+			AND add_deny = {int:add_deny}
+			AND id_group != {int:id_group}',
+		array(
+			'add_deny' => 1,
+			'id_group' => 0,
+			'admin_forum' => 'admin_forum',
+		)
+	);
+	$groups = array(1);
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$groups[] = $row['id_group'];
+	$smfFunc['db_free_result']($request);
+
+	$request = $smfFunc['db_query']('', '
+		SELECT id_member, member_name, real_name, lngfile, email_address
+		FROM {db_prefix}members
+		WHERE (id_group IN ({array_int:group_list}) OR FIND_IN_SET({raw:group_array_implode}, additional_groups))
+			AND notify_types != {int:notify_types}
+		ORDER BY lngfile',
+		array(
+			'group_list' => $groups,
+			'notify_types' => 4,
+			'group_array_implode' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+		)
+	);
+	$emails_sent = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// Stick their particulars in the replacement data.
+		$replacements['IDMEMBER'] = $row['id_member'];
+		$replacements['REALNAME'] = $row['member_name'];
+		$replacements['USERNAME'] = $row['real_name'];
+
+		// Load the data from the template.
+		$emaildata = loadEmailTemplate($template, $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
+
+		// Then send the actual email.
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
+
+		// Track who we emailed so we don't do it twice.
+		$emails_sent[] = $row['email_address'];
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Any additional users we must email this to?
+	if (!empty($additional_recipients))
+		foreach ($additional_recipients as $recipient)
+		{
+			if (in_array($recipient['email'], $emails_sent))
+				continue;
+
+			$replacements['IDMEMBER'] = $recipient['id'];
+			$replacements['REALNAME'] = $recipient['name'];
+			$replacements['USERNAME'] = $recipient['name'];
+
+			// Load the template again.
+			$emaildata = loadEmailTemplate($template, $replacements, empty($recipient['lang']) || empty($modSettings['userLanguage']) ? $language : $recipient['lang']);
+
+			// Send off the email.
+			sendmail($recipient['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
+		}
 }
 
 ?>

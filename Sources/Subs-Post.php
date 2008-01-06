@@ -2115,6 +2115,13 @@ function createAttachment(&$attachmentOptions)
 		// Too big!  Maybe you could zip it or something...
 		if ($attachmentOptions['size'] + $dirSize > $modSettings['attachmentDirSizeLimit'] * 1024)
 			$attachmentOptions['errors'][] = 'directory_full';
+		// Soon to be too big - warn the admins...
+		elseif (!isset($modSettings['attachment_full_notified']) && $modSettings['attachmentDirSizeLimit'] > 4000 && $attachmentOptions['size'] + $dirSize > ($modSettings['attachmentDirSizeLimit'] - 2000) * 1024)
+		{
+			require_once($sourcedir . '/Subs-Admin.php');
+			emailAdmins('admin_attachments_full');
+			updateSettings(array('attachment_full_notified' => 1));
+		}
 	}
 
 	// Check if the file already exists.... (for those who do not encrypt their filenames...)

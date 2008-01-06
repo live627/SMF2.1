@@ -406,23 +406,6 @@ function scheduled_daily_maintenance()
 	// First clean out the data cache.
 	clean_cache('data');
 
-	// Then delete some settings that needn't be set if they are otherwise empty.
-	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage', 'spider_mode', 'spider_group',
-		'paid_currency_code', 'paid_currency_symbol', 'paid_email_to', 'paid_email', 'paid_enabled', 'paypal_email',
-		'search_enable_captcha', 'search_floodcontrol_time', 'show_spider_online',
-	);
-
-	$smfFunc['db_query']('', '
-		DELETE FROM {db_prefix}settings
-		WHERE variable IN ({array_string:setting_list)
-			AND (value = {string:zero_value} OR value = {string:blank_value})',
-		array(
-			'zero_value' => '0',
-			'blank_value' => '',
-			'setting_list' => $emptySettings,
-		)
-	);
-
 	// If warning decrement is enabled and we have people who have not had a new warning in 24 hours, lower their warning level.
 	list (, , $modSettings['warning_decrement']) = explode(',', $modSettings['warning_settings']);
 	if ($modSettings['warning_decrement'])
@@ -1293,6 +1276,37 @@ function scheduled_birthdayemails()
 function scheduled_weekly_maintenance()
 {
 	global $modSettings, $smfFunc, $db_prefix;
+
+	// Delete some settings that needn't be set if they are otherwise empty.
+	$emptySettings = array(
+		'warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage', 'spider_mode', 'spider_group',
+		'paid_currency_code', 'paid_currency_symbol', 'paid_email_to', 'paid_email', 'paid_enabled', 'paypal_email',
+		'search_enable_captcha', 'search_floodcontrol_time', 'show_spider_online',
+	);
+
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}settings
+		WHERE variable IN ({array_string:setting_list)
+			AND (value = {string:zero_value} OR value = {string:blank_value})',
+		array(
+			'zero_value' => '0',
+			'blank_value' => '',
+			'setting_list' => $emptySettings,
+		)
+	);
+
+	// Some settings we never want to keep - they are just there for temporary purposes.
+	$deleteAnywaySettings = array(
+		'attachment_full_notified',
+	);
+
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}settings
+		WHERE variable IN ({array_string:setting_list)',
+		array(
+			'setting_list' => $deleteAnywaySettings,
+		)
+	);
 
 	// Ok should we prune the logs?
 	if (!empty($modSettings['pruningOptions']))

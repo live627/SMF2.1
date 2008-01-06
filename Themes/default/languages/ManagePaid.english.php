@@ -175,19 +175,7 @@ $txt['paid_admin_add'] = 'Add This Subscription';
 $txt['paid_not_set_currency'] = 'You have not setup your currency yet. Please do so from the settings menu before continuing';
 
 // Some error strings.
-$txt['paid_error_subject'] = 'Paid Subscription Error Occured';
 $txt['paid_no_data'] = 'No valid data was sent to the script.';
-$txt['paid_error_body'] = 'An error occured while attempting to do a paid subscription. The error is shown below:';
-$txt['paid_new_sub_subject'] = 'New Paid Subscription';
-$txt['paid_new_sub_body'] = 'A member has taken out a new paid subscription. Below are the details of this subscription:';
-$txt['paid_new_sub_body_sub'] = 'Subscription:';
-$txt['paid_new_sub_body_price'] = 'Cost:';
-$txt['paid_new_sub_body_name'] = 'User';
-$txt['paid_new_sub_body_email'] = 'Email Address';
-$txt['paid_new_sub_body_date'] = 'Date';
-$txt['paid_new_sub_body_link'] = 'You can view this members profile by clicking the link below';
-$txt['paid_delete_sub_subject'] = 'Refunded Paid Subscription';
-$txt['paid_delete_sub_body'] = 'A member has received a refund on a paid subscription. Below are the details of this subscription:';
 
 $txt['paypal_could_not_connect'] = 'Could not connect to PayPal server';
 $txt['paypal_unverified_subject'] = 'Unverified Paypal Transaction';

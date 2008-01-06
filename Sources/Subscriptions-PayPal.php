@@ -133,7 +133,7 @@ class paypal_payment
 	// Validate all the data was valid.
 	public function precheck()
 	{
-		global $modSettings, $txt, $webmaster_email;
+		global $modSettings, $txt;
 
 		// Put this to some default value.
 		if (!isset($_POST['txn_type']))
@@ -262,7 +262,7 @@ class paypal_payment
 	// exit.
 	public function close()
 	{
-		global $smfFunc, $db_prefix, $ID_SUB;
+		global $smfFunc, $subscription_id;
 
 		// If it's a subscription record the reference.
 		if ($_POST['txn_type'] == 'subscr_payment' && !empty($_POST['subscr_id']))
@@ -273,7 +273,7 @@ class paypal_payment
 				SET vendor_ref = {string:vendor_ref}
 				WHERE id_sublog = {int:current_subscription}',
 				array(
-					'current_subscription' => $ID_SUB,
+					'current_subscription' => $subscription_id,
 					'vendor_ref' => $_POST['subscr_id'],
 				)
 			);
@@ -324,8 +324,8 @@ class paypal_payment
 			else
 				return false;
 		}
-		list ($ID_MEMBER, $ID_SUB) = $smfFunc['db_fetch_row']($request);
-		$_POST['item_number'] = $ID_MEMBER . '+' . $ID_SUB;
+		list ($member_id, $subscription_id) = $smfFunc['db_fetch_row']($request);
+		$_POST['item_number'] = $member_id . '+' . $subscription_id;
 		$smfFunc['db_free_result']($request);
 	}
 }

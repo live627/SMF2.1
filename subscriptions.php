@@ -36,6 +36,10 @@ if (!file_exists(dirname(__FILE__) . '/SSI.php'))
 
 require_once(dirname(__FILE__) . '/SSI.php');
 require_once($sourcedir . '/ManagePaid.php');
+
+// For any admin emailing.
+require_once($sourcedir . '/Subs-Admin.php');
+
 loadLanguage('ManagePaid');
 
 // If there's literally nothing coming in, let's take flight!
@@ -45,6 +49,16 @@ if (empty($_POST))
 // I assume we're even active?
 if (empty($modSettings['paid_enabled']))
 	exit;
+
+// If we have some custom people who find out about problems load them here.
+$notify_users = array();
+if (!empty($modSettings['paid_email_to']))
+	foreach (explode(',', $modSettings['paid_email_to']) as $email)
+		$notify_users[] = array(
+			'email' => $email,
+			'name' => $txt['who_member'],
+			'id' => 0,
+		);
 
 // We need to see whether we can find the correct payment gateway, we'll going to go through all our gateway scripts and find out if they are happy with what we have.
 $txnType = '';
@@ -62,15 +76,15 @@ foreach ($gatewayHandles as $gateway)
 if (empty($txnType))
 	generateSubscriptionError($txt['paid_unknown_transaction_type']);
 
-// Get the ID_SUB and ID_MEMBER amoungst others...
-@list ($ID_SUB, $ID_MEMBER) = $gatewayClass->precheck();
+// Get the subscription and member ID amoungst others...
+@list ($subscription_id, $member_id) = $gatewayClass->precheck();
 
 // Integer these just in case.
-$ID_SUB = (int) $ID_SUB;
-$ID_MEMBER = (int) $ID_MEMBER;
+$subscription_id = (int) $subscription_id;
+$member_id = (int) $member_id;
 
 // This would be bad...
-if (empty($ID_MEMBER))
+if (empty($member_id))
 	generateSubscriptionError($txt['paid_empty_member']);
 
 // Verify the member.
@@ -79,30 +93,30 @@ $request = $smfFunc['db_query']('', '
 	FROM {db_prefix}members
 	WHERE id_member = {int:current_member}',
 	array(
-		'current_member' => $ID_MEMBER,
+		'current_member' => $member_id,
 	)
 );
 // Didn't find them?
 if ($smfFunc['db_num_rows']($request) == 0)
-	generateSubscriptionError(sprintf($txt['paid_could_not_find_member'], $ID_MEMBER));
-list ($ID_MEMBER, $username, $name, $email) = $smfFunc['db_fetch_row']($request);
+	generateSubscriptionError(sprintf($txt['paid_could_not_find_member'], $member_id));
+$member_info = $smfFunc['db_fetch_assoc']($request);
 $smfFunc['db_free_result']($request);
 
 // Get the subscription details.
 $request = $smfFunc['db_query']('', '
-	SELECT cost, active, length, name, email_complete
+	SELECT cost, length, name
 	FROM {db_prefix}subscriptions
 	WHERE id_subscribe = {int:current_subscription}',
 	array(
-		'current_subscription' => $ID_SUB,
+		'current_subscription' => $subscription_id,
 	)
 );
 
 // Didn't find it?
 if ($smfFunc['db_num_rows']($request) == 0)
-	generateSubscriptionError(sprintf($txt['paid_count_not_find_subscription'], $ID_MEMBER, $ID_SUB));
+	generateSubscriptionError(sprintf($txt['paid_count_not_find_subscription'], $member_id, $subscription_id));
 
-list ($cost, $active, $length, $subname, $emaildata) = $smfFunc['db_fetch_row']($request);
+$subscription_info = $smfFunc['db_fetch_assoc']($request);
 $smfFunc['db_free_result']($request);
 
 // We wish to check the pending payments to make sure we are expecting this.
@@ -113,20 +127,20 @@ $request = $smfFunc['db_query']('', '
 		AND id_member = {int:current_member}
 	LIMIT 1',
 	array(
-		'current_subscription' => $ID_SUB,
-		'current_member' => $ID_MEMBER,
+		'current_subscription' => $subscription_id,
+		'current_member' => $member_id,
 	)
 );
 if ($smfFunc['db_num_rows']($request) == 0)
-	generateSubscriptionError(sprintf($txt['paid_count_not_find_subscription_log'], $ID_MEMBER, $ID_SUB));
-list ($id_sublog, $payments_pending, $pending_details) = $smfFunc['db_fetch_row']($request);
+	generateSubscriptionError(sprintf($txt['paid_count_not_find_subscription_log'], $member_id, $subscription_id));
+$subscription_info += $smfFunc['db_fetch_assoc']($request);
 $smfFunc['db_free_result']($request);
 
 // Is this a refund etc?
 if ($gatewayClass->isRefund())
 {
 	// Delete user subscription.
-	removeSubscription($ID_SUB, $ID_MEMBER);
+	removeSubscription($subscription_id, $member_id);
 
 	// Mark it as complete so we have a record.
 	$smfFunc['db_query']('', '
@@ -137,8 +151,8 @@ if ($gatewayClass->isRefund())
 			AND status = {int:not_active}',
 		array(
 			'current_time' => time(),
-			'current_subscription' => $ID_SUB,
-			'current_member' => $ID_MEMBER,
+			'current_subscription' => $subscription_id,
+			'current_member' => $member_id,
 			'not_active' => 0,
 		)
 	);
@@ -146,112 +160,99 @@ if ($gatewayClass->isRefund())
 	// Receipt?
 	if (!empty($modSettings['paid_email']) && $modSettings['paid_email'] == 2)
 	{
-		$emailbody = $txt['paid_delete_sub_body'];
-		$emailbody .= "\n\n\t";
-		$emailbody .= $txt['paid_new_sub_body_sub'] . ' ' . $subname;
-		$emailbody .= "\n\t" . $txt['paid_new_sub_body_name'] . ' ' . $name . ' (' . $username . ')';
-		$emailbody .= "\n\t" . $txt['paid_new_sub_body_date'] . ' ' . timeformat(time(), false);
+		$replacements = array(
+			'NAME' => $subscription_info['name'],
+			'REFUNDNAME' => $member_info['member_name'],
+			'REFUNDUSER' => $member_info['real_name'],
+			'PROFILELINK' => $scripturl . '?action=profile;u=' . $member_id,
+			'DATE' => timeformat(time(), false),
+		);
 
-		paidAdminEmail($txt['paid_delete_sub_subject'], $emailbody);
+		emailAdmins('paid_subscription_refund', $replacements, $notify_users);
 	}
 
 }
 // Otherwise is it what we want, a purchase?
 elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 {
-	$cost = unserialize($cost);
-	$totalCost = $gatewayClass->getCost();
+	$cost = unserialize($subscription_info['cost']);
+	$total_cost = $gatewayClass->getCost();
 	$notify = false;
 
 	// For one off's we want to only capture them once!
 	if (!$gatewayClass->isSubscription())
 	{
-		$real_details = @unserialize($pending_details);
+		$real_details = @unserialize($subscription_info['pending_details']);
 		if (empty($real_details))
-			generateSubscriptionError(sprintf($txt['paid_count_not_find_outstanding_payment'], $ID_MEMBER, $ID_SUB));
+			generateSubscriptionError(sprintf($txt['paid_count_not_find_outstanding_payment'], $member_id, $subscription_id));
 		// Now we just try to find anything pending. We don't really care which it is as security happens later.
 		foreach ($real_details as $id => $detail)
 		{
 			unset($real_details[$id]);
-			if ($detail[3] == 'payback' && $payments_pending)
-				$payments_pending--;
+			if ($detail[3] == 'payback' && $subscription_info['payments_pending'])
+				$subscription_info['payments_pending']--;
 			break;
 		}
-		$pending_details = empty($real_details) ? '' : serialize($real_details);
+		$subscription_info['pending_details'] = empty($real_details) ? '' : serialize($real_details);
 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_subscribed
 			SET payments_pending = {int:payments_pending}, pending_details = {string:pending_details}
 			WHERE id_sublog = {int:current_subscription_item}',
 			array(
-				'payments_pending' => $payments_pending,
-				'current_subscription_item' => $id_sublog,
-				'pending_details' => $pending_details,
+				'payments_pending' => $subscription_info['payments_pending'],
+				'current_subscription_item' => $subscription_info['id_sublog'],
+				'pending_details' => $subscription_info['pending_details'],
 			)
 		);
 	}
 
 	// Is this flexible?
-	if ($length == 'F')
+	if ($subscription_info['length'] == 'F')
 	{
-		$foundDuration = 0;
+		$found_duration = 0;
 		// This is a little harder, can we find the right duration?
 		foreach ($cost as $duration => $value)
 		{
 			if ($duration == 'fixed')
 				continue;
-			elseif ((float) $value == (float) $totalCost)
-				$foundDuration = strtoupper(substr($duration, 0, 1));
+			elseif ((float) $value == (float) $total_cost)
+				$found_duration = strtoupper(substr($duration, 0, 1));
 		}
 
 		// If we have the duration then we're done.
-		if ($foundDuration !== 0)
+		if ($found_duration!== 0)
 		{
 			$notify = true;
-			addSubscription($ID_SUB, $ID_MEMBER, $foundDuration);
+			addSubscription($subscription_id, $member_id, $found_duration);
 		}
 	}
 	else
 	{
 		$actual_cost = $cost['fixed'];
 		// It must be at least the right amount.
-		if ($totalCost != 0 && $totalCost >= $actual_cost)
+		if ($total_cost != 0 && $total_cost >= $actual_cost)
 		{
 			// Add the subscription.
 			$notify = true;
-			addSubscription($ID_SUB, $ID_MEMBER);
+			addSubscription($subscription_id, $member_id);
 		}
 	}
 
 	// Send a receipt?
 	if (!empty($modSettings['paid_email']) && $modSettings['paid_email'] == 2 && $notify)
 	{
-		$emailbody = $txt['paid_new_sub_body'];
-		$emailbody .= "\n\n\t";
-		$emailbody .= $txt['paid_new_sub_body_sub'] . ' ' . $subname;
-		$emailbody .= "\n\t" . $txt['paid_new_sub_body_price'] . ' ' . sprintf($modSettings['paid_currency_symbol'], $totalCost);
-		$emailbody .= "\n\t" . $txt['paid_new_sub_body_name'] . ' ' . $name . ' (' . $username . ')';
-		$emailbody .= "\n\t" . $txt['paid_new_sub_body_email'] . ' ' . $email;
-		$emailbody .= "\n\t" . $txt['paid_new_sub_body_date'] . ' ' . timeformat(time(), false);
-		$emailbody .= "\n" . $txt['paid_new_sub_body_link'] . ':' . "\n\t" . $scripturl . '?action=profile;u=' . $ID_MEMBER;
+		$replacements = array(
+			'NAME' => $subscription_info['name'],
+			'SUBNAME' => $member_info['member_name'],
+			'SUBUSER' => $member_info['real_name'],
+			'SUBEMAIL' => $member_info['email_address'],
+			'PRICE' => sprintf($modSettings['paid_currency_symbol'], $total_cost),
+			'PROFILELINK' => $scripturl . '?action=profile;u=' . $member_id,
+			'DATE' => timeformat(time(), false),
+		);
 
-		paidAdminEmail($txt['paid_new_sub_subject'], $emailbody);
-	}
-
-	// Email the user?
-	if (strlen($emaildata > 10) && strpos($emaildata, "\n") !== false)
-	{
-		$subject = substr($emaildata, 0, strpos($emaildata, "\n") - 1);
-		$body = substr($emaildata, strpos($emaildata, "\n") + 1);
-
-		$search = array('{NAME}', '{FORUM}');
-		$replace = array($name, $mbname);
-
-		$subject = str_replace($search, $replace, $subject);
-		$body = str_replace($search, $replace, $body);
-
-		require_once($sourcedir . '/Subs-Post.php');
-		sendmail($email, $subject, $body);
+		emailAdmins('paid_subscription_new', $replacements, $notify_users);
 	}
 }
 
@@ -259,42 +260,24 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 $gatewayClass->close();
 
 // Log an error then die.
-function generateSubscriptionError($text, $notify = true)
+function generateSubscriptionError($text)
 {
-	global $modSettings, $sourcedir, $db_prefix, $txt;
+	global $modSettings, $notify_users;
 
 	// Send an email?
 	if (!empty($modSettings['paid_email']))
-		paidAdminEmail($txt['paid_error_subject'], $txt['paid_error_body'] . "\n" . '---------------------------------------------' . "\n" . $text);
-
-	// Otherwise log and die.
-	log_error($text);
-	exit;
-}
-
-// Send an email to admins.
-function paidAdminEmail($subject, $body)
-{
-	global $sourcedir, $db_prefix, $mbname, $modSettings, $smfFunc;
-
-	require_once($sourcedir . '/Subs-Post.php');
-	$request = $smfFunc['db_query']('', '
-		SELECT email_address, real_name
-		FROM {db_prefix}members
-		WHERE id_group = {int:admin_group}',
-		array(
-			'admin_group' => 1,
-		)
-	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		sendmail($row['email_address'], $subject, $row['real_name'] . "\n\n" . $body . "\n\n" . $mbname);
-	$smfFunc['db_free_result']($request);
-
-	if (!empty($modSettings['paid_email_to']))
 	{
-		foreach (explode(',', $modSettings['paid_email_to']) as $email)
-			sendmail(trim($email), $subject, $body . "\n\n" . $mbname);
+		$replacements = array(
+			'ERROR' => $text,
+		);
+
+		emailAdmins('paid_subscription_new', $replacements, $notify_users);
 	}
+
+	// Then just log and die.
+	log_error($text);
+
+	exit;
 }
 
 ?>
