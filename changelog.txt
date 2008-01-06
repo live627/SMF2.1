@@ -57,6 +57,7 @@ January 2008
  ! Latest news wasn't working in the moderation centre. (ModerationCenter template)
  ! By default change boardsAllowedTo to also check a groups access rights - not just permissions. (Security.php)
  ! Make sure the moderation log absolutely respects access rights of viewers. (Modlog.php) [Bug 1087]
+ ! Don't update columns that don't need to be when doing a replace query. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1194]
 
 
 December 2007

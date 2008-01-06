@@ -613,33 +613,34 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 			else
 				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
 
-			$updateData .= $actualType;
-
 			// Has it got a key?
 			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND') . substr($actualType,0, -2);
+				$where .= (empty($where) ? '' : ' AND ') . substr($actualType,0, -2);
+			else
+				$updateData .= $actualType;
 
 			$count++;
 		}
 		$updateData = substr($updateData, 0, -2);
 
 		// Try and update the entries.
-		foreach ($data as $k => $entry)
-		{
-			$smfFunc['db_query']('', '
-				UPDATE ' . $table . '
-				SET ' . $updateData . '
-				' . (empty($where) ? '' : ' WHERE ' . $where),
-				$entry, $connection
-			);
-
-			// Make a note that the replace actually overwrote.
-			if (smf_db_affected_rows() != 0)
+		if (!empty($updateData))
+			foreach ($data as $k => $entry)
 			{
-				unset($data[$k]);
-				$db_replace_result = 2;
+				$smfFunc['db_query']('', '
+					UPDATE ' . $table . '
+					SET ' . $updateData . '
+					' . (empty($where) ? '' : ' WHERE ' . $where),
+					$entry, $connection
+				);
+	
+				// Make a note that the replace actually overwrote.
+				if (smf_db_affected_rows() != 0)
+				{
+					unset($data[$k]);
+					$db_replace_result = 2;
+				}
 			}
-		}
 	}
 
 	if (!empty($data))
