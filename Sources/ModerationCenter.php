@@ -1149,7 +1149,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 // Simply put, look at the warning log!
 function ViewWarningLog()
 {
-	global $db_prefix, $smfFunc, $modSettings, $context, $txt, $scripturl;
+	global $db_prefix, $smfFunc, $modSettings, $context, $txt, $scripturl, $sourcedir;
 
 	// Setup context as always.
 	$context['page_title'] = $txt['mc_warning_log'];
@@ -1209,6 +1209,153 @@ function ViewWarningLog()
 		);
 	}
 	$smfFunc['db_free_result']($request);
+
+	require_once($sourcedir . '/Subs-List.php');
+
+	// This is all the information required for a watched user listing.
+	$listOptions = array(
+		'id' => 'warning_list',
+		'title' => $txt['mc_warning_log'],
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['mc_warnings_none'],
+		'base_href' => $scripturl . '?action=moderate;area=warnlog;sesc=' . $context['session_id'],
+		'default_sort_col' => 'time',
+		'get_items' => array(
+			'function' => 'list_getWarnings',
+		),
+		'get_count' => array(
+			'function' => 'list_getWarningCount',
+		),
+		// This assumes we are viewing by user.
+		'columns' => array(
+			'issuer' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_issued'],
+				),
+				'data' => array(
+					'db' => 'issuer_link',
+				),
+				'sort' => array(
+					'default' => 'member_name',
+					'reverse' => 'member_name DESC',
+				),
+			),
+			'recipient' => array(
+				'header' => array(
+					'value' => $txt['mc_warnings_recipient'],
+				),
+				'data' => array(
+					'db' => 'recipient_link',
+				),
+				'sort' => array(
+					'default' => 'recipient_name',
+					'reverse' => 'recipient_name DESC',
+				),
+			),
+			'time' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_time'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'lc.log_time DESC',
+					'reverse' => 'lc.log_time',
+				),
+			),
+			'reason' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_reason'],
+				),
+				'data' => array(
+					'function' => create_function('$warning', '
+						global $scripturl, $settings, $txt;
+
+						$output = \'
+							<div style="float: left;">
+								\' . $warning[\'reason\'] . \'
+							</div>\';
+
+						if (!empty($warning[\'id_notice\']))
+							$output .= \'
+							<div style="float: right;">
+								<a href="\' . $scripturl . \'?action=moderate;area=notice;nid=\' . $warning[\'id_notice\'] . \'" onclick="window.open(this.href, \\\'\\\', \\\'scrollbars=yes,resizable=yes,width=400,height=250\\\');return false;" target="_blank" class="new_win" title="\' . $txt[\'profile_warning_previous_notice\'] . \'"><img src="\' . $settings[\'default_images_url\'] . \'/filter.gif" alt="\' . $txt[\'profile_warning_previous_notice\'] . \'" /></a>
+							</div>\';
+
+						return $output;
+					'),
+				),
+			),
+			'points' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_level'],
+				),
+				'data' => array(
+					'db' => 'counter',
+				),
+			),
+		),
+	);
+
+	// Create the watched user list.
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'warning_list';
+}
+
+function list_getWarningCount()
+{
+	global $smfFunc, $db_prefix, $modSettings;
+
+	$request = $smfFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}log_comments
+		WHERE comment_type = {string:warning}',
+		array(
+			'warning' => 'warning',
+		)
+	);
+	list ($totalWarns) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $totalWarns;
+}
+
+function list_getWarnings($start, $items_per_page, $sort)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl, $modSettings, $user_info;
+
+	$request = $smfFunc['db_query']('', '
+		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
+			IFNULL(mem2.id_member, 0) AS id_recipient, IFNULL(mem2.real_name, lc.recipient_name) AS recipient_name,
+			lc.log_time, lc.body, lc.id_notice, lc.counter
+		FROM {db_prefix}log_comments AS lc
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+			LEFT JOIN {db_prefix}members AS mem2 ON (mem2.id_member = lc.id_recipient)
+		WHERE lc.comment_type = {string:warning}
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+			'warning' => 'warning',
+		)
+	);
+	$warnings = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$warnings[] = array(
+			'issuer_link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
+			'recipient_link' => $row['id_recipient'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_recipient'] . '">' . $row['recipient_name'] . '</a>') : $row['recipient_name'],
+			'time' => timeformat($row['log_time']),
+			'reason' => $row['body'],
+			'counter' => $row['counter'] > 0 ? '+' . $row['counter'] : $row['counter'],
+			'id_notice' => $row['id_notice'],
+		);
+	}
+	$smfFunc['db_free_result']($request);
+
+	return $warnings;
 }
 
 // Change moderation preferences.

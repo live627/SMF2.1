@@ -189,7 +189,7 @@ function issueWarning($memID)
 		$smfFunc['db_insert']('',
 			$db_prefix . 'log_comments',
 			array(
-				'id_member' => 'int', 'member_name' => 'int', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
+				'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
 				'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
 			),
 			array(

@@ -624,67 +624,6 @@ function template_user_watch_post_callback($post)
 	return $output_html;
 }
 
-// A record of all warnings issued to members.
-function template_warning_log()
-{
-	global $settings, $options, $context, $txt, $scripturl;
-
-	echo '
-		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-			<tr class="titlebg">
-				<td colspan="5">', $txt['mc_warning_log'], '</td>
-			</tr><tr class="catbg">
-				<td width="18%">', $txt['profile_warning_previous_issued'], '</td>
-				<td width="18%">', $txt['mc_warnings_recipient'], '</td>
-				<td width="25%">', $txt['profile_warning_previous_time'], '</td>
-				<td width="30%">', $txt['profile_warning_previous_reason'], '</td>
-				<td width="10%">', $txt['profile_warning_previous_level'], '</td>
-			</tr>';
-
-	// Show each warning.
-	$alternate = 0;
-	foreach ($context['warnings'] as $warning)
-	{
-		echo '
-			<tr class="middletext ', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td>', $warning['issuer']['link'], '</td>
-				<td>', $warning['recipient']['link'], '</td>
-				<td>', $warning['time'], '</td>
-				<td>
-					<div style="float: left;">
-						', $warning['reason'], '
-					</div>';
-
-		if (!empty($warning['id_notice']))
-			echo '
-					<div style="float: right;">
-						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" class="new_win" title="', $txt['profile_warning_previous_notice'], '"><img src="' , $settings['default_images_url'] , '/filter.gif" alt="', $txt['profile_warning_previous_notice'], '" /></a>
-					</div>';
-		echo '
-				</td>
-				<td>', $warning['counter'], '</td>
-			</tr>';
-		$alternate = !$alternate;
-	}
-
-	// No warnings yet?
-	if (empty($context['warnings']))
-		echo '
-			<tr class="windowbg">
-				<td colspan="5" align="center">', $txt['mc_warnings_none'], '</td>
-			</tr>';
-
-	echo '
-			<tr class="catbg">
-				<td colspan="5">
-					<div style="float: left;">
-						', $txt['pages'], ': ', $context['page_index'], '
-					</div>
-				</td>
-			</tr>
-		</table>';
-}
-
 // Moderation settings
 function template_moderation_settings()
 {
