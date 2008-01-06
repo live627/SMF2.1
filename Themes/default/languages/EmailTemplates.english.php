@@ -839,7 +839,7 @@ You can view this members profile by clicking the link below:
 				REALNAME: Recipients name
 			@description:
 		*/
-		'subject' => 'Paid Subscription Error Occured'',
+		'subject' => 'Paid Subscription Error Occured',
 		'body' => '{REALNAME},
 
 The following error occured when processing a paid subscription
