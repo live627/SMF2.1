@@ -50,6 +50,7 @@ January 2008
  ! Warn the admin if the attachment folder is getting full. (Subs-Post.php, EmailTemplates language files) [Feature 1201]
  ! Paid subscriptions should use email templates. (subscriptions.php, EmailTemplates and ManagePaid language files)
  ! Tidy up the paid subscriptions code and use the EmailAdmin function for sending out subscription details. (subscriptions.php)
+ ! Warn the user if the board directory seems wrong before starting an upgrade. (upgrade.php)
 
 
 December 2007

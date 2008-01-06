@@ -977,6 +977,17 @@ function WelcomeLogin()
 		fclose($fp);
 	}
 
+	// We're going to check that their board dir setting is right incase they've been moving stuff around.
+	if (strtr($boarddir, array('/' => '', '\\' => '')) != strtr(dirname(__FILE__), array('/' => '', '\\' => '')))
+		$upcontext['warning'] = '
+			It looks as if your board directory settings <em>might</em> be incorrect. Your board directory is currently set to &quot;' . $boarddir . '&quot; but should probably be &quot;' . dirname(__FILE__) . '&quot;. Settings.php currently lists your paths as:<br />
+			<ul>
+				<li>Board Directory: ' . $boarddir . '</li>
+				<li>Source Directory: ' . $boarddir . '</li>
+				<li>Cache Directory: ' . $cachedir_temp . '</li>
+			</ul>
+			If these seem incorrect please open Settings.php in a text editor before proceeding with this upgrade. If they are incorrect due to you moving your forum to a new location please download and execute the <a href="http://www.simplemachines.org/download/?tools">Repair Settings</a> tool from the Simple Machines website before continuing.';
+
 	// Either we're logged in or we're going to present the login.
 	if (checkLogin())
 		return true;
@@ -3650,6 +3661,17 @@ function template_welcome_message()
 				This upgrade script has detected that your forum contains a lot of data which needs upgrading. This
 				process may take quite some time depending on your server and forum size, and for very large forums (~300,000 messages) may take several
 				hours to complete.
+			</div>
+		</div>';
+
+	// A warning message?
+	if (!empty($upcontext['warning']))
+		echo '
+		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
+			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<b style="text-decoration: underline;">Warning!</b><br />
+			<div style="padding-left: 6ex;">
+				', $upcontext['warning'], '
 			</div>
 		</div>';
 
