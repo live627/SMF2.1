@@ -1633,7 +1633,7 @@ if ($numIndexedWords == 0 || isset($_GET['lt']))
 		while ($row = mysql_fetch_assoc($request))
 		{
 			foreach (text2words($row['subject']) as $word)
-				$inserts[] = "'$word', $row[ID_TOPIC]";
+				$inserts[] = "'" . mysql_real_escape_string($word) . "', $row[ID_TOPIC]";
 		}
 		mysql_free_result($request);
 
