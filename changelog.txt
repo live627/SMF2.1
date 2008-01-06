@@ -51,6 +51,7 @@ January 2008
  ! Paid subscriptions should use email templates. (subscriptions.php, EmailTemplates and ManagePaid language files)
  ! Tidy up the paid subscriptions code and use the EmailAdmin function for sending out subscription details. (subscriptions.php)
  ! Warn the user if the board directory seems wrong before starting an upgrade. (upgrade.php)
+ * Point out that setting attachment sizes to zero disable those limits. (Admin language file) [Bug 1200]
 
 
 December 2007
