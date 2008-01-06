@@ -39,6 +39,8 @@ January 2008
  ! The jump to box was not dealing with ampersands in board names very well. (Display.php, MessageIndex.php, ManageBoards.php)
  + Added an interface to the reattribute posts function and made it work with user names and email addresses. (Subs-Members.php, ManageMaintenance.php) [Feature 1195]
  * Changed the manage maintenance template around as it was getting too crowded. (ManageMaintenance.php, ManageMaintenance template, ManageMaintenance language files)
+ * Don't show the warning icon for guest's posts. (Display template) [Bug 1212]
+ + Try to detect when the user is using an iPhone. (Load.php) [MotM]
 
 
 December 2007

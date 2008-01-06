@@ -1446,6 +1446,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_firefox' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== false,
 		'is_firefox1' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox/1.') !== false,
 		'is_firefox2' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox/2.') !== false,
+		'is_iphone' => strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') !== false,
 	);
 
 	$context['browser']['is_gecko'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Gecko') !== false && !$context['browser']['is_safari'] && !$context['browser']['is_konqueror'];
