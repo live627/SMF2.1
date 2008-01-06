@@ -95,7 +95,6 @@ function template_latest_news()
 			}
 
 			add_load_event(smfSetAnnouncements);
-			}
 		// ]]></script>';
 
 }
@@ -264,6 +263,7 @@ function template_reported_posts()
 
 	// Make the buttons.
 	$close_button = create_button('close.gif', $context['view_closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', $context['view_closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', 'align="middle"');
+	$details_button = create_button('details.gif', 'mc_reportedp_details', 'mc_reportedp_details', 'align="middle"');
 	$ignore_button = create_button('ignore.gif', 'mc_reportedp_ignore', 'mc_reportedp_ignore', 'align="middle"');
 	$unignore_button = create_button('ignore.gif', 'mc_reportedp_unignore', 'mc_reportedp_unignore', 'align="middle"');
 
@@ -274,9 +274,10 @@ function template_reported_posts()
 				<td>
 					<div>
 						<div style="float: left">
-							<b><a href="', $report['report_href'], '">', $report['subject'], '</a></b> ', $txt['mc_reportedp_by'], ' <b>', $report['author']['link'], '</b>
+							<b><a href="', $report['topic_href'], '">', $report['subject'], '</a></b> ', $txt['mc_reportedp_by'], ' <b>', $report['author']['link'], '</b>
 						</div>
 						<div style="float: right">
+							<a href="', $report['report_href'], '">', $details_button, '</a>
 							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';ignore=', !$report['ignore'], ';rid=', $report['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '" ', !$report['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $report['ignore'] ? $unignore_button : $ignore_button, '</a>
 							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';close=', !$report['closed'], ';rid=', $report['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
 							', !$context['view_closed'] ? '<input type="checkbox" name="close[]" value="' . $report['id'] . '" class="check" />' : '', '
@@ -504,15 +505,16 @@ function template_viewmodreport()
 	global $context, $scripturl, $txt;
 	echo '
 	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-		<tr class="catbg">
+		<tr class="titlebg">
 			<td colspan="2">
 				', sprintf($txt['mc_viewmodreport'], $context['report']['message_link'], $context['report']['author']['link']), '
 			</td>
-		</tr><tr class="titlebg2">
-			<td>
-				', sprintf($txt['mc_modreport_summary'], $context['report']['num_reports'], $context['report']['last_updated']), '
-			</td>
-			<td align="center">';
+		</tr><tr class="catbg">
+			<td colspan="2">
+				<div style="float: left">
+					', sprintf($txt['mc_modreport_summary'], $context['report']['num_reports'], $context['report']['last_updated']), '
+				</div>
+				<div style="float: right">';
 
 	// Make the buttons.
 	$close_button = create_button('close.gif', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', 'align="middle"');
@@ -520,8 +522,9 @@ function template_viewmodreport()
 	$unignore_button = create_button('ignore.gif', 'mc_reportedp_unignore', 'mc_reportedp_unignore', 'align="middle"');
 
 	echo '
-				<a href="', $scripturl, '?action=moderate;area=reports;ignore=', !$context['report']['ignore'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '" ', !$context['report']['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $context['report']['ignore'] ? $unignore_button : $ignore_button, '</a>
-				<a href="', $scripturl, '?action=moderate;area=reports;close=', !$context['report']['closed'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
+					<a href="', $scripturl, '?action=moderate;area=reports;ignore=', !$context['report']['ignore'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '" ', !$context['report']['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $context['report']['ignore'] ? $unignore_button : $ignore_button, '</a>
+					<a href="', $scripturl, '?action=moderate;area=reports;close=', !$context['report']['closed'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
+				</div>
 			</td>
 		</tr><tr class="windowbg2">
 			<td colspan="2">
@@ -530,7 +533,7 @@ function template_viewmodreport()
 		</tr>
 	</table><br />
 	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-		<tr class="catbg">
+		<tr class="titlebg">
 			<td>', $txt['mc_modreport_whoreported_title'], '</td>
 		</tr>';
 

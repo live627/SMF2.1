@@ -52,6 +52,9 @@ January 2008
  ! Tidy up the paid subscriptions code and use the EmailAdmin function for sending out subscription details. (subscriptions.php)
  ! Warn the user if the board directory seems wrong before starting an upgrade. (upgrade.php)
  * Point out that setting attachment sizes to zero disable those limits. (Admin language file) [Bug 1200]
+ * Make it more obvious how the reported posts are linked by adding a button to launch the report. (details.gif, ModerationCenter template) [Bug 1196]
+ & Tweaked a few language strings and style classes to give the moderation centre a more consistant feel. (ModerationCenter language files)
+ ! Latest news wasn't working in the moderation centre. (ModerationCenter template)
 
 
 December 2007

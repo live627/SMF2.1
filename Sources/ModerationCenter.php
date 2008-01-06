@@ -345,7 +345,7 @@ function ModBlockReportedPosts()
 	if ($user_info['mod_cache']['bq'] == '0=1')
 		return 'reported_posts_block';
 
-	if (($reported_posts = cache_get_data('reported_posts_' . $cachekey, 240)) === null)
+	if (($reported_posts = cache_get_data('reported_posts_' . $cachekey, 90)) === null)
 	{
 		// By George, that means we in a position to get the reports, jolly good.
 		$request = $smfFunc['db_query']('', '
@@ -370,7 +370,7 @@ function ModBlockReportedPosts()
 		$smfFunc['db_free_result']($request);
 
 		// Cache it.
-		cache_put_data('reported_posts_' . $cachekey, $reported_posts, 240);
+		cache_put_data('reported_posts_' . $cachekey, $reported_posts, 90);
 	}
 
 	$context['reported_posts'] = array();
@@ -739,18 +739,17 @@ function ModReport()
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($row['id_member'] == 0 || !isset($context['report']['comments'][$row['id_member']]))
-			$context['report']['comments'][$row['id_member']] = array(
-				'id' => $row['id_comment'],
-				'message' => $row['comment'],
-				'time' => timeformat($row['time_sent']),
-				'member' => array(
-					'id' => $row['id_member'],
-					'name' => $row['reporter'],
-					'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
-					'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-				),
-			);
+		$context['report']['comments'][] = array(
+			'id' => $row['id_comment'],
+			'message' => $row['comment'],
+			'time' => timeformat($row['time_sent']),
+			'member' => array(
+				'id' => $row['id_member'],
+				'name' => $row['reporter'],
+				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+			),
+		);
 	}
 	$smfFunc['db_free_result']($request);
 
