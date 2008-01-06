@@ -55,6 +55,8 @@ January 2008
  * Make it more obvious how the reported posts are linked by adding a button to launch the report. (details.gif, ModerationCenter template) [Bug 1196]
  & Tweaked a few language strings and style classes to give the moderation centre a more consistant feel. (ModerationCenter language files)
  ! Latest news wasn't working in the moderation centre. (ModerationCenter template)
+ ! By default change boardsAllowedTo to also check a groups access rights - not just permissions. (Security.php)
+ ! Make sure the moderation log absolutely respects access rights of viewers. (Modlog.php) [Bug 1087]
 
 
 December 2007

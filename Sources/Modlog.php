@@ -47,8 +47,8 @@ function ViewModlog()
 	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc, $modlog_descriptions;
 
 	$context['can_delete'] = allowedTo('admin_forum');
-	$user_info['modlog_query'] = $context['can_delete'] || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_action = 0' : strtr($user_info['mod_cache']['bq'], array('b.' => 'lm')));
 
+	$modlog_query = $context['can_delete'] || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_board = 0 AND lm.id_topic = 0' : strtr($user_info['mod_cache']['bq'], array('id_board' => 't.id_board')));
 	loadTemplate('Modlog');
 
 	$context['page_title'] = $txt['modlog_view'];
@@ -179,8 +179,9 @@ function ViewModlog()
 		FROM {db_prefix}log_actions AS lm
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_member_id} THEN mem.id_post_group ELSE mem.id_group END)
+			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic OR t.id_board = lm.id_board)
 		WHERE' . (!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string})
-			AND' : '') . ' ' . $user_info['modlog_query'],
+			AND' : '') . ' ' . $modlog_query,
 		array(
 			'reg_member_id' => 0,
 			'sql_type' => $search_params['type_sql'],
@@ -194,7 +195,7 @@ function ViewModlog()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=modlog;order=' . $context['order'] . $context['dir'] . (!empty($context['search_params']) ? ';params=' . $context['search_params'] : ''), $_REQUEST['start'], $context['entry_count'], $context['displaypage']);
 	$context['start'] = $_REQUEST['start'];
 
-	getModLogEntries((!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : '') . $user_info['modlog_query'], array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']), $orderType . (isset($_REQUEST['d']) ? '' : ' DESC'), array($context['start'], $context['displaypage']));
+	getModLogEntries((!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : '') . $modlog_query, array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']), $orderType . (isset($_REQUEST['d']) ? '' : ' DESC'), array($context['start'], $context['displaypage']));
 }
 
 
@@ -224,7 +225,8 @@ function getModLogEntries($query_string = '', $query_params = array(), $order= '
 			mem.real_name, mg.group_name
 		FROM {db_prefix}log_actions AS lm
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)'
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)
+			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic OR t.id_board = lm.id_board)'
 			. (!empty($query_string) ? '
 			WHERE ' . $query_string : '') . (!empty($order) ? '
 		ORDER BY ' . $order : '') . '

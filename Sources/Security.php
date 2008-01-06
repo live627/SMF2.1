@@ -92,12 +92,13 @@ if (!defined('SMF'))
 		  error using $txt['cannot_' . $permission].
 		- if they are a guest and cannot do it, this calls is_not_guest().
 
-	array boardsAllowedTo(string permission)
+	array boardsAllowedTo(string permission, bool check_access = false)
 		- returns a list of boards on which the user is allowed to do the
 		  specified permission.
 		- returns an array with only a 0 in it if the user has permission
 		  to do this on every board.
 		- returns an empty array if he or she cannot do this on any board.
+		- if check_access is true will also make sure the group has proper access to that board.
 
 	string showEmailAddress(string userProfile_hideEmail, int userProfile_id)
 		- returns whether an email address should be shown and how.
@@ -860,7 +861,7 @@ function isAllowedTo($permission, $boards = null)
 }
 
 // Return the boards a user has a certain (board) permission on. (array(0) if all.)
-function boardsAllowedTo($permission)
+function boardsAllowedTo($permission, $check_access = true)
 {
 	global $db_prefix, $user_info, $modSettings, $smfFunc;
 
@@ -878,7 +879,8 @@ function boardsAllowedTo($permission)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
 		WHERE bp.id_group IN ({array_int:group_list}, {int:moderator_group})
 			AND bp.permission = {string:permission}
-			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})',
+			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})' . 
+			($check_access ? ' AND ' . $user_info['query_see_board'] : ''),
 		array(
 			'current_member' => $user_info['id'],
 			'group_list' => $groups,
@@ -897,7 +899,7 @@ function boardsAllowedTo($permission)
 	}
 	$smfFunc['db_free_result']($request);
 
-	$boards = array_values(array_diff($boards, $deny_boards));
+	$boards = array_unique(array_values(array_diff($boards, $deny_boards)));
 
 	return $boards;
 }
