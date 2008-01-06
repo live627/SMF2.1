@@ -501,7 +501,7 @@ function Post()
 			$context['choices'] = array();
 			$choice_id = 0;
 
-			$_POST['options'] = empty($_POST['options']) ? array() : htmlspecialchars__recursive(unescapestring__recursive($_POST['options']));
+			$_POST['options'] = empty($_POST['options']) ? array() : htmlspecialchars__recursive($_POST['options']);
 			foreach ($_POST['options'] as $option)
 			{
 				if (trim($option) == '')

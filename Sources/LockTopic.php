@@ -114,7 +114,7 @@ function LockTopic()
 // Sticky a topic.  Can't be done by topic starters - that would be annoying!
 function Sticky()
 {
-	global $db_prefix, $modSettings, $topic, $sourcedir, $smfFunc;
+	global $db_prefix, $modSettings, $topic, $board, $sourcedir, $smfFunc;
 
 	// Make sure the user can sticky it, and they are stickying *something*.
 	isAllowedTo('make_sticky');
@@ -157,7 +157,7 @@ function Sticky()
 	);
 
 	// Log this sticky action - always a moderator thing.
-	logAction('sticky', array('topic' => $topic));
+	logAction('sticky', array('topic' => $topic, 'board' => $board));
 	// Notify people that this topic has been stickied?
 	if (empty($is_sticky))
 		sendNotifications($topic, 'sticky');

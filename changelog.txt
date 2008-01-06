@@ -59,6 +59,7 @@ January 2008
  ! Make sure the moderation log absolutely respects access rights of viewers. (Modlog.php) [Bug 1087]
  ! Don't update columns that don't need to be when doing a replace query. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1194]
  ! Use a generic list for the warning log. (ModerationCenter.php)
+ ! Some remaining bits of escaping wern't yet removed. (Various files) [Bug 1215]
 
 
 December 2007

@@ -430,8 +430,6 @@ function ReportToModerator2()
 		// Otherwise, we shall make one!
 		else
 		{
-			// Serve, Protect!
-			$message = escapestring__recursive($message);
 			if (empty($message['real_name']))
 				$message['real_name'] = $message['poster_name'];
 

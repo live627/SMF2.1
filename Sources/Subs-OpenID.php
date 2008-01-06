@@ -87,9 +87,6 @@ function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 {
 	global $smfFunc, $db_prefix;
 
-	$server = $smfFunc['db_escape_string']($server);
-	$handle = $handle === null ? null : $smfFunc['db_escape_string']($handle);
-
 	if (!$no_delete)
 	{
 		// Delete the already expired associations.
@@ -152,18 +149,16 @@ function smf_openID_makeAssociation($server)
 	$secret = $assoc_data['mac_key'];
 
 	// Clean things up a bit
-	$server_url = $smfFunc['db_escape_string']($server);
-	$handle = isset($assoc_data['assoc_handle']) ? $smfFunc['db_escape_string']($assoc_data['assoc_handle']) : '';
-	$secret = $smfFunc['db_escape_string']($secret);
+	$handle = isset($assoc_data['assoc_handle']) ? $assoc_data['assoc_handle'] : '';
 	$issued = time();
 	$expires = $issued + min((int)$assoc_data['expires_in'], 60);
-	$assoc_type = isset($assoc_data['assoc_type']) ? $smfFunc['db_escape_string']($assoc_data['assoc_type']) : '';
+	$assoc_type = isset($assoc_data['assoc_type']) ? $assoc_data['assoc_type'] : '';
 
 	// Store the data
 	$smfFunc['db_insert']('replace',
 		$db_prefix . 'openid_assoc',
 		array('server_url' => 'string', 'handle' => 'string', 'secret' => 'string', 'issued' => 'int', 'expires' => 'int', 'assoc_type' => 'string'),
-		array($server_url, $handle, $secret, $issued, $expires, $assoc_type),
+		array($server, $handle, $secret, $issued, $expires, $assoc_type),
 		array('server_url', 'handle')
 	);
 
@@ -180,8 +175,6 @@ function smf_openID_makeAssociation($server)
 function smf_openID_removeAssociation($handle)
 {
 	global $smfFunc, $db_prefix;
-
-	$handle = $smfFunc['db_escape_string']($handle);
 
 	$smfFunc['db_query']('openid_remove_association', '
 		DELETE FROM {db_prefix}openid_assoc
@@ -239,7 +232,7 @@ function smf_openID_return()
 	if (!isset($_SESSION['openid']['saved_data'][$_GET['t']]))
 		fatal_lang_error('openid_load_data');
 
-	$openid_uri = $smfFunc['db_escape_string']($_SESSION['openid']['saved_data'][$_GET['t']]['openid_uri']);
+	$openid_uri = $_SESSION['openid']['saved_data'][$_GET['t']]['openid_uri'];
 	$modSettings['cookieTime'] = $_SESSION['openid']['saved_data'][$_GET['t']]['cookieTime'];
 
 	if (empty($openid_uri))
@@ -315,8 +308,6 @@ function smf_openID_canonize($uri)
 function smf_openid_member_exists($url)
 {
 	global $smfFunc, $db_prefix;
-
-	$url = $smfFunc['db_escape_string']($url);
 
 	$result = $smfFunc['db_query']('openid_member_exists', '
 		SELECT id_member, member_name

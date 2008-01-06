@@ -755,9 +755,6 @@ function DisplayAdminFile()
 {
 	global $db_prefix, $context, $modSettings, $smfFunc;
 
-	// Danger Will Robinson.
-	$_REQUEST['filename'] = $smfFunc['db_escape_string']($_REQUEST['filename']);
-
 	$request = $smfFunc['db_query']('', '
 		SELECT data, filetype
 		FROM {db_prefix}admin_info_files
@@ -803,7 +800,7 @@ function AdminSearch()
 	);
 
 	$context['search_type'] = !isset($_REQUEST['search_type']) || !isset($subactions[$_REQUEST['search_type']]) ? 'internal' : $_REQUEST['search_type'];
-	$context['search_term'] = $smfFunc['db_unescape_string']($_REQUEST['search_term']);
+	$context['search_term'] = $_REQUEST['search_term'];
 
 	$context['sub_template'] = 'admin_search_results';
 	$context['page_title'] = $txt['admin_search_results'];

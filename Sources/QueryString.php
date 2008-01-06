@@ -182,7 +182,7 @@ function cleanRequest()
 	}
 
 	// Add entities to GET.  This is kinda like the slashes on everything else.
-	$_GET = escapestring__recursive(htmlspecialchars__recursive($_GET));
+	$_GET = htmlspecialchars__recursive($_GET);
 
 	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
 	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && (!$smfFunc['db_sybase'] || $magicSybase))
@@ -193,19 +193,6 @@ function cleanRequest()
 		foreach ($_FILES as $k => $dummy)
 			$_FILES[$k]['name'] = stripslashes__recursive($_FILES[$k]['name']);
 	}
-	// Emulate magic quotes!
-	if (!function_exists('get_magic_quotes_gpc') || (get_magic_quotes_gpc() == 0 && empty($modSettings['integrate_magic_quotes'])) || ($smfFunc['db_sybase'] && !$magicSybase))
-	{
-		// E(G)PCS: ENV, (GET was already done), POST, COOKIE, SERVER.
-		$_ENV = escapestring__recursive($_ENV);
-
-		// FILES work like this: k -> name -> array.  So be careful.
-		foreach ($_FILES as $k => $dummy)
-			$_FILES[$k]['name'] = escapestring__recursive($_FILES[$k]['name']);
-	}
-
-	// Take care of the server variables.
-	$_SERVER = escapestring__recursive($_SERVER);
 
 	// Let's not depend on the ini settings... why even have COOKIE in there, anyway?
 	$_REQUEST = $_POST + $_GET;

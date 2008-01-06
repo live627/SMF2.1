@@ -318,7 +318,7 @@ function ComposeMailing()
 
 			foreach ($_POST[$type] as $index => $member)
 				if (strlen(trim($member)) > 0)
-					$_POST[$type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
+					$_POST[$type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower'](trim($member)));
 				else
 					unset($_POST[$type][$index]);
 
@@ -512,7 +512,7 @@ function SendMailing($clean_only = false)
 	// Finally - emails!
 	if (!empty($_POST['emails']))
 	{
-		$addressed = array_unique(explode(';', $smfFunc['db_unescape_string']($_POST['emails'])));
+		$addressed = array_unique(explode(';', $_POST['emails']));
 		foreach ($addressed as $curmem)
 		{
 			$curmem = trim($curmem);
@@ -530,17 +530,14 @@ function SendMailing($clean_only = false)
 	// Prepare the message (etc).
 	if (!$context['send_pm'])
 	{
-		$context['subject'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['subject']));
-		$context['message'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['message']));
+		$context['subject'] = htmlspecialchars($_POST['subject']);
+		$context['message'] = htmlspecialchars($_POST['message']);
 		$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
 		$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
 
 		// Prepare the message for HTML.
 		if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
-			$_POST['message'] = str_replace(array("\n", '  '), array('<br />' . "\n", '&nbsp; '), $smfFunc['db_unescape_string']($_POST['message']));
-		else
-			$_POST['message'] = $smfFunc['db_unescape_string']($_POST['message']);
-		$_POST['subject'] = $smfFunc['db_unescape_string']($_POST['subject']);
+			$_POST['message'] = str_replace(array("\n", '  '), array('<br />' . "\n", '&nbsp; '), $_POST['message']);
 
 		// This is here to prevent spam filters from tagging this as spam.
 		if (!empty($_POST['send_html']) && preg_match('~\<html~i', $_POST['message']) == 0)
@@ -613,7 +610,7 @@ function SendMailing($clean_only = false)
 			$email
 		);
 
-		sendmail($email, str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+		sendmail($email, str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 0);
 	}
 
 	// Got some more to send this batch?
@@ -710,7 +707,7 @@ function SendMailing($clean_only = false)
 
 			// Send the actual email off, replacing the member dependent variables - or a PM!
 			if (!$context['send_pm'])
-				sendmail($row['email_address'], str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+				sendmail($row['email_address'], str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 0);
 			else
 				sendpm(array('to' => array($row['id_member']), 'bcc' => array()), $_POST['subject'], $_POST['message']);
 		}

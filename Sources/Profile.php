@@ -349,9 +349,7 @@ function ModifyProfile($post_errors = array())
 
 		// Clean up the POST variables.
 		$_POST = htmltrim__recursive($_POST);
-		$_POST = unescapestring__recursive($_POST);
 		$_POST = htmlspecialchars__recursive($_POST);
-		$_POST = escapestring__recursive($_POST);
 
 		if ($context['user']['is_owner'] && $context['require_password'])
 		{

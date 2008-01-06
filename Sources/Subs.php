@@ -501,7 +501,7 @@ function updateMemberData($members, $data)
 
 			if (!empty($member_names))
 				foreach ($vars_to_integrate as $var)
-					call_user_func($modSettings['integrate_change_member_data'], $member_names, $var, $smfFunc['db_unescape_string']($data[$var]));
+					call_user_func($modSettings['integrate_change_member_data'], $member_names, $var, $data[$var]);
 		}
 	}
 

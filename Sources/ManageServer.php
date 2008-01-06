@@ -292,10 +292,6 @@ function ModifyCoreSettings2()
 	global $boarddir, $sc, $cookiename, $modSettings, $user_settings;
 	global $sourcedir, $context, $cachedir;
 
-	// Unescape off of the post vars.
-	foreach ($_POST as $key => $val)
-		$_POST[$key] = unescapestring__recursive($val);
-
 	// Fix the darn stupid cookiename! (more may not be allowed, but these for sure!)
 	if (isset($_POST['cookiename']))
 		$_POST['cookiename'] = preg_replace('~[,;\s\.$]+~' . ($context['utf8'] ? 'u' : ''), '', $_POST['cookiename']);
