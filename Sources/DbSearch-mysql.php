@@ -56,7 +56,7 @@ function smf_db_search_support($search_type)
 // Highly specific - create the custom word index table!
 function smf_db_create_word_search($size)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	if ($size == 'small')
 		$size = 'smallint(5)';

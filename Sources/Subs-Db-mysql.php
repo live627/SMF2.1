@@ -112,7 +112,7 @@ function db_fix_prefix (&$db_prefix, $db_name)
 
 function smf_db_replacement__callback($matches)
 {
-	global $db_callback, $db_prefix;
+	global $db_callback, $user_info;
 
 	list ($values, $connection) = $db_callback;
 
@@ -122,6 +122,12 @@ function smf_db_replacement__callback($matches)
 
 	if ($matches[1] === 'db_prefix')
 		return $db_prefix;
+
+	if ($matches[1] === 'query_see_board')
+		return $user_info['query_see_board'];
+
+	if ($matches[1] === 'query_wanna_see_board')
+		return $user_info['query_wanna_see_board'];
 
 	if (!isset($matches[2]))
 		trigger_error('Invalid value injected or no type specified.', E_USER_ERROR);
@@ -637,6 +643,9 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	// With nothing to insert, simply return.
 	if (empty($data))
 		return;
+
+	// Replace the prefix holder with the actual prefix.
+	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	// Inserting data as a single row can be done as a single array.
 	if (!is_array($data[array_rand($data)]))

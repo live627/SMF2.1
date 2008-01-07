@@ -39,7 +39,7 @@ if (!defined('SMF'))
 // Show the list of topics in this board, along with any child boards.
 function MessageIndex()
 {
-	global $txt, $scripturl, $board, $db_prefix, $modSettings, $context;
+	global $txt, $scripturl, $board, $modSettings, $context;
 	global $options, $settings, $board_info, $user_info, $smfFunc, $sourcedir;
 
 	// If this is a redirection board head off.
@@ -133,7 +133,7 @@ function MessageIndex()
 		}
 
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_boards',
+			'{db_prefix}log_boards',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 			array($modSettings['maxMsgID'], $user_info['id'], $board),
 			array('id_member', 'id_board')
@@ -615,7 +615,7 @@ function MessageIndex()
 // Allows for moderation from the message index.
 function QuickModeration()
 {
-	global $db_prefix, $sourcedir, $board, $user_info, $modSettings, $sourcedir, $smfFunc;
+	global $sourcedir, $board, $user_info, $modSettings, $sourcedir, $smfFunc;
 
 	// Check the session = get or post.
 	checkSession('request');
@@ -1060,7 +1060,7 @@ function QuickModeration()
 			$markArray[] = array($modSettings['maxMsgID'], $user_info['id'], $topic);
 
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			$markArray,
 			array('id_member', 'id_topic')

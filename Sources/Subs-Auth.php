@@ -426,7 +426,7 @@ function show_db_error($loadavg = false)
 // Find members by email address, username, or real name.
 function findMembers($names, $use_wildcards = false, $buddies_only = false, $max = null)
 {
-	global $db_prefix, $scripturl, $user_info, $modSettings, $smfFunc;
+	global $scripturl, $user_info, $modSettings, $smfFunc;
 
 	// If it's not already an array, make it one.
 	if (!is_array($names))
@@ -567,7 +567,7 @@ function JSMembers()
 
 function RequestMembers()
 {
-	global $user_info, $db_prefix, $txt, $smfFunc;
+	global $user_info, $txt, $smfFunc;
 
 	checkSession('get');
 
@@ -626,7 +626,7 @@ function RequestMembers()
 // This function generates a random password for a user and emails it to them.
 function resetPassword($memID, $username = null)
 {
-	global $db_prefix, $scripturl, $context, $txt, $sourcedir, $modSettings, $smfFunc;
+	global $scripturl, $context, $txt, $sourcedir, $modSettings, $smfFunc;
 
 	// Language... and a required file.
 	loadLanguage('Login');
@@ -727,7 +727,7 @@ function validatePassword($password, $username, $restrict_in = array())
 // Quickly find out what this user can and cannot do.
 function rebuildModCache()
 {
-	global $db_prefix, $user_info, $smfFunc;
+	global $user_info, $smfFunc;
 
 	// What groups can they moderate?
 	$group_query = allowedTo('manage_membergroups') ? '1=1' : '0=1';

@@ -191,7 +191,7 @@ function SetCensor()
 // Modify all settings related to posts and posting.
 function ModifyPostSettings($return_config = false)
 {
-	global $context, $txt, $db_prefix, $modSettings, $scripturl, $sourcedir, $smfFunc;
+	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc;
 
 	// All the settings...
 	$config_vars = array(

@@ -59,7 +59,7 @@ if (!defined('SMF'))
 // Add the file functions to the $smfFunc array.
 function db_packages_init()
 {
-	global $smfFunc, $reservedTables, $db_prefix, $db_package_log;
+	global $smfFunc, $reservedTables, $db_package_log;
 
 	if (!isset($smfFunc['db_create_table']) || $smfFunc['db_create_table'] != 'db_create_table')
 	{

@@ -60,6 +60,9 @@ January 2008
  ! Don't update columns that don't need to be when doing a replace query. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1194]
  ! Use a generic list for the warning log. (ModerationCenter.php)
  ! Some remaining bits of escaping wern't yet removed. (Various files) [Bug 1215]
+ ! DB insert now uses {db_prefix} for the table name instead of using the raw variable. (Lots of source files)
+ + Added {query_see_board} and {query_wanna_see_boards) as automatic replacements for queries. (Subs-Db-XXX.php, Lots of source files)
+ ! Removed db_prefix from the list of globals. (Almost every source file) [Bug 1203]
 
 
 December 2007

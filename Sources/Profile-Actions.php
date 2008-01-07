@@ -78,7 +78,7 @@ function activateAccount($memID)
 // Issue/manage a users warning status.
 function issueWarning($memID)
 {
-	global $txt, $scripturl, $modSettings, $db_prefix, $user_info;
+	global $txt, $scripturl, $modSettings, $user_info;
 	global $context, $cur_profile, $memberContext, $smfFunc, $sourcedir;
 
 	// Get all the actual settings.
@@ -298,7 +298,7 @@ function deleteAccount($memID)
 
 function deleteAccount2($profile_vars, $post_errors, $memID)
 {
-	global $user_info, $sourcedir, $context, $db_prefix, $cur_profile, $modSettings, $smfFunc;
+	global $user_info, $sourcedir, $context, $cur_profile, $modSettings, $smfFunc;
 
 	// !!! Add a way to delete pms as well?
 
@@ -409,7 +409,7 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 // Function for doing all the paid subscription stuff - kinda.
 function subscriptions($memID)
 {
-	global $context, $txt, $sourcedir, $db_prefix, $modSettings, $smfFunc, $scripturl;
+	global $context, $txt, $sourcedir, $modSettings, $smfFunc, $scripturl;
 
 	// Load the paid template anyway.
 	loadTemplate('ManagePaid');

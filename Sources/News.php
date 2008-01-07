@@ -72,7 +72,7 @@ if (!defined('SMF'))
 // Show an xml file representing recent information or a profile.
 function ShowXmlFeed()
 {
-	global $db_prefix, $board, $board_info, $context, $scripturl, $txt, $modSettings, $user_info;
+	global $board, $board_info, $context, $scripturl, $txt, $modSettings, $user_info;
 	global $query_this_board, $smfFunc, $forum_version;
 
 	// If it's not enabled, die.
@@ -112,7 +112,7 @@ function ShowXmlFeed()
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
 			WHERE b.id_cat IN ({array_int:current_category_list})
-				AND ' . $user_info['query_see_board'],
+				AND {query_see_board}',
 			array(
 				'current_category_list' => $_REQUEST['c'],
 			)
@@ -144,7 +144,7 @@ function ShowXmlFeed()
 			SELECT b.id_board, b.num_posts, b.name
 			FROM {db_prefix}boards AS b
 			WHERE b.id_board IN ({array_int:board_list})
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 			LIMIT ' . count($_REQUEST['boards']),
 			array(
 				'board_list' => $_REQUEST['boards'],
@@ -200,7 +200,7 @@ function ShowXmlFeed()
 	}
 	else
 	{
-		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+		$query_this_board = '{query_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != ' . $modSettings['recycle_board'] : ''). '
 			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_GET['limit'] * 5);
 	}
@@ -481,7 +481,7 @@ function dumpTags($data, $i, $tag = null, $xml_format = '')
 
 function getXmlMembers($xml_format)
 {
-	global $db_prefix, $scripturl, $smfFunc;
+	global $scripturl, $smfFunc;
 
 	// Find the most recent members.
 	$request = $smfFunc['db_query']('', '
@@ -533,7 +533,7 @@ function getXmlMembers($xml_format)
 
 function getXmlNews($xml_format)
 {
-	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
+	global $user_info, $scripturl, $modSettings, $board;
 	global $query_this_board, $smfFunc, $settings;
 
 	/* Find the latest posts that:
@@ -637,7 +637,7 @@ function getXmlNews($xml_format)
 
 function getXmlRecent($xml_format)
 {
-	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
+	global $user_info, $scripturl, $modSettings, $board;
 	global $query_this_board, $smfFunc, $settings;
 
 	$request = $smfFunc['db_query']('', '

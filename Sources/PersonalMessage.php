@@ -110,7 +110,7 @@ if (!defined('SMF'))
 // This helps organize things...
 function MessageMain()
 {
-	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $smfFunc;
 
 	// No guests!
 	is_not_guest();
@@ -354,7 +354,7 @@ function messageIndexBar($area)
 // A folder, ie. inbox/sent etc.
 function MessageFolder()
 {
-	global $txt, $scripturl, $db_prefix, $modSettings, $context, $subjects_request;
+	global $txt, $scripturl, $modSettings, $context, $subjects_request;
 	global $messages_request, $user_info, $recipients, $options, $smfFunc, $memberContext, $user_settings;
 
 	// Changing view?
@@ -1010,7 +1010,7 @@ function MessageSearch()
 
 function MessageSearch2()
 {
-	global $scripturl, $modSettings, $user_info, $context, $txt, $db_prefix;
+	global $scripturl, $modSettings, $user_info, $context, $txt;
 	global $memberContext, $smfFunc;
 
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_search']) && $context['load_average'] >= $modSettings['loadavg_search'])
@@ -1425,7 +1425,7 @@ function MessageSearch2()
 // Send a new message?
 function MessagePost()
 {
-	global $txt, $sourcedir, $db_prefix, $scripturl, $modSettings;
+	global $txt, $sourcedir, $scripturl, $modSettings;
 	global $context, $options, $smfFunc, $language, $user_info;
 
 	isAllowedTo('pm_send');
@@ -1707,7 +1707,7 @@ function MessagePost()
 // An error in the message...
 function messagePostError($error_types, $to, $bcc)
 {
-	global $txt, $context, $scripturl, $modSettings, $db_prefix;
+	global $txt, $context, $scripturl, $modSettings;
 	global $smfFunc, $user_info, $sourcedir;
 
 	$context['pm_area'] = 'send';
@@ -1873,7 +1873,7 @@ function messagePostError($error_types, $to, $bcc)
 function MessagePost2()
 {
 	global $txt, $context, $sourcedir;
-	global $db_prefix, $user_info, $modSettings, $scripturl, $smfFunc;
+	global $user_info, $modSettings, $scripturl, $smfFunc;
 
 	isAllowedTo('pm_send');
 	require_once($sourcedir . '/Subs-Auth.php');
@@ -2178,7 +2178,7 @@ function MessagePost2()
 // This function lists all buddies for wireless protocols.
 function WirelessAddBuddy()
 {
-	global $scripturl, $txt, $db_prefix, $user_info, $context, $smfFunc;
+	global $scripturl, $txt, $user_info, $context, $smfFunc;
 
 	isAllowedTo('pm_send');
 	$context['page_title'] = $txt['wireless_pm_add_buddy'];
@@ -2217,7 +2217,7 @@ function WirelessAddBuddy()
 // This function performs all additional stuff...
 function MessageActionsApply()
 {
-	global $txt, $db_prefix, $context, $user_info, $options, $smfFunc;
+	global $txt, $context, $user_info, $options, $smfFunc;
 
 	checkSession('request');
 
@@ -2368,7 +2368,7 @@ function MessageKillAll()
 // This function allows the user to delete all messages older than so many days.
 function MessagePrune()
 {
-	global $txt, $context, $db_prefix, $user_info, $scripturl, $smfFunc;
+	global $txt, $context, $user_info, $scripturl, $smfFunc;
 
 	// Actually delete the messages.
 	if (isset($_REQUEST['age']))
@@ -2436,7 +2436,7 @@ function MessagePrune()
 // Delete the specified personal messages.
 function deleteMessages($personal_messages, $folder = null, $owner = null)
 {
-	global $db_prefix, $user_info, $smfFunc;
+	global $user_info, $smfFunc;
 
 	if ($owner === null)
 		$owner = array($user_info['id']);
@@ -2564,7 +2564,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 // Mark personal messages read.
 function markMessages($personal_messages = null, $label = null, $owner = null)
 {
-	global $user_info, $db_prefix, $context, $smfFunc;
+	global $user_info, $context, $smfFunc;
 
 	if ($owner === null)
 		$owner = $user_info['id'];
@@ -2629,7 +2629,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 // This function handles adding, deleting and editing labels on messages.
 function ManageLabels()
 {
-	global $txt, $context, $db_prefix, $user_info, $scripturl, $smfFunc;
+	global $txt, $context, $user_info, $scripturl, $smfFunc;
 
 	// Build the link tree elements...
 	$context['linktree'][] = array(
@@ -2837,7 +2837,7 @@ function ManageLabels()
 // Edit Personal Message Settings
 function MessageSettings()
 {
-	global $txt, $user_settings, $user_info, $db_prefix, $context, $db_prefix, $sourcedir, $smfFunc;
+	global $txt, $user_settings, $user_info, $db_prefix, $context, $sourcedir, $smfFunc;
 	global $scripturl, $profile_vars, $cur_profile, $user_profile;
 
 	// Need this for the display.
@@ -2882,7 +2882,7 @@ function MessageSettings()
 // Allows a user to report a personal message they receive to the administrator.
 function ReportMessage()
 {
-	global $txt, $context, $scripturl, $sourcedir, $db_prefix;
+	global $txt, $context, $scripturl, $sourcedir;
 	global $user_info, $language, $modSettings, $smfFunc;
 
 	// Check that this feature is even enabled!
@@ -3045,7 +3045,7 @@ function ReportMessage()
 // List all rules, and allow adding/entering etc....
 function ManageRules()
 {
-	global $txt, $context, $db_prefix, $user_info, $scripturl, $smfFunc;
+	global $txt, $context, $user_info, $scripturl, $smfFunc;
 
 	// The link tree - gotta have this :o
 	$context['linktree'][] = array(
@@ -3266,7 +3266,7 @@ function ManageRules()
 // This will apply rules to all unread messages. If all_messages is set will, clearly, do it to all!
 function ApplyRules($all_messages = false)
 {
-	global $user_info, $smfFunc, $db_prefix, $context, $options;
+	global $user_info, $smfFunc, $context, $options;
 
 	// Want this - duh!
 	loadRules();
@@ -3369,7 +3369,7 @@ function ApplyRules($all_messages = false)
 // Load up all the rules for the current user.
 function LoadRules($reload = false)
 {
-	global $user_info, $context, $smfFunc, $db_prefix;
+	global $user_info, $context, $smfFunc;
 
 	if (isset($context['rules']) && !$reload)
 		return;

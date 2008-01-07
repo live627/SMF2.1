@@ -49,7 +49,7 @@ if (!defined('SMF'))
 // Display some useful/interesting board statistics.
 function DisplayStats()
 {
-	global $txt, $scripturl, $db_prefix, $modSettings, $user_info, $context, $smfFunc;
+	global $txt, $scripturl, $modSettings, $user_info, $context, $smfFunc;
 
 	if (!empty($_REQUEST['expand']))
 	{
@@ -259,7 +259,7 @@ function DisplayStats()
 	$boards_result = $smfFunc['db_query']('', '
 		SELECT id_board, name, num_posts
 		FROM {db_prefix}boards AS b
-		WHERE ' . $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+		WHERE {query_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_board}' : '') . '
 			AND b.redirect = {string:blank_redirect}
 		ORDER BY num_posts DESC
@@ -323,7 +323,7 @@ function DisplayStats()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_board}' : '') . ')
 		WHERE
-			' . $user_info['query_see_board'] . '
+			{query_see_board}
 			' . (!empty($topic_ids) ? '
 			AND t.id_topic IN ({array_int:topic_list})' : ' AND t.approved = {int:is_approved}') . '
 		ORDER BY t.num_replies DESC
@@ -394,7 +394,7 @@ function DisplayStats()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_board}' : '') . ')
 		WHERE
-			' . $user_info['query_see_board'] . '
+			{query_see_board}
 			' . (!empty($topic_ids) ? '
 			AND t.id_topic IN ({array_int:topic_list})' : ' AND t.approved = {int:is_approved}') . '
 		ORDER BY t.num_views DESC
@@ -646,7 +646,7 @@ function DisplayStats()
 
 function getDailyStats($condition_string, $condition_parameters = array())
 {
-	global $context, $db_prefix, $smfFunc;
+	global $context, $smfFunc;
 
 	// Activity by day.
 	$days_result = $smfFunc['db_query']('', '

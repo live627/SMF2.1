@@ -83,7 +83,7 @@ function ManageMail()
 // Display the mail queue...
 function BrowseMailQueue()
 {
-	global $scripturl, $context, $db_prefix, $modSettings, $txt, $smfFunc;
+	global $scripturl, $context, $modSettings, $txt, $smfFunc;
 	global $sourcedir;
 
 	// How many items do we have?
@@ -233,7 +233,7 @@ function BrowseMailQueue()
 
 function list_getMailQueue($start, $items_per_page, $sort)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_mail, time_sent, recipient, priority, subject
@@ -253,7 +253,7 @@ function list_getMailQueue($start, $items_per_page, $sort)
 
 function list_getMailQueueSize()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// How many items do we have?
 	$request = $smfFunc['db_query']('', '
@@ -360,7 +360,7 @@ function ModifyMailSettings($return_config = false)
 // This function clears the mail queue of all emails, and at the end redirects to browse.
 function ClearMailQueue()
 {
-	global $sourcedir, $db_prefix, $smfFunc;
+	global $sourcedir, $smfFunc;
 
 	checkSession('get');
 

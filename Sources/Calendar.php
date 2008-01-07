@@ -152,7 +152,7 @@ function CalendarMain()
 
 function CalendarPost()
 {
-	global $context, $txt, $db_prefix, $user_info, $sourcedir, $scripturl;
+	global $context, $txt, $user_info, $sourcedir, $scripturl;
 	global $modSettings, $topic, $smfFunc;
 
 	// Well - can they?
@@ -298,7 +298,7 @@ function CalendarPost()
 
 function iCalDownload()
 {
-	global $smfFunc, $db_prefix, $sourcedir, $forum_version, $context, $modSettings;
+	global $smfFunc, $sourcedir, $forum_version, $context, $modSettings;
 
 	// Goes without saying that this is required.
 	if (!isset($_REQUEST['eventid']))

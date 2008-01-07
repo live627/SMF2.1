@@ -95,7 +95,7 @@ if (!defined('SMF'))
 
 function downloadAvatar($url, $memID, $max_width, $max_height)
 {
-	global $modSettings, $db_prefix, $sourcedir, $gd2, $smfFunc;
+	global $modSettings, $sourcedir, $gd2, $smfFunc;
 
 	$ext = !empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg';
 	$destName = 'avatar_' . $memID . '.' . $ext;
@@ -238,7 +238,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 function createThumbnail($source, $max_width, $max_height)
 {
-	global $modSettings, $db_prefix, $gd2;
+	global $modSettings, $gd2;
 
 	$default_formats = array(
 		'1' => 'gif',

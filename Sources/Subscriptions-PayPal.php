@@ -285,7 +285,7 @@ class paypal_payment
 	// A private function to find out the subscription details.
 	private function _findSubscription()
 	{
-		global $smfFunc, $db_prefix;
+		global $smfFunc;
 
 		// Assume we have this?
 		if (empty($_POST['subscr_id']))

@@ -49,7 +49,7 @@ if (!defined('SMF'))
 function Register($reg_errors = array())
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
-	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir, $smfFunc, $cur_profile;
+	global $language, $scripturl, $smfFunc, $sourcedir, $smfFunc, $cur_profile;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'usernamecheck')
 		return RegisterCheckUsername();
@@ -208,7 +208,7 @@ function Register($reg_errors = array())
 // Actually register the member.
 function Register2()
 {
-	global $scripturl, $txt, $modSettings, $db_prefix, $context, $sourcedir;
+	global $scripturl, $txt, $modSettings, $context, $sourcedir;
 	global $user_info, $options, $settings, $smfFunc;
 
 	// Well, if you don't agree, you can't register.
@@ -476,7 +476,7 @@ function Register2()
 
 function Activate()
 {
-	global $db_prefix, $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc;
+	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc;
 
 	loadLanguage('Login');
 	loadTemplate('Login');
@@ -627,7 +627,7 @@ function Activate()
 // This function will display the contact information for the forum, as well a form to fill in.
 function CoppaForm()
 {
-	global $context, $modSettings, $txt, $db_prefix, $smfFunc;
+	global $context, $modSettings, $txt, $smfFunc;
 
 	loadLanguage('Login');
 	loadTemplate('Register');

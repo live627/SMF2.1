@@ -119,7 +119,7 @@ function ModifyMembergroups()
 // An overview of the current membergroups.
 function MembergroupIndex()
 {
-	global $db_prefix, $txt, $scripturl, $context, $settings, $smfFunc, $sourcedir;
+	global $txt, $scripturl, $context, $settings, $smfFunc, $sourcedir;
 
 	$context['page_title'] = $txt['membergroups_title'];
 
@@ -360,7 +360,7 @@ function MembergroupIndex()
 // Add a membergroup.
 function AddMembergroup()
 {
-	global $db_prefix, $context, $txt, $sourcedir, $modSettings, $smfFunc;
+	global $context, $txt, $sourcedir, $modSettings, $smfFunc;
 
 	// A form was submitted, we can start adding.
 	if (!empty($_POST['group_name']))
@@ -435,7 +435,7 @@ function AddMembergroup()
 
 			if (!empty($inserts))
 				$smfFunc['db_insert']('insert',
-					$db_prefix . 'permissions',
+					'{db_prefix}permissions',
 					array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 					$inserts,
 					array('id_group', 'permission')
@@ -456,7 +456,7 @@ function AddMembergroup()
 
 			if (!empty($inserts))
 				$smfFunc['db_insert']('insert',
-					$db_prefix . 'board_permissions',
+					'{db_prefix}board_permissions',
 					array('id_group' => 'int', 'id_profile' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 					$inserts,
 					array('id_group', 'id_profile', 'permission')
@@ -596,7 +596,7 @@ function DeleteMembergroup()
 // Editing a membergroup.
 function EditMembergroup()
 {
-	global $db_prefix, $context, $txt, $sourcedir, $modSettings, $smfFunc;
+	global $context, $txt, $sourcedir, $modSettings, $smfFunc;
 
 	// Make sure this group is editable.
 	if (empty($_REQUEST['group']) || (int) $_REQUEST['group'] < 1)
@@ -834,7 +834,7 @@ function EditMembergroup()
 					$mod_insert[] = array($_REQUEST['group'], $moderator);
 
 				$smfFunc['db_insert']('insert',
-					$db_prefix . 'group_moderators',
+					'{db_prefix}group_moderators',
 					array('id_group' => 'int', 'id_member' => 'int'),
 					$mod_insert,
 					array('id_group', 'id_member')
@@ -952,7 +952,7 @@ function EditMembergroup()
 // Set general membergroup settings.
 function ModifyMembergroupsettings()
 {
-	global $context, $db_prefix, $sourcedir, $scripturl, $modSettings, $txt;
+	global $context, $sourcedir, $scripturl, $modSettings, $txt;
 
 	$context['sub_template'] = 'show_settings';
 	$context['page_title'] = $txt['membergroups_settings'];

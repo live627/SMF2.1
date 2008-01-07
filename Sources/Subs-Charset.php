@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**********************************************************************************
 * Subs-Charset.php                                                                *
 ***********************************************************************************
@@ -568,7 +568,7 @@ function utf8_strtoupper($string)
 // Fixes corrupted serialized strings after a character set conversion.
 function fix_serialized_columns()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_action, extra

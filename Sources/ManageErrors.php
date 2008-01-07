@@ -53,7 +53,7 @@ if (!defined('SMF'))
 // View the forum's error log.
 function ViewErrorLog()
 {
-	global $db_prefix, $scripturl, $txt, $context, $modSettings, $user_profile, $filter, $boarddir, $sourcedir, $themedir, $smfFunc;
+	global $scripturl, $txt, $context, $modSettings, $user_profile, $filter, $boarddir, $sourcedir, $themedir, $smfFunc;
 
 	// Viewing contents of a file?
 	if (isset($_GET['file']))
@@ -300,7 +300,7 @@ function ViewErrorLog()
 // Delete errors from the database.
 function deleteErrors()
 {
-	global $db_prefix, $filter, $smfFunc;
+	global $filter, $smfFunc;
 
 	// Make sure the session exists and is correct; otherwise, might be a hacker.
 	checkSession();

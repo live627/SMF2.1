@@ -64,7 +64,7 @@ if (!defined('SMF'))
 // View a summary.
 function summary($memID)
 {
-	global $context, $memberContext, $txt, $modSettings, $user_info, $user_profile, $sourcedir, $db_prefix, $scripturl, $smfFunc;
+	global $context, $memberContext, $txt, $modSettings, $user_info, $user_profile, $sourcedir, $scripturl, $smfFunc;
 
 	// Attempt to load the member's profile data.
 	if (!loadMemberContext($memID) || !isset($memberContext[$memID]))
@@ -238,7 +238,7 @@ function summary($memID)
 // Show all posts by the current user
 function showPosts($memID)
 {
-	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
+	global $txt, $user_info, $scripturl, $modSettings;
 	global $context, $user_profile, $sourcedir, $smfFunc, $board;
 
 	// Some initial context.
@@ -278,7 +278,7 @@ function showPosts($memID)
 		SELECT COUNT(*)
 		FROM {db_prefix}messages AS m' . ($context['is_topics'] ? '
 			INNER JOIN {db_prefix}topics AS t ON (t.id_first_msg = m.id_msg)' : '') . '
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 		WHERE m.id_member = {int:current_member}
 			' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
 			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
@@ -351,7 +351,7 @@ function showPosts($memID)
 				' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
 				' . (empty($range_limit) ? '' : '
 				AND ' . $range_limit) . '
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 				' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
 			ORDER BY m.id_msg ' . ($reverse ? 'ASC' : 'DESC') . '
 			LIMIT ' . $start . ', ' . $maxIndex,
@@ -473,7 +473,7 @@ function showPosts($memID)
 // Show all the attachments of a user.
 function showAttachments($memID)
 {
-	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
+	global $txt, $user_info, $scripturl, $modSettings;
 	global $context, $user_profile, $sourcedir, $smfFunc;
 
 	// OBEY permissions!
@@ -491,7 +491,7 @@ function showAttachments($memID)
 		WHERE a.attachment_type = {int:attachment_type}
 			AND a.id_msg != {int:no_message}
 			AND m.id_member = {int:current_member}
-			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
+			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_list})' : '') . '
 			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
 		array(
@@ -532,7 +532,7 @@ function showAttachments($memID)
 		WHERE a.attachment_type = {int:attachment_type}
 			AND a.id_msg != {int:no_message}
 			AND m.id_member = {int:current_member}
-			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
+			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_list})' : '') . '
 			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}') . '
 		ORDER BY ' . $sort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . '
@@ -567,7 +567,7 @@ function showAttachments($memID)
 
 function statPanel($memID)
 {
-	global $txt, $scripturl, $db_prefix, $context, $user_profile, $user_info, $modSettings, $smfFunc;
+	global $txt, $scripturl, $context, $user_profile, $user_info, $modSettings, $smfFunc;
 
 	$context['page_title'] = $txt['statPanel_showStats'] . ' ' . $user_profile[$memID]['real_name'];
 
@@ -632,7 +632,7 @@ function statPanel($memID)
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = {int:current_member}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 		GROUP BY b.id_board
 		ORDER BY message_count DESC
 		LIMIT 10',
@@ -668,7 +668,7 @@ function statPanel($memID)
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = {int:current_member}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 		GROUP BY b.id_board
 		ORDER BY percentage DESC
 		LIMIT 10',
@@ -743,7 +743,7 @@ function statPanel($memID)
 
 function trackUser($memID)
 {
-	global $scripturl, $txt, $db_prefix, $modSettings, $sourcedir;
+	global $scripturl, $txt, $modSettings, $sourcedir;
 	global $user_profile, $context, $smfFunc;
 
 	// Verify if the user has sufficient permissions.
@@ -941,7 +941,7 @@ function trackUser($memID)
 
 function list_getUserErrorCount($where, $where_vars = array())
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS error_count
@@ -957,7 +957,7 @@ function list_getUserErrorCount($where, $where_vars = array())
 
 function list_getUserErrors($start, $items_per_page, $sort, $where, $where_vars = array())
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl;
+	global $smfFunc, $txt, $scripturl;
 
 	// Get a list of error messages from this ip (range).
 	$request = $smfFunc['db_query']('', '
@@ -990,7 +990,7 @@ function list_getUserErrors($start, $items_per_page, $sort, $where, $where_vars 
 
 function list_getIPMessageCount($where, $where_vars = array())
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS messageCount
@@ -1006,7 +1006,7 @@ function list_getIPMessageCount($where, $where_vars = array())
 
 function list_getIPMessages($start, $items_per_page, $sort, $where, $where_vars = array())
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl;
+	global $smfFunc, $txt, $scripturl;
 
 	// Get all the messages fitting this where clause.
 	// !!!SLOW This query is using a filesort.
@@ -1045,7 +1045,7 @@ function list_getIPMessages($start, $items_per_page, $sort, $where, $where_vars 
 function TrackIP($memID = 0)
 {
 	global $user_profile, $scripturl, $txt, $user_info, $modSettings, $sourcedir;
-	global $db_prefix, $context, $smfFunc;
+	global $context, $smfFunc;
 
 	// Can the user do this?
 	isAllowedTo('moderate_forum');
@@ -1310,7 +1310,7 @@ function TrackIP($memID = 0)
 
 function showPermissions($memID)
 {
-	global $scripturl, $txt, $db_prefix, $board, $modSettings;
+	global $scripturl, $txt, $board, $modSettings;
 	global $user_profile, $context, $user_info, $sourcedir, $smfFunc;
 
 	// Verify if the user has sufficient permissions.
@@ -1344,7 +1344,7 @@ function showPermissions($memID)
 		SELECT b.id_board, b.name, b.id_profile, b.member_groups
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
-		WHERE ' . $user_info['query_see_board'] . '
+		WHERE {query_see_board}
 			AND b.id_profile != {int:default_profile}',
 		array(
 			'current_member' => $memID,

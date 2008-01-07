@@ -50,7 +50,7 @@ if (!defined('SMF'))
 // Turn on/off notifications...
 function Notify()
 {
-	global $db_prefix, $scripturl, $txt, $topic, $user_info, $context, $smfFunc;
+	global $scripturl, $txt, $topic, $user_info, $context, $smfFunc;
 
 	// Make sure they aren't a guest or something - guests can't really receive notifications!
 	is_not_guest();
@@ -122,7 +122,7 @@ function Notify()
 
 function BoardNotify()
 {
-	global $db_prefix, $scripturl, $txt, $board, $user_info, $context, $smfFunc;
+	global $scripturl, $txt, $board, $user_info, $context, $smfFunc;
 
 	// Permissions are an important part of anything ;).
 	is_not_guest();

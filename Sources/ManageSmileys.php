@@ -125,7 +125,7 @@ function ManageSmileys()
 
 function EditSmileySettings($return_config = false)
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $sourcedir, $scripturl;
+	global $modSettings, $context, $settings, $txt, $boarddir, $sourcedir, $scripturl;
 
 	// The directories...
 	$context['smileys_dir'] = empty($modSettings['smileys_dir']) ? $boarddir . '/Smileys' : $modSettings['smileys_dir'];
@@ -185,7 +185,7 @@ function EditSmileySettings($return_config = false)
 
 function EditSmileySets()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir;
+	global $modSettings, $context, $settings, $txt, $boarddir;
 	global $smfFunc, $scripturl, $sourcedir;
 
 	// Set the right tab to be selected.
@@ -504,7 +504,7 @@ function list_getNumSmileySets()
 
 function AddSmiley()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
+	global $modSettings, $context, $settings, $txt, $boarddir, $smfFunc;
 
 	// Get a list of all known smiley sets.
 	$context['smileys_dir'] = empty($modSettings['smileys_dir']) ? $boarddir . '/Smileys' : $modSettings['smileys_dir'];
@@ -746,7 +746,7 @@ function AddSmiley()
 
 function EditSmileys()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir;
+	global $modSettings, $context, $settings, $txt, $boarddir;
 	global $smfFunc, $scripturl, $sourcedir;
 
 	// Force the correct tab to be displayed.
@@ -1149,7 +1149,7 @@ function EditSmileys()
 
 function list_getSmileys($start, $items_per_page, $sort)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_smiley, code, filename, description, smiley_row, smiley_order, hidden
@@ -1168,7 +1168,7 @@ function list_getSmileys($start, $items_per_page, $sort)
 
 function list_getNumSmileys()
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1184,7 +1184,7 @@ function list_getNumSmileys()
 
 function Editsmiley_order()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
+	global $modSettings, $context, $settings, $txt, $boarddir, $smfFunc;
 
 	// Move smileys to another position.
 	if (isset($_REQUEST['reorder']))
@@ -1383,7 +1383,7 @@ function InstallSmileySet()
 // A function to import new smileys from an existing directory into the database.
 function ImportSmileys($smileyPath)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	if (empty($modSettings['smileys_dir']) || !is_dir($modSettings['smileys_dir'] . '/' . $smileyPath))
 		fatal_lang_error('smiley_set_unable_to_import');
@@ -1455,7 +1455,7 @@ function ImportSmileys($smileyPath)
 
 function EditMessageIcons()
 {
-	global $user_info, $modSettings, $context, $settings, $db_prefix, $txt;
+	global $user_info, $modSettings, $context, $settings, $txt;
 	global $boarddir, $smfFunc, $scripturl, $sourcedir;
 
 	// Get a list of icons.
@@ -1464,7 +1464,7 @@ function EditMessageIcons()
 		SELECT m.id_icon, m.title, m.filename, m.icon_order, m.id_board, b.name AS board_name
 		FROM {db_prefix}message_icons AS m
 			LEFT JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE ' . $user_info['query_see_board'],
+		WHERE {query_see_board}',
 		array(
 		)
 	);
@@ -1557,7 +1557,7 @@ function EditMessageIcons()
 			}
 
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'message_icons',
+				'{db_prefix}message_icons',
 				array('id_icon' => 'int', 'id_board' => 'int', 'title' => 'string-80', 'filename' => 'string-80', 'icon_order' => 'int'),
 				$iconInsert,
 				array('id_icon')
@@ -1699,13 +1699,13 @@ function EditMessageIcons()
 
 function list_getMessageIcons($start, $items_per_page, $sort)
 {
-	global $smfFunc, $db_prefix, $user_info;
+	global $smfFunc, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT m.id_icon, m.title, m.filename, m.icon_order, m.id_board, b.name AS board_name
 		FROM {db_prefix}message_icons AS m
 			LEFT JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE ' . $user_info['query_see_board'],
+		WHERE {query_see_board}',
 		array(
 		)
 	);

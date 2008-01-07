@@ -116,7 +116,7 @@ if (!defined('SMF'))
 // The main attachment management function.
 function ManageAttachments()
 {
-	global $txt, $db_prefix, $modSettings, $scripturl, $context, $options;
+	global $txt, $modSettings, $scripturl, $context, $options;
 
 	// You have to be able to moderate the forum to do this.
 	isAllowedTo('manage_attachments');
@@ -161,7 +161,7 @@ function ManageAttachments()
 
 function ManageAttachmentSettings($return_config = false)
 {
-	global $txt, $db_prefix, $modSettings, $scripturl, $context, $options, $sourcedir;
+	global $txt, $modSettings, $scripturl, $context, $options, $sourcedir;
 
 	$context['valid_upload_dir'] = is_dir($modSettings['attachmentUploadDir']) && is_writable($modSettings['attachmentUploadDir']);
 
@@ -211,7 +211,7 @@ function ManageAttachmentSettings($return_config = false)
 
 function ManageAvatarSettings($return_config = false)
 {
-	global $txt, $context, $db_prefix, $modSettings, $sourcedir, $scripturl;
+	global $txt, $context, $modSettings, $sourcedir, $scripturl;
 
 	// Perform a test to see if the GD module is installed.
 	$testGD = get_extension_funcs('gd');
@@ -277,7 +277,7 @@ function ManageAvatarSettings($return_config = false)
 
 function BrowseFiles()
 {
-	global $context, $db_prefix, $txt, $scripturl, $options, $modSettings;
+	global $context, $txt, $scripturl, $options, $modSettings;
 	global $smfFunc, $sourcedir;
 
 	$context['sub_template'] = 'browse';
@@ -450,7 +450,7 @@ function BrowseFiles()
 
 function list_getFiles($start, $items_per_page, $sort, $browse_type)
 {
-	global $db_prefix, $smfFunc, $txt;
+	global $smfFunc, $txt;
 
 	// Choose a query depending on what we are viewing.
 	if ($browse_type === 'avatars')
@@ -503,7 +503,7 @@ function list_getFiles($start, $items_per_page, $sort, $browse_type)
 
 function list_getNumFiles($browse_type)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	// Depending on the type of file, different queries are used.
 	if ($browse_type === 'avatars')
@@ -535,7 +535,7 @@ function list_getNumFiles($browse_type)
 
 function MaintainFiles()
 {
-	global $db_prefix, $context, $modSettings, $txt, $smfFunc;
+	global $context, $modSettings, $txt, $smfFunc;
 
 	$context['sub_template'] = 'maintenance';
 
@@ -608,7 +608,7 @@ function MaintainFiles()
 // !!! Not implemented yet.
 function MoveAvatars()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	// First make sure the custom avatar dir is writable.
 	if (!is_writable($modSettings['custom_avatar_dir']))
@@ -657,7 +657,7 @@ function MoveAvatars()
 
 function RemoveAttachmentByAge()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	checkSession('post', 'admin');
 
@@ -691,7 +691,7 @@ function RemoveAttachmentByAge()
 
 function RemoveAttachmentBySize()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	checkSession('post', 'admin');
 
@@ -715,7 +715,7 @@ function RemoveAttachmentBySize()
 
 function RemoveAttachment()
 {
-	global $db_prefix, $modSettings, $txt, $smfFunc;
+	global $modSettings, $txt, $smfFunc;
 
 	checkSession('post');
 
@@ -753,7 +753,7 @@ function RemoveAttachment()
 // !!! Not implemented (yet?)
 function RemoveAllAttachments()
 {
-	global $db_prefix, $txt, $smfFunc;
+	global $txt, $smfFunc;
 
 	checkSession('get', 'admin');
 
@@ -780,7 +780,7 @@ function RemoveAllAttachments()
 // Removes attachments - allowed query_types: '', 'messages', 'members'
 function removeAttachments($condition, $query_type = '', $return_affected_messages = false, $autoThumbRemoval = true)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	//!!! This might need more work!
 	$new_condition = array();
@@ -892,7 +892,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 // This function should find attachments in the database that no longer exist and clear them, and fix filesize issues.
 function RepairAttachments()
 {
-	global $db_prefix, $modSettings, $context, $txt, $smfFunc;
+	global $modSettings, $context, $txt, $smfFunc;
 
 	checkSession('get');
 
@@ -1409,7 +1409,7 @@ function pauseAttachmentMaintenance($to_fix, $max_substep = 0)
 // Called from a mouse click, works out what we want to do with attachments and actions it.
 function ApproveAttach()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Security is our primary concern...
 	checkSession('get');
@@ -1492,7 +1492,7 @@ function ApproveAttach()
 // Approve an attachment, or maybe even more - no permission check!
 function ApproveAttachments($attachments)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	if (empty($attachments))
 		return 0;
@@ -1544,7 +1544,7 @@ function ApproveAttachments($attachments)
 
 function ManageAttachmentPaths()
 {
-	global $modSettings, $scripturl, $context, $txt, $sourcedir, $smfFunc, $db_prefix;
+	global $modSettings, $scripturl, $context, $txt, $sourcedir, $smfFunc;
 
 	// Saving?
 	if (isset($_REQUEST['save']))
@@ -1711,7 +1711,7 @@ function ManageAttachmentPaths()
 // Prepare the actual attachment directories to be displayed in the list.
 function list_getAttachDirs()
 {
-	global $smfFunc, $db_prefix, $modSettings, $sc, $txt;
+	global $smfFunc, $modSettings, $sc, $txt;
 
 	// The dirs should already have been unserialized but just in case...
 	if (!is_array($modSettings['attachmentUploadDir']))

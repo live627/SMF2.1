@@ -121,7 +121,7 @@ if (!defined('SMF'))
 // Handling function for generating reports.
 function ReportsMain()
 {
-	global $db_prefix, $txt, $modSettings, $context, $scripturl;
+	global $txt, $modSettings, $context, $scripturl;
 
 	// Only admins, only EVER admins!
 	isAllowedTo('admin_forum');
@@ -191,7 +191,7 @@ function ReportsMain()
 // Standard report about what settings the boards have.
 function BoardReport()
 {
-	global $context, $db_prefix, $txt, $sourcedir, $smfFunc;
+	global $context, $txt, $sourcedir, $smfFunc;
 
 	// Load the permission profiles.
 	require_once($sourcedir . '/ManagePermissions.php');
@@ -298,7 +298,7 @@ function BoardReport()
 // Generate a report on the current permissions by board and membergroup.
 function BoardPermissionsReport()
 {
-	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
+	global $context, $txt, $modSettings, $smfFunc;
 
 	// Get as much memory as possible as this can be big.
 	@ini_set('memory_limit', '256M');
@@ -471,7 +471,7 @@ function BoardPermissionsReport()
 // Show what the membergroups are made of.
 function MemberGroupsReport()
 {
-	global $context, $db_prefix, $txt, $settings, $modSettings, $smfFunc;
+	global $context, $txt, $settings, $modSettings, $smfFunc;
 
 	// Fetch all the board names.
 	$request = $smfFunc['db_query']('', '
@@ -581,7 +581,7 @@ function MemberGroupsReport()
 // Show the large variety of group permissions assigned to each membergroup.
 function GroupPermissionsReport()
 {
-	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
+	global $context, $txt, $modSettings, $smfFunc;
 
 	if (isset($_REQUEST['groups']))
 	{
@@ -676,7 +676,7 @@ function GroupPermissionsReport()
 // Report for showing all the forum staff members - quite a feat!
 function StaffReport()
 {
-	global $sourcedir, $context, $db_prefix, $txt, $smfFunc;
+	global $sourcedir, $context, $txt, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Members.php');
 

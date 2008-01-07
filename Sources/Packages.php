@@ -136,7 +136,7 @@ function Packages()
 // Test install a package.
 function PackageInstallTest()
 {
-	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $db_prefix, $smfFunc;
+	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $smfFunc;
 
 	// You have to specify a file!!
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -557,7 +557,7 @@ function PackageInstallTest()
 function PackageInstall()
 {
 	global $boarddir, $txt, $context, $boardurl, $scripturl, $sourcedir, $modSettings;
-	global $db_prefix, $user_info, $smfFunc;
+	global $user_info, $smfFunc;
 
 	// If there's no file, what are we installing?
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -768,7 +768,7 @@ function PackageInstall()
 			elseif ($action['type'] == 'code' && !empty($action['filename']))
 			{
 				// This is just here as reference for what is available.
-				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version, $smfFunc;
+				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $forum_version, $smfFunc;
 
 				// Now include the file and be done with it ;).
 				require($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']);
@@ -777,7 +777,7 @@ function PackageInstall()
 			elseif ($action['type'] == 'database' && !empty($action['filename']) && (!$context['uninstalling'] || !empty($_POST['do_db_changes'])))
 			{
 				// These can also be there for database changes.
-				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version, $smfFunc;
+				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $forum_version, $smfFunc;
 				global $db_package_log;
 
 				// We'll likely want the package specific database functionality!
@@ -1032,7 +1032,7 @@ function InstalledList()
 // Empty out the installed list.
 function FlushInstall()
 {
-	global $boarddir, $sourcedir, $db_prefix, $smfFunc;
+	global $boarddir, $sourcedir, $smfFunc;
 
 	include_once($sourcedir . '/Subs-Package.php');
 
@@ -1081,7 +1081,7 @@ function PackageRemove()
 // Browse a list of installed packages.
 function PackageBrowse()
 {
-	global $txt, $boarddir, $scripturl, $context, $forum_version, $db_prefix;
+	global $txt, $boarddir, $scripturl, $context, $forum_version;
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',

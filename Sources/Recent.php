@@ -44,7 +44,7 @@ if (!defined('SMF'))
 // Get the latest post.
 function getLastPost()
 {
-	global $db_prefix, $user_info, $scripturl, $modSettings, $smfFunc;
+	global $user_info, $scripturl, $modSettings, $smfFunc;
 
 	// Find it by the board - better to order by board than sort the entire messages table.
 	$request = $smfFunc['db_query']('get_last_post', '
@@ -54,7 +54,7 @@ function getLastPost()
 			INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = b.id_last_msg)
 		WHERE ' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			b.id_board != {int:recycle_board}' : '1=1 ') . '
-			AND ' . $user_info['query_wanna_see_board'] . '
+			AND {query_wanna_see_board}
 			AND ml.approved = {int:is_approved}
 		ORDER BY b.id_msg_updated DESC
 		LIMIT 1',
@@ -92,7 +92,7 @@ function getLastPost()
 // Find the ten most recent posts.
 function RecentPosts()
 {
-	global $txt, $scripturl, $db_prefix, $user_info, $context, $modSettings, $sourcedir, $board, $smfFunc;
+	global $txt, $scripturl, $user_info, $context, $modSettings, $sourcedir, $board, $smfFunc;
 
 	loadTemplate('Recent');
 	$context['page_title'] = $txt['recent_posts'];
@@ -134,7 +134,7 @@ function RecentPosts()
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
 			WHERE b.id_cat IN ({array_int:category_list})
-				AND ' . $user_info['query_see_board'],
+				AND {query_see_board}',
 			array(
 				'category_list' => $_REQUEST['c'],
 			)
@@ -174,7 +174,7 @@ function RecentPosts()
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
 			WHERE b.id_board IN ({array_int:board_list})
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 			LIMIT ' . count($_REQUEST['boards']),
 			array(
 				'board_list' => $_REQUEST['boards'],
@@ -234,7 +234,7 @@ function RecentPosts()
 	}
 	else
 	{
-		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+		$query_this_board = '{query_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_board}' : ''). '
 			AND m.id_msg >= {int:max_id_msg}';
 		$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 100 - $_REQUEST['start'] * 6);
@@ -404,7 +404,7 @@ function RecentPosts()
 // Find unread topics and replies.
 function UnreadTopics()
 {
-	global $board, $txt, $scripturl, $db_prefix, $sourcedir;
+	global $board, $txt, $scripturl, $sourcedir;
 	global $user_info, $context, $settings, $modSettings, $smfFunc, $options;
 
 	// Guests can't have unread things, we don't know anything about them.
@@ -452,7 +452,7 @@ function UnreadTopics()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.id_parent
 			FROM {db_prefix}boards AS b
-			WHERE ' . $user_info['query_wanna_see_board'] . '
+			WHERE {query_wanna_see_board}
 				AND b.child_level > {int:no_child}
 				AND b.id_board NOT IN ({array_int:boards})
 			ORDER BY child_level ASC
@@ -491,7 +491,7 @@ function UnreadTopics()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
-			WHERE ' . $user_info['query_see_board'] . '
+			WHERE {query_see_board}
 				AND b.id_board IN ({array_int:board_list})',
 			array(
 				'board_list' => $_REQUEST['boards'],
@@ -675,7 +675,7 @@ function UnreadTopics()
 				SELECT MIN(lmr.id_msg)
 				FROM {db_prefix}boards AS b
 					LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = {int:current_member})
-				WHERE ' . $user_info['query_see_board'],
+				WHERE {query_see_board}',
 				array(
 					'current_member' => $user_info['id'],
 				)

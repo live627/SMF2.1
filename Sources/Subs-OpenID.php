@@ -85,7 +85,7 @@ function smf_openID_validate($openid_uri, $return = false)
 
 function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	if (!$no_delete)
 	{
@@ -124,7 +124,7 @@ function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 
 function smf_openID_makeAssociation($server)
 {
-	global $smfFunc, $db_prefix, $modSettings;
+	global $smfFunc, $modSettings;
 
 	$parameters = array(
 		'openid.mode=associate',
@@ -156,7 +156,7 @@ function smf_openID_makeAssociation($server)
 
 	// Store the data
 	$smfFunc['db_insert']('replace',
-		$db_prefix . 'openid_assoc',
+		'{db_prefix}openid_assoc',
 		array('server_url' => 'string', 'handle' => 'string', 'secret' => 'string', 'issued' => 'int', 'expires' => 'int', 'assoc_type' => 'string'),
 		array($server, $handle, $secret, $issued, $expires, $assoc_type),
 		array('server_url', 'handle')
@@ -174,7 +174,7 @@ function smf_openID_makeAssociation($server)
 
 function smf_openID_removeAssociation($handle)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$smfFunc['db_query']('openid_remove_association', '
 		DELETE FROM {db_prefix}openid_assoc
@@ -188,7 +188,7 @@ function smf_openID_removeAssociation($handle)
 
 function smf_openID_return()
 {
-	global $smfFunc, $db_prefix, $user_info, $user_profile, $sourcedir, $modSettings, $context, $sc, $user_settings;
+	global $smfFunc, $user_info, $user_profile, $sourcedir, $modSettings, $context, $sc, $user_settings;
 
 	if (!isset($_GET['openid_mode']))
 		fatal_lang_error('openid_return_no_mode');
@@ -307,7 +307,7 @@ function smf_openID_canonize($uri)
 
 function smf_openid_member_exists($url)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$result = $smfFunc['db_query']('openid_member_exists', '
 		SELECT id_member, member_name

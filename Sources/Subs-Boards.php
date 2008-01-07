@@ -90,7 +90,7 @@ if (!defined('SMF'))
 // Mark a board or multiple boards read.
 function markBoardsRead($boards, $unread = false)
 {
-	global $db_prefix, $user_info, $modSettings, $smfFunc;
+	global $user_info, $modSettings, $smfFunc;
 
 	// Force $boards to be an array.
 	if (!is_array($boards))
@@ -135,14 +135,14 @@ function markBoardsRead($boards, $unread = false)
 
 		// Update log_mark_read and log_boards.
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_mark_read',
+			'{db_prefix}log_mark_read',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 			$markRead,
 			array('id_board', 'id_member')
 		);
 
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_boards',
+			'{db_prefix}log_boards',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 			$markRead,
 			array('id_board', 'id_member')
@@ -198,7 +198,7 @@ function markBoardsRead($boards, $unread = false)
 // Mark one or more boards as read.
 function MarkRead()
 {
-	global $board, $topic, $user_info, $board_info, $db_prefix, $modSettings, $smfFunc;
+	global $board, $topic, $user_info, $board_info, $modSettings, $smfFunc;
 
 	// No Guests allowed!
 	is_not_guest();
@@ -211,7 +211,7 @@ function MarkRead()
 		$result = $smfFunc['db_query']('', '
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
-			WHERE ' . $user_info['query_see_board'],
+			WHERE {query_see_board}',
 			array(
 			)
 		);
@@ -242,7 +242,7 @@ function MarkRead()
 			$markRead[] = array($modSettings['maxMsgID'], $user_info['id'], (int) $id_topic);
 
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			$markRead,
 			array('id_member', 'id_topic')
@@ -293,7 +293,7 @@ function MarkRead()
 
 		// Use a time one second earlier than the first time: blam, unread!
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			array($earlyMsg, $user_info['id'], $topic),
 			array('id_member', 'id_topic')
@@ -329,7 +329,7 @@ function MarkRead()
 			$request = $smfFunc['db_query']('', '
 				SELECT b.id_board, b.id_parent
 				FROM {db_prefix}boards AS b
-				WHERE ' . $user_info['query_see_board'] . '
+				WHERE {query_see_board}
 					AND b.child_level > {int:no_parents}
 					AND b.id_board NOT IN ({array_int:board_list})
 				ORDER BY child_level ASC
@@ -364,7 +364,7 @@ function MarkRead()
 		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board
 			FROM {db_prefix}boards AS b
-			WHERE ' . $user_info['query_see_board'] . '
+			WHERE {query_see_board}
 				AND b.' . implode(' OR b.', $clauses),
 			array_merge($clauseParameters, array(
 			))
@@ -392,7 +392,7 @@ function MarkRead()
 				SELECT b.id_board
 				FROM {db_prefix}boards AS b
 				WHERE b.id_parent IN ({array_int:parent_list})
-					AND ' . $user_info['query_see_board'],
+					AND {query_see_board}',
 				array(
 					'parent_list' => $boards,
 				)
@@ -404,7 +404,7 @@ function MarkRead()
 					$logBoardInserts[] = array($modSettings['maxMsgID'], $user_info['id'], $row['id_board']);
 
 				$smfFunc['db_insert']('replace',
-					$db_prefix . 'log_boards',
+					'{db_prefix}log_boards',
 					array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 					$logBoardInserts,
 					array('id_member', 'id_board')
@@ -430,7 +430,7 @@ function MarkRead()
 // Get the id_member associated with the specified message.
 function getMsgMemberID($messageID)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Find the topic and make sure the member still exists.
 	$result = $smfFunc['db_query']('', '
@@ -456,7 +456,7 @@ function getMsgMemberID($messageID)
 // Modify the settings and position of a board.
 function modifyBoard($board_id, &$boardOptions)
 {
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc;
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $smfFunc;
 
 	// Get some basic information about all boards and categories.
 	getBoardTree();
@@ -700,7 +700,7 @@ function modifyBoard($board_id, &$boardOptions)
 				$inserts[] = array($board_id, $moderator);
 
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'moderators',
+				'{db_prefix}moderators',
 				array('id_board' => 'int', 'id_member' => 'int'),
 				$inserts,
 				array('id_board', 'id_member')
@@ -718,7 +718,7 @@ function modifyBoard($board_id, &$boardOptions)
 // Create a new board and set its properties and position.
 function createBoard($boardOptions)
 {
-	global $boards, $db_prefix, $modSettings, $smfFunc;
+	global $boards, $modSettings, $smfFunc;
 
 	// Trigger an error if one of the required values is not set.
 	if (!isset($boardOptions['board_name']) || trim($boardOptions['board_name']) == '' || !isset($boardOptions['move_to']) || !isset($boardOptions['target_category']))
@@ -798,7 +798,7 @@ function createBoard($boardOptions)
 // Remove one or more boards.
 function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 {
-	global $db_prefix, $sourcedir, $boards, $smfFunc;
+	global $sourcedir, $boards, $smfFunc;
 
 	// No boards to delete? Return!
 	if (empty($boards_to_remove))
@@ -923,7 +923,7 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 // Put all boards in the right order.
 function reorderBoards()
 {
-	global $db_prefix, $cat_tree, $boardList, $boards, $smfFunc;
+	global $cat_tree, $boardList, $boards, $smfFunc;
 
 	getBoardTree();
 
@@ -957,7 +957,7 @@ function reorderBoards()
 // Fixes the children of a board by setting their child_levels to new values.
 function fixChildren($parent, $newLevel, $newParent)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Grab all children of $parent...
 	$result = $smfFunc['db_query']('', '
@@ -993,7 +993,7 @@ function fixChildren($parent, $newLevel, $newParent)
 // Load a lot of useful information regarding the boards and categories.
 function getBoardTree()
 {
-	global $db_prefix, $cat_tree, $boards, $boardList, $txt, $modSettings, $smfFunc;
+	global $cat_tree, $boards, $boardList, $txt, $modSettings, $smfFunc;
 
 	// Getting all the board and category information you'd ever wanted.
 	$request = $smfFunc['db_query']('', '

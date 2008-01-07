@@ -613,7 +613,7 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 function sendmail($to, $subject, $message, $from = null, $message_id = null, $send_html = false, $priority = 1, $hotmail_fix = null)
 {
 	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Use sendmail if it's set or if no SMTP server is set.
 	$use_sendmail = empty($modSettings['mail_type']) || $modSettings['smtp_host'] == '';
@@ -781,7 +781,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 // Add an email to the mail queue.
 function AddMailQueue($flush = false, $to_array = array(), $subject = '', $message = '', $headers = '', $send_html = false, $priority = 1)
 {
-	global $db_prefix, $context, $modSettings, $smfFunc;
+	global $context, $modSettings, $smfFunc;
 
 	static $cur_insert = array();
 	static $cur_insert_len = 0;
@@ -868,7 +868,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 // Send off a personal message.
 function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null, $pm_head = 0)
 {
-	global $db_prefix, $scripturl, $txt, $user_info, $language;
+	global $scripturl, $txt, $user_info, $language;
 	global $modSettings, $smfFunc;
 
 	$onBehalf = $from !== null;
@@ -1151,7 +1151,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		}
 
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'pm_recipients',
+			'{db_prefix}pm_recipients',
 			array(
 				'id_pm' => 'int', 'id_member' => 'int', 'bcc' => 'int', 'deleted' => 'int', 'is_new' => 'int'
 			),
@@ -1506,7 +1506,7 @@ function SpellCheck()
 // Notify members that something has happened to a topic  they marked!
 function sendNotifications($topics, $type, $exclude = array())
 {
-	global $txt, $scripturl, $db_prefix, $language, $user_info;
+	global $txt, $scripturl, $language, $user_info;
 	global $modSettings, $sourcedir, $context, $smfFunc;
 
 	// Can't do it if there's no topics.
@@ -1699,7 +1699,7 @@ function sendNotifications($topics, $type, $exclude = array())
 // - Mandatory parameters are set.
 function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $txt, $modSettings, $smfFunc;
+	global $user_info, $txt, $modSettings, $smfFunc;
 
 	// Set optional parameters to the default value.
 	$msgOptions['icon'] = empty($msgOptions['icon']) ? 'xx' : $msgOptions['icon'];
@@ -1956,7 +1956,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (empty($flag))
 		{
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'log_topics',
+				'{db_prefix}log_topics',
 				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 				array($topicOptions['id'], $user_info['id'], $msgOptions['id'] + 1),
 				array('id_topic', 'id_member')
@@ -2015,7 +2015,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 // !!!
 function createAttachment(&$attachmentOptions)
 {
-	global $db_prefix, $modSettings, $sourcedir, $smfFunc;
+	global $modSettings, $sourcedir, $smfFunc;
 
 	// We need to know where this thing is going.
 	if (!empty($modSettings['currentAttachmentUploadDir']))
@@ -2296,7 +2296,7 @@ function createAttachment(&$attachmentOptions)
 // !!!
 function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $modSettings, $smfFunc;
+	global $user_info, $modSettings, $smfFunc;
 
 	$topicOptions['poll'] = isset($topicOptions['poll']) ? (int) $topicOptions['poll'] : null;
 	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ? $topicOptions['lock_mode'] : null;
@@ -2381,7 +2381,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// Mark inserted topic as read.
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 			array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
 			array('id_topic', 'id_member')
@@ -2419,7 +2419,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			foreach ($inserted_words as $word)
 				$inserts[] = array($word, $msgOptions['id']);
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'log_search_words',
+				'{db_prefix}log_search_words',
 				array('id_word' => 'string', 'id_msg' => 'int'),
 				$inserts,
 				array('id_word', 'id_msg')
@@ -2454,7 +2454,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 // Approve (or not) some posts... without permission checks...
 function approvePosts($msgs, $approve = true)
 {
-	global $db_prefix, $sourcedir, $smfFunc;
+	global $sourcedir, $smfFunc;
 
 	if (!is_array($msgs))
 		$msgs = array($msgs);
@@ -2663,7 +2663,7 @@ function approvePosts($msgs, $approve = true)
 // Approve topics?
 function approveTopics($topics, $approve = true)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	if (!is_array($topics))
 		$topics = array($topics);
@@ -2695,7 +2695,7 @@ function approveTopics($topics, $approve = true)
 // A special function for handling the hell which is sending approval notifications.
 function sendApprovalNotifications(&$topicData)
 {
-	global $txt, $scripturl, $db_prefix, $language, $user_info;
+	global $txt, $scripturl, $language, $user_info;
 	global $modSettings, $sourcedir, $context, $smfFunc;
 
 	// Clean up the data...
@@ -2822,7 +2822,7 @@ function sendApprovalNotifications(&$topicData)
 // Update the last message in a board, and its parents.
 function updateLastMessages($setboards, $id_msg = 0)
 {
-	global $db_prefix, $board_info, $board, $modSettings, $smfFunc;
+	global $board_info, $board, $modSettings, $smfFunc;
 
 	// Please - let's be sane.
 	if (empty($setboards))
@@ -2948,7 +2948,7 @@ function updateLastMessages($setboards, $id_msg = 0)
 // This simple function gets a list of all administrators and sends them an email to let them know a new member has joined.
 function adminNotify($type, $memberID, $member_name = null)
 {
-	global $txt, $db_prefix, $modSettings, $language, $scripturl, $user_info, $context, $smfFunc;
+	global $txt, $modSettings, $language, $scripturl, $user_info, $context, $smfFunc;
 
 	// If the setting isn't enabled then just exit.
 	if (empty($modSettings['notify_new_registration']))

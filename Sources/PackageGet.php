@@ -116,7 +116,7 @@ function PackageGet()
 
 function PackageServers()
 {
-	global $txt, $scripturl, $context, $boarddir, $sourcedir, $modSettings, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $context, $boarddir, $sourcedir, $modSettings, $smfFunc;
 
 	// Ensure we use the correct template, and page title.
 	$context['sub_template'] = 'servers';
@@ -209,7 +209,7 @@ function PackageServers()
 // Browse a server's list of packages.
 function PackageGBrowse()
 {
-	global $txt, $boardurl, $context, $scripturl, $boarddir, $sourcedir, $forum_version, $context, $db_prefix, $smfFunc;
+	global $txt, $boardurl, $context, $scripturl, $boarddir, $sourcedir, $forum_version, $context, $smfFunc;
 
 	if (isset($_GET['server']))
 	{
@@ -520,7 +520,7 @@ function PackageGBrowse()
 // Download a package.
 function PackageDownload()
 {
-	global $txt, $scripturl, $boarddir, $context, $sourcedir, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $boarddir, $context, $sourcedir, $smfFunc;
 
 	// Use the downloaded sub template.
 	$context['sub_template'] = 'downloaded';
@@ -682,7 +682,7 @@ function PackageUpload()
 // Add a package server to the list.
 function PackageServerAdd()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Validate the user.
 	checkSession();
@@ -708,7 +708,7 @@ function PackageServerAdd()
 // Remove a server from the list.
 function PackageServerRemove()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}package_servers

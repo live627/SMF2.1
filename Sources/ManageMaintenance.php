@@ -117,7 +117,7 @@ if (!defined('SMF'))
 // The maintenance access point.
 function ManageMaintenance()
 {
-	global $txt, $db_prefix, $modSettings, $scripturl, $context, $options;
+	global $txt, $modSettings, $scripturl, $context, $options;
 
 	// You absolutely must be an admin by here!
 	isAllowedTo('admin_forum');
@@ -171,7 +171,7 @@ function ManageMaintenance()
 // Miscellaneous maintenance..
 function Maintenance()
 {
-	global $context, $txt, $db_prefix, $user_info, $db_character_set, $db_type;
+	global $context, $txt, $user_info, $db_character_set, $db_type;
 	global $modSettings, $sourcedir, $cachedir, $smfFunc;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
@@ -264,7 +264,7 @@ function Maintenance()
 // List all the scheduled task in place on the forum.
 function ScheduledTasks()
 {
-	global $context, $txt, $db_prefix, $sourcedir, $smfFunc, $user_info, $modSettings;
+	global $context, $txt, $sourcedir, $smfFunc, $user_info, $modSettings;
 
 	// Mama, setup the template first - cause it's like the most important bit, like pickle in a sandwich.
 	// ... ironically I don't like pickle. </grudge>
@@ -383,7 +383,7 @@ function ScheduledTasks()
 // Function for editing a task.
 function EditTask()
 {
-	global $context, $txt, $db_prefix, $sourcedir, $smfFunc, $user_info, $modSettings;
+	global $context, $txt, $sourcedir, $smfFunc, $user_info, $modSettings;
 
 	// Just set up some lovely context stuff.
 	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
@@ -484,7 +484,7 @@ function EditTask()
 // Show the log of all tasks that have taken place.
 function TaskLog()
 {
-	global $scripturl, $db_prefix, $context, $txt, $smfFunc;
+	global $scripturl, $context, $txt, $smfFunc;
 
 	// How many per page?
 	$entries_per_page = 20;
@@ -543,7 +543,7 @@ function TaskLog()
 // Convert both data and database tables to UTF-8 character set.
 function ConvertUtf8()
 {
-	global $scripturl, $context, $txt, $language, $db_prefix, $db_character_set;
+	global $scripturl, $context, $txt, $language, $db_character_set;
 	global $modSettings, $user_info, $sourcedir, $smfFunc;
 
 	// Show me your badge!
@@ -885,7 +885,7 @@ function ConvertUtf8()
 // Convert HTML-entities to their UTF-8 character equivalents.
 function ConvertEntities()
 {
-	global $db_prefix, $db_character_set, $modSettings, $context, $sourcedir, $smfFunc;
+	global $db_character_set, $modSettings, $context, $sourcedir, $smfFunc;
 
 	isAllowedTo('admin_forum');
 
@@ -1129,7 +1129,7 @@ function OptimizeTables()
 // Recount all the important board totals.
 function AdminBoardRecount()
 {
-	global $txt, $db_prefix, $context, $scripturl, $modSettings, $sourcedir;
+	global $txt, $context, $scripturl, $modSettings, $sourcedir;
 	global $time_start, $smfFunc;
 
 	isAllowedTo('admin_forum');
@@ -1590,7 +1590,7 @@ function AdminBoardRecount()
 // This function caches the relevant language files, and if the cache doesn't work includes them with eval.
 function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 {
-	global $language, $settings, $txt, $db_prefix, $modSettings;
+	global $language, $settings, $txt, $modSettings;
 	global $sourcedir, $cachedir, $smfFunc;
 
 	// Is the file writable?
@@ -1713,7 +1713,7 @@ function AdminTask()
 		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE ' . $user_info['query_see_board'],
+		WHERE {query_see_board}',
 		array(
 		)
 	);

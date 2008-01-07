@@ -65,7 +65,7 @@ $GLOBALS['search_versions'] = array(
 // Ask the user what they want to search for.
 function PlushSearch1()
 {
-	global $txt, $scripturl, $db_prefix, $modSettings, $user_info, $context, $smfFunc;
+	global $txt, $scripturl, $modSettings, $user_info, $context, $smfFunc;
 
 	// Is the load average too high to allow searching just now?
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_search']) && $context['load_average'] >= $modSettings['loadavg_search'])
@@ -152,7 +152,7 @@ function PlushSearch1()
 		SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE ' . $user_info['query_see_board'],
+		WHERE {query_see_board}',
 		array(
 		)
 	);
@@ -224,12 +224,11 @@ function PlushSearch1()
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 			WHERE t.id_topic = {int:search_topic_id}
-				AND {raw:boards_allowed_to_see}
+				AND {query_see_board}
 				AND t.approved = {int:is_approved_true}
 			LIMIT 1',
 			array(
 				'is_approved_true' => 1,
-				'boards_allowed_to_see' => $user_info['query_see_board'],
 				'search_topic_id' => $context['search_params']['topic'],
 			)
 		);
@@ -251,7 +250,7 @@ function PlushSearch1()
 // Gather the results and show them.
 function PlushSearch2()
 {
-	global $scripturl, $modSettings, $sourcedir, $txt, $db_prefix, $db_connection;
+	global $scripturl, $modSettings, $sourcedir, $txt, $db_connection;
 	global $user_info, $context, $options, $messages_request, $boards_can;
 	global $excludedWords, $participants, $smfFunc, $search_versions, $searchAPI;
 
@@ -489,7 +488,7 @@ function PlushSearch2()
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			WHERE t.id_topic = {int:search_topic_id}
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 				AND t.approved = {int:is_approved_true}
 			LIMIT 1',
 			array(
@@ -1758,7 +1757,7 @@ function PlushSearch2()
 // !!! Fix this, update it, whatever... from Display.php mainly.
 function prepareSearchContext($reset = false)
 {
-	global $txt, $modSettings, $db_prefix, $scripturl, $user_info, $sourcedir;
+	global $txt, $modSettings, $scripturl, $user_info, $sourcedir;
 	global $memberContext, $context, $settings, $options, $messages_request;
 	global $boards_can, $participants, $smfFunc;
 

@@ -472,7 +472,7 @@ function ModifyCacheSettings($return_config = false)
 // Download a language file from the Simple Machines website.
 function DownloadLanguage()
 {
-	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smfFunc, $db_prefix, $scripturl;
+	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smfFunc, $scripturl;
 
 	loadLanguage('ManageSettings');
 	require_once($sourcedir . '/Subs-Package.php');
@@ -807,7 +807,7 @@ function DownloadLanguage()
 // This lists all the current languages and allows editing of them.
 function ModifyLanguageSettings()
 {
-	global $txt, $db_prefix, $context, $scripturl;
+	global $txt, $context, $scripturl;
 	global $user_info, $smfFunc, $sourcedir, $language, $boarddir, $forum_version;
 
 	// Setting a new default?
@@ -998,7 +998,7 @@ function list_getNumLanguages()
 // Fetch the actual language information.
 function list_getLanguages()
 {
-	global $settings, $smfFunc, $language, $db_prefix, $txt;
+	global $settings, $smfFunc, $language, $txt;
 
 	$languages = array();
 	// Keep our old entries.
@@ -1057,7 +1057,7 @@ function list_getLanguages()
 // Edit a particular set of language entries.
 function ModifyLanguage()
 {
-	global $settings, $context, $smfFunc, $db_prefix, $txt;
+	global $settings, $context, $smfFunc, $txt;
 
 	loadLanguage('ManageSettings');
 

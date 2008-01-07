@@ -210,7 +210,7 @@ function is_not_guest($message = '')
 // Do banning related stuff.  (ie. disallow access....)
 function is_not_banned($forceCheck = false)
 {
-	global $txt, $db_prefix, $modSettings, $context, $user_info;
+	global $txt, $modSettings, $context, $user_info;
 	global $sourcedir, $cookiename, $user_settings, $smfFunc;
 
 	// You cannot be banned if you are an admin - doesn't help if you log out.
@@ -542,7 +542,7 @@ function banPermissions()
 // Log a ban in the database.
 function log_ban($ban_ids = array(), $email = null)
 {
-	global $db_prefix, $user_info, $smfFunc;
+	global $user_info, $smfFunc;
 
 	// Don't log web accelerators, it's very confusing...
 	if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
@@ -570,7 +570,7 @@ function log_ban($ban_ids = array(), $email = null)
 // Checks if a given email address might be banned.
 function isBannedEmail($email, $restriction, $error)
 {
-	global $db_prefix, $txt, $smfFunc;
+	global $txt, $smfFunc;
 
 	// Can't ban an empty email
 	if (empty($email) || trim($email) == '')
@@ -747,7 +747,7 @@ function checkSubmitOnce($action, $is_fatal = true)
 // Check the user's permissions.
 function allowedTo($permission, $boards = null)
 {
-	global $user_info, $db_prefix, $modSettings, $smfFunc;
+	global $user_info, $modSettings, $smfFunc;
 
 	// You're always allowed to do nothing. (unless you're a working man, MR. LAZY :P!)
 	if (empty($permission))
@@ -863,7 +863,7 @@ function isAllowedTo($permission, $boards = null)
 // Return the boards a user has a certain (board) permission on. (array(0) if all.)
 function boardsAllowedTo($permission, $check_access = true)
 {
-	global $db_prefix, $user_info, $modSettings, $smfFunc;
+	global $user_info, $modSettings, $smfFunc;
 
 	// Administrators are all powerful, sorry.
 	if ($user_info['is_admin'])

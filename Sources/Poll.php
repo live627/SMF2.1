@@ -82,7 +82,7 @@ if (!defined('SMF'))
 // Allow the user to vote.
 function Vote()
 {
-	global $topic, $txt, $db_prefix, $user_info, $smfFunc, $sourcedir, $modSettings;
+	global $topic, $txt, $user_info, $smfFunc, $sourcedir, $modSettings;
 
 	// Make sure you can vote.
 	isAllowedTo('poll_vote');
@@ -200,7 +200,7 @@ function Vote()
 
 	// Add their vote to the tally.
 	$smfFunc['db_insert']('insert',
-		$db_prefix . 'log_polls',
+		'{db_prefix}log_polls',
 		array('id_poll' => 'int', 'id_member' => 'int', 'id_choice' => 'int'),
 		$inserts,
 		array('id_poll', 'id_member', 'id_choice')
@@ -234,7 +234,7 @@ function Vote()
 // Lock the voting for a poll.
 function LockVoting()
 {
-	global $topic, $db_prefix, $user_info, $smfFunc;
+	global $topic, $user_info, $smfFunc;
 
 	checkSession('get');
 
@@ -288,7 +288,7 @@ function LockVoting()
 // Ask what to change in a poll.
 function EditPoll()
 {
-	global $txt, $db_prefix, $user_info, $context, $topic, $board, $smfFunc, $sourcedir, $scripturl;
+	global $txt, $user_info, $context, $topic, $board, $smfFunc, $sourcedir, $scripturl;
 
 	if (empty($topic))
 		fatal_lang_error('no_access', false);
@@ -565,7 +565,7 @@ function EditPoll()
 // Change a poll...
 function EditPoll2()
 {
-	global $txt, $topic, $board, $db_prefix, $context;
+	global $txt, $topic, $board, $context;
 	global $modSettings, $user_info, $smfFunc, $sourcedir;
 
 	if (checkSession('post', '', false) != '')
@@ -839,7 +839,7 @@ function EditPoll2()
 // Remove a poll from a topic without removing the topic.
 function RemovePoll()
 {
-	global $topic, $db_prefix, $user_info, $smfFunc;
+	global $topic, $user_info, $smfFunc;
 
 	// Make sure the topic is not empty.
 	if (empty($topic))

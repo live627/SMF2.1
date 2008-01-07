@@ -137,7 +137,7 @@ if (!defined('SMF'))
 // Load the $modSettings array.
 function reloadSettings()
 {
-	global $modSettings, $db_prefix, $boarddir, $smfFunc, $txt, $db_character_set;
+	global $modSettings, $boarddir, $smfFunc, $txt, $db_character_set;
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (!empty($db_character_set))
@@ -301,7 +301,7 @@ function reloadSettings()
 function loadUserSettings()
 {
 	global $modSettings, $user_settings, $sourcedir, $smfFunc;
-	global $db_prefix, $cookiename, $user_info, $language;
+	global $cookiename, $user_info, $language;
 
 	// Check first the integration, then the cookie, and last the session.
 	if (isset($modSettings['integrate_verify_user']) && function_exists($modSettings['integrate_verify_user']))
@@ -537,7 +537,7 @@ function loadUserSettings()
 // Check for moderators and see if they have access to the board.
 function loadBoard()
 {
-	global $txt, $db_prefix, $scripturl, $context, $modSettings;
+	global $txt, $scripturl, $context, $modSettings;
 	global $board_info, $board, $topic, $user_info, $smfFunc;
 
 	// Assume they are not a moderator.
@@ -766,7 +766,7 @@ function loadBoard()
 // Load this user's permissions.
 function loadPermissions()
 {
-	global $user_info, $db_prefix, $board, $board_info, $modSettings, $smfFunc;
+	global $user_info, $board, $board_info, $modSettings, $smfFunc;
 
 	if ($user_info['is_admin'])
 	{
@@ -867,7 +867,7 @@ function loadPermissions()
 // Loads an array of users' data by ID or member_name.
 function loadMemberData($users, $is_name = false, $set = 'normal')
 {
-	global $user_profile, $db_prefix, $modSettings, $board_info, $smfFunc;
+	global $user_profile, $modSettings, $board_info, $smfFunc;
 
 	// Can't just look for no users :P.
 	if (empty($users))
@@ -1026,7 +1026,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 {
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
 	global $context, $modSettings, $board_info, $settings;
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 	static $dataLoaded = array();
 
 	// If this person's data is already loaded, skip it.
@@ -1190,7 +1190,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 function loadTheme($id_theme = 0, $initialize = true)
 {
 	global $user_info, $user_settings, $board_info, $sc;
-	global $db_prefix, $txt, $boardurl, $scripturl, $mbname, $modSettings;
+	global $txt, $boardurl, $scripturl, $mbname, $modSettings;
 	global $context, $settings, $options, $sourcedir, $ssi_theme, $smfFunc;
 
 	// The theme was specified by parameter.
@@ -1736,7 +1736,7 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 // Get all parent boards (requires first parent as parameter)
 function getBoardParents($id_parent)
 {
-	global $db_prefix, $scripturl, $txt, $smfFunc;
+	global $scripturl, $txt, $smfFunc;
 
 	$boards = array();
 
@@ -2093,7 +2093,7 @@ function sessionClose()
 
 function sessionRead($session_id)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
@@ -2116,7 +2116,7 @@ function sessionRead($session_id)
 
 function sessionWrite($session_id, $data)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
@@ -2147,7 +2147,7 @@ function sessionWrite($session_id, $data)
 
 function sessionDestroy($session_id)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
@@ -2164,7 +2164,7 @@ function sessionDestroy($session_id)
 
 function sessionGC($max_lifetime)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	// Just set to the default or lower?  Ignore it for a higher value. (hopefully)
 	if (!empty($modSettings['databaseSession_lifetime']) && ($max_lifetime <= 1440 || $modSettings['databaseSession_lifetime'] > $max_lifetime))
@@ -2183,7 +2183,7 @@ function sessionGC($max_lifetime)
 function loadDatabase()
 {
 	global $db_persist, $db_connection, $db_server, $db_user, $db_passwd;
-	global $db_type, $db_name, $ssi_db_user, $ssi_db_passwd, $db_prefix, $sourcedir;
+	global $db_type, $db_name, $ssi_db_user, $ssi_db_passwd, $sourcedir;
 
 	// Figure out what type of database we are using.
 	if (empty($db_type) || !file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))

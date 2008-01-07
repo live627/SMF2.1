@@ -196,7 +196,7 @@ function EditWeights()
 
 function EditSearchMethod()
 {
-	global $txt, $context, $modSettings, $db_prefix, $smfFunc, $db_type;
+	global $txt, $context, $modSettings, $smfFunc, $db_type;
 
 	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 	$context['page_title'] = $txt['search_method_title'];
@@ -418,7 +418,7 @@ function EditSearchMethod()
 
 function CreateMessageIndex()
 {
-	global $modSettings, $context, $db_prefix, $smfFunc;
+	global $modSettings, $context, $smfFunc;
 
 	// Scotty, we need more time...
 	@set_time_limit(600);

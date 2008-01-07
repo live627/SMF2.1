@@ -470,7 +470,7 @@ function ModifyProfile($post_errors = array())
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.
 function loadCustomFields($memID, $area = 'summary')
 {
-	global $db_prefix, $context, $txt, $user_profile, $smfFunc;
+	global $context, $txt, $user_profile, $smfFunc;
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';

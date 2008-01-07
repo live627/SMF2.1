@@ -70,7 +70,7 @@ if (!defined('SMF'))
 // This function works out what to do!
 function AutoTask()
 {
-	global $db_prefix, $time_start, $modSettings, $smfFunc;
+	global $time_start, $modSettings, $smfFunc;
 
 	// Special case for doing the mail queue.
 	if (isset($_GET['scheduled']) && $_GET['scheduled'] == 'mailq')
@@ -188,7 +188,7 @@ function AutoTask()
 // Function to sending out approval notices to moderators etc.
 function scheduled_approval_notification()
 {
-	global $db_prefix, $scripturl, $modSettings, $mbname, $txt, $sourcedir, $smfFunc;
+	global $scripturl, $modSettings, $mbname, $txt, $sourcedir, $smfFunc;
 
 	// Grab all the items awaiting approval and sort type then board - clear up any things that are no longer relevant.
 	$request = $smfFunc['db_query']('', '
@@ -401,7 +401,7 @@ function scheduled_approval_notification()
 // Do some daily cleaning up.
 function scheduled_daily_maintenance()
 {
-	global $smfFunc, $db_prefix, $modSettings, $sourcedir;
+	global $smfFunc, $modSettings, $sourcedir;
 
 	// First clean out the data cache.
 	clean_cache('data');
@@ -480,7 +480,7 @@ function scheduled_daily_maintenance()
 // Auto optimize the database?
 function scheduled_auto_optimize()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	// By default do it now!
 	$delay = false;
@@ -524,7 +524,7 @@ function scheduled_auto_optimize()
 // Send out a daily email of all subscribed topics.
 function scheduled_daily_digest()
 {
-	global $db_prefix, $is_weekly, $txt, $mbname, $scripturl, $sourcedir, $smfFunc, $context, $modSettings;
+	global $is_weekly, $txt, $mbname, $scripturl, $sourcedir, $smfFunc, $context, $modSettings;
 
 	// We'll want this...
 	require_once($sourcedir . '/Subs-Post.php');
@@ -829,7 +829,7 @@ function scheduled_daily_digest()
 // Like the daily stuff - just seven times less regular ;)
 function scheduled_weekly_digest()
 {
-	global $db_prefix, $is_weekly;
+	global $is_weekly;
 
 	// We just pass through to the daily function - avoid duplication!
 	$is_weekly = true;
@@ -839,7 +839,7 @@ function scheduled_weekly_digest()
 // Send a bunch of emails from the mail queue.
 function ReduceMailQueue($number = false, $override_limit = false)
 {
-	global $db_prefix, $modSettings, $smfFunc, $sourcedir;
+	global $modSettings, $smfFunc, $sourcedir;
 
 	// By default send 5 at once.
 	if (!$number)
@@ -983,7 +983,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 // Calculate the next time the passed tasks should be triggered.
 function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	$task_query = '';
 	if (!is_array($tasks))
@@ -1110,7 +1110,7 @@ function next_time($regularity, $unit, $offset)
 // This loads the bare minimum data to allow us to load language files!
 function loadEssentialThemeData()
 {
-	global $settings, $modSettings, $db_prefix, $smfFunc;
+	global $settings, $modSettings, $smfFunc;
 
 	// Get all the default theme variables.
 	$result = $smfFunc['db_query']('', '
@@ -1136,7 +1136,7 @@ function loadEssentialThemeData()
 
 function scheduled_fetchSMfiles()
 {
-	global $db_prefix, $sourcedir, $txt, $language, $settings, $forum_version, $modSettings, $smfFunc;
+	global $sourcedir, $txt, $language, $settings, $forum_version, $modSettings, $smfFunc;
 
 	// What files do we want to get
 	$request = $smfFunc['db_query']('', '
@@ -1199,7 +1199,7 @@ function scheduled_fetchSMfiles()
 
 function scheduled_birthdayemails()
 {
-	global $db_prefix, $modSettings, $sourcedir, $mbname, $txt, $smfFunc, $birthdayEmails;
+	global $modSettings, $sourcedir, $mbname, $txt, $smfFunc, $birthdayEmails;
 
 	// Need this in order to load the language files.
 	loadEssentialThemeData();
@@ -1275,7 +1275,7 @@ function scheduled_birthdayemails()
 
 function scheduled_weekly_maintenance()
 {
-	global $modSettings, $smfFunc, $db_prefix;
+	global $modSettings, $smfFunc;
 
 	// Delete some settings that needn't be set if they are otherwise empty.
 	$emptySettings = array(
@@ -1458,7 +1458,7 @@ function scheduled_weekly_maintenance()
 // Perform the standard checks on expiring/near expiring subscriptions.
 function scheduled_paid_subscriptions()
 {
-	global $db_prefix, $txt, $sourcedir, $scripturl, $smfFunc;
+	global $txt, $sourcedir, $scripturl, $smfFunc;
 
 	// Start off by checking for removed subscriptions.
 	$request = $smfFunc['db_query']('', '

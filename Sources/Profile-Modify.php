@@ -332,7 +332,7 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'profile_extra',
 			'enabled' => $modSettings['theme_allow'] || allowedTo('admin_forum'),
 			'preload' => create_function('', '
-				global $smfFunc, $db_prefix, $context, $cur_profile, $txt;
+				global $smfFunc, $context, $cur_profile, $txt;
 
 				$request = $smfFunc[\'db_query\'](\'\', "
 					SELECT value
@@ -507,7 +507,7 @@ function loadProfileFields($force_reload = false)
 			'type' => 'callback',
 			'callback_func' => 'ignore_list_modify',
 			'preload' => create_function('', '
-				global $context, $cur_profile, $smfFunc, $db_prefix;
+				global $context, $cur_profile, $smfFunc;
 
 				if ($cur_profile[\'pm_ignore_list\'] != \'*\')
 				{
@@ -534,7 +534,7 @@ function loadProfileFields($force_reload = false)
 			'),
 			'permission' => 'pm_read',
 			'input_validate' => create_function('&$value', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 
 				// Validate and set the ignorelist...
 				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
@@ -970,7 +970,7 @@ function saveProfileFields()
 // Save the profile changes....
 function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 {
-	global $db_prefix, $user_info, $txt, $modSettings, $user_profile;
+	global $user_info, $txt, $modSettings, $user_profile;
 	global $context, $settings, $sourcedir;
 	global $smfFunc;
 
@@ -1051,7 +1051,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 // Make any theme changes that are sent with the profile..
 function makeThemeChanges($memID, $id_theme)
 {
-	global $db_prefix, $modSettings, $smfFunc, $context;
+	global $modSettings, $smfFunc, $context;
 
 	// These are the theme changes...
 	$themeSetArray = array();
@@ -1085,7 +1085,7 @@ function makeThemeChanges($memID, $id_theme)
 		if (!empty($themeSetArray))
 		{
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'themes',
+				'{db_prefix}themes',
 				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$themeSetArray,
 				array('id_member', 'id_theme', 'variable')
@@ -1116,7 +1116,7 @@ function makeThemeChanges($memID, $id_theme)
 // Make any notification changes that need to be made.
 function makeNotificationChanges($memID)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Update the boards they are being notified on.
 	if (isset($_POST['edit_notify_boards']) && !empty($_POST['notify_boards']))
@@ -1163,7 +1163,7 @@ function makeNotificationChanges($memID)
 // Save any changes to the custom profile fields...
 function makeCustomFieldChanges($memID, $area)
 {
-	global $db_prefix, $context, $smfFunc, $user_profile;
+	global $context, $smfFunc, $user_profile;
 
 	$where = $area == 'register' ? 'show_reg != 0' : 'show_profile = {string:area}';
 
@@ -1224,7 +1224,7 @@ function makeCustomFieldChanges($memID, $area)
 	// Make those changes!
 	if (!empty($changes) && empty($context['password_auth_failed']))
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'themes',
+			'{db_prefix}themes',
 			array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534', 'id_member' => 'int'),
 			$changes,
 			array('id_theme', 'variable', 'id_member')
@@ -1269,7 +1269,7 @@ function activateAccount($memID)
 // Show all the users buddies, as well as a add/delete interface.
 function editBuddies($memID)
 {
-	global $txt, $scripturl, $modSettings, $db_prefix;
+	global $txt, $scripturl, $modSettings;
 	global $context, $user_profile, $memberContext, $smfFunc;
 
 	// Do a quick check to ensure people aren't getting here illegally!
@@ -1517,7 +1517,7 @@ function getAvatars($directory, $level)
 
 function theme($memID)
 {
-	global $txt, $context, $user_profile, $db_prefix, $modSettings, $settings, $user_info, $smfFunc;
+	global $txt, $context, $user_profile, $modSettings, $settings, $user_info, $smfFunc;
 
 	loadThemeOptions($memID);
 	loadCustomFields($memID, 'theme');
@@ -1537,7 +1537,7 @@ function theme($memID)
 // Display the notifications and settings for changes.
 function notification($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc, $sourcedir, $settings;
+	global $txt, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc, $sourcedir, $settings;
 
 	// Gonna want this for the list.
 	require_once($sourcedir . '/Subs-List.php');
@@ -1747,7 +1747,7 @@ function notification($memID)
 
 function list_getTopicNotificationCount($memID)
 {
-	global $smfFunc, $db_prefix, $user_info;
+	global $smfFunc, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1755,7 +1755,7 @@ function list_getTopicNotificationCount($memID)
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE ln.id_member = {int:selected_member}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			AND t.approved = {int:is_approved}',
 		array(
 			'selected_member' => $memID,
@@ -1770,7 +1770,7 @@ function list_getTopicNotificationCount($memID)
 
 function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl, $user_info;
+	global $smfFunc, $txt, $scripturl, $user_info;
 
 	// All the topics with notification on...
 	$request = $smfFunc['db_query']('', '
@@ -1781,7 +1781,7 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 			IFNULL(mem2.real_name, ml.poster_name) AS last_real_name
 		FROM {db_prefix}log_notify AS ln
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic AND t.approved = {int:is_approved})
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND ' . $user_info['query_see_board'] . ')
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND {query_see_board})
 			INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ms.id_member)
@@ -1824,7 +1824,7 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 
 function list_getBoardNotifications($start, $items_per_page, $sort, $memID)
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl, $user_info;
+	global $smfFunc, $txt, $scripturl, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT b.id_board, b.name, IFNULL(lb.id_msg, 0) AS board_read, b.id_msg_updated
@@ -1832,7 +1832,7 @@ function list_getBoardNotifications($start, $items_per_page, $sort, $memID)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = ln.id_board)
 			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
 		WHERE ln.id_member = {int:selected_member}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 		ORDER BY ' . $sort,
 		array(
 			'current_member' => $user_info['id'],
@@ -1855,7 +1855,7 @@ function list_getBoardNotifications($start, $items_per_page, $sort, $memID)
 
 function loadThemeOptions($memID)
 {
-	global $context, $options, $db_prefix, $cur_profile, $smfFunc;
+	global $context, $options, $cur_profile, $smfFunc;
 
 	if (isset($_POST['default_options']))
 		$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
@@ -1905,7 +1905,7 @@ function loadThemeOptions($memID)
 
 function ignoreboards($memID)
 {
-	global $txt, $user_info, $db_prefix, $context, $db_prefix, $modSettings, $smfFunc, $cur_profile;
+	global $txt, $user_info, $db_prefix, $context, $modSettings, $smfFunc, $cur_profile;
 
 	// Have the admins enabled this option?
 	if (empty($modSettings['allow_ignore_boards']))
@@ -1917,7 +1917,7 @@ function ignoreboards($memID)
 			'. (!empty($cur_profile['ignore_boards']) ? 'b.id_board IN ({array_int:ignore_boards})' : 'false') . ' AS is_ignored
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE ' . $user_info['query_see_board'],
+		WHERE {query_see_board}',
 		array(
 			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? $cur_profile['ignore_boards'] : array(),
 		)
@@ -2015,7 +2015,7 @@ function profileLoadLanguages()
 // Load all the group info for the profile.
 function profileLoadGroups()
 {
-	global $cur_profile, $txt, $context, $smfFunc, $db_prefix, $user_settings;
+	global $cur_profile, $txt, $context, $smfFunc, $user_settings;
 
 	$context['member_groups'] = array(
 		0 => array(
@@ -2165,7 +2165,7 @@ function profileLoadAvatarData()
 // Save a members group.
 function profileSaveGroups(&$value)
 {
-	global $profile_vars, $old_profile, $context, $smfFunc, $db_prefix, $cur_profile;
+	global $profile_vars, $old_profile, $context, $smfFunc, $cur_profile;
 
 	// The account page allows the change of your id_group - but not to admin!.
 	if (allowedTo('admin_forum') || ((int) $value != 1 && $old_profile['id_group'] != 1))
@@ -2235,7 +2235,7 @@ function profileSaveGroups(&$value)
 // The avatar is incredibly complicated, what with the options... and what not.
 function profileSaveAvatarData(&$value)
 {
-	global $modSettings, $sourcedir, $db_prefix, $smfFunc, $profile_vars, $cur_profile, $context;
+	global $modSettings, $sourcedir, $smfFunc, $profile_vars, $cur_profile, $context;
 
 	$memID = $context['id_member'];
 	if (empty($memID) && !empty($context['password_auth_failed']))
@@ -2583,7 +2583,7 @@ function profileValidateSignature(&$value)
 // Validate an email address.
 function profileValidateEmail($email, $memID = 0)
 {
-	global $smfFunc, $db_prefix, $context;
+	global $smfFunc, $context;
 
 	$email = strtr($email, array('&#039;' => '\''));
 
@@ -2631,7 +2631,7 @@ function profileReloadUser()
 // Send the user a new activation email if they need to reactivate!
 function profileSendActivation()
 {
-	global $sourcedir, $profile_vars, $txt, $context, $scripturl, $smfFunc, $db_prefix, $cookiename;
+	global $sourcedir, $profile_vars, $txt, $context, $scripturl, $smfFunc, $cookiename;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -2683,7 +2683,7 @@ function profileSendActivation()
 // Function to allow the user to choose group membership etc...
 function groupMembership($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc;
+	global $txt, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc;
 
 	$curMember = $user_profile[$memID];
 	$context['primary_group'] = $curMember['id_group'];
@@ -2772,7 +2772,7 @@ function groupMembership($memID)
 // This function actually makes all the group changes...
 function groupMembership2($profile_vars, $post_errors, $memID)
 {
-	global $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $txt, $smfFunc, $scripturl;
+	global $user_info, $sourcedir, $context, $user_profile, $modSettings, $txt, $smfFunc, $scripturl;
 
 	// Let's be extra cautious...
 	if (!$context['user']['is_owner'] || empty($modSettings['show_group_membership']))

@@ -91,7 +91,7 @@ function Login()
 // Perform the actual logging-in.
 function Login2()
 {
-	global $txt, $db_prefix, $scripturl, $user_info, $user_settings, $smfFunc;
+	global $txt, $scripturl, $user_info, $user_settings, $smfFunc;
 	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
 
 	// Load cookie authentication stuff.
@@ -410,7 +410,7 @@ function checkActivation()
 
 function DoLogin()
 {
-	global $txt, $db_prefix, $scripturl, $user_info, $user_settings, $smfFunc;
+	global $txt, $scripturl, $user_info, $user_settings, $smfFunc;
 	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
 
 	// Load cookie authentication stuff.
@@ -471,7 +471,7 @@ function DoLogin()
 // Log the user out.
 function Logout($internal = false, $redirect = true)
 {
-	global $db_prefix, $sourcedir, $user_info, $user_settings, $context, $modSettings, $smfFunc;
+	global $sourcedir, $user_info, $user_settings, $context, $modSettings, $smfFunc;
 
 	// Make sure they aren't being auto-logged out.
 	if (!$internal)

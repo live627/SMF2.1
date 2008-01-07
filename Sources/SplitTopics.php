@@ -151,7 +151,7 @@ function SplitTopics()
 // Part 1: General stuff.
 function SplitIndex()
 {
-	global $txt, $topic, $db_prefix, $context, $smfFunc;
+	global $txt, $topic, $context, $smfFunc;
 
 	// Validate "at".
 	if (empty($_GET['at']))
@@ -204,7 +204,7 @@ function SplitIndex()
 // Alright, you've decided what you want to do with it.... now to do it.
 function SplitExecute()
 {
-	global $txt, $board, $topic, $db_prefix, $context, $user_info, $smfFunc;
+	global $txt, $board, $topic, $context, $user_info, $smfFunc;
 
 	// They blanked the subject name.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
@@ -255,7 +255,7 @@ function SplitExecute()
 // Get a selective list of topics...
 function SplitSelectTopics()
 {
-	global $txt, $scripturl, $topic, $db_prefix, $context, $modSettings, $original_msgs, $smfFunc;
+	global $txt, $scripturl, $topic, $context, $modSettings, $original_msgs, $smfFunc;
 
 	// For determining what they can see...
 	$approveQuery = allowedTo('approve_posts') ? '1=1' : 'approved = 1';
@@ -499,7 +499,7 @@ function SplitSelectTopics()
 // Actually and selectively split the topics out.
 function SplitSelectionExecute()
 {
-	global $txt, $board, $topic, $db_prefix, $context, $user_info;
+	global $txt, $board, $topic, $context, $user_info;
 
 	// Make sure the session id was passed with post.
 	checkSession();
@@ -523,7 +523,7 @@ function SplitSelectionExecute()
 // Split a topic in two topics.
 function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 {
-	global $db_prefix, $user_info, $topic, $board, $modSettings;
+	global $user_info, $topic, $board, $modSettings;
 	global $smfFunc;
 
 	// Nothing to split?
@@ -759,7 +759,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	// We're going to assume they bothered to read it before splitting it.
 	if (!$user_info['is_guest'])
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			array($modSettings['maxMsgID'], $user_info['id'], $split2_ID_TOPIC),
 			array('id_member', 'id_topic')
@@ -802,7 +802,7 @@ function MergeTopics()
 function MergeIndex()
 {
 	global $txt, $board, $context, $smfFunc;
-	global $scripturl, $topic, $db_prefix, $user_info, $modSettings;
+	global $scripturl, $topic, $user_info, $modSettings;
 
 	$_REQUEST['targetboard'] = isset($_REQUEST['targetboard']) ? (int) $_REQUEST['targetboard'] : $board;
 	$context['target_board'] = $_REQUEST['targetboard'];
@@ -863,7 +863,7 @@ function MergeIndex()
 		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE ' . $user_info['query_see_board'] . (!in_array(0, $merge_boards) ? '
+		WHERE {query_see_board}' . (!in_array(0, $merge_boards) ? '
 			AND b.id_board IN ({array_int:merge_boards})' : ''),
 		array(
 			'merge_boards' => $merge_boards,
@@ -922,7 +922,7 @@ function MergeIndex()
 // Now that the topic IDs are known, do the proper merging.
 function MergeExecute($topics = array())
 {
-	global $db_prefix, $user_info, $txt, $context, $scripturl, $sourcedir;
+	global $user_info, $txt, $context, $scripturl, $sourcedir;
 	global $smfFunc, $language, $modSettings;
 
 	// The parameters of MergeExecute were set, so this must've been an internal call.
@@ -1047,7 +1047,7 @@ function MergeExecute($topics = array())
 		SELECT b.id_board
 		FROM {db_prefix}boards AS b
 		WHERE b.id_board IN ({array_int:boards})
-			AND ' . $user_info['query_see_board'] . (!in_array(0, $merge_boards) ? '
+			AND {query_see_board}' . (!in_array(0, $merge_boards) ? '
 			AND b.id_board IN ({array_int:merge_boards})' : '') . '
 		LIMIT ' . count($boards),
 		array(
@@ -1357,7 +1357,7 @@ function MergeExecute($topics = array())
 			$replaceEntries[] = array($row['id_member'], $id_topic, $row['new_id_msg']);
 
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array('id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int'),
 			$replaceEntries,
 			array('id_member', 'id_topic')
@@ -1397,7 +1397,7 @@ function MergeExecute($topics = array())
 				$replaceEntries[] = array($row['id_member'], $id_topic, 0, $row['sent']);
 
 			$smfFunc['db_insert']('replace',
-					$db_prefix . 'log_notify',
+					'{db_prefix}log_notify',
 					array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'sent' => 'int'),
 					$replaceEntries,
 					array('id_member', 'id_topic', 'id_board')

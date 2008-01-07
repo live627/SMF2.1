@@ -241,7 +241,7 @@ function ManageBoardsMain()
 // Modify a specific category.
 function EditCategory()
 {
-	global $txt, $db_prefix, $context, $cat_tree, $boardList, $boards, $sourcedir;
+	global $txt, $context, $cat_tree, $boardList, $boards, $sourcedir;
 
 	loadTemplate('ManageBoards');
 	require_once($sourcedir . '/Subs-Boards.php');
@@ -320,7 +320,7 @@ function EditCategory()
 // Complete the modifications to a specific category.
 function EditCategory2()
 {
-	global $db_prefix, $sourcedir;
+	global $sourcedir;
 
 	checkSession();
 
@@ -374,7 +374,7 @@ function EditCategory2()
 // Modify a specific board..
 function EditBoard()
 {
-	global $txt, $db_prefix, $context, $cat_tree, $boards, $boardList, $sourcedir, $smfFunc;
+	global $txt, $context, $cat_tree, $boards, $boardList, $sourcedir, $smfFunc;
 
 	loadTemplate('ManageBoards');
 	require_once($sourcedir . '/Subs-Boards.php');
@@ -556,7 +556,7 @@ function EditBoard()
 // Make changes to/delete a board.
 function EditBoard2()
 {
-	global $txt, $db_prefix, $sourcedir, $modSettings, $smfFunc;
+	global $txt, $sourcedir, $modSettings, $smfFunc;
 
 	checkSession();
 
@@ -672,7 +672,7 @@ function EditBoard2()
 
 function ModifyCat()
 {
-	global $db_prefix, $cat_tree, $boardList, $boards, $sourcedir, $smfFunc;
+	global $cat_tree, $boardList, $boards, $sourcedir, $smfFunc;
 
 	// Get some information about the boards and the cats.
 	require_once($sourcedir . '/Subs-Boards.php');
@@ -710,7 +710,7 @@ function ModifyCat()
 
 function EditBoardSettings($return_config = false)
 {
-	global $context, $txt, $db_prefix, $sourcedir, $modSettings, $scripturl, $smfFunc;
+	global $context, $txt, $sourcedir, $modSettings, $scripturl, $smfFunc;
 
 	// Load the boards list - for the recycle bin!
 	$recycle_boards = array('');

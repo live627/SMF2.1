@@ -57,7 +57,7 @@ if (!defined('SMF'))
 // Edit the position and properties of a category.
 function modifyCategory($category_id, $catOptions)
 {
-	global $db_prefix, $sourcedir, $smfFunc;
+	global $sourcedir, $smfFunc;
 
 	$catUpdates = array();
 	$catParameters = array();
@@ -139,7 +139,7 @@ function modifyCategory($category_id, $catOptions)
 // Create a new category.
 function createCategory($catOptions)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Check required values.
 	if (!isset($catOptions['cat_name']) || trim($catOptions['cat_name']) == '')
@@ -176,7 +176,7 @@ function createCategory($catOptions)
 // Remove one or more categories.
 function deleteCategories($categories, $moveBoardsTo = null)
 {
-	global $db_prefix, $sourcedir, $smfFunc;
+	global $sourcedir, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Boards.php');
 
@@ -241,7 +241,7 @@ function deleteCategories($categories, $moveBoardsTo = null)
 // Collapse, expand or toggle one or more categories for one or more members.
 function collapseCategories($categories, $new_status, $members = null, $check_collapsable = true)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Collapse or expand the categories.
 	if ($new_status === 'collapse' || $new_status === 'expand')
@@ -306,7 +306,7 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 		// Collapse the ones that were originally expanded...
 		if (!empty($updates['insert']))
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'collapsed_categories',
+				'{db_prefix}collapsed_categories',
 				array(
 					'id_cat' => 'int', 'id_member' => 'int',
 				),

@@ -179,7 +179,7 @@ function ModifyHolidays()
 // This function is used for adding/editing a specific holiday
 function EditHoliday()
 {
-	global $txt, $context, $db_prefix, $scripturl, $smfFunc;
+	global $txt, $context, $scripturl, $smfFunc;
 
 	loadTemplate('ManageCalendar');
 
@@ -272,7 +272,7 @@ function EditHoliday()
 
 function ModifyCalendarSettings($return_config = false)
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $sourcedir, $scripturl, $smfFunc;
+	global $modSettings, $context, $settings, $txt, $boarddir, $sourcedir, $scripturl, $smfFunc;
 
 	// Load the boards list.
 	$boards = array('');

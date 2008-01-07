@@ -44,7 +44,7 @@ if (!defined('SMF'))
 // Show the moderation log
 function ViewModlog()
 {
-	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc, $modlog_descriptions;
+	global $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc, $modlog_descriptions;
 
 	$context['can_delete'] = allowedTo('admin_forum');
 
@@ -202,7 +202,7 @@ function ViewModlog()
 
 function getModLogEntries($query_string = '', $query_params = array(), $order= '', $limit = 0)
 {
-	global $db_prefix, $context, $scripturl, $txt, $smfFunc, $user_info, $modlog_descriptions;
+	global $context, $scripturl, $txt, $smfFunc, $user_info, $modlog_descriptions;
 
 	// Construct our limit.
 	if (empty($limit))

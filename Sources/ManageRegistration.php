@@ -67,7 +67,7 @@ if (!defined('SMF'))
 // Main handling function for the admin approval center
 function RegCenter()
 {
-	global $modSettings, $context, $txt, $db_prefix, $scripturl;
+	global $modSettings, $context, $txt, $scripturl;
 
 	// Old templates might still request this.
 	if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'browse')
@@ -118,7 +118,7 @@ function RegCenter()
 // This function allows the admin to register a new member by hand.
 function AdminRegister()
 {
-	global $txt, $context, $db_prefix, $sourcedir, $scripturl, $smfFunc;
+	global $txt, $context, $sourcedir, $scripturl, $smfFunc;
 
 	if (!empty($_POST['regSubmit']))
 	{
@@ -244,7 +244,7 @@ function EditAgreement()
 // Set reserved names/words....
 function SetReserve()
 {
-	global $txt, $db_prefix, $context, $modSettings;
+	global $txt, $context, $modSettings;
 
 	// Submitting new reserved words.
 	if (!empty($_POST['save_reserved_names']))
@@ -277,7 +277,7 @@ function SetReserve()
 // This function handles registration settings, and provides a few pretty stats too while it's at it.
 function AdminSettings()
 {
-	global $txt, $context, $db_prefix, $scripturl, $modSettings;
+	global $txt, $context, $scripturl, $modSettings;
 
 	// Setup the template
 	$context['sub_template'] = 'admin_settings';

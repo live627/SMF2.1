@@ -65,7 +65,7 @@ if (!defined('SMF'))
 // Delete one or more membergroups.
 function deleteMembergroups($groups)
 {
-	global $db_prefix, $sourcedir, $smfFunc, $modSettings;
+	global $sourcedir, $smfFunc, $modSettings;
 
 	// Make sure it's an array.
 	if (!is_array($groups))
@@ -207,7 +207,7 @@ function deleteMembergroups($groups)
 // Remove one or more members from one or more membergroups.
 function removeMembersFromGroups($members, $groups = null, $permissionCheckDone = false)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// You're getting nowhere without this permission, unless of course you are the group's moderator.
 	if (!$permissionCheckDone)
@@ -351,7 +351,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	                      available. If not, assign it to the additional group. */
 function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDone = false)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Show your licence, but only if it hasn't been done yet.
 	if (!$permissionCheckDone)
@@ -455,7 +455,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 
 function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 {
-	global $db_prefix, $scripturl, $txt, $smfFunc;
+	global $scripturl, $txt, $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name
@@ -484,7 +484,7 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 // Retrieve a list of (visible) membergroups used by the cache.
 function cache_getMembergroupList()
 {
-	global $db_prefix, $scripturl, $smfFunc;
+	global $scripturl, $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name, online_color
@@ -514,7 +514,7 @@ function cache_getMembergroupList()
 
 function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 {
-	global $db_prefix, $txt, $scripturl, $context, $settings, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $smfFunc;
 
 	$groups = array();
 

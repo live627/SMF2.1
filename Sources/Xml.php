@@ -53,7 +53,7 @@ function XMLhttpMain()
 // Get a list of boards and categories used for the jumpto dropdown.
 function GetJumpTo()
 {
-	global $db_prefix, $user_info, $context, $smfFunc, $sourcedir;
+	global $user_info, $context, $smfFunc, $sourcedir;
 
 	// Find the boards/cateogories they can see.
 	require_once($sourcedir . '/Subs-MessageIndex.php');

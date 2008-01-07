@@ -117,7 +117,7 @@ function smf_db_optimize_table($table)
 // List all the tables in the database.
 function smf_db_list_tables($db = false, $filter = false)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$filter = $filter == false ? '' : ' WHERE relname LIKE \'' . $filter . '\'';
 

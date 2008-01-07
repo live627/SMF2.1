@@ -73,7 +73,7 @@ if (!defined('SMF'))
 // The central part of the board - topic display.
 function Display()
 {
-	global $scripturl, $txt, $db_prefix, $modSettings, $context, $settings;
+	global $scripturl, $txt, $modSettings, $context, $settings;
 	global $options, $sourcedir, $user_info, $board_info, $topic, $board;
 	global $attachments, $messages_request, $topicinfo, $language, $smfFunc;
 
@@ -338,7 +338,7 @@ function Display()
 	if (!$user_info['is_guest'])
 	{
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'log_topics',
+			'{db_prefix}log_topics',
 			array(
 				'id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int',
 			),
@@ -426,7 +426,7 @@ function Display()
 		if (isset($_REQUEST['boardseen']))
 		{
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'log_boards',
+				'{db_prefix}log_boards',
 				array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 				array($modSettings['maxMsgID'], $user_info['id'], $board),
 				array('id_member', 'id_board')
@@ -1086,7 +1086,7 @@ function prepareDisplayContext($reset = false)
 // Download an attachment.
 function Download()
 {
-	global $txt, $modSettings, $db_prefix, $user_info, $scripturl, $context, $sourcedir, $smfFunc;
+	global $txt, $modSettings, $user_info, $scripturl, $context, $sourcedir, $smfFunc;
 
 	$context['no_last_modified'] = true;
 
@@ -1121,7 +1121,7 @@ function Download()
 			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 			WHERE a.id_attach = {int:attach}
 			LIMIT 1',
 			array(
@@ -1279,7 +1279,7 @@ function Download()
 
 function loadAttachmentContext($id_msg)
 {
-	global $attachments, $modSettings, $txt, $scripturl, $topic, $db_prefix, $sourcedir, $smfFunc;
+	global $attachments, $modSettings, $txt, $scripturl, $topic, $sourcedir, $smfFunc;
 
 	// Set up the attachment info - based on code by Meriadoc.
 	$attachmentData = array();
@@ -1425,7 +1425,7 @@ function approved_attach_sort($a, $b)
 // In-topic quick moderation.
 function QuickInTopicModeration()
 {
-	global $sourcedir, $db_prefix, $topic, $board, $user_info, $smfFunc, $modSettings;
+	global $sourcedir, $topic, $board, $user_info, $smfFunc, $modSettings;
 
 	// Check the session = get or post.
 	checkSession('request');

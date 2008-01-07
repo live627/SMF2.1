@@ -217,7 +217,7 @@ if (!defined('SMF'))
 // Update some basic statistics...
 function updateStats($type, $parameter1 = null, $parameter2 = null)
 {
-	global $db_prefix, $sourcedir, $modSettings, $smfFunc;
+	global $sourcedir, $modSettings, $smfFunc;
 
 	switch ($type)
 	{
@@ -441,7 +441,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 // Assumes the data has been slashed.
 function updateMemberData($members, $data)
 {
-	global $db_prefix, $modSettings, $user_info, $smfFunc;
+	global $modSettings, $user_info, $smfFunc;
 
 	$parameters = array();
 	if (is_array($members))
@@ -580,7 +580,7 @@ function updateMemberData($members, $data)
 // Updates the settings table as well as $modSettings... only does one at a time if $update is true.
 function updateSettings($changeArray, $update = false)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	if (empty($changeArray) || !is_array($changeArray))
 		return;
@@ -627,7 +627,7 @@ function updateSettings($changeArray, $update = false)
 		return;
 
 	$smfFunc['db_insert']('replace',
-		$db_prefix . 'settings',
+		'{db_prefix}settings',
 		array('variable' => 'string-255', 'value' => 'string-65534'),
 		$replaceArray,
 		array('variable')
@@ -757,7 +757,7 @@ function comma_format($number, $override_decimal_count = false)
 // Format a time to make it look purdy.
 function timeformat($log_time, $show_today = true, $offset_type = false)
 {
-	global $user_info, $txt, $db_prefix, $modSettings, $smfFunc;
+	global $user_info, $txt, $modSettings, $smfFunc;
 
 	// Offset the time.
 	if (!$offset_type)
@@ -2351,7 +2351,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 // Parse smileys in the passed message.
 function parsesmileys(&$message)
 {
-	global $modSettings, $db_prefix, $txt, $user_info, $context, $smfFunc;
+	global $modSettings, $txt, $user_info, $context, $smfFunc;
 	static $smileyfromcache = array(), $smileytocache = array();
 
 	// No smiley set at all?!
@@ -2447,7 +2447,7 @@ function highlight_php_code($code)
 // Put this user in the online log.
 function writeLog($force = false)
 {
-	global $db_prefix, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc, $sourcedir;
+	global $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc, $sourcedir;
 
 	// If we are showing who is viewing a topic, let's see if we are, and force an update if so - to make it accurate.
 	if (!empty($settings['display_who_viewing']) && ($topic || $board))
@@ -2737,7 +2737,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 // Usage: logAction('remove', array('starter' => $id_member_started));
 function logAction($action, $extra = array())
 {
-	global $db_prefix, $modSettings, $user_info, $smfFunc;
+	global $modSettings, $user_info, $smfFunc;
 
 	// No point in doing anything if the log isn't even enabled.
 	if (empty($modSettings['modlog_enabled']))
@@ -2804,7 +2804,7 @@ function logAction($action, $extra = array())
 // Track Statistics.
 function trackStats($stats = array())
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 	static $cache_stats = array();
 
 	if (empty($modSettings['trackStats']))
@@ -2857,7 +2857,7 @@ function trackStats($stats = array())
 // Make sure the user isn't posting over and over again.
 function spamProtection($error_type)
 {
-	global $modSettings, $txt, $db_prefix, $user_info, $smfFunc;
+	global $modSettings, $txt, $user_info, $smfFunc;
 
 	// Certain types take less/more time.
 	$timeOverrides = array(
@@ -2888,7 +2888,7 @@ function spamProtection($error_type)
 
 	// Add a new entry, deleting the old if necessary.
 	$smfFunc['db_insert']('replace',
-		$db_prefix . 'log_floodcontrol',
+		'{db_prefix}log_floodcontrol',
 		array('ip' => 'string-16', 'log_time' => 'int', 'log_type' => 'string'),
 		array($user_info['ip'], time(), $error_type),
 		array('ip', 'log_type')

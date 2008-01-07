@@ -123,7 +123,7 @@ function ManageNews()
 // Let the administrator(s) edit the news.
 function EditNews()
 {
-	global $txt, $modSettings, $context, $db_prefix, $sourcedir, $user_info;
+	global $txt, $modSettings, $context, $sourcedir, $user_info;
 	global $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
@@ -180,7 +180,7 @@ function EditNews()
 
 function SelectMailingMembers()
 {
-	global $txt, $db_prefix, $context, $modSettings, $smfFunc;
+	global $txt, $context, $modSettings, $smfFunc;
 
 	$context['page_title'] = $txt['admin_newsletters'];
 
@@ -297,7 +297,7 @@ function SelectMailingMembers()
 // Email your members...
 function ComposeMailing()
 {
-	global $txt, $db_prefix, $sourcedir, $context, $smfFunc;
+	global $txt, $sourcedir, $context, $smfFunc;
 
 	// Start by finding any members!
 	$toClean = array();
@@ -434,7 +434,7 @@ function ComposeMailing()
 // Send out the mailing!
 function SendMailing($clean_only = false)
 {
-	global $txt, $db_prefix, $sourcedir, $context, $smfFunc;
+	global $txt, $sourcedir, $context, $smfFunc;
 	global $scripturl, $modSettings, $user_info;
 
 	// How many to send at once? Quantity depends on whether we are queueing or not.
@@ -731,7 +731,7 @@ function SendMailing($clean_only = false)
 
 function ModifyNewsSettings($return_config = false)
 {
-	global $context, $db_prefix, $sourcedir, $modSettings, $txt, $scripturl;
+	global $context, $sourcedir, $modSettings, $txt, $scripturl;
 
 	$config_vars = array(
 		array('title', 'settings'),

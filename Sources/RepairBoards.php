@@ -54,7 +54,7 @@ if (!defined('SMF'))
 
 function RepairBoards()
 {
-	global $db_prefix, $txt, $scripturl, $db_connection, $sc, $context, $sourcedir;
+	global $txt, $scripturl, $db_connection, $sc, $context, $sourcedir;
 	global $salvageCatID, $salvageBoardID, $smfFunc, $errorTests;
 
 	isAllowedTo('admin_forum');
@@ -215,7 +215,7 @@ function pauseRepairProcess($to_fix, $current_step_description, $max_substep = 0
 // Load up all the tests we might want to do ;)
 function loadForumTests()
 {
-	global $smfFunc, $db_prefix, $errorTests;
+	global $smfFunc, $errorTests;
 
 	/* Here this array is defined like so:
 		string check_query:	Query to be executed when testing if errors exist.
@@ -279,7 +279,7 @@ function loadForumTests()
 				WHERE t.id_topic IS NULL
 				GROUP BY m.id_topic',
 			'fix_processing' => create_function('$row', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 
 				// Only if we don\'t have a reasonable idea of where to put it.
 				if ($row[\'id_board\'] == 0)
@@ -330,7 +330,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_topic',
 				'process' => create_function('$topics', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}topics
 						WHERE id_topic IN ({array_int:topics})",
@@ -380,7 +380,7 @@ function loadForumTests()
 					OR t.approved != mf.approved
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 				$row[\'myApproved\'] = (int) $row[\'myApproved\'];
 				$row[\'myid_first_msg\'] = (int) $row[\'myid_first_msg\'];
 				$row[\'myid_last_msg\'] = (int) $row[\'myid_last_msg\'];
@@ -431,7 +431,7 @@ function loadForumTests()
 				HAVING num_replies != (CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END)
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 				$row[\'myNumReplies\'] = (int) $row[\'myNumReplies\'];
 
 				$smfFunc[\'db_query\'](\'\', "
@@ -462,7 +462,7 @@ function loadForumTests()
 				HAVING unapproved_posts != COUNT(mu.id_msg)
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 				$row[\'myUnapprovedPosts\'] = (int) $row[\'myUnapprovedPosts\'];
 
 				$smfFunc[\'db_query\'](\'\', "
@@ -499,7 +499,7 @@ function loadForumTests()
 					AND t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_board',
 			'fix_processing' => create_function('$row', '
-				global $smfFunc, $db_prefix, $salvageCatID;
+				global $smfFunc, $salvageCatID;
 				createSalvageArea();
 
 				$row[\'myNumTopics\'] = (int) $row[\'myNumTopics\'];
@@ -541,7 +541,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_cat',
 				'process' => create_function('$cats', '
-					global $smfFunc, $db_prefix, $salvageCatID;
+					global $smfFunc, $salvageCatID;
 					createSalvageArea();
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}boards
@@ -575,7 +575,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_msg',
 				'process' => create_function('$msgs', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}messages
 						SET id_member = 0
@@ -600,7 +600,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_parent',
 				'process' => create_function('$parents', '
-					global $smfFunc, $db_prefix, $salvageBoardID, $salvageCatID;
+					global $smfFunc, $salvageBoardID, $salvageCatID;
 					createSalvageArea();
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}boards
@@ -631,7 +631,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_poll',
 				'process' => create_function('$polls', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}topics
 						SET id_poll = 0
@@ -662,7 +662,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_topic',
 				'process' => create_function('$events', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}calendar
 						SET id_topic = 0, id_board = 0
@@ -691,7 +691,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_topic',
 				'process' => create_function('$topics', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
 						WHERE id_topic IN ({array_int:topics})",
@@ -720,7 +720,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
 						WHERE id_member IN ({array_int:members})",
@@ -749,7 +749,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_board',
 				'process' => create_function('$boards', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_boards
 						WHERE id_board IN ({array_int:boards})",
@@ -778,7 +778,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_boards
 						WHERE id_member IN ({array_int:members})",
@@ -807,7 +807,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_board',
 				'process' => create_function('$boards', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_mark_read
 						WHERE id_board IN ({array_int:boards})",
@@ -836,7 +836,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_mark_read
 						WHERE id_member IN ({array_int:members})",
@@ -865,7 +865,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_pm',
 				'process' => create_function('$pms', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}pm_recipients
 						WHERE id_pm IN ({array_int:pms})",
@@ -895,7 +895,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}pm_recipients
 						WHERE id_member IN ({array_int:members})",
@@ -924,7 +924,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_pm',
 				'process' => create_function('$guestMessages', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}personal_messages
 						SET id_member_from = 0
@@ -953,7 +953,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_notify
 						WHERE id_member IN ({array_int:members})",
@@ -980,7 +980,7 @@ function loadForumTests()
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lss.id_topic IS NULL',
 			'fix_full_processing' => create_function('$result', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 
 				$inserts = array();
 				while ($row = $smfFunc[\'db_fetch_assoc\']($result))
@@ -1036,7 +1036,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_topic',
 				'process' => create_function('$deleteTopics', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_search_subjects
 						WHERE id_topic IN ({array_int:deleteTopics})",
@@ -1065,7 +1065,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_polls
 						WHERE id_member IN ({array_int:members})",
@@ -1093,7 +1093,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_poll',
 				'process' => create_function('$polls', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_polls
 						WHERE id_poll IN ({array_int:polls})",
@@ -1121,7 +1121,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_report',
 				'process' => create_function('$reports', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_reported
 						WHERE id_report IN ({array_int:reports})",
@@ -1149,7 +1149,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_report',
 				'process' => create_function('$reports', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_reported_comments
 						WHERE id_report IN ({array_int:reports})",
@@ -1178,7 +1178,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_group_requests
 						WHERE id_member IN ({array_int:members})",
@@ -1207,7 +1207,7 @@ function loadForumTests()
 			'fix_collect' => array(
 				'index' => 'id_group',
 				'process' => create_function('$groups', '
-					global $smfFunc, $db_prefix;
+					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_group_requests
 						WHERE id_group IN ({array_int:groups})",
@@ -1224,7 +1224,7 @@ function loadForumTests()
 
 function findForumErrors($do_fix = false)
 {
-	global $db_prefix, $context, $txt, $smfFunc, $errorTests, $db_cache, $db_temp_cache;
+	global $context, $txt, $smfFunc, $errorTests, $db_cache, $db_temp_cache;
 
 	// This may take some time...
 	@set_time_limit(600);
@@ -1436,7 +1436,7 @@ function findForumErrors($do_fix = false)
 // Create a salvage area for repair purposes.
 function createSalvageArea()
 {
-	global $db_prefix, $txt, $language, $salvageBoardID, $salvageCatID, $smfFunc;
+	global $txt, $language, $salvageBoardID, $salvageCatID, $smfFunc;
 	static $createOnce = false;
 
 	// Have we already created it?

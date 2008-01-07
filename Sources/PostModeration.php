@@ -58,7 +58,7 @@ function PostModerationMain()
 // View all unapproved posts.
 function UnapprovedPosts()
 {
-	global $txt, $scripturl, $context, $db_prefix, $user_info, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $context, $user_info, $sourcedir, $smfFunc;
 
 	$context['current_view'] = isset($_GET['sa']) && $_GET['sa'] == 'topics' ? 'topics' : 'replies';
 	$context['page_title'] = $txt['mc_unapproved_posts'];
@@ -128,7 +128,7 @@ function UnapprovedPosts()
 			LEFT JOIN {db_prefix}boards AS b ON (t.id_board = b.id_board)
 			WHERE m.id_msg IN ({array_int:message_list})
 				AND m.approved = {int:not_approved}
-				AND ' . $user_info['query_see_board'],
+				AND {query_see_board}',
 			array(
 				'message_list' => $toAction,
 				'not_approved' => 0,
@@ -198,7 +198,7 @@ function UnapprovedPosts()
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.id_first_msg != m.id_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE m.approved = {int:not_approved}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			' . $approve_query,
 		array(
 			'not_approved' => 0,
@@ -213,7 +213,7 @@ function UnapprovedPosts()
 		FROM {db_prefix}topics AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.approved = {int:not_approved}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			' . $approve_query,
 		array(
 			'not_approved' => 0,
@@ -255,7 +255,7 @@ function UnapprovedPosts()
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE m.approved = {int:not_approved}
 			AND t.id_first_msg ' . ($context['current_view'] == 'topics' ? '=' : '!=') . ' m.id_msg
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			' . $approve_query . '
 		LIMIT ' . $context['start'] . ', 10',
 		array(
@@ -313,7 +313,7 @@ function UnapprovedPosts()
 // View all unapproved attachments.
 function UnapprovedAttachments()
 {
-	global $txt, $scripturl, $context, $db_prefix, $user_info, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $context, $user_info, $sourcedir, $smfFunc;
 
 	$context['page_title'] = $txt['mc_unapproved_attachments'];
 
@@ -358,7 +358,7 @@ function UnapprovedAttachments()
 			WHERE a.id_attach IN ({array_int:attachments})
 				AND a.approved = {int:not_approved}
 				AND a.attachment_type = {int:attachment_type}
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 				' . $approve_query,
 			array(
 				'attachments' => $attachments,
@@ -389,7 +389,7 @@ function UnapprovedAttachments()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE a.approved = {int:not_approved}
 			AND a.attachment_type = {int:attachment_type}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			' . $approve_query,
 		array(
 			'not_approved' => 0,
@@ -415,7 +415,7 @@ function UnapprovedAttachments()
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE a.approved = {int:not_approved}
 			AND a.attachment_type = {int:attachment_type}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			' . $approve_query . '
 		LIMIT ' . $context['start'] . ', 10',
 		array(
@@ -465,7 +465,7 @@ function UnapprovedAttachments()
 // Approve a post, just the one.
 function ApproveMessage()
 {
-	global $user_info, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
+	global $user_info, $topic, $board, $sourcedir, $smfFunc;
 
 	checkSession('get');
 

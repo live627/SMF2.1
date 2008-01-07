@@ -76,7 +76,7 @@ if (!defined('SMF'))
 
 function ViewMembers()
 {
-	global $txt, $scripturl, $context, $modSettings, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $context, $modSettings, $smfFunc;
 
 	$subActions = array(
 		'all' => array('ViewMemberlist', 'moderate_forum'),
@@ -182,7 +182,7 @@ function ViewMembers()
 // View all members.
 function ViewMemberlist()
 {
-	global $txt, $scripturl, $db_prefix, $context, $modSettings, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $context, $modSettings, $sourcedir, $smfFunc;
 
 	// Set the current sub action.
 	$context['sub_action'] = $_REQUEST['sa'];
@@ -642,7 +642,7 @@ function ViewMemberlist()
 // Search the member list, using one or more criteria.
 function SearchMembers()
 {
-	global $db_prefix, $context, $txt, $smfFunc;
+	global $context, $txt, $smfFunc;
 
 	// Get a list of all the membergroups and postgroups that can be selected.
 	$context['membergroups'] = array(
@@ -687,7 +687,7 @@ function SearchMembers()
 // List all members who are awaiting approval / activation
 function MembersAwaitingActivation()
 {
-	global $txt, $context, $db_prefix, $scripturl, $modSettings, $smfFunc;
+	global $txt, $context, $scripturl, $modSettings, $smfFunc;
 	global $sourcedir;
 
 	// Not a lot here!
@@ -1036,7 +1036,7 @@ function MembersAwaitingActivation()
 // Do the approve/activate/delete stuff
 function AdminApprove()
 {
-	global $txt, $context, $db_prefix, $scripturl, $modSettings, $sourcedir, $language, $user_info, $smfFunc;
+	global $txt, $context, $scripturl, $modSettings, $sourcedir, $language, $user_info, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 

@@ -93,7 +93,7 @@ if (!defined('SMF'))
 
 function Post()
 {
-	global $txt, $scripturl, $topic, $db_prefix, $modSettings, $board;
+	global $txt, $scripturl, $topic, $modSettings, $board;
 	global $user_info, $sc, $board_info, $context, $settings;
 	global $sourcedir, $options, $smfFunc, $language;
 
@@ -755,7 +755,7 @@ function Post()
 			$request = $smfFunc['db_query']('', '
 				SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body
 				FROM {db_prefix}messages AS m
-					INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
+					INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				WHERE m.id_msg = {int:id_msg}
 					' . (allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}') . '
@@ -1097,7 +1097,7 @@ function Post()
 
 function Post2()
 {
-	global $board, $topic, $txt, $db_prefix, $modSettings, $sourcedir, $context;
+	global $board, $topic, $txt, $modSettings, $sourcedir, $context;
 	global $user_info, $board_info, $options, $smfFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
@@ -1679,7 +1679,7 @@ function Post2()
 		}
 
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'poll_choices',
+			'{db_prefix}poll_choices',
 			array('id_poll' => 'int', 'id_choice' => 'int', 'label' => 'string-255'),
 			$pollOptions,
 			array('id_poll', 'id_choice')
@@ -1959,7 +1959,7 @@ function AnnounceTopic()
 // Allow a user to chose the membergroups to send the announcement to.
 function AnnouncementSelectMembergroup()
 {
-	global $db_prefix, $txt, $context, $topic, $board, $board_info, $smfFunc;
+	global $txt, $context, $topic, $board, $board_info, $smfFunc;
 
 	$groups = array_merge($board_info['groups'], array(1));
 	foreach ($groups as $id => $group)
@@ -2022,7 +2022,7 @@ function AnnouncementSelectMembergroup()
 // Send the announcement in chunks.
 function AnnouncementSend()
 {
-	global $db_prefix, $topic, $board, $board_info, $context, $modSettings;
+	global $topic, $board, $board_info, $context, $modSettings;
 	global $language, $scripturl, $txt, $user_info, $sourcedir, $smfFunc;
 
 	checkSession();
@@ -2144,7 +2144,7 @@ function AnnouncementSend()
 // Notify members of a new post.
 function notifyMembersBoard(&$topicData)
 {
-	global $txt, $scripturl, $db_prefix, $language, $user_info;
+	global $txt, $scripturl, $language, $user_info;
 	global $modSettings, $sourcedir, $board, $smfFunc, $context;
 
 	require_once($sourcedir . '/Subs-Post.php');
@@ -2293,7 +2293,7 @@ function notifyMembersBoard(&$topicData)
 // Get the topic for display purposes.
 function getTopic()
 {
-	global $topic, $db_prefix, $modSettings, $context, $smfFunc;
+	global $topic, $modSettings, $context, $smfFunc;
 
 	// Calculate the amount of new replies.
 	$newReplies = empty($_REQUEST['num_replies']) || $context['num_replies'] <= $_REQUEST['num_replies'] ? 0 : $context['num_replies'] - $_REQUEST['num_replies'];
@@ -2345,7 +2345,7 @@ function getTopic()
 
 function QuoteFast()
 {
-	global $db_prefix, $modSettings, $user_info, $txt, $settings, $context;
+	global $modSettings, $user_info, $txt, $settings, $context;
 	global $sourcedir, $smfFunc;
 
 	loadLanguage('Post');
@@ -2364,7 +2364,7 @@ function QuoteFast()
 	$request = $smfFunc['db_query']('', '
 		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.id_topic, m.subject
 		FROM ({db_prefix}messages AS m, {db_prefix}topics AS t)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_msg = {int:id_msg}' .
 			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}') . '
@@ -2451,7 +2451,7 @@ function QuoteFast()
 
 function JavaScriptModify()
 {
-	global $db_prefix, $sourcedir, $modSettings, $board, $topic, $txt;
+	global $sourcedir, $modSettings, $board, $topic, $txt;
 	global $user_info, $context, $smfFunc, $language;
 
 	// We have to have a topic!

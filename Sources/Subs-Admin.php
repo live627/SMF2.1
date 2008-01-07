@@ -335,7 +335,7 @@ function updateSettingsFile($config_vars)
 
 function updateAdminPreferences()
 {
-	global $options, $context, $smfFunc, $db_prefix, $settings, $user_info;
+	global $options, $context, $smfFunc, $settings, $user_info;
 
 	// This must exist!
 	if (!isset($context['admin_preferences']))
@@ -357,7 +357,7 @@ function updateAdminPreferences()
 
 	// Update the themes table.
 	$smfFunc['db_insert']('replace',
-		$db_prefix . 'themes',
+		'{db_prefix}themes',
 		array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 		array($user_info['id'], 1, 'admin_preferences', $options['admin_preferences']),
 		array('id_member', 'id_theme', 'variable')

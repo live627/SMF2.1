@@ -59,7 +59,7 @@ if (!defined('SMF'))
 // The main handling function for sending specialist (Or otherwise) emails to a user.
 function EmailUser()
 {
-	global $topic, $txt, $db_prefix, $context, $scripturl, $sourcedir, $smfFunc;
+	global $topic, $txt, $context, $scripturl, $sourcedir, $smfFunc;
 
 	// Don't index anything here.
 	$context['robot_no_index'] = true;
@@ -81,7 +81,7 @@ function EmailUser()
 // Send a topic to a friend.
 function SendTopic()
 {
-	global $topic, $txt, $db_prefix, $context, $scripturl, $sourcedir, $smfFunc;
+	global $topic, $txt, $context, $scripturl, $sourcedir, $smfFunc;
 
 	// Check permissions...
 	isAllowedTo('send_topic');
@@ -174,7 +174,7 @@ function SendTopic()
 // Allow a user to send an email.
 function CustomEmail()
 {
-	global $context, $modSettings, $user_info, $smfFunc, $db_prefix, $txt, $scripturl, $sourcedir;
+	global $context, $modSettings, $user_info, $smfFunc, $txt, $scripturl, $sourcedir;
 
 	// Can the user even see this information?
 	if ($user_info['is_guest'] && !empty($modSettings['guest_hideContacts']))
@@ -289,7 +289,7 @@ function CustomEmail()
 // Report a post to the moderator... ask for a comment.
 function ReportToModerator()
 {
-	global $txt, $db_prefix, $topic, $modSettings, $user_info, $context, $smfFunc;
+	global $txt, $topic, $modSettings, $user_info, $context, $smfFunc;
 
 	// You can't use this if it's off or you are not allowed to do it.
 	isAllowedTo('report_any');
@@ -338,7 +338,7 @@ function ReportToModerator()
 // Send the emails.
 function ReportToModerator2()
 {
-	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $modSettings, $sourcedir, $language, $context, $smfFunc;
+	global $txt, $scripturl, $topic, $board, $user_info, $modSettings, $sourcedir, $language, $context, $smfFunc;
 
 	// Check their session... don't want them redirected here without their knowledge.
 	checkSession();

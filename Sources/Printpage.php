@@ -38,7 +38,7 @@ if (!defined('SMF'))
 
 function PrintTopic()
 {
-	global $db_prefix, $topic, $txt, $scripturl, $context;
+	global $topic, $txt, $scripturl, $context;
 	global $board_info, $smfFunc;
 
 	if (empty($topic))

@@ -105,7 +105,7 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 // Highly specific - create the custom word index table!
 function smf_db_create_word_search($size)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$size = 'int';
 

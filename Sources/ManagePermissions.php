@@ -146,7 +146,7 @@ function ModifyPermissions()
 
 function PermissionIndex()
 {
-	global $db_prefix, $txt, $scripturl, $context, $settings, $modSettings, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $modSettings, $smfFunc;
 
 	$context['page_title'] = $txt['permissions_title'];
 
@@ -401,7 +401,7 @@ function PermissionIndex()
 
 function PermissionByBoard()
 {
-	global $context, $db_prefix, $modSettings, $txt, $smfFunc, $sourcedir, $cat_tree, $boardList, $boards;
+	global $context, $modSettings, $txt, $smfFunc, $sourcedir, $cat_tree, $boardList, $boards;
 
 	$context['page_title'] = $txt['permissions_boards'];
 	$context['edit_all'] = isset($_GET['edit']);
@@ -469,7 +469,7 @@ function PermissionByBoard()
 
 function SetQuickGroups()
 {
-	global $db_prefix, $context, $smfFunc;
+	global $context, $smfFunc;
 
 	checkSession();
 
@@ -688,7 +688,7 @@ function SetQuickGroups()
 			{
 				if ($permissionType == 'membergroup')
 					$smfFunc['db_insert']('replace',
-						$db_prefix . 'permissions',
+						'{db_prefix}permissions',
 						array('permission' => 'string', 'id_group' => 'int', 'add_deny' => 'int'),
 						$permChange,
 						array('permission', 'id_group')
@@ -696,7 +696,7 @@ function SetQuickGroups()
 				// Board permissions go into the other table.
 				else
 					$smfFunc['db_insert']('replace',
-						$db_prefix . 'board_permissions',
+						'{db_prefix}board_permissions',
 						array('permission' => 'string', 'id_group' => 'int', 'id_profile' => 'int', 'add_deny' => 'int'),
 						$permChange,
 						array('permission', 'id_group', 'id_profile')
@@ -713,7 +713,7 @@ function SetQuickGroups()
 
 function ModifyMembergroup()
 {
-	global $db_prefix, $context, $txt, $modSettings, $smfFunc, $sourcedir;
+	global $context, $txt, $modSettings, $smfFunc, $sourcedir;
 
 	$context['group']['id'] = (int) $_GET['group'];
 
@@ -842,7 +842,7 @@ function ModifyMembergroup()
 
 function ModifyMembergroup2()
 {
-	global $db_prefix, $modSettings, $smfFunc, $context;
+	global $modSettings, $smfFunc, $context;
 
 	checkSession();
 
@@ -914,7 +914,7 @@ function ModifyMembergroup2()
 		if (!empty($givePerms['membergroup']))
 		{
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'permissions',
+				'{db_prefix}permissions',
 				array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$givePerms['membergroup'],
 				array('id_group', 'permission')
@@ -938,7 +938,7 @@ function ModifyMembergroup2()
 		foreach ($givePerms['board'] as $k => $v)
 			$givePerms['board'][$k][] = $profileid;
 		$smfFunc['db_insert']('replace',
-			$db_prefix . 'board_permissions',
+			'{db_prefix}board_permissions',
 			array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int', 'id_profile' => 'int'),
 			$givePerms['board'],
 			array('id_group', 'permission', 'id_profile')
@@ -957,7 +957,7 @@ function ModifyMembergroup2()
 // Screen for modifying general permission settings.
 function GeneralPermissionSettings($return_config = false)
 {
-	global $context, $db_prefix, $modSettings, $sourcedir, $txt, $scripturl, $smfFunc;
+	global $context, $modSettings, $sourcedir, $txt, $scripturl, $smfFunc;
 
 	// All the setting variables
 	$config_vars = array(
@@ -1059,7 +1059,7 @@ function GeneralPermissionSettings($return_config = false)
 // Set the permission level for a specific profile, group, or group for a profile.
 function setPermissionLevel($level, $group, $profile = 'null')
 {
-	global $db_prefix, $smfFunc, $context;
+	global $smfFunc, $context;
 
 	loadIllegalPermissions();
 
@@ -1248,7 +1248,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			$groupInserts[] = array($group, $permission);
 
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'permissions',
+			'{db_prefix}permissions',
 			array('id_group' => 'int', 'permission' => 'string'),
 			$groupInserts,
 			array('id_group')
@@ -1259,7 +1259,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			$boardInserts[] = array(1, $group, $permission);
 
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'board_permissions',
+			'{db_prefix}board_permissions',
 			array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 			$boardInserts,
 			array('id_profile', 'id_group')
@@ -1291,7 +1291,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 				$boardInserts[] = array($profile, $group, $permission);
 
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 				$boardInserts,
 				array('id_profile', 'id_group')
@@ -1334,7 +1334,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 				$boardInserts[] = array($profile, $group, $permission);
 
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 				$boardInserts,
 				array('id_profile', 'id_group')
@@ -1348,7 +1348,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			$boardInserts[] = array($profile, 0, $permission);
 
 		$smfFunc['db_insert']('insert',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 				$boardInserts,
 				array('id_profile', 'id_group')
@@ -1660,7 +1660,7 @@ function loadAllPermissions($loadType = 'classic')
 // Initialize a form with inline permissions.
 function init_inline_permissions($permissions, $excluded_groups = array())
 {
-	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
+	global $context, $txt, $modSettings, $smfFunc;
 
 	loadLanguage('ManagePermissions');
 	loadTemplate('ManagePermissions');
@@ -1759,7 +1759,7 @@ function theme_inline_permissions($permission)
 // Save the permissions of a form containing inline permissions.
 function save_inline_permissions($permissions)
 {
-	global $context, $db_prefix, $smfFunc;
+	global $context, $smfFunc;
 
 	// No permissions? Not a great deal to do here.
 	if (!allowedTo('manage_permissions'))
@@ -1795,7 +1795,7 @@ function save_inline_permissions($permissions)
 	// ...and replace them with new ones.
 	if (!empty($insertRows))
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'permissions',
+			'{db_prefix}permissions',
 			array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 			$insertRows,
 			array('id_group', 'permission')
@@ -1810,7 +1810,7 @@ function save_inline_permissions($permissions)
 
 function loadPermissionProfiles()
 {
-	global $context, $db_prefix, $txt, $smfFunc;
+	global $context, $txt, $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_profile, profile_name
@@ -1841,7 +1841,7 @@ function loadPermissionProfiles()
 // Add/Edit/Delete profiles.
 function EditPermissionProfiles()
 {
-	global $db_prefix, $context, $txt, $smfFunc;
+	global $context, $txt, $smfFunc;
 
 	// Setup the template, first for fun.
 	$context['page_title'] = $txt['permissions_profile_edit'];
@@ -1883,7 +1883,7 @@ function EditPermissionProfiles()
 
 		if (!empty($inserts))
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$inserts,
 				array('id_profile', 'id_group', 'permission')
@@ -1983,7 +1983,7 @@ function EditPermissionProfiles()
 // This function updates the permissions of any groups based off this group.
 function updateChildPermissions($parents, $profile = null)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// All the parent groups to sort out.
 	if (!is_array($parents))
@@ -2047,7 +2047,7 @@ function updateChildPermissions($parents, $profile = null)
 		if (!empty($permissions))
 		{
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'permissions',
+				'{db_prefix}permissions',
 				array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$permissions,
 				array('id_group', 'permission')
@@ -2091,7 +2091,7 @@ function updateChildPermissions($parents, $profile = null)
 		if (!empty($permissions))
 		{
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('id_group' => 'int', 'id_profile' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$permissions,
 				array('id_group', 'id_profile', 'permission')
@@ -2117,7 +2117,7 @@ function loadIllegalPermissions()
 // Present a nice way of applying post moderation.
 function ModifyPostModeration()
 {
-	global $context, $txt, $smfFunc, $db_prefix, $modSettings;
+	global $context, $txt, $smfFunc, $modSettings;
 
 	// Just in case.
 	checkSession('get');

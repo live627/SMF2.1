@@ -29,7 +29,7 @@
 
 function getBoardList($boardListOptions = array())
 {
-	global $smfFunc, $db_prefix, $user_info;
+	global $smfFunc, $user_info;
 
 	if (isset($boardListOptions['excluded_boards']) && isset($boardListOptions['included_boards']))
 		trigger_error('getBoardList(): Setting both excluded_boards and included_boards is not allowed.', E_USER_ERROR);
@@ -49,10 +49,10 @@ function getBoardList($boardListOptions = array())
 	}
 
 	if (!empty($boardListOptions['ignore_boards']))
-		$where[] = $user_info['query_wanna_see_board'];
+		$where[] = '{query_wanna_see_board}';
 
 	elseif (!empty($boardListOptions['use_permissions']))
-		$where[] = $user_info['query_see_board'];
+		$where[] = '{query_see_board}';
 
 	if (!empty($boardListOptions['not_redirection']))
 	{

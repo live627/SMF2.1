@@ -90,7 +90,7 @@ function Groups()
 // This very simply lists the groups, nothing snazy.
 function GroupList()
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc;
+	global $txt, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Yep, find the groups...
 	$request = $smfFunc['db_query']('', '
@@ -179,7 +179,7 @@ function GroupList()
 // Display members of a group, and allow adding of members to a group. Silly function name though ;)
 function MembergroupMembers()
 {
-	global $txt, $scripturl, $db_prefix, $context, $modSettings, $sourcedir, $user_info, $settings, $smfFunc;
+	global $txt, $scripturl, $context, $modSettings, $sourcedir, $user_info, $settings, $smfFunc;
 
 	$_REQUEST['group'] = isset($_REQUEST['group']) ? (int) $_REQUEST['group'] : 0;
 
@@ -430,7 +430,7 @@ function MembergroupMembers()
 // Show and manage all group requests.
 function GroupRequests()
 {
-	global $txt, $db_prefix, $context, $scripturl, $user_info, $sourcedir, $smfFunc, $modSettings;
+	global $txt, $context, $scripturl, $user_info, $sourcedir, $smfFunc, $modSettings;
 
 	// Set up the template stuff...
 	$context['page_title'] = $txt['mc_group_requests'];
@@ -723,7 +723,7 @@ function GroupRequests()
 
 function list_getGroupRequestCount($where, $where_parameters)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -741,7 +741,7 @@ function list_getGroupRequestCount($where, $where_parameters)
 
 function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_parameters)
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl;
+	global $smfFunc, $txt, $scripturl;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,

@@ -32,7 +32,7 @@ if (!defined('SMF'))
 // Entry point for the moderation center.
 function ModerationMain($dont_call = false)
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc, $db_prefix;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc;
 
 	// Don't run this twice... and don't conflict with the admin bar.
 	if (isset($context['admin_area']))
@@ -225,7 +225,7 @@ function ModBlockLatestNews()
 // Show a list of the most active watched users.
 function ModBlockWatchedUsers()
 {
-	global $context, $db_prefix, $smfFunc, $scripturl, $modSettings;
+	global $context, $smfFunc, $scripturl, $modSettings;
 
 	if (($watched_users = cache_get_data('recent_user_watches', 240)) === null)
 	{
@@ -266,7 +266,7 @@ function ModBlockWatchedUsers()
 // Show an area for the moderator to type into.
 function ModBlockNotes()
 {
-	global $context, $smfFunc, $db_prefix, $scripturl, $txt, $user_info;
+	global $context, $smfFunc, $scripturl, $txt, $user_info;
 
 	// Are we saving a note?
 	if (isset($_POST['makenote']) && isset($_POST['new_note']))
@@ -337,7 +337,7 @@ function ModBlockNotes()
 // Show a list of the most recent reported posts.
 function ModBlockReportedPosts()
 {
-	global $context, $db_prefix, $user_info, $scripturl, $smfFunc;
+	global $context, $user_info, $scripturl, $smfFunc;
 
 	// Got the info already?
 	$cachekey = md5(serialize($user_info['mod_cache']['bq']));
@@ -398,7 +398,7 @@ function ModBlockReportedPosts()
 // Show a list of all the group requests they can see.
 function ModBlockGroupRequests()
 {
-	global $context, $db_prefix, $user_info, $scripturl, $smfFunc;
+	global $context, $user_info, $scripturl, $smfFunc;
 
 	$context['group_requests'] = array();
 	// Make sure they can even moderate someone!
@@ -444,7 +444,7 @@ function ModBlockGroupRequests()
 // Browse all the reported posts...
 function ReportedPosts()
 {
-	global $txt, $context, $scripturl, $modSettings, $user_info, $db_prefix, $smfFunc;
+	global $txt, $context, $scripturl, $modSettings, $user_info, $smfFunc;
 
 	// This comes under the umbrella of moderating posts.
 	if ($user_info['mod_cache']['bq'] == '0=1')
@@ -617,7 +617,7 @@ function ReportedPosts()
 //!!! As for most things in this file, this needs to be moved somewhere appropriate.
 function ModerateGroups()
 {
-	global $txt, $context, $scripturl, $modSettings, $user_info, $db_prefix;
+	global $txt, $context, $scripturl, $modSettings, $user_info;
 
 	// You need to be allowed to moderate groups...
 	if ($user_info['mod_cache']['gq'] == '0=1')
@@ -643,7 +643,7 @@ function ModerateGroups()
 // How many open reports do we have?
 function recountOpenReports()
 {
-	global $user_info, $db_prefix, $context, $smfFunc;
+	global $user_info, $context, $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -670,7 +670,7 @@ function recountOpenReports()
 
 function ModReport()
 {
-	global $db_prefix, $user_info, $context, $sourcedir, $scripturl, $txt, $smfFunc;
+	global $user_info, $context, $sourcedir, $scripturl, $txt, $smfFunc;
 
 	// Have to at least give us something
 	if (empty($_REQUEST['report']))
@@ -769,7 +769,7 @@ function ModReport()
 // Show a notice sent to a user.
 function ShowNotice()
 {
-	global $db_prefix, $smfFunc, $txt, $context;
+	global $smfFunc, $txt, $context;
 
 	$context['page_title'] = $txt['show_notice'];
 	$context['sub_template'] = 'show_notice';
@@ -798,7 +798,7 @@ function ShowNotice()
 // View watched users.
 function ViewWatchedUsers()
 {
-	global $db_prefix, $smfFunc, $modSettings, $context, $txt, $scripturl, $user_info, $sourcedir;
+	global $smfFunc, $modSettings, $context, $txt, $scripturl, $user_info, $sourcedir;
 
 	// Some important context!
 	$context['page_title'] = $txt['mc_watched_users_title'];
@@ -1008,7 +1008,7 @@ function ViewWatchedUsers()
 
 function list_getWatchedUserCount($approve_query)
 {
-	global $smfFunc, $db_prefix, $modSettings;
+	global $smfFunc, $modSettings;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1026,7 +1026,7 @@ function list_getWatchedUserCount($approve_query)
 
 function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $dummy)
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl, $modSettings, $user_info;
+	global $smfFunc, $txt, $scripturl, $modSettings, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, last_login, posts, warning
@@ -1063,7 +1063,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			WHERE m.id_member IN ({array_int:member_list})
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 				AND m.approved = {int:is_approved}
 			GROUP BY m.id_member
 			ORDER BY m.poster_time DESC',
@@ -1085,7 +1085,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 
 function list_getWatchedUserPostsCount($approve_query)
 {
-	global $smfFunc, $db_prefix, $modSettings, $user_info;
+	global $smfFunc, $modSettings, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1093,7 +1093,7 @@ function list_getWatchedUserPostsCount($approve_query)
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			WHERE mem.warning >= {int:warning_watch}
-				AND ' . $user_info['query_see_board'] . '
+				AND {query_see_board}
 				' . $approve_query,
 		array(
 			'warning_watch' => $modSettings['warning_watch'],
@@ -1107,7 +1107,7 @@ function list_getWatchedUserPostsCount($approve_query)
 
 function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query, $delete_boards)
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl, $modSettings, $user_info;
+	global $smfFunc, $txt, $scripturl, $modSettings, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT m.id_msg, m.id_topic, m.id_board, m.id_member, m.subject, m.body, m.poster_time,
@@ -1116,7 +1116,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE mem.warning >= {int:warning_watch}
-			AND ' . $user_info['query_see_board'] . '
+			AND {query_see_board}
 			' . $approve_query . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $start . ', ' . $items_per_page,
@@ -1149,7 +1149,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 // Simply put, look at the warning log!
 function ViewWarningLog()
 {
-	global $db_prefix, $smfFunc, $modSettings, $context, $txt, $scripturl, $sourcedir;
+	global $smfFunc, $modSettings, $context, $txt, $scripturl, $sourcedir;
 
 	// Setup context as always.
 	$context['page_title'] = $txt['mc_warning_log'];
@@ -1307,7 +1307,7 @@ function ViewWarningLog()
 
 function list_getWarningCount()
 {
-	global $smfFunc, $db_prefix, $modSettings;
+	global $smfFunc, $modSettings;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1325,7 +1325,7 @@ function list_getWarningCount()
 
 function list_getWarnings($start, $items_per_page, $sort)
 {
-	global $smfFunc, $db_prefix, $txt, $scripturl, $modSettings, $user_info;
+	global $smfFunc, $txt, $scripturl, $modSettings, $user_info;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
@@ -1361,7 +1361,7 @@ function list_getWarnings($start, $items_per_page, $sort)
 // Change moderation preferences.
 function ModerationSettings()
 {
-	global $context, $db_prefix, $smfFunc, $txt, $sourcedir, $scripturl, $user_settings, $user_info;
+	global $context, $smfFunc, $txt, $sourcedir, $scripturl, $user_settings, $user_info;
 
 	// Some useful context stuff.
 	loadTemplate('ModerationCenter');

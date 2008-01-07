@@ -75,7 +75,7 @@ function RemindMe()
 // Email a reminder.
 function RemindMail()
 {
-	global $db_prefix, $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smfFunc;
+	global $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smfFunc;
 
 	checkSession();
 
@@ -177,7 +177,7 @@ function setPassword()
 
 function setPassword2()
 {
-	global $db_prefix, $context, $txt, $modSettings, $smfFunc, $sourcedir;
+	global $context, $txt, $modSettings, $smfFunc, $sourcedir;
 
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
 		fatal_lang_error('no_access', false);
@@ -246,7 +246,7 @@ function setPassword2()
 // Get the secret answer.
 function secret_answerInput()
 {
-	global $txt, $db_prefix, $context, $smfFunc;
+	global $txt, $context, $smfFunc;
 
 	checkSession();
 
@@ -298,7 +298,7 @@ function secret_answerInput()
 
 function secret_answer2()
 {
-	global $txt, $db_prefix, $context, $modSettings, $smfFunc;
+	global $txt, $context, $modSettings, $smfFunc;
 
 	checkSession();
 

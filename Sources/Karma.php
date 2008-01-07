@@ -40,7 +40,7 @@ if (!defined('SMF'))
 // Modify a user's karma.
 function ModifyKarma()
 {
-	global $modSettings, $db_prefix, $txt, $user_info, $topic, $smfFunc;
+	global $modSettings, $txt, $user_info, $topic, $smfFunc;
 
 	// If the mod is disabled, show an error.
 	if (empty($modSettings['karmaMode']))
@@ -105,7 +105,7 @@ function ModifyKarma()
 	{
 		// Put it in the log.
 		$smfFunc['db_insert']('replace',
-				$db_prefix . 'log_karma',
+				'{db_prefix}log_karma',
 				array('action' => 'int', 'id_target' => 'int', 'id_executor' => 'int', 'log_time' => 'int'),
 				array($dir, $_REQUEST['uid'], $user_info['id'], time()),
 				array('id_target', 'id_executor')

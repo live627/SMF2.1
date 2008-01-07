@@ -184,7 +184,7 @@ function ThemesMain()
 
 function ThemeAdmin()
 {
-	global $context, $db_prefix, $sc, $boarddir, $modSettings, $smfFunc;
+	global $context, $sc, $boarddir, $modSettings, $smfFunc;
 
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
@@ -261,7 +261,7 @@ function ThemeAdmin()
 
 function ThemeList()
 {
-	global $context, $db_prefix, $boarddir, $boardurl, $smfFunc;
+	global $context, $boarddir, $boardurl, $smfFunc;
 
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
@@ -313,7 +313,7 @@ function ThemeList()
 		if (!empty($setValues))
 		{
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'themes',
+				'{db_prefix}themes',
 				array('id_theme' => 'int', 'id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$setValues,
 				array('id_theme', 'variable', 'id_member')
@@ -379,7 +379,7 @@ function ThemeList()
 // Administrative global settings.
 function SetThemeOptions()
 {
-	global $txt, $sc, $context, $settings, $db_prefix, $modSettings, $smfFunc;
+	global $txt, $sc, $context, $settings, $modSettings, $smfFunc;
 
 	$_GET['th'] = isset($_GET['th']) ? (int) $_GET['th'] : (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 
@@ -509,7 +509,7 @@ function SetThemeOptions()
 				);
 
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'themes',
+				'{db_prefix}themes',
 				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$setValues,
 				array('id_theme', 'variable', 'id_member')
@@ -756,7 +756,7 @@ function SetThemeOptions()
 // Administrative global settings.
 function SetThemeSettings()
 {
-	global $txt, $sc, $context, $settings, $db_prefix, $modSettings, $sourcedir, $smfFunc;
+	global $txt, $sc, $context, $settings, $modSettings, $sourcedir, $smfFunc;
 
 	if (empty($_GET['th']) && empty($_GET['id']))
 		return ThemeAdmin();
@@ -829,7 +829,7 @@ function SetThemeSettings()
 		if (!empty($inserts))
 		{
 			$smfFunc['db_insert']('replace',
-				$db_prefix . 'themes',
+				'{db_prefix}themes',
 				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$inserts,
 				array('id_member', 'id_theme', 'variable')
@@ -884,7 +884,7 @@ function SetThemeSettings()
 // Remove a theme from the database.
 function RemoveTheme()
 {
-	global $db_prefix, $modSettings, $sc, $smfFunc;
+	global $modSettings, $sc, $smfFunc;
 
 	checkSession('get');
 
@@ -939,7 +939,7 @@ function RemoveTheme()
 // Choose a theme from a list.
 function PickTheme()
 {
-	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $language, $smfFunc, $settings;
+	global $txt, $sc, $context, $modSettings, $user_info, $language, $smfFunc, $settings;
 
 	checkSession('get');
 
@@ -1134,7 +1134,7 @@ function PickTheme()
 
 function ThemeInstall()
 {
-	global $sourcedir, $boarddir, $boardurl, $db_prefix, $txt, $context, $settings, $modSettings, $smfFunc;
+	global $sourcedir, $boarddir, $boardurl, $txt, $context, $settings, $modSettings, $smfFunc;
 
 	checkSession('request');
 
@@ -1346,7 +1346,7 @@ function ThemeInstall()
 
 		if (!empty($inserts))
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'themes',
+				'{db_prefix}themes',
 				array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$inserts,
 				array('id_theme', 'variable')
@@ -1391,7 +1391,7 @@ function WrapAction()
 // Set an option via javascript.
 function SetJavaScript()
 {
-	global $db_prefix, $settings, $user_info, $smfFunc, $options;
+	global $settings, $user_info, $smfFunc, $options;
 
 	// Sorry, guests can't do this.
 	if ($user_info['is_guest'])
@@ -1427,7 +1427,7 @@ function SetJavaScript()
 
 	// Update the option.
 	$smfFunc['db_insert']('replace',
-		$db_prefix . 'themes',
+		'{db_prefix}themes',
 		array('id_theme' => 'int', 'id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 		array($settings['theme_id'], $user_info['id'], $_GET['var'], is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']),
 		array('id_theme', 'id_member', 'variable')
@@ -1441,7 +1441,7 @@ function SetJavaScript()
 
 function EditTheme()
 {
-	global $context, $settings, $db_prefix, $scripturl, $boarddir, $smfFunc;
+	global $context, $settings, $scripturl, $boarddir, $smfFunc;
 
 	if (isset($_REQUEST['preview']))
 	{
@@ -1774,7 +1774,7 @@ function get_file_listing($path, $relative)
 
 function CopyTemplate()
 {
-	global $context, $settings, $db_prefix, $smfFunc;
+	global $context, $settings, $smfFunc;
 
 	isAllowedTo('admin_forum');
 	loadTemplate('Themes');

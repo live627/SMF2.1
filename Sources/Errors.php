@@ -84,7 +84,7 @@ function db_fatal_error($loadavg = false)
 // Log an error, if the option is on.
 function log_error($error_message, $error_type = 'general', $file = null, $line = null)
 {
-	global $db_prefix, $txt, $modSettings, $sc, $user_info, $smfFunc, $scripturl;
+	global $txt, $modSettings, $sc, $user_info, $smfFunc, $scripturl;
 
 	// Check if error logging is actually on.
 	if (empty($modSettings['enableErrorLogging']))

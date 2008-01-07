@@ -115,7 +115,7 @@ if (!defined('SMF'))
 // Get all birthdays within the given time range.
 function getBirthdayRange($low_date, $high_date)
 {
-	global $db_prefix, $scripturl, $modSettings, $smfFunc;
+	global $scripturl, $modSettings, $smfFunc;
 
 	// Birthdays people set without specifying a year (no age, see?) are the easiest ;).
 	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
@@ -177,7 +177,7 @@ function getBirthdayRange($low_date, $high_date)
 // Get all events within the given time range.
 function getEventRange($low_date, $high_date, $use_permissions = true)
 {
-	global $db_prefix, $scripturl, $modSettings, $user_info, $sc, $smfFunc;
+	global $scripturl, $modSettings, $user_info, $sc, $smfFunc;
 
 	$low_date_time = sscanf($low_date, '%04d-%02d-%02d');
 	$low_date_time = mktime(0, 0, 0, $low_date_time[1], $low_date_time[2], $low_date_time[0]);
@@ -194,7 +194,7 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
 		WHERE cal.start_date <= {date:high_date}
 			AND cal.end_date >= {date:low_date}' . ($use_permissions ? '
-			AND (cal.id_board = {int:no_board_link} OR ' . $user_info['query_wanna_see_board'] . ')' : ''),
+			AND (cal.id_board = {int:no_board_link} OR {query_wanna_see_board})' : ''),
 		array(
 			'high_date' => $high_date,
 			'low_date' => $low_date,
@@ -272,7 +272,7 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 // Get all holidays within the given time range.
 function getHolidayRange($low_date, $high_date)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Get the lowest and highest dates for "all years".
 	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
@@ -314,7 +314,7 @@ function getHolidayRange($low_date, $high_date)
 // Does permission checks to see if an event can be linked to a board/topic.
 function canLinkEvent()
 {
-	global $db_prefix, $user_info, $topic, $board, $smfFunc;
+	global $user_info, $topic, $board, $smfFunc;
 
 	// If you can't post, you can't link.
 	isAllowedTo('calendar_post');
@@ -823,7 +823,7 @@ function validateEventPost()
 // Get the event's poster.
 function getEventPoster($event_id)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	// A simple database query, how hard can that be?
 	$request = $smfFunc['db_query']('', '
@@ -849,7 +849,7 @@ function getEventPoster($event_id)
 // Consolidating the various INSERT statements into this function.
 function insertEvent(&$eventOptions)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	// Add special chars to the title.
 	$eventOptions['title'] = $smfFunc['htmlspecialchars']($eventOptions['title'], ENT_QUOTES);
@@ -894,7 +894,7 @@ function insertEvent(&$eventOptions)
 
 function modifyEvent($event_id, &$eventOptions)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	// Properly sanitize the title.
 	$eventOptions['title'] = $smfFunc['htmlspecialchars']($eventOptions['title'], ENT_QUOTES);
@@ -936,7 +936,7 @@ function modifyEvent($event_id, &$eventOptions)
 
 function removeEvent($event_id)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}calendar
@@ -953,7 +953,7 @@ function removeEvent($event_id)
 
 function getEventProperties($event_id)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT
@@ -1001,7 +1001,7 @@ function getEventProperties($event_id)
 
 function list_getHolidays($start, $items_per_page, $sort)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
@@ -1022,7 +1022,7 @@ function list_getHolidays($start, $items_per_page, $sort)
 
 function list_getNumHolidays()
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1038,7 +1038,7 @@ function list_getNumHolidays()
 
 function removeHolidays($holiday_ids)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}calendar_holidays

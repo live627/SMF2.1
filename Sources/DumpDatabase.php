@@ -42,7 +42,7 @@ if (!defined('SMF'))
 // Dumps the database to a file.
 function DumpDatabase2()
 {
-	global $db_name, $db_prefix, $scripturl, $context, $modSettings, $crlf, $smfFunc;
+	global $db_name, $scripturl, $context, $modSettings, $crlf, $smfFunc;
 
 	// Administrators only!
 	if (!allowedTo('admin_forum'))

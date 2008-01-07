@@ -128,7 +128,7 @@ function bbc_to_html($text)
 // The harder one - wysiwyg to BBC!
 function html_to_bbc($text)
 {
-	global $db_prefix, $modSettings, $smfFunc, $sourcedir;
+	global $modSettings, $smfFunc, $sourcedir;
 
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ''));
@@ -619,7 +619,7 @@ function fetchTagAttributes($text)
 
 function getMessageIcons($board_id)
 {
-	global $modSettings, $context, $db_prefix, $txt, $settings, $smfFunc;
+	global $modSettings, $context, $txt, $settings, $smfFunc;
 
 	if (empty($modSettings['messageIcons_enable']))
 	{
@@ -948,7 +948,7 @@ function theme_postbox($msg)
 // Creates a box that can be used for richedit stuff like BBC, Smileys etc.
 function create_control_richedit($editorOptions)
 {
-	global $txt, $modSettings, $db_prefix, $options, $smfFunc;
+	global $txt, $modSettings, $options, $smfFunc;
 	global $context, $settings, $user_info, $sourcedir, $scripturl;
 
 	// Every control must have a ID!
@@ -1180,7 +1180,7 @@ function create_control_richedit($editorOptions)
 // Create an an autosuggest box?
 function create_control_autosuggest(&$suggestOptions)
 {
-	global $txt, $modSettings, $db_prefix, $options, $smfFunc;
+	global $txt, $modSettings, $options, $smfFunc;
 	global $context, $settings, $user_info, $sourcedir;
 
 	// First autosuggest means we need to set up some bits...
@@ -1243,7 +1243,7 @@ function AutoSuggestHandler($checkRegistered = null)
 // Search for a member - by realName or memberName by default.
 function AutoSuggest_Search_Member()
 {
-	global $user_info, $db_prefix, $txt, $smfFunc;
+	global $user_info, $txt, $smfFunc;
 
 	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search']) . '*';
 	$_REQUEST['search'] = trim($smfFunc['strtolower']($_REQUEST['search']));

@@ -159,7 +159,7 @@ function ModifyCoreFeatures($return_config = false)
 		'cp' => array(
 			'url' => 'action=admin;area=featuresettings;sa=profile',
 			'save_callback' => create_function('$value', '
-				global $smfFunc, $db_prefix;
+				global $smfFunc;
 				if (!$value)
 				{
 					$smfFunc[\'db_query\'](\'\', "
@@ -579,7 +579,7 @@ function ModifyModerationSettings($return_config = false)
 // You'll never guess what this function does...
 function ModifySignatureSettings($return_config = false)
 {
-	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt, $scripturl, $sc;
+	global $context, $txt, $modSettings, $sig_start, $smfFunc, $helptxt, $scripturl, $sc;
 
 	$config_vars = array(
 			// Are signatures even enabled?
@@ -902,7 +902,7 @@ function pauseSignatureApplySettings()
 // Show all the custom profile fields available to the user.
 function ShowCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $sc, $smfFunc;
 	global $modSettings, $sourcedir;
 
 	$context['page_title'] = $txt['custom_profile_title'];
@@ -1117,7 +1117,7 @@ function ShowCustomProfiles()
 
 function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 {
-	global $txt, $modSettings, $smfFunc, $db_prefix;
+	global $txt, $modSettings, $smfFunc;
 
 	$list = array();
 
@@ -1158,7 +1158,7 @@ function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 
 function list_getProfileFieldSize()
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1176,7 +1176,7 @@ function list_getProfileFieldSize()
 // Edit some profile fields?
 function EditCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $sc, $smfFunc;
 
 	// Sort out the context!
 	$context['fid'] = isset($_GET['fid']) ? (int) $_GET['fid'] : 0;

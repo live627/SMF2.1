@@ -66,7 +66,7 @@ function SearchEngines()
 // This is really just the settings page.
 function ManageSearchEngineSettings($return_config = false)
 {
-	global $context, $txt, $db_prefix, $modSettings, $scripturl, $sourcedir, $smfFunc;
+	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc;
 
 	$config_vars = array(
 		// How much detail?
@@ -125,7 +125,7 @@ function ManageSearchEngineSettings($return_config = false)
 // View a list of all the spiders we know about.
 function ViewSpiders()
 {
-	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix;
+	global $context, $txt, $sourcedir, $scripturl, $smfFunc;
 
 	if (!isset($_SESSION['spider_stat']) || $_SESSION['spider_stat'] < time() - 60)
 	{
@@ -290,7 +290,7 @@ function ViewSpiders()
 
 function list_getSpiders($start, $items_per_page, $sort)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, spider_name, user_agent, ip_info
@@ -310,7 +310,7 @@ function list_getSpiders($start, $items_per_page, $sort)
 
 function list_getNumSpiders()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_spiders
@@ -327,7 +327,7 @@ function list_getNumSpiders()
 // Here we can add, and edit, spider info!
 function EditSpider()
 {
-	global $context, $db_prefix, $smfFunc, $txt;
+	global $context, $smfFunc, $txt;
 
 	// Some standard stuff.
 	$context['id_spider'] = !empty($_GET['sid']) ? (int) $_GET['sid'] : 0;
@@ -364,7 +364,7 @@ function EditSpider()
 			);
 		else
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'spiders',
+				'{db_prefix}spiders',
 				array(
 					'spider_name' => 'string', 'user_agent' => 'string', 'ip_info' => 'string',
 				),
@@ -415,7 +415,7 @@ function EditSpider()
 // Do we think the current user is a spider?
 function SpiderCheck()
 {
-	global $modSettings, $smfFunc, $db_prefix;
+	global $modSettings, $smfFunc;
 
 	if (isset($_SESSION['id_robot']))
 		unset($_SESSION['id_robot']);
@@ -493,7 +493,7 @@ function SpiderCheck()
 //!!! Different file?
 function logSpider()
 {
-	global $smfFunc, $db_prefix, $modSettings, $context;
+	global $smfFunc, $modSettings, $context;
 
 	if (empty($modSettings['spider_mode']) || empty($_SESSION['id_robot']))
 		return;
@@ -516,7 +516,7 @@ function logSpider()
 		if ($smfFunc['db_affected_rows']() == 0)
 		{
 			$smfFunc['db_insert']('insert',
-				$db_prefix . 'log_spider_stats',
+				'{db_prefix}log_spider_stats',
 				array(
 					'id_spider' => 'int', 'last_seen' => 'int', 'stat_date' => 'date', 'page_hits' => 'int',
 				),
@@ -540,7 +540,7 @@ function logSpider()
 			$url = '';
 
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'log_spider_hits',
+			'{db_prefix}log_spider_hits',
 			array('id_spider' => 'int', 'log_time' => 'int', 'url' => 'string'),
 			array($_SESSION['id_robot'], time(), $url),
 			array()
@@ -551,7 +551,7 @@ function logSpider()
 // This function takes any unprocessed hits and turns them into stats.
 function consolidateSpiderStats()
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, MAX(log_time) AS last_seen, COUNT(*) AS num_hits
@@ -595,7 +595,7 @@ function consolidateSpiderStats()
 	// New stats?
 	if (!empty($stat_inserts))
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'log_spider_stats',
+			'{db_prefix}log_spider_stats',
 			array('stat_date' => 'date', 'id_spider' => 'int', 'page_hits' => 'int', 'last_seen' => 'int'),
 			$stat_inserts,
 			array('stat_date', 'id_spider')
@@ -642,7 +642,7 @@ function ip2range($fullip)
 // See what spiders have been up to.
 function SpiderLogs()
 {
-	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix, $modSettings;
+	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $modSettings;
 
 	// Did they want to delete some entries?
 	if (!empty($_POST['delete_entries']) && !empty($_POST['older']))
@@ -755,7 +755,7 @@ function SpiderLogs()
 
 function list_getSpiderLogs($start, $items_per_page, $sort)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT sl.id_spider, sl.url, sl.log_time, s.spider_name
@@ -776,7 +776,7 @@ function list_getSpiderLogs($start, $items_per_page, $sort)
 
 function list_getNumSpiderLogs()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_logs
@@ -793,7 +793,7 @@ function list_getNumSpiderLogs()
 // Show the spider statistics.
 function SpiderStats()
 {
-	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix;
+	global $context, $txt, $sourcedir, $scripturl, $smfFunc;
 
 	// Force an update of the stats every 60 seconds.
 	if (!isset($_SESSION['spider_stat']) || $_SESSION['spider_stat'] < time() - 60)
@@ -936,7 +936,7 @@ function SpiderStats()
 
 function list_getSpiderStats($start, $items_per_page, $sort)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT ss.id_spider, ss.stat_date, ss.page_hits, s.spider_name
@@ -957,7 +957,7 @@ function list_getSpiderStats($start, $items_per_page, $sort)
 
 function list_getNumSpiderStats()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_stats
@@ -974,7 +974,7 @@ function list_getNumSpiderStats()
 // Recache spider names?
 function recacheSpiderNames()
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, spider_name

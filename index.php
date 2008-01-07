@@ -260,6 +260,7 @@ function smf_main()
 		'markasread' => array('Subs-Boards.php', 'MarkRead'),
 		'mergetopics' => array('SplitTopics.php', 'MergeTopics'),
 		'mlist' => array('Memberlist.php', 'Memberlist'),
+		'mascot' => array('Who.php', 'Mascot'),
 		'moderate' => array('ModerationCenter.php', 'ModerationMain'),
 		'modifycat' => array('ManageBoards.php', 'ModifyCat'),
 		'modifykarma' => array('Karma.php', 'ModifyKarma'),

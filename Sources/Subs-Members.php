@@ -93,7 +93,7 @@ if (!defined('SMF'))
 // Delete a group of/single member.
 function deleteMembers($users)
 {
-	global $db_prefix, $sourcedir, $modSettings, $user_info, $smfFunc;
+	global $sourcedir, $modSettings, $user_info, $smfFunc;
 
 	// If it's not an array, make it so!
 	if (!is_array($users))
@@ -399,7 +399,7 @@ function deleteMembers($users)
 
 function registerMember(&$regOptions, $return_errors = false)
 {
-	global $scripturl, $txt, $modSettings, $db_prefix, $context, $sourcedir;
+	global $scripturl, $txt, $modSettings, $context, $sourcedir;
 	global $user_info, $options, $settings, $smfFunc;
 
 	loadLanguage('Login');
@@ -703,7 +703,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		foreach ($theme_vars as $var => $val)
 			$inserts[] = array($memberID, $var, $val);
 		$smfFunc['db_insert']('insert',
-			$db_prefix . 'themes',
+			'{db_prefix}themes',
 			array('id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 			$inserts,
 			array('id_member', 'variable')
@@ -806,7 +806,7 @@ function registerMember(&$regOptions, $return_errors = false)
 // Check if a name is in the reserved words list. (name, current member id, name/username?.)
 function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal = true)
 {
-	global $user_info, $modSettings, $db_prefix, $smfFunc;
+	global $user_info, $modSettings, $smfFunc;
 
 	$checkName = $smfFunc['strtolower']($name);
 
@@ -885,7 +885,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 // Get a list of groups that have a given permission (on a given board).
 function groupsAllowedTo($permission, $board_id = null)
 {
-	global $db_prefix, $modSettings, $board_info, $smfFunc;
+	global $modSettings, $board_info, $smfFunc;
 
 	// Admins are allowed to do anything.
 	$member_groups = array(
@@ -958,7 +958,7 @@ function groupsAllowedTo($permission, $board_id = null)
 // Get a list of members that have a given permission (on a given board).
 function membersAllowedTo($permission, $board_id = null)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$member_groups = groupsAllowedTo($permission, $board_id);
 
@@ -993,7 +993,7 @@ function membersAllowedTo($permission, $board_id = null)
 // This function is used to reassociate members with relevant posts.
 function reattributePosts($memID, $email = false, $membername = false, $post_count = false)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	// Firstly, if email and username aren't passed find out the members email address and name.
 	if ($email === false && $membername === false)
@@ -1087,7 +1087,7 @@ function BuddyListToggle()
 
 function list_getMembers($start, $items_per_page, $sort, $where, $where_params = array(), $get_duplicates = false)
 {
-	global $smfFunc, $db_prefix;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT
@@ -1119,7 +1119,7 @@ function list_getMembers($start, $items_per_page, $sort, $where, $where_params =
 
 function list_getNumMembers($where, $where_params = array())
 {
-	global $smfFunc, $db_prefix, $modSettings;
+	global $smfFunc, $modSettings;
 
 	// We know how many members there are in total.
 	if (empty($where) or $where == '1')

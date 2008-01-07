@@ -154,7 +154,7 @@ function Ban()
 // List all the bans.
 function BanList()
 {
-	global $txt, $db_prefix, $context, $ban_request, $ban_counts, $scripturl;
+	global $txt, $context, $ban_request, $ban_counts, $scripturl;
 	global $user_info, $smfFunc, $sourcedir;
 
 	// User pressed the 'remove selection button'.
@@ -354,7 +354,7 @@ function BanList()
 
 function list_getBans($start, $items_per_page, $sort)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(*) AS num_triggers
@@ -376,7 +376,7 @@ function list_getBans($start, $items_per_page, $sort)
 
 function list_getNumBans()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_bans
@@ -392,7 +392,7 @@ function list_getNumBans()
 
 function BanEdit()
 {
-	global $txt, $db_prefix, $modSettings, $context, $ban_request, $scripturl, $smfFunc;
+	global $txt, $modSettings, $context, $ban_request, $scripturl, $smfFunc;
 
 	$_REQUEST['bg'] = empty($_REQUEST['bg']) ? 0 : (int) $_REQUEST['bg'];
 
@@ -1008,7 +1008,7 @@ function BanEdit()
 
 function BanEditTrigger()
 {
-	global $context, $db_prefix, $smfFunc;
+	global $context, $smfFunc;
 
 	$context['sub_template'] = 'ban_edit_trigger';
 
@@ -1087,7 +1087,7 @@ function BanEditTrigger()
 
 function BanBrowseTriggers()
 {
-	global $db_prefix, $modSettings, $context, $scripturl, $smfFunc, $txt;
+	global $modSettings, $context, $scripturl, $smfFunc, $txt;
 	global $sourcedir, $settings;
 
 	if (!empty($_POST['remove_triggers']) && !empty($_POST['remove']) && is_array($_POST['remove']))
@@ -1284,7 +1284,7 @@ function BanBrowseTriggers()
 
 function list_getBanTriggers($start, $items_per_page, $sort, $trigger_type)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$where = array(
 		'ip' => 'bi.ip_low1 > 0',
@@ -1317,7 +1317,7 @@ function list_getBanTriggers($start, $items_per_page, $sort, $trigger_type)
 
 function list_getNumBanTriggers($trigger_type)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$where = array(
 		'ip' => 'bi.ip_low1 > 0',
@@ -1342,7 +1342,7 @@ function list_getNumBanTriggers($trigger_type)
 
 function BanLog()
 {
-	global $db_prefix, $scripturl, $context, $smfFunc, $sourcedir, $txt;
+	global $scripturl, $context, $smfFunc, $sourcedir, $txt;
 	global $context;
 
 	// Delete one or more entries.
@@ -1491,7 +1491,7 @@ function BanLog()
 
 function list_getBanLogEntries($start, $items_per_page, $sort)
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT lb.id_ban_log, lb.id_member, IFNULL(lb.ip, {string:dash}) AS ip, IFNULL(lb.email, {string:dash}) AS email, lb.log_time, IFNULL(mem.real_name, {string:blank_string}) AS real_name
@@ -1514,7 +1514,7 @@ function list_getBanLogEntries($start, $items_per_page, $sort)
 
 function list_getNumBanLogEntries()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -1579,7 +1579,7 @@ function ip2range($fullip)
 
 function updateBanMembers()
 {
-	global $db_prefix, $smfFunc;
+	global $smfFunc;
 
 	$updates = array();
 	$allMembers = array();

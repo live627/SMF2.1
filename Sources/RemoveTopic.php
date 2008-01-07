@@ -47,7 +47,7 @@ if (!defined('SMF'))
 // Completely remove an entire topic.
 function RemoveTopic2()
 {
-	global $user_info, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
+	global $user_info, $topic, $board, $sourcedir, $smfFunc;
 
 	// Make sure they aren't being lead around by someone. (:@)
 	checkSession('get');
@@ -91,7 +91,7 @@ function RemoveTopic2()
 // Remove just a single post.
 function DeleteMessage()
 {
-	global $user_info, $db_prefix, $topic, $board, $modSettings, $smfFunc;
+	global $user_info, $topic, $board, $modSettings, $smfFunc;
 
 	checkSession('get');
 
@@ -154,7 +154,7 @@ function DeleteMessage()
 // So long as you are sure... all old posts will be gone.
 function RemoveOldTopics2()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $modSettings, $smfFunc;
 
 	isAllowedTo('admin_forum');
 	checkSession('post', 'admin');
@@ -224,7 +224,7 @@ function RemoveOldTopics2()
 // Removes the passed ID_TOPICs. (permissions are NOT checked here!)
 function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = false)
 {
-	global $db_prefix, $sourcedir, $modSettings, $smfFunc;
+	global $sourcedir, $modSettings, $smfFunc;
 
 	// Nothing to do?
 	if (empty($topics))
@@ -544,7 +544,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 // Remove a specific message (including permission checks).
 function removeMessage($message, $decreasePostCount = true)
 {
-	global $db_prefix, $board, $sourcedir, $modSettings, $user_info, $smfFunc;
+	global $board, $sourcedir, $modSettings, $user_info, $smfFunc;
 
 	if (empty($message) || !is_numeric($message))
 		return false;
@@ -822,7 +822,7 @@ function removeMessage($message, $decreasePostCount = true)
 			// Mark recycled topic as read.
 			if (!$user_info['is_guest'])
 				$smfFunc['db_insert']('replace',
-					$db_prefix . 'log_topics',
+					'{db_prefix}log_topics',
 					array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 					array($topicID, $user_info['id'], $modSettings['maxMsgID']),
 					array('id_topic', 'id_member')
@@ -831,7 +831,7 @@ function removeMessage($message, $decreasePostCount = true)
 			// Mark recycle board as seen, if it was marked as seen before.
 			if (!empty($isRead) && !$user_info['is_guest'])
 				$smfFunc['db_insert']('replace',
-					$db_prefix . 'log_boards',
+					'{db_prefix}log_boards',
 					array('id_board' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 					array($modSettings['recycle_board'], $user_info['id'], $modSettings['maxMsgID']),
 					array('id_board', 'id_member')
