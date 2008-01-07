@@ -124,6 +124,7 @@ function modifyCategory($category_id, $catOptions)
 
 	// Do the updates (if any).
 	if (!empty($catUpdates))
+	{
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}categories
 			SET
@@ -134,6 +135,10 @@ function modifyCategory($category_id, $catOptions)
 				'current_category' => $category_id,
 			))
 		);
+
+		if (empty($catOptions['dont_log']))
+			logAction('edit_cat', array('catname' => isset($catOptions['cat_name']) ? $catOptions['cat_name'] : $category_id), 'admin');
+	}
 }
 
 // Create a new category.
@@ -150,6 +155,8 @@ function createCategory($catOptions)
 		$catOptions['move_after'] = 0;
 	if (!isset($catOptions['is_collapsible']))
 		$catOptions['is_collapsible'] = true;
+	// Don't log an edit right after.
+	$catOptions['dont_log'] = true;
 
 	// Add the category to the database.
 	$smfFunc['db_insert']('',
@@ -169,6 +176,8 @@ function createCategory($catOptions)
 	// Set the given properties to the newly created category.
 	modifyCategory($category_id, $catOptions);
 
+	logAction('add_cat', array('catname' => $catOptions['cat_name']), 'admin');
+
 	// Return the database ID of the category.
 	return $category_id;
 }
@@ -176,9 +185,11 @@ function createCategory($catOptions)
 // Remove one or more categories.
 function deleteCategories($categories, $moveBoardsTo = null)
 {
-	global $sourcedir, $smfFunc;
+	global $sourcedir, $smfFunc, $cat_tree;
 
 	require_once($sourcedir . '/Subs-Boards.php');
+
+	getBoardTree();
 
 	// With no category set to move the boards to, delete them all.
 	if ($moveBoardsTo === null)
@@ -233,6 +244,10 @@ function deleteCategories($categories, $moveBoardsTo = null)
 			'category_list' => $categories,
 		)
 	);
+
+	// Log what we've done.
+	foreach ($categories as $category)
+		logAction('delete_cat', array('catname' => $cat_tree[$category]['node']['name']), 'admin');
 
 	// Get all boards back into the right order.
 	reorderBoards();

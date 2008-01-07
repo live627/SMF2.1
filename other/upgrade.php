@@ -2072,7 +2072,7 @@ function UpgradeTemplate()
 // Delete the damn thing!
 function DeleteUpgrade()
 {
-	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version;
+	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info;
 
 	$upcontext['sub_template'] = 'upgrade_complete';
 	$upcontext['page_title'] = 'Upgrade Complete';
@@ -2111,6 +2111,12 @@ function DeleteUpgrade()
 	require_once($sourcedir . '/ScheduledTasks.php');
 	$forum_version = SMF_VERSION;  // The variable is usually defined in index.php so lets just use the constant to do it for us.
 	scheduled_fetchSMfiles(); // Now go get those files!
+
+	// Log what we've done.
+	if (empty($user_info['id']) && !empty($upcontext['user']['id']))
+		$user_info['id'] = $upcontext['user']['id'];
+	logAction('upgrade', array('version' => $forum_version), 'admin');
+	$user_info['id'] = 0;
 
 	if ($command_line)
 	{

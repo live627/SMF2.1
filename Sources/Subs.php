@@ -2735,12 +2735,18 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 }
 
 // Usage: logAction('remove', array('starter' => $id_member_started));
-function logAction($action, $extra = array())
+function logAction($action, $extra = array(), $log_type = 'moderate')
 {
 	global $modSettings, $user_info, $smfFunc;
 
+	$log_types = array(
+		'moderate' => 1,
+		'user' => 2,
+		'admin' => 3,
+	);
+
 	// No point in doing anything if the log isn't even enabled.
-	if (empty($modSettings['modlog_enabled']))
+	if (empty($modSettings['modlog_enabled']) || !isset($log_types[$log_type]))
 		return false;
 
 	if (!is_array($extra))
@@ -2793,8 +2799,14 @@ function logAction($action, $extra = array())
 
 	$smfFunc['db_insert']('',
 		'{db_prefix}log_actions',
-		array('log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string', 'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534'),
-		array(time(), $user_info['id'], $user_info['ip'], $action, $board_id, $topic_id, $msg_id, serialize($extra)),
+		array(
+			'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
+			'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534',
+		),
+		array(
+			time(), $log_types[$log_type], $user_info['id'], $user_info['ip'], $action,
+			$board_id, $topic_id, $msg_id, serialize($extra),
+		),
 		array('id_action')
 	);
 

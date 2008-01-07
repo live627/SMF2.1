@@ -137,7 +137,6 @@ if (isset($_GET['version']) && strpos($_GET['version'], '2.0') !== false)
 	'DefaultMemberlist.template.php': '2.0 Beta 2',
 	'DefaultMessageIndex.template.php': '2.0 Beta 2',
 	'DefaultModerationCenter.template.php': '2.0 Beta 2',
-	'DefaultModlog.template.php': '2.0 Beta 2',
 	'DefaultMoveTopic.template.php': '2.0 Beta 2',
 	'DefaultNotify.template.php': '2.0 Beta 2',
 	'DefaultPackages.template.php': '2.0 Beta 2',

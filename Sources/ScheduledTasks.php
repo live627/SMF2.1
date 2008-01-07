@@ -1334,9 +1334,11 @@ function scheduled_weekly_maintenance()
 
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_actions
-				WHERE log_time < {int:log_time}',
+				WHERE log_time < {int:log_time}
+					AND id_log = {int:moderation_log}',
 				array(
 					'log_time' => $t,
+					'moderation_log' => 1,
 				)
 			);
 		}

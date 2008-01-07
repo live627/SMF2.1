@@ -63,6 +63,9 @@ January 2008
  ! DB insert now uses {db_prefix} for the table name instead of using the raw variable. (Lots of source files)
  + Added {query_see_board} and {query_wanna_see_boards) as automatic replacements for queries. (Subs-Db-XXX.php, Lots of source files)
  ! Removed db_prefix from the list of globals. (Almost every source file) [Bug 1203]
+ * Changed the Moderation Log to use the generic list template. (ModLog template)
+ & Changed the way the moderation log displays information on activities to make it human readable. (ModLog language file)
+ ! Added an admin log to the admin center that is displayed if the moderation log is active, not used much yet. (Various files)
 
 
 December 2007

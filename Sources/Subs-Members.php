@@ -125,40 +125,43 @@ function deleteMembers($users)
 		isAllowedTo('profile_remove_any');
 	}
 
-	// Make sure they aren't trying to delete administrators if they aren't one.  But don't bother checking if it's just themself.
-	if (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $user_info['id']))
+
+	// Get their names for logging purposes.
+	$request = $smfFunc['db_query']('', '
+		SELECT id_member, member_name, CASE WHEN id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0 THEN 1 ELSE 0 END AS is_admin
+		FROM {db_prefix}members
+		WHERE id_member IN ({array_int:user_list})
+		LIMIT ' . count($users),
+		array(
+			'user_list' => $users,
+			'admin_group' => 1,
+		)
+	);
+	$admins = array();
+	$user_log_details = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$request = $smfFunc['db_query']('', '
-			SELECT id_member
-			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:user_list})
-				AND (id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0)
-			LIMIT ' . count($users),
-			array(
-				'user_list' => $users,
-				'admin_group' => 1,
-			)
-		);
-		$admins = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		if ($row['is_admin'])
 			$admins[] = $row['id_member'];
-		$smfFunc['db_free_result']($request);
-
-		if (!empty($admins))
-			$users = array_diff($users, $admins);
+		$user_log_details[] = array($row['id_member'], $row['member_name']);
 	}
+	$smfFunc['db_free_result']($request);
 
-	if (empty($users))
+	if (empty($user_log_details))
 		return;
 
+	// Make sure they aren't trying to delete administrators if they aren't one.  But don't bother checking if it's just themself.
+	if (!empty($admins) && !allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $user_info['id']))
+		$users = array_diff($users, $admins);
+
 	// Log the action - regardless of who is deleting it.
-	foreach ($users as $user)
+	foreach ($user_log_details as $user)
 	{
 		// Integration rocks!
 		if (isset($modSettings['integrate_delete_member']) && function_exists($modSettings['integrate_delete_member']))
-			call_user_func($modSettings['integrate_delete_member'], $user);
+			call_user_func($modSettings['integrate_delete_member'], $user[0]);
 
-		logAction('delete_member', array('member' => $user));
+		logAction('delete_member', array('member' => $user[0], 'name' => $user[1]));
 	}
 
 	// Make these peoples' posts guest posts.

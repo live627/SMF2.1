@@ -128,6 +128,7 @@ function ManageMaintenance()
 
 	// So many things you can - but frankly I won't let you - just these!
 	$subActions = array(
+		'adminlog' => 'AdminLog',
 		'admintask' => 'AdminTask',
 		'cleancache' => 'Maintenance',
 		'convertentities' => 'ConvertEntities',
@@ -161,11 +162,24 @@ function ManageMaintenance()
 			'tasks' => array(
 				'description' => $txt['maintain_tasks_desc'],
 			),
+			'adminlog' => array(
+				'description' => $txt['admin_log_desc'],
+			),
 		),
 	);
 
 	// Finally fall through to what we are doing.
 	$subActions[$context['sub_action']]();
+}
+
+// Basic pass through function.
+function AdminLog()
+{
+	global $sourcedir;
+
+	// Show the admin log.
+	require_once($sourcedir . '/ModLog.php');
+	ViewModlog();
 }
 
 // Miscellaneous maintenance..

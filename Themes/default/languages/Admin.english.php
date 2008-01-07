@@ -212,6 +212,8 @@ $txt['maintain_common'] = 'Common Tasks';
 $txt['maintain_common_desc'] = 'Perform common tasks here such as making backups, pruning and checking for errors.';
 $txt['maintain_tasks'] = 'Scheduled Tasks';
 $txt['maintain_tasks_desc'] = 'Manage all the tasks scheduled by SMF.';
+$txt['admin_log'] = 'Admin Log';
+$txt['admin_log_desc'] = 'Lists administrative tasks that have been performed by admins of your forum.';
 
 $txt['mailqueue_title'] = 'Mail';
 

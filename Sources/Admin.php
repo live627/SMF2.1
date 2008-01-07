@@ -398,6 +398,7 @@ function AdminMain()
 					'subsections' => array(
 						'general' => array($txt['maintain_common'], 'admin_forum'),
 						'tasks' => array($txt['maintain_tasks'], 'admin_forum'),
+						'adminlog' => array($txt['admin_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 					),
 				),
 				'mailqueue' => array(

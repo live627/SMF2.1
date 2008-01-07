@@ -780,6 +780,7 @@ CREATE TABLE {$db_prefix}group_moderators (
 
 CREATE TABLE {$db_prefix}log_actions (
   id_action int(10) unsigned NOT NULL auto_increment,
+  id_board tinyint(3) unsigned NOT NULL default '1',
   log_time int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
@@ -789,6 +790,7 @@ CREATE TABLE {$db_prefix}log_actions (
   id_msg int(10) unsigned NOT NULL default '0',
   extra text NOT NULL,
   PRIMARY KEY (id_action),
+  KEY id_log (id_log),
   KEY log_time (log_time),
   KEY id_member (id_member),
   KEY id_board (id_board),

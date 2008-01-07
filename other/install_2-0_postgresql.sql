@@ -947,6 +947,7 @@ CREATE SEQUENCE {$db_prefix}log_actions_seq;
 
 CREATE TABLE {$db_prefix}log_actions (
   id_action int default nextval('{$db_prefix}log_actions_seq'),
+  id_log smallint NOT NULL default '1',
   log_time int NOT NULL default '0',
   id_member int NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
@@ -966,6 +967,7 @@ CREATE INDEX {$db_prefix}log_actions_log_time ON {$db_prefix}log_actions (log_ti
 CREATE INDEX {$db_prefix}log_actions_id_member ON {$db_prefix}log_actions (id_member);
 CREATE INDEX {$db_prefix}log_actions_id_board ON {$db_prefix}log_actions (id_board);
 CREATE INDEX {$db_prefix}log_actions_id_msg ON {$db_prefix}log_actions (id_msg);
+CREATE INDEX {$db_prefix}log_actions_id_log ON {$db_prefix}log_actions (id_log);
 
 #
 # Table structure for table `log_activity`

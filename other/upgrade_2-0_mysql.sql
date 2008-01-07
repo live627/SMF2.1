@@ -1774,6 +1774,12 @@ ADD KEY id_board (id_board),
 ADD KEY id_msg (id_msg);
 ---#
 
+---# Add the user log...
+ALTER TABLE {$db_prefix}log_actions
+ADD id_log tinyint(3) unsigned NOT NULL default '1',
+ADD KEY id_log (id_log);
+---#
+
 ---# Update the information already in log_actions
 ---{
 $request = upgrade_query("

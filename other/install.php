@@ -1125,7 +1125,7 @@ function doStep2()
 {
 	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename;
 	global $smfFunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
-	global $current_smf_version, $databases, $sourcedir, $forum_version, $modSettings;
+	global $current_smf_version, $databases, $sourcedir, $forum_version, $modSettings, $user_info;
 
 	// Load the SQL server login information.
 	require_once(dirname(__FILE__) . '/Settings.php');
@@ -1451,6 +1451,11 @@ function doStep2()
 	{
 		$forum_version = $current_smf_version;  // The variable is usually defined in index.php so lets just use our variable to do it for us.
 		scheduled_fetchSMfiles(); // Now go get those files!
+
+		// We've just installed!
+		$user_info['ip'] = $_SERVER['REMOTE_ADDR'];
+		$user_info['id'] = isset($id) ? $id : 0;
+		logAction('install', array('version' => $forum_version), 'admin');
 	}
 
 	return true;

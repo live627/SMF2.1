@@ -713,6 +713,9 @@ function modifyBoard($board_id, &$boardOptions)
 
 	if (isset($boardOptions['move_to']))
 		reorderBoards();
+
+	if (empty($boardOptions['dont_log']))
+		logAction('edit_board', array('board' => $board_id), 'admin');
 }
 
 // Create a new board and set its properties and position.
@@ -737,6 +740,7 @@ function createBoard($boardOptions)
 		'profile' => 1,
 		'moderators' => '',
 		'inherit_permissions' => true,
+		'dont_log' => true,
 	);
 
 	// Insert a board, the settings are dealt with later.
@@ -790,6 +794,9 @@ function createBoard($boardOptions)
 			);
 		}
 	}
+
+	// Created it.
+	logAction('add_board', array('board' => $board_id), 'admin');
 
 	// Here you are, a new board, ready to be spammed.
 	return $board_id;
@@ -918,6 +925,10 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	updateSettings(array('settings_updated' => time()));
 
 	reorderBoards();
+
+	// Let's do some serious logging.
+	foreach ($boards_to_remove as $id_board)
+		logAction('delete_board', array('boardname' => $boards[$id_board]['name']), 'admin');
 }
 
 // Put all boards in the right order.
