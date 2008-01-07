@@ -110,7 +110,7 @@ function db_fix_prefix (&$db_prefix, $db_name)
 
 function smf_db_replacement__callback($matches)
 {
-	global $db_callback, $user_info;
+	global $db_callback, $user_info, $db_prefix;
 
 	list ($values, $connection) = $db_callback;
 
@@ -587,7 +587,7 @@ function smf_postg_unescape_string($string)
 // For inserting data in a special way...
 function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
-	global $db_replace_result, $db_in_transact, $smfFunc, $db_connection;
+	global $db_replace_result, $db_in_transact, $smfFunc, $db_connection, $db_prefix;
 
 	$connection = $connection === null ? $db_connection : $connection;
 

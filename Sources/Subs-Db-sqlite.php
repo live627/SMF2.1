@@ -125,7 +125,7 @@ function db_fix_prefix (&$db_prefix, $db_name)
 
 function smf_db_replacement__callback($matches)
 {
-	global $db_callback, $user_info;
+	global $db_callback, $user_info, $db_prefix;
 
 	list ($values, $connection) = $db_callback;
 
@@ -502,7 +502,7 @@ function db_error($db_string, $connection = null)
 // Insert some data...
 function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
-	global $db_in_transact, $db_connection, $smfFunc;
+	global $db_in_transact, $db_connection, $smfFunc, $db_prefix;
 
 	$connection = $connection === null ? $db_connection : $connection;
 
