@@ -237,7 +237,7 @@ function smf_db_quote($db_string, $db_values, $connection = null)
 // Do a query.  Takes care of errors too.
 function smf_db_query($identifier, $db_string, $db_values = array(), $connection = null)
 {
-	global $db_cache, $db_count, $db_connection, $db_show_debug, $db_prefix;
+	global $db_cache, $db_count, $db_connection, $db_show_debug;
 	global $db_unbuffered, $db_callback, $modSettings;
 
 	// !!! REMOVE ME. Temporary code to filter out old type queries.

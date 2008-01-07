@@ -772,7 +772,7 @@ function removeMessage($message, $decreasePostCount = true)
 
 		// Insert a new topic in the recycle board.
 		$smfFunc['db_insert']('',
-			$db_prefix . 'topics',
+			'{db_prefix}topics',
 			array(
 				'id_board' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int', 'id_first_msg' => 'int',
 				'id_last_msg' => 'int', 'unapproved_posts' => 'int', 'approved' => 'int',

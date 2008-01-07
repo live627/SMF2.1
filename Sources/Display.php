@@ -1343,7 +1343,7 @@ function loadAttachmentContext($id_msg)
 
 						// Add this beauty to the database.
 						$smfFunc['db_insert']('',
-							$db_prefix . 'attachments',
+							'{db_prefix}attachments',
 							array('id_folder' => 'int', 'id_msg' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'size' => 'int', 'width' => 'int', 'height' => 'int'),
 							array($id_folder_thumb, $id_msg, 3, $thumb_filename, (int) $thumb_size, (int) $attachment['thumb_width'], (int) $attachment['thumb_height']),
 							array('id_attach')

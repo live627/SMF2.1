@@ -128,7 +128,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 	$id_folder = !empty($modSettings['currentAttachmentUploadDir']) ? $modSettings['currentAttachmentUploadDir'] : 1;
 	$smfFunc['db_insert']('',
-		$db_prefix . 'attachments',
+		'{db_prefix}attachments',
 		array(
 			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8', 'size' => 'int',
 			'id_folder' => 'int',

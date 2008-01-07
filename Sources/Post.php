@@ -1656,7 +1656,7 @@ function Post2()
 	{
 		// Create the poll.
 		$smfFunc['db_insert']('',
-			$db_prefix . 'polls',
+			'{db_prefix}polls',
 			array(
 				'question' => 'string-255', 'hide_results' => 'int', 'max_votes' => 'int', 'expire_time' => 'int', 'id_member' => 'int',
 				'poster_name' => 'string-255', 'change_vote' => 'int', 'guest_vote' => 'int'
@@ -1849,7 +1849,7 @@ function Post2()
 	{
 		if (allowedTo('mark_any_notify'))
 			$smfFunc['db_insert']('ignore',
-				$db_prefix . 'log_notify',
+				'{db_prefix}log_notify',
 				array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int'),
 				array($user_info['id'], $topic, 0),
 				array('id_member', 'id_topic', 'id_board')
@@ -2184,7 +2184,7 @@ function notifyMembersBoard(&$topicData)
 	foreach ($topicData as $id => $data)
 		$digest_insert[] = array($data['topic'], $data['msg'], 'topic', $user_info['id']);
 	$smfFunc['db_insert']('',
-		$db_prefix . 'log_digest',
+		'{db_prefix}log_digest',
 		array(
 			'id_topic' => 'int', 'id_msg' => 'int', 'note_type' => 'string', 'exclude' => 'int',
 		),

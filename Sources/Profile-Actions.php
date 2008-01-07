@@ -167,7 +167,7 @@ function issueWarning($memID)
 
 			// Log the notice!
 			$smfFunc['db_insert']('',
-				$db_prefix . 'log_member_notices',
+				'{db_prefix}log_member_notices',
 				array(
 					'subject' => 'string-255', 'body' => 'string-65534',
 				),
@@ -187,7 +187,7 @@ function issueWarning($memID)
 
 		// Log what we've done!
 		$smfFunc['db_insert']('',
-			$db_prefix . 'log_comments',
+			'{db_prefix}log_comments',
 			array(
 				'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
 				'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
@@ -638,7 +638,7 @@ function subscriptions($memID)
 		{
 			$pending_details = serialize(array($new_data));
 			$smfFunc['db_insert']('',
-				$db_prefix . 'log_subscribed',
+				'{db_prefix}log_subscribed',
 				array(
 					'id_subscribe' => 'int', 'id_member' => 'int', 'status' => 'int', 'payments_pending' => 'int', 'pending_details' => 'string-65534',
 					'start_time' => 'int', 'vendor_ref' => 'string-255',

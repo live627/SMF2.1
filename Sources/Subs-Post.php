@@ -791,7 +791,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	{
 		// Dump the data...
 		$smfFunc['db_insert']('',
-			$db_prefix . 'mail_queue',
+			'{db_prefix}mail_queue',
 			array(
 				'time_sent' => 'int', 'recipient' => 'string-255', 'body' => 'string-65534', 'subject' => 'string-255',
 				'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int',
@@ -839,7 +839,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		{
 			// Flush out what we have so far.
 			$smfFunc['db_insert']('',
-				$db_prefix . 'mail_queue',
+				'{db_prefix}mail_queue',
 				array(
 					'time_sent' => 'int', 'recipient' => 'string-255', 'body' => 'string-65534', 'subject' => 'string-255',
 					'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int'
@@ -1108,7 +1108,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 	// Insert the message itself and then grab the last insert id.
 	$smfFunc['db_insert']('',
-		$db_prefix . 'personal_messages',
+		'{db_prefix}personal_messages',
 		array(
 			'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
 			'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
@@ -1566,7 +1566,7 @@ function sendNotifications($topics, $type, $exclude = array())
 	foreach ($topicData as $id => $data)
 		$digest_insert[] = array($data['topic'], $data['last_id'], $type, (int) $data['exclude']);
 	$smfFunc['db_insert']('',
-		$db_prefix . 'log_digest',
+		'{db_prefix}log_digest',
 		array(
 			'id_topic' => 'int', 'id_msg' => 'int', 'note_type' => 'string', 'exclude' => 'int',
 		),
@@ -1775,7 +1775,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Insert the post.
 	$smfFunc['db_insert']('',
-		$db_prefix . 'messages',
+		'{db_prefix}messages',
 		array(
 			'id_board' => 'int', 'id_topic' => 'int', 'id_member' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
 			'poster_name' => 'string-255', 'poster_email' => 'string-255', 'poster_time' => 'int', 'poster_ip' => 'string-255',
@@ -1810,7 +1810,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if ($new_topic)
 	{
 		$smfFunc['db_insert']('',
-			$db_prefix . 'topics',
+			'{db_prefix}topics',
 			array(
 				'id_board' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int', 'id_first_msg' => 'int',
 				'id_last_msg' => 'int', 'locked' => 'int', 'is_sticky' => 'int', 'num_views' => 'int',
@@ -1921,7 +1921,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		// Add to the approval queue too.
 		$smfFunc['db_insert']('',
-			$db_prefix . 'approval_queue',
+			'{db_prefix}approval_queue',
 			array(
 				'id_msg' => 'int',
 			),
@@ -1975,7 +1975,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		if (!empty($inserts))
 			$smfFunc['db_insert']('ignore',
-				$db_prefix . 'log_search_words',
+				'{db_prefix}log_search_words',
 				array('id_word' => 'int', 'id_msg' => 'int'),
 				$inserts,
 				array('id_word', 'id_msg')
@@ -2162,7 +2162,7 @@ function createAttachment(&$attachmentOptions)
 	}
 
 	$smfFunc['db_insert']('',
-		$db_prefix . 'attachments',
+		'{db_prefix}attachments',
 		array(
 			'id_folder' => 'int', 'id_msg' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8',
 			'size' => 'int', 'width' => 'int', 'height' => 'int',
@@ -2183,7 +2183,7 @@ function createAttachment(&$attachmentOptions)
 	// If it's not approved add to the approval queue.
 	if (!$attachmentOptions['approved'])
 		$smfFunc['db_insert']('',
-			$db_prefix . 'approval_queue',
+			'{db_prefix}approval_queue',
 			array(
 				'id_attach' => 'int', 'id_msg' => 'int',
 			),
@@ -2260,7 +2260,7 @@ function createAttachment(&$attachmentOptions)
 
 			// To the database we go!
 			$smfFunc['db_insert']('',
-				$db_prefix . 'attachments',
+				'{db_prefix}attachments',
 				array(
 					'id_folder' => 'int', 'id_msg' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8',
 					'size' => 'int', 'width' => 'int', 'height' => 'int', 'mime_type' => 'string-20', 'approved' => 'int',
@@ -2647,7 +2647,7 @@ function approvePosts($msgs, $approve = true)
 			$msgInserts[] = array($msg);
 
 		$smfFunc['db_insert']('ignore',
-			$db_prefix . 'approval_queue',
+			'{db_prefix}approval_queue',
 			array('id_msg' => 'int'),
 			$msgInserts,
 			array('id_msg')
@@ -2718,7 +2718,7 @@ function sendApprovalNotifications(&$topicData)
 
 	// These need to go into the digest too...
 	$smfFunc['db_insert']('',
-		$db_prefix . 'log_digest',
+		'{db_prefix}log_digest',
 		array(
 			'id_topic' => 'int', 'id_msg' => 'int', 'note_type' => 'string', 'exclude' => 'int',
 		),

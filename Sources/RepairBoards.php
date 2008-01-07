@@ -1465,7 +1465,7 @@ function createSalvageArea()
 	if (empty($salveageCatID))
 	{
 		$smfFunc['db_insert']('',
-			$db_prefix . 'categories',
+			'{db_prefix}categories',
 			array('name' => 'string-255', 'cat_order' => 'int'),
 			array($txt['salvaged_category_name'], -1),
 			array('id_cat')
@@ -1499,7 +1499,7 @@ function createSalvageArea()
 	if (empty($salvageBoardID))
 	{
 		$smfFunc['db_insert']('',
-			$db_prefix . 'boards',
+			'{db_prefix}boards',
 			array('name' => 'string-255', 'description' => 'string-255', 'id_cat' => 'int', 'member_groups' => 'string', 'board_order' => 'int', 'redirect' => 'string'),
 			array($txt['salvaged_board_name'], $txt['salvaged_board_description'], $salvageCatID, '1', -1, ''),
 			array('id_board')

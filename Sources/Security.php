@@ -549,7 +549,7 @@ function log_ban($ban_ids = array(), $email = null)
 		return;
 
 	$smfFunc['db_insert']('',
-		$db_prefix . 'log_banned',
+		'{db_prefix}log_banned',
 		array('id_member' => 'int', 'ip' => 'string-16', 'email' => 'string', 'log_time' => 'int'),
 		array($user_info['id'], $user_info['ip'], ($email === null ? ($user_info['is_guest'] ? '' : $user_info['email']) : $email), time()),
 		array('id_ban_log')

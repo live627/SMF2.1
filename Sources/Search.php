@@ -1073,7 +1073,7 @@ function PlushSearch2()
 			if (!empty($inserts))
 			{
 				$smfFunc['db_insert']('',
-					$db_prefix . 'log_search_results',
+					'{db_prefix}log_search_results',
 					array('id_search' => 'int', 'id_topic' => 'int', 'relevance' => 'int', 'id_msg' => 'int', 'num_matches' => 'int'),
 					$inserts,
 					array('id_search', 'id_topic')
@@ -1515,7 +1515,7 @@ function PlushSearch2()
 							$query_columns[$k] = 'int';
 
 						$smfFunc['db_insert']('',
-							$db_prefix . 'log_search_results',
+							'{db_prefix}log_search_results',
 							$query_columns,
 							$inserts,
 							array('id_search', 'id_topic')
@@ -1582,7 +1582,7 @@ function PlushSearch2()
 					if (!empty($inserts))
 					{
 						$smfFunc['db_insert']('',
-							$db_prefix . 'log_search_results',
+							'{db_prefix}log_search_results',
 							array('id_search' => 'int', 'id_topic' => 'int', 'relevance' => 'int', 'id_msg' => 'int', 'num_matches' => 'int'),
 							$inserts,
 							array('id_search', 'id_topic')

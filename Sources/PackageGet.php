@@ -692,7 +692,7 @@ function PackageServerAdd()
 		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 
 	$smfFunc['db_insert']('',
-		$db_prefix . 'package_servers',
+		'{db_prefix}package_servers',
 		array(
 			'name' => 'string-255', 'url' => 'string-255',
 		),

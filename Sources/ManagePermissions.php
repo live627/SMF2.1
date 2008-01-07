@@ -577,7 +577,7 @@ function SetQuickGroups()
 			{
 				// ..and insert the new ones.
 				$smfFunc['db_insert']('',
-					$db_prefix . 'permissions',
+					'{db_prefix}permissions',
 					array(
 						'permission' => 'string', 'id_group' => 'int', 'add_deny' => 'int',
 					),
@@ -624,7 +624,7 @@ function SetQuickGroups()
 		{
 			// ..and insert the new ones.
 			$smfFunc['db_insert']('',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('permission' => 'string', 'id_group' => 'int', 'id_profile' => 'int', 'add_deny' => 'int'),
 				$inserts,
 				array('permission', 'id_group', 'id_profile')
@@ -1856,7 +1856,7 @@ function EditPermissionProfiles()
 
 		// Insert the profile itself.
 		$smfFunc['db_insert']('',
-			$db_prefix . 'permission_profiles',
+			'{db_prefix}permission_profiles',
 			array(
 				'profile_name' => 'string',
 			),
@@ -2237,7 +2237,7 @@ function ModifyPostModeration()
 		// Insert new permissions.
 		if (!empty($new_permissions))
 			$smfFunc['db_insert']('',
-				$db_prefix . 'board_permissions',
+				'{db_prefix}board_permissions',
 				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$new_permissions,
 				array('id_profile', 'id_group', 'permission')

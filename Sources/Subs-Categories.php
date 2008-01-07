@@ -153,7 +153,7 @@ function createCategory($catOptions)
 
 	// Add the category to the database.
 	$smfFunc['db_insert']('',
-		$db_prefix . 'categories',
+		'{db_prefix}categories',
 		array(
 			'name' => 'string-48',
 		),

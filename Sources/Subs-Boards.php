@@ -741,7 +741,7 @@ function createBoard($boardOptions)
 
 	// Insert a board, the settings are dealt with later.
 	$smfFunc['db_insert']('',
-		$db_prefix . 'boards',
+		'{db_prefix}boards',
 		array(
 			'id_cat' => 'int', 'name' => 'string-255', 'description' => 'string', 'board_order' => 'int',
 			'member_groups' => 'string', 'redirect' => 'string',

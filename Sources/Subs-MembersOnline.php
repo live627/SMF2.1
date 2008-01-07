@@ -231,7 +231,7 @@ function trackStatsUsersOnline($total_users_online)
 		if ($smfFunc['db_num_rows']($request) === 0)
 		{
 			$smfFunc['db_insert']('ignore',
-				$db_prefix . 'log_activity',
+				'{db_prefix}log_activity',
 				array('date' => 'date', 'most_on' => 'int'),
 				array($date, $total_users_online),
 				array('date')

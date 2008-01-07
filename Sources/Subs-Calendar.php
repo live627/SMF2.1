@@ -871,7 +871,7 @@ function insertEvent(&$eventOptions)
 
 	// Insert the event!
 	$smfFunc['db_insert']('',
-		$db_prefix . 'calendar',
+		'{db_prefix}calendar',
 		array(
 			'id_board' => 'int', 'id_topic' => 'int', 'title' => 'string-48', 'id_member' => 'int',
 			'start_date' => 'date', 'end_date' => 'date',

@@ -561,7 +561,7 @@ function CreateMessageIndex()
 
 				if (!empty($inserts))
 					$smfFunc['db_insert']('ignore',
-						$db_prefix . 'log_search_words',
+						'{db_prefix}log_search_words',
 						array('id_word' => 'int', 'id_msg' => 'int'),
 						$inserts,
 						array('id_word', 'id_msg')

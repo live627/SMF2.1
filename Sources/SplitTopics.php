@@ -650,7 +650,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// We're off to insert the new topic!  Use 0 for now to avoid UNIQUE errors.
 	$smfFunc['db_insert']('',
-			$db_prefix . 'topics',
+			'{db_prefix}topics',
 			array(
 				'id_board' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int', 'id_first_msg' => 'int',
 				'id_last_msg' => 'int', 'num_replies' => 'int', 'unapproved_posts' => 'int', 'approved' => 'int', 'is_sticky' => 'int',

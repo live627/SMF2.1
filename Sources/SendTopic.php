@@ -434,7 +434,7 @@ function ReportToModerator2()
 				$message['real_name'] = $message['poster_name'];
 
 			$smfFunc['db_insert']('',
-				$db_prefix . 'log_reported',
+				'{db_prefix}log_reported',
 				array(
 					'id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member' => 'int', 'membername' => 'string',
 					'subject' => 'string', 'body' => 'string', 'time_started' => 'int', 'time_updated' => 'int',
@@ -455,7 +455,7 @@ function ReportToModerator2()
 			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
 			$smfFunc['db_insert']('',
-				$db_prefix . 'log_reported_comments',
+				'{db_prefix}log_reported_comments',
 				array(
 					'id_report' => 'int', 'id_member' => 'int', 'membername' => 'string', 'comment' => 'string', 'time_sent' => 'int',
 				),

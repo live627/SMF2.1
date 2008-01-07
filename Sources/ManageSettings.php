@@ -1454,7 +1454,7 @@ function EditCustomProfiles()
 		else
 		{
 			$smfFunc['db_insert']('',
-				$db_prefix . 'custom_fields',
+				'{db_prefix}custom_fields',
 				array(
 					'col_name' => 'string', 'field_name' => 'string', 'field_desc' => 'string', 'field_type' => 'string',
 					'field_length' => 'string', 'field_options' => 'string', 'show_reg' => 'int', 'show_display' => 'int',

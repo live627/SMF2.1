@@ -690,7 +690,7 @@ function AddSmiley()
 				$smiley_order = '0';
 		}
 		$smfFunc['db_insert']('',
-			$db_prefix . 'smileys',
+			'{db_prefix}smileys',
 			array(
 				'code' => 'string-30', 'filename' => 'string-48', 'description' => 'string-80', 'hidden' => 'int', 'smiley_order' => 'int',
 			),
@@ -1432,7 +1432,7 @@ function ImportSmileys($smileyPath)
 	if (!empty($new_smileys))
 	{
 		$smfFunc['db_insert']('',
-			$db_prefix . 'smileys',
+			'{db_prefix}smileys',
 			array(
 				'code' => 'string-30', 'filename' => 'string-48', 'description' => 'string-80', 'smiley_row' => 'int', 'smiley_order' => 'int',
 			),

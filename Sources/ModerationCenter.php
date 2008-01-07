@@ -279,7 +279,7 @@ function ModBlockNotes()
 		{
 			// Insert it into the database then!
 			$smfFunc['db_insert']('',
-				$db_prefix . 'log_comments',
+				'{db_prefix}log_comments',
 				array(
 					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'recipient_name' => 'string',
 					'body' => 'string', 'log_time' => 'int',

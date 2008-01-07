@@ -382,7 +382,7 @@ function AddMembergroup()
 		$id_group++;
 
 		$smfFunc['db_insert']('',
-			$db_prefix . 'membergroups',
+			'{db_prefix}membergroups',
 			array(
 				'id_group' => 'int', 'description' => 'string', 'group_name' => 'string-80', 'min_posts' => 'int',
 				'stars' => 'string', 'online_color' => 'string',

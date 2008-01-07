@@ -349,7 +349,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 			if (!empty($inserts))
 				$smfFunc['db_insert']('ignore',
-					$db_prefix . 'log_search_subjects',
+					'{db_prefix}log_search_subjects',
 					array('word' => 'string', 'id_topic' => 'int'),
 					$inserts,
 					array('word', 'id_topic')
@@ -2541,7 +2541,7 @@ function writeLog($force = false)
 			);
 
 		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
-			$db_prefix . 'log_online',
+			'{db_prefix}log_online',
 			array('session' => 'string', 'id_member' => 'int', 'id_spider' => 'int', 'log_time' => 'int', 'ip' => 'raw', 'url' => 'string'),
 			array($session_id, $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', $serialized),
 			array('session')
@@ -2792,7 +2792,7 @@ function logAction($action, $extra = array())
 		$msg_id = '0';
 
 	$smfFunc['db_insert']('',
-		$db_prefix . 'log_actions',
+		'{db_prefix}log_actions',
 		array('log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string', 'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534'),
 		array(time(), $user_info['id'], $user_info['ip'], $action, $board_id, $topic_id, $msg_id, serialize($extra)),
 		array('id_action')
@@ -2841,7 +2841,7 @@ function trackStats($stats = array())
 	if ($smfFunc['db_affected_rows']() == 0)
 	{
 		$smfFunc['db_insert']('ignore',
-			$db_prefix . 'log_activity',
+			'{db_prefix}log_activity',
 			array_merge($insert_keys, array('date' => 'date')),
 			array_merge($cache_stats, array($date)),
 			array('date')

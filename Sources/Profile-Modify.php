@@ -2374,7 +2374,7 @@ function profileSaveAvatarData(&$value)
 					fatal_lang_error('attach_timeout', 'critical');
 
 				$smfFunc['db_insert']('',
-					$db_prefix . 'attachments',
+					'{db_prefix}attachments',
 					array(
 						'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'fileext' => 'string', 'size' => 'int',
 						'width' => 'int', 'height' => 'int', 'mime_type' => 'string',
@@ -2892,7 +2892,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 		// Log the request.
 		$smfFunc['db_insert']('',
-			$db_prefix . 'log_group_requests',
+			'{db_prefix}log_group_requests',
 			array(
 				'id_member' => 'int', 'id_group' => 'int', 'time_applied' => 'int', 'reason' => 'string-65534',
 			),

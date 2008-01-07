@@ -216,7 +216,7 @@ function EditHoliday()
 				);
 			else
 				$smfFunc['db_insert']('',
-					$db_prefix . 'calendar_holidays',
+					'{db_prefix}calendar_holidays',
 					array(
 						'event_date' => 'date', 'title' => 'string-48',
 					),

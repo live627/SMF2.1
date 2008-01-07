@@ -3211,7 +3211,7 @@ function ManageRules()
 		// Create the rule?
 		if (empty($context['rid']))
 			$smfFunc['db_insert']('',
-				$db_prefix . 'pm_rules',
+				'{db_prefix}pm_rules',
 				array(
 					'id_member' => 'int', 'rule_name' => 'string', 'criteria' => 'string', 'actions' => 'string',
 					'delete_pm' => 'int', 'is_or' => 'int',

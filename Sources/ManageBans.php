@@ -529,7 +529,7 @@ function BanEdit()
 
 		if ($newBan)
 			$smfFunc['db_insert']('',
-				$db_prefix . 'ban_items',
+				'{db_prefix}ban_items',
 				$insertKeys,
 				$values,
 				array('id_ban')
@@ -738,7 +738,7 @@ function BanEdit()
 
 			// Yes yes, we're ready to add now.
 			$smfFunc['db_insert']('',
-				$db_prefix . 'ban_groups',
+				'{db_prefix}ban_groups',
 				array(
 					'name' => 'string-20', 'ban_time' => 'int', 'expire_time' => 'raw', 'cannot_access' => 'int', 'cannot_register' => 'int',
 					'cannot_post' => 'int', 'cannot_login' => 'int', 'reason' => 'string-255', 'notes' => 'string-65534',
@@ -759,7 +759,7 @@ function BanEdit()
 					array_unshift($ban_triggers[$k], $_REQUEST['bg']);
 
 				$smfFunc['db_insert']('',
-					$db_prefix . 'ban_items',
+					'{db_prefix}ban_items',
 					array(
 						'id_ban_group' => 'int', 'ip_low1' => 'int', 'ip_high1' => 'int', 'ip_low2' => 'int', 'ip_high2' => 'int',
 						'ip_low3' => 'int', 'ip_high3' => 'int', 'ip_low4' => 'int', 'ip_high4' => 'int', 'hostname' => 'string-255',

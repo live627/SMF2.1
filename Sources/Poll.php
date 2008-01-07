@@ -701,7 +701,7 @@ function EditPoll2()
 	{
 		// Create the poll.
 		$smfFunc['db_insert']('',
-			$db_prefix . 'polls',
+			'{db_prefix}polls',
 			array(
 				'question' => 'string-255', 'hide_results' => 'int', 'max_votes' => 'int', 'expire_time' => 'int', 'id_member' => 'int',
 				'poster_name' => 'string-255', 'change_vote' => 'int', 'guest_vote' => 'int'
@@ -777,7 +777,7 @@ function EditPoll2()
 			);
 		else
 			$smfFunc['db_insert']('',
-				$db_prefix . 'poll_choices',
+				'{db_prefix}poll_choices',
 				array(
 					'id_poll' => 'int', 'id_choice' => 'int', 'label' => 'string-255', 'votes' => 'int',
 				),

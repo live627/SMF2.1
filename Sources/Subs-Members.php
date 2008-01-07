@@ -683,7 +683,7 @@ function registerMember(&$regOptions, $return_errors = false)
 
 	// Register them into the database.
 	$smfFunc['db_insert']('',
-		$db_prefix . 'members',
+		'{db_prefix}members',
 		$column_names,
 		$values,
 		array('id_member')
