@@ -246,6 +246,15 @@ function deleteMembers($users)
 
 	// Delete the logs...
 	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_actions
+		WHERE id_log = {int:log_type}
+			AND id_member IN ({array_int:users})',
+		array(
+			'log_type' => 2,
+			'users' => $users,
+		)
+	);
+	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_boards
 		WHERE id_member IN ({array_int:users})',
 		array(

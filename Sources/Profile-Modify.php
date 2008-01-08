@@ -240,6 +240,7 @@ function loadProfileFields($force_reload = false)
 			'type' => 'text',
 			'value' => empty($cur_profile['date_registered']) ? $txt['not_applicable'] : strftime('%Y-%m-%d', $cur_profile['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
 			'label' => $txt['date_registered'],
+			'log_change' => true,
 			'permission' => 'moderate_forum',
 			'input_validate' => create_function('&$value', '
 				global $txt, $user_info, $modSettings, $cur_profile, $context;
@@ -261,6 +262,7 @@ function loadProfileFields($force_reload = false)
 			'type' => 'text',
 			'label' => $txt['email'],
 			'subtext' => $txt['valid_email'],
+			'log_change' => true,
 			'permission' => 'profile_identity',
 			'input_validate' => create_function('&$value', '
 				global $context, $old_profile, $context, $profile_vars;
@@ -414,6 +416,7 @@ function loadProfileFields($force_reload = false)
 		'location' => array(
 			'type' => 'text',
 			'label' => $txt['location'],
+			'log_change' => true,
 			'size' => 50,
 			'permission' => 'profile_extra',
 		),
@@ -422,6 +425,7 @@ function loadProfileFields($force_reload = false)
 			'type' => allowedTo('admin_forum') && isset($_GET['changeusername']) ? 'text' : 'label',
 			'label' => $txt['username'],
 			'subtext' => allowedTo('admin_forum') && !isset($_GET['changeusername']) ? '(<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';sa=account;changeusername" style="font-style: italic;">' . $txt['username_change'] . '</a>)' : '',
+			'log_change' => true,
 			'permission' => 'profile_identity',
 			'prehtml' => allowedTo('admin_forum') && isset($_GET['changeusername']) ? '<div style="color: red;">' . $txt['username_warning'] . '</div>' : '',
 			'input_validate' => create_function('&$value', '
@@ -499,6 +503,7 @@ function loadProfileFields($force_reload = false)
 		'personal_text' => array(
 			'type' => 'text',
 			'label' => $txt['personal_text'],
+			'log_change' => true,
 			'input_attr' => array('maxlength="50"'),
 			'size' => 50,
 			'permission' => 'profile_extra',
@@ -591,6 +596,7 @@ function loadProfileFields($force_reload = false)
 		'posts' => array(
 			'type' => 'int',
 			'label' => $txt['profile_posts'],
+			'log_change' => true,
 			'size' => 4,
 			'permission' => 'moderate_forum',
 			'input_validate' => create_function('&$value', '
@@ -603,6 +609,7 @@ function loadProfileFields($force_reload = false)
 			'type' => !empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum') ? 'text' : 'label',
 			'label' => $txt['name'],
 			'subtext' => $txt['display_name_desc'],
+			'log_change' => true,
 			'input_attr' => array('maxlength="60"'),
 			'permission' => 'profile_identity',
 			'enabled' => !empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum'),
@@ -746,6 +753,7 @@ function loadProfileFields($force_reload = false)
 		'usertitle' => array(
 			'type' => 'text',
 			'label' => $txt['custom_title'],
+			'log_change' => true,
 			'size' => 50,
 			'permission' => 'profile_title',
 			'enabled' => !empty($modSettings['titlesEnable']),
@@ -902,6 +910,9 @@ function saveProfileFields()
 	if ($context['user']['is_owner'])
 		$context['profile_execute_on_save']['reload_user'] = 'profileReloadUser';
 
+	// Assume we log nothing.
+	$context['log_changes'] = array();
+
 	// Cycle through the profile fields working out what to do!
 	foreach ($profile_fields as $key => $field)
 	{
@@ -948,6 +959,13 @@ function saveProfileFields()
 			$profile_vars[$db_key] = $_POST[$key];
 			// And update the user profile.
 			$cur_profile[$key] = $_POST[$key];
+
+			// Are we logging it?
+			if (!empty($field['log_change']) && isset($old_profile[$key]))
+				$context['log_changes'][$key] = array(
+					'previous' => $old_profile[$key],
+					'new' => $_POST[$key],
+				);
 		}
 	}
 

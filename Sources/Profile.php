@@ -108,17 +108,13 @@ function ModifyProfile($post_errors = array())
 					'any' => array('profile_view_any'),
 					'load_member' => true,
 				),
-				'trackUser' => array(
-					'own' => array('moderate_forum'),
-					'any' => array('moderate_forum'),
-				),
-				'trackIP' => array(
-					'own' => array('moderate_forum'),
-					'any' => array('moderate_forum'),
-				),
 				'showPermissions' => array(
 					'own' => array('manage_permissions'),
 					'any' => array('manage_permissions'),
+				),
+				'tracking' => array(
+					'own' => array('moderate_forum'),
+					'any' => array('moderate_forum'),
 				),
 			),
 		),
@@ -432,6 +428,30 @@ function ModifyProfile($post_errors = array())
 				updateSettings(array(
 					'calendar_updated' => time(),
 				));
+
+			// Anything worth logging?
+			if (!empty($context['log_changes']) && !empty($modSettings['modlog_enabled']))
+			{
+				$log_changes = array();
+				foreach ($context['log_changes'] as $k => $v)
+					$log_changes[] = array(
+						'action' => $k,
+						'id_log' => 2,
+						'log_time' => time(),
+						'id_member' => $memID,
+						'ip' => $user_info['ip'],
+						'extra' => serialize(array_merge($v, array('applicator' => $user_info['id']))),
+					);
+				$smfFunc['db_insert']('',
+					'{db_prefix}log_actions',
+					array(
+						'action' => 'string', 'id_log' => 'int', 'log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16',
+						'extra' => 'string-65534',
+					),
+					$log_changes,
+					array('id_action')
+				);
+			}
 
 			// Have we got any post save functions to execute?
 			if (!empty($context['profile_execute_on_save']))

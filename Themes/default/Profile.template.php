@@ -677,6 +677,24 @@ function template_editBuddies()
 	</form>';
 }
 
+function template_tracking_above()
+{
+	global $context;
+
+	echo '
+	<div align="center">
+		<div align="left" style="width: 90%">';
+
+	template_generic_menu_tabs($context['tracking_tabs']);
+}
+
+function template_tracking_below()
+{
+	echo '
+		</div>
+	</div>';
+}
+
 // This template shows an admin information on a users IP addresses used and errors attributed to them.
 function template_trackUser()
 {
@@ -684,7 +702,7 @@ function template_trackUser()
 
 	// The first table shows IP information about the user.
 	echo '
-		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
+		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="100%"><tr><td>
 			<table border="0" cellspacing="1" cellpadding="4" align="left" width="100%">
 				<tr class="titlebg">
 					<td colspan="2">
@@ -699,12 +717,12 @@ function template_trackUser()
 						', (empty($context['last_ip2']) ? '' : '<br /><span class="smalltext">(<a href="' . $scripturl . '?action=helpadmin;help=whytwoip" onclick="return reqWin(this.href);">' . $txt['why_two_ip_address'] . '</a>)</span>'), '
 					</td>
 					<td class="windowbg2" align="left">
-						<a href="', $scripturl, '?action=trackip;searchip=', $context['last_ip'], ';">', $context['last_ip'], '</a>';
+						<a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip'], ';">', $context['last_ip'], '</a>';
 
 	// Second address detected?
 	if (!empty($context['last_ip2']))
 		echo '
-						, <a href="', $scripturl, '?action=trackip;searchip=', $context['last_ip2'], ';">', $context['last_ip2'], '</a>';
+						, <a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip2'], ';">', $context['last_ip2'], '</a>';
 
 	echo '
 					</td>
@@ -751,7 +769,7 @@ function template_trackIP()
 
 	// The first table in the template gives an input box to allow the admin to enter another IP to track.
 	echo '
-			<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
+			<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="100%"><tr><td>
 				<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
 					<tr class="titlebg">
 						<td>', $txt['trackIP'], '</td>
@@ -769,7 +787,7 @@ function template_trackIP()
 	if ($context['single_ip'])
 	{
 		echo '
-		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
+		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="100%"><tr><td>
 			<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
 				<tr class="titlebg">
 					<td colspan="2">
@@ -790,7 +808,7 @@ function template_trackIP()
 
 	// The second table lists all the members who have been logged as using this IP address.
 	echo '
-		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
+		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="100%"><tr><td>
 			<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
 				<tr class="titlebg">
 					<td colspan="2">

@@ -39,6 +39,9 @@ if (!defined('SMF'))
 	void statPanel(int id_member)
 		// !!!
 
+	void tracking(int id_member)
+		// !!!
+
 	void trackUser(int id_member)
 		// !!!
 
@@ -741,6 +744,64 @@ function statPanel($memID)
 	ksort($context['posts_by_time']);
 }
 
+function tracking($memID)
+{
+	global $sourcedir, $context, $txt, $scripturl, $modSettings;
+
+	$areas = array(
+		'edits' => array('trackEdits'),
+		'user' => array('trackUser'),
+		'ip' => array('TrackIP'),
+	);
+
+	$context['tracking_area'] = isset($_GET['area']) && isset($areas[$_GET['area']]) ? $_GET['area'] : 'user';
+
+	if (isset($types[$context['tracking_area']][1]))
+		require_once($sourcedir . '/' . $types[$context['tracking_area']][1]);
+
+	// Currently a cheat - profile should use generic menu all the time?
+	loadTemplate('GenericMenu');
+
+	$context['tracking_tabs'] = array(
+		'current_area' => $context['tracking_area'],
+		'current_action' => 'profile',
+		'current_subsection' => 'tracking',
+		'tab_data' => array(
+			'title' => $txt['tracking'],
+			'description' => $txt['tracking_description'],
+		),
+	);
+
+	$context['tabs'] = array(
+		'user' => array(
+			'label' => $txt['trackUser'],
+			'url' => $scripturl . '?action=profile;sa=tracking;area=user;u=' . $memID,
+			'is_selected' => $context['tracking_area'] == 'user',
+		),
+		'ip' => array(
+			'label' => $txt['trackIP'],
+			'url' => $scripturl . '?action=profile;sa=tracking;area=ip;u=' . $memID,
+			'is_selected' => $context['tracking_area'] == 'ip',
+		),
+		'edits' => array(
+			'label' => $txt['trackEdits'],
+			'url' => $scripturl . '?action=profile;sa=tracking;area=edits;u=' . $memID,
+			'is_selected' => $context['tracking_area'] == 'edits',
+		),
+	);
+
+	// Moderation must be on to track edits.
+	if (empty($modSettings['modlog_enabled']))
+		unset($context['tabs']['edits']);
+
+	// Put the menu in a layer.
+	$context['template_layers'][] = 'tracking';
+
+	// Pass on to the actual function.
+	$context['sub_template'] = $areas[$context['tracking_area']][0];
+	$areas[$context['tracking_area']][0]($memID);
+}
+
 function trackUser($memID)
 {
 	global $scripturl, $txt, $modSettings, $sourcedir;
@@ -760,10 +821,9 @@ function trackUser($memID)
 	$listOptions = array(
 		'id' => 'track_user_list',
 		'title' => $txt['errors_by'] . ' ' . $context['member']['name'],
-		'width' => '90%',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_errors_from_user'],
-		'base_href' => $scripturl . '?action=profile;sa=trackUser;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;sa=tracking;area=user;u=' . $memID,
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
@@ -786,7 +846,7 @@ function trackUser($memID)
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<a href="' . $scripturl . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'format' => '<a href="' . $scripturl . '?action=profile;sa=tracking;area=ip;searchip=%1$s">%1$s</a>',
 						'params' => array(
 							'ip' => false,
 						),
@@ -879,7 +939,7 @@ function trackUser($memID)
 	$context['ips'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$context['ips'][] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['poster_ip'] . '">' . $row['poster_ip'] . '</a>';
+		$context['ips'][] = '<a href="' . $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $row['poster_ip'] . '">' . $row['poster_ip'] . '</a>';
 		$ips[] = $row['poster_ip'];
 	}
 	$smfFunc['db_free_result']($request);
@@ -897,7 +957,7 @@ function trackUser($memID)
 	$context['error_ips'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$context['error_ips'][] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['ip'] . '">' . $row['ip'] . '</a>';
+		$context['error_ips'][] = '<a href="' . $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $row['ip'] . '">' . $row['ip'] . '</a>';
 		$ips[] = $row['ip'];
 	}
 	$smfFunc['db_free_result']($request);
@@ -1091,11 +1151,10 @@ function TrackIP($memID = 0)
 	$listOptions = array(
 		'id' => 'track_message_list',
 		'title' => $txt['messages_from_ip'] . ' ' . $context['ip'],
-		'width' => '90%',
 		'start_var_name' => 'messageStart',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_messages_from_ip'],
-		'base_href' => $scripturl . '?action=profile;sa=trackIP;searchip=' . $context['ip'],
+		'base_href' => $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $context['ip'],
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getIPMessages',
@@ -1182,11 +1241,10 @@ function TrackIP($memID = 0)
 	$listOptions = array(
 		'id' => 'track_user_list',
 		'title' => $txt['errors_from_ip'] . ' ' . $context['ip'],
-		'width' => '90%',
 		'start_var_name' => 'errorStart',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_errors_from_ip'],
-		'base_href' => $scripturl . '?action=profile;sa=trackIP;searchip=' . $context['ip'],
+		'base_href' => $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $context['ip'],
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
@@ -1306,6 +1364,173 @@ function TrackIP($memID = 0)
 				$context['auto_whois_server'] = $whois;
 		}
 	}
+}
+
+function trackEdits($memID)
+{
+	global $scripturl, $txt, $modSettings, $sourcedir, $context;
+
+	require_once($sourcedir . '/Subs-List.php');
+
+	// Set the options for the error lists.
+	$listOptions = array(
+		'id' => 'edit_list',
+		'title' => $txt['trackEdits'],
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['no_errors_from_ip'],
+		'base_href' => $scripturl . '?action=profile;sa=tracking;area=edits;u=' . $memID,
+		'default_sort_col' => 'time',
+		'get_items' => array(
+			'function' => 'list_getProfileEdits',
+			'params' => array(
+				$memID,
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getProfileEditCount',
+			'params' => array(
+				$memID,
+			),
+		),
+		'columns' => array(
+			'action' => array(
+				'header' => array(
+					'value' => $txt['trackEdit_action'],
+				),
+				'data' => array(
+					'db' => 'action_text',
+				),
+			),
+			'before' => array(
+				'header' => array(
+					'value' => $txt['trackEdit_before'],
+				),
+				'data' => array(
+					'db' => 'before',
+				),
+			),
+			'after' => array(
+				'header' => array(
+					'value' => $txt['trackEdit_after'],
+				),
+				'data' => array(
+					'db' => 'after',
+				),
+			),
+			'time' => array(
+				'header' => array(
+					'value' => $txt['date'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'id_action DESC',
+					'reverse' => 'id_action',
+				),
+			),
+			'applicator' => array(
+				'header' => array(
+					'value' => $txt['trackEdit_applicator'],
+				),
+				'data' => array(
+					'db' => 'member_link',
+				),
+			),
+		),
+	);
+
+	// Create the error list.
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'edit_list';
+}
+
+// How many edits?
+function list_getProfileEditCount($memID)
+{
+	global $smfFunc;
+
+	$request = $smfFunc['db_query']('', '
+		SELECT COUNT(*) AS edit_count
+		FROM {db_prefix}log_actions
+		WHERE id_log = {int:log_type}
+			AND id_member = {int:owner}',
+		array(
+			'log_type' => 2,
+			'owner' => $memID,
+		)
+	);
+	list ($edit_count) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $edit_count;
+}
+
+function list_getProfileEdits($start, $items_per_page, $sort, $memID)
+{
+	global $smfFunc, $txt, $scripturl;
+
+	// Get a list of error messages from this ip (range).
+	$request = $smfFunc['db_query']('', '
+		SELECT
+			id_action, id_member, ip, log_time, action, extra
+		FROM {db_prefix}log_actions
+		WHERE id_log = {int:log_type}
+			AND id_member = {int:owner}
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+			'log_type' => 2,
+			'owner' => $memID,
+		)
+	);
+	$edits = array();
+	$members = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$extra = @unserialize($row['extra']);
+		if (!empty($extra['applicator']))
+			$members[] = $extra['applicator'];
+
+		$edits[] = array(
+			'id' => $row['id_action'],
+			'ip' => $row['ip'],
+			'id_member' => !empty($extra['applicator']) ? $extra['applicator'] : 0,
+			'member_link' => $txt['trackEdit_deleted_member'],
+			'action' => $row['action'],
+			'action_text' => isset($txt['trackEdit_action_' . $row['action']]) ? $txt['trackEdit_action_' . $row['action']] : (isset($txt[$row['action']]) ? $txt[$row['action']] : $row['action']),
+			'before' => !empty($extra['previous']) ? $extra['previous'] : '',
+			'after' => !empty($extra['new']) ? $extra['new'] : '',
+			'time' => timeformat($row['log_time']),
+		);
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Get any member names.
+	if (!empty($members))
+	{
+		$request = $smfFunc['db_query']('', '
+			SELECT
+				id_member, member_name
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:members})',
+			array(
+				'members' => $members,
+			)
+		);
+		$members = array();
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$members[$row['id_member']] = $row['member_name'];
+		$smfFunc['db_free_result']($request);
+
+		foreach ($edits as $k => $v)
+			if (isset($members[$v['id_member']]))
+				$edits[$k]['member_link'] = '<a href="' . $scripturl . '?action=profile;u=' . $v['id_member'] . '">' . $members[$v['id_member']] . '</a>';
+	}
+
+	return $edits;
 }
 
 function showPermissions($memID)
