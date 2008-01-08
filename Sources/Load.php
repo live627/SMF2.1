@@ -905,10 +905,10 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			CASE WHEN mem.id_group = 0 OR mg.stars = {string:blank_string} THEN pg.stars ELSE mg.stars END AS stars' . (!empty($modSettings['titlesEnable']) ? ',
 			mem.usertitle' : '');
 		$select_tables = '
-			LEFT JOIN ' . $db_prefix . 'log_online AS lo ON (lo.id_member = mem.id_member)
-			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.id_member = mem.id_member)
-			LEFT JOIN ' . $db_prefix . 'membergroups AS pg ON (pg.id_group = mem.id_post_group)
-			LEFT JOIN ' . $db_prefix . 'membergroups AS mg ON (mg.id_group = mem.id_group)';
+			LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)';
 	}
 	elseif ($set == 'profile')
 	{
@@ -925,10 +925,10 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			pg.online_color AS post_group_color, IFNULL(pg.group_name, {string:blank_string}) AS post_group, mem.ignore_boards, mem.warning,
 			CASE WHEN mem.id_group = 0 OR mg.stars = {string:blank_string} THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt, mem.pm_prefs';
 		$select_tables = '
-			LEFT JOIN ' . $db_prefix . 'log_online AS lo ON (lo.id_member = mem.id_member)
-			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.id_member = mem.id_member)
-			LEFT JOIN ' . $db_prefix . 'membergroups AS pg ON (pg.id_group = mem.id_post_group)
-			LEFT JOIN ' . $db_prefix . 'membergroups AS mg ON (mg.id_group = mem.id_group)';
+			LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)';
 	}
 	elseif ($set == 'minimal')
 	{

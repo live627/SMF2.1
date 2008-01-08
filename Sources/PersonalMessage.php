@@ -2837,7 +2837,7 @@ function ManageLabels()
 // Edit Personal Message Settings
 function MessageSettings()
 {
-	global $txt, $user_settings, $user_info, $db_prefix, $context, $sourcedir, $smfFunc;
+	global $txt, $user_settings, $user_info, $context, $sourcedir, $smfFunc;
 	global $scripturl, $profile_vars, $cur_profile, $user_profile;
 
 	// Need this for the display.

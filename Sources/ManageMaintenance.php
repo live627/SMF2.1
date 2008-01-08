@@ -558,7 +558,7 @@ function TaskLog()
 function ConvertUtf8()
 {
 	global $scripturl, $context, $txt, $language, $db_character_set;
-	global $modSettings, $user_info, $sourcedir, $smfFunc;
+	global $modSettings, $user_info, $sourcedir, $smfFunc, $db_prefix;
 
 	// Show me your badge!
 	isAllowedTo('admin_forum');

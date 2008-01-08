@@ -1348,7 +1348,7 @@ function loadAttachmentContext($id_msg)
 							array($id_folder_thumb, $id_msg, 3, $thumb_filename, (int) $thumb_size, (int) $attachment['thumb_width'], (int) $attachment['thumb_height']),
 							array('id_attach')
 						);
-						$attachment['id_thumb'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
+						$attachment['id_thumb'] = $smfFunc['db_insert_id']( '{db_prefix}attachments', 'id_attach');
 						if (!empty($attachment['id_thumb']))
 						{
 							$smfFunc['db_query']('', '

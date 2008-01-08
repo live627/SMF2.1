@@ -215,7 +215,7 @@ function pauseRepairProcess($to_fix, $current_step_description, $max_substep = 0
 // Load up all the tests we might want to do ;)
 function loadForumTests()
 {
-	global $smfFunc, $errorTests;
+	global $smfFunc, $errorTests, $db_prefix;
 
 	/* Here this array is defined like so:
 		string check_query:	Query to be executed when testing if errors exist.
@@ -292,13 +292,13 @@ function loadForumTests()
 				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
 
 				$smfFunc[\'db_insert\'](\'\',
-					$db_prefix . \'topics\',
+					\'{db_prefix}topics\',
 					array(\'id_board\' => \'int\', \'id_member_started\' => \'int\', \'id_member_updated\' => \'int\', \'id_first_msg\' => \'int\', \'id_last_msg\' => \'int\', \'num_replies\' => \'int\'),
 					array($row[\'id_board\'], $memberStartedID, $memberUpdatedID, $row[\'myid_first_msg\'], $row[\'myid_last_msg\'], $row[\'myNumReplies\']),
 					array(\'id_topic\')
 				);
 
-				$newTopicID = $smfFunc[\'db_insert_id\']("{$db_prefix}topics", \'id_topic\');
+				$newTopicID = $smfFunc[\'db_insert_id\']("{db_prefix}topics", \'id_topic\');
 
 				$smfFunc[\'db_query\'](\'\', "
 					UPDATE {$db_prefix}messages
@@ -1208,9 +1208,9 @@ function loadForumTests()
 				'index' => 'id_group',
 				'process' => create_function('$groups', '
 					global $smfFunc;
-					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_group_requests
-						WHERE id_group IN ({array_int:groups})",
+					$smfFunc[\'db_query\'](\'\', \'
+						DELETE FROM {db_prefix}log_group_requests
+						WHERE id_group IN ({array_int:groups})\',
 						array(
 							\'groups\' => $groups
 						)
@@ -1477,7 +1477,7 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_category_error', false);
 		}
 
-		$salvageCatID = $smfFunc['db_insert_id']( $db_prefix . 'categories', 'id_cat');
+		$salvageCatID = $smfFunc['db_insert_id']( '{db_prefix}categories', 'id_cat');
 	}
 
 	// Check to see if a 'Salvage Board' exists, if not => insert one.
@@ -1511,7 +1511,7 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_board_error', false);
 		}
 
-		$salvageBoardID = $smfFunc['db_insert_id']( $db_prefix . 'boards', 'id_board');
+		$salvageBoardID = $smfFunc['db_insert_id']( '{db_prefix}boards', 'id_board');
 	}
 
 	$smfFunc['db_query']('alter_table_boards', '

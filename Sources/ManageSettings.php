@@ -162,9 +162,9 @@ function ModifyCoreFeatures($return_config = false)
 				global $smfFunc;
 				if (!$value)
 				{
-					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}custom_fields
-						SET active = 0");
+					$smfFunc[\'db_query\'](\'\', \'
+						UPDATE {db_prefix}custom_fields
+						SET active = 0\');
 				}
 			'),
 			'setting_callback' => create_function('$value', '

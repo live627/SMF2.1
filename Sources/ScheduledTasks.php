@@ -480,7 +480,7 @@ function scheduled_daily_maintenance()
 // Auto optimize the database?
 function scheduled_auto_optimize()
 {
-	global $modSettings, $smfFunc;
+	global $modSettings, $smfFunc, $db_prefix;
 
 	// By default do it now!
 	$delay = false;

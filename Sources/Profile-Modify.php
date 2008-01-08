@@ -334,12 +334,12 @@ function loadProfileFields($force_reload = false)
 			'preload' => create_function('', '
 				global $smfFunc, $context, $cur_profile, $txt;
 
-				$request = $smfFunc[\'db_query\'](\'\', "
+				$request = $smfFunc[\'db_query\'](\'\', \'
 					SELECT value
-					FROM {$db_prefix}themes
+					FROM {db_prefix}themes
 					WHERE id_theme = {int:id_theme}
 						AND variable = {string:variable}
-					LIMIT 1", array(
+					LIMIT 1\', array(
 						\'id_theme\' => $cur_profile[\'id_theme\'],
 						\'variable\' => \'name\',
 					)
@@ -1905,7 +1905,7 @@ function loadThemeOptions($memID)
 
 function ignoreboards($memID)
 {
-	global $txt, $user_info, $db_prefix, $context, $modSettings, $smfFunc, $cur_profile;
+	global $txt, $user_info, $context, $modSettings, $smfFunc, $cur_profile;
 
 	// Have the admins enabled this option?
 	if (empty($modSettings['allow_ignore_boards']))
@@ -2386,7 +2386,7 @@ function profileSaveAvatarData(&$value)
 					array('id_attach')
 				);
 
-				$cur_profile['id_attach'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
+				$cur_profile['id_attach'] = $smfFunc['db_insert_id']( '{db_prefix}attachments', 'id_attach');
 				$cur_profile['filename'] = $destName;
 				$cur_profile['attachment_type'] = empty($modSettings['custom_avatar_enabled']) ? 0 : 1;
 

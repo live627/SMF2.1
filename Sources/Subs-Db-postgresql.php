@@ -439,7 +439,9 @@ function smf_db_affected_rows($result = null)
 
 function smf_db_insert_id($table, $field, $connection = null)
 {
-	global $db_connection, $smfFunc;
+	global $db_connection, $smfFunc, $db_prefix;
+
+	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	if ($connection === false)
 		$connection = $db_connection;

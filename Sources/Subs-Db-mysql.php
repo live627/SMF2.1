@@ -404,7 +404,9 @@ function smf_db_affected_rows($connection = null)
 
 function smf_db_insert_id($table, $field, $connection = null)
 {
-	global $db_connection;
+	global $db_connection, $db_prefix;
+
+	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	// MySQL doesn't need the table or field information.
 	return mysql_insert_id($connection == null ? $db_connection : $connection);
