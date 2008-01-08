@@ -171,7 +171,7 @@ function createCategory($catOptions)
 	);
 
 	// Grab the new category ID.
-	$category_id = $smfFunc['db_insert_id']( $db_prefix . 'categories', 'id_cat');
+	$category_id = $smfFunc['db_insert_id']( '{db_prefix}categories', 'id_cat');
 
 	// Set the given properties to the newly created category.
 	modifyCategory($category_id, $catOptions);
@@ -301,7 +301,7 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 			SELECT mem.id_member, c.id_cat, IFNULL(cc.id_cat, 0) AS is_collapsed, c.can_collapse
 			FROM {db_prefix}members AS mem
 				INNER JOIN {db_prefix}categories AS c ON (c.id_cat IN ({array_int:category_list}))
-				LEFT JOIN {$db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = mem.id_member)
+				LEFT JOIN {db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = mem.id_member)
 			' . ($members === null ? '' : '
 				WHERE mem.id_member IN ({array_int:member_list})'),
 			array(

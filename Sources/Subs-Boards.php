@@ -756,7 +756,7 @@ function createBoard($boardOptions)
 		),
 		array('id_board')
 	);
-	$board_id = $smfFunc['db_insert_id']( $db_prefix . 'boards', 'id_board');
+	$board_id = $smfFunc['db_insert_id']( '{db_prefix}boards', 'id_board');
 
 	if (empty($board_id))
 		return 0;

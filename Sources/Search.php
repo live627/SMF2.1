@@ -1090,9 +1090,9 @@ function PlushSearch2()
 					'relevance' => '0',
 				),
 				'weights' => array(),
-				'from' => $db_prefix . 'topics AS t',
+				'from' => '{db_prefix}topics AS t',
 				'inner_join' => array(
-					$db_prefix . 'messages AS m ON (m.id_topic = t.id_topic)'
+					'{db_prefix}messages AS m ON (m.id_topic = t.id_topic)'
 				),
 				'left_join' => array(),
 				'where' => array(),
@@ -1174,7 +1174,7 @@ function PlushSearch2()
 				foreach ($searchWords as $orIndex => $words)
 				{
 					$subject_query = array(
-						'from' => $db_prefix . 'topics AS t',
+						'from' => '{db_prefix}topics AS t',
 						'inner_join' => array(),
 						'left_join' => array(),
 						'where' => array(),
@@ -1189,11 +1189,11 @@ function PlushSearch2()
 						$numTables++;
 						if (in_array($subjectWord, $excludedSubjectWords))
 						{
-							if ($subject_query['from'] != $db_prefix . 'messages AS m')
+							if ($subject_query['from'] != '{db_prefix}messages AS m')
 							{
-								$subject_query['inner_join'][] = $db_prefix . 'messages AS m ON (m.id_msg = t.id_first_msg)';
+								$subject_query['inner_join'][] = '{db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)';
 							}
-							$subject_query['left_join'][] = $db_prefix . 'log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE {string:subject_not_' . $count . '}' : '= {string:subject_not_' . $count . '}') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
+							$subject_query['left_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE {string:subject_not_' . $count . '}' : '= {string:subject_not_' . $count . '}') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
 							$subject_query['params']['subject_not_' . $count] = empty($modSettings['search_match_words']) ? '%' . $subjectWord . '%' : $subjectWord;
 
 							$subject_query['where'][] = '(subj' . $numTables . '.word IS NULL)';
@@ -1202,7 +1202,7 @@ function PlushSearch2()
 						}
 						else
 						{
-							$subject_query['inner_join'][] = $db_prefix . 'log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.id_topic = ' . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
+							$subject_query['inner_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.id_topic = ' . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
 							$subject_query['where'][] = 'subj' . $numTables . '.word LIKE {string:subject_like_' . $count . '}';
 							$subject_query['params']['subject_like_' . $count++] = empty($modSettings['search_match_words']) ? '%' . $subjectWord . '%' : $subjectWord;
 							$prev_join = $numTables;
@@ -1211,9 +1211,9 @@ function PlushSearch2()
 
 					if (!empty($userQuery))
 					{
-						if ($subject_query['from'] != $db_prefix . 'messages AS m')
+						if ($subject_query['from'] != '{db_prefix}messages AS m')
 						{
-							$subject_query['inner_join'][] = $db_prefix . 'messages AS m ON (m.id_msg = t.id_first_msg)';
+							$subject_query['inner_join'][] = '{db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)';
 						}
 						$subject_query['where'][] = '{raw:user_query}';
 						$subject_query['params']['user_query'] = $userQuery;
@@ -1240,9 +1240,9 @@ function PlushSearch2()
 					}
 					if (!empty($excludedPhrases))
 					{
-						if ($subject_query['from'] != $db_prefix . 'messages AS m')
+						if ($subject_query['from'] != '{db_prefix}messages AS m')
 						{
-							$subject_query['inner_join'][] = $db_prefix . 'messages AS m ON (m.id_msg = t.id_first_msg)';
+							$subject_query['inner_join'][] = '{db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)';
 						}
 						$count = 0;
 						foreach ($excludedPhrases as $phrase)
@@ -1294,7 +1294,7 @@ function PlushSearch2()
 				if (!empty($inserts))
 				{
 					$smfFunc['db_insert']('',
-						($db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_topics'),
+						('{db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics'),
 						$createTemporary ? array('id_topic' => 'int') : array('id_search' => 'int', 'id_topic' => 'int'),
 						$inserts,
 						$createTemporary ? array('id_topic') : array('id_search', 'id_topic')
@@ -1304,7 +1304,7 @@ function PlushSearch2()
 				if ($numSubjectResults !== 0)
 				{
 					$main_query['weights']['subject'] = 'CASE WHEN MAX(lst.id_topic) IS NULL THEN 0 ELSE 1 END';
-					$main_query['left_join'][] = $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (' . ($createTemporary ? '' : 'lst.id_search = {int:id_search} AND ') . 'lst.id_topic = t.id_topic)';
+					$main_query['left_join'][] = '{db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (' . ($createTemporary ? '' : 'lst.id_search = {int:id_search} AND ') . 'lst.id_topic = t.id_topic)';
 					if ($createTemporary)
 						$main_query['parameters']['id_search'] = $_SESSION['search_cache']['id_search'];
 				}
@@ -1333,7 +1333,7 @@ function PlushSearch2()
 
 				if (!$createTemporary)
 					$smfFunc['db_search_query']('delete_log_search_messages', '
-						DELETE FROM {$db_prefix}log_search_messages
+						DELETE FROM {db_prefix}log_search_messages
 						WHERE id_search = {int:id_search}',
 						array(
 							'id_search' => $_SESSION['search_cache']['id_search'],
@@ -1392,7 +1392,7 @@ function PlushSearch2()
 				if (!empty($inserts))
 				{
 					$smfFunc['db_insert']('',
-						$db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_messages',
+						'{db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_messages',
 						$createTemporary ? array('id_msg' => 'int') : array('id_msg' => 'int', 'id_search' => 'int'),
 						$inserts,
 						$createTemporary ? array('id_msg') : array('id_msg', 'id_search')
@@ -1407,7 +1407,7 @@ function PlushSearch2()
 				}
 				elseif (!empty($indexedResults))
 				{
-					$main_query['inner_join'][] = $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_messages AS lsm ON (lsm.id_msg = m.id_msg)';
+					$main_query['inner_join'][] = '{db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_messages AS lsm ON (lsm.id_msg = m.id_msg)';
 					if (!$createTemporary)
 					{
 						$main_query['where'][] = 'lsm.id_search = {int:id_search}';
@@ -1477,7 +1477,7 @@ function PlushSearch2()
 				$main_query['select']['relevance'] = substr($relevance, 0, -3) . ') / ' . $new_weight_total . ' AS relevance';
 
 				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_no_index', ($smfFunc['db_support_ignore'] ? ( '
-					INSERT IGNORE INTO ' . $db_prefix . 'log_search_results
+					INSERT IGNORE INTO ' . '{db_prefix}log_search_results
 						(' . implode(', ', array_keys($main_query['select'])) . ')') : '') . '
 					SELECT
 						' . implode(',

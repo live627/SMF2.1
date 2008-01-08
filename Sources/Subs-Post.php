@@ -1119,7 +1119,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		),
 		array('id_pm')
 	);
-	$id_pm = $smfFunc['db_insert_id']( $db_prefix . 'personal_messages', 'id_pm');
+	$id_pm = $smfFunc['db_insert_id']( '{db_prefix}personal_messages', 'id_pm');
 
 	// Add the recipients.
 	if (!empty($id_pm))
@@ -1788,7 +1788,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		),
 		array('id_msg')
 	);
-	$msgOptions['id'] = $smfFunc['db_insert_id']( $db_prefix . 'messages', 'id_msg');
+	$msgOptions['id'] = $smfFunc['db_insert_id']( '{db_prefix}messages', 'id_msg');
 
 	// Something went wrong creating the message...
 	if (empty($msgOptions['id']))
@@ -1823,7 +1823,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			),
 			array('id_topic')
 		);
-		$topicOptions['id'] = $smfFunc['db_insert_id']( $db_prefix . 'topics', 'id_topic');
+		$topicOptions['id'] = $smfFunc['db_insert_id']( '{db_prefix}topics', 'id_topic');
 
 		// The topic couldn't be created for some reason.
 		if (empty($topicOptions['id']))
@@ -2175,7 +2175,7 @@ function createAttachment(&$attachmentOptions)
 		),
 		array('id_attach')
 	);
-	$attachmentOptions['id'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
+	$attachmentOptions['id'] = $smfFunc['db_insert_id']( '{db_prefix}attachments', 'id_attach');
 
 	if (empty($attachmentOptions['id']))
 		return false;
@@ -2271,7 +2271,7 @@ function createAttachment(&$attachmentOptions)
 				),
 				array('id_attach')
 			);
-			$attachmentOptions['thumb'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
+			$attachmentOptions['thumb'] = $smfFunc['db_insert_id']( '{db_prefix}attachments', 'id_attach');
 
 			if (!empty($attachmentOptions['thumb']))
 			{

@@ -2810,7 +2810,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 		array('id_action')
 	);
 
-	return $smfFunc['db_insert_id']($db_prefix . 'log_actions', 'id_action');
+	return $smfFunc['db_insert_id']('{db_prefix}log_actions', 'id_action');
 }
 
 // Track Statistics.

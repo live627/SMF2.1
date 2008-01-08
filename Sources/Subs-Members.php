@@ -691,7 +691,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		$values,
 		array('id_member')
 	);
-	$memberID = $smfFunc['db_insert_id']($db_prefix . 'members', 'id_member');
+	$memberID = $smfFunc['db_insert_id']('{db_prefix}members', 'id_member');
 
 	// Grab their real name and send emails using it.
 	$real_name = substr($regOptions['register_vars']['real_name'], 1, -1);

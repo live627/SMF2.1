@@ -215,7 +215,7 @@ function pauseRepairProcess($to_fix, $current_step_description, $max_substep = 0
 // Load up all the tests we might want to do ;)
 function loadForumTests()
 {
-	global $smfFunc, $errorTests, $db_prefix;
+	global $smfFunc, $errorTests;
 
 	/* Here this array is defined like so:
 		string check_query:	Query to be executed when testing if errors exist.
@@ -240,11 +240,11 @@ function loadForumTests()
 		'zero_topics' => array(
 			'check_query' => '
 				SELECT COUNT(*)
-				FROM ' . $db_prefix . 'topics
+				FROM {db_prefix}topics
 				WHERE id_topic = 0',
 			'check_type' => 'count',
 			'fix_it_query' => '
-				UPDATE ' . $db_prefix . 'topics
+				UPDATE  {db_prefix}topics
 				SET id_topic = NULL
 				WHERE id_topic = 0',
 			'message' => 'repair_zero_ids',
@@ -253,11 +253,11 @@ function loadForumTests()
 		'zero_messages' => array(
 			'check_query' => '
 				SELECT COUNT(*)
-				FROM ' . $db_prefix . 'messages
+				FROM {db_prefix}messages
 				WHERE id_msg = 0',
 			'check_type' => 'count',
 			'fix_it_query' => '
-				UPDATE ' . $db_prefix . 'messages
+				UPDATE {db_prefix}messages
 				SET id_msg = NULL
 				WHERE id_msg = 0',
 			'message' => 'repair_zero_ids',
@@ -266,16 +266,16 @@ function loadForumTests()
 		'missing_topics' => array(
 			'check_query' => '
 				SELECT m.id_topic, m.id_msg
-				FROM ' . $db_prefix . 'messages AS m
-					LEFT JOIN ' . $db_prefix . 'topics AS t ON (t.id_topic = m.id_topic)
+				FROM {db_prefix}messages AS m
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 				WHERE t.id_topic IS NULL
 				ORDER BY m.id_topic, m.id_msg',
 			'fix_query' => '
 				SELECT
 					m.id_board, m.id_topic, MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg,
 					COUNT(*) - 1 AS myNumReplies
-				FROM ' . $db_prefix . 'messages AS m
-					LEFT JOIN ' . $db_prefix . 'topics AS t ON (t.id_topic = m.id_topic)
+				FROM {db_prefix}messages AS m
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 				WHERE t.id_topic IS NULL
 				GROUP BY m.id_topic',
 			'fix_processing' => create_function('$row', '
@@ -301,7 +301,7 @@ function loadForumTests()
 				$newTopicID = $smfFunc[\'db_insert_id\']("{db_prefix}topics", \'id_topic\');
 
 				$smfFunc[\'db_query\'](\'\', "
-					UPDATE {$db_prefix}messages
+					UPDATE {db_prefix}messages
 					SET id_topic = $newTopicID, id_board = $row[id_board]
 					WHERE id_topic = $row[id_topic]",
 					array(
@@ -317,12 +317,12 @@ function loadForumTests()
 				'step_size' => 1000,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT t.id_topic, COUNT(m.id_msg) AS num_msg
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'messages AS m ON (m.id_topic = t.id_topic)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_topic
 				HAVING COUNT(m.id_msg) = 0',
@@ -332,14 +332,14 @@ function loadForumTests()
 				'process' => create_function('$topics', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}topics
+						DELETE FROM {db_prefix}topics
 						WHERE id_topic IN ({array_int:topics})",
 						array(
 							\'topics\' => $topics
 						)
 					);
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_topics
+						DELETE FROM {db_prefix}log_topics
 						WHERE id_topic IN ({array_int:topics})",
 						array(
 							\'topics\' => $topics
@@ -354,7 +354,7 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT
@@ -366,10 +366,10 @@ function loadForumTests()
 					MIN(mu.id_msg) END AS myid_first_msg,
 					CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END AS myid_last_msg,
 					t.approved, mf.approved AS myApproved
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
-					LEFT JOIN ' . $db_prefix . 'messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
-					LEFT JOIN ' . $db_prefix . 'messages AS mf ON (mf.id_msg = t.id_first_msg)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved
 				HAVING id_first_msg != (CASE WHEN MIN(ma.id_msg) > 0 THEN
@@ -389,7 +389,7 @@ function loadForumTests()
 				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
 
 				$smfFunc[\'db_query\'](\'\', "
-					UPDATE {$db_prefix}topics
+					UPDATE {db_prefix}topics
 					SET id_first_msg = $row[myid_first_msg],
 						id_member_started = $memberStartedID, id_last_msg = $row[myid_last_msg],
 						id_member_updated = $memberUpdatedID, approved = $row[myApproved]
@@ -417,15 +417,15 @@ function loadForumTests()
 				'step_size' => 1000,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT
 					t.id_topic, t.num_replies,
 					CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END AS myNumReplies
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
-					LEFT JOIN ' . $db_prefix . 'messages AS mf ON (mf.id_msg = t.id_first_msg)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_topic, t.num_replies, mf.approved
 				HAVING num_replies != (CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END)
@@ -435,7 +435,7 @@ function loadForumTests()
 				$row[\'myNumReplies\'] = (int) $row[\'myNumReplies\'];
 
 				$smfFunc[\'db_query\'](\'\', "
-					UPDATE {$db_prefix}topics
+					UPDATE {db_prefix}topics
 					SET num_replies = $row[myNumReplies]
 					WHERE id_topic = $row[id_topic]",
 					array(
@@ -450,13 +450,13 @@ function loadForumTests()
 				'step_size' => 1000,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT
 					t.id_topic, t.unapproved_posts, COUNT(mu.id_msg) AS myUnapprovedPosts
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_topic, t.unapproved_posts
 				HAVING unapproved_posts != COUNT(mu.id_msg)
@@ -466,7 +466,7 @@ function loadForumTests()
 				$row[\'myUnapprovedPosts\'] = (int) $row[\'myUnapprovedPosts\'];
 
 				$smfFunc[\'db_query\'](\'\', "
-					UPDATE {$db_prefix}topics
+					UPDATE {db_prefix}topics
 					SET num_replies = $row[myUnapprovedPosts]
 					WHERE id_topic = $row[id_topic]",
 					array(
@@ -481,20 +481,20 @@ function loadForumTests()
 				'step_size' => 1000,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT t.id_topic, t.id_board
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'boards AS b ON (b.id_board = t.id_board)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				WHERE b.id_board IS NULL
 					AND t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				ORDER BY t.id_board, t.id_topic',
 			'fix_query' => '
 				SELECT t.id_board, COUNT(*) AS myNumTopics, COUNT(m.id_msg) AS myNumPosts
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'boards AS b ON (b.id_board = t.id_board)
-					LEFT JOIN ' . $db_prefix . 'messages AS m ON (m.id_topic = t.id_topic)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+					LEFT JOIN {db_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				WHERE b.id_board IS NULL
 					AND t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_board',
@@ -506,22 +506,22 @@ function loadForumTests()
 				$row[\'myNumPosts\'] = (int) $row[\'myNumPosts\'];
 
 				$smfFunc[\'db_insert\'](\'\',
-					$db_prefix . \'boards\',
+					\'{db_prefix}\' . \'boards\',
 					array(\'id_cat\' => \'int\', \'name\' => \'string\', \'description\' => \'string\', \'num_topics\' => \'int\', \'num_posts\' => \'int\', \'member_groups\' => \'string\'),
 					array($salvageCatID, \'Salvaged board\', \'\', $row[\'myNumTopics\'], $row[\'myNumPosts\'], \'1\'),
 					array(\'id_board\')
 				);
-				$newBoardID = $smfFunc[\'db_insert_id\']("{$db_prefix}boards", \'id_board\');
+				$newBoardID = $smfFunc[\'db_insert_id\'](\'{db_prefix}boards\', \'id_board\');
 
 				$smfFunc[\'db_query\'](\'\', "
-					UPDATE {$db_prefix}topics
+					UPDATE {db_prefix}topics
 					SET id_board = $newBoardID
 					WHERE id_board = $row[id_board]",
 					array(
 					)
 				);
 				$smfFunc[\'db_query\'](\'\', "
-					UPDATE {$db_prefix}messages
+					UPDATE {db_prefix}messages
 					SET id_board = $newBoardID
 					WHERE id_board = $row[id_board]",
 					array(
@@ -534,8 +534,8 @@ function loadForumTests()
 		'missing_categories' => array(
 			'check_query' => '
 				SELECT b.id_board, b.id_cat
-				FROM ' . $db_prefix . 'boards AS b
-					LEFT JOIN ' . $db_prefix . 'categories AS c ON (c.id_cat = b.id_cat)
+				FROM {db_prefix}boards AS b
+					LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 				WHERE c.id_cat IS NULL
 				ORDER BY b.id_cat, b.id_board',
 			'fix_collect' => array(
@@ -544,7 +544,7 @@ function loadForumTests()
 					global $smfFunc, $salvageCatID;
 					createSalvageArea();
 					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}boards
+						UPDATE {db_prefix}boards
 						SET id_cat = $salvageCatID
 						WHERE id_cat IN ({array_int:categories})",
 						array(
@@ -561,12 +561,12 @@ function loadForumTests()
 				'step_size' => 2000,
 				'step_max' => '
 					SELECT MAX(id_msg)
-					FROM ' . $db_prefix . 'messages'
+					FROM {db_prefix}messages'
 			),
 			'check_query' => '
 				SELECT m.id_msg, m.id_member
-				FROM ' . $db_prefix . 'messages AS m
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = m.id_member)
+				FROM {db_prefix}messages AS m
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				WHERE mem.id_member IS NULL
 					AND m.id_member != 0
 					AND m.id_msg BETWEEN {STEP_LOW} AND {STEP_HIGH}
@@ -577,7 +577,7 @@ function loadForumTests()
 				'process' => create_function('$msgs', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}messages
+						UPDATE {db_prefix}messages
 						SET id_member = 0
 						WHERE id_msg IN ({array_int:msgs})",
 						array(
@@ -592,8 +592,8 @@ function loadForumTests()
 		'missing_parents' => array(
 			'check_query' => '
 				SELECT b.id_board, b.id_parent
-				FROM ' . $db_prefix . 'boards AS b
-					LEFT JOIN ' . $db_prefix . 'boards AS p ON (p.id_board = b.id_parent)
+				FROM {db_prefix}boards AS b
+					LEFT JOIN {db_prefix}boards AS p ON (p.id_board = b.id_parent)
 				WHERE b.id_parent != 0
 					AND (p.id_board IS NULL OR p.id_board = b.id_board)
 				ORDER BY b.id_parent, b.id_board',
@@ -603,7 +603,7 @@ function loadForumTests()
 					global $smfFunc, $salvageBoardID, $salvageCatID;
 					createSalvageArea();
 					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}boards
+						UPDATE {db_prefix}boards
 						SET id_parent = $salvageBoardID, id_cat = $salvageCatID, child_level = 1
 						WHERE id_parent IN ({array_int:parents})",
 						array(
@@ -619,12 +619,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_poll)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT t.id_poll, t.id_topic
-				FROM ' . $db_prefix . 'topics AS t
-					LEFT JOIN ' . $db_prefix . 'polls AS p ON (p.id_poll = t.id_poll)
+				FROM {db_prefix}topics AS t
+					LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 				WHERE t.id_poll != 0
 					AND t.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND p.id_poll IS NULL',
@@ -633,7 +633,7 @@ function loadForumTests()
 				'process' => create_function('$polls', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}topics
+						UPDATE {db_prefix}topics
 						SET id_poll = 0
 						WHERE id_poll IN ({array_int:polls})",
 						array(
@@ -649,12 +649,12 @@ function loadForumTests()
 				'step_size' => 1000,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'calendar'
+					FROM {db_prefix}calendar'
 			),
 			'check_query' => '
 				SELECT cal.id_topic, cal.id_event
-				FROM ' . $db_prefix . 'calendar AS cal
-					LEFT JOIN ' . $db_prefix . 'topics AS t ON (t.id_topic = cal.id_topic)
+				FROM {db_prefix}calendar AS cal
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
 				WHERE cal.id_topic != 0
 					AND cal.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND t.id_topic IS NULL
@@ -663,10 +663,10 @@ function loadForumTests()
 				'index' => 'id_topic',
 				'process' => create_function('$events', '
 					global $smfFunc;
-					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}calendar
+					$smfFunc[\'db_query\'](\'\', \'
+						UPDATE {db_prefix}calendar
 						SET id_topic = 0, id_board = 0
-						WHERE id_topic IN ({array_int:events})",
+						WHERE id_topic IN ({array_int:events})\',
 						array(
 							\'events\' => $events
 						)
@@ -680,12 +680,12 @@ function loadForumTests()
 				'step_size' => 150,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_topics'
+					FROM {db_prefix}log_topics'
 			),
 			'check_query' => '
 				SELECT lt.id_topic
-				FROM ' . $db_prefix . 'log_topics AS lt
-					LEFT JOIN ' . $db_prefix . 'topics AS t ON (t.id_topic = lt.id_topic)
+				FROM {db_prefix}log_topics AS lt
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lt.id_topic)
 				WHERE t.id_topic IS NULL
 					AND lt.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}',
 			'fix_collect' => array(
@@ -693,7 +693,7 @@ function loadForumTests()
 				'process' => create_function('$topics', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_topics
+						DELETE FROM {db_prefix}log_topics
 						WHERE id_topic IN ({array_int:topics})",
 						array(
 							\'topics\' => $topics
@@ -708,12 +708,12 @@ function loadForumTests()
 				'step_size' => 150,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_topics'
+					FROM {db_prefix}log_topics'
 			),
 			'check_query' => '
 				SELECT lt.id_member
-				FROM ' . $db_prefix . 'log_topics AS lt
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = lt.id_member)
+				FROM {db_prefix}log_topics AS lt
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lt.id_member)
 				WHERE mem.id_member IS NULL
 					AND lt.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lt.id_member',
@@ -722,7 +722,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_topics
+						DELETE FROM {db_prefix}log_topics
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -737,12 +737,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_boards'
+					FROM {db_prefix}log_boards'
 			),
 			'check_query' => '
 				SELECT lb.id_board
-				FROM ' . $db_prefix . 'log_boards AS lb
-					LEFT JOIN ' . $db_prefix . 'boards AS b ON (b.id_board = lb.id_board)
+				FROM {db_prefix}log_boards AS lb
+					LEFT JOIN {db_prefix}boards AS b ON (b.id_board = lb.id_board)
 				WHERE b.id_board IS NULL
 					AND lb.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lb.id_board',
@@ -751,7 +751,7 @@ function loadForumTests()
 				'process' => create_function('$boards', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_boards
+						DELETE FROM {db_prefix}log_boards
 						WHERE id_board IN ({array_int:boards})",
 						array(
 							\'boards\' => $boards
@@ -766,12 +766,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_boards'
+					FROM {db_prefix}log_boards'
 			),
 			'check_query' => '
 				SELECT lb.id_member
-				FROM ' . $db_prefix . 'log_boards AS lb
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = lb.id_member)
+				FROM {db_prefix}log_boards AS lb
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lb.id_member)
 				WHERE mem.id_member IS NULL
 					AND lb.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lb.id_member',
@@ -780,7 +780,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_boards
+						DELETE FROM {db_prefix}log_boards
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -795,12 +795,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_mark_read'
+					FROM {db_prefix}log_mark_read'
 			),
 			'check_query' => '
 				SELECT lmr.id_board
-				FROM ' . $db_prefix . 'log_mark_read AS lmr
-					LEFT JOIN ' . $db_prefix . 'boards AS b ON (b.id_board = lmr.id_board)
+				FROM {db_prefix}log_mark_read AS lmr
+					LEFT JOIN {db_prefix}boards AS b ON (b.id_board = lmr.id_board)
 				WHERE b.id_board IS NULL
 					AND lmr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lmr.id_board',
@@ -809,7 +809,7 @@ function loadForumTests()
 				'process' => create_function('$boards', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_mark_read
+						DELETE FROM {db_prefix}log_mark_read
 						WHERE id_board IN ({array_int:boards})",
 						array(
 							\'boards\' => $boards
@@ -824,12 +824,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_mark_read'
+					FROM {db_prefix}log_mark_read'
 			),
 			'check_query' => '
 				SELECT lmr.id_member
-				FROM ' . $db_prefix . 'log_mark_read AS lmr
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = lmr.id_member)
+				FROM {db_prefix}log_mark_read AS lmr
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lmr.id_member)
 				WHERE mem.id_member IS NULL
 					AND lmr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lmr.id_member',
@@ -838,7 +838,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_mark_read
+						DELETE FROM {db_prefix}log_mark_read
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -853,12 +853,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_pm)
-					FROM ' . $db_prefix . 'pm_recipients'
+					FROM {db_prefix}pm_recipients'
 			),
 			'check_query' => '
 				SELECT pmr.id_pm
-				FROM ' . $db_prefix . 'pm_recipients AS pmr
-					LEFT JOIN ' . $db_prefix . 'personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+				FROM {db_prefix}pm_recipients AS pmr
+					LEFT JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
 				WHERE pm.id_pm IS NULL
 					AND pmr.id_pm BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY pmr.id_pm',
@@ -867,7 +867,7 @@ function loadForumTests()
 				'process' => create_function('$pms', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}pm_recipients
+						DELETE FROM {db_prefix}pm_recipients
 						WHERE id_pm IN ({array_int:pms})",
 						array(
 							\'pms\' => $pms
@@ -882,12 +882,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'pm_recipients'
+					FROM {db_prefix}pm_recipients'
 			),
 			'check_query' => '
 				SELECT pmr.id_member
-				FROM ' . $db_prefix . 'pm_recipients AS pmr
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = pmr.id_member)
+				FROM {db_prefix}pm_recipients AS pmr
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
 				WHERE pmr.id_member != 0
 					AND pmr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL
@@ -897,7 +897,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}pm_recipients
+						DELETE FROM {db_prefix}pm_recipients
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -912,12 +912,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_pm)
-					FROM ' . $db_prefix . 'personal_messages'
+					FROM {db_prefix}personal_messages'
 			),
 			'check_query' => '
 				SELECT pm.id_pm, pm.id_member_from
-				FROM ' . $db_prefix . 'personal_messages AS pm
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = pm.id_member_from)
+				FROM {db_prefix}personal_messages AS pm
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 				WHERE pm.id_member_from != 0
 					AND pm.id_pm BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL',
@@ -926,7 +926,7 @@ function loadForumTests()
 				'process' => create_function('$guestMessages', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						UPDATE {$db_prefix}personal_messages
+						UPDATE {db_prefix}personal_messages
 						SET id_member_from = 0
 						WHERE id_pm IN ({array_int:guestMessages})",
 						array(
@@ -941,12 +941,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_notify'
+					FROM {db_prefix}log_notify'
 			),
 			'check_query' => '
 				SELECT ln.id_member
-				FROM ' . $db_prefix . 'log_notify AS ln
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = ln.id_member)
+				FROM {db_prefix}log_notify AS ln
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
 				WHERE ln.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL
 				GROUP BY ln.id_member',
@@ -955,7 +955,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_notify
+						DELETE FROM {db_prefix}log_notify
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -970,13 +970,13 @@ function loadForumTests()
 				'step_size' => 100,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'topics'
+					FROM {db_prefix}topics'
 			),
 			'check_query' => '
 				SELECT t.id_topic, fm.subject
-				FROM ' . $db_prefix . 'topics AS t
-					INNER JOIN ' . $db_prefix . 'messages AS fm ON (fm.id_msg = t.id_first_msg)
-					LEFT JOIN ' . $db_prefix . 'log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
+				FROM {db_prefix}topics AS t
+					INNER JOIN {db_prefix}messages AS fm ON (fm.id_msg = t.id_first_msg)
+					LEFT JOIN {db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lss.id_topic IS NULL',
 			'fix_full_processing' => create_function('$result', '
@@ -990,7 +990,7 @@ function loadForumTests()
 					if (count($inserts) > 500)
 					{
 						$smfFunc[\'db_insert\'](\'ignore\',
-							"{$db_prefix}log_search_subjects",
+							"{db_prefix}log_search_subjects",
 							array(\'word\' => \'string\', \'id_topic\' => \'int\'),
 							$inserts,
 							array(\'word\', \'id_topic\')
@@ -1002,7 +1002,7 @@ function loadForumTests()
 
 				if (!empty($inserts))
 					$smfFunc[\'db_insert\'](\'ignore\',
-						"{$db_prefix}log_search_subjects",
+						"{db_prefix}log_search_subjects",
 						array(\'word\' => \'string\', \'id_topic\' => \'int\'),
 						$inserts,
 						array(\'word\', \'id_topic\')
@@ -1025,12 +1025,12 @@ function loadForumTests()
 				'step_size' => 50,
 				'step_max' => '
 					SELECT MAX(id_topic)
-					FROM ' . $db_prefix . 'log_search_subjects'
+					FROM {db_prefix}log_search_subjects'
 			),
 			'check_query' => '
 				SELECT lss.id_topic, lss.word
-				FROM ' . $db_prefix . 'log_search_subjects AS lss
-					LEFT JOIN ' . $db_prefix . 'topics AS t ON (t.id_topic = lss.id_topic)
+				FROM {db_prefix}log_search_subjects AS lss
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lss.id_topic)
 				WHERE lss.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND t.id_topic IS NULL',
 			'fix_collect' => array(
@@ -1038,7 +1038,7 @@ function loadForumTests()
 				'process' => create_function('$deleteTopics', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_search_subjects
+						DELETE FROM {db_prefix}log_search_subjects
 						WHERE id_topic IN ({array_int:deleteTopics})",
 						array(
 							\'deleteTopics\' => $deleteTopics
@@ -1053,12 +1053,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_polls'
+					FROM {db_prefix}log_polls'
 			),
 			'check_query' => '
 				SELECT lp.id_poll, lp.id_member
-				FROM ' . $db_prefix . 'log_polls AS lp
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = lp.id_member)
+				FROM {db_prefix}log_polls AS lp
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lp.id_member)
 				WHERE lp.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lp.id_member > 0
 					AND mem.id_member IS NULL',
@@ -1067,7 +1067,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_polls
+						DELETE FROM {db_prefix}log_polls
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -1082,12 +1082,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_poll)
-					FROM ' . $db_prefix . 'log_polls'
+					FROM {db_prefix}log_polls'
 			),
 			'check_query' => '
 				SELECT lp.id_poll, lp.id_member
-				FROM ' . $db_prefix . 'log_polls AS lp
-					LEFT JOIN ' . $db_prefix . 'polls AS p ON (p.id_poll = lp.id_poll)
+				FROM {db_prefix}log_polls AS lp
+					LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = lp.id_poll)
 				WHERE lp.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND p.id_poll IS NULL',
 			'fix_collect' => array(
@@ -1095,7 +1095,7 @@ function loadForumTests()
 				'process' => create_function('$polls', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_polls
+						DELETE FROM {db_prefix}log_polls
 						WHERE id_poll IN ({array_int:polls})",
 						array(
 							\'polls\' => $polls
@@ -1110,12 +1110,12 @@ function loadForumTests()
 				'step_size' => 500,
 				'step_max' => '
 					SELECT MAX(id_report)
-					FROM ' . $db_prefix . 'log_reported'
+					FROM {db_prefix}log_reported'
 			),
 			'check_query' => '
 				SELECT lr.id_report, lr.subject
-				FROM ' . $db_prefix . 'log_reported AS lr
-					LEFT JOIN ' . $db_prefix . 'log_reported_comments AS lrc ON (lrc.id_report = lr.id_report)
+				FROM {db_prefix}log_reported AS lr
+					LEFT JOIN {db_prefix}log_reported_comments AS lrc ON (lrc.id_report = lr.id_report)
 				WHERE lr.id_report BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lrc.id_report IS NULL',
 			'fix_collect' => array(
@@ -1123,7 +1123,7 @@ function loadForumTests()
 				'process' => create_function('$reports', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_reported
+						DELETE FROM {db_prefix}log_reported
 						WHERE id_report IN ({array_int:reports})",
 						array(
 							\'reports\' => $reports
@@ -1138,12 +1138,12 @@ function loadForumTests()
 				'step_size' => 200,
 				'step_max' => '
 					SELECT MAX(id_report)
-					FROM ' . $db_prefix . 'log_reported_comments'
+					FROM {db_prefix}log_reported_comments'
 			),
 			'check_query' => '
 				SELECT lrc.id_report, lrc.membername
-				FROM ' . $db_prefix . 'log_reported_comments AS lrc
-					LEFT JOIN ' . $db_prefix . 'log_reported AS lr ON (lr.id_report = lrc.id_report)
+				FROM {db_prefix}log_reported_comments AS lrc
+					LEFT JOIN {db_prefix}log_reported AS lr ON (lr.id_report = lrc.id_report)
 				WHERE lrc.id_report BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lr.id_report IS NULL',
 			'fix_collect' => array(
@@ -1151,7 +1151,7 @@ function loadForumTests()
 				'process' => create_function('$reports', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_reported_comments
+						DELETE FROM {db_prefix}log_reported_comments
 						WHERE id_report IN ({array_int:reports})",
 						array(
 							\'reports\' => $reports
@@ -1166,12 +1166,12 @@ function loadForumTests()
 				'step_size' => 200,
 				'step_max' => '
 					SELECT MAX(id_member)
-					FROM ' . $db_prefix . 'log_group_requests'
+					FROM {db_prefix}log_group_requests'
 			),
 			'check_query' => '
 				SELECT lgr.id_member
-				FROM ' . $db_prefix . 'log_group_requests AS lgr
-					LEFT JOIN ' . $db_prefix . 'members AS mem ON (mem.id_member = lgr.id_member)
+				FROM {db_prefix}log_group_requests AS lgr
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 				WHERE lgr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL
 				GROUP BY lgr.id_member',
@@ -1180,7 +1180,7 @@ function loadForumTests()
 				'process' => create_function('$members', '
 					global $smfFunc;
 					$smfFunc[\'db_query\'](\'\', "
-						DELETE FROM {$db_prefix}log_group_requests
+						DELETE FROM {db_prefix}log_group_requests
 						WHERE id_member IN ({array_int:members})",
 						array(
 							\'members\' => $members
@@ -1195,12 +1195,12 @@ function loadForumTests()
 				'step_size' => 200,
 				'step_max' => '
 					SELECT MAX(id_group)
-					FROM ' . $db_prefix . 'log_group_requests'
+					FROM {db_prefix}log_group_requests'
 			),
 			'check_query' => '
 				SELECT lgr.id_group
-				FROM ' . $db_prefix . 'log_group_requests AS lgr
-					LEFT JOIN ' . $db_prefix . 'membergroups AS mg ON (mg.id_group = lgr.id_group)
+				FROM {db_prefix}log_group_requests AS lgr
+					LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 				WHERE lgr.id_group BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mg.id_group IS NULL
 				GROUP BY lgr.id_group',
