@@ -178,7 +178,7 @@ function AdminLog()
 	global $sourcedir;
 
 	// Show the admin log.
-	require_once($sourcedir . '/ModLog.php');
+	require_once($sourcedir . '/Modlog.php');
 	ViewModlog();
 }
 
@@ -1774,13 +1774,13 @@ function AdminTask()
 	if (empty($_POST['do']))
 	{
 		$context['sub_template'] = 'activity_' . $context['maintain_activity'];
-	
+
 		// Help text or page title?
 		$context['help_text'] = isset($helptxt[$context['maintain_activity']]) ? $context['maintain_activity'] : false;
 		$context['page_title'] = isset($txt[$context['maintain_activity']]) ? $txt[$context['maintain_activity']] : $txt['maintain_general'];
-	
+
 		// Setup the layer.
-		$context['template_layers'][] = 'maintain';	
+		$context['template_layers'][] = 'maintain';
 	}
 
 	// Call the function - telling them what we're up to.

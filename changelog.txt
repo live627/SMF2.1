@@ -69,6 +69,7 @@ January 2008
  ! Few fixes with the Moderation Log. (install_2-0.sql, Modlog language file) [Bug 1222,1224]
  ! Fixed index error in News.php. (News.php) [Bug 1221]
  ! crc32 doesn't work correctly on 64-bit systems. (Subs-Package.php, Class-Graphics.php, webinstall.php) [Bug 1220]
+ ! Changed the admin action logging strings to the standard string format to parse. "{%varname%} -> {varname}" (Modlog.php, Modlog language file)
 
 
 December 2007

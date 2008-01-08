@@ -545,7 +545,7 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 
 		if (empty($entries[$k]['action_text']))
 			$entries[$k]['action_text'] = isset($txt['modlog_ac_' . $entry['action']]) ? $txt['modlog_ac_' . $entry['action']] : $entry['action'];
-		$entries[$k]['action_text'] = preg_replace('~\{%([A-Za-z\d_]+)%\}~ie', 'isset($entry[\'extra\'][\'$1\']) ? $entry[\'extra\'][\'$1\'] : \'\'', $entries[$k]['action_text']);	
+		$entries[$k]['action_text'] = preg_replace('~\{([A-Za-z\d_]+)\}~ie', 'isset($entry[\'extra\'][\'$1\']) ? $entry[\'extra\'][\'$1\'] : \'\'', $entries[$k]['action_text']);
 	}
 
 	// Back we go!
