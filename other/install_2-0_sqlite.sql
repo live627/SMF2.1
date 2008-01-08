@@ -824,7 +824,7 @@ CREATE INDEX {$db_prefix}log_actions_log_time ON {$db_prefix}log_actions (log_ti
 CREATE INDEX {$db_prefix}log_actions_id_member ON {$db_prefix}log_actions (id_member);
 CREATE INDEX {$db_prefix}log_actions_id_board ON {$db_prefix}log_actions (id_board);
 CREATE INDEX {$db_prefix}log_actions_id_msg ON {$db_prefix}log_actions (id_msg);
-CREATE INDEX {$db_prefix}log_actions_id_log ON {$db_prefix}log_actions (id_log;
+CREATE INDEX {$db_prefix}log_actions_id_log ON {$db_prefix}log_actions (id_log);
 
 #
 # Table structure for table `log_activity`
