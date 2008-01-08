@@ -1667,7 +1667,7 @@ function Post2()
 			),
 			array('id_poll')
 		);
-		$id_poll = $smfFunc['db_insert_id']( '{db_prefix}polls', 'id_poll');
+		$id_poll = $smfFunc['db_insert_id']('{db_prefix}polls', 'id_poll');
 
 		// Create each answer choice.
 		$i = 0;

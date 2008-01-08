@@ -1865,7 +1865,7 @@ function EditPermissionProfiles()
 			),
 			array('id_profile')
 		);
-		$profile_id = $smfFunc['db_insert_id']( '{db_prefix}permission_profiles', 'id_profile');
+		$profile_id = $smfFunc['db_insert_id']('{db_prefix}permission_profiles', 'id_profile');
 
 		// Load the permissions from the one it's being copied from.
 		$request = $smfFunc['db_query']('', '

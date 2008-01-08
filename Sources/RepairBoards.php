@@ -1477,7 +1477,7 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_category_error', false);
 		}
 
-		$salvageCatID = $smfFunc['db_insert_id']( '{db_prefix}categories', 'id_cat');
+		$salvageCatID = $smfFunc['db_insert_id']('{db_prefix}categories', 'id_cat');
 	}
 
 	// Check to see if a 'Salvage Board' exists, if not => insert one.
@@ -1511,7 +1511,7 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_board_error', false);
 		}
 
-		$salvageBoardID = $smfFunc['db_insert_id']( '{db_prefix}boards', 'id_board');
+		$salvageBoardID = $smfFunc['db_insert_id']('{db_prefix}boards', 'id_board');
 	}
 
 	$smfFunc['db_query']('alter_table_boards', '

@@ -176,7 +176,7 @@ function issueWarning($memID)
 				),
 				array('id_notice')
 			);
-			$id_notice = $smfFunc['db_insert_id']( '{db_prefix}log_member_notices', 'id_notice');
+			$id_notice = $smfFunc['db_insert_id']('{db_prefix}log_member_notices', 'id_notice');
 		}
 
 		// Just in case - make sure notice is valid!
