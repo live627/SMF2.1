@@ -256,7 +256,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	$crc = unpack('Vcrc32/Visize', substr($data, strlen($data) - 8, 8));
 	$data = @gzinflate(substr($data, $offset, strlen($data) - 8 - $offset));
 
-	if ($crc['crc32'] != crc32($data))
+	if ($crc['crc32'] != smf_crc32($data))
 		return false;
 
 	$blocks = strlen($data) / 512 - 1;
@@ -2541,6 +2541,24 @@ function cleanupFilePermissions($permission_type = 'free')
 
 		$done_dirs[] = $dirname;
 	}
+}
+
+// crc32 doesn't work as expected on 64-bit functions - make our own.
+// http://www.php.net/crc32#79567
+if (!function_exists('smf_crc32'))
+{
+	function smf_crc32($number)
+	{
+		$crc = crc32($number);
+	
+		if($crc & 0x80000000){
+			$crc ^= 0xffffffff;
+			$crc += 1;
+			$crc = -$crc;
+		}
+	
+		return $crc;
+	} 
 }
 
 ?>
