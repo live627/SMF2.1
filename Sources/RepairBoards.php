@@ -506,7 +506,7 @@ function loadForumTests()
 				$row[\'myNumPosts\'] = (int) $row[\'myNumPosts\'];
 
 				$smfFunc[\'db_insert\'](\'\',
-					\'{db_prefix}\' . \'boards\',
+					\'{db_prefix}boards\',
 					array(\'id_cat\' => \'int\', \'name\' => \'string\', \'description\' => \'string\', \'num_topics\' => \'int\', \'num_posts\' => \'int\', \'member_groups\' => \'string\'),
 					array($salvageCatID, \'Salvaged board\', \'\', $row[\'myNumTopics\'], $row[\'myNumPosts\'], \'1\'),
 					array(\'id_board\')

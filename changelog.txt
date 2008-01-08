@@ -66,6 +66,7 @@ January 2008
  * Changed the Moderation Log to use the generic list template. (ModLog template)
  & Changed the way the moderation log displays information on activities to make it human readable. (ModLog language file)
  ! Added an admin log to the admin center that is displayed if the moderation log is active, not used much yet. (Various files)
+ ! Few fixes with the Moderation Log. (install_2-0.sql, Modlog language file) [Bug 1222,1224]
 
 
 December 2007
