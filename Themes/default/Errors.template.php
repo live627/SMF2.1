@@ -36,18 +36,31 @@ function template_error_log()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-		<form action="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';start=', $context['start'], $context['has_filter'] ? $context['filter']['href'] : '', '" method="post" accept-charset="', $context['character_set'], '" onsubmit="if (lastClicked == \'remove_all\' &amp;&amp; !confirm(\'', $txt['sure_about_errorlog_remove'], '\')) return false; else return true;">
+		<form action="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';start=', $context['start'], $context['has_filter'] ? $context['filter']['href'] : '', '" method="post" accept-charset="', $context['character_set'], '" onsubmit="if (lastClicked == \'remove_all\' &amp;&amp; !confirm(\'', $txt['sure_about_errorlog_remove'], '\')) return false; else return true;">
 			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 				var lastClicked = "";
 			// ]]></script>
-			<table border="0" cellspacing="1" cellpadding="5" class="bordercolor" align="center" width="100%">';
-
-	echo '
+			<table border="0" cellspacing="1" cellpadding="5" class="bordercolor" align="center" width="100%">
 				<tr>
 					<td colspan="2" class="titlebg">
-						<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-							<td>', $txt['pages'], ': ', $context['page_index'], '</td>
-						</tr></table>
+						<a href="', $scripturl, '?action=helpadmin;help=error_log" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['errlog'], '
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="windowbg2">
+						Apply filter of type:';
+
+	$error_types = array();
+	foreach ($context['error_types'] as $type => $details)
+		$error_types[] = ($details['is_selected'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="" /> ' : '') . '<a href="' . $details['url'] . '" ' . ($details['is_selected'] ? 'style="font-weight: bold;"' : '') . ' title="' . $details['description'] . '">' . $details['label'] . '</a>';
+		
+	echo '
+						', implode('&nbsp;|&nbsp;', $error_types), '
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="catbg">
+						', $txt['pages'], ': ', $context['page_index'], '
 					</td>
 				</tr>';
 
@@ -55,7 +68,7 @@ function template_error_log()
 		echo '
 				<tr>
 					<td colspan="2" class="windowbg2">
-						<b>', $txt['applying_filter'], ':</b> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], ' (<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['clear_filter'], '</a>)
+						<b>', $txt['applying_filter'], ':</b> ', $context['filter']['entity'], ' ', $context['filter']['value']['html'], ' (<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['clear_filter'], '</a>)
 					</td>
 				</tr>';
 
@@ -77,21 +90,21 @@ function template_error_log()
 					</td><td class="windowbg2" width="100%"><table width="100%" class="windowbg2" border="0" cellspacing="7" cellpadding="0">
 						<tr>
 							<td class="windowbg2" width="50%">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=id_member;value=', $error['member']['id'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=id_member;value=', $error['member']['id'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '" /></a>
 								<b>', $error['member']['link'], '</b>
 							</td><td class="windowbg2" width="50%" align="left">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? '' : ';desc', $context['has_filter'] ? $context['filter']['href'] : '', '" title="', $txt['reverse_direction'], '"><img src="', $settings['images_url'], '/sort_', $context['sort_direction'], '.gif" alt="" /></a>
+								<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? '' : ';desc', $context['has_filter'] ? $context['filter']['href'] : '', '" title="', $txt['reverse_direction'], '"><img src="', $settings['images_url'], '/sort_', $context['sort_direction'], '.gif" alt="', $txt['reverse_direction'], '" /></a>
 								<b>', $error['time'], '</b>
 							</td>
 						</tr><tr>
 							<td class="windowbg2" width="50%">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=ip;value=', $error['member']['ip'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=ip;value=', $error['member']['ip'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_ip'], '" /></a>
 								<b><a href="', $scripturl, '?action=trackip;searchip=', $error['member']['ip'], '">', $error['member']['ip'], '</a></b>&nbsp;&nbsp;
 							</td><td class="windowbg2" width="50%">';
 
 		if ($error['member']['session'] != '')
 			echo '
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=session;value=', $error['member']['session'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_session'], '" /></a>
 								', $error['member']['session'];
 
 		echo '
@@ -99,24 +112,24 @@ function template_error_log()
 						</tr><tr>
 							<td class="windowbg2" width="50%">&nbsp;</td>
 							<td class="windowbg2" width="50%">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=error_type;value=', $error['error_type']['type'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=error_type;value=', $error['error_type']['type'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '" /></a>
 								', $txt['error_type'], ': ', $error['error_type']['name'], '
 							</td>
 						</tr></td>
 							<td class="windowbg2" colspan="2"><div style="overflow: hidden; width: 100%; white-space: nowrap;">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '" /></a>
 								<a href="', $error['url']['html'], '">', $error['url']['html'], '</a>
 								</div></td>
 						</tr><tr>
 							<td class="windowbg2" colspan="2">
-								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=message;value=', $error['message']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '" /></a></div>
+								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=message;value=', $error['message']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '" /></a></div>
 								<div style="float: left; margin-left: 1ex;">', $error['message']['html'], '</div>
 							</td>
 						</tr>';
 		if (!empty($error['file']))
 			echo '<tr>
 							<td class="windowbg2" colspan="2">
-								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=file;value=', $error['file']['search'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '" /></a></div>
+								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=logs;sa=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=file;value=', $error['file']['search'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '" /></a></div>
 								<div style="float: left; margin-left: 1ex;">
 									', $txt['file'], ': ', $error['file']['link'], '<br />
 									', $txt['line'], ': ', $error['file']['line'], '
@@ -144,10 +157,8 @@ function template_error_log()
 
 	echo '
 				<tr>
-					<td colspan="2" class="titlebg">
-						<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-							<td>', $txt['pages'], ': ', $context['page_index'], '</td>
-						</tr></table>
+					<td colspan="2" class="catbg">
+						', $txt['pages'], ': ', $context['page_index'], '
 					</td>
 				</tr>
 			</table><br />';

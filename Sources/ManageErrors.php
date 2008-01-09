@@ -32,7 +32,7 @@ if (!defined('SMF'))
 		- uses the Errors template and error_log sub template.
 		- requires the maintain_forum permission.
 		- uses the 'view_errors' administration area.
-		- accessed from ?action=admin;area=errorlog.
+		- accessed from ?action=admin;area=logs;sa=errorlog.
 
 	void deleteErrors()
 		- deletes all or some of the errors in the error log.
@@ -107,7 +107,7 @@ function ViewErrorLog()
 
 	// If this filter is empty...
 	if ($num_errors == 0 && isset($filter))
-		redirectexit('action=admin;area=errorlog' . (isset($_REQUEST['desc']) ? ';desc' : ''));
+		redirectexit('action=admin;area=logs;sa=errorlog' . (isset($_REQUEST['desc']) ? ';desc' : ''));
 
 	// Clean up start.
 	if (!isset($_GET['start']) || $_GET['start'] < 0)
@@ -117,7 +117,7 @@ function ViewErrorLog()
 	$context['sort_direction'] = isset($_REQUEST['desc']) ? 'down' : 'up';
 
 	// Set the page listing up.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . (isset($filter) ? $filter['href'] : ''), $_GET['start'], $num_errors, $modSettings['defaultMaxMessages']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=logs;sa=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . (isset($filter) ? $filter['href'] : ''), $_GET['start'], $num_errors, $modSettings['defaultMaxMessages']);
 	$context['start'] = $_GET['start'];
 
 	// Find and sort out the errors.
@@ -172,8 +172,8 @@ function ViewErrorLog()
 			$context['errors'][$row['id_error']]['file'] = array(
 				'file' => $row['file'],
 				'line' => $row['line'],
-				'href' => $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'],
-				'link' => $linkfile ? '<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>' : $row['file'],
+				'href' => $scripturl . '?action=admin;area=logs;sa=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'],
+				'link' => $linkfile ? '<a href="' . $scripturl . '?action=admin;area=logs;sa=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>' : $row['file'],
 				'search' => base64_encode($row['file']),
 			);
 		}
@@ -241,19 +241,12 @@ function ViewErrorLog()
 			$context['filter']['value']['html'] = &$filter['value']['sql'];
 	}
 
-	// Setup the admin tabs!
-	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => $txt['errlog'],
-		'help' => 'error_log',
-		'description' => sprintf($txt['errlog_desc'], $txt['remove']),
-	);
+	$context['error_types'] = array();
 
-	$context['tabs'] = array();
-
-	$context['tabs']['all'] = array(
+	$context['error_types']['all'] = array(
 		'label' => $txt['errortype_all'],
 		'description' => isset($txt['errortype_all_desc']) ? $txt['errortype_all_desc'] : '',
-		'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : ''),
+		'url' => $scripturl . '?action=admin;area=logs;sa=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : ''),
 		'is_selected' => empty($filter),
 	);
 
@@ -273,23 +266,23 @@ function ViewErrorLog()
 		// Total errors so far?
 		$sum += $row['num_errors'];
 
-		$context['tabs'][$sum] = array(
+		$context['error_types'][$sum] = array(
 			'label' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
 			'description' => isset($txt['errortype_' . $row['error_type'] . '_desc']) ? $txt['errortype_' . $row['error_type'] . '_desc'] : '',
-			'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
+			'url' => $scripturl . '?action=admin;area=logs;sa=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
 			'is_selected' => isset($filter) && $filter['value']['sql'] == addcslashes($row['error_type'], '\\_%'),
 		);
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Update the all errors tab with the total number of errors
-	$context['tabs']['all']['label'] .= ' (' . $sum . ')';
+	$context['error_types']['all']['label'] .= ' (' . $sum . ')';
 
 	// Finally, work out what is the last tab!
-	if (isset($context['tabs'][$sum]))
-		$context['tabs'][$sum]['is_last'] = true;
+	if (isset($context['error_types'][$sum]))
+		$context['error_types'][$sum]['is_last'] = true;
 	else
-		$context['tabs']['all']['is_last'] = true;
+		$context['error_types']['all']['is_last'] = true;
 
 	// And this is pretty basic ;).
 	$context['page_title'] = $txt['errlog'];
@@ -333,11 +326,11 @@ function deleteErrors()
 		);
 
 		// Go back to where we were.
-		redirectexit('action=admin;area=errorlog' . (isset($_REQUEST['desc']) ? ';desc' : '') . ';start=' . $_GET['start'] . (isset($filter) ? ';filter=' . $_GET['filter'] . ';value=' . $_GET['value'] : ''));
+		redirectexit('action=admin;area=logs;sa=errorlog' . (isset($_REQUEST['desc']) ? ';desc' : '') . ';start=' . $_GET['start'] . (isset($filter) ? ';filter=' . $_GET['filter'] . ';value=' . $_GET['value'] : ''));
 	}
 
 	// Back to the error log!
-	redirectexit('action=admin;area=errorlog' . (isset($_REQUEST['desc']) ? ';desc' : ''));
+	redirectexit('action=admin;area=logs;sa=errorlog' . (isset($_REQUEST['desc']) ? ';desc' : ''));
 }
 
 function ViewFile()

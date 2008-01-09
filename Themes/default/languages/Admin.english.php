@@ -214,6 +214,8 @@ $txt['maintain_tasks'] = 'Scheduled Tasks';
 $txt['maintain_tasks_desc'] = 'Manage all the tasks scheduled by SMF.';
 $txt['admin_log'] = 'Admin Log';
 $txt['admin_log_desc'] = 'Lists administrative tasks that have been performed by admins of your forum.';
+$txt['moderation_log'] = 'Moderation Log';
+$txt['moderation_log_desc'] = 'Lists moderation activities that have been performed by moderators on your forum.';
 
 $txt['mailqueue_title'] = 'Mail';
 
@@ -409,7 +411,7 @@ $txt['editnews_remove_confirm'] = 'Are you sure you want to delete the selected 
 $txt['censor_clickadd'] = 'Click here to add another word.';
 
 $txt['layout_controls'] = 'Forum';
-
+$txt['logs'] = 'Logs';
 $txt['generate_reports'] = 'Reports';
 
 $txt['update_available'] = 'Update Available!';

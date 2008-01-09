@@ -50,15 +50,15 @@ function ViewModlog()
 	global $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc, $settings;
 
 	// Are we looking at the moderation log or the admin log.
-	$context['log_type'] = isset($_REQUEST['action']) && $_REQUEST['action'] == 'admin' ? 3 : 1;
+	$context['log_type'] = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'adminlog' ? 3 : 1;
 	if ($context['log_type'] == 3)
 		isAllowedTo('admin_forum');
 
 	// These change dependant on whether we are viewing the moderation or admin log.
-	if ($context['log_type'] == 3)
-		$context['url_start'] = '?action=admin;area=maintain;sa=adminlog';
+	if ($context['log_type'] == 3 || $_REQUEST['action'] == 'admin')
+		$context['url_start'] = '?action=admin;area=logs;sa=' . ($context['log_type'] == 3 ? 'adminlog' : 'modlog') . ';type=' . $context['log_type'];
 	else
-		$context['url_start'] = '?action=moderate;area=modlog';
+		$context['url_start'] = '?action=moderate;area=modlog;type=' . $context['log_type'];
 
 	$context['can_delete'] = allowedTo('admin_forum');
 
@@ -169,7 +169,7 @@ function ViewModlog()
 		'get_items' => array(
 			'function' => 'list_getModLogEntries',
 			'params' => array(
-				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : ''),
+				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string})' : ''),
 				array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']),
 				$context['log_type'],
 			),
@@ -177,7 +177,7 @@ function ViewModlog()
 		'get_count' => array(
 			'function' => 'list_getModLogEntryCount',
 			'params' => array(
-				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : ''),
+				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string})' : ''),
 				array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']),
 				$context['log_type'],
 			),
@@ -206,8 +206,8 @@ function ViewModlog()
 					'class' => 'smalltext',
 				),
 				'sort' => array(
-					'default' => 'lm.log_time',
-					'reverse' => 'lm.log_time DESC',
+					'default' => 'lm.log_time DESC',
+					'reverse' => 'lm.log_time',
 				),
 			),
 			'moderator' => array(

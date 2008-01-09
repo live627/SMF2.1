@@ -398,7 +398,6 @@ function AdminMain()
 					'subsections' => array(
 						'general' => array($txt['maintain_common'], 'admin_forum'),
 						'tasks' => array($txt['maintain_tasks'], 'admin_forum'),
-						'adminlog' => array($txt['admin_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 					),
 				),
 				'mailqueue' => array(
@@ -416,11 +415,14 @@ function AdminMain()
 					'file' => 'Reports.php',
 					'function' => 'ReportsMain',
 				),
-				'errorlog' => array(
-					'label' => $txt['errlog'],
-					'file' => 'ManageErrors.php',
-					'function' => 'ViewErrorLog',
-					'custom_url' => $scripturl . '?action=admin;area=errorlog;desc',
+				'logs' => array(
+					'label' => $txt['logs'],
+					'function' => 'AdminLogs',
+					'subsections' => array(
+						'errorlog' => array($txt['errlog'], 'admin_forum'),
+						'adminlog' => array($txt['admin_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
+						'modlog' => array($txt['moderation_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
+					),
 				),
 				'repairboards' => array(
 					'file' => 'RepairBoards.php',
@@ -1034,6 +1036,46 @@ function AdminSearchOM()
 				);
 		}
 	}
+}
+
+// This function decides which log to load.
+function AdminLogs()
+{
+	global $sourcedir, $context, $txt, $scripturl;
+
+	// These are the logs they can load.
+	$log_functions = array(
+		'errorlog' => array('ManageErrors.php', 'ViewErrorLog'),
+		'adminlog' => array('ModLog.php', 'ViewModlog'),
+		'modlog' => array('ModLog.php', 'ViewModlog'),
+	);
+
+	$sub_action = isset($_REQUEST['sa']) && isset($log_functions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'errorlog';
+	// If it's not got a sa set it must have come here for first time, pretend error log should be reversed.
+	if (!isset($_REQUEST['sa']))
+		$_REQUEST['desc'] = true;
+
+	// Setup some tab stuff.
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['logs'],
+		'help' => '',
+		'description' => $txt['maintain_info'],
+		'tabs' => array(
+			'errorlog' => array(
+				'url' => $scripturl . '?action=admin;area=logs;sa=errorlog;desc',
+				'description' => sprintf($txt['errlog_desc'], $txt['remove']),
+			),
+			'adminlog' => array(
+				'description' => $txt['admin_log_desc'],
+			),
+			'modlog' => array(
+				'description' => $txt['moderation_log_desc'],
+			),
+		),
+	);
+
+	require_once($sourcedir . '/' . $log_functions[$sub_action][0]);
+	$log_functions[$sub_action][1]();
 }
 
 ?>
