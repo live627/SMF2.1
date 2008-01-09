@@ -754,10 +754,106 @@ function ModReport()
 	$smfFunc['db_free_result']($request);
 
 	// What have the other moderators done to this message?
-	// !!! Should this limit the results to the boards the mod can see or not?
-
 	require_once($sourcedir . '/Modlog.php');
-	getModLogEntries('lm.id_msg = {int:id_msg}', array('id_msg' => $context['report']['message_id']));
+	require_once($sourcedir . '/Subs-List.php');
+	loadLanguage('Modlog');
+
+	// This is all the information required for a watched user listing.
+	$listOptions = array(
+		'id' => 'moderation_actions_list',
+		'title' => $txt['mc_modreport_modactions'],
+		'items_per_page' => 15,
+		'no_items_label' => $txt['modlog_no_entries_found'],
+		'base_href' => $scripturl . '?action=moderate;area=reports;id=' . $context['report']['id'],
+		'default_sort_col' => 'time',
+		'get_items' => array(
+			'function' => 'list_getModLogEntries',
+			'params' => array(
+				'lm.id_msg = {int:id_msg}',
+				array('id_msg' => $context['report']['message_id']),
+				1,
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getModLogEntryCount',
+			'params' => array(
+				'lm.id_msg = {int:id_msg}',
+				array('id_msg' => $context['report']['message_id']),
+				1,
+			),
+		),
+		// This assumes we are viewing by user.
+		'columns' => array(
+			'action' => array(
+				'header' => array(
+					'value' => $txt['modlog_action'],
+				),
+				'data' => array(
+					'db' => 'action_text',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'lm.action',
+					'reverse' => 'lm.action DESC',
+				),
+			),
+			'time' => array(
+				'header' => array(
+					'value' => $txt['modlog_date'],
+				),
+				'data' => array(
+					'db' => 'time',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'lm.log_time',
+					'reverse' => 'lm.log_time DESC',
+				),
+			),
+			'moderator' => array(
+				'header' => array(
+					'value' => $txt['modlog_member'],
+				),
+				'data' => array(
+					'db' => 'moderator_link',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'mem.real_name',
+					'reverse' => 'mem.real_name DESC',
+				),
+			),
+			'position' => array(
+				'header' => array(
+					'value' => $txt['modlog_position'],
+				),
+				'data' => array(
+					'db' => 'position',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'mg.group_name',
+					'reverse' => 'mg.group_name DESC',
+				),
+			),
+			'ip' => array(
+				'header' => array(
+					'value' => $txt['modlog_ip'],
+				),
+				'data' => array(
+					'db' => 'ip',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'lm.ip',
+					'reverse' => 'lm.ip DESC',
+				),
+			),
+		),
+	);
+
+	// Create the watched user list.
+	createList($listOptions);
 
 	// Finally we are done :P
 	loadTemplate('ModerationCenter');

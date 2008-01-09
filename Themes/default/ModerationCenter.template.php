@@ -551,6 +551,8 @@ function template_viewmodreport()
 
 	$alt = false;
 
+	template_show_list('moderation_actions_list');
+
 	if (!empty($context['entries']))
 	{
 		echo '

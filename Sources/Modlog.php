@@ -35,7 +35,10 @@ if (!defined('SMF'))
 		- uses the Modlog template, main sub template.
 		- is accessed via ?action=moderate;area=modlog.
 
-	void getModLogEntries($query_string = '', $query_params = array(), $order= '', $limit = 0)
+	int list_getModLogEntries()
+		//!!!
+
+	array list_getModLogEntries($start, $items_per_page, $sort, $query_string = '', $query_params = array(), $log_type = 1)
 		- Gets the moderation log entries that match the specified paramaters
 		- limit can be an array with two values
 		- search_param and order should be proper SQL strings or blank.  If blank they are not used.
@@ -58,8 +61,6 @@ function ViewModlog()
 		$context['url_start'] = '?action=moderate;area=modlog';
 
 	$context['can_delete'] = allowedTo('admin_forum');
-
-	$modlog_query = $context['can_delete'] || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_board = 0 AND lm.id_topic = 0' : (strtr($user_info['mod_cache']['bq'], array('id_board' => 'b.id_board')) . ' AND ' . strtr($user_info['mod_cache']['bq'], array('id_board' => 't.id_board'))));
 
 	loadLanguage('Modlog');
 
@@ -168,7 +169,7 @@ function ViewModlog()
 		'get_items' => array(
 			'function' => 'list_getModLogEntries',
 			'params' => array(
-				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : '') . $modlog_query,
+				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : ''),
 				array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']),
 				$context['log_type'],
 			),
@@ -176,7 +177,7 @@ function ViewModlog()
 		'get_count' => array(
 			'function' => 'list_getModLogEntryCount',
 			'params' => array(
-				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : '') . $modlog_query,
+				(!empty($search_params['string']) ? ' INSTR({raw:sql_type}, {string:search_string}) AND ' : ''),
 				array('sql_type' => $search_params['type_sql'], 'search_string' => $search_params['string']),
 				$context['log_type'],
 			),
@@ -304,7 +305,9 @@ function ViewModlog()
 // Get the number of mod log entries.
 function list_getModLogEntryCount($query_string = '', $query_params = array(), $log_type = 1)
 {
-	global $smfFunc;
+	global $smfFunc, $user_info;
+
+	$modlog_query = allowedTo('admin_forum') || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_board = 0 AND lm.id_topic = 0' : (strtr($user_info['mod_cache']['bq'], array('id_board' => 'b.id_board')) . ' AND ' . strtr($user_info['mod_cache']['bq'], array('id_board' => 't.id_board'))));
 
 	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
@@ -313,12 +316,14 @@ function list_getModLogEntryCount($query_string = '', $query_params = array(), $
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)
 			LEFT JOIN {db_prefix}boards AS b ON (b.id_board = lm.id_board)
 			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic)
-		WHERE id_log = {int:log_type}'
+		WHERE id_log = {int:log_type}
+			AND {raw:modlog_query}'
 			. (!empty($query_string) ? '
 				AND ' . $query_string : ''),
 		array_merge($query_params, array(
 			'reg_group_id' => 0,
 			'log_type' => $log_type,
+			'modlog_query' => $modlog_query,
 		))
 	);
 	list ($entry_count) = $smfFunc['db_fetch_row']($result);
@@ -330,6 +335,8 @@ function list_getModLogEntryCount($query_string = '', $query_params = array(), $
 function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '', $query_params = array(), $log_type = 1)
 {
 	global $context, $scripturl, $txt, $smfFunc, $user_info;
+
+	$modlog_query = allowedTo('admin_forum') || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_board = 0 AND lm.id_topic = 0' : (strtr($user_info['mod_cache']['bq'], array('id_board' => 'b.id_board')) . ' AND ' . strtr($user_info['mod_cache']['bq'], array('id_board' => 't.id_board'))));
 
 	// Do a little bit of self protection.
 	if (!isset($context['hoursdisable']))
@@ -348,7 +355,8 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)
 			LEFT JOIN {db_prefix}boards AS b ON (b.id_board = lm.id_board)
 			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic)
-			WHERE id_log = {int:log_type}'
+			WHERE id_log = {int:log_type}
+				AND {raw:modlog_query}'
 			. (!empty($query_string) ? '
 				AND ' . $query_string : '') . '
 		ORDER BY ' . $sort . '
@@ -356,6 +364,7 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 		array_merge($query_params, array(
 			'reg_group_id' => 0,
 			'log_type' => $log_type,
+			'modlog_query' => $modlog_query,
 		))
 	);
 
@@ -363,6 +372,7 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 	$topics = array();
 	$boards = array();
 	$members = array();
+	$messages = array();
 	$entries = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -402,6 +412,10 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 			$boards[(int) $row['extra']['board_from']][] = $row['id_action'];
 		if (isset($row['extra']['board']))
 			$boards[(int) $row['extra']['board']][] = $row['id_action'];
+
+		// A message?
+		if (isset($row['extra']['message']))
+			$messages[(int) $row['extra']['message']][] = $row['id_action'];
 
 		// IP Info?
 		if (isset($row['extra']['ip_range']))
@@ -497,6 +511,39 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 					$this_action['extra']['topic'] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
 				elseif (isset($this_action['extra']['new_topic']) && $this_action['extra']['new_topic'] == $row['id_topic'])
 					$this_action['extra']['new_topic'] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
+			}
+		}
+		$smfFunc['db_free_result']($request);
+	}
+
+	if (!empty($messages))
+	{
+		$request = $smfFunc['db_query']('', '
+			SELECT id_msg, subject
+			FROM {db_prefix}messages
+			WHERE id_msg IN ({array_int:message_list})
+			LIMIT ' . count(array_keys($messages)),
+			array(
+				'message_list' => array_keys($messages),
+			)
+		);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			foreach ($messages[$row['id_msg']] as $action)
+			{
+				$this_action = &$entries[$action];
+
+				// This isn't used in the current theme.
+				$this_action['message'] = array(
+					'id' => $row['id_msg'],
+					'subject' => $row['subject'],
+					'href' => $scripturl . '?msg=' . $row['id_msg'],
+					'link' => '<a href="' . $scripturl . '?msg=' . $row['id_msg'] . '">' . $row['subject'] . '</a>',
+				);
+
+				// Make the message number into a link.
+				if (isset($this_action['extra']['message']) && $this_action['extra']['message'] == $row['id_msg'])
+					$this_action['extra']['message'] = '<a href="' . $scripturl . '?msg=' . $row['id_msg'] . '">' . $row['subject'] . '</a>';
 			}
 		}
 		$smfFunc['db_free_result']($request);
