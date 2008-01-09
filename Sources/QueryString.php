@@ -92,7 +92,9 @@ function cleanRequest()
 
 	// Makes it easier to refer to things this way.
 	$scripturl = $boardurl . '/index.php';
-	$magicSybase = @ini_get('magic_quotes_sybase') || strtolower(@ini_get('magic_quotes_sybase')) == 'on';
+
+	// What function to use to reverse magic quotes - if sybase is on we assume that the database sensibly has the right unescape function!
+	$removeMagicQuoteFunction = @ini_get('magic_quotes_sybase') || strtolower(@ini_get('magic_quotes_sybase')) == 'on' ? 'unescape__recursive' : 'stripslashes__recursive';
 
 	// Save some memory.. (since we don't use these anyway.)
 	unset($GLOBALS['HTTP_POST_VARS'], $GLOBALS['HTTP_POST_VARS']);
@@ -135,10 +137,7 @@ function cleanRequest()
 
 		if (get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
 		{
-			if ($smfFunc['db_sybase'] && $magicSybase)
-				$_GET = unescape__recursive($_GET);
-			else
-				$_GET = stripslashes__recursive($_GET);
+			$_GET = $removeMagicQuoteFunction($_GET);
 		}
 
 		// Search engines will send action=profile%3Bu=1, which confuses PHP.
@@ -185,13 +184,13 @@ function cleanRequest()
 	$_GET = htmlspecialchars__recursive($_GET);
 
 	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
-	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && (!$smfFunc['db_sybase'] || $magicSybase))
+	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0)
 	{
-		$_ENV = stripslashes__recursive($_ENV);
-		$_POST = stripslashes__recursive($_POST);
-		$_COOKIE = stripslashes__recursive($_COOKIE);
+		$_ENV = $removeMagicQuoteFunction($_ENV);
+		$_POST = $removeMagicQuoteFunction($_POST);
+		$_COOKIE = $removeMagicQuoteFunction($_COOKIE);
 		foreach ($_FILES as $k => $dummy)
-			$_FILES[$k]['name'] = stripslashes__recursive($_FILES[$k]['name']);
+			$_FILES[$k]['name'] = $removeMagicQuoteFunction($_FILES[$k]['name']);
 	}
 
 	// Let's not depend on the ini settings... why even have COOKIE in there, anyway?

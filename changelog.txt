@@ -72,6 +72,7 @@ January 2008
  ! Changed the admin action logging strings to the standard string format to parse. "{%varname%} -> {varname}" (Modlog.php, Modlog language file)
  ! Merged track user and track IP into one menu item in the profile menu. (Profile.php, Profile-View.php)
  + Log user profile edits and allow it's review from the tracking section of profile. (Profile-View.php, Profile language file)
+ ! cleanRequest wasn't reversing magic quotes right for sybase databases. (QueryString.php) [Bug 1194]
 
 
 December 2007
