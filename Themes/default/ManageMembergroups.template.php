@@ -335,7 +335,7 @@ function template_group_members()
 					<td align="left">
 						<b>', $txt['name'], ':</b> <span ', $context['group']['online_color'] ? 'style="color: ' . $context['group']['online_color'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
 						', $context['group']['description'] ? '<br /><b>' . $txt['membergroups_members_description'] . ':</b> ' . $context['group']['description'] : '', '
-						<br /><b>', $txt['members'], ':</b> ', $context['total_members'];
+						<br /><b>', $txt['membergroups_members_top'], ':</b> ', $context['total_members'];
 	// Any group moderators to show?
 	if (!empty($context['group']['moderators']))
 	{
@@ -449,50 +449,6 @@ function template_group_members()
 	echo '
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</form>';
-}
-
-// A simple template for showing a pretty listing of a group, for non-admins really.
-function template_group_index()
-{
-	global $context, $settings, $options, $scripturl, $txt;
-
-	// No moderation powers? Just show a link tree...
-	if (!$context['can_moderate'])
-		echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>';
-
-	echo '
-		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor" align="center">
-			<tr class="titlebg">
-				<td colspan="2" align="left">', $context['page_title'], '</td>
-			</tr>
-			<tr class="catbg">
-				<td align="left" width="90%">', $txt['name'], '</td>
-				<td align="center">', $txt['members'], '</td>
-			</tr>';
-
-	$alternate = 0;
-	foreach ($context['groups'] as $group)
-	{
-		echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td align="left" width="90%">
-					<a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;group=', $group['id'], '" style="font-weight: bold;', $group['color'] ? 'color: ' . $group['color'] . ';' : '', '">', $group['name'], '</a>&nbsp;', $group['stars'];
-
-		if ($group['desc'])
-			echo '
-					<div class="smalltext">', $group['desc'], '</div>';
-
-		echo '
-				</td>
-				<td align="left">', $group['num_members'], '</td>
-			</tr>';
-
-		$alternate = !$alternate;
-	}
-
-	echo '
-		</table>';
 }
 
 // Allow the moderator to enter a reason to each user being rejected.

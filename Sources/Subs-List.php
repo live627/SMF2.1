@@ -47,7 +47,7 @@ function createList($listOptions)
 	if (empty($listOptions['default_sort_col']))
 	{
 		$list_context['sort'] = array();
-		$sort = null;
+		$sort = '1=1';
 	}
 	else
 	{
@@ -73,9 +73,8 @@ function createList($listOptions)
 	if (empty($listOptions['items_per_page']))
 	{
 		$list_context['start'] = 0;
-		$list_context['items_per_page'] = null;
+		$list_context['items_per_page'] = 0;
 	}
-
 	// With items per page set, calculate total number of items and page index.
 	else
 	{

@@ -90,7 +90,7 @@ function Groups()
 // This very simply lists the groups, nothing snazy.
 function GroupList()
 {
-	global $txt, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc;
+	global $txt, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc, $sourcedir;
 
 	// Yep, find the groups...
 	$request = $smfFunc['db_query']('', '
@@ -174,6 +174,200 @@ function GroupList()
 
 	$context['sub_template'] = 'group_index';
 	$context['page_title'] = $txt['viewing_groups'];
+
+	// Making a list is not hard with this beauty.
+	require_once($sourcedir . '/Subs-List.php');
+
+	// Use the standard templates for showing this.
+	$listOptions = array(
+		'id' => 'group_lists',
+		'title' => $context['page_title'],
+		'get_items' => array(
+			'function' => 'list_getGroups',
+		),
+		'columns' => array(
+			'group' => array(
+				'header' => array(
+					'value' => $txt['name'],
+				),
+				'data' => array(
+					'function' => create_function('$group', '
+						global $scripturl, $context;
+
+						$output = \'<a href="\' . $scripturl . \'?action=\' . $context[\'current_action\'] . (isset($context[\'admin_area\']) ? \';area=\' . $context[\'admin_area\'] : \'\') . \';sa=members;group=\' . $group[\'id\'] . \'" \' . ($group[\'color\'] ? \'style="color: \' . $group[\'color\'] . \';"\' : \'\') . \'>\' . $group[\'name\'] . \'</a>\';
+
+						if ($group[\'desc\'])
+							$output .= \'<div class="smalltext">\' . $group[\'desc\'] . \'</div>\';
+
+						return $output;
+					'),
+					'style' => 'width: 50%;',
+				),
+			),
+			'stars' => array(
+				'header' => array(
+					'value' => $txt['membergroups_stars'],
+				),
+				'data' => array(
+					'db' => 'stars',
+				),
+			),
+			'moderators' => array(
+				'header' => array(
+					'value' => $txt['moderators'],
+				),
+				'data' => array(
+					'function' => create_function('$group', '
+						global $txt;
+
+						return empty($group[\'moderators\']) ? \'<em>\' . $txt[\'membergroups_new_copy_none\'] . \'</em>\' : implode(\', \', $group[\'moderators\']);
+					'),
+				),
+			),
+			'members' => array(
+				'header' => array(
+					'value' => $txt['membergroups_members_top'],
+				),
+				'data' => array(
+					'db' => 'num_members',
+				),
+			),
+		),
+	);
+
+	// Create the request list.
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'group_lists';
+}
+
+// Get the group information for the list.
+function list_getGroups($start, $items_per_page, $sort)
+{
+	global $smfFunc, $txt, $scripturl, $user_info, $settings;
+
+	// Yep, find the groups...
+	$request = $smfFunc['db_query']('', '
+		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
+			mg.stars, IFNULL(gm.id_member, 0) AS can_moderate
+		FROM {db_prefix}membergroups AS mg
+			LEFT JOIN {db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = {int:current_member})
+		WHERE mg.min_posts = {int:min_posts}
+			AND mg.id_group != {int:mod_group}
+		ORDER BY group_name',
+		array(
+			'current_member' => $user_info['id'],
+			'min_posts' => -1,
+			'mod_group' => 3,
+		)
+	);
+	// Start collecting the data.
+	$groups = array();
+	$group_ids = array();
+	$context['can_moderate'] = allowedTo('manage_membergroups');
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// We only list the groups they can see.
+		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
+			continue;
+
+		$row['stars'] = explode('#', $row['stars']);
+
+		$groups[$row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name'],
+			'desc' => $row['description'],
+			'color' => $row['online_color'],
+			'type' => $row['group_type'],
+			'num_members' => 0,
+			'moderators' => array(),
+			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
+		);
+
+		$context['can_moderate'] |= $row['can_moderate'];
+		$group_ids[] = $row['id_group'];
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Count up the members separately...
+	if (!empty($group_ids))
+	{
+		$query = $smfFunc['db_query']('', '
+			SELECT id_group, COUNT(*) AS num_members
+			FROM {db_prefix}members
+			WHERE id_group IN ({array_int:group_list})
+			GROUP BY id_group',
+			array(
+				'group_list' => $group_ids,
+			)
+		);
+		while ($row = $smfFunc['db_fetch_assoc']($query))
+			$groups[$row['id_group']]['num_members'] += $row['num_members'];
+		$smfFunc['db_free_result']($query);
+
+		// Only do additional groups if we can moderate...
+		if ($context['can_moderate'])
+		{
+			$query = $smfFunc['db_query']('', '
+				SELECT mg.id_group, COUNT(*) AS num_members
+				FROM {db_prefix}membergroups AS mg
+					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_screen}
+						AND mem.id_group != mg.id_group
+						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+				WHERE mg.id_group IN ({array_int:group_list})
+				GROUP BY mg.id_group',
+				array(
+					'group_list' => $group_ids,
+					'blank_screen' => '',
+				)
+			);
+			while ($row = $smfFunc['db_fetch_assoc']($query))
+				$groups[$row['id_group']]['num_members'] += $row['num_members'];
+			$smfFunc['db_free_result']($query);
+		}
+	}
+
+	// Get any group moderators.
+	// Count up the members separately...
+	if (!empty($group_ids))
+	{
+		$query = $smfFunc['db_query']('', '
+			SELECT mods.id_group, mods.id_member, mem.member_name
+			FROM {db_prefix}group_moderators AS mods
+				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+			WHERE mods.id_group IN ({array_int:group_list})',
+			array(
+				'group_list' => $group_ids,
+			)
+		);
+		while ($row = $smfFunc['db_fetch_assoc']($query))
+			$groups[$row['id_group']]['moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>';
+		$smfFunc['db_free_result']($query);
+	}
+
+	return $groups;
+}
+
+// How many groups are there that are visible?
+function list_getGroupCount()
+{
+	global $smfFunc;
+
+	$request = $smfFunc['db_query']('', '
+		SELECT COUNT(id_group) AS group_count
+		FROM {db_prefix}membergroups
+		WHERE mg.min_posts = {int:min_posts}
+			AND mg.id_group != {int:mod_group}',
+		array(
+			'min_posts' => -1,
+			'mod_group' => 3,
+		)
+	);
+	list ($group_count) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $group_count;
 }
 
 // Display members of a group, and allow adding of members to a group. Silly function name though ;)
@@ -576,9 +770,6 @@ function GroupRequests()
 						$emaildata = loadEmailTemplate('mc_group_approve', $replacements, $email['language']);
 
 						sendmail($email['email'], $emaildata['subject'], $emaildata['body']);
-
-						//!!! DELETE ME DELETE ME
-						//sendmail($email['email'], $txt['mc_group_email_sub_approve'], sprintf($txt['mc_group_email_request_approve'], $email['member_name'], $email['group_name'], ''));
 					}
 				}
 				// Otherwise, they are getting rejected (With or without a reason).

@@ -69,12 +69,14 @@ $txt['membergroups_members_group_moderators'] = 'Group Moderators';
 $txt['membergroups_members_description'] = 'Description';
 
 $txt['membergroups_postgroups'] = 'Post groups';
-
 $txt['membergroups_settings'] = 'Membergroup Settings';
 $txt['groups_manage_membergroups'] = 'Groups allowed to change membergroups';
 $txt['membergroups_select_permission_type'] = 'Select permission profile';
 $txt['membergroups_images_url'] = '{theme URL}/images/';
 $txt['membergroups_select_visible_boards'] = 'Show boards';
+$txt['membergroups_members_top'] = 'Members';
+$txt['membergroups_name'] = 'Name';
+$txt['membergroups_stars'] = 'Stars';
 
 $txt['admin_browse_approve'] = 'Members whose accounts are awaiting approval';
 $txt['admin_browse_approve_desc'] = 'From here you can manage all members who are waiting to have their accounts approved.';

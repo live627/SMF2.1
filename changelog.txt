@@ -79,6 +79,9 @@ January 2008
  ! Listing tables wasn't working properly with database names that were non-alphanumeric. (DbExtra-mysql.php) [Bug 1208]
  ! Removed some hardcoded strings. (Errors, Help template. ManageMaintenance language file) [Bug 1229,1231]
  ! Fixed SQL error in the weekly maintenance. (ScheduledTasks.php) [Bug 1230]
+ & Move language entry membergroups_members_top to ManageMembers language file and use it as a more appropriate version of 'Members' in some templates. (ManageMembergroups template, Admin and ManageMembers language file) 
+ ! If you didn't form lists right it could crash Apache. (Subs-List.php)
+ * Viewing a group should use the standard list template. (ManageMembers.php, Groups.php, ManageMembers template) [Feature 1233]
 
 
 December 2007

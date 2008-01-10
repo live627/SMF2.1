@@ -284,9 +284,6 @@ $txt['edit_permissions_info'] = 'Change restrictions and available features glob
 $txt['membergroups_members'] = 'Regular Members';
 $txt['membergroups_guests'] = 'Guests';
 $txt['membergroups_guests_na'] = 'n/a';
-$txt['membergroups_name'] = 'Name';
-$txt['membergroups_stars'] = 'Stars';
-$txt['membergroups_members_top'] = 'Members';
 $txt['membergroups_add_group'] = 'Add group';
 $txt['membergroups_permissions'] = 'Permissions';
 
