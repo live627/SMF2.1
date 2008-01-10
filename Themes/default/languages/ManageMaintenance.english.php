@@ -104,6 +104,7 @@ $txt['reverse_direction'] = 'Reverse chronological order of list';
 $txt['error_type'] = 'Type of error';
 $txt['filter_only_type'] = 'Only show the errors of this type';
 $txt['filter_only_file'] = 'Only show the errors from this file';
+$txt['apply_filter_of_type'] = 'Apply filter of type';
 
 $txt['errortype_all'] = 'All errors';
 $txt['errortype_general'] = 'General';

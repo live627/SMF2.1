@@ -1286,7 +1286,7 @@ function scheduled_weekly_maintenance()
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}settings
-		WHERE variable IN ({array_string:setting_list)
+		WHERE variable IN ({array_string:setting_list})
 			AND (value = {string:zero_value} OR value = {string:blank_value})',
 		array(
 			'zero_value' => '0',
@@ -1302,7 +1302,7 @@ function scheduled_weekly_maintenance()
 
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}settings
-		WHERE variable IN ({array_string:setting_list)',
+		WHERE variable IN ({array_string:setting_list})',
 		array(
 			'setting_list' => $deleteAnywaySettings,
 		)

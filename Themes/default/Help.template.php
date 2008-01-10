@@ -1014,19 +1014,19 @@ function template_manual_profile()
 											</td>
 										</tr>
 										<tr>
-											<td><b>icq:</b></td>
+											<td><b>', $txt['icq'], ':</b></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>aim:</b></td>
+											<td><b>', $txt['aim'], ':</b></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>msn:</b></td>
+											<td><b>', $txt['msn'], ':</b></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>yim:</b></td>
+											<td><b>', $txt['yim'], ':</b></td>
 											<td></td>
 										</tr>
 										<tr>

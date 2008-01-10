@@ -48,7 +48,7 @@ function template_error_log()
 				</tr>
 				<tr>
 					<td colspan="2" class="windowbg2">
-						Apply filter of type:';
+						', $txt['apply_filter_of_type'], ':';
 
 	$error_types = array();
 	foreach ($context['error_types'] as $type => $details)

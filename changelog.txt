@@ -77,6 +77,8 @@ January 2008
  ! Sort the moderation log by date descending by default. (Modlog.php) [Bug 1227]
  * Change the way filters are shown on the error log now we cannot use the tabs. (Errors template)
  ! Listing tables wasn't working properly with database names that were non-alphanumeric. (DbExtra-mysql.php) [Bug 1208]
+ ! Removed some hardcoded strings. (Errors, Help template. ManageMaintenance language file) [Bug 1229,1231]
+ ! Fixed SQL error in the weekly maintenance. (ScheduledTasks.php) [Bug 1230]
 
 
 December 2007
