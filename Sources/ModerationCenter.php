@@ -484,8 +484,8 @@ function ReportedPosts()
 			WHERE id_report = {int:id_report}
 				AND ' . $user_info['mod_cache']['bq'],
 			array(
-				'ignore_all' => (int) $_GET['ignore'],
-				'closed' => (int) $_GET['close'],
+				'ignore_all' => isset($_GET['ignore']) ? (int) $_GET['ignore'] : 0,
+				'closed' => isset($_GET['close']) ? (int) $_GET['close'] : 0,
 				'id_report' => $_GET['rid'],
 			)
 		);
