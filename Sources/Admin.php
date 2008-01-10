@@ -1046,8 +1046,8 @@ function AdminLogs()
 	// These are the logs they can load.
 	$log_functions = array(
 		'errorlog' => array('ManageErrors.php', 'ViewErrorLog'),
-		'adminlog' => array('ModLog.php', 'ViewModlog'),
-		'modlog' => array('ModLog.php', 'ViewModlog'),
+		'adminlog' => array('Modlog.php', 'ViewModlog'),
+		'modlog' => array('Modlog.php', 'ViewModlog'),
 	);
 
 	$sub_action = isset($_REQUEST['sa']) && isset($log_functions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'errorlog';
