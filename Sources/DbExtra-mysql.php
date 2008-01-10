@@ -203,14 +203,15 @@ function smf_db_list_tables($db = false, $filter = false)
 	global $db_name, $smfFunc;
 
 	$db = $db == false ? $db_name : $db;
+	$db = trim($db);
 	$filter = $filter == false ? '' : ' LIKE \'' . $filter . '\'';
 
 	$request = $smfFunc['db_query']('', '
 		SHOW TABLES
-		FROM {raw:db}
+		FROM `{raw:db}`
 		{raw:filter}',
 		array(
-			'db' => $db,
+			'db' => $db{0} == '`' ? strtr($db, array('`' => '')) : $db,
 			'filter' => $filter,
 		)
 	);
