@@ -246,9 +246,9 @@ $txt['permissionname_post_unapproved_replies'] = 'Post unapproved replies';
 $txt['permissionhelp_post_unapproved_replies'] = 'This permission allows a user to post replies to a topic which will not be shown until approved by a moderator.';
 $txt['permissionname_post_unapproved_replies_own'] = 'Own topic';
 $txt['permissionname_post_unapproved_replies_any'] = 'Any topic';
-$txt['permissionname_post_unapproved_topics'] = 'Post unapproved topics';
+$txt['permissionname_post_unapproved_topics'] = 'Post topics that will be displayed once approved';
 $txt['permissionhelp_post_unapproved_topics'] = 'This permission allows a user to post a new topic which will require approval before being shown.';
-$txt['permissionname_post_unapproved_attachments'] = 'Post unapproved attachments';
+$txt['permissionname_post_unapproved_attachments'] = 'Post attachments that require approval before display';
 $txt['permissionhelp_post_unapproved_attachments'] = 'This permission allows a user to attach files to their posts which will then require approval before being shown to other users.';
 
 $txt['permissiongroup_notification'] = 'Notifications';
@@ -285,7 +285,7 @@ $txt['permissionname_simple_profile_title_any'] = 'Edit other people\'s custom t
 $txt['permissionname_simple_profile_remove_own'] = 'Delete their own account';
 $txt['permissionname_simple_profile_remove_any'] = 'Delete other user\'s accounts';
 
-$txt['permissiongroup_simple_make_unapproved_posts'] = 'Post topics and replies to the board - without requiring approval';
+$txt['permissiongroup_simple_make_unapproved_posts'] = 'Post topics and replies to the board <span style="text-decoration: underline">only</span> after they have been approved';
 $txt['permissiongroup_simple_make_posts'] = 'Post topics and replies to the board';
 $txt['permissiongroup_simple_post_polls'] = 'Make new polls';
 $txt['permissiongroup_simple_participate'] = 'View additional board content';
@@ -294,8 +294,8 @@ $txt['permissiongroup_simple_notification'] = 'Request notifications';
 $txt['permissiongroup_simple_attach'] = 'Post attachments';
 $txt['permissiongroup_simple_moderate'] = 'Moderate the board';
 
-$txt['permissionname_simple_post_unapproved_replies_own'] = 'Post replies that do not need approval to a topic they started';
-$txt['permissionname_simple_post_unapproved_replies_any'] = 'Post replies that do not need approval to any topic';
+$txt['permissionname_simple_post_unapproved_replies_own'] = 'Post replies to a topic - but require approval';
+$txt['permissionname_simple_post_unapproved_replies_any'] = 'Post replies to any topic - but require approval';
 $txt['permissionname_simple_post_reply_own'] = 'Post replies to a topic they started';
 $txt['permissionname_simple_post_reply_any'] = 'Post replies to any topic';
 $txt['permissionname_simple_move_own'] = 'Move their own topics';

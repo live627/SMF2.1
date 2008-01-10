@@ -559,7 +559,8 @@ function SetQuickGroups()
 					if (!empty($context['illegal_permissions']) && in_array($perm, $context['illegal_permissions']))
 						continue;
 
-					$inserts[] = array($perm, $group_id, $add_deny);
+					if ($group_id != 1 && $group_id != 3)
+						$inserts[] = array($perm, $group_id, $add_deny);
 				}
 
 			// Delete the previous permissions...
@@ -678,7 +679,7 @@ function SetQuickGroups()
 			$permChange = array();
 			foreach ($_POST['group'] as $groupID)
 			{
-				if ($permissionType == 'membergroup' && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
+				if ($permissionType == 'membergroup' && $groupID != 1 && $groupID != 3 && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
 					$permChange[] = array($permission, $groupID, $add_deny);
 				elseif ($permissionType != 'membergroup')
 					$permChange[] = array($permission, $groupID, $bid, $add_deny);
@@ -730,7 +731,7 @@ function ModifyMembergroup()
 	$context['view_type'] = !empty($context['admin_preferences']['pv']) && $context['admin_preferences']['pv'] == 'classic' ? 'classic' : 'simple';
 
 	// It's not likely you'd end up here with this setting disabled.
-	if ($_GET['group'] == 1 || ($context['group']['id'] == 3 && empty($_GET['pid'])))
+	if ($_GET['group'] == 1)
 		redirectexit('action=admin;area=permissions');
 
 	loadAllPermissions($context['view_type']);
@@ -760,6 +761,22 @@ function ModifyMembergroup()
 		$context['group']['name'] = &$txt['membergroups_members'];
 
 	$context['profile']['id'] = empty($_GET['pid']) ? 0 : (int) $_GET['pid'];
+
+	// If this is a moderator and they are editing "no profile" then we only do boards.
+	if ($context['group']['id'] == 3 && empty($context['profile']['id']))
+	{
+		// For sanity just check they have no general permissions.
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}permissions
+			WHERE id_group = {int:moderator_group}',
+			array(
+				'moderator_group' => 3,
+			)
+		);
+
+		$context['profile']['id'] = 1;
+	}
+
 	$context['permission_type'] = empty($context['profile']['id']) ? 'membergroup' : 'board';
 	$context['profile']['can_modify'] = !$context['profile']['id'] || $context['profiles'][$context['profile']['id']]['can_modify'];
 
@@ -1452,8 +1469,8 @@ function loadAllPermissions($loadType = 'classic')
 		'board' => array(
 			'moderate_board' => array(false, 'general_board', 'moderate'),
 			'approve_posts' => array(false, 'general_board', 'moderate'),
-			'post_unapproved_topics' => array(false, 'topic', 'make_unapproved_posts'),
 			'post_new' => array(false, 'topic', 'make_posts'),
+			'post_unapproved_topics' => array(false, 'topic', 'make_unapproved_posts'),
 			'post_unapproved_replies' => array(true, 'topic', 'make_unapproved_posts', 'make_unapproved_posts'),
 			'post_reply' => array(true, 'topic', 'make_posts', 'make_posts'),
 			'merge_any' => array(false, 'topic', 'moderate'),
@@ -1524,6 +1541,7 @@ function loadAllPermissions($loadType = 'classic')
 	// Some permissions are hidden if features are off.
 	$hiddenPermissions = array();
 	$relabelPermissions = array(); // Permissions to apply a different label to.
+	$relabelGroups = array(); // As above but for groups.
 	if (!in_array('cd', $context['admin_features']))
 	{
 		$hiddenPermissions[] = 'calendar_view';
@@ -1532,6 +1550,8 @@ function loadAllPermissions($loadType = 'classic')
 	}
 	if (!in_array('w', $context['admin_features']))
 		$hiddenPermissions[] = 'issue_warning';
+
+	// Post moderation?
 	if (!in_array('pm', $context['admin_features']))
 	{
 		$hiddenPermissions[] = 'approve_posts';
@@ -1540,7 +1560,8 @@ function loadAllPermissions($loadType = 'classic')
 		$hiddenPermissions[] = 'post_unapproved_attachments';
 	}
 	// If we show them on classic view we change the name.
-	elseif ($loadType == 'classic')
+	//if ($loadType == 'classic')
+	else
 	{
 		// Relabel the topics permissions
 		$relabelPermissions['post_new'] = 'auto_approve_topics';

@@ -504,6 +504,13 @@ function loadUserSettings()
 	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']))
 		$user_info['language'] = strtr($_SESSION['language'], './\\:', '____');
 
+	// Just build this here, it makes it easier to change/use - administrators can see all boards.
+	if ($user_info['is_admin'])
+		$user_info['query_see_board'] = '1=1';
+	// Otherwise just the groups in $user_info['groups'].
+	else
+		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups)' . (isset($user_info['mod_cache']) ? ' OR ' . $user_info['mod_cache']['mq'] : '') . ')';
+
 	// Load the mod cache so we can know what additional boards they should see, but no sense in doing it for admins and guests
 	if (!$user_info['is_guest'] && !$user_info['is_admin'])
 	{
@@ -515,13 +522,6 @@ function loadUserSettings()
 		else
 			$user_info['mod_cache'] = $_SESSION['mc'];
 	}
-
-	// Just build this here, it makes it easier to change/use - administrators can see all boards.
-	if ($user_info['is_admin'])
-		$user_info['query_see_board'] = '1=1';
-	// Otherwise just the groups in $user_info['groups'].
-	else
-		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups)' . (isset($user_info['mod_cache']) ? ' OR ' . $user_info['mod_cache']['mq'] : '') . ')';
 
 	// Build the list of boards they WANT to see.
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also
