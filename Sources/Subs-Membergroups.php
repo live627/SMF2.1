@@ -590,20 +590,8 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 	{
 		$sort_ascending = strpos($sort, 'DESC') === false;
 
-		// Post count based groups can be sorted normally.
-		if ($membergroup_type === 'post_count')
-		{
-			foreach ($groups as $group)
-				$sort_array[] = (int) $group['num_members'];
-		}
-
-		// For regular membergroups keep the first three membergroups at top.
-		else
-		{
-			$sort_array = $sort_ascending ? array(-3, -2, -1) : array(999999999, 999999998, 999999997);
-			foreach (array_slice($groups, 3) as $group)
-				$sort_array[] = (int) $group['num_members'];
-		}
+		foreach ($groups as $group)
+			$sort_array[] = $group['num_members'] != 'n/a' ? (int) $group['num_members'] : -1;
 
 		array_multisort($sort_array, $sort_ascending ? SORT_ASC : SORT_DESC, SORT_REGULAR, $groups);
 	}

@@ -193,8 +193,8 @@ function MembergroupIndex()
 
 				),
 				'sort' => array(
-					'default' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE(\'#\', stars) - 1) DESC, SUBSTRING(stars, LOCATE(\'#\', stars) + 1)',
-					'reverse' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE(\'#\', stars) - 1), SUBSTRING(stars, LOCATE(\'#\', stars) + 1) DESC',
+					'default' => 'SUBSTRING(stars, 1, LOCATE(\'#\', stars) - 1) DESC, SUBSTRING(stars, LOCATE(\'#\', stars) + 1)',
+					'reverse' => 'SUBSTRING(stars, 1, LOCATE(\'#\', stars) - 1), SUBSTRING(stars, LOCATE(\'#\', stars) + 1) DESC',
 				)
 			),
 			'members' => array(

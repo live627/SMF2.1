@@ -82,6 +82,7 @@ January 2008
  & Move language entry membergroups_members_top to ManageMembers language file and use it as a more appropriate version of 'Members' in some templates. (ManageMembergroups template, Admin and ManageMembers language file) 
  ! If you didn't form lists right it could crash Apache. (Subs-List.php)
  * Viewing a group should use the standard list template. (ManageMembers.php, Groups.php, ManageMembers template) [Feature 1233]
+ ! Only bother forcing the "default groups" to the top of the manage membergroups list if sorting by name. (ManageMembergroups.php, Subs-Membergroups.php) [Bug 1235]
 
 
 December 2007
