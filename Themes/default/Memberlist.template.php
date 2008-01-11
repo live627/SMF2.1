@@ -49,7 +49,7 @@ function template_main()
 	{
 		echo '
 		<tr class="titlebg">
-			<td colspan="12">';
+			<td colspan="', $context['colspan'], '">';
 				$links = array();
 				foreach ($context['sort_links'] as $link)
 					$links[] = ($link['selected'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '') . '<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">' . $link['label'] . '</a>';
@@ -61,7 +61,7 @@ function template_main()
 	}
 	echo '
 		<tr>
-			<td colspan="12" class="', empty($settings['use_tabs']) ? 'catbg' : 'titlebg', '">';
+			<td colspan="', $context['colspan'], '" class="', empty($settings['use_tabs']) ? 'catbg' : 'titlebg', '">';
 
 		// Display page numbers and the a-z links for sorting by name if not a result of a search.
 		if (!isset($context['old_search']))
@@ -161,13 +161,13 @@ function template_main()
 	else
 		echo '
 		<tr>
-			<td colspan="12" class="windowbg">', $txt['search_no_results'], '</td>
+			<td colspan="', $context['colspan'], '" class="windowbg">', $txt['search_no_results'], '</td>
 		</tr>';
 
 	// Show the page numbers again. (makes 'em easier to find!)
 	echo '
 		<tr>
-			<td class="titlebg" colspan="12">', $txt['pages'], ': ', $context['page_index'], '</td>
+			<td class="titlebg" colspan="', $context['colspan'], '">', $txt['pages'], ': ', $context['page_index'], '</td>
 		</tr>
 	</table>';
 

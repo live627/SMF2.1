@@ -88,6 +88,7 @@ January 2008
  ! Fixed errors with mod installations caused by the database changes script. (Class-Package.php, Subs-Package.php) [Bug 1240]
  ! Make sure to keep the correct register date and time when changing profile info. (Profile-Modify.php)
  ! The logic for checking whether to allow emails needed to be reversed. (Profile-Modify.php)
+ * Use a variable column span on the memberlist. (Memberlist template)
 
 
 December 2007
