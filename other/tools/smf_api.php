@@ -427,7 +427,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		INSERT INTO $smf_settings[db_prefix]members
 			(" . implode(', ', array_keys($register_vars)) . ")
 		VALUES (" . implode(', ', $register_vars) . ')', __FILE__, __LINE__);
-	$id_member = db_insert_id();
+	$id_member = smf_insert_id();
 
 	smf_query("
 		UPDATE $smf_settings[db_prefix]settings
@@ -442,7 +442,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		UPDATE {$db_prefix}log_activity
 		SET registers = registers + 1
 		WHERE date = '" . strftime('%Y-%m-%d') . "'", __FILE__, __LINE__);
-	if (db_affected_rows() == 0)
+	if (smf_affected_rows() == 0)
 		smf_query("
 			INSERT IGNORE INTO {$db_prefix}log_activity
 				(date, registers)
@@ -592,6 +592,20 @@ function smf_query($string, $file, $line)
 		smf_logError(mysql_error($smf_connection), $file, $line);
 
 	return $ret;
+}
+
+function smf_affected_rows()
+{
+	global $smf_connection;
+
+	return mysql_affected_rows($smf_connection);
+}
+
+function smf_insert_id()
+{
+	global $smf_connection;
+
+	return mysql_insert_id($smf_connection);
 }
 
 // Mother, may I?
