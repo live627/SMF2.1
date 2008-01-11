@@ -254,6 +254,8 @@ function loadProfileFields($force_reload = false)
 				// As long as it doesn\'t equal "N/A"...
 				elseif ($value != $txt[\'not_applicable\'] && $value != strtotime(strftime(\'%Y-%m-%d\', $cur_profile[\'date_registered\'] + ($user_info[\'time_offset\'] + $modSettings[\'time_offset\']) * 3600)))
 					$value = $value - ($user_info[\'time_offset\'] + $modSettings[\'time_offset\']) * 3600;
+				else
+					$value = $cur_profile[\'date_registered\'];
 
 				return true;
 			'),

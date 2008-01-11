@@ -676,7 +676,8 @@ function registerMember(&$regOptions, $return_errors = false)
 	$knownFloats = array(
 		'time_offset',
 	);
-
+echo '<pre>';
+die(print_r($regOptions));
 	$column_names = array();
 	$values = array();
 	foreach ($regOptions['register_vars'] as $var => $val)

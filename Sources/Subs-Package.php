@@ -1123,7 +1123,7 @@ function parse_path($path)
 
 	// do we parse in a package directory?
 	if (!empty($temp_path))
-		$dirs[$package] = $temp_path;
+		$dirs['$package'] = $temp_path;
 
 	if (strlen($path) == 0)
 		trigger_error('parse_path(): There should never be an empty filename', E_USER_ERROR);
@@ -2550,15 +2550,15 @@ if (!function_exists('smf_crc32'))
 	function smf_crc32($number)
 	{
 		$crc = crc32($number);
-	
+
 		if($crc & 0x80000000){
 			$crc ^= 0xffffffff;
 			$crc += 1;
 			$crc = -$crc;
 		}
-	
+
 		return $crc;
-	} 
+	}
 }
 
 ?>
