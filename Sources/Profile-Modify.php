@@ -295,12 +295,11 @@ function loadProfileFields($force_reload = false)
 		),
 		'hide_email' => array(
 			'type' => 'check',
-			'value' => empty($cur_profile['hide_email']) ? true : false,
+			'value' => empty($cur_profile['hide_email']) ? false : true,
 			'label' => $txt['allow_user_email'],
 			'permission' => 'profile_identity',
-			// Reverse the logic.
 			'input_validate' => create_function('&$value', '
-				if ($value == 0)
+				if ($value == 1)
 					$value = 1;
 				else
 					$value = 0;

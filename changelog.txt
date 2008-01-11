@@ -87,6 +87,7 @@ January 2008
  ! Editing the moderator group permissions wasn't working as expected. (ManagePermissions.php) [Bug 1225]
  ! Fixed errors with mod installations caused by the database changes script. (Class-Package.php, Subs-Package.php) [Bug 1240]
  ! Make sure to keep the correct register date and time when changing profile info. (Profile-Modify.php)
+ ! The logic for checking whether to allow emails needed to be reversed. (Profile-Modify.php)
 
 
 December 2007
