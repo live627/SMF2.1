@@ -93,6 +93,7 @@ January 2008
  ! Added some more hooks to the search API. (Search.php, ManageSearch.php)
  + Added Sphinx search engine API (SMF Side Only) to the repository. (SearchAPI-Sphinx.php)
  ! Better handle unallowed access on wireless devices. (Security.php)
+ * Tweak the who's online template. (Who template)
 
 
 December 2007

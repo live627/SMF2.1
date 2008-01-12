@@ -9,10 +9,16 @@ function template_main()
 	// Display the table header and linktree.
 	echo '
 	<div style="padding: 3px;">', theme_linktree(), '</div>
+	<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
 	<table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder">
 		<tr class="titlebg">
-			<td width="30%"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td style="width: 14ex;"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';sort=time', $context['sort_direction'] == 'down' && $context['sort_by'] == 'time' ? ';asc' : '', '">', $txt['who_time'], ' ', $context['sort_by'] == 'time' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td colspan="3">
+				', $txt['who_title'], '
+			</td>
+		</tr>
+		<tr class="catbg">
+			<td width="30%"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td style="width: 14ex;"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=time', $context['sort_direction'] == 'down' && $context['sort_by'] == 'time' ? ';asc' : '', '">', $txt['who_time'], ' ', $context['sort_by'] == 'time' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td>', $txt['who_action'], '</td>
 		</tr>';
 
@@ -54,36 +60,36 @@ function template_main()
 		$alternate = !$alternate;
 	}
 
+	// No members?
+	if (empty($context['members']))
+		echo '
+		<tr class="windowbg2">
+			<td colspan="3" align="center">
+				', $txt['who_no_online_' . ($context['show_by'] == 'guests' ? 'guests' : 'members')], '
+			</td>
+		</tr>';
+
 	echo '
-		<tr class="titlebg">
-			<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
-		</tr>
-	</table>
-	<form action="', $scripturl, '?action=who" method="post" accept-charset="', $context['character_set'], '">
-		', $txt['who_show1'], '
-		<select name="show">';
+		<tr class="catbg">
+			<td colspan="3">
+				<div style="float: left;">
+					<b>', $txt['pages'], ':</b> ', $context['page_index'], '
+				</div>
+				<div class="smalltext" style="float: right; font-weight: normal;">', $txt['who_show1'], '
+					<select name="show" onchange="document.forms.whoFilter.submit();">';
 
 	foreach ($context['show_methods'] as $value => $label)
 		echo '
-			<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
+						<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
 	echo '
-		</select>
-		', $txt['who_show2'], '
-		<select name="sort">';
-
-	foreach ($context['sort_methods'] as $value => $label)
-		echo '
-			<option value="', $value, '" ', $value == $context['sort_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
-
-	echo '
-		</select>
-		', $txt['who_show3'], '
-		<select name="sort_dir">
-			<option value="desc">', $txt['who_sort_desc'], '</option>
-			<option value="asc" ', $context['sort_direction'] == 'up' ? 'selected="selected"' : '', '>', $txt['who_sort_asc'], '</option>
-		</select>
-		', $txt['who_show4'], '
-		<input type="submit" />
+					</select>
+					<noscript>
+						<input type="submit" value="', $txt['go'], '" />
+					</noscript>
+				</div>
+			</td>
+		</tr>
+	</table>
 	</form>';
 }
 

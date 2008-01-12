@@ -138,7 +138,7 @@ function Who()
 	$smfFunc['db_free_result']($request);
 
 	// Prepare some page index variables.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=who;sort=' . $context['sort_by'] . (isset($_REQUEST['asc']) ? ';asc' : '') . ';show=' . $context['show_by'], $_REQUEST['start'], $totalMembers, $modSettings['defaultMaxMembers']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=who;sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';asc' : '') . ';show=' . $context['show_by'], $_REQUEST['start'], $totalMembers, $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
 
 	// Look for people online, provided they don't mind if you see they are.
@@ -151,7 +151,7 @@ function Who()
 			LEFT JOIN {db_prefix}members AS mem ON (lo.id_member = mem.id_member)
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_member} THEN mem.id_post_group ELSE mem.id_group END)' . (!empty($conditions) ? '
 		WHERE ' . implode(' AND ', $conditions) : '') . '
-		ORDER BY ' . $_REQUEST['sort'] . ' ' . (isset($_REQUEST['asc']) ? 'ASC' : 'DESC') . '
+		ORDER BY ' . $_REQUEST['sort'] . ' ' . ($context['sort_direction'] == 'up' ? 'ASC' : 'DESC') . '
 		LIMIT ' . $context['start'] . ', ' . $modSettings['defaultMaxMembers'],
 		array(
 			'regular_member' => 0,
