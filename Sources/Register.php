@@ -503,8 +503,8 @@ function Activate()
 		WHERE id_member = {int:id_member}') . '
 		LIMIT 1',
 		array(
-			'id_member' => (int) $_REQUEST['u'],
-			'email_address' => $_POST['user'],
+			'id_member' => isset($_REQUEST['u']) ? $_REQUEST['u'] : 0,
+			'email_address' => isset($_POST['user']) ? $_POST['user'] : '',
 		)
 	);
 

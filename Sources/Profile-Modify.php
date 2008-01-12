@@ -1936,7 +1936,7 @@ function ignoreboards($memID)
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE {query_see_board}',
 		array(
-			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? $cur_profile['ignore_boards'] : array(),
+			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? explode(',',$cur_profile['ignore_boards']) : array(),
 		)
 	);
 	$context['num_boards'] = $smfFunc['db_num_rows']($request);
