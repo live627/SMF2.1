@@ -40,7 +40,7 @@ if (!defined('SMF'))
 // Retrieve a list and several other statistics of the users currently online.
 function getMembersOnlineStats($membersOnlineOptions)
 {
-	global $smfFunc, $context, $scripturl, $user_info, $modSettings;
+	global $smfFunc, $context, $scripturl, $user_info, $modSettings, $txt;
 
 	// The list can be sorted in several ways.
 	$allowed_sort_options = array(
