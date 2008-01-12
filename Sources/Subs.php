@@ -3313,7 +3313,7 @@ function theme_copyright($get_it = false)
 	}
 	//!!! Remove Lewis Media before release (Not yet as it'll break site language files!)
 	// If it's in the copyright, and we are outputting it... it's been found.
-	elseif (isset($modSettings['copyright_key']) && sha1($modSettings['copyright_key'] . 'banjo') == '1d01885ece7a9355bdeb22ed107f0ffa8c323026'){$found = true;return;}elseif (preg_match('~<a\shref="http://www.simplemachines.org/"[^<>]*>(SMF|Powered by SMF)~', $forum_copyright) && preg_match('~<a\shref="http://www.simplemachines.org/about/copyright.php"[^<>]*>SMF\s&copy;[\s\d,ndash\-&;]*Simple Machines LLC~', $forum_copyright)){$found = true; echo $forum_copyright;}
+	elseif (isset($modSettings['copyright_key']) && sha1($modSettings['copyright_key'] . 'banjo') == '1d01885ece7a9355bdeb22ed107f0ffa8c323026'){$found = true;return;}elseif (preg_match('~<a\shref="http://www.simplemachines.org/"[^<>]*>(SMF|Powered by SMF)~', $forum_copyright) && preg_match('~<a\shref="http://www.simplemachines.org/about/copyright.php"[^<>]*>SMF\s.{1,6}[\s\d,ndash\-&;]*Simple Machines LLC~', $forum_copyright)){$found = true; echo $forum_copyright;}
 
 	echo '
 		</span>';
