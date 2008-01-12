@@ -744,6 +744,29 @@ function UnreadTopics()
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
 				'is_approved' => 1,
 			))
+		) !== false;
+	}
+	else
+		$have_temp_table = false;
+
+	if ($context['showing_all_topics'] && $have_temp_table)
+	{
+		$request = $smfFunc['db_query']('', '
+			SELECT COUNT(*), MIN(t.id_last_msg)
+			FROM {db_prefix}topics AS t
+				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
+				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
+			WHERE t.' . $query_this_board . ($context['showing_all_topics'] && !empty($earliest_msg) ? '
+				AND t.id_last_msg > {int:earliest_msg}' : '
+				AND t.id_last_msg > {int:id_msg_last_visit}') . '
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
+				AND approved = {int:is_approved}',
+			array_merge($query_parameters, array(
+				'current_member' => $user_info['id'],
+				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
+				'id_msg_last_visit' => !empty($_SESSION['id_msg_last_visit']) ? $_SESSION['id_msg_last_visit'] : 0,
+				'is_approved' => 1,
+			))
 		);
 		list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
