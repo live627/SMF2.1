@@ -921,6 +921,34 @@ function UnreadTopics()
 					'is_approved' => 1,
 					'string_zero' => '0',
 				)
+			) !== false;
+
+			// If that worked, create a sample of the log_topics table too.
+			if ($have_temp_table)
+				$have_temp_table = $smfFunc['db_query']('', '
+					CREATE TEMPORARY TABLE {db_prefix}log_topics_posted_in (
+						PRIMARY KEY (id_topic)
+					)
+					SELECT lt.id_topic, lt.id_msg
+					FROM {db_prefix}log_topics AS lt
+						INNER JOIN {db_prefix}topics_posted_in AS pi ON (pi.id_topic = lt.id_topic)
+					WHERE lt.id_member = {int:current_member}',
+					array(
+						'current_member' => $user_info['id'],
+					)
+				) !== false;
+		}
+
+		if (!empty($have_temp_table))
+		{
+			$request = $smfFunc['db_query']('', '
+				SELECT COUNT(*)
+				FROM {db_prefix}topics_posted_in AS pi
+					LEFT JOIN {db_prefix}log_topics_posted_in AS lt ON (lt.id_topic = pi.id_topic)
+				WHERE pi.' . $query_this_board . '
+					AND IFNULL(lt.id_msg, pi.id_msg) < pi.id_last_msg',
+				array_merge($query_parameters, array(
+				))
 			);
 			list ($num_topics) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
