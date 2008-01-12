@@ -154,10 +154,6 @@ function Login2()
 	elseif (!empty($_POST['cookielength']) && ($_POST['cookielength'] >= 1 || $_POST['cookielength'] <= 525600))
 		$modSettings['cookieTime'] = (int) $_POST['cookielength'];
 
-	// Set things up in case an error occurs.
-	if (!empty($maintenance) || empty($modSettings['allow_guestAccess']))
-		$context['sub_template'] = 'kick_guest';
-
 	loadLanguage('Login');
 	// Load the template stuff - wireless or normal.
 	if (WIRELESS)

@@ -3711,7 +3711,7 @@ function setupMenuContext()
 					),
 					'errorlog' => array(
 						'title' => $txt['errlog'],
-						'href' => $scripturl . '?action=admin;area=errorlog;desc',
+						'href' => $scripturl . '?action=admin;area=logs;sa=errorlog;desc',
 						'show' => allowedTo('admin_forum') && !empty($modSettings['enableErrorLogging']),
 					),
 					'permissions' => array(
@@ -3778,7 +3778,7 @@ function setupMenuContext()
 					'pm_read' => array(
 						'title' => $txt['pm_menu_read'],
 						'href' => $scripturl . '?action=pm',
-						'show' => true,
+						'show' => allowedTo('pm_read'),
 					),
 					'pm_send' => array(
 						'title' => $txt['pm_menu_send'],

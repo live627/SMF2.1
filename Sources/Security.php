@@ -189,7 +189,10 @@ function is_not_guest($message = '')
 
 	// Are we in wireless mode?
 	if (WIRELESS)
+	{
+		$context['login_error'] = $message ? $message : $txt['only_members_can_access'];
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_login';
+	}
 	else
 	{
 		loadTemplate('Login');
@@ -198,7 +201,6 @@ function is_not_guest($message = '')
 
 	// Use the kick_guest sub template...
 	$context['kick_message'] = $message;
-	$context['sub_template'] = 'kick_guest';
 	$context['page_title'] = $txt['login'];
 
 	obExit();

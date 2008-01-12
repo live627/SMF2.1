@@ -113,9 +113,10 @@ function template_wap_login()
 	echo '
 	<card id="login" title="', $context['page_title'], '">';
 
-	if (isset($context['login_error']))
-		echo '
-		<p><b>', $context['login_error'], '</b></p>';
+	if (isset($context['login_errors']))
+		foreach ($context['login_errors'] as $error)
+			echo '
+			<p><b>', $error, '</b></p>';
 
 	echo '
 		<p>', $txt['username'], ':<br />
@@ -359,9 +360,10 @@ function template_imode_login()
 		<form action="', $scripturl, '?action=login2;imode" method="post">
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr bgcolor="#b6dbff"><td>', $txt['login'], '</td></tr>';
-	if (isset($context['login_error']))
+	if (isset($context['login_errors']))
+		foreach ($context['login_errors'] as $error)
 		echo '
-				<tr><td><b><font color="#ff00000">', $context['login_error'], '</b></td></tr>';
+				<tr><td><b><font color="#ff00000">', $error, '</b></td></tr>';
 	echo '
 				<tr><td>', $txt['username'], ':</td></tr>
 				<tr><td><input type="text" name="user" size="10" /></td></tr>
@@ -887,9 +889,10 @@ function template_wap2_login()
 	echo '
 		<form action="', $scripturl, '?action=login2;wap2" method="post">
 			<p class="catbg">', $txt['login'], '</p>';
-	if (isset($context['login_error']))
-		echo '
-			<p class="windowbg" style="color: #ff0000;"><b>', $context['login_error'], '</b></p>';
+	if (isset($context['login_errors']))
+		foreach ($context['login_errors'] as $error)
+			echo '
+			<p class="windowbg" style="color: #ff0000;"><b>', $error, '</b></p>';
 	echo '
 			<p class="windowbg">', $txt['username'], ':</p>
 			<p class="windowbg"><input type="text" name="user" size="10" /></p>

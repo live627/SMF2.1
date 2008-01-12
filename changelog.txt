@@ -92,6 +92,7 @@ January 2008
  ! Quotes no longer need to be removed from a new member's real name. (Subs-Members.php)
  ! Added some more hooks to the search API. (Search.php, ManageSearch.php)
  + Added Sphinx search engine API (SMF Side Only) to the repository. (SearchAPI-Sphinx.php)
+ ! Better handle unallowed access on wireless devices. (Security.php)
 
 
 December 2007
