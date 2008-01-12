@@ -384,8 +384,8 @@ function PlushSearch2()
 				poster_time <= {int:timestamp_minimum_age}') . (empty($search_params['maxage']) ? '' : '
 				AND poster_time >= {int:timestamp_maximum_age}'),
 			array(
-				'timestamp_minimum_age' => time() - 86400 * $search_params['minage'],
-				'timestamp_maximum_age' => time() - 86400 * $search_params['maxage'],
+				'timestamp_minimum_age' => empty($search_params['minage']) ? 0 : time() - 86400 * $search_params['minage'],
+				'timestamp_maximum_age' => empty($search_params['maxage']) ? 0 : time() - 86400 * $search_params['maxage'],
 				'is_approved_true' => 1,
 			)
 		);
