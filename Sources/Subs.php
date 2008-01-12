@@ -761,10 +761,12 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 
 	// Offset the time.
 	if (!$offset_type)
-		$log_time = $log_time + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
+		$time = $log_time + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
 	// Just the forum offset?
 	elseif ($offset_type == 'forum')
-		$log_time = $log_time + $modSettings['time_offset'] * 3600;
+		$time = $log_time + $modSettings['time_offset'] * 3600;
+	else
+		$time = $log_time;
 
 	// We can't have a negative date (on Windows, at least.)
 	if ($log_time < 0)
@@ -776,7 +778,7 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 		// Get the current time.
 		$nowtime = forum_time();
 
-		$then = @getdate($log_time);
+		$then = @getdate($time);
 		$now = @getdate($nowtime);
 
 		// Try to make something of a time format string...
@@ -804,20 +806,20 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 	{
 		foreach (array('%a', '%A', '%b', '%B') as $token)
 			if (strpos($str, $token) !== false)
-				$str = str_replace($token, $smfFunc['ucwords'](strftime($token, $log_time)), $str);
+				$str = str_replace($token, $smfFunc['ucwords'](strftime($token, $time)), $str);
 	}
 	else
 	{
 		// Do-it-yourself time localization.  Fun.
 		foreach (array('%a' => 'days_short', '%A' => 'days', '%b' => 'months_short', '%B' => 'months') as $token => $text_label)
 			if (strpos($str, $token) !== false)
-				$str = str_replace($token, $txt[$text_label][(int) strftime($token === '%a' || $token === '%A' ? '%w' : '%m', $log_time)], $str);
+				$str = str_replace($token, $txt[$text_label][(int) strftime($token === '%a' || $token === '%A' ? '%w' : '%m', $time)], $str);
 		if (strpos($str, '%p'))
-			$str = str_replace('%p', (strftime('%H', $log_time) < 12 ? 'am' : 'pm'), $str);
+			$str = str_replace('%p', (strftime('%H', $time) < 12 ? 'am' : 'pm'), $str);
 	}
 
 	// Format any other characters..
-	return strftime($str, $log_time);
+	return strftime($str, $time);
 }
 
 // Removes special entities from strings.  Compatibility...
