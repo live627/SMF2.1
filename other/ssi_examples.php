@@ -174,6 +174,11 @@ require(dirname(__FILE__) . '/SSI.php');
 
 		<hr />
 
+			<h3>Recent Attachments Function &lt;?php ssi_recentAttachments(); ?&gt;</h3>
+			<?php ssi_recentAttachments(); flush(); ?>
+
+		<hr />
+
 			<h3>Some notes on usage</h3>
 			All the functions have an output method parameter.  This can either be &quot;echo&quot; (the default) or &quot;array&quot;.<br />
 			If it is &quot;echo&quot;, the function will act normally - otherwise, it will return an array containing information about the requested task.<br />

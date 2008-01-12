@@ -1832,4 +1832,113 @@ function ssi_checkPassword($id = null, $password = null, $is_username = false)
 	return sha1(strtolower($user) . $password) == $pass && $active == 1;
 }
 
+// We want to show the recent attachments outside of the forum.
+function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(), $output_method = 'echo')
+{
+	global $smfFunc, $context, $modSettings, $scripturl, $txt, $settings;
+
+	// We want to make sure that we only get attachments for boards that we can see *if* any.
+	$attachments_boards = boardsAllowedTo('view_attachments');
+
+	// No boards?  Adios amigo.
+	if (empty($attachments_boards))
+		return array();
+
+	// Is it an array?
+	if (!is_array($attachment_ext))
+		$attachment_ext = array($attachment_ext);
+
+	// Lets build the query.
+	$request = $smfFunc['db_query']('', '
+		SELECT
+			att.id_attach, att.id_msg, att.filename, IFNULL(att.size, 0) AS filesize, att.downloads, mem.id_member,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.id_topic, m.subject, t.id_board, m.poster_time,
+			att.width, att.height' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ', IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
+		FROM ({db_prefix}attachments AS att, {db_prefix}messages AS m, {db_prefix}topics AS t)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
+			LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = att.id_thumb)') . '
+		WHERE t.id_topic = m.id_topic
+			AND att.id_msg = m.id_msg
+			AND att.attachment_type = 0
+			' . (!empty($attachment_ext) ? '
+			AND att.fileext IN ({array_string:attachment_ext})' : '') . '
+		ORDER BY att.id_attach DESC
+		LIMIT {int:num_attachments}',
+		array(
+			'boards_can_see' => $attachments_boards,
+			'attachment_ext' => $attachment_ext,
+			'num_attachments' => $num_attachments,
+		)
+	);
+
+	// We have something.
+	$attachments = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// Is it an image?
+		$attachments[$row['id_attach']] = array(
+			'member' => array(
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>',
+			),
+			'file' => array(
+				'filename' => htmlspecialchars($row['filename']),
+				'filesize' => round($row['filesize'] /1024, 2) . $txt['kilobyte'],
+				'downloads' => $row['downloads'],
+				'href' => $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'],
+				'link' => '<img src="' . $settings['images_url'] . '/icons/clip.gif" alt="" /> <a href="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . '">' . htmlspecialchars($row['filename']) . '</a>',
+				'is_image' => !empty($row['width']) && !empty($row['height']) && !empty($modSettings['attachmentShowImages']),
+			),
+			'topic' => array(
+				'id' => $row['id_topic'],
+				'subject' => $row['subject'],
+				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '">' . $row['subject'] . '</a>',
+				'time' => timeformat($row['poster_time']),
+			),
+		);
+
+		// Images.
+		if ($attachments[$row['id_attach']]['file']['is_image'])
+		{
+			$id_thumb = empty($row['id_thumb']) ? $row['id_attach'] : $row['id_thumb'];
+			$attachments[$row['id_attach']]['file']['image'] = array(
+				'id' => $id_thumb,
+				'width' => $row['width'],
+				'height' => $row['height'],
+				'img' => '<img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . ';image" alt="' . htmlspecialchars($row['filename']) . '" />',
+				'thumb' => '<img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image" alt="' . htmlspecialchars($row['filename']) . '" />',
+				'href' => $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image',
+				'link' => '<a href="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . ';image"><img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image" alt="' . htmlspecialchars($row['filename']) . '" /></a>',
+			);
+		}
+	}
+	$smfFunc['db_free_result']($request);
+
+	// So you just want an array?  Here you can have it.
+	if ($output_method == 'array' || empty($attachments))
+		return $attachments;
+
+	// Give them the default.
+	echo '
+		<table class="ssi_table" cellpadding="2">
+			<tr>
+				<th align="left">', $txt['file'], '</th>
+				<th align="left">', $txt['posted_by'], '</th>
+				<th align="left">', $txt['downloads'], '</th>
+				<th align="left">', $txt['filesize'], '</th>
+			</tr>';
+	foreach ($attachments as $attach)
+		echo '
+			<tr>
+				<td>', $attach['file']['link'], '</td>
+				<td>', $attach['member']['link'], '</td>
+				<td align="center">', $attach['file']['downloads'], '</td>
+				<td>', $attach['file']['filesize'], '</td>
+			</tr>';
+	echo '
+		</table>';
+}
+
 ?>

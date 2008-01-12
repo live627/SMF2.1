@@ -97,6 +97,7 @@ January 2008
  ! Only one class attribute is allowed on links. (Subs.php) [Bug 1251]
  ! The WYSIWYG editor wouldn't work if you try to toggle a string of one character. (Subs-Editor.php)
  ! Try harder to keep lists all legal. (Subs-Post.php) [Bug 1239]
+ + Added the ability to get the latest attachments via SSI.php (SSI.php, ssi_example files, index language file)
 
 
 December 2007

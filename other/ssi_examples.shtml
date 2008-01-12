@@ -142,6 +142,11 @@
 
 		<hr />
 
+			<h3>Recent Attachments Function &lt;?php ssi_recentAttachments(); ?&gt;</h3>
+			<?php ssi_recentAttachments(); flush(); ?>
+
+		<hr />
+
 		<br />
 		<br />
 		<span style="font-size: smaller; color: #CCCCCC;">
