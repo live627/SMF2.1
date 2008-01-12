@@ -94,6 +94,7 @@ January 2008
  + Added Sphinx search engine API (SMF Side Only) to the repository. (SearchAPI-Sphinx.php)
  ! Better handle unallowed access on wireless devices. (Security.php)
  * Tweak the who's online template. (Who template)
+ ! Only one class attribute is allowed on links. (Subs.php) [Bug 1251]
 
 
 December 2007

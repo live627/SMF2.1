@@ -1520,13 +1520,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" class="bbc_link" target="_blank" class="new_win">$1</a>',
+				'content' => '<a href="$1" class="bbc_link new_win" target="_blank">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" class="bbc_link" target="_blank" class="new_win">',
+				'before' => '<a href="$1" class="bbc_link new_win" target="_blank">',
 				'after' => '</a>',
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
