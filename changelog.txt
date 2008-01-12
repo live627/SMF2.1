@@ -89,6 +89,7 @@ January 2008
  ! Make sure to keep the correct register date and time when changing profile info. (Profile-Modify.php)
  ! The logic for checking whether to allow emails needed to be reversed. (Profile-Modify.php)
  * Use a variable column span on the memberlist. (Memberlist template)
+ ! Quotes no longer need to be removed from a new member's real name. (Subs-Members.php)
 
 
 December 2007

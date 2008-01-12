@@ -702,11 +702,8 @@ function registerMember(&$regOptions, $return_errors = false)
 	);
 	$memberID = $smfFunc['db_insert_id']('{db_prefix}members', 'id_member');
 
-	// Grab their real name and send emails using it.
-	$real_name = substr($regOptions['register_vars']['real_name'], 1, -1);
-
 	// Update the number of members and latest member's info - and pass the name, but remove the 's.
-	updateStats('member', $memberID, $real_name);
+	updateStats('member', $memberID, $regOptions['register_vars']['real_name']);
 
 	// Theme variables too?
 	if (!empty($theme_vars))
@@ -736,7 +733,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		if (isset($email_message))
 		{
 			$replacements = array(
-				'REALNAME' => $real_name,
+				'REALNAME' => $regOptions['register_vars']['real_name'],
 				'USERNAME' => $regOptions['username'],
 				'PASSWORD' => $regOptions['password'],
 				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
@@ -758,7 +755,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		if (!empty($regOptions['send_welcome_email']))
 		{
 			$replacements = array(
-				'REALNAME' => $real_name,
+				'REALNAME' => $regOptions['register_vars']['real_name'],
 				'USERNAME' => $regOptions['username'],
 				'PASSWORD' => $regOptions['password'],
 			);
@@ -773,7 +770,7 @@ function registerMember(&$regOptions, $return_errors = false)
 	elseif ($regOptions['require'] == 'activation' || $regOptions['require'] == 'coppa')
 	{
 		$replacements = array(
-			'REALNAME' => $real_name,
+			'REALNAME' => $regOptions['register_vars']['real_name'],
 			'USERNAME' => $regOptions['username'],
 			'PASSWORD' => $regOptions['password'],
 		);
@@ -796,7 +793,7 @@ function registerMember(&$regOptions, $return_errors = false)
 	else
 	{
 		$replacements = array(
-			'REALNAME' => $real_name,
+			'REALNAME' => $regOptions['register_vars']['real_name'],
 			'USERNAME' => $regOptions['username'],
 			'PASSWORD' => $regOptions['password'],
 		);
