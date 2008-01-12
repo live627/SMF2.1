@@ -734,7 +734,7 @@ function UnreadTopics()
 			)
 			SELECT lt.id_topic, lt.id_msg
 			FROM {db_prefix}topics AS t
-				INNER JOIN {db_prefix}log_topics AS lt (lt.id_topic = t.id_topic)
+				INNER JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic)
 			WHERE lt.id_member = {int:current_member}
 				AND t.' . $query_this_board . (!empty($earliest_msg) ? '
 				AND t.id_last_msg > {int:earliest_msg}' : '') . '
