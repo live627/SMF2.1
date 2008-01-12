@@ -170,7 +170,7 @@ function preparsecode(&$message, $previewing = false)
 	global $user_info, $modSettings, $smfFunc, $context;
 
 	// This line makes all languages *theoretically* work even with the wrong charset ;).
-	//$message = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $message);
+	$message = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $message);
 
 	// Clean up after nobbc ;).
 	$message = preg_replace('~\[nobbc\](.+?)\[/nobbc\]~ie', '\'[nobbc]\' . strtr(\'$1\', array(\'[\' => \'&#91;\', \']\' => \'&#93;\', \':\' => \'&#58;\', \'@\' => \'&#64;\')) . \'[/nobbc]\'', $message);
@@ -291,6 +291,7 @@ function preparsecode(&$message, $previewing = false)
 				'~\[/tr\]~s' => '[/td][/tr]',
 				// Look for properly opened [li]s which aren't closed.
 				'~\[li\]([^\[\]]+?)\[li\]~s' => '[li]$1[_/li_][_li_]',
+				'~\[li\]([^\[\]]+?)\[/list\]~s' => '[_li_]$1[_/li_][/list]',
 				'~\[li\]([^\[\]]+?)$~s' => '[li]$1[/li]',
 				// Lists - find correctly closed items/lists.
 				'~\[/li\]([\s' . $non_breaking_space . ']*)\[/list\]~s' . ($context['utf8'] ? 'u' : '') => '[_/li_]$1[/list]',

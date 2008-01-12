@@ -689,6 +689,9 @@ function legalise_bbc($text)
 {
 	global $modSettings;
 
+	if (strlen($text < 3))
+		return $text;
+
 	// We are going to cycle through the BBC and keep track of tags as they arise - in order. If get to a block level tag we're going to make sure it's not in a non-block level tag!
 	// This will keep the order of tags that are open.
 	$current_tags = array();

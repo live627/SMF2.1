@@ -95,6 +95,8 @@ January 2008
  ! Better handle unallowed access on wireless devices. (Security.php)
  * Tweak the who's online template. (Who template)
  ! Only one class attribute is allowed on links. (Subs.php) [Bug 1251]
+ ! The WYSIWYG editor wouldn't work if you try to toggle a string of one character. (Subs-Editor.php)
+ ! Try harder to keep lists all legal. (Subs-Post.php) [Bug 1239]
 
 
 December 2007
