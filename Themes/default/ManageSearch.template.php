@@ -135,7 +135,29 @@ function template_select_search_method()
 						<b>', $txt['search_index_label'], ':</b> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex">', $txt['search_index_create_custom'], '</a>]';
 	echo '
 					</span>
-				</td>
+				</td>';
+
+	foreach ($context['search_apis'] as $api)
+	{
+		if (empty($api['label']) || $api['has_template'])
+			continue;
+
+		echo '
+			</tr><tr class="windowbg2">
+				<td align="right"></td>
+				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="', $api['setting_index'], '"', !empty($modSettings['search_index']) && $modSettings['search_index'] == $api['setting_index'] ? ' checked="checked"' : '', ' /></td>
+				<td>
+					', $api['label'];
+
+	if ($api['desc'])
+		echo '
+					<div class="smalltext">
+						', $api['desc'], '
+					</div>
+				</td>';
+	}
+
+	echo '
 			</tr><tr class="windowbg2">
 				<th align="right"><label for="search_force_index_check">', $txt['search_force_index'], ':</label></th>
 				<td colspan="2"><input type="checkbox" name="search_force_index" id="search_force_index_check" value="1"', empty($modSettings['search_force_index']) ? '' : ' checked="checked"', ' /></td>

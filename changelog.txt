@@ -90,6 +90,8 @@ January 2008
  ! The logic for checking whether to allow emails needed to be reversed. (Profile-Modify.php)
  * Use a variable column span on the memberlist. (Memberlist template)
  ! Quotes no longer need to be removed from a new member's real name. (Subs-Members.php)
+ ! Added some more hooks to the search API. (Search.php, ManageSearch.php)
+ + Added Sphinx search engine API (SMF Side Only) to the repository. (SearchAPI-Sphinx.php)
 
 
 December 2007

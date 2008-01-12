@@ -66,6 +66,9 @@ if (!defined('SMF'))
 		  'create_index_done' sub templates of the ManageSearch template.
 		- depending on the size of the message table, the process is divided
 		  in steps.
+
+	array loadSearchAPIs()
+		// !!!
 */
 
 function ManageSearch()
@@ -203,6 +206,9 @@ function EditSearchMethod()
 	$context['sub_template'] = 'select_search_method';
 	$context['supports_fulltext'] = $smfFunc['db_search_support']('fulltext');
 
+	// Load any apis.
+	$context['search_apis'] = loadSearchAPIs();
+
 	// Detect whether a fulltext index is set.
 	if ($context['supports_fulltext'])
 	{
@@ -334,7 +340,7 @@ function EditSearchMethod()
 	{
 		checkSession();
 		updateSettings(array(
-			'search_index' => empty($_POST['search_index']) || !in_array($_POST['search_index'], array('fulltext', 'custom')) ? '' : $_POST['search_index'],
+			'search_index' => empty($_POST['search_index']) || (!in_array($_POST['search_index'], array('fulltext', 'custom')) && !isset($context['search_apis'][$_POST['search_index']])) ? '' : $_POST['search_index'],
 			'search_force_index' => isset($_POST['search_force_index']) ? '1' : '0',
 			'search_match_words' => isset($_POST['search_match_words']) ? '1' : '0',
 		));
@@ -647,6 +653,47 @@ function CreateMessageIndex()
 			)
 		);
 	}
+}
+
+// Get the installed APIs.
+function loadSearchAPIs()
+{
+	global $sourcedir, $txt;
+
+	$apis = array();
+	if ($dh = opendir($sourcedir))
+	{
+		while (($file = readdir($dh)) !== false)
+		{
+			if (!is_dir($file) && preg_match('~SearchAPI-([A-Za-z\d]+)\.php~', $file, $matches))
+			{
+				// Check this is definitely a valid API!
+				$fp = fopen($sourcedir . '/' . $file, 'rb');
+				$header = fread($fp, 4096);
+				fclose($fp);
+
+				if (strpos($header, '* SearchAPI-' . $matches[1] . '.php') !== false)
+				{
+					loadClassFile($file);
+
+					$index_name = strtolower($matches[1]);
+					$search_class_name = $index_name . '_search';
+					$searchAPI = new $search_class_name();
+
+					$apis[$index_name] = array(
+						'filename' => $file,
+						'setting_index' => $index_name,
+						'has_template' => in_array($index_name, array('custom', 'fulltext', 'standard')),
+						'label' => $index_name && isset($txt['search_index_' . $index_name]) ? $txt['search_index_' . $index_name] : '',
+						'desc' => $index_name && isset($txt['search_index_' . $index_name . '_desc']) ? $txt['search_index_' . $index_name . '_desc'] : '',
+					);
+				}
+			}
+		}
+	}
+	closedir($dh);
+
+	return $apis;
 }
 
 ?>
