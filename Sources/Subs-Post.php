@@ -2352,6 +2352,10 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		$update_parameters['var_' . $var] = $val;
 	}
 
+	// Nothing to do?
+	if (empty($messages_columns))
+		return true;
+
 	// Change the post.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}messages
