@@ -20,7 +20,7 @@ $txt['who_show_all'] = 'Everyone';
 $txt['who_sort_asc'] = 'Ascending';
 $txt['who_sort_desc'] = 'Descending';
 $txt['who_no_online_guests'] = 'There are currently no guests online.';
-$txt['who_no_online_members'] = 'There are currently no guests online.';
+$txt['who_no_online_members'] = 'There are currently no members online.';
 
 $txt['whoall_activate'] = 'Activating their account.';
 $txt['whoall_help'] = 'Viewing the <a href="' . $scripturl . '?action=help">help page</a>.';
