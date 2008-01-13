@@ -11,7 +11,8 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.sEditWidth = typeof(sEditWidth) != 'undefined' ? sEditWidth : '70%';
 	this.sEditHeight = typeof(sEditHeight) != 'undefined' ? sEditHeight : '150px';
 
-	this.showDebug = false;
+	//!!! CHANGE ME
+	this.showDebug = true;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	//!!! This partly works on opera - it's a rubbish browser for JS.
 	this.bRichTextPossible = is_ie5up || is_ff || is_opera9up;
@@ -252,15 +253,24 @@ SmfEditor.prototype.init = function()
 
 		// Listen for input.
 		this.oFrameDocument.instanceRef = this;
-		this.oFrameDocument.onkeyup = function ()
-		{
-			this.instanceRef.editorKeyUp();
-		}
-		this.oFrameDocument.onmouseup = function()
-		{
-			this.instanceRef.editorKeyUp();
-		}
 
+		if (is_ff)
+		{
+			this.oFrameDocument.addEventListener('keyup', function() {this.instanceRef.editorKeyUp();}, true);
+			this.oFrameDocument.addEventListener('mouseup', function() {this.instanceRef.editorKeyUp();}, true);
+		}
+		else
+		{
+			this.oFrameDocument.onkeyup = function ()
+			{
+				this.instanceRef.editorKeyUp();
+			}
+			this.oFrameDocument.onmouseup = function()
+			{
+				this.instanceRef.editorKeyUp();
+			}
+		}
+		
 		// Show the iframe only if wysiwyrg is on - and hide the text area.
 		this.oTextHandle.style.display = this.bRichTextEnabled ? 'none' : '';
 		this.oFrameHandle.style.display = this.bRichTextEnabled ? '' : 'none';
@@ -454,11 +464,11 @@ SmfEditor.prototype.updateEditorControls = function()
 
 	for (i in this.aButtonControls)
 	{
-		bNewState = in_array(this.aButtonControls[i].sCode, aAllCrumbs);
+		var bNewState = in_array(this.aButtonControls[i].sCode, aAllCrumbs);
 		if (bNewState != this.aButtonControls[i].bIsActive)
 		{
-			this.aButtonControls[i].isActive = bNewState;
-			this.aButtonControls[i].oCodeHandle.style.backgroundImage = "url(" + smf_images_url + (bNewState ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+			this.aButtonControls[i].bIsActive = bNewState;
+			this.aButtonControls[i].oCodeHandle.style.backgroundImage = 'url(' + smf_images_url + (bNewState ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ')';
 		}
 	}
 
@@ -945,7 +955,7 @@ SmfEditor.prototype.getParentElement = function(oNode)
 	if (oNode.nodeType == 1)
 		return oNode;
 
-	for (i = 0; i < 50; i++)
+	for (var i = 0; i < 50; i++)
 	{
 		if (!oNode.parentNode)
 			break;
