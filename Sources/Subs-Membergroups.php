@@ -65,7 +65,7 @@ if (!defined('SMF'))
 // Delete one or more membergroups.
 function deleteMembergroups($groups)
 {
-	global $sourcedir, $smfFunc, $modSettings;
+	global $sourcedir, $smcFunc, $modSettings;
 
 	// Make sure it's an array.
 	if (!is_array($groups))
@@ -85,7 +85,7 @@ function deleteMembergroups($groups)
 		return false;
 
 	// Remove the membergroups themselves.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}membergroups
 		WHERE id_group IN ({array_int:group_list})',
 		array(
@@ -94,21 +94,21 @@ function deleteMembergroups($groups)
 	);
 
 	// Remove the permissions of the membergroups.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}permissions
 		WHERE id_group IN ({array_int:group_list})',
 		array(
 			'group_list' => $groups,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}board_permissions
 		WHERE id_group IN ({array_int:group_list})',
 		array(
 			'group_list' => $groups,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}group_moderators
 		WHERE id_group IN ({array_int:group_list})',
 		array(
@@ -117,7 +117,7 @@ function deleteMembergroups($groups)
 	);
 
 	// Delete any outstanding requests.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_group_requests
 		WHERE id_group IN ({array_int:group_list})',
 		array(
@@ -126,7 +126,7 @@ function deleteMembergroups($groups)
 	);
 
 	// Update the primary groups of members.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}members
 		SET id_group = {int:regular_group}
 		WHERE id_group IN ({array_int:group_list})',
@@ -137,7 +137,7 @@ function deleteMembergroups($groups)
 	);
 
 	// Update any inherited groups (Lose inheritance).
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}membergroups
 		SET id_parent = {int:uninherited}
 		WHERE id_parent IN ({array_int:group_list})',
@@ -148,7 +148,7 @@ function deleteMembergroups($groups)
 	);
 
 	// Update the additional groups of members.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, additional_groups
 		FROM {db_prefix}members
 		WHERE FIND_IN_SET({raw:additional_groups_explode}, additional_groups)',
@@ -157,15 +157,15 @@ function deleteMembergroups($groups)
 		)
 	);
 	$updates = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$updates[$row['additional_groups']][] = $row['id_member'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	foreach ($updates as $additional_groups => $memberArray)
 		updateMemberData($memberArray, array('additional_groups' => implode(',', array_diff(explode(',', $additional_groups), $groups))));
 
 	// No boards can provide access to these membergroups anymore.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_board, member_groups
 		FROM {db_prefix}boards
 		WHERE FIND_IN_SET({raw:member_groups_explode}, member_groups)',
@@ -174,12 +174,12 @@ function deleteMembergroups($groups)
 		)
 	);
 	$updates = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$updates[$row['member_groups']][] = $row['id_board'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	foreach ($updates as $member_groups => $boardArray)
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET member_groups = {string:member_groups}
 			WHERE id_board IN ({array_int:board_lists})',
@@ -207,7 +207,7 @@ function deleteMembergroups($groups)
 // Remove one or more members from one or more membergroups.
 function removeMembersFromGroups($members, $groups = null, $permissionCheckDone = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// You're getting nowhere without this permission, unless of course you are the group's moderator.
 	if (!$permissionCheckDone)
@@ -234,7 +234,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	elseif ($groups === null)
 	{
 		// Wanna remove all groups from these members? That's easy.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET
 				id_group = {int:regular_member},
@@ -267,7 +267,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 
 	// Fetch a list of groups members cannot be assigned to explicitely.
 	$implicitGroups = array(-1, 0, 3);
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group
 		FROM {db_prefix}membergroups
 		WHERE min_posts != {int:min_posts}',
@@ -275,9 +275,9 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 			'min_posts' => -1,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$implicitGroups[] = $row['id_group'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Now get rid of those groups.
 	$groups = array_diff($groups, $implicitGroups);
@@ -291,7 +291,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		return false;
 
 	// First, reset those who have this as their primary group - this is the easy one.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}members
 		SET id_group = {int:regular_member}
 		WHERE id_group IN ({array_int:group_list})
@@ -304,7 +304,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	);
 
 	// Those who have it as part of their additional group must be updated the long way... sadly.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, additional_groups
 		FROM {db_prefix}members
 		WHERE (FIND_IN_SET({raw:additional_groups_implode}, additional_groups))
@@ -316,12 +316,12 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		)
 	);
 	$updates = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$updates[$row['additional_groups']][] = $row['id_member'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	foreach ($updates as $additional_groups => $memberArray)
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET additional_groups = {string:additional_groups}
 			WHERE id_member IN ({array_int:member_list})',
@@ -351,7 +351,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	                      available. If not, assign it to the additional group. */
 function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDone = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Show your licence, but only if it hasn't been done yet.
 	if (!$permissionCheckDone)
@@ -373,7 +373,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 	$group = (int) $group;
 
 	// Some groups just don't like explicitly having members.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group
 		FROM {db_prefix}membergroups
 		WHERE min_posts != {int:min_posts}',
@@ -382,9 +382,9 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 		)
 	);
 	$implicitGroups = array(-1, 0, 3);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$implicitGroups[] = $row['id_group'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Sorry, you can't join an implicit group.
 	if (in_array($group, $implicitGroups) || empty($members))
@@ -396,7 +396,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 
 	// Do the actual updates.
 	if ($type == 'only_additional')
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET additional_groups = CASE WHEN additional_groups = {string:blank_string} THEN {string:id_group_string} ELSE CONCAT(additional_groups, {string:id_group_string_extend}) END
 			WHERE id_member IN ({array_int:member_list})
@@ -411,7 +411,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 			)
 		);
 	elseif ($type == 'only_primary' || $type == 'force_primary')
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET id_group = {int:id_group}
 			WHERE id_member IN ({array_int:member_list})' . ($type == 'force_primary' ? '' : '
@@ -424,7 +424,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 			)
 		);
 	elseif ($type == 'auto')
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET
 				additional_groups = CASE WHEN id_group = {int:id_group} THEN additional_groups
@@ -455,9 +455,9 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 
 function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 {
-	global $scripturl, $txt, $smfFunc;
+	global $scripturl, $txt, $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, real_name
 		FROM {db_prefix}members
 		WHERE id_group = {int:id_group} OR FIND_IN_SET({int:id_group}, additional_groups)' . ($limit === null ? '' : '
@@ -467,9 +467,9 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 		)
 	);
 	$members = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$members[] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If there are more than $limit members, add a 'more' link.
 	if ($limit !== null && count($members) > $limit)
@@ -484,9 +484,9 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 // Retrieve a list of (visible) membergroups used by the cache.
 function cache_getMembergroupList()
 {
-	global $scripturl, $smfFunc;
+	global $scripturl, $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group, group_name, online_color
 		FROM {db_prefix}membergroups
 		WHERE min_posts = {int:min_posts}
@@ -501,9 +501,9 @@ function cache_getMembergroupList()
 		)
 	);
 	$groupCache = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$groupCache[] = '<a href="' . $scripturl . '?action=groups;sa=members;group=' . $row['id_group'] . '" ' . ($row['online_color'] ? 'style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'] . '</a>';
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return array(
 		'data' => $groupCache,
@@ -514,12 +514,12 @@ function cache_getMembergroupList()
 
 function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 {
-	global $txt, $scripturl, $context, $settings, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $smcFunc;
 
 	$groups = array();
 
 	// Get the basic group data.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group, group_name, min_posts, online_color, stars, 0 as num_members
 		FROM {db_prefix}membergroups
 		WHERE min_posts ' . ($membergroup_type === 'post_count' ? '!=' : '=') . ' -1
@@ -528,16 +528,16 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 			'sort' => $sort,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$groups[$row['id_group']] = $row;
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If we found any membergroups, get the amount of members in them.
 	if (!empty($groups))
 	{
 		if ($membergroup_type === 'post_count')
 		{
-			$query = $smfFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT id_post_group AS id_group, COUNT(*) AS num_members
 				FROM {db_prefix}members
 				WHERE id_post_group IN ({array_int:group_list})
@@ -546,14 +546,14 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 					'group_list' => array_keys($groups),
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($query))
+			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$groups[$row['id_group']]['num_members'] += $row['num_members'];
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 		}
 
 		else
 		{
-			$query = $smfFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT id_group, COUNT(*) AS num_members
 				FROM {db_prefix}members
 				WHERE id_group IN ({array_int:group_list})
@@ -562,11 +562,11 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 					'group_list' => array_keys($groups),
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($query))
+			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$groups[$row['id_group']]['num_members'] += $row['num_members'];
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 
-			$query = $smfFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT mg.id_group, COUNT(*) AS num_members
 				FROM {db_prefix}membergroups AS mg
 					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
@@ -579,9 +579,9 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 					'blank_string' => '',
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($query))
+			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$groups[$row['id_group']]['num_members'] += $row['num_members'];
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 		}
 	}
 

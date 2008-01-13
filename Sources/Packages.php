@@ -136,7 +136,7 @@ function Packages()
 // Test install a package.
 function PackageInstallTest()
 {
-	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $smfFunc;
+	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $smcFunc;
 
 	// You have to specify a file!!
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -213,7 +213,7 @@ function PackageInstallTest()
 		fatal_lang_error('no_access', false);
 
 	// Load up any custom themes we may want to install into...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
 		WHERE (id_theme = {int:default_theme} OR id_theme IN ({array_int:known_theme_list}))
@@ -226,11 +226,11 @@ function PackageInstallTest()
 		)
 	);
 	$theme_paths = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);
@@ -244,7 +244,7 @@ function PackageInstallTest()
 	$context['is_installed'] = false;
 
 	// See if it is installed?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT version, themes_installed, db_changes
 		FROM {db_prefix}log_packages
 		WHERE package_id = {string:current_package}
@@ -254,13 +254,13 @@ function PackageInstallTest()
 			'current_package' => $packageInfo['id'],
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
 		$db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['database_changes'] = array();
 	if (!empty($db_changes))
@@ -557,7 +557,7 @@ function PackageInstallTest()
 function PackageInstall()
 {
 	global $boarddir, $txt, $context, $boardurl, $scripturl, $sourcedir, $modSettings;
-	global $user_info, $smfFunc;
+	global $user_info, $smcFunc;
 
 	// If there's no file, what are we installing?
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -631,7 +631,7 @@ function PackageInstall()
 	}
 
 	// Now load up the paths of the themes that we need to know about.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
 		WHERE id_theme IN ({array_int:custom_themes})
@@ -643,11 +643,11 @@ function PackageInstall()
 		)
 	);
 	$theme_paths = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);
@@ -668,7 +668,7 @@ function PackageInstall()
 	$context['is_installed'] = false;
 
 	// Is it actually installed?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT version, themes_installed, db_changes
 		FROM {db_prefix}log_packages
 		WHERE package_id = {string:current_package}
@@ -678,13 +678,13 @@ function PackageInstall()
 			'current_package' => $packageInfo['id'],
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
 		$db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Wait, it's not installed yet!
 	// !!! TODO: Replace with a better error message!
@@ -768,7 +768,7 @@ function PackageInstall()
 			elseif ($action['type'] == 'code' && !empty($action['filename']))
 			{
 				// This is just here as reference for what is available.
-				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $forum_version, $smfFunc;
+				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $forum_version, $smcFunc;
 
 				// Now include the file and be done with it ;).
 				require($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']);
@@ -777,7 +777,7 @@ function PackageInstall()
 			elseif ($action['type'] == 'database' && !empty($action['filename']) && (!$context['uninstalling'] || !empty($_POST['do_db_changes'])))
 			{
 				// These can also be there for database changes.
-				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $forum_version, $smfFunc;
+				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $forum_version, $smcFunc;
 				global $db_package_log;
 
 				// We'll likely want the package specific database functionality!
@@ -810,7 +810,7 @@ function PackageInstall()
 		package_put_contents($boarddir . '/Packages/installed.list', time());
 
 		// See if this is already installed, and change it's state as required.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_install, install_state
 			FROM {db_prefix}log_packages
 			WHERE install_state != {int:not_installed}
@@ -825,12 +825,12 @@ function PackageInstall()
 			)
 		);
 		$is_upgrade = false;
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			// Uninstalling?
 			if ($context['uninstalling'])
 			{
-				$smfFunc['db_query']('', '
+				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}log_packages
 					SET install_state = {int:not_installed}, member_removed = {string:member_name}, id_member_removed = {int:current_member},
 						time_removed = {int:current_time}
@@ -883,7 +883,7 @@ function PackageInstall()
 			// What failed steps?
 			$failed_step_insert = serialize($failed_steps);
 
-			$smfFunc['db_insert']('',
+			$smcFunc['db_insert']('',
 				'{db_prefix}log_packages',
 				array(
 					'filename' => 'string', 'name' => 'string', 'package_id' => 'string', 'version' => 'string',
@@ -900,7 +900,7 @@ function PackageInstall()
 				array('id_install')
 			);
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		$context['install_finished'] = true;
 	}
@@ -914,11 +914,11 @@ function PackageInstall()
 		foreach ($db_changes as $change)
 		{
 			if ($change[0] == 'remove_table' && isset($change[1]))
-				$smfFunc['db_drop_table']($change[1]);
+				$smcFunc['db_drop_table']($change[1]);
 			elseif ($change[0] == 'remove_column' && isset($change[2]))
-				$smfFunc['db_remove_column']($change[1], $change[2]);
+				$smcFunc['db_remove_column']($change[1], $change[2]);
 			elseif ($change[0] == 'remove_index' && isset($change[2]))
-				$smfFunc['db_remove_index']($change[1], $change[2]);
+				$smcFunc['db_remove_index']($change[1], $change[2]);
 		}
 	}
 
@@ -1032,7 +1032,7 @@ function InstalledList()
 // Empty out the installed list.
 function FlushInstall()
 {
-	global $boarddir, $sourcedir, $smfFunc;
+	global $boarddir, $sourcedir, $smcFunc;
 
 	include_once($sourcedir . '/Subs-Package.php');
 
@@ -1040,7 +1040,7 @@ function FlushInstall()
 	package_put_contents($boarddir . '/Packages/installed.list', time());
 
 	// Set everything as uninstalled.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_packages
 		SET install_state = {int:not_installed}',
 		array(
@@ -1272,7 +1272,7 @@ function PackageOptions()
 
 function ViewOperations()
 {
-	global $context, $txt, $boarddir, $sourcedir, $smfFunc;
+	global $context, $txt, $boarddir, $sourcedir, $smcFunc;
 
 	// Can't be in here buddy.
 	isAllowedTo('admin_forum');
@@ -1322,8 +1322,8 @@ function ViewOperations()
 
 	// Ok lets get the content of the file.
 	$context['operations'] = array(
-		'search' => $smfFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['search_original'], ENT_QUOTES),
-		'replace' => $smfFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['replace_original'], ENT_QUOTES),
+		'search' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['search_original'], ENT_QUOTES),
+		'replace' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['replace_original'], ENT_QUOTES),
 		'position' => $mod_actions[$_REQUEST['operation_key']]['position'],
 	);
 

@@ -39,7 +39,7 @@ if (!defined('SMF'))
 // See the queries....
 function ViewQuery()
 {
-	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $smfFunc;
+	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $smcFunc;
 
 	// Don't allow except for administrators.
 	isAllowedTo('admin_forum');
@@ -127,7 +127,7 @@ function ViewQuery()
 		// Explain the query.
 		if ($query_id == $q && $is_select_query)
 		{
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				EXPLAIN ' . $select,
 				array(
 				)
@@ -136,7 +136,7 @@ function ViewQuery()
 			{
 				echo '
 		<table border="1" cellpadding="4" cellspacing="0" style="empty-cells: show; font-family: serif; margin-bottom: 2ex;">
-			<tr><td>', $smfFunc['db_error']($db_connection), '</td></tr>
+			<tr><td>', $smcFunc['db_error']($db_connection), '</td></tr>
 		</table>';
 				continue;
 			}
@@ -144,7 +144,7 @@ function ViewQuery()
 			echo '
 		<table border="1" rules="all" cellpadding="4" cellspacing="0" style="empty-cells: show; font-family: serif; margin-bottom: 2ex;">';
 
-			$row = $smfFunc['db_fetch_assoc']($result);
+			$row = $smcFunc['db_fetch_assoc']($result);
 
 			echo '
 			<tr>
@@ -152,8 +152,8 @@ function ViewQuery()
 				<th>', array_keys($row)) . '</th>
 			</tr>';
 
-			$smfFunc['db_data_seek']($result, 0);
-			while ($row = $smfFunc['db_fetch_assoc']($result))
+			$smcFunc['db_data_seek']($result, 0);
+			while ($row = $smcFunc['db_fetch_assoc']($result))
 			{
 				echo '
 			<tr>
@@ -161,7 +161,7 @@ function ViewQuery()
 				<td>', $row) . '</td>
 			</tr>';
 			}
-			$smfFunc['db_free_result']($result);
+			$smcFunc['db_free_result']($result);
 
 			echo '
 		</table>';

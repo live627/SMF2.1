@@ -79,7 +79,7 @@ if (!defined('SMF'))
 // The main admin handling function.
 function AdminMain()
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smcFunc;
 
 	// Load the language and templates....
 	loadLanguage('Admin');
@@ -467,7 +467,7 @@ function AdminMain()
 // The main administration section.
 function AdminHome()
 {
-	global $sourcedir, $forum_version, $txt, $scripturl, $context, $user_info, $boardurl, $modSettings, $smfFunc;
+	global $sourcedir, $forum_version, $txt, $scripturl, $context, $user_info, $boardurl, $modSettings, $smcFunc;
 
 	// You have to be able to do at least one of the below to see this page.
 	isAllowedTo(array('admin_forum', 'manage_permissions', 'moderate_forum', 'manage_membergroups', 'manage_bans', 'send_mail', 'edit_news', 'manage_boards', 'manage_smileys', 'manage_attachments'));
@@ -534,7 +534,7 @@ function AdminHome()
 				else
 				{
 					$_SESSION['copy_expire'] = '';
-					$smfFunc['db_query']('', '
+					$smcFunc['db_query']('', '
 						DELETE FROM {db_prefix}settings
 						WHERE variable = {string:copy_settings}
 							OR variable = {string:copyright_key}',
@@ -559,7 +559,7 @@ function AdminHome()
 
 	$context['current_versions'] = array(
 		'php' => array('title' => $txt['support_versions_php'], 'version' => PHP_VERSION),
-		'db' => array('title' => sprintf($txt['support_versions_db'], $smfFunc['db_title']), 'version' => ''),
+		'db' => array('title' => sprintf($txt['support_versions_db'], $smcFunc['db_title']), 'version' => ''),
 		'server' => array('title' => $txt['support_versions_server'], 'version' => $_SERVER['SERVER_SOFTWARE']),
 	);
 	$context['forum_version'] = $forum_version;
@@ -756,9 +756,9 @@ function CleanupPermissions()
 // Get one of the admin information files from Simple Machines.
 function DisplayAdminFile()
 {
-	global $context, $modSettings, $smfFunc;
+	global $context, $modSettings, $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT data, filetype
 		FROM {db_prefix}admin_info_files
 		WHERE filename = {string:current_filename}
@@ -768,11 +768,11 @@ function DisplayAdminFile()
 		)
 	);
 
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('admin_file_not_found', true, array($_REQUEST['filename']));
 
-	list ($file_data, $filetype) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($file_data, $filetype) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['template_layers'] = array();
 	// Lets make sure we aren't going to output anything nasty.
@@ -791,7 +791,7 @@ function DisplayAdminFile()
 // This allocates out all the search stuff.
 function AdminSearch()
 {
-	global $txt, $context, $smfFunc;
+	global $txt, $context, $smcFunc;
 
 	isAllowedTo('admin_forum');
 

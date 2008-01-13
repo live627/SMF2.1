@@ -118,7 +118,7 @@ function RegCenter()
 // This function allows the admin to register a new member by hand.
 function AdminRegister()
 {
-	global $txt, $context, $sourcedir, $scripturl, $smfFunc;
+	global $txt, $context, $sourcedir, $scripturl, $smcFunc;
 
 	if (!empty($_POST['regSubmit']))
 	{
@@ -161,7 +161,7 @@ function AdminRegister()
 	$context['page_title'] = $txt['registration_center'];
 
 	// Load the assignable member groups.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT group_name, id_group
 		FROM {db_prefix}membergroups
 		WHERE id_group != {int:moderator_group}
@@ -178,15 +178,15 @@ function AdminRegister()
 		)
 	);
 	$context['member_groups'] = array(0 => &$txt['admin_register_group_none']);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$context['member_groups'][$row['id_group']] = $row['group_name'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 }
 
 // I hereby agree not to be a lazy bum.
 function EditAgreement()
 {
-	global $txt, $boarddir, $context, $modSettings, $smfFunc, $settings;
+	global $txt, $boarddir, $context, $modSettings, $smcFunc, $settings;
 
 	// By default we look at agreement.txt.
 	$context['current_agreement'] = '';
@@ -213,7 +213,7 @@ function EditAgreement()
 		while ($entry = $dir->read())
 			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && file_exists($boarddir . '/agreement.' . $matches[1] . '.txt'))
 			{
-				$context['editable_agreements']['_' . $matches[1]] = $smfFunc['ucwords'](strtr($matches[1], '_', ' '));
+				$context['editable_agreements']['_' . $matches[1]] = $smcFunc['ucwords'](strtr($matches[1], '_', ' '));
 				// Are we editing this?
 				if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '_' . $matches[1])
 					$context['current_agreement'] = '.' . $matches[1];

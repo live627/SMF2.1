@@ -66,7 +66,7 @@ if (!empty($maintenance) && $maintenance == 2)
 	db_fatal_error();
 
 // Create a variable to store some SMF specific functions in.
-$smfFunc = array();
+$smcFunc = array();
 
 // Initate the database connection and define some database functions to use.
 loadDatabase();

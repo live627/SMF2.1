@@ -32,11 +32,11 @@ if (!defined('SMF'))
 // Get the latest posts of a forum.
 function getLastPosts($latestPostOptions)
 {
-	global $scripturl, $txt, $user_info, $modSettings, $smfFunc;
+	global $scripturl, $txt, $user_info, $modSettings, $smcFunc;
 
 	// Find all the posts.  Newer ones will have higher IDs.  (assuming the last 20 * number are accessable...)
 	// !!!SLOW This query is now slow, NEEDS to be fixed.  Maybe break into two?
-	$request = $smfFunc['db_query']('get_last_posts', '
+	$request = $smcFunc['db_query']('get_last_posts', '
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_board, b.name AS board_name,
@@ -60,15 +60,15 @@ function getLastPosts($latestPostOptions)
 		)
 	);
 	$posts = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Censor the subject and post for the preview ;).
 		censorText($row['subject']);
 		censorText($row['body']);
 
 		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
-		if ($smfFunc['strlen']($row['body']) > 128)
-			$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
+		if ($smcFunc['strlen']($row['body']) > 128)
+			$row['body'] = $smcFunc['substr']($row['body'], 0, 128) . '...';
 
 		// Build the array.
 		$posts[] = array(
@@ -95,7 +95,7 @@ function getLastPosts($latestPostOptions)
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>'
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $posts;
 }

@@ -41,13 +41,13 @@ if (!defined('SMF'))
 
 */
 
-// Add the file functions to the $smfFunc array.
+// Add the file functions to the $smcFunc array.
 function db_extra_init()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	if (!isset($smfFunc['db_backup_table']) || $smfFunc['db_backup_table'] != 'smf_db_backup_table')
-		$smfFunc += array(
+	if (!isset($smcFunc['db_backup_table']) || $smcFunc['db_backup_table'] != 'smf_db_backup_table')
+		$smcFunc += array(
 			'db_backup_table' => 'smf_db_backup_table',
 			'db_optimize_table' => 'smf_db_optimize_table',
 			'db_insert_sql' => 'smf_db_insert_sql',
@@ -60,12 +60,12 @@ function db_extra_init()
 // Backup $table to $backup_table.
 function smf_db_backup_table($table, $backup_table)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Do we need to drop it first?
 	$tables = smf_db_list_tables(false, $backup_table);
 	if (!empty($tables))
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DROP TABLE {raw:backup_table}',
 			array(
 				'backup_table' => $backup_table,
@@ -73,7 +73,7 @@ function smf_db_backup_table($table, $backup_table)
 		);
 
 	//!!! Does not work at the moment!
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		CREATE TABLE {raw:backup_table}
 		AS SELECT * FROM {raw:table}',
 		array(
@@ -81,7 +81,7 @@ function smf_db_backup_table($table, $backup_table)
 			'table' => $table,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		INSERT INTO {raw:backup_table}
 		SELECT * FROM {raw:table}',
 		array(
@@ -94,9 +94,9 @@ function smf_db_backup_table($table, $backup_table)
 // Optimize a table - return data freed!
 function smf_db_optimize_table($table)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 			VACUUM ANALYZE {raw:table}',
 			array(
 				'table' => $table,
@@ -105,8 +105,8 @@ function smf_db_optimize_table($table)
 	if (!$request)
 		return -1;
 
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (isset($row['Data_free']))
 			return $row['Data_free'] / 1024;
@@ -117,11 +117,11 @@ function smf_db_optimize_table($table)
 // List all the tables in the database.
 function smf_db_list_tables($db = false, $filter = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	$filter = $filter == false ? '' : ' WHERE relname LIKE \'' . $filter . '\'';
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT relname
 		FROM pg_stat_user_tables
 		{raw:filter}
@@ -131,9 +131,9 @@ function smf_db_list_tables($db = false, $filter = false)
 		)
 	);
 	$tables = array();
-	while ($row = $smfFunc['db_fetch_row']($request))
+	while ($row = $smcFunc['db_fetch_row']($request))
 		$tables[] = $row[0];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $tables;
 }
@@ -141,13 +141,13 @@ function smf_db_list_tables($db = false, $filter = false)
 // Get the content (INSERTs) for a table.
 function smf_db_insert_sql($tableName)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// This will be handy...
 	$crlf = "\r\n";
 
 	// Get everything from the table.
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SELECT
 		FROM {raw:table}',
 		array(
@@ -156,27 +156,27 @@ function smf_db_insert_sql($tableName)
 	);
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
-	$num_rows = $smfFunc['db_num_rows']($result);
+	$num_rows = $smcFunc['db_num_rows']($result);
 	$current_row = 0;
 
 	if ($num_rows == 0)
 		return '';
 
-	$fields = array_keys($smfFunc['db_fetch_assoc']($result));
-	$smfFunc['db_data_seek']($result, 0);
+	$fields = array_keys($smcFunc['db_fetch_assoc']($result));
+	$smcFunc['db_data_seek']($result, 0);
 
 	// Start it off with the basic INSERT INTO.
 	$data = '';
 	$insert_msg = $crlf . 'INSERT INTO ' . $tableName . $crlf . "\t" . '(' . implode(', ', $fields) . ')' . $crlf . 'VALUES ' . $crlf . "\t";
 
 	// Loop through each row.
-	while ($row = $smfFunc['db_fetch_row']($result))
+	while ($row = $smcFunc['db_fetch_row']($result))
 	{
 		$current_row++;
 
 		// Get the fields in this row...
 		$field_list = array();
-		for ($j = 0; $j < $smfFunc['db_num_fields']($result); $j++)
+		for ($j = 0; $j < $smcFunc['db_num_fields']($result); $j++)
 		{
 			// Try to figure out the type of each field. (NULL, number, or 'string'.)
 			if (!isset($row[$j]))
@@ -184,13 +184,13 @@ function smf_db_insert_sql($tableName)
 			elseif (is_numeric($row[$j]))
 				$field_list[] = $row[$j];
 			else
-				$field_list[] = '\'' . $smfFunc['db_escape_string']($row[$j]) . '\'';
+				$field_list[] = '\'' . $smcFunc['db_escape_string']($row[$j]) . '\'';
 		}
 
 		// 'Insert' the data.
 		$data .= $insert_msg . '(' . implode(', ', $field_list) . ');';
 	}
-	$smfFunc['db_free_result']($result);
+	$smcFunc['db_free_result']($result);
 
 	// Return an empty string if there were no rows.
 	return $num_rows == 0 ? '' : $data;
@@ -199,7 +199,7 @@ function smf_db_insert_sql($tableName)
 // Get the schema (CREATE) for a table.
 function smf_db_table_sql($tableName)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// This will be needed...
 	$crlf = "\r\n";
@@ -210,7 +210,7 @@ function smf_db_table_sql($tableName)
 	$seq_create = '';
 
 	// Find all the fields.
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
 		FROM information_schema.columns
 		WHERE table_name = {string:table}
@@ -219,7 +219,7 @@ function smf_db_table_sql($tableName)
 			'table' => $tableName,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		if ($row['data_type'] == 'character varying')
 			$row['data_type'] = 'varchar';
@@ -240,7 +240,7 @@ function smf_db_table_sql($tableName)
 			if (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
 			{
 				// Get to find the next variable first!
-				$count_req = $smfFunc['db_query']('', '
+				$count_req = $smcFunc['db_query']('', '
 					SELECT MAX({raw:column})
 					FROM {raw:table}',
 					array(
@@ -248,8 +248,8 @@ function smf_db_table_sql($tableName)
 						'table' => $tableName,
 					)
 				);
-				list ($max_ind) = $smfFunc['db_fetch_row']($count_req);
-				$smfFunc['db_free_result']($count_req);
+				list ($max_ind) = $smcFunc['db_fetch_row']($count_req);
+				$smcFunc['db_free_result']($count_req);
 				//!!! Get the right bloody start!
 				$seq_create .= 'CREATE SEQUENCE ' . $matches[1] . ' START WITH ' . ($max_ind+ 1) . ';' . $crlf . $crlf;
 			}
@@ -257,12 +257,12 @@ function smf_db_table_sql($tableName)
 
 		$schema_create .= ',' . $crlf;
 	}
-	$smfFunc['db_free_result']($result);
+	$smcFunc['db_free_result']($result);
 
 	// Take off the last comma.
 	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
 
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
 		FROM pg_class AS c, pg_class AS c2, pg_index AS i
 		WHERE c.relname = {string:table}
@@ -273,7 +273,7 @@ function smf_db_table_sql($tableName)
 		)
 	);
 	$indexes = array();
-	while ($row = $smfFunc['db_fetch_assoc']($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		if ($row['is_primary'])
 		{
@@ -285,7 +285,7 @@ function smf_db_table_sql($tableName)
 		else
 			$index_create .= $crlf . $row['inddef'] . ';';
 	}
-	$smfFunc['db_free_result']($result);
+	$smcFunc['db_free_result']($result);
 
 	// Finish it off!
 	$schema_create .= $crlf . ');';
@@ -296,15 +296,15 @@ function smf_db_table_sql($tableName)
 // Get the version number.
 function smf_db_get_version()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SHOW server_version',
 		array(
 		)
 	);
-	list ($ver) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($ver) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $ver;
 }

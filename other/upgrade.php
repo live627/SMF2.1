@@ -148,7 +148,7 @@ if (!function_exists('text2words'))
 {
 	function text2words($text)
 	{
-		global $smfFunc;
+		global $smcFunc;
 
 		// Step 1: Remove entities/things we don't consider words:
 		$words = preg_replace('~([\x0B\0\xA0\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~', ' ', $text);
@@ -588,7 +588,7 @@ if ($upcontext['current_step'] != 0 || !empty($upcontext['user']['step']))
 // This only exists if we're on SMF ;)
 if (isset($modSettings['smfVersion']))
 {
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT variable, value
 		FROM {db_prefix}themes
 		WHERE id_theme = {int:id_theme}
@@ -599,9 +599,9 @@ if (isset($modSettings['smfVersion']))
 			'images_url' => 'images_url',
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$modSettings[$row['variable']] = $row['value'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 }
 
 if (!isset($modSettings['theme_url']))
@@ -761,7 +761,7 @@ function redirectLocation($location, $addForm = true)
 function loadEssentialData()
 {
 	global $db_server, $db_user, $db_passwd, $db_name, $db_connection, $db_prefix, $db_character_set, $db_type;
-	global $modSettings, $sourcedir, $smfFunc, $upcontext;
+	global $modSettings, $sourcedir, $smcFunc, $upcontext;
 
 	// Do the non-SSI stuff...
 	@set_magic_quotes_runtime(0);
@@ -773,8 +773,8 @@ function loadEssentialData()
 		@ini_set('session.save_handler', 'files');
 	@session_start();
 
-	if (empty($smfFunc))
-		$smfFunc = array();
+	if (empty($smcFunc))
+		$smcFunc = array();
 
 	// Initialize everything...
 	initialize_inputs();
@@ -794,26 +794,26 @@ function loadEssentialData()
 			die('Unable to connect to database - please check username and password are correct in Settings.php');
 
 		// Make sure we get failure notices.
-		$smfFunc['db_error_handler_return'] = true;
+		$smcFunc['db_error_handler_return'] = true;
 
 		if ($db_type == 'mysql' && isset($db_character_set) && preg_match('~^\w+$~', $db_character_set) === 1)
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 			SET NAMES ' . $db_character_set,
 			array(
 			)
 		);
 
 		// Load the modSettings data...
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT variable, value
 			FROM {db_prefix}settings',
 			array(
 			)
 		);
 		$modSettings = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$modSettings[$row['variable']] = $row['value'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 	else
 	{
@@ -892,7 +892,7 @@ function initialize_inputs()
 function WelcomeLogin()
 {
 	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $cachedir, $upgradeurl, $upcontext, $disable_security;
-	global $smfFunc, $db_type, $databases;
+	global $smcFunc, $db_type, $databases;
 
 	$upcontext['sub_template'] = 'welcome_message';
 
@@ -928,7 +928,7 @@ function WelcomeLogin()
 	}
 
 	// Do they have ALTER privileges?
-	if (!empty($databases[$db_type]['alter_support']) && $smfFunc['db_query']('alter_boards', 'ALTER TABLE {db_prefix}boards ORDER BY id_board', array()) === false)
+	if (!empty($databases[$db_type]['alter_support']) && $smcFunc['db_query']('alter_boards', 'ALTER TABLE {db_prefix}boards ORDER BY id_board', array()) === false)
 	{
 		throw_error('The ' . $databases[$db_type]['name'] . ' user you have set in Settings.php does not have proper privileges.<br /><br />Please ask your host to give this user the ALTER, CREATE, and DROP privileges.');
 		return false;
@@ -1016,7 +1016,7 @@ function WelcomeLogin()
 function checkLogin()
 {
 	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $cachedir, $upgradeurl, $upcontext, $disable_security;
-	global $smfFunc, $db_type, $databases, $support_js;
+	global $smcFunc, $db_type, $databases, $support_js;
 
 	// Are we trying to login?
 	if (isset($_POST['contbutt']) && (!empty($_POST['user']) || $disable_security))
@@ -1029,7 +1029,7 @@ function checkLogin()
 		$oldDB = false;
 		if (empty($db_type) || $db_type == 'mysql')
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SHOW COLUMNS
 				FROM {db_prefix}members
 				LIKE {string:member_name}',
@@ -1037,16 +1037,16 @@ function checkLogin()
 					'member_name' => 'memberName',
 				)
 			);
-			if ($smfFunc['db_num_rows']($request) != 0)
+			if ($smcFunc['db_num_rows']($request) != 0)
 				$oldDB = true;
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 		}
 
 		// Get what we believe to be their details.
 		if (!$disable_security)
 		{
 			if ($oldDB)
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT id_member, memberName AS member_name, passwd, id_group,
 					additionalGroups AS additional_groups
 					FROM {db_prefix}members
@@ -1056,7 +1056,7 @@ function checkLogin()
 					)
 				);
 			else
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT id_member, member_name, passwd, id_group, additional_groups
 					FROM {db_prefix}members
 					WHERE member_name = {string:member_name}',
@@ -1064,9 +1064,9 @@ function checkLogin()
 						'member_name' => $_POST['user'],
 					)
 				);
-			if ($smfFunc['db_num_rows']($request) != 0)
+			if ($smcFunc['db_num_rows']($request) != 0)
 			{
-				list ($id_member, $name, $password, $id_group, $addGroups) = $smfFunc['db_fetch_row']($request);
+				list ($id_member, $name, $password, $id_group, $addGroups) = $smcFunc['db_fetch_row']($request);
 
 				$groups = explode(',', $addGroups);
 				$groups[] = $id_group;
@@ -1083,7 +1083,7 @@ function checkLogin()
 			}
 			else
 				$upcontext['username_incorrect'] = true;
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 		}
 		$upcontext['username'] = $_POST['user'];
 
@@ -1121,7 +1121,7 @@ function checkLogin()
 				// Do we actually have permission?
 				if (!in_array(1, $groups))
 				{
-					$request = $smfFunc['db_query']('', '
+					$request = $smcFunc['db_query']('', '
 						SELECT permission
 						FROM {db_prefix}permissions
 						WHERE id_group IN ({array_int:groups})
@@ -1131,9 +1131,9 @@ function checkLogin()
 							'admin_forum' => 'admin_forum',
 						)
 					);
-					if ($smfFunc['db_num_rows']($request) == 0)
+					if ($smcFunc['db_num_rows']($request) == 0)
 						throw_error('You need to be an admin to perform an upgrade!');
-					$smfFunc['db_free_result']($request);
+					$smcFunc['db_free_result']($request);
 				}
 
 				$upcontext['user']['id'] = $id_member;
@@ -1165,7 +1165,7 @@ function checkLogin()
 // Step 1: Do the maintenance and backup.
 function UpgradeOptions()
 {
-	global $db_prefix, $command_line, $modSettings, $is_debug, $smfFunc;
+	global $db_prefix, $command_line, $modSettings, $is_debug, $smcFunc;
 	global $boarddir, $boardurl, $sourcedir, $maintenance, $mmessage, $cachedir, $upcontext, $db_type;
 
 	$upcontext['sub_template'] = 'upgrade_options';
@@ -1197,7 +1197,7 @@ function UpgradeOptions()
 			preg_match('~SITE-ID:\s(\w{10})~', $return_data, $ID);
 
 			if (!empty($ID[1]))
-				$smfFunc['db_insert']('replace',
+				$smcFunc['db_insert']('replace',
 					$db_prefix . 'settings',
 					array('variable' => 'string', 'value' => 'string'),
 					array('allow_sm_stats', $ID[1]),
@@ -1206,7 +1206,7 @@ function UpgradeOptions()
 		}
 	}
 	else
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}settings
 			WHERE variable = {string:allow_sm_stats}',
 			array(
@@ -1282,7 +1282,7 @@ function UpgradeOptions()
 // Backup the database - why not...
 function BackupDatabase()
 {
-	global $upcontext, $db_prefix, $command_line, $is_debug, $support_js, $file_steps, $smfFunc;
+	global $upcontext, $db_prefix, $command_line, $is_debug, $support_js, $file_steps, $smcFunc;
 
 	$upcontext['sub_template'] = isset($_GET['xml']) ? 'backup_xml' : 'backup_database';
 	$upcontext['page_title'] = 'Backup Database';
@@ -1297,7 +1297,7 @@ function BackupDatabase()
 	// Get all the table names.
 	$filter = str_replace('_', '\_', preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0 ? $match[2] : $db_prefix) . '%';
 	$db = preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0 ? strtr($match[1], array('`' => '')) : false;
-	$tables = $smfFunc['db_list_tables']($db, $filter);
+	$tables = $smcFunc['db_list_tables']($db, $filter);
 
 	$table_names = array();
 	foreach ($tables as $table)
@@ -1360,7 +1360,7 @@ function BackupDatabase()
 // Backup one table...
 function backupTable($table)
 {
-	global $is_debug, $command_line, $db_prefix, $smfFunc;
+	global $is_debug, $command_line, $db_prefix, $smcFunc;
 
 	if ($is_debug && $command_line)
 	{
@@ -1368,7 +1368,7 @@ function backupTable($table)
 		flush();
 	}
 
-	$smfFunc['db_backup_table']($table, 'backup_' . $table);
+	$smcFunc['db_backup_table']($table, 'backup_' . $table);
 
 	if ($is_debug && $command_line)
 		echo ' done.';
@@ -1377,7 +1377,7 @@ function backupTable($table)
 // Step 2: Everything.
 function DatabaseChanges()
 {
-	global $db_prefix, $modSettings, $command_line, $smfFunc;
+	global $db_prefix, $modSettings, $command_line, $smcFunc;
 	global $language, $boardurl, $sourcedir, $boarddir, $upcontext, $support_js, $db_type;
 
 	// Have we just completed this?
@@ -1427,7 +1427,7 @@ function DatabaseChanges()
 				if ($nextFile)
 				{
 					// Only update the version of this if complete.
-					$smfFunc['db_insert']('replace',
+					$smcFunc['db_insert']('replace',
 						$db_prefix . 'settings',
 						array('variable' => 'string', 'value' => 'string'),
 						array('smfVersion', $file[2]),
@@ -1473,7 +1473,7 @@ function DatabaseChanges()
 // Clean up any mods installed...
 function CleanupMods()
 {
-	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smfFunc;
+	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smcFunc;
 
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
 	if (!isset($_GET['ssi']) || !function_exists('mktree'))
@@ -1502,7 +1502,7 @@ function CleanupMods()
 	}
 
 	// Load all theme paths....
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
 		WHERE id_member = {int:id_member}
@@ -1514,17 +1514,17 @@ function CleanupMods()
 		)
 	);
 	$theme_paths = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($row['id_theme'] == 1)
 			$settings['default_' . $row['variable']] = $row['value'];
 		elseif ($row['variable'] == 'theme_dir')
 			$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Are there are mods installed that may need uninstalling?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_install, filename, name, themes_installed, version
 		FROM {db_prefix}log_packages
 		WHERE install_state = {int:installed}
@@ -1534,7 +1534,7 @@ function CleanupMods()
 		)
 	);
 	$upcontext['packages'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Work out the status.
 		if (!file_exists($boarddir . '/Packages/' . $row['filename']))
@@ -1565,7 +1565,7 @@ function CleanupMods()
 			'needs_removing' => false,
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Don't carry on if there are none.
 	if (empty($upcontext['packages']))
@@ -1772,7 +1772,7 @@ function CleanupMods()
 // Make any necessary template changes.
 function UpgradeTemplate()
 {
-	global $upcontext, $boarddir, $boardurl, $db_prefix, $command_line, $is_debug, $sourcedir, $txtChanges, $smfFunc;
+	global $upcontext, $boarddir, $boardurl, $db_prefix, $command_line, $is_debug, $sourcedir, $txtChanges, $smcFunc;
 
 	$upcontext['page_title'] = 'Upgrade Templates';
 	$upcontext['sub_template'] = 'upgrade_templates';
@@ -1833,7 +1833,7 @@ function UpgradeTemplate()
 	}
 
 	// Load up all the theme/lang directories - we'll want these.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_theme, value
 		FROM {db_prefix}themes
 		WHERE id_member = {int:id_member}
@@ -1845,13 +1845,13 @@ function UpgradeTemplate()
 	);
 	$theme_dirs = array();
 	$lang_dirs = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$theme_dirs[$row['id_theme']] = $row['value'];
 		if (file_exists($row['value'] . '/languages') && is_dir($row['value'] . '/languages'))
 			$lang_dirs[$row['id_theme']] = $row['value'] . '/languages';
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Calculate how many steps in total.
 	$upcontext['file_count'] = 0;
@@ -2013,14 +2013,14 @@ function UpgradeTemplate()
 		);
 
 		// Get an available id_theme first...
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT MAX(id_theme) + 1
 			FROM {db_prefix}themes',
 			array(
 			)
 		);
-		list ($id_theme) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($id_theme) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		$themeData = array();
 		foreach ($values as $variable => $value)
@@ -2028,7 +2028,7 @@ function UpgradeTemplate()
 
 		if (!empty($themeData))
 		{
-			$smfFunc['db_insert']('ignore',
+			$smcFunc['db_insert']('ignore',
 				$db_prefix . 'themes',
 				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string', 'value' => 'string'),
 				$themeData,
@@ -2036,7 +2036,7 @@ function UpgradeTemplate()
 			);
 		}
 
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}settings
 			SET value = CONCAT(value, {string:new_theme})
 			WHERE variable = {string:knownThemes}',
@@ -2046,7 +2046,7 @@ function UpgradeTemplate()
 			)
 		);
 
-		$smfFunc['db_insert']('replace',
+		$smcFunc['db_insert']('replace',
 				$db_prefix . 'settings',
 				array('variable' => 'string', 'value' => 'string'),
 				array(array('theme_guests', $id_theme), array('smiley_sets_default', 'classic')),
@@ -2137,7 +2137,7 @@ function DeleteUpgrade()
 
 function convertSettingsToTheme()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $db_prefix, $modSettings, $smcFunc;
 
 	$values = array(
 		'show_latest_member' => @$GLOBALS['showlatestmember'],
@@ -2170,7 +2170,7 @@ function convertSettingsToTheme()
 	}
 	if (!empty($themeData))
 	{
-		$smfFunc['db_insert']('ignore',
+		$smcFunc['db_insert']('ignore',
 			$db_prefix . 'themes',
 			array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string', 'value' => 'string'),
 			$themeData,
@@ -2182,7 +2182,7 @@ function convertSettingsToTheme()
 // This function only works with MySQL but that's fine as it is only used for v1.0.
 function convertSettingstoOptions()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $db_prefix, $modSettings, $smcFunc;
 
 	// Format: new_setting -> old_setting_name.
 	$values = array(
@@ -2196,7 +2196,7 @@ function convertSettingstoOptions()
 		if (empty($modSettings[$value[0]]))
 			continue;
 
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			INSERT IGNORE INTO {db_prefix}themes
 				(id_member, id_theme, variable, value)
 			SELECT id_member, 1, {string:variable}, {string:value}
@@ -2207,7 +2207,7 @@ function convertSettingstoOptions()
 			)
 		);
 
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			INSERT IGNORE INTO {db_prefix}themes
 				(id_member, id_theme, variable, value)
 			VALUES (-1, 1, {string:variable}, {string:value})',
@@ -2310,13 +2310,13 @@ function db_version_check()
 
 function getMemberGroups()
 {
-	global $db_prefix, $smfFunc;
+	global $db_prefix, $smcFunc;
 	static $member_groups = array();
 
 	if (!empty($member_groups))
 		return $member_groups;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT group_name, id_group
 		FROM {db_prefix}membergroups
 		WHERE id_group = {int:admin_group} OR id_group > {int:old_group}',
@@ -2327,7 +2327,7 @@ function getMemberGroups()
 	);
 	if ($request === false)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT membergroup, id_group
 			FROM {db_prefix}membergroups
 			WHERE id_group = {int:admin_group} OR id_group > {int:old_group}',
@@ -2337,9 +2337,9 @@ function getMemberGroups()
 			)
 		);
 	}
-	while ($row = $smfFunc['db_fetch_row']($request))
+	while ($row = $smcFunc['db_fetch_row']($request))
 		$member_groups[trim($row[0])] = $row[1];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $member_groups;
 }
@@ -2355,7 +2355,7 @@ function fixRelativePath($path)
 function parse_sql($filename)
 {
 	global $db_prefix, $db_collation, $boarddir, $boardurl, $command_line, $file_steps, $step_progress, $custom_warning;
-	global $upcontext, $support_js, $is_debug, $smfFunc, $db_connection, $databases, $db_type, $db_character_set;
+	global $upcontext, $support_js, $is_debug, $smcFunc, $db_connection, $databases, $db_type, $db_character_set;
 
 /*
 	Failure allowed on:
@@ -2404,21 +2404,21 @@ function parse_sql($filename)
 	// If we're on MySQL supporting collations then let's find out what the members table uses and put it in a global var - to allow upgrade script to match collations!
 	if (!empty($databases[$db_type]['utf8_support']) && version_compare($databases[$db_type]['utf8_version'], eval($databases[$db_type]['utf8_version_check'])) != 1)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SHOW TABLE STATUS
 			LIKE {string:table_name}',
 			array(
 				'table_name' => "{$db_prefix}members",
 			)
 		);
-		if ($smfFunc['db_num_rows']($request) === 0)
+		if ($smcFunc['db_num_rows']($request) === 0)
 			die('Unable to find members table!');
-		$table_status = $smfFunc['db_fetch_assoc']($request);
-		$smfFunc['db_free_result']($request);
+		$table_status = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (!empty($table_status['Collation']))
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SHOW COLLATION
 				LIKE {string:collation}',
 				array(
@@ -2426,9 +2426,9 @@ function parse_sql($filename)
 				)
 			);
 			// Got something?
-			if ($smfFunc['db_num_rows']($request) !== 0)
-				$collation_info = $smfFunc['db_fetch_assoc']($request);
-			$smfFunc['db_free_result']($request);
+			if ($smcFunc['db_num_rows']($request) !== 0)
+				$collation_info = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Excellent!
 			if (!empty($collation_info['Collation']) && !empty($collation_info['Charset']))
@@ -2562,7 +2562,7 @@ function parse_sql($filename)
 					continue;
 				}
 
-				if (eval('global $db_prefix, $modSettings, $smfFunc; ' . $current_data) === false)
+				if (eval('global $db_prefix, $modSettings, $smcFunc; ' . $current_data) === false)
 				{
 					$upcontext['error_message'] = 'Error in upgrade script ' . basename($filename) . ' on line ' . $line_number . '!' . $endl;
 					if ($command_line)
@@ -2594,14 +2594,14 @@ function parse_sql($filename)
 
 				// !!! This will be how it kinda does it once mysql all stripped out - needed for postgre (etc).
 				/*
-				$result = $smfFunc['db_query']('', $current_data, false, false);
+				$result = $smcFunc['db_query']('', $current_data, false, false);
 				// Went wrong?
 				if (!$result)
 				{
 					// Bit of a bodge - do we want the error?
 					if (!empty($upcontext['return_error']))
 					{
-						$upcontext['error_message'] = $smfFunc['db_error']($db_connection);
+						$upcontext['error_message'] = $smcFunc['db_error']($db_connection);
 						return false;
 					}
 				}*/
@@ -2634,19 +2634,19 @@ function parse_sql($filename)
 function upgrade_query($string, $unbuffered = false)
 {
 	global $db_connection, $db_server, $db_user, $db_passwd, $db_type, $command_line, $upcontext, $upgradeurl, $modSettings;
-	global $db_name, $db_unbuffered, $smfFunc;
+	global $db_name, $db_unbuffered, $smcFunc;
 
 	// Get the query result - working around some SMF specific security - just this once!
 	$modSettings['disableQueryCheck'] = true;
 	$db_unbuffered = $unbuffered;
-	$result = $smfFunc['db_query']('', $string, 'security_override');
+	$result = $smcFunc['db_query']('', $string, 'security_override');
 	$db_unbuffered = false;
 
 	// Failure?!
 	if ($result !== false)
 		return $result;
 
-	$db_error_message = $smfFunc['db_error']($db_connection);
+	$db_error_message = $smcFunc['db_error']($db_connection);
 	// If MySQL we do something more clever.
 	if ($db_type == 'mysql')
 	{
@@ -2760,7 +2760,7 @@ function upgrade_query($string, $unbuffered = false)
 // This performs a table alter, but does it unbuffered so the script can time out professionally.
 function protected_alter($change, $substep, $is_test = false)
 {
-	global $db_prefix, $smfFunc;
+	global $db_prefix, $smcFunc;
 
 	db_extend('packages');
 
@@ -2768,7 +2768,7 @@ function protected_alter($change, $substep, $is_test = false)
 	$found = false;
 	if ($change['type'] === 'column')
 	{
-		$columns = $smfFunc['db_list_columns']( $db_prefix . $change['table'], true);
+		$columns = $smcFunc['db_list_columns']( $db_prefix . $change['table'], true);
 		foreach ($columns as $column)
 		{
 			// Found it?
@@ -2794,14 +2794,14 @@ function protected_alter($change, $substep, $is_test = false)
 		{
 			$cur_index = array();
 
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 				if ($row['Key_name'] === $change['name'])
 					$cur_index[(int) $row['Seq_in_index']] = $row['Column_name'];
 
 			ksort($cur_index, SORT_NUMERIC);
 			$found = array_values($cur_index) === $change['target_columns'];
 
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 		}
 	}
 
@@ -2822,7 +2822,7 @@ function protected_alter($change, $substep, $is_test = false)
 	{
 		$request = upgrade_query('
 			SHOW FULL PROCESSLIST');
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (strpos($row['Info'], 'ALTER TABLE ' . $db_prefix . $change['table']) !== false && strpos($row['Info'], $change['text']) !== false)
 				$found = true;
@@ -2831,7 +2831,7 @@ function protected_alter($change, $substep, $is_test = false)
 		// Can't find it? Then we need to run it fools!
 		if (!$found && !$running)
 		{
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 
 			$success = upgrade_query( '
 				ALTER TABLE ' . $db_prefix . $change['table'] . '
@@ -2846,7 +2846,7 @@ function protected_alter($change, $substep, $is_test = false)
 		// What if we've not found it, but we'd ran it already? Must of completed.
 		elseif (!$found)
 		{
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 			return true;
 		}
 
@@ -2864,7 +2864,7 @@ function protected_alter($change, $substep, $is_test = false)
 // Alter a text column definition preserving its character set.
 function textfield_alter($change, $substep)
 {
-	global $db_prefix, $databases, $db_type, $smfFunc;
+	global $db_prefix, $databases, $db_type, $smcFunc;
 
 	// Versions of MySQL < 4.1 wouldn't benefit from character set detection.
 	if (empty($databases[$db_type]['utf8_support']) || version_compare($databases[$db_type]['utf8_version'], eval($databases[$db_type]['utf8_version_check'])) > 0)
@@ -2874,7 +2874,7 @@ function textfield_alter($change, $substep)
 	}
 	else
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SHOW FULL COLUMNS
 			FROM {db_prefix}' . $change['table'] . '
 			LIKE {string:column}',
@@ -2882,10 +2882,10 @@ function textfield_alter($change, $substep)
 				'column' => $change['column'],
 			)
 		);
-		if ($smfFunc['db_num_rows']($request) === 0)
+		if ($smcFunc['db_num_rows']($request) === 0)
 			die('Unable to find column ' . $change['column'] . ' inside table ' . $db_prefix . $change['table']);
-		$table_row = $smfFunc['db_fetch_assoc']($request);
-		$smfFunc['db_free_result']($request);
+		$table_row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
 
 		// If something of the current column definition is different, fix it.
 		$column_fix = $table_row['Type'] !== $change['type'] || (strtolower($table_row['Null']) === 'yes') !== $change['null_allowed'] || ($table_row['Default'] == NULL) !== !isset($change['default']) || (isset($change['default']) && $change['default'] !== $table_row['Default']);
@@ -2896,7 +2896,7 @@ function textfield_alter($change, $substep)
 		// Get the character set that goes with the collation of the column.
 		if ($column_fix && !empty($table_row['Collation']))
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SHOW COLLATION
 				LIKE {string:collation}',
 				array(
@@ -2904,11 +2904,11 @@ function textfield_alter($change, $substep)
 				)
 			);
 			// No results? Just forget it all together.
-			if ($smfFunc['db_num_rows']($request) === 0)
+			if ($smcFunc['db_num_rows']($request) === 0)
 				unset($table_row['Collation']);
 			else
-				$collation_info = $smfFunc['db_fetch_assoc']($request);
-			$smfFunc['db_free_result']($request);
+				$collation_info = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
 		}
 	}
 
@@ -2916,7 +2916,7 @@ function textfield_alter($change, $substep)
 	{
 		// Make sure there are no NULL's left.
 		if ($null_fix)
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}' . $change['table'] . '
 				SET ' . $change['column'] . ' = {string:default}
 				WHERE ' . $change['column'] . ' IS NULL',
@@ -2926,7 +2926,7 @@ function textfield_alter($change, $substep)
 			);
 
 		// Do the actual alteration.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}' . $change['table'] . '
 			CHANGE COLUMN ' . $change['column'] . ' ' . $change['column'] . ' ' . $change['type'] . (isset($collation_info['Charset']) ? ' CHARACTER SET ' . $collation_info['Charset'] . ' COLLATE ' . $collation_info['Collation'] : '') . ($change['null_allowed'] ? '' : ' NOT NULL') . (isset($change['default']) ? ' default {string:default}' : ''),
 			array(
@@ -2999,7 +2999,7 @@ function nextSubstep($substep)
 
 function cmdStep0()
 {
-	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type, $smfFunc, $upcontext;
+	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type, $smcFunc, $upcontext;
 	global $language, $is_debug;
 	$start_time = time();
 
@@ -3047,7 +3047,7 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 	if (!db_version_check())
 		print_error('Error: ' . $databases[$db_type]['name'] . ' ' . $databases[$db_type]['version'] . ' does not match minimum requirements.', true);
 
-	if (!empty($databases[$db_type]['alter_support']) && $smfFunc['db_query']('alter_boards', 'ALTER TABLE {db_prefix}boards ORDER BY id_board', array()) === false)
+	if (!empty($databases[$db_type]['alter_support']) && $smcFunc['db_query']('alter_boards', 'ALTER TABLE {db_prefix}boards ORDER BY id_board', array()) === false)
 		print_error('Error: The ' . $databases[$db_type]['name'] . ' account in Settings.php does not have sufficient privileges.', true);
 
 	$check = @file_exists($boarddir . '/Themes/default/index.template.php')

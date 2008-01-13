@@ -100,6 +100,7 @@ January 2008
  + Added the ability to get the latest attachments via SSI.php (SSI.php, ssi_example files, index language file)
  ! Remodeled WYSIWYG editor to be an object oriented class. (editor.js, GenericControls template, Post template)
  ! Fixed some JavaScript errors. (GenericMenu template, script.js, menu.js)
+ ! Changed the $smfFunc variable to $smcFunc to properly handle future expansion of its purpose. (Almost all files)
 
 
 December 2007

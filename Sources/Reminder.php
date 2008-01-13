@@ -75,7 +75,7 @@ function RemindMe()
 // Email a reminder.
 function RemindMail()
 {
-	global $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smfFunc;
+	global $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smcFunc;
 
 	checkSession();
 
@@ -84,7 +84,7 @@ function RemindMail()
 		fatal_lang_error('username_no_exist', false);
 
 	// Find the user!
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
 		FROM {db_prefix}members
 		WHERE member_name = {string:member_name}
@@ -93,11 +93,11 @@ function RemindMail()
 			'member_name' => $_POST['user'],
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 	{
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
 			FROM {db_prefix}members
 			WHERE email_address = {string:email_address}
@@ -106,12 +106,12 @@ function RemindMail()
 				'email_address' => $_POST['user'],
 			)
 		);
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('username_no_exist', false);
 	}
 
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If the user isn't activated/approved, give them some feedback on what to do next.
 	if ($row['is_activated'] != 1)
@@ -177,7 +177,7 @@ function setPassword()
 
 function setPassword2()
 {
-	global $context, $txt, $modSettings, $smfFunc, $sourcedir;
+	global $context, $txt, $modSettings, $smcFunc, $sourcedir;
 
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
 		fatal_lang_error('no_access', false);
@@ -193,7 +193,7 @@ function setPassword2()
 	loadLanguage('Login');
 
 	// Get the code as it should be from the database.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT validation_code, member_name, email_address
 		FROM {db_prefix}members
 		WHERE id_member = {int:id_member}
@@ -208,11 +208,11 @@ function setPassword2()
 	);
 
 	// Does this user exist at all?
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('invalid_userid', false);
 
-	list ($realCode, $username, $email) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($realCode, $username, $email) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Is the password actually valid?
 	require_once($sourcedir . '/Subs-Auth.php');
@@ -246,7 +246,7 @@ function setPassword2()
 // Get the secret answer.
 function secret_answerInput()
 {
-	global $txt, $context, $smfFunc;
+	global $txt, $context, $smcFunc;
 
 	checkSession();
 
@@ -255,7 +255,7 @@ function secret_answerInput()
 		fatal_lang_error('username_no_exist', false);
 
 	// Get the stuff....
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT real_name, member_name, secret_question
 		FROM {db_prefix}members
 		WHERE member_name = {string:member_name}
@@ -264,11 +264,11 @@ function secret_answerInput()
 			'member_name' => $_POST['user'],
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 	{
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT real_name, member_name, secret_question
 			FROM {db_prefix}members
 			WHERE email_address = {string:email_address}
@@ -277,12 +277,12 @@ function secret_answerInput()
 				'email_address' => $_POST['user'],
 			)
 		);
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('username_no_exist', false);
 	}
 
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If there is NO secret question - then throw an error.
 	if (trim($row['secret_question']) == '')
@@ -298,7 +298,7 @@ function secret_answerInput()
 
 function secret_answer2()
 {
-	global $txt, $context, $modSettings, $smfFunc;
+	global $txt, $context, $modSettings, $smcFunc;
 
 	checkSession();
 
@@ -309,7 +309,7 @@ function secret_answer2()
 	loadLanguage('Login');
 
 	// Get the information from the database.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, real_name, member_name, secret_answer, secret_question
 		FROM {db_prefix}members
 		WHERE member_name = {string:member_name}
@@ -318,11 +318,11 @@ function secret_answer2()
 			'member_name' => $_POST['user'],
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 	{
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member, real_name, member_name, secret_answer, secret_question
 			FROM {db_prefix}members
 			WHERE email_address = {string:email_address}
@@ -331,12 +331,12 @@ function secret_answer2()
 				'email_address' => $_POST['user'],
 			)
 		);
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('username_no_exist', false);
 	}
 
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Check if the secret answer is correct.
 	if ($row['secret_question'] == '' || $row['secret_answer'] == '' || md5($_POST['secret_answer']) != $row['secret_answer'])

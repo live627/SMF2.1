@@ -83,18 +83,18 @@ function ManageMail()
 // Display the mail queue...
 function BrowseMailQueue()
 {
-	global $scripturl, $context, $modSettings, $txt, $smfFunc;
+	global $scripturl, $context, $modSettings, $txt, $smcFunc;
 	global $sourcedir;
 
 	// How many items do we have?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*) AS queueSize, MIN(time_sent) AS oldest
 		FROM {db_prefix}mail_queue',
 		array(
 		)
 	);
-	list ($mailQueueSize, $mailOldest) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($mailQueueSize, $mailOldest) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['oldest_mail'] = empty($mailOldest) ? $txt['mailqueue_oldest_not_available'] : time_since(time() - $mailOldest);
 	$context['mail_queue_size'] = comma_format($mailQueueSize);
@@ -203,7 +203,7 @@ function BrowseMailQueue()
 	$context['start'] = $_REQUEST['start'];
 
 	// Even if it's disabled we should still show the mail queue, in case there's stuff left!
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_mail, time_sent, recipient, priority, subject
 		FROM {db_prefix}mail_queue
 		ORDER BY id_mail ASC
@@ -212,7 +212,7 @@ function BrowseMailQueue()
 		)
 	);
 	$context['mails'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['mails'][] = array(
 			'id' => $row['id_mail'],
@@ -224,7 +224,7 @@ function BrowseMailQueue()
 			'subject' => strlen($row['subject']) > 50 ? substr($row['subject'], 0, 47) . '...' : $row['subject'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Setup the template stuff.
 	loadTemplate('ManageMail');
@@ -233,9 +233,9 @@ function BrowseMailQueue()
 
 function list_getMailQueue($start, $items_per_page, $sort)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_mail, time_sent, recipient, priority, subject
 		FROM {db_prefix}mail_queue
 		ORDER BY ' . $sort . '
@@ -244,26 +244,26 @@ function list_getMailQueue($start, $items_per_page, $sort)
 		)
 	);
 	$mails = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$mails[] = $row;
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $mails;
 }
 
 function list_getMailQueueSize()
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// How many items do we have?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*) AS queueSize
 		FROM {db_prefix}mail_queue',
 		array(
 		)
 	);
-	list ($mailQueueSize) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($mailQueueSize) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $mailQueueSize;
 }
@@ -360,7 +360,7 @@ function ModifyMailSettings($return_config = false)
 // This function clears the mail queue of all emails, and at the end redirects to browse.
 function ClearMailQueue()
 {
-	global $sourcedir, $smfFunc;
+	global $sourcedir, $smcFunc;
 
 	checkSession('get');
 
@@ -371,14 +371,14 @@ function ClearMailQueue()
 	if (!isset($_GET['te']))
 	{
 		// How many items do we have?
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*) AS queueSize
 			FROM {db_prefix}mail_queue',
 			array(
 			)
 		);
-		list ($_GET['te']) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($_GET['te']) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 	}
 	else
 		$_GET['te'] = (int) $_GET['te'];

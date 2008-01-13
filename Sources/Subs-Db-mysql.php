@@ -34,11 +34,11 @@ if (!defined('SMF'))
 // Initialize the database settings
 function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
-	global $smfFunc, $mysql_set_mode;
+	global $smcFunc, $mysql_set_mode;
 
 	// Map some database specific functions, only do this once.
-	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'mysql_fetch_assoc')
-		$smfFunc += array(
+	if (!isset($smcFunc['db_fetch_assoc']) || $smcFunc['db_fetch_assoc'] != 'mysql_fetch_assoc')
+		$smcFunc += array(
 			'db_query' => 'smf_db_query',
 			'db_quote' => 'smf_db_quote',
 			'db_fetch_assoc' => 'mysql_fetch_assoc',
@@ -86,7 +86,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
 	if (isset($mysql_set_mode) && $mysql_set_mode === true)
-		$smfFunc['db_query']('', 'SET sql_mode = \'\', AUTOCOMMIT = 1',
+		$smcFunc['db_query']('', 'SET sql_mode = \'\', AUTOCOMMIT = 1',
 		array(
 		), false
 	);
@@ -436,10 +436,10 @@ function db_error($db_string, $connection = null)
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
-	global $smfFunc;
+	global $smcFunc;
 
 	// If we're being asked to return error information then do this right away (For upgrade etc).
-	if (!empty($smfFunc['db_error_handler_return']))
+	if (!empty($smcFunc['db_error_handler_return']))
 		return false;
 
 	// We'll try recovering the file and line number the original db query was called from.
@@ -537,7 +537,7 @@ function db_error($db_string, $connection = null)
 
 			// Attempt to find and repair the broken table.
 			foreach ($fix_tables as $table)
-				$smfFunc['db_query']('', "
+				$smcFunc['db_query']('', "
 					REPAIR TABLE $table", false, false);
 
 			// And send off an email!
@@ -546,7 +546,7 @@ function db_error($db_string, $connection = null)
 			$modSettings['cache_enable'] = $old_cache;
 
 			// Try the query again...?
-			$ret = $smfFunc['db_query']('', $db_string, false, false);
+			$ret = $smcFunc['db_query']('', $db_string, false, false);
 			if ($ret !== false)
 				return $ret;
 		}
@@ -584,7 +584,7 @@ function db_error($db_string, $connection = null)
 				// Try a deadlock more than once more.
 				for ($n = 0; $n < 4; $n++)
 				{
-					$ret = $smfFunc['db_query']('', $db_string, false, false);
+					$ret = $smcFunc['db_query']('', $db_string, false, false);
 
 					$new_errno = mysql_errno($db_connection);
 					if ($ret !== false || in_array($new_errno, array(1205, 1213)))
@@ -638,7 +638,7 @@ function db_error($db_string, $connection = null)
 // Insert some data...
 function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
-	global $smfFunc, $db_connection, $db_prefix;
+	global $smcFunc, $db_connection, $db_prefix;
 
 	$connection = $connection === null ? $db_connection : $connection;
 
@@ -677,7 +677,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
 
 	// Do the insert.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		' . $queryTitle . ' INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
 		VALUES
 			' . implode(',

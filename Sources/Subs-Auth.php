@@ -336,7 +336,7 @@ function adminLogin()
 
 function adminLogin_outputPostVars($k, $v)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (!is_array($v))
 		return '
@@ -355,7 +355,7 @@ function adminLogin_outputPostVars($k, $v)
 function show_db_error($loadavg = false)
 {
 	global $sourcedir, $mbname, $maintenance, $mtitle, $mmessage, $modSettings;
-	global $db_connection, $webmaster_email, $db_last_error, $db_error_send, $smfFunc;
+	global $db_connection, $webmaster_email, $db_last_error, $db_error_send, $smcFunc;
 
 	// Don't cache this page!
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -379,8 +379,8 @@ function show_db_error($loadavg = false)
 				updateSettingsFile(array('db_last_error' => time()));
 
 			// Language files aren't loaded yet :(.
-			$db_error = @$smfFunc['db_error']($db_connection);
-			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($db_error == '' ? '' : "\n" . $smfFunc['db_title'] . ' reported:' . "\n" . $db_error) . "\n\n" . 'This is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.');
+			$db_error = @$smcFunc['db_error']($db_connection);
+			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($db_error == '' ? '' : "\n" . $smcFunc['db_title'] . ' reported:' . "\n" . $db_error) . "\n\n" . 'This is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.');
 		}
 	}
 
@@ -426,7 +426,7 @@ function show_db_error($loadavg = false)
 // Find members by email address, username, or real name.
 function findMembers($names, $use_wildcards = false, $buddies_only = false, $max = null)
 {
-	global $scripturl, $user_info, $modSettings, $smfFunc;
+	global $scripturl, $user_info, $modSettings, $smcFunc;
 
 	// If it's not already an array, make it one.
 	if (!is_array($names))
@@ -436,7 +436,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	foreach ($names as $i => $name)
 	{
 		// Trim, and fix wildcards for each name.
-		$names[$i] = trim($smfFunc['strtolower']($name));
+		$names[$i] = trim($smcFunc['strtolower']($name));
 
 		$maybe_email |= strpos($name, '@') !== false;
 
@@ -463,11 +463,11 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 		$email_condition = '';
 
 	// Get the case of the columns right - but only if we need to as things like MySQL will go slow needlessly otherwise.
-	$member_name = $smfFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name';
-	$real_name = $smfFunc['db_case_sensitive'] ? 'LOWER(real_name)' : 'real_name';
+	$member_name = $smcFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name';
+	$real_name = $smcFunc['db_case_sensitive'] ? 'LOWER(real_name)' : 'real_name';
 
 	// Search by username, display name, and email address.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, hide_email
 		FROM {db_prefix}members
 		WHERE ({raw:member_name_search}
@@ -482,7 +482,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 			'email_condition' => $email_condition,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$results[$row['id_member']] = array(
 			'id' => $row['id_member'],
@@ -493,7 +493,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Return all the results.
 	return $results;
@@ -501,7 +501,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 
 function JSMembers()
 {
-	global $context, $scripturl, $user_info, $smfFunc;
+	global $context, $scripturl, $user_info, $smcFunc;
 
 	checkSession('get');
 
@@ -517,7 +517,7 @@ function JSMembers()
 	}
 
 	if (isset($_REQUEST['search']))
-		$context['last_search'] = $smfFunc['htmlspecialchars']($_REQUEST['search'], ENT_QUOTES);
+		$context['last_search'] = $smcFunc['htmlspecialchars']($_REQUEST['search'], ENT_QUOTES);
 	else
 		$_REQUEST['start'] = 0;
 
@@ -525,7 +525,7 @@ function JSMembers()
 	$context['input_box_name'] = isset($_REQUEST['input']) && preg_match('~^[\w-]+$~', $_REQUEST['input']) === 1 ? $_REQUEST['input'] : 'to';
 
 	// Take the delimiter over GET in case it's \n or something.
-	$context['delimiter'] = isset($_REQUEST['delim']) ? $smfFunc['htmlspecialchars']($_REQUEST['delim']) : ', ';
+	$context['delimiter'] = isset($_REQUEST['delim']) ? $smcFunc['htmlspecialchars']($_REQUEST['delim']) : ', ';
 	$context['quote_results'] = !empty($_REQUEST['quote']);
 
 	// List all the results.
@@ -538,7 +538,7 @@ function JSMembers()
 	// If the user has done a search, well - search.
 	if (isset($_REQUEST['search']))
 	{
-		$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search'], ENT_QUOTES);
+		$_REQUEST['search'] = $smcFunc['htmlspecialchars']($_REQUEST['search'], ENT_QUOTES);
 
 		$context['results'] = findMembers(array($_REQUEST['search']), true, $context['buddy_search']);
 		$total_results = count($context['results']);
@@ -567,18 +567,18 @@ function JSMembers()
 
 function RequestMembers()
 {
-	global $user_info, $txt, $smfFunc;
+	global $user_info, $txt, $smcFunc;
 
 	checkSession('get');
 
-	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search']) . '*';
-	$_REQUEST['search'] = trim($smfFunc['strtolower']($_REQUEST['search']));
+	$_REQUEST['search'] = $smcFunc['htmlspecialchars']($_REQUEST['search']) . '*';
+	$_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search']));
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	if (function_exists('iconv'))
 		header('Content-Type: text/plain; charset=UTF-8');
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT real_name
 		FROM {db_prefix}members
 		WHERE real_name LIKE {string:search}' . (isset($_REQUEST['buddies']) ? '
@@ -590,7 +590,7 @@ function RequestMembers()
 			'search' => $_REQUEST['search'],
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if (function_exists('iconv'))
 		{
@@ -618,7 +618,7 @@ function RequestMembers()
 
 		echo $row['real_name'], "\n";
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	obExit(false);
 }
@@ -626,14 +626,14 @@ function RequestMembers()
 // This function generates a random password for a user and emails it to them.
 function resetPassword($memID, $username = null)
 {
-	global $scripturl, $context, $txt, $sourcedir, $modSettings, $smfFunc;
+	global $scripturl, $context, $txt, $sourcedir, $modSettings, $smcFunc;
 
 	// Language... and a required file.
 	loadLanguage('Login');
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Get some important details.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT member_name, email_address
 		FROM {db_prefix}members
 		WHERE id_member = {int:id_member}',
@@ -641,8 +641,8 @@ function resetPassword($memID, $username = null)
 			'id_member' => $memID,
 		)
 	);
-	list ($user, $email) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($user, $email) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	if ($username !== null)
 	{
@@ -695,7 +695,7 @@ function resetPassword($memID, $username = null)
 // This function simply checks whether a password meets the current forum rules.
 function validatePassword($password, $username, $restrict_in = array())
 {
-	global $modSettings, $smfFunc;
+	global $modSettings, $smcFunc;
 
 	// Perform basic requirements first.
 	if (strlen($password) < (empty($modSettings['password_strength']) ? 4 : 8))
@@ -708,7 +708,7 @@ function validatePassword($password, $username, $restrict_in = array())
 	// Otherwise, perform the medium strength test - checking if password appears in the restricted string.
 	if (preg_match('~\b' . preg_quote($password, '~') . '\b~', implode(' ', $restrict_in)) != 0)
 		return 'restricted_words';
-	elseif ($smfFunc['strpos']($password, $username) !== false)
+	elseif ($smcFunc['strpos']($password, $username) !== false)
 		return 'restricted_words';
 
 	// !!! If pspell is available, use it on the word, and return restricted_words if it doesn't give "bad spelling"?
@@ -719,7 +719,7 @@ function validatePassword($password, $username, $restrict_in = array())
 
 	// Otherwise, hard test next, check for numbers and letters, uppercase too.
 	$good = preg_match('~(\D\d|\d\D)~', $password) != 0;
-	$good &= $smfFunc['strtolower']($password) != $password;
+	$good &= $smcFunc['strtolower']($password) != $password;
 
 	return $good ? null : 'chars';
 }
@@ -727,14 +727,14 @@ function validatePassword($password, $username, $restrict_in = array())
 // Quickly find out what this user can and cannot do.
 function rebuildModCache()
 {
-	global $user_info, $smfFunc;
+	global $user_info, $smcFunc;
 
 	// What groups can they moderate?
 	$group_query = allowedTo('manage_membergroups') ? '1=1' : '0=1';
 
 	if ($group_query == 0)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_group
 			FROM {db_prefix}group_moderators
 			WHERE id_member = {int:current_member}',
@@ -743,9 +743,9 @@ function rebuildModCache()
 			)
 		);
 		$groups = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$groups[] = $row['id_group'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (empty($groups))
 			$group_query = '0=1';
@@ -770,7 +770,7 @@ function rebuildModCache()
 	$boards_mod = array();
 	if (!$user_info['is_guest'])
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_board
 			FROM {db_prefix}moderators
 			WHERE id_member = {int:current_member}',
@@ -778,9 +778,9 @@ function rebuildModCache()
 				'current_member' => $user_info['id'],
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$boards_mod[] = $row['id_board'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	$mod_query = empty($boards_mod) ? '0=1' : 'b.id_board IN (' . implode(',', $boards_mod) . ')';

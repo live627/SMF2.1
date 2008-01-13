@@ -29,7 +29,7 @@
 
 function getBoardList($boardListOptions = array())
 {
-	global $smfFunc, $user_info;
+	global $smcFunc, $user_info;
 
 	if (isset($boardListOptions['excluded_boards']) && isset($boardListOptions['included_boards']))
 		trigger_error('getBoardList(): Setting both excluded_boards and included_boards is not allowed.', E_USER_ERROR);
@@ -61,7 +61,7 @@ function getBoardList($boardListOptions = array())
 	}
 
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' . (empty($where) ? '' : '
@@ -71,9 +71,9 @@ function getBoardList($boardListOptions = array())
 	);
 
 	$return_value = array();
-	if ($smfFunc['db_num_rows']($request) !== 0)
+	if ($smcFunc['db_num_rows']($request) !== 0)
 	{
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($return_value[$row['id_cat']]))
 				$return_value[$row['id_cat']] = array(
@@ -90,7 +90,7 @@ function getBoardList($boardListOptions = array())
 			);
 		}
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $return_value;
 }

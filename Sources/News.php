@@ -73,7 +73,7 @@ if (!defined('SMF'))
 function ShowXmlFeed()
 {
 	global $board, $board_info, $context, $scripturl, $txt, $modSettings, $user_info;
-	global $query_this_board, $smfFunc, $forum_version;
+	global $query_this_board, $smcFunc, $forum_version;
 
 	// If it's not enabled, die.
 	if (empty($modSettings['xmlnews_enable']))
@@ -94,7 +94,7 @@ function ShowXmlFeed()
 
 		if (count($_REQUEST['c']) == 1)
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT name
 				FROM {db_prefix}categories
 				WHERE id_cat = {int:current_category}',
@@ -102,13 +102,13 @@ function ShowXmlFeed()
 					'current_category' => (int) $_REQUEST['c'][0],
 				)
 			);
-			list ($feed_title) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
+			list ($feed_title) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 
 			$feed_title = ' - ' . strip_tags($feed_title);
 		}
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts
 			FROM {db_prefix}boards AS b
 			WHERE b.id_cat IN ({array_int:current_category_list})
@@ -119,12 +119,12 @@ function ShowXmlFeed()
 		);
 		$total_cat_posts = 0;
 		$boards = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$boards[] = $row['id_board'];
 			$total_cat_posts += $row['num_posts'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (!empty($boards))
 			$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
@@ -140,7 +140,7 @@ function ShowXmlFeed()
 		foreach ($_REQUEST['boards'] as $i => $b)
 			$_REQUEST['boards'][$i] = (int) $b;
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts, b.name
 			FROM {db_prefix}boards AS b
 			WHERE b.id_board IN ({array_int:board_list})
@@ -152,12 +152,12 @@ function ShowXmlFeed()
 		);
 
 		// Either the board specified doesn't exist or you have no access.
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('no_board');
 
 		$total_posts = 0;
 		$boards = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (count($_REQUEST['boards']) == 1)
 				$feed_title = ' - ' . strip_tags($row['name']);
@@ -165,7 +165,7 @@ function ShowXmlFeed()
 			$boards[] = $row['id_board'];
 			$total_posts += $row['num_posts'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (!empty($boards))
 			$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
@@ -177,7 +177,7 @@ function ShowXmlFeed()
 	}
 	elseif (!empty($board))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT num_posts
 			FROM {db_prefix}boards
 			WHERE id_board = {int:current_board}
@@ -186,8 +186,8 @@ function ShowXmlFeed()
 				'current_board' => $board,
 			)
 		);
-		list ($total_posts) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($total_posts) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		$feed_title = ' - ' . strip_tags($board_info['name']);
 
@@ -358,18 +358,18 @@ function fix_possible_url($val)
 
 function cdata_parse($data, $ns = '')
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	$cdata = '<![CDATA[';
 
-	for ($pos = 0, $n = $smfFunc['strlen']($data); $pos < $n; null)
+	for ($pos = 0, $n = $smcFunc['strlen']($data); $pos < $n; null)
 	{
 		$positions = array(
-			$smfFunc['strpos']($data, '&', $pos),
-			$smfFunc['strpos']($data, ']', $pos),
+			$smcFunc['strpos']($data, '&', $pos),
+			$smcFunc['strpos']($data, ']', $pos),
 		);
 		if ($ns != '')
-			$positions[] = $smfFunc['strpos']($data, '<', $pos);
+			$positions[] = $smcFunc['strpos']($data, '<', $pos);
 		foreach ($positions as $k => $dummy)
 		{
 			if ($dummy === false)
@@ -380,37 +380,37 @@ function cdata_parse($data, $ns = '')
 		$pos = empty($positions) ? $n : min($positions);
 
 		if ($pos - $old > 0)
-			$cdata .= $smfFunc['substr']($data, $old, $pos - $old);
+			$cdata .= $smcFunc['substr']($data, $old, $pos - $old);
 		if ($pos >= $n)
 			break;
 
-		if ($smfFunc['substr']($data, $pos, 1) == '<')
+		if ($smcFunc['substr']($data, $pos, 1) == '<')
 		{
-			$pos2 = $smfFunc['strpos']($data, '>', $pos);
+			$pos2 = $smcFunc['strpos']($data, '>', $pos);
 			if ($pos2 === false)
 				$pos2 = $n;
-			if ($smfFunc['substr']($data, $pos + 1, 1) == '/')
-				$cdata .= ']]></' . $ns . ':' . $smfFunc['substr']($data, $pos + 2, $pos2 - $pos - 1) . '<![CDATA[';
+			if ($smcFunc['substr']($data, $pos + 1, 1) == '/')
+				$cdata .= ']]></' . $ns . ':' . $smcFunc['substr']($data, $pos + 2, $pos2 - $pos - 1) . '<![CDATA[';
 			else
-				$cdata .= ']]><' . $ns . ':' . $smfFunc['substr']($data, $pos + 1, $pos2 - $pos) . '<![CDATA[';
+				$cdata .= ']]><' . $ns . ':' . $smcFunc['substr']($data, $pos + 1, $pos2 - $pos) . '<![CDATA[';
 			$pos = $pos2 + 1;
 		}
-		elseif ($smfFunc['substr']($data, $pos, 1) == ']')
+		elseif ($smcFunc['substr']($data, $pos, 1) == ']')
 		{
 			$cdata .= ']]>&#093;<![CDATA[';
 			$pos++;
 		}
-		elseif ($smfFunc['substr']($data, $pos, 1) == '&')
+		elseif ($smcFunc['substr']($data, $pos, 1) == '&')
 		{
-			$pos2 = $smfFunc['strpos']($data, ';', $pos);
+			$pos2 = $smcFunc['strpos']($data, ';', $pos);
 			if ($pos2 === false)
 				$pos2 = $n;
-			$ent = $smfFunc['substr']($data, $pos + 1, $pos2 - $pos - 1);
+			$ent = $smcFunc['substr']($data, $pos + 1, $pos2 - $pos - 1);
 
-			if ($smfFunc['substr']($data, $pos + 1, 1) == '#')
-				$cdata .= ']]>' . $smfFunc['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
+			if ($smcFunc['substr']($data, $pos + 1, 1) == '#')
+				$cdata .= ']]>' . $smcFunc['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
 			elseif (in_array($ent, array('amp', 'lt', 'gt', 'quot')))
-				$cdata .= ']]>' . $smfFunc['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
+				$cdata .= ']]>' . $smcFunc['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
 			// !!! ??
 
 			$pos = $pos2 + 1;
@@ -481,10 +481,10 @@ function dumpTags($data, $i, $tag = null, $xml_format = '')
 
 function getXmlMembers($xml_format)
 {
-	global $scripturl, $smfFunc;
+	global $scripturl, $smcFunc;
 
 	// Find the most recent members.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, date_registered, last_login
 		FROM {db_prefix}members
 		ORDER BY id_member DESC
@@ -493,7 +493,7 @@ function getXmlMembers($xml_format)
 		)
 	);
 	$data = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Make the data look rss-ish.
 		if ($xml_format == 'rss' || $xml_format == 'rss2')
@@ -526,7 +526,7 @@ function getXmlMembers($xml_format)
 				'link' => $scripturl . '?action=profile;u=' . $row['id_member']
 			);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $data;
 }
@@ -534,14 +534,14 @@ function getXmlMembers($xml_format)
 function getXmlNews($xml_format)
 {
 	global $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $smfFunc, $settings;
+	global $query_this_board, $smcFunc, $settings;
 
 	/* Find the latest posts that:
 		- are the first post in their topic.
 		- are on an any board OR in a specified board.
 		- can be seen by this user.
 		- are actually the latest posts. */
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.modified_time,
 			m.icon, t.id_topic, t.id_board, t.num_replies,
@@ -564,11 +564,11 @@ function getXmlNews($xml_format)
 		)
 	);
 	$data = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Limit the length of the message, if the option is set.
-		if (!empty($modSettings['xmlnews_maxlen']) && $smfFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
-			$row['body'] = strtr($smfFunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
+		if (!empty($modSettings['xmlnews_maxlen']) && $smcFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
+			$row['body'] = strtr($smcFunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
 
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
@@ -630,7 +630,7 @@ function getXmlNews($xml_format)
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0'
 			);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $data;
 }
@@ -638,9 +638,9 @@ function getXmlNews($xml_format)
 function getXmlRecent($xml_format)
 {
 	global $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $smfFunc, $settings;
+	global $query_this_board, $smcFunc, $settings;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
@@ -655,15 +655,15 @@ function getXmlRecent($xml_format)
 		)
 	);
 	$messages = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$messages[] = $row['id_msg'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (empty($messages))
 		return array();
 
 	// Find the most recent posts this user can see.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.id_topic, t.id_board,
 			b.name AS bname, t.num_replies, m.id_member, m.icon, mf.id_member AS ID_FIRST_MEMBER,
@@ -686,11 +686,11 @@ function getXmlRecent($xml_format)
 		)
 	);
 	$data = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Limit the length of the message, if the option is set.
-		if (!empty($modSettings['xmlnews_maxlen']) && $smfFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
-			$row['body'] = strtr($smfFunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
+		if (!empty($modSettings['xmlnews_maxlen']) && $smcFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
+			$row['body'] = strtr($smcFunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
 
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
@@ -764,7 +764,7 @@ function getXmlRecent($xml_format)
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
 			);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $data;
 }

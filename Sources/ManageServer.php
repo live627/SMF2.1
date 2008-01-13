@@ -188,7 +188,7 @@ function ModifySettings2()
 // Basic forum settings - database name, host, etc.
 function ModifyCoreSettings()
 {
-	global $scripturl, $context, $settings, $txt, $sc, $boarddir, $smfFunc;
+	global $scripturl, $context, $settings, $txt, $sc, $boarddir, $smcFunc;
 
 	// Warn the user if the backup of Settings.php failed.
 	$settings_not_writable = !is_writable($boarddir . '/Settings.php');
@@ -243,7 +243,7 @@ function ModifyCoreSettings()
 		$dir = dir($language_dir);
 		while ($entry = $dir->read())
 			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches))
-				$config_vars['language'][3][$matches[1]] = array($matches[1], $smfFunc['ucwords'](strtr($matches[1], '_', ' ')));
+				$config_vars['language'][3][$matches[1]] = array($matches[1], $smcFunc['ucwords'](strtr($matches[1], '_', ' ')));
 		$dir->close();
 	}
 
@@ -472,7 +472,7 @@ function ModifyCacheSettings($return_config = false)
 // Download a language file from the Simple Machines website.
 function DownloadLanguage()
 {
-	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smfFunc, $scripturl;
+	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smcFunc, $scripturl;
 
 	loadLanguage('ManageSettings');
 	require_once($sourcedir . '/Subs-Package.php');
@@ -649,7 +649,7 @@ function DownloadLanguage()
 	$context['theme_names'] = array();
 	if (!empty($indexes))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_theme, value
 			FROM {db_prefix}themes
 			WHERE id_member = {int:no_member}
@@ -662,19 +662,19 @@ function DownloadLanguage()
 			)
 		);
 		$themes = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			// Find the right one.
 			foreach ($indexes as $index)
 				if (strpos($row['value'], $index) !== false)
 					$themes[$row['id_theme']] = $index;
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (!empty($themes))
 		{
 			// Now we have the id_theme we can get the pretty description.
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_theme, value
 				FROM {db_prefix}themes
 				WHERE id_member = {int:no_member}
@@ -686,12 +686,12 @@ function DownloadLanguage()
 					'name' => 'name',
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
 				// Now we have it...
 				$context['theme_names'][$themes[$row['id_theme']]] = $row['value'];
 			}
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 		}
 	}
 
@@ -808,7 +808,7 @@ function DownloadLanguage()
 function ModifyLanguageSettings()
 {
 	global $txt, $context, $scripturl;
-	global $user_info, $smfFunc, $sourcedir, $language, $boarddir, $forum_version;
+	global $user_info, $smcFunc, $sourcedir, $language, $boarddir, $forum_version;
 
 	// Setting a new default?
 	if (!empty($_POST['set_default']) && !empty($_POST['def_language']))
@@ -957,7 +957,7 @@ function ModifyLanguageSettings()
 
 				$context['smf_languages'][] = array(
 					'id' => $file->fetch('id'),
-					'name' => $smfFunc['ucwords']($file->fetch('name')),
+					'name' => $smcFunc['ucwords']($file->fetch('name')),
 					'version' => $file->fetch('version'),
 					'utf8' => $file->fetch('utf8'),
 					'description' => $file->fetch('description'),
@@ -998,7 +998,7 @@ function list_getNumLanguages()
 // Fetch the actual language information.
 function list_getLanguages()
 {
-	global $settings, $smfFunc, $language, $txt;
+	global $settings, $smcFunc, $language, $txt;
 
 	$languages = array();
 	// Keep our old entries.
@@ -1021,20 +1021,20 @@ function list_getLanguages()
 			'char_set' => $txt['lang_character_set'],
 			'default' => $language == $matches[1] || ($language == '' && $matches[1] == 'english'),
 			'locale' => $txt['lang_locale'],
-			'name' => $smfFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
+			'name' => $smcFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
 		);
 	}
 	$dir->close();
 
 	// Work out how many people are using each language.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lngfile, COUNT(*) AS num_users
 		FROM {db_prefix}members
 		GROUP BY lngfile',
 		array(
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Default?
 		if (empty($row['lngfile']) || !isset($languages[$row['lngfile']]))
@@ -1045,7 +1045,7 @@ function list_getLanguages()
 		elseif (isset($languages[$row['lngfile']]))
 			$languages[$row['lngfile']]['count'] += $row['num_users'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Restore the current users language.
 	$txt = $old_txt;
@@ -1057,7 +1057,7 @@ function list_getLanguages()
 // Edit a particular set of language entries.
 function ModifyLanguage()
 {
-	global $settings, $context, $smfFunc, $txt;
+	global $settings, $context, $smcFunc, $txt;
 
 	loadLanguage('ManageSettings');
 
@@ -1074,7 +1074,7 @@ function ModifyLanguage()
 	$context['lang_id'] = $matches[1];
 
 	// Get all the theme data.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_theme, variable, value
 		FROM {db_prefix}themes
 		WHERE id_theme != {int:default_theme}
@@ -1093,9 +1093,9 @@ function ModifyLanguage()
 			'theme_dir' => $settings['default_theme_dir'],
 		),
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$themes[$row['id_theme']][$row['variable']] = $row['value'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// This will be where we look
 	$lang_dirs = array();
@@ -1169,7 +1169,7 @@ function ModifyLanguage()
 	$context['lang_file_not_writable_message'] = is_writable($settings['default_theme_dir'] . '/languages/index.' . $context['lang_id'] . '.php') ? '' : sprintf($txt['lang_file_not_writable'], $settings['default_theme_dir'] . '/languages/index.' . $context['lang_id'] . '.php');
 	// Setup the primary settings context.
 	$context['primary_settings'] = array(
-		'name' => $smfFunc['ucwords'](strtr($context['lang_id'], array('_' => ' ', '-utf8' => ''))),
+		'name' => $smcFunc['ucwords'](strtr($context['lang_id'], array('_' => ' ', '-utf8' => ''))),
 		'character_set' => $txt['lang_character_set'],
 		'locale' => $txt['lang_locale'],
 		'dictionary' => $txt['lang_dictionary'],
@@ -1356,7 +1356,7 @@ function ModifyLanguage()
 // This function could be two functions - either way it cleans language entries to/from display.
 function cleanLangString($string, $to_display = true)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// If going to display we make sure it doesn't have any HTML in it - etc.
 	$new_string = '';

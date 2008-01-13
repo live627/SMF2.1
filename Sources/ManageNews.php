@@ -124,7 +124,7 @@ function ManageNews()
 function EditNews()
 {
 	global $txt, $modSettings, $context, $sourcedir, $user_info;
-	global $smfFunc;
+	global $smcFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -170,7 +170,7 @@ function EditNews()
 	foreach (explode("\n", $modSettings['news']) as $id => $line)
 		$context['admin_current_news'][$id] = array(
 			'id' => $id,
-			'unparsed' => $smfFunc['htmlspecialchars'](un_preparsecode($line)),
+			'unparsed' => $smcFunc['htmlspecialchars'](un_preparsecode($line)),
 			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
 		);
 
@@ -180,7 +180,7 @@ function EditNews()
 
 function SelectMailingMembers()
 {
-	global $txt, $context, $modSettings, $smfFunc;
+	global $txt, $context, $modSettings, $smcFunc;
 
 	$context['page_title'] = $txt['admin_newsletters'];
 
@@ -202,7 +202,7 @@ function SelectMailingMembers()
 	}
 
 	// Get all the extra groups as well as Administrator and Global Moderator.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.min_posts
 		FROM {db_prefix}membergroups AS mg' . (empty($modSettings['permission_enable_postgroups']) ? '
 		WHERE mg.min_posts = {int:min_posts}' : '') . '
@@ -213,7 +213,7 @@ function SelectMailingMembers()
 			'newbie_group' => 4,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['groups'][$row['id_group']] = array(
 			'id' => $row['id_group'],
@@ -226,12 +226,12 @@ function SelectMailingMembers()
 		else
 			$postGroups[$row['id_group']] = $row['id_group'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If we have post groups, let's count the number of members...
 	if (!empty($postGroups))
 	{
-		$query = $smfFunc['db_query']('', '
+		$query = $smcFunc['db_query']('', '
 			SELECT mem.id_post_group AS id_group, COUNT(*) AS member_count
 			FROM {db_prefix}members AS mem
 			WHERE mem.id_post_group IN ({array_int:post_group_list})
@@ -240,15 +240,15 @@ function SelectMailingMembers()
 				'post_group_list' => $postGroups,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
+		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['member_count'] += $row['member_count'];
-		$smfFunc['db_free_result']($query);
+		$smcFunc['db_free_result']($query);
 	}
 
 	if (!empty($normalGroups))
 	{
 		// Find people who are members of this group...
-		$query = $smfFunc['db_query']('', '
+		$query = $smcFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS member_count
 			FROM {db_prefix}members
 			WHERE id_group IN ({array_int:normal_group_list})
@@ -257,12 +257,12 @@ function SelectMailingMembers()
 				'normal_group_list' => $normalGroups,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
+		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['member_count'] += $row['member_count'];
-		$smfFunc['db_free_result']($query);
+		$smcFunc['db_free_result']($query);
 
 		// Also do those who have it as an additional membergroup - this ones more yucky...
-		$query = $smfFunc['db_query']('', '
+		$query = $smcFunc['db_query']('', '
 			SELECT mg.id_group, COUNT(*) AS member_count
 			FROM {db_prefix}membergroups AS mg
 				INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_string}
@@ -275,21 +275,21 @@ function SelectMailingMembers()
 				'blank_string' => '',
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
+		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['member_count'] += $row['member_count'];
-		$smfFunc['db_free_result']($query);
+		$smcFunc['db_free_result']($query);
 	}
 
 	// Any moderators?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(DISTINCT id_member) AS num_distinct_mods
 		FROM {db_prefix}moderators
 		LIMIT 1',
 		array(
 		)
 	);
-	list ($context['groups'][3]['member_count']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['groups'][3]['member_count']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['can_send_pm'] = allowedTo('pm_send');
 }
@@ -297,7 +297,7 @@ function SelectMailingMembers()
 // Email your members...
 function ComposeMailing()
 {
-	global $txt, $sourcedir, $context, $smfFunc;
+	global $txt, $sourcedir, $context, $smcFunc;
 
 	// Start by finding any members!
 	$toClean = array();
@@ -318,7 +318,7 @@ function ComposeMailing()
 
 			foreach ($_POST[$type] as $index => $member)
 				if (strlen(trim($member)) > 0)
-					$_POST[$type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower'](trim($member)));
+					$_POST[$type][$index] = $smcFunc['htmlspecialchars']($smcFunc['strtolower'](trim($member)));
 				else
 					unset($_POST[$type][$index]);
 
@@ -334,7 +334,7 @@ function ComposeMailing()
 	loadLanguage('EmailTemplates');
 
 	// Get a list of all full banned users.  Use their Username and email to find them.  Only get the ones that can't login to turn off notification.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT DISTINCT mem.id_member
 		FROM {db_prefix}ban_groups AS bg
 			INNER JOIN {db_prefix}ban_items AS bi ON (bg.id_ban_group = bi.id_ban_group)
@@ -347,11 +347,11 @@ function ComposeMailing()
 			'current_time' => time(),
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$context['recipients']['exclude_members'][] = $row['id_member'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT DISTINCT bi.email_address
 		FROM {db_prefix}ban_items AS bi
 			INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
@@ -368,7 +368,7 @@ function ComposeMailing()
 	$condition_array = array();
 	$condition_array_params = array();
 	$count = 0;
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$condition_array[] = 'email_address LIKE {string:email_' . $count . '}';
 		$condition_array_params['email_' . $count++] = $row['email_address'];
@@ -376,20 +376,20 @@ function ComposeMailing()
 
 	if (!empty($condition_array))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
 			WHERE ' . implode(' OR ', $condition_array),
 			$condition_array_params
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['recipients']['exclude_members'][] = $row['id_member'];
 	}
 
 	// Did they select moderators - if so add them as specific members...
 	if ((!empty($context['recipients']['groups']) && in_array(3, $context['recipients']['groups'])) || (!empty($context['recipients']['exclude_groups']) && in_array(3, $context['recipients']['exclude_groups'])))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT DISTINCT mem.id_member AS identifier
 			FROM {db_prefix}members AS mem
 				INNER JOIN {db_prefix}moderators AS mods ON (mods.id_member = mem.id_member)
@@ -398,26 +398,26 @@ function ComposeMailing()
 				'is_activated' => 1,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (in_array(3, $context['recipients']))
 				$context['recipients']['exclude_members'][] = $row['identifier'];
 			else
 				$context['recipients']['members'][] = $row['identifier'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	// For progress bar!
 	$context['total_emails'] = count($context['recipients']['emails']);
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT MAX(id_member)
 		FROM {db_prefix}members',
 		array(
 		)
 	);
-	list ($context['max_id_member']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['max_id_member']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Clean up the arrays.
 	$context['recipients']['members'] = array_unique($context['recipients']['members']);
@@ -434,7 +434,7 @@ function ComposeMailing()
 // Send out the mailing!
 function SendMailing($clean_only = false)
 {
-	global $txt, $sourcedir, $context, $smfFunc;
+	global $txt, $sourcedir, $context, $smcFunc;
 	global $scripturl, $modSettings, $user_info;
 
 	// How many to send at once? Quantity depends on whether we are queueing or not.
@@ -663,7 +663,7 @@ function SendMailing($clean_only = false)
 			$sendQuery .= ' AND mem.notify_announcements = {int:notify_announcements}';
 
 		// Get the smelly people - note we respect the id_member range as it gives us a quicker query.
-		$result = $smfFunc['db_query']('', '
+		$result = $smcFunc['db_query']('', '
 			SELECT mem.id_member, mem.email_address, mem.real_name, mem.id_group, mem.additional_groups, mem.id_post_group
 			FROM {db_prefix}members AS mem
 			WHERE mem.id_member > {int:min_id_member}
@@ -681,7 +681,7 @@ function SendMailing($clean_only = false)
 			))
 		);
 
-		while ($row = $smfFunc['db_fetch_assoc']($result))
+		while ($row = $smcFunc['db_fetch_assoc']($result))
 		{
 			$last_id_member = $row['id_member'];
 
@@ -711,7 +711,7 @@ function SendMailing($clean_only = false)
 			else
 				sendpm(array('to' => array($row['id_member']), 'bcc' => array()), $_POST['subject'], $_POST['message']);
 		}
-		$smfFunc['db_free_result']($result);
+		$smcFunc['db_free_result']($result);
 	}
 
 	// If we have no id_member then we're done.

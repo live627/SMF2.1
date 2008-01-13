@@ -95,7 +95,7 @@ if (!defined('SMF'))
 
 function downloadAvatar($url, $memID, $max_width, $max_height)
 {
-	global $modSettings, $sourcedir, $gd2, $smfFunc;
+	global $modSettings, $sourcedir, $gd2, $smcFunc;
 
 	$ext = !empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg';
 	$destName = 'avatar_' . $memID . '.' . $ext;
@@ -127,7 +127,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	removeAttachments(array('id_member' => $memID));
 
 	$id_folder = !empty($modSettings['currentAttachmentUploadDir']) ? $modSettings['currentAttachmentUploadDir'] : 1;
-	$smfFunc['db_insert']('',
+	$smcFunc['db_insert']('',
 		'{db_prefix}attachments',
 		array(
 			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8', 'size' => 'int',
@@ -139,7 +139,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		),
 		array('id_attach')
 	);
-	$attachID = $smfFunc['db_insert_id']('{db_prefix}attachments', 'id_attach');
+	$attachID = $smcFunc['db_insert_id']('{db_prefix}attachments', 'id_attach');
 	// Retain this globally in case the script wants it.
 	$modSettings['new_avatar_data'] = array(
 		'id' => $attachID,
@@ -203,7 +203,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			$mime_type = 'image/' . $ext;
 
 			// Write filesize in the database.
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}attachments
 				SET size = {int:filesize}, width = {int:width}, height = {int:height},
 					mime_type = {string:mime_type}
@@ -223,7 +223,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	}
 	else
 	{
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}attachments
 			WHERE id_attach = {int:current_attachment}',
 			array(

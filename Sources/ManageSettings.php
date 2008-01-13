@@ -159,10 +159,10 @@ function ModifyCoreFeatures($return_config = false)
 		'cp' => array(
 			'url' => 'action=admin;area=featuresettings;sa=profile',
 			'save_callback' => create_function('$value', '
-				global $smfFunc;
+				global $smcFunc;
 				if (!$value)
 				{
-					$smfFunc[\'db_query\'](\'\', \'
+					$smcFunc[\'db_query\'](\'\', \'
 						UPDATE {db_prefix}custom_fields
 						SET active = 0\');
 				}
@@ -579,7 +579,7 @@ function ModifyModerationSettings($return_config = false)
 // You'll never guess what this function does...
 function ModifySignatureSettings($return_config = false)
 {
-	global $context, $txt, $modSettings, $sig_start, $smfFunc, $helptxt, $scripturl, $sc;
+	global $context, $txt, $modSettings, $sig_start, $smcFunc, $helptxt, $scripturl, $sc;
 
 	$config_vars = array(
 			// Are signatures even enabled?
@@ -622,34 +622,34 @@ function ModifySignatureSettings($return_config = false)
 		$_GET['step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
 		$done = false;
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT MAX(id_member)
 			FROM {db_prefix}members',
 			array(
 			)
 		);
-		list ($context['max_member']) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($context['max_member']) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		while (!$done)
 		{
 			$changes = array();
 
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_member, signature
 				FROM {db_prefix}members
 				WHERE id_member BETWEEN ' . $_GET['step'] . ' AND ' . $_GET['step'] . ' + 49',
 				array(
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
 				// Apply all the rules we can realistically do.
 				$sig = strtr($row['signature'], array('<br />' => "\n"));
 
 				// Max characters...
 				if (!empty($sig_limits[1]))
-					$sig = $smfFunc['substr']($sig, 0, $sig_limits[1]);
+					$sig = $smcFunc['substr']($sig, 0, $sig_limits[1]);
 				// Max lines...
 				if (!empty($sig_limits[2]))
 				{
@@ -787,15 +787,15 @@ function ModifySignatureSettings($return_config = false)
 				if ($sig != $row['signature'])
 					$changes[$row['id_member']] = $sig;
 			}
-			if ($smfFunc['db_num_rows']($request) == 0)
+			if ($smcFunc['db_num_rows']($request) == 0)
 				$done = true;
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Do we need to delete what we have?
 			if (!empty($changes))
 			{
 				foreach ($changes as $id => $sig)
-					$smfFunc['db_query']('', '
+					$smcFunc['db_query']('', '
 						UPDATE {db_prefix}members
 						SET signature = {string:signature}
 						WHERE id_member = {int:id_member}',
@@ -902,7 +902,7 @@ function pauseSignatureApplySettings()
 // Show all the custom profile fields available to the user.
 function ShowCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $sc, $smcFunc;
 	global $modSettings, $sourcedir;
 
 	$context['page_title'] = $txt['custom_profile_title'];
@@ -1117,7 +1117,7 @@ function ShowCustomProfiles()
 
 function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 {
-	global $txt, $modSettings, $smfFunc;
+	global $txt, $modSettings, $smcFunc;
 
 	$list = array();
 
@@ -1140,7 +1140,7 @@ function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 	else
 	{
 		// Load all the fields.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_field, col_name, field_name, field_desc, field_type, active
 			FROM {db_prefix}custom_fields
 			ORDER BY ' . $sort . '
@@ -1148,9 +1148,9 @@ function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 			array(
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$list[] = $row;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	return $list;
@@ -1158,17 +1158,17 @@ function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 
 function list_getProfileFieldSize()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}custom_fields',
 		array(
 		)
 	);
 
-	list ($numProfileFields) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($numProfileFields) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $numProfileFields;
 }
@@ -1176,7 +1176,7 @@ function list_getProfileFieldSize()
 // Edit some profile fields?
 function EditCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $sc, $smcFunc;
 
 	// Sort out the context!
 	$context['fid'] = isset($_GET['fid']) ? (int) $_GET['fid'] : 0;
@@ -1189,7 +1189,7 @@ function EditCustomProfiles()
 
 	if ($context['fid'])
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
 				show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask
 			FROM {db_prefix}custom_fields
@@ -1199,7 +1199,7 @@ function EditCustomProfiles()
 			)
 		);
 		$context['field'] = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if ($row['field_type'] == 'textarea')
 				@list ($rows, $cols) = @explode(',', $row['default_value']);
@@ -1231,7 +1231,7 @@ function EditCustomProfiles()
 				'regex' => substr($row['mask'], 0, 5) == 'regex' ? substr($row['mask'], 5) : '',
 			);
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Setup the default values as needed.
@@ -1265,8 +1265,8 @@ function EditCustomProfiles()
 		// Everyone needs a name - even the (bracket) unknown...
 		if (trim($_POST['field_name']) == '')
 			fatal_lang_error('custom_option_need_name');
-		$_POST['field_name'] = $smfFunc['htmlspecialchars']($_POST['field_name']);
-		$_POST['field_desc'] = $smfFunc['htmlspecialchars']($_POST['field_desc']);
+		$_POST['field_name'] = $smcFunc['htmlspecialchars']($_POST['field_name']);
+		$_POST['field_desc'] = $smcFunc['htmlspecialchars']($_POST['field_desc']);
 
 		// Checkboxes...
 		$show_reg = isset($_POST['reg']) ? (int) $_POST['reg'] : 0;
@@ -1293,7 +1293,7 @@ function EditCustomProfiles()
 			foreach ($_POST['select_option'] as $k => $v)
 			{
 				// Clean, clean, clean...
-				$v = $smfFunc['htmlspecialchars']($v);
+				$v = $smcFunc['htmlspecialchars']($v);
 				$v = strtr($v, array(',' => ''));
 
 				// Nada, zip, etc...
@@ -1329,7 +1329,7 @@ function EditCustomProfiles()
 			$unique = false;
 			while ($unique == false)
 			{
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT id_field
 					FROM {db_prefix}custom_fields
 					WHERE col_name = {string:current_column}',
@@ -1337,11 +1337,11 @@ function EditCustomProfiles()
 						'current_column' => $colname,
 					)
 				);
-				if ($smfFunc['db_num_rows']($request) == 0)
+				if ($smcFunc['db_num_rows']($request) == 0)
 					$unique = true;
 				else
 					$colname .= rand(0, 9);
-				$smfFunc['db_free_result']($request);
+				$smcFunc['db_free_result']($request);
 
 				if (strlen($colname) >= 12 && !$unique)
 					fatal_lang_error('custom_option_not_unique');
@@ -1355,7 +1355,7 @@ function EditCustomProfiles()
 				|| (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && $context['field']['type'] != 'select' && $context['field']['type'] != 'radio')
 				|| ($context['field']['type'] == 'check' && $_POST['field_type'] != 'check'))
 			{
-				$smfFunc['db_query']('', '
+				$smcFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
 					WHERE variable = {string:current_column}
 						AND id_member > {int:no_member}',
@@ -1389,7 +1389,7 @@ function EditCustomProfiles()
 				{
 					// Just been renamed?
 					if (!in_array($k, $takenKeys) && !empty($newOptions[$k]))
-						$smfFunc['db_query']('', '
+						$smcFunc['db_query']('', '
 							UPDATE {db_prefix}themes
 							SET value = {string:new_value}
 							WHERE variable = {string:current_column}
@@ -1410,7 +1410,7 @@ function EditCustomProfiles()
 		// Do the insertion/updates.
 		if ($context['fid'])
 		{
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}custom_fields
 				SET field_name = {string:field_name}, field_desc = {string:field_desc},
 					field_type = {string:field_type}, field_length = {int:field_length},
@@ -1439,7 +1439,7 @@ function EditCustomProfiles()
 
 			// Just clean up any old selects - these are a pain!
 			if (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && !empty($newOptions))
-				$smfFunc['db_query']('', '
+				$smcFunc['db_query']('', '
 					DELETE FROM {db_prefix}themes
 					WHERE variable = {string:current_column}
 						AND value NOT IN ({array_string:new_option_values})
@@ -1453,7 +1453,7 @@ function EditCustomProfiles()
 		}
 		else
 		{
-			$smfFunc['db_insert']('',
+			$smcFunc['db_insert']('',
 				'{db_prefix}custom_fields',
 				array(
 					'col_name' => 'string', 'field_name' => 'string', 'field_desc' => 'string', 'field_type' => 'string',
@@ -1477,7 +1477,7 @@ function EditCustomProfiles()
 		checkSession();
 
 		// Delete the user data first.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}themes
 			WHERE variable = {string:current_column}
 				AND id_member > {int:no_member}',
@@ -1487,7 +1487,7 @@ function EditCustomProfiles()
 			)
 		);
 		// Finally - the field itself is gone!
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}custom_fields
 			WHERE id_field = {int:current_field}',
 			array(
@@ -1501,7 +1501,7 @@ function EditCustomProfiles()
 	{
 		checkSession();
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT col_name, field_name, bbc
 			FROM {db_prefix}custom_fields
 			WHERE show_display = {int:is_displayed}
@@ -1515,7 +1515,7 @@ function EditCustomProfiles()
 		);
 
 		$fields = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$fields[] = array(
 				'c' => strtr($row['col_name'], array('|' => '', ';' => '')),
@@ -1523,7 +1523,7 @@ function EditCustomProfiles()
 				'b' => ($row['bbc'] ? '1' : '0')
 			);
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		updateSettings(array('displayFields' => serialize($fields)));
 		redirectexit('action=admin;area=featuresettings;sa=profile');

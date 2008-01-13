@@ -85,12 +85,12 @@ function smf_openID_validate($openid_uri, $return = false)
 
 function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (!$no_delete)
 	{
 		// Delete the already expired associations.
-		$smfFunc['db_query']('openid_delete_assoc_old', '
+		$smcFunc['db_query']('openid_delete_assoc_old', '
 			DELETE FROM {db_prefix}openid_assoc
 			WHERE expires <= {int:current_time}',
 			array(
@@ -100,7 +100,7 @@ function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 	}
 
 	// Get the association that has the longest lifetime from now.
-	$request = $smfFunc['db_query']('openid_select_assoc', '
+	$request = $smcFunc['db_query']('openid_select_assoc', '
 		SELECT server_url, handle, secret, issued, expires, assoc_type
 		FROM {db_prefix}openid_assoc
 		WHERE server_url = {string:server_url}' . ($handle === null ? '' : '
@@ -113,18 +113,18 @@ function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 		)
 	);
 
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		return null;
 
-	$return = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$return = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $return;
 }
 
 function smf_openID_makeAssociation($server)
 {
-	global $smfFunc, $modSettings;
+	global $smcFunc, $modSettings;
 
 	$parameters = array(
 		'openid.mode=associate',
@@ -155,7 +155,7 @@ function smf_openID_makeAssociation($server)
 	$assoc_type = isset($assoc_data['assoc_type']) ? $assoc_data['assoc_type'] : '';
 
 	// Store the data
-	$smfFunc['db_insert']('replace',
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}openid_assoc',
 		array('server_url' => 'string', 'handle' => 'string', 'secret' => 'string', 'issued' => 'int', 'expires' => 'int', 'assoc_type' => 'string'),
 		array($server, $handle, $secret, $issued, $expires, $assoc_type),
@@ -174,9 +174,9 @@ function smf_openID_makeAssociation($server)
 
 function smf_openID_removeAssociation($handle)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$smfFunc['db_query']('openid_remove_association', '
+	$smcFunc['db_query']('openid_remove_association', '
 		DELETE FROM {db_prefix}openid_assoc
 		WHERE handle = {string:handle}
 		LIMIT 1',
@@ -188,7 +188,7 @@ function smf_openID_removeAssociation($handle)
 
 function smf_openID_return()
 {
-	global $smfFunc, $user_info, $user_profile, $sourcedir, $modSettings, $context, $sc, $user_settings;
+	global $smcFunc, $user_info, $user_profile, $sourcedir, $modSettings, $context, $sc, $user_settings;
 
 	if (!isset($_GET['openid_mode']))
 		fatal_lang_error('openid_return_no_mode');
@@ -239,7 +239,7 @@ function smf_openID_return()
 		fatal_lang_error('openid_load_data');
 
 	// Is there a user with this OpenID_uri?
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 		FROM {db_prefix}members
 		WHERE openid_uri = {string:openid_uri}
@@ -249,7 +249,7 @@ function smf_openID_return()
 		)
 	);
 
-	if ($smfFunc['db_num_rows']($result) == 0)
+	if ($smcFunc['db_num_rows']($result) == 0)
 	{
 		// Need to this user over to the registration page.
 		$_SESSION['openid'] = array(
@@ -269,8 +269,8 @@ function smf_openID_return()
 	}
 	else
 	{
-		$user_settings = $smfFunc['db_fetch_assoc']($result);
-		$smfFunc['db_free_result']($result);
+		$user_settings = $smcFunc['db_fetch_assoc']($result);
+		$smcFunc['db_free_result']($result);
 
 		$user_settings['passwd'] = sha1(strtolower($user_settings['member_name']) . $secret);
 		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
@@ -307,9 +307,9 @@ function smf_openID_canonize($uri)
 
 function smf_openid_member_exists($url)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$result = $smfFunc['db_query']('openid_member_exists', '
+	$result = $smcFunc['db_query']('openid_member_exists', '
 		SELECT id_member, member_name
 		FROM {db_prefix}members AS mem
 		WHERE mem.openid_uri = {string:openid_uri}
@@ -321,10 +321,10 @@ function smf_openid_member_exists($url)
 
 	$ret = array();
 
-	while ($row = $smfFunc['db_fetch_assoc']($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 		$ret = $row;
 
-	$smfFunc['db_free_result']($result);
+	$smcFunc['db_free_result']($result);
 
 	return $ret;
 }

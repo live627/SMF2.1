@@ -50,7 +50,7 @@ if (!defined('SMF'))
 // Turn on/off notifications...
 function Notify()
 {
-	global $scripturl, $txt, $topic, $user_info, $context, $smfFunc;
+	global $scripturl, $txt, $topic, $user_info, $context, $smcFunc;
 
 	// Make sure they aren't a guest or something - guests can't really receive notifications!
 	is_not_guest();
@@ -67,7 +67,7 @@ function Notify()
 		loadTemplate('Notify');
 
 		// Find out if they have notification set for this topic already.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}log_notify
 			WHERE id_member = {int:current_member}
@@ -78,8 +78,8 @@ function Notify()
 				'current_topic' => $topic,
 			)
 		);
-		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
-		$smfFunc['db_free_result']($request);
+		$context['notification_set'] = $smcFunc['db_num_rows']($request) != 0;
+		$smcFunc['db_free_result']($request);
 
 		// Set the template variables...
 		$context['topic_href'] = $scripturl . '?topic=' . $topic . '.' . $_REQUEST['start'];
@@ -93,7 +93,7 @@ function Notify()
 		checkSession('get');
 
 		// Attempt to turn notifications on.
-		$smfFunc['db_insert']('ignore',
+		$smcFunc['db_insert']('ignore',
 			'{db_prefix}log_notify',
 			array('id_member' => 'int', 'id_topic' => 'int'),
 			array($user_info['id'], $topic),
@@ -105,7 +105,7 @@ function Notify()
 		checkSession('get');
 
 		// Just turn notifications off.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_notify
 			WHERE id_member = {int:current_member}
 				AND id_topic = {int:current_topic}',
@@ -122,7 +122,7 @@ function Notify()
 
 function BoardNotify()
 {
-	global $scripturl, $txt, $board, $user_info, $context, $smfFunc;
+	global $scripturl, $txt, $board, $user_info, $context, $smcFunc;
 
 	// Permissions are an important part of anything ;).
 	is_not_guest();
@@ -139,7 +139,7 @@ function BoardNotify()
 		loadTemplate('Notify');
 
 		// Find out if they have notification set for this topic already.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}log_notify
 			WHERE id_member = {int:current_member}
@@ -150,8 +150,8 @@ function BoardNotify()
 				'current_member' => $user_info['id'],
 			)
 		);
-		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
-		$smfFunc['db_free_result']($request);
+		$context['notification_set'] = $smcFunc['db_num_rows']($request) != 0;
+		$smcFunc['db_free_result']($request);
 
 		// Set the template variables...
 		$context['board_href'] = $scripturl . '?board=' . $board . '.' . $_REQUEST['start'];
@@ -167,7 +167,7 @@ function BoardNotify()
 		checkSession('get');
 
 		// Turn notification on.  (note this just blows smoke if it's already on.)
-		$smfFunc['db_insert']('ignore',
+		$smcFunc['db_insert']('ignore',
 			'{db_prefix}log_notify',
 			array('id_member' => 'int', 'id_board' => 'int'),
 			array($user_info['id'], $board),
@@ -180,7 +180,7 @@ function BoardNotify()
 		checkSession('get');
 
 		// Turn notification off for this board.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_notify
 			WHERE id_member = {int:current_member}
 				AND id_board = {int:current_board}',

@@ -26,7 +26,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*	This file has a single job - database backup.  Note that, because of the
-	nature of its output, it uses the $smfFunc['db_query']() function without __FILE__ or
+	nature of its output, it uses the $smcFunc['db_query']() function without __FILE__ or
 	__LINE__ so errors won't be outputted.
 
 	void DumpDatabase2()
@@ -42,7 +42,7 @@ if (!defined('SMF'))
 // Dumps the database to a file.
 function DumpDatabase2()
 {
-	global $db_name, $scripturl, $context, $modSettings, $crlf, $smfFunc, $db_prefix;
+	global $db_name, $scripturl, $context, $modSettings, $crlf, $smcFunc, $db_prefix;
 
 	// Administrators only!
 	if (!allowedTo('admin_forum'))
@@ -107,9 +107,9 @@ function DumpDatabase2()
 	$scripturl = '';
 
 	// If this database is flat file and has a handler function pass it to that.
-	if (!empty($smfFunc['db_get_backup']))
+	if (!empty($smcFunc['db_get_backup']))
 	{
-		$smfFunc['db_get_backup']();
+		$smcFunc['db_get_backup']();
 		exit;
 	}
 
@@ -144,7 +144,7 @@ function DumpDatabase2()
 	}
 
 	// Dump each table.
-	$tables = $smfFunc['db_list_tables'](false, $db_prefix . '%');
+	$tables = $smcFunc['db_list_tables'](false, $db_prefix . '%');
 	foreach ($tables as $tableName)
 	{
 		if (function_exists('apache_reset_timeout'))
@@ -159,7 +159,7 @@ function DumpDatabase2()
 				'-- Table structure for table `', $tableName, '`', $crlf,
 				'--', $crlf,
 				$crlf,
-				$smfFunc['db_table_sql']($tableName), ';', $crlf;
+				$smcFunc['db_table_sql']($tableName), ';', $crlf;
 		}
 
 		// How about the data?
@@ -167,7 +167,7 @@ function DumpDatabase2()
 			continue;
 
 		// Are there any rows in this table?
-		$get_rows = $smfFunc['db_insert_sql']($tableName);
+		$get_rows = $smcFunc['db_insert_sql']($tableName);
 
 		// No rows to get - skip it.
 		if (empty($get_rows))

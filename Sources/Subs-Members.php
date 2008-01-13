@@ -93,7 +93,7 @@ if (!defined('SMF'))
 // Delete a group of/single member.
 function deleteMembers($users)
 {
-	global $sourcedir, $modSettings, $user_info, $smfFunc;
+	global $sourcedir, $modSettings, $user_info, $smcFunc;
 
 	// If it's not an array, make it so!
 	if (!is_array($users))
@@ -127,7 +127,7 @@ function deleteMembers($users)
 
 
 	// Get their names for logging purposes.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, CASE WHEN id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups) != 0 THEN 1 ELSE 0 END AS is_admin
 		FROM {db_prefix}members
 		WHERE id_member IN ({array_int:user_list})
@@ -139,13 +139,13 @@ function deleteMembers($users)
 	);
 	$admins = array();
 	$user_log_details = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($row['is_admin'])
 			$admins[] = $row['id_member'];
 		$user_log_details[] = array($row['id_member'], $row['member_name']);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (empty($user_log_details))
 		return;
@@ -165,7 +165,7 @@ function deleteMembers($users)
 	}
 
 	// Make these peoples' posts guest posts.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}messages
 		SET id_member = {int:guest_id}, poster_email = {string:blank_email}
 		WHERE id_member IN ({array_int:users})',
@@ -175,7 +175,7 @@ function deleteMembers($users)
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}polls
 		SET id_member = {int:guest_id}
 		WHERE id_member IN ({array_int:users})',
@@ -186,7 +186,7 @@ function deleteMembers($users)
 	);
 
 	// Make these peoples' posts guest first posts and last posts.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET id_member_started = {int:guest_id}
 		WHERE id_member_started IN ({array_int:users})',
@@ -195,7 +195,7 @@ function deleteMembers($users)
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET id_member_updated = {int:guest_id}
 		WHERE id_member_updated IN ({array_int:users})',
@@ -205,7 +205,7 @@ function deleteMembers($users)
 		)
 	);
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_actions
 		SET id_member = {int:guest_id}
 		WHERE id_member IN ({array_int:users})',
@@ -215,7 +215,7 @@ function deleteMembers($users)
 		)
 	);
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_banned
 		SET id_member = {int:guest_id}
 		WHERE id_member IN ({array_int:users})',
@@ -225,7 +225,7 @@ function deleteMembers($users)
 		)
 	);
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_errors
 		SET id_member = {int:guest_id}
 		WHERE id_member IN ({array_int:users})',
@@ -236,7 +236,7 @@ function deleteMembers($users)
 	);
 
 	// Delete the member.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}members
 		WHERE id_member IN ({array_int:users})',
 		array(
@@ -245,7 +245,7 @@ function deleteMembers($users)
 	);
 
 	// Delete the logs...
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_actions
 		WHERE id_log = {int:log_type}
 			AND id_member IN ({array_int:users})',
@@ -254,21 +254,21 @@ function deleteMembers($users)
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_boards
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_group_requests
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_karma
 		WHERE id_target IN ({array_int:users})
 			OR id_executor IN ({array_int:users})',
@@ -276,35 +276,35 @@ function deleteMembers($users)
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_mark_read
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_notify
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_online
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_topics
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}collapsed_categories
 		WHERE id_member IN ({array_int:users})',
 		array(
@@ -314,7 +314,7 @@ function deleteMembers($users)
 
 	// Make their votes appear as guest votes - at least it keeps the totals right.
 	//!!! Consider adding back in cookie protection.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_polls
 		SET id_member = {int:guest_id}
 		WHERE id_member IN ({array_int:users})',
@@ -328,7 +328,7 @@ function deleteMembers($users)
 	require_once($sourcedir . '/PersonalMessage.php');
 	deleteMessages(null, null, $users);
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}personal_messages
 		SET id_member_from = {int:guest_id}
 		WHERE id_member_from IN ({array_int:users})',
@@ -343,14 +343,14 @@ function deleteMembers($users)
 	removeAttachments(array('id_member' => $users));
 
 	// It's over, no more moderation for you.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}moderators
 		WHERE id_member IN ({array_int:users})',
 		array(
 			'users' => $users,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}group_moderators
 		WHERE id_member IN ({array_int:users})',
 		array(
@@ -359,7 +359,7 @@ function deleteMembers($users)
 	);
 
 	// If you don't exist we can't ban you.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}ban_items
 		WHERE id_member IN ({array_int:users})',
 		array(
@@ -368,7 +368,7 @@ function deleteMembers($users)
 	);
 
 	// Remove individual theme settings.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}themes
 		WHERE id_member IN ({array_int:users})',
 		array(
@@ -377,7 +377,7 @@ function deleteMembers($users)
 	);
 
 	// These users are nobody's buddy nomore.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, pm_ignore_list, buddy_list
 		FROM {db_prefix}members
 		WHERE FIND_IN_SET({raw:pm_ignore_list}, pm_ignore_list) OR FIND_IN_SET({raw:buddy_list}, buddy_list)',
@@ -386,8 +386,8 @@ function deleteMembers($users)
 			'buddy_list' => implode(', buddy_list) OR FIND_IN_SET(', $users),
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$smfFunc['db_query']('', '
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET
 				pm_ignore_list = {string:pm_ignore_list},
@@ -399,7 +399,7 @@ function deleteMembers($users)
 				'buddy_list' => implode(',', array_diff(explode(',', $row['buddy_list']), $users)),
 			)
 		);
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Make sure no member's birthday is still sticking in the calendar...
 	updateSettings(array(
@@ -412,7 +412,7 @@ function deleteMembers($users)
 function registerMember(&$regOptions, $return_errors = false)
 {
 	global $scripturl, $txt, $modSettings, $context, $sourcedir;
-	global $user_info, $options, $settings, $smfFunc;
+	global $user_info, $options, $settings, $smcFunc;
 
 	loadLanguage('Login');
 
@@ -458,19 +458,19 @@ function registerMember(&$regOptions, $return_errors = false)
 	$regOptions['username'] = preg_replace('~[\t\n\r\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0') . ']+~' . ($context['utf8'] ? 'u' : ''), ' ', $regOptions['username']);
 
 	// Don't use too long a name.
-	if ($smfFunc['strlen']($regOptions['username']) > 25)
+	if ($smcFunc['strlen']($regOptions['username']) > 25)
 		$reg_errors[] = array('lang', 'error_long_name');
 
 	// Only these characters are permitted.
 	if (preg_match('~[<>&"\'=\\\]~', $regOptions['username']) != 0 || $regOptions['username'] == '_' || $regOptions['username'] == '|' || strpos($regOptions['username'], '[code') !== false || strpos($regOptions['username'], '[/code') !== false)
 		$reg_errors[] = array('lang', 'error_invalid_characters_username');
 
-	if ($smfFunc['strtolower']($regOptions['username']) === $smfFunc['strtolower']($txt['guest_title']))
+	if ($smcFunc['strtolower']($regOptions['username']) === $smcFunc['strtolower']($txt['guest_title']))
 		$reg_errors[] = array('lang', 'username_reserved', 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?
 	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $regOptions['email']) === 0 || strlen($regOptions['email']) > 255)
-		$reg_errors[] = array('done', sprintf($txt['valid_email_needed'], $smfFunc['htmlspecialchars']($regOptions['username'])));
+		$reg_errors[] = array('done', sprintf($txt['valid_email_needed'], $smcFunc['htmlspecialchars']($regOptions['username'])));
 
 	if (!empty($regOptions['check_reserved_name']) && isReservedName($regOptions['username'], 0, false))
 	{
@@ -524,7 +524,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		isBannedEmail($regOptions['email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 	// Check if the email address is in use.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}members
 		WHERE email_address = {string:email_address}
@@ -536,9 +536,9 @@ function registerMember(&$regOptions, $return_errors = false)
 		)
 	);
 	// !!! Separate the sprintf?
-	if ($smfFunc['db_num_rows']($request) != 0)
+	if ($smcFunc['db_num_rows']($request) != 0)
 		$reg_errors[] = array('lang', 'email_in_use', false, array(htmlspecialchars($regOptions['email'])));
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If we found any errors we need to do something about it right away!
 	foreach ($reg_errors as $key => $error)
@@ -631,7 +631,7 @@ function registerMember(&$regOptions, $return_errors = false)
 
 		// Check if this group is assignable.
 		$unassignableGroups = array(-1, 3);
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_group
 			FROM {db_prefix}membergroups
 			WHERE min_posts != {int:min_posts}',
@@ -639,9 +639,9 @@ function registerMember(&$regOptions, $return_errors = false)
 				'min_posts' => -1,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$unassignableGroups[] = $row['id_group'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (in_array($regOptions['register_vars']['id_group'], $unassignableGroups))
 			$regOptions['register_vars']['id_group'] = 0;
@@ -694,13 +694,13 @@ function registerMember(&$regOptions, $return_errors = false)
 	}
 
 	// Register them into the database.
-	$smfFunc['db_insert']('',
+	$smcFunc['db_insert']('',
 		'{db_prefix}members',
 		$column_names,
 		$values,
 		array('id_member')
 	);
-	$memberID = $smfFunc['db_insert_id']('{db_prefix}members', 'id_member');
+	$memberID = $smcFunc['db_insert_id']('{db_prefix}members', 'id_member');
 
 	// Update the number of members and latest member's info - and pass the name, but remove the 's.
 	updateStats('member', $memberID, $regOptions['register_vars']['real_name']);
@@ -711,7 +711,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		$inserts = array();
 		foreach ($theme_vars as $var => $val)
 			$inserts[] = array($memberID, $var, $val);
-		$smfFunc['db_insert']('insert',
+		$smcFunc['db_insert']('insert',
 			'{db_prefix}themes',
 			array('id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 			$inserts,
@@ -815,9 +815,9 @@ function registerMember(&$regOptions, $return_errors = false)
 // Check if a name is in the reserved words list. (name, current member id, name/username?.)
 function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal = true)
 {
-	global $user_info, $modSettings, $smfFunc;
+	global $user_info, $modSettings, $smcFunc;
 
-	$checkName = $smfFunc['strtolower']($name);
+	$checkName = $smcFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
 	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
@@ -833,9 +833,9 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 				continue;
 
 			// Case sensitive name?
-			$reservedCheck = empty($modSettings['reserveCase']) ? $smfFunc['strtolower']($reserved) : $reserved;
+			$reservedCheck = empty($modSettings['reserveCase']) ? $smcFunc['strtolower']($reserved) : $reserved;
 			// If it's not just entire word, check for it in there somewhere...
-			if ($checkMe == $reservedCheck || ($smfFunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
+			if ($checkMe == $reservedCheck || ($smcFunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
 				if ($fatal)
 					fatal_lang_error('username_reserved', 'password', array($reserved));
 				else
@@ -854,7 +854,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 	$checkName = strtr($name, array('_' => '\\_', '%' => '\\%'));
 
 	// Make sure they don't want someone else's name.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}members
 		WHERE ' . (empty($current_ID_MEMBER) ? '' : 'id_member != {int:current_member}
@@ -865,14 +865,14 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 			'check_name' => $checkName,
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) > 0)
+	if ($smcFunc['db_num_rows']($request) > 0)
 	{
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 		return true;
 	}
 
 	// Does name case insensitive match a member group name?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group
 		FROM {db_prefix}membergroups
 		WHERE group_name LIKE {string:check_name}
@@ -881,9 +881,9 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 			'check_name' => $checkName,
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) > 0)
+	if ($smcFunc['db_num_rows']($request) > 0)
 	{
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 		return true;
 	}
 
@@ -894,7 +894,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 // Get a list of groups that have a given permission (on a given board).
 function groupsAllowedTo($permission, $board_id = null)
 {
-	global $modSettings, $board_info, $smfFunc;
+	global $modSettings, $board_info, $smcFunc;
 
 	// Admins are allowed to do anything.
 	$member_groups = array(
@@ -905,7 +905,7 @@ function groupsAllowedTo($permission, $board_id = null)
 	// Assume we're dealing with regular permissions (like profile_view_own).
 	if ($board_id === null)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_group, add_deny
 			FROM {db_prefix}permissions
 			WHERE permission = {string:permission}',
@@ -913,9 +913,9 @@ function groupsAllowedTo($permission, $board_id = null)
 				'permission' => $permission,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$member_groups[$row['add_deny'] === '1' ? 'allowed' : 'denied'][] = $row['id_group'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Otherwise it's time to look at the board.
@@ -926,7 +926,7 @@ function groupsAllowedTo($permission, $board_id = null)
 			$profile_id = $board_info['profile'];
 		elseif ($board_id !== 0)
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_profile
 				FROM {db_prefix}boards
 				WHERE id_board = {int:id_board}
@@ -935,15 +935,15 @@ function groupsAllowedTo($permission, $board_id = null)
 					'id_board' => $board_id,
 				)
 			);
-			if ($smfFunc['db_num_rows']($request) == 0)
+			if ($smcFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('no_board');
-			list ($profile_id) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
+			list ($profile_id) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 		}
 		else
 			$profile_id = 1;
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT bp.id_group, bp.add_deny
 			FROM {db_prefix}board_permissions AS bp
 			WHERE bp.permission = {string:permission}
@@ -953,9 +953,9 @@ function groupsAllowedTo($permission, $board_id = null)
 				'permission' => $permission,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$member_groups[$row['add_deny'] === '1' ? 'allowed' : 'denied'][] = $row['id_group'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Denied is never allowed.
@@ -967,7 +967,7 @@ function groupsAllowedTo($permission, $board_id = null)
 // Get a list of members that have a given permission (on a given board).
 function membersAllowedTo($permission, $board_id = null)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	$member_groups = groupsAllowedTo($permission, $board_id);
 
@@ -977,7 +977,7 @@ function membersAllowedTo($permission, $board_id = null)
 	$exclude_moderators = in_array(3, $member_groups['denied']) && $board_id !== null;
 	$member_groups['denied'] = array_diff($member_groups['denied'], array(3));
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mem.id_member
 		FROM {db_prefix}members AS mem' . ($include_moderators || $exclude_moderators ? '
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_member = mem.id_member AND mods.id_board = {int:board_id})' : '') . '
@@ -992,9 +992,9 @@ function membersAllowedTo($permission, $board_id = null)
 		)
 	);
 	$members = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$members[] = $row['id_member'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $members;
 }
@@ -1002,12 +1002,12 @@ function membersAllowedTo($permission, $board_id = null)
 // This function is used to reassociate members with relevant posts.
 function reattributePosts($memID, $email = false, $membername = false, $post_count = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Firstly, if email and username aren't passed find out the members email address and name.
 	if ($email === false && $membername === false)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT email_address, member_name
 			FROM {db_prefix}members
 			WHERE id_member = {int:memID}
@@ -1016,8 +1016,8 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 				'memID' => $memID,
 			)
 		);
-		list ($email, $membername) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($email, $membername) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	$query_parts = array();
@@ -1030,7 +1030,7 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 	// If they want the post count restored then we need to do some research.
 	if ($post_count)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND b.count_posts = {int:count_posts})
@@ -1045,14 +1045,14 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 				'recycled_icon' => 'recycled',
 			)
 		);
-		list ($messageCount) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($messageCount) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		updateMemberData($memID, array('posts' => 'posts + ' . $messageCount));
 	}
 
 	// Finally, update the posts themselves!
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}messages AS m
 		SET m.id_member = {int:memID}
 		WHERE ' . $query,
@@ -1063,7 +1063,7 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 		)
 	);
 
-	return $smfFunc['db_affected_rows']();
+	return $smcFunc['db_affected_rows']();
 }
 
 // This simple function adds/removes the passed user from the current users buddy list.
@@ -1096,9 +1096,9 @@ function BuddyListToggle()
 
 function list_getMembers($start, $items_per_page, $sort, $where, $where_params = array(), $get_duplicates = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.icq, mem.aim, mem.yim, mem.msn, mem.member_ip, mem.member_ip2, mem.last_login,
 			mem.posts, mem.is_activated, mem.date_registered, mg.group_name
@@ -1115,9 +1115,9 @@ function list_getMembers($start, $items_per_page, $sort, $where, $where_params =
 	);
 
 	$members = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$members[] = $row;
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If we want duplicates pass the members array off.
 	if ($get_duplicates)
@@ -1128,7 +1128,7 @@ function list_getMembers($start, $items_per_page, $sort, $where, $where_params =
 
 function list_getNumMembers($where, $where_params = array())
 {
-	global $smfFunc, $modSettings;
+	global $smcFunc, $modSettings;
 
 	// We know how many members there are in total.
 	if (empty($where) or $where == '1')
@@ -1137,15 +1137,15 @@ function list_getNumMembers($where, $where_params = array())
 	// The database knows the amount when there are extra conditions.
 	else
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}members
 			WHERE ' . $where,
 			array_merge($where_params, array(
 			))
 		);
-		list ($num_members) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($num_members) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	return $num_members;
@@ -1153,7 +1153,7 @@ function list_getNumMembers($where, $where_params = array())
 
 function populateDuplicateMembers(&$members)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// This will hold all the ip addresses.
 	$ips = array();
@@ -1175,7 +1175,7 @@ function populateDuplicateMembers(&$members)
 		return false;
 
 	// Fetch all members with this IP address, we'll filter out the current ones in a sec.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT
 			id_member, member_name, email_address, member_ip, member_ip2, is_activated
 		FROM {db_prefix}members
@@ -1187,7 +1187,7 @@ function populateDuplicateMembers(&$members)
 	);
 	$duplicate_members = array();
 	$duplicate_ids = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		//$duplicate_ids[] = $row['id_member'];
 
@@ -1205,10 +1205,10 @@ function populateDuplicateMembers(&$members)
 		if ($row['member_ip'] != $row['member_ip2'] && in_array($row['member_ip2'], $ips))
 			$duplicate_members[$row['member_ip2']][] = $member_context;
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Also try to get a list of messages using these ips.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT
 			m.poster_ip, mem.id_member, mem.member_name, mem.email_address, mem.is_activated
 		FROM {db_prefix}messages AS m
@@ -1223,7 +1223,7 @@ function populateDuplicateMembers(&$members)
 	);
 
 	$had_ips = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Don't collect lots of the same.
 		if (isset($had_ips[$row['poster_ip']]) && in_array($row['id_member'], $had_ips[$row['poster_ip']]))
@@ -1239,7 +1239,7 @@ function populateDuplicateMembers(&$members)
 			'ip2' => $row['poster_ip'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Now we have all the duplicate members, stick them with their respective member in the list.
 	if (!empty($duplicate_members))

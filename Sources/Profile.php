@@ -41,7 +41,7 @@ if (!defined('SMF'))
 function ModifyProfile($post_errors = array())
 {
 	global $txt, $scripturl, $user_info, $context, $sourcedir, $user_profile, $cur_profile;
-	global $modSettings, $memberContext, $profile_vars, $smfFunc, $post_errors;
+	global $modSettings, $memberContext, $profile_vars, $smcFunc, $post_errors;
 
 	// Don't reload this as we may have processed error strings.
 	if (empty($post_errors))
@@ -442,7 +442,7 @@ function ModifyProfile($post_errors = array())
 						'ip' => $user_info['ip'],
 						'extra' => serialize(array_merge($v, array('applicator' => $user_info['id']))),
 					);
-				$smfFunc['db_insert']('',
+				$smcFunc['db_insert']('',
 					'{db_prefix}log_actions',
 					array(
 						'action' => 'string', 'id_log' => 'int', 'log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16',
@@ -490,7 +490,7 @@ function ModifyProfile($post_errors = array())
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.
 function loadCustomFields($memID, $area = 'summary')
 {
-	global $context, $txt, $user_profile, $smfFunc;
+	global $context, $txt, $user_profile, $smcFunc;
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';
@@ -503,7 +503,7 @@ function loadCustomFields($memID, $area = 'summary')
 		$where .= ' AND show_profile = {string:area}';
 
 	// Load all the relevant fields - and data.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT col_name, field_name, field_desc, field_type, field_length, field_options,
 			default_value, bbc
 		FROM {db_prefix}custom_fields
@@ -513,7 +513,7 @@ function loadCustomFields($memID, $area = 'summary')
 		)
 	);
 	$context['custom_fields'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Shortcut.
 		$exists = $memID && isset($user_profile[$memID], $user_profile[$memID]['options'][$row['col_name']]);
@@ -521,7 +521,7 @@ function loadCustomFields($memID, $area = 'summary')
 
 		// If this was submitted already then make the value the posted version.
 		if (isset($_POST['customfield']) && isset($_POST['customfield'][$row['col_name']]))
-			$value = $smfFunc['htmlspecialchars']($_POST['customfield'][$row['col_name']]);
+			$value = $smcFunc['htmlspecialchars']($_POST['customfield'][$row['col_name']]);
 
 		// HTML for the input form.
 		$output_html = $value;
@@ -580,7 +580,7 @@ function loadCustomFields($memID, $area = 'summary')
 			'value' => $value,
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 }
 
 ?>

@@ -88,7 +88,7 @@ if (!defined('SMF'))
 // Clean the request variables - add html entities to GET and slashes if magic_quotes_gpc is Off.
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smcFunc;
 
 	// Makes it easier to refer to things this way.
 	$scripturl = $boardurl . '/index.php';
@@ -314,7 +314,7 @@ function cleanRequest()
 		$_SERVER['REQUEST_URL'] = $_SERVER['REQUEST_URI'];
 
 	// And make sure HTTP_USER_AGENT is set.
-	$_SERVER['HTTP_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($smfFunc['db_unescape_string']($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES) : '';
+	$_SERVER['HTTP_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($smcFunc['db_unescape_string']($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES) : '';
 
 	// Some final checking.
 	if (preg_match('~^((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|25[0-5])$~', $_SERVER['BAN_CHECK_IP']) === 0)
@@ -326,17 +326,17 @@ function cleanRequest()
 // Adds slashes to the array/variable.  Uses two underscores to guard against overloading.
 function escapestring__recursive($var)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (!is_array($var))
-		return $smfFunc['db_escape_string']($var);
+		return $smcFunc['db_escape_string']($var);
 
 	// Reindex the array with slashes.
 	$new_var = array();
 
 	// Add slashes to every element, even the indexes!
 	foreach ($var as $k => $v)
-		$new_var[$smfFunc['db_escape_string']($k)] = escapestring__recursive($v);
+		$new_var[$smcFunc['db_escape_string']($k)] = escapestring__recursive($v);
 
 	return $new_var;
 }
@@ -344,10 +344,10 @@ function escapestring__recursive($var)
 // Adds html entities to the array/variable.  Uses two underscores to guard against overloading.
 function htmlspecialchars__recursive($var, $level = 0)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (!is_array($var))
-		return isset($smfFunc['htmlspecialchars']) ? $smfFunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
+		return isset($smcFunc['htmlspecialchars']) ? $smcFunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
 
 	// Add the htmlspecialchars to every element.
 	foreach ($var as $k => $v)
@@ -374,17 +374,17 @@ function urldecode__recursive($var, $level = 0)
 // Unescapes any array or variable.  Two underscores for the normal reason.
 function unescapestring__recursive($var)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (!is_array($var))
-		return $smfFunc['db_unescape_string']($var);
+		return $smcFunc['db_unescape_string']($var);
 
 	// Reindex the array without slashes, this time.
 	$new_var = array();
 
 	// Strip the slashes from every element.
 	foreach ($var as $k => $v)
-		$new_var[$smfFunc['db_unescape_string']($k)] = unescapestring__recursive($v);
+		$new_var[$smcFunc['db_unescape_string']($k)] = unescapestring__recursive($v);
 
 	return $new_var;
 }
@@ -408,11 +408,11 @@ function stripslashes__recursive($var, $level = 0)
 // Trim a string including the HTML space, character 160.
 function htmltrim__recursive($var, $level = 0)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Remove spaces (32), tabs (9), returns (13, 10, and 11), nulls (0), and hard spaces. (160)
 	if (!is_array($var))
-		return isset($smfFunc) ? $smfFunc['htmltrim']($var) : trim($var, ' ' . "\t\n\r\x0B" . '\0' . "\xA0");
+		return isset($smcFunc) ? $smcFunc['htmltrim']($var) : trim($var, ' ' . "\t\n\r\x0B" . '\0' . "\xA0");
 
 	// Go through all the elements and remove the whitespace.
 	foreach ($var as $k => $v)

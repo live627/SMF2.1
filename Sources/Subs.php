@@ -217,7 +217,7 @@ if (!defined('SMF'))
 // Update some basic statistics...
 function updateStats($type, $parameter1 = null, $parameter2 = null)
 {
-	global $sourcedir, $modSettings, $smfFunc;
+	global $sourcedir, $modSettings, $smcFunc;
 
 	switch ($type)
 	{
@@ -230,7 +230,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
 		{
 			// Update the latest activated member (highest id_member) and count.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT COUNT(*), MAX(id_member)
 				FROM {db_prefix}members
 				WHERE is_activated = {int:is_activated}',
@@ -238,11 +238,11 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'is_activated' => 1,
 				)
 			);
-			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
-			$smfFunc['db_free_result']($result);
+			list ($changes['totalMembers'], $changes['latestMember']) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 
 			// Get the latest activated member's display name.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT real_name
 				FROM {db_prefix}members
 				WHERE id_member = {int:id_member}
@@ -251,19 +251,19 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'id_member' => (int) $changes['latestMember'],
 				)
 			);
-			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
-			$smfFunc['db_free_result']($result);
+			list ($changes['latestRealName']) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 
 			// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT COUNT(*)
 				FROM {db_prefix}members
 				WHERE is_activated IN (3, 4)',
 				array(
 				)
 			);
-			list ($changes['unapprovedMembers']) = $smfFunc['db_fetch_row']($result);
-			$smfFunc['db_free_result']($result);
+			list ($changes['unapprovedMembers']) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 		}
 		// If $parameter1 is a number, it's the new id_member and #2 is the real name for a new registration.
 		elseif ($parameter1 !== null && $parameter1 !== false)
@@ -277,17 +277,17 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		elseif ($parameter1 !== false)
 		{
 			// Update the latest member (highest id_member) and count.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT COUNT(*), MAX(id_member)
 				FROM {db_prefix}members',
 				array(
 				)
 			);
-			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
-			$smfFunc['db_free_result']($result);
+			list ($changes['totalMembers'], $changes['latestMember']) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 
 			// Get the latest member's display name.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT real_name
 				FROM {db_prefix}members
 				WHERE id_member = {int:id_member}
@@ -296,8 +296,8 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'id_member' => (int) $changes['latestMember'],
 				)
 			);
-			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
-			$smfFunc['db_free_result']($result);
+			list ($changes['latestRealName']) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 		}
 
 		updateSettings($changes);
@@ -309,7 +309,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		else
 		{
 			// SUM and MAX on a smaller table is better for InnoDB tables.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT SUM(num_posts) AS total_messages, MAX(id_last_msg) AS max_msg_id
 				FROM {db_prefix}boards
 				WHERE redirect = {string:blank_redirect}',
@@ -317,8 +317,8 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'blank_redirect' => '',
 				)
 			);
-			$row = $smfFunc['db_fetch_assoc']($result);
-			$smfFunc['db_free_result']($result);
+			$row = $smcFunc['db_fetch_assoc']($result);
+			$smcFunc['db_free_result']($result);
 
 			updateSettings(array(
 				'totalMessages' => $row['total_messages'],
@@ -329,7 +329,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 	case 'subject':
 		// Remove the previous subject (if any).
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_search_subjects
 			WHERE id_topic = {int:id_topic}',
 			array(
@@ -348,7 +348,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				$inserts[] = array($word, $parameter1);
 
 			if (!empty($inserts))
-				$smfFunc['db_insert']('ignore',
+				$smcFunc['db_insert']('ignore',
 					'{db_prefix}log_search_subjects',
 					array('word' => 'string', 'id_topic' => 'int'),
 					$inserts,
@@ -364,7 +364,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		{
 			// Get the number of topics - a SUM is better for InnoDB tables.
 			// We also ignore the recycle bin here because there will probably be a bunch of one-post topics there.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT SUM(num_topics) AS total_topics
 				FROM {db_prefix}boards' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 				WHERE id_board != {int:recycle_board}' : ''),
@@ -372,8 +372,8 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					'recycle_board' => $modSettings['recycle_board'],
 				)
 			);
-			$row = $smfFunc['db_fetch_assoc']($result);
-			$smfFunc['db_free_result']($result);
+			$row = $smcFunc['db_fetch_assoc']($result);
+			$smcFunc['db_free_result']($result);
 
 			updateSettings(array('totalTopics' => $row['total_topics']));
 		}
@@ -387,7 +387,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		if (($postgroups = cache_get_data('updateStats:postgroups', 360)) == null)
 		{
 			// Fetch the postgroups!
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_group, min_posts
 				FROM {db_prefix}membergroups
 				WHERE min_posts != {int:min_posts}',
@@ -396,9 +396,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				)
 			);
 			$postgroups = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$postgroups[$row['id_group']] = $row['min_posts'];
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Sort them this way because if it's done with MySQL it causes a filesort :(.
 			arsort($postgroups);
@@ -420,7 +420,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		}
 
 		// A big fat CASE WHEN... END is faster than a zillion UPDATE's ;).
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET id_post_group = CASE {raw:conditions}
 					ELSE 0
@@ -441,7 +441,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 // Assumes the data has been slashed.
 function updateMemberData($members, $data)
 {
-	global $modSettings, $user_info, $smfFunc;
+	global $modSettings, $user_info, $smcFunc;
 
 	$parameters = array();
 	if (is_array($members))
@@ -487,16 +487,16 @@ function updateMemberData($members, $data)
 			else
 			{
 				$member_names = array();
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT member_name
 					FROM {db_prefix}members
 					WHERE ' . $condition,
 					array(
 					)
 				);
-				while ($row = $smfFunc['db_fetch_assoc']($request))
+				while ($row = $smcFunc['db_fetch_assoc']($request))
 					$member_names[] = $row['member_name'];
-				$smfFunc['db_free_result']($request);
+				$smcFunc['db_free_result']($request);
 			}
 
 			if (!empty($member_names))
@@ -549,7 +549,7 @@ function updateMemberData($members, $data)
 		$parameters['p_' . $var] = $val;
 	}
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}members
 		SET' . substr($setString, 0, -1) . '
 		WHERE ' . $condition,
@@ -580,7 +580,7 @@ function updateMemberData($members, $data)
 // Updates the settings table as well as $modSettings... only does one at a time if $update is true.
 function updateSettings($changeArray, $update = false)
 {
-	global $modSettings, $smfFunc;
+	global $modSettings, $smcFunc;
 
 	if (empty($changeArray) || !is_array($changeArray))
 		return;
@@ -590,7 +590,7 @@ function updateSettings($changeArray, $update = false)
 	{
 		foreach ($changeArray as $variable => $value)
 		{
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}settings
 				SET value = {raw:value}
 				WHERE variable = {string:variable}',
@@ -626,7 +626,7 @@ function updateSettings($changeArray, $update = false)
 	if (empty($replaceArray))
 		return;
 
-	$smfFunc['db_insert']('replace',
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}settings',
 		array('variable' => 'string-255', 'value' => 'string-65534'),
 		$replaceArray,
@@ -757,7 +757,7 @@ function comma_format($number, $override_decimal_count = false)
 // Format a time to make it look purdy.
 function timeformat($log_time, $show_today = true, $offset_type = false)
 {
-	global $user_info, $txt, $modSettings, $smfFunc;
+	global $user_info, $txt, $modSettings, $smcFunc;
 
 	// Offset the time.
 	if (!$offset_type)
@@ -806,7 +806,7 @@ function timeformat($log_time, $show_today = true, $offset_type = false)
 	{
 		foreach (array('%a', '%A', '%b', '%B') as $token)
 			if (strpos($str, $token) !== false)
-				$str = str_replace($token, $smfFunc['ucwords'](strftime($token, $time)), $str);
+				$str = str_replace($token, $smcFunc['ucwords'](strftime($token, $time)), $str);
 	}
 	else
 	{
@@ -844,14 +844,14 @@ if (!function_exists('stripos'))
 // Shorten a subject + internationalization concerns.
 function shorten_subject($subject, $len)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// It was already short enough!
-	if ($smfFunc['strlen']($subject) <= $len)
+	if ($smcFunc['strlen']($subject) <= $len)
 		return $subject;
 
 	// Shorten it by the length it was too long, and strip off junk from the end.
-	return $smfFunc['substr']($subject, 0, $len) . '...';
+	return $smcFunc['substr']($subject, 0, $len) . '...';
 }
 
 // The current time with offset.
@@ -2353,7 +2353,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 // Parse smileys in the passed message.
 function parsesmileys(&$message)
 {
-	global $modSettings, $txt, $user_info, $context, $smfFunc;
+	global $modSettings, $txt, $user_info, $context, $smcFunc;
 	static $smileyfromcache = array(), $smileytocache = array();
 
 	// No smiley set at all?!
@@ -2375,7 +2375,7 @@ function parsesmileys(&$message)
 			// Load the smileys in reverse order by length so they don't get parsed wrong.
 			if (($temp = cache_get_data('parsing_smileys', 480)) == null)
 			{
-				$result = $smfFunc['db_query']('', '
+				$result = $smcFunc['db_query']('', '
 					SELECT code, filename, description
 					FROM {db_prefix}smileys',
 					array(
@@ -2384,13 +2384,13 @@ function parsesmileys(&$message)
 				$smileysfrom = array();
 				$smileysto = array();
 				$smileysdescs = array();
-				while ($row = $smfFunc['db_fetch_assoc']($result))
+				while ($row = $smcFunc['db_fetch_assoc']($result))
 				{
 					$smileysfrom[] = $row['code'];
 					$smileysto[] = $row['filename'];
 					$smileysdescs[] = $row['description'];
 				}
-				$smfFunc['db_free_result']($result);
+				$smcFunc['db_free_result']($result);
 
 				cache_put_data('parsing_smileys', array($smileysfrom, $smileysto, $smileysdescs), 480);
 			}
@@ -2449,7 +2449,7 @@ function highlight_php_code($code)
 // Put this user in the online log.
 function writeLog($force = false)
 {
-	global $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc, $sourcedir;
+	global $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smcFunc, $sourcedir;
 
 	// If we are showing who is viewing a topic, let's see if we are, and force an update if so - to make it accurate.
 	if (!empty($settings['display_who_viewing']) && ($topic || $board))
@@ -2496,7 +2496,7 @@ function writeLog($force = false)
 	{
 		if ($do_delete)
 		{
-			$smfFunc['db_query']('delete_log_online_interval', '
+			$smcFunc['db_query']('delete_log_online_interval', '
 				DELETE FROM {db_prefix}log_online
 				WHERE log_time < {int:log_time}
 					AND session != {string:session}',
@@ -2510,7 +2510,7 @@ function writeLog($force = false)
 			cache_put_data('log_online-update', time(), 30);
 		}
 
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}log_online
 			SET log_time = {int:log_time}, ip = IFNULL(INET_ATON({string:ip}), 0), url = {string:url}
 			WHERE session = {string:session}',
@@ -2523,7 +2523,7 @@ function writeLog($force = false)
 		);
 
 		// Guess it got deleted.
-		if ($smfFunc['db_affected_rows']() == 0)
+		if ($smcFunc['db_affected_rows']() == 0)
 			$_SESSION['log_time'] = 0;
 	}
 	else
@@ -2533,7 +2533,7 @@ function writeLog($force = false)
 	if (empty($_SESSION['log_time']))
 	{
 		if ($do_delete || !empty($user_info['id']))
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_online
 				WHERE ' . ($do_delete ? 'log_time < {int:log_time}' : '') . ($do_delete && !empty($user_info['id']) ? ' OR ' : '') . (empty($user_info['id']) ? '' : 'id_member = {int:current_member}'),
 				array(
@@ -2542,7 +2542,7 @@ function writeLog($force = false)
 				)
 			);
 
-		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
+		$smcFunc['db_insert']($do_delete ? 'ignore' : 'replace',
 			'{db_prefix}log_online',
 			array('session' => 'string', 'id_member' => 'int', 'id_spider' => 'int', 'log_time' => 'int', 'ip' => 'raw', 'url' => 'string'),
 			array($session_id, $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', $serialized),
@@ -2739,7 +2739,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 // Usage: logAction('remove', array('starter' => $id_member_started));
 function logAction($action, $extra = array(), $log_type = 'moderate')
 {
-	global $modSettings, $user_info, $smfFunc;
+	global $modSettings, $user_info, $smcFunc;
 
 	$log_types = array(
 		'moderate' => 1,
@@ -2799,7 +2799,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 	else
 		$msg_id = '0';
 
-	$smfFunc['db_insert']('',
+	$smcFunc['db_insert']('',
 		'{db_prefix}log_actions',
 		array(
 			'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
@@ -2812,13 +2812,13 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 		array('id_action')
 	);
 
-	return $smfFunc['db_insert_id']('{db_prefix}log_actions', 'id_action');
+	return $smcFunc['db_insert_id']('{db_prefix}log_actions', 'id_action');
 }
 
 // Track Statistics.
 function trackStats($stats = array())
 {
-	global $modSettings, $smfFunc;
+	global $modSettings, $smcFunc;
 	static $cache_stats = array();
 
 	if (empty($modSettings['trackStats']))
@@ -2846,15 +2846,15 @@ function trackStats($stats = array())
 		$insert_keys[$field] = 'int';
 	}
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_activity
 		SET' . substr($setStringUpdate, 0, -1) . '
 		WHERE date = {date:current_date}',
 		$update_paramaters
 	);
-	if ($smfFunc['db_affected_rows']() == 0)
+	if ($smcFunc['db_affected_rows']() == 0)
 	{
-		$smfFunc['db_insert']('ignore',
+		$smcFunc['db_insert']('ignore',
 			'{db_prefix}log_activity',
 			array_merge($insert_keys, array('date' => 'date')),
 			array_merge($cache_stats, array($date)),
@@ -2871,7 +2871,7 @@ function trackStats($stats = array())
 // Make sure the user isn't posting over and over again.
 function spamProtection($error_type)
 {
-	global $modSettings, $txt, $user_info, $smfFunc;
+	global $modSettings, $txt, $user_info, $smcFunc;
 
 	// Certain types take less/more time.
 	$timeOverrides = array(
@@ -2890,7 +2890,7 @@ function spamProtection($error_type)
 		$timeLimit = 2;
 
 	// Delete old entries...
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_floodcontrol
 		WHERE log_time < {int:log_time}
 			AND log_type = {string:log_type}',
@@ -2901,7 +2901,7 @@ function spamProtection($error_type)
 	);
 
 	// Add a new entry, deleting the old if necessary.
-	$smfFunc['db_insert']('replace',
+	$smcFunc['db_insert']('replace',
 		'{db_prefix}log_floodcontrol',
 		array('ip' => 'string-16', 'log_time' => 'int', 'log_type' => 'string'),
 		array($user_info['ip'], time(), $error_type),
@@ -2909,7 +2909,7 @@ function spamProtection($error_type)
 	);
 
 	// If affected is 0 or 2, it was there already.
-	if ($smfFunc['db_affected_rows']() != 1)
+	if ($smcFunc['db_affected_rows']() != 1)
 	{
 		// Spammer!  You only have to wait a *few* seconds!
 		fatal_lang_error($error_type . 'WaitTime_broken', false, array($timeLimit));
@@ -3014,7 +3014,7 @@ function determineTopicClass(&$topic_context)
 function setupThemeContext($forceload = false)
 {
 	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance;
-	global $user_settings, $smfFunc;
+	global $user_settings, $smcFunc;
 	static $loaded = false;
 
 	// Under SSI this function can be called more then once.  That can cause some problems.
@@ -3542,13 +3542,13 @@ function host_from_ip($ip)
 // Chops a string into words and prepares them to be inserted into (or searched from) the database.
 function text2words($text, $max_chars = 20, $encrypt = false)
 {
-	global $smfFunc, $context;
+	global $smcFunc, $context;
 
 	// Step 1: Remove entities/things we don't consider words:
 	$words = preg_replace('~([\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', strtr($text, array('<br />' => ' ')));
 
 	// Step 2: Entities we left to letters, where applicable, lowercase.
-	$words = un_htmlspecialchars($smfFunc['strtolower']($words));
+	$words = un_htmlspecialchars($smcFunc['strtolower']($words));
 
 	// Step 3: Ready to split apart and index!
 	$words = explode(' ', $words);

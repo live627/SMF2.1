@@ -95,7 +95,7 @@ function Post()
 {
 	global $txt, $scripturl, $topic, $modSettings, $board;
 	global $user_info, $sc, $board_info, $context, $settings;
-	global $sourcedir, $options, $smfFunc, $language;
+	global $sourcedir, $options, $smcFunc, $language;
 
 	loadLanguage('Post');
 
@@ -124,7 +124,7 @@ function Post()
 	// Check if it's locked.  It isn't locked if no topic is specified.
 	if (!empty($topic))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT
 				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.num_replies, mf.id_member,
 				t.id_first_msg, mf.subject,
@@ -140,8 +140,8 @@ function Post()
 				'current_topic' => $topic,
 			)
 		);
-		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $id_first_msg, $first_subject, $lastPostTime) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $id_first_msg, $first_subject, $lastPostTime) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		// If this topic already has a poll, they sure can't add another.
 		if (isset($_REQUEST['poll']) && $pollID > 0)
@@ -279,7 +279,7 @@ function Post()
 			}
 
 			// Get the current event information.
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT
 					id_member, title, MONTH(start_date) AS month, DAYOFMONTH(start_date) AS day,
 					YEAR(start_date) AS year, (TO_DAYS(end_date) - TO_DAYS(start_date)) AS span
@@ -290,8 +290,8 @@ function Post()
 					'id_event' => $context['event']['id'],
 				)
 			);
-			$row = $smfFunc['db_fetch_assoc']($request);
-			$smfFunc['db_free_result']($request);
+			$row = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Make sure the user is allowed to edit this event.
 			if ($row['id_member'] != $user_info['id'])
@@ -415,7 +415,7 @@ function Post()
 				// Validate the name and email.
 				if (!isset($_REQUEST['guestname']) || trim(strtr($_REQUEST['guestname'], '_', ' ')) == '')
 					$context['post_error']['no_name'] = true;
-				elseif ($smfFunc['strlen']($_REQUEST['guestname']) > 25)
+				elseif ($smcFunc['strlen']($_REQUEST['guestname']) > 25)
 					$context['post_error']['long_name'] = true;
 				else
 				{
@@ -459,15 +459,15 @@ function Post()
 		$context['can_announce'] &= $context['becomes_approved'];
 
 		// Set up the inputs for the form.
-		$form_subject = strtr($smfFunc['htmlspecialchars']($_REQUEST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
-		$form_message = $smfFunc['htmlspecialchars']($_REQUEST['message'], ENT_QUOTES);
+		$form_subject = strtr($smcFunc['htmlspecialchars']($_REQUEST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
+		$form_message = $smcFunc['htmlspecialchars']($_REQUEST['message'], ENT_QUOTES);
 
 		// Make sure the subject isn't too long - taking into account special characters.
-		if ($smfFunc['strlen']($form_subject) > 100)
-			$form_subject = $smfFunc['substr']($form_subject, 0, 100);
+		if ($smcFunc['strlen']($form_subject) > 100)
+			$form_subject = $smcFunc['substr']($form_subject, 0, 100);
 
 		// Have we inadvertently trimmed off the subject of useful information?
-		if ($smfFunc['htmltrim']($form_subject) === '')
+		if ($smcFunc['htmltrim']($form_subject) === '')
 			$context['post_error']['no_subject'] = true;
 
 		// Any errors occurred?
@@ -496,7 +496,7 @@ function Post()
 
 		if (isset($_REQUEST['poll']))
 		{
-			$context['question'] = isset($_REQUEST['question']) ? $smfFunc['htmlspecialchars'](trim($_REQUEST['question'])) : '';
+			$context['question'] = isset($_REQUEST['question']) ? $smcFunc['htmlspecialchars'](trim($_REQUEST['question'])) : '';
 
 			$context['choices'] = array();
 			$choice_id = 0;
@@ -588,7 +588,7 @@ function Post()
 		{
 			if (!empty($modSettings['attachmentEnable']))
 			{
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT IFNULL(size, -1) AS filesize, filename, id_attach, approved
 					FROM {db_prefix}attachments
 					WHERE id_msg = {int:id_msg}
@@ -598,7 +598,7 @@ function Post()
 						'attachment_type' => 0,
 					)
 				);
-				while ($row = $smfFunc['db_fetch_assoc']($request))
+				while ($row = $smcFunc['db_fetch_assoc']($request))
 				{
 					if ($row['filesize'] <= 0)
 						continue;
@@ -608,13 +608,13 @@ function Post()
 						'approved' => $row['approved'],
 					);
 				}
-				$smfFunc['db_free_result']($request);
+				$smcFunc['db_free_result']($request);
 			}
 
 			// Allow moderators to change names....
 			if (allowedTo('moderate_forum') && !empty($topic))
 			{
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT id_member, poster_name, poster_email
 					FROM {db_prefix}messages
 					WHERE id_msg = {int:id_msg}
@@ -625,8 +625,8 @@ function Post()
 						'id_msg' => (int) $_REQUEST['msg'],
 					)
 				);
-				$row = $smfFunc['db_fetch_assoc']($request);
-				$smfFunc['db_free_result']($request);
+				$row = $smcFunc['db_fetch_assoc']($request);
+				$smcFunc['db_free_result']($request);
 
 				if (empty($row['id_member']))
 				{
@@ -646,7 +646,7 @@ function Post()
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
 		// Get the existing message.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT
 				m.id_member, m.modified_time, m.smileys_enabled, m.body,
 				m.poster_name, m.poster_email, m.subject, m.icon, m.approved,
@@ -666,14 +666,14 @@ function Post()
 		);
 		// The message they were trying to edit was most likely deleted.
 		// !!! Change this error message?
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('no_board', false);
-		$row = $smfFunc['db_fetch_assoc']($request);
+		$row = $smcFunc['db_fetch_assoc']($request);
 
 		$attachment_stuff = array($row);
-		while ($row2 = $smfFunc['db_fetch_assoc']($request))
+		while ($row2 = $smcFunc['db_fetch_assoc']($request))
 			$attachment_stuff[] = $row2;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
@@ -752,7 +752,7 @@ function Post()
 			checkSession('get');
 
 			// Make sure they _can_ quote this post, and if so get it.
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
@@ -765,13 +765,13 @@ function Post()
 					'is_approved' => 1,
 				)
 			);
-			if ($smfFunc['db_num_rows']($request) == 0)
+			if ($smcFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('quoted_post_deleted', false);
-			list ($form_subject, $mname, $mdate, $form_message) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
+			list ($form_subject, $mname, $mdate, $form_message) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Add 'Re: ' to the front of the quoted subject.
-			if (trim($context['response_prefix']) != '' && $smfFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
+			if (trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
 				$form_subject = $context['response_prefix'] . $form_subject;
 
 			// Censor the message and subject.
@@ -794,7 +794,7 @@ function Post()
 			$form_subject = $first_subject;
 
 			// Add 'Re: ' to the front of the subject.
-			if (trim($context['response_prefix']) != '' && $form_subject != '' && $smfFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
+			if (trim($context['response_prefix']) != '' && $form_subject != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
 				$form_subject = $context['response_prefix'] . $form_subject;
 
 			// Censor the subject.
@@ -829,7 +829,7 @@ function Post()
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT COUNT(*), SUM(size)
 				FROM {db_prefix}attachments
 				WHERE id_msg = {int:id_msg}
@@ -839,8 +839,8 @@ function Post()
 					'attachment_type' => 0,
 				)
 			);
-			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
+			list ($quantity, $total_size) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 		}
 		else
 		{
@@ -1098,7 +1098,7 @@ function Post()
 function Post2()
 {
 	global $board, $topic, $txt, $modSettings, $sourcedir, $context;
-	global $user_info, $board_info, $options, $smfFunc;
+	global $user_info, $board_info, $options, $smcFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
 	if (!empty($_REQUEST['message_mode']) && isset($_REQUEST['message']))
@@ -1138,7 +1138,7 @@ function Post2()
 	// Replying to a topic?
 	if (!empty($topic) && !isset($_REQUEST['msg']))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT t.locked, t.is_sticky, t.id_poll, t.num_replies, m.id_member
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
@@ -1148,8 +1148,8 @@ function Post2()
 				'current_topic' => $topic,
 			)
 		);
-		list ($tmplocked, $tmpstickied, $pollID, $num_replies, $ID_MEMBER_POSTER) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($tmplocked, $tmpstickied, $pollID, $num_replies, $ID_MEMBER_POSTER) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		// Don't allow a post if it's locked.
 		if ($tmplocked != 0 && !allowedTo('moderate_board'))
@@ -1250,7 +1250,7 @@ function Post2()
 	{
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT
 				m.id_member, m.poster_name, m.poster_email, m.poster_time, m.approved,
 				t.id_first_msg, t.locked, t.is_sticky, t.id_member_started AS id_member_poster
@@ -1263,10 +1263,10 @@ function Post2()
 				'id_msg' => $_REQUEST['msg'],
 			)
 		);
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('cant_find_messages', false);
-		$row = $smfFunc['db_fetch_assoc']($request);
-		$smfFunc['db_free_result']($request);
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (!empty($row['locked']) && !allowedTo('moderate_board'))
 			fatal_lang_error('topic_locked', false);
@@ -1345,7 +1345,7 @@ function Post2()
 
 		if ($_POST['guestname'] == '' || $_POST['guestname'] == '_')
 			$post_errors[] = 'no_name';
-		if ($smfFunc['strlen']($_POST['guestname']) > 25)
+		if ($smcFunc['strlen']($_POST['guestname']) > 25)
 			$post_errors[] = 'long_name';
 
 		if (empty($modSettings['guest_post_no_email']))
@@ -1372,16 +1372,16 @@ function Post2()
 	}
 
 	// Check the subject and message.
-	if (!isset($_POST['subject']) || $smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['subject'])) === '')
+	if (!isset($_POST['subject']) || $smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['subject'])) === '')
 		$post_errors[] = 'no_subject';
-	if (!isset($_POST['message']) || $smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['message']), ENT_QUOTES) === '')
+	if (!isset($_POST['message']) || $smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['message']), ENT_QUOTES) === '')
 		$post_errors[] = 'no_message';
-	elseif (!empty($modSettings['max_messageLength']) && $smfFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
+	elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
 	else
 	{
 		// Prepare the message a bit for some additional testing.
-		$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
+		$_POST['message'] = $smcFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
 
 		// Preparse code. (Zef)
 		if ($user_info['is_guest'])
@@ -1389,10 +1389,10 @@ function Post2()
 		preparsecode($_POST['message']);
 
 		// Let's see if there's still some content left without the tags.
-		if ($smfFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
+		if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
 			$post_errors[] = 'no_message';
 	}
-	if (isset($_POST['calendar']) && !isset($_REQUEST['deleteevent']) && $smfFunc['htmltrim']($_POST['evtitle']) === '')
+	if (isset($_POST['calendar']) && !isset($_REQUEST['deleteevent']) && $smcFunc['htmltrim']($_POST['evtitle']) === '')
 		$post_errors[] = 'no_event';
 	// You are not!
 	if (isset($_POST['message']) && strtolower($_POST['message']) == 'i am the administrator.' && !$user_info['is_admin'])
@@ -1472,13 +1472,13 @@ function Post2()
 	@set_time_limit(300);
 
 	// Add special html entities to the subject, name, and email.
-	$_POST['subject'] = strtr($smfFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
+	$_POST['subject'] = strtr($smcFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
 	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
 	$_POST['email'] = htmlspecialchars($_POST['email']);
 
 	// At this point, we want to make sure the subject isn't too long.
-	if ($smfFunc['strlen']($_POST['subject']) > 100)
-		$_POST['subject'] = $smfFunc['substr']($_POST['subject'], 0, 100);
+	if ($smcFunc['strlen']($_POST['subject']) > 100)
+		$_POST['subject'] = $smcFunc['substr']($_POST['subject'], 0, 100);
 
 	// Make the poll...
 	if (isset($_REQUEST['poll']))
@@ -1559,7 +1559,7 @@ function Post2()
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT COUNT(*), SUM(size)
 				FROM {db_prefix}attachments
 				WHERE id_msg = {int:id_msg}
@@ -1569,8 +1569,8 @@ function Post2()
 					'attachment_type' => 0,
 				)
 			);
-			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
+			list ($quantity, $total_size) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 		}
 		else
 		{
@@ -1655,7 +1655,7 @@ function Post2()
 	if (isset($_REQUEST['poll']))
 	{
 		// Create the poll.
-		$smfFunc['db_insert']('',
+		$smcFunc['db_insert']('',
 			'{db_prefix}polls',
 			array(
 				'question' => 'string-255', 'hide_results' => 'int', 'max_votes' => 'int', 'expire_time' => 'int', 'id_member' => 'int',
@@ -1667,7 +1667,7 @@ function Post2()
 			),
 			array('id_poll')
 		);
-		$id_poll = $smfFunc['db_insert_id']('{db_prefix}polls', 'id_poll');
+		$id_poll = $smcFunc['db_insert_id']('{db_prefix}polls', 'id_poll');
 
 		// Create each answer choice.
 		$i = 0;
@@ -1678,7 +1678,7 @@ function Post2()
 			$i++;
 		}
 
-		$smfFunc['db_insert']('insert',
+		$smcFunc['db_insert']('insert',
 			'{db_prefix}poll_choices',
 			array('id_poll' => 'int', 'id_choice' => 'int', 'label' => 'string-255'),
 			$pollOptions,
@@ -1775,7 +1775,7 @@ function Post2()
 		if (!allowedTo('calendar_edit_any'))
 		{
 			// Get the event's poster.
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}calendar
 				WHERE id_event = {int:id_event}',
@@ -1783,8 +1783,8 @@ function Post2()
 					'id_event' => $_REQUEST['eventid'],
 				)
 			);
-			$row2 = $smfFunc['db_fetch_assoc']($request);
-			$smfFunc['db_free_result']($request);
+			$row2 = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Silly hacker, Trix are for kids. ...probably trademarked somewhere, this is FAIR USE! (parody...)
 			isAllowedTo('calendar_edit_' . ($row2['id_member'] == $user_info['id'] ? 'own' : 'any'));
@@ -1792,7 +1792,7 @@ function Post2()
 
 		// Delete it?
 		if (isset($_REQUEST['deleteevent']))
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}calendar
 				WHERE id_event = {int:id_event}',
 				array(
@@ -1805,7 +1805,7 @@ function Post2()
 			$span = !empty($modSettings['cal_allowspan']) && !empty($_REQUEST['span']) ? min((int) $modSettings['cal_maxspan'], (int) $_REQUEST['span'] - 1) : 0;
 			$start_time = mktime(0, 0, 0, (int) $_REQUEST['month'], (int) $_REQUEST['day'], (int) $_REQUEST['year']);
 
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}calendar
 				SET end_date = {date:end_date},
 					start_date = {date:start_date},
@@ -1815,7 +1815,7 @@ function Post2()
 					'end_date' => strftime('%Y-%m-%d', $start_time + $span * 86400),
 					'start_date' => strftime('%Y-%m-%d', $start_time),
 					'id_event' => $_REQUEST['eventid'],
-					'title' => $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES),
+					'title' => $smcFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES),
 				)
 			);
 		}
@@ -1830,7 +1830,7 @@ function Post2()
 		// Mark all the parents read.  (since you just posted and they will be unread.)
 		if (!empty($board_info['parent_boards']))
 		{
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}log_boards
 				SET id_msg = {int:id_msg}
 				WHERE id_member = {int:current_member}
@@ -1848,7 +1848,7 @@ function Post2()
 	if (!empty($_POST['notify']))
 	{
 		if (allowedTo('mark_any_notify'))
-			$smfFunc['db_insert']('ignore',
+			$smcFunc['db_insert']('ignore',
 				'{db_prefix}log_notify',
 				array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int'),
 				array($user_info['id'], $topic, 0),
@@ -1856,7 +1856,7 @@ function Post2()
 			);
 	}
 	elseif (!$newTopic)
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_notify
 			WHERE id_member = {int:current_member}
 				AND id_topic = {int:current_topic}',
@@ -1901,7 +1901,7 @@ function Post2()
 	if (!empty($_REQUEST['goback']))
 	{
 		// Mark the board as read.... because it might get confusing otherwise.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}log_boards
 			SET id_msg = {int:maxMsgID}
 			WHERE id_member = {int:current_member}
@@ -1959,7 +1959,7 @@ function AnnounceTopic()
 // Allow a user to chose the membergroups to send the announcement to.
 function AnnouncementSelectMembergroup()
 {
-	global $txt, $context, $topic, $board, $board_info, $smfFunc;
+	global $txt, $context, $topic, $board, $board_info, $smcFunc;
 
 	$groups = array_merge($board_info['groups'], array(1));
 	foreach ($groups as $id => $group)
@@ -1976,7 +1976,7 @@ function AnnouncementSelectMembergroup()
 	}
 
 	// Get all membergroups that have access to the board the announcement was made on.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, COUNT(mem.id_member) AS num_members
 		FROM {db_prefix}membergroups AS mg
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_group = mg.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
@@ -1988,7 +1988,7 @@ function AnnouncementSelectMembergroup()
 			'newbie_id_group' => 4,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['groups'][$row['id_group']] = array(
 			'id' => $row['id_group'],
@@ -1996,10 +1996,10 @@ function AnnouncementSelectMembergroup()
 			'member_count' => $row['num_members'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Get the subject of the topic we're about to announce.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT m.subject
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
@@ -2008,8 +2008,8 @@ function AnnouncementSelectMembergroup()
 			'current_topic' => $topic,
 		)
 	);
-	list ($context['topic_subject']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['topic_subject']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	censorText($context['announce_topic']['subject']);
 
@@ -2023,7 +2023,7 @@ function AnnouncementSelectMembergroup()
 function AnnouncementSend()
 {
 	global $topic, $board, $board_info, $context, $modSettings;
-	global $language, $scripturl, $txt, $user_info, $sourcedir, $smfFunc;
+	global $language, $scripturl, $txt, $user_info, $sourcedir, $smcFunc;
 
 	checkSession();
 
@@ -2045,7 +2045,7 @@ function AnnouncementSend()
 		$_POST['who'][$id] = in_array((int) $mg, $groups) ? (int) $mg : 0;
 
 	// Get the topic subject and censor it.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.subject, m.body
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
@@ -2054,8 +2054,8 @@ function AnnouncementSend()
 			'current_topic' => $topic,
 		)
 	);
-	list ($id_msg, $context['topic_subject'], $message) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($id_msg, $context['topic_subject'], $message) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	censorText($context['topic_subject']);
 	censorText($message);
@@ -2066,7 +2066,7 @@ function AnnouncementSend()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Select the email addresses for this batch.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mem.id_member, mem.email_address, mem.lngfile
 		FROM {db_prefix}members AS mem
 		WHERE mem.id_member != {int:current_member}' . (!empty($modSettings['allow_disableAnnounce']) ? '
@@ -2087,7 +2087,7 @@ function AnnouncementSend()
 	);
 
 	// All members have received a mail. Go to the next screen.
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 	{
 		if (!empty($_REQUEST['move']) && allowedTo('move_any'))
 			redirectexit('action=movetopic;topic=' . $topic . '.0' . (empty($_REQUEST['goback']) ? '' : ';goback'));
@@ -2098,7 +2098,7 @@ function AnnouncementSend()
 	}
 
 	// Loop through all members that'll receive an announcement in this batch.
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$cur_language = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
 
@@ -2123,7 +2123,7 @@ function AnnouncementSend()
 		$announcements[$cur_language]['recipients'][$row['id_member']] = $row['email_address'];
 		$context['start'] = $row['id_member'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// For each language send a different mail - low priority...
 	foreach ($announcements as $lang => $mail)
@@ -2145,7 +2145,7 @@ function AnnouncementSend()
 function notifyMembersBoard(&$topicData)
 {
 	global $txt, $scripturl, $language, $user_info;
-	global $modSettings, $sourcedir, $board, $smfFunc, $context;
+	global $modSettings, $sourcedir, $board, $smcFunc, $context;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -2183,7 +2183,7 @@ function notifyMembersBoard(&$topicData)
 	$digest_insert = array();
 	foreach ($topicData as $id => $data)
 		$digest_insert[] = array($data['topic'], $data['msg'], 'topic', $user_info['id']);
-	$smfFunc['db_insert']('',
+	$smcFunc['db_insert']('',
 		'{db_prefix}log_digest',
 		array(
 			'id_topic' => 'int', 'id_msg' => 'int', 'note_type' => 'string', 'exclude' => 'int',
@@ -2193,7 +2193,7 @@ function notifyMembersBoard(&$topicData)
 	);
 
 	// Find the members with notification on for these boards.
-	$members = $smfFunc['db_query']('', '
+	$members = $smcFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
 			ln.sent, ln.id_board, mem.id_group, mem.additional_groups, b.member_groups,
@@ -2215,7 +2215,7 @@ function notifyMembersBoard(&$topicData)
 			'notify_regularity' => 2,
 		)
 	);
-	while ($rowmember = $smfFunc['db_fetch_assoc']($members))
+	while ($rowmember = $smcFunc['db_fetch_assoc']($members))
 	{
 		if ($rowmember['id_group'] != 1)
 		{
@@ -2274,10 +2274,10 @@ function notifyMembersBoard(&$topicData)
 			$sentOnceAlready = 1;
 		}
 	}
-	$smfFunc['db_free_result']($members);
+	$smcFunc['db_free_result']($members);
 
 	// Sent!
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_notify
 		SET sent = {int:is_sent}
 		WHERE id_board IN ({array_int:board_list})
@@ -2293,7 +2293,7 @@ function notifyMembersBoard(&$topicData)
 // Get the topic for display purposes.
 function getTopic()
 {
-	global $topic, $modSettings, $context, $smfFunc;
+	global $topic, $modSettings, $context, $smcFunc;
 
 	// Calculate the amount of new replies.
 	$newReplies = empty($_REQUEST['num_replies']) || $context['num_replies'] <= $_REQUEST['num_replies'] ? 0 : $context['num_replies'] - $_REQUEST['num_replies'];
@@ -2306,7 +2306,7 @@ function getTopic()
 		LIMIT ' . (int) $modSettings['topicSummaryPosts'];
 
 	// If you're modifying, get only those posts before the current one. (otherwise get all.)
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.smileys_enabled, m.id_msg
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
@@ -2321,7 +2321,7 @@ function getTopic()
 		)
 	);
 	$context['previous_posts'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Censor, BBC, ...
 		censorText($row['body']);
@@ -2340,13 +2340,13 @@ function getTopic()
 		if (!empty($newReplies))
 			$newReplies--;
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 }
 
 function QuoteFast()
 {
 	global $modSettings, $user_info, $txt, $settings, $context;
-	global $sourcedir, $smfFunc;
+	global $sourcedir, $smcFunc;
 
 	loadLanguage('Post');
 	if (!isset($_REQUEST['xml']))
@@ -2361,7 +2361,7 @@ function QuoteFast()
 	// Where we going if we need to?
 	$context['post_box_name'] = isset($_GET['pb']) ? $_GET['pb'] : '';
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.id_topic, m.subject
 		FROM ({db_prefix}messages AS m, {db_prefix}topics AS t)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
@@ -2378,13 +2378,13 @@ function QuoteFast()
 			'not_locked' => 0,
 		)
 	);
-	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
+	$context['close_window'] = $smcFunc['db_num_rows']($request) == 0;
 
 	$context['sub_template'] = 'quotefast';
-	if ($smfFunc['db_num_rows']($request) != 0)
+	if ($smcFunc['db_num_rows']($request) != 0)
 	{
-		$row = $smfFunc['db_fetch_assoc']($request);
-		$smfFunc['db_free_result']($request);
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
 
 		// Remove special formatting we don't want anymore.
 		$row['body'] = un_preparsecode($row['body']);
@@ -2428,7 +2428,7 @@ function QuoteFast()
 		$context['quote']['text'] = strtr(un_htmlspecialchars($context['quote']['xml']), array('\'' => '\\\'', '\\' => '\\\\', "\n" => '\\n', '</script>' => '</\' + \'script>'));
 		$context['quote']['xml'] = strtr($context['quote']['xml'], array('&nbsp;' => '&#160;', '<' => '&lt;', '>' => '&gt;'));
 
-		$context['quote']['mozilla'] = strtr($smfFunc['htmlspecialchars']($context['quote']['text']), array('&quot;' => '"'));
+		$context['quote']['mozilla'] = strtr($smcFunc['htmlspecialchars']($context['quote']['text']), array('&quot;' => '"'));
 	}
 	// !!! Needs a nicer interface.
 	// In case our message has been removed in the meantime.
@@ -2452,7 +2452,7 @@ function QuoteFast()
 function JavaScriptModify()
 {
 	global $sourcedir, $modSettings, $board, $topic, $txt;
-	global $user_info, $context, $smfFunc, $language;
+	global $user_info, $context, $smcFunc, $language;
 
 	// We have to have a topic!
 	if (empty($topic))
@@ -2462,7 +2462,7 @@ function JavaScriptModify()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Assume the first message if no message ID was given.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 			SELECT
 				t.locked, t.num_replies, t.id_member_started, t.id_first_msg,
 				m.id_msg, m.id_member, m.poster_time, m.subject, m.smileys_enabled, m.body, m.icon,
@@ -2478,10 +2478,10 @@ function JavaScriptModify()
 				'is_approved' => 1,
 			)
 		);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board', false);
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Change either body or subject requires permissions to modify messages.
 	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_REQUEST['icon']))
@@ -2509,13 +2509,13 @@ function JavaScriptModify()
 	}
 
 	$post_errors = array();
-	if (isset($_POST['subject']) && $smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['subject'])) !== '')
+	if (isset($_POST['subject']) && $smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['subject'])) !== '')
 	{
-		$_POST['subject'] = strtr($smfFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
+		$_POST['subject'] = strtr($smcFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
 
 		// Maximum number of characters.
-		if ($smfFunc['strlen']($_POST['subject']) > 100)
-			$_POST['subject'] = $smfFunc['substr']($_POST['subject'], 0, 100);
+		if ($smcFunc['strlen']($_POST['subject']) > 100)
+			$_POST['subject'] = $smcFunc['substr']($_POST['subject'], 0, 100);
 	}
 	elseif (isset($_POST['subject']))
 	{
@@ -2525,23 +2525,23 @@ function JavaScriptModify()
 
 	if (isset($_POST['message']))
 	{
-		if ($smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['message'])) === '')
+		if ($smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['message'])) === '')
 		{
 			$post_errors[] = 'no_message';
 			unset($_POST['message']);
 		}
-		elseif (!empty($modSettings['max_messageLength']) && $smfFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
+		elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
 		{
 			$post_errors[] = 'long_message';
 			unset($_POST['message']);
 		}
 		else
 		{
-			$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
+			$_POST['message'] = $smcFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
 
 			preparsecode($_POST['message']);
 
-			if ($smfFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
+			if ($smcFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
 			{
 				$post_errors[] = 'no_message';
 				unset($_POST['message']);
@@ -2624,7 +2624,7 @@ function JavaScriptModify()
 				cache_put_data('response_prefix', $context['response_prefix'], 600);
 			}
 
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}messages
 				SET subject = {string:subject}
 				WHERE id_topic = {int:current_topic}

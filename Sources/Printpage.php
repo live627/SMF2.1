@@ -39,7 +39,7 @@ if (!defined('SMF'))
 function PrintTopic()
 {
 	global $topic, $txt, $scripturl, $context;
-	global $board_info, $smfFunc;
+	global $board_info, $smcFunc;
 
 	if (empty($topic))
 		fatal_lang_error('not_a_topic', false);
@@ -48,7 +48,7 @@ function PrintTopic()
 	$context['robot_no_index'] = true;
 
 	// Get the topic starter information.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT m.poster_time, IFNULL(mem.real_name, m.poster_name) AS poster_name
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
@@ -59,10 +59,10 @@ function PrintTopic()
 			'current_topic' => $topic,
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Lets "output" all that info.
 	loadTemplate('Printpage');
@@ -76,7 +76,7 @@ function PrintTopic()
 		$context['parent_boards'][] = $parent['name'];
 
 	// Split the topics up so we can print them.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT subject, poster_time, body, IFNULL(mem.real_name, poster_name) AS poster_name
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
@@ -87,7 +87,7 @@ function PrintTopic()
 		)
 	);
 	$context['posts'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Censor the subject and message.
 		censorText($row['subject']);
@@ -104,7 +104,7 @@ function PrintTopic()
 		if (!isset($context['topic_subject']))
 			$context['topic_subject'] = $row['subject'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 }
 
 ?>

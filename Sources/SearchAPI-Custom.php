@@ -107,7 +107,7 @@ class custom_search
 	// Search for indexed words.
 	public function indexedWordQuery($words, $search_data)
 	{
-		global $modSettings, $smfFunc;
+		global $modSettings, $smcFunc;
 
 		$query_select = array(
 			'id_msg' => 'm.id_msg',
@@ -172,7 +172,7 @@ class custom_search
 			}
 		}
 
-		$ignoreRequest = $smfFunc['db_search_query']('insert_into_log_messages_fulltext', ($smfFunc['db_support_ignore'] ? ( '
+		$ignoreRequest = $smcFunc['db_search_query']('insert_into_log_messages_fulltext', ($smcFunc['db_support_ignore'] ? ( '
 			INSERT IGNORE INTO {db_prefix}' . $search_data['insert_into'] . '
 				(' . implode(', ', array_keys($query_select)) . ')') : '') . '
 			SELECT ' . implode(', ', $query_select) . '

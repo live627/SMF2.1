@@ -68,7 +68,7 @@ if (!defined('SMF'))
 // At the moment this is only used for returning WYSIWYG data...
 function EditorMain()
 {
-	global $context, $smfFunc;
+	global $context, $smcFunc;
 
 	checkSession('get');
 
@@ -92,13 +92,13 @@ function EditorMain()
 		$context['message'] = html_to_bbc($_REQUEST['message']);
 	}
 
-	$context['message'] = $smfFunc['htmlspecialchars']($context['message']);
+	$context['message'] = $smcFunc['htmlspecialchars']($context['message']);
 }
 
 // Convert only the BBC that can be edited in HTML mode for the editor.
 function bbc_to_html($text)
 {
-	global $modSettings, $smfFunc;
+	global $modSettings, $smcFunc;
 
 	// What tags do we allow?
 	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'pre', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup', 'tt');
@@ -128,7 +128,7 @@ function bbc_to_html($text)
 // The harder one - wysiwyg to BBC!
 function html_to_bbc($text)
 {
-	global $modSettings, $smfFunc, $sourcedir;
+	global $modSettings, $smcFunc, $sourcedir;
 
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ''));
@@ -165,7 +165,7 @@ function html_to_bbc($text)
 
 			if (!empty($names))
 			{
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT code, filename
 					FROM {db_prefix}smileys
 					WHERE filename IN ({array_string:smiley_filenames})',
@@ -174,9 +174,9 @@ function html_to_bbc($text)
 					)
 				);
 				$mappings = array();
-				while ($row = $smfFunc['db_fetch_assoc']($request))
+				while ($row = $smcFunc['db_fetch_assoc']($request))
 					$mappings[$row['filename']] = $row['code'];
-				$smfFunc['db_free_result']($request);
+				$smcFunc['db_free_result']($request);
 
 				foreach ($matches[1] as $k => $file)
 					if (isset($mappings[$file]))
@@ -619,7 +619,7 @@ function fetchTagAttributes($text)
 
 function getMessageIcons($board_id)
 {
-	global $modSettings, $context, $txt, $settings, $smfFunc;
+	global $modSettings, $context, $txt, $settings, $smcFunc;
 
 	if (empty($modSettings['messageIcons_enable']))
 	{
@@ -651,7 +651,7 @@ function getMessageIcons($board_id)
 	{
 		if (($temp = cache_get_data('posting_icons-' . $board_id, 480)) == null)
 		{
-			$request = $smfFunc['db_query']('select_message_icons', '
+			$request = $smcFunc['db_query']('select_message_icons', '
 				SELECT title, filename
 				FROM {db_prefix}message_icons
 				WHERE id_board IN (0, {int:board_id})',
@@ -660,9 +660,9 @@ function getMessageIcons($board_id)
 				)
 			);
 			$icon_data = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$icon_data[] = $row;
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 
 			cache_put_data('posting_icons-' . $board_id, $icon_data, 480);
 		}
@@ -951,7 +951,7 @@ function theme_postbox($msg)
 // Creates a box that can be used for richedit stuff like BBC, Smileys etc.
 function create_control_richedit($editorOptions)
 {
-	global $txt, $modSettings, $options, $smfFunc;
+	global $txt, $modSettings, $options, $smcFunc;
 	global $context, $settings, $user_info, $sourcedir, $scripturl;
 
 	// Every control must have a ID!
@@ -1113,7 +1113,7 @@ function create_control_richedit($editorOptions)
 		{
 			if (($temp = cache_get_data('posting_smileys', 480)) == null)
 			{
-				$request = $smfFunc['db_query']('', '
+				$request = $smcFunc['db_query']('', '
 					SELECT code, filename, description, smiley_row, hidden
 					FROM {db_prefix}smileys
 					WHERE hidden IN (0, 2)
@@ -1121,14 +1121,14 @@ function create_control_richedit($editorOptions)
 					array(
 					)
 				);
-				while ($row = $smfFunc['db_fetch_assoc']($request))
+				while ($row = $smcFunc['db_fetch_assoc']($request))
 				{
 					$row['filename'] = htmlspecialchars($row['filename']);
 					$row['description'] = htmlspecialchars($row['description']);
 
 					$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smiley_row']]['smileys'][] = $row;
 				}
-				$smfFunc['db_free_result']($request);
+				$smcFunc['db_free_result']($request);
 
 				cache_put_data('posting_smileys', $context['smileys'], 480);
 			}
@@ -1183,7 +1183,7 @@ function create_control_richedit($editorOptions)
 // Create an an autosuggest box?
 function create_control_autosuggest(&$suggestOptions)
 {
-	global $txt, $modSettings, $options, $smfFunc;
+	global $txt, $modSettings, $options, $smcFunc;
 	global $context, $settings, $user_info, $sourcedir;
 
 	// First autosuggest means we need to set up some bits...
@@ -1246,14 +1246,14 @@ function AutoSuggestHandler($checkRegistered = null)
 // Search for a member - by realName or memberName by default.
 function AutoSuggest_Search_Member()
 {
-	global $user_info, $txt, $smfFunc;
+	global $user_info, $txt, $smcFunc;
 
-	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search']) . '*';
-	$_REQUEST['search'] = trim($smfFunc['strtolower']($_REQUEST['search']));
+	$_REQUEST['search'] = $smcFunc['htmlspecialchars']($_REQUEST['search']) . '*';
+	$_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search']));
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	// Find the member.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, real_name
 		FROM {db_prefix}members
 		WHERE real_name LIKE {string:search}' . (!empty($context['search_param']['buddies']) ? '
@@ -1271,7 +1271,7 @@ function AutoSuggest_Search_Member()
 			'children' => array(),
 		),
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if (function_exists('iconv'))
 		{
@@ -1304,7 +1304,7 @@ function AutoSuggest_Search_Member()
 			'value' => $row['real_name'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $xml_data;
 }

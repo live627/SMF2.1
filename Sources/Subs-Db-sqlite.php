@@ -33,7 +33,7 @@ if (!defined('SMF'))
 // Initialize the database settings
 function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
-	global $smfFunc, $mysql_set_mode, $db_in_transact;
+	global $smcFunc, $mysql_set_mode, $db_in_transact;
 
 	// Just some debugging code, make sure to remove it before release.
 	$parameters = array(
@@ -45,8 +45,8 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	);
 
 	// Map some database specific functions, only do this once.
-	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'sqlite_fetch_array')
-		$smfFunc += array(
+	if (!isset($smcFunc['db_fetch_assoc']) || $smcFunc['db_fetch_assoc'] != 'sqlite_fetch_array')
+		$smcFunc += array(
 			'db_query' => 'smf_db_query',
 			'db_quote' => 'smf_db_quote',
 			'db_fetch_assoc' => 'sqlite_fetch_array',
@@ -440,10 +440,10 @@ function db_error($db_string, $connection = null)
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
-	global $smfFunc;
+	global $smcFunc;
 
 	// If we're being asked to return error information then do this right away (For upgrade etc).
-	if (!empty($smfFunc['db_error_handler_return']))
+	if (!empty($smcFunc['db_error_handler_return']))
 		return false;
 
 	// We'll try recovering the file and line number the original db query was called from.
@@ -504,7 +504,7 @@ function db_error($db_string, $connection = null)
 // Insert some data...
 function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
-	global $db_in_transact, $db_connection, $smfFunc, $db_prefix;
+	global $db_in_transact, $db_connection, $smcFunc, $db_prefix;
 
 	$connection = $connection === null ? $db_connection : $connection;
 
@@ -520,7 +520,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 	$priv_trans = false;
 	if (count($data) > 1 && !$db_in_transact && !$disable_trans)
 	{
-		$smfFunc['db_transaction']('begin', $connection);
+		$smcFunc['db_transaction']('begin', $connection);
 		$priv_trans = true;
 	}
 
@@ -553,7 +553,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		if (!empty($updateData))
 			foreach ($data as $k => $entry)
 			{
-				$smfFunc['db_query']('', '
+				$smcFunc['db_query']('', '
 					UPDATE ' . $table . '
 					SET ' . $updateData . '
 					' . (empty($where) ? '' : ' WHERE ' . $where),
@@ -590,11 +590,11 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 
 		// Can't error on this if ignore.
 		if ($method == 'ignore')
-			$smfFunc['db_error_handler_return'] = false;
+			$smcFunc['db_error_handler_return'] = false;
 
 		foreach ($insertRows as $entry)
 			// Do the insert.
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				INSERT INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
 				VALUES
 					' . $entry, 'security_override',
@@ -602,11 +602,11 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 			);
 
 		if ($method == 'ignore')
-			$smfFunc['db_error_handler_return'] = true;
+			$smcFunc['db_error_handler_return'] = true;
 	}
 
 	if ($priv_trans)
-		$smfFunc['db_transaction']('commit', $connection);
+		$smcFunc['db_transaction']('commit', $connection);
 }
 
 // Doesn't do anything on sqlite!

@@ -90,10 +90,10 @@ function Groups()
 // This very simply lists the groups, nothing snazy.
 function GroupList()
 {
-	global $txt, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc, $sourcedir;
+	global $txt, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smcFunc, $sourcedir;
 
 	// Yep, find the groups...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
 			mg.stars, IFNULL(gm.id_member, 0) AS can_moderate
 		FROM {db_prefix}membergroups AS mg
@@ -111,7 +111,7 @@ function GroupList()
 	$context['groups'] = array();
 	$group_ids = array();
 	$context['can_moderate'] = allowedTo('manage_membergroups');
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// We only list the groups they can see.
 		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
@@ -132,12 +132,12 @@ function GroupList()
 		$context['can_moderate'] |= $row['can_moderate'];
 		$group_ids[] = $row['id_group'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Count up the members separately...
 	if (!empty($group_ids))
 	{
-		$query = $smfFunc['db_query']('', '
+		$query = $smcFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS num_members
 			FROM {db_prefix}members
 			WHERE id_group IN ({array_int:group_list})
@@ -146,14 +146,14 @@ function GroupList()
 				'group_list' => $group_ids,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
+		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
-		$smfFunc['db_free_result']($query);
+		$smcFunc['db_free_result']($query);
 
 		// Only do additional groups if we can moderate...
 		if ($context['can_moderate'])
 		{
-			$query = $smfFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT mg.id_group, COUNT(*) AS num_members
 				FROM {db_prefix}membergroups AS mg
 					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_screen}
@@ -166,9 +166,9 @@ function GroupList()
 					'blank_screen' => '',
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($query))
+			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 		}
 	}
 
@@ -245,10 +245,10 @@ function GroupList()
 // Get the group information for the list.
 function list_getGroups($start, $items_per_page, $sort)
 {
-	global $smfFunc, $txt, $scripturl, $user_info, $settings;
+	global $smcFunc, $txt, $scripturl, $user_info, $settings;
 
 	// Yep, find the groups...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
 			mg.stars, IFNULL(gm.id_member, 0) AS can_moderate
 		FROM {db_prefix}membergroups AS mg
@@ -266,7 +266,7 @@ function list_getGroups($start, $items_per_page, $sort)
 	$groups = array();
 	$group_ids = array();
 	$context['can_moderate'] = allowedTo('manage_membergroups');
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// We only list the groups they can see.
 		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
@@ -288,12 +288,12 @@ function list_getGroups($start, $items_per_page, $sort)
 		$context['can_moderate'] |= $row['can_moderate'];
 		$group_ids[] = $row['id_group'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Count up the members separately...
 	if (!empty($group_ids))
 	{
-		$query = $smfFunc['db_query']('', '
+		$query = $smcFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS num_members
 			FROM {db_prefix}members
 			WHERE id_group IN ({array_int:group_list})
@@ -302,14 +302,14 @@ function list_getGroups($start, $items_per_page, $sort)
 				'group_list' => $group_ids,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
+		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$groups[$row['id_group']]['num_members'] += $row['num_members'];
-		$smfFunc['db_free_result']($query);
+		$smcFunc['db_free_result']($query);
 
 		// Only do additional groups if we can moderate...
 		if ($context['can_moderate'])
 		{
-			$query = $smfFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT mg.id_group, COUNT(*) AS num_members
 				FROM {db_prefix}membergroups AS mg
 					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:blank_screen}
@@ -322,9 +322,9 @@ function list_getGroups($start, $items_per_page, $sort)
 					'blank_screen' => '',
 				)
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($query))
+			while ($row = $smcFunc['db_fetch_assoc']($query))
 				$groups[$row['id_group']]['num_members'] += $row['num_members'];
-			$smfFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 		}
 	}
 
@@ -332,7 +332,7 @@ function list_getGroups($start, $items_per_page, $sort)
 	// Count up the members separately...
 	if (!empty($group_ids))
 	{
-		$query = $smfFunc['db_query']('', '
+		$query = $smcFunc['db_query']('', '
 			SELECT mods.id_group, mods.id_member, mem.member_name
 			FROM {db_prefix}group_moderators AS mods
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
@@ -341,9 +341,9 @@ function list_getGroups($start, $items_per_page, $sort)
 				'group_list' => $group_ids,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
+		while ($row = $smcFunc['db_fetch_assoc']($query))
 			$groups[$row['id_group']]['moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>';
-		$smfFunc['db_free_result']($query);
+		$smcFunc['db_free_result']($query);
 	}
 
 	return $groups;
@@ -352,9 +352,9 @@ function list_getGroups($start, $items_per_page, $sort)
 // How many groups are there that are visible?
 function list_getGroupCount()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(id_group) AS group_count
 		FROM {db_prefix}membergroups
 		WHERE mg.min_posts = {int:min_posts}
@@ -364,8 +364,8 @@ function list_getGroupCount()
 			'mod_group' => 3,
 		)
 	);
-	list ($group_count) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($group_count) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $group_count;
 }
@@ -373,7 +373,7 @@ function list_getGroupCount()
 // Display members of a group, and allow adding of members to a group. Silly function name though ;)
 function MembergroupMembers()
 {
-	global $txt, $scripturl, $context, $modSettings, $sourcedir, $user_info, $settings, $smfFunc;
+	global $txt, $scripturl, $context, $modSettings, $sourcedir, $user_info, $settings, $smcFunc;
 
 	$_REQUEST['group'] = isset($_REQUEST['group']) ? (int) $_REQUEST['group'] : 0;
 
@@ -382,7 +382,7 @@ function MembergroupMembers()
 		fatal_lang_error('membergroup_does_not_exist', false);
 
 	// Load up the group details.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group AS id, group_name AS name, min_posts = {int:min_posts} AS assignable, hidden, online_color,
 			stars, description, min_posts != {int:min_posts} AS is_post_group
 		FROM {db_prefix}membergroups
@@ -394,10 +394,10 @@ function MembergroupMembers()
 		)
 	);
 	// Doesn't exist?
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('membergroup_does_not_exist', false);
-	$context['group'] = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$context['group'] = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Fix the stars.
 	$context['group']['stars'] = explode('#', $context['group']['stars']);
@@ -410,7 +410,7 @@ function MembergroupMembers()
 	);
 
 	// Load all the group moderators, for fun.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}group_moderators AS mods
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
@@ -420,7 +420,7 @@ function MembergroupMembers()
 		)
 	);
 	$context['group']['moderators'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['group']['moderators'][] = array(
 			'id' => $row['id_member'],
@@ -430,7 +430,7 @@ function MembergroupMembers()
 		if ($user_info['id'] == $row['id_member'])
 			$context['group']['can_moderate'] = true;
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If this group is hidden then it can only "exists" if the user can moderate it!
 	if ($context['group']['hidden'] && !$context['group']['can_moderate'])
@@ -464,13 +464,13 @@ function MembergroupMembers()
 		$member_parameters = array();
 
 		// Get all the members to be added... taking into account names can be quoted ;)
-		$_REQUEST['toAdd'] = strtr($smfFunc['htmlspecialchars']($_REQUEST['toAdd'], ENT_QUOTES), array('&quot;' => '"'));
+		$_REQUEST['toAdd'] = strtr($smcFunc['htmlspecialchars']($_REQUEST['toAdd'], ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_REQUEST['toAdd'], $matches);
 		$member_names = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['toAdd']))));
 
 		foreach ($member_names as $index => $member_name)
 		{
-			$member_names[$index] = trim($smfFunc['strtolower']($member_names[$index]));
+			$member_names[$index] = trim($smcFunc['strtolower']($member_names[$index]));
 
 			if (strlen($member_names[$index]) == 0)
 				unset($member_names[$index]);
@@ -499,7 +499,7 @@ function MembergroupMembers()
 		$members = array();
 		if (!empty($member_query))
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}members
 				WHERE (' . implode(' OR ', $member_query) . ')
@@ -509,9 +509,9 @@ function MembergroupMembers()
 					'id_group' => $_REQUEST['group'],
 				))
 			);
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 		}
 
 		// !!! Add $_POST['additional'] to templates!
@@ -555,7 +555,7 @@ function MembergroupMembers()
 		$where = $context['group']['is_post_group'] ? 'id_post_group = {int:group}' : 'id_group = {int:group}';
 
 	// Count members of the group.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}members
 		WHERE ' . $where,
@@ -563,8 +563,8 @@ function MembergroupMembers()
 			'group' => $_REQUEST['group'],
 		)
 	);
-	list ($context['total_members']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['total_members']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Create the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
@@ -572,7 +572,7 @@ function MembergroupMembers()
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 
 	// Load up all members of this group.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, member_ip, date_registered, last_login,
 			hide_email, posts, is_activated
 		FROM {db_prefix}members
@@ -584,7 +584,7 @@ function MembergroupMembers()
 		)
 	);
 	$context['members'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$last_online = empty($row['last_login']) ? $txt['never'] : timeformat($row['last_login']);
 
@@ -604,7 +604,7 @@ function MembergroupMembers()
 			'is_activated' => $row['is_activated'] % 10 == 1,
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Create a pretty auto suggest box for the member names.
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -624,7 +624,7 @@ function MembergroupMembers()
 // Show and manage all group requests.
 function GroupRequests()
 {
-	global $txt, $context, $scripturl, $user_info, $sourcedir, $smfFunc, $modSettings;
+	global $txt, $context, $scripturl, $user_info, $sourcedir, $smcFunc, $modSettings;
 
 	// Set up the template stuff...
 	$context['page_title'] = $txt['mc_group_requests'];
@@ -659,7 +659,7 @@ function GroupRequests()
 		else
 		{
 			// Get the details of all the members concerned...
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT lgr.id_request, lgr.id_member, lgr.id_group, mem.email_address, mem.id_group AS primary_group,
 					mem.additional_groups AS additional_groups, mem.lngfile, mem.member_name, mem.notify_types,
 					mg.hidden, mg.group_name
@@ -675,7 +675,7 @@ function GroupRequests()
 			);
 			$email_details = array();
 			$group_changes = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
 				// If we are approving work out what their new group is.
 				if ($_POST['req_action'] == 'approve')
@@ -718,10 +718,10 @@ function GroupRequests()
 						'language' => $row['lngfile'],
 					);
 			}
-			$smfFunc['db_free_result']($request);
+			$smcFunc['db_free_result']($request);
 
 			// Remove the evidence...
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_group_requests
 				WHERE id_request IN ({array_int:request_list})',
 				array(
@@ -747,7 +747,7 @@ function GroupRequests()
 							if ($value == 0 || trim($value) == '')
 								unset($groups['add'][$key]);
 
-						$smfFunc['db_query']('', '
+						$smcFunc['db_query']('', '
 							UPDATE {db_prefix}members
 							SET id_group = {int:primary_group}, additional_groups = {string:additional_groups}
 							WHERE id_member = {int:selected_member}',
@@ -914,9 +914,9 @@ function GroupRequests()
 
 function list_getGroupRequestCount($where, $where_parameters)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_group_requests AS lgr
 		WHERE ' . $where,
@@ -924,17 +924,17 @@ function list_getGroupRequestCount($where, $where_parameters)
 			$where_parameters
 		)
 	);
-	list ($totalRequests) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($totalRequests) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $totalRequests;
 }
 
 function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_parameters)
 {
-	global $smfFunc, $txt, $scripturl;
+	global $smcFunc, $txt, $scripturl;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
 			mem.member_name, mg.group_name, mg.online_color
 		FROM {db_prefix}log_group_requests AS lgr
@@ -948,7 +948,7 @@ function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_pa
 		))
 	);
 	$group_requests = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$group_requests[] = array(
 			'id' => $row['id_request'],
@@ -958,7 +958,7 @@ function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_pa
 			'time_submitted' => timeformat($row['time_applied']),
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $group_requests;
 }

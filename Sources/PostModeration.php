@@ -58,7 +58,7 @@ function PostModerationMain()
 // View all unapproved posts.
 function UnapprovedPosts()
 {
-	global $txt, $scripturl, $context, $user_info, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $context, $user_info, $sourcedir, $smcFunc;
 
 	$context['current_view'] = isset($_GET['sa']) && $_GET['sa'] == 'topics' ? 'topics' : 'replies';
 	$context['page_title'] = $txt['mc_unapproved_posts'];
@@ -121,7 +121,7 @@ function UnapprovedPosts()
 		$any_array = $curAction == 'approve' ? $approve_boards : $delete_any_boards;
 
 		// Now for each message work out whether it's actually a topic, and what board it's on.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT m.id_msg, m.id_member, m.id_board, t.id_topic, t.id_first_msg, t.id_member_started
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
@@ -135,7 +135,7 @@ function UnapprovedPosts()
 			)
 		);
 		$toAction = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			// If it's not within what our view is ignore it...
 			if (($row['id_msg'] == $row['id_first_msg'] && $context['current_view'] != 'topics') || ($row['id_msg'] != $row['id_first_msg'] && $context['current_view'] != 'replies'))
@@ -164,7 +164,7 @@ function UnapprovedPosts()
 			if ($can_add)
 				$toAction[] = $context['current_view'] == 'topics' ? $row['id_topic'] : $row['id_msg'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		// If we have anything left we can actually do the approving (etc).
 		if (!empty($toAction))
@@ -192,7 +192,7 @@ function UnapprovedPosts()
 	}
 
 	// How many unapproved posts are there?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.id_first_msg != m.id_msg)
@@ -204,11 +204,11 @@ function UnapprovedPosts()
 			'not_approved' => 0,
 		)
 	);
-	list ($context['total_unapproved_posts']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['total_unapproved_posts']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// What about topics?  Normally we'd use the table alias t for topics but lets use m so we don't have to redo our approve query.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(m.id_topic)
 		FROM {db_prefix}topics AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
@@ -219,8 +219,8 @@ function UnapprovedPosts()
 			'not_approved' => 0,
 		)
 	);
-	list ($context['total_unapproved_topics']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['total_unapproved_topics']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=postmod;sa=posts', $_GET['start'], $context['current_view'] == 'topics' ? $context['total_unapproved_topics'] : $context['total_unapproved_posts'], 10);
 	$context['start'] = $_GET['start'];
@@ -244,7 +244,7 @@ function UnapprovedPosts()
 	}
 
 	// Get all unapproved posts.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
 			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
@@ -264,7 +264,7 @@ function UnapprovedPosts()
 	);
 	$context['unapproved_items'] = array();
 	$count = 1;
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Can delete is complicated, let's solve it first... is it their own post?
 		if ($row['id_member'] == $user_info['id'] && ($delete_own_boards == array(0) || in_array($row['id_board'], $delete_own_boards)))
@@ -305,7 +305,7 @@ function UnapprovedPosts()
 			'can_delete' => $can_delete,
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'unapproved_posts';
 }
@@ -313,7 +313,7 @@ function UnapprovedPosts()
 // View all unapproved attachments.
 function UnapprovedAttachments()
 {
-	global $txt, $scripturl, $context, $user_info, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $context, $user_info, $sourcedir, $smcFunc;
 
 	$context['page_title'] = $txt['mc_unapproved_attachments'];
 
@@ -350,7 +350,7 @@ function UnapprovedAttachments()
 		require_once($sourcedir . '/ManageAttachments.php');
 
 		// Confirm the attachments are eligible for changing!
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT a.id_attach
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
@@ -367,9 +367,9 @@ function UnapprovedAttachments()
 			)
 		);
 		$attachments = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$attachments[] = $row['id_attach'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		// Assuming it wasn't all like, proper illegal, we can do the approving.
 		if (!empty($attachments))
@@ -382,7 +382,7 @@ function UnapprovedAttachments()
 	}
 
 	// How many unapproved attachments in total?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
@@ -396,14 +396,14 @@ function UnapprovedAttachments()
 			'attachment_type' => 0,
 		)
 	);
-	list ($context['total_unapproved_attachments']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['total_unapproved_attachments']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=attachmod;sa=attachments', $_GET['start'], $context['total_unapproved_attachments'], 10);
 	$context['start'] = $_GET['start'];
 
 	// Get all unapproved attachments.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT a.id_attach, a.filename, a.size, m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
 			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
@@ -424,7 +424,7 @@ function UnapprovedAttachments()
 		)
 	);
 	$context['unapproved_items'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['unapproved_items'][] = array(
 			'id' => $row['id_attach'],
@@ -457,7 +457,7 @@ function UnapprovedAttachments()
 			),
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'unapproved_attachments';
 }
@@ -465,7 +465,7 @@ function UnapprovedAttachments()
 // Approve a post, just the one.
 function ApproveMessage()
 {
-	global $user_info, $topic, $board, $sourcedir, $smfFunc;
+	global $user_info, $topic, $board, $sourcedir, $smcFunc;
 
 	checkSession('get');
 
@@ -475,7 +475,7 @@ function ApproveMessage()
 
 	isAllowedTo('approve_posts');
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT t.id_member_started, t.id_first_msg, m.id_member, m.subject, m.approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
@@ -487,8 +487,8 @@ function ApproveMessage()
 			'id_msg' => $_REQUEST['msg'],
 		)
 	);
-	list ($starter, $first_msg, $poster, $subject, $approved) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($starter, $first_msg, $poster, $subject, $approved) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// If it's the first in a topic then the whole topic gets approved!
 	if ($first_msg == $_REQUEST['msg'])

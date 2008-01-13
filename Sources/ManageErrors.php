@@ -53,7 +53,7 @@ if (!defined('SMF'))
 // View the forum's error log.
 function ViewErrorLog()
 {
-	global $scripturl, $txt, $context, $modSettings, $user_profile, $filter, $boarddir, $sourcedir, $themedir, $smfFunc;
+	global $scripturl, $txt, $context, $modSettings, $user_profile, $filter, $boarddir, $sourcedir, $themedir, $smcFunc;
 
 	// Viewing contents of a file?
 	if (isset($_GET['file']))
@@ -94,7 +94,7 @@ function ViewErrorLog()
 		deleteErrors();
 
 	// Just how many errors are there?
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_errors' . (isset($filter) ? '
 		WHERE ' . $filter['variable'] . ' LIKE {string:filter}' : ''),
@@ -102,8 +102,8 @@ function ViewErrorLog()
 			'filter' => isset($filter) ? $filter['value']['sql'] : '',
 		)
 	);
-	list ($num_errors) = $smfFunc['db_fetch_row']($result);
-	$smfFunc['db_free_result']($result);
+	list ($num_errors) = $smcFunc['db_fetch_row']($result);
+	$smcFunc['db_free_result']($result);
 
 	// If this filter is empty...
 	if ($num_errors == 0 && isset($filter))
@@ -121,7 +121,7 @@ function ViewErrorLog()
 	$context['start'] = $_GET['start'];
 
 	// Find and sort out the errors.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_error, id_member, ip, url, log_time, message, session, error_type, file, line
 		FROM {db_prefix}log_errors' . (isset($filter) ? '
 		WHERE ' . $filter['variable'] . ' LIKE {string:filter}' : '') . '
@@ -134,7 +134,7 @@ function ViewErrorLog()
 	$context['errors'] = array();
 	$members = array();
 
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', addcslashes($row['message'], '\\_%'));
 		if ($search_message == $filter['value']['sql'])
@@ -181,13 +181,13 @@ function ViewErrorLog()
 		// Make a list of members to load later.
 		$members[$row['id_member']] = $row['id_member'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Load the member data.
 	if (!empty($members))
 	{
 		// Get some additional member info...
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member, member_name, real_name
 			FROM {db_prefix}members
 			WHERE id_member IN ({array_int:member_list})
@@ -196,9 +196,9 @@ function ViewErrorLog()
 				'member_list' => $members,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$members[$row['id_member']] = $row;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		// This is a guest...
 		$members[0] = array(
@@ -252,7 +252,7 @@ function ViewErrorLog()
 
 	$sum = 0;
 	// What type of errors do we have and how many do we have?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT error_type, COUNT(*) AS num_errors
 		FROM {db_prefix}log_errors
 		GROUP BY error_type
@@ -261,7 +261,7 @@ function ViewErrorLog()
 			'critical_type' => 'critical',
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Total errors so far?
 		$sum += $row['num_errors'];
@@ -273,7 +273,7 @@ function ViewErrorLog()
 			'is_selected' => isset($filter) && $filter['value']['sql'] == addcslashes($row['error_type'], '\\_%'),
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Update the all errors tab with the total number of errors
 	$context['error_types']['all']['label'] .= ' (' . $sum . ')';
@@ -293,21 +293,21 @@ function ViewErrorLog()
 // Delete errors from the database.
 function deleteErrors()
 {
-	global $filter, $smfFunc;
+	global $filter, $smcFunc;
 
 	// Make sure the session exists and is correct; otherwise, might be a hacker.
 	checkSession();
 
 	// Delete all or just some?
 	if (isset($_POST['delall']) && !isset($filter))
-		$smfFunc['db_query']('truncate_table', '
+		$smcFunc['db_query']('truncate_table', '
 			TRUNCATE {db_prefix}log_errors',
 			array(
 			)
 		);
 	// Deleting all with a filter?
 	elseif (isset($_POST['delall']) && isset($filter))
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_errors
 			WHERE ' . $filter['variable'] . ' LIKE {string:filter}',
 			array(
@@ -317,7 +317,7 @@ function deleteErrors()
 	// Just specific errors?
 	elseif (!empty($_POST['delete']))
 	{
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_errors
 			WHERE id_error IN ({array_int:error_list})',
 			array(

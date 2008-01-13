@@ -116,21 +116,21 @@ function PackageGet()
 
 function PackageServers()
 {
-	global $txt, $scripturl, $context, $boarddir, $sourcedir, $modSettings, $smfFunc;
+	global $txt, $scripturl, $context, $boarddir, $sourcedir, $modSettings, $smcFunc;
 
 	// Ensure we use the correct template, and page title.
 	$context['sub_template'] = 'servers';
 	$context['page_title'] .= ' - ' . $txt['download_packages'];
 
 	// Load the list of servers.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_server, name, url
 		FROM {db_prefix}package_servers',
 		array(
 		)
 	);
 	$context['servers'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['servers'][] = array(
 			'name' => $row['name'],
@@ -138,7 +138,7 @@ function PackageServers()
 			'id' => $row['id_server'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['package_download_broken'] = !is_writable($boarddir . '/Packages') || !is_writable($boarddir . '/Packages/installed.list');
 
@@ -209,7 +209,7 @@ function PackageServers()
 // Browse a server's list of packages.
 function PackageGBrowse()
 {
-	global $txt, $boardurl, $context, $scripturl, $boarddir, $sourcedir, $forum_version, $context, $smfFunc;
+	global $txt, $boardurl, $context, $scripturl, $boarddir, $sourcedir, $forum_version, $context, $smcFunc;
 
 	if (isset($_GET['server']))
 	{
@@ -219,7 +219,7 @@ function PackageGBrowse()
 		$server = (int) $_GET['server'];
 
 		// Query the server list to find the current server.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT name, url
 			FROM {db_prefix}package_servers
 			WHERE id_server = {int:current_server}
@@ -228,8 +228,8 @@ function PackageGBrowse()
 				'current_server' => $server,
 			)
 		);
-		list ($name, $url) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($name, $url) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		// If the server does not exist, dump out.
 		if (empty($url))
@@ -520,7 +520,7 @@ function PackageGBrowse()
 // Download a package.
 function PackageDownload()
 {
-	global $txt, $scripturl, $boarddir, $context, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $boarddir, $context, $sourcedir, $smcFunc;
 
 	// Use the downloaded sub template.
 	$context['sub_template'] = 'downloaded';
@@ -533,7 +533,7 @@ function PackageDownload()
 		$server = (int) $_GET['server'];
 
 		// Query the server table to find the requested server.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT name, url
 			FROM {db_prefix}package_servers
 			WHERE id_server = {int:current_server}
@@ -542,8 +542,8 @@ function PackageDownload()
 				'current_server' => $server,
 			)
 		);
-		list ($name, $url) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
+		list ($name, $url) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
 
 		// If server does not exist then dump out.
 		if (empty($url))
@@ -682,7 +682,7 @@ function PackageUpload()
 // Add a package server to the list.
 function PackageServerAdd()
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Validate the user.
 	checkSession();
@@ -691,7 +691,7 @@ function PackageServerAdd()
 	if (substr($_POST['serverurl'], -1) == '/')
 		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 
-	$smfFunc['db_insert']('',
+	$smcFunc['db_insert']('',
 		'{db_prefix}package_servers',
 		array(
 			'name' => 'string-255', 'url' => 'string-255',
@@ -708,9 +708,9 @@ function PackageServerAdd()
 // Remove a server from the list.
 function PackageServerRemove()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}package_servers
 		WHERE id_server = {int:current_server}',
 		array(

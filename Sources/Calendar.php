@@ -153,7 +153,7 @@ function CalendarMain()
 function CalendarPost()
 {
 	global $context, $txt, $user_info, $sourcedir, $scripturl;
-	global $modSettings, $topic, $smfFunc;
+	global $modSettings, $topic, $smcFunc;
 
 	// Well - can they?
 	isAllowedTo('calendar_post');
@@ -298,7 +298,7 @@ function CalendarPost()
 
 function iCalDownload()
 {
-	global $smfFunc, $sourcedir, $forum_version, $context, $modSettings;
+	global $smcFunc, $sourcedir, $forum_version, $context, $modSettings;
 
 	// Goes without saying that this is required.
 	if (!isset($_REQUEST['eventid']))
@@ -358,7 +358,7 @@ function iCalDownload()
 
 	// How big is it?
 	if (empty($modSettings['enableCompressedOutput']))
-		header('Content-Length: ' . $smfFunc['strlen']($filecontents));
+		header('Content-Length: ' . $smcFunc['strlen']($filecontents));
 
 	// This is a calendar item!
 	header('Content-Type: text/calendar');

@@ -48,10 +48,10 @@ class fulltext_search
 
 	public function __construct()
 	{
-		global $smfFunc, $db_connection, $modSettings;
+		global $smcFunc, $db_connection, $modSettings;
 
 		// Some MySQL versions are superior to others :P.
-		$this->canDoBooleanSearch = version_compare($smfFunc['db_server_info']($db_connection), '4.0.1', '>=') == 1;
+		$this->canDoBooleanSearch = version_compare($smcFunc['db_server_info']($db_connection), '4.0.1', '>=') == 1;
 
 		$this->bannedWords = empty($modSettings['search_banned_words']) ? array() : explode(',', $modSettings['search_banned_words']);
 		$this->min_word_length = $this->__getMinWordLength();
@@ -60,20 +60,20 @@ class fulltext_search
 	// What is the minimum word length full text supports?
 	protected function __getMinWordLength()
 	{
-		global $smfFunc;
+		global $smcFunc;
 
 		// Try to determine the minimum number of letters for a fulltext search.
-		$request = $smfFunc['db_search_query']('max_fulltext_length', '
+		$request = $smcFunc['db_search_query']('max_fulltext_length', '
 			SHOW VARIABLES
 			LIKE {string:fulltext_minimum_word_length}',
 			array(
 				'fulltext_minimum_word_length' => 'ft_min_word_len',
 			)
 		);
-		if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
+		if ($request !== false && $smcFunc['db_num_rows']($request) == 1)
 		{
-			list (, $min_word_length) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
+			list (, $min_word_length) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
 		}
 		// 4 is the MySQL default...
 		else
@@ -136,7 +136,7 @@ class fulltext_search
 	// Search for indexed words.
 	public function indexedWordQuery($words, $search_data)
 	{
-		global $modSettings, $smfFunc;
+		global $modSettings, $smcFunc;
 
 		$query_select = array(
 			'id_msg' => 'm.id_msg',
@@ -206,7 +206,7 @@ class fulltext_search
 			}
 		}
 
-		$ignoreRequest = $smfFunc['db_search_query']('insert_into_log_messages_fulltext', ($smfFunc['db_support_ignore'] ? ( '
+		$ignoreRequest = $smcFunc['db_search_query']('insert_into_log_messages_fulltext', ($smcFunc['db_support_ignore'] ? ( '
 			INSERT IGNORE INTO {db_prefix}' . $search_data['insert_into'] . '
 				(' . implode(', ', array_keys($query_select)) . ')') : '') . '
 			SELECT ' . implode(', ', $query_select) . '

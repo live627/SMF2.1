@@ -111,7 +111,7 @@ function ManagePostSettings()
 // Set the censored words.
 function SetCensor()
 {
-	global $txt, $modSettings, $context, $smfFunc;
+	global $txt, $modSettings, $context, $smcFunc;
 
 	if (!empty($_POST['save_censor']))
 	{
@@ -191,7 +191,7 @@ function SetCensor()
 // Modify all settings related to posts and posting.
 function ModifyPostSettings($return_config = false)
 {
-	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc, $db_prefix;
+	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smcFunc, $db_prefix;
 
 	// All the settings...
 	$config_vars = array(
@@ -232,12 +232,12 @@ function ModifyPostSettings($return_config = false)
 		{
 			db_extend('packages');
 
-			$colData = $smfFunc['db_list_columns']( $db_prefix . 'messages', true);
+			$colData = $smcFunc['db_list_columns']( $db_prefix . 'messages', true);
 			foreach ($colData as $column)
 				if ($column['name'] == 'body')
 					$body_type = $column['type'];
 
-			$indData = $smfFunc['db_list_indexes']( $db_prefix . 'messages', true);
+			$indData = $smcFunc['db_list_indexes']( $db_prefix . 'messages', true);
 			foreach ($indData as $index)
 				foreach ($index['columns'] as $column)
 					if ($column == 'body' && $index['type'] == 'fulltext')
@@ -252,13 +252,13 @@ function ModifyPostSettings($return_config = false)
 				else
 				{
 					// Make it longer so we can do their limit.
-					$smfFunc['db_change_column']( $db_prefix . 'messages', 'body', array('type' => 'mediumtext'));
+					$smcFunc['db_change_column']( $db_prefix . 'messages', 'body', array('type' => 'mediumtext'));
 				}
 			}
 			elseif (isset($body_type) && $_POST['max_messageLength'] <= 65535 && $body_type != 'text')
 			{
 				// Shorten the column so we can have the benefit of fulltext searching again!
-				$smfFunc['db_change_column']( $db_prefix . 'messages', 'body', array('type' => 'text'));
+				$smcFunc['db_change_column']( $db_prefix . 'messages', 'body', array('type' => 'text'));
 			}
 		}
 

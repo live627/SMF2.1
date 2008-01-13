@@ -31,13 +31,13 @@ if (!defined('SMF'))
 
 */
 
-// Add the file functions to the $smfFunc array.
+// Add the file functions to the $smcFunc array.
 function db_search_init()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	if (!isset($smfFunc['db_search_query']) || $smfFunc['db_search_query'] != 'smf_db_query')
-		$smfFunc += array(
+	if (!isset($smcFunc['db_search_query']) || $smcFunc['db_search_query'] != 'smf_db_query')
+		$smcFunc += array(
 			'db_search_query' => 'smf_db_query',
 			'db_search_support' => 'smf_db_search_support',
 			'db_create_word_search' => 'smf_db_create_word_search',
@@ -56,7 +56,7 @@ function smf_db_search_support($search_type)
 // Highly specific - create the custom word index table!
 function smf_db_create_word_search($size)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if ($size == 'small')
 		$size = 'smallint(5)';
@@ -65,7 +65,7 @@ function smf_db_create_word_search($size)
 	else
 		$size = 'int(10)';
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		CREATE TABLE {db_prefix}log_search_words (
 			id_word {raw:size} unsigned NOT NULL default {string:string_zero},
 			id_msg int(10) unsigned NOT NULL default {string:string_zero},

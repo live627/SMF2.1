@@ -49,7 +49,7 @@ if (!defined('SMF'))
 function Register($reg_errors = array())
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
-	global $language, $scripturl, $smfFunc, $sourcedir, $smfFunc, $cur_profile;
+	global $language, $scripturl, $smcFunc, $sourcedir, $smcFunc, $cur_profile;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'usernamecheck')
 		return RegisterCheckUsername();
@@ -119,7 +119,7 @@ function Register($reg_errors = array())
 					continue;
 
 				$context['languages'][] = array(
-					'name' => $smfFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
+					'name' => $smcFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
 					'selected' => $selectedLanguage == $matches[1],
 					'filename' => $matches[1],
 				);
@@ -150,7 +150,7 @@ function Register($reg_errors = array())
 		// We might have had some submissions on this front - go check.
 		foreach ($reg_fields as $field)
 			if (isset($_POST[$field]))
-				$cur_profile[$field] = $smfFunc['htmlspecialchars']($_POST[$field]);
+				$cur_profile[$field] = $smcFunc['htmlspecialchars']($_POST[$field]);
 
 		// Load all the fields in question.
 		setupProfileContext($reg_fields);
@@ -188,13 +188,13 @@ function Register($reg_errors = array())
 	{
 		$context += array(
 			'openid' => isset($_POST['openid_url']) ? $_POST['openid_url'] : '',
-			'username' => isset($_POST['user']) ? $smfFunc['htmlspecialchars']($_POST['user']) : '',
-			'email' => isset($_POST['email']) ? $smfFunc['htmlspecialchars']($_POST['email']) : '',
+			'username' => isset($_POST['user']) ? $smcFunc['htmlspecialchars']($_POST['user']) : '',
+			'email' => isset($_POST['email']) ? $smcFunc['htmlspecialchars']($_POST['email']) : '',
 		);
 	}
 
 	$context += array(
-		'prev_verification_code' => isset($_POST['visual_verification_code']) ? $smfFunc['htmlspecialchars']($_POST['visual_verification_code']) : '',
+		'prev_verification_code' => isset($_POST['visual_verification_code']) ? $smcFunc['htmlspecialchars']($_POST['visual_verification_code']) : '',
 		'skip_coppa' => !empty($_POST['skip_coppa']) ? true : false,
 	);
 
@@ -209,7 +209,7 @@ function Register($reg_errors = array())
 function Register2()
 {
 	global $scripturl, $txt, $modSettings, $context, $sourcedir;
-	global $user_info, $options, $settings, $smfFunc;
+	global $user_info, $options, $settings, $smcFunc;
 
 	// Well, if you don't agree, you can't register.
 	if (!empty($modSettings['requireAgreement']) && (empty($_POST['regagree']) || $_POST['regagree'] == 'no'))
@@ -297,7 +297,7 @@ function Register2()
 	if (isset($_POST['real_name']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')))
 	{
 		$_POST['real_name'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['real_name']));
-		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID) && $smfFunc['strlen']($_POST['real_name']) < 60)
+		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID) && $smcFunc['strlen']($_POST['real_name']) < 60)
 			$possible_strings[] = 'real_name';
 	}
 
@@ -366,7 +366,7 @@ function Register2()
 	// Include the additional options that might have been filled in.
 	foreach ($possible_strings as $var)
 		if (isset($_POST[$var]))
-			$regOptions['extra_register_vars'][$var] = '\'' . $smfFunc['htmlspecialchars']($_POST[$var]) . '\'';
+			$regOptions['extra_register_vars'][$var] = '\'' . $smcFunc['htmlspecialchars']($_POST[$var]) . '\'';
 	foreach ($possible_ints as $var)
 		if (isset($_POST[$var]))
 			$regOptions['extra_register_vars'][$var] = (int) $_POST[$var];
@@ -383,7 +383,7 @@ function Register2()
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
 	// Check whether we have fields that simply MUST be displayed?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT col_name, field_name, field_type, field_length, mask, show_reg
 		FROM {db_prefix}custom_fields
 		WHERE show_reg != {int:reg_disabled}
@@ -394,14 +394,14 @@ function Register2()
 		)
 	);
 	$custom_field_errors = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// We only care for text fields as the others are valid to be empty.
 		if (!in_array($row['field_type'], array('check', 'select', 'radio')))
 		{
 			$value = isset($_POST['customfield'][$row['col_name']]) ? trim($_POST['customfield'][$row['col_name']]) : '';
 			// Is it too long?
-			if ($row['field_length'] && $row['field_length'] < $smfFunc['strlen']($value))
+			if ($row['field_length'] && $row['field_length'] < $smcFunc['strlen']($value))
 				$custom_field_errors[] = array('custom_field_too_long', array($row['field_name'], $row['field_length']));
 
 			// Any masks to apply?
@@ -421,7 +421,7 @@ function Register2()
 				$custom_field_errors[] = array('custom_field_empty', array($row['field_name']));
 		}
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Process any errors.
 	if (!empty($custom_field_errors))
@@ -476,7 +476,7 @@ function Register2()
 
 function Activate()
 {
-	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc;
+	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smcFunc;
 
 	loadLanguage('Login');
 	loadTemplate('Login');
@@ -496,7 +496,7 @@ function Activate()
 	}
 
 	// Get the code from the database...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, validation_code, member_name, real_name, email_address, is_activated, passwd
 		FROM {db_prefix}members' . (empty($_REQUEST['u']) ? '
 		WHERE member_name = {string:email_address} OR email_address = {string:email_address}' : '
@@ -509,7 +509,7 @@ function Activate()
 	);
 
 	// Does this user exist at all?
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 	{
 		$context['sub_template'] = 'retry_activate';
 		$context['page_title'] = $txt['invalid_userid'];
@@ -518,8 +518,8 @@ function Activate()
 		return;
 	}
 
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Change their email address? (they probably tried a fake one first :P.)
 	if (isset($_POST['new_email'], $_REQUEST['passwd']) && sha1(strtolower($row['member_name']) . $_REQUEST['passwd']) == $row['passwd'])
@@ -535,7 +535,7 @@ function Activate()
 		isBannedEmail($_POST['new_email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 		// Ummm... don't even dare try to take someone else's email!!
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
 			WHERE email_address = {string:email_address}
@@ -545,9 +545,9 @@ function Activate()
 			)
 		);
 		// !!! Separate the sprintf?
-		if ($smfFunc['db_num_rows']($request) != 0)
+		if ($smcFunc['db_num_rows']($request) != 0)
 			fatal_lang_error('email_in_use', false, array(htmlspecialchars($_POST['new_email'])));
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		updateMemberData($row['id_member'], array('email_address' => $_POST['new_email']));
 		$row['email_address'] = $_POST['new_email'];
@@ -627,7 +627,7 @@ function Activate()
 // This function will display the contact information for the forum, as well a form to fill in.
 function CoppaForm()
 {
-	global $context, $modSettings, $txt, $smfFunc;
+	global $context, $modSettings, $txt, $smcFunc;
 
 	loadLanguage('Login');
 	loadTemplate('Register');
@@ -637,7 +637,7 @@ function CoppaForm()
 		fatal_lang_error('no_access');
 
 	// Get the user details...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT member_name
 		FROM {db_prefix}members
 		WHERE id_member = {int:id_member}
@@ -647,10 +647,10 @@ function CoppaForm()
 			'is_coppa' => 5,
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access');
-	list ($username) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($username) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (isset($_GET['form']))
 	{
@@ -762,7 +762,7 @@ function VerificationCode()
 // See if a username already exists.
 function RegisterCheckUsername()
 {
-	global $sourcedir, $smfFunc, $context, $txt;
+	global $sourcedir, $smcFunc, $context, $txt;
 
 	// This is XML!
 	loadTemplate('Xml');
@@ -772,8 +772,8 @@ function RegisterCheckUsername()
 
 	// Clean it up like mother would.
 	$context['checked_username'] = preg_replace('~[\t\n\r\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0') . ']+~' . ($context['utf8'] ? 'u' : ''), ' ', $context['checked_username']);
-	if ($smfFunc['strlen']($context['checked_username']) > 25)
-		$context['checked_username'] = $smfFunc['htmltrim']($smfFunc['substr']($context['checked_username'], 0, 25));
+	if ($smcFunc['strlen']($context['checked_username']) > 25)
+		$context['checked_username'] = $smcFunc['htmltrim']($smcFunc['substr']($context['checked_username'], 0, 25));
 
 	// Only these characters are permitted.
 	if (preg_match('~[<>&"\'=\\\]~', $context['checked_username']) != 0 || $context['checked_username'] == '_' || $context['checked_username'] == '|' || strpos($context['checked_username'], '[code') !== false || strpos($context['checked_username'], '[/code') !== false)

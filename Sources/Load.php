@@ -137,11 +137,11 @@ if (!defined('SMF'))
 // Load the $modSettings array.
 function reloadSettings()
 {
-	global $modSettings, $boarddir, $smfFunc, $txt, $db_character_set;
+	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set;
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (!empty($db_character_set))
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			SET NAMES ' . $db_character_set,
 			array(
 			)
@@ -150,7 +150,7 @@ function reloadSettings()
 	// Try to load it from the cache first; it'll never get cached if the setting is off.
 	if (($modSettings = cache_get_data('modSettings', 90)) == null)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT variable, value
 			FROM {db_prefix}settings',
 			array(
@@ -159,9 +159,9 @@ function reloadSettings()
 		$modSettings = array();
 		if (!$request)
 			db_fatal_error();
-		while ($row = $smfFunc['db_fetch_row']($request))
+		while ($row = $smcFunc['db_fetch_row']($request))
 			$modSettings[$row[0]] = $row[1];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 
 		// Do a few things to protect against missing settings or settings with invalid values...
@@ -181,24 +181,24 @@ function reloadSettings()
 
 	// Set a list of common functions.
 	$ent_list = empty($modSettings['disableEntityCheck']) ? '&(#\d{1,7}|quot|amp|lt|gt|nbsp);' : '&(#021|quot|amp|lt|gt|nbsp);';
-	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smfFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
+	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smcFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
 
 	// Preg_replace can handle complex characters only for higher PHP versions.
 	$space_chars = $utf8 ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{A0}\x{AD}\x{2000}-\x{200F}\x{201F}\x{202F}\x{3000}\x{FEFF}' : pack('C*', 0xC2, 0xA0, 0xC2, 0xAD, 0xE2, 0x80, 0x80) . '-' . pack('C*', 0xE2, 0x80, 0x8F, 0xE2, 0x80, 0x9F, 0xE2, 0x80, 0xAF, 0xE2, 0x80, 0x9F, 0xE3, 0x80, 0x80, 0xEF, 0xBB, 0xBF)) : '\xA0';
 
-	$smfFunc += array(
+	$smcFunc += array(
 		'entity_fix' => create_function('$string', '
 			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
 			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) || $num == 0x202E ? \'\' : \'&#\' . $num . \';\';'),
 		'substr' => create_function('$string, $start, $length = null', '
-			global $smfFunc;
+			global $smcFunc;
 			$ent_arr = preg_split(\'~(&#' . (empty($modSettings['disableEntityCheck']) ? '\d{1,7}' : '021') . ';|&quot;|&amp;|&lt;|&gt;|&nbsp;|.)~' . ($utf8 ? 'u' : '') . '\', ' . implode('$string', $ent_check) . ', -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 			return $length === null ? implode(\'\', array_slice($ent_arr, $start)) : implode(\'\', array_slice($ent_arr, $start, $length));'),
 		'strlen' => create_function('$string', '
-			global $smfFunc;
+			global $smcFunc;
 			return strlen(preg_replace(\'~' . $ent_list . ($utf8 ? '|.~u' : '~') . '\', \'_\', ' . implode('$string', $ent_check) . '));'),
 		'strpos' => create_function('$haystack, $needle, $offset = 0', '
-			global $smfFunc;
+			global $smcFunc;
 			$haystack_arr = preg_split(\'~(&#' . (empty($modSettings['disableEntityCheck']) ? '\d{1,7}' : '021') . ';|&quot;|&amp;|&lt;|&gt;|&nbsp;|.)~' . ($utf8 ? 'u' : '') . '\', ' . implode('$haystack', $ent_check) . ', -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 			$haystack_size = count($haystack_arr);
 			if (strlen($needle) === 1)
@@ -222,15 +222,15 @@ function reloadSettings()
 				return false;
 			}'),
 		'htmlspecialchars' => create_function('$string, $quote_style = ENT_COMPAT, $charset = \'ISO-8859-1\'', '
-			global $smfFunc;
+			global $smcFunc;
 			return ' . strtr($ent_check[0], array('&' => '&amp;'))  . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
 		'htmltrim' => create_function('$string', '
-			global $smfFunc;
+			global $smcFunc;
 			return preg_replace(\'~^([ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
 		'truncate' => create_function('$string, $length', (empty($modSettings['disableEntityCheck']) ? '
-			global $smfFunc;
+			global $smcFunc;
 			$string = ' . implode('$string', $ent_check) . ';' : '') . '
-			preg_match(\'~^(' . $ent_list . '|.){\' . $smfFunc[\'strlen\'](substr($string, 0, $length)) . \'}~'.  ($utf8 ? 'u' : '') . '\', $string, $matches);
+			preg_match(\'~^(' . $ent_list . '|.){\' . $smcFunc[\'strlen\'](substr($string, 0, $length)) . \'}~'.  ($utf8 ? 'u' : '') . '\', $string, $matches);
 			$string = $matches[0];
 			while (strlen($string) > $length)
 				$string = preg_replace(\'~(' . $ent_list . '|.)$~'.  ($utf8 ? 'u' : '') . '\', \'\', $string);
@@ -246,20 +246,20 @@ function reloadSettings()
 			require_once($sourcedir . \'/Subs-Charset.php\');
 			return utf8_strtoupper($string);')) : 'strtoupper',
 		'ucfirst' => $utf8 ? create_function('$string', '
-			global $smfFunc;
-			return $smfFunc[\'strtoupper\']($smfFunc[\'substr\']($string, 0, 1)) . $smfFunc[\'substr\']($string, 1);') : 'ucfirst',
+			global $smcFunc;
+			return $smcFunc[\'strtoupper\']($smcFunc[\'substr\']($string, 0, 1)) . $smcFunc[\'substr\']($string, 1);') : 'ucfirst',
 		'ucwords' => $utf8 ? (function_exists('mb_convert_case') ? create_function('$string', '
 			return mb_convert_case($string, MB_CASE_TITLE, \'UTF-8\');') : create_function('$string', '
-			global $smfFunc;
+			global $smcFunc;
 			$words = preg_split(\'~([\s\r\n\t]+)~\', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
 			for ($i = 0, $n = count($words); $i < $n; $i += 2)
-				$words[$i] = $smfFunc[\'ucfirst\']($words[$i]);
+				$words[$i] = $smcFunc[\'ucfirst\']($words[$i]);
 			return implode(\'\', $words);')) : 'ucwords',
 	);
 
 	// Some mods may already be using $func, so lets be nice and make it accessible to them, but only if its not defined yet.
 	if (!isset($func))
-		$func = &$smfFunc;
+		$func = &$smcFunc;
 
 	// Setting the timezone is a requirement for some functions in PHP >= 5.1.
 	if (isset($modSettings['default_timezone']) && function_exists('date_default_timezone_set'))
@@ -300,7 +300,7 @@ function reloadSettings()
 // Load all the important user information...
 function loadUserSettings()
 {
-	global $modSettings, $user_settings, $sourcedir, $smfFunc;
+	global $modSettings, $user_settings, $sourcedir, $smcFunc;
 	global $cookiename, $user_info, $language;
 
 	// Check first the integration, then the cookie, and last the session.
@@ -336,7 +336,7 @@ function loadUserSettings()
 		// Is the member data cached?
 		if (empty($modSettings['cache_enable']) || $modSettings['cache_enable'] < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) == null)
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT mem.*, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type
 				FROM {db_prefix}members AS mem
 					LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = {int:id_member})
@@ -346,8 +346,8 @@ function loadUserSettings()
 					'id_member' => $id_member,
 				)
 			);
-			$user_settings = $smfFunc['db_fetch_assoc']($request);
-			$smfFunc['db_free_result']($request);
+			$user_settings = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
 
 			if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 				cache_put_data('user_settings-' . $id_member, $user_settings, 60);
@@ -383,7 +383,7 @@ function loadUserSettings()
 		if (SMF != 'SSI' && !isset($_REQUEST['xml']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != '.xml') && empty($_SESSION['id_msg_last_visit']) && (empty($modSettings['cache_enable']) || ($_SESSION['id_msg_last_visit'] = cache_get_data('user_last_visit-' . $id_member, 5 * 3600)) === null))
 		{
 			// Do a quick query to make sure this isn't a mistake.
-			$result = $smfFunc['db_query']('', '
+			$result = $smcFunc['db_query']('', '
 				SELECT poster_time
 				FROM {db_prefix}messages
 				WHERE id_msg = {int:id_msg}
@@ -392,8 +392,8 @@ function loadUserSettings()
 					'id_msg' => $user_settings['id_msg_last_visit'],
 				)
 			);
-			list ($visitTime) = $smfFunc['db_fetch_row']($result);
-			$smfFunc['db_free_result']($result);
+			list ($visitTime) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 
 			$_SESSION['id_msg_last_visit'] = $user_settings['id_msg_last_visit'];
 
@@ -538,7 +538,7 @@ function loadUserSettings()
 function loadBoard()
 {
 	global $txt, $scripturl, $context, $modSettings;
-	global $board_info, $board, $topic, $user_info, $smfFunc;
+	global $board_info, $board, $topic, $user_info, $smcFunc;
 
 	// Assume they are not a moderator.
 	$user_info['is_mod'] = false;
@@ -556,7 +556,7 @@ function loadBoard()
 		// Looking through the message table can be slow, so try using the cache first.
 		if (($topic = cache_get_data('msg_topic-' . $_REQUEST['msg'], 120)) === NULL)
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT id_topic
 				FROM {db_prefix}messages
 				WHERE id_msg = {int:id_msg}
@@ -567,10 +567,10 @@ function loadBoard()
 			);
 
 			// So did it find anything?
-			if ($smfFunc['db_num_rows']($request))
+			if ($smcFunc['db_num_rows']($request))
 			{
-				list ($topic) = $smfFunc['db_fetch_row']($request);
-				$smfFunc['db_free_result']($request);
+				list ($topic) = $smcFunc['db_fetch_row']($request);
+				$smcFunc['db_free_result']($request);
 				// Save save save.
 				cache_put_data('msg_topic-' . $_REQUEST['msg'], $topic, 120);
 			}
@@ -611,7 +611,7 @@ function loadBoard()
 
 	if (empty($temp))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT
 				c.id_cat, b.name AS bname, b.description, b.num_topics, b.member_groups,
 				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
@@ -626,13 +626,13 @@ function loadBoard()
 			WHERE b.id_board = {raw:board_link}',
 			array(
 				'current_topic' => $topic,
-				'board_link' => empty($topic) ? $smfFunc['db_quote']('{int:current_board}', array('current_board' => $board)) : 't.id_board',
+				'board_link' => empty($topic) ? $smcFunc['db_quote']('{int:current_board}', array('current_board' => $board)) : 't.id_board',
 			)
 		);
 		// If there aren't any, skip.
-		if ($smfFunc['db_num_rows']($request) > 0)
+		if ($smcFunc['db_num_rows']($request) > 0)
 		{
-			$row = $smfFunc['db_fetch_assoc']($request);
+			$row = $smcFunc['db_fetch_assoc']($request);
 
 			// Set the current board.
 			if (!empty($row['id_board']))
@@ -676,7 +676,7 @@ function loadBoard()
 						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 			}
-			while ($row = $smfFunc['db_fetch_assoc']($request));
+			while ($row = $smcFunc['db_fetch_assoc']($request));
 
 			if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] >= 3))
 			{
@@ -696,7 +696,7 @@ function loadBoard()
 			$topic = null;
 			$board = 0;
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	if (!empty($topic))
@@ -766,7 +766,7 @@ function loadBoard()
 // Load this user's permissions.
 function loadPermissions()
 {
-	global $user_info, $board, $board_info, $modSettings, $smfFunc;
+	global $user_info, $board, $board_info, $modSettings, $smcFunc;
 
 	if ($user_info['is_admin'])
 	{
@@ -800,7 +800,7 @@ function loadPermissions()
 	if (empty($user_info['permissions']))
 	{
 		// Get the general permissions.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}permissions
 			WHERE id_group IN ({array_int:member_groups})
@@ -811,14 +811,14 @@ function loadPermissions()
 			)
 		);
 		$removals = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['add_deny']))
 				$removals[] = $row['permission'];
 			else
 				$user_info['permissions'][] = $row['permission'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		if (isset($cache_groups))
 			cache_put_data('permissions:' . $cache_groups, array($user_info['permissions'], $removals), 240);
@@ -831,7 +831,7 @@ function loadPermissions()
 		if (!isset($board_info['profile']))
 			fatal_lang_error('no_board');
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}board_permissions
 			WHERE (id_group IN ({array_int:member_groups})
@@ -843,14 +843,14 @@ function loadPermissions()
 				'spider_group' => !empty($modSettings['spider_group']) ? $modSettings['spider_group'] : 0,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['add_deny']))
 				$removals[] = $row['permission'];
 			else
 				$user_info['permissions'][] = $row['permission'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Remove all the permissions they shouldn't have ;).
@@ -867,7 +867,7 @@ function loadPermissions()
 // Loads an array of users' data by ID or member_name.
 function loadMemberData($users, $is_name = false, $set = 'normal')
 {
-	global $user_profile, $modSettings, $board_info, $smfFunc;
+	global $user_profile, $modSettings, $board_info, $smcFunc;
 
 	// Can't just look for no users :P.
 	if (empty($users))
@@ -943,7 +943,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	if (!empty($users))
 	{
 		// Load the member's data.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT' . $select_columns . '
 			FROM {db_prefix}members AS mem' . $select_tables . '
 			WHERE mem.' . ($is_name ? 'member_name' : 'id_member') . (count($users) == 1 ? ' = {' . ($is_name ? 'string' : 'int') . ':users}' : ' IN ({' . ($is_name ? 'array_string' : 'array_int') . ':users})'),
@@ -953,19 +953,19 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			)
 		);
 		$new_loaded_ids = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$new_loaded_ids[] = $row['id_member'];
 			$loaded_ids[] = $row['id_member'];
 			$row['options'] = array();
 			$user_profile[$row['id_member']] = $row;
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	if (!empty($new_loaded_ids) && $set !== 'minimal')
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT *
 			FROM {db_prefix}themes
 			WHERE id_member' . (count($new_loaded_ids) == 1 ? ' = {int:loaded_ids}' : ' IN ({array_int:loaded_ids})'),
@@ -973,9 +973,9 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 				'loaded_ids' => count($new_loaded_ids) == 1 ? $new_loaded_ids[0] : $new_loaded_ids,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$user_profile[$row['id_member']]['options'][$row['variable']] = $row['value'];
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	if (!empty($new_loaded_ids) && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
@@ -989,7 +989,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	{
 		if (($row = cache_get_data('moderator_group_info', 480)) == null)
 		{
-			$request = $smfFunc['db_query']('', '
+			$request = $smcFunc['db_query']('', '
 				SELECT group_name AS member_group, online_color AS member_group_color, stars
 				FROM {db_prefix}membergroups
 				WHERE id_group = {int:moderator_group}
@@ -998,8 +998,8 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 					'moderator_group' => 3,
 				)
 			);
-			$row = $smfFunc['db_fetch_assoc']($request);
-			$smfFunc['db_free_result']($request);
+			$row = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($request);
 
 			cache_put_data('moderator_group_info', $row, 480);
 		}
@@ -1026,7 +1026,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 {
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
 	global $context, $modSettings, $board_info, $settings;
-	global $smfFunc;
+	global $smcFunc;
 	static $dataLoaded = array();
 
 	// If this person's data is already loaded, skip it.
@@ -1151,7 +1151,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 			'image_href' => $settings['images_url'] . '/' . ($profile['buddy'] ? 'buddy_' : '') . ($profile['is_online'] ? 'useron' : 'useroff') . '.gif',
 			'label' => $txt[$profile['is_online'] ? 'online' : 'offline']
 		),
-		'language' => $smfFunc['ucwords'](strtr($profile['lngfile'], array('_' => ' ', '-utf8' => ''))),
+		'language' => $smcFunc['ucwords'](strtr($profile['lngfile'], array('_' => ' ', '-utf8' => ''))),
 		'is_activated' => isset($profile['is_activated']) ? $profile['is_activated'] : 1,
 		'is_banned' => isset($profile['is_activated']) ? $profile['is_activated'] >= 10 : 0,
 		'options' => $profile['options'],
@@ -1191,7 +1191,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 {
 	global $user_info, $user_settings, $board_info, $sc;
 	global $txt, $boardurl, $scripturl, $mbname, $modSettings;
-	global $context, $settings, $options, $sourcedir, $ssi_theme, $smfFunc;
+	global $context, $settings, $options, $sourcedir, $ssi_theme, $smcFunc;
 
 	// The theme was specified by parameter.
 	if (!empty($id_theme))
@@ -1248,7 +1248,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	if (empty($flag))
 	{
 		// Load variables from the current or default theme, global or this user's.
-		$result = $smfFunc['db_query']('', '
+		$result = $smcFunc['db_query']('', '
 			SELECT variable, value, id_member, id_theme
 			FROM {db_prefix}themes
 			WHERE id_member' . (empty($themeData[0]) ? ' IN (-1, 0, {int:id_member})' : ' = {int:id_member}') . '
@@ -1259,7 +1259,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 			)
 		);
 		// Pick between $settings and $options depending on whose data it is.
-		while ($row = $smfFunc['db_fetch_assoc']($result))
+		while ($row = $smcFunc['db_fetch_assoc']($result))
 		{
 			// If this is the theme_dir of the default theme, store it.
 			if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['id_theme'] == '1' && empty($row['id_member']))
@@ -1269,7 +1269,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 			if (!isset($themeData[$row['id_member']][$row['variable']]) || $row['id_theme'] != '1')
 				$themeData[$row['id_member']][$row['variable']] = substr($row['variable'], 0, 5) == 'show_' ? $row['value'] == '1' : $row['value'];
 		}
-		$smfFunc['db_free_result']($result);
+		$smcFunc['db_free_result']($result);
 
 		if (!empty($themeData[-1]))
 			foreach ($themeData[-1] as $k => $v)
@@ -1736,14 +1736,14 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 // Get all parent boards (requires first parent as parameter)
 function getBoardParents($id_parent)
 {
-	global $scripturl, $txt, $smfFunc;
+	global $scripturl, $txt, $smcFunc;
 
 	$boards = array();
 
 	// Loop while the parent is non-zero.
 	while ($id_parent != 0)
 	{
-		$result = $smfFunc['db_query']('', '
+		$result = $smcFunc['db_query']('', '
 			SELECT
 				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
 				mem.real_name, b.child_level
@@ -1756,9 +1756,9 @@ function getBoardParents($id_parent)
 			)
 		);
 		// In the EXTREMELY unlikely event this happens, give an error message.
-		if ($smfFunc['db_num_rows']($result) == 0)
+		if ($smcFunc['db_num_rows']($result) == 0)
 			fatal_lang_error('parent_not_found', 'critical');
-		while ($row = $smfFunc['db_fetch_assoc']($result))
+		while ($row = $smcFunc['db_fetch_assoc']($result))
 		{
 			if (!isset($boards[$row['id_board']]))
 			{
@@ -1782,7 +1782,7 @@ function getBoardParents($id_parent)
 					);
 				}
 		}
-		$smfFunc['db_free_result']($result);
+		$smcFunc['db_free_result']($result);
 	}
 
 	return $boards;
@@ -2093,13 +2093,13 @@ function sessionClose()
 
 function sessionRead($session_id)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// Look for it in the database.
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SELECT data
 		FROM {db_prefix}sessions
 		WHERE session_id = {string:session_id}
@@ -2108,21 +2108,21 @@ function sessionRead($session_id)
 			'session_id' => $session_id,
 		)
 	);
-	list ($sess_data) = $smfFunc['db_fetch_row']($result);
-	$smfFunc['db_free_result']($result);
+	list ($sess_data) = $smcFunc['db_fetch_row']($result);
+	$smcFunc['db_free_result']($result);
 
 	return $sess_data;
 }
 
 function sessionWrite($session_id, $data)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// First try to update an existing row...
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		UPDATE {db_prefix}sessions
 		SET data = {string:data}, last_update = {int:last_update}
 		WHERE session_id = {string:session_id}',
@@ -2134,8 +2134,8 @@ function sessionWrite($session_id, $data)
 	);
 
 	// If that didn't work, try inserting a new one.
-	if ($smfFunc['db_affected_rows']() == 0)
-		$result = $smfFunc['db_insert']('ignore',
+	if ($smcFunc['db_affected_rows']() == 0)
+		$result = $smcFunc['db_insert']('ignore',
 			'{db_prefix}sessions',
 			array('session_id' => 'string', 'data' => 'string', 'last_update' => 'int'),
 			array($session_id, $data, time()),
@@ -2147,13 +2147,13 @@ function sessionWrite($session_id, $data)
 
 function sessionDestroy($session_id)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// Just delete the row...
-	return $smfFunc['db_query']('', '
+	return $smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}sessions
 		WHERE session_id = {string:session_id}',
 		array(
@@ -2164,14 +2164,14 @@ function sessionDestroy($session_id)
 
 function sessionGC($max_lifetime)
 {
-	global $modSettings, $smfFunc;
+	global $modSettings, $smcFunc;
 
 	// Just set to the default or lower?  Ignore it for a higher value. (hopefully)
 	if (!empty($modSettings['databaseSession_lifetime']) && ($max_lifetime <= 1440 || $modSettings['databaseSession_lifetime'] > $max_lifetime))
 		$max_lifetime = max($modSettings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return $smfFunc['db_query']('', '
+	return $smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}sessions
 		WHERE last_update < {int:last_update}',
 		array(

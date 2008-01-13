@@ -30,13 +30,13 @@ if (!defined('SMF'))
 
 */
 
-// Add the file functions to the $smfFunc array.
+// Add the file functions to the $smcFunc array.
 function db_search_init()
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	if (!isset($smfFunc['db_search_query']) || $smfFunc['db_search_query'] != 'smf_db_search_query')
-		$smfFunc += array(
+	if (!isset($smcFunc['db_search_query']) || $smcFunc['db_search_query'] != 'smf_db_search_query')
+		$smcFunc += array(
 			'db_search_query' => 'smf_db_search_query',
 			'db_search_support' => 'smf_db_search_support',
 			'db_create_word_search' => 'smf_db_create_word_search',
@@ -55,7 +55,7 @@ function smf_db_search_support($search_type)
 // Returns the correct query for this search type.
 function smf_db_search_query($identifier, $db_string, $db_values = array(), $connection = null)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Search queries that need processing are here!
 	$nonFatal = array(
@@ -79,7 +79,7 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 		// Don't fail on this query?
 		if (isset($replacements[$identifier]['on_fail']))
 		{
-			$smfFunc['db_error_handler_return'] = true;
+			$smcFunc['db_error_handler_return'] = true;
 			unset($replacements[$identifier]['on_fail']);
 		}
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
@@ -88,17 +88,17 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 	{
 		$db_string = preg_replace('~^\s*INSERT\sIGNORE~i', 'INSERT', $db_string);
 		// Don't error on multi-insert.
-		$smfFunc['db_error_handler_return'] = true;
+		$smcFunc['db_error_handler_return'] = true;
 	}
 
 	// Should we not error on this?
 	if (in_array($identifier, $nonFatal))
-		$smfFunc['db_error_handler_return'] = true;
+		$smcFunc['db_error_handler_return'] = true;
 
-	$return = $smfFunc['db_query']('', $db_string,
+	$return = $smcFunc['db_query']('', $db_string,
 		$db_values, $connection
 	);
-	$smfFunc['db_error_handler_return'] = false;
+	$smcFunc['db_error_handler_return'] = false;
 
 	return $return;
 }
@@ -106,11 +106,11 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 // Highly specific - create the custom word index table!
 function smf_db_create_word_search($size)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	$size = 'int';
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		CREATE TABLE {db_prefix}log_search_words (
 			id_word {raw:size} NOT NULL default {string:string_zero},
 			id_msg int(10) NOT NULL default {string:string_zero},

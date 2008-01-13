@@ -76,7 +76,7 @@ if (!defined('SMF'))
 
 function ViewMembers()
 {
-	global $txt, $scripturl, $context, $modSettings, $smfFunc;
+	global $txt, $scripturl, $context, $modSettings, $smcFunc;
 
 	$subActions = array(
 		'all' => array('ViewMemberlist', 'moderate_forum'),
@@ -97,7 +97,7 @@ function ViewMembers()
 	loadTemplate('ManageMembers');
 
 	// Get counts on every type of activation - for sections and filtering alike.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*) AS totalMembers, is_activated
 		FROM {db_prefix}members
 		WHERE is_activated != {int:is_activated}
@@ -109,9 +109,9 @@ function ViewMembers()
 	$context['activation_numbers'] = array();
 	$context['awaiting_activation'] = 0;
 	$context['awaiting_approval'] = 0;
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$context['activation_numbers'][$row['is_activated']] = $row['totalMembers'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	foreach ($context['activation_numbers'] as $activation_type => $total_members)
 	{
@@ -182,7 +182,7 @@ function ViewMembers()
 // View all members.
 function ViewMemberlist()
 {
-	global $txt, $scripturl, $context, $modSettings, $sourcedir, $smfFunc;
+	global $txt, $scripturl, $context, $modSettings, $sourcedir, $smcFunc;
 
 	// Set the current sub action.
 	$context['sub_action'] = $_REQUEST['sa'];
@@ -214,7 +214,7 @@ function ViewMemberlist()
 		);
 		$context['postgroups'] = array();
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name, min_posts
 			FROM {db_prefix}membergroups
 			WHERE id_group != {int:moderator_group}
@@ -224,7 +224,7 @@ function ViewMemberlist()
 				'newbie_group' => 4,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if ($row['min_posts'] == -1)
 				$context['membergroups'][] = array(
@@ -238,7 +238,7 @@ function ViewMemberlist()
 					'name' => $row['group_name']
 				);
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		// Some data about the form fields and how they are linked to the database.
 		$params = array(
@@ -642,7 +642,7 @@ function ViewMemberlist()
 // Search the member list, using one or more criteria.
 function SearchMembers()
 {
-	global $context, $txt, $smfFunc;
+	global $context, $txt, $smcFunc;
 
 	// Get a list of all the membergroups and postgroups that can be selected.
 	$context['membergroups'] = array(
@@ -654,7 +654,7 @@ function SearchMembers()
 	);
 	$context['postgroups'] = array();
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_group, group_name, min_posts
 		FROM {db_prefix}membergroups
 		WHERE id_group != {int:moderator_group}
@@ -664,7 +664,7 @@ function SearchMembers()
 			'newbie_group' => 4,
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($row['min_posts'] == -1)
 			$context['membergroups'][] = array(
@@ -678,7 +678,7 @@ function SearchMembers()
 				'name' => $row['group_name']
 			);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'search_members';
@@ -687,7 +687,7 @@ function SearchMembers()
 // List all members who are awaiting approval / activation
 function MembersAwaitingActivation()
 {
-	global $txt, $context, $scripturl, $modSettings, $smfFunc;
+	global $txt, $context, $scripturl, $modSettings, $smcFunc;
 	global $sourcedir;
 
 	// Not a lot here!
@@ -1036,7 +1036,7 @@ function MembersAwaitingActivation()
 // Do the approve/activate/delete stuff
 function AdminApprove()
 {
-	global $txt, $context, $scripturl, $modSettings, $sourcedir, $language, $user_info, $smfFunc;
+	global $txt, $context, $scripturl, $modSettings, $sourcedir, $language, $user_info, $smcFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -1073,7 +1073,7 @@ function AdminApprove()
 	}
 
 	// Get information on each of the members, things that are important to us, like email address...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, validation_code, lngfile
 		FROM {db_prefix}members
 		WHERE is_activated = {int:activated_status}' . $condition . '
@@ -1085,7 +1085,7 @@ function AdminApprove()
 		)
 	);
 
-	$member_count = $smfFunc['db_num_rows']($request);
+	$member_count = $smcFunc['db_num_rows']($request);
 
 	// If no results then just return!
 	if ($member_count == 0)
@@ -1094,7 +1094,7 @@ function AdminApprove()
 	$member_info = array();
 	$members = array();
 	// Fill the info array.
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$members[] = $row['id_member'];
 		$member_info[] = array(
@@ -1106,13 +1106,13 @@ function AdminApprove()
 			'code' => $row['validation_code']
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Are we activating or approving the members?
 	if ($_POST['todo'] == 'ok' || $_POST['todo'] == 'okemail')
 	{
 		// Approve/activate this member.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
 			SET validation_code = {string:blank_string}, is_activated = {int:is_activated}
 			WHERE is_activated = {int:activated_status}' . $condition,
@@ -1157,7 +1157,7 @@ function AdminApprove()
 			$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 			// Set these members for activation - I know this includes two id_member checks but it's safer than bodging $condition ;).
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}members
 				SET validation_code = {string:validation_code}, is_activated = {int:not_activated}
 				WHERE is_activated = {int:activated_status}

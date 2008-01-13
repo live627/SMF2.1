@@ -91,7 +91,7 @@ function Login()
 // Perform the actual logging-in.
 function Login2()
 {
-	global $txt, $scripturl, $user_info, $user_settings, $smfFunc;
+	global $txt, $scripturl, $user_info, $user_settings, $smcFunc;
 	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
 
 	// Load cookie authentication stuff.
@@ -208,7 +208,7 @@ function Login2()
 		}
 
 	// Load the data up!
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 		FROM {db_prefix}members
 		WHERE member_name = {string:user_name}
@@ -218,11 +218,11 @@ function Login2()
 		)
 	);
 	// Probably mistyped or their email, try it as an email address. (member_name first, though!)
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 	{
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 			FROM {db_prefix}members
 			WHERE email_address = {string:user_name}
@@ -232,15 +232,15 @@ function Login2()
 			)
 		);
 		// Let them try again, it didn't match anything...
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 		{
 			$context['login_errors'] = array($txt['username_no_exist']);
 			return;
 		}
 	}
 
-	$user_settings = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$user_settings = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Figure out the password using SMF's encryption - if what they typed is right.
 	if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
@@ -406,7 +406,7 @@ function checkActivation()
 
 function DoLogin()
 {
-	global $txt, $scripturl, $user_info, $user_settings, $smfFunc;
+	global $txt, $scripturl, $user_info, $user_settings, $smcFunc;
 	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
 
 	// Load cookie authentication stuff.
@@ -448,7 +448,7 @@ function DoLogin()
 	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => $user_info['ip'], 'member_ip2' => $_SERVER['BAN_CHECK_IP']));
 
 	// Get rid of the online entry for that old guest....
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_online
 		WHERE session = {string:session}',
 		array(
@@ -467,7 +467,7 @@ function DoLogin()
 // Log the user out.
 function Logout($internal = false, $redirect = true)
 {
-	global $sourcedir, $user_info, $user_settings, $context, $modSettings, $smfFunc;
+	global $sourcedir, $user_info, $user_settings, $context, $modSettings, $smcFunc;
 
 	// Make sure they aren't being auto-logged out.
 	if (!$internal)
@@ -485,7 +485,7 @@ function Logout($internal = false, $redirect = true)
 			call_user_func($modSettings['integrate_logout'], $user_settings['member_name']);
 
 		// If you log out, you aren't online anymore :P.
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_online
 			WHERE id_member = {int:current_member}',
 			array(

@@ -56,14 +56,14 @@ if (!defined('SMF'))
 
 */
 
-// Add the file functions to the $smfFunc array.
+// Add the file functions to the $smcFunc array.
 function db_packages_init()
 {
-	global $smfFunc, $reservedTables, $db_package_log, $db_prefix;
+	global $smcFunc, $reservedTables, $db_package_log, $db_prefix;
 
-	if (!isset($smfFunc['db_create_table']) || $smfFunc['db_create_table'] != 'db_create_table')
+	if (!isset($smcFunc['db_create_table']) || $smcFunc['db_create_table'] != 'db_create_table')
 	{
-		$smfFunc += array(
+		$smcFunc += array(
 			'db_add_column' => 'smf_db_add_column',
 			'db_add_index' => 'smf_db_add_index',
 			'db_calculate_type' => 'smf_db_calculate_type',
@@ -101,7 +101,7 @@ function db_packages_init()
 //!!! Add/remove indexes too?
 function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'update', $error = 'fatal')
 {
-	global $reservedTables, $smfFunc, $db_package_log;
+	global $reservedTables, $smcFunc, $db_package_log;
 
 	// First - no way do we touch SMF tables.
 	if (in_array(strtolower($table_name), $reservedTables))
@@ -111,14 +111,14 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	$db_package_log[] = array('remove_table', $table_name);
 
 	// Slightly easier on MySQL than the others...
-	$tables = $smfFunc['db_list_tables']();
+	$tables = $smcFunc['db_list_tables']();
 	foreach ($tables as $table)
 	{
 		if ($table == $table_name)
 		{
 			// This is a sad day... drop the table?
 			if ($if_exists == 'overwrite')
-				$smfFunc['db_drop_table']($table_name);
+				$smcFunc['db_drop_table']($table_name);
 			elseif ($if_exists == 'ignore')
 				return true;
 			elseif ($if_exists == 'error')
@@ -126,7 +126,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			// Otherwise we have to sort through the columns and add/remove ones which are wrong!
 			else
 			{
-				$old_columns = $smfFunc['db_list_columns']($table_name);
+				$old_columns = $smcFunc['db_list_columns']($table_name);
 				foreach ($old_columns as $k => $v)
 					$old_columns[$k] = strtolower($v);
 				foreach ($columns as $column)
@@ -139,13 +139,13 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 					}
 					// Doesn't - add it!
 					else
-						$smfFunc['db_add_column']($table_name, $column);
+						$smcFunc['db_add_column']($table_name, $column);
 				}
 				// Whatever is left needs to be removed.
 				if ($if_exists == 'update_remove')
 				{
 					foreach ($old_columns as $column)
-						$smfFunc['db_remove_column']($table_name, $column);
+						$smcFunc['db_remove_column']($table_name, $column);
 				}
 
 				// All done!
@@ -170,7 +170,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 		// Sort out the size... and stuff...
 		$column['size'] = isset($column['size']) ? $column['size'] : null;
-		list ($type, $size) = $smfFunc['db_calculate_type']($column['type'], $column['size']);
+		list ($type, $size) = $smcFunc['db_calculate_type']($column['type'], $column['size']);
 		if ($size !== null)
 			$type = $type . '(' . $size . ')';
 
@@ -199,7 +199,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	$table_query .= ') TYPE=MyISAM';
 
 	// Create the table!
-	$smfFunc['db_query']('', $table_query,
+	$smcFunc['db_query']('', $table_query,
 		'security_override'
 	);
 }
@@ -207,17 +207,17 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 // Drop a table.
 function smf_db_drop_table($table_name, $error = 'fatal')
 {
-	global $reservedTables, $smfFunc;
+	global $reservedTables, $smcFunc;
 
 	// God no - dropping one of these = bad.
 	if (in_array(strtolower($table_name), $reservedTables))
 		return false;
 
 	// Does it exist?
-	if (in_array($table_name, $smfFunc['db_list_tables']()))
+	if (in_array($table_name, $smcFunc['db_list_tables']()))
 	{
 		$query = 'DROP TABLE ' . $table_name;
-		$smfFunc['db_query']('', $query,
+		$smcFunc['db_query']('', $query,
 		'security_override'
 	);
 
@@ -231,26 +231,26 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 // Add a column.
 function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $error = 'fatal')
 {
-	global $smfFunc, $db_package_log, $txt;
+	global $smcFunc, $db_package_log, $txt;
 
 	// Log that we will want to uninstall this!
 	$db_package_log[] = array('remove_column', $table_name, $column_info['name']);
 
 	// Does it exist - if so don't add it again!
-	$columns = $smfFunc['db_list_columns']($table_name);
+	$columns = $smcFunc['db_list_columns']($table_name);
 	foreach ($columns as $column)
 		if ($column['name'] == $column_info['name'])
 		{
 			// If we're going to overwrite then use change column.
 			if ($if_exists == 'update')
-				return $smfFunc['db_change_column']($table_name, $column_info['name'], $column_info);
+				return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info);
 			else
 				return false;
 		}
 
 	// Get the specifics...
 	$column_info['size'] = isset($column_info['size']) ? $column_info['size'] : null;
-	list ($type, $size) = $smfFunc['db_calculate_type']($column_info['type'], $column_info['size']);
+	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
 	if ($size !== null)
 		$type = $type . '(' . $size . ')';
 
@@ -260,7 +260,7 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
 			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ';
-	$smfFunc['db_query']('', $query,
+	$smcFunc['db_query']('', $query,
 		'security_override'
 	);
 
@@ -270,14 +270,14 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 // Remove a column.
 function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Does it exist?
-	$columns = $smfFunc['db_list_columns']($table_name, true);
+	$columns = $smcFunc['db_list_columns']($table_name, true);
 	foreach ($columns as $column)
 		if ($column['name'] == $column_name)
 		{
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP COLUMN ' . $column_name,
 				'security_override'
@@ -293,10 +293,10 @@ function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 // Change a column.
 function smf_db_change_column($table_name, $old_column, $column_info, $error = 'fatal')
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Check it does exist!
-	$columns = $smfFunc['db_list_columns']($table_name, true);
+	$columns = $smcFunc['db_list_columns']($table_name, true);
 	$old_info = null;
 	foreach ($columns as $column)
 		if ($column['name'] == $old_column)
@@ -320,11 +320,11 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 	if (!isset($column_info['size']))
 		$column_info['size'] = $old_info['size'];
 
-	list ($type, $size) = $smfFunc['db_calculate_type']($column_info['type'], $column_info['size']);
+	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
 	if ($size !== null)
 		$type = $type . '(' . $size . ')';
 
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		ALTER TABLE ' . $table_name . '
 		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
 			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
@@ -336,7 +336,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 // Add an index.
 function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $error = 'fatal')
 {
-	global $smfFunc, $db_package_log;
+	global $smcFunc, $db_package_log;
 
 	// No columns = no index.
 	if (empty($index_info['columns']))
@@ -359,7 +359,7 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 	$db_package_log[] = array('remove_index', $table_name, $index_info['name']);
 
 	// Let's get all our indexes.
-	$indexes = $smfFunc['db_list_indexes']($table_name);
+	$indexes = $smcFunc['db_list_indexes']($table_name);
 	// Do we already have it?
 	foreach ($indexes as $index)
 	{
@@ -367,7 +367,7 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 		{
 			// If we want to overwrite simply remove the current one then continue.
 			if ($if_exists == 'update')
-				$smfFunc['db_remove_index']($table_name, $index_info['name']);
+				$smcFunc['db_remove_index']($table_name, $index_info['name']);
 			else
 				return false;
 		}
@@ -376,7 +376,7 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 	// If we're here we know we don't have the index - so just add it.
 	if (!empty($index_info['type']) && $index_info['type'] == 'primary')
 	{
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD PRIMARY KEY (' . $columns . ')',
 			'security_override'
@@ -384,7 +384,7 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 	}
 	else
 	{
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : 'INDEX') . ' ' . $index_info['name'] . ' (' . $columns . ')',
 			'security_override'
@@ -395,10 +395,10 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 // Remove an index.
 function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	// Better exist!
-	$indexes = $smfFunc['db_list_indexes']($table_name, true);
+	$indexes = $smcFunc['db_list_indexes']($table_name, true);
 
 	foreach ($indexes as $index)
 	{
@@ -406,7 +406,7 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 		if ($index['type'] == 'primary' && $index_name == 'primary')
 		{
 			// Dropping primary key?
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP PRIMARY KEY',
 				'security_override'
@@ -417,7 +417,7 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 		if ($index['name'] == $index_name)
 		{
 			// Drop the bugger...
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				DROP INDEX ' . $index_name,
 				'security_override'
 			);
@@ -440,27 +440,27 @@ function smf_db_calculate_type($type_name, $type_size = null, $reverse = false)
 // Get table structure.
 function smf_db_table_structure($table_name)
 {
-	global $smfFunc;
+	global $smcFunc;
 
 	return array(
 		'name' => $table_name,
-		'columns' => $smfFunc['db_list_columns']($table_name, true),
-		'indexes' => $smfFunc['db_list_indexes']($table_name, true),
+		'columns' => $smcFunc['db_list_columns']($table_name, true),
+		'indexes' => $smcFunc['db_list_indexes']($table_name, true),
 	);
 }
 
 // Return column information for a table.
 function smf_db_list_columns($table_name, $detail = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SHOW FIELDS
 		FROM `' . $table_name . '`',
 		'security_override'
 	);
 	$columns = array();
-	while ($row = $smfFunc['db_fetch_assoc']($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		if (!$detail)
 		{
@@ -493,7 +493,7 @@ function smf_db_list_columns($table_name, $detail = false)
 			);
 		}
 	}
-	$smfFunc['db_free_result']($result);
+	$smcFunc['db_free_result']($result);
 
 	return $columns;
 }
@@ -501,15 +501,15 @@ function smf_db_list_columns($table_name, $detail = false)
 // What about some index information?
 function smf_db_list_indexes($table_name, $detail = false)
 {
-	global $smfFunc;
+	global $smcFunc;
 
-	$result = $smfFunc['db_query']('', '
+	$result = $smcFunc['db_query']('', '
 		SHOW KEYS
 		FROM `' . $table_name . '`',
 		'security_override'
 	);
 	$indexes = array();
-	while ($row = $smfFunc['db_fetch_assoc']($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		if (!$detail)
 			$indexes[] = $row['Key_name'];
@@ -542,7 +542,7 @@ function smf_db_list_indexes($table_name, $detail = false)
 				$indexes[$row['Key_name']]['columns'][] = $row['Column_name'];
 		}
 	}
-	$smfFunc['db_free_result']($result);
+	$smcFunc['db_free_result']($result);
 
 	return $indexes;
 }

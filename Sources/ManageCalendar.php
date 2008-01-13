@@ -179,7 +179,7 @@ function ModifyHolidays()
 // This function is used for adding/editing a specific holiday
 function EditHoliday()
 {
-	global $txt, $context, $scripturl, $smfFunc;
+	global $txt, $context, $scripturl, $smcFunc;
 
 	loadTemplate('ManageCalendar');
 
@@ -193,7 +193,7 @@ function EditHoliday()
 		checkSession();
 
 		if (isset($_REQUEST['delete']))
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}calendar_holidays
 				WHERE id_holiday = {int:selected_holiday}',
 				array(
@@ -204,7 +204,7 @@ function EditHoliday()
 		{
 			$date = strftime($_REQUEST['year'] <= 4 ? '0004-%m-%d' : '%Y-%m-%d', mktime(0, 0, 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']));
 			if (isset($_REQUEST['edit']))
-				$smfFunc['db_query']('', '
+				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}calendar_holidays
 					SET event_date = {date:holiday_date}, title = {string:holiday_title}
 					WHERE id_holiday = {int:selected_holiday}',
@@ -215,7 +215,7 @@ function EditHoliday()
 					)
 				);
 			else
-				$smfFunc['db_insert']('',
+				$smcFunc['db_insert']('',
 					'{db_prefix}calendar_holidays',
 					array(
 						'event_date' => 'date', 'title' => 'string-48',
@@ -246,7 +246,7 @@ function EditHoliday()
 	// If it's not new load the data.
 	else
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
 			FROM {db_prefix}calendar_holidays
 			WHERE id_holiday = {int:selected_holiday}
@@ -255,7 +255,7 @@ function EditHoliday()
 				'selected_holiday' => $_REQUEST['holiday'],
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['holiday'] = array(
 				'id' => $row['id_holiday'],
 				'day' => $row['day'],
@@ -263,7 +263,7 @@ function EditHoliday()
 				'year' => $row['year'] <= 4 ? 0 : $row['year'],
 				'title' => $row['title']
 			);
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Last day for the drop down?
@@ -272,20 +272,20 @@ function EditHoliday()
 
 function ModifyCalendarSettings($return_config = false)
 {
-	global $modSettings, $context, $settings, $txt, $boarddir, $sourcedir, $scripturl, $smfFunc;
+	global $modSettings, $context, $settings, $txt, $boarddir, $sourcedir, $scripturl, $smcFunc;
 
 	// Load the boards list.
 	$boards = array('');
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)',
 		array(
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 		$boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Look, all the calendar settings - of which there are many!
 	$config_vars = array(

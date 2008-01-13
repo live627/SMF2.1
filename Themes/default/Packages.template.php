@@ -8,7 +8,7 @@ function template_main()
 
 function template_view_package()
 {
-	global $context, $settings, $options, $txt, $scripturl, $smfFunc;
+	global $context, $settings, $options, $txt, $scripturl, $smcFunc;
 
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
@@ -1053,7 +1053,7 @@ function template_servers()
 
 function template_package_list()
 {
-	global $context, $settings, $options, $txt, $scripturl, $smfFunc;
+	global $context, $settings, $options, $txt, $scripturl, $smcFunc;
 
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
@@ -1120,7 +1120,7 @@ function template_package_list()
 					// Show the mod type?
 					if ($package['type'] != '')
 						echo '
-						', $txt['package_type'], ':&nbsp; ', $smfFunc['ucwords']($smfFunc['strtolower']($package['type'])), '<br />';
+						', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '<br />';
 					// Show the version number?
 					if ($package['version'] != '')
 						echo '

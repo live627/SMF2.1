@@ -262,13 +262,13 @@ class paypal_payment
 	// exit.
 	public function close()
 	{
-		global $smfFunc, $subscription_id;
+		global $smcFunc, $subscription_id;
 
 		// If it's a subscription record the reference.
 		if ($_POST['txn_type'] == 'subscr_payment' && !empty($_POST['subscr_id']))
 		{
 			$_POST['subscr_id'] = $_POST['subscr_id'];
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}log_subscribed
 				SET vendor_ref = {string:vendor_ref}
 				WHERE id_sublog = {int:current_subscription}',
@@ -285,14 +285,14 @@ class paypal_payment
 	// A private function to find out the subscription details.
 	private function _findSubscription()
 	{
-		global $smfFunc;
+		global $smcFunc;
 
 		// Assume we have this?
 		if (empty($_POST['subscr_id']))
 			return false;
 
 		// Do we have this in the database?
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member, id_subscribe
 			FROM {db_prefix}log_subscribed
 			WHERE vendor_ref = {string:vendor_ref}
@@ -302,13 +302,13 @@ class paypal_payment
 			)
 		);
 		// No joy?
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 		{
 			// Can we identify them by email?
 			if (!empty($_POST['payer_email']))
 			{
-				$smfFunc['db_free_result']($request);
-				$request = $smfFunc['db_query']('', '
+				$smcFunc['db_free_result']($request);
+				$request = $smcFunc['db_query']('', '
 					SELECT ls.id_member, ls.id_subscribe
 					FROM {db_prefix}log_subscribed AS ls
 						INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ls.id_member)
@@ -318,15 +318,15 @@ class paypal_payment
 						'payer_email' => $_POST['payer_email'],
 					)
 				);
-				if ($smfFunc['db_num_rows']($request) == 0)
+				if ($smcFunc['db_num_rows']($request) == 0)
 					return false;
 			}
 			else
 				return false;
 		}
-		list ($member_id, $subscription_id) = $smfFunc['db_fetch_row']($request);
+		list ($member_id, $subscription_id) = $smcFunc['db_fetch_row']($request);
 		$_POST['item_number'] = $member_id . '+' . $subscription_id;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 }
 

@@ -56,12 +56,12 @@ if (!defined('SMF'))
 // Move a topic.  Give the moderator a chance to post a reason.
 function MoveTopic()
 {
-	global $txt, $board, $topic, $user_info, $context, $language, $scripturl, $settings, $smfFunc;
+	global $txt, $board, $topic, $user_info, $context, $language, $scripturl, $settings, $smcFunc;
 
 	if (empty($topic))
 		fatal_lang_error('no_access');
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT t.id_member_started, ms.subject, t.approved
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
@@ -71,8 +71,8 @@ function MoveTopic()
 			'current_topic' => $topic,
 		)
 	);
-	list ($id_member_started, $context['subject'], $context['is_approved']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($id_member_started, $context['subject'], $context['is_approved']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Can they see it - if not approved?
 	if (!$context['is_approved'])
@@ -96,7 +96,7 @@ function MoveTopic()
 	loadTemplate('MoveTopic');
 
 	// Get a list of boards this moderator can move to.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
@@ -107,7 +107,7 @@ function MoveTopic()
 		)
 	);
 	$context['boards'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($context['categories'][$row['id_cat']]))
 			$context['categories'][$row['id_cat']] = array (
@@ -123,7 +123,7 @@ function MoveTopic()
 			'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board']
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (empty($context['categories']))
 		fatal_lang_error('moveto_noboards', false);
@@ -160,12 +160,12 @@ function MoveTopic()
 function MoveTopic2()
 {
 	global $txt, $board, $topic, $scripturl, $sourcedir, $modSettings, $context;
-	global $board, $language, $user_info, $smfFunc;
+	global $board, $language, $user_info, $smcFunc;
 
 	// Make sure this form hasn't been submitted before.
 	checkSubmitOnce('check');
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member_started, id_first_msg, approved
 		FROM {db_prefix}topics
 		WHERE id_topic = {int:current_topic}
@@ -174,8 +174,8 @@ function MoveTopic2()
 			'current_topic' => $topic,
 		)
 	);
-	list ($id_member_started, $id_first_msg, $context['is_approved']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($id_member_started, $id_first_msg, $context['is_approved']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Can they see it?
 	if (!$context['is_approved'])
@@ -210,7 +210,7 @@ function MoveTopic2()
 	$_POST['toboard'] = (int) $_POST['toboard'];
 
 	// Make sure they can see the board they are trying to move to (and get whether posts count in the target board).
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT b.count_posts, b.name, m.subject
 		FROM {db_prefix}boards AS b
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
@@ -225,10 +225,10 @@ function MoveTopic2()
 			'blank_redirect' => '',
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');
-	list ($pcounter, $board_name, $subject) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($pcounter, $board_name, $subject) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Remember this for later.
 	$_SESSION['move_to_topic'] = $_POST['toboard'];
@@ -236,7 +236,7 @@ function MoveTopic2()
 	// Rename the topic...
 	if (isset($_POST['reset_subject'], $_POST['custom_subject']) && $_POST['custom_subject'] != '')
 	{
-		$_POST['custom_subject'] = $smfFunc['htmlspecialchars']($_POST['custom_subject']);
+		$_POST['custom_subject'] = $smcFunc['htmlspecialchars']($_POST['custom_subject']);
 
 		if (isset($_POST['enforce_subject']))
 		{
@@ -254,7 +254,7 @@ function MoveTopic2()
 				cache_put_data('response_prefix', $context['response_prefix'], 600);
 			}
 
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}messages
 				SET subject = {string:subject}
 				WHERE id_topic = {int:current_topic}',
@@ -265,7 +265,7 @@ function MoveTopic2()
 			);
 		}
 
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}messages
 			SET subject = {string:custom_subject}
 			WHERE id_msg = {int:id_first_msg}',
@@ -287,7 +287,7 @@ function MoveTopic2()
 		if ($user_info['language'] != $language)
 			loadLanguage('index', $language);
 
-		$_POST['reason'] = $smfFunc['htmlspecialchars']($_POST['reason'], ENT_QUOTES);
+		$_POST['reason'] = $smcFunc['htmlspecialchars']($_POST['reason'], ENT_QUOTES);
 		preparsecode($_POST['reason']);
 
 		// Add a URL onto the message.
@@ -314,7 +314,7 @@ function MoveTopic2()
 		createPost($msgOptions, $topicOptions, $posterOptions);
 	}
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT count_posts
 		FROM {db_prefix}boards
 		WHERE id_board = {int:current_board}
@@ -323,12 +323,12 @@ function MoveTopic2()
 			'current_board' => $board,
 		)
 	);
-	list ($pcounter_from) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($pcounter_from) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	if ($pcounter_from != $pcounter)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:current_topic}',
@@ -337,14 +337,14 @@ function MoveTopic2()
 			)
 		);
 		$posters = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($posters[$row['id_member']]))
 				$posters[$row['id_member']] = 0;
 
 			$posters[$row['id_member']]++;
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		foreach ($posters as $id_member => $posts)
 		{
@@ -380,7 +380,7 @@ function MoveTopic2()
 // Moves one or more topics to a specific board. (doesn't check permissions.)
 function moveTopics($topics, $toBoard)
 {
-	global $sourcedir, $user_info, $modSettings, $smfFunc;
+	global $sourcedir, $user_info, $modSettings, $smcFunc;
 
 	// Empty array?
 	if (empty($topics))
@@ -396,7 +396,7 @@ function moveTopics($topics, $toBoard)
 		return;
 
 	// Determine the source boards...
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_board, approved, COUNT(*) AS num_topics, SUM(unapproved_posts) AS unapproved_posts,
 			SUM(num_replies) AS num_replies
 		FROM {db_prefix}topics
@@ -407,9 +407,9 @@ function moveTopics($topics, $toBoard)
 		)
 	);
 	// Num of rows = 0 -> no topics found. Num of rows > 1 -> topics are on multiple boards.
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		return;
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($fromBoards[$row['id_board']]['num_posts']))
 		{
@@ -431,11 +431,11 @@ function moveTopics($topics, $toBoard)
 		else
 			$fromBoards[$row['id_board']]['unapproved_topics'] += $row['num_topics'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Move over the mark_read data. (because it may be read and now not by some!)
 	$SaveAServer = max(0, $modSettings['maxMsgID'] - 50000);
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lmr.id_member, lmr.id_msg, t.id_topic
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board
@@ -449,14 +449,14 @@ function moveTopics($topics, $toBoard)
 		)
 	);
 	$log_topics = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$log_topics[] = array($row['id_topic'], $row['id_member'], $row['id_msg']);
 
 		// Prevent queries from getting too big. Taking some steam off.
 		if (count($log_topics) > 500)
 		{
-			$smfFunc['db_insert']('replace',
+			$smcFunc['db_insert']('replace',
 				'{db_prefix}log_topics',
 				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 				$log_topics,
@@ -466,13 +466,13 @@ function moveTopics($topics, $toBoard)
 			$log_topics = array();
 		}
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Now that we have all the topics that *should* be marked read, and by which members...
 	if (!empty($log_topics))
 	{
 		// Insert that information into the database!
-		$smfFunc['db_insert']('replace',
+		$smcFunc['db_insert']('replace',
 			'{db_prefix}log_topics',
 			array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 			$log_topics,
@@ -487,7 +487,7 @@ function moveTopics($topics, $toBoard)
 	$totalUnapprovedPosts = 0;
 	foreach ($fromBoards as $stats)
 	{
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET
 				num_posts = CASE WHEN {int:num_posts} > num_posts THEN 0 ELSE num_posts - {int:num_posts} END,
@@ -508,7 +508,7 @@ function moveTopics($topics, $toBoard)
 		$totalUnapprovedTopics += $stats['unapproved_topics'];
 		$totalUnapprovedPosts += $stats['unapproved_posts'];
 	}
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}boards
 		SET
 			num_topics = num_topics + {int:total_topics},
@@ -526,7 +526,7 @@ function moveTopics($topics, $toBoard)
 	);
 
 	// Move the topic.  Done.  :P
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET id_board = {int:id_board}
 		WHERE id_topic IN ({array_int:topics})',
@@ -535,7 +535,7 @@ function moveTopics($topics, $toBoard)
 			'topics' => $topics,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}messages
 		SET id_board = {int:id_board}
 		WHERE id_topic IN ({array_int:topics})',
@@ -544,7 +544,7 @@ function moveTopics($topics, $toBoard)
 			'topics' => $topics,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_reported
 		SET id_board = {int:id_board}
 		WHERE id_topic IN ({array_int:topics})',
@@ -553,7 +553,7 @@ function moveTopics($topics, $toBoard)
 			'topics' => $topics,
 		)
 	);
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}calendar
 		SET id_board = {int:id_board}
 		WHERE id_topic IN ({array_int:topics})',
@@ -564,7 +564,7 @@ function moveTopics($topics, $toBoard)
 	);
 
 	// Mark target board as seen, if it was already marked as seen before.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
@@ -574,12 +574,12 @@ function moveTopics($topics, $toBoard)
 			'id_board' => $toBoard,
 		)
 	);
-	list ($isSeen) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($isSeen) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (!empty($isSeen) && !$user_info['is_guest'])
 	{
-		$smfFunc['db_insert']('replace',
+		$smcFunc['db_insert']('replace',
 			'{db_prefix}log_boards',
 			array('id_board' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 			array($toBoard, $user_info['id'], $modSettings['maxMsgID']),

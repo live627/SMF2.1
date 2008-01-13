@@ -32,7 +32,7 @@ if (!defined('SMF'))
 // Entry point for the moderation center.
 function ModerationMain($dont_call = false)
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smcFunc;
 
 	// Don't run this twice... and don't conflict with the admin bar.
 	if (isset($context['admin_area']))
@@ -225,12 +225,12 @@ function ModBlockLatestNews()
 // Show a list of the most active watched users.
 function ModBlockWatchedUsers()
 {
-	global $context, $smfFunc, $scripturl, $modSettings;
+	global $context, $smcFunc, $scripturl, $modSettings;
 
 	if (($watched_users = cache_get_data('recent_user_watches', 240)) === null)
 	{
 		$modSettings['warning_watch'] = empty($modSettings['warning_watch']) ? 1 : $modSettings['warning_watch'];
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT id_member, real_name, last_login
 			FROM {db_prefix}members
 			WHERE warning >= {int:warning_watch}
@@ -241,9 +241,9 @@ function ModBlockWatchedUsers()
 			)
 		);
 		$watched_users = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$watched_users[] = $row;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		cache_put_data('recent_user_watches', $watched_users, 240);
 	}
@@ -266,19 +266,19 @@ function ModBlockWatchedUsers()
 // Show an area for the moderator to type into.
 function ModBlockNotes()
 {
-	global $context, $smfFunc, $scripturl, $txt, $user_info;
+	global $context, $smcFunc, $scripturl, $txt, $user_info;
 
 	// Are we saving a note?
 	if (isset($_POST['makenote']) && isset($_POST['new_note']))
 	{
 		checkSession();
 
-		$_POST['new_note'] = $smfFunc['htmlspecialchars'](trim($_POST['new_note']));
+		$_POST['new_note'] = $smcFunc['htmlspecialchars'](trim($_POST['new_note']));
 		// Make sure they actually entered something.
 		if (!empty($_POST['new_note']) && $_POST['new_note'] !== $txt['mc_click_add_note'])
 		{
 			// Insert it into the database then!
-			$smfFunc['db_insert']('',
+			$smcFunc['db_insert']('',
 				'{db_prefix}log_comments',
 				array(
 					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'recipient_name' => 'string',
@@ -298,7 +298,7 @@ function ModBlockNotes()
 	// Grab the current notes.
 	if (($moderator_notes = cache_get_data('moderator_notes', 240)) === null)
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
 				lc.log_time, lc.body
 			FROM {db_prefix}log_comments AS lc
@@ -311,9 +311,9 @@ function ModBlockNotes()
 			)
 		);
 		$moderator_notes = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$moderator_notes[] = $row;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		cache_put_data('moderator_notes', $moderator_notes, 240);
 	}
@@ -337,7 +337,7 @@ function ModBlockNotes()
 // Show a list of the most recent reported posts.
 function ModBlockReportedPosts()
 {
-	global $context, $user_info, $scripturl, $smfFunc;
+	global $context, $user_info, $scripturl, $smcFunc;
 
 	// Got the info already?
 	$cachekey = md5(serialize($user_info['mod_cache']['bq']));
@@ -348,7 +348,7 @@ function ModBlockReportedPosts()
 	if (($reported_posts = cache_get_data('reported_posts_' . $cachekey, 90)) === null)
 	{
 		// By George, that means we in a position to get the reports, jolly good.
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject,
 				lr.num_reports, IFNULL(mem.real_name, lr.membername) AS author_name,
 				IFNULL(mem.id_member, 0) AS id_author
@@ -365,9 +365,9 @@ function ModBlockReportedPosts()
 			)
 		);
 		$reported_posts = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$reported_posts[] = $row;
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		// Cache it.
 		cache_put_data('reported_posts_' . $cachekey, $reported_posts, 90);
@@ -398,7 +398,7 @@ function ModBlockReportedPosts()
 // Show a list of all the group requests they can see.
 function ModBlockGroupRequests()
 {
-	global $context, $user_info, $scripturl, $smfFunc;
+	global $context, $user_info, $scripturl, $smcFunc;
 
 	$context['group_requests'] = array();
 	// Make sure they can even moderate someone!
@@ -406,7 +406,7 @@ function ModBlockGroupRequests()
 		return 'group_requests_block';
 
 	// What requests are outstanding?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, mem.member_name, mg.group_name
 		FROM {db_prefix}log_group_requests AS lgr
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
@@ -417,7 +417,7 @@ function ModBlockGroupRequests()
 		array(
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['group_requests'][] = array(
 			'id' => $row['id_request'],
@@ -435,7 +435,7 @@ function ModBlockGroupRequests()
 			'time_submitted' => timeformat($row['time_applied']),
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return 'group_requests_block';
 }
@@ -444,7 +444,7 @@ function ModBlockGroupRequests()
 // Browse all the reported posts...
 function ReportedPosts()
 {
-	global $txt, $context, $scripturl, $modSettings, $user_info, $smfFunc;
+	global $txt, $context, $scripturl, $modSettings, $user_info, $smcFunc;
 
 	// This comes under the umbrella of moderating posts.
 	if ($user_info['mod_cache']['bq'] == '0=1')
@@ -478,7 +478,7 @@ function ReportedPosts()
 		$_GET['rid'] = (int) $_GET['rid'];
 
 		// Update the report...
-		$smfFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}log_reported
 			SET ' . (isset($_GET['ignore']) ? 'ignore_all = {int:ignore_all}' : 'closed = {int:closed}') . '
 			WHERE id_report = {int:id_report}
@@ -505,7 +505,7 @@ function ReportedPosts()
 
 		if (!empty($toClose))
 		{
-			$smfFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}log_reported
 				SET closed = {int:is_closed}
 				WHERE id_report IN ({array_int:report_list})
@@ -523,7 +523,7 @@ function ReportedPosts()
 	}
 
 	// How many entries are we viewing?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_reported AS lr
 		WHERE lr.closed = {int:view_closed}
@@ -532,15 +532,15 @@ function ReportedPosts()
 			'view_closed' => $context['view_closed'],
 		)
 	);
-	list ($context['total_reports']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['total_reports']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// So, that means we can page index, yes?
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=reports' . ($context['view_closed'] ? ';sa=closed' : ''), $_GET['start'], $context['total_reports'], 10);
 	$context['start'] = $_GET['start'];
 
 	// By George, that means we in a position to get the reports, golly good.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
 			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
@@ -556,7 +556,7 @@ function ReportedPosts()
 	);
 	$context['reports'] = array();
 	$report_ids = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$report_ids[] = $row['id_report'];
 		$context['reports'][$row['id_report']] = array(
@@ -579,12 +579,12 @@ function ReportedPosts()
 			'ignore' => $row['ignore_all']
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Now get all the people who reported it.
 	if (!empty($report_ids))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT lrc.id_comment, lrc.id_report, lrc.time_sent, lrc.comment,
 				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 			FROM {db_prefix}log_reported_comments AS lrc
@@ -594,7 +594,7 @@ function ReportedPosts()
 				'report_list' => $report_ids,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			if ($row['id_member'] == 0 || !isset($context['reports'][$row['id_report']]['comments'][$row['id_member']]))
 				$context['reports'][$row['id_report']]['comments'][$row['id_member']] = array(
@@ -609,7 +609,7 @@ function ReportedPosts()
 					),
 				);
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 }
 
@@ -643,9 +643,9 @@ function ModerateGroups()
 // How many open reports do we have?
 function recountOpenReports()
 {
-	global $user_info, $context, $smfFunc;
+	global $user_info, $context, $smcFunc;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_reported
 		WHERE ' . $user_info['mod_cache']['bq'] . '
@@ -656,8 +656,8 @@ function recountOpenReports()
 			'not_ignored' => 0,
 		)
 	);
-	list ($open_reports) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($open_reports) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$_SESSION['rc'] = array(
 		'id' => $user_info['id'],
@@ -670,7 +670,7 @@ function recountOpenReports()
 
 function ModReport()
 {
-	global $user_info, $context, $sourcedir, $scripturl, $txt, $smfFunc;
+	global $user_info, $context, $sourcedir, $scripturl, $txt, $smcFunc;
 
 	// Have to at least give us something
 	if (empty($_REQUEST['report']))
@@ -680,7 +680,7 @@ function ModReport()
 	$_REQUEST['report'] = (int) $_REQUEST['report'];
 
 	// Get the report details, need this so we can limit access to a particular board
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
 			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
@@ -695,12 +695,12 @@ function ModReport()
 	);
 
 	// So did we find anything?
-	if (!$smfFunc['db_num_rows']($request))
+	if (!$smcFunc['db_num_rows']($request))
 		fatal_lang_error('mc_no_modreport_found');
 
 	// Woohoo we found a report and they can see it!  Bad news is we have more work to do
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['report'] = array(
 		'id' => $row['id_report'],
@@ -727,7 +727,7 @@ function ModReport()
 	);
 
 	// So what bad things do the reporters have to say about it?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT lrc.id_comment, lrc.id_report, lrc.time_sent, lrc.comment,
 			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 		FROM {db_prefix}log_reported_comments AS lrc
@@ -737,7 +737,7 @@ function ModReport()
 			'id_report' => $context['report']['id'],
 		)
 	);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$context['report']['comments'][] = array(
 			'id' => $row['id_comment'],
@@ -751,7 +751,7 @@ function ModReport()
 			),
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	// What have the other moderators done to this message?
 	require_once($sourcedir . '/Modlog.php');
@@ -865,7 +865,7 @@ function ModReport()
 // Show a notice sent to a user.
 function ShowNotice()
 {
-	global $smfFunc, $txt, $context;
+	global $smcFunc, $txt, $context;
 
 	$context['page_title'] = $txt['show_notice'];
 	$context['sub_template'] = 'show_notice';
@@ -875,7 +875,7 @@ function ShowNotice()
 
 	//!!! Assumes nothing needs permission more than accessing moderation center!
 	$id_notice = (int) $_GET['nid'];
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT body, subject
 		FROM {db_prefix}log_member_notices
 		WHERE id_notice = {int:id_notice}',
@@ -883,10 +883,10 @@ function ShowNotice()
 			'id_notice' => $id_notice,
 		)
 	);
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access');
-	list ($context['notice_body'], $context['notice_subject']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['notice_body'], $context['notice_subject']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['notice_body'] = strtr($context['notice_body'], array("\n" => '<br />'));
 }
@@ -894,7 +894,7 @@ function ShowNotice()
 // View watched users.
 function ViewWatchedUsers()
 {
-	global $smfFunc, $modSettings, $context, $txt, $scripturl, $user_info, $sourcedir;
+	global $smcFunc, $modSettings, $context, $txt, $scripturl, $user_info, $sourcedir;
 
 	// Some important context!
 	$context['page_title'] = $txt['mc_watched_users_title'];
@@ -1104,9 +1104,9 @@ function ViewWatchedUsers()
 
 function list_getWatchedUserCount($approve_query)
 {
-	global $smfFunc, $modSettings;
+	global $smcFunc, $modSettings;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}members
 		WHERE warning >= {int:warning_watch}',
@@ -1114,17 +1114,17 @@ function list_getWatchedUserCount($approve_query)
 			'warning_watch' => $modSettings['warning_watch'],
 		)
 	);
-	list ($totalMembers) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($totalMembers) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $totalMembers;
 }
 
 function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $dummy)
 {
-	global $smfFunc, $txt, $scripturl, $modSettings, $user_info;
+	global $smcFunc, $txt, $scripturl, $modSettings, $user_info;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, last_login, posts, warning
 		FROM {db_prefix}members
 		WHERE warning >= {int:warning_watch}
@@ -1137,7 +1137,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 	);
 	$watched_users = array();
 	$members = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$watched_users[$row['id_member']] = array(
 			'id' => $row['id_member'],
@@ -1150,11 +1150,11 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 		);
 		$members[] = $row['id_member'];
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	if (!empty($members))
 	{
-		$request = $smfFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
@@ -1168,12 +1168,12 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 				'is_approved' => 1,
 			)
 		);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$watched_users[$row['id_member']]['last_post'] = timeformat($row['last_post']);
 			$watched_users[$row['id_member']]['last_post_id'] = $row['last_post_id'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 	}
 
 	return $watched_users;
@@ -1181,9 +1181,9 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 
 function list_getWatchedUserPostsCount($approve_query)
 {
-	global $smfFunc, $modSettings, $user_info;
+	global $smcFunc, $modSettings, $user_info;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
@@ -1195,17 +1195,17 @@ function list_getWatchedUserPostsCount($approve_query)
 			'warning_watch' => $modSettings['warning_watch'],
 		)
 	);
-	list ($totalMemberPosts) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($totalMemberPosts) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $totalMemberPosts;
 }
 
 function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query, $delete_boards)
 {
-	global $smfFunc, $txt, $scripturl, $modSettings, $user_info;
+	global $smcFunc, $txt, $scripturl, $modSettings, $user_info;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.id_topic, m.id_board, m.id_member, m.subject, m.body, m.poster_time,
 			m.approved, mem.member_name
 		FROM {db_prefix}messages AS m
@@ -1221,7 +1221,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 		)
 	);
 	$member_posts = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$row['subject'] = censorText($row['subject']);
 		$row['body'] = censorText($row['body']);
@@ -1237,7 +1237,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 			'can_delete' => $delete_boards == array(0) || in_array($row['id_board'], $delete_boards),
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $member_posts;
 }
@@ -1245,7 +1245,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 // Simply put, look at the warning log!
 function ViewWarningLog()
 {
-	global $smfFunc, $modSettings, $context, $txt, $scripturl, $sourcedir;
+	global $smcFunc, $modSettings, $context, $txt, $scripturl, $sourcedir;
 
 	// Setup context as always.
 	$context['page_title'] = $txt['mc_warning_log'];
@@ -1255,7 +1255,7 @@ function ViewWarningLog()
 	loadLanguage('Profile');
 
 	// Fine - how many warnings have we issued?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}log_comments
 			WHERE comment_type = {string:warning}',
@@ -1263,8 +1263,8 @@ function ViewWarningLog()
 				'warning' => 'warning',
 			)
 		);
-	list ($context['total_warnings']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($context['total_warnings']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Do the page index.
 	$perPage = (int) $modSettings['defaultMaxMessages'];
@@ -1272,7 +1272,7 @@ function ViewWarningLog()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=warnlog', $context['start'], $context['total_warnings'], $perPage);
 
 	// Load them up, boyo.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
 			IFNULL(mem2.id_member, 0) AS id_recipient, IFNULL(mem2.real_name, lc.recipient_name) AS recipient_name,
 			lc.log_time, lc.body, lc.id_notice, lc.counter
@@ -1287,7 +1287,7 @@ function ViewWarningLog()
 		)
 	);
 	$context['warnings'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 			$context['warnings'][] = array(
 			'issuer' => array(
@@ -1304,7 +1304,7 @@ function ViewWarningLog()
 			'id_notice' => $row['id_notice'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	require_once($sourcedir . '/Subs-List.php');
 
@@ -1403,9 +1403,9 @@ function ViewWarningLog()
 
 function list_getWarningCount()
 {
-	global $smfFunc, $modSettings;
+	global $smcFunc, $modSettings;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_comments
 		WHERE comment_type = {string:warning}',
@@ -1413,17 +1413,17 @@ function list_getWarningCount()
 			'warning' => 'warning',
 		)
 	);
-	list ($totalWarns) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($totalWarns) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $totalWarns;
 }
 
 function list_getWarnings($start, $items_per_page, $sort)
 {
-	global $smfFunc, $txt, $scripturl, $modSettings, $user_info;
+	global $smcFunc, $txt, $scripturl, $modSettings, $user_info;
 
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
 			IFNULL(mem2.id_member, 0) AS id_recipient, IFNULL(mem2.real_name, lc.recipient_name) AS recipient_name,
 			lc.log_time, lc.body, lc.id_notice, lc.counter
@@ -1438,7 +1438,7 @@ function list_getWarnings($start, $items_per_page, $sort)
 		)
 	);
 	$warnings = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$warnings[] = array(
 			'issuer_link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
@@ -1449,7 +1449,7 @@ function list_getWarnings($start, $items_per_page, $sort)
 			'id_notice' => $row['id_notice'],
 		);
 	}
-	$smfFunc['db_free_result']($request);
+	$smcFunc['db_free_result']($request);
 
 	return $warnings;
 }
@@ -1457,7 +1457,7 @@ function list_getWarnings($start, $items_per_page, $sort)
 // Change moderation preferences.
 function ModerationSettings()
 {
-	global $context, $smfFunc, $txt, $sourcedir, $scripturl, $user_settings, $user_info;
+	global $context, $smcFunc, $txt, $sourcedir, $scripturl, $user_settings, $user_info;
 
 	// Some useful context stuff.
 	loadTemplate('ModerationCenter');

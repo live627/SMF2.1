@@ -46,7 +46,7 @@ if (!defined('SMF'))
 // Locks a topic... either by way of a moderator or the topic starter.
 function LockTopic()
 {
-	global $topic, $user_info, $sourcedir, $board, $smfFunc;
+	global $topic, $user_info, $sourcedir, $board, $smcFunc;
 
 	// Just quit if there's no topic to lock.
 	if (empty($topic))
@@ -58,7 +58,7 @@ function LockTopic()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Find out who started the topic - in case User Topic Locking is enabled.
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT id_member_started, locked
 		FROM {db_prefix}topics
 		WHERE id_topic = {int:current_topic}
@@ -67,8 +67,8 @@ function LockTopic()
 			'current_topic' => $topic,
 		)
 	);
-	list ($starter, $locked) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($starter, $locked) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Can you lock topics here, mister?
 	$user_lock = !allowedTo('lock_any');
@@ -91,7 +91,7 @@ function LockTopic()
 		fatal_lang_error('locked_by_admin', 'user');
 
 	// Actually lock the topic in the database with the new value.
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET locked = {int:locked}
 		WHERE id_topic = {int:current_topic}',
@@ -114,7 +114,7 @@ function LockTopic()
 // Sticky a topic.  Can't be done by topic starters - that would be annoying!
 function Sticky()
 {
-	global $modSettings, $topic, $board, $sourcedir, $smfFunc;
+	global $modSettings, $topic, $board, $sourcedir, $smcFunc;
 
 	// Make sure the user can sticky it, and they are stickying *something*.
 	isAllowedTo('make_sticky');
@@ -133,7 +133,7 @@ function Sticky()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Is this topic already stickied, or no?
-	$request = $smfFunc['db_query']('', '
+	$request = $smcFunc['db_query']('', '
 		SELECT is_sticky
 		FROM {db_prefix}topics
 		WHERE id_topic = {int:current_topic}
@@ -142,11 +142,11 @@ function Sticky()
 			'current_topic' => $topic,
 		)
 	);
-	list ($is_sticky) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($is_sticky) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	// Toggle the sticky value.... pretty simple ;).
-	$smfFunc['db_query']('', '
+	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET is_sticky = {int:is_sticky}
 		WHERE id_topic = {int:current_topic}',
