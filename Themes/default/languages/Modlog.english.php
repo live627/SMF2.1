@@ -57,4 +57,8 @@ $txt['modlog_ac_add_cat'] = 'Added a new category, &quot;{catname}&quot;';
 $txt['modlog_ac_edit_cat'] = 'Edited the &quot;{catname}&quot; category';
 $txt['modlog_ac_delete_cat'] = 'Deleted the &quot;{catname}&quot; category';
 
+// Restore topic.
+$txt['modlog_ac_restore_topic'] = 'Restored topic &quot;{topic}&quot; from &quot;{board}&quot; to &quot;{board_to}&quot;';
+$txt['modlog_ac_restore_posts'] = 'Restored posts from &quot;{subject}&quot; to the topic &quot;{topic}&quot; in the &quot;{board}&quot; board.';
+
 ?>

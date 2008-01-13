@@ -182,6 +182,7 @@ function Display()
 			t.num_replies, t.num_views, t.locked, ms.subject, t.is_sticky, t.id_poll,
 			t.id_member_started, t.id_first_msg, t.id_last_msg, t.approved,
 			' . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.id_msg, -1) + 1') . ' AS new_from
+			' . (!empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $board ? ', id_previous_board, id_previous_topic' : '') . '
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)' . ($user_info['is_guest'] ? '' : '
 			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = {int:current_topic} AND lt.id_member = {int:current_member})') . '
@@ -920,6 +921,8 @@ function Display()
 		'can_report_moderator' => 'report_any',
 		'can_moderate_forum' => 'moderate_forum',
 		'can_issue_warning' => 'issue_warning',
+		'can_restore_topic' => 'moderate_forum',
+		'can_restore_msg' => 'moderate_forum',
 	);
 	foreach ($common_permissions as $contextual => $perm)
 		$context[$contextual] = allowedTo($perm);
@@ -951,6 +954,10 @@ function Display()
 
 	// Start this off for quick moderation - it will be or'd for each post.
 	$context['can_remove_post'] = allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']);
+
+	// Can restore topic?  That's if the topic is in the recycle board and has a previous restore state.
+	$context['can_restore_topic'] &= !empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $board && !empty($topicinfo['id_previous_board']);
+	$context['can_restore_msg'] &= !empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $board && !empty($topicinfo['id_previous_topic']);
 
 	// Wireless shows a "more" if you can do anything special.
 	if (WIRELESS && WIRELESS_PROTOCOL != 'wap')

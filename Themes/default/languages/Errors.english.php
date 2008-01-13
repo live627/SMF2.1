@@ -377,4 +377,7 @@ $txt['email_no_template'] = 'The email template &quotl%1$s&quot; could not be fo
 $txt['search_api_missing'] = 'The search API could not be found! Please contact the admin to check they have uploaded the correct files.';
 $txt['search_api_not_compatible'] = 'The selected search API the forum is using is out of date - falling back to standard search. Please check file %1$s.';
 
+// Restore topic/posts
+$txt['cannot_restore_first_post'] = 'You cannot restore the first post in a topic.';
+$txt['parent_topic_missing'] = 'The parent topic of the post you are trying to restore has been deleted.';
 ?>

@@ -104,3 +104,13 @@ INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOption
 ALTER TABLE {$db_prefix}attachments
 ADD COLUMN id_folder smallint NOT NULL default '1';
 ---#
+
+/******************************************************************************/
+--- Adding restore topic from recycle.
+/******************************************************************************/
+
+---# Adding restore from recycle feature...
+ALTER TABLE {$db_prefix}topics
+ADD COLUMN id_previous_board smallint NOT NULL default '0',
+ADD COLUMN id_previous_topic int NOT NULL default '0';
+---#

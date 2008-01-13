@@ -102,6 +102,7 @@ January 2008
  ! Fixed some JavaScript errors. (GenericMenu template, script.js, menu.js)
  ! Changed the $smfFunc variable to $smcFunc to properly handle future expansion of its purpose. (Almost all files)
  ! The security_override parameter wasn't properly handled by db_query. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1262]
+ + Added the ability to restore topics from the recycle board. (index.php, Display.php, RemoveTopic.php, Display template, index, Errors and Modlog language files, install and upgrade scripts)
 
 
 December 2007

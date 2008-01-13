@@ -2156,6 +2156,16 @@ INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOption
 ---#
 
 /******************************************************************************/
+--- Adding restore topic from recycle.
+/******************************************************************************/
+
+---# Adding restore from recycle feature...
+ALTER TABLE {$db_prefix}topics
+ADD COLUMN id_previous_board smallint(5) NOT NULL default '0',
+ADD COLUMN id_previous_topic mediumint(8) NOT NULL default '0';
+---#
+
+/******************************************************************************/
 --- Final clean up...
 /******************************************************************************/
 

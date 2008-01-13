@@ -1965,6 +1965,8 @@ CREATE TABLE {$db_prefix}topics (
   id_member_started mediumint(8) unsigned NOT NULL default '0',
   id_member_updated mediumint(8) unsigned NOT NULL default '0',
   id_poll mediumint(8) unsigned NOT NULL default '0',
+  id_previous_board smallint(5) NOT NULL default '0',
+  id_previous_topic mediumint(8) NOT NULL default '0',
   num_replies int(10) unsigned NOT NULL default '0',
   num_views int(10) unsigned NOT NULL default '0',
   locked tinyint(4) NOT NULL default '0',

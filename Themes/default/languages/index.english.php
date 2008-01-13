@@ -705,4 +705,10 @@ $txt['openid'] = 'OpenID';
 
 $txt['downloads'] = 'Downloads';
 $txt['filesize'] = 'Filesize';
+
+// Restore topic
+$txt['restore_topic'] = 'Restore Topic';
+$txt['restore_message'] = 'Restore Message';
+$txt['restore_selected_messages'] = 'Restore Selected Messages';
+
 ?>

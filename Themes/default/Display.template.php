@@ -240,6 +240,7 @@ function template_main()
 	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 	$split_button = create_button('split.gif', 'split', 'split', 'align="middle"');
 	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
+	$restore_message_button = create_button('restore_topic.gif', 'restore_message', 'restore_message', 'align="middle"');
 
 // Time to display all the posts
 	echo '
@@ -441,6 +442,11 @@ function template_main()
 			echo '
 					<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', $split_button, '</a>';
 
+		// Can we restore topics?
+		if ($context['can_restore_msg'])
+			echo '
+					<a href="', $scripturl, '?action=restoretopic;topic=', $context['current_topic'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '">', $restore_message_button, '</a>';
+
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
 			echo '
@@ -630,6 +636,10 @@ function template_main()
 
 	if ($context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 		$mod_buttons[] = array('text' => 'quickmod_delete_selected', 'image' => 'delete_selected.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['quickmod_confirm'] . '\');" id="quickmodSubmit"', 'url' => 'javascript:document.quickModForm.submit();');
+
+	// Restore topic. eh?  No monkey business.
+	if ($context['current_board'] == $modSettings['recycle_board'] && $context['can_restore_topic'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topic=' . $context['current_topic'] . ';sesc=' . $context['session_id']);
 
 	echo '
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 1ex;">

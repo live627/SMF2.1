@@ -2116,6 +2116,8 @@ CREATE TABLE {$db_prefix}topics (
   id_member_started int NOT NULL default '0',
   id_member_updated int NOT NULL default '0',
   id_poll int NOT NULL default '0',
+  id_previous_board smallint NOT NULL default '0',
+  id_previous_topic int NOT NULL default '0',
   num_replies int NOT NULL default '0',
   num_views int NOT NULL default '0',
   locked smallint NOT NULL default '0',

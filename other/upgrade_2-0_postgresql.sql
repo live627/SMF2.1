@@ -280,3 +280,42 @@ else
 }
 ---}
 ---#
+
+/******************************************************************************/
+--- Adding restore topic from recycle.
+/******************************************************************************/
+
+---# Adding multiple attachment path functionality.
+---{
+if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
+		ADD COLUMN id_previous_board smallint,
+		ADD COLUMN id_previous_topic int");
+
+	upgrade_query("
+		UPDATE {$db_prefix}topics
+		SET
+			id_previous_board = 0,
+			id_previous_topic = 0");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
+		ALTER COLUMN id_previous_board SET NOT NULL,
+		ALTER COLUMN id_previous_topic SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
+		ALTER COLUMN id_previous_board SET default '0',
+		ALTER COLUMN id_previous_topic SET default '0'");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
+		ADD COLUMN id_previous_board smallint NOT NULL default '0',
+		ADD COLUMN id_previous_topic int NOT NULL default '0'");
+}
+---}
+---#
