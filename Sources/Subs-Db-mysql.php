@@ -274,10 +274,8 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		var_dump(debug_backtrace());
 		fatal_error('Hacking attempt...', false);
 	}
-	elseif ($db_values === 'security_override')
-		$db_values = array();
 
-	if (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false)
+	if ($db_values !== 'security_override' && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
 	{
 		// Pass some values to the global space for use in the callback function.
 		$db_callback = array($db_values, $connection);
