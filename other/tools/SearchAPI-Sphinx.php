@@ -131,7 +131,7 @@ class sphinx_search
 					);
 
 			// Store the search results in the cache.
-			cache_put_data('search_results_' . md5($user_info['query_see_board']) . '_' . $context['params'], $cached_results, 600);
+			cache_put_data('search_results_' . md5($user_info['query_see_board'] . '_' . $context['params']), $cached_results, 600);
 		}
 
 		$participants = array();
