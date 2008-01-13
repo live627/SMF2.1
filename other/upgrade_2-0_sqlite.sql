@@ -63,10 +63,10 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 		SELECT value
 		FROM {$db_prefix}settings
 		WHERE variable = 'cache_enable'");
-	list ($cache_enable) = $smfFunc['db_fetch_row']($request);
+	list ($cache_enable) = $smcFunc['db_fetch_row']($request);
 
 	// No cache before 1.1.
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		upgrade_query("
 			INSERT INTO {$db_prefix}settings
 				(variable, value)

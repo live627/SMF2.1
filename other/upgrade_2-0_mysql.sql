@@ -532,10 +532,10 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 		SELECT value
 		FROM {$db_prefix}settings
 		WHERE variable = 'cache_enable'");
-	list ($cache_enable) = $smfFunc['db_fetch_row']($request);
+	list ($cache_enable) = $smcFunc['db_fetch_row']($request);
 
 	// No cache before 1.1.
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		upgrade_query("
 			INSERT INTO {$db_prefix}settings
 				(variable, value)
@@ -1102,8 +1102,8 @@ if (@$modSettings['smfVersion'] < '2.0')
 	$request = upgrade_query("
 		SELECT MAX(id_attach)
 		FROM {$db_prefix}attachments");
-	list ($step_progress['total']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	list ($step_progress['total']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
 
 	$_GET['a'] = isset($_GET['a']) ? (int) $_GET['a'] : 0;
 	$step_progress['name'] = 'Calculating MIME Types';
@@ -1160,9 +1160,9 @@ if (@$modSettings['smfVersion'] < '2.0')
 				AND mime_type = ''
 			LIMIT $_GET[a], 100");
 		// Finished?
-		if ($smfFunc['db_num_rows']($request) == 0)
+		if ($smcFunc['db_num_rows']($request) == 0)
 			$is_done = true;
-		while ($row = $smfFunc['db_fetch_assoc']($request))
+		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 			if (!file_exists($filename))
@@ -1191,7 +1191,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 				);
 			$ext_updates[$row['fileext'] . $size['mime']]['files'][] = $row['id_attach'];
 		}
-		$smfFunc['db_free_result']($request);
+		$smcFunc['db_free_result']($request);
 
 		// Do the updates?
 		foreach ($ext_updates as $key => $update)

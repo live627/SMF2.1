@@ -22,7 +22,7 @@ CREATE TABLE {$db_prefix}openid_assoc (
 
 ---# Adding search ability to custom fields.
 ---{
-if ($smfFunc['db_server_info'] < 8.0)
+if ($smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}custom_fields
@@ -67,7 +67,7 @@ upgrade_query("
 
 ---# Implementing board redirects.
 ---{
-if ($db_type == 'postgresql' && $smfFunc['db_server_info'] < 8.0)
+if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}boards
@@ -156,10 +156,10 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 		SELECT value
 		FROM {$db_prefix}settings
 		WHERE variable = 'cache_enable'");
-	list ($cache_enable) = $smfFunc['db_fetch_row']($request);
+	list ($cache_enable) = $smcFunc['db_fetch_row']($request);
 
 	// No cache before 1.1.
-	if ($smfFunc['db_num_rows']($request) == 0)
+	if ($smcFunc['db_num_rows']($request) == 0)
 		upgrade_query("
 			INSERT INTO {$db_prefix}settings
 				(variable, value)
@@ -196,7 +196,7 @@ CREATE INDEX {$db_prefix}log_online_id_member ON {$db_prefix}log_online (id_memb
 
 ---# Adding guest voting - part 1...
 ---{
-if ($smfFunc['db_server_info'] < 8.0)
+if ($smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
@@ -254,7 +254,7 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30
 
 ---# Adding multiple attachment path functionality.
 ---{
-if ($smfFunc['db_server_info'] < 8.0)
+if ($smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}attachments
