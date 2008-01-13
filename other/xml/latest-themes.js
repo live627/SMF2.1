@@ -24,7 +24,7 @@ unset($_SESSION['language']);
 
 // Get a featured theme
 $themes = array();
-$request = $smfFunc['db_query']('', "
+$request = $smcFunc['db_query']('', "
 	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
 		th.submit_time, th.id_type, a.filename, th.description, th.author_name
 	FROM {$theme_prefix}featured AS fe
@@ -34,9 +34,9 @@ $request = $smfFunc['db_query']('', "
 	WHERE th.status=1
 	ORDER BY RAND()
 	LIMIT 1", __FILE__, __LINE__);
-if ( $smfFunc['db_num_rows']($request) )
+if ( $smcFunc['db_num_rows']($request) )
 {
-	$row = $smfFunc['db_fetch_assoc']($request);
+	$row = $smcFunc['db_fetch_assoc']($request);
 	censorText($row['theme_name']);
 	censorText($row['description']);
 	$themes[$row['id_theme']] = array(
@@ -59,7 +59,7 @@ else
 	$featured = 0;
 
 // Load the theme data
-$request = $smfFunc['db_query']('', "
+$request = $smcFunc['db_query']('', "
 	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
 		th.submit_time, th.id_type, a.filename, th.description, th.author_name
 	FROM {$theme_prefix}themes AS th
@@ -70,7 +70,7 @@ $request = $smfFunc['db_query']('', "
 	ORDER BY submit_time DESC
 	LIMIT 3", __FILE__, __LINE__);
 $latest_ids = array();
-while ( $row = $smfFunc['db_fetch_assoc']($request) )
+while ( $row = $smcFunc['db_fetch_assoc']($request) )
 {
 	censorText($row['theme_name']);
 	censorText($row['description']);
@@ -92,7 +92,7 @@ while ( $row = $smfFunc['db_fetch_assoc']($request) )
 }
 
 // Grab a random theme
-$request = $smfFunc['db_query']('', "
+$request = $smcFunc['db_query']('', "
 	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
 		th.submit_time, th.id_type, a.filename, th.description, th.author_name
 	FROM {$theme_prefix}themes AS th
@@ -101,7 +101,7 @@ $request = $smfFunc['db_query']('', "
 	WHERE th.status=1 AND th.id_theme NOT IN ($featured" . (empty($latest_ids) ? '' : ',' . implode(',',$latest_ids)) . ")
 	ORDER BY RAND()
 	LIMIT 1", __FILE__, __LINE__);
-while ( $row = $smfFunc['db_fetch_assoc']($request) )
+while ( $row = $smcFunc['db_fetch_assoc']($request) )
 {
 	censorText($row['theme_name']);
 	censorText($row['description']);
@@ -122,7 +122,7 @@ while ( $row = $smfFunc['db_fetch_assoc']($request) )
 	$random_id = $row['id_theme'];
 }
 
-$smfFunc['db_free_result']($request);
+$smcFunc['db_free_result']($request);
 
 
 header('Content-Type: text/javascript');

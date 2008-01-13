@@ -35,17 +35,17 @@ else
 var actionurl = '?action=admin;area=packages;sa=download;get;package=';";
 }
 // Pull the smf versions out of the table.
-$result = $smfFunc['db_query']('', "
+$result = $smcFunc['db_query']('', "
 	SELECT id_ver, ver_name
 	FROM {$customize_prefix}smfVersions
 	WHERE public = 1", __FILE__, __LINE__);
 
 $mod_site['smf_versions'] = array();
-while ($row = $smfFunc['db_fetch_assoc']($result))
+while ($row = $smcFunc['db_fetch_assoc']($result))
 {
 	$mod_site['smf_versions'][$row['id_ver']] = $row['vername'];
 }
-$smfFunc['db_free_result']($result);
+$smcFunc['db_free_result']($result);
 
 header('Content-Type: text/javascript');
 
@@ -86,7 +86,7 @@ else
 var smf_modificationInfo = {
 <?php
 
-$request = $smfFunc['db_query']('', "
+$request = $smcFunc['db_query']('', "
 	(
 		SELECT
 			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 1 AS type,
@@ -113,7 +113,7 @@ $request = $smfFunc['db_query']('', "
 		LIMIT 1
 	)", __FILE__, __LINE__);
 $mods = array();
-while ($row = $smfFunc['db_fetch_assoc']($request))
+while ($row = $smcFunc['db_fetch_assoc']($request))
 {
 	censorText($row['mod_name']);
 	censorText($row['description']);
@@ -134,7 +134,7 @@ while ($row = $smfFunc['db_fetch_assoc']($request))
 		'is_last' => $row['type'] == 2,
 	);
 }
-$smfFunc['db_free_result']($request);
+$smcFunc['db_free_result']($request);
 
 foreach ($mod_site['smf_versions'] as $i => $ver)
 {

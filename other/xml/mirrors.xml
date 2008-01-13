@@ -19,24 +19,24 @@
 		);
 
 		// Get the releases!
-		$result = $smfFunc['db_query']('', "
+		$result = $smcFunc['db_query']('', "
 			SELECT ver.ver_name, ver.file_name, ver.public, IFNULL(pkg.access,1) AS access
 			FROM {$customize_prefix}smfVersions AS ver
 			LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, 'install', '%' ) ) 
 			WHERE obsolete !=1
 			ORDER BY display_order DESC", __FILE__, __LINE__);
 
-		while ( $row = $smfFunc['db_fetch_assoc']($result) )
+		while ( $row = $smcFunc['db_fetch_assoc']($result) )
 			$data['releases'][] = array(
 				'name' => 'SMF ' . $row['ver_name'],
 				'file' => $row['file_name'],
 				'access' => $row['access'],
 			);
 
-		$smfFunc['db_free_result']($result);
+		$smcFunc['db_free_result']($result);
 
 		// Finally get the languages!
-		$result = $smfFunc['db_query']('', $query = "
+		$result = $smcFunc['db_query']('', $query = "
 			SELECT ver.ver_name, ver.file_name, pkg.filename
 			FROM customize.smfVersions AS ver
 			LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, '%' ) AND pkg.release_type =1 ) 
@@ -45,19 +45,19 @@
 				AND NOT ISNULL(pkg.filename) 
 			ORDER BY display_order DESC, pkg.filename ASC", __FILE__, __LINE__);
 
-		while ($row = $smfFunc['db_fetch_assoc']($result))
+		while ($row = $smcFunc['db_fetch_assoc']($result))
 		{
 			$lang = str_replace($row['file_name'], '', $row['filename']);
 			if (!isset($data['languages'][$lang]))
 				$data['languages'][$lang] = array(
-					'name' => $smfFunc['htmlspecialchars']($lang),
+					'name' => $smcFunc['htmlspecialchars']($lang),
 					'access' => $row['access'],
 					'versions' => array(),
 				);
 			$data['languages'][$lang]['versions'][] = $row['ver_name'];
 		}
 
-		$smfFunc['db_free_result']($result);
+		$smcFunc['db_free_result']($result);
 
 		// Finally store the results for later use.
 		cache_put_data('mirrors-xml-data', $data, 3600);
