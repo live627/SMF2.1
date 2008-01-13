@@ -380,12 +380,21 @@ function getOuterHTML(node)
 // Checks for variable in theArray.
 function in_array(variable, theArray)
 {
-	for (var i = 0; i < theArray.length; i++)
-	{
+	for (var i in theArray)
 		if (theArray[i] == variable)
 			return true;
-	}
+
 	return false;
+}
+
+// Checks for variable in theArray.
+function array_search(variable, theArray)
+{
+	for (var i in theArray)
+		if (theArray[i] == variable)
+			return i;
+
+	return null;
 }
 
 // Find a specific radio button in its group and select it.
@@ -395,10 +404,8 @@ function selectRadioByName(radioGroup, name)
 		return radioGroup.checked = true;
 
 	for (var i = 0; i < radioGroup.length; i++)
-	{
 		if (radioGroup[i].value == name)
 			return radioGroup[i].checked = true;
-	}
 
 	return false;
 }
@@ -426,7 +433,7 @@ function smf_sessionKeepAlive()
 	if (smf_scripturl && curTime - lastKeepAliveCheck > 900000)
 	{
 		var tempImage = new Image();
-		tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=keepalive;" + curTime;
+		tempImage.src = smf_scripturl + (smf_scripturl.indexOf('?') == -1 ? '?' : '&') + 'action=keepalive;' + curTime;
 		lastKeepAliveCheck = curTime;
 	}
 
@@ -1032,8 +1039,7 @@ function smf_itemPos(itemHandle)
 		itemY = itemHandle.offsetTop;
 		if (itemHandle.offsetParent)
 		{
-			
-			while (itemHandle = itemHandle.offsetParent)
+			while (typeof(itemHandle = itemHandle.offsetParent) == 'object')
 			{
 				itemX += itemHandle.offsetLeft;
 				itemY += itemHandle.offsetTop;

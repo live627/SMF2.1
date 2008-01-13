@@ -136,7 +136,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		// Now it's all drawn out we'll actually setup the box.
 		echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var editorHandle', $editor_id, ' = new smfEditor(\'', $context['session_id'], '\', \'', $editor_id, '\', ', $editor_context['rich_active'] ? 'true' : 'false', ', \'', $editor_context['rich_active'] ? $editor_context['rich_value'] : '', '\', \'', $editor_context['width'], '\', \'', $editor_context['height'], '\');';
+		var editorHandle', $editor_id, ' = new SmfEditor(\'', $context['session_id'], '\', \'', $editor_id, '\', ', $editor_context['rich_active'] ? 'true' : 'false', ', \'', $editor_context['rich_active'] ? $editor_context['rich_value'] : '', '\', \'', $editor_context['width'], '\', \'', $editor_context['height'], '\');';
 
 		// Create the controls.
 		if (!empty($context['bbc_tags']))
@@ -188,7 +188,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		editorHandle', $editor_id, '.addSelect(\'face\');
 		editorHandle', $editor_id, '.addSelect(\'size\');
 		editorHandle', $editor_id, '.addSelect(\'color\');
-		editorHandle', $editor_id, '.setFormID(\'', $editor_context['form'], '\');
+		editorHandle', $editor_id, '.sFormID = \'', $editor_context['form'], '\';
 		smf_editorArray[smf_editorArray.length] = editorHandle', $editor_id, ';
 	// ]]></script>';
 	}

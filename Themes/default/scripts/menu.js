@@ -43,6 +43,8 @@ function smfMenu(menuID)
 		// Find out what the mouse is doing.
 		createEventListener(document.body);
 		document.body.addEventListener('mousemove', onMenuMouseMove, false);
+
+		return true;
 	}
 
 	function toggleMenuVisible(itemHandle, is_visible)

@@ -661,7 +661,7 @@ function template_main()
 						if (document.forms.postmodify.elements[textFields[i]])
 						{
 							// Handle the WYSIWYG editor.
-							if (textFields[i] == "', $context['post_box_name'], '" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.getMode() == 1)
+							if (textFields[i] == "', $context['post_box_name'], '" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.bRichTextEnabled)
 								x[x.length] = "message_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
 							else
 								x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
@@ -778,9 +778,9 @@ function template_main()
 			function insertQuoteFast(messageid)
 			{
 				if (window.XMLHttpRequest)
-					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.getMode(), onDocReceived);
+					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.bRichTextEnabled, onDocReceived);
 				else
-					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.getMode(), 240, 90);
+					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.bRichTextEnabled, 240, 90);
 					return true;
 			}
 			function onDocReceived(XMLDoc)

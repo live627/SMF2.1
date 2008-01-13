@@ -1,1222 +1,1189 @@
 // Make an editor!!
-function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
+function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight)
 {
+
 	// Create some links to the editor object.
-	this.uid = uniqueId;
-	var textHandle = false;
-	var currentText = typeof(text) != "undefined" ? text : '';
+	this.sUniqueId = sUniqueId;
+	this.oTextHandle = null;
+	this.sCurrentText = typeof(sText) != 'undefined' ? sText : '';
 
 	// How big?
-	var editWidth = typeof(editWidth) != "undefined" ? editWidth : '70%';
-	var editHeight = typeof(editHeight) != "undefined" ? editHeight : '150px';
+	this.sEditWidth = typeof(sEditWidth) != 'undefined' ? sEditWidth : '70%';
+	this.sEditHeight = typeof(sEditHeight) != 'undefined' ? sEditHeight : '150px';
 
-	var showDebug = false;
-	var richTextEnabled = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
+	this.showDebug = false;
+	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	//!!! This partly works on opera - it's a rubbish browser for JS.
-	var richTextPossible = is_ie5up || is_ff || is_opera9up;
-	//var richTextPossible = is_ie5up || is_ff;
+	this.bRichTextPossible = is_ie5up || is_ff || is_opera9up;
+	//var this.bRichTextPossible = is_ie5up || is_ff;
 
-	var frameHandle = null;
-	var frameDocument = null;
-	var frameWindow = null;
-
-	// What is the ID of the form this control is in?
-	var formID = 'postmodify';
+	this.oFrameHandle = null;
+	this.oFrameDocument = null;
+	this.oFrameWindow = null;
 
 	// These hold the breadcrumb.
-	var breadHandle = null;
+	this.oBreadHandle = null;
 
-	var smileyPopupWindow = null;
-	var cur_session_id = sessionID;
-
-	// This will be used for loading the wysiwyg stuff.
-	this.init = init;
-	this.addButton = addButton;
-	this.addSmiley = addSmiley;
-	this.addSelect = addSelect;
-	this.toggleView = toggleView;
-	this.insertText = insertText;
-	this.insertSmiley = insertSmiley;
-	this.getMode = getMode;
-	this.getText = getText;
-	this.showMoreSmileys = showMoreSmileys;
-	this.resizeTextArea = resizeTextArea;
-	this.doSubmit = doSubmit;
-	this.setFormID = setFormID;
-
-	// Spellcheck functionaliy.
-	this.spellCheckStart = spellCheckStart;
-	this.spellCheckEnd = spellCheckEnd;
+	this.oSmileyPopupWindow = null;
+	this.sCurSessionId = sSessionId;
 
 	// Kinda holds all the useful stuff.
-	var buttonControls = new Array();
-	var selectControls = new Array();
-	var smfSmileys = new Array();
-	var formatQueue = new Array();
+	this.aButtonControls = new Array();
+	this.aSelectControls = new Array();
+	this.oSmfSmileys = new Object;
+	this.aFormatQueue = new Array();
 
 	// This is all the elements that can have a simple execCommand.
-	var simpleExec = new Array();
-	simpleExec['b'] = 'bold';
-	simpleExec['u'] = 'underline';
-	simpleExec['i'] = 'italic';
-	simpleExec['s'] = 'strikethrough';
-	simpleExec['left'] = 'justifyleft';
-	simpleExec['center'] = 'justifycenter';
-	simpleExec['right'] = 'justifyright';
-	simpleExec['hr'] = 'inserthorizontalrule';
-	simpleExec['list'] = 'insertunorderedlist';
-	simpleExec['orderlist'] = 'insertorderedlist';
+	this.oSimpleExec = {
+		b: 'bold',
+		u: 'underline',
+		i: 'italic',
+		s: 'strikethrough',
+		left: 'justifyleft',
+		center: 'justifycenter',
+		right: 'justifyright',
+		hr: 'inserthorizontalrule',
+		list: 'insertunorderedlist',
+		orderlist: 'insertorderedlist'
+	}
 
 	// Codes to call a private function
-	var smfExec = new Array();
-	smfExec['toggle'] = toggleView;
+	this.oSmfExec = {
+		toggle: 'toggleView'
+	}
 	//smfExec['increase_height'] = makeEditorTaller;
 	//smfExec['decrease_height'] = makeEditorShorter;
 
 	// Things which have direct HTML equivalents. [ => <
-	var htmlEquiv = new Array();
-	htmlEquiv['pre'] = 'pre';
-	htmlEquiv['sub'] = 'sub';
-	htmlEquiv['sup'] = 'sup';
-	htmlEquiv['tt'] = 'tt';
+	this.oHtmlEquiv = {
+		pre: 'pre',
+		sub: 'sub',
+		sup: 'sup',
+		tt: 'tt'
+	}
 
 	// Any special breadcrumb mappings to ensure we show a consistant tag name.
-	var breadCrumbNameTags = new Array();
-	breadCrumbNameTags['strike'] = 's';
-	breadCrumbNameTags['strong'] = 'b';
-	breadCrumbNameTags['em'] = 'i';
+	this.breadCrumbNameTags = {
+		strike: 's',
+		strong: 'b',
+		em: 'i'
+	}
 
-	var breadCrumbNameStyles = new Array();
-	breadCrumbNameStyles[0] = new Array('text-decoration', 'underline', 'u');
-	breadCrumbNameStyles[1] = new Array('text-decoration', 'line-through', 's');
-	breadCrumbNameStyles[2] = new Array('text-align', 'left', 'left');
-	breadCrumbNameStyles[3] = new Array('text-align', 'center', 'center');
-	breadCrumbNameStyles[4] = new Array('text-align', 'right', 'right');
-	breadCrumbNameStyles[5] = new Array('font-weight', 'bold', 'b');
-	breadCrumbNameStyles[6] = new Array('font-style', 'italic', 'i');
+	this.aBreadCrumbNameStyles = [
+		{
+			sStyleType: 'text-decoration',
+			sStyleValue: 'underline',
+			sBbcTag: 'u'
+		},
+		{
+			sStyleType: 'text-decoration',
+			sStyleValue: 'line-through',
+			sBbcTag: 's'
+		},
+		{
+			sStyleType: 'text-align',
+			sStyleValue: 'left',
+			sBbcTag: 'left'
+		},
+		{
+			sStyleType: 'text-align',
+			sStyleValue: 'center',
+			sBbcTag: 'center'
+		},
+		{
+			sStyleType: 'text-align',
+			sStyleValue: 'right',
+			sBbcTag: 'right'
+		},
+		{
+			sStyleType: 'font-weight',
+			sStyleValue: 'bold',
+			sBbcTag: 'b'
+		},
+		{
+			sStyleType: 'font-style',
+			sStyleValue: 'italic',
+			sBbcTag: 'i'
+		}
+	];
 
 	// All the fonts in the world.
-	var fontFaces = new Array('Arial', 'Arial Black', 'Impact', 'Verdana', 'Times New Roman', 'Georgia', 'Andale Mono', 'Trebuchet MS', 'Comic Sans MS');
+	this.aFontFaces = [
+		'Arial',
+		'Arial Black',
+		'Impact',
+		'Verdana',
+		'Times New Roman',
+		'Georgia',
+		'Andale Mono',
+		'Trebuchet MS',
+		'Comic Sans MS'
+	];
 	// Font maps (HTML => CSS size)
-	var fontSizes = new Array(0, 8, 10, 12, 14, 18, 24, 36);
+	this.aFontSizes = [
+		0,
+		8,
+		10,
+		12,
+		14,
+		18,
+		24,
+		36
+	];
 	// Color maps! (hex => name)
-	var fontColors = new Array();
-	fontColors['#000000'] = 'black';
-	fontColors['#ff0000'] = 'red';
-	fontColors['#ffff00'] = 'yellow';
-	fontColors['#ffc0cb'] = 'pink';
-	fontColors['#008000'] = 'green';
-	fontColors['#ffa500'] = 'orange';
-	fontColors['#800080'] = 'purple';
-	fontColors['#0000ff'] = 'blue';
-	fontColors['#f5f5dc'] = 'beige';
-	fontColors['#a52a2a'] = 'brown';
-	fontColors['#008080'] = 'teal';
-	fontColors['#000080'] = 'navy';
-	fontColors['#800000'] = 'maroon';
-	fontColors['#32cd32'] = 'limegreen';
-
-	function getMode()
-	{
-		return richTextEnabled ? 1 : 0;
+	this.oFontColors = {
+		black: '#000000',
+		red: '#ff0000',
+		yellow: '#ffff00',
+		pink: '#ffc0cb',
+		green: '#008000',
+		orange: '#ffa500',
+		purple: '#800080',
+		blue: '#0000ff',
+		beige: '#f5f5dc',
+		brown: '#a52a2a',
+		teal: '#008080',
+		navy: '#000080',
+		maroon: '#800000',
+		limegreen: '#32cd32'
 	}
+
+	this.formID = 'postmodify';
+
+	this.init();
+}
+
+SmfEditor.prototype.init = function()
+{
+	// Set the textHandle.	
+	this.oTextHandle = document.getElementById(this.sUniqueId);
+
+	// Ensure the currentText is set correctly depending on the mode.
+	if (this.sCurrentText == '' && this.bRichTextEnabled)
+		this.sCurrentText = smf_unhtmlspecialchars(getInnerHTML(this.oTextHandle));
+
+	// Only try to do this if rich text is supported.
+	if (this.bRichTextPossible)
+	{
+		// Make the iframe itself, stick it next to the current text area, and give it an ID.
+		this.oFrameHandle = document.createElement('iframe');
+		this.oFrameHandle.id = 'html_' + this.sUniqueId;
+		this.oFrameHandle.style.display = 'none';
+		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
+
+		// Create some handy shortcuts.
+		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : this.oFrameHandle.contentWindow.document;
+		this.oFrameWindow = this.oFrameHandle.contentWindow;
+
+		// Create the debug window... and stick this under the main frame - make it invisible by default.
+		this.oBreadHandle = document.createElement('div');
+		this.oBreadHandle.id = 'bread_' . uid;
+		this.oBreadHandle.style.visibility = 'visible';
+		this.oBreadHandle.style.display = 'none';
+		this.oFrameHandle.parentNode.appendChild(this.oBreadHandle);
+
+		// Size the iframe dimensions to something sensible.
+		this.oFrameHandle.style.width = this.sEditWidth;
+		this.oFrameHandle.style.height = this.sEditHeight;
+		this.oFrameHandle.style.visibility = 'visible';
+
+		// Only bother formatting the debug window if debug is enabled.
+		if (this.showDebug)
+		{
+			this.oBreadHandle.style.width = this.sEditWidth;
+			this.oBreadHandle.style.height = '20px';
+			this.oBreadHandle.className = 'windowbg2';
+			this.oBreadHandle.style.border = '1px black solid';
+			this.oBreadHandle.style.display = '';
+		}
+
+		// Populate the editor with nothing by default.
+		if (!is_opera9up)
+		{
+			this.oFrameDocument.open();
+			this.oFrameDocument.write('');
+			this.oFrameDocument.close();
+		}
+
+		// Mark it as editable...
+		if (this.oFrameDocument.body.contentEditable)
+			this.oFrameDocument.body.contentEditable = true;
+		else
+		{
+			this.oFrameHandle.style.display = '';
+			this.oFrameDocument.designMode = 'on';
+			this.oFrameHandle.style.display = 'none';
+		}
+
+		// Now we need to try and style the editor - internet explorer allows us to do the whole lot.
+		if (document.styleSheets['rich_edit_css'])
+		{
+			var oMyStyle = this.oFrameDocument.createElement('style');
+			this.oFrameDocument.documentElement.firstChild.appendChild(oMyStyle);
+			oMyStyle.styleSheet.cssText = document.styleSheets['rich_edit_css'].cssText;
+		}
+		// Otherwise we seem to have to try to rip out each of the styles one by one!
+		else if (document.styleSheets.length)
+		{
+			// First we need to find the right style sheet.
+			for (var i = 0, iNumStyleSheets = document.styleSheets.length; i < iNumStyleSheets; i++)
+			{
+				if (document.styleSheets[i].cssRules.length)
+				{
+					// Manually try to find the rich_editor class.
+					for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
+					{
+						// Got it!
+						if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
+						{
+							// Set some possible styles.
+							this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
+							this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
+							this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
+							this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+						}
+					}
+				}
+			}
+		}
+
+		// Apply the class...
+		this.oFrameDocument.body.className = 'rich_editor';
+
+		// Listen for input.
+		this.oFrameDocument.instanceRef = this;
+		this.oFrameDocument.onkeyup = function ()
+		{
+			this.instanceRef.editorKeyUp();
+		}
+		this.oFrameDocument.onmouseup = function()
+		{
+			this.instanceRef.editorKeyUp();
+		}
+
+		// Show the iframe only if wysiwyrg is on - and hide the text area.
+		this.oTextHandle.style.display = this.bRichTextEnabled ? 'none' : '';
+		this.oFrameHandle.style.display = this.bRichTextEnabled ? '' : 'none';
+		this.oBreadHandle.style.display = this.bRichTextEnabled ? '' : 'none';
+	}
+	// If we can't do advanced stuff then just do the basics.
+	else
+	{
+		// Cannot have WYSIWYG anyway!
+		this.bRichTextEnabled = false;
+	}
+
+	// Set the text.
+	this.insertText(this.sCurrentText, true);
+
+	// Better make us the focus!
+	this.setFocus();
+
+	// And add the select controls.
+	for (i in this.aSelectControls)
+		this.addSelect(this.aSelectControls[i]);
+}
 
 	// Return the current text.
-	function getText(prepareEntities, modeOverride)
+SmfEditor.prototype.getText = function(bPrepareEntities, bModeOverride)
+{
+	var bCurMode = typeof(bModeOverride) != 'undefined' ? bModeOverride : this.bRichTextEnabled;
+
+	if (!bCurMode || this.oFrameDocument == null)
 	{
-		curMode = typeof(modeOverride) != "undefined" ? modeOverride : richTextEnabled;
-
-		if (!curMode || !frameDocument)
-		{
-			text = textHandle.value;
-			if (prepareEntities)
-			{
-				text = text.replace(/</g, '#smlt#');
-				text = text.replace(/>/g, '#smgt#');
-				text = text.replace(/&/g, '#smamp#');
-			}
-		}
-		else
-		{
-			text = frameDocument.body.innerHTML;
-			if (prepareEntities)
-			{
-				text = text.replace(/&lt;/g, '#smlt#');
-				text = text.replace(/&gt;/g, '#smgt#');
-				text = text.replace(/&amp;/g, '#smamp#');
-			}
-		}
-
-		// Clean it up - including removing semi-colons.
-		if (prepareEntities)
-		{
-			text = text.replace(/&nbsp;/g, ' ');
-			text = text.replace(/;/g, '#smcol#');
-		}
-
-		// Return it.
-		return text;
+		var sText = this.oTextHandle.value;
+		if (bPrepareEntities)
+			sText = sText.replace(/</g, '#smlt#').replace(/>/g, '#smgt#').replace(/&/g, '#smamp#');
+	}
+	else
+	{
+		var sText = this.oFrameDocument.body.innerHTML;
+		if (bPrepareEntities)
+			sText = sText.replace(/&lt;/g, '#smlt#').replace(/&gt;/g, '#smgt#').replace(/&amp;/g, '#smamp#');
 	}
 
-	function init(text, editWidth, editHeight)
+	// Clean it up - including removing semi-colons.
+	if (bPrepareEntities)
+		sText = sText.replace(/&nbsp;/g, ' ').replace(/;/g, '#smcol#');
+
+	// Return it.
+	return sText;
+}
+
+
+SmfEditor.prototype.editorKeyUp = function()
+{
+	// Apply any outstanding formatting
+	if (this.aFormatQueue.length > 0)
 	{
-		if (init.hasRun)
-			return false;
-		init.hasRun = true;
+		// Try inserting again.
+		for (i = 0; i < this.aFormatQueue.length; i++)
+			this.insertCustomHTML(this.aFormatQueue[i]);
 
-		if (!editWidth)
-			editWidth = '70%';
-		if (!editHeight)
-			editHeight = '150px';
+		// Either way give up.
+		this.aFormatQueue = [];
+	}
 
-		// Set the textHandle.	
-		textHandle = document.getElementById(uniqueId);
+	// Rebuild the breadcrumb.
+	this.updateEditorControls();
+}
 
-		// Ensure the currentText is set correctly depending on the mode.
-		if (typeof(text) != "undefined" && richTextEnabled == 1)
-			currentText = text;
-		else if (currentText == '' && richTextEnabled == 0)
-			currentText = smf_unhtmlspecialchars(getInnerHTML(textHandle));
+// Rebuild the breadcrumb etc - and set things to the correct context.
+SmfEditor.prototype.updateEditorControls = function()
+{
+	// Assume nothing.
+	if (typeof(this.aSelectControls.face) != 'undefined')
+		this.aSelectControls.face.value = '';
+	if (typeof(this.aSelectControls.size) != 'undefined')
+		this.aSelectControls.size.value = '';
+	if (typeof(this.aSelectControls.color) != 'undefined')
+		this.aSelectControls.color.value = '';
 
-		// Only try to do this if rich text is supported.
-		if (richTextPossible)
+	// Everything else is specific to HTML mode.
+	if (!this.bRichTextEnabled)
+		return;
+
+	var aCrumb = new Array();
+	var aAllCrumbs = new Array();
+	var iMaxLength = 6;
+
+	// What is the current element?
+	var oCurTag = this.getCurElement();
+
+	var i = 0;
+	while (typeof(oCurTag) == 'object' && oCurTag != null && oCurTag.nodeName.toLowerCase() != 'body' && i < iMaxLength)
+	{
+		aCrumb[i++] = oCurTag;
+		oCurTag = oCurTag.parentNode;
+	}
+
+	// Now print out the tree.
+	var sTree = '';
+	var sCurFontName = '';
+	var sCurFontSize = '';
+	var sCurFontColor = '';
+	for (var i = 0, iNumCrumbs = aCrumb.length; i < iNumCrumbs; i++)
+	{
+		var sCrumbName = aCrumb[i].nodeName.toLowerCase();
+
+		// Does it have an alternative name?
+		if (typeof(this.breadCrumbNameTags[sCrumbName]) != 'undefined')
+			sCrumbName = this.breadCrumbNameTags[sCrumbName];
+		// Don't bother with this...
+		else if (sCrumbName == 'p')
+			continue;
+		// A link?
+		else if (sCrumbName == 'a')
 		{
-			// Make the iframe itself, stick it next to the current text area, and give it an ID.
-			frameHandle = document.createElement('iframe');
-			frameHandle.id = 'html_' . uid;
-			frameHandle.style.display = 'none';
-			textHandle.parentNode.appendChild(frameHandle);
-
-			// Create some handy shortcuts.
-			frameDocument = frameHandle.contentDocument ? frameHandle.contentDocument : frameHandle.contentWindow.document;
-			frameWindow = frameHandle.contentWindow;
-
-			// Create the debug window... and stick this under the main frame - make it invisible by default.
-			breadHandle = document.createElement('div');
-			breadHandle.id = 'bread_' . uid;
-			breadHandle.style.visibility = 'visible';
-			breadHandle.style.display = 'none';
-			frameHandle.parentNode.appendChild(breadHandle);
-
-			// Size the iframe dimensions to something sensible.
-			frameHandle.style.width = editWidth;
-			frameHandle.style.height = editHeight;
-			frameHandle.style.visibility = 'visible';
-
-			// Only bother formatting the debug window if debug is enabled.
-			if (showDebug)
+			var sUrlInfo = aCrumb[i].getAttribute('href');
+			sCrumbName = 'url';
+			if (typeof(sUrlInfo) == 'string')
 			{
-				breadHandle.style.width = editWidth;
-				breadHandle.style.height = '20px';
-				breadHandle.className = 'windowbg2';
-				breadHandle.style.border = '1px black solid';
-				breadHandle.style.display = '';
+				if (sUrlInfo.substr(0, 3) == 'ftp')
+					sCrumbName = 'ftp';
+				else if (sUrlInfo.substr(0, 6) == 'mailto')
+					sCrumbName = 'email';
 			}
-	
-			// Populate the editor with nothing by default.
-			if (!is_opera9up)
+		}
+		else if (sCrumbName == 'span' || sCrumbName == 'div')
+		{
+			if (aCrumb[i].style)
 			{
-				frameDocument.open();
-				frameDocument.write("");
-				frameDocument.close();
-			}
-
-			// Mark it as editable...
-			if (frameDocument.body.contentEditable)
-				frameDocument.body.contentEditable = true;
-			else
-			{
-				frameHandle.style.display = '';
-				frameDocument.designMode = "on";
-				frameHandle.style.display = 'none';
-			}
-
-			// Now we need to try and style the editor - internet explorer allows us to do the whole lot.
-			if (document.styleSheets['rich_edit_css'])
-			{
-				ssheet = frameDocument.createElement('style');
-				frameDocument.documentElement.firstChild.appendChild(ssheet);
-				ssheet.styleSheet.cssText = document.styleSheets['rich_edit_css'].cssText;
-			}
-			// Otherwise we seem to have to try to rip out each of the styles one by one!
-			else if (document.styleSheets.length)
-			{
-				// First we need to find the right style sheet.
-				for (i = 0; i < document.styleSheets.length; i++)
+				for (var j = 0, iNumStyles = this.aBreadCrumbNameStyles.length; j < iNumStyles; j++)
 				{
-					if (document.styleSheets[i].cssRules.length)
+					// Do we have a font?
+					if (aCrumb[i].style.fontFamily && aCrumb[i].style.fontFamily != '' && sCurFontName == '')
 					{
-						// Manually try to find the rich_editor class.
-						for (r = 0; r < document.styleSheets[i].cssRules.length; r++)
-						{
-							// Got it!
-							if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
-							{
-								// Set some possible styles.
-								frameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
-								frameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
-								frameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
-								frameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
-							}
-						}
+						sCurFontName = aCrumb[i].style.fontFamily;
+						sCrumbName = 'face';
 					}
+					// ... or a font size?
+					if (aCrumb[i].style.fontSize && aCrumb[i].style.fontSize != '' && sCurFontSize == '')
+					{
+						sCurFontSize = aCrumb[i].style.fontSize;
+						sCrumbName = 'size';
+					}
+					// ... even color?
+					if (aCrumb[i].style.color && aCrumb[i].style.color != '' && sCurFontColor == '')
+					{
+						sCurFontColor = aCrumb[i].style.color;
+						if (in_array(sCurFontColor, this.oFontColors))
+							sCurFontColor = array_search(sCurFontColor, this.oFontColors);
+						sCrumbName = 'color';
+					}
+
+					if (this.aBreadCrumbNameStyles[j].sStyleType == 'text-align' && aCrumb[i].style.textAlign && aCrumb[i].style.textAlign == this.aBreadCrumbNameStyles[j].sStyleValue)
+						sCrumbName = this.aBreadCrumbNameStyles[j].sBbcTag;
+					else if (this.aBreadCrumbNameStyles[j].sStyleType == 'text-decoration' && aCrumb[i].style.textDecoration && aCrumb[i].style.textDecoration == this.aBreadCrumbNameStyles[j].sStyleValue)
+						sCrumbName = this.aBreadCrumbNameStyles[j].sBbcTag;
+					else if (this.aBreadCrumbNameStyles[j].sStyleType == 'font-weight' && aCrumb[i].style.fontWeight && aCrumb[i].style.fontWeight == this.aBreadCrumbNameStyles[j].sStyleValue)
+						sCrumbName = this.aBreadCrumbNameStyles[j].sBbcTag;
+					else if (this.aBreadCrumbNameStyles[j].sStyleType == 'font-style' && aCrumb[i].style.fontStyle && aCrumb[i].style.fontStyle == this.aBreadCrumbNameStyles[j].sStyleValue)
+						sCrumbName = this.aBreadCrumbNameStyles[j].sBbcTag;
 				}
 			}
-
-			// Apply the class...
-			frameDocument.body.className = 'rich_editor';
-
-			// Listen for input.
-			if (is_ff)
+		}
+		// Do we have a font?
+		else if (sCrumbName == 'font')
+		{
+			if (aCrumb[i].getAttribute('face') && sCurFontName == '')
 			{
-				frameDocument.addEventListener('keyup', editorKeyUp, true);
-				frameDocument.addEventListener('mouseup', editorKeyUp, true);
+				sCurFontName = aCrumb[i].getAttribute('face').toLowerCase();
+				sCrumbName = 'face';
 			}
-			else
+			if (aCrumb[i].getAttribute('size') && sCurFontSize == '')
 			{
-				frameDocument.onkeyup = editorKeyUp;
-				frameDocument.onmouseup = editorKeyUp;
+				sCurFontSize = aCrumb[i].getAttribute('size');
+				sCrumbName = 'size';
 			}
-
-			// Show the iframe only if wysiwyg is on - and hide the text area.
-			textHandle.style.display = richTextEnabled ? 'none' : '';
-			frameHandle.style.display = richTextEnabled ? '' : 'none';
-			breadHandle.style.display = richTextEnabled ? '' : 'none';
-		}
-		// If we can't do advanced stuff then just do the basics.
-		else
-		{
-			// Cannot have WYSIWYG anyway!
-			richTextEnabled = 0;
-		}
-
-		// Clean up!
-		initClose();
-	}
-
-	// The final elements of initalisation.
-	function initClose()
-	{
-		// Set the text.
-		insertText(currentText, true);
-
-		// Better make us the focus!
-		setFocus();
-
-		// And add the select controls.
-		for (i in selectControls)
-			addSelect(selectControls[i]);
-	}
-
-	function editorKeyUp(ev)
-	{
-		// Apply any outstanding formatting
-		if (formatQueue.length > 0)
-		{
-			for (i = 0; i < formatQueue.length; i++)
+			if (aCrumb[i].getAttribute('color') && sCurFontColor == '')
 			{
-				// Try inserting again.
-				InsertCustomHTML(formatQueue[i]);
+				sCurFontColor = aCrumb[i].getAttribute('color');
+				if (in_array(sCurFontColor, this.oFontColors))
+					sCurFontColor = array_search(sCurFontColor, this.oFontColors);
+				sCrumbName = 'color';
 			}
-			// Either way give up.
-			formatQueue.length = 0;
-		}
-
-		// Rebuild the breadcrumb.
-		updateEditorControls();
-	}
-
-	// Rebuild the breadcrumb etc - and set things to the correct context.
-	function updateEditorControls()
-	{
-		// Assume nothing.
-		if (selectControls['face'])
-			selectControls['face'].value = '';
-		if (selectControls['size'])
-			selectControls['size'].value = '';
-		if (selectControls['color'])
-			selectControls['color'].value = '';
-
-		// Everything else is specific to HTML mode.
-		if (!richTextEnabled)
-			return;
-
-		crumb = new Array();
-		allCrumbs = new Array();
-		max_length = 6;
-
-		// What is the current element?
-		curTag = getCurElement();
-
-		i = 0;
-		while (curTag && curTag.nodeName.toLowerCase() != 'body' && i < max_length)
-		{
-			crumb[i] = curTag;
-			curTag = curTag.parentNode;
-			i++;
-		}
-
-		// Now print out the tree.
-		tree = '';
-		curFontName = '';
-		curFontSize = '';
-		curFontColor = '';
-		for (i = 0; i < crumb.length; i++)
-		{
-			crumbname = crumb[i].nodeName.toLowerCase();
-
-			// Does it have an alternative name?
-			if (breadCrumbNameTags[crumbname])
-				crumbname = breadCrumbNameTags[crumbname];
-			// Don't bother with this...
-			else if (crumbname == 'p')
+			// Something else - ignore.
+			if (sCrumbName == 'font')
 				continue;
-			// A link?
-			else if (crumbname == 'a')
-			{
-				crumbname = 'url';
-				if (urlInfo = crumb[i].getAttribute('href'))
-				{
-					if (urlInfo.substr(0, 3) == 'ftp')
-						crumbname = 'ftp';
-					else if (urlInfo.substr(0, 6) == 'mailto')
-						crumbname = 'email';
-				}
-			}
-			else if (crumbname == 'span' || crumbname == 'div')
-			{
-				for (j = 0; j < breadCrumbNameStyles.length; j++)
-				{
-					if (crumb[i].style)
-					{
-						// Do we have a font?
-						if (crumb[i].style.fontFamily && crumb[i].style.fontFamily != '' && curFontName == '')
-						{
-							curFontName = crumb[i].style.fontFamily;
-							crumbname = 'face';
-						}
-						// ... or a font size?
-						if (crumb[i].style.fontSize && crumb[i].style.fontSize != '' && curFontSize == '')
-						{
-							curFontSize = crumb[i].style.fontSize;
-							crumbname = 'size';
-						}
-						// ... even color?
-						if (crumb[i].style.color && crumb[i].style.color != '' && curFontColor == '')
-						{
-							curFontColor = crumb[i].style.color;
-							if (fontColors[curFontColor])
-								curFontColor = fontColors[curFontColor];
-							crumbname = 'color';
-						}
-
-						if (breadCrumbNameStyles[j][0] == 'text-align' && crumb[i].style.textAlign && crumb[i].style.textAlign == breadCrumbNameStyles[j][1])
-							crumbname = breadCrumbNameStyles[j][2];
-						else if (breadCrumbNameStyles[j][0] == 'text-decoration' && crumb[i].style.textDecoration && crumb[i].style.textDecoration == breadCrumbNameStyles[j][1])
-							crumbname = breadCrumbNameStyles[j][2];
-						else if (breadCrumbNameStyles[j][0] == 'font-weight' && crumb[i].style.fontWeight && crumb[i].style.fontWeight == breadCrumbNameStyles[j][1])
-							crumbname = breadCrumbNameStyles[j][2];
-						else if (breadCrumbNameStyles[j][0] == 'font-style' && crumb[i].style.fontStyle && crumb[i].style.fontStyle == breadCrumbNameStyles[j][1])
-							crumbname = breadCrumbNameStyles[j][2];
-					}
-				}
-			}
-			// Do we have a font?
-			else if (crumbname == 'font')
-			{
-				if (crumb[i].getAttribute('face') && curFontName == '')
-				{
-					curFontName = crumb[i].getAttribute('face').toLowerCase();
-					crumbname = 'face';
-				}
-				if (crumb[i].getAttribute('size') && curFontSize == '')
-				{
-					curFontSize = crumb[i].getAttribute('size');
-					crumbname = 'size';
-				}
-				if (crumb[i].getAttribute('color') && curFontColor == '')
-				{
-					curFontColor = crumb[i].getAttribute('color');
-					if (fontColors[curFontColor])
-						curFontColor = fontColors[curFontColor];
-					crumbname = 'color';
-				}
-				// Something else - ignore.
-				if (crumbname == 'font')
-					continue;
-			}
-
-			tree += (i != 0 ? '&nbsp;<b>&gt;</b>' : '') + '&nbsp;' + crumbname;
-			allCrumbs[allCrumbs.length] = crumbname;
 		}
 
-		for (i in buttonControls)
-		{
-			newState = in_array(buttonControls[i][1], allCrumbs);
-			if (newState != buttonControls[i][4])
-			{
-				buttonControls[i][4] = newState;
-				buttonControls[i][0].style.backgroundImage = "url(" + smf_images_url + (newState ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
-			}
-		}
-
-		// Try set the font boxes correct.
-		if (selectControls['face'] && typeof(selectControls['face']) == 'object')
-			selectControls['face'].value = curFontName ;
-		if (selectControls['size'] && typeof(selectControls['size']) == 'object')
-			selectControls['size'].value = curFontSize ;
-		if (selectControls['color'] && typeof(selectControls['size']) == 'object')
-			selectControls['color'].value = curFontColor ;
-
-		if (showDebug)
-			setInnerHTML(breadHandle, tree);
+		sTree += (i != 0 ? '&nbsp;<b>&gt;</b>' : '') + '&nbsp;' + sCrumbName;
+		aAllCrumbs[aAllCrumbs.length] = sCrumbName;
 	}
 
-	// Set the HTML content to be that of the text box - if we are in wysiwyg mode.
-	function doSubmit()
+	for (i in this.aButtonControls)
 	{
-		if (richTextEnabled)
-			textHandle.value = frameDocument.body.innerHTML;
+		bNewState = in_array(this.aButtonControls[i].sCode, aAllCrumbs);
+		if (bNewState != this.aButtonControls[i].bIsActive)
+		{
+			this.aButtonControls[i].isActive = bNewState;
+			this.aButtonControls[i].oCodeHandle.style.backgroundImage = "url(" + smf_images_url + (bNewState ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+		}
 	}
 
-	// Populate the box with text.
-	function insertText(text, clear)
+	// Try set the font boxes correct.
+	if (typeof(this.aSelectControls.face) == 'object')
+		this.aSelectControls.face.value = sCurFontName ;
+	if (typeof(this.aSelectControls.size) == 'object')
+		this.aSelectControls.size.value = sCurFontSize ;
+	if (typeof(this.aSelectControls.color) == 'object')
+		this.aSelectControls.color.value = sCurFontColor ;
+
+	if (this.showDebug)
+		setInnerHTML(this.oBreadHandle, sTree);
+}
+
+// Set the HTML content to be that of the text box - if we are in wysiwyg mode.
+SmfEditor.prototype.doSubmit = function()
+{
+	if (this.bRichTextEnabled)
+		this.oTextHandle.value = this.oFrameDocument.body.innerHTML;
+}
+
+// Populate the box with text.
+SmfEditor.prototype.insertText = function(sText, bClear)
+{
+	// Erase it all?
+	if (bClear)
 	{
-		// Erase it all?
-		if (clear)
-		{
-			if (richTextEnabled)
-				frameDocument.body.innerHTML = text;
-			else
-				textHandle.value = text;
-		}
+		if (this.bRichTextEnabled)
+			this.oFrameDocument.body.innerHTML = sText;
 		else
+			this.oTextHandle.value = sText;
+	}
+	else
+	{
+		this.setFocus();
+		if (this.bRichTextEnabled)
 		{
-			setFocus();
-			if (richTextEnabled)
-			{
-				// IE croaks if you have an image selected and try to insert!
-				if (typeof(frameDocument.selection) != 'undefined' && frameDocument.selection.type != 'Text' && frameDocument.selection.clear)
-					frameDocument.selection.clear();
+			// IE croaks if you have an image selected and try to insert!
+			if (typeof(this.oFrameDocument.selection) != 'undefined' && this.oFrameDocument.selection.type != 'Text' && this.oFrameDocument.selection.clear)
+				this.oFrameDocument.selection.clear();
 
-				range = getRange();
+			var oRange = this.getRange();
 
-				if (range.pasteHTML)
-					range.pasteHTML(text);
-				else
-				{
-					// This is a git - we need to do all kinds of crap. Thanks to this page:
-					// http://www.richercomponents.com/Forums/ShowPost.aspx?PostID=2777
-					// Create a new span element first...
-					element = frameDocument.createElement('span');
-					element.innerHTML = text;
-
-					selection = getSelect();
-					if (!range)
-						selection.collapse(frameDocument.getElementsByTagName('body')[0].firstChild,0);
-
-					selection.removeAllRanges();
-					range.deleteContents();
-
-					container = range.startContainer;
-					pos = range.startOffset;
-					range = document.createRange();
-
-					if (container.nodeType == 3)
-					{ 
-						textNode = container; 
-						container = textNode.parentNode; 
-						var text = textNode.nodeValue; 
-						var textBefore = text.substr(0, pos); 
-						var textAfter = text.substr(pos); 
-						var beforeNode = document.createTextNode(textBefore); 
-						var afterNode = document.createTextNode(textAfter); 
-						container.insertBefore(afterNode, textNode); 
-						container.insertBefore(element, afterNode); 
-						container.insertBefore(beforeNode, element); 
-						container.removeChild(textNode); 
-
-						//!!! Why does this not work on opera?
-						if (!is_opera)
-						{
-							range.setEndBefore(afterNode); 
-							range.setStartBefore(afterNode); 
-						}
-					}
-					else
-					{ 
-						container.insertBefore(element, container.childNodes[pos]); 
-						range.setEnd(container, pos + 1); 
-						range.setStart(container, pos + 1); 
-					} 
-					selection.addRange(range); 
-				}
-			}
+			if (oRange.pasteHTML)
+				oRange.pasteHTML(sText);
 			else
 			{
-				replaceText(text, textHandle);
-			}
-		}
-	}
+				// This is a git - we need to do all kinds of crap. Thanks to this page:
+				// http://www.richercomponents.com/Forums/ShowPost.aspx?PostID=2777
+				// Create a new span element first...
+				var oElement = this.oFrameDocument.createElement('span');
+				oElement.innerHTML = sText;
 
-	// Add all the smileys into the "knowledge base" ;)
-	function addSmiley(code, smileyname, desc)
-	{
-		if (smfSmileys[code])
-			return;
+				var oSelection = this.getSelect();
+				if (!oRange)
+					oSelection.collapse(this.oFrameDocument.getElementsByTagName('body')[0].firstChild,0);
 
-		smileyHandle = document.getElementById('sml_' + smileyname);
+				oSelection.removeAllRanges();
+				oRange.deleteContents();
 
-		smfSmileys[code] = Array(3);
-		smfSmileys[code][0] = code;
-		smfSmileys[code][1] = smileyname;
-		smfSmileys[code][2] = desc;
+				var oContainer = oRange.startContainer;
+				var iPos = oRange.startOffset;
+				oRange = document.createRange();
 
-		if (smileyHandle)
-		{
-			// Setup the event callback.
-			createEventListener(smileyHandle);
-			smileyHandle.addEventListener('click', smileyEventHandler, false);
+				if (oContainer.nodeType == 3)
+				{ 
+					var oTextNode = oContainer; 
+					oContainer = oTextNode.parentNode; 
+					sText = oTextNode.nodeValue; 
+					var sTextBefore = sText.substr(0, iPos); 
+					var sTextAfter = sText.substr(iPos); 
+					var oBeforeNode = document.createTextNode(sTextBefore); 
+					var oAfterNode = document.createTextNode(sTextAfter); 
+					oContainer.insertBefore(oAfterNode, oTextNode); 
+					oContainer.insertBefore(oElement, oAfterNode); 
+					oContainer.insertBefore(oBeforeNode, oElement); 
+					oContainer.removeChild(oTextNode); 
 
-			smileyHandle.code = code;
-			smileyHandle.smileyname = smileyname;
-			smileyHandle.desc = desc;
-		}
-	}
-
-	function addButton(code, before, after)
-	{
-		codeHandle = document.getElementById('cmd_' + code);
-
-		buttonControls[code] = Array(4);
-		buttonControls[code][0] = codeHandle;
-		buttonControls[code][1] = code;
-		buttonControls[code][2] = before;
-		buttonControls[code][3] = after;
-		// This holds whether or not it's active.
-		buttonControls[code][4] = false;
-
-		// Tie all the relevant actions to the event handler.
-		createEventListener(codeHandle);
-		codeHandle.addEventListener('click', buttonEventHandler, false);
-		codeHandle.addEventListener('mouseover', buttonEventHandler, false);
-		codeHandle.addEventListener('mouseout', buttonEventHandler, false);
-
-		codeHandle.code = code;		
-	}
-
-	// Populate/handle the select boxes.
-	function addSelect(selType)
-	{
-		selectHandle = document.getElementById('sel_' + selType);
-		if (!selectHandle)
-			return;
-
-		selectHandle.code = selType;
-
-		selectControls[selType] = selectHandle;
-
-		// Font face box!
-		if (selType == 'face')
-		{
-			// Add in the other options.
-			for (i = 0; i < fontFaces.length; i++)
-				selectHandle.options[selectHandle.options.length] = new Option(fontFaces[i], fontFaces[i].toLowerCase());
-		}
-
-		createEventListener(selectHandle);
-		selectHandle.addEventListener('change', selectEventHandler, false);
-	}
-
-	function smileyEventHandler(ev)
-	{
-		// Just for IE...
-		if (!ev)
-			ev = window.event;
-
-		// Select the current smiley element.
-		if (this.code)
-			curElement = this;
-		else if (ev.srcElement)
-			curElement = ev.srcElement;
-
-		// Assume it does exist?!
-		if (!curElement || !curElement.code)
-			return false;
-
-		insertSmiley(curElement.smileyname, curElement.code, curElement.desc);
-	}
-
-	// Special handler for WYSIWYG.
-	function smf_execCommand(command, ui, value)
-	{
-		return frameDocument.execCommand(command, ui, value);
-	}
-
-	function insertSmiley(name, code, desc)
-	{
-		// In text mode we just add it in as we always did.
-		if (!richTextEnabled)
-		{
-			insertText(' ' + code);
-		}
-		// Otherwise we need to do a whole image...
-		else
-		{
-			unique_smiley_id = 1000 + Math.floor(Math.random() * 100000);
-			insertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + unique_smiley_id + '_' + name + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
-		}
-	}
-
-	function buttonEventHandler(ev)
-	{
-		// IE etc...
-		if (!ev)
-			ev = window.event;
-
-		// What is the current element?
-		if (this.code)
-			curElement = this;
-		else if (ev.srcElement)
-			curElement = ev.srcElement;
-
-		if (!curElement || !buttonControls[curElement.code])
-			return false;
-
-		// Are handling a hover?
-		if (ev.type == 'mouseover' || ev.type == 'mouseout')
-		{
-			// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSWIYG we toggle current state.
-			isHighlight = ev.type == 'mouseover' ? true : false;
-			if (richTextEnabled && buttonControls[curElement.code][4])
-				isHighlight = !isHighlight;
-
-			curElement.style.backgroundImage = "url(" + smf_images_url + (isHighlight ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
-		}
-		else if (ev.type == 'click')
-		{
-			setFocus();
-
-			// An special SMF function?
-			if (smfExec[curElement.code])
-			{
-				smfExec[curElement.code]();
-			}
-			else
-			{
-				// In text this is easy...
-				if (!richTextEnabled)
-				{
-					// Replace?
-					if (buttonControls[curElement.code][3] == '')
+					//!!! Why does this not work on opera?
+					if (!is_opera)
 					{
-						replaceText(buttonControls[curElement.code][2], textHandle)
-					}
-					// Surround!
-					else
-					{
-						surroundText(buttonControls[curElement.code][2], buttonControls[curElement.code][3], textHandle)
+						oRange.setEndBefore(oAfterNode); 
+						oRange.setStartBefore(oAfterNode); 
 					}
 				}
 				else
-				{
-					// Is it easy?
-					if (simpleExec[curElement.code])
-					{
-						smf_execCommand(simpleExec[curElement.code], false, null);
-					}
-					// A link?
-					else if (curElement.code == 'url' || curElement.code == 'email' || curElement.code == 'ftp')
-					{
-						insertLink(curElement.code);
-					}
-					// Maybe an image?
-					else if (curElement.code == 'img')
-					{
-						insertImage();
-					}
-					// Everything else means doing something ourselves.
-					else if (buttonControls[curElement.code][2])
-					{
-						InsertCustomHTML(curElement.code);
-					}
-				}
+				{ 
+					oContainer.insertBefore(oElement, oContainer.childNodes[iPos]); 
+					oRange.setEnd(oContainer, iPos + 1); 
+					oRange.setStart(oContainer, iPos + 1); 
+				} 
+				oSelection.addRange(oRange); 
 			}
-
-			// If this is WYSWIYG toggle this button state.
-			if (richTextEnabled)
-			{
-				buttonControls[curElement.code][4] = !buttonControls[curElement.code][4];
-				curElement.style.backgroundImage = "url(" + smf_images_url + (buttonControls[curElement.code][4] ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
-			}
-
-			updateEditorControls();
+		}
+		else
+		{
+			replaceText(sText, this.oTextHandle);
 		}
 	}
+}
 
-	// Changing a select box?
-	function selectEventHandler(ev)
-	{
-		// For IE as always!
-		if (!ev)
-			ev = window.event;
+// Add all the smileys into the "knowledge base" ;)
+SmfEditor.prototype.addSmiley = function(sCode, sSmileyName, sDesc)
+{
+	if (this.oSmfSmileys[sCode])
+		return;
 
-		// Work out what the current element is.
-		if (this.code)
-			curElement = this;
-		else if (ev.srcElement)
-			curElement = ev.srcElement;
-
-		// Make sure it exists.
-		if (!curElement || !selectControls[curElement.code])
-			return false;
-
-		setFocus();
-
-		value = document.getElementById('sel_' + curElement.code).value;
-
-		// Changing font face?
-		if (curElement.code == 'face')
-		{
-			// Not in HTML mode?
-			if (!richTextEnabled)
-			{
-				value = value.replace(/"/, '');
-				surroundText('[font=' + value + ']', '[/font]', textHandle)
-			}
-			else
-			{
-				smf_execCommand('fontname', false, value);
-			}
-		}
-		// Font size?
-		else if (curElement.code == 'size')
-		{
-			// Are we in boring mode?
-			if (!richTextEnabled)
-			{
-				surroundText('[size=' + value + ']', '[/size]', textHandle)
-			}
-			else
-			{
-				smf_execCommand('fontsize', false, value);
-			}
-		}
-		// Or color even?
-		else if (curElement.code == 'color')
-		{
-			// Are we in boring mode?
-			if (!richTextEnabled)
-			{
-				surroundText('[color=' + value + ']', '[/color]', textHandle)
-			}
-			else
-			{
-				smf_execCommand('forecolor', false, value);
-			}
-		}
-
-		updateEditorControls();
+	this.oSmfSmileys[sCode] = {
+		sCode: sCode,
+		sName: sSmileyName,
+		sDescription: sDesc
 	}
 
-	// Put in some custom HTML.
-	function InsertCustomHTML(code)
+	var oSmileyHandle = document.getElementById('sml_' + sSmileyName);
+
+	if (oSmileyHandle)
 	{
-		if (!buttonControls[code])
+		// Setup the event callback.
+		oSmileyHandle.instanceRef = this;
+		oSmileyHandle.onclick = function() 
+		{
+			this.instanceRef.smileyEventHandler(this);
+		};
+
+		oSmileyHandle.code = sCode;
+		oSmileyHandle.smileyname = sSmileyName;
+		oSmileyHandle.desc = sDesc;
+	}
+}
+
+SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
+{
+	var oCodeHandle = document.getElementById('cmd_' + sCode);
+
+	this.aButtonControls[sCode] = {
+		oCodeHandle: oCodeHandle,
+		sCode: sCode,
+		sBefore: sBefore,
+		sAfter: sAfter,
+		bIsActive: false
+	};
+		
+/*	
+	Array(4);
+	this.aButtonControls[sCode][0] = oCodeHandle;
+	this.aButtonControls[sCode][1] = sCode;
+	this.aButtonControls[sCode][2] = sBefore;
+	this.aButtonControls[sCode][3] = sAfter;
+	// This holds whether or not it's active.
+	this.aButtonControls[sCode][4] = false;
+*/
+
+	// Tie all the relevant actions to the event handler.
+	oCodeHandle.instanceRef = this;
+	oCodeHandle.onclick = function()
+	{
+		this.instanceRef.buttonEventHandler(this, 'click');
+	}
+	oCodeHandle.onmouseover = function()
+	{
+		this.instanceRef.buttonEventHandler(this, 'mouseover');
+	}
+	oCodeHandle.onmouseout = function() 
+	{
+		this.instanceRef.buttonEventHandler(this, 'mouseout');
+	}
+
+	oCodeHandle.code = sCode;
+}
+
+// Populate/handle the select boxes.
+SmfEditor.prototype.addSelect = function(sSelectType)
+{
+	var oSelectHandle = document.getElementById('sel_' + sSelectType);
+	if (typeof(oSelectHandle) != 'object')
+		return;
+
+	oSelectHandle.code = sSelectType;
+
+	this.aSelectControls[sSelectType] = oSelectHandle;
+
+	// Font face box!
+	if (sSelectType == 'face')
+	{
+		// Add in the other options.
+		for (var i = 0; i < this.aFontFaces.length; i++)
+			oSelectHandle.options[oSelectHandle.options.length] = new Option(this.aFontFaces[i], this.aFontFaces[i].toLowerCase());
+	}
+
+	oSelectHandle.instanceRef = this;
+	oSelectHandle.onchange = function()
+	{
+		this.instanceRef.selectEventHandler(this)
+	}
+}
+
+SmfEditor.prototype.smileyEventHandler = function(oSrcElement)
+{
+	// Assume it does exist?!
+	if (typeof(oSrcElement.code) == 'undefined')
+		return false;
+
+	this.insertSmiley(oSrcElement.smileyname, oSrcElement.code, oSrcElement.desc);
+	return true;
+}
+
+// Special handler for WYSIWYG.
+SmfEditor.prototype.smf_execCommand = function(sCommand, bUi, sValue)
+{
+	return this.oFrameDocument.execCommand(sCommand, bUi, sValue);
+}
+
+SmfEditor.prototype.insertSmiley = function(sName, sCode, sDesc)
+{
+	// In text mode we just add it in as we always did.
+	if (!this.bRichTextEnabled)
+		this.insertText(' ' + sCode);
+
+	// Otherwise we need to do a whole image...
+	else
+	{
+		var iUniqueSmileyId = 1000 + Math.floor(Math.random() * 100000);
+		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" />');
+	}
+}
+
+SmfEditor.prototype.buttonEventHandler = function(oSrcElement, sEventType)
+{
+	if (typeof(oSrcElement.code) == 'undefined' || typeof(this.aButtonControls[oSrcElement.code]) == 'undefined')
+		return false;
+
+	// Are handling a hover?
+	if (sEventType == 'mouseover' || sEventType == 'mouseout')
+	{
+		// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSWIYG we toggle current state.
+		var bIsHighlight = sEventType == 'mouseover';
+		if (this.bRichTextEnabled && this.aButtonControls[oSrcElement.code].bIsActive)
+			bIsHighlight = !bIsHighlight;
+
+		oSrcElement.style.backgroundImage = "url(" + smf_images_url + (bIsHighlight ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+	}
+	else if (sEventType == 'click')
+	{
+		this.setFocus();
+
+		// A special SMF function?
+		if (this.oSmfExec[oSrcElement.code])
+			this[this.oSmfExec[oSrcElement.code]]();
+
+		else
+		{
+			// In text this is easy...
+			if (!this.bRichTextEnabled)
+			{
+				// Replace?
+				if (this.aButtonControls[oSrcElement.code].sAfter == '')
+					replaceText(this.aButtonControls[oSrcElement.code].sBefore, this.oTextHandle)
+
+				// Surround!
+				else
+					surroundText(this.aButtonControls[oSrcElement.code].sBefore, this.aButtonControls[oSrcElement.code].sAfter, this.oTextHandle)
+			}
+			else
+			{
+				// Is it easy?
+				if (this.oSimpleExec[oSrcElement.code])
+					this.smf_execCommand(this.oSimpleExec[oSrcElement.code], false, null);
+
+				// A link?
+				else if (oSrcElement.code == 'url' || oSrcElement.code == 'email' || oSrcElement.code == 'ftp')
+					this.insertLink(oSrcElement.code);
+
+				// Maybe an image?
+				else if (oSrcElement.code == 'img')
+					this.insertImage();
+
+				// Everything else means doing something ourselves.
+				else if (this.aButtonControls[oSrcElement.code].sBefore)
+					this.insertCustomHTML(oSrcElement.code);
+
+			}
+		}
+
+		// If this is WYSWIYG toggle this button state.
+		if (this.bRichTextEnabled)
+		{
+			this.aButtonControls[oSrcElement.code].bIsActive = !this.aButtonControls[oSrcElement.code].bIsActive;
+			oSrcElement.style.backgroundImage = "url(" + smf_images_url + (this.aButtonControls[oSrcElement.code].bIsActive ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+		}
+
+		this.updateEditorControls();
+	}
+
+	return true;
+}
+
+// Changing a select box?
+SmfEditor.prototype.selectEventHandler = function(oSrcElement)
+{
+	// Make sure it exists.
+	if (!oSrcElement || !this.aSelectControls[oSrcElement.code])
+		return false;
+
+	this.setFocus();
+
+	var sValue = document.getElementById('sel_' + oSrcElement.code).value;
+
+	// Changing font face?
+	if (oSrcElement.code == 'face')
+	{
+		// Not in HTML mode?
+		if (!this.bRichTextEnabled)
+		{
+			sValue = sValue.replace(/"/, '');
+			surroundText('[font=' + sValue + ']', '[/font]', this.oTextHandle)
+		}
+		else
+			this.smf_execCommand('fontname', false, sValue);
+	}
+
+	// Font size?
+	else if (oSrcElement.code == 'size')
+	{
+		// Are we in boring mode?
+		if (!this.bRichTextEnabled)
+			surroundText('[size=' + sValue + ']', '[/size]', this.oTextHandle)
+
+		else
+			this.smf_execCommand('fontsize', false, sValue);
+	}
+	// Or color even?
+	else if (oSrcElement.code == 'color')
+	{
+		// Are we in boring mode?
+		if (!this.bRichTextEnabled)
+			surroundText('[color=' + sValue + ']', '[/color]', this.oTextHandle)
+
+		else
+			this.smf_execCommand('forecolor', false, sValue);
+	}
+
+	this.updateEditorControls();
+
+	return true;
+}
+
+// Put in some custom HTML.
+SmfEditor.prototype.insertCustomHTML = function(sCode)
+{
+	if (!this.aButtonControls[sCode])
+		return;
+
+	var oSelection = this.getSelect(true);
+	if (oSelection.length == 0)
+		oSelection = '&nbsp;';
+
+	// If there is no text don't insert yet - add to the queue instead - otherwise it gets ignored.
+	//if (oSelection.length == 0 && (',' + formatQueue.toString() + ',').indexOf(',' + sCode + ',') == -1)
+	//	formatQueue[oSelection.length] = sCode;
+
+	// Are they just HTML equivalents?
+	if (this.oHtmlEquiv[sCode])
+	{
+		var sLeftTag = this.aButtonControls[sCode].sBefore.replace(/\[/g, '<').replace(/\]/g, '>');
+		var sRightTag = this.aButtonControls[sCode].sAfter.replace(/\[/g, '<').replace(/\]/g, '>');
+	}
+	else
+	{
+		var sLeftTag = this.aButtonControls[sCode].sBefore;
+		var sRightTag = this.aButtonControls[sCode].sAfter;
+	}
+
+	// Are we overwriting?
+	if (sRightTag == '')
+		this.insertText(sLeftTag);
+
+	else
+		this.insertText(sLeftTag + oSelection + sRightTag);
+}
+
+// Insert a URL link.
+SmfEditor.prototype.insertLink = function(sType)
+{
+	if (sType == 'email')
+		var sPromptText = 'Please enter the email address.';
+	else if (sType == 'ftp')
+		var sPromptText = 'Please enter the ftp address.';
+	else
+		var sPromptText = 'Please enter the URL you wish to link to.';
+
+	// IE has a nice prompt for this - others don't.
+	if (sType != 'email' && sType != 'ftp' && is_ie)
+		this.smf_execCommand('createlink', true, 'http://');
+
+	else
+	{
+		// Ask them where to link to.
+		var sText = prompt(sPromptText, sType == 'email' ? '' : (sType == 'ftp' ? 'ftp://' : 'http://'));
+		if (!sText)
 			return;
 
-		selection = getSelect(true);
-		if (selection.length == 0)
-			selection = '&nbsp;';
+		if (sType == 'email' && sText.indexOf('mailto:') != 0)
+			sText = 'mailto:' + sText;
 
-		// If there is no text don't insert yet - add to the queue instead - otherwise it gets ignored.
-		//if (selection.length == 0 && (',' + formatQueue.toString() + ',').indexOf(',' + code + ',') == -1)
-		//	formatQueue[selection.length] = code;
+		// Check if we have text selected and if not force us to have some.
+		curText = this.getSelect(true);
 
-		// Are they just HTML equivalents?
-		if (htmlEquiv[code])
+		if (curText.toString().length != 0)
 		{
-			leftTag = buttonControls[code][2].replace(/\[/g, '<');
-			leftTag = leftTag.replace(/\]/g, '>');
-			rightTag = buttonControls[code][3].replace(/\[/g, '<');
-			rightTag = rightTag.replace(/\]/g, '>');
+			this.smf_execCommand('unlink');
+			this.smf_execCommand('createlink', false, sText);
 		}
 		else
-		{
-			leftTag = buttonControls[code][2];
-			rightTag = buttonControls[code][3];
-		}
-
-		// Are we overwriting?
-		if (rightTag == '')
-			insertText(leftTag);
-		else
-		{
-			insertText(leftTag + selection + rightTag);
-		}
+			this.insertText('<a href="' + sText + '">' + sText + '</a>');
 	}
+}
 
-	// Insert a URL link.
-	function insertLink(type)
+SmfEditor.prototype.insertImage = function(sSrc)
+{
+	if (!sSrc)
 	{
-		if (type == 'email')
-			promptText = 'Please enter the email address.';
-		else if (type == 'ftp')
-			promptText = 'Please enter the ftp address.';
-		else
-			promptText = 'Please enter the URL you wish to link to.';
-
-		// IE has a nice prompt for this - others don't.
-		if (type != 'email' && type != 'ftp' && is_ie)
-			smf_execCommand('createlink', true, 'http://');
-		else
-		{
-			// Ask them where to link to.
-			text = prompt(promptText, type == 'email' ? '' : (type == 'ftp' ? 'ftp://' : 'http://'));
-			if (!text)
-				return;
-
-			if (type == 'email' && text.indexOf('mailto:') != 0)
-				text = 'mailto:' + text;
-
-			// Check if we have text selected and if not force us to have some.
-			curText = getSelect(true);
-
-			if (curText.toString().length != 0)
-			{
-				smf_execCommand('unlink');
-				smf_execCommand('createlink', false, text);
-			}
-			else
-			{
-				insertText('<a href="' + text + '">' + text + '</a>');
-			}
-		}
-	}
-
-	function insertImage(src)
-	{
-		if (!src)
-		{
-			src = prompt('Enter image location', 'http://');
-			if (!src)
-				return;
-		}
-		smf_execCommand('insertimage', false, src);
-	}
-
-	function getSelect(wantText)
-	{
-		if (is_ie && frameDocument.selection)
-		{
-			if (wantText)
-				return frameDocument.selection.createRange().text;
-
-			return frameDocument.selection;
-		}
-
-		if (frameWindow.getSelection)
-			return frameWindow.getSelection();
-
-		return frameDocument.getSelection();
-	}
-
-	function getRange()
-	{
-		// Get the current selection.
-		selection = getSelect();
-
-		if (!selection)
+		sSrc = prompt('Enter image location', 'http://');
+		if (!sSrc)
 			return;
+	}
+	this.smf_execCommand('insertimage', false, sSrc);
+}
 
-		if (is_ie && selection.createRange)
-			return selection.createRange();
+SmfEditor.prototype.getSelect = function(bWantText)
+{
+	if (is_ie && this.oFrameDocument.selection)
+	{
+		if (bWantText)
+			return this.oFrameDocument.selection.createRange().text;
 
-		return selection.getRangeAt(0);
+		return this.oFrameDocument.selection;
 	}
 
-	// Get the current element.
-	function getCurElement()
-	{
-		range = getRange();
+	if (this.oFrameWindow.getSelection)
+		return this.oFrameWindow.getSelection();
 
-		if (!range)
-			return null;
+	return this.oFrameDocument.getSelection();
+}
 
-		if (is_ie)
-		{
-			if (range.item)
-				return range.item(0);
-			else
-				return range.parentElement();
-		}
-		else
-		{
-			element = range.commonAncestorContainer;
-			return getParentElement(element);
-		}
-	}
+SmfEditor.prototype.getRange = function()
+{
+	// Get the current selection.
+	var oSelection = this.getSelect();
 
-	function getParentElement(node)
-	{
-		if (node.nodeType == 1)
-			return node;
-
-		for (i = 0; i < 50; i++)
-		{
-			if (!node.parentNode)
-				break;
-
-			node = node.parentNode;
-			if (node.nodeType == 1)
-				return node;
-		}
+	if (!oSelection)
 		return null;
+
+	if (is_ie && oSelection.createRange)
+		return oSelection.createRange();
+
+	return oSelection.getRangeAt(0);
+}
+
+// Get the current element.
+SmfEditor.prototype.getCurElement = function()
+{
+	var oRange = this.getRange();
+
+	if (!oRange)
+		return null;
+
+	if (is_ie)
+	{
+		if (oRange.item)
+			return oRange.item(0);
+		else
+			return oRange.parentElement();
+	}
+	else
+	{
+		var oElement = oRange.commonAncestorContainer;
+		return this.getParentElement(oElement);
+	}
+}
+
+SmfEditor.prototype.getParentElement = function(oNode)
+{
+	if (oNode.nodeType == 1)
+		return oNode;
+
+	for (i = 0; i < 50; i++)
+	{
+		if (!oNode.parentNode)
+			break;
+
+		oNode = oNode.parentNode;
+		if (oNode.nodeType == 1)
+			return oNode;
+	}
+	return null;
+}
+
+// Toggle wysiwyg/normal mode.
+SmfEditor.prototype.toggleView = function(bView)
+{
+	if (!this.bRichTextPossible)
+	{
+		alert('Your browser does not support Rich Text editing.');
+		return false;
 	}
 
-	// Toggle wysiwyg/normal mode.
-	function toggleView(view)
+	// Overriding or alternating?
+	if (typeof(bView) != 'undefined')
+		this.bRichTextEnabled = bView;
+	else
+		this.bRichTextEnabled = !this.bRichTextEnabled;
+
+	this.requestParsedMessage(this.bRichTextEnabled);
+
+	return true;
+}
+
+// Request the message in a different form.
+SmfEditor.prototype.requestParsedMessage = function(bView)
+{
+	// Replace with a force reload.
+	if (!window.XMLHttpRequest)
 	{
-		if (!richTextPossible)
-		{
-			alert('Your browser does not support Rich Text editing.');
-			return false;
-		}
+		alert('Your browser does not support this function!');
+		return;
+	}
 
-		// Overriding or alternating?
-		if (typeof(view) != "undefined")
-			richTextEnabled = view;
-		else
-			richTextEnabled = !richTextEnabled;
+	// Get the text.
+	var sText = escape(this.getText(true, !bView));
 
-		requestParsedMessage(richTextEnabled);
+	this.tmpMethod = sendXMLDocument;
+	this.tmpMethod(smf_scripturl + '?action=jseditor;view=' + (bView ? 1 : 0) + ';sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
+	delete tmpMethod;
+}
+
+SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
+{
+	var sText = '';
+	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
+		sText += oXMLDoc.getElementsByTagName('message')[0].childNodes[i].nodeValue;
+
+	var bView = oXMLDoc.getElementsByTagName('message')[0].getAttribute('view') != '0';
+
+	// Only change the text if we have the right data.
+	if (this.bRichTextEnabled != bView)
+		return;
+
+	if (this.bRichTextEnabled)
+	{
+		this.oFrameHandle.style.display = '';
+		this.oBreadHandle.style.display = '';
+		this.oTextHandle.style.display = 'none';
+	}
+	else
+	{
+		sText = sText.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+		this.oFrameHandle.style.display = 'none';
+		this.oBreadHandle.style.display = 'none';
+		this.oTextHandle.style.display = '';
 
 		// If we're leaving WYSIWYG all buttons need to be off.
-		if (!richTextEnabled)
+		for (i in this.aButtonControls)
 		{
-			for (i in buttonControls)
-			{
-				buttonControls[i][4] = false;
-				buttonControls[i][0].style.backgroundImage = "url(" + smf_images_url + '/bbc/bbc_bg.gif' + ")";
-			}
+			this.aButtonControls[i].bIsActive = false;
+			this.aButtonControls[i].oCodeHandle.style.backgroundImage = "url(" + smf_images_url + '/bbc/bbc_bg.gif' + ")";
 		}
 	}
 
-	// Request the message in a different form.
-	function requestParsedMessage(view)
+	this.insertText(sText, true);
+
+	// Record the new status.
+	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
+
+	// Focus, focus, focus.
+	this.setFocus();
+
+	// Rebuild the bread crumb!
+	this.updateEditorControls();
+}
+
+// Show the "More Smileys" popup box.
+SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, sCloseText, smf_theme_url)
+{
+	if (this.oSmileyPopupWindow)
+		this.oSmileyPopupWindow.close();
+
+	this.oSmileyPopupWindow = window.open('', 'add_smileys', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,width=480,height=220,resizable=yes');
+	this.oSmileyPopupWindow.document.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html>');
+	this.oSmileyPopupWindow.document.write('\n\t<head>\n\t\t<title>' + sTitleText + '</title>\n\t\t<link rel="stylesheet" type="text/css" href="' + smf_theme_url + '/style.css" />\n\t</head>');
+	this.oSmileyPopupWindow.document.write('\n\t<body style="margin: 1ex;">\n\t\t<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder">\n\t\t\t<tr class="titlebg"><td align="left">' + sPickText + '</td></tr>\n\t\t\t<tr class="windowbg"><td align="left">');
+
+	// Variable smileys is set in the template...for now.
+	for (var iRow = 0; iRow < smileys.length; iRow++)
 	{
-		// Replace with a force reload.
-		if (!window.XMLHttpRequest)
+		for (i = 0; i < smileys[iRow].length; i++)
 		{
-			alert('Your browser does not support this function!');
-			return;
+			smileys[iRow][i][2] = smileys[iRow][i][2].replace(/"/g, '&quot;');
+			this.oSmileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.insertSmiley(\'' + smileys[iRow][i][1] + '\', \'' + smileys[iRow][i][0] + '\', \'' + smileys[iRow][i][2] + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[iRow][i][1] + '" id="sml_' + smileys[iRow][i][1] + '" alt="' + smileys[iRow][i][2] + '" title="' + smileys[iRow][i][2] + '" style="padding: 4px;" border="0" /></a> ');
 		}
-
-		// Get the text.
-		text = getText(true, !view);
-		text = escape(text);
-
-		sendXMLDocument(smf_scripturl + '?action=jseditor;view=' + (view ? 1 : 0) + ';sesc=' + cur_session_id + ';xml', 'message=' + text, onToggleDataReceived);
+		this.oSmileyPopupWindow.document.write('<br />');
 	}
 
-	function onToggleDataReceived(XMLDoc)
+	this.oSmileyPopupWindow.document.write('</td></tr>\n\t\t\t<tr><td align="center" class="windowbg"><a href="javascript:window.close();">' + sCloseText + '</a></td></tr>\n\t\t</table>');
+	// Do the javascript required.
+	this.oSmileyPopupWindow.document.write('<script language="JavaScript" type="text/javascript">\n');
+	for (var iRow = 0; iRow < smileys.length; iRow++)
 	{
-		var text = "";
-		for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
-			text += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
-
-		view = XMLDoc.getElementsByTagName("message")[0].getAttribute("view");
-
-		// Only change the text if we have the right data.
-		if (richTextEnabled != view)
-			return;
-
-		if (richTextEnabled)
+		for (var i = 0; i < smileys[iRow].length; i++)
 		{
-			frameHandle.style.display = '';
-			breadHandle.style.display = '';
-			textHandle.style.display = 'none';
-			insertText(text, true);
+			this.oSmileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley("' + smileys[iRow][i][0] + '", "' + smileys[iRow][i][1] + '", "' + smileys[iRow][i][2] + '");');
 		}
-		else
-		{
-			text = text.replace(/&lt;/g, '<');
-			text = text.replace(/&gt;/g, '>');
-			text = text.replace(/&amp;/g, '&');
-			frameHandle.style.display = 'none';
-			breadHandle.style.display = 'none';
-			textHandle.style.display = '';
-			insertText(text, true);
-		}
-
-		// Record the new status.
-		document.getElementById(uniqueId + '_mode').value = (richTextEnabled ? 1 : 0);
-
-		// Focus, focus, focus.
-		setFocus();
-
-		// Rebuild the bread crumb!
-		updateEditorControls();
 	}
+	this.oSmileyPopupWindow.document.write('\n</script>');
+	this.oSmileyPopupWindow.document.write('\n\t</body>\n</html>');
+	this.oSmileyPopupWindow.document.close();
+}
 
-	// Show the "More Smileys" popup box.
-	function showMoreSmileys(postbox, titleText, pickText, closeText, smf_theme_url)
+// Set the focus for the editing window.
+SmfEditor.prototype.setFocus = function()
+{
+	if (!this.bRichTextEnabled)
+		this.oTextHandle.focus();
+	else
+		this.oFrameWindow.focus();
+}
+
+// Start up the spellchecker!
+SmfEditor.prototype.spellCheckStart = function()
+{
+	if (!spellCheck)
+		return false;
+
+	// If we're in HTML mode we need to get the non-HTML text.
+	if (this.bRichTextEnabled)
 	{
-		var row, i;
+		var sText = escape(this.getText(true, 1));
 
-		if (smileyPopupWindow)
-			smileyPopupWindow.close();
-
-		smileyPopupWindow = window.open("", "add_smileys", "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,width=480,height=220,resizable=yes");
-		smileyPopupWindow.document.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html>');
-		smileyPopupWindow.document.write('\n\t<head>\n\t\t<title>' + titleText + '</title>\n\t\t<link rel="stylesheet" type="text/css" href="' + smf_theme_url + '/style.css" />\n\t</head>');
-		smileyPopupWindow.document.write('\n\t<body style="margin: 1ex;">\n\t\t<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder">\n\t\t\t<tr class="titlebg"><td align="left">' + pickText + '</td></tr>\n\t\t\t<tr class="windowbg"><td align="left">');
-
-		for (row = 0; row < smileys.length; row++)
-		{
-			for (i = 0; i < smileys[row].length; i++)
-			{
-				smileys[row][i][2] = smileys[row][i][2].replace(/"/g, '&quot;');
-				smileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.insertSmiley(\'' + smileys[row][i][1] + '\', \'' + smileys[row][i][0] + '\', \'' + smileys[row][i][2] + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[row][i][1] + '" id="sml_' + smileys[row][i][1] + '" alt="' + smileys[row][i][2] + '" title="' + smileys[row][i][2] + '" style="padding: 4px;" border="0" /></a> ');
-			}
-			smileyPopupWindow.document.write("<br />");
-		}
-
-		smileyPopupWindow.document.write('</td></tr>\n\t\t\t<tr><td align="center" class="windowbg"><a href="javascript:window.close();">' + closeText + '</a></td></tr>\n\t\t</table>');
-		// Do the javascript required.
-		smileyPopupWindow.document.write('<script language="JavaScript" type="text/javascript">\n');
-		for (row = 0; row < smileys.length; row++)
-		{
-			for (i = 0; i < smileys[row].length; i++)
-			{
-				smileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley("' + smileys[row][i][0] + '", "' + smileys[row][i][1] + '", "' + smileys[row][i][2] + '");');
-			}
-		}
-		smileyPopupWindow.document.write('\n</script>');
-		smileyPopupWindow.document.write('\n\t</body>\n</html>');
-		smileyPopupWindow.document.close();
+		getXMLDocument(smf_scripturl + '?action=jseditor;spell;view=0;sesc=' + this.sCurSessionId + ';xml;message=' + sText, onSpellCheckDataReceived);
 	}
+	// Otherwise start spellchecking right away.
+	else
+		spellCheck('postmodify', 'message');
 
-	// Set the focus for the editing window.
-	function setFocus()
+	return true;
+}
+
+// This contains the spellcheckable text.
+SmfEditor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
+{
+	var sText = '';
+	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
+		sText += oXMLDoc.getElementsByTagName('message')[0].childNodes[i].nodeValue;
+
+	sText = sText.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+	this.oTextHandle.value = sText;
+	spellCheck('postmodify', 'message', 'spellCheckEnd');
+}
+
+// Function called when the Spellchecker is finished and ready to pass back.
+SmfEditor.prototype.spellCheckEnd = function()
+{
+	// If HTML edit put the text back!
+	if (this.bRichTextEnabled)
 	{
-		if (!richTextEnabled)
-			textHandle.focus();
-		else
-			frameWindow.focus();
+		var sText = escape(this.getText(true, 0));
+
+		getXMLDocument(smf_scripturl + '?action=jseditor;spelldone;view=1;sesc=' + this.sCurSessionId + ';xml;message=' + sText, onSpellCheckCompleteDataReceived);
 	}
+	else
+		this.setFocus();
+}
 
-	// Start up the spellchecker!
-	function spellCheckStart()
-	{
-		if (!spellCheck)
-			return false;
+// The corrected text.
+SmfEditor.prototype.onSpellCheckCompleteDataReceived = function(oXMLDoc)
+{
+	var sText = '';
+	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
+		sText += oXMLDoc.getElementsByTagName('message')[0].childNodes[i].nodeValue;
 
-		// If we're in HTML mode we need to get the non-HTML text.
-		if (richTextEnabled)
-		{
-			text = getText(true, 1);
-			text = escape(text);
+	this.insertText(sText, true);
+	this.setFocus();
+}
 
-			getXMLDocument(smf_scripturl + '?action=jseditor;spell;view=0;sesc=' + cur_session_id + ';xml;message=' + text, onSpellCheckDataReceived);
-		}
-		// Otherwise start spellchecking right away.
-		else
-		{
-			spellCheck(formID, uniqueId);
-		}
-	}
-
-	// This contains the spellcheckable text.
-	function onSpellCheckDataReceived(XMLDoc)
-	{
-		var text = "";
-		for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
-			text += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
-
-		text = text.replace(/&lt;/g, '<');
-		text = text.replace(/&gt;/g, '>');
-		text = text.replace(/&amp;/g, '&');
-
-		textHandle.value = text;
-		spellCheck(formID, uniqueId, 'spellCheckEnd');
-	}
-
-	// Function called when the Spellchecker is finished and ready to pass back.
-	function spellCheckEnd()
-	{
-		// If HTML edit put the text back!
-		if (richTextEnabled)
-		{
-			text = getText(true, 0);
-			text = escape(text);
-
-			getXMLDocument(smf_scripturl + '?action=jseditor;spelldone;view=1;sesc=' + cur_session_id + ';xml;message=' + text, onSpellCheckCompleteDataReceived);
-		}
-		else
-			setFocus();
-	}
-
-	// The corrected text.
-	function onSpellCheckCompleteDataReceived(XMLDoc)
-	{
-		var text = "";
-		for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
-			text += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
-
-		insertText(text, true);
-		setFocus();
-	}
-
-	function resizeTextArea(newHeight, newWidth, is_change)
-	{
-		// Work out what the new height is.
-		if (is_change)
-		{
-			// We'll assume pixels but may not be.
-			newHeight = _calculateNewDimension(textHandle.style.height, newHeight);
-			newWidth = _calculateNewDimension(textHandle.style.width, newWidth);
-		}
-
-		// Do the HTML editor - but only if it's enabled!
-		if (richTextPossible)
-		{
-			frameHandle.style.height = newHeight;
-			frameHandle.style.width = newWidth;
-		}
-		// Do the text box regardless!
-		textHandle.style.height = newHeight;
-		textHandle.style.width = newWidth;
-	}
-
-	// A utility instruction to save repetition when trying to work out what to change on a height/width.
-	function _calculateNewDimension(old_size, change_size)
+SmfEditor.prototype.resizeTextArea = function(newHeight, newWidth, is_change)
+{
+	// Work out what the new height is.
+	if (is_change)
 	{
 		// We'll assume pixels but may not be.
-		changeReg = change_size.toString().match(/(\d+)(\D*)/);
-		curReg = old_size.toString().match(/(\d+)(\D*)/);
-
-		if (!changeReg[2])
-			changeReg[2] = 'px';
-
-		// Both the same type?
-		if (changeReg[2] == curReg[2])
-			new_size = (parseInt(changeReg[1]) + parseInt(curReg[1])).toString() + changeReg[2];
-		// Is the change a percentage?
-		else if (changeReg[2] == '%')
-			new_size = (parseInt(curReg[1]) + parseInt((parseInt(changeReg[1]) * parseInt(curReg[1])) / 100)).toString() + 'px';
-		// Otherwise just guess!
-		else
-			new_size = (parseInt(curReg[1]) + (parseInt(changeReg[1]) / 10)).toString() + '%';
-
-		return new_size;
+		newHeight = _calculateNewDimension(this.oTextHandle.style.height, newHeight);
+		newWidth = _calculateNewDimension(this.oTextHandle.style.width, newWidth);
 	}
 
-	// Simply set the form ID.
-	function setFormID(newID)
+	// Do the HTML editor - but only if it's enabled!
+	if (this.bRichTextPossible)
 	{
-		formID = newID;
+		this.oFrameHandle.style.height = newHeight;
+		this.oFrameHandle.style.width = newWidth;
 	}
+	// Do the text box regardless!
+	this.oTextHandle.style.height = newHeight;
+	this.oTextHandle.style.width = newWidth;
+}
 
-	init(text, editWidth, editHeight);
+// A utility instruction to save repetition when trying to work out what to change on a height/width.
+SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
+{
+	// We'll assume pixels but may not be.
+	changeReg = change_size.toString().match(/(\d+)(\D*)/);
+	curReg = old_size.toString().match(/(\d+)(\D*)/);
+
+	if (!changeReg[2])
+		changeReg[2] = 'px';
+
+	// Both the same type?
+	if (changeReg[2] == curReg[2])
+		new_size = (parseInt(changeReg[1]) + parseInt(curReg[1])).toString() + changeReg[2];
+	// Is the change a percentage?
+	else if (changeReg[2] == '%')
+		new_size = (parseInt(curReg[1]) + parseInt((parseInt(changeReg[1]) * parseInt(curReg[1])) / 100)).toString() + 'px';
+	// Otherwise just guess!
+	else
+		new_size = (parseInt(curReg[1]) + (parseInt(changeReg[1]) / 10)).toString() + '%';
+
+	return new_size;
 }

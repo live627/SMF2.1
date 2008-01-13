@@ -98,6 +98,8 @@ January 2008
  ! The WYSIWYG editor wouldn't work if you try to toggle a string of one character. (Subs-Editor.php)
  ! Try harder to keep lists all legal. (Subs-Post.php) [Bug 1239]
  + Added the ability to get the latest attachments via SSI.php (SSI.php, ssi_example files, index language file)
+ ! Remodeled WYSIWYG editor to be an object oriented class. (editor.js, GenericControls template, Post template)
+ ! Fixed some JavaScript errors. (GenericMenu template, script.js, menu.js)
 
 
 December 2007
