@@ -380,4 +380,6 @@ $txt['search_api_not_compatible'] = 'The selected search API the forum is using 
 // Restore topic/posts
 $txt['cannot_restore_first_post'] = 'You cannot restore the first post in a topic.';
 $txt['parent_topic_missing'] = 'The parent topic of the post you are trying to restore has been deleted.';
+$txt['restored_disabled'] = 'The restoration of topics has been disabled.';
+
 ?>
