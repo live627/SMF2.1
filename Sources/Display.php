@@ -956,8 +956,8 @@ function Display()
 	$context['can_remove_post'] = allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']);
 
 	// Can restore topic?  That's if the topic is in the recycle board and has a previous restore state.
-	$context['can_restore_topic'] &= !empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $board && !empty($topicinfo['id_previous_board']);
-	$context['can_restore_msg'] &= !empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $board && !empty($topicinfo['id_previous_topic']);
+	$context['can_restore_topic'] &= !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board && !empty($topicinfo['id_previous_board']);
+	$context['can_restore_msg'] &= !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board && !empty($topicinfo['id_previous_topic']);
 
 	// Wireless shows a "more" if you can do anything special.
 	if (WIRELESS && WIRELESS_PROTOCOL != 'wap')

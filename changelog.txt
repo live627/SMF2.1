@@ -119,6 +119,7 @@ January 2008
  ! Moved the view_newest_pm_first option to the pm_settings template. (Profile template) [Feature 1284]
  ! Empty the error log if the user wishes, during an upgrade. (upgrade.php) [Feature 1285]
  & Fixed typo at the top of each language file. (All language files) [Bug 1252]
+ ! Restore topic from recycle link was disabled if quick_mod was turned off. (Dispay.php, Display template)
 
 
 December 2007
