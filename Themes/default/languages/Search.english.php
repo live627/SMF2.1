@@ -1,7 +1,7 @@
 <?php
 // Version: 2.0 Beta 2; Search
 
-// Important! Before editing these language files please read the text at the topic of index.english.php.
+// Important! Before editing these language files please read the text at the top of index.english.php.
 
 $txt['set_perameters'] = 'Set Search Parameters';
 $txt['choose_board'] = 'Choose a board to search in, or search all';

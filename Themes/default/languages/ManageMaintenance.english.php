@@ -1,7 +1,7 @@
 <?php
 // Version: 2.0 Beta 2; ManageMaintenance
 
-// Important! Before editing these language files please read the text at the topic of index.english.php.
+// Important! Before editing these language files please read the text at the top of index.english.php.
 
 $txt['repair_zero_ids'] = 'Found topics and/or messages with topic or message IDs of 0.';
 $txt['repair_missing_topics'] = 'Message #%d is in non-existent topic #%d.';

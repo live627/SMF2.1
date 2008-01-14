@@ -1,7 +1,7 @@
 <?php
 // Version: 2.0 Beta 2; ManageBoards
 
-// Important! Before editing these language files please read the text at the topic of index.english.php.
+// Important! Before editing these language files please read the text at the top of index.english.php.
 
 $txt['boards_and_cats'] = 'Manage Boards and Categories';
 $txt['order'] = 'Order';

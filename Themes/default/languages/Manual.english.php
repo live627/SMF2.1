@@ -1,7 +1,7 @@
 <?php
 // Version: 2.0 Beta 2; Manual
 
-// Important! Before editing these language files please read the text at the topic of index.english.php.
+// Important! Before editing these language files please read the text at the top of index.english.php.
 
 /* Everything in this file is for the Simple Machines help manual
    If you are looking at translating this into another language please
