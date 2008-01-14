@@ -107,6 +107,11 @@ January 2008
  ! Adding and removing columns wasn't working quite right. (DbPackages-xxx.php, Packages language file) [Bug 936]
  ! Don't count posts in the recycling board for the stats. (Subs.php) [Bug 1036]
  ! Don't set the old url to the cached javascript action. (Subs.php) [Bug 952]
+ ! Removed duplicate the duplicate checks for can_remove and can_see_ip. (Display.php) [Bug 1269]
+ ! The low password difficulty level was being changed to medium on the javascript side. (register.js) [Bug 1242]
+ ! It was possible to bypass captcha on registration if the other fields were filled in correctly. (Register.php) [Bug 1272]
+ ! Search terms were not being properly sanitized. (Admin.php) [Bug 1274]
+ ! Made some small tweaks to the restore from recycle feature. (RestoreTopic.php)
 
 
 December 2007

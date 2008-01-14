@@ -6,7 +6,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 
 	var verificationFields = new Array();
 	var textStrings = regTextStrings ? regTextStrings : new Array();
-	var passwordLevel = passwordDifficultyLevel ? passwordDifficultyLevel : 1;
+	var passwordLevel = passwordDifficultyLevel ? passwordDifficultyLevel : 0;
 
 	var validColor = '#F5FFF0';
 	var invalidColor = '#FFF0F0';
@@ -201,7 +201,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			return false;
 
 		ajax_indicator(true);
-		
+
 		// Request a search on that username.
 		getXMLDocument(smf_scripturl + '?action=register;sa=usernamecheck;xml;username=' + escape(curUsername), checkUsernameCallback);
 	}

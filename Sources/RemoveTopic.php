@@ -999,6 +999,10 @@ function RestoreTopic()
 	// Can we be in here?
 	isAllowedTo('moderate_forum');
 
+	// Is recycled board enabled?
+	if (empty($modSettings['recycle_enable']))
+		fatal_lang_error('restored_disabled', 'critical');
+
 	// We need this file.
 	require_once($sourcedir . '/MoveTopic.php');
 
@@ -1055,7 +1059,10 @@ function RestoreTopic()
 			list ($id_board, $subject) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_free_result']($request);
 
-			if (!empty($id_board))
+			// Can't restore a topic if the parent topic is in the recycle board and in a different topic.
+			if (!empty($id_board) && $id_board == $modSettings['recycle_board'])
+				fatal_lang_error('parent_topic_missing', 'general');
+			elseif (!empty($id_board))
 			{
 				// Merge them.
 				mergePosts($_REQUEST['msg'], $_REQUEST['topic'], $id_previous_topic, $id_current_board, $id_previous_board);
@@ -1069,9 +1076,12 @@ function RestoreTopic()
 		// Send them to the new topic
 		redirectexit(empty($id_previous_topic) ? 'board=' . $id_previous_board : 'topic=' . $id_previous_topic);
 	}
+
+	// Just send them to the index if they get here.
+	redirectexit();
 }
 
-function mergePosts($msgs = array(), $from_topic, $target_topic = 0, $from_board = 0, $target_board = 0)
+function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0, $target_board = 0)
 {
 	global $context, $smcFunc, $modSettings, $sourcedir;
 
@@ -1082,6 +1092,36 @@ function mergePosts($msgs = array(), $from_topic, $target_topic = 0, $from_board
 	// Lets make sure they are int.
 	foreach ($msgs as $key => $msg)
 		$msgs[$key] = (int) $msg;
+
+	// If we don't have the from_board find out.
+	if (empty($from_board))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_board
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:from_topic}',
+			array(
+				'from_topic' => $from_topic,
+			)
+		);
+		list ($from_board) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	}
+
+	// Now the target_board.
+	if (empty($target_board))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_board
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:target_topic}',
+			array(
+				'target_topic' => $target_topic,
+			)
+		);
+		list ($target_board) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	}
 
 	// Time to move them.
 	$smcFunc['db_query']('', '
@@ -1094,7 +1134,7 @@ function mergePosts($msgs = array(), $from_topic, $target_topic = 0, $from_board
 		array(
 			'target_topic' => $target_topic,
 			'target_board' => $target_board,
-			'icon' => 'xx',
+			'icon' => $target_board == $modSettings['recycle_board'] ? 'recycled' : 'xx',
 			'msgs' => $msgs,
 		)
 	);

@@ -439,6 +439,8 @@ function Register2()
 		$reg_errors = array_merge($reg_errors, $memberID);
 		return Register($reg_errors);
 	}
+	elseif (!empty($reg_errors))
+		return Register($reg_errors);
 
 	// Do our spam protection now.
 	spamProtection('register');
