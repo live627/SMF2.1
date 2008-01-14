@@ -255,7 +255,7 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 	// Does it exist - if so don't add it again!
 	$columns = $smcFunc['db_list_columns']($table_name);
 	foreach ($columns as $column)
-		if ($column['name'] == $column_info['name'])
+		if ($column == $column_info['name'])
 		{
 			// If we're going to overwrite then use change column.
 			if ($if_exists == 'update')

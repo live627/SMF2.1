@@ -103,6 +103,8 @@ January 2008
  ! Changed the $smfFunc variable to $smcFunc to properly handle future expansion of its purpose. (Almost all files)
  ! The security_override parameter wasn't properly handled by db_query. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1262]
  + Added the ability to restore topics from the recycle board. (index.php, Display.php, RemoveTopic.php, Display template, index, Errors and Modlog language files, install and upgrade scripts)
+ & The attachments and avatars administrative section didn't have a help entry. (Help language file) [Bug 1266]
+ ! Adding and removing columns wasn't working quite right. (DbPackages-xxx.php, Packages language file) [Bug 936]
 
 
 December 2007

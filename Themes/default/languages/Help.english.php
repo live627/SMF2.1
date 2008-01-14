@@ -209,6 +209,22 @@ $helptxt['serversettings'] = '<b>Server Settings</b><br />
 	Here you can perform the core configuration for your forum. This section includes the database and url settings, as well as other
 	important configuration items such as mail settings and caching. Think carefully whenever editing these settings as an error may
 	render the forum inaccessible';
+$helptxt['manage_files'] = '
+	<ul>
+		<li>
+			<b>Browse Files</b><br />
+			Browse through all the attachments, avatars and thumbnails stored by SMF.<br /><br />
+		</li><li>
+			<b>Attachment Settings</b><br />
+			Configure where attachments are stored and set restrictions on the types of attachments.<br /><br />
+		</li><li>
+			<b>Avatar Settings</b><br />
+			Configure where avarars are stored and manage resizing of avatars.<br /><br />
+		</li><li>
+			<b>File Maintenance</b><br />
+			Check and repair any error in the attachment directory and delete selected attachments.<br /><br />
+		</li>
+	</ul>';
 
 $helptxt['topicSummaryPosts'] = 'This allows you to set the number of previous posts shown in the topic summary at the reply screen.';
 $helptxt['enableAllMessages'] = 'Set this to the <em>maximum</em> number of posts a topic can have to show the all link.  Setting this lower than &quot;Maximum messages to display in a topic page&quot; will simply mean it never gets shown, and setting it too high could slow down your forum.';
