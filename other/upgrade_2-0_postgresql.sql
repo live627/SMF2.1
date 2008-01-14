@@ -223,13 +223,42 @@ else
 ---}
 ---#
 
----# Adding guest voting - part 1...
+---# Adding guest voting - part 2...
 DELETE FROM {$db_prefix}log_polls
 WHERE id_member < 0;
 
 ALTER TABLE {$db_prefix}log_polls DROP CONSTRAINT {$db_prefix}log_polls_pkey;
 
 CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id_member, id_choice);
+---#
+
+---# Adding adming log...
+---{
+if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_actions
+		ADD COLUMN id_log smallint");
+
+	upgrade_query("
+		UPDATE {$db_prefix}log_actions
+		SET id_log = 1");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_actions
+		ALTER COLUMN id_log SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_actions
+		ALTER COLUMN id_log SET default '1'"),
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_actions
+		ADD COLUMN id_log smallint NOT NULL default '1'"):
+}
+---}
 ---#
 
 /******************************************************************************/
@@ -285,13 +314,15 @@ else
 --- Adding restore topic from recycle.
 /******************************************************************************/
 
----# Adding multiple attachment path functionality.
+---# Adding restore topic form recycle feature...
 ---{
 if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}topics
-		ADD COLUMN id_previous_board smallint,
+		ADD COLUMN id_previous_board smallint");
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
 		ADD COLUMN id_previous_topic int");
 
 	upgrade_query("
@@ -302,19 +333,25 @@ if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 
 	upgrade_query("
 		ALTER TABLE {$db_prefix}topics
-		ALTER COLUMN id_previous_board SET NOT NULL,
+		ALTER COLUMN id_previous_board SET NOT NULL");
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
 		ALTER COLUMN id_previous_topic SET NOT NULL");
 
 	upgrade_query("
 		ALTER TABLE {$db_prefix}topics
-		ALTER COLUMN id_previous_board SET default '0',
+		ALTER COLUMN id_previous_board SET default '0'");
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
 		ALTER COLUMN id_previous_topic SET default '0'");
 }
 else
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}topics
-		ADD COLUMN id_previous_board smallint NOT NULL default '0',
+		ADD COLUMN id_previous_board smallint NOT NULL default '0'"):
+	upgrade_query("
+		ALTER TABLE {$db_prefix}topics
 		ADD COLUMN id_previous_topic int NOT NULL default '0'");
 }
 ---}

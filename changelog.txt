@@ -114,6 +114,8 @@ January 2008
  ! Made some small tweaks to the restore from recycle feature. (RestoreTopic.php)
  & Theme settings link was not using the action=admin;area= format. (ManageSettings language file) [Bug 1276]
  ! Check to see if $_GET['sa'] is set before using it. (Themes.php) [Bug 1277]
+ ! Upgrade failed in PostgreSQL due to missing id_log column in log_actions table. (upgrade_2-0_postgresql.sql) [Bug 1283]
+ ! PostgreSQL doesn't like multiple ADD COLUMN in one query. (upgrade_2-0_postgresql.sql) [Bug 1282]
 
 
 December 2007
