@@ -287,7 +287,7 @@ $txt['error_search_string_small_words'] = 'Each word must be at least two charac
 $txt['error_query_not_specific_enough'] = 'Your search query didn\'t return any matches.';
 $txt['error_no_messages_in_time_frame'] = 'No messages found in selected time frame.';
 $txt['error_no_labels_selected'] = 'No labels were selected!';
-$txt['error_no_search_deamon'] = 'Unable to access the search deamon';
+$txt['error_no_search_daemon'] = 'Unable to access the search daemon';
 
 $txt['profile_errors_occurred'] = 'The following errors occurred when trying to save your profile';
 $txt['profile_error_bad_offset'] = 'The time offset is out of range';
