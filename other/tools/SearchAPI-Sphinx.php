@@ -48,7 +48,7 @@ class sphinx_search
 	public function searchSort($a, $b)
 	{
 		global $modSettings, $excludedWords;
-	
+
 		$x = strlen($a) - (in_array($a, $excludedWords) ? 1000 : 0);
 		$y = strlen($b) - (in_array($b, $excludedWords) ? 1000 : 0);
 
@@ -77,7 +77,7 @@ class sphinx_search
 		if (($cached_results = cache_get_data('search_results_' . md5($user_info['query_see_board'] . '_' . $context['params']))) === null)
 		{
 			//!!! Should this not be in here?
-			// The API communicating with the search deamon.
+			// The API communicating with the search daemon.
 			require_once($sourcedir . '/sphinxapi.php');
 
 			// Create an instance of the sphinx client and set a few options.
@@ -97,7 +97,7 @@ class sphinx_search
 				$mySphinx->SetFilter('id_board', $search_params['brd']);
 			if (!empty($search_params['memberlist']))
 				$mySphinx->SetFilter('id_member', $search_params['memberlist']);
-			
+
 			// Construct the (binary mode) query.
 			$orResults = array();
 			foreach ($search_words as $orIndex => $words)
@@ -112,9 +112,9 @@ class sphinx_search
 			// Execute the search query.
 			$request = $mySphinx->Query($query, 'smf_index');
 
-			// Can a connection to the deamon be made?
+			// Can a connection to the daemon be made?
 			if ($request === false)
-				fatal_lang_error('error_no_search_deamon');
+				fatal_lang_error('error_no_search_daemon');
 
 			// Get the relevant information from the search results.
 			$cached_results = array(
