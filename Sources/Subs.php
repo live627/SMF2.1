@@ -312,9 +312,11 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smcFunc['db_query']('', '
 				SELECT SUM(num_posts) AS total_messages, MAX(id_last_msg) AS max_msg_id
 				FROM {db_prefix}boards
-				WHERE redirect = {string:blank_redirect}',
+				WHERE redirect = {string:blank_redirect}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+					AND id_board != {int:recycle_board}' : ''),
 				array(
 					'blank_redirect' => '',
+					'recycle_board' => $modSettings['recycle_board'],
 				)
 			);
 			$row = $smcFunc['db_fetch_assoc']($result);
@@ -2706,7 +2708,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	}
 
 	// Remember this URL in case someone doesn't like sending HTTP_REFERER.
-	if (strpos($_SERVER['REQUEST_URL'], 'action=dlattach') === false)
+	if (strpos($_SERVER['REQUEST_URL'], 'action=dlattach') === false && strpos($_SERVER['REQUEST_URL'], 'action=viewsmfile') === false)
 		$_SESSION['old_url'] = $_SERVER['REQUEST_URL'];
 
 	// For session check verfication.... don't switch browsers...

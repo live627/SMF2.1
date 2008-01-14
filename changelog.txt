@@ -105,6 +105,8 @@ January 2008
  + Added the ability to restore topics from the recycle board. (index.php, Display.php, RemoveTopic.php, Display template, index, Errors and Modlog language files, install and upgrade scripts)
  & The attachments and avatars administrative section didn't have a help entry. (Help language file) [Bug 1266]
  ! Adding and removing columns wasn't working quite right. (DbPackages-xxx.php, Packages language file) [Bug 936]
+ ! Don't count posts in the recycling board for the stats. (Subs.php) [Bug 1036]
+ ! Don't set the old url to the cached javascript action. (Subs.php) [Bug 952]
 
 
 December 2007
