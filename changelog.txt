@@ -116,6 +116,7 @@ January 2008
  ! Check to see if $_GET['sa'] is set before using it. (Themes.php) [Bug 1277]
  ! Upgrade failed in PostgreSQL due to missing id_log column in log_actions table. (upgrade_2-0_postgresql.sql) [Bug 1283]
  ! PostgreSQL doesn't like multiple ADD COLUMN in one query. (upgrade_2-0_postgresql.sql) [Bug 1282]
+ ! Moved the view_newest_pm_first option to the pm_settings template. (Profile template) [Feature 1284]
 
 
 December 2007

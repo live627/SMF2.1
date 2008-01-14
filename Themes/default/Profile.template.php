@@ -1378,6 +1378,8 @@ function template_profile_pm_settings()
 									<label for="popup_messages"><input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['popup_messages'], '</label><br />
 									<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
 									<label for="pm_remove_inbox_label"><input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['pm_remove_inbox_label'], '</label><br />
+									<input type="hidden" name="default_options[view_newest_pm_first]" value="0" />
+									<label for="view_newest_pm_first"><input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['recent_pms_at_top'], '</label>
 								</td>
 							</tr>';
 }
@@ -1439,11 +1441,6 @@ function template_profile_theme_settings()
 											<td colspan="2">
 												<input type="hidden" name="default_options[view_newest_first]" value="0" />
 												<label for="view_newest_first"><input type="checkbox" name="default_options[view_newest_first]" id="view_newest_first" value="1"', !empty($context['member']['options']['view_newest_first']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['recent_posts_at_top'], '</label>
-											</td>
-										</tr><tr>
-											<td colspan="2">
-												<input type="hidden" name="default_options[view_newest_pm_first]" value="0" />
-												<label for="view_newest_pm_first"><input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['recent_pms_at_top'], '</label>
 											</td>
 										</tr>';
 
