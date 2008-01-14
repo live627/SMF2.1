@@ -5,7 +5,7 @@
 
 global $scripturl;
 
-$txt['modSettings_desc'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
+$txt['modSettings_desc'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
 
 $txt['pollMode'] = 'Poll mode';
 $txt['disable_polls'] = 'Disable polls';

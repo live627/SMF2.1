@@ -112,6 +112,8 @@ January 2008
  ! It was possible to bypass captcha on registration if the other fields were filled in correctly. (Register.php) [Bug 1272]
  ! Search terms were not being properly sanitized. (Admin.php) [Bug 1274]
  ! Made some small tweaks to the restore from recycle feature. (RestoreTopic.php)
+ & Theme settings link was not using the action=admin;area= format. (ManageSettings language file) [Bug 1276]
+ ! Check to see if $_GET['sa'] is set before using it. (Themes.php) [Bug 1277]
 
 
 December 2007

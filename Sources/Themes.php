@@ -176,7 +176,7 @@ function ThemesMain()
 	}
 
 	// Follow the sa or just go to administration.
-	if (!empty($subActions[$_GET['sa']]))
+	if (isset($_GET['sa']) && !empty($subActions[$_GET['sa']]))
 		$subActions[$_GET['sa']]();
 	else
 		$subActions['admin']();
