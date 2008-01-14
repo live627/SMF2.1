@@ -1214,6 +1214,14 @@ function UpgradeOptions()
 			)
 		);
 
+	// Emptying the error log?
+	if (!empty($_POST['empty_error']))
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_errors',
+			array(
+			)
+		);
+
 	$changes = array();
 
 	$changes['language'] = '\'' . $_POST['lang'] . '\'';
@@ -3821,6 +3829,14 @@ function template_upgrade_options()
 						</td>
 						<td width="100%">
 							<label for="debug">Output extra debugging information</label>
+						</td>
+					</tr>
+					<tr valign="top">
+						<td width="2%">
+							<input type="checkbox" name="empty_error" id="empty_error" value="1" />
+						</td>
+						<td width="100%">
+							<label for="empty_error">Empty error log before upgrading</label>
 						</td>
 					</tr>
 					<tr valign="top">
