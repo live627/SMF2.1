@@ -729,7 +729,7 @@ function showCodeImage($code)
 	}
 
 	// Create an image.
-	$code_image = imagecreate($total_width, $max_height);
+	$code_image = $gd2 ? imagecreatetruecolor($total_width, $max_height) : imagecreate($total_width, $max_height);
 
 	// Draw the background.
 	$bg_color = imagecolorallocate($code_image, $background_color[0], $background_color[1], $background_color[2]);
@@ -824,7 +824,7 @@ function showCodeImage($code)
 				// Rotating the characters a little...
 				if (function_exists('imagerotate'))
 				{
-					$char_image = function_exists('imagecreatetruecolor') ? imagecreatetruecolor($character['width'], $character['height']) : imagecreate($character['width'], $character['height']);
+					$char_image = $gd2 ? imagecreatetruecolor($character['width'], $character['height']) : imagecreate($character['width'], $character['height']);
 					$char_bgcolor = imagecolorallocate($char_image, $background_color[0], $background_color[1], $background_color[2]);
 					imagefilledrectangle($char_image, 0, 0, $character['width'] - 1, $character['height'] - 1, $char_bgcolor);
 					imagechar($char_image, $loaded_fonts[$character['font']], 0, 0, $character['id'], imagecolorallocate($char_image, $char_fg_color[0], $char_fg_color[1], $char_fg_color[2]));

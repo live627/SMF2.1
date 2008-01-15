@@ -132,6 +132,7 @@ January 2008
  ! Was possible to get duplicate data errors in search engine tracking. (ManageSearchEngines.php) [Bug 1265]
  ! Added new function smf_db_error_backtrace for backtracing database errors and doing all manner of things to give the right file and line data. (Subs-Db-xxxx.php)
  ! Redirect to the paid subscriptions setting page if a currency isn't set up. (ManagePaid.php) [Bug 1190]
+ ! Visual verification should use imagecreatetruecolor where available. (Subs-Graphics.php) [Bug 1247]
 
 
 December 2007
