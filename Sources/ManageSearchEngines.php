@@ -70,13 +70,29 @@ function ManageSearchEngineSettings($return_config = false)
 
 	$config_vars = array(
 		// How much detail?
-		array('select', 'spider_mode', array($txt['spider_mode_off'], $txt['spider_mode_standard'], $txt['spider_mode_high'], $txt['spider_mode_vhigh'])),
+		array('select', 'spider_mode', array($txt['spider_mode_off'], $txt['spider_mode_standard'], $txt['spider_mode_high'], $txt['spider_mode_vhigh']), 'onchange' => 'disableFields();'),
 		'spider_group' => array('select', 'spider_group', array($txt['spider_group_none'], $txt['membergroups_members'])),
 		array('select', 'show_spider_online', array($txt['show_spider_online_no'], $txt['show_spider_online_summary'], $txt['show_spider_online_detail'], $txt['show_spider_online_detail_admin'])),
 	);
 
 	// Set up a message.
 	$context['settings_message'] = '<span class="smalltext">' . sprintf($txt['spider_settings_desc'], $scripturl . '?action=admin;area=featuresettings;sa=pruning;sc=' . $context['session_id']) . '</span>';
+
+	// Do some javascript.
+	$javascript_function = '
+		function disableFields()
+		{
+			disabledState = document.getElementById(\'spider_mode\').value == 0;';
+
+	foreach ($config_vars as $variable)
+		if ($variable[1] != 'spider_mode')
+			$javascript_function .= '
+			if (document.getElementById(\'' . $variable[1] . '\'))
+				document.getElementById(\'' . $variable[1] . '\').disabled = disabledState;';
+
+	$javascript_function .= '
+		}
+		disableFields();';
 
 	if ($return_config)
 		return $config_vars;
@@ -117,6 +133,10 @@ function ManageSearchEngineSettings($return_config = false)
 	// Final settings...
 	$context['post_url'] = $scripturl . '?action=admin;area=sengines;save;sa=settings';
 	$context['settings_title'] = $txt['settings'];
+	$context['settings_insert_below'] = '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			' . $javascript_function . '
+		// ]]></script>';
 
 	// Prepare the settings...
 	prepareDBSettingContext($config_vars);

@@ -127,6 +127,7 @@ January 2008
  ! Approving a single posts resulted in a undefined index: 'message' error. (Subs-Post.php)
  ! Messenger icons now have a title. (Load.php, index language file) [Bug 1213]
  ! By default change findMember to return no more than 500 results. (Subs-Auth.php) [Bug 1268]
+ ! Use javascript to ensure that the search engine tracking settings that have effect are disabled when logging is disabled. (ManageSearchEngines.php)
 
 
 December 2007
