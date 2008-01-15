@@ -2537,7 +2537,7 @@ function approvePosts($msgs, $approve = true)
 			if ($row['id_msg'] > $row['id_last_msg'])
 				$notification_posts[$row['id_topic']][] = array(
 					'id' => $row['id_msg'],
-					'body' => $row['message'],
+					'body' => $row['body'],
 					'subject' => $row['subject'],
 					'name' => $row['poster_name'],
 					'topic' => $row['id_topic'],
@@ -2611,8 +2611,8 @@ function approvePosts($msgs, $approve = true)
 	foreach ($board_changes as $id => $changes)
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
-			SET num_posts = num_posts + {int:posts}, unapproved_posts = unapproved_posts + {int:unapproved_posts}
-				num_topics = num_topics + {int:topics}, unapproved_topics = unapproved_topics + {int:unapproved_topics}
+			SET num_posts = num_posts + {int:num_posts}, unapproved_posts = unapproved_posts + {int:unapproved_posts},
+				num_topics = num_topics + {int:num_topics}, unapproved_topics = unapproved_topics + {int:unapproved_topics}
 			WHERE id_board = {int:id_board}',
 			array(
 				'num_posts' => $changes['posts'],

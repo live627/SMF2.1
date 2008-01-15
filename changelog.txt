@@ -123,6 +123,8 @@ January 2008
  ! Fixed the pagination on the groups page. (Groups.php) [Bug 1292]
  & English strings are already translated. (Errors, Install, ManageMaintenance, Packages language files) [Bug 1290]
  ! Moved the info center collapse object to the BoardIndex template. (index and BoardIndex template files) [Bug 1291]
+ ! Approving a post resulted in a database error due to a call to the wrong inject value. (Subs-Post.php) [Bug 1270]
+ ! Approving a single posts resulted in a undefined index: 'message' error. (Subs-Post.php)
 
 
 December 2007
