@@ -419,7 +419,7 @@ function AdminMain()
 					'label' => $txt['logs'],
 					'function' => 'AdminLogs',
 					'subsections' => array(
-						'errorlog' => array($txt['errlog'], 'admin_forum'),
+						'errorlog' => array($txt['errlog'], 'admin_forum', 'enabled' => !empty($modSettings['enableErrorLogging'])),
 						'adminlog' => array($txt['admin_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 						'modlog' => array($txt['moderation_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 					),

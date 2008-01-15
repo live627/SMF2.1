@@ -567,7 +567,7 @@ function MembergroupMembers()
 	$smcFunc['db_free_result']($request);
 
 	// Create the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=' . ($context['group']['can_moderate'] ? 'moderate;area=viewgroups' : 'groups') . ';sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 

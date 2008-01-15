@@ -312,11 +312,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smcFunc['db_query']('', '
 				SELECT SUM(num_posts) AS total_messages, MAX(id_last_msg) AS max_msg_id
 				FROM {db_prefix}boards
-				WHERE redirect = {string:blank_redirect}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-					AND id_board != {int:recycle_board}' : ''),
+				WHERE redirect = {string:blank_redirect}',
 				array(
 					'blank_redirect' => '',
-					'recycle_board' => $modSettings['recycle_board'],
 				)
 			);
 			$row = $smcFunc['db_fetch_assoc']($result);

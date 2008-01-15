@@ -58,11 +58,9 @@ $txt['session_varify_fail'] = 'Session verification failed.  Please try logging 
 $txt['verify_url_fail'] = 'Unable to verify referring url.  Please go back and try again.';
 $txt['guest_vote_disabled'] = 'Guests cannot vote in this poll.';
 
-// Untranslated!
 $txt['cannot_access_mod_center'] = 'You do not have permission to access the moderation center.';
 $txt['cannot_admin_forum'] = 'You are not allowed to administrate this forum.';
 $txt['cannot_announce_topic'] = 'You are not allowed to announce topics on this board.';
-// Untranslated!
 $txt['cannot_approve_posts'] = 'You do not have permission to approve items.';
 $txt['cannot_post_unapproved_attachments'] = 'You do not have permission to post unapproved attachments.';
 $txt['cannot_post_unapproved_topics'] = 'You do not have permission to post unapproved topics.';
@@ -293,7 +291,6 @@ $txt['profile_errors_occurred'] = 'The following errors occurred when trying to 
 $txt['profile_error_bad_offset'] = 'The time offset is out of range';
 $txt['profile_error_no_name'] = 'The name field was left blank';
 $txt['profile_error_name_taken'] = 'The selected username has already been taken';
-// Untranslated!
 $txt['profile_error_name_too_long'] = 'The selected name is too long. It should be no greater than 60 characters long';
 $txt['profile_error_no_email'] = 'The email field was left blank';
 $txt['profile_error_bad_email'] = 'You have not entered a valid email address';
@@ -327,7 +324,6 @@ $txt['loadavg_allunread_disabled'] = 'The server\'s resources are temporarily un
 $txt['loadavg_unreadreplies_disabled'] = 'The server is currently under high stress.  Please try again shortly.';
 $txt['loadavg_show_posts_disabled'] = 'Please try again later.  This member\'s posts are not currently available due to high load on the server.';
 
-// Untranslated!
 $txt['cannot_edit_permissions_inherited'] = 'You cannot edit inherited permissions directly, you must either edit the parent group or edit the membergroup inheritance.';
 
 $txt['mc_no_modreport_specified'] = 'You need to specify which report you wish to view.';

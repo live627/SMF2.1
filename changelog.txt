@@ -105,7 +105,6 @@ January 2008
  + Added the ability to restore topics from the recycle board. (index.php, Display.php, RemoveTopic.php, Display template, index, Errors and Modlog language files, install and upgrade scripts)
  & The attachments and avatars administrative section didn't have a help entry. (Help language file) [Bug 1266]
  ! Adding and removing columns wasn't working quite right. (DbPackages-xxx.php, Packages language file) [Bug 936]
- ! Don't count posts in the recycling board for the stats. (Subs.php) [Bug 1036]
  ! Don't set the old url to the cached javascript action. (Subs.php) [Bug 952]
  ! Removed duplicate the duplicate checks for can_remove and can_see_ip. (Display.php) [Bug 1269]
  ! The low password difficulty level was being changed to medium on the javascript side. (register.js) [Bug 1242]
@@ -120,6 +119,9 @@ January 2008
  ! Empty the error log if the user wishes, during an upgrade. (upgrade.php) [Feature 1285]
  & Fixed typo at the top of each language file. (All language files) [Bug 1252]
  ! Restore topic from recycle link was disabled if quick_mod was turned off. (Dispay.php, Display template)
+ ! Don't show the error log link in the admin menu if it is disabled. (Admin.php) [Bug 1297]
+ ! Fixed the pagination on the groups page. (Groups.php)
+ & English strings are already translated. (Errors, Install, ManageMaintenance, Packages language files) [Bug 1290]
 
 
 December 2007

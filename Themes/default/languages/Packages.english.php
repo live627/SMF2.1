@@ -154,7 +154,6 @@ $txt['package_modification_malformed'] = 'Malformed or invalid modification file
 $txt['package_modification_missing'] = 'The file could not be found.';
 $txt['package_no_zlib'] = 'Sorry, your PHP configuration doesn\'t have support for <b>zlib</b>.  Without this, the package manager cannot function.  Please contact your host about this for more information.';
 
-// Untranslated!
 $txt['package_cleanperms_title'] = 'Cleanup Permissions';
 $txt['package_cleanperms_desc'] = 'This interface allows you to reset the permissions for files throughout your installation, so as to increase security or solve any permission problems you may encounter while installing packages.';
 $txt['package_cleanperms_type'] = 'Change all file permissions throughout the forum such that';

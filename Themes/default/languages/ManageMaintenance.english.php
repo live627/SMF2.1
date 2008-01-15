@@ -158,7 +158,6 @@ $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
 $txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
 
-// Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';
 $txt['scheduled_tasks_name'] = 'Task Name';
 $txt['scheduled_tasks_next_time'] = 'Next Due';
@@ -168,7 +167,6 @@ $txt['scheduled_tasks_run_now'] = 'Run Task Now';
 $txt['scheduled_tasks_save_changes'] = 'Save Changes';
 $txt['scheduled_tasks_time_offset'] = '<strong>Note:</strong> All times given below are <em>server time</em> and do not take any time offsets setup within SMF into account.';
 
-// Untranslated!
 $txt['scheduled_tasks_na'] = 'N/A';
 $txt['scheduled_task_approval_notification'] = 'Approval Notifications';
 $txt['scheduled_task_desc_approval_notification'] = 'Send out emails to all moderators summarising posts awaiting approval.';
@@ -189,7 +187,6 @@ $txt['scheduled_task_desc_weekly_maintenance'] = 'Runs essential weekly maintena
 $txt['scheduled_task_paid_subscriptions'] = 'Paid Subscription Checks';
 $txt['scheduled_task_desc_paid_subscriptions'] = 'Sends out any necessary paid subscription reminders and removes expired member subscriptions.';
 
-// Untranslated!
 $txt['scheduled_task_reg_starting'] = 'Starting at %s';
 $txt['scheduled_task_reg_repeating'] = 'repeating every %1$d %2$s';
 $txt['scheduled_task_reg_unit_m'] = 'minute(s)';
@@ -197,7 +194,6 @@ $txt['scheduled_task_reg_unit_h'] = 'hour(s)';
 $txt['scheduled_task_reg_unit_d'] = 'day(s)';
 $txt['scheduled_task_reg_unit_w'] = 'week(s)';
 
-// Untranslated!
 $txt['scheduled_task_edit'] = 'Edit Scheduled Task';
 $txt['scheduled_task_edit_repeat'] = 'Repeat task every';
 $txt['scheduled_task_edit_pick_unit'] = 'Pick Unit';

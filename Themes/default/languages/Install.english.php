@@ -92,7 +92,6 @@ $txt['install_settings_stats_title'] = 'Allow Simple Machines to Collect Basic S
 $txt['install_settings_stats_info'] = 'If enabled, this will allow Simple Machines to visit your site once a month to collect basic statistics. This will help us make decisions as to which configurations to optimize the software for. For more information please visit our <a href="http://www.simplemachines.org/about/stats.php" target="_blank">info page</a>.';
 $txt['install_settings_proceed'] = 'Proceed';
 
-// Untranslated!
 $txt['db_settings'] = 'Database Server Settings';
 $txt['db_settings_info'] = 'These are the settings to use for your database server.  If you don\'t know the values, you should ask your host what they are.';
 $txt['db_settings_type'] = 'Database type';
