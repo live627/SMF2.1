@@ -447,6 +447,7 @@ function template_modify_board()
 	echo '
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
+				<input type="hidden" name="rid" value="', $context['redirect_location'], '">
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 
 	// If this board has no children don't bother with the next confirmation screen.

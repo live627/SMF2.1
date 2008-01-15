@@ -223,7 +223,7 @@ function template_by_board()
 			echo '
 				<tr class="windowbg2">
 					<td width="60%" align="left">
-						<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';sesc=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
+						<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;sesc=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
 					</td>
 					<td width="40%" align="left">';
 			if ($context['edit_all'])

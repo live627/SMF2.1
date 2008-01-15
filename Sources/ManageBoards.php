@@ -427,6 +427,9 @@ function EditBoard()
 		$context['board']['no_children'] = empty($boards[$_REQUEST['boardid']]['tree']['children']);
 	}
 
+	// As we may have come from the permissions screen keep track of where we should go on save.
+	$context['redirect_location'] = isset($_GET['rid']) && $_GET['rid'] == 'permissions' ? 'permissions' : 'boards';
+
 	// Default membergroups.
 	$context['groups'] = array(
 		-1 => array(
@@ -556,7 +559,7 @@ function EditBoard()
 // Make changes to/delete a board.
 function EditBoard2()
 {
-	global $txt, $sourcedir, $modSettings, $smcFunc;
+	global $txt, $sourcedir, $modSettings, $smcFunc, $context;
 
 	checkSession();
 
@@ -667,7 +670,10 @@ function EditBoard2()
 			deleteBoards(array($_POST['boardid']), 0);
 	}
 
-	redirectexit('action=admin;area=manageboards');
+	if (isset($_REQUEST['rid']) && $_REQUEST['rid'] == 'permissions')
+		redirectexit('action=admin;area=permissions;sa=board;sesc=' . $context['session_id']);
+	else
+		redirectexit('action=admin;area=manageboards');
 }
 
 function ModifyCat()

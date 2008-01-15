@@ -133,6 +133,7 @@ January 2008
  ! Added new function smf_db_error_backtrace for backtracing database errors and doing all manner of things to give the right file and line data. (Subs-Db-xxxx.php)
  ! Redirect to the paid subscriptions setting page if a currency isn't set up. (ManagePaid.php) [Bug 1190]
  ! Visual verification should use imagecreatetruecolor where available. (Subs-Graphics.php) [Bug 1247]
+ ! Redirect the user back to the permissions page if they edited a board from there. (ManageBoards.php, ManagePermissions and ManageBoards templates) [Bug 1300]
 
 
 December 2007
