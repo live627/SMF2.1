@@ -129,10 +129,6 @@ function smf_db_replacement__callback($matches)
 
 	list ($values, $connection) = $db_callback;
 
-	// !!! REMOVE ME. Temporary code to filter out old type queries.
-	if (!is_resource($connection))
-		var_dump(debug_backtrace());
-
 	if ($matches[1] === 'db_prefix')
 		return $db_prefix;
 
@@ -143,10 +139,10 @@ function smf_db_replacement__callback($matches)
 		return $user_info['query_wanna_see_board'];
 
 	if (!isset($matches[2]))
-		trigger_error('Invalid value injected or no type specified.', E_USER_ERROR);
+		smf_db_error_backtrace('Invalid value injected or no type specified.', '', E_USER_ERROR, __FILE__, __LINE__);
 
 	if (!isset($values[$matches[2]]))
-		trigger_error(var_dump(debug_backtrace()) . 'The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), E_USER_ERROR);
+		smf_db_error_backtrace('The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), '', E_USER_ERROR, __FILE__, __LINE__);
 
 	$replacement = $values[$matches[2]];
 
@@ -154,7 +150,7 @@ function smf_db_replacement__callback($matches)
 	{
 		case 'int':
 			if (!is_numeric($replacement) || (string) $replacement !== (string) (int) $replacement)
-				trigger_error(var_dump(debug_backtrace()) . 'Wrong value type sent to the database. Integer expected.', E_USER_ERROR);
+				smf_db_error_backtrace('Wrong value type sent to the database. Integer expected.', '', E_USER_ERROR, __FILE__, __LINE__);
 			return (string) (int) $replacement;
 		break;
 
@@ -167,12 +163,12 @@ function smf_db_replacement__callback($matches)
 			if (is_array($replacement))
 			{
 				if (empty($replacement))
-					trigger_error('Database error, given array of integer values is empty.', E_USER_ERROR);
+					smf_db_error_backtrace('Database error, given array of integer values is empty.', '', E_USER_ERROR, __FILE__, __LINE__);
 
 				foreach ($replacement as $key => $value)
 				{
 					if (!is_numeric($value) || (string) $value !== (string) (int) $value)
-						trigger_error('Wrong value type sent to the database. Array of integers expected.', E_USER_ERROR);
+						smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected.', '', E_USER_ERROR, __FILE__, __LINE__);
 
 					$replacement[$key] = (string) (int) $value;
 				}
@@ -180,14 +176,15 @@ function smf_db_replacement__callback($matches)
 				return implode(', ', $replacement);
 			}
 			else
-				trigger_error('Wrong value type sent to the database. Array of integers expected.', E_USER_ERROR);
+				smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+
 		break;
 
 		case 'array_string':
 			if (is_array($replacement))
 			{
 				if (empty($replacement))
-					trigger_error('Database error, given array of string values is empty.', E_USER_ERROR);
+					smf_db_error_backtrace('Database error, given array of string values is empty.', '', E_USER_ERROR, __FILE__, __LINE__);
 
 				foreach ($replacement as $key => $value)
 					$replacement[$key] = sprintf('\'%1$s\'', sqlite_escape_string($value));
@@ -195,24 +192,23 @@ function smf_db_replacement__callback($matches)
 				return implode(', ', $replacement);
 			}
 			else
-				trigger_error('Wrong value type sent to the database. Array of strings expected.', E_USER_ERROR);
+				smf_db_error_backtrace('Wrong value type sent to the database. Array of strings expected.', '', E_USER_ERROR, __FILE__, __LINE__);
 		break;
 
 		case 'date':
 			if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
 				return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
 			else
-				trigger_error('Wrong value type sent to the database. Date expected.', E_USER_ERROR);
+				smf_db_error_backtrace('Wrong value type sent to the database. Date expected.', '', E_USER_ERROR, __FILE__, __LINE__);
 		break;
 
 		case 'float':
 			if (!is_numeric($replacement))
-				trigger_error('Wrong value type sent to the database. Floating point number expected.', E_USER_ERROR);
+				smf_db_error_backtrace('Wrong value type sent to the database. Floating point number expected.', '', E_USER_ERROR, __FILE__, __LINE__);
 			return (string) (float) $replacement;
 		break;
 
 		case 'identifier':
-			// Backticks inside identifiers are supported as of MySQL 4.1. We don't need them for SMF.
 			return '`' . strtr($replacement, array('`' => '', '.' => '')) . '`';
 		break;
 
@@ -221,7 +217,7 @@ function smf_db_replacement__callback($matches)
 		break;
 
 		default:
-			trigger_error('Undefined type used in the database query');
+			smf_db_error_backtrace('Undefined type used in the database query', '', false, __FILE__, __LINE__);
 		break;
 	}
 }
@@ -252,13 +248,6 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 {
 	global $db_cache, $db_count, $db_connection, $db_show_debug;
 	global $db_unbuffered, $db_callback, $modSettings;
-
-	// !!! REMOVE ME. Temporary code to filter out old type queries.
-	if (is_int($connection))
-	{
-		echo '<pre>OLD TYPE QUERY ALERT', "\n";
-		var_dump(debug_backtrace());
-	}
 
 	// Decide which connection to use.
 	$connection = $connection == null ? $db_connection : $connection;
@@ -313,11 +302,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
 
 	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && $db_values !== 'security_override')
-	{
-		//!!! TEMP.
-		var_dump(debug_backtrace());
-		fatal_error('Hacking attempt...', false);
-	}
+		smf_db_error_backtrace('Hacking attempt...', 'Illegal character (\') used in query...', true, __FILE__, __LINE__);
 
 	if ($db_values !== 'security_override' && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
 	{
@@ -335,19 +320,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	if (isset($db_show_debug) && $db_show_debug === true)
 	{
 		// Get the file and line number this function was called.
-		if (function_exists('debug_backtrace'))
-		{
-			$backtrace = debug_backtrace();
-			$file = $backtrace[0]['file'];
-			$line = $backtrace[0]['line'];
-		}
-
-		// For PHP < 4.3, this will have to do.
-		else
-		{
-			$file = __FILE__;
-			$line = __LINE__;
-		}
+		list ($file, $line) = smf_db_error_backtrace('', '', 'return', __FILE__, __LINE__);
 
 		// Initialize $db_cache if not already initialized.
 		if (!isset($db_cache))
@@ -445,19 +418,7 @@ function db_error($db_string, $connection = null)
 		return false;
 
 	// We'll try recovering the file and line number the original db query was called from.
-	if (function_exists('debug_backtrace'))
-	{
-		$backtrace = debug_backtrace();
-		$file = isset($backtrace[1]) ? $backtrace[1]['file'] : __FILE__;
-		$line = isset($backtrace[1]) ? $backtrace[1]['line'] : __LINE__;
-	}
-
-	// For PHP < 4.3, this will have to do.
-	else
-	{
-		$file = __FILE__;
-		$line = __LINE__;
-	}
+	list ($file, $line) = smf_db_error_backtrace('', '', 'return', __FILE__, __LINE__);
 
 	// Decide which connection to use
 	$connection = $connection == null ? $db_connection : $connection;
@@ -623,6 +584,52 @@ function smf_sqlite_fetch_row($handle)
 function smf_sqlite_unescape_string($string)
 {
 	return strtr($string, array('\'\'' => '\''));
+}
+
+// This function tries to work out additional error information from a back trace.
+function smf_db_error_backtrace($error_message, $log_message = '', $error_type = false, $file = null, $line = null)
+{
+	if (empty($log_message))
+		$log_message = $error_message;
+
+	if (function_exists('debug_backtrace'))
+	{
+		foreach (debug_backtrace() as $step)
+		{
+			// Found it?
+			if (strpos($step['function'], 'query') === false && !in_array(substr($step['function'], 0, 7), array('smf_db_', 'preg_re', 'db_erro')))
+			{
+				$log_message .= '<br />Function: ' . $step['function'];
+				break;
+			}
+
+			if (isset($step['line']))
+			{
+				$file = $step['file'];
+				$line = $step['line'];
+			}
+		}
+	}
+
+	// A special case - we want the file and line numbers for debugging.
+	if ($error_type == 'return')
+		return array($file, $line);
+
+	// Is always a critical error.
+	if (function_exists('log_error'))
+		log_error($log_message, 'critical', $file, $line);
+
+	if (function_exists('fatal_error') && $error_type && $error_type != E_USER_ERROR)
+	{
+		fatal_error($error_message, $error_type);
+
+		// Cannot continue...
+		exit;
+	}
+	elseif ($error_type)
+		trigger_error($error_message, $error_type);
+	else
+		trigger_error($error_message);
 }
 
 // Emulate UNIX_TIMESTAMP.

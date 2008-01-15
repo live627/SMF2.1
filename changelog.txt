@@ -130,6 +130,7 @@ January 2008
  ! Use javascript to ensure that the search engine tracking settings that have effect are disabled when logging is disabled. (ManageSearchEngines.php)
  ! The recentPosts function was actually sending the wrong stage for new. (SSI.php) [Bug 1296]
  ! Was possible to get duplicate data errors in search engine tracking. (ManageSearchEngines.php) [Bug 1265]
+ ! Added new function smf_db_error_backtrace for backtracing database errors and doing all manner of things to give the right file and line data. (Subs-Db-xxxx.php)
 
 
 December 2007
