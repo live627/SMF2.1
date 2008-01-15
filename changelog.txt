@@ -120,7 +120,7 @@ January 2008
  & Fixed typo at the top of each language file. (All language files) [Bug 1252]
  ! Restore topic from recycle link was disabled if quick_mod was turned off. (Dispay.php, Display template)
  ! Don't show the error log link in the admin menu if it is disabled. (Admin.php) [Bug 1297]
- ! Fixed the pagination on the groups page. (Groups.php)
+ ! Fixed the pagination on the groups page. (Groups.php) [Bug 1292]
  & English strings are already translated. (Errors, Install, ManageMaintenance, Packages language files) [Bug 1290]
 
 
