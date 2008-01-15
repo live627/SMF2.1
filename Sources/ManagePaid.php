@@ -82,7 +82,7 @@ if (!defined('SMF'))
 
 function ManagePaidSubscriptions()
 {
-	global $context, $txt, $scripturl, $sourcedir, $smcFunc;
+	global $context, $txt, $scripturl, $sourcedir, $smcFunc, $modSettings;
 
 	// Load the required language and template.
 	loadLanguage('ManagePaid');
@@ -96,8 +96,8 @@ function ManagePaidSubscriptions()
 		'viewsub' => array('ViewSubscribedUsers', 'admin_forum'),
 	);
 
-	// Default the sub-action to 'view subscriptions'.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'view';
+	// Default the sub-action to 'view subscriptions', but only if they have already set things up..
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : (!empty($modSettings['paid_currency_symbol']) ? 'view' : 'settings');
 
 	// Make sure you can do this.
 	isAllowedTo($subActions[$_REQUEST['sa']][1]);
@@ -167,6 +167,7 @@ function ModifySubscriptionSettings($return_config = false)
 	$context['page_title'] = $txt['settings'];
 	$context['sub_template'] = 'show_settings';
 	$context['settings_message'] = '<span class="smalltext">' . $txt['paid_note'] . '</span>';
+	$context[$context['admin_menu_name']]['current_subsection'] = 'settings';
 
 	// Get the final touches in place.
 	$context['post_url'] = $scripturl . '?action=admin;area=paidsubscribe;save;sa=settings';
