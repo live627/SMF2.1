@@ -586,7 +586,7 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 	}
 
 	// Apply manual sorting if the 'number of members' column is selected.
-	if (strpos($sort, ', -1') !== FALSE)
+	if (substr($sort, 0, 2) == '-1' || strpos($sort, ', -1') !== FALSE)
 	{
 		$sort_ascending = strpos($sort, 'DESC') === false;
 
