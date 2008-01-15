@@ -484,7 +484,9 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#new" rel="nofollow">' . $row['subject'] . '</a>',
+			// Retained for compatibility - is technically incorrect!
 			'new' => !empty($row['isRead']),
+			'is_new' => empty($row['isRead']),
 			'new_from' => $row['new_from'],
 			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" border="0" />',
 		);
@@ -506,7 +508,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 				<td valign="top">
 					<a href="', $post['href'], '">', $post['subject'], '</a>
 					', $txt['by'], ' ', $post['poster']['link'], '
-					', $post['new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>', '
+					', !$post['is_new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new" rel="nofollow"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>', '
 				</td>
 				<td align="right" nowrap="nowrap">
 					', $post['time'], '
