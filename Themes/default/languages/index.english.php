@@ -280,7 +280,6 @@ $txt['logged'] = 'Logged';
 // Use numeric entities in the below string.
 $txt['ip'] = 'IP';
 
-$txt['icq'] = 'ICQ';
 $txt['www'] = 'WWW';
 
 $txt['by'] = 'by';
@@ -295,7 +294,13 @@ $txt['search_for'] = 'Search for';
 $txt['aim'] = 'AIM';
 // In this string, please use +'s for spaces.
 $txt['aim_default_message'] = 'Hi.+Are+you+there?';
+$txt['aim_title'] = 'AOL Instant Messenger';
+$txt['icq'] = 'ICQ';
+$txt['icq_title'] = 'ICQ Messenger';
+$txt['msn'] = 'MSN';
+$txt['msn_title'] = 'MSN Messenger';
 $txt['yim'] = 'YIM';
+$txt['yim_title'] = 'Yahoo Instant Messenger';
 
 $txt['maintain_mode_on'] = 'Remember, this forum is in \'Maintenance Mode\'.';
 
@@ -499,8 +504,6 @@ $txt['mlist_menu_view'] = 'View the memberlist';
 $txt['attach_downloaded'] = 'downloaded';
 $txt['attach_viewed'] = 'viewed';
 $txt['attach_times'] = 'times';
-
-$txt['msn'] = 'MSN';
 
 $txt['settings'] = 'Settings';
 $txt['never'] = 'Never';
