@@ -138,13 +138,6 @@ function template_html_above()
 		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
 		mainHeader.addTogglePanel("upshrinkHeader");
 		mainHeader.addTogglePanel("upshrinkHeader2");
-
-		// And create the info center object.
-		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
-		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
-		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
-		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>';
 
 	echo '

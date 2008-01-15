@@ -122,6 +122,7 @@ January 2008
  ! Don't show the error log link in the admin menu if it is disabled. (Admin.php) [Bug 1297]
  ! Fixed the pagination on the groups page. (Groups.php) [Bug 1292]
  & English strings are already translated. (Errors, Install, ManageMaintenance, Packages language files) [Bug 1290]
+ ! Moved the info center collapse object to the BoardIndex template. (index and BoardIndex template files) [Bug 1291]
 
 
 December 2007

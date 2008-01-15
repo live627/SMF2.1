@@ -267,6 +267,17 @@ function template_info_center()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
+	// Info center collapse object.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		// And create the info center object.
+		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
+		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
+		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
+		infoHeader.addTogglePanel("upshrinkHeaderIC");
+	// ]]></script>';
+
 	// Here's where the "Info Center" starts...
 	echo '<br />
 	<div class="tborder" ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'style="width: 100%;"' : '', '>
