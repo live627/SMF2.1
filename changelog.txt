@@ -129,6 +129,7 @@ January 2008
  ! By default change findMember to return no more than 500 results. (Subs-Auth.php) [Bug 1268]
  ! Use javascript to ensure that the search engine tracking settings that have effect are disabled when logging is disabled. (ManageSearchEngines.php)
  ! The recentPosts function was actually sending the wrong stage for new. (SSI.php) [Bug 1296]
+ ! Was possible to get duplicate data errors in search engine tracking. (ManageSearchEngines.php) [Bug 1265]
 
 
 December 2007

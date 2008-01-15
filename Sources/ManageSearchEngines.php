@@ -614,7 +614,7 @@ function consolidateSpiderStats()
 
 	// New stats?
 	if (!empty($stat_inserts))
-		$smcFunc['db_insert']('insert',
+		$smcFunc['db_insert']('ignore',
 			'{db_prefix}log_spider_stats',
 			array('stat_date' => 'date', 'id_spider' => 'int', 'page_hits' => 'int', 'last_seen' => 'int'),
 			$stat_inserts,
