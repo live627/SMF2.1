@@ -76,7 +76,7 @@ if (!defined('SMF'))
 		- stops further execution of the script.
 
 	array findMembers(array names, bool use_wildcards = false,
-			bool buddies_only = false, int max = none)
+			bool buddies_only = false, int max = 500)
 		- searches for members whose username, display name, or e-mail address
 		  match the given pattern of array names.
 		- accepts wildcards ? and * in the patern if use_wildcards is set.
@@ -424,7 +424,7 @@ function show_db_error($loadavg = false)
 }
 
 // Find members by email address, username, or real name.
-function findMembers($names, $use_wildcards = false, $buddies_only = false, $max = null)
+function findMembers($names, $use_wildcards = false, $buddies_only = false, $max = 500)
 {
 	global $scripturl, $user_info, $modSettings, $smcFunc;
 
@@ -473,13 +473,14 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 		WHERE ({raw:member_name_search}
 			OR {raw:member_name_search} {raw:email_condition})
 			' . ($buddies_only ? 'AND id_member IN ({array_int:buddy_list})' : '') . '
-			AND is_activated IN (1, 11)' . ($max == null ? '' : '
-		LIMIT ' . (int) $max),
+			AND is_activated IN (1, 11)
+		LIMIT {int:limit}',
 		array(
 			'buddy_list' => $user_info['buddies'],
 			'member_name_search' => $member_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $member_name . ' ' . $comparison . ' \'', $names) . '\'',
 			'real_name_search' => $real_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $real_name . ' ' . $comparison . ' \'', $names) . '\'',
 			'email_condition' => $email_condition,
+			'limit' => $max,
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))

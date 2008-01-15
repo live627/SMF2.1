@@ -126,6 +126,7 @@ January 2008
  ! Approving a post resulted in a database error due to a call to the wrong inject value. (Subs-Post.php) [Bug 1270]
  ! Approving a single posts resulted in a undefined index: 'message' error. (Subs-Post.php)
  ! Messenger icons now have a title. (Load.php, index language file) [Bug 1213]
+ ! By default change findMember to return no more than 500 results. (Subs-Auth.php) [Bug 1268]
 
 
 December 2007
