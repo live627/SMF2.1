@@ -69,7 +69,7 @@ $txt['permissions_deny_dangerous'] = 'You are about to deny one or more permissi
 $txt['permissions_modify_group'] = 'Modify Group';
 $txt['permissions_general'] = 'General Permissions';
 $txt['permissions_board'] = 'Default Board Profile Permissions';
-$txt['permissions_board_desc'] = 'Note that changing the default board permissions will affect all boards currently assigned the &quot;Default&quot; permissions profile.';
+$txt['permissions_board_desc'] = '<strong>Note</strong>: changing these board permissions will affect all boards currently assigned the &quot;Default&quot; permissions profile. Boards not using the &quot;Default&quot; profile will not be affected by changes to this page.';
 $txt['permissions_commit'] = 'Save changes';
 $txt['permissions_on'] = 'in profile';
 $txt['permissions_local_for'] = 'Permissions for group';
@@ -242,13 +242,13 @@ $txt['permissionname_poll_remove_any'] = 'Any poll';
 $txt['permissiongroup_approval'] = 'Post Moderation';
 $txt['permissionname_approve_posts'] = 'Approve items awaiting moderation';
 $txt['permissionhelp_approve_posts'] = 'This permission allows a user to approve all unapproved items on a board.';
-$txt['permissionname_post_unapproved_replies'] = 'Post unapproved replies';
+$txt['permissionname_post_unapproved_replies'] = 'Post replies to topics, but hide until approved';
 $txt['permissionhelp_post_unapproved_replies'] = 'This permission allows a user to post replies to a topic which will not be shown until approved by a moderator.';
 $txt['permissionname_post_unapproved_replies_own'] = 'Own topic';
 $txt['permissionname_post_unapproved_replies_any'] = 'Any topic';
-$txt['permissionname_post_unapproved_topics'] = 'Post topics that will be displayed once approved';
+$txt['permissionname_post_unapproved_topics'] = 'Post new topics, but hide until approved';
 $txt['permissionhelp_post_unapproved_topics'] = 'This permission allows a user to post a new topic which will require approval before being shown.';
-$txt['permissionname_post_unapproved_attachments'] = 'Post attachments that require approval before display';
+$txt['permissionname_post_unapproved_attachments'] = 'Post attachments, but hide until approved';
 $txt['permissionhelp_post_unapproved_attachments'] = 'This permission allows a user to attach files to their posts which will then require approval before being shown to other users.';
 
 $txt['permissiongroup_notification'] = 'Notifications';
@@ -345,8 +345,8 @@ $txt['permissions_post_moderation_moderate'] = 'Can create but requires approval
 $txt['permissions_post_moderation_disallow'] = 'Cannot create';
 $txt['permissions_post_moderation_group'] = 'Group';
 
-$txt['auto_approve_topics'] = 'Automatically Approve Topics';
-$txt['auto_approve_replies'] = 'Automatically Approve Replies';
-$txt['auto_approve_attachments'] = 'Automatically Approve Attachments';
+$txt['auto_approve_topics'] = 'Post new topics, without requiring approval';
+$txt['auto_approve_replies'] = 'Post replies to topics, without requiring approval';
+$txt['auto_approve_attachments'] = 'Post attachments, without requiring approval';
 
 ?>

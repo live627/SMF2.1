@@ -1560,20 +1560,16 @@ function loadAllPermissions($loadType = 'classic')
 		$hiddenPermissions[] = 'post_unapproved_attachments';
 	}
 	// If we show them on classic view we change the name.
-	//if ($loadType == 'classic')
 	else
 	{
 		// Relabel the topics permissions
 		$relabelPermissions['post_new'] = 'auto_approve_topics';
-		$relabelPermissions['post_unapproved_topics'] = 'permissionname_post_new';
 
 		// Relabel the reply permissions
 		$relabelPermissions['post_reply'] = 'auto_approve_replies';
-		$relabelPermissions['post_unapproved_replies'] = 'permissionname_post_reply';
 
 		// Relabel the attachment permissions
 		$relabelPermissions['post_attachment'] = 'auto_approve_attachments';
-		$relabelPermissions['post_unapproved_attachments'] = 'permissionname_post_attachment';
 	}
 
 	$context['permissions'] = array();

@@ -134,6 +134,7 @@ January 2008
  ! Redirect to the paid subscriptions setting page if a currency isn't set up. (ManagePaid.php) [Bug 1190]
  ! Visual verification should use imagecreatetruecolor where available. (Subs-Graphics.php) [Bug 1247]
  ! Redirect the user back to the permissions page if they edited a board from there. (ManageBoards.php, ManagePermissions and ManageBoards templates) [Bug 1300]
+ & Improve the descriptions for managing some permissions. (ManagePermissions.php, ManagePermissions language file)
 
 
 December 2007
