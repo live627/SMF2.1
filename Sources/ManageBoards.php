@@ -406,7 +406,7 @@ function EditBoard()
 			'id' => 0,
 			'name' => $txt['mboards_new_board_name'],
 			'description' => '',
-			'count_posts' => 0,
+			'count_posts' => 1,
 			'posts' => 0,
 			'topics' => 0,
 			'theme' => 0,
