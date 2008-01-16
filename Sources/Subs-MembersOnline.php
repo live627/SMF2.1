@@ -158,7 +158,7 @@ function getMembersOnlineStats($membersOnlineOptions)
 	if (!empty($spider_finds) && $modSettings['show_spider_online'] > 1)
 		foreach ($spider_finds as $id => $count)
 		{
-			$link = $spiders[$id] . ($count > 1 ? '(' . $count . ')' : '');
+			$link = $spiders[$id] . ($count > 1 ? ' (' . $count . ')' : '');
 			$sort = $memberOnlineOptions['sort'] = 'log_time' && $memberOnlineOptions['reverse_sort'] ? 0 : 'zzz_';
 			$memberOnlineStats['users_online'][$sort . $spiders[$id]] = array(
 				'id' => 0,

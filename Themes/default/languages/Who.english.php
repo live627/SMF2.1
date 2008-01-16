@@ -16,9 +16,11 @@ $txt['who_show3'] = ' in ';
 $txt['who_show4'] = ' order.';
 $txt['who_show_members_only'] = 'Members Only';
 $txt['who_show_guests_only'] = 'Guests Only';
+$txt['who_show_spiders_only'] = 'Spiders Only';
 $txt['who_show_all'] = 'Everyone';
 $txt['who_sort_asc'] = 'Ascending';
 $txt['who_sort_desc'] = 'Descending';
+$txt['who_no_online_spiders'] = 'There are currently no spiders online.';
 $txt['who_no_online_guests'] = 'There are currently no guests online.';
 $txt['who_no_online_members'] = 'There are currently no members online.';
 

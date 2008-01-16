@@ -97,6 +97,14 @@ function Who()
 		'guests' => $txt['who_show_guests_only'],
 	);
 
+	// Can they see spiders too?
+	if (!empty($modSettings['show_spider_online']) && ($modSettings['show_spider_online'] < 3 || allowedTo('admin_forum')) && !empty($modSettings['spider_name_cache']))
+	{
+		$show_methods['spiders'] = '(lo.id_member = 0 AND lo.id_spider > 0)';
+		$show_methods['guests'] = '(lo.id_member = 0 AND lo.id_spider = 0)';
+		$context['show_methods']['spiders'] = $txt['who_show_spiders_only'];
+	}
+
 	// By default order by last time online.
 	if (!isset($_REQUEST['sort']) || !isset($sort_methods[$_REQUEST['sort']]))
 	{
@@ -200,7 +208,7 @@ function Who()
 
 	// Are we showing spiders?
 	$spiderContext = array();
-	if (!empty($modSettings['show_spider_online']) && !empty($modSettings['spider_name_cache']))
+	if (!empty($modSettings['show_spider_online']) && ($modSettings['show_spider_online'] < 3 || allowedTo('admin_forum')) && !empty($modSettings['spider_name_cache']))
 	{
 		foreach (unserialize($modSettings['spider_name_cache']) as $id => $name)
 			$spiderContext[$id] = array(

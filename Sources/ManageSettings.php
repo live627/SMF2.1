@@ -244,6 +244,11 @@ function ModifyCoreFeatures($return_config = false)
 				if (!$value)
 					return array(\'spider_group\' => 0, \'show_spider_online\' => 0);
 			'),
+			'on_save' => create_function('', '
+				global $sourcedir, $modSettings;
+				require_once($sourcedir . \'/ManageSearchEngines.php\');
+				recacheSpiderNames();
+			'),
 		),
 	);
 
@@ -289,8 +294,8 @@ function ModifyCoreFeatures($return_config = false)
 			}
 
 			// Standard save callback?
-			if (isset($feature['save_callback']))
-				$feature['save_callback'](!empty($_POST[$post_var_prefix . $id]));
+			if (isset($feature['on_save']))
+				$feature['on_save']();
 		}
 
 		// Make sure this one setting is a string!
@@ -298,6 +303,14 @@ function ModifyCoreFeatures($return_config = false)
 
 		// Make any setting changes!
 		updateSettings($setting_changes);
+
+		// Any post save things?
+		foreach ($core_features as $id => $feature)
+		{
+			// Standard save callback?
+			if (isset($feature['save_callback']))
+				$feature['save_callback'](!empty($_POST[$post_var_prefix . $id]));
+		}
 
 		redirectexit('action=admin;area=featuresettings;sa=core;sesc=' . $context['session_id']);
 	}

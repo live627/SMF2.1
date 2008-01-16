@@ -127,6 +127,7 @@ function ManageSearchEngineSettings($return_config = false)
 	if (isset($_GET['save']))
 	{
 		saveDBSettings($config_vars);
+		recacheSpiderNames();
 		redirectexit('action=admin;area=sengines;sa=settings');
 	}
 
@@ -577,7 +578,7 @@ function consolidateSpiderStats()
 		SELECT id_spider, MAX(log_time) AS last_seen, COUNT(*) AS num_hits
 		FROM {db_prefix}log_spider_hits
 		WHERE processed = {int:not_processed}
-		GROUP BY id_spider, MONTH(log_time), DAY(log_time)',
+		GROUP BY id_spider, MONTH(log_time), DAYOFMONTH(log_time)',
 		array(
 			'not_processed' => 0,
 		)

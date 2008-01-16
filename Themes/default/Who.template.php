@@ -65,7 +65,7 @@ function template_main()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="3" align="center">
-				', $txt['who_no_online_' . ($context['show_by'] == 'guests' ? 'guests' : 'members')], '
+				', $txt['who_no_online_' . ($context['show_by'] == 'guests' || $context['show_by'] == 'spiders' ? $context['show_by'] : 'members')], '
 			</td>
 		</tr>';
 
