@@ -75,7 +75,7 @@ function RemindMe()
 // Email a reminder.
 function RemindMail()
 {
-	global $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smcFunc;
+	global $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smcFunc, $language, $modSettings;
 
 	checkSession();
 
@@ -85,7 +85,7 @@ function RemindMail()
 
 	// Find the user!
 	$request = $smcFunc['db_query']('', '
-		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
+		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code, lngfile
 		FROM {db_prefix}members
 		WHERE member_name = {string:member_name}
 		LIMIT 1',
@@ -98,7 +98,7 @@ function RemindMail()
 		$smcFunc['db_free_result']($request);
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
+			SELECT id_member, real_name, member_name, email_address, is_activated, validation_code, lngfile
 			FROM {db_prefix}members
 			WHERE email_address = {string:email_address}
 			LIMIT 1',
@@ -143,7 +143,7 @@ function RemindMail()
 		'MEMBERNAME' => $row['member_name'],
 	);
 
-	$emaildata = loadEmailTemplate('forgot_password', $replacements);
+	$emaildata = loadEmailTemplate('forgot_password', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 	sendmail($row['email_address'], $emaildata['subject'], $emaildata['body']);
 

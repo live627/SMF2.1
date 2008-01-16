@@ -2648,7 +2648,7 @@ function profileReloadUser()
 // Send the user a new activation email if they need to reactivate!
 function profileSendActivation()
 {
-	global $sourcedir, $profile_vars, $txt, $context, $scripturl, $smcFunc, $cookiename;
+	global $sourcedir, $profile_vars, $txt, $context, $scripturl, $smcFunc, $cookiename, $cur_profile, $language, $modSettings;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -2662,7 +2662,7 @@ function profileSendActivation()
 	);
 
 	// Send off the email.
-	$emaildata = loadEmailTemplate('activate_reactivate', $replacements);
+	$emaildata = loadEmailTemplate('activate_reactivate', $replacements, empty($cur_profile['lngfile']) || empty($modSettings['userLanguage']) ? $language : $cur_profile['lngfile']);
 	sendmail($profile_vars['email_address'], $emaildata['subject'], $emaildata['body']);
 
 	// Log the user out.
@@ -2789,7 +2789,7 @@ function groupMembership($memID)
 // This function actually makes all the group changes...
 function groupMembership2($profile_vars, $post_errors, $memID)
 {
-	global $user_info, $sourcedir, $context, $user_profile, $modSettings, $txt, $smcFunc, $scripturl;
+	global $user_info, $sourcedir, $context, $user_profile, $modSettings, $txt, $smcFunc, $scripturl, $language;
 
 	// Let's be extra cautious...
 	if (!$context['user']['is_owner'] || empty($modSettings['show_group_membership']))
@@ -2966,7 +2966,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 					'MODLINK' => $scripturl . '?action=groups;sa=requests',
 				);
 
-				$emaildata = loadEmailTemplate('request_membership', $replacements, $row['lngfile']);
+				$emaildata = loadEmailTemplate('request_membership', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 				sendmail($row['email_address'], $emaildata['subject'], $emaildata['body']);
 			}
 			$smcFunc['db_free_result']($request);

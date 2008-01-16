@@ -1504,7 +1504,7 @@ function SpellCheck()
 	$context['sub_template'] = 'spellcheck';
 }
 
-// Notify members that something has happened to a topic  they marked!
+// Notify members that something has happened to a topic they marked!
 function sendNotifications($topics, $type, $exclude = array())
 {
 	global $txt, $scripturl, $language, $user_info;
@@ -1650,7 +1650,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		// Send only if once is off or it's on and it hasn't been sent.
 		if ($type != 'reply' || empty($row['notify_regularity']) || empty($row['sent']))
 		{
-			$emaildata = loadEmailTemplate($message_type, $replacements);
+			$emaildata = loadEmailTemplate($message_type, $replacements, $needed_language);
 			sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, 'm' . $topicData[$row['id_topic']]['last_id']);
 			$sent++;
 		}
@@ -2796,7 +2796,7 @@ function sendApprovalNotifications(&$topicData)
 			// Send only if once is off or it's on and it hasn't been sent.
 			if (empty($row['notify_regularity']) || (empty($row['sent']) && !$sent_this_time))
 			{
-				$emaildata = loadEmailTemplate($message_type, $replacements);
+				$emaildata = loadEmailTemplate($message_type, $replacements, $needed_language);
 				sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, 'm' . $topicData[$row['id_topic']]['last_id']);
 				$sent++;
 			}

@@ -422,13 +422,12 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		// A big fat CASE WHEN... END is faster than a zillion UPDATE's ;).
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}members
-			SET id_post_group = CASE {raw:conditions}
+			SET id_post_group = CASE ' . $conditions . '
 					ELSE 0
 				END' . ($parameter1 != null ? '
 			WHERE ' . (is_array($parameter1) ? 'id_member IN ({array_int:members})' : 'id_member = {int:members}') : ''),
 			array(
 				'members' => $parameter1,
-				'conditions' => $conditions,
 			)
 		);
 		break;
@@ -592,10 +591,10 @@ function updateSettings($changeArray, $update = false)
 		{
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}settings
-				SET value = {raw:value}
+				SET value = {' . ($value === false || $value === true ? 'raw' : 'string') . ':value}
 				WHERE variable = {string:variable}',
 				array(
-					'value' => $value === true ? 'value + 1' : ($value === false ? 'value - 1' : '\'' . $value . '\''),
+					'value' => $value === true ? 'value + 1' : ($value === false ? 'value - 1' : $value),
 					'variable' => $variable,
 				)
 			);

@@ -627,7 +627,7 @@ function RequestMembers()
 // This function generates a random password for a user and emails it to them.
 function resetPassword($memID, $username = null)
 {
-	global $scripturl, $context, $txt, $sourcedir, $modSettings, $smcFunc;
+	global $scripturl, $context, $txt, $sourcedir, $modSettings, $smcFunc, $language;
 
 	// Language... and a required file.
 	loadLanguage('Login');
@@ -635,14 +635,14 @@ function resetPassword($memID, $username = null)
 
 	// Get some important details.
 	$request = $smcFunc['db_query']('', '
-		SELECT member_name, email_address
+		SELECT member_name, email_address, lngfile
 		FROM {db_prefix}members
 		WHERE id_member = {int:id_member}',
 		array(
 			'id_member' => $memID,
 		)
 	);
-	list ($user, $email) = $smcFunc['db_fetch_row']($request);
+	list ($user, $email, $lngfile) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
 	if ($username !== null)
@@ -687,7 +687,7 @@ function resetPassword($memID, $username = null)
 		'PASSWORD' => $newPassword,
 	);
 
-	$emaildata = loadEmailTemplate('change_password', $replacements);
+	$emaildata = loadEmailTemplate('change_password', $replacements, empty($lngfile) || empty($modSettings['userLanguage']) ? $language : $lngfile);
 
 	// Send them the email informing them of the change - then we're done!
 	sendmail($email, $emaildata['subject'], $emaildata['body']);

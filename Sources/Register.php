@@ -478,7 +478,7 @@ function Register2()
 
 function Activate()
 {
-	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smcFunc;
+	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smcFunc, $language;
 
 	loadLanguage('Login');
 	loadTemplate('Login');
@@ -499,7 +499,7 @@ function Activate()
 
 	// Get the code from the database...
 	$request = $smcFunc['db_query']('', '
-		SELECT id_member, validation_code, member_name, real_name, email_address, is_activated, passwd
+		SELECT id_member, validation_code, member_name, real_name, email_address, is_activated, passwd, lngfile
 		FROM {db_prefix}members' . (empty($_REQUEST['u']) ? '
 		WHERE member_name = {string:email_address} OR email_address = {string:email_address}' : '
 		WHERE id_member = {int:id_member}') . '
@@ -569,7 +569,7 @@ function Activate()
 			'ACTIVATIONCODE' => $row['validation_code'],
 		);
 
-		$emaildata = loadEmailTemplate(empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message', $replacements);
+		$emaildata = loadEmailTemplate(empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
 

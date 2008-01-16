@@ -388,7 +388,7 @@ function scheduled_approval_notification()
 			'BODY' => $emailbody,
 		);
 
-		$emaildata = loadEmailTemplate('scheduled_approval', $replacements);
+		$emaildata = loadEmailTemplate('scheduled_approval', $replacements, $current_language);
 
 		// Send the actual email.
 		sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
@@ -1460,7 +1460,7 @@ function scheduled_weekly_maintenance()
 // Perform the standard checks on expiring/near expiring subscriptions.
 function scheduled_paid_subscriptions()
 {
-	global $txt, $sourcedir, $scripturl, $smcFunc;
+	global $txt, $sourcedir, $scripturl, $smcFunc, $modSettings, $language;
 
 	// Start off by checking for removed subscriptions.
 	$request = $smcFunc['db_query']('', '
@@ -1482,7 +1482,7 @@ function scheduled_paid_subscriptions()
 
 	// Get all those about to expire that have not had a reminder sent.
 	$request = $smcFunc['db_query']('', '
-		SELECT ls.id_sublog, m.id_member, m.member_name, m.email_address, s.name, ls.end_time
+		SELECT ls.id_sublog, m.id_member, m.member_name, m.email_address, m.lngfile, s.name, ls.end_time
 		FROM {db_prefix}log_subscribed AS ls
 			INNER JOIN {db_prefix}subscriptions AS s ON (s.id_subscribe = ls.id_subscribe)
 			INNER JOIN {db_prefix}members AS m ON (m.id_member = ls.id_member)
@@ -1517,10 +1517,10 @@ function scheduled_paid_subscriptions()
 			'END_DATE' => timeformat($row['end_time']),
 		);
 
-		$emaildata = loadEmailTemplate('paid_subscription_reminder', $replacements);
+		$emaildata = loadEmailTemplate('paid_subscription_reminder', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		// Send the actual email.
-		sendmail($member['email_address'], $emaildata['subject'], $emaildata['body']);
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body']);
 	}
 	$smcFunc['db_free_result']($request);
 

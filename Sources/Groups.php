@@ -624,7 +624,7 @@ function MembergroupMembers()
 // Show and manage all group requests.
 function GroupRequests()
 {
-	global $txt, $context, $scripturl, $user_info, $sourcedir, $smcFunc, $modSettings;
+	global $txt, $context, $scripturl, $user_info, $sourcedir, $smcFunc, $modSettings, $language;
 
 	// Set up the template stuff...
 	$context['page_title'] = $txt['mc_group_requests'];
@@ -677,6 +677,8 @@ function GroupRequests()
 			$group_changes = array();
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
+				$row['lngfile'] = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
+
 				// If we are approving work out what their new group is.
 				if ($_POST['req_action'] == 'approve')
 				{
