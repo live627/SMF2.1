@@ -2820,7 +2820,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	$request = $smcFunc['db_query']('', '
 		SELECT id_group, group_type, hidden, group_name
 		FROM {db_prefix}membergroups
-		WHERE id_group IN ({array_int:group_list}, {int:current_group})',
+		WHERE id_group IN ({int:group_list}, {int:current_group})',
 		array(
 			'group_list' => $group_id,
 			'current_group' => $old_profile['id_group'],
