@@ -138,6 +138,7 @@ January 2008
  ! Lowered the perPage interval for the expandPages function down to 100. (script.js) [Bug 1304]
  ! When creating a new board enable count posts by default. (ManageBoards.php) [Bug 1305]
  ! When joining groups the database expected group_list to be an array of integers when the value was really an integer. (Profile-Modify.php) [Bug 1307]
+ ! Query error when downloading a language pack. (ManageServer.php)
 
 
 December 2007

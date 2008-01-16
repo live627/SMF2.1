@@ -649,17 +649,28 @@ function DownloadLanguage()
 	$context['theme_names'] = array();
 	if (!empty($indexes))
 	{
+		$value_data = array(
+			'query' => array(),
+			'params' => array(),
+		);
+
+		foreach ($indexes as $k => $index)
+		{
+			$value_data['query'][] = 'value LIKE {string:value_' . $k . '}';
+			$value_data['params']['value_' . $k] = '%' . $index;
+		}
+
 		$request = $smcFunc['db_query']('', '
 			SELECT id_theme, value
 			FROM {db_prefix}themes
 			WHERE id_member = {int:no_member}
 				AND variable = {string:theme_dir}
-				AND ({raw:index_compare_explode})',
-			array(
+				AND (' . implode(' OR ', $value_data['query']) . ')',
+			array_merge($value_data['params'], array(
 				'no_member' => 0,
 				'theme_dir' => 'theme_dir',
-				'index_compare_explode' => 'value LIKE \'%' . implode('\' OR value LIKE \'%', $indexes),
-			)
+				'index_compare_explode' => 'value LIKE \'%' . implode('\' OR value LIKE \'%', $indexes) . '\'',
+			))
 		);
 		$themes = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
