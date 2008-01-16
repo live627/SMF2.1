@@ -382,7 +382,7 @@ function PackageInstallTest()
 				// Lets get the last section of the file name.
 				if (isset($mod_action['filename']) && substr($mod_action['filename'], -13) != '.template.php')
 					$actual_filename = strtolower(substr(strrchr($mod_action['filename'], '/'), 1));
-				elseif (isset($mod_action['filename']) && preg_match('~/([\w]*)/([\w]*)\.template.php$~', $mod_action['filename'], $matches))
+				elseif (isset($mod_action['filename']) && preg_match('~([\w]*)/([\w]*)\.template\.php$~', $mod_action['filename'], $matches))
 					$actual_filename = strtolower($matches[1] . '/' . $matches[2] . '.template.php');
 				else
 					$actual_filename = $key;
@@ -461,7 +461,7 @@ function PackageInstallTest()
 				// Lets get the last section of the file name.
 				if (isset($mod_action['filename']) && substr($mod_action['filename'], -13) != '.template.php')
 					$actual_filename = strtolower(substr(strrchr($mod_action['filename'], '/'), 1));
-				elseif (isset($mod_action['filename']) && preg_match('~/([\w]*)/([\w]*)\.template.php$~', $mod_action['filename'], $matches))
+				elseif (isset($mod_action['filename']) && preg_match('~([\w]*)/([\w]*)\.template\.php$~', $mod_action['filename'], $matches))
 					$actual_filename = strtolower($matches[1] . '/' . $matches[2] . '.template.php');
 				else
 					$actual_filename = $key;

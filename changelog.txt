@@ -141,6 +141,7 @@ January 2008
  ! Query error when downloading a language pack. (ManageServer.php)
  ! Opera simply does not work well with javascript - no rich edit for Opera users. (editor.js)
  ! Remove defunct sidebar setting. (ManageSettings.php, ManageSettings and Help language files) [Bug 1306]
+ ! The package operations regex didn't get along to well with windows style paths leading to undefined index errors. (Packages.php) [Bug 1302]
 
 
 December 2007
