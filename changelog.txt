@@ -135,6 +135,7 @@ January 2008
  ! Visual verification should use imagecreatetruecolor where available. (Subs-Graphics.php) [Bug 1247]
  ! Redirect the user back to the permissions page if they edited a board from there. (ManageBoards.php, ManagePermissions and ManageBoards templates) [Bug 1300]
  & Improve the descriptions for managing some permissions. (ManagePermissions.php, ManagePermissions language file)
+ ! Lowered the perPage interval for the expandPages function down to 100. (script.js) [Bug 1304]
 
 
 December 2007

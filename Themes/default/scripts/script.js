@@ -539,10 +539,10 @@ function expandPages(spanNode, baseURL, firstPage, lastPage, perPage)
 	spanNode.onclick = '';
 
 	// Prevent too many pages to be loaded at once.
-	if ((lastPage - firstPage) / perPage > 1000)
+	if ((lastPage - firstPage) / perPage > 100)
 	{
 		oldLastPage = lastPage;
-		lastPage = firstPage + 1000 * perPage;
+		lastPage = firstPage + 100 * perPage;
 	}
 
 	// Calculate the new pages.
@@ -701,11 +701,11 @@ function createEventListener(oTarget)
 		}
 		else
 		{
-			oTarget.addEventListener = function (sEvent, funcHandler, bCapture) 
+			oTarget.addEventListener = function (sEvent, funcHandler, bCapture)
 			{
 				oTarget["on" + sEvent] = funcHandler;
 			}
-			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture) 
+			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture)
 			{
 				oTarget["on" + sEvent] = null;
 			}
@@ -820,7 +820,7 @@ JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 		else if (aBoardsAndCategories[i].id == this.opt.iCurBoardId && bIE5x)
 			iIndexPointer = this.dropdownList.options.length;
 
-		
+
 		if (aBoardsAndCategories[i].isCategory)
 			oListFragment.appendChild(oDashOption.cloneNode(true));
 		else
@@ -949,7 +949,7 @@ IconList.prototype.onIconsReceived = function (oXMLDoc)
 
 	if (is_ie)
 		this.oContainerDiv.style.width = this.oContainerDiv.clientWidth + 'px';
-	
+
 	ajax_indicator(false);
 }
 
