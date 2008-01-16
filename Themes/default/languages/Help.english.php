@@ -509,8 +509,6 @@ $helptxt['posts_and_topics'] = '
 			Modify the settings related to topics. The number of topics per page, whether sticky topics are enabled or not, the number of messages needed for a topic to be hot, etc.
 		</li>
 	</ul>';
-$helptxt['showsidebarAdmin'] = 'This setting will switch back to the old display of admin section, where a sidebar was used for the menu.';
-
 $helptxt['spider_group'] = 'By selecting a restrictive group, when a guest is detected as a search crawler it will automatically be assigned any &quot;deny&quot; deny permissions of this group in addition to the normal permissions of a guest. You can use this to provide lesser access to a search engine than you would a normal guest. You might for example wish to create a new group called &quot;Spiders&quot; and select that here. You could then deny permission for that group to view profiles to stop spiders indexing your members profiles.<br />Note: Spider detection is not perfect and can be simulated by users so this feature is not guaranteed to restrict content only to those search engines you have added.';
 
 $helptxt['birthday_email'] = 'Choose the index of the birthday email message to use.  A preview will be shown in the Email Subject and Email Body fields.<br /><strong>Note:</strong> Setting this option does not automatically enable birthday emails.  To enable birthday emails use the <a href="%1$s?action=admin;area=maintain;sa=tasks;sesc=%2$s">Scheduled Tasks</a> page and enable the birthday email task.';

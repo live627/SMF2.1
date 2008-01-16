@@ -56,7 +56,6 @@ $txt['enableReportPM'] = 'Enable reporting of personal messages';
 $txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal message.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
 $txt['pm_posts_verification'] = 'Post count under which users must enter code when sending personal messages.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
 $txt['pm_posts_per_hour'] = 'Number of personal messages a user may send in an hour.<div class="smalltext">(0 for no limit, moderators are exempt)</div>';
-$txt['showsidebarAdmin'] = 'Use a sidebar instead of dropdown-menu for admin section';
 $txt['compactTopicPagesEnable'] = 'Limit number of displayed page links';
 $txt['contiguous_page_display'] = 'Contiguous pages to display:';
 $txt['to_display'] = 'to display';

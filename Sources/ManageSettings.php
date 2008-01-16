@@ -346,7 +346,6 @@ function ModifyBasicSettings($return_config = false)
 			array('int', 'lastActive'),
 			array('check', 'trackStats'),
 			array('check', 'hitStats'),
-			array('check', 'showsidebarAdmin'),
 		'',
 			// Option-ish things... miscellaneous sorta.
 			array('check', 'allow_disableAnnounce'),

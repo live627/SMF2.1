@@ -140,6 +140,7 @@ January 2008
  ! When joining groups the database expected group_list to be an array of integers when the value was really an integer. (Profile-Modify.php) [Bug 1307]
  ! Query error when downloading a language pack. (ManageServer.php)
  ! Opera simply does not work well with javascript - no rich edit for Opera users. (editor.js)
+ ! Remove defunct sidebar setting. (ManageSettings.php, ManageSettings and Help language files) [Bug 1306]
 
 
 December 2007
