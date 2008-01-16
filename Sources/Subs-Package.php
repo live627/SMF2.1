@@ -1657,6 +1657,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						'position' => $search['position'],
 						'failed' => $failed,
 						'ignore_failure' => $failed && $actual_operation['error'] === 'ignore',
+						'is_custom' => $theme > 1 ? $theme : 0,
 					);
 				}
 			}
