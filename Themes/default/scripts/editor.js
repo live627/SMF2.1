@@ -11,12 +11,10 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.sEditWidth = typeof(sEditWidth) != 'undefined' ? sEditWidth : '70%';
 	this.sEditHeight = typeof(sEditHeight) != 'undefined' ? sEditHeight : '150px';
 
-	//!!! CHANGE ME
-	this.showDebug = true;
+	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
-	//!!! This partly works on opera - it's a rubbish browser for JS.
-	this.bRichTextPossible = is_ie5up || is_ff || is_opera9up;
-	//var this.bRichTextPossible = is_ie5up || is_ff;
+	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
+	this.bRichTextPossible = is_ie5up || is_ff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -761,6 +759,9 @@ SmfEditor.prototype.buttonEventHandler = function(oSrcElement, sEventType)
 		}
 
 		this.updateEditorControls();
+
+		// Finally set the focus.
+		this.setFocus();
 	}
 
 	return true;
