@@ -1216,8 +1216,8 @@ function UpgradeOptions()
 
 	// Emptying the error log?
 	if (!empty($_POST['empty_error']))
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_errors',
+		$smcFunc['db_query']('truncate_table', '
+			TRUNCATE {db_prefix}log_errors',
 			array(
 			)
 		);
