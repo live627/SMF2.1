@@ -117,8 +117,15 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 {
 	var sBodyText = '', sSubjectText = '';
 
+	// No longer show the 'loading...' sign.
+	ajax_indicator(false);
+
 	// Grab the message ID.
 	this.sCurMessageId = XMLDoc.getElementsByTagName('message')[0].getAttribute('id');
+
+	// If this is not valid then simply give up.
+	if (!document.getElementById(this.sCurMessageId))
+		return this.modifyCancel();
 
 	// Replace the body part.
 	for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
@@ -138,17 +145,17 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 
 	sSubjectText = XMLDoc.getElementsByTagName('subject')[0].childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
 	setInnerHTML(this.oCurSubjectDiv, this.opt.sTemplateSubjectEdit.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
-
-	// No longer show the 'loading...' sign.
-	ajax_indicator(false);
 }
 
 // Function in case the user presses cancel (or other circumstances cause it).
 QuickModify.prototype.modifyCancel = function ()
 {
 	// Roll back the HTML to its original state.
-	setInnerHTML(this.oCurMessageDiv, this.sMessageBuffer);
-	setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
+	if (this.oCurMessageDiv)
+	{
+		setInnerHTML(this.oCurMessageDiv, this.sMessageBuffer);
+		setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
+	}
 
 	// No longer in edit mode, that's right.
 	this.bInEditMode = false;
@@ -179,8 +186,11 @@ QuickModify.prototype.modifySave = function (sSessionId)
 // Callback function of the XMLhttp request sending the modified message.
 QuickModify.prototype.onModifyDone = function (XMLDoc)
 {
+	// We've finished the loading stuff.
+	ajax_indicator(false);
+
 	// If we didn't get a valid document, just cancel.
-	if (!XMLDoc)
+	if (!XMLDoc || !XMLDoc.getElementsByTagName('smf')[0])
 	{
 		this.modifyCancel();
 		return;
@@ -220,8 +230,6 @@ QuickModify.prototype.onModifyDone = function (XMLDoc)
 		document.forms.quickModForm.message.style.border = error.getAttribute('in_body') == '1' ? this.opt.sErrorBorderStyle : '';
 		document.forms.quickModForm.subject.style.border = error.getAttribute('in_subject') == '1' ? this.opt.sErrorBorderStyle : '';
 	}
-
-	ajax_indicator(false);
 }
 
 // *** Other functions...

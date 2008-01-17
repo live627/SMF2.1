@@ -2367,15 +2367,17 @@ function QuoteFast()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_msg = {int:id_msg}' .
-			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}') . '
+			(allowedTo('approve_posts') ? '' : ' AND (m.approved = {int:is_approved} OR (m.id_member != {int:guest_id} AND m.id_member = {int:current_member}))') . '
 			AND t.id_topic = m.id_topic' . (isset($_REQUEST['modify']) || (!empty($moderate_boards) && $moderate_boards[0] == 0) ? '' : '
 			AND (t.locked = {int:not_locked}' . (empty($moderate_boards) ? '' : ' OR b.id_board IN ({array_int:moderation_board_list})') . ')') . '
 		LIMIT 1',
 		array(
+			'current_member' => $user_info['id'],
 			'moderation_board_list' => $moderate_boards,
 			'id_msg' => (int) $_REQUEST['quote'],
 			'is_approved' => 1,
 			'not_locked' => 0,
+			'guest_id' => 0,
 		)
 	);
 	$context['close_window'] = $smcFunc['db_num_rows']($request) == 0;
@@ -2471,11 +2473,13 @@ function JavaScriptModify()
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
 			WHERE m.id_msg = {raw:id_msg}
 				AND m.id_topic = {int:current_topic}' .
-				(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}'),
+				(allowedTo('approve_posts') ? '' : ' AND (m.approved = {int:is_approved} OR (m.id_member != {int:guest_id} AND m.id_member = {int:current_member}))'),
 			array(
+				'current_member' => $user_info['id'],
 				'current_topic' => $topic,
 				'id_msg' => empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg'],
 				'is_approved' => 1,
+				'guest_id' => 0,
 			)
 		);
 	if ($smcFunc['db_num_rows']($request) == 0)
