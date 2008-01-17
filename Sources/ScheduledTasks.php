@@ -1380,8 +1380,6 @@ function scheduled_weekly_maintenance()
 
 			if (!empty($reports))
 			{
-				$reports = implode(', ', $reports);
-
 				// Now delete the reports...
 				$smcFunc['db_query']('', '
 					DELETE FROM {db_prefix}log_reported

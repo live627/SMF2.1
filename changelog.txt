@@ -150,6 +150,7 @@ January 2008
  + Added a array_combine implementation for those not using PHP 5. (Subs-Compat.php) [Bug 1317]
  ! Editing just would not really work if you didn't have WYSIWYG enabled. (editor.js) [Bug 1310]
  * XML previewing of posts was looking dodgy sometimes. (Post template)
+ ! The weekly scheduled task was imploding an array it shouldn't have. (ScheduledTasks.php) [Bug 1318]
 
 
 December 2007
