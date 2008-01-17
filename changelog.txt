@@ -151,6 +151,7 @@ January 2008
  ! Editing just would not really work if you didn't have WYSIWYG enabled. (editor.js) [Bug 1310]
  * XML previewing of posts was looking dodgy sometimes. (Post template)
  ! The weekly scheduled task was imploding an array it shouldn't have. (ScheduledTasks.php) [Bug 1318]
+ ! The time_taken column for the scheduled task log is a float not an int. (ScheduledTasks.php, ManageMaintenance.php) [Bug 1321]
 
 
 December 2007

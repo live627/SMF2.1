@@ -341,7 +341,7 @@ function ScheduledTasks()
 				$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $start_time)), 3);
 				$smcFunc['db_insert']('',
 					'{db_prefix}log_scheduled_tasks',
-					array('id_task' => 'int', 'time_run' => 'int', 'time_taken' => 'int'),
+					array('id_task' => 'int', 'time_run' => 'int', 'time_taken' => 'float'),
 					array($row['id_task'], time(), $total_time),
 					array('id_task')
 				);

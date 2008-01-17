@@ -142,7 +142,7 @@ function AutoTask()
 					$smcFunc['db_insert']('',
 						'{db_prefix}log_scheduled_tasks',
 						array(
-							'id_task' => 'int', 'time_run' => 'int', 'time_taken' => 'int',
+							'id_task' => 'int', 'time_run' => 'int', 'time_taken' => 'float',
 						),
 						array(
 							$row['id_task'], time(), (int) $total_time,
