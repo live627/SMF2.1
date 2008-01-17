@@ -153,6 +153,7 @@ January 2008
  ! The weekly scheduled task was imploding an array it shouldn't have. (ScheduledTasks.php) [Bug 1318]
  ! The time_taken column for the scheduled task log is a float not an int. (ScheduledTasks.php, ManageMaintenance.php) [Bug 1321]
  ! Quick edit wasn't working for unapproved posts in all situations. (xml_topic.js, Post.php) [Bug 1157]
+ ! The WYSIWYG editor wasn't making valid BBC for sub lists. (Subs-Editor.php) [Bug 1324]
 
 
 December 2007
