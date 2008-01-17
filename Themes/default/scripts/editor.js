@@ -158,7 +158,7 @@ SmfEditor.prototype.init = function()
 	this.oTextHandle = document.getElementById(this.sUniqueId);
 
 	// Ensure the currentText is set correctly depending on the mode.
-	if (this.sCurrentText == '' && this.bRichTextEnabled)
+	if (this.sCurrentText == '' && !this.bRichTextEnabled)
 		this.sCurrentText = smf_unhtmlspecialchars(getInnerHTML(this.oTextHandle));
 
 	// Only try to do this if rich text is supported.

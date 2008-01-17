@@ -148,6 +148,8 @@ January 2008
  ! Use the correct language string for empty profile edits list. (Profile-View.php) [Bug 1314]
  ! When emptying the log_errors table on upgrade, use TRUNCATE and pass the truncate_table identifier for SQLite support. (upgrade.php) [Bug 1285]
  + Added a array_combine implementation for those not using PHP 5. (Subs-Compat.php) [Bug 1317]
+ ! Editing just would not really work if you didn't have WYSIWYG enabled. (editor.js) [Bug 1310]
+ * XML previewing of posts was looking dodgy sometimes. (Post template)
 
 
 December 2007
