@@ -198,7 +198,7 @@ if (!function_exists('array_combine'))
 	function array_combine($keys, $values)
 	{
 		$ret = array();
-		if (!is_array($keys) || empty($keys) || !is_array($values) || empty($values) || count($keys) != count($values))
+		if (!is_array($keys) || !is_array($values) || empty($values) || ($count=count($keys)) != count($values))
 		{
 			trigger_error('array_combine(): Both parameters should have equal number of elements', E_USER_WARNING);
 			return false;
@@ -208,10 +208,8 @@ if (!function_exists('array_combine'))
 		$keys = array_values($keys);
 		$values = array_values($values);
 
-		foreach($keys AS $i => $key)
-		{
-			$ret[$key] = $values[$i];
-		}
+		for($i=0; $i < $count; $i++)
+			$ret[$keys[$i]] = $values[$i];
 
 		return $ret;
 	}
