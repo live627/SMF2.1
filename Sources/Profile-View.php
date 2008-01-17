@@ -1377,7 +1377,7 @@ function trackEdits($memID)
 		'id' => 'edit_list',
 		'title' => $txt['trackEdits'],
 		'items_per_page' => $modSettings['defaultMaxMessages'],
-		'no_items_label' => $txt['no_errors_from_ip'],
+		'no_items_label' => $txt['trackEdit_no_edits'],
 		'base_href' => $scripturl . '?action=profile;sa=tracking;area=edits;u=' . $memID,
 		'default_sort_col' => 'time',
 		'get_items' => array(

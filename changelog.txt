@@ -145,6 +145,7 @@ January 2008
  ! Various fixes related to the spider tracking feature. (ManageSearchEngines.php, ManageSettings.php, Who.php, Who template, Who language file) [Bug 1298]
  ! Package operations were not working properly on custom themes. (Subs-Package.php)
  ! Lots of places were not sending out emails in the right members language. (Various files) [Bug 1312]
+ ! Use the correct language string for empty profile edits list. (Profile-View.php) [Bug 1314]
 
 
 December 2007
