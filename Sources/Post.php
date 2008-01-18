@@ -2362,32 +2362,32 @@ function QuoteFast()
 	$context['post_box_name'] = isset($_GET['pb']) ? $_GET['pb'] : '';
 
 	$request = $smcFunc['db_query']('', '
-		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.id_topic, m.subject
-		FROM ({db_prefix}messages AS m, {db_prefix}topics AS t)
+		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.id_topic, m.subject,
+			m.id_board, m.id_member, m.approved
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg = {int:id_msg}' .
-			(allowedTo('approve_posts') ? '' : ' AND (m.approved = {int:is_approved} OR (m.id_member != {int:guest_id} AND m.id_member = {int:current_member}))') . '
-			AND t.id_topic = m.id_topic' . (isset($_REQUEST['modify']) || (!empty($moderate_boards) && $moderate_boards[0] == 0) ? '' : '
+		WHERE m.id_msg = {int:id_msg}' . (isset($_REQUEST['modify']) || (!empty($moderate_boards) && $moderate_boards[0] == 0) ? '' : '
 			AND (t.locked = {int:not_locked}' . (empty($moderate_boards) ? '' : ' OR b.id_board IN ({array_int:moderation_board_list})') . ')') . '
 		LIMIT 1',
 		array(
 			'current_member' => $user_info['id'],
 			'moderation_board_list' => $moderate_boards,
 			'id_msg' => (int) $_REQUEST['quote'],
-			'is_approved' => 1,
 			'not_locked' => 0,
-			'guest_id' => 0,
 		)
 	);
 	$context['close_window'] = $smcFunc['db_num_rows']($request) == 0;
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'quotefast';
-	if ($smcFunc['db_num_rows']($request) != 0)
-	{
-		$row = $smcFunc['db_fetch_assoc']($request);
-		$smcFunc['db_free_result']($request);
+	if (!empty($row))
+		$can_view_post = $row['approved'] || ($row['id_member'] != 0 && $row['id_member'] == $user_info['id']) || allowedTo('approve_posts', $row['id_board']);
 
+	if (!empty($can_view_post))
+	{
 		// Remove special formatting we don't want anymore.
 		$row['body'] = un_preparsecode($row['body']);
 

@@ -1108,11 +1108,13 @@ SmfEditor.prototype.spellCheckStart = function()
 	{
 		var sText = escape(this.getText(true, 1));
 
-		getXMLDocument(smf_scripturl + '?action=jseditor;spell;view=0;sesc=' + this.sCurSessionId + ';xml;message=' + sText, onSpellCheckDataReceived);
+		this.tmpMethod = sendXMLDocument;
+		this.tmpMethod(smf_scripturl + '?action=jseditor;view=0;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
+		delete tmpMethod;
 	}
 	// Otherwise start spellchecking right away.
 	else
-		spellCheck('postmodify', 'message');
+		spellCheck(this.formID, this.sUniqueId);
 
 	return true;
 }
@@ -1127,7 +1129,7 @@ SmfEditor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
 	sText = sText.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
 	this.oTextHandle.value = sText;
-	spellCheck('postmodify', 'message', 'spellCheckEnd');
+	spellCheck(this.formID, this.sUniqueId, 'spellCheckEnd');
 }
 
 // Function called when the Spellchecker is finished and ready to pass back.
@@ -1138,7 +1140,9 @@ SmfEditor.prototype.spellCheckEnd = function()
 	{
 		var sText = escape(this.getText(true, 0));
 
-		getXMLDocument(smf_scripturl + '?action=jseditor;spelldone;view=1;sesc=' + this.sCurSessionId + ';xml;message=' + sText, onSpellCheckCompleteDataReceived);
+		this.tmpMethod = sendXMLDocument;
+		this.tmpMethod(smf_scripturl + '?action=jseditor;view=1;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckCompleteDataReceived);
+		delete tmpMethod;
 	}
 	else
 		this.setFocus();
