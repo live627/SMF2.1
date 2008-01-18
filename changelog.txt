@@ -154,6 +154,8 @@ January 2008
  ! The time_taken column for the scheduled task log is a float not an int. (ScheduledTasks.php, ManageMaintenance.php) [Bug 1321]
  ! Quick edit wasn't working for unapproved posts in all situations. (xml_topic.js, Post.php) [Bug 1157]
  ! The WYSIWYG editor wasn't making valid BBC for sub lists. (Subs-Editor.php) [Bug 1324]
+ ! If the search term is empty for the admin search don't bother searching and return an empty array. (Admin.php) [Bug 1328]
+ ! Check to see if $_REQUEST['search_term'] is set before using it. (Admin.php)
 
 
 December 2007
