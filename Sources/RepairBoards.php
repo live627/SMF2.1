@@ -264,11 +264,18 @@ function loadForumTests()
 		),
 		// Find messages that don't have existing topics.
 		'missing_topics' => array(
+			'substeps' => array(
+				'step_size' => 1000,
+				'step_max' => '
+					SELECT MAX(id_topic)
+					FROM {db_prefix}messages'
+			),
 			'check_query' => '
 				SELECT m.id_topic, m.id_msg
 				FROM {db_prefix}messages AS m
 					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
-				WHERE t.id_topic IS NULL
+				WHERE m.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
+					AND t.id_topic IS NULL
 				ORDER BY m.id_topic, m.id_msg',
 			'fix_query' => '
 				SELECT
