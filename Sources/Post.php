@@ -2641,7 +2641,7 @@ function JavaScriptModify()
 			);
 		}
 
-		if ($moderationAction)
+		if (!empty($moderationAction))
 			logAction('modify', array('topic' => $topic, 'message' => $row['id_msg'], 'member' => $row['id_member_started'], 'board' => $board));
 	}
 

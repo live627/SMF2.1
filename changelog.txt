@@ -159,6 +159,8 @@ January 2008
  ! Firefox wasn't doing all that great at spell checking in the rich text editor mode. (Subs-Editor.php, editor.js) [Bug 1316]
  ! Unread messages was not paginating dependant on user preference. (Recent.php) [Bug 1320]
  ! smf_ItemPos wasn't correctly checking offset parent. (script.js)
+ ! Don't change the WYSIWYG editor state until you actually change the boxes. (editor.js)
+ ! WYSIWYG editor wasn't really doing internationalisation well at all. (script.js)
 
 
 December 2007

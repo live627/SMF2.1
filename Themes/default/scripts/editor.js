@@ -980,11 +980,11 @@ SmfEditor.prototype.toggleView = function(bView)
 
 	// Overriding or alternating?
 	if (typeof(bView) != 'undefined')
-		this.bRichTextEnabled = bView;
+		bNewView = bView;
 	else
-		this.bRichTextEnabled = !this.bRichTextEnabled;
+		bNewView = !this.bRichTextEnabled;
 
-	this.requestParsedMessage(this.bRichTextEnabled);
+	this.requestParsedMessage(bNewView);
 
 	return true;
 }
@@ -1000,7 +1000,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	}
 
 	// Get the text.
-	var sText = escape(this.getText(true, !bView));
+	var sText = escape(textToEntities(this.getText(true, !bView).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
 
 	this.tmpMethod = sendXMLDocument;
 	this.tmpMethod(smf_scripturl + '?action=jseditor;view=' + (bView ? 1 : 0) + ';sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
@@ -1013,11 +1013,8 @@ SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
 	for (var i = 0; i < oXMLDoc.getElementsByTagName('message')[0].childNodes.length; i++)
 		sText += oXMLDoc.getElementsByTagName('message')[0].childNodes[i].nodeValue;
 
-	var bView = oXMLDoc.getElementsByTagName('message')[0].getAttribute('view') != '0';
-
-	// Only change the text if we have the right data.
-	if (this.bRichTextEnabled != bView)
-		return;
+	// What is this new view we have?
+	this.bRichTextEnabled = oXMLDoc.getElementsByTagName('message')[0].getAttribute('view') != '0';
 
 	if (this.bRichTextEnabled)
 	{

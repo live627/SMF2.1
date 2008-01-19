@@ -78,7 +78,7 @@ function EditorMain()
 	$context['sub_template'] = 'sendbody';
 
 	$context['view'] = (int) $_REQUEST['view'];
-
+log_error($_REQUEST['message'] . base64_encode($_REQUEST['message']));
 	// Return the right thing for the mode.
 	if ($context['view'])
 	{
