@@ -5,8 +5,8 @@
 
 // Symbols.
 $txt['usd_symbol'] = '$%1.2f';
-$txt['eur_symbol'] = '€%1.2f';
-$txt['gbp_symbol'] = '£%1.2f';
+$txt['eur_symbol'] = '&euro;%1.2f';
+$txt['gbp_symbol'] = '&pound;%1.2f';
 
 $txt['usd'] = 'USD ($)';
 $txt['eur'] = 'EURO (&euro;)';
