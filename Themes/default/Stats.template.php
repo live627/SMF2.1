@@ -202,7 +202,7 @@ function template_main()
 			echo '
 						<tr class="windowbg2" valign="middle" id="year_', $id, '">
 							<th align="left" width="25%">
-								<a href="#" onclick="yearElements[', $id, '].toggle(); return false;"><img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /></a> ', $year['year'], '</a>
+								<a href="#" onclick="yearElements[', $id, '].toggle(); return false;"><img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /> ', $year['year'], '</a>
 							</th>
 							<th align="center" width="15%">', $year['new_topics'], '</th>
 							<th align="center" width="15%">', $year['new_posts'], '</th>
