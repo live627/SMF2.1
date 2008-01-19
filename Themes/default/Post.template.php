@@ -790,10 +790,6 @@ function template_main()
 					text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
 				editorHandle', $context['post_box_name'], '.insertText(text);
 			}
-			function spellCheckDone()
-			{
-				editorHandle', $context['post_box_name'], '.spellCheckEnd();
-			}
 		// ]]></script>
 
 			<table cellspacing="1" cellpadding="0" width="92%" align="center" class="bordercolor">

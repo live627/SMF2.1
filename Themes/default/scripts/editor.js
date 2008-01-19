@@ -147,7 +147,8 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 		limegreen: '#32cd32'
 	}
 
-	this.formID = 'postmodify';
+	this.sFormId = 'postmodify';
+	this.iArrayPosition = smf_editorArray.length;
 
 	this.init();
 }
@@ -1114,7 +1115,7 @@ SmfEditor.prototype.spellCheckStart = function()
 	}
 	// Otherwise start spellchecking right away.
 	else
-		spellCheck(this.formID, this.sUniqueId);
+		spellCheck(this.sFormId, this.sUniqueId);
 
 	return true;
 }
@@ -1129,7 +1130,7 @@ SmfEditor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
 	sText = sText.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
 	this.oTextHandle.value = sText;
-	spellCheck(this.formID, this.sUniqueId, 'spellCheckEnd');
+	spellCheck(this.sFormId, this.sUniqueId);
 }
 
 // Function called when the Spellchecker is finished and ready to pass back.
@@ -1141,7 +1142,7 @@ SmfEditor.prototype.spellCheckEnd = function()
 		var sText = escape(this.getText(true, 0));
 
 		this.tmpMethod = sendXMLDocument;
-		this.tmpMethod(smf_scripturl + '?action=jseditor;view=1;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckCompleteDataReceived);
+		this.tmpMethod(smf_scripturl + '?action=jseditor;view=1;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, smf_editorArray[this.iArrayPosition].onSpellCheckCompleteDataReceived);
 		delete tmpMethod;
 	}
 	else

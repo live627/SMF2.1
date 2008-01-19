@@ -997,7 +997,7 @@ function create_control_richedit($editorOptions)
 				function spellCheckDone()
 				{
 					for (i = 0; i < smf_editorArray.length; i++)
-						smf_editorArray[i].spellCheckEnd();
+						setTimeout("smf_editorArray[" + i + "].spellCheckEnd()", 150);
 				}
 				// ]]></script>';
 		}
