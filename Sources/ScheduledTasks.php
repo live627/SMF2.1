@@ -1178,12 +1178,11 @@ function scheduled_fetchSMfiles()
 		// Get the file
 		$file_data = fetch_web_data($url);
 
-		// If we got an error log it
+		// If we got an error - give up - the site might be down.
 		if ($file_data === false)
 		{
 			log_error(sprintf($txt['st_cannot_retrieve_file'], $url));
-			// No more to do with this file, on to the next.
-			continue;
+			return false;
 		}
 
 		// Save the file to the database.
