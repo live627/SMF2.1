@@ -1127,11 +1127,12 @@ function UnreadTopics()
 
 		// Decide how many pages the topic should have.
 		$topic_length = $row['num_replies'] + 1;
-		if ($topic_length > $modSettings['defaultMaxMessages'])
+		$messages_per_page = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) && !WIRELESS ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
+		if ($topic_length > $messages_per_page)
 		{
 			$tmppages = array();
 			$tmpa = 1;
-			for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $modSettings['defaultMaxMessages'])
+			for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $messages_per_page)
 			{
 				$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . $tmpb . ';topicseen">' . $tmpa . '</a>';
 				$tmpa++;

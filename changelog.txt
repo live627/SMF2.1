@@ -157,6 +157,7 @@ January 2008
  ! If the search term is empty for the admin search don't bother searching and return an empty array. (Admin.php) [Bug 1328]
  ! Check to see if $_REQUEST['search_term'] is set before using it. (Admin.php)
  ! Firefox wasn't doing all that great at spell checking in the rich text editor mode. (Subs-Editor.php, editor.js) [Bug 1316]
+ ! Unread messages was not paginating dependant on user preference. (Recent.php) [Bug 1320]
 
 
 December 2007
