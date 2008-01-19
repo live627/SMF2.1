@@ -741,7 +741,7 @@ function loadProfileFields($force_reload = false)
 			'),
 			'input_validate' => create_function('&$value', '
 				// Validate the time_offset...
-				$value = strtr($value, \',\', \'.\');
+				$value = (float) strtr($value, \',\', \'.\');
 
 				if ($value < -23.5 || $value > 23.5)
 					return \'bad_offset\';
