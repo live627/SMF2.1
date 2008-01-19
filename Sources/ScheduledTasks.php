@@ -1110,7 +1110,7 @@ function next_time($regularity, $unit, $offset)
 // This loads the bare minimum data to allow us to load language files!
 function loadEssentialThemeData()
 {
-	global $settings, $modSettings, $smcFunc;
+	global $settings, $modSettings, $smcFunc, $mbname, $context;
 
 	// Get all the default theme variables.
 	$result = $smcFunc['db_query']('', '
@@ -1134,6 +1134,7 @@ function loadEssentialThemeData()
 	$smcFunc['db_free_result']($result);
 
 	// Assume we want this.
+	$context['forum_name'] = $mbname;
 	loadLanguage('index+Modifications');
 }
 
