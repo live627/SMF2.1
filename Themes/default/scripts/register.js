@@ -204,7 +204,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 
 		// Request a search on that username.
 		checkName = escape(textToEntities(curUsername).replace(/&#(\d+);/g, "%#$1%")).replace(/%26/g, "%25%23038%25");
-		getXMLDocument(smf_scripturl + '?action=register;sa=usernamecheck;xml;username=' + checkName, checkUsernameCallback);
+		getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=register;sa=usernamecheck;xml;username=' + checkName, checkUsernameCallback);
 	}
 
 	// Callback for getting the username data.

@@ -9,18 +9,18 @@ function QuickReply(oOptions)
 QuickReply.prototype.quote = function (iMessageId, sSessionId)
 {
 	if (this.bCollapsed)
-		window.location.href = this.opt.sScriptUrl + '?action=post;quote=' + iMessageId + ';topic=' + this.opt.iTopicId + '.' + this.opt.iStart + ';sesc=' + sSessionId;
+		window.location.href = smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=post;quote=' + iMessageId + ';topic=' + this.opt.iTopicId + '.' + this.opt.iStart + ';sesc=' + sSessionId;
 	else
 	{
 		// Doing it the XMLhttp way?
 		if (window.XMLHttpRequest)
 		{
 			ajax_indicator(true);
-			getXMLDocument(this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';xml', this.onQuoteReceived);
+			getXMLDocument(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';xml', this.onQuoteReceived);
 		}
 		// Or with a smart popup!
 		else
-			reqWin(this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId, 240, 90);
+			reqWin(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId, 240, 90);
 
 		// Move the view to the quick reply box.
 		if (navigator.appName == 'Microsoft Internet Explorer')
@@ -108,7 +108,7 @@ QuickModify.prototype.modifyMsg = function (iMessageId, sSessionId)
 
 	// For IE 5.0 support, 'call' is not yet used.
 	this.tmpMethod = getXMLDocument;
-	this.tmpMethod(this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';modify;xml', this.onMessageReceived);
+	this.tmpMethod(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';modify;xml', this.onMessageReceived);
 	delete this.tmpMethod;
 }
 
@@ -178,7 +178,7 @@ QuickModify.prototype.modifySave = function (sSessionId)
 
 	// Send in the XMLhttp request and let's hope for the best.
 	ajax_indicator(true);
-	sendXMLDocument.call(this, this.opt.sScriptUrl + "?action=jsmodify;topic=" + this.opt.iTopicId + ";sesc=" + sSessionId + ";xml", x.join("&"), this.onModifyDone);
+	sendXMLDocument.call(this, smf_prepareScriptUrl(this.opt.sScriptUrl) + "action=jsmodify;topic=" + this.opt.iTopicId + ";sesc=" + sSessionId + ";xml", x.join("&"), this.onModifyDone);
 
 	return false;
 }

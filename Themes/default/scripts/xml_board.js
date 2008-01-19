@@ -26,7 +26,7 @@ function modify_topic(topic_id, first_msg_id, cur_session_id)
 
 	if (typeof window.ajax_indicator == "function")
 		ajax_indicator(true);
-	getXMLDocument(smf_scripturl + "?action=quotefast;quote=" + first_msg_id + ";sesc=" + cur_session_id + ";modify;xml", onDocReceived_modify_topic);
+	getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + first_msg_id + ";sesc=" + cur_session_id + ";modify;xml", onDocReceived_modify_topic);
 }
 
 function onDocReceived_modify_topic(XMLDoc)
@@ -65,7 +65,7 @@ function modify_topic_save(cur_session_id)
 
 	if (typeof window.ajax_indicator == "function")
 		ajax_indicator(true);
-	sendXMLDocument(smf_scripturl + "?action=jsmodify;topic=" + parseInt(document.forms.quickModForm.elements['topic'].value) + ";sesc=" + cur_session_id + ";xml", x.join("&"), modify_topic_done);
+	sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=jsmodify;topic=" + parseInt(document.forms.quickModForm.elements['topic'].value) + ";sesc=" + cur_session_id + ";xml", x.join("&"), modify_topic_done);
 
 	return false;
 }

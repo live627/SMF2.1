@@ -64,7 +64,7 @@ function smfStats_month(uniqueId, initialState)
 		{
 			if (this.daysloaded == false)
 			{
-				getXMLDocument(smf_scripturl + "?action=stats;expand=" + this.uid + ";xml", onDocReceived);
+				getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;expand=" + this.uid + ";xml", onDocReceived);
 				doingExpandCollapse = true;
 				if (typeof(window.ajax_indicator) == "function")
 					ajax_indicator(true);
@@ -77,7 +77,7 @@ function smfStats_month(uniqueId, initialState)
 				// If we are collapsing this make sure to tell the forum we don't need to load that data any more.
 				if (this.toggleElement.state)
 				{
-					getXMLDocument(smf_scripturl + "?action=stats;collapse=" + this.uid + ";xml");
+					getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + this.uid + ";xml");
 				}
 			}
 			return false;
@@ -140,7 +140,7 @@ function onDocReceived(XMLDoc)
 			}
 		}
 		// Adjust the link to collapse instead of expand
-		document.getElementById("link_" + curId).href = smf_scripturl + "?action=stats;collapse=" + curId + "#" + curId;
+		document.getElementById("link_" + curId).href = smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + curId + "#" + curId;
 	}
 
 	doingExpandCollapse = false;

@@ -732,7 +732,7 @@ function findCoords(oElement)
 // This function will retrieve the contents needed for the jump to boxes.
 function grabJumpToContent()
 {
-	var oXMLDoc = getXMLDocument(smf_scripturl + "?action=xmlhttp;sa=jumpto;xml");
+	var oXMLDoc = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=xmlhttp;sa=jumpto;xml");
 	var aBoardsAndCategories = new Array();
 
 	ajax_indicator(true);
@@ -911,7 +911,7 @@ IconList.prototype.openPopup = function (oDiv, iMessageId)
 		// Start to fetch its contents.
 		ajax_indicator(true);
 		this.tmpMethod = getXMLDocument;
-		this.tmpMethod(this.opt.sScriptUrl + '?action=xmlhttp;sa=messageicons;board=' + this.opt.iBoardId + ';xml', this.onIconsReceived);
+		this.tmpMethod(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=xmlhttp;sa=messageicons;board=' + this.opt.iBoardId + ';xml', this.onIconsReceived);
 		delete this.tmpMethod;
 
 		createEventListener(document.body);
@@ -973,7 +973,7 @@ IconList.prototype.onItemMouseDown = function (oDiv, sNewIcon)
 	{
 		ajax_indicator(true);
 		this.tmpMethod = getXMLDocument;
-		var oXMLDoc = this.tmpMethod(this.opt.sScriptUrl + '?action=jsmodify;topic=' + this.opt.iTopicId + ';msg=' + this.iCurMessageId + ';sesc=' + this.opt.sSessionId + ';icon=' + sNewIcon + ';xml');
+		var oXMLDoc = this.tmpMethod(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=jsmodify;topic=' + this.opt.iTopicId + ';msg=' + this.iCurMessageId + ';sesc=' + this.opt.sSessionId + ';icon=' + sNewIcon + ';xml');
 		delete this.tmpMethod;
 		ajax_indicator(false);
 
@@ -1051,6 +1051,12 @@ function smf_itemPos(itemHandle)
 	}
 
 	return [itemX, itemY];
+}
+
+// This function takes the script URL and prepares it to allow the query string to be appended to it.
+function smf_prepareScriptUrl(sUrl)
+{
+	return sUrl.indexOf('?') == -1 ? sUrl + '?' : sUrl + (sUrl.charAt(sUrl.length - 1) == '?' || sUrl.charAt(sUrl.length - 1) == '&' || sUrl.charAt(sUrl.length - 1) == ';' ? '' : ';');
 }
 
 var onload_events = new Array();

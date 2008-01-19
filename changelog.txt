@@ -170,6 +170,7 @@ January 2008
  ! Allow lists within lists, to make sub lists look nicer. (Subs.php, Subs-Post.php, Subs-Editor.php)
  ! Add support for ISO-8859-15. (ManageMaintenance.php)
  & Replace pound and euro signs with their entity equivalents. (ManagePaid language file) [Bug 1331]
+ ! Added a new javascript function smf_prepareScriptUrl, to ensure we use the right URL on javascript if cookies are disabled on the client. (Most javascript files) [Bug 1329]
 
 
 December 2007

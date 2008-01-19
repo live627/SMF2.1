@@ -478,7 +478,7 @@ function smfSuggest(sessionID, textID)
 		searchString = escape(textToEntities(searchString).replace(/&#(\d+);/g, "%#$1%")).replace(/%26/g, "%25%23038%25");
 
 		// Get the document.
-		xmlRequestHandle = getXMLDocument(smf_scripturl + '?action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);
+		xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);
 	}
 
 	// Auto initialise!
