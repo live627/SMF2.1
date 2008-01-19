@@ -1022,6 +1022,9 @@ function Post()
 	$editorOptions = array(
 		'id' => 'message',
 		'value' => $context['message'],
+		'labels' => array(
+			'post_button' => $context['submit_label'],
+		),
 		// We do XML preview here.
 		'preview_type' => 2,
 	);
