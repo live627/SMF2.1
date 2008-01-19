@@ -9,8 +9,8 @@ $txt['eur_symbol'] = '€%1.2f';
 $txt['gbp_symbol'] = '£%1.2f';
 
 $txt['usd'] = 'USD ($)';
-$txt['eur'] = 'EURO (€)';
-$txt['gbp'] = 'GBP (£)';
+$txt['eur'] = 'EURO (&euro;)';
+$txt['gbp'] = 'GBP (&pound;)';
 $txt['other'] = 'Other';
 
 $txt['paid_username'] = 'Username';

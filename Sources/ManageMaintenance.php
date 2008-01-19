@@ -561,6 +561,8 @@ function ConvertUtf8()
 		'ISO-8859-2' => 'latin2',
 		// Turkish.
 		'ISO-8859-9' => 'latin5',
+		// West European with Euro sign.
+		'ISO-8859-15' => 'latin9',
 		// Thai.
 		'tis-620' => 'tis620',
 		// Persian, Chinese, etc.

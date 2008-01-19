@@ -168,6 +168,8 @@ January 2008
  & Don't open admin help links in the same window. (Help language file) [Bug 1275]
  ! Log actions to do with membergroups and activation into the admin log. (Subs-Member.php, Subs-Membergroups.php, ManageMembergroups.php, Modlog language file)
  ! Allow lists within lists, to make sub lists look nicer. (Subs.php, Subs-Post.php, Subs-Editor.php)
+ ! Add support for ISO-8859-15. (ManageMaintenance.php)
+ & Replace pound and euro signs with their entity equivalents. (ManagePaid language file) [Bug 1331]
 
 
 December 2007
