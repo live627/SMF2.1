@@ -381,7 +381,7 @@ function PlushSearch2()
 			SELECT ' . (empty($search_params['maxage']) ? '0, ' : 'IFNULL(MIN(id_msg), -1), ') . (empty($search_params['minage']) ? '0' : 'IFNULL(MAX(id_msg), -1)') . '
 			FROM {db_prefix}messages
 			WHERE approved = {int:is_approved_true}' . (empty($search_params['minage']) ? '' : '
-				poster_time <= {int:timestamp_minimum_age}') . (empty($search_params['maxage']) ? '' : '
+				AND poster_time <= {int:timestamp_minimum_age}') . (empty($search_params['maxage']) ? '' : '
 				AND poster_time >= {int:timestamp_maximum_age}'),
 			array(
 				'timestamp_minimum_age' => empty($search_params['minage']) ? 0 : time() - 86400 * $search_params['minage'],
