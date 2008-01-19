@@ -78,7 +78,7 @@ function EditorMain()
 	$context['sub_template'] = 'sendbody';
 
 	$context['view'] = (int) $_REQUEST['view'];
-log_error($_REQUEST['message'] . base64_encode($_REQUEST['message']));
+
 	// Return the right thing for the mode.
 	if ($context['view'])
 	{
@@ -407,6 +407,55 @@ function html_to_bbc($text)
 		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', '[li]' . "$" .'1[/li]', $text);
 	}
 
+	// I love my own image...
+	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) != false)
+	{
+		// Find the position of the image.
+		$start_pos = strpos($text, $matches[0]);
+		if ($start_pos === false)
+			break;
+		$end_pos = $start_pos + strlen($matches[0]);
+
+		$params = '';
+		$had_params = array();
+		$src = '';
+
+		$attrs = explode(' ', $matches[1]);
+		foreach ($attrs as $attrib)
+		{
+			@list ($k, $v) = explode('=', $attrib);
+			if (empty($v))
+				continue;
+
+			$v = strtr($v, array('"' => ''));
+			$k = trim($k);
+
+			if (trim($v) == '')
+				continue;
+
+			if (in_array($k, $had_params))
+				continue;
+
+			if (in_array($k, array('width', 'height')))
+				$params .= ' ' . $k . '=' . (int) $v;
+			elseif ($k == 'alt')
+				$params .= ' alt=' . trim($v);
+			elseif ($k == 'src')
+				$src = trim($v);
+
+			$had_params[] = $k;
+		}
+
+		$tag = '';
+		if (!empty($src))
+		{
+			$tag = '[img' . $params . ']' . $src . '[/img]';
+		}
+
+		// Replace the tag
+		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
+	}
+
 	// What about URL's - the pain in the ass of the tag world.
 	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
 	{
@@ -461,55 +510,6 @@ function html_to_bbc($text)
 				$tag = '[' . $tag_type . ']' . $href . '[/' . $tag_type . ']';
 			else
 				$tag = '[' . $tag_type . '=' . $href . ']' . $matches[2] . '[/' . $tag_type . ']';
-		}
-
-		// Replace the tag
-		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
-	}
-
-	// I love my own image...
-	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) != false)
-	{
-		// Find the position of the image.
-		$start_pos = strpos($text, $matches[0]);
-		if ($start_pos === false)
-			break;
-		$end_pos = $start_pos + strlen($matches[0]);
-
-		$params = '';
-		$had_params = array();
-		$src = '';
-
-		$attrs = explode(' ', $matches[1]);
-		foreach ($attrs as $attrib)
-		{
-			@list ($k, $v) = explode('=', $attrib);
-			if (empty($v))
-				continue;
-
-			$v = strtr($v, array('"' => ''));
-			$k = trim($k);
-
-			if (trim($v) == '')
-				continue;
-
-			if (in_array($k, $had_params))
-				continue;
-
-			if (in_array($k, array('width', 'height')))
-				$params .= ' ' . $k . '=' . (int) $v;
-			elseif ($k == 'alt')
-				$params .= ' alt=' . trim($v);
-			elseif ($k == 'src')
-				$src = trim($v);
-
-			$had_params[] = $k;
-		}
-
-		$tag = '';
-		if (!empty($src))
-		{
-			$tag = '[img' . $params . ']' . $src . '[/img]';
 		}
 
 		// Replace the tag
