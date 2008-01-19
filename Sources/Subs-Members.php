@@ -155,14 +155,35 @@ function deleteMembers($users)
 		$users = array_diff($users, $admins);
 
 	// Log the action - regardless of who is deleting it.
+	$log_inserts = array();
 	foreach ($user_log_details as $user)
 	{
 		// Integration rocks!
 		if (isset($modSettings['integrate_delete_member']) && function_exists($modSettings['integrate_delete_member']))
 			call_user_func($modSettings['integrate_delete_member'], $user[0]);
 
-		logAction('delete_member', array('member' => $user[0], 'name' => $user[1]));
+		// Add it to both the moderation and admin logs as it effects both.
+		$log_inserts[] = array(
+			time(), 3, $user_info['id'], $user_info['ip'], 'delete_member',
+			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1])),
+		);
+		$log_inserts[] = array(
+			time(), 1, $user_info['id'], $user_info['ip'], 'delete_member',
+			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1])),
+		);
 	}
+
+	// Do the actual logging.
+	if (!empty($log_inserts) && !empty($modSettings['modlog_enabled']))
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_actions',
+			array(
+				'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
+				'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534',
+			),
+			$log_inserts,
+			array('id_action')
+		);
 
 	// Make these peoples' posts guest posts.
 	$smcFunc['db_query']('', '

@@ -1173,13 +1173,13 @@ function AdminApprove()
 				)
 			);
 
-				$replacements = array(
-					'USERNAME' => $member['name'],
-					'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $validation_code,
-				);
+			$replacements = array(
+				'USERNAME' => $member['name'],
+				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $validation_code,
+			);
 
-				$emaildata = loadEmailTemplate('admin_approve_activation', $replacements, $member['language']);
-				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+			$emaildata = loadEmailTemplate('admin_approve_activation', $replacements, $member['language']);
+			sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 		}
 	}
 	// Are we rejecting them?
@@ -1227,14 +1227,13 @@ function AdminApprove()
 	{
 		foreach ($member_info as $member)
 		{
-				$replacements = array(
-					'USERNAME' => $member['name'],
-					'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $member['code'],
-				);
+			$replacements = array(
+				'USERNAME' => $member['name'],
+				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $member['code'],
+			);
 
-				$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);
-				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
-
+			$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);
+			sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 		}
 	}
 
@@ -1243,6 +1242,29 @@ function AdminApprove()
 	{
 		loadLanguage('index');
 		loadLanguage('ManageMembers');
+	}
+
+	// Log what we did?
+	if (!empty($modSettings['modlog_enabled']) && (substr($_POST['todo'], 0, 2) == 'ok' || $_POST['todo'] == 'remind'))
+	{
+		$log_action = $_POST['todo'] == 'remind' ? 'remind_member' : 'approve_member';
+		$log_inserts = array();
+		foreach ($member_info as $member)
+		{
+			$log_inserts[] = array(
+				time(), 3, $user_info['id'], $user_info['ip'], $log_action,
+				0, 0, 0, serialize(array('member' => $member['id'])),
+			);
+		}
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_actions',
+			array(
+				'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
+				'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534',
+			),
+			$log_inserts,
+			array('id_action')
+		);
 	}
 
 	// Although updateStats *may* catch this, best to do it manually just in case (Doesn't always sort out unapprovedMembers).

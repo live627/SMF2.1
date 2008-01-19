@@ -532,6 +532,9 @@ function AddMembergroup()
 			'settings_updated' => time(),
 		));
 
+		// We did it.
+		logAction('add_group', array('group' => $_POST['group_name']), 'admin');
+
 		// Go change some more settings.
 		redirectexit('action=admin;area=membergroups;sa=edit;group=' . $id_group);
 	}
@@ -848,6 +851,9 @@ function EditMembergroup()
 		updateSettings(array(
 			'settings_updated' => time(),
 		));
+
+		// Log the edit.
+		logAction('edited_group', array('group' => $_POST['group_name']), 'admin');
 
 		redirectexit('action=admin;area=membergroups');
 	}

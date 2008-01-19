@@ -84,6 +84,19 @@ function deleteMembergroups($groups)
 	if (empty($groups))
 		return false;
 
+	// Log the deletion.
+	$request = $smcFunc['db_query']('', '
+		SELECT group_name
+		FROM {db_prefix}membergroups
+		WHERE id_group IN ({array_int:group_list})',
+		array(
+			'group_list' => $groups,
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		logAction('delete_group', array('group' => $row['group_name']), 'admin');
+	$smcFunc['db_free_result']($request);
+
 	// Remove the membergroups themselves.
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}membergroups
@@ -207,7 +220,7 @@ function deleteMembergroups($groups)
 // Remove one or more members from one or more membergroups.
 function removeMembersFromGroups($members, $groups = null, $permissionCheckDone = false)
 {
-	global $smcFunc;
+	global $smcFunc, $user_info, $modSettings;
 
 	// You're getting nowhere without this permission, unless of course you are the group's moderator.
 	if (!$permissionCheckDone)
@@ -252,6 +265,10 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 
 		updateStats('postgroups', $members);
 
+		// Log what just happened.
+		foreach ($members as $member)
+			logAction('removed_all_groups', array('member' => $member), 'admin');
+
 		return true;
 	}
 	elseif (!is_array($groups))
@@ -265,18 +282,24 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 			$groups[$key] = (int) $value;
 	}
 
-	// Fetch a list of groups members cannot be assigned to explicitely.
+	// Fetch a list of groups members cannot be assigned to explicitely, and the group names of the ones we want.
 	$implicitGroups = array(-1, 0, 3);
 	$request = $smcFunc['db_query']('', '
-		SELECT id_group
+		SELECT id_group, group_name, min_posts
 		FROM {db_prefix}membergroups
-		WHERE min_posts != {int:min_posts}',
+		WHERE id_group IN ({array_int:group_list})',
 		array(
-			'min_posts' => -1,
+			'group_list' => $groups,
 		)
 	);
+	$group_names = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$implicitGroups[] = $row['id_group'];
+	{
+		if ($row['min_posts'] != -1)
+			$implicitGroups[] = $row['id_group'];
+		else
+			$group_names[$row['id_group']] = $row['group_name'];
+	}
 	$smcFunc['db_free_result']($request);
 
 	// Now get rid of those groups.
@@ -291,6 +314,24 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		return false;
 
 	// First, reset those who have this as their primary group - this is the easy one.
+	$log_inserts = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member, id_group
+		FROM {db_prefix}members AS members
+		WHERE id_group IN ({array_int:group_list})
+			AND id_member IN ({array_int:member_list})',
+		array(
+			'group_list' => $groups,
+			'member_list' => $members,
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$log_inserts[] = array(
+			time(), 3, $user_info['id'], $user_info['ip'], 'removed_from_group',
+			0, 0, 0, serialize(array('group' => $group_names[$row['id_group']], 'member' => $row['id_member'])),
+		);
+	$smcFunc['db_free_result']($request);
+
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}members
 		SET id_group = {int:regular_member}
@@ -317,7 +358,17 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	);
 	$updates = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		// What log entries must we make for this one, eh?
+		foreach (explode(',', $row['additional_groups']) as $group)
+			if (in_array($group, $groups))
+				$log_inserts[] = array(
+					time(), 3, $user_info['id'], $user_info['ip'], 'removed_from_group',
+					0, 0, 0, serialize(array('group' => $group_names[$group], 'member' => $row['id_member'])),
+				);
+
 		$updates[$row['additional_groups']][] = $row['id_member'];
+	}
 	$smcFunc['db_free_result']($request);
 
 	foreach ($updates as $additional_groups => $memberArray)
@@ -333,6 +384,18 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 
 	// Their post groups may have changed now...
 	updateStats('postgroups', $members);
+
+	// Do the log.
+	if (!empty($log_inserts) && !empty($modSettings['modlog_enabled']))
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_actions',
+			array(
+				'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
+				'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534',
+			),
+			$log_inserts,
+			array('id_action')
+		);
 
 	// Mission successful.
 	return true;
@@ -351,7 +414,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	                      available. If not, assign it to the additional group. */
 function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDone = false)
 {
-	global $smcFunc;
+	global $smcFunc, $user_info, $modSettings;
 
 	// Show your licence, but only if it hasn't been done yet.
 	if (!$permissionCheckDone)
@@ -373,17 +436,23 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 	$group = (int) $group;
 
 	// Some groups just don't like explicitly having members.
+	$implicitGroups = array(-1, 0, 3);
 	$request = $smcFunc['db_query']('', '
-		SELECT id_group
+		SELECT id_group, group_name, min_posts
 		FROM {db_prefix}membergroups
-		WHERE min_posts != {int:min_posts}',
+		WHERE id_group = {int:current_group}',
 		array(
-			'min_posts' => -1,
+			'current_group' => $group,
 		)
 	);
-	$implicitGroups = array(-1, 0, 3);
+	$group_names = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$implicitGroups[] = $row['id_group'];
+	{
+		if ($row['min_posts'] != -1)
+			$implicitGroups[] = $row['id_group'];
+		else
+			$group_names[$row['id_group']] = $row['group_name'];
+	}
 	$smcFunc['db_free_result']($request);
 
 	// Sorry, you can't join an implicit group.
@@ -449,6 +518,25 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 
 	// Update their postgroup statistics.
 	updateStats('postgroups', $members);
+
+	// Log the data.
+	$log_inserts = array();
+	foreach ($members as $member)
+		$log_inserts[] = array(
+			time(), 3, $user_info['id'], $user_info['ip'], 'added_to_group',
+			0, 0, 0, serialize(array('group' => $group_names[$group], 'member' => $member)),
+		);
+
+	if (!empty($log_inserts) && !empty($modSettings['modlog_enabled']))
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_actions',
+			array(
+				'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
+				'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534',
+			),
+			$log_inserts,
+			array('id_action')
+		);
 
 	return true;
 }
