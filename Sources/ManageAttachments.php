@@ -926,10 +926,6 @@ function RepairAttachments()
 		}
 	}
 
-	$to_fix = !empty($_SESSION['attachments_to_fix']) ? $_SESSION['attachments_to_fix'] : array();
-	$context['repair_errors'] = isset($_SESSION['attachments_to_fix2']) ? $_SESSION['attachments_to_fix2'] : array();
-	$fix_errors = isset($_GET['fixErrors']) ? true : false;
-
 	// All the valid problems are here:
 	$context['repair_errors'] = array(
 		'missing_thumbnail_parent' => 0,
@@ -941,6 +937,10 @@ function RepairAttachments()
 		'avatar_no_member' => 0,
 		'wrong_folder' => 0,
 	);
+
+	$to_fix = !empty($_SESSION['attachments_to_fix']) ? $_SESSION['attachments_to_fix'] : array();
+	$context['repair_errors'] = isset($_SESSION['attachments_to_fix2']) ? $_SESSION['attachments_to_fix2'] : array();
+	$fix_errors = isset($_GET['fixErrors']) ? true : false;
 
 	// Get stranded thumbnails.
 	if ($_GET['step'] <= 0)

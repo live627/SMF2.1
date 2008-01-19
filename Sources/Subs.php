@@ -1289,7 +1289,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'before' => '<ul class="bbc_list">',
 				'after' => '</ul>',
 				'trim' => 'inside',
-				'require_children' => array('li'),
+				'require_children' => array('li', 'list'),
 				'block_level' => true,
 			),
 			array(

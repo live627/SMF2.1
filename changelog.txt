@@ -167,6 +167,7 @@ January 2008
  ! If we're fetching simple machines files and we fail to get one give up as their site might be broken. (ScheduledTasks.php)
  & Don't open admin help links in the same window. (Help language file) [Bug 1275]
  ! Log actions to do with membergroups and activation into the admin log. (Subs-Member.php, Subs-Membergroups.php, ManageMembergroups.php, Modlog language file)
+ ! Allow lists within lists, to make sub lists look nicer. (Subs.php, Subs-Post.php, Subs-Editor.php)
 
 
 December 2007

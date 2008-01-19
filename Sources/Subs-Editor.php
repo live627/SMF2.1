@@ -550,10 +550,6 @@ function html_to_bbc($text)
 		'~</td>~i' => '[/td]',
 		'~<br\s*/*>~i' => "\n",
 		'~<hr[^<>]*>~i' => '[hr]',
-		// Note that due to the way HTML works sublists might not have been captured right.
-		'~\[/li\](\s*)\[list\]~i' => '[/li]$1[li][list]',
-		'~\[/list\](\s*)\[li\]~i' => '[/list]$1[/li][li]',
-		'~\[/list\](\s*)\[/list\]~i' => '[/list]$1[/li][/list]',
 	);
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
