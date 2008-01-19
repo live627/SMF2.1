@@ -1003,7 +1003,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	var sText = escape(textToEntities(this.getText(true, !bView).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
 
 	this.tmpMethod = sendXMLDocument;
-	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + '?action=jseditor;view=' + (bView ? 1 : 0) + ';sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
+	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=' + (bView ? 1 : 0) + ';sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
 	delete tmpMethod;
 }
 
@@ -1107,7 +1107,7 @@ SmfEditor.prototype.spellCheckStart = function()
 		var sText = escape(this.getText(true, 1));
 
 		this.tmpMethod = sendXMLDocument;
-		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + '?action=jseditor;view=0;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
+		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=0;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
 		delete tmpMethod;
 	}
 	// Otherwise start spellchecking right away.

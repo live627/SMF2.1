@@ -173,6 +173,7 @@ January 2008
  ! Added a new javascript function smf_prepareScriptUrl, to ensure we use the right URL on javascript if cookies are disabled on the client. (Most javascript files) [Bug 1329]
  * HTML issue in stats template. (Stats template) [Bug 1332]
  ! ScheduledTasks might load a language file that needed an undefined variable. (ScheduledTasks.php) [Bug 1337]
+ ! Add and use a special style sheet for the rich text editor and internet explorer. (editor_ie.css)
 
 
 December 2007

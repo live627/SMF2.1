@@ -1,0 +1,13 @@
+/* This is the WYSIWYG editor */
+.rich_editor
+{
+	background-color: white;
+	color: black;
+	font-family: verdana;
+	font-size: x-small;
+}
+
+.rich_editor p
+{
+	margin: 0px;
+}
