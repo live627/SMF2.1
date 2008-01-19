@@ -1037,13 +1037,11 @@ function smf_itemPos(itemHandle)
 	{
 		itemX = itemHandle.offsetLeft;
 		itemY = itemHandle.offsetTop;
-		if (itemHandle.offsetParent)
+		while (itemHandle.offsetParent && typeof(itemHandle.offsetParent) == 'object')
 		{
-			while (typeof(itemHandle = itemHandle.offsetParent) == 'object')
-			{
-				itemX += itemHandle.offsetLeft;
-				itemY += itemHandle.offsetTop;
-			}
+			itemHandle = itemHandle.offsetParent;
+			itemX += itemHandle.offsetLeft;
+			itemY += itemHandle.offsetTop;
 		}
 	}
 	else if (typeof(itemHandle.x) != 'undefined')

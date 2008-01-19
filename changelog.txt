@@ -158,6 +158,7 @@ January 2008
  ! Check to see if $_REQUEST['search_term'] is set before using it. (Admin.php)
  ! Firefox wasn't doing all that great at spell checking in the rich text editor mode. (Subs-Editor.php, editor.js) [Bug 1316]
  ! Unread messages was not paginating dependant on user preference. (Recent.php) [Bug 1320]
+ ! smf_ItemPos wasn't correctly checking offset parent. (script.js)
 
 
 December 2007
