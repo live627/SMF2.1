@@ -368,7 +368,7 @@ $txt['error_custom_field_not_number'] = 'The &quot;%1$s&quot; field must be nume
 $txt['error_custom_field_inproper_format'] = 'The &quot;%1$s&quot; field is an invalid format.';
 $txt['error_custom_field_empty'] = 'The &quot;%1$s&quot; field cannot be left blank.';
 
-$txt['email_no_template'] = 'The email template &quotl%1$s&quot; could not be found.';
+$txt['email_no_template'] = 'The email template &quot;%1$s&quot; could not be found.';
 
 $txt['search_api_missing'] = 'The search API could not be found! Please contact the admin to check they have uploaded the correct files.';
 $txt['search_api_not_compatible'] = 'The selected search API the forum is using is out of date - falling back to standard search. Please check file %1$s.';
