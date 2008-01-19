@@ -1132,6 +1132,9 @@ function loadEssentialThemeData()
 			$settings['default_' . $row['variable']] = $row['value'];
 	}
 	$smcFunc['db_free_result']($result);
+
+	// Assume we want this.
+	loadLanguage('index+Modifications');
 }
 
 function scheduled_fetchSMfiles()

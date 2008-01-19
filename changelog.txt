@@ -163,6 +163,7 @@ January 2008
  ! WYSIWYG editor wasn't really doing internationalisation well at all. (script.js)
  ! The WYSIWYG editor wouldn't allow linked images through. (Subs-Editor.php) [Bug 1301]
  ! Username test was not working for i18n. (register.js) [Bug 1123]
+ ! Load the index language file along with the minimum theme data for ScheduledTasks - just in case. (ScheduledTasks.php) [Bug 825]
 
 
 December 2007
