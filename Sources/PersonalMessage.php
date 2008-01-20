@@ -597,7 +597,7 @@ function MessageFolder()
 						AND pmr.id_member = {int:current_member}
 						AND pmr.deleted = {int:deleted_by}
 						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:pm_member})') : '') . '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
 				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
 					AND pm.deleted_by_sender = {int:deleted_by}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
 					AND pm.id_pm = {int:pmsg}') . '
@@ -796,7 +796,7 @@ function MessageFolder()
 			SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name
 			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? '
 				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') . ($context['sort_by'] == 'name' ? '
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:id_member})' : '') . '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:id_member})' : '') . '
 			WHERE pm.id_pm IN ({array_int:display_pms})' . ($context['folder'] == 'sent' ? '
 			GROUP BY pm.id_pm' : '') . '
 			ORDER BY ' . ($context['display_mode'] == 2 ? 'pm.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . '
