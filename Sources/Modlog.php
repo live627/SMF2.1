@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 2                                       *
+* Software Version:           SMF 2.0 Beta 2                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -64,7 +64,7 @@ function ViewModlog()
 
 	loadLanguage('Modlog');
 
-	$context['page_title'] = $txt['modlog_view'];
+	$context['page_title'] = $context['log_type'] == 3 ? $txt['modlog_admin_log'] : $txt['modlog_view'];
 
 	// The number of entries to show per page of log file.
 	$context['displaypage'] = 30;
