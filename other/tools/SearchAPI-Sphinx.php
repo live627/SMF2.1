@@ -114,7 +114,12 @@ class sphinx_search
 
 			// Can a connection to the daemon be made?
 			if ($request === false)
+			{
+				// Just log the error.
+				if ($mySphinx->GetLastError())
+					log_error($mySphinx->GetLastError());
 				fatal_lang_error('error_no_search_daemon');
+			}
 
 			// Get the relevant information from the search results.
 			$cached_results = array(
