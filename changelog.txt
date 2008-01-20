@@ -179,6 +179,7 @@ January 2008
  * One too many semicolons in the karma links. (PersonalMessages template) [Bug 1347]
  ! Wrong database type in a few PM queries. (PersonalMessages.php)
  ! RemoveTopics would fail if they had polls attached. (RemoveTopic.php) [Bug 1344]
+ ! Converting HTML entities to UTF-8 would fail with a database error. (ManageMaintenance.php) [Bug 1341]
 
 
 December 2007

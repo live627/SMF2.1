@@ -1046,9 +1046,7 @@ function ConvertEntities()
 							' . implode(',
 							', $changes) . '
 						WHERE ' . implode(' AND ', $where),
-						array(
-							$insertion_variables
-						)
+						$insertion_variables
 					);
 			}
 			$smcFunc['db_free_result']($request);
