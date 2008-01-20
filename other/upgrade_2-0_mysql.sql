@@ -1483,6 +1483,8 @@ if (!empty($profiles))
 			continue;
 		$done_ids[$row['id_profile']] = true;
 
+		$row['name'] = mysql_real_escape_string($row['name']);
+
 		upgrade_query("
 			UPDATE {$db_prefix}permission_profiles
 			SET profile_name = '$row[name]'

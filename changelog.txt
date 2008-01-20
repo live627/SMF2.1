@@ -188,6 +188,7 @@ January 2008
  ! Streamline javascript quoting on the quick reply, but keep something back for theme compatibility. (xml_topic.js)
  ! ManageSearch had a couple of old style queries. (ManageSearch.php)
  ! Don't error out on certain search related issued. (ManageSearch.php)
+ ! Updating permission profiles on upgrade broke if the board name has a special character in it. (upgrade_2-0_mysql.sql)
 
 
 December 2007
