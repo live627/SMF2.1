@@ -324,7 +324,7 @@ function EditSearchMethod()
 			$smcFunc['db_search_query']('drop_words_table', '
 				DROP TABLE {db_prefix}log_search_words',
 				array(
-				),
+				)
 			);
 		}
 
