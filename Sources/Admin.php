@@ -758,6 +758,9 @@ function DisplayAdminFile()
 {
 	global $context, $modSettings, $smcFunc;
 
+	if (empty($_REQUEST['filename']))
+		fatal_lang_error('no_access');
+
 	$request = $smcFunc['db_query']('', '
 		SELECT data, filetype
 		FROM {db_prefix}admin_info_files
