@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 2                                                               ???
+SMF 2.0 Beta 2                                                   20 January 2008
 ================================================================================
 January 2008
 --------------------------------------------------------------------------------
@@ -184,6 +184,8 @@ January 2008
  ! Use UTF-8 characters instead of HTML entities in UTF-8 mode for inline editing. (script.js) [Bug 1159]
  ! The WYSIWYG editor couldn't get focus in Firefox in case the message was empty. (editor.js) [Bug 1147]
  ! Switching from WYSIWYG to BBC mode didn't translate nested tags properly. (Subs-Editor.php)
+ ! Don't let opera identify itself as firefox or gecko. (script.js) [Bug 1329]
+ ! Streamline javascript quoting on the quick reply, but keep something back for theme compatibility. (xml_topic.js)
 
 
 December 2007

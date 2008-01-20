@@ -5,8 +5,6 @@ var smf_editorArray = new Array();
 // Some very basic browser detection - from Mozilla's sniffer page.
 var ua = navigator.userAgent.toLowerCase();
 
-var is_ff = ua.indexOf("firefox") != -1;
-var is_gecko = ua.indexOf('gecko') != -1;
 var is_opera = ua.indexOf("opera") != -1;
 var is_opera5 = ua.indexOf("opera/5") != -1 || ua.indexOf("opera 5") != -1;
 var is_opera6 = ua.indexOf("opera/6") != -1 || ua.indexOf("opera 6") != -1;
@@ -14,6 +12,9 @@ var is_opera7 = ua.indexOf("opera/7") != -1 || ua.indexOf("opera 7") != -1;
 var is_opera8 = ua.indexOf("opera/8") != -1 || ua.indexOf("opera 8") != -1;
 var is_opera9 = ua.indexOf("opera/9") != -1 || ua.indexOf("opera 9") != -1;
 var is_opera9up = is_opera && !is_opera8 && !is_opera7 && !is_opera6 && !is_opera5;
+
+var is_ff = ua.indexOf("firefox") != -1 && !is_opera;
+var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
 var is_safari13beta = ua.indexOf('applewebkit') != -1;
 

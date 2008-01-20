@@ -6,10 +6,16 @@ function QuickReply(oOptions)
 }
 
 // When a user presses quote, put it in the quick reply box (if expanded).
-QuickReply.prototype.quote = function (iMessageId, sSessionId)
+QuickReply.prototype.quote = function (iMessageId, sSessionId, bTemplateUpgraded)
 {
 	if (this.bCollapsed)
-		window.location.href = smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=post;quote=' + iMessageId + ';topic=' + this.opt.iTopicId + '.' + this.opt.iStart + ';sesc=' + sSessionId;
+	{
+		// This is for compatibility.
+		if (bTemplateUpgraded)
+			return true;
+		else
+			window.location.href = smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=post;quote=' + iMessageId + ';topic=' + this.opt.iTopicId + '.' + this.opt.iStart + ';sesc=' + sSessionId;
+	}
 	else
 	{
 		// Doing it the XMLhttp way?
@@ -27,6 +33,8 @@ QuickReply.prototype.quote = function (iMessageId, sSessionId)
 			window.location.hash = this.opt.sJumpAnchor;
 		else
 			window.location.hash = '#' + this.opt.sJumpAnchor;
+
+		return false;
 	}
 }
 
