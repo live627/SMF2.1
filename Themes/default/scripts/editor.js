@@ -167,7 +167,7 @@ SmfEditor.prototype.init = function()
 	{
 		// Make the iframe itself, stick it next to the current text area, and give it an ID.
 		this.oFrameHandle = document.createElement('iframe');
-		this.oFrameHandle.src = is_ie ? 'about:blank' : 'javascript:;';
+		this.oFrameHandle.src = 'about:blank';
 		this.oFrameHandle.id = 'html_' + this.sUniqueId;
 		this.oFrameHandle.style.display = 'none';
 		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
@@ -497,13 +497,8 @@ SmfEditor.prototype.insertText = function(sText, bClear)
 	// Erase it all?
 	if (bClear)
 	{
-		if (this.bRichTextEnabled)
-		{
-			if (sText == '')
-				this.oFrameDocument.src = 'javascript:;';
-			else
-				this.oFrameDocument.body.innerHTML = sText;
-		}
+		if (this.bRichTextEnabled && sText != '')
+			this.oFrameDocument.body.innerHTML = sText;
 		else
 			this.oTextHandle.value = sText;
 	}
