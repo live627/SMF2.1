@@ -277,12 +277,15 @@ function EditSearchMethod()
 		checkSession('get');
 
 		// Make sure it's gone before creating it.
+		$oldErrorHandlerState = !empty($smcFunc['db_error_handler_return']);
+		$smcFunc['db_error_handler_return'] = true;
 		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}messages
 			DROP INDEX body',
 			array(
 			)
 		);
+		$smcFunc['db_error_handler_return'] = $oldErrorHandlerState;
 
 		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}messages
@@ -297,6 +300,8 @@ function EditSearchMethod()
 	{
 		checkSession('get');
 
+		$oldErrorHandlerState = !empty($smcFunc['db_error_handler_return']);
+		$smcFunc['db_error_handler_return'] = true;
 		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}messages
 			DROP INDEX ' . implode(',
@@ -304,6 +309,7 @@ function EditSearchMethod()
 			array(
 			)
 		);
+		$smcFunc['db_error_handler_return'] = $oldErrorHandlerState;
 
 		$context['fulltext_index'] = '';
 
@@ -451,7 +457,7 @@ function CreateMessageIndex()
 		5 => array(
 			'column_definition' => 'large',
 			'step_size' => 100000000,
-			'max_size' => 4294967295,
+			'max_size' => 2000000000,
 		),
 	);
 
@@ -637,7 +643,7 @@ function CreateMessageIndex()
 
 				$context['start'] += $index_properties[$context['index_settings']['bytes_per_word']]['step_size'];
 				if ($context['start'] > $index_properties[$context['index_settings']['bytes_per_word']]['max_size'])
-				{
+				{echo 'there';
 					$context['step'] = 3;
 					break;
 				}
