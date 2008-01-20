@@ -551,6 +551,10 @@ if (!class_exists('ftp_connection'))
 	}
 }
 
+// Check we don't need some compatibility.
+if (@version_compare(PHP_VERSION, '5') == -1)
+	require_once($sourcedir . '/Subs-Compat.php');
+
 // Have we got tracking data - if so use it (It will be clean!)
 if (isset($_GET['data']))
 {

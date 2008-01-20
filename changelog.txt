@@ -1,6 +1,17 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0 Beta 3                                                               ???
+================================================================================
+January 2008
+--------------------------------------------------------------------------------
+ ! ManageSearch had a couple of old style queries. (ManageSearch.php)
+ ! Don't error out on certain search related issued. (ManageSearch.php)
+ ! Updating permission profiles on upgrade broke if the board name has a special character in it. (upgrade_2-0_mysql.sql)
+ ! Don't let users try to edit invalid language files. (ManageServer.php)
+ ! Upgrade wasn't PHP5 capable. (upgrade.php)
+
+
 SMF 2.0 Beta 2                                                   20 January 2008
 ================================================================================
 January 2008
@@ -186,10 +197,6 @@ January 2008
  ! Switching from WYSIWYG to BBC mode didn't translate nested tags properly. (Subs-Editor.php)
  ! Don't let opera identify itself as firefox or gecko. (script.js) [Bug 1329]
  ! Streamline javascript quoting on the quick reply, but keep something back for theme compatibility. (xml_topic.js)
- ! ManageSearch had a couple of old style queries. (ManageSearch.php)
- ! Don't error out on certain search related issued. (ManageSearch.php)
- ! Updating permission profiles on upgrade broke if the board name has a special character in it. (upgrade_2-0_mysql.sql)
- ! Don't let users try to edit invalid language files. (ManageServer.php)
 
 
 December 2007

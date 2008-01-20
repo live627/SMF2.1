@@ -1377,7 +1377,7 @@ VALUES
 	(0, 120, 1, 'd', 0, 'paid_subscriptions');
 ---#
 
----# Populating Scheduled Task Table...
+---# Deleting old scheduled task items...
 DELETE FROM {$db_prefix}scheduled_tasks
 WHERE task = 'clean_cache';
 ---#
@@ -1683,7 +1683,7 @@ ALTER TABLE {$db_prefix}membergroups
 ADD id_parent smallint(5) NOT NULL default '-2';
 ---#
 
----# MAke sure admins and moderators don't inherit...
+---# Make sure admins and moderators don't inherit...
 UPDATE {$db_prefix}membergroups
 SET id_parent = -2
 WHERE id_group = 1
