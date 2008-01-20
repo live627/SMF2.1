@@ -534,6 +534,9 @@ function PlushSearch2()
 
 	if (count($search_params['brd']) != 0)
 	{
+		foreach ($search_params['brd'] as $k => $v)
+			$search_params['brd'][$k] = (int) $v;
+
 		// If we've selected all boards, this parameter can be left empty.
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
@@ -553,8 +556,6 @@ function PlushSearch2()
 	}
 	else
 		$boardQuery = '';
-
-
 
 	$search_params['show_complete'] = !empty($search_params['show_complete']) || !empty($_REQUEST['show_complete']);
 	$search_params['subject_only'] = !empty($search_params['subject_only']) || !empty($_REQUEST['subject_only']);
