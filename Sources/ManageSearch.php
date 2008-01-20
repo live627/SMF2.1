@@ -441,6 +441,7 @@ function CreateMessageIndex()
 	$index_properties = array(
 		2 => array(
 			'column_definition' => 'small',
+			'step_size' => 1000000,
 		),
 		4 => array(
 			'column_definition' => 'medium',
