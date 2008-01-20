@@ -322,7 +322,10 @@ function EditSearchMethod()
 		if (!empty($tables))
 		{
 			$smcFunc['db_search_query']('drop_words_table', '
-				DROP TABLE ' . $db_prefix . 'log_search_words', __FILE__, __LINE__);
+				DROP TABLE {db_prefix}log_search_words',
+				array(
+				),
+			);
 		}
 
 		updateSettings(array(
@@ -488,7 +491,10 @@ function CreateMessageIndex()
 			if (!empty($tables))
 			{
 				$smcFunc['db_search_query']('drop_words_table', '
-					DROP TABLE ' . $db_prefix . 'log_search_words', __FILE__, __LINE__);
+					DROP TABLE {db_prefix}log_search_words',
+					array(
+					),
+				);
 			}
 
 			$smcFunc['db_create_word_search']($index_properties[$context['index_settings']['bytes_per_word']]['column_definition']);
