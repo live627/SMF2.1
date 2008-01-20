@@ -115,15 +115,33 @@ function sendXMLDocument(sUrl, sContent, funcCallback)
 
 function textToEntities(text)
 {
-	var entities = "";
-	for (var i = 0; i < text.length; i++)
+	var entities = '';
+	if (smf_charset == 'UTF-8')
 	{
-		if (text.charCodeAt(i) > 127)
-			entities += "&#" + text.charCodeAt(i) + ";";
-		else
-			entities += text.charAt(i);
-	}
+		for (var i = 0; i < text.length; i++)
+		{
+			var iCharCode = text.charCodeAt(i);
 
+			if (iCharCode < 128)
+				entities += text.charAt(i);
+			else if (iCharCode < 2048)
+				entities += String.fromCharCode(192 | iCharCode >> 6, 128 | iCharCode & 63);
+			else if (iCharCode < 65536)
+				entities += String.fromCharCode(224 | iCharCode >> 12, 128 | iCharCode >> 6 & 63, 128 | iCharCode & 63);
+			else
+				entities += String.fromCharCode(240 | iCharCode >> 18, 128 | iCharCode >> 12 & 63, 128 | iCharCode >> 6 & 63, 128 | iCharCode & 63);
+		}
+	}
+	else
+	{
+		for (var i = 0; i < text.length; i++)
+		{
+			if (text.charCodeAt(i) > 127)
+				entities += "&#" + text.charCodeAt(i) + ";";
+			else
+				entities += text.charAt(i);
+		}
+	}
 	return entities;
 }
 
