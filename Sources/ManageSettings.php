@@ -1049,7 +1049,7 @@ function ShowCustomProfiles()
 					'function' => create_function('$rowData', '
 						global $scripturl;
 
-						return sprintf(\'<a href="%1$s?action=admin;area=featuresettings;sa=profileedit;fid=%2$d">%3$s</a><div class="smalltext">%4$s</div>\', $scripturl, $rowData[\'id_field\'], htmlspecialchars($rowData[\'field_name\']), htmlspecialchars($rowData[\'field_desc\']));
+						return sprintf(\'<a href="%1$s?action=admin;area=featuresettings;sa=profileedit;fid=%2$d">%3$s</a><div class="smalltext">%4$s</div>\', $scripturl, $rowData[\'id_field\'], $rowData[\'field_name\'], $rowData[\'field_desc\']);
 					'),
 					'style' => 'width: 62%;',
 				),
