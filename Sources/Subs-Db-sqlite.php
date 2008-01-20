@@ -139,10 +139,10 @@ function smf_db_replacement__callback($matches)
 		return $user_info['query_wanna_see_board'];
 
 	if (!isset($matches[2]))
-		smf_db_error_backtrace('Invalid value injected or no type specified.', '', E_USER_ERROR, __FILE__, __LINE__);
+		smf_db_error_backtrace('Invalid value inserted or no type specified.', '', E_USER_ERROR, __FILE__, __LINE__);
 
 	if (!isset($values[$matches[2]]))
-		smf_db_error_backtrace('The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), '', E_USER_ERROR, __FILE__, __LINE__);
+		smf_db_error_backtrace('The database value you\'re trying to insert does not exist: ' . htmlspecialchars($matches[2]), '', E_USER_ERROR, __FILE__, __LINE__);
 
 	$replacement = $values[$matches[2]];
 

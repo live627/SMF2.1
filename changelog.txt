@@ -180,6 +180,7 @@ January 2008
  ! Wrong database type in a few PM queries. (PersonalMessages.php)
  ! RemoveTopics would fail if they had polls attached. (RemoveTopic.php) [Bug 1344]
  ! Converting HTML entities to UTF-8 would fail with a database error. (ManageMaintenance.php) [Bug 1341]
+ ! Viewing custom profile fields was incorrectly htmlspecialchar'ing the field names. (ManageSettings.php) [Bug 1346]
 
 
 December 2007
