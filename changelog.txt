@@ -189,6 +189,7 @@ January 2008
  ! ManageSearch had a couple of old style queries. (ManageSearch.php)
  ! Don't error out on certain search related issued. (ManageSearch.php)
  ! Updating permission profiles on upgrade broke if the board name has a special character in it. (upgrade_2-0_mysql.sql)
+ ! Don't let users try to edit invalid language files. (ManageServer.php)
 
 
 December 2007
