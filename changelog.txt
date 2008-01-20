@@ -178,6 +178,7 @@ January 2008
  ! Fixed the page title for the admin log. (Modlog.php)
  * One too many semicolons in the karma links. (PersonalMessages template) [Bug 1347]
  ! Wrong database type in a few PM queries. (PersonalMessages.php)
+ ! RemoveTopics would fail if they had polls attached. (RemoveTopic.php) [Bug 1344]
 
 
 December 2007

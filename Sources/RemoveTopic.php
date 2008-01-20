@@ -428,27 +428,25 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 
 	if (!empty($polls))
 	{
-		$pollCondition = count($polls) == 1 ? '= ' . $polls[0] : 'IN (' . implode(', ', $polls) . ')';
-
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}polls
 			WHERE id_poll IN ({array_int:polls})',
 			array(
-				'poll' => $polls,
+				'polls' => $polls,
 			)
 		);
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}poll_choices
 			WHERE id_poll IN ({array_int:polls})',
 			array(
-				'poll' => $polls,
+				'polls' => $polls,
 			)
 		);
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_polls
 			WHERE id_poll IN ({array_int:polls})',
 			array(
-				'poll' => $polls,
+				'polls' => $polls,
 			)
 		);
 	}
