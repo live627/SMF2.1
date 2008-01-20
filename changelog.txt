@@ -183,6 +183,7 @@ January 2008
  ! Viewing custom profile fields was incorrectly htmlspecialchar'ing the field names. (ManageSettings.php) [Bug 1346]
  ! Use UTF-8 characters instead of HTML entities in UTF-8 mode for inline editing. (script.js) [Bug 1159]
  ! The WYSIWYG editor couldn't get focus in Firefox in case the message was empty. (editor.js) [Bug 1147]
+ ! Switching from WYSIWYG to BBC mode didn't translate nested tags properly. (Subs-Editor.php)
 
 
 December 2007

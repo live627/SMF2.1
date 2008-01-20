@@ -188,114 +188,148 @@ function html_to_bbc($text)
 		$text = str_replace($matches[0], $matches[1], $text);
 	}
 
-	// Start by pulling out any styles from existing tags.
-	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(style="*(([^<>"]+))"*)[^<>]*?(/?)>~i', $text, $matches) != false)
+	$parts = preg_split('~(<[A-Za-z]+\s*[^<>]*?style="?[^<>"]+"?[^<>]*?(?:/?)>|</[A-Za-z]+>)~', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$replacement = '';
+	$stack = array();
+
+	foreach ($parts as $part)
 	{
-		// Find the position in the text of this tag.
-		$start_pos = strpos($text, $matches[0]);
-		if ($start_pos === false)
-			break;
+		if (preg_match('~(<([A-Za-z]+)\s*[^<>]*?)style="?([^<>"]+)"?([^<>]*?(/?)>)~', $part, $matches) === 1)
+		{
+			// If it's being closed instantly, we can't deal with it...yet.
+			if ($matches[5] === '/')
+				continue;
+			else
+			{
+				// Get an array of styles that apply to this element.
+				$styles = explode(';', $matches[3]);
+				$curElement = $matches[2];
+				$precedingStyle = $matches[1];
+				$afterStyle = $matches[4];
+				$curCloseTags = '';
+				$extra_attr = '';
+				
+				foreach ($styles as $style_item)
+				{
+					if (trim($style_item) === '')
+						continue;
+						
+					// Capture the elements of a single style item (e.g. 'font-weight' and 'bold').
+					@list ($style_type, $style_value) = explode(':', strtr($style_item, '=', ':'));
 
-		// Does it have an end tag?
-		if ($matches[5] != '/' && strpos($text, '</' . $matches[1] . '>', $start_pos) !== false)
-			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
+					$style_value = strtolower(trim($style_value));
+					
+					switch (strtolower(trim($style_type)))
+					{
+						case 'font-weight':
+							if ($style_value === 'bold')
+							{
+								$curCloseTags .= '[/b]';
+								$replacement .= '[b]';
+							}
+						break;
+						
+						case 'text-decoration':
+							if ($style_value == 'underline')
+							{
+								$curCloseTags .= '[/u]';
+								$replacement .= '[u]';
+							}
+							elseif ($style_value == 'line-through')
+							{
+								$curCloseTags .= '[/s]';
+								$replacement .= '[s]';
+							}
+						break;
+						
+						case 'text-align':
+							if ($style_value == 'left')
+							{
+								$curCloseTags .= '[/left]';
+								$replacement .= '[left]';
+							}
+							elseif ($style_value == 'center')
+							{
+								$curCloseTags .= '[/center]';
+								$replacement .= '[center]';
+							}
+							elseif ($style_value == 'right')
+							{
+								$curCloseTags .= '[/right]';
+								$replacement .= '[right]';
+							}
+						break;
+
+						case 'font-style':
+							if ($style_value == 'italic')
+							{
+								$curCloseTags .= '[/i]';
+								$replacement .= '[i]';
+							}
+						break;												
+						
+						case 'color':
+							$curCloseTags .= '[/color]';
+							$replacement .= '[color=' . $style_value . ']';
+						break;
+
+						case 'font-size':
+							$curCloseTags .= '[/size]';
+							$replacement .= '[size=' . $style_value . ']';
+						break;
+												
+						case 'font-family':
+							$curCloseTags .= '[/font]';
+							$replacement .= '[font=' . $style_value . ']';
+						break;
+						
+						// This is a hack for images with dimensions embedded.
+						case 'width':
+						case 'height':
+							if (preg_match('~[1-9]\d*~i', $style_value, $dimension) === 1)
+								$extra_attr .= ' ' . $style_type . '="' . $dimension[0] . '"';
+						break;
+												
+						case 'list-style-type':
+							if (preg_match('~none|disc|circle|square|decimal|decimal-leading-zero|lower-roman|upper-roman|lower-alpha|upper-alpha|lower-greek|lower-latin|upper-latin|hebrew|armenian|georgian|cjk-ideographic|hiragana|katakana|hiragana-iroha|katakana-iroha~i', $style_value, $listType) === 1)
+								$extra_attr .= ' listtype="' . $listType[0] . '"';
+						break;
+					}
+				}
+				
+				// If there's something that still needs closing, push it to the stack.
+				if (!empty($curCloseTags))
+					array_push($stack, array(
+							'element' =>$curElement, 
+							'closeTags' => $curCloseTags
+						)
+					);
+				elseif (!empty($extra_attr))
+					$replacement .= $precedingStyle . $extra_attr . $afterStyle;
+			}
+		}
+		
+		elseif (preg_match('~</([A-Za-z]+)>~', $part, $matches) === 1)
+		{
+			// Is this the element that we've been waiting for to be closed?
+			if (!empty($stack) && strtolower($matches[1]) === $stack[count($stack) - 1]['element'])
+			{	
+				$byebyeTag = array_pop($stack);
+				$replacement .= $byebyeTag['closeTags'];
+			}
+			
+			// Must've been something else.
+			else 
+				$replacement .= $part;
+		}
+		// In all other cases, just add the part to the replacement.
 		else
-			$end_pos = $start_pos + strlen($matches[0]);
-
-		// Now we know our insertion points - let's see what we need to insert.
-		$styles = explode(';', $matches[3]);
-		$tags = array();
-		$extra_attr = '';
-
-		foreach ($styles as $item)
-		{
-			if (trim($item) == '')
-				continue;
-
-			$item = strtr($item, '=', ':');
-			@list ($s, $v) = explode(':', $item);
-
-			if (empty($v))
-				continue;
-			$s = trim(strtolower($s));
-			$v = trim(strtolower($v));
-
-			// Now - the switch - what do we do with it?
-			if ($s == 'font-weight')
-			{
-				if ($v == 'bold')
-					$tags[] = array('[b]', '[/b]');
-			}
-			elseif ($s == 'text-decoration')
-			{
-				if ($v == 'underline')
-					$tags[] = array('[u]', '[/u]');
-				elseif ($v == 'line-through')
-					$tags[] = array('[s]', '[/s]');
-			}
-			elseif ($s == 'text-align')
-			{
-				if ($v == 'left')
-					$tags[] = array('[left]', '[/left]');
-				elseif ($v == 'center')
-					$tags[] = array('[center]', '[/center]');
-				elseif ($v == 'right')
-					$tags[] = array('[right]', '[/right]');
-			}
-			elseif ($s == 'font-style')
-			{
-				if ($v == 'italic')
-					$tags[] = array('[i]', '[/i]');
-			}
-			// Font colors?
-			elseif ($s == 'color')
-			{
-				$tags[] = array('[color=' . $v . ']', '[/color]');
-			}
-			// Font size?
-			elseif ($s == 'font-size')
-			{
-				$tags[] = array('[size=' . $v . ']', '[/size]');
-			}
-			// Font family?
-			elseif ($s == 'font-family')
-			{
-				$tags[] = array('[font=' . $v . ']', '[/font]');
-			}
-			// This is a hack for images with dimensions embedded.
-			elseif ($s == 'width' || $s == 'height')
-			{
-				preg_match('~(\d+)~i', $v, $dim);
-				if (!empty($dim[1]))
-					$extra_attr .= ' ' . $s . '="' . $dim[1] . '"';
-			}
-			// Another hack - for lists this time.
-			elseif ($s == 'list-style-type')
-			{
-				preg_match('~(none|disc|circle|square|decimal|decimal-leading-zero|lower-roman|upper-roman|lower-alpha|upper-alpha|lower-greek|lower-latin|upper-latin|hebrew|armenian|georgian|cjk-ideographic|hiragana|katakana|hiragana-iroha|katakana-iroha)~i', $v, $type);
-				if (!empty($type[1]))
-					$extra_attr .= ' listtype="' . $type[1] . '"';
-			}
-		}
-
-		// Add in all our new tags.
-		$before = $after = '';
-		foreach ($tags as $tag)
-		{
-			$before .= $tag[0];
-			if (isset($tag[1]))
-				$after = $tag[1] . $after;
-		}
-
-		// Remove the style from that tag so it's never checked again.
-		$tag = substr($text, $start_pos, strlen($matches[0]));
-		$content = substr($text, $start_pos + strlen($matches[0]), $end_pos - $start_pos - strlen($matches[0]));
-		$tag = str_replace($matches[2], $extra_attr, $tag);
-
-		// Put the tags back into the body.
-		$text = substr($text, 0, $start_pos) . $tag . $before . $content . $after . substr($text, $end_pos);
+			$replacement .= $part;
 	}
 
+	// Now put back the replacement in the text.
+	$text = $replacement;
+	
 	// Let's pull out any legacy alignments.
 	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(align="*(left|center|right)"*)[^<>]*?(/?)>~i', $text, $matches) != false)
 	{
@@ -398,7 +432,7 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(<br\s*/*>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'' . "$" .'2\' == \'ol\' || \'' . "$" .'2\' == \'OL\' ? \' type=decimal\' : (strlen(\'' . "$" .'4\') > 1 ? \' type=' . "$" .'4\' : \'\')) . \']' . "$" .'5[/list]\'', $text);
+		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'' . "$" .'2\' == \'ol\' || \'' . "$" .'2\' == \'OL\' ? \' type=decimal\' : (strlen(\'' . "$" .'4\') > 1 ? \' type=' . "$" .'4\' : \'\')) . \']' . "$" .'5[/list]\'', $text);
 	}
 	$last_text = '';
 	while ($text != $last_text)
