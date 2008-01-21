@@ -1885,7 +1885,7 @@ function UpgradeTemplate()
 			$upcontext['file_count']++;
 		$dir->close();
 	}
-	$upcontext['step_progress'] = ($upcontext['is_test'] ? 0 : 50) + (int) (($upcontext['temp_progress'] / $upcontext['file_count']) * 50);
+	$upcontext['step_progress'] = ($upcontext['is_test'] ? 0 : 50) + ($upcontext['file_count'] ? (int) (($upcontext['temp_progress'] / $upcontext['file_count']) * 50) : 50);
 
 	// Attempt to check all the language files.
 	$current_pos = 0;

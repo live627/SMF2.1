@@ -15,6 +15,7 @@ January 2008
  ! Upgrade wasn't surpressing set_time_out errors and install wasn't PHP4 compatible. (install and upgrade scripts)
  ! A repair boards query wasn't MySQL 4 compatible. (RepairBoards.php) [Bug 1358]
  ! Repair boards wasn't quite postgreSQL compatible. (RepairBoards.php)
+ ! Upgrade could potentially get a divide by zero error. (upgrade.php) [Bug 1356]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
