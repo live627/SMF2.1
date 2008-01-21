@@ -428,7 +428,7 @@ function loadForumTests()
 			),
 			'check_query' => '
 				SELECT
-					t.id_topic, t.num_replies,
+					t.id_topic, t.num_replies, mf.approved, ma.id_msg,
 					CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END AS my_num_replies
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
