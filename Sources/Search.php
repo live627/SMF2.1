@@ -1040,7 +1040,7 @@ function PlushSearch2()
 							) / {int:weight_total} AS relevance,
 							' . (empty($userQuery) ? 't.id_first_msg' : 'm.id_msg') . ',
 							1
-						FROM {query_from}' . (empty($subject_query['inner_join']) ? '' : '
+						FROM ' . $subject_query['from'] . (empty($subject_query['inner_join']) ? '' : '
 							INNER JOIN ' . implode('
 							INNER JOIN ', $subject_query['inner_join'])) . (empty($subject_query['left_join']) ? '' : '
 							LEFT JOIN ' . implode('
@@ -1050,7 +1050,6 @@ function PlushSearch2()
 						LIMIT ' . ($modSettings['search_max_results'] - $numSubjectResults)),
 						array_merge($subject_query_params, array(
 							'id_search' => $_SESSION['search_cache']['id_search'],
-							'query_from' => $subject_query['from'],
 							'weight_age' => $weight['age'],
 							'weight_frequency' => $weight['frequency'],
 							'weight_length' => $weight['frequency'],
