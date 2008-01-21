@@ -11,6 +11,7 @@ January 2008
  ! Don't let users try to edit invalid language files. (ManageServer.php)
  ! Upgrade wasn't PHP5 capable. (upgrade.php)
  ! When uploading an attachment it was possible to get a database error due to undefined variable. (Display.php)
+ ! No need to escape the variable in a single quote string. (ManageNews.php, Help english file) [Bug 1350]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

@@ -338,15 +338,15 @@ $helptxt['globalCookies'] = 'Makes log in cookies available across subdomains.  
 $helptxt['securityDisable'] = 'This <i>disables</i> the additional password check for the administration section. This is not recommended!';
 $helptxt['securityDisable_why'] = 'This is your current password. (the same one you use to login.)<br /><br />Having to type this helps ensure that you want to do whatever administration you are doing, and that it is <b>you</b> doing it.';
 $helptxt['emailmembers'] = 'In this message you can use a few &quot;variables&quot;.  These are:<br />
-	{\$board_url} - The URL to your forum.<br />
-	{\$current_time} - The current time.<br />
-	{\$member.email} - The current member\'s email.<br />
-	{\$member.link} - The current member\'s link.<br />
-	{\$member.id} - The current member\'s id.<br />
-	{\$member.name} - The current member\'s name.  (for personalization.)<br />
-	{\$latest_member.link} - The most recently registered member\'s link.<br />
-	{\$latest_member.id} - The most recently registered member\'s id.<br />
-	{\$latest_member.name} - The most recently registered member\'s name.';
+	{$board_url} - The URL to your forum.<br />
+	{$current_time} - The current time.<br />
+	{$member.email} - The current member\'s email.<br />
+	{$member.link} - The current member\'s link.<br />
+	{$member.id} - The current member\'s id.<br />
+	{$member.name} - The current member\'s name.  (for personalization.)<br />
+	{$latest_member.link} - The most recently registered member\'s link.<br />
+	{$latest_member.id} - The most recently registered member\'s id.<br />
+	{$latest_member.name} - The most recently registered member\'s name.';
 $helptxt['attachmentEncryptFilenames'] = 'Encrypting attachment filenames allows you to have more than one attachment of the
 	same name, to safely use .php files for attachments, and heightens security.  It, however, could make it more
 	difficult to rebuild your database if something drastic happened.';
