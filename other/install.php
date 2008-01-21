@@ -704,6 +704,10 @@ function doStep1()
 		$smcFunc = array();
 	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
+	// What - running PHP4? The shame!
+	if (@version_compare(PHP_VERSION, '5') == -1)
+		require_once($sourcedir . '/Subs-Compat.php');
+
 	// Don't let SMF try to jump in with some error messages.
 	$smcFunc['db_error_handler_return'] = true;
 
