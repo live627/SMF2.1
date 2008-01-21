@@ -1346,6 +1346,8 @@ function loadAttachmentContext($id_msg)
 						list ($attachment['thumb_width'], $attachment['thumb_height']) = @getimagesize($filename . '_thumb');
 						$thumb_size = filesize($filename . '_thumb');
 
+						$thumb_filename = $attachment['filename'] . '_thumb';
+
 						// Add this beauty to the database.
 						$smcFunc['db_insert']('',
 							'{db_prefix}attachments',

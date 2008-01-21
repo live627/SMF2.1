@@ -10,6 +10,7 @@ January 2008
  ! Updating permission profiles on upgrade broke if the board name has a special character in it. (upgrade_2-0_mysql.sql)
  ! Don't let users try to edit invalid language files. (ManageServer.php)
  ! Upgrade wasn't PHP5 capable. (upgrade.php)
+ ! When uploading an attachment it was possible to get a database error due to undefined variable. (Display.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
