@@ -13,6 +13,8 @@ January 2008
  ! When uploading an attachment it was possible to get a database error due to undefined variable. (Display.php)
  ! No need to escape the variable in a single quote string. (ManageNews.php, Help english file) [Bug 1350]
  ! Upgrade wasn't surpressing set_time_out errors and install wasn't PHP4 compatible. (install and upgrade scripts)
+ ! A repair boards query wasn't MySQL 4 compatible. (RepairBoards.php) [Bug 1358]
+ ! Repair boards wasn't quite postgreSQL compatible. (RepairBoards.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

@@ -280,7 +280,7 @@ function loadForumTests()
 			'fix_query' => '
 				SELECT
 					m.id_board, m.id_topic, MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg,
-					COUNT(*) - 1 AS myNumReplies
+					COUNT(*) - 1 AS my_num_replies
 				FROM {db_prefix}messages AS m
 					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 				WHERE t.id_topic IS NULL
@@ -301,7 +301,7 @@ function loadForumTests()
 				$smcFunc[\'db_insert\'](\'\',
 					\'{db_prefix}topics\',
 					array(\'id_board\' => \'int\', \'id_member_started\' => \'int\', \'id_member_updated\' => \'int\', \'id_first_msg\' => \'int\', \'id_last_msg\' => \'int\', \'num_replies\' => \'int\'),
-					array($row[\'id_board\'], $memberStartedID, $memberUpdatedID, $row[\'myid_first_msg\'], $row[\'myid_last_msg\'], $row[\'myNumReplies\']),
+					array($row[\'id_board\'], $memberStartedID, $memberUpdatedID, $row[\'myid_first_msg\'], $row[\'myid_last_msg\'], $row[\'my_num_replies\']),
 					array(\'id_topic\')
 				);
 
@@ -372,7 +372,7 @@ function loadForumTests()
 						MIN(ma.id_msg) END ELSE
 					MIN(mu.id_msg) END AS myid_first_msg,
 					CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END AS myid_last_msg,
-					t.approved, mf.approved AS myApproved
+					t.approved, mf.approved, mf.approved AS firstmsg_approved
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
 					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
@@ -388,7 +388,7 @@ function loadForumTests()
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
 				global $smcFunc;
-				$row[\'myApproved\'] = (int) $row[\'myApproved\'];
+				$row[\'firstmsg_approved\'] = (int) $row[\'firstmsg_approved\'];
 				$row[\'myid_first_msg\'] = (int) $row[\'myid_first_msg\'];
 				$row[\'myid_last_msg\'] = (int) $row[\'myid_last_msg\'];
 
@@ -399,7 +399,7 @@ function loadForumTests()
 					UPDATE {db_prefix}topics
 					SET id_first_msg = $row[myid_first_msg],
 						id_member_started = $memberStartedID, id_last_msg = $row[myid_last_msg],
-						id_member_updated = $memberUpdatedID, approved = $row[myApproved]
+						id_member_updated = $memberUpdatedID, approved = $row[firstmsg_approved]
 					WHERE id_topic = $row[id_topic]",
 					array(
 					)
@@ -429,7 +429,7 @@ function loadForumTests()
 			'check_query' => '
 				SELECT
 					t.id_topic, t.num_replies,
-					CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END AS myNumReplies
+					CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END AS my_num_replies
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
 					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
@@ -439,11 +439,11 @@ function loadForumTests()
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
 				global $smcFunc;
-				$row[\'myNumReplies\'] = (int) $row[\'myNumReplies\'];
+				$row[\'my_num_replies\'] = (int) $row[\'my_num_replies\'];
 
 				$smcFunc[\'db_query\'](\'\', "
 					UPDATE {db_prefix}topics
-					SET num_replies = $row[myNumReplies]
+					SET num_replies = $row[my_num_replies]
 					WHERE id_topic = $row[id_topic]",
 					array(
 					)
@@ -461,7 +461,7 @@ function loadForumTests()
 			),
 			'check_query' => '
 				SELECT
-					t.id_topic, t.unapproved_posts, COUNT(mu.id_msg) AS myUnapprovedPosts
+					t.id_topic, t.unapproved_posts, COUNT(mu.id_msg) AS my_unapproved_posts
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
@@ -470,11 +470,11 @@ function loadForumTests()
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
 				global $smcFunc;
-				$row[\'myUnapprovedPosts\'] = (int) $row[\'myUnapprovedPosts\'];
+				$row[\'my_unapproved_posts\'] = (int) $row[\'my_unapproved_posts\'];
 
 				$smcFunc[\'db_query\'](\'\', "
 					UPDATE {db_prefix}topics
-					SET num_replies = $row[myUnapprovedPosts]
+					SET num_replies = $row[my_unapproved_posts]
 					WHERE id_topic = $row[id_topic]",
 					array(
 					)
@@ -498,7 +498,7 @@ function loadForumTests()
 					AND t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				ORDER BY t.id_board, t.id_topic',
 			'fix_query' => '
-				SELECT t.id_board, COUNT(*) AS myNumTopics, COUNT(m.id_msg) AS myNumPosts
+				SELECT t.id_board, COUNT(*) AS my_num_topics, COUNT(m.id_msg) AS my_num_posts
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 					LEFT JOIN {db_prefix}messages AS m ON (m.id_topic = t.id_topic)
@@ -509,13 +509,13 @@ function loadForumTests()
 				global $smcFunc, $salvageCatID;
 				createSalvageArea();
 
-				$row[\'myNumTopics\'] = (int) $row[\'myNumTopics\'];
-				$row[\'myNumPosts\'] = (int) $row[\'myNumPosts\'];
+				$row[\'my_num_topics\'] = (int) $row[\'my_num_topics\'];
+				$row[\'my_num_posts\'] = (int) $row[\'my_num_posts\'];
 
 				$smcFunc[\'db_insert\'](\'\',
 					\'{db_prefix}boards\',
 					array(\'id_cat\' => \'int\', \'name\' => \'string\', \'description\' => \'string\', \'num_topics\' => \'int\', \'num_posts\' => \'int\', \'member_groups\' => \'string\'),
-					array($salvageCatID, \'Salvaged board\', \'\', $row[\'myNumTopics\'], $row[\'myNumPosts\'], \'1\'),
+					array($salvageCatID, \'Salvaged board\', \'\', $row[\'my_num_topics\'], $row[\'my_num_posts\'], \'1\'),
 					array(\'id_board\')
 				);
 				$newBoardID = $smcFunc[\'db_insert_id\'](\'{db_prefix}boards\', \'id_board\');
