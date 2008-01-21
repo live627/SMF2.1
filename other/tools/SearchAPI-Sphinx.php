@@ -84,7 +84,7 @@ class sphinx_search
 			$mySphinx = new SphinxClient();
 			$mySphinx->SetServer($modSettings['sphinx_searchd_server'], (int) $modSettings['sphinx_searchd_port']);
 			$mySphinx->SetLimits(0, (int) $modSettings['sphinx_max_results']);
-			$mySphinx->SetMatchMode(SPH_MATCH_BOOLEAN);
+			$mySphinx->SetMatchMode(SPH_MATCH_EXTENDED);
 			$mySphinx->SetGroupBy('id_topic', SPH_GROUPBY_ATTR);
 			$mySphinx->SetSortMode($search_params['sort_dir'] === 'asc' ? SPH_SORT_ATTR_ASC : SPH_SORT_ATTR_DESC, $search_params['sort'] === 'id_msg' ? 'id_topic' : $search_params['sort']);
 
