@@ -1134,6 +1134,10 @@ function doStep2()
 		$smcFunc = array();
 	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
+	// Define the sha1 function, if it doesn't exist.
+	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
+		require_once($sourcedir . '/Subs-Compat.php');
+
 	if (!isset($_POST['password3']) && (empty($db_type) || $db_type != 'sqlite'))
 		return doStep2a();
 
@@ -1201,10 +1205,6 @@ function doStep2()
 	require_once($sourcedir . '/Load.php');
 	require_once($sourcedir . '/Security.php');
 	require_once($sourcedir . '/Subs-Auth.php');
-
-	// Define the sha1 function, if it doesn't exist.
-	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
-		require_once($sourcedir . '/Subs-Compat.php');
 
 	if (isset($db_character_set) && !empty($databases[$db_type]['utf8_support']))
 		$smcFunc['db_query']('', '

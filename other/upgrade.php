@@ -78,7 +78,7 @@ $upcontext['steps'] = array(
 );
 // Just to remember which one has files in it.
 $upcontext['database_step'] = 3;
-set_time_limit(5000);
+@set_time_limit(600);
 // Clean the upgrade path if this is from the client.
 if (!empty($_SERVER['argv']) && php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 	for ($i = 1; $i < $_SERVER['argc']; $i++)
