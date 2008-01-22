@@ -1163,6 +1163,7 @@ function PlushSearch2()
 					$smcFunc['db_search_query']('drop_tmp_log_search_topics', '
 						DROP TABLE IF EXISTS {db_prefix}tmp_log_search_topics',
 						array(
+							'db_error_skip' => true,
 						)
 					);
 					$createTemporary = $smcFunc['db_search_query']('create_tmp_log_search_topics', '
@@ -1172,6 +1173,7 @@ function PlushSearch2()
 						) TYPE=HEAP',
 						array(
 							'string_zero' => '0',
+							'db_error_skip' => true,
 						)
 					) !== false;
 
@@ -1332,6 +1334,7 @@ function PlushSearch2()
 					$smcFunc['db_search_query']('drop_tmp_log_search_messages', '
 						DROP TABLE IF EXISTS {db_prefix}tmp_log_search_messages',
 						array(
+							'db_error_skip' => true,
 						)
 					);
 
@@ -1342,6 +1345,7 @@ function PlushSearch2()
 						) TYPE=HEAP',
 						array(
 							'string_zero' => '0',
+							'db_error_skip' => true,
 						)
 					) !== false;
 

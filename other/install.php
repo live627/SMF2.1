@@ -708,9 +708,6 @@ function doStep1()
 	if (@version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
 
-	// Don't let SMF try to jump in with some error messages.
-	$smcFunc['db_error_handler_return'] = true;
-
 	// Attempt a connection.
 	$needsDB = !empty($databases[$db_type]['always_has_db']);
 	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
@@ -760,13 +757,25 @@ function doStep1()
 	if ($db_name != '' && !$needsDB)
 	{
 		$smcFunc['db_query']('', "
-			CREATE DATABASE IF NOT EXISTS `$db_name`", 'security_override', $db_connection);
+			CREATE DATABASE IF NOT EXISTS `$db_name`",
+			array(
+				'security_override' => true,
+				'db_error_skip' => true,
+			),
+			$db_connection
+		);
 
 		// Okay, let's try the prefix if it didn't work...
 		if (!$smcFunc['db_select_db']($db_name, $db_connection) && $db_name != '')
 		{
 			$smcFunc['db_query']('', "
-				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`", 'security_override', $db_connection);
+				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`",
+				array(
+					'security_override' => true,
+					'db_error_skip' => true,
+				),
+				$db_connection
+			);
 
 			if ($smcFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
 			{
@@ -797,6 +806,7 @@ function doStep1()
 		LIMIT 1',
 		array(
 			'version' => 'smfVersion',
+			'db_error_skip' => true,
 		)
 	);
 	if ($result !== false)
@@ -838,6 +848,7 @@ function doStep1()
 			$smcFunc['db_query']('', '
 				SET NAMES utf8',
 				array(
+					'db_error_skip' => true,
 				)
 			);
 		}
@@ -888,7 +899,7 @@ function doStep1()
 			continue;
 		}
 
-		if ($smcFunc['db_query']('', $current_statement, 'security_override', $db_connection) === false)
+		if ($smcFunc['db_query']('', $current_statement, array('security_override' => true, 'db_error_skip' => true), $db_connection) === false)
 		{
 			// Error 1050: Table already exists!
 			//!!! Needs to be made better!
@@ -1035,7 +1046,7 @@ function doStep1()
 	}
 
 	// Check for the ALTER privilege.
-	if (!empty($databases[$db_type]['alter_support']) && $smcFunc['db_query']('', "ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD", 'security_override') === false)
+	if (!empty($databases[$db_type]['alter_support']) && $smcFunc['db_query']('', "ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD", array('security_override' => true, 'db_error_skip' => true)) === false)
 	{
 		echo '
 				<div class="error_message">
@@ -1215,6 +1226,7 @@ function doStep2()
 			SET NAMES {raw:db_character_set}',
 			array(
 				'db_character_set' => $db_character_set,
+				'db_error_skip' => true,
 			)
 		);
 
@@ -1226,6 +1238,7 @@ function doStep2()
 		array(
 			'username' => stripslashes($_POST['username']),
 			'email' => stripslashes($_POST['email']),
+			'db_error_skip' => true,
 		)
 	);
 	if ($smcFunc['db_num_rows']($result) != 0)
@@ -1347,6 +1360,7 @@ function doStep2()
 		WHERE variable = {string:db_sessions}',
 		array(
 			'db_sessions' => 'databaseSession_enable',
+			'db_error_skip' => true,
 		)
 	);
 	if ($smcFunc['db_num_rows']($result) != 0)
@@ -1380,6 +1394,7 @@ function doStep2()
 		SELECT variable, value
 		FROM {db_prefix}settings',
 		array(
+			'db_error_skip' => true,
 		)
 	);
 	// Only proceed if we can load the data.
@@ -1405,6 +1420,7 @@ function doStep2()
 			AND modified_time = 0
 		LIMIT 1',
 		array(
+			'db_error_skip' => true,
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) > 0)

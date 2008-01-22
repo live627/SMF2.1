@@ -743,6 +743,7 @@ function UnreadTopics()
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
 				'is_approved' => 1,
+				'db_error_skip' => true,
 			))
 		) !== false;
 	}
@@ -943,6 +944,7 @@ function UnreadTopics()
 					'current_member' => $user_info['id'],
 					'is_approved' => 1,
 					'string_zero' => '0',
+					'db_error_skip' => true,
 				)
 			) !== false;
 
@@ -958,6 +960,7 @@ function UnreadTopics()
 					WHERE lt.id_member = {int:current_member}',
 					array(
 						'current_member' => $user_info['id'],
+						'db_error_skip' => true,
 					)
 				) !== false;
 		}

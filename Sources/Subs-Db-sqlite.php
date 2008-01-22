@@ -301,10 +301,13 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
 
-	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && $db_values !== 'security_override')
+	// Overriding security? This is evil!
+	$security_override = $db_values === 'security_override' || !empty($db_values['security_override']);
+
+	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && !$security_override)
 		smf_db_error_backtrace('Hacking attempt...', 'Illegal character (\') used in query...', true, __FILE__, __LINE__);
 
-	if ($db_values !== 'security_override' && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
+	if (!$security_override && (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false))
 	{
 		// Pass some values to the global space for use in the callback function.
 		$db_callback = array($db_values, $connection);
@@ -341,7 +344,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	}
 
 	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);
-	if ($ret === false)
+	if ($ret === false && empty($db_values['db_error_skip']))
 		$ret = db_error($db_string . '#!#' . $err_msg, $connection);
 
 	// Debugging.
@@ -412,10 +415,6 @@ function db_error($db_string, $connection = null)
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
 	global $smcFunc;
-
-	// If we're being asked to return error information then do this right away (For upgrade etc).
-	if (!empty($smcFunc['db_error_handler_return']))
-		return false;
 
 	// We'll try recovering the file and line number the original db query was called from.
 	list ($file, $line) = smf_db_error_backtrace('', '', 'return', __FILE__, __LINE__);
@@ -547,21 +546,18 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		foreach ($data as $dataRow)
 			$insertRows[] = smf_db_quote($insertData, array_combine($indexed_columns, $dataRow), $connection);
 
-		// Can't error on this if ignore.
-		if ($method == 'ignore')
-			$smcFunc['db_error_handler_return'] = false;
-
 		foreach ($insertRows as $entry)
 			// Do the insert.
 			$smcFunc['db_query']('', '
 				INSERT INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
 				VALUES
-					' . $entry, 'security_override',
+					' . $entry,
+				array(
+					'security_override' => true,
+					'db_error_skip' => true,
+				),
 				$connection
 			);
-
-		if ($method == 'ignore')
-			$smcFunc['db_error_handler_return'] = true;
 	}
 
 	if ($priv_trans)

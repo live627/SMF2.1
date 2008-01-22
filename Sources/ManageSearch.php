@@ -277,15 +277,13 @@ function EditSearchMethod()
 		checkSession('get');
 
 		// Make sure it's gone before creating it.
-		$oldErrorHandlerState = !empty($smcFunc['db_error_handler_return']);
-		$smcFunc['db_error_handler_return'] = true;
 		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}messages
 			DROP INDEX body',
 			array(
+				'db_error_skip' => true,
 			)
 		);
-		$smcFunc['db_error_handler_return'] = $oldErrorHandlerState;
 
 		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}messages
@@ -300,16 +298,14 @@ function EditSearchMethod()
 	{
 		checkSession('get');
 
-		$oldErrorHandlerState = !empty($smcFunc['db_error_handler_return']);
-		$smcFunc['db_error_handler_return'] = true;
 		$smcFunc['db_query']('', '
 			ALTER TABLE {db_prefix}messages
 			DROP INDEX ' . implode(',
 			DROP INDEX ', $context['fulltext_index']),
 			array(
+				'db_error_skip' => true,
 			)
 		);
-		$smcFunc['db_error_handler_return'] = $oldErrorHandlerState;
 
 		$context['fulltext_index'] = '';
 

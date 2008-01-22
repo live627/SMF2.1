@@ -601,6 +601,7 @@ if (isset($modSettings['smfVersion']))
 			'id_theme' => 1,
 			'theme_url' => 'theme_url',
 			'images_url' => 'images_url',
+			'db_error_skip' => true,
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -797,13 +798,11 @@ function loadEssentialData()
 		if ($db_connection === null)
 			die('Unable to connect to database - please check username and password are correct in Settings.php');
 
-		// Make sure we get failure notices.
-		$smcFunc['db_error_handler_return'] = true;
-
 		if ($db_type == 'mysql' && isset($db_character_set) && preg_match('~^\w+$~', $db_character_set) === 1)
 			$smcFunc['db_query']('', '
 			SET NAMES ' . $db_character_set,
 			array(
+				'db_error_skip' => true,
 			)
 		);
 
@@ -812,6 +811,7 @@ function loadEssentialData()
 			SELECT variable, value
 			FROM {db_prefix}settings',
 			array(
+				'db_error_skip' => true,
 			)
 		);
 		$modSettings = array();
@@ -1039,6 +1039,7 @@ function checkLogin()
 				LIKE {string:member_name}',
 				array(
 					'member_name' => 'memberName',
+					'db_error_skip' => true,
 				)
 			);
 			if ($smcFunc['db_num_rows']($request) != 0)
@@ -1057,6 +1058,7 @@ function checkLogin()
 					WHERE memberName = {string:member_name}',
 					array(
 						'member_name' => $_POST['user'],
+						'db_error_skip' => true,
 					)
 				);
 			else
@@ -1066,6 +1068,7 @@ function checkLogin()
 					WHERE member_name = {string:member_name}',
 					array(
 						'member_name' => $_POST['user'],
+						'db_error_skip' => true,
 					)
 				);
 			if ($smcFunc['db_num_rows']($request) != 0)
@@ -1133,6 +1136,7 @@ function checkLogin()
 						array(
 							'groups' => $groups,
 							'admin_forum' => 'admin_forum',
+							'db_error_skip' => true,
 						)
 					);
 					if ($smcFunc['db_num_rows']($request) == 0)
@@ -1215,6 +1219,7 @@ function UpgradeOptions()
 			WHERE variable = {string:allow_sm_stats}',
 			array(
 				'allow_sm_stats' => 'allow_sm_stats',
+				'db_error_skip' => true,
 			)
 		);
 
@@ -1523,6 +1528,7 @@ function CleanupMods()
 			'id_member' => 0,
 			'theme_dir' => 'theme_dir',
 			'images_url' => 'images_url',
+			'db_error_skip' => true,
 		)
 	);
 	$theme_paths = array();
@@ -1543,6 +1549,7 @@ function CleanupMods()
 		ORDER BY time_installed DESC',
 		array(
 			'installed' => 1,
+			'db_error_skip' => true,
 		)
 	);
 	$upcontext['packages'] = array();
@@ -1853,6 +1860,7 @@ function UpgradeTemplate()
 		array(
 			'id_member' => 0,
 			'theme_dir' => 'theme_dir',
+			'db_error_skip' => true,
 		)
 	);
 	$theme_dirs = array();
@@ -2029,6 +2037,7 @@ function UpgradeTemplate()
 			SELECT MAX(id_theme) + 1
 			FROM {db_prefix}themes',
 			array(
+				'db_error_skip' => true,
 			)
 		);
 		list ($id_theme) = $smcFunc['db_fetch_row']($request);
@@ -2055,6 +2064,7 @@ function UpgradeTemplate()
 			array(
 				'knownThemes' => 'knownThemes',
 				'new_theme' => ',' . $id_theme,
+				'db_error_skip' => true,
 			)
 		);
 
@@ -2216,6 +2226,7 @@ function convertSettingstoOptions()
 			array(
 				'variable' => $variable,
 				'value' => $modSettings[$value[0]],
+				'db_error_skip' => true,
 			)
 		);
 
@@ -2226,6 +2237,7 @@ function convertSettingstoOptions()
 			array(
 				'variable' => $variable,
 				'value' => $modSettings[$value[0]],
+				'db_error_skip' => true,
 			)
 		);
 	}
@@ -2335,6 +2347,7 @@ function getMemberGroups()
 		array(
 			'admin_group' => 1,
 			'old_group' => 7,
+			'db_error_skip' => true,
 		)
 	);
 	if ($request === false)
@@ -2346,6 +2359,7 @@ function getMemberGroups()
 			array(
 				'admin_group' => 1,
 				'old_group' => 7,
+				'db_error_skip' => true,
 			)
 		);
 	}
@@ -2421,6 +2435,7 @@ function parse_sql($filename)
 			LIKE {string:table_name}',
 			array(
 				'table_name' => "{$db_prefix}members",
+				'db_error_skip' => true,
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) === 0)
@@ -2435,6 +2450,7 @@ function parse_sql($filename)
 				LIKE {string:collation}',
 				array(
 					'collation' => $table_status['Collation'],
+					'db_error_skip' => true,
 				)
 			);
 			// Got something?
@@ -2892,6 +2908,7 @@ function textfield_alter($change, $substep)
 			LIKE {string:column}',
 			array(
 				'column' => $change['column'],
+				'db_error_skip' => true,
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) === 0)
@@ -2913,6 +2930,7 @@ function textfield_alter($change, $substep)
 				LIKE {string:collation}',
 				array(
 					'collation' => $table_row['Collation'],
+					'db_error_skip' => true,
 				)
 			);
 			// No results? Just forget it all together.
@@ -2934,6 +2952,7 @@ function textfield_alter($change, $substep)
 				WHERE ' . $change['column'] . ' IS NULL',
 				array(
 					'default' => isset($change['default']) ? $change['default'] : '',
+					'db_error_skip' => true,
 				)
 			);
 
@@ -2943,6 +2962,7 @@ function textfield_alter($change, $substep)
 			CHANGE COLUMN ' . $change['column'] . ' ' . $change['column'] . ' ' . $change['type'] . (isset($collation_info['Charset']) ? ' CHARACTER SET ' . $collation_info['Charset'] . ' COLLATE ' . $collation_info['Collation'] : '') . ($change['null_allowed'] ? '' : ' NOT NULL') . (isset($change['default']) ? ' default {string:default}' : ''),
 			array(
 				'default' => isset($change['default']) ? $change['default'] : '',
+				'db_error_skip' => true,
 			)
 		);
 	}

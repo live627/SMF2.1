@@ -57,12 +57,6 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 {
 	global $smcFunc;
 
-	// Search queries that need processing are here!
-	$nonFatal = array(
-		'drop_tmp_log_search_topics',
-		'drop_tmp_log_search_messages',
-	);
-
 	$replacements = array(
 		'create_tmp_log_search_topics' => array(
 			'~mediumint\(\d\)~i' => 'int',
@@ -75,30 +69,17 @@ function smf_db_search_query($identifier, $db_string, $db_values = array(), $con
 	);
 
 	if (isset($replacements[$identifier]))
-	{
-		// Don't fail on this query?
-		if (isset($replacements[$identifier]['on_fail']))
-		{
-			$smcFunc['db_error_handler_return'] = true;
-			unset($replacements[$identifier]['on_fail']);
-		}
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
-	}
 	elseif (preg_match('~^\s*INSERT\sIGNORE~i', $db_string) != 0)
 	{
 		$db_string = preg_replace('~^\s*INSERT\sIGNORE~i', 'INSERT', $db_string);
 		// Don't error on multi-insert.
-		$smcFunc['db_error_handler_return'] = true;
+		$db_values['db_error_skip'] = true;
 	}
-
-	// Should we not error on this?
-	if (in_array($identifier, $nonFatal))
-		$smcFunc['db_error_handler_return'] = true;
 
 	$return = $smcFunc['db_query']('', $db_string,
 		$db_values, $connection
 	);
-	$smcFunc['db_error_handler_return'] = false;
 
 	return $return;
 }
