@@ -825,7 +825,7 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 	if (!this.aButtonControls[sCode])
 		return;
 
-	var oSelection = this.getSelect(true);
+	var oSelection = this.getSelect(true, true);
 	if (oSelection.length == 0)
 		oSelection = '&nbsp;';
 
@@ -848,7 +848,6 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 	// Are we overwriting?
 	if (sRightTag == '')
 		this.insertText(sLeftTag);
-
 	else
 		this.insertText(sLeftTag + oSelection + sRightTag);
 }
@@ -901,19 +900,47 @@ SmfEditor.prototype.insertImage = function(sSrc)
 	this.smf_execCommand('insertimage', false, sSrc);
 }
 
-SmfEditor.prototype.getSelect = function(bWantText)
+SmfEditor.prototype.getSelect = function(bWantText, bWantHTMLText)
 {
 	if (is_ie && this.oFrameDocument.selection)
 	{
-		if (bWantText)
+		// Just want plain text?
+		if (bWantText && !bWantHTMLText)
 			return this.oFrameDocument.selection.createRange().text;
+		// We want the HTML flavoured variety?
+		else if (bWantHTMLText)
+			return this.oFrameDocument.selection.createRange().htmlText;
 
 		return this.oFrameDocument.selection;
 	}
 
+	// This is mainly Firefox.
 	if (this.oFrameWindow.getSelection)
-		return this.oFrameWindow.getSelection();
+	{
+		// Plain text?
+		if (bWantText && !bWantHTMLText)
+			return this.oFrameWindow.getSelection().toString();
+		// HTML is harder - currently using: http://www.faqts.com/knowledge_base/view.phtml/aid/32427
+		else if (bWantHTMLText)
+		{
+			var oSelection = this.oFrameWindow.getSelection();
+			if (oSelection.rangeCount > 0)
+			{
+				oRange = oSelection.getRangeAt(0);
+				var oClonedSelection = oRange.cloneContents();
+				var oDiv = document.createElement('div');
+				oDiv.appendChild(oClonedSelection);
+				return oDiv.innerHTML;
+			}
+			else
+				return '';
+		}
 
+		// Want the whole object then.
+		return this.oFrameWindow.getSelection();
+	}
+
+	// If we're here it's not good.
 	return this.oFrameDocument.getSelection();
 }
 

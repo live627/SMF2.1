@@ -18,6 +18,7 @@ January 2008
  ! Upgrade could potentially get a divide by zero error. (upgrade.php) [Bug 1356]
  ! Search would not work if searching topic only. (Search.php) [Bug 1354]
  ! Fixing long words was broken. (Subs.php)
+ ! Do a better job of inserting tags around text in the WYSIWYG editor. (editor.js) [Bug 1365]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
