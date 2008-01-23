@@ -645,7 +645,7 @@ function template_imode_profile()
 		echo '
 			<tr><td><a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], ';imode">', $txt['wireless_profile_pm'], '.</a></td></tr>';
 
-	if (!$context['user']['is_owner'] && $context['can_edit_ban'])
+	if (!$context['user']['is_owner'] && !empty($context['can_edit_ban']))
 		echo '
 			<tr><td><a href="', $scripturl, '?action=admin;area=ban;sa=add;u=', $context['id_member'], ';imode">', $txt['profileBanUser'], '.</a></td></tr>';
 
@@ -1186,7 +1186,7 @@ function template_wap2_profile()
 		echo '
 		<p class="windowbg"><a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], ';wap2">', $txt['wireless_profile_pm'], '.</a></p>';
 
-	if (!$context['user']['is_owner'] && $context['can_edit_ban'])
+	if (!$context['user']['is_owner'] && !empty($context['can_edit_ban']))
 		echo '
 		<p class="windowbg"><a href="', $scripturl, '?action=admin;area=ban;sa=add;u=', $context['id_member'], ';wap2">', $txt['profileBanUser'], '.</a></p>';
 
