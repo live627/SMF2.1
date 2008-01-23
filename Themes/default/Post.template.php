@@ -778,10 +778,10 @@ function template_main()
 			function insertQuoteFast(messageid)
 			{
 				if (window.XMLHttpRequest)
-					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.bRichTextEnabled, onDocReceived);
+					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
 				else
-					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.bRichTextEnabled, 240, 90);
-					return true;
+					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
+				return true;
 			}
 			function onDocReceived(XMLDoc)
 			{

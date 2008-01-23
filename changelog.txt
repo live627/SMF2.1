@@ -22,6 +22,7 @@ January 2008
  ! Remove error handler override for database functions instead opting for a db_values key called 'db_error_skip'. (Subs-Db-xxx.php)
  ! Allow security_override to also be set through db_values. (Subs-Db-xxxx.php)
  ! Unread and search were often erroring on temporary tables. (Recent.php, Search.php)
+ ! Quoting from the post view wasn't respecting the WYSIWYG editor mode. (Post template) [Bug 1370]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
