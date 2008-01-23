@@ -149,8 +149,7 @@ function PackageInstallTest()
 	require_once($sourcedir . '/Subs-Package.php');
 
 	// Load up the package FTP information?
-	if (isset($_SESSION['pack_ftp']))
-		packageRequireFTP($scripturl . '?action=admin;area=packages;sa=' . $_REQUEST['sa'] . ';package=' . $_REQUEST['package']);
+	create_chmod_control();
 
 	// Make sure temp directory exists and is empty.
 	if (file_exists($boarddir . '/Packages/temp'))
@@ -162,7 +161,7 @@ function PackageInstallTest()
 		if (!mktree($boarddir . '/Packages/temp', 0777))
 		{
 			deltree($boarddir . '/Packages/temp', false);
-			packageRequireFTP($scripturl . '?action=admin;area=packages;sa=' . $_REQUEST['sa'] . ';package=' . $_REQUEST['package'], array($boarddir . '/Packages/temp/delme.tmp'));
+			create_chmod_control(array($boarddir . '/Packages/temp/delme.tmp'), array('destination_url' => $scripturl . '?action=admin;area=packages;sa=' . $_REQUEST['sa'] . ';package=' . $_REQUEST['package'], 'crash_on_error' => true));
 
 			deltree($boarddir . '/Packages/temp', false);
 			if (!mktree($boarddir . '/Packages/temp', 0777))
@@ -336,7 +335,6 @@ function PackageInstallTest()
 	{
 		if ($action['type'] == 'chmod')
 		{
-			$context['ftp_needed'] = true;
 			$chmod_files[] = $action['filename'];
 			continue;
 		}
@@ -397,7 +395,6 @@ function PackageInstallTest()
 				}
 				elseif ($mod_action['type'] == 'chmod')
 				{
-					$context['ftp_needed'] = true;
 					$chmod_files[] = $mod_action['filename'];
 				}
 				elseif ($mod_action['type'] == 'saved')
@@ -548,9 +545,11 @@ function PackageInstallTest()
 	if (file_exists($boarddir . '/Packages/temp'))
 		deltree($boarddir . '/Packages/temp');
 
-	if ($context['ftp_needed'])
-		packageRequireFTP($scripturl . '?action=admin;area=packages;sa=' . $_REQUEST['sa'] . ';package=' . $_REQUEST['package'], $chmod_files);
-	$context['ftp_needed'] = false;
+	if (!empty($chmod_files))
+	{
+		$ftp_status = create_chmod_control($chmod_files);
+		$context['ftp_needed'] = !empty($ftp_status['files']['notwritable']);
+	}
 }
 
 // Apply another type of (avatar, language, etc.) package.
@@ -1127,6 +1126,13 @@ function PackageBrowse()
 	$context['available_languages'] = array();
 	$context['available_other'] = array();
 	$context['available_all'] = array();
+
+	// We need the packages directory to be writable for this.
+	if (!@is_writable($boarddir . '/Packages'))
+	{
+		create_chmod_control(array($boarddir . '/Packages'), array('destination_url' => $scripturl . '?action=admin;area=packages', 'crash_on_error' => true));
+
+	}
 
 	if ($dir = @opendir($boarddir . '/Packages'))
 	{

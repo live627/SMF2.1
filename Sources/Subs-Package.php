@@ -592,6 +592,136 @@ function getPackageInfo($gzfilename)
 	return $package;
 }
 
+// Create a chmod control for chmoding files.
+function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $restore_write_status = false)
+{
+	global $context, $modSettings, $package_ftp, $boarddir, $txt;
+
+	// This is where we report what we got up to.
+	$return_data = array(
+		'files' => array(
+			'writable' => array(),
+			'notwritable' => array(),
+		),
+	);
+
+	// If we have some FTP information already, then let's assume it was required and try to get ourselves connected.
+	if (!empty($_SESSION['pack_ftp']['connected']))
+	{
+		// Load the file containing the ftp_connection class.
+		loadClassFile('Class-Package.php');
+
+		$package_ftp = new ftp_connection($_SESSION['pack_ftp']['server'], $_SESSION['pack_ftp']['port'], $_SESSION['pack_ftp']['username'], package_crypt($_SESSION['pack_ftp']['password']));
+	}
+	// Just got a submission did we?
+	elseif (isset($_POST['ftp_username']))
+	{
+		loadClassFile('Class-Package.php');
+		$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
+
+		// We're connected, jolly good!
+		if ($ftp->error === false)
+		{
+			// Common mistake, so let's try to remedy it...
+			if (!$ftp->chdir($_POST['ftp_path']))
+			{
+				$ftp_error = $ftp->last_message;
+				$ftp->chdir(preg_replace('~^/home[2]?/[^/]+?~', '', $_POST['ftp_path']));
+			}
+
+			if (!in_array($_POST['ftp_path'], array('', '/')))
+			{
+				$ftp_root = strtr($boarddir, array($_POST['ftp_path'] => ''));
+				if (substr($ftp_root, -1) == '/' && ($_POST['ftp_path'] == '' || substr($_POST['ftp_path'], 0, 1) == '/'))
+					$ftp_root = substr($ftp_root, 0, -1);
+			}
+			else
+				$ftp_root = $boarddir;
+
+			$_SESSION['pack_ftp'] = array(
+				'server' => $_POST['ftp_server'],
+				'port' => $_POST['ftp_port'],
+				'username' => $_POST['ftp_username'],
+				'password' => package_crypt($_POST['ftp_password']),
+				'path' => $_POST['ftp_path'],
+				'root' => $ftp_root,
+				'connected' => true,
+			);
+
+			if (!isset($modSettings['package_path']) || $modSettings['package_path'] != $_POST['ftp_path'])
+				updateSettings(array('package_path' => $_POST['ftp_path']));
+
+			// This is now the primary connection.
+			$package_ftp = $ftp;
+		}
+	}
+
+	// Now try to simply make the files writable, with whatever we might have.
+	if (!empty($chmodFiles))
+	{
+		foreach ($chmodFiles as $k => $file)
+		{
+			// Already writable?
+			if (@is_writable($file))
+				$return_data['files']['writable'][] = $file;
+			else
+			{
+				// Now try to change that.
+				$return_data['files'][package_chmod($file) ? 'writable' : 'notwritable'][] = $file;
+			}
+		}
+	}
+
+	// Have we still got nasty files which ain't writable? Dear me we need more FTP good sir.
+	if (empty($package_ftp) && !empty($return_data['files']['notwritable']))
+	{
+		if (!isset($ftp) || $ftp->error !== false)
+		{
+			if (!isset($ftp))
+			{
+				loadClassFile('Class-Package.php');
+				$ftp = new ftp_connection(null);
+			}
+			elseif ($ftp->error !== false && !isset($ftp_error))
+				$ftp_error = $ftp->last_message === null ? '' : $ftp->last_message;
+
+			list ($username, $detect_path, $found_path) = $ftp->detect_path($boarddir);
+
+			if ($found_path)
+				$_POST['ftp_path'] = $detect_path;
+			elseif (!isset($_POST['ftp_path']))
+				$_POST['ftp_path'] = isset($modSettings['package_path']) ? $modSettings['package_path'] : $detect_path;
+
+			if (!isset($_POST['ftp_username']))
+				$_POST['ftp_username'] = $username;
+		}
+
+		$context['package_ftp'] = array(
+			'server' => isset($_POST['ftp_server']) ? $_POST['ftp_server'] : (isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost'),
+			'port' => isset($_POST['ftp_port']) ? $_POST['ftp_port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'),
+			'username' => isset($_POST['ftp_username']) ? $_POST['ftp_username'] : (isset($modSettings['package_username']) ? $modSettings['package_username'] : ''),
+			'path' => $_POST['ftp_path'],
+			'error' => empty($ftp_error) ? null : $ftp_error,
+			'destination' => !empty($chmodOptions['destination_url']) ? $chmodOptions['destination_url'] : '',
+		);
+
+		// Which files failed?
+		if (!isset($context['notwritable_files']))
+			$context['notwritable_files'] = array();
+		$context['notwritable_files'] = array_merge($context['notwritable_files'], $return_data['files']['notwritable']);
+
+		// Sent here to die?
+		if (!empty($chmodOptions['crash_on_error']))
+		{
+			$context['page_title'] = $txt['package_ftp_necessary'];
+			$context['sub_template'] = 'ftp_required';
+			obExit();
+		}
+	}
+
+	return $return_data;
+}
+
 function packageRequireFTP($destination_url, $files = null, $return = false)
 {
 	global $context, $modSettings, $package_ftp, $boarddir, $txt;
@@ -2129,47 +2259,109 @@ function package_flush_cache($trash = false)
 	$package_cache = array();
 }
 
+// Try to make a file writable. Return true if it worked, false if it didn't.
 function package_chmod($filename)
 {
 	global $package_ftp;
 
 	if (file_exists($filename) && is_writable($filename))
-		return;
+		return true;
 
-	// File exists, but isn't writable and we have FTP.
-	if (file_exists($filename) && isset($package_ftp))
+	// Start off checking without FTP.
+	if (!isset($package_ftp) || $package_ftp === false)
+	{
+		for ($i = 0; $i < 2; $i++)
+		{
+			$chmod_file = $filename;
+
+			// Start off with a less agressive test.
+			if ($i == 0)
+			{
+				// If this file doesn't exist, then we actually want to look at whatever parent directory does.
+				$subTraverseLimit = 2;
+				while (!file_exists($chmod_file) && $subTraverseLimit)
+				{
+					$chmod_file = dirname($chmod_file);
+					$subTraverseLimit--;
+				}
+
+				// Keep track of the writable status here.
+				$file_permissions = @fileperms($chmod_file);
+			}
+			else
+			{
+				// This looks odd, but it's an attempt to work around PHP suExec.
+				if (!file_exists($chmod_file))
+				{
+					$file_permissions = @fileperms(dirname($chmod_file));
+
+					mktree(dirname($chmod_file), 0755);
+					@touch($chmod_file);
+					@chmod($chmod_file, 0755);
+				}
+				else
+					$file_permissions = @fileperms($chmod_file);
+			}
+
+			// This looks odd, but it's another attempt to work around PHP suExec.
+			if (!@is_writable($chmod_file))
+				@chmod($chmod_file, 0755);
+			if (!@is_writable($chmod_file))
+				@chmod($chmod_file, 0777);
+			if (!@is_writable(dirname($chmod_file)))
+				@chmod($chmod_file, 0755);
+			if (!@is_writable(dirname($chmod_file)))
+				@chmod($chmod_file, 0777);
+
+			// The ultimate writable test.
+			$fp = is_dir($chmod_file) ? @opendir($chmod_file) : @fopen($chmod_file, 'rb');
+			if (@is_writable($chmod_file) && $fp)
+			{
+				if (!is_dir($chmod_file))
+					fclose($fp);
+				else
+					closedir($fp);
+
+				// It worked!
+				$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
+				return true;
+			}
+		}
+
+		// If we're here we're a failure.
+		return false;
+	}
+	// Otherwise we do have FTP?
+	elseif ($package_ftp !== false && !empty($_SESSION['pack_ftp']))
 	{
 		$ftp_file = strtr($filename, array($_SESSION['pack_ftp']['root'] => ''));
 
-		$package_ftp->chmod($ftp_file, 0755);
-		if (!is_writable($filename))
-			$package_ftp->chmod($ftp_file, 0777);
-	}
-	// File exists, but no FTP help.
-	elseif (file_exists($filename))
-	{
-		@chmod($filename, 0755);
-		if (!is_writable($filename))
-			@chmod($filename, 0777);
-	}
-	// File does not exist, and we have FTP.
-	elseif (isset($package_ftp))
-	{
-		$ftp_file = strtr(dirname($filename), array($_SESSION['pack_ftp']['root'] => ''));
+		// This looks odd, but it's an attempt to work around PHP suExec.
+		if (!file_exists($filename))
+		{
+			$file_permissions = @fileperms(dirname($filename));
 
-		$package_ftp->chmod($ftp_file, 0755);
-		if (!is_writable($filename))
-			$package_ftp->chmod($ftp_file, 0777);
-	}
-	// File does not exist, and no FTP.
-	else
-	{
-		$filename = dirname($filename);
+			mktree(dirname($filename), 0755);
+			$package_ftp->create_file($ftp_file);
+			$package_ftp->chmod($ftp_file, 0755);
+		}
+		else
+			$file_permissions = @fileperms($filename);
 
-		@chmod($filename, 0755);
-		if (!is_writable($filename))
-			@chmod($filename, 0777);
+		if (!@is_writable($filename))
+			$package_ftp->chmod($ftp_file, 0777);
+		if (!@is_writable(dirname($filename)))
+			$package_ftp->chmod(dirname($ftp_file), 0777);
+
+		if (@is_writable($filename))
+		{
+			$_SESSION['pack_ftp']['original_perms'][$filename] = $file_permissions;
+			return true;
+		}
 	}
+
+	// Oh dear, we failed if we get here.
+	return false;
 }
 
 function package_crypt($pass)

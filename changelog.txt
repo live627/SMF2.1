@@ -23,6 +23,9 @@ January 2008
  ! Allow security_override to also be set through db_values. (Subs-Db-xxxx.php)
  ! Unread and search were often erroring on temporary tables. (Recent.php, Search.php)
  ! Quoting from the post view wasn't respecting the WYSIWYG editor mode. (Post template) [Bug 1370]
+ ! Added a new control to Subs-Packages, chmod_control, to handle chmoding of files - and used it a bit in the package manager. (Subs-Package.php, Packages template)
+ ! Make package_chmod do more, and use it from the chmod_control function. (Subs-Package.php)
+ ! Tell users what files need to be writable if we're going to prompt for FTP information, and also check the Packages directory is writable. (Packages.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

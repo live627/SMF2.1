@@ -287,42 +287,9 @@ function template_view_package()
 				<td class="catbg">', $txt['package_ftp_necessary'], '</td>
 			</tr><tr>
 				<td class="windowbg2">
-					', $txt['package_ftp_why'];
-
-		if (!empty($context['package_ftp']['error']))
-			echo '
-					<div class="bordercolor" style="padding: 1px; margin: 1ex;"><div class="windowbg" style="padding: 1ex;">
-						<tt>', $context['package_ftp']['error'], '</tt>
-					</div></div>';
-
-		echo '
-						<table width="520" cellpadding="0" cellspacing="0" border="0" align="center" style="margin-bottom: 1ex; margin-top: 2ex;">
-							<tr>
-								<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
-								<td style="padding-bottom: 1ex;">
-									<div style="float: right; margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $context['package_ftp']['port'], '" /></div>
-									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', $context['package_ftp']['server'], '" style="width: 70%;" />
-								</td>
-							</tr><tr>
-								<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_username">', $txt['package_ftp_username'], ':</label></td>
-								<td style="padding-bottom: 1ex;">
-									<input type="text" size="50" name="ftp_username" id="ftp_username" value="', $context['package_ftp']['username'], '" style="width: 99%;" />
-								</td>
-							</tr><tr>
-								<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_password">', $txt['package_ftp_password'], ':</label></td>
-								<td style="padding-bottom: 1ex;">
-									<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
-								</td>
-							</tr><tr>
-								<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_path">', $txt['package_ftp_path'], ':</label></td>
-								<td style="padding-bottom: 1ex;">
-									<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" />
-								</td>
-							</tr>
-						</table>
-						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
-					</td>
-				</tr>';
+					', template_control_chmod(), '
+				</td>
+			</tr>';
 	}
 		echo '
 			</table>
@@ -1273,15 +1240,27 @@ function template_install_options()
 		</div>';
 }
 
-function template_ftp_required()
+function template_control_chmod()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
+	// Nothing to do? Brilliant!
+	if (empty($context['package_ftp']))
+		return false;
+
 	echo '
-		<div class="tborder">
-			<div class="titlebg" style="padding: 4px;">', $txt['package_ftp_necessary'], '</div>
-			<div class="windowbg" style="padding: 4px;">
-				', $txt['package_ftp_why'];
+				', sprintf($txt['package_ftp_why'], 'document.getElementById(\'need_writable_list\').style.display = \'\'; return false;'), '<br />
+				<div id="need_writable_list" class="smalltext">
+					', $txt['package_ftp_why_file_list'], '
+					<ul style="display: inline;">';
+	if (!empty($context['notwritable_files']))
+		foreach ($context['notwritable_files'] as $file)
+			echo '
+						<li>', $file, '</li>';
+
+	echo '
+					</ul>
+				</div>';
 
 	if (!empty($context['package_ftp']['error']))
 		echo '
@@ -1289,8 +1268,11 @@ function template_ftp_required()
 					<tt>', $context['package_ftp']['error'], '</tt>
 				</div></div>';
 
+	if (!empty($context['package_ftp']['destination']))
+		echo '
+				<form action="', $context['package_ftp']['destination'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">';
+
 	echo '
-				<form action="', $context['package_ftp']['destination'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 					<table width="520" cellpadding="0" cellspacing="0" border="0" align="center" style="margin-bottom: 1ex; margin-top: 2ex;">
 						<tr>
 							<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
@@ -1316,10 +1298,31 @@ function template_ftp_required()
 						</tr>
 					</table>
 
-					<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
+					<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>';
+	
+	if (!empty($context['package_ftp']['destination']))
+		echo '
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				</form>
-			</div></div>';
+				</form>';
+
+	// Hide the details of the list.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		document.getElementById(\'need_writable_list\').style.display = \'none\';
+	// ]]></script>';
+}
+
+function template_ftp_required()
+{
+	global $context, $settings, $options, $txt, $scripturl;
+
+	echo '
+		<div class="tborder">
+			<div class="titlebg" style="padding: 4px;">', $txt['package_ftp_necessary'], '</div>
+			<div class="windowbg" style="padding: 4px;">
+				', template_control_chmod(), '
+			</div>
+		</div>';
 }
 
 function template_view_operations()
