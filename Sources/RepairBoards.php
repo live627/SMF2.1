@@ -412,7 +412,7 @@ function loadForumTests()
 					$context[\'repair_errors\'][] = sprintf($txt[\'repair_stats_topics_1\'], $row[\'id_topic\'], $row[\'id_first_msg\']);
 				if ($row[\'id_last_msg\'] != $row[\'myid_last_msg\'])
 					$context[\'repair_errors\'][] = sprintf($txt[\'repair_stats_topics_2\'], $row[\'id_topic\'], $row[\'id_last_msg\']);
-				if ($row[\'approved\'] != $row[\'myApproved\'])
+				if ($row[\'approved\'] != $row[\'firstmsg_approved\'])
 					$context[\'repair_errors\'][] = sprintf($txt[\'repair_stats_topics_5\'], $row[\'id_topic\']);
 
 				return true;
