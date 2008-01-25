@@ -614,7 +614,7 @@ function loadBoard()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				c.id_cat, b.name AS bname, b.description, b.num_topics, b.member_groups,
-				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
+				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS id_moderator,
 				mem.real_name' . (!empty($topic) ? ', b.id_board' : '') . ', b.child_level,
 				b.id_theme, b.override_theme, b.count_posts, b.id_profile, b.redirect,
 				b.unapproved_topics, b.unapproved_posts' . (!empty($topic) ? ', t.approved, t.id_member_started' : '') . '
@@ -668,12 +668,12 @@ function loadBoard()
 
 			do
 			{
-				if (!empty($row['ID_MODERATOR']))
-					$board_info['moderators'][$row['ID_MODERATOR']] = array(
-						'id' => $row['ID_MODERATOR'],
+				if (!empty($row['id_moderator']))
+					$board_info['moderators'][$row['id_moderator']] = array(
+						'id' => $row['id_moderator'],
 						'name' => $row['real_name'],
-						'href' => $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
+						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 			}
 			while ($row = $smcFunc['db_fetch_assoc']($request));
@@ -1745,7 +1745,7 @@ function getBoardParents($id_parent)
 	{
 		$result = $smcFunc['db_query']('', '
 			SELECT
-				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
+				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS id_moderator,
 				mem.real_name, b.child_level
 			FROM {db_prefix}boards AS b
 				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
@@ -1771,14 +1771,14 @@ function getBoardParents($id_parent)
 				);
 			}
 			// If a moderator exists for this board, add that moderator for all children too.
-			if (!empty($row['ID_MODERATOR']))
+			if (!empty($row['id_moderator']))
 				foreach ($boards as $id => $dummy)
 				{
-					$boards[$id]['moderators'][$row['ID_MODERATOR']] = array(
-						'id' => $row['ID_MODERATOR'],
+					$boards[$id]['moderators'][$row['id_moderator']] = array(
+						'id' => $row['id_moderator'],
 						'name' => $row['real_name'],
-						'href' => $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
+						'href' => $scripturl . '?action=profile;u=' . $row['id_moderator'],
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_moderator'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 				}
 		}
