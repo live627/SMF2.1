@@ -922,9 +922,8 @@ function list_getGroupRequestCount($where, $where_parameters)
 		SELECT COUNT(*)
 		FROM {db_prefix}log_group_requests AS lgr
 		WHERE ' . $where,
-		array(
-			$where_parameters
-		)
+		array_merge($where_parameters, array(
+		))
 	);
 	list ($totalRequests) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);

@@ -536,32 +536,32 @@ SmfEditor.prototype.insertText = function(sText, bClear)
 
 				if (oContainer.nodeType == 3)
 				{ 
-					var oTextNode = oContainer; 
-					oContainer = oTextNode.parentNode; 
-					sText = oTextNode.nodeValue; 
-					var sTextBefore = sText.substr(0, iPos); 
-					var sTextAfter = sText.substr(iPos); 
-					var oBeforeNode = document.createTextNode(sTextBefore); 
-					var oAfterNode = document.createTextNode(sTextAfter); 
-					oContainer.insertBefore(oAfterNode, oTextNode); 
-					oContainer.insertBefore(oElement, oAfterNode); 
-					oContainer.insertBefore(oBeforeNode, oElement); 
-					oContainer.removeChild(oTextNode); 
+					var oTextNode = oContainer;
+					oContainer = oTextNode.parentNode;
+					sText = oTextNode.nodeValue;
+					var sTextBefore = sText.substr(0, iPos);
+					var sTextAfter = sText.substr(iPos);
+					var oBeforeNode = document.createTextNode(sTextBefore);
+					var oAfterNode = document.createTextNode(sTextAfter);
+					oContainer.insertBefore(oAfterNode, oTextNode);
+					oContainer.insertBefore(oElement, oAfterNode);
+					oContainer.insertBefore(oBeforeNode, oElement);
+					oContainer.removeChild(oTextNode);
 
 					//!!! Why does this not work on opera?
 					if (!is_opera)
 					{
-						oRange.setEndBefore(oAfterNode); 
-						oRange.setStartBefore(oAfterNode); 
+						oRange.setEndBefore(oAfterNode);
+						oRange.setStartBefore(oAfterNode);
 					}
 				}
 				else
 				{ 
-					oContainer.insertBefore(oElement, oContainer.childNodes[iPos]); 
-					oRange.setEnd(oContainer, iPos + 1); 
-					oRange.setStart(oContainer, iPos + 1); 
+					oContainer.insertBefore(oElement, oContainer.childNodes[iPos]);
+					oRange.setEnd(oContainer, iPos + 1);
+					oRange.setStart(oContainer, iPos + 1);
 				} 
-				oSelection.addRange(oRange); 
+				oSelection.addRange(oRange);
 			}
 		}
 		else

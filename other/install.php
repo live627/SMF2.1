@@ -1216,6 +1216,7 @@ function doStep2()
 
 	chdir(dirname(__FILE__));
 
+	require_once($sourcedir . '/Errors.php');
 	require_once($sourcedir . '/Subs.php');
 	require_once($sourcedir . '/Load.php');
 	require_once($sourcedir . '/Security.php');

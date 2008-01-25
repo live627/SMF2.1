@@ -27,6 +27,9 @@ January 2008
  ! Make package_chmod do more, and use it from the chmod_control function. (Subs-Package.php)
  ! Tell users what files need to be writable if we're going to prompt for FTP information, and also check the Packages directory is writable. (Packages.php)
  ! The some steps in the find and repair errors section were being done in the wrong order. (RepairBoards.php)
+ ! Fixed broken query in group requests. (Groups.php)
+ ! Ensure we include the error file during install. (install.php) [Bug 1378]
+ ! Remove some unnecessary white space in editor.js. (editor.js) [Bug 1351]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
