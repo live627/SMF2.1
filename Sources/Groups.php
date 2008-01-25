@@ -628,6 +628,7 @@ function GroupRequests()
 
 	// Set up the template stuff...
 	$context['page_title'] = $txt['mc_group_requests'];
+	$context['sub_template'] = 'show_list';
 
 	// Verify we can be here.
 	if ($user_info['mod_cache']['gq'] == '0=1')
@@ -654,6 +655,11 @@ function GroupRequests()
 			// And a limitation. We don't care that the page number bit makes no sense, as we don't need it!
 			$where .= ' AND lgr.id_request IN ({array_int:request_ids})';
 			$where_parameters['request_ids'] = $_POST['groupr'];
+
+			$context['group_requests'] = list_getGroupRequests(0, $modSettings['defaultMaxMessages'], 'lgr.id_request', $where, $where_parameters);
+
+			// Let obExit etc sort things out.
+			obExit();
 		}
 		// Otherwise we do something!
 		else
@@ -910,7 +916,6 @@ function GroupRequests()
 	// Create the request list.
 	createList($listOptions);
 
-	$context['sub_template'] = 'show_list';
 	$context['default_list'] = 'group_request_list';
 }
 

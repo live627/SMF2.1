@@ -38,6 +38,7 @@ January 2008
  * Delete button was wrong in the recent template. (Recent template) [Bug 1373]
  ! The nobbc tag wasn't quite working 100% of the time. (Subs.php) [Bug 1368]
  ! Sessions via GET use sesc for the query string instead of sc. (Admin.php) [Bug 1379]
+ ! Rejecting group requests with a reason wasn't working. (Groups.php, ManageMembergroups.template.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

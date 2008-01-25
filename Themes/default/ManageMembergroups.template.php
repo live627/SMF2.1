@@ -475,7 +475,7 @@ function template_group_request_reason()
 		echo '
 			<tr class="windowbg2">
 				<td>
-					<b>', sprintf($txt['mc_groupr_reason_desc'], $request['member']['link'], $request['group']['link']), ':</b>
+					<b>', sprintf($txt['mc_groupr_reason_desc'], $request['member_link'], $request['group_link']), ':</b>
 					<input type="hidden" name="groupr[]" value="', $request['id'], '" />
 				</td>
 			</tr>
