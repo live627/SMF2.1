@@ -535,7 +535,7 @@ SmfEditor.prototype.insertText = function(sText, bClear)
 
 				var oContainer = oRange.startContainer;
 				var iPos = oRange.startOffset;
-				oRange = document.createRange();
+				oRange = this.oFrameDocument.createRange();
 
 				if (oContainer.nodeType == 3)
 				{ 
@@ -544,8 +544,8 @@ SmfEditor.prototype.insertText = function(sText, bClear)
 					sText = oTextNode.nodeValue;
 					var sTextBefore = sText.substr(0, iPos);
 					var sTextAfter = sText.substr(iPos);
-					var oBeforeNode = document.createTextNode(sTextBefore);
-					var oAfterNode = document.createTextNode(sTextAfter);
+					var oBeforeNode = this.oFrameDocument.createTextNode(sTextBefore);
+					var oAfterNode = this.oFrameDocument.createTextNode(sTextAfter);
 					oContainer.insertBefore(oAfterNode, oTextNode);
 					oContainer.insertBefore(oElement, oAfterNode);
 					oContainer.insertBefore(oBeforeNode, oElement);
@@ -931,7 +931,7 @@ SmfEditor.prototype.getSelect = function(bWantText, bWantHTMLText)
 			{
 				oRange = oSelection.getRangeAt(0);
 				var oClonedSelection = oRange.cloneContents();
-				var oDiv = document.createElement('div');
+				var oDiv = this.oFrameDocument.createElement('div');
 				oDiv.appendChild(oClonedSelection);
 				return oDiv.innerHTML;
 			}
