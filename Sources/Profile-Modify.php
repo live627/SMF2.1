@@ -299,7 +299,7 @@ function loadProfileFields($force_reload = false)
 			'label' => $txt['allow_user_email'],
 			'permission' => 'profile_identity',
 			'input_validate' => create_function('&$value', '
-				$value = $value == 1 ? 1 : 0;
+				$value = $value == 0 ? 1 : 0;
 
 				return true;
 			'),
