@@ -412,6 +412,11 @@ function template_group_members()
 				</tr>';
 	}
 
+	echo '
+				<tr class="catbg">
+					<td colspan="6" align="left">', $txt['pages'], ': ', $context['page_index'], '</td>
+				</tr>';
+
 	if (!empty($context['group']['assignable']))
 		echo '
 				<tr class="titlebg">
