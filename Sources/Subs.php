@@ -2176,7 +2176,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			$code = strtr($tag['content'], array('$1' => $data));
 			$message = substr($message, 0, $pos) . $code . substr($message, $pos2 + 3 + strlen($tag['tag']));
+
 			$pos += strlen($code) - 1;
+			$last_pos = $pos + 1;
+
 		}
 		// Don't parse the content, just skip it.
 		elseif ($tag['type'] == 'unparsed_equals_content')

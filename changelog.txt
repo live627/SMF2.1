@@ -36,6 +36,7 @@ January 2008
  ! The WYSIWYG editor was using the document object where it shouldn't have been - which FF3 doesn't really like. (editor.js) [Bug 1376]
  * Display the page index on the top and bottom of the group display page. (ManageMembergroups template) [Bug 1374]
  * Delete button was wrong in the recent template. (Recent template) [Bug 1373]
+ ! The nobbc tag wasn't quite working 100% of the time. (Subs.php) [Bug 1368]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
