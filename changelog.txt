@@ -30,6 +30,8 @@ January 2008
  ! Fixed broken query in group requests. (Groups.php)
  ! Ensure we include the error file during install. (install.php) [Bug 1378]
  ! Remove some unnecessary white space in editor.js. (editor.js) [Bug 1351]
+ ! The WYSIWYG editor was incorrectly showing quotes with HTML in if it was disabled. (editor.js) [Bug 1377]
+ ! Make sure we don't forget to escape slashes when entering the WYSIWYG editor. (Subs-Editor.php) [Bug 1375]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

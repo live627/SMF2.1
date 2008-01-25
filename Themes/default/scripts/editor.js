@@ -14,7 +14,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = is_ie5up || is_ff;
+	this.bRichTextPossible = !is_opera && (is_ie5up || is_ff);
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -283,11 +283,14 @@ SmfEditor.prototype.init = function()
 		this.bRichTextEnabled = false;
 	}
 
-	// Set the text.
-	this.insertText(this.sCurrentText, true);
+	// Set the text - if WYSIWYG is enabled that is.
+	if (this.bRichTextEnabled)
+	{
+		this.insertText(this.sCurrentText, true);
 
-	// Better make us the focus!
-	this.setFocus();
+		// Better make us the focus!
+		this.setFocus();
+	}
 
 	// And add the select controls.
 	for (i in this.aSelectControls)
