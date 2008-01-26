@@ -136,6 +136,7 @@ function AdminMain()
 						'browse' => array($txt['browse_packages']),
 						'packageget' => array($txt['download_packages'], 'url' => $scripturl . '?action=admin;area=packages;get'),
 						'installed' => array($txt['installed_packages']),
+						'perms' => array($txt['package_file_perms']),
 						'options' => array($txt['package_settings']),
 					),
 				),
@@ -742,12 +743,8 @@ function CleanupPermissions()
 		),
 	);
 
-	// FTP to the rescue!
+	// Off we pop...
 	require_once($sourcedir . '/Subs-Package.php');
-	packageRequireFTP($scripturl . '?action=admin;area=cleanperms;perm_type=' . $_REQUEST['perm_type']);
-
-	// Do the cleanup.
-	require_once($sourcedir . '/Subs-Admin.php');
 	cleanupFilePermissions($_REQUEST['perm_type']);
 
 	redirectexit('action=admin;area=packages;sa=options');

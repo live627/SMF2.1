@@ -105,6 +105,9 @@ function PackageGet()
 			'installed' => array(
 				'description' => $txt['installed_packages_desc'],
 			),
+			'perms' => array(
+				'description' => $txt['package_file_perms_desc'],
+			),
 			'options' => array(
 				'description' => $txt['package_install_options_ftp_why'],
 			),

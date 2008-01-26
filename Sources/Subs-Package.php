@@ -2260,7 +2260,7 @@ function package_flush_cache($trash = false)
 }
 
 // Try to make a file writable. Return true if it worked, false if it didn't.
-function package_chmod($filename)
+function package_chmod($filename, $perm_state = 'writable')
 {
 	global $package_ftp;
 
@@ -2291,7 +2291,7 @@ function package_chmod($filename)
 			else
 			{
 				// This looks odd, but it's an attempt to work around PHP suExec.
-				if (!file_exists($chmod_file))
+				if (!file_exists($chmod_file) && $perm_state == 'writable')
 				{
 					$file_permissions = @fileperms(dirname($chmod_file));
 
@@ -2304,18 +2304,23 @@ function package_chmod($filename)
 			}
 
 			// This looks odd, but it's another attempt to work around PHP suExec.
-			if (!@is_writable($chmod_file))
-				@chmod($chmod_file, 0755);
-			if (!@is_writable($chmod_file))
-				@chmod($chmod_file, 0777);
-			if (!@is_writable(dirname($chmod_file)))
-				@chmod($chmod_file, 0755);
-			if (!@is_writable(dirname($chmod_file)))
-				@chmod($chmod_file, 0777);
+			if ($perm_state != 'writable')
+				@chmod($chmod_file, $perm_state == 'execute' ? 0755 : 0644);
+			else
+			{	
+				if (!@is_writable($chmod_file))
+					@chmod($chmod_file, 0755);
+				if (!@is_writable($chmod_file))
+					@chmod($chmod_file, 0777);
+				if (!@is_writable(dirname($chmod_file)))
+					@chmod($chmod_file, 0755);
+				if (!@is_writable(dirname($chmod_file)))
+					@chmod($chmod_file, 0777);
+			}
 
 			// The ultimate writable test.
 			$fp = is_dir($chmod_file) ? @opendir($chmod_file) : @fopen($chmod_file, 'rb');
-			if (@is_writable($chmod_file) && $fp)
+			if (@is_writable($chmod_file) && $fp && $perm_state == 'writable')
 			{
 				if (!is_dir($chmod_file))
 					fclose($fp);
@@ -2326,6 +2331,8 @@ function package_chmod($filename)
 				$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
 				return true;
 			}
+			elseif ($perm_state != 'writable' && isset($_SESSION['pack_ftp']['original_perms'][$chmod_file]))
+				unset($_SESSION['pack_ftp']['original_perms'][$chmod_file]);
 		}
 
 		// If we're here we're a failure.
@@ -2337,7 +2344,7 @@ function package_chmod($filename)
 		$ftp_file = strtr($filename, array($_SESSION['pack_ftp']['root'] => ''));
 
 		// This looks odd, but it's an attempt to work around PHP suExec.
-		if (!file_exists($filename))
+		if (!file_exists($filename) && $perm_state == 'writable')
 		{
 			$file_permissions = @fileperms(dirname($filename));
 
@@ -2348,16 +2355,25 @@ function package_chmod($filename)
 		else
 			$file_permissions = @fileperms($filename);
 
-		if (!@is_writable($filename))
-			$package_ftp->chmod($ftp_file, 0777);
-		if (!@is_writable(dirname($filename)))
-			$package_ftp->chmod(dirname($ftp_file), 0777);
+		if ($perm_state != 'writable')
+		{
+			$package_ftp->chmod($ftp_file, $perm_state == 'execute' ? 0755 : 0644);
+		}
+		else
+		{
+			if (!@is_writable($filename))
+				$package_ftp->chmod($ftp_file, 0777);
+			if (!@is_writable(dirname($filename)))
+				$package_ftp->chmod(dirname($ftp_file), 0777);
+		}
 
 		if (@is_writable($filename))
 		{
 			$_SESSION['pack_ftp']['original_perms'][$filename] = $file_permissions;
 			return true;
 		}
+		elseif ($perm_state != 'writable' && isset($_SESSION['pack_ftp']['original_perms'][$filename]))
+			unset($_SESSION['pack_ftp']['original_perms'][$filename]);
 	}
 
 	// Oh dear, we failed if we get here.
@@ -2661,7 +2677,7 @@ function cleanupFilePermissions($permission_type = 'free')
 		),
 	);
 
-	@chmod($boarddir . '/Settings.php', 0755);
+	package_chmod($boarddir . '/Settings.php');
 	if (isset($package_ftp))
 		$package_ftp->chmod(strtr($boarddir . '/Settings.php', array($_SESSION['pack_ftp']['root'] => '')), 0755);
 

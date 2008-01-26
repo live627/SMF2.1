@@ -1362,4 +1362,79 @@ function template_view_operations()
 </html>';
 
 }
+
+function template_file_permissions()
+{
+	global $txt, $scripturl, $context, $settings;
+
+		echo '
+	<form action="', $scripturl, '?action=admin;area=packages;sa=perms" method="post" accept-charset="', $context['character_set'], '">
+		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
+			<tr class="titlebg">
+				<td colspan="2">', $txt['package_file_perms'], '</td>
+			</tr>
+			<tr class="catbg">
+				<td>', $txt['package_file_perms_name'], '</td>
+				<td>', $txt['package_file_perms_status'], '</td>
+			</tr>';
+
+	foreach ($context['file_tree'] as $name => $dir)
+	{
+		echo '
+			<tr class="windowbg2">
+				<td><strong>';
+
+			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
+				echo '
+					<img src="', $settings['default_images_url'], '/board.gif" alt="*" />';
+
+			echo '
+					', $name, '
+				</strong></td>
+				<td>
+					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
+					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
+				</td>
+			</tr>';
+				
+		if (!empty($dir['contents']))
+			template_permission_show_contents($dir['contents'], 1);
+	}
+
+	echo '
+		</table>
+	</form>';
+}
+
+function template_permission_show_contents($contents, $level)
+{
+	global $settings, $txt;
+
+	foreach ($contents as $name => $dir)
+	{
+		if (isset($dir['perms']))
+		{
+			echo '
+			<tr class="windowbg">
+				<td class="smalltext">' . str_repeat('&nbsp;', $level * 5);
+
+			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
+				echo '
+					<img src="', $settings['default_images_url'], '/board.gif" alt="*" />';
+
+			echo '
+					', $name, '
+				</td>
+				<td class="smalltext">
+					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
+					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
+				</td>
+			</tr>';
+		}
+
+		if (!empty($dir['contents']))
+			template_permission_show_contents($dir['contents'], $level + 1);
+	}
+}
+
 ?>

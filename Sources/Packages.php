@@ -98,6 +98,7 @@ function Packages()
 		'uninstall2' => 'PackageInstall',
 		'installed' => 'InstalledList',
 		'options' => 'PackageOptions',
+		'perms' => 'PackagePermissions',
 		'flush' => 'FlushInstall',
 		'examine' => 'ExamineFile',
 		'showoperations' => 'ViewOperations',
@@ -122,6 +123,9 @@ function Packages()
 			),
 			'installed' => array(
 				'description' => $txt['installed_packages_desc'],
+			),
+			'perms' => array(
+				'description' => $txt['package_file_perms_desc'],
 			),
 			'options' => array(
 				'description' => $txt['package_install_options_ftp_why'],
@@ -1336,6 +1340,242 @@ function ViewOperations()
 	// No layers
 	$context['template_layers'] = array();
 	$context['sub_template'] = 'view_operations';
+}
+
+// Allow the admin to reset permissions on files.
+function PackagePermissions()
+{
+	global $context, $txt, $modSettings, $boarddir, $sourcedir, $smcFunc;
+
+	// This is a memory eat.
+	@ini_set('memory_limit', '128M');
+
+	// Define the template.
+	$context['page_title'] = $txt['package_file_perms'];
+	$context['sub_template'] = 'file_permissions';
+
+	// Define what files we're interested in, as a tree.
+	$context['file_tree'] = array(
+		$boarddir => array(
+			'type' => 'dir',
+			'contents' => array(
+				'agreement.txt' => array(
+					'type' => 'file',
+					'writable_on' => 'standard',
+				),
+				'Settings.php' => array(
+					'type' => 'file',
+					'writable_on' => 'restrictive',
+				),
+				'Settings_bak.php' => array(
+					'type' => 'file',
+					'writable_on' => 'restrictive',
+				),
+				'attachments' => array(
+					'type' => 'dir',
+					'writable_on' => 'restrictive',
+				),
+				'avatars' => array(
+					'type' => 'dir',
+					'writable_on' => 'standard',
+				),
+				'custom_avatar_dir' => array(
+					'type' => 'dir',
+					'writable_on' => 'restrictive',
+				),
+				'Smileys' => array(
+					'type' => 'dir_recursive',
+					'writable_on' => 'standard',
+				),
+				'Sources' => array(
+					'type' => 'dir',
+					'list_contents' => true,
+					'writable_on' => 'standard',
+				),
+				'Themes' => array(
+					'type' => 'dir_recursive',
+					'writable_on' => 'standard',
+					'contents' => array(
+						'default' => array(
+							'type' => 'dir_recursive',
+							'list_contents' => true,
+							'contents' => array(
+								'languages' => array(
+									'type' => 'dir',
+									'list_contents' => true,
+								),
+							),
+						),
+					),
+				),
+				'Packages' => array(
+					'type' => 'dir',
+					'writable_on' => 'standard',
+					'contents' => array(
+						'temp' => array(
+							'type' => 'dir',
+						),
+						'backup' => array(
+							'type' => 'dir',
+						),
+						'installed.list' => array(
+							'type' => 'file',
+							'writable_on' => 'standard',
+						),
+					),
+				),
+			),
+		),
+	);
+
+	// Directories that can move.
+	if (substr($sourcedir, 0, strlen($boarddir)) != $boarddir)
+	{
+		unset($context['file_tree'][$boarddir]['contents']['Sources']);
+		$context['file_tree'][$sourcedir] = array(
+			'type' => 'dir',
+			'list_contents' => true,
+			'writable_on' => 'standard',
+		);
+	}
+	if (substr($modSettings['attachmentUploadDir'], 0, strlen($boarddir)) != $boarddir)
+	{
+		unset($context['file_tree'][$boarddir]['contents']['attachments']);
+		$context['file_tree'][$modSettings['attachmentUploadDir']] = array(
+			'type' => 'dir',
+			'writable_on' => 'restrictive',
+		);
+	}
+	if (substr($modSettings['smileys_dir'], 0, strlen($boarddir)) != $boarddir)
+	{
+		unset($context['file_tree'][$boarddir]['contents']['Smileys']);
+		$context['file_tree'][$modSettings['smileys_dir']] = array(
+			'type' => 'dir',
+			'writable_on' => 'standard',
+		);
+	}
+	if (substr($modSettings['avatar_directory'], 0, strlen($boarddir)) != $boarddir)
+	{
+		unset($context['file_tree'][$boarddir]['contents']['avatars']);
+		$context['file_tree'][$modSettings['avatar_directory']] = array(
+			'type' => 'dir',
+			'writable_on' => 'standard',
+		);
+	}
+	if (isset($modSettings['custom_avatar_dir']) && substr($modSettings['custom_avatar_dir'], 0, strlen($boarddir)) != $boarddir)
+	{
+		unset($context['file_tree'][$boarddir]['contents']['custom_avatar_dir']);
+		$context['file_tree'][$modSettings['custom_avatar_dir']] = array(
+			'type' => 'dir',
+			'writable_on' => 'restrictive',
+		);
+	}
+
+	// Load up any custom themes.
+	$request = $smcFunc['db_query']('', '
+		SELECT value
+		FROM {db_prefix}themes
+		WHERE id_theme > {int:default_theme_id}
+			AND id_member = {int:guest_id}
+			AND variable = {string:theme_dir}',
+		array(
+			'default_theme_id' => 1,
+			'guest_id' => 0,
+			'theme_dir' => 'theme_dir',
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (substr($row['value'], 0, strlen($boarddir) + 7) == $boarddir . '/Themes')
+			$context['file_tree'][$boarddir]['contents']['Themes']['contents'][substr($row['value'], strlen($boarddir) + 8)] = array(
+				'type' => 'dir_recursive',
+				'list_contents' => true,
+				'contents' => array(
+					'languages' => array(
+						'type' => 'dir',
+						'list_contents' => true,
+					),
+				),
+			);
+		else
+			$context['file_tree'][$row['value']] = array(
+				'type' => 'dir_recursive',
+				'list_contents' => true,
+				'contents' => array(
+					'languages' => array(
+						'type' => 'dir',
+						'list_contents' => true,
+					),
+				),
+			);
+	}
+	$smcFunc['db_free_result']($request);
+
+	foreach ($context['file_tree'] as $path => $data)
+	{
+		// Run this directory.
+		if (file_exists($path))
+		{
+			fetchPerms__recursive($path, $context['file_tree'][$path]);
+			$context['file_tree'][$path]['perms'] = array(
+				'chmod' => @is_writable($path),
+				'perms' => @fileperms($path),
+			);
+		}
+		else
+			unset($context['file_tree'][$path]);
+	}
+}
+
+function fetchPerms__recursive($path, &$data)
+{
+	//!!! Shouldn't happen - but better error message?
+	if (!is_dir($path))
+		fatal_lang_error('no_access');
+
+	$dh = opendir($path);
+	while ($entry = readdir($dh))
+	{
+		$entry_perms = array(
+			'chmod' => @is_writable($path . '/' . $entry),
+			'perms' => @fileperms($path . '/' . $entry),
+		);
+
+		// Some kind of file?
+		if (!is_dir($path . '/' . $entry))
+		{
+			// Are we listing PHP files in this directory?
+			if (!empty($data['list_contents']) && substr($entry, -4) == '.php')
+			{
+				$data['contents'][$entry] = array(
+					'perms' => $entry_perms,
+				);
+			}
+			// A file we were looking for.
+			elseif (isset($data['contents'][$entry]))
+				$data['contents'][$entry]['perms'] = $entry_perms;
+		}
+		// It's a directory - we're interested one way or another.
+		elseif ($entry != '.' && $entry != '..')
+		{
+			// Going further?
+			if ((!empty($data['type']) && $data['type'] == 'dir_recursive') || (isset($data['contents'][$entry]) && (!empty($data['contents'][$entry]['list_contents']) || (!empty($data['contents'][$entry]['type']) && $data['contents'][$entry]['type'] == 'dir_recursive'))))
+			{
+				// If this wasn't expected inherit the recusiveness...
+				if (!isset($data['contents'][$entry]))
+					$data['contents'][$entry] = array(
+						'type' => 'dir_recursive',
+					);
+
+				$data['contents'][$entry]['perms'] = $entry_perms;
+
+				// Actually do the recursive stuff...
+				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry]);
+			}
+			// Otherwise we stop here.
+		}
+	}
+	closedir($dh);
 }
 
 ?>
