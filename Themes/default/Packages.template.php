@@ -1407,6 +1407,13 @@ function template_file_permissions()
 
 			return false;
 		}
+		function repeatString(sString, iTime)
+		{
+			if (iTime < 1)
+				return \'\';
+			else
+				return sString + repeatString(sString, iTime - 1);
+		}
 		// Getting something back?
 		function onNewFolderReceived(oXMLDoc)
 		{
@@ -1429,6 +1436,7 @@ function template_file_permissions()
 
 					var curRow = document.createElement("tr");
 					curRow.className = "windowbg";
+					curRow.id = "content_" + fileItems[i].getAttribute(\'ident\') + "_" + fileItems[i].getAttribute(\'my_ident\');
 					tableHandle.appendChild(curRow);
 					var curCol = document.createElement("td");
 					curCol.className = "smalltext";
@@ -1438,6 +1446,9 @@ function template_file_permissions()
 					var fileName = document.createTextNode(fileItems[i].firstChild.nodeValue);
 					// And the path.
 					var curPath = fileItems[i].getAttribute(\'path\') + "/" + fileItems[i].firstChild.nodeValue;
+
+					// Start by wacking in the spaces.
+					curCol.innerHTML = repeatString("&nbsp;", fileItems[i].getAttribute(\'level\') * 5);
 
 					// Create the actual text.
 					if (fileItems[i].getAttribute(\'folder\') == 1)

@@ -1523,6 +1523,9 @@ function PackagePermissions()
 	// Don't list more than this many files in a directory.
 	$context['file_limit'] = 150;
 
+	// How many levels shall we show?
+	$context['default_level'] = empty($context['only_find']) ? 2 : 25;
+
 	// This will be used if we end up catching XML data.
 	$context['xml_data'] = array(
 		'folders' => array(
@@ -1537,7 +1540,7 @@ function PackagePermissions()
 		if (file_exists($path) && (empty($context['only_find']) || substr($context['only_find'], 0, strlen($path)) == $path))
 		{
 			// Get the first level down only.
-			fetchPerms__recursive($path, $context['file_tree'][$path], empty($context['only_find']) ? 2 : 25);
+			fetchPerms__recursive($path, $context['file_tree'][$path], 1);
 			$context['file_tree'][$path]['perms'] = array(
 				'chmod' => @is_writable($path),
 				'perms' => @fileperms($path),
@@ -1556,15 +1559,13 @@ function PackagePermissions()
 	}
 }
 
-function fetchPerms__recursive($path, &$data, $max_level = 999)
+function fetchPerms__recursive($path, &$data, $level)
 {
 	global $context;
 
 	// Is this where we stop?
-	if ($max_level < 1 && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($path)) != $path))
+	if ($level > $context['default_level'] && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($path)) != $path))
 		return;
-
-	$max_level--;
 
 	// This defines the maximum amount of files we'll list in a directory.
 	$dir_limit = $context['file_limit'];
@@ -1619,17 +1620,18 @@ function fetchPerms__recursive($path, &$data, $max_level = 999)
 			// Going further?
 			if ((!empty($data['type']) && $data['type'] == 'dir_recursive') || (isset($data['contents'][$entry]) && (!empty($data['contents'][$entry]['list_contents']) || (!empty($data['contents'][$entry]['type']) && $data['contents'][$entry]['type'] == 'dir_recursive'))))
 			{
-				if ($save_data)
-				{
-					// If this wasn't expected inherit the recusiveness...
-					if (!isset($data['contents'][$entry]))
-						$additional_data['type'] = 'dir_recursive';
+				// If this wasn't expected inherit the recusiveness...
+				if (!isset($data['contents'][$entry]))
+					// We need to do this as we will be going all recursive.
+					$data['contents'][$entry] = array(
+						'type' => 'dir_recursive',
+					);
 
+				if ($save_data)
 					$additional_data['perms'] = true;
-				}
 
 				// Actually do the recursive stuff...
-				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry], $max_level);
+				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry], $level + 1);
 			}
 			// Otherwise we stop here.
 		}
@@ -1651,6 +1653,7 @@ function fetchPerms__recursive($path, &$data, $max_level = 999)
 						'permissions' => substr(sprintf('%o', $additional_data['perms']['perms']), -4),
 						'folder' => empty($additional_data['is_file']) ? 1 : 0,
 						'path' => $context['only_find'],
+						'level' => $level,
 						'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $entry),
 						'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
 					),
