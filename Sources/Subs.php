@@ -437,7 +437,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 	}
 }
 
-// Assumes the data has been slashed.
+// Assumes the data has been htmlspecialchar'd.
 function updateMemberData($members, $data)
 {
 	global $modSettings, $user_info, $smcFunc;
@@ -2715,7 +2715,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	$_SESSION['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
 	if (!empty($settings['strict_doctype']))
-	{		
+	{
 		// The theme author wants to use the STRICT doctype (only God knows why).
 		$temp = ob_get_contents();
 		if (function_exists('ob_clean'))

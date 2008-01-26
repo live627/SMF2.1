@@ -40,6 +40,7 @@ January 2008
  ! Sessions via GET use sesc for the query string instead of sc. (Admin.php) [Bug 1379]
  ! Rejecting group requests with a reason wasn't working. (Groups.php, ManageMembergroups.template.php)
  + Added beginning of a file permissions section to the package manager which currently only display permissions, and might time out. (Packages.php, Packages template, Packages language file)
+ ! Additional text fields were being escaped improperly on registration. (Register.php) [Bug 1383]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
