@@ -1367,6 +1367,130 @@ function template_file_permissions()
 {
 	global $txt, $scripturl, $context, $settings;
 
+	// This will handle expanding the selection.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function expandFolder(folderIdent, folderReal)
+		{
+			// See if it already exists.
+			var possibleTags = document.getElementsByTagName("tr");
+			var foundOne = false;
+			for (i = 0; i < possibleTags.length; i++)
+			{
+				if (possibleTags[i].id.indexOf("content_" + folderIdent + "_") == 0)
+				{
+					possibleTags[i].style.display = possibleTags[i].style.display == "none" ? "" : "none";
+					foundOne = true;
+				}
+			}
+
+			// Got something then we\'re done.
+			if (foundOne)
+			{
+				return false;
+			}
+			// Otherwise we need to get the wicked thing.
+			else if (window.XMLHttpRequest)
+			{
+				ajax_indicator(true);
+				getXMLDocument(\'', $scripturl, '?action=admin;area=packages;onlyfind=\' + escape(folderReal) + \';sa=perms;xml;sesc=', $context['session_id'], '\', onNewFolderReceived);
+			}
+			// Otherwise reload.
+			else
+				return true;
+
+			return false;
+		}
+		function dynamicExpandFolder()
+		{
+			expandFolder(this.ident, this.path);
+
+			return false;
+		}
+		// Getting something back?
+		function onNewFolderReceived(oXMLDoc)
+		{
+			ajax_indicator(false);
+
+			var fileItems = oXMLDoc.getElementsByTagName(\'folders\')[0].getElementsByTagName(\'folder\');
+			if (fileItems.length < 1)
+				return false;
+			var tableHandle = false;
+			var ident = "";
+
+			for (var i = 0; i < fileItems.length; i++)
+			{
+				if (document.getElementById("insert_div_loc_" + fileItems[i].getAttribute(\'ident\')))
+				{
+					ident = fileItems[i].getAttribute(\'ident\');
+
+					// Get where we\'re putting it next to.
+					tableHandle = document.getElementById("insert_div_loc_" + fileItems[i].getAttribute(\'ident\'));
+
+					var curRow = document.createElement("tr");
+					curRow.className = "windowbg";
+					tableHandle.appendChild(curRow);
+					var curCol = document.createElement("td");
+					curCol.className = "smalltext";
+					curCol.width = "40%";
+
+					// This is the name.
+					var fileName = document.createTextNode(fileItems[i].firstChild.nodeValue);
+					// And the path.
+					var curPath = fileItems[i].getAttribute(\'path\') + "/" + fileItems[i].firstChild.nodeValue;
+
+					// Create the actual text.
+					if (fileItems[i].getAttribute(\'folder\') == 1)
+					{
+						var linkData = document.createElement("a");
+						linkData.name = "fol_" + ident;
+						linkData.href = \'#\';
+						linkData.path = curPath;
+						linkData.ident = fileItems[i].getAttribute(\'my_ident\');
+						linkData.onclick = dynamicExpandFolder;
+
+						var folderImage = document.createElement("img");
+						folderImage.src = \'', addcslashes($settings['default_images_url'], "\\"), '/board.gif\';
+						linkData.appendChild(folderImage);
+
+						linkData.appendChild(fileName);
+						curCol.appendChild(linkData);
+
+						// Put in a new dummy section.
+						var newRow = document.createElement("tr");
+						newRow.id = "insert_div_loc_" + fileItems[i].getAttribute(\'my_ident\');
+						newRow.style.display = "none";
+						tableHandle.appendChild(newRow);
+						var newCol = document.createElement("td");
+						newCol.colspan = 2;
+						newRow.appendChild(newCol);
+					}
+					else
+						curCol.appendChild(fileName);
+
+					curRow.appendChild(curCol);
+
+					// Right, the permissions.
+					curCol = document.createElement("td");
+					curCol.className = "smalltext";
+
+					var writeSpan = document.createElement("span");
+					writeSpan.style.color = fileItems[i].getAttribute(\'writable\') ? "green" : "red";
+					writeSpan.innerHTML = fileItems[i].getAttribute(\'writable\') ? \'', $txt['package_file_perms_writable'], '\' : \'', $txt['package_file_perms_writable'], '\';
+					curCol.appendChild(writeSpan);
+
+					if (fileItems[i].getAttribute(\'permissions\'))
+					{
+						var permData = document.createTextNode("\u00a0(', $txt['package_file_perms_chmod'], ': " + fileItems[i].getAttribute(\'permissions\') + ")");
+						curCol.appendChild(permData);
+					}
+
+					curRow.appendChild(curCol);
+				}
+			}
+		}
+	// ]]></script>';
+
 		echo '
 	<form action="', $scripturl, '?action=admin;area=packages;sa=perms" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
@@ -1374,15 +1498,17 @@ function template_file_permissions()
 				<td colspan="2">', $txt['package_file_perms'], '</td>
 			</tr>
 			<tr class="catbg">
-				<td>', $txt['package_file_perms_name'], '</td>
+				<td width="40%">', $txt['package_file_perms_name'], '</td>
 				<td>', $txt['package_file_perms_status'], '</td>
-			</tr>';
+			</tr>
+		</table>';
 
 	foreach ($context['file_tree'] as $name => $dir)
 	{
 		echo '
+		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
 			<tr class="windowbg2">
-				<td><strong>';
+				<td width="40%"><strong>';
 
 			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
 				echo '
@@ -1398,25 +1524,37 @@ function template_file_permissions()
 			</tr>';
 				
 		if (!empty($dir['contents']))
-			template_permission_show_contents($dir['contents'], 1);
+			template_permission_show_contents($name, $dir['contents'], 1);
 	}
 
 	echo '
-		</table>
 	</form>';
 }
 
-function template_permission_show_contents($contents, $level)
+function template_permission_show_contents($ident, $contents, $level, $has_more = false)
 {
-	global $settings, $txt;
+	global $settings, $txt, $scripturl, $context;
+
+	$js_ident = preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident);
+	// Have we actually done something?
+	$drawn_div = false;
 
 	foreach ($contents as $name => $dir)
 	{
 		if (isset($dir['perms']))
 		{
+			if (!$drawn_div)
+			{
+				$drawn_div = true;
+				echo '
+			<div id="', $js_ident, '">';
+			}
+
+			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident . '/' . $name);
 			echo '
-			<tr class="windowbg">
-				<td class="smalltext">' . str_repeat('&nbsp;', $level * 5);
+			<tr class="windowbg" id="content_', $js_ident, '_', $cur_ident, '">
+				<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
+					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
 
 			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
 				echo '
@@ -1424,16 +1562,45 @@ function template_permission_show_contents($contents, $level)
 
 			echo '
 					', $name, '
+					', !empty($dir['contents']) ? '</a>' : '', '
 				</td>
 				<td class="smalltext">
 					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
-			</tr>';
-		}
+			</tr>
+			<tr id="insert_div_loc_' . $cur_ident . '" style="display: none;"><td></td></tr>';
 
-		if (!empty($dir['contents']))
-			template_permission_show_contents($dir['contents'], $level + 1);
+			if (!empty($dir['contents']))
+			{
+				template_permission_show_contents($ident . '/' . $name, $dir['contents'], $level + 1, !empty($dir['more_files']));
+
+			}
+		}
+	}
+
+	// We have more files to show?
+	if ($has_more)
+		echo '
+	<tr class="windowbg">
+		<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
+			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
+		</td>
+		<td class="smalltext">
+		</td>
+	</tr>';
+
+	if ($drawn_div)
+	{
+		echo '
+	</div>';
+
+		// Hide anything too far down the tree.
+		if ($level > 1 && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($ident)) != $ident))
+			echo '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			expandFolder(\'', $js_ident, '\', \'\');
+		// ]]></script>';
 	}
 }
 

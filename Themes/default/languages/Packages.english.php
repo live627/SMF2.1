@@ -195,5 +195,6 @@ $txt['package_file_perms_status'] = 'Current Status';
 $txt['package_file_perms_writable'] = 'Writable';
 $txt['package_file_perms_not_writable'] = 'Not Writable';
 $txt['package_file_perms_chmod'] = 'chmod';
+$txt['package_file_perms_more_files'] = 'More Files';
 
 ?>

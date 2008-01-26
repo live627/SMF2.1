@@ -1356,7 +1356,7 @@ function PackagePermissions()
 
 	// Define what files we're interested in, as a tree.
 	$context['file_tree'] = array(
-		$boarddir => array(
+		strtr($boarddir, array('\\' => '/')) => array(
 			'type' => 'dir',
 			'contents' => array(
 				'agreement.txt' => array(
@@ -1431,8 +1431,8 @@ function PackagePermissions()
 	// Directories that can move.
 	if (substr($sourcedir, 0, strlen($boarddir)) != $boarddir)
 	{
-		unset($context['file_tree'][$boarddir]['contents']['Sources']);
-		$context['file_tree'][$sourcedir] = array(
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['Sources']);
+		$context['file_tree'][strtr($sourcedir, array('\\' => '/'))] = array(
 			'type' => 'dir',
 			'list_contents' => true,
 			'writable_on' => 'standard',
@@ -1440,32 +1440,32 @@ function PackagePermissions()
 	}
 	if (substr($modSettings['attachmentUploadDir'], 0, strlen($boarddir)) != $boarddir)
 	{
-		unset($context['file_tree'][$boarddir]['contents']['attachments']);
-		$context['file_tree'][$modSettings['attachmentUploadDir']] = array(
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['attachments']);
+		$context['file_tree'][strtr($modSettings['attachmentUploadDir'], array('\\' => '/'))] = array(
 			'type' => 'dir',
 			'writable_on' => 'restrictive',
 		);
 	}
 	if (substr($modSettings['smileys_dir'], 0, strlen($boarddir)) != $boarddir)
 	{
-		unset($context['file_tree'][$boarddir]['contents']['Smileys']);
-		$context['file_tree'][$modSettings['smileys_dir']] = array(
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['Smileys']);
+		$context['file_tree'][strtr($modSettings['smileys_dir'], array('\\' => '/'))] = array(
 			'type' => 'dir',
 			'writable_on' => 'standard',
 		);
 	}
 	if (substr($modSettings['avatar_directory'], 0, strlen($boarddir)) != $boarddir)
 	{
-		unset($context['file_tree'][$boarddir]['contents']['avatars']);
-		$context['file_tree'][$modSettings['avatar_directory']] = array(
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['avatars']);
+		$context['file_tree'][strtr($modSettings['avatar_directory'], array('\\' => '/'))] = array(
 			'type' => 'dir',
 			'writable_on' => 'standard',
 		);
 	}
 	if (isset($modSettings['custom_avatar_dir']) && substr($modSettings['custom_avatar_dir'], 0, strlen($boarddir)) != $boarddir)
 	{
-		unset($context['file_tree'][$boarddir]['contents']['custom_avatar_dir']);
-		$context['file_tree'][$modSettings['custom_avatar_dir']] = array(
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['custom_avatar_dir']);
+		$context['file_tree'][strtr($modSettings['custom_avatar_dir'], array('\\' => '/'))] = array(
 			'type' => 'dir',
 			'writable_on' => 'restrictive',
 		);
@@ -1486,8 +1486,8 @@ function PackagePermissions()
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if (substr($row['value'], 0, strlen($boarddir) + 7) == $boarddir . '/Themes')
-			$context['file_tree'][$boarddir]['contents']['Themes']['contents'][substr($row['value'], strlen($boarddir) + 8)] = array(
+		if (substr(strtolower(strtr($row['value'], array('\\' => '/'))), 0, strlen($boarddir) + 7) == strtolower(strtr($boarddir, array('\\' => '/')) . '/Themes'))
+			$context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['Themes']['contents'][substr($row['value'], strlen($boarddir) + 8)] = array(
 				'type' => 'dir_recursive',
 				'list_contents' => true,
 				'contents' => array(
@@ -1498,7 +1498,8 @@ function PackagePermissions()
 				),
 			);
 		else
-			$context['file_tree'][$row['value']] = array(
+		{
+			$context['file_tree'][strtr($row['value'], array('\\' => '/'))] = array(
 				'type' => 'dir_recursive',
 				'list_contents' => true,
 				'contents' => array(
@@ -1508,15 +1509,35 @@ function PackagePermissions()
 					),
 				),
 			);
+		}
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Are we looking for a particular tree?
+	$context['look_for'] = !empty($_REQUEST['find']) ? base64_decode($_REQUEST['find']) : '';
+	// Only that tree?
+	$context['only_find'] = isset($_GET['xml']) && !empty($_REQUEST['onlyfind']) ? $_REQUEST['onlyfind'] : '';
+
+	// Are we finding more files than first thought?
+	$context['file_offset'] = !empty($_REQUEST['fileoffset']) ? (int) $_REQUEST['fileoffset'] : 0;
+	// Don't list more than this many files in a directory.
+	$context['file_limit'] = 150;
+
+	// This will be used if we end up catching XML data.
+	$context['xml_data'] = array(
+		'folders' => array(
+			'identifier' => 'folder',
+			'children' => array(),
+		),
+	);
 
 	foreach ($context['file_tree'] as $path => $data)
 	{
 		// Run this directory.
-		if (file_exists($path))
+		if (file_exists($path) && (empty($context['only_find']) || substr($context['only_find'], 0, strlen($path)) == $path))
 		{
-			fetchPerms__recursive($path, $context['file_tree'][$path]);
+			// Get the first level down only.
+			fetchPerms__recursive($path, $context['file_tree'][$path], empty($context['only_find']) ? 2 : 25);
 			$context['file_tree'][$path]['perms'] = array(
 				'chmod' => @is_writable($path),
 				'perms' => @fileperms($path),
@@ -1525,10 +1546,33 @@ function PackagePermissions()
 		else
 			unset($context['file_tree'][$path]);
 	}
+
+	// Is this actually xml?
+	if (isset($_GET['xml']))
+	{
+		loadTemplate('Xml');
+		$context['sub_template'] = 'generic_xml';
+		$context['template_layers'] = array();
+	}
 }
 
-function fetchPerms__recursive($path, &$data)
+function fetchPerms__recursive($path, &$data, $max_level = 999)
 {
+	global $context;
+
+	// Is this where we stop?
+	if ($max_level < 1 && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($path)) != $path))
+		return;
+
+	$max_level--;
+
+	// This defines the maximum amount of files we'll list in a directory.
+	$dir_limit = $context['file_limit'];
+	$dir_offset_count = 0;
+
+	// Are we actually interested in saving this data?
+	$save_data = empty($context['only_find']) || $context['only_find'] == $path;
+
 	//!!! Shouldn't happen - but better error message?
 	if (!is_dir($path))
 		fatal_lang_error('no_access');
@@ -1536,43 +1580,90 @@ function fetchPerms__recursive($path, &$data)
 	$dh = opendir($path);
 	while ($entry = readdir($dh))
 	{
-		$entry_perms = array(
-			'chmod' => @is_writable($path . '/' . $entry),
-			'perms' => @fileperms($path . '/' . $entry),
-		);
+		$additional_data = array();
 
 		// Some kind of file?
 		if (!is_dir($path . '/' . $entry))
 		{
 			// Are we listing PHP files in this directory?
-			if (!empty($data['list_contents']) && substr($entry, -4) == '.php')
+			if ($save_data && !empty($data['list_contents']) && substr($entry, -4) == '.php' && $dir_limit > -1)
 			{
-				$data['contents'][$entry] = array(
-					'perms' => $entry_perms,
-				);
+				$additional_data['is_file'] = true;
+
+				// We finding files from an offset?
+				if (!empty($context['file_offset']) && $context['look_for'] == $path && $dir_offset_count < $context['file_offset'])
+					$dir_offset_count++;
+				else
+				{
+					if ($dir_limit > 0)
+					{
+						$additional_data['perms'] = true;
+					}
+					// Indicate there is more to come?
+					else
+						$data['more_files'] = true;
+
+					$dir_limit--;
+				}
 			}
 			// A file we were looking for.
-			elseif (isset($data['contents'][$entry]))
-				$data['contents'][$entry]['perms'] = $entry_perms;
+			elseif ($save_data && isset($data['contents'][$entry]))
+			{
+				$additional_data['is_file'] = true;
+				$additional_data['perms'] = true;
+			}
 		}
-		// It's a directory - we're interested one way or another.
+		// It's a directory - we're interested one way or another, probably...
 		elseif ($entry != '.' && $entry != '..')
 		{
 			// Going further?
 			if ((!empty($data['type']) && $data['type'] == 'dir_recursive') || (isset($data['contents'][$entry]) && (!empty($data['contents'][$entry]['list_contents']) || (!empty($data['contents'][$entry]['type']) && $data['contents'][$entry]['type'] == 'dir_recursive'))))
 			{
-				// If this wasn't expected inherit the recusiveness...
-				if (!isset($data['contents'][$entry]))
-					$data['contents'][$entry] = array(
-						'type' => 'dir_recursive',
-					);
+				if ($save_data)
+				{
+					// If this wasn't expected inherit the recusiveness...
+					if (!isset($data['contents'][$entry]))
+						$additional_data['type'] = 'dir_recursive';
 
-				$data['contents'][$entry]['perms'] = $entry_perms;
+					$additional_data['perms'] = true;
+				}
 
 				// Actually do the recursive stuff...
-				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry]);
+				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry], $max_level);
 			}
 			// Otherwise we stop here.
+		}
+
+		// Actually add the data.
+		if (!empty($additional_data))
+		{
+			$additional_data['perms'] = array(
+				'chmod' => @is_writable($path . '/' . $entry),
+				'perms' => @fileperms($path . '/' . $entry),
+			);
+
+			// XML?
+			if (isset($_GET['xml']))
+			{
+				$context['xml_data']['folders']['children'][] = array(
+					'attributes' => array(
+						'writable' => $additional_data['perms']['chmod'] ? 1 : 0,
+						'permissions' => substr(sprintf('%o', $additional_data['perms']['perms']), -4),
+						'folder' => empty($additional_data['is_file']) ? 1 : 0,
+						'path' => $context['only_find'],
+						'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $entry),
+						'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
+					),
+					'value' => $entry,
+				);
+			}
+			else
+			{
+				if (isset($data['contents'][$entry]))
+					$data['contents'][$entry] = array_merge($data['contents'][$entry], $additional_data);
+				else
+					$data['contents'][$entry] = $additional_data;
+			}
 		}
 	}
 	closedir($dh);
