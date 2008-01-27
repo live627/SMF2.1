@@ -1509,10 +1509,10 @@ function ModerationSettings()
 		// Do blocks first!
 		$mod_blocks = '';
 		if (!empty($_POST['mod_homepage']))
-			foreach ($_POST['mod_homepage'] as $v)
+			foreach ($_POST['mod_homepage'] as $k => $v)
 			{
 				// Sanitise my friend!
-				if (preg_match('~([a-zA-Z])~', $v, $matches))
+				if (preg_match('~([a-zA-Z])~', $k, $matches))
 					$mod_blocks .= $matches[0];
 			}
 

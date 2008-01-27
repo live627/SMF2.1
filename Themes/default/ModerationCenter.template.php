@@ -649,15 +649,13 @@ function template_moderation_settings()
 					<b>', $txt['mc_prefs_homepage'], ':</b>
 					<div class="smalltext">', $txt['mc_prefs_homepage_desc'], '</div>
 				</td>
-				<td width="50%">
-					<select name="mod_homepage[]" size="8" multiple="multiple">';
+				<td width="50%">';
 
 	foreach ($context['homepage_blocks'] as $k => $v)
 		echo '
-						<option value="', $k, '" ', in_array($k, $context['mod_settings']['user_blocks']) ? 'selected="selected"' : '', '>', $v, '</option>';
+					<label for="mod_homepage_', $k, '"><input type="checkbox" id="mod_homepage_', $k, '" name="mod_homepage[', $k, ']"', in_array($k, $context['mod_settings']['user_blocks']) ? ' checked="checked"' : '', ' class="check" /> ', $v, '</label><br />';
 
 	echo '
-					</select>
 				</td>
 			</tr>';
 

@@ -42,6 +42,7 @@ January 2008
  + Added beginning of a file permissions section to the package manager which currently only display permissions, and might time out. (Packages.php, Packages template, Packages language file)
  ! Additional text fields were being escaped improperly on registration. (Register.php) [Bug 1383]
  ! The file permission screen now displays results correctly, and is javascripted up the eyeballs to ensure it works on even the largest server. (Packages.php, Packages template)
+ * Use check boxes instead of a select box when customizing the moderation center homepage. (ModerationCenter.php, ModerationCenter template)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
