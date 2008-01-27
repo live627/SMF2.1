@@ -270,6 +270,10 @@ function ViewSpiders()
 					'db_htmlsafe' => 'ip_info',
 					'class' => 'smalltext',
 				),
+				'sort' => array(
+					'default' => 'ip_info',
+					'reverse' => 'ip_info DESC',
+				),
 			),
 			'check' => array(
 				'header' => array(
@@ -931,6 +935,10 @@ function SpiderStats()
 				'data' => array(
 					'db' => 'page_hits',
 					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'ss.page_hits',
+					'reverse' => 'ss.page_hits DESC',
 				),
 			),
 		),

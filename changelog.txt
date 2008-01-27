@@ -51,6 +51,7 @@ January 2008
  ! Changing the cookie name was causing a session error. (ManageServer.php) [Bug 1391]
  ! Redirect after running scheduled tasks manually and tell the user we actually did something. (ManageMaintenance.php, ManageMaintenance language file) [Bug 1357]
  ! On backups only try to get more memory if PHP doesn't already have a high default. (DumpDatabase.php) [Bug 1366]
+ ! Added some more sorting options to manage search engines. (ManageSearchEngines.php) [Bug 1386]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
