@@ -1688,7 +1688,7 @@ function template_file_permissions()
 				</td>
 				<td>
 					<b>', $txt['package_file_perms_apply'], '</b><br />
-					<em class="smalltext">', $txt['package_file_perms_custom'], ' <input type="text" name="custom_value" value="0755" maxlength="4" size="5" /></em>
+					<em class="smalltext">', $txt['package_file_perms_custom'], ' <input type="text" name="custom_value" value="0755" maxlength="4" size="5" />&nbsp;<a href="', $scripturl, '?action=helpadmin;help=chmod_flags" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 				</td>
 			</tr>';
 

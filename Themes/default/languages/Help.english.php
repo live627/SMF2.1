@@ -516,6 +516,6 @@ $helptxt['pm_bcc'] = 'When sending a personal message you can choose to add a re
 
 $helptxt['move_topics_maintenance'] = 'This will allow you to move all the posts from one board to another board.';
 $helptxt['maintain_reattribute_posts'] = 'You can use this function to attribute guest posts on your board to a registered member. This is useful if, for example, a user deleted their account and changed their mind and wished to have their old posts associated with their account.';
-$helptxt['chmod_flags'] = 'You can manually set the permissions you wish to set the selected files to. To do this enter the chmod value as a numeric (octet) value. Note - these flags will have no effect on windows operating systems.';
+$helptxt['chmod_flags'] = 'You can manually set the permissions you wish to set the selected files to. To do this enter the chmod value as a numeric (octet) value. Note - these flags will have no effect on Microsoft Windows operating systems.';
 
 ?>
