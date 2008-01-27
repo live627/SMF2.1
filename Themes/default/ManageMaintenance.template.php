@@ -399,6 +399,13 @@ function template_view_scheduled_tasks()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
+	// We completed some tasks?
+	if (!empty($context['tasks_were_run']))
+		echo '
+		<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed green; color: green;">
+			', $txt['scheduled_tasks_were_run'], '
+		</div>';
+
 	// Starts off with general maintenance procedures.
 	echo '
 	<form action="', $scripturl, '?action=admin;area=maintain;sa=tasks" method="post" accept-charset="', $context['character_set'], '">

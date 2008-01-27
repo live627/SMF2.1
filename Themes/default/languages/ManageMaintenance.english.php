@@ -166,10 +166,11 @@ $txt['scheduled_tasks_enabled'] = 'Enabled';
 $txt['scheduled_tasks_run_now'] = 'Run Task Now';
 $txt['scheduled_tasks_save_changes'] = 'Save Changes';
 $txt['scheduled_tasks_time_offset'] = '<strong>Note:</strong> All times given below are <em>server time</em> and do not take any time offsets setup within SMF into account.';
+$txt['scheduled_tasks_were_run'] = 'All selected tasks were completed';
 
 $txt['scheduled_tasks_na'] = 'N/A';
 $txt['scheduled_task_approval_notification'] = 'Approval Notifications';
-$txt['scheduled_task_desc_approval_notification'] = 'Send out emails to all moderators summarising posts awaiting approval.';
+$txt['scheduled_task_desc_approval_notification'] = 'Send out emails to all moderators summarizing posts awaiting approval.';
 $txt['scheduled_task_auto_optimize'] = 'Optimize Database';
 $txt['scheduled_task_desc_auto_optimize'] = 'Optimize the database to resolve fragmentation issues.';
 $txt['scheduled_task_daily_maintenance'] = 'Daily Maintenance';

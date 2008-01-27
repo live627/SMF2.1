@@ -346,8 +346,9 @@ function ScheduledTasks()
 					array('id_task')
 				);
 			}
-
 		}
+
+		redirectexit('action=admin;area=maintain;sa=tasks;done');
 	}
 
 	// Get the tasks, all of them, now - dammit!
@@ -378,6 +379,8 @@ function ScheduledTasks()
 	// You see - Mike sucks - and can't work out how to do in C++ what PHP can do with it's eyes closed - pah! He no programmer ;)
 	// TWlrZSBTdWNrcyBCYWxscyBhbmQgSXMgTXkgQmlhdGNoISE=
 	$smcFunc['db_free_result']($request);
+
+	$context['tasks_were_run'] = isset($_GET['done']);
 }
 
 // Function for editing a task.
