@@ -1217,26 +1217,6 @@ function template_install_options()
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 				</form>
 			</div>
-		</div>
-
-		<div class="tborder" style="margin-top: 2ex;">
-			<div class="titlebg" style="padding: 4px;">', $txt['package_cleanperms_title'], '</div>
-			<div class="windowbg" style="padding: 1ex;">
-				<span class="smalltext">', $txt['package_cleanperms_desc'], '</span>
-			</div>
-
-			<div class="windowbg2" style="padding: 4px;">
-				<form action="', $scripturl, '?action=admin;area=cleanperms" method="post" accept-charset="', $context['character_set'], '">
-					', $txt['package_cleanperms_type'], ':<br />
-					<br />
-					<label for="perm_type_standard"><input type="radio" name="perm_type" id="perm_type_standard" value="standard" checked="checked" class="check" /> ', $txt['package_cleanperms_standard'], '</label><br />
-					<label for="perm_type_free"><input type="radio" name="perm_type" id="perm_type_free" value="free" class="check" /> ', $txt['package_cleanperms_free'], '</label><br />
-					<label for="perm_type_restrictive"><input type="radio" name="perm_type" id="perm_type_restrictive" value="restrictive" class="check" /> ', $txt['package_cleanperms_restrictive'], '</label><br />
-
-					<div align="center" style="padding-top: 2ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['package_cleanperms_go'], '" /></div>
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				</form>
-			</div>
 		</div>';
 }
 
@@ -1769,7 +1749,7 @@ function template_file_permissions()
 				</td>
 				<td>
 					<label for="method_predefined"><b>', $txt['package_file_perms_predefined'], ':</b></label>
-					<select name="predefined">
+					<select name="predefined" onchange="document.getElementById(\'method_predefined\').checked = \'checked\';">
 						<option value="restricted" selected="selected">', $txt['package_file_perms_pre_restricted'], '</option>
 						<option value="standard">', $txt['package_file_perms_pre_standard'], '</option>
 						<option value="free">', $txt['package_file_perms_pre_free'], '</option>
@@ -1905,8 +1885,9 @@ function template_action_permissions()
 			</tr>';
 
 	// How many have we done?
-	$progress_message = sprintf($txt['package_file_perms_items_done'], $context['total_items'] - count($context['to_process']), $context['total_items']);
-	$progress_percent = round(($context['total_items'] - count($context['to_process'])) / $context['total_items'] * 100, 1);
+	$remaining_items = count($context['method'] == 'individual' ? $context['to_process'] : $context['directory_list']);
+	$progress_message = sprintf($context['method'] == 'individual' ? $txt['package_file_perms_items_done'] : $txt['package_file_perms_dirs_done'], $context['total_items'] - $remaining_items, $context['total_items']);
+	$progress_percent = round(($context['total_items'] - $remaining_items) / $context['total_items'] * 100, 1);
 
 	echo '
 			<tr class="windowbg">
@@ -1915,11 +1896,31 @@ function template_action_permissions()
 						<strong>', $progress_message, '</strong>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: ', $context['browser']['is_safari'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $progress_percent, '%</div>
-							<div style="width: ', $progress_percent, '%; height: 12pt; z-index: 1; background-color: blue;">&nbsp;</div>
+							<div style="width: ', $progress_percent, '%; height: 12pt; z-index: 1; background-color: #98B8F4;">&nbsp;</div>
 						</div>
 					</div>
 				</td>
 			</tr>';
+
+	// Second progress bar for a specific directory?
+	if ($context['method'] != 'individual' && !empty($context['total_files']))
+	{
+		$file_progress_message = sprintf($txt['package_file_perms_files_done'], $context['file_offset'], $context['total_files']);
+		$file_progress_percent = round($context['file_offset'] / $context['total_files'] * 100, 1);
+
+		echo '
+			<tr class="windowbg">
+				<td>
+					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+						<strong>', $file_progress_message, '</strong>
+						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+							<div style="padding-top: ', $context['browser']['is_safari'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $file_progress_percent, '%</div>
+							<div style="width: ', $file_progress_percent, '%; height: 12pt; z-index: 1; background-color: #C1FFC1;">&nbsp;</div>
+						</div>
+					</div>
+				</td>
+			</tr>';
+	}
 
 	echo '
 			<tr class="titlebg">
@@ -1931,6 +1932,13 @@ function template_action_permissions()
 					<input type="hidden" name="custom_value" value="', $context['custom_value'], '" />
 					<input type="hidden" name="totalItems" value="', $context['total_items'], '" />
 					<input type="hidden" name="toProcess" value="', base64_encode(serialize($context['to_process'])), '" />';
+	else
+		echo '
+					<input type="hidden" name="predefined" value="', $context['predefined_type'], '" />
+					<input type="hidden" name="fileOffset" value="', $context['file_offset'], '" />
+					<input type="hidden" name="totalItems" value="', $context['total_items'], '" />
+					<input type="hidden" name="dirList" value="', base64_encode(serialize($context['directory_list'])), '" />
+					<input type="hidden" name="specialFiles" value="', base64_encode(serialize($context['special_files'])), '" />';
 
 	// Are we not using FTP for whatever reason.
 	if (!empty($context['skip_ftp']))

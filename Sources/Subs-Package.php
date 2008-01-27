@@ -172,13 +172,6 @@ if (!defined('SMF'))
 			bool keep_alive = false)
 		// !!!
 
-	void cleanupFilePermissions(string permission_type = 'free')
-		- cleans up file permissions, in the hopes of making things work
-		  smoother and potentially more securely.
-		- can set permissions to either restrictive, free, or standard.
-		- used by Admin.php's CleanupPermissions (action=admin;area=cleanperms).
-
-
 	Creating your own package server:
 	---------------------------------------------------------------------------
 		// !!!
@@ -2652,108 +2645,6 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false)
 	}
 
 	return $data;
-}
-
-// cleans up file permissions, in the hopes of making things work smoother and potentially more securely.
-function cleanupFilePermissions($permission_type = 'free')
-{
-	global $boarddir, $sourcedir, $package_ftp, $modSettings;
-
-	// The files that should be chmod'd are here - add any if you add any files with a modification.
-	$special_files = array(
-		'restrictive' => array(
-			'/attachments',
-			'/custom_avatar_dir',
-			'/Settings.php',
-			'/Settings_bak.php',
-		),
-		'standard' => array(
-			'/attachments',
-			'/avatars',
-			'/custom_avatar_dir',
-			'/Packages',
-			'/Packages/installed.list',
-			'/Smileys',
-			'/Themes',
-			'/agreement.txt',
-			'/Settings.php',
-			'/Settings_bak.php',
-		),
-	);
-
-	package_chmod($boarddir . '/Settings.php');
-	if (isset($package_ftp))
-		$package_ftp->chmod(strtr($boarddir . '/Settings.php', array($_SESSION['pack_ftp']['root'] => '')), 0755);
-
-	// If the owner of PHP is not nobody, this should probably pass through - in which case 755 is better than 777.
-	if ((!function_exists('is_executable') || is_executable($boarddir . '/Settings.php')) && is_writable($boarddir . '/Settings.php'))
-		$suexec_fix = 0755;
-	else
-		$suexec_fix = 0777;
-
-	@chmod($boarddir, $permission_type == 'free' ? $suexec_fix : 0755);
-	if (isset($package_ftp))
-		$package_ftp->chmod(strtr($boarddir . '/.', array($_SESSION['pack_ftp']['root'] => '')), $permission_type == 'free' ? $suexec_fix : 0755);
-
-	$dirs = array('' => $boarddir);
-
-	if (substr($sourcedir, 0, strlen($boarddir)) != $boarddir)
-		$dirs['/Sources'] = $sourcedir;
-	if (substr($modSettings['attachmentUploadDir'], 0, strlen($boarddir)) != $boarddir)
-		$dirs['/attachments'] = $modSettings['attachmentUploadDir'];
-	if (substr($modSettings['smileys_dir'], 0, strlen($boarddir)) != $boarddir)
-		$dirs['/Smileys'] = $modSettings['smileys_dir'];
-	if (substr($modSettings['avatar_directory'], 0, strlen($boarddir)) != $boarddir)
-		$dirs['/avatars'] = $modSettings['avatar_directory'];
-	if (isset($modSettings['custom_avatar_dir']) && substr($modSettings['custom_avatar_dir'], 0, strlen($boarddir)) != $boarddir)
-		$dirs['/custom_avatar_dir'] = $modSettings['custom_avatar_dir'];
-
-	$done_dirs = array();
-	while (count($dirs) > 0)
-	{
-		// The alias is what we know it as.  The attachments directory *could* be named "uploads".
-		$temp = array_keys($dirs);
-		$alias = $temp[0];
-
-		// The actual full filename...
-		$dirname = $dirs[$alias];
-		unset($dirs[$alias]);
-
-		$dir = dir($dirname);
-		if (!$dir)
-			continue;
-
-		while ($entry = $dir->read())
-		{
-			if ($entry == '.' || $entry == '..')
-				continue;
-
-			// Figure out the filenames to chmod with...
-			$filename = $dirname . '/' . $entry;
-			$ftp_file = strtr($filename, array($_SESSION['pack_ftp']['root'] => ''));
-
-			// Is this one we want writable?
-			if ($permission_type == 'free' || in_array($alias . '/' . $entry, $special_files[$permission_type]))
-			{
-				@chmod($filename, $suexec_fix);
-				if (isset($package_ftp))
-					$package_ftp->chmod($ftp_file, $suexec_fix);
-			}
-			// Not writable, just executable... yes?
-			else
-			{
-				@chmod($filename, 0755);
-				if (isset($package_ftp))
-					$package_ftp->chmod($ftp_file, 0755);
-			}
-
-			// Directories get added to the todo list.
-			if (@is_dir($filename) && !in_array($filename, $done_dirs))
-				$dirs[$alias . '/' . $entry] = $filename;
-		}
-
-		$done_dirs[] = $dirname;
-	}
 }
 
 // crc32 doesn't work as expected on 64-bit functions - make our own.

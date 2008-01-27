@@ -140,11 +140,6 @@ function AdminMain()
 						'options' => array($txt['package_settings']),
 					),
 				),
-				'cleanperms' => array(
-					'function' => 'CleanupPermissions',
-					'permission' => array('admin_forum'),
-					'select' => 'packages'
-				),
 				'version' => array(
 					'function' => 'VersionDetail',
 					'permission' => array('admin_forum'),
@@ -710,44 +705,6 @@ function ManageCopyright()
 
 	$context['sub_template'] = 'manage_copyright';
 	$context['page_title'] = $txt['copyright_removal'];
-}
-
-// Clean up the permissions one way or another.
-function CleanupPermissions()
-{
-	global $boarddir, $sourcedir, $scripturl, $package_ftp, $context, $txt, $modSettings;
-
-	isAllowedTo('admin_forum');
-	umask(0);
-
-	loadTemplate('Packages');
-	loadLanguage('Packages');
-
-	if (!isset($_REQUEST['perm_type']) || !in_array($_REQUEST['perm_type'], array('free', 'restrictive', 'standard')))
-		$_REQUEST['perm_type'] = 'free';
-
-	checkSession();
-
-	// Make sure the user gets the right description.
-	$context[$context['admin_menu_name']]['current_subsection'] = 'options';
-	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['package_manager'],
-		'description' => $txt['package_manager_desc'],
-		'tabs' => array(
-			'browse' => array(),
-			'packageget' => array(),
-			'installed' => array(),
-			'options' => array(
-				'description' => $txt['package_install_options_ftp_why'],
-			),
-		),
-	);
-
-	// Off we pop...
-	require_once($sourcedir . '/Subs-Package.php');
-	cleanupFilePermissions($_REQUEST['perm_type']);
-
-	redirectexit('action=admin;area=packages;sa=options');
 }
 
 // Get one of the admin information files from Simple Machines.

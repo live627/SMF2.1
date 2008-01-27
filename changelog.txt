@@ -44,6 +44,8 @@ January 2008
  ! The file permission screen now displays results correctly, and is javascripted up the eyeballs to ensure it works on even the largest server. (Packages.php, Packages template)
  * Use check boxes instead of a select box when customizing the moderation center homepage. (ModerationCenter.php, ModerationCenter template)
  ! Added an AJAX method to test an FTP connection prior to doing a full submit. (Packages.php, Subs-Package.php, Package template)
+ ! It's now possible to reset permissions on all files and selected files from the file permissions screen. (Packages.php, Packages template)
+ ! Removed cleanupFilePermissions as it's been superseeded by the above. (Subs-Packages.php, Admin.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

@@ -1747,7 +1747,9 @@ function PackagePermissionsAction()
 {
 	global $context, $txt, $time_start, $package_ftp;
 
-	$timeout_limit = 3;
+	umask(0);
+
+	$timeout_limit = 5;
 
 	$context['method'] = $_POST['method'] == 'individual' ? 'individual' : 'predefined';
 	$context['sub_template'] = 'action_permissions';
@@ -1836,17 +1838,130 @@ function PackagePermissionsAction()
 			unset($context['to_process'][$path]);
 
 			// See if we're out of time?
-			if (time() - array_sum(explode(' ', $time_start)) < $timeout_limit)
+			if (time() - array_sum(explode(' ', $time_start)) > $timeout_limit)
 				return false;
 		}
-
-		// If we're here we are done!
-		redirectexit('action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
 	}
 	// If predefined this is a little different.
 	else
 	{
+		$context['predefined_type'] = isset($_POST['predefined']) ? $_POST['predefined'] : 'restricted';
+
+		$context['total_items'] = isset($_POST['totalItems']) ? (int) $_POST['totalItems'] : 0;
+		$context['directory_list'] = isset($_POST['dirList']) ? unserialize(base64_decode($_POST['dirList'])) : array();
+
+		$context['file_offset'] = isset($_POST['fileOffset']) ? (int) $_POST['fileOffset'] : 0;
+
+		// Haven't counted the items yet?
+		if (empty($context['total_items']))
+		{
+			function count_directories__recursive($dir)
+			{
+				global $context;
+
+				$count = 0;
+				$dh = @opendir($dir);
+				while ($entry = readdir($dh))
+				{
+					if ($entry != '.' && $entry != '..' && is_dir($dir . '/' . $entry))
+					{
+						$context['directory_list'][$dir . '/' . $entry] = 1;
+						$count++;
+						$count += count_directories__recursive($dir . '/' . $entry);
+					}
+				}
+				closedir($dh);
+
+				return $count;
+			}
+
+			foreach ($context['file_tree'] as $path => $data)
+			{
+				if (is_dir($path))
+				{
+					$context['directory_list'][$path] = 1;
+					$context['total_items'] += count_directories__recursive($path);
+					$context['total_items']++;
+				}
+			}
+		}
+
+		// Have we built up our list of special files?
+		if (!isset($_POST['specialFiles']) && $context['predefined_type'] != 'free')
+		{
+			$context['special_files'] = array();
+			function build_special_files__recursive($path, &$data)
+			{
+				global $context;
+
+				if (!empty($data['writable_on']))
+					if ($context['predefined_type'] == 'standard' || $data['writable_on'] == 'restrictive')
+						$context['special_files'][$path] = 1;
+
+				if (!empty($data['contents']))
+					foreach ($data['contents'] as $name => $contents)
+						build_special_files__recursive($path . '/' . $name, $contents);
+			}
+
+			foreach ($context['file_tree'] as $path => $data)
+				build_special_files__recursive($path, $data);
+		}
+		// Free doesn't need special files.
+		elseif ($context['predefined_type'] == 'free')
+			$context['special_files'] = array();
+		else
+			$context['special_files'] = unserialize(base64_decode($_POST['specialFiles']));
+
+		// Now we definitely know where we are, we need to go through again doing the chmod!
+		foreach ($context['directory_list'] as $path => $dummy)
+		{
+			// Do the contents of the directory first.
+			$dh = @opendir($path);
+			$file_count = 0;
+			$dont_chmod = false;
+			while ($entry = readdir($dh))
+			{
+				$file_count++;
+				// Actually process this file?
+				if (!$dont_chmod && !is_dir($path . '/' . $entry) && (empty($context['file_offset']) || $context['file_offset'] < $file_count))
+				{
+					$status = $context['predefined_type'] == 'free' || isset($context['special_files'][$path . '/' . $entry]) ? 'writable' : 'execute';
+					package_chmod($path . '/' . $entry, $status);
+				}
+
+				// See if we're out of time?
+				if (!$dont_chmod && time() - array_sum(explode(' ', $time_start)) > $timeout_limit)
+				{
+					$dont_chmod = true;
+					// Don't do this again.
+					$context['file_offset'] = $file_count;
+				}
+			}
+			closedir($dh);
+
+			// If this is set it means we timed out half way through.
+			if ($dont_chmod)
+			{
+				$context['total_files'] = $file_count;
+				return false;
+			}
+
+			// Do the actual directory.
+			$status = $context['predefined_type'] == 'free' || isset($context['special_files'][$path]) ? 'writable' : 'execute';
+			package_chmod($path, $status);
+
+			// We've finished the directory so no file offset, and no record.
+			$context['file_offset'] = 0;
+			unset($context['directory_list'][$path]);
+
+			// See if we're out of time?
+			if (time() - array_sum(explode(' ', $time_start)) > $timeout_limit)
+				return false;
+		}
 	}
+
+	// If we're here we are done!
+	redirectexit('action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
 }
 
 // Test an FTP connection.
