@@ -1265,10 +1265,9 @@ function template_control_chmod()
 				</div>';
 	}
 
-	if (!empty($context['package_ftp']['error']))
-		echo '
-				<div class="bordercolor" style="padding: 1px; margin: 1ex;"><div class="windowbg2" style="padding: 1ex;">
-					<tt>', $context['package_ftp']['error'], '</tt>
+	echo '
+				<div class="bordercolor" id="ftp_error_div" style="', (!empty($context['package_ftp']['error']) ? '' : 'display:none;'), 'padding: 1px; margin: 1ex;"><div class="windowbg2" id="ftp_error_innerdiv" style="padding: 1ex;">
+					<tt id="ftp_error_message">', !empty($context['package_ftp']['error']) ? $context['package_ftp']['error'] : '', '</tt>
 				</div></div>';
 
 	if (!empty($context['package_ftp']['destination']))
@@ -1304,7 +1303,10 @@ function template_control_chmod()
 	if (empty($context['package_ftp']['form_elements_only']))
 		echo '
 
-					<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>';
+					<div align="right" style="margin: 1ex;">
+						<span id="test_ftp_placeholder_full"></span>
+						<input type="submit" value="', $txt['package_proceed'], '" />
+					</div>';
 	
 	if (!empty($context['package_ftp']['destination']))
 		echo '
@@ -1317,6 +1319,82 @@ function template_control_chmod()
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			document.getElementById(\'need_writable_list\').style.display = \'none\';
 		// ]]></script>';
+
+	// Quick generate the test button.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		// Generate a "test ftp" button.
+		function generateFTPTest()
+		{
+			// No XML?
+			if (!window.XMLHttpRequest || (!document.getElementById("test_ftp_placeholder") && !document.getElementById("test_ftp_placeholder_full")))
+				return false;
+
+			var ftpTest = document.createElement("input");
+			ftpTest.type = "button";
+			ftpTest.onclick = testFTP;
+
+			if (document.getElementById("test_ftp_placeholder"))
+			{
+				ftpTest.value = "', $txt['package_ftp_test'], '";
+				document.getElementById("test_ftp_placeholder").appendChild(ftpTest);
+			}
+			else
+			{
+				ftpTest.value = "', $txt['package_ftp_test_connection'], '";
+				document.getElementById("test_ftp_placeholder_full").appendChild(ftpTest);
+			}
+		}
+		function testFTP()
+		{
+			ajax_indicator(true);
+
+			// What we need to post.
+			var oPostData = {
+				0: "ftp_server",
+				1: "ftp_port",
+				2: "ftp_username",
+				3: "ftp_password",
+				4: "ftp_path"
+			}
+
+			var sPostData = "";
+			for (i = 0; i < 5; i++)
+				sPostData = sPostData + (sPostData.length == 0 ? "" : "&") + oPostData[i] + "=" + escape(document.getElementById(oPostData[i]).value);
+
+			// Post the data out.
+			sendXMLDocument(\'', $scripturl, '?action=admin;area=packages;sa=ftptest;xml;sesc=', $context['session_id'], '\', sPostData, testFTPResults);
+		}
+		function testFTPResults(oXMLDoc)
+		{
+			ajax_indicator(false);
+
+			// This assumes it went wrong!
+			var wasSuccess = false;
+			var message = "', addcslashes($txt['package_ftp_test_failed'], "'"), '";
+
+			var results = oXMLDoc.getElementsByTagName(\'results\')[0].getElementsByTagName(\'result\');
+			if (results.length > 0)
+			{
+				if (results[0].getAttribute(\'success\') == 1)
+					wasSuccess = true;
+				message = results[0].firstChild.nodeValue;
+			}
+
+			document.getElementById("ftp_error_div").style.display = "";
+			document.getElementById("ftp_error_div").style.backgroundColor = wasSuccess ? "green" : "red";
+			document.getElementById("ftp_error_innerdiv").style.backgroundColor = wasSuccess ? "#DBFDC7" : "#FDBDBD";
+
+			setInnerHTML(document.getElementById("ftp_error_message"), message);
+		}
+		generateFTPTest();
+	// ]]></script>';
+
+	// Make sure the button gets generated last.
+	$context['insert_after_template'] .= '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		generateFTPTest();
+	// ]]></script>';
 }
 
 function template_ftp_required()
@@ -1504,7 +1582,7 @@ function template_file_permissions()
 					var fileName = document.createTextNode(fileItems[i].firstChild.nodeValue);
 
 					// Start by wacking in the spaces.
-					curCol.innerHTML = repeatString("&nbsp;", curLevel);
+					setInnerHTML(curCol, repeatString("&nbsp;", curLevel));
 
 					// Create the actual text.
 					if (fileItems[i].getAttribute(\'folder\') == 1)
@@ -1534,7 +1612,7 @@ function template_file_permissions()
 
 					var writeSpan = document.createElement("span");
 					writeSpan.style.color = fileItems[i].getAttribute(\'writable\') ? "green" : "red";
-					writeSpan.innerHTML = fileItems[i].getAttribute(\'writable\') ? \'', $txt['package_file_perms_writable'], '\' : \'', $txt['package_file_perms_writable'], '\';
+					setInnerHTML(writeSpan, fileItems[i].getAttribute(\'writable\') ? \'', $txt['package_file_perms_writable'], '\' : \'', $txt['package_file_perms_not_writable'], '\');
 					curCol.appendChild(writeSpan);
 
 					if (fileItems[i].getAttribute(\'permissions\'))
@@ -1602,7 +1680,7 @@ function template_file_permissions()
 				curCol.className = "smalltext";
 				curCol.width = "40%";
 
-				curCol.innerHTML = repeatString("&nbsp;", curLevel);
+				setInnerHTML(curCol, repeatString("&nbsp;", curLevel));
 				curCol.appendChild(document.createTextNode(\'\\u00ab \'));
 				curCol.appendChild(linkData);
 				curCol.appendChild(document.createTextNode(\' \\u00bb\'));
@@ -1648,7 +1726,7 @@ function template_file_permissions()
 					', $name, '
 				</strong></td>
 				<td width="30%">
-					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
+					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_not_writable']), '</span>
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
 				<td align="center" width="8%" style="background-color: #D1F7BF"><input type="radio" name="permStatus[', $name, ']" value="read" /></td>
@@ -1709,6 +1787,7 @@ function template_file_permissions()
 	echo '
 			<tr class="windowbg2">
 				<td colspan="2" align="right">
+					<span id="test_ftp_placeholder_full"></span>
 					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" />
 				</td>
 			</tr>
@@ -1750,7 +1829,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 					', !empty($dir['contents']) ? '</a>' : '', '
 				</td>
 				<td class="smalltext">
-					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
+					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_not_writable']), '</span>
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
 				<td align="center" width="8%" style="background-color: #D1F7BF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="read" /></td>

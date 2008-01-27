@@ -43,6 +43,7 @@ January 2008
  ! Additional text fields were being escaped improperly on registration. (Register.php) [Bug 1383]
  ! The file permission screen now displays results correctly, and is javascripted up the eyeballs to ensure it works on even the largest server. (Packages.php, Packages template)
  * Use check boxes instead of a select box when customizing the moderation center homepage. (ModerationCenter.php, ModerationCenter template)
+ ! Added an AJAX method to test an FTP connection prior to doing a full submit. (Packages.php, Subs-Package.php, Package template)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

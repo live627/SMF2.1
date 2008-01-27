@@ -92,6 +92,7 @@ function Packages()
 		'browse' => 'PackageBrowse',
 		'remove' => 'PackageRemove',
 		'list' => 'PackageList',
+		'ftptest' => 'PackageFTPTest',
 		'install' => 'PackageInstallTest',
 		'install2' => 'PackageInstall',
 		'uninstall' => 'PackageInstallTest',
@@ -1731,6 +1732,35 @@ function fetchPerms__recursive($path, &$data, $level)
 				$data['contents'][$file] = $additional_data;
 		}
 	}
+}
+
+// Test an FTP connection.
+function PackageFTPTest()
+{
+	global $context, $txt, $package_ftp;
+
+	// Try to make the FTP connection.
+	create_chmod_control(array(), array('force_find_error' => true));
+
+	// Deal with the template stuff.
+	loadTemplate('Xml');
+	$context['sub_template'] = 'generic_xml';
+	$context['template_layers'] = array();
+
+	// Define the return data, this is simple.
+	$context['xml_data'] = array(
+		'results' => array(
+			'identifier' => 'result',
+			'children' => array(
+				array(
+					'attributes' => array(
+						'success' => !empty($package_ftp) ? 1 : 0,
+					),
+					'value' => !empty($package_ftp) ? $txt['package_ftp_test_success'] : (isset($context['package_ftp'], $context['package_ftp']['error']) ? $context['package_ftp']['error'] : $txt['package_ftp_test_failed']),
+				),
+			),
+		),
+	);
 }
 
 ?>

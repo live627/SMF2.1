@@ -613,8 +613,9 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 
 		$package_ftp = new ftp_connection($_SESSION['pack_ftp']['server'], $_SESSION['pack_ftp']['port'], $_SESSION['pack_ftp']['username'], package_crypt($_SESSION['pack_ftp']['password']));
 	}
+
 	// Just got a submission did we?
-	elseif (isset($_POST['ftp_username']))
+	if (empty($package_ftp) && isset($_POST['ftp_username']))
 	{
 		loadClassFile('Class-Package.php');
 		$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
@@ -673,7 +674,7 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 	}
 
 	// Have we still got nasty files which ain't writable? Dear me we need more FTP good sir.
-	if (empty($package_ftp) && !empty($return_data['files']['notwritable']))
+	if (empty($package_ftp) && (!empty($return_data['files']['notwritable']) || !empty($chmodOptions['force_find_error'])))
 	{
 		if (!isset($ftp) || $ftp->error !== false)
 		{
