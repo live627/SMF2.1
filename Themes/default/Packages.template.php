@@ -1670,25 +1670,25 @@ function template_file_permissions()
 			</tr>
 			<tr class="windowbg2" valign="top">
 				<td width="4%" align="center">
-					<input type="radio" name="method" value="predefined" />
+					<input type="radio" name="method" value="individual" checked="checked" id="method_individual" />
 				</td>
 				<td>
-					<b>', $txt['package_file_perms_predefined'], ':</b>
+					<label for="method_individual"><b>', $txt['package_file_perms_apply'], '</b></label><br />
+					<em class="smalltext">', $txt['package_file_perms_custom'], ': <input type="text" name="custom_value" value="0755" maxlength="4" size="5" />&nbsp;<a href="', $scripturl, '?action=helpadmin;help=chmod_flags" onclick="return reqWin(this.href);" class="help">(?)</a></em>
+				</td>
+			</tr>
+			<tr class="windowbg2" valign="top">
+				<td width="4%" align="center">
+					<input type="radio" name="method" value="predefined" id="method_predefined" />
+				</td>
+				<td>
+					<label for="method_predefined"><b>', $txt['package_file_perms_predefined'], ':</b></label>
 					<select name="predefined">
 						<option value="restricted" selected="selected">', $txt['package_file_perms_pre_restricted'], '</option>
 						<option value="standard">', $txt['package_file_perms_pre_standard'], '</option>
 						<option value="free">', $txt['package_file_perms_pre_free'], '</option>
 					</select><br />
 					<em class="smalltext">', $txt['package_file_perms_predefined_note'], '</em>
-				</td>
-			</tr>
-			<tr class="windowbg2" valign="top">
-				<td width="4%" align="center">
-					<input type="radio" name="method" value="individual" checked="checked" />
-				</td>
-				<td>
-					<b>', $txt['package_file_perms_apply'], '</b><br />
-					<em class="smalltext">', $txt['package_file_perms_custom'], ' <input type="text" name="custom_value" value="0755" maxlength="4" size="5" />&nbsp;<a href="', $scripturl, '?action=helpadmin;help=chmod_flags" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 				</td>
 			</tr>';
 
