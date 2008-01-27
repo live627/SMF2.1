@@ -1695,7 +1695,7 @@ function fetchPerms__recursive($path, &$data, $level)
 					'folder' => 0,
 					'path' => $context['only_find'],
 					'level' => $level,
-					'more' => $counter == ($context['file_offset'] + $context['file_limit']),
+					'more' => $counter == ($context['file_offset'] + $context['file_limit']) ? 1 : 0,
 					'offset' => $context['file_offset'],
 					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $file),
 					'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),

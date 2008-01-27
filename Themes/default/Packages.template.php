@@ -1370,6 +1370,13 @@ function template_file_permissions()
 	// This will handle expanding the selection.
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var oRadioColors = {
+			0: "#D1F7BF",
+			1: "#FFBBBB",
+			2: "#FDD7AF",
+			3: "#C2C6C0",
+			4: "#FFFFFF"
+		}
 		function expandFolder(folderIdent, folderReal)
 		{
 			// See if it already exists.
@@ -1421,6 +1428,31 @@ function template_file_permissions()
 			else
 				return sString + repeatString(sString, iTime - 1);
 		}
+		// Create a named element dynamically - thanks to: http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
+		function createNamedElement(type, name, customFields)
+		{
+			var element = null;
+
+			if (!customFields)
+				customFields = "";
+
+			// Try the IE way; this fails on standards-compliant browsers
+			try
+			{
+				element = document.createElement("<" + type + \' name="\' + name + \'" \' + customFields + ">");
+			}
+			catch (e)
+			{
+			}
+			if (!element || element.nodeName != type.toUpperCase())
+			{
+				// Non-IE browser; use canonical method to create named element
+				element = document.createElement(type);
+				element.name = name;
+			}
+
+			return element;
+		}
 		// Getting something back?
 		function onNewFolderReceived(oXMLDoc)
 		{
@@ -1456,7 +1488,7 @@ function template_file_permissions()
 					var curRow = document.createElement("tr");
 					curRow.className = "windowbg";
 					curRow.id = "content_" + my_ident;
-					tableHandle.appendChild(curRow);
+					curRow.style.display = "";
 					var curCol = document.createElement("td");
 					curCol.className = "smalltext";
 					curCol.width = "40%";
@@ -1483,15 +1515,6 @@ function template_file_permissions()
 
 						linkData.appendChild(fileName);
 						curCol.appendChild(linkData);
-
-						// Put in a new dummy section.
-						var newRow = document.createElement("tr");
-						newRow.id = "insert_div_loc_" + my_ident;
-						newRow.style.display = "none";
-						tableHandle.appendChild(newRow);
-						var newCol = document.createElement("td");
-						newCol.colspan = 2;
-						newRow.appendChild(newCol);
 					}
 					else
 						curCol.appendChild(fileName);
@@ -1514,6 +1537,35 @@ function template_file_permissions()
 					}
 
 					curRow.appendChild(curCol);
+
+					// Now add the five radio buttons.
+					for (j = 0; j < 5; j++)
+					{
+						curCol = document.createElement("td");
+						curCol.style.backgroundColor = oRadioColors[j];
+						curCol.align = "center";
+
+						var curInput = createNamedElement("input", "permStatus[" + curPath + "/" + fileItems[i].firstChild.nodeValue + "]", j == 4 ? \'checked="checked"\' : "");
+						curInput.type = "radio";
+
+						curCol.appendChild(curInput);
+						curRow.appendChild(curCol);
+					}
+
+					// Put the row in.
+					tableHandle.parentNode.insertBefore(curRow, tableHandle);
+
+					// Put in a new dummy section?
+					if (fileItems[i].getAttribute(\'folder\') == 1)
+					{
+						var newRow = document.createElement("tr");
+						newRow.id = "insert_div_loc_" + my_ident;
+						newRow.style.display = "none";
+						tableHandle.parentNode.insertBefore(newRow, tableHandle);
+						var newCol = document.createElement("td");
+						newCol.colspan = 2;
+						newRow.appendChild(newCol);
+					}
 				}
 			}
 
@@ -1538,7 +1590,7 @@ function template_file_permissions()
 				curRow = document.createElement("tr");
 				curRow.className = "windowbg";
 				curRow.id = "content_" + ident + "_more";
-				tableHandle.appendChild(curRow);
+				tableHandle.parentNode.insertBefore(curRow, tableHandle);
 				curCol = document.createElement("td");
 				curCol.className = "smalltext";
 				curCol.width = "40%";
@@ -1560,20 +1612,26 @@ function template_file_permissions()
 	<form action="', $scripturl, '?action=admin;area=packages;sa=perms" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
 			<tr class="titlebg">
-				<td colspan="2">', $txt['package_file_perms'], '</td>
+				<td colspan="7">', $txt['package_file_perms'], '</td>
 			</tr>
 			<tr class="catbg">
-				<td width="40%">', $txt['package_file_perms_name'], '</td>
-				<td>', $txt['package_file_perms_status'], '</td>
+				<td width="30%" rowspan="2">', $txt['package_file_perms_name'], '</td>
+				<td width="30%" rowspan="2">', $txt['package_file_perms_status'], '</td>
+				<td colspan="5" align="center">', $txt['package_file_perms_new_status'], '</td>
 			</tr>
-		</table>';
+			<tr class="catbg">
+				<td align="center" class="smalltext" width="8%">', $txt['package_file_perms_status_read'], '</td>
+				<td align="center" class="smalltext" width="8%">', $txt['package_file_perms_status_write'], '</td>
+				<td align="center" class="smalltext" width="8%">', $txt['package_file_perms_status_execute'], '</td>
+				<td align="center" class="smalltext" width="8%">', $txt['package_file_perms_status_custom'], '</td>
+				<td align="center" class="smalltext" width="8%">', $txt['package_file_perms_status_no_change'], '</td>
+			</tr>';
 
 	foreach ($context['file_tree'] as $name => $dir)
 	{
 		echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
 			<tr class="windowbg2">
-				<td width="40%"><strong>';
+				<td width="30%"><strong>';
 
 			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
 				echo '
@@ -1582,10 +1640,15 @@ function template_file_permissions()
 			echo '
 					', $name, '
 				</strong></td>
-				<td>
+				<td width="30%">
 					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
+				<td align="center" width="8%" style="background-color: #D1F7BF"><input type="radio" name="permStatus[', $name, ']" value="read" /></td>
+				<td align="center" width="8%" style="background-color: #FFBBBB"><input type="radio" name="permStatus[', $name, ']" value="write" /></td>
+				<td align="center" width="8%" style="background-color: #FDD7AF"><input type="radio" name="permStatus[', $name, ']" value="execute" /></td>
+				<td align="center" width="8%" style="background-color: #C2C6C0"><input type="radio" name="permStatus[', $name, ']" value="custom" /></td>
+				<td align="center" width="8%" style="background-color: #FFFFFF"><input type="radio" name="permStatus[', $name, ']" value="no_change" checked="checked" /></td>
 			</tr>';
 				
 		if (!empty($dir['contents']))
@@ -1593,6 +1656,7 @@ function template_file_permissions()
 	}
 
 	echo '
+		</table>
 	</form>';
 }
 
@@ -1618,7 +1682,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident . '/' . $name);
 			echo '
 			<tr class="windowbg" id="content_', $cur_ident, '">
-				<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
+				<td class="smalltext" width="30%">' . str_repeat('&nbsp;', $level * 5), '
 					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
 
 			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
@@ -1633,6 +1697,11 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 					<span style="color: ', ($dir['perms']['chmod'] ? 'green' : 'red'), '">', ($dir['perms']['chmod'] ? $txt['package_file_perms_writable'] : $txt['package_file_perms_writable']), '</span>
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
+				<td align="center" width="8%" style="background-color: #D1F7BF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="read" /></td>
+				<td align="center" width="8%" style="background-color: #FFBBBB"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="write" /></td>
+				<td align="center" width="8%" style="background-color: #FDD7AF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="execute" /></td>
+				<td align="center" width="8%" style="background-color: #C2C6C0"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="custom" /></td>
+				<td align="center" width="8%" style="background-color: #FFFFFF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="no_change" checked="checked" /></td>
 			</tr>
 			<tr id="insert_div_loc_' . $cur_ident . '" style="display: none;"><td></td></tr>';
 
@@ -1651,8 +1720,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 		<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
 			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
 		</td>
-		<td class="smalltext">
-		</td>
+		<td colspan="6"></td>
 	</tr>';
 
 	if ($drawn_div)
