@@ -219,4 +219,10 @@ $txt['package_file_perms_ftp_details'] = 'On most servers it is only possible to
 $txt['package_file_perms_ftp_retain'] = 'Note, SMF will only retain the password information temporarily to aid operation of the package manager.';
 $txt['package_file_perms_go'] = 'Make Changes';
 
+$txt['package_file_perms_applying'] = 'Applying Changes';
+$txt['package_file_perms_items_done'] = '%1$d of %2$d items completed';
+$txt['package_file_perms_skipping_ftp'] = '<strong>Warning:</strong> Failed to connect to FTP server, attempting to change permissions without. This is <em>likely</em> to fail - please check the results upon completion and try again with correct FTP details if necessary.';
+
+$txt['chmod_value_invalid'] = 'You have tried to enter an invalid chmod value. Chmod must be between 0444 and 0777';
+
 ?>

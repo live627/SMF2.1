@@ -1348,13 +1348,17 @@ function PackagePermissions()
 {
 	global $context, $txt, $modSettings, $boarddir, $sourcedir, $smcFunc, $package_ftp;
 
+	// Let's try and be good, yes?
+	checkSession('get');
+
 	// This is a memory eat.
 	@ini_set('memory_limit', '128M');
+	@set_time_limit(600);
 
 	// Load up some FTP stuff.
 	create_chmod_control();
 
-	if (empty($package_ftp))
+	if (empty($package_ftp) && !isset($_POST['skip_ftp']))
 	{
 		loadClassFile('Class-Package.php');
 		$ftp = new ftp_connection(null);
@@ -1534,6 +1538,10 @@ function PackagePermissions()
 		}
 	}
 	$smcFunc['db_free_result']($request);
+
+	// If we're submitting then let's move on to another function to keep things cleaner..
+	if (isset($_POST['action_changes']))
+		return PackagePermissionsAction();
 
 	// Are we looking for a particular tree?
 	$context['look_for'] = !empty($_REQUEST['find']) ? base64_decode($_REQUEST['find']) : '';
@@ -1734,10 +1742,119 @@ function fetchPerms__recursive($path, &$data, $level)
 	}
 }
 
+// Actually action the permission changes they want.
+function PackagePermissionsAction()
+{
+	global $context, $txt, $time_start, $package_ftp;
+
+	$timeout_limit = 3;
+
+	$context['method'] = $_POST['method'] == 'individual' ? 'individual' : 'predefined';
+	$context['sub_template'] = 'action_permissions';
+	$context['page_title'] = $txt['package_file_perms_applying'];
+
+	// Skipping use of FTP?
+	if (empty($package_ftp))
+		$context['skip_ftp'] = true;
+
+	// We'll start off in a good place, security. Make sure that if we're dealing with individual files that they seem in the right place.
+	if ($context['method'] == 'individual')
+	{
+		// Only these path roots are legal.
+		$legal_roots = array_keys($context['file_tree']);
+		$context['custom_value'] = (int) $_POST['custom_value'];
+
+		// Continuing?
+		if (isset($_POST['toProcess']))
+			$_POST['permStatus'] = unserialize(base64_decode($_POST['toProcess']));
+
+		if (isset($_POST['permStatus']))
+		{
+			$context['to_process'] = array();
+			$validate_custom = false;
+			foreach ($_POST['permStatus'] as $path => $status)
+			{
+				// Nothing to see here?
+				if ($status == 'no_change')
+					continue;
+				$legal = false;
+				foreach ($legal_roots as $root)
+					if (substr($path, 0, strlen($root)) == $root)
+						$legal = true;
+
+				if (!$legal)
+					continue;
+
+				// Check it exists.
+				if (!file_exists($path))
+					continue;
+
+				if ($status == 'custom')
+					$validate_custom = true;
+
+				// Now add it.
+				$context['to_process'][$path] = $status;
+			}
+			$context['total_items'] = isset($_POST['totalItems']) ? (int) $_POST['totalItems'] : count($context['to_process']);
+
+			// Make sure the chmod status is valid?
+			if ($validate_custom)
+			{
+				if (preg_match('~^[4567][4567][4567]$~', $context['custom_value']) == false)
+					fatal_error($txt['chmod_value_invalid']);	
+			}
+
+			// Nothing to do?
+			if (empty($context['to_process']))
+				redirectexit('action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
+		}
+		// Should never get here,
+		else
+			fatal_lang_error('no_access');
+
+		// Setup the custom value.
+		$custom_value = octdec('0' . $context['custom_value']);
+
+		// Start processing items.
+		foreach ($context['to_process'] as $path => $status)
+		{
+			if (in_array($status, array('execute', 'writable', 'read')))
+				package_chmod($path, $status);
+			elseif ($status == 'custom' && !empty($custom_value))
+			{
+				// Use FTP if we have it.
+				if (!empty($package_ftp) && !empty($_SESSION['pack_ftp']))
+				{
+					$ftp_file = strtr($path, array($_SESSION['pack_ftp']['root'] => ''));
+					$package_ftp->chmod($ftp_file, $custom_value);
+				}
+				else
+					@chmod($path, $custom_value);
+			}
+
+			// This fish is fried...
+			unset($context['to_process'][$path]);
+
+			// See if we're out of time?
+			if (time() - array_sum(explode(' ', $time_start)) < $timeout_limit)
+				return false;
+		}
+
+		// If we're here we are done!
+		redirectexit('action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
+	}
+	// If predefined this is a little different.
+	else
+	{
+	}
+}
+
 // Test an FTP connection.
 function PackageFTPTest()
 {
 	global $context, $txt, $package_ftp;
+
+	checkSession('get');
 
 	// Try to make the FTP connection.
 	create_chmod_control(array(), array('force_find_error' => true));

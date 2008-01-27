@@ -1462,6 +1462,13 @@ function template_file_permissions()
 			3: "#C2C6C0",
 			4: "#FFFFFF"
 		}
+		var oRadioValues = {
+			0: "read",
+			1: "writable",
+			2: "execute",
+			3: "custom",
+			4: "no_change"
+		}
 		function expandFolder(folderIdent, folderReal)
 		{
 			// See if it already exists.
@@ -1632,6 +1639,7 @@ function template_file_permissions()
 
 						var curInput = createNamedElement("input", "permStatus[" + curPath + "/" + fileItems[i].firstChild.nodeValue + "]", j == 4 ? \'checked="checked"\' : "");
 						curInput.type = "radio";
+						curInput.value = oRadioValues[j];
 
 						curCol.appendChild(curInput);
 						curRow.appendChild(curCol);
@@ -1694,7 +1702,7 @@ function template_file_permissions()
 	// ]]></script>';
 
 		echo '
-	<form action="', $scripturl, '?action=admin;area=packages;sa=perms" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="7">', $txt['package_file_perms'], '</td>
@@ -1730,7 +1738,7 @@ function template_file_permissions()
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
 				<td align="center" width="8%" style="background-color: #D1F7BF"><input type="radio" name="permStatus[', $name, ']" value="read" /></td>
-				<td align="center" width="8%" style="background-color: #FFBBBB"><input type="radio" name="permStatus[', $name, ']" value="write" /></td>
+				<td align="center" width="8%" style="background-color: #FFBBBB"><input type="radio" name="permStatus[', $name, ']" value="writable" /></td>
 				<td align="center" width="8%" style="background-color: #FDD7AF"><input type="radio" name="permStatus[', $name, ']" value="execute" /></td>
 				<td align="center" width="8%" style="background-color: #C2C6C0"><input type="radio" name="permStatus[', $name, ']" value="custom" /></td>
 				<td align="center" width="8%" style="background-color: #FFFFFF"><input type="radio" name="permStatus[', $name, ']" value="no_change" checked="checked" /></td>
@@ -1788,6 +1796,7 @@ function template_file_permissions()
 			<tr class="windowbg2">
 				<td colspan="2" align="right">
 					<span id="test_ftp_placeholder_full"></span>
+					<input type="hidden" name="action_changes" value="1" />
 					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" />
 				</td>
 			</tr>
@@ -1833,7 +1842,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 					', ($dir['perms']['perms'] ? '&nbsp;(' . $txt['package_file_perms_chmod'] . ': ' . substr(sprintf('%o', $dir['perms']['perms']), -4) . ')' : ''), '
 				</td>
 				<td align="center" width="8%" style="background-color: #D1F7BF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="read" /></td>
-				<td align="center" width="8%" style="background-color: #FFBBBB"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="write" /></td>
+				<td align="center" width="8%" style="background-color: #FFBBBB"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="writable" /></td>
 				<td align="center" width="8%" style="background-color: #FDD7AF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="execute" /></td>
 				<td align="center" width="8%" style="background-color: #C2C6C0"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="custom" /></td>
 				<td align="center" width="8%" style="background-color: #FFFFFF"><input type="radio" name="permStatus[', $ident . '/' . $name, ']" value="no_change" checked="checked" /></td>
@@ -1870,6 +1879,93 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 			expandFolder(\'', $js_ident, '\', \'\');
 		// ]]></script>';
 	}
+}
+
+function template_action_permissions()
+{
+	global $txt, $scripturl, $context, $settings;
+
+	$countDown = 3;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;sesc=', $context['session_id'], '" id="perm_submit" method="post" accept-charset="', $context['character_set'], '">
+		<table border="0" align="center" width="60%" cellspacing="" cellpadding="2" class="tborder">
+			<tr class="titlebg">
+				<td>', $txt['package_file_perms_applying'], '</td>
+			</tr>';
+
+	if (!empty($context['skip_ftp']))
+		echo '
+			<tr class="windowbg">
+				<td>
+					<div style="border: 2px dashed red; margin: 5px; padding: 4px;">
+						', $txt['package_file_perms_skipping_ftp'], '
+					</div>
+				</td>
+			</tr>';
+
+	// How many have we done?
+	$progress_message = sprintf($txt['package_file_perms_items_done'], $context['total_items'] - count($context['to_process']), $context['total_items']);
+	$progress_percent = round(($context['total_items'] - count($context['to_process'])) / $context['total_items'] * 100, 1);
+
+	echo '
+			<tr class="windowbg">
+				<td>
+					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+						<strong>', $progress_message, '</strong>
+						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+							<div style="padding-top: ', $context['browser']['is_safari'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $progress_percent, '%</div>
+							<div style="width: ', $progress_percent, '%; height: 12pt; z-index: 1; background-color: blue;">&nbsp;</div>
+						</div>
+					</div>
+				</td>
+			</tr>';
+
+	echo '
+			<tr class="titlebg">
+				<td>';
+
+	// Put out the right hidden data.
+	if ($context['method'] == 'individual')
+		echo '
+					<input type="hidden" name="custom_value" value="', $context['custom_value'], '" />
+					<input type="hidden" name="totalItems" value="', $context['total_items'], '" />
+					<input type="hidden" name="toProcess" value="', base64_encode(serialize($context['to_process'])), '" />';
+
+	// Are we not using FTP for whatever reason.
+	if (!empty($context['skip_ftp']))
+		echo '
+					<input type="hidden" name="skip_ftp" value="1" />';
+
+	echo '
+					<input type="hidden" name="method" value="', $context['method'], '" />
+					<input type="hidden" name="action_changes" value="1" />
+					<input type="submit" name="go" id="cont" value="', $txt['not_done_continue'], '" />
+				</td>
+			</tr>
+		</table>
+	</form>';
+
+	// Just the countdown stuff
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var countdown = ', $countDown, ';
+		doAutoSubmit();
+
+		function doAutoSubmit()
+		{
+			if (countdown == 0)
+				document.forms.perm_submit.submit();
+			else if (countdown == -1)
+				return;
+
+			document.getElementById(\'cont\').value = "', $txt['not_done_continue'], ' (" + countdown + ")";
+			countdown--;
+
+			setTimeout("doAutoSubmit();", 1000);
+		}
+	// ]]></script>';
+
 }
 
 ?>

@@ -2320,17 +2320,20 @@ function package_chmod($filename, $perm_state = 'writable')
 			}
 
 			// The ultimate writable test.
-			$fp = is_dir($chmod_file) ? @opendir($chmod_file) : @fopen($chmod_file, 'rb');
-			if (@is_writable($chmod_file) && $fp && $perm_state == 'writable')
+			if ($perm_state == 'writable')
 			{
-				if (!is_dir($chmod_file))
-					fclose($fp);
-				else
-					closedir($fp);
-
-				// It worked!
-				$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
-				return true;
+				$fp = is_dir($chmod_file) ? @opendir($chmod_file) : @fopen($chmod_file, 'rb');
+				if (@is_writable($chmod_file) && $fp)
+				{
+					if (!is_dir($chmod_file))
+						fclose($fp);
+					else
+						closedir($fp);
+	
+					// It worked!
+					$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
+					return true;
+				}
 			}
 			elseif ($perm_state != 'writable' && isset($_SESSION['pack_ftp']['original_perms'][$chmod_file]))
 				unset($_SESSION['pack_ftp']['original_perms'][$chmod_file]);
