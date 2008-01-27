@@ -1477,7 +1477,8 @@ function PackagePermissions()
 		FROM {db_prefix}themes
 		WHERE id_theme > {int:default_theme_id}
 			AND id_member = {int:guest_id}
-			AND variable = {string:theme_dir}',
+			AND variable = {string:theme_dir}
+		ORDER BY value ASC',
 		array(
 			'default_theme_id' => 1,
 			'guest_id' => 0,
@@ -1517,6 +1518,8 @@ function PackagePermissions()
 	$context['look_for'] = !empty($_REQUEST['find']) ? base64_decode($_REQUEST['find']) : '';
 	// Only that tree?
 	$context['only_find'] = isset($_GET['xml']) && !empty($_REQUEST['onlyfind']) ? $_REQUEST['onlyfind'] : '';
+	if ($context['only_find'])
+		$context['look_for'] = $context['only_find'];
 
 	// Are we finding more files than first thought?
 	$context['file_offset'] = !empty($_REQUEST['fileoffset']) ? (int) $_REQUEST['fileoffset'] : 0;
@@ -1564,12 +1567,10 @@ function fetchPerms__recursive($path, &$data, $level)
 	global $context;
 
 	// Is this where we stop?
-	if ($level > $context['default_level'] && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($path)) != $path))
+	if (isset($_GET['xml']) && !empty($context['look_for']) && substr($context['look_for'], 0, strlen($path)) != $path)
 		return;
-
-	// This defines the maximum amount of files we'll list in a directory.
-	$dir_limit = $context['file_limit'];
-	$dir_offset_count = 0;
+	elseif ($level > $context['default_level'] && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($path)) != $path))
+		return;
 
 	// Are we actually interested in saving this data?
 	$save_data = empty($context['only_find']) || $context['only_find'] == $path;
@@ -1578,41 +1579,24 @@ function fetchPerms__recursive($path, &$data, $level)
 	if (!is_dir($path))
 		fatal_lang_error('no_access');
 
+	// This is where we put stuff we've found for sorting.
+	$foundData = array(
+		'files' => array(),
+		'folders' => array(),
+	);
+
 	$dh = opendir($path);
 	while ($entry = readdir($dh))
 	{
-		$additional_data = array();
-
 		// Some kind of file?
 		if (!is_dir($path . '/' . $entry))
 		{
 			// Are we listing PHP files in this directory?
-			if ($save_data && !empty($data['list_contents']) && substr($entry, -4) == '.php' && $dir_limit > -1)
-			{
-				$additional_data['is_file'] = true;
-
-				// We finding files from an offset?
-				if (!empty($context['file_offset']) && $context['look_for'] == $path && $dir_offset_count < $context['file_offset'])
-					$dir_offset_count++;
-				else
-				{
-					if ($dir_limit > 0)
-					{
-						$additional_data['perms'] = true;
-					}
-					// Indicate there is more to come?
-					else
-						$data['more_files'] = true;
-
-					$dir_limit--;
-				}
-			}
+			if ($save_data && !empty($data['list_contents']) && substr($entry, -4) == '.php')
+				$foundData['files'][$entry] = true;
 			// A file we were looking for.
 			elseif ($save_data && isset($data['contents'][$entry]))
-			{
-				$additional_data['is_file'] = true;
-				$additional_data['perms'] = true;
-			}
+				$foundData['files'][$entry] = true;
 		}
 		// It's a directory - we're interested one way or another, probably...
 		elseif ($entry != '.' && $entry != '..')
@@ -1620,6 +1604,11 @@ function fetchPerms__recursive($path, &$data, $level)
 			// Going further?
 			if ((!empty($data['type']) && $data['type'] == 'dir_recursive') || (isset($data['contents'][$entry]) && (!empty($data['contents'][$entry]['list_contents']) || (!empty($data['contents'][$entry]['type']) && $data['contents'][$entry]['type'] == 'dir_recursive'))))
 			{
+				if (!isset($data['contents'][$entry]))
+					$foundData['folders'][$entry] = 'dir_recursive';
+				else
+					$foundData['folders'][$entry] = true;
+
 				// If this wasn't expected inherit the recusiveness...
 				if (!isset($data['contents'][$entry]))
 					// We need to do this as we will be going all recursive.
@@ -1627,49 +1616,101 @@ function fetchPerms__recursive($path, &$data, $level)
 						'type' => 'dir_recursive',
 					);
 
-				if ($save_data)
-					$additional_data['perms'] = true;
-
 				// Actually do the recursive stuff...
 				fetchPerms__recursive($path . '/' . $entry, $data['contents'][$entry], $level + 1);
 			}
 			// Otherwise we stop here.
 		}
-
-		// Actually add the data.
-		if (!empty($additional_data))
-		{
-			$additional_data['perms'] = array(
-				'chmod' => @is_writable($path . '/' . $entry),
-				'perms' => @fileperms($path . '/' . $entry),
-			);
-
-			// XML?
-			if (isset($_GET['xml']))
-			{
-				$context['xml_data']['folders']['children'][] = array(
-					'attributes' => array(
-						'writable' => $additional_data['perms']['chmod'] ? 1 : 0,
-						'permissions' => substr(sprintf('%o', $additional_data['perms']['perms']), -4),
-						'folder' => empty($additional_data['is_file']) ? 1 : 0,
-						'path' => $context['only_find'],
-						'level' => $level,
-						'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $entry),
-						'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
-					),
-					'value' => $entry,
-				);
-			}
-			else
-			{
-				if (isset($data['contents'][$entry]))
-					$data['contents'][$entry] = array_merge($data['contents'][$entry], $additional_data);
-				else
-					$data['contents'][$entry] = $additional_data;
-			}
-		}
 	}
 	closedir($dh);
+
+	// Nothing to see here?
+	if (!$save_data)
+		return;
+
+	// Now actually add the data, starting with the folders.
+	ksort($foundData['folders']);
+	foreach ($foundData['folders'] as $folder => $type)
+	{
+		$additional_data['perms'] = array(
+			'chmod' => @is_writable($path . '/' . $folder),
+			'perms' => @fileperms($path . '/' . $folder),
+		);
+		if ($type !== true)
+			$additional_data['type'] = $type;
+
+		// If there's an offset ignore any folders in XML mode.
+		if (isset($_GET['xml']) && $context['file_offset'] == 0)
+		{
+			$context['xml_data']['folders']['children'][] = array(
+				'attributes' => array(
+					'writable' => $additional_data['perms']['chmod'] ? 1 : 0,
+					'permissions' => substr(sprintf('%o', $additional_data['perms']['perms']), -4),
+					'folder' => 1,
+					'path' => $context['only_find'],
+					'level' => $level,
+					'more' => 0,
+					'offset' => $context['file_offset'],
+					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $folder),
+					'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
+				),
+				'value' => $folder,
+			);
+		}
+		elseif (!isset($_GET['xml']))
+		{
+			if (isset($data['contents'][$folder]))
+				$data['contents'][$folder] = array_merge($data['contents'][$folder], $additional_data);
+			else
+				$data['contents'][$folder] = $additional_data;
+		}
+	}
+
+	// Now we want to do a similar thing with files.
+	ksort($foundData['files']);
+	$counter = -1;
+	foreach ($foundData['files'] as $file => $dummy)
+	{
+		$counter++;
+
+		// Have we reached our offset?
+		if ($context['file_offset'] > $counter)
+			continue;
+		// Gone too far?
+		if ($counter > ($context['file_offset'] + $context['file_limit']))
+			continue;
+
+		$additional_data['perms'] = array(
+			'chmod' => @is_writable($path . '/' . $file),
+			'perms' => @fileperms($path . '/' . $file),
+		);
+
+		// XML?
+		if (isset($_GET['xml']))
+		{
+			$context['xml_data']['folders']['children'][] = array(
+				'attributes' => array(
+					'writable' => $additional_data['perms']['chmod'] ? 1 : 0,
+					'permissions' => substr(sprintf('%o', $additional_data['perms']['perms']), -4),
+					'folder' => 0,
+					'path' => $context['only_find'],
+					'level' => $level,
+					'more' => $counter == ($context['file_offset'] + $context['file_limit']),
+					'offset' => $context['file_offset'],
+					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $file),
+					'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
+				),
+				'value' => $file,
+			);
+		}
+		elseif ($counter != ($context['file_offset'] + $context['file_limit']))
+		{
+			if (isset($data['contents'][$file]))
+				$data['contents'][$file] = array_merge($data['contents'][$file], $additional_data);
+			else
+				$data['contents'][$file] = $additional_data;
+		}
+	}
 }
 
 ?>

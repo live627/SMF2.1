@@ -1375,9 +1375,10 @@ function template_file_permissions()
 			// See if it already exists.
 			var possibleTags = document.getElementsByTagName("tr");
 			var foundOne = false;
+
 			for (i = 0; i < possibleTags.length; i++)
 			{
-				if (possibleTags[i].id.indexOf("content_" + folderIdent + "_") == 0)
+				if (possibleTags[i].id.indexOf("content_" + folderIdent) == 0 && possibleTags[i].id != "content_" + folderIdent)
 				{
 					possibleTags[i].style.display = possibleTags[i].style.display == "none" ? "" : "none";
 					foundOne = true;
@@ -1407,6 +1408,12 @@ function template_file_permissions()
 
 			return false;
 		}
+		function dynamicAddMore()
+		{
+			ajax_indicator(true);
+
+			getXMLDocument(\'', $scripturl, '?action=admin;area=packages;fileoffset=\' + (parseInt(this.offset) + ', $context['file_limit'], ') + \';onlyfind=\' + escape(this.path) + \';sa=perms;xml;sesc=', $context['session_id'], '\', onNewFolderReceived);
+		}
 		function repeatString(sString, iTime)
 		{
 			if (iTime < 1)
@@ -1423,20 +1430,32 @@ function template_file_permissions()
 			if (fileItems.length < 1)
 				return false;
 			var tableHandle = false;
+			var isMore = false;
 			var ident = "";
+			var my_ident = "";
+			var curLevel = 0;
 
 			for (var i = 0; i < fileItems.length; i++)
 			{
-				if (document.getElementById("insert_div_loc_" + fileItems[i].getAttribute(\'ident\')))
+				if (fileItems[i].getAttribute(\'more\') == 1)
+				{
+					isMore = true;
+					var curOffset = fileItems[i].getAttribute(\'offset\');
+				}
+
+				if (fileItems[i].getAttribute(\'more\') != 1 && document.getElementById("insert_div_loc_" + fileItems[i].getAttribute(\'ident\')))
 				{
 					ident = fileItems[i].getAttribute(\'ident\');
+					my_ident = fileItems[i].getAttribute(\'my_ident\');
+					curLevel = fileItems[i].getAttribute(\'level\') * 5;
+					curPath = fileItems[i].getAttribute(\'path\');
 
 					// Get where we\'re putting it next to.
 					tableHandle = document.getElementById("insert_div_loc_" + fileItems[i].getAttribute(\'ident\'));
 
 					var curRow = document.createElement("tr");
 					curRow.className = "windowbg";
-					curRow.id = "content_" + fileItems[i].getAttribute(\'ident\') + "_" + fileItems[i].getAttribute(\'my_ident\');
+					curRow.id = "content_" + my_ident;
 					tableHandle.appendChild(curRow);
 					var curCol = document.createElement("td");
 					curCol.className = "smalltext";
@@ -1444,11 +1463,9 @@ function template_file_permissions()
 
 					// This is the name.
 					var fileName = document.createTextNode(fileItems[i].firstChild.nodeValue);
-					// And the path.
-					var curPath = fileItems[i].getAttribute(\'path\') + "/" + fileItems[i].firstChild.nodeValue;
 
 					// Start by wacking in the spaces.
-					curCol.innerHTML = repeatString("&nbsp;", fileItems[i].getAttribute(\'level\') * 5);
+					curCol.innerHTML = repeatString("&nbsp;", curLevel);
 
 					// Create the actual text.
 					if (fileItems[i].getAttribute(\'folder\') == 1)
@@ -1456,8 +1473,8 @@ function template_file_permissions()
 						var linkData = document.createElement("a");
 						linkData.name = "fol_" + ident;
 						linkData.href = \'#\';
-						linkData.path = curPath;
-						linkData.ident = fileItems[i].getAttribute(\'my_ident\');
+						linkData.path = curPath + "/" + fileItems[i].firstChild.nodeValue;
+						linkData.ident = my_ident;
 						linkData.onclick = dynamicExpandFolder;
 
 						var folderImage = document.createElement("img");
@@ -1469,7 +1486,7 @@ function template_file_permissions()
 
 						// Put in a new dummy section.
 						var newRow = document.createElement("tr");
-						newRow.id = "insert_div_loc_" + fileItems[i].getAttribute(\'my_ident\');
+						newRow.id = "insert_div_loc_" + my_ident;
 						newRow.style.display = "none";
 						tableHandle.appendChild(newRow);
 						var newCol = document.createElement("td");
@@ -1498,6 +1515,43 @@ function template_file_permissions()
 
 					curRow.appendChild(curCol);
 				}
+			}
+
+			// Is there some more to remove?
+			if (document.getElementById("content_" + ident + "_more"))
+			{
+				document.getElementById("content_" + ident + "_more").parentNode.removeChild(document.getElementById("content_" + ident + "_more"));
+			}
+
+			// Add more?
+			if (isMore && tableHandle)
+			{
+				// Create the actual link.
+				var linkData = document.createElement("a");
+				linkData.href = \'#fol_\' + my_ident;
+				linkData.path = curPath;
+				linkData.offset = curOffset;
+				linkData.onclick = dynamicAddMore;
+
+				linkData.appendChild(document.createTextNode(\'', $txt['package_file_perms_more_files'], '\'));
+
+				curRow = document.createElement("tr");
+				curRow.className = "windowbg";
+				curRow.id = "content_" + ident + "_more";
+				tableHandle.appendChild(curRow);
+				curCol = document.createElement("td");
+				curCol.className = "smalltext";
+				curCol.width = "40%";
+
+				curCol.innerHTML = repeatString("&nbsp;", curLevel);
+				curCol.appendChild(document.createTextNode(\'\\u00ab \'));
+				curCol.appendChild(linkData);
+				curCol.appendChild(document.createTextNode(\' \\u00bb\'));
+
+				curRow.appendChild(curCol);
+				curCol = document.createElement("td");
+				curCol.className = "smalltext";
+				curRow.appendChild(curCol);
 			}
 		}
 	// ]]></script>';
@@ -1563,7 +1617,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 
 			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident . '/' . $name);
 			echo '
-			<tr class="windowbg" id="content_', $js_ident, '_', $cur_ident, '">
+			<tr class="windowbg" id="content_', $cur_ident, '">
 				<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
 					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
 
@@ -1593,7 +1647,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 	// We have more files to show?
 	if ($has_more)
 		echo '
-	<tr class="windowbg">
+	<tr class="windowbg" id="content_', $js_ident, '_more">
 		<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
 			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
 		</td>
