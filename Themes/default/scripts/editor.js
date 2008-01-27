@@ -1,5 +1,5 @@
 // Make an editor!!
-function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight)
+function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight, bRichEditOff)
 {
 
 	// Create some links to the editor object.
@@ -14,7 +14,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = !is_opera && (is_ie5up || is_ff);
+	this.bRichTextPossible = (is_ie5up || is_ff) && !bRichEditOff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -1005,7 +1005,7 @@ SmfEditor.prototype.toggleView = function(bView)
 {
 	if (!this.bRichTextPossible)
 	{
-		alert('Your browser does not support Rich Text editing.');
+		alert(oEditorStrings['wont_work']);
 		return false;
 	}
 
@@ -1026,7 +1026,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	// Replace with a force reload.
 	if (!window.XMLHttpRequest)
 	{
-		alert('Your browser does not support this function!');
+		alert(oEditorStrings['func_disabled']);
 		return;
 	}
 

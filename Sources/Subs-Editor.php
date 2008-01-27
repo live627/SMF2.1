@@ -1005,6 +1005,10 @@ function create_control_richedit($editorOptions)
 		<link rel="stylesheet" type="text/css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/' . ($context['browser']['is_ie'] ? 'editor_ie.css' : 'editor.css') . '" />
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
+			var oEditorStrings= {
+				wont_work: \'' . addcslashes($txt['rich_edit_wont_work'], "'") . '\',
+				func_disabled: \'' . addcslashes($txt['rich_edit_function_disabled'], "'") . '\'
+			}
 		// ]]></script>
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js"></script>';
 

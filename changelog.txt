@@ -52,6 +52,8 @@ January 2008
  ! Redirect after running scheduled tasks manually and tell the user we actually did something. (ManageMaintenance.php, ManageMaintenance language file) [Bug 1357]
  ! On backups only try to get more memory if PHP doesn't already have a high default. (DumpDatabase.php) [Bug 1366]
  ! Added some more sorting options to manage search engines. (ManageSearchEngines.php) [Bug 1386]
+ ! Don't bother making lots of WYSWIYG stuff if it's switched off. (editor.js) [Bug 1360]
+ & Make the WYSIWYG error messages translatable. (editor.js, Subs-Editor.php, Post language file)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
