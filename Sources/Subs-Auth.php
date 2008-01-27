@@ -186,7 +186,6 @@ function setLoginCookie($cookie_length, $id, $password = '')
 		session_regenerate_id();
 		$_SESSION = $oldSessionData;
 
-
 		// Version 4.3.2 didn't store the cookie of the new session.
 		if (version_compare(PHP_VERSION, '4.3.2') === 0)
 			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
