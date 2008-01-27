@@ -46,6 +46,7 @@ January 2008
  ! Added an AJAX method to test an FTP connection prior to doing a full submit. (Packages.php, Subs-Package.php, Package template)
  ! It's now possible to reset permissions on all files and selected files from the file permissions screen. (Packages.php, Packages template)
  ! Removed cleanupFilePermissions as it's been superseeded by the above. (Subs-Packages.php, Admin.php)
+ * Changed the icons that show package status. (Packages template, package_installed.gif, package_old.gif) [Bug 1271]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
