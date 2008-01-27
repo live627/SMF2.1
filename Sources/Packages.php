@@ -1345,10 +1345,30 @@ function ViewOperations()
 // Allow the admin to reset permissions on files.
 function PackagePermissions()
 {
-	global $context, $txt, $modSettings, $boarddir, $sourcedir, $smcFunc;
+	global $context, $txt, $modSettings, $boarddir, $sourcedir, $smcFunc, $package_ftp;
 
 	// This is a memory eat.
 	@ini_set('memory_limit', '128M');
+
+	// Load up some FTP stuff.
+	create_chmod_control();
+
+	if (empty($package_ftp))
+	{
+		loadClassFile('Class-Package.php');
+		$ftp = new ftp_connection(null);
+		list ($username, $detect_path, $found_path) = $ftp->detect_path($boarddir);
+	
+		$context['package_ftp'] = array(
+			'server' => isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost',
+			'port' => isset($modSettings['package_port']) ? $modSettings['package_port'] : '21',
+			'username' => empty($username) ? (isset($modSettings['package_username']) ? $modSettings['package_username'] : '') : $username,
+			'path' => $detect_path,
+			'form_elements_only' => true,
+		);
+	}
+	else
+		$context['ftp_connected'] = true;
 
 	// Define the template.
 	$context['page_title'] = $txt['package_file_perms'];

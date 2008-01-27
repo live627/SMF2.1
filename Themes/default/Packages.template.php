@@ -1248,19 +1248,22 @@ function template_control_chmod()
 	if (empty($context['package_ftp']))
 		return false;
 
-	echo '
+	if (empty($context['package_ftp']['form_elements_only']))
+	{
+		echo '
 				', sprintf($txt['package_ftp_why'], 'document.getElementById(\'need_writable_list\').style.display = \'\'; return false;'), '<br />
 				<div id="need_writable_list" class="smalltext">
 					', $txt['package_ftp_why_file_list'], '
 					<ul style="display: inline;">';
-	if (!empty($context['notwritable_files']))
-		foreach ($context['notwritable_files'] as $file)
-			echo '
+		if (!empty($context['notwritable_files']))
+			foreach ($context['notwritable_files'] as $file)
+				echo '
 						<li>', $file, '</li>';
 
-	echo '
+		echo '
 					</ul>
 				</div>';
+	}
 
 	if (!empty($context['package_ftp']['error']))
 		echo '
@@ -1283,20 +1286,23 @@ function template_control_chmod()
 						</tr><tr>
 							<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_username">', $txt['package_ftp_username'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="text" size="50" name="ftp_username" id="ftp_username" value="', $context['package_ftp']['username'], '" style="width: 99%;" />
+								<input type="text" size="50" name="ftp_username" id="ftp_username" value="', $context['package_ftp']['username'], '" style="width: 98%;" />
 							</td>
 						</tr><tr>
 							<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_password">', $txt['package_ftp_password'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
+								<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 98%;" />
 							</td>
 						</tr><tr>
 							<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_path">', $txt['package_ftp_path'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" />
+								<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 98%;" />
 							</td>
 						</tr>
-					</table>
+					</table>';
+
+	if (empty($context['package_ftp']['form_elements_only']))
+		echo '
 
 					<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>';
 	
@@ -1306,10 +1312,11 @@ function template_control_chmod()
 				</form>';
 
 	// Hide the details of the list.
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		document.getElementById(\'need_writable_list\').style.display = \'none\';
-	// ]]></script>';
+	if (empty($context['package_ftp']['form_elements_only']))
+		echo '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			document.getElementById(\'need_writable_list\').style.display = \'none\';
+		// ]]></script>';
 }
 
 function template_ftp_required()
@@ -1656,6 +1663,55 @@ function template_file_permissions()
 	}
 
 	echo '
+		</table><br />
+		<table border="0" width="100%" cellspacing="0" cellpadding="4" class="tborder">
+			<tr class="titlebg">
+				<td colspan="2">', $txt['package_file_perms_change'], '</td>
+			</tr>
+			<tr class="windowbg2" valign="top">
+				<td width="4%" align="center">
+					<input type="radio" name="method" value="predefined" />
+				</td>
+				<td>
+					<b>', $txt['package_file_perms_predefined'], ':</b>
+					<select name="predefined">
+						<option value="restricted" selected="selected">', $txt['package_file_perms_pre_restricted'], '</option>
+						<option value="standard">', $txt['package_file_perms_pre_standard'], '</option>
+						<option value="free">', $txt['package_file_perms_pre_free'], '</option>
+					</select><br />
+					<em class="smalltext">', $txt['package_file_perms_predefined_note'], '</em>
+				</td>
+			</tr>
+			<tr class="windowbg2" valign="top">
+				<td width="4%" align="center">
+					<input type="radio" name="method" value="individual" checked="checked" />
+				</td>
+				<td>
+					<b>', $txt['package_file_perms_apply'], '</b><br />
+					<em class="smalltext">', $txt['package_file_perms_custom'], ' <input type="text" name="custom_value" value="0755" maxlength="4" size="5" /></em>
+				</td>
+			</tr>';
+
+	// Likely to need FTP?
+	if (empty($context['ftp_connected']))
+		echo '
+			<tr class="windowbg2">
+				<td colspan="2">
+					<hr />
+					<div style="width: 530px; padding-left: 10px;">
+						', $txt['package_file_perms_ftp_details'], ':
+						', template_control_chmod(), '
+						<span class="smalltext">', $txt['package_file_perms_ftp_retain'], '</span>
+					</div>
+				</td>
+			</tr>';
+
+	echo '
+			<tr class="windowbg2">
+				<td colspan="2" align="right">
+					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" />
+				</td>
+			</tr>
 		</table>
 	</form>';
 }

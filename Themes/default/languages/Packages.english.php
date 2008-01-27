@@ -203,4 +203,16 @@ $txt['package_file_perms_not_writable'] = 'Not Writable';
 $txt['package_file_perms_chmod'] = 'chmod';
 $txt['package_file_perms_more_files'] = 'More Files';
 
+$txt['package_file_perms_change'] = 'Change File Permissions';
+$txt['package_file_perms_predefined'] = 'Use predefined permission profile';
+$txt['package_file_perms_predefined_note'] = 'Note that this only applies the predefined profile to key SMF folders and files.';
+$txt['package_file_perms_apply'] = 'Apply permission settings listed above';
+$txt['package_file_perms_custom'] = 'If &quot;Custom&quot; has been selected use chmod values of:';
+$txt['package_file_perms_pre_restricted'] = 'Restricted - minimum files writable';
+$txt['package_file_perms_pre_standard'] = 'Standard - key files writable';
+$txt['package_file_perms_pre_free'] = 'Free - all files writable';
+$txt['package_file_perms_ftp_details'] = 'On most servers it is only possible to change file permissions using an FTP account. Please enter your FTP details below';
+$txt['package_file_perms_ftp_retain'] = 'Note, SMF will only retain the password information temporarily to aid operation of the package manager.';
+$txt['package_file_perms_go'] = 'Make Changes';
+
 ?>
