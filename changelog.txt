@@ -47,6 +47,7 @@ January 2008
  ! It's now possible to reset permissions on all files and selected files from the file permissions screen. (Packages.php, Packages template)
  ! Removed cleanupFilePermissions as it's been superseeded by the above. (Subs-Packages.php, Admin.php)
  * Changed the icons that show package status. (Packages template, package_installed.gif, package_old.gif) [Bug 1271]
+ ! loadLanguage no longer assumes the user has definitely been loaded. (Load.php) [Bug 1390]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

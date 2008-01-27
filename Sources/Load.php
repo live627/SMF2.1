@@ -1693,7 +1693,7 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 
 	// Default to the user's language.
 	if ($lang == '')
-		$lang = $user_info['language'];
+		$lang = isset($user_info['language']) ? $user_info['language'] : $language;
 
 	if (!$force_reload && isset($already_loaded[$template_name]) && $already_loaded[$template_name] == $lang)
 		return $lang;
