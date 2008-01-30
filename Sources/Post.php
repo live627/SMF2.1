@@ -695,8 +695,8 @@ function Post()
 			$context['last_modified'] = timeformat($row['modified_time']);
 
 		// Get the stuff ready for the form.
-		$form_subject = $row['subject'];//echo $row['body'];
-		$form_message = un_preparsecode($row['body']);//echo $form_message;
+		$form_subject = $row['subject'];
+		$form_message = un_preparsecode($row['body']);
 		censorText($form_message);
 		censorText($form_subject);
 
@@ -2422,6 +2422,7 @@ function QuoteFast()
 		if (!empty($_REQUEST['mode']))
 		{
 			require_once($sourcedir . '/Subs-Editor.php');
+			$row['body'] = strtr($row['body'], array('&lt;' => '#smlt#', '&gt;' => '#smgt#', '&amp;' => '#smamp#'));
 			$row['body'] = bbc_to_html($row['body']);
 			$lb = '<br />';
 		}

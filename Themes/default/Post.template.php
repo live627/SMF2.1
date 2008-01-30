@@ -788,7 +788,7 @@ function template_main()
 				var text = "";
 				for (var i = 0; i < XMLDoc.getElementsByTagName("quote")[0].childNodes.length; i++)
 					text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
-				editorHandle', $context['post_box_name'], '.insertText(text);
+				editorHandle', $context['post_box_name'], '.insertText(text, false, true);
 			}
 		// ]]></script>
 

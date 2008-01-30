@@ -111,9 +111,9 @@ function bbc_to_html($text)
 	// Note that IE doesn't understand spans really - make them something "legacy"
 	$working_html = array(
 		'~<del>(.+?)</del>~i' => '<strike>' . "$" .'1</strike>',
-		//'~<span\sclass="bbc_u">(.+?)</span>~i' => '<u>' . "$" .'1</u>',
-		//'~<span\sstyle="color:\s*([#\d\w]+);" class="bbc_color">(.+?)</span>~i' => '<font color="' . "$" .'1">' . "$" .'2</font>',
-		//'~<span\sstyle="font-family:\s*([#\d\w\s]+);" class="bbc_font">(.+?)</span>~i' => '<font face="' . "$" .'1">' . "$" .'2</font>',
+		'~<span\sclass="bbc_u">(.+?)</span>~i' => '<u>' . "$" .'1</u>',
+		'~<span\sstyle="color:\s*([#\d\w]+);" class="bbc_color">(.+?)</span>~i' => '<font color="' . "$" .'1">' . "$" .'2</font>',
+		'~<span\sstyle="font-family:\s*([#\d\w\s]+);" class="bbc_font">(.+?)</span>~i' => '<font face="' . "$" .'1">' . "$" .'2</font>',
 		'~<div\sstyle="text-align:\s*(left|right);">(.+?)</div>~i' => '<p align="' . "$" .'1">' . "$" .'2</p>',
 	);
 	$text = preg_replace(array_keys($working_html), array_values($working_html), $text);

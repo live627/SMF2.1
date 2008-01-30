@@ -300,7 +300,7 @@ SmfEditor.prototype.init = function()
 		this.addSelect(this.aSelectControls[i]);
 }
 
-	// Return the current text.
+// Return the current text.
 SmfEditor.prototype.getText = function(bPrepareEntities, bModeOverride)
 {
 	var bCurMode = typeof(bModeOverride) != 'undefined' ? bModeOverride : this.bRichTextEnabled;
@@ -326,6 +326,17 @@ SmfEditor.prototype.getText = function(bPrepareEntities, bModeOverride)
 	return sText;
 }
 
+// Return the current text.
+SmfEditor.prototype.unprotectText = function(sText)
+{
+	var bCurMode = typeof(bModeOverride) != 'undefined' ? bModeOverride : this.bRichTextEnabled;
+
+	// This restores smlt, smgt and smamp into boring entities, to unprotect against XML'd information like quotes.
+	sText = sText.replace(/#smlt#/g, '&lt;').replace(/#smgt#/g, '&gt;').replace(/#smamp#/g, '&amp;');
+
+	// Return it.
+	return sText;
+}
 
 SmfEditor.prototype.editorKeyUp = function()
 {
@@ -498,8 +509,11 @@ SmfEditor.prototype.doSubmit = function()
 }
 
 // Populate the box with text.
-SmfEditor.prototype.insertText = function(sText, bClear)
+SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse)
 {
+	if (bForceEntityReverse)
+		sText = this.unprotectText(sText);
+
 	// Erase it all?
 	if (bClear)
 	{
