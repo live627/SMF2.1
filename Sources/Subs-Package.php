@@ -2258,7 +2258,7 @@ function package_chmod($filename, $perm_state = 'writable')
 {
 	global $package_ftp;
 
-	if (file_exists($filename) && is_writable($filename))
+	if (file_exists($filename) && is_writable($filename) && $perm_state == 'writable')
 		return true;
 
 	// Start off checking without FTP.

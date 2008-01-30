@@ -55,6 +55,7 @@ January 2008
  ! Don't bother making lots of WYSWIYG stuff if it's switched off. (editor.js) [Bug 1360]
  & Make the WYSIWYG error messages translatable. (editor.js, Subs-Editor.php, Post language file)
  ! The file permissions screen now retains tree status after change of permissions. (Packages.php, Packages template)
+ ! File permissions wasn't making writable stuff read only, and now shows when folders can't be expanded any further. (Packages.php, Subs-Packages.php, Packages template)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

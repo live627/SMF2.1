@@ -1457,7 +1457,7 @@ function template_file_permissions()
 
 			for (i = 0; i < possibleTags.length; i++)
 			{
-				if (possibleTags[i].id.indexOf("content_" + folderIdent) == 0 && possibleTags[i].id != "content_" + folderIdent)
+				if (possibleTags[i].id.indexOf("content_" + folderIdent + "|=|") == 0)
 				{
 					possibleTags[i].style.display = possibleTags[i].style.display == "none" ? "" : "none";
 					foundOne = true;
@@ -1531,8 +1531,24 @@ function template_file_permissions()
 			ajax_indicator(false);
 
 			var fileItems = oXMLDoc.getElementsByTagName(\'folders\')[0].getElementsByTagName(\'folder\');
+
+			// No folders, no longer worth going further.
 			if (fileItems.length < 1)
+			{
+				if (oXMLDoc.getElementsByTagName(\'roots\')[0].getElementsByTagName(\'root\')[0])
+				{
+					var rootName = oXMLDoc.getElementsByTagName(\'roots\')[0].getElementsByTagName(\'root\')[0].firstChild.nodeValue;
+					var itemLink = document.getElementById(\'link_\' + rootName);
+
+					// Move the children up.
+					for (i = 0; i <= itemLink.childNodes.length; i++)
+						itemLink.parentNode.insertBefore(itemLink.childNodes[0], itemLink);
+
+					// And remove the link.
+					itemLink.parentNode.removeChild(itemLink);
+				}
 				return false;
+			}
 			var tableHandle = false;
 			var isMore = false;
 			var ident = "";
@@ -1575,7 +1591,8 @@ function template_file_permissions()
 					if (fileItems[i].getAttribute(\'folder\') == 1)
 					{
 						var linkData = document.createElement("a");
-						linkData.name = "fol_" + ident;
+						linkData.name = "fol_" + my_ident;
+						linkData.id = "link_" + my_ident;
 						linkData.href = \'#\';
 						linkData.path = curPath + "/" + fileItems[i].firstChild.nodeValue;
 						linkData.ident = my_ident;
@@ -1801,7 +1818,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 {
 	global $settings, $txt, $scripturl, $context;
 
-	$js_ident = preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident);
+	$js_ident = preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $ident);
 	// Have we actually done something?
 	$drawn_div = false;
 
@@ -1816,11 +1833,11 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 			<div id="', $js_ident, '">';
 			}
 
-			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident . '/' . $name);
+			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $ident . '/' . $name);
 			echo '
 			<tr class="windowbg" id="content_', $cur_ident, '">
 				<td class="smalltext" width="30%">' . str_repeat('&nbsp;', $level * 5), '
-					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';back_look=' . $context['back_look_data'] . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
+					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" id="link_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';back_look=' . $context['back_look_data'] . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
 
 			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
 				echo '
@@ -1855,7 +1872,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 		echo '
 	<tr class="windowbg" id="content_', $js_ident, '_more">
 		<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
-			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=]~', '', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
+			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
 		</td>
 		<td colspan="6"></td>
 	</tr>';

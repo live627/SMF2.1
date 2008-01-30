@@ -1475,7 +1475,7 @@ function PackagePermissions()
 	{
 		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['Smileys']);
 		$context['file_tree'][strtr($modSettings['smileys_dir'], array('\\' => '/'))] = array(
-			'type' => 'dir',
+			'type' => 'dir_recursive',
 			'writable_on' => 'standard',
 		);
 	}
@@ -1575,6 +1575,14 @@ function PackagePermissions()
 
 	// This will be used if we end up catching XML data.
 	$context['xml_data'] = array(
+		'roots' => array(
+			'identifier' => 'root',
+			'children' => array(
+				array(
+					'value' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find']),
+				),
+			),
+		),
 		'folders' => array(
 			'identifier' => 'folder',
 			'children' => array(),
@@ -1702,8 +1710,8 @@ function fetchPerms__recursive($path, &$data, $level)
 					'level' => $level,
 					'more' => 0,
 					'offset' => $context['file_offset'],
-					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $folder),
-					'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
+					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find'] . '/' . $folder),
+					'ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find']),
 				),
 				'value' => $folder,
 			);
@@ -1733,8 +1741,8 @@ function fetchPerms__recursive($path, &$data, $level)
 
 		$additional_data = array(
 			'perms' => array(
-				'chmod' => @is_writable($path . '/' . $folder),
-				'perms' => @fileperms($path . '/' . $folder),
+				'chmod' => @is_writable($path . '/' . $file),
+				'perms' => @fileperms($path . '/' . $file),
 			),
 		);
 
@@ -1750,8 +1758,8 @@ function fetchPerms__recursive($path, &$data, $level)
 					'level' => $level,
 					'more' => $counter == ($context['file_offset'] + $context['file_limit']) ? 1 : 0,
 					'offset' => $context['file_offset'],
-					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find'] . '/' . $file),
-					'ident' => preg_replace('~[^A-Za-z0-9_\-=]~', '', $context['only_find']),
+					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find'] . '/' . $file),
+					'ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find']),
 				),
 				'value' => $file,
 			);
