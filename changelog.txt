@@ -60,6 +60,7 @@ January 2008
  ! Added a theme specific javascript file to the scripts directory, and moved the code box fix code out to it. (theme.js)
  + Allow users to select the text in a code block. (Subs.php, style.css, index language file) [Feature 1410]
  ! Sorting by IP when viewing a members profile throw an error. (Profile-View.php) [Bug 1397]
+ * Wrong session abbreviation was used in URL for toggling menus. (GenericMenu.php) [Bug 1404]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
