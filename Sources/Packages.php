@@ -1543,12 +1543,27 @@ function PackagePermissions()
 	if (isset($_POST['action_changes']))
 		return PackagePermissionsAction();
 
-	// Are we looking for a particular tree?
-	$context['look_for'] = !empty($_REQUEST['find']) ? base64_decode($_REQUEST['find']) : '';
+	$context['look_for'] = array();
+	// Are we looking for a particular tree - normally an expansion?
+	if (!empty($_REQUEST['find']))
+		$context['look_for'][] = base64_decode($_REQUEST['find']);
 	// Only that tree?
 	$context['only_find'] = isset($_GET['xml']) && !empty($_REQUEST['onlyfind']) ? $_REQUEST['onlyfind'] : '';
 	if ($context['only_find'])
-		$context['look_for'] = $context['only_find'];
+		$context['look_for'][] = $context['only_find'];
+
+	// Have we got a load of back-catalogue trees to expand from a submit etc?
+	if (!empty($_GET['back_look']))
+	{
+		$potententialTrees = unserialize(base64_decode($_GET['back_look']));
+		foreach ($potententialTrees as $tree)
+			$context['look_for'][] = $tree;
+	}
+	// ... maybe posted?
+	if (!empty($_POST['back_look']))
+		$context['only_find'] = array_merge($context['only_find'], $_POST['back_look']);
+
+	$context['back_look_data'] = base64_encode(serialize(array_slice($context['look_for'], 0, 15)));
 
 	// Are we finding more files than first thought?
 	$context['file_offset'] = !empty($_REQUEST['fileoffset']) ? (int) $_REQUEST['fileoffset'] : 0;
@@ -1595,10 +1610,15 @@ function fetchPerms__recursive($path, &$data, $level)
 {
 	global $context;
 
+	$isLikelyPath = false;
+	foreach ($context['look_for'] as $possiblePath)
+		if (substr($possiblePath, 0, strlen($path)) == $path)
+			$isLikelyPath = true;
+
 	// Is this where we stop?
-	if (isset($_GET['xml']) && !empty($context['look_for']) && substr($context['look_for'], 0, strlen($path)) != $path)
+	if (isset($_GET['xml']) && !empty($context['look_for']) && !$isLikelyPath)
 		return;
-	elseif ($level > $context['default_level'] && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($path)) != $path))
+	elseif ($level > $context['default_level'] && !$isLikelyPath)
 		return;
 
 	// Are we actually interested in saving this data?
@@ -1661,9 +1681,11 @@ function fetchPerms__recursive($path, &$data, $level)
 	ksort($foundData['folders']);
 	foreach ($foundData['folders'] as $folder => $type)
 	{
-		$additional_data['perms'] = array(
-			'chmod' => @is_writable($path . '/' . $folder),
-			'perms' => @fileperms($path . '/' . $folder),
+		$additional_data = array(
+			'perms' => array(
+				'chmod' => @is_writable($path . '/' . $folder),
+				'perms' => @fileperms($path . '/' . $folder),
+			),
 		);
 		if ($type !== true)
 			$additional_data['type'] = $type;
@@ -1709,9 +1731,11 @@ function fetchPerms__recursive($path, &$data, $level)
 		if ($counter > ($context['file_offset'] + $context['file_limit']))
 			continue;
 
-		$additional_data['perms'] = array(
-			'chmod' => @is_writable($path . '/' . $file),
-			'perms' => @fileperms($path . '/' . $file),
+		$additional_data = array(
+			'perms' => array(
+				'chmod' => @is_writable($path . '/' . $folder),
+				'perms' => @fileperms($path . '/' . $folder),
+			),
 		);
 
 		// XML?
@@ -1754,6 +1778,7 @@ function PackagePermissionsAction()
 	$context['method'] = $_POST['method'] == 'individual' ? 'individual' : 'predefined';
 	$context['sub_template'] = 'action_permissions';
 	$context['page_title'] = $txt['package_file_perms_applying'];
+	$context['back_look_data'] = isset($_POST['back_look']) ? $_POST['back_look'] : array();
 
 	// Skipping use of FTP?
 	if (empty($package_ftp))
@@ -1808,7 +1833,7 @@ function PackagePermissionsAction()
 
 			// Nothing to do?
 			if (empty($context['to_process']))
-				redirectexit('action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
+				redirectexit('action=admin;area=packages;sa=perms' . (!empty($context['back_look_data']) ? ';back_look=' . base64_encode(serialize($context['back_look_data'])) : '') . ';sesc=' . $context['session_id']);
 		}
 		// Should never get here,
 		else
@@ -1961,7 +1986,7 @@ function PackagePermissionsAction()
 	}
 
 	// If we're here we are done!
-	redirectexit('action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
+	redirectexit('action=admin;area=packages;sa=perms' . (!empty($context['back_look_data']) ? ';back_look=' . base64_encode(serialize($context['back_look_data'])) : '') . ';sesc=' . $context['session_id']);
 }
 
 // Test an FTP connection.

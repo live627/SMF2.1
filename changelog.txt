@@ -54,6 +54,7 @@ January 2008
  ! Added some more sorting options to manage search engines. (ManageSearchEngines.php) [Bug 1386]
  ! Don't bother making lots of WYSWIYG stuff if it's switched off. (editor.js) [Bug 1360]
  & Make the WYSIWYG error messages translatable. (editor.js, Subs-Editor.php, Post language file)
+ ! The file permissions screen now retains tree status after change of permissions. (Packages.php, Packages template)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

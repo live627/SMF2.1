@@ -1678,6 +1678,13 @@ function template_file_permissions()
 				curCol.className = "smalltext";
 				curRow.appendChild(curCol);
 			}
+
+			// Keep track of it.
+			var curInput = createNamedElement("input", "back_look[]");
+			curInput.type = "hidden";
+			curInput.value = curPath;
+
+			curCol.appendChild(curInput);
 		}
 	// ]]></script>';
 
@@ -1780,7 +1787,13 @@ function template_file_permissions()
 					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" />
 				</td>
 			</tr>
-		</table>
+		</table>';
+
+	// Any looks fors we've already done?
+	foreach ($context['look_for'] as $path)
+		echo '
+			<input type="hidden" name="back_look[]" value="', $path, '" />';
+	echo '
 	</form>';
 }
 
@@ -1807,7 +1820,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 			echo '
 			<tr class="windowbg" id="content_', $cur_ident, '">
 				<td class="smalltext" width="30%">' . str_repeat('&nbsp;', $level * 5), '
-					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
+					', (!empty($dir['type']) && $dir['type'] == 'dir_recursive') || !empty($dir['list_contents']) ? '<a name="fol_' . $cur_ident . '" href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident . '/' . $name) . ';back_look=' . $context['back_look_data'] . ';sesc=' . $context['session_id'] . '#fol_' . $cur_ident . '" onclick="return expandFolder(\'' . $cur_ident . '\', \'' . addcslashes($ident . '/' . $name, "'\\") . '\');">' : '';
 
 			if (!empty($dir['type']) && ($dir['type'] == 'dir' || $dir['type'] == 'dir_recursive'))
 				echo '
@@ -1853,7 +1866,14 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 	</div>';
 
 		// Hide anything too far down the tree.
-		if ($level > 1 && (empty($context['look_for']) || substr($context['look_for'], 0, strlen($ident)) != $ident))
+		$isFound = false;
+		foreach ($context['look_for'] as $tree)
+		{
+			if (substr($tree, 0, strlen($ident)) == $ident)
+				$isFound = true;
+		}
+
+		if ($level > 1 && !$isFound)
 			echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			expandFolder(\'', $js_ident, '\', \'\');
@@ -1944,6 +1964,11 @@ function template_action_permissions()
 	if (!empty($context['skip_ftp']))
 		echo '
 					<input type="hidden" name="skip_ftp" value="1" />';
+
+	// Retain state.
+	foreach ($context['back_look_data'] as $path)
+		echo '
+					<input type="hidden" name="back_look[]" value="', $path, '" />';
 
 	echo '
 					<input type="hidden" name="method" value="', $context['method'], '" />
