@@ -919,8 +919,8 @@ function EditSmileys()
 						'db_htmlsafe' => 'code',
 					),
 					'sort' => array(
-						'default' => 'name',
-						'reverse' => 'name DESC',
+						'default' => 'code',
+						'reverse' => 'code DESC',
 					),
 				),
 				'filename' => array(
