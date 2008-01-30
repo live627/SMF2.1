@@ -1184,8 +1184,8 @@ function TrackIP($memID = 0)
 					),
 				),
 				'sort' => array(
-					'default' => 'le.ip',
-					'reverse' => 'le.ip DESC',
+					'default' => 'poster_ip.ip',
+					'reverse' => 'poster_ip.ip DESC',
 				),
 			),
 			'poster' => array(
