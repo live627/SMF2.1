@@ -62,6 +62,7 @@ January 2008
  ! Sorting by IP when viewing a members profile throw an error. (Profile-View.php) [Bug 1397]
  * Wrong session abbreviation was used in URL for toggling menus. (GenericMenu.php) [Bug 1404]
  ! Insert the correct statistics at the birth of a forum. (install.php) [Bug 1405]
+ ! If we think they are using https then use it in install. (install.php, Settings.php) [Bug 1403]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
