@@ -711,6 +711,14 @@ function smf_unhtmlspecialchars(text)
 	return text;
 }
 
+// This will escape single quotes, kinda like PHP.
+function smf_addslashes(text)
+{
+	text = text.replace(/'/g, '\\\'');
+
+	return text;
+}
+
 function createEventListener(oTarget)
 {
 	if (typeof(oTarget.addEventListener) == 'undefined')

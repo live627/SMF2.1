@@ -1100,7 +1100,7 @@ SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, s
 		for (i = 0; i < smileys[iRow].length; i++)
 		{
 			smileys[iRow][i][2] = smileys[iRow][i][2].replace(/"/g, '&quot;');
-			this.oSmileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.insertSmiley(\'' + smileys[iRow][i][1] + '\', \'' + smileys[iRow][i][0] + '\', \'' + smileys[iRow][i][2] + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[iRow][i][1] + '" id="sml_' + smileys[iRow][i][1] + '" alt="' + smileys[iRow][i][2] + '" title="' + smileys[iRow][i][2] + '" style="padding: 4px;" border="0" /></a> ');
+			this.oSmileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.insertSmiley(\'' + smf_addslashes(smileys[iRow][i][1]) + '\', \'' + smf_addslashes(smileys[iRow][i][0]) + '\', \'' + smf_addslashes(smileys[iRow][i][2]) + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[iRow][i][1] + '" id="sml_' + smileys[iRow][i][1] + '" alt="' + smileys[iRow][i][2] + '" title="' + smileys[iRow][i][2] + '" style="padding: 4px;" border="0" /></a> ');
 		}
 		this.oSmileyPopupWindow.document.write('<br />');
 	}
@@ -1112,7 +1112,7 @@ SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, s
 	{
 		for (var i = 0; i < smileys[iRow].length; i++)
 		{
-			this.oSmileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley("' + smileys[iRow][i][0] + '", "' + smileys[iRow][i][1] + '", "' + smileys[iRow][i][2] + '");');
+			this.oSmileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley("' + smf_addslashes(smileys[iRow][i][0]) + '", "' + smf_addslashes(smileys[iRow][i][1]) + '", "' + smf_addslashes(smileys[iRow][i][2]) + '");');
 		}
 	}
 	this.oSmileyPopupWindow.document.write('\n</script>');
