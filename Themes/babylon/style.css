@@ -106,6 +106,7 @@ hr, .hrcolor
 	overflow: auto;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
+	clear: both;
 }
 
 /* The "Quote:" and "Code:" header parts... */
@@ -117,6 +118,13 @@ hr, .hrcolor
 	font-weight: bold;
 	font-size: x-small;
 	line-height: 1.2em;
+}
+
+/* For links to change the code stuff... */
+.codeoperation
+{
+	font-weight: normal;
+	overflow: auto;
 }
 
 /* Generally, those [?] icons.  This makes your cursor a help icon. */

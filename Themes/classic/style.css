@@ -98,10 +98,14 @@ hr
 	color: #000000;
 	background-color: #cccccc;
 	border: 1px solid black;
-	margin: 1px;
+	margin: 1px auto 1px auto;
 	padding: 1px;
 	font-size: x-small;
 	line-height: 1.3em;
+	overflow: auto;
+	width: 99%;
+	white-space: nowrap;
+	clear: both;
 }
 
 /* The "Quote:" and "Code:" header parts... */
@@ -113,6 +117,13 @@ hr
 	font-weight: bold;
 	font-size: x-small;
 	line-height: 1.2em;
+}
+
+/* For links to change the code stuff... */
+.codeoperation
+{
+	font-weight: normal;
+	overflow: auto;
 }
 
 /* Generally, those [?] icons. */

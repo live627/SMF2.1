@@ -43,6 +43,14 @@ else if (!window.XMLHttpRequest && window.ActiveXObject)
 		return new ActiveXObject(is_ie5 ? "Microsoft.XMLHTTP" : "MSXML2.XMLHTTP");
 	};
 
+// Ensure the getElementsByTagName exists.
+if (typeof(document.getElementsByTagName) == "undefined")
+	document.getElementsByTagName = function (name)
+	{
+		// Just return the tags with this name.
+		return document.all.tags[name];
+	}
+
 // Some older versions of Mozilla don't have this, for some reason.
 if (typeof(document.forms) == "undefined")
 	document.forms = document.getElementsByTagName("form");
@@ -476,7 +484,7 @@ function smf_setThemeOption(option, value, theme, cur_session_id, additional_var
 
 function smf_avatarResize()
 {
-	var possibleAvatars = document.getElementsByTagName ? document.getElementsByTagName("img") : document.all.tags("img");
+	var possibleAvatars = document.getElementsByTagName("img");
 
 	for (var i = 0; i < possibleAvatars.length; i++)
 	{
@@ -1109,4 +1117,46 @@ function add_load_event(func)
 	else
 		// Ok just add it to the list of functions to call.
 		onload_events[onload_events.length] = func;
+}
+
+function smfFooterHighlight(element, value)
+{
+	element.src = smf_images_url + "/" + (value ? "h_" : "") + element.id + ".gif";
+}
+
+// Get the text in a code tag.
+function smfSelectText(curElement)
+{
+	// The place we're looking for is two divs up, and next door ;)
+	var codeArea = curElement.parentNode.parentNode.nextSibling;
+	if (!codeArea)
+		return false;
+
+	// Start off with my favourite, internet explorer.
+	if (document.body.createTextRange)
+	{
+		var curRange = document.body.createTextRange();
+		curRange.moveToElementText(codeArea);
+		curRange.select();
+	}
+	// Firefox at el.
+	else if (window.getSelection)
+	{
+		var curSelection = window.getSelection();
+		// Safari is special!
+		if (curSelection.setBaseAndExtent)
+		{
+			curSelection.setBaseAndExtent(codeArea, 0, codeArea, 1);
+		}
+		else
+		{
+			var curRange = document.createRange();
+			curRange.selectNodeContents(codeArea);
+
+			curSelection.removeAllRanges();
+			curSelection.addRange(curRange);
+		}
+	}
+
+	return false;
 }

@@ -333,12 +333,6 @@ function template_body_below()
 	echo '
 
 	<div id="footerarea" style="text-align: center; padding-bottom: 1ex;', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? ' width: 100%;' : '', '">
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			function smfFooterHighlight(element, value)
-			{
-				element.src = smf_images_url + "/" + (value ? "h_" : "") + element.id + ".gif";
-			}
-		// ]]></script>
 		<table cellspacing="0" cellpadding="3" border="0" width="100%">
 			<tr>
 				<td width="28%" valign="middle" align="', !$context['right_to_left'] ? 'right' : 'left', '">

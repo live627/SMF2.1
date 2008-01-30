@@ -71,6 +71,7 @@ function template_html_above()
 	<meta name="description" content="', $context['page_title'], '" />
 	<meta name="keywords" content="PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum" />
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2p"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2p"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -341,12 +342,6 @@ function template_body_below()
 	echo '
 
 	<div id="footerarea" style="text-align: center; padding-bottom: 1ex;', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? ' width: 100%;' : '', '">
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			function smfFooterHighlight(element, value)
-			{
-				element.src = smf_images_url + "/" + (value ? "h_" : "") + element.id + ".gif";
-			}
-		// ]]></script>
 		<table cellspacing="0" cellpadding="3" border="0" align="center" width="100%">
 			<tr>
 				<td width="28%" valign="middle" align="', !$context['right_to_left'] ? 'right' : 'left', '">
@@ -367,60 +362,6 @@ function template_body_below()
 	if ($context['show_load_time'])
 		echo '
 		<span class="smalltext">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</span>';
-
-	// This is an interesting bug in Internet Explorer AND Safari. Rather annoying, it makes overflows just not tall enough.
-	if (($context['browser']['is_ie'] && !$context['browser']['is_ie4']) || $context['browser']['is_mac_ie'] || $context['browser']['is_safari'] || $context['browser']['is_firefox'])
-	{
-		// The purpose of this code is to fix the height of overflow: auto div blocks, because IE can't figure it out for itself.
-		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
-
-		// Unfortunately, Safari does not have a "getComputedStyle" implementation yet, so we have to just do it to code...
-		if ($context['browser']['is_safari'])
-			echo '
-			window.addEventListener("load", smf_codeFix, false);
-
-			function smf_codeFix()
-			{
-				var codeFix = document.getElementsByTagName ? document.getElementsByTagName("div") : document.all.tags("div");
-
-				for (var i = 0; i < codeFix.length; i++)
-				{
-					if ((codeFix[i].className == "code" || codeFix[i].className == "post" || codeFix[i].className == "signature") && codeFix[i].offsetHeight < 20)
-						codeFix[i].style.height = (codeFix[i].offsetHeight + 20) + "px";
-				}
-			}';
-		elseif ($context['browser']['is_firefox'])
-			echo '
-			window.addEventListener("load", smf_codeFix, false);
-			function smf_codeFix()
-			{
-				var codeFix = document.getElementsByTagName ? document.getElementsByTagName("div") : document.all.tags("div");
-
-				for (var i = 0; i < codeFix.length; i++)
-				{
-					if (codeFix[i].className == "code" && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0))
-						codeFix[i].style.overflow = "scroll";
-				}
-			}';
-		else
-			echo '
-			add_load_event(smf_codeFix);
-
-			function smf_codeFix()
-			{
-				var codeFix = document.getElementsByTagName ? document.getElementsByTagName("div") : document.all.tags("div");
-
-				for (var i = codeFix.length - 1; i > 0; i--)
-				{
-					if (codeFix[i].currentStyle.overflow == "auto" && (codeFix[i].currentStyle.height == "" || codeFix[i].currentStyle.height == "auto") && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0) && (codeFix[i].offsetHeight != 0 || codeFix[i].className == "code"))
-						codeFix[i].style.height = (codeFix[i].offsetHeight + 36) + "px";
-				}
-			}';
-
-		echo '
-		// ]]></script>';
-	}
 
 	echo '
 	</div>';

@@ -56,6 +56,9 @@ January 2008
  & Make the WYSIWYG error messages translatable. (editor.js, Subs-Editor.php, Post language file)
  ! The file permissions screen now retains tree status after change of permissions. (Packages.php, Packages template)
  ! File permissions wasn't making writable stuff read only, and now shows when folders can't be expanded any further. (Packages.php, Subs-Packages.php, Packages template)
+ ! If getElementsByTagName doesn't exist, create it. (script.js)
+ ! Added a theme specific javascript file to the scripts directory, and moved the code box fix code out to it. (theme.js)
+ + Allow users to select the text in a code block. (Subs.php, style.css, index language file) [Feature 1410]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
