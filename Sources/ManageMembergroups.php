@@ -368,6 +368,7 @@ function AddMembergroup()
 		checkSession();
 
 		$postCountBasedGroup = isset($_POST['min_posts']) && (!isset($_POST['postgroup_based']) || !empty($_POST['postgroup_based']));
+		$_POST['group_type'] = isset($_POST['group_type']) && $_POST['group_type'] >= 0 && $_POST['group_type'] <= 2 ? (int) $_POST['group_type'] : 0;
 
 		// !!! Check for members with same name too?
 
@@ -385,11 +386,11 @@ function AddMembergroup()
 			'{db_prefix}membergroups',
 			array(
 				'id_group' => 'int', 'description' => 'string', 'group_name' => 'string-80', 'min_posts' => 'int',
-				'stars' => 'string', 'online_color' => 'string',
+				'stars' => 'string', 'online_color' => 'string', 'group_type' => 'int',
 			),
 			array(
 				$id_group, '', $_POST['group_name'], ($postCountBasedGroup ? (int) $_POST['min_posts'] : '-1'),
-				'1#star.gif', '',
+				'1#star.gif', '', $_POST['group_type'],
 			),
 			array('id_group')
 		);
@@ -526,6 +527,10 @@ function AddMembergroup()
 					'comma_group' => ',' . $id_group,
 				)
 			);
+
+		// If this is joinable then set it to show group membership in people's profiles.
+		if (empty($modSettings['show_group_membership']) && $_POST['group_type'] > 0)
+			updateSettings(array('show_group_membership' => 1));
 
 		// Rebuild the group cache.
 		updateSettings(array(

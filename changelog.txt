@@ -63,6 +63,7 @@ January 2008
  * Wrong session abbreviation was used in URL for toggling menus. (GenericMenu.php) [Bug 1404]
  ! Insert the correct statistics at the birth of a forum. (install.php) [Bug 1405]
  ! If we think they are using https then use it in install. (install.php, Settings.php) [Bug 1403]
+ ! When adding a membergroup the group type wasn't taking affect. (ManageMembergroups.php) [Bug 1401]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
