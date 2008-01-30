@@ -329,7 +329,7 @@ function html_to_bbc($text)
 
 	// Now put back the replacement in the text.
 	$text = $replacement;
-	
+
 	// Let's pull out any legacy alignments.
 	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(align="*(left|center|right)"*)[^<>]*?(/?)>~i', $text, $matches) != false)
 	{
@@ -340,9 +340,15 @@ function html_to_bbc($text)
 
 		// End tag?
 		if ($matches[4] != '/' && strpos($text, '</' . $matches[1] . '>', $start_pos) !== false)
+		{
+			$end_length = strlen('</' . $matches[1] . '>');
 			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
+		}
 		else
+		{
+			$end_length = 0;
 			$end_pos = $start_pos + strlen($matches[0]);
+		}
 
 		// Remove the align from that tag so it's never checked again.
 		$tag = substr($text, $start_pos, strlen($matches[0]));
@@ -350,7 +356,7 @@ function html_to_bbc($text)
 		$tag = str_replace($matches[2], '', $tag);
 
 		// Put the tags back into the body.
-		$text = substr($text, 0, $start_pos) . '[' . $matches[3] . ']' . $tag . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos + strlen('</' . $matches[1] . '>'));
+		$text = substr($text, 0, $start_pos) . '[' . $matches[3] . ']' . $tag . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos + $end_length);
 	}
 
 	// Let's do some special stuff for fonts - cause we all love fonts.
@@ -454,30 +460,15 @@ function html_to_bbc($text)
 		$had_params = array();
 		$src = '';
 
-		$attrs = explode(' ', $matches[1]);
-		foreach ($attrs as $attrib)
+		$attrs = fetchTagAttributes($matches[1]);
+		foreach ($attrs as $attrib => $value)
 		{
-			@list ($k, $v) = explode('=', $attrib);
-			if (empty($v))
-				continue;
-
-			$v = strtr($v, array('"' => ''));
-			$k = trim($k);
-
-			if (trim($v) == '')
-				continue;
-
-			if (in_array($k, $had_params))
-				continue;
-
-			if (in_array($k, array('width', 'height')))
-				$params .= ' ' . $k . '=' . (int) $v;
-			elseif ($k == 'alt')
-				$params .= ' alt=' . trim($v);
-			elseif ($k == 'src')
-				$src = trim($v);
-
-			$had_params[] = $k;
+			if (in_array($attrib, array('width', 'height')))
+				$params .= ' ' . $attrib . '=' . (int) $value;
+			elseif ($attrib == 'alt' && trim($value) != '')
+				$params .= ' alt=' . trim($value);
+			elseif ($attrib == 'src')
+				$src = trim($value);
 		}
 
 		$tag = '';
@@ -502,24 +493,12 @@ function html_to_bbc($text)
 		$tag_type = 'url';
 		$href = '';
 
-		$attrs = explode(' ', $matches[1]);
-		foreach ($attrs as $attrib)
+		$attrs = fetchTagAttributes($matches[1]);
+		foreach ($attrs as $attrib => $value)
 		{
-			// Get the key and attribute.
-			$key_offset = strpos($attrib, '=');
-			if ($key_offset === false)
-				continue;
-
-			$k = trim(substr($attrib, 0, $key_offset));
-			$v = trim(substr($attrib, $key_offset + 1));
-			if (empty($v))
-				continue;
-
-			$v = strtr($v, array('"' => ''));
-
-			if (trim($k) == 'href')
+			if ($attrib == 'href')
 			{
-				$href = trim($v);
+				$href = trim($value);
 				if (substr($href, 0, 6) == 'ftp://')
 					$tag_type = 'ftp';
 				elseif (substr($href, 0, 7) == 'mailto:')
@@ -530,9 +509,9 @@ function html_to_bbc($text)
 			}
 
 			// External URL?
-			if (trim($k) == 'target' && $tag_type == 'url')
+			if ($attrib == 'target' && $tag_type == 'url')
 			{
-				if (trim($v) == '_blank')
+				if (trim($value) == '_blank')
 					$tag_type == 'iurl';
 			}
 		}
@@ -724,7 +703,7 @@ function legalise_bbc($text)
 {
 	global $modSettings;
 
-	if (strlen($text < 3))
+	if (strlen($text) < 3)
 		return $text;
 
 	// We are going to cycle through the BBC and keep track of tags as they arise - in order. If get to a block level tag we're going to make sure it's not in a non-block level tag!
@@ -902,6 +881,7 @@ function legalise_bbc($text)
 				// Now move on.
 				$i += strlen($matches[0]) - 1;
 			}
+			// Starting a tag.
 			else
 			{
 				// Get the tag.
