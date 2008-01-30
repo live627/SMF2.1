@@ -391,7 +391,7 @@ $txt['more_stats'] = '[More Stats]';
 
 // Use numeric entities in the below three strings.
 $txt['code'] = 'Code';
-$txt['code_select'] = '&#171; Select Text &#187;';
+$txt['code_select'] = '[Select]';
 $txt['quote_from'] = 'Quote from';
 $txt['quote'] = 'Quote';
 

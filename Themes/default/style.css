@@ -124,7 +124,6 @@ a img
 	overflow: auto;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
-	clear: both;
 }
 
 /* The "Quote:" and "Code:" header parts... */
@@ -143,7 +142,6 @@ a img
 .codeoperation
 {
 	font-weight: normal;
-	overflow: auto;
 }
 
 /* Generally, those [?] icons.  This makes your cursor a help icon. */

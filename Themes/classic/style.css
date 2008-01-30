@@ -105,7 +105,6 @@ hr
 	overflow: auto;
 	width: 99%;
 	white-space: nowrap;
-	clear: both;
 }
 
 /* The "Quote:" and "Code:" header parts... */
@@ -123,7 +122,6 @@ hr
 .codeoperation
 {
 	font-weight: normal;
-	overflow: auto;
 }
 
 /* Generally, those [?] icons. */
