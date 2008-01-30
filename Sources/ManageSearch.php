@@ -639,7 +639,7 @@ function CreateMessageIndex()
 
 				$context['start'] += $index_properties[$context['index_settings']['bytes_per_word']]['step_size'];
 				if ($context['start'] > $index_properties[$context['index_settings']['bytes_per_word']]['max_size'])
-				{echo 'there';
+				{
 					$context['step'] = 3;
 					break;
 				}
