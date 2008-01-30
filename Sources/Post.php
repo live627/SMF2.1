@@ -695,8 +695,8 @@ function Post()
 			$context['last_modified'] = timeformat($row['modified_time']);
 
 		// Get the stuff ready for the form.
-		$form_subject = $row['subject'];
-		$form_message = un_preparsecode($row['body']);
+		$form_subject = $row['subject'];//echo $row['body'];
+		$form_message = un_preparsecode($row['body']);//echo $form_message;
 		censorText($form_message);
 		censorText($form_subject);
 

@@ -67,6 +67,7 @@ January 2008
  ! If the admin session has expired, but the query is using XML, give them another ten minutes (for xml) as they can't login like this and it breaks AJAX. (Security.php)
  ! Prompt the user as to whether they wish to restore permission settings following install of a modification. (Packages.php, Subs-Package.php, Packages template, Packages language file)
  ! Don't use packageRequireFTP anywhere - use the chmod control. (ManageServer.php, PackageGet.php)
+ ! HTML tags were getting slashed when edited. (Subs-Post.php) [Bug 1409]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
