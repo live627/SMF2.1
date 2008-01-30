@@ -228,4 +228,18 @@ $txt['package_file_perms_files_done'] = '%1$d of %2$d files done in current dire
 
 $txt['chmod_value_invalid'] = 'You have tried to enter an invalid chmod value. Chmod must be between 0444 and 0777';
 
+$txt['package_restore_permissions'] = 'Restore File Permissions';
+$txt['package_restore_permissions_desc'] = 'The following file permissions were changed by SMF to install the selected package(s). You can return these files back to their original status by clicking &quot;Restore&quot; below.';
+$txt['package_restore_permissions_restore'] = 'Restore';
+$txt['package_restore_permissions_filename'] = 'Filename';
+$txt['package_restore_permissions_orig_status'] = 'Original Status';
+$txt['package_restore_permissions_cur_status'] = 'Current Status';
+$txt['package_restore_permissions_result'] = 'Result';
+$txt['package_restore_permissions_pre_change'] = '%1$s (%3$s)';
+$txt['package_restore_permissions_post_change'] = '%2$s (%3$s - was %2$s)';
+$txt['package_restore_permissions_action_skipped'] = '<em>Skipped</em>';
+$txt['package_restore_permissions_action_success'] = '<span style="color: green;">Success</span>';
+$txt['package_restore_permissions_action_failure'] = '<span style="color: red;">Failed</span>';
+$txt['package_restore_permissions_action_done'] = 'SMF has attempted to restore the selected files back to their original permissions, the results can be seen below. If a change failed, or for a more detailed view of file permissions, please see the <a href="%1$s">File Permissions</a> section.';
+
 ?>

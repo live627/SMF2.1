@@ -436,6 +436,13 @@ function template_extract_package()
 				</td>
 			</tr>
 		</table>';
+
+	// Show the "restore permissions" screen?
+	if (function_exists('template_show_list'))
+	{
+		echo '<br />';
+		template_show_list('restore_file_permissions');
+	}
 }
 
 function template_list()

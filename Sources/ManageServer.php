@@ -509,7 +509,8 @@ function DownloadLanguage()
 		}
 
 		// Call this in case we have work to do.
-		$files_left = packageRequireFTP('', $chmod_files, true);
+		$file_status = create_chmod_control($chmod_files);
+		$files_left = $file_status['files']['notwritable'];
 
 		// Something not writable?
 		if (!empty($files_left))
@@ -716,7 +717,8 @@ function DownloadLanguage()
 	if (!empty($context['make_writable']))
 	{
 		// What is left to be made writable?
-		$context['still_not_writable'] = packageRequireFTP('', $context['make_writable'], true);
+		$file_status = create_chmod_control($context['make_writable']);
+		$context['still_not_writable'] = $file_status['files']['notwritable'];
 
 		// Mark those which are now writable as such.
 		foreach ($context['files'] as $type => $data)

@@ -588,7 +588,179 @@ function getPackageInfo($gzfilename)
 // Create a chmod control for chmoding files.
 function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $restore_write_status = false)
 {
-	global $context, $modSettings, $package_ftp, $boarddir, $txt;
+	global $context, $modSettings, $package_ftp, $boarddir, $txt, $sourcedir, $scripturl;
+
+	// If we're restoring the status of existing files prepare the data.
+	if ($restore_write_status && isset($_SESSION['pack_ftp']) && !empty($_SESSION['pack_ftp']['original_perms']))
+	{
+		function list_restoreFiles($dummy1, $dummy2, $dummy3, $do_change)
+		{
+			global $txt;
+
+			$restore_files = array();
+			foreach ($_SESSION['pack_ftp']['original_perms'] as $file => $perms)
+			{
+				// Check the file still exists, and the permissions were indeed different than now.
+				$file_permissions = @fileperms($file);
+				if (!file_exists($file) || $file_permissions == $perms)
+				{
+					unset($_SESSION['pack_ftp']['original_perms'][$file]);
+					continue;
+				}
+
+				// Are we wanting to change the permission?
+				if ($do_change && isset($_POST['restore_files']) && in_array($file, $_POST['restore_files']))
+				{
+					// Use FTP if we have it.
+					if (!empty($package_ftp))
+					{
+						$ftp_file = strtr($file, array($_SESSION['pack_ftp']['root'] => ''));
+						$package_ftp->chmod($ftp_file, $perms);
+					}
+					else
+						@chmod($file, $perms);
+
+					$new_permissions = @fileperms($file);
+					$result = $new_permissions == $perms ? 'success' : 'failure';
+					unset($_SESSION['pack_ftp']['original_perms'][$file]);
+				}
+				elseif ($do_change)
+				{
+					$new_permissions = '';
+					$result = 'skipped';
+					unset($_SESSION['pack_ftp']['original_perms'][$file]);
+				}
+
+				// Record the results!
+				$restore_files[] = array(
+					'path' => $file,
+					'old_perms_raw' => $perms,
+					'old_perms' => substr(sprintf('%o', $perms), -4),
+					'cur_perms' => substr(sprintf('%o', $file_permissions), -4),
+					'new_perms' => isset($new_permissions) ? substr(sprintf('%o', $new_permissions), -4) : '',
+					'result' => isset($result) ? $result : '',
+					'writable_message' => '<span style="color: ' . (@is_writable($file) ? 'green' : 'red') . '">' . (@is_writable($file) ? $txt['package_file_perms_writable'] : $txt['package_file_perms_not_writable']) . '</span>',
+				);
+			}
+
+			return $restore_files;
+		}
+
+		$listOptions = array(
+			'id' => 'restore_file_permissions',
+			'title' => $txt['package_restore_permissions'],
+			'get_items' => array(
+				'function' => 'list_restoreFiles',
+				'params' => array(
+					!empty($_POST['restore_perms']),
+				),
+			),
+			'columns' => array(
+				'path' => array(
+					'header' => array(
+						'value' => $txt['package_restore_permissions_filename'],
+					),
+					'data' => array(
+						'db' => 'path',
+						'class' => 'smalltext',
+					),
+				),
+				'old_perms' => array(
+					'header' => array(
+						'value' => $txt['package_restore_permissions_orig_status'],
+					),
+					'data' => array(
+						'db' => 'old_perms',
+						'class' => 'smalltext',
+					),
+				),
+				'cur_perms' => array(
+					'header' => array(
+						'value' => $txt['package_restore_permissions_cur_status'],
+					),
+					'data' => array(
+						'function' => create_function('$rowData', '
+							global $txt;
+
+							$formatTxt = $rowData[\'result\'] == \'\' || $rowData[\'result\'] == \'skipped\' ? $txt[\'package_restore_permissions_pre_change\'] : $txt[\'package_restore_permissions_post_change\'];
+							return sprintf($formatTxt, $rowData[\'cur_perms\'], $rowData[\'new_perms\'], $rowData[\'writable_message\']);
+						'),
+						'class' => 'smalltext',
+					),
+				),
+				'check' => array(
+					'header' => array(
+						'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<input type="checkbox" name="restore_files[]" value="%1$s" class="check" />',
+							'params' => array(
+								'path' => false,
+							),
+						),
+						'style' => 'text-align: center',
+					),
+				),
+				'result' => array(
+					'header' => array(
+						'value' => $txt['package_restore_permissions_result'],
+					),
+					'data' => array(
+						'function' => create_function('$rowData', '
+							global $txt;
+
+							return $txt[\'package_restore_permissions_action_\' . $rowData[\'result\']];
+						'),
+						'class' => 'smalltext',
+					),
+				),
+			),
+			'form' => array(
+				'href' => !empty($chmodOptions['destination_url']) ? $chmodOptions['destination_url'] : $scripturl . '?action=admin;area=packages;sa=perms;restore;sesc=' . $context['session_id'],
+			),
+			'additional_rows' => array(
+				array(
+					'position' => 'below_table_data',
+					'value' => '<input type="submit" name="restore_perms" value="' . $txt['package_restore_permissions_restore'] . '" />',
+					'class' => 'titlebg',
+					'style' => 'text-align: right;',
+				),
+				array(
+					'position' => 'after_title',
+					'value' => '<span class="smalltext">' . $txt['package_restore_permissions_desc'] . '</span>',
+					'class' => 'windowbg2',
+				),
+			),
+		);
+
+		// Work out what columns and the like to show.
+		if (!empty($_POST['restore_perms']))
+		{
+			$listOptions['additional_rows'][1]['value'] = sprintf($txt['package_restore_permissions_action_done'], $scripturl . '?action=admin;area=packages;sa=perms;sesc=' . $context['session_id']);
+			unset($listOptions['columns']['check']);
+			unset($listOptions['form']);
+			unset($listOptions['additional_rows'][0]);
+
+			$context['sub_template'] = 'show_list';
+			$context['default_list'] = 'restore_file_permissions';
+		}
+		else
+		{
+			unset($listOptions['columns']['result']);
+		}
+
+		// Create the list for display.
+		require_once($sourcedir . '/Subs-List.php');
+		createList($listOptions);
+
+		// If we just restored permissions then whereever we are, we are now done and dusted.
+		if (!empty($_POST['restore_perms']))
+			obExit();
+	}
+	// Otherwise, it's entirely irrelevant?
+	elseif ($restore_write_status)
+		return true;
 
 	// This is where we report what we got up to.
 	$return_data = array(

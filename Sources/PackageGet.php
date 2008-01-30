@@ -590,7 +590,7 @@ function PackageDownload()
 		fatal_lang_error('corrupt_compatable', false);
 
 	// Use FTP if necessary.
-	packageRequireFTP($scripturl . '?action=admin;area=packages;get;sa=download' . (isset($_GET['server']) ? ';server=' . $_GET['server'] : '') . (isset($_REQUEST['auto']) ? ';auto' : '') . ';package=' . $_REQUEST['package'] . (isset($_REQUEST['conflict']) ? ';conflict' : '') . ';sesc=' . $context['session_id'], array($boarddir . '/Packages/' . $package_name));
+	create_chmod_control(array($boarddir . '/Packages/' . $package_name), array('destination_url' => $scripturl . '?action=admin;area=packages;get;sa=download' . (isset($_GET['server']) ? ';server=' . $_GET['server'] : '') . (isset($_REQUEST['auto']) ? ';auto' : '') . ';package=' . $_REQUEST['package'] . (isset($_REQUEST['conflict']) ? ';conflict' : '') . ';sesc=' . $context['session_id'], 'crash_on_error' => true));
 	package_put_contents($boarddir . '/Packages/' . $package_name, fetch_web_data($url . $_REQUEST['package']));
 
 	// Done!  Did we get this package automatically?

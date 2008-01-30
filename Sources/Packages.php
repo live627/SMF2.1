@@ -590,8 +590,7 @@ function PackageInstall()
 		fatal_lang_error('package_no_file', false);
 
 	// Load up the package FTP information?
-	if (isset($_SESSION['pack_ftp']))
-		packageRequireFTP($scripturl . '?action=admin;area=packages;sa=' . $_REQUEST['sa'] . ';package=' . $_REQUEST['package']);
+	create_chmod_control(array(), array('destination_url' => $scripturl . '?action=admin;area=packages;sa=' . $_REQUEST['sa'] . ';package=' . $_REQUEST['package']));
 
 	// Make sure temp directory exists and is empty!
 	if (file_exists($boarddir . '/Packages/temp'))
@@ -932,6 +931,9 @@ function PackageInstall()
 
 	// Just in case it's modified any language files let's remove them all.
 	clean_cache('lang');
+
+	// Restore file permissions?
+	create_chmod_control(array(), array(), true);
 }
 
 // List the files in a package.
@@ -1068,7 +1070,7 @@ function PackageRemove()
 	// Can't delete what's not there.
 	if (file_exists($boarddir . '/Packages/' . $_GET['package']))
 	{
-		packageRequireFTP($scripturl . '?action=admin;area=packages;sa=remove;package=' . $_GET['package'], array($boarddir . '/Packages/' . $_GET['package']));
+		create_chmod_control(array($boarddir . '/Packages/' . $_GET['package']), array('destination_url' => $scripturl . '?action=admin;area=packages;sa=remove;package=' . $_GET['package'], 'crash_on_error' => true));
 
 		if (is_dir($boarddir . '/Packages/' . $_GET['package']))
 			deltree($boarddir . '/Packages/' . $_GET['package']);
@@ -1134,10 +1136,7 @@ function PackageBrowse()
 
 	// We need the packages directory to be writable for this.
 	if (!@is_writable($boarddir . '/Packages'))
-	{
 		create_chmod_control(array($boarddir . '/Packages'), array('destination_url' => $scripturl . '?action=admin;area=packages', 'crash_on_error' => true));
-
-	}
 
 	if ($dir = @opendir($boarddir . '/Packages'))
 	{
@@ -1350,6 +1349,13 @@ function PackagePermissions()
 
 	// Let's try and be good, yes?
 	checkSession('get');
+
+	// If we're restoring permissions this is just a pass through really.
+	if (isset($_GET['restore']))
+	{
+		create_chmod_control(array(), array(), true);
+		fatal_lang_error('no_access');
+	}
 
 	// This is a memory eat.
 	@ini_set('memory_limit', '128M');
