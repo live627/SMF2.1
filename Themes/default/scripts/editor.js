@@ -1126,7 +1126,7 @@ SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, s
 	{
 		for (var i = 0; i < smileys[iRow].length; i++)
 		{
-			this.oSmileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley("' + smf_addslashes(smileys[iRow][i][0]) + '", "' + smf_addslashes(smileys[iRow][i][1]) + '", "' + smf_addslashes(smileys[iRow][i][2]) + '");');
+			this.oSmileyPopupWindow.document.write('\n\twindow.opener.editorHandle' + postbox + '.addSmiley(\'' + smf_addslashes(smileys[iRow][i][0]) + '\', \'' + smf_addslashes(smileys[iRow][i][1]) + '\', \'' + smf_addslashes(smileys[iRow][i][2]) + '\');');
 		}
 	}
 	this.oSmileyPopupWindow.document.write('\n</script>');
