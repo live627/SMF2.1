@@ -283,6 +283,9 @@ SmfEditor.prototype.init = function()
 		this.bRichTextEnabled = false;
 	}
 
+	// Make sure we set the message mode correctly.
+	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
+
 	// Set the text - if WYSIWYG is enabled that is.
 	if (this.bRichTextEnabled)
 	{
