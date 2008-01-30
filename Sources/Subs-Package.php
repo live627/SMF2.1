@@ -661,7 +661,7 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 			else
 			{
 				// Now try to change that.
-				$return_data['files'][package_chmod($file) ? 'writable' : 'notwritable'][] = $file;
+				$return_data['files'][package_chmod($file, 'writable', true) ? 'writable' : 'notwritable'][] = $file;
 			}
 		}
 	}
@@ -2254,7 +2254,7 @@ function package_flush_cache($trash = false)
 }
 
 // Try to make a file writable. Return true if it worked, false if it didn't.
-function package_chmod($filename, $perm_state = 'writable')
+function package_chmod($filename, $perm_state = 'writable', $track_change = false)
 {
 	global $package_ftp;
 
@@ -2324,7 +2324,9 @@ function package_chmod($filename, $perm_state = 'writable')
 						closedir($fp);
 	
 					// It worked!
-					$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
+					if ($track_change)
+						$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
+
 					return true;
 				}
 			}
@@ -2366,7 +2368,9 @@ function package_chmod($filename, $perm_state = 'writable')
 
 		if (@is_writable($filename))
 		{
-			$_SESSION['pack_ftp']['original_perms'][$filename] = $file_permissions;
+			if ($track_change)
+				$_SESSION['pack_ftp']['original_perms'][$filename] = $file_permissions;
+
 			return true;
 		}
 		elseif ($perm_state != 'writable' && isset($_SESSION['pack_ftp']['original_perms'][$filename]))

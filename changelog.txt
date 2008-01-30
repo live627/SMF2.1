@@ -64,6 +64,7 @@ January 2008
  ! Insert the correct statistics at the birth of a forum. (install.php) [Bug 1405]
  ! If we think they are using https then use it in install. (install.php, Settings.php) [Bug 1403]
  ! When adding a membergroup the group type wasn't taking affect. (ManageMembergroups.php) [Bug 1401]
+ ! If the admin session has expired, but the query is using XML, give them another ten minutes (for xml) as they can't login like this and it breaks AJAX. (Security.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

@@ -119,8 +119,11 @@ function validateSession()
 	// We don't care if the option is off, because Guests should NEVER get past here.
 	is_not_guest();
 
+	// If we're using XML give an additional ten minutes grace as an admin can't log on in XML mode.
+	$refreshTime = isset($_GET['xml']) ? 4200 : 3600;
+
 	// Is the security option off?  Or are they already logged in?
-	if (!empty($modSettings['securityDisable']) || (!empty($_SESSION['admin_time']) && $_SESSION['admin_time'] + 3600 >= time()))
+	if (!empty($modSettings['securityDisable']) || (!empty($_SESSION['admin_time']) && $_SESSION['admin_time'] + $refreshTime >= time()))
 		return;
 
 	require_once($sourcedir . '/Subs-Auth.php');
