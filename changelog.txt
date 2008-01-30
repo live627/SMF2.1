@@ -75,6 +75,8 @@ January 2008
  ! Toggling the rich text editor could awaken text from the dead. (editor.js) [Bug 1423]
  ! Added a new javascript function smf_addslashes, which does pretty much what the PHP version foes. (script.js)
  ! Ensure we escape single quotes when launching the smiley popup from the rich text editor. (editor.js) [Bug 1421]
+ ! Some BBC wasn't getting converted into HTML understood by IE for the WYSIWYG editor. (Subs-Editor.php) [Bug 1420]
+ ! Don't leave open tags unclosed in the WYSIWYG editor. (Subs-Editor.php) [Bug 1420]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

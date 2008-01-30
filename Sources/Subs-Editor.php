@@ -111,10 +111,10 @@ function bbc_to_html($text)
 	// Note that IE doesn't understand spans really - make them something "legacy"
 	$working_html = array(
 		'~<del>(.+?)</del>~i' => '<strike>' . "$" .'1</strike>',
-		'~<span\sstyle="text-decoration:\sunderline;">(.+?)</span>~i' => '<u>' . "$" .'1</u>',
-		'~<span\sstyle="color:\s*([#\d\w]+);">(.+?)</span>~i' => '<font color="' . "$" .'1">' . "$" .'2</font>',
-		'~<span\sstyle="font-family:\s*([#\d\w\s]+);">(.+?)</span>~i' => '<font face="' . "$" .'1">' . "$" .'2</font>',
-		'~<div\sstyle="text-align:\s*(left|center|right);">(.+?)</div>~i' => '<p align="' . "$" .'1">' . "$" .'2</p>',
+		//'~<span\sclass="bbc_u">(.+?)</span>~i' => '<u>' . "$" .'1</u>',
+		//'~<span\sstyle="color:\s*([#\d\w]+);" class="bbc_color">(.+?)</span>~i' => '<font color="' . "$" .'1">' . "$" .'2</font>',
+		//'~<span\sstyle="font-family:\s*([#\d\w\s]+);" class="bbc_font">(.+?)</span>~i' => '<font face="' . "$" .'1">' . "$" .'2</font>',
+		'~<div\sstyle="text-align:\s*(left|right);">(.+?)</div>~i' => '<p align="' . "$" .'1">' . "$" .'2</p>',
 	);
 	$text = preg_replace(array_keys($working_html), array_values($working_html), $text);
 
@@ -794,7 +794,7 @@ function legalise_bbc($text)
 	// Quickly remove any tags which are back to back.
 	$strip_b2b_tags = array();
 	foreach ($valid_tags as $tag => $dummy)
-		$strip_b2b_tags['~\[' . $tag . '\]\s*\[/' . $tag . '\]~'] = '';
+		$strip_b2b_tags['~\[' . $tag . '[^<>\[\]]*\]\s*\[/' . $tag . '\]~'] = '';
 	$lastlen = 0;
 	while (strlen($new_text) != $lastlen)
 	{
@@ -942,6 +942,13 @@ function legalise_bbc($text)
 					$i += strlen($matches[0]) - 1;
 			}
 		}
+	}
+
+
+	// What, there's still some open tags?!
+	foreach (array_reverse($current_tags) as $tag)
+	{
+		$new_text .= '[/' . $tag['type'] . ']';
 	}
 
 	// Final clean up of back to back tags.
