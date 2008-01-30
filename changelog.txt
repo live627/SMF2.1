@@ -61,6 +61,7 @@ January 2008
  + Allow users to select the text in a code block. (Subs.php, style.css, index language file) [Feature 1410]
  ! Sorting by IP when viewing a members profile throw an error. (Profile-View.php) [Bug 1397]
  * Wrong session abbreviation was used in URL for toggling menus. (GenericMenu.php) [Bug 1404]
+ ! Insert the correct statistics at the birth of a forum. (install.php) [Bug 1405]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

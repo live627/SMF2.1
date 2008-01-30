@@ -1351,6 +1351,14 @@ function doStep2()
 		$id = $smcFunc['db_insert_id']("{$db_prefix}members", 'id_member');
 	}
 
+	// As track stats is by default enabled let's add some activity.
+	$smcFunc['db_insert']('ignore',
+		'{db_prefix}log_activity',
+		array('date' => 'date', 'topics' => 'int', 'posts' => 'int', 'registers' => 'int'),
+		array(strftime('%Y-%m-%d', time()), 1, 1, (!empty($id) ? 1 : 0)),
+		array('date')
+	);
+
 	// Automatically log them in ;).
 	if (isset($id) && isset($salt))
 		setLoginCookie(3153600 * 60, $id, sha1(sha1(strtolower($_POST['username']) . $_POST['password1']) . $salt));
