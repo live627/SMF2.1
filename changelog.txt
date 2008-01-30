@@ -69,6 +69,7 @@ January 2008
  ! Don't use packageRequireFTP anywhere - use the chmod control. (ManageServer.php, PackageGet.php)
  ! HTML tags were getting slashed when edited. (Subs-Post.php) [Bug 1409]
  ! Ensure the WYSIWYG editor mode is correctly set at all times. (GenericControls template, editor.js) [Bug 1416]
+ ! Memcached now requires the memcached module to be compiled into PHP as it's otherwise a drag. (Load.php) [Bug 1353]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
