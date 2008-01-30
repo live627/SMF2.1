@@ -503,7 +503,7 @@ SmfEditor.prototype.insertText = function(sText, bClear)
 	// Erase it all?
 	if (bClear)
 	{
-		if (this.bRichTextEnabled && sText != '')
+		if (this.bRichTextEnabled)
 			this.oFrameDocument.body.innerHTML = sText;
 		else
 			this.oTextHandle.value = sText;

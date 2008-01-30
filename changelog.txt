@@ -72,6 +72,7 @@ January 2008
  ! Memcached now requires the memcached module to be compiled into PHP as it's otherwise a drag. (Load.php) [Bug 1353]
  ! Sorting smileys by code wouldn't work. (ManageSmileys.php)
  ! Made some improvements to the way the WYSIWYG editor handles images and links. (Subs-Editor.php) [Bug 1418]
+ ! Toggling the rich text editor could awaken text from the dead. (editor.js) [Bug 1423]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
