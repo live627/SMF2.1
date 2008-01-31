@@ -73,7 +73,6 @@ function createWaveFile($word)
 		0x01,	0x00,	0x08,	0x00,	0x64,	0x61,	0x74,	0x61,
 	);
 
-
 	$data_size = strlen($sound_word);
 	$file_size = $data_size + 0x24;
 

@@ -686,7 +686,7 @@ function RemoveAttachmentByAge()
 		// Remove all the old avatars.
 		removeAttachments(array('not_id_member' => 0, 'last_login' => (time() - 24 * 60 * 60 * $_POST['age'])), 'members');
 	}
-	redirectexit('action=admin;area=manageattachments' . (empty($_REQUEST['avatars']) ? '' : ';avatars'));
+	redirectexit('action=admin;area=manageattachments' . (empty($_REQUEST['avatars']) ? ';sa=maintenance' : ';avatars'));
 }
 
 function RemoveAttachmentBySize()

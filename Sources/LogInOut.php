@@ -57,6 +57,9 @@ if (!defined('SMF'))
 	string md5_hmac(string data, string key)
 		- old style SMF 1.0.x/YaBB SE 1.5.x hashing.
 		- returns the HMAC MD5 of data with key.
+
+	string phpBB3_password_check(string passwd, string passwd_hash)
+		- Custom encryption for phpBB3 based passwords.
 */
 
 // Ask them for their login information.
@@ -298,6 +301,9 @@ function Login2()
 			// Snitz style - SHA-256.  Technically, this is a downgrade, but most PHP configurations don't support sha256 anyway.
 			if (strlen($user_settings['passwd']) == 64 && function_exists('mhash') && defined('MHASH_SHA256'))
 				$other_passwords[] = bin2hex(mhash(MHASH_SHA256, $_REQUEST['passwrd']));
+
+			// phpBB3 users new hashing.  We now support it as well ;).
+			$other_passwords[] = phpBB3_password_check($_REQUEST['passwrd'], $user_settings['passwd']);
 		}
 		// The hash should be 40 if it's SHA-1, so we're safe with more here too.
 		elseif (strlen($user_settings['passwd']) == 32)
@@ -521,4 +527,63 @@ function md5_hmac($data, $key)
 	return md5(($key ^ str_repeat(chr(0x5c), 64)) . pack('H*', md5(($key ^ str_repeat(chr(0x36), 64)) . $data)));
 }
 
+// Special encryption used by phpBB3.
+function phpBB3_password_check($passwd, $passwd_hash)
+{
+	// Too long or too short?
+	if (strlen($passwd_hash) != 34)
+		return;
+
+	// Range of characters allowed.
+	$range = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+	// Tests
+	$strpos = strpos($range, $passwd_hash[3]);
+	$count = 1 << $strpos;
+	$count2 = $count;
+	$salt = substr($passwd_hash, 4, 8);
+
+	// Things are done differently for PHP 5.
+	if (@version_compare(PHP_VERSION, '5') == 1)
+	{
+		$hash = md5($salt . $passwd, true);
+		for (; $count != 0; --$count)
+			$hash = md5($hash . $passwd, true);;
+	}
+	else
+	{
+		$hash = pack('h*', md5($salt . $passwd));
+		for (; $count != 0; --$count)
+			$hash = pack('H*', md5($hash . $passwd));
+	}
+
+	$output = substr($passwd_hash, 0, 12);
+	$i = 0;
+	while ($i < 16)
+	{
+		$value = ord($hash[$i++]);
+		$output .= $range[$value & 0x3f];
+
+		if ($i < 16)
+			$value |= ord($hash[$i]) << 8;
+
+		$output .= $range[($value >> 6) & 0x3f];
+
+		if ($i++ >= 16)
+			break;
+
+		if ($i < 16)
+			$value |= ord($hash[$i]) << 16;
+
+		$output .= $range[($value >> 12) & 0x3f];
+
+		if ($i++ >= 16)
+			break;
+
+		$output .= $range[($value >> 18) & 0x3f];
+	}
+
+	// Return now.
+	return $output;
+}
 ?>

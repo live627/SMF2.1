@@ -2069,7 +2069,7 @@ function updateSettingsFile($vars)
 			$settingsArray[$i++] = '';
 			continue;
 		}
-		elseif (substr(trim($settingsArray[$i]), -16) == '/install.php\');' && substr(trim($settingsArray[$i]), 0, 26) == 'header(\'Location: http://\'')
+		elseif (substr(trim($settingsArray[$i]), -16) == '/install.php\');' && substr(trim($settingsArray[$i]), 0, 22) == 'header(\'Location: http')
 		{
 			$settingsArray[$i] = '';
 			continue;

@@ -79,6 +79,9 @@ January 2008
  ! Don't leave open tags unclosed in the WYSIWYG editor. (Subs-Editor.php) [Bug 1420]
  ! Editing karma could cause a database error. (Profile-Modify.php) [Bug 1424]
  ! HTML tags were not being handled right when quoting text in the WYSIWYG editor. (Post.php, editor.js) [Bug 1422]
+ ! After installation the install.php check was not removed from Settings.php (install.php) [Bug 1431]
+ + Added support fo phpBB3 password has.  (LogInOut.php)
+ ! Redirect back to the maintenance page after doing maintenance on attachments. (ManageAttachments.php) [Bug 1427]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
