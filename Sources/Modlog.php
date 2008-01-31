@@ -128,8 +128,8 @@ function ViewModlog()
 		$search_params = array(
 			'string' => empty($_REQUEST['search']) ? '' : $_REQUEST['search'],
 			'type' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : isset($searchTypes[$context['order']]) ? $context['order'] : 'member',
-			'type_sql' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['sql'] : isset($searchTypes[$context['order']]) ? $sort_types[$context['order']]['sql'] : 'mem.real_name',
-			'type_label' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['label'] : isset($searchTypes[$context['order']]) ? $sort_types[$context['order']]['label'] : $txt['modlog_member'],
+			'type_sql' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['sql'] : isset($searchTypes[$context['order']]) ? $searchTypes[$context['order']]['sql'] : 'mem.real_name',
+			'type_label' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['label'] : isset($searchTypes[$context['order']]) ? $searchTypes[$context['order']]['label'] : $txt['modlog_member'],
 		);
 	}
 
