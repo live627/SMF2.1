@@ -498,18 +498,18 @@ function template_verification_sound()
 		echo '
 			<object classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95" type="audio/x-wav">
 				<param name="AutoStart" value="1" />
-				<param name="FileName" value="', $context['verification_sound_href'], ';format=.wav" />
+				<param name="FileName" value="', $context['verification_sound_href'], '" />
 			</object>';
 	else
 		echo '
-			<object type="audio/x-wav" data="', $context['verification_sound_href'], ';format=.wav">
-				<a href="', $context['verification_sound_href'], ';format=.wav">', $context['verification_sound_href'], ';format=.wav</a>
+			<object type="audio/x-wav" data="', $context['verification_sound_href'], '">
+				<a href="', $context['verification_sound_href'], '">', $context['verification_sound_href'], '</a>
 			</object>';
 	echo '
 			<br />
 			<a href="', $context['verification_sound_href'], ';sound">', $txt['visual_verification_sound_again'], '</a><br />
 			<a href="javascript:self.close();">', $txt['visual_verification_sound_close'], '</a><br />
-			<a href="', $context['verification_sound_href'], ';format=.wav">', $txt['visual_verification_sound_direct'], '</a>
+			<a href="', $context['verification_sound_href'], '">', $txt['visual_verification_sound_direct'], '</a>
 		</div>
 	</body>
 </html>';

@@ -1695,7 +1695,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_character_set'], ':</b>
+				<b>', $txt['languages_rtl'], ':</b>
 			</td>
 			<td>
 				<input type="checkbox" name="rtl" ', $context['primary_settings']['rtl'] ? 'checked="checked"' : '', ' class="check" />
@@ -1707,9 +1707,10 @@ function template_modify_language_entries()
 			</td>
 		</tr>
 	</table>
-	</form>
+	</form><br />
+
 	<form action="', $scripturl, '?action=admin;area=serversettings;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
-	<table align="center" width="80%" cellpadding="5" cellspacing="1" class="tborder">
+	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">
 				', $txt['edit_language_entries'], '

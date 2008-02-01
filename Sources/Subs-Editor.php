@@ -208,17 +208,17 @@ function html_to_bbc($text)
 				$afterStyle = $matches[4];
 				$curCloseTags = '';
 				$extra_attr = '';
-				
+
 				foreach ($styles as $style_item)
 				{
 					if (trim($style_item) === '')
 						continue;
-						
+
 					// Capture the elements of a single style item (e.g. 'font-weight' and 'bold').
 					@list ($style_type, $style_value) = explode(':', strtr($style_item, '=', ':'));
 
 					$style_value = strtolower(trim($style_value));
-					
+
 					switch (strtolower(trim($style_type)))
 					{
 						case 'font-weight':
@@ -228,7 +228,7 @@ function html_to_bbc($text)
 								$replacement .= '[b]';
 							}
 						break;
-						
+
 						case 'text-decoration':
 							if ($style_value == 'underline')
 							{
@@ -241,7 +241,7 @@ function html_to_bbc($text)
 								$replacement .= '[s]';
 							}
 						break;
-						
+
 						case 'text-align':
 							if ($style_value == 'left')
 							{
@@ -266,8 +266,8 @@ function html_to_bbc($text)
 								$curCloseTags .= '[/i]';
 								$replacement .= '[i]';
 							}
-						break;												
-						
+						break;
+
 						case 'color':
 							$curCloseTags .= '[/color]';
 							$replacement .= '[color=' . $style_value . ']';
@@ -277,30 +277,30 @@ function html_to_bbc($text)
 							$curCloseTags .= '[/size]';
 							$replacement .= '[size=' . $style_value . ']';
 						break;
-												
+
 						case 'font-family':
 							$curCloseTags .= '[/font]';
 							$replacement .= '[font=' . $style_value . ']';
 						break;
-						
+
 						// This is a hack for images with dimensions embedded.
 						case 'width':
 						case 'height':
 							if (preg_match('~[1-9]\d*~i', $style_value, $dimension) === 1)
 								$extra_attr .= ' ' . $style_type . '="' . $dimension[0] . '"';
 						break;
-												
+
 						case 'list-style-type':
 							if (preg_match('~none|disc|circle|square|decimal|decimal-leading-zero|lower-roman|upper-roman|lower-alpha|upper-alpha|lower-greek|lower-latin|upper-latin|hebrew|armenian|georgian|cjk-ideographic|hiragana|katakana|hiragana-iroha|katakana-iroha~i', $style_value, $listType) === 1)
 								$extra_attr .= ' listtype="' . $listType[0] . '"';
 						break;
 					}
 				}
-				
+
 				// If there's something that still needs closing, push it to the stack.
 				if (!empty($curCloseTags))
 					array_push($stack, array(
-							'element' =>$curElement, 
+							'element' =>$curElement,
 							'closeTags' => $curCloseTags
 						)
 					);
@@ -308,18 +308,18 @@ function html_to_bbc($text)
 					$replacement .= $precedingStyle . $extra_attr . $afterStyle;
 			}
 		}
-		
+
 		elseif (preg_match('~</([A-Za-z]+)>~', $part, $matches) === 1)
 		{
 			// Is this the element that we've been waiting for to be closed?
 			if (!empty($stack) && strtolower($matches[1]) === $stack[count($stack) - 1]['element'])
-			{	
+			{
 				$byebyeTag = array_pop($stack);
 				$replacement .= $byebyeTag['closeTags'];
 			}
-			
+
 			// Must've been something else.
-			else 
+			else
 				$replacement .= $part;
 		}
 		// In all other cases, just add the part to the replacement.
@@ -976,6 +976,9 @@ function create_control_richedit($editorOptions)
 	global $txt, $modSettings, $options, $smcFunc;
 	global $context, $settings, $user_info, $sourcedir, $scripturl;
 
+	// Load the Post language file... for the moment at least.
+	loadLanguage('Post');
+
 	// Every control must have a ID!
 	assert(isset($editorOptions['id']));
 	assert(isset($editorOptions['value']));
@@ -1053,9 +1056,6 @@ function create_control_richedit($editorOptions)
 		$temp3 = $settings['theme_dir'];
 		$settings['theme_dir'] = $settings['default_theme_dir'];
 	}
-
-	// Load the Post language file... for the moment at least.
-	loadLanguage('Post');
 
 	if (empty($context['bbc_tags']))
 	{

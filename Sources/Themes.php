@@ -1719,6 +1719,10 @@ function get_file_listing($path, $relative)
 {
 	global $scripturl, $txt, $context;
 
+	// Is it even a directory?
+	if (!is_dir($path))
+		fatal_lang_error('error_invalid_dir', 'critical');
+
 	$dir = dir($path);
 	$entries = array();
 	while ($entry = $dir->read())

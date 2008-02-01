@@ -236,6 +236,7 @@ $txt['language_settings_writable'] = 'Warning: Settings.php is not writable so t
 $txt['edit_languages'] = 'Edit Languages';
 $txt['lang_file_not_writable'] = '<b>Warning:</b> The primary language file (%1$s) is not writable. You must make this writable before you can make any changes.';
 $txt['lang_entries_not_writable'] = '<b>Warning:</b> The language file you wish to edit (%1$s) is not writable. You must make this writable before you can make any changes.';
+$txt['languages_ltr'] = 'Right to Left';
 
 $txt['add_language'] = 'Add Language';
 $txt['add_language_smf'] = 'Download from Simple Machines';

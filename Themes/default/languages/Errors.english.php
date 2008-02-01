@@ -378,4 +378,5 @@ $txt['cannot_restore_first_post'] = 'You cannot restore the first post in a topi
 $txt['parent_topic_missing'] = 'The parent topic of the post you are trying to restore has been deleted.';
 $txt['restored_disabled'] = 'The restoration of topics has been disabled.';
 
+$txt['error_invalid_dir'] = 'The directory you entered is invalid.';
 ?>

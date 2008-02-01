@@ -83,6 +83,12 @@ January 2008
  + Added support fo phpBB3 password has.  (LogInOut.php)
  ! Redirect back to the maintenance page after doing maintenance on attachments. (ManageAttachments.php) [Bug 1427]
  ! When sorting and doing a search in the moderation center it was possible to get a database error. (Modlog.php) [Bug 1434]
+ ! When browsing for theme files make sure that the directory is valid. (Themes.php) [Bug 1458]
+ ! Cast closed and ignore as integers for reported posts in the moderation center. (ModerationCenter template) [Bug 1457]
+ * Removed the duplicate format=.wav from the verification audio links. (Register template) [Bug 1449]
+ * Removed extra semicolon from the delete pm link. (PersonalMessage template) [Bug 1443, 1447]
+ ! Load the Post language file before using strings from that file. (Subs-Editor.php) [Bug 1442]
+ & Use the correct label for left to right setting when editing languages. (Admin template, ManageSettings language file) [Bug 1453]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
