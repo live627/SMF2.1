@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Invision Power Board 2"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2"
+---~ version: "SMF 2.0 Beta 2.1"
 ---~ settings: "/conf_global.php"
 ---~ globals: INFO
 ---~ from_prefix: "`$INFO[sql_database]`.$INFO[sql_tbl_prefix]"

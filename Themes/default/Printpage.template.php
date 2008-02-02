@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2; Printpage
+// Version: 2.0 Beta 2.1; Printpage
 
 function template_print_above()
 {

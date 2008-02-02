@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2; Login
+// Version: 2.0 Beta 2.1; Login
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

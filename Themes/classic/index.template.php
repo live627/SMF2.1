@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2; index
+// Version: 2.0 Beta 2.1; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -44,7 +44,7 @@ function template_init()
 
 	/* The version this template/theme is for.
 		This should probably be the version of SMF it was created for. */
-	$settings['theme_version'] = '2.0 Beta 2';
+	$settings['theme_version'] = '2.0 Beta 2.1';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
 	$settings['use_tabs'] = false;
@@ -68,7 +68,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title'], '" />
 	<meta name="keywords" content="PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2p"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b21"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -80,8 +80,8 @@ function template_html_above()
 			window.open("' . $scripturl . '?action=pm");' : '', '
 	// ]]></script>
 	<title>', $context['page_title'], '</title>
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?b21" />
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b21" media="print" />';
 
 	// Please don't index these Mr Robot.
 	if (!empty($context['robot_no_index']))

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MyTopix 1.2.x"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2"
+---~ version: "SMF 2.0 Beta 2.1"
 ---~ settings: "/config/settings.php"
 ---~ from_prefix: "`{$config['db_name']}`.{$config['db_pref']}"
 ---~ table_test: "{$from_prefix}members"

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "versatileBulletinBoard 1.0.0"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2"
+---~ version: "SMF 2.0 Beta 2.1"
 ---~ settings: "/admin/config.inc.php", "/admin/dbstart.php"
 ---~ from_prefix: "`$databasename`.{$dbprefix}_"
 ---~ table_test: "{$from_prefix}user"

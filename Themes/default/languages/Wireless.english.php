@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2; Wireless
+// Version: 2.0 Beta 2.1; Wireless
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

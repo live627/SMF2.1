@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2; ManagePermissions
+// Version: 2.0 Beta 2.1; ManagePermissions
 
 function template_permission_index()
 {

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MyBulletinBoard 1.0"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2"
+---~ version: "SMF 2.0 Beta 2.1"
 ---~ settings: "/inc/config.php"
 ---~ globals: config
 ---~ from_prefix: "`{$config['database']}`.{$config['table_prefix']}"

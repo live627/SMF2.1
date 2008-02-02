@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "IkonBoard 3.1.x"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2"
+---~ version: "SMF 2.0 Beta 2.1"
 ---~ parameters: ib_database text=MySQL database used by IkonBoard
 ---~ parameters: ib_prefix text=Prefix used by IkonBoard
 ---~ parameters: ib_uploads text=Path to the uploads directory

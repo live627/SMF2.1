@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Land Down Under 80x"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2"
+---~ version: "SMF 2.0 Beta 2.1"
 ---~ settings: "/datas/config.php"
 ---~ globals: $db_users, $db_forum_sections, $db_forum_topics, $db_forum_posts
 ---~ globals: $db_polls, $db_polls_options, $db_polls_voters, $db_pm
