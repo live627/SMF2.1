@@ -295,7 +295,7 @@ function MoveTopic2()
 
 		// Add a URL onto the message.
 		$_POST['reason'] = strtr($_POST['reason'], array(
-			$txt['movetopic_auto_board'] => '[url=' . $scripturl . '?board=' . $_POST['toboard'] . ']' . $board_name . '[/url]',
+			$txt['movetopic_auto_board'] => '[url=' . $scripturl . '?board=' . $_POST['toboard'] . '.0]' . $board_name . '[/url]',
 			$txt['movetopic_auto_topic'] => '[iurl]' . $scripturl . '?topic=' . $topic . '.0[/iurl]'
 		));
 
