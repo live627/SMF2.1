@@ -504,12 +504,15 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 	{
 		if (this.bRichTextEnabled)
 		{
-			// This includes a work around for FF to get the curtor to show!
+			// This includes a work around for FF to get the cursor to show!
 			this.oFrameDocument.body.innerHTML = sText;
 
 			// If FF trick the cursor into coming back!
 			if (is_ff)
 			{
+				// For some entirely unknown reason FF3 Beta 2 requires this.
+				this.oFrameDocument.body.contentEditable = false;
+
 				this.oFrameDocument.designMode = 'off';
 				this.oFrameDocument.designMode = 'on';
 			}
@@ -717,7 +720,7 @@ SmfEditor.prototype.insertSmiley = function(sName, sCode, sDesc)
 	else
 	{
 		var iUniqueSmileyId = 1000 + Math.floor(Math.random() * 100000);
-		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" style="padding-left: 4px;" />');
+		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" style="padding-left: 6px;" />');
 	}
 }
 

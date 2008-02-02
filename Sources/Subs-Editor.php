@@ -121,7 +121,7 @@ function bbc_to_html($text)
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_$3" style="padding-left: 4px;" />\'', $text);
+	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_$3" style="padding-left: 6px;" />\'', $text);
 
 	return $text;
 }
@@ -136,6 +136,9 @@ function html_to_bbc($text)
 
 	// Though some of us love paragraphs the parser will do better with breaks.
 	$text = preg_replace('~</p>\s*?<p>~i', '<br />', $text);
+
+	// If there's a trailing break get rid of it - Firefox tends to add one.
+	$text = preg_replace('~<br\s?/?>$~i', '', $text);
 
 	// Do the smileys ultra first!
 	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>~i', $text, $matches);
