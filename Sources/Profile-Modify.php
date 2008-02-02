@@ -2265,7 +2265,26 @@ function profileSaveAvatarData(&$value)
 
 	require_once($sourcedir . '/ManageAttachments.php');
 
-	$uploadDir = empty($modSettings['custom_avatar_enabled']) ? $modSettings['attachmentUploadDir'] : $modSettings['custom_avatar_dir'];
+	// We need to know where we're going to be putting it..
+	if (!empty($modSettings['custom_avatar_enabled']))
+	{
+		$uploadDir = $modSettings['custom_avatar_dir'];
+		$id_folder = 1;
+	}
+	if (!empty($modSettings['currentAttachmentUploadDir']))
+	{
+		if (!is_array($modSettings['attachmentUploadDir']))
+			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+		// Just use the current path for temp files.
+		$attach_dir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+		$id_folder = $modSettings['currentAttachmentUploadDir'];
+	}
+	else
+	{
+		$attach_dir = $modSettings['attachmentUploadDir'];
+		$id_folder = 1;
+	}
 
 	$downloadedExternalAvatar = false;
 	if ($value == 'external' && allowedTo('profile_remote_avatar') && strtolower(substr($_POST['userpicpersonal'], 0, 7)) == 'http://' && strlen($_POST['userpicpersonal']) > 7 && !empty($modSettings['avatar_download_external']))
@@ -2394,11 +2413,11 @@ function profileSaveAvatarData(&$value)
 					'{db_prefix}attachments',
 					array(
 						'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'fileext' => 'string', 'size' => 'int',
-						'width' => 'int', 'height' => 'int', 'mime_type' => 'string',
+						'width' => 'int', 'height' => 'int', 'mime_type' => 'string', 'id_folder' => 'int',
 					),
 					array(
 						$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $extension, filesize($uploadDir . '/' . $destName),
-						(int) $width, (int) $height, $mime_type,
+						(int) $width, (int) $height, $mime_type, $id_folder,
 					),
 					array('id_attach')
 				);

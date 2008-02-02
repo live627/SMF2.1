@@ -111,6 +111,7 @@ January 2008
  ! Do some primative removal of formatting if used in non-richedit mode. (editor.js) [Bug 1467]
  ! File permissions wasn't selecting "no change" by default. (Packages template) [Bug 1432]
  ! When posting a move topic redirection make sure the URL indicates the page is zero. (MoveTopic.php) [Bug 1436]
+ ! Uploading avatars wouldn't work if you had multiple attachment folders enabled. (Profile-Modify.php) [Bug 1460]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
