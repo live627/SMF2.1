@@ -1611,7 +1611,7 @@ function MessagePost()
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
-					'name' => htmlspecialchars($row['real_name']),
+					'name' => $row['real_name'],
 				);
 			$smcFunc['db_free_result']($request);
 		}
@@ -1633,7 +1633,7 @@ function MessagePost()
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
-					'name' => htmlspecialchars($row['real_name']),
+					'name' => $row['real_name'],
 				);
 			$smcFunc['db_free_result']($request);
 		}

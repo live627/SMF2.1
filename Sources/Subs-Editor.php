@@ -1279,8 +1279,7 @@ function AutoSuggest_Search_Member()
 {
 	global $user_info, $txt, $smcFunc;
 
-	$_REQUEST['search'] = $smcFunc['htmlspecialchars']($_REQUEST['search']) . '*';
-	$_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search']));
+	$_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search'])) . '*';
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	// Find the member.
@@ -1311,8 +1310,6 @@ function AutoSuggest_Search_Member()
 				$row['real_name'] = $utf8;
 		}
 
-		$row['real_name'] = strtr($row['real_name'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
-
 		if (preg_match('~&#\d+;~', $row['real_name']) != 0)
 		{
 			$fixchar = create_function('$n', '
@@ -1327,6 +1324,8 @@ function AutoSuggest_Search_Member()
 
 			$row['real_name'] = preg_replace('~&#(\d+);~e', '$fixchar(\'$1\')', $row['real_name']);
 		}
+
+		$row['real_name'] = strtr($row['real_name'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
 
 		$xml_data['members']['children'][] = array(
 			'attributes' => array(

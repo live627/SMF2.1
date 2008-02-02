@@ -115,6 +115,7 @@ January 2008
  ! Add a hidden setting for a load average limit on unread posts. (Recent.php, Errors language file) [Feature 1435]
  ! The track IP now keeps track of how you entered it (Member or raw IP) and doesn't switch out in error. (Profile-Modify.php, Profile template, Who template) [Bug 1396]
  ! Loading a language would fail on install. (install.php) [Bug 1471]
+ ! Some characters in usernames wouldn't be found by the personal messaging system. (Subs-Editor.php, PersonalMessage.php) [Bug 1384]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
