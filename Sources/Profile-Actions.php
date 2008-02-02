@@ -172,7 +172,7 @@ function issueWarning($memID)
 					'subject' => 'string-255', 'body' => 'string-65534',
 				),
 				array(
-					$_POST['warn_sub'], $_POST['warn_body'],
+					$smcFunc['htmlspecialchars']($_POST['warn_sub']), $smcFunc['htmlspecialchars']($_POST['warn_body']),
 				),
 				array('id_notice')
 			);

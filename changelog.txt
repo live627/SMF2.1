@@ -90,6 +90,7 @@ January 2008
  ! Load the Post language file before using strings from that file. (Subs-Editor.php) [Bug 1442]
  & Use the correct label for left to right setting when editing languages. (Admin template, ManageSettings language file) [Bug 1453]
  ! Don't allow HTML in the ban name as it's more hastle than it's worth. (ManageBans.php) [Bug 1455]
+ ! Store member warning notices in HTML-safe versions. (Profile-Actions.php) [Bug 1454]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
