@@ -1013,8 +1013,33 @@ SmfEditor.prototype.getParentElement = function(oNode)
 SmfEditor.prototype.removeFormatting = function()
 {
 	// Do both at once.
-	this.smf_execCommand('removeformat');
-	this.smf_execCommand('unlink');
+	if (this.bRichTextEnabled)
+	{
+		this.smf_execCommand('removeformat');
+		this.smf_execCommand('unlink');
+	}
+	// Otherwise do a crude move indeed.
+	else
+	{
+		// Get the current selection first.
+		if (this.oTextHandle.caretPos)
+		{
+			var sCurrentText = this.oTextHandle.caretPos.text;
+		}
+		else if (typeof(this.oTextHandle.selectionStart) != "undefined")
+		{
+			var sCurrentText = this.oTextHandle.value.substr(this.oTextHandle.selectionStart, (this.oTextHandle.selectionEnd - this.oTextHandle.selectionStart));
+		}
+		else
+			return;
+
+		// Do bits that are likely to have attributes.
+		sCurrentText = sCurrentText.replace(RegExp("\\[/?(url|img|iurl|ftp|email|img|color|font|size).*?\\]", "g"), '');
+		// Then just anything that looks like BBC.
+		sCurrentText = sCurrentText.replace(RegExp("\\[/?[A-Za-z]+\\]", "g"), '');
+
+		replaceText(sCurrentText, this.oTextHandle);
+	}
 }
 
 // Toggle wysiwyg/normal mode.

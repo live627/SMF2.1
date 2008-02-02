@@ -108,6 +108,7 @@ January 2008
  ! Put some padding to the left of smileys in the rich text editor to simulate the spaces normally required. (editor.js)
  ! Replaced some unnecessarily complex code in the WYSIWYG editor. (editor.js)
  ! The cursor was not showing properly on Firefox. (editor.js)
+ ! Do some primative removal of formatting if used in non-richedit mode. (editor.js) [Bug 1467]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
