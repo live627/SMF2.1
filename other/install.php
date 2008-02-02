@@ -1140,7 +1140,7 @@ function doStep2()
 {
 	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename;
 	global $smcFunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
-	global $current_smf_version, $databases, $sourcedir, $forum_version, $modSettings, $user_info;
+	global $current_smf_version, $databases, $sourcedir, $forum_version, $modSettings, $user_info, $language;
 
 	// Load the SQL server login information.
 	require_once(dirname(__FILE__) . '/Settings.php');
@@ -1433,7 +1433,7 @@ function doStep2()
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) > 0)
-		updateStats('subject', 1, $smcFunc['db_escape_string'](htmlspecialchars($txt['default_topic_subject'])));
+		updateStats('subject', 1, htmlspecialchars($txt['default_topic_subject']));
 	$smcFunc['db_free_result']($request);
 
 	echo '
