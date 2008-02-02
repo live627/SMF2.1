@@ -82,6 +82,9 @@ function ShowAdminHelp()
 {
 	global $txt, $helptxt, $context, $scripturl;
 
+	if (!isset($_GET['help']))
+		fatal_lang_error('no_access');
+
 	// Load the admin help language file and template.
 	loadLanguage('Help');
 

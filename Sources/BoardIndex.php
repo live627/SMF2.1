@@ -134,6 +134,9 @@ function CollapseCategory()
 {
 	global $user_info, $sourcedir;
 
+	if (!isset($_GET['sa']))
+		fatal_lang_error('no_access');
+
 	// Check if the input values are correct.
 	if (in_array($_REQUEST['sa'], array('expand', 'collapse', 'toggle')) && isset($_REQUEST['c']))
 	{

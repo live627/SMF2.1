@@ -162,6 +162,9 @@ function MoveTopic2()
 	global $txt, $board, $topic, $scripturl, $sourcedir, $modSettings, $context;
 	global $board, $language, $user_info, $smcFunc;
 
+	if (empty($topic))
+		fatal_lang_error('no_access');
+
 	// Make sure this form hasn't been submitted before.
 	checkSubmitOnce('check');
 

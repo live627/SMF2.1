@@ -804,6 +804,9 @@ function MergeIndex()
 	global $txt, $board, $context, $smcFunc;
 	global $scripturl, $topic, $user_info, $modSettings;
 
+	if (!isset($_GET['from']))
+		fatal_lang_error('no_access');
+
 	$_REQUEST['targetboard'] = isset($_REQUEST['targetboard']) ? (int) $_REQUEST['targetboard'] : $board;
 	$context['target_board'] = $_REQUEST['targetboard'];
 

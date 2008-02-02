@@ -95,6 +95,7 @@ January 2008
  ! Don't allow permission profiles to have HTML in their name. (ManagePermissions.php) [Bug 1448]
  ! Don't let people prune silly timescales, which could give a wrong type warning. (PersonalMessage.php) [Bug 1444]
  * The template for searching messages could look a little silly with no results. (PersonalMessage template) [Bug 1441]
+ ! Provide a few more no access errors for people loading up pages incorrectly. (Help.php, BoardIndex.php, SplitTopics.php, MoveTopic.php) [Bug 1433]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
