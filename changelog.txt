@@ -105,6 +105,9 @@ January 2008
  ! Search results had an incorrect link for quoting. (Search template) [Bug 1437]
  ! Redirect the user after adding a moderation note to save the risk of resubmission on reload. (ModerationCenter.php) [Bug 1462]
  ! Listening to CAPTCHA sounds wouldn't work correctly in IE6. (Subs-Sound.php)
+ ! Put some padding to the left of smileys in the rich text editor to simulate the spaces normally required. (editor.js)
+ ! Replaced some unnecessarily complex code in the WYSIWYG editor. (editor.js)
+ ! The cursor was not showing properly on Firefox. (editor.js)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

@@ -14,7 +14,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = (is_ie5up || is_ff) && !bRichEditOff;
+	this.bRichTextPossible = (is_ie5up || is_ff || is_opera95up) && !bRichEditOff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -195,7 +195,7 @@ SmfEditor.prototype.init = function()
 		}
 
 		// Populate the editor with nothing by default.
-		if (!is_opera9up)
+		if (!is_opera95up)
 		{
 			this.oFrameDocument.open();
 			this.oFrameDocument.write('');
@@ -494,7 +494,7 @@ SmfEditor.prototype.doSubmit = function()
 }
 
 // Populate the box with text.
-SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse)
+SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iMoveCursorBack)
 {
 	if (bForceEntityReverse)
 		sText = this.unprotectText(sText);
@@ -503,7 +503,17 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse)
 	if (bClear)
 	{
 		if (this.bRichTextEnabled)
+		{
+			// This includes a work around for FF to get the curtor to show!
 			this.oFrameDocument.body.innerHTML = sText;
+
+			// If FF trick the cursor into coming back!
+			if (is_ff)
+			{
+				this.oFrameDocument.designMode = 'off';
+				this.oFrameDocument.designMode = 'on';
+			}
+		}
 		else
 			this.oTextHandle.value = sText;
 	}
@@ -519,13 +529,23 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse)
 			var oRange = this.getRange();
 
 			if (oRange.pasteHTML)
+			{
 				oRange.pasteHTML(sText);
+
+				// Do we want to move the cursor back at all?
+				if (iMoveCursorBack)
+					oRange.moveEnd('character', -iMoveCursorBack);
+
+				oRange.select();
+			}
 			else
 			{
+				// Think this will do actually?
+				this.smf_execCommand('inserthtml', false, sText);
 				// This is a git - we need to do all kinds of crap. Thanks to this page:
 				// http://www.richercomponents.com/Forums/ShowPost.aspx?PostID=2777
 				// Create a new span element first...
-				var oElement = this.oFrameDocument.createElement('span');
+				/*var oElement = this.oFrameDocument.createElement('span');
 				oElement.innerHTML = sText;
 
 				var oSelection = this.getSelect();
@@ -566,7 +586,7 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse)
 					oRange.setEnd(oContainer, iPos + 1);
 					oRange.setStart(oContainer, iPos + 1);
 				} 
-				oSelection.addRange(oRange);
+				oSelection.addRange(oRange);*/
 			}
 		}
 		else
@@ -697,7 +717,7 @@ SmfEditor.prototype.insertSmiley = function(sName, sCode, sDesc)
 	else
 	{
 		var iUniqueSmileyId = 1000 + Math.floor(Math.random() * 100000);
-		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" />');
+		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" style="padding-left: 4px;" />');
 	}
 }
 
@@ -841,7 +861,7 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 	if (sRightTag == '')
 		this.insertText(sLeftTag);
 	else
-		this.insertText(sLeftTag + oSelection + sRightTag);
+		this.insertText(sLeftTag + oSelection + sRightTag, false, false, sRightTag.length);
 }
 
 // Insert a URL link.

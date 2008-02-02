@@ -11,7 +11,8 @@ var is_opera6 = ua.indexOf("opera/6") != -1 || ua.indexOf("opera 6") != -1;
 var is_opera7 = ua.indexOf("opera/7") != -1 || ua.indexOf("opera 7") != -1;
 var is_opera8 = ua.indexOf("opera/8") != -1 || ua.indexOf("opera 8") != -1;
 var is_opera9 = ua.indexOf("opera/9") != -1 || ua.indexOf("opera 9") != -1;
-var is_opera9up = is_opera && !is_opera8 && !is_opera7 && !is_opera6 && !is_opera5;
+var is_opera95 = ua.indexOf("opera/9.5") != -1 || ua.indexOf("opera 9.5") != -1;
+var is_opera95up = is_opera95;
 
 var is_ff = ua.indexOf("firefox") != -1 && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
