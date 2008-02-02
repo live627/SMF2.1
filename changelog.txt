@@ -112,6 +112,7 @@ January 2008
  ! File permissions wasn't selecting "no change" by default. (Packages template) [Bug 1432]
  ! When posting a move topic redirection make sure the URL indicates the page is zero. (MoveTopic.php) [Bug 1436]
  ! Uploading avatars wouldn't work if you had multiple attachment folders enabled. (Profile-Modify.php) [Bug 1460]
+ ! Add a hidden setting for a load average limit on unread posts. (Recent.php, Errors language file) [Feature 1435]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

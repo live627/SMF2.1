@@ -323,6 +323,7 @@ $txt['loadavg_generic_disabled'] = 'Sorry, because of high stress on the server,
 $txt['loadavg_allunread_disabled'] = 'The server\'s resources are temporarily under too high a demand to find all the topics you have not read.';
 $txt['loadavg_unreadreplies_disabled'] = 'The server is currently under high stress.  Please try again shortly.';
 $txt['loadavg_show_posts_disabled'] = 'Please try again later.  This member\'s posts are not currently available due to high load on the server.';
+$txt['loadavg_unread_disabled'] = 'The server\'s resources are temporarily under too high a demand to list out the topics you have not read.';
 
 $txt['cannot_edit_permissions_inherited'] = 'You cannot edit inherited permissions directly, you must either edit the parent group or edit the membergroup inheritance.';
 

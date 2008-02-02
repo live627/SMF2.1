@@ -429,6 +429,8 @@ function UnreadTopics()
 		fatal_lang_error('loadavg_allunread_disabled', false);
 	elseif ($_REQUEST['action'] != 'unread' && !empty($context['load_average']) && !empty($modSettings['loadavg_unreadreplies']) && $context['load_average'] >= $modSettings['loadavg_unreadreplies'])
 		fatal_lang_error('loadavg_unreadreplies_disabled', false);
+	elseif (!$context['showing_all_topics'] && $_REQUEST['action'] == 'unread' && !empty($context['load_average']) && !empty($modSettings['loadavg_unread']) && $context['load_average'] >= $modSettings['loadavg_unread'])
+		fatal_lang_error('loadavg_unread_disabled', false);
 
 	// Parameters for the main query.
 	$query_parameters = array();
