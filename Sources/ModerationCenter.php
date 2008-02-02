@@ -293,6 +293,9 @@ function ModBlockNotes()
 			// Clear the cache.
 			cache_put_data('moderator_notes', null, 240);
 		}
+
+		// Redirect otherwise people can resubmit.
+		redirectexit('action=moderate');
 	}
 
 	// Grab the current notes.

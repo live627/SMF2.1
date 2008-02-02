@@ -103,6 +103,7 @@ January 2008
  + Adding a BBC button for unformatting and unlinking selected text. (Subs-Editor.php, unformat.gif)
  ! Make sure the deliminator works correctly on find members. (Subs-Auth.php, Profile template) [Bug 1446]
  ! Search results had an incorrect link for quoting. (Search template) [Bug 1437]
+ ! Redirect the user after adding a moderation note to save the risk of resubmission on reload. (ModerationCenter.php) [Bug 1462]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
