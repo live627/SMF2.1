@@ -287,7 +287,7 @@ function getBoardIndex($boardIndexOptions)
 	$smcFunc['db_free_result']($result_boards);
 
 	// By now we should know the most recent post...if we wanna know it that is.
-	if (!empty($boardIndexOptions['set_latest_post']))
+	if (!empty($boardIndexOptions['set_latest_post']) && !empty($latest_post['ref']))
 		$context['latest_post'] = $latest_post['ref'];
 
 	return 	$boardIndexOptions['include_categories'] ? $categories : $this_category;

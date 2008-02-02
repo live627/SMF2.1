@@ -212,7 +212,7 @@ function BanList()
 					'value' => $txt['ban_name'],
 				),
 				'data' => array(
-					'db_htmlsafe' => 'name',
+					'db' => 'name',
 					'class' => 'windowbg',
 				),
 				'sort' => array(
@@ -590,6 +590,10 @@ function BanEdit()
 		$addBan = !empty($_POST['add_ban']);
 		if (empty($_POST['ban_name']))
 			fatal_lang_error('ban_name_empty', false);
+
+		// Let's not allow HTML in ban names, it's more evil than beneficial.
+		$_POST['ban_name'] = htmlspecialchars($_POST['ban_name'], ENT_QUOTES);
+
 		// Check whether a ban with this name already exists.
 		$request = $smcFunc['db_query']('', '
 			SELECT id_ban_group

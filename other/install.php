@@ -2062,16 +2062,13 @@ function updateSettingsFile($vars)
 	for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
 	{
 		// Remove the redirect...
-		if (trim($settingsArray[$i]) == 'if (file_exists(dirname(__FILE__) . \'/install.php\'))')
+		if (trim($settingsArray[$i]) == 'if (file_exists(dirname(__FILE__) . \'/install.php\'))' && trim($settingsArray[$i + 1]) == '{' && trim($settingsArray[$i + 3]) == '}')
 		{
+			// Get the four lines to nothing.
 			$settingsArray[$i] = '';
-			$settingsArray[$i++] = '';
-			$settingsArray[$i++] = '';
-			continue;
-		}
-		elseif (substr(trim($settingsArray[$i]), -16) == '/install.php\');' && substr(trim($settingsArray[$i]), 0, 22) == 'header(\'Location: http')
-		{
-			$settingsArray[$i] = '';
+			$settingsArray[++$i] = '';
+			$settingsArray[++$i] = '';
+			$settingsArray[++$i] = '';
 			continue;
 		}
 
