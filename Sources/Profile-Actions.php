@@ -84,6 +84,9 @@ function issueWarning($memID)
 	// Get all the actual settings.
 	list ($modSettings['warning_enable'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
 
+	// This stores any legitimate errors.
+	$issueErrors = array();
+
 	// Doesn't hurt to be overly cautious.
 	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warning'))
 		fatal_lang_error('no_access', false);
@@ -124,6 +127,14 @@ function issueWarning($memID)
 		$context['max_allowed'] = min(100, $cur_profile['warning'] - $current_applied + $context['warning_limit']);
 	}
 
+	// Defaults.
+	$context['warning_data'] = array(
+		'reason' => '',
+		'notify' => '',
+		'notify_subject' => '',
+		'notify_body' => '',
+	);
+
 	// Are we saving?
 	if (isset($_POST['save']))
 	{
@@ -133,7 +144,7 @@ function issueWarning($memID)
 		// This cannot be empty!
 		$_POST['warn_reason'] = trim($_POST['warn_reason']);
 		if ($_POST['warn_reason'] == '')
-			fatal_lang_error('warning_no_reason');
+			$issueErrors[] = 'warning_no_reason';
 		$_POST['warn_reason'] = $smcFunc['htmlspecialchars']($_POST['warn_reason']);
 
 		// If the value hasn't changed it's either no JS or a real no change (Which this will pass)
@@ -154,29 +165,31 @@ function issueWarning($memID)
 			$_POST['warn_sub'] = trim($_POST['warn_sub']);
 			$_POST['warn_body'] = trim($_POST['warn_body']);
 			if (empty($_POST['warn_sub']) || empty($_POST['warn_body']))
-				fatal_lang_error('warning_notify_blank');
+				$issueErrors[] = 'warning_notify_blank';
+			// Send the PM?
+			else
+			{
+				require_once($sourcedir . '/Subs-Post.php');
+				$from = array(
+					'id' => 0,
+					'name' => $context['forum_name'],
+					'username' => $context['forum_name'],
+				);
+				sendpm(array('to' => array($memID), 'bcc' => array()), $_POST['warn_sub'], $_POST['warn_body'], false, $from);
 
-			// Send the PM!
-			require_once($sourcedir . '/Subs-Post.php');
-			$from = array(
-				'id' => 0,
-				'name' => $context['forum_name'],
-				'username' => $context['forum_name'],
-			);
-			sendpm(array('to' => array($memID), 'bcc' => array()), $_POST['warn_sub'], $_POST['warn_body'], false, $from);
-
-			// Log the notice!
-			$smcFunc['db_insert']('',
-				'{db_prefix}log_member_notices',
-				array(
-					'subject' => 'string-255', 'body' => 'string-65534',
-				),
-				array(
-					$smcFunc['htmlspecialchars']($_POST['warn_sub']), $smcFunc['htmlspecialchars']($_POST['warn_body']),
-				),
-				array('id_notice')
-			);
-			$id_notice = $smcFunc['db_insert_id']('{db_prefix}log_member_notices', 'id_notice');
+				// Log the notice!
+				$smcFunc['db_insert']('',
+					'{db_prefix}log_member_notices',
+					array(
+						'subject' => 'string-255', 'body' => 'string-65534',
+					),
+					array(
+						$smcFunc['htmlspecialchars']($_POST['warn_sub']), $smcFunc['htmlspecialchars']($_POST['warn_body']),
+					),
+					array('id_notice')
+				);
+				$id_notice = $smcFunc['db_insert_id']('{db_prefix}log_member_notices', 'id_notice');
+			}
 		}
 
 		// Just in case - make sure notice is valid!
@@ -185,24 +198,51 @@ function issueWarning($memID)
 		// What have we changed?
 		$level_change = $_POST['warning_level'] - $cur_profile['warning'];
 
-		// Log what we've done!
-		$smcFunc['db_insert']('',
-			'{db_prefix}log_comments',
-			array(
-				'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
-				'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
-			),
-			array(
-				$user_info['id'], $user_info['name'], 'warning', $memID, $cur_profile['real_name'],
-				time(), $id_notice, $level_change, $_POST['warn_reason'],
-			),
-			array('id_comment')
-		);
+		// No errors? Proceed!
+		if (empty($issueErrors))
+		{
+			// Log what we've done!
+			$smcFunc['db_insert']('',
+				'{db_prefix}log_comments',
+				array(
+					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
+					'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
+				),
+				array(
+					$user_info['id'], $user_info['name'], 'warning', $memID, $cur_profile['real_name'],
+					time(), $id_notice, $level_change, $_POST['warn_reason'],
+				),
+				array('id_comment')
+			);
 
-		// Make the change.
-		updateMemberData($memID, array('warning' => $_POST['warning_level']));
+			// Make the change.
+			updateMemberData($memID, array('warning' => $_POST['warning_level']));
 
-		redirectexit('action=profile;u=' . $memID);
+			// Leave a lovely message.
+			$context['profile_updated'] = $txt['profile_warning_success'];
+		}
+		else
+		{
+			// Get the base stuff done.
+			loadLanguage('Errors');
+			$context['custom_error_title'] = $txt['profile_warning_errors_occured'];
+
+			// Fill in the suite of errors.
+			$context['post_errors'] = array();
+			foreach ($issueErrors as $error)
+				$context['post_errors'][] = $txt[$error];
+
+			// Try to remember some bits.
+			$context['warning_data'] = array(
+				'reason' => $_POST['warn_reason'],
+				'notify' => !empty($_POST['warn_notify']),
+				'notify_subject' => $_POST['warn_sub'],
+				'notify_body' => $_POST['warn_body'],
+			);
+		}
+
+		// Show the new improved warning level.
+		$context['member']['warning'] = $_POST['warning_level'];
 	}
 
 	$context['page_title'] = $txt['profile_issue_warning'];
@@ -216,7 +256,7 @@ function issueWarning($memID)
 	);
 	$context['current_level'] = 0;
 	foreach ($context['level_effects'] as $limit => $dummy)
-		if ($cur_profile['warning'] >= $limit)
+		if ($context['member']['warning'] >= $limit)
 			$context['current_level'] = $limit;
 
 	// Load up all the old warnings - count first!

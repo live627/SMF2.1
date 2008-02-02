@@ -368,6 +368,8 @@ $txt['profile_warning_notify_title_insulting'] = 'Insulting Users/Staff';
 $txt['profile_warning_issue'] = 'Issue Warning';
 $txt['profile_warning_max'] = '(Max 100)';
 $txt['profile_warning_limit_attribute'] = 'Note you can not adjust this user\'s level by more than %1$d%% in a 24 hour period.';
+$txt['profile_warning_errors_occured'] = 'Warning has not been sent due to following errors';
+$txt['profile_warning_success'] = 'Warning Successfully Issued';
 
 $txt['profile_warning_previous'] = 'Previous Warnings';
 $txt['profile_warning_previous_none'] = 'This user has not received any previous warnings.';

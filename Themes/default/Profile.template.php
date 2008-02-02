@@ -2055,7 +2055,7 @@ function template_issueWarning()
 					<div class="smalltext">', $txt['profile_warning_reason_desc'], '</div>
 				</td>
 				<td>
-					<input type="text" name="warn_reason" id="warn_reason" value="" size="50" style="width: 80%;" />
+					<input type="text" name="warn_reason" id="warn_reason" value="', $context['warning_data']['reason'], '" size="50" style="width: 80%;" />
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -2068,7 +2068,7 @@ function template_issueWarning()
 					<b>', $txt['profile_warning_notify'], ':</b>
 				</td>
 				<td>
-					<input type="checkbox" name="warn_notify" id="warn_notify" onclick="modifyWarnNotify();" />
+					<input type="checkbox" name="warn_notify" id="warn_notify" onclick="modifyWarnNotify();" ', $context['warning_data']['notify'] ? 'checked="checked"' : '', ' />
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -2076,7 +2076,7 @@ function template_issueWarning()
 					<b>', $txt['profile_warning_notify_subject'], ':</b>
 				</td>
 				<td>
-					<input type="text" name="warn_sub" id="warn_sub" value="', $txt['profile_warning_notify_template_subject'], '" size="50" style="width: 80%;" />
+					<input type="text" name="warn_sub" id="warn_sub" value="', empty($context['warning_data']['notify_subject']) ? $txt['profile_warning_notify_template_subject'] : $context['warning_data']['notify_subject'], '" size="50" style="width: 80%;" />
 				</td>
 			</tr>
 			<tr class="windowbg" valign="top">
@@ -2094,7 +2094,7 @@ function template_issueWarning()
 
 	echo '
 					</select><br />
-					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;" ></textarea>
+					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;" >', $context['warning_data']['notify_body'], '</textarea>
 				</td>
 			</tr>
 			</table>
@@ -2170,9 +2170,7 @@ function template_issueWarning()
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById(\'warndiv1\').style.display = "";
 		document.getElementById(\'warndiv2\').style.display = "none";
-		document.getElementById(\'warn_temp\').disabled = "disabled";
-		document.getElementById(\'warn_sub\').disabled = "disabled";
-		document.getElementById(\'warn_body\').disabled = "disabled";
+		modifyWarnNotify();
 	// ]]></script>';
 }
 
@@ -2331,7 +2329,7 @@ function template_error_message()
 
 	echo '
 		<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
-			<span style="text-decoration: underline;">', $txt['profile_errors_occurred'], ':</span>
+			<span style="text-decoration: underline;">', !empty($context['custom_error_title']) ? $context['custom_error_title'] : $txt['profile_errors_occurred'], ':</span>
 			<ul>';
 
 		// Cycle through each error and display an error message.
