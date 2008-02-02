@@ -93,6 +93,7 @@ January 2008
  ! Store member warning notices in HTML-safe versions. (Profile-Actions.php) [Bug 1454]
  ! Handle errors much better on the warning issue page, and tell people what's been done. (Profile.php, Profile template, Profile language file) [Bug 1456]
  ! Don't allow permission profiles to have HTML in their name. (ManagePermissions.php) [Bug 1448]
+ ! Don't let people prune silly timescales, which could give a wrong type warning. (PersonalMessage.php) [Bug 1444]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

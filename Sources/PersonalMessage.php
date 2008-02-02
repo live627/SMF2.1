@@ -2376,7 +2376,7 @@ function MessagePrune()
 		checkSession();
 
 		// Calculate the time to delete before.
-		$deleteTime = time() - (86400 * (int) $_REQUEST['age']);
+		$deleteTime = max(0, time() - (86400 * (int) $_REQUEST['age']));
 
 		// Array to store the IDs in.
 		$toDelete = array();
