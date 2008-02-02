@@ -166,7 +166,7 @@ function template_summary()
 					<td width="40%">
 						<b>', $txt['ip'], ': </b>
 					</td><td>
-						<a href="', $scripturl, '?action=trackip;searchip=', $context['member']['ip'], '" target="_blank" class="new_win">', $context['member']['ip'], '</a>
+						<a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['member']['ip'], '">', $context['member']['ip'], '</a>
 					</td>
 				</tr>';
 
@@ -765,7 +765,7 @@ function template_trackIP()
 
 	// This function always defaults to the last IP used by a member but can be set to track any IP.
 	echo '
-		<form action="', $scripturl, '?action=trackip" method="post" accept-charset="', $context['character_set'], '">';
+		<form action="', $context['base_url'], '" method="post" accept-charset="', $context['character_set'], '">';
 
 	// The first table in the template gives an input box to allow the admin to enter another IP to track.
 	echo '
@@ -826,7 +826,7 @@ function template_trackIP()
 		foreach ($context['ips'] as $ip => $memberlist)
 			echo '
 				<tr>
-					<td class="windowbg2"><a href="', $scripturl, '?action=trackip;searchip=', $ip, ';">', $ip, '</a></td>
+					<td class="windowbg2"><a href="', $context['base_url'], ';searchip=', $ip, ';">', $ip, '</a></td>
 					<td class="windowbg2">', implode(', ', $memberlist), '</td>
 				</tr>';
 	echo '

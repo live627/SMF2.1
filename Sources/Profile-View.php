@@ -1112,14 +1112,22 @@ function TrackIP($memID = 0)
 
 	if ($memID == 0)
 	{
-		$context['ip'] = isset($_REQUEST['searchip']) ? trim($_REQUEST['searchip']) : $user_info['ip'];
+		$context['ip'] = $user_info['ip'];
 		loadTemplate('Profile');
 		loadLanguage('Profile');
 		$context['sub_template'] = 'trackIP';
 		$context['page_title'] = $txt['profile'];
+		$context['base_url'] = $scripturl . '?action=trackip';
 	}
 	else
+	{
 		$context['ip'] = $user_profile[$memID]['member_ip'];
+		$context['base_url'] = $scripturl . '?action=profile;sa=tracking;area=ip;u=' . $memID;
+	}
+
+	// Searching?
+	if (isset($_REQUEST['searchip']))
+		$context['ip'] = trim($_REQUEST['searchip']);
 
 	if (preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $context['ip']) == 0)
 		fatal_lang_error('invalid_ip', false);
@@ -1154,7 +1162,7 @@ function TrackIP($memID = 0)
 		'start_var_name' => 'messageStart',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_messages_from_ip'],
-		'base_href' => $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $context['ip'],
+		'base_href' => $context['base_url'] . ';searchip=' . $context['ip'],
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getIPMessages',
@@ -1177,7 +1185,7 @@ function TrackIP($memID = 0)
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<a href="' . $scripturl . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'format' => '<a href="' . $context['base_url'] . ';searchip=%1$s">%1$s</a>',
 						'params' => array(
 							'ip' => false,
 						),
@@ -1244,7 +1252,7 @@ function TrackIP($memID = 0)
 		'start_var_name' => 'errorStart',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_errors_from_ip'],
-		'base_href' => $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $context['ip'],
+		'base_href' => $context['base_url'] . ';searchip=' . $context['ip'],
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
@@ -1267,7 +1275,7 @@ function TrackIP($memID = 0)
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<a href="' . $scripturl . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'format' => '<a href="' . $context['base_url'] . ';searchip=%1$s">%1$s</a>',
 						'params' => array(
 							'ip' => false,
 						),
