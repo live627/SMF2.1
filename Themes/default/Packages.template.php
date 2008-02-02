@@ -1643,6 +1643,7 @@ function template_file_permissions()
 
 						var curInput = createNamedElement("input", "permStatus[" + curPath + "/" + fileItems[i].firstChild.nodeValue + "]", j == 4 ? \'checked="checked"\' : "");
 						curInput.type = "radio";
+						curInput.checked = "checked";
 						curInput.value = oRadioValues[j];
 
 						curCol.appendChild(curInput);

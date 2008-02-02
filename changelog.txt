@@ -109,6 +109,7 @@ January 2008
  ! Replaced some unnecessarily complex code in the WYSIWYG editor. (editor.js)
  ! The cursor was not showing properly on Firefox. (editor.js)
  ! Do some primative removal of formatting if used in non-richedit mode. (editor.js) [Bug 1467]
+ ! File permissions wasn't selecting "no change" by default. (Packages template) [Bug 1432]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
