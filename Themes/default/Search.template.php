@@ -541,7 +541,7 @@ function template_results()
 				if ($topic['can_reply'])
 				{
 					$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . '">' . $reply_button . '</a>';
-					$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $topic['id'] . '.0;quote=' . $message['id'] . '/' . $message['start'] . ';sesc=' . $context['session_id'] . '">' . $quote_button . '</a>';
+					$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $topic['id'] . '.' . $message['start'] . ';quote=' . $message['id'] . ';sesc=' . $context['session_id'] . '">' . $quote_button . '</a>';
 				}
 				if ($topic['can_mark_notify'])
 					$buttonArray[] = '<a href="' . $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'] . '">' . $notify_button . '</a>';
