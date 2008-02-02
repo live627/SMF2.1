@@ -1247,7 +1247,7 @@ function template_labels()
 					<b>', $txt['pm_label_name'], ':</b>
 				</td>
 				<td align="left">
-					<input type="text" name="label" value="" size="30" maxlength="20" />
+					<input type="text" name="label" value="" size="30" maxlength="30" />
 				</td>
 			</tr>
 			<tr class="catbg3">
