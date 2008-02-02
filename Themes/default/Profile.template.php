@@ -2420,7 +2420,7 @@ function template_profile_ignore_list_modify()
 									<div class="smalltext">
 										', $txt['username_line'], '<br />
 										<br />
-										<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=\\n;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a>
+										<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=LB;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a>
 									</div>
 								</td>
 								<td>

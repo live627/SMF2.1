@@ -101,6 +101,7 @@ January 2008
  ! Removed the teletype and preformatted text tags from being HTML as the rich editor really doesn't handle them well - keep them BBC. (editor.js)
  ! Superscript and subscript now work properly in the rich text editor. (editor.js) [Bug 1445]
  + Adding a BBC button for unformatting and unlinking selected text. (Subs-Editor.php, unformat.gif)
+ ! Make sure the deliminator works correctly on find members. (Subs-Auth.php, Profile template) [Bug 1446]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
