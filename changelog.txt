@@ -104,6 +104,7 @@ January 2008
  ! Make sure the deliminator works correctly on find members. (Subs-Auth.php, Profile template) [Bug 1446]
  ! Search results had an incorrect link for quoting. (Search template) [Bug 1437]
  ! Redirect the user after adding a moderation note to save the risk of resubmission on reload. (ModerationCenter.php) [Bug 1462]
+ ! Listening to CAPTCHA sounds wouldn't work correctly in IE6. (Subs-Sound.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

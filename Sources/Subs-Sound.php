@@ -39,7 +39,7 @@ if (!defined('SMF'))
 
 function createWaveFile($word)
 {
-	global $settings, $user_info;
+	global $settings, $user_info, $context;
 
 	// Try to see if there's a sound font in the user's language.
 	if (file_exists($settings['default_theme_dir'] . '/fonts/sound/a.' . $user_info['language'] . '.wav'))
@@ -82,7 +82,8 @@ function createWaveFile($word)
 
 	// Output the wav.
 	header('Content-type: audio/x-wav');
-	header('Content-Length: ' . $file_size);
+	if (empty($context['browser']['is_ie']))
+		header('Content-Length: ' . $file_size);
 	echo 'RIFF', chr($file_size & 0xFF), chr(($file_size & 0xFF00) >> 8), chr(($file_size & 0xFF0000) >> 16), chr(($file_size & 0xFF000000) >> 24), 'WAVEfmt ';
 	foreach ($sound_header as $char)
 		echo chr($char);
