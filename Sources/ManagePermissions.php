@@ -1870,6 +1870,7 @@ function EditPermissionProfiles()
 		checkSession();
 
 		$_POST['copy_from'] = (int) $_POST['copy_from'];
+		$_POST['profile_name'] = $smcFunc['htmlspecialchars']($_POST['profile_name']);
 
 		// Insert the profile itself.
 		$smcFunc['db_insert']('',
@@ -1916,6 +1917,8 @@ function EditPermissionProfiles()
 		{
 			foreach ($_POST['rename_profile'] as $id => $value)
 			{
+				$value = $smcFunc['htmlspecialchars']($value);
+
 				if (trim($value) != '' && $id > 4)
 					$smcFunc['db_query']('', '
 						UPDATE {db_prefix}permission_profiles
