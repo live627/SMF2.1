@@ -71,6 +71,7 @@ $txt['horizontal_rule'] = 'Horizontal Rule';
 $txt['font_size'] = 'Font Size';
 $txt['font_face'] = 'Font Face';
 $txt['toggle_view'] = 'Toggle View';
+$txt['unformat_text'] = 'Remove Formatting';
 
 $txt['rich_edit_wont_work'] = 'Your browser does not support Rich Text editing.';
 $txt['rich_edit_function_disabled'] = 'Your browser does not support this function.';

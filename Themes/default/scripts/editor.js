@@ -30,7 +30,6 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.aButtonControls = new Array();
 	this.aSelectControls = new Array();
 	this.oSmfSmileys = new Object;
-	this.aFormatQueue = new Array();
 
 	// This is all the elements that can have a simple execCommand.
 	this.oSimpleExec = {
@@ -43,23 +42,20 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 		right: 'justifyright',
 		hr: 'inserthorizontalrule',
 		list: 'insertunorderedlist',
-		orderlist: 'insertorderedlist'
+		orderlist: 'insertorderedlist',
+		sub: 'subscript',
+		sup: 'superscript',
+		indent: 'indent',
+		outdent: 'outdent'
 	}
 
 	// Codes to call a private function
 	this.oSmfExec = {
+		unformat: 'removeFormatting',
 		toggle: 'toggleView'
 	}
 	//smfExec['increase_height'] = makeEditorTaller;
 	//smfExec['decrease_height'] = makeEditorShorter;
-
-	// Things which have direct HTML equivalents. [ => <
-	this.oHtmlEquiv = {
-		pre: 'pre',
-		sub: 'sub',
-		sup: 'sup',
-		tt: 'tt'
-	}
 
 	// Any special breadcrumb mappings to ensure we show a consistant tag name.
 	this.breadCrumbNameTags = {
@@ -340,17 +336,6 @@ SmfEditor.prototype.unprotectText = function(sText)
 
 SmfEditor.prototype.editorKeyUp = function()
 {
-	// Apply any outstanding formatting
-	if (this.aFormatQueue.length > 0)
-	{
-		// Try inserting again.
-		for (i = 0; i < this.aFormatQueue.length; i++)
-			this.insertCustomHTML(this.aFormatQueue[i]);
-
-		// Either way give up.
-		this.aFormatQueue = [];
-	}
-
 	// Rebuild the breadcrumb.
 	this.updateEditorControls();
 }
@@ -847,23 +832,10 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 
 	var oSelection = this.getSelect(true, true);
 	if (oSelection.length == 0)
-		oSelection = '&nbsp;';
+		oSelection = '';
 
-	// If there is no text don't insert yet - add to the queue instead - otherwise it gets ignored.
-	//if (oSelection.length == 0 && (',' + formatQueue.toString() + ',').indexOf(',' + sCode + ',') == -1)
-	//	formatQueue[oSelection.length] = sCode;
-
-	// Are they just HTML equivalents?
-	if (this.oHtmlEquiv[sCode])
-	{
-		var sLeftTag = this.aButtonControls[sCode].sBefore.replace(/\[/g, '<').replace(/\]/g, '>');
-		var sRightTag = this.aButtonControls[sCode].sAfter.replace(/\[/g, '<').replace(/\]/g, '>');
-	}
-	else
-	{
-		var sLeftTag = this.aButtonControls[sCode].sBefore;
-		var sRightTag = this.aButtonControls[sCode].sAfter;
-	}
+	var sLeftTag = this.aButtonControls[sCode].sBefore;
+	var sRightTag = this.aButtonControls[sCode].sAfter;
 
 	// Are we overwriting?
 	if (sRightTag == '')
@@ -1015,6 +987,14 @@ SmfEditor.prototype.getParentElement = function(oNode)
 			return oNode;
 	}
 	return null;
+}
+
+// Remove formatting for the selected text.
+SmfEditor.prototype.removeFormatting = function()
+{
+	// Do both at once.
+	this.smf_execCommand('removeformat');
+	this.smf_execCommand('unlink');
 }
 
 // Toggle wysiwyg/normal mode.

@@ -98,6 +98,9 @@ January 2008
  ! Provide a few more no access errors for people loading up pages incorrectly. (Help.php, BoardIndex.php, SplitTopics.php, MoveTopic.php) [Bug 1433]
  * PM labels can actually be 30 characters long. (PersonalMessage template) [Bug 1440]
  ! The WYSIWYG editor wasn't getting rid of silly linebreaks. (Subs-Editor.php) [Bug 1439]
+ ! Removed the teletype and preformatted text tags from being HTML as the rich editor really doesn't handle them well - keep them BBC. (editor.js)
+ ! Superscript and subscript now work properly in the rich text editor. (editor.js) [Bug 1445]
+ + Adding a BBC button for unformatting and unlinking selected text. (Subs-Editor.php, unformat.gif)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
