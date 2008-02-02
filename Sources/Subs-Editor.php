@@ -111,17 +111,17 @@ function bbc_to_html($text)
 
 	// Note that IE doesn't understand spans really - make them something "legacy"
 	$working_html = array(
-		'~<del>(.+?)</del>~i' => '<strike>' . "$" .'1</strike>',
-		'~<span\sclass="bbc_u">(.+?)</span>~i' => '<u>' . "$" .'1</u>',
-		'~<span\sstyle="color:\s*([#\d\w]+);" class="bbc_color">(.+?)</span>~i' => '<font color="' . "$" .'1">' . "$" .'2</font>',
-		'~<span\sstyle="font-family:\s*([#\d\w\s]+);" class="bbc_font">(.+?)</span>~i' => '<font face="' . "$" .'1">' . "$" .'2</font>',
-		'~<div\sstyle="text-align:\s*(left|right);">(.+?)</div>~i' => '<p align="' . "$" .'1">' . "$" .'2</p>',
+		'~<del>(.+?)</del>~i' => '<strike>$1</strike>',
+		'~<span\sclass="bbc_u">(.+?)</span>~i' => '<u>$1</u>',
+		'~<span\sstyle="color:\s*([#\d\w]+);" class="bbc_color">(.+?)</span>~i' => '<font color="$1">$2</font>',
+		'~<span\sstyle="font-family:\s*([#\d\w\s]+);" class="bbc_font">(.+?)</span>~i' => '<font face="$1">$2</font>',
+		'~<div\sstyle="text-align:\s*(left|right);">(.+?)</div>~i' => '<p align="$1">$2</p>',
 	);
 	$text = preg_replace(array_keys($working_html), array_values($working_html), $text);
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'' . "$" .'2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_' . "$" .'3" />\'', $text);
+	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'$2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_$3" />\'', $text);
 
 	return $text;
 }
@@ -439,13 +439,13 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'' . "$" .'2\' == \'ol\' || \'' . "$" .'2\' == \'OL\' ? \' type=decimal\' : (strlen(\'' . "$" .'4\') > 1 ? \' type=' . "$" .'4\' : \'\')) . \']' . "$" .'5[/list]\'', $text);
+		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '$5[/list]\'', $text);
 	}
 	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', '[li]' . "$" .'1[/li]', $text);
+		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', '[li]$1[/li]' . "\n", $text);
 	}
 
 	// I love my own image...
