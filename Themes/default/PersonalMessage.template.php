@@ -725,7 +725,7 @@ function template_search_results()
 			<tr class="catbg" height="30">
 				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
-		</table><br />';
+		</table>';
 	}
 	else
 	{
@@ -753,6 +753,7 @@ function template_search_results()
 		{
 			// !!! This still needs to be made pretty.
 			echo '
+		<br />
 		<table width="98%" align="center" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td align="left">
@@ -802,7 +803,7 @@ function template_search_results()
 			echo '
 				</td>
 			</tr>
-		</table><br />';
+		</table>';
 		}
 		// Otherwise just a simple list!
 		else
@@ -827,9 +828,12 @@ function template_search_results()
 			echo '
 		<table width="98%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
 			<tr class="windowbg">
-				<td>', $txt['pm_search_none_found'], '</td>
+				<td align="center">', $txt['pm_search_none_found'], '</td>
 			</tr>
-		</table><br />';
+		</table>';
+		else
+			echo '
+		<br />';
 
 		echo '
 		<table width="98%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
@@ -843,7 +847,7 @@ function template_search_results()
 		if (empty($context['personal_messages']))
 			echo '
 			<tr class="windowbg2">
-				<td colspan="3">', $txt['pm_search_none_found'], '</td>
+				<td colspan="3" align="center">', $txt['pm_search_none_found'], '</td>
 			</tr>';
 
 		echo '
