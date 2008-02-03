@@ -442,7 +442,7 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '$5[/list]\'', $text);
+		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '\' . strtr(\'$5\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
 	}
 	$last_text = '';
 	while ($text != $last_text)

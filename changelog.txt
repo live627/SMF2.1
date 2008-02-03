@@ -119,6 +119,7 @@ January 2008
  ! Add a warning to the file permissions screen with some helpful advice. (Packages language file, Packages template) [Bug 1479]
  ! Add a javascript select function to the package operation template. (Packages template) [Feature 1410]
  ! Add an extra space to the select link when specifying a language for code. (Subs.php) [Feature 1410]
+ ! Fixed quotes getting escaped in the WYSIWYG editor. (Subs-Editor.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
