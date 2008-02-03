@@ -1777,7 +1777,8 @@ function saveDBSettings(&$config_vars)
 			$inlinePermissions[] = $var[1];
 	}
 
-	updateSettings($setArray);
+	if (!empty($setArray))
+		updateSettings($setArray);
 
 	// If we have inline permissions we need to save them.
 	if (!empty($inlinePermissions) && allowedTo('manage_permissions'))
