@@ -116,6 +116,9 @@ January 2008
  ! The track IP now keeps track of how you entered it (Member or raw IP) and doesn't switch out in error. (Profile-Modify.php, Profile template, Who template) [Bug 1396]
  ! Loading a language would fail on install. (install.php) [Bug 1471]
  ! Some characters in usernames wouldn't be found by the personal messaging system. (Subs-Editor.php, PersonalMessage.php) [Bug 1384]
+ ! Add a warning to the file permissions screen with some helpful advice. (Packages language file, Packages template) [Bug 1479]
+ ! Add a javascript select function to the package operation template. (Packages template) [Feature 1410]
+ ! Add an extra space to the select link when specifying a language for code. (Subs.php) [Feature 1410]
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

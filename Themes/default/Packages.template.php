@@ -1410,26 +1410,25 @@ function template_view_operations()
 		<title>', $txt['operation_title'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b21"></script>
 	</head>
 	<body>
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
-			<tr class="titlebg" width="100%">
-				<td>', $txt['operation_find'], '</td>
-			</tr>
-			<tr class="windowbg2" width="100%">
-				<td>
-					<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</pre>
-				</td>
-			</tr>
-			<tr class="titlebg" width="100%">
-				<td>', $txt[$operation_text], '</td>
-			</tr>
-			<tr class="windowbg2" width="100%">
-				<td>
-					<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</pre>
-				</td>
-			</tr>
-		</table>
+	<div class="tborder" style="width: 100%;">
+		<div class="titlebg" style="padding: 6px;">
+			', $txt['operation_find'], '
+			<a href="javascript:void(0);" onclick="return smfSelectText(this);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+		</div>
+		<div class="windowbg2" style="padding: 4px;">
+			<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</pre>
+		</div>
+		<div class="titlebg" style="padding: 6px;">
+			', $txt[$operation_text], '
+			<a href="javascript:void(0);" onclick="return smfSelectText(this);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+		</div>
+		<div class="windowbg2" style="padding: 4px;">
+			<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</pre>
+		</div>
+	</div>
 	</body>
 </html>';
 
@@ -1714,6 +1713,16 @@ function template_file_permissions()
 	// ]]></script>';
 
 		echo '
+	<div style="margin: 2ex; padding: 1ex; border: 1px dashed #C16409; color: black; background-color: #FCDBBA; margin-top: 0;">
+		<div>
+			<b style="text-decoration: underline;">', $txt['package_file_perms_warning'], ':</b>
+			<div class="smalltext">
+				<ol style="margin-top: 2px; margin-bottom: 2px">
+					', $txt['package_file_perms_warning_desc'], '
+				</ol>
+			</div>
+		</div>
+	</div>
 	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor">
 			<tr class="titlebg">
