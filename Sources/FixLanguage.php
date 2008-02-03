@@ -935,12 +935,6 @@ the cache go to Admin => Maintenance => Clean Cache.
 
 		$edit_count = 0;
 	}
-	// Fix up the help file with existing indexes.
-	if ($type == 'Help' && preg_match('~\\t\{\$~', $fileContents))
-	{
-		$fileContents = preg_replace('~\\t\{\$~', "\t" . '{' . '\\\\' . "$", $fileContents);
-		$edit_count = 0;
-	}
 	// More silly amounts of joins.
 	if ($type != 'Install' && preg_match('~\' \. \'~', $fileContents, $matches))
 	{

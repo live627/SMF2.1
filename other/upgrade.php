@@ -2094,7 +2094,7 @@ function UpgradeTemplate()
 // Delete the damn thing!
 function DeleteUpgrade()
 {
-	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info;
+	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info, $maintenance;
 
 	$upcontext['sub_template'] = 'upgrade_complete';
 	$upcontext['page_title'] = 'Upgrade Complete';
@@ -2115,6 +2115,9 @@ function DeleteUpgrade()
 		$upcontext['removed_maintenance'] = true;
 		$changes['maintenance'] = $upcontext['user']['main'];
 	}
+	// Otherwise if somehow we are in 2 let's go to 1.
+	elseif (!empty($maintenance) && $maintenance == 2)
+		$changes['maintenance'] = 1;
 
 	// Wipe this out...
 	$upcontext['user'] = array();

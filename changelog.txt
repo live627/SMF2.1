@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 2.1                                                             ???
+SMF 2.0 Beta 2.1                                                03 February 2008
 ================================================================================
 January 2008
 --------------------------------------------------------------------------------
@@ -121,6 +121,8 @@ January 2008
  ! Add an extra space to the select link when specifying a language for code. (Subs.php) [Feature 1410]
  ! Fixed quotes getting escaped in the WYSIWYG editor. (Subs-Editor.php)
  ! Fixed potential undefined index error when saving settings. (ManageServer.php) [Bug 1480]
+ ! Upgrade should always put maintenance mode back to something which ain't 2. (upgrade.php)
+ ! FixLanguages wasn't quite working right for the Help file. (FixLanguage.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008
