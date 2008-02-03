@@ -102,7 +102,7 @@ function bbc_to_html($text)
 	global $modSettings, $smcFunc;
 
 	// What tags do we allow?
-	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'pre', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup', 'tt');
+	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup');
 
 	$text = parse_bbc($text, true, '', $allowed_tags);
 
