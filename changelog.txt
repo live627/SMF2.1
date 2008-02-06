@@ -6,7 +6,7 @@ SMF 2.0 Beta 3
 February 2008
 --------------------------------------------------------------------------------
  ! Try to make sure that garbage collection for sessions is turned on when using database driven sessions. (Load.php) [Bug 1494]
- & Added a compact linktree consiting of category name and current board name to the wireless templates. (Wireless template) [Feature 1243]
+ & Added a compact linktree consisting of category name and current board name to the wireless templates. (Wireless template) [Feature 1243]
  ! Check for registration errors before registering the user. (Register.php) [Bug 1495]
  & Changed the moderation notes interface a bit and added scrollbars. (ModerationCenter template, style.css) [Bug 937]
  + Lowered the limit of moderation notes to show and added pagination. (ModerationCenter.php, ModerationCenter template) [Bug 1476]
