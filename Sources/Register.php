@@ -431,6 +431,10 @@ function Register2()
 			$reg_errors[] = vsprintf($txt['error_' . $error[0]], $error[1]);
 	}
 
+	// Lets check for other errors before trying to register the member.
+	if (!empty($reg_errors))
+		return Register($reg_errors);
+
 	$memberID = registerMember($regOptions, true);
 
 	// What there actually an error of some kind dear boy?
@@ -439,8 +443,6 @@ function Register2()
 		$reg_errors = array_merge($reg_errors, $memberID);
 		return Register($reg_errors);
 	}
-	elseif (!empty($reg_errors))
-		return Register($reg_errors);
 
 	// Do our spam protection now.
 	spamProtection('register');

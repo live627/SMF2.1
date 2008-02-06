@@ -88,6 +88,7 @@ function template_wap_display()
 
 	echo '
 	<card id="main" title="', $context['page_title'], '">
+		<p><b>' . $context['linktree'][1]['name'] . ' > ' . $context['linktree'][count($context['linktree']) - 2]['name'] . '</b></p>
 		<p><b>', $context['subject'], '</b></p>
 		<p>', $txt['pages'], ': ', !empty($context['links']['prev']) ? '<a href="' . $context['links']['first'] . ';wap">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';wap">&lt;</a> ' : '', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', !empty($context['links']['next']) ? ' <a href="' . $context['links']['next'] . ';wap">&gt;</a> <a href="' . $context['links']['last'] . ';wap">&gt;&gt;</a> ' : '', '<br /><br /></p>';
 
@@ -280,6 +281,7 @@ function template_imode_display()
 
 	echo '
 		<table border="0" cellspacing="0" cellpadding="0">
+			<tr bgcolor="#b6dbff"><td>' . $context['linktree'][1]['name'] . ' > ' . $context['linktree'][count($context['linktree']) - 2]['name'] . '</td></tr>
 			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $context['subject'], '</font></td></tr>
 			<tr><td>', !empty($context['links']['prev']) ? '<a href="' . $context['links']['first'] . ';imode">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';imode">&lt;</a> ' : '', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', !empty($context['links']['next']) ? ' <a href="' . $context['links']['next'] . ';imode">&gt;</a> <a href="' . $context['links']['last'] . ';imode">&gt;&gt;</a> ' : '', '</td></tr>';
 	while ($message = $context['get_message']())
@@ -844,6 +846,7 @@ function template_wap2_display()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
+		<p class="titlebg">' . $context['linktree'][1]['name'] . ' > ' . $context['linktree'][count($context['linktree']) - 2]['name'] . '</p>
 		<p class="catbg">', $context['subject'], '</p>
 		<p class="windowbg">', !empty($context['links']['prev']) ? '<a href="' . $context['links']['first'] . ';wap2">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';wap2">&lt;</a> ' : '', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', !empty($context['links']['next']) ? ' <a href="' . $context['links']['next'] . ';wap2">&gt;</a> <a href="' . $context['links']['last'] . ';wap2">&gt;&gt;</a> ' : '', '</p>';
 	$alternate = true;

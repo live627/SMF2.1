@@ -1,8 +1,65 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0 Beta 3
+================================================================================
+February 2008
+--------------------------------------------------------------------------------
+ ! Try to make sure that garbage collection for sessions is turned on when using database driven sessions. (Load.php) [Bug 1494]
+ & Added a compact linktree consiting of category name and current board name to the wireless templates. (Wireless template) [Feature 1243]
+ ! Check for registration errors before registering the user. (Register.php) [Bug 1495]
+ & Changed the moderation notes interface a bit and added scrollbars. (ModerationCenter template, style.css) [Bug 937]
+ + Lowered the limit of moderation notes to show and added pagination. (ModerationCenter.php, ModerationCenter template) [Bug 1476]
+ + Added the ability to delete moderation notes. (ModerationCenter.php, ModerationCenter template)
+ & Give the message icon cell a fixed width. (Display template) [Bug 1452]
+
+
 SMF 2.0 Beta 2.1                                                03 February 2008
 ================================================================================
+February 2008
+--------------------------------------------------------------------------------
+ ! When browsing for theme files make sure that the directory is valid. (Themes.php) [Bug 1458]
+ ! Cast closed and ignore as integers for reported posts in the moderation center. (ModerationCenter template) [Bug 1457]
+ * Removed the duplicate format=.wav from the verification audio links. (Register template) [Bug 1449]
+ * Removed extra semicolon from the delete pm link. (PersonalMessage template) [Bug 1443, 1447]
+ ! Load the Post language file before using strings from that file. (Subs-Editor.php) [Bug 1442]
+ & Use the correct label for left to right setting when editing languages. (Admin template, ManageSettings language file) [Bug 1453]
+ ! Don't allow HTML in the ban name as it's more hassle than it's worth. (ManageBans.php) [Bug 1455]
+ ! Store member warning notices in HTML-safe versions. (Profile-Actions.php) [Bug 1454]
+ ! Handle errors much better on the warning issue page, and tell people what's been done. (Profile.php, Profile template, Profile language file) [Bug 1456]
+ ! Don't allow permission profiles to have HTML in their name. (ManagePermissions.php) [Bug 1448]
+ ! Don't let people prune silly timescales, which could give a wrong type warning. (PersonalMessage.php) [Bug 1444]
+ * The template for searching messages could look a little silly with no results. (PersonalMessage template) [Bug 1441]
+ ! Provide a few more no access errors for people loading up pages incorrectly. (Help.php, BoardIndex.php, SplitTopics.php, MoveTopic.php) [Bug 1433]
+ * PM labels can actually be 30 characters long. (PersonalMessage template) [Bug 1440]
+ ! The WYSIWYG editor wasn't getting rid of silly linebreaks. (Subs-Editor.php) [Bug 1439]
+ ! Removed the teletype and preformatted text tags from being HTML as the rich editor really doesn't handle them well - keep them BBC. (editor.js)
+ ! Superscript and subscript now work properly in the rich text editor. (editor.js) [Bug 1445]
+ + Adding a BBC button for unformatting and unlinking selected text. (Subs-Editor.php, unformat.gif)
+ ! Make sure the deliminator works correctly on find members. (Subs-Auth.php, Profile template) [Bug 1446]
+ ! Search results had an incorrect link for quoting. (Search template) [Bug 1437]
+ ! Redirect the user after adding a moderation note to save the risk of resubmission on reload. (ModerationCenter.php) [Bug 1462]
+ ! Listening to CAPTCHA sounds wouldn't work correctly in IE6. (Subs-Sound.php)
+ ! Put some padding to the left of smileys in the rich text editor to simulate the spaces normally required. (editor.js)
+ ! Replaced some unnecessarily complex code in the WYSIWYG editor. (editor.js)
+ ! The cursor was not showing properly on Firefox. (editor.js)
+ ! Do some primative removal of formatting if used in non-richedit mode. (editor.js) [Bug 1467]
+ ! File permissions wasn't selecting "no change" by default. (Packages template) [Bug 1432]
+ ! When posting a move topic redirection make sure the URL indicates the page is zero. (MoveTopic.php) [Bug 1436]
+ ! Uploading avatars wouldn't work if you had multiple attachment folders enabled. (Profile-Modify.php) [Bug 1460]
+ ! Add a hidden setting for a load average limit on unread posts. (Recent.php, Errors language file) [Feature 1435]
+ ! The track IP now keeps track of how you entered it (Member or raw IP) and doesn't switch out in error. (Profile-Modify.php, Profile template, Who template) [Bug 1396]
+ ! Loading a language would fail on install. (install.php) [Bug 1471]
+ ! Some characters in usernames wouldn't be found by the personal messaging system. (Subs-Editor.php, PersonalMessage.php) [Bug 1384]
+ ! Add a warning to the file permissions screen with some helpful advice. (Packages language file, Packages template) [Bug 1479]
+ ! Add a javascript select function to the package operation template. (Packages template) [Feature 1410]
+ ! Add an extra space to the select link when specifying a language for code. (Subs.php) [Feature 1410]
+ ! Fixed quotes getting escaped in the WYSIWYG editor. (Subs-Editor.php)
+ ! Fixed potential undefined index error when saving settings. (ManageServer.php) [Bug 1480]
+ ! Upgrade should always put maintenance mode back to something which ain't 2. (upgrade.php)
+ ! FixLanguages wasn't quite working right for the Help file. (FixLanguage.php)
+
+
 January 2008
 --------------------------------------------------------------------------------
  ! ManageSearch had a couple of old style queries. (ManageSearch.php)
@@ -12,7 +69,7 @@ January 2008
  ! Upgrade wasn't PHP5 capable. (upgrade.php)
  ! When uploading an attachment it was possible to get a database error due to undefined variable. (Display.php)
  ! No need to escape the variable in a single quote string. (ManageNews.php, Help english file) [Bug 1350]
- ! Upgrade wasn't surpressing set_time_out errors and install wasn't PHP4 compatible. (install and upgrade scripts)
+ ! Upgrade wasn't suppressing set_time_out errors and install wasn't PHP4 compatible. (install and upgrade scripts)
  ! A repair boards query wasn't MySQL 4 compatible. (RepairBoards.php) [Bug 1358]
  ! Repair boards wasn't quite postgreSQL compatible. (RepairBoards.php)
  ! Upgrade could potentially get a divide by zero error. (upgrade.php) [Bug 1356]
@@ -80,49 +137,9 @@ January 2008
  ! Editing karma could cause a database error. (Profile-Modify.php) [Bug 1424]
  ! HTML tags were not being handled right when quoting text in the WYSIWYG editor. (Post.php, editor.js) [Bug 1422]
  ! After installation the install.php check was not removed from Settings.php (install.php) [Bug 1431]
- + Added support fo phpBB3 password has.  (LogInOut.php)
+ + Added support for phpBB3 password hash.  (LogInOut.php)
  ! Redirect back to the maintenance page after doing maintenance on attachments. (ManageAttachments.php) [Bug 1427]
  ! When sorting and doing a search in the moderation center it was possible to get a database error. (Modlog.php) [Bug 1434]
- ! When browsing for theme files make sure that the directory is valid. (Themes.php) [Bug 1458]
- ! Cast closed and ignore as integers for reported posts in the moderation center. (ModerationCenter template) [Bug 1457]
- * Removed the duplicate format=.wav from the verification audio links. (Register template) [Bug 1449]
- * Removed extra semicolon from the delete pm link. (PersonalMessage template) [Bug 1443, 1447]
- ! Load the Post language file before using strings from that file. (Subs-Editor.php) [Bug 1442]
- & Use the correct label for left to right setting when editing languages. (Admin template, ManageSettings language file) [Bug 1453]
- ! Don't allow HTML in the ban name as it's more hastle than it's worth. (ManageBans.php) [Bug 1455]
- ! Store member warning notices in HTML-safe versions. (Profile-Actions.php) [Bug 1454]
- ! Handle errors much better on the warning issue page, and tell people what's been done. (Profile.php, Profile template, Profile language file) [Bug 1456]
- ! Don't allow permission profiles to have HTML in their name. (ManagePermissions.php) [Bug 1448]
- ! Don't let people prune silly timescales, which could give a wrong type warning. (PersonalMessage.php) [Bug 1444]
- * The template for searching messages could look a little silly with no results. (PersonalMessage template) [Bug 1441]
- ! Provide a few more no access errors for people loading up pages incorrectly. (Help.php, BoardIndex.php, SplitTopics.php, MoveTopic.php) [Bug 1433]
- * PM labels can actually be 30 characters long. (PersonalMessage template) [Bug 1440]
- ! The WYSIWYG editor wasn't getting rid of silly linebreaks. (Subs-Editor.php) [Bug 1439]
- ! Removed the teletype and preformatted text tags from being HTML as the rich editor really doesn't handle them well - keep them BBC. (editor.js)
- ! Superscript and subscript now work properly in the rich text editor. (editor.js) [Bug 1445]
- + Adding a BBC button for unformatting and unlinking selected text. (Subs-Editor.php, unformat.gif)
- ! Make sure the deliminator works correctly on find members. (Subs-Auth.php, Profile template) [Bug 1446]
- ! Search results had an incorrect link for quoting. (Search template) [Bug 1437]
- ! Redirect the user after adding a moderation note to save the risk of resubmission on reload. (ModerationCenter.php) [Bug 1462]
- ! Listening to CAPTCHA sounds wouldn't work correctly in IE6. (Subs-Sound.php)
- ! Put some padding to the left of smileys in the rich text editor to simulate the spaces normally required. (editor.js)
- ! Replaced some unnecessarily complex code in the WYSIWYG editor. (editor.js)
- ! The cursor was not showing properly on Firefox. (editor.js)
- ! Do some primative removal of formatting if used in non-richedit mode. (editor.js) [Bug 1467]
- ! File permissions wasn't selecting "no change" by default. (Packages template) [Bug 1432]
- ! When posting a move topic redirection make sure the URL indicates the page is zero. (MoveTopic.php) [Bug 1436]
- ! Uploading avatars wouldn't work if you had multiple attachment folders enabled. (Profile-Modify.php) [Bug 1460]
- ! Add a hidden setting for a load average limit on unread posts. (Recent.php, Errors language file) [Feature 1435]
- ! The track IP now keeps track of how you entered it (Member or raw IP) and doesn't switch out in error. (Profile-Modify.php, Profile template, Who template) [Bug 1396]
- ! Loading a language would fail on install. (install.php) [Bug 1471]
- ! Some characters in usernames wouldn't be found by the personal messaging system. (Subs-Editor.php, PersonalMessage.php) [Bug 1384]
- ! Add a warning to the file permissions screen with some helpful advice. (Packages language file, Packages template) [Bug 1479]
- ! Add a javascript select function to the package operation template. (Packages template) [Feature 1410]
- ! Add an extra space to the select link when specifying a language for code. (Subs.php) [Feature 1410]
- ! Fixed quotes getting escaped in the WYSIWYG editor. (Subs-Editor.php)
- ! Fixed potential undefined index error when saving settings. (ManageServer.php) [Bug 1480]
- ! Upgrade should always put maintenance mode back to something which ain't 2. (upgrade.php)
- ! FixLanguages wasn't quite working right for the Help file. (FixLanguage.php)
 
 
 SMF 2.0 Beta 2                                                   20 January 2008

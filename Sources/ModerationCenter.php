@@ -298,19 +298,57 @@ function ModBlockNotes()
 		redirectexit('action=moderate');
 	}
 
+	// Bye... bye...
+	if (isset($_GET['notes']) && isset($_GET['delete']) && is_numeric($_GET['delete']))
+	{
+		checkSession('get');
+
+		// Lets delete it.
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_comments
+			WHERE id_comment = {int:note}
+				AND comment_type = {string:type}',
+			array(
+				'note' => $_GET['delete'],
+				'type' => 'modnote',
+			)
+		);
+
+		redirectexit('action=moderate');
+	}
+
+	// How many notes in total?
+	if (($moderator_notes_total = cache_get_data('moderator_notes_total', 240)) === null)
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(*)
+			FROM {db_prefix}log_comments AS lc
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+			WHERE lc.comment_type = {string:modnote}',
+			array(
+				'modnote' => 'modnote',
+			)
+		);
+		list ($moderator_notes_total) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		cache_put_data('moderator_notes_total', $moderator_notes_total, 240);
+	}
+
 	// Grab the current notes.
 	if (($moderator_notes = cache_get_data('moderator_notes', 240)) === null)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
-				lc.log_time, lc.body
+				lc.log_time, lc.body, lc.id_comment AS id_note
 			FROM {db_prefix}log_comments AS lc
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
 			WHERE lc.comment_type = {string:modnote}
 			ORDER BY id_comment DESC
-			LIMIT 0, 15',
+			LIMIT {int:offset}, 10',
 			array(
 				'modnote' => 'modnote',
+				'offset' => isset($_GET['notes']) && isset($_GET['start']) ? $_GET['start'] : 0,
 			)
 		);
 		$moderator_notes = array();
@@ -321,16 +359,21 @@ function ModBlockNotes()
 		cache_put_data('moderator_notes', $moderator_notes, 240);
 	}
 
+	// Lets construct a page index.
+	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=index;notes', $_GET['start'], $moderator_notes_total, 10);
+	$context['start'] = $_GET['start'];
+
 	$context['notes'] = array();
 	foreach ($moderator_notes as $note)
 	{
 		$context['notes'][] = array(
 			'author' => array(
 				'id' => $note['id_member'],
-				'link' => $note['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $note['id_member'] . '">' . $note['member_name'] . '</a>') : $note['member_name'],
+				'link' => $note['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $note['id_member'] . '" title="' . $txt['on'] . ' ' . timeformat($note['log_time']) . '">' . $note['member_name'] . '</a>') : $note['member_name'],
 			),
 			'time' => timeformat($note['log_time']),
 			'text' => parse_bbc($note['body']),
+			'delete_href' => $scripturl . '?action=moderate;area=index;notes;delete=' . $note['id_note'] . ';sesc=' . $context['session_id'],
 		);
 	}
 
@@ -1526,9 +1569,7 @@ function ModerationSettings()
 			if (!empty($_POST['mod_notify_approval']))
 				$pref_binary |= 4;
 			if (!empty($_POST['mod_notify_report']))
-			{
 				$pref_binary |= ($_POST['mod_notify_report'] == 2 ? 1 : 2);
-			}
 
 			$show_reports = !empty($_POST['mod_show_reports']) ? 1 : 0;
 		}

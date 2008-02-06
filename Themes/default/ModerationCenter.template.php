@@ -213,34 +213,39 @@ function template_notes()
 
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=index" method="post">
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-		<tr>
-			<td class="catbg">
-				', $txt['mc_notes'], '
-			</td>
-		</tr>';
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
+			<tr>
+				<td class="catbg">
+					', $txt['mc_notes'], '
+				</td>
+			</tr>
+			<tr>
+				<td class="windowbg2" align="left" style="padding: 0;">
+					<ul class="moderation_notes">';
 
 	// Cycle through the notes.
 	foreach ($context['notes'] as $note)
 		echo '
-		<tr>
-			<td class="windowbg2" align="left">
-				<span class="smalltext">', $note['author']['link'], ': ', $note['text'], '</span>
-			</td>
-		</tr>';
+						<li class="smalltext"><a href="', $note['delete_href'], '"><img src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="" /></a> <b>', $note['author']['link'], ':</b> ', $note['text'], '</li>';
 
 	echo '
-		<tr class="windowbg">
-			<td>
-				<div style="float: left;" style="width: 90%;">
-					<input type="text" name="new_note" value="', $txt['mc_click_add_note'], '" style="width: 100%;" onclick="if (this.value == \'', $txt['mc_click_add_note'], '\') this.value = \'\';" />
-				</div>
-				<div style="float: right;">
-					<input type="submit" name="makenote" value="', $txt['mc_add_note'], '" style="width: 100%;" />
-				</div>
-			</td>
-		</tr>
-	</table>
+					</ul>
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td>
+					<div style="float: left; width: 90%;">
+						<input type="text" name="new_note" value="', $txt['mc_click_add_note'], '" style="width: 95%;" onclick="if (this.value == \'', $txt['mc_click_add_note'], '\') this.value = \'\';" />
+					</div>
+					<div style="float: right;">
+						<input type="submit" name="makenote" value="', $txt['mc_add_note'], '" style="width: 100%;" />
+					</div>
+				</td>
+			</tr>
+			<tr class="windowbg3">
+				<td><span class="smalltext">', $txt['pages'], ': ', $context['page_index'], '</span></td>
+			</tr>
+		</table>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 }

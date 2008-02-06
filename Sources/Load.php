@@ -2051,7 +2051,10 @@ function loadSession()
 
 		// Use database sessions? (they don't work in 4.1.x!)
 		if (!empty($modSettings['databaseSession_enable']) && @version_compare(PHP_VERSION, '4.2.0') != -1)
+		{
 			session_set_save_handler('sessionOpen', 'sessionClose', 'sessionRead', 'sessionWrite', 'sessionDestroy', 'sessionGC');
+			@ini_set('session.gc_probability', '1');
+		}
 		elseif (@ini_get('session.gc_maxlifetime') <= 1440 && !empty($modSettings['databaseSession_lifetime']))
 			@ini_set('session.gc_maxlifetime', max($modSettings['databaseSession_lifetime'], 60));
 
