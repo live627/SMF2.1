@@ -236,8 +236,8 @@ function issueWarning($memID)
 			$context['warning_data'] = array(
 				'reason' => $_POST['warn_reason'],
 				'notify' => !empty($_POST['warn_notify']),
-				'notify_subject' => $_POST['warn_sub'],
-				'notify_body' => $_POST['warn_body'],
+				'notify_subject' => isset($_POST['warn_sub']) ? $_POST['warn_sub'] : '',
+				'notify_body' => isset($_POST['warn_body']) ? $_POST['warn_body'] : '',
 			);
 		}
 

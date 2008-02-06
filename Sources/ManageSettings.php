@@ -226,6 +226,14 @@ function ModifyCoreFeatures($return_config = false)
 						\'warning_mute\' => 0,
 					);
 				}
+				elseif (empty($modSettings[\'warning_enable\']) && $value)
+				{
+					$returnSettings = array(
+						\'warning_watch\' => 10,
+						\'warning_moderate\' => 35,
+						\'warning_mute\' => 60,
+					);
+				}
 				else
 					$returnSettings = array();
 

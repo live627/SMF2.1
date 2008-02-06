@@ -12,6 +12,8 @@ February 2008
  + Lowered the limit of moderation notes to show and added pagination. (ModerationCenter.php, ModerationCenter template) [Bug 1476]
  + Added the ability to delete moderation notes. (ModerationCenter.php, ModerationCenter template)
  & Give the message icon cell a fixed width. (Display template) [Bug 1452]
+ ! When enabling the warning system restore the default values. (ManageSettings.php)
+ ! Undefined index errors when warning a member and leaving the reason blank. (Profile-Actions.php) [Bug 1496]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
