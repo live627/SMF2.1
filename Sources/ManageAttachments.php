@@ -1507,7 +1507,7 @@ function ApproveAttachments($attachments)
 			AND a.attachment_type = {int:attachment_type}',
 		array(
 			'attachments' => $attachments,
-			'attachment_type	' => 0,
+			'attachment_type' => 0,
 		)
 	);
 	$attachments = array();

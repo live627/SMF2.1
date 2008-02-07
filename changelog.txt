@@ -15,6 +15,7 @@ February 2008
  ! When enabling the warning system restore the default values. (ManageSettings.php)
  ! Undefined index errors when warning a member and leaving the reason blank. (Profile-Actions.php) [Bug 1496]
  ! In some versions of MySQL ordering by length results in error. (ManageSmileys.php)
+ ! Approving an attachment threw a database error. (ManageAttachments.php) [Bug 1506]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
