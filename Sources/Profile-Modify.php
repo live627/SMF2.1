@@ -2277,12 +2277,12 @@ function profileSaveAvatarData(&$value)
 			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
 
 		// Just use the current path for temp files.
-		$attach_dir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+		$uploadDir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
 		$id_folder = $modSettings['currentAttachmentUploadDir'];
 	}
 	else
 	{
-		$attach_dir = $modSettings['attachmentUploadDir'];
+		$uploadDir = $modSettings['attachmentUploadDir'];
 		$id_folder = 1;
 	}
 
