@@ -844,7 +844,7 @@ function EditSmileys()
 			// Sort all smiley codes for more accurate parsing (longest code first).
 			$smcFunc['db_query']('alter_table_smileys', '
 				ALTER TABLE {db_prefix}smileys
-				ORDER BY LENGTH(code) DESC',
+				ORDER BY code DESC',
 				array(
 				)
 			);
