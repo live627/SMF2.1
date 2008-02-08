@@ -18,6 +18,8 @@ February 2008
  ! Approving an attachment threw a database error. (ManageAttachments.php) [Bug 1506]
  + Inform the admin if memcache is installed and ready for use. (Admin.php, ManageServer.php, Subs-Admin.php, ManageSettings language file) [Feature 1504]
  ! varify != verify (Settings.php, FixLanguage.php, Errors language file) [Bug 1503]
+ & Requesting another verification image on registration was refreshing the page. (Register template)
+ ! When a guest performs a search and image verification is on, going to the next page of results would ask for image verification again. (Search.php) [Bug 1507]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

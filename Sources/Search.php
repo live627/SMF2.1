@@ -422,12 +422,12 @@ function PlushSearch2()
 		$realNameMatches = array();
 		foreach ($possible_users as $possible_user)
 			$realNameMatches[] = $smcFunc['db_quote'](
-				'{string:possible_user}', 
+				'{string:possible_user}',
 				array(
 					'possible_user' => $possible_user
 				)
 			);
-			
+
 		// Retrieve a list of possible members.
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member
@@ -458,7 +458,7 @@ function PlushSearch2()
 			$userQuery = $smcFunc['db_quote'](
 				'(m.id_member IN ({array_int:matched_members}) OR (m.id_member = {int:id_member_guest} AND ({raw:match_possible_guest_names})))',
 				 array(
-				 	'matched_members' => $memberlist, 
+				 	'matched_members' => $memberlist,
 				 	'id_member_guest' => 0,
 				 	'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
 				 )
@@ -861,13 +861,15 @@ function PlushSearch2()
 		$context['search_params']['userspec'] = $smcFunc['htmlspecialchars']($context['search_params']['userspec']);
 
 	// Do we have captcha enabled?
-	if ($user_info['is_guest'] && !empty($modSettings['search_enable_captcha']))
+	if ($user_info['is_guest'] && !empty($modSettings['search_enable_captcha']) && (!isset($_SESSION['visual_verification_passed']) && (empty($_SESSION['last_ss']) || $_SESSION['last_ss'] != $search_params['search'])))
 	{
 		// If we come from another search box tone down the error...
 		if (!isset($_REQUEST['visual_verification_code']))
 			$context['search_errors']['need_verification_code'] = true;
 		elseif (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code'])
 			$context['search_errors']['wrong_verification_code'] = true;
+		else
+			$_SESSION['visual_verification_passed'] = true;
 	}
 
 	// *** Encode all search params
@@ -923,7 +925,7 @@ function PlushSearch2()
 	{
 		$participants = array();
 		$searchArray = array();
-		
+
 		$query_params = array_merge($search_params, array(
 			'min_msg_id' => isset($minMsgID) ? (int) $minMsgID : 0,
 			'max_msg_id' => isset($maxMsgID) ? (int) $maxMsgID : 0,
@@ -1071,7 +1073,7 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($inserts[$row[1]]))
 								continue;
-	
+
 							$inserts[$row[1]] = $row;
 						}
 						$smcFunc['db_free_result']($ignoreRequest);
@@ -1143,7 +1145,7 @@ function PlushSearch2()
 					$main_query['select']['id_topic'] = 'm.id_msg AS id_topic';
 					$main_query['select']['id_msg'] = 'm.id_msg';
 					$main_query['select']['num_matches'] = '1 AS num_matches';
-	
+
 					$main_query['weights'] = array(
 						'age' => '((m.id_msg - t.id_first_msg) / CASE WHEN t.id_last_msg = t.id_first_msg THEN 1 ELSE t.id_last_msg - t.id_first_msg END)',
 						'first_message' => 'CASE WHEN m.id_msg = t.id_first_msg THEN 1 ELSE 0 END',
@@ -1211,7 +1213,7 @@ function PlushSearch2()
 								}
 								$subject_query['left_join'][] = '{db_prefix}log_search_subjects AS subj' . $numTables . ' ON (subj' . $numTables . '.word ' . (empty($modSettings['search_match_words']) ? 'LIKE {string:subject_not_' . $count . '}' : '= {string:subject_not_' . $count . '}') . ' AND subj' . $numTables . '.id_topic = t.id_topic)';
 								$subject_query['params']['subject_not_' . $count] = empty($modSettings['search_match_words']) ? '%' . $subjectWord . '%' : $subjectWord;
-	
+
 								$subject_query['where'][] = '(subj' . $numTables . '.word IS NULL)';
 								$subject_query['where'][] = 'm.body NOT ' . (empty($modSettings['search_match_words']) || $no_regexp ? ' LIKE ' : ' RLIKE ') . '{string:body_not_' . $count . '}';
 								$subject_query['params']['body_not_' . $count++] = empty($modSettings['search_match_words']) || $no_regexp ? '%' . strtr($subjectWord, array('_' => '\\_', '%' => '\\%')) . '%' : '[[:<:]]' . addcslashes(preg_replace(array('/([\[\]$.+*?|{}()])/'), array('[$1]'), $subjectWord), '\\\'') . '[[:>:]]';
@@ -1293,7 +1295,7 @@ function PlushSearch2()
 								// No duplicates!
 								if (isset($inserts[$row[$ind]]))
 									continue;
-	
+
 								$inserts[$row[$ind]] = $row;
 							}
 							$smcFunc['db_free_result']($ignoreRequest);
@@ -1392,7 +1394,7 @@ function PlushSearch2()
 									// No duplicates!
 									if (isset($inserts[$row[0]]))
 										continue;
-	
+
 									$inserts[$row[0]] = $row;
 								}
 								$smcFunc['db_free_result']($ignoreRequest);
@@ -1454,7 +1456,7 @@ function PlushSearch2()
 					}
 					if (!empty($orWhere))
 						$main_query['where'][] = count($orWhere) > 1 ? '(' . implode(' OR ', $orWhere) . ')' : $orWhere[0];
-	
+
 					if (!empty($userQuery))
 					{
 						$main_query['where'][] = '{raw:user_query}';
@@ -1493,7 +1495,7 @@ function PlushSearch2()
 						$new_weight_total += $weight[$type];
 					}
 					$main_query['select']['relevance'] = substr($relevance, 0, -3) . ') / ' . $new_weight_total . ' AS relevance';
-	
+
 					$ignoreRequest = $smcFunc['db_search_query']('insert_log_search_results_no_index', ($smcFunc['db_support_ignore'] ? ( '
 						INSERT IGNORE INTO ' . '{db_prefix}log_search_results
 							(' . implode(', ', array_keys($main_query['select'])) . ')') : '') . '
@@ -1520,7 +1522,7 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($inserts[$row[2]]))
 								continue;
-	
+
 							$inserts[$row[2]] = $row;
 						}
 						$smcFunc['db_free_result']($ignoreRequest);
@@ -1531,7 +1533,7 @@ function PlushSearch2()
 							$query_columns = array();
 							foreach ($main_query['select'] as $k => $v)
 								$query_columns[$k] = 'int';
-	
+
 							$smcFunc['db_insert']('',
 								'{db_prefix}log_search_results',
 								$query_columns,
@@ -1590,7 +1592,7 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($usedIDs[$row[1]]))
 								continue;
-	
+
 							$usedIDs[$row[1]] = true;
 							$inserts[] = $row;
 						}

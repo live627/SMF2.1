@@ -37,15 +37,14 @@ function template_before()
 	function getAuthValue()
 	{
 		var obj = document.forms.creator.authenticate;
-		for(i=0,n=obj.length; i < n; i++)
+		for(i = 0, n = obj.length; i < n; i++)
 		{
 			if (obj[i].checked)
 				return obj[i].value
 		}
 
 		return "";
-	}
-	';
+	}';
 
 	if ($context['require_agreement'])
 		echo '
@@ -164,7 +163,7 @@ function template_before()
 						<td>
 							<div class="smalltext" style="margin: 4px 0 8px 0;">
 								<input type="text" name="visual_verification_code" value="', !empty($context['prev_verification_code']) ? $context['prev_verification_code'] : '', '" size="30" tabindex="', $context['tabindex']++, '" />
-								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="', $scripturl, '?action=register" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a>
+								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a>
 							</div>';
 		if ($context['use_graphic_library'])
 			echo '
