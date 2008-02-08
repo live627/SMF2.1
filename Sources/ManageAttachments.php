@@ -939,7 +939,7 @@ function RepairAttachments()
 	);
 
 	$to_fix = !empty($_SESSION['attachments_to_fix']) ? $_SESSION['attachments_to_fix'] : array();
-	$context['repair_errors'] = isset($_SESSION['attachments_to_fix2']) ? $_SESSION['attachments_to_fix2'] : array();
+	$context['repair_errors'] = isset($_SESSION['attachments_to_fix2']) ? $_SESSION['attachments_to_fix2'] : $context['repair_errors'];
 	$fix_errors = isset($_GET['fixErrors']) ? true : false;
 
 	// Get stranded thumbnails.
