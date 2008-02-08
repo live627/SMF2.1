@@ -1603,7 +1603,7 @@ function PlushSearch2()
 						{
 							$smcFunc['db_insert']('',
 								'{db_prefix}log_search_results',
-								array('id_search' => 'int', 'id_topic' => 'int', 'relevance' => 'int', 'id_msg' => 'int', 'num_matches' => 'int'),
+								array('id_search' => 'int', 'id_topic' => 'int', 'relevance' => 'float', 'id_msg' => 'int', 'num_matches' => 'int'),
 								$inserts,
 								array('id_search', 'id_topic')
 							);
