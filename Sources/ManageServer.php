@@ -466,6 +466,8 @@ function ModifyCacheSettings($return_config = false)
 		$detected = 'APC';
 	elseif (function_exists('output_cache_put'))
 		$detected = 'Zend';
+	elseif (function_exists('memcache_set'))
+		$detected = 'Memcached';
 	else
 		$detected = 'no_caching';
 

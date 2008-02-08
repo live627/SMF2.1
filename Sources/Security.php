@@ -639,14 +639,14 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 		$error = 'session_timeout';
 	// How about $_GET['sesc']?
 	elseif ($type == 'get' && (!isset($_GET['sesc']) || $_GET['sesc'] != $sc))
-		$error = 'session_varify_fail';
+		$error = 'session_verify_fail';
 	// Or can it be in either?
 	elseif ($type == 'request' && (!isset($_GET['sesc']) || $_GET['sesc'] != $sc) && (!isset($_POST['sc']) || $_POST['sc'] != $sc))
-		$error = 'session_varify_fail';
+		$error = 'session_verify_fail';
 
 	// Verify that they aren't changing user agents on us - that could be bad.
 	if ((!isset($_SESSION['USER_AGENT']) || $_SESSION['USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) && empty($modSettings['disableCheckUA']))
-		$error = 'session_varify_fail';
+		$error = 'session_verify_fail';
 
 	// Make sure a page with session check requirement is not being prefetched.
 	if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
@@ -884,7 +884,7 @@ function boardsAllowedTo($permission, $check_access = true)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
 		WHERE bp.id_group IN ({array_int:group_list}, {int:moderator_group})
 			AND bp.permission = {string:permission}
-			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})' . 
+			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})' .
 			($check_access ? ' AND ' . $user_info['query_see_board'] : ''),
 		array(
 			'current_member' => $user_info['id'],

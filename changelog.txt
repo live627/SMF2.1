@@ -16,6 +16,7 @@ February 2008
  ! Undefined index errors when warning a member and leaving the reason blank. (Profile-Actions.php) [Bug 1496]
  ! In some versions of MySQL ordering by length results in error. (ManageSmileys.php)
  ! Approving an attachment threw a database error. (ManageAttachments.php) [Bug 1506]
+ + Inform the admin if memcache is installed and ready for use. (Admin.php, ManageServer.php, Subs-Admin.php, ManageSettings language file) [Feature 1504]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

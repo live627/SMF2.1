@@ -108,6 +108,7 @@ $txt['detected_APC'] = '<b style="color: green">SMF has detected that your serve
 $txt['detected_eAccelerator'] = '<b style="color: green">SMF has detected that your server has eAccelerator installed.';
 $txt['detected_MMCache'] = '<b style="color: green">SMF has detected that your server has MMCache installed.';
 $txt['detected_Zend'] = '<b style="color: green">SMF has detected that your server has Zend installed.';
+$txt['detected_Memcached'] = '<b style="color: green">SMF has detected that your server has Memcached installed.';
 
 $txt['cache_enable'] = 'Caching Level';
 $txt['cache_off'] = 'No caching';

@@ -569,6 +569,7 @@ function AdminHome()
 		'eaccelerator',
 		'phpa',
 		'apc',
+		'memcache',
 		'php',
 		'server',
 	);

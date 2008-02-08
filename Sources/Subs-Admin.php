@@ -95,6 +95,8 @@ function getServerVersions($checkFor)
 		$versions['phpa'] = array('title' => 'ionCube PHP-Accelerator', 'version' => $_PHPA['VERSION']);
 	if (in_array('apc', $checkFor) && extension_loaded('apc'))
 		$versions['apc'] = array('title' => 'Alternative PHP Cache', 'version' => phpversion('apc'));
+	if (in_array('memcache', $checkFor) && function_exists('memcache_set'))
+		$versions['memcache'] = array('title' => 'Memcached', 'version' => memcache_get_version());
 
 	if (in_array('php', $checkFor))
 		$versions['php'] = array('title' => 'PHP', 'version' => PHP_VERSION);
