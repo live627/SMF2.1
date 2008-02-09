@@ -612,7 +612,9 @@ function smf_db_calculate_type($type_name, $type_size = null, $reverse = false)
 // Get table structure.
 function smf_db_table_structure($table_name)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
 	return array(
 		'name' => $table_name,
@@ -624,7 +626,9 @@ function smf_db_table_structure($table_name)
 // Return column information for a table.
 function smf_db_list_columns($table_name, $detail = false)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
 	$result = $smcFunc['db_query']('', '
 		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
@@ -677,7 +681,9 @@ function smf_db_list_columns($table_name, $detail = false)
 // What about some index information?
 function smf_db_list_indexes($table_name, $detail = false)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
 	$result = $smcFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary,

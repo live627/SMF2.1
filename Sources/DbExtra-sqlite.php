@@ -60,7 +60,9 @@ function db_extra_init()
 // Backup $table to $backup_table.
 function smf_db_backup_table($table, $backup_table)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	$result = $smcFunc['db_query']('', '
 		SHOW CREATE TABLE {raw:table}',
@@ -162,6 +164,8 @@ function smf_db_optimize_table($table)
 {
 	global $smcFunc;
 
+	$table = str_replace('{db_prefix}', $db_prefix, $table);
+
 	return 0;
 }
 
@@ -194,7 +198,9 @@ function smf_db_list_tables($db = false, $filter = false)
 // Get the content (INSERTs) for a table.
 function smf_db_insert_sql($tableName)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	$tableName = str_replace('{db_prefix}', $db_prefix, $tableName);
 
 	// This will be handy...
 	$crlf = "\r\n";
@@ -252,7 +258,9 @@ function smf_db_insert_sql($tableName)
 // Get the schema (CREATE) for a table.
 function smf_db_table_sql($tableName)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	$tableName = str_replace('{db_prefix}', $db_prefix, $tableName);
 
 	// This will be needed...
 	$crlf = "\r\n";

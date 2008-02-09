@@ -34,6 +34,7 @@ February 2008
  ! Skip database errors during smiley sorting. (ManageSmileys.php) [Bug 1502]
  ! The user contextual array should be referenced to the user_info array where possible. (SSI.php, Load.php) [Bug 1519]
  ! Don't allow more than one "Test Connection" button. (Packages template) [Bug 1500]
+ ! For consistency allow {db_prefix} in all standard database functions. (DbExtra-xxxx.php, DbPackages-xxxx.php) [Bug 1499]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
