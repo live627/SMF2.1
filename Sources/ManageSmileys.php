@@ -844,8 +844,9 @@ function EditSmileys()
 			// Sort all smiley codes for more accurate parsing (longest code first).
 			$smcFunc['db_query']('alter_table_smileys', '
 				ALTER TABLE {db_prefix}smileys
-				ORDER BY code DESC',
+				ORDER BY LENGTH(code) DESC',
 				array(
+					'db_error_skip' => true,
 				)
 			);
 		}
@@ -1445,6 +1446,7 @@ function ImportSmileys($smileyPath)
 			ALTER TABLE {db_prefix}smileys
 			ORDER BY LENGTH(code) DESC',
 			array(
+				'db_error_skip' => true,
 			)
 		);
 
