@@ -22,7 +22,8 @@ February 2008
  ! When a guest performs a search and image verification is on, going to the next page of results would ask for image verification again. (Search.php) [Bug 1507]
  ! relevance parameter is a float not an int. (Search.php)
  ! No longer remove the first and last quote from the password salt on registration. (Register.php) [Bug 1517]
- ! Make sure that $context['repair_error'] gets overwritten only if it has to be when doing attachment maintenance. (ManageAttachments.php) [Bug 1512]
+ ! Make sure that $context['repair_errors'] gets overwritten only if it has to be when doing attachment maintenance. (ManageAttachments.php) [Bug 1512]
+ ! SQLite doesn't know what SUBSTRING is so we need to add a valid replacement when fetching SM files. (ScheduledTasks.php, Subs-Db-sqlite.php) [Bug 1510]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

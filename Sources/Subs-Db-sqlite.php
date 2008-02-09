@@ -287,6 +287,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'unread_fetch_topic_count' => array(
 			'~\s*SELECT\sCOUNT\(DISTINCT\st\.id_topic\),\sMIN\(t\.id_last_msg\)(.+)$~is' => 'SELECT COUNT(id_topic), MIN(id_last_msg) FROM (SELECT DISTINCT t.id_topic, t.id_last_msg $1)',
 		),
+		'fetch_sm_files' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
 	);
 
 	if (isset($replacements[$identifier]))
@@ -517,7 +520,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 					' . (empty($where) ? '' : ' WHERE ' . $where),
 					$entry, $connection
 				);
-	
+
 				// Make a note that the replace actually overwrote.
 				if (smf_db_affected_rows() != 0)
 					unset($data[$k]);
