@@ -30,6 +30,7 @@ February 2008
  ! Fixed support for HOUR and FROM_UNIXTIME in SQLite. (Subs-Db-sqlite.php, Profile-View.php)
  ! Ensure loadEssentialThemeData has loadLanguage existing. (ScheduledTasks.php) [Bug 1486]
  ! SQLite doesn't require the db_prefix fix. (Subs-Db-sqlite.php) [Bug 1524]
+ ! Only ask for search CAPTCHA once. (Search.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

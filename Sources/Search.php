@@ -861,15 +861,16 @@ function PlushSearch2()
 		$context['search_params']['userspec'] = $smcFunc['htmlspecialchars']($context['search_params']['userspec']);
 
 	// Do we have captcha enabled?
-	if ($user_info['is_guest'] && !empty($modSettings['search_enable_captcha']) && (!isset($_SESSION['visual_verification_passed']) && (empty($_SESSION['last_ss']) || $_SESSION['last_ss'] != $search_params['search'])))
+	if ($user_info['is_guest'] && !empty($modSettings['search_enable_captcha']) && empty($_SESSION['ss_vv_passed']) && (empty($_SESSION['last_ss']) || $_SESSION['last_ss'] != $search_params['search']))
 	{
 		// If we come from another search box tone down the error...
 		if (!isset($_REQUEST['visual_verification_code']))
 			$context['search_errors']['need_verification_code'] = true;
 		elseif (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code'])
 			$context['search_errors']['wrong_verification_code'] = true;
+		// Don't keep asking for it - they've proven themselves worthy.
 		else
-			$_SESSION['visual_verification_passed'] = true;
+			$_SESSION['ss_vv_passed'] = true;
 	}
 
 	// *** Encode all search params
