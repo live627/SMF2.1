@@ -38,6 +38,7 @@ February 2008
  ! Showing "today/yesterday" wasn't taking offset into account correctly. (Subs.php)
  ! Scheduled tasks was showing random times, really. (ManageMaintenance.php) [Bug 1487]
  ! Randomise the offset for the simple machines javascript fetch stuff to avoid killing our server. (install.php, upgrade scripts)
+ ! If an admin wants a custom profile field on registration ignore the privacy field. (Profile.php) [Bug 1488]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

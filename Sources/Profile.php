@@ -494,7 +494,7 @@ function loadCustomFields($memID, $area = 'summary')
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';
-	if (!allowedTo('admin_forum'))
+	if (!allowedTo('admin_forum') && $area != 'register')
 		$where .= $area == 'summary' ? ' AND private != 2' : ' AND private = 0';
 
 	if ($area == 'register')
