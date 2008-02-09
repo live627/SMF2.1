@@ -29,6 +29,7 @@ February 2008
  ! We need our own version of sqlite_libversion() since the function doesn't take any parameters. (Subs-Db-sqlite.php)
  ! Fixed support for HOUR and FROM_UNIXTIME in SQLite. (Subs-Db-sqlite.php, Profile-View.php)
  ! Ensure loadEssentialThemeData has loadLanguage existing. (ScheduledTasks.php) [Bug 1486]
+ ! SQLite doesn't require the db_prefix fix. (Subs-Db-sqlite.php) [Bug 1524]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

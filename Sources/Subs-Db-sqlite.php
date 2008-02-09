@@ -117,10 +117,10 @@ function db_extend($type = 'extra')
 	$initFunc();
 }
 
-// Fix up the prefix so it doesn't require the database to be selected.
+// SQLite doesn't actually need this!
 function db_fix_prefix(&$db_prefix, $db_name)
 {
-	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
+	return false;
 }
 
 function smf_db_replacement__callback($matches)
