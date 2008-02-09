@@ -862,6 +862,7 @@ function doStep1()
 		'{$databaseSession_enable}' => isset($_POST['dbsession']) ? '1' : '0',
 		'{$smf_version}' => $GLOBALS['current_smf_version'],
 		'{$current_time}' => time(),
+		'{$sched_task_offset}' => 82800 + rand(0, 86399),
 	);
 	foreach ($txt as $key => $value)
 	{

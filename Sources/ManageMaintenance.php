@@ -370,7 +370,7 @@ function ScheduledTasks()
 			'function' => $row['task'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'desc' => isset($txt['scheduled_task_desc_' . $row['task']]) ? $txt['scheduled_task_desc_' . $row['task']] : '',
-			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat(($row['next_time'] == 0 ? time() : $row['next_time']) - (($user_info['time_offset'] + $modSettings['time_offset']) * 3600)),
+			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat(($row['next_time'] == 0 ? time() : $row['next_time']), true, 'server'),
 			'disabled' => $row['disabled'],
 			'regularity' => $offset . ', ' . $repeating,
 		);
@@ -392,7 +392,7 @@ function EditTask()
 	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
 	$context['sub_template'] = 'edit_scheduled_tasks';
 	$context['page_title'] = $txt['scheduled_task_edit'];
-	$context['server_time'] = timeformat(time() - (($user_info['time_offset'] + $modSettings['time_offset']) * 3600), false);
+	$context['server_time'] = timeformat(time(), false, 'server');
 
 	// Cleaning...
 	if (!isset($_GET['tid']))
@@ -473,7 +473,7 @@ function EditTask()
 			'function' => $row['task'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'desc' => isset($txt['scheduled_task_desc_' . $row['task']]) ? $txt['scheduled_task_desc_' . $row['task']] : '',
-			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['next_time'] == 0 ? time() : $row['next_time']),
+			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['next_time'] == 0 ? time() : $row['next_time'], true, 'server'),
 			'disabled' => $row['disabled'],
 			'offset' => $row['time_offset'],
 			'regularity' => $row['time_regularity'],
@@ -531,7 +531,7 @@ function TaskLog()
 		$context['log_entries'][] = array(
 			'id' => $row['id_log'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
-			'time_run' => timeformat($row['time_run']),
+			'time_run' => timeformat($row['time_run'], true, 'server'),
 			'time_taken' => $row['time_taken'],
 		);
 	$smcFunc['db_free_result']($request);

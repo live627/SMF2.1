@@ -35,6 +35,9 @@ February 2008
  ! The user contextual array should be referenced to the user_info array where possible. (SSI.php, Load.php) [Bug 1519]
  ! Don't allow more than one "Test Connection" button. (Packages template) [Bug 1500]
  ! For consistency allow {db_prefix} in all standard database functions. (DbExtra-xxxx.php, DbPackages-xxxx.php) [Bug 1499]
+ ! Showing "today/yesterday" wasn't taking offset into account correctly. (Subs.php)
+ ! Scheduled tasks was showing random times, really. (ManageMaintenance.php) [Bug 1487]
+ ! Randomise the offset for the simple machines javascript fetch stuff to avoid killing our server. (install.php, upgrade scripts)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

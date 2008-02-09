@@ -543,6 +543,13 @@ function template_task_log()
 			<tr class="titlebg">
 				<td colspan="3">', $txt['scheduled_log'], '</td>
 			</tr>
+			<tr class="windowbg2">
+				<td colspan="3">
+					<span class="smalltext">
+						', $txt['scheduled_tasks_time_offset'], '
+					</span>
+				</td>
+			</tr>
 			<tr class="catbg">
 				<td colspan="3">', $context['page_index'], '</td>
 			</tr>

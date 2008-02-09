@@ -1372,9 +1372,20 @@ VALUES
 	(0, 60, 1, 'd', 0, 'daily_maintenance'),
 	(0, 0, 1, 'd', 0, 'daily_digest'),
 	(0, 0, 1, 'w', 0, 'weekly_digest'),
-	(0, 0, 1, 'd', 0, 'fetchSMfiles'),
 	(0, 0, 1, 'd', 1, 'birthdayemails'),
 	(0, 120, 1, 'd', 0, 'paid_subscriptions');
+---#
+
+---# Adding the simple machines scheduled task.
+---{
+// Randomise the time.
+$randomTime = 82800 + rand(0, 86399);
+upgrade_query("
+	INSERT IGNORE INTO {$db_prefix}scheduled_tasks
+		(next_time, time_offset, time_regularity, time_unit, disabled, task)
+	VALUES
+		(0, {$randomTime}, 1, 'd', 0, 'fetchSMfiles')");
+---}
 ---#
 
 ---# Deleting old scheduled task items...
