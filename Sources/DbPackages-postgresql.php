@@ -101,7 +101,11 @@ function db_packages_init()
 //!!! Add/remove indexes too?
 function smf_db_create_table($table_name, $columns, $indexes = array(), $parameters = array(), $if_exists = 'update', $error = 'fatal')
 {
-	global $reservedTables, $smcFunc, $db_package_log;
+	global $reservedTables, $smcFunc, $db_package_log, $db_prefix;
+
+	// Append the prefix?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// First - no way do we touch SMF tables.
 	if (in_array(strtolower($table_name), $reservedTables))
@@ -221,13 +225,20 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 }
 
 // Drop a table.
-function smf_db_drop_table($table_name, $error = 'fatal')
+function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 {
-	global $reservedTables, $smcFunc;
+	global $reservedTables, $smcFunc, $db_prefix;
+
+	// What's that - you don't want my prefix?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// God no - dropping one of these = bad.
 	if (in_array(strtolower($table_name), $reservedTables))
 		return false;
+
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// Does it exist?
 	if (in_array($table_name, $smcFunc['db_list_tables']()))
@@ -245,9 +256,13 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 }
 
 // Add a column.
-function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $error = 'fatal')
+function smf_db_add_column($table_name, $column_info, $parameters = array(), $if_exists = 'update', $error = 'fatal')
 {
-	global $smcFunc, $db_package_log, $txt;
+	global $smcFunc, $db_package_log, $txt, $db_prefix;
+
+	// Add a prefix?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// Log that we will want to uninstall this!
 	$db_package_log[] = array('remove_column', $table_name, $column_info['name']);
@@ -289,9 +304,13 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 }
 
 // Remove a column.
-function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
+function smf_db_remove_column($table_name, $column_name, $parameters = array(), $error = 'fatal')
 {
 	global $smcFunc;
+
+	// Are we gonna prefix?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// Does it exist?
 	$columns = $smcFunc['db_list_columns']($table_name, true);
@@ -300,9 +319,10 @@ function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 		{
 			// If there is an auto we need remove it!
 			if ($column['auto'])
-				$smcFunc['db_query']('', 'DROP SEQUENCE ' . $table_name . '_seq',
-				'security_override'
-	);
+				$smcFunc['db_query']('',
+					'DROP SEQUENCE ' . $table_name . '_seq',
+					'security_override'
+				);
 
 			$smcFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
@@ -318,9 +338,13 @@ function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 }
 
 // Change a column.
-function smf_db_change_column($table_name, $old_column, $column_info, $error = 'fatal')
+function smf_db_change_column($table_name, $old_column, $column_info, $parameters = array(), $error = 'fatal')
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	// Prefix, prefix, where art thou prefix?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// Check it does exist!
 	$columns = $smcFunc['db_list_columns']($table_name, true);
@@ -441,9 +465,13 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 }
 
 // Add an index.
-function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $error = 'fatal')
+function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_exists = 'update', $error = 'fatal')
 {
-	global $smcFunc, $db_package_log;
+	global $smcFunc, $db_package_log, $db_prefix;
+
+	// What you want up front?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// No columns = no index.
 	if (empty($index_info['columns']))
@@ -499,9 +527,13 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 }
 
 // Remove an index.
-function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
+function smf_db_remove_index($table_name, $index_name, $parameters = array(), $error = 'fatal')
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	// Nothing to hide Mr Hidey Man.
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	// Better exist!
 	$indexes = $smcFunc['db_list_indexes']($table_name, true);

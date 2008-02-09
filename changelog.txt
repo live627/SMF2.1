@@ -31,6 +31,7 @@ February 2008
  ! Ensure loadEssentialThemeData has loadLanguage existing. (ScheduledTasks.php) [Bug 1486]
  ! SQLite doesn't require the db_prefix fix. (Subs-Db-sqlite.php) [Bug 1524]
  ! Only ask for search CAPTCHA once. (Search.php)
+ ! For the greater good, when doing database changes, by default add the prefix. (DbPackages-xxxx.php, Packages.php) [Bug 1516]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
