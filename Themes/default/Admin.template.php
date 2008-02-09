@@ -40,9 +40,9 @@ function template_admin()
 			<img src="' , $settings['images_url'] , '/filter.gif" alt="" style="float: right;" />
 			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
 			<select name="search_type">
-				<option value="internal">', $txt['admin_search_type_internal'], '</option>
-				<option value="member">', $txt['admin_search_type_member'], '</option>
-				<option value="online">', $txt['admin_search_type_online'], '</option>
+				<option value="internal" ', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
+				<option value="member" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
+				<option value="online" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
 			</select>
 			<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
 		</form>

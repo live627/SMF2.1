@@ -702,7 +702,7 @@ function DisplayAdminFile()
 // This allocates out all the search stuff.
 function AdminSearch()
 {
-	global $txt, $context, $smcFunc;
+	global $txt, $context, $smcFunc, $sourcedir;
 
 	isAllowedTo('admin_forum');
 
@@ -718,6 +718,16 @@ function AdminSearch()
 
 	$context['sub_template'] = 'admin_search_results';
 	$context['page_title'] = $txt['admin_search_results'];
+
+	// Keep track of what the admin wants.
+	if (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] != $context['search_type'])
+	{
+		$context['admin_preferences']['sb'] = $context['search_type'];
+
+		// Update the preferences.
+		require_once($sourcedir . '/Subs-Admin.php');
+		updateAdminPreferences();
+	}
 
 	if (trim($context['search_term']) == '')
 		$context['search_results'] = array();
