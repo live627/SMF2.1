@@ -46,16 +46,6 @@ if (!defined('SMF'))
 		- uses the index administrative area.
 		- can be found by going to ?action=admin.
 
-	void VersionDetail()
-		- parses the comment headers in all files for their version information
-		  and outputs that for some javascript to check with simplemacines.org.
-		- does not connect directly with simplemachines.org, but rather
-		  expects the client to.
-		- requires the admin_forum permission.
-		- uses the view_versions admin area.
-		- loads the view_versions sub template (in the Admin template.)
-		- accessed through ?action=admin;area=version.
-
 	void ManageCopyright()
 		// !!!
 
@@ -139,11 +129,6 @@ function AdminMain()
 						'perms' => array($txt['package_file_perms']),
 						'options' => array($txt['package_settings']),
 					),
-				),
-				'version' => array(
-					'function' => 'VersionDetail',
-					'permission' => array('admin_forum'),
-					'select' => 'index'
 				),
 				'copyright' => array(
 					'function' => 'ManageCopyright',
@@ -623,38 +608,6 @@ function AdminHome()
 		$context['quick_admin_tasks'][count($context['quick_admin_tasks']) - 1]['is_last'] = true;
 		$context['quick_admin_tasks'][count($context['quick_admin_tasks']) - 2]['is_last'] = true;
 	}
-}
-
-// Perform a detailed version check.  A very good thing ;).
-function VersionDetail()
-{
-	global $forum_version, $txt, $sourcedir, $context;
-
-	isAllowedTo('admin_forum');
-
-	// Call the function that'll get all the version info we need.
-	require_once($sourcedir . '/Subs-Admin.php');
-	$versionOptions = array(
-		'include_ssi' => true,
-		'include_subscriptions' => true,
-		'sort_results' => true,
-	);
-	$version_info = getFileVersions($versionOptions);
-
-	// Add the new info to the template context.
-	$context += array(
-		'file_versions' => $version_info['file_versions'],
-		'default_template_versions' => $version_info['default_template_versions'],
-		'template_versions' => $version_info['template_versions'],
-		'default_language_versions' => $version_info['default_language_versions'],
-		'default_known_languages' => array_keys($version_info['default_language_versions']),
-	);
-
-	// Make it easier to manage for the template.
-	$context['forum_version'] = $forum_version;
-
-	$context['sub_template'] = 'view_versions';
-	$context['page_title'] = $txt['admin_version_check'];
 }
 
 // Allow users to remove their copyright.

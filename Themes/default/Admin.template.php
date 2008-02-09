@@ -81,7 +81,7 @@ function template_admin()
 							<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i><br />
 							', $txt['support_versions_current'], ':
 							<i id="smfVersion" style="white-space: nowrap;">??</i><br />
-							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=version">' . $txt['version_check_more'] . '</a>' : '', '<br />';
+							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=maintain;sa=version">' . $txt['version_check_more'] . '</a>' : '', '<br />';
 
 	// Have they paid to remove copyright?
 	if (!empty($context['copyright_expires']))
@@ -298,7 +298,7 @@ function template_credits()
 				<td class="windowbg2">
 					<b>', $txt['support_versions'], ':</b><br />
 					', $txt['support_versions_forum'], ':
-					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
+					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
 					<i id="smfVersion" style="white-space: nowrap;">??</i><br />';
 

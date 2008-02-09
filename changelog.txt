@@ -40,6 +40,7 @@ February 2008
  ! Randomise the offset for the simple machines javascript fetch stuff to avoid killing our server. (install.php, upgrade scripts)
  ! If an admin wants a custom profile field on registration ignore the privacy field. (Profile.php) [Bug 1488]
  ! UTF-8 conversion would try to use a non-numeric key as a range. (ManageMaintenance.php)
+ ! Move the version check to be part of maintenance. (Admin.php, ManageMaintenance.php, Admin and ManageMaintenance templates) [Bug 1523]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

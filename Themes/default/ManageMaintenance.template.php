@@ -33,7 +33,7 @@ function template_maintain()
 					', $txt['maintain_common_task_routine'], ':
 					<ul style="margin-top: 0px; margin-bottom: 0px;">
 						<li>
-							<a href="', $scripturl, '?action=admin;area=version">', $txt['maintain_version'], '</a><br />
+							<a href="', $scripturl, '?action=admin;area=maintain;sa=version">', $txt['maintain_version'], '</a><br />
 						</li>
 						<li>
 							<a href="', $scripturl, '?action=admin;area=repairboards">', $txt['maintain_errors'], '</a><br />

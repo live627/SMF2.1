@@ -90,6 +90,16 @@ if (!defined('SMF'))
 		- redirects back to ?action=admin;area=maintain when complete.
 		- accessed via ?action=admin;area=maintain;sa=recount.
 
+	void VersionDetail()
+		- parses the comment headers in all files for their version information
+		  and outputs that for some javascript to check with simplemacines.org.
+		- does not connect directly with simplemachines.org, but rather
+		  expects the client to.
+		- requires the admin_forum permission.
+		- uses the view_versions admin area.
+		- loads the view_versions sub template (in the Admin template.)
+		- accessed through ?action=admin;area=maintain;sa=version.
+
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
 		// !!!
 
@@ -141,6 +151,7 @@ function ManageMaintenance()
 		'taskedit' => 'EditTask',
 		'tasklog' => 'TaskLog',
 		'tasks' => 'ScheduledTasks',
+		'version' => 'VersionDetail',
 	);
 
 	// Yep, sub-action time!
@@ -1594,6 +1605,38 @@ function AdminBoardRecount()
 	CalculateNextTrigger();
 
 	redirectexit('action=admin;area=maintain;done');
+}
+
+// Perform a detailed version check.  A very good thing ;).
+function VersionDetail()
+{
+	global $forum_version, $txt, $sourcedir, $context;
+
+	isAllowedTo('admin_forum');
+
+	// Call the function that'll get all the version info we need.
+	require_once($sourcedir . '/Subs-Admin.php');
+	$versionOptions = array(
+		'include_ssi' => true,
+		'include_subscriptions' => true,
+		'sort_results' => true,
+	);
+	$version_info = getFileVersions($versionOptions);
+
+	// Add the new info to the template context.
+	$context += array(
+		'file_versions' => $version_info['file_versions'],
+		'default_template_versions' => $version_info['default_template_versions'],
+		'template_versions' => $version_info['template_versions'],
+		'default_language_versions' => $version_info['default_language_versions'],
+		'default_known_languages' => array_keys($version_info['default_language_versions']),
+	);
+
+	// Make it easier to manage for the template.
+	$context['forum_version'] = $forum_version;
+
+	$context['sub_template'] = 'view_versions';
+	$context['page_title'] = $txt['admin_version_check'];
 }
 
 // This function caches the relevant language files, and if the cache doesn't work includes them with eval.
