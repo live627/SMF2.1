@@ -898,9 +898,6 @@ function ConvertEntities()
 	if ($modSettings['global_character_set'] !== 'UTF-8' || !isset($db_character_set) || $db_character_set !== 'utf8')
 		fatal_lang_error('entity_convert_only_utf8');
 
-	// Select the sub template from the Admin template.
-	$context['sub_template'] = 'convert_entities';
-
 	// Some starting values.
 	$context['table'] = empty($_REQUEST['table']) ? 0 : (int) $_REQUEST['table'];
 	$context['start'] = empty($_REQUEST['start']) ? 0 : (int) $_REQUEST['start'];
@@ -912,7 +909,14 @@ function ConvertEntities()
 
 	// The first step is just a text screen with some explanation.
 	if ($context['first_step'])
+	{
+		$context['sub_template'] = 'convert_entities';
 		return;
+	}
+	// Otherwise use the generic "not done" template.
+	$context['sub_template'] = 'not_done';
+	$context['continue_post_data'] = '';
+	$context['continue_countdown'] = 3;
 
 	// Now we're actually going to convert...
 	checkSession('get');
@@ -967,7 +971,7 @@ function ConvertEntities()
 		);
 		while ($column_info = $smcFunc['db_fetch_assoc']($request))
 			if (strpos($column_info['Type'], 'text') !== false || strpos($column_info['Type'], 'char') !== false)
-				$columns[] = $column_info['Field'];
+				$columns[] = strtolower($column_info['Field']);
 
 		// Get the column with the (first) primary key.
 		$request = $smcFunc['db_query']('', '
@@ -980,8 +984,9 @@ function ConvertEntities()
 		{
 			if ($row['Key_name'] === 'PRIMARY')
 			{
-				if (empty($primary_key) && $row['Seq_in_index'] == 1)
+				if (empty($primary_key) || ($row['Seq_in_index'] == 1 && !in_array(strtolower($row['Column_name']), $columns)))
 					$primary_key = $row['Column_name'];
+					
 				$primary_keys[] = $row['Column_name'];
 			}
 		}
@@ -1075,6 +1080,7 @@ function ConvertEntities()
 	$context['continue_percent'] = 100;
 	$context['continue_get_data'] = '?action=admin;area=maintain';
 	$context['last_step'] = true;
+	$context['continue_countdown'] = -1;
 }
 
 // Optimize the database's tables.

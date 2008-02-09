@@ -662,53 +662,14 @@ function template_convert_entities()
 				<td class="windowbg2">
 					', $txt['entity_convert_introduction'], '
 				</td>
-			</tr>';
-	if ($context['first_step'])
-	{
-		echo '
+			</tr>
 			<tr>
 				<td class="windowbg2" align="center">
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=convertentities;start=0;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 						<input type="submit" value="', $txt['entity_convert_proceed'], '" />
 					</form>
 				</td>
-			</tr>';
-	}
-	else
-	{
-		echo '
-			<tr>
-				<td>
-					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
-							<div style="padding-top: ', $context['browser']['is_safari'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['percent_done'], '%</div>
-							<div style="width: ', $context['percent_done'], '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
-						</div>
-					</div>
-					<form action="', $scripturl, $context['continue_get_data'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;" name="autoSubmit" id="autoSubmit">
-						<div style="margin: 1ex; text-align: right;"><input type="submit" name="cont" value="', $txt['not_done_continue'], '" /></div>
-					</form>
-					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-						var countdown = ', $context['last_step'] ? '-1' : '2', ';
-						doAutoSubmit();
-
-						function doAutoSubmit()
-						{
-							if (countdown == 0)
-								document.forms.autoSubmit.submit();
-							else if (countdown == -1)
-								return;
-
-							document.forms.autoSubmit.cont.value = "', $txt['not_done_continue'], ' (" + countdown + ")";
-							countdown--;
-
-							setTimeout("doAutoSubmit();", 1000);
-						}
-					// ]]></script>
-				</td>
-			</tr>';
-	}
-	echo '
+			</tr>
 		</table>';
 }
 
