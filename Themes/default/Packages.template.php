@@ -1314,7 +1314,7 @@ function template_control_chmod()
 		var generatedButton = false;
 		function generateFTPTest()
 		{
-			// Don't ever call this twice!
+			// Don\'t ever call this twice!
 			if (generatedButton)
 				return false;
 			generatedButton = true;
