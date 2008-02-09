@@ -28,6 +28,7 @@ February 2008
  ! SQLite doesn't support INSTR.  We make it use LIKE then. (Subs-Db-sqlite.php)
  ! We need our own version of sqlite_libversion() since the function doesn't take any parameters. (Subs-Db-sqlite.php)
  ! Fixed support for HOUR and FROM_UNIXTIME in SQLite. (Subs-Db-sqlite.php, Profile-View.php)
+ ! Ensure loadEssentialThemeData has loadLanguage existing. (ScheduledTasks.php) [Bug 1486]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
@@ -74,6 +75,7 @@ February 2008
  ! Fixed potential undefined index error when saving settings. (ManageServer.php) [Bug 1480]
  ! Upgrade should always put maintenance mode back to something which ain't 2. (upgrade.php)
  ! FixLanguages wasn't quite working right for the Help file. (FixLanguage.php)
+
 
 
 January 2008

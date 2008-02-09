@@ -2133,6 +2133,9 @@ function DeleteUpgrade()
 	$upcontext['can_delete_script'] = is_writable(dirname(__FILE__)) || is_writable(__FILE__);
 
 	// Now is the perfect time to fetch the SM files.
+	require_once($sourcedir . '/Errors.php');
+	require_once($sourcedir . '/Load.php');
+	require_once($sourcedir . '/Subs.php');
 	require_once($sourcedir . '/ScheduledTasks.php');
 	$forum_version = SMF_VERSION;  // The variable is usually defined in index.php so lets just use the constant to do it for us.
 	scheduled_fetchSMfiles(); // Now go get those files!
