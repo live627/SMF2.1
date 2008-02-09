@@ -909,7 +909,7 @@ SmfEditor.prototype.insertImage = function(sSrc)
 	if (!sSrc)
 	{
 		sSrc = prompt('Enter image location', 'http://');
-		if (!sSrc)
+		if (!sSrc || sSrc.length < 10)
 			return;
 	}
 	this.smf_execCommand('insertimage', false, sSrc);
@@ -1037,7 +1037,7 @@ SmfEditor.prototype.removeFormatting = function()
 			return;
 
 		// Do bits that are likely to have attributes.
-		sCurrentText = sCurrentText.replace(RegExp("\\[/?(url|img|iurl|ftp|email|img|color|font|size).*?\\]", "g"), '');
+		sCurrentText = sCurrentText.replace(RegExp("\\[/?(url|img|iurl|ftp|email|img|color|font|size|list|bdo).*?\\]", "g"), '');
 		// Then just anything that looks like BBC.
 		sCurrentText = sCurrentText.replace(RegExp("\\[/?[A-Za-z]+\\]", "g"), '');
 

@@ -308,6 +308,8 @@ function preparsecode(&$message, $previewing = false)
 				'~\[/li\]~' => '[/li][/list]',
 				// Put the correct ones back how we found them.
 				'~\[_(li|/li|td|tr|/tr)_\]~' => '[$1]',
+				// Images with no real url.
+				'~\[img\]https?://.{0,7}\[/img\]~' => '',
 			);
 
 			// Fix up some use of tables without [tr]s, etc. (it has to be done more than once to catch it all.)

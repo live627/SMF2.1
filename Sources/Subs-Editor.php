@@ -485,6 +485,43 @@ function html_to_bbc($text)
 		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
 	}
 
+	// The final bits are the easy ones - tags which map to tags which map to tags - etc etc.
+	$tags = array(
+		'~<b(\s(.)*?)*?>~i' => '[b]',
+		'~</b>~i' => '[/b]',
+		'~<i(\s(.)*?)*?>~i' => '[i]',
+		'~</i>~i' => '[/i]',
+		'~<u(\s(.)*?)*?>~i' => '[u]',
+		'~</u>~i' => '[/u]',
+		'~<strong(\s(.)*?)*?>~i' => '[b]',
+		'~</strong>~i' => '[/b]',
+		'~<em(\s(.)*?)*?>~i' => '[i]',
+		'~</em>~i' => '[/i]',
+		'~<strike(\s(.)*?)*?>~i' => '[s]',
+		'~</strike>~i' => '[/s]',
+		'~<del(\s(.)*?)*?>~i' => '[s]',
+		'~</del>~i' => '[/s]',
+		'~<center(\s(.)*?)*?>~i' => '[center]',
+		'~</center>~i' => '[/center]',
+		'~<pre(\s(.)*?)*?>~i' => '[pre]',
+		'~</pre>~i' => '[/pre]',
+		'~<sub(\s(.)*?)*?>~i' => '[sub]',
+		'~</sub>~i' => '[/sub]',
+		'~<sup(\s(.)*?)*?>~i' => '[sup]',
+		'~</sup>~i' => '[/sup]',
+		'~<tt(\s(.)*?)*?>~i' => '[tt]',
+		'~</tt>~i' => '[/tt]',
+		'~<table(\s(.)*?)*?>~i' => '[table]',
+		'~</table>~i' => '[/table]',
+		'~<tr(\s(.)*?)*?>~i' => '[tr]',
+		'~</tr>~i' => '[/tr]',
+		'~<td(\s(.)*?)*?>~i' => '[td]',
+		'~</td>~i' => '[/td]',
+		'~<br\s*/*>~i' => "\n",
+		'~<hr[^<>]*>~i' => '[hr]',
+	);
+	$text = preg_replace(array_keys($tags), array_values($tags), $text);
+
 	// What about URL's - the pain in the ass of the tag world.
 	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
 	{
@@ -532,43 +569,6 @@ function html_to_bbc($text)
 		// Replace the tag
 		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
 	}
-
-	// The final bits are the easy ones - tags which map to tags which map to tags - etc etc.
-	$tags = array(
-		'~<b(\s(.)*?)*?>~i' => '[b]',
-		'~</b>~i' => '[/b]',
-		'~<i(\s(.)*?)*?>~i' => '[i]',
-		'~</i>~i' => '[/i]',
-		'~<u(\s(.)*?)*?>~i' => '[u]',
-		'~</u>~i' => '[/u]',
-		'~<strong(\s(.)*?)*?>~i' => '[b]',
-		'~</strong>~i' => '[/b]',
-		'~<em(\s(.)*?)*?>~i' => '[i]',
-		'~</em>~i' => '[/i]',
-		'~<strike(\s(.)*?)*?>~i' => '[s]',
-		'~</strike>~i' => '[/s]',
-		'~<del(\s(.)*?)*?>~i' => '[s]',
-		'~</del>~i' => '[/s]',
-		'~<center(\s(.)*?)*?>~i' => '[center]',
-		'~</center>~i' => '[/center]',
-		'~<pre(\s(.)*?)*?>~i' => '[pre]',
-		'~</pre>~i' => '[/pre]',
-		'~<sub(\s(.)*?)*?>~i' => '[sub]',
-		'~</sub>~i' => '[/sub]',
-		'~<sup(\s(.)*?)*?>~i' => '[sup]',
-		'~</sup>~i' => '[/sup]',
-		'~<tt(\s(.)*?)*?>~i' => '[tt]',
-		'~</tt>~i' => '[/tt]',
-		'~<table(\s(.)*?)*?>~i' => '[table]',
-		'~</table>~i' => '[/table]',
-		'~<tr(\s(.)*?)*?>~i' => '[tr]',
-		'~</tr>~i' => '[/tr]',
-		'~<td(\s(.)*?)*?>~i' => '[td]',
-		'~</td>~i' => '[/td]',
-		'~<br\s*/*>~i' => "\n",
-		'~<hr[^<>]*>~i' => '[hr]',
-	);
-	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
 	$text = strip_tags($text);
 

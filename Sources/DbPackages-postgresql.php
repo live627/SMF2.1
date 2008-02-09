@@ -274,7 +274,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 		{
 			// If we're going to overwrite then use change column.
 			if ($if_exists == 'update')
-				return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info);
+				return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info, array('no_prefix' => true));
 			else
 				return false;
 		}
