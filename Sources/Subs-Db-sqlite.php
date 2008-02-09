@@ -59,7 +59,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_num_fields' => 'sqlite_num_fields',
 			'db_escape_string' => 'sqlite_escape_string',
 			'db_unescape_string' => 'smf_sqlite_unescape_string',
-			'db_server_info' => 'sqlite_libversion',
+			'db_server_info' => 'smf_sqlite_libversion',
 			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
@@ -108,7 +108,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 }
 
 // Extend the database functionality.
-function db_extend ($type = 'extra')
+function db_extend($type = 'extra')
 {
 	global $sourcedir, $db_type;
 
@@ -118,7 +118,7 @@ function db_extend ($type = 'extra')
 }
 
 // Fix up the prefix so it doesn't require the database to be selected.
-function db_fix_prefix (&$db_prefix, $db_name)
+function db_fix_prefix(&$db_prefix, $db_name)
 {
 	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
 }
@@ -282,13 +282,16 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			'~TRUNCATE~i' => 'DELETE FROM',
 		),
 		'user_activity_by_time' => array(
-			'~HOUR\(FROM_UNIXTIME\((poster_time\s+\+\s+\d+)\)\)~' => 'strftime(\'%H\', datetime($1, \'unixepoch\'))',
+			'~HOUR\(FROM_UNIXTIME\((poster_time\s+\+\s+\{int:.+\})\)\)~' => 'strftime(\'%H\', datetime($1, \'unixepoch\'))',
 		),
 		'unread_fetch_topic_count' => array(
 			'~\s*SELECT\sCOUNT\(DISTINCT\st\.id_topic\),\sMIN\(t\.id_last_msg\)(.+)$~is' => 'SELECT COUNT(id_topic), MIN(id_last_msg) FROM (SELECT DISTINCT t.id_topic, t.id_last_msg $1)',
 		),
 		'fetch_sm_files' => array(
 			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'alter_table_boards' => array(
+			'~(.+)~' => '',
 		),
 	);
 
@@ -300,6 +303,14 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
 
 	$db_string = preg_replace('~SUBSTRING\(\s*\'~', 'SUBSTR(\'', $db_string);
+
+	// INSTR?  No support for that buddy :(
+	if (preg_match('~INSTR\((.+?),\s(.+?)\)~', $db_string, $matches) === 1)
+	{
+		$db_string = preg_replace('~INSTR\((.+?),\s(.+?)\)~', '$1 LIKE $2', $db_string);
+		list(, $search) = explode(':', substr($matches[2], 1, -1));
+		$db_values[$search] = '%' . $db_values[$search] . '%';
+	}
 
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
@@ -693,6 +704,12 @@ function smf_udf_month($date)
 function smf_udf_dayofmonth($date)
 {
 	return substr($date, 8, 2);
+}
+
+// We need this since sqlite_libversion() doesn't take any parameters.
+function smf_sqlite_libversion($void)
+{
+	return sqlite_libversion();
 }
 
 ?>

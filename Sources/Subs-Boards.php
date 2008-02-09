@@ -960,6 +960,7 @@ function reorderBoards()
 		ALTER TABLE {db_prefix}boards
 		ORDER BY board_order',
 		array(
+			'db_error_skip' => true,
 		)
 	);
 }

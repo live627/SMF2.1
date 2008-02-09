@@ -718,6 +718,9 @@ function statPanel($memID)
 	$context['posts_by_time'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
+		// Cast as an integer to remove the leading 0.
+		$row['hour'] = (int) $row['hour'];
+
 		if ($row['post_count'] > $maxPosts)
 			$maxPosts = $row['post_count'];
 

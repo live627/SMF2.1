@@ -24,6 +24,10 @@ February 2008
  ! No longer remove the first and last quote from the password salt on registration. (Register.php) [Bug 1517]
  ! Make sure that $context['repair_errors'] gets overwritten only if it has to be when doing attachment maintenance. (ManageAttachments.php) [Bug 1512]
  ! SQLite doesn't know what SUBSTRING is so we need to add a valid replacement when fetching SM files. (ScheduledTasks.php, Subs-Db-sqlite.php) [Bug 1510]
+ ! SQLite doesn't support ORDER BY on ALTER TABLE so we skip it. (Subs-Db-sqlite.php, Subs-Boards.php)
+ ! SQLite doesn't support INSTR.  We make it use LIKE then. (Subs-Db-sqlite.php)
+ ! We need our own version of sqlite_libversion() since the function doesn't take any parameters. (Subs-Db-sqlite.php)
+ ! Fixed support for HOUR and FROM_UNIXTIME in SQLite. (Subs-Db-sqlite.php, Profile-View.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
