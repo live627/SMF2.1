@@ -1311,8 +1311,14 @@ function template_control_chmod()
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		// Generate a "test ftp" button.
+		var generatedButton = false;
 		function generateFTPTest()
 		{
+			// Don't ever call this twice!
+			if (generatedButton)
+				return false;
+			generatedButton = true;
+
 			// No XML?
 			if (!window.XMLHttpRequest || (!document.getElementById("test_ftp_placeholder") && !document.getElementById("test_ftp_placeholder_full")))
 				return false;

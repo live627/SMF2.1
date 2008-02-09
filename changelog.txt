@@ -32,7 +32,8 @@ February 2008
  ! Only ask for search CAPTCHA once. (Search.php)
  ! For the greater good, when doing database changes, by default add the prefix. (DbPackages-xxxx.php, Packages.php) [Bug 1516]
  ! Skip database errors during smiley sorting. (ManageSmileys.php) [Bug 1502]
- ! The user contextual array should be referenced to the user_info array where possible. (Load.php) [Bug 1519]
+ ! The user contextual array should be referenced to the user_info array where possible. (SSI.php, Load.php) [Bug 1519]
+ ! Don't allow more than one "Test Connection" button. (Packages template) [Bug 1500]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
