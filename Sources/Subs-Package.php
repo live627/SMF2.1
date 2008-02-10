@@ -1176,9 +1176,15 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 
 		// If there is a destination, make sure it makes sense.
 		if (substr($actionType, 0, 6) != 'remove')
+		{
+			$this_action['unparsed_destination'] = $action->fetch('@destination');
 			$this_action['destination'] = parse_path($action->fetch('@destination')) . '/' . basename($this_action['filename']);
+		}
 		else
+		{
+			$this_action['unparsed_filename'] = $this_action['filename'];
 			$this_action['filename'] = parse_path($this_action['filename']);
+		}
 
 		// If we're moving or requiring (copying) a file.
 		if (substr($actionType, 0, 4) == 'move' || substr($actionType, 0, 7) == 'require')
@@ -1240,6 +1246,9 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 		}
 		elseif ($actionType == 'require-file')
 		{
+			if ($action->fetch('@theme'))
+				$this_action['theme_action'] = $action->fetch('@theme');
+
 			if (!mktree(dirname($this_action['destination']), false))
 			{
 				$temp = dirname($this_action['destination']);
@@ -1326,7 +1335,13 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				$failure = true;
 		}
 		elseif ($action['type'] == 'require-dir')
+		{
 			copytree($action['source'], $action['destination']);
+			// Any other theme folders?
+			if (!empty($context['theme_copies']) && !empty($context['theme_copies'][$action['type']][$action['destination']]))
+				foreach ($context['theme_copies'][$action['type']][$action['destination']] as $theme_destination)
+					copytree($action['source'], $theme_destination);
+		}
 		elseif ($action['type'] == 'require-file')
 		{
 			if (!mktree(dirname($action['destination']), 0755) || !is_writable(dirname($action['destination'])))
@@ -1335,6 +1350,18 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 			package_put_contents($action['destination'], package_get_contents($action['source']), $testing_only);
 
 			$failure |= !copy($action['source'], $action['destination']);
+
+			// Any other theme files?
+			if (!empty($context['theme_copies']) && !empty($context['theme_copies'][$action['type']][$action['destination']]))
+				foreach ($context['theme_copies'][$action['type']][$action['destination']] as $theme_destination)
+				{
+					if (!mktree(dirname($theme_destination), 0755) || !is_writable(dirname($theme_destination)))
+						$failure |= !mktree(dirname($theme_destination), 0777);
+
+					package_put_contents($theme_destination, package_get_contents($action['source']), $testing_only);
+
+					$failure |= !copy($action['source'], $theme_destination);
+				}
 		}
 		elseif ($action['type'] == 'move-file')
 		{

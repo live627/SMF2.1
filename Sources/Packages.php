@@ -141,7 +141,7 @@ function Packages()
 // Test install a package.
 function PackageInstallTest()
 {
-	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $smcFunc;
+	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $smcFunc, $settings;
 
 	// You have to specify a file!!
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -336,6 +336,13 @@ function PackageInstallTest()
 	if (empty($actions))
 		return;
 
+	// This will hold data about anything that can be installed in other themes.
+	$themeFinds = array(
+		'candidates' => array(),
+		'other_themes' => array(),
+	);
+
+	// Now prepare things for the template.
 	foreach ($actions as $action)
 	{
 		if ($action['type'] == 'chmod')
@@ -521,10 +528,33 @@ function PackageInstallTest()
 				'action' => strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('require-dir', 'require-file')))
+		{
+			// Do this one...
 			$thisAction = array(
 				'type' => $txt['package_extract'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => strtr($action['destination'], array($boarddir => '.'))
 			);
+
+			// Could this be theme related?
+			if (!empty($action['unparsed_destination']) && preg_match('~^\$(languagedir|languages_dir|imagesdir|themedir|themes_dir)~i', $action['unparsed_destination'], $matches))
+			{
+				// Is the action already stated?
+				$theme_action = !empty($action['theme_action']) && in_array($action['theme_action'], array('no', 'yes', 'auto')) ? $action['theme_action'] : 'auto';
+				// If it's not auto do we think we have something we can act upon?
+				if ($theme_action != 'auto' && !in_array($matches[1], array('languagedir', 'languages_dir', 'imagesdir', 'themedir')))
+					$theme_action = '';
+				// ... or if it's auto do we even want to do anything?
+				elseif ($theme_action == 'auto' && $matches[1] != 'imagesdir')
+					$theme_action = '';
+
+				// So, we still want to do something?
+				if ($theme_action != '')
+					$themeFinds['candidates'][] = $action;
+				// Otherwise is this is going into another theme record it.
+				elseif ($matches[1] == 'themes_dir')
+					$themeFinds['other_themes'][] = strtolower(strtr(parse_path($action['unparsed_destination']), array('\\' => '/')) . '/' . basename($action['filename']));
+			}
+		}
 		elseif (in_array($action['type'], array('move-dir', 'move-file')))
 			$thisAction = array(
 				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package_tree'] : $txt['package_file']),
@@ -542,6 +572,63 @@ function PackageInstallTest()
 		// !!! None given?
 		$thisAction['description'] = isset($action['description']) ? $action['description'] : '';
 		$context['actions'][] = $thisAction;
+	}
+
+	// Have we got some things which we might want to do "multi-theme"?
+	if (!empty($themeFinds['candidates']))
+	{
+		foreach ($themeFinds['candidates'] as $action_data)
+		{
+			// Get the part of the file we'll be dealing with.
+			preg_match('~^\$(languagedir|languages_dir|imagesdir|themedir)(\\|/)*(.+)*~i', $action_data['unparsed_destination'], $matches);
+
+			if ($matches[1] == 'imagesdir')
+				$path = '/' . basename($settings['default_images_url']);
+			elseif ($matches[1] == 'languagedir' || $matches[1] == 'languages_dir')
+				$path = '/languages';
+			else
+				$path = '';
+
+			if (!empty($matches[3]))
+				$path .= $matches[3];
+			$path .= '/' . $action_data['filename'];
+
+			// Loop through each custom theme to note it's candidacy!
+			foreach ($theme_paths as $id => $theme_data)
+			{
+				if (isset($theme_data['theme_dir']) && $id != 1)
+				{
+					// Confirm that we don't already have this dealt with by another entry.
+					if (!in_array(strtolower(strtr($theme_data['theme_dir'] . $path, array('\\' => '/'))), $themeFinds['other_themes']))
+					{
+						// Check if we will need to chmod this.
+						if (!mktree(dirname($theme_data['theme_dir'] . $path), false))
+						{
+							$temp = dirname($this_action['destination']);
+							while (!file_exists($temp) && strlen($temp) > 1)
+								$temp = dirname($temp);
+							$chmod_files[] = $temp;
+						}
+						if ($action['type'] == 'require-dir' && !is_writable($theme_data['theme_dir'] . $path) && (file_exists($theme_data['theme_dir'] . $path) || !is_writable(dirname($theme_data['theme_dir'] . $path))))
+							$chmod_files[] = $theme_data['theme_dir'] . $path;
+
+						if (!isset($context['theme_actions'][$id]))
+							$context['theme_actions'][$id] = array(
+								'name' => $theme_data['name'],
+								'actions' => array(),
+							);
+
+						$context['theme_actions'][$id]['actions'][] = array(
+							'type' => $txt['package_extract'] . ' ' . ($action_data['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
+							'action' => strtr($theme_data['theme_dir'] . $path, array('\\' => '/', $boarddir => '.')),
+							'description' => '',
+							'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['destination'], 'future' => $theme_data['theme_dir'] . $path))),
+							'not_mod' => true,
+						);
+					}
+				}
+			}
+		}
 	}
 
 	// Trash the cache... which will also check permissions for us!
@@ -651,6 +738,25 @@ function PackageInstall()
 		$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Are there any theme copying that we want to take place?
+	$context['theme_copies'] = array(
+		'require-file' => array(),
+		'require-dir' => array(),
+	);
+	if (!empty($_POST['theme_changes']))
+	{
+		foreach ($_POST['theme_changes'] as $change)
+		{
+			if (empty($change))
+				continue;
+			$theme_data = unserialize(base64_decode($change));
+			if (empty($theme_data['type']))
+				continue;
+
+			$context['theme_copies'][$theme_data['type']][$theme_data['orig']][] = $theme_data['future'];
+		}
+	}
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);

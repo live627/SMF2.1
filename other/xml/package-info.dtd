@@ -82,6 +82,8 @@
 			<!ATTLIST require-dir from CDATA #IMPLIED>
 			<!ATTLIST require-dir name CDATA #REQUIRED>
 			<!ATTLIST require-dir destination CDATA #REQUIRED>
+			<!-- SMF will try to put folders going into the theme directory, which are normally theme specific, into other themes. Override with the below. (no = don't copy, yes = do copy, auto = SMF decides) -->
+			<!ATTLIST require-dir themes (no|yes|auto) "auto">
 
 		<!-- Require a file from inside the package. -->
 		<!ELEMENT require-file (#PCDATA)>
@@ -89,6 +91,8 @@
 			<!ATTLIST require-file from CDATA #IMPLIED>
 			<!ATTLIST require-file name CDATA #REQUIRED>
 			<!ATTLIST require-file destination CDATA #REQUIRED>
+			<!-- SMF will try to put files going into the theme directory, which are normally theme specific, into other themes. Override with the below. (no = don't copy, yes = do copy, auto = SMF decides) -->
+			<!ATTLIST require-file themes (no|yes|auto) "auto">
 
 		<!-- Move an entire directory, named name, to destination. -->
 		<!ELEMENT move-dir (#PCDATA)>

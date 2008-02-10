@@ -443,7 +443,7 @@ function invertAll(headerfield, checkform, mask, ignore_disabled)
 {
 	for (var i = 0; i < checkform.length; i++)
 	{
-		if (typeof(checkform[i].name) == "undefined" || (typeof(mask) != "undefined" && checkform[i].name.substr(0, mask.length) != mask))
+		if (typeof(checkform[i].name) == "undefined" || (typeof(mask) != "undefined" && checkform[i].name.substr(0, mask.length) != mask && checkform[i].id.substr(0, mask.length) != mask))
 			continue;
 
 		if (!checkform[i].disabled || typeof(ignore_disabled) != "undefined")

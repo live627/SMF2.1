@@ -191,7 +191,7 @@ function template_view_package()
 			foreach ($context['theme_actions'] as $id => $theme)
 			{
 				// Pass?
-				$js_operations[$action_num] = $theme['has_failure'];
+				$js_operations[$action_num] = !empty($theme['has_failure']);
 
 				echo '
 						<tr class="titlebg">
@@ -201,7 +201,7 @@ function template_view_package()
 					echo '
 								<input type="hidden" name="custom_theme[]" value="', $id, '" />';
 				echo '
-								<input type="checkbox" name="custom_theme[]" id="custom_theme_', $id, '" value="', $id, '" class="check" onclick="', ($theme['has_failure'] ? 'this.form.custom_theme_' . $id . '.checked && if (!confirm(\'' . $txt['package_theme_failure_warning'] . '\')) return false;' : ''), 'invertAll(this, this.form, \'dummy_theme_', $id, '\', true);" ', !empty($context['themes_locked']) ? 'disabled="disabled" checked="checked"' : '', '/>
+								<input type="checkbox" name="custom_theme[]" id="custom_theme_', $id, '" value="', $id, '" class="check" onclick="', (!empty($theme['has_failure']) ? 'this.form.custom_theme_' . $id . '.checked && if (!confirm(\'' . $txt['package_theme_failure_warning'] . '\')) return false;' : ''), 'invertAll(this, this.form, \'dummy_theme_', $id, '\', true);" ', !empty($context['themes_locked']) ? 'disabled="disabled" checked="checked"' : '', '/>
 							</td>
 							<td colspan="3">
 								', $theme['name'], '
@@ -214,7 +214,7 @@ function template_view_package()
 						<tr class="windowbg', $alternate ? '' : '2', '">
 							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" /></a>' : '', '</td>
 							<td width="30" style="padding-right: 2ex;">
-								<input type="checkbox" name="dummy_theme_', $id, '[]" id="dummy_theme_', $id, '[]" class="check" disabled="disabled" ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
+								<input type="checkbox" name="theme_changes[]" value="', !empty($action['value']) ? $action['value'] : '', '" id="dummy_theme_', $id, '[]" class="check" ', (!empty($action['not_mod']) ? '' : 'disabled="disabled"'), ' ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
 							</td>
 							<td style="padding-right: 2ex;">', $action['type'], '</td>
 							<td width="50%" style="padding-right: 2ex;">', $action['action'], '</td>
@@ -275,7 +275,7 @@ function template_view_package()
 		echo '
 		<tr class="titlebg">
 			<td align="right">
-				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" ', $context['has_failure'] ? 'onclick="return confirm(\'' . $txt['package_will_fail_popup'] . '\');"' : '', '/>
+				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" ', !empty($context['has_failure']) ? 'onclick="return confirm(\'' . $txt['package_will_fail_popup'] . '\');"' : '', '/>
 			</td>
 		</tr>';
 	}
@@ -438,7 +438,7 @@ function template_extract_package()
 		</table>';
 
 	// Show the "restore permissions" screen?
-	if (function_exists('template_show_list'))
+	if (function_exists('template_show_list') && !empty($context['restore_file_permissions']['rows']))
 	{
 		echo '<br />';
 		template_show_list('restore_file_permissions');
