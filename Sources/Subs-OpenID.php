@@ -299,7 +299,7 @@ function smf_openID_canonize($uri)
 	if (strpos($uri, 'http://') !== 0)
 		$uri = 'http://' . $uri;
 
-	if (strpos(substr($uri, strpos($uri, '://')+3), '/') === false)
+	if (strpos(substr($uri, strpos($uri, '://') + 3), '/') === false)
 		$uri .= '/';
 
 	return $uri;

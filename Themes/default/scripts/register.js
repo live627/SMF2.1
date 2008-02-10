@@ -3,6 +3,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 	this.addVerify = addVerificationField;
 	this.autoSetup = autoSetup;
 	this.refreshMainPassword = refreshMainPassword;
+	this.refreshVerifyPassword = refreshVerifyPassword;
 
 	var verificationFields = new Array();
 	var textStrings = regTextStrings ? regTextStrings : new Array();

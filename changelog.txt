@@ -49,6 +49,7 @@ February 2008
  + The package manager will now try to put theme files in all installed themes, if the user selects it. Mod authors can override using the "theme" attribute. (package-info.dtd, Packages.php, Subs-Package.php, Packages template)
  ! Ensure any formatting within code tags isn't parsed by the WYSIWYG editor. (Subs-Editor.php)
  ! Make the editor do a better job of closing tags. (Subs-Editor.php)
+ * Change the registration template to look a little prettier when using openID. (Register template)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

@@ -158,7 +158,9 @@ $txt['registration_password_valid'] = 'Password is valid';
 
 $txt['registration_errors_occurred'] = 'The following errors were detected in your registration. Please correct them to continue:';
 
-$txt['authenticate_label'] = 'Authenticate using';
+$txt['authenticate_label'] = 'Authenticate Method';
 $txt['authenticate_password'] = 'Password';
 $txt['authenticate_openid'] = 'OpenID';
+$txt['authenticate_openid_url'] = 'OpenID Authentication URL';
+
 ?>

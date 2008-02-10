@@ -13,7 +13,7 @@ function template_before()
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	function verifyAgree()
 	{
-		if (document.forms.creator.passwrd1.value != document.forms.creator.passwrd2.value)
+		if (currentAuthMethod == \'passwd\' && document.forms.creator.smf_autov_pwmain.value != document.forms.creator.smf_autov_pwverify.value)
 		{
 			alert("', $txt['register_passwords_differ_js'], '");
 			return false;
@@ -34,23 +34,45 @@ function template_before()
 
 		return true;
 	}
-	function getAuthValue()
-	{
-		var obj = document.forms.creator.authenticate;
-		for(i = 0, n = obj.length; i < n; i++)
-		{
-			if (obj[i].checked)
-				return obj[i].value
-		}
 
-		return "";
+	var currentAuthMethod = \'passwd\';
+	function updateAuthMethod()
+	{
+		// What authentication method is being used?
+		if (!document.getElementById(\'auth_openid\') || !document.getElementById(\'auth_openid\').checked)
+			currentAuthMethod = \'passwd\';
+		else
+			currentAuthMethod = \'openid\';
+
+		// No openID?
+		if (!document.getElementById(\'auth_openid\'))
+			return true;
+
+		document.forms.creator.openid_url.disabled = currentAuthMethod == \'openid\' ? false : true;
+		document.forms.creator.smf_autov_pwmain.disabled = currentAuthMethod == \'passwd\' ? false : true;
+		document.forms.creator.smf_autov_pwverify.disabled = currentAuthMethod == \'passwd\' ? false : true;
+		document.getElementById(\'smf_autov_pwmain_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
+		document.getElementById(\'smf_autov_pwverify_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
+
+		if (currentAuthMethod == \'passwd\')
+		{
+			verificationHandle.refreshMainPassword();
+			verificationHandle.refreshVerifyPassword();
+			document.forms.creator.openid_url.style.backgroundColor = \'\';
+		}
+		else
+		{
+			document.forms.creator.smf_autov_pwmain.style.backgroundColor = \'\';
+			document.forms.creator.smf_autov_pwverify.style.backgroundColor = \'\';
+			document.forms.creator.openid_url.style.backgroundColor = \'#FCE184\';
+		}
 	}';
 
 	if ($context['require_agreement'])
 		echo '
 	function checkAgree()
 	{
-		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || ', !empty($modSettings['enableOpenID']) ? '(isEmptyText(document.forms.creator.passwrd1) && getAuthValue() == "passwd") || (isEmptyText(document.forms.creator.openid_url) && getAuthValue() == "openid") || ' : '', '!document.forms.creator.regagree.checked;
+		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || (currentAuthMethod == "passwd" && isEmptyText(document.forms.creator.smf_autov_pwmain)) || (currentAuthMethod == "openid" && isEmptyText(document.forms.creator.openid_url)) || !document.forms.creator.regagree.checked;
 		setTimeout("checkAgree();", 1000);
 	}
 	setTimeout("checkAgree();", 1000);';
@@ -106,7 +128,11 @@ function template_before()
 							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" />
 							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt['allow_user_email'], '</label>
 						</td>
-					</tr>
+					</tr>';
+
+	// With openID disabled we put the password here.
+	if (empty($modSettings['enableOpenID']))
+		echo '
 					<tr>
 						<td width="40%">
 							<b>', $txt['choose_pass'], ':</b>
@@ -126,29 +152,6 @@ function template_before()
 							<span id="smf_autov_pwverify_div" style="display: none;">
 								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
 							</span>
-						</td>
-					</tr>';
-
-	if (!empty($modSettings['enableOpenID']))
-		echo '
-					<tr>
-						<td>
-							<b>', $txt['openid'], ':</b>
-						</td>
-						<td>
-							<input type="text" name="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
-							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<b>', $txt['authenticate_label'], ':</b>
-						</td>
-						<td>
-							<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', empty($context['openid']) ? 'checked="checked" ' : '', '/>
-							<label for="auth_pass">', $txt['authenticate_password'], '</label><br />
-							<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', '/>
-							<label for="auth_openid">', $txt['authenticate_openid'], '</label>
 						</td>
 					</tr>';
 
@@ -189,12 +192,80 @@ function template_before()
 						</td>
 					</tr>';
 
-	// If we have some optional fields show them too!
-	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
 		echo '
 				</table>
 			</td>
+		</tr>';
+
+	// If openID is enabled offer them the choice.
+	if (!empty($modSettings['enableOpenID']))
+		echo '
+		<tr class="windowbg">
+			<td colspan="2">
+				<hr />
+			</td>
 		</tr>
+		<tr class="windowbg" style="padding-left: 3px;">
+			<td>
+				<b>', $txt['authenticate_label'], ':</b>
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="100%">
+				<table cellpadding="3" cellspacing="2" border="0" width="100%">
+					<tr>
+						<td width="2%" align="center" class="windowbg2" rowspan="3">
+							<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
+						</td>
+						<td colspan="2">
+							<label for="auth_pass"><b>', $txt['authenticate_password'], ':</b></label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<i>', $txt['choose_pass'], ':</i>
+						</td>
+						<td width="60%">
+							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
+							<span id="smf_autov_pwmain_div" style="display: none;">
+								<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+							</span>
+						</td>
+					</tr><tr>
+						<td>
+							<i>', $txt['verify_pass'], ':</i>
+						</td>
+						<td width="60%">
+							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
+							<span id="smf_autov_pwverify_div" style="display: none;">
+								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td width="2%" align="center" class="windowbg2" rowspan="2">
+							<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
+						</td>
+						<td colspan="2">
+							<label for="auth_openid"><b>', $txt['authenticate_openid'], ':</b></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<i>', $txt['authenticate_openid_url'], ':</i>
+						</td>
+						<td width="60%">
+							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
+							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>';
+
+	// If we have some optional fields show them too!
+	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
+		echo '
 		<tr class="windowbg">
 			<td><hr /></td>
 		</tr>
@@ -298,10 +369,13 @@ function template_before()
 		}
 	}
 
-	echo '
+	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
+		echo '
 				</table>
 			</td>
-		</tr>
+		</tr>';
+
+	echo '
 	</table>';
 
 	// Require them to agree here?
@@ -334,7 +408,7 @@ function template_before()
 	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;';
 
 	// Clever registration stuff...
-echo '
+	echo '
 	var regTextStrings = {
 		"username_valid": "', $txt['registration_username_available'], '",
 		"username_invalid": "', $txt['registration_username_unavailable'], '",
@@ -345,7 +419,9 @@ echo '
 		"password_no_match": "', $txt['registration_password_no_match'], '",
 		"password_valid": "', $txt['registration_password_valid'], '"
 	};
-	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);';
+	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
+	// Update the authentication status.
+	updateAuthMethod();';
 
 	// Have we got visual verification on the move?
 	if ($context['visual_verification'])
