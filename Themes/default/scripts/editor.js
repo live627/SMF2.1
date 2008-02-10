@@ -222,29 +222,45 @@ SmfEditor.prototype.init = function()
 		// Otherwise we seem to have to try to rip out each of the styles one by one!
 		else if (document.styleSheets.length)
 		{
+			var bFoundSomething = false;
 			// First we need to find the right style sheet.
 			for (var i = 0, iNumStyleSheets = document.styleSheets.length; i < iNumStyleSheets; i++)
 			{
+				// Firefox won't allow us to get a CSS file which ain't in the right URL.
 				try
 				{
-					if (document.styleSheets[i].cssRules.length)
+					if (document.styleSheets[i].cssRules.length < 1)
+						continue;
+				}
+				catch (e)
+				{
+					continue;
+				}
+				
+				// Manually try to find the rich_editor class.
+				for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
+				{
+					// Got it!
+					if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
 					{
-						// Manually try to find the rich_editor class.
-						for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
-						{
-							// Got it!
-							if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
-							{
-								// Set some possible styles.
-								this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
-								this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
-								this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
-								this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
-							}
-						}
+						// Set some possible styles.
+						this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
+						this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
+						this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
+						this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+						bFoundSomething = true;
 					}
 				}
-				catch (e) {}
+			}
+
+			// Didn't find it?
+			if (!bFoundSomething)
+			{
+				// Do something that is better than nothing.
+				this.oFrameDocument.body.style.color = 'black';
+				this.oFrameDocument.body.style.backgroundColor = 'white';
+				this.oFrameDocument.body.style.fontSize = 'small';
+				this.oFrameDocument.body.style.fontFamily = 'verdana';
 			}
 		}
 

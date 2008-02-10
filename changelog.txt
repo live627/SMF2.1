@@ -50,6 +50,7 @@ February 2008
  ! Ensure any formatting within code tags isn't parsed by the WYSIWYG editor. (Subs-Editor.php)
  ! Make the editor do a better job of closing tags. (Subs-Editor.php)
  * Change the registration template to look a little prettier when using openID. (Register template)
+ ! Firefox (And perhaps other browsers) would error if the CSS files were outside the domain on the WYSIWYG editor. (editor.js)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
