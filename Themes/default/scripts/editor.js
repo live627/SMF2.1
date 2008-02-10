@@ -225,22 +225,26 @@ SmfEditor.prototype.init = function()
 			// First we need to find the right style sheet.
 			for (var i = 0, iNumStyleSheets = document.styleSheets.length; i < iNumStyleSheets; i++)
 			{
-				if (document.styleSheets[i].cssRules.length)
+				try
 				{
-					// Manually try to find the rich_editor class.
-					for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
+					if (document.styleSheets[i].cssRules.length)
 					{
-						// Got it!
-						if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
+						// Manually try to find the rich_editor class.
+						for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
 						{
-							// Set some possible styles.
-							this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
-							this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
-							this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
-							this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+							// Got it!
+							if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
+							{
+								// Set some possible styles.
+								this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
+								this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
+								this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
+								this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+							}
 						}
 					}
 				}
+				catch (e) {}
 			}
 		}
 
