@@ -844,7 +844,7 @@ function legalise_bbc($text)
 					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
 						$in_code_nobbc = false;
 					// As long as we're not in code and nobbc and it's been started note it's no longer in action.
-					elseif (!$in_code_nobbc && isset($active_tags[$matches[1]]))
+					elseif (!$in_code_nobbc && !empty($active_tags[$matches[1]]))
 					{
 						$to_add_back = array();
 						// We need to make sure we have the tags closed in the right order.
@@ -852,7 +852,13 @@ function legalise_bbc($text)
 						{
 							// This was the one we are closing so stop.
 							if ($tag['type'] == $matches[1])
+							{
+								// Remove the right active bit.
+								foreach ($active_tags[$matches[1]] as $k => $v)
+									if ($v == $tag['content'])
+										unset($active_tags[$matches[1]][$k]);
 								break;
+							}
 							else
 							{
 								$to_add_back[] = $tag;
@@ -874,8 +880,11 @@ function legalise_bbc($text)
 						// Set what the tags are these days...
 						foreach ($to_add_back as $tag)
 							array_push($current_tags, $tag);
-
-						unset($active_tags[$matches[1]]);
+					}
+					// What if it isn't block level and we've never heard of it? Remove it!
+					elseif (!$in_code_nobbc && !$valid_tags[$matches[1]])
+					{
+						//!!! Do something here?
 					}
 					// What if it's a block level tag we are ending? We need to close any open tags and reopen them afterwards!
 					elseif (!$in_code_nobbc && $valid_tags[$matches[1]])
@@ -916,8 +925,16 @@ function legalise_bbc($text)
 					if (!$in_code_nobbc && !$valid_tags[$matches[1]])
 					{
 						// Can't have two tags active that are the same - close the previous one!
-						if (isset($active_tags[$matches[1]]))
+						if (!empty($active_tags[$matches[1]]) && in_array($matches[0], $active_tags[$matches[1]]))
 						{
+							// Remove this tag.
+							foreach ($active_tags[$matches[1]] as $k => $v)
+								if ($v == $matches[0])
+								{
+									unset($active_tags[$matches[1]][$k]);
+									break;
+								}
+
 							// First add in the new closing tag...
 							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $matches[1] . ']' . substr($new_text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $matches[1] . ']');
@@ -928,7 +945,7 @@ function legalise_bbc($text)
 								$new_text = substr($new_text, 0, $tag_offset) . substr($new_text, $tag_offset + strlen('[/' . $matches[1] . ']'));
 
 						}
-						$active_tags[$matches[1]] = $matches[0];
+						$active_tags[$matches[1]][] = $matches[0];
 						$tag = array(
 							'type' => $matches[1],
 							'content' => $matches[0],
