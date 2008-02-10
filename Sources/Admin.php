@@ -666,6 +666,8 @@ function DisplayAdminFile()
 {
 	global $context, $modSettings, $smcFunc;
 
+	@ini_set('memory_limit', '32M');
+
 	if (empty($_REQUEST['filename']))
 		fatal_lang_error('no_access');
 

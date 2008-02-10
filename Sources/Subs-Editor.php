@@ -140,6 +140,23 @@ function html_to_bbc($text)
 	// If there's a trailing break get rid of it - Firefox tends to add one.
 	$text = preg_replace('~<br\s?/?>$~i', '', $text);
 
+	// Remove any formatting within code tags.
+	if (strpos($text, '[code') !== false)
+	{
+		$text = preg_replace('~<br\s?/?>~i', '#smf_br_spec_grudge_cool!#', $text);
+		$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		// Only mess with stuff outside [code] tags.
+		for ($i = 0, $n = count($parts); $i < $n; $i++)
+		{
+			// Value of 2 means we're inside the tag.
+			if ($i % 4 == 2)
+				$parts[$i] = strip_tags($parts[$i]);
+		}
+
+		$text = strtr(implode('', $parts), array('#smf_br_spec_grudge_cool!#' => '<br />'));
+	}
+
 	// Do the smileys ultra first!
 	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>~i', $text, $matches);
 	if (!empty($matches))
@@ -864,14 +881,11 @@ function legalise_bbc($text)
 					elseif (!$in_code_nobbc && $valid_tags[$matches[1]])
 					{
 						// Close all the current tags...
-						foreach ($current_tags as $tag)
+						foreach (array_reverse($current_tags) as $tag)
 						{
 							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $tag['type'] . ']');
 						}
-
-						// The tags are now reversed!
-						$current_tags = array_reverse($current_tags);
 
 						// ... and reopen them again.
 						foreach ($current_tags as $tag)
@@ -889,7 +903,7 @@ function legalise_bbc($text)
 			else
 			{
 				// Get the tag.
-				preg_match('~\[([A-Za-z]+)[^\]\s]*\]~', substr($text, $i), $matches);
+				preg_match('~\[([A-Za-z]+)[^\]]*\]~', substr($text, $i), $matches);
 
 				// It's possible that this wasn't actually a tag after all - if not continue!
 				if (!isset($matches[0]) || strpos(substr($text, $i), $matches[0]) !== 0)
@@ -898,11 +912,8 @@ function legalise_bbc($text)
 				// Is it actually valid?!
 				if (!empty($matches) && isset($valid_tags[$matches[1]]))
 				{
-					// If it's code or nobbc we need to note it.
-					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
-						$in_code_nobbc = true;
 					// Not block level?
-					elseif (!$in_code_nobbc && !$valid_tags[$matches[1]])
+					if (!$in_code_nobbc && !$valid_tags[$matches[1]])
 					{
 						// Can't have two tags active that are the same - close the previous one!
 						if (isset($active_tags[$matches[1]]))
@@ -933,13 +944,18 @@ function legalise_bbc($text)
 							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $tag['type'] . ']');
 						}
-						// Open all the new ones again!
-						foreach (array_reverse($current_tags) as $tag)
-						{
-							$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
-							$new_text_offset += strlen($tag['content']);
-						}
+						// Open all the new ones again - if we're not going into a code type tag!
+						if ($matches[1] != 'code' && $matches[1] != 'nobbc')
+							foreach ($current_tags as $tag)
+							{
+								$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+								$new_text_offset += strlen($tag['content']);
+							}
 					}
+
+					// If it's code or nobbc we need to note it.
+					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
+						$in_code_nobbc = true;
 				}
 				// Move on quite a bit!
 				elseif (!empty($matches))
@@ -947,7 +963,6 @@ function legalise_bbc($text)
 			}
 		}
 	}
-
 
 	// What, there's still some open tags?!
 	foreach (array_reverse($current_tags) as $tag)

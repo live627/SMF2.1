@@ -47,6 +47,8 @@ February 2008
  ! Work around MySQL's removal of ALTER BY ... ORDER BY <function>. (ManageSmileys.php) [Bug 1502]
  ! invertAll now checks ID as well as name properties. (script.js)
  + The package manager will now try to put theme files in all installed themes, if the user selects it. Mod authors can override using the "theme" attribute. (package-info.dtd, Packages.php, Subs-Package.php, Packages template)
+ ! Ensure any formatting within code tags isn't parsed by the WYSIWYG editor. (Subs-Editor.php)
+ ! Make the editor do a better job of closing tags. (Subs-Editor.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
