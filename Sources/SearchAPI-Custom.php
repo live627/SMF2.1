@@ -38,16 +38,27 @@ class custom_search
 	public $version_compatible = 'SMF 2.0 Beta 2';
 	// This won't work with versions of SMF less than this.
 	public $min_smf_version = 'SMF 2.0 Beta 2';
+	// Is it supported?
+	public $is_supported = true;
 
 	protected $indexSettings = array();
 	// What words are banned?
 	protected $bannedWords = array();
 	// What is the minimum word length?
 	protected $min_word_length = null;
+	// What databases support the custom index?
+	protected $supported_databases = array('mysql', 'postgresql', 'sqlite');
 
 	public function __construct()
 	{
-		global $modSettings;
+		global $modSettings, $db_type;
+
+		// Is this dataase supported?
+		if (!in_array($db_type, $this->supported_databases))
+		{
+			$this->is_supported = false;
+			return;
+		}
 
 		if (empty($modSettings['search_custom_index_config']))
 			return;
@@ -70,7 +81,7 @@ class custom_search
 	public function searchSort($a, $b)
 	{
 		global $modSettings, $excludedWords;
-	
+
 		$x = strlen($a) - (in_array($a, $excludedWords) ? 1000 : 0);
 		$y = strlen($b) - (in_array($b, $excludedWords) ? 1000 : 0);
 

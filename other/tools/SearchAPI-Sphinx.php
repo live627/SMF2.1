@@ -38,10 +38,23 @@ class sphinx_search
 	public $version_compatible = 'SMF 2.0 Beta 2';
 	// This won't work with versions of SMF less than this.
 	public $min_smf_version = 'SMF 2.0 Beta 2';
+	// Is it supported?
+	public $is_supported = true;
+
+	// What databases support the custom index?
+	protected $supported_databases = array('mysql');
 
 	// Nothing to do...
 	public function __construct()
 	{
+		global $db_type;
+
+		// Is this dataase supported?
+		if (!in_array($db_type, $this->supported_databases))
+		{
+			$this->is_supported = false;
+			return;
+		}
 	}
 
 	// This function compares the length of two strings plus a little.

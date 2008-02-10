@@ -674,7 +674,7 @@ function loadSearchAPIs()
 	{
 		while (($file = readdir($dh)) !== false)
 		{
-			if (!is_dir($file) && preg_match('~SearchAPI-([A-Za-z\d]+)\.php~', $file, $matches))
+			if (!is_dir($file) && preg_match('~SearchAPI-([A-Za-z\d_]+)\.php~', $file, $matches))
 			{
 				// Check this is definitely a valid API!
 				$fp = fopen($sourcedir . '/' . $file, 'rb');
@@ -688,6 +688,10 @@ function loadSearchAPIs()
 					$index_name = strtolower($matches[1]);
 					$search_class_name = $index_name . '_search';
 					$searchAPI = new $search_class_name();
+
+					// No Support?  NEXT!!!.
+					if (!$searchAPI->is_supported)
+						continue;
 
 					$apis[$index_name] = array(
 						'filename' => $file,

@@ -31,6 +31,8 @@ class standard_search
 	public $version_compatible = 'SMF 2.0 Beta 2';
 	// This won't work with versions of SMF less than this.
 	public $min_smf_version = 'SMF 2.0 Beta 2';
+	// Standard search is supported by default.
+	public $is_supported = true;
 }
 
 ?>

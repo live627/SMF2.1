@@ -38,6 +38,8 @@ class fulltext_search
 	public $version_compatible = 'SMF 2.0 Beta 2';
 	// This won't work with versions of SMF less than this.
 	public $min_smf_version = 'SMF 2.0 Beta 2';
+	// Is it supported?
+	public $is_supported = true;
 
 	// Can we do a boolean search - tested on construct.
 	protected $canDoBooleanSearch = false;
@@ -45,10 +47,19 @@ class fulltext_search
 	protected $bannedWords = array();
 	// What is the minimum word length?
 	protected $min_word_length = 4;
+	// What databases support the custom index?
+	protected $supported_databases = array('mysql', 'postgresql');
 
 	public function __construct()
 	{
-		global $smcFunc, $db_connection, $modSettings;
+		global $smcFunc, $db_connection, $modSettings, $db_type;
+
+		// Is this dataase supported?
+		if (!in_array($db_type, $this->supported_databases))
+		{
+			$this->is_supported = false;
+			return;
+		}
 
 		// Some MySQL versions are superior to others :P.
 		$this->canDoBooleanSearch = version_compare($smcFunc['db_server_info']($db_connection), '4.0.1', '>=') == 1;
@@ -86,7 +97,7 @@ class fulltext_search
 	public function searchSort($a, $b)
 	{
 		global $modSettings, $excludedWords;
-	
+
 		$x = strlen($a) - (in_array($a, $excludedWords) ? 1000 : 0);
 		$y = strlen($b) - (in_array($b, $excludedWords) ? 1000 : 0);
 

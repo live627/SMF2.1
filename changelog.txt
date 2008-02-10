@@ -51,6 +51,7 @@ February 2008
  ! Make the editor do a better job of closing tags. (Subs-Editor.php)
  * Change the registration template to look a little prettier when using openID. (Register template)
  ! Firefox (And perhaps other browsers) would error if the CSS files were outside the domain on the WYSIWYG editor. (editor.js)
+ ! Check if the current database type supports the search method being loaded. (ManageSearch.php, SearchAPI-Standard.php, SearchAPI-Fulltext.php, SearchAPI-Custom.php, SearchAPI-Sphinx.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
