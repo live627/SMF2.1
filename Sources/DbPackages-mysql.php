@@ -490,8 +490,10 @@ function smf_db_list_columns($table_name, $detail = false)
 
 	$result = $smcFunc['db_query']('', '
 		SHOW FIELDS
-		FROM `' . $table_name . '`',
-		'security_override'
+		FROM {raw:table_name}',
+		array(
+			'table_name' => substr($table_name, 0, 1) == '`' ? $table_name : '`' . $table_name . '`',
+		)
 	);
 	$columns = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -541,8 +543,10 @@ function smf_db_list_indexes($table_name, $detail = false)
 
 	$result = $smcFunc['db_query']('', '
 		SHOW KEYS
-		FROM `' . $table_name . '`',
-		'security_override'
+		FROM {raw:table_name}',
+		array(
+			'table_name' => substr($table_name, 0, 1) == '`' ? $table_name : '`' . $table_name . '`',
+		)
 	);
 	$indexes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))

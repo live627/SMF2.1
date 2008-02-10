@@ -1246,7 +1246,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 		}
 		elseif ($actionType == 'require-file')
 		{
-			if ($action->fetch('@theme'))
+			if ($action->exists('@theme'))
 				$this_action['theme_action'] = $action->fetch('@theme');
 
 			if (!mktree(dirname($this_action['destination']), false))
