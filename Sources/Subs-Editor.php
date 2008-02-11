@@ -130,7 +130,7 @@ function bbc_to_html($text)
 function html_to_bbc($text)
 {
 	global $modSettings, $smcFunc, $sourcedir;
-
+log_error($text);
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => '', "\r" => ''));
 
@@ -321,7 +321,7 @@ function html_to_bbc($text)
 				// If there's something that still needs closing, push it to the stack.
 				if (!empty($curCloseTags))
 					array_push($stack, array(
-							'element' =>$curElement,
+							'element' => strtolower($curElement),
 							'closeTags' => $curCloseTags
 						)
 					);
@@ -532,8 +532,9 @@ function html_to_bbc($text)
 		'~</table>~i' => '[/table]',
 		'~<tr(\s(.)*?)*?>~i' => '[tr]',
 		'~</tr>~i' => '[/tr]',
-		'~<td(\s(.)*?)*?>~i' => '[td]',
-		'~</td>~i' => '[/td]',
+		'~<(td|th)\s[^<>]*?colspan="?(\d{1,2})"?.*?>~ie' => 'str_repeat(\'[td][/td]\', $2 - 1) . \'[td]\'',
+		'~<(td|th)(\s(.)*?)*?>~i' => '[td]',
+		'~</(td|th)>~i' => '[/td]',
 		'~<br\s*/*>~i' => "\n",
 		'~<hr[^<>]*>~i' => '[hr]',
 	);
@@ -815,7 +816,10 @@ function legalise_bbc($text)
 	// Quickly remove any tags which are back to back.
 	$strip_b2b_tags = array();
 	foreach ($valid_tags as $tag => $dummy)
-		$strip_b2b_tags['~\[' . $tag . '[^<>\[\]]*\]\s*\[/' . $tag . '\]~'] = '';
+	{
+		if ($tag != 'td')
+			$strip_b2b_tags['~\[' . $tag . '[^<>\[\]]*\]\s*\[/' . $tag . '\]~'] = '';
+	}
 	$lastlen = 0;
 	while (strlen($new_text) != $lastlen)
 	{

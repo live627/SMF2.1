@@ -1134,10 +1134,14 @@ function smfFooterHighlight(element, value)
 }
 
 // Get the text in a code tag.
-function smfSelectText(curElement)
+function smfSelectText(curElement, actOnElement)
 {
-	// The place we're looking for is one div up, and next door ;)
-	var codeArea = curElement.parentNode.nextSibling;
+	// The place we're looking for is one div up, and next door - if it's auto detect.
+	if (actOnElement)
+		var codeArea = document.getElementById(curElement);
+	else
+		var codeArea = curElement.parentNode.nextSibling;
+
 	if (!codeArea)
 		return false;
 

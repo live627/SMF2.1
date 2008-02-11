@@ -1422,17 +1422,17 @@ function template_view_operations()
 	<div class="tborder" style="width: 100%;">
 		<div class="titlebg" style="padding: 6px;">
 			', $txt['operation_find'], '
-			<a href="javascript:void(0);" onclick="return smfSelectText(this);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+			<a href="javascript:void(0);" onclick="return smfSelectText(\'find_pre\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
 		</div>
 		<div class="windowbg2" style="padding: 4px;">
-			<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</pre>
+			<pre id="find_pre" style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</pre>
 		</div>
 		<div class="titlebg" style="padding: 6px;">
 			', $txt[$operation_text], '
-			<a href="javascript:void(0);" onclick="return smfSelectText(this);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+			<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_pre\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
 		</div>
 		<div class="windowbg2" style="padding: 4px;">
-			<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</pre>
+			<pre id="replace_pre" style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</pre>
 		</div>
 	</div>
 	</body>
