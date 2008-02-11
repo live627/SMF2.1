@@ -123,10 +123,10 @@ CREATE SEQUENCE {$db_prefix}log_spider_hits_seq;
 ---# Creating spider hit tracking table.
 CREATE TABLE {$db_prefix}log_spider_hits (
 	id_hit int default nextval('{$db_prefix}log_spider_hits_seq'),
-  id_spider smallint NOT NULL default '0',
-  log_time int NOT NULL,
-  url varchar(255) NOT NULL,
-  processed smallint NOT NULL default '0'
+	id_spider smallint NOT NULL default '0',
+	log_time int NOT NULL,
+	url varchar(255) NOT NULL,
+	processed smallint NOT NULL default '0'
 );
 
 CREATE INDEX {$db_prefix}log_spider_hits_id_spider ON {$db_prefix}log_spider_hits (id_spider);
@@ -232,7 +232,7 @@ ALTER TABLE {$db_prefix}log_polls DROP CONSTRAINT {$db_prefix}log_polls_pkey;
 CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id_member, id_choice);
 ---#
 
----# Adding adming log...
+---# Adding admin log...
 ---{
 if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 {
@@ -250,13 +250,13 @@ if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 
 	upgrade_query("
 		ALTER TABLE {$db_prefix}log_actions
-		ALTER COLUMN id_log SET default '1'"),
+		ALTER COLUMN id_log SET default '1'");
 }
 else
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}log_actions
-		ADD COLUMN id_log smallint NOT NULL default '1'"):
+		ADD COLUMN id_log smallint NOT NULL default '1'");
 }
 ---}
 ---#
@@ -349,7 +349,7 @@ else
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}topics
-		ADD COLUMN id_previous_board smallint NOT NULL default '0'"):
+		ADD COLUMN id_previous_board smallint NOT NULL default '0'");
 	upgrade_query("
 		ALTER TABLE {$db_prefix}topics
 		ADD COLUMN id_previous_topic int NOT NULL default '0'");

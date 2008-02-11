@@ -226,6 +226,10 @@ SmfEditor.prototype.init = function()
 			// First we need to find the right style sheet.
 			for (var i = 0, iNumStyleSheets = document.styleSheets.length; i < iNumStyleSheets; i++)
 			{
+				// Start off looking for the right style sheet.
+				if (!document.styleSheets[i].href || document.styleSheets[i].href.indexOf('editor') < 1)
+					continue;
+
 				// Firefox won't allow us to get a CSS file which ain't in the right URL.
 				try
 				{

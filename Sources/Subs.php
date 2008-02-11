@@ -147,7 +147,7 @@ if (!defined('SMF'))
 		- doesn't return anything, but rather modifies message directly.
 
 	string highlight_php_code(string code)
-		- Uses PHP's highlight_code() to highlight PHP syntax
+		- Uses PHP's highlight_string() to highlight PHP syntax
 		- does special handling to keep the tabs in the code available.
 		- used to parse PHP code from inside [code] and [php] tags.
 		- returns the code with highlighted HTML.
