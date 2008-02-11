@@ -266,7 +266,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
 
 	// Limits need to be a little different.
-	$db_string = preg_replace('~\sLIMIT\s(\d+),\s*(\d+)\s*$~i', 'LIMIT $2 OFFSET $1', $db_string);
+	$db_string = preg_replace('~\sLIMIT\s(\d+|{int:.+}),\s*(\d+|{int:.+})\s*$~i', 'LIMIT $2 OFFSET $1', $db_string);
 
 	if (trim($db_string) == '')
 		return false;
@@ -599,7 +599,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 					' . (empty($where) ? '' : ' WHERE ' . $where),
 					$entry, $connection
 				);
-	
+
 				// Make a note that the replace actually overwrote.
 				if (smf_db_affected_rows() != 0)
 				{

@@ -314,6 +314,10 @@ function ModBlockNotes()
 			)
 		);
 
+		// Clear the cache.
+		cache_put_data('moderator_notes', null, 240);
+		cache_put_data('moderator_notes_total', null, 240);
+
 		redirectexit('action=moderate');
 	}
 

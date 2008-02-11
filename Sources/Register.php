@@ -198,7 +198,7 @@ function Register($reg_errors = array())
 		'skip_coppa' => !empty($_POST['skip_coppa']) ? true : false,
 	);
 
-	// Was there any errors?
+	// Were there any errors?
 	$context['registration_errors'] = array();
 	if (!empty($reg_errors))
 		foreach ($reg_errors as $error)

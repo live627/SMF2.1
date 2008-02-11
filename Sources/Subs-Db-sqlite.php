@@ -257,25 +257,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'birthday_array' => array(
 			'~DATE_FORMAT\(([^,]+),\s*([^\)]+)\s*\)~' => 'strftime($2, $1)'
 		),
-		'main_topics_query' => array(
-			'~SUBSTRING~' => 'SUBSTR',
-		),
-		'memberlist_find_page' => array(
-			'~SUBSTRING~' => 'SUBSTR',
-		),
-		'recent_show_all_temp' => array(
-			'~SUBSTRING~' => 'SUBSTR',
-		),
-		'recent_is_topics_only' => array(
-			'~SUBSTRING~' => 'SUBSTR',
-		),
-		'recent_get_everything' => array(
-			'~SUBSTRING~' => 'SUBSTR',
-		),
-		'get_last_post' => array(
-			'~SUBSTRING~' => 'SUBSTR',
-		),
-		'get_last_posts' => array(
+		'substring' => array(
 			'~SUBSTRING~' => 'SUBSTR',
 		),
 		'truncate_table' => array(
@@ -286,9 +268,6 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		),
 		'unread_fetch_topic_count' => array(
 			'~\s*SELECT\sCOUNT\(DISTINCT\st\.id_topic\),\sMIN\(t\.id_last_msg\)(.+)$~is' => 'SELECT COUNT(id_topic), MIN(id_last_msg) FROM (SELECT DISTINCT t.id_topic, t.id_last_msg $1)',
-		),
-		'fetch_sm_files' => array(
-			'~SUBSTRING~' => 'SUBSTR',
 		),
 		'alter_table_boards' => array(
 			'~(.+)~' => '',
@@ -301,8 +280,6 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	// SQLite doesn't support count(distinct).
 	$db_string = trim($db_string);
 	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
-
-	$db_string = preg_replace('~SUBSTRING\(\s*\'~', 'SUBSTR(\'', $db_string);
 
 	// INSTR?  No support for that buddy :(
 	if (preg_match('~INSTR\((.+?),\s(.+?)\)~', $db_string, $matches) === 1)

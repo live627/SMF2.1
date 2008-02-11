@@ -47,7 +47,7 @@ function getLastPost()
 	global $user_info, $scripturl, $modSettings, $smcFunc;
 
 	// Find it by the board - better to order by board than sort the entire messages table.
-	$request = $smcFunc['db_query']('get_last_post', '
+	$request = $smcFunc['db_query']('substring', '
 		SELECT ml.poster_time, ml.subject, ml.id_topic, ml.poster_name, SUBSTRING(ml.body, 1, 385) AS body,
 			ml.smileys_enabled
 		FROM {db_prefix}boards AS b
@@ -802,7 +802,7 @@ function UnreadTopics()
 		else
 			$min_message = (int) $min_message;
 
-		$request = $smcFunc['db_query']('recent_show_all_temp', '
+		$request = $smcFunc['db_query']('substring', '
 			SELECT ' . $select_clause . '
 			FROM {db_prefix}messages AS ms
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ms.id_topic AND t.id_first_msg = ms.id_msg)
@@ -876,7 +876,7 @@ function UnreadTopics()
 		else
 			$min_message = (int) $min_message;
 
-		$request = $smcFunc['db_query']('recent_is_topics_only', '
+		$request = $smcFunc['db_query']('substring', '
 			SELECT ' . $select_clause . '
 			FROM {db_prefix}messages AS ms
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ms.id_topic AND t.id_first_msg = ms.id_msg)
@@ -1077,7 +1077,7 @@ function UnreadTopics()
 			return;
 		}
 
-		$request = $smcFunc['db_query']('recent_get_everything', '
+		$request = $smcFunc['db_query']('substring', '
 			SELECT ' . $select_clause . '
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}messages AS ms ON (ms.id_topic = t.id_topic AND ms.id_msg = t.id_first_msg)

@@ -52,6 +52,9 @@ February 2008
  * Change the registration template to look a little prettier when using openID. (Register template)
  ! Firefox (And perhaps other browsers) would error if the CSS files were outside the domain on the WYSIWYG editor. (editor.js)
  ! Check if the current database type supports the search method being loaded. (ManageSearch.php, SearchAPI-Standard.php, SearchAPI-Fulltext.php, SearchAPI-Custom.php, SearchAPI-Sphinx.php)
+ ! SQLite now uses a common identifier for SUBSTRING to SUBSTR replacement. (Subs-Db-sqlite.php, MessageIndex.php, Memberlist.php, Recent.php, Subs-Recent.php, ScheduledTasks.php)
+ ! When deleting moderation notes, make sure to empty the cache. (ModerationCenter.php)
+ ! The regex for the LIMIT fix in PostgreSQL needed to be updated. (Subs-Db-postgresql.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
