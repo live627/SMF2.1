@@ -54,7 +54,7 @@ class fulltext_search
 	{
 		global $smcFunc, $db_connection, $modSettings, $db_type;
 
-		// Is this dataase supported?
+		// Is this database supported?
 		if (!in_array($db_type, $this->supported_databases))
 		{
 			$this->is_supported = false;
