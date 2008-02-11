@@ -689,7 +689,7 @@ function loadSearchAPIs()
 					$search_class_name = $index_name . '_search';
 					$searchAPI = new $search_class_name();
 
-					// No Support?  NEXT!!!.
+					// No Support?  NEXT!!!
 					if (!$searchAPI->is_supported)
 						continue;
 
