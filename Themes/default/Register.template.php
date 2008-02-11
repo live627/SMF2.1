@@ -72,7 +72,7 @@ function template_before()
 		echo '
 	function checkAgree()
 	{
-		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || (currentAuthMethod == "passwd" && isEmptyText(document.forms.creator.smf_autov_pwmain)) || (currentAuthMethod == "openid" && isEmptyText(document.forms.creator.openid_url)) || !document.forms.creator.regagree.checked;
+		document.forms.creator.regSubmit.disabled =  (currentAuthMethod == "passwd" && (isEmptyText(document.forms.creator.smf_autov_pwmain) || isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email))) || (currentAuthMethod == "openid" && isEmptyText(document.forms.creator.openid_url)) || !document.forms.creator.regagree.checked;
 		setTimeout("checkAgree();", 1000);
 	}
 	setTimeout("checkAgree();", 1000);';

@@ -505,7 +505,7 @@ function registerMember(&$regOptions, $return_errors = false)
 	if ($regOptions['require'] == 'activation')
 		$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
-	// If you haven't put in a password generated one.
+	// If you haven't put in a password generate one.
 	if ($regOptions['interface'] == 'admin' && $regOptions['password'] == '' && $regOptions['auth_method'] == 'password')
 	{
 		srand(time() + 1277);

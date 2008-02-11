@@ -30,11 +30,12 @@ if (!defined('SMF'))
 		- openid_uri is the URI given by the user
 		- Validates the URI and changes it to a fully canonicalize URL
 		- Determines the IDP server and delegation
+		- optional array of fields to restore when validation complete.
 		- Redirects the user to the IDP for validation
 
 */
 
-function smf_openID_validate($openid_uri, $return = false)
+function smf_openID_validate($openid_uri, $return = false, $save_fields = array())
 {
 	global $sourcedir, $scripturl, $boardurl, $modSettings;
 
@@ -63,7 +64,7 @@ function smf_openID_validate($openid_uri, $return = false)
 		'openid.trust_root=' . urlencode($scripturl),
 		'openid.identity=' .  urlencode(empty($response_data['delegate']) ? $openid_url : $response_data['delegate']),
 		'openid.assoc_handle=' . urlencode($assoc['handle']),
-		'openid.return_to=' . urlencode($scripturl . '?action=openidreturn&sa=' . $_REQUEST['action'] . '&t=' . $request_time),
+		'openid.return_to=' . urlencode($scripturl . '?action=openidreturn&sa=' . $_REQUEST['action'] . '&t=' . $request_time . (!empty($save_fields) ? '&sf=' . base64_encode(serialize($save_fields)) : '')),
 	);
 
 	// If they are logging in but don't yet have an account or they are registering, lets request some additional information
@@ -198,7 +199,7 @@ function smf_openID_return()
 		fatal_lang_error('openid_not_resolved');
 
 	// SMF has this annoying habit of removing the + from the base64 encoding.  So lets put them back.
-	foreach (array('openid_assoc_handle', 'openid_invalidate_handle', 'openid_sig') AS $key)
+	foreach (array('openid_assoc_handle', 'openid_invalidate_handle', 'openid_sig', 'sf') AS $key)
 		if (isset($_GET[$key]))
 			$_GET[$key] = str_replace(' ', '+', $_GET[$key]);
 
@@ -238,6 +239,9 @@ function smf_openID_return()
 	if (empty($openid_uri))
 		fatal_lang_error('openid_load_data');
 
+	// Any save fields to restore?
+	$context['openid_save_fields'] = isset($_GET['sf']) ? unserialize(base64_decode($_GET['sf'])) ? array();
+
 	// Is there a user with this OpenID_uri?
 	$result = $smcFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
@@ -265,7 +269,14 @@ function smf_openID_return()
 		if (isset($_GET['openid_sreg_gender']))
 			$_SESSION['openid']['gender'] = $_GET['openid_sreg_gender'];
 
-		redirectexit('action=register');
+		// Were we just verifying the registration state?
+		if (isset($_GET['sa']) && $_GET['sa'] == 'register2')
+		{
+			require_once($sourcedir . '/Register.php);
+			return Register2(true);
+		}
+		else
+			redirectexit('action=register');
 	}
 	else
 	{
