@@ -58,6 +58,9 @@ February 2008
  ! The WYSIWYG editor wasn't doing inline styles quite right. (Subs-Editor.php)
  ! Javascript select on packages wasn't quite working right. (script.js, Packages template) [Bug 1410]
  ! Register should probably work with OpenID native (i.e. without doing login first) (Subs-OpenID.php, Register.php)
+ ! SQLite doesn't support the TO_DAYS function but has an equivalent function that we can use. (Subs-Db-sqlite.php) [Bug 1561]
+ ! The recent posts page should respect the ignore boards option. (Recent.php) [Bug 1425]
+ * Updated the Flash BBC icons. (flash.gif)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

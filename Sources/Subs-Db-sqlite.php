@@ -289,6 +289,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_values[$search] = '%' . $db_values[$search] . '%';
 	}
 
+	// SQLite doesn't support TO_DAYS but has the julianday function which can be used in the same manner.  But make sure it is being used to calculate a span.
+	$db_string = preg_replace('~\(TO_DAYS\(([^)]+)\) - TO_DAYS\(([^)]+)\)\) AS span~', '(julianday($1) - julianday($2)) AS span', $db_string);
+
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
 
