@@ -106,8 +106,7 @@ function smf_openID_getAssociation($server, $handle = null, $no_delete = false)
 		FROM {db_prefix}openid_assoc
 		WHERE server_url = {string:server_url}' . ($handle === null ? '' : '
 			AND handle = {string:handle}') . '
-		ORDER BY expires DESC
-		LIMIT 1',
+		ORDER BY expires DESC',
 		array(
 			'server_url' => $server,
 			'handle' => $handle,
@@ -135,7 +134,6 @@ function smf_openID_makeAssociation($server)
 	// The data to post to the server.
 	$post_data = implode('&', $parameters);
 	$data = fetch_web_data($server, $post_data);
-
 
 	// parse the data given
 	preg_match_all('~^([^:]+):(.+)$~m', $data, $matches);
@@ -179,8 +177,7 @@ function smf_openID_removeAssociation($handle)
 
 	$smcFunc['db_query']('openid_remove_association', '
 		DELETE FROM {db_prefix}openid_assoc
-		WHERE handle = {string:handle}
-		LIMIT 1',
+		WHERE handle = {string:handle}',
 		array(
 			'handle' => $handle,
 		)
@@ -240,14 +237,13 @@ function smf_openID_return()
 		fatal_lang_error('openid_load_data');
 
 	// Any save fields to restore?
-	$context['openid_save_fields'] = isset($_GET['sf']) ? unserialize(base64_decode($_GET['sf'])) ? array();
+	$context['openid_save_fields'] = isset($_GET['sf']) ? unserialize(base64_decode($_GET['sf'])) : array();
 
 	// Is there a user with this OpenID_uri?
 	$result = $smcFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 		FROM {db_prefix}members
-		WHERE openid_uri = {string:openid_uri}
-		LIMIT 1',
+		WHERE openid_uri = {string:openid_uri}',
 		array(
 			'openid_uri' => $openid_uri,
 		)
@@ -272,7 +268,7 @@ function smf_openID_return()
 		// Were we just verifying the registration state?
 		if (isset($_GET['sa']) && $_GET['sa'] == 'register2')
 		{
-			require_once($sourcedir . '/Register.php);
+			require_once($sourcedir . '/Register.php');
 			return Register2(true);
 		}
 		else
@@ -320,24 +316,18 @@ function smf_openid_member_exists($url)
 {
 	global $smcFunc;
 
-	$result = $smcFunc['db_query']('openid_member_exists', '
-		SELECT id_member, member_name
+	$request = $smcFunc['db_query']('openid_member_exists', '
+		SELECT mem.id_member, mem.member_name
 		FROM {db_prefix}members AS mem
-		WHERE mem.openid_uri = {string:openid_uri}
-		LIMIT 1',
+		WHERE mem.openid_uri = {string:openid_uri}',
 		array(
 			'openid_uri' => $url,
 		)
 	);
+	$member = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
 
-	$ret = array();
-
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-		$ret = $row;
-
-	$smcFunc['db_free_result']($result);
-
-	return $ret;
+	return $member;
 }
 
 /*
@@ -481,14 +471,10 @@ function long_to_binary($value)
 {
 	$cmp = bccomp($value, 0);
 	if ($cmp < 0)
-	{
 		fatal_error('Only non-negative integers allowed.');
-	}
 
 	if ($cmp == 0)
-	{
 		return "\x00";
-	}
 
 	$bytes = array();
 
@@ -499,16 +485,11 @@ function long_to_binary($value)
 	}
 
 	if ($bytes && ($bytes[0] > 127))
-	{
 		array_unshift($bytes, 0);
-	}
 
 	$return = '';
-
 	foreach ($bytes as $byte)
-	{
 		$return .= pack('C', $byte);
-	}
 
 	return $return;
 }
