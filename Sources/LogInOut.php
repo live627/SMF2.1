@@ -484,6 +484,10 @@ function Logout($internal = false, $redirect = true)
 	if (isset($_SESSION['pack_ftp']))
 		$_SESSION['pack_ftp'] = null;
 
+	// They cannot be open ID verified any longer.
+	if (isset($_SESSION['openid']))
+		unset($_SESSION['openid']);
+
 	// Just ensure they aren't a guest!
 	if (!$user_info['is_guest'])
 	{

@@ -68,7 +68,7 @@ function smf_openID_validate($openid_uri, $return = false, $save_fields = array(
 	);
 
 	// If they are logging in but don't yet have an account or they are registering, lets request some additional information
-	if (($_REQUEST['action'] == 'login2' && !smf_openid_member_exists($openid_url)) || $_REQUEST['action'] == 'register')
+	if (($_REQUEST['action'] == 'login2' && !smf_openid_member_exists($openid_url)) || ($_REQUEST['action'] == 'register' || $_REQUEST['action'] == 'register2'))
 	{
 		// Email is required.
 		$parameters[] = 'openid.sreg.required=email';

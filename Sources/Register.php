@@ -180,8 +180,8 @@ function Register($reg_errors = array())
 	if (!empty($_SESSION['openid']['verified']) && !empty($_SESSION['openid']['openid_uri']))
 	{
 		$context['openid'] = $_SESSION['openid']['openid_uri'];
-		$context['username'] = $_SESSION['openid']['nickname'];
-		$context['email'] = $_SESSION['openid']['email'];
+		$context['username'] = $smcFunc['htmlspecialchars'](!empty($_POST['user']) ? $_POST['user'] : $_SESSION['openid']['nickname']);
+		$context['email'] = $smcFunc['htmlspecialchars'](!empty($_POST['email']) ? $_POST['email'] : $_SESSION['openid']['email']);
 	}
 	// See whether we have some prefiled values.
 	else
@@ -196,6 +196,7 @@ function Register($reg_errors = array())
 	$context += array(
 		'prev_verification_code' => isset($_POST['visual_verification_code']) ? $smcFunc['htmlspecialchars']($_POST['visual_verification_code']) : '',
 		'skip_coppa' => !empty($_POST['skip_coppa']) ? true : false,
+		'regagree' => !empty($_POST['regagree']) && !empty($_SESSION['openid']['verified']) && !empty($_SESSION['openid']['openid_uri']) ? true : false,
 	);
 
 	// Were there any errors?
@@ -446,24 +447,23 @@ function Register2($verifiedOpenID = false)
 	if (!empty($reg_errors))
 		return Register($reg_errors);
 
-	// If they're wanting to use OpenID we need to validate them first - if's are to make it clear what I'm doing ;)
-	if (empty($_SESSION['openid']['verified']))
-		if (!empty($_POST['authenticate']) && $_POST['authenticate'] == 'openid')
-		{
-			// What do we need to save?
-			$save_variables = array();
-			foreach ($_POST as $k => $v)
-				if (!in_array($k, array('sc', 'sesc', 'email', 'user', 'passwrd1', 'passwrd2', 'visual_verification_code', 'skip_coppa', 'authenticate', 'openid_url', 'regagree', 'regSubmit')))
-					$save_variables[$k] = $v;
+	// If they're wanting to use OpenID we need to validate them first.
+	if (empty($_SESSION['openid']['verified']) && !empty($_POST['authenticate']) && $_POST['authenticate'] == 'openid')
+	{
+		// What do we need to save?
+		$save_variables = array();
+		foreach ($_POST as $k => $v)
+			if (!in_array($k, array('sc', 'sesc', 'passwrd1', 'passwrd2', 'regSubmit')))
+				$save_variables[$k] = $v;
 
-			require_once($sourcedir . '/Subs-OpenID.php');
-			smf_openID_validate($_POST['openid_url'], false, $save_variables);
-		}
+		require_once($sourcedir . '/Subs-OpenID.php');
+		smf_openID_validate($_POST['openid_url'], false, $save_variables);
+	}
 	// If we've come from OpenID set up some default stuff.
 	elseif ($verifiedOpenID || (!empty($_POST['openid_url']) && $_POST['authenticate'] == 'openid'))
 	{
-		$regOptions['username'] = !empty($_POST['user']) ? $_POST['user'] : $_SESSION['openid']['nickname'];
-		$regOptions['email'] = !empty($_POST['email']) ? $_POST['email'] : $_SESSION['openid']['email'];
+		$regOptions['username'] = !empty($_POST['user']) && trim($_POST['user']) != '' ? $_POST['user'] : $_SESSION['openid']['nickname'];
+		$regOptions['email'] = !empty($_POST['email']) && trim($_POST['email']) != '' ? $_POST['email'] : $_SESSION['openid']['email'];
 		$regOptions['auth_method'] = 'openid';
 		$regOptions['openid'] = !empty($_POST['openid_url']) ? $_POST['openid_url'] : $_SESSION['openid']['openid_uri'];
 	}

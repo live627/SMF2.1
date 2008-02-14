@@ -388,7 +388,7 @@ function template_before()
 			</td>
 		</tr><tr>
 			<td align="center" class="windowbg2">
-				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" /> <b>', $txt['agree'], '</b></label>
+				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
 			</td>
 		</tr>
 	</table>';
@@ -402,7 +402,7 @@ function template_before()
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
 	// Uncheck the agreement thing....
-	if ($context['require_agreement'])
+	if ($context['require_agreement'] && empty($context['regagree']))
 		echo '
 	document.forms.creator.regagree.checked = false;
 	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;';
