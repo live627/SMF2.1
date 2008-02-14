@@ -1186,7 +1186,7 @@ function makeCustomFieldChanges($memID, $area)
 
 	// Load the fields we are saving too - make sure we save valid data (etc).
 	$request = $smcFunc['db_query']('', '
-		SELECT col_name, field_name, field_desc, field_type, field_length, field_options, default_value, mask, private
+		SELECT col_name, field_name, field_desc, field_type, field_length, field_options, default_value, show_reg, mask, private
 		FROM {db_prefix}custom_fields
 		WHERE ' . $where . '
 			AND active = {int:is_active}',
@@ -1198,7 +1198,7 @@ function makeCustomFieldChanges($memID, $area)
 	$changes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if ($row['private'] != 0 && !allowedTo('admin_forum'))
+		if ($row['private'] != 0 && !allowedTo('admin_forum') && ($area != 'register' || $row['show_reg'] == 0))
 			continue;
 
 		// Validate the user data.

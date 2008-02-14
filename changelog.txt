@@ -61,6 +61,7 @@ February 2008
  ! SQLite doesn't support the TO_DAYS function but has an equivalent function that we can use. (Subs-Db-sqlite.php) [Bug 1561]
  ! The recent posts page should respect the ignore boards option. (Recent.php) [Bug 1425]
  * Updated the Flash BBC icons. (flash.gif)
+ ! Custom profile fields wern't saving if they were admin only but shown on registration. (Profile-Modify.php) [Bug 1571]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
