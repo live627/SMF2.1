@@ -320,4 +320,29 @@ function template_resend()
 		</form>';
 }
 
+// OpenID can't currently do admin stuff.
+function template_admin_openid_disabled()
+{
+	global $context, $settings, $options, $scripturl, $txt;
+
+	// Tell them they can't do this - really sorry!
+	echo '
+	<div style="text-align: center">
+		<table border="0" width="480" cellspacing="0" cellpadding="3" class="tborder" align="center">
+			<tr class="titlebg">
+				<td align="left">
+					<img src="', $settings['images_url'], '/openid.gif" alt="" align="top" /> ', $txt['openid_admin_disabled'], '
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td align="left">
+					', $txt['openid_admin_disallowed_desc'], '<br />
+					<hr />
+					', sprintf($txt['openid_admin_disallowed_desc2'], $scripturl . '?action=profile;sa=account;u=' . $context['user']['id']), '
+				</td>
+			</tr>
+		</table>
+	</div>';
+}
+
 ?>

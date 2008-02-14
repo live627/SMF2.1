@@ -62,6 +62,9 @@ February 2008
  ! The recent posts page should respect the ignore boards option. (Recent.php) [Bug 1425]
  * Updated the Flash BBC icons. (flash.gif)
  ! Custom profile fields wern't saving if they were admin only but shown on registration. (Profile-Modify.php) [Bug 1571]
+ ! If you are using OpenID don't allow you to do admin actions - but tell you how to enable it. (Subs-Auth.php, Admin language files, Login template)
+ ! If you are using OpenID to login allow you to change your authentication method from the profile. (Profile.php, Profile-Modify.php, Profile template, Profile language files)
+ ! Don't require password confirmation nor show the password change box if you are using OpenID. (Profile-Modify.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

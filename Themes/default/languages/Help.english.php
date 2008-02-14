@@ -414,7 +414,7 @@ $helptxt['registration_method'] = 'This option determines what method of registr
 	</ul>';
 $helptxt['register_openid'] = '<b>Authenticate with OpenID</b><br />
 	OpenID is a means of using one username across different websites, to simplify the online experience. To use OpenID you first need to create an OpenID account - a list of providers can be found on the <a href="http://openid.net/" target="_blank">OpenID Official Site</a><br /><br />
-	Once you have an OpenID account simply enter your unique identification URL into the OpenID input box and submit. You will then be taken to your providers site to verify your identity before being passed back to this site.<br />.<br />
+	Once you have an OpenID account simply enter your unique identification URL into the OpenID input box and submit. You will then be taken to your providers site to verify your identity before being passed back to this site.<br /><br />
 	On your first visit to this site you will be asked to confirm a couple of details before you will be recognised, after which you can login to this site and change your profile settings using just your OpenID.<br /><br />
 	For more information please visit the <a href="http://openid.net/" target="_blank">OpenID Official Site</a>';
 

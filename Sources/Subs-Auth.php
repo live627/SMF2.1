@@ -267,10 +267,23 @@ function InMaintenance()
 
 function adminLogin()
 {
-	global $context, $scripturl, $txt, $user_info;
+	global $context, $scripturl, $txt, $user_info, $user_settings;
 
 	loadLanguage('Admin');
 	loadTemplate('Login');
+
+	// If this person is an OpenID person I'm afraid at the moment we require them to unhook their account.
+	//!!! Do we think we should allow this in the future?
+	if (!empty($user_settings['openid_uri']))
+	{
+		$context['sub_template'] = 'admin_openid_disabled';
+		$context['page_title'] = $txt['openid_admin_action'];
+
+		obExit();
+
+		// No pass, just in case!
+		trigger_error('Hacking attempt...', E_USER_ERROR);
+	}
 
 	// Start with nothing for get data and post data.
 	$context['get_data'] = '?';

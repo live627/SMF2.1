@@ -2765,4 +2765,142 @@ function template_profile_smiley_pick()
 							</tr>';
 }
 
+// Change the way you login to the forum.
+function template_authentication_method()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	// The main header!
+	echo '
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
+		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
+			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+				<tr class="titlebg">
+					<td height="26" >
+						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
+						', $txt['authentication'], '
+					</td>
+				</tr>
+				<tr class="windowbg">
+					<td class="smalltext" height="25" style="padding: 2ex;">
+						', $txt['change_authentication'], '
+					</td>
+				</tr>
+				<tr>
+					<td class="windowbg2" style="padding-bottom: 2ex;">
+						<table width="100%" cellpadding="3" cellspacing="0" border="0">
+							<tr>
+								<td width="2%" align="center" class="windowbg" rowspan="2">
+									<input type="radio" name="authenticate" value="openid" id="auth_openid" ', $context['auth_method'] == 'openid' ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
+								</td>
+								<td colspan="2">
+									<label for="auth_openid"><b>', $txt['authenticate_openid'], ':</b></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<i>', $txt['authenticate_openid_url'], ':</i>
+								</td>
+								<td width="60%">
+									<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', $context['member']['openid_uri'], '" />
+									<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td width="60%" colspan="2">
+									<hr />
+								</td>
+							</tr>
+							<tr class="windowbg2">
+								<td width="2%" align="center" class="windowbg" rowspan="3">
+									<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', $context['auth_method'] == 'password' ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
+								</td>
+								<td colspan="2">
+									<label for="auth_pass"><b>', $txt['authenticate_password'], ':</b></label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<i>', $txt['choose_pass'], ':</i>
+								</td>
+								<td width="60%">
+									<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
+									<span id="smf_autov_pwmain_div" style="display: none;">
+										<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<i>', $txt['verify_pass'], ':</i>
+								</td>
+								<td width="60%">
+									<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
+									<span id="smf_autov_pwverify_div" style="display: none;">
+										<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right" colspan="3">
+									<input type="submit" value="', $txt['change_profile'], '" />
+									<input type="hidden" name="sc" value="', $context['session_id'], '" />
+									<input type="hidden" name="u" value="', $context['id_member'], '" />
+									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>';
+
+	// The password stuff.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	var regTextStrings = {
+		"password_short": "', $txt['registration_password_short'], '",
+		"password_reserved": "', $txt['registration_password_reserved'], '",
+		"password_numbercase": "', $txt['registration_password_numbercase'], '",
+		"password_no_match": "', $txt['registration_password_no_match'], '",
+		"password_valid": "', $txt['registration_password_valid'], '"
+	};
+	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
+	var currentAuthMethod = \'passwd\';
+	function updateAuthMethod()
+	{
+		// What authentication method is being used?
+		if (!document.getElementById(\'auth_openid\') || !document.getElementById(\'auth_openid\').checked)
+			currentAuthMethod = \'passwd\';
+		else
+			currentAuthMethod = \'openid\';
+
+		// No openID?
+		if (!document.getElementById(\'auth_openid\'))
+			return true;
+
+		document.forms.creator.openid_url.disabled = currentAuthMethod == \'openid\' ? false : true;
+		document.forms.creator.smf_autov_pwmain.disabled = currentAuthMethod == \'passwd\' ? false : true;
+		document.forms.creator.smf_autov_pwverify.disabled = currentAuthMethod == \'passwd\' ? false : true;
+		document.getElementById(\'smf_autov_pwmain_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
+		document.getElementById(\'smf_autov_pwverify_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
+
+		if (currentAuthMethod == \'passwd\')
+		{
+			verificationHandle.refreshMainPassword();
+			verificationHandle.refreshVerifyPassword();
+			document.forms.creator.openid_url.style.backgroundColor = \'\';
+		}
+		else
+		{
+			document.forms.creator.smf_autov_pwmain.style.backgroundColor = \'\';
+			document.forms.creator.smf_autov_pwverify.style.backgroundColor = \'\';
+			document.forms.creator.openid_url.style.backgroundColor = \'#FCE184\';
+		}
+	}
+	updateAuthMethod();
+	// ]]></script>';
+}
+
 ?>

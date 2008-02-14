@@ -144,6 +144,9 @@ $txt['editBuddies'] = 'Edit Buddies';
 $txt['trackUser'] = 'Track User';
 $txt['trackIP'] = 'Track IP';
 
+$txt['authentication'] = 'Authentication';
+$txt['change_authentication'] = 'From this section you can change how you login to the forum. You may choose to either use an OpenID account for your authentication, or alternatively switch to use a username and password.';
+
 $txt['profileEdit'] = 'Modify Profile';
 $txt['account_info'] = 'These are your account settings. This page holds all critical information that identifies you on this forum. For security reasons, you will need to enter your (current) password to make changes to this information.';
 $txt['forumProfile_info'] = 'You can change your personal information on this page. This information will be displayed throughout ' . $context['forum_name'] . '. If you aren\'t comfortable with sharing some information, simply skip it - nothing here is required.';

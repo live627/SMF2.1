@@ -212,7 +212,8 @@ function Login2()
 
 	// Load the data up!
 	$request = $smcFunc['db_query']('', '
-		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
+		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt,
+			openid_uri
 		FROM {db_prefix}members
 		WHERE member_name = {string:user_name}
 		LIMIT 1',
@@ -440,7 +441,7 @@ function DoLogin()
 	is_not_banned(true);
 
 	// An administrator, set up the login so they don't have to type it again.
-	if ($user_info['is_admin'])
+	if ($user_info['is_admin'] && isset($user_settings['openid_uri']) && empty($user_settings['openid_uri']))
 	{
 		$_SESSION['admin_time'] = time();
 		unset($_SESSION['just_registered']);

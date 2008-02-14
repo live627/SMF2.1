@@ -138,6 +138,13 @@ function ModifyProfile($post_errors = array())
 					'any' => array('profile_extra_any'),
 					'sc' => 'post',
 				),
+				'authentication' => array(
+					'own' => array('profile_identity_any', 'profile_identity_own'),
+					'any' => array('profile_identity_any'),
+					'enabled' => !empty($modSettings['enableOpenID']) || !empty($cur_profile['openid_uri']),
+					'sc' => 'post',
+					'hidden' => empty($cur_profile['openid_uri']),
+				),
 				'notification' => array(
 					'own' => array('profile_extra_any', 'profile_extra_own'),
 					'any' => array('profile_extra_any'),
@@ -270,8 +277,8 @@ function ModifyProfile($post_errors = array())
 					$defaultAction = $area_id;
 					$defaultInclude = !empty($section['include']) ? $section['include'] : false;
 				}
-				// Password required?
-				if (!empty($area['password']))
+				// Password required - only if not on OpenID.
+				if (!empty($area['password']) && empty($cur_profile['openid_uri']))
 					$context['password_areas'][] = $area_id;
 			}
 			// Otherwise unset it!
@@ -393,6 +400,11 @@ function ModifyProfile($post_errors = array())
 
 			// Whatever we've done, we have nothing else to do here...
 			redirectexit('action=profile;u=' . $memID . ';sa=groupMembership' . (!empty($msg) ? ';msg=' . $msg : ''));
+		}
+		// Authentication changes?
+		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'authentication')
+		{
+			authentication($memID, true);
 		}
 		elseif (isset($_REQUEST['sa']) && in_array($_REQUEST['sa'], array('account', 'forumProfile', 'theme', 'pmprefs')))
 			saveProfileFields();

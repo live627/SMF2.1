@@ -241,7 +241,8 @@ function smf_openID_return()
 
 	// Is there a user with this OpenID_uri?
 	$result = $smcFunc['db_query']('', '
-		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
+		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt,
+			openid_uri
 		FROM {db_prefix}members
 		WHERE openid_uri = {string:openid_uri}',
 		array(
