@@ -29,8 +29,7 @@ if (!defined('SMF'))
 	everything.  It provides all of the following functions:
 
 	void updateStats(string statistic, string condition = '1')
-		- statistic can be 'member', 'message', 'topic', 'calendar', or
-		  'postgroups'.
+		- statistic can be 'member', 'message', 'topic', or 'postgroups'.
 		- parameter1 and parameter2 are optional, and are used to update only
 		  those stats that need updating.
 		- the 'member' statistic updates the latest member, the total member
@@ -42,8 +41,6 @@ if (!defined('SMF'))
 		  respectively.
 		- 'topic' updates the total number of topics, or if parameter1 is true
 		  simply increments them.
-		- the 'calendar' statistic updates the cache of the calendar
-		  information for a day before and after today.
 		- the 'postgroups' case updates those members who match condition's
 		  post-based membergroups in the database (restricted by parameter1).
 
@@ -2443,7 +2440,7 @@ function highlight_php_code($code)
 	error_reporting($oldlevel);
 
 	// Yes, I know this is kludging it, but this is the best way to preserve tabs from PHP :P.
-	$buffer = preg_replace('~SMF_TAB(</(font|span)><(font color|span style)="[^"]*?">)?\(\);~', '<pre style=\"display: inline;\">' . "\t" . '</pre>', $buffer);
+	$buffer = preg_replace('~SMF_TAB(</(font|span)><(font color|span style)="[^"]*?">)?\(\);~', '<pre style="display: inline;">' . "\t" . '</pre>', $buffer);
 
 	return strtr($buffer, array('\'' => '&#039;', '<code>' => '', '</code>' => ''));
 }

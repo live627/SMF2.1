@@ -65,6 +65,8 @@ February 2008
  ! If you are using OpenID don't allow you to do admin actions - but tell you how to enable it. (Subs-Auth.php, Admin language files, Login template)
  ! If you are using OpenID to login allow you to change your authentication method from the profile. (Profile.php, Profile-Modify.php, Profile template, Profile language files)
  ! Don't require password confirmation nor show the password change box if you are using OpenID. (Profile-Modify.php)
+ ! Some characters were being escaped that didn't need to be escaped. (Subs.php) [Bug 1568]
+ ! Removed comment reference to calendar in the updateStats function. (Subs.php) [Bug 1575]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
