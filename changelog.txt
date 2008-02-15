@@ -67,6 +67,9 @@ February 2008
  ! Don't require password confirmation nor show the password change box if you are using OpenID. (Profile-Modify.php)
  ! Some characters were being escaped that didn't need to be escaped. (Subs.php) [Bug 1568]
  ! Removed comment reference to calendar in the updateStats function. (Subs.php) [Bug 1575]
+ * Fixed JavaScript warnings issued on logging in. (sha1.php)
+ * Repaired the HTML of the upgrade output and fixed JavaScript warnings. (upgrade.php)
+ ! Fixed a bug in the last step of upgrade causing a 'function already defined' error in rare cases. (upgrade.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

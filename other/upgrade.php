@@ -133,7 +133,7 @@ if (isset($_GET['ssi']))
 
 	loadUserSettings();
 	loadPermissions();
-}
+} 
 
 // All the non-SSI stuff.
 if (!function_exists('un_htmlspecialchars'))
@@ -752,11 +752,11 @@ function redirectLocation($location, $addForm = true)
 	if ($addForm)
 	{
 		$upcontext['upgrade_status']['curstep'] = $upcontext['current_step'];
-		$location = $upgradeurl . '?step=' . $upcontext['current_step'] . '&amp;substep=' . $_GET['substep'] . '&amp;data=' . base64_encode(serialize($upcontext['upgrade_status'])) . $location;
+		$location = $upgradeurl . '?step=' . $upcontext['current_step'] . '&substep=' . $_GET['substep'] . '&data=' . base64_encode(serialize($upcontext['upgrade_status'])) . $location;
 	}
 
 	while (@ob_end_clean());
-	header('Location: ' . $location);
+	header('Location: ' . strtr($location, array('&amp;' => '&')));
 
 	// Exit - saving status as we go.
 	upgradeExit(true);
@@ -1494,7 +1494,7 @@ function CleanupMods()
 
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
 	if (!isset($_GET['ssi']) || !function_exists('mktree'))
-		redirectLocation('&amp;ssi=1');
+		redirectLocation('&ssi=1');
 
 	$upcontext['sub_template'] = 'clean_mods';
 	$upcontext['page_title'] = 'Cleanup Modifications';
@@ -2096,6 +2096,10 @@ function DeleteUpgrade()
 {
 	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info, $maintenance;
 
+	// Now it's nice to have some of the basic SMF source files.
+	if (!isset($_GET['ssi']))
+		redirectLocation('&ssi=1');
+
 	$upcontext['sub_template'] = 'upgrade_complete';
 	$upcontext['page_title'] = 'Upgrade Complete';
 
@@ -2133,9 +2137,6 @@ function DeleteUpgrade()
 	$upcontext['can_delete_script'] = is_writable(dirname(__FILE__)) || is_writable(__FILE__);
 
 	// Now is the perfect time to fetch the SM files.
-	require_once($sourcedir . '/Errors.php');
-	require_once($sourcedir . '/Load.php');
-	require_once($sourcedir . '/Subs.php');
 	require_once($sourcedir . '/ScheduledTasks.php');
 	$forum_version = SMF_VERSION;  // The variable is usually defined in index.php so lets just use the constant to do it for us.
 	scheduled_fetchSMfiles(); // Now go get those files!
@@ -3488,7 +3489,7 @@ function template_upgrade_above()
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
 			var smf_charset = \'', (empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set']), '\';
-			startPercent = ', $upcontext['overall_percent'], ';
+			var startPercent = ', $upcontext['overall_percent'], ';
 
 			// This function dynamically updates the step progress bar - and overall one as required.
 			function updateStepProgress(current, max, overall_weight)
@@ -3564,7 +3565,7 @@ function template_upgrade_above()
 	$seconds = $elapsed - $mins * 60;
 	echo '
 								<div class="smalltext" style="padding: 5px; text-align: center;">Time Elapsed:</div>
-								<div class="smalltext" style="color: blue; text-align: center;"><span id="mins_elapsed">', $mins, '</span> mins, <span id="secs_elapsed">', $seconds, '</span> seconds.';
+								<div class="smalltext" style="color: blue; text-align: center;"><span id="mins_elapsed">', $mins, '</span> mins, <span id="secs_elapsed">', $seconds, '</span> seconds.</div>';
 
 	echo '
 							</td>
@@ -3583,36 +3584,35 @@ function template_upgrade_below()
 
 	if (!empty($upcontext['pause']))
 		echo '
-			<i>Incomplete.</i><br />
+								<i>Incomplete.</i><br />
 
-			<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
-			<h3>
-				This upgrade has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.
-			</h3>';
+								<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
+								<h3>
+									This upgrade has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="contbutt">continue button</label> below to keep going.
+								</h3>';
 
 	if (!empty($upcontext['custom_warning']))
 		echo '
-		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
-			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Note!</b><br />
-			<div style="padding-left: 6ex;">', $upcontext['custom_warning'], '</div>
-		</div>';
+								<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
+									<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+									<b style="text-decoration: underline;">Note!</b><br />
+									<div style="padding-left: 6ex;">', $upcontext['custom_warning'], '</div>
+								</div>';
 
 	echo '
-		<div align="right" style="margin: 1ex;">';
+								<div align="right" style="margin: 1ex;">';
 
 	if (!empty($upcontext['continue']))
 		echo '
-				<input type="submit" id="contbutt" name="contbutt" value="Continue" ', $upcontext['continue'] == 2 ? 'disabled="disabled"' : '', '/>';
+									<input type="submit" id="contbutt" name="contbutt" value="Continue" ', $upcontext['continue'] == 2 ? 'disabled="disabled"' : '', '/>';
 	if (!empty($upcontext['skip']))
 		echo '
-				<input type="submit" id="skip" name="skip" value="Skip" onclick="dontSubmit = true; document.getElementById(\'contbutt\').disabled = \'disabled\'; return true;" />';
+									<input type="submit" id="skip" name="skip" value="Skip" onclick="dontSubmit = true; document.getElementById(\'contbutt\').disabled = \'disabled\'; return true;" />';
 
 	echo '
-		</div>
-			</form>';
-
-	echo '
+								</div>
+							</form>
+						</div>
 					</div>
 				</td>
 			</tr>
@@ -3763,7 +3763,7 @@ function template_welcome_message()
 
 	echo '
 			<b>Admin Login: ', $disable_security ? '(DISABLED)' : '', '</b>
-			<h3>For security purposes please login with your admin account to proceed with the upgrade.<h3>
+			<h3>For security purposes please login with your admin account to proceed with the upgrade.</h3>
 			<table>
 				<tr valign="top">
 					<td><b ', $disable_security ? 'style="color: gray;"' : '', '>Username:</b></td>
@@ -3828,7 +3828,7 @@ function template_upgrade_options()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $boarddir, $db_prefix, $mmessage, $mtitle, $db_type;
 
 	echo '
-			<h3>Before the upgrade gets underway please review the options below - and hit continue when you\'re ready to begin.
+			<h3>Before the upgrade gets underway please review the options below - and hit continue when you\'re ready to begin.</h3>
 			<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform">
 				<table cellpadding="1" cellspacing="0">
 					<tr valign="top">
@@ -3923,7 +3923,7 @@ function template_backup_database()
 			var lastTable = ', $upcontext['cur_table_num'], ';
 			function getNextTables()
 			{
-				getXMLDocument(\'', $upcontext['form_url'], '&amp;xml&amp;substep=\' + lastTable, onBackupUpdate);
+				getXMLDocument(\'', $upcontext['form_url'], '&xml&substep=\' + lastTable, onBackupUpdate);
 			}
 
 			// Got an update!
@@ -3944,7 +3944,7 @@ function template_backup_database()
 		// If debug flood the screen.
 		if ($is_debug)
 			echo '
-				setOuterHTML(document.getElementById(\'debuginfo\'), \'<br />Completed Table: &quot;\' + sTableName + \'&quot;.<span id="debuginfo"></span>\');
+				setOuterHTML(document.getElementById(\'debuginfo\'), \'<br />Completed Table: &quot;\' + sTableName + \'&quot;.<span id="debuginfo"><\' + \'/span>\');
 				window.scroll(0,99999);';
 
 		echo '
@@ -4057,7 +4057,7 @@ function template_database_changes()
 					clearTimeout(timeOutID);
 				timeOutID = window.setTimeout("retTimeout()", ', (10 * $timeLimitThreshold), '000);
 
-				getXMLDocument(\'', $upcontext['form_url'], '&amp;xml&amp;filecount=', $upcontext['file_count'], '&amp;substep=\' + lastItem + getData, onItemUpdate);
+				getXMLDocument(\'', $upcontext['form_url'], '&xml&filecount=', $upcontext['file_count'], '&substep=\' + lastItem + getData, onItemUpdate);
 			}
 
 			// Got an update!
@@ -4089,7 +4089,7 @@ function template_database_changes()
 
 	if ($is_debug)
 		echo '
-						setOuterHTML(document.getElementById(\'debuginfo\'), \'<span style="color: red;">failed</span><span id="debuginfo"></span>\');';
+						setOuterHTML(document.getElementById(\'debuginfo\'), \'<span style="color: red;">failed<\' + \'/span><span id="debuginfo"><\' + \'/span>\');';
 
 	echo '
 					}
@@ -4112,7 +4112,7 @@ function template_database_changes()
 
 	if ($is_debug)
 		echo '
-						setOuterHTML(document.getElementById(\'debuginfo\'), \'<span style="color: red;">failed</span><span id="debuginfo"></span>\');';
+						setOuterHTML(document.getElementById(\'debuginfo\'), \'<span style="color: red;">failed<\' + \'/span><span id="debuginfo"><\' + \'/span>\');';
 
 	echo '
 					}
@@ -4125,7 +4125,7 @@ function template_database_changes()
 					sDebugName += oXMLDoc.getElementsByTagName("debug")[0].childNodes[i].nodeValue;
 				for (var i = 0; i < oXMLDoc.getElementsByTagName("get").length; i++)
 				{
-					getData += "&amp;" + oXMLDoc.getElementsByTagName("get")[i].getAttribute("key") + "=";
+					getData += "&" + oXMLDoc.getElementsByTagName("get")[i].getAttribute("key") + "=";
 					for (var j = 0; j < oXMLDoc.getElementsByTagName("get")[i].childNodes.length; j++)
 					{
 						 getData += oXMLDoc.getElementsByTagName("get")[i].childNodes[j].nodeValue;
@@ -4173,7 +4173,7 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<span id="debuginfo"></span>\');
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<span id="debuginfo"><\' + \'/span>\');
 					document.getElementById(\'debug_section\').style.display = "none"';
 
 		echo '
@@ -4199,7 +4199,7 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />Moving to next script file...<span id="debuginfo"></span>\');';
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />Moving to next script file...<span id="debuginfo"><\' + \'/span>\');';
 
 		echo '
 					getNextItem();
@@ -4216,10 +4216,10 @@ function template_database_changes()
 					numDots = dots ? dots.length : 0;
 					for (var i = numDots; i < 3; i++)
 						sDebugName += ".";
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />\' + sDebugName + \'<span id="debuginfo"></span>\');
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<br />\' + sDebugName + \'<span id="debuginfo"><\' + \'/span>\');
 				}
 				else
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'...<span id="debuginfo"></span>\');
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'...<span id="debuginfo"><\' + \'/span>\');
 				window.scroll(0,99999);
 				if (document.getElementById(\'debug_section\').scrollHeight)
 					document.getElementById(\'debug_section\').scrollTop = document.getElementById(\'debug_section\').scrollHeight';
@@ -4263,6 +4263,7 @@ function template_database_changes()
 				setInnerHTML(document.getElementById("secs_elapsed"), secs);
 
 				getNextItem();
+				return true;
 			}
 
 			// What if we timeout?!
@@ -4272,7 +4273,7 @@ function template_database_changes()
 				if (!attemptAgain)
 				{
 					document.getElementById("error_block").style.display = "";
-					setInnerHTML(document.getElementById("error_message"), "Server has not responded for ', ($timeLimitThreshold * 10), ' seconds. It may be worth waiting a little longer or otherwise please click <a href=\"#\" onclick=\"retTimeout(true); return false;\">here</a> to try this step again");
+					setInnerHTML(document.getElementById("error_message"), "Server has not responded for ', ($timeLimitThreshold * 10), ' seconds. It may be worth waiting a little longer or otherwise please click <a href=\"#\" onclick=\"retTimeout(true); return false;\">here<" + "/a> to try this step again");
 				}
 				else
 				{
@@ -4491,7 +4492,8 @@ function template_upgrade_complete()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $boarddir, $db_prefix, $boardurl;
 
 	echo '
-	<h3>That wasn\'t so hard, was it?  Now you are ready to use <a href="', $boardurl, '/index.php">your installation of SMF</a>.  Hope you like it!</h3>';
+	<h3>That wasn\'t so hard, was it?  Now you are ready to use <a href="', $boardurl, '/index.php">your installation of SMF</a>.  Hope you like it!</h3>
+	<form action="', $boardurl, '/index.php">';
 
 	if (!empty($upcontext['can_delete_script']))
 		echo '
