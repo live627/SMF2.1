@@ -70,6 +70,7 @@ February 2008
  ! Fixed JavaScript warnings issued on logging in. (sha1.js)
  * Repaired the HTML of the upgrade output and fixed JavaScript warnings. (upgrade.php)
  ! Fixed a bug in the last step of upgrade causing a 'function already defined' error in rare cases. (upgrade.php)
+ * Fixed quick modify refering to the wrong JavaScript object on submit. (Display template)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
