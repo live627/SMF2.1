@@ -83,16 +83,6 @@ $txt['admin_setting_registration_approval'] = 'Member Approval';
 $txt['admin_setting_notify_new_registration'] = 'Notify administrators when a new member joins';
 $txt['admin_setting_send_welcomeEmail'] = 'Send welcome email to new members';
 
-$txt['admin_setting_image_verification_type'] = 'Complexity of visual verification image';
-$txt['admin_setting_image_verification_type_desc'] = 'The more complex the image the harder it is for bots to bypass';
-$txt['admin_setting_image_verification_off'] = 'Disabled';
-$txt['admin_setting_image_verification_vsimple'] = 'Very Simple - Plain text on image';
-$txt['admin_setting_image_verification_simple'] = 'Simple - Overlapping colored letters, no noise';
-$txt['admin_setting_image_verification_medium'] = 'Medium - Overlapping colored letters, with noise';
-$txt['admin_setting_image_verification_high'] = 'High - Angled letters, considerable noise';
-$txt['admin_setting_image_verification_sample'] = 'Sample';
-$txt['admin_setting_image_verification_nogd'] = '<b>Note:</b> as this server does not have the GD library installed the different complexity settings will have no effect.';
-
 $txt['admin_setting_coppaAge'] = 'Age below which to apply registration restrictions';
 $txt['admin_setting_coppaAge_desc'] = '(Set to 0 to disable)';
 $txt['admin_setting_coppaType'] = 'Action to take when a user below minimum age registers';

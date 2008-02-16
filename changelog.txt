@@ -76,6 +76,7 @@ February 2008
  & Number of password reminder language strings changed and some added for OpenID functionality. (Profile language file)
  * Added new sections to the admin center for security and modification settings, and moved some elements around. (Admin.php, ManageSettings.php)
  & Moved and changed a load of language strings. (Admin, ManageSettings, Login language files)
+ ! Seperate out the verification on registration setting from the visual verification type. (upgrade and install scripts, Subs-Graphics.php, Register.php, ManageSettings.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

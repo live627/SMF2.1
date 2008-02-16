@@ -495,6 +495,9 @@ function ModifyGeneralSecuritySettings($return_config = false)
 		'',
 			// Password strength.
 			array('select', 'password_strength', array($txt['setting_password_strength_low'], $txt['setting_password_strength_medium'], $txt['setting_password_strength_high'])),
+		'',
+			// Reporting of personal messages?
+			array('check', 'enableReportPM'),
 	);
 								
 	if ($return_config)
@@ -670,11 +673,15 @@ function ModifySpamSettings($return_config = false)
 	$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 	$config_vars = array(
-			// Visual verification.
-				'vv' => array('select', 'visual_verification_type', array(1 => $txt['setting_image_verification_off'], 2 => $txt['setting_image_verification_vsimple'], 3 => $txt['setting_image_verification_simple'], 4 => $txt['setting_image_verification_medium'], 5 => $txt['setting_image_verification_high']), 'subtext'=> $txt['setting_visual_verification_type_desc'], 'onchange' => $context['use_graphic_library'] ? 'refreshImages();' : ''),
+				array('check', 'reg_verification'),
 			'',
-			// Reporting of personal messages?
-			array('check', 'enableReportPM'),
+			// PM Settings
+				'pm1' => array('int', 'max_pm_recipients'),
+				'pm2' => array('int', 'pm_posts_verification'),
+				'pm3' => array('int', 'pm_posts_per_hour'),
+			'',
+			// Visual verification.
+				'vv' => array('select', 'visual_verification_type', array($txt['setting_image_verification_off'], $txt['setting_image_verification_vsimple'], $txt['setting_image_verification_simple'], $txt['setting_image_verification_medium'], $txt['setting_image_verification_high']), 'subtext'=> $txt['setting_visual_verification_type_desc'], 'onchange' => $context['use_graphic_library'] ? 'refreshImages();' : ''),		
 	);
 
 	if ($return_config)
@@ -689,16 +696,16 @@ function ModifySpamSettings($return_config = false)
 		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
 
 		$save_vars = $config_vars;
+		unset($save_vars['pm1']);
+		unset($save_vars['pm2']);
+		unset($save_vars['pm3']);
+
 		$save_vars[] = array('text', 'pm_spam_settings');
 
 		saveDBSettings($save_vars);
 
 		redirectexit('action=admin;area=securitysettings;sa=spam');
 	}
-
-	// What is the current level actually? No value means default of 4!
-	if (empty($modSettings['visual_verification_type']))
-		$modSettings['visual_verification_type'] = 4;
 
 	$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
 	$_SESSION['visual_verification_code'] = '';
@@ -722,9 +729,6 @@ function ModifySpamSettings($return_config = false)
 
 	// Hack for PM spam settings.
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
-	$config_vars[] = array('int', 'max_pm_recipients');
-	$config_vars[] = array('int', 'pm_posts_verification');
-	$config_vars[] = array('int', 'pm_posts_per_hour');
 
 	$context['post_url'] = $scripturl . '?action=admin;area=securitysettings;save;sa=spam';
 	$context['settings_title'] = $txt['antispam_title'];

@@ -577,6 +577,43 @@ upgrade_query("
 ---}
 ---#
 
+---# Changing visual verification setting, again.
+---{
+$request = upgrade_query("
+	SELECT value
+	FROM {$db_prefix}settings
+	WHERE variable = 'reg_verification'");
+if (mysql_num_rows($request) == 0)
+{
+	// Upgrade visual verification again!
+	if (!empty($modSettings['visual_verification_type']))
+	{
+		upgrade_query("
+			UPDATE {$db_prefix}settings
+			SET value = value - 1
+			WHERE variable = 'visual_verification_type'");
+		$modSettings['visual_verification_type']--;
+	}
+	// Never set?
+	elseif (!isset($modSettings['visual_verification_type']))
+	{
+		upgrade_query("
+			INSERT INTO {$db_prefix}settings
+				(variable, value)
+			VALUES
+				('visual_verification_type', '3')");
+		$modSettings['visual_verification_type'] = 3;
+	}
+
+	upgrade_query("
+		INSERT INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('reg_verification', '" . (!empty($modSettings['visual_verification_type']) ? 1 : 0) . "')");
+}
+---}
+---#
+
 ---# Changing default personal text setting.
 UPDATE {$db_prefix}settings
 SET variable = 'default_personal_text'

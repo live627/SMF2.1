@@ -300,7 +300,6 @@ function AdminSettings()
 			'registration_method' => (int) $_POST['registration_method'],
 			'notify_new_registration' => isset($_POST['notify_new_registration']) ? 1 : 0,
 			'send_welcomeEmail' => isset($_POST['send_welcomeEmail']) ? 1 : 0,
-			'visual_verification_type' => isset($_POST['visual_verification_type']) ? (int) $_POST['visual_verification_type'] : 0,
 			'coppaAge' => (int) $_POST['coppaAge'],
 			'coppaType' => empty($_POST['coppaType']) ? 0 : (int) $_POST['coppaType'],
 			'coppaPost' => $_POST['coppaPost'],
@@ -315,19 +314,6 @@ function AdminSettings()
 
 	// Turn the postal address into something suitable for a textbox.
 	$context['coppaPost'] = !empty($modSettings['coppaPost']) ? preg_replace('~<br(?: /)?' . '>~', "\n", $modSettings['coppaPost']) : '';
-
-	// What is the current level actually? No value means default of 4!
-	if (empty($modSettings['visual_verification_type']))
-		$modSettings['visual_verification_type'] = 4;
-
-	// Generate a sample registration image.
-	$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-	$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
-
-	$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
-	$_SESSION['visual_verification_code'] = '';
-	for ($i = 0; $i < 5; $i++)
-		$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
 }
 
 ?>

@@ -791,19 +791,6 @@ function template_admin_settings()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// Javascript for the verification image.
-	if ($context['use_graphic_library'])
-	{
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function refreshImages()
-		{
-			var imageType = document.getElementById(\'visual_verification_type_select\').value;
-			document.getElementById(\'verification_image\').src = \'', $context['verification_image_href'], ';type=\' + imageType;
-		}
-	// ]]></script>';
-	}
-
 	echo '
 	<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="tborder">
@@ -864,33 +851,6 @@ function template_admin_settings()
 							</th>
 							<td width="50%" align="left">
 								<input type="checkbox" name="send_welcomeEmail" id="send_welcomeEmail_check"', !empty($modSettings['send_welcomeEmail']) ? ' checked="checked"' : '', ' class="check" />
-							</td>
-						</tr><tr class="windowbg2" valign="top">
-							<th width="50%" align="right">
-								<label for="visual_verification_type_select">
-									', $txt['admin_setting_image_verification_type'], ':<br />
-									<span class="smalltext" style="font-weight: normal;">
-										', $txt['admin_setting_image_verification_type_desc'], '
-									</span>
-								</label>
-							</th>
-							<td width="50%" align="left">
-								<select name="visual_verification_type" id="visual_verification_type_select" ', $context['use_graphic_library'] ? 'onchange="refreshImages();"' : '', '>
-									<option value="1" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 1 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_off'], '</option>
-									<option value="2" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 2 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_vsimple'], '</option>
-									<option value="3" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 3 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_simple'], '</option>
-									<option value="4" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 4 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_medium'], '</option>
-									<option value="5" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 5 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_high'], '</option>
-								</select><br />';
-	if ($context['use_graphic_library'])
-		echo '
-								<img src="', $context['verification_image_href'], ';type=', empty($modSettings['visual_verification_type']) ? 0 : $modSettings['visual_verification_type'], '" alt="', $txt['admin_setting_image_verification_sample'], '" id="verification_image" /><br />';
-	else
-	{
-		echo '
-								<span class="smalltext">', $txt['admin_setting_image_verification_nogd'], '</span>';
-	}
-	echo '
 							</td>
 						</tr><tr class="windowbg2">
 							<td width="100%" colspan="2" align="center">

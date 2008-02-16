@@ -157,7 +157,7 @@ function Register($reg_errors = array())
 	}
 
 	// Generate a visual verification code to make sure the user is no bot.
-	$context['visual_verification'] = empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1;
+	$context['visual_verification'] = !empty($modSettings['reg_verification']) && !empty($modSettings['visual_verification_type']);
 	if ($context['visual_verification'])
 	{
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
@@ -246,7 +246,7 @@ function Register2($verifiedOpenID = false)
 		}
 
 		// Check whether the visual verification code was entered correctly.
-		if ((empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1) && (empty($_REQUEST['visual_verification_code']) || empty($_SESSION['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
+		if (!empty($modSettings['reg_verification']) && !empty($modSettings['visual_verification_type']) && (empty($_REQUEST['visual_verification_code']) || empty($_SESSION['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
 		{
 			// Don't allow lots of errors!
 			$_SESSION['visual_errors'] = isset($_SESSION['visual_errors']) ? $_SESSION['visual_errors'] + 1 : 1;
@@ -481,7 +481,7 @@ function Register2($verifiedOpenID = false)
 	spamProtection('register');
 
 	// Remove the old code.
-	if ((empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1) && isset($_SESSION['visual_verification_code']))
+	if (!empty($modSettings['reg_verification']) && !empty($modSettings['visual_verification_type']) && isset($_SESSION['visual_verification_code']))
 		unset($_SESSION['visual_verification_code']);
 
 	// We'll do custom fields after as then we get to use the helper function!

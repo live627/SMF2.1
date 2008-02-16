@@ -1800,7 +1800,9 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('admin_features', ''),
 	('last_mod_report_action', '0'),
 	('pruningOptions', '30,180,180,180,30,0'),
-	('cache_enable', '1');
+	('cache_enable', '1'),
+	('reg_verification', '1'),
+	('visual_verification_type', '3');
 # --------------------------------------------------------
 
 #
