@@ -71,6 +71,9 @@ February 2008
  * Repaired the HTML of the upgrade output and fixed JavaScript warnings. (upgrade.php)
  ! Fixed a bug in the last step of upgrade causing a 'function already defined' error in rare cases. (upgrade.php)
  * Fixed quick modify refering to the wrong JavaScript object on submit. (Display template)
+ ! Update the password reminder functionality to act appropriately with OpenID. (Reminder.php, Reminder template)
+ & Email templates added for all registration functions so that passwords are not sent to OpenID users. (EmalTemplates language file)
+ & Number of password reminder language strings changed and some added for OpenID functionality. (Profile language file)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

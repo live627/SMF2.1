@@ -69,6 +69,17 @@ $txt['enter_new_password'] = 'Please enter the answer to your question, and the 
 $txt['password_success'] = 'Your password was changed successfully.<br />Click <a href="' . $scripturl . '?action=login">here</a> to login.';
 $txt['secret_why_blank'] = 'why is this blank?';
 
+$txt['authentication_reminder'] = 'Authentication Reminder';
+$txt['password_reminder_desc'] = 'If you\'ve forgotten your login details, don\'t worry, they can be retrieved. To start this process please enter your username or password below.';
+$txt['authentication_options'] = 'Please select one of the two options below';
+$txt['authentication_openid_email'] = 'Email me a reminder of my OpenID identity';
+$txt['authentication_openid_secret'] = 'Answer my &quot;secret question&quot; to display my OpenID identity';
+$txt['authentication_password_email'] = 'Email me a new password';
+$txt['authentication_password_secret'] = 'Let me set a new password by answering my &quot;secret question&quot;';
+$txt['openid_secret_reminder'] = 'Please enter your answer to the question below. If you get it correct your OpenID identity will be shown.';
+$txt['reminder_openid_is'] = 'The OpenID identity associated with your account is:<br />&nbsp;&nbsp;&nbsp;&nbsp;<b>%1$s</b><br /><br />Please make a note of this for future reference.';
+$txt['reminder_continue'] = 'Continue';
+
 $txt['current_theme'] = 'Current Theme';
 $txt['change'] = '(change)';
 $txt['theme_preferences'] = 'Theme preferences';
@@ -195,7 +206,7 @@ $txt['activate_changed_email'] = 'You\'ve changed your email address. In order t
 
 $txt['no_reminder_email'] = 'Unable to send reminder email.';
 $txt['send_email'] = 'Send an email to';
-$txt['to_ask_password'] = 'to ask for password';
+$txt['to_ask_password'] = 'to ask for your authentication details';
 $txt['password_reminder'] = 'Password Reminder';
 
 $txt['user_email'] = 'Username/Email';
@@ -204,6 +215,7 @@ $txt['user_email'] = 'Username/Email';
 $txt['reminder_subject'] = 'New password for ' . $context['forum_name'];
 $txt['reminder_mail'] = 'This mail was sent because the \'forgot password\' function has been applied to your account. To set a new password click the following link';
 $txt['reminder_sent'] = 'A mail has been sent to your email address. Click the link in that mail to set a new password.';
+$txt['reminder_openid_sent'] = 'Your current OpenID identity has been sent to your email address.';
 $txt['reminder_set_password'] = 'Set Password';
 $txt['reminder_password_set'] = 'Password successfully set';
 $txt['reminder_error'] = '%s failed to answer their secret question correctly when attempting to change a forgotten password.';
