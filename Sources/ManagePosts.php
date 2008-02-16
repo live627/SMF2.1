@@ -211,7 +211,6 @@ function ModifyPostSettings($return_config = false)
 			array('int', 'spamWaitTime', 'postinput' => $txt['manageposts_seconds']),
 			array('int', 'edit_wait_time', 'postinput' => $txt['manageposts_seconds']),
 			array('int', 'edit_disable_time', 'subtext' => $txt['edit_disable_time_zero'], 'postinput' => $txt['manageposts_minutes']),
-			array('int', 'posts_require_captcha', 'subtext' => $txt['posts_require_captcha_desc']),
 	);
 
 	if ($return_config)

@@ -967,6 +967,12 @@ function template_show_settings()
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 
+	if (!empty($context['settings_post_javascript']))
+		echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	', $context['settings_post_javascript'], '
+	// ]]></script>';
+
 	if (!empty($context['settings_insert_below']))
 		echo $context['settings_insert_below'];
 }

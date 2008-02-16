@@ -456,8 +456,6 @@ $txt['spamWaitTime'] = 'Time required between posts from the same IP';
 $txt['edit_wait_time'] = 'Courtesy edit wait time';
 $txt['edit_disable_time'] = 'Maximum time after posting to allow edit';
 $txt['edit_disable_time_zero'] = '0 to disable';
-$txt['posts_require_captcha'] = 'Post count under which users must enter a visual code to post a message';
-$txt['posts_require_captcha_desc'] = '(0 for no limit, moderators are exempt)';
 
 $txt['enableBBC'] = 'Enable bulletin board code (BBC)';
 $txt['enablePostHTML'] = 'Enable <i>basic</i> HTML in posts';
@@ -534,7 +532,7 @@ $txt['admin_search_section_settings'] = 'Setting';
 $txt['core_settings_title'] = 'Core Features';
 $txt['mods_cat_features'] = 'Options';
 $txt['mods_cat_security_general'] = 'General';
-$txt['antispam_title'] = 'Verification';
+$txt['antispam_title'] = 'Anti-Spam';
 $txt['mods_cat_modifications_misc'] = 'Miscellaneous';
 $txt['mods_cat_layout'] = 'Layout';
 $txt['karma'] = 'Karma';

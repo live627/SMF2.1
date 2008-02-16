@@ -674,6 +674,10 @@ function ModifySpamSettings($return_config = false)
 
 	$config_vars = array(
 				array('check', 'reg_verification'),
+				array('check', 'search_enable_captcha'),
+				// This, my friend, is a cheat :p
+				'guest_verify' => array('check', 'guests_require_captcha', 'subtext' => $txt['setting_guests_require_captcha_desc']),
+				array('int', 'posts_require_captcha', 'subtext' => $txt['posts_require_captcha_desc'], 'onchange' => 'if (this.value > 0){ document.getElementById(\'guests_require_captcha\').checked = true; document.getElementById(\'guests_require_captcha\').disabled = true;} else {document.getElementById(\'guests_require_captcha\').disabled = false;}'),
 			'',
 			// PM Settings
 				'pm1' => array('int', 'max_pm_recipients'),
@@ -695,10 +699,15 @@ function ModifySpamSettings($return_config = false)
 		// Fix PM settings.
 		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
 
+		// Hack in guest requiring verification!
+		if (empty($_POST['posts_require_captcha']) && !empty($_POST['guests_require_captcha']))
+			$_POST['posts_require_captcha'] = -1;
+
 		$save_vars = $config_vars;
 		unset($save_vars['pm1']);
 		unset($save_vars['pm2']);
 		unset($save_vars['pm3']);
+		unset($save_vars['guest_verify']);
 
 		$save_vars[] = array('text', 'pm_spam_settings');
 
@@ -712,9 +721,10 @@ function ModifySpamSettings($return_config = false)
 	for ($i = 0; $i < 5; $i++)
 		$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
 
-	// Some javascript for CAPTCHA
+	// Some javascript for CAPTCHA.
+	$context['settings_post_javascript'] = '';
 	if ($context['use_graphic_library'])
-		$context['settings_pre_javascript'] = '
+		$context['settings_post_javascript'] .= '
 		function refreshImages()
 		{
 			var imageType = document.getElementById(\'visual_verification_type\').value;
@@ -729,6 +739,15 @@ function ModifySpamSettings($return_config = false)
 
 	// Hack for PM spam settings.
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
+
+	// Hack for guests requiring verification.
+	$modSettings['guests_require_captcha'] = !empty($modSettings['posts_require_captcha']);
+	$modSettings['posts_require_captcha'] = !isset($modSettings['posts_require_captcha']) || $modSettings['posts_require_captcha'] == -1 ? 0 : $modSettings['posts_require_captcha'];
+
+	// Some minor javascript for the guest post setting.
+	if ($modSettings['posts_require_captcha'])
+		$context['settings_post_javascript'] .= '
+		document.getElementById(\'guests_require_captcha\').disabled = true;';
 
 	$context['post_url'] = $scripturl . '?action=admin;area=securitysettings;save;sa=spam';
 	$context['settings_title'] = $txt['antispam_title'];

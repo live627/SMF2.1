@@ -82,7 +82,6 @@ $txt['search_max_results'] = 'Maximum results to show';
 $txt['search_max_results_disable'] = '(0: no limit)';
 $txt['search_floodcontrol_time'] = 'Time required between searches from same member';
 $txt['search_floodcontrol_time_desc'] = '(0 for no limit, in seconds)';
-$txt['search_enable_captcha'] = 'Require image verification on all guest searches';
 
 $txt['search_create_index'] = 'Create index';
 $txt['search_create_index_why'] = 'Why create a search index?';

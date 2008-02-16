@@ -126,9 +126,14 @@ $txt['setting_password_strength_low'] = 'Low - 4 character minimum';
 $txt['setting_password_strength_medium'] = 'Medium - cannot contain username';
 $txt['setting_password_strength_high'] = 'High - mixture of different characters';
 
-$txt['antispam_Settings'] = 'Verifications Settings';
+$txt['antispam_Settings'] = 'Anti-Spam Verification';
 $txt['antispam_Settings_desc'] = 'This section allows you to setup verification checks to ensure the user is a human (and not a bot), and tweak how and where these apply.';
 $txt['setting_reg_verification'] = 'Require verification on registration page';
+$txt['posts_require_captcha'] = 'Post count under which users must pass verification to make a post';
+$txt['posts_require_captcha_desc'] = '(0 for no limit, moderators are exempt)';
+$txt['search_enable_captcha'] = 'Require verification on all guest searches';
+$txt['setting_guests_require_captcha'] = 'Guests must pass verification when making a post';
+$txt['setting_guests_require_captcha_desc'] = '(Automatically set if you specify a minimum post count below)';
 $txt['setting_visual_verification_type'] = 'Complexity of visual verification image';
 $txt['setting_visual_verification_type_desc'] = 'The more complex the image the harder it is for bots to bypass';
 $txt['setting_image_verification_off'] = 'Disabled';

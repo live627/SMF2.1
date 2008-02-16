@@ -1073,7 +1073,7 @@ function Post()
 	$context['is_first_post'] = $context['is_new_topic'] || (isset($_REQUEST['msg']) && $_REQUEST['msg'] == $id_first_msg);
 
 	// Do we need to show the visual verification image?
-	$context['visual_verification'] = !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && $user_info['posts'] < $modSettings['posts_require_captcha'];
+	$context['visual_verification'] = !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1));
 	if ($context['visual_verification'])
 	{
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
@@ -1132,7 +1132,7 @@ function Post2()
 		$post_errors[] = 'session_timeout';
 
 	// Wrong verification code?
-	if (!$user_info['is_admin'] && !$user_info['is_mod'] && !empty($modSettings['posts_require_captcha']) && $user_info['posts'] < $modSettings['posts_require_captcha'] && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
+	if (!$user_info['is_admin'] && !$user_info['is_mod'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1)) && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
 		$post_errors[] = 'wrong_verification_code';
 
 	require_once($sourcedir . '/Subs-Post.php');
