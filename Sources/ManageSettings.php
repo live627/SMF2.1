@@ -31,13 +31,19 @@ if (!defined('SMF'))
 	void ModifyFeatureSettings()
 		// !!!
 
+	void ModifySecuritySettings()
+		// !!!
+
+	void ModifyModSettings()
+		// !!!
+
 	void ModifyCoreFeatures()
 		// !!!
 
 	void ModifyBasicSettings()
 		// !!!
 
-	void ModifySecuritySettings()
+	void ModifyGeneralSecuritySettings()
 		// !!!
 
 	void ModifyLayoutSettings()
@@ -47,6 +53,9 @@ if (!defined('SMF'))
 		// !!!
 
 	void ModifyModerationSettings()
+		// !!!
+
+	void ModifySpamSettings()
 		// !!!
 
 	void ModifySignatureSettings()
@@ -67,10 +76,10 @@ if (!defined('SMF'))
 // !!!
 */
 
-// This function passes control through to the relevant tab.
-function ModifyFeatureSettings()
+// This just avoids some repetition.
+function loadGeneralSettingParameters(&$subActions, $defaultAction = '')
 {
-	global $context, $txt, $scripturl, $modSettings, $sourcedir, $settings;
+	global $context, $txt, $sourcedir;
 
 	// You need to be an admin to edit settings!
 	isAllowedTo('admin_forum');
@@ -81,43 +90,46 @@ function ModifyFeatureSettings()
 	// Will need the utility functions from here.
 	require_once($sourcedir . '/ManageServer.php');
 
-	$context['page_title'] = $txt['modSettings_title'];
 	$context['sub_template'] = 'show_settings';
+
+	// By default do the basic settings.
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : (!empty($defaultAction) ? $defaultAction : array_pop(array_keys($subActions)));
+	$context['sub_action'] = $_REQUEST['sa'];
+}
+
+// This function passes control through to the relevant tab.
+function ModifyFeatureSettings()
+{
+	global $context, $txt, $scripturl, $modSettings, $settings;
+
+	$context['page_title'] = $txt['modSettings_title'];
 
 	$subActions = array(
 		'basic' => 'ModifyBasicSettings',
 		'core' => 'ModifyCoreFeatures',
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
-		'moderation' => 'ModifyModerationSettings',
-		'security' => 'ModifySecuritySettings',
 		'sig' => 'ModifySignatureSettings',
 		'profile' => 'ShowCustomProfiles',
 		'profileedit' => 'EditCustomProfiles',
 		'pruning' => 'ModifyPruningSettings',
 	);
 
-	// By default do the basic settings.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'core';
-	$context['sub_action'] = $_REQUEST['sa'];
+	loadGeneralSettingParameters($subActions, 'core');
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['modSettings_title'],
-		'help' => 'modsettings',
+		'help' => 'featuresettings',
 		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
 			'core' => array(
 			),
 			'basic' => array(
 			),
-			'security' => array(
-			),
 			'layout' => array(
 			),
 			'karma' => array(
-			),
-			'moderation' => array(
 			),
 			'sig' => array(
 				'description' => $txt['signature_settings_desc'],
@@ -126,6 +138,70 @@ function ModifyFeatureSettings()
 				'description' => $txt['custom_profile_desc'],
 			),
 			'pruning' => array(
+			),
+		),
+	);
+
+	// Call the right function for this sub-acton.
+	$subActions[$_REQUEST['sa']]();
+}
+
+// This function passes control through to the relevant security tab.
+function ModifySecuritySettings()
+{
+	global $context, $txt, $scripturl, $modSettings, $settings;
+
+	$context['page_title'] = $txt['admin_security_moderation'];
+
+	$subActions = array(
+		'general' => 'ModifyGeneralSecuritySettings',
+		'spam' => 'ModifySpamSettings',
+		'moderation' => 'ModifyModerationSettings',
+	);
+
+	loadGeneralSettingParameters($subActions, 'general');
+
+	// Load up all the tabs...
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['admin_security_moderation'],
+		'help' => 'securitysettings',
+		'description' => $txt['security_settings_desc'],
+		'tabs' => array(
+			'general' => array(
+			),
+			'spam' => array(
+				'description' => $txt['antispam_Settings_desc'] ,
+			),
+			'moderation' => array(
+			),
+		),
+	);
+
+	// Call the right function for this sub-acton.
+	$subActions[$_REQUEST['sa']]();
+}
+
+// This my friend, is for all the mod authors out there. They're like builders without the ass crack - with the possible exception of... /cut short
+function ModifyModSettings()
+{
+	global $context, $txt, $scripturl, $modSettings, $settings;
+
+	$context['page_title'] = $txt['admin_modifications'];
+
+	$subActions = array(
+		'general' => 'ModifyGeneralModSettings',
+		// Mod authors, once again, if you have a whole section to add do it AFTER this line, and keep a comma at the end.
+	);
+
+	loadGeneralSettingParameters($subActions, 'general');
+
+	// Load up all the tabs...
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['admin_modifications'],
+		'help' => 'modsettings',
+		'description' => $txt['modification_settings_desc'],
+		'tabs' => array(
+			'general' => array(
 			),
 		),
 	);
@@ -399,7 +475,7 @@ function ModifyBasicSettings($return_config = false)
 }
 
 // Settings really associated with general security aspects.
-function ModifySecuritySettings($return_config = false)
+function ModifyGeneralSecuritySettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
@@ -417,10 +493,10 @@ function ModifySecuritySettings($return_config = false)
 			array('check', 'send_validation_onChange'),
 			array('check', 'approveAccountDeletion'),
 		'',
-			// Reporting of personal messages?
-			array('check', 'enableReportPM'),
+			// Password strength.
+			array('select', 'password_strength', array($txt['setting_password_strength_low'], $txt['setting_password_strength_medium'], $txt['setting_password_strength_high'])),
 	);
-
+								
 	if ($return_config)
 		return $config_vars;
 
@@ -429,26 +505,14 @@ function ModifySecuritySettings($return_config = false)
 	{
 		checkSession();
 
-		// Fix PM settings.
-		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
-
-		$save_vars = $config_vars;
-		$save_vars[] = array('text', 'pm_spam_settings');
-
-		saveDBSettings($save_vars);
+		saveDBSettings($config_vars);
 
 		writeLog();
-		redirectexit('action=admin;area=featuresettings;sa=security');
+		redirectexit('action=admin;area=securitysettings;sa=general');
 	}
 
-	// Hack for PM spam settings.
-	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
-	$config_vars[] = array('int', 'max_pm_recipients');
-	$config_vars[] = array('int', 'pm_posts_verification');
-	$config_vars[] = array('int', 'pm_posts_per_hour');
-
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=security';
-	$context['settings_title'] = $txt['mods_cat_security'];
+	$context['post_url'] = $scripturl . '?action=admin;area=securitysettings;save;sa=general';
+	$context['settings_title'] = $txt['mods_cat_security_general'];
 
 	prepareDBSettingContext($config_vars);
 }
@@ -584,14 +648,86 @@ function ModifyModerationSettings($return_config = false)
 		unset($save_vars['rem1'], $save_vars['rem2']);
 
 		saveDBSettings($save_vars);
-		redirectexit('action=admin;area=featuresettings;sa=moderation');
+		redirectexit('action=admin;area=securitysettings;sa=moderation');
 	}
 
 	// We actually store lots of these together - for efficiency.
 	list ($modSettings['warning_enable'], $modSettings['user_limit'], $modSettings['warning_decrement']) = explode(',', $modSettings['warning_settings']);
 
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=moderation';
+	$context['post_url'] = $scripturl . '?action=admin;area=securitysettings;save;sa=moderation';
 	$context['settings_title'] = $txt['moderation_settings'];
+
+	prepareDBSettingContext($config_vars);
+}
+
+// Let's try keep the spam to a minimum ah Thantos?
+function ModifySpamSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	// Generate a sample registration image.
+	$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
+	$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+
+	$config_vars = array(
+			// Visual verification.
+				'vv' => array('select', 'visual_verification_type', array(1 => $txt['setting_image_verification_off'], 2 => $txt['setting_image_verification_vsimple'], 3 => $txt['setting_image_verification_simple'], 4 => $txt['setting_image_verification_medium'], 5 => $txt['setting_image_verification_high']), 'subtext'=> $txt['setting_visual_verification_type_desc'], 'onchange' => $context['use_graphic_library'] ? 'refreshImages();' : ''),
+			'',
+			// Reporting of personal messages?
+			array('check', 'enableReportPM'),
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		checkSession();
+
+		// Fix PM settings.
+		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
+
+		$save_vars = $config_vars;
+		$save_vars[] = array('text', 'pm_spam_settings');
+
+		saveDBSettings($save_vars);
+
+		redirectexit('action=admin;area=securitysettings;sa=spam');
+	}
+
+	// What is the current level actually? No value means default of 4!
+	if (empty($modSettings['visual_verification_type']))
+		$modSettings['visual_verification_type'] = 4;
+
+	$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
+	$_SESSION['visual_verification_code'] = '';
+	for ($i = 0; $i < 5; $i++)
+		$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
+
+	// Some javascript for CAPTCHA
+	if ($context['use_graphic_library'])
+		$context['settings_pre_javascript'] = '
+		function refreshImages()
+		{
+			var imageType = document.getElementById(\'visual_verification_type\').value;
+			document.getElementById(\'verification_image\').src = \'' . $context['verification_image_href'] . ';type=\' + imageType;
+		}';
+
+	// Show the image itself, or text saying we can't.
+	if ($context['use_graphic_library'])
+		$config_vars['vv']['postinput'] = '<br /><img src="' . $context['verification_image_href'] . ';type=' . (empty($modSettings['visual_verification_type']) ? 0 : $modSettings['visual_verification_type']) . '" alt="' . $txt['setting_image_verification_sample'] . '" id="verification_image" /><br />';
+	else
+		$config_vars['vv']['postinput'] = '<br /><span class="smalltext">' . $txt['admin_setting_image_verification_nogd'] . '</span>';
+
+	// Hack for PM spam settings.
+	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
+	$config_vars[] = array('int', 'max_pm_recipients');
+	$config_vars[] = array('int', 'pm_posts_verification');
+	$config_vars[] = array('int', 'pm_posts_per_hour');
+
+	$context['post_url'] = $scripturl . '?action=admin;area=securitysettings;save;sa=spam';
+	$context['settings_title'] = $txt['antispam_title'];
 
 	prepareDBSettingContext($config_vars);
 }
@@ -1614,4 +1750,50 @@ function ModifyPruningSettings($return_config = false)
 
 	prepareDBSettingContext($config_vars);
 }
+
+// If you have a general mod setting to add stick it here.
+function ModifyGeneralModSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	$config_vars = array(
+		// Mod authors, add any settings UNDER this line. Include a comma at the end of the line and don't remove this statement!!
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	$context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=general';
+	$context['settings_title'] = $txt['mods_cat_modifications_misc'];
+
+	// No removing this line you, dirty unwashed mod authors. :p
+	if (empty($config_vars))
+	{
+		$context['settings_save_dont_show'] = true;
+		$context['settings_message'] = '<div style="text-align: center">' . $txt['modification_no_misc_settings'] . '</div>';
+
+		return prepareDBSettingContext($config_vars);
+	}
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		checkSession();
+
+		$save_vars = $config_vars;
+
+		// This line is to help mod authors do a search/add after if you want to add something here. Keyword: FOOT TAPPING SUCKS!
+
+		saveDBSettings($save_vars);
+
+		// This line is to help mod authors do a search/add after if you want to add something here. Keyword: I LOVE TEA!
+
+		redirectexit('action=admin;area=modsettings;sa=general');
+	}
+
+	// This line is to help mod authors do a search/add after if you want to add something here. Keyword: RED INK IS FOR TEACHERS AND THOSE WHO LIKE PAIN!
+
+	prepareDBSettingContext($config_vars);
+}
+
 ?>

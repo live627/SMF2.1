@@ -300,7 +300,6 @@ function AdminSettings()
 			'registration_method' => (int) $_POST['registration_method'],
 			'notify_new_registration' => isset($_POST['notify_new_registration']) ? 1 : 0,
 			'send_welcomeEmail' => isset($_POST['send_welcomeEmail']) ? 1 : 0,
-			'password_strength' => (int) $_POST['password_strength'],
 			'visual_verification_type' => isset($_POST['visual_verification_type']) ? (int) $_POST['visual_verification_type'] : 0,
 			'coppaAge' => (int) $_POST['coppaAge'],
 			'coppaType' => empty($_POST['coppaType']) ? 0 : (int) $_POST['coppaType'],

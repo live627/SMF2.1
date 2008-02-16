@@ -90,8 +90,14 @@ $helptxt['ban_members'] = '<b>Ban Members</b><br />
 	you simply type that IP address in, save, and they can no longer post from that location.<br />You can also
 	ban people through their email address.';
 
-$helptxt['modsettings'] = '<b>Edit Features and Options</b><br />
-	There are several features in this section that can be changed to your preference.  Options for installed mods will generally also appear in here.';
+$helptxt['featuresettings'] = '<b>Edit Features and Options</b><br />
+	There are several features in this section that can be changed to your preference.';
+
+$helptxt['securitysettings'] = '<b>Security and Moderation</b><br />
+	This section contains settings relating to the security and moderation of your forum.';
+
+$helptxt['modsettings'] = '<b>Modification Settings</b><br />
+	This section should contain any settings added by modifications installed on your forum.';
 
 $helptxt['number_format'] = '<b>Number Format</b><br />
 	You can use this setting to format the way in which numbers on your forum will be displayed to the user. The format of this setting is:<br />

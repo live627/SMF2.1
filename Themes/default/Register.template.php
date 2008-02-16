@@ -865,17 +865,6 @@ function template_admin_settings()
 							<td width="50%" align="left">
 								<input type="checkbox" name="send_welcomeEmail" id="send_welcomeEmail_check"', !empty($modSettings['send_welcomeEmail']) ? ' checked="checked"' : '', ' class="check" />
 							</td>
-						</tr><tr class="windowbg2">
-							<th width="50%" align="right">
-								<label for="password_strength_select">', $txt['admin_setting_password_strength'], '</label> <span style="font-weight: normal;">(<a href="', $scripturl, '?action=helpadmin;help=password_strength" onclick="return reqWin(this.href);">?</a>)</span>:
-							</th>
-							<td width="50%" align="left">
-								<select name="password_strength" id="password_strength_select">
-									<option value="0"', empty($modSettings['password_strength']) ? ' selected="selected"' : '', '>', $txt['admin_setting_password_strength_low'], '</option>
-									<option value="1"', !empty($modSettings['password_strength']) && $modSettings['password_strength'] == 1 ? ' selected="selected"' : '', '>', $txt['admin_setting_password_strength_medium'], '</option>
-									<option value="2"', !empty($modSettings['password_strength']) && $modSettings['password_strength'] == 2 ? ' selected="selected"' : '', '>', $txt['admin_setting_password_strength_high'], '</option>
-								</select>
-							</td>
 						</tr><tr class="windowbg2" valign="top">
 							<th width="50%" align="right">
 								<label for="visual_verification_type_select">

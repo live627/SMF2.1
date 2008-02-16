@@ -774,6 +774,9 @@ function template_show_settings()
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
+	if (!empty($context['settings_pre_javascript']))
+		echo $context['settings_pre_javascript'];
+
 	// If we have BBC selection we have a bit of JS.
 	if (!empty($context['bbc_sections']))
 	{
@@ -949,10 +952,14 @@ function template_show_settings()
 		echo '
 						</tr>';
 	}
-	echo '
+
+	if (empty($context['settings_save_dont_show']))
+		echo '
 						<tr>
 							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
-						</tr>
+						</tr>';
+
+	echo '
 					</table>
 				</td>
 			</tr>

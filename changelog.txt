@@ -74,6 +74,8 @@ February 2008
  ! Update the password reminder functionality to act appropriately with OpenID. (Reminder.php, Reminder template)
  & Email templates added for all registration functions so that passwords are not sent to OpenID users. (EmalTemplates language file)
  & Number of password reminder language strings changed and some added for OpenID functionality. (Profile language file)
+ * Added new sections to the admin center for security and modification settings, and moved some elements around. (Admin.php, ManageSettings.php)
+ & Moved and changed a load of language strings. (Admin, ManageSettings, Login language files)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

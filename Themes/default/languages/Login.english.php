@@ -83,11 +83,6 @@ $txt['admin_setting_registration_approval'] = 'Member Approval';
 $txt['admin_setting_notify_new_registration'] = 'Notify administrators when a new member joins';
 $txt['admin_setting_send_welcomeEmail'] = 'Send welcome email to new members';
 
-$txt['admin_setting_password_strength'] = 'Required strength for user passwords';
-$txt['admin_setting_password_strength_low'] = 'Low - 4 character minimum';
-$txt['admin_setting_password_strength_medium'] = 'Medium - cannot contain username';
-$txt['admin_setting_password_strength_high'] = 'High - mixture of different characters';
-
 $txt['admin_setting_image_verification_type'] = 'Complexity of visual verification image';
 $txt['admin_setting_image_verification_type_desc'] = 'The more complex the image the harder it is for bots to bypass';
 $txt['admin_setting_image_verification_off'] = 'Disabled';

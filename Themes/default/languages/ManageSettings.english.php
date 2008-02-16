@@ -5,7 +5,11 @@
 
 global $scripturl;
 
-$txt['modSettings_desc'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
+$txt['modSettings_desc'] = 'This page allows you to change the settings of features and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
+$txt['security_settings_desc'] = 'This page allows you to set options specifically related to the security and moderation of your forum, including anti-spam options.';
+$txt['modification_settings_desc'] = 'This page contains settings added by any modifications to your forum';
+
+$txt['modification_no_misc_settings'] = 'There are modifications installed that have added any settings to this area yet.';
 
 $txt['pollMode'] = 'Poll mode';
 $txt['disable_polls'] = 'Disable polls';
@@ -116,6 +120,23 @@ $txt['cache_level1'] = 'Level 1 Caching (Recommended)';
 $txt['cache_level2'] = 'Level 2 Caching';
 $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
+
+$txt['setting_password_strength'] = 'Required strength for user passwords';
+$txt['setting_password_strength_low'] = 'Low - 4 character minimum';
+$txt['setting_password_strength_medium'] = 'Medium - cannot contain username';
+$txt['setting_password_strength_high'] = 'High - mixture of different characters';
+
+$txt['antispam_Settings'] = 'Anti-Spam Settings';
+$txt['antispam_Settings_desc'] = 'This section contains a number of settings to help restrict, control and monitoring spamming of content on your forum.';
+$txt['setting_visual_verification_type'] = 'Complexity of visual verification image';
+$txt['setting_visual_verification_type_desc'] = 'The more complex the image the harder it is for bots to bypass';
+$txt['setting_image_verification_off'] = 'Disabled';
+$txt['setting_image_verification_vsimple'] = 'Very Simple - Plain text on image';
+$txt['setting_image_verification_simple'] = 'Simple - Overlapping colored letters, no noise';
+$txt['setting_image_verification_medium'] = 'Medium - Overlapping colored letters, with noise';
+$txt['setting_image_verification_high'] = 'High - Angled letters, considerable noise';
+$txt['setting_image_verification_sample'] = 'Sample';
+$txt['setting_image_verification_nogd'] = '<b>Note:</b> as this server does not have the GD library installed the different complexity settings will have no effect.';
 
 $txt['moderation_settings'] = 'Moderation Settings';
 $txt['setting_warning_enable'] = 'Enable User Warning System';

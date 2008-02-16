@@ -154,13 +154,21 @@ function AdminMain()
 					'subsections' => array(
 						'core' => array($txt['core_settings_title']),
 						'basic' => array($txt['mods_cat_features']),
-						'security' => array($txt['mods_cat_security']),
 						'layout' => array($txt['mods_cat_layout']),
 						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),
-						'moderation' => array($txt['moderation_settings_short'], 'enabled' => substr($modSettings['warning_settings'], 0, 1) == 1),
 						'sig' => array($txt['signature_settings_short']),
 						'profile' => array($txt['custom_profile_shorttitle'], 'enabled' => in_array('cp', $context['admin_features'])),
 						'pruning' => array($txt['pruning_title']),
+					),
+				),
+				'securitysettings' => array(
+					'label' => $txt['admin_security_moderation'],
+					'file' => 'ManageSettings.php',
+					'function' => 'ModifySecuritySettings',
+					'subsections' => array(
+						'general' => array($txt['mods_cat_security_general']),
+						'spam' => array($txt['antispam_title']),
+						'moderation' => array($txt['moderation_settings_short'], 'enabled' => substr($modSettings['warning_settings'], 0, 1) == 1),
 					),
 				),
 				'serversettings' => array(
@@ -173,6 +181,17 @@ function AdminMain()
 						'other' => array($txt['other_configuration']),
 						'languages' => array($txt['language_configuration']),
 						'cache' => array($txt['caching_settings']),
+					),
+				),
+				'modsettings' => array(
+					'label' => $txt['admin_modifications'],
+					'file' => 'ManageSettings.php',
+					'function' => 'ModifyModSettings',
+					'subsections' => array(
+						'general' => array($txt['mods_cat_modifications_misc']),
+						// Mod Authors for a "ADD AFTER" on this line. Ensure you end your change with a comma. For example:
+						// 'shout' => array($txt['shout']),
+						// Note the comma!! The setting with automatically appear with the first mod to be added.
 					),
 				),
 				'current_theme' => array(
@@ -792,11 +811,14 @@ function AdminSearchInternal()
 	$settings_search = array(
 		array('ModifyCoreFeatures', 'area=featuresettings;sa=core'),
 		array('ModifyBasicSettings', 'area=featuresettings;sa=basic'),
-		array('ModifySecuritySettings', 'area=featuresettings;sa=security'),
 		array('ModifyLayoutSettings', 'area=featuresettings;sa=layout'),
 		array('ModifyKarmaSettings', 'area=featuresettings;sa=karma'),
-		array('ModifyModerationSettings', 'area=featuresettings;sa=moderate'),
 		array('ModifySignatureSettings', 'area=featuresettings;sa=sig'),
+		array('ModifyGeneralSecuritySettings', 'area=securitysettings;sa=general'),
+		array('ModifySpamSettings', 'area=securitysettings;sa=spam'),
+		array('ModifyModerationSettings', 'area=securitysettings;sa=moderation'),
+		array('ModifyGeneralModSettings', 'area=modsettings;sa=general'),
+		// Mod authors if you want to be "real freaking good" then add any setting pages for your mod BELOW this line!
 		array('ManageAttachmentSettings', 'area=manageattachments;sa=attachments'),
 		array('ManageAvatarSettings', 'area=manageattachments;sa=avatars'),
 		array('ModifyCalendarSettings', 'area=managecalendar;sa=settings'),
