@@ -527,16 +527,32 @@ function logSpider()
 	if ($modSettings['spider_mode'] == 1)
 	{
 		$date = strftime('%Y-%m-%d', forum_time(false));
-		$smcFunc['db_insert']('replace',
-			'{db_prefix}log_spider_stats',
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}log_spider_stats
+			SET last_seen = {int:current_time}, page_hits = page_hits + 1
+			WHERE id_spider = {int:current_spider}
+				AND stat_date = {date:current_date}',
 			array(
-				'id_spider' => 'int', 'last_seen' => 'int', 'stat_date' => 'date', 'page_hits' => 'int',
-			),
-			array(
-				$_SESSION['id_robot'], time(), $date, 1,
-			),
-			array('id_spider', 'stat_date')
+				'current_date' => $date,
+				'current_time' => time(),
+				'current_spider' => $_SESSION['id_robot'],
+			)
 		);
+
+		// Nothing updated?
+		if ($smcFunc['db_affected_rows']() == 0)
+		{
+			$smcFunc['db_insert']('ignore',
+				'{db_prefix}log_spider_stats',
+				array(
+					'id_spider' => 'int', 'last_seen' => 'int', 'stat_date' => 'date', 'page_hits' => 'int',
+				),
+				array(
+					$_SESSION['id_robot'], time(), $date, 1,
+				),
+				array('id_spider', 'stat_date')
+			);
+		}
 	}
 	// If we're tracking better stats than track, better stats - we sort out the today thing later.
 	else
