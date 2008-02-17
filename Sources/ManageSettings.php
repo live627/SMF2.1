@@ -821,7 +821,7 @@ function ModifySpamSettings($return_config = false)
 	if ($context['use_graphic_library'])
 		$config_vars['vv']['postinput'] = '<br /><img src="' . $context['verification_image_href'] . ';type=' . (empty($modSettings['visual_verification_type']) ? 0 : $modSettings['visual_verification_type']) . '" alt="' . $txt['setting_image_verification_sample'] . '" id="verification_image" /><br />';
 	else
-		$config_vars['vv']['postinput'] = '<br /><span class="smalltext">' . $txt['admin_setting_image_verification_nogd'] . '</span>';
+		$config_vars['vv']['postinput'] = '<br /><span class="smalltext">' . $txt['setting_image_verification_nogd'] . '</span>';
 
 	// Hack for PM spam settings.
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
