@@ -1388,15 +1388,14 @@ function PackageOptions()
 
 function ViewOperations()
 {
-	global $context, $txt, $boarddir, $sourcedir, $smcFunc;
+	global $context, $txt, $boarddir, $sourcedir, $smcFunc, $modSettings;
 
 	// Can't be in here buddy.
 	isAllowedTo('admin_forum');
 
 	// We need to know the operation key for the search and replace, mod file looking at, is it a board mod?
-	// !!! CHANGE ERROR MESSAGE.
 	if (!isset($_REQUEST['operation_key'], $_REQUEST['filename']) && !is_numeric($_REQUEST['operation_key']))
-		fatal_error('YOU SUCK', 'general');
+		fatal_lang_error('operation_invalid', 'general');
 
 	// Load the required file.
 	require_once($sourcedir . '/Subs-Package.php');
@@ -1430,11 +1429,29 @@ function ViewOperations()
 		$context['base_path'] = '';
 	}
 
+	// Load up any custom themes we may want to install into...
+	$request = $smcFunc['db_query']('', '
+		SELECT id_theme, variable, value
+		FROM {db_prefix}themes
+		WHERE (id_theme = {int:default_theme} OR id_theme IN ({array_int:known_theme_list}))
+			AND variable IN ({string:name}, {string:theme_dir})',
+		array(
+			'known_theme_list' => explode(',', $modSettings['knownThemes']),
+			'default_theme' => 1,
+			'name' => 'name',
+			'theme_dir' => 'theme_dir',
+		)
+	);
+	$theme_paths = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
+	$smcFunc['db_free_result']($request);
+
 	// Boardmod?
 	if (isset($_REQUEST['boardmod']))
-		$mod_actions = parseBoardMod(@file_get_contents($boarddir . '/Packages/temp/' . $_REQUEST['base_path'] . $_REQUEST['filename']), true, $reverse);
+		$mod_actions = parseBoardMod(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $_REQUEST['filename']), true, $reverse, $theme_paths);
 	else
-		$mod_actions = parseModification(@file_get_contents($boarddir . '/Packages/temp/' . $_REQUEST['base_path'] . $_REQUEST['filename']), true, $reverse);
+		$mod_actions = parseModification(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $_REQUEST['filename']), true, $reverse, $theme_paths);
 
 	// Ok lets get the content of the file.
 	$context['operations'] = array(
@@ -1475,7 +1492,7 @@ function PackagePermissions()
 		loadClassFile('Class-Package.php');
 		$ftp = new ftp_connection(null);
 		list ($username, $detect_path, $found_path) = $ftp->detect_path($boarddir);
-	
+
 		$context['package_ftp'] = array(
 			'server' => isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost',
 			'port' => isset($modSettings['package_port']) ? $modSettings['package_port'] : '21',
@@ -1948,7 +1965,7 @@ function PackagePermissionsAction()
 			if ($validate_custom)
 			{
 				if (preg_match('~^[4567][4567][4567]$~', $context['custom_value']) == false)
-					fatal_error($txt['chmod_value_invalid']);	
+					fatal_error($txt['chmod_value_invalid']);
 			}
 
 			// Nothing to do?

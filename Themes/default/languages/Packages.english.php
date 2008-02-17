@@ -192,6 +192,7 @@ $txt['operation_after'] = 'Add After';
 $txt['operation_before'] = 'Add Before';
 $txt['operation_title'] = 'Operations';
 $txt['operation_ignore'] = 'Ignore Errors';
+$txt['operation_invalid'] = 'The operation that you selected is invalid.';
 
 $txt['package_file_perms_desc'] = 'You can use this section to review the writable status of critical files and folders within your forum directory. Note this only considers key forum folders and files - use an FTP client for additional options.';
 $txt['package_file_perms_name'] = 'File/Folder Name';
