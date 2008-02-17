@@ -222,7 +222,7 @@ $txt['email'] = 'Email';
 $txt['viewing_members'] = 'Viewing Members %1$s to %2$s';
 $txt['of_total_members'] = 'of %1$s total members';
 
-$txt['forgot_your_password'] = 'Forgot your login details?';
+$txt['forgot_your_password'] = 'Forgot your password?';
 
 $txt['date'] = 'Date';
 // Use numeric entities in the below string.

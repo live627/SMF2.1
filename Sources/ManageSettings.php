@@ -836,7 +836,7 @@ function ModifySpamSettings($return_config = false)
 		document.getElementById(\'guests_require_captcha\').disabled = true;';
 
 	$context['post_url'] = $scripturl . '?action=admin;area=securitysettings;save;sa=spam';
-	$context['settings_title'] = $txt['antispam_title'];
+	$context['settings_title'] = $txt['antispam_Settings'];
 
 	prepareDBSettingContext($config_vars);
 }
