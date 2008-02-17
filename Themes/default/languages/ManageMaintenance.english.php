@@ -208,7 +208,7 @@ $txt['scheduled_log_empty'] = 'There are currently no items in the log.';
 $txt['scheduled_log'] = 'Task Log';
 $txt['scheduled_log_time_run'] = 'Time Run';
 $txt['scheduled_log_time_taken'] = 'Time taken';
-$txt['scheduled_log_time_taken_seconds'] = 'seconds';
+$txt['scheduled_log_time_taken_seconds'] = '%1$d seconds';
 $txt['scheduled_log_empty_log'] = 'Empty Log';
 
 $txt['utf8_title'] = 'Convert the database and data to UTF-8';

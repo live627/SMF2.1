@@ -498,10 +498,7 @@ function EditTask()
 // Show the log of all tasks that have taken place.
 function TaskLog()
 {
-	global $scripturl, $context, $txt, $smcFunc;
-
-	// How many per page?
-	$entries_per_page = 20;
+	global $scripturl, $context, $txt, $smcFunc, $sourcedir;
 
 	// Empty the log?
 	if (!empty($_POST['deleteAll']))
@@ -515,44 +512,133 @@ function TaskLog()
 		);
 	}
 
-	// Count the total number of task log entries.
+	// Setup the list.
+	$listOptions = array(
+		'id' => 'task_log',
+		'items_per_page' => 30,
+		'title' => $txt['scheduled_log'],
+		'no_items_label' => $txt['scheduled_log_empty'],
+		'base_href' => $scripturl . '?action=admin;area=maintain;sa=tasklog',
+		'default_sort_col' => 'date',
+		'get_items' => array(
+			'function' => 'list_getTaskLogEntries',
+		),
+		'get_count' => array(
+			'function' => 'list_getNumTaskLogEntries',
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['scheduled_tasks_name'],
+				),
+				'data' => array(
+					'db' => 'name'
+				),
+			),
+			'date' => array(
+				'header' => array(
+					'value' => $txt['scheduled_log_time_run'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						return timeformat($rowData[\'time_run\'], true, \'server\');
+					'),
+				),
+				'sort' => array(
+					'default' => 'lst.id_log DESC',
+					'reverse' => 'lst.id_log',
+				),
+			),
+			'time_taken' => array(
+				'header' => array(
+					'value' => $txt['scheduled_log_time_taken'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => $txt['scheduled_log_time_taken_seconds'],
+						'params' => array(
+							'time_taken' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'lst.time_taken',
+					'reverse' => 'lst.time_taken DESC',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=maintain;sa=tasklog',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '
+					<input type="submit" name="removeAll" value="' . $txt['scheduled_log_empty_log'] . '" />',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+			array(
+				'position' => 'after_title',
+				'value' => '
+					<span class="smalltext">' . $txt['scheduled_tasks_time_offset'] . '</span>',
+				'class' => 'windowbg2',
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'task_log';
+
+	// Make it all look tify.
+	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
+	$context['page_title'] = $txt['scheduled_log'];
+}
+
+function list_getTaskLogEntries($start, $items_per_page, $sort)
+{
+	global $smcFunc, $txt;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT lst.id_log, lst.id_task, lst.time_run, lst.time_taken, st.task
+		FROM {db_prefix}log_scheduled_tasks AS lst
+			INNER JOIN {db_prefix}scheduled_tasks AS st ON (st.id_task = lst.id_task)
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
+	$log_entries = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$log_entries[] = array(
+			'id' => $row['id_log'],
+			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
+			'time_run' => $row['time_run'],
+			'time_taken' => $row['time_taken'],
+		);
+	$smcFunc['db_free_result']($request);
+
+	return $log_entries;
+}
+
+function list_getNumTaskLogEntries()
+{
+	global $smcFunc;
+
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}log_scheduled_tasks',
 		array(
 		)
 	);
-	list ($num_task_log_entries) = $smcFunc['db_fetch_row']($request);
+	list ($num_entries) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=maintain;sa=tasklog', $_REQUEST['start'], $num_task_log_entries, $entries_per_page);
-	$context['start'] = $_REQUEST['start'];
-
-	$request = $smcFunc['db_query']('', '
-		SELECT lst.id_log, lst.id_task, lst.time_run, lst.time_taken, st.task
-		FROM {db_prefix}log_scheduled_tasks AS lst, {db_prefix}scheduled_tasks AS st
-		WHERE st.id_task = lst.id_task
-		ORDER BY id_log DESC
-		LIMIT ' . $_REQUEST['start'] . ', ' . $entries_per_page,
-		array(
-		)
-	);
-	$context['log_entries'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['log_entries'][] = array(
-			'id' => $row['id_log'],
-			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
-			'time_run' => timeformat($row['time_run'], true, 'server'),
-			'time_taken' => $row['time_taken'],
-		);
-	$smcFunc['db_free_result']($request);
-
-	// Just context bits...
-	$context['sub_template'] = 'task_log';
-	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
-	$context['page_title'] = $txt['scheduled_log'];
+	return $num_entries;
 }
-
 
 // Convert both data and database tables to UTF-8 character set.
 function ConvertUtf8()
