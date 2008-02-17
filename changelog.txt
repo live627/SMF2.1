@@ -86,6 +86,9 @@ February 2008
  ! Column name should be casted as raw and not as an integer. (PersonalMessage.php) [Bug 1551]
  ! Cast months as integers to lose the preceding 0. (Stats.php, ManageCalendar.php) [Bug 1550]
  ! When managing ignored boards return 0 if the board is not ignored instead of false since it works better on SQLite. (Profile-Modify.php) [Bug 1557]
+ + Added verification control which now handles everything to do with verification including loading image, testing user input, etc. Rolled this out to all verification areas. (Subs-Editor.php, Post.php, PersonalMessage.php, Search.php, Register.php)
+ * Updated templates for new verification control. (GenericControls, Post, Register, PersonalMessage and Search templates)
+ + Added option to set question and answers for verification challenges. Either independant on image or as well as. (ManageSettings.php, Subs-Editor.php, ManageSettings language files)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

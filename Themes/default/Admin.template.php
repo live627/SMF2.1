@@ -827,7 +827,7 @@ function template_show_settings()
 		if (is_array($config_var) && $config_var['type'] == 'title')
 		{
 			echo '
-						<tr class="titlebg" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>
+						<tr class="', !empty($config_var['class']) ? $config_var['class'] : 'titlebg', '" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>
 							<td colspan="3">
 								', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 								', $config_var['label'], '
@@ -835,6 +835,15 @@ function template_show_settings()
 						</tr>';
 
 			continue;
+		}
+		// Hang about? Are you pulling my leg - a callback?!
+		if (is_array($config_var) && $config_var['type'] == 'callback')
+		{
+			if (function_exists('template_callback_' . $config_var['name']))
+				call_user_func('template_callback_' . $config_var['name']);
+
+			continue;
+				
 		}
 
 		echo '
@@ -1819,6 +1828,111 @@ function template_modify_language_entries()
 		</tr>
 	</table>
 	</form>';
+}
+
+// This little beauty shows questions and answer from the captcha type feature.
+function template_callback_question_answer_list()
+{
+	global $txt, $context;
+
+	echo '
+		<tr class="catbg" style="border: 1px solid black;">
+			<td colspan="2">
+				', $txt['setup_verification_question'], '
+			</td>
+			<td>
+				', $txt['setup_verification_answer'], '
+			</td>
+		</tr>';
+
+	foreach ($context['question_answers'] as $data)
+		echo '
+		<tr class="windowbg2">
+			<td colspan="2">
+				<input type="text" name="question[', $data['id'], ']" value="', $data['question'], '" size="40" style="width: 98%" />
+			</td>
+			<td>
+				<input type="text" name="answer[', $data['id'], ']" value="', $data['answer'], '" size="40" style="width: 98%" />
+			</td>
+		</tr>';
+
+	// Some blank ones.
+	for ($count = 0; $count < 3; $count++)
+		echo '
+		<tr class="windowbg2">
+			<td colspan="2">
+				<input type="text" name="question[]" size="40" style="width: 98%" />
+			</td>
+			<td>
+				<input type="text" name="answer[]" size="40" style="width: 98%" />
+			</td>
+		</tr>';
+
+	echo '
+		<tr class="windowbg2" id="add_more_question_placeholder" style="display: none;"><td colspan="3"></td></tr>
+		<tr class="windowbg2" id="add_more_link_div" style="display: none;">
+			<td colspan="3" align="right" class="smalltext">
+				<a href="#" onclick="addAnotherQuestion(); return false;">&#171; ', $txt['setup_verification_add_more'], ' &#187;</a>
+			</td>
+		</tr>';
+
+	// The javascript needs to go at the end but we'll put it in this template for looks.
+	$context['settings_post_javascript'] .= '
+		// Create a named element dynamically - thanks to: http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
+		function createNamedElement(type, name, customFields)
+		{
+			var element = null;
+
+			if (!customFields)
+				customFields = "";
+
+			// Try the IE way; this fails on standards-compliant browsers
+			try
+			{
+				element = document.createElement("<" + type + \' name="\' + name + \'" \' + customFields + ">");
+			}
+			catch (e)
+			{
+			}
+			if (!element || element.nodeName != type.toUpperCase())
+			{
+				// Non-IE browser; use canonical method to create named element
+				element = document.createElement(type);
+				element.name = name;
+			}
+
+			return element;
+		}
+
+		var placeHolder = document.getElementById(\'add_more_question_placeholder\');
+
+		function addAnotherQuestion()
+		{
+			var newRow = document.createElement("tr");
+			newRow.className = "windowbg2";
+			newRow.style.display = "";
+
+			var newCol = document.createElement("td");
+			newCol.colSpan = 2;
+			newRow.appendChild(newCol);
+
+			var newInput = createNamedElement("input", "question[]");
+			newInput.type = "text";
+			newInput.style.width = "98%";
+			newCol.appendChild(newInput);
+
+			newCol = document.createElement("td");
+			newRow.appendChild(newCol);
+
+			newInput = createNamedElement("input", "answer[]");
+			newInput.type = "text";
+			newInput.style.width = "98%";
+			newCol.appendChild(newInput);
+
+			placeHolder.parentNode.insertBefore(newRow, placeHolder);
+		}
+		document.getElementById(\'add_more_link_div\').style.display = \'\';
+	';
 }
 
 ?>

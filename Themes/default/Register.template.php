@@ -9,7 +9,6 @@ function template_before()
 	// Make sure they've agreed to the terms and conditions.
 	echo '
 <script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
-<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	function verifyAgree()
 	{
@@ -160,26 +159,9 @@ function template_before()
 		echo '
 					<tr valign="top">
 						<td width="40%" valign="top">
-							<b>', $txt['visual_verification_label'], ':</b>
-							<div class="smalltext">', $txt['visual_verification_description'], '</div>
+							<b>', $txt['verification'], ':</b>
 						</td>
-						<td>
-							<div class="smalltext" style="margin: 4px 0 8px 0;">
-								<input type="text" name="visual_verification_code" value="', !empty($context['prev_verification_code']) ? $context['prev_verification_code'] : '', '" size="30" tabindex="', $context['tabindex']++, '" />
-								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a>
-							</div>';
-		if ($context['use_graphic_library'])
-			echo '
-							<img src="', $context['verification_image_href'], '" alt="', $txt['visual_verification_description'], '" id="verification_image" /><br />';
-		else
-			echo '
-							<img src="', $context['verification_image_href'], ';letter=1" alt="', $txt['visual_verification_description'], '" id="verification_image_1" />
-							<img src="', $context['verification_image_href'], ';letter=2" alt="', $txt['visual_verification_description'], '" id="verification_image_2" />
-							<img src="', $context['verification_image_href'], ';letter=3" alt="', $txt['visual_verification_description'], '" id="verification_image_3" />
-							<img src="', $context['verification_image_href'], ';letter=4" alt="', $txt['visual_verification_description'], '" id="verification_image_4" />
-							<img src="', $context['verification_image_href'], ';letter=5" alt="', $txt['visual_verification_description'], '" id="verification_image_5" />';
-		echo '
-						</td>
+						<td>', template_control_verification($context['visual_verification_id'], 'all'), '</td>
 					</tr>';
 	}
 
@@ -422,11 +404,6 @@ function template_before()
 	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
 	// Update the authentication status.
 	updateAuthMethod();';
-
-	// Have we got visual verification on the move?
-	if ($context['visual_verification'])
-		echo '
-	captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
 
 echo '
 // ]]></script>';

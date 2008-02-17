@@ -677,6 +677,8 @@ $txt['ajax_in_progress'] = 'Loading...';
 $txt['mod_reports_waiting'] = 'There are currently %1$d moderator reports open.';
 
 $txt['view_unread_category'] = 'Unread Posts';
+$txt['verification'] = 'Verification';
+$txt['visual_verification_description'] = 'Type the letters shown in the picture';
 $txt['visual_verification_sound'] = 'Listen to the letters';
 $txt['visual_verification_request_new'] = 'Request another image';
 

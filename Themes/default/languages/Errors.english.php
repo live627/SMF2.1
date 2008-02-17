@@ -240,6 +240,7 @@ $txt['error_bad_bcc'] = 'One or more \'bcc\'-recipients could not be found.';
 $txt['error_form_already_submitted'] = 'You already submitted this post!  You might have accidently double clicked, or tried to refresh.';
 $txt['error_poll_few'] = 'You must have at least two choices!';
 $txt['error_wrong_verification_code'] = 'The letters you typed don\'t match the letters that were shown in the picture.';
+$txt['error_wrong_verification_answer'] = 'You did not answer the verification questions correctly.';
 $txt['error_need_verification_code'] = 'Please enter the verification code below to continue to the results.';
 $txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %1$s';
 $txt['error_bad_line'] = 'The line you specified is invalid.';

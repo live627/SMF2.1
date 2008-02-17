@@ -134,15 +134,25 @@ $txt['posts_require_captcha_desc'] = '(0 for no limit, moderators are exempt)';
 $txt['search_enable_captcha'] = 'Require verification on all guest searches';
 $txt['setting_guests_require_captcha'] = 'Guests must pass verification when making a post';
 $txt['setting_guests_require_captcha_desc'] = '(Automatically set if you specify a minimum post count below)';
-$txt['setting_visual_verification_type'] = 'Complexity of visual verification image';
+
+$txt['configure_verification_means'] = 'Configure Verification Methods';
+$txt['setting_qa_verification_number'] = 'Number of verification questions user must answer';
+$txt['setting_qa_verification_number_desc'] = '(0 to disable; questions are set below)';
+$txt['configure_verification_means_desc'] = '<span class="smalltext">Below you can set which anti-spam features you wish to have enabled whenever a user needs to verify they are a human. Note that the user will have to pass <em>all</em> verification so if you enable both a verification image and a question/answer test they need to complete both to proceed.</span>';
+$txt['setting_visual_verification_type'] = 'Visual verification image to display';
 $txt['setting_visual_verification_type_desc'] = 'The more complex the image the harder it is for bots to bypass';
-$txt['setting_image_verification_off'] = 'Disabled';
+$txt['setting_image_verification_off'] = 'None';
 $txt['setting_image_verification_vsimple'] = 'Very Simple - Plain text on image';
 $txt['setting_image_verification_simple'] = 'Simple - Overlapping colored letters, no noise';
 $txt['setting_image_verification_medium'] = 'Medium - Overlapping colored letters, with noise';
 $txt['setting_image_verification_high'] = 'High - Angled letters, considerable noise';
 $txt['setting_image_verification_sample'] = 'Sample';
 $txt['setting_image_verification_nogd'] = '<b>Note:</b> as this server does not have the GD library installed the different complexity settings will have no effect.';
+$txt['setup_verification_questions'] = 'Verification Questions';
+$txt['setup_verification_questions_desc'] = '<span class="smalltext">If you want users to answer verification questions in order to stop spam bots you should setup a number of questions in the table below. You should pick relatively simple questions; answers are not case sensitive. You may use BBC in the questions for formatting, to remove a question simply delete the contents of that line.</span>';
+$txt['setup_verification_question'] = 'Question';
+$txt['setup_verification_answer'] = 'Answer';
+$txt['setup_verification_add_more'] = 'Add another question';
 
 $txt['moderation_settings'] = 'Moderation Settings';
 $txt['setting_warning_enable'] = 'Enable User Warning System';

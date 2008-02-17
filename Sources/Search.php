@@ -65,7 +65,7 @@ $GLOBALS['search_versions'] = array(
 // Ask the user what they want to search for.
 function PlushSearch1()
 {
-	global $txt, $scripturl, $modSettings, $user_info, $context, $smcFunc;
+	global $txt, $scripturl, $modSettings, $user_info, $context, $smcFunc, $sourcedir;
 
 	// Is the load average too high to allow searching just now?
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_search']) && $context['load_average'] >= $modSettings['loadavg_search'])
@@ -88,19 +88,15 @@ function PlushSearch1()
 	// This is hard coded maximum string length.
 	$context['search_string_limit'] = 100;
 
-	$context['visual_verification'] = $user_info['is_guest'] && !empty($modSettings['search_enable_captcha']);
-	if ($context['visual_verification'])
+	$context['require_verification'] = $user_info['is_guest'] && !empty($modSettings['search_enable_captcha']);
+	if ($context['require_verification'])
 	{
-		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
-
-		// Skip I, J, L, O, Q, S and Z.
-		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
-
-		// Generate a new code.
-		$_SESSION['visual_verification_code'] = '';
-		for ($i = 0; $i < 5; $i++)
-			$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'search',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
 	}
 
 	// If you got back from search2 by using the linktree, you get your original search parameters back.
@@ -864,13 +860,25 @@ function PlushSearch2()
 	if ($user_info['is_guest'] && !empty($modSettings['search_enable_captcha']) && empty($_SESSION['ss_vv_passed']) && (empty($_SESSION['last_ss']) || $_SESSION['last_ss'] != $search_params['search']))
 	{
 		// If we come from another search box tone down the error...
-		if (!isset($_REQUEST['visual_verification_code']))
+		if (!isset($_REQUEST['search_vv']))
 			$context['search_errors']['need_verification_code'] = true;
-		elseif (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code'])
-			$context['search_errors']['wrong_verification_code'] = true;
-		// Don't keep asking for it - they've proven themselves worthy.
 		else
-			$_SESSION['ss_vv_passed'] = true;
+		{
+			require_once($sourcedir . '/Subs-Editor.php');
+			$verificationOptions = array(
+				'id' => 'search',
+			);
+			$context['require_verification'] = create_control_verification($verificationOptions, true);
+
+			if (is_array($context['require_verification']))
+			{
+				foreach ($context['require_verification'] as $error)
+					$context['search_errors'][$error] = true;
+			}
+			// Don't keep asking for it - they've proven themselves worthy.
+			else
+				$_SESSION['ss_vv_passed'] = true;
+		}
 	}
 
 	// *** Encode all search params

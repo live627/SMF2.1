@@ -1,18 +1,19 @@
 // This file contains javascript associated with the captcha visual verification stuffs.
 
-function smfCaptcha(imageURL, useLibrary, letterCount)
+function smfCaptcha(imageURL, uniqueID, useLibrary, letterCount)
 {
 	// By default the letter count is five.
 	if (!letterCount)
 		letterCount = 5;
 
+	uniqueID = uniqueID ? '_' + uniqueID : '';
 	autoCreate();
 
 	// Automatically get the captcha event handlers in place and the like.
 	function autoCreate()
 	{
 		// Is there anything to cycle images with - if so attach the refresh image functio.?
-		cycleHandle = document.getElementById('visual_verification_refresh');
+		cycleHandle = document.getElementById('visual_verification' + uniqueID + '_refresh');
 		if (cycleHandle)
 		{
 			createEventListener(cycleHandle);
@@ -20,7 +21,7 @@ function smfCaptcha(imageURL, useLibrary, letterCount)
 		}
 
 		// Maybe a voice is here to spread light?
-		soundHandle = document.getElementById('visual_verification_sound');
+		soundHandle = document.getElementById('visual_verification' + uniqueID + '_sound');
 		if (soundHandle)
 		{
 			createEventListener(soundHandle);
@@ -40,15 +41,15 @@ function smfCaptcha(imageURL, useLibrary, letterCount)
 		for(var i=0; i < 32; i++)
 			new_url = new_url + hexstr.substr(Math.floor(Math.random() * 16), 1);
 
-		if (useLibrary && document.getElementById("verification_image"))
+		if (useLibrary && document.getElementById("verification_image" + uniqueID))
 		{
-			document.getElementById("verification_image").src = new_url;
+			document.getElementById("verification_image" + uniqueID).src = new_url;
 		}
-		else if (document.getElementById("verification_image"))
+		else if (document.getElementById("verification_image" + uniqueID))
 		{
 			for (i = 1; i <= letterCount; i++)
-				if (document.getElementById("verification_image_" + i))
-					document.getElementById("verification_image_" + i).src = new_url + ";letter=" + i;
+				if (document.getElementById("verification_image" + uniqueID + "_" + i))
+					document.getElementById("verification_image" + uniqueID + "_" + i).src = new_url + ";letter=" + i;
 		}
 
 		return false;

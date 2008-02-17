@@ -636,7 +636,10 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		' . $queryTitle . ' INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
 		VALUES
 			' . implode(',
-			', $insertRows), 'security_override',
+			', $insertRows),
+		array(
+			'security_override' => true,
+		),
 		$connection
 	);
 }

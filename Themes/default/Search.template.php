@@ -5,10 +5,6 @@ function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
-	if ($context['visual_verification'])
-		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
-
 	echo '
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
 		<table cellpadding="3" cellspacing="0" border="0">
@@ -48,7 +44,7 @@ function template_main()
 								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
 							</td>
 							<td>
-								', $context['visual_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />', '
+								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />', '
 							</td>
 						</tr>';
 		if (empty($modSettings['search_simple_fulltext']))
@@ -59,27 +55,12 @@ function template_main()
 						</tr>';
 		echo '
 					</table>';
-		if ($context['visual_verification'])
+		if ($context['require_verification'])
 		{
 			echo '
 					<div style="padding: 0.1em;">
-						<b>', $txt['search_visual_verification_label'], ':</b><br />';
-			if ($context['use_graphic_library'])
-				echo '
-						<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['search_visual_verification_desc'], '" />';
-			else
-				echo '
-						<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['search_visual_verification_desc'], '" />
-						<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['search_visual_verification_desc'], '" />
-						<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['search_visual_verification_desc'], '" />
-						<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['search_visual_verification_desc'], '" />
-						<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['search_visual_verification_desc'], '" />';
-			echo '
-						<div class="smalltext">
-							<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
-						</div>
-						<input type="text" name="visual_verification_code" size="30" />
-						<div class="smalltext">', $txt['search_visual_verification_desc'], '</div><br />
+						<b>', $txt['search_visual_verification_label'], ':</b>
+						<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
 						<div style="text-align: right;">
 							<input type="submit" name="submit" value="' . $txt['search'] . '" />
 						</div>
@@ -213,30 +194,12 @@ function template_main()
 		}
 
 		// Require an image to be typed to save spamming?
-		if ($context['visual_verification'])
+		if ($context['require_verification'])
 		{
 			echo '
 					<div style="padding: 1em;">
-						<b>', $txt['search_visual_verification_label'], ':</b>
-							<div style="float: left;">';
-			if ($context['use_graphic_library'])
-				echo '
-								<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['search_visual_verification_desc'], '" />';
-			else
-				echo '
-								<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['search_visual_verification_desc'], '" />
-								<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['search_visual_verification_desc'], '" />
-								<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['search_visual_verification_desc'], '" />
-								<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['search_visual_verification_desc'], '" />
-								<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['search_visual_verification_desc'], '" />';
-			echo '
-							</div>
-							<div class="smalltext">
-								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a><br />
-								<a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
-							</div><br />
-						<input type="text" name="visual_verification_code" size="30" />
-						<div class="smalltext">', $txt['search_visual_verification_desc'], '</div>
+						<b>', $txt['verification'], ':</b>
+						', template_control_verification($context['visual_verification_id'], 'all'), '
 					</div>';
 		}
 		else
@@ -272,10 +235,6 @@ function template_main()
 			document.getElementById("searchBoardsExpand").style.display = current ? "none" : "";
 			document.getElementById("expandBoardsIcon").src = smf_images_url + (current ? "/expand.gif" : "/collapse.gif");
 		}';
-
-	if ($context['visual_verification'])
-		echo '
-		captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
 
 	echo '
 	// ]]></script>';

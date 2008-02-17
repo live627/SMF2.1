@@ -157,24 +157,18 @@ function Register($reg_errors = array())
 	}
 
 	// Generate a visual verification code to make sure the user is no bot.
-	$context['visual_verification'] = !empty($modSettings['reg_verification']) && !empty($modSettings['visual_verification_type']);
-	if ($context['visual_verification'])
+	if (!empty($modSettings['reg_verification']))
 	{
-		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
-
-		// Only generate a new code if one hasn't been set yet
-		if (!isset($_SESSION['visual_verification_code']))
-		{
-			// Skip I, J, L, O, Q, S and Z.
-			$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
-
-			// Generate a new code.
-			$_SESSION['visual_verification_code'] = '';
-			for ($i = 0; $i < 5; $i++)
-				$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
-		}
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'register',
+		);
+		$context['visual_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
 	}
+	// Otherwise we have nothing to show.
+	else
+		$context['visual_verification'] = false;
 
 	// Are they coming from an OpenID login attempt?
 	if (!empty($_SESSION['openid']['verified']) && !empty($_SESSION['openid']['openid_uri']))
@@ -194,7 +188,6 @@ function Register($reg_errors = array())
 	}
 
 	$context += array(
-		'prev_verification_code' => isset($_POST['visual_verification_code']) ? $smcFunc['htmlspecialchars']($_POST['visual_verification_code']) : '',
 		'skip_coppa' => !empty($_POST['skip_coppa']) ? true : false,
 		'regagree' => !empty($_POST['regagree']) && !empty($_SESSION['openid']['verified']) && !empty($_SESSION['openid']['openid_uri']) ? true : false,
 	);
@@ -246,23 +239,21 @@ function Register2($verifiedOpenID = false)
 		}
 
 		// Check whether the visual verification code was entered correctly.
-		if (!empty($modSettings['reg_verification']) && !empty($modSettings['visual_verification_type']) && (empty($_REQUEST['visual_verification_code']) || empty($_SESSION['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
+		if (!empty($modSettings['reg_verification']))
 		{
-			// Don't allow lots of errors!
-			$_SESSION['visual_errors'] = isset($_SESSION['visual_errors']) ? $_SESSION['visual_errors'] + 1 : 1;
-			if ($_SESSION['visual_errors'] > 3 && isset($_SESSION['visual_verification_code']))
-				unset($_SESSION['visual_verification_code']);
-	
-			loadLanguage('Errors');
-			if (!empty($_REQUEST['visual_verification_code']) && in_array(md5(strtolower($_REQUEST['visual_verification_code'])), array('7921903964212cc383bf910a8bf2d7f4', '9726255eec083aa56dc0449a21b33190')))
+			require_once($sourcedir . '/Subs-Editor.php');
+			$verificationOptions = array(
+				'id' => 'register',
+			);
+			$context['visual_verification'] = create_control_verification($verificationOptions, true);
+
+			if (is_array($context['visual_verification']))
 			{
-				$reg_errors[] = $txt['error_wrong_verification_code'] . '<br />And we don\'t take bribes';
+				loadLanguage('Errors');
+				foreach ($context['visual_verification'] as $error)
+					$reg_errors[] = $txt['error_' . $error];
 			}
-			else
-				$reg_errors[] = $txt['error_wrong_verification_code'];
 		}
-		elseif (isset($_SESSION['visual_errors']))
-			unset($_SESSION['visual_errors']);
 	}
 
 	foreach ($_POST as $key => $value)
@@ -479,10 +470,6 @@ function Register2($verifiedOpenID = false)
 
 	// Do our spam protection now.
 	spamProtection('register');
-
-	// Remove the old code.
-	if (!empty($modSettings['reg_verification']) && !empty($modSettings['visual_verification_type']) && isset($_SESSION['visual_verification_code']))
-		unset($_SESSION['visual_verification_code']);
 
 	// We'll do custom fields after as then we get to use the helper function!
 	require_once($sourcedir . '/Profile.php');
@@ -747,8 +734,11 @@ function VerificationCode()
 {
 	global $sourcedir, $modSettings, $context, $scripturl;
 
+	$verification_id = isset($_GET['vid']) ? $_GET['vid'] : '';
+	$code = $verification_id && isset($_SESSION[$verification_id . '_vv']) ? $_SESSION[$verification_id . '_vv']['code'] : (isset($_SESSION['visual_verification_code']) ? $_SESSION['visual_verification_code'] : '');
+
 	// Somehow no code was generated or the session was lost.
-	if (empty($_SESSION['visual_verification_code']))
+	if (empty($code))
 		header('HTTP/1.1 408 - Request Timeout');
 
 	// Show a window that will play the verification code.
@@ -757,7 +747,7 @@ function VerificationCode()
 		loadLanguage('Login');
 		loadTemplate('Register');
 
-		$context['verification_sound_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand()) . ';format=.wav';
+		$context['verification_sound_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand()) . ($verification_id ? ';vid=' . $verification_id : '') . ';format=.wav';
 		$context['sub_template'] = 'verification_sound';
 		$context['template_layers'] = array();
 
@@ -769,14 +759,14 @@ function VerificationCode()
 	{
 		require_once($sourcedir . '/Subs-Graphics.php');
 
-		if (in_array('gd', get_loaded_extensions()) && !showCodeImage($_SESSION['visual_verification_code']))
+		if (in_array('gd', get_loaded_extensions()) && !showCodeImage($code))
 			header('HTTP/1.1 400 Bad Request');
 
 		// Otherwise just show a pre-defined letter.
 		elseif (isset($_REQUEST['letter']))
 		{
 			$_REQUEST['letter'] = (int) $_REQUEST['letter'];
-			if ($_REQUEST['letter'] > 0 && $_REQUEST['letter'] <= strlen($_SESSION['visual_verification_code']) && !showLetterImage(strtolower($_SESSION['visual_verification_code']{$_REQUEST['letter'] - 1})))
+			if ($_REQUEST['letter'] > 0 && $_REQUEST['letter'] <= strlen($code) && !showLetterImage(strtolower($code{$_REQUEST['letter'] - 1})))
 				header('HTTP/1.1 400 Bad Request');
 		}
 		// You must be up to no good.
@@ -788,7 +778,7 @@ function VerificationCode()
 	{
 		require_once($sourcedir . '/Subs-Sound.php');
 
-		if (!createWaveFile($_SESSION['visual_verification_code']))
+		if (!createWaveFile($code))
 			header('HTTP/1.1 400 Bad Request');
 	}
 

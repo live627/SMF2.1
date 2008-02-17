@@ -1685,19 +1685,14 @@ function MessagePost()
 	$suggestOptions['id'] = 'bcc';
 	create_control_autosuggest($suggestOptions);
 
-	$context['visual_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
-	if ($context['visual_verification'])
+	$context['require_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
+	if ($context['require_verification'])
 	{
-		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
-
-		// Skip I, J, L, O and Q.
-		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
-
-		// Generate a new code.
-		$_SESSION['visual_verification_code'] = '';
-		for ($i = 0; $i < 5; $i++)
-			$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
+		$verificationOptions = array(
+			'id' => 'pm',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
 	}
 
 	// Register this form and get a sequence number in $context.
@@ -1820,14 +1815,6 @@ function messagePostError($error_types, $to, $bcc)
 		}
 	}
 
-	// Check whether we need to show the code again.
-	$context['visual_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
-	if ($context['visual_verification'])
-	{
-		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
-	}
-
 	// We need to load the editor once more.
 	require_once($sourcedir . '/Subs-Editor.php');
 
@@ -1844,6 +1831,18 @@ function messagePostError($error_types, $to, $bcc)
 
 	// ... and store the ID again...
 	$context['post_box_name'] = $editorOptions['id'];
+
+	// Check whether we need to show the code again.
+	$context['require_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
+	if ($context['require_verification'])
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'pm',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
+	}
 
 	// Get the sugget box done too.
 	$suggestOptions = array(
@@ -2057,8 +2056,19 @@ function MessagePost2()
 		$post_errors[] = 'no_to';
 
 	// Wrong verification code?
-	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'] && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
-		$post_errors[] = 'wrong_verification_code';
+	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'pm',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions, true);
+
+		if (is_array($context['require_verification']))
+		{
+			$post_errors = array_merge($post_errors, $context['require_verification']);
+		}
+	}
 
 	// If they did, give a chance to make ammends.
 	if (!empty($post_errors) && empty($is_recipient_change))

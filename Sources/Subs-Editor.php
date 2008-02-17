@@ -47,6 +47,9 @@ if (!defined('SMF'))
 	void create_control_autosuggest(&array suggestOptions)
 		// !!
 
+	void create_control_verification(&array suggestOptions)
+		// !!
+
 	void fetchTagAttributes()
 		// !!
 
@@ -1280,6 +1283,223 @@ function create_control_autosuggest(&$suggestOptions)
 		'button' => !empty($suggestOptions['button']) ? $suggestOptions['button'] : false,
 		'callbacks' => !empty($suggestOptions['callbacks']) ? $suggestOptions['callbacks'] : array(),
 	);
+}
+
+// Create a anti-bot verification control?
+function create_control_verification(&$verificationOptions, $do_test = false)
+{
+	global $txt, $modSettings, $options, $smcFunc;
+	global $context, $settings, $user_info, $sourcedir, $scripturl;
+
+	// First verification means we need to set up some bits...
+	if (empty($context['controls']['verification']))
+	{
+		// The template
+		loadTemplate('GenericControls');
+
+		// Some javascript ma'am?
+		if (!empty($verificationOptions['override_visual']) || (!empty($modSettings['visual_verification_type']) && !isset($verificationOptions['override_visual'])))
+			$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/captcha.js"></script>';
+
+		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
+
+		// Skip I, J, L, O, Q, S and Z.
+		$context['standard_captcha_range'] = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
+	}
+
+	// Always have an ID.
+	assert(isset($verificationOptions['id']));
+	$isNew = !isset($context['controls']['verification'][$verificationOptions['id']]);
+
+	// Log this into our collection.
+	if ($isNew)
+		$context['controls']['verification'][$verificationOptions['id']] = array(
+			'id' => $verificationOptions['id'],
+			'show_visual' => !empty($verificationOptions['override_visual']) || (!empty($modSettings['visual_verification_type']) && !isset($verificationOptions['override_visual'])),
+			'number_questions' => isset($verificationOptions['override_qs']) ? $verificationOptions['override_qs'] : (!empty($modSettings['qa_verification_number']) ? $modSettings['qa_verification_number'] : 0),
+			'max_errors' => isset($verificationOptions['max_errors']) ? $verificationOptions['max_errors'] : 3,
+			'image_href' => $scripturl . '?action=verificationcode;vid=' . $verificationOptions['id'] . ';rand=' . md5(rand()),
+			'text_value' => '',
+			'questions' => array(),
+		);
+	$thisVerification = &$context['controls']['verification'][$verificationOptions['id']];
+
+	// Add javascript for the object.
+	$context['insert_after_template'] .= '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		verification' . $verificationOptions['id'] . 'Handle = new smfCaptcha("' . $thisVerification['image_href'] . '", "' . $verificationOptions['id'] . '", ' . ($context['use_graphic_library'] ? 1 : 0) . ');
+		// ]]></script>';
+
+	// Is there actually going to be anything?
+	if (empty($thisVerification['show_visual']) && empty($thisVerification['number_questions']))
+		return false;
+	elseif (!$isNew && !$do_test)
+		return true;
+
+	// If we want questions do we have a cache of all the IDs?
+	if (!empty($thisVerification['number_questions']) && empty($modSettings['question_id_cache']))
+	{
+		if (($modSettings['question_id_cache'] = cache_get_data('verificationQuestionIds', 300)) == null)
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT id_comment
+				FROM {db_prefix}log_comments
+				WHERE comment_type = {string:ver_test}',
+				array(
+					'ver_test' => 'ver_test',
+				)
+			);
+			$modSettings['question_id_cache'] = array();
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$modSettings['question_id_cache'][] = $row['id_comment'];
+			$smcFunc['db_free_result']($request);
+
+			if (!empty($modSettings['cache_enable']))
+				cache_put_data('verificationQuestionIds', $modSettings['question_id_cache'], 300);
+		}
+	}
+
+	if (!isset($_SESSION[$verificationOptions['id'] . '_vv']))
+		$_SESSION[$verificationOptions['id'] . '_vv'] = array();
+
+	// Do we need to refresh the verification?
+	if (!$do_test && (!empty($_SESSION[$verificationOptions['id'] . '_vv']['did_pass']) || empty($_SESSION[$verificationOptions['id'] . '_vv']['count']) || $_SESSION[$verificationOptions['id'] . '_vv']['count'] > 3) && empty($verificationOptions['dont_refresh']))
+		$force_refresh = true;
+	else
+		$force_refresh = false;
+
+	// This can also force a fresh, although unlikely.
+	if (($thisVerification['show_visual'] && empty($_SESSION[$verificationOptions['id'] . '_vv']['code'])) || ($thisVerification['number_questions'] && empty($_SESSION[$verificationOptions['id'] . '_vv']['q'])))
+		$force_refresh = true;
+
+	$verification_errors = array();
+
+	// Start with any testing.
+	if ($do_test)
+	{
+		// This cannot happen!
+		if (!isset($_SESSION[$verificationOptions['id'] . '_vv']['count']))
+			fatal_lang_error('no_access');
+		// ... nor this!
+		if ($thisVerification['number_questions'] && (!isset($_SESSION[$verificationOptions['id'] . '_vv']['q']) || !isset($_REQUEST[$verificationOptions['id'] . '_vv']['q'])))
+			fatal_lang_error('no_access');
+
+		if ($thisVerification['show_visual'] && (empty($_REQUEST[$verificationOptions['id'] . '_vv']['code']) || empty($_SESSION[$verificationOptions['id'] . '_vv']['code']) || strtoupper($_REQUEST[$verificationOptions['id'] . '_vv']['code']) !== $_SESSION[$verificationOptions['id'] . '_vv']['code']))
+			$verification_errors[] = 'wrong_verification_code';
+		if ($thisVerification['number_questions'])
+		{
+			// Get the answers and see if they are all right!
+			$request = $smcFunc['db_query']('', '
+				SELECT id_comment, recipient_name AS answer
+				FROM {db_prefix}log_comments
+				WHERE comment_type = {string:ver_test}
+					AND id_comment IN ({array_int:comment_ids})',
+				array(
+					'ver_test' => 'ver_test',
+					'comment_ids' => $_SESSION[$verificationOptions['id'] . '_vv']['q'],
+				)
+			);
+			$incorrectQuestions = array();
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				if (empty($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']]) || trim($smcFunc['htmlspecialchars']($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']])) != $row['answer'])
+					$incorrectQuestions[] = $row['id_comment'];
+			}
+			$smcFunc['db_free_result']($request);
+
+			if (!empty($incorrectQuestions))
+				$verification_errors[] = 'wrong_verification_answer';
+		}
+	}
+
+	// Any errors means we refresh potentially.
+	if (!empty($verification_errors))
+	{
+		if (empty($_SESSION[$verificationOptions['id'] . '_vv']['errors']))
+			$_SESSION[$verificationOptions['id'] . '_vv']['errors'] = 0;
+		// Too many errors?
+		elseif ($_SESSION[$verificationOptions['id'] . '_vv']['errors'] > $thisVerification['max_errors'])
+			$force_refresh = true;
+
+		// Keep a track of these.
+		$_SESSION[$verificationOptions['id'] . '_vv']['errors']++;
+	}
+
+	// Are we refreshing then?
+	if ($force_refresh)
+	{
+		// Assume nothing went before.
+		$_SESSION[$verificationOptions['id'] . '_vv']['count'] = 0;
+		$_SESSION[$verificationOptions['id'] . '_vv']['errors'] = 0;
+		$_SESSION[$verificationOptions['id'] . '_vv']['did_pass'] = false;
+
+		// Generating a new image.
+		if ($thisVerification['show_visual'])
+		{
+			// Are we overriding the range?
+			$character_range = !empty($verificationOptions['override_range']) ? $verificationOptions['override_range'] : $context['standard_captcha_range'];
+
+			$_SESSION[$verificationOptions['id'] . '_vv']['code'] = '';
+			for ($i = 0; $i < 5; $i++)
+				$_SESSION[$verificationOptions['id'] . '_vv']['code'] .= $character_range[array_rand($character_range)];
+		}
+
+		// Getting some new questions?
+		if ($thisVerification['number_questions'])
+		{
+			// Pick some random IDs
+			$questionIDs = array();
+			foreach (array_rand($modSettings['question_id_cache'], $thisVerification['number_questions']) as $index)
+				$questionIDs[] = $modSettings['question_id_cache'][$index];
+		}
+	}
+	else
+	{
+		// Same questions as before.
+		$questionIDs = !empty($_SESSION[$verificationOptions['id'] . '_vv']['q']) ? $_SESSION[$verificationOptions['id'] . '_vv']['q'] : array();
+		$thisVerification['text_value'] = !empty($_REQUEST[$verificationOptions['id'] . '_vv']['code']) ? $smcFunc['htmlspecialchars']($_REQUEST[$verificationOptions['id'] . '_vv']['code']) : '';
+	}
+
+	// Have we got some questions to load?
+	if (!empty($questionIDs))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_comment, body AS question
+			FROM {db_prefix}log_comments
+			WHERE comment_type = {string:ver_test}
+				AND id_comment IN ({array_int:comment_ids})',
+			array(
+				'ver_test' => 'ver_test',
+				'comment_ids' => $questionIDs,
+			)
+		);
+		$_SESSION[$verificationOptions['id'] . '_vv']['q'] = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$thisVerification['questions'][] = array(
+				'id' => $row['id_comment'],
+				'q' => parse_bbc($row['question']),
+				'is_error' => !empty($incorrectQuestions) && in_array($row['id_comment'], $incorrectQuestions),
+				// Remember a previous submission?
+				'a' => isset($_REQUEST[$verificationOptions['id'] . '_vv'], $_REQUEST[$verificationOptions['id'] . '_vv']['q'], $_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']]) ? $smcFunc['htmlspecialchars']($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']]) : '',
+			);
+			$_SESSION[$verificationOptions['id'] . '_vv']['q'][] = $row['id_comment'];
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
+	$_SESSION[$verificationOptions['id'] . '_vv']['count'] = empty($_SESSION[$verificationOptions['id'] . '_vv']['count']) ? 1 : $_SESSION[$verificationOptions['id'] . '_vv']['count'] + 1;
+
+	// Return errors if we have them.
+	if (!empty($verification_errors))
+		return $verification_errors;
+	// If we had a test that one, make a note.
+	elseif ($do_test)
+		$_SESSION[$verificationOptions['id'] . '_vv']['did_pass'] = true;
+
+	// Say that everything went well chaps.
+	return true;
 }
 
 // This keeps track of all registered handling functions for auto suggest functionality and passes execution to them.

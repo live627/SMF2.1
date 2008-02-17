@@ -666,7 +666,7 @@ function ModifyModerationSettings($return_config = false)
 // Let's try keep the spam to a minimum ah Thantos?
 function ModifySpamSettings($return_config = false)
 {
-	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings, $smcFunc;
 
 	// Generate a sample registration image.
 	$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
@@ -683,13 +683,39 @@ function ModifySpamSettings($return_config = false)
 				'pm1' => array('int', 'max_pm_recipients'),
 				'pm2' => array('int', 'pm_posts_verification'),
 				'pm3' => array('int', 'pm_posts_per_hour'),
-			'',
 			// Visual verification.
+			array('title', 'configure_verification_means'),
+			array('title', 'configure_verification_means_desc', 'class' => 'windowbg'),
 				'vv' => array('select', 'visual_verification_type', array($txt['setting_image_verification_off'], $txt['setting_image_verification_vsimple'], $txt['setting_image_verification_simple'], $txt['setting_image_verification_medium'], $txt['setting_image_verification_high']), 'subtext'=> $txt['setting_visual_verification_type_desc'], 'onchange' => $context['use_graphic_library'] ? 'refreshImages();' : ''),		
+				array('int', 'qa_verification_number', 'subtext' => $txt['setting_qa_verification_number_desc']),
+			// Clever Thomas, who is looking sheepy now? Not I, the mighty sword swinger did say.
+			array('title', 'setup_verification_questions'),
+			array('title', 'setup_verification_questions_desc', 'class' => 'windowbg'),
+				array('callback', 'question_answer_list'),
 	);
 
 	if ($return_config)
 		return $config_vars;
+
+	// Load any question and answers!
+	$context['question_answers'] = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT id_comment, body AS question, recipient_name AS answer
+		FROM {db_prefix}log_comments
+		WHERE comment_type = {string:ver_test}',
+		array(
+			'ver_test' => 'ver_test',
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['question_answers'][$row['id_comment']] = array(
+			'id' => $row['id_comment'],
+			'question' => $row['question'],
+			'answer' => $row['answer'],
+		);
+	}
+	$smcFunc['db_free_result']($request);
 
 	// Saving?
 	if (isset($_GET['save']))
@@ -712,6 +738,66 @@ function ModifySpamSettings($return_config = false)
 		$save_vars[] = array('text', 'pm_spam_settings');
 
 		saveDBSettings($save_vars);
+
+		// Handle verification questions.
+		$questionInserts = array();
+		foreach ($_POST['question'] as $id => $question)
+		{
+			$question = trim($smcFunc['htmlspecialchars']($question));
+			$answer = trim(strtolower($smcFunc['htmlspecialchars']($_POST['answer'][$id])));
+
+			// Already existed?
+			if (isset($context['question_answers'][$id]))
+			{
+				// Changed?
+				if ($context['question_answers'][$id]['question'] != $question || $context['question_answers'][$id]['answer'] != $answer)
+				{
+					if ($question == '' || $answer == '')
+						$smcFunc['db_query']('', '
+							DELETE FROM {db_prefix}log_comments
+							WHERE comment_type = {string:ver_test}
+								AND id_comment = {int:id}',
+							array(
+								'id' => $id,
+								'ver_test' => 'ver_test',
+							)
+						);
+					else
+					$request = $smcFunc['db_query']('', '
+						UPDATE {db_prefix}log_comments
+						SET body = {string:question}, recipient_name = {string:answer}
+						WHERE comment_type = {string:ver_test}
+							AND id_comment = {int:id}',
+						array(
+							'id' => $id,
+							'ver_test' => 'ver_test',
+							'question' => $question,
+							'answer' => $answer,
+						)
+					);
+				}
+			}
+			// It's so shiney and new!
+			elseif ($question != '' && $answer != '')
+			{
+				$questionInserts[] = array(
+					'comment_type' => 'ver_test',
+					'body' => $question,
+					'recipient_name' => $answer,
+				);
+			}
+		}
+
+		// Any questions to insert?
+		if (!empty($questionInserts))
+			$smcFunc['db_insert']('',
+				'{db_prefix}log_comments',
+				array('comment_type' => 'string', 'body' => 'string-65535',  'recipient_name' => 'string-80'),
+				$questionInserts,
+				array('id_comment')
+			);
+
+		cache_put_data('verificationQuestionIds', null, 300);
 
 		redirectexit('action=admin;area=securitysettings;sa=spam');
 	}

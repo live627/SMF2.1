@@ -862,10 +862,6 @@ function template_send()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	if ($context['visual_verification'])
-		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
-
 	// This function stops people appearing on both bcc and to.
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -1005,30 +1001,15 @@ function template_send()
 							</tr>';
 
 	// Require an image to be typed to save spamming?
-	if ($context['visual_verification'])
+	if ($context['require_verification'])
 	{
 		echo '
 							<tr>
 								<td align="right" valign="top">
 									<b>', $txt['pm_visual_verification_label'], ':</b>
 								</td>
-								<td>';
-		if ($context['use_graphic_library'])
-			echo '
-									<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['pm_visual_verification_desc'], '" /><br />';
-		else
-			echo '
-									<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['pm_visual_verification_desc'], '" /><br />';
-		echo '
-									<span class="smalltext">
-										<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
-									</span>
-									<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
-									<div class="smalltext">', $txt['pm_visual_verification_desc'], '</div>
+								<td>
+									', template_control_verification($context['visual_verification_id'], 'all'), '
 								</td>
 							</tr>';
 	}
@@ -1129,10 +1110,6 @@ function template_send()
 					if (document.forms.postmodify.elements[textFields[i]])
 						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
 			}';
-
-	if ($context['visual_verification'])
-		echo '
-		captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
 
 	echo '
 		// ]]></script>';
