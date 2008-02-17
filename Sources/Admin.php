@@ -58,7 +58,7 @@ if (!defined('SMF'))
 	void AdminSearch()
 		// !!
 
-	void AdminSearchInteral()
+	void AdminSearchInternal()
 		// !!
 
 	void AdminSearchMember()
@@ -764,14 +764,14 @@ function AdminSearchInternal()
 	// Load a lot of language files.
 	$language_files = array(
 		'Help', 'ManageMail', 'ManageSettings', 'ManageCalendar', 'ManageBoards', 'ManagePaid', 'ManagePermissions', 'Search',
-		'ManageSmileys',
+		'Login', 'ManageSmileys',
 	);
 	loadLanguage(implode('+', $language_files));
 
 	// All the files we need to include.
 	$include_files = array(
 		'ManageSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePaid', 'ManagePermissions',
-		'ManagePosts', 'ManageSearch', 'ManageSearchEngines', 'ManageServer', 'ManageSmileys',
+		'ManagePosts', 'ManageRegistration', 'ManageSearch', 'ManageSearchEngines', 'ManageServer', 'ManageSmileys',
 	);
 	foreach ($include_files as $file)
 		require_once($sourcedir . '/' . $file . '.php');
@@ -833,6 +833,7 @@ function AdminSearchInternal()
 		array('EditSmileySettings', 'area=smileys;sa=settings'),
 		array('ModifyOtherSettings', 'area=serversettings;sa=other'),
 		array('ModifyCacheSettings', 'area=serversettings;sa=cache'),
+		array('ModifyRegistrationSettings', 'area=regcenter;sa=settings'),
 		array('ManageSearchEngineSettings', 'area=sengines;sa=settings'),
 		array('ModifySubscriptionSettings', 'area=paidsubscribe;sa=settings'),
 	);

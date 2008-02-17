@@ -72,26 +72,25 @@ $txt['approval_after_registration'] = 'Thank you for registering. The admin must
 
 $txt['admin_settings_desc'] = 'Here you can change a variety of settings related to registration of new members.';
 
-$txt['admin_setting_enableOpenID'] = 'Allow users to register using OpenID';
-$txt['admin_setting_enableOpenID_warning'] = 'Note: This feature is not yet functionally complete';
+$txt['setting_enableOpenID'] = 'Allow users to register using OpenID';
 
-$txt['admin_setting_registration_method'] = 'Method of registration employed for new members';
-$txt['admin_setting_registration_disabled'] = 'Registration Disabled';
-$txt['admin_setting_registration_standard'] = 'Immediate Registration';
-$txt['admin_setting_registration_activate'] = 'Member Activation';
-$txt['admin_setting_registration_approval'] = 'Member Approval';
-$txt['admin_setting_notify_new_registration'] = 'Notify administrators when a new member joins';
-$txt['admin_setting_send_welcomeEmail'] = 'Send welcome email to new members';
+$txt['setting_registration_method'] = 'Method of registration employed for new members';
+$txt['setting_registration_disabled'] = 'Registration Disabled';
+$txt['setting_registration_standard'] = 'Immediate Registration';
+$txt['setting_registration_activate'] = 'Member Activation';
+$txt['setting_registration_approval'] = 'Member Approval';
+$txt['setting_notify_new_registration'] = 'Notify administrators when a new member joins';
+$txt['setting_send_welcomeEmail'] = 'Send welcome email to new members';
 
-$txt['admin_setting_coppaAge'] = 'Age below which to apply registration restrictions';
-$txt['admin_setting_coppaAge_desc'] = '(Set to 0 to disable)';
-$txt['admin_setting_coppaType'] = 'Action to take when a user below minimum age registers';
-$txt['admin_setting_coppaType_reject'] = 'Reject their registration';
-$txt['admin_setting_coppaType_approval'] = 'Require parent/guardian approval';
-$txt['admin_setting_coppaPost'] = 'Postal address to which approval forms should be sent';
-$txt['admin_setting_coppaPost_desc'] = 'Only applies if age restriction is in place';
-$txt['admin_setting_coppaFax'] = 'Fax number to which approval forms should be faxed';
-$txt['admin_setting_coppaPhone'] = 'Contact number for parents to contact with age restriction queries';
+$txt['setting_coppaAge'] = 'Age below which to apply registration restrictions';
+$txt['setting_coppaAge_desc'] = '(Set to 0 to disable)';
+$txt['setting_coppaType'] = 'Action to take when a user below minimum age registers';
+$txt['setting_coppaType_reject'] = 'Reject their registration';
+$txt['setting_coppaType_approval'] = 'Require parent/guardian approval';
+$txt['setting_coppaPost'] = 'Postal address to which approval forms should be sent';
+$txt['setting_coppaPost_desc'] = 'Only applies if age restriction is in place';
+$txt['setting_coppaFax'] = 'Fax number to which approval forms should be faxed';
+$txt['setting_coppaPhone'] = 'Contact number for parents to contact with age restriction queries';
 
 $txt['admin_register'] = 'Registration of new member';
 $txt['admin_register_desc'] = 'From here you can register new members into the forum, and if desired, email them their details.';

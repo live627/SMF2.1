@@ -596,6 +596,8 @@ November 2007
  * The help template should output the pre bbc tag example as shown in the example. (Help template)
  ! Don't cache language files if they are missing. (ManageMaintenance.php)
  ! Show updates to language files right away. (ManageServer.php) [Bug 1574]
+ ! Registration settings now uses the generic settings template. (ManageRegistration.php, Admin.php, Registration template)
+ & Changed some language strings to fit with the right way of working. (FixLanguage.php, Login language file)
 
 
 October 2007

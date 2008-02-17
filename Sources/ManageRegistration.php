@@ -57,11 +57,10 @@ if (!defined('SMF'))
 		- requires the admin_forum permission.
 		- uses the reserved_words sub template of the Register template.
 
-	void AdminSettings()
+	void ModifyRegistrationSettings()
 		- set general registration settings and Coppa compliance settings.
 		- accessed by ?action=admin;area=regcenter;sa=settings.
 		- requires the admin_forum permission.
-		- uses the admin_settings sub template of the Register template.
 */
 
 // Main handling function for the admin approval center
@@ -77,7 +76,7 @@ function RegCenter()
 		'register' => array('AdminRegister', 'moderate_forum'),
 		'agreement' => array('EditAgreement', 'admin_forum'),
 		'reservednames' => array('SetReserve', 'admin_forum'),
-		'settings' => array('AdminSettings', 'admin_forum'),
+		'settings' => array('ModifyRegistrationSettings', 'admin_forum'),
 	);
 
 	// Work out which to call...
@@ -275,16 +274,34 @@ function SetReserve()
 }
 
 // This function handles registration settings, and provides a few pretty stats too while it's at it.
-function AdminSettings()
+function ModifyRegistrationSettings($return_config = false)
 {
-	global $txt, $context, $scripturl, $modSettings;
+	global $txt, $context, $scripturl, $modSettings, $sourcedir;
+
+	// This is really quite wanting.
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Setup the template
-	$context['sub_template'] = 'admin_settings';
+	$context['sub_template'] = 'show_settings';
 	$context['page_title'] = $txt['registration_center'];
 
-	// Saving?
-	if (isset($_POST['save']))
+	$config_vars = array(
+			array('select', 'registration_method', array($txt['setting_registration_standard'], $txt['setting_registration_activate'], $txt['setting_registration_approval'], $txt['setting_registration_disabled'])),
+			array('check', 'enableOpenID'),
+			array('check', 'notify_new_registration'),
+			array('check', 'send_welcomeEmail'),
+		'',
+			array('int', 'coppaAge', 'subtext' => $txt['setting_coppaAge_desc'], 'onchange' => 'checkCoppa();'),
+			array('select', 'coppaType', array($txt['setting_coppaType_reject'], $txt['setting_coppaType_approval']), 'onchange' => 'checkCoppa();'),
+			array('large_text', 'coppaPost', 'subtext' => $txt['setting_coppaPost_desc']),
+			array('text', 'coppaFax'),
+			array('text', 'coppaPhone'),
+	);
+								
+	if ($return_config)
+		return $config_vars;
+
+	if (isset($_GET['save']))
 	{
 		checkSession();
 
@@ -295,25 +312,32 @@ function AdminSettings()
 		// Post needs to take into account line breaks.
 		$_POST['coppaPost'] = str_replace("\n", '<br />', empty($_POST['coppaPost']) ? '' : $_POST['coppaPost']);
 
-		// Update the actual settings.
-		updateSettings(array(
-			'registration_method' => (int) $_POST['registration_method'],
-			'notify_new_registration' => isset($_POST['notify_new_registration']) ? 1 : 0,
-			'send_welcomeEmail' => isset($_POST['send_welcomeEmail']) ? 1 : 0,
-			'coppaAge' => (int) $_POST['coppaAge'],
-			'coppaType' => empty($_POST['coppaType']) ? 0 : (int) $_POST['coppaType'],
-			'coppaPost' => $_POST['coppaPost'],
-			'coppaFax' => !empty($_POST['coppaFax']) ? $_POST['coppaFax'] : '',
-			'coppaPhone' => !empty($_POST['coppaPhone']) ? $_POST['coppaPhone'] : '',
-			'enableOpenID' => !empty($_POST['enableOpenID']) ? 1 : 0,
-		));
+		saveDBSettings($config_vars);
 
-		// Reload the page, so the tabs are accurate.
 		redirectexit('action=admin;area=regcenter;sa=settings');
 	}
 
+	$context['post_url'] = $scripturl . '?action=admin;area=regcenter;save;sa=settings';
+	$context['settings_title'] = $txt['settings'];
+
+	// Define some javascript for COPPA.
+	$context['settings_post_javascript'] = '
+		function checkCoppa()
+		{
+			var coppaDisabled = document.getElementById(\'coppaAge\').value == 0;
+			document.getElementById(\'coppaType\').disabled = coppaDisabled;
+
+			var disableContacts = coppaDisabled || document.getElementById(\'coppaType\').options[document.getElementById(\'coppaType\').selectedIndex].value != 1;
+			document.getElementById(\'coppaPost\').disabled = disableContacts;
+			document.getElementById(\'coppaFax\').disabled = disableContacts;
+			document.getElementById(\'coppaPhone\').disabled = disableContacts;
+		}
+		checkCoppa();';
+
 	// Turn the postal address into something suitable for a textbox.
-	$context['coppaPost'] = !empty($modSettings['coppaPost']) ? preg_replace('~<br(?: /)?' . '>~', "\n", $modSettings['coppaPost']) : '';
+	$modSettings['coppaPost'] = !empty($modSettings['coppaPost']) ? preg_replace('~<br(?: /)?' . '>~', "\n", $modSettings['coppaPost']) : '';
+
+	prepareDBSettingContext($config_vars);
 }
 
 ?>
