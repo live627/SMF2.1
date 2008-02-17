@@ -18,7 +18,7 @@ function spellCheck(formName, fieldName)
 	var aWordCharacters = ['-', '\''];
 
 	var aWords = new Array(), aResult = new Array();
-	var sText = document.forms[formName][fieldName].value
+	var sText = document.forms[formName][fieldName].value;
 	var bInCode = false;
 	var iOffset1, iOffset2;
 
