@@ -135,10 +135,8 @@ function cleanRequest()
 	{
 		$_GET = urldecode__recursive($_GET);
 
-		if (get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
-		{
+		if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
 			$_GET = $removeMagicQuoteFunction($_GET);
-		}
 
 		// Search engines will send action=profile%3Bu=1, which confuses PHP.
 		foreach ($_GET as $k => $v)
