@@ -3902,6 +3902,9 @@ function setupMenuContext()
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
 
+	// set the stylesheet
+	$context['stylesheet'] = empty($context['current_action']) ? 'forum' : $context['current_action'];
+
 	// Only load the menu javascript stuff when we have to.
 	$context['load_menu_js'] = false;
 

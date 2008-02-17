@@ -1,0 +1,147 @@
+/* ************************************* */
+/* styles from BoardIndex.template							*/
+/* ************************************* */
+
+p#stats
+{
+	text-align: right;
+}
+h3#newsfader
+{
+	font-size: 1em;
+}
+#smfNewsFader span
+{
+	font-weight: bold:
+}
+#smfFadeScroller
+{
+	padding: 2em;
+	font-size: 1em;
+	text-align: center;
+}
+.categoryframe
+{
+	margin-top: 0.4em;
+}
+.categoryframe h3
+{
+	margin: 0;
+}
+table.boardsframe
+{
+	border-spacing: 1px;
+	width: 100%;
+}
+table.boardsframe td.icon
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 6%;
+}
+table.boardsframe td.info
+{
+	width: 60%;
+	padding: 0;
+}
+table.boardsframe td.info h4
+{
+	padding: 0.4em 0.4em 0 0.4em;
+	margin: 0;
+}
+table.boardsframe td.info p
+{
+	padding: 0 0.4em 0.5em 0.4em;
+	margin: 0;
+}
+table.boardsframe td.info p.children
+{
+	padding: 0.2em 0.4em 0.2em 0.4em;
+}
+table.boardsframe td.info p.moderators
+{
+}
+table.boardsframe td.stats
+{
+	width: 8%;
+	vertical-align: middle;
+	text-align: center;
+}
+table.boardsframe td.lastpost
+{
+	width: 20%;
+	vertical-align: top;
+	padding: 0.5em;
+}
+table.boardsframe p.children
+{
+	border-top: solid 1px #ADADAD;
+	margin: 0;
+	padding: 0.5em;
+}
+#posticons
+{
+	clear: both;
+	width: 100%;
+}
+#posticons .buttonlist
+{
+	margin-right: 1em;
+	float: right;
+}
+#infocenterframe
+{
+	margin-top: 2em;
+	clear: both;
+}
+/* each section in infocenter has this class */
+.infocenter_section
+{
+	clear: both;
+}
+.infocenter_section dl
+{
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.infocenter_section dt.section
+{
+	width: 3%;
+	text-align: center;
+	float: left;	
+	padding-top: 0.5em;
+}
+.infocenter_section dd.section
+{
+	margin-left: 3%;
+	padding: 0.3em;
+	border-left: solid #a0a0a0 1px;
+}
+/* recent posts - or just one recent post */
+dl#infocenter_recentposts
+{
+}
+dl#infocenter_recentposts dt
+{
+	float: left;
+	padding: 0.1em;
+}
+dl#infocenter_recentposts dd
+{
+	padding: 0.1em;
+}
+/* login form */
+form#infocenter_login ul.horizlist label
+{
+	white-space: nowrap;
+	font-size: 90%;
+	font-weight: bold;
+}
+
+
+
+
+
+
+
