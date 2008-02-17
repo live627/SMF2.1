@@ -89,6 +89,7 @@ February 2008
  + Added verification control which now handles everything to do with verification including loading image, testing user input, etc. Rolled this out to all verification areas. (Subs-Editor.php, Post.php, PersonalMessage.php, Search.php, Register.php)
  * Updated templates for new verification control. (GenericControls, Post, Register, PersonalMessage and Search templates)
  + Added option to set question and answers for verification challenges. Either independant on image or as well as. (ManageSettings.php, Subs-Editor.php, ManageSettings language files)
+ ! SQLite only takes integer fields as a primary key. (install_2-0_sqlite.sql) [Bug 1554]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

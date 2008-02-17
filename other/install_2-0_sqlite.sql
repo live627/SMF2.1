@@ -2026,7 +2026,7 @@ INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VA
 #
 
 CREATE TABLE {$db_prefix}subscriptions(
-  id_subscribe smallint primary key,
+  id_subscribe integer primary key,
   name varchar(60) NOT NULL,
   description varchar(255) NOT NULL,
   cost text NOT NULL,
