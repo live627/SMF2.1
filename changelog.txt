@@ -90,6 +90,12 @@ February 2008
  * Updated templates for new verification control. (GenericControls, Post, Register, PersonalMessage and Search templates)
  + Added option to set question and answers for verification challenges. Either independant on image or as well as. (ManageSettings.php, Subs-Editor.php, ManageSettings language files)
  ! SQLite only takes integer fields as a primary key. (install_2-0_sqlite.sql) [Bug 1554]
+ ! Don't cache language files if they are missing. (ManageMaintenance.php)
+ ! Show updates to language files right away. (ManageServer.php) [Bug 1574]
+ ! Registration settings now uses the generic settings template. (ManageRegistration.php, Admin.php, Registration template)
+ & Changed some language strings to fit with the right way of working. (FixLanguage.php, Login language file)
+ ! The task log now uses the generic list. (ManageMaintenance.php, ManageMaintenance template)
+ ! Scheduled task list is now a generic list. (ManageMaintenance.php, ManageMaintenance template)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
@@ -595,11 +601,6 @@ November 2007
  ! Added the option to view user posts on a particular board. (Profile.php)
  ! Added a BBC tag to act like the bidirectional override tag. (Subs.php)
  * The help template should output the pre bbc tag example as shown in the example. (Help template)
- ! Don't cache language files if they are missing. (ManageMaintenance.php)
- ! Show updates to language files right away. (ManageServer.php) [Bug 1574]
- ! Registration settings now uses the generic settings template. (ManageRegistration.php, Admin.php, Registration template)
- & Changed some language strings to fit with the right way of working. (FixLanguage.php, Login language file)
- ! The task log now uses the generic list. (ManageMaintenance.php, ManageMaintenance template)
 
 
 October 2007

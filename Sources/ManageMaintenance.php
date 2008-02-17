@@ -275,7 +275,7 @@ function Maintenance()
 // List all the scheduled task in place on the forum.
 function ScheduledTasks()
 {
-	global $context, $txt, $sourcedir, $smcFunc, $user_info, $modSettings;
+	global $context, $txt, $sourcedir, $smcFunc, $user_info, $modSettings, $scripturl;
 
 	// Mama, setup the template first - cause it's like the most important bit, like pickle in a sandwich.
 	// ... ironically I don't like pickle. </grudge>
@@ -362,36 +362,150 @@ function ScheduledTasks()
 		redirectexit('action=admin;area=maintain;sa=tasks;done');
 	}
 
-	// Get the tasks, all of them, now - dammit!
+	$listOptions = array(
+		'id' => 'scheduled_tasks',
+		'title' => $txt['maintain_tasks'],
+		'base_href' => $scripturl . '?action=admin;area=maintain;sa=tasks',
+		'get_items' => array(
+			'function' => 'list_getScheduledTasks',
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['scheduled_tasks_name'],
+					'style' => 'width: 40%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '
+							<a href="' . $scripturl . '?action=admin;area=maintain;sa=taskedit;tid=%1$d">%2$s</a><br /><span class="smalltext">%3$s</span>',
+						'params' => array(
+							'id' => false,
+							'name' => false,
+							'desc' => false,
+						),
+					),
+				),
+			),
+			'next_due' => array(
+				'header' => array(
+					'value' => $txt['scheduled_tasks_next_time'],
+				),
+				'data' => array(
+					'db' => 'next_time',
+					'class' => 'smalltext',
+				),
+			),
+			'regularity' => array(
+				'header' => array(
+					'value' => $txt['scheduled_tasks_regularity'],
+				),
+				'data' => array(
+					'db' => 'regularity',
+					'class' => 'smalltext',
+				),
+			),
+			'enabled' => array(
+				'header' => array(
+					'value' => $txt['scheduled_tasks_enabled'],
+					'style' => 'width: 6%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => 
+							'<input type="hidden" name="task[%1$d]" id="task_%1$d" value="0" /><input type="checkbox" name="task[%1$d]" id="task_check_%1$d" %2$s class="check" />',
+						'params' => array(
+							'id' => false,
+							'checked_state' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+			'run_now' => array(
+				'header' => array(
+					'value' => $txt['scheduled_tasks_run_now'],
+					'style' => 'width: 6%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => 
+							'<input type="checkbox" name="run_task[%1$d]" id="run_task_%1$d" class="check" />',
+						'params' => array(
+							'id' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=maintain;sa=tasks',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '
+					<div style="float: left;">
+						[<a href="' . $scripturl . '?action=admin;area=maintain;sa=tasklog">' . $txt['scheduled_view_log'] . '</a>]
+					</div>
+					<div style="float: right;">
+						<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" />
+						<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" />
+					</div>',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+			array(
+				'position' => 'after_title',
+				'value' => '
+					<span class="smalltext">' . $txt['scheduled_tasks_time_offset'] . '</span>',
+				'class' => 'windowbg2',
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	$context['sub_template'] = 'view_scheduled_tasks';
+
+	$context['tasks_were_run'] = isset($_GET['done']);
+}
+
+function list_getScheduledTasks($start, $items_per_page, $sort)
+{
+	global $smcFunc, $txt, $scripturl;
+
 	$request = $smcFunc['db_query']('', '
 		SELECT id_task, next_time, time_offset, time_regularity, time_unit, disabled, task
 		FROM {db_prefix}scheduled_tasks',
 		array(
 		)
 	);
-	$context['tasks'] = array();
+	$known_tasks = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Find the next for regularity - don't offset as it's always server time!
 		$offset = sprintf($txt['scheduled_task_reg_starting'], date('H:i', $row['time_offset']));
 		$repeating = sprintf($txt['scheduled_task_reg_repeating'], $row['time_regularity'], $txt['scheduled_task_reg_unit_' . $row['time_unit']]);
 
-		$context['tasks'][] = array(
+		$known_tasks[] = array(
 			'id' => $row['id_task'],
 			'function' => $row['task'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'desc' => isset($txt['scheduled_task_desc_' . $row['task']]) ? $txt['scheduled_task_desc_' . $row['task']] : '',
 			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat(($row['next_time'] == 0 ? time() : $row['next_time']), true, 'server'),
 			'disabled' => $row['disabled'],
+			'checked_state' => $row['disabled'] ? '' : 'checked="checked"',
 			'regularity' => $offset . ', ' . $repeating,
 		);
 	}
-
 	// You see - Mike sucks - and can't work out how to do in C++ what PHP can do with it's eyes closed - pah! He no programmer ;)
 	// TWlrZSBTdWNrcyBCYWxscyBhbmQgSXMgTXkgQmlhdGNoISE=
 	$smcFunc['db_free_result']($request);
 
-	$context['tasks_were_run'] = isset($_GET['done']);
+	return $known_tasks;
 }
 
 // Function for editing a task.

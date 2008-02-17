@@ -406,68 +406,7 @@ function template_view_scheduled_tasks()
 			', $txt['scheduled_tasks_were_run'], '
 		</div>';
 
-	// Starts off with general maintenance procedures.
-	echo '
-	<form action="', $scripturl, '?action=admin;area=maintain;sa=tasks" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
-			<tr class="titlebg">
-				<td colspan="5">', $txt['maintain_tasks'], '</td>
-			</tr>
-			<tr class="windowbg2">
-				<td colspan="5">
-					<span class="smalltext">
-						', $txt['scheduled_tasks_time_offset'], '
-					</span>
-				</td>
-			</tr>
-			<tr class="catbg">
-				<td colspan="5">', $txt['scheduled_tasks_header'], '</td>
-			</tr>
-			<tr class="titlebg">
-				<td width="40%">', $txt['scheduled_tasks_name'], '</td>
-				<td>', $txt['scheduled_tasks_next_time'], '</td>
-				<td>', $txt['scheduled_tasks_regularity'], '</td>
-				<td width="6%">', $txt['scheduled_tasks_enabled'], '</td>
-				<td width="6%">', $txt['scheduled_tasks_run_now'], '</td>
-			</tr>';
-
-	$alternate = 0;
-	foreach ($context['tasks'] as $task)
-	{
-		echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td>
-					<a href="', $scripturl, '?action=admin;area=maintain;sa=taskedit;tid=', $task['id'], '">', $task['name'], '</a><br />
-					<span class="smalltext">', $task['desc'], '</span>
-				</td>
-				<td><span class="smalltext">', $task['next_time'], '</span></td>
-				<td><span class="smalltext">', $task['regularity'], '</span></td>
-				<td align="center">
-					<input type="hidden" name="task[', $task['id'], ']" id="task_', $task['id'], '" value="0" />
-					<input type="checkbox" name="task[', $task['id'], ']" id="task_check_', $task['id'], '" ', !$task['disabled'] ? 'checked="checked"' : '', ' class="check" />
-				</td>
-				<td align="center">
-					<input type="checkbox" name="run_task[', $task['id'], ']" id="run_task_', $task['id'], '" class="check" />
-				</td>
-			</tr>';
-		$alternate = !$alternate;
-	}
-
-	echo '
-			<tr class="titlebg">
-				<td colspan="5" align="right">
-					<div style="float: left;">
-						[<a href="', $scripturl, '?action=admin;area=maintain;sa=tasklog">', $txt['scheduled_view_log'], '</a>]
-					</div>
-					<div style="float: right;">
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />
-						<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" />
-						<input type="submit" name="run" value="', $txt['scheduled_tasks_run_now'], '" />
-					</div>
-				</td>
-			</tr>
-		</table>
-	</form>';
+	template_show_list('scheduled_tasks');
 }
 
 // A template for, you guessed it, editing a task!
