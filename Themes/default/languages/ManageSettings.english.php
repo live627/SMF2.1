@@ -9,7 +9,7 @@ $txt['modSettings_desc'] = 'This page allows you to change the settings of featu
 $txt['security_settings_desc'] = 'This page allows you to set options specifically related to the security and moderation of your forum, including anti-spam options.';
 $txt['modification_settings_desc'] = 'This page contains settings added by any modifications to your forum';
 
-$txt['modification_no_misc_settings'] = 'There are modifications installed that have added any settings to this area yet.';
+$txt['modification_no_misc_settings'] = 'There are no modifications installed that have added any settings to this area yet.';
 
 $txt['pollMode'] = 'Poll mode';
 $txt['disable_polls'] = 'Disable polls';
