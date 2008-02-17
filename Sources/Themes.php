@@ -439,7 +439,7 @@ function SetThemeOptions()
 		$smcFunc['db_free_result']($request);
 		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN ({array_string:custom_fields})');
 
-		$request = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query']('themes_count', '
 			SELECT COUNT(DISTINCT id_member) AS value, id_theme
 			FROM {db_prefix}themes
 			WHERE id_member > {int:no_member}

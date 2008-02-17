@@ -1382,8 +1382,8 @@ function ViewWarningLog()
 					'db' => 'issuer_link',
 				),
 				'sort' => array(
-					'default' => 'member_name',
-					'reverse' => 'member_name DESC',
+					'default' => 'member_name_col',
+					'reverse' => 'member_name_col DESC',
 				),
 			),
 			'recipient' => array(
@@ -1474,7 +1474,7 @@ function list_getWarnings($start, $items_per_page, $sort)
 	global $smcFunc, $txt, $scripturl, $modSettings, $user_info;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
+		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name_col,
 			IFNULL(mem2.id_member, 0) AS id_recipient, IFNULL(mem2.real_name, lc.recipient_name) AS recipient_name,
 			lc.log_time, lc.body, lc.id_notice, lc.counter
 		FROM {db_prefix}log_comments AS lc
@@ -1491,7 +1491,7 @@ function list_getWarnings($start, $items_per_page, $sort)
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$warnings[] = array(
-			'issuer_link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
+			'issuer_link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name_col'] . '</a>') : $row['member_name_col'],
 			'recipient_link' => $row['id_recipient'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_recipient'] . '">' . $row['recipient_name'] . '</a>') : $row['recipient_name'],
 			'time' => timeformat($row['log_time']),
 			'reason' => $row['body'],

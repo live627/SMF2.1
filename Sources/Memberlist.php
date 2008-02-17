@@ -295,8 +295,8 @@ function MLAll()
 	// List out the different sorting methods...
 	$sort_methods = array(
 		'is_online' => array(
-			'down' => '(ISNULL(lo.log_time)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') ASC, real_name ASC',
-			'up' => '(ISNULL(lo.log_time)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') DESC, real_name DESC'
+			'down' => '(IFNULL(lo.log_time, 1=1)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') ASC, real_name ASC',
+			'up' => '(IFNULL(lo.log_time, 1=1)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') DESC, real_name DESC'
 		),
 		'real_name' => array(
 			'down' => 'mem.real_name ASC',
@@ -307,32 +307,32 @@ function MLAll()
 			'up' => allowedTo('moderate_forum') ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC'
 		),
 		'website_url' => array(
-			'down' => 'LENGTH(mem.website_url) > 0 DESC, ISNULL(mem.website_url) ASC, mem.website_url ASC',
-			'up' => 'LENGTH(mem.website_url) > 0 ASC, ISNULL(mem.website_url) DESC, mem.website_url DESC'
+			'down' => 'LENGTH(mem.website_url) > 0 DESC, IFNULL(mem.website_url, 1=1) ASC, mem.website_url ASC',
+			'up' => 'LENGTH(mem.website_url) > 0 ASC, IFNULL(mem.website_url, 1=1) DESC, mem.website_url DESC'
 		),
 		'icq' => array(
-			'down' => 'LENGTH(mem.icq) > 0 DESC, ISNULL(mem.icq) OR mem.icq = 0 ASC, mem.icq ASC',
-			'up' => 'LENGTH(mem.icq) > 0 ASC, ISNULL(mem.icq) OR mem.icq = 0 DESC, mem.icq DESC'
+			'down' => 'LENGTH(mem.icq) > 0 DESC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 ASC, mem.icq ASC',
+			'up' => 'LENGTH(mem.icq) > 0 ASC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 DESC, mem.icq DESC'
 		),
 		'aim' => array(
-			'down' => 'LENGTH(mem.aim) > 0 DESC, ISNULL(mem.aim) ASC, mem.aim ASC',
-			'up' => 'LENGTH(mem.aim) > 0 ASC, ISNULL(mem.aim) DESC, mem.aim DESC'
+			'down' => 'LENGTH(mem.aim) > 0 DESC, IFNULL(mem.aim, 1=1) ASC, mem.aim ASC',
+			'up' => 'LENGTH(mem.aim) > 0 ASC, IFNULL(mem.aim, 1=1) DESC, mem.aim DESC'
 		),
 		'yim' => array(
-			'down' => 'LENGTH(mem.yim) > 0 DESC, ISNULL(mem.yim) ASC, mem.yim ASC',
-			'up' => 'LENGTH(mem.yim) > 0 ASC, ISNULL(mem.yim) DESC, mem.yim DESC'
+			'down' => 'LENGTH(mem.yim) > 0 DESC, IFNULL(mem.yim, 1=1) ASC, mem.yim ASC',
+			'up' => 'LENGTH(mem.yim) > 0 ASC, IFNULL(mem.yim, 1=1) DESC, mem.yim DESC'
 		),
 		'msn' => array(
-			'down' => 'LENGTH(mem.msn) > 0 DESC, ISNULL(mem.msn) ASC, mem.msn ASC',
-			'up' => 'LENGTH(mem.msn) > 0 ASC, ISNULL(mem.msn) DESC, mem.msn DESC'
+			'down' => 'LENGTH(mem.msn) > 0 DESC, IFNULL(mem.msn, 1=1) ASC, mem.msn ASC',
+			'up' => 'LENGTH(mem.msn) > 0 ASC, IFNULL(mem.msn, 1=1) DESC, mem.msn DESC'
 		),
 		'registered' => array(
 			'down' => 'mem.date_registered ASC',
 			'up' => 'mem.date_registered DESC'
 		),
 		'id_group' => array(
-			'down' => 'ISNULL(mg.group_name) ASC, mg.group_name ASC',
-			'up' => 'ISNULL(mg.group_name) DESC, mg.group_name DESC'
+			'down' => 'IFNULL(mg.group_name, 1=1) ASC, mg.group_name ASC',
+			'up' => 'IFNULL(mg.group_name, 1=1) DESC, mg.group_name DESC'
 		),
 		'posts' => array(
 			'down' => 'mem.posts DESC',

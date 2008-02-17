@@ -96,6 +96,11 @@ February 2008
  & Changed some language strings to fit with the right way of working. (FixLanguage.php, Login language file)
  ! The task log now uses the generic list. (ManageMaintenance.php, ManageMaintenance template)
  ! Scheduled task list is now a generic list. (ManageMaintenance.php, ManageMaintenance template)
+ ! SQLite doesn't like the use if DISTINCT inside COUNT. (Themes.php, Subs-Db-sqlite.php) [Bug 1556]
+ ! SQLite doesn't like it when you give a column alias the same name as an existing column. (ModerationCenter.php, Profile-Modify.php) [Bug 1555]
+ ! Was possible to get a database error when deleting personal messages in SQLite. (PersonalMessage.php) [Bug 1559]
+ ! Changed a few references to ISNULL to IFNULL. (Memberlist.php, ManageNews.php) [Bug 1558]
+ ! Replace \n with an actual line break in reserved names. (ManageRegistration.php) [Bug 1553]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

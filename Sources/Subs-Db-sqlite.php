@@ -272,6 +272,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'alter_table_boards' => array(
 			'~(.+)~' => '',
 		),
+		'themes_count' => array(
+			'~\s*SELECT\sCOUNT\(DISTINCT\sid_member\)\sAS\svalue,\sid_theme.+FROM\s(.+themes)(.+)~is' => 'SELECT COUNT(id_member) AS value, id_theme FROM (SELECT DISTINCT id_member, id_theme FROM $1) $2',
+		),
 	);
 
 	if (isset($replacements[$identifier]))

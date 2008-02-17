@@ -261,6 +261,7 @@ function SetReserve()
 	}
 
 	// Get the reserved word options and words.
+	$modSettings['reserveNames'] = str_replace('\n', "\n", $modSettings['reserveNames']);
 	$context['reserved_words'] = explode("\n", $modSettings['reserveNames']);
 	$context['reserved_word_options'] = array();
 	$context['reserved_word_options']['match_word'] = $modSettings['reserveWord'] == '1';
@@ -297,7 +298,7 @@ function ModifyRegistrationSettings($return_config = false)
 			array('text', 'coppaFax'),
 			array('text', 'coppaPhone'),
 	);
-								
+
 	if ($return_config)
 		return $config_vars;
 

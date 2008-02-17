@@ -1757,8 +1757,8 @@ function notification($memID)
 					'db' => 'poster_link',
 				),
 				'sort' => array(
-					'default' => 'real_name',
-					'reverse' => 'real_name DESC',
+					'default' => 'real_name_col',
+					'reverse' => 'real_name_col DESC',
 				),
 			),
 			'last_post' => array(
@@ -1860,7 +1860,7 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, b.id_board, b.name,
-			t.id_topic, ms.subject, ms.id_member, IFNULL(mem.real_name, ms.poster_name) AS real_name,
+			t.id_topic, ms.subject, ms.id_member, IFNULL(mem.real_name, ms.poster_name) AS real_name_col,
 			ml.id_msg_modified, ml.poster_time, ml.id_member AS id_member_updated,
 			IFNULL(mem2.real_name, ml.poster_name) AS last_real_name
 		FROM {db_prefix}log_notify AS ln
@@ -1888,7 +1888,7 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 
 		$notification_topics[] = array(
 			'id' => $row['id_topic'],
-			'poster_link' => empty($row['id_member']) ? $row['real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
+			'poster_link' => empty($row['id_member']) ? $row['real_name_col'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name_col'] . '</a>',
 			'poster_updated_link' => empty($row['id_member_updated']) ? $row['last_real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_updated'] . '">' . $row['last_real_name'] . '</a>',
 			'subject' => $row['subject'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
