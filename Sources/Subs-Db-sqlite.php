@@ -289,6 +289,13 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_values[$search] = '%' . $db_values[$search] . '%';
 	}
 
+	// Lets remove ASC and DESC from ORDER BY clause.
+	if (preg_match('~GROUP BY.+$~is', $db_string, $matches))
+	{
+		$replace = str_replace(array('ASC', 'DESC'), '', $matches[0]);
+		$db_string = str_replace($matches[0], $replace, $db_string);
+	}
+
 	// SQLite doesn't support TO_DAYS but has the julianday function which can be used in the same manner.  But make sure it is being used to calculate a span.
 	$db_string = preg_replace('~\(TO_DAYS\(([^)]+)\) - TO_DAYS\(([^)]+)\)\) AS span~', '(julianday($1) - julianday($2)) AS span', $db_string);
 
