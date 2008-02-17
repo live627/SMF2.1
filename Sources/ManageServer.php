@@ -1163,6 +1163,8 @@ function ModifyLanguage()
 		$dir->close();
 	}
 
+	$madeSave = false;
+
 	// Saving primary settings?
 	if (!empty($_POST['save_main']))
 	{
@@ -1181,7 +1183,7 @@ function ModifyLanguage()
 		fwrite($fp, $current_data);
 		fclose($fp);
 
-		clean_cache('lang');
+		$madeSave = true;
 	}
 
 	// Quickly load index language entries.
@@ -1366,11 +1368,18 @@ function ModifyLanguage()
 			fwrite($fp, $file_contents);
 			fclose($fp);
 
-			clean_cache('lang');
+			$madeSave = true;
 		}
 
 		// Another restore.
 		$txt = $old_txt;
+	}
+
+	// If we saved redirect.
+	if ($madeSave)
+	{
+		clean_cache('lang');
+		redirectexit('action=admin;area=serversettings;sa=editlang;lid=' . $context['lang_id'] . ';sesc=' . $context['session_id']);
 	}
 }
 

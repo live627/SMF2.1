@@ -1650,6 +1650,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 
 	// By default include it afterwards.
 	$do_include = $can_write;
+	$invalid_file_found = false;
 
 	// Make sure we have $settings - if not we're in trouble and need to find it!
 	if (empty($settings['default_theme_dir']))
@@ -1728,6 +1729,8 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		// That couldn't be found!  Log the error, but *try* to continue normally.
 		if (!isset($language_url))
 		{
+			$invalid_file_found = true;
+
 			if ($fatal)
 				log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
 			break;
@@ -1741,6 +1744,13 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		fwrite($fh, '?>');
 		@flock($fp, LOCK_UN);
 		fclose($fh);
+
+		// If we couldn't find the file don't cache it!
+		if ($invalid_file_found)
+		{
+			@unlink($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
+			$do_include = false;
+		}
 	}
 
 	return $do_include;
