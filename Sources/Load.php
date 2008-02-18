@@ -62,7 +62,7 @@ if (!defined('SMF'))
 	void loadTheme(int id_theme = auto_detect)
 		// !!!
 
-	void loadTemplate(string template_name, array stlye_sheets = array(), bool fatal = true)
+	void loadTemplate(string template_name, array style_sheets = array(), bool fatal = true)
 		- loads a template file with the name template_name from the current,
 		  default, or base theme.
 		- uses the template_include() function to include the file.
