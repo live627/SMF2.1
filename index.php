@@ -253,7 +253,7 @@ function smf_main()
 		'jsoption' => array('Themes.php', 'SetJavaScript'),
 		'jsmodify' => array('Post.php', 'JavaScriptModify'),
 		'lock' => array('LockTopic.php', 'LockTopic'),
-		'lockVoting' => array('Poll.php', 'LockVoting'),
+		'lockvoting' => array('Poll.php', 'LockVoting'),
 		'login' => array('LogInOut.php', 'Login'),
 		'login2' => array('LogInOut.php', 'Login2'),
 		'logout' => array('LogInOut.php', 'Logout'),

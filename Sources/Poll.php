@@ -43,7 +43,7 @@ if (!defined('SMF'))
 		- if not an admin must have poll_lock_any permission.
 		- otherwise must be poll starter with poll_lock_own permission.
 		- upon successful completion of action will direct user back to topic.
-		- is accessed via ?action=lockVoting.
+		- is accessed via ?action=lockvoting.
 
 	void EditPoll()
 		- is called to display screen for editing or adding a poll.

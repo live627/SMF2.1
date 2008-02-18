@@ -113,7 +113,7 @@ function template_main()
 			// If they're allowed to lock the poll, show a link!
 			if ($context['poll']['lock'])
 				echo '
-						<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
+						<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
 
 			// If they're allowed to edit the poll... guess what... show a link!
 			if ($context['poll']['edit'])
@@ -162,7 +162,7 @@ function template_main()
 			// Show a link for locking the poll as well...
 			if ($context['poll']['lock'])
 				echo '
-							<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock']), '</a><br />';
+							<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock']), '</a><br />';
 
 			// Want to edit it?  Click right here......
 			if ($context['poll']['edit'])
@@ -475,7 +475,7 @@ function template_main()
 
 			// If we had unapproved attachments clean up.
 			if ($last_approved_state == 0)
-				echo ' 
+				echo '
 									</fieldset>';
 		}
 
