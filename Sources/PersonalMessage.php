@@ -121,15 +121,12 @@ function MessageMain()
 	// This file contains the basic functions for sending a PM.
 	require_once($sourcedir . '/Subs-Post.php');
 
-	if (loadLanguage('PersonalMessage', '', false) === false)
-		loadLanguage('InstantMessage');
+	loadLanguage('PersonalMessage');
+
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_pm';
 	else
-	{
-		if (loadTemplate('PersonalMessage', false) === false)
-			loadTemplate('InstantMessage');
-	}
+		loadTemplate('PersonalMessage');
 
 	// Load up the members maximum message capacity.
 	if (!$user_info['is_admin'] && ($context['message_limit'] = cache_get_data('msgLimit:' . $user_info['id'], 360)) === null)
@@ -1430,13 +1427,11 @@ function MessagePost()
 
 	isAllowedTo('pm_send');
 
-	if (loadLanguage('PersonalMessage', '', false) === false)
-		loadLanguage('InstantMessage');
+	if (loadLanguage('PersonalMessage');
 	// Just in case it was loaded from somewhere else.
 	if (!WIRELESS)
 	{
-		if (loadTemplate('PersonalMessage', false) === false)
-			loadTemplate('InstantMessage');
+		loadTemplate('PersonalMessage');
 		$context['sub_template'] = 'send';
 	}
 

@@ -3368,6 +3368,8 @@ function db_debug_junk()
 		$_SESSION['view_queries'] = 0;
 	if (empty($context['debug']['language_files']))
 		$context['debug']['language_files'] = array();
+	if (empty($context['debug']['sheets']))
+		$context['debug']['sheets'] = array();
 
 	$files = get_included_files();
 	$total_size = 0;
@@ -3405,6 +3407,7 @@ function db_debug_junk()
 	Templates: ', count($context['debug']['templates']), ': <i>', implode('</i>, <i>', $context['debug']['templates']), '</i>.<br />
 	Sub templates: ', count($context['debug']['sub_templates']), ': <i>', implode('</i>, <i>', $context['debug']['sub_templates']), '</i>.<br />
 	Language files: ', count($context['debug']['language_files']), ': <i>', implode('</i>, <i>', $context['debug']['language_files']), '</i>.<br />
+	Style sheets: ', count($context['debug']['sheets']), ': <i>', implode('</i>, <i>', $context['debug']['sheets']), '</i>.<br />
 	Files included: ', count($files), ' - ', round($total_size / 1024), 'KB. (<a href="javascript:void(0);" onclick="document.getElementById(\'debug_include_info\').style.display = \'inline\'; this.style.display = \'none\'; return false;">show</a><span id="debug_include_info" style="display: none;"><i>', implode('</i>, <i>', $files), '</i></span>)<br />';
 
 	if (!empty($modSettings['cache_enable']) && !empty($cache_hits))
@@ -3901,9 +3904,6 @@ function setupMenuContext()
 		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
-
-	// set the stylesheet
-	$context['stylesheet'] = empty($context['current_action']) ? 'forum' : $context['current_action'];
 
 	// Only load the menu javascript stuff when we have to.
 	$context['load_menu_js'] = false;

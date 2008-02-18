@@ -101,8 +101,8 @@ February 2008
  ! Was possible to get a database error when deleting personal messages in SQLite. (PersonalMessage.php) [Bug 1559]
  ! Changed a few references to ISNULL to IFNULL. (Memberlist.php, ManageNews.php) [Bug 1558]
  ! Replace \n with an actual line break in reserved names. (ManageRegistration.php) [Bug 1553]
- ! Added $context['stylesheet'] for use in new default theme (Subs.php)
  ! Changed the action lockVoting to lockvoting to keep the naming style consistent. (index.php, Poll.php, Display template files) [Bug 1592]
+ ! loadTemplate will take an optional array of style sheets to also include, they must be in the css directory though. (Load.php, Subs.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

@@ -10,10 +10,6 @@ function template_main()
 <a name="top"></a>
 <a name="msg', $context['first_message'], '"></a>', $context['first_new_message'] ? '<a name="new"></a>' : '';
 
-		// Show the linktree
-	echo '
-<div>', theme_linktree(), '</div>';
-
 	// Is this topic also a poll?
 	if ($context['is_poll'])
 	{

@@ -1603,11 +1603,26 @@ function loadTheme($id_theme = 0, $initialize = true)
 }
 
 // Load a template - if the theme doesn't include it, use the default.
-function loadTemplate($template_name, $fatal = true)
+function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 {
 	global $context, $settings, $txt, $scripturl, $boarddir, $db_show_debug;
 
 	$loaded = false;
+
+	// Do any style sheets first, cause we're easy with those.
+	if (!empty($style_sheets))
+	{
+		if (!is_array($style_sheets))
+			$style_sheets = array($style_sheets);
+
+		foreach ($style_sheets as $sheet)
+		{
+			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : 'default_theme_url';
+			$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
+			if ($db_show_debug === true)
+				$context['debug']['sheets'][] = $sheet . '(' . basename($settings[$sheet_path]) . ')';
+		}
+	}
 
 	foreach ($settings['template_dirs'] as $template_dir)
 	{

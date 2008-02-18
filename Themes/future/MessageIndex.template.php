@@ -5,9 +5,6 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	echo '
-	<div style="margin-bottom: 2px;"><a name="top"></a>', theme_linktree(), '</div>';
-
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '

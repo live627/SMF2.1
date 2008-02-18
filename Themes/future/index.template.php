@@ -90,26 +90,18 @@ function template_html_above()
 
 	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/classes.css?rc2" />
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/core.css?rc2" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
 
-	// load subtemplate stylesheet
-	if(file_exists($settings['theme_dir']. '/css/' . $context['stylesheet'] . '.css'))
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/' . $context['stylesheet'] . '.css?rc2" />';
-	else
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/' . $context['stylesheet'] . '.css?rc2" />';
-
-	// IE7 needs some fixes for styles
+	// IE7 needs some fixes for styles.
 	if ($context['browser']['is_ie7'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style_ie7.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie7.css" />';
 	// ..and IE6!
-	elseif ($context['browser']['is_ie7'])
+	elseif ($context['browser']['is_ie6'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style_ie6.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
@@ -131,7 +123,7 @@ function template_html_above()
 	// If we're in a board, or a topic for that matter, the index will be the board's index.
 	if (!empty($context['current_board']))
 		echo '
-	<link rel="index" href="' . $scripturl . '?board=' . $context['current_board'] . '.0" />';
+	<link rel="index" href="', $scripturl, '?board=' . $context['current_board'] . '.0" />';
 
 	// We'll have to use the cookie to remember the header...
 	if ($context['user']['is_guest'])
@@ -280,9 +272,7 @@ function template_body_above()
 		</div>
 		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-				<a href="', $scripturl, '?action=search;advanced">
-					<img src="'.$settings['images_url'].'/filter.gif" align="middle" style="margin: 0 1ex;" alt="" />
-				</a>
+				<a href="', $scripturl, '?action=search;advanced"><img src="'.$settings['images_url'].'/filter.gif" align="middle" style="margin: 0 1ex;" alt="" /></a>
 				<input type="text" name="search" value="" style="width: 190px;" />&nbsp;
 				<input type="submit" name="submit" value="', $txt['search'], '" style="width: 11ex;" />
 				<input type="hidden" name="advanced" value="0" />';
@@ -350,7 +340,6 @@ function template_html_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '<pre>styleshee: ' , $context['stylesheet'] , '</pre>';
 	// The following will be used to let the user know that some AJAX process is running
 	echo '
 <div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '"><a href="javascript:ajax_indicator(false);"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['modify_cancel'], '" /></a>', $txt['ajax_in_progress'], '</div>
@@ -373,18 +362,19 @@ function theme_linktree()
 	foreach ($context['linktree'] as $link_num => $tree)
 	{
 		echo '
-		<li' , ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '' , '>';
+		<li', ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '', '>';
 		// Show something before the link?
 		if (isset($tree['extra_before']))
 			echo $tree['extra_before'];
 
 		// Show the link, including a URL if it should have one.
 		echo $settings['linktree_link'] && isset($tree['url']) ? '
-				<a href="' . $tree['url'] . '">' . $tree['name'] . '</a>' : $tree['name'];
+			<a href="' . $tree['url'] . '">' . $tree['name'] . '</a>' : $tree['name'];
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))
 			echo $tree['extra_after'];
+
 		echo '
 		</li>';
 	}
@@ -402,12 +392,14 @@ function template_menu()
 		<ul class="clearfix">';
 	
 	foreach($context['menu_buttons'] AS $act => $button)
+	{
 		echo '
-			<li id="button' , $act[0] , '">
-				<a' , $button['active_button'] ? ' class="active"' : '' , ' href="' , $button['href'] , '">
-					<span' , isset($button['is_last']) ? ' class="last"' : '' , '>' , $button['active_button'] ? '<em>' : '' ,  $button['title'] , array_keys($act) , $button['active_button'] ? '</em>' : '' , '</span>
+			<li id="button_', $act, '">
+				<a', $button['active_button'] ? ' class="active"' : '', ' href="', $button['href'], '">
+					<span', isset($button['is_last']) ? ' class="last"' : '', '>', ($button['active_button'] ? '<em>' : ''), $button['title'], ($button['active_button'] ? '</em>' : ''), '</span>
 				</a>
 			</li>';
+	}
 
 	echo '
 		</ul>
@@ -453,4 +445,5 @@ function template_buttonlist($buttons, $top = true)
 		echo '
 		<div class="oldbuttonlist">', implode('&nbsp;', $buttons) , '</div>';
 }
+
 ?>

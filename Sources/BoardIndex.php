@@ -55,7 +55,7 @@ function BoardIndex()
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_boardindex';
 	else
-		loadTemplate('BoardIndex');
+		loadTemplate('BoardIndex', 'forum');
 
 	// Retrieve the categories and boards.
 	require_once($sourcedir . '/Subs-BoardIndex.php');
