@@ -592,7 +592,6 @@ function Credits($in_admin = false)
 				$txt['some_mod_copyright'],
 		*/
 		'mods' => array(
-			'Some Mod by Thantos &copy; 2008',
 		),
 	);
 	
