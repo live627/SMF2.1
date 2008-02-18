@@ -133,7 +133,7 @@ function bbc_to_html($text)
 function html_to_bbc($text)
 {
 	global $modSettings, $smcFunc, $sourcedir;
-log_error($text);
+
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => '', "\r" => ''));
 
@@ -161,7 +161,7 @@ log_error($text);
 	}
 
 	// Do the smileys ultra first!
-	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>~i', $text, $matches);
+	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>(\s)?~i', $text, $matches);
 	if (!empty($matches))
 	{
 		// Easy if it's not custom.
@@ -173,8 +173,9 @@ log_error($text);
 			foreach ($matches[1] as $k => $file)
 			{
 				$found = array_search($file, $smileysto);
+				// Note the weirdness here is to stop double spaces between smileys.
 				if ($found)
-					$matches[1][$k] = ' ' . $smileysfrom[$found];
+					$matches[1][$k] = '-[]-smf_smily_start#|#' . $smileysfrom[$found] . '-[]-smf_smily_end#|#';
 				else
 					$matches[1][$k] = '';
 			}
@@ -204,12 +205,15 @@ log_error($text);
 
 				foreach ($matches[1] as $k => $file)
 					if (isset($mappings[$file]))
-						$matches[1][$k] = isset($mappings[$file]) ? ' ' . $mappings[$file] : '';
+						$matches[1][$k] = '-[]-smf_smily_start#|#' . $mappings[$file] . '-[]-smf_smily_end#|#';
 			}
 		}
 
 		// Replace the tags!
 		$text = str_replace($matches[0], $matches[1], $text);
+
+		// Now sort out spaces
+		$text = str_replace(array('-[]-smf_smily_end#|#-[]-smf_smily_start#|#', '-[]-smf_smily_end#|#', '-[]-smf_smily_start#|#'), ' ', $text);
 	}
 
 	$parts = preg_split('~(<[A-Za-z]+\s*[^<>]*?style="?[^<>"]+"?[^<>]*?(?:/?)>|</[A-Za-z]+>)~', $text, -1, PREG_SPLIT_DELIM_CAPTURE);

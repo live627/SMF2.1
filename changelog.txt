@@ -103,6 +103,7 @@ February 2008
  ! Replace \n with an actual line break in reserved names. (ManageRegistration.php) [Bug 1553]
  ! Changed the action lockVoting to lockvoting to keep the naming style consistent. (index.php, Poll.php, Display template files) [Bug 1592]
  ! loadTemplate will take an optional array of style sheets to also include, they must be in the css directory though. (Load.php, Subs.php)
+ ! Do a better job with spaces between smileys on the rich editor. (Subs-Editor.php) [Bug 1477]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
