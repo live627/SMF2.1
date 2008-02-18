@@ -582,7 +582,7 @@ function DisplayStats()
 				'current_year' => $row_months['stats_year'] == date('Y'),
 			);
 
-		$context['yearly'][$row_months['stats_year']]['months'][$row_months['stats_month']] = array(
+		$context['yearly'][$row_months['stats_year']]['months'][(int) $row_months['stats_month']] = array(
 			'id' => $ID_MONTH,
 			'date' => array(
 				'month' => sprintf('%02d', $row_months['stats_month']),

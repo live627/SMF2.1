@@ -285,8 +285,8 @@ function BanList()
 					'class' => 'windowbg',
 				),
 				'sort' => array(
-					'default' => 'ISNULL(bg.expire_time) DESC, bg.expire_time DESC',
-					'reverse' => 'ISNULL(bg.expire_time), bg.expire_time',
+					'default' => 'IFNULL(bg.expire_time, 1=1) DESC, bg.expire_time DESC',
+					'reverse' => 'IFNULL(bg.expire_time, 1=1), bg.expire_time',
 				),
 			),
 			'num_triggers' => array(
@@ -1436,8 +1436,8 @@ function BanLog()
 					'class' => 'windowbg',
 				),
 				'sort' => array(
-					'default' => 'ISNULL(mem.real_name), mem.real_name',
-					'reverse' => 'ISNULL(mem.real_name) DESC, mem.real_name DESC',
+					'default' => 'IFNULL(mem.real_name, 1=1), mem.real_name',
+					'reverse' => 'IFNULL(mem.real_name, 1=1) DESC, mem.real_name DESC',
 				),
 			),
 			'date' => array(
