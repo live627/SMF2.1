@@ -240,6 +240,16 @@ function template_info_center()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
+	// Some java to make it all kinda work.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
+	infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+	infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
+	infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
+	infoHeader.addTogglePanel("upshrinkHeaderIC");
+	// ]]></script>';
+
 	// Here's where the "Info Center" starts...
 	echo '
 	<div class="tborder" id="infocenterframe">
@@ -433,12 +443,12 @@ function template_info_center()
 	</div>';
 }
 
-function	render_infocenter($endcode = 'end', $icon = '' , $alt = '', $link = '', $subtitle = '')
+function render_infocenter($endcode = 'end', $icon = '' , $alt = '', $link = '', $subtitle = '')
 {
 	global $scripturl;
 
-	// its the start of the code then?
-	if($endcode=='start')
+	// Tts the start of the code then?
+	if ($endcode=='start')
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $alt , ' ' , $subtitle != '' ? $subtitle : '' , '</h4>
@@ -448,7 +458,7 @@ function	render_infocenter($endcode = 'end', $icon = '' , $alt = '', $link = '',
 					</dt>
 					<dd class="windowbg2 section">';
 
-	// nope, the end of it
+	// Nope, the end of it
 	else
 		echo '
 					</dd>

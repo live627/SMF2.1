@@ -139,13 +139,6 @@ function template_html_above()
 		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
 		mainHeader.addTogglePanel("user_section");
 		mainHeader.addTogglePanel("news_section");
-
-		// And create the info center object.
-		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
-		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
-		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
-		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>
 
 </head>
@@ -326,7 +319,7 @@ function template_body_below()
 			<li><a href="' , $scripturl , '?action=.xml"> | RSS</a></li>
 		</ul>';
 
-		// Show the load time?
+	// Show the load time?
 	if ($context['show_load_time'])
 		echo '
 		<p class="smalltext">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
@@ -342,7 +335,9 @@ function template_html_below()
 
 	// The following will be used to let the user know that some AJAX process is running
 	echo '
-<div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '"><a href="javascript:ajax_indicator(false);"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['modify_cancel'], '" /></a>', $txt['ajax_in_progress'], '</div>
+<div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '">
+	<a href="javascript:ajax_indicator(false);"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['modify_cancel'], '" /></a>', $txt['ajax_in_progress'], '
+</div>
 </body></html>';
 }
 
@@ -421,29 +416,29 @@ function template_buttonlist($buttons, $top = true)
 		}
 		elseif (!isset($buttonlist[$key]))
 		{
-				// do we want to use old buttons or simply texts? if tabs are off.
-				if($settings['use_buttons'] && !$settings['use_tabs'])
+				// Do we want to use old buttons or simply texts? if tabs are off.
+				if ($settings['use_buttons'] && !$settings['use_tabs'])
 					$buttonlist[$key] = '<a href="' . $value['url'] . '"' . (!empty($value['sctive']) ? ' class="active"' : '') . '><img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/' . $value['image'] . '" alt="' . $txt[$value['text']] . '" /></a>';
-				// we will use texts anyway!
+				// We will use texts anyway!
 				else
 					$buttonlist[$key] = '<a href="' . $value['url'] . '"' . (!empty($value['active']) ? ' class="active"' : '') . '><span' . (($key == count($buttons) - 1) ? ' class="last"' : '') . '>' . (!empty($value['active']) ? '<em>' : '') . $txt[$value['text']] . (!empty($value['active']) ? '</em>' : '') . '</span></a>';
 		}
 		$buttons[$key] = $buttonlist[$key];
 	}
-	// empty list, so just return.
+	// Empty list, so just return.
 	if (empty($buttons))
 		return ;
 
 	if($settings['use_tabs'])
 		echo '
-		<div class="buttonlist' , !$top ? '_bottom' : '' , '">
+		<div class="buttonlist', !$top ? '_bottom' : '', '">
 			<ul class="clearfix">
-				<li>', implode('</li><li>', $buttons) , '</li>
+				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>
 		</div>';
 	else
 		echo '
-		<div class="oldbuttonlist">', implode('&nbsp;', $buttons) , '</div>';
+		<div class="oldbuttonlist">', implode('&nbsp;', $buttons), '</div>';
 }
 
 ?>
