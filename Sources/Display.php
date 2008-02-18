@@ -180,7 +180,7 @@ function Display()
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			t.num_replies, t.num_views, t.locked, ms.subject, t.is_sticky, t.id_poll,
-			t.id_member_started, t.id_first_msg, t.id_last_msg, t.approved,
+			t.id_member_started, t.id_first_msg, t.id_last_msg, t.approved, t.unapproved_posts,
 			' . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.id_msg, -1) + 1') . ' AS new_from
 			' . (!empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $board ? ', id_previous_board, id_previous_topic' : '') . '
 		FROM {db_prefix}topics AS t
@@ -328,6 +328,28 @@ function Display()
 
 	$context['num_replies'] = $topicinfo['num_replies'];
 	$context['topic_first_message'] = $topicinfo['id_first_msg'];
+
+	// If this topic has unapproved posts, we need to work out how many posts the user can see, for page indexing.
+	if ($topicinfo['unapproved_posts'] && !$user_info['is_guest'] && !allowedTo('approve_posts'))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(id_member) AS my_unapproved_posts
+			FROM {db_prefix}messages
+			WHERE id_topic = {int:current_topic}
+				AND id_member = {int:current_member}
+				AND approved = 0',
+			array(
+				'current_topic' => $topic,
+				'current_member' => $user_info['id'],
+			)
+		);
+		list ($myUnapprovedPosts) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		$context['total_visible_posts'] = $context['num_replies'] + $myUnapprovedPosts - ($topicinfo['approved'] ? 0 : 1);
+	}
+	else
+		$context['total_visible_posts'] = $context['num_replies'] + $topicinfo['unapproved_posts'] - ($topicinfo['approved'] ? 0 : 1);
 
 	// Is this topic sticky, or can it even be?
 	$topicinfo['is_sticky'] = empty($modSettings['enableStickyTopics']) ? '0' : $topicinfo['is_sticky'];
@@ -511,26 +533,26 @@ function Display()
 
 	// Construct the page index, allowing for the .START method...
 	$context['messages_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) && !WIRELESS ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
-	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $topicinfo['num_replies'] + 1, $context['messages_per_page'], true);
+	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $context['total_visible_posts'], $context['messages_per_page'], true);
 	$context['start'] = $_REQUEST['start'];
 
 	// This is information about which page is current, and which page we're on - in case you don't like the constructed page index. (again, wireles..)
 	$context['page_info'] = array(
 		'current_page' => $_REQUEST['start'] / $context['messages_per_page'] + 1,
-		'num_pages' => floor($topicinfo['num_replies'] / $context['messages_per_page']) + 1
+		'num_pages' => floor($context['total_visible_posts'] / $context['messages_per_page']) + 1
 	);
 
 	// Figure out all the link to the next/prev/first/last/etc. for wireless mainly.
 	$context['links'] = array(
 		'first' => $_REQUEST['start'] >= $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.0' : '',
 		'prev' => $_REQUEST['start'] >= $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] - $context['messages_per_page']) : '',
-		'next' => $_REQUEST['start'] + $context['messages_per_page'] < $topicinfo['num_replies'] + 1 ? $scripturl . '?topic=' . $topic. '.' . ($_REQUEST['start'] + $context['messages_per_page']) : '',
-		'last' => $_REQUEST['start'] + $context['messages_per_page'] < $topicinfo['num_replies'] + 1 ? $scripturl . '?topic=' . $topic. '.' . (floor($topicinfo['num_replies'] / $context['messages_per_page']) * $context['messages_per_page']) : '',
+		'next' => $_REQUEST['start'] + $context['messages_per_page'] < $context['total_visible_posts'] ? $scripturl . '?topic=' . $topic. '.' . ($_REQUEST['start'] + $context['messages_per_page']) : '',
+		'last' => $_REQUEST['start'] + $context['messages_per_page'] < $context['total_visible_posts'] ? $scripturl . '?topic=' . $topic. '.' . (floor($context['total_visible_posts'] / $context['messages_per_page']) * $context['messages_per_page']) : '',
 		'up' => $scripturl . '?board=' . $board . '.0'
 	);
 
 	// If they are viewing all the posts, show all the posts, otherwise limit the number.
-	if (!empty($modSettings['enableAllMessages']) && $topicinfo['num_replies'] + 1 > $context['messages_per_page'] && $topicinfo['num_replies'] + 1 < $modSettings['enableAllMessages'])
+	if (!empty($modSettings['enableAllMessages']) && $context['total_visible_posts'] > $context['messages_per_page'] && $context['total_visible_posts'] < $modSettings['enableAllMessages'])
 	{
 		if (isset($_REQUEST['all']))
 		{
@@ -787,11 +809,11 @@ function Display()
 	$start = $_REQUEST['start'];
 	$limit = $context['messages_per_page'];
 	$firstIndex = 0;
-	if ($start > $topicinfo['num_replies'] / 2 && $context['messages_per_page'] != -1)
+	if ($start >= $context['total_visible_posts'] / 2 && $context['messages_per_page'] != -1)
 	{
 		$ascending = !$ascending;
-		$limit = $topicinfo['num_replies'] < $start + $limit ? $topicinfo['num_replies'] - $start + 1 : $limit;
-		$start = $topicinfo['num_replies'] < $start + $limit ? 0 : $topicinfo['num_replies'] - $start - $limit + 1;
+		$limit = $context['total_visible_posts'] <= $start + $limit ? $context['total_visible_posts'] - $start : $limit;
+		$start = $context['total_visible_posts'] <= $start + $limit ? 0 : $context['total_visible_posts'] - $start - $limit;
 		$firstIndex = $limit - 1;
 	}
 
@@ -985,7 +1007,7 @@ function prepareDisplayContext($reset = false)
 
 	// Remember which message this is.  (ie. reply #83)
 	if ($counter === null || $reset)
-		$counter = empty($options['view_newest_first']) ? $context['start'] : $context['num_replies'] - $context['start'];
+		$counter = empty($options['view_newest_first']) ? $context['start'] : $context['total_visible_posts'] - $context['start'];
 
 	// Start from the beginning...
 	if ($reset)

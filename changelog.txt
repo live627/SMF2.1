@@ -106,6 +106,7 @@ February 2008
  ! Do a better job with spaces between smileys on the rich editor. (Subs-Editor.php) [Bug 1477]
  ! Make the text areas more forgiving when editing a language entry. (ManageServer.php, Admin template)
  * Was possible to get an undefined index error if the user couldn't see your latest post. (BoardIndex template) [Bug 1591]
+ ! Display wasn't doing things like page indexing correctly if there were unapproved posts and you were a special person. (Display.php) [Bug 1595]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
