@@ -61,7 +61,7 @@ February 2008
  ! SQLite doesn't support the TO_DAYS function but has an equivalent function that we can use. (Subs-Db-sqlite.php) [Bug 1561]
  ! The recent posts page should respect the ignore boards option. (Recent.php) [Bug 1425]
  * Updated the Flash BBC icons. (flash.gif)
- ! Custom profile fields wern't saving if they were admin only but shown on registration. (Profile-Modify.php) [Bug 1571]
+ ! Custom profile fields weren't saving if they were admin only but shown on registration. (Profile-Modify.php) [Bug 1571]
  ! If you are using OpenID don't allow you to do admin actions - but tell you how to enable it. (Subs-Auth.php, Admin language files, Login template)
  ! If you are using OpenID to login allow you to change your authentication method from the profile. (Profile.php, Profile-Modify.php, Profile template, Profile language files)
  ! Don't require password confirmation nor show the password change box if you are using OpenID. (Profile-Modify.php)
@@ -292,7 +292,7 @@ January 2008
  ! Make sure the moderation log absolutely respects access rights of viewers. (Modlog.php) [Bug 1087]
  ! Don't update columns that don't need to be when doing a replace query. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 1194]
  ! Use a generic list for the warning log. (ModerationCenter.php)
- ! Some remaining bits of escaping wern't yet removed. (Various files) [Bug 1215]
+ ! Some remaining bits of escaping weren't yet removed. (Various files) [Bug 1215]
  ! DB insert now uses {db_prefix} for the table name instead of using the raw variable. (Lots of source files)
  + Added {query_see_board} and {query_wanna_see_boards) as automatic replacements for queries. (Subs-Db-XXX.php, Lots of source files)
  ! Removed db_prefix from the list of globals. (Almost every source file) [Bug 1203]
@@ -515,7 +515,7 @@ December 2007
  ! Make the copyright check more forgiving for older copyright messages. (Subs.php)
  ! Fixed undefined offset when editing permissions. (ManagePermissions.php) [Bug 1138,1137]
  ! Removed even more unnecessary spacing. (ManageSettings.php, Subs-Boards.php) [Bug 1134]
- ! Banned users wern't being flagged as such for notifications if they also had an expired ban. (ManageBans.php) [Bug 1118]
+ ! Banned users weren't being flagged as such for notifications if they also had an expired ban. (ManageBans.php) [Bug 1118]
  ! Optimise the updateBanMembers function as it was very slow at working out who had an incorrect ban. (ManageBans.php)
  ! Make sure search engine tracking features all get turned off and on at the right points, and work together. (ManageSearchEngines.php, ManageSettings.php) [Bug 993]
  * Don't show the preview button if you're adding/editing a poll - as we don't support it! (Poll template) [Bug 165]
@@ -1990,7 +1990,7 @@ SMF 1.1 RC2                                                    December 23, 2005
  ! Some Mambo/Joomla field names need to be enclosed in back-ticks. (install.smf.php, smf_registration.php)
  * Fixed error with legend in the default unread template. (Recent template)
  ! Copyright was throwing an error for old language files. (Subs.php)
- ! Some feature settings wern't saving as a result of a missing loadLanguage. (ModSettings.php)
+ ! Some feature settings weren't saving as a result of a missing loadLanguage. (ModSettings.php)
  * Use the current themes help.css file if it exists. (Help.php)
  ! When detecting crawlers, ensure we pick up on Google. (Load.php)
  ! Some activation emails did not contain the full URL in Mambo/Joomla bridge registration. (smf_registration.php)
