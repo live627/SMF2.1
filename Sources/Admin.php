@@ -480,21 +480,9 @@ function AdminHome()
 		$context['more_admins_link'] = '<a href="' . $scripturl . '?action=moderate;area=viewgroups;sa=members;group=1">' . $txt['more'] . '</a>';
 	}
 
-	// Some stuff.... :P.
-	$context['credits'] = '
-<i>Simple Machines wants to thank everyone who helped make SMF 2.0 what it is today; shaping and directing our project, all through the thick and the thin. It wouldn\'t have been possible without you.</i><br />
-<div style="margin-top: 1ex;"><i>This includes our users and especially Charter Members - thanks for installing and using our software as well as providing valuable feedback, bug reports, and opinions.</i></div>
-<div style="margin-top: 2ex;"><b>Project Managers:</b> Amacythe, David Recordon, Joseph Fung, and Jeff Lewis.</div>
-<div style="margin-top: 1ex;"><b>Developers:</b> Hendrik Jan &quot;Compuart&quot; Visser, Matt &quot;Grudge&quot; Wolf, Michael &quot;Thantos&quot; Miller, Theodore &quot;Orstio&quot; Hildebrandt, and Unknown W. &quot;[Unknown]&quot; Brackets</div>
-<div style="margin-top: 1ex;"><b>Support Specialists:</b> Ben Scott, Michael &quot;Oldiesmann&quot; Eshom, Jan-Olof &quot;Owdy&quot; Eriksson, A&auml;ron van Geffen, Alexandre &quot;Ap2&quot; Patenaude, Andrea Hubacher, Chris Cromer, [darksteel], dtm.exe, Nick &quot;Fizzy&quot; Dyer, Horseman, Huw Ayling-Miller, jerm, Justyne, kegobeer, Kindred, Matthew &quot;Mattitude&quot; Hall, Mediman, Metho, Omar Bazavilvazo, Pitti, redone, Tomer &quot;Lamper&quot; Dean, Tony, and xenovanis.</div>
-<div style="margin-top: 1ex;"><b>Mod Developers:</b> snork13, Cristi&aacute;n &quot;Anguz&quot; L&aacute;vaque, Goosemoose, Jack.R.Abbit, James &quot;Cheschire&quot; Yarbro, Jesse &quot;Gobalopper&quot; Reid, Juan &quot;JayBachatero&quot; Hernandez, Kirby, vbgamer45, and winrules.</div>
-<div style="margin-top: 1ex;"><b>Documentation Writers:</b> akabugeyes, eldacar, Gary M. &quot;AwwLilMaggie&quot; Gadsdon, Jerry, and Nave.</div>
-<div style="margin-top: 1ex;"><b>Language Coordinators:</b> Daniel Diehl.</div>
-<div style="margin-top: 1ex;"><b>Graphic Designers:</b> Bjoern &quot;Bloc&quot; Kristiansen, Alienine (Adrian), A.M.A, babylonking, BlackouT, Burpee, diplomat, Eren &quot;forsakenlad&quot; Yasarkurt, Hyper Piranha, Killer Possum, Mystica, Nico &quot;aliencowfarm&quot; Boer, Philip &quot;Meriadoc&quot; Renich and Tippmaster.</div>
-<div style="margin-top: 1ex;"><b>Site team:</b> dschwab9 and Tim.</div>
-<div style="margin-top: 1ex;"><b>Marketing:</b> Douglas &quot;The Bear&quot; Hazard, RickC and Trekkie101.</div>
-<div style="margin-top: 1ex;"><b>Translators:</b> Thank you for your efforts which make it possible for people all around the world to use SMF.</div>
-<div style="margin-top: 1ex;">And for anyone we may have missed, thank you!</div>';
+	// Load the credits stuff.
+	require_once($sourcedir . '/Who.php');
+	Credits(true);
 
 	// Copyright?
 	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
@@ -507,47 +495,36 @@ function AdminHome()
 		{
 			list ($key, $expires) = explode(',', $modSettings['copy_settings']);
 			// Get the expired date.
-			$fp = @fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
-			if ($fp)
+			require_once($sourcedir . '/Subs-Package.php');
+			$return_data = fetch_web_data('http://www.simplemachines.org/smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $key . '&version=' . base64_encode($forum_version));
+
+			// Get the expire date.
+			$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
+			$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
+
+			if ($return_data != 'void')
 			{
-				$out = 'GET /smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $key . '&version=' . base64_encode($forum_version) . ' HTTP/1.1' . "\r\n";
-				$out .= 'Host: www.simplemachines.org' . "\r\n";
-				$out .= 'Connection: Close' . "\r\n\r\n";
-				fwrite($fp, $out);
-
-				$return_data = '';
-				while (!feof($fp))
-					$return_data .= fgets($fp, 128);
-				fclose($fp);
-
-				// Get the expire date.
-				$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
-				$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
-
-				if ($return_data != 'void')
-				{
-					list ($_SESSION['copy_expire'], $modSettings['copyright_key']) = explode('|', $return_data);
-					$_SESSION['copy_key'] = $key;
-					$modSettings['copy_settings'] = $key . ',' . (int) $return_data;
-					updateSettings(array('copy_settings' => $modSettings['copy_settings'], 'copyright_key' => $modSettings['copyright_key']));
-				}
-				else
-				{
-					$_SESSION['copy_expire'] = '';
-					$smcFunc['db_query']('', '
-						DELETE FROM {db_prefix}settings
-						WHERE variable = {string:copy_settings}
-							OR variable = {string:copyright_key}',
-						array(
-							'copy_settings' => 'copy_settings',
-							'copyright_key' => 'copyright_key',
-						)
-					);
-				}
+				list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
+				$_SESSION['copy_key'] = $key;
+				$copy_settings = $key . ',' . (int) $_SESSION['copy_expire'];
+				updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
+			}
+			else
+			{
+				$_SESSION['copy_expire'] = '';
+				$smcFunc['db_query']('', '
+					DELETE FROM {db_prefix}settings
+					WHERE variable = {string:copy_settings}
+						OR variable = {string:copyright_key}',
+					array(
+						'copy_settings' => 'copy_settings',
+						'copyright_key' => 'copyright_key',
+					)
+				);
 			}
 		}
 
-		if ($_SESSION['copy_expire'] && $_SESSION['copy_expire'] > time())
+		if (isset($_SESSION['copy_expire']) && $_SESSION['copy_expire'] > time())
 		{
 			$context['copyright_expires'] = (int) (($_SESSION['copy_expire'] - time()) / 3600 / 24);
 			$context['copyright_key'] = $_SESSION['copy_key'];
@@ -643,36 +620,24 @@ function ManageCopyright()
 		$_POST['copy_code'] = urlencode($_POST['copy_code']);
 
 		// Check the actual code.
-		$fp = @fsockopen('www.simplemachines.org', 80, $errno, $errstr);
-		if ($fp)
+		require_once($sourcedir . '/Subs-Package.php');
+		$return_data = fetch_web_data('http://www.simplemachines.org/smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $_POST['copy_code'] . '&version=' . base64_encode($forum_version));
+
+		// Get the data back
+		$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
+		$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
+
+		if ($return_data != 'void')
 		{
-			$out = 'GET /smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $_POST['copy_code'] . '&version=' . base64_encode($forum_version) . ' HTTP/1.1' . "\r\n";
-			$out .= 'Host: www.simplemachines.org' . "\r\n";
-			$out .= 'Connection: Close' . "\r\n\r\n";
-			fwrite($fp, $out);
-
-			$return_data = '';
-			while (!feof($fp))
-				$return_data .= fgets($fp, 128);
-			fclose($fp);
-
-			// Get the data back
-			$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
-			$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
-
-			if ($return_data != 'void')
-			{
-				echo $return_data;
-				list ($_SESSION['copy_expire'], $modSettings['copyright_key']) = explode('|', $return_data);
-				$_SESSION['copy_key'] = $key;
-				$modSettings['copy_settings'] = $key . ',' . (int) $return_data;
-				updateSettings(array('copy_settings' => $modSettings['copy_settings'], 'copyright_key' => $modSettings['copyright_key']));
-				redirectexit('action=admin');
-			}
-			else
-			{
-				fatal_lang_error('copyright_failed');
-			}
+			list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
+			$_SESSION['copy_key'] = $_POST['copy_code'];
+			$copy_settings = $_POST['copy_code'] . ',' . (int) $_SESSION['copy_expire'];
+			updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
+			redirectexit('action=admin');
+		}
+		else
+		{
+			fatal_lang_error('copyright_failed');
 		}
 	}
 

@@ -332,7 +332,14 @@ function template_credits()
 			<tr class="titlebg">
 				<td>', $txt['admin_credits'], '</td>
 			</tr><tr>
-				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">', $context['credits'], '</span></td>
+				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">
+					<p>', $txt['credits_intro'], '</p>';
+
+	foreach($context['credits'] AS $section => $teams)
+		foreach($teams AS $team => $members)
+			echo '
+					<div style="margin-top: 1ex;"><strong>', $team, ':</strong> ', implode(', ', $members), '</div>';
+	echo '			</span></td>
 			</tr>
 		</table>';
 

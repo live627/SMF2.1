@@ -214,7 +214,7 @@ a img
 }
 
 /* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
-.titlebg, tr.titlebg th, tr.titlebg td, .titlebg2, tr.titlebg2 th, tr.titlebg2 td
+.titlebg, tr.titlebg th, tr.titlebg td, .titlebg2, tr.titlebg2 th, tr.titlebg2 td, #credits h3
 {
 	color: black;
 	font-style: normal;
@@ -622,4 +622,25 @@ a.moderation_link, a.moderation_link:visited
 {
 	padding: 4px 0px 4px 4px;
 	border-bottom: 1px solid #cccccc;
+}
+
+/* Credits page */
+#credits p, #credits h4
+{
+	padding: 0 10px;
+}
+
+#credits h3
+{
+	margin: 0;
+}
+
+#credits ul
+{
+	list-style-type: none;
+}
+
+#credits ul li
+{
+	margin-bottom: 0.5em;
 }

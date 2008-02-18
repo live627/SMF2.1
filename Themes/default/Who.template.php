@@ -93,4 +93,59 @@ function template_main()
 	</form>';
 }
 
+function template_credits()
+{
+	global $context, $txt;
+	// The most important part - the credits :P.
+	echo '
+	<div class="tborder windowbg2" id="credits">
+		<h3>', $txt['credits'], '</h3>
+		<p>', $txt['credits_intro'], '</p>
+
+		<h4>', $txt['credits_team'], '</h4>
+		<ul>';
+
+	foreach($context['credits']['team'] AS $group => $members)
+	{
+		echo '
+			<li><strong>', $group, '</strong>: ', implode(', ', $members), '</li>';
+	}
+
+	echo '
+		</ul>
+
+		<h4>', $txt['credits_special'], '</h4>
+		<ul>';
+
+	foreach($context['credits']['special'] AS $group => $members)
+	{
+		echo '
+			<li><strong>', $group, '</strong>: ', implode(', ', $members), '</li>';
+	}
+
+	echo '
+		</ul>
+		<p>', $txt['credits_anyone'], '</p>
+
+		<h3>', $txt['credits_copyright'], '</h3>
+		<h4>', $txt['credits_forum'], '</h4>', '
+		<p>', $context['copyrights']['smf'];
+
+	if (!empty($context['copyright_removal_validate']))
+		echo '<br />
+			', $context['copyright_removal_validate'];
+
+	echo '
+		</p>';
+
+	if (!empty($context['copyrights']['mods']))
+	{
+		echo '
+		<h4>', $txt['credits_modifications'], '</h4>
+		<p>', implode("<br />\n", $context['copyrights']['mods']), '</p>';
+	}
+
+	echo '
+	</div>';
+}
 ?>

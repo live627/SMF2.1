@@ -105,4 +105,14 @@ $txt['who_profile'] = 'Editing the profile of <a href="' . $scripturl . '?action
 $txt['who_post'] = 'Posting a new topic in <a href="' . $scripturl . '?board=%d.0">%s</a>.';
 $txt['who_poll'] = 'Posting a new poll in <a href="' . $scripturl . '?board=%d.0">%s</a>.';
 
+// Credits text
+$txt['credits'] = 'Credits';
+$txt['credits_intro'] = 'Simple Machines wants to thank everyone who helped make SMF 2.0 what it is today; shaping and directing our project, all through the thick and the thin. It wouldn\'t have been possible without you. This includes our users and especially Charter Members - thanks for installing and using our software as well as providing valuable feedback, bug reports, and opinions.';
+$txt['credits_team'] = 'The Team';
+$txt['credits_special'] = 'Special Thanks';
+$txt['credits_anyone'] = 'And for anyone we may have missed, thank you!';
+$txt['credits_copyright'] = 'Copyrights';
+$txt['credits_removal_good'] = 'This forum has been authorized to remove the copyright display until %1$s. (<a href="%2$s" target="_blank">Validate</a>)';
+$txt['credits_forum'] = 'Forum';
+$txt['credits_modifications'] = 'Modifications';
 ?>

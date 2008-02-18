@@ -208,7 +208,7 @@ function template_manual_intro()
 	echo '
 
 	<p>', $txt['manual_index_you_have_arrived_part1'], '<a href="http://www.simplemachines.org/">', $txt['manual_index_you_have_arrived_link_site0'], '</a>', $txt['manual_index_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;page=index#board">', $txt['manual_index_you_have_arrived_link_site0_board'], '</a>', $txt['manual_index_you_have_arrived_part3'], '</p>
-	<p>', $txt['manual_index_guest_permit_read_part1'], '<a href="', $scripturl, '?action=help;page=registering">', $txt['manual_index_guest_permit_read_link_registering'], '</a>', $txt['manual_index_guest_permit_read_part2'], '</p>
+	<p>', sprintf($txt['manual_index_guest_permit_read_part1'], $scripturl . '?action=credits'), '<a href="', $scripturl, '?action=help;page=registering">', $txt['manual_index_guest_permit_read_link_registering'], '</a>', $txt['manual_index_guest_permit_read_part2'], '</p>
 	<ol>
 		<li><a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_index_main_menu'], '</a></li>
 		<li><a href="', $scripturl, '?action=help;page=index#board">', $txt['manual_index_sec_board_index'], '</a></li>

@@ -484,6 +484,127 @@ function determineActions($urls)
 		return $data;
 }
 
+function Credits($in_admin = false)
+{
+	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt;
+	$context['credits'] = array(
+		'team' => array(
+			'Project Manager' => array(
+				'Amacythe',
+				'dschwab9',
+				'Michael &quot;Oldiesmann&quot; Eshom',
+			),
+			'Developers' => array(
+				'Hendrik Jan &quot;Compuart&quot; Visser',
+				'Matt &quot;Grudge&quot; Wolf',
+				'Bjoern &quot;Bloc&quot; Kristiansen',
+				'Juan &quot;JayBachatero&quot; Hernandez',
+				'Michael &quot;Thantos&quot; Miller',
+				'Theodore &quot;Orstio&quot; Hildebrandt',
+			),
+			'Support Specialists' => array(
+				'jerm',
+				'BlackMage',
+				'Kindred',
+				'greyknight17',
+				'RedOne',
+				'Harro',
+				'Bigguy',
+				'Fiery',
+				'Huw Ayling-Miller',
+				'Sarge',
+				'Rumbaar',
+				'SlammedDime',
+				'Jan-Olof &quot;Owdy&quot; Eriksson',
+				'A&auml;ron van Geffen',
+				'KGIII',
+				'Dannii',
+			),
+			'Customizers' => array(
+				'winrules',
+				'Gary M. Gadsdon',
+				'RunicWarrior',
+				'vbgamer45',
+				'Jeremy "SleePy" Darwood',
+				'Niko',
+				'Kirby',
+				'Daniel15',
+				'groundup',
+				'Fizzy',
+				'Pitti',
+				'*eren',
+				'snork13',
+			),
+			'Documentation Writers' => array(
+				'Jack "akabugeyes" Thorsen',
+				'Daniel Diehl',
+				'IchBin™',
+				'Alundra',
+				'Peter Duggan',
+			),
+			'Marketing' => array(
+				'rickC',
+				'Motoko-chan',
+				'Trekkie101',
+			),
+		),
+		'special' => array(
+			'Language Translators' => array(
+				'Thank you for your efforts which make it possible for people all around the world to use SMF.',
+			),
+			'Beta Testers' => array(
+				'The hidden few who tirelessly find bugs, provide feedback, and drive the developers crazier',
+			),
+			'Founding Father of SMF' => array(
+				'Unknown W. &quot;[Unknown]&quot; Brackets',
+			),
+			'Orignal Project Managers' => array(
+				'Jeff Lewis',
+				'Joseph Fung',
+				'David Recordon',
+			),
+		)
+	);
+
+	loadLanguage('Who');
+
+	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
+	{
+		if (empty($modSettings['copy_settings']))
+			$modSettings['copy_settings'] = 'a,0';
+
+		list ($key, $expire) = explode(',', $modSettings['copy_settings']);
+
+		if ($expire >= time())
+		{
+			$context['copyright_removal_expires'] = timeformat($expire);
+			$context['copyright_removal_validate_url'] = sprintf('http://www.simplemachines.org/copyright/index.php?action=validate;url=%1$s', base64_encode($boardurl));
+			$context['copyright_removal_validate'] = sprintf($txt['credits_removal_good'], $context['copyright_removal_expires'], $context['copyright_removal_validate_url']);
+		}
+	}
+
+	$context['copyrights'] = array(
+		'smf' => sprintf($forum_copyright, $forum_version),
+
+		/* Modification Authors:  You may add a copyright statement to this array for your mods.
+			Copyright statements should be in the form of a value only without a array key.  I.E.:
+				'Some Mod by Thantos &copy; 2008',
+				$txt['some_mod_copyright'],
+		*/
+		'mods' => array(
+			'Some Mod by Thantos &copy; 2008',
+		),
+	);
+	
+	if (!$in_admin)
+	{
+		loadTemplate('Who');
+		$context['sub_template'] = 'credits';
+		$context['robot_no_index'] = true;
+		$context['page_title'] = $txt['credits'];
+	}
+}
+
 function Mascot()
 {
 	global $sourcedir;

@@ -26,7 +26,7 @@ $txt['manual_index_you_have_arrived_link_site0'] = 'Simple Machines Forum';
 $txt['manual_index_you_have_arrived_part2'] = ' (SMF)! Perhaps you\'ve been looking at the ';
 $txt['manual_index_you_have_arrived_link_site0_board'] = 'board index';
 $txt['manual_index_you_have_arrived_part3'] = ' or a screen telling you that you need to register before you can read it and you\'re wondering what to do next?';
-$txt['manual_index_guest_permit_read_part1'] = 'Well, some forums permit guests to read and post, some permit guests to read only and some are restricted to registered members. We\'d recommend ';
+$txt['manual_index_guest_permit_read_part1'] = 'Well, some forums permit guests to read and post, some permit guests to read only and some are restricted to registered members. <a href="%1$s">We\'d</a> recommend ';
 $txt['manual_index_guest_permit_read_link_registering'] = 'registering';
 $txt['manual_index_guest_permit_read_part2'] = ' at any forum that you see yourself using regularly because many of the most useful features will only become available to you when you do so. Since SMF, however, is such a flexible system that few forums are likely to be identical, we will start by describing four key areas that we\'d normally expect to be there for you:';
 $txt['manual_index_main_menu'] = 'The Main Menu';
