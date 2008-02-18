@@ -174,17 +174,17 @@ function template_body_above()
 				<a href="#" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>
 			</div>';
 
-	if($context['user']['is_logged'])
+	if ($context['user']['is_logged'])
 		echo '
-			<h2>' , $txt['hello_member_ndt'], ' <em>', $context['user']['name'] , '</em></h2>';
+			<h2>', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></h2>';
 	else
 		echo '
-			<h2>' , $txt['hello_guest'] , $txt['guest'] , '</h2>';
+			<h2>', $txt['hello_guest'], $txt['guest'], '</h2>';
 
 	echo '
 		</div>
 		<div id="user_section" class="bordercolor"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>';
-		
+
 	if (!empty($context['user']['avatar']))
 		echo '
 			<p id="avatar">', $context['user']['avatar']['image'], '</p>';
@@ -286,7 +286,7 @@ function template_body_above()
 	if (!empty($settings['enable_news']))
 		echo '
 			<div id="random_news"><h3>', $txt['news'], ':</h3> ', $context['random_news_line'], '</div>';
-	
+
 	echo '
 		</div>
 	</div>';
@@ -316,7 +316,7 @@ function template_body_below()
 			<li>', theme_copyright(), '</li>
 			<li><a href="http://validator.w3.org/check/referer" target="_blank"> | XHTML</a></li>
 			<li><a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank"> | CSS</a></li>
-			<li><a href="' , $scripturl , '?action=.xml"> | RSS</a></li>
+			<li><a href="', $scripturl, '?action=.xml"> | RSS</a></li>
 		</ul>';
 
 	// Show the load time?
@@ -346,7 +346,7 @@ function theme_linktree()
 {
 	global $context, $settings, $options;
 
-	// if linktree is empty, just return
+	// If linktree is empty, just return
 	if(empty($context['linktree']))
 		return;
 
@@ -385,8 +385,8 @@ function template_menu()
 	echo '
 	<div id="main_menu">
 		<ul class="clearfix">';
-	
-	foreach($context['menu_buttons'] AS $act => $button)
+
+	foreach ($context['menu_buttons'] as $act => $button)
 	{
 		echo '
 			<li id="button_', $act, '">

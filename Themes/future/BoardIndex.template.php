@@ -397,7 +397,7 @@ function template_info_center()
 	if ($context['user']['is_logged'] && !$settings['show_stats_index'])
 	{
 		render_infocenter(false, $settings['images_url'] . '/message_sm.gif', $txt['personal_message'] , $context['allow_pm'] ? $scripturl . '?action=pm' : '');
-		 echo '
+		echo '
 						<strong><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></strong>
 						<div class="smalltext">
 							', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], ' <a href="', $scripturl, '?action=pm">', $txt['here'], '</a> ', $txt['to_view'], '
@@ -443,18 +443,18 @@ function template_info_center()
 	</div>';
 }
 
-function render_infocenter($endcode = 'end', $icon = '' , $alt = '', $link = '', $subtitle = '')
+function render_infocenter($endcode = 'end', $icon = '', $alt = '', $link = '', $subtitle = '')
 {
 	global $scripturl;
 
-	// Tts the start of the code then?
-	if ($endcode=='start')
+	// Is it the start of the code then?
+	if ($endcode == 'start')
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $alt , ' ' , $subtitle != '' ? $subtitle : '' , '</h4>
 				<dl class="windowbg">
 					<dt class="section">
-						' , $link!='' ? '<a href="'. $link . '"><img src="' . $icon . '" alt="' . $alt . '" /></a>' : '<img src="' . $icon . '" alt="' . $alt . '" />' , '
+						', $link != '' ? '<a href="'. $link . '"><img src="' . $icon . '" alt="' . $alt . '" /></a>' : '<img src="' . $icon . '" alt="' . $alt . '" />', '
 					</dt>
 					<dd class="windowbg2 section">';
 
