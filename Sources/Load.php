@@ -62,7 +62,7 @@ if (!defined('SMF'))
 	void loadTheme(int id_theme = auto_detect)
 		// !!!
 
-	void loadTemplate(string template_name, bool fatal = true)
+	void loadTemplate(string template_name, array stlye_sheets = array(), bool fatal = true)
 		- loads a template file with the name template_name from the current,
 		  default, or base theme.
 		- uses the template_include() function to include the file.
@@ -1617,10 +1617,13 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 
 		foreach ($style_sheets as $sheet)
 		{
-			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : 'default_theme_url';
-			$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
-			if ($db_show_debug === true)
-				$context['debug']['sheets'][] = $sheet . '(' . basename($settings[$sheet_path]) . ')';
+			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : (file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'default_theme_url' : '');
+			if ($sheet_path)
+			{
+				$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
+				if ($db_show_debug === true)
+					$context['debug']['sheets'][] = $sheet . '(' . basename($settings[$sheet_path]) . ')';
+			}
 		}
 	}
 
