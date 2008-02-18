@@ -1348,10 +1348,11 @@ function ModifyLanguage()
 					);
 				}
 
+				$editing_string = cleanLangString($v['entry'], true);
 				$context['file_entries'][] = array(
 					'key' => $k,
-					'value' => cleanLangString($v['entry'], true),
-					'rows' => 1,
+					'value' => $editing_string,
+					'rows' => (int) (strlen($editing_string) / 38) + substr_count($editing_string, "\n") + 1,
 				);
 			}
 		}

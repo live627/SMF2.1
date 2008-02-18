@@ -1790,14 +1790,14 @@ function template_modify_language_entries()
 					<span class="smalltext">', $entry['key'], '</span>
 				</td>
 			</tr>
-			<tr class="windowbg2">
+			<tr class="windowbg2" valign="top">
 				<td width="50%">
 					<input type="hidden" name="comp[', $cached['key'], ']" value="', $cached['value'], '" />
-					<textarea name="entry[', $cached['key'], ']" cols="40" rows="2" style="width: 96%;">', $cached['value'], '</textarea>
+					<textarea name="entry[', $cached['key'], ']" cols="40" rows="', $cached['rows'] < 2 ? 2 : $cached['rows'], '" style="width: 96%;">', $cached['value'], '</textarea>
 				</td>
 				<td width="50%">
 					<input type="hidden" name="comp[', $entry['key'], ']" value="', $entry['value'], '" />
-					<textarea name="entry[', $entry['key'], ']" cols="40" rows="2" style="width: 96%;">', $entry['value'], '</textarea>
+					<textarea name="entry[', $entry['key'], ']" cols="40" rows="', $entry['rows'] < 2 ? 2 : $entry['rows'], '" style="width: 96%;">', $entry['value'], '</textarea>
 				</td>
 			</tr>';
 			$cached = array();
