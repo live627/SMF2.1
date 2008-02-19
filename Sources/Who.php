@@ -559,7 +559,7 @@ function Credits($in_admin = false)
 			'Founding Father of SMF' => array(
 				'Unknown W. &quot;[Unknown]&quot; Brackets',
 			),
-			'Orignal Project Managers' => array(
+			'Original Project Managers' => array(
 				'Jeff Lewis',
 				'Joseph Fung',
 				'David Recordon',
