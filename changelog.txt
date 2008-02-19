@@ -115,6 +115,7 @@ February 2008
  ! When sorting by number of members in the Manage Membergroups page sort by 1 and not -1. (ManageMembergroups.php) [Bug 1603]
  ! Generic lists had the sort arrows the the opposite direction. (Subs-Lists.php) [Bug 1589]
  ! Warning System link in core settings page was pointing to the wrong area. (ManageSettings.php) [Bug 1599]
+ & In Manage Membergroups the javascript to disable the fields was looking for the wrong name for the moderators input box. (ManageMembergroups template) [Bug 1604]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
