@@ -1427,7 +1427,7 @@ function MessagePost()
 
 	isAllowedTo('pm_send');
 
-	if (loadLanguage('PersonalMessage');
+	loadLanguage('PersonalMessage');
 	// Just in case it was loaded from somewhere else.
 	if (!WIRELESS)
 	{
