@@ -312,8 +312,8 @@ function MembergroupIndex()
 					'style' => 'text-align: center',
 				),
 				'sort' => array(
-					'default' => '-1 DESC',
-					'reverse' => '-1',
+					'default' => '1 DESC',
+					'reverse' => '1',
 				),
 			),
 			'required_posts' => array(

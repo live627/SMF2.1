@@ -109,6 +109,11 @@ February 2008
  ! Display wasn't doing things like page indexing correctly if there were unapproved posts and you were a special person. (Display.php) [Bug 1595]
  ! Make the credits publically accessible. (index.php, Admin.php, Who.php, Who, Admin, and Help templates, Who and Manual language files, style.css)
  ! Removed the Lewis Media copyright replacement. (Subs.php)
+ ! Missed a SUBSTRING replacement for SQLite. (Subs-Membergroups.php) [Bug 1602]
+ ! When looking for packages to install, ignore the case for extentions. (Packages.php) [Bug 1359]
+ ! SQLite doesn't like LOW PRIORITY on update. (Subs-Db-sqlite.php)
+ ! When sorting by number of members in the Manage Membergroups page sort by 1 and not -1. (ManageMembergroups.php) [Bug 1603]
+ ! Generic lists had the sort arrows the the opposite direction. (Subs-Lists.php) [Bug 1589]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

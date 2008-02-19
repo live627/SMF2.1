@@ -487,6 +487,7 @@ function determineActions($urls)
 function Credits($in_admin = false)
 {
 	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt;
+
 	$context['credits'] = array(
 		'team' => array(
 			'Project Manager' => array(
@@ -594,7 +595,7 @@ function Credits($in_admin = false)
 		'mods' => array(
 		),
 	);
-	
+
 	if (!$in_admin)
 	{
 		loadTemplate('Who');

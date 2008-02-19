@@ -1249,7 +1249,7 @@ function PackageBrowse()
 		$dirs = array();
 		while ($package = readdir($dir))
 		{
-			if ($package == '.' || $package == '..' || $package == 'temp' || (!(is_dir($boarddir . '/Packages/' . $package) && file_exists($boarddir . '/Packages/' . $package . '/package-info.xml')) && substr($package, -7) != '.tar.gz' && substr($package, -4) != '.tgz' && substr($package, -4) != '.zip'))
+			if ($package == '.' || $package == '..' || $package == 'temp' || (!(is_dir($boarddir . '/Packages/' . $package) && file_exists($boarddir . '/Packages/' . $package . '/package-info.xml')) && substr(strtolower($package), -7) != '.tar.gz' && substr(strtolower($package), -4) != '.tgz' && substr(strtolower($package), -4) != '.zip'))
 				continue;
 
 			// Skip directories or files that are named the same.
@@ -1259,13 +1259,13 @@ function PackageBrowse()
 					continue;
 				$dirs[] = $package;
 			}
-			elseif (substr($package, -7) == '.tar.gz')
+			elseif (substr(strtolower($package), -7) == '.tar.gz')
 			{
 				if (in_array(substr($package, 0, -7), $dirs))
 					continue;
 				$dirs[] = substr($package, 0, -7);
 			}
-			elseif (substr($package, -4) == '.zip' || substr($package, -4) == '.tgz')
+			elseif (substr(strtolower($package), -4) == '.zip' || substr(strtolower($package), -4) == '.tgz')
 			{
 				if (in_array(substr($package, 0, -4), $dirs))
 					continue;

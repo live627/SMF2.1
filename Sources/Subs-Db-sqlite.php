@@ -275,6 +275,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'themes_count' => array(
 			'~\s*SELECT\sCOUNT\(DISTINCT\sid_member\)\sAS\svalue,\sid_theme.+FROM\s(.+themes)(.+)~is' => 'SELECT COUNT(id_member) AS value, id_theme FROM (SELECT DISTINCT id_member, id_theme FROM $1) $2',
 		),
+		'attach_download_increase' => array(
+			'~LOW_PRIORITY~' => '',
+		),
 	);
 
 	if (isset($replacements[$identifier]))

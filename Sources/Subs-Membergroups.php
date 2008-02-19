@@ -608,8 +608,8 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 	$groups = array();
 
 	// Get the basic group data.
-	$request = $smcFunc['db_query']('', '
-		SELECT id_group, group_name, min_posts, online_color, stars, 0 as num_members
+	$request = $smcFunc['db_query']('substring', '
+		SELECT id_group, group_name, min_posts, online_color, stars, 0 AS num_members
 		FROM {db_prefix}membergroups
 		WHERE min_posts ' . ($membergroup_type === 'post_count' ? '!=' : '=') . ' -1
 		ORDER BY {raw:sort}',

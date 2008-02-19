@@ -105,11 +105,9 @@ function template_credits()
 		<h4>', $txt['credits_team'], '</h4>
 		<ul>';
 
-	foreach($context['credits']['team'] AS $group => $members)
-	{
+	foreach ($context['credits']['team'] as $group => $members)
 		echo '
 			<li><strong>', $group, '</strong>: ', implode(', ', $members), '</li>';
-	}
 
 	echo '
 		</ul>
@@ -117,11 +115,9 @@ function template_credits()
 		<h4>', $txt['credits_special'], '</h4>
 		<ul>';
 
-	foreach($context['credits']['special'] AS $group => $members)
-	{
+	foreach ($context['credits']['special'] as $group => $members)
 		echo '
 			<li><strong>', $group, '</strong>: ', implode(', ', $members), '</li>';
-	}
 
 	echo '
 		</ul>
