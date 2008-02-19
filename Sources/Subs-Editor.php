@@ -135,7 +135,7 @@ function html_to_bbc($text)
 	global $modSettings, $smcFunc, $sourcedir;
 
 	// Remove any newlines - as they are useless.
-	$text = strtr($text, array("\n" => '', "\r" => ''));
+	$text = strtr($text, array("\n" => ' ', "\r" => ''));
 
 	// Though some of us love paragraphs the parser will do better with breaks.
 	$text = preg_replace('~</p>\s*?<p>~i', '<br />', $text);

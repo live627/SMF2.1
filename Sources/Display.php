@@ -346,10 +346,10 @@ function Display()
 		list ($myUnapprovedPosts) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
-		$context['total_visible_posts'] = $context['num_replies'] + $myUnapprovedPosts - ($topicinfo['approved'] ? 0 : 1);
+		$context['total_visible_posts'] = $context['num_replies'] + $myUnapprovedPosts + ($topicinfo['approved'] ? 1 : 0);
 	}
 	else
-		$context['total_visible_posts'] = $context['num_replies'] + $topicinfo['unapproved_posts'] - ($topicinfo['approved'] ? 0 : 1);
+		$context['total_visible_posts'] = $context['num_replies'] + $topicinfo['unapproved_posts'] + ($topicinfo['approved'] ? 1 : 0);
 
 	// Is this topic sticky, or can it even be?
 	$topicinfo['is_sticky'] = empty($modSettings['enableStickyTopics']) ? '0' : $topicinfo['is_sticky'];
