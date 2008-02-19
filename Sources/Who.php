@@ -486,8 +486,9 @@ function determineActions($urls)
 
 function Credits($in_admin = false)
 {
-	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt;
+	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt, $user_info;
 
+	// To have a different publically accessible name make the admin name the key, not the value.
 	$context['credits'] = array(
 		'team' => array(
 			'Project Manager' => array(
@@ -497,7 +498,7 @@ function Credits($in_admin = false)
 			),
 			'Developers' => array(
 				'Hendrik Jan &quot;Compuart&quot; Visser',
-				'Matt &quot;Grudge&quot; Wolf',
+				'Matt &quot;Grudge&quot; Wolf' => 'Grudge',
 				'Bjoern &quot;Bloc&quot; Kristiansen',
 				'Juan &quot;JayBachatero&quot; Hernandez',
 				'Michael &quot;Thantos&quot; Miller',
@@ -566,6 +567,13 @@ function Credits($in_admin = false)
 			),
 		)
 	);
+
+	// Quickly process any bits.
+	foreach ($context['credits'] as $section => $section_data)
+		foreach ($section_data as $role => $role_data)
+			foreach ($role_data as $full_name => $public_name)
+				if ($user_info['is_admin'] && !is_numeric($full_name))
+					$context['credits'][$section][$role][$full_name] = $full_name;
 
 	loadLanguage('Who');
 
