@@ -117,6 +117,7 @@ February 2008
  ! Warning System link in core settings page was pointing to the wrong area. (ManageSettings.php) [Bug 1599]
  & In Manage Membergroups the javascript to disable the fields was looking for the wrong name for the moderators input box. (ManageMembergroups template) [Bug 1604]
  ! Use as different variable name for the parameter in autoDetectTimeOffset. (profile.js) [Bug 1609]
+ + Added a theme setting to determine if message previews are being used on the message index.  Don't parse the posts if they aren't. (MessageIndex.php, index template) [Bug 1594]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

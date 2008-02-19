@@ -57,6 +57,9 @@ function template_init()
 
 	/* Does this theme use the strict doctype? */
 	$settings['strict_doctype'] = false;
+
+	/* Does this theme use post previews on the message index? */
+	$settings['message_index_preview'] = false;
 }
 
 // The main sub template above the content.
