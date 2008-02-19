@@ -1,7 +1,7 @@
 var localTime = new Date();
-function autoDetectTimeOffset(serverTime)
+function autoDetectTimeOffset(currentTime)
 {
-	var serverTime = new Date(serverTime);
+	var serverTime = new Date(currentTime);
 
 	// Get the difference between the two, set it up so that the sign will tell us who is ahead of who.
 	var diff = Math.round((localTime.getTime() - serverTime.getTime())/3600000);
