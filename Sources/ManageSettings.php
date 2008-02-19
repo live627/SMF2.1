@@ -289,7 +289,7 @@ function ModifyCoreFeatures($return_config = false)
 		),
 		// w = warning.
 		'w' => array(
-			'url' => 'action=admin;area=featuresettings;sa=moderation',
+			'url' => 'action=admin;area=securitysettings;sa=moderation',
 			'setting_callback' => create_function('$value', '
 				global $modSettings;
 				list ($modSettings[\'warning_enable\'], $modSettings[\'user_limit\'], $modSettings[\'warning_decrement\']) = explode(\',\', $modSettings[\'warning_settings\']);
@@ -499,7 +499,7 @@ function ModifyGeneralSecuritySettings($return_config = false)
 			// Reporting of personal messages?
 			array('check', 'enableReportPM'),
 	);
-								
+
 	if ($return_config)
 		return $config_vars;
 
@@ -686,7 +686,7 @@ function ModifySpamSettings($return_config = false)
 			// Visual verification.
 			array('title', 'configure_verification_means'),
 			array('title', 'configure_verification_means_desc', 'class' => 'windowbg'),
-				'vv' => array('select', 'visual_verification_type', array($txt['setting_image_verification_off'], $txt['setting_image_verification_vsimple'], $txt['setting_image_verification_simple'], $txt['setting_image_verification_medium'], $txt['setting_image_verification_high']), 'subtext'=> $txt['setting_visual_verification_type_desc'], 'onchange' => $context['use_graphic_library'] ? 'refreshImages();' : ''),		
+				'vv' => array('select', 'visual_verification_type', array($txt['setting_image_verification_off'], $txt['setting_image_verification_vsimple'], $txt['setting_image_verification_simple'], $txt['setting_image_verification_medium'], $txt['setting_image_verification_high']), 'subtext'=> $txt['setting_visual_verification_type_desc'], 'onchange' => $context['use_graphic_library'] ? 'refreshImages();' : ''),
 				array('int', 'qa_verification_number', 'subtext' => $txt['setting_qa_verification_number_desc']),
 			// Clever Thomas, who is looking sheepy now? Not I, the mighty sword swinger did say.
 			array('title', 'setup_verification_questions'),

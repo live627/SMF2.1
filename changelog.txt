@@ -114,6 +114,7 @@ February 2008
  ! SQLite doesn't like LOW PRIORITY on update. (Subs-Db-sqlite.php)
  ! When sorting by number of members in the Manage Membergroups page sort by 1 and not -1. (ManageMembergroups.php) [Bug 1603]
  ! Generic lists had the sort arrows the the opposite direction. (Subs-Lists.php) [Bug 1589]
+ ! Warning System link in core settings page was pointing to the wrong area. (ManageSettings.php) [Bug 1599]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
