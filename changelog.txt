@@ -119,6 +119,8 @@ February 2008
  ! Use as different variable name for the parameter in autoDetectTimeOffset. (profile.js) [Bug 1609]
  + Added a theme setting to determine if message previews are being used on the message index.  Don't parse the posts if they aren't. (MessageIndex.php, index template) [Bug 1594]
  ! Removed the leet Easter Egg, because it's time. (Load.php)
+ ! Putting padding on the left and right of a smiley in the WYSWIYG editor but reduce it slightly. (editor.js, Subs-Editor.php)
+ ! Inserting smileys into the WYSIWYG editor with IE was eating a character sometimes. (editor.js) [Bug 1477]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

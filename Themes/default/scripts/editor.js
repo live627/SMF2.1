@@ -550,7 +550,7 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 		if (this.bRichTextEnabled)
 		{
 			// IE croaks if you have an image selected and try to insert!
-			if (typeof(this.oFrameDocument.selection) != 'undefined' && this.oFrameDocument.selection.type != 'Text' && this.oFrameDocument.selection.clear)
+			if (typeof(this.oFrameDocument.selection) != 'undefined' && this.oFrameDocument.selection.type != 'Text' && this.oFrameDocument.selection.type != 'None' && this.oFrameDocument.selection.clear)
 				this.oFrameDocument.selection.clear();
 
 			var oRange = this.getRange();
@@ -744,7 +744,7 @@ SmfEditor.prototype.insertSmiley = function(sName, sCode, sDesc)
 	else
 	{
 		var iUniqueSmileyId = 1000 + Math.floor(Math.random() * 100000);
-		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" style="padding-left: 6px;" />');
+		this.insertText('<img src="' + smf_smileys_url + '/' + sName + '" id="smiley_' + iUniqueSmileyId + '_' + sName + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(sDesc) + '" style="padding: 0 3px 0 3px;" />');
 	}
 }
 
