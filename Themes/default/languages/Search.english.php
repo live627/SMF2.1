@@ -80,7 +80,7 @@ $txt['search_force_index'] = 'Force the use of a search index';
 $txt['search_match_words'] = 'Match whole words only';
 $txt['search_max_results'] = 'Maximum results to show';
 $txt['search_max_results_disable'] = '(0: no limit)';
-$txt['search_floodcontrol_time'] = 'Time required between searches from same member';
+$txt['search_floodcontrol_time'] = 'Time required between searches from same user';
 $txt['search_floodcontrol_time_desc'] = '(0 for no limit, in seconds)';
 
 $txt['search_create_index'] = 'Create index';
