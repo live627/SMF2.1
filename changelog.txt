@@ -125,6 +125,7 @@ February 2008
  + When restoring posts from the recycle board, check to see if the board has post count on and restore the members' post count. (RemoveTopic.php) [Bug 1581]
  ! Send the sub_template and page_title after the config_vars for Manage Registration Settings area. (ManageRegistration.php) [Bug 1621]
  ! Make the credits page a little bit more generalized. (Who.php, Who template, Who language file)
+ ! When searching by board if the user wants to refine their search show the boards appropriately. (Search.php, Search template) [Bug 1623]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

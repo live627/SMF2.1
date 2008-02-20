@@ -88,7 +88,7 @@ function PlushSearch1()
 	// This is hard coded maximum string length.
 	$context['search_string_limit'] = 100;
 
-	$context['require_verification'] = $user_info['is_guest'] && !empty($modSettings['search_enable_captcha']);
+	$context['require_verification'] = $user_info['is_guest'] && !empty($modSettings['search_enable_captcha']) && empty($_SESSION['ss_vv_passed']);
 	if ($context['require_verification'])
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
@@ -153,6 +153,7 @@ function PlushSearch1()
 		)
 	);
 	$context['num_boards'] = $smcFunc['db_num_rows']($request);
+	$context['boards_check_all'] = true;
 	$context['categories'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
@@ -171,6 +172,10 @@ function PlushSearch1()
 			'child_level' => $row['child_level'],
 			'selected' => (empty($context['search_params']['brd']) && (empty($modSettings['recycle_enable']) || $row['id_board'] != $modSettings['recycle_board']) && !in_array($row['id_board'], $user_info['ignoreboards'])) || (!empty($context['search_params']['brd']) && in_array($row['id_board'], $context['search_params']['brd']))
 		);
+
+		// If a board wasn't checked that probably should have been ensure the board selection is selected, yo!
+		if (!$context['categories'][$row['id_cat']]['boards'][$row['id_board']]['selected'] && (empty($modSettings['recycle_enable']) || $row['id_board'] != $modSettings['recycle_board']))
+			$context['boards_check_all'] = false;
 	}
 	$smcFunc['db_free_result']($request);
 

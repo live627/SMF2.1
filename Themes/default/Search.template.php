@@ -160,7 +160,7 @@ function template_main()
 					<fieldset class="windowbg2" style="padding: 10px;">
 						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
 
-						<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex; display: none;">';
+						<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex;', $context['boards_check_all'] ? ' display: none;' : '', '">';
 
 			$alternate = true;
 			foreach ($context['board_columns'] as $board)
@@ -189,7 +189,7 @@ function template_main()
 
 			echo '
 						</table><br />
-						<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
+						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
 					</fieldset> ';
 		}
 
