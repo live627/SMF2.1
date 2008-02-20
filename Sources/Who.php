@@ -488,7 +488,7 @@ function Credits($in_admin = false)
 {
 	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt, $user_info;
 
-	loadLanguage('who');
+	loadLanguage('Who');
 
 	$context['credits'] = array(
 		array(
