@@ -383,16 +383,19 @@ function ModifyProfile($post_errors = array())
 			$profile_vars['member_ip'] = $user_info['ip'];
 
 		// Now call the sub-action function...
-		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'activateAccount' && empty($post_errors))
+		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'activateAccount')
 		{
-			activateAccount($memID);
-		}
-		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'deleteAccount' && empty($post_errors))
-		{
-			deleteAccount2($profile_vars, $post_errors, $memID);
-
 			if (empty($post_errors))
+				activateAccount($memID);
+		}
+		elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'deleteAccount')
+		{
+			if (empty($post_errors))
+			{
+				deleteAccount2($profile_vars, $post_errors, $memID);
+
 				redirectexit();
+			}
 		}
 		elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'groupMembership' && empty($post_errors))
 		{
@@ -402,7 +405,7 @@ function ModifyProfile($post_errors = array())
 			redirectexit('action=profile;u=' . $memID . ';sa=groupMembership' . (!empty($msg) ? ';msg=' . $msg : ''));
 		}
 		// Authentication changes?
-		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'authentication')
+		elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'authentication')
 		{
 			authentication($memID, true);
 		}
@@ -411,6 +414,8 @@ function ModifyProfile($post_errors = array())
 		else
 		{
 			$force_redirect = true;
+			// Ensure we include this.
+			require_once($sourcedir . '/Profile-Modify.php');
 			saveProfileChanges($profile_vars, $post_errors, $memID);
 		}
 
