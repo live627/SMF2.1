@@ -593,7 +593,7 @@ function ReportedPosts()
 	$request = $smcFunc['db_query']('', '
 		SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
-			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
+			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS id_author
 		FROM {db_prefix}log_reported AS lr
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.closed = {int:view_closed}
@@ -614,10 +614,10 @@ function ReportedPosts()
 			'topic_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['id_report'],
 			'author' => array(
-				'id' => $row['ID_AUTHOR'],
+				'id' => $row['id_author'],
 				'name' => $row['author_name'],
-				'link' => $row['ID_AUTHOR'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_AUTHOR'] . '">' . $row['author_name'] . '</a>' : $row['author_name'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_AUTHOR'],
+				'link' => $row['id_author'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_author'] . '">' . $row['author_name'] . '</a>' : $row['author_name'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_author'],
 			),
 			'comments' => array(),
 			'time_started' => timeformat($row['time_started']),
@@ -733,7 +733,7 @@ function ModReport()
 	$request = $smcFunc['db_query']('', '
 		SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
-			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
+			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS id_author
 		FROM {db_prefix}log_reported AS lr
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.id_report = {int:id_report}
@@ -761,10 +761,10 @@ function ModReport()
 		'message_link' => '<a href="' . $scripturl . '?msg=' . $row['id_msg'] . '">' . $row['subject'] . '</a>',
 		'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['id_report'],
 		'author' => array(
-			'id' => $row['ID_AUTHOR'],
+			'id' => $row['id_author'],
 			'name' => $row['author_name'],
-			'link' => $row['ID_AUTHOR'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_AUTHOR'] . '">' . $row['author_name'] . '</a>' : $row['author_name'],
-			'href' => $scripturl . '?action=profile;u=' . $row['ID_AUTHOR'],
+			'link' => $row['id_author'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_author'] . '">' . $row['author_name'] . '</a>' : $row['author_name'],
+			'href' => $scripturl . '?action=profile;u=' . $row['id_author'],
 		),
 		'comments' => array(),
 		'time_started' => timeformat($row['time_started']),

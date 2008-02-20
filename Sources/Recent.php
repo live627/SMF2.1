@@ -647,10 +647,10 @@ function UnreadTopics()
 	// This part is the same for each query.
 	$select_clause = '
 				ms.subject AS first_subject, ms.poster_time AS first_poster_time, ms.id_topic, t.id_board, b.name AS bname,
-				t.num_replies, t.num_views, ms.id_member AS id_first_member, ml.id_member AS ID_LAST_MEMBER,
+				t.num_replies, t.num_views, ms.id_member AS id_first_member, ml.id_member AS id_last_member,
 				ml.poster_time AS last_poster_time, IFNULL(mems.real_name, ms.poster_name) AS first_poster_name,
-				IFNULL(meml.real_name, ml.poster_name) AS lastPosterName, ml.subject AS last_subject,
-				ml.icon AS last_icon, ms.icon AS first_icon, t.id_poll, t.is_sticky, t.locked, ml.modified_time AS lastModifiedTime,
+				IFNULL(meml.real_name, ml.poster_name) AS last_poster_name, ml.subject AS last_subject,
+				ml.icon AS last_icon, ms.icon AS first_icon, t.id_poll, t.is_sticky, t.locked, ml.modified_time AS last_modified_time,
 				IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, SUBSTRING(ml.body, 1, 385) AS last_body,
 				SUBSTRING(ms.body, 1, 385) AS first_body, ml.smileys_enabled AS last_smileys, ms.smileys_enabled AS first_smileys, t.id_first_msg, t.id_last_msg';
 
@@ -1190,10 +1190,10 @@ function UnreadTopics()
 			'last_post' => array(
 				'id' => $row['id_last_msg'],
 				'member' => array(
-					'name' => $row['lastPosterName'],
-					'id' => $row['ID_LAST_MEMBER'],
-					'href' => $scripturl . '?action=profile;u=' . $row['ID_LAST_MEMBER'],
-					'link' => !empty($row['ID_LAST_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_LAST_MEMBER'] . '">' . $row['lastPosterName'] . '</a>' : $row['lastPosterName']
+					'name' => $row['last_poster_name'],
+					'id' => $row['id_last_member'],
+					'href' => $scripturl . '?action=profile;u=' . $row['id_last_member'],
+					'link' => !empty($row['id_last_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_last_member'] . '">' . $row['last_poster_name'] . '</a>' : $row['last_poster_name']
 				),
 				'time' => timeformat($row['last_poster_time']),
 				'timestamp' => forum_time(true, $row['last_poster_time']),

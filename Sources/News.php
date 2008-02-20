@@ -666,7 +666,7 @@ function getXmlRecent($xml_format)
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.id_topic, t.id_board,
-			b.name AS bname, t.num_replies, m.id_member, m.icon, mf.id_member AS ID_FIRST_MEMBER,
+			b.name AS bname, t.num_replies, m.id_member, m.icon, mf.id_member AS id_first_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, mf.subject AS first_subject,
 			IFNULL(memf.real_name, mf.poster_name) AS firstPosterName, mem.hide_email,
 			IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
@@ -743,8 +743,8 @@ function getXmlRecent($xml_format)
 				'body' => cdata_parse($row['body']),
 				'starter' => array(
 					'name' => cdata_parse($row['firstPosterName']),
-					'id' => $row['ID_FIRST_MEMBER'],
-					'link' => !empty($row['ID_FIRST_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] : ''
+					'id' => $row['id_first_member'],
+					'link' => !empty($row['id_first_member']) ? $scripturl . '?action=profile;u=' . $row['id_first_member'] : ''
 				),
 				'poster' => array(
 					'name' => cdata_parse($row['poster_name']),
