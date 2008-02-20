@@ -542,7 +542,7 @@ function Credits($in_admin = false)
 						'Gary M. Gadsdon',
 						'RunicWarrior',
 						'vbgamer45',
-						'Jeremy "SleePy" Darwood',
+						'Jeremy &quot;SleePy&quot; Darwood',
 						'Niko',
 						'Kirby',
 						'Daniel15',
@@ -556,7 +556,7 @@ function Credits($in_admin = false)
 				array(
 					'title' => $txt['credits_groups_docs'],
 					'members' => array(
-						'Jack "akabugeyes" Thorsen',
+						'Jack &quot;akabugeyes&quot; Thorsen',
 						'Daniel Diehl',
 						'IchBin™',
 						'Alundra',

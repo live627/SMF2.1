@@ -96,12 +96,13 @@ function template_main()
 function template_credits()
 {
 	global $context, $txt;
+
 	// The most important part - the credits :P.
 	echo '
 	<div class="tborder windowbg2" id="credits">
 		<h3>', $txt['credits'], '</h3>';
 
-	foreach($context['credits'] as $section)
+	foreach ($context['credits'] as $section)
 	{
 		if (isset($section['pretext']))
 			echo '
@@ -114,15 +115,15 @@ function template_credits()
 		echo '
 		<ul>';
 
-		foreach($section['groups'] as $group)
+		foreach ($section['groups'] as $group)
 		{
 			echo '
 			<li>';
-			
+
 			if (isset($group['title']))
 			echo '
 				<strong>', $group['title'], '</strong>: ';
-			
+
 			// Try to make this read nicely.
 			if (count($group['members']) <= 2)
 				echo implode($txt['credits_and'], $group['members']);
@@ -131,7 +132,7 @@ function template_credits()
 				$last_peep = array_pop($group['members']);
 				echo implode(', ', $group['members']), ', ', $txt['credits_and'], ' ', $last_peep;
 			}
-			
+
 			echo '
 			</li>';
 		}
