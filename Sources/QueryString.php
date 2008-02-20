@@ -107,7 +107,7 @@ function cleanRequest()
 	// Same goes for numeric keys.
 	foreach (array_merge(array_keys($_POST), array_keys($_GET), array_keys($_FILES)) as $key)
 		if (is_numeric($key))
-			die('Invalid request variable.');
+			die('Numeric request keys are invalid.');
 
 	// Numeric keys in cookies are less of a problem. Just unset those.
 	foreach ($_COOKIE as $key => $value)
