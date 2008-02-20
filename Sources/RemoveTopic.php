@@ -1038,6 +1038,34 @@ function RestoreTopic()
 				)
 			);
 
+			// Lets see if the board that we are returning to has post count enabled.
+			$request = $smcFunc['db_query']('', '
+				SELECT count_posts
+				FROM {db_prefix}boards
+				WHERE id_board = {int:board}',
+				array(
+					'board' => $id_previous_board,
+				)
+			);
+			list ($count_posts) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
+
+			if (empty($count_posts))
+			{
+				// Lets get the members that need their post count restored.
+				$request = $smcFunc['db_query']('', '
+					SELECT id_member
+					FROM {db_prefix}messages
+					WHERE id_topic = {int:topic}',
+					array(
+						'topic' => $_REQUEST['topic'],
+					)
+				);
+
+				while ($row = $smcFunc['db_fetch_assoc']($request))
+					updateMemberData($row['id_member'], array('posts' => '+'));
+			}
+
 			// Log it.
 			logAction('restore_topic', array('topic' => $_REQUEST['topic'], 'board' => $id_current_board, 'board_to' => $id_previous_board));
 		}
@@ -1119,6 +1147,34 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 		);
 		list ($target_board) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
+	}
+
+	// Lets see if the board that we are returning to has post count enabled.
+	$request = $smcFunc['db_query']('', '
+		SELECT count_posts
+		FROM {db_prefix}boards
+		WHERE id_board = {int:board}',
+		array(
+			'board' => $target_board,
+		)
+	);
+	list ($count_posts) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	if (empty($count_posts))
+	{
+		// Lets get the members that need their post count restored.
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member
+			FROM {db_prefix}messages
+			WHERE id_msg IN ({array_int:messages})',
+			array(
+				'messages' => $msgs,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			updateMemberData($row['id_member'], array('posts' => '+'));
 	}
 
 	// Time to move them.

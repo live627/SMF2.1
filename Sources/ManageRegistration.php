@@ -282,10 +282,6 @@ function ModifyRegistrationSettings($return_config = false)
 	// This is really quite wanting.
 	require_once($sourcedir . '/ManageServer.php');
 
-	// Setup the template
-	$context['sub_template'] = 'show_settings';
-	$context['page_title'] = $txt['registration_center'];
-
 	$config_vars = array(
 			array('select', 'registration_method', array($txt['setting_registration_standard'], $txt['setting_registration_activate'], $txt['setting_registration_approval'], $txt['setting_registration_disabled'])),
 			array('check', 'enableOpenID'),
@@ -301,6 +297,10 @@ function ModifyRegistrationSettings($return_config = false)
 
 	if ($return_config)
 		return $config_vars;
+
+	// Setup the template
+	$context['sub_template'] = 'show_settings';
+	$context['page_title'] = $txt['registration_center'];
 
 	if (isset($_GET['save']))
 	{

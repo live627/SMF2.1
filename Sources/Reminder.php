@@ -119,7 +119,7 @@ function RemindPick()
 			))
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('username_no_exist', false);
+			fatal_lang_error('no_user_with_email', false);
 	}
 
 	$row = $smcFunc['db_fetch_assoc']($request);
