@@ -332,14 +332,32 @@ function template_credits()
 			<tr class="titlebg">
 				<td>', $txt['admin_credits'], '</td>
 			</tr><tr>
-				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">
-					<p>', $txt['credits_intro'], '</p>';
+				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">';
 
-	foreach($context['credits'] AS $section => $teams)
-		foreach($teams AS $team => $members)
+	foreach($context['credits'] AS $section)
+	{
+		if (isset($section['pretext']))
 			echo '
-					<div style="margin-top: 1ex;"><strong>', $team, ':</strong> ', implode(', ', $members), '</div>';
-	echo '			</span></td>
+					<p>', $section['pretext'], '</p>';
+
+		foreach($section['groups'] AS $group)
+		{
+			echo '
+					<div style="margin-top: 1ex;">';
+					
+			if (isset($group['title']))
+				echo '<strong>', $group['title'], ':</strong> ';
+			
+			echo implode(', ', $group['members']), '</div>';
+		}
+
+		if (isset($section['posttext']))
+			echo '
+					<p>', $section['posttext'], '</p>';
+	}
+
+	echo '
+				</span></td>
 			</tr>
 		</table>';
 
