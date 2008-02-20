@@ -84,7 +84,7 @@ function db_fatal_error($loadavg = false)
 // Log an error, if the option is on.
 function log_error($error_message, $error_type = 'general', $file = null, $line = null)
 {
-	global $txt, $modSettings, $sc, $user_info, $smcFunc, $scripturl;
+	global $txt, $modSettings, $sc, $user_info, $smcFunc, $scripturl, $last_error;
 
 	// Check if error logging is actually on.
 	if (empty($modSettings['enableErrorLogging']))
@@ -137,13 +137,19 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	// Make sure the category that was specified is a valid one
 	$error_type = in_array($error_type, $known_error_types) && $error_type !== true ? $error_type : 'general';
 
-	// Insert the error into the database.
-	$smcFunc['db_insert']('',
-		'{db_prefix}log_errors',
-		array('id_member' => 'int', 'log_time' => 'int', 'ip' => 'string-16', 'url' => 'string-65534', 'message' => 'string-65534', 'session' => 'string', 'error_type' => 'string', 'file' => 'string-255', 'line' => 'int'),
-		array($user_info['id'], time(), $user_info['ip'], $query_string, $error_message, (string) $sc, $error_type, $file, $line),
-		array('id_error')
-	);
+	// Don't log the same error countless times, as we can get in a cycle of depression...
+	$error_info = array($user_info['id'], time(), $user_info['ip'], $query_string, $error_message, (string) $sc, $error_type, $file, $line);
+	if (empty($last_error) || $last_error != $error_info)
+	{
+		// Insert the error into the database.
+		$smcFunc['db_insert']('',
+			'{db_prefix}log_errors',
+			array('id_member' => 'int', 'log_time' => 'int', 'ip' => 'string-16', 'url' => 'string-65534', 'message' => 'string-65534', 'session' => 'string', 'error_type' => 'string', 'file' => 'string-255', 'line' => 'int'),
+			$error_info
+			array('id_error')
+		);
+		$last_error = $error_info;
+	}
 
 	// Return the message to make things simpler.
 	return $error_message;

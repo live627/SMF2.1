@@ -198,6 +198,31 @@ function Display()
 	$topicinfo = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
+	$context['num_replies'] = $topicinfo['num_replies'];
+	$context['topic_first_message'] = $topicinfo['id_first_msg'];
+
+	// If this topic has unapproved posts, we need to work out how many posts the user can see, for page indexing.
+	if ($topicinfo['unapproved_posts'] && !$user_info['is_guest'] && !allowedTo('approve_posts'))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(id_member) AS my_unapproved_posts
+			FROM {db_prefix}messages
+			WHERE id_topic = {int:current_topic}
+				AND id_member = {int:current_member}
+				AND approved = 0',
+			array(
+				'current_topic' => $topic,
+				'current_member' => $user_info['id'],
+			)
+		);
+		list ($myUnapprovedPosts) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		$context['total_visible_posts'] = $context['num_replies'] + $myUnapprovedPosts + ($topicinfo['approved'] ? 1 : 0);
+	}
+	else
+		$context['total_visible_posts'] = $context['num_replies'] + $topicinfo['unapproved_posts'] + ($topicinfo['approved'] ? 1 : 0);
+
 	// When was the last time this topic was replied to?  Should we warn them about it?
 	$request = $smcFunc['db_query']('', '
 		SELECT poster_time
@@ -223,7 +248,7 @@ function Display()
 			// Guests automatically go to the last topic.
 			if ($user_info['is_guest'])
 			{
-				$context['start_from'] = $topicinfo['num_replies'];
+				$context['start_from'] = $context['total_visible_posts'] - 1;
 				$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : 0;
 			}
 			else
@@ -263,9 +288,12 @@ function Display()
 					SELECT COUNT(*)
 					FROM {db_prefix}messages
 					WHERE poster_time < {int:timestamp}
-						AND id_topic = {int:current_topic}',
+						AND id_topic = {int:current_topic}' . 
+						($topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? ' AND (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
 					array(
 						'current_topic' => $topic,
+						'current_member' => $user_info['id'],
+						'is_approved' => 1,
 						'timestamp' => $timestamp,
 					)
 				);
@@ -273,7 +301,7 @@ function Display()
 				$smcFunc['db_free_result']($request);
 
 				// Handle view_newest_first options, and get the correct start value.
-				$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['num_replies'] - $context['start_from'];
+				$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $context['total_visible_posts'] - $context['start_from'] - 1;
 			}
 		}
 
@@ -281,9 +309,9 @@ function Display()
 		elseif (substr($_REQUEST['start'], 0, 3) == 'msg')
 		{
 			$virtual_msg = (int) substr($_REQUEST['start'], 3);
-			if ($virtual_msg >= $topicinfo['id_last_msg'])
-				$context['start_from'] = $topicinfo['num_replies'];
-			elseif ($virtual_msg <= $topicinfo['id_first_msg'])
+			if (!$topicinfo['unapproved_posts'] && $virtual_msg >= $topicinfo['id_last_msg'])
+				$context['start_from'] = $context['total_visible_posts'] - 1;
+			elseif (!$topicinfo['unapproved_posts'] && $virtual_msg <= $topicinfo['id_first_msg'])
 				$context['start_from'] = 0;
 			else
 			{
@@ -292,8 +320,8 @@ function Display()
 					SELECT COUNT(*)
 					FROM {db_prefix}messages
 					WHERE id_msg < {int:virtual_msg}
-						AND id_topic = {int:current_topic}
-						AND (approved = {int:is_approved} OR (id_member != {int:no_member} AND id_member = {int:current_member}))',
+						AND id_topic = {int:current_topic}' . 
+						($topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? ' AND (approved = 1' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
 					array(
 						'current_member' => $user_info['id'],
 						'current_topic' => $topic,
@@ -307,7 +335,7 @@ function Display()
 			}
 
 			// We need to reverse the start as well in this case.
-			$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['num_replies'] - $context['start_from'];
+			$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $context['total_visible_posts'] - $context['start_from'] - 1;
 
 			$context['robot_no_index'] = true;
 		}
@@ -325,31 +353,6 @@ function Display()
 	// Censor the title...
 	censorText($topicinfo['subject']);
 	$context['page_title'] = $topicinfo['subject'];
-
-	$context['num_replies'] = $topicinfo['num_replies'];
-	$context['topic_first_message'] = $topicinfo['id_first_msg'];
-
-	// If this topic has unapproved posts, we need to work out how many posts the user can see, for page indexing.
-	if ($topicinfo['unapproved_posts'] && !$user_info['is_guest'] && !allowedTo('approve_posts'))
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(id_member) AS my_unapproved_posts
-			FROM {db_prefix}messages
-			WHERE id_topic = {int:current_topic}
-				AND id_member = {int:current_member}
-				AND approved = 0',
-			array(
-				'current_topic' => $topic,
-				'current_member' => $user_info['id'],
-			)
-		);
-		list ($myUnapprovedPosts) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		$context['total_visible_posts'] = $context['num_replies'] + $myUnapprovedPosts + ($topicinfo['approved'] ? 1 : 0);
-	}
-	else
-		$context['total_visible_posts'] = $context['num_replies'] + $topicinfo['unapproved_posts'] + ($topicinfo['approved'] ? 1 : 0);
 
 	// Is this topic sticky, or can it even be?
 	$topicinfo['is_sticky'] = empty($modSettings['enableStickyTopics']) ? '0' : $topicinfo['is_sticky'];
@@ -1094,6 +1097,7 @@ function prepareDisplayContext($reset = false)
 		'approved' => $message['approved'],
 		'first_new' => isset($context['start_from']) && $context['start_from'] == $counter,
 		'can_approve' => !$message['approved'] && $context['can_approve'],
+		'can_unapprove' => $message['approved'] && $context['can_approve'],
 		'can_modify' => (!$context['is_locked'] || allowedTo('moderate_board')) && (allowedTo('modify_any') || (allowedTo('modify_replies') && $context['user']['started']) || (allowedTo('modify_own') && $message['id_member'] == $user_info['id'] && (empty($modSettings['edit_disable_time']) || !$message['approved'] || $message['poster_time'] + $modSettings['edit_disable_time'] * 60 > time()))),
 		'can_remove' => allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']) || (allowedTo('delete_own') && $message['id_member'] == $user_info['id'] && (empty($modSettings['edit_disable_time']) || $message['poster_time'] + $modSettings['edit_disable_time'] * 60 > time())),
 		'can_see_ip' => allowedTo('moderate_forum') || ($message['id_member'] == $user_info['id'] && !empty($user_info['id'])),

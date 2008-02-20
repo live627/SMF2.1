@@ -129,6 +129,8 @@ February 2008
  ! There were some legacy uppercase column aliases in use. (ModerationCenter.php, News.php, Recent.php) [Bug 1631]
  ! Typo in the function to handle phpBB3 passwords was causing the wrong password to be generated for PHP4. (LogInOut.php)
  ! Erroring when deleting an account cause cause an unexpected error. (Profile.php) [Bug 1615]
+ ! Don't log repeated errors. (Errors.php)
+ ! Better handle start variables for unapproved posts in display. (Display.php) [Bug 1595]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
