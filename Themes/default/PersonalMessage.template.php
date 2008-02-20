@@ -645,7 +645,7 @@ function template_search()
 						</tr><tr>
 							<td colspan="2">
 								<select name="sort">
-		<!--- <option value="relevance|desc">', $txt['pm_search_orderby_relevant_first'], '</option> --->
+		<!-- <option value="relevance|desc">', $txt['pm_search_orderby_relevant_first'], '</option> -->
 									<option value="id_pm|desc">', $txt['pm_search_orderby_recent_first'], '</option>
 									<option value="id_pm|asc">', $txt['pm_search_orderby_old_first'], '</option>
 								</select>
