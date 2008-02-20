@@ -99,30 +99,51 @@ function template_credits()
 	// The most important part - the credits :P.
 	echo '
 	<div class="tborder windowbg2" id="credits">
-		<h3>', $txt['credits'], '</h3>
-		<p>', $txt['credits_intro'], '</p>
+		<h3>', $txt['credits'], '</h3>';
 
-		<h4>', $txt['credits_team'], '</h4>
+	foreach($context['credits'] as $section)
+	{
+		if (isset($section['pretext']))
+			echo '
+		<p>', $section['pretext'], '</p>';
+
+		if (isset($section['title']))
+			echo '
+		<h4>', $section['title'], '</h4>';
+
+		echo '
 		<ul>';
 
-	foreach ($context['credits']['team'] as $group => $members)
+		foreach($section['groups'] as $group)
+		{
+			echo '
+			<li>';
+			
+			if (isset($group['title']))
+			echo '
+				<strong>', $group['title'], '</strong>: ';
+			
+			// Try to make this read nicely.
+			if (count($group['members']) <= 2)
+				echo implode($txt['credits_and'], $group['members']);
+			else
+			{
+				$last_peep = array_pop($group['members']);
+				echo implode(', ', $group['members']), ', ', $txt['credits_and'], ' ', $last_peep;
+			}
+			
+			echo '
+			</li>';
+		}
 		echo '
-			<li><strong>', $group, '</strong>: ', implode(', ', $members), '</li>';
+		</ul>';
+
+		if (isset($section['posttext']))
+			echo '
+		<p>', $section['posttext'], '</p>';
+	}
 
 	echo '
-		</ul>
-
-		<h4>', $txt['credits_special'], '</h4>
-		<ul>';
-
-	foreach ($context['credits']['special'] as $group => $members)
-		echo '
-			<li><strong>', $group, '</strong>: ', implode(', ', $members), '</li>';
-
-	echo '
-		</ul>
-		<p>', $txt['credits_anyone'], '</p>
-
 		<h3>', $txt['credits_copyright'], '</h3>
 		<h4>', $txt['credits_forum'], '</h4>', '
 		<p>', $context['copyrights']['smf'];

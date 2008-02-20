@@ -488,94 +488,124 @@ function Credits($in_admin = false)
 {
 	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt, $user_info;
 
-	// To have a different publically accessible name make the admin name the key, not the value.
+	loadLanguage('who');
+
 	$context['credits'] = array(
-		'team' => array(
-			'Project Manager' => array(
-				'Amacythe',
-				'dschwab9',
-				'Michael &quot;Oldiesmann&quot; Eshom',
-			),
-			'Developers' => array(
-				'Hendrik Jan &quot;Compuart&quot; Visser',
-				'Matt &quot;Grudge&quot; Wolf' => 'Grudge',
-				'Bjoern &quot;Bloc&quot; Kristiansen',
-				'Juan &quot;JayBachatero&quot; Hernandez',
-				'Michael &quot;Thantos&quot; Miller',
-				'Theodore &quot;Orstio&quot; Hildebrandt',
-			),
-			'Support Specialists' => array(
-				'jerm',
-				'BlackMage',
-				'Kindred',
-				'greyknight17',
-				'RedOne',
-				'Harro',
-				'Bigguy',
-				'Fiery',
-				'Huw Ayling-Miller',
-				'Sarge',
-				'Rumbaar',
-				'SlammedDime',
-				'Jan-Olof &quot;Owdy&quot; Eriksson',
-				'A&auml;ron van Geffen',
-				'KGIII',
-				'Dannii',
-			),
-			'Customizers' => array(
-				'winrules',
-				'Gary M. Gadsdon',
-				'RunicWarrior',
-				'vbgamer45',
-				'Jeremy "SleePy" Darwood',
-				'Niko',
-				'Kirby',
-				'Daniel15',
-				'groundup',
-				'Fizzy',
-				'Pitti',
-				'*eren',
-				'snork13',
-			),
-			'Documentation Writers' => array(
-				'Jack "akabugeyes" Thorsen',
-				'Daniel Diehl',
-				'IchBin™',
-				'Alundra',
-				'Peter Duggan',
-			),
-			'Marketing' => array(
-				'rickC',
-				'Motoko-chan',
-				'Trekkie101',
+		array(
+			'pretext' => $txt['credits_intro'],
+			'title' => $txt['credits_team'],
+			'groups' => array(
+				array(
+					'title' => $txt['credits_groups_pm'],
+					'members' => array(
+						'Amacythe',
+						'dschwab9',
+						'Michael &quot;Oldiesmann&quot; Eshom',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_dev'],
+					'members' => array(
+						'Hendrik Jan &quot;Compuart&quot; Visser',
+						$user_info['is_admin'] ? 'Matt &quot;Grudge&quot; Wolf': 'Grudge',
+						'Bjoern &quot;Bloc&quot; Kristiansen',
+						'Juan &quot;JayBachatero&quot; Hernandez',
+						'Michael &quot;Thantos&quot; Miller',
+						'Theodore &quot;Orstio&quot; Hildebrandt',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_support'],
+					'members' => array(
+						'jerm',
+						'BlackMage',
+						'Kindred',
+						'greyknight17',
+						'RedOne',
+						'Harro',
+						'Bigguy',
+						'Fiery',
+						'Huw Ayling-Miller',
+						'Sarge',
+						'Rumbaar',
+						'SlammedDime',
+						'Jan-Olof &quot;Owdy&quot; Eriksson',
+						'A&auml;ron van Geffen',
+						'KGIII',
+						'Dannii',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_customize'],
+					'members' => array(
+						'winrules',
+						'Gary M. Gadsdon',
+						'RunicWarrior',
+						'vbgamer45',
+						'Jeremy "SleePy" Darwood',
+						'Niko',
+						'Kirby',
+						'Daniel15',
+						'groundup',
+						'Fizzy',
+						'Pitti',
+						'*eren',
+						'snork13',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_docs'],
+					'members' => array(
+						'Jack "akabugeyes" Thorsen',
+						'Daniel Diehl',
+						'IchBin™',
+						'Alundra',
+						'Peter Duggan',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_marketing'],
+					'members' => array(
+						'rickC',
+						'Motoko-chan',
+						'Trekkie101',
+					),
+				),
 			),
 		),
-		'special' => array(
-			'Language Translators' => array(
-				'Thank you for your efforts which make it possible for people all around the world to use SMF.',
+		array(
+			'title' => $txt['credits_special'],
+			'posttext' => $txt['credits_anyone'],
+			'groups' => array(
+				array(
+					'title' => $txt['credits_groups_translators'],
+					'members' => array(
+						$txt['credits_translators_message'],
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_beta'],
+					'members' => array(
+						$txt['credits_beta_message'],
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_founder'],
+					'members' => array(
+						'Unknown W. &quot;[Unknown]&quot; Brackets',
+					),
+				),
+				array(
+					'title' => $txt['credits_groups_orignal_pm'],
+					'members' => array(
+						'Jeff Lewis',
+						'Joseph Fung',
+						'David Recordon',
+					),
+				),
 			),
-			'Beta Testers' => array(
-				'The hidden few who tirelessly find bugs, provide feedback, and drive the developers crazier',
-			),
-			'Founding Father of SMF' => array(
-				'Unknown W. &quot;[Unknown]&quot; Brackets',
-			),
-			'Original Project Managers' => array(
-				'Jeff Lewis',
-				'Joseph Fung',
-				'David Recordon',
-			),
-		)
+		),
 	);
-
-	// Quickly process any bits.
-	foreach ($context['credits'] as $section => $section_data)
-		foreach ($section_data as $role => $role_data)
-			foreach ($role_data as $full_name => $public_name)
-				if ($user_info['is_admin'] && !is_numeric($full_name))
-					$context['credits'][$section][$role][$full_name] = $full_name;
-
-	loadLanguage('Who');
 
 	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
 	{
