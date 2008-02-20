@@ -127,6 +127,7 @@ February 2008
  ! Make the credits page a little bit more generalized. (Who.php, Who template, Who language file)
  ! When searching by board if the user wants to refine their search show the boards appropriately. (Search.php, Search template) [Bug 1623]
  ! There were some legacy uppercase column aliases in use. (ModerationCenter.php, News.php, Recent.php) [Bug 1631]
+ ! Typo in the function to handle PHP passwords was causing the wrong password to be generated for PHP4. (LogInOut.php)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

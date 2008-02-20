@@ -334,20 +334,20 @@ function template_credits()
 			</tr><tr>
 				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">';
 
-	foreach($context['credits'] AS $section)
+	foreach ($context['credits'] as $section)
 	{
 		if (isset($section['pretext']))
 			echo '
 					<p>', $section['pretext'], '</p>';
 
-		foreach($section['groups'] AS $group)
+		foreach ($section['groups'] as $group)
 		{
 			echo '
 					<div style="margin-top: 1ex;">';
-					
+
 			if (isset($group['title']))
 				echo '<strong>', $group['title'], ':</strong> ';
-			
+
 			echo implode(', ', $group['members']), '</div>';
 		}
 
@@ -868,7 +868,7 @@ function template_show_settings()
 				call_user_func('template_callback_' . $config_var['name']);
 
 			continue;
-				
+
 		}
 
 		echo '
