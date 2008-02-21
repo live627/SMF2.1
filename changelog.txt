@@ -132,6 +132,7 @@ February 2008
  ! Don't log repeated errors. (Errors.php)
  ! Better handle start variables for unapproved posts in display. (Display.php) [Bug 1595]
  ! Only show the previous year and next year grid for the calendar if the previous year is less than the minyear and next year is less than maxyear. (Calendar.php) [Bug 1619]
+ ! Use a different name for the ip_address and name for sorting in the Track IP page. (Profile-View.php) [Bug 1614]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

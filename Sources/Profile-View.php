@@ -1256,7 +1256,7 @@ function TrackIP($memID = 0)
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_errors_from_ip'],
 		'base_href' => $context['base_url'] . ';searchip=' . $context['ip'],
-		'default_sort_col' => 'date',
+		'default_sort_col' => 'date2',
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
 			'params' => array(
@@ -1272,7 +1272,7 @@ function TrackIP($memID = 0)
 			),
 		),
 		'columns' => array(
-			'ip_address' => array(
+			'ip_address2' => array(
 				'header' => array(
 					'value' => $txt['ip_address'],
 				),
@@ -1311,7 +1311,7 @@ function TrackIP($memID = 0)
 					),
 				),
 			),
-			'date' => array(
+			'date2' => array(
 				'header' => array(
 					'value' => $txt['date'],
 				),
