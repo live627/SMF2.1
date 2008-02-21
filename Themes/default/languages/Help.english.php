@@ -52,10 +52,22 @@ $helptxt['manage_boards'] = '
 	under each category, to reorder them (put &quot;Pinto&quot; behind &quot;Chevy&quot;), or
 	to delete the board entirely.';
 
-$helptxt['edit_news'] = '<b>Edit Forum News</b><br />
-	This allows you to set the text for news items displayed on the Board Index page.
-	Add any item you want (e.g., &quot;Don\'t miss the conference this Tuesday&quot;). Each news item should
-	go in a separate box, and they are displayed randomly.';
+$helptxt['edit_news'] = '
+	<ul>
+		<li>
+			<b>News</b><br />
+			This section allows you to set the text for news items displayed on the Board Index page.
+			Add any item you want (e.g., &quot;Don\'t miss the conference this Tuesday&quot;). Each news item should go in a separate box, and they are displayed randomly.
+		</li>
+		<li>
+			<b>Newsletters</b><br />
+			This section allows you to send out newsletters to the members of the forum. First you select the groups that you want to send the newsletter to. You can also select groups that can never receive the newsletter, as well as additional members and email addresses that will receive the newsletter. You will then get to type the message you want to send as well as select whether you want it to be sent to members as a personal message or as an email.
+		</li>
+		<li>
+			<b>Settings</b><br />
+				This section contains a few settings that relate to news and newsletters, including selecting what groups can do certain permissions and a setting for whether you want XML/RSS support enabled on the forum.
+		</li>
+	</ul>';
 
 $helptxt['view_members'] = '
 	<ul>
