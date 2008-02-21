@@ -22,6 +22,9 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
+// We need the Settings.php info for database stuff.
+if (file_exists(dirname(__FILE__) . '/Settings.php'))
+	require_once(dirname(__FILE__) . '/Settings.php');
 
 // Initialize everything and load the language files.
 initialize_inputs();
@@ -32,7 +35,7 @@ $txt['default_value'] = 'Recommended value';
 $txt['save_settings'] = 'Save Settings';
 $txt['not_writable'] = 'Settings.php cannot be written to by your webserver.  Please modify the permissions on this file to allow write access.';
 $txt['recommend_blank'] = '<i>(blank)</i>';
-$txt['database_settings_hidden'] = 'Some settings are not being shown because the MySQL connection information is incorrect.';
+$txt['database_settings_hidden'] = 'Some settings are not being shown because the database connection information is incorrect.';
 
 $txt['critical_settings'] = 'Critical Settings';
 $txt['critical_settings_info'] = 'These are the settings most likely to be screwing up your board, but try the things below (especially the path and URL ones) if these don\'t help.  You can click on the recommendded value to use it.';
@@ -53,13 +56,13 @@ $txt['databaseSession_enable0'] = 'Off (not recommended)';
 $txt['databaseSession_enable1'] = 'On (recommended)';
 
 $txt['database_settings'] = 'MySQL Database Info';
-$txt['database_settings_info'] = 'This is the server, username, password, and database for your MySQL server.';
-$txt['db_server'] = 'MySQL server';
-$txt['db_name'] = 'MySQL database name';
-$txt['db_user'] = 'MySQL username';
-$txt['db_passwd'] = 'MySQL password';
-$txt['db_prefix'] = 'MySQL table prefix';
-$txt['db_persist'] = 'MySQL connection type';
+$txt['database_settings_info'] = 'This is the server, username, password, and database for your server.';
+$txt['db_server'] = 'Server';
+$txt['db_name'] = 'Database name';
+$txt['db_user'] = 'Username';
+$txt['db_passwd'] = 'Password';
+$txt['db_prefix'] = 'Table prefix';
+$txt['db_persist'] = 'Connection type';
 $txt['db_persist0'] = 'Standard (recommended)';
 $txt['db_persist1'] = 'Persistent (might cause problems)';
 
@@ -93,18 +96,23 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 		<style type="text/css">
 			body
 			{
-				font-family: Verdana, sans-serif;
-				background-color: #D4D4D4;
-				margin: 0;
+				background-color: #E5E5E8;
+				margin: 0px;
+				padding: 0px;
 			}
 			body, td
 			{
-				font-size: 10pt;
+				color: #000000;
+				font-size: small;
+				font-family: verdana, sans-serif;
 			}
 			div#header
 			{
-				background-color: white;
+				background-image: url(Themes/default/images/catbg.jpg);
+				background-repeat: repeat-x;
+				background-color: #88A6C0;
 				padding: 22px 4% 12px 4%;
+				color: white;
 				font-family: Georgia, serif;
 				font-size: xx-large;
 				border-bottom: 1px solid black;
@@ -124,7 +132,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F0F0F0;
+				background-color: #F6F6F6;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
@@ -153,7 +161,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 				padding-top: 2px;
 				font-weight: bold;
 				white-space: nowrap;
-				padding-right: 2ex;
+				padding-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 2ex;
 			}
 		</style>
 	</head>
@@ -173,6 +181,8 @@ echo '
 
 function initialize_inputs()
 {
+	global $smcFunc, $db_connection, $sourcedir, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_type;
+
 	// Turn off magic quotes runtime and enable error reporting.
 	@set_magic_quotes_runtime(0);
 	error_reporting(E_ALL);
@@ -202,11 +212,30 @@ function initialize_inputs()
 		header('Location: http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']) . dirname($_SERVER['PHP_SELF']) . '/Themes/default/images/blank.gif');
 		exit;
 	}
+
+	$db_connection = false;
+	if (isset($sourcedir))
+	{
+		define('SMF', 1);
+
+		if (empty($smcFunc))
+			$smcFunc = array();
+
+		require_once($sourcedir . '/Errors.php');
+		require_once($sourcedir . '/Subs.php');
+		require_once($sourcedir . '/Load.php');
+		require_once($sourcedir . '/Security.php');
+		require_once($sourcedir . '/Subs-Auth.php');
+		require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+
+		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+	}
+
 }
 
 function show_settings()
 {
-	global $txt;
+	global $txt, $smcFunc, $db_connection;
 
 	// Check to make sure Settings.php exists!
 	if (file_exists(dirname(__FILE__) . '/Settings.php'))
@@ -239,35 +268,35 @@ function show_settings()
 		}
 	}
 
-	if (isset($settings['db_server']) && isset($settings['db_name']) && isset($settings['db_user']) && isset($settings['db_passwd']))
+	if ($db_connection == true)
 	{
-		$attempt = @mysql_connect($settings['db_server'], $settings['db_user'], $settings['db_passwd']);
-		if ($attempt != false)
-			$attempt = @mysql_select_db($settings['db_name']);
+		$request = $smcFunc['db_query']('', '
+			SELECT DISTINCT variable, value
+			FROM {db_prefix}settings',
+			array(
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$settings[$row['variable']] = $row['value'];
+		$smcFunc['db_free_result']($request);
 
-		if ($attempt && isset($settings['db_prefix']))
-		{
-			$request = @mysql_query("
-				SELECT DISTINCT variable, value
-				FROM $settings[db_prefix]settings");
-			while ($row = @mysql_fetch_row($request))
-				$settings[$row[0]] = $row[1];
-			@mysql_free_result($request);
+		// Load all the themes.
+		$request = $smcFunc['db_query']('', '
+			SELECT variable, value, id_theme
+			FROM {db_prefix}themes
+			WHERE id_member = 0
+				AND variable IN ({array_string:variables})',
+			array(
+			      'variables' => array('theme_dir', 'theme_url', 'images_url', 'name'),
+			)
+		);
 
-			// Load all the themes.
-			$request = @mysql_query("
-				SELECT variable, value, id_theme
-				FROM $settings[db_prefix]themes
-				WHERE id_member = 0
-					AND variable IN ('theme_dir', 'theme_url', 'images_url', 'name')");
+		$theme_settings = array();
+		while ($row = $smcFunc['db_fetch_row']($request))
+			$theme_settings[$row[2]][$row[0]] = $row[1];
+		$smcFunc['db_free_result']($request);
 
-			$theme_settings = array();
-			while ($row = @mysql_fetch_row($request))
-				$theme_settings[$row[2]][$row[0]] = $row[1];
-			@mysql_free_result($request);
-
-			$show_db_settings = $request;
-		}
+		$show_db_settings = $request;
 	}
 	else
 		$show_db_settings = false;
@@ -338,7 +367,7 @@ function show_settings()
 */
 
 	// Create the values for the themes.
-	foreach($theme_settings as $id => $theme)
+	foreach ($theme_settings as $id => $theme)
 	{
 		$this_theme = ($pos = strpos($theme['theme_url'], '/Themes/')) !== false ? substr($theme['theme_url'], $pos+8) : '';
 		if (!empty($this_theme))
@@ -362,13 +391,21 @@ function show_settings()
 		$txt['theme_' . $id . '_theme_dir'] = $theme['name'] . ' Directory';
 	}
 
-	if (isset($attempt) && $attempt)
+	if ($db_connection == true)
 	{
-		$request = @mysql_query("
-			SHOW TABLES LIKE '%log_topics'");
-		if (@mysql_num_rows($request) == 1)
-			list ($known_settings['database_settings']['db_prefix'][2]) = preg_replace('~log_topics$~', '', mysql_fetch_row($request));
-		@mysql_free_result($request);
+		$request = $smcFunc['db_query']('', '
+			SHOW TABLES LIKE {raw:log_topics}',
+			array(
+			      'log_topics' => '%log_topics',
+			      'db_error_skip' => true,
+			)
+		);
+		if ($request == true)
+		{
+			if ($smcFunc['db_num_rows']($request) == 1)
+				list ($known_settings['database_settings']['db_prefix'][2]) = preg_replace('~log_topics$~', '', mysql_fetch_row($request));
+			$smcFunc['db_free_result']($request);
+		}
 	}
 	elseif (empty($show_db_settings))
 	{
@@ -540,6 +577,8 @@ function show_settings()
 
 function set_settings()
 {
+	global $smcFunc;
+
 	$db_updates = isset($_POST['dbsettings']) ? $_POST['dbsettings'] : array();
 	$theme_updates = isset($_POST['themesettings']) ? $_POST['themesettings'] : array();
 	$file_updates = isset($_POST['flatsettings']) ? $_POST['flatsettings'] : array();
@@ -590,22 +629,20 @@ function set_settings()
 	// Make sure it works.
 	require(dirname(__FILE__) . '/Settings.php');
 
-	// Attempt a connection.
-	@mysql_connect($db_server, $db_user, $db_passwd);
-	@mysql_select_db($db_name);
 
-	$setString = '';
+	$setString = array();
 	foreach ($db_updates as $var => $val)
-		$setString .= "
-				('$var', SUBSTRING('$val', 1, 65534)),";
+		$setString[] = array($var, $val);
 
 	if (!empty($setString))
-		@mysql_query("
-			REPLACE INTO {$db_prefix}settings
-				(variable, value)
-			VALUES" . substr($setString, 0, -1));
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}settings',
+			array('variable' => 'string', 'value' => 'string-65534'),
+			$setString,
+			array('variable')
+		);
 
-	$setString = '';
+	$setString = array();
 	foreach ($theme_updates as $var => $val)
 	{
 		// Extract the data
@@ -613,15 +650,16 @@ function set_settings()
 		if (empty($match[0]))
 			continue;
 
-		$setString .= "
-				($match[1], 0, '$match[2]', SUBSTRING('$val', 1, 65534)),";
+		$setString[] = array($match[1], 0, $match[2], $val);
 	}
 
 	if (!empty($setString))
-		@mysql_query("
-			REPLACE INTO {$db_prefix}themes
-				(id_theme, id_member, variable, value)
-			VALUES" . substr($setString, 0, -1));
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}themes',
+			array('id_theme' => 'int', 'id_member' => 'int', 'variable' => 'string', 'value' => 'string-65534'),
+			$setString,
+			array('id_theme', 'id_member', 'variable')
+		);
 }
 
 ?>
