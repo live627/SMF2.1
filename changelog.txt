@@ -131,6 +131,7 @@ February 2008
  ! Erroring when deleting an account cause cause an unexpected error. (Profile.php) [Bug 1615]
  ! Don't log repeated errors. (Errors.php)
  ! Better handle start variables for unapproved posts in display. (Display.php) [Bug 1595]
+ ! Only show the previous year and next year grid for the calendar if the previous year is less than the minyear and next year is less than maxyear. (Calendar.php) [Bug 1619]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

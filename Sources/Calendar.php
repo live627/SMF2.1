@@ -134,8 +134,11 @@ function CalendarMain()
 	$calendarOptions['show_week_links'] = false;
 	$calendarOptions['size'] = 'small';
 	$context['calendar_grid_current'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
-	$context['calendar_grid_prev'] = getCalendarGrid($context['calendar_grid_current']['previous_calendar']['month'], $context['calendar_grid_current']['previous_calendar']['year'], $calendarOptions);
-	$context['calendar_grid_next'] = getCalendarGrid($context['calendar_grid_current']['next_calendar']['month'], $context['calendar_grid_current']['next_calendar']['year'], $calendarOptions);
+	// Only show these if the previous year is greater than the minyear but less than the maxyear.
+	if ($context['calendar_grid_current']['previous_calendar']['year'] > $modSettings['cal_minyear'])
+		$context['calendar_grid_prev'] = getCalendarGrid($context['calendar_grid_current']['previous_calendar']['month'], $context['calendar_grid_current']['previous_calendar']['year'], $calendarOptions);
+	if ($context['calendar_grid_current']['next_calendar']['year'] < $modSettings['cal_maxyear'])
+		$context['calendar_grid_next'] = getCalendarGrid($context['calendar_grid_current']['next_calendar']['month'], $context['calendar_grid_current']['next_calendar']['year'], $calendarOptions);
 
 	// Basic template stuff.
 	$context['can_post'] = allowedTo('calendar_post');

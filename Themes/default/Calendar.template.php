@@ -368,9 +368,7 @@ function template_show_month_grid($grid_name)
 
 						// Stop at ten?
 						if ($count == 10 && $use_js_hide)
-						{
 							echo '<span style="font-style: italic;" id="bdhidelink_', $day['day'], '">...<br /><a href="', $scripturl, '?action=calendar;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';showbd" onclick="document.getElementById(\'bdhide_', $day['day'], '\').style.display = \'\'; document.getElementById(\'bdhidelink_', $day['day'], '\').style.display = \'none\'; return false;">(', sprintf($txt['calendar_click_all'], count($day['birthdays'])), ')</a></span><span id="bdhide_', $day['day'], '" style="display: none;">, ';
-						}
 
 						$count++;
 					}
