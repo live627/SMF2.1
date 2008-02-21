@@ -816,7 +816,7 @@ function EditMembergroup()
 					unset($moderators[$k]);
 			}
 
-			// Find all the ID_MEMBERs for the member_name's in the list.
+			// Find all the id_member's for the member_name's in the list.
 			$group_moderators = array();
 			if (!empty($moderators))
 			{

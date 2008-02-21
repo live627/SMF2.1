@@ -820,7 +820,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	$attach = array();
 	$parents = array();
 
-	// Get all the attachment names and ID_MSGs.
+	// Get all the attachment names and id_msg's.
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			a.id_folder, a.filename, a.attachment_type, a.id_attach, a.id_member' . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ',

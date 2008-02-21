@@ -74,7 +74,7 @@ if (!defined('SMF'))
 		- sends an personal message from the specified person to the
 		  specified people. (from defaults to the user.)
 		- recipients should be an array containing the arrays 'to' and 'bcc',
-		  both containing ID_MEMBERs.
+		  both containing id_member's.
 		- subject and message should have no slashes and no html entities.
 		- pm_head is the ID of the chain being replied to - if any.
 		- from is an array, with the id, name, and username of the member.
@@ -143,7 +143,7 @@ if (!defined('SMF'))
 	void sendApprovalNotifications(array topicData)
 		// !!!
 
-	void updateLastMessages(array ID_BOARDs, int id_msg)
+	void updateLastMessages(array id_board's, int id_msg)
 		- takes an array of board IDs and updates their last messages.
 		- if the board has a parent, that parent board is also automatically
 		  updated.

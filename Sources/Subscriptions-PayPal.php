@@ -222,7 +222,7 @@ class paypal_payment
 		if (empty($_POST['item_number']))
 			exit;
 
-		// Return the ID_SUB and ID_MEMBER
+		// Return the id_sub and id_member
 		return explode('+', $_POST['item_number']);
 	}
 
