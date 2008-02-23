@@ -2338,7 +2338,7 @@ function profileSaveAvatarData(&$value)
 		$uploadDir = $modSettings['custom_avatar_dir'];
 		$id_folder = 1;
 	}
-	if (!empty($modSettings['currentAttachmentUploadDir']))
+	elseif (!empty($modSettings['currentAttachmentUploadDir']))
 	{
 		if (!is_array($modSettings['attachmentUploadDir']))
 			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);

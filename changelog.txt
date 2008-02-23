@@ -138,6 +138,7 @@ February 2008
  ! Put the settings URL in the warning when a currency hasn't been set up for Paid Subscriptions. (ManagePaid language file) [Bug 1644]
  ! deleteMembers now takes an optional parameter to *not* delete any admins. (Subs-Members.php)
  ! Don't allow the admin to delete either themselves or other admins from the member list - just in case they are an idiot. (ManageMembers.php) [Bug 1620]
+ ! Custom avatars wern't uploading to the right place. (Profile-Modify.php) [Bug 1543]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
