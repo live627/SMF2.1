@@ -224,7 +224,7 @@ function ViewSubscriptions()
 
 	// Not made the settings yet?
 	if (empty($modSettings['paid_currency_symbol']))
-		fatal_lang_error('paid_not_set_currency', false);
+		fatal_lang_error('paid_not_set_currency', false, $scripturl . '?action=admin;area=paidsubscribe;sa=settings');
 
 	// Some basic stuff.
 	$context['page_title'] = $txt['paid_subs_view'];

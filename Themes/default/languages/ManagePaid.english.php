@@ -172,7 +172,7 @@ $txt['paid_sub_return'] = 'Return to Subscriptions';
 $txt['paid_current_desc'] = 'Below is a list of all your current and previous subscriptions. To extend an existing subscription simply select it from the list above.';
 $txt['paid_admin_add'] = 'Add This Subscription';
 
-$txt['paid_not_set_currency'] = 'You have not setup your currency yet. Please do so from the settings menu before continuing';
+$txt['paid_not_set_currency'] = 'You have not setup your currency yet. Please do so from the <a href-"%1$s">Settings</a> section before continuing.';
 
 // Some error strings.
 $txt['paid_no_data'] = 'No valid data was sent to the script.';
