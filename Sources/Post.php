@@ -1145,33 +1145,36 @@ function Post2()
 	require_once($sourcedir . '/Subs-Post.php');
 	loadLanguage('Post');
 
-	// Replying to a topic?
-	if (!empty($topic) && !isset($_REQUEST['msg']))
+	// If this isn't a new topic load the topic info that we need.
+	if (!empty($topic))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT t.locked, t.is_sticky, t.id_poll, t.num_replies, m.id_member
-			FROM {db_prefix}topics AS t
-				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			WHERE t.id_topic = {int:current_topic}
+			SELECT locked, is_sticky, id_poll, approved, num_replies, id_first_msg, id_member_started
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:current_topic}
 			LIMIT 1',
 			array(
 				'current_topic' => $topic,
 			)
 		);
-		list ($tmplocked, $tmpstickied, $pollID, $num_replies, $ID_MEMBER_POSTER) = $smcFunc['db_fetch_row']($request);
+		$topic_info = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
+	}
 
+	// Replying to a topic?
+	if (!empty($topic) && !isset($_REQUEST['msg']))
+	{
 		// Don't allow a post if it's locked.
-		if ($tmplocked != 0 && !allowedTo('moderate_board'))
+		if ($topic_info['locked'] != 0 && !allowedTo('moderate_board'))
 			fatal_lang_error('topic_locked', false);
 
 		// Sorry, multiple polls aren't allowed... yet.  You should stop giving me ideas :P.
-		if (isset($_REQUEST['poll']) && $pollID > 0)
+		if (isset($_REQUEST['poll']) && $topic_info['id_poll'] > 0)
 			unset($_REQUEST['poll']);
 
 		// Do the permissions and approval stuff...
 		$becomesApproved = true;
-		if ($ID_MEMBER_POSTER != $user_info['id'])
+		if ($topic_info['id_member_started'] != $user_info['id'])
 		{
 			if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 				$becomesApproved = false;
@@ -1189,16 +1192,16 @@ function Post2()
 		if (isset($_POST['lock']))
 		{
 			// Nothing is changed to the lock.
-			if ((empty($tmplocked) && empty($_POST['lock'])) || (!empty($_POST['lock']) && !empty($tmplocked)))
+			if ((empty($topic_info['locked']) && empty($_POST['lock'])) || (!empty($_POST['lock']) && !empty($topic_info['locked'])))
 				unset($_POST['lock']);
 			// You're have no permission to lock this topic.
-			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $ID_MEMBER_POSTER))
+			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $topic_info['id_member_started']))
 				unset($_POST['lock']);
 			// You are allowed to (un)lock your own topic only.
 			elseif (!allowedTo('lock_any'))
 			{
 				// You cannot override a moderator lock.
-				if ($tmplocked == 1)
+				if ($topic_info['locked'] == 1)
 					unset($_POST['lock']);
 				else
 					$_POST['lock'] = empty($_POST['lock']) ? 0 : 2;
@@ -1209,11 +1212,11 @@ function Post2()
 		}
 
 		// So you wanna (un)sticky this...let's see.
-		if (isset($_POST['sticky']) && (empty($modSettings['enableStickyTopics']) || $_POST['sticky'] == $tmpstickied || !allowedTo('make_sticky')))
+		if (isset($_POST['sticky']) && (empty($modSettings['enableStickyTopics']) || $_POST['sticky'] == $topic_info['is_sticky'] || !allowedTo('make_sticky')))
 			unset($_POST['sticky']);
 
 		// If the number of replies has changed, if the setting is enabled, go back to Post() - which handles the error.
-		$newReplies = isset($_POST['num_replies']) && $num_replies > $_POST['num_replies'] ? $num_replies - $_POST['num_replies'] : 0;
+		$newReplies = isset($_POST['num_replies']) && $topic_info['num_replies'] > $_POST['num_replies'] ? $topic_info['num_replies'] - $_POST['num_replies'] : 0;
 		if (empty($options['no_new_reply_warning']) && !empty($newReplies))
 		{
 			$_REQUEST['preview'] = true;
@@ -1261,15 +1264,11 @@ function Post2()
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
 		$request = $smcFunc['db_query']('', '
-			SELECT
-				m.id_member, m.poster_name, m.poster_email, m.poster_time, m.approved,
-				t.id_first_msg, t.locked, t.is_sticky, t.id_member_started AS id_member_poster
-			FROM {db_prefix}messages AS m
-				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-			WHERE m.id_msg = {int:id_msg}
+			SELECT id_member, poster_name, poster_email, poster_time, approved
+			FROM {db_prefix}messages
+			WHERE id_msg = {int:id_msg}
 			LIMIT 1',
 			array(
-				'current_topic' => $topic,
 				'id_msg' => $_REQUEST['msg'],
 			)
 		);
@@ -1278,22 +1277,22 @@ function Post2()
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
-		if (!empty($row['locked']) && !allowedTo('moderate_board'))
+		if (!empty($topic_info['locked']) && !allowedTo('moderate_board'))
 			fatal_lang_error('topic_locked', false);
 
 		if (isset($_POST['lock']))
 		{
 			// Nothing changes to the lock status.
-			if ((empty($_POST['lock']) && empty($row['locked'])) || (!empty($_POST['lock']) && !empty($row['locked'])))
+			if ((empty($_POST['lock']) && empty($topic_info['locked'])) || (!empty($_POST['lock']) && !empty($topic_info['locked'])))
 				unset($_POST['lock']);
 			// You're simply not allowed to (un)lock this.
-			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $row['id_member_poster']))
+			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $topic_info['id_member_started']))
 				unset($_POST['lock']);
 			// You're only allowed to lock your own topics.
 			elseif (!allowedTo('lock_any'))
 			{
 				// You're not allowed to break a moderator's lock.
-				if ($row['locked'] == 1)
+				if ($topic_info['locked'] == 1)
 					unset($_POST['lock']);
 				// Lock it with a soft lock or unlock it.
 				else
@@ -1305,19 +1304,19 @@ function Post2()
 		}
 
 		// Change the sticky status of this topic?
-		if (isset($_POST['sticky']) && (!allowedTo('make_sticky') || $_POST['sticky'] == $row['is_sticky']))
+		if (isset($_POST['sticky']) && (!allowedTo('make_sticky') || $_POST['sticky'] == $topic_info['is_sticky']))
 			unset($_POST['sticky']);
 
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			if ($row['approved'] && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_own'))
+			elseif ($topic_info['id_member_started'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
-		elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_any'))
+		elseif ($topic_info['id_member_started'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			isAllowedTo('modify_replies');
 
@@ -1418,7 +1417,7 @@ function Post2()
 		if (empty($topic))
 			isAllowedTo('poll_post');
 		// Can you add to your own topics?
-		elseif ($user_info['id'] == $row['id_member_poster'] && !allowedTo('poll_add_any'))
+		elseif ($user_info['id'] == $topic_info['id_member_started'] && !allowedTo('poll_add_any'))
 			isAllowedTo('poll_add_own');
 		// Can you add polls to any topic, then?
 		else
@@ -1904,7 +1903,13 @@ function Post2()
 			notifyMembersBoard($notifyData);
 		}
 		elseif (empty($_REQUEST['msg']))
-			sendNotifications($topic, 'reply');
+		{
+			// Only send it to everyone if the topic is approved, otherwise just to the topic starter if they want it.
+			if ($topic_info['approved'])
+				sendNotifications($topic, 'reply');
+			else
+				sendNotifications($topic, 'reply', array(), $topic_info['id_member_started']);
+		}
 	}
 
 	// Returning to the topic?

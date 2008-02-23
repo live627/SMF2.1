@@ -113,7 +113,7 @@ if (!defined('SMF'))
 		- has problems with internationalization.
 		- is accessed via ?action=spellcheck.
 
-	void sendNotifications(array topics, string type, array exclude)
+	void sendNotifications(array topics, string type, array exclude = array(), array members_only = array())
 		- sends a notification to members who have elected to receive emails
 		  when things happen to a topic, such as replies are posted.
 		- uses the Post langauge file.
@@ -124,6 +124,7 @@ if (!defined('SMF'))
 		  for each member who is "signed up" for notifications.
 		- will not send 'reply' notifications more than once in a row.
 		- members in the exclude array will not be processed for the topic with the same key.
+		- members_only are the only ones that will be sent the notification if they have it on.
 
 	bool createPost(&array msgOptions, &array topicOptions, &array posterOptions)
 		// !!!
@@ -1510,7 +1511,7 @@ function SpellCheck()
 }
 
 // Notify members that something has happened to a topic they marked!
-function sendNotifications($topics, $type, $exclude = array())
+function sendNotifications($topics, $type, $exclude = array(), $members_only = array())
 {
 	global $txt, $scripturl, $language, $user_info;
 	global $modSettings, $sourcedir, $context, $smcFunc;
@@ -1594,7 +1595,8 @@ function sendNotifications($topics, $type, $exclude = array())
 			AND mem.notify_types < {int:notify_types}
 			AND mem.notify_regularity < {int:notify_regularity}
 			AND mem.is_activated = {int:is_activated}
-			AND ln.id_member != {int:current_member}
+			AND ln.id_member != {int:current_member}' . 
+			(empty($members_only) ? '' : ' AND ln.id_member IN ({array_int:members_only})') . '
 		ORDER BY mem.lngfile',
 		array(
 			'current_member' => $user_info['id'],
@@ -1602,6 +1604,7 @@ function sendNotifications($topics, $type, $exclude = array())
 			'notify_types' => $type == 'reply' ? '4' : '3',
 			'notify_regularity' => 2,
 			'is_activated' => 1,
+			'members_only' => is_array($members_only) ? $members_only : array($members_only),
 		)
 	);
 	$sent = 0;

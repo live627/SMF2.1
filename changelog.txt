@@ -139,6 +139,9 @@ February 2008
  ! deleteMembers now takes an optional parameter to *not* delete any admins. (Subs-Members.php)
  ! Don't allow the admin to delete either themselves or other admins from the member list - just in case they are an idiot. (ManageMembers.php) [Bug 1620]
  ! Custom avatars wern't uploading to the right place. (Profile-Modify.php) [Bug 1543]
+ ! Remove some query duplication in Post2. (Post.php)
+ ! sendNotifications now accepts a fourth parameter to restrict the members being sent to. (Subs-Post.php)
+ ! Only send notifications for replies to unapproved topics to the topic starter - as no-one else can see the thing! (Post.php) [Bug 1638]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008
