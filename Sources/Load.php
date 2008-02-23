@@ -1738,15 +1738,6 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 	// Remember what we have loaded, and in which language.
 	$already_loaded[$template_name] = $lang;
 
-	//!!! /**************** 2.0 Beta 1 FIXES - START ********************/
-	if (!in_array($lang, array('dutch', 'english', 'german', 'spanish')))
-	{
-		global $txtChanges;
-		require_once($sourcedir . '/FixLanguage.php');
-		applyTxtFixes();
-	}
-	//!!! /**************** 2.0 Beta 1 FIXES - END **********************/
-
 	// Return the language actually loaded.
 	return $lang;
 }

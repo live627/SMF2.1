@@ -142,6 +142,7 @@ February 2008
  ! Remove some query duplication in Post2. (Post.php)
  ! sendNotifications now accepts a fourth parameter to restrict the members being sent to. (Subs-Post.php)
  ! Only send notifications for replies to unapproved topics to the topic starter - as no-one else can see the thing! (Post.php) [Bug 1638]
+ ! Don't eval language files anymore, it's not required. (ManageMaintenance.php) [Bug 590]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

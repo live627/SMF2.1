@@ -1907,13 +1907,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				// If the cache directory is not writable we're having a bad day.
 				else
 				{
-					//!!! Do we need to eval these days?
-					$fc = implode('', file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'));
-					$fc = preg_replace('~\{NL\}~', '\\\\n', $fc);
-					$fc = preg_replace('~<\?php~', '', $fc);
-					$fc = preg_replace('~\?>~', '', $fc);
-					global $context, $modSettings, $scripturl, $boardurl;
-					eval($fc);
+					require($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php');
 
 					// Mark that we're messed up!
 					$do_include = false;
