@@ -300,6 +300,10 @@ function determineActions($urls)
 		if ($actions === false)
 			continue;
 
+		// If it's the admin or moderation center, and there is an area set, use that instead.
+		if (isset($actions['action']) && ($actions['action'] == 'admin' || $actions['action'] == 'moderate') && isset($actions['area']))
+			$actions['action'] = $actions['area'];
+
 		// Check if there was no action or the action is display.
 		if (!isset($actions['action']) || $actions['action'] == 'display')
 		{
