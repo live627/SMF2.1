@@ -52,7 +52,6 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_escape_string' => 'addslashes',
 			'db_unescape_string' => 'stripslashes',
 			'db_server_info' => 'mysql_get_server_info',
-			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'mysql_error',
@@ -357,7 +356,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	else
 		$ret = @mysql_unbuffered_query($db_string, $connection);
 	if ($ret === false && empty($db_values['db_error_skip']))
-		$ret = db_error($db_string, $connection);
+		$ret = smf_db_error($db_string, $connection);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -402,7 +401,7 @@ function smf_db_transaction($type = 'commit', $connection = null)
 }
 
 // Database error!
-function db_error($db_string, $connection = null)
+function smf_db_error($db_string, $connection = null)
 {
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;

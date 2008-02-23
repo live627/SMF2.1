@@ -52,20 +52,19 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_quote' => 'smf_db_quote',
 			'db_insert' => 'smf_db_insert',
 			'db_insert_id' => 'smf_db_insert_id',
-			'db_fetch_assoc' => 'postg_fetch_assoc',
-			'db_fetch_row' => 'postg_fetch_row',
+			'db_fetch_assoc' => 'smf_db_fetch_assoc',
+			'db_fetch_row' => 'smf_db_fetch_row',
 			'db_free_result' => 'pg_free_result',
 			'db_num_rows' => 'pg_num_rows',
-			'db_data_seek' => 'db_data_seek',
+			'db_data_seek' => 'smf_db_data_seek',
 			'db_num_fields' => 'pg_num_fields',
 			'db_escape_string' => 'pg_escape_string',
 			'db_unescape_string' => 'smf_postg_unescape_string',
-			'db_server_info' => 'postg_version',
-			'db_tablename' => 'mysql_tablename',
+			'db_server_info' => 'smf_db_version',
 			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'pg_last_error',
-			'db_select_db' => 'postg_select_db',
+			'db_select_db' => 'smf_db_select_db',
 			'db_title' => 'PostgreSQL',
 			'db_sybase' => true,
 			'db_case_sensitive' => true,
@@ -387,7 +386,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	$db_last_result = @pg_query($connection, $db_string);
 
 	if ($db_last_result === false && empty($db_values['db_error_skip']))
-		$db_last_result = db_error($db_string, $connection);
+		$db_last_result = smf_db_error($db_string, $connection);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -449,7 +448,7 @@ function smf_db_transaction($type = 'commit', $connection = null)
 }
 
 // Database error!
-function db_error($db_string, $connection = null)
+function smf_db_error($db_string, $connection = null)
 {
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
@@ -494,7 +493,7 @@ function db_error($db_string, $connection = null)
 }
 
 // A PostgreSQL specific function for tracking the current row...
-function postg_fetch_row($request, $counter = false)
+function smf_db_fetch_row($request, $counter = false)
 {
 	global $db_row_count;
 
@@ -510,7 +509,7 @@ function postg_fetch_row($request, $counter = false)
 }
 
 // Get an associative array
-function postg_fetch_assoc($request, $counter = false)
+function smf_db_fetch_assoc($request, $counter = false)
 {
 	global $db_row_count;
 
@@ -526,7 +525,7 @@ function postg_fetch_assoc($request, $counter = false)
 }
 
 // Reset the pointer...
-function db_data_seek($request, $counter)
+function smf_db_data_seek($request, $counter)
 {
 	global $db_row_count;
 
@@ -536,7 +535,7 @@ function db_data_seek($request, $counter)
 }
 
 // Unescape an escaped string!
-function smf_postg_unescape_string($string)
+function smf_db_unescape_string($string)
 {
 	return strtr($string, array('\'\'' => '\''));
 }
@@ -650,13 +649,13 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 }
 
 // Dummy function really.
-function postg_select_db($db_name, $db_connection)
+function smf_db_select_db($db_name, $db_connection)
 {
 	return true;
 }
 
 // Get the current version.
-function postg_version()
+function smf_db_version()
 {
 	$version = pg_version();
 

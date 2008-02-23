@@ -50,20 +50,19 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_query' => 'smf_db_query',
 			'db_quote' => 'smf_db_quote',
 			'db_fetch_assoc' => 'sqlite_fetch_array',
-			'db_fetch_row' => 'smf_sqlite_fetch_row',
-			'db_free_result' => 'smf_sqlite_free_result',
+			'db_fetch_row' => 'smf_db_fetch_row',
+			'db_free_result' => 'smf_db_free_result',
 			'db_insert' => 'smf_db_insert',
 			'db_insert_id' => 'smf_db_insert_id',
 			'db_num_rows' => 'sqlite_num_rows',
 			'db_data_seek' => 'sqlite_seek',
 			'db_num_fields' => 'sqlite_num_fields',
 			'db_escape_string' => 'sqlite_escape_string',
-			'db_unescape_string' => 'smf_sqlite_unescape_string',
-			'db_server_info' => 'smf_sqlite_libversion',
-			'db_tablename' => 'mysql_tablename',
+			'db_unescape_string' => 'smf_db_unescape_string',
+			'db_server_info' => 'smf_db_libversion',
 			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
-			'db_error' => 'smf_sqlite_last_error',
+			'db_error' => 'smf_db_last_error',
 			'db_select_db' => '',
 			'db_title' => 'SQLite',
 			'db_sybase' => true,
@@ -352,7 +351,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 
 	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);
 	if ($ret === false && empty($db_values['db_error_skip']))
-		$ret = db_error($db_string . '#!#' . $err_msg, $connection);
+		$ret = smf_db_error($db_string . '#!#' . $err_msg, $connection);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -379,7 +378,7 @@ function smf_db_insert_id($table, $field, $connection = null)
 }
 
 // Keeps the connection handle.
-function smf_sqlite_last_error()
+function smf_db_last_error()
 {
 	global $db_connection;
 
@@ -416,7 +415,7 @@ function smf_db_transaction($type = 'commit', $connection)
 }
 
 // Database error!
-function db_error($db_string, $connection = null)
+function smf_db_error($db_string, $connection = null)
 {
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
@@ -572,19 +571,19 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 }
 
 // Doesn't do anything on sqlite!
-function smf_sqlite_free_result($handle = false)
+function smf_db_free_result($handle = false)
 {
 	return true;
 }
 
 // Make sure we return no string indexes!
-function smf_sqlite_fetch_row($handle)
+function smf_db_fetch_row($handle)
 {
 	return sqlite_fetch_array($handle, SQLITE_NUM);
 }
 
 // Unescape an escaped string!
-function smf_sqlite_unescape_string($string)
+function smf_db_unescape_string($string)
 {
 	return strtr($string, array('\'\'' => '\''));
 }
@@ -700,7 +699,7 @@ function smf_udf_dayofmonth($date)
 }
 
 // We need this since sqlite_libversion() doesn't take any parameters.
-function smf_sqlite_libversion($void)
+function smf_db_libversion($void)
 {
 	return sqlite_libversion();
 }
