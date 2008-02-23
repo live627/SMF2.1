@@ -136,6 +136,8 @@ February 2008
  ! Updated some database function names to improve consistency and help avoid conflicts with integrations better. (Subs-Db-xxx.php) [Bug 1641]
  ! Allow who's online to work out the correct actions on the new admin URLs. (Who.php) [Bug 1313]
  ! Put the settings URL in the warning when a currency hasn't been set up for Paid Subscriptions. (ManagePaid language file) [Bug 1644]
+ ! deleteMembers now takes an optional parameter to *not* delete any admins. (Subs-Members.php)
+ ! Don't allow the admin to delete either themselves or other admins from the member list - just in case they are an idiot. (ManageMembers.php) [Bug 1620]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

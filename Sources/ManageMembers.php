@@ -182,7 +182,7 @@ function ViewMembers()
 // View all members.
 function ViewMemberlist()
 {
-	global $txt, $scripturl, $context, $modSettings, $sourcedir, $smcFunc;
+	global $txt, $scripturl, $context, $modSettings, $sourcedir, $smcFunc, $user_info;
 
 	// Set the current sub action.
 	$context['sub_action'] = $_REQUEST['sa'];
@@ -194,11 +194,19 @@ function ViewMemberlist()
 
 		// Clean the input.
 		foreach ($_POST['delete'] as $key => $value)
+		{
 			$_POST['delete'][$key] = (int) $value;
+			// Don't delete yourself, idiot.
+			if ($value == $user_info['id'])
+				unset($_POST['delete'][$key]);
+		}
 
-		// Delete all the selected members.
-		require_once($sourcedir . '/Subs-Members.php');
-		deleteMembers($_POST['delete']);
+		if (!empty($_POST['delete']))
+		{
+			// Delete all the selected members.
+			require_once($sourcedir . '/Subs-Members.php');
+			deleteMembers($_POST['delete'], true);
+		}
 	}
 
 	// Check input after a member search has been submitted.
@@ -602,12 +610,11 @@ function ViewMemberlist()
 					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
 				),
 				'data' => array(
-					'sprintf' => array(
-						'format' => '<input type="checkbox" name="delete[]" value="%1$d" class="check" />',
-						'params' => array(
-							'id_member' => false,
-						),
-					),
+					'function' => create_function('$rowData', '
+						global $user_info;
+
+						return \'<input type="checkbox" name="delete[]" value="\' . $rowData[\'id_member\'] . \'" class="check" \' . ($rowData[\'id_member\'] == $user_info[\'id\'] || $rowData[\'id_group\'] == 1 || in_array(1, explode(\',\', $rowData[\'additional_groups\'])) ? \'disabled="disabled"\' : \'\') . \' />\';
+					'),
 					'class' => 'windowbg',
 					'style' => 'text-align: center',
 				),

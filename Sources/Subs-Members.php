@@ -27,7 +27,7 @@ if (!defined('SMF'))
 
 /* This file contains some useful functions for members and membergroups.
 
-	void deleteMembers(array $users)
+	void deleteMembers(array $users, bool check_not_admin = false)
 		- delete of one or more members.
 		- requires profile_remove_own or profile_remove_any permission for
 		  respectively removing your own account or any account.
@@ -91,7 +91,7 @@ if (!defined('SMF'))
 */
 
 // Delete a group of/single member.
-function deleteMembers($users)
+function deleteMembers($users, $check_not_admin = false)
 {
 	global $sourcedir, $modSettings, $user_info, $smcFunc;
 
@@ -143,7 +143,7 @@ function deleteMembers($users)
 	{
 		if ($row['is_admin'])
 			$admins[] = $row['id_member'];
-		$user_log_details[] = array($row['id_member'], $row['member_name']);
+		$user_log_details[$row['id_member']] = array($row['id_member'], $row['member_name']);
 	}
 	$smcFunc['db_free_result']($request);
 
@@ -151,8 +151,16 @@ function deleteMembers($users)
 		return;
 
 	// Make sure they aren't trying to delete administrators if they aren't one.  But don't bother checking if it's just themself.
-	if (!empty($admins) && !allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $user_info['id']))
+	if (!empty($admins) && ($check_not_admin || (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $user_info['id']))))
+	{
 		$users = array_diff($users, $admins);
+		foreach ($admins as $id)
+			unset($user_log_details[$id]);
+	}
+
+	// No one left?
+	if (empty($users))
+		return;
 
 	// Log the action - regardless of who is deleting it.
 	$log_inserts = array();
@@ -1125,7 +1133,7 @@ function list_getMembers($start, $items_per_page, $sort, $where, $where_params =
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.icq, mem.aim, mem.yim, mem.msn, mem.member_ip, mem.member_ip2, mem.last_login,
-			mem.posts, mem.is_activated, mem.date_registered, mg.group_name
+			mem.posts, mem.is_activated, mem.date_registered, mem.id_group, mem.additional_groups, mg.group_name
 		FROM {db_prefix}members AS mem
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)
 		WHERE ' . $where . '
