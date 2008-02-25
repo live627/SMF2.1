@@ -42,6 +42,10 @@ if (!defined('SMF'))
 		- returns an array of descriptions if you passed an array, otherwise
 		  the string describing their current location.
 
+    void Credits(bool in_admin)
+		- prepares credit and copyright information for the credits page or the admin page
+		- if parameter is true the it will not load the sub template nor the template file
+
 	Adding actions to the Who's Online list:
 	---------------------------------------------------------------------------
 		Adding actions to this list is actually relatively easy....
@@ -502,8 +506,8 @@ function Credits($in_admin = false)
 				array(
 					'title' => $txt['credits_groups_pm'],
 					'members' => array(
-						'Amacythe',
-						'dschwab9',
+						'Cathy &quot;Amacythe&quot; Bailey',
+						'Derek Schwab',
 						'Michael &quot;Oldiesmann&quot; Eshom',
 					),
 				),
@@ -521,22 +525,27 @@ function Credits($in_admin = false)
 				array(
 					'title' => $txt['credits_groups_support'],
 					'members' => array(
-						'jerm',
-						'BlackMage',
+						'Jeremy &quot;jerm&quot; Strike',
+						'Justin &quot;BlackMage&quot; O\'Leary',
 						'Kindred',
-						'greyknight17',
+						'Kevin &quot;greyknight17&quot; Hou',
 						'RedOne',
 						'Harro',
 						'Bigguy',
 						'Fiery',
-						'Huw Ayling-Miller',
-						'Sarge',
+						'Huw',
+						'Piro &quot;Sarge&quot; Dhima',
 						'Rumbaar',
 						'SlammedDime',
 						'Jan-Olof &quot;Owdy&quot; Eriksson',
-						'A&auml;ron van Geffen',
+						'Ben Scott',
+						'Aäron van Geffen',
 						'KGIII',
-						'Dannii',
+						'Tony Reid',
+						'Nick &quot;Fizzy&quot; Dyer',
+						'Pitti',
+						'Mattitude',
+						'xenovanis',
 					),
 				),
 				array(
@@ -544,17 +553,16 @@ function Credits($in_admin = false)
 					'members' => array(
 						'winrules',
 						'Gary M. Gadsdon',
-						'RunicWarrior',
-						'vbgamer45',
+						'Bryan &quot;RunicWarrior&quot; Deakin',
+						'Jonathan &quot;vbgamer45&quot; Valentin',
 						'Jeremy &quot;SleePy&quot; Darwood',
 						'Niko',
 						'Kirby',
 						'Daniel15',
 						'groundup',
-						'Fizzy',
-						'Pitti',
-						'*eren',
+						'Eren Yasarkurt',
 						'snork13',
+						'Killer Possum',
 					),
 				),
 				array(
@@ -562,9 +570,10 @@ function Credits($in_admin = false)
 					'members' => array(
 						'Jack &quot;akabugeyes&quot; Thorsen',
 						'Daniel Diehl',
-						'IchBin™',
+						'Brad &quot;IchBin™&quot; Grow',
 						'Alundra',
 						'Peter Duggan',
+						'Dannii Willis',
 					),
 				),
 				array(
@@ -572,7 +581,7 @@ function Credits($in_admin = false)
 					'members' => array(
 						'rickC',
 						'Motoko-chan',
-						'Trekkie101',
+						'Graeme &quot;Trekkie101&quot; Spence',
 					),
 				),
 			),
