@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2; index
+// Version: 2.0 Beta 2.1; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -57,6 +57,9 @@ function template_init()
 
 	/* Does this theme use the strict doctype? */
 	$settings['strict_doctype'] = false;
+
+	/* Does this theme use post previews on the message index? */
+	$settings['message_index_preview'] = false;
 }
 
 // The main sub template above the content.
@@ -70,7 +73,8 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title'], '" />
 	<meta name="keywords" content="PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2p"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b21"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?b21"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -88,11 +92,11 @@ function template_html_above()
 		echo '
 	<meta name="robots" content="noindex" />';
 
-	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
+	// The ?b21 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/core.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?b21" />
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/core.css?b21" />
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b21" media="print" />';
 
 	// IE7 needs some fixes for styles.
 	if ($context['browser']['is_ie7'])
@@ -168,50 +172,51 @@ function template_body_above()
 
 	// display user name and time
 	echo '
-		<div id="greeting_section" class="titlebg2">
-			<div id="time" class="smalltext floatright">
+		<ul id="greeting_section" class="titlebg2">
+			<li id="time" class="smalltext floatright">
 				' , $context['current_time'], '
 				<a href="#" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>
-			</div>';
+			</li>';
 
 	if ($context['user']['is_logged'])
 		echo '
-			<h2>', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></h2>';
+			<li>', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></li>';
 	else
 		echo '
-			<h2>', $txt['hello_guest'], $txt['guest'], '</h2>';
+			<li>', $txt['hello_guest'], $txt['guest'], '</li>';
 
 	echo '
-		</div>
-		<div id="user_section" class="bordercolor"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>';
+		</ul>
+		<div id="user_section" class="bordercolor"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
+			<div class="windowbg2 clearfix">';
 
 	if (!empty($context['user']['avatar']))
 		echo '
-			<p id="avatar">', $context['user']['avatar']['image'], '</p>';
+				<div id="myavatar">', $context['user']['avatar']['image'], '</div>';
 
 	// If the user is logged in, display stuff like their name, new messages, etc.
 	if ($context['user']['is_logged'])
 	{
 		echo '
-			<ul class="windowbg2">
-				<li><a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a></li>
-				<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';
+				<ul> 
+					<li><a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a></li>
+					<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';
 
 		// Is the forum in maintenance mode?
 		if ($context['in_maintenance'] && $context['user']['is_admin'])
 			echo '
-				<li class="notice">', $txt['maintain_mode_on'], '</li>';
+					<li class="notice">', $txt['maintain_mode_on'], '</li>';
 
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
 			echo '
-				<li>', $context['unapproved_members'] == 1 ? $txt['approve_thereis'] : $txt['approve_thereare'], ' <a href="', $scripturl, '?action=admin;area=viewmembers;sa=browse;type=approve">', $context['unapproved_members'] == 1 ? $txt['approve_member'] : $context['unapproved_members'] . ' ' . $txt['approve_members'], '</a> ', $txt['approve_members_waiting'], '</li>';
+					<li>', $context['unapproved_members'] == 1 ? $txt['approve_thereis'] : $txt['approve_thereare'], ' <a href="', $scripturl, '?action=admin;area=viewmembers;sa=browse;type=approve">', $context['unapproved_members'] == 1 ? $txt['approve_member'] : $context['unapproved_members'] . ' ' . $txt['approve_members'], '</a> ', $txt['approve_members_waiting'], '</li>';
 
 		// Show the total time logged in?
 		if (!empty($context['user']['total_time_logged_in']))
 		{
 			echo '
-				<li>', $txt['totalTimeLogged1'];
+					<li>', $txt['totalTimeLogged1'];
 
 			// If days is just zero, don't bother to show it.
 			if ($context['user']['total_time_logged_in']['days'] > 0)
@@ -223,45 +228,46 @@ function template_body_above()
 
 			// But, let's always show minutes - Time wasted here: 0 minutes ;).
 			echo $context['user']['total_time_logged_in']['minutes'], $txt['totalTimeLogged4'], '
-				</li>';
+					</li>';
 		}
 
 		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 			echo '
-				<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
+					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
 		echo '
-			</ul>';
+				</ul>';
 	}
 	// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
 	else
 	{
 		echo '
-			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
-			<form class="windowbg" id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-				' , sprintf($txt['welcome_guest'], $txt['guest_title']) , '<br />
-				<input type="text" name="user" size="10" />
-				<input type="password" name="passwrd" size="10" />
-				<select name="cookielength">
-					<option value="60">', $txt['one_hour'], '</option>
-					<option value="1440">', $txt['one_day'], '</option>
-					<option value="10080">', $txt['one_week'], '</option>
-					<option value="43200">', $txt['one_month'], '</option>
-					<option value="-1" selected="selected">', $txt['forever'], '</option>
-				</select>
-				<input type="submit" value="', $txt['login'], '" /><br />
-				', $txt['quick_login_dec'];
+				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
+				<form class="windowbg" id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
+					' , sprintf($txt['welcome_guest'], $txt['guest_title']) , '<br />
+					<input type="text" name="user" size="10" />
+					<input type="password" name="passwrd" size="10" />
+					<select name="cookielength">
+						<option value="60">', $txt['one_hour'], '</option>
+						<option value="1440">', $txt['one_day'], '</option>
+						<option value="10080">', $txt['one_week'], '</option>
+						<option value="43200">', $txt['one_month'], '</option>
+						<option value="-1" selected="selected">', $txt['forever'], '</option>
+					</select>
+					<input type="submit" value="', $txt['login'], '" /><br />
+					', $txt['quick_login_dec'];
 
 		if (!empty($modSettings['enableOpenID']))
 			echo'
-				<br />
-				<input type="text" name="openid_url" id="openid_url" size="25" class="openid_login" />';
+					<br />
+					<input type="text" name="openid_url" id="openid_url" size="25" class="openid_login" />';
 
 		echo '
-				<input type="hidden" name="hash_passwrd" value="" />
-			</form>';
+					<input type="hidden" name="hash_passwrd" value="" />
+				</form>';
 	}
 
 	echo '
+			</div>
 		</div>
 		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
@@ -285,7 +291,7 @@ function template_body_above()
 	// Show a random news item? (or you could pick one from news_lines...)
 	if (!empty($settings['enable_news']))
 		echo '
-			<div id="random_news"><h3>', $txt['news'], ':</h3> ', $context['random_news_line'], '</div>';
+			<div id="random_news"><h3>', $txt['news'], ':</h3><p>', $context['random_news_line'], '</p></div>';
 
 	echo '
 		</div>
@@ -311,12 +317,13 @@ function template_body_below()
 
 	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!
 	echo '
-	<div id="footerarea" class="headerpadding topmargin">
-		<ul class="horizlist smalltext">
-			<li>', theme_copyright(), '</li>
-			<li><a href="http://validator.w3.org/check/referer" target="_blank"> | XHTML</a></li>
-			<li><a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank"> | CSS</a></li>
-			<li><a href="', $scripturl, '?action=.xml"> | RSS</a></li>
+	<div id="footerarea" class="headerpadding topmargin clearfix">
+		<ul class="smalltext">
+			<li><a id="button_php" href="http://www.mysql.com/" target="_blank" class="new_win"><span>', $txt['powered_by_mysql'], '</span></a></li>
+			<li><a id="button_mysql" href="http://www.php.net/" target="_blank" class="new_win"><span>', $txt['powered_by_php'], '</span></a></li>
+			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win"><span>', $txt['valid_html'], '</span></a></li>
+			<li><a id="button_css" href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank" class="new_win"><span>', $txt['valid_css'], '</span></a></li>
+			<li class="copywrite">', theme_copyright(), '</li>
 		</ul>';
 
 	// Show the load time?

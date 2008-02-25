@@ -1,2 +1,5 @@
 /* special styles for IE6 */
-
+#mainframe
+{
+	font-size: 80%;
+}

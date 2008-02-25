@@ -97,7 +97,7 @@
 /* this is the main container surrounding everything, use this to set forum width, font-size  etc. */
 #mainframe
 {
-	font-size: 0.9em;
+	font-size: 90%;
 	width: 95%;
 	margin: auto;
 }
@@ -140,25 +140,36 @@ h2 em
 {
 	padding: 0.5em 0.7em 0.5em 0.7em;
 }
-/* the avatar, located to the left */
-#user_section p#avatar
+/* the greeting */
+#greeting_section em
 {
-	float: left;
+	font-style: normal;font-weight: bold;
 }
-#guest_section
+/* the avatar, located to the left */
+#user_section #myavatar
 {
-	clear: both;
+	padding: 0.7em;
+	border-right: solid 1px #ADADAD;
+	margin: 0 0.5em 0 0;
+	float: left;
 }
 /* the news and search areas */
 #news_section
 {
+	clear: both;
 	font-size: 0.8em;
 	padding: 0.5em 1em 0.5em 1em;
 }
 #random_news h3
 {
-	margin: 0.2em 0 0.2em 0;
+	margin-right: 1em;
 	font-size: 0.85em;
+	display: inline;
+}
+#random_news p
+{
+	margin: 0;
+	padding: 0;
 	display: inline;
 }
 
@@ -257,12 +268,74 @@ ul#linktree li a:hover
 /* the footer area */
 #footerarea
 {
-	padding: 1em 0 1em 0;
+	padding: 1em 0 2em 0;
+	text-align: center;
 }
-/* copyright */
-#footerara ul
+#footerarea ul li
 {
+	float: left;
 }
+#footerarea ul li.copywrite
+{
+	display: block;
+	line-height: 0;
+	padding: 1em;
+}
+#footerarea ul li a span
+{
+	position: absolute;
+	left: -3000px;
+}
+#footerarea a#button_php
+{
+	display: block;
+	width: 51px;
+	height: 20px;
+	background: url(images/powered-php.gif) no-repeat;
+	padding: 0.5em;
+}
+#footerarea a#button_php:hover
+{
+	background: url(images/h_powered-php.gif) no-repeat;
+}
+#footerarea a#button_mysql
+{
+	display: block;
+	width: 51px;
+	height: 20px;
+	background: url(images/powered-mysql.gif) no-repeat;
+	padding: 0.5em;
+}
+#footerarea a#button_mysql:hover
+{
+	background: url(images/h_powered-mysql.gif) no-repeat;
+}
+
+#footerarea a#button_xhtml
+{
+	display: block;
+	width: 57px;
+	height: 20px;
+	background: url(images/valid-xhtml10.gif) no-repeat;
+	padding: 0.5em;
+}
+#footerarea a#button_xhtml:hover
+{
+	background: url(images/h_valid-xhtml10.gif) no-repeat;
+}
+#footerarea a#button_css
+{
+	display: block;
+	width: 57px;
+	height: 20px;
+	background: url(images/valid-css.gif) no-repeat;
+	padding: 0.5em;
+}
+#footerarea a#button_css:hover
+{
+	background: url(images/h_valid-css.gif) no-repeat;
+}
+
 /* page created in.. */
 #footerarea p
 {

@@ -1,2 +1,5 @@
 /* special styles for IE7 */
-
+#mainframe
+{
+	font-size: 80%;
+}
