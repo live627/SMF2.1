@@ -508,7 +508,9 @@ function template_unapproved_attachments()
 function template_viewmodreport()
 {
 	global $context, $scripturl, $txt;
+
 	echo '
+	<form action="', $scripturl, '?action=moderate;area=reports;report=', $context['report']['id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr class="titlebg">
 			<td colspan="2">
@@ -552,6 +554,34 @@ function template_viewmodreport()
 		</tr>';
 	}
 	echo '
+	</table><br />
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
+		<tr class="titlebg">
+			<td>', $txt['mc_modreport_mod_comments'], '</td>
+		</tr>';
+
+	if (empty($context['report']['mod_comments']))
+		echo '
+		<tr class="windowbg">
+			<td align="center">', $txt['mc_modreport_no_mod_comment'], '</td>
+		</tr>';
+
+	foreach ($context['report']['mod_comments'] as $comment)
+	{
+		echo '
+		<tr class="windowbg2">
+			<td>	', $comment['member']['link'], ': ', $comment['message'], ' <em>(', $comment['time'], ')</em></td>
+		</tr>';
+	}
+	echo '
+		<tr class="windowbg2">
+			<td align="center">
+				<textarea rows="2" cols="60" style="width: 60%;" name="mod_comment"></textarea>
+				<div>
+					<input type="submit" name="add_comment" value="', $txt['mc_modreport_add_mod_comment'], '" />
+				</div>
+			</td>
+		</tr>
 	</table><br />';
 
 	$alt = false;
@@ -596,6 +626,10 @@ function template_viewmodreport()
 		echo '
 	</table>';
 	}
+
+	echo '
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
 }
 
 // Callback function for showing a watched users post in the table.

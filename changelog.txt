@@ -145,7 +145,8 @@ February 2008
  ! Don't eval language files anymore, it's not required. (ManageMaintenance.php) [Bug 590]
  * More updates on "future" theme, removed infocenter render function, fixed avatar/font-sizes etc (Themes/future)
  * Converted MessageIndex.template, fixed linktree etc. (Themes/future)
- 
+ + Allow moderators to comment on topic reports in the moderation center. (ModerationCenter.php, ModerationCenter template, ModerationCenter language file) [Feature 873]
+
 
 SMF 2.0 Beta 2.1                                                03 February 2008
 ================================================================================

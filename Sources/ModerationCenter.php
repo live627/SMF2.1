@@ -646,18 +646,17 @@ function ReportedPosts()
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			if ($row['id_member'] == 0 || !isset($context['reports'][$row['id_report']]['comments'][$row['id_member']]))
-				$context['reports'][$row['id_report']]['comments'][$row['id_member']] = array(
-					'id' => $row['id_comment'],
-					'message' => $row['comment'],
-					'time' => timeformat($row['time_sent']),
-					'member' => array(
-						'id' => $row['id_member'],
-						'name' => $row['reporter'],
-						'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
-						'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-					),
-				);
+			$context['reports'][$row['id_report']]['comments'][] = array(
+				'id' => $row['id_comment'],
+				'message' => $row['comment'],
+				'time' => timeformat($row['time_sent']),
+				'member' => array(
+					'id' => $row['id_member'],
+					'name' => $row['reporter'],
+					'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
+					'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+				),
+			);
 		}
 		$smcFunc['db_free_result']($request);
 	}
@@ -752,6 +751,27 @@ function ModReport()
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
+	// If they are adding a comment then... add a comment.
+	if (isset($_POST['add_comment']) && !empty($_POST['mod_comment']))
+	{
+		$newComment = trim($smcFunc['htmlspecialchars']($_POST['mod_comment']));
+
+		// In it goes.
+		if (!empty($newComment))
+			$smcFunc['db_insert']('',
+				'{db_prefix}log_comments',
+				array(
+					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'recipient_name' => 'string',
+					'id_notice' => 'int', 'body' => 'string', 'log_time' => 'int',
+				),
+				array(
+					$user_info['id'], $user_info['name'], 'reportc', '',
+					$_REQUEST['report'], $newComment, time(),
+				),
+				array('id_comment')
+			);
+	}
+
 	$context['report'] = array(
 		'id' => $row['id_report'],
 		'topic_id' => $row['id_topic'],
@@ -767,6 +787,7 @@ function ModReport()
 			'href' => $scripturl . '?action=profile;u=' . $row['id_author'],
 		),
 		'comments' => array(),
+		'mod_comments' => array(),
 		'time_started' => timeformat($row['time_started']),
 		'last_updated' => timeformat($row['time_updated']),
 		'subject' => $row['subject'],
@@ -797,6 +818,35 @@ function ModReport()
 				'id' => $row['id_member'],
 				'name' => $row['reporter'],
 				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+			),
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	// Hang about old chap, any comments from moderators on this one?
+	$request = $smcFunc['db_query']('', '
+		SELECT lc.id_comment, lc.id_notice, lc.log_time, lc.body,
+			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS moderator
+		FROM {db_prefix}log_comments AS lc
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+		WHERE lc.id_notice = {int:id_report}
+			AND lc.comment_type = {string:reportc}',
+		array(
+			'id_report' => $context['report']['id'],
+			'reportc' => 'reportc',
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$context['report']['mod_comments'][] = array(
+			'id' => $row['id_comment'],
+			'message' => parse_bbc($row['body']),
+			'time' => timeformat($row['log_time']),
+			'member' => array(
+				'id' => $row['id_member'],
+				'name' => $row['moderator'],
+				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['moderator'] . '</a>' : $row['moderator'],
 				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			),
 		);
@@ -928,9 +978,11 @@ function ShowNotice()
 	$request = $smcFunc['db_query']('', '
 		SELECT body, subject
 		FROM {db_prefix}log_member_notices
-		WHERE id_notice = {int:id_notice}',
+		WHERE id_notice = {int:id_notice}
+			AND comment_type = {string:warning}',
 		array(
 			'id_notice' => $id_notice,
+			'warning' => 'warning',
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
