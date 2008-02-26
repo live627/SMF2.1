@@ -180,10 +180,10 @@ function template_body_above()
 
 	if ($context['user']['is_logged'])
 		echo '
-			<li>', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></li>';
+			<li id="name">', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></li>';
 	else
 		echo '
-			<li>', $txt['hello_guest'], $txt['guest'], '</li>';
+			<li id="name">', $txt['hello_guest'], $txt['guest'], '</li>';
 
 	echo '
 		</ul>
@@ -371,12 +371,16 @@ function theme_linktree()
 
 		// Show the link, including a URL if it should have one.
 		echo $settings['linktree_link'] && isset($tree['url']) ? '
-			<a href="' . $tree['url'] . '">' . $tree['name'] . '</a>' : $tree['name'];
+			<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>' : '<span>' . $tree['name'] .'</span>';
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))
 			echo $tree['extra_after'];
 
+		// Don't show a separator for the last one.
+		if ($link_num != count($context['linktree']) - 1)
+			echo '&nbsp;>';
+		
 		echo '
 		</li>';
 	}
@@ -413,6 +417,7 @@ function template_buttonlist($buttons, $top = true)
 {
 	global $settings, $context, $txt, $scripturl;
 
+	$count = 0;
 	// Create the buttons...
 	foreach ($buttons as $key => $value)
 	{
@@ -428,9 +433,10 @@ function template_buttonlist($buttons, $top = true)
 					$buttonlist[$key] = '<a href="' . $value['url'] . '"' . (!empty($value['sctive']) ? ' class="active"' : '') . '><img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/' . $value['image'] . '" alt="' . $txt[$value['text']] . '" /></a>';
 				// We will use texts anyway!
 				else
-					$buttonlist[$key] = '<a href="' . $value['url'] . '"' . (!empty($value['active']) ? ' class="active"' : '') . '><span' . (($key == count($buttons) - 1) ? ' class="last"' : '') . '>' . (!empty($value['active']) ? '<em>' : '') . $txt[$value['text']] . (!empty($value['active']) ? '</em>' : '') . '</span></a>';
+					$buttonlist[$key] = '<a href="' . $value['url'] . '"' . (!empty($value['active']) ? ' class="active"' : '') . '><span' . ($count == (count($buttons) - 1) ? ' class="last"' : '') . '>' . (!empty($value['active']) ? '<em>' : '') . $txt[$value['text']] . (!empty($value['active']) ? '</em>' : '') . '</span></a>';
 		}
 		$buttons[$key] = $buttonlist[$key];
+		$count++;
 	}
 	// Empty list, so just return.
 	if (empty($buttons))

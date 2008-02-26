@@ -1,5 +1,5 @@
 /* ************************************* */
-/* styles from BoardIndex.template       */
+/* styles from BoardIndex.template                   */
 /* ************************************* */
 
 p#stats
@@ -138,9 +138,73 @@ form#infocenter_login ul.horizlist label
 	font-weight: bold;
 }
 
-
-
-
+/* ************************************* */
+/* styles from MessageIndex.template               */
+/* ************************************* */
+#childboards table
+{
+	width: 100%;
+}
+#modbuttons
+{
+	clear: both;
+	width: 100%;
+}
+#modbuttons .buttonlist, #modbuttons .buttonlist_bottom
+{
+	margin-right: 1em;
+	float: right;
+}
+#messageindex td.icon1, #messageindex td.icon2
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 5%;
+}
+#messageindex td.subject
+{
+	padding: 0.5em;
+}
+#messageindex td.starter
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 14%;
+}
+#messageindex td.replies
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 4%;
+}
+#messageindex td.views
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 4%;
+}
+#messageindex td.lastpost
+{
+	padding: 0.5em;
+	width: 22%;
+}
+#messageindex td.moderation
+{
+	text-align: center;
+	padding: 0.5em;
+	width: 4%;
+}
+#topic_icons p
+{
+	display: block;
+	padding: 0.5em 0.5em 0.1em 0.5em;
+	margin: 0
+	border-bottom: none;
+}
+#message_index_jump_to
+{
+	margin: 2em 4em 0 2em;
+}
 
 
 

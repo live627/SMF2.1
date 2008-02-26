@@ -60,7 +60,7 @@ function MessageIndex()
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_messageindex';
 	else
-		loadTemplate('MessageIndex');
+		loadTemplate('MessageIndex', 'forum');
 
 	$context['name'] = $board_info['name'];
 	$context['description'] = $board_info['description'];

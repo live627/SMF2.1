@@ -144,6 +144,7 @@ February 2008
  ! Only send notifications for replies to unapproved topics to the topic starter - as no-one else can see the thing! (Post.php) [Bug 1638]
  ! Don't eval language files anymore, it's not required. (ManageMaintenance.php) [Bug 590]
  * More updates on "future" theme, removed infocenter render function, fixed avatar/font-sizes etc (Themes/future)
+ * Converted MessageIndex.template, fixed linktree etc. (Themes/future)
  
 
 SMF 2.0 Beta 2.1                                                03 February 2008

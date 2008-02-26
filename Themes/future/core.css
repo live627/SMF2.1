@@ -65,6 +65,7 @@
 }
 .buttonlist_bottom ul li a span
 {
+	padding: 0.5em 0.5em 0.1em 0.5em;
 	background: url(images/mirrortab_back.gif) repeat-x top left;
 }
 .buttonlist_bottom ul li a.active
@@ -77,10 +78,11 @@
 }
 .buttonlist_bottom ul li a.active span
 {
-	background: url(images/mirrortab_active_first.gif) no-repeat bottom left;
+	background: url(images/mirrortab_active_first.gif) no-repeat top left;
 }
 .buttonlist_bottom ul li a span.last
 {
+	padding: 0.5em 1.5em 0.1em 0.5em;
 	background: url(images/mirrortab_last.gif) no-repeat top right;
 }
 /* the old type of menu, with images */
@@ -97,7 +99,7 @@
 /* this is the main container surrounding everything, use this to set forum width, font-size  etc. */
 #mainframe
 {
-	font-size: 90%;
+	font-size: 85%;
 	width: 95%;
 	margin: auto;
 }
@@ -143,7 +145,12 @@ h2 em
 /* the greeting */
 #greeting_section em
 {
-	font-style: normal;font-weight: bold;
+	font-style: normal;
+	font-weight: bold;
+}
+#greeting_section li#name
+{
+	padding-left: 0.5em;
 }
 /* the avatar, located to the left */
 #user_section #myavatar
@@ -245,10 +252,9 @@ ul#linktree
 }
 ul#linktree li
 {
-	margin: 0 1em 0 0;
+	margin: 0;
 	padding: 0;
 	display: inline;
-	font-weight: bold;
 	font-size: 0.8em;
 }
 ul#linktree li a
@@ -259,7 +265,10 @@ ul#linktree li a:hover
 {
 	color: red;
 }
-
+ul#linktree li span
+{
+	font-weight: bold;
+}
 
 /* the main content area */
 #bodyarea
