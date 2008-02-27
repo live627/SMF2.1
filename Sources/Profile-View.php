@@ -276,29 +276,41 @@ function showPosts($memID)
 	if (empty($_REQUEST['viewscount']) || !is_numeric($_REQUEST['viewscount']))
 		$_REQUEST['viewscount'] = '10';
 
-
-	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*)
-		FROM {db_prefix}messages AS m' . ($context['is_topics'] ? '
-			INNER JOIN {db_prefix}topics AS t ON (t.id_first_msg = m.id_msg)' : '') . '
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
-		WHERE m.id_member = {int:current_member}
-			' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
-		array(
-			'current_member' => $memID,
-			'is_approved' => 1,
-		)
-	);
+	if ($context['is_topics'])
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(*)
+			FROM {db_prefix}topics AS t' . ($user_info['query_see_board'] == '1=1' ? '' : '
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND {query_see_board})') . '
+			WHERE t.id_member_started = {int:current_member}' . (!empty($board) ? '
+				AND t.id_board = ' . $board : '') . ($context['user']['is_owner'] ? '' : '
+				AND t.approved = {int:is_approved}'),
+			array(
+				'current_member' => $memID,
+				'is_approved' => 1,
+			)
+		);
+	else
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(*)
+			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
+			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
+				AND m.id_board = ' . $board : '') . ($context['user']['is_owner'] ? '' : '
+				AND m.approved = {int:is_approved}'),
+			array(
+				'current_member' => $memID,
+				'is_approved' => 1,
+			)
+		);
 	list ($msgCount) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
 	$request = $smcFunc['db_query']('', '
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {db_prefix}messages AS m
-		WHERE m.id_member = {int:current_member}
-			' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
+		WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
+			AND m.id_board = ' . $board : '') . ($context['user']['is_owner'] ? '' : '
+			AND m.approved = {int:is_approved}'),
 		array(
 			'current_member' => $memID,
 			'is_approved' => 1,

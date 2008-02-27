@@ -114,3 +114,12 @@ ALTER TABLE {$db_prefix}topics
 ADD COLUMN id_previous_board smallint NOT NULL default '0',
 ADD COLUMN id_previous_topic int NOT NULL default '0';
 ---#
+
+/******************************************************************************/
+--- Adding general table indexes.
+/******************************************************************************/
+
+---# Adding index for topics table...
+CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
+---#
+

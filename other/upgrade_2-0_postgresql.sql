@@ -356,3 +356,12 @@ else
 }
 ---}
 ---#
+
+/******************************************************************************/
+--- Adding general table indexes.
+/******************************************************************************/
+
+---# Adding index for topics table...
+CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
+---#
+

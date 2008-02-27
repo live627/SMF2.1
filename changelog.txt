@@ -146,6 +146,7 @@ February 2008
  * More updates on "future" theme, removed infocenter render function, fixed avatar/font-sizes etc (Themes/future)
  * Converted MessageIndex.template, fixed linktree etc. (Themes/future)
  + Allow moderators to comment on topic reports in the moderation center. (ModerationCenter.php, ModerationCenter template, ModerationCenter language file) [Feature 873]
+ ! Applied some query optimizations. (Display.php, ModerationCenter.php, Profile-View.php, upgrade_2-0.sql, install_2-0.sql)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

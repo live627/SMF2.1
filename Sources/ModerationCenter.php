@@ -1256,13 +1256,44 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 
 	if (!empty($members))
 	{
+		// First get the latests messages from these users.
+		$request = $smcFunc['db_query']('', '
+			SELECT m.id_member, MAX(m.id_msg) AS last_post_id
+			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
+			WHERE m.id_member IN ({array_int:member_list})' . (allowedTo('approve_posts') ? '' : '
+				AND m.approved = {int:is_approved}') . '
+			GROUP BY m.id_member',
+			array(
+				'member_list' => $members,
+				'is_approved' => 1,
+			)
+		);
+		$latest_posts = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$latest_posts[$row['id_member']] = $row['last_post_id'];
+
+		// Now get the time thoses messages were posted.
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, poster_time
+			FROM {db_prefix}messages
+			WHERE id_msg IN ({array_int:message_list})',
+			array(
+				'message_list' => $latest_posts,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$watched_users[$row['id_member']]['last_post'] = timeformat($row['poster_time']);
+			$watched_users[$row['id_member']]['last_post_id'] = $latest_posts[$row['id_member']];
+		}
+
 		$request = $smcFunc['db_query']('', '
 			SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
-			FROM {db_prefix}messages AS m
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE m.id_member IN ({array_int:member_list})
-				AND {query_see_board}
-				AND m.approved = {int:is_approved}
+			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
+			WHERE m.id_member IN ({array_int:member_list})' . (allowedTo('approve_posts') ? '' : '
+				AND m.approved = {int:is_approved}') . '
 			GROUP BY m.id_member
 			ORDER BY m.poster_time DESC',
 			array(

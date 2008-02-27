@@ -2216,6 +2216,15 @@ ADD COLUMN id_previous_topic mediumint(8) NOT NULL default '0';
 ---#
 
 /******************************************************************************/
+--- Adding general table indexes.
+/******************************************************************************/
+
+---# Adding index for topics table...
+ALTER TABLE {$db_prefix}topics
+ADD INDEX member_started (id_member_started, id_board);
+---#
+
+/******************************************************************************/
 --- Final clean up...
 /******************************************************************************/
 

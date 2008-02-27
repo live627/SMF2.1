@@ -2137,6 +2137,7 @@ CREATE UNIQUE INDEX {$db_prefix}topics_poll ON {$db_prefix}topics (id_poll, id_t
 CREATE INDEX {$db_prefix}topics_is_sticky ON {$db_prefix}topics (is_sticky);
 CREATE INDEX {$db_prefix}topics_approved ON {$db_prefix}topics (approved);
 CREATE INDEX {$db_prefix}topics_id_board ON {$db_prefix}topics (id_board);
+CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
 
 #
 # Dumping data for table `topics`

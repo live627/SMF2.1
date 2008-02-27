@@ -1980,7 +1980,8 @@ CREATE TABLE {$db_prefix}topics (
   UNIQUE poll (id_poll, id_topic),
   KEY is_sticky (is_sticky),
   KEY approved (approved),
-  KEY id_board (id_board)
+  KEY id_board (id_board),
+  KEY member_started (id_member_started, id_board)
 ) TYPE=MyISAM;
 
 #
