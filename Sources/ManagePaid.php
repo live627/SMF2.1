@@ -458,7 +458,7 @@ function ModifySubscription()
 			list ($disableGroups) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_free_result']($request);
 
-			$smcFunc['db_query']('', '
+			$smcFunc['db_query']('substring', '
 				UPDATE {db_prefix}subscriptions
 					SET name = SUBSTRING({string:name}, 1, 60), description = SUBSTRING({string:description}, 1, 255), active = {int:is_active},
 					length = SUBSTRING({string:length}, 1, 4), cost = {string:cost}' . ($disableGroups ? '' : ', id_group = {int:id_group},

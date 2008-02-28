@@ -337,7 +337,8 @@ function ModifyMailSettings($return_config = false)
 	foreach ($birthdayEmails as $index => $email)
 	{
 		// Remove the newlines and count them.
-		$email['body'] = str_replace("\n", '<br />', $email['body'], $newlines);
+		$newlines = count(explode("\n", $email['body']));
+		$email['body'] = str_replace("\n", '<br />', $email['body']);
 		$context['settings_insert_above'] .= '
 			bDay[\'' . $index . '\'] = {
 				subject: \'' . addslashes($email['subject']) . '\',

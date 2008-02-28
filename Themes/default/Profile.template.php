@@ -1979,7 +1979,7 @@ function template_issueWarning()
 	foreach ($context['notify_types'] as $k => $type)
 		echo '
 			if (index == ', $k, ')
-				document.getElementById(\'warn_body\').value = "', addcslashes($type['body'], '"' . "\n"), '";';
+				document.getElementById(\'warn_body\').value = "', strtr($type['body'], array('"' => "'", "\n" => '\\n', "\r" => '')), '";';
 
 	echo '
 		}
