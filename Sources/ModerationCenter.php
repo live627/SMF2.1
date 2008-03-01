@@ -978,11 +978,9 @@ function ShowNotice()
 	$request = $smcFunc['db_query']('', '
 		SELECT body, subject
 		FROM {db_prefix}log_member_notices
-		WHERE id_notice = {int:id_notice}
-			AND comment_type = {string:warning}',
+		WHERE id_notice = {int:id_notice}',
 		array(
 			'id_notice' => $id_notice,
-			'warning' => 'warning',
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)

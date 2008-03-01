@@ -437,7 +437,7 @@ function ViewMemberlist()
 	elseif ($context['sub_action'] == 'query')
 	{
 		list ($where, $where_params) = unserialize(base64_decode(strtr($_REQUEST['params'], array(' ' => '+'))));
-		
+
 	}
 
 	// Construct the additional URL part with the query info in it.
@@ -898,8 +898,8 @@ function MembersAwaitingActivation()
 					),
 				),
 				'sort' => array(
-					'default' => 'member_ip',
-					'reverse' => 'member_ip DESC',
+					'default' => 'INET_ATON(member_ip)',
+					'reverse' => 'INET_ATON(member_ip) DESC',
 				),
 			),
 			'hostname' => array(

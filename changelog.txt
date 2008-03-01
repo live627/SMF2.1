@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 3
 ================================================================================
+March 2008
+--------------------------------------------------------------------------------
+ ! When sorting by IP use INET_ATON to sort them properly. (ManageMembers.php, Profile-View.php) [Bug 1671]
+
+
 February 2008
 --------------------------------------------------------------------------------
  ! Try to make sure that garbage collection for sessions is turned on when using database driven sessions. (Load.php) [Bug 1494]

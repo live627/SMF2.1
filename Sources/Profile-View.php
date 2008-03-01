@@ -1207,8 +1207,8 @@ function TrackIP($memID = 0)
 					),
 				),
 				'sort' => array(
-					'default' => 'm.poster_ip',
-					'reverse' => 'm.poster_ip DESC',
+					'default' => 'INET_ATON(m.poster_ip)',
+					'reverse' => 'INET_ATON(m.poster_ip) DESC',
 				),
 			),
 			'poster' => array(
@@ -1297,8 +1297,8 @@ function TrackIP($memID = 0)
 					),
 				),
 				'sort' => array(
-					'default' => 'le.ip',
-					'reverse' => 'le.ip DESC',
+					'default' => 'INET_ATON(le.ip)',
+					'reverse' => 'INET_ATON(le.ip) DESC',
 				),
 			),
 			'display_name' => array(
