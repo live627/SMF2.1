@@ -336,15 +336,15 @@ function MessageIndex()
 				INNER JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)' : '')) . ($context['sort_by'] === 'starter' ? '
 				LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)' : '') . ($context['sort_by'] === 'last_poster' ? '
 				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)' : '') . '
-			WHERE t.id_board = {int:current_board}
-				' . ($context['can_approve_posts'] ? '' : ' AND (t.approved = {int:is_approved} OR (t.id_member_started != {int:member_started} AND t.id_member_started = {int:current_member}))') . '
+			WHERE t.id_board = {int:current_board}' . (!in_array('pm', $context['admin_features']) || $context['can_approve_posts'] ? '' : '
+				AND (t.approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR t.id_member_started = {int:current_member}') . ')') . '
 			ORDER BY ' . (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
 			LIMIT {int:start}, {int:maxindex}',
 			array(
 				'current_board' => $board,
 				'current_member' => $user_info['id'],
 				'is_approved' => 1,
-				'member_started' => 0,
+				'id_member_guest' => 0,
 				'start' => $start,
 				'maxindex' => $maxindex,
 			)
@@ -376,8 +376,8 @@ function MessageIndex()
 				LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)' . ($user_info['is_guest'] ? '' : '
 				LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = {int:current_board} AND lmr.id_member = {int:current_member})'). '
-			WHERE ' . ($pre_query ? 't.id_topic IN ({array_int:topic_list})' : 't.id_board = {int:current_board}') . '
-				' . ($context['can_approve_posts'] ? '' : ' AND (t.approved = {int:is_approved} OR (t.id_member_started != {int:id_member_started} AND t.id_member_started = {int:current_member}))') . '
+			WHERE ' . ($pre_query ? 't.id_topic IN ({array_int:topic_list})' : 't.id_board = {int:current_board}') . (!in_array('pm', $context['admin_features']) || $context['can_approve_posts'] ? '' : '
+				AND (t.approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR t.id_member_started = {int:current_member}') . ')') . '
 			ORDER BY ' . ($pre_query ? 'FIND_IN_SET(t.id_topic, {string:find_set_topics})' : (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . '
 			LIMIT ' . ($pre_query ? '' : '{int:start}, ') . '{int:maxindex}',
 			array(
@@ -385,7 +385,6 @@ function MessageIndex()
 				'current_member' => $user_info['id'],
 				'topic_list' => $topic_ids,
 				'is_approved' => 1,
-				'id_member_started' => 0,
 				'find_set_topics' => implode(',', $topic_ids),
 				'start' => $start,
 				'maxindex' => $maxindex,
@@ -633,7 +632,7 @@ function MessageIndex()
 // Allows for moderation from the message index.
 function QuickModeration()
 {
-	global $sourcedir, $board, $user_info, $modSettings, $sourcedir, $smcFunc;
+	global $sourcedir, $board, $user_info, $modSettings, $sourcedir, $smcFunc, $context;
 
 	// Check the session = get or post.
 	checkSession('request');
@@ -752,13 +751,13 @@ function QuickModeration()
 		{
 			if (!empty($board))
 			{
-				if ($row['id_board'] != $board || (!$row['approved'] && !allowedTo('approve_posts')))
+				if ($row['id_board'] != $board || (in_array('pm', $context['admin_features']) && !$row['approved'] && !allowedTo('approve_posts')))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 			}
 			else
 			{
 				// Don't allow them to act on unapproved posts they can't see...
-				if (!$row['approved'] && !in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))
+				if (in_array('pm', $context['admin_features']) && !$row['approved'] && !in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 				// Goodness, this is fun.  We need to validate the action.
 				elseif ($_REQUEST['actions'][$row['id_topic']] == 'sticky' && !in_array(0, $boards_can['make_sticky']) && !in_array($row['id_board'], $boards_can['make_sticky']))
@@ -770,7 +769,7 @@ function QuickModeration()
 				elseif ($_REQUEST['actions'][$row['id_topic']] == 'lock' && !in_array(0, $boards_can['lock_any']) && !in_array($row['id_board'], $boards_can['lock_any']) && ($row['id_member_started'] != $user_info['id'] || $locked == 1 || (!in_array(0, $boards_can['lock_own']) && !in_array($row['id_board'], $boards_can['lock_own']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 				// If the topic is approved then you need permission to approve the posts within.
-				elseif ($_REQUEST['actions'][$row['id_topic']] == 'approve' && (!$row['unapproved_posts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))))
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'approve' && (!in_array('pm', $context['admin_features']) || !$row['unapproved_posts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 			}
 		}

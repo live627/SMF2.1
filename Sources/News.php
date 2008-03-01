@@ -534,7 +534,7 @@ function getXmlMembers($xml_format)
 function getXmlNews($xml_format)
 {
 	global $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $smcFunc, $settings;
+	global $query_this_board, $smcFunc, $settings, $context;
 
 	/* Find the latest posts that:
 		- are the first post in their topic.
@@ -553,9 +553,9 @@ function getXmlNews($xml_format)
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE ' . $query_this_board . '
-			' . (empty($board) ? '' : 'AND t.id_board = {int:current_board}') . '
-			AND t.approved = {int:is_approved}
+		WHERE ' . $query_this_board . (empty($board) ? '' : '
+			AND t.id_board = {int:current_board}') . (in_array('pm', $context['admin_features']) ? '
+			AND t.approved = {int:is_approved}' : '') . '
 		ORDER BY t.id_first_msg DESC
 		LIMIT ' . $_GET['limit'],
 		array(
@@ -644,9 +644,9 @@ function getXmlRecent($xml_format)
 		SELECT m.id_msg
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE ' . $query_this_board . '
-			' . (empty($board) ? '' : 'AND m.id_board = {int:current_board}') . '
-			AND m.approved = {int:is_approved}
+		WHERE ' . $query_this_board . (empty($board) ? '' : '
+			AND m.id_board = {int:current_board}') . (in_array('pm', $context['admin_features']) ? '
+			AND m.approved = {int:is_approved}' : '') . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $_GET['limit'],
 		array(

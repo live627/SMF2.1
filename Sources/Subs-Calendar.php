@@ -177,7 +177,7 @@ function getBirthdayRange($low_date, $high_date)
 // Get all events within the given time range.
 function getEventRange($low_date, $high_date, $use_permissions = true)
 {
-	global $scripturl, $modSettings, $user_info, $sc, $smcFunc;
+	global $scripturl, $modSettings, $user_info, $sc, $smcFunc, $context;
 
 	$low_date_time = sscanf($low_date, '%04d-%02d-%02d');
 	$low_date_time = mktime(0, 0, 0, $low_date_time[1], $low_date_time[2], $low_date_time[0]);
@@ -206,7 +206,7 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 	{
 		// If the attached topic is not approved then for the moment pretend it doesn't exist
 		//!!! This should be fixed to show them all and then sort by approval state later?
-		if (!empty($row['id_first_msg']) && !$row['approved'])
+		if (!empty($row['id_first_msg']) && in_array('pm', $context['admin_features']) && !$row['approved'])
 			continue;
 
 		// Force a censor of the title - as often these are used by others.

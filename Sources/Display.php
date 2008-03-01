@@ -112,8 +112,8 @@ function Display()
 					t2.id_last_msg ' . $gt_lt . ' t.id_last_msg' : '
 					(t2.id_last_msg ' . $gt_lt . ' t.id_last_msg AND t2.is_sticky ' . $gt_lt . '= t.is_sticky) OR t2.is_sticky ' . $gt_lt . ' t.is_sticky') . ')
 				WHERE t.id_topic = {int:current_topic}
-					AND t2.id_board = {int:current_board}
-					' . (allowedTo('approve_posts') ? '' : ' AND (t2.approved = {int:is_approved} OR (t2.id_member_started != {int:id_member_started} AND t2.id_member_started = {int:current_member}))') . '
+					AND t2.id_board = {int:current_board}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+					AND (t2.approved = {int:is_approved} OR (t2.id_member_started != {int:id_member_started} AND t2.id_member_started = {int:current_member}))') . '
 				ORDER BY' . (empty($modSettings['enableStickyTopics']) ? '' : ' t2.is_sticky' . $order . ',') . ' t2.id_last_msg' . $order . '
 				LIMIT 1',
 				array(
@@ -134,8 +134,8 @@ function Display()
 				$request = $smcFunc['db_query']('', '
 					SELECT id_topic
 					FROM {db_prefix}topics
-					WHERE id_board = {int:current_board}
-						' . (allowedTo('approve_posts') ? '' : ' AND (approved = {int:is_approved} OR (id_member_started != {int:id_member_started} AND id_member_started = {int:current_member}))') . '
+					WHERE id_board = {int:current_board}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+						AND (approved = {int:is_approved} OR (id_member_started != {int:id_member_started} AND id_member_started = {int:current_member}))') . '
 					ORDER BY' . (empty($modSettings['enableStickyTopics']) ? '' : ' is_sticky' . $order . ',') . ' id_last_msg' . $order . '
 					LIMIT 1',
 					array(
@@ -202,7 +202,7 @@ function Display()
 	$context['topic_first_message'] = $topicinfo['id_first_msg'];
 
 	// If this topic has unapproved posts, we need to work out how many posts the user can see, for page indexing.
-	if ($topicinfo['unapproved_posts'] && !$user_info['is_guest'] && !allowedTo('approve_posts'))
+	if (in_array('pm', $context['admin_features']) && $topicinfo['unapproved_posts'] && !$user_info['is_guest'] && !allowedTo('approve_posts'))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(id_member) AS my_unapproved_posts
@@ -288,8 +288,8 @@ function Display()
 					SELECT COUNT(*)
 					FROM {db_prefix}messages
 					WHERE poster_time < {int:timestamp}
-						AND id_topic = {int:current_topic}' . 
-						($topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? ' AND (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
+						AND id_topic = {int:current_topic}' . (in_array('pm', $context['admin_features']) && $topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? '
+						AND (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
 					array(
 						'current_topic' => $topic,
 						'current_member' => $user_info['id'],
@@ -320,8 +320,8 @@ function Display()
 					SELECT COUNT(*)
 					FROM {db_prefix}messages
 					WHERE id_msg < {int:virtual_msg}
-						AND id_topic = {int:current_topic}' . 
-						($topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? ' AND (approved = 1' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
+						AND id_topic = {int:current_topic}' . (in_array('pm', $context['admin_features']) && $topicinfo['unapproved_posts'] && !allowedTo('approve_posts') ? '
+						AND (approved = 1' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member})') : ''),
 					array(
 						'current_member' => $user_info['id'],
 						'current_topic' => $topic,
@@ -822,10 +822,10 @@ function Display()
 
 	// Get each post and poster in this topic.
 	$request = $smcFunc['db_query']('', '
-		SELECT id_msg, id_member
+		SELECT id_msg, id_member, approved
 		FROM {db_prefix}messages
-		WHERE id_topic = {int:current_topic}' . (allowedTo('approve_posts') ? '' : '
-			AND (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member}') . ')') . '
+		WHERE id_topic = {int:current_topic}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+		HAVING (approved = {int:is_approved}' . ($user_info['is_guest'] ? '' : ' OR id_member = {int:current_member}') . ')') . '
 		ORDER BY id_msg ' . ($ascending ? '' : 'DESC') . ($context['messages_per_page'] == -1 ? '' : '
 		LIMIT ' . $start . ', ' . $limit),
 		array(
@@ -863,8 +863,8 @@ function Display()
 				FROM {db_prefix}attachments AS a' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
 					LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)') . '
 				WHERE a.id_msg IN ({array_int:message_list})
-					AND a.attachment_type = {int:attachment_type}
-					' . (allowedTo('approve_posts') ? '' : ' AND a.approved = {int:is_approved}'),
+					AND a.attachment_type = {int:attachment_type}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+					AND a.approved = {int:is_approved}'),
 				array(
 					'message_list' => $messages,
 					'attachment_type' => 0,

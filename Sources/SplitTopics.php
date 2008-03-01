@@ -158,16 +158,13 @@ function SplitIndex()
 		fatal_lang_error('numbers_one_to_nine', false);
 	$_GET['at'] = (int) $_GET['at'];
 
-	// Can they view unapproved?
-	$approveQuery = allowedTo('approve_posts') ? ' AND m.approved = 1' : '';
-
 	// Retrieve the subject and stuff of the specific topic/message.
 	$request = $smcFunc['db_query']('', '
 		SELECT m.subject, t.num_replies, t.id_first_msg, t.approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-		WHERE m.id_msg = {int:split_at}
-			' . $approveQuery . '
+		WHERE m.id_msg = {int:split_at}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+			AND m.approved = 1') . '
 			AND m.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
@@ -181,7 +178,7 @@ function SplitIndex()
 	$smcFunc['db_free_result']($request);
 
 	// If not approved validate they can see it.
-	if (!$approved)
+	if (in_array('pm', $context['admin_features']) && !$approved)
 		isAllowedTo('approve_posts');
 
 	// Check if there is more than one message in the topic.  (there should be.)
@@ -257,9 +254,6 @@ function SplitSelectTopics()
 {
 	global $txt, $scripturl, $topic, $context, $modSettings, $original_msgs, $smcFunc;
 
-	// For determining what they can see...
-	$approveQuery = allowedTo('approve_posts') ? '1=1' : 'approved = 1';
-
 	$context['page_title'] = $txt['split'] . ' - ' . $txt['select_split_posts'];
 
 	// Haven't selected anything have we?
@@ -299,13 +293,14 @@ function SplitSelectTopics()
 			SELECT id_msg
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:current_topic}' . (empty($_SESSION['split_selection'][$topic]) ? '' : '
-				AND id_msg NOT IN ({array_int:no_split_msgs})') . '
-				AND ' . $approveQuery . '
+				AND id_msg NOT IN ({array_int:no_split_msgs})') . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+				AND approved = {int:is_approved}') . '
 			ORDER BY id_msg DESC
 			LIMIT ' . $context['not_selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 			array(
 				'current_topic' => $topic,
 				'no_split_msgs' => empty($_SESSION['split_selection'][$topic]) ? array() : $_SESSION['split_selection'][$topic],
+				'is_approved' => 1,
 			)
 		);
 		// You can't split the last message off.
@@ -320,13 +315,14 @@ function SplitSelectTopics()
 				SELECT id_msg
 				FROM {db_prefix}messages
 				WHERE id_topic = {int:current_topic}
-					AND id_msg IN ({array_int:split_msgs})
-					AND ' . $approveQuery . '
+					AND id_msg IN ({array_int:split_msgs})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+					AND approved = {int:is_approved}') . '
 				ORDER BY id_msg DESC
 				LIMIT ' . $context['selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 				array(
 					'current_topic' => $topic,
 					'split_msgs' => $_SESSION['split_selection'][$topic],
+					'is_approved' => 1,
 				)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -355,11 +351,12 @@ function SplitSelectTopics()
 			SELECT id_msg
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:current_topic}
-				AND id_msg IN ({array_int:split_msgs})
-				AND ' . $approveQuery,
+				AND id_msg IN ({array_int:split_msgs})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+				AND approved = {int:is_approved}'),
 			array(
 				'current_topic' => $topic,
 				'split_msgs' => $_SESSION['split_selection'][$topic],
+				'is_approved' => 1,
 			)
 		);
 		$_SESSION['split_selection'][$topic] = array();
@@ -372,12 +369,13 @@ function SplitSelectTopics()
 	$request = $smcFunc['db_query']('', '
 		SELECT ' . (empty($_SESSION['split_selection'][$topic]) ? '0' : 'm.id_msg IN ({array_int:split_msgs})') . ' AS is_selected, COUNT(*) AS num_messages
 		FROM {db_prefix}messages AS m
-		WHERE m.id_topic = {int:current_topic}
-			AND ' . $approveQuery . '
+		WHERE m.id_topic = {int:current_topic}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+			AND approved = {int:is_approved}') . '
 		GROUP BY is_selected',
 		array(
 			'current_topic' => $topic,
 			'split_msgs' => !empty($_SESSION['split_selection'][$topic]) ? $_SESSION['split_selection'][$topic] : array(),
+			'is_approved' => 1,
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -399,13 +397,14 @@ function SplitSelectTopics()
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = {int:current_topic}' . (empty($_SESSION['split_selection'][$topic]) ? '' : '
-			AND id_msg NOT IN ({array_int:no_split_msgs})') . '
-			AND ' . $approveQuery . '
+			AND id_msg NOT IN ({array_int:no_split_msgs})') . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+			AND approved = {int:is_approved}') . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $context['not_selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 		array(
 			'current_topic' => $topic,
 			'no_split_msgs' => !empty($_SESSION['split_selection'][$topic]) ? $_SESSION['split_selection'][$topic] : array(),
+			'is_approved' => 1,
 		)
 	);
 	$context['messages'] = array();
@@ -434,13 +433,14 @@ function SplitSelectTopics()
 			FROM {db_prefix}messages AS m
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.id_topic = {int:current_topic}
-				AND m.id_msg IN ({array_int:split_msgs})
-				AND ' . $approveQuery . '
+				AND m.id_msg IN ({array_int:split_msgs})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+				AND approved = {int:is_approved}') . '
 			ORDER BY m.id_msg DESC
 			LIMIT ' . $context['selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 			array(
 				'current_topic' => $topic,
 				'split_msgs' => $_SESSION['split_selection'][$topic],
+				'is_approved' => 1,
 			)
 		);
 		$context['messages'] = array();
@@ -545,8 +545,9 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// Find the new first and last not in the list. (old topic)
 	$request = $smcFunc['db_query']('', '
-		SELECT MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count,
-			m.approved
+		SELECT 
+			MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count,
+			{raw:approved_value} AS approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:id_topic})
 		WHERE m.id_msg NOT IN ({array_int:no_msg_list})
@@ -557,6 +558,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		array(
 			'id_topic' => $split1_ID_TOPIC,
 			'no_msg_list' => $splitMessages,
+			'approved_value' => in_array('pm', $context['admin_features']) ? 'm.approved' : '1',
 		)
 	);
 	// You can't select ALL the messages!
@@ -594,7 +596,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	// Find the first and last in the list. (new topic)
 	$request = $smcFunc['db_query']('', '
 		SELECT MIN(id_msg) AS myid_first_msg, MAX(id_msg) AS myid_last_msg, COUNT(*) AS message_count,
-			approved
+			{raw:approved_value} AS approved
 		FROM {db_prefix}messages
 		WHERE id_msg IN ({array_int:msg_list})
 			AND id_topic = {int:id_topic}
@@ -604,6 +606,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		array(
 			'msg_list' => $splitMessages,
 			'id_topic' => $split1_ID_TOPIC,
+			'approved_value' => in_array('pm', $context['admin_features']) ? 'approved' : '1',
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -652,8 +655,15 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	$smcFunc['db_insert']('',
 			'{db_prefix}topics',
 			array(
-				'id_board' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int', 'id_first_msg' => 'int',
-				'id_last_msg' => 'int', 'num_replies' => 'int', 'unapproved_posts' => 'int', 'approved' => 'int', 'is_sticky' => 'int',
+				'id_board' => 'int',
+				'id_member_started' => 'int',
+				'id_member_updated' => 'int',
+				'id_first_msg' => 'int',
+				'id_last_msg' => 'int',
+				'num_replies' => 'int',
+				'unapproved_posts' => 'int',
+				'approved' => 'int',
+				'is_sticky' => 'int',
 			),
 			array(
 				(int) $id_board, $split2_firstMem, $split2_lastMem, 0,
@@ -811,17 +821,23 @@ function MergeIndex()
 	$context['target_board'] = $_REQUEST['targetboard'];
 
 	// Prepare a handy query bit for approval...
-	$can_approve_boards = boardsAllowedTo('approve_posts');
-	$approveQuery = $can_approve_boards == array(0) || in_array($_REQUEST['targetboard'], $can_approve_boards) ? 'AND t.approved = 1' : '';
+	if (in_array('pm', $context['admin_features']))
+	{
+		$can_approve_boards = in_array('pm', $context['admin_features']) ? boardsAllowedTo('approve_posts') : array(0);
+		$onlyApproved = $can_approve_boards !== array(0) && !in_array($_REQUEST['targetboard'], $can_approve_boards);
+	}
+	else
+		$onlyApproved = false;
 
 	// How many topics are on this board?  (used for paging.)
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}topics AS t
-		WHERE t.id_board = {int:id_board}
-			' . $approveQuery,
+		WHERE t.id_board = {int:id_board}' . ($onlyApproved ? '
+			AND t.approved = {int:is_approved}' : ''),
 		array(
 			'id_board' => $_REQUEST['targetboard'],
+			'is_approved' => 1,
 		)
 	);
 	list ($topiccount) = $smcFunc['db_fetch_row']($request);
@@ -836,12 +852,13 @@ function MergeIndex()
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 		WHERE t.id_topic = {int:id_topic}
-			AND t.id_board = {int:current_board}
-			' . $approveQuery . '
+			AND t.id_board = {int:current_board}' . ($onlyApproved ? '
+			AND t.approved = {int:is_approved}' : '') . '
 		LIMIT 1',
 		array(
 			'current_board' => $board,
 			'id_topic' => $_GET['from'],
+			'is_approved' => 1,
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
@@ -888,13 +905,16 @@ function MergeIndex()
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE t.id_board = {int:id_board}
-			AND t.id_topic != {int:id_topic}
-			' . $approveQuery . '
-		ORDER BY ' . (!empty($modSettings['enableStickyTopics']) ? 't.is_sticky DESC, ' : '') . 't.id_last_msg DESC
-		LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
+			AND t.id_topic != {int:id_topic}' . ($onlyApproved ? '
+			AND t.approved = {int:is_approved}' : '') . '
+		ORDER BY {raw:sort}
+		LIMIT {offset}, {limit}',
 		array(
 			'id_board' => $_REQUEST['targetboard'],
 			'id_topic' => $_GET['from'],
+			'sort' => (!empty($modSettings['enableStickyTopics']) ? 't.is_sticky DESC, ' : '') . 't.id_last_msg DESC',
+			'offset' => $_REQUEST['start'],
+			'limit' => $modSettings['defaultMaxTopics'],
 		)
 	);
 	$context['topics'] = array();
@@ -952,7 +972,8 @@ function MergeExecute($topics = array())
 		$topics[$id] = (int) $topic;
 
 	// Joy of all joys, make sure they're not pi**ing about with unapproved topics they can't see :P
-	$can_approve_boards = boardsAllowedTo('approve_posts');
+	if (in_array('pm', $context['admin_features']))
+		$can_approve_boards = boardsAllowedTo('approve_posts');
 
 	// Get info about the topics and polls that will be merged.
 	$request = $smcFunc['db_query']('', '
@@ -991,7 +1012,7 @@ function MergeExecute($topics = array())
 			);
 
 		// We can't see unapproved topics here?
-		if (!$row['approved'] && $can_approve_boards != array(0) && in_array($row['id_board'], $can_approve_boards))
+		if (in_array('pm', $context['admin_features']) && !$row['approved'] && $can_approve_boards != array(0) && in_array($row['id_board'], $can_approve_boards))
 			continue;
 		elseif (!$row['approved'])
 			$boardTotals[$row['id_board']]['unapproved_topics']++;

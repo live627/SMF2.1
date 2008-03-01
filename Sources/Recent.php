@@ -52,9 +52,8 @@ function getLastPost()
 			ml.smileys_enabled
 		FROM {db_prefix}boards AS b
 			INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = b.id_last_msg)
-		WHERE ' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			b.id_board != {int:recycle_board}' : '1=1 ') . '
-			AND {query_wanna_see_board}
+		WHERE {query_wanna_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:recycle_board}' : '') . '
 			AND ml.approved = {int:is_approved}
 		ORDER BY b.id_msg_updated DESC
 		LIMIT 1',
@@ -175,9 +174,10 @@ function RecentPosts()
 			FROM {db_prefix}boards AS b
 			WHERE b.id_board IN ({array_int:board_list})
 				AND {query_see_board}
-			LIMIT ' . count($_REQUEST['boards']),
+			LIMIT {int:limit}',
 			array(
 				'board_list' => $_REQUEST['boards'],
+				'limit' => count($_REQUEST['boards']),
 			)
 		);
 		$total_posts = 0;
@@ -258,9 +258,11 @@ function RecentPosts()
 		WHERE ' . $query_this_board . '
 			AND m.approved = {int:is_approved}
 		ORDER BY m.id_msg DESC
-		LIMIT ' . $_REQUEST['start'] . ', 10',
+		LIMIT {int:offset}, {int:limit}',
 		array_merge($query_parameters, array(
 			'is_approved' => 1,
+			'offset' => $_REQUEST['start'],
+			'limit' => 10,
 		))
 	);
 	$messages = array();
@@ -738,9 +740,9 @@ function UnreadTopics()
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic)
 			WHERE lt.id_member = {int:current_member}
-				AND t.' . $query_this_board . (!empty($earliest_msg) ? '
-				AND t.id_last_msg > {int:earliest_msg}' : '') . '
-				AND t.approved = {int:is_approved}',
+				AND t.' . $query_this_board . (empty($earliest_msg) ? '' : '
+				AND t.id_last_msg > {int:earliest_msg}') . (in_array('pm', $context['admin_features']) ? '
+				AND t.approved = {int:is_approved}' : ''),
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
@@ -762,8 +764,8 @@ function UnreadTopics()
 			WHERE t.' . $query_this_board . ($context['showing_all_topics'] && !empty($earliest_msg) ? '
 				AND t.id_last_msg > {int:earliest_msg}' : '
 				AND t.id_last_msg > {int:id_msg_last_visit}') . '
-				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-				AND approved = {int:is_approved}',
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . (in_array('pm', $context['admin_features']) ? '
+				AND approved = {int:is_approved}' : ''),
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
@@ -814,14 +816,17 @@ function UnreadTopics()
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 			WHERE t.' . $query_this_board . '
 				AND t.id_last_msg >= {int:min_message}
-				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-				AND t.approved = {int:is_approved}
-			ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
-			LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . (in_array('pm', $context['admin_features']) ? '
+				AND t.approved = {int:is_approved}' : '') . '
+			ORDER BY {raw:sort}
+			LIMIT {int:offset}, {int:limit}',
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'min_message' => $min_message,
 				'is_approved' => 1,
+				'sort' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
+				'offset' => $_REQUEST['start'],
+				'limit' => $modSettings['defaultMaxTopics'],
 			))
 		);
 	}
@@ -836,8 +841,8 @@ function UnreadTopics()
 			WHERE t.' . $query_this_board . ($context['showing_all_topics'] && !empty($earliest_msg) ? '
 				AND t.id_last_msg > {int:earliest_msg}' : '
 				AND t.id_last_msg > {int:id_msg_last_visit}') . '
-				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-				AND t.approved = {int:is_approved}',
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . (in_array('pm', $context['admin_features']) ? '
+				AND t.approved = {int:is_approved}' : ''),
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
@@ -889,14 +894,17 @@ function UnreadTopics()
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 			WHERE t.' . $query_this_board . '
 				AND t.id_last_msg >= {int:min_message}
-				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < ml.id_msg
-				AND t.approved = {int:is_approved}
-			ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
-			LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < ml.id_msg' . (in_array('pm', $context['admin_features']) ? '
+				AND t.approved = {int:is_approved}' : '') . '
+			ORDER BY {raw:order}
+			LIMIT {int:offset}, {int:limit}',
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'min_message' => $min_message,
 				'is_approved' => 1,
+				'order' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
+				'offset' => $_REQUEST['start'],
+				'limit' => $modSettings['defaultMaxTopics'],
 			))
 		);
 	}
@@ -938,8 +946,8 @@ function UnreadTopics()
 					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 					LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})' . (isset($sortKey_joins[$_REQUEST['sort']]) ? $sortKey_joins[$_REQUEST['sort']] : '') . '
 				WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-					AND t.id_board = {int:current_board}' : '') . '
-					AND t.approved = {int:is_approved}
+					AND t.id_board = {int:current_board}' : '') . (in_array('pm', $context['admin_features']) ? '
+					AND t.approved = {int:is_approved}' : '') . '
 				GROUP BY m.id_topic',
 				array(
 					'current_board' => $board,
@@ -991,8 +999,8 @@ function UnreadTopics()
 					LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 				WHERE t.' . $query_this_board . '
 					AND m.id_member = {int:current_member}
-					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
-					AND t.approved = {int:is_approved}',
+					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . (in_array('pm', $context['admin_features']) ? '
+					AND t.approved = {int:is_approved}' : ''),
 				array_merge($query_parameters, array(
 					'current_member' => $user_info['id'],
 					'is_approved' => 1,
@@ -1035,9 +1043,13 @@ function UnreadTopics()
 					LEFT JOIN {db_prefix}log_topics_posted_in AS lt ON (lt.id_topic = t.id_topic)
 				WHERE t.' . $query_this_board . '
 					AND IFNULL(lt.id_msg, t.id_msg) < t.id_last_msg
-				ORDER BY ' . (in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? $_REQUEST['sort'] : 't.sortKey') . ($ascending ? '' : ' DESC') . '
-				LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
-				$query_parameters
+				ORDER BY {raw:order}
+				LIMIT {int:offset}, {int:limit}',
+				array_merge($query_parameters, array(
+					'order' => (in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? $_REQUEST['sort'] : 't.sortKey') . ($ascending ? '' : ' DESC'),
+					'offset' => $_REQUEST['start'],
+					'limit' => $modSettings['defaultMaxTopics'],
+				))
 			);
 		else
 			$request = $smcFunc['db_query']('', '
@@ -1052,12 +1064,15 @@ function UnreadTopics()
 					AND t.id_last_msg >= {int:min_message}
 					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
 					AND t.approved = {int:is_approved}
-				ORDER BY ' . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
-				LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
+				ORDER BY {raw:order}
+				LIMIT {int:offset}, {int:limit}',
 				array_merge($query_parameters, array(
 					'current_member' => $user_info['id'],
 					'min_message' => (int) $min_message,
 					'is_approved' => 1,
+					'order' =>  $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
+					'offset' => $_REQUEST['start'],
+					'limit' => $modSettings['defaultMaxTopics'],
 				))
 			);
 

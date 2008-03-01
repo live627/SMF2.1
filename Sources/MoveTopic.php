@@ -75,7 +75,7 @@ function MoveTopic()
 	$smcFunc['db_free_result']($request);
 
 	// Can they see it - if not approved?
-	if (!$context['is_approved'])
+	if (in_array('pm', $context['admin_features']) && !$context['is_approved'])
 		isAllowedTo('approve_posts');
 
 	// Permission check!
@@ -199,7 +199,7 @@ function MoveTopic2()
 		$boards = boardsAllowedTo('move_any');
 
 	// If this topic isn't approved don't let them move it if they can't approve it!
-	if (!$context['is_approved'] && !allowedTo('approve_posts'))
+	if (in_array('pm', $context['admin_features']) && !$context['is_approved'] && !allowedTo('approve_posts'))
 	{
 		// Only allow them to move it to other boards they can't approve it in.
 		$can_approve = boardsAllowedTo('approve_posts');

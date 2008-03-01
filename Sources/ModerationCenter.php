@@ -1222,7 +1222,7 @@ function list_getWatchedUserCount($approve_query)
 
 function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $dummy)
 {
-	global $smcFunc, $txt, $scripturl, $modSettings, $user_info;
+	global $smcFunc, $txt, $scripturl, $modSettings, $user_info, $context;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, last_login, posts, warning
@@ -1259,7 +1259,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 			SELECT m.id_member, MAX(m.id_msg) AS last_post_id
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
-			WHERE m.id_member IN ({array_int:member_list})' . (allowedTo('approve_posts') ? '' : '
+			WHERE m.id_member IN ({array_int:member_list})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
 				AND m.approved = {int:is_approved}') . '
 			GROUP BY m.id_member',
 			array(
@@ -1290,7 +1290,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 			SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
-			WHERE m.id_member IN ({array_int:member_list})' . (allowedTo('approve_posts') ? '' : '
+			WHERE m.id_member IN ({array_int:member_list})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
 				AND m.approved = {int:is_approved}') . '
 			GROUP BY m.id_member
 			ORDER BY m.poster_time DESC',

@@ -282,7 +282,7 @@ function showPosts($memID)
 			FROM {db_prefix}topics AS t' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND {query_see_board})') . '
 			WHERE t.id_member_started = {int:current_member}' . (!empty($board) ? '
-				AND t.id_board = ' . $board : '') . ($context['user']['is_owner'] ? '' : '
+				AND t.id_board = ' . $board : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
 				AND t.approved = {int:is_approved}'),
 			array(
 				'current_member' => $memID,
@@ -295,7 +295,7 @@ function showPosts($memID)
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
 			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-				AND m.id_board = ' . $board : '') . ($context['user']['is_owner'] ? '' : '
+				AND m.id_board = ' . $board : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
 				AND m.approved = {int:is_approved}'),
 			array(
 				'current_member' => $memID,
@@ -309,7 +309,7 @@ function showPosts($memID)
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {db_prefix}messages AS m
 		WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-			AND m.id_board = ' . $board : '') . ($context['user']['is_owner'] ? '' : '
+			AND m.id_board = ' . $board : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}'),
 		array(
 			'current_member' => $memID,
@@ -362,12 +362,11 @@ function showPosts($memID)
 				INNER JOIN {db_prefix}topics AS t ON (' . ($context['is_topics'] ? 't.id_first_msg = m.id_msg' : 't.id_topic = m.id_topic') . ')
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-			WHERE m.id_member = {int:current_member}
-				' . (!empty($board) ? 'AND m.id_board=' . $board : '') . '
-				' . (empty($range_limit) ? '' : '
+			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
+				AND m.id_board=' . $board : '') . (empty($range_limit) ? '' : '
 				AND ' . $range_limit) . '
-				AND {query_see_board}
-				' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
+				AND {query_see_board}' . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+				AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
 			ORDER BY m.id_msg ' . ($reverse ? 'ASC' : 'DESC') . '
 			LIMIT ' . $start . ', ' . $maxIndex,
 			array(
@@ -507,8 +506,8 @@ function showAttachments($memID)
 			AND a.id_msg != {int:no_message}
 			AND m.id_member = {int:current_member}
 			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:boards_list})' : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}'),
+			AND b.id_board IN ({array_int:boards_list})' : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+			AND m.approved = {int:is_approved}'),
 		array(
 			'boards_list' => $boardsAllowed,
 			'attachment_type' => 0,
@@ -548,16 +547,19 @@ function showAttachments($memID)
 			AND a.id_msg != {int:no_message}
 			AND m.id_member = {int:current_member}
 			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:boards_list})' : '') . '
-			' . ($context['user']['is_owner'] ? '' : 'AND m.approved = {int:is_approved}') . '
-		ORDER BY ' . $sort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . '
-		LIMIT ' . $context['start'] . ', ' . $maxIndex,
+			AND b.id_board IN ({array_int:boards_list})' : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+			AND m.approved = {int:is_approved}') . '
+		ORDER BY {raw:sort}
+		LIMIT {raw:offset}, {raw:limit}',
 		array(
 			'boards_list' => $boardsAllowed,
 			'attachment_type' => 0,
 			'no_message' => 0,
 			'current_member' => $memID,
 			'is_approved' => 1,
+			'sort' => $sort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC'),
+			'offset' => $context['start'],
+			'limit' => $maxIndex,
 		)
 	);
 	$context['attachments'] = array();
@@ -1000,8 +1002,9 @@ function trackUser($memID)
 		$request = $smcFunc['db_query']('', '
 			SELECT mem.id_member, mem.real_name
 			FROM {db_prefix}messages AS m
-				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member AND mem.id_member != {int:current_member})
-			WHERE m.poster_ip IN ({array_string:ip_list})',
+				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			WHERE m.poster_ip IN ({array_string:ip_list})
+			HAVING id_member != {int:current_member}',
 			array(
 				'current_member' => $memID,
 				'ip_list' => $ips,

@@ -47,7 +47,7 @@ if (!defined('SMF'))
 // Completely remove an entire topic.
 function RemoveTopic2()
 {
-	global $user_info, $topic, $board, $sourcedir, $smcFunc;
+	global $user_info, $topic, $board, $sourcedir, $smcFunc, $context;
 
 	// Make sure they aren't being lead around by someone. (:@)
 	checkSession('get');
@@ -74,7 +74,7 @@ function RemoveTopic2()
 		isAllowedTo('remove_any');
 
 	// Can they see the topic?
-	if (!$approved)
+	if (in_array('pm', $context['admin_features']) && !$approved)
 		isAllowedTo('approve_posts');
 
 	// Notify people that this topic has been removed.
@@ -116,7 +116,7 @@ function DeleteMessage()
 	$smcFunc['db_free_result']($request);
 
 	// Verify they can see this!
-	if (!$approved)
+	if (in_array('pm', $context['admin_features']) && !$approved)
 		isAllowedTo('approve_posts');
 
 	if ($poster == $user_info['id'])
@@ -555,7 +555,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 // Remove a specific message (including permission checks).
 function removeMessage($message, $decreasePostCount = true)
 {
-	global $board, $sourcedir, $modSettings, $user_info, $smcFunc;
+	global $board, $sourcedir, $modSettings, $user_info, $smcFunc, $context;
 
 	if (empty($message) || !is_numeric($message))
 		return false;
@@ -616,7 +616,7 @@ function removeMessage($message, $decreasePostCount = true)
 		}
 
 		// Can't delete an unapproved message, if you can't see it!
-		if (!$row['approved'])
+		if (in_array('pm', $context['admin_features']) && !$row['approved'])
 		{
 			$approve_posts = boardsAllowedTo('approve_posts');
 			if (!in_array(0, $approve_posts) && !in_array($row['id_board'], $approve_posts))
@@ -643,7 +643,7 @@ function removeMessage($message, $decreasePostCount = true)
 		else
 			isAllowedTo('delete_any');
 
-		if (!$row['approved'])
+		if (in_array('pm', $context['admin_features']) && !$row['approved'])
 			isAllowedTo('approve_posts');
 	}
 
@@ -712,7 +712,7 @@ function removeMessage($message, $decreasePostCount = true)
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:id_topic}
 				AND id_msg != {int:id_msg}
-			ORDER BY approved DESC, id_msg DESC
+			ORDER BY ' . (in_array('pm', $context['admin_features']) ? 'approved DESC, ' : '') . 'id_msg DESC
 			LIMIT 1',
 			array(
 				'id_topic' => $row['id_topic'],
@@ -726,7 +726,7 @@ function removeMessage($message, $decreasePostCount = true)
 			UPDATE {db_prefix}topics
 			SET
 				id_last_msg = {int:id_last_msg},
-				id_member_updated = {int:id_member_updated}' . ($row['approved'] ? ',
+				id_member_updated = {int:id_member_updated}' . (!in_array('pm', $context['admin_features']) || $row['approved'] ? ',
 				num_replies = CASE WHEN num_replies = {int:no_replies} THEN 0 ELSE num_replies - 1 END' : ',
 				unapproved_posts = CASE WHEN unapproved_posts = {int:no_unapproved} THEN 0 ELSE unapproved_posts - 1 END') . '
 			WHERE id_topic = {int:id_topic}',

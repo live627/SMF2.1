@@ -257,7 +257,7 @@ function Who()
 
 function determineActions($urls)
 {
-	global $txt, $user_info, $modSettings, $smcFunc;
+	global $txt, $user_info, $modSettings, $smcFunc, $context;
 
 	if (!allowedTo('who_view'))
 		return array();
@@ -379,10 +379,10 @@ function determineActions($urls)
 					SELECT m.id_topic, m.subject
 					FROM {db_prefix}messages AS m
 						INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = {int:is_approved})
+						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic' . (in_array('pm', $context['admin_features']) ? ' AND t.approved = {int:is_approved}' : '') . ')
 					WHERE m.id_msg = {int:id_msg}
-						AND {query_see_board}
-						AND m.approved = {int:is_approved}
+						AND {query_see_board}' . (in_array('pm', $context['admin_features']) ? '
+						AND m.approved = {int:is_approved}' : '') . '
 					LIMIT 1',
 					array(
 						'is_approved' => 1,
@@ -422,12 +422,13 @@ function determineActions($urls)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			WHERE {query_see_board}
-				AND t.id_topic IN ({array_int:topic_list})
-				AND t.approved = {int:is_approved}
-			LIMIT ' . count($topic_ids),
+				AND t.id_topic IN ({array_int:topic_list})' . (in_array('pm', $context['admin_features']) ? '
+				AND t.approved = {int:is_approved}' : '') . '
+			LIMIT {int:limit}',
 			array(
 				'topic_list' => array_keys($topic_ids),
 				'is_approved' => 1,
+				'limit' => count($topic_ids),
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($result))

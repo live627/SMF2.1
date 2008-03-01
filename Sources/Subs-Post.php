@@ -1708,7 +1708,7 @@ function sendNotifications($topics, $type, $exclude = array(), $members_only = a
 // - Mandatory parameters are set.
 function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $user_info, $txt, $modSettings, $smcFunc;
+	global $user_info, $txt, $modSettings, $smcFunc, $context;
 
 	// Set optional parameters to the default value.
 	$msgOptions['icon'] = empty($msgOptions['icon']) ? 'xx' : $msgOptions['icon'];
@@ -1723,7 +1723,9 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip'] : $posterOptions['ip'];
 
 	// We need to know if the topic is approved. If we're told that's great - if not find out.
-	if (!empty($topicOptions['id']) && !isset($topicOptions['is_approved']))
+	if (!in_array('pm', $context['admin_features']))
+		$topicOptions['is_approved'] = true;
+	elseif (!empty($topicOptions['id']) && !isset($topicOptions['is_approved']))
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT approved
@@ -1908,7 +1910,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	);
 
 	// Increase the number of posts and topics on the board.
-	if ($msgOptions['approved'])
+	if (!in_array('pm', $context['admin_features']) || $msgOptions['approved'])
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET num_posts = num_posts + 1' . ($new_topic ? ', num_topics = num_topics + 1' : '') . '
@@ -2011,7 +2013,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	updateStats('message', true, $msgOptions['id']);
 
 	// Update the last message on the board assuming it's approved AND the topic is.
-	if ($msgOptions['approved'])
+	if (!in_array('pm', $context['admin_features']) || $msgOptions['approved'])
 		updateLastMessages($topicOptions['board'], $new_topic || !empty($topicOptions['is_approved']) ? $msgOptions['id'] : 0);
 
 	// Alright, done now... we can abort now, I guess... at least this much is done.
@@ -2024,7 +2026,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 // !!!
 function createAttachment(&$attachmentOptions)
 {
-	global $modSettings, $sourcedir, $smcFunc;
+	global $modSettings, $sourcedir, $smcFunc, $context;
 
 	// We need to know where this thing is going.
 	if (!empty($modSettings['currentAttachmentUploadDir']))
@@ -2045,7 +2047,7 @@ function createAttachment(&$attachmentOptions)
 	$attachmentOptions['errors'] = array();
 	if (!isset($attachmentOptions['post']))
 		$attachmentOptions['post'] = 0;
-	if (!isset($attachmentOptions['approved']))
+	if (!in_array('pm', $context['admin_features']) || !isset($attachmentOptions['approved']))
 		$attachmentOptions['approved'] = 1;
 
 	$already_uploaded = preg_match('~^post_tmp_' . $attachmentOptions['poster'] . '_\d+$~', $attachmentOptions['tmp_name']) != 0;
@@ -2305,7 +2307,7 @@ function createAttachment(&$attachmentOptions)
 // !!!
 function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $user_info, $modSettings, $smcFunc;
+	global $user_info, $modSettings, $smcFunc, $context;
 
 	$topicOptions['poll'] = isset($topicOptions['poll']) ? (int) $topicOptions['poll'] : null;
 	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ? $topicOptions['lock_mode'] : null;
@@ -2458,7 +2460,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	}
 
 	// Finally, if we are setting the approved state we need to do much more work :(
-	if (isset($msgOptions['approved']))
+	if (!in_array('pm', $context['admin_features']) || isset($msgOptions['approved']))
 		approvePosts($msgOptions['id'], $msgOptions['approved']);
 
 	return true;

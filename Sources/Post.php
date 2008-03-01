@@ -149,21 +149,21 @@ function Post()
 
 		if (empty($_REQUEST['msg']))
 		{
-			if ($user_info['is_guest'] && !allowedTo('post_reply_any') && !allowedTo('post_unapproved_replies_any'))
+			if ($user_info['is_guest'] && !allowedTo('post_reply_any') && (!in_array('pm', $context['admin_features']) || !allowedTo('post_unapproved_replies_any')))
 				is_not_guest();
 
 			// By default the reply will be approved...
 			$context['becomes_approved'] = true;
 			if ($ID_MEMBER_POSTER != $user_info['id'])
 			{
-				if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
+				if (in_array('pm', $context['admin_features']) && allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 					$context['becomes_approved'] = false;
 				else
 					isAllowedTo('post_reply_any');
 			}
 			elseif (!allowedTo('post_reply_any'))
 			{
-				if (allowedTo('post_unapproved_replies_own') && !allowedTo('post_reply_own'))
+				if (in_array('pm', $context['admin_features']) && allowedTo('post_unapproved_replies_own') && !allowedTo('post_reply_own'))
 					$context['becomes_approved'] = false;
 				else
 					isAllowedTo('post_reply_own');
@@ -757,8 +757,8 @@ function Post()
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-				WHERE m.id_msg = {int:id_msg}
-					' . (allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}') . '
+				WHERE m.id_msg = {int:id_msg}' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+					AND m.approved = {int:is_approved}') . '
 				LIMIT 1',
 				array(
 					'id_msg' => (int) $_REQUEST['quote'],
@@ -1009,7 +1009,7 @@ function Post()
 	// If they've unchecked an attachment, they may still want to attach that many more files, but don't allow more than num_allowed_attachments.
 	// !!! This won't work if you're posting an event.
 	$context['num_allowed_attachments'] = min($modSettings['attachmentNumPerPostLimit'] - count($context['current_attachments']) + (isset($deleted_attachments) ? $deleted_attachments : 0), $modSettings['attachmentNumPerPostLimit']);
-	$context['can_post_attachment'] = !empty($modSettings['attachmentEnable']) && $modSettings['attachmentEnable'] == 1 && (allowedTo('post_attachment') || allowedTo('post_unapproved_attachments')) && $context['num_allowed_attachments'] > 0;
+	$context['can_post_attachment'] = !empty($modSettings['attachmentEnable']) && $modSettings['attachmentEnable'] == 1 && (allowedTo('post_attachment') || (in_array('pm', $context['admin_features']) && allowedTo('post_unapproved_attachments'))) && $context['num_allowed_attachments'] > 0;
 	$context['can_post_attachment_unapproved'] = allowedTo('post_attachment');
 
 	$context['subject'] = addcslashes($form_subject, '"');
@@ -1176,14 +1176,14 @@ function Post2()
 		$becomesApproved = true;
 		if ($topic_info['id_member_started'] != $user_info['id'])
 		{
-			if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
+			if (in_array('pm', $context['admin_features']) && allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 				$becomesApproved = false;
 			else
 				isAllowedTo('post_reply_any');
 		}
 		elseif (!allowedTo('post_reply_any'))
 		{
-			if (allowedTo('post_unapproved_replies_own') && !allowedTo('post_reply_own'))
+			if (in_array('pm', $context['admin_features']) && allowedTo('post_unapproved_replies_own') && !allowedTo('post_reply_own'))
 				$becomesApproved = false;
 			else
 				isAllowedTo('post_reply_own');
@@ -1233,7 +1233,7 @@ function Post2()
 		$becomesApproved = true;
 		if (!isset($_REQUEST['poll']) || $modSettings['pollMode'] != '1')
 		{
-			if (!allowedTo('post_new') && allowedTo('post_unapproved_topics'))
+			if (in_array('pm', $context['admin_features']) && !allowedTo('post_new') && allowedTo('post_unapproved_topics'))
 				$becomesApproved = false;
 			else
 				isAllowedTo('post_new');
@@ -1309,7 +1309,7 @@ function Post2()
 
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
-			if ($row['approved'] && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if ((!in_array('pm', $context['admin_features']) || $row['approved']) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
 			elseif ($topic_info['id_member_started'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
@@ -1336,7 +1336,7 @@ function Post2()
 
 		// Can they approve it?
 		$can_approve = allowedTo('approve_posts');
-		$becomesApproved = $can_approve && !$row['approved'] ? (isset($_REQUEST['approved']) ? 1 : 0) : $row['approved'];
+		$becomesApproved = in_array('pm', $context['admin_features']) ? ($can_approve && !$row['approved'] ? (isset($_REQUEST['approved']) ? 1 : 0) : $row['approved']) : 1;
 		$approve_has_changed = $row['approved'] != $becomesApproved;
 
 		if (!allowedTo('moderate_forum') || !$posterIsGuest)
@@ -1531,7 +1531,7 @@ function Post2()
 	}
 
 	// Check if they are trying to delete any current attachments....
-	if (isset($_REQUEST['msg'], $_POST['attach_del']) && (allowedTo('post_attachment') || allowedTo('post_unapproved_attachments')))
+	if (isset($_REQUEST['msg'], $_POST['attach_del']) && (allowedTo('post_attachment') || (in_array('pm', $context['admin_features']) && allowedTo('post_unapproved_attachments'))))
 	{
 		$del_temp = array();
 		foreach ($_POST['attach_del'] as $i => $dummy)
@@ -1550,7 +1550,7 @@ function Post2()
 	if (isset($_FILES['attachment']['name']) || !empty($_SESSION['temp_attachments']))
 	{
 		// Verify they can post them!
-		if (!allowedTo('post_unapproved_attachments'))
+		if (!in_array('pm', $context['admin_features']) || !allowedTo('post_unapproved_attachments'))
 			isAllowedTo('post_attachment');
 
 		// Make sure we're uploading to the right place.
@@ -1633,7 +1633,7 @@ function Post2()
 				'name' => $_FILES['attachment']['name'][$n],
 				'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
 				'size' => $_FILES['attachment']['size'][$n],
-				'approved' => allowedTo('post_attachment'),
+				'approved' => !in_array('pm', $context['admin_features']) || allowedTo('post_attachment'),
 			);
 
 			if (createAttachment($attachmentOptions))
@@ -1719,7 +1719,7 @@ function Post2()
 		'lock_mode' => isset($_POST['lock']) ? (int) $_POST['lock'] : null,
 		'sticky_mode' => isset($_POST['sticky']) && !empty($modSettings['enableStickyTopics']) ? (int) $_POST['sticky'] : null,
 		'mark_as_read' => true,
-		'is_approved' => empty($topic) || !empty($board_info['cur_topic_approved']),
+		'is_approved' => !in_array('pm', $context['admin_features']) || empty($topic) || !empty($board_info['cur_topic_approved']),
 	);
 	$posterOptions = array(
 		'id' => $user_info['id'],
@@ -1905,7 +1905,7 @@ function Post2()
 		elseif (empty($_REQUEST['msg']))
 		{
 			// Only send it to everyone if the topic is approved, otherwise just to the topic starter if they want it.
-			if ($topic_info['approved'])
+			if (in_array('pm', $context['admin_features']) && $topic_info['approved'])
 				sendNotifications($topic, 'reply');
 			else
 				sendNotifications($topic, 'reply', array(), $topic_info['id_member_started']);
@@ -2326,8 +2326,8 @@ function getTopic()
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = {int:current_topic}' . (isset($_REQUEST['msg']) ? '
-			AND m.id_msg < {int:id_msg}' : '') .
-			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:approved}') . '
+			AND m.id_msg < {int:id_msg}' : '') .(!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+			AND m.approved = {int:approved}') . '
 		ORDER BY m.id_msg DESC' . $limit,
 		array(
 			'current_topic' => $topic,
@@ -2488,8 +2488,8 @@ function JavaScriptModify()
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
 			WHERE m.id_msg = {raw:id_msg}
-				AND m.id_topic = {int:current_topic}' .
-				(allowedTo('approve_posts') ? '' : ' AND (m.approved = {int:is_approved} OR (m.id_member != {int:guest_id} AND m.id_member = {int:current_member}))'),
+				AND m.id_topic = {int:current_topic}' . (!in_array('pm', $context['admin_features']) && allowedTo('approve_posts') ? '' : '
+				AND (m.approved = {int:is_approved} OR (m.id_member != {int:guest_id} AND m.id_member = {int:current_member}))'),
 			array(
 				'current_member' => $user_info['id'],
 				'current_topic' => $topic,
@@ -2511,7 +2511,7 @@ function JavaScriptModify()
 
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
-			if ($row['approved'] && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if ((!in_array('pm', $context['admin_features']) || $row['approved']) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
 			elseif ($row['id_member_started'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
