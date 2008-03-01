@@ -1256,7 +1256,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 
 	if (!empty($members))
 	{
-		// First get the latests messages from these users.
+		// First get the latest messages from these users.
 		$request = $smcFunc['db_query']('', '
 			SELECT m.id_member, MAX(m.id_msg) AS last_post_id
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
@@ -1273,7 +1273,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$latest_posts[$row['id_member']] = $row['last_post_id'];
 
-		// Now get the time thoses messages were posted.
+		// Now get the time those messages were posted.
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member, poster_time
 			FROM {db_prefix}messages
