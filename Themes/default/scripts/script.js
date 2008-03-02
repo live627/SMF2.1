@@ -30,6 +30,8 @@ var is_ie6up = is_ie5up && !is_ie55 && !is_ie5;
 var is_ie7 = is_ie && ua.indexOf("msie 7") != -1;
 var is_ie7up = is_ie6up && !is_ie6;
 
+var ajax_indicator_ele = null;
+
 // Define document.getElementById for Internet Explorer 4.
 if (typeof(document.getElementById) == "undefined")
 	document.getElementById = function (id)
@@ -679,15 +681,58 @@ function smfToggle(uniqueId, initialState)
 
 function ajax_indicator(turn_on)
 {
-	var indicator = document.getElementById("ajax_in_progress");
-	if (indicator != null)
+	if (ajax_indicator_ele == null)
+	{
+		ajax_indicator_ele = document.getElementById("ajax_in_progress");
+
+		if (ajax_indicator_ele == null && typeof(ajax_notification_text) != null)
+		{
+			create_ajax_indicator_ele();
+		}
+	}
+
+	if (ajax_indicator_ele != null)
 	{
 		if (navigator.appName == "Microsoft Internet Explorer" && !is_ie7up)
 		{
-			indicator.style.top = document.documentElement.scrollTop;
+			ajax_indicator_ele.style.position = "absolute";
+			ajax_indicator_ele.style.top = document.documentElement.scrollTop;
 		}
-		indicator.style.display = turn_on ? "block" : "none";
+
+		ajax_indicator_ele.style.display = turn_on ? "block" : "none";
 	}
+}
+
+function create_ajax_indicator_ele()
+{
+	// Create the div for the indicator.
+	ajax_indicator_ele = document.createElement("div");
+
+	// Set the id so it'll load the style properly.
+	ajax_indicator_ele.id = "ajax_in_progress";
+
+	// Add the image in and link to turn it off.
+	var cancel_link = document.createElement("a");
+	cancel_link.href = "javascript:ajax_indicator(false)";
+	var cancel_img = document.createElement("img");
+	cancel_img.src = smf_images_url + "/icons/quick_remove.gif";
+
+	if (typeof(ajax_notification_cancel_text) != null)
+	{
+		cancel_img.alt = ajax_notification_cancel_text;
+		cancel_img.title = ajax_notification_cancel_text;
+	}
+
+	// Add the cancel link and image to the indicator.
+	cancel_link.appendChild(cancel_img);
+	ajax_indicator_ele.appendChild(cancel_link);
+
+	// Set the text.  (Note:  You MUST append here and not overwrite.)
+	ajax_indicator_ele.innerHTML += ajax_notification_text;
+
+	// Finally attach the element to the body.
+	document.body.appendChild(ajax_indicator_ele);
+	
 }
 
 // Mimics the PHP version of this function.

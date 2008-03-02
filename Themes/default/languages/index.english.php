@@ -76,6 +76,7 @@ $txt['email'] = 'Email';
 $txt['subject'] = 'Subject';
 $txt['message'] = 'Message';
 $txt['redirects'] = 'Redirects';
+$txt['quick_modify'] = 'Modify Inline';
 
 $txt['profile'] = 'Profile';
 

@@ -84,6 +84,8 @@ function template_html_above()
 		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
 		if (confirm("' . $txt['show_personal_messages'] . '"))
 			window.open("' . $scripturl . '?action=pm");' : '', '
+		var ajax_notification_text = "', $txt['ajax_in_progress'], '";
+		var ajax_notification_cancel_text = "', $txt['modify_cancel'], '";
 	// ]]></script>
 	<title>', $context['page_title'], '</title>';
 
@@ -374,9 +376,7 @@ function template_html_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// The following will be used to let the user know that some AJAX process is running
 	echo '
-	<div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '"><a href="javascript:ajax_indicator(false);"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['modify_cancel'], '" /></a>', $txt['ajax_in_progress'], '</div>
 </body></html>';
 }
 

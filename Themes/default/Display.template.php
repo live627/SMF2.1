@@ -471,7 +471,7 @@ function template_main()
 		echo '
 								', $message['body'], '
 							</div>', $message['can_modify'] ? '
-							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" align="right" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '' , '
+							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="' . $txt['quick_modify'] . '" title="' . $txt['quick_modify'] . '" align="right" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '' , '
 						</td>
 					</tr>';
 
@@ -550,7 +550,7 @@ function template_main()
 		// Can we issue a warning because of this post?  Remember, we can't give guests warnings.
 		if ($context['can_issue_warning'] && !$message['is_message_author'] && !$message['member']['is_guest'])
 			echo '
-									<a href="', $scripturl, '?action=profile;u=', $message['member']['id'], ';sa=issueWarning;msg=', $message['id'], '"><img src="', $settings['images_url'], '/warn.gif" alt="', $txt['issue_warning_post'], '" border="0" /></a>';
+									<a href="', $scripturl, '?action=profile;u=', $message['member']['id'], ';sa=issueWarning;msg=', $message['id'], '"><img src="', $settings['images_url'], '/warn.gif" alt="', $txt['issue_warning_post'], '" title="', $txt['issue_warning_post'], '" border="0" /></a>';
 		echo '
 									<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
