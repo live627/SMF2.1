@@ -198,7 +198,7 @@ function RemoveOldTopics2()
 		$condition_params['is_sticky'] = 0;
 	}
 
-	// All we're gonna do here is grab the ID_TOPICs and send them to removeTopics().
+	// All we're gonna do here is grab the id_topic's and send them to removeTopics().
 	$request = $smcFunc['db_query']('', '
 		SELECT t.id_topic
 		FROM {db_prefix}topics AS t
@@ -221,7 +221,7 @@ function RemoveOldTopics2()
 	redirectexit('action=admin;area=maintain;done');
 }
 
-// Removes the passed ID_TOPICs. (permissions are NOT checked here!)
+// Removes the passed id_topic's. (permissions are NOT checked here!)
 function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = false)
 {
 	global $sourcedir, $modSettings, $smcFunc;
@@ -231,9 +231,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		return;
 	// Only a single topic.
 	elseif (is_numeric($topics))
-	{
 		$topics = array($topics);
-	}
 
 	// Decrease the post counts.
 	if ($decreasePostCount)
