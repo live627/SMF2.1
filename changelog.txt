@@ -159,6 +159,7 @@ February 2008
  ! The count parameter in str_replace was added in PHP 5 so we count lines the old fashion way. (ManageMail.php)
  ! For reason body in the warn user section, replace \n with \\n and \r with an empty string in the javascript. (Profile template)
  ! Missing substring identifier for a query in ManagePaid.php. (ManagePaid.php)
+ ! Fixed an undefined index error (News.php) [Bug 1679]
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

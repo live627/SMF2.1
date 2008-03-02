@@ -638,7 +638,7 @@ function getXmlNews($xml_format)
 function getXmlRecent($xml_format)
 {
 	global $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $smcFunc, $settings;
+	global $query_this_board, $smcFunc, $settings, $context;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg
