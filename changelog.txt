@@ -6,6 +6,10 @@ SMF 2.0 Beta 3
 March 2008
 --------------------------------------------------------------------------------
  ! When sorting by IP use INET_ATON to sort them properly. (ManageMembers.php, Profile-View.php) [Bug 1671]
+ ! When viewing the warning notices that were sent to a member resulted in a database error. (ModerationCenter.php) [Bug 1670]
+ ! Post moderation wasn't fully gone in its disabled state. (several files)
+ ! The current_member parameter should be casted as raw instead of integer. (PersonalMessage.php)
+ ! SQLite is picky when int is used as an column type for primary fields. Use integer instead. (install_2-0_sqlite.sql)
 
 
 February 2008
@@ -155,7 +159,6 @@ February 2008
  ! The count parameter in str_replace was added in PHP 5 so we count lines the old fashion way. (ManageMail.php)
  ! For reason body in the warn user section, replace \n with \\n and \r with an empty string in the javascript. (Profile template)
  ! Missing substring identifier for a query in ManagePaid.php. (ManagePaid.php)
- ! Post moderation wasn't fully gone in its disabled state. (several files)
 
 
 SMF 2.0 Beta 2.1                                                03 February 2008

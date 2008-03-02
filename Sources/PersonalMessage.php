@@ -624,7 +624,7 @@ function MessageFolder()
 					AND pmr.deleted = {int:is_deleted}
 					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
-			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
+			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {raw:current_member}
 				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
 				AND pm.id_pm = {int:pmsg}') . '
 			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '

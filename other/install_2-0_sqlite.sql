@@ -1000,7 +1000,7 @@ CREATE TABLE {$db_prefix}log_mark_read (
 #
 
 CREATE TABLE {$db_prefix}log_member_notices (
-  id_notice int primary key,
+  id_notice integer primary key,
   subject varchar(255) NOT NULL,
   body text NOT NULL
 );
@@ -1204,7 +1204,7 @@ CREATE TABLE {$db_prefix}log_search_topics (
 #
 
 CREATE TABLE {$db_prefix}log_spider_hits (
-	id_hit int primary key,
+	id_hit integer primary key,
   id_spider smallint NOT NULL default '0',
   log_time int NOT NULL,
   url varchar(255) NOT NULL,
@@ -1236,7 +1236,7 @@ CREATE TABLE {$db_prefix}log_spider_stats (
 #
 
 CREATE TABLE {$db_prefix}log_subscribed (
-  id_sublog int primary key,
+  id_sublog integer primary key,
   id_subscribe smallint unsigned NOT NULL default '0',
   id_member int NOT NULL default '0',
   old_id_group int NOT NULL default '0',
@@ -2007,7 +2007,7 @@ COMMIT;
 #
 
 CREATE TABLE {$db_prefix}spiders (
-  id_spider smallint primary key,
+  id_spider integer primary key,
   spider_name varchar(255) NOT NULL,
   user_agent varchar(255) NOT NULL,
   ip_info varchar(255) NOT NULL
