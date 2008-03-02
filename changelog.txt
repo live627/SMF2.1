@@ -11,7 +11,7 @@ March 2008
  ! The current_member parameter should be casted as raw instead of integer. (PersonalMessage.php)
  ! SQLite is picky when int is used as an column type for primary fields. Use integer instead. (install_2-0_sqlite.sql)
  * Use javascript to create the AJAX notification. (index template, script.js)
- * Give the quick edit and post warning icons title attributes. (Display template, index language file)
+ * Give the quick edit and post warning icons title attributes. (Display template, index language file) [Feature 1411]
 
 
 February 2008
