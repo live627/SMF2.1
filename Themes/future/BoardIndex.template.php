@@ -252,7 +252,7 @@ function template_info_center()
 
 	// Here's where the "Info Center" starts...
 	echo '
-	<div class="tborder" id="infocenterframe">
+	<div class="tborder clearfix" id="infocenterframe">
 		<h3 class="catbg headerpadding">
 			<a href="#" onclick="infoHeader.toggle(); return false;"><img id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" style="margin-right: 2ex;" align="right" /></a>
 			', sprintf($txt['info_center_title'], $context['forum_name']), '
@@ -265,11 +265,11 @@ function template_info_center()
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $txt['recent_posts'], '</h4>
-				<dl class="windowbg">
-					<dt class="section">
+				<div class="windowbg">
+					<p class="section">
 						<a href="', $scripturl, '?action=recent"><img src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" /></a>
-					</dt>
-					<dd class="windowbg2 section">';
+					</p>
+					<div class="windowbg2 sectionbody">';
 
 		// Only show one post.
 		if ($settings['number_recent_posts'] == 1)
@@ -298,8 +298,8 @@ function template_info_center()
 						</dl>';
 		}
 		echo '
-					</dd>
-				</dl>
+					</div>
+				</div>
 			</div>';
 	}
 
@@ -309,11 +309,11 @@ function template_info_center()
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</h4>
-				<dl class="windowbg">
-					<dt class="section">
+				<div class="windowbg">
+					<p class="section">
 						<a href="', $scripturl, '?action=calendar' . '"><img src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a> 
-					</dt>
-					<dd class="windowbg2 section">';
+					</p>
+					<div class="sectionbody windowbg2">';
 
 		// Holidays like "Christmas", "Chanukah", and "We Love [Unknown] Day" :P.
 		if (!empty($context['calendar_holidays']))
@@ -348,8 +348,8 @@ function template_info_center()
 							(<a href="', $scripturl, '?action=helpadmin;help=calendar_how_edit" onclick="return reqWin(this.href);">', $txt['calendar_how_edit'], '</a>)';
 		}
 		echo '
-					</dd>
-				</dl>
+					</div>
+				</div>
 			</div>';
 	}
 
@@ -360,17 +360,17 @@ function template_info_center()
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $txt['forum_stats'], '</h4>
-				<dl class="windowbg">
-					<dt class="section">
+				<div class="windowbg">
+					<p class="section">
 						<a href="', $scripturl, '?action=stats"><img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
-					</dt>
-					<dd class="windowbg2 section middletext">
+					</p>
+					<div class="windowbg2 sectionbody middletext">
 						', $context['common_stats']['total_posts'], ' ', $txt['posts_made'], ' ', $txt['in'], ' ', $context['common_stats']['total_topics'], ' ', $txt['topics'], ' ', $txt['by'], ' ', $context['common_stats']['total_members'], ' ', $txt['members'], '. ', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <b> ' . $context['common_stats']['latest_member']['link'] . '</b>' : '', '<br />
 						', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <b>&quot;' . $context['latest_post']['link'] . '&quot;</b>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
 						<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 						<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '
-					</dd>
-				</dl>
+					</div>
+				</div>
 			</div>';
 	}
 
@@ -378,11 +378,11 @@ function template_info_center()
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $txt['online_users'], '</h4>
-				<dl class="windowbg">
-					<dt class="section">
+				<div class="windowbg">
+					<p class="section">
 						', $context['show_who'] ? '<a href="'. $scripturl . '?action=who' . '">' : '', '<img src="', $settings['images_url'] . '/icons/online.gif',  '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
-					</dt>
-					<dd class="windowbg2 section">
+					</p>
+					<div class="windowbg2 sectionbody">
 						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', $context['num_guests'], ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . $context['num_users_online'], ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	// Handle hidden users and buddies.
@@ -421,8 +421,8 @@ function template_info_center()
 							', $txt['most_online_today'], ': <b>', $modSettings['mostOnlineToday'], '</b>.
 							', $txt['most_online_ever'], ': ', $modSettings['mostOnline'], ' (' , timeformat($modSettings['mostDate']), ')
 						</div>
-					</dd>
-				</dl>
+					</div>
+				</div>
 			</div>';
 
 	// If they are logged in, but statistical information is off... show a personal message bar.
@@ -431,17 +431,17 @@ function template_info_center()
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $txt['personal_message'], '</h4>
-				<dl class="windowbg">
-					<dt class="section">
+				<div class="windowbg">
+					<p class="section">
 						', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" />', $context['allow_pm'] ? '</a>' : '', '
-					</dt>
-					<dd class="windowbg2 section">
+					</p>
+					<div class="windowbg2 sectionbody">
 						<strong><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></strong>
 						<div class="smalltext">
 							', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], ' <a href="', $scripturl, '?action=pm">', $txt['here'], '</a> ', $txt['to_view'], '
 						</div>
-					</dd>
-				</dl>
+					</div>
+				</div>
 			</div>';
 	}
 
@@ -451,11 +451,11 @@ function template_info_center()
 		echo '
 			<div class="infocenter_section">
 				<h4 class="headerpadding titlebg">', $txt['login'], '</h4>
-				<dl class="windowbg">
-					<dt class="section">
+				<div class="windowbg">
+					<p class="section">
 						<a href="', $scripturl,  '?action=login"><img src="', $settings['images_url'], '/icons/login.gif', '" alt="', $txt['login'], '" /></a> <a href="', $scripturl, '?action=reminder">', $txt['remind'], '</a>
-					</dt>
-					<dd class="windowbg2 section">
+					</p>
+					<div class="windowbg2 sectionbody">
 						<form id="infocenter_login" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
 							<ul class="horizlist clearfix">
 								<li>
@@ -479,8 +479,8 @@ function template_info_center()
 								</li>
 							</ul>
 						</form>
-					</dd>
-				</dl>
+					</div>
+				</div>
 			</div>';
 	}
 	echo '

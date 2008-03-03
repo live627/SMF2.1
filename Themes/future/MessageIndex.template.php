@@ -109,7 +109,7 @@ function template_main()
 	if (!empty($options['show_board_desc']) && $context['description'] != '')
 	{
 		echo '
-	<div class="tborder ">
+	<div id="description" class="tborder ">
 		<div class="titlebg2 headerpadding margintop smalltext">', $context['description'], '</div>
 	</div>';
 	}

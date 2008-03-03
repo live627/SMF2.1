@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; Display
+// Version: 2.0 Beta 2.1; Display
 
 function template_main()
 {
@@ -14,20 +14,19 @@ function template_main()
 	if ($context['is_poll'])
 	{
 		echo '
-<table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder" style="padding-top: 0; margin-bottom: 2ex;">
-	<tr>
-		<td class="titlebg" colspan="2" valign="middle" style="padding-left: 6px;">
-			<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
-		</td>
-	</tr>
-	<tr>
-		<td width="5%" valign="top" class="windowbg"><b>', $txt['poll_question'], ':</b></td>
-		<td class="windowbg">
-			', $context['poll']['question'];
+<div class="tborder marginbottom" id="poll">
+	<h3 class="titlebg headerpadding">
+		<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
+	</h3>
+	<h4 class="windowbg">', $txt['poll_question'], ': ', $context['poll']['question'];
+
 		if (!empty($context['poll']['expire_time']))
 			echo '
 					&nbsp;(', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ': ', $context['poll']['expire_time'], ')';
 
+		echo '
+	</h4>
+	<div class="windowbg" id="poll_options">';
 		// Are they not allowed to vote but allowed to view the options?
 		if ($context['poll']['show_results'] || !$context['allow_vote'])
 		{
@@ -63,7 +62,7 @@ function template_main()
 			// If they're allowed to lock the poll, show a link!
 			if ($context['poll']['lock'])
 				echo '
-						<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
+						<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
 
 			// If they're allowed to edit the poll... guess what... show a link!
 			if ($context['poll']['edit'])
@@ -98,7 +97,7 @@ function template_main()
 			// Show each option with its button - a radio likely.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-							', $option['vote_button'], ' <label for="options-', $option['id'], '">', $option['option'], '</label><br />';
+							', $option['vote_button'], ' <label for="', $option['id'], '">', $option['option'], '</label><br />';
 
 			echo '
 						</td>
@@ -112,7 +111,7 @@ function template_main()
 			// Show a link for locking the poll as well...
 			if ($context['poll']['lock'])
 				echo '
-							<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock']), '</a><br />';
+							<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock']), '</a><br />';
 
 			// Want to edit it? Click right here......
 			if ($context['poll']['edit'])
@@ -130,34 +129,25 @@ function template_main()
 		}
 
 		echo '
-		</td>
-	</tr>
-</table>';
+	</div>
+</div>';
 	}
 
 	// Does this topic have some events linked to it?
 	if (!empty($context['linked_calendar_events']))
 	{
 		echo '
-<table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder" style="padding-top: 0; margin-bottom: 3ex;">
-		<tr>
-				<td class="titlebg" valign="middle" align="left" style="padding-left: 6px;">
-						', $txt['calendar_linked_events'], '
-				</td>
-		</tr>
-		<tr>
-				<td width="5%" valign="top" class="windowbg">
-						<ul>';
+<div id="events" class="tborder marginbottom">
+	<h3 class="titlebg headerpadding">	', $txt['calendar_linked_events'], '</h3>
+	<ul class="windowbg headerpadding">';
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
-								<li>
-									', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), '<b>', $event['title'], '</b>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : ''), '
-								</li>';
+		<li>
+			', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), '<strong>', $event['title'], '</strong>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : ''), '
+		</li>';
 		echo '
-						</ul>
-				</td>
-		</tr>
-</table>';
+	</ul>
+</div>';
 	}
 
 	// Build the normal button array.
@@ -166,7 +156,7 @@ function template_main()
 		'notify' => array('test' => 'can_mark_notify', 'text' => 'notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');"', 'url' => $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
 		'custom' => array(),
 		'send' => array('test' => 'can_send_topic', 'text' => 'send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.0'),
-		'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'custom' => 'target="_blank" rel="nofollow"', 'url' => $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0'),
+		'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'custom' => 'rel="new_win nofollow"', 'url' => $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0'),
 	);
 
 	// Special case for the custom one.
@@ -179,19 +169,13 @@ function template_main()
 
 	// Show the page index... "Pages: [1]".
 	echo '
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-	<tr>
-		<td class="middletext" valign="bottom" style="padding-bottom: 4px;">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><b>' . $txt['go_down'] . '</b></a>' : '', '</td>
-		<td align="right" style="padding-right: 1ex;">
-			<div class="nav" style="margin-bottom: 2px;"> ', $context['previous_next'], '</div>
-			<table cellpadding="0" cellspacing="0">
-				<tr>
-					', template_button_strip($normal_buttons, 'bottom'), '
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>';
+<div class="clearfix margintop" id="postbuttons">
+	<div class="middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
+	<div class="nav floatright">
+		', $context['previous_next'], '
+		', template_buttonlist($normal_buttons, false), '
+	</div>
+</div>';
 
 	// Show the topic information - icon, subject, etc.
 	echo '
@@ -228,7 +212,7 @@ function template_main()
 </table>';
 
 	echo '
-<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickEdit.bInEditMode ? oQuickEdit.modifySave(\'' . $context['session_id'] . '\') : confirm(\'' . $txt['quickmod_confirm'] . '\');">';
+<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : confirm(\'' . $txt['quickmod_confirm'] . '\');">';
 
 	// These are some cache image buttons we may want.
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -236,6 +220,7 @@ function template_main()
 	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 	$split_button = create_button('split.gif', 'split', 'split', 'align="middle"');
 	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
+	$restore_message_button = create_button('restore_topic.gif', 'restore_message', 'restore_message', 'align="middle"');
 
 // Time to display all the posts
 	echo '
@@ -325,15 +310,11 @@ function template_main()
 								', $txt['member_postcount'], ': ', $message['member']['posts'], '<br />';
 
 			// Any custom fields?
-			if (!empty($modSettings['displayFields']))
+			if (!empty($message['member']['custom_fields']))
 			{
-				foreach (explode('|', $modSettings['displayFields']) as $custom)
-				{
-					@list ($field, $title) = explode(';', $custom);
-					if (!empty($title) && !empty($message['member']['options'][$field]))
-						echo '
-								', $title, ': ', $message['member']['options'][$field], '<br />';
-				}
+				foreach ($message['member']['custom_fields'] as $custom)
+					echo '
+								', $custom['title'], ': ', $custom['value'], '<br />';
 			}
 
 			echo '<br />';
@@ -368,12 +349,12 @@ function template_main()
 				// Don't show an icon if they haven't specified a website.
 				if ($message['member']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
 					echo '
-								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a>';
+								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a>';
 
 				// Don't show the email address if they want it hidden.
 				if (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
+								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -392,7 +373,7 @@ function template_main()
 			echo '
 								<br />
 								<br />
-								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
+								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '
@@ -419,7 +400,7 @@ function template_main()
 		// Can they reply? Have they turned on quick reply?
 		if ($context['can_reply'] && !empty($options['display_quick_reply']))
 			echo '
-					<a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';sesc=', $context['session_id'], '" onclick="oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\'); return false;">', $reply_button, '</a>';
+					<a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';sesc=', $context['session_id'], '" onclick="return oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\', true);">', $reply_button, '</a>';
 
 		// So... quick reply is off, but they *can* reply?
 		elseif ($context['can_reply'])
@@ -441,6 +422,11 @@ function template_main()
 			echo '
 					<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', $split_button, '</a>';
 
+		// Can we restore topics?
+		if ($context['can_restore_msg'])
+			echo '
+					<a href="', $scripturl, '?action=restoretopic;topic=', $context['current_topic'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '">', $restore_message_button, '</a>';
+
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
 			echo '
@@ -452,9 +438,7 @@ function template_main()
 							</tr></table>
 							<hr width="100%" size="1" class="hrcolor" />';
 		if ($ignoring)
-		{
-			echo '				<div id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
-		}
+			echo '				<div id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
 
 		echo '
 							<div class="post" id="msg_', $message['id'], '"', '>';
@@ -542,6 +526,11 @@ function template_main()
 		if ($context['can_report_moderator'])
 			echo '
 									<a href="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $message['counter'], ';msg=', $message['id'], '">', $txt['report_to_mod'], '</a> &nbsp;';
+
+		// Can we issue a warning because of this post?  Remember, we can't give guests warnings.
+		if ($context['can_issue_warning'] && !$message['is_message_author'] && !$message['member']['is_guest'])
+			echo '
+									<a href="', $scripturl, '?action=profile;u=', $message['member']['id'], ';sa=issueWarning;msg=', $message['id'], '"><img src="', $settings['images_url'], '/warn.gif" alt="', $txt['issue_warning_post'], '" border="0" /></a>';
 		echo '
 									<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
@@ -627,6 +616,10 @@ function template_main()
 
 	if ($context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 		$mod_buttons[] = array('text' => 'quickmod_delete_selected', 'image' => 'delete_selected.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['quickmod_confirm'] . '\');" id="quickmodSubmit"', 'url' => 'javascript:document.quickModForm.submit();');
+
+	// Restore topic. eh?  No monkey business.
+	if (!empty($modSettings['recycle_enable']) && $context['current_board'] == $modSettings['recycle_board'] && $context['can_restore_topic'])
+		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topic=' . $context['current_topic'] . ';sesc=' . $context['session_id']);
 
 	echo '
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 1ex;">
@@ -719,7 +712,7 @@ function template_main()
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
 			sTemplateBodyEdit: \'<div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" onclick="return oQuickModify.modifyCancel();" /></div>\',
-			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="60" style="width: 99%;"  maxlength="80" />\',
+			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="60" style="width: 99%;" maxlength="80" />\',
 			sTemplateBodyNormal: \'%body%\',
 			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
 			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')",
