@@ -521,7 +521,7 @@ function getXmlMembers($xml_format)
 		else
 			$data[] = array(
 				'name' => cdata_parse($row['real_name']),
-				'time' => strip_tags(timeformat($row['date_registered'])),
+				'time' => htmlspecialchars(strip_tags(timeformat($row['date_registered']))),
 				'id' => $row['id_member'],
 				'link' => $scripturl . '?action=profile;u=' . $row['id_member']
 			);
@@ -612,7 +612,7 @@ function getXmlNews($xml_format)
 		// The biggest difference here is more information.
 		else
 			$data[] = array(
-				'time' => strip_tags(timeformat($row['poster_time'])),
+				'time' => htmlspecialchars(strip_tags(timeformat($row['poster_time']))),
 				'id' => $row['id_msg'],
 				'subject' => cdata_parse($row['subject']),
 				'body' => cdata_parse($row['body']),
@@ -737,7 +737,7 @@ function getXmlRecent($xml_format)
 		// A lot of information here.  Should be enough to please the rss-ers.
 		else
 			$data[] = array(
-				'time' => strip_tags(timeformat($row['poster_time'])),
+				'time' => htmlspecialchars(strip_tags(timeformat($row['poster_time']))),
 				'id' => $row['id_msg'],
 				'subject' => cdata_parse($row['subject']),
 				'body' => cdata_parse($row['body']),

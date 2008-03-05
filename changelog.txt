@@ -13,6 +13,8 @@ March 2008
  * Use javascript to create the AJAX notification. (index template, script.js)
  * Give the quick edit and post warning icons title attributes. (Display template, index language file) [Feature 1411]
  * More changes to future theme. Started on Display.template (Themes/future)
+ ! In some languages smf news feeds might not display correctly. (News.php) [Bug 1686]
+ ! Fixed query in profile. (Profile-Modify.php) [Bug 1688]
 
 
 February 2008

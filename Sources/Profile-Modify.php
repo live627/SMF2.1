@@ -1835,7 +1835,7 @@ function list_getTopicNotificationCount($memID)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {db_prefix}log_notify AS ln' . (!in_array('pm', $context['admin_features']) || $user_info['query_see_board'] === '1=1' ? '' : '
+		FROM {db_prefix}log_notify AS ln' . (in_array('pm', $context['admin_features']) || $user_info['query_see_board'] === '1=1' ? '' : '
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic)') . ($user_info['query_see_board'] === '1=1' ? '' : '
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)') . '
 		WHERE ln.id_member = {int:selected_member}' . ($user_info['query_see_board'] === '1=1' ? '' : '
