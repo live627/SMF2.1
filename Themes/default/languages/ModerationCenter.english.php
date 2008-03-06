@@ -33,7 +33,7 @@ $txt['mc_seen'] = 'last seen';
 $txt['mc_groupr_by'] = 'by';
 
 $txt['mc_reported_posts_desc'] = 'Here you can review all the post reports raised by members of the community.';
-$txt['mc_reportedp_open'] = 'Active Reports';
+$txt['mc_reportedp_active'] = 'Active Reports';
 $txt['mc_reportedp_closed'] = 'Old Reports';
 $txt['mc_reportedp_by'] = 'by';
 $txt['mc_reportedp_reported_by'] = 'Reported By';

@@ -258,7 +258,7 @@ function template_reported_posts()
 	<form action="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $context['view_closed'] ? $txt['mc_reportedp_closed'] : $txt['mc_reportedp_open'], '</td>
+				<td>', $context['view_closed'] ? $txt['mc_reportedp_closed'] : $txt['mc_reportedp_active'], '</td>
 			</tr><tr class="catbg">
 				<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr>';

@@ -111,7 +111,7 @@ function ModerationMain($dont_call = false)
 					'file' => 'ModerationCenter.php',
 					'function' => 'ReportedPosts',
 					'subsections' => array(
-						'open' => array($txt['mc_reportedp_open']),
+						'open' => array($txt['mc_reportedp_active']),
 						'closed' => array($txt['mc_reportedp_closed']),
 					),
 				),
