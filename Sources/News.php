@@ -554,7 +554,7 @@ function getXmlNews($xml_format)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE ' . $query_this_board . (empty($board) ? '' : '
-			AND t.id_board = {int:current_board}') . (in_array('pm', $context['admin_features']) ? '
+			AND t.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . '
 		ORDER BY t.id_first_msg DESC
 		LIMIT ' . $_GET['limit'],
@@ -645,7 +645,7 @@ function getXmlRecent($xml_format)
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE ' . $query_this_board . (empty($board) ? '' : '
-			AND m.id_board = {int:current_board}') . (in_array('pm', $context['admin_features']) ? '
+			AND m.id_board = {int:current_board}') . ($modSettings['postmod_active'] ? '
 			AND m.approved = {int:is_approved}' : '') . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $_GET['limit'],

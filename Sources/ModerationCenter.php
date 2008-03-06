@@ -90,7 +90,7 @@ function ModerationMain($dont_call = false)
 			'areas' => array(
 				'postmod' => array(
 					'label' => $txt['mc_unapproved_posts'],
-					'enabled' => in_array('pm', $context['admin_features']),
+					'enabled' => $modSettings['postmod_active'],
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=postmod;sa=posts',
@@ -101,7 +101,7 @@ function ModerationMain($dont_call = false)
 				),
 				'attachmod' => array(
 					'label' => $txt['mc_unapproved_attachments'],
-					'enabled' => in_array('pm', $context['admin_features']),
+					'enabled' => $modSettings['postmod_active'],
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=attachmod;sa=attachments',
@@ -1259,7 +1259,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 			SELECT m.id_member, MAX(m.id_msg) AS last_post_id
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
-			WHERE m.id_member IN ({array_int:member_list})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+			WHERE m.id_member IN ({array_int:member_list})' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 				AND m.approved = {int:is_approved}') . '
 			GROUP BY m.id_member',
 			array(
@@ -1290,7 +1290,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 			SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
-			WHERE m.id_member IN ({array_int:member_list})' . (!in_array('pm', $context['admin_features']) || allowedTo('approve_posts') ? '' : '
+			WHERE m.id_member IN ({array_int:member_list})' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 				AND m.approved = {int:is_approved}') . '
 			GROUP BY m.id_member
 			ORDER BY m.poster_time DESC',

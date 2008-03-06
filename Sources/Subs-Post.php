@@ -1723,7 +1723,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip'] : $posterOptions['ip'];
 
 	// We need to know if the topic is approved. If we're told that's great - if not find out.
-	if (!in_array('pm', $context['admin_features']))
+	if (!$modSettings['postmod_active'])
 		$topicOptions['is_approved'] = true;
 	elseif (!empty($topicOptions['id']) && !isset($topicOptions['is_approved']))
 	{
@@ -1910,7 +1910,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	);
 
 	// Increase the number of posts and topics on the board.
-	if (!in_array('pm', $context['admin_features']) || $msgOptions['approved'])
+	if (!$modSettings['postmod_active'] || $msgOptions['approved'])
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET num_posts = num_posts + 1' . ($new_topic ? ', num_topics = num_topics + 1' : '') . '
@@ -2013,7 +2013,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	updateStats('message', true, $msgOptions['id']);
 
 	// Update the last message on the board assuming it's approved AND the topic is.
-	if (!in_array('pm', $context['admin_features']) || $msgOptions['approved'])
+	if (!$modSettings['postmod_active'] || $msgOptions['approved'])
 		updateLastMessages($topicOptions['board'], $new_topic || !empty($topicOptions['is_approved']) ? $msgOptions['id'] : 0);
 
 	// Alright, done now... we can abort now, I guess... at least this much is done.
@@ -2047,7 +2047,7 @@ function createAttachment(&$attachmentOptions)
 	$attachmentOptions['errors'] = array();
 	if (!isset($attachmentOptions['post']))
 		$attachmentOptions['post'] = 0;
-	if (!in_array('pm', $context['admin_features']) || !isset($attachmentOptions['approved']))
+	if (!$modSettings['postmod_active'] || !isset($attachmentOptions['approved']))
 		$attachmentOptions['approved'] = 1;
 
 	$already_uploaded = preg_match('~^post_tmp_' . $attachmentOptions['poster'] . '_\d+$~', $attachmentOptions['tmp_name']) != 0;
@@ -2460,7 +2460,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	}
 
 	// Finally, if we are setting the approved state we need to do much more work :(
-	if (!in_array('pm', $context['admin_features']) || isset($msgOptions['approved']))
+	if (!$modSettings['postmod_active'] || isset($msgOptions['approved']))
 		approvePosts($msgOptions['id'], $msgOptions['approved']);
 
 	return true;

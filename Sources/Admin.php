@@ -333,7 +333,7 @@ function AdminMain()
 						'index' => array($txt['permissions_groups'], 'manage_permissions'),
 						'board' => array($txt['permissions_boards'], 'manage_permissions'),
 						'profiles' => array($txt['permissions_profiles'], 'manage_permissions'),
-						'postmod' => array($txt['permissions_post_moderation'], 'manage_permissions', 'enabled' => in_array('pm', $context['admin_features'])),
+						'postmod' => array($txt['permissions_post_moderation'], 'manage_permissions', 'enabled' => $modSettings['postmod_active']),
 						'settings' => array($txt['settings'], 'admin_forum'),
 					),
 				),

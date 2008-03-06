@@ -1378,7 +1378,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 function loadAllPermissions($loadType = 'classic')
 {
-	global $context, $txt;
+	global $context, $txt, $modSettings;
 
 	// List of all the groups dependant on the currently selected view - for the order so it looks pretty, yea?
 	// Note to Mod authors - you don't need to stick your permission group here if you don't mind SMF sticking it the last group of the page.
@@ -1552,7 +1552,7 @@ function loadAllPermissions($loadType = 'classic')
 		$hiddenPermissions[] = 'issue_warning';
 
 	// Post moderation?
-	if (!in_array('pm', $context['admin_features']))
+	if (!$modSettings['postmod_active'])
 	{
 		$hiddenPermissions[] = 'approve_posts';
 		$hiddenPermissions[] = 'post_unapproved_topics';

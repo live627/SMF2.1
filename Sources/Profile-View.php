@@ -282,7 +282,7 @@ function showPosts($memID)
 			FROM {db_prefix}topics AS t' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND {query_see_board})') . '
 			WHERE t.id_member_started = {int:current_member}' . (!empty($board) ? '
-				AND t.id_board = ' . $board : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+				AND t.id_board = ' . $board : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 				AND t.approved = {int:is_approved}'),
 			array(
 				'current_member' => $memID,
@@ -295,7 +295,7 @@ function showPosts($memID)
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
 			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-				AND m.id_board = ' . $board : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+				AND m.id_board = ' . $board : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 				AND m.approved = {int:is_approved}'),
 			array(
 				'current_member' => $memID,
@@ -309,7 +309,7 @@ function showPosts($memID)
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {db_prefix}messages AS m
 		WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-			AND m.id_board = ' . $board : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+			AND m.id_board = ' . $board : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}'),
 		array(
 			'current_member' => $memID,
@@ -365,7 +365,7 @@ function showPosts($memID)
 			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
 				AND m.id_board=' . $board : '') . (empty($range_limit) ? '' : '
 				AND ' . $range_limit) . '
-				AND {query_see_board}' . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+				AND {query_see_board}' . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 				AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
 			ORDER BY m.id_msg ' . ($reverse ? 'ASC' : 'DESC') . '
 			LIMIT ' . $start . ', ' . $maxIndex,
@@ -506,7 +506,7 @@ function showAttachments($memID)
 			AND a.id_msg != {int:no_message}
 			AND m.id_member = {int:current_member}
 			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:boards_list})' : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+			AND b.id_board IN ({array_int:boards_list})' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}'),
 		array(
 			'boards_list' => $boardsAllowed,
@@ -547,7 +547,7 @@ function showAttachments($memID)
 			AND a.id_msg != {int:no_message}
 			AND m.id_member = {int:current_member}
 			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:boards_list})' : '') . (!in_array('pm', $context['admin_features']) || $context['user']['is_owner'] ? '' : '
+			AND b.id_board IN ({array_int:boards_list})' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}') . '
 		ORDER BY {raw:sort}
 		LIMIT {raw:offset}, {raw:limit}',

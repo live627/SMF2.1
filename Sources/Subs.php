@@ -3729,12 +3729,12 @@ function setupMenuContext()
 					'poststopics' => array(
 						'title' => $txt['mc_unapproved_poststopics'],
 						'href' => $scripturl . '?action=moderate;area=postmod;sa=posts',
-						'show' => in_array('pm', $context['admin_features']),
+						'show' => $modSettings['postmod_active'],
 					),
 					'attachments' => array(
 						'title' => $txt['mc_unapproved_attachments'],
 						'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments',
-						'show' => in_array('pm', $context['admin_features']),
+						'show' => $modSettings['postmod_active'],
 					),
 					'reports' => array(
 						'title' => $txt['mc_reported_posts'],

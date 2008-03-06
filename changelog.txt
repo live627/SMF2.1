@@ -15,6 +15,9 @@ March 2008
  * More changes to future theme. Started on Display.template (Themes/future)
  ! In some languages smf news feeds might not display correctly. (News.php) [Bug 1686]
  ! Fixed query in profile. (Profile-Modify.php) [Bug 1688]
+ ! Query error in MergeTopics. (SplitTopics.php) [Bug 1690]
+ ! Fixed query error in Display. (Display.php) [Bug 1691]
+ ! Added $modSettings['postmod_active'] as a shortcut to define whether post moderation is doing something. (Several files)
 
 
 February 2008

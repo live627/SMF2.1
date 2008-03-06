@@ -206,7 +206,7 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 	{
 		// If the attached topic is not approved then for the moment pretend it doesn't exist
 		//!!! This should be fixed to show them all and then sort by approval state later?
-		if (!empty($row['id_first_msg']) && in_array('pm', $context['admin_features']) && !$row['approved'])
+		if (!empty($row['id_first_msg']) && $modSettings['postmod_active'] && !$row['approved'])
 			continue;
 
 		// Force a censor of the title - as often these are used by others.

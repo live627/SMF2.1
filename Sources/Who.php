@@ -379,9 +379,9 @@ function determineActions($urls)
 					SELECT m.id_topic, m.subject
 					FROM {db_prefix}messages AS m
 						INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic' . (in_array('pm', $context['admin_features']) ? ' AND t.approved = {int:is_approved}' : '') . ')
+						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic' . ($modSettings['postmod_active'] ? ' AND t.approved = {int:is_approved}' : '') . ')
 					WHERE m.id_msg = {int:id_msg}
-						AND {query_see_board}' . (in_array('pm', $context['admin_features']) ? '
+						AND {query_see_board}' . ($modSettings['postmod_active'] ? '
 						AND m.approved = {int:is_approved}' : '') . '
 					LIMIT 1',
 					array(
@@ -422,7 +422,7 @@ function determineActions($urls)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			WHERE {query_see_board}
-				AND t.id_topic IN ({array_int:topic_list})' . (in_array('pm', $context['admin_features']) ? '
+				AND t.id_topic IN ({array_int:topic_list})' . ($modSettings['postmod_active'] ? '
 				AND t.approved = {int:is_approved}' : '') . '
 			LIMIT {int:limit}',
 			array(

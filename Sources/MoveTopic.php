@@ -56,7 +56,7 @@ if (!defined('SMF'))
 // Move a topic.  Give the moderator a chance to post a reason.
 function MoveTopic()
 {
-	global $txt, $board, $topic, $user_info, $context, $language, $scripturl, $settings, $smcFunc;
+	global $txt, $board, $topic, $user_info, $context, $language, $scripturl, $settings, $smcFunc, $modSettings;
 
 	if (empty($topic))
 		fatal_lang_error('no_access');
@@ -75,7 +75,7 @@ function MoveTopic()
 	$smcFunc['db_free_result']($request);
 
 	// Can they see it - if not approved?
-	if (in_array('pm', $context['admin_features']) && !$context['is_approved'])
+	if ($modSettings['postmod_active'] && !$context['is_approved'])
 		isAllowedTo('approve_posts');
 
 	// Permission check!
@@ -199,7 +199,7 @@ function MoveTopic2()
 		$boards = boardsAllowedTo('move_any');
 
 	// If this topic isn't approved don't let them move it if they can't approve it!
-	if (in_array('pm', $context['admin_features']) && !$context['is_approved'] && !allowedTo('approve_posts'))
+	if ($modSettings['postmod_active'] && !$context['is_approved'] && !allowedTo('approve_posts'))
 	{
 		// Only allow them to move it to other boards they can't approve it in.
 		$can_approve = boardsAllowedTo('approve_posts');

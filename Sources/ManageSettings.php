@@ -622,7 +622,7 @@ function ModifyModerationSettings($return_config = false)
 		return $config_vars;
 
 	// Cannot use moderation if post moderation is not enabled.
-	if (!in_array('pm', $context['admin_features']))
+	if (!$modSettings['postmod_active'])
 		unset($config_vars['moderate']);
 
 	// Saving?
@@ -640,7 +640,7 @@ function ModifyModerationSettings($return_config = false)
 		else
 		{
 			$_POST['warning_watch'] = min($_POST['warning_watch'], 100);
-			$_POST['warning_moderate'] = in_array('pm', $context['admin_features']) ? min($_POST['warning_moderate'], 100) : 0;
+			$_POST['warning_moderate'] = $modSettings['postmod_active'] ? min($_POST['warning_moderate'], 100) : 0;
 			$_POST['warning_mute'] = min($_POST['warning_mute'], 100);
 		}
 

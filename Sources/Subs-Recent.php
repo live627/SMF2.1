@@ -48,7 +48,7 @@ function getLastPosts($latestPostOptions)
 		WHERE m.id_msg >= {int:likely_max_msg}' .
 			(!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_board}' : '') . '
-			AND {query_wanna_see_board}' . (in_array('pm', $context['admin_features']) ? '
+			AND {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}
 			AND m.approved = {int:is_approved}' : '') . '
 		ORDER BY m.id_msg DESC

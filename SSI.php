@@ -261,7 +261,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 		AND b.id_board NOT IN ({array_int:exclude_boards})') . '
 		' . ($include_boards === null ? '' : '
 		AND b.id_board IN ({array_int:include_boards})') . '
-		AND ' . $user_info['query_wanna_see_board'] . (in_array('pm', $context['admin_features']) ? '
+		AND ' . $user_info['query_wanna_see_board'] . ($modSettings['postmod_active'] ? '
 		AND m.approved = {int:is_approved}' : '');
 
 	$query_where_params = array(
@@ -278,7 +278,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 // Fetch a post with a particular ID. By default will only show if you have permission to the see the board in question - this can be overriden.
 function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method = 'echo')
 {
-	global $user_info;
+	global $user_info, $modSettings;
 
 	// Allow the user to request more than one - why not?
 	$post_ids = is_array($post_ids) ? $post_ids : array($post_ids);
@@ -286,7 +286,7 @@ function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method
 	// Restrict the posts required...
 	$query_where = '
 		m.id_msg IN ({array_int:message_list})
-		' . ($override_permissions ? '' : 'AND ' . $user_info['query_wanna_see_board']) . (in_array('pm', $context['admin_features']) ? '
+		' . ($override_permissions ? '' : 'AND ' . $user_info['query_wanna_see_board']) . ($modSettings['postmod_active'] ? '
 		AND m.approved = {int:is_approved}' : '');
 	$query_where_params = array(
 		'message_list' => $post_ids,
@@ -433,7 +433,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 			AND b.id_board NOT IN ({array_int:exclude_boards})') . '
 			' . (empty($include_boards) ? '' : '
 			AND b.id_board IN ({array_int:include_boards})') . '
-			AND ' . $user_info['query_wanna_see_board'] . (in_array('pm', $context['admin_features']) ? '
+			AND ' . $user_info['query_wanna_see_board'] . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}
 			AND m.approved = {int:is_approved}' : '') . '
 		ORDER BY t.id_last_msg DESC
@@ -621,7 +621,7 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 		$request = $smcFunc['db_query']('', '
 			SELECT id_topic
 			FROM {db_prefix}topics
-			WHERE num_' . ($type != 'replies' ? 'views' : 'replies') . ' != 0' . (in_array('pm', $context['admin_features']) ? '
+			WHERE num_' . ($type != 'replies' ? 'views' : 'replies') . ' != 0' . ($modSettings['postmod_active'] ? '
 				AND approved = {int:is_approved}' : '') . '
 			ORDER BY num_' . ($type != 'replies' ? 'views' : 'replies') . ' DESC
 			LIMIT 100',
@@ -642,7 +642,7 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE ' . $user_info['query_wanna_see_board'] . (in_array('pm', $context['admin_features']) ? '
+		WHERE ' . $user_info['query_wanna_see_board'] . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . (!empty($topic_ids) ? '
 			AND t.id_topic IN ({array_int:topic_list})' : '') . '
 			AND ' . $user_info['query_wanna_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
@@ -1004,7 +1004,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 	$request = $smcFunc['db_query']('', '
 		SELECT p.id_poll, p.question, t.id_topic, p.max_votes, p.guest_vote, p.hide_results, p.expire_time
 		FROM {db_prefix}polls AS p
-			INNER JOIN {db_prefix}topics AS t ON (t.id_poll = p.id_poll' . (in_array('pm', $context['admin_features']) ? ' AND t.approved = {int:is_approved}' : '') . ')
+			INNER JOIN {db_prefix}topics AS t ON (t.id_poll = p.id_poll' . ($modSettings['postmod_active'] ? ' AND t.approved = {int:is_approved}' : '') . ')
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)' . ($topPollInstead ? '
 			INNER JOIN {db_prefix}poll_choices AS pc ON (pc.id_poll = p.id_poll)' : '') . '
 			LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member > {int:no_member} AND lp.id_member = {int:current_member})
@@ -1132,7 +1132,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 
 function ssi_showPoll($topic = null, $output_method = 'echo')
 {
-	global $db_prefix, $txt, $settings, $boardurl, $sc, $user_info, $context, $smcFunc;
+	global $db_prefix, $txt, $settings, $boardurl, $sc, $user_info, $context, $smcFunc, $modSettings;
 
 	$boardsAllowed = boardsAllowedTo('poll_view');
 
@@ -1152,7 +1152,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE t.id_topic = {int:current_topic}
 			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
-			AND b.id_board IN ({array_int:boards_allowed_see})' : '') . (in_array('pm', $context['admin_features']) ? '
+			AND b.id_board IN ({array_int:boards_allowed_see})' : '') . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . '
 		LIMIT 1',
 		array(
@@ -1343,7 +1343,7 @@ function ssi_pollVote()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = {int:current_member})
 		WHERE p.id_poll = {int:current_poll}
-			AND ' . $user_info['query_see_board'] . (in_array('pm', $context['admin_features']) ? '
+			AND ' . $user_info['query_see_board'] . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . '
 		LIMIT 1',
 		array(
@@ -1621,7 +1621,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	$request = $smcFunc['db_query']('', '
 		SELECT id_first_msg
 		FROM {db_prefix}topics
-		WHERE id_board = {int:current_board}' . (in_array('pm', $context['admin_features']) ? '
+		WHERE id_board = {int:current_board}' . ($modSettings['postmod_active'] ? '
 			AND approved = {int:is_approved}' : '') . '
 		ORDER BY id_first_msg DESC
 		LIMIT ' . $start . ', ' . $limit,
