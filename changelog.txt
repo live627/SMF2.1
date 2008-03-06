@@ -20,6 +20,7 @@ March 2008
  ! Added $modSettings['postmod_active'] as a shortcut to define whether post moderation is doing something. (Several files)
  ! Issueing a warning was displaying the username not display name. (Profile-Actions.php) [Bug 1687]
  ! Fixed undefined index when editing a poll. (Poll.php) [Bug 1682]
+ ! Truncate poll questions so they look nicer. (Post.php, Poll.php) [Bug 1681]
 
 
 February 2008

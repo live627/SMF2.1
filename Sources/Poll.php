@@ -646,6 +646,7 @@ function EditPoll2()
 
 	// Now we've done all our error checking, let's get the core poll information cleaned... question first.
 	$_POST['question'] = $smcFunc['htmlspecialchars']($_POST['question']);
+	$_POST['question'] = $smcFunc['truncate']($_POST['question'], 255);
 
 	$_POST['poll_hide'] = (int) $_POST['poll_hide'];
 	$_POST['poll_change_vote'] = isset($_POST['poll_change_vote']) ? 1 : 0;
