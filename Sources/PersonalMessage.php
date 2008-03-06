@@ -2238,6 +2238,43 @@ function MessageActionsApply()
 	if (empty($_REQUEST['pm_actions']))
 		redirectexit($context['current_label_redirect']);
 
+	// To begin with, if we are in conversation view this should apply to everyone.
+	if ($context['display_mode'] == 2)
+	{
+		$id_pms = array();
+		foreach ($_REQUEST['pm_actions'] as $pm => $dummy)
+			$id_pms[] = (int) $pm;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_pm_head, id_pm
+			FROM {db_prefix}personal_messages
+			WHERE id_pm IN ({array_int:id_pms})',
+			array(
+				'id_pms' => $id_pms,
+			)
+		);
+		$pm_heads = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$pm_heads[$row['id_pm_head']] = $row['id_pm'];
+		$smcFunc['db_free_result']($request);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_pm, id_pm_head
+			FROM {db_prefix}personal_messages
+			WHERE id_pm_head IN ({array_int:pm_heads})',
+			array(
+				'pm_heads' => array_keys($pm_heads),
+			)
+		);
+		// Copy the action from the single to PM to the others.
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if (isset($pm_heads[$row['id_pm_head']]) && isset($_REQUEST['pm_actions'][$pm_heads[$row['id_pm_head']]]))
+				$_REQUEST['pm_actions'][$row['id_pm']] = $_REQUEST['pm_actions'][$pm_heads[$row['id_pm_head']]];
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
 	$to_delete = array();
 	$to_label = array();
 	$label_type = array();

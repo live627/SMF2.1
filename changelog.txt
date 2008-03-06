@@ -23,6 +23,7 @@ March 2008
  ! Truncate poll questions so they look nicer. (Post.php, Poll.php) [Bug 1681]
  & There were two strings with the same index in one file. (ModerationCenter language file) [Bug 1673]
  ! If the user is adding more than one person to a PM, try do them all one after another. (suggest.js) [Bug 1663]
+ ! When deleting or labelling a conversation in personal messages do it to every message. (PersonalMessage.php) [Bug 1674]
 
 
 February 2008
