@@ -15,7 +15,7 @@ function smfSuggest(sessionID, textID)
 	var minimumSearchChars = 3;
 
 	var onMemberAddCallback = false;
-
+	var doAutoAdd = false;
 
 	var hideTimer = false;
 	var positionComplete = false;
@@ -150,7 +150,7 @@ function smfSuggest(sessionID, textID)
 			return return_value;
 		else
 		{
-			addUserLink(return_value);
+			addUserLink(return_value, true);
 			return false;
 		}
 	}
@@ -196,7 +196,7 @@ function smfSuggest(sessionID, textID)
 	}
 
 	// Add a result if not already done.
-	function addUserLink(curUser)
+	function addUserLink(curUser, fromSubmit)
 	{
 		// Is there a div that we are duplicating and populating?
 		if (document.getElementById('suggest_template_' + textID))
@@ -248,6 +248,15 @@ function smfSuggest(sessionID, textID)
 		// Just take it all.
 		else
 			textHandle.value = '';
+
+		// If we came from a submit, and there's still more to go, turn on auto add for all the other things.
+		if (textHandle.value != '' && fromSubmit)
+			doAutoAdd = true;
+		else
+			doAutoAdd = false;
+
+		// Update the fellow..
+		autoSuggestUpdate();
 
 		// If there's a callback then call it.
 		if (onMemberAddCallback)
@@ -384,7 +393,18 @@ function smfSuggest(sessionID, textID)
 			cache[i] = new Array(2);
 			cache[i]['id'] = members[i].getAttribute('id');
 			cache[i]['name'] = members[i].childNodes[0].nodeValue;
+
+			// If we're doing auto add and we find the exact person, then add them!
+			if (doAutoAdd && lastSearch == cache[i]['name'])
+			{
+				return_value = {'memberid': cache[i]['id'], 'membername': cache[i]['name']};
+				cache = [];
+				return addUserLink(return_value, true);
+			}
 		}
+
+		// Check we don't try to keep auto updating!
+		doAutoAdd = false;
 
 		// Populate the div.
 		populateDiv(cache);
