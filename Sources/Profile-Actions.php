@@ -98,7 +98,7 @@ function issueWarning($memID)
 
 	$context['warning_limit'] = allowedTo('admin_forum') ? 0 : $modSettings['user_limit'];
 	$context['member']['warning'] = $cur_profile['warning'];
-	$context['member']['name'] = $cur_profile['member_name'];
+	$context['member']['name'] = $cur_profile['real_name'];
 
 	// What are the limits we can apply?
 	$context['min_allowed'] = 0;
@@ -310,8 +310,8 @@ function issueWarning($memID)
 	$smcFunc['db_free_result']($request);
 
 	// Are they warning because of a message?
-	if (isset($_REQUEST['msg']) && 0 < (int)$_REQUEST['msg'])
-		$context['warning_for_message'] = (int)$_REQUEST['msg'];
+	if (isset($_REQUEST['msg']) && 0 < (int) $_REQUEST['msg'])
+		$context['warning_for_message'] = (int) $_REQUEST['msg'];
 	else
 		$context['warning_for_message'] = 0;
 

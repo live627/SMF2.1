@@ -687,8 +687,8 @@ function EditPoll2()
 			array(
 				'change_vote' => $_POST['poll_change_vote'],
 				'hide_results' => $_POST['poll_hide'],
-				'expire_time' => $_POST['poll_expire'],
-				'max_votes' => $_POST['poll_max_votes'],
+				'expire_time' => !empty($_POST['poll_expire']) ? $_POST['poll_expire'] : 0,
+				'max_votes' => !empty($_POST['poll_max_votes']) ? $_POST['poll_max_votes'] : 0,
 				'guest_vote' => $_POST['poll_guest_vote'],
 				'expire_time_zero' => 0,
 				'id_poll' => $bcinfo['id_poll'],

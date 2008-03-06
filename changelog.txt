@@ -18,6 +18,8 @@ March 2008
  ! Query error in MergeTopics. (SplitTopics.php) [Bug 1690]
  ! Fixed query error in Display. (Display.php) [Bug 1691]
  ! Added $modSettings['postmod_active'] as a shortcut to define whether post moderation is doing something. (Several files)
+ ! Issueing a warning was displaying the username not display name. (Profile-Actions.php) [Bug 1687]
+ ! Fixed undefined index when editing a poll. (Poll.php) [Bug 1682]
 
 
 February 2008
