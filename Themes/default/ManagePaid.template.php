@@ -404,11 +404,11 @@ function template_user_subscription()
 {
 	global $context, $txt, $scripturl, $modSettings;
 
-		echo '
+	echo '
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=subscriptions;confirm" method="post">
-		<table border="0" cellspacing="1" cellpadding="3" align="center" width="95%" class="tborder">
+		<table border="0" cellspacing="1" cellpadding="3" align="center" width="85%" class="bordercolor">
 			<tr class="titlebg">
-				<td>
+				<td colspan="2">
 					', $txt['subscriptions'], '
 				</td>
 			</tr>';
@@ -424,7 +424,7 @@ function template_user_subscription()
 	{
 		echo '
 			<tr class="windowbg2">
-				<td align="left"><span class="smalltext">', $txt['paid_subs_desc'], '</span></td>
+				<td align="left" colspan="2"><span class="smalltext">', $txt['paid_subs_desc'], '</span></td>
 			</tr>';
 
 		// Print out all the subscriptions.
@@ -435,74 +435,61 @@ function template_user_subscription()
 				continue;
 
 			echo '
-				<tr class="windowbg">
-					<td width="100%">
-						<table border="0" cellspacing="0" cellpadding="2" align="center" width="100%" class="tborder">
-							<tr class="titlebg">
-								<td colspan="2">', $subscription['name'], '</td>
-							</tr>
-							<tr class="windowbg2">
-								<td colspan="2">', $subscription['desc'], '</td>
-							</tr>
-							<tr class="windowbg2">
-								<td colspan="2"><hr /></td>
-							</tr>
-							<tr class="windowbg2">
-								<td align="left">';
+			<tr class="catbg">
+				<td colspan="2">', $subscription['name'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td colspan="2">', $subscription['desc'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td align="right" valign="bottom">';
+
 			if (!$subscription['flexible'])
 				echo '
-									<b>', $txt['paid_duration'], ':</b> ', $subscription['length'];
-
-			echo '
-								</td>
-								<td align="right">';
+					<div style="float: left; height: 100%; margin: 2px;"><b>', $txt['paid_duration'], ':</b> ', $subscription['length'], '</div>';
 
 			if ($context['user']['is_owner'])
 			{
 				echo '
-									<b>', $txt['paid_cost'], ':</b>';
+					<b>', $txt['paid_cost'], ':</b>';
 
 				if ($subscription['flexible'])
 				{
 					echo '
-									<select name="cur[', $subscription['id'], ']">';
+					<select name="cur[', $subscription['id'], ']">';
 
 					// Print out the costs for this one.
 					foreach ($subscription['costs'] as $duration => $value)
 						echo '
-									<option value="', $duration, '">', sprintf($modSettings['paid_currency_symbol'], $value), '/', $txt[$duration], '</option>';
+						<option value="', $duration, '">', sprintf($modSettings['paid_currency_symbol'], $value), '/', $txt[$duration], '</option>';
 
 					echo '
-									</select>';
+					</select>';
 				}
 				else
 					echo '
-									', sprintf($modSettings['paid_currency_symbol'], $subscription['costs']['fixed']);
+					', sprintf($modSettings['paid_currency_symbol'], $subscription['costs']['fixed']);
 
 				echo '
-									<input type="submit" name="sub_id[', $subscription['id'], ']" value="Order" />';
+					<input type="submit" name="sub_id[', $subscription['id'], ']" value="Order" />';
 			}
 			else
-			{
 				echo '
-									<a href="', $scripturl, '?action=admin;area=paidsubscribe;sa=modifyuser;sid=', $subscription['id'], ';uid=', $context['member']['id'], (empty($context['current'][$subscription['id']]) ? '' : ';lid=' . $context['current'][$subscription['id']]['id']), '">', empty($context['current'][$subscription['id']]) ? $txt['paid_admin_add'] : $txt['paid_edit_subscription'], '</a>';
-			}
+					<a href="', $scripturl, '?action=admin;area=paidsubscribe;sa=modifyuser;sid=', $subscription['id'], ';uid=', $context['member']['id'], (empty($context['current'][$subscription['id']]) ? '' : ';lid=' . $context['current'][$subscription['id']]['id']), '">', empty($context['current'][$subscription['id']]) ? $txt['paid_admin_add'] : $txt['paid_edit_subscription'], '</a>';
+
 			echo '
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>';
+				</td>
+			</tr>';
 		}
 
 		echo '
-			</table>
-		</form>
-		<br />';
+		</table>
+	</form>
+	<br />';
 	}
 
 	echo '
-		<table border="0" cellspacing="1" cellpadding="3" align="center" width="95%" class="tborder">
+		<table border="0" cellspacing="1" cellpadding="3" align="center" width="85%" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="4">
 					', $txt['paid_current'], '
@@ -521,14 +508,12 @@ function template_user_subscription()
 			</tr>';
 
 	if (empty($context['current']))
-	{
 		echo '
 			<tr class="windowbg">
 				<td align="center" colspan="4">
 					', $txt['paid_none_yet'], '
 				</td>
 			</tr>';
-	}
 
 	foreach ($context['current'] as $sub)
 	{
@@ -556,44 +541,47 @@ function template_choose_payment()
 	global $context, $txt, $modSettings, $scripturl;
 
 	echo '
-		<table border="0" cellspacing="1" cellpadding="3" align="center" width="95%" class="tborder">
+		<table border="0" cellspacing="1" cellpadding="4" align="center" width="85%" class="bordercolor">
 			<tr class="titlebg">
-				<td>
-					', $txt['paid_confirm_payment'], '
-				</td>
+				<td>', $txt['paid_confirm_payment'], '</td>
 			</tr>
 			<tr class="windowbg2">
-				<td>
-					', $txt['paid_confirm_desc'], '<br /><br />
-					<b>', $txt['subscription'], ':</b> ', $context['sub']['name'], '<br />
-					<b>', $txt['paid_cost'], ':</b> ', $context['cost'], '<br /><br />';
+				<td class="smalltext">', $txt['paid_confirm_desc'], '</td>
+			</tr>
+			<tr class="windowbg3">
+				<td><b>', $txt['subscription'], ':</b> ', $context['sub']['name'], ' | <b>', $txt['paid_cost'], ':</b> ', $context['cost'], '</td>
+			</tr>';
 
 	// Do all the gateway options.
 	foreach ($context['gateways'] as $gateway)
 	{
 		echo '
-		<form action="', $gateway['form'], '" method="post">
-			<u><b>', $gateway['title'], '</b></u><br />
-			', $gateway['desc'], '<br />';
+			<tr class="catbg">
+				<td><b>', $gateway['title'], '</b></td>
+			</tr>
+			<tr class="windowbg2">
+				<td>
+					', $gateway['desc'], '<br />
+					<form action="', $gateway['form'], '" method="post">';
 
 		if (!empty($gateway['javascript']))
 			echo '
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-				', $gateway['javascript'], '
-			// ]]></script>';
+						<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+							', $gateway['javascript'], '
+						// ]]></script>';
 
 		foreach ($gateway['hidden'] as $name => $value)
 			echo '
-			<input type="hidden" id="', $gateway['id'], '_', $name, '" name="', $name, '" value="', $value, '" />';
+						<input type="hidden" id="', $gateway['id'], '_', $name, '" name="', $name, '" value="', $value, '" />';
 
 		echo '
-			<input type="submit" value="', $gateway['submit'], '" />
-		</form>';
+						<input type="submit" value="', $gateway['submit'], '" style="float: right;"/>
+					</form>
+				</td>
+			</tr>';
 	}
 
 	echo '
-				</td>
-			</tr>
 		</table>';
 }
 

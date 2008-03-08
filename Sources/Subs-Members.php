@@ -1163,7 +1163,7 @@ function list_getNumMembers($where, $where_params = array())
 	global $smcFunc, $modSettings;
 
 	// We know how many members there are in total.
-	if (empty($where) or $where == '1')
+	if (empty($where) || $where == '1')
 		$num_members = $modSettings['totalMembers'];
 
 	// The database knows the amount when there are extra conditions.

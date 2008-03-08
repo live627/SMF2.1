@@ -101,6 +101,7 @@ function createList($listOptions)
 			'sort_image' => empty($listOptions['default_sort_col']) || empty($column['sort']) || $column_id !== $list_context['sort']['id'] ? null : ($list_context['sort']['desc'] ? 'down' : 'up'),
 			'class' => isset($column['header']['class']) ? $column['header']['class'] : '',
 			'style' => isset($column['header']['style']) ? $column['header']['style'] : '',
+			'colspan' => isset($column['header']['colspan']) ? $column['header']['colspan'] : '',
 		);
 
 	// We know the amount of columns, might be useful for the template.
@@ -227,6 +228,10 @@ function createList($listOptions)
 	// Add an option for inline JavaScript.
 	if (isset($listOptions['javascript']))
 		$list_context['javascript'] = $listOptions['javascript'];
+
+	// We want a menu.
+	if (isset($listOptions['list_menu']))
+		$list_context['list_menu'] = $listOptions['list_menu'];
 
 	// Make sure the template is loaded.
 	loadTemplate('GenericList');

@@ -24,6 +24,8 @@ March 2008
  & There were two strings with the same index in one file. (ModerationCenter language file) [Bug 1673]
  ! If the user is adding more than one person to a PM, try do them all one after another. (suggest.js) [Bug 1663]
  ! When deleting or labelling a conversation in personal messages do it to every message. (PersonalMessage.php) [Bug 1674]
+ + Added the ability to support tabs to the generic list. (Subs-List.php, GenericList template)
+ * Changed the order subscription page looks in the profile section. (ManagePaid template)
 
 
 February 2008
