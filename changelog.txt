@@ -26,6 +26,7 @@ March 2008
  ! When deleting or labelling a conversation in personal messages do it to every message. (PersonalMessage.php) [Bug 1674]
  + Added the ability to support tabs to the generic list. (Subs-List.php, GenericList template)
  * Changed the order subscription page looks in the profile section. (ManagePaid template)
+ ! Better handle replacing of smileys in the WYSIWYG editor. (Subs-Editor.php) [Bug 1477]
 
 
 February 2008
