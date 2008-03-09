@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2.1; Reports
+// Version: 2.0 Beta 3; Reports
 
 // Choose which type of report to run?
 function template_report_type()

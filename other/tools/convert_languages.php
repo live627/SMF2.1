@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2.1
+// Version: 2.0 Beta 3
 
 // Use this to convert theme and language files to use the new SMF 2.0 indexes. Simple
 // drop this into your SMF directory and run from the browser!

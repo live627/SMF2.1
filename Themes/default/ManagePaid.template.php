@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2.1; ManagePaid
+// Version: 2.0 Beta 3; ManagePaid
 
 // The template for adding or editing a subscription.
 function template_modify_subscription()

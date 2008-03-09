@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 2.1                                    *
+* Software Version:           SMF 2.0 Beta 3                                    *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -24,8 +24,8 @@
 
 
 // Version information...
-define('SMF_VERSION', '2.0 Beta 2.1');
-define('SMF_LANG_VERSION', '2.0 Beta 2.1');
+define('SMF_VERSION', '2.0 Beta 3');
+define('SMF_LANG_VERSION', '2.0 Beta 3');
 
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';

@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2.1; ManageMaintenance
+// Version: 2.0 Beta 3; ManageMaintenance
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

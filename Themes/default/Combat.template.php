@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 2.1; Combat
+// Version: 2.0 Beta 3; Combat
 
 // Generate a strip of buttons, out of buttons.
 function template_button_strip($button_strip, $direction = 'top', $force_reset = false, $custom_td = '')
