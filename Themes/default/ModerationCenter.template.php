@@ -686,7 +686,6 @@ function template_moderation_settings()
 			<tr class="windowbg2" valign="top">
 				<td width="50%">
 					<b>', $txt['mc_prefs_homepage'], ':</b>
-					<div class="smalltext">', $txt['mc_prefs_homepage_desc'], '</div>
 				</td>
 				<td width="50%">';
 

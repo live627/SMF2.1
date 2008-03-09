@@ -521,6 +521,8 @@ function DownloadLanguage()
 		elseif (!empty($install_files))
 		{
 			$archive_content = read_tgz_file('http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), $boarddir, false, true, $install_files);
+			// Make sure the files aren't stuck in the cache.
+			package_flush_cache();
 			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id']);
 
 			clean_cache('lang');
@@ -1030,7 +1032,7 @@ function list_getLanguages()
 	while ($entry = $dir->read())
 	{
 		// We're only after the index.language.php file.
-		if (preg_match('~^index\.([A-Za-z0-9]+)\.php$~', $entry, $matches) == 0)
+		if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
 			continue;
 
 		// Load the file to get the character set.
@@ -1091,7 +1093,7 @@ function ModifyLanguage()
 	list($theme_id, $file_id) = empty($_REQUEST['tfid']) || strpos($_REQUEST['tfid'], '+') === false ? array(1, '') : explode('+', $_REQUEST['tfid']);
 
 	// Clean the ID - just in case.
-	preg_match('~([A-Za-z0-9]+)~', $context['lang_id'], $matches);
+	preg_match('~([A-Za-z0-9_]+)~', $context['lang_id'], $matches);
 	$context['lang_id'] = $matches[1];
 
 	// Get all the theme data.

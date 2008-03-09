@@ -27,6 +27,9 @@ March 2008
  + Added the ability to support tabs to the generic list. (Subs-List.php, GenericList template)
  * Changed the order subscription page looks in the profile section. (ManagePaid template)
  ! Better handle replacing of smileys in the WYSIWYG editor. (Subs-Editor.php) [Bug 1477]
+ & The description for the moderation center boxes setting is no longer needed as it now users checkboxes. (Moderation Center template, Moderation Center language file) [Bug 1667]
+ ! Language files downloaded from the admin panel were not always saved to the disk correctly. (ManageServer.php) [Bug 1538]
+ ! Language files with an underscore didn't work with the language editor. (ManageServer.php)
 
 
 February 2008

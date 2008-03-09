@@ -108,7 +108,6 @@ $txt['mc_settings'] = 'Change Settings';
 $txt['mc_prefs_title'] = 'Moderation Preferences';
 $txt['mc_prefs_desc'] = 'This section allows you to set some personal preferences for moderation related activities such as email notifications.';
 $txt['mc_prefs_homepage'] = 'Items to show on moderation homepage';
-$txt['mc_prefs_homepage_desc'] = 'Use shift and ctrl to select more than one item.';
 $txt['mc_prefs_latest_news'] = 'SM News';
 $txt['mc_prefs_show_reports'] = 'Show open report count in forum header';
 $txt['mc_prefs_notify_report'] = 'Notify of topic reports';

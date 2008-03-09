@@ -2500,7 +2500,7 @@ function package_chmod($filename, $perm_state = 'writable', $track_change = fals
 			if ($perm_state != 'writable')
 				@chmod($chmod_file, $perm_state == 'execute' ? 0755 : 0644);
 			else
-			{	
+			{
 				if (!@is_writable($chmod_file))
 					@chmod($chmod_file, 0755);
 				if (!@is_writable($chmod_file))
@@ -2521,7 +2521,7 @@ function package_chmod($filename, $perm_state = 'writable', $track_change = fals
 						fclose($fp);
 					else
 						closedir($fp);
-	
+
 					// It worked!
 					if ($track_change)
 						$_SESSION['pack_ftp']['original_perms'][$chmod_file] = $file_permissions;
