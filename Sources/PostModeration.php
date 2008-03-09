@@ -354,7 +354,7 @@ function UnapprovedAttachments()
 			SELECT a.id_attach
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
-				LEFT JOIN {db_prefix}boards AS board ON (m.id_board = b.id_board)
+				LEFT JOIN {db_prefix}boards AS b ON (m.id_board = b.id_board)
 			WHERE a.id_attach IN ({array_int:attachments})
 				AND a.approved = {int:not_approved}
 				AND a.attachment_type = {int:attachment_type}
