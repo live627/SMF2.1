@@ -75,6 +75,7 @@ $txt['paid_total'] = 'Total';
 $txt['paid_is_active'] = 'Activated';
 $txt['paid_none_yet'] = 'You haven\'t set up any subscriptions yet.';
 $txt['paid_payments_pending'] = 'Payments Pending';
+$txt['paid_order'] = 'Order';
 
 $txt['yes'] = 'Yes';
 $txt['no'] = 'No';

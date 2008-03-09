@@ -30,6 +30,7 @@ March 2008
  & The description for the moderation center boxes setting is no longer needed as it now users checkboxes. (Moderation Center template, Moderation Center language file) [Bug 1667]
  ! Language files downloaded from the admin panel were not always saved to the disk correctly. (ManageServer.php) [Bug 1538]
  ! Language files with an underscore didn't work with the language editor. (ManageServer.php)
+ & The order button's text was hardcoded in the subscriptions page. (ManagePaid template, ManagePaid language file) [Bug 1697]
 
 
 February 2008

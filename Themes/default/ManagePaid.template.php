@@ -471,7 +471,7 @@ function template_user_subscription()
 					', sprintf($modSettings['paid_currency_symbol'], $subscription['costs']['fixed']);
 
 				echo '
-					<input type="submit" name="sub_id[', $subscription['id'], ']" value="Order" />';
+					<input type="submit" name="sub_id[', $subscription['id'], ']" value="', $txt['paid_order'], '" />';
 			}
 			else
 				echo '
