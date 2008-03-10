@@ -1072,7 +1072,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'code',
 				'type' => 'unparsed_content',
-				'content' => '<div class="codeheader">' . $txt['code'] . ': <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><div class="code">' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</div>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': <a href="javascript:void(0);" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code>' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</code>',
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1110,7 +1110,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'code',
 				'type' => 'unparsed_equals_content',
-				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><div class="code">' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</div>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2) <a href="#" onclick="return smfSelectText(this);" class="codeoperation">' . $txt['code_select'] . '</a></div><code>' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</code>',
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1355,8 +1355,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'quote',
-				'before' => '<div class="quoteheader">' . $txt['quote'] . '</div><div class="quote">',
-				'after' => '</div>',
+				'before' => '<div class="quoteheader">' . $txt['quote'] . '</div><blockquote>',
+				'after' => '</blockquote>',
 				'block_level' => true,
 			),
 			array(
@@ -1364,15 +1364,15 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'parameters' => array(
 					'author' => array('match' => '(.{1,192}?)', 'quoted' => true),
 				),
-				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><div class="quote">',
-				'after' => '</div>',
+				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><blockquote>',
+				'after' => '</blockquote>',
 				'block_level' => true,
 			),
 			array(
 				'tag' => 'quote',
 				'type' => 'unparsed_equals',
-				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': $1</div><div class="quote">',
-				'after' => '</div>',
+				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': $1</div><blockquote>',
+				'after' => '</blockquote>',
 				'quoted' => 'optional',
 				'block_level' => true,
 			),
@@ -1383,8 +1383,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'link' => array('match' => '(?:board=\d+;)?((?:topic|threadid)=[\dmsg#\./]{1,40}(?:;start=[\dmsg#\./]{1,40})?|action=profile;u=\d+)'),
 					'date' => array('match' => '(\d+)', 'validate' => 'timeformat'),
 				),
-				'before' => '<div class="quoteheader"><a href="' . $scripturl . '?{link}">' . $txt['quote_from'] . ': {author} ' . $txt['search_on'] . ' {date}</a></div><div class="quote">',
-				'after' => '</div>',
+				'before' => '<div class="quoteheader"><a href="' . $scripturl . '?{link}">' . $txt['quote_from'] . ': {author} ' . $txt['search_on'] . ' {date}</a></div><blockquote>',
+				'after' => '</blockquote>',
 				'block_level' => true,
 			),
 			array(
@@ -1392,8 +1392,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'parameters' => array(
 					'author' => array('match' => '(.{1,192}?)'),
 				),
-				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><div class="quote">',
-				'after' => '</div>',
+				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><blockquote>',
+				'after' => '</blockquote>',
 				'block_level' => true,
 			),
 			array(

@@ -43,6 +43,7 @@ March 2008
  ! Wrong index name was being used for paid subscriptions errors. (subscriptions.php)
  ! Stop adding new people adding more than one and/or submitting the form. (suggest.js) [Bug 1659]
  ! Group requests were being made much too safe. (Groups.php) [Bug 1706]
+ ! Use <code> for BBC code tag and <blockquote> for BBC quote tag. (Subs.php, style.css)
 
 
 February 2008

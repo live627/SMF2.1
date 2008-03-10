@@ -95,7 +95,7 @@ a img
 	border: 0;
 }
 /* A quote, perhaps from another post. */
-.quote
+.quote, blockquote
 {
 	color: #000000;
 	background-color: #D7DAEC;
@@ -107,10 +107,11 @@ a img
 }
 
 /* A code block - maybe even PHP ;). */
-.code
+code
 {
 	color: #000000;
 	background-color: #dddddd;
+	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	line-height: 1.3em;

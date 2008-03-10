@@ -82,7 +82,7 @@ hr
 }
 
 /* A quote, perhaps from another post. */
-.quote
+blockquote
 {
 	color: #000000;
 	background-color: #dee7ef;
@@ -93,7 +93,7 @@ hr
 }
 
 /* A code block - maybe even PHP ;). */
-.code
+code
 {
 	color: #000000;
 	background-color: #cccccc;
