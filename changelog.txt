@@ -41,6 +41,7 @@ March 2008
  & Duplicated txt entry. (Profile language file) [Bug 1661]
  & Some old email text strings hadn't been removed. (ManageMembers language file) [Bug 1565]
  ! Wrong index name was being used for paid subscriptions errors. (subscriptions.php)
+ ! Stop adding new people adding more than one and/or submitting the form. (suggest.js) [Bug 1659]
 
 
 February 2008

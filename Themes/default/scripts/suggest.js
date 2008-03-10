@@ -61,7 +61,15 @@ function smfSuggest(sessionID, textID)
 					onElementSubmitted();
 			}
 
-			// Don't let it submit anything.
+			// Do our best to stop it submitting the form!
+			if (is_ie && ev.cancelBubble)
+				ev.cancelBubble = true;
+			else if (ev.stopPropagation)
+			{
+				ev.stopPropagation();
+				ev.preventDefault();
+			}
+
 			void(0);
 			return false;
 		}
@@ -191,8 +199,44 @@ function smfSuggest(sessionID, textID)
 			var curMember = {'memberid': curElement.memberid, 'membername': curElement.innerHTML};
 			addUserLink(curMember);
 		}
+		// Otherwise clear things down.
+		else
+		{
+			removeLastSearchString();
+			autoSuggestUpdate();
+		}
 
 		selectedDiv = false;
+	}
+
+	// Remove the last searched for name from the search box.
+	function removeLastSearchString()
+	{
+		// Remove the text we searched for from the div.
+		tempText = textHandle.value.toLowerCase();
+		tempSearch = lastSearch.toLowerCase();
+		startString = tempText.indexOf(tempSearch);
+		// Just attempt to remove the bits we just searched for.
+		if (startString != -1)
+		{
+			while (startString > 0)
+			{
+				if (tempText.charAt(startString - 1) == '"' || tempText.charAt(startString - 1) == ',' || tempText.charAt(startString - 1) == ' ')
+				{
+					startString--;
+					if (tempText.charAt(startString - 1) == ',')
+						break;
+				}
+				else
+					break;
+			}
+
+			// Now remove anything from startString upwards.
+			textHandle.value = textHandle.value.substr(0, startString);
+		}
+		// Just take it all.
+		else
+			textHandle.value = '';
 	}
 
 	// Add a result if not already done.
@@ -223,31 +267,8 @@ function smfSuggest(sessionID, textID)
 			}
 		}
 
-		// Remove the text we searched for from the div.
-		tempText = textHandle.value.toLowerCase();
-		tempSearch = lastSearch.toLowerCase();
-		startString = tempText.indexOf(tempSearch);
-		// Just attempt to remove the bits we just searched for.
-		if (startString != -1)
-		{
-			while (startString > 0)
-			{
-				if (tempText.charAt(startString - 1) == '"' || tempText.charAt(startString - 1) == ',' || tempText.charAt(startString - 1) == ' ')
-				{
-					startString--;
-					if (tempText.charAt(startString - 1) == ',')
-						break;
-				}
-				else
-					break;
-			}
-
-			// Now remove anything from startString upwards.
-			textHandle.value = textHandle.value.substr(0, startString);
-		}
-		// Just take it all.
-		else
-			textHandle.value = '';
+		// Clear the div a bit.
+		removeLastSearchString();
 
 		// If we came from a submit, and there's still more to go, turn on auto add for all the other things.
 		if (textHandle.value != '' && fromSubmit)
