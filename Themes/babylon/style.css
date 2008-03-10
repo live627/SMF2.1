@@ -103,7 +103,7 @@ code
 	padding: 1px;
 	width: 99%;
 	/* Don't wrap its contents, and show scrollbars. */
-	white-space: nowrap;
+	white-space: pre;
 	overflow: auto;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
