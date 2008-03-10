@@ -97,6 +97,7 @@ code
 {
 	color: #000000;
 	background-color: #cccccc;
+	display: block;
 	border: 1px solid black;
 	margin: 1px auto 1px auto;
 	padding: 1px;
