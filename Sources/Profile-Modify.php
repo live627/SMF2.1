@@ -2980,8 +2980,6 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	// If we're requesting, add the note then return.
 	if ($changeType == 'request')
 	{
-		$reason = htmlspecialchars($_POST['reason']);
-
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}log_group_requests
@@ -3003,7 +3001,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 				'id_member' => 'int', 'id_group' => 'int', 'time_applied' => 'int', 'reason' => 'string-65534',
 			),
 			array(
-				$memID, $group_id, time(), $reason,
+				$memID, $group_id, time(), $_POST['reason'],
 			),
 			array('id_request')
 		);

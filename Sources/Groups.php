@@ -868,7 +868,7 @@ function GroupRequests()
 					'value' => $txt['mc_groupr_reason'],
 				),
 				'data' => array(
-					'db_htmlsafe' => 'reason',
+					'db' => 'reason',
 				),
 			),
 			'action' => array(
