@@ -271,7 +271,7 @@ function generateSubscriptionError($text)
 			'ERROR' => $text,
 		);
 
-		emailAdmins('paid_subscription_new', $replacements, $notify_users);
+		emailAdmins('paid_subscription_error', $replacements, $notify_users);
 	}
 
 	// Then just log and die.

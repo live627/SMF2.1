@@ -40,6 +40,7 @@ March 2008
  - Removed the ability to pass an unhashed password to the login function via GET. (LogInOut.php) [Bug 467]
  & Duplicated txt entry. (Profile language file) [Bug 1661]
  & Some old email text strings hadn't been removed. (ManageMembers language file) [Bug 1565]
+ ! Wrong index name was being used for paid subscriptions errors. (subscriptions.php)
 
 
 February 2008
