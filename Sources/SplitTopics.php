@@ -546,8 +546,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	// Find the new first and last not in the list. (old topic)
 	$request = $smcFunc['db_query']('', '
 		SELECT 
-			MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count,
-			{raw:approved_value} AS approved
+			MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count, approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:id_topic})
 		WHERE m.id_msg NOT IN ({array_int:no_msg_list})
@@ -558,7 +557,6 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		array(
 			'id_topic' => $split1_ID_TOPIC,
 			'no_msg_list' => $splitMessages,
-			'approved_value' => $modSettings['postmod_active'] ? 'm.approved' : '1',
 		)
 	);
 	// You can't select ALL the messages!
@@ -595,8 +593,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// Find the first and last in the list. (new topic)
 	$request = $smcFunc['db_query']('', '
-		SELECT MIN(id_msg) AS myid_first_msg, MAX(id_msg) AS myid_last_msg, COUNT(*) AS message_count,
-			{raw:approved_value} AS approved
+		SELECT MIN(id_msg) AS myid_first_msg, MAX(id_msg) AS myid_last_msg, COUNT(*) AS message_count, approved
 		FROM {db_prefix}messages
 		WHERE id_msg IN ({array_int:msg_list})
 			AND id_topic = {int:id_topic}
@@ -606,7 +603,6 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		array(
 			'msg_list' => $splitMessages,
 			'id_topic' => $split1_ID_TOPIC,
-			'approved_value' => $modSettings['postmod_active'] ? 'approved' : '1',
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))

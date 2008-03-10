@@ -44,6 +44,7 @@ March 2008
  ! Stop adding new people adding more than one and/or submitting the form. (suggest.js) [Bug 1659]
  ! Group requests were being made much too safe. (Groups.php) [Bug 1706]
  ! Use <code> for BBC code tag and <blockquote> for BBC quote tag. (Subs.php, style.css)
+ ! Hopefully fix some post moderation issues. (Several files) [Bug 1707]
 
 
 February 2008

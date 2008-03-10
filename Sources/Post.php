@@ -1906,7 +1906,7 @@ function Post2()
 		elseif (empty($_REQUEST['msg']))
 		{
 			// Only send it to everyone if the topic is approved, otherwise just to the topic starter if they want it.
-			if ($modSettings['postmod_active'] && $topic_info['approved'])
+			if ($topic_info['approved'])
 				sendNotifications($topic, 'reply');
 			else
 				sendNotifications($topic, 'reply', array(), $topic_info['id_member_started']);

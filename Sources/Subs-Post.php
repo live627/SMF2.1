@@ -1910,7 +1910,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	);
 
 	// Increase the number of posts and topics on the board.
-	if (!$modSettings['postmod_active'] || $msgOptions['approved'])
+	if ($msgOptions['approved'])
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET num_posts = num_posts + 1' . ($new_topic ? ', num_topics = num_topics + 1' : '') . '
@@ -2013,7 +2013,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	updateStats('message', true, $msgOptions['id']);
 
 	// Update the last message on the board assuming it's approved AND the topic is.
-	if (!$modSettings['postmod_active'] || $msgOptions['approved'])
+	if ($msgOptions['approved'])
 		updateLastMessages($topicOptions['board'], $new_topic || !empty($topicOptions['is_approved']) ? $msgOptions['id'] : 0);
 
 	// Alright, done now... we can abort now, I guess... at least this much is done.
@@ -2047,7 +2047,7 @@ function createAttachment(&$attachmentOptions)
 	$attachmentOptions['errors'] = array();
 	if (!isset($attachmentOptions['post']))
 		$attachmentOptions['post'] = 0;
-	if (!$modSettings['postmod_active'] || !isset($attachmentOptions['approved']))
+	if (!isset($attachmentOptions['approved']))
 		$attachmentOptions['approved'] = 1;
 
 	$already_uploaded = preg_match('~^post_tmp_' . $attachmentOptions['poster'] . '_\d+$~', $attachmentOptions['tmp_name']) != 0;
@@ -2460,7 +2460,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	}
 
 	// Finally, if we are setting the approved state we need to do much more work :(
-	if (!$modSettings['postmod_active'] || isset($msgOptions['approved']))
+	if ($modSettings['postmod_active'] && isset($msgOptions['approved']))
 		approvePosts($msgOptions['id'], $msgOptions['approved']);
 
 	return true;

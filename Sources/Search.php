@@ -381,7 +381,7 @@ function PlushSearch2()
 		$request = $smcFunc['db_query']('', '
 			SELECT ' . (empty($search_params['maxage']) ? '0, ' : 'IFNULL(MIN(id_msg), -1), ') . (empty($search_params['minage']) ? '0' : 'IFNULL(MAX(id_msg), -1)') . '
 			FROM {db_prefix}messages
-			WHERE TRUE' . ($modSettings['postmod_active'] ? '
+			WHERE 1=1' . ($modSettings['postmod_active'] ? '
 				AND approved = {int:is_approved_true}' : '') . (empty($search_params['minage']) ? '' : '
 				AND poster_time <= {int:timestamp_minimum_age}') . (empty($search_params['maxage']) ? '' : '
 				AND poster_time >= {int:timestamp_maximum_age}'),

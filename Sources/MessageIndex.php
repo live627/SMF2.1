@@ -769,7 +769,7 @@ function QuickModeration()
 				elseif ($_REQUEST['actions'][$row['id_topic']] == 'lock' && !in_array(0, $boards_can['lock_any']) && !in_array($row['id_board'], $boards_can['lock_any']) && ($row['id_member_started'] != $user_info['id'] || $locked == 1 || (!in_array(0, $boards_can['lock_own']) && !in_array($row['id_board'], $boards_can['lock_own']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 				// If the topic is approved then you need permission to approve the posts within.
-				elseif ($_REQUEST['actions'][$row['id_topic']] == 'approve' && (!$modSettings['postmod_active'] || !$row['unapproved_posts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))))
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'approve' && (!$row['unapproved_posts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 			}
 		}
