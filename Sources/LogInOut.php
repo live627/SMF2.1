@@ -188,7 +188,7 @@ function Login2()
 	}
 
 	// Hmm... maybe 'admin' will login with no password. Uhh... NO!
-	if ((!isset($_REQUEST['passwrd']) || $_REQUEST['passwrd'] == '') && (!isset($_REQUEST['hash_passwrd']) || strlen($_REQUEST['hash_passwrd']) != 40))
+	if ((!isset($_POST['passwrd']) || $_POST['passwrd'] == '') && (!isset($_REQUEST['hash_passwrd']) || strlen($_REQUEST['hash_passwrd']) != 40))
 	{
 		$context['login_errors'] = array($txt['no_password']);
 		return;
@@ -276,7 +276,7 @@ function Login2()
 		}
 	}
 	else
-		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_REQUEST['passwrd']));
+		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
 
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
@@ -288,39 +288,39 @@ function Login2()
 		if ($user_settings['password_salt'] == '')
 		{
 			// YaBB SE, Discus, MD5 (used a lot), SHA-1 (used some), SMF 1.0.x, IkonBoard, and none at all.
-			$other_passwords[] = crypt($_REQUEST['passwrd'], substr($_REQUEST['passwrd'], 0, 2));
-			$other_passwords[] = crypt($_REQUEST['passwrd'], substr($user_settings['passwd'], 0, 2));
-			$other_passwords[] = md5($_REQUEST['passwrd']);
-			$other_passwords[] = sha1($_REQUEST['passwrd']);
-			$other_passwords[] = md5_hmac($_REQUEST['passwrd'], strtolower($user_settings['member_name']));
-			$other_passwords[] = md5($_REQUEST['passwrd'] . strtolower($user_settings['member_name']));
-			$other_passwords[] = $_REQUEST['passwrd'];
+			$other_passwords[] = crypt($_POST['passwrd'], substr($_POST['passwrd'], 0, 2));
+			$other_passwords[] = crypt($_POST['passwrd'], substr($user_settings['passwd'], 0, 2));
+			$other_passwords[] = md5($_POST['passwrd']);
+			$other_passwords[] = sha1($_POST['passwrd']);
+			$other_passwords[] = md5_hmac($_POST['passwrd'], strtolower($user_settings['member_name']));
+			$other_passwords[] = md5($_POST['passwrd'] . strtolower($user_settings['member_name']));
+			$other_passwords[] = $_POST['passwrd'];
 
 			// This one is a strange one... MyPHP, crypt() on the MD5 hash.
-			$other_passwords[] = crypt(md5($_REQUEST['passwrd']), md5($_REQUEST['passwrd']));
+			$other_passwords[] = crypt(md5($_POST['passwrd']), md5($_POST['passwrd']));
 
 			// Snitz style - SHA-256.  Technically, this is a downgrade, but most PHP configurations don't support sha256 anyway.
 			if (strlen($user_settings['passwd']) == 64 && function_exists('mhash') && defined('MHASH_SHA256'))
-				$other_passwords[] = bin2hex(mhash(MHASH_SHA256, $_REQUEST['passwrd']));
+				$other_passwords[] = bin2hex(mhash(MHASH_SHA256, $_POST['passwrd']));
 
 			// phpBB3 users new hashing.  We now support it as well ;).
-			$other_passwords[] = phpBB3_password_check($_REQUEST['passwrd'], $user_settings['passwd']);
+			$other_passwords[] = phpBB3_password_check($_POST['passwrd'], $user_settings['passwd']);
 		}
 		// The hash should be 40 if it's SHA-1, so we're safe with more here too.
 		elseif (strlen($user_settings['passwd']) == 32)
 		{
 			// vBulletin 3 style hashing?  Let's welcome them with open arms \o/.
-			$other_passwords[] = md5(md5($_REQUEST['passwrd']) . $user_settings['password_salt']);
+			$other_passwords[] = md5(md5($_POST['passwrd']) . $user_settings['password_salt']);
 			// Hmm.. p'raps it's Invision 2 style?
-			$other_passwords[] = md5(md5($user_settings['password_salt']) . md5($_REQUEST['passwrd']));
+			$other_passwords[] = md5(md5($user_settings['password_salt']) . md5($_POST['passwrd']));
 		}
 
 		// Maybe they are using a hash from before the password fix.
-		$other_passwords[] = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_REQUEST['passwrd']));
+		$other_passwords[] = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
 
 		// SMF's sha1 function can give a funny result on Linux (Not our fault!). If we've now got the real one let the old one be valid!
 		require_once($sourcedir . '/Subs-Compat.php');
-		$other_passwords[] = sha1_smf(strtolower($user_settings['member_name']) . un_htmlspecialchars($_REQUEST['passwrd']));
+		$other_passwords[] = sha1_smf(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
 
 		// Whichever encryption it was using, let's make it use SMF's now ;).
 		if (in_array($user_settings['passwd'], $other_passwords))

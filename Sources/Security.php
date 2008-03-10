@@ -591,10 +591,12 @@ function isBannedEmail($email, $restriction, $error)
 		FROM {db_prefix}ban_items AS bi
 			INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
 		WHERE {string:email} LIKE bi.email_address
-			AND (bg.' . $restriction . ' = {int:cannot_access} OR bg.cannot_access = {int:cannot_access})',
+			AND (bg.' . $restriction . ' = {int:cannot_access} OR bg.cannot_access = {int:cannot_access})
+			AND bg.expire_time >= {int:now}',
 		array(
 			'email' => $email,
 			'cannot_access' => 1,
+			'now' => time(),
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))

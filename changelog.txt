@@ -32,6 +32,14 @@ March 2008
  ! Language files with an underscore didn't work with the language editor. (ManageServer.php)
  & The order button's text was hardcoded in the subscriptions page. (ManagePaid template, ManagePaid language file) [Bug 1697]
  ! Attachments couldn't be approved or deleted from the moderation center due to a database error. (PostModeration.php) [Bug 1693]
+ ! Bans that have expired shouldn't trigger a hit on the email address. (Security.php) [Bug 1684]
+ & Missing global. (ManagePaid language file) [Bug 1698]
+ ! Copyright function could sometimes spit out bad HTML. (Subs.php)
+ * Calendar template was missing an opening div. (Calendar template) [Bug 1637]
+ * Make lists show up better in wireless mode. (Wireless template) [Bug 1349]
+ - Removed the ability to pass an unhashed password to the login function via GET. (LogInOut.php) [Bug 467]
+ & Duplicated txt entry. (Profile language file) [Bug 1661]
+ & Some old email text strings hadn't been removed. (ManageMembers language file) [Bug 1565]
 
 
 February 2008

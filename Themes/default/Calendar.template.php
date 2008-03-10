@@ -5,9 +5,9 @@
 function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
 	echo '
 		<div style="padding: 3px;">', theme_linktree(), '</div>
+		<div>
 			<div style="padding: 1px; align: center; float: left; width: 200px;">
 					', template_show_month_grid('prev'), '
 					', template_show_month_grid('current'), '
@@ -18,7 +18,7 @@ function template_main()
 			</div>
 		</div>
 		<form style="clear: both;" action="', $scripturl, '?action=calendar" method="post" accept-charset="', $context['character_set'], '">
-			<table cellspacing="0" cellpadding="3" width="100%" class="tborder"">
+			<table cellspacing="0" cellpadding="3" width="100%" class="tborder">
 				<tr class="titlebg2">
 					<td align="center">';
 	// Show a little "post event" button?
@@ -328,7 +328,7 @@ function template_show_month_grid($grid_name)
 		{
 			// If this is today, make it a different color and show a border.
 			echo '
-				<td valign="top" style="height: ', $calendar_data['size'] == 'small' ? '20' : '100', 'px; padding: 2px;', $calendar_data['size'] == 'small' ? 'font-size: x-small;' : '', '" class="', $day['is_today'] ? 'calendar_today' : 'windowbg' , '">';
+				<td valign="top" align="center" style="height: ', $calendar_data['size'] == 'small' ? '20' : '100', 'px; padding: 2px;', $calendar_data['size'] == 'small' ? 'font-size: x-small;' : '', '" class="', $day['is_today'] ? 'calendar_today' : 'windowbg' , '">';
 
 			// Skip it if it should be blank - it's not a day if it has no number.
 			if (!empty($day['day']))

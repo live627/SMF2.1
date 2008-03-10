@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
+global $boardurl;
+
 // Symbols.
 $txt['usd_symbol'] = '$%1.2f';
 $txt['eur_symbol'] = '&euro;%1.2f';

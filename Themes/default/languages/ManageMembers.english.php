@@ -120,17 +120,6 @@ $txt['admin_browse_outstanding_days_2'] = 'days ago';
 $txt['admin_browse_outstanding_perform'] = 'Perform the following action';
 $txt['admin_browse_outstanding_go'] = 'Perform Action';
 
-// Use numeric entities in the below nine strings.
-$txt['admin_approve_reject'] = 'Registration Rejected';
-$txt['admin_approve_reject_desc'] = 'Regrettably, your application to join ' . $context['forum_name'] . ' has been rejected.';
-$txt['admin_approve_delete'] = 'Account Deleted';
-$txt['admin_approve_delete_desc'] = 'Your account on ' . $context['forum_name'] . ' has been deleted.  This may be because you never activated your account, in which case you should be able to register again.';
-$txt['admin_approve_remind'] = 'Registration Reminder';
-$txt['admin_approve_remind_desc'] = 'You still have not activated your account at';
-$txt['admin_approve_remind_desc2'] = 'Please click the link below to activate your account:';
-$txt['admin_approve_accept_desc'] = 'Your account has been activated manually by the admin and you can now login and post.';
-$txt['admin_approve_require_activation'] = 'Your account on ' . $context['forum_name'] . ' has been approved by the forum administrator, and must now be activated before you can begin posting.';
-
 $txt['check_for_duplicate'] = 'Check for Duplicates';
 $txt['dont_check_for_duplicate'] = 'Don\'t Check for Duplicates';
 $txt['duplicates'] = 'Duplicates';
