@@ -13,7 +13,7 @@ function template_main()
 			<tr>
 				<td colspan="4" class="catbg headerpadding">', $txt['parent_boards'], '</td>
 			</tr>';
-	
+
 		foreach ($context['boards'] as $board)
 		{
 			echo '

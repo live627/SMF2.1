@@ -133,7 +133,7 @@ if (isset($_GET['ssi']))
 
 	loadUserSettings();
 	loadPermissions();
-} 
+}
 
 // All the non-SSI stuff.
 if (!function_exists('un_htmlspecialchars'))
@@ -4128,7 +4128,7 @@ function template_database_changes()
 					getData += "&" + oXMLDoc.getElementsByTagName("get")[i].getAttribute("key") + "=";
 					for (var j = 0; j < oXMLDoc.getElementsByTagName("get")[i].childNodes.length; j++)
 					{
-						 getData += oXMLDoc.getElementsByTagName("get")[i].childNodes[j].nodeValue;
+						getData += oXMLDoc.getElementsByTagName("get")[i].childNodes[j].nodeValue;
 					}
 				}
 

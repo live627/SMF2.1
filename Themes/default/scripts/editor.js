@@ -240,7 +240,7 @@ SmfEditor.prototype.init = function()
 				{
 					continue;
 				}
-			
+
 				// Manually try to find the rich_editor class.
 				for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
 				{
@@ -290,7 +290,7 @@ SmfEditor.prototype.init = function()
 				this.instanceRef.editorKeyUp();
 			}
 		}
-	
+
 		// Show the iframe only if wysiwyrg is on - and hide the text area.
 		this.oTextHandle.style.display = this.bRichTextEnabled ? 'none' : '';
 		this.oFrameHandle.style.display = this.bRichTextEnabled ? '' : 'none';
@@ -587,7 +587,7 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 				oRange = this.oFrameDocument.createRange();
 
 				if (oContainer.nodeType == 3)
-				{ 
+				{
 					var oTextNode = oContainer;
 					oContainer = oTextNode.parentNode;
 					sText = oTextNode.nodeValue;
@@ -608,11 +608,11 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 					}
 				}
 				else
-				{ 
+				{
 					oContainer.insertBefore(oElement, oContainer.childNodes[iPos]);
 					oRange.setEnd(oContainer, iPos + 1);
 					oRange.setStart(oContainer, iPos + 1);
-				} 
+				}
 				oSelection.addRange(oRange);*/
 			}
 		}
@@ -641,7 +641,7 @@ SmfEditor.prototype.addSmiley = function(sCode, sSmileyName, sDesc)
 	{
 		// Setup the event callback.
 		oSmileyHandle.instanceRef = this;
-		oSmileyHandle.onclick = function() 
+		oSmileyHandle.onclick = function()
 		{
 			this.instanceRef.smileyEventHandler(this);
 		};
@@ -663,7 +663,7 @@ SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
 		sAfter: sAfter,
 		bIsActive: false
 	};
-	
+
 /*
 	Array(4);
 	this.aButtonControls[sCode][0] = oCodeHandle;
@@ -684,7 +684,7 @@ SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
 	{
 		this.instanceRef.buttonEventHandler(this, 'mouseover');
 	}
-	oCodeHandle.onmouseout = function() 
+	oCodeHandle.onmouseout = function()
 	{
 		this.instanceRef.buttonEventHandler(this, 'mouseout');
 	}

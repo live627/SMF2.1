@@ -290,7 +290,7 @@ function getBoardIndex($boardIndexOptions)
 	if (!empty($boardIndexOptions['set_latest_post']) && !empty($latest_post['ref']))
 		$context['latest_post'] = $latest_post['ref'];
 
-	return 	$boardIndexOptions['include_categories'] ? $categories : $this_category;
+	return $boardIndexOptions['include_categories'] ? $categories : $this_category;
 }
 
 ?>

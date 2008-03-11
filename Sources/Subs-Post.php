@@ -1595,7 +1595,7 @@ function sendNotifications($topics, $type, $exclude = array(), $members_only = a
 			AND mem.notify_types < {int:notify_types}
 			AND mem.notify_regularity < {int:notify_regularity}
 			AND mem.is_activated = {int:is_activated}
-			AND ln.id_member != {int:current_member}' . 
+			AND ln.id_member != {int:current_member}' .
 			(empty($members_only) ? '' : ' AND ln.id_member IN ({array_int:members_only})') . '
 		ORDER BY mem.lngfile',
 		array(

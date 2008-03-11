@@ -446,10 +446,10 @@ function PlushSearch2()
 		{
 			$userQuery = $smcFunc['db_quote'](
 				'm.id_member = {int:id_member_guest} AND ({raw:match_possible_guest_names})',
-				 array(
-				 	'id_member_guest' => 0,
-				 	'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
-				 )
+				array(
+					'id_member_guest' => 0,
+					'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
+				)
 			);
 		}
 		else
@@ -459,11 +459,11 @@ function PlushSearch2()
 				$memberlist[] = $row['id_member'];
 			$userQuery = $smcFunc['db_quote'](
 				'(m.id_member IN ({array_int:matched_members}) OR (m.id_member = {int:id_member_guest} AND ({raw:match_possible_guest_names})))',
-				 array(
-				 	'matched_members' => $memberlist,
-				 	'id_member_guest' => 0,
-				 	'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
-				 )
+				array(
+					'matched_members' => $memberlist,
+					'id_member_guest' => 0,
+					'match_possible_guest_names' => 'm.poster_name LIKE ' . implode(' OR m.poster_name LIKE ', $realNameMatches),
+				)
 			);
 		}
 		$smcFunc['db_free_result']($request);

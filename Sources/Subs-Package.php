@@ -100,14 +100,14 @@ if (!defined('SMF'))
 
 	array parsePackageInfo(xmlArray &package, bool testing_only = true,
 			string method = 'install', string previous_version = '')
-		 - parses the actions in package-info.xml files from packages.
-		 - package should be an xmlArray with package-info as its base.
-		 - testing_only should be true if the package should not actually be
+		- parses the actions in package-info.xml files from packages.
+		- package should be an xmlArray with package-info as its base.
+		- testing_only should be true if the package should not actually be
 		   applied.
-		 - method is upgrade, install, or uninstall.  Its default is install.
-		 - previous_version should be set to the previous installed version
+		- method is upgrade, install, or uninstall.  Its default is install.
+		- previous_version should be set to the previous installed version
 		   of this package, if any.
-		 - does not handle failure terribly well; testing first is always
+		- does not handle failure terribly well; testing first is always
 		   better.
 		- returns an array of those changes made.
 

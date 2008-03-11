@@ -999,7 +999,7 @@ function extract_gzip($data)
 		}
 	
 		return $crc;
-	} 
+	}
 
 	if ($crc['crc32'] != smf_crc32($data))
 		return false;

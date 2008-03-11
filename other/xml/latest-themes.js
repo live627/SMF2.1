@@ -65,7 +65,7 @@ $request = $smcFunc['db_query']('', "
 	FROM {$theme_prefix}themes AS th
 	LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
 	LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
-	WHERE th.status=1 
+	WHERE th.status=1
 		AND th.id_theme != $featured
 	ORDER BY submit_time DESC
 	LIMIT 3", __FILE__, __LINE__);
@@ -185,7 +185,7 @@ window.smfLatestThemes += '\
 			</ul>';
 if ( smf_featured !=0 || smf_random != 0 )
 {
-	
+
 	if ( smf_featured != 0 )
 		window.smfLatestThemes += '\
 				<h4 style="padding: 4px 4px 0 4px; margin: 0;">Featured Theme</h4>\

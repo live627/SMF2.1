@@ -20,7 +20,7 @@ function template_generic_menu_sidebar_above()
 	$firstSection = true;
 	foreach ($menu_context['sections'] as $section)
 	{
-		// Show the section header 
+		// Show the section header
 		echo '
 			<h3 class="catbg">', $section['title'];
 

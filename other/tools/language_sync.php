@@ -22,10 +22,9 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-/*	                                                                          *
-*	See language_settings.php for a description of the language tools         *
-*	                                                                          *
-******************************************************************************/
+/**********************************************************************************
+*	See language_settings.php for a description of the language tools             *
+**********************************************************************************/
 
 require_once('./language_settings.php');
 

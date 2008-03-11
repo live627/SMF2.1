@@ -111,7 +111,7 @@ $latest_news = array(
 		'message_turkish' => 'SMF nin 1.0.6 sürümü çikti.  Bu sürümde 1.0.5 de bulunan bazi küçük hatalar ve potansiyel bir güvenlik açigi düzeltilmis bulunuyor. Bu güncellemeyi paket yöneticinizi veya diger metotlari kullanarak hemen uygulamaniz önerilir.',
 
 		'subject_german' => 'SMF 1.0.6',
-		'message_german' => 'SMF 1.0.6 wurde ver&ouml;ffentlicht. Diese Version behebt ein potentielles Sicherheitsrisiko und mehrere kleine Fehler, die nach Version 1.0.5 gefunden worden sind. Sie k&ouml;nnen Ihr Forum sofort mit Hilfe des Paket-Managers aktualisieren oder das Update-Paket herunterladen. Diese Version darf nicht mit SMF 1.1 benutzt werden!', 
+		'message_german' => 'SMF 1.0.6 wurde ver&ouml;ffentlicht. Diese Version behebt ein potentielles Sicherheitsrisiko und mehrere kleine Fehler, die nach Version 1.0.5 gefunden worden sind. Sie k&ouml;nnen Ihr Forum sofort mit Hilfe des Paket-Managers aktualisieren oder das Update-Paket herunterladen. Diese Version darf nicht mit SMF 1.1 benutzt werden!',
 	),
 	array(
 		'time' => 1138108185,
@@ -249,7 +249,7 @@ $latest_news = array(
 		'author_english' => 'Meriadoc',
 
 		'subject_german' => 'SMF 1.0.2',
- 		'message_german' => 'Ein paar kleine Fehler wurden in SMF gefunden, die meisten jedoch nur Server betreffend und einer im Paket-Manager. Ein Update wird dringend empfohlen! Im Paket-Manager oder auf der Downloadseite von Simplemachines finden Sie das neue Update..',
+		'message_german' => 'Ein paar kleine Fehler wurden in SMF gefunden, die meisten jedoch nur Server betreffend und einer im Paket-Manager. Ein Update wird dringend empfohlen! Im Paket-Manager oder auf der Downloadseite von Simplemachines finden Sie das neue Update..',
 
 		'subject_finnish' => 'SMF 1.0.2',
 
@@ -306,7 +306,7 @@ $latest_news = array(
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=22008.0',
 		'author_english' =>  'Peter Duggan',
 
- 		'subject_german' => 'Eine PHP Sicherheitsl&uuml;cke!',
+		'subject_german' => 'Eine PHP Sicherheitsl&uuml;cke!',
 		'message_german' => 'Eine neue Sicherheitsl&uuml;cke wurde in PHP gefunden (Programmiersprache von SMF). Fragen Sie bei Ihrem Host an, ob er so bald wie m&ouml;glich auf PHP 4.3.10 oder 5.0.3 aktualisiert. Sie k&ouml;nnen bis dahin auch einen Patch installieren, den Sie im Paket-Manager finden.',
 	),
 

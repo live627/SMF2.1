@@ -97,7 +97,7 @@ function sha1_ft(t, b, c, d)
 function sha1_kt(t)
 {
 	return (t < 20) ?  1518500249 : (t < 40) ?  1859775393 :
-	       (t < 60) ? -1894007588 : -899497514;
+		   (t < 60) ? -1894007588 : -899497514;
 }
 
 /*
@@ -177,7 +177,7 @@ function binb2hex(binarray)
 	for (var i = 0; i < binarray.length * 4; i++)
 	{
 		str += hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8+4)) & 0xF) +
-		       hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);
+			   hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);
 	}
 	return str;
 }
@@ -192,8 +192,8 @@ function binb2b64(binarray)
 	for (var i = 0; i < binarray.length * 4; i += 3)
 	{
 		var triplet = (((binarray[i   >> 2] >> 8 * (3 -  i   %4)) & 0xFF) << 16)
-		            | (((binarray[i+1 >> 2] >> 8 * (3 - (i+1)%4)) & 0xFF) << 8 )
-		            |  ((binarray[i+2 >> 2] >> 8 * (3 - (i+2)%4)) & 0xFF);
+					| (((binarray[i+1 >> 2] >> 8 * (3 - (i+1)%4)) & 0xFF) << 8 )
+					|  ((binarray[i+2 >> 2] >> 8 * (3 - (i+2)%4)) & 0xFF);
 		for (var j = 0; j < 4; j++)
 		{
 			if (i * 8 + j * 6 > binarray.length * 32) str += b64pad;

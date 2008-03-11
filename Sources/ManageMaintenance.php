@@ -412,7 +412,7 @@ function ScheduledTasks()
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => 
+						'format' =>
 							'<input type="hidden" name="task[%1$d]" id="task_%1$d" value="0" /><input type="checkbox" name="task[%1$d]" id="task_check_%1$d" %2$s class="check" />',
 						'params' => array(
 							'id' => false,
@@ -429,7 +429,7 @@ function ScheduledTasks()
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => 
+						'format' =>
 							'<input type="checkbox" name="run_task[%1$d]" id="run_task_%1$d" class="check" />',
 						'params' => array(
 							'id' => false,
@@ -1197,7 +1197,7 @@ function ConvertEntities()
 			{
 				if (empty($primary_key) || ($row['Seq_in_index'] == 1 && !in_array(strtolower($row['Column_name']), $columns)))
 					$primary_key = $row['Column_name'];
-				
+
 				$primary_keys[] = $row['Column_name'];
 			}
 		}

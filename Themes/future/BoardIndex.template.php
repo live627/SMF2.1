@@ -227,7 +227,7 @@ function template_main()
 
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'] && !empty($context['categories']))
-			 template_buttonlist($mark_read_button, true);
+			template_buttonlist($mark_read_button, true);
 
 		echo '
 	</div>';
@@ -311,7 +311,7 @@ function template_info_center()
 				<h4 class="headerpadding titlebg">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</h4>
 				<div class="windowbg">
 					<p class="section">
-						<a href="', $scripturl, '?action=calendar' . '"><img src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a> 
+						<a href="', $scripturl, '?action=calendar' . '"><img src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a>
 					</p>
 					<div class="sectionbody windowbg2">';
 

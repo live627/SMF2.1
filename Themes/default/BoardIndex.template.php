@@ -251,7 +251,7 @@ function template_main()
 				echo '
 				<table cellpadding="0" cellspacing="0" border="0" style="position: relative; top: -5px;">
 					<tr>
-							 ', template_button_strip($mark_read_button, 'top'), '
+							', template_button_strip($mark_read_button, 'top'), '
 					</tr>
 				</table>';
 		echo '
@@ -464,7 +464,7 @@ function template_info_center()
 	// If they are logged in, but statistical information is off... show a personal message bar.
 	if ($context['user']['is_logged'] && !$settings['show_stats_index'])
 	{
-		 echo '
+		echo '
 				<tr>
 					<td class="titlebg" colspan="2">', $txt['personal_message'], '</td>
 				</tr><tr>

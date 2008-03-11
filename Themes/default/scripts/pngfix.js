@@ -1,5 +1,5 @@
 /*
- 
+
 Correctly handle PNG transparency in Win IE 5.5 & 6.
 http://homepage.ntlworld.com/bobosola. Updated 18-Jan-2006.
 
@@ -10,7 +10,7 @@ Use in <HEAD> with DEFER keyword wrapped in conditional comments:
 
 */
 
-if (is_ie5up && !is_ie7up && document.body.filters) 
+if (is_ie5up && !is_ie7up && document.body.filters)
 {
 	// Find the relevant images to act upon.
 	for (var i = 0; i < document.images.length; i++)

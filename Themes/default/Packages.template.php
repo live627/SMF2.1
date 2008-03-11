@@ -1770,7 +1770,7 @@ function template_file_permissions()
 				<td align="center" width="8%" style="background-color: #C2C6C0"><input type="radio" name="permStatus[', $name, ']" value="custom" /></td>
 				<td align="center" width="8%" style="background-color: #FFFFFF"><input type="radio" name="permStatus[', $name, ']" value="no_change" checked="checked" /></td>
 			</tr>';
-			
+
 		if (!empty($dir['contents']))
 			template_permission_show_contents($name, $dir['contents'], 1);
 	}

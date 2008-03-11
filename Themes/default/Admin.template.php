@@ -104,7 +104,7 @@ function template_admin()
 	// If we have lots of admins... don't show them all.
 	if (!empty($context['more_admins_link']))
 		echo '
-							 (', $context['more_admins_link'], ')';
+							(', $context['more_admins_link'], ')';
 
 	echo '
 						</td>

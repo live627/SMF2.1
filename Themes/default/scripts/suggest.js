@@ -120,7 +120,7 @@ function smfSuggest(sessionID, textID)
 			// Mark what the selected div now is.
 			selectedDiv = toHighlight;
 			itemMouseOver({'srcElement': selectedDiv});
-		}	
+		}
 	}
 
 	// Functions for integration.

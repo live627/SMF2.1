@@ -30,9 +30,9 @@ if (!defined('SMF'))
 	error log administration.  It does this with:
 
 	bool db_fatal_error(bool loadavg = false)
- 		- loads Subs-Auth.php and calls show_db_error().
- 		- this is used for database connection error handling.
- 		- loadavg means this is a load average problem, not a database error.
+		- loads Subs-Auth.php and calls show_db_error().
+		- this is used for database connection error handling.
+		- loadavg means this is a load average problem, not a database error.
 
 	string log_error(string error_message, string error_type = general
 			string filename = none,	int line = none)

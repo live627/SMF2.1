@@ -49,15 +49,15 @@ if (!defined('SMF'))
 	Adding actions to the Who's Online list:
 	---------------------------------------------------------------------------
 		Adding actions to this list is actually relatively easy....
-		 - for actions anyone should be able to see, just add a string named
+		- for actions anyone should be able to see, just add a string named
 		   whoall_ACTION.  (where ACTION is the action used in index.php.)
-		 - for actions that have a subaction which should be represented
+		- for actions that have a subaction which should be represented
 		   differently, use whoall_ACTION_SUBACTION.
-		 - for actions that include a topic, and should be restricted, use
+		- for actions that include a topic, and should be restricted, use
 		   whotopic_ACTION.
-		 - for actions that use a message, by msg or quote, use whopost_ACTION.
-		 - for administrator-only actions, use whoadmin_ACTION.
-		 - for actions that should be viewable only with certain permissions,
+		- for actions that use a message, by msg or quote, use whopost_ACTION.
+		- for administrator-only actions, use whoadmin_ACTION.
+		- for actions that should be viewable only with certain permissions,
 		   use whoallow_ACTION and add a list of possible permissions to the
 		   $allowedActions array, using ACTION as the key.
 */

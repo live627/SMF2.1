@@ -200,7 +200,7 @@ function template_body_above()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-				<ul> 
+				<ul>
 					<li><a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a></li>
 					<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';
 
@@ -378,7 +378,7 @@ function theme_linktree()
 		// Don't show a separator for the last one.
 		if ($link_num != count($context['linktree']) - 1)
 			echo '&nbsp;>';
-	
+
 		echo '
 		</li>';
 	}
