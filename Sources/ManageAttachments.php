@@ -1132,20 +1132,13 @@ function RepairAttachments()
 										)
 									);
 
-								$wrong_folder = true;
-								break;
+								continue 2;
 							}
-							else
-								$wrong_folder = false;
 					}
 
-					if (!$wrong_folder)
-					{
-						$to_remove[] = $row['id_attach'];
-						$context['repair_errors']['file_missing_on_disk']++;
-						$errors_found[] = 'file_missing_on_disk';
-					}
-
+					$to_remove[] = $row['id_attach'];
+					$context['repair_errors']['file_missing_on_disk']++;
+					$errors_found[] = 'file_missing_on_disk';
 				}
 				elseif (filesize($filename) == 0)
 				{
