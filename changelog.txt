@@ -53,6 +53,7 @@ March 2008
  ! Removed some incorrect spacing. (Various files) [Bug 1385]
  ! Try to make key names as unique as possible for package operations to accommodate for different modification files. (Packages.php) [Bug 1703]
  ! Set the $connection paramenter to null by default for transactions in SQLite to make the connection optional. (Subs-Db-sqlite.php) [Bug 1701]
+ ! Rewrote the upgrade file for SQLite.  This is a temporary method until the custom alter table support is added to SMF. (upgrade_2-0_sqlite.sql) [Bug 1546]
 
 
 February 2008
