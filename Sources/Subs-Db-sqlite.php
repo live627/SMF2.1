@@ -381,7 +381,7 @@ function smf_db_last_error()
 }
 
 // Do a transaction.
-function smf_db_transaction($type = 'commit', $connection)
+function smf_db_transaction($type = 'commit', $connection = null)
 {
 	global $db_connection, $db_in_transact;
 

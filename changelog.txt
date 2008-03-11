@@ -51,6 +51,8 @@ March 2008
  ! Sorting some options in Manage Membergroup resulted in database error for SQLite. (Subs-ManageMembergroups.php, ManageMembergroups.php) [Bug 1603]
  ! Some debugging code was left in the database initialization functions. (Subs-Db-sqlite.php, Subs-Db-postgresql.php) [Bug 1708]
  ! Removed some incorrect spacing. (Various files) [Bug 1385]
+ ! Try to make key names as unique as possible for package operations to accommodate for different modification files. (Packages.php) [Bug 1703]
+ ! Set the $connection paramenter to null by default for transactions in SQLite to make the connection optional. (Subs-Db-sqlite.php) [Bug 1701]
 
 
 February 2008
