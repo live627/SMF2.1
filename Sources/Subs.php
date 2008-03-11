@@ -3298,7 +3298,7 @@ function theme_copyright($get_it = false)
 
 	// Put in the version...
 	$forum_copyright = sprintf($forum_copyright, $forum_version);
-	
+
 	echo '
 		<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">';
 

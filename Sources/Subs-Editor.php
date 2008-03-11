@@ -92,7 +92,7 @@ function EditorMain()
 	{
 		$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
 		$_REQUEST['message'] = strtr($_REQUEST['message'], array('#smcol#' => ';', '#smlt#' => '&lt;', '#smgt#' => '&gt;', '#smamp#' => '&amp;'));
-		
+	
 		$context['message'] = html_to_bbc($_REQUEST['message']);
 	}
 

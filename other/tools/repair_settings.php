@@ -287,7 +287,7 @@ function show_settings()
 			WHERE id_member = 0
 				AND variable IN ({array_string:variables})',
 			array(
-			      'variables' => array('theme_dir', 'theme_url', 'images_url', 'name'),
+				'variables' => array('theme_dir', 'theme_url', 'images_url', 'name'),
 			)
 		);
 
@@ -396,8 +396,8 @@ function show_settings()
 		$request = $smcFunc['db_query']('', '
 			SHOW TABLES LIKE {raw:log_topics}',
 			array(
-			      'log_topics' => '%log_topics',
-			      'db_error_skip' => true,
+				'log_topics' => '%log_topics',
+				'db_error_skip' => true,
 			)
 		);
 		if ($request == true)

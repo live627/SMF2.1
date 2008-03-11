@@ -131,7 +131,7 @@ var smf_themeInfo = {';
 $temp_output = array();
 foreach($themes as $theme)
 {
-	
+
 	$temp_output[] = '
 	'. $theme['id']. ': {
 		name: \''. addcslashes($theme['name'], "'"). '\',
@@ -185,7 +185,7 @@ window.smfLatestThemes += '\
 			</ul>';
 if ( smf_featured !=0 || smf_random != 0 )
 {
-		
+	
 	if ( smf_featured != 0 )
 		window.smfLatestThemes += '\
 				<h4 style="padding: 4px 4px 0 4px; margin: 0;">Featured Theme</h4>\

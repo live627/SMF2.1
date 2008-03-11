@@ -378,7 +378,7 @@ function theme_linktree()
 		// Don't show a separator for the last one.
 		if ($link_num != count($context['linktree']) - 1)
 			echo '&nbsp;>';
-		
+	
 		echo '
 		</li>';
 	}

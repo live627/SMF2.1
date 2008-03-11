@@ -120,7 +120,7 @@ function smfSuggest(sessionID, textID)
 			// Mark what the selected div now is.
 			selectedDiv = toHighlight;
 			itemMouseOver({'srcElement': selectedDiv});
-		}		
+		}	
 	}
 
 	// Functions for integration.
@@ -251,7 +251,7 @@ function smfSuggest(sessionID, textID)
 			if (!document.getElementById(newID))
 			{
 				brotherNode = document.getElementById('suggest_template_' + textID);
-	
+
 				newNode = brotherNode.cloneNode(true);
 				brotherNode.parentNode.insertBefore(newNode, brotherNode);
 				newNode.id = newID;

@@ -46,7 +46,7 @@ function template_generic_menu_sidebar_above()
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
-    		}
+			}
 			else
 				echo '
 				<li><a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a></li>';

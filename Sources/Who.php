@@ -42,7 +42,7 @@ if (!defined('SMF'))
 		- returns an array of descriptions if you passed an array, otherwise
 		  the string describing their current location.
 
-    void Credits(bool in_admin)
+	void Credits(bool in_admin)
 		- prepares credit and copyright information for the credits page or the admin page
 		- if parameter is true the it will not load the sub template nor the template file
 

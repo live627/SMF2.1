@@ -198,7 +198,7 @@ if (!function_exists('array_combine'))
 	function array_combine($keys, $values)
 	{
 		$ret = array();
-	    if (($array_error = !is_array($keys) || !is_array($values)) || empty($values) || ($count=count($keys)) != count($values))
+		if (($array_error = !is_array($keys) || !is_array($values)) || empty($values) || ($count=count($keys)) != count($values))
 		{
 			trigger_error('array_combine(): Both parameters should be non-empty arrays with an equal number of elements', E_USER_WARNING);
 

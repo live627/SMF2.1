@@ -732,7 +732,7 @@ function create_ajax_indicator_ele()
 
 	// Finally attach the element to the body.
 	document.body.appendChild(ajax_indicator_ele);
-	
+
 }
 
 // Mimics the PHP version of this function.

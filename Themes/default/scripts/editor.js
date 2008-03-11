@@ -151,7 +151,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 
 SmfEditor.prototype.init = function()
 {
-	// Set the textHandle.	
+	// Set the textHandle.
 	this.oTextHandle = document.getElementById(this.sUniqueId);
 
 	// Ensure the currentText is set correctly depending on the mode.
@@ -240,7 +240,7 @@ SmfEditor.prototype.init = function()
 				{
 					continue;
 				}
-				
+			
 				// Manually try to find the rich_editor class.
 				for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
 				{
@@ -290,7 +290,7 @@ SmfEditor.prototype.init = function()
 				this.instanceRef.editorKeyUp();
 			}
 		}
-		
+	
 		// Show the iframe only if wysiwyrg is on - and hide the text area.
 		this.oTextHandle.style.display = this.bRichTextEnabled ? 'none' : '';
 		this.oFrameHandle.style.display = this.bRichTextEnabled ? '' : 'none';
@@ -663,8 +663,8 @@ SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
 		sAfter: sAfter,
 		bIsActive: false
 	};
-		
-/*	
+	
+/*
 	Array(4);
 	this.aButtonControls[sCode][0] = oCodeHandle;
 	this.aButtonControls[sCode][1] = sCode;

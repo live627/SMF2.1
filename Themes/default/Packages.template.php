@@ -1294,7 +1294,7 @@ function template_control_chmod()
 						<span id="test_ftp_placeholder_full"></span>
 						<input type="submit" value="', $txt['package_proceed'], '" />
 					</div>';
-	
+
 	if (!empty($context['package_ftp']['destination']))
 		echo '
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -1770,7 +1770,7 @@ function template_file_permissions()
 				<td align="center" width="8%" style="background-color: #C2C6C0"><input type="radio" name="permStatus[', $name, ']" value="custom" /></td>
 				<td align="center" width="8%" style="background-color: #FFFFFF"><input type="radio" name="permStatus[', $name, ']" value="no_change" checked="checked" /></td>
 			</tr>';
-				
+			
 		if (!empty($dir['contents']))
 			template_permission_show_contents($name, $dir['contents'], 1);
 	}

@@ -1197,7 +1197,7 @@ function ConvertEntities()
 			{
 				if (empty($primary_key) || ($row['Seq_in_index'] == 1 && !in_array(strtolower($row['Column_name']), $columns)))
 					$primary_key = $row['Column_name'];
-					
+				
 				$primary_keys[] = $row['Column_name'];
 			}
 		}

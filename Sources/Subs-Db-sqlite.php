@@ -21,6 +21,7 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -34,15 +35,6 @@ if (!defined('SMF'))
 function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
 	global $smcFunc, $mysql_set_mode, $db_in_transact;
-
-	// Just some debugging code, make sure to remove it before release.
-	$parameters = array(
-		'server' => $db_server,
-		'name' => $db_name,
-		'user' => $db_user,
-		'pass' => $db_passwd,
-		'opts' => $db_options,
-	);
 
 	// Map some database specific functions, only do this once.
 	if (!isset($smcFunc['db_fetch_assoc']) || $smcFunc['db_fetch_assoc'] != 'sqlite_fetch_array')

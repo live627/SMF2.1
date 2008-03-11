@@ -149,7 +149,7 @@ function template_ask()
 
 	if ($context['account_type'] == 'password')
 		echo '
-			
+		
 			</tr><tr class="windowbg2">
 				<td width="45%">
 					<b>', $txt['choose_pass'], ': </b>
@@ -172,7 +172,7 @@ function template_ask()
 				</td>';
 
 	echo '
-			
+		
 			</tr><tr class="windowbg2">
 				<td colspan="2" align="right" style="padding: 1ex;"><input type="submit" value="', $txt['save'], '" /></td>
 			</tr>

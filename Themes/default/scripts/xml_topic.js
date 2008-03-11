@@ -146,7 +146,7 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 
 	// Actually create the content, with a bodge for disappearing dollar signs.
 	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/%body%/, sBodyText).replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/\{&dollarfix;\$\}/g, '$'));
-	
+
 	// Replace the subject part.
 	this.oCurSubjectDiv = document.getElementById('subject_' + this.sCurMessageId.substr(4));
 	this.sSubjectBuffer = getInnerHTML(this.oCurSubjectDiv);
@@ -223,7 +223,7 @@ QuickModify.prototype.onModifyDone = function (XMLDoc)
 		var sSubjectText = oSubject.childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
 		this.sSubjectBuffer = this.opt.sTemplateSubjectNormal.replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g,'$');
 		setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
-		
+
 		// If this is the first message, also update the topic subject.
 		if (oSubject.getAttribute('is_first') == '1')
 			setInnerHTML(document.getElementById('top_subject'), this.opt.sTemplateTopSubject.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
