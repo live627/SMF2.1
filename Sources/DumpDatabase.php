@@ -49,8 +49,8 @@ function DumpDatabase2()
 		fatal_lang_error('no_dump_database', 'critical');
 
 	// You can't dump nothing!
-	if (!isset($_GET['struct']) && !isset($_GET['data']))
-		$_GET['data'] = true;
+	if (!isset($_REQUEST['struct']) && !isset($_REQUEST['data']))
+		$_REQUEST['data'] = true;
 
 	checkSession('post');
 
@@ -115,7 +115,7 @@ function DumpDatabase2()
 	}
 
 	// Send the proper headers to let them download this file.
-	header('Content-Disposition: filename="' . $db_name . '-' . (empty($_GET['struct']) ? 'data' : (empty($_GET['data']) ? 'structure' : 'complete')) . '_' . strftime('%Y-%m-%d') . $extension . '"');
+	header('Content-Disposition: filename="' . $db_name . '-' . (empty($_REQUEST['struct']) ? 'data' : (empty($_REQUEST['data']) ? 'structure' : 'complete')) . '_' . strftime('%Y-%m-%d') . $extension . '"');
 	header('Cache-Control: private');
 	header('Connection: close');
 
@@ -152,7 +152,7 @@ function DumpDatabase2()
 			apache_reset_timeout();
 
 		// Are we dumping the structures?
-		if (isset($_GET['struct']))
+		if (isset($_REQUEST['struct']))
 		{
 			echo
 				$crlf,
@@ -164,7 +164,7 @@ function DumpDatabase2()
 		}
 
 		// How about the data?
-		if (!isset($_GET['data']) || substr($tableName, -10) == 'log_errors')
+		if (!isset($_REQUEST['data']) || substr($tableName, -10) == 'log_errors')
 			continue;
 
 		// Are there any rows in this table?

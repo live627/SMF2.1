@@ -45,6 +45,7 @@ March 2008
  ! Group requests were being made much too safe. (Groups.php) [Bug 1706]
  ! Use <code> for BBC code tag and <blockquote> for BBC quote tag. (Subs.php, style.css)
  ! Hopefully fix some post moderation issues. (Several files) [Bug 1707]
+ ! Some database backup options were not being followed. (DumpDatabase.php) [Bug 1653]
 
 
 February 2008
