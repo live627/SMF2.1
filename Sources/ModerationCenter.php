@@ -864,7 +864,7 @@ function ModReport()
 		'title' => $txt['mc_modreport_modactions'],
 		'items_per_page' => 15,
 		'no_items_label' => $txt['modlog_no_entries_found'],
-		'base_href' => $scripturl . '?action=moderate;area=reports;id=' . $context['report']['id'],
+		'base_href' => $scripturl . '?action=moderate;area=reports;report=' . $context['report']['id'],
 		'default_sort_col' => 'time',
 		'get_items' => array(
 			'function' => 'list_getModLogEntries',
@@ -954,6 +954,10 @@ function ModReport()
 
 	// Create the watched user list.
 	createList($listOptions);
+
+	// Make sure to get the correct tab selected.
+	if ($context['report']['closed'])
+		$context[$context['moderation_menu_name']]['current_subsection'] = 'closed';
 
 	// Finally we are done :P
 	loadTemplate('ModerationCenter');
