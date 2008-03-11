@@ -5,9 +5,9 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 3                                    *
+* Software Version:           SMF 2.0 Beta 3                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
 * Support, News, Updates at:  http://www.simplemachines.org                       *
 ***********************************************************************************
@@ -21,6 +21,7 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
