@@ -102,6 +102,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	sqlite_create_function($connection, 'year', 'smf_udf_year', 1);
 	sqlite_create_function($connection, 'month', 'smf_udf_month', 1);
 	sqlite_create_function($connection, 'dayofmonth', 'smf_udf_dayofmonth', 1);
+	sqlite_create_function($connection, 'concat', 'smf_udf_concat');
 
 	return $connection;
 }
@@ -702,6 +703,17 @@ function smf_udf_dayofmonth($date)
 function smf_db_libversion($void)
 {
 	return sqlite_libversion();
+}
+
+// This function uses variable argument lists so that it can handle more then two parameters.
+// Emulates the CONCAT function.
+function smf_udf_concat()
+{
+	// Since we didn't specify any arguments we must get them from PHP.
+	$args = func_get_args();
+
+	// It really doesn't matter if there were 0 to 100 arguments, just slap them all together.
+	return implode('', $args);
 }
 
 ?>
