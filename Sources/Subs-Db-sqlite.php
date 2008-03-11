@@ -81,13 +81,9 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	if (!$connection)
 	{
 		if (!empty($db_options['non_fatal']))
-		{
 			return $sqlite_error;
-		}
 		else
-		{
 			db_fatal_error();
-		}
 	}
 	$db_in_transact = false;
 
@@ -103,6 +99,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	sqlite_create_function($connection, 'month', 'smf_udf_month', 1);
 	sqlite_create_function($connection, 'dayofmonth', 'smf_udf_dayofmonth', 1);
 	sqlite_create_function($connection, 'concat', 'smf_udf_concat');
+	sqlite_create_function($connection, 'locate', 'smf_udf_locate', 2);
 
 	return $connection;
 }
@@ -301,6 +298,10 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$replace = str_replace(array('ASC', 'DESC'), '', $matches[0]);
 		$db_string = str_replace($matches[0], $replace, $db_string);
 	}
+
+	// We need to replace the SUBSTRING in the sort identifier.
+	if ($identifier == 'substring_membergroups' && isset($db_values['sort']))
+		$db_values['sort'] = preg_replace('~SUBSTRING~', 'SUBSTR', $db_values['sort']);
 
 	// SQLite doesn't support TO_DAYS but has the julianday function which can be used in the same manner.  But make sure it is being used to calculate a span.
 	$db_string = preg_replace('~\(TO_DAYS\(([^)]+)\) - TO_DAYS\(([^)]+)\)\) AS span~', '(julianday($1) - julianday($2)) AS span', $db_string);
@@ -714,6 +715,12 @@ function smf_udf_concat()
 
 	// It really doesn't matter if there were 0 to 100 arguments, just slap them all together.
 	return implode('', $args);
+}
+
+// We need to use PHP to locate the position in the string.
+function smf_udf_locate($find, $string)
+{
+	return strpos($string, $find);
 }
 
 ?>

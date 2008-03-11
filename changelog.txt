@@ -47,6 +47,8 @@ March 2008
  ! Hopefully fix some post moderation issues. (Several files) [Bug 1707]
  ! Some database backup options were not being followed. (DumpDatabase.php) [Bug 1653]
  ! SQLite doesn't have a CONCAT function of its own. (Subs-Db-sqlie.php) [Bug 1702]
+ ! SQLite doesn't have LOCATE so we need to create it. (Subs-Db-sqlite.php) [Bug 1602]
+ ! Sorting some options in Manage Membergroup resulted in database error for SQLite. (Subs-ManageMembergroups.php, ManageMembergroups.php) [Bug 1603]
 
 
 February 2008

@@ -529,8 +529,8 @@ function template_viewmodreport()
 	$unignore_button = create_button('ignore.gif', 'mc_reportedp_unignore', 'mc_reportedp_unignore', 'align="middle"');
 
 	echo '
-					<a href="', $scripturl, '?action=moderate;area=reports;ignore=', !$context['report']['ignore'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '" ', !$context['report']['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $context['report']['ignore'] ? $unignore_button : $ignore_button, '</a>
-					<a href="', $scripturl, '?action=moderate;area=reports;close=', !$context['report']['closed'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
+					<a href="', $scripturl, '?action=moderate;area=reports;ignore=', (int) !$context['report']['ignore'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '" ', !$context['report']['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $context['report']['ignore'] ? $unignore_button : $ignore_button, '</a>
+					<a href="', $scripturl, '?action=moderate;area=reports;close=', (int) !$context['report']['closed'], ';rid=', $context['report']['id'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
 				</div>
 			</td>
 		</tr><tr class="windowbg2">

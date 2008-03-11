@@ -608,7 +608,7 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 	$groups = array();
 
 	// Get the basic group data.
-	$request = $smcFunc['db_query']('substring', '
+	$request = $smcFunc['db_query']('substring_membergroups', '
 		SELECT id_group, group_name, min_posts, online_color, stars, 0 AS num_members
 		FROM {db_prefix}membergroups
 		WHERE min_posts ' . ($membergroup_type === 'post_count' ? '!=' : '=') . ' -1
@@ -618,7 +618,14 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$groups[$row['id_group']] = $row;
+		$groups[$row['id_group']] = array(
+			'id_group' => $row['id_group'],
+			'group_name' => $row['group_name'],
+			'min_posts' => $row['min_posts'],
+			'online_color' => $row['online_color'],
+			'stars' => $row['stars'],
+			'num_members' => $row['num_members'],
+		);
 	$smcFunc['db_free_result']($request);
 
 	// If we found any membergroups, get the amount of members in them.
@@ -675,12 +682,12 @@ function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
 	}
 
 	// Apply manual sorting if the 'number of members' column is selected.
-	if (substr($sort, 0, 2) == '-1' || strpos($sort, ', -1') !== FALSE)
+	if (substr($sort, 0, 1) == '1' || strpos($sort, ', 1') !== false)
 	{
 		$sort_ascending = strpos($sort, 'DESC') === false;
 
 		foreach ($groups as $group)
-			$sort_array[] = $group['num_members'] != 'n/a' ? (int) $group['num_members'] : -1;
+			$sort_array[] = $group['id_group'] != 3 ? (int) $group['num_members'] : -1;
 
 		array_multisort($sort_array, $sort_ascending ? SORT_ASC : SORT_DESC, SORT_REGULAR, $groups);
 	}
