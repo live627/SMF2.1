@@ -2108,7 +2108,7 @@ function createAttachment(&$attachmentOptions)
 		$dir = @opendir($attach_dir) or fatal_lang_error('cant_access_upload_path', 'critical');
 		while ($file = readdir($dir))
 		{
-			if (substr($file, 0, -1) == '.')
+			if ($file == '.' || $file == '..')
 				continue;
 
 			if (preg_match('~^post_tmp_\d+_\d+$~', $file) != 0)

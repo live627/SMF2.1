@@ -71,6 +71,7 @@ March 2008
  ! Make absolutely sure that changing mods can be skipped. (upgrade.php) [Bug 1669]
  ! Make the moderation log easier to understand when we can't find particular parameters. (Modlog.php) [Bug 1712]
  ! Memberlist search was incorrectly html'ing repeat searches. (Memberlist.php) [Bug 1725]
+ ! The number of files in some directories was being reported incorrectly. (ManageAttachments.php, Post.php, Subs-Post.php)
 
 
 February 2008
