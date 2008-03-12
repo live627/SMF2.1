@@ -62,6 +62,7 @@ March 2008
  ! Fixed undefined index reporting a pm. (PersonalMessage.php) [Bug 1721]
  ! Viewing bans was showing the wrong number of triggers. (ManageBans.php)
  ! Ban name was being unnecessarily protected twice. (ManageBans.php) [Bug 1716]
+ ! Reporting a personal message was protecting the subject too much. (PersonalMessage.php) [Bug 1720]
 
 
 February 2008
