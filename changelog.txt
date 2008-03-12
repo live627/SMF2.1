@@ -60,6 +60,8 @@ March 2008
  ! The list of boards a particular user could not see was not exhaustive. (Profile-View.php) [Bug 1680]
  ! Fixed undefined index when writing reasons to request a group application. (ManageMembergroups template) [Bug 1727]
  ! Fixed undefined index reporting a pm. (PersonalMessage.php) [Bug 1721]
+ ! Viewing bans was showing the wrong number of triggers. (ManageBans.php)
+ ! Ban name was being unnecessarily protected twice. (ManageBans.php) [Bug 1716]
 
 
 February 2008

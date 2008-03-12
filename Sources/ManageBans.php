@@ -357,7 +357,7 @@ function list_getBans($start, $items_per_page, $sort)
 	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(*) AS num_triggers
+		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(bi.id_ban) AS num_triggers
 		FROM {db_prefix}ban_groups AS bg
 			LEFT JOIN {db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
 		GROUP BY bg.id_ban_group, ' . $sort . '
@@ -1155,7 +1155,7 @@ function BanBrowseTriggers()
 						'format' => '<a href="' . $scripturl . '?action=admin;area=ban;sa=edit;bg=%1$d">%2$s</a>',
 						'params' => array(
 							'id_ban_group' => false,
-							'name' => true,
+							'name' => false,
 						),
 					),
 				),
