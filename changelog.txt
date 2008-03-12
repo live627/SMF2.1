@@ -63,6 +63,7 @@ March 2008
  ! Viewing bans was showing the wrong number of triggers. (ManageBans.php)
  ! Ban name was being unnecessarily protected twice. (ManageBans.php) [Bug 1716]
  ! Reporting a personal message was protecting the subject too much. (PersonalMessage.php) [Bug 1720]
+ ! Personal Message searching was simply ignoring the age parameters. (PersonalMessage.php) [Bug 1722]
 
 
 February 2008

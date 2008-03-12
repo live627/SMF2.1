@@ -1245,9 +1245,16 @@ function MessageSearch2()
 		$searchq_parameters['search_' . $index] = '%' . strtr($word, array('_' => '\\_', '%' => '\\%')) . '%';
 	}
 
-	$searchQuery = ' 1';
+	$searchQuery = ' 1=1';
 	if (!empty($andQueryParts))
 		$searchQuery = implode(!empty($search_params['searchtype']) && $search_params['searchtype'] == 2 ? ' OR ' : ' AND ', $andQueryParts);
+
+	// Age limits?
+	$timeQuery = '';
+	if (!empty($search_params['minage']))
+		$timeQuery .= ' AND pm.msgtime < ' . (time() - $search_params['minage'] * 86400);
+	if (!empty($search_params['maxage']))
+		$timeQuery .= ' AND pm.msgtime > ' . (time() - $search_params['maxage'] * 86400);
 
 	// If we have errors - return back to the first screen...
 	if (!empty($context['search_errors']))
@@ -1266,7 +1273,7 @@ function MessageSearch2()
 			AND pmr.deleted = {int:not_deleted}' : '
 			pm.id_member_from = {int:current_member}
 			AND pm.deleted_by_sender = {int:not_deleted}') . '
-			' . $userQuery . $labelQuery . '
+			' . $userQuery . $labelQuery . $timeQuery . '
 			AND (' . $searchQuery . ')',
 		array_merge($searchq_parameters, array(
 			'current_member' => $user_info['id'],
@@ -1287,7 +1294,7 @@ function MessageSearch2()
 			AND pmr.deleted = {int:not_deleted}' : '
 			pm.id_member_from = {int:current_member}
 			AND pm.deleted_by_sender = {int:not_deleted}') . '
-			' . $userQuery . $labelQuery . '
+			' . $userQuery . $labelQuery . $timeQuery . '
 			AND (' . $searchQuery . ')
 		ORDER BY ' . $search_params['sort'] . ' ' . $search_params['sort_dir'] . '
 		LIMIT ' . $context['start'] . ', ' . $modSettings['search_results_per_page'],
