@@ -1663,10 +1663,6 @@ function PlushSearch2()
 		$num_results = $_SESSION['search_cache']['num_results'];
 	}
 
-	// Now that we know how many results to expect we can start calculating the page numbers.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=search2;params=' . $context['params'], $_REQUEST['start'], $num_results, $modSettings['search_results_per_page'], false);
-
-
 	if (!empty($context['topics']))
 	{
 		// Create an array for the permissions.
@@ -1750,6 +1746,10 @@ function PlushSearch2()
 		);
 		// Note that the reg-exp slows things alot, but makes things make a lot more sense.
 
+		// If there are no results that means the things in the cache got deleted, so pretend we have no topics any more.
+		if ($smcFunc['db_num_rows']($messages_request) == 0)
+			$context['topics'] = array();
+
 		// If we want to know who participated in what then load this now.
 		if (!empty($modSettings['enableParticipation']) && !$user_info['is_guest'])
 		{
@@ -1770,6 +1770,9 @@ function PlushSearch2()
 			$smcFunc['db_free_result']($result);
 		}
 	}
+
+	// Now that we know how many results to expect we can start calculating the page numbers.
+	$context['page_index'] = constructPageIndex($scripturl . '?action=search2;params=' . $context['params'], $_REQUEST['start'], $num_results, $modSettings['search_results_per_page'], false);
 
 	// Consider the search complete!
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)

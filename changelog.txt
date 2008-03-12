@@ -73,6 +73,7 @@ March 2008
  ! Memberlist search was incorrectly html'ing repeat searches. (Memberlist.php) [Bug 1725]
  ! The number of files in some directories was being reported incorrectly. (ManageAttachments.php, Post.php, Subs-Post.php)
  * The link to quote a personal message was incorrect in sent messages folder. (PersonalMessage template) [Bug 1723]
+ ! Make sure search doesn't die if a topic in the cache get's deleted. (Search.php) [Bug 1715]
 
 
 February 2008
