@@ -591,7 +591,7 @@ function Activate()
 			'ACTIVATIONCODE' => $row['validation_code'],
 		);
 
-		$emaildata = loadEmailTemplate(empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
+		$emaildata = loadEmailTemplate('resend_activate_message', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
 
