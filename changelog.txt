@@ -56,6 +56,7 @@ March 2008
  ! Rewrote the upgrade file for SQLite.  This is a temporary method until the custom alter table support is added to SMF. (upgrade_2-0_sqlite.sql) [Bug 1546]
  ! The link to sort the moderation report actions table was incorrect. (ModerationCenter.php) [Bug 1704]
  ! Attachment maintenence occasionally threw undefinded variable errors when using a single attachment path. (ManageAttachments.php)
+ ! Viewing a user's permissions in a specific board threw a database error. (Profile-View.php)
 
 
 February 2008

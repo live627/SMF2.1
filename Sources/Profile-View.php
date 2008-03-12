@@ -1697,7 +1697,7 @@ function showPermissions($memID)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = {int:current_board})
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})') . '
 			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = bp.id_group)
-		WHERE bp.id_profile = {int:current_profile}
+		WHERE bp.id_profile = {raw:current_profile}
 			AND bp.id_group IN ({array_int:group_list}' . (empty($board) ? ')' : ', {int:moderator_group})
 			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})'),
 		array(
