@@ -67,6 +67,7 @@ March 2008
  ! Disabling the font BBC wasn't removing the select box. (GenericControls template)
  ! Disabled BBC which had a select box would lead to a javascript error. (editor.js) [Bug 1718]
  ! SMF wasn't sending the right reminder email all the time. (Register.php) [Bug 1692]
+ ! Simplify the language caching to avoid rush conditions better. (Load.php, ManageMaintenance.php) [Bug 1709]
 
 
 February 2008

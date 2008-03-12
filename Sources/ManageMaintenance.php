@@ -1848,8 +1848,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	// Is the file writable?
 	$can_write = !empty($modSettings['cache_enable']) && is_writable($cachedir) ? 1 : 0;
 
-	// By default include it afterwards.
-	$do_include = $can_write;
+	// Assume it's not invalid!
 	$invalid_file_found = false;
 
 	// Make sure we have $settings - if not we're in trouble and need to find it!
@@ -1906,12 +1905,10 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				}
 				// If the cache directory is not writable we're having a bad day.
 				else
-				{
-					require($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php');
-
-					// Mark that we're messed up!
 					$do_include = false;
-				}
+
+				// Include it for fun.
+				require($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php');
 
 				// Hmmm... do we really still need this?
 				$language_url = $file[3];
@@ -1941,10 +1938,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 
 		// If we couldn't find the file don't cache it!
 		if ($invalid_file_found)
-		{
 			@unlink($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
-			$do_include = false;
-		}
 	}
 
 	return $do_include;

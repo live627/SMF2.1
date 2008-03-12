@@ -1723,18 +1723,18 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 	if (empty($theme_name))
 		$theme_name = 'unknown';
 
+	// Keep track of what we're up to soldier.
+	if ($db_show_debug === true)
+		$context['debug']['language_files'][] = $template_name . '.' . $lang . ' (' . $theme_name . ')';
+
 	// Is this cached? If not recache!
-	$do_include = true;
 	if (!file_exists($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php'))
 	{
 		require_once($sourcedir . '/ManageMaintenance.php');
 		$do_include = cacheLanguage($template_name, $lang, $fatal, $theme_name);
 	}
-
-	if ($db_show_debug === true)
-		$context['debug']['language_files'][] = $template_name . '.' . $lang . ' (' . $theme_name . ')';
-
-	if ($do_include)
+	// Otherwise just get it, get it, get it.
+	else
 		template_include($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
 
 	// Remember what we have loaded, and in which language.
