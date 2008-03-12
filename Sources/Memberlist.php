@@ -547,7 +547,7 @@ function MLSearch()
 		$context['search_defaults'] = array('name', 'email');
 
 		$context['sub_template'] = 'search';
-		$context['old_search'] = isset($_REQUEST['search']) ? htmlspecialchars($_REQUEST['search']) : '';
+		$context['old_search'] = isset($_GET['search']) ? $_GET['search'] : (isset($_POST['search']) ? htmlspecialchars($_POST['search']) : '');
 	}
 
 	$context['linktree'][] = array(
