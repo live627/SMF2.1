@@ -57,6 +57,7 @@ March 2008
  ! The link to sort the moderation report actions table was incorrect. (ModerationCenter.php) [Bug 1704]
  ! Attachment maintenence occasionally threw undefinded variable errors when using a single attachment path. (ManageAttachments.php)
  ! Viewing a user's permissions in a specific board threw a database error. (Profile-View.php)
+ ! The list of boards a particular user could not see was not exhaustive. (Profile-View.php) [Bug 1680]
 
 
 February 2008

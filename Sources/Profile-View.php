@@ -1592,37 +1592,32 @@ function showPermissions($memID)
 
 	// Load a list of boards for the jump box - except the defaults.
 	$request = $smcFunc['db_query']('', '
-		SELECT b.id_board, b.name, b.id_profile, b.member_groups
+		SELECT b.id_board, b.name, b.id_profile, b.member_groups, IFNULL(mods.id_member, 0) AS is_mod
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
-		WHERE {query_see_board}
-			AND b.id_profile != {int:default_profile}',
+		WHERE {query_see_board}',
 		array(
 			'current_member' => $memID,
-			'default_profile' => 1,
 		)
 	);
 	$context['boards'] = array();
 	$context['no_access_boards'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if (count(array_intersect($curGroups, explode(',', $row['member_groups']))) === 0)
+		if (count(array_intersect($curGroups, explode(',', $row['member_groups']))) === 0 && !$row['is_mod'])
 			$context['no_access_boards'][] = array(
 				'id' => $row['id_board'],
 				'name' => $row['name'],
 				'is_last' => false,
 			);
-
-		// Format the name of this profile.
-		$profile_name = $context['profiles'][$row['id_profile']]['name'];
-
-		$context['boards'][$row['id_board']] = array(
-			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'selected' => $board == $row['id_board'],
-			'profile' => $row['id_profile'],
-			'profile_name' => $profile_name,
-		);
+		elseif ($row['id_profile'] != 1 || $row['is_mod'])
+			$context['boards'][$row['id_board']] = array(
+				'id' => $row['id_board'],
+				'name' => $row['name'],
+				'selected' => $board == $row['id_board'],
+				'profile' => $row['id_profile'],
+				'profile_name' => $context['profiles'][$row['id_profile']]['name'],
+			);
 	}
 	$smcFunc['db_free_result']($request);
 
