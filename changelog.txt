@@ -72,6 +72,7 @@ March 2008
  ! Make the moderation log easier to understand when we can't find particular parameters. (Modlog.php) [Bug 1712]
  ! Memberlist search was incorrectly html'ing repeat searches. (Memberlist.php) [Bug 1725]
  ! The number of files in some directories was being reported incorrectly. (ManageAttachments.php, Post.php, Subs-Post.php)
+ * The link to quote a personal message was incorrect in sent messages folder. (PersonalMessage template) [Bug 1723]
 
 
 February 2008
