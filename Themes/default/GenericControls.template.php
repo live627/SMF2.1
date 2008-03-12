@@ -39,7 +39,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		}
 
 		// Show the font drop down...
-		if (!isset($context['disabled_tags']['face']))
+		if (!isset($context['disabled_tags']['font']))
 			echo '
 						<select name="sel_face" id="sel_face" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt['font_face'], '</option>

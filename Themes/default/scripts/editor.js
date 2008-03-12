@@ -696,7 +696,7 @@ SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
 SmfEditor.prototype.addSelect = function(sSelectType)
 {
 	var oSelectHandle = document.getElementById('sel_' + sSelectType);
-	if (typeof(oSelectHandle) != 'object')
+	if (typeof(oSelectHandle) != 'object' || !oSelectHandle)
 		return;
 
 	oSelectHandle.code = sSelectType;

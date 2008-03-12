@@ -64,6 +64,8 @@ March 2008
  ! Ban name was being unnecessarily protected twice. (ManageBans.php) [Bug 1716]
  ! Reporting a personal message was protecting the subject too much. (PersonalMessage.php) [Bug 1720]
  ! Personal Message searching was simply ignoring the age parameters. (PersonalMessage.php) [Bug 1722]
+ ! Disabling the font BBC wasn't removing the select box. (GenericControls template)
+ ! Disabled BBC which had a select box would lead to a javascript error. (editor.js) [Bug 1718]
 
 
 February 2008
