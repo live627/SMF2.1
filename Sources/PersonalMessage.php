@@ -3023,7 +3023,7 @@ function ReportMessage()
 			ORDER BY lngfile',
 			array(
 				'admin_id' => 1,
-				'specific_admin' => (int) $_REQUEST['ID_ADMIN'],
+				'specific_admin' => isset($_REQUEST['ID_ADMIN']) ? (int) $_REQUEST['ID_ADMIN'] : 0,
 			)
 		);
 

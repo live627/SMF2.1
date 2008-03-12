@@ -463,7 +463,7 @@ function template_group_request_reason()
 
 	// Show a welcome message to the user.
 	echo '
-	<form action="', $scripturl, '?action=groups;sa=requests;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=groups;sa=requests" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['mc_groups_reason_title'], '</td>

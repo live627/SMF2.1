@@ -800,9 +800,6 @@ function GroupRequests()
 						$emaildata = loadEmailTemplate(empty($custom_reason) ? 'mc_group_reject' : 'mc_group_reject_reason', $replacements, $email['language']);
 
 						sendmail($email['email'], $emaildata['subject'], $emaildata['body']);
-
-						//!!! DELETE ME DELETE ME
-						//sendmail($email['email'], $txt['mc_group_email_sub_reject'], sprintf($txt['mc_group_email_request_' . ($custom_reason == '' ? 'reject' : 'reject_reason')], $email['member_name'], $email['group_name'], $custom_reason));
 					}
 				}
 			}

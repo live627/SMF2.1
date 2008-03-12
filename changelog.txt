@@ -58,6 +58,8 @@ March 2008
  ! Attachment maintenence occasionally threw undefinded variable errors when using a single attachment path. (ManageAttachments.php)
  ! Viewing a user's permissions in a specific board threw a database error. (Profile-View.php)
  ! The list of boards a particular user could not see was not exhaustive. (Profile-View.php) [Bug 1680]
+ ! Fixed undefined index when writing reasons to request a group application. (ManageMembergroups template) [Bug 1727]
+ ! Fixed undefined index reporting a pm. (PersonalMessage.php) [Bug 1721]
 
 
 February 2008
