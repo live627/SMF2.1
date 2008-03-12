@@ -1492,6 +1492,10 @@ function CleanupMods()
 {
 	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smcFunc;
 
+	// Skipping first?
+	if (!empty($_POST['skip']))
+		return true;
+
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
 	if (!isset($_GET['ssi']) || !function_exists('mktree'))
 		redirectLocation('&ssi=1');
@@ -1502,8 +1506,8 @@ function CleanupMods()
 	// This can be skipped.
 	$upcontext['skip'] = true;
 
-	// If we're on the second redirect continue... or if we're skipping
-	if (isset($_POST['cleandone2']) || !empty($_POST['skip']))
+	// If we're on the second redirect continue...
+	if (isset($_POST['cleandone2']))
 		return true;
 
 	// Do we already know about some writable files?
