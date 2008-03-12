@@ -403,7 +403,16 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 
 		// How about a member?
 		if (isset($row['extra']['member']))
-			$members[(int) $row['extra']['member']][] = $row['id_action'];
+		{
+			// Guests don't have names!
+			if (empty($row['extra']['member']))
+				$row['extra']['member'] = $txt['modlog_parameter_guest'];
+			else
+			{
+				// Try to find it...
+				$members[(int) $row['extra']['member']][] = $row['id_action'];
+			}
+		}
 
 		// Associated with a board?
 		if (isset($row['extra']['board_to']))
@@ -582,7 +591,7 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 	foreach ($entries as $k => $entry)
 	{
 		// Make any message info links so its easier to go find that message.
-		if (isset($entry['extra']['message']))
+		if (isset($entry['extra']['message']) && (empty($entry['message']) || empty($entry['message']['id'])))
 			$entries[$k]['extra']['message'] = '<a href="' . $scripturl . '?msg=' . $entry['extra']['message'] . '">' . $entry['extra']['message'] . '</a>';
 
 		// Mark up any deleted members, topics and boards.
@@ -592,7 +601,7 @@ function list_getModLogEntries($start, $items_per_page, $sort, $query_string = '
 
 		if (empty($entries[$k]['action_text']))
 			$entries[$k]['action_text'] = isset($txt['modlog_ac_' . $entry['action']]) ? $txt['modlog_ac_' . $entry['action']] : $entry['action'];
-		$entries[$k]['action_text'] = preg_replace('~\{([A-Za-z\d_]+)\}~ie', 'isset($entry[\'extra\'][\'$1\']) ? $entry[\'extra\'][\'$1\'] : \'\'', $entries[$k]['action_text']);
+		$entries[$k]['action_text'] = preg_replace('~\{([A-Za-z\d_]+)\}~ie', 'isset($entries[$k][\'extra\'][\'$1\']) ? $entries[$k][\'extra\'][\'$1\'] : \'\'', $entries[$k]['action_text']);
 	}
 
 	// Back we go!

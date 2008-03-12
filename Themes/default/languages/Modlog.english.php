@@ -36,7 +36,7 @@ $txt['modlog_go'] = 'Go';
 $txt['modlog_add'] = 'Add';
 $txt['modlog_search'] = 'Quick Search';
 $txt['modlog_by'] = 'By';
-$txt['modlog_id'] = '<em>(ID:%1$d)</em>';
+$txt['modlog_id'] = '<em>Deleted - ID:%1$d</em>';
 
 $txt['modlog_ac_ban'] = 'Added ban triggers:';
 $txt['modlog_ac_ban_trigger_member'] = ' <em>Member:</em> {member}';
@@ -70,5 +70,7 @@ $txt['modlog_ac_approve_member'] = 'Approved/Activated the account of &quot;{mem
 // Restore topic.
 $txt['modlog_ac_restore_topic'] = 'Restored topic &quot;{topic}&quot; from &quot;{board}&quot; to &quot;{board_to}&quot;';
 $txt['modlog_ac_restore_posts'] = 'Restored posts from &quot;{subject}&quot; to the topic &quot;{topic}&quot; in the &quot;{board}&quot; board.';
+
+$txt['modlog_parameter_guest'] = '<em>Guest</em>';
 
 ?>

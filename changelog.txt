@@ -69,6 +69,7 @@ March 2008
  ! SMF wasn't sending the right reminder email all the time. (Register.php) [Bug 1692]
  ! Simplify the language caching to avoid rush conditions better. (Load.php, ManageMaintenance.php) [Bug 1709]
  ! Make absolutely sure that changing mods can be skipped. (upgrade.php) [Bug 1669]
+ ! Make the moderation log easier to understand when we can't find particular parameters. (Modlog.php) [Bug 1712]
 
 
 February 2008
