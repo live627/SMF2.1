@@ -16,7 +16,7 @@ $request = $smcFunc['db_query']('', '
 $row = $smcFunc['db_fetch_assoc']($request);
 $smcFunc['db_free_result']($request);
 
-if (!in_array('can_search', array_keys($row))
+if (!in_array('can_search', array_keys($row)))
 {
 	$smcFunc['db_transaction']('begin');
 	$smcFunc['db_query']('', "
@@ -209,7 +209,7 @@ $request = $smcFunc['db_query']('', '
 $row = $smcFunc['db_fetch_assoc']($request);
 $smcFunc['db_free_result']($request);
 
-if (!in_array('id_folder', array_keys($row))
+if (!in_array('id_folder', array_keys($row)))
 {
 	$smcFunc['db_transaction']('begin');
 	$smcFunc['db_query']('', "
@@ -283,7 +283,7 @@ $request = $smcFunc['db_query']('', '
 $row = $smcFunc['db_fetch_assoc']($request);
 $smcFunc['db_free_result']($request);
 
-if (!in_array('id_previous_topic', array_keys($row))
+if (!in_array('id_previous_topic', array_keys($row)))
 {
 	$smcFunc['db_transaction']('begin');
 	$smcFunc['db_query']('', "
