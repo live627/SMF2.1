@@ -76,6 +76,7 @@ March 2008
  ! Make sure search doesn't die if a topic in the cache get's deleted. (Search.php) [Bug 1715]
  ! Cast months as integers to drop the leading 0 for the stats. (Stats.php) [Bug 1713]
  ! A GROUP BY is needed for SQLite when using HAVING. (Profile-View.php) [Bug 1719]
+ ! Make sure to skip certain database errors for SQLite on upgrade. (upgrade.php) [Bug 1546]
 
 
 February 2008

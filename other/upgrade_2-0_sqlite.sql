@@ -89,7 +89,9 @@ CREATE TABLE {$db_prefix}spiders (
 	user_agent varchar(255) NOT NULL,
 	ip_info varchar(255) NOT NULL
 );
+---#
 
+---# Inserting the search engines.
 ---{
 $smcFunc['db_insert']('ignore',
 	'{db_prefix}spiders',
@@ -106,7 +108,7 @@ $smcFunc['db_insert']('ignore',
 
 ---# Creating spider hit tracking table.
 CREATE TABLE {$db_prefix}log_spider_hits (
-	id_spider interger NOT NULL default '0',
+	id_spider integer NOT NULL default '0',
 	session varchar(32) NOT NULL default '',
 	log_time int NOT NULL,
 	url varchar(255) NOT NULL,
