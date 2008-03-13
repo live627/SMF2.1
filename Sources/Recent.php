@@ -765,7 +765,7 @@ function UnreadTopics()
 				AND t.id_last_msg > {int:earliest_msg}' : '
 				AND t.id_last_msg > {int:id_msg_last_visit}') . '
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . ($modSettings['postmod_active'] ? '
-				AND approved = {int:is_approved}' : ''),
+				AND t.approved = {int:is_approved}' : ''),
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,

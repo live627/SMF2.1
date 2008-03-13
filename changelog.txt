@@ -77,6 +77,8 @@ March 2008
  ! Cast months as integers to drop the leading 0 for the stats. (Stats.php) [Bug 1713]
  ! A GROUP BY is needed for SQLite when using HAVING. (Profile-View.php) [Bug 1719]
  ! Make sure to skip certain database errors for SQLite on upgrade. (upgrade.php) [Bug 1546]
+ ! Use the table alias for the approve column in the recent page. (Recent.php) [Bug 1737]
+ ! Set the $do_include to true by default. (ManageMaintenance.php) [Bug 1736]
 
 
 February 2008

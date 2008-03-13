@@ -1851,6 +1851,9 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	// Assume it's not invalid!
 	$invalid_file_found = false;
 
+	// Lets assume we can cache the file and include it.
+	$do_include = true;
+
 	// Make sure we have $settings - if not we're in trouble and need to find it!
 	if (empty($settings['default_theme_dir']))
 	{
