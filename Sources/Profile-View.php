@@ -1004,7 +1004,8 @@ function trackUser($memID)
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.poster_ip IN ({array_string:ip_list})
-			HAVING id_member != {int:current_member}',
+			GROUP BY mem.id_member
+			HAVING mem.id_member != {int:current_member}',
 			array(
 				'current_member' => $memID,
 				'ip_list' => $ips,

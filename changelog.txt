@@ -74,6 +74,8 @@ March 2008
  ! The number of files in some directories was being reported incorrectly. (ManageAttachments.php, Post.php, Subs-Post.php)
  * The link to quote a personal message was incorrect in sent messages folder. (PersonalMessage template) [Bug 1723]
  ! Make sure search doesn't die if a topic in the cache get's deleted. (Search.php) [Bug 1715]
+ ! Cast months as integers to drop the leading 0 for the stats. (Stats.php) [Bug 1713]
+ ! A GROUP BY is needed for SQLite when using HAVING. (Profile-View.php) [Bug 1719]
 
 
 February 2008

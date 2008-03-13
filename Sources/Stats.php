@@ -655,7 +655,7 @@ function getDailyStats($condition_string, $condition_parameters = array())
 		$condition_parameters
 	);
 	while ($row_days = $smcFunc['db_fetch_assoc']($days_result))
-		$context['yearly'][$row_days['stats_year']]['months'][$row_days['stats_month']]['days'][] = array(
+		$context['yearly'][$row_days['stats_year']]['months'][(int) $row_days['stats_month']]['days'][] = array(
 			'day' => sprintf('%02d', $row_days['stats_day']),
 			'month' => sprintf('%02d', $row_days['stats_month']),
 			'year' => $row_days['stats_year'],
