@@ -217,7 +217,7 @@ $txt['mark_board_read'] = 'Mark Topics as Read for this Board';
 $txt['views'] = 'Views';
 $txt['new'] = 'New';
 
-$txt['view_all_members'] = 'View all members';
+$txt['view_all_members'] = 'View All Members';
 $txt['view'] = 'View';
 $txt['email'] = 'Email';
 
@@ -493,7 +493,7 @@ $txt['smtp_bad_response'] = 'Couldn\'t get mail server response codes';
 $txt['smtp_error'] = 'Ran into problems sending Mail. Error: ';
 $txt['mail_send_unable'] = 'Unable to send mail to the email address \'%s\'';
 
-$txt['mlist_search'] = 'Search for members';
+$txt['mlist_search'] = 'Search For Members';
 $txt['mlist_search_again'] = 'Search again';
 $txt['mlist_search_email'] = 'Search by email address';
 $txt['mlist_search_messenger'] = 'Search by messenger nickname';

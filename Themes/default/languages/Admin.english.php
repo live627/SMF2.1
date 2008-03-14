@@ -141,7 +141,7 @@ $txt['ban_email'] = 'Email banning: (e.g. badguy@somewhere.com) - one entry per 
 $txt['ban_username'] = 'User name banning: (e.g. l33tuser) - one entry per line';
 
 $txt['ban_description'] = 'Here you can ban troublesome people either by IP, hostname, username, or email.';
-$txt['ban_add_new'] = 'Add new ban';
+$txt['ban_add_new'] = 'Add New Ban';
 $txt['ban_banned_entity'] = 'Banned entity';
 $txt['ban_on_ip'] = 'Ban on IP (e.g. 192.168.10-20.*)';
 $txt['ban_on_hostname'] = 'Ban on Hostname (e.g. *.mil)';
@@ -155,7 +155,7 @@ $txt['ban_cannot_post'] = 'Cannot post';
 $txt['ban_cannot_register'] = 'Cannot register';
 $txt['ban_cannot_login'] = 'Cannot login';
 $txt['ban_add'] = 'Add';
-$txt['ban_edit_list'] = 'Ban list';
+$txt['ban_edit_list'] = 'Ban List';
 $txt['ban_type'] = 'Ban Type';
 $txt['ban_days'] = 'day(s)';
 $txt['ban_will_expire_within'] = 'Ban will expire after';
@@ -187,10 +187,10 @@ $txt['ban_edit_trigger_submit'] = 'Modify';
 $txt['ban_remove_selected_triggers'] = 'Remove selected ban triggers';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['ban_remove_selected_triggers_confirm'] = 'Are you sure you want to remove the selected ban triggers?';
-$txt['ban_trigger_browse'] = 'Browse ban triggers';
+$txt['ban_trigger_browse'] = 'Browse Ban Triggers';
 $txt['ban_trigger_browse_description'] = 'This screen shows all banned entities grouped by IP address, hostname, email address and username.';
 
-$txt['ban_log'] = 'Ban log';
+$txt['ban_log'] = 'Ban Log';
 $txt['ban_log_description'] = 'The ban log shows all attempts to enter the forum by banned users (\'full ban\' and \'cannot register\' ban only).';
 $txt['ban_log_no_entries'] = 'No ban log entries';
 $txt['ban_log_ip'] = 'IP';
@@ -309,8 +309,8 @@ $txt['attachment_manager_total_avatars'] = 'Total Avatars';
 
 $txt['attachment_manager_settings'] = 'Attachment Settings';
 $txt['attachment_manager_avatar_settings'] = 'Avatar Settings';
-$txt['attachment_manager_browse'] = 'Browse files';
-$txt['attachment_manager_maintenance'] = 'File maintenance';
+$txt['attachment_manager_browse'] = 'Browse Files';
+$txt['attachment_manager_maintenance'] = 'File Maintenance';
 $txt['attachment_manager_save'] = 'Save';
 
 $txt['attachmentEnable'] = 'Attachments mode';
@@ -542,16 +542,16 @@ $txt['custom_profile_shorttitle'] = 'Profile Fields';
 $txt['pruning_title'] = 'Log Pruning';
 
 $txt['boardsEdit'] = 'Modify Boards';
-$txt['mboards_new_cat'] = 'Create new category';
+$txt['mboards_new_cat'] = 'Create New Category';
 $txt['manage_holidays'] = 'Manage Holidays';
 $txt['calendar_settings'] = 'Calendar Settings';
 $txt['search_weights'] = 'Weights';
-$txt['search_method'] = 'Search method';
+$txt['search_method'] = 'Search Method';
 
 $txt['smiley_sets'] = 'Smiley Sets';
 $txt['smileys_add'] = 'Add Smiley';
 $txt['smileys_edit'] = 'Edit Smileys';
-$txt['smileys_set_order'] = 'Set smiley order';
+$txt['smileys_set_order'] = 'Set Smiley Order';
 $txt['icons_edit_message_icons'] = 'Edit Message Icons';
 
 $txt['membergroups_new_group'] = 'Add Membergroup';
@@ -570,7 +570,7 @@ $txt['themeadmin_admin_title'] = 'Manage and Install';
 $txt['themeadmin_list_title'] = 'Themes Settings';
 $txt['themeadmin_reset_title'] = 'Member Options';
 $txt['themeadmin_edit_title'] = 'Modify Themes';
-$txt['admin_browse_register_new'] = 'Register new member';
+$txt['admin_browse_register_new'] = 'Register New Member';
 
 $txt['search_engines'] = 'Search Engines';
 $txt['spiders'] = 'Spiders';
