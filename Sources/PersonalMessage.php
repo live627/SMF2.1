@@ -1623,6 +1623,8 @@ function MessagePost()
 			foreach ($_REQUEST['u'] as $key => $uID)
 				$_REQUEST['u'][$key] = (int) $uID;
 
+			$_REQUEST['u'] = array_unique($_REQUEST['u']);
+
 			$request = $smcFunc['db_query']('', '
 				SELECT id_member, real_name
 				FROM {db_prefix}members
@@ -1639,8 +1641,6 @@ function MessagePost()
 				);
 			$smcFunc['db_free_result']($request);
 		}
-
-		$_REQUEST['u'] = array_unique($_REQUEST['u']);
 	}
 
 	// Set the defaults...
@@ -2013,6 +2013,7 @@ function MessagePost2()
 		$_REQUEST['u'] = explode(',', $_REQUEST['u']);
 		foreach ($_REQUEST['u'] as $key => $uID)
 			$_REQUEST['u'][$key] = (int) $uID;
+		$_REQUEST['u'] = array_unique($_REQUEST['u']);
 
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member
@@ -2026,8 +2027,6 @@ function MessagePost2()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$context['recipient_ids']['to'][] = $row['id_member'];
 		$smcFunc['db_free_result']($request);
-
-		$_REQUEST['u'] = array_unique($_REQUEST['u']);
 	}
 	$context['recipient_ids']['to'] = array_unique($context['recipient_ids']['to']);
 	$context['recipient_ids']['bcc'] = array_unique($context['recipient_ids']['bcc']);
