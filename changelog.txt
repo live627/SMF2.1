@@ -80,6 +80,7 @@ March 2008
  ! Use the table alias for the approve column in the recent page. (Recent.php) [Bug 1737]
  ! Set the $do_include to true by default. (ManageMaintenance.php) [Bug 1736]
  ! The post moderation setting screen wasn't setting moderate permissions right. (ManagePermissions.php) [Bug 1642]
+ ! The file permissions screen wasn't XHTML valid. (Packages.php, Packages template) [Bug 1739]
 
 
 February 2008

@@ -1469,7 +1469,7 @@ function template_file_permissions()
 
 			for (i = 0; i < possibleTags.length; i++)
 			{
-				if (possibleTags[i].id.indexOf("content_" + folderIdent + "|=|") == 0)
+				if (possibleTags[i].id.indexOf("content_" + folderIdent + ":-:") == 0)
 				{
 					possibleTags[i].style.display = possibleTags[i].style.display == "none" ? "" : "none";
 					foundOne = true;
@@ -1841,7 +1841,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 {
 	global $settings, $txt, $scripturl, $context;
 
-	$js_ident = preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $ident);
+	$js_ident = preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $ident);
 	// Have we actually done something?
 	$drawn_div = false;
 
@@ -1856,7 +1856,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 			<div id="', $js_ident, '">';
 			}
 
-			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $ident . '/' . $name);
+			$cur_ident = preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $ident . '/' . $name);
 			echo '
 			<tr class="windowbg" id="content_', $cur_ident, '">
 				<td class="smalltext" width="30%">' . str_repeat('&nbsp;', $level * 5), '
@@ -1895,7 +1895,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 		echo '
 	<tr class="windowbg" id="content_', $js_ident, '_more">
 		<td class="smalltext" width="40%">' . str_repeat('&nbsp;', $level * 5), '
-			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
+			&#171; <a href="' . $scripturl . '?action=admin;area=packages;sa=perms;find=' . base64_encode($ident) . ';fileoffset=', ($context['file_offset'] + $context['file_limit']), ';sesc=' . $context['session_id'] . '#fol_' . preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $ident) . '">', $txt['package_file_perms_more_files'], '</a> &#187;
 		</td>
 		<td colspan="6"></td>
 	</tr>';

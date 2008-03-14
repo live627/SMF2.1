@@ -1708,7 +1708,7 @@ function PackagePermissions()
 			'identifier' => 'root',
 			'children' => array(
 				array(
-					'value' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find']),
+					'value' => preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $context['only_find']),
 				),
 			),
 		),
@@ -1839,8 +1839,8 @@ function fetchPerms__recursive($path, &$data, $level)
 					'level' => $level,
 					'more' => 0,
 					'offset' => $context['file_offset'],
-					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find'] . '/' . $folder),
-					'ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find']),
+					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $context['only_find'] . '/' . $folder),
+					'ident' => preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $context['only_find']),
 				),
 				'value' => $folder,
 			);
@@ -1887,8 +1887,8 @@ function fetchPerms__recursive($path, &$data, $level)
 					'level' => $level,
 					'more' => $counter == ($context['file_offset'] + $context['file_limit']) ? 1 : 0,
 					'offset' => $context['file_offset'],
-					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find'] . '/' . $file),
-					'ident' => preg_replace('~[^A-Za-z0-9_\-=|]~', '|=|', $context['only_find']),
+					'my_ident' => preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $context['only_find'] . '/' . $file),
+					'ident' => preg_replace('~[^A-Za-z0-9_\-=:]~', ':-:', $context['only_find']),
 				),
 				'value' => $file,
 			);
