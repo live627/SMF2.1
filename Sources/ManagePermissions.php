@@ -2249,7 +2249,7 @@ function ModifyPostModeration()
 						$new_permissions[] = array($context['current_profile'], $group['id'], $data[1], 1);
 					}
 					elseif ($_POST[$index][$group['id']] == 'moderate')
-						$new_permissions[] = array($context['current_profile'], $group['id'], $data[0], 1);
+						$new_permissions[] = array($context['current_profile'], $group['id'], $data[1], 1);
 				}
 			}
 		}
@@ -2289,7 +2289,7 @@ function ModifyPostModeration()
 					if ($row['add_deny'])
 					{
 						// Full allowance?
-						if ($index == 1)
+						if ($index == 0)
 							$context['profile_groups'][$row['id_group']][$key] = 'allow';
 						// Otherwise only bother with moderate if not on allow.
 						elseif ($context['profile_groups'][$row['id_group']][$key] != 'allow')

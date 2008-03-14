@@ -79,6 +79,7 @@ March 2008
  ! Make sure to skip certain database errors for SQLite on upgrade. (upgrade.php) [Bug 1546]
  ! Use the table alias for the approve column in the recent page. (Recent.php) [Bug 1737]
  ! Set the $do_include to true by default. (ManageMaintenance.php) [Bug 1736]
+ ! The post moderation setting screen wasn't setting moderate permissions right. (ManagePermissions.php) [Bug 1642]
 
 
 February 2008
