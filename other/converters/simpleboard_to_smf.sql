@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Simpleboard 1.0 and 1.1"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2.1"
+---~ version: "SMF 2.0 Beta 3"
 ---~ settings: "/configuration.php", "../../configuration.php", "../../../configuration.php"
 ---~ from_prefix: "`$mosConfig_db`.$mosConfig_dbprefix"
 ---~ table_test: "{$from_prefix}users"

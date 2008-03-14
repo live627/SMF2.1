@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "vBulletin 3.5"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 2.1"
+---~ version: "SMF 2.0 Beta 3"
 ---~ settings: "/admin/config.php", "/includes/config.php"
 ---~ from_prefix: "`" . $config['Database']['dbname'] . "`." . $config['Database']['tableprefix'] . ""
 ---~ table_test: "{$from_prefix}user"
