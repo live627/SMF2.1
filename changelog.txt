@@ -6,6 +6,7 @@ SMF 2.0 Beta 3 Public
 March 2008
 --------------------------------------------------------------------------------
  ! Ensure memcached version information is displayed correctly when available. (Subs-Admin.php)
+ ! Split topics would cause a database error. (SplitTopics.php) [Bug 1754]
 
 
 SMF 2.0 Beta 3                                                     15 March 2008

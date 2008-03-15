@@ -546,7 +546,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	// Find the new first and last not in the list. (old topic)
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count, approved
+			MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count, m.approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:id_topic})
 		WHERE m.id_msg NOT IN ({array_int:no_msg_list})
