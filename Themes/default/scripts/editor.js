@@ -252,7 +252,6 @@ SmfEditor.prototype.init = function()
 						this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
 						this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
 						this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
-						this.oFrameDocument.body.style.border = document.styleSheets[i].cssRules[r].style.border;
 						bFoundSomething = true;
 					}
 				}
@@ -266,7 +265,6 @@ SmfEditor.prototype.init = function()
 				this.oFrameDocument.body.style.backgroundColor = 'white';
 				this.oFrameDocument.body.style.fontSize = 'small';
 				this.oFrameDocument.body.style.fontFamily = 'verdana';
-				this.oFrameDocument.body.style.border = '1px solid #808080';
 			}
 		}
 
