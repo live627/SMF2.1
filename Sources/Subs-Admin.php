@@ -60,7 +60,7 @@ if (!defined('SMF'))
 
 function getServerVersions($checkFor)
 {
-	global $txt, $db_connection, $_PHPA, $smcFunc, $memcached;
+	global $txt, $db_connection, $_PHPA, $smcFunc, $memcached, $modSettings;
 
 	loadLanguage('Admin');
 
@@ -87,7 +87,7 @@ function getServerVersions($checkFor)
 	}
 
 	// If we're using memcache we need the server info.
-	if (empty($memcached))
+	if (empty($memcached) && function_exists('memcache_get') && isset($modSettings['cache_memcached']) && trim($modSettings['cache_memcached']) != '')
 		get_memcached_server();
 
 	// Check to see if we have any accelerators installed...
