@@ -7,6 +7,7 @@ March 2008
 --------------------------------------------------------------------------------
  ! Ensure memcached version information is displayed correctly when available. (Subs-Admin.php)
  ! Split topics would cause a database error. (SplitTopics.php) [Bug 1754]
+ ! Magic quotes still applies on parse_str, so work around this too. (QueryString.php) [Bug 1588]
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
