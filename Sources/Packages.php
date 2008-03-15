@@ -604,12 +604,12 @@ function PackageInstallTest()
 						// Check if we will need to chmod this.
 						if (!mktree(dirname($theme_data['theme_dir'] . $path), false))
 						{
-							$temp = dirname($this_action['destination']);
+							$temp = dirname($action_data['destination']);
 							while (!file_exists($temp) && strlen($temp) > 1)
 								$temp = dirname($temp);
 							$chmod_files[] = $temp;
 						}
-						if ($action['type'] == 'require-dir' && !is_writable($theme_data['theme_dir'] . $path) && (file_exists($theme_data['theme_dir'] . $path) || !is_writable(dirname($theme_data['theme_dir'] . $path))))
+						if ($action_data['type'] == 'require-dir' && !is_writable($theme_data['theme_dir'] . $path) && (file_exists($theme_data['theme_dir'] . $path) || !is_writable(dirname($theme_data['theme_dir'] . $path))))
 							$chmod_files[] = $theme_data['theme_dir'] . $path;
 
 						if (!isset($context['theme_actions'][$id]))

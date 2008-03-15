@@ -827,8 +827,11 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 	{
 		foreach ($chmodFiles as $k => $file)
 		{
+			// Sometimes this can somehow happen maybe?
+			if (empty($file))
+				unset($chmodFiles[$k]);
 			// Already writable?
-			if (@is_writable($file))
+			elseif (@is_writable($file))
 				$return_data['files']['writable'][] = $file;
 			else
 			{
