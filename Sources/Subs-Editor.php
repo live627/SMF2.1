@@ -1437,6 +1437,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 		$_SESSION[$verificationOptions['id'] . '_vv']['count'] = 0;
 		$_SESSION[$verificationOptions['id'] . '_vv']['errors'] = 0;
 		$_SESSION[$verificationOptions['id'] . '_vv']['did_pass'] = false;
+		$_SESSION[$verificationOptions['id'] . '_vv']['q'] = array();
 
 		// Generating a new image.
 		if ($thisVerification['show_visual'])
@@ -1454,8 +1455,11 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 		{
 			// Pick some random IDs
 			$questionIDs = array();
-			foreach (array_rand($modSettings['question_id_cache'], $thisVerification['number_questions']) as $index)
-				$questionIDs[] = $modSettings['question_id_cache'][$index];
+			if ($thisVerification['number_questions'] == 1)
+				$questionIDs[] = $modSettings['question_id_cache'][array_rand($modSettings['question_id_cache'], $thisVerification['number_questions'])];
+			else
+				foreach (array_rand($modSettings['question_id_cache'], $thisVerification['number_questions']) as $index)
+					$questionIDs[] = $modSettings['question_id_cache'][$index];
 		}
 	}
 	else
