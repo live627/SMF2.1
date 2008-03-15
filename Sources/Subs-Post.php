@@ -1978,10 +1978,10 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// If there's a custom search index, it needs updating...
 	if (!empty($modSettings['search_custom_index_config']))
 	{
-		//$index_settings = unserialize($modSettings['search_custom_index_config']);
+		$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
 
 		$inserts = array();
-		foreach (text2words($msgOptions['body'], 4, true) as $word)
+		foreach (text2words($msgOptions['body'], $customIndexSettings['bytes_per_word'], true) as $word)
 			$inserts[] = array($word, $msgOptions['id']);
 
 		if (!empty($inserts))
@@ -2405,9 +2405,11 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// If there's a custom search index, it needs to be modified...
 	if (isset($msgOptions['body']) && !empty($modSettings['search_custom_index_config']))
 	{
+		$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
+
 		$stopwords = empty($modSettings['search_stopwords']) ?  array() : explode(',', $modSettings['search_stopwords']);
-		$old_index = text2words($old_body, 4, true);
-		$new_index = text2words($msgOptions['body'], 4, true);
+		$old_index = text2words($old_body, $customIndexSettings['bytes_per_word'], true);
+		$new_index = text2words($msgOptions['body'], $customIndexSettings['bytes_per_word'], true);
 
 		// Calculate the words to be added and removed from the index.
 		$removed_words = array_diff(array_diff($old_index, $new_index), $stopwords);

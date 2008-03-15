@@ -2020,7 +2020,8 @@ function prepareSearchContext($reset = false)
 		// Fix the international characters in the keyword too.
 		$query = strtr($smcFunc['htmlspecialchars']($query), array('\\\'' => '\''));
 
-		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), '\'$2\' == \'$1\' ? \'$1\' : \'<b class="highlight">$1</b>\'', $body_highlighted);
+		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? stripslashes('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
+		//$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), '\'$2\' == \'$1\' ? \'$1\' : \'<b class="highlight">$1</b>\'', $body_highlighted);
 		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<b class="highlight">$1</b>', $subject_highlighted);
 	}
 
