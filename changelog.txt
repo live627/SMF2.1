@@ -83,6 +83,7 @@ March 2008
  ! The file permissions screen wasn't XHTML valid. (Packages.php, Packages template) [Bug 1739]
  ! Replying to all on a pm would throw an error. (PersonalMessage.php) [Bug 1744]
  ! Verification questions were not working if you just wanted one question. (Subs-Editor.php) [Bug 1745]
+ ! Marking recent topics as read would redirect to somewhere which might not be where you wanted to go. (Recent template) [Bug 1746]
 
 
 February 2008

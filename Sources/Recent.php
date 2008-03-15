@@ -421,6 +421,7 @@ function UnreadTopics()
 	}
 
 	$context['showing_all_topics'] = isset($_GET['all']);
+	$context['start'] = (int) $_REQUEST['start'];
 	$context['topics_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['topics_per_page']) && !WIRELESS ? $options['topics_per_page'] : $modSettings['defaultMaxTopics'];
 	if ($_REQUEST['action'] == 'unread')
 		$context['page_title'] = $context['showing_all_topics'] ? $txt['unread_topics_all'] : $txt['unread_topics_visit'];
