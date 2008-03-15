@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 3
+SMF 2.0 Beta 3                                                     15 March 2008
 ================================================================================
 March 2008
 --------------------------------------------------------------------------------
@@ -287,7 +287,6 @@ February 2008
  ! Fixed potential undefined index error when saving settings. (ManageServer.php) [Bug 1480]
  ! Upgrade should always put maintenance mode back to something which ain't 2. (upgrade.php)
  ! FixLanguages wasn't quite working right for the Help file. (FixLanguage.php)
-
 
 
 January 2008
