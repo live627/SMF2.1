@@ -192,9 +192,9 @@ function loadProfileFields($force_reload = false)
 				global $cur_profile, $context;
 
 				// Split up the birthdate....
-				list ($uyear, $umonth, $uday) = empty($cur_profile[\'birthdate\']) ? \'0000-00-00\' : explode(\'-\', $cur_profile[\'birthdate\']);
+				list ($uyear, $umonth, $uday) = explode(\'-\', empty($cur_profile[\'birthdate\']) || $cur_profile[\'birthdate\'] == \'0001-01-01\' ? \'0000-00-00\' : $cur_profile[\'birthdate\']);
 				$context[\'member\'][\'birth_date\'] = array(
-					\'year\' => $uyear,
+					\'year\' => $uyear == \'0004\' ? \'0000\' : $uyear,
 					\'month\' => $umonth,
 					\'day\' => $uday,
 				);
@@ -234,7 +234,7 @@ function loadProfileFields($force_reload = false)
 				}
 				else
 				{
-					$value = empty($cur_profile[\'birthdate\']) ? \'0004-01-01\' : $cur_profile[\'birthdate\'];
+					$value = empty($cur_profile[\'birthdate\']) ? \'0001-01-01\' : $cur_profile[\'birthdate\'];
 					return false;
 				}
 			'),
