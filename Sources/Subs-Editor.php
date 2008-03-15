@@ -1407,7 +1407,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 			$incorrectQuestions = array();
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
-				if (empty($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']]) || trim($smcFunc['htmlspecialchars']($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']])) != $row['answer'])
+				if (empty($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']]) || trim($smcFunc['htmlspecialchars'](strtolower($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$row['id_comment']]))) != strtolower($row['answer']))
 					$incorrectQuestions[] = $row['id_comment'];
 			}
 			$smcFunc['db_free_result']($request);
