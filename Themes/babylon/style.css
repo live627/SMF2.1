@@ -105,6 +105,8 @@ code
 	/* Don't wrap its contents, and show scrollbars. */
 	white-space: pre;
 	overflow: auto;
+	display: block;
+
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
 }
