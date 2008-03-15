@@ -90,6 +90,7 @@ March 2008
  ! Added another index to the topics table for MySQL. (install and upgrade scripts) [Bug 1593]
  ! Search highlighting wasn't really working very well. (Search.php) [Bug 1622]
  ! Custom search index wasn't working with new posts. (Subs-Post.php)
+ ! Optimisation of the recent topic query for when post moderation is in use. (Recent.php) [Bug 1728]
 
 
 February 2008

@@ -818,7 +818,7 @@ function UnreadTopics()
 			WHERE t.' . $query_this_board . '
 				AND t.id_last_msg >= {int:min_message}
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . ($modSettings['postmod_active'] ? '
-				AND t.approved = {int:is_approved}' : '') . '
+				AND ms.approved = {int:is_approved}' : '') . '
 			ORDER BY {raw:sort}
 			LIMIT {int:offset}, {int:limit}',
 			array_merge($query_parameters, array(
@@ -896,7 +896,7 @@ function UnreadTopics()
 			WHERE t.' . $query_this_board . '
 				AND t.id_last_msg >= {int:min_message}
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < ml.id_msg' . ($modSettings['postmod_active'] ? '
-				AND t.approved = {int:is_approved}' : '') . '
+				AND ms.approved = {int:is_approved}' : '') . '
 			ORDER BY {raw:order}
 			LIMIT {int:offset}, {int:limit}',
 			array_merge($query_parameters, array(
