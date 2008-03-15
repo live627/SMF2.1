@@ -60,7 +60,7 @@ if (!defined('SMF'))
 
 function getServerVersions($checkFor)
 {
-	global $txt, $db_connection, $_PHPA, $smcFunc;
+	global $txt, $db_connection, $_PHPA, $smcFunc, $memcached;
 
 	loadLanguage('Admin');
 
@@ -86,6 +86,10 @@ function getServerVersions($checkFor)
 		}
 	}
 
+	// If we're using memcache we need the server info.
+	if (empty($memcached))
+		get_memcached_server();
+
 	// Check to see if we have any accelerators installed...
 	if (in_array('mmcache', $checkFor) && defined('MMCACHE_VERSION'))
 		$versions['mmcache'] = array('title' => 'Turck MMCache', 'version' => MMCACHE_VERSION);
@@ -96,7 +100,7 @@ function getServerVersions($checkFor)
 	if (in_array('apc', $checkFor) && extension_loaded('apc'))
 		$versions['apc'] = array('title' => 'Alternative PHP Cache', 'version' => phpversion('apc'));
 	if (in_array('memcache', $checkFor) && function_exists('memcache_set'))
-		$versions['memcache'] = array('title' => 'Memcached', 'version' => memcache_get_version());
+		$versions['memcache'] = array('title' => 'Memcached', 'version' => empty($memcached) ? '???' : memcache_get_version($memcached));
 
 	if (in_array('php', $checkFor))
 		$versions['php'] = array('title' => 'PHP', 'version' => PHP_VERSION);

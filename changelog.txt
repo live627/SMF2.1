@@ -1,6 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
+SMF 2.0 Beta 3 Public
+================================================================================
+March 2008
+--------------------------------------------------------------------------------
+ ! Ensure memcached version information is displayed correctly when available. (Subs-Admin.php)
+
+
 SMF 2.0 Beta 3                                                     15 March 2008
 ================================================================================
 March 2008
