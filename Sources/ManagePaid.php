@@ -401,6 +401,10 @@ function ModifySubscription()
 
 			// Sort out the cost.
 			$cost = array('fixed' => $_POST['cost']);
+
+			// There needs to be something.
+			if (empty($_POST['span_value']) || empty($_POST['cost']))
+				fatal_lang_error('paid_no_cost_value');
 		}
 		// Flexible is harder but more fun ;)
 		else
@@ -413,6 +417,9 @@ function ModifySubscription()
 				'month' => $_POST['cost_month'],
 				'year' => $_POST['cost_year'],
 			);
+
+			if (empty($_POST['cost_day']) && empty($_POST['cost_week']) && empty($_POST['cost_month']) && empty($_POST['cost_year']))
+				fatal_lang_error('paid_all_freq_blank');
 		}
 		$cost = serialize($cost);
 
@@ -1081,7 +1088,7 @@ function ModifyUserSubscription()
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 		$row = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
 
