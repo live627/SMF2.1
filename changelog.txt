@@ -87,6 +87,7 @@ March 2008
  ! Verification questions were not being checked as case insensitive. (Subs-Editor.php) [Bug 1624]
  ! Birthdates were not getting saved and displayed quite right if the user wanted to remove the year/date. (Profile-Modify.php) [Bug 1178]
  ! Don't let the admin setup a paid subscription without any costs. (ManagePaid.php, ManagePaid language file) [Bug 1598]
+ ! Added another index to the topics table for MySQL. (install and upgrade scripts) [Bug 1593]
 
 
 February 2008

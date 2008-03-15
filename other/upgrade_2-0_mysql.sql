@@ -2224,6 +2224,11 @@ ALTER TABLE {$db_prefix}topics
 ADD INDEX member_started (id_member_started, id_board);
 ---#
 
+---# Adding another index to the topics table...
+ALTER TABLE {$db_prefix}topics
+ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
+---#
+
 /******************************************************************************/
 --- Final clean up...
 /******************************************************************************/

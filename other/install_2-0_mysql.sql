@@ -1981,7 +1981,8 @@ CREATE TABLE {$db_prefix}topics (
   KEY is_sticky (is_sticky),
   KEY approved (approved),
   KEY id_board (id_board),
-  KEY member_started (id_member_started, id_board)
+  KEY member_started (id_member_started, id_board),
+  KEY last_message_sticky (id_board, is_sticky, id_last_msg)
 ) TYPE=MyISAM;
 
 #
