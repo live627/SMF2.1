@@ -11,6 +11,7 @@ March 2008
  ! Allow styling of the WYSWIYG editor border, and make it look the same in all browsers. (editor.js, editor.css, editor_ie.css) [Bug 1146]
  ! The activateaccount function existed twice. (Profile-Modify.php) [Bug 1757]
  ! Pagination wasn't working for unapproved topics. (PostModeration.php) [Bug 1753]
+ ! Latest news in the moderation center could cause a javascript error. (ModerationCenter template) [Bug 1608]
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
