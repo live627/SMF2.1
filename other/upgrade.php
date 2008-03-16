@@ -3695,9 +3695,18 @@ function template_welcome_message()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings;
 
 	echo '
+		<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . SMF_VERSION . '"></script>
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 			<h3>Thank you for choosing to upgrade to SMF ', SMF_VERSION, '. All files appear to be in place, and we\'re ready to proceed.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>';
+	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
+		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
+			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<b style="text-decoration: underline;">Warning!</b><br />
+			<div style="padding-left: 6ex;">
+				This upgrade script is out of date! The current version of SMF is <i id="smfVersion" style="white-space: nowrap;">??</i> but this upgrade script is for <i id="yourVersion" style="white-space: nowrap;">' . SMF_VERSION . '</i>.<br /><br />
+				It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are upgrading to the latest version.
+			</div>
+		</div>';
 
 	$upcontext['chmod_in_form'] = true;
 	template_chmod();
@@ -3827,6 +3836,25 @@ function template_welcome_message()
 			{
 				document.getElementById(\'js_works\').value = 1;
 			}
+			// Latest version?
+			function smfCurrentVersion()
+			{
+				var smfVer, yourVer;
+
+				if (typeof(window.smfVersion) != "string")
+					return;
+				window.smfVersion = window.smfVersion.replace(/SMF/g, \'\');
+
+				smfVer = document.getElementById("smfVersion");
+				yourVer = document.getElementById("yourVersion");
+
+				setInnerHTML(smfVer, window.smfVersion);
+
+				var currentVersion = getInnerHTML(yourVer);
+				if (currentVersion < window.smfVersion)
+					document.getElementById(\'version_warning\').style.display = \'\';
+			}
+			add_load_event(smfCurrentVersion);
 		// ]]></script>';
 }
 

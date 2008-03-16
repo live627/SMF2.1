@@ -498,6 +498,14 @@ function doStep0()
 	$test_dbsession = @ini_get('session.auto_start') != 1 && @version_compare(PHP_VERSION, '4.2.0') != -1;
 
 	echo '
+				<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
+				<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
+					<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+					<b style="text-decoration: underline;">', $txt['error_warning_notice'], '</b><br />
+					<div style="padding-left: 6ex;">
+						', sprintf($txt['error_script_outdated'], '<i id="smfVersion" style="white-space: nowrap;">??</i>', '<i id="yourVersion" style="white-space: nowrap;">' . $GLOBALS['current_smf_version'] . '</i>'), '
+					</div>
+				</div>
 				<div class="panel">
 					<form action="' . $_SERVER['PHP_SELF'] . '?step=1" method="post">
 						<h2>', $txt['install_settings'], '</h2>
@@ -652,6 +660,25 @@ function doStep0()
 			document.getElementById(\'db_filename_contain\').style.display = !showAll ? \'\' : \'none\';
 		}
 		toggleDBInput();
+		// Latest version?
+		function smfCurrentVersion()
+		{
+			var smfVer, yourVer;
+
+			if (typeof(window.smfVersion) != "string")
+				return;
+			window.smfVersion = window.smfVersion.replace(/SMF/g, \'\');
+
+			smfVer = document.getElementById("smfVersion");
+			yourVer = document.getElementById("yourVersion");
+
+			setInnerHTML(smfVer, window.smfVersion);
+
+			var currentVersion = getInnerHTML(yourVer);
+			if (currentVersion < window.smfVersion)
+				document.getElementById(\'version_warning\').style.display = \'\';
+		}
+		add_load_event(smfCurrentVersion);
 	// ]]></script>';
 
 	return true;
