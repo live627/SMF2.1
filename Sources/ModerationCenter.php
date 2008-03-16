@@ -292,6 +292,7 @@ function ModBlockNotes()
 
 			// Clear the cache.
 			cache_put_data('moderator_notes', null, 240);
+			cache_put_data('moderator_notes_total', null, 240);
 		}
 
 		// Redirect otherwise people can resubmit.
@@ -339,8 +340,9 @@ function ModBlockNotes()
 		cache_put_data('moderator_notes_total', $moderator_notes_total, 240);
 	}
 
-	// Grab the current notes.
-	if (($moderator_notes = cache_get_data('moderator_notes', 240)) === null)
+	// Grab the current notes. We can only use the cache for the first page of notes.
+	$offset = isset($_GET['notes']) && isset($_GET['start']) ? $_GET['start'] : 0;
+	if ($offset != 0 || ($moderator_notes = cache_get_data('moderator_notes', 240)) === null)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
@@ -352,7 +354,7 @@ function ModBlockNotes()
 			LIMIT {int:offset}, 10',
 			array(
 				'modnote' => 'modnote',
-				'offset' => isset($_GET['notes']) && isset($_GET['start']) ? $_GET['start'] : 0,
+				'offset' => $offset,
 			)
 		);
 		$moderator_notes = array();
@@ -360,7 +362,8 @@ function ModBlockNotes()
 			$moderator_notes[] = $row;
 		$smcFunc['db_free_result']($request);
 
-		cache_put_data('moderator_notes', $moderator_notes, 240);
+		if ($offset == 0)
+			cache_put_data('moderator_notes', $moderator_notes, 240);
 	}
 
 	// Lets construct a page index.

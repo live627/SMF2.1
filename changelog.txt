@@ -21,6 +21,7 @@ March 2008
  + Install and upgrade will now warn you if your script is out of date. (install and upgrade scripts)
  * Use tabindex on quick modify to ensure the input jumps as expected. (Display templates)
  ! If deleting a conversation delete items in your outbox and inbox. (PersonalMessage.php) [Bug 1674]
+ ! Only the first page of moderator notes could be viewed if caching was enabled. (ModerationCenter.php) [Bug 1762]
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
