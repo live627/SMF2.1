@@ -364,6 +364,25 @@ function doStep0()
 		return false;
 	}
 
+	// See if we think they have already installed it?
+	if (file_exists(dirname(__FILE__) . '/Settings.php'))
+	{
+		$probably_installed = 0;
+		foreach (file(dirname(__FILE__) . '/Settings.php') as $line)
+		{
+			if (preg_match('~^\$db_passwd\s=\s\'([^\']+)\';$~', $line))
+				$probably_installed++;
+			if (preg_match('~^\$boardurl\s=\s\'([^\']+)\';~', $line) && !preg_match('~^\$boardurl\s=\s\'http://127\.0\.0\.1/smf\';~', $line))
+				$probably_installed++;
+		}
+
+		if ($probably_installed == 2)
+			echo '
+				<div class="error_message">
+					<div style="color: red;">', $txt['error_already_installed'], '</div>
+				</div>';
+	}
+
 	// Is some database support even compiled in?
 	$foundDBCount = 0;
 
@@ -641,7 +660,7 @@ function doStep0()
 // Step one: Do the SQL thang.
 function doStep1()
 {
-	global $txt, $db_connection, $smcFunc, $databases, $modSettings, $db_type, $sourcedir;
+	global $txt, $db_connection, $smcFunc, $databases, $modSettings, $db_type, $sourcedir, $db_prefix;
 
 	if (substr($_POST['boardurl'], -10) == '/index.php')
 		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
@@ -800,22 +819,21 @@ function doStep1()
 
 	// Before running any of the queries, let's make sure another version isn't already installed.
 	$result = $smcFunc['db_query']('', '
-		SELECT value
-		FROM {db_prefix}settings
-		WHERE variable = {string:version}
-		LIMIT 1',
+		SELECT variable, value
+		FROM {db_prefix}settings',
 		array(
-			'version' => 'smfVersion',
 			'db_error_skip' => true,
 		)
 	);
+	$modSettings = array();
 	if ($result !== false)
 	{
-		list ($database_version) = $smcFunc['db_fetch_row']($result);
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$modSettings[$row['variable']] = $row['value'];
 		$smcFunc['db_free_result']($result);
 
 		// Do they match?  If so, this is just a refresh so charge on!
-		if ($database_version != $GLOBALS['current_smf_version'])
+		if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] != $GLOBALS['current_smf_version'])
 		{
 			echo '
 					<div class="error_message">
@@ -1075,7 +1093,7 @@ function doStep2a()
 	global $txt, $db_type;
 
 	// Need this to check whether we need the database password.
-	require_once(dirname(__FILE__) . '/Settings.php');
+	require(dirname(__FILE__) . '/Settings.php');
 
 	if (!isset($_POST['username']))
 		$_POST['username'] = '';
@@ -1129,7 +1147,16 @@ function doStep2a()
 	}
 
 	echo '
-						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';"><input type="submit" value="', $txt['user_settings_proceed'], '" /></div>
+						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">';
+
+	// Only allow skipping if we think they already have an account setup.
+	if (!empty($webmaster_email))
+		echo '
+							<input type="submit" name="skip_account" value="', $txt['user_settings_skip'], '" onclick="return confirm(\'', addcslashes($txt['user_settings_skip_sure'], "'"), '\');" />';
+
+	echo '
+							<input type="submit" value="', $txt['user_settings_proceed'], '" />
+						</div>
 					</form>
 				</div>';
 
@@ -1180,7 +1207,7 @@ function doStep2()
 	}
 
 	// Let them try again...
-	if ($_POST['password1'] != $_POST['password2'])
+	if ($_POST['password1'] != $_POST['password2'] && empty($_POST['skip_account']))
 	{
 		echo '
 				<div class="error_message">
@@ -1191,7 +1218,7 @@ function doStep2()
 		return doStep2a();
 	}
 	// No password?
-	elseif (strlen($_POST['password1']) < 4)
+	elseif (strlen($_POST['password1']) < 4 && empty($_POST['skip_account']))
 	{
 		echo '
 				<div class="error_message">
@@ -1213,7 +1240,8 @@ function doStep2()
 		return doStep2a();
 	}
 
-	updateSettingsFile(array('webmaster_email' => $_POST['email']));
+	if (!empty($_POST['email']) && empty($webmaster_email))
+		updateSettingsFile(array('webmaster_email' => $_POST['email']));
 
 	chdir(dirname(__FILE__));
 
@@ -1232,124 +1260,127 @@ function doStep2()
 			)
 		);
 
-	$result = $smcFunc['db_query']('', '
-		SELECT id_member, password_salt
-		FROM {db_prefix}members
-		WHERE member_name = {string:username} OR email_address = {string:email}
-		LIMIT 1',
-		array(
-			'username' => stripslashes($_POST['username']),
-			'email' => stripslashes($_POST['email']),
-			'db_error_skip' => true,
-		)
-	);
-	if ($smcFunc['db_num_rows']($result) != 0)
+	if (empty($_POST['skip_account']))
 	{
-		list ($id, $salt) = $smcFunc['db_fetch_row']($result);
-		$smcFunc['db_free_result']($result);
+		$result = $smcFunc['db_query']('', '
+			SELECT id_member, password_salt
+			FROM {db_prefix}members
+			WHERE member_name = {string:username} OR email_address = {string:email}
+			LIMIT 1',
+			array(
+				'username' => stripslashes($_POST['username']),
+				'email' => stripslashes($_POST['email']),
+				'db_error_skip' => true,
+			)
+		);
+		if ($smcFunc['db_num_rows']($result) != 0)
+		{
+			list ($id, $salt) = $smcFunc['db_fetch_row']($result);
+			$smcFunc['db_free_result']($result);
 
 		echo '
 				<div class="error_message">
 					<div style="color: red;">', $txt['error_user_settings_taken'], '</div>
 				</div>
 				<br />';
-	}
-	elseif (preg_match('~[<>&"\'=\\\]~', $_POST['username']) != 0 || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
-	{
-		// Initialize some variables needed for the language file.
-		$context = array(
-			'forum_name' => $mbname,
-		);
-		$modSettings = array(
-			'lastActive' => '15',
-			'hotTopicPosts' => '15',
-			'hotTopicVeryPosts' => '25',
-			'smfVersion' => $current_smf_version,
-		);
-		$scripturl = $boardurl . '/index.php';
+		}
+		elseif (preg_match('~[<>&"\'=\\\]~', $_POST['username']) != 0 || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
+		{
+			// Initialize some variables needed for the language file.
+			$context = array(
+				'forum_name' => $mbname,
+			);
+			$modSettings = array(
+				'lastActive' => '15',
+				'hotTopicPosts' => '15',
+				'hotTopicVeryPosts' => '25',
+				'smfVersion' => $current_smf_version,
+			);
+			$scripturl = $boardurl . '/index.php';
 
-		require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
-		echo '
+			require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
+			echo '
 				<div class="error_message">
 					<div style="color: red;">', $txt['error_invalid_characters_username'], '</div>
 				</div>
 				<br />';
 
-		// Try the previous step again.
-		return doStep2a();
-	}
-	elseif (empty($_POST['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smcFunc['db_unescape_string']($_POST['email'])) === 0 || strlen($smcFunc['db_unescape_string']($_POST['email'])) > 255)
-	{
-		// Artificially fill some of the globals needed for the language files.
-		$context = array(
-			'forum_name' => $mbname,
-		);
-		$modSettings = array(
-			'lastActive' => '15',
-			'hotTopicPosts' => '15',
-			'hotTopicVeryPosts' => '25',
-			'smfVersion' => $current_smf_version,
-		);
-		$scripturl = $boardurl . '/index.php';
+			// Try the previous step again.
+			return doStep2a();
+		}
+		elseif (empty($_POST['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smcFunc['db_unescape_string']($_POST['email'])) === 0 || strlen($smcFunc['db_unescape_string']($_POST['email'])) > 255)
+		{
+			// Artificially fill some of the globals needed for the language files.
+			$context = array(
+				'forum_name' => $mbname,
+			);
+			$modSettings = array(
+				'lastActive' => '15',
+				'hotTopicPosts' => '15',
+				'hotTopicVeryPosts' => '25',
+				'smfVersion' => $current_smf_version,
+			);
+			$scripturl = $boardurl . '/index.php';
 
-		require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
-		require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'Login')));
-		echo '
+			require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
+			require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'Login')));
+			echo '
 				<div class="error_message">
 					<div style="color: red;">', sprintf($txt['error_valid_email_needed'], $_POST['username']), '</div>
 				</div>
 				<br />';
 
-		// One step back, this time fill out a proper email address.
-		return doStep2a();
-	}
-	elseif ($_POST['username'] != '')
-	{
-		$salt = substr(md5(rand()), 0, 4);
-
-		// Format the username properly.
-		$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
-		$ip = isset($_SERVER['REMOTE_ADDR']) ? $smcFunc['db_escape_string'](substr($smcFunc['db_unescape_string']($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
-
-		$request = $smcFunc['db_insert']('',
-			$db_prefix . 'members',
-			array(
-				'member_name' => 'string-25', 'real_name' => 'string-25', 'passwd' => 'string', 'email_address' => 'string',
-				'id_group' => 'int', 'posts' => 'int', 'date_registered' => 'int', 'hide_email' => 'int',
-				'password_salt' => 'string', 'lngfile' => 'string', 'personal_text' => 'string', 'avatar' => 'string',
-				'member_ip' => 'string', 'member_ip2' => 'string', 'buddy_list' => 'string', 'pm_ignore_list' => 'string',
-				'message_labels' => 'string', 'website_title' => 'string', 'website_url' => 'string', 'location' => 'string',
-				'icq' => 'string', 'msn' => 'string', 'signature' => 'string', 'usertitle' => 'string', 'secret_question' => 'string',
-				'additional_groups' => 'string', 'ignore_boards' => 'string', 'openid_uri' => 'string',
-			),
-			array(
-				stripslashes($_POST['username']), stripslashes($_POST['username']), sha1(strtolower(stripslashes($_POST['username'])) . stripslashes($_POST['password1'])), stripslashes($_POST['email']),
-				1, 0, time(), 0,
-				$salt, '', '', '',
-				$ip, $ip, '', '',
-				'', '', '', '',
-				'', '', '', '', '',
-				'', '', '',
-			),
-			array('id_member')
-		);
-
-		// Awww, crud!
-		if ($request === false)
-		{
-			echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_user_settings_query'], '</div>
-
-					<div style="margin: 2ex;">', nl2br(htmlspecialchars($smcFunc['db_error']($db_connection))), '</div>
-
-					<a href="', $_SERVER['PHP_SELF'], '?step=2">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-			return false;
+			// One step back, this time fill out a proper email address.
+			return doStep2a();
 		}
+		elseif ($_POST['username'] != '')
+		{
+			$salt = substr(md5(rand()), 0, 4);
 
-		$id = $smcFunc['db_insert_id']("{$db_prefix}members", 'id_member');
+			// Format the username properly.
+			$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
+			$ip = isset($_SERVER['REMOTE_ADDR']) ? $smcFunc['db_escape_string'](substr($smcFunc['db_unescape_string']($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
+
+			$request = $smcFunc['db_insert']('',
+				$db_prefix . 'members',
+				array(
+					'member_name' => 'string-25', 'real_name' => 'string-25', 'passwd' => 'string', 'email_address' => 'string',
+					'id_group' => 'int', 'posts' => 'int', 'date_registered' => 'int', 'hide_email' => 'int',
+					'password_salt' => 'string', 'lngfile' => 'string', 'personal_text' => 'string', 'avatar' => 'string',
+					'member_ip' => 'string', 'member_ip2' => 'string', 'buddy_list' => 'string', 'pm_ignore_list' => 'string',
+					'message_labels' => 'string', 'website_title' => 'string', 'website_url' => 'string', 'location' => 'string',
+					'icq' => 'string', 'msn' => 'string', 'signature' => 'string', 'usertitle' => 'string', 'secret_question' => 'string',
+					'additional_groups' => 'string', 'ignore_boards' => 'string', 'openid_uri' => 'string',
+				),
+				array(
+					stripslashes($_POST['username']), stripslashes($_POST['username']), sha1(strtolower(stripslashes($_POST['username'])) . stripslashes($_POST['password1'])), stripslashes($_POST['email']),
+					1, 0, time(), 0,
+					$salt, '', '', '',
+					$ip, $ip, '', '',
+					'', '', '', '',
+					'', '', '', '', '',
+					'', '', '',
+				),
+				array('id_member')
+			);
+
+			// Awww, crud!
+			if ($request === false)
+			{
+				echo '
+					<div class="error_message">
+						<div style="color: red;">', $txt['error_user_settings_query'], '</div>
+	
+						<div style="margin: 2ex;">', nl2br(htmlspecialchars($smcFunc['db_error']($db_connection))), '</div>
+	
+						<a href="', $_SERVER['PHP_SELF'], '?step=2">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+					</div>';
+	
+				return false;
+			}
+
+			$id = $smcFunc['db_insert_id']("{$db_prefix}members", 'id_member');
+		}
 	}
 
 	// As track stats is by default enabled let's add some activity.

@@ -13,6 +13,8 @@ March 2008
  ! Pagination wasn't working for unapproved topics. (PostModeration.php) [Bug 1753]
  ! Latest news in the moderation center could cause a javascript error. (ModerationCenter template) [Bug 1608]
  * Added a new image for use in the package manager for viewing operations and make it always use the default theme. (package_ops.gif)
+ ! Warn a user if they are running install on an existing install. (install.php)
+ ! Allow the skipping of admin account creation on install. (install.php)
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
