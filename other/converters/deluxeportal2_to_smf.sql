@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Deluxe Portal 2.0"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3"
+---~ version: "SMF 2.0 Beta 3 Public"
 ---~ settings: "/config.php"
 ---~ from_prefix: "`$dbname`."
 ---~ table_test: "{$from_prefix}user"

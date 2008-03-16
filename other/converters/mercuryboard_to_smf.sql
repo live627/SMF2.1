@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MercuryBoard 1.1"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3"
+---~ version: "SMF 2.0 Beta 3 Public"
 ---~ settings: "/settings.php", "/global.php"
 ---~ from_prefix: "`$set[db_name]`.$set[prefix]"
 ---~ table_test: "{$from_prefix}users"

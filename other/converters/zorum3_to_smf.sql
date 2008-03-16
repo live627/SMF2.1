@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Zorum 3"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3"
+---~ version: "SMF 2.0 Beta 3 Public"
 ---~ settings: "/config.php", "/constants.php"
 ---~ variable: "$applName = 'zorum';"
 ---~ from_prefix: "`$dboard_name`.{$applName}_"

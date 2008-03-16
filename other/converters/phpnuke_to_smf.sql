@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "PHP-Nuke 7.7"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3"
+---~ version: "SMF 2.0 Beta 3 Public"
 ---~ settings: "/config.php", "/includes/constants.php"
 ---~ defines: IN_PHPBB
 ---~ from_prefix: "`$dbname`.{$prefix}_"

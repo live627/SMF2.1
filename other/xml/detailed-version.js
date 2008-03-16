@@ -13,7 +13,7 @@ if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($modified_since) >= 
 if (isset($_GET['version']) && strpos($_GET['version'], '2.0') !== false)
 {
 ?>window.smfVersions = {
-	'SMF': 'SMF 2.0 Beta 3',
+	'SMF': 'SMF 2.0 Beta 3 Public',
 	'SourcesAdmin.php': '2.0 Beta 3',
 	'SourcesBoardIndex.php': '2.0 Beta 3',
 	'SourcesCalendar.php': '2.0 Beta 3',
