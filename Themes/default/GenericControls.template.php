@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; GenericControls
+// Version: 2.0 Beta 3 Public; GenericControls
 
 // This function displays all the stuff you get with a richedit box - BBC, smileys etc.
 function template_control_richedit($editor_id, $display_controls = 'all')

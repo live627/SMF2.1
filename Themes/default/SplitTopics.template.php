@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; SplitTopics
+// Version: 2.0 Beta 3 Public; SplitTopics
 
 function template_ask()
 {

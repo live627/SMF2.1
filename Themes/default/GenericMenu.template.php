@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; GenericMenu
+// Version: 2.0 Beta 3 Public; GenericMenu
 
 // This contains the html for the side bar of the admin center, which is used for all admin pages.
 function template_generic_menu_sidebar_above()

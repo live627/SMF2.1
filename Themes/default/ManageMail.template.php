@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; ManageMail
+// Version: 2.0 Beta 3 Public; ManageMail
 
 function template_browse()
 {

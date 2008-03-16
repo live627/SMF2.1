@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; ManageAttachments
+// Version: 2.0 Beta 3 Public; ManageAttachments
 
 // Template template wraps around the simple settings page to add javascript functionality.
 function template_avatar_settings_above()

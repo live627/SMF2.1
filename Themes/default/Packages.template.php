@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; Packages
+// Version: 2.0 Beta 3 Public; Packages
 
 function template_main()
 {
