@@ -1,3 +1,9 @@
+/* This is the IFRAME that holds the editor. */
+.rich_editor_frame
+{
+	border: 1px solid #808080;
+}
+
 /* This is the WYSIWYG editor */
 .rich_editor
 {
@@ -5,6 +11,7 @@
 	color: black;
 	font-family: verdana;
 	font-size: small;
+	border: none;
 }
 
 .rich_editor p

@@ -165,6 +165,7 @@ SmfEditor.prototype.init = function()
 		this.oFrameHandle = document.createElement('iframe');
 		this.oFrameHandle.src = 'about:blank';
 		this.oFrameHandle.id = 'html_' + this.sUniqueId;
+		this.oFrameHandle.className = 'rich_editor_frame';
 		this.oFrameHandle.style.display = 'none';
 		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
 
@@ -244,15 +245,27 @@ SmfEditor.prototype.init = function()
 				// Manually try to find the rich_editor class.
 				for (var r = 0, iNumRules = document.styleSheets[i].cssRules.length; r < iNumRules; r++)
 				{
-					// Got it!
+					// Got the main editor?
 					if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
 					{
 						// Set some possible styles.
-						this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
-						this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
-						this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
-						this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+						if (document.styleSheets[i].cssRules[r].style.color)
+							this.oFrameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
+						if (document.styleSheets[i].cssRules[r].style.backgroundColor)
+							this.oFrameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
+						if (document.styleSheets[i].cssRules[r].style.fontSize)
+							this.oFrameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
+						if (document.styleSheets[i].cssRules[r].style.fontFamily)
+							this.oFrameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+						if (document.styleSheets[i].cssRules[r].style.border)
+							this.oFrameDocument.body.style.border = document.styleSheets[i].cssRules[r].style.border;
 						bFoundSomething = true;
+					}
+					// The frame?
+					else if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor_frame')
+					{
+						if (document.styleSheets[i].cssRules[r].style.border)
+							this.oFrameHandle.style.border = document.styleSheets[i].cssRules[r].style.border;
 					}
 				}
 			}
@@ -265,6 +278,8 @@ SmfEditor.prototype.init = function()
 				this.oFrameDocument.body.style.backgroundColor = 'white';
 				this.oFrameDocument.body.style.fontSize = 'small';
 				this.oFrameDocument.body.style.fontFamily = 'verdana';
+				this.oFrameDocument.body.style.border = 'none';
+				this.oFrameHandle.style.border = '#808080';
 			}
 		}
 

@@ -8,6 +8,7 @@ March 2008
  ! Ensure memcached version information is displayed correctly when available. (Subs-Admin.php)
  ! Split topics would cause a database error. (SplitTopics.php) [Bug 1754]
  ! Magic quotes still applies on parse_str, so work around this too. (QueryString.php) [Bug 1588]
+ ! Allow styling of the WYSWIYG editor border, and make it look the same in all browsers. (editor.js, editor.css, editor_ie.css) [Bug 1146]
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
