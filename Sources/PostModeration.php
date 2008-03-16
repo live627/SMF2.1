@@ -45,12 +45,13 @@ function PostModerationMain()
 	$subactions = array(
 		'approve' => 'ApproveMessage',
 		'attachments' => 'UnapprovedAttachments',
-		'posts' => 'UnapprovedPosts',
+		'replies' => 'UnapprovedPosts',
+		'topics' => 'UnapprovedPosts',
 	);
 
 	// Pick something valid...
 	if (!isset($_REQUEST['sa']) || !isset($subactions[$_REQUEST['sa']]))
-		$_REQUEST['sa'] = 'posts';
+		$_REQUEST['sa'] = 'replies';
 
 	$subactions[$_REQUEST['sa']]();
 }
@@ -222,7 +223,7 @@ function UnapprovedPosts()
 	list ($context['total_unapproved_topics']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=postmod;sa=posts', $_GET['start'], $context['current_view'] == 'topics' ? $context['total_unapproved_topics'] : $context['total_unapproved_posts'], 10);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=postmod;sa=' . $context['current_view'], $_GET['start'], $context['current_view'] == 'topics' ? $context['total_unapproved_topics'] : $context['total_unapproved_posts'], 10);
 	$context['start'] = $_GET['start'];
 
 	// We have enough to make some pretty tabs!

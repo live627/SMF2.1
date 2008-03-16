@@ -335,7 +335,7 @@ function template_unapproved_posts()
 
 	// Just a big table of it all really...
 	echo '
-	<form action="', $scripturl, '?action=moderate;area=postmod;sa=posts;start=', $context['start'], ';sa=', $context['current_view'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=moderate;area=postmod;start=', $context['start'], ';sa=', $context['current_view'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['mc_unapproved_posts'], '</td>
@@ -389,12 +389,12 @@ function template_unapproved_posts()
 						<tr>
 							<td colspan="3" class="windowbg2" align="', !$context['right_to_left'] ? 'right' : 'left', '"><span class="middletext">
 
-					<a href="', $scripturl, '?action=moderate;area=postmod;sa=posts;sa=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
 
 			if ($item['can_delete'])
 				echo '
 					', $context['menu_separator'], '
-					<a href="', $scripturl, '?action=moderate;area=postmod;sa=posts;sa=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';delete=', $item['id'], '">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';delete=', $item['id'], '">', $remove_button, '</a>';
 
 			echo '
 					<input type="checkbox" name="item[]" value="', $item['id'], '" checked="checked" class="check" /> ';
