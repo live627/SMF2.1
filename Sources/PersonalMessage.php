@@ -2313,7 +2313,7 @@ function MessageActionsApply()
 
 	// Deleting, it looks like?
 	if (!empty($to_delete))
-		deleteMessages($to_delete, $context['folder']);
+		deleteMessages($to_delete, $context['display_mode'] == 2 ? null : $context['folder']);
 
 	// Are we labeling anything?
 	if (!empty($to_label) && $context['folder'] == 'inbox')
