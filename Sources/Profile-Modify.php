@@ -1185,7 +1185,7 @@ function makeNotificationChanges($memID)
 // Save any changes to the custom profile fields...
 function makeCustomFieldChanges($memID, $area)
 {
-	global $context, $smcFunc, $user_profile;
+	global $context, $smcFunc, $user_profile, $user_info, $modSettings;
 
 	$where = $area == 'register' ? 'show_reg != 0' : 'show_profile = {string:area}';
 
@@ -1201,6 +1201,7 @@ function makeCustomFieldChanges($memID, $area)
 		)
 	);
 	$changes = array();
+	$log_changes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		if ($row['private'] != 0 && !allowedTo('admin_forum') && ($area != 'register' || $row['show_reg'] == 0))
@@ -1238,19 +1239,43 @@ function makeCustomFieldChanges($memID, $area)
 			}
 		}
 
-		$user_profile[$memID]['options'][$row['col_name']] = $value;
-		$changes[] = array(1, $row['col_name'], $value, $memID);
+		// Did it change?
+		if ((!empty($value) && (!isset($user_profile[$memID]['options'][$row['col_name']]) || $user_profile[$memID]['options'][$row['col_name']] != $value)) || (empty($value) && !empty($user_profile[$memID]['options'][$row['col_name']])))
+		{
+			$log_changes[] = array(
+				'action' => 'customfield_' . $row['col_name'],
+				'id_log' => 2,
+				'log_time' => time(),
+				'id_member' => $memID,
+				'ip' => $user_info['ip'],
+				'extra' => serialize(array('previous' => !empty($user_profile[$memID]['options'][$row['col_name']]) ? $user_profile[$memID]['options'][$row['col_name']] : '', 'new' => $value, 'applicator' => $user_info['id'])),
+			);
+			$changes[] = array(1, $row['col_name'], $value, $memID);
+			$user_profile[$memID]['options'][$row['col_name']] = $value;
+		}
 	}
 	$smcFunc['db_free_result']($request);
 
 	// Make those changes!
 	if (!empty($changes) && empty($context['password_auth_failed']))
+	{
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}themes',
 			array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534', 'id_member' => 'int'),
 			$changes,
 			array('id_theme', 'variable', 'id_member')
 		);
+		if (!empty($log_changes) && !empty($modSettings['modlog_enabled']))
+			$smcFunc['db_insert']('',
+				'{db_prefix}log_actions',
+				array(
+					'action' => 'string', 'id_log' => 'int', 'log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16',
+					'extra' => 'string-65534',
+				),
+				$log_changes,
+				array('id_action')
+			);
+	}
 }
 
 // Show all the users buddies, as well as a add/delete interface.

@@ -1395,9 +1395,24 @@ function TrackIP($memID = 0)
 
 function trackEdits($memID)
 {
-	global $scripturl, $txt, $modSettings, $sourcedir, $context;
+	global $scripturl, $txt, $modSettings, $sourcedir, $context, $smcFunc;
 
 	require_once($sourcedir . '/Subs-List.php');
+
+	// Get the names of any custom fields.
+	$request = $smcFunc['db_query']('', '
+		SELECT col_name, field_name, bbc
+		FROM {db_prefix}custom_fields',
+		array(
+		)
+	);
+	$context['custom_field_titles'] = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$context['custom_field_titles']['customfield_' . $row['col_name']] = array(
+			'title' => $row['field_name'],
+			'parse_bbc' => $row['bbc'],
+		);
+	$smcFunc['db_free_result']($request);
 
 	// Set the options for the error lists.
 	$listOptions = array(
@@ -1497,7 +1512,7 @@ function list_getProfileEditCount($memID)
 
 function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 {
-	global $smcFunc, $txt, $scripturl;
+	global $smcFunc, $txt, $scripturl, $context;
 
 	// Get a list of error messages from this ip (range).
 	$request = $smcFunc['db_query']('', '
@@ -1521,15 +1536,29 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 		if (!empty($extra['applicator']))
 			$members[] = $extra['applicator'];
 
+		// Work out what the name of the action is.
+		if (isset($txt['trackEdit_action_' . $row['action']]))
+			$action_text = $txt['trackEdit_action_' . $row['action']];
+		elseif (isset($txt[$row['action']])) 
+			$action_text = $txt[$row['action']];
+		// Custom field?
+		elseif (isset($context['custom_field_titles'][$row['action']]))
+			$action_text = $context['custom_field_titles'][$row['action']]['title'];
+		else
+			$action_text = $row['action'];
+
+		// Parse BBC?
+		$parse_bbc = isset($context['custom_field_titles'][$row['action']]) && $context['custom_field_titles'][$row['action']]['parse_bbc'] ? true : false;
+
 		$edits[] = array(
 			'id' => $row['id_action'],
 			'ip' => $row['ip'],
 			'id_member' => !empty($extra['applicator']) ? $extra['applicator'] : 0,
 			'member_link' => $txt['trackEdit_deleted_member'],
 			'action' => $row['action'],
-			'action_text' => isset($txt['trackEdit_action_' . $row['action']]) ? $txt['trackEdit_action_' . $row['action']] : (isset($txt[$row['action']]) ? $txt[$row['action']] : $row['action']),
-			'before' => !empty($extra['previous']) ? $extra['previous'] : '',
-			'after' => !empty($extra['new']) ? $extra['new'] : '',
+			'action_text' => $action_text,
+			'before' => !empty($extra['previous']) ? ($parse_bbc ? parse_bbc($extra['previous']) : $extra['previous']) : '',
+			'after' => !empty($extra['new']) ? ($parse_bbc ? parse_bbc($extra['new']) : $extra['new']) : '',
 			'time' => timeformat($row['log_time']),
 		);
 	}
