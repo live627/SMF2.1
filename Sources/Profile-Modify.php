@@ -1253,41 +1253,6 @@ function makeCustomFieldChanges($memID, $area)
 		);
 }
 
-// Activate an account.
-function activateAccount($memID)
-{
-	global $sourcedir, $context, $user_profile, $modSettings;
-
-	isAllowedTo('moderate_forum');
-
-	if (isset($_REQUEST['save']) && isset($user_profile[$memID]['is_activated']) && $user_profile[$memID]['is_activated'] != 1)
-	{
-		// If we are approving the deletion of an account, we do something special ;)
-		if ($user_profile[$memID]['is_activated'] == 4)
-		{
-			require_once($sourcedir . '/Subs-Members.php');
-			deleteMembers($context['id_member']);
-			redirectexit();
-		}
-
-		if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
-			call_user_func($modSettings['integrate_activate'], $user_profile[$memID]['member_name']);
-
-		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
-		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? 11 : 1, 'validation_code' => ''));
-
-		// If we are doing approval, update the stats for the member just in case.
-		if (in_array($user_profile[$memID]['is_activated'], array(3, 4, 13, 14)))
-			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 1 ? $modSettings['unapprovedMembers'] - 1 : 0)));
-
-		// Make sure we update the stats too.
-		updateStats('member', false);
-	}
-
-	// Leave it be...
-	redirectexit('action=profile;sa=summary;u=' . $memID);
-}
-
 // Show all the users buddies, as well as a add/delete interface.
 function editBuddies($memID)
 {

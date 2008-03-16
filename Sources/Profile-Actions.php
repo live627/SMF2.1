@@ -27,6 +27,9 @@ if (!defined('SMF'))
 
 /*	This file contains profile action functions.
 
+	void activateAccount(int id_member)
+		// !!!
+
 	void issueWarning(int id_member)
 		// !!!
 
