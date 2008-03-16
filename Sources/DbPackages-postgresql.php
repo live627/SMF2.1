@@ -502,7 +502,7 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 		{
 			// If we want to overwrite simply remove the current one then continue.
 			if ($if_exists == 'update')
-				$smcFunc['db_remove_index']($table_name, $index_info['name']);
+				$smcFunc['db_remove_index']($table_name, $index_info['name'], array('no_prefix' => true));
 			else
 				return false;
 		}
