@@ -19,6 +19,7 @@ March 2008
  ! Adding an index wouldn't work quite right. (DbPackages-xxxx.php)
  ! Dump database was incorrectly checking memory allocation. (DumpDatabase.php)
  + Install and upgrade will now warn you if your script is out of date. (install and upgrade scripts)
+ * Use tabindex on quick modify to ensure the input jumps as expected. (Display templates)
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
