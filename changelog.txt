@@ -114,7 +114,8 @@ March 2008
  ! Search highlighting wasn't really working very well. (Search.php) [Bug 1622]
  ! Custom search index wasn't working with new posts. (Subs-Post.php)
  ! Optimisation of the recent topic query for when post moderation is in use. (Recent.php) [Bug 1728]
-
+ ! Recycled posts and topics can now be restore via quick moderation. (Display.php, MessageIndex.php, RemoveTopic.php, Display and MessageIndex templates, index language file) [Feature 1343]
+ ! Restoring topics now uses the move_any permission instead of the moderate_forum. (Display.php, MessageIndex.php, RemoveTopic.php)
 
 February 2008
 --------------------------------------------------------------------------------

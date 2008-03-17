@@ -354,12 +354,16 @@ function MessageIndex()
 			$topic_ids[] = $row['id_topic'];
 	}
 
+	// Lets keep track of the posts that can't be restored if we are in the recycle board.
+	if ($modSettings['recycle_enable'] && $modSettings['recycle_board'] == $board)
+		$context['topics_not_restorable'] = array();
+
 	// Grab the appropriate topic information...
 	if (!$pre_query || !empty($topic_ids))
 	{
 		$result = $smcFunc['db_query']('substring', '
 			SELECT
-				t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll,
+				t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll, t.id_previous_board,
 				' . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1') . ' AS new_from,
 				t.id_last_msg, t.approved, t.unapproved_posts, ml.poster_time AS last_poster_time,
 				ml.id_msg_modified, ml.subject AS last_subject, ml.icon AS last_icon,
@@ -400,6 +404,9 @@ function MessageIndex()
 			if (!$pre_query)
 				$topic_ids[] = $row['id_topic'];
 
+			if ($modSettings['recycle_enable'] && $modSettings['recycle_board'] == $board && empty($row['id_previous_board']))
+				$context['topics_not_restorable'][] = $row['id_topic'];
+
 			if (!empty($settings['message_index_preview']))
 			{
 				// Limit them to 128 characters - do this FIRST because it's a lot of wasted censoring otherwise.
@@ -433,13 +440,9 @@ function MessageIndex()
 				censorText($row['first_subject']);
 
 				if ($row['id_first_msg'] == $row['id_last_msg'])
-				{
 					$row['last_subject'] = $row['first_subject'];
-				}
 				else
-				{
 					censorText($row['last_subject']);
-				}
 			}
 
 			// Decide how many pages the topic should have.
@@ -589,6 +592,8 @@ function MessageIndex()
 		$context['can_merge'] = allowedTo('merge_any');
 		// Ignore approving own topics as it's unlikely to come up...
 		$context['can_approve'] = allowedTo('approve_posts');
+		// Can we restore topics?
+		$context['can_restore'] = allowedTo('move_any') && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board;
 
 		// Set permissions for all the topics.
 		foreach ($context['topics'] as $t => $topic)
@@ -636,6 +641,10 @@ function QuickModeration()
 
 	// Check the session = get or post.
 	checkSession('request');
+
+	// Lets go straight to the restore area.
+	if (isset($_REQUEST['qaction']) && $_REQUEST['qaction'] == 'restore')
+		redirectexit('action=restoretopic;topics=' . implode(',', $_REQUEST['topics']) . ';sesc=' . $context['session_id']);
 
 	if (isset($_SESSION['topicseen_cache']))
 		$_SESSION['topicseen_cache'] = array();

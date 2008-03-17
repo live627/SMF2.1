@@ -641,6 +641,10 @@ function template_main()
 	if (!empty($modSettings['recycle_enable']) && $context['current_board'] == $modSettings['recycle_board'] && $context['can_restore_topic'])
 		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topic=' . $context['current_topic'] . ';sesc=' . $context['session_id']);
 
+	// Restore messages?
+	if (!empty($modSettings['recycle_enable']) && $context['current_board'] == $modSettings['recycle_board'] && $context['can_restore_msg'])
+		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => '{SUBMIT}', 'custom' => ' name="restore_selected" ');
+
 	echo '
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 1ex;">
 		<tr>

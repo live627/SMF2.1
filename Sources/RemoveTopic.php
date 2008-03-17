@@ -987,13 +987,14 @@ function RestoreTopic()
 	//	Restore full topic. DONE
 	//	Quick Moderation Topics. BETA 3
 	//	Quick Moderation Posts ??? Maybe ???
+	//	Recount stats when restoring a deleted posts to a deleted topic.
 	//	Anything else???
 
 	// Check session.
 	checkSession('get');
 
 	// Can we be in here?
-	isAllowedTo('moderate_forum');
+	isAllowedTo('move_any');
 
 	// Is recycled board enabled?
 	if (empty($modSettings['recycle_enable']))
@@ -1068,7 +1069,7 @@ function RestoreTopic()
 			logAction('restore_topic', array('topic' => $_REQUEST['topic'], 'board' => $id_current_board, 'board_to' => $id_previous_board));
 		}
 		// Ok lets merge then IF the parent topic exists.
-		elseif (!empty($id_previous_topic) && isset($_REQUEST['msg']) && is_numeric($_REQUEST['msg']))
+		elseif (!empty($id_previous_topic) && (isset($_REQUEST['msg']) && is_numeric($_REQUEST['msg']) || isset($_REQUEST['msgs'])))
 		{
 			// Lets check to see if the topic is still there.
 			$request = $smcFunc['db_query']('', '
@@ -1088,17 +1089,98 @@ function RestoreTopic()
 				fatal_lang_error('parent_topic_missing', 'general');
 			elseif (!empty($id_board))
 			{
+				// Message or messages?
+				if (isset($_REQUEST['msgs']))
+				{
+					$msgs = explode(',', $_REQUEST['msgs']);
+					foreach ($msgs as $key => $msg)
+						$msgs[$key] = (int) $msg;
+				}
+				else
+					$msgs = $_REQUEST['msg'];
+
 				// Merge them.
-				mergePosts($_REQUEST['msg'], $_REQUEST['topic'], $id_previous_topic, $id_current_board, $id_previous_board);
+				mergePosts($msgs, $_REQUEST['topic'], $id_previous_topic, $id_current_board, $id_previous_board);
 				// Log em
 				logAction('restore_posts', array('topic' => $id_previous_topic, 'subject' => $subject, 'board' => $id_board));
 			}
 		}
+		// We can't restore the first message in restore selected.
+		elseif (empty($id_previous_topic) && in_array($id_first_msg, $_REQUEST['msgs']))
+			fatal_lang_error('parent_topic_missing', 'general');
 		else
 			fatal_lang_error('parent_topic_missing', 'general');
 
 		// Send them to the new topic
 		redirectexit(empty($id_previous_topic) ? 'board=' . $id_previous_board : 'topic=' . $id_previous_topic);
+	}
+	elseif (isset($_REQUEST['topics']))
+	{
+		// Clean up time.
+		$topics = explode(',', $_REQUEST['topics']);
+		foreach ($topics as $key => $id)
+			$topics[$key] = (int) $id;
+
+		// Lets get the data for these topics.
+		$request = $smcFunc['db_query']('', '
+			SELECT id_topic, id_previous_board, id_board
+			FROM {db_prefix}topics
+			WHERE id_topic IN ({array_int:topics})',
+			array(
+				'topics' => $topics,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			// We can only restore if the previous board is set.
+			if (empty($row['id_previous_board']))
+				continue;
+
+			// Ok we got here so me move them from here to there.
+			moveTopics($row['id_topic'], $row['id_previous_board']);
+
+			// Lets remove the recycled icon.
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}messages
+				SET icon = {string:icon}
+				WHERE id_topic = {int:id_topic}',
+				array(
+					'icon' => 'xx',
+					'id_topic' => $row['id_topic'],
+				)
+			);
+
+			// Lets see if the board that we are returning to has post count enabled.
+			$request2 = $smcFunc['db_query']('', '
+				SELECT count_posts
+				FROM {db_prefix}boards
+				WHERE id_board = {int:board}',
+				array(
+					'board' => $row['id_previous_board'],
+				)
+			);
+			list ($count_posts) = $smcFunc['db_fetch_row']($request2);
+			$smcFunc['db_free_result']($request2);
+
+			if (empty($count_posts))
+			{
+				// Lets get the members that need their post count restored.
+				$request = $smcFunc['db_query']('', '
+					SELECT id_member
+					FROM {db_prefix}messages
+					WHERE id_topic = {int:topic}',
+					array(
+						'topic' => $row['id_topic'],
+					)
+				);
+
+				while ($row = $smcFunc['db_fetch_assoc']($request))
+					updateMemberData($row['id_member'], array('posts' => '+'));
+			}
+
+			// Log it.
+			logAction('restore_topic', array('topic' => $row['id_topic'], 'board' => $row['id_board'], 'board_to' => $row['id_previous_board']));
+		}
 	}
 
 	// Just send them to the index if they get here.
@@ -1270,6 +1352,7 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 		)
 	);
 
+	// Remove the topic if it doesn't have any messages.
 	$topic_exists = true;
 	if ($smcFunc['db_num_rows']($request) == 0)
 	{

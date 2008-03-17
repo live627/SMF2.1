@@ -318,7 +318,7 @@ function template_main()
 			echo '
 					<tr class="catbg">
 						<td colspan="8" align="right">
-					<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
+							<select name="qaction"', $context['can_move'] || $context['can_restore'] ? ' onchange="quickModSelect(this.options[this.selectedIndex].value);"' : '', '>
 								<option value="">--------</option>
 								', $context['can_approve'] ? '<option value="approve">' . $txt['quick_mod_approve'] . '</option>' : '', '
 								', $context['can_remove'] ? '<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', '
@@ -326,6 +326,7 @@ function template_main()
 								', $context['can_sticky'] ? '<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '', '
 								', $context['can_move'] ? '<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', '
 								', $context['can_merge'] ? '<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
+								', $context['can_restore'] ? '<option value="restore" onchange="disabledRestore();">' . $txt['quick_mod_restore'] . '</option>' : '', '
 								<option value="markread">', $txt['quick_mod_markread'], '</option>
 							</select>';
 
@@ -360,9 +361,9 @@ function template_main()
 			</div>
 			<a name="bot"></a>';
 
-			// Finish off the form - again.
-		if (!empty($options['display_quick_mod']) && !empty($context['topics']))
-				echo '
+	// Finish off the form - again.
+	if (!empty($options['display_quick_mod']) && !empty($context['topics']))
+		echo '
 			<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
 	</form>';
 
@@ -422,7 +423,48 @@ function template_main()
 					sCatSeparator: "-----------------------------",
 					sCatPrefix: "",
 					sGoButtonLabel: "', $txt['go'], '"
-				});
+				});';
+
+	// Only if you can restore.
+	if ($context['can_move'])
+	{
+		echo '
+			function quickModSelect(action)
+			{
+				if (action == \'move\')
+					document.quickModForm.moveItTo.disabled = false;
+				else
+					document.quickModForm.moveItTo.disabled = true;';
+
+		if ($context['can_restore'])
+			echo '
+				// We do other things for the restore topics.
+				if (action == \'restore\')
+					disabledRestore(false);
+				else
+					disabledRestore(true);';
+
+		echo '
+			}';
+	}
+
+	if ($context['can_restore'])
+		echo '
+			// The topics that can\'t be restored.
+			var topicsCantRestore = [', implode(', ', $context['topics_not_restorable']), '];
+			// Lets disable the ones that we cant restore.
+			function disabledRestore(undo)
+			{
+				// Lets get the checkboxes with the name topics.
+				var topicsCheck = document.getElementsByName("topics[]");
+				for (i = 0; i < topicsCheck.length; i++)
+				{
+					if (in_array(topicsCheck[i].value, topicsCantRestore))
+						topicsCheck[i].disabled = undo ? false : true;
+				}
+			}';
+
+	echo '
 		// ]]></script>
 	</div>';
 

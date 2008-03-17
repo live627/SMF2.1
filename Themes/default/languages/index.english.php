@@ -717,6 +717,6 @@ $txt['filesize'] = 'Filesize';
 // Restore topic
 $txt['restore_topic'] = 'Restore Topic';
 $txt['restore_message'] = 'Restore Message';
-$txt['restore_selected_messages'] = 'Restore Selected Messages';
+$txt['quick_mod_restore'] = 'Restore Selected';
 
 ?>

@@ -946,8 +946,8 @@ function Display()
 		'can_report_moderator' => 'report_any',
 		'can_moderate_forum' => 'moderate_forum',
 		'can_issue_warning' => 'issue_warning',
-		'can_restore_topic' => 'moderate_forum',
-		'can_restore_msg' => 'moderate_forum',
+		'can_restore_topic' => 'move_any',
+		'can_restore_msg' => 'move_any',
 	);
 	foreach ($common_permissions as $contextual => $perm)
 		$context[$contextual] = allowedTo($perm);
@@ -1471,6 +1471,10 @@ function QuickInTopicModeration()
 	$messages = array();
 	foreach ($_REQUEST['msgs'] as $dummy)
 		$messages[] = (int) $dummy;
+
+	// We are restoring messages. We handle this in another place.
+	if (isset($_REQUEST['restore_selected']))
+		redirectexit('action=restoretopic;topic=' . $topic . ';msgs=' . implode(',', $messages) . ';sesc=' . $_REQUEST['sc']);
 
 	// Allowed to delete any message?
 	if (allowedTo('delete_any'))
