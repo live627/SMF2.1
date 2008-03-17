@@ -186,7 +186,7 @@ function Vote()
 
 	// Too many options checked!
 	if (count($_REQUEST['options']) > $row['max_votes'])
-		fatal_lang_error('poll_error1', false, array($row['max_votes']));
+		fatal_lang_error('poll_too_many_votes', false, array($row['max_votes']));
 
 	$pollOptions = array();
 	$inserts = array();
