@@ -223,13 +223,14 @@ function template_main()
 	<tr class="titlebg">
 		<td colspan="8" align="right">
 			<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
-				<option value="">--------</option>', $context['can_approve'] ? '
-				<option value="approve">' . $txt['quick_mod_approve'] . '</option>' : '', $context['can_remove'] ? '
-				<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
-				<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
-				<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '', $context['can_move'] ? '
-				<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', $context['can_merge'] ? '
-				<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
+				<option value="">--------</option>
+				', $context['can_approve'] ? '<option value="approve">' . $txt['quick_mod_approve'] . '</option>' : '', '
+				', $context['can_remove'] ? '<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', '
+				', $context['can_lock'] ? '<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', '
+				', $context['can_sticky'] ? '<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '', '
+				', $context['can_move'] ? '<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', '
+				', $context['can_merge'] ? '<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
+				', $context['can_restore'] ? '<option value="restore">' . $txt['quick_mod_restore'] . '</option>' : '', '
 				<option value="markread">', $txt['quick_mod_markread'], '</option>
 			</select>';
 

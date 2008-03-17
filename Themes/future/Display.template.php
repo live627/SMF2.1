@@ -425,7 +425,7 @@ function template_main()
 		// Can we restore topics?
 		if ($context['can_restore_msg'])
 			echo '
-					<a href="', $scripturl, '?action=restoretopic;topic=', $context['current_topic'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '">', $restore_message_button, '</a>';
+					<a href="', $scripturl, '?action=restoretopic;msgs=', $message['id'], ';sesc=', $context['session_id'], '">', $restore_message_button, '</a>';
 
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
@@ -618,8 +618,12 @@ function template_main()
 		$mod_buttons[] = array('text' => 'quickmod_delete_selected', 'image' => 'delete_selected.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['quickmod_confirm'] . '\');" id="quickmodSubmit"', 'url' => 'javascript:document.quickModForm.submit();');
 
 	// Restore topic. eh?  No monkey business.
-	if (!empty($modSettings['recycle_enable']) && $context['current_board'] == $modSettings['recycle_board'] && $context['can_restore_topic'])
-		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topic=' . $context['current_topic'] . ';sesc=' . $context['session_id']);
+	if ($context['can_restore_topic'])
+		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';sesc=' . $context['session_id']);
+
+	// Restore messages?
+	if ($context['can_restore_msg'])
+		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => '{SUBMIT}', 'custom' => ' name="restore_selected" ');
 
 	echo '
 	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 1ex;">

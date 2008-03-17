@@ -1,7 +1,15 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 3 Public
+SMF 2.0 Beta 4
+================================================================================
+March 2008
+--------------------------------------------------------------------------------
+ ! Recycled posts and topics can now be restore via quick moderation. (Display.php, MessageIndex.php, RemoveTopic.php, Display and MessageIndex templates, index language file) [Feature 1343]
+ ! Restoring topics now uses the move_any permission instead of the moderate_forum. (Display.php, MessageIndex.php, RemoveTopic.php)
+
+
+SMF 2.0 Beta 3 Public                                              17 March 2008
 ================================================================================
 March 2008
 --------------------------------------------------------------------------------

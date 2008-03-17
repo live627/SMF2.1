@@ -993,148 +993,176 @@ function RestoreTopic()
 	// Check session.
 	checkSession('get');
 
-	// Can we be in here?
-	isAllowedTo('move_any');
-
 	// Is recycled board enabled?
 	if (empty($modSettings['recycle_enable']))
 		fatal_lang_error('restored_disabled', 'critical');
 
+	// Can we be in here?
+	isAllowedTo('move_any', $modSettings['recycle_enable']);
+
 	// We need this file.
 	require_once($sourcedir . '/MoveTopic.php');
 
-	// A single message?
-	if (isset($_REQUEST['topic']) && is_numeric($_REQUEST['topic']))
+	$unfound_messages = array();
+	$topics_to_restore = array();
+
+	// Restoring messages?
+	if (!empty($_REQUEST['msgs']))
 	{
+		$msgs = explode(',', $_REQUEST['msgs']);
+		foreach ($msgs as $k => $msg)
+			$msgs[$k] = (int) $msg;
+
 		// Get the id_previous_board and id_previous_topic.
 		$request = $smcFunc['db_query']('', '
-			SELECT id_previous_board, id_previous_topic, id_first_msg, id_board
-			FROM {db_prefix}topics
-			WHERE id_topic = {int:id_topic}',
+			SELECT m.id_topic, m.id_msg, m.id_board, m.subject, m.id_member, t.id_previous_board, t.id_previous_topic,
+				t.id_first_msg, b.count_posts, IFNULL(pt.id_board, 0) AS possible_prev_board
+			FROM {db_prefix}messages AS m
+				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+				LEFT JOIN {db_prefix}topics AS pt ON (pt.id_topic = t.id_previous_topic)
+			WHERE m.id_msg IN ({array_int:messages})',
 			array(
-				'id_topic' => $_REQUEST['topic'],
+				'messages' => $msgs,
 			)
 		);
-		list ($id_previous_board, $id_previous_topic, $id_first_msg, $id_current_board) = $smcFunc['db_fetch_row']($request);
+
+		$actioned_messages = array();
+		$previous_topics = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			// Restoring the first post means topic.
+			if ($row['id_msg'] == $row['id_first_msg'])
+			{
+				$topics_to_restore[] = $row['id_topic'];
+				continue;
+			}
+			// Don't know where it's going?
+			if (empty($row['id_previous_topic']))
+			{
+				$unfound_messages[$row['id_msg']] = array(
+					'subject' => $row['subject'],
+				);
+				continue;
+			}
+
+			$previous_topics[] = $row['id_previous_topic'];
+			if (empty($actioned_messages[$row['id_previous_topic']]))
+				$actioned_messages[$row['id_previous_topic']] = array(
+					'msgs' => array(),
+					'count_posts' => $row['count_posts'],
+					'subject' => $row['subject'],
+					'previous_board' => $row['id_previous_board'],
+					'current_topic' => $row['id_topic'],
+					'current_board' => $row['id_board'],
+					'members' => array(),
+				);
+
+			$actioned_messages[$row['id_previous_topic']]['msgs'][$row['id_msg']] = $row['subject'];
+			if ($row['id_member'])
+				$actioned_messages[$row['id_previous_topic']]['members'][] = $row['id_member'];
+		}
 		$smcFunc['db_free_result']($request);
 
-		// Whole topic was deleted but you want to restore the first post of the topic?  Sorry buddy but no.
-		if (empty($id_previous_topic) && empty($id_previous_board) && (isset($_REQUEST['msg']) && $_REQUEST['msg'] == $id_first_msg))
-			fatal_lang_error('cannot_restore_first_post', 'general');
-		// Moving a topic?
-		elseif (!empty($id_previous_board) && !isset($_REQUEST['msg']))
-		{
-			moveTopics($_REQUEST['topic'], $id_previous_board);
+		// Check for topics we are going to fully restore.
+		foreach ($actioned_messages as $topic => $data)
+			if (in_array($topic, $topics_to_restore))
+				unset($actioned_messages[$topic]);
 
-			// Change the icon.
+		// Load any previous topics to check they exist.
+		if (!empty($previous_topics))
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT t.id_topic, t.id_board, m.subject
+				FROM {db_prefix}topics AS t
+					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+				WHERE t.id_topic IN ({array_int:previous_topics})',
+				array(
+					'previous_topics' => $previous_topics,
+				)
+			);
+			$previous_topics = array();
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$previous_topics[$row['id_topic']] = array(
+					'board' => $row['id_board'],
+					'subject' => $row['subject'],
+				);
+			$smcFunc['db_free_result']($request);
+		}
+
+		// Restore each topic.
+		$messages = array();
+		foreach ($actioned_messages as $topic => $data)
+		{
+			// If we have topics we are going to restore the whole lot ignore them.
+			if (in_array($topic, $topics_to_restore))
+			{
+				unset($actioned_messages[$topic]);
+				continue;
+			}
+
+			// Move the posts back then!
+			if (isset($previous_topics[$topic]))
+			{
+				mergePosts(array_keys($data['msgs']), $data['current_topic'], $topic, $data['current_board'], $data['previous_board']);
+				// Log em.
+				logAction('restore_posts', array('topic' => $topic, 'subject' => $previous_topics[$topic]['subject'], 'board' => empty($data['previous_board']) ? $data['possible_prev_board'] : $data['previous_board']));
+
+				// Restore post count.
+				if ($data['count_posts'] && !empty($data['members']))
+					updateMemberData($data['members'], array('posts' => '+'));
+				$messages = array_merge(array_keys($data['msgs']), $messages);
+			}
+			else
+			{
+				foreach ($data['msgs'] as $msg)
+					$unfound_messages[$msg['id']] = array(
+						'subject' => $msg['subject'],
+					);
+			}
+		}
+
+		// Put the icons back.
+		if (!empty($messages))
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}messages
 				SET icon = {string:icon}
-				WHERE id_topic = {int:id_topic}',
+				WHERE id_msg IN ({array_int:messages})',
 				array(
 					'icon' => 'xx',
-					'id_topic' => $_REQUEST['topic'],
+					'messages' => $messages,
 				)
 			);
-
-			// Lets see if the board that we are returning to has post count enabled.
-			$request = $smcFunc['db_query']('', '
-				SELECT count_posts
-				FROM {db_prefix}boards
-				WHERE id_board = {int:board}',
-				array(
-					'board' => $id_previous_board,
-				)
-			);
-			list ($count_posts) = $smcFunc['db_fetch_row']($request);
-			$smcFunc['db_free_result']($request);
-
-			if (empty($count_posts))
-			{
-				// Lets get the members that need their post count restored.
-				$request = $smcFunc['db_query']('', '
-					SELECT id_member
-					FROM {db_prefix}messages
-					WHERE id_topic = {int:topic}',
-					array(
-						'topic' => $_REQUEST['topic'],
-					)
-				);
-
-				while ($row = $smcFunc['db_fetch_assoc']($request))
-					updateMemberData($row['id_member'], array('posts' => '+'));
-			}
-
-			// Log it.
-			logAction('restore_topic', array('topic' => $_REQUEST['topic'], 'board' => $id_current_board, 'board_to' => $id_previous_board));
-		}
-		// Ok lets merge then IF the parent topic exists.
-		elseif (!empty($id_previous_topic) && (isset($_REQUEST['msg']) && is_numeric($_REQUEST['msg']) || isset($_REQUEST['msgs'])))
-		{
-			// Lets check to see if the topic is still there.
-			$request = $smcFunc['db_query']('', '
-				SELECT t.id_board, m.subject
-				FROM {db_prefix}topics AS t
-					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-				WHERE t.id_topic = {int:id_previous_topic}',
-				array(
-					'id_previous_topic' => $id_previous_topic,
-				)
-			);
-			list ($id_board, $subject) = $smcFunc['db_fetch_row']($request);
-			$smcFunc['db_free_result']($request);
-
-			// Can't restore a topic if the parent topic is in the recycle board and in a different topic.
-			if (!empty($id_board) && $id_board == $modSettings['recycle_board'])
-				fatal_lang_error('parent_topic_missing', 'general');
-			elseif (!empty($id_board))
-			{
-				// Message or messages?
-				if (isset($_REQUEST['msgs']))
-				{
-					$msgs = explode(',', $_REQUEST['msgs']);
-					foreach ($msgs as $key => $msg)
-						$msgs[$key] = (int) $msg;
-				}
-				else
-					$msgs = $_REQUEST['msg'];
-
-				// Merge them.
-				mergePosts($msgs, $_REQUEST['topic'], $id_previous_topic, $id_current_board, $id_previous_board);
-				// Log em
-				logAction('restore_posts', array('topic' => $id_previous_topic, 'subject' => $subject, 'board' => $id_board));
-			}
-		}
-		// We can't restore the first message in restore selected.
-		elseif (empty($id_previous_topic) && in_array($id_first_msg, $_REQUEST['msgs']))
-			fatal_lang_error('parent_topic_missing', 'general');
-		else
-			fatal_lang_error('parent_topic_missing', 'general');
-
-		// Send them to the new topic
-		redirectexit(empty($id_previous_topic) ? 'board=' . $id_previous_board : 'topic=' . $id_previous_topic);
 	}
-	elseif (isset($_REQUEST['topics']))
+
+	// Now any topics?
+	if (!empty($_REQUEST['topics']))
 	{
-		// Clean up time.
 		$topics = explode(',', $_REQUEST['topics']);
 		foreach ($topics as $key => $id)
-			$topics[$key] = (int) $id;
+			$topics_to_restore[] = (int) $id;
+	}
 
+	if (!empty($topics_to_restore))
+	{
 		// Lets get the data for these topics.
 		$request = $smcFunc['db_query']('', '
-			SELECT id_topic, id_previous_board, id_board
-			FROM {db_prefix}topics
-			WHERE id_topic IN ({array_int:topics})',
+			SELECT t.id_topic, t.id_previous_board, t.id_board, t.id_first_msg, m.subject
+			FROM {db_prefix}topics AS t
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			WHERE t.id_topic IN ({array_int:topics})',
 			array(
-				'topics' => $topics,
+				'topics' => $topics_to_restore,
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			// We can only restore if the previous board is set.
 			if (empty($row['id_previous_board']))
+			{
+				$unfound_messages[$row['id_first_msg']] = $row['subject'];
 				continue;
+			}
 
 			// Ok we got here so me move them from here to there.
 			moveTopics($row['id_topic'], $row['id_previous_board']);
@@ -1181,6 +1209,12 @@ function RestoreTopic()
 			// Log it.
 			logAction('restore_topic', array('topic' => $row['id_topic'], 'board' => $row['id_board'], 'board_to' => $row['id_previous_board']));
 		}
+	}
+
+	// Didn't find some things?
+	if (!empty($unfound_messages))
+	{
+		fatal_lang_error('restore_not_found', false, array(implode('<br />', $unfound_messages)));
 	}
 
 	// Just send them to the index if they get here.

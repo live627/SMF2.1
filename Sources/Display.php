@@ -1474,7 +1474,7 @@ function QuickInTopicModeration()
 
 	// We are restoring messages. We handle this in another place.
 	if (isset($_REQUEST['restore_selected']))
-		redirectexit('action=restoretopic;topic=' . $topic . ';msgs=' . implode(',', $messages) . ';sesc=' . $_REQUEST['sc']);
+		redirectexit('action=restoretopic;msgs=' . implode(',', $messages) . ';sesc=' . $context['session_id']);
 
 	// Allowed to delete any message?
 	if (allowedTo('delete_any'))

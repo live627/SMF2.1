@@ -354,10 +354,6 @@ function MessageIndex()
 			$topic_ids[] = $row['id_topic'];
 	}
 
-	// Lets keep track of the posts that can't be restored if we are in the recycle board.
-	if ($modSettings['recycle_enable'] && $modSettings['recycle_board'] == $board)
-		$context['topics_not_restorable'] = array();
-
 	// Grab the appropriate topic information...
 	if (!$pre_query || !empty($topic_ids))
 	{
@@ -403,9 +399,6 @@ function MessageIndex()
 
 			if (!$pre_query)
 				$topic_ids[] = $row['id_topic'];
-
-			if ($modSettings['recycle_enable'] && $modSettings['recycle_board'] == $board && empty($row['id_previous_board']))
-				$context['topics_not_restorable'][] = $row['id_topic'];
 
 			if (!empty($settings['message_index_preview']))
 			{
@@ -643,7 +636,7 @@ function QuickModeration()
 	checkSession('request');
 
 	// Lets go straight to the restore area.
-	if (isset($_REQUEST['qaction']) && $_REQUEST['qaction'] == 'restore')
+	if (isset($_REQUEST['qaction']) && $_REQUEST['qaction'] == 'restore' && !empty($_REQUEST['topics']))
 		redirectexit('action=restoretopic;topics=' . implode(',', $_REQUEST['topics']) . ';sesc=' . $context['session_id']);
 
 	if (isset($_SESSION['topicseen_cache']))
