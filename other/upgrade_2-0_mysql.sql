@@ -514,6 +514,10 @@ $request = upgrade_query("
 if (mysql_num_rows($request) != 0)
 {
 	upgrade_query("
+		DELETE FROM {$db_prefix}themes
+		WHERE variable = 'show_stats_index'");
+
+	upgrade_query("
 		UPDATE {$db_prefix}themes
 		SET variable = 'show_stats_index'
 		WHERE variable = 'show_sp1_info'");
