@@ -753,12 +753,12 @@ function cache_getRecentEvents($eventOptions)
 				}
 			}
 
-			if (empty($params[\'include_holidays\']))
-				$return_data[\'calendar_holidays\'] = array();
-			if (empty($params[\'include_birthdays\']))
-				$return_data[\'calendar_birthdays\'] = array();
-			if (empty($params[\'include_events\']))
-				$return_data[\'calendar_events\'] = array();
+			if (empty($params[0][\'include_holidays\']))
+				$cache_block[\'data\'][\'calendar_holidays\'] = array();
+			if (empty($params[0][\'include_birthdays\']))
+				$cache_block[\'data\'][\'calendar_birthdays\'] = array();
+			if (empty($params[0][\'include_events\']))
+				$cache_block[\'data\'][\'calendar_events\'] = array();
 
 			$cache_block[\'data\'][\'show_calendar\'] = !empty($cache_block[\'data\'][\'calendar_holidays\']) || !empty($cache_block[\'data\'][\'calendar_birthdays\']) || !empty($cache_block[\'data\'][\'calendar_events\']);',
 	);

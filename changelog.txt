@@ -11,6 +11,10 @@ March 2008
  ! We don't use short joins in queries any more. (SSI.php)
  ! Downloading a database dump in SQLite would sometime fail due to an error in the headers sent. (DbExtra-sqlite.php)
  ! Check to see if the db_filename is empty when installing under SQLite. (install.php, Install language file) [Bug 1732]
+ ! When using the "Today" feature moderation note submission times were parsed incorrectly. (ModerationCenter.php) [Bug 1778]
+ ! Password reminders were not being sent out by email. (Reminder.php) [Bug 1780]
+ * The classic theme was showing a header for child boards when there were none. (MessageIndex template) [Bug 1777]
+ ! Calendar events were being shown on the board index regardless of where they were set to show. (Subs-Calendar.php) [Bug 1776]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

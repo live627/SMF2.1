@@ -23,7 +23,7 @@ function template_main()
 	</tr>
 </table>';
 
-	if (isset($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
+	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
 <table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
