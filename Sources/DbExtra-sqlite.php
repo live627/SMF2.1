@@ -375,12 +375,15 @@ function smf_db_get_backup()
 		$ext = '.gz';
 
 	// Do the remaining headers.
-	header('Content-Disposition: filename="' . $db_name . $ext . '"');
+	header('Content-Disposition: attachment; filename="' . $db_name . $ext . '"');
 	header('Cache-Control: private');
 	header('Connection: close');
 
-	// Literally dump the contents.
-	echo file_get_contents($db_name);
+	// Literally dump the contents.  Try reading the file first.
+	if (@readfile($db_name) == null)
+		echo file_get_contents($db_name);
+
+	obExit(false);
 }
 
 ?>

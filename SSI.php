@@ -304,7 +304,7 @@ function ssi_queryPosts($query_where, $query_where_params = array(), $query_limi
 	global $modSettings, $smcFunc;
 
 	// Find all the posts. Newer ones will have higher IDs.
-	$request = $smcFunc['db_query']('', '
+	$request = $smcFunc['db_query']('substring', '
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
@@ -415,7 +415,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 		$icon_sources[$icon] = 'images_url';
 
 	// Find all the posts in distinct topics.  Newer ones will have higher IDs.
-	$request = $smcFunc['db_query']('', '
+	$request = $smcFunc['db_query']('substring', '
 		SELECT
 			m.poster_time, ms.subject, m.id_topic, m.id_member, m.id_msg, b.id_board, b.name AS board_name, t.num_replies, t.num_views,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
@@ -1857,12 +1857,12 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 			att.id_attach, att.id_msg, att.filename, IFNULL(att.size, 0) AS filesize, att.downloads, mem.id_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.id_topic, m.subject, t.id_board, m.poster_time,
 			att.width, att.height' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ', IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
-		FROM ({db_prefix}attachments AS att, {db_prefix}messages AS m, {db_prefix}topics AS t)
+		FROM {db_prefix}attachments AS att
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = att.id_msg)
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
 			LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = att.id_thumb)') . '
-		WHERE t.id_topic = m.id_topic
-			AND att.id_msg = m.id_msg
-			AND att.attachment_type = 0
+		WHERE att.attachment_type = 0
 			' . (!empty($attachment_ext) ? '
 			AND att.fileext IN ({array_string:attachment_ext})' : '') . '
 		ORDER BY att.id_attach DESC

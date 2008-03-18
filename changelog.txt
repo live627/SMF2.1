@@ -7,6 +7,10 @@ March 2008
 --------------------------------------------------------------------------------
  ! Recycled posts and topics can now be restore via quick moderation. (Display.php, MessageIndex.php, RemoveTopic.php, Display and MessageIndex templates, index language file) [Feature 1343]
  ! Restoring topics now uses the move_any permission instead of the moderate_forum. (Display.php, MessageIndex.php, RemoveTopic.php)
+ ! Some queries were missing the substring identifier in SSI.php. (SSI.php)
+ ! We don't use short joins in queries any more. (SSI.php)
+ ! Downloading a database dump in SQLite would sometime fail due to an error in the headers sent. (DbExtra-sqlite.php)
+ ! Check to see if the db_filename is empty when installing under SQLite. (install.php, Install language file) [Bug 1732]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
@@ -122,8 +126,7 @@ March 2008
  ! Search highlighting wasn't really working very well. (Search.php) [Bug 1622]
  ! Custom search index wasn't working with new posts. (Subs-Post.php)
  ! Optimisation of the recent topic query for when post moderation is in use. (Recent.php) [Bug 1728]
- ! Recycled posts and topics can now be restore via quick moderation. (Display.php, MessageIndex.php, RemoveTopic.php, Display and MessageIndex templates, index language file) [Feature 1343]
- ! Restoring topics now uses the move_any permission instead of the moderate_forum. (Display.php, MessageIndex.php, RemoveTopic.php)
+
 
 February 2008
 --------------------------------------------------------------------------------

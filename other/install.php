@@ -647,10 +647,8 @@ function doStep0()
 			var showAll = false;';
 	// If we have more than one DB including SQLite what should we be doing?
 	else
-	{
 		echo '
 			var showAll = document.getElementById(\'db_type_input\').value == \'sqlite\' ? false : true;';
-	}
 
 	echo '
 			document.getElementById(\'db_passwd_contain\').style.display = showAll ? \'\' : \'none\';
@@ -695,6 +693,19 @@ function doStep1()
 		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -1);
 	if (substr($_POST['boardurl'], 0, 7) != 'http://' && substr($_POST['boardurl'], 0, 7) != 'file://' && substr($_POST['boardurl'], 0, 8) != 'https://')
 		$_POST['boardurl'] = 'http://' . $_POST['boardurl'];
+
+	// You better enter enter a database name for SQLite.
+	if (isset($_POST['db_filename']) && trim($_POST['db_filename']) == '')
+	{
+		echo '
+				<div class="error_message">
+					<div style="color: red;">', $txt['error_db_filename'], '</div>
+					<br />
+					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+				</div>';
+
+		return false;
+	}
 
 	// Take care of these variables...
 	$vars = array(
@@ -1397,12 +1408,12 @@ function doStep2()
 				echo '
 					<div class="error_message">
 						<div style="color: red;">', $txt['error_user_settings_query'], '</div>
-	
+
 						<div style="margin: 2ex;">', nl2br(htmlspecialchars($smcFunc['db_error']($db_connection))), '</div>
-	
+
 						<a href="', $_SERVER['PHP_SELF'], '?step=2">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 					</div>';
-	
+
 				return false;
 			}
 

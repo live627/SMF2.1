@@ -170,5 +170,6 @@ $txt['error_already_installed'] = 'The installer has detected that you already h
 $txt['error_warning_notice'] = 'Warning!';
 $txt['error_script_outdated'] = 'This install script is out of date! The current version of SMF is %1$s but this install script is for %2$s.<br /><br />
 	It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are installing the latest version.';
+$txt['error_db_filename'] = 'You must enter a name for the database file name for SQLite.';
 
 ?>
