@@ -15,6 +15,7 @@ March 2008
  ! Password reminders were not being sent out by email. (Reminder.php) [Bug 1780]
  * The classic theme was showing a header for child boards when there were none. (MessageIndex template) [Bug 1777]
  ! Calendar events were being shown on the board index regardless of where they were set to show. (Subs-Calendar.php) [Bug 1776]
+ ! Banned members could still post unapproved replies and topics if post moderation was enabled. (Security.php) [Bug 1775]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

@@ -499,6 +499,7 @@ function banPermissions()
 			'send_topic',
 			'lock_own', 'lock_any',
 			'remove_own', 'remove_any',
+			'post_unapproved_topics', 'post_unapproved_replies_own', 'post_unapproved_replies_any',
 		);
 		$user_info['permissions'] = array_diff($user_info['permissions'], $denied_permissions);
 	}
