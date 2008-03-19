@@ -352,7 +352,7 @@ function template_results()
 
 				if ($message['body_highlighted'] != '')
 					echo '
-					<div class="quote" style="margin-left: 20px;">', $message['body_highlighted'], '</div>';
+					<blockquote style="margin-left: 20px;">', $message['body_highlighted'], '</blockquote>';
 			}
 
 			echo '
