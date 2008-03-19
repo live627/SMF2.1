@@ -16,6 +16,8 @@ March 2008
  * The classic theme was showing a header for child boards when there were none. (MessageIndex template) [Bug 1777]
  ! Calendar events were being shown on the board index regardless of where they were set to show. (Subs-Calendar.php) [Bug 1776]
  ! Banned members could still post unapproved replies and topics if post moderation was enabled. (Security.php) [Bug 1775]
+ ! Calendar events that were not linked to a post could not be edited. (Subs-Calendar.php) [Bug 1788]
+ ! Members were being shown as duplicates of themselves when awaiting activation. (Subs-Members.php) [Bug 1786]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

@@ -1283,7 +1283,7 @@ function populateDuplicateMembers(&$members)
 				$members[$key]['duplicate_members'] = array_merge($member['duplicate_members'], $duplicate_members[$member['member_ip2']]);
 
 			// Check we don't have lots of the same member.
-			$member_track = array();
+			$member_track = array($member['id_member']);
 			foreach ($members[$key]['duplicate_members'] as $k => $m)
 			{
 				if (in_array($m['id'], $member_track))

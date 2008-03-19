@@ -923,8 +923,8 @@ function modifyEvent($event_id, &$eventOptions)
 			'start_date' => $eventOptions['start_date'],
 			'end_date' => $eventOptions['end_date'],
 			'title' => $eventOptions['title'],
-			'id_board' => isset($eventOptions['board']) ? (int) $eventOptions['board'] : 'id_board',
-			'id_topic' => isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 'id_board',
+			'id_board' => isset($eventOptions['board']) ? (int) $eventOptions['board'] : 0,
+			'id_topic' => isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 0,
 			'id_event' => $event_id,
 		)
 	);
