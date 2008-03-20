@@ -122,7 +122,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		{
 			// This is a sad day... drop the table?
 			if ($if_exists == 'overwrite')
-				$smcFunc['db_drop_table']($table_name);
+				$smcFunc['db_drop_table']($table_name, array('no_prefix' => true));
 			elseif ($if_exists == 'ignore')
 				return true;
 			elseif ($if_exists == 'error')
@@ -143,13 +143,13 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 					}
 					// Doesn't - add it!
 					else
-						$smcFunc['db_add_column']($table_name, $column);
+						$smcFunc['db_add_column']($table_name, $column, array('no_prefix' => true));
 				}
 				// Whatever is left needs to be removed.
 				if ($if_exists == 'update_remove')
 				{
 					foreach ($old_columns as $column)
-						$smcFunc['db_remove_column']($table_name, $column);
+						$smcFunc['db_remove_column']($table_name, $column, array('no_prefix' => true));
 				}
 
 				// All done!
@@ -298,7 +298,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	unset($column_info['size']);
 
 	if (count($column_info) != 1)
-		return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info);
+		return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info, array('no_prefix' => true));
 	else
 		return true;
 }
