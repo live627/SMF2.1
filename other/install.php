@@ -1185,15 +1185,15 @@ function doStep2a()
 	}
 
 	echo '
-						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">';
+						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
+							<input type="submit" value="', $txt['user_settings_proceed'], '" />';
 
 	// Only allow skipping if we think they already have an account setup.
-	if (!empty($webmaster_email))
+	if (!empty($webmaster_email) && $webmaster_email != 'noreply@myserver.com')
 		echo '
 							<input type="submit" name="skip_account" value="', $txt['user_settings_skip'], '" onclick="return confirm(\'', addcslashes($txt['user_settings_skip_sure'], "'"), '\');" />';
 
 	echo '
-							<input type="submit" value="', $txt['user_settings_proceed'], '" />
 						</div>
 					</form>
 				</div>';
@@ -1219,11 +1219,11 @@ function doStep2()
 	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
 
-	if (!isset($_POST['password3']) && (empty($db_type) || $db_type != 'sqlite'))
+	if (!isset($_POST['password3']) && (empty($db_type) || $db_type != 'sqlite') && !empty($_POST['skip_account']))
 		return doStep2a();
 
 	$needsDB = !empty($databases[$db_type]['always_has_db']);
-	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, isset($_POST['password3']) ? $_POST['password3'] : '', $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
+	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, !empty($_POST['password3']) ? $_POST['password3'] : (!empty($_POST['skip_account']) ? $db_passwd : ''), $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
 	if (!$db_connection)
 	{
 		echo '
@@ -1278,7 +1278,7 @@ function doStep2()
 		return doStep2a();
 	}
 
-	if (!empty($_POST['email']) && empty($webmaster_email))
+	if (!empty($_POST['email']) && (empty($webmaster_email) || $webmaster_email == 'noreply@myserver.com'))
 		updateSettingsFile(array('webmaster_email' => $_POST['email']));
 
 	chdir(dirname(__FILE__));
@@ -1456,8 +1456,8 @@ function doStep2()
 	{
 		$_SERVER['HTTP_USER_AGENT'] = substr($_SERVER['HTTP_USER_AGENT'], 0, 211);
 
-		$smcFunc['db_insert']('',
-			$db_prefix . 'sessions',
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}sessions',
 			array(
 				'session_id' => 'string', 'last_update' => 'int', 'data' => 'string',
 			),

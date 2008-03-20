@@ -20,6 +20,9 @@ March 2008
  ! Members were being shown as duplicates of themselves when awaiting activation. (Subs-Members.php) [Bug 1786]
  * Search results were not styled in quote box correctly. (Search template) [Bug 1785]
  * Update wireless mode to handle the new code for code and quote BBC. (Wireless template)
+ ! The default action for admin account creation on new installs was "skip" instead of "finish". (install.php) [Bug 1797]
+ ! The webmaster email was not being written to the settings file on new installs. (install.php)
+ ! Skipping admin account creation caused a database error if a session was already present in the database. (install.php)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
