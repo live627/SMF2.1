@@ -95,7 +95,7 @@ function template_wap_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$wireless_message = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>', '<li>'), array('', '', '<br />--<br />', '<br />* '), $message['body']), '<br>');
+		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
 
 		echo '
 		<p><u>', $message['member']['name'], '</u>:<br /></p>
@@ -287,7 +287,7 @@ function template_imode_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$wireless_message = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>', '<li>'), array('<br />', '<br />', '<br />', '<br />* '), $message['body']), '<br>');
+		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
 
 		echo '
 			<tr><td>', $message['first_new'] ? '
@@ -544,7 +544,7 @@ function template_imode_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$message['body'] = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>', '<li>'), array('<br />', '<br />', '<br />', '<br />* '), $message['body']), '<br>');
+		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
 
 		echo '
 		<table border="0" cellspacing="0" cellpadding="0">
@@ -853,7 +853,7 @@ function template_wap2_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$wireless_message = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>', '<li>'), array('<br />', '<br />', '<br />', '<br />* '), $message['body']), '<br>');
+		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
 
 		echo $message['first_new'] ? '
 		<a name="new"></a>' : '', '
@@ -1103,7 +1103,7 @@ function template_wap2_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$message['body'] = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>', '<li>'), array('<br />', '<br />', '<br />', '<br />* '), $message['body']), '<br>');
+		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
 		echo '
 			<p class="catbg">', $message['subject'], '</p>
 			<p class="titlebg">

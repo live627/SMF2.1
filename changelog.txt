@@ -19,6 +19,7 @@ March 2008
  ! Calendar events that were not linked to a post could not be edited. (Subs-Calendar.php) [Bug 1788]
  ! Members were being shown as duplicates of themselves when awaiting activation. (Subs-Members.php) [Bug 1786]
  * Search results were not styled in quote box correctly. (Search template) [Bug 1785]
+ * Update wireless mode to handle the new code for code and quote BBC. (Wireless template)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
