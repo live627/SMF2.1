@@ -202,7 +202,7 @@ $txt['pmWaitTime_broken'] = 'The last personal message from your IP was less tha
 $txt['reporttmWaitTime_broken'] = 'The last topic report from your IP was less than %d seconds ago. Please try again later.';
 $txt['sendtopcWaitTime_broken'] = 'The last topic sent from your IP was less than %d seconds ago. Please try again later.';
 $txt['sendmailWaitTime_broken'] = 'The last email sent from your IP was less than %d seconds ago. Please try again later.';
-$txt['searchWaitTime_broken'] = 'You last search was less than %d seconds ago. Please try again later.';
+$txt['searchWaitTime_broken'] = 'Your last search was less than %d seconds ago. Please try again later.';
 
 $txt['email_missing_data'] = 'You must enter something in both the subject and message boxes.';
 

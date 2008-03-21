@@ -24,6 +24,8 @@ March 2008
  ! The webmaster email was not being written to the settings file on new installs. (install.php)
  ! Skipping admin account creation caused a database error if a session was already present in the database. (install.php)
  ! Some database functions for packages were adding the database prefix multiple times. (DbPackages-xxxx.php) [Bug 1793]
+ ! Board deletion was not being logged in the administrative log properly. (Subs-Boards.php) [Bug 1795]
+ ! Requesting group membership caused an undefined variable error. (Profile-Modify.php) [Bug 1799]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

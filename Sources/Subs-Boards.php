@@ -924,11 +924,11 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	// Plus reset the cache to stop people getting odd results.
 	updateSettings(array('settings_updated' => time()));
 
-	reorderBoards();
-
 	// Let's do some serious logging.
 	foreach ($boards_to_remove as $id_board)
 		logAction('delete_board', array('boardname' => $boards[$id_board]['name']), 'admin');
+
+	reorderBoards();
 }
 
 // Put all boards in the right order.

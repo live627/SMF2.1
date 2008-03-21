@@ -3039,7 +3039,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 					'RECPNAME' => $row['member_name'],
 					'APPYNAME' => $old_profile['member_name'],
 					'GROUPNAME' => $group_name,
-					'REASON' => $reason,
+					'REASON' => $_POST['reason'],
 					'MODLINK' => $scripturl . '?action=groups;sa=requests',
 				);
 
