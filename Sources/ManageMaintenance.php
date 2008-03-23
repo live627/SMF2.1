@@ -615,7 +615,7 @@ function TaskLog()
 	global $scripturl, $context, $txt, $smcFunc, $sourcedir;
 
 	// Empty the log?
-	if (!empty($_POST['deleteAll']))
+	if (!empty($_POST['removeAll']))
 	{
 		checkSession();
 
