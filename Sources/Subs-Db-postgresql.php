@@ -50,7 +50,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_data_seek' => 'smf_db_data_seek',
 			'db_num_fields' => 'pg_num_fields',
 			'db_escape_string' => 'pg_escape_string',
-			'db_unescape_string' => 'smf_postg_unescape_string',
+			'db_unescape_string' => 'smf_db_unescape_string',
 			'db_server_info' => 'smf_db_version',
 			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
