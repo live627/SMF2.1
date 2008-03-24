@@ -1547,7 +1547,7 @@ if (!empty($profiles))
 ---}
 ---#
 
----# Migrating old board profiles to profile sysetem
+---# Migrating old board profiles to profile system.
 ---{
 
 // Doing this twice would be awful!
