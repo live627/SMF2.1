@@ -1605,7 +1605,7 @@ if ($profileCount == 0)
 				INSERT INTO {$db_prefix}permission_profiles
 					(profile_name)
 				VALUES
-					('$row[name]')");
+					('" . addslashes($row['name']) . "')");
 			$board_updates[mysql_insert_id()][] = $row['id_board'];
 		}
 		// Otherwise, dear god, this is an old school "simple" permission...
