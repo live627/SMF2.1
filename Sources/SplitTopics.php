@@ -819,7 +819,7 @@ function MergeIndex()
 	// Prepare a handy query bit for approval...
 	if ($modSettings['postmod_active'])
 	{
-		$can_approve_boards = $modSettings['postmod_active'] ? boardsAllowedTo('approve_posts') : array(0);
+		$can_approve_boards = boardsAllowedTo('approve_posts');
 		$onlyApproved = $can_approve_boards !== array(0) && !in_array($_REQUEST['targetboard'], $can_approve_boards);
 	}
 	else
@@ -911,6 +911,7 @@ function MergeIndex()
 			'sort' => (!empty($modSettings['enableStickyTopics']) ? 't.is_sticky DESC, ' : '') . 't.id_last_msg DESC',
 			'offset' => $_REQUEST['start'],
 			'limit' => $modSettings['defaultMaxTopics'],
+			'is_approved' => 1,
 		)
 	);
 	$context['topics'] = array();

@@ -52,6 +52,7 @@ March 2008
  ! The scheduled task log could not be emptied. (ManageMaintenance.php) [Bug 1825]
  ! The unescape string function did not work in PostgreSQL (Subs-Db-postgresql.php) [Bug 1828]
  ! Upgrade failed if a board using local permissions had an apostrophe in its name. (upgrade_2-0_mysql.sql)
+ ! In some cases merging topics would cause a database error. (SplitTopics.php) [Bug 1844]
 
 
 SMF 2.0 Beta 3                                                     15 March 2008
