@@ -387,8 +387,7 @@ function checkActivation()
 	// Awaiting deletion, changed their mind?
 	elseif ($activation_status == 4)
 	{
-		// Check they haven't done the wrong password etc!
-		if (isset($_REQUEST['undelete']) && empty($context['login_errors']))
+		if (isset($_REQUEST['undelete']))
 		{
 			updateMemberData($user_settings['id_member'], array('is_activated' => 1));
 			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 0 ? $modSettings['unapprovedMembers'] - 1 : 0)));
