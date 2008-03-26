@@ -385,6 +385,10 @@ function Register2($verifiedOpenID = false)
 		$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
+	// If Quick Reply hasn't been set then set it to be shown but collapsed.
+	if (!isset($regOptions['theme_vars']['display_quick_reply']))
+		$regOptions['theme_vars']['display_quick_reply'] = 1;
+
 	// Check whether we have fields that simply MUST be displayed?
 	$request = $smcFunc['db_query']('', '
 		SELECT col_name, field_name, field_type, field_length, mask, show_reg

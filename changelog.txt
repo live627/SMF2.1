@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 4
+SMF 2.0 Beta 4                                                               ???
 ================================================================================
 March 2008
 --------------------------------------------------------------------------------
@@ -26,6 +26,7 @@ March 2008
  ! Some database functions for packages were adding the database prefix multiple times. (DbPackages-xxxx.php) [Bug 1793]
  ! Board deletion was not being logged in the administrative log properly. (Subs-Boards.php) [Bug 1795]
  ! Requesting group membership caused an undefined variable error. (Profile-Modify.php) [Bug 1799]
+ ! Set quick reply to be shown but collapsed by default. (Register.php) [Feature 1845]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
