@@ -333,7 +333,7 @@ function list_getGroups($start, $items_per_page, $sort)
 	if (!empty($group_ids))
 	{
 		$query = $smcFunc['db_query']('', '
-			SELECT mods.id_group, mods.id_member, mem.member_name
+			SELECT mods.id_group, mods.id_member, mem.member_name, mem.real_name
 			FROM {db_prefix}group_moderators AS mods
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
 			WHERE mods.id_group IN ({array_int:group_list})',
@@ -342,7 +342,7 @@ function list_getGroups($start, $items_per_page, $sort)
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($query))
-			$groups[$row['id_group']]['moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>';
+			$groups[$row['id_group']]['moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 		$smcFunc['db_free_result']($query);
 	}
 
@@ -574,7 +574,7 @@ function MembergroupMembers()
 	// Load up all members of this group.
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, member_ip, date_registered, last_login,
-			hide_email, posts, is_activated
+			hide_email, posts, is_activated, real_name
 		FROM {db_prefix}members
 		WHERE ' . $where . '
 		ORDER BY ' . $querySort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . '
@@ -939,7 +939,7 @@ function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_pa
 
 	$request = $smcFunc['db_query']('', '
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
-			mem.member_name, mg.group_name, mg.online_color
+			mem.member_name, mg.group_name, mg.online_color, mem.real_name
 		FROM {db_prefix}log_group_requests AS lgr
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 			INNER JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
@@ -955,7 +955,7 @@ function list_getGroupRequests($start, $items_per_page, $sort, $where, $where_pa
 	{
 		$group_requests[] = array(
 			'id' => $row['id_request'],
-			'member_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+			'member_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 			'group_link' => '<span style="color: ' . $row['online_color'] . '">' . $row['group_name'] . '</span>',
 			'reason' => censorText($row['reason']),
 			'time_submitted' => timeformat($row['time_applied']),

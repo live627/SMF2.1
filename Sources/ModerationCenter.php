@@ -460,7 +460,7 @@ function ModBlockGroupRequests()
 
 	// What requests are outstanding?
 	$request = $smcFunc['db_query']('', '
-		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, mem.member_name, mg.group_name
+		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, mem.member_name, mg.group_name, mem.real_name
 		FROM {db_prefix}log_group_requests AS lgr
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 			INNER JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
@@ -477,8 +477,8 @@ function ModBlockGroupRequests()
 			'request_href' => $scripturl . '?action=groups;sa=requests;gid=' . $row['id_group'],
 			'member' => array(
 				'id' => $row['id_member'],
-				'name' => $row['member_name'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+				'name' => $row['real_name'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			),
 			'group' => array(
@@ -1278,19 +1278,24 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$latest_posts[$row['id_member']] = $row['last_post_id'];
 
-		// Now get the time those messages were posted.
-		$request = $smcFunc['db_query']('', '
-			SELECT id_member, poster_time
-			FROM {db_prefix}messages
-			WHERE id_msg IN ({array_int:message_list})',
-			array(
-				'message_list' => $latest_posts,
-			)
-		);
-		while ($row = $smcFunc['db_fetch_assoc']($request))
+		if (!empty($latest_posts))
 		{
-			$watched_users[$row['id_member']]['last_post'] = timeformat($row['poster_time']);
-			$watched_users[$row['id_member']]['last_post_id'] = $latest_posts[$row['id_member']];
+			// Now get the time those messages were posted.
+			$request = $smcFunc['db_query']('', '
+				SELECT id_member, poster_time
+				FROM {db_prefix}messages
+				WHERE id_msg IN ({array_int:message_list})',
+				array(
+					'message_list' => $latest_posts,
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				$watched_users[$row['id_member']]['last_post'] = timeformat($row['poster_time']);
+				$watched_users[$row['id_member']]['last_post_id'] = $latest_posts[$row['id_member']];
+			}
+
+			$smcFunc['db_free_result']($request);
 		}
 
 		$request = $smcFunc['db_query']('', '

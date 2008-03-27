@@ -33,6 +33,8 @@ March 2008
  ! When moving a topic make sure the current board isn't select as the default value. (MoveTopic.php) [Bug 1833]
  ! The unapproved reply permission was showing a reply link on locked topics. (Display.php) [Bug 1829]
  ! Disable WYSIWYG if BBC is disabled. (Post.php, PersonalMessage.php) [Bug 1809]
+ ! The group requests and the group listings was using the member name instead of the real name. (Groups.php, ModerationCenter.php) [Bug 1816]
+ ! Having a moderator watch list with members who all have 0 posts was causing a database error. (ModerationCenter.php) [Bug 1832]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
