@@ -878,6 +878,9 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	global $scripturl, $txt, $user_info, $language;
 	global $modSettings, $smcFunc;
 
+	// Make sure the PM language file is loaded, we might need something out of it.
+	loadLanguage('PersonalMessage');
+
 	$onBehalf = $from !== null;
 
 	// Initialize log array.

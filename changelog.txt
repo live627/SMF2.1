@@ -27,6 +27,7 @@ March 2008
  ! Board deletion was not being logged in the administrative log properly. (Subs-Boards.php) [Bug 1795]
  ! Requesting group membership caused an undefined variable error. (Profile-Modify.php) [Bug 1799]
  ! Set quick reply to be shown but collapsed by default. (Register.php) [Feature 1845]
+ ! The sendpm function should load the PM language file in case it needs encounters an error. (Subs-Post.php)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
