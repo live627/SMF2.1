@@ -1655,6 +1655,9 @@ function MessagePost()
 		'name' => $txt['new_message']
 	);
 
+	$modSettings['disable_wysiwyg'] = !empty($modSettings['disable_wysiwyg']) || empty($modSettings['enableBBC']);
+
+
 	// Needed for the WYSIWYG editor.
 	require_once($sourcedir . '/Subs-Editor.php');
 

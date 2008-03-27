@@ -995,7 +995,7 @@ function ShowNotice()
 	list ($context['notice_body'], $context['notice_subject']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	$context['notice_body'] = strtr($context['notice_body'], array("\n" => '<br />'));
+	$context['notice_body'] = parse_bbc($context['notice_body'], false);
 }
 
 // View watched users.

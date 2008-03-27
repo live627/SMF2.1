@@ -120,7 +120,7 @@ function MoveTopic()
 			'name' => $row['name'],
 			'category' => $row['cat_name'],
 			'child_level' => $row['child_level'],
-			'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board']
+			'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'] && $row['id_board'] != $board,
 		);
 	}
 	$smcFunc['db_free_result']($request);

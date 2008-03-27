@@ -28,6 +28,11 @@ March 2008
  ! Requesting group membership caused an undefined variable error. (Profile-Modify.php) [Bug 1799]
  ! Set quick reply to be shown but collapsed by default. (Register.php) [Feature 1845]
  ! The sendpm function should load the PM language file in case it needs encounters an error. (Subs-Post.php)
+ ! Parse the BBC in previous notice text. (ModerationCenter.php) [Bug 1846]
+ ! Sort the smileys table immediately after enabling smileys. (MangeSmileys.php) [Bug 1834]
+ ! When moving a topic make sure the current board isn't select as the default value. (MoveTopic.php) [Bug 1833]
+ ! The unapproved reply permission was showing a reply link on locked topics. (Display.php) [Bug 1829]
+ ! Disable WYSIWYG if BBC is disabled. (Post.php, PersonalMessage.php) [Bug 1809]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

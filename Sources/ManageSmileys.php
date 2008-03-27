@@ -175,6 +175,10 @@ function EditSmileySettings($return_config = false)
 		// Validate the smiley set name.
 		$_POST['smiley_sets_default'] = empty($smiley_context[$_POST['smiley_sets_default']]) ? 'default' : $_POST['smiley_sets_default'];
 
+		// Make sure that the smileys are in the right order after enabling them.
+		if (isset($_POST['smiley_enable']))
+			sortSmileyTable();
+
 		saveDBSettings($config_vars);
 
 		cache_put_data('parsing_smileys', null, 480);

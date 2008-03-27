@@ -1084,6 +1084,9 @@ function Post()
 		$context['visual_verification_id'] = $verificationOptions['id'];
 	}
 
+	// WYSIWYG only works if BBC is enabled
+	$modSettings['disable_wysiwyg'] = !empty($modSettings['disable_wysiwyg']) || empty($modSettings['enableBBC']);
+
 	// Register this form in the session variables.
 	checkSubmitOnce('register');
 
