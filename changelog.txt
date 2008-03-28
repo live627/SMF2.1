@@ -860,8 +860,8 @@ October 2007
  ! When limiting unapproved topics/posts to a board keep the board information in the link for the tabs. (PostModeration.php)
 
 
- September 2007
-=======
+September 2007
+--------------------------------------------------------------------------------
  ! Make sure the bridge knows where the javascript files are. (Mambo bridge/smf.php)
  + Added a hook to export the first post in a new topic. (Subs-Post.php)
  ! Update Mambo bridge for SMF 2.0. (Mambo bridge/several files)
