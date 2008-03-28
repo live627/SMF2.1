@@ -35,6 +35,8 @@ March 2008
  ! Disable WYSIWYG if BBC is disabled. (Post.php, PersonalMessage.php) [Bug 1809]
  ! The group requests and the group listings was using the member name instead of the real name. (Groups.php, ModerationCenter.php) [Bug 1816]
  ! Having a moderator watch list with members who all have 0 posts was causing a database error. (ModerationCenter.php) [Bug 1832]
+ ! Fixed upgrade script erroring if theme paths were wrong - give them a big warning instead. (upgrade.php)
+ ! Upgrade wasn't slashing board names sometimes. (upgrade_2-0.sql)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

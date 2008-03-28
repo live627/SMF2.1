@@ -596,10 +596,11 @@ if (isset($modSettings['smfVersion']))
 		SELECT variable, value
 		FROM {db_prefix}themes
 		WHERE id_theme = {int:id_theme}
-			AND variable IN ({string:theme_url}, {string:images_url})',
+			AND variable IN ({string:theme_url}, {string:theme_dir}, {string:images_url})',
 		array(
 			'id_theme' => 1,
 			'theme_url' => 'theme_url',
+			'theme_dir' => 'theme_dir',
 			'images_url' => 'images_url',
 			'db_error_skip' => true,
 		)
@@ -611,11 +612,14 @@ if (isset($modSettings['smfVersion']))
 
 if (!isset($modSettings['theme_url']))
 {
+	$modSettings['theme_dir'] = $boarddir . '/Themes/default';
 	$modSettings['theme_url'] = 'Themes/default';
 	$modSettings['images_url'] = 'Themes/default/images';
 }
 if (!isset($settings['default_theme_url']))
 	$settings['default_theme_url'] = $modSettings['theme_url'];
+if (!isset($settings['default_theme_dir']))
+	$settings['default_theme_dir'] = $modSettings['theme_dir'];
 
 $upcontext['is_large_forum'] = (empty($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '1.1 RC1') && !empty($modSettings['totalMessages']) && $modSettings['totalMessages'] > 75000;
 // Default title...
@@ -3735,6 +3739,16 @@ function template_welcome_message()
 			</div>
 		</div>';
 
+	// Paths are incorrect?
+	echo '
+		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #804840; color: black; background-color: #FE5A44; ', (file_exists($settings['default_theme_dir'] . '/scripts/script.js') ? 'display: none;' : ''), '" id="js_script_missing_error">
+			<div style="float: left; width: 2ex; font-size: 2em; color: black;">!!</div>
+			<b style="text-decoration: underline;">Critical Error!</b><br />
+			<div style="padding-left: 6ex;">
+				The upgrade script cannot find script.js or it is out of date. Make sure your theme paths are correct. You can download a setting checker tool from the <a href="http://www.simplemachines.org">Simple Machines Website</a>
+			</div>
+		</div>';
+
 	// Is there someone already doing this?
 	if (!empty($upcontext['user']['id']) && (time() - $upcontext['started'] < 72600 || time() - $upcontext['updated'] < 3600))
 	{
@@ -3855,6 +3869,12 @@ function template_welcome_message()
 					document.getElementById(\'version_warning\').style.display = \'\';
 			}
 			add_load_event(smfCurrentVersion);
+
+			// This checks that the script file even exists!
+			if (typeof(smfSelectText) == \'undefined\')
+			{
+				document.getElementById(\'js_script_missing_error\').style.display = \'\';
+			}
 		// ]]></script>';
 }
 
@@ -4062,7 +4082,7 @@ function template_database_changes()
 		<div id="error_block" style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9; display: ', empty($upcontext['error_message']) ? 'none' : '', ';">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
 			<b style="text-decoration: underline;">Error!</b><br />
-			<div style="padding-left: 6ex;" id="error_message">', isset($upcontext['error_message']) ? $upcontext['error_message'] : '', '</div>
+			<div style="padding-left: 6ex;" id="error_message">', isset($upcontext['error_message']) ? $upcontext['error_message'] : 'Unknown Error!', '</div>
 		</div>';
 
 

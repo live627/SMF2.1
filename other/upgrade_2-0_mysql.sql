@@ -1547,7 +1547,7 @@ if (!empty($profiles))
 ---}
 ---#
 
----# Migrating old board profiles to profile system.
+---# Migrating old board profiles to profile sysetem
 ---{
 
 // Doing this twice would be awful!
@@ -1597,6 +1597,8 @@ if ($profileCount == 0)
 	$board_updates = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
+		$row['name'] = addslashes($row['name']);
+
 		// Is it a truely local permission board? If so this is a new profile!
 		if ($row['permission_mode'] == 1)
 		{
@@ -1605,7 +1607,7 @@ if ($profileCount == 0)
 				INSERT INTO {$db_prefix}permission_profiles
 					(profile_name)
 				VALUES
-					('" . addslashes($row['name']) . "')");
+					('$row[name]')");
 			$board_updates[mysql_insert_id()][] = $row['id_board'];
 		}
 		// Otherwise, dear god, this is an old school "simple" permission...
