@@ -43,6 +43,7 @@ March 2008
  ! Reverse the logic behind the priority flag on mails to work to MySQL's natural sorting advantage. (Many files)
  ! Annoucements and newsletters are now sent lower priority than notifications as they can go whenever. (ManageNews.php, Post.php)
  ! Make sure password/activation emails are sent right away. (Several files)
+ ! Don't show areas of the moderation centre to people who can't access them. (ModerationCenter.php) [Bug 1810]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

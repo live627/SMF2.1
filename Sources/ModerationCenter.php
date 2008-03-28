@@ -50,6 +50,10 @@ function ModerationMain($dont_call = false)
 
 	$context['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
 
+	// Can they approve any posts?
+	if ($modSettings['postmod_active'])
+		$approve_boards = boardsAllowedTo('approve_posts');
+
 	// This is the menu structure - refer to Subs-Menu.php for the details.
 	$moderation_areas = array(
 		'main' => array(
@@ -87,6 +91,7 @@ function ModerationMain($dont_call = false)
 		),
 		'posts' => array(
 			'title' => $txt['mc_posts'],
+			'enabled' => $user_info['mod_cache']['bq'] != '0=1' || !empty($approve_boards),
 			'areas' => array(
 				'postmod' => array(
 					'label' => $txt['mc_unapproved_posts'],
@@ -108,6 +113,7 @@ function ModerationMain($dont_call = false)
 				),
 				'reports' => array(
 					'label' => $txt['mc_reported_posts'],
+					'enabled' => $user_info['mod_cache']['bq'] != '0=1',
 					'file' => 'ModerationCenter.php',
 					'function' => 'ReportedPosts',
 					'subsections' => array(
