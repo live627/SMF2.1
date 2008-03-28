@@ -1150,7 +1150,7 @@ function AdminApprove()
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_accept', $replacements, $member['language']);
-				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
 			}
 		}
 	}
@@ -1186,7 +1186,7 @@ function AdminApprove()
 			);
 
 			$emaildata = loadEmailTemplate('admin_approve_activation', $replacements, $member['language']);
-			sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+			sendmail($member['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
 		}
 	}
 	// Are we rejecting them?

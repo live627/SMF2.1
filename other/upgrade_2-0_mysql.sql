@@ -920,7 +920,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}mail_queue (
 	priority tinyint(3) NOT NULL default '1',
 	PRIMARY KEY (id_mail),
 	KEY time_sent (time_sent),
-	KEY priority (priority)
+	KEY mail_priority (priority, id_mail)
 ) TYPE=MyISAM{$db_collation};
 ---#
 
@@ -936,6 +936,14 @@ if (!isset($modSettings['mail_next_send']))
 			('mail_recent', '0000000000|0')");
 }
 ---}
+---#
+
+---# Change mail queue indexes...
+ALTER TABLE {$db_prefix}mail_queue
+DROP INDEX priority;
+
+ALTER TABLE {$db_prefix}mail_queue
+ADD INDEX mail_priority (priority, id_mail);
 ---#
 
 /******************************************************************************/

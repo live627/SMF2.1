@@ -1,4 +1,4 @@
-<?php
+	<?php
 /**********************************************************************************
 * ScheduledTasks.php                                                              *
 ***********************************************************************************
@@ -766,7 +766,7 @@ function scheduled_daily_digest()
 		$email['body'] .= "\n\n" . $txt['regards_team'];
 
 		// Send it - low priority!
-		sendmail($email['email'], $email['subject'], $email['body'], null, null, false, 0);
+		sendmail($email['email'], $email['subject'], $email['body'], null, null, false, 5);
 	}
 
 	// Clean up...
@@ -898,7 +898,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	$request = $smcFunc['db_query']('', '
 		SELECT /*!40001 SQL_NO_CACHE */ id_mail, recipient, body, subject, headers, send_html
 		FROM {db_prefix}mail_queue
-		ORDER BY priority DESC, id_mail ASC
+		ORDER BY priority ASC, id_mail ASC
 		LIMIT ' . $number,
 		array(
 		)
@@ -1268,7 +1268,7 @@ function scheduled_birthdayemails()
 
 			$emaildata = loadEmailTemplate('happy_birthday', $replacements, $lang, false);
 
-			sendmail($recp['email'], $emaildata['subject'], $emaildata['body']);
+			sendmail($recp['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 5);
 
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);

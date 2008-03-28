@@ -254,6 +254,7 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 					'allowed_groups' => explode(',', $row['member_groups']),
 					'id_board' => $row['id_board'],
 					'href' => $row['id_topic'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
+					'link' => $row['id_topic'] == 0 ? $row['title'] : '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['title'] . '</a>',
 				);
 		}
 	}
@@ -633,8 +634,6 @@ function getCalendarWeek($month, $year, $day, $calendarOptions)
 function cache_getOffsetIndependentEvents($days_to_index)
 {
 	global $sourcedir;
-
-	require_once($sourcedir . '/Calendar.php');
 
 	$low_date = strftime('%Y-%m-%d', forum_time(false) - 24 * 3600);
 	$high_date = strftime('%Y-%m-%d', forum_time(false) + $days_to_index * 24 * 3600);

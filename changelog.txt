@@ -37,6 +37,12 @@ March 2008
  ! Having a moderator watch list with members who all have 0 posts was causing a database error. (ModerationCenter.php) [Bug 1832]
  ! Fixed upgrade script erroring if theme paths were wrong - give them a big warning instead. (upgrade.php)
  ! Upgrade wasn't slashing board names sometimes. (upgrade_2-0.sql)
+ ! cache_getOffsetIndependentEvents doesn't need Calendar.php. (Subs-Calendar.php)
+ ! getEventRange didn't always include the link index of events. (Subs-Calendar.php) [Bug 1848]
+ ! Change the index on the manage mail queue to make it faster. (install and upgrade scripts)
+ ! Reverse the logic behind the priority flag on mails to work to MySQL's natural sorting advantage. (Many files)
+ ! Annoucements and newsletters are now sent lower priority than notifications as they can go whenever. (ManageNews.php, Post.php)
+ ! Make sure password/activation emails are sent right away. (Several files)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

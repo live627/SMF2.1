@@ -40,10 +40,11 @@ $txt['mq_minutes'] = '%d Minutes';
 $txt['mq_second'] = '%d Second';
 $txt['mq_seconds'] = '%d Seconds';
 
-$txt['mq_priority_0'] = 'Low';
-$txt['mq_priority_1'] = 'Normal';
-$txt['mq_priority_2'] = 'High';
-$txt['mq_priority_3'] = 'Very High';
+$txt['mq_mpriority_5'] = 'Very Low';
+$txt['mq_mpriority_4'] = 'Low';
+$txt['mq_mpriority_3'] = 'Normal';
+$txt['mq_mpriority_2'] = 'High';
+$txt['mq_mpriority_1'] = 'Very High';
 
 $txt['birthday_email'] = 'Birthday Message to use';
 $txt['birthday_body'] = 'Email Body';

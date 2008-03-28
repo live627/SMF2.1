@@ -2146,7 +2146,7 @@ function AnnouncementSend()
 
 	// For each language send a different mail - low priority...
 	foreach ($announcements as $lang => $mail)
-		sendmail($mail['recipients'], $mail['subject'], $mail['body'], null, null, false, 0);
+		sendmail($mail['recipients'], $mail['subject'], $mail['body'], null, null, false, 5);
 
 	$context['percentage_done'] = round(100 * $context['start'] / $modSettings['latestMember'], 1);
 
@@ -2287,7 +2287,7 @@ function notifyMembersBoard(&$topicData)
 			{
 				$emailtype .= $send_body ? '_body' : '';
 				$emaildata = loadEmailTemplate($emailtype, $replacements, $langloaded);
-				sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body']);
+				sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
 			}
 
 			$sentOnceAlready = 1;

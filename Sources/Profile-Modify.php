@@ -2742,7 +2742,7 @@ function profileSendActivation()
 
 	// Send off the email.
 	$emaildata = loadEmailTemplate('activate_reactivate', $replacements, empty($cur_profile['lngfile']) || empty($modSettings['userLanguage']) ? $language : $cur_profile['lngfile']);
-	sendmail($profile_vars['email_address'], $emaildata['subject'], $emaildata['body']);
+	sendmail($profile_vars['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
 
 	// Log the user out.
 	$smcFunc['db_query']('', '

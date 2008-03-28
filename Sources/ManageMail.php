@@ -155,16 +155,16 @@ function BrowseMailQueue()
 						global $txt;
 
 						// We probably have a text label with your priority.
-						$txtKey = sprintf(\'mq_priority_%1$s\', $rowData[\'priority\']);
+						$txtKey = sprintf(\'mq_mpriority_%1$s\', $rowData[\'priority\']);
 
-						// But if not, revert to priority 3.
-						return isset($txt[$txtKey]) ? $txt[$txtKey] : $txt[\'mq_priority_3\'];
+						// But if not, revert to priority 0.
+						return isset($txt[$txtKey]) ? $txt[$txtKey] : $txt[\'mq_mpriority_1\'];
 					'),
 					'class' => 'smalltext',
 				),
 				'sort' => array(
-					'default' => 'priority DESC',
-					'reverse' => 'priority',
+					'default' => 'priority',
+					'reverse' => 'priority DESC',
 				),
 			),
 			'age' => array(
@@ -178,8 +178,8 @@ function BrowseMailQueue()
 					'class' => 'smalltext',
 				),
 				'sort' => array(
-					'default' => 'priority DESC',
-					'reverse' => 'priority',
+					'default' => 'time_sent',
+					'reverse' => 'time_sent DESC',
 				),
 			),
 		),
@@ -220,7 +220,7 @@ function BrowseMailQueue()
 			'age' => time_since(time() - $row['time_sent']),
 			'recipient' => '<a href="mailto:' . $row['recipient'] . '">' . $row['recipient'] . '</a>',
 			'priority' => $row['priority'],
-			'priority_text' => isset($txt['mq_priority_' . $row['priority']]) ? $txt['mq_priority_' . $row['priority']] : $txt['mq_priority_3'],
+			'priority_text' => isset($txt['mq_mpriority_' . $row['priority']]) ? $txt['mq_mpriority_' . $row['priority']] : $txt['mq_mpriority_1'],
 			'subject' => strlen($row['subject']) > 50 ? substr($row['subject'], 0, 47) . '...' : $row['subject'],
 		);
 	}

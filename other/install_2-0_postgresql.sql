@@ -1524,7 +1524,7 @@ CREATE TABLE {$db_prefix}mail_queue (
 #
 
 CREATE INDEX {$db_prefix}mail_queue_time_sent ON {$db_prefix}mail_queue (time_sent);
-CREATE INDEX {$db_prefix}mail_queue_priority ON {$db_prefix}mail_queue (priority);
+CREATE INDEX {$db_prefix}mail_queue_mail_priority ON {$db_prefix}mail_queue (priority, id_mail);
 
 #
 # Sequence for table `membergroups`

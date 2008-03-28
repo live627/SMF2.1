@@ -1195,7 +1195,7 @@ CREATE TABLE {$db_prefix}mail_queue (
   priority tinyint(3) NOT NULL default '1',
   PRIMARY KEY  (id_mail),
   KEY time_sent (time_sent),
-  KEY priority (priority)
+  KEY mail_priority (priority, id_mail)
 ) TYPE=MyISAM;
 
 #

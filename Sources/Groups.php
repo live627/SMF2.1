@@ -777,7 +777,7 @@ function GroupRequests()
 
 						$emaildata = loadEmailTemplate('mc_group_approve', $replacements, $email['language']);
 
-						sendmail($email['email'], $emaildata['subject'], $emaildata['body']);
+						sendmail($email['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
 					}
 				}
 				// Otherwise, they are getting rejected (With or without a reason).

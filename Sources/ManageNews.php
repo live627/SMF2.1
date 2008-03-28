@@ -610,7 +610,7 @@ function SendMailing($clean_only = false)
 			$email
 		);
 
-		sendmail($email, str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 0);
+		sendmail($email, str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 5);
 	}
 
 	// Got some more to send this batch?
@@ -707,7 +707,7 @@ function SendMailing($clean_only = false)
 
 			// Send the actual email off, replacing the member dependent variables - or a PM!
 			if (!$context['send_pm'])
-				sendmail($row['email_address'], str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 0);
+				sendmail($row['email_address'], str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 5);
 			else
 				sendpm(array('to' => array($row['id_member']), 'bcc' => array()), $_POST['subject'], $_POST['message']);
 		}

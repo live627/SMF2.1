@@ -51,7 +51,7 @@ if (!defined('SMF'))
 
 	bool sendmail(array to, string subject, string message,
 			string message_id = auto, string from = webmaster,
-			bool send_html = false, int priority = 1, bool hotmail_fix = null)
+			bool send_html = false, int priority = 3, bool hotmail_fix = null)
 		- sends an email to the specified recipient.
 		- uses the mail_type setting and the webmaster_email global.
 		- to is he email(s), string or array, to send to.
@@ -66,7 +66,7 @@ if (!defined('SMF'))
 		- returns whether or not the email was sent properly.
 
 	bool AddMailQueue(bool flush = true, array to_array = array(), string subject = '', string message = '',
-		string headers = '', bool send_html = false, int priority = 1)
+		string headers = '', bool send_html = false, int priority = 3)
 		//!!
 
 	array sendpm(array recipients, string subject, string message,
@@ -617,7 +617,7 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 }
 
 // Send off an email.
-function sendmail($to, $subject, $message, $from = null, $message_id = null, $send_html = false, $priority = 1, $hotmail_fix = null)
+function sendmail($to, $subject, $message, $from = null, $message_id = null, $send_html = false, $priority = 3, $hotmail_fix = null)
 {
 	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
 	global $smcFunc;
@@ -739,7 +739,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	}
 
 	// Are we using the mail queue, if so this is where we butt in...
-	if (!empty($modSettings['mail_queue']) && $priority < 4)
+	if (!empty($modSettings['mail_queue']) && $priority != 0)
 		return AddMailQueue(false, $to_array, $subject, $message, $headers, $send_html, $priority);
 
 	// If it's a priority mail, send it now - note though that this should NOT be used for sending many at once.
@@ -786,7 +786,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 }
 
 // Add an email to the mail queue.
-function AddMailQueue($flush = false, $to_array = array(), $subject = '', $message = '', $headers = '', $send_html = false, $priority = 1)
+function AddMailQueue($flush = false, $to_array = array(), $subject = '', $message = '', $headers = '', $send_html = false, $priority = 3)
 {
 	global $context, $modSettings, $smcFunc;
 
