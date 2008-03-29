@@ -65,61 +65,21 @@ function template_browse()
 		</tr>
 	</table>';
 	}
-	// if not, use the old style
+	// If not, use the old style.
 	else
 	{
 		echo '
 		<tr class="catbg">
 			<td colspan="5">
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a>&nbsp;|&nbsp;
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a>&nbsp;|&nbsp;
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a>&nbsp;|&nbsp;
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a>&nbsp;|&nbsp;
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
 			</td>
 		</tr>
 	</table>';
 	}
 
 	template_show_list('file_list');
-/*
-	echo '
-<form action="', $scripturl, '?action=admin;area=manageattachments;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', ';sa=remove" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');">
-	<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
-		<tr class="titlebg">';
-
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['attachment_name'], $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=size', $context['sort_by'] == 'size' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['attachment_file_size'], $context['sort_by'] == 'size' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=member', $context['sort_by'] == 'member' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? $txt['attachment_manager_member'] : $txt['posted_by'], $context['sort_by'] == 'member' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? $txt['attachment_manager_last_active'] : $txt['date'], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td nowrap="nowrap" align="center"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
-		</tr>';
-	$alternate = false;
-	foreach ($context['posts'] as $post)
-	{
-		echo '
-		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-			<td>', $post['attachment']['link'], empty($post['attachment']['width']) || empty($post['attachment']['height']) ? '' : ' <span class="smalltext">' . $post['attachment']['width'] . 'x' . $post['attachment']['height'] . '</span>', '</td>
-			<td align="right">', $post['attachment']['size'], $txt['kilobyte'], '</td>
-			<td>', $post['poster']['link'], '</td>
-			<td class="smalltext">', $post['time'], $context['browse_type'] != 'avatars' ? '<br />' . $txt['in'] . ' ' . $post['link'] : '', '</td>
-			<td align="center"><input type="checkbox" name="remove[', $post['attachment']['id'], ']" class="check" /></td>
-		</tr>';
-		$alternate = !$alternate;
-	}
-	echo '
-		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-			<td align="right" colspan="5">
-				<input type="submit" name="remove_submit" value="', $txt['delete'], '" />
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				<input type="hidden" name="type" value="', $context['browse_type'], '" />
-				<input type="hidden" name="start" value="', $context['start'], '" />
-			</td>
-		</tr>
-		<tr class="catbg">
-			<td align="left" colspan="5" style="padding: 5px;"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
-		</tr>
-	</table>
-</form>';
-*/
 }
 
 function template_maintenance()

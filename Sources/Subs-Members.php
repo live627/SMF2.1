@@ -1171,7 +1171,7 @@ function list_getNumMembers($where, $where_params = array())
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
-			FROM {db_prefix}members
+			FROM {db_prefix}members AS mem
 			WHERE ' . $where,
 			array_merge($where_params, array(
 			))

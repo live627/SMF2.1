@@ -405,7 +405,7 @@ function ViewMemberlist()
 		// Primary membergroups, but only if at least was was not selected.
 		if (!empty($_POST['membergroups'][1]) && count($context['membergroups']) != count($_POST['membergroups'][1]))
 		{
-			$mg_query_parts[] = 'id_group IN ({array_int:group_check})';
+			$mg_query_parts[] = 'mem.id_group IN ({array_int:group_check})';
 			$where_params['group_check'] = $_POST['membergroups'][1];
 		}
 
@@ -413,7 +413,7 @@ function ViewMemberlist()
 		if (!empty($_POST['membergroups'][2]) && (empty($_POST['membergroups'][1]) || count($context['membergroups']) != count($_POST['membergroups'][1])))
 			foreach ($_POST['membergroups'][2] as $mg)
 			{
-				$mg_query_parts[] = 'FIND_IN_SET({int:add_group_' . $mg . '}, additional_groups)';
+				$mg_query_parts[] = 'FIND_IN_SET({int:add_group_' . $mg . '}, mem.additional_groups)';
 				$where_params['add_group_' . $mg] = $mg;
 			}
 
