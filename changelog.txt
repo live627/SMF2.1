@@ -48,6 +48,7 @@ March 2008
  ! Don't throw an error if moderation log data in the database is a little off. (Modlog.php)
  * Themes that didn't use tabs threw some errors on the manage attachments screen. (ManageAttachments template) [Bug 1854]
  ! Searching for members by their primary group resulted in a database error. (ManageMembers.php, Subs-Members.php) [Bug 1850]
+ ! The session was not being checked when approving posts. (PostModeration.php) [Bug 1851]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

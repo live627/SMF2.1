@@ -118,6 +118,8 @@ function UnapprovedPosts()
 	// Right, so we have something to do?
 	if (!empty($toAction) && isset($curAction))
 	{
+		checkSession('request');
+
 		// Handy shortcut.
 		$any_array = $curAction == 'approve' ? $approve_boards : $delete_any_boards;
 
