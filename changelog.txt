@@ -57,6 +57,7 @@ March 2008
  ! The register "allow users to email me" option wasn't really being done right. (Register.php, Register template) [Bug 1858]
  + Allow the admin to set the server timezone. (ManageSettings.php, ManageSettings and Help language files)
  ! Upgrade and install scripts should now work with MySQL 6, assuming you are starting from 2.0. (install.php, upgrade.php, install_2-0_mysql.sql, upgrade_2-0_mysql.sql) [Bug 1859]
+ ! Make sure the "Play Sound" doesn't follow the link. (captcha.js) [Bug 1784]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

@@ -56,8 +56,25 @@ function smfCaptcha(imageURL, uniqueID, useLibrary, letterCount)
 	}
 
 	// Request a sound... play it Mr Soundman...
-	function playSound()
+	function playSound(ev)
 	{
-		return reqWin(imageURL + ";sound", 400, 120);
+		if (!ev)
+			ev = window.event;
+
+		popupFailed = reqWin(imageURL + ";sound", 400, 120);
+		// Don't follow the link if the popup worked, which it would have done!
+		if (!popupFailed)
+		{
+			if (is_ie && ev.cancelBubble)
+				ev.cancelBubble = true;
+			else if (ev.stopPropagation)
+			{
+				ev.stopPropagation();
+				ev.preventDefault();
+			}
+			void(0);
+		}
+
+		return popupFailed;
 	}
 }
