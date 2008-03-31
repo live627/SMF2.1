@@ -51,6 +51,8 @@ March 2008
  ! The session was not being checked when approving posts. (PostModeration.php) [Bug 1851]
  ! Don't let guests issue warnings. (ManagePermissions.php) [Bug 1857]
  ! Size custom profile input fields a little more logically. (Profile.php)
+ ! The javascript verification password should only be true if the main password is true. (register.js)
+ ! Autocheck the username is available when the user has typed it in register. (register.js)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

@@ -52,6 +52,9 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			createEventListener(inputHandle);
 			inputHandle.addEventListener('keyup', eventHandler, false);
 			eventHandler();
+
+			// Username will auto check on blur!
+			inputHandle.addEventListener('blur', autoCheckUsername, false);
 		}
 
 		// Make the div visible!
@@ -110,7 +113,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 	}
 
 	// What is the password state?
-	function refreshMainPassword()
+	function refreshMainPassword(called_from_verify)
 	{
 		if (!verificationFields['pwmain'])
 			return false;
@@ -155,8 +158,10 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 		verificationFields['pwmain'][1].style.backgroundColor = isValid ? validColor : invalidColor;
 
 		// As this has changed the verification one may have too!
-		if (verificationFields['pwverify'])
+		if (verificationFields['pwverify'] && !called_from_verify)
 			refreshVerifyPassword();
+
+		return isValid;
 	}
 
 	// Check that the verification password matches the main one!
@@ -167,7 +172,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			return false;
 
 		// Check and set valid status!
-		var isValid = verificationFields['pwmain'][1].value == verificationFields['pwverify'][1].value;
+		var isValid = verificationFields['pwmain'][1].value == verificationFields['pwverify'][1].value && refreshMainPassword(true);
 		alt = textStrings[isValid == 1 ? 'password_valid' : 'password_no_match'] ? textStrings[isValid == 1 ? 'password_valid' : 'password_no_match'] : '';
 		setVerificationImage(verificationFields['pwverify'][2], isValid, alt);
 		verificationFields['pwverify'][1].style.backgroundColor = isValid ? validColor : invalidColor;
@@ -190,8 +195,14 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 		refreshMainPassword();
 	}
 
+	// This is a pass through function that ensures we don't do any of the AJAX notification stuff.
+	function autoCheckUsername()
+	{
+		checkUsername(true);
+	}
+
 	// Check whether the username exists?
-	function checkUsername()
+	function checkUsername(is_auto)
 	{
 		if (!verificationFields['username'])
 			return false;
@@ -201,7 +212,8 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 		if (!curUsername)
 			return false;
 
-		ajax_indicator(true);
+		if (!is_auto)
+			ajax_indicator(true);
 
 		// Request a search on that username.
 		checkName = escape(textToEntities(curUsername).replace(/&#(\d+);/g, "%#$1%")).replace(/%26/g, "%25%23038%25");
