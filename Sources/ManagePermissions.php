@@ -1522,6 +1522,7 @@ function loadAllPermissions($loadType = 'classic')
 		'edit_news',
 		'access_mod_center',
 		'moderate_forum',
+		'issue_warning',
 		'manage_membergroups',
 		'manage_permissions',
 		'manage_bans',

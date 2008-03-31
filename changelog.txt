@@ -49,6 +49,8 @@ March 2008
  * Themes that didn't use tabs threw some errors on the manage attachments screen. (ManageAttachments template) [Bug 1854]
  ! Searching for members by their primary group resulted in a database error. (ManageMembers.php, Subs-Members.php) [Bug 1850]
  ! The session was not being checked when approving posts. (PostModeration.php) [Bug 1851]
+ ! Don't let guests issue warnings. (ManagePermissions.php) [Bug 1857]
+ ! Size custom profile input fields a little more logically. (Profile.php)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
