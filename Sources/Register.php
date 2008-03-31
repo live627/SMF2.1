@@ -314,6 +314,9 @@ function Register2($verifiedOpenID = false)
 	elseif (!empty($_POST['bday1']) && !empty($_POST['bday2']))
 		$_POST['birthdate'] = sprintf('%04d-%02d-%02d', empty($_POST['bday3']) ? 0 : (int) $_POST['bday3'], (int) $_POST['bday1'], (int) $_POST['bday2']);
 
+	// By default assume email is hidden, only show it if we tell it to.
+	$_POST['hide_email'] = !empty($_POST['show_email']) ? 0 : 1;
+
 	// Validate the passed langauge file.
 	if (isset($_POST['lngfile']) && !empty($modSettings['userLanguage']))
 	{

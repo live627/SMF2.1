@@ -125,7 +125,7 @@ function template_before()
 						</td>
 						<td>
 							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" />
-							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt['allow_user_email'], '</label>
+							<label for="allow_email"><input type="checkbox" name="allow_email" id="allow_email" class="check" /> ', $txt['allow_user_email'], '</label>
 						</td>
 					</tr>';
 

@@ -53,6 +53,8 @@ March 2008
  ! Size custom profile input fields a little more logically. (Profile.php)
  ! The javascript verification password should only be true if the main password is true. (register.js)
  ! Autocheck the username is available when the user has typed it in register. (register.js)
+ ! show_online wasn't being cast to an int. (Subs.php, Subs-Membmers.php)
+ ! The register "allow users to email me" option wasn't really being done right. (Register.php, Register template) [Bug 1858]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
