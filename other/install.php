@@ -920,6 +920,7 @@ function doStep1()
 		'{$current_time}' => time(),
 		'{$sched_task_offset}' => 82800 + rand(0, 86399),
 	);
+
 	foreach ($txt as $key => $value)
 	{
 		if (substr($key, 0, 8) == 'default_')
@@ -927,10 +928,13 @@ function doStep1()
 	}
 	$replaces['{$default_reserved_names}'] = strtr($replaces['{$default_reserved_names}'], array('\\\\n' => '\\n'));
 
+	// MySQL users below v4 can't use engine.
+	if ($db_type == 'mysql' && version_compare('4', preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
+		$replaces[') ENGINE='] = ') TYPE=';
 	// If the UTF-8 setting was enabled, add it to the table definitions.
 	//!!! Very MySQL specific still
 	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
-		$replaces[') TYPE=MyISAM;'] = ') TYPE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;';
+		$replaces[') ENGINE=MyISAM;'] = ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;';
 
 	// Read in the SQL.  Turn this on and that off... internationalize... etc.
 	$sql_lines = explode("\n", strtr(implode(' ', file(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $db_type . '.sql')), $replaces));

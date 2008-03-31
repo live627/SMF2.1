@@ -2490,9 +2490,12 @@ function parse_sql($filename)
 	$substep = 0;
 	$last_step = '';
 
+	// MySQL users below v4 can't use engine.
+	if ($db_type == 'mysql' && version_compare('4', preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
+		$lines = strtr($lines, array(') ENGINE=' => ') TYPE='));
 	// Make sure all newly created tables will have the proper characters set.
 	if (isset($db_character_set) && $db_character_set === 'utf8')
-		$lines = str_replace(') TYPE=MyISAM;', ') TYPE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;', $lines);
+		$lines = str_replace(') ENGINE=MyISAM;', ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;', $lines);
 
 	// Count the total number of steps within this file - for progress.
 	$file_steps = substr_count(implode('', $lines), '---#');
