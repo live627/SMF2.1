@@ -440,6 +440,7 @@ function ModifyBasicSettings($return_config = false)
 			array('text', 'time_format'),
 			array('select', 'number_format', array('1234.00' => '1234.00', '1,234.00' => '1,234.00', '1.234,00' => '1.234,00', '1 234,00' => '1 234,00', '1234,00' => '1234,00')),
 			array('float', 'time_offset'),
+			'default_timezone' => array('select', 'default_timezone', array()),
 			array('int', 'lastActive'),
 			array('check', 'trackStats'),
 			array('check', 'hitStats'),
@@ -453,6 +454,17 @@ function ModifyBasicSettings($return_config = false)
 			array('int', 'max_image_width'),
 			array('int', 'max_image_height'),
 	);
+
+	// Get all the time zones.
+	if (function_exists('timezone_identifiers_list') && function_exists('date_default_timezone_set'))
+	{
+		$all_zones = timezone_identifiers_list();
+		// Make sure we set the value to the same as the printed value.
+		foreach ($all_zones as $zone)
+			$config_vars['default_timezone'][2][$zone] = $zone;
+	}
+	else
+		unset($config_vars['default_timezone']);
 
 	if ($return_config)
 		return $config_vars;

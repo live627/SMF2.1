@@ -55,6 +55,7 @@ March 2008
  ! Autocheck the username is available when the user has typed it in register. (register.js)
  ! show_online wasn't being cast to an int. (Subs.php, Subs-Membmers.php)
  ! The register "allow users to email me" option wasn't really being done right. (Register.php, Register template) [Bug 1858]
+ + Allow the admin to set the server timezone. (ManageSettings.php, ManageSettings and Help language files)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
