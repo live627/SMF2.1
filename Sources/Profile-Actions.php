@@ -91,7 +91,7 @@ function issueWarning($memID)
 	$issueErrors = array();
 
 	// Doesn't hurt to be overly cautious.
-	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warning'))
+	if (empty($modSettings['warning_enable']) || ($context['user']['is_owner'] && !$cur_profile['warning']) || !allowedTo('issue_warning'))
 		fatal_lang_error('no_access', false);
 
 	// Make sure things which are disabled stay disabled.
@@ -145,8 +145,8 @@ function issueWarning($memID)
 		checkSession('post');
 
 		// This cannot be empty!
-		$_POST['warn_reason'] = trim($_POST['warn_reason']);
-		if ($_POST['warn_reason'] == '')
+		$_POST['warn_reason'] = isset($_POST['warn_reason']) ? trim($_POST['warn_reason']) : '';
+		if ($_POST['warn_reason'] == '' && !$context['user']['is_owner'])
 			$issueErrors[] = 'warning_no_reason';
 		$_POST['warn_reason'] = $smcFunc['htmlspecialchars']($_POST['warn_reason']);
 
@@ -201,28 +201,29 @@ function issueWarning($memID)
 		// What have we changed?
 		$level_change = $_POST['warning_level'] - $cur_profile['warning'];
 
-		// No errors? Proceed!
+		// No errors? Proceed! Only log if you're not the owner.
 		if (empty($issueErrors))
 		{
 			// Log what we've done!
-			$smcFunc['db_insert']('',
-				'{db_prefix}log_comments',
-				array(
-					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
-					'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
-				),
-				array(
-					$user_info['id'], $user_info['name'], 'warning', $memID, $cur_profile['real_name'],
-					time(), $id_notice, $level_change, $_POST['warn_reason'],
-				),
-				array('id_comment')
-			);
+			if (!$context['user']['is_owner'])
+				$smcFunc['db_insert']('',
+					'{db_prefix}log_comments',
+					array(
+						'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int', 'recipient_name' => 'string-255',
+						'log_time' => 'int', 'id_notice' => 'int', 'counter' => 'int', 'body' => 'string-65534',
+					),
+					array(
+						$user_info['id'], $user_info['name'], 'warning', $memID, $cur_profile['real_name'],
+						time(), $id_notice, $level_change, $_POST['warn_reason'],
+					),
+					array('id_comment')
+				);
 
 			// Make the change.
 			updateMemberData($memID, array('warning' => $_POST['warning_level']));
 
 			// Leave a lovely message.
-			$context['profile_updated'] = $txt['profile_warning_success'];
+			$context['profile_updated'] = $context['user']['is_owner'] ? $txt['profile_updated_own'] : $txt['profile_warning_success'];
 		}
 		else
 		{

@@ -187,10 +187,10 @@ function ModifyProfile($post_errors = array())
 					'label' => $txt['profileSendIm'],
 				),
 				'issueWarning' => array(
-					'own' => array(),
+					'own' => array('issue_warning'),
 					'any' => array('issue_warning'),
-					'enabled' => $modSettings['warning_settings']{0} == 1 && !$context['user']['is_owner'],
-					'label' => $txt['profile_issue_warning'],
+					'enabled' => $modSettings['warning_settings']{0} == 1 && (!$context['user']['is_owner'] || $cur_profile['warning']),
+					'label' => $context['user']['is_owner'] && $cur_profile['warning'] ? $txt['profile_view_warnings'] : $txt['profile_issue_warning'],
 				),
 				'banUser' => array(
 					'own' => array(),

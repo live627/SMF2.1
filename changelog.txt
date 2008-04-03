@@ -65,6 +65,7 @@ March 2008
  ! Email form was showing the wrong name. (SendTopic.php) [Bug 1874]
  ! "Allow users to email" still wasn't working. (Register.php) [Bug 1873]
  ! Check time offset always returns something valid. (profile.js) [Bug 1871]
+ ! Allow warned admins to change their warning level. (Profile-Actions.php, Profile template) [Bug 1867]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

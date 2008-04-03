@@ -1991,25 +1991,35 @@ function template_issueWarning()
 		<table border="0" width="85%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="2" height="26">
-					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['profile_issue_warning'], '
+					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $context['user']['is_owner'] ? $txt['profile_warning_level'] : $txt['profile_issue_warning'], '
 				</td>
-			</tr>
+			</tr>';
+
+	if (!$context['user']['is_owner'])
+		echo '
 			<tr class="windowbg2">
 				<td colspan="2">
 					<span class="smalltext">', $txt['profile_warning_desc'], '</span>
 				</td>
-			</tr>
+			</tr>';
+
+	echo '
 			<tr class="windowbg">
 				<td width="100%">
-					<table border="0" width="100%" cellspacing="0" cellpadding="2" align="center">
+					<table border="0" width="100%" cellspacing="0" cellpadding="2" align="center">';
+
+	if (!$context['user']['is_owner'])
+		echo '
 						<tr class="windowbg">
-				<td width="40%">
-					<b>', $txt['profile_warning_name'], ':</b>
-				</td>
-				<td>
-					<b>', $context['member']['name'], '</b>
-				</td>
-			</tr>
+							<td width="40%">
+								<b>', $txt['profile_warning_name'], ':</b>
+							</td>
+							<td>
+								<b>', $context['member']['name'], '</b>
+							</td>
+						</tr>';
+
+	echo '
 			<tr class="windowbg" valign="top">
 				<td width="30%">
 					<b>', $txt['profile_warning_level'], ':</b>';
@@ -2048,7 +2058,11 @@ function template_issueWarning()
 						</div>
 					</div>
 				</td>
-			</tr>
+			</tr>';
+
+	if (!$context['user']['is_owner'])
+	{
+		echo '
 			<tr class="windowbg" valign="top">
 				<td width="30%">
 					<b>', $txt['profile_warning_reason'], ':</b>
@@ -2088,22 +2102,24 @@ function template_issueWarning()
 						<option value="-1">', $txt['profile_warning_notify_template'], '</option>
 						<option value="-1">------------------------------</option>';
 
-	foreach ($context['notify_types'] as $k => $v)
-		echo '
+		foreach ($context['notify_types'] as $k => $v)
+			echo '
 						<option value="', $k, '">', $v['title'], '</option>';
 
-	echo '
+		echo '
 					</select><br />
 					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;" >', $context['warning_data']['notify_body'], '</textarea>
 				</td>
-			</tr>
+			</tr>';
+	}
+	echo '
 			</table>
 			</td>
 			</tr>
 			<tr class="catbg">
 				<td colspan="2" align="right">
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-					<input type="submit" name="save" value="', $txt['profile_warning_issue'], '" />
+					<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" />
 				</td>
 			</tr>
 		</table>
