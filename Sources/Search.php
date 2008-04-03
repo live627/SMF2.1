@@ -1856,7 +1856,7 @@ function prepareSearchContext($reset = false)
 
 		$message['body'] = strtr($message['body'], array("\n" => ' ', '<br />' => "\n"));
 		$message['body'] = parse_bbc($message['body'], $message['smileys_enabled'], $message['id_msg']);
-		$message['body'] = strip_tags(strtr($message['body'], array('</div>' => '<br />')), '<br>');
+		$message['body'] = strip_tags(strtr($message['body'], array('</div>' => '<br />', '</li>' => '<br />')), '<br>');
 
 		if (strlen($message['body']) > $charLimit)
 		{
