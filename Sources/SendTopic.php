@@ -185,7 +185,7 @@ function CustomEmail()
 	if (isset($_REQUEST['uid']))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT email_address AS email, member_name AS name, id_member, hide_email
+			SELECT email_address AS email, real_name AS name, id_member, hide_email
 			FROM {db_prefix}members
 			WHERE id_member = {int:id_member}',
 			array(

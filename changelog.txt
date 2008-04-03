@@ -61,6 +61,9 @@ March 2008
  * The link to import a smiley was not correct. (ManageSmileys.php, ManageSmileys template) [Bug 1862]
  & If a member was banned while logged in they would not receive the correct error. (Security.php, index language file) [Bug 1862]
  ! Add some extra variable safety into SMF. (index.php)
+ & Emailing a user should appear in who's online. (Who language file) [Bug 1875]
+ ! Email form was showing the wrong name. (SendTopic.php) [Bug 1874]
+ ! "Allow users to email" still wasn't working. (Register.php) [Bug 1873]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

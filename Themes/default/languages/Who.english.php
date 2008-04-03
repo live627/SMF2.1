@@ -25,6 +25,7 @@ $txt['who_no_online_guests'] = 'There are currently no guests online.';
 $txt['who_no_online_members'] = 'There are currently no members online.';
 
 $txt['whoall_activate'] = 'Activating their account.';
+$txt['whoall_emailuser'] = 'Sending email to another member.';
 $txt['whoall_help'] = 'Viewing the <a href="' . $scripturl . '?action=help">help page</a>.';
 $txt['whoall_helpadmin'] = 'Viewing a help popup.';
 $txt['whoall_pm'] = 'Viewing their messages.';
