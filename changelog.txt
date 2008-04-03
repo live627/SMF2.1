@@ -64,6 +64,7 @@ March 2008
  & Emailing a user should appear in who's online. (Who language file) [Bug 1875]
  ! Email form was showing the wrong name. (SendTopic.php) [Bug 1874]
  ! "Allow users to email" still wasn't working. (Register.php) [Bug 1873]
+ ! Check time offset always returns something valid. (profile.js) [Bug 1871]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
