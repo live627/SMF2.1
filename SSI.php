@@ -42,6 +42,11 @@ if (function_exists('set_magic_quotes_runtime'))
 	@set_magic_quotes_runtime(0);
 $time_start = microtime();
 
+// Just being safe...
+foreach (array('db_character_set', 'cachedir') as $variable)
+	if (isset($GLOBALS[$variable]))
+		unset($GLOBALS[$variable]);
+
 // Get the forum's settings for database and file paths.
 require_once(dirname(__FILE__) . '/Settings.php');
 

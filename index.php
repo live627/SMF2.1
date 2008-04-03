@@ -43,6 +43,11 @@ if (function_exists('set_magic_quotes_runtime'))
 error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
 $time_start = microtime();
 
+// Do some cleaning, just in case.
+foreach (array('db_character_set', 'cachedir') as $variable)
+	if (isset($GLOBALS[$variable]))
+		unset($GLOBALS[$variable]);
+
 // Load the settings...
 require_once(dirname(__FILE__) . '/Settings.php');
 

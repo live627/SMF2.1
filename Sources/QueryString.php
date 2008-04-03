@@ -244,6 +244,8 @@ function cleanRequest()
 		// Now make sure the online log gets the right number.
 		$_GET['topic'] = $topic;
 	}
+	else
+		$topic = 0;
 
 	// There should be a $_REQUEST['start'], some at least.  If you need to default to other than 0, use $_GET['start'].
 	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0)
