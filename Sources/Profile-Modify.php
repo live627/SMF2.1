@@ -718,7 +718,7 @@ function loadProfileFields($force_reload = false)
 			'callback_func' => 'timeformat_modify',
 			'permission' => 'profile_extra',
 			'preload' => create_function('', '
-				global $context, $user_info, $txt, $cur_profile;
+				global $context, $user_info, $txt, $cur_profile, $modSettings;
 
 				$context[\'easy_timeformats\'] = array(
 					array(\'format\' => \'\', \'title\' => $txt[\'timeformat_default\']),
@@ -731,6 +731,7 @@ function loadProfileFields($force_reload = false)
 
 				$context[\'member\'][\'time_format\'] = $cur_profile[\'time_format\'];
 				$context[\'current_forum_time\'] = timeformat(time() - $user_info[\'time_offset\'] * 3600, false);
+				$context[\'current_forum_time_js\'] = strftime(\'%Y,\' . ((int) strftime(\'%m\', time() + $modSettings[\'time_offset\'] * 3600) - 1) . \',%d,%H,%M,%S\', time() + $modSettings[\'time_offset\'] * 3600);
 				$context[\'current_forum_time_hour\'] = (int) strftime(\'%H\', forum_time(false));
 				return true;
 			'),

@@ -68,6 +68,7 @@ March 2008
  ! Allow warned admins to change their warning level. (Profile-Actions.php, Profile template) [Bug 1867]
  ! Display lists better in search results. (Search.php) [Bug 1869]
  ! Paid subscriptions wasn't allow deletion of completed subscriptions. (ManagePaid.php) [Bug 1864]
+ ! Auto detecting the time offset wasn't working in some locales. (Profile.php, Profile template, profile.js) [Bug 1860]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
