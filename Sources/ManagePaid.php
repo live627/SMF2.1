@@ -1504,7 +1504,7 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 	list ($id_group, $additional_groups) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	// Get all of the subscriptions for this user - it will be necessary!
+	// Get all of the subscriptions for this user that are active - it will be necessary!
 	$request = $smcFunc['db_query']('', '
 		SELECT id_subscribe, old_id_group
 		FROM {db_prefix}log_subscribed
@@ -1515,10 +1515,6 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 			'is_active' => 1,
 		)
 	);
-
-	// What if like, there isn't any?
-	if ($smcFunc['db_num_rows']($request) == 0)
-		return;
 
 	// These variables will be handy, honest ;)
 	$removals = array();
