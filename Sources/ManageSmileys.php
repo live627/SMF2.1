@@ -294,6 +294,7 @@ function EditSmileySets()
 
 		// Force the process to continue.
 		$context['sub_action'] = 'modifyset';
+		$context['sub_template'] = 'modifyset';
 	}
 	// If we're modifying or adding a smileyset, some context info needs to be set.
 	if ($context['sub_action'] == 'modifyset')
