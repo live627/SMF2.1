@@ -71,6 +71,7 @@ March 2008
  ! Auto detecting the time offset wasn't working in some locales. (Profile.php, Profile template, profile.js) [Bug 1860]
  ! WYSIWYG editor is now themable. (Load.php, Subs-Editor.php, editor.js)
  ! If you define a custom menu subsection URL then don't force the 'sa' index into the URL. (Admin.php, GenericMenu template) [Bug 1877]
+ + Add a new variable in SSI, $ssi_on_error_method, that allows users to define how to handle errors in SSI. (SSI.php, Errors.php) [Feature 1084]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

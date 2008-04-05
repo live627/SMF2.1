@@ -266,7 +266,7 @@ function error_handler($error_level, $error_string, $file, $line)
 
 function setup_fatal_error_context($error_message)
 {
-	global $context, $txt;
+	global $context, $txt, $ssi_on_error_method;
 
 	// Don't bother indexing errors mate...
 	$context['robot_no_index'] = true;
@@ -288,11 +288,17 @@ function setup_fatal_error_context($error_message)
 		$context['sub_template'] = 'fatal_error';
 	}
 
-	// If this is SSI, we shouldn't put all our layers around, so jump out.
+	// If this is SSI, what do they want us to do?
 	if (SMF == 'SSI')
 	{
-		loadSubTemplate('fatal_error');
-		exit;
+		if (!empty($ssi_on_error_method) && $ssi_on_error_method !== true && function_exists($ssi_on_error_method))
+			$ssi_on_error_method();
+		else
+			loadSubTemplate('fatal_error');
+
+		// No layers?
+		if (empty($ssi_on_error_method) || $ssi_on_error_method !== true)
+			exit;
 	}
 
 	// We want whatever for the header, and a footer. (footer includes sub template!)

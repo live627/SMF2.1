@@ -51,6 +51,12 @@ foreach (array('db_character_set', 'cachedir') as $variable)
 require_once(dirname(__FILE__) . '/Settings.php');
 
 $ssi_error_reporting = error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
+/* Set this to one of three values depending on what you want to happen in the case of a fatal error.
+	false:	Default, will just load the error sub template and die - not putting any theme layers around it.
+	true:	Will load the error sub template AND put the SMF layers around it (Not useful if on total custom pages).
+	string:	Name of a callback function to call in the event of an error to allow you to define your own methods. Will die after function returns.
+*/
+$ssi_on_error_method = false;
 
 // Don't do john didley if the forum's been shut down competely.
 if ($maintenance == 2 && (!isset($ssi_maintenance_off) || $ssi_maintenance_off !== true))
