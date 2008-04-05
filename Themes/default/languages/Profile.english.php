@@ -372,8 +372,8 @@ $txt['profile_warning_notify_subject'] = 'Notification Subject';
 $txt['profile_warning_notify_body'] = 'Notification Message';
 $txt['profile_warning_notify_template_subject'] = 'You have received a warning';
 // Use numeric entities in below string.
-$txt['profile_warning_notify_template_outline'] = '%1$s,' . "\n\n" . 'You have received a warning for %2$s. Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . $txt['regards_team'];
-$txt['profile_warning_notify_template_outline_post'] = '%1$s,' . "\n\n" . 'You have received a warning for %2$s in regards to your message posted [url=' . $scripturl . '?msg=%3$s]here[/url]. Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . $txt['regards_team'];
+$txt['profile_warning_notify_template_outline'] = '{MEMBER},' . "\n\n" . 'You have received a warning for %1$s. Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . '{REGARDS}';
+$txt['profile_warning_notify_template_outline_post'] = '{MEMBER},' . "\n\n" . 'You have received a warning for %1$s in regards to the message:' . "\n" . '{MESSAGE}.' . "\n\n" . 'Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . '{REGARDS}';
 $txt['profile_warning_notify_for_spamming'] = 'spamming';
 $txt['profile_warning_notify_title_spamming'] = 'Spamming';
 $txt['profile_warning_notify_for_offence'] = 'posting offensive material';
@@ -385,6 +385,7 @@ $txt['profile_warning_max'] = '(Max 100)';
 $txt['profile_warning_limit_attribute'] = 'Note you can not adjust this user\'s level by more than %1$d%% in a 24 hour period.';
 $txt['profile_warning_errors_occured'] = 'Warning has not been sent due to following errors';
 $txt['profile_warning_success'] = 'Warning Successfully Issued';
+$txt['profile_warning_new_template'] = 'New Template';
 
 $txt['profile_warning_previous'] = 'Previous Warnings';
 $txt['profile_warning_previous_none'] = 'This user has not received any previous warnings.';

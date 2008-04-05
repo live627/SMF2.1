@@ -787,4 +787,60 @@ function template_show_notice()
 
 }
 
+// Add or edit a warning template.
+function template_warn_template()
+{
+	global $context, $settings, $options, $txt, $scripturl;
+
+	echo '
+		<form action="', $scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=', $context['id_template'], '" method="post" accept-charset="', $context['character_set'], '">
+			<table width="80%" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
+				<tr class="titlebg">
+					<td colspan="3">', $context['page_title'], '</td>
+				</tr>
+				<tr class="windowbg">
+					<td colspan="3" class="smalltext">', $txt['mc_warning_template_desc'], '</td>
+				</tr>
+				<tr class="windowbg2" valign="top">
+					<td width="50%" colspan="2">
+						<b>', $txt['mc_warning_template_title'], ':</b>
+					</td>
+					<td width="50%">
+						<input type="text" name="template_title" value="', $context['template_data']['title'], '" size="30" />
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="top">
+					<td width="50%" colspan="2">
+						<b>', $txt['profile_warning_notify_body'], ':</b>
+						<div class="smalltext">', $txt['mc_warning_template_body_desc'], '</div>
+					</td>
+					<td width="50%">
+						<textarea name="template_body" style="width: 96%" rows="8" cols="40" class="smalltext">', $context['template_data']['body'], '</textarea>
+					</td>
+				</tr>';
+
+	if ($context['template_data']['can_edit_personal'])
+		echo '
+				<tr class="windowbg2" valign="top">
+					<td width="4%">
+						<input type="checkbox" name="make_personal" id="make_personal" ', $context['template_data']['personal'] ? 'checked="checked"' : '', ' class="check" />
+					</td>
+					<td colspan="2">
+						<label for="make_personal">
+							 <b>', $txt['mc_warning_template_personal'], '</b>
+						<div class="smalltext">', $txt['mc_warning_template_personal_desc'], '</div>
+					</td>
+				</tr>';
+
+	echo '
+				<tr class="windowbg2">
+					<td colspan="3" align="center">
+						<input type="submit" name="save" value="', $context['page_title'], '" />
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		</form>';
+}
+
 ?>

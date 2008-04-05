@@ -74,10 +74,14 @@ function ModerationMain($dont_call = false)
 					'function' => 'ShowNotice',
 					'select' => 'index'
 				),
-				'warnlog' => array(
-					'label' => $txt['mc_warning_log'],
+				'warnings' => array(
+					'label' => $txt['mc_warnings'],
 					'enabled' => $modSettings['warning_settings']{0} == 1,
-					'function' => 'ViewWarningLog',
+					'function' => 'ViewWarnings',
+					'subsections' => array(
+						'log' => array($txt['mc_warning_log']),
+						'templates' => array($txt['mc_warning_templates'], 'issue_warning'),
+					),
 				),
 				'userwatch' => array(
 					'label' => $txt['mc_watched_users_title'],
@@ -1391,79 +1395,50 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 	return $member_posts;
 }
 
+// Entry point for viewing warning related stuff.
+function ViewWarnings()
+{
+	global $context, $txt;
+
+	$subActions = array(
+		'log' => array('ViewWarningLog'),
+		'templateedit' => array('ModifyWarningTemplate', 'issue_warning'),
+		'templates' => array('ViewWarningTemplates', 'issue_warning'),
+	);
+
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && (empty($subActions[$_REQUEST['sa']][1]) || allowedTo($subActions[$_REQUEST['sa']]))? $_REQUEST['sa'] : 'log';
+
+	// Some of this stuff is overseas, so to speak.
+	loadTemplate('ModerationCenter');
+	loadLanguage('Profile');
+
+	// Setup the admin tabs.
+	$context[$context['moderation_menu_name']]['tab_data'] = array(
+		'title' => $txt['mc_warnings'],
+		'description' => $txt['mc_warnings_description'],
+	);
+
+	// Call the right function.
+	$subActions[$_REQUEST['sa']][0]();
+}
+
 // Simply put, look at the warning log!
 function ViewWarningLog()
 {
 	global $smcFunc, $modSettings, $context, $txt, $scripturl, $sourcedir;
 
 	// Setup context as always.
-	$context['page_title'] = $txt['mc_warning_log'];
-	$context['sub_template'] = 'warning_log';
-
-	loadTemplate('ModerationCenter');
-	loadLanguage('Profile');
-
-	// Fine - how many warnings have we issued?
-	$request = $smcFunc['db_query']('', '
-			SELECT COUNT(*)
-			FROM {db_prefix}log_comments
-			WHERE comment_type = {string:warning}',
-			array(
-				'warning' => 'warning',
-			)
-		);
-	list ($context['total_warnings']) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
-	// Do the page index.
-	$perPage = (int) $modSettings['defaultMaxMessages'];
-	$context['start'] = (int) $_REQUEST['start'];
-	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=warnlog', $context['start'], $context['total_warnings'], $perPage);
-
-	// Load them up, boyo.
-	$request = $smcFunc['db_query']('', '
-		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
-			IFNULL(mem2.id_member, 0) AS id_recipient, IFNULL(mem2.real_name, lc.recipient_name) AS recipient_name,
-			lc.log_time, lc.body, lc.id_notice, lc.counter
-		FROM {db_prefix}log_comments AS lc
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
-			LEFT JOIN {db_prefix}members AS mem2 ON (mem2.id_member = lc.id_recipient)
-		WHERE lc.comment_type = {string:warning}
-		ORDER BY lc.log_time DESC
-		LIMIT ' . $context['start'] . ', ' . $perPage,
-		array(
-			'warning' => 'warning',
-		)
-	);
-	$context['warnings'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-			$context['warnings'][] = array(
-			'issuer' => array(
-				'id' => $row['id_member'],
-				'link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
-			),
-			'recipient' => array(
-				'id' => $row['id_recipient'],
-				'link' => $row['id_recipient'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_recipient'] . '">' . $row['recipient_name'] . '</a>') : $row['recipient_name'],
-			),
-			'time' => timeformat($row['log_time']),
-			'reason' => $row['body'],
-			'counter' => $row['counter'] > 0 ? '+' . $row['counter'] : $row['counter'],
-			'id_notice' => $row['id_notice'],
-		);
-	}
-	$smcFunc['db_free_result']($request);
+	$context['page_title'] = $txt['mc_warning_log_title'];
 
 	require_once($sourcedir . '/Subs-List.php');
 
 	// This is all the information required for a watched user listing.
 	$listOptions = array(
 		'id' => 'warning_list',
-		'title' => $txt['mc_warning_log'],
+		'title' => $txt['mc_warning_log_title'],
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['mc_warnings_none'],
-		'base_href' => $scripturl . '?action=moderate;area=warnlog;sesc=' . $context['session_id'],
+		'base_href' => $scripturl . '?action=moderate;area=warnings;sa=log;sesc=' . $context['session_id'],
 		'default_sort_col' => 'time',
 		'get_items' => array(
 			'function' => 'list_getWarnings',
@@ -1601,6 +1576,340 @@ function list_getWarnings($start, $items_per_page, $sort)
 	$smcFunc['db_free_result']($request);
 
 	return $warnings;
+}
+
+// Load all the warning templates.
+function ViewWarningTemplates()
+{
+	global $smcFunc, $modSettings, $context, $txt, $scripturl, $sourcedir, $user_info;
+
+	// Submitting a new one?
+	if (isset($_POST['add']))
+		return ModifyWarningTemplate();
+	elseif (isset($_POST['delete']) && !empty($_POST['deltpl']))
+	{
+		checkSession('post');
+
+		// Log the actions.
+		$request = $smcFunc['db_query']('', '
+			SELECT recipient_name
+			FROM {db_prefix}log_comments
+			WHERE id_comment IN ({array_int:delete_ids})
+				AND comment_type = {string:warntpl}
+				AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})',
+			array(
+				'delete_ids' => $_POST['deltpl'],
+				'warntpl' => 'warntpl',
+				'generic' => 0,
+				'current_member' => $user_info['id'],
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			logAction('delete_warn_template', array('template' => $row['recipient_name']));
+		$smcFunc['db_free_result']($request);
+
+		// Do the deletes.
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_comments
+			WHERE id_comment IN ({array_int:delete_ids})
+				AND comment_type = {string:warntpl}
+				AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})',
+			array(
+				'delete_ids' => $_POST['deltpl'],
+				'warntpl' => 'warntpl',
+				'generic' => 0,
+				'current_member' => $user_info['id'],
+			)
+		);
+	}
+
+	// Setup context as always.
+	$context['page_title'] = $txt['mc_warning_templates_title'];
+
+	require_once($sourcedir . '/Subs-List.php');
+
+	// This is all the information required for a watched user listing.
+	$listOptions = array(
+		'id' => 'warning_template_list',
+		'title' => $txt['mc_warning_templates_title'],
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['mc_warning_templates_none'],
+		'base_href' => $scripturl . '?action=moderate;area=warnings;sa=templates;sesc=' . $context['session_id'],
+		'default_sort_col' => 'title',
+		'get_items' => array(
+			'function' => 'list_getWarningTemplates',
+		),
+		'get_count' => array(
+			'function' => 'list_getWarningTemplateCount',
+		),
+		// This assumes we are viewing by user.
+		'columns' => array(
+			'title' => array(
+				'header' => array(
+					'value' => $txt['mc_warning_templates_name'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=moderate;area=warnings;sa=templateedit;tid=%1$d">%2$s</a>',
+						'params' => array(
+							'id_comment' => false,
+							'title' => false,
+							'body' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'template_title',
+					'reverse' => 'template_title DESC',
+				),
+			),
+			'creator' => array(
+				'header' => array(
+					'value' => $txt['mc_warning_templates_creator'],
+				),
+				'data' => array(
+					'db' => 'creator',
+				),
+				'sort' => array(
+					'default' => 'creator_name',
+					'reverse' => 'creator_name DESC',
+				),
+			),
+			'time' => array(
+				'header' => array(
+					'value' => $txt['mc_warning_templates_time'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'lc.log_time DESC',
+					'reverse' => 'lc.log_time',
+				),
+			),
+			'delete' => array(
+				'header' => array(
+					'style' => 'width: 4%;',
+					'value' => '&nbsp;',
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $context, $txt, $scripturl;
+
+						return \'<input type="checkbox" name="deltpl[]" value="\' . $rowData[\'id_comment\'] . \'" class="check" />\';
+					'),
+					'style' => 'text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=moderate;area=warnings;sa=templates',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '
+					<input type="submit" name="add" value="' . $txt['mc_warning_template_add'] . '" />
+					<input type="submit" name="delete" value="' . $txt['mc_warning_template_delete'] . '" onclick="return confirm(\'' . $txt['mc_warning_template_delete_confirm'] . '\');"/>',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+		),
+	);
+
+	// Create the watched user list.
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'warning_template_list';
+}
+
+function list_getWarningTemplateCount()
+{
+	global $smcFunc, $modSettings, $user_info;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}log_comments
+		WHERE comment_type = {string:warntpl}
+			AND (id_recipient = {string:generic} OR id_recipient = {int:current_member})',
+		array(
+			'warntpl' => 'warntpl',
+			'generic' => 0,
+			'current_member' => $user_info['id'],
+		)
+	);
+	list ($totalWarns) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	return $totalWarns;
+}
+
+function list_getWarningTemplates($start, $items_per_page, $sort)
+{
+	global $smcFunc, $txt, $scripturl, $modSettings, $user_info;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT lc.id_comment, IFNULL(mem.id_member, 0) AS id_member,
+			IFNULL(mem.real_name, lc.member_name) AS creator_name, recipient_name AS template_title,
+			lc.log_time, lc.body
+		FROM {db_prefix}log_comments AS lc
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+		WHERE lc.comment_type = {string:warntpl}
+			AND (id_recipient = {string:generic} OR id_recipient = {int:current_member})
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+			'warntpl' => 'warntpl',
+			'generic' => 0,
+			'current_member' => $user_info['id'],
+		)
+	);
+	$templates = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$templates[] = array(
+			'id_comment' => $row['id_comment'],
+			'creator' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['creator_name'] . '</a>') : $row['creator_name'],
+			'time' => timeformat($row['log_time']),
+			'title' => $row['template_title'],
+			'body' => $smcFunc['htmlspecialchars']($row['body']),
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $templates;
+}
+
+// Edit a warning template.
+function ModifyWarningTemplate()
+{
+	global $smcFunc, $context, $txt, $user_info, $sourcedir;
+
+	$context['id_template'] = isset($_REQUEST['tid']) ? (int) $_REQUEST['tid'] : 0;
+	$context['is_edit'] = $context['id_template'];
+
+	// Standard template things.
+	$context['page_title'] = $context['is_edit'] ? $txt['mc_warning_template_modify'] : $txt['mc_warning_template_add'];
+	$context['sub_template'] = 'warn_template';
+	$context[$context['moderation_menu_name']]['current_subsection'] = 'templates';
+
+	// Defaults.
+	$context['template_data'] = array(
+		'title' => '',
+		'body' => $txt['mc_warning_template_body_default'],
+		'personal' => false,
+		'can_edit_personal' => true,
+	);
+
+	// If it's an edit load it.
+	if ($context['is_edit'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, id_recipient, recipient_name AS template_title, body
+			FROM {db_prefix}log_comments
+			WHERE id_comment = {int:id}
+				AND comment_type = {string:warntpl}
+				AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})',
+			array(
+				'id' => $context['id_template'],
+				'warntpl' => 'warntpl',
+				'generic' => 0,
+				'current_member' => $user_info['id'],
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			$context['template_data'] = array(
+				'title' => $row['template_title'],
+				'body' => $smcFunc['htmlspecialchars']($row['body']),
+				'personal' => $row['id_recipient'],
+				'can_edit_personal' => $row['id_member'] == $user_info['id'],
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
+	// Wait, we are saving?
+	if (isset($_POST['save']))
+	{
+		checkSession('post');
+
+		// To check the BBC is pretty good...
+		require_once($sourcedir . '/Subs-Post.php');
+
+		// Bit of cleaning!
+		$_POST['template_body'] = trim($_POST['template_body']);
+		$_POST['template_title'] = trim($_POST['template_title']);
+
+		// Need something in both boxes.
+		if (empty($_POST['template_body']) || empty($_POST['template_title']))
+			fatal_error($txt['mc_warning_template_error_empty']);
+
+		// Safety first.
+		$_POST['template_title'] = $smcFunc['htmlspecialchars']($_POST['template_title']);
+
+		// Clean up BBC.
+		preparsecode($_POST['template_body']);
+		// But put line breaks back!
+		$_POST['template_body'] = strtr($_POST['template_body'], array('<br />' => "\n"));
+
+		// Is this personal?
+		$recipient_id = !empty($_POST['make_personal']) ? $user_info['id'] : 0;
+
+		// If we are this far it's save time.
+		if ($context['is_edit'])
+		{
+			// Simple update...
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}log_comments
+				SET id_recipient = {int:personal}, recipient_name = {string:title}, body = {string:body}
+				WHERE id_comment = {int:id}
+					AND comment_type = {string:warntpl}
+					AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})'.
+					($recipient_id ? ' AND id_member = {int:current_member}' : ''),
+				array(
+					'personal' => $recipient_id,
+					'title' => $_POST['template_title'],
+					'body' => $_POST['template_body'],
+					'id' => $context['id_template'],
+					'warntpl' => 'warntpl',
+					'generic' => 0,
+					'current_member' => $user_info['id'],
+				)
+			);
+
+			// If it wasn't visible and now is they've effectively added it.
+			if ($context['template_data']['personal'] && !$recipient_id)
+				logAction('add_warn_template', array('template' => $_POST['template_title']));
+			// Conversely if they made it personal it's a delete.
+			elseif (!$context['template_data']['personal'] && $recipient_id)
+				logAction('delete_warn_template', array('template' => $_POST['template_title']));
+			// Otherwise just an edit.
+			else
+				logAction('modify_warn_template', array('template' => $_POST['template_title']));
+		}
+		else
+		{
+			$smcFunc['db_insert']('',
+				'{db_prefix}log_comments',
+				array(
+					'id_member' => 'int', 'member_name' => 'string', 'comment_type' => 'string', 'id_recipient' => 'int',
+					'recipient_name' => 'string-255', 'body' => 'string-65535', 'log_time' => 'int',
+				),
+				array(
+					$user_info['id'], $user_info['name'], 'warntpl', $recipient_id,
+					$_POST['template_title'], $_POST['template_body'], time(),
+				),
+				array('id_comment')
+			);
+
+			logAction('add_warn_template', array('template' => $_POST['template_title']));
+		}
+
+		// Get out of town...
+		redirectexit('action=moderate;area=warnings;sa=templates');
+	}
 }
 
 // Change moderation preferences.

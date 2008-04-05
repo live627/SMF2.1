@@ -1843,21 +1843,11 @@ function template_issueWarning()
 		$modSettings['warning_mute'] => 'red',
 	);
 
-	// Setup known notification types.
-	$context['notify_types'] = array('spamming', 'offence', 'insulting');
-
 	// Work out the starting color.
 	$context['current_color'] = $context['colors'][0];
 	foreach ($context['colors'] as $limit => $color)
 		if ($context['member']['warning'] >= $limit)
 			$context['current_color'] = $color;
-
-	// Format notification types.
-	foreach ($context['notify_types'] as $k => $type)
-		$context['notify_types'][$k] = array(
-			'title' => $txt['profile_warning_notify_title_' . $type],
-			'body' => sprintf($txt[$context['warning_template']], $context['member']['name'], $txt['profile_warning_notify_for_' . $type], $context['warning_for_message']),
-		);
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -1960,6 +1950,7 @@ function template_issueWarning()
 			document.getElementById(\'warn_sub\').disabled = disable;
 			document.getElementById(\'warn_body\').disabled = disable;
 			document.getElementById(\'warn_temp\').disabled = disable;
+			document.getElementById(\'new_template_link\').style.display = disable ? \'none\' : \'\';
 		}
 
 		function changeWarnLevel(amount)
@@ -1976,7 +1967,7 @@ function template_issueWarning()
 
 			// Otherwise see what we can do...';
 
-	foreach ($context['notify_types'] as $k => $type)
+	foreach ($context['notification_templates'] as $k => $type)
 		echo '
 			if (index == ', $k, ')
 				document.getElementById(\'warn_body\').value = "', strtr($type['body'], array('"' => "'", "\n" => '\\n', "\r" => '')), '";';
@@ -2102,12 +2093,13 @@ function template_issueWarning()
 						<option value="-1">', $txt['profile_warning_notify_template'], '</option>
 						<option value="-1">------------------------------</option>';
 
-		foreach ($context['notify_types'] as $k => $v)
+		foreach ($context['notification_templates'] as $k => $v)
 			echo '
 						<option value="', $k, '">', $v['title'], '</option>';
 
 		echo '
-					</select><br />
+					</select>
+					<span class="smalltext" id="new_template_link" style="display: none;">[<a href="', $scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=0" target="_blank" class="new_win">', $txt['profile_warning_new_template'], '</a>]</span><br />
 					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;" >', $context['warning_data']['notify_body'], '</textarea>
 				</td>
 			</tr>';

@@ -81,7 +81,7 @@ function activateAccount($memID)
 // Issue/manage a users warning status.
 function issueWarning($memID)
 {
-	global $txt, $scripturl, $modSettings, $user_info;
+	global $txt, $scripturl, $modSettings, $user_info, $mbname;
 	global $context, $cur_profile, $memberContext, $smcFunc, $sourcedir;
 
 	// Get all the actual settings.
@@ -315,11 +315,71 @@ function issueWarning($memID)
 
 	// Are they warning because of a message?
 	if (isset($_REQUEST['msg']) && 0 < (int) $_REQUEST['msg'])
-		$context['warning_for_message'] = (int) $_REQUEST['msg'];
-	else
-		$context['warning_for_message'] = 0;
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT subject
+			FROM {db_prefix}messages
+			WHERE id_msg = {int:message}
+				AND {query_see_board}
+			LIMIT 1',
+			array(
+				'message' => $_REQUEST['msg'],
+			)
+		);
+		if ($smcFunc['db_num_rows']($request) != 0)
+		{
+			$context['warning_for_message'] = (int) $_REQUEST['msg'];
+			list ($context['warned_message_subject']) = $smcFunc['db_fetch_row']($request);
+		}
+		$smcFunc['db_free_result']($request);
+		
+	}
 
-	$context['warning_template'] = 'profile_warning_notify_template_outline' . (!empty($context['warning_for_message']) ? '_post' : '');
+	// Didn't find the message?
+	if (empty($context['warning_for_message']))
+	{
+		$context['warning_for_message'] = 0;
+		$context['warned_message_subject'] = '';
+	}
+
+	// Any custom templates?
+	$context['notification_templates'] = array();
+
+	$request = $smcFunc['db_query']('', '
+		SELECT recipient_name AS template_title, body
+		FROM {db_prefix}log_comments
+		WHERE comment_type = {string:warntpl}
+			AND (id_recipient = {int:generic} OR id_recipient = {int:current_member})',
+		array(
+			'warntpl' => 'warntpl',
+			'generic' => 0,
+			'current_member' => $user_info['id'],
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		// If we're not warning for a message skip any that are.
+		if (!$context['warning_for_message'] && strpos($row['body'], '{MESSAGE}') !== false)
+			continue;
+
+		$context['notification_templates'][] = array(
+			'title' => $row['template_title'],
+			'body' => $row['body'],
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	// Setup the "default" templates.
+	foreach (array('spamming', 'offence', 'insulting') as $type)
+		$context['notification_templates'][] = array(
+			'title' => $txt['profile_warning_notify_title_' . $type],
+			'body' => sprintf($txt['profile_warning_notify_template_outline' . (!empty($context['warning_for_message']) ? '_post' : '')], $txt['profile_warning_notify_for_' . $type]),
+		);
+
+	// Replace all the common variables in the templates.
+	foreach ($context['notification_templates'] as $k => $name)
+		$context['notification_templates'][$k]['body'] = strtr($name['body'], array('{MEMBER}' => $context['member']['name'], '{MESSAGE}' => '[url=' . $scripturl . '?msg=' . $context['warning_for_message'] . ']' . $context['warned_message_subject'] . '[/url]', 'SCRIPTURL' => $scripturl, 'FORUMNAME' => $mbname, '{REGARDS}' => $txt['regards_team']));
+
 }
 
 // Present a screen to make sure the user wants to be deleted

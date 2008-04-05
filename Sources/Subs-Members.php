@@ -291,6 +291,15 @@ function deleteMembers($users, $check_not_admin = false)
 		)
 	);
 	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_comments
+		WHERE id_recipient IN ({array_int:users})
+			AND comment_type = {string:warntpl}',
+		array(
+			'users' => $users,
+			'warntpl' => 'warntpl',
+		)
+	);
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_group_requests
 		WHERE id_member IN ({array_int:users})',
 		array(
