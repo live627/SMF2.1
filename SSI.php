@@ -807,7 +807,7 @@ function ssi_fetchGroupMembers($group_id, $output_method = 'echo')
 		'id_group' => $group_id,
 	);
 
-	return ssi_queryMembers($query_where, $query_where_params, '', 'member_name', $output_method);
+	return ssi_queryMembers($query_where, $query_where_params, '', 'real_name', $output_method);
 }
 
 // Fetch some member data!
