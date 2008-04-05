@@ -2124,6 +2124,7 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smtp_username', '');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smtp_password', '');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('mail_type', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('timeLoadPageEnable', '0');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('totalMembers', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('totalTopics', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('totalMessages', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('simpleSearch', '0');
