@@ -86,6 +86,7 @@ March 2008
  ! Add a function for destroying a menu. (Subs-Menu.php)
  + Allow moderators to add custom warning messages. (Profile-Actions.php, Profile template, ModerationCenter.php, ModerationCenter template, ModerationCenter language file) [Feature 1497]
  ! Shut PHP up about magic quotes. (QueryString.php) [Bug 1658]
+ ! User searching wasn't doing it by name and username. (Subs-Auth.php) [Bug 1815]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

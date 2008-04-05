@@ -483,7 +483,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 		SELECT id_member, member_name, real_name, email_address, hide_email
 		FROM {db_prefix}members
 		WHERE ({raw:member_name_search}
-			OR {raw:member_name_search} {raw:email_condition})
+			OR {raw:real_name_search} {raw:email_condition})
 			' . ($buddies_only ? 'AND id_member IN ({array_int:buddy_list})' : '') . '
 			AND is_activated IN (1, 11)
 		LIMIT {int:limit}',
