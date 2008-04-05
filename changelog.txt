@@ -81,6 +81,7 @@ March 2008
  ! BBC cleaner upper was being a little more aggressive than need be, time to reign it back in, as it was messing up some languages translations. (Subs-Post.php) [Bug 1807]
  ! Moderation cache wasn't respecting people who could manage membergroups. (Subs-Auth.php) [Bug 1817]
  ! The "simple" permission management screen would cause a javascript error with disabled permissions. (ManagePermissions template) [Bug 1783]
+ ! XML feeds (RSS etc) were not having the URLs prepared right if queryless URLs were enabled. (News.php) [Bug 1790]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

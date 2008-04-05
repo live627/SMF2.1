@@ -1942,7 +1942,7 @@ function convert_template($output_dir, $old_template = '')
 	$old_template = strtr($old_template, array('\'' => '\\\''));
 
 	// Step 3: Parse out any existing PHP code.
-	$old_template = preg_replace('~\<\?php(.*)\?\>~es', 'phpcodefix(\'\$1\')', $old_template);
+	$old_template = preg_replace('~\<\?php(.*)\?\>~es', 'phpcodefix(\'$1\')', $old_template);
 
 	// Step 4: Now we add the beginning and end...
 	$old_template = '<?php
