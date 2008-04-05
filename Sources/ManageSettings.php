@@ -244,11 +244,14 @@ function ModifyCoreFeatures($return_config = false)
 				}
 			'),
 			'setting_callback' => create_function('$value', '
-				return array(
-					\'disabled_profile_fields\' => \'\',
-					\'registration_fields\' => \'\',
-					\'displayFields\' => \'\',
-				);
+				if (!$value)
+					return array(
+						\'disabled_profile_fields\' => \'\',
+						\'registration_fields\' => \'\',
+						\'displayFields\' => \'\',
+					);
+				else
+					return array();
 			'),
 		),
 		// k = karma.
