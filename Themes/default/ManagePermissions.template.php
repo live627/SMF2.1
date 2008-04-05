@@ -725,6 +725,7 @@ function template_modify_group_simple($type)
 			groupPermissions[\'', $id_group, '\'][', $count, '] = ', $id, ';';
 
 				// Show the group as required.
+				if ($has_display_content)
 				echo '
 			determineGroupState(\'', $id_group, '\');';
 			}
