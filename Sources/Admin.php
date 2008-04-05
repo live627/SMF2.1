@@ -93,6 +93,7 @@ function AdminMain()
 	$admin_areas = array(
 		'forum' => array(
 			'title' => $txt['admin_main'],
+			'permission' => array('admin_forum', 'manage_permissions', 'moderate_forum', 'manage_membergroups', 'manage_bans', 'send_mail', 'edit_news', 'manage_boards', 'manage_smileys', 'manage_attachments'),
 			'areas' => array(
 				'index' => array(
 					'label' => $txt['admin_center'],
@@ -446,13 +447,13 @@ function AdminMain()
 	$admin_include_data = createMenu($admin_areas, $menuOptions);
 	unset($admin_areas);
 
-	// Make a note of the Unique ID for this menu.
-	$context['admin_menu_id'] = $context['max_menu_id'];
-	$context['admin_menu_name'] = 'menu_data_' . $context['admin_menu_id'];
-
 	// Nothing valid?
 	if ($admin_include_data == false)
 		fatal_lang_error('no_access');
+
+	// Make a note of the Unique ID for this menu.
+	$context['admin_menu_id'] = $context['max_menu_id'];
+	$context['admin_menu_name'] = 'menu_data_' . $context['admin_menu_id'];
 
 	// Why on the admin are we?
 	$context['admin_area'] = $admin_include_data['current_area'];

@@ -158,13 +158,13 @@ function ModerationMain($dont_call = false)
 	$mod_include_data = createMenu($moderation_areas, $menuOptions);
 	unset($moderation_areas);
 
-	// Retain the ID information in case required by a subaction.
-	$context['moderation_menu_id'] = $context['max_menu_id'];
-	$context['moderation_menu_name'] = 'menu_data_' . $context['moderation_menu_id'];
-
 	// We got something - didn't we? DIDN'T WE!
 	if ($mod_include_data == false)
 		fatal_lang_error('no_access');
+
+	// Retain the ID information in case required by a subaction.
+	$context['moderation_menu_id'] = $context['max_menu_id'];
+	$context['moderation_menu_name'] = 'menu_data_' . $context['moderation_menu_id'];
 
 	// What a pleasant shortcut - even tho we're not *really* on the admin screen who cares...
 	$context['admin_area'] = $mod_include_data['current_area'];

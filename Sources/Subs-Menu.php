@@ -255,4 +255,15 @@ function createMenu($menuData, $menuOptions = array())
 	return $include_data;
 }
 
+// Delete a menu.
+function destroyMenu($menu_id = 'last')
+{
+	global $context;
+
+	if ($menu_id == 'last' && isset($context['max_menu_id']) && isset($context['menu_data_' . $context['max_menu_id']]))
+		unset($context['menu_data_' . $context['max_menu_id']]);
+	elseif (isset($context['menu_data_' . $menu_id]));
+		unset($context['menu_data_' . $menu_id]);
+}
+
 ?>

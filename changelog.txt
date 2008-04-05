@@ -82,6 +82,8 @@ March 2008
  ! Moderation cache wasn't respecting people who could manage membergroups. (Subs-Auth.php) [Bug 1817]
  ! The "simple" permission management screen would cause a javascript error with disabled permissions. (ManagePermissions template) [Bug 1783]
  ! XML feeds (RSS etc) were not having the URLs prepared right if queryless URLs were enabled. (News.php) [Bug 1790]
+ ! The admin menu wasn't hiding itself properly for those who could not enter. (Admin.php, Moderate.php) [Bug 1774]
+ ! Add a function for destroying a menu. (Subs-Menu.php)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
