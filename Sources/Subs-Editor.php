@@ -1038,8 +1038,8 @@ function create_control_richedit($editorOptions)
 		$settings['smileys_url'] = $modSettings['smileys_url'] . '/' . $user_info['smiley_set'];
 
 		// This really has some WYSIWYG stuff.
+		loadTemplate(false, $context['browser']['is_ie'] ? 'editor_ie' : 'editor');
 		$context['html_headers'] .= '
-		<link rel="stylesheet" type="text/css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/' . ($context['browser']['is_ie'] ? 'editor_ie.css' : 'editor.css') . '" />
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
 			var oEditorStrings= {

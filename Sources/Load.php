@@ -1626,12 +1626,16 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : (file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'default_theme_url' : '');
 			if ($sheet_path)
 			{
-				$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
+				$context['html_headers'] .= '<link rel="stylesheet" type="text/css" id="' . $sheet . '_css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
 				if ($db_show_debug === true)
 					$context['debug']['sheets'][] = $sheet . '(' . basename($settings[$sheet_path]) . ')';
 			}
 		}
 	}
+
+	// No template to load?
+	if ($template_name === false)
+		return true;
 
 	foreach ($settings['template_dirs'] as $template_dir)
 	{

@@ -214,11 +214,11 @@ SmfEditor.prototype.init = function()
 		}
 
 		// Now we need to try and style the editor - internet explorer allows us to do the whole lot.
-		if (document.styleSheets['rich_edit_css'])
+		if (document.styleSheets['editor_css'] || document.styleSheets['editor_ie_css'])
 		{
 			var oMyStyle = this.oFrameDocument.createElement('style');
 			this.oFrameDocument.documentElement.firstChild.appendChild(oMyStyle);
-			oMyStyle.styleSheet.cssText = document.styleSheets['rich_edit_css'].cssText;
+			oMyStyle.styleSheet.cssText = document.styleSheets['editor_ie_css'] ? document.styleSheets['editor_ie_css'].cssText : document.styleSheets['editor_css'].cssText;
 		}
 		// Otherwise we seem to have to try to rip out each of the styles one by one!
 		else if (document.styleSheets.length)
