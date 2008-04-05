@@ -78,6 +78,7 @@ March 2008
  ! Ensure totalMembers is set on install. (install scripts) [Bug 1798]
  ! ssi_fetchGroupMembers was incorrectly sorting by username, not display name. (SSI.php) [Bug 1800]
  ! Changing core settings was destroying the custom profile field cache. (ManageSettings.php) [Bug 1792]
+ ! BBC cleaner upper was being a little more aggressive than need be, time to reign it back in, as it was messing up some languages translations. (Subs-Post.php) [Bug 1807]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

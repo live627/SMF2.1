@@ -257,15 +257,15 @@ function preparsecode(&$message, $previewing = false)
 			$parts[$i] = preg_replace('~\[(black|blue|green|red|white)\]~', '[color=$1]', $parts[$i]);  // First do the opening tags.
 			$parts[$i] = preg_replace('~\[/(black|blue|green|red|white)\]~', '[/color]', $parts[$i]);   // And now do the closing tags
 
+			// Make sure all tags are lowercase.
+			$parts[$i] = preg_replace('~\[([/]?)(list|li|table|tr|td)((\s[^\]]+)*)\]~ie', '\'[$1\' . strtolower(\'$2\') . \'$3]\'', $parts[$i]);
+
 			$list_open = substr_count($parts[$i], '[list]') + substr_count($parts[$i], '[list ');
 			$list_close = substr_count($parts[$i], '[/list]');
 			if ($list_close - $list_open > 0)
 				$parts[$i] = str_repeat('[list]', $list_close - $list_open) . $parts[$i];
 			if ($list_open - $list_close > 0)
 				$parts[$i] = $parts[$i] . str_repeat('[/list]', $list_open - $list_close);
-
-			// Make sure all tags are lowercase.
-			$parts[$i] = preg_replace('~\[([/]?)(list|li|table|tr|td)([^\]]*)\]~ie', '\'[$1\' . strtolower(\'$2\') . \'$3]\'', $parts[$i]);
 
 			$mistake_fixes = array(
 				// Find [table]s not followed by [tr].
