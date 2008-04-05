@@ -124,7 +124,7 @@ function AdminMain()
 					'icon' => 'packages.gif',
 					'subsections' => array(
 						'browse' => array($txt['browse_packages']),
-						'packageget' => array($txt['download_packages'], 'url' => $scripturl . '?action=admin;area=packages;get'),
+						'packageget' => array($txt['download_packages'], 'url' => $scripturl . '?action=admin;area=packages;sa=packageget;get'),
 						'installed' => array($txt['installed_packages']),
 						'perms' => array($txt['package_file_perms']),
 						'options' => array($txt['package_settings']),
@@ -419,7 +419,7 @@ function AdminMain()
 					'label' => $txt['logs'],
 					'function' => 'AdminLogs',
 					'subsections' => array(
-						'errorlog' => array($txt['errlog'], 'admin_forum', 'enabled' => !empty($modSettings['enableErrorLogging']), 'url' => $scripturl . '?action=admin;area=logs;desc'),
+						'errorlog' => array($txt['errlog'], 'admin_forum', 'enabled' => !empty($modSettings['enableErrorLogging']), 'url' => $scripturl . '?action=admin;area=logs;sa=errorlog;desc'),
 						'adminlog' => array($txt['admin_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 						'modlog' => array($txt['moderation_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 					),
