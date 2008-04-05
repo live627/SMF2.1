@@ -745,7 +745,7 @@ function rebuildModCache()
 	// What groups can they moderate?
 	$group_query = allowedTo('manage_membergroups') ? '1=1' : '0=1';
 
-	if ($group_query == 0)
+	if ($group_query == '0=1')
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group

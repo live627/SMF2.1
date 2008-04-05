@@ -104,9 +104,6 @@ if (!defined('SMF'))
 	void ignoreboards(int id_member)
 		// !!!
 
-	void groupMembership(int id_member)
-		// !!!
-
 	Adding new fields to the profile:
 	---------------------------------------------------------------------------
 		// !!!
