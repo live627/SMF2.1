@@ -288,7 +288,7 @@ function smf_openID_return()
 		// Cleanup on Aisle 5.
 		$_SESSION['openid'] = array(
 			'verified' => true,
-			'openid_uri' => $_SESSION['openid']['openid_uri'],
+			'openid_uri' => $openid_uri,
 		);
 
 		require_once($sourcedir . '/LogInOut.php');

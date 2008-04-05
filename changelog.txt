@@ -74,6 +74,7 @@ March 2008
  + Add a new variable in SSI, $ssi_on_error_method, that allows users to define how to handle errors in SSI. (SSI.php, Errors.php) [Feature 1084]
  ! By default assume the admin will want to email users through the forum, but allow them to select their email address from the email screen. (SendTopic.php, SendTopic template) [Feature 1872]
  * Updated some templates for the above change. (Profile, Display templates)
+ ! Fixed undefined index error when logging in with OpenID. (Subs-OpenID.php) [Bug 1804]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
