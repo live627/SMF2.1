@@ -321,9 +321,9 @@ function canLinkEvent()
 	isAllowedTo('calendar_post');
 
 	// No board?  No topic?!?
-	if (!isset($board))
+	if (empty($board))
 		fatal_lang_error('missing_board_id', false);
-	if (!isset($topic))
+	if (empty($topic))
 		fatal_lang_error('missing_topic_id', false);
 
 	// Administrator, Moderator, or owner.  Period.

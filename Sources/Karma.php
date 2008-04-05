@@ -142,7 +142,7 @@ function ModifyKarma()
 	}
 
 	// Figure out where to go back to.... the topic?
-	if (isset($topic))
+	if (!empty($topic))
 		redirectexit('topic=' . $topic . '.' . $_REQUEST['start'] . '#msg' . $_REQUEST['m']);
 	// Hrm... maybe a personal message?
 	elseif (isset($_REQUEST['f']))

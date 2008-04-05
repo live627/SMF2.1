@@ -1062,7 +1062,7 @@ function Post()
 		));
 	}
 
-	if (isset($topic) && !empty($modSettings['topicSummaryPosts']))
+	if (!empty($topic) && !empty($modSettings['topicSummaryPosts']))
 		getTopic();
 
 	$context['back_to_topic'] = isset($_REQUEST['goback']) || (isset($_REQUEST['msg']) && !isset($_REQUEST['subject']));
@@ -1413,7 +1413,7 @@ function Post2()
 	// Validate the poll...
 	if (isset($_REQUEST['poll']) && $modSettings['pollMode'] == '1')
 	{
-		if (isset($topic) && !isset($_REQUEST['msg']))
+		if (!empty($topic) && !isset($_REQUEST['msg']))
 			fatal_lang_error('no_access', false);
 
 		// This is a new topic... so it's a new poll.
