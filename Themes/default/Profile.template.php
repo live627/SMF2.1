@@ -291,7 +291,7 @@ function template_summary()
 	// Only show the email address fully if it's not hidden - and we reveal the email.
 	if ($context['member']['show_email'] == 'yes')
 		echo '
-						<a href="mailto:', $context['member']['email'], '">', $context['member']['email'], '</a>';
+						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a>';
 	// What about if we allow email only via the forum??
 	elseif ($context['member']['show_email'] == 'no_through_forum')
 		echo '
@@ -300,7 +300,7 @@ function template_summary()
 	// ... Or if the one looking at the profile is an admin they can see it anyway.
 	elseif ($context['member']['show_email'] == 'yes_permission_override')
 		echo '
-						<i><a href="mailto:', $context['member']['email'], '">', $context['member']['email'], '</a></i>';
+						<i><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></i>';
 
 	// That must mean the email is hidden.
 	else

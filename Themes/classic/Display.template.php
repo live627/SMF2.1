@@ -353,7 +353,7 @@ function template_main()
 				// Don't show the email address if they want it hidden.
 				if (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
+								<a href="', $scripturl, '?action=emailuser;sa=email;msg=', $message['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -362,11 +362,11 @@ function template_main()
 			}
 		}
 		// Otherwise, show the guest's email.
-		elseif (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
+		elseif (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')) && $message['member']['email'])
 			echo '
 								<br />
 								<br />
-								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
+								<a href="', $scripturl, '?action=emailuser;sa=email;msg=', $message['id'], '" rel="nofollow">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '

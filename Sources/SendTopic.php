@@ -217,7 +217,8 @@ function CustomEmail()
 	$smcFunc['db_free_result']($request);
 
 	// Can they actually do this?
-	if (showEmailAddress(!empty($row['hide_email']), $row['id_member']) === 'no')
+	$context['show_email_address'] = showEmailAddress(!empty($row['hide_email']), $row['id_member']);
+	if ($context['show_email_address'] === 'no')
 		fatal_lang_error('no_access');
 
 	// Setup the context!
@@ -225,8 +226,12 @@ function CustomEmail()
 		'id' => $row['id_member'],
 		'name' => $row['name'],
 		'email' => $row['email'],
+		'email_link' => ($context['show_email_address'] == 'yes_permission_override' ? '<em>' : '') . '<a href="mailto:' . $row['email'] . '">' . $row['email'] . '</a>' . ($context['show_email_address'] == 'yes_permission_override' ? '</em>' : ''),
 		'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['name'] . '</a>' : $row['name'],
 	);
+
+	// Can we see this person's email address?
+	$context['can_view_receipient_email'] = $context['show_email_address'] == 'yes' || $context['show_email_address'] == 'yes_permission_override';
 
 	// Are we actually sending it?
 	if (isset($_POST['send']) && isset($_POST['email_body']))

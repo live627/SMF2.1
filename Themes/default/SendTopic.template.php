@@ -94,6 +94,19 @@ function template_custom_email()
 					<td>', $context['recipient']['link'], '</td>
 				</tr>';
 
+	// Can the user see the persons email?
+	if ($context['can_view_receipient_email'])
+		echo '
+				<tr class="windowbg">
+					<td width="30%"><b>', $txt['sendtopic_receiver_email'], ':</b></td>
+					<td>', $context['recipient']['email_link'], '</td>
+				</tr>
+				<tr class="windowbg">
+					<td colspan="2">
+						<hr />
+					</td>
+				</tr>';
+
 	// If it's a guest we need their details.
 	if ($context['user']['is_guest'])
 		echo '
