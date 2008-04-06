@@ -510,19 +510,16 @@ function ReportedPosts()
 {
 	global $txt, $context, $scripturl, $modSettings, $user_info, $smcFunc;
 
-	// This comes under the umbrella of moderating posts.
-	if ($user_info['mod_cache']['bq'] == '0=1')
-		isAllowedTo('moderate_forum');
-
-	// First load the template.
-	loadTemplate('ModerationCenter');
-
 	// Put the open and closed options into tabs, because we can...
 	$context[$context['moderation_menu_name']]['tab_data'] = array(
 		'title' => $txt['mc_reported_posts'],
 		'help' => '',
 		'description' => $txt['mc_reported_posts_desc'],
 	);
+
+	// This comes under the umbrella of moderating posts.
+	if ($user_info['mod_cache']['bq'] == '0=1')
+		isAllowedTo('moderate_forum');
 
 	// Are they wanting to view a particular report?
 	if (!empty($_REQUEST['report']))
