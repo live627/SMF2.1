@@ -222,10 +222,11 @@ ul.horizlist li
 }
 
 /* A code block - maybe even PHP ;). */
-.code
+code
 {
 	color: #000000;
 	background-color: #dddddd;
+	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	line-height: 1.3em;
@@ -234,8 +235,6 @@ ul.horizlist li
 	margin: 1px auto 1px auto;
 	padding: 1px;
 	width: 99%;
-	/* Don't wrap its contents, and show scrollbars. */
-	white-space: nowrap;
 	overflow: auto;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;

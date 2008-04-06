@@ -95,6 +95,7 @@ March 2008
  * Don't show action=unread links for guests. (BoardIndex and Message index templates)
  ! Inline permissions were not saving right. (ManageServer.php) [Bug 1884]
  ! Fixed undefined index error for reported posts. (ModerationCenter.php) [Bug 1811]
+ ! Code blocks were using white-space: pre, which does not work well with IE. (style.css) [Bug 1802]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

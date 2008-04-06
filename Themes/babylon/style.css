@@ -103,7 +103,7 @@ code
 	padding: 1px;
 	width: 99%;
 	/* Don't wrap its contents, and show scrollbars. */
-	white-space: pre;
+	white-space: nowrap;
 	overflow: auto;
 	display: block;
 
