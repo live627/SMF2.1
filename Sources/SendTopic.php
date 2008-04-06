@@ -296,6 +296,8 @@ function ReportToModerator()
 {
 	global $txt, $topic, $modSettings, $user_info, $context, $smcFunc;
 
+	$context['robot_no_index'] = true;
+
 	// You can't use this if it's off or you are not allowed to do it.
 	isAllowedTo('report_any');
 

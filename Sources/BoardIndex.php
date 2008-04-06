@@ -57,6 +57,10 @@ function BoardIndex()
 	else
 		loadTemplate('BoardIndex', 'forum');
 
+	// Do not let search engines index anything if there is a random thing in $_GET.
+	if (!empty($_GET) && (count($_GET) > 1 || !isset($_GET[session_name()])))
+		$context['robot_no_index'] = true;
+
 	// Retrieve the categories and boards.
 	require_once($sourcedir . '/Subs-BoardIndex.php');
 	$boardIndexOptions = array(

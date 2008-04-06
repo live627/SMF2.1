@@ -19,7 +19,7 @@ function template_main()
 			echo '
 			<tr>
 				<td class="windowbg icon">
-					<a href="', $scripturl, '?action=unread;board=', $board['id'], '.0;children">';
+					<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 			// If the board or children is new, show an indicator.
 			if ($board['new'] || $board['children_new'])

@@ -9,7 +9,8 @@ function template_wap_above()
 	// Show the xml declaration...
 	echo '<?xml version="1.0"?', '>
 <!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
-<wml>';
+<wml>
+<head><meta name="robots" content="noindex" /></head>';
 }
 
 // This is the board index (main page) in WAP 1.1.
@@ -191,6 +192,7 @@ function template_imode_above()
 <html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
+		<meta name="robots" content="noindex" />
 		<title>', $context['page_title'], '</title>
 	</head>
 	<body>';
@@ -761,6 +763,7 @@ function template_wap2_above()
 	<head>
 		<title>', $context['page_title'], '</title>
 		<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/wireless.css" type="text/css" />
+		<meta name="robots" content="noindex" />
 	</head>
 	<body>';
 }

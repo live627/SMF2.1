@@ -105,6 +105,7 @@ function Post()
 
 	// Posting an event?
 	$context['make_event'] = isset($_REQUEST['calendar']);
+	$context['robot_no_index'] = true;
 
 	// You must be posting to *some* board.
 	if (empty($board) && !$context['make_event'])
@@ -1101,6 +1102,9 @@ function Post2()
 {
 	global $board, $topic, $txt, $modSettings, $sourcedir, $context;
 	global $user_info, $board_info, $options, $smcFunc;
+
+	// No need!
+	$context['robot_no_index'] = true;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
 	if (!empty($_REQUEST['message_mode']) && isset($_REQUEST['message']))

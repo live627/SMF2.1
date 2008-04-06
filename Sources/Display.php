@@ -95,6 +95,19 @@ function Display()
 		die;
 	}
 
+	// How much are we sticking on each page?
+	$context['messages_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) && !WIRELESS ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
+
+	// Let's do some work on what to search index.
+	if (count($_GET) > 2)
+		foreach ($_GET as $k => $v)
+		{
+			if (!in_array($k, array('topic', 'board', 'start', session_name())))
+				$context['robot_no_index'] = true;
+		}
+	if (!empty($_REQUEST['start']) && (!is_numeric($_REQUEST['start']) || $_REQUEST['start'] % $context['messages_per_page'] != 0))
+		$context['robot_no_index'] = true;
+
 	// Find the previous or next topic.  Make a fuss if there are no more.
 	if (isset($_REQUEST['prev_next']) && ($_REQUEST['prev_next'] == 'prev' || $_REQUEST['prev_next'] == 'next'))
 	{
@@ -156,9 +169,6 @@ function Display()
 
 		// Go to the newest message on this topic.
 		$_REQUEST['start'] = 'new';
-
-		// Duplicate link!  Tell the robots not to link this.
-		$context['robot_no_index'] = true;
 	}
 
 	// Add 1 to the number of views of this topic.
@@ -336,8 +346,6 @@ function Display()
 
 			// We need to reverse the start as well in this case.
 			$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $context['total_visible_posts'] - $context['start_from'] - 1;
-
-			$context['robot_no_index'] = true;
 		}
 	}
 
@@ -531,11 +539,9 @@ function Display()
 	elseif (isset($_REQUEST['all']))
 	{
 		$_REQUEST['start'] = -1;
-		$context['robot_no_index'] = true;
 	}
 
 	// Construct the page index, allowing for the .START method...
-	$context['messages_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) && !WIRELESS ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
 	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $context['total_visible_posts'], $context['messages_per_page'], true);
 	$context['start'] = $_REQUEST['start'];
 

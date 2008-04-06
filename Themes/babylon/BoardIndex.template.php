@@ -136,7 +136,7 @@ function template_main()
 			{
 				echo '
 	<tr class="windowbg2">
-		<td class="windowbg" width="6%" align="center" valign="top"><a href="', ($board['is_redirect'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
+		<td class="windowbg" width="6%" align="center" valign="top"><a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 				// If the board or children is new, show an indicator.
 				if ($board['new'] || $board['children_new'])

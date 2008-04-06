@@ -73,10 +73,10 @@ function AdminMain()
 
 	// Load the language and templates....
 	loadLanguage('Admin');
-	loadTemplate('Admin');
+	loadTemplate('Admin', 'admin');
 
-	// We have our own special stylesheet for admin like stuff.
-	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/admin.css" />';
+	// No indexing evil stuff.
+	$context['robot_no_index'] = true;
 
 	// The admin centre uses PNG sometimes.
 	$context['html_headers'] .= '

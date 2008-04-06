@@ -377,7 +377,7 @@ function template_main()
 								<td align="left" valign="middle"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></td>
 								<td align="left" valign="middle">
 									<div style="font-weight: bold;" id="subject_', $message['id'], '">
-										<a href="', $message['href'], '">', $message['subject'], '</a>
+										<a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a>
 									</div>';
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.

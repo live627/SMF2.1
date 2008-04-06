@@ -49,6 +49,7 @@ function ModerationMain($dont_call = false)
 	loadLanguage('ModerationCenter');
 
 	$context['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
+	$context['robot_no_index'] = true;
 
 	// Can they approve any posts?
 	if ($modSettings['postmod_active'])

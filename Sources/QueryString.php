@@ -118,6 +118,13 @@ function cleanRequest()
 	if (!isset($_SERVER['QUERY_STRING']))
 		$_SERVER['QUERY_STRING'] = getenv('QUERY_STRING');
 
+	// It seems that sticking a URL after the query string is mighty common, well, it's evil - don't.
+	if (strpos($_SERVER['QUERY_STRING'], 'http') === 0)
+	{
+		header('HTTP/1.1 400 Bad Request');
+		die;
+	}
+
 	// Are we going to need to parse the ; out?
 	if ((strpos(@ini_get('arg_separator.input'), ';') === false || @version_compare(PHP_VERSION, '4.2.0') == -1) && !empty($_SERVER['QUERY_STRING']))
 	{

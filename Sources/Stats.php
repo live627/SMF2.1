@@ -53,6 +53,8 @@ function DisplayStats()
 
 	if (!empty($_REQUEST['expand']))
 	{
+		$context['robot_no_index'] = true;
+
 		$month = (int) substr($_REQUEST['expand'], 4);
 		$year = (int) substr($_REQUEST['expand'], 0, 4);
 		if ($year > 1900 && $year < 2200 && $month >= 1 && $month <= 12)
@@ -60,6 +62,8 @@ function DisplayStats()
 	}
 	elseif (!empty($_REQUEST['collapse']))
 	{
+		$context['robot_no_index'] = true;
+
 		$month = (int) substr($_REQUEST['collapse'], 4);
 		$year = (int) substr($_REQUEST['collapse'], 0, 4);
 		if (!empty($_SESSION['expanded_stats'][$year]))
