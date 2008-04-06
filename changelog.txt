@@ -93,6 +93,7 @@ March 2008
  ! Generally, stop robots indexing stupid pages. (Several files)
  ! Change last post links on message index for guests to improve indexing. (MessageIndex.php)
  * Don't show action=unread links for guests. (BoardIndex and Message index templates)
+ ! Inline permissions were not saving right. (ManageServer.php) [Bug 1884]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
