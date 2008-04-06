@@ -1521,7 +1521,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		// Load each template.... and attempt to load its associated language file.
 		foreach ($templates as $template)
 		{
-			loadTemplate($template);
+			loadTemplate($template, $template);
 			loadLanguage($template . '+Modifications', '', false);
 		}
 

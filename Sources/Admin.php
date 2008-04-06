@@ -562,6 +562,10 @@ function AdminHome()
 	$context['sub_template'] = $context['admin_area'] == 'credits' ? 'credits' : 'admin';
 	$context['page_title'] = $context['admin_area'] == 'credits' ? $txt['support_credits_title'] : $txt['admin_center'];
 
+	// Load the right CSS.
+	if ($context['admin_area'] == 'credits')
+		loadTemplate(false, 'who');
+
 	// The format of this array is: permission, action, title, description.
 	$quick_admin_tasks = array(
 		array('', 'credits', 'support_credits_title', 'support_credits_info'),

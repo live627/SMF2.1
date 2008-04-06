@@ -1034,11 +1034,10 @@ function create_control_richedit($editorOptions)
 	if (empty($context['controls']['richedit']))
 	{
 		// Some general stuff.
-		loadTemplate('GenericControls');
 		$settings['smileys_url'] = $modSettings['smileys_url'] . '/' . $user_info['smiley_set'];
 
 		// This really has some WYSIWYG stuff.
-		loadTemplate(false, $context['browser']['is_ie'] ? 'editor_ie' : 'editor');
+		loadTemplate('GenericControls', $context['browser']['is_ie'] ? 'editor_ie' : 'editor');
 		$context['html_headers'] .= '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
@@ -1264,7 +1263,7 @@ function create_control_autosuggest(&$suggestOptions)
 	if (empty($context['controls']['autosuggest']))
 	{
 		// Will want the template.
-		loadTemplate('GenericControls');
+		loadTemplate('GenericControls', 'suggest');
 
 		// Javascript is cool... says Grudge
 		$context['html_headers'] .= '
