@@ -157,6 +157,17 @@ h1,h2,h3,h4,h5,h6,h7
 {
 	padding: 0.5em;
 }
+/* smaller padding used in paragraphs, sections etc */
+.smallpadding
+{
+	padding: 0.2em;
+}
+/* larger padding used in paragraphs, sections etc */
+.largepadding
+{
+	padding: 0.7em;
+}
+
 /* a small space to the next section */
 .marginbottom
 {
@@ -166,6 +177,12 @@ h1,h2,h3,h4,h5,h6,h7
 .margintop
 {
 	margin-top: 1em;
+}
+/* remove bold/italic styles */
+span.plainstyle
+{
+	font-weight: normal;
+	font-style: normal;
 }
 /* float a list horisontally */
 ul.horizlist
@@ -177,6 +194,11 @@ ul.horizlist li
 	float: left;
 	padding: 0.2em 0.4em 0.2em 0.4em;
 	vertical-align: top;
+}
+/* make a inline-list */
+ul.nolist li
+{
+	display: inline;
 }
 /* helping style to clear floated items */
 .clearfix:after 
@@ -222,11 +244,10 @@ ul.horizlist li
 }
 
 /* A code block - maybe even PHP ;). */
-code
+.code
 {
 	color: #000000;
 	background-color: #dddddd;
-	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	line-height: 1.3em;
@@ -235,6 +256,8 @@ code
 	margin: 1px auto 1px auto;
 	padding: 1px;
 	width: 99%;
+	/* Don't wrap its contents, and show scrollbars. */
+	white-space: nowrap;
 	overflow: auto;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;

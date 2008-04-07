@@ -97,7 +97,7 @@ function template_html_above()
 	// The ?b21 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?b21" />
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/core.css?b21" />
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/index.css?b21" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b21" media="print" />';
 
 	// IE7 needs some fixes for styles.

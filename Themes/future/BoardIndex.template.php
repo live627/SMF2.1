@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 1; BoardIndex
+// Version: 2.0 Beta 3 Public; BoardIndex
 
 function template_main()
 {
@@ -149,7 +149,7 @@ function template_main()
 				// Has it outstanding posts for approval?
 				if ($board['can_approve_posts'] && ($board['unapproved_posts'] | $board['unapproved_topics']))
 					echo '
-						<span class="approve" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '">(!)</span>';
+						<a href="', $scripturl, '?action=moderate;area=postmod;sa=topics;brd=', $board['id'], ';sesc=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 
 				echo '
 					</h4>
@@ -176,7 +176,7 @@ function template_main()
 
 						// Has it posts awaiting approval?
 						if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
-							$child['link'] .= '<strong style="color: red;" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '">(!)</b>';
+							$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=topics;brd=' . $child['id'] . ';sesc=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 
 						$children[] = $child['new'] ? '<b>' . $child['link'] . '</strong>' : $child['link'];
 					}
@@ -240,14 +240,15 @@ function template_info_center()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
-	// Some java to make it all kinda work.
+	// Info center collapse object.
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-	var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
-	infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-	infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
-	infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
-	infoHeader.addTogglePanel("upshrinkHeaderIC");
+		// And create the info center object.
+		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
+		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
+		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
+		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>';
 
 	// Here's where the "Info Center" starts...
@@ -324,7 +325,7 @@ function template_info_center()
 		if (!empty($context['calendar_birthdays']))
 		{
 				echo '
-							<span class="birthday">', $context['calendar_only_today'] ? $txt['birthdays'] : $txt['birthdays_upcoming']. '</span> ';
+							<span class="birthday">', $context['calendar_only_today'] ? $txt['birthdays'] : $txt['birthdays_upcoming'], '</span> ';
 		/* Each member in calendar_birthdays has:
 				id, name (person), age (if they have one set?), is_last. (last in list?), and is_today (birthday is today?) */
 		foreach ($context['calendar_birthdays'] as $member)
@@ -380,39 +381,37 @@ function template_info_center()
 				<h4 class="headerpadding titlebg">', $txt['online_users'], '</h4>
 				<div class="windowbg">
 					<p class="section">
-						', $context['show_who'] ? '<a href="'. $scripturl . '?action=who' . '">' : '', '<img src="', $settings['images_url'] . '/icons/online.gif',  '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
+						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<img src="', $settings['images_url'], '/icons/online.gif" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
 					</p>
 					<div class="windowbg2 sectionbody">
 						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', $context['num_guests'], ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . $context['num_users_online'], ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	// Handle hidden users and buddies.
-	if (!empty($context['num_users_hidden']) || ($context['show_buddies'] && !empty($context['num_buddies'])))
-	{
-		echo ' (';
+	$bracketList = array();
+	if ($context['show_buddies'])
+		$bracketList[] = $context['num_buddies'] . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+	if (!empty($context['num_spiders']))
+		$bracketList[] = $context['num_spiders'] . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+	if (!empty($context['num_users_hidden']))
+		$bracketList[] = $context['num_users_hidden'] . ' ' . $txt['hidden'];
 
-		// Show the number of buddies online?
-		if ($context['show_buddies'])
-			echo $context['num_buddies'], ' ', $context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies'];
-
-		// How about hidden users?
-		if (!empty($context['num_users_hidden']))
-			echo $context['show_buddies'] ? ', ' : '', $context['num_users_hidden'] . ' ' . $txt['hidden'];
-
-		echo ')';
-	}
+	if (!empty($bracketList))
+		echo ' (' . implode(', ', $bracketList) . ')';
 
 	echo $context['show_who'] ? '</a>' : '', '
 						<div class="smalltext">';
 
 	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
 	if (!empty($context['users_online']))
+	{
 		echo '
 							', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
 
-	// Showing membergroups?
-	if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
-		echo '
+		// Showing membergroups?
+		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
+			echo '
 							<br />[' . implode(']&nbsp;&nbsp;[', $context['membergroups']) . ']';
+	}
 
 	echo '
 						</div>

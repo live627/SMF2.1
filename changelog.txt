@@ -97,6 +97,7 @@ March 2008
  ! Fixed undefined index error for reported posts. (ModerationCenter.php) [Bug 1811]
  ! Code blocks were using white-space: pre, which does not work well with IE. (style.css) [Bug 1802]
  ! Moved the future index template into the default, and added new stylesheets as a result. (style.css, index.css, ie6.css, ie7.css, index template)
+ * Fixed css issues with future theme, converted Display.template (future/templates)
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

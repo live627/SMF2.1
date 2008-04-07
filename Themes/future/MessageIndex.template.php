@@ -8,7 +8,7 @@ function template_main()
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
-	<div class="tborder" id="childboards">
+	<div class="tborder marginbottom" id="childboards">
 		<table cellspacing="1" class="bordercolor boardsframe">
 			<tr>
 				<td colspan="4" class="catbg headerpadding">', $txt['parent_boards'], '</td>
@@ -19,7 +19,7 @@ function template_main()
 			echo '
 			<tr>
 				<td class="windowbg icon">
-					<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
+					<a href="', $scripturl, '?action=unread;board=', $board['id'], '.0;children">';
 
 			// If the board or children is new, show an indicator.
 			if ($board['new'] || $board['children_new'])
@@ -109,8 +109,8 @@ function template_main()
 	if (!empty($options['show_board_desc']) && $context['description'] != '')
 	{
 		echo '
-	<div id="description" class="tborder ">
-		<div class="titlebg2 headerpadding margintop smalltext">', $context['description'], '</div>
+	<div id="description" class="tborder">
+		<div class="titlebg2 largepadding smalltext">', $context['description'], '</div>
 	</div>';
 	}
 

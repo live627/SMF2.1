@@ -205,13 +205,152 @@ form#infocenter_login ul.horizlist label
 }
 
 /* ************************************* */
-/* styles from Display.template               */
+/* styles from Display.template                         */
 /* ************************************* */
 #events .post
 {
 	padding: 1em;
 }
-#postbuttons .nav
+#moderationbuttons
+{
+	margin-left: 0.5em;
+}
+#postbuttons .nav, #postbuttons_lower .nav
+{
+	margin: 0.5em 0.5em 0 0;
+	text-align: right;
+}
+#postbuttons_lower .nav
+{
+	margin: 0em 0.5em 0.5em 0;
+}
+#postbuttons, #postbuttons_lower
 {
 	text-align: right;
+}
+#poll_options ul.options
+{
+	margin: 0;
+	padding: 0 0 0.5em 5em;
+}
+#poll_options ul.options li
+{
+	float: none;
+	padding: 0;
+}
+#poll_options p.submitbutton
+{
+	clear: both;
+	padding: 0 0 0.5em 5em;
+	margin: 0;
+}
+#poll_options p.pollmoderation
+{
+	margin: 0;
+	padding: 0 0 0 3em;
+}
+#poll_options dl
+{
+	padding: 0;
+	margin: 0;
+}
+#poll_options dt
+{
+	float: left;
+	white-space: nowrap;
+	margin: 0 0 0 5em;
+}
+#poll_options dd
+{
+	margin: 0 0 0 15%;
+}
+#poll_options p
+{
+	margin: 0 0 0.2em 0;
+	padding: 0.2em 0 0.5em 5em;
+}
+.approve_post
+{
+	margin: 2ex; 
+	padding: 1ex; 
+	border: 2px dashed #cc3344; 
+	color: black; 
+	font-weight: bold;
+}
+#forumposts h3.catbg3
+{
+	font-weight: normal;
+	padding: 0.4em;
+}
+#forumposts h3.catbg3 img
+{
+	vertical-align: middle;
+}
+#forumposts h3.catbg3 span
+{
+	padding-left: 2%;
+}
+#forumposts h3.catbg3 span#top_subject
+{
+	padding-left: 9%;
+}
+.poster
+{
+	width: 15%;
+}
+.postarea
+{
+	margin-left: 16%;
+}
+.messageicon
+{
+	width: 40px;
+	margin-right: 10px;
+}
+
+ul.postingbuttons
+{
+	float: right;
+	position: relative;
+	margin-top: -2.5em;
+	padding-right: 1em;
+}
+ul.postingbuttons li
+{
+	display: inline;
+}
+.modifybutton
+{
+	float: right;
+}
+.attachments
+{
+	clear: right;
+	padding-top: 1em;
+}
+.postfooter
+{
+	margin-left: 16%;
+}
+.topborder
+{
+	border-top: solid 1px #bbb;
+}
+.moderatorbar
+{
+	clear: both;
+	margin-left: 16%;
+}
+#quickReplyOptions div
+{
+	text-align: center;
+	margin-left: 26%;
+	border-left: solid 1px #aaa;
+}
+#quickReplyOptions #warning
+{
+	border: none;
+	text-align: left;
+	margin: 0;
+	width: 25%;
 }

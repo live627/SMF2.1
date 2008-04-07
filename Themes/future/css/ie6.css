@@ -3,3 +3,11 @@
 {
 	font-size: 80%;
 }
+#postbuttons
+{
+	text-align: left;
+}
+#postbuttons .floatleft
+{
+	text-align: left;
+}
