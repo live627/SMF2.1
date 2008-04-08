@@ -168,6 +168,16 @@ ul, ul li
 {
 	padding: 0.5em;
 }
+/* smaller padding used in paragraphs, sections etc */
+.smallpadding
+{
+	padding: 0.2em;
+}
+/* larger padding used in paragraphs, sections etc */
+.largepadding
+{
+	padding: 0.7em;
+}
 
 /* A small space to the next section. */
 .marginbottom
@@ -179,7 +189,12 @@ ul, ul li
 {
 	margin-top: 1em;
 }
-
+/* remove bold/italic styles */
+span.plainstyle
+{
+	font-weight: normal;
+	font-style: normal;
+}
 /* float a list horisontally */
 ul.horizlist
 {
@@ -191,7 +206,11 @@ ul.horizlist li
 	padding: 0.2em 0.4em 0.2em 0.4em;
 	vertical-align: top;
 }
-
+/* make a inline-list */
+ul.nolist li
+{
+	display: inline;
+}
 /* Helping style to clear floated items. */
 .clearfix:after 
 {
@@ -239,7 +258,6 @@ code
 {
 	color: #000000;
 	background-color: #dddddd;
-	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	line-height: 1.3em;
@@ -249,6 +267,7 @@ code
 	padding: 1px;
 	width: 99%;
 	overflow: auto;
+	white-space: nowrap;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
 }

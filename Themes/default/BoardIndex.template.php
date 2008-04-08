@@ -243,14 +243,15 @@ function template_info_center()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
-	// Some java to make it all kinda work.
+	// Info center collapse object.
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-	var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
-	infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-	infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
-	infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
-	infoHeader.addTogglePanel("upshrinkHeaderIC");
+		// And create the info center object.
+		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
+		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
+		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
+		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>';
 
 	// Here's where the "Info Center" starts...
@@ -327,7 +328,7 @@ function template_info_center()
 		if (!empty($context['calendar_birthdays']))
 		{
 				echo '
-							<span class="birthday">', $context['calendar_only_today'] ? $txt['birthdays'] : $txt['birthdays_upcoming']. '</span> ';
+							<span class="birthday">', $context['calendar_only_today'] ? $txt['birthdays'] : $txt['birthdays_upcoming'], '</span> ';
 		/* Each member in calendar_birthdays has:
 				id, name (person), age (if they have one set?), is_last. (last in list?), and is_today (birthday is today?) */
 		foreach ($context['calendar_birthdays'] as $member)
@@ -383,7 +384,7 @@ function template_info_center()
 				<h4 class="headerpadding titlebg">', $txt['online_users'], '</h4>
 				<div class="windowbg">
 					<p class="section">
-						', $context['show_who'] ? '<a href="'. $scripturl . '?action=who' . '">' : '', '<img src="', $settings['images_url'] . '/icons/online.gif',  '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
+						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who' . '">' : '', '<img src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
 					</p>
 					<div class="windowbg2 sectionbody">
 						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', $context['num_guests'], ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . $context['num_users_online'], ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
@@ -405,13 +406,15 @@ function template_info_center()
 
 	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
 	if (!empty($context['users_online']))
+	{
 		echo '
 							', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
 
-	// Showing membergroups?
-	if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
-		echo '
+		// Showing membergroups?
+		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
+			echo '
 							<br />[' . implode(']&nbsp;&nbsp;[', $context['membergroups']) . ']';
+	}
 
 	echo '
 						</div>
