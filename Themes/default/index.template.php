@@ -98,10 +98,6 @@ function template_html_above()
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?b21" />';
 
-	if ($settings['theme_version'] >= '2.0 Beta 4')
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css?b21" />';
-
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b21" media="print" />';
 
@@ -148,8 +144,8 @@ function template_html_above()
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
 		mainHeader.setOptions("collapse_header", "', $context['session_id'], '");
 		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
-		mainHeader.addTogglePanel("upshrinkHeader");
-		mainHeader.addTogglePanel("upshrinkHeader2");
+		mainHeader.addTogglePanel("user_section");
+		mainHeader.addTogglePanel("news_section");
 	// ]]></script>';
 
 	echo '
@@ -428,8 +424,11 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 	global $settings, $buttons, $context, $txt, $scripturl;
 
 	// Create the buttons...
+	$i = count($button_strip);
 	foreach ($button_strip as $key => $value)
 	{
+		$i--;
+
 		if (isset($value['test']) && empty($context[$value['test']]))
 		{
 			unset($button_strip[$key]);
@@ -440,7 +439,7 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 			if ($value['url'] === '{SUBMIT}')
 				$buttons[$key] = '<input type="submit" value="' . (isset($value['custom']) ? $value['custom'] : '') . $txt[$value['text']] . '" class="button_strip_submit" />';
 			else
-				$buttons[$key] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '>' . $txt[$value['text']] . '</a>';
+				$buttons[$key] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span' . ($i == 0 ? ' class="last"' : '') . '>' . $txt[$value['text']] . '</span></a>';
 		}
 		$button_strip[$key] = $buttons[$key];
 	}
@@ -449,7 +448,7 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 		return '<td>&nbsp;</td>';
 
 	//!!! TEMP.
-	if (1 == 0)
+	if (!empty($context['theme_updated']))
 		echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '">
 			<ul class="clearfix">

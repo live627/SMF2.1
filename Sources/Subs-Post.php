@@ -794,7 +794,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	static $cur_insert_len = 0;
 
 	// If we're flushing, make the final inserts - also if we're near the MySQL length limit!
-	if (($flush || $cur_insert_len > 800000)&& !empty($cur_insert))
+	if (($flush || $cur_insert_len > 800000) && !empty($cur_insert))
 	{
 		// Dump the data...
 		$smcFunc['db_insert']('',

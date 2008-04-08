@@ -97,6 +97,8 @@ March 2008
  ! Fixed undefined index error for reported posts. (ModerationCenter.php) [Bug 1811]
  ! Code blocks were using white-space: pre, which does not work well with IE. (style.css) [Bug 1802]
  ! Moved the future index template into the default, and added new stylesheets as a result. (style.css, index.css, ie6.css, ie7.css, index template)
+ ! Fixed up some problems with the new templates, and moved the board index across. (forum.css, index.css, style.css, main/mirror tab images, BoardIndex template, index template)
+ ! Added a variable to show when a function has had it's templates updated. (BoardIndex.php, index template)
  * Fixed css issues with future theme, converted Display.template (future/templates)
 
 

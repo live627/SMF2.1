@@ -24,20 +24,19 @@ table
 	empty-cells: show;
 }
 
-/* By default (td, body..) use verdana in black. */
+/* set a fontsize that will look the same in all browsers. */
+body
+{
+	font: 100.01%/100% Verdana, Helvetica, sans-serif;
+	background: #E5E5E8;
+	margin: 0;
+	padding: 12px 0 4px 0;
+}
+
+/* use dark grey for the text, leaving black for headers etc */
 body, td, th , tr
 {
 	color: #444444;
-}
-
-/* The main body of the entire forum. */
-body
-{
-	font-size: 100.01%/100%;
-	font-family: verdana, sans-serif;
-	background-color: #E5E5E8;
-	margin: 0px;
-	padding: 12px 30px 4px 30px;
 }
 
 /* lets give all forms zero padding/margins */
