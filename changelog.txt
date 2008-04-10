@@ -100,6 +100,8 @@ March 2008
  ! Fixed up some problems with the new templates, and moved the board index across. (forum.css, index.css, style.css, main/mirror tab images, BoardIndex template, index template)
  ! Added a variable to show when a function has had it's templates updated. (BoardIndex.php, index template)
  * Fixed css issues with future theme, converted Display.template (future/templates)
+ ! If max number of attachments per post is disabled, show the upload field and set the limit to 50 per page load. (Post.php) [Bug 1902]
+ ! Wrong variable was being used for the key in the $matches array. (ManageSettings.php) [Bug 1896]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008

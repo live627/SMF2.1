@@ -961,7 +961,7 @@ function ModifySignatureSettings($return_config = false)
 							$limit_broke = 'large';
 
 						if ($limit_broke)
-							$sig = str_replace($matches[0][$key], '[size=' . $sig_limits[7] . 'px', $sig);
+							$sig = str_replace($matches[0][$ind], '[size=' . $sig_limits[7] . 'px', $sig);
 					}
 				}
 
