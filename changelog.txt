@@ -50,6 +50,7 @@ April 2008
  ! If max number of attachments per post is disabled, show the upload field and set the limit to 50 per page load. (Post.php) [Bug 1902]
  ! Wrong variable was being used for the key in the $matches array. (ManageSettings.php) [Bug 1896]
  ! Some actions were in the wrong order. (index.php) [Bug 1906]
+ ! Recounting forum totals and statistics sometimes caused a database error. (ManageMaintenance.php)
 
 
 March 2008

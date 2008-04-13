@@ -1574,7 +1574,7 @@ function AdminBoardRecount()
 					WHERE id_board = {int:id_board}',
 					array(
 						'id_board' => $row['id_board'],
-						'unapproved_posts' => $row['unapproved_posts'],
+						'unapproved_posts' => $row['real_unapproved_posts'],
 					)
 				);
 			$smcFunc['db_free_result']($request);
