@@ -293,7 +293,7 @@ function setup_fatal_error_context($error_message)
 	{
 		if (!empty($ssi_on_error_method) && $ssi_on_error_method !== true && function_exists($ssi_on_error_method))
 			$ssi_on_error_method();
-		else
+		elseif (empty($ssi_on_error_method) || $ssi_on_error_method !== true)
 			loadSubTemplate('fatal_error');
 
 		// No layers?

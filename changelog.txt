@@ -3,6 +3,55 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 4                                                               ???
 ================================================================================
+April 2008
+--------------------------------------------------------------------------------
+ * The link to import a smiley was not correct. (ManageSmileys.php, ManageSmileys template) [Bug 1862]
+ & If a member was banned while logged in they would not receive the correct error. (Security.php, index language file) [Bug 1862]
+ ! Add some extra variable safety into SMF. (index.php)
+ & Emailing a user should appear in who's online. (Who language file) [Bug 1875]
+ ! Email form was showing the wrong name. (SendTopic.php) [Bug 1874]
+ ! "Allow users to email" still wasn't working. (Register.php) [Bug 1873]
+ ! Check time offset always returns something valid. (profile.js) [Bug 1871]
+ ! Allow warned admins to change their warning level. (Profile-Actions.php, Profile template) [Bug 1867]
+ ! Display lists better in search results. (Search.php) [Bug 1869]
+ ! Paid subscriptions wasn't allow deletion of completed subscriptions. (ManagePaid.php) [Bug 1864]
+ ! Auto detecting the time offset wasn't working in some locales. (Profile.php, Profile template, profile.js) [Bug 1860]
+ ! WYSIWYG editor is now themable. (Load.php, Subs-Editor.php, editor.js)
+ ! If you define a custom menu subsection URL then don't force the 'sa' index into the URL. (Admin.php, GenericMenu template) [Bug 1877]
+ + Add a new variable in SSI, $ssi_on_error_method, that allows users to define how to handle errors in SSI. (SSI.php, Errors.php) [Feature 1084]
+ ! By default assume the admin will want to email users through the forum, but allow them to select their email address from the email screen. (SendTopic.php, SendTopic template) [Feature 1872]
+ * Updated some templates for the above change. (Profile, Display templates)
+ ! Fixed undefined index error when logging in with OpenID. (Subs-OpenID.php) [Bug 1804]
+ ! Ensure totalMembers is set on install. (install scripts) [Bug 1798]
+ ! ssi_fetchGroupMembers was incorrectly sorting by username, not display name. (SSI.php) [Bug 1800]
+ ! Changing core settings was destroying the custom profile field cache. (ManageSettings.php) [Bug 1792]
+ ! BBC cleaner upper was being a little more aggressive than need be, time to reign it back in, as it was messing up some languages translations. (Subs-Post.php) [Bug 1807]
+ ! Moderation cache wasn't respecting people who could manage membergroups. (Subs-Auth.php) [Bug 1817]
+ ! The "simple" permission management screen would cause a javascript error with disabled permissions. (ManagePermissions template) [Bug 1783]
+ ! XML feeds (RSS etc) were not having the URLs prepared right if queryless URLs were enabled. (News.php) [Bug 1790]
+ ! The admin menu wasn't hiding itself properly for those who could not enter. (Admin.php, Moderate.php) [Bug 1774]
+ ! Add a function for destroying a menu. (Subs-Menu.php)
+ + Allow moderators to add custom warning messages. (Profile-Actions.php, Profile template, ModerationCenter.php, ModerationCenter template, ModerationCenter language file) [Feature 1497]
+ ! Shut PHP up about magic quotes. (QueryString.php) [Bug 1658]
+ ! User searching wasn't doing it by name and username. (Subs-Auth.php) [Bug 1815]
+ ! On the board index don't let search engines index it if there is something in the querystring, other than the session ID. (BoardIndex.php)
+ ! Block requests that have http at the start of the query string as it's annoying. (QueryString.php)
+ ! Only index topics that have come through normal page links. (Display.php, MessageIndex.php)
+ ! Generally, stop robots indexing stupid pages. (Several files)
+ ! Change last post links on message index for guests to improve indexing. (MessageIndex.php)
+ * Don't show action=unread links for guests. (BoardIndex and Message index templates)
+ ! Inline permissions were not saving right. (ManageServer.php) [Bug 1884]
+ ! Fixed undefined index error for reported posts. (ModerationCenter.php) [Bug 1811]
+ ! Code blocks were using white-space: pre, which does not work well with IE. (style.css) [Bug 1802]
+ ! Moved the future index template into the default, and added new stylesheets as a result. (style.css, index.css, ie6.css, ie7.css, index template)
+ ! Fixed up some problems with the new templates, and moved the board index across. (forum.css, index.css, style.css, main/mirror tab images, BoardIndex template, index template)
+ ! Added a variable to show when a function has had it's templates updated. (BoardIndex.php, index template)
+ * Fixed css issues with future theme, converted Display.template (future/templates)
+ ! If max number of attachments per post is disabled, show the upload field and set the limit to 50 per page load. (Post.php) [Bug 1902]
+ ! Wrong variable was being used for the key in the $matches array. (ManageSettings.php) [Bug 1896]
+ ! Some actions were in the wrong order. (index.php) [Bug 1906]
+
+
 March 2008
 --------------------------------------------------------------------------------
  ! Recycled posts and topics can now be restore via quick moderation. (Display.php, MessageIndex.php, RemoveTopic.php, Display and MessageIndex templates, index language file) [Feature 1343]
@@ -58,50 +107,6 @@ March 2008
  + Allow the admin to set the server timezone. (ManageSettings.php, ManageSettings and Help language files)
  ! Upgrade and install scripts should now work with MySQL 6, assuming you are starting from 2.0. (install.php, upgrade.php, install_2-0_mysql.sql, upgrade_2-0_mysql.sql) [Bug 1859]
  ! Make sure the "Play Sound" doesn't follow the link. (captcha.js) [Bug 1784]
- * The link to import a smiley was not correct. (ManageSmileys.php, ManageSmileys template) [Bug 1862]
- & If a member was banned while logged in they would not receive the correct error. (Security.php, index language file) [Bug 1862]
- ! Add some extra variable safety into SMF. (index.php)
- & Emailing a user should appear in who's online. (Who language file) [Bug 1875]
- ! Email form was showing the wrong name. (SendTopic.php) [Bug 1874]
- ! "Allow users to email" still wasn't working. (Register.php) [Bug 1873]
- ! Check time offset always returns something valid. (profile.js) [Bug 1871]
- ! Allow warned admins to change their warning level. (Profile-Actions.php, Profile template) [Bug 1867]
- ! Display lists better in search results. (Search.php) [Bug 1869]
- ! Paid subscriptions wasn't allow deletion of completed subscriptions. (ManagePaid.php) [Bug 1864]
- ! Auto detecting the time offset wasn't working in some locales. (Profile.php, Profile template, profile.js) [Bug 1860]
- ! WYSIWYG editor is now themable. (Load.php, Subs-Editor.php, editor.js)
- ! If you define a custom menu subsection URL then don't force the 'sa' index into the URL. (Admin.php, GenericMenu template) [Bug 1877]
- + Add a new variable in SSI, $ssi_on_error_method, that allows users to define how to handle errors in SSI. (SSI.php, Errors.php) [Feature 1084]
- ! By default assume the admin will want to email users through the forum, but allow them to select their email address from the email screen. (SendTopic.php, SendTopic template) [Feature 1872]
- * Updated some templates for the above change. (Profile, Display templates)
- ! Fixed undefined index error when logging in with OpenID. (Subs-OpenID.php) [Bug 1804]
- ! Ensure totalMembers is set on install. (install scripts) [Bug 1798]
- ! ssi_fetchGroupMembers was incorrectly sorting by username, not display name. (SSI.php) [Bug 1800]
- ! Changing core settings was destroying the custom profile field cache. (ManageSettings.php) [Bug 1792]
- ! BBC cleaner upper was being a little more aggressive than need be, time to reign it back in, as it was messing up some languages translations. (Subs-Post.php) [Bug 1807]
- ! Moderation cache wasn't respecting people who could manage membergroups. (Subs-Auth.php) [Bug 1817]
- ! The "simple" permission management screen would cause a javascript error with disabled permissions. (ManagePermissions template) [Bug 1783]
- ! XML feeds (RSS etc) were not having the URLs prepared right if queryless URLs were enabled. (News.php) [Bug 1790]
- ! The admin menu wasn't hiding itself properly for those who could not enter. (Admin.php, Moderate.php) [Bug 1774]
- ! Add a function for destroying a menu. (Subs-Menu.php)
- + Allow moderators to add custom warning messages. (Profile-Actions.php, Profile template, ModerationCenter.php, ModerationCenter template, ModerationCenter language file) [Feature 1497]
- ! Shut PHP up about magic quotes. (QueryString.php) [Bug 1658]
- ! User searching wasn't doing it by name and username. (Subs-Auth.php) [Bug 1815]
- ! On the board index don't let search engines index it if there is something in the querystring, other than the session ID. (BoardIndex.php)
- ! Block requests that have http at the start of the query string as it's annoying. (QueryString.php)
- ! Only index topics that have come through normal page links. (Display.php, MessageIndex.php)
- ! Generally, stop robots indexing stupid pages. (Several files)
- ! Change last post links on message index for guests to improve indexing. (MessageIndex.php)
- * Don't show action=unread links for guests. (BoardIndex and Message index templates)
- ! Inline permissions were not saving right. (ManageServer.php) [Bug 1884]
- ! Fixed undefined index error for reported posts. (ModerationCenter.php) [Bug 1811]
- ! Code blocks were using white-space: pre, which does not work well with IE. (style.css) [Bug 1802]
- ! Moved the future index template into the default, and added new stylesheets as a result. (style.css, index.css, ie6.css, ie7.css, index template)
- ! Fixed up some problems with the new templates, and moved the board index across. (forum.css, index.css, style.css, main/mirror tab images, BoardIndex template, index template)
- ! Added a variable to show when a function has had it's templates updated. (BoardIndex.php, index template)
- * Fixed css issues with future theme, converted Display.template (future/templates)
- ! If max number of attachments per post is disabled, show the upload field and set the limit to 50 per page load. (Post.php) [Bug 1902]
- ! Wrong variable was being used for the key in the $matches array. (ManageSettings.php) [Bug 1896]
 
 
 SMF 2.0 Beta 3 Public                                              17 March 2008
