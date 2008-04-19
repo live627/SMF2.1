@@ -241,13 +241,16 @@ function preparsecode(&$message, $previewing = false)
 			else
 				$parts[$i] = preg_replace('~(?:\A|\n)/me(?: |&nbsp;)([^\n]*)(?:\z)?~i', '[me=' . $user_info['name'] . ']$1[/me]', $parts[$i]);
 
-			if (!$previewing)
+			if (!$previewing && strpos($parts[$i], '[html]') !== false)
 			{
 				if (allowedTo('admin_forum'))
 					$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . strtr(un_htmlspecialchars(\'$1\'), array("\n" => \'&#13;\', \'  \' => \' &#32;\')) . \'[/html]\'', $parts[$i]);
 				// We should edit them out, or else if an admin edits the message they will get shown...
 				else
-					$parts[$i] = preg_replace('~\[[/]?html\]~i', '', $parts[$i]);
+				{
+					while (strpos($parts[$i], '[html]') !== false)
+						$parts[$i] = preg_replace('~\[[/]?html\]~i', '', $parts[$i]);
+				}
 			}
 
 			// Let's look at the time tags...

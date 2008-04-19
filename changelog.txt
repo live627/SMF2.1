@@ -68,6 +68,7 @@ April 2008
  & Removed unused language string, "to delete_blank". (Post language file) [Bug 1913]
  ! Put the "future" display template into the default theme. (Display template)
  ! On PHP 4.2.0 seed the random generator. (Subs-Compat.php, index.php)
+ ! Remove HTML recursively from normal user's posts. (Subs-Post.php)
 
 
 March 2008
