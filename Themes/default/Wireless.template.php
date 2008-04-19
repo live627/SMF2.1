@@ -10,7 +10,12 @@ function template_wap_above()
 	echo '<?xml version="1.0"?', '>
 <!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
 <wml>
-<head><meta name="robots" content="noindex" /></head>';
+<head>';
+	if ($context['user']['is_guest'])
+		echo '
+	<meta name="robots" content="noindex" />';
+	echo '
+</head>';
 }
 
 // This is the board index (main page) in WAP 1.1.
@@ -191,8 +196,11 @@ function template_imode_above()
 	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD Compact HTML 1.0 Draft//EN">
 <html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
-		<meta name="robots" content="noindex" />
+		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />';
+	if ($context['user']['is_guest'])
+		echo '
+		<meta name="robots" content="noindex" />';
+	echo '
 		<title>', $context['page_title'], '</title>
 	</head>
 	<body>';
@@ -762,8 +770,11 @@ function template_wap2_above()
 <html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<title>', $context['page_title'], '</title>
-		<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/wireless.css" type="text/css" />
-		<meta name="robots" content="noindex" />
+		<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/wireless.css" type="text/css" />';
+	if ($context['user']['is_guest'])
+		echo '
+		<meta name="robots" content="noindex" />';
+	echo '
 	</head>
 	<body>';
 }

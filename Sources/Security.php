@@ -200,6 +200,7 @@ function is_not_guest($message = '')
 	{
 		loadTemplate('Login');
 		$context['sub_template'] = 'kick_guest';
+		$context['robot_no_index'] = true;
 	}
 
 	// Use the kick_guest sub template...

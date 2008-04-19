@@ -270,7 +270,7 @@ function MLAll()
 		if (!isset($_REQUEST['desc']) && $col == $_REQUEST['sort'])
 			$context['columns'][$col]['href'] .= ';desc';
 
-		$context['columns'][$col]['link'] = '<a href="' . $context['columns'][$col]['href'] . '">' . $context['columns'][$col]['label'] . '</a>';
+		$context['columns'][$col]['link'] = '<a href="' . $context['columns'][$col]['href'] . '" rel="nofollow">' . $context['columns'][$col]['label'] . '</a>';
 		$context['columns'][$col]['selected'] = $_REQUEST['sort'] == $col;
 	}
 

@@ -125,10 +125,10 @@ h2 em
 	display: block;
 	padding: 0.1em 0.5em 0.5em 0.5em;
 }
-#main_menu li a.active
+#main_menu li a span.last
 {
-	background: url(../images/maintab_active_last.gif) no-repeat bottom right;
-	padding-right: 8px;
+	background: url(../images/maintab_last.gif) no-repeat bottom right;
+	padding: 0.1em 1em 0.5em 0.5em;
 }
 #main_menu li a.active span em
 {
@@ -142,10 +142,10 @@ h2 em
 	background: url(../images/maintab_active_first.gif) no-repeat bottom left;
 	padding: 0 0 0 8px;
 }
-#main_menu li a span.last
+#main_menu li a.active
 {
-	background: url(../images/maintab_last.gif) no-repeat bottom right;
-	padding: 0.1em 1em 0.5em 0.5em;
+	background: url(../images/maintab_active_last.gif) no-repeat bottom right;
+	padding-right: 8px;
 }
 
 /* the linktree */

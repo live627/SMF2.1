@@ -238,6 +238,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'alter_table_smileys' => array(
 			'~(.+)~' => '',
 		),
+		'alter_table_spiders' => array(
+			'~(.+)~' => '',
+		),
 		'attach_download_increase' => array(
 			'~LOW_PRIORITY~' => '',
 		),

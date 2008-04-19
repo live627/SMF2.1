@@ -399,6 +399,9 @@ function EditSpider()
 				array('id_spider')
 			);
 
+		// Order by user agent length.
+		sortSpiderTable();
+
 		cache_put_data('spider_search', null, 300);
 		recacheSpiderNames();
 
@@ -1019,6 +1022,37 @@ function recacheSpiderNames()
 	$smcFunc['db_free_result']($request);
 
 	updateSettings(array('spider_name_cache' => serialize($spiders)));
+}
+
+// Sort the search engine table by user agent name to avoid misidentification of engine.
+function sortSpiderTable()
+{
+	global $smcFunc;
+
+	db_extend('packages');
+
+	// Add a sorting column.
+	$smcFunc['db_add_column']('spiders', array('name' => 'temp_order', 'size' => 8, 'type' => 'mediumint'));
+
+	// Set the contents of this column.
+	$smcFunc['db_query']('set_spider_order', '
+		UPDATE {db_prefix}spiders
+		SET temp_order = LENGTH(user_agent)',
+		array(
+		)
+	);
+
+	// Order the table by this column.
+	$smcFunc['db_query']('alter_table_spiders', '
+		ALTER TABLE {db_prefix}spiders
+		ORDER BY temp_order DESC',
+		array(
+			'db_error_skip' => true,
+		)
+	);
+
+	// Remove the sorting column.
+	$smcFunc['db_remove_column']('spiders', 'temp_order');
 }
 
 ?>

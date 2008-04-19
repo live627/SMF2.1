@@ -51,6 +51,10 @@ April 2008
  ! Wrong variable was being used for the key in the $matches array. (ManageSettings.php) [Bug 1896]
  ! Some actions were in the wrong order. (index.php) [Bug 1906]
  ! Recounting forum totals and statistics sometimes caused a database error. (ManageMaintenance.php)
+ ! Keep search engine list sorted by user agent order. (ManageSearchEngines.php) [Bug 1924]
+ ! Send 503 when the forum is down. (Subs-Auth.php) [Feature 1926]
+ ! Send nofollow on sorting links on generic lists, memberlist and the who template. (Who, GenericList templates)
+ ! No search engine indexing for guest login screen thanks. (Security.php)
 
 
 March 2008

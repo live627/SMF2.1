@@ -374,6 +374,11 @@ function show_db_error($loadavg = false)
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 	header('Cache-Control: no-cache');
 
+	// Send the right error codes.
+	header('HTTP/1.1 503 Service Temporarily Unavailable');
+	header('Status: 503 Service Temporarily Unavailable');
+	header('Retry-After: 3600');
+
 	if ($loadavg == false)
 	{
 		// For our purposes, we're gonna want this on if at all possible.
@@ -400,6 +405,7 @@ function show_db_error($loadavg = false)
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+		<meta name="robots" content="noindex" />
 		<title>', $mtitle, '</title>
 	</head>
 	<body>
@@ -412,6 +418,7 @@ function show_db_error($loadavg = false)
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+		<meta name="robots" content="noindex" />
 		<title>Temporarily Unavailable</title>
 	</head>
 	<body>
@@ -424,6 +431,7 @@ function show_db_error($loadavg = false)
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+		<meta name="robots" content="noindex" />
 		<title>Connection Problems</title>
 	</head>
 	<body>
