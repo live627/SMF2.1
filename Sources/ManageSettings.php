@@ -1605,6 +1605,10 @@ function EditCustomProfiles()
 				fatal_lang_error('custom_option_not_unique');
 			$colname = strtolower($matches[1]);
 
+			// If there is nothing to the name, then let's start out own - for foreign languages etc.
+			if (empty($colname))
+				$colname = 'cust_' . rand(1, 999);
+
 			// Check this is unique.
 			$unique = false;
 			while ($unique == false)

@@ -69,6 +69,7 @@ April 2008
  ! Put the "future" display template into the default theme. (Display template)
  ! On PHP 4.2.0 seed the random generator. (Subs-Compat.php, index.php)
  ! Remove HTML recursively from normal user's posts. (Subs-Post.php)
+ ! Custom profile fields wouldn't play nice in non-latin languages. (ManageSettings.php) [Bug 1885]
 
 
 March 2008

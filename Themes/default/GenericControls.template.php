@@ -250,7 +250,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 	// How many items are there to display in total.
 	$total_items = count($verify_context['questions']) + ($verify_context['show_visual'] ? 1 : 0);
 
-	// If we've gone to far, stop.
+	// If we've gone too far, stop.
 	if ($verify_context['tracking'] > $total_items)
 		return false;
 
