@@ -55,6 +55,7 @@ April 2008
  ! Send 503 when the forum is down. (Subs-Auth.php) [Feature 1926]
  ! Send nofollow on sorting links on generic lists, memberlist and the who template. (Who, GenericList templates)
  ! No search engine indexing for guest login screen thanks. (Security.php)
+ ! Put the new message index template live into the default theme, and fix a few errors elsewhere. (forum.css, MessageIndex.php, style.css)
 
 
 March 2008

@@ -258,6 +258,7 @@ code
 {
 	color: #000000;
 	background-color: #dddddd;
+	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
 	line-height: 1.3em;
