@@ -143,12 +143,12 @@ form#infocenter_login ul.horizlist label
 {
 	width: 100%;
 }
-#modbuttons
+.modbuttons
 {
 	clear: both;
 	width: 100%;
 }
-#modbuttons .buttonlist, #modbuttons .buttonlist_bottom
+.modbuttons .buttonlist, .modbuttons .buttonlist_bottom
 {
 	margin-right: 1em;
 	float: right;

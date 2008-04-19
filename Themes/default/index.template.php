@@ -421,31 +421,26 @@ function template_menu()
 // Generate a strip of buttons.
 function template_button_strip($button_strip, $direction = 'top', $force_reset = false, $custom_td = '')
 {
-	global $settings, $buttons, $context, $txt, $scripturl;
+	global $settings, $context, $txt, $scripturl;
 
 	// Create the buttons...
-	$i = count($button_strip);
+	$buttons = array();
 	foreach ($button_strip as $key => $value)
 	{
-		$i--;
-
-		if (isset($value['test']) && empty($context[$value['test']]))
-		{
-			unset($button_strip[$key]);
-			continue;
-		}
-		elseif (!isset($buttons[$key]) || $force_reset)
+		if (!isset($value['test']) || !empty($context[$value['test']]))
 		{
 			if ($value['url'] === '{SUBMIT}')
-				$buttons[$key] = '<input type="submit" value="' . (isset($value['custom']) ? $value['custom'] : '') . $txt[$value['text']] . '" class="button_strip_submit" />';
+				$buttons[] = '<input type="submit" value="' . (isset($value['custom']) ? $value['custom'] : '') . $txt[$value['text']] . '" class="button_strip_submit" />';
 			else
-				$buttons[$key] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span' . ($i == 0 ? ' class="last"' : '') . '>' . $txt[$value['text']] . '</span></a>';
+				$buttons[] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 		}
-		$button_strip[$key] = $buttons[$key];
 	}
 
-	if (empty($button_strip))
-		return '<td>&nbsp;</td>';
+	// Make the last one, as easy as possible.
+	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+
+	if (empty($buttons))
+		return empty($context['theme_updated']) ? '<td>&nbsp;</td>' : '';
 
 	//!!! TEMP.
 	if (!empty($context['theme_updated']))
@@ -459,7 +454,7 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 	else
 		echo '
 		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_' , $context['right_to_left'] ? 'last' : 'first' , '">&nbsp;</td>
-		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_back">', implode(' &nbsp;|&nbsp; ', $button_strip) , '</td>
+		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_back">', implode(' &nbsp;|&nbsp; ', $buttons) , '</td>
 		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_' , $context['right_to_left'] ? 'first' : 'last' , '">&nbsp;</td>';
 }
 

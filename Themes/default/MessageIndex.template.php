@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3; MessageIndex
+// Version: 2.0 Beta 4; MessageIndex
 
 function template_main()
 {
@@ -41,7 +41,7 @@ function template_main()
 				<h4><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a>';
 
 			// Has it outstanding posts for approval?
-			if ($board['can_approve_posts'] && ($board['unapproved_posts'] | $board['unapproved_topics']))
+			if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
 				echo '
 					<a href="', $scripturl, '?action=moderate;area=postmod;sa=topics;brd=', $board['id'], ';sesc=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 
@@ -69,7 +69,7 @@ function template_main()
 						$child['link'] = '<a href="' . $child['href'] . '" title="' . $child['posts'] . ' ' . $txt['redirects'] . '">' . $child['name'] . '</a>';
 
 					// Has it posts awaiting approval?
-					if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
+					if ($child['can_approve_posts'] && ($child['unapproved_posts'] || $child['unapproved_topics']))
 						$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=topics;brd=' . $child['id'] . ';sesc=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'] . $child['unapproved_topics'] . $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 					$children[] = $child['new'] ? '<b>' . $child['link'] . '</strong>' : $child['link'];
 				}
@@ -128,7 +128,7 @@ function template_main()
 	if (!$context['no_topic_listing'])
 	{
 		echo '
-		<div id="modbuttons" class="clearfix margintop">
+		<div id="modbuttons_top" class="modbuttons clearfix margintop">
 			<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#bot"><b>' . $txt['go_down'] . '</b></a>' : '', '</div>
 			', template_button_strip($normal_buttons, 'bottom'), '
 		</div>';
@@ -141,36 +141,38 @@ function template_main()
 		echo '
 			<div class="tborder" id="messageindex">
 				<table cellspacing="1" class="bordercolor boardsframe">
-					<thead>';
+					<thead>
+						<tr>';
 
 		// Are there actually any topics to show?
 		if (!empty($context['topics']))
 		{
 			echo '
-						<th width="9%" colspan="2" class="catbg3 headerpadding"></td>
-						<th class="catbg3 headerpadding"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-						<th class="catbg3 headerpadding" width="11%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-						<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-						<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['views'], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-						<th class="catbg3 headerpadding" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
+							<th width="9%" colspan="2" class="catbg3 headerpadding">&nbsp;</th>
+							<th class="catbg3 headerpadding"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
+							<th class="catbg3 headerpadding" width="11%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['views'], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
+							<th class="catbg3 headerpadding" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
 
 			// Show a "select all" box for quick moderation?
 			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
-						<th class="catbg3 headerpadding" width="24">
-							<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
-						</th>';
+							<th class="catbg3 headerpadding" width="24">
+								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+							</th>';
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($options['display_quick_mod']))
 				echo '
-						<th class="catbg3 headerpadding" width="4%" ></th>';
+							<th class="catbg3 headerpadding" width="4%"></th>';
 		}
 		// No topics.... just say, "sorry bub".
 		else
 			echo '
-						<th class="catbg3" colspan="7"><strong>', $txt['msg_alert_none'], '</strong></th>';
+							<th class="catbg3" colspan="7"><strong>', $txt['msg_alert_none'], '</strong></th>';
 
 		echo '
+							</tr>
 					</thead>';
 
 		if (!empty($settings['display_who_viewing']))
@@ -342,7 +344,7 @@ function template_main()
 	</form>';
 
 		echo '
-	<div id="modbuttons" class="clearfix marginbottom">
+	<div id="modbuttons_bottom" class="modbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
 		', template_button_strip($normal_buttons, 'top'), '
 	</div>';
