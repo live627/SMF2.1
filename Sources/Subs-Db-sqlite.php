@@ -92,6 +92,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	sqlite_create_function($connection, 'dayofmonth', 'smf_udf_dayofmonth', 1);
 	sqlite_create_function($connection, 'concat', 'smf_udf_concat');
 	sqlite_create_function($connection, 'locate', 'smf_udf_locate', 2);
+	sqlite_create_function($connection, 'regexp', 'smf_udf_regexp', 2);
 
 	return $connection;
 }
@@ -275,6 +276,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	// SQLite doesn't support count(distinct).
 	$db_string = trim($db_string);
 	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
+
+	// Or RLIKE.
+	$db_string = str_replace(' RLIKE ', ' REGEXP ', $db_string);
 
 	// INSTR?  No support for that buddy :(
 	if (preg_match('~INSTR\((.+?),\s(.+?)\)~', $db_string, $matches) === 1)
@@ -713,6 +717,14 @@ function smf_udf_concat()
 function smf_udf_locate($find, $string)
 {
 	return strpos($string, $find);
+}
+
+// This is used to replace RLIKE.
+function smf_udf_regexp($exp, $search)
+{
+	if (preg_match($exp, $match))
+		return 1;
+	return 0;
 }
 
 ?>
