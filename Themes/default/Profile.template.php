@@ -871,7 +871,7 @@ function template_showPermissions()
 					', $txt['showPermissions_restricted_boards_desc'], ':<br />';
 			foreach ($context['no_access_boards'] as $no_access_board)
 				echo '
-					<a href="', $scripturl, '?board=', $no_access_board['id'], '">', $no_access_board['name'], '</a>', $no_access_board['is_last'] ? '' : ', ';
+					<a href="', $scripturl, '?board=', $no_access_board['id'], '.0">', $no_access_board['name'], '</a>', $no_access_board['is_last'] ? '' : ', ';
 			echo '
 				</td>
 			</tr>';
