@@ -64,6 +64,7 @@ April 2008
  ! Tab image sizes meant too long or too short tabs were looking wrong. (mirrortab_first/last.gif, maintab_first/last.gif)
  ! Fixed some problems left on the message index. (MessageIndex template) [Bug 1932]
  ! Changed the way template_button_strip works to make it more efficient. (index template)
+ ! Fixed some validation issues in the updated theme templates. (BoardIndex template) [Bug 1922]
 
 
 March 2008
