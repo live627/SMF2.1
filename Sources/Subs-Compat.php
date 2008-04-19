@@ -30,9 +30,6 @@ if (!defined('SMF'))
 	versions.
 */
 
-if (@version_compare(PHP_VERSION, '4.2.0') == -1)
-	srand(time());
-
 if (!function_exists('md5_file'))
 {
 	function md5_file($filename)

@@ -2757,7 +2757,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 	if (isset($extra['topic']))
 	{
 		if (!is_numeric($extra['topic']))
-			trigger_error('logAction(): data\'s topic is not an number', E_USER_NOTICE);
+			trigger_error('logAction(): data\'s topic is not a number', E_USER_NOTICE);
 		$topic_id = empty($extra['topic']) ? '0' : (int)$extra['topic'];
 		unset($extra['topic']);
 	}
@@ -2765,12 +2765,12 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 		$topic_id = '0';
 
 	if (isset($extra['member']) && !is_numeric($extra['member']))
-		trigger_error('logAction(): data\'s member is not an number', E_USER_NOTICE);
+		trigger_error('logAction(): data\'s member is not a number', E_USER_NOTICE);
 
 	if (isset($extra['board']))
 	{
 		if (!is_numeric($extra['board']))
-			trigger_error('logAction(): data\'s board is not an number', E_USER_NOTICE);
+			trigger_error('logAction(): data\'s board is not a number', E_USER_NOTICE);
 		$board_id = empty($extra['board']) ? '0' : (int)$extra['board'];
 		unset($extra['board']);
 	}
@@ -2780,7 +2780,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 	if (isset($extra['board_to']))
 	{
 		if (!is_numeric($extra['board_to']))
-			trigger_error('logAction(): data\'s board_to is not an number', E_USER_NOTICE);
+			trigger_error('logAction(): data\'s board_to is not a number', E_USER_NOTICE);
 		if (empty($board_id))
 		{
 			$board_id = empty($extra['board_to']) ? '0' : (int)$extra['board_to'];
@@ -2791,7 +2791,7 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 	if (isset($extra['message']))
 	{
 		if (!is_numeric($extra['message']))
-			trigger_error('logAction(): data\'s message is not an number', E_USER_NOTICE);
+			trigger_error('logAction(): data\'s message is not a number', E_USER_NOTICE);
 		$msg_id = empty($extra['message']) ? '0' : (int)$extra['message'];
 		unset($extra['message']);
 	}
