@@ -436,11 +436,11 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 		}
 	}
 
-	// Make the last one, as easy as possible.
-	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
-
 	if (empty($buttons))
 		return empty($context['theme_updated']) ? '<td>&nbsp;</td>' : '';
+
+	// Make the last one, as easy as possible.
+	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
 	//!!! TEMP.
 	if (!empty($context['theme_updated']))
