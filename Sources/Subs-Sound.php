@@ -77,9 +77,39 @@ function createWaveFile($word)
 	$file_size = $data_size + 0x24;
 
 	// Add a little randomness.
-	for ($i = 0; $i < $data_size; $i += rand(1, 10))
-		$sound_word{$i} = chr(ord($sound_word{$i}) + rand(-1, 1));
+	$rand_type = 'noise';
+	$shift = 0;
+	$loop = 0;
+	for ($i = 0; $i < $data_size; $i++)
+	{
+		// Every 250 times think about changing something.
+		if ($i % 250 === 1)
+		{$loop++;
+			// Change the type...
+			if (rand(1, 20) > 15)
+			{
+				// If it's noise then change this bit.
+				$rand_type = 'noise';
+				$sound_word{$i} = chr(ord($sound_word{$i}) + rand(-10, 10));
+			}
+			else
+			{
+				$rand_type = 'shift';
+				// Change the shift?
+				if ($shift == 0 || rand(1, 100))
+					$shift = rand(-15, 15);
+			}
+		}
+		// Noise changes a lot.
+		elseif ($i % 10 && $rand_type == 'noise')
+		{
+			$sound_word{$i} = chr(ord($sound_word{$i}) + rand(-10, 10));
+		}
 
+		// Shift is constant.
+		if ($rand_type != 'noise')
+			$sound_word{$i} = chr(ord($sound_word{$i}) + $shift);
+	}
 	// Output the wav.
 	header('Content-type: audio/x-wav');
 	if (empty($context['browser']['is_ie']))

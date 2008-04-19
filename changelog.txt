@@ -60,6 +60,7 @@ April 2008
  ! Expanding message size wasn't working. (ManagePosts.php) [Bug 1918]
  ! Removed migrated templates from future theme directory as it will use default. (Several templates)
  ! LoadTemplate wasn't failling back to the default theme properly for style sheets. (Load.php) [Bug 1900]
+ ! Make the audio CAPTCHA harder to detect with scripts. (Subs-Sound.php)
 
 
 March 2008
