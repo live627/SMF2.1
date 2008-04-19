@@ -63,7 +63,7 @@ require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
 
 // Using an pre-PHP5 version?
-if (@version_compare(PHP_VERSION, '5') == -1)
+if (@version_compare(PHP_VERSION, '50') == -1)
 	require_once($sourcedir . '/Subs-Compat.php');
 
 // If $maintenance is set specifically to 2, then we're upgrading or something.
@@ -81,6 +81,10 @@ reloadSettings();
 // Clean the request variables, add slashes, etc.
 cleanRequest();
 $context = array();
+
+// Seed the random generator for PHP < 4.2.0.
+if (@version_compare(PHP_VERSION, '40.2.0') == -1)
+	smf_seed_generator();
 
 // Before we get carried away, are we doing a scheduled task? If so save CPU cycles by jumping out!
 if (isset($_GET['scheduled']))
