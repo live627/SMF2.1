@@ -219,7 +219,7 @@ if (!function_exists('array_combine'))
 }
 
 // Make sure random means random.
-if (@version_compare(PHP_VERSION, '40.2.0') == -1)
+if (@version_compare(PHP_VERSION, '4.2.0') == -1)
 {
 	function smf_seed_generator()
 	{
