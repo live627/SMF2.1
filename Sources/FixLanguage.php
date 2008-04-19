@@ -746,7 +746,6 @@ $txtChanges = array(
 		'smf120' => 'allowed_types',
 		'smf121' => 'max_size',
 		'smf123' => 'cant_upload_type',
-		'smf129' => 'to delete_blank',
 		'smf130' => 'uncheck_unwatchd_attach',
 		'smf130b' => 'restricted_filename',
 		'smf287' => 'topic_locked_no_reply',

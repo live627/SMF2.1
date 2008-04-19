@@ -92,7 +92,6 @@ $txt['attached'] = 'Attached';
 $txt['allowed_types'] = 'Allowed file types';
 $txt['max_size'] = 'Maximum attachment size allowed';
 $txt['cant_upload_type'] = 'You cannot upload that type of file. The only allowed extensions are';
-$txt['to delete_blank'] = 'To delete your attachment, leave this blank.';
 $txt['uncheck_unwatchd_attach'] = 'Uncheck the attachments you no longer want attached';
 $txt['restricted_filename'] = 'That is a restricted filename. Please try a different filename.';
 $txt['topic_locked_no_reply'] = 'Warning: topic is currently/will be locked!<br />Only admins and moderators can reply.';

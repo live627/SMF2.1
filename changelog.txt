@@ -65,6 +65,7 @@ April 2008
  ! Fixed some problems left on the message index. (MessageIndex template) [Bug 1932]
  ! Changed the way template_button_strip works to make it more efficient. (index template)
  ! Fixed some validation issues in the updated theme templates. (BoardIndex template) [Bug 1922]
+ & Removed unused language string, "to delete_blank". (Post language file) [Bug 1913]
 
 
 March 2008
