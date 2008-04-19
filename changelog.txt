@@ -58,6 +58,8 @@ April 2008
  ! Put the new message index template live into the default theme, and fix a few errors elsewhere. (forum.css, MessageIndex.php, style.css)
  ! SQLite doesn't support RLIKE, so make our own. (Subs-Db-sqlite.php) [Bug 1724]
  ! Expanding message size wasn't working. (ManagePosts.php) [Bug 1918]
+ ! Removed migrated templates from future theme directory as it will use default. (Several templates)
+ ! LoadTemplate wasn't failling back to the default theme properly for style sheets. (Load.php) [Bug 1900]
 
 
 March 2008

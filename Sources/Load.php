@@ -1623,7 +1623,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 
 		foreach ($style_sheets as $sheet)
 		{
-			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : (file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'default_theme_url' : '');
+			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : (file_exists($settings['default_theme_dir']. '/css/' . $sheet . '.css') ? 'default_theme_url' : '');
 			if ($sheet_path)
 			{
 				$context['html_headers'] .= '<link rel="stylesheet" type="text/css" id="' . $sheet . '_css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
