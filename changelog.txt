@@ -57,6 +57,7 @@ April 2008
  ! No search engine indexing for guest login screen thanks. (Security.php)
  ! Put the new message index template live into the default theme, and fix a few errors elsewhere. (forum.css, MessageIndex.php, style.css)
  ! SQLite doesn't support RLIKE, so make our own. (Subs-Db-sqlite.php) [Bug 1724]
+ ! Expanding message size wasn't working. (ManagePosts.php) [Bug 1918]
 
 
 March 2008

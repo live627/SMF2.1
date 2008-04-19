@@ -251,13 +251,13 @@ function ModifyPostSettings($return_config = false)
 				else
 				{
 					// Make it longer so we can do their limit.
-					$smcFunc['db_change_column']( $db_prefix . 'messages', 'body', array('type' => 'mediumtext'));
+					$smcFunc['db_change_column']('messages', 'body', array('type' => 'mediumtext'));
 				}
 			}
 			elseif (isset($body_type) && $_POST['max_messageLength'] <= 65535 && $body_type != 'text')
 			{
 				// Shorten the column so we can have the benefit of fulltext searching again!
-				$smcFunc['db_change_column']( $db_prefix . 'messages', 'body', array('type' => 'text'));
+				$smcFunc['db_change_column']('messages', 'body', array('type' => 'text'));
 			}
 		}
 
