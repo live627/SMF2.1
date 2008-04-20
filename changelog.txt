@@ -70,6 +70,7 @@ April 2008
  ! On PHP 4.2.0 seed the random generator. (Subs-Compat.php, index.php)
  ! Remove HTML recursively from normal user's posts. (Subs-Post.php)
  ! Custom profile fields wouldn't play nice in non-latin languages. (ManageSettings.php) [Bug 1885]
+ ! Added some more randomization to CAPTCHA sound. (Subs-Sound.php) [Bug 1920]
 
 
 March 2008
