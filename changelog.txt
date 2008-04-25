@@ -84,6 +84,8 @@ April 2008
  * Reattribute post template was invalid, and making it unusable in Firefox. (ManageMaintenance template) [Bug 1916]
  ! Custom profile fields can now be marked as editable by the owner and admin only, invisible to users. (ManageSettings.php, Profile.php, Profile-Modify.php, ManageSettings language file) [Feature 1901]
  ! Stats had an unnecessary group in the query. (Stats.php) [Bug 1830]
+ ! Tabs were not being displayed right with code blocks in firefox. (Subs.php) [Bug 1944]
+ ! The nobbc was getting auto closed too many times. (Subs-Editor.php) [Bug 1831]
 
 
 March 2008

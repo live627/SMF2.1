@@ -1104,6 +1104,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$data = str_replace("\t", "<pre style=\"display: inline;\">\t</pre>", $data);
 						elseif (!$context[\'browser\'][\'is_gecko\'])
 							$data = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data);
+						else
+							$data = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $data);
 					}'),
 				'block_level' => true,
 			),
@@ -1142,6 +1144,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$data = str_replace("\t", "<pre style=\"display: inline;\">\t</pre>", $data);
 						elseif (!$context[\'browser\'][\'is_gecko\'])
 							$data = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data);
+						else
+							$data = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $data);
 					}'),
 				'block_level' => true,
 			),

@@ -956,12 +956,17 @@ function legalise_bbc($text)
 								$new_text = substr($new_text, 0, $tag_offset) . substr($new_text, $tag_offset + strlen('[/' . $matches[1] . ']'));
 
 						}
-						$active_tags[$matches[1]][] = $matches[0];
-						$tag = array(
-							'type' => $matches[1],
-							'content' => $matches[0],
-						);
-						array_push($current_tags, $tag);
+
+						// As long as it's not nobbc, track it.
+						if ($matches[1] != 'nobbc')
+						{
+							$active_tags[$matches[1]][] = $matches[0];
+							$tag = array(
+								'type' => $matches[1],
+								'content' => $matches[0],
+							);
+							array_push($current_tags, $tag);
+						}
 					}
 					// If it's a block level then we need to close all active tags and reopen them!
 					elseif (!$in_code_nobbc)
