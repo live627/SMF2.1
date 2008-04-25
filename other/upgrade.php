@@ -825,8 +825,7 @@ function loadEssentialData()
 	}
 	else
 	{
-		throw_error('Cannot find ' . $sourcedir . '/Subs-Db-' . $db_type . '.php' . '. Please check you have uploaded all source files and have the correct paths set.');
-		return false;
+		return throw_error('Cannot find ' . $sourcedir . '/Subs-Db-' . $db_type . '.php' . '. Please check you have uploaded all source files and have the correct paths set.');
 	}
 
 	// If they don't have the file, they're going to get a warning anyway so we won't need to clean request vars.
@@ -917,39 +916,25 @@ function WelcomeLogin()
 		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
 
 	if (!$check)
-	{
 		// Don't tell them what files exactly because it's a spot check - just like teachers don't tell which problems they are spot checking, that's dumb.
-		throw_error('The upgrader was unable to find some crucial files.<br /><br />Please make sure you uploaded all of the files included in the package, including the Themes, Sources, and other directories.');
-		return false;
-	}
+		return throw_error('The upgrader was unable to find some crucial files.<br /><br />Please make sure you uploaded all of the files included in the package, including the Themes, Sources, and other directories.');
 
 	// Do they meet the install requirements?
 	if (!php_version_check())
-	{
-		throw_error('Warning!  You do not appear to have a version of PHP installed on your webserver that meets SMF\'s minimum installations requirements.<br /><br />Please ask your host to upgrade.');
-		return false;
-	}
+		return throw_error('Warning!  You do not appear to have a version of PHP installed on your webserver that meets SMF\'s minimum installations requirements.<br /><br />Please ask your host to upgrade.');
+
 	if (!db_version_check())
-	{
-		throw_error('Your ' . $databases[$db_type]['name'] . ' version does not meet the minimum requirements of SMF.<br /><br />Please ask your host to upgrade.');
-		return false;
-	}
+		return throw_error('Your ' . $databases[$db_type]['name'] . ' version does not meet the minimum requirements of SMF.<br /><br />Please ask your host to upgrade.');
 
 	// Do they have ALTER privileges?
 	if (!empty($databases[$db_type]['alter_support']) && $smcFunc['db_query']('alter_boards', 'ALTER TABLE {db_prefix}boards ORDER BY id_board', array()) === false)
-	{
-		throw_error('The ' . $databases[$db_type]['name'] . ' user you have set in Settings.php does not have proper privileges.<br /><br />Please ask your host to give this user the ALTER, CREATE, and DROP privileges.');
-		return false;
-	}
+		return throw_error('The ' . $databases[$db_type]['name'] . ' user you have set in Settings.php does not have proper privileges.<br /><br />Please ask your host to give this user the ALTER, CREATE, and DROP privileges.');
 
 	// Do a quick version spot check.
 	$temp = substr(@implode('', @file($boarddir . '/index.php')), 0, 4096);
 	preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $temp, $match);
 	if (empty($match[1]) || $match[1] != SMF_VERSION)
-	{
-		throw_error('The upgrader found some old or outdated files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package.');
-		return false;
-	}
+		return throw_error('The upgrader found some old or outdated files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package.');
 
 	// What absolutely needs to be writable?
 	$writable_files = array(
@@ -962,10 +947,8 @@ function WelcomeLogin()
 	if (!file_exists($cachedir_temp))
 		@mkdir($cachedir_temp);
 	if (!file_exists($cachedir_temp))
-	{
-		throw_error('The cache directory could not be found.<br /><br />Please make sure you have a directory called &quot;cache&quot; in your forum directory before continuing.');
-		return false;
-	}
+		return throw_error('The cache directory could not be found.<br /><br />Please make sure you have a directory called &quot;cache&quot; in your forum directory before continuing.');
+
 	$writable_files[] = $cachedir_temp;
 
 	if (!makeFilesWritable($writable_files))
@@ -973,10 +956,8 @@ function WelcomeLogin()
 
 	// Check agreement.txt. (it may not exist, in which case $boarddir must be writable.)
 	if (isset($modSettings['agreement']) && (!is_writable($boarddir) || file_exists($boarddir . '/agreement.txt')) && !is_writable($boarddir . '/agreement.txt'))
-	{
-		throw_error('The upgrader was unable to obtain write access to agreement.txt.<br /><br />If you are using a linux or unix based server, please ensure that the file is chmod\'d to 777, or if it does not exist that the directory this upgrader is in is 777.<br />If your server is running Windows, please ensure that the internet guest account has the proper permissions on it or its folder.');
-		return false;
-	}
+		return throw_error('The upgrader was unable to obtain write access to agreement.txt.<br /><br />If you are using a linux or unix based server, please ensure that the file is chmod\'d to 777, or if it does not exist that the directory this upgrader is in is 777.<br />If your server is running Windows, please ensure that the internet guest account has the proper permissions on it or its folder.');
+
 	// Upgrade the agreement.
 	elseif (isset($modSettings['agreement']))
 	{
@@ -1001,20 +982,14 @@ function WelcomeLogin()
 		return true;
 
 	if (!file_exists($boarddir . '/Themes/default/languages/index.' . basename($language, '.lng') . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
-	{
-		throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
-		return false;
-	}
+		return throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
 	elseif (!isset($_GET['skiplang']))
 	{
 		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . (basename($upcontext['language'], '.lng')) . '.php')), 0, 4096);
 		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
 
 		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
-		{
-			throw_error('The upgrader found some old or outdated language files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme. [<a href="' . $upgradeurl . '?skiplang">SKIP</a>]');
-			return false;
-		}
+			return throw_error('The upgrader found some old or outdated language files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme. [<a href="' . $upgradeurl . '?skiplang">SKIP</a>]');
 	}
 
 	return false;
@@ -1082,6 +1057,9 @@ function checkLogin()
 				$groups = explode(',', $addGroups);
 				$groups[] = $id_group;
 
+				foreach ($groups as $k => $v)
+					$groups[$k] = (int) $v;
+
 				// Figure out the password using SMF's encryption - if what they typed is right.
 				if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
 				{
@@ -1144,7 +1122,7 @@ function checkLogin()
 						)
 					);
 					if ($smcFunc['db_num_rows']($request) == 0)
-						throw_error('You need to be an admin to perform an upgrade!');
+						return throw_error('You need to be an admin to perform an upgrade!');
 					$smcFunc['db_free_result']($request);
 				}
 
@@ -3189,6 +3167,8 @@ function throw_error($message)
 
 	$upcontext['error_msg'] = $message;
 	$upcontext['sub_template'] = 'error_message';
+
+	return false;
 }
 
 // Check files are writable - make them writable if necessary...

@@ -610,7 +610,7 @@ function PackageDownload()
 	elseif ($context['package']['type'] == 'avatar')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'language')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_laguages'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_languages'] . ' ]</a>';
 	else
 		$context['package']['install']['link'] = '';
 
@@ -671,7 +671,7 @@ function PackageUpload()
 	elseif ($context['package']['type'] == 'avatar')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'language')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_laguages'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_languages'] . ' ]</a>';
 	else
 		$context['package']['install']['link'] = '';
 
