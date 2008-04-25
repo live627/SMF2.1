@@ -81,6 +81,7 @@ April 2008
  ! The spider display setting was unclean and not working right. (Who.php, Search language file) [Bug 1940]
  ! Added CSS class, "normallist", for standard list - that do need formatting. (style.css, Help language file)
  * Link to the right section of the post approval centre when clicking the board/message index link. (BoardIndex, MessageIndex templates) [Bug 1929]
+ * Reattribute post template was invalid, and making it unusable in Firefox. (ManageMaintenance template) [Bug 1916]
 
 
 March 2008
