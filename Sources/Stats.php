@@ -468,7 +468,6 @@ function DisplayStats()
 		SELECT id_member, real_name
 		FROM {db_prefix}members
 		WHERE id_member IN ({array_int:member_list})
-		GROUP BY id_member, real_name
 		ORDER BY FIND_IN_SET(id_member, {string:top_topic_posters})
 		LIMIT 10',
 		array(
