@@ -11,7 +11,7 @@ $latest_news = Array(
 	array(
 		'time' => 1205781621,
 
-		'subject_english' => 'SMF 2.0 Beta 3 Public Released',
+		'subject_english' => 'SMF 2.0 Beta 4 Released',
 		'message_english' => 'Simple Machines are very pleased to annouce the release of the first public beta of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=228921.0',
 		'author_english' => 'Grudge',
@@ -172,18 +172,18 @@ $latest_news = Array(
 	array(
 		'time' => 1120005510,
 
-		'subject_english' => 'SMF 1.1 Beta 3 Public',
+		'subject_english' => 'SMF 1.1 Beta 4',
 		'message_english' => 'The first public beta of SMF 1.1 has been released!  Please read the announcement for details - and only update if you are certain you are comfortable with beta software.  There is no package manager style update for this version.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=40085.0',
 		'author_english' => '[Unknown]',
 
-		'subject_finnish' => 'SMF 1.1 Beta 3 Public',
+		'subject_finnish' => 'SMF 1.1 Beta 4',
 		'message_finnish' => 'Ensimmäinen julkinen beta SMF 1.1:stä on julkaistu! Ole hyvä ja lue tiedotteesta tarkemmin - ja päivitä vain jos olet varma että haluat käyttää beta vaiheessa olevaa ohjelmistoa.  Tähän versioon ei voi päivittää pakettien hallinnan kautta.',
 
 		'subject_french' => 'SMF 1.1 Beta 3 &Eacute;dition Publique',
 		'message_french' => 'La premi&egrave;re version beta publique de SMF 1.1 est sortie&nbsp;!  Veuillez lire le sujet d\'annonces pour plus de d&eacute;tails - et veuillez ne mettre &agrave; jour votre forum que si vous &ecirc;tes confortable avec les logiciels en version de test.  Il n\'y a aucune mise &agrave; jour via le Gestionnaire de paquets possible pour cette version.',
 
-		'subject_german' => 'SMF 1.1 Beta 3 Public',
+		'subject_german' => 'SMF 1.1 Beta 4',
 		'message_german' => 'Die erste &ouml;ffentliche Beta von SMF 1.1 steht zum Download bereit! Bitte lesen Sie das Ank&uuml;ndigungsthema f&uuml;r weitere Informationen und aktualisieren Sie Ihr Forum nur, wenn Sie sich mit Beta Software gen&uuml;gend auskennen! F&uuml;r diese Version gibt es kein Paket-Manager Update.',
 	),
 

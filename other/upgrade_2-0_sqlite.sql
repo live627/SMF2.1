@@ -75,6 +75,13 @@ if (!in_array('can_search', array_keys($row)))
 	);
 	$smcFunc['db_transaction']('commit');
 }
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] < '2.0 Beta 4')
+{
+upgrade_query("
+	UPDATE {$db_prefix}custom_fields
+	SET private = 3
+	WHERE private = 2");
+}
 ---}
 ---#
 

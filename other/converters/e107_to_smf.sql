@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "e107"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3 Public"
+---~ version: "SMF 2.0 Beta 4"
 ---~ settings: "/e107_config.php"
 ---~ from_prefix: "`$mySQLdefaultdb`.$mySQLprefix"
 ---~ table_test: "{$from_prefix}user"

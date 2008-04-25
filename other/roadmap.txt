@@ -3,7 +3,7 @@ Tentative Roadmap for SMF 1.1:
 
 SMF 1.1 RC2
 --------------------------------------------------------------------------------
- - resolve any bugs found in Beta 3 or Beta 3 Public.
+ - resolve any bugs found in Beta 3 or Beta 4.
  - clean up and split some templates to make it easier to modify themes.
  - more comments and better organized code, aka code review.
  - attempt to track down any and all possible injections, and fix them.

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 3 Public                               *
+* Software Version:           SMF 2.0 Beta 4                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -418,13 +418,13 @@ function MLSearch()
 		SELECT col_name, field_name, field_desc
 		FROM {db_prefix}custom_fields
 		WHERE active = {int:active}
-			' . (allowedTo('admin_forum') ? '' : ' AND private != {int:private}') . '
+			' . (allowedTo('admin_forum') ? '' : ' AND private < {int:private_level}') . '
 			AND can_search = {int:can_search}
 			AND (field_type = {string:field_type_text} OR field_type = {string:field_type_textarea})',
 		array(
 			'active' => 1,
 			'can_search' => 1,
-			'private' => 2,
+			'private_level' => 2,
 			'field_type_text' => 'text',
 			'field_type_textarea' => 'textarea',
 		)

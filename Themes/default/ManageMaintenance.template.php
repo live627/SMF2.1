@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; ManageMaintenance
+// Version: 2.0 Beta 4; ManageMaintenance
 
 // Template for forum maintenance page.
 function template_maintain()

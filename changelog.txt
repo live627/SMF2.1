@@ -82,6 +82,7 @@ April 2008
  ! Added CSS class, "normallist", for standard list - that do need formatting. (style.css, Help language file)
  * Link to the right section of the post approval centre when clicking the board/message index link. (BoardIndex, MessageIndex templates) [Bug 1929]
  * Reattribute post template was invalid, and making it unusable in Firefox. (ManageMaintenance template) [Bug 1916]
+ ! Custom profile fields can now be marked as editable by the owner and admin only, invisible to users. (ManageSettings.php, Profile.php, Profile-Modify.php, ManageSettings language file) [Feature 1901]
 
 
 March 2008

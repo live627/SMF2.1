@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; Reports
+// Version: 2.0 Beta 4; Reports
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

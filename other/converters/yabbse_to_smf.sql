@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "YaBB SE 1.5.x"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3 Public"
+---~ version: "SMF 2.0 Beta 4"
 ---~ settings: "/Settings.php"
 ---~ from_prefix: "`$db_name`.$db_prefix"
 ---~ globals: language, timeout, timeoffset, MembersPerPage, Show_RecentBar, userpic_width, userpic_height

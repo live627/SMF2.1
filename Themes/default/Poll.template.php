@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; Poll
+// Version: 2.0 Beta 4; Poll
 
 function template_main()
 {

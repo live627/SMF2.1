@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Phorum 5"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3 Public"
+---~ version: "SMF 2.0 Beta 4"
 ---~ defines: PHORUM
 ---~ settings: "/include/db/config.php"
 ---~ from_prefix: "`{$PHORUM['DBCONFIG']['name']}`.{$PHORUM['DBCONFIG']['table_prefix']}_"

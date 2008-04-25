@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; ManageSettings
+// Version: 2.0 Beta 4; ManageSettings
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
@@ -225,6 +225,7 @@ $txt['custom_edit_privacy'] = 'Privacy';
 $txt['custom_edit_privacy_desc'] = 'Who can see and edit this field.';
 $txt['custom_edit_privacy_all'] = 'Users can see this field; owner can edit it';
 $txt['custom_edit_privacy_see'] = 'Users can see this field; only admins can edit it';
+$txt['custom_edit_privacy_owner'] = 'Users cannot see this field; owner and admins can edit it.';
 $txt['custom_edit_privacy_none'] = 'This field is only visible to admins';
 $txt['custom_edit_can_search'] = 'Searchable';
 $txt['custom_edit_can_search_desc'] = 'Can this field be searched from the members list.';

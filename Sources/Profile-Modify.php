@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 3 Public                               *
+* Software Version:           SMF 2.0 Beta 4                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -1202,7 +1202,7 @@ function makeCustomFieldChanges($memID, $area)
 	$log_changes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if ($row['private'] != 0 && !allowedTo('admin_forum') && ($area != 'register' || $row['show_reg'] == 0))
+		if ($row['private'] != 0 && (!allowedTo('admin_forum') || ($memID == $user_info['id'] && $row['private'] == 2)) && ($area != 'register' || $row['show_reg'] == 0))
 			continue;
 
 		// Validate the user data.

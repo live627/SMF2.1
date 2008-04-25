@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; Admin
+// Version: 2.0 Beta 4; Admin
 
 // This is the administration center home.
 function template_admin()
@@ -1042,6 +1042,7 @@ function template_edit_profile_field()
 		function updateInputBoxes()
 		{
 			curType = document.getElementById("field_type").value;
+			privStatus = document.getElementById("private").value;
 			document.getElementById("max_length_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
 			document.getElementById("dimension_div").style.display = curType == "textarea" ? "" : "none";
 			document.getElementById("bbc_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
@@ -1052,7 +1053,7 @@ function template_edit_profile_field()
 			document.getElementById("regex_div").style.display = curType == "text" && document.getElementById("mask").value == "regex" ? "" : "none";
 			document.getElementById("display").disabled = false;
 			// Cannot show this on the topic
-			if (curType == "textarea")
+			if (curType == "textarea" || privStatus >= 2)
 			{
 				document.getElementById("display").checked = false;
 				document.getElementById("display").disabled = true;
@@ -1193,10 +1194,11 @@ function template_edit_profile_field()
 					<div class="smalltext">', $txt['custom_edit_privacy_desc'], '</div>
 				</td>
 				<td width="50%">
-					<select name="private" id="private">
+					<select name="private" id="private" onchange="updateInputBoxes();">
 						<option value="0" ', $context['field']['private'] == 0 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_all'], '</option>
 						<option value="1" ', $context['field']['private'] == 1 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_see'], '</option>
-						<option value="2" ', $context['field']['private'] == 2 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_none'], '</option>
+						<option value="2" ', $context['field']['private'] == 2 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_owner'], '</option>
+						<option value="3" ', $context['field']['private'] == 3 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_none'], '</option>
 					</select>
 				</td>
 			</tr><tr class="windowbg2" id="can_search_div">

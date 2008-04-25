@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "PunBB 1.2.5"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3 Public"
+---~ version: "SMF 2.0 Beta 4"
 ---~ settings: "/config.php"
 ---~ from_prefix: "`$db_name`.$db_prefix"
 ---~ table_test: "{$from_prefix}users"

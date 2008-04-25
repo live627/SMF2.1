@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; Settings
+// Version: 2.0 Beta 4; Settings
 
 function template_options()
 {

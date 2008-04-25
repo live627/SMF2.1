@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 3 Public                               *
+* Software Version:           SMF 2.0 Beta 4                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -507,12 +507,18 @@ function ModifyProfile($post_errors = array())
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.
 function loadCustomFields($memID, $area = 'summary')
 {
-	global $context, $txt, $user_profile, $smcFunc;
+	global $context, $txt, $user_profile, $smcFunc, $user_info;
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';
 	if (!allowedTo('admin_forum') && $area != 'register')
-		$where .= $area == 'summary' ? ' AND private != 2' : ' AND private = 0';
+	{
+		// If it's the owner they can see two types of private fields, regardless.
+		if ($memID == $user_info['id'])
+			$where .= $area == 'summary' ? ' AND private < 3' : ' AND (private = 0 OR private = 2)';
+		else
+			$where .= $area == 'summary' ? ' AND private < 2' : ' AND private = 0';
+	}
 
 	if ($area == 'register')
 		$where .= ' AND show_reg != 0';

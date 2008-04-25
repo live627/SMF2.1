@@ -266,7 +266,7 @@ if (@$modSettings['smfVersion'] < '1.1')
 		VALUES ('disableHashTime', " . (time() + 7776000) . ")");
 }
 
-if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '1.1 Beta 3 Public')
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '1.1 Beta 4')
 {
 	// Enable the buddy list for those used to it.
 	upgrade_query("

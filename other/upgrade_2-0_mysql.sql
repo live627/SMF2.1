@@ -823,6 +823,13 @@ upgrade_query("
 	SET private = 2
 	WHERE private = 1");
 }
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] < '2.0 Beta 4')
+{
+upgrade_query("
+	UPDATE {$db_prefix}custom_fields
+	SET private = 3
+	WHERE private = 2");
+}
 ---}
 ---#
 

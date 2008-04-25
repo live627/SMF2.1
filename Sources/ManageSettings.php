@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 3 Public                               *
+* Software Version:           SMF 2.0 Beta 4                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -1790,11 +1790,13 @@ function EditCustomProfiles()
 			FROM {db_prefix}custom_fields
 			WHERE show_display = {int:is_displayed}
 				AND active = {int:active}
+				AND private != {int:not_owner_only}
 				AND private != {int:not_admin_only}',
 			array(
 				'is_displayed' => 1,
 				'active' => 1,
-				'not_admin_only' => 2,
+				'not_owner_only' => 2,
+				'not_admin_only' => 3,
 			)
 		);
 

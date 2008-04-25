@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 3 Public; Memberlist
+// Version: 2.0 Beta 4; Memberlist
 
 // Displays a sortable listing of all members registered on the forum.
 function template_main()

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "OpenBB 1.0.x"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 3 Public"
+---~ version: "SMF 2.0 Beta 4"
 ---~ settings: "/lib/sqldata.php"
 ---~ from_prefix: "`{$database_server['database']}`.{$database_server['prefix']}"
 ---~ table_test: "{$from_prefix}profiles"
