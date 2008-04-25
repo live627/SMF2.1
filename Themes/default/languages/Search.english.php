@@ -118,11 +118,11 @@ $txt['spider_settings_desc'] = 'You can change settings for spider tracking from
 $txt['spider_group'] = 'Apply restrictive permissions from group<div class="smalltext">To enable you to stop spiders indexing some pages.</div>';
 $txt['spider_group_none'] = 'Disabled';
 
-$txt['show_spider_online'] = 'Show spiders in who\'s online list';
+$txt['show_spider_online'] = 'Show spiders in the online list';
 $txt['show_spider_online_no'] = 'Not at all';
 $txt['show_spider_online_summary'] = 'Show spider quantity';
-$txt['show_spider_online_detail'] = 'Show spider details';
-$txt['show_spider_online_detail_admin'] = 'Show spider details - admin only';
+$txt['show_spider_online_detail'] = 'Show spider names';
+$txt['show_spider_online_detail_admin'] = 'Show spider names - admin only';
 
 $txt['spider_name'] = 'Spider Name';
 $txt['spider_last_seen'] = 'Last Seen';

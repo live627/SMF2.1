@@ -116,6 +116,17 @@ ul, ul li
 	list-style: none;
 }
 
+/* We can define lists to be lists tho! */
+ul.normallist
+{
+	padding-left:	2em;
+}
+
+ul.normallist li
+{
+	list-style: disc;
+}
+
 /* NOTE: REMOVE THIS??!?!?!! */
 /* But do use them in the posts area! */
 .post ul

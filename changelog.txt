@@ -76,6 +76,10 @@ April 2008
  ! Send some very basic traceback info on a solid error in the database - very basic. (Subs-Db-xxx.php)
  ! If you were not an admin and you tried to do an upgrade you simply got a database error. (upgrade.php) [Bug 1946]
  ! Added some temporary images to get tabs looking right in non-upgraded themes, other tweaks. (forum.css, maintab_first_prev.gif (etc))
+ - Removed noindex from wireless pages as it will stop mobile indexers. (Wireless template)
+ ! Always clean the language class when debugging. (Subs.php)
+ ! The spider display setting was unclean and not working right. (Who.php, Search language file) [Bug 1940]
+ ! Added CSS class, "normallist", for standard list - that do need formatting. (style.css, Help language file)
 
 
 March 2008

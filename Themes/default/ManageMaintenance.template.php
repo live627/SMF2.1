@@ -22,7 +22,7 @@ function template_maintain()
 			<tr>
 				<td class="windowbg2" style="line-height: 1.3; padding-bottom: 2ex;">
 					', $txt['maintain_common_task_database'], ':
-					<ul style="margin-top: 0px; margin-bottom: 0px;">
+					<ul class="normallist" style="margin-top: 0px; margin-bottom: 0px;">
 						<li>
 							<a href="', $scripturl, '?action=admin;area=maintain;sa=optimize;sesc=', $context['session_id'], '">', $txt['maintain_optimize'], '</a><br />
 						</li>
@@ -31,7 +31,7 @@ function template_maintain()
 						</li>
 					</ul>
 					', $txt['maintain_common_task_routine'], ':
-					<ul style="margin-top: 0px; margin-bottom: 0px;">
+					<ul class="normallist" style="margin-top: 0px; margin-bottom: 0px;">
 						<li>
 							<a href="', $scripturl, '?action=admin;area=maintain;sa=version">', $txt['maintain_version'], '</a><br />
 						</li>
@@ -43,7 +43,7 @@ function template_maintain()
 						</li>
 					</ul>
 					', $txt['maintain_common_task_members'], ':
-					<ul style="margin-top: 0px; margin-bottom: 0px;">
+					<ul class="normallist" style="margin-top: 0px; margin-bottom: 0px;">
 						<li>
 							<a href="', $scripturl, '?action=admin;area=maintain;sa=admintask;activity=maintain_members;sesc=', $context['session_id'], '">', $txt['maintain_members'], '</a><br />
 						</li>
@@ -52,7 +52,7 @@ function template_maintain()
 						</li>
 					</ul>
 					', $txt['maintain_common_task_topics'], ':
-					<ul style="margin-top: 0px; margin-bottom: 0px;">
+					<ul class="normallist" style="margin-top: 0px; margin-bottom: 0px;">
 						<li>
 							<a href="', $scripturl, '?action=admin;area=maintain;sa=admintask;activity=maintain_old;sesc=', $context['session_id'], '">', $txt['maintain_old'], '</a><br />
 						</li>
@@ -61,7 +61,7 @@ function template_maintain()
 						</li>
 					</ul>
 					', $txt['maintain_common_task_misc'], ':
-					<ul style="margin-top: 0px; margin-bottom: 0px;">
+					<ul class="normallist" style="margin-top: 0px; margin-bottom: 0px;">
 						<li>
 							<a href="', $scripturl, '?action=admin;area=maintain;sa=logs;sesc=', $context['session_id'], '">', $txt['maintain_logs'], '</a><br />', $context['convert_utf8'] ? '
 						</li>
