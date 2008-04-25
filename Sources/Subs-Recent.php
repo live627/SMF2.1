@@ -54,7 +54,7 @@ function getLastPosts($latestPostOptions)
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $latestPostOptions['number_posts'],
 		array(
-			'likely_max_msg' => max(0, $modSettings['maxMsgID'] - 20 * $latestPostOptions['number_posts']),
+			'likely_max_msg' => max(0, $modSettings['maxMsgID'] - 50 * $latestPostOptions['number_posts']),
 			'recycle_board' => $modSettings['recycle_board'],
 			'is_approved' => 1,
 		)
@@ -105,7 +105,7 @@ function cache_getLastPosts($latestPostOptions)
 {
 	return array(
 		'data' => getLastPosts($latestPostOptions),
-		'expires' => time() + 120,
+		'expires' => time() + 60,
 		'post_retri_eval' => '
 			foreach ($cache_block[\'data\'] as $k => $post)
 			{
