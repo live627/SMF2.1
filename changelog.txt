@@ -75,6 +75,7 @@ April 2008
  & Minor typo in language string index. (PackageGet.php, FixLanguage.php, Packages language file) [Bug 1948]
  ! Send some very basic traceback info on a solid error in the database - very basic. (Subs-Db-xxx.php)
  ! If you were not an admin and you tried to do an upgrade you simply got a database error. (upgrade.php) [Bug 1946]
+ ! Added some temporary images to get tabs looking right in non-upgraded themes, other tweaks. (forum.css, maintab_first_prev.gif (etc))
 
 
 March 2008

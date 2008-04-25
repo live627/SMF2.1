@@ -717,7 +717,7 @@ a.moderation_link, a.moderation_link:visited
 
 .maintab_first
 {
-	background: url(images/maintab_first.gif) left bottom no-repeat;
+	background: url(images/maintab_first_prev.gif) left bottom no-repeat;
 	width: 10px;
 }
 .maintab_back
@@ -726,7 +726,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .maintab_last
 {
-	background: url(images/maintab_last.gif) left bottom no-repeat;
+	background: url(images/maintab_last_prev.gif) left bottom no-repeat;
 	width: 8px;
 }
 .maintab_active_first
@@ -775,7 +775,7 @@ a.moderation_link, a.moderation_link:visited
 
 .mirrortab_first
 {
-	background: url(images/mirrortab_first.gif) no-repeat;
+	background: url(images/mirrortab_first_prev.gif) no-repeat;
 	width: 10px;
 }
 .mirrortab_back
@@ -784,7 +784,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .mirrortab_last
 {
-	background: url(images/mirrortab_last.gif) no-repeat;
+	background: url(images/mirrortab_last_prev.gif) no-repeat;
 	width: 6px;
 }
 .mirrortab_active_first

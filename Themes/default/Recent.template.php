@@ -54,7 +54,9 @@ function template_main()
 			echo '
 			<table cellpadding="0" cellspacing="0" align="right" style="margin-right: 2ex;">
 				<tr>
-					', template_button_strip($button_set, 'top', true), '
+					<td>
+						', template_button_strip($button_set, 'top', true), '
+					</td>
 				</tr>
 			</table><br />';
 		}
@@ -99,11 +101,7 @@ function template_unread()
 		<tr>
 			<td>', theme_linktree(), '</td>
 		</tr>
-	</table>
-
-	<table border="0" width="100%" cellpadding="0" cellspacing="0">
-		<tr>
-			<td class="middletext" valign="middle">' . $txt['pages'] . ': ' . $context['page_index'] . '</td>';
+	</table>';
 
 	if ($settings['show_mark_read'])
 	{
@@ -117,21 +115,14 @@ function template_unread()
 				'text' => 'quick_mod_markread',
 				'image' => 'markselectedread.gif',
 				'lang' => true,
-				'url' => '{SUBMIT}',
+				'url' => 'javascript:document.quickModForm.submit();',
 			);
-
-		echo '
-			<td align="right" style="padding-right: 1ex;">
-				<table border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						', template_button_strip($mark_read, 'bottom'), '
-					</tr>
-				</table>
-			</td>';
 	}
 	echo '
-		</tr>
-	</table>
+	<div id="readbuttons_top" class="readbuttons clearfix margintop">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
+		', !empty($mark_read) ? template_button_strip($mark_read, 'bottom') : '', '
+	</div>
 
 	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor">
 		<tr><td>
@@ -214,23 +205,11 @@ function template_unread()
 			</table>
 		</td></tr>
 	</table>
-
-	<table border="0" width="100%" cellpadding="0" cellspacing="0">
-		<tr>
-			<td class="middletext" valign="middle">', $txt['pages'], ': ', $context['page_index'], '</td>';
-
-	if ($settings['show_mark_read'])
-		echo '
-			<td align="right" style="padding-right: 1ex;">
-				<table border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						', template_button_strip($mark_read, 'top'), '
-					</tr>
-				</table>
-			</td>';
-		echo '
-		</tr>
-	</table><br />';
+	<div id="readbuttons_bottom" class="readbuttons clearfix marginbottom">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
+		', !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
+	</div>
+	<br />';
 
 	if ($showCheckboxes)
 		echo '
@@ -269,16 +248,6 @@ function template_replies()
 		<input type="hidden" name="qaction" value="markread" />
 		<input type="hidden" name="redirect_url" value="action=unreadreplies;start=', $context['start'], (!empty($context['showing_all_topics']) ? ';all' : ''), '" />';
 
-	echo '
-	<table width="100%" border="0" cellspacing="0" cellpadding="3" align="center">
-		<tr>
-			<td>', theme_linktree(), '</td>
-		</tr>
-	</table>
-
-	<table border="0" width="100%" cellpadding="0" cellspacing="0">
-		<tr>
-			<td class="middletext" valign="middle">' . $txt['pages'] . ': ' . $context['page_index'] . '</td>';
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 	{
 		$mark_read = array(
@@ -290,21 +259,14 @@ function template_replies()
 				'text' => 'quick_mod_markread',
 				'image' => 'markselectedread.gif',
 				'lang' => true,
-				'url' => '{SUBMIT}',
+				'url' => 'javascript:document.quickModForm.submit();',
 			);
-
-		echo '
-			<td align="right" style="padding-right: 1ex;">
-				<table border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						', template_button_strip($mark_read, 'bottom'), '
-					</tr>
-				</table>
-			</td>';
 	}
 	echo '
-		</tr>
-	</table>
+	<div id="readbuttons_top" class="readbuttons clearfix margintop">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
+		', !empty($mark_read) ? template_button_strip($mark_read, 'bottom') : '', '
+	</div>
 
 	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor">
 		<tr><td>
@@ -376,22 +338,11 @@ function template_replies()
 			</table>
 		</td></tr>
 	</table>
-
-	<table border="0" width="100%" cellpadding="0" cellspacing="0">
-		<tr>
-			<td class="middletext" valign="middle">' . $txt['pages'] . ': ' . $context['page_index'] . '</td>';
-	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
-		echo '
-			<td align="right" style="padding-right: 1ex;">
-				<table border="0" cellpadding="0" cellspacing="0">
-					<tr>
-						', template_button_strip($mark_read, 'top'), '
-					</tr>
-				</table>
-			</td>';
-	echo '
-		</tr>
-	</table><br />';
+	<div id="readbuttons_bottom" class="readbuttons clearfix marginbottom">
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
+		', !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
+	</div>
+	<br />';
 
 	if ($showCheckboxes)
 		echo '

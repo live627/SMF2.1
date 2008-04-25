@@ -428,12 +428,7 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 	foreach ($button_strip as $key => $value)
 	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-		{
-			if ($value['url'] === '{SUBMIT}')
-				$buttons[] = '<input type="submit" value="' . (isset($value['custom']) ? $value['custom'] : '') . $txt[$value['text']] . '" class="button_strip_submit" />';
-			else
-				$buttons[] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
-		}
+			$buttons[] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 	}
 
 	if (empty($buttons))
@@ -443,19 +438,14 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
 	//!!! TEMP.
-	if (!empty($context['theme_updated']))
+
 		echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '">
 			<ul class="clearfix">
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>
 		</div>';
-	// Old style.
-	else
-		echo '
-		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_' , $context['right_to_left'] ? 'last' : 'first' , '">&nbsp;</td>
-		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_back">', implode(' &nbsp;|&nbsp; ', $buttons) , '</td>
-		<td class="', $direction == 'top' ? 'main' : 'mirror', 'tab_' , $context['right_to_left'] ? 'first' : 'last' , '">&nbsp;</td>';
+	
 }
 
 ?>

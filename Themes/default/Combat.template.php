@@ -4,27 +4,30 @@
 // Generate a strip of buttons, out of buttons.
 function template_button_strip($button_strip, $direction = 'top', $force_reset = false, $custom_td = '')
 {
-	global $settings, $buttons, $context, $txt, $scripturl;
-
-	if (empty($button_strip))
-		return '';
+	global $settings, $context, $txt, $scripturl;
 
 	// Create the buttons...
+	$buttons = array();
 	foreach ($button_strip as $key => $value)
 	{
-		if (isset($value['test']) && empty($context[$value['test']]))
+		if (!isset($value['test']) || !empty($context[$value['test']]))
 		{
-			unset($button_strip[$key]);
-			continue;
+			$buttons[] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 		}
-		elseif (!isset($buttons[$key]) || $force_reset)
-			$buttons[$key] = '<a href="' . $value['url'] . '" ' .( isset($value['custom']) ? $value['custom'] : '') . '>' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . ($value['lang'] ? $context['user']['language'] . '/' : '') . $value['image'] . '" alt="' . $txt[$value['text']] . '" border="0" />' : $txt[$value['text']]) . '</a>';
-
-		$button_strip[$key] = $buttons[$key];
 	}
 
+	if (empty($buttons))
+		return true;
+
+	// Make the last one, as easy as possible.
+	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+
 	echo '
-		<td ', $custom_td, '>', implode($context['menu_separator'], $button_strip) , '</td>';
+		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '">
+			<ul class="clearfix">
+				<li>', implode('</li><li>', $buttons), '</li>
+			</ul>
+		</div>';
 }
 
 ?>

@@ -354,3 +354,16 @@ ul.postingbuttons li
 	margin: 0;
 	width: 25%;
 }
+/* ************************************* */
+/* styles from Recent.template           */
+/* ************************************* */
+.readbuttons
+{
+	clear: both;
+	width: 100%;
+}
+.readbuttons .buttonlist, .readbuttons .buttonlist_bottom
+{
+	margin-right: 1em;
+	float: right;
+}

@@ -93,7 +93,7 @@ function RecentPosts()
 {
 	global $txt, $scripturl, $user_info, $context, $modSettings, $sourcedir, $board, $smcFunc;
 
-	loadTemplate('Recent');
+	loadTemplate('Recent', 'forum');
 	$context['page_title'] = $txt['recent_posts'];
 
 	if (isset($_REQUEST['start']) && $_REQUEST['start'] > 95)
@@ -635,7 +635,7 @@ function UnreadTopics()
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_recent';
 	else
 	{
-		loadTemplate('Recent');
+		loadTemplate('Recent', 'forum');
 		$context['sub_template'] = $_REQUEST['action'] == 'unread' ? 'unread' : 'replies';
 	}
 
