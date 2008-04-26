@@ -474,7 +474,7 @@ function loadForumTests()
 
 				$smcFunc[\'db_query\'](\'\', "
 					UPDATE {db_prefix}topics
-					SET num_replies = $row[my_unapproved_posts]
+					SET unapproved_posts = $row[my_unapproved_posts]
 					WHERE id_topic = $row[id_topic]",
 					array(
 					)

@@ -98,6 +98,8 @@ April 2008
  ! Sometimes the package installer/uninstaller could ask for FTP when it didn't need it. (Packages.php) [Bug 1899]
  ! Give a more accurate status message to people upgrading their language/template files. (upgrade.php) [Bug 1767]
  ! Present a user installing SMF with a more obvious error message if the install scripts are missing. (install.php, install language file) [Bug 1863]
+ ! RepairBoards wasn't setting unapproved post count right. (RepairBoards.php)
+ ! Restore posts wasn't setting all the necessary statistics so it got a partial rewrite. (RemoveTopic.php) [Bug 1943]
 
 
 March 2008

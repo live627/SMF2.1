@@ -646,8 +646,6 @@ function removeMessage($message, $decreasePostCount = true)
 	}
 
 	// Close any moderation reports for this message.
-	require_once($sourcedir . '/ModerationCenter.php');
-
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}log_reported
 		SET closed = {int:is_closed}
@@ -657,10 +655,12 @@ function removeMessage($message, $decreasePostCount = true)
 			'id_msg' => $message,
 		)
 	);
-
-	updateSettings(array('last_mod_report_action' => time()));
-	recountOpenReports();
-
+	if ($smcFunc['db_affected_rows']() != 0)
+	{
+		require_once($sourcedir . '/ModerationCenter.php');
+		updateSettings(array('last_mod_report_action' => time()));
+		recountOpenReports();
+	}
 
 	// Delete the *whole* topic, but only if the topic consists of one message.
 	if ($row['id_first_msg'] == $message)
@@ -761,7 +761,7 @@ function removeMessage($message, $decreasePostCount = true)
 	{
 		// Check if the recycle board exists and if so get the read status.
 		$request = $smcFunc['db_query']('', '
-			SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen
+			SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen, id_last_msg
 			FROM {db_prefix}boards AS b
 				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
 			WHERE b.id_board = {int:recycle_board}',
@@ -772,7 +772,7 @@ function removeMessage($message, $decreasePostCount = true)
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('recycle_no_valid_board');
-		list ($isRead) = $smcFunc['db_fetch_row']($request);
+		list ($isRead, $last_board_msg) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
 		// Even if it's being recycled respect approval state.
@@ -781,14 +781,16 @@ function removeMessage($message, $decreasePostCount = true)
 
 		// Is there an existing topic in the recycle board to group this post with?
 		$request = $smcFunc['db_query']('', '
-			SELECT id_topic
+			SELECT id_topic, id_first_msg, id_last_msg
 			FROM {db_prefix}topics
-			WHERE id_previous_topic = {int:id_previous_topic}',
+			WHERE id_previous_topic = {int:id_previous_topic}
+				AND id_board = {int:recycle_board}',
 			array(
 				'id_previous_topic' => $row['id_topic'],
+				'recycle_board' => $modSettings['recycle_board'],
 			)
 		);
-		list ($id_recycle_topic) = $smcFunc['db_fetch_row']($request);
+		list ($id_recycle_topic, $first_topic_msg, $last_topic_msg) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
 		// Insert a new topic in the recycle board if $id_recycle_topic is empty.
@@ -865,11 +867,13 @@ function removeMessage($message, $decreasePostCount = true)
 					UPDATE {db_prefix}boards
 					SET
 						num_topics = num_topics + {int:num_topics_inc},
-						num_posts = num_posts + 1
+						num_posts = num_posts + 1' . 
+							($message > $last_board_msg ? ', id_last_msg = {int:id_merged_msg}' : '') . '
 					WHERE id_board = {int:recycle_board}',
 					array(
-						'num_topics_inc' => empty($id_recycle_topic) ? '1' : '0',
+						'num_topics_inc' => empty($id_recycle_topic) ? 1 : 0,
 						'recycle_board' => $modSettings['recycle_board'],
+						'id_merged_msg' => $message,
 					)
 				);
 			else
@@ -880,19 +884,22 @@ function removeMessage($message, $decreasePostCount = true)
 						unapproved_posts = unapproved_posts + 1
 					WHERE id_board = {int:recycle_board}',
 					array(
-						'num_topics_inc' => empty($id_recycle_topic) ? '1' : '0',
+						'num_topics_inc' => empty($id_recycle_topic) ? 1 : 0,
 						'recycle_board' => $modSettings['recycle_board'],
 					)
 				);
 
-			// Lets increase the num_replies
+			// Lets increase the num_replies, and the first/last message ID as appropriate.
 			if (!empty($id_recycle_topic))
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}topics
-					SET num_replies = num_replies + 1
+					SET num_replies = num_replies + 1' .
+						($message > $last_topic_msg ? ', id_last_msg = {int:id_merged_msg}' : '') .
+						($message < $first_topic_msg ? ', id_first_msg = {int:id_merged_msg}' : '') . '
 					WHERE id_topic = {int:id_recycle_topic}',
 					array(
 						'id_recycle_topic' => $id_recycle_topic,
+						'id_merged_msg' => $message,
 					)
 				);
 
@@ -1032,7 +1039,7 @@ function RestoreTopic()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			// Restoring the first post means topic.
-			if ($row['id_msg'] == $row['id_first_msg'])
+			if ($row['id_msg'] == $row['id_first_msg'] && $row['id_previous_topic'] == $row['id_topic'])
 			{
 				$topics_to_restore[] = $row['id_topic'];
 				continue;
@@ -1040,9 +1047,7 @@ function RestoreTopic()
 			// Don't know where it's going?
 			if (empty($row['id_previous_topic']))
 			{
-				$unfound_messages[$row['id_msg']] = array(
-					'subject' => $row['subject'],
-				);
+				$unfound_messages[$row['id_msg']] = $row['subject'];
 				continue;
 			}
 
@@ -1104,21 +1109,15 @@ function RestoreTopic()
 			// Move the posts back then!
 			if (isset($previous_topics[$topic]))
 			{
-				mergePosts(array_keys($data['msgs']), $data['current_topic'], $topic, $data['current_board'], $data['previous_board']);
+				mergePosts(array_keys($data['msgs']), $data['current_topic'], $topic);
 				// Log em.
 				logAction('restore_posts', array('topic' => $topic, 'subject' => $previous_topics[$topic]['subject'], 'board' => empty($data['previous_board']) ? $data['possible_prev_board'] : $data['previous_board']));
-
-				// Restore post count.
-				if ($data['count_posts'] && !empty($data['members']))
-					updateMemberData($data['members'], array('posts' => '+'));
 				$messages = array_merge(array_keys($data['msgs']), $messages);
 			}
 			else
 			{
 				foreach ($data['msgs'] as $msg)
-					$unfound_messages[$msg['id']] = array(
-						'subject' => $msg['subject'],
-					);
+					$unfound_messages[$msg['id']] = $msg['subject'];
 			}
 		}
 
@@ -1213,17 +1212,18 @@ function RestoreTopic()
 
 	// Didn't find some things?
 	if (!empty($unfound_messages))
-	{
 		fatal_lang_error('restore_not_found', false, array(implode('<br />', $unfound_messages)));
-	}
 
 	// Just send them to the index if they get here.
 	redirectexit();
 }
 
-function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0, $target_board = 0)
+// Take a load of messages from one place and stick them in a topic.
+function mergePosts($msgs = array(), $from_topic, $target_topic)
 {
 	global $context, $smcFunc, $modSettings, $sourcedir;
+
+	//!!! This really needs to be rewritten to take a load of messages from ANY topic, it's also inefficient.
 
 	// Is it an array?
 	if (!is_array($msgs))
@@ -1233,48 +1233,33 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 	foreach ($msgs as $key => $msg)
 		$msgs[$key] = (int) $msg;
 
-	// If we don't have the from_board find out.
-	if (empty($from_board))
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT id_board
-			FROM {db_prefix}topics
-			WHERE id_topic = {int:from_topic}',
-			array(
-				'from_topic' => $from_topic,
-			)
-		);
-		list ($from_board) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-	}
-
-	// Now the target_board.
-	if (empty($target_board))
-	{
-		$request = $smcFunc['db_query']('', '
-			SELECT id_board
-			FROM {db_prefix}topics
-			WHERE id_topic = {int:target_topic}',
-			array(
-				'target_topic' => $target_topic,
-			)
-		);
-		list ($target_board) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-	}
-
-	// Lets see if the board that we are returning to has post count enabled.
+	// Get the source information.
 	$request = $smcFunc['db_query']('', '
-		SELECT count_posts
-		FROM {db_prefix}boards
-		WHERE id_board = {int:board}',
+		SELECT t.id_board, t.id_first_msg, t.num_replies, t.unapproved_posts
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE t.id_topic = {int:from_topic}',
 		array(
-			'board' => $target_board,
+			'from_topic' => $from_topic,
 		)
 	);
-	list ($count_posts) = $smcFunc['db_fetch_row']($request);
+	list ($from_board, $from_first_msg, $from_replies, $from_unapproved_posts) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
+	// Get some target topic and board stats.
+	$request = $smcFunc['db_query']('', '
+		SELECT t.id_board, t.id_first_msg, t.num_replies, t.unapproved_posts, b.count_posts
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE t.id_topic = {int:target_topic}',
+		array(
+			'target_topic' => $target_topic,
+		)
+	);
+	list ($target_board, $target_first_msg, $target_replies, $target_unapproved_posts, $count_posts) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	// Lets see if the board that we are returning to has post count enabled.
 	if (empty($count_posts))
 	{
 		// Lets get the members that need their post count restored.
@@ -1291,7 +1276,7 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 			updateMemberData($row['id_member'], array('posts' => '+'));
 	}
 
-	// Time to move them.
+	// Time to move the messages.
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}messages
 		SET
@@ -1308,30 +1293,32 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 	);
 
 	// Fix the id_first_msg and id_last_msg for the target topic.
+	$target_topic_data = array(
+		'num_replies' => 0,
+		'unapproved_posts' => 0,
+		'id_first_msg' => 9999999999,
+	);
 	$request = $smcFunc['db_query']('', '
-		SELECT MIN(id_msg) AS id_first_msg, MAX(id_msg) AS id_last_msg, COUNT(*) -1 AS num_replies, subject
+		SELECT MIN(id_msg) AS id_first_msg, MAX(id_msg) AS id_last_msg, COUNT(*) AS message_count, approved
 		FROM {db_prefix}messages
 		WHERE id_topic = {int:target_topic}
-			AND approved = 1
-		GROUP BY id_topic',
+		GROUP BY id_topic, approved
+		ORDER BY approved ASC
+		LIMIT 2',
 		array(
 			'target_topic' => $target_topic,
 		)
 	);
-	list ($id_first_msg, $id_last_msg, $num_replies, $target_subject) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
-	// We need to see how many of the new posts are unapproved.
-	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*)
-		FROM {db_prefix}messages
-		WHERE approved = 0
-			AND id_msg IN({array_int:msgs})',
-		array(
-			'msgs' => $msgs,
-		)
-	);
-	list ($new_unapproved_posts) = $smcFunc['db_fetch_row']($request);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if ($row['id_first_msg'] < $target_topic_data['id_first_msg'])
+			$target_topic_data['id_first_msg'] = $row['id_first_msg'];
+		$target_topic_data['id_last_msg'] = $row['id_last_msg'];
+		if (!$row['approved'])
+			$target_topic_data['unapproved_posts'] = $row['message_count'];
+		else
+			$target_topic_data['num_replies'] = max(0, $row['message_count'] - 1);
+	}
 	$smcFunc['db_free_result']($request);
 
 	// Update the topic details.
@@ -1341,13 +1328,13 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 			id_first_msg = {int:id_first_msg},
 			id_last_msg = {int:id_last_msg},
 			num_replies = {int:num_replies},
-			unapproved_posts = unapproved_posts + {int:new_unapproved_posts}
+			unapproved_posts = {int:unapproved_posts}
 		WHERE id_topic = {int:target_topic}',
 		array(
-			'id_first_msg' => $id_first_msg,
-			'id_last_msg' => $id_last_msg,
-			'num_replies' => $num_replies,
-			'new_unapproved_posts' => $new_unapproved_posts,
+			'id_first_msg' => $target_topic_data['id_first_msg'],
+			'id_last_msg' => $target_topic_data['id_last_msg'],
+			'num_replies' => $target_topic_data['num_replies'],
+			'unapproved_posts' => $target_topic_data['unapproved_posts'],
 			'target_topic' => $target_topic,
 		)
 	);
@@ -1356,25 +1343,15 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}boards
 		SET
-			num_posts = num_posts + {int:num_replies},
-			unapproved_posts = unapproved_posts + {int:new_unapproved_posts}
+			num_posts = num_posts + {int:diff_replies},
+			unapproved_posts = unapproved_posts + {int:diff_unapproved_posts}
 		WHERE id_board = {int:target_board}',
 		array(
-			'num_replies' => ($num_replies + 1), // Lets keep in mind that the first message in a topic counts towards num_replies in a board.
-			'new_unapproved_posts' => $new_unapproved_posts,
+			'diff_replies' => $target_topic_data['num_replies'] - $target_replies, // Lets keep in mind that the first message in a topic counts towards num_replies in a board.
+			'diff_unapproved_posts' => $target_topic_data['unapproved_posts'] - $target_unapproved_posts,
 			'target_board' => $target_board,
 		)
 	);
-
-	// Need it to update some stats.
-	require_once($sourcedir . '/Subs-Post.php');
-
-	// Update stats.
-	updateStats('topic');
-	updateStats('message');
-	updateStats('subject', $from_topic);
-	updateStats('subject', $target_topic, $target_subject);
-	updateLastMessages(array($from_board, $target_board));
 
 	// In some cases we merged the only post in a topic so the topic data is left behind in the topic table.
 	$request = $smcFunc['db_query']('', '
@@ -1398,65 +1375,98 @@ function mergePosts($msgs = array(), $from_topic, $target_topic, $from_board = 0
 	// Recycled topic.
 	if ($topic_exists == true)
 	{
-		// Fix the id_first_msg and id_last_msg for the target topic.
+		// Fix the id_first_msg and id_last_msg for the source topic.
+		$source_topic_data = array(
+			'num_replies' => 0,
+			'unapproved_posts' => 0,
+			'id_first_msg' => 9999999999,
+		);
 		$request = $smcFunc['db_query']('', '
-			SELECT MIN(id_msg) AS id_first_msg, MAX(id_msg) AS id_last_msg, COUNT(*) -1 AS num_replies
+			SELECT MIN(id_msg) AS id_first_msg, MAX(id_msg) AS id_last_msg, COUNT(*) AS message_count, approved, subject
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:from_topic}
-				AND approved = 1
-			GROUP BY id_topic',
+			GROUP BY id_topic, approved
+			ORDER BY approved ASC
+			LIMIT 2',
 			array(
 				'from_topic' => $from_topic,
 			)
 		);
-		list ($id_first_msg, $id_last_msg, $num_replies) = $smcFunc['db_fetch_row']($request);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if ($row['id_first_msg'] < $source_topic_data['id_first_msg'])
+				$source_topic_data['id_first_msg'] = $row['id_first_msg'];
+			$source_topic_data['id_last_msg'] = $row['id_last_msg'];
+			if (!$row['approved'])
+				$source_topic_data['unapproved_posts'] = $row['message_count'];
+			else
+				$source_topic_data['num_replies'] = max(0, $row['message_count'] - 1);
+		}
 		$smcFunc['db_free_result']($request);
 
-		// We need to see how many of the new posts are unapproved.
-		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(*)
-			FROM {db_prefix}messages
-			WHERE approved = 0
-				AND id_topic = {int:from_topic}',
-			array(
-				'from_topic' => $from_topic,
-			)
-		);
-		list ($new_unapproved_posts) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		// Update the topic details.
+		// Update the topic details for the source topic.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET
 				id_first_msg = {int:id_first_msg},
 				id_last_msg = {int:id_last_msg},
 				num_replies = {int:num_replies},
-				unapproved_posts = unapproved_posts + {int:new_unapproved_posts}
+				unapproved_posts = {int:unapproved_posts}
 			WHERE id_topic = {int:from_topic}',
 			array(
-				'id_first_msg' => $id_first_msg,
-				'id_last_msg' => $id_last_msg,
-				'num_replies' => $num_replies,
-				'new_unapproved_posts' => $new_unapproved_posts,
+				'id_first_msg' => $source_topic_data['id_first_msg'],
+				'id_last_msg' => $source_topic_data['id_last_msg'],
+				'num_replies' => $source_topic_data['num_replies'],
+				'unapproved_posts' => $source_topic_data['unapproved_posts'],
 				'from_topic' => $from_topic,
 			)
 		);
 
-		// We have a new post count for the board.
+		// We have a new post count for the source board.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET
-				num_posts = num_posts + {int:num_replies},
-				unapproved_posts = unapproved_posts + {int:new_unapproved_posts}
+				num_posts = num_posts + {int:diff_replies},
+				unapproved_posts = unapproved_posts + {int:diff_unapproved_posts}
 			WHERE id_board = {int:from_board}',
 			array(
-				'num_replies' => $num_replies,
-				'new_unapproved_posts' => $new_unapproved_posts,
+				'diff_replies' => $source_topic_data['num_replies'] - $from_replies, // Lets keep in mind that the first message in a topic counts towards num_replies in a board.
+				'diff_unapproved_posts' => $source_topic_data['unapproved_posts'] - $from_unapproved_posts,
 				'from_board' => $from_board,
 			)
 		);
 	}
+
+	// Need it to update some stats.
+	require_once($sourcedir . '/Subs-Post.php');
+
+	// Update stats.
+	updateStats('topic');
+	updateStats('message');
+
+	// Subject cache?
+	$cache_updates = array();
+	if ($target_first_msg != $target_topic_data['id_first_msg'])
+		$cache_updates[] = $target_topic_data['id_first_msg'];
+	if (!empty($source_topic_data['id_first_msg']) && $from_first_msg != $source_topic_data['id_first_msg'])
+		$cache_updates[] = $source_topic_data['id_first_msg'];
+
+	if (!empty($cache_updates))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_topic, subject
+			FROM {db_prefix}messages
+			WHERE id_msg IN ({array_int:first_messages})',
+			array(
+				'first_messages' => $cache_updates,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			updateStats('subject', $row['id_topic'], $row['subject']);
+		$smcFunc['db_free_result']($request);
+	}
+
+	updateLastMessages(array($from_board, $target_board));
 }
 
 ?>
