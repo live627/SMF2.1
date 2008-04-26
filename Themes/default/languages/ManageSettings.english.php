@@ -76,6 +76,7 @@ $txt['timeLoadPageEnable'] = 'Display time taken to create every page';
 $txt['disableHostnameLookup'] = 'Disable hostname lookups?';
 $txt['who_enabled'] = 'Enable who\'s online list';
 $txt['make_email_viewable'] = 'Allow viewable email addresses.';
+$txt['meta_keywords'] = 'Meta keywords associated with forum.<div class="smalltext">For search engines, leave blank for default.</div>';
 
 $txt['karmaMode'] = 'Karma mode';
 $txt['karma_options'] = 'Disable karma|Enable karma total|Enable karma positive/negative';

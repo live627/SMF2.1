@@ -88,6 +88,9 @@ April 2008
  ! The nobbc was getting auto closed too many times. (Subs-Editor.php) [Bug 1831]
  ! Cache the recent posts for slightly less time and search harder for messages as it's now cached. (Subs-Recent.php) [Bug 1819]
  ! Don't allow spell checking to suggest censored words. (Subs-Post.php, Search.php) [Bug 882]
+ + Allow admins to override meta keywords tag. (ManageSettings.php, index templates, ManageSettings and Help language files)
+ ! Ensure that the meta description and, in some cases, forum name, are html'd when used in tags. (Subs.php, index templates) [Bug 1893]
+ ! Use the "send email" form in all places except admin areas. (PersonalMessage, Memberlist, Profile templates) [Bug 1872]
 
 
 March 2008

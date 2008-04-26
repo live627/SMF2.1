@@ -557,6 +557,9 @@ function ModifyLayoutSettings($return_config = false)
 			array('check', 'timeLoadPageEnable'),
 			array('check', 'disableHostnameLookup'),
 		'',
+			// Meta.
+			array('text', 'meta_keywords', 'size' => 50),
+		'',
 			// Who's online.
 			array('check', 'who_enabled'),
 	);
