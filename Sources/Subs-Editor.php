@@ -104,13 +104,16 @@ function bbc_to_html($text)
 {
 	global $modSettings, $smcFunc;
 
+	// Turn line breaks back into br's.
+	$text = strtr($text, array("\r" => '', "\n" => '<br />'));
+
 	// What tags do we allow?
 	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup');
 
 	$text = parse_bbc($text, true, '', $allowed_tags);
 
 	// Fix for having a line break then a thingy.
-	$text = strtr($text, array('<br /><hr />' => '<hr />', '<br /><div' => '<div'));
+	$text = strtr($text, array('<br /><hr />' => '<hr />', '<br /><div' => '<div', "\n" => '', "\r" => ''));
 
 	// Note that IE doesn't understand spans really - make them something "legacy"
 	$working_html = array(

@@ -779,6 +779,19 @@ function Post()
 			censorText($form_message);
 			censorText($form_subject);
 
+			// But if it's in HTML world, turn them into htmlspecialchar's so they can be edited!
+			if (strpos($form_message, '[html]') !== false)
+			{
+				$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $form_message, -1, PREG_SPLIT_DELIM_CAPTURE);
+				for ($i = 0, $n = count($parts); $i < $n; $i++)
+				{
+					// It goes 0 = outside, 1 = begin tag, 2 = inside, 3 = close tag, repeat.
+					if ($i % 4 == 0)
+						$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . preg_replace(\'~<br\s?/?>~i\', \'&lt;br /&gt;<br />\', \'$1\') . \'[/html]\'', $parts[$i]);
+				}
+				$form_message = implode('', $parts);
+			}
+
 			$form_message = preg_replace('~<br(?: /)?' . '>~i', "\n", $form_message);
 
 			// Remove any nested quotes, if necessary.
@@ -786,7 +799,7 @@ function Post()
 				$form_message = preg_replace(array('~\n?\[quote.*?\].+?\[/quote\]\n?~is', '~^\n~', '~\[/quote\]~'), '', $form_message);
 
 			// Add a quote string on the front and end.
-			$form_message = '[quote author=' . $mname . ' link=topic=' . $topic . '.msg' . (int) $_REQUEST['quote'] . '#msg' . (int) $_REQUEST['quote'] . ' date=' . $mdate . ']' . "\n" . $form_message . "\n" . '[/quote]';
+			$form_message = '[quote author=' . $mname . ' link=topic=' . $topic . '.msg' . (int) $_REQUEST['quote'] . '#msg' . (int) $_REQUEST['quote'] . ' date=' . $mdate . ']' . "\n" . rtrim($form_message) . "\n" . '[/quote]';
 		}
 		// Posting a reply without a quote?
 		elseif (!empty($topic) && empty($_REQUEST['quote']))

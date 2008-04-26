@@ -92,6 +92,9 @@ April 2008
  ! Ensure that the meta description and, in some cases, forum name, are html'd when used in tags. (Subs.php, index templates) [Bug 1893]
  ! Use the "send email" form in all places except admin areas. (PersonalMessage, Memberlist, Profile templates) [Bug 1872]
  ! Ensure you can only skip admin account creation if you have no admins, and clean erroneous username characters. (install.php) [Bug 1733]
+ ! rtrim quotes to avoid any trailing line breaks (etc). (Post.php)
+ ! When quoting html tags, keep the line breaks. (Post.php) [Bug 1897]
+ ! Ensure that in the rich text editor all normal breaks are converted to html breaks. (Subs-Editor.php)
 
 
 March 2008
