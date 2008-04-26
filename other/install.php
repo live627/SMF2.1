@@ -1132,7 +1132,7 @@ function doStep1()
 // Step two-A: Ask for the administrator login information.
 function doStep2a()
 {
-	global $txt, $db_type;
+	global $txt, $db_type, $db_connection, $databases, $smcFunc;
 
 	// Need this to check whether we need the database password.
 	require(dirname(__FILE__) . '/Settings.php');
@@ -1193,9 +1193,35 @@ function doStep2a()
 							<input type="submit" value="', $txt['user_settings_proceed'], '" />';
 
 	// Only allow skipping if we think they already have an account setup.
-	if (!empty($webmaster_email) && $webmaster_email != 'noreply@myserver.com')
-		echo '
+	if (function_exists('smf_db_initiate'))
+	{
+		if (!$db_connection)
+		{
+			$needsDB = !empty($databases[$db_type]['always_has_db']);
+			$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
+			if ($db_connection && !$needsDB)
+				$smcFunc['db_select_db']($db_name, $db_connection);
+			if ($db_connection)
+			{
+				$request = $smcFunc['db_query']('', '
+					SELECT id_member
+					FROM {db_prefix}members
+					WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)
+					LIMIT 1',
+					array(
+						'db_error_skip' => true,
+						'admin_group' => 1,
+					)
+				);
+				if ($smcFunc['db_num_rows']($request) != 0)
+				{
+					echo '
 							<input type="submit" name="skip_account" value="', $txt['user_settings_skip'], '" onclick="return confirm(\'', addcslashes($txt['user_settings_skip_sure'], "'"), '\');" />';
+				}
+				$smcFunc['db_free_result']($request);
+			}
+		}
+	}
 
 	echo '
 						</div>
@@ -1304,6 +1330,10 @@ function doStep2()
 
 	if (empty($_POST['skip_account']))
 	{
+		// Work out whether we're going to have dodgy characters and remove them.
+		$invalid_characters = preg_match('~[<>&"\'=\\\]~', $_POST['username']) != 0;
+		$_POST['username'] = preg_replace('~[<>&"\'=\\\]~', '', $_POST['username']);
+
 		$result = $smcFunc['db_query']('', '
 			SELECT id_member, password_salt
 			FROM {db_prefix}members
@@ -1320,13 +1350,13 @@ function doStep2()
 			list ($id, $salt) = $smcFunc['db_fetch_row']($result);
 			$smcFunc['db_free_result']($result);
 
-		echo '
+			echo '
 				<div class="error_message">
 					<div style="color: red;">', $txt['error_user_settings_taken'], '</div>
 				</div>
 				<br />';
 		}
-		elseif (preg_match('~[<>&"\'=\\\]~', $_POST['username']) != 0 || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
+		elseif ($invalid_characters || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
 		{
 			// Initialize some variables needed for the language file.
 			$context = array(

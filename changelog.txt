@@ -91,6 +91,7 @@ April 2008
  + Allow admins to override meta keywords tag. (ManageSettings.php, index templates, ManageSettings and Help language files)
  ! Ensure that the meta description and, in some cases, forum name, are html'd when used in tags. (Subs.php, index templates) [Bug 1893]
  ! Use the "send email" form in all places except admin areas. (PersonalMessage, Memberlist, Profile templates) [Bug 1872]
+ ! Ensure you can only skip admin account creation if you have no admins, and clean erroneous username characters. (install.php) [Bug 1733]
 
 
 March 2008
