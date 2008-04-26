@@ -391,7 +391,11 @@ function doStep0()
 		if ($db['supported'])
 		{
 			if (!file_exists(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql'))
+			{
 				$databases[$key]['supported'] = false;
+				$notFoundSQLFile = true;
+				$txt['error_db_script_missing'] = sprintf($txt['error_db_script_missing'], 'install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql');
+			}
 			else
 			{
 				$db_type = $key;
@@ -401,7 +405,7 @@ function doStep0()
 	}
 
 	if (empty($foundDBCount))
-		$error = 'error_db_missing';
+		$error = empty($notFoundSQLFile) ? 'error_db_missing' : 'error_db_script_missing';
 	// How about session support?  Some crazy sysadmin remove it?
 	elseif (!function_exists('session_start'))
 		$error = 'error_session_missing';

@@ -97,6 +97,7 @@ April 2008
  ! Ensure that in the rich text editor all normal breaks are converted to html breaks. (Subs-Editor.php)
  ! Sometimes the package installer/uninstaller could ask for FTP when it didn't need it. (Packages.php) [Bug 1899]
  ! Give a more accurate status message to people upgrading their language/template files. (upgrade.php) [Bug 1767]
+ ! Present a user installing SMF with a more obvious error message if the install scripts are missing. (install.php, install language file) [Bug 1863]
 
 
 March 2008
