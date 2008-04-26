@@ -1897,8 +1897,8 @@ function UpgradeTemplate()
 			// Found a language? If so add it.
 			if (preg_match('~(.+?)\.(.+?)\.php~', $entry, $matches) && isset($matches[2]))
 			{
-				$upcontext['current_message'] = ($upcontext['is_test'] ? 'Testing' : 'Updating') . ' language file &quot;' . (strlen($matches[0]) > 40 ? '...' . substr(($matches[0]), -40): ($matches[0])) . '&quot;...';
 				$edit_count = fixLanguageFile($langdir . '/' . $matches[0], $matches[1], $matches[2], $upcontext['is_test']);
+				$upcontext['current_message'] = ($upcontext['is_test'] ? 'Testing' : ($edit_count != -1 ? 'Updating' : 'Bypassing')) . ' language file &quot;' . (strlen($matches[0]) > 40 ? '...' . substr(($matches[0]), -40): ($matches[0])) . '&quot;...';
 				// Are there actually any edits to be made?
 				if ($edit_count != -1)
 				{
@@ -1957,8 +1957,8 @@ function UpgradeTemplate()
 			// Got a template file... good
 			if (substr($entry, -4) == '.php' && strpos($entry, 'template') !== false)
 			{
-				$upcontext['current_message'] = ($upcontext['is_test'] ? 'Testing' : 'Updating') . ' template file &quot;' . (strlen($themedir . '/' . $entry) > 40 ? '...' . substr(($themedir . '/' . $entry), -40): ($themedir . '/' . $entry)) . '&quot;...';
 				$edit_count = fixTemplateFile($themedir . '/' . $entry, $upcontext['is_test']);
+				$upcontext['current_message'] = ($upcontext['is_test'] ? 'Testing' : ($edit_count != -1 ? 'Updating' : 'Bypassing')) . ' template file &quot;' . (strlen($themedir . '/' . $entry) > 40 ? '...' . substr(($themedir . '/' . $entry), -40): ($themedir . '/' . $entry)) . '&quot;...';
 				if ($edit_count != -1)
 				{
 					if (!isset($upcontext['themes'][$theme_name]))
