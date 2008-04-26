@@ -64,6 +64,9 @@ if (!defined('SMF'))
 	void AdminSearchMember()
 		// !!
 
+	void DisplayAdminFile()
+		// !!
+
 */
 
 // The main admin handling function.
