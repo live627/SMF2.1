@@ -640,7 +640,7 @@ function PackageInstallTest()
 	if (!empty($chmod_files))
 	{
 		$ftp_status = create_chmod_control($chmod_files);
-		$context['ftp_needed'] = !empty($ftp_status['files']['notwritable']);
+		$context['ftp_needed'] = !empty($ftp_status['files']['notwritable']) && !empty($context['package_ftp']);
 	}
 }
 
