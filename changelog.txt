@@ -87,6 +87,7 @@ April 2008
  ! Tabs were not being displayed right with code blocks in firefox. (Subs.php) [Bug 1944]
  ! The nobbc was getting auto closed too many times. (Subs-Editor.php) [Bug 1831]
  ! Cache the recent posts for slightly less time and search harder for messages as it's now cached. (Subs-Recent.php) [Bug 1819]
+ ! Don't allow spell checking to suggest censored words. (Subs-Post.php, Search.php) [Bug 882]
 
 
 March 2008

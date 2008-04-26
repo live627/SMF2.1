@@ -1499,7 +1499,15 @@ function SpellCheck()
 		// If there are suggestions, add them in...
 		$suggestions = pspell_suggest($pspell_link, $check_word[0]);
 		if (!empty($suggestions))
-			$context['spell_js'] .= '"' . join('", "', $suggestions) . '"';
+		{
+			// But first check they aren't going to be censored - no naughty words!
+			foreach ($suggestions as $k => $word)
+				if ($suggestions[$k] != censorText($word))
+					unset($suggestions[$k]);
+
+			if (!empty($suggestions))
+				$context['spell_js'] .= '"' . implode('", "', $suggestions) . '"';
+		}
 
 		$context['spell_js'] .= ']),';
 	}
