@@ -29,6 +29,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	// Kinda holds all the useful stuff.
 	this.aButtonControls = new Array();
 	this.aSelectControls = new Array();
+	this.aKeyboardShortcuts = new Array();
 	this.oSmfSmileys = new Object;
 
 	// This is all the elements that can have a simple execCommand.
@@ -332,6 +333,9 @@ SmfEditor.prototype.init = function()
 	// And add the select controls.
 	for (i in this.aSelectControls)
 		this.addSelect(this.aSelectControls[i]);
+
+	// Finally, register shortcuts.
+	this.registerDefaultShortcuts();
 }
 
 // Return the current text.
@@ -1314,4 +1318,55 @@ SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
 		new_size = (parseInt(curReg[1]) + (parseInt(changeReg[1]) / 10)).toString() + '%';
 
 	return new_size;
+}
+
+// Regstier default keyboard shortcuts.
+SmfEditor.prototype.registerDefaultShortcuts = function()
+{
+	// IE doesn't need these!
+	if (is_ff)
+	{
+		this.registerShortcut('b', 'ctrl', 'bold');
+	}
+}
+
+// Register a keyboard shortcut.
+SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCommandName)
+{
+	if (!sCommandName)
+		return;
+
+	var aNewShortcut = {
+		command : sCommandName,
+		key: sLetter.charCodeAt(0),
+		alt : false,
+		ctrl : false
+	};
+
+	sSplitModifiers = sModifiers.split(',');
+	for(i = 0; i < sSplitModifiers.length; i++)
+		if (typeof(aNewShortcut[sSplitModifiers[i]]) != 'undefined')
+			aNewShortcut[sSplitModifiers[i]] = true;
+
+	this.aKeyboardShortcuts[sModifiers + sLetter] = aNewShortcut;
+}
+
+// Check whether the key has triggered a shortcut?
+function checkShortcut(e)
+{
+	// To be a shortcut it needs to be one of these, duh!
+	if (!e.altKey && !e.ctrlKey)
+		return false;
+
+	sReturnCommand = false;
+
+	// Let's take a look at each of our shortcuts shall we?
+	for (i in this.aKeyboardShortcuts)
+	{
+		// Found something?
+		if (e.altKey == this.aKeyboardShortcuts[i].alt && e.ctrlKey == this.aKeyboardShortcuts[i].ctrl && e.keyCode == this.aKeyboardShortcuts[i].key)
+			sReturnCommand = this.aKeyboardShortcuts[i].command;
+	}
+
+	return sReturnCommand;
 }
