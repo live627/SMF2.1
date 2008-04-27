@@ -101,6 +101,7 @@ April 2008
  ! RepairBoards wasn't setting unapproved post count right. (RepairBoards.php)
  ! Restore posts wasn't setting all the necessary statistics so it got a partial rewrite. (RemoveTopic.php) [Bug 1943]
  ! Upgrade now requires the Install language file, and uses this for some of the primary language strings. (upgrade.php, Install language file)
+ ! Don't allow the use of numeric prefixes for SQLite. (install.php) [Bug 1672]
 
 
 March 2008

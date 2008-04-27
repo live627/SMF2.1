@@ -44,6 +44,7 @@ $databases = array(
 		'utf8_support' => true,
 		'utf8_version' => '4.1.0',
 		'utf8_version_check' => 'return mysql_get_server_info();',
+		'support_numeric_prefix' => true,
 		'alter_support' => true,
 	),
 	'postgresql' => array(
@@ -52,6 +53,7 @@ $databases = array(
 		'function_check' => 'pg_connect',
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'supported' => function_exists('pg_connect'),
+		'support_numeric_prefix' => true,
 		'always_has_db' => true,
 	),
 	'sqlite' => array(
@@ -60,6 +62,7 @@ $databases = array(
 		'function_check' => 'sqlite_open',
 		'version_check' => 'return 1;',
 		'supported' => function_exists('sqlite_open'),
+		'support_numeric_prefix' => false,
 		'always_has_db' => true,
 	),
 );
@@ -705,11 +708,29 @@ function doStep1()
 				<div class="error_message">
 					<div style="color: red;">', $txt['error_db_filename'], '</div>
 					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+					<a href="', $_SERVER['PHP_SELF'], '?step=0">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 				</div>';
 
 		return false;
 	}
+
+	// What type are they trying?
+	$db_type = preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']);
+	$db_prefix = preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix']);
+
+	// Is the prefix numeric, yet we don't support it?
+	if (preg_match('~^\d~', $db_prefix) && empty($databases[$db_type]['support_numeric_prefix']))
+	{
+		echo '
+				<div class="error_message">
+					<div style="color: red;">', $txt['error_db_prefix_numeric'], '</div>
+					<br />
+					<a href="', $_SERVER['PHP_SELF'], '?step=0">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+				</div>';
+
+		return false;
+	}
+
 
 	// Take care of these variables...
 	$vars = array(
@@ -717,19 +738,17 @@ function doStep1()
 		'boarddir' => addslashes(dirname(__FILE__)),
 		'sourcedir' => addslashes(dirname(__FILE__)) . '/Sources',
 		'cachedir' => addslashes(dirname(__FILE__)) . '/cache',
-		'db_type' => preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']),
+		'db_type' => $db_type,
 		'db_name' => $_POST['db_type'] == 'sqlite' && isset($_POST['db_filename']) ? $_POST['db_filename'] : $_POST['db_name'],
 		'db_user' => $_POST['db_user'],
 		'db_passwd' => isset($_POST['db_passwd']) ? $_POST['db_passwd'] : '',
 		'db_server' => $_POST['db_server'],
-		'db_prefix' => preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix']),
+		'db_prefix' => $db_prefix,
 		'mbname' => $_POST['mbname'],
 		'language' => substr($_SESSION['installer_temp_lang'], 8, -4),
 		// The cookiename is special; we want it to be the same if it ever needs to be reinstalled with the same info.
 		'cookiename' => 'SMFCookie' . abs(crc32($_POST['db_name'] . preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix'])) % 1000),
 	);
-
-	// !!! if (is_numeric(substr($vars['db_prefix'], 0, 1)))
 
 	if (!updateSettingsFile($vars) && substr(__FILE__, 1, 2) == ':\\')
 	{
