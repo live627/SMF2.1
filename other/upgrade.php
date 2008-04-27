@@ -564,6 +564,10 @@ if (isset($_GET['data']))
 	$upcontext['rid'] = $upcontext['upgrade_status']['rid'];
 	$is_debug = $upcontext['upgrade_status']['debug'];
 	$support_js = $upcontext['upgrade_status']['js'];
+
+	// Load the language.
+	if (file_exists($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php'))
+		require_once($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php');
 }
 // Set the defaults.
 else
@@ -572,7 +576,7 @@ else
 	$upcontext['rid'] = rand(0, 5000);
 	$upcontext['upgrade_status'] = array(
 		'curstep' => 0,
-		'lang' => isset($_GET['lang']) ? $_GET['lang'] : $language,
+		'lang' => isset($_GET['lang']) ? $_GET['lang'] : basename($language, '.lng'),
 		'rid' => $upcontext['rid'],
 		'pass' => 0,
 		'debug' => 0,
@@ -899,7 +903,7 @@ function initialize_inputs()
 function WelcomeLogin()
 {
 	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $cachedir, $upgradeurl, $upcontext, $disable_security;
-	global $smcFunc, $db_type, $databases;
+	global $smcFunc, $db_type, $databases, $txt;
 
 	$upcontext['sub_template'] = 'welcome_message';
 
@@ -981,16 +985,22 @@ function WelcomeLogin()
 	if (checkLogin())
 		return true;
 
-	if (!file_exists($boarddir . '/Themes/default/languages/index.' . basename($language, '.lng') . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
+	if (!file_exists($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
 		return throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
 	elseif (!isset($_GET['skiplang']))
 	{
-		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . (basename($upcontext['language'], '.lng')) . '.php')), 0, 4096);
+		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php')), 0, 4096);
 		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
 
 		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
-			return throw_error('The upgrader found some old or outdated language files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme. [<a href="' . $upgradeurl . '?skiplang">SKIP</a>]');
+			return throw_error('The upgrader found some old or outdated language files, for the forum default language, ' . $upcontext['language'] . '.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme.<br />&nbsp;&nbsp;&nbsp;[<a href="' . $upgradeurl . '?skiplang">SKIP</a>] [<a href="' . $upgradeurl . '?lang=english">Try English</a>]');
 	}
+
+	// This needs to exist!
+	if (!file_exists($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php'))
+		return throw_error('The upgrader could not find the &quot;Install&quot; language file for the forum default language, ' . $upcontext['language'] . '.<br /><br />Please make certain you uploaded all the files included in the package, even the theme and language files for the default theme.<br />&nbsp;&nbsp;&nbsp;[<a href="' . $upgradeurl . '?lang=english">Try English</a>]');
+	else
+		require_once($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php');
 
 	return false;
 }
@@ -999,7 +1009,7 @@ function WelcomeLogin()
 function checkLogin()
 {
 	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $cachedir, $upgradeurl, $upcontext, $disable_security;
-	global $smcFunc, $db_type, $databases, $support_js;
+	global $smcFunc, $db_type, $databases, $support_js, $txt;
 
 	// Are we trying to login?
 	if (isset($_POST['contbutt']) && (!empty($_POST['user']) || $disable_security))
@@ -1032,7 +1042,7 @@ function checkLogin()
 			if ($oldDB)
 				$request = $smcFunc['db_query']('', '
 					SELECT id_member, memberName AS member_name, passwd, id_group,
-					additionalGroups AS additional_groups
+					additionalGroups AS additional_groups, lngfile
 					FROM {db_prefix}members
 					WHERE memberName = {string:member_name}',
 					array(
@@ -1042,7 +1052,7 @@ function checkLogin()
 				);
 			else
 				$request = $smcFunc['db_query']('', '
-					SELECT id_member, member_name, passwd, id_group, additional_groups
+					SELECT id_member, member_name, passwd, id_group, additional_groups, lngfile
 					FROM {db_prefix}members
 					WHERE member_name = {string:member_name}',
 					array(
@@ -1052,7 +1062,7 @@ function checkLogin()
 				);
 			if ($smcFunc['db_num_rows']($request) != 0)
 			{
-				list ($id_member, $name, $password, $id_group, $addGroups) = $smcFunc['db_fetch_row']($request);
+				list ($id_member, $name, $password, $id_group, $addGroups, $user_language) = $smcFunc['db_fetch_row']($request);
 
 				$groups = explode(',', $addGroups);
 				$groups[] = $id_group;
@@ -1138,6 +1148,28 @@ function checkLogin()
 			// This basically is used to match the GET variables to Settings.php.
 			$upcontext['upgrade_status']['pass'] = $upcontext['user']['pass'];
 
+			// Set the language to that of the user?
+			if ($user_language != $upcontext['language'] && file_exists($boarddir . '/Themes/default/languages/index.' . basename($user_language, '.lng') . '.php'))
+			{
+				$user_language = basename($user_language, '.lng');
+				$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . $user_language . '.php')), 0, 4096);
+				preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
+
+				if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
+					$upcontext['upgrade_options_warning'] = 'The language files for your selected language, ' . $user_language . ', have not been updated to the latest version. Upgrade will continue with the forum default, ' . $upcontext['language'] . '.';
+				elseif (!file_exists($boarddir . '/Themes/default/languages/Install.' . basename($user_language, '.lng') . '.php'))
+					$upcontext['upgrade_options_warning'] = 'The language files for your selected language, ' . $user_language . ', have not been uploaded/updated as the &quot;Install&quot; language file is missing. Upgrade will continue with the forum default, ' . $upcontext['language'] . '.';
+				else
+				{
+					// Set this as the new language.
+					$upcontext['language'] = $user_language;
+					$upcontext['upgrade_status']['lang'] = $upcontext['language'];
+
+					// Include the file.
+					require_once($boarddir . '/Themes/default/languages/Install.' . $user_language . '.php');
+				}
+			}
+
 			// If we're resuming set the step and substep to be correct.
 			if (isset($_POST['cont']))
 			{
@@ -1215,7 +1247,9 @@ function UpgradeOptions()
 
 	$changes = array();
 
-	$changes['language'] = '\'' . $_POST['lang'] . '\'';
+	// If we're overriding the language follow it through.
+	if (isset($_GET['lang']) && file_exists($boarddir . '/Themes/default/languages/index.' . $_GET['lang'] . '.php'))
+		$changes['language'] = '\'' . $_GET['lang'] . '\'';
 
 	if (!empty($_POST['maint']))
 	{
@@ -3031,7 +3065,7 @@ function nextSubstep($substep)
 function cmdStep0()
 {
 	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type, $smcFunc, $upcontext;
-	global $language, $is_debug;
+	global $language, $is_debug, $txt;
 	$start_time = time();
 
 	ob_end_clean();
@@ -3041,7 +3075,6 @@ function cmdStep0()
 	if (!isset($_SERVER['argv']))
 		$_SERVER['argv'] = array();
 	$_GET['maint'] = 1;
-	$_GET['lang'] = basename($language, '.lng');
 
 	foreach ($_SERVER['argv'] as $i => $arg)
 	{
@@ -3070,8 +3103,6 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 			exit;
 		}
 	}
-
-	$_POST['lang'] = $_GET['lang'];
 
 	if (!php_version_check())
 		print_error('Error: PHP ' . PHP_VERSION . ' does not match version requirements.', true);
@@ -3132,15 +3163,20 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 	if (!is_writable($cachedir_temp))
 		print_error('Error: Unable to obtain write access to "cache".', true);
 
-	if (!file_exists($boarddir . '/Themes/default/languages/index.' . basename($language, '.lng') . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
+	if (!file_exists($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
 		print_error('Error: Unable to find language files!', true);
 	else
 	{
-		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . (isset($_GET['lang']) ? $_GET['lang'] : basename($language, '.lng')) . '.php')), 0, 4096);
+		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . $upcontext['language'] . '.php')), 0, 4096);
 		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
 
 		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
 			print_error('Error: Language files out of date.', true);
+		if (!file_exists($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php'))
+			print_error('Error: Install language is missing for selected language.', true);
+
+		// Otherwise include it!
+		require_once($boarddir . '/Themes/default/languages/Install.' . $upcontext['language'] . '.php');
 	}
 
 	// Make sure we skip the HTML for login.
@@ -3477,7 +3513,7 @@ function template_upgrade_above()
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<title>SMF Upgrade Utility</title>
+		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -3507,7 +3543,7 @@ function template_upgrade_above()
 	<body>
 		<div id="header">
 			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $smfsite, '/smflogo.gif" style=" float: right;" alt="Simple Machines" border="0" /></a>
-			<div title="Radical Dreamers">SMF Upgrade Utility</div>
+			<div title="Radical Dreamers">', $txt['upgrade_upgrade_utility'], '</div>
 		</div>
 		<div id="content">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
@@ -3515,24 +3551,24 @@ function template_upgrade_above()
 				<td width="250" valign="top" style="padding-right: 10px;">
 					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
 						<tr>
-							<td class="titlebg">Steps</td>
+							<td class="titlebg">', $txt['upgrade_steps'], '</td>
 						</tr>
 						<tr>
 							<td class="windowbg2">';
 
 	foreach ($upcontext['steps'] as $num => $step)
 		echo '
-						<span class="', $num < $upcontext['current_step'] ? 'stepdone' : ($num == $upcontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">Step ', $step[0], ': ', $step[1], '</span><br />';
+						<span class="', $num < $upcontext['current_step'] ? 'stepdone' : ($num == $upcontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">', $txt['upgrade_step'], ' ', $step[0], ': ', $step[1], '</span><br />';
 
 	echo '
 							</td>
 						</tr>
 						<tr>
-							<td class="titlebg">Progress</td>
+							<td class="titlebg">', $txt['upgrade_progress'], '</td>
 						</tr>
 						<tr>
 							<td class="windowbg2">
-								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">Overall Progress:</div>
+								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">', $txt['upgrade_overall_progress'], ':</div>
 								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
 									<div id="overall_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $upcontext['overall_percent'], '%</div>
 									<div id="overall_progress" style="width: ', $upcontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
@@ -3540,7 +3576,7 @@ function template_upgrade_above()
 
 	if (isset($upcontext['step_progress']))
 		echo '
-								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">Step Progress:</div>
+								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">', $txt['upgrade_step_progress'], ':</div>
 								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
 									<div id="step_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $upcontext['step_progress'], '%</div>
 									<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #FFD000;">&nbsp;</div>
@@ -3558,8 +3594,8 @@ function template_upgrade_above()
 	$mins = (int) ($elapsed / 60);
 	$seconds = $elapsed - $mins * 60;
 	echo '
-								<div class="smalltext" style="padding: 5px; text-align: center;">Time Elapsed:</div>
-								<div class="smalltext" style="color: blue; text-align: center;"><span id="mins_elapsed">', $mins, '</span> mins, <span id="secs_elapsed">', $seconds, '</span> seconds.</div>';
+								<div class="smalltext" style="padding: 5px; text-align: center;">', $txt['upgrade_time_elapsed'], ':</div>
+								<div class="smalltext" style="color: blue; text-align: center;"><span id="mins_elapsed">', $mins, '</span> ', $txt['upgrade_time_mins'], ', <span id="secs_elapsed">', $seconds, '</span> ', $txt['upgrade_time_secs'], '.</div>';
 
 	echo '
 							</td>
@@ -3574,22 +3610,22 @@ function template_upgrade_above()
 
 function template_upgrade_below()
 {
-	global $upcontext;
+	global $upcontext, $txt;
 
 	if (!empty($upcontext['pause']))
 		echo '
-								<i>Incomplete.</i><br />
+								<i>', $txt['upgrade_incomplete'], '.</i><br />
 
-								<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
+								<h2 style="margin-top: 2ex;">', $txt['upgrade_not_quite_done'], '</h2>
 								<h3>
-									This upgrade has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="contbutt">continue button</label> below to keep going.
+									', $txt['upgrade_paused_overload'], '
 								</h3>';
 
 	if (!empty($upcontext['custom_warning']))
 		echo '
 								<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 									<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-									<b style="text-decoration: underline;">Note!</b><br />
+									<b style="text-decoration: underline;">', $txt['upgrade_note'], '</b><br />
 									<div style="padding-left: 6ex;">', $upcontext['custom_warning'], '</div>
 								</div>';
 
@@ -3598,10 +3634,10 @@ function template_upgrade_below()
 
 	if (!empty($upcontext['continue']))
 		echo '
-									<input type="submit" id="contbutt" name="contbutt" value="Continue" ', $upcontext['continue'] == 2 ? 'disabled="disabled"' : '', '/>';
+									<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '" ', $upcontext['continue'] == 2 ? 'disabled="disabled"' : '', '/>';
 	if (!empty($upcontext['skip']))
 		echo '
-									<input type="submit" id="skip" name="skip" value="Skip" onclick="dontSubmit = true; document.getElementById(\'contbutt\').disabled = \'disabled\'; return true;" />';
+									<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '" onclick="dontSubmit = true; document.getElementById(\'contbutt\').disabled = \'disabled\'; return true;" />';
 
 	echo '
 								</div>
@@ -3629,7 +3665,7 @@ function template_upgrade_below()
 				else if (countdown == -1)
 					return;
 
-				document.getElementById(\'contbutt\').value = "Continue (" + countdown + ")";
+				document.getElementById(\'contbutt\').value = "', $txt['upgrade_continue'], ' (" + countdown + ")";
 				countdown--;
 
 				setTimeout("doAutoSubmit();", 1000);
@@ -3679,19 +3715,18 @@ function template_error_message()
 
 function template_welcome_message()
 {
-	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings;
+	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $txt;
 
 	echo '
 		<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . SMF_VERSION . '"></script>
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
-			<h3>Thank you for choosing to upgrade to SMF ', SMF_VERSION, '. All files appear to be in place, and we\'re ready to proceed.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
+			<h3>', sprintf($txt['upgrade_ready_proceed'], SMF_VERSION), '</h3>
+	<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
 		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Warning!</b><br />
+			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
 			<div style="padding-left: 6ex;">
-				This upgrade script is out of date! The current version of SMF is <i id="smfVersion" style="white-space: nowrap;">??</i> but this upgrade script is for <i id="yourVersion" style="white-space: nowrap;">' . SMF_VERSION . '</i>.<br /><br />
-				It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are upgrading to the latest version.
+				', sprintf($txt['upgrade_warning_out_of_date'], SMF_VERSION), '
 			</div>
 		</div>';
 
@@ -3703,11 +3738,9 @@ function template_welcome_message()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Warning!</b><br />
+			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
 			<div style="padding-left: 6ex;">
-				This upgrade script has detected that your forum contains a lot of data which needs upgrading. This
-				process may take quite some time depending on your server and forum size, and for very large forums (~300,000 messages) may take several
-				hours to complete.
+				', $txt['upgrade_warning_lots_data'], '
 			</div>
 		</div>';
 
@@ -3716,7 +3749,7 @@ function template_welcome_message()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Warning!</b><br />
+			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
 			<div style="padding-left: 6ex;">
 				', $upcontext['warning'], '
 			</div>
@@ -3726,9 +3759,9 @@ function template_welcome_message()
 	echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #804840; color: black; background-color: #FE5A44; ', (file_exists($settings['default_theme_dir'] . '/scripts/script.js') ? 'display: none;' : ''), '" id="js_script_missing_error">
 			<div style="float: left; width: 2ex; font-size: 2em; color: black;">!!</div>
-			<b style="text-decoration: underline;">Critical Error!</b><br />
+			<b style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</b><br />
 			<div style="padding-left: 6ex;">
-				The upgrade script cannot find script.js or it is out of date. Make sure your theme paths are correct. You can download a setting checker tool from the <a href="http://www.simplemachines.org">Simple Machines Website</a>
+				', $txt['upgrade_error_script_js'], '
 			</div>
 		</div>';
 
@@ -3754,7 +3787,7 @@ function template_welcome_message()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Warning!</b><br />
+			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
 			<div style="padding-left: 6ex;">
 				&quot;', $upcontext['user']['name'], '&quot; has been running the upgrade script for the last ', $ago, ' - and was last active ', $updated, ' ago.';
 
@@ -3867,7 +3900,20 @@ function template_upgrade_options()
 
 	echo '
 			<h3>Before the upgrade gets underway please review the options below - and hit continue when you\'re ready to begin.</h3>
-			<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform">
+			<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform">';
+
+	// Warning message?
+	if (!empty($upcontext['upgrade_options_warning']))
+		echo '
+		<div style="margin: 1ex; padding: 1ex; border: 1px dashed #cc3344; color: black; background-color: #ffe4e9;">
+			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<b style="text-decoration: underline;">Warning!</b><br />
+			<div style="padding-left: 4ex;">
+				', $upcontext['upgrade_options_warning'], '
+			</div>
+		</div>';
+
+	echo '
 				<table cellpadding="1" cellspacing="0">
 					<tr valign="top">
 						<td width="2%">
@@ -3919,7 +3965,6 @@ function template_upgrade_options()
 						</td>
 					</tr>
 				</table>
-				<input type="hidden" name="lang" value="', $upcontext['language'], '" />
 				<input type="hidden" name="upcont" value="1" />';
 
 	// We need a normal continue button here!
@@ -3935,7 +3980,7 @@ function template_backup_database()
 			<h3>Please wait while a backup is created. For large forums this may take some time!</h3>';
 
 	echo '
-			<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" name="upform"  id="upform" method="post">
+			<form action="', $upcontext['form_url'], '" name="upform"  id="upform" method="post">
 			<input type="hidden" name="backup_done" id="backup_done" value="0" />
 			<b>Completed <span id="tab_done">', $upcontext['cur_table_num'], '</span> out of ', $upcontext['table_count'], ' tables.</b>
 			<span id="debuginfo"></span>';
@@ -4020,7 +4065,7 @@ function template_database_changes()
 		<h4 style="font-style: italic;">Please be patient - this may take some time on large forums. The time elapsed increments from the server to show progress is being made!</h4>';
 
 	echo '
-		<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;filecount=', $upcontext['file_count'], '" name="upform"  id="upform" method="post">
+		<form action="', $upcontext['form_url'], '&amp;filecount=', $upcontext['file_count'], '" name="upform"  id="upform" method="post">
 		<input type="hidden" name="database_done" id="database_done" value="0" />';
 
 	// No javascript looks rubbish!
@@ -4353,7 +4398,7 @@ function template_clean_mods()
 
 	echo '
 	<h3>SMF has detected some packages which were installed but not fully removed prior to upgrade. We recommend you remove the following mods and reinstall upon completion of the upgrade.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1" name="upform"  id="upform" method="post">';
+	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform"  id="upform" method="post">';
 
 	// In case it's required.
 	template_chmod();
@@ -4400,7 +4445,7 @@ function template_cleanup_done()
 
 	echo '
 	<h3>SMF has attempted to fix and reinstall mods as required. We recommend you visit the package manager upon completing upgrade to check the status of your modifications.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1" name="upform"  id="upform" method="post">
+	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform"  id="upform" method="post">
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
 				<td width="100%"><b>Actions Completed:</b></td>
@@ -4428,7 +4473,7 @@ function template_upgrade_templates()
 
 	echo '
 	<h3>There have been numerous language and template changes since the previous version of SMF. On this step the upgrader can attempt to automatically make these changes in your templates to save you from doing so manually.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1', $upcontext['is_test'] ? '' : ';forreal=1', '" name="upform"  id="upform" method="post">';
+	<form action="', $upcontext['form_url'], '&amp;ssi=1', $upcontext['is_test'] ? '' : ';forreal=1', '" name="upform"  id="upform" method="post">';
 
 	// Any files need to be writable?
 	$upcontext['chmod_in_form'] = true;

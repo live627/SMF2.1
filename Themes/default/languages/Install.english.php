@@ -173,4 +173,30 @@ $txt['error_script_outdated'] = 'This install script is out of date! The current
 	It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are installing the latest version.';
 $txt['error_db_filename'] = 'You must enter a name for the database file name for SQLite.';
 
+$txt['upgrade_upgrade_utility'] = 'SMF Upgrade Utility';
+$txt['upgrade_warning'] = 'Warning!';
+$txt['upgrade_critical_error'] = 'Critical Error!';
+$txt['upgrade_continue'] = 'Continue';
+$txt['upgrade_skip'] = 'Skip';
+$txt['upgrade_note'] = 'Note!';
+$txt['upgrade_step'] = 'Step';
+$txt['upgrade_steps'] = 'Steps';
+$txt['upgrade_progress'] = 'Progress';
+$txt['upgrade_overall_progress'] = 'Overall Progress';
+$txt['upgrade_step_progress'] = 'Step Progress';
+$txt['upgrade_time_elapsed'] = 'Time Elapsed';
+$txt['upgrade_time_mins'] = 'mins';
+$txt['upgrade_time_secs'] = 'seconds';
+
+$txt['upgrade_incomplete'] = 'Incomplete';
+$txt['upgrade_not_quite_done'] = 'Not quite done yet!';
+$txt['upgrade_paused_overload'] = 'This upgrade has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="contbutt">continue button</label> below to keep going.';
+
+$txt['upgrade_ready_proceed'] = 'Thank you for choosing to upgrade to SMF %1$s. All files appear to be in place, and we\'re ready to proceed.';
+
+$txt['upgrade_error_script_js'] = 'The upgrade script cannot find script.js or it is out of date. Make sure your theme paths are correct. You can download a setting checker tool from the <a href="http://www.simplemachines.org">Simple Machines Website</a>';
+
+$txt['upgrade_warning_lots_data'] = 'This upgrade script has detected that your forum contains a lot of data which needs upgrading. This process may take quite some time depending on your server and forum size, and for very large forums (~300,000 messages) may take several hours to complete.';
+$txt['upgrade_warning_out_of_date'] = 'This upgrade script is out of date! The current version of SMF is <i id="smfVersion" style="white-space: nowrap;">??</i> but this upgrade script is for <i id="yourVersion" style="white-space: nowrap;">%1$s</i>.<br /><br />It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are upgrading to the latest version.';
+
 ?>

@@ -100,6 +100,7 @@ April 2008
  ! Present a user installing SMF with a more obvious error message if the install scripts are missing. (install.php, install language file) [Bug 1863]
  ! RepairBoards wasn't setting unapproved post count right. (RepairBoards.php)
  ! Restore posts wasn't setting all the necessary statistics so it got a partial rewrite. (RemoveTopic.php) [Bug 1943]
+ ! Upgrade now requires the Install language file, and uses this for some of the primary language strings. (upgrade.php, Install language file)
 
 
 March 2008
