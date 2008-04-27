@@ -288,19 +288,22 @@ SmfEditor.prototype.init = function()
 		this.oFrameDocument.body.className = 'rich_editor';
 		// Listen for input.
 		this.oFrameDocument.instanceRef = this;
+		this.oTextHandle.instanceRef = this;
 
 		if (is_ff)
 		{
-			this.oFrameDocument.addEventListener('keyup', function() {this.instanceRef.editorKeyUp();}, true);
-			this.oFrameDocument.addEventListener('mouseup', function() {this.instanceRef.editorKeyUp();}, true);
+			this.oFrameDocument.addEventListener('keyup', function(ev) {this.instanceRef.editorKeyUp();}, true);
+			this.oFrameDocument.addEventListener('mouseup', function(ev) {this.instanceRef.editorKeyUp();}, true);
+			this.oFrameDocument.addEventListener('keydown', function(ev) {this.instanceRef.shortcutCheck(ev);}, true);
+			this.oTextHandle.addEventListener('keydown', function(ev) {this.instanceRef.shortcutCheck(ev);}, true);
 		}
 		else
 		{
-			this.oFrameDocument.onkeyup = function ()
+			this.oFrameDocument.onkeyup = function (ev)
 			{
 				this.instanceRef.editorKeyUp();
 			}
-			this.oFrameDocument.onmouseup = function()
+			this.oFrameDocument.onmouseup = function(ev)
 			{
 				this.instanceRef.editorKeyUp();
 			}
@@ -1323,22 +1326,25 @@ SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
 // Regstier default keyboard shortcuts.
 SmfEditor.prototype.registerDefaultShortcuts = function()
 {
-	// IE doesn't need these!
 	if (is_ff)
 	{
-		this.registerShortcut('b', 'ctrl', 'bold');
+		this.registerShortcut('b', 'ctrl', 'b');
+		this.registerShortcut('u', 'ctrl', 'u');
+		this.registerShortcut('i', 'ctrl', 'i');
+		this.registerShortcut('p', 'alt', 'preview');
+		this.registerShortcut('s', 'alt', 'submit');
 	}
 }
 
 // Register a keyboard shortcut.
-SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCommandName)
+SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCodeName)
 {
-	if (!sCommandName)
+	if (!sCodeName)
 		return;
 
 	var aNewShortcut = {
-		command : sCommandName,
-		key: sLetter.charCodeAt(0),
+		code : sCodeName,
+		key: sLetter.toUpperCase().charCodeAt(0),
 		alt : false,
 		ctrl : false
 	};
@@ -1348,25 +1354,72 @@ SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCommandNam
 		if (typeof(aNewShortcut[sSplitModifiers[i]]) != 'undefined')
 			aNewShortcut[sSplitModifiers[i]] = true;
 
-	this.aKeyboardShortcuts[sModifiers + sLetter] = aNewShortcut;
+	this.aKeyboardShortcuts[this.aKeyboardShortcuts.length] = aNewShortcut;
 }
 
 // Check whether the key has triggered a shortcut?
-function checkShortcut(e)
+SmfEditor.prototype.checkShortcut = function(ev)
 {
 	// To be a shortcut it needs to be one of these, duh!
-	if (!e.altKey && !e.ctrlKey)
+	if (!ev.altKey && !ev.ctrlKey)
 		return false;
 
-	sReturnCommand = false;
+	sReturnCode = false;
 
 	// Let's take a look at each of our shortcuts shall we?
-	for (i in this.aKeyboardShortcuts)
+	for (i = 0; i < this.aKeyboardShortcuts.length; i++)
 	{
 		// Found something?
-		if (e.altKey == this.aKeyboardShortcuts[i].alt && e.ctrlKey == this.aKeyboardShortcuts[i].ctrl && e.keyCode == this.aKeyboardShortcuts[i].key)
-			sReturnCommand = this.aKeyboardShortcuts[i].command;
+		if (ev.altKey == this.aKeyboardShortcuts[i].alt && ev.ctrlKey == this.aKeyboardShortcuts[i].ctrl && ev.keyCode == this.aKeyboardShortcuts[i].key)
+			sReturnCode = this.aKeyboardShortcuts[i].code;
 	}
 
-	return sReturnCommand;
+	return sReturnCode;
+}
+
+// The actual event check for the above!
+SmfEditor.prototype.shortcutCheck = function(ev)
+{
+	sFoundCode = this.checkShortcut(ev);
+
+	// Run it and exit.
+	if (sFoundCode)
+	{
+		cancelEvent = false;
+		if (sFoundCode == 'submit')
+		{
+			// So much to do!
+			submitThisOnce(document.getElementById(this.sFormId));
+			submitonce(document.getElementById(this.sFormId));
+			saveEntities();
+			document.getElementById(this.sFormId).submit();
+
+			cancelEvent = true;
+		}
+		if (sFoundCode == 'preview')
+		{
+			previewPost();
+			cancelEvent = true;
+		}
+		if (document.getElementById('cmd_' + sFoundCode))
+		{
+			oEmulateObject = document.getElementById('cmd_' + sFoundCode);
+			this.buttonEventHandler(oEmulateObject, 'click');
+			cancelEvent = true;
+		}
+
+		if (cancelEvent)
+		{
+			if (is_ie && ev.cancelBubble)
+				ev.cancelBubble = true;
+			else if (ev.stopPropagation)
+			{
+				ev.stopPropagation();
+				ev.preventDefault();
+			}
+
+			void(0);
+			return false;
+		}
+	}
 }

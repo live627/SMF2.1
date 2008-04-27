@@ -102,6 +102,7 @@ April 2008
  ! Restore posts wasn't setting all the necessary statistics so it got a partial rewrite. (RemoveTopic.php) [Bug 1943]
  ! Upgrade now requires the Install language file, and uses this for some of the primary language strings. (upgrade.php, Install language file)
  ! Don't allow the use of numeric prefixes for SQLite. (install.php) [Bug 1672]
+ ! Make posting keyboard shortcuts (alt+s, ctrl+b etc) work in Firefox on the post page. (editor.js)
 
 
 March 2008
