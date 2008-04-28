@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Invision Power Board 2"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1"
 ---~ settings: "/conf_global.php"
 ---~ globals: INFO
 ---~ from_prefix: "`$INFO[sql_database]`.$INFO[sql_tbl_prefix]"
@@ -26,9 +26,9 @@ $row['signature'] = addslashes(preg_replace(
 		'~<!--c2-->.+?<!--ec2-->~is',
 		'~<a href=\'mailto:(.+?)\'>.+?</a>~is',
 		'~<a href=\'(.+?)\' target=\'_blank\'>(.+?)</a>~is',
-		'~<span style=\'color:([^;]+?)\'>(.+?)</span>~is',
-		'~<span style=\'font-size:([^;]+?).+?\'>(.+?)</span>~is',
-		'~<span style=\'font-family:([^;]+?)\'>(.+?)</span>~is',
+		'~<span style=\'color:([^;]+?)\'>(.+)</span>~is',
+		'~<span style=\'font-size:(.+?);.+?\'>(.+)</span>~is',
+		'~<span style=\'font-family:([^;]+?)\'>(.+)</span>~is',
 		'~<([/]?)ul>~is',
 		'~<img src=\'~i',
 		'~\' border=\'0\' alt=\'user posted image\'( /)?' . '>~i',
@@ -67,11 +67,12 @@ SELECT
 	SUBSTRING(me.icq_number, 1, 255) AS icq,
 	SUBSTRING(me.msnname, 1, 255) AS msn, SUBSTRING(me.aim_name, 1, 16) AS aim,
 	m.hide_email AS hide_email, m.email_pm AS pm_email_notify,
-	SUBSTRING(IF(me.avatar_location = 'noavatar', '', me.avatar_location), 1, 255) AS avatar,
+	SUBSTRING(IF(me.avatar_location = 'noavatar' OR me.avatar_type = 'upload', '', me.avatar_location), 1, 255) AS avatar,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt, '' AS member_ip2
+	'' AS additional_groups, '' AS smiley_set, '' AS member_ip2,
+	CASE WHEN m.mgroup = 1 THEN 0 ELSE 1 END AS is_activated
 FROM {$from_prefix}members AS m
 	LEFT JOIN {$from_prefix}member_extra AS me ON (m.id = me.id)
 	LEFT JOIN {$from_prefix}members_converge AS mc ON (m.id = mc.converge_id)
@@ -126,9 +127,9 @@ SELECT
 	pl.pid AS id_poll, t.posts AS num_replies, t.views AS num_views,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg,
 	t.state = 'closed' AS locked
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.topic_id = t.tid)
 	LEFT JOIN {$from_prefix}polls AS pl ON (pl.tid = t.tid)
-WHERE p.topic_id = t.tid
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -150,9 +151,9 @@ $row['body'] = addslashes(preg_replace(
 		'~<!--c2-->.+?<!--ec2-->~is',
 		'~<a href=\'mailto:(.+?)\'>.+?</a>~is',
 		'~<a href=\'(.+?)\' target=\'_blank\'>(.+?)</a>~is',
-		'~<span style=\'color:([^;]+?)\'>(.+?)</span>~is',
-		'~<span style=\'font-size:([^;]+?).+?\'>(.+?)</span>~is',
-		'~<span style=\'font-family:([^;]+?)\'>(.+?)</span>~is',
+		'~<span style=\'color:([^;]+?)\'>(.+)</span>~is',
+		'~<span style=\'font-size:(.+?);.+?\'>(.+)</span>~is',
+		'~<span style=\'font-family:([^;]+?)\'>(.+)</span>~is',
 		'~<([/]?)ul>~is',
 		'~<img src=\'~i',
 		'~\' border=\'0\' alt=\'user posted image\'( /)?' . '>~i',
@@ -220,7 +221,7 @@ if (is_array($choices))
 	foreach ($choices as $choice)
 	{
 		$choice = addslashes_recursive($choice);
-		$rows[] = "$row[id_poll], SUBSTRING('" . implode("', 1, 255), '", $choice) . "'";
+		$rows[] = "$row[id_poll], SUBSTRING('" . implode("', 1, 255), SUBSTRING('", $choice) . "', 1, 255)";
 	}
 ---}
 SELECT pid AS id_poll, choices
@@ -253,9 +254,9 @@ $row['body'] = addslashes(preg_replace(
 		'~<!--c2-->.+?<!--ec2-->~is',
 		'~<a href=\'mailto:(.+?)\'>.+?</a>~is',
 		'~<a href=\'(.+?)\' target=\'_blank\'>(.+?)</a>~is',
-		'~<span style=\'color:([^;]+?)\'>(.+?)</span>~is',
-		'~<span style=\'font-size:([^;]+?).+?\'>(.+?)</span>~is',
-		'~<span style=\'font-family:([^;]+?)\'>(.+?)</span>~is',
+		'~<span style=\'color:([^;]+?)\'>(.+)</span>~is',
+		'~<span style=\'font-size:(.+?);.+?\'>(.+)</span>~is',
+		'~<span style=\'font-family:([^;]+?)\'>(.+)</span>~is',
 		'~<([/]?)ul>~is',
 		'~<img src=\'~i',
 		'~\' border=\'0\' alt=\'user posted image\'( /)?' . '>~i',
@@ -280,16 +281,14 @@ $row['body'] = strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />'
 ---}
 SELECT
 	mt.msg_id AS id_pm, mt.msg_author_id AS id_member_from,
-	IF(m.mt_to_id = m.mt_from_id, 0, 1) AS deleted_by_sender,
 	mt.msg_date AS msgtime, SUBSTRING(uf.name, 1, 255) AS from_name,
-	SUBSTRING(m.mt_title, 1, 255) AS subject,
+	SUBSTRING(m.mt_title, 1, 255) AS subject, '1' AS deleted_by_sender,
 	SUBSTRING(mt.msg_post, 1, 65534) AS body
-FROM ({$from_prefix}message_text AS mt, {$from_prefix}message_topics AS m)
+FROM {$from_prefix}message_text AS mt
+	INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = mt.msg_id)
 	LEFT JOIN {$from_prefix}members AS uf ON (uf.id = m.mt_from_id)
-WHERE m.mt_msg_id = mt.msg_id
 GROUP BY mt.msg_id;
 ---*
-
 /******************************************************************************/
 --- Converting personal messages (step 2)...
 /******************************************************************************/
@@ -299,11 +298,30 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	mt_msg_id AS id_pm, mt_to_id AS id_member, MIN(mt_hide_cc) AS bcc,
-	IF(MAX(mt_user_read) > 0, 1, 0) AS is_read, '' AS labels
+	mt_read AS is_read, '-1' AS labels, '1' AS deleted
 FROM {$from_prefix}message_topics
-WHERE mt_vid_folder != 'sent' OR mt_from_id != mt_to_id
 GROUP BY mt_msg_id, mt_to_id;
 ---*
+
+/******************************************************************************/
+--- Converting personal messages (step 3)...
+/******************************************************************************/
+
+---{
+convert_query("
+	UPDATE ({$to_prefix}personal_messages AS pm, {$from_prefix}message_topics AS m)
+	SET pm.deleted_by_sender = '0'
+	WHERE m.mt_msg_id = pm.id_pm
+		AND m.mt_vid_folder = 'sent'
+");
+
+convert_query("
+	UPDATE ({$to_prefix}pm_recipients AS r, {$from_prefix}message_topics AS m)
+	SET r.deleted = '0'
+	WHERE m.mt_msg_id = r.id_pm
+		AND m.mt_vid_folder != 'sent'
+");
+---}
 
 /******************************************************************************/
 --- Converting topic notifications...
@@ -342,12 +360,12 @@ WHERE member_id != -1;
 /******************************************************************************/
 
 DELETE FROM {$to_prefix}calendar_holidays
-WHERE id_holiday > 95;
+WHERE ID_HOLIDAY > 95;
 
 ---* {$to_prefix}calendar_holidays
 SELECT
 	SUBSTRING(title, 1, 30) AS title,
-	CONCAT(year, '-', month, '-', mday) AS event_date
+	CONCAT(year, '-', month, '-', mday) AS eventDate
 FROM {$from_prefix}calendar_events
 WHERE event_repeat = 1
 	AND repeat_unit = 'y';
@@ -389,7 +407,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT
-			g_id AS id_group, g_title AS group_name, g_max_messages AS max_messages,
+			g_id AS id_group, g_title AS group_name, g_max_messages AS maxMessages,
 			g_view_board AS view_stats, g_mem_info AS view_mlist,
 			g_view_board AS who_view, g_use_search AS search_posts, g_email_friend AS send_topic,
 			g_edit_profile AS profile_identity_own, g_post_new_topics AS post_new,
@@ -414,9 +432,9 @@ while (true)
 		{
 			convert_query("
 				INSERT INTO {$to_prefix}membergroups
-					(id_group, group_name, max_messages, online_color, stars)
+					(id_group, group_name, maxMessages, online_color, stars)
 				VALUES
-					($row[id_group] + 3, SUBSTRING('$row[group_name]', 1, 255), $row[max_messages], '', '')");
+					($row[id_group] + 3, SUBSTRING('$row[group_name]', 1, 255), $row[maxMessages], '', '')");
 			$groupID = $row['id_group'] + 3;
 		}
 		else
@@ -431,7 +449,7 @@ while (true)
 
 		unset($row['id_group']);
 		unset($row['group_name']);
-		unset($row['max_messages']);
+		unset($row['maxMessages']);
 
 		foreach ($row as $key => $value)
 			if ($value == 1)
@@ -732,9 +750,6 @@ if (!empty($rows))
 			(", $rows) . ")");
 ---}
 
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
-
 /******************************************************************************/
 --- Converting settings...
 /******************************************************************************/
@@ -753,11 +768,11 @@ while ($row = mysql_fetch_assoc($result))
 	{
 	case 'board_name':
 		$inv_forum_name = $row['config_value'];
-		continue;
+		break;
 
 	case 'offline_msg':
-		$inv_maintenance_message = $row['config_value'];
-		continue;
+		$inv_maintenance_message = str_replace("\n", '<br />', $row['config_value']);
+		break;
 
 	case 'hot_topic':
 		$row['config_name'] = 'hotTopicPosts';
@@ -810,7 +825,7 @@ updateSettingsFile(array(
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($oldAttachmentDir))
 {
@@ -826,11 +841,24 @@ if (!isset($oldAttachmentDir))
 		$oldAttachmentDir = $_POST['path_from'] . '/uploads';
 }
 
+// Is this an image???
+$attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
+if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
+	$attachmentExtention = '';
+
 $oldFilename = strtr($row['oldEncrypt'], array('upload:' => ''));
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+	// Set the default empty values.
+	$width = '0';
+	$height = '0';
+
+	// Is an an image?
+	if (!empty($attachmentExtension))
+		list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $oldFilename);
+
+	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
 
 	$id_attach++;
 }
@@ -839,4 +867,94 @@ SELECT
 	attach_pid AS id_msg, attach_location AS oldEncrypt,
 	attach_hits AS downloads, attach_file AS filename
 FROM {$from_prefix}attachments;
+---*
+
+/******************************************************************************/
+--- Converting user avatars...
+/******************************************************************************/
+
+---* {$to_prefix}attachments
+---{
+$no_add = true;
+$keys = array('id_attach', 'size', 'filename', 'id_member', 'width', 'height', 'attachmentType');
+
+if (!isset($oldAttachmentDir))
+{
+	$result = convert_query("
+		SELECT conf_value
+		FROM {$from_prefix}conf_settings
+		WHERE conf_key = 'upload_dir'
+		LIMIT 1");
+	list ($oldAvatarDir) = mysql_fetch_row($result);
+	mysql_free_result($result);
+
+	if (empty($oldAttachmentDir) || !file_exists($oldAvatarDir))
+		$oldAvatarDir = $_POST['path_from'] . '/uploads';
+}
+
+if (!isset($id_attach))
+{
+	$request = convert_query("
+		SELECT MAX(id_attach)
+		FROM {$to_prefix}attachments");
+	list ($id_attach) = mysql_fetch_row($request);
+	mysql_free_result($request);
+}
+
+// Find out where uploaded avatars go
+$request2 = convert_query("
+	SELECT value
+	FROM {$to_prefix}settings
+	WHERE variable = 'custom_avatar_enabled'
+	LIMIT 1");
+
+if (mysql_num_rows($request2))
+	list ($custom_avatar_enabled) = mysql_fetch_row($request2);
+else
+	$custom_avatar_enabled = false;
+mysql_free_result($request2);
+
+if ($custom_avatar_enabled)
+{
+	// Custom avatar dir.
+	$request2 = convert_query("
+		SELECT value
+		FROM {$to_prefix}settings
+		WHERE variable = 'custom_avatar_dir'
+		LIMIT 1");
+	list ($avatar_dir) = mysql_fetch_row($request2);
+	$attachmentType = '1';
+}
+else
+{
+	// Attachments dir.
+	$request2 = convert_query("
+		SELECT value
+		FROM {$to_prefix}settings
+		WHERE variable = 'attachmentUploadDir'
+		LIMIT 1");
+	list ($avatar_dir) = mysql_fetch_row($request2);
+	$attachmentType = '0';
+}
+mysql_free_result($request2);
+
+$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
+$ipb_avatar = $oldAvatarDir . '/' . $row['filename'];
+
+if (strlen($smf_avatar_filename) <= 255 && copy($ipb_avatar, $avatar_dir . '/' . $smf_avatar_filename))
+{
+	// Increase it.
+	++$id_attach;
+
+	// Get width, height, filename and id_member
+	list ($width, $height) = explode('x', $row['dimension']);
+	$filesize = filesize($ipb_avatar);
+	$id_member = $row['id_member'];
+
+	$rows[] = "'$id_attach', '$filesize', '" . addslashes($smf_avatar_filename) . "', '$id_member', '$width', '$height', '$attachmentType'";
+}
+---}
+SELECT id AS id_member, avatar_location AS filename, avatar_size AS dimension
+FROM {$from_prefix}member_extra
+WHERE avatar_type = 'upload';
 ---*

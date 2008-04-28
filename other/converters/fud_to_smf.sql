@@ -96,14 +96,14 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.poster_id AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}msg AS m)
-WHERE m.id = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}msg AS m ON (m.id = t.id_last_msg);
 ---*
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.poster_id AS id_member_started
-FROM ({$to_prefix}topics AS t, {$from_prefix}msg AS m)
-WHERE m.id = t.id_first_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}msg AS m ON (m.id = t.id_first_msg);
 ---*
 
 /******************************************************************************/
@@ -139,9 +139,9 @@ SELECT
 	SUBSTRING(IFNULL(u.email, ''), 1, 255) AS poster_email,
 	m.msg_opt & 2 != 0 AS smileys_enabled,
 	m.file_id, m.foff, m.length, '' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}msg AS m, {$from_prefix}thread AS t)
-	LEFT JOIN {$from_prefix}users AS u ON (u.id = m.poster_id)
-WHERE t.id = m.thread_id;
+FROM {$from_prefix}msg AS m
+	INNER JOIN {$from_prefix}thread AS t ON (t.id = m.thread_id)
+	LEFT JOIN {$from_prefix}users AS u ON (u.id = m.poster_id);
 ---*
 
 /******************************************************************************/
@@ -164,8 +164,8 @@ FROM {$from_prefix}poll AS p
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.poll_id AS id_poll
-FROM ({$to_prefix}topics AS t, {$from_prefix}msg AS m)
-WHERE m.id = t.id_first_msg
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}msg AS m ON (m.id = t.id_first_msg)
 	AND m.poll_id != 0;
 ---*
 
@@ -210,8 +210,8 @@ FROM {$from_prefix}poll_opt;
 SELECT
 	pot.poll_id AS id_poll, pot.user_id AS id_member,
 	pc.id_choice AS id_choice
-FROM ({$from_prefix}poll_opt_track AS pot, {$to_prefix}poll_choices AS pc)
-WHERE pc.tempID = pot.poll_opt;
+FROM {$from_prefix}poll_opt_track AS pot
+	INNER JOIN {$to_prefix}poll_choices AS pc ON (pc.tempID = pot.poll_opt);
 ---*
 
 ALTER TABLE {$to_prefix}poll_choices
@@ -362,9 +362,6 @@ if (!empty($rows))
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}
-
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
 
 /******************************************************************************/
 --- Converting attachments...

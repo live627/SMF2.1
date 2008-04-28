@@ -1,9 +1,9 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "MyBulletinBoard 1.0"
+---~ name: "MyBulletinBoard 1.2"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1"
 ---~ settings: "/inc/config.php"
 ---~ globals: config
 ---~ from_prefix: "`{$config['database']}`.{$config['table_prefix']}"
@@ -14,25 +14,29 @@
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}members;
+ALTER TABLE {$to_prefix}members
+CHANGE COLUMN password_salt password_salt varchar(8) NOT NULL default '';
 
 ---* {$to_prefix}members
 SELECT
 	uid AS id_member, SUBSTRING(username, 1, 255) AS member_name,
-	SUBSTRING(username, 1, 255) AS real_name,
-	SUBSTRING(password, 1, 64) AS passwd, email AS email_address,
+	SUBSTRING(username, 1, 255) AS real_name, email AS email_address,
+	SUBSTRING(password, 1, 64) AS passwd, SUBSTRING(salt, 1, 8) AS password_salt,
 	postnum AS posts, SUBSTRING(usertitle, 1, 255) AS usertitle,
 	lastvisit AS last_login, IF(usergroup = 4, 1, 0) AS id_group,
 	regdate AS date_registered, SUBSTRING(website, 1, 255) AS website_url,
 	SUBSTRING(website, 1, 255) AS website_title,
 	SUBSTRING(icq, 1, 255) AS icq, SUBSTRING(aim, 1, 16) AS aim,
-	SUBSTRING(yahoo, 1, 32) AS yim, SUBSTRING(msn AS msn, 1, 255) AS msn,
+	SUBSTRING(yahoo, 1, 32) AS yim, SUBSTRING(msn, 1, 255) AS msn,
 	SUBSTRING(signature, 1, 65534) AS signature, hideemail AS hide_email,
 	SUBSTRING(buddylist, 1, 255) AS buddy_list,
-	SUBSTRING(regip, 1, 255) AS member_ip,
-	SUBSTRING(regip, 1, 255) AS member_ip2,
+	SUBSTRING(regip, 1, 255) AS member_ip, SUBSTRING(regip, 1, 255) AS member_ip2,
 	SUBSTRING(ignorelist, 1, 255) AS pm_ignore_list,
-	timeonline AS total_time_logged_in,
-	IF(birthday = '', '0001-01-01', CONCAT_WS('-', RIGHT(birthday, 4), SUBSTRING(birthday, LOCATE('-', birthday) + 1, LOCATE('-', birthday, LOCATE('-', birthday) + 1) - LOCATE('-', birthday) - 1), SUBSTRING(birthday, 0, LOCATE('-', birthday) - 1))) AS birthdate
+	timeonline AS totalTimeLoggedIn,
+	CASE
+		WHEN birthday = '' THEN '0001-01-01'
+		ELSE CONCAT_WS('-', RIGHT(birthday, 4), SUBSTRING(birthday, LOCATE('-', birthday) + 1, LOCATE('-', birthday, LOCATE('-', birthday) + 1) - LOCATE('-', birthday) - 1), LEFT(birthday, LOCATE('-', birthday) - 1))
+	END AS birthdate
 FROM {$from_prefix}users;
 ---*
 
@@ -63,7 +67,7 @@ SELECT
 	fid AS id_board, SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, disporder AS board_order,
 	posts AS num_posts, threads AS num_topics, pid AS id_parent,
-	usepostcounts != 'yes' AS count_posts, '-1,0' AS member_groups
+	usepostcounts != 'yes' AS countPosts, '-1,0' AS member_groups
 FROM {$from_prefix}forums
 WHERE type = 'f';
 ---*
@@ -126,7 +130,7 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.pid AS id_poll, SUBSTRING(p.question, 1, 255), p.closed AS voting_locked,
+	p.pid AS id_poll, SUBSTRING(p.question, 1, 255) AS question, p.closed AS voting_locked,
 	t.uid AS id_member,
 	IF(p.timeout = 0, 0, p.dateline + p.timeout * 86400) AS expire_time,
 	SUBSTRING(t.username, 1, 255) AS poster_name
@@ -185,7 +189,7 @@ WHERE pm.folder != 2;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT pmid AS id_pm, toid AS id_member, readtime != 0 AS is_read, '' AS labels
+SELECT pmid AS id_pm, toid AS id_member, readtime != 0 AS is_read, '-1' AS labels
 FROM {$from_prefix}privatemessages
 WHERE folder != 2;
 ---*
@@ -197,6 +201,9 @@ WHERE folder != 2;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
+---{
+$ignore = true;
+---}
 SELECT uid AS id_member, tid AS id_topic
 FROM {$from_prefix}favorites;
 ---*
@@ -206,6 +213,9 @@ FROM {$from_prefix}favorites;
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
+---{
+$ignore = true;
+---}
 SELECT uid AS id_member, fid AS id_board
 FROM {$from_prefix}forumsubscriptions;
 ---*
@@ -260,7 +270,7 @@ FROM {$from_prefix}moderators;
 TRUNCATE {$to_prefix}log_topics;
 
 ---* {$to_prefix}log_topics
-SELECT tid AS id_topic, uid AS id_member, dateline AS log_time
+SELECT tid AS id_topic, uid AS id_member
 FROM {$from_prefix}threadsread;
 ---*
 
@@ -271,21 +281,43 @@ FROM {$from_prefix}threadsread;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
+if (!isset($oldAttachmentDir))
+{
+	$result = convert_query("
+		SELECT value
+		FROM {$from_prefix}settings
+		WHERE name = 'uploadspath'
+		LIMIT 1");
+	list ($oldAttachmentDir) = mysql_fetch_row($result);
+	mysql_free_result($result);
+
+	$oldAttachmentDir = $_POST['path_from'] . ltrim($oldAttachmentDir, '.');
+}
+
+// Is this an image???
+$attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
+if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
+	$attachmentExtention = '';
+
+$oldFilename = $row['attachname'];
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) > 255)
-	return;
-$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
-if (!$fp)
-	return;
+if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
+{
+	// Set the default empty values.
+	$width = '0';
+	$height = '0';
 
-fwrite($fp, $row['filedata']);
-fclose($fp);
+	// Is an an image?
+	if (!empty($attachmentExtension))
+		list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $oldFilename);
 
-$rows[] = "$id_attach, $row[filesize], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
-$id_attach++;
+	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
+
+	$id_attach++;
+}
 ---}
-SELECT pid AS id_msg, filedata, downloads, filename, filesize
+SELECT pid AS id_msg, downloads, filename, filesize, attachname
 FROM {$from_prefix}attachments;
 ---*

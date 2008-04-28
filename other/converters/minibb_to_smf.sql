@@ -81,8 +81,8 @@ SELECT
 	t.topic_poster AS id_member_started, (t.posts_count - 1) AS num_replies,
 	t.topic_views AS num_views, t.topic_status AS locked,
 	MIN(p.post_id) AS id_first_msg, MAX(p.post_id) AS id_last_msg
-FROM ({$from_prefix}{$Tt} AS t, {$from_prefix}{$Tp} AS p)
-WHERE p.topic_id = t.topic_id
+FROM {$from_prefix}{$Tt} AS t
+	INNER JOIN {$from_prefix}{$Tp} AS p ON (p.topic_id = t.topic_id)
 GROUP BY t.topic_id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -90,8 +90,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, p.poster_id AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}{$Tp} AS p)
-WHERE p.post_id = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}{$Tp} AS p ON (p.post_id = t.id_last_msg);
 ---*
 
 /******************************************************************************/
@@ -112,13 +112,13 @@ SELECT
 	p.forum_id AS id_board,
 	SUBSTRING(REPLACE(p.post_text, '<br>', '<br />'), 1, 65534) AS body,
 	'' modified_name, 'xx' AS icon
-FROM ({$from_prefix}{$Tp} AS p, {$from_prefix}{$Tt} AS t)
-	LEFT JOIN {$from_prefix}{$Tu} AS u ON (u.user_id = p.poster_id)
-WHERE t.topic_id = p.topic_id;
+FROM {$from_prefix}{$Tp} AS p
+	INNER JOIN {$from_prefix}{$Tt} AS t ON (t.topic_id = p.topic_id)
+	LEFT JOIN {$from_prefix}{$Tu} AS u ON (u.user_id = p.poster_id);
 ---*
 
 /******************************************************************************/
---- Clearing unused tables...
+--- Clearing unused SMF tables...
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}polls;

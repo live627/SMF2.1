@@ -79,9 +79,9 @@ SELECT
 	m.user_id AS id_member_started, (m.thread_count - 1) AS num_replies,
 	m.viewcount AS num_views, IF(m.sort = 1, 1, 0) AS is_sticky,
 	MAX(m2.message_id) AS id_last_msg, m.closed AS locked
-FROM ({$from_prefix}messages AS m, {$from_prefix}messages AS m2)
+FROM {$from_prefix}messages AS m
+	INNER JOIN {$from_prefix}messages AS m2 ON (m2.thread = m.thread)
 WHERE m.message_id = m.thread
-	AND m2.thread = m.thread
 	AND m.parent_id = 0
 GROUP BY m.thread
 HAVING id_first_msg != 0
@@ -90,8 +90,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.user_id AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}messages AS m)
-WHERE m.message_id = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}messages AS m ON (m.message_id = t.id_last_msg);
 ---*
 
 /******************************************************************************/

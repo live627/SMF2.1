@@ -331,9 +331,9 @@ SELECT
 	vote_id AS id_poll, SUBSTRING(vote_text, 1, 255) AS question,
 	t.topic_poster AS id_member, vote_start + vote_length AS expire_time,
 	SUBSTRING(IFNULL(u.username, ''), 1, 255) AS poster_name
-FROM ({$from_prefix}bbvote_desc AS vd, {$from_prefix}bbtopics AS t)
-	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = t.topic_poster)
-WHERE vd.topic_id = t.topic_id;
+FROM {$from_prefix}bbvote_desc AS vd
+	INNER JOIN {$from_prefix}bbtopics AS t ON (vd.topic_id = t.topic_id)
+	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = t.topic_poster);
 ---*
 
 /******************************************************************************/
@@ -426,7 +426,7 @@ $request = convert_query("
 	FROM {$from_prefix}bbforums");
 while ($row = mysql_fetch_assoc($request))
 {
-	// Accumulate permissions in here - the keys are ID_GROUPs.
+	// Accumulate permissions in here - the keys are id_groups.
 	$this_board = array(
 		'-1' => array(),
 		'0' => array(),
@@ -506,9 +506,9 @@ $request = convert_query("
 		aa.forum_id AS id_board, mg.id_group AS id_group, aa.auth_post,
 		aa.auth_reply, aa.auth_edit, aa.auth_delete, aa.auth_sticky,
 		aa.auth_announce, aa.auth_vote, aa.auth_pollcreate, aa.auth_mod
-	FROM ({$from_prefix}bbauth_access AS aa, {$from_prefix}bbgroups AS g, {$to_prefix}membergroups AS mg)
-	WHERE g.group_id = aa.group_id
-		AND BINARY mg.group_name = CONCAT('phpBB ', g.group_name)");
+	FROM {$from_prefix}bbauth_access AS aa
+		INNER JOIN {$from_prefix}bbgroups AS g ON (g.group_id = aa.group_id)
+		INNER JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', g.group_name))");
 while ($row = mysql_fetch_assoc($request))
 {
 	$this_group = array();
@@ -602,11 +602,11 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT u.user_id AS id_member, aa.forum_id AS id_board
-FROM ({$from_prefix}users AS u, {$from_prefix}bbgroups AS g, {$from_prefix}bbuser_group AS ug, {$from_prefix}bbauth_access AS aa)
-WHERE ug.user_id = u.user_id
-	AND ug.group_id = aa.group_id
-	AND g.group_id = aa.group_id
-	AND g.group_single_user = 1
+FROM {$from_prefix}users AS u
+	INNER JOIN {$from_prefix}bbgroups AS g ON (g.group_id = aa.group_id)
+	INNER JOIN {$from_prefix}bbuser_group AS ug ON (ug.user_id = u.user_id)
+	INNER JOIN {$from_prefix}bbauth_access AS aa ON (ug.group_id = aa.group_id)
+WHERE g.group_single_user = 1
 	AND aa.auth_mod = 1
 GROUP BY aa.forum_id, u.user_id;
 ---*
@@ -922,9 +922,9 @@ while (true)
 		SELECT
 			a.post_id AS id_msg, ad.real_filename AS filename, ad.physical_filename AS encrypted,
 			ad.download_count AS downloads, ad.filesize AS size
-		FROM ({$from_prefix}bbattachments AS a, {$from_prefix}bbattachments_desc AS ad)
+		FROM {$from_prefix}bbattachments AS a
+			INNER JOIN {$from_prefix}bbattachments_desc AS ad ON (ad.attach_id = a.attach_id)
 		WHERE a.post_id != 0
-			AND ad.attach_id = a.attach_id
 		LIMIT $_REQUEST[start], 100");
 	$attachments = array();
 	while ($row = mysql_fetch_assoc($result))

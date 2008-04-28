@@ -84,10 +84,10 @@ SELECT
 	t.viewnum AS num_views, IF(t.poll, p.id, 0) AS id_poll,
 	memf.id_member AS id_member_started, MIN(m.id) AS id_first_msg,
 	MAX(m.id) AS id_last_msg
-FROM ({$from_prefix}topic AS t, {$from_prefix}message AS m)
+FROM {$from_prefix}topic AS t
+	INNER JOIN {$from_prefix}message AS m ON (m.tid = t.id)
 	LEFT JOIN {$from_prefix}poll AS p ON (p.tid = t.id)
 	LEFT JOIN {$to_prefix}members AS memf ON (memf.tempID = t.ownerId)
-WHERE m.tid = t.id
 GROUP BY t.id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -95,9 +95,9 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, meml.id_member AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}message AS m, {$to_prefix}members AS meml)
-WHERE m.id = t.id_last_msg
-	AND meml.tempID = m.ownerId;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}message AS m ON (m.id = t.id_last_msg)
+	INNER JOIN {$to_prefix}members AS meml ON (meml.tempID = m.ownerId);
 ---*
 
 /******************************************************************************/
@@ -117,10 +117,10 @@ SELECT
 	SUBSTRING(mem.email_address, 1, 255) AS poster_email,
 	SUBSTRING(IFNULL(mem.member_name, u.name), 1, 255) AS poster_name,
 	'' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}message AS m, {$from_prefix}topic AS t)
+FROM {$from_prefix}message AS m
+	INNER JOIN {$from_prefix}topic AS t ON (t.id = m.tid)
 	LEFT JOIN {$to_prefix}members AS mem ON (mem.tempID = m.ownerId)
-	LEFT JOIN {$from_prefix}zorumuser AS u ON (u.id = m.ownerId)
-WHERE t.id = m.tid;
+	LEFT JOIN {$from_prefix}zorumuser AS u ON (u.id = m.ownerId);
 ---*
 
 /******************************************************************************/
@@ -166,10 +166,9 @@ FROM {$from_prefix}poll;
 
 ---* {$to_prefix}poll_choices (update ID_TEMP)
 SELECT pc.ID_TEMP, COUNT(*) AS votes
-FROM ({$to_prefix}poll_choices AS pc, {$from_prefix}subscribe AS s)
+FROM {$to_prefix}poll_choices AS pc
+	INNER JOIN {$from_prefix}subscribe AS s ON (s.objid = pc.id_poll AND s.info = pc.id_choice)
 WHERE s.type = 65536
-	AND s.objid = pc.id_poll
-	AND s.info = pc.id_choice
 GROUP BY pc.ID_TEMP;
 ---*
 
@@ -183,9 +182,9 @@ ADD PRIMARY KEY (id_poll, id_choice);
 
 ---* {$to_prefix}log_polls
 SELECT s.objid AS id_poll, mem.id_member, s.info AS id_choice
-FROM ({$from_prefix}subscribe AS s, {$to_prefix}members AS mem)
-WHERE s.type = 65536
-	AND mem.tempID = s.userid;
+FROM {$from_prefix}subscribe AS s
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = s.userid)
+WHERE s.type = 65536;
 ---*
 
 /******************************************************************************/
@@ -196,9 +195,9 @@ TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.objid AS id_topic
-FROM ({$from_prefix}subscribe AS s, {$to_prefix}members AS mem)
-WHERE s.type = 16
-	AND mem.tempID = s.userid;
+FROM {$from_prefix}subscribe AS s
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = s.userid)
+WHERE s.type = 16;
 ---*
 
 /******************************************************************************/
@@ -207,9 +206,9 @@ WHERE s.type = 16
 
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.objid AS id_board
-FROM ({$from_prefix}subscribe AS s, {$to_prefix}members AS mem)
-WHERE s.type = 8
-	AND mem.tempID = s.userid;
+FROM {$from_prefix}subscribe AS s
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = s.userid)
+WHERE s.type = 8;
 ---*
 
 /******************************************************************************/
@@ -244,6 +243,6 @@ $id_attach++;
 SELECT
 	m.id AS id_msg, m.downloaded AS downloads, m.att_file_upload AS filename,
 	m.attsize AS size, a.file
-FROM ({$from_prefix}attach AS a, {$from_prefix}message AS m)
-WHERE m.id = a.id;
+FROM {$from_prefix}attach AS a
+	INNER JOIN {$from_prefix}message AS m ON (m.id = a.id);
 ---*

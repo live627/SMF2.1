@@ -89,9 +89,9 @@ SELECT
 	ul.userid AS id_member_updated, t.replycount AS num_replies,
 	IF(t.open, 0, 1) AS locked, MIN(p.postid) AS id_first_msg,
 	MAX(p.postid) AS id_last_msg
-FROM ({$from_prefix}thread AS t, {$from_prefix}post AS p)
+FROM {$from_prefix}thread AS t
+	INNER JOIN {$from_prefix}post AS p ON (p.threadid = t.threadid)
 	LEFT JOIN {$from_prefix}user AS ul ON (ul.username = t.lastposter)
-WHERE p.threadid = t.threadid
 GROUP BY t.threadid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -120,10 +120,10 @@ SELECT
 	SUBSTRING(edit_u.username, 1, 255) AS modified_name,
 	SUBSTRING(REPLACE(p.pagetext, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
-FROM ({$from_prefix}post AS p, {$from_prefix}thread AS t)
+FROM {$from_prefix}post AS p
+	INNER JOIN {$from_prefix}thread AS t ON (t.threadid = p.threadid)
 	LEFT JOIN {$from_prefix}user AS u ON (u.userid = p.userid)
-	LEFT JOIN {$from_prefix}user AS edit_u ON (edit_u.userid = p.edituserid)
-WHERE t.threadid = p.threadid;
+	LEFT JOIN {$from_prefix}user AS edit_u ON (edit_u.userid = p.edituserid);
 ---*
 
 /******************************************************************************/
@@ -279,9 +279,6 @@ if (!empty($rows))
 			(", $rows) . ")");
 ---}
 
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
-
 /******************************************************************************/
 --- Converting attachments...
 /******************************************************************************/
@@ -303,8 +300,8 @@ $rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) .
 $id_attach++;
 ---}
 SELECT p.postid AS id_msg, a.filedata, a.counter AS downloads, a.filename
-FROM ({$from_prefix}attachment AS a, {$from_prefix}post AS p)
-WHERE p.attachmentid = a.attachmentid;
+FROM {$from_prefix}attachment AS a
+	INNER JOIN {$from_prefix}post AS p ON (p.attachmentid = a.attachmentid);
 ---*
 
 /******************************************************************************/

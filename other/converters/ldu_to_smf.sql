@@ -70,8 +70,8 @@ SELECT
 	SUBSTRING(fs.fs_desc, 1, 65534) AS description,
 	fs.fs_postcount AS num_posts, fs_topiccount AS num_topics,
 	fs_countposts = 0 AS count_posts, '-1,0' AS member_groups
-FROM ({$from_prefix}{$db_forum_sections} AS fs, {$to_prefix}categories AS c)
-WHERE BINARY c.name = fs.fs_category;
+FROM {$from_prefix}{$db_forum_sections} AS fs
+	INNER JOIN {$to_prefix}categories AS c ON (BINARY c.name = fs.fs_category);
 ---*
 
 /******************************************************************************/
@@ -90,8 +90,8 @@ SELECT
 	t.ft_viewcount AS num_views, t.ft_lastposterid AS id_member_updated,
 	t.ft_firstposterid AS id_member_started, MIN(p.fp_id) AS id_first_msg,
 	MAX(p.fp_id) AS id_last_msg, t.ft_poll AS id_poll
-FROM ({$from_prefix}{$db_forum_topics} AS t, {$from_prefix}{$db_forum_posts} AS p)
-WHERE p.fp_topicid = t.ft_id
+FROM {$from_prefix}{$db_forum_topics} AS t
+	INNER JOIN {$from_prefix}{$db_forum_posts} AS p ON (p.fp_topicid = t.ft_id)
 	AND ft_movedto = 0
 GROUP BY t.ft_id
 HAVING id_first_msg != 0
@@ -117,9 +117,9 @@ SELECT
 	SUBSTRING(p.fp_posterip, 1, 255) AS poster_ip,
 	SUBSTRING(t.ft_title, 1, 255) AS subject,
 	SUBSTRING(u.user_email, 1, 255) AS poster_email, 'xx' AS icon
-FROM ({$from_prefix}{$db_forum_posts} AS p, {$from_prefix}{$db_forum_topics} AS t)
-	LEFT JOIN {$from_prefix}{$db_users} AS u ON (u.user_id = p.fp_posterid)
-WHERE t.ft_id = p.fp_topicid;
+FROM {$from_prefix}{$db_forum_posts} AS p
+	INNER JOIN {$from_prefix}{$db_forum_topics} AS t ON (t.ft_id = p.fp_topicid)
+	LEFT JOIN {$from_prefix}{$db_users} AS u ON (u.user_id = p.fp_posterid);
 ---*
 
 /******************************************************************************/
@@ -136,9 +136,9 @@ SELECT
 	SUBSTRING(p.poll_text, 1, 255) AS question,
 	t.ft_firstposterid AS id_member,
 	SUBSTRING(t.ft_firstpostername, 1, 255) AS poster_name
-FROM ({$from_prefix}{$db_polls} AS p, {$from_prefix}{$db_forum_topics} AS t)
-WHERE p.poll_type = 1
-	AND t.ft_poll = p.poll_id;
+FROM {$from_prefix}{$db_polls} AS p
+	INNER JOIN {$from_prefix}{$db_forum_topics} AS t ON (t.ft_poll = p.poll_id)
+WHERE p.poll_type = 1;
 ---*
 
 /******************************************************************************/

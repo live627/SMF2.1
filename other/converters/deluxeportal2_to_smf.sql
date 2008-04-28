@@ -86,8 +86,8 @@ SELECT
 	t.userid AS id_member_started, t.lastuserid AS id_member_updated,
 	t.posts - 1 AS num_replies, t.closed AS locked,
 	MIN(p.postid) AS id_first_msg, t.lastpostid AS id_last_msg
-FROM ({$from_prefix}thread AS t, {$from_prefix}post AS p)
-WHERE p.threadid = t.threadid
+FROM {$from_prefix}thread AS t
+	INNER JOIN {$from_prefix}post AS p ON (p.threadid = t.threadid)
 GROUP BY t.threadid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -111,9 +111,9 @@ SELECT
 	p.smilies AS smileys_enabled, p.editedby_date AS modified_time,
 	SUBSTRING(IF(p.editedby_date = 0, '', p.editedby_username), 1, 255) AS modified_name,
 	SUBSTRING(REPLACE(p.message, '\r', ''), 1, 65534) AS body, 'xx' AS icon
-FROM ({$from_prefix}post AS p, {$from_prefix}thread AS t)
-	LEFT JOIN {$from_prefix}user AS u ON (u.userid = p.userid)
-WHERE t.threadid = p.threadid;
+FROM {$from_prefix}post AS p
+	INNER JOIN {$from_prefix}thread AS t ON (t.threadid = p.threadid)
+	LEFT JOIN {$from_prefix}user AS u ON (u.userid = p.userid);
 ---*
 
 /******************************************************************************/
@@ -130,10 +130,10 @@ SELECT
 	t.userid AS id_member, SUBSTRING(t.username, 1, 255) AS poster_name,
 	p.postdate + t.poll_days * 86400 AS expire_time
 	/* // !!! t.poll_multiple = 1 AS max_votes */
-FROM ({$from_prefix}thread AS t, {$to_prefix}topics AS t2, {$from_prefix}post AS p)
-WHERE t.poll != ''
-	AND t2.id_topic = t.threadid
-	AND p.postid = t2.id_first_msg;
+FROM {$from_prefix}thread AS t
+	INNER JOIN {$to_prefix}topics AS t2 ON (t2.id_topic = t.threadid)
+	INNER JOIN {$from_prefix}post AS p ON (p.postid = t2.id_first_msg)
+WHERE t.poll != '';
 ---*
 
 /******************************************************************************/
@@ -225,8 +225,8 @@ TRUNCATE {$to_prefix}log_topics;
 
 ---* {$to_prefix}log_topics
 SELECT mr.threadid AS id_topic, mr.userid AS id_member, p.postdate AS log_time
-FROM ({$from_prefix}markread AS mr, {$from_prefix}post AS p)
-WHERE p.postid = mr.postid
+FROM {$from_prefix}markread AS mr
+	INNER JOIN {$from_prefix}post AS p ON (p.postid = mr.postid)
 GROUP BY id_topic, id_member;
 ---*
 

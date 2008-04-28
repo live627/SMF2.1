@@ -94,8 +94,8 @@ SELECT
 	t.topic_last_poster AS id_member_updated, t.topic_replies AS num_replies,
 	t.topic_views AS num_views, IF(t.topic_modes & 1, 1, 0) AS locked,
 	MIN(p.post_id) AS id_first_msg, MAX(p.post_id) AS id_last_msg
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
-WHERE p.post_topic = t.topic_id
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.post_topic = t.topic_id)
 GROUP BY t.topic_id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -119,9 +119,9 @@ SELECT
 	p.post_emoticons AS smileys_enabled,
 	SUBSTRING(REPLACE(p.post_text, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
-FROM ({$from_prefix}posts AS p, {$from_prefix}topics AS t)
-	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = p.post_author)
-WHERE t.topic_id = p.post_topic;
+FROM {$from_prefix}posts AS p
+	INNER JOIN {$from_prefix}topics AS t ON (t.topic_id = p.post_topic)
+	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = p.post_author);
 ---*
 
 /******************************************************************************/
@@ -155,16 +155,16 @@ WHERE t.topic_modes & 4;
 
 ---* {$to_prefix}poll_choices
 ---{
-if (!isset($last_ID_POLL) || $last_ID_POLL != $row['id_poll'])
+if (!isset($last_id_poll) || $last_id_poll != $row['id_poll'])
 {
-	if (isset($last_ID_POLL) && !empty($choices))
+	if (isset($last_id_poll) && !empty($choices))
 	{
 		foreach ($choices as $id => $label)
-			$rows[] = "$last_ID_POLL, '" . addslashes($label) . "', " . ($id + 1) . ", 0";
+			$rows[] = "$last_id_poll, '" . addslashes($label) . "', " . ($id + 1) . ", 0";
 		$choices = array();
 	}
 
-	$last_ID_POLL = $row['id_poll'];
+	$last_id_poll = $row['id_poll'];
 	$choices = explode("\n", $row['label']);
 }
 
@@ -181,11 +181,11 @@ GROUP BY t.topic_id, v.vote_option;
 ---*
 
 ---{
-if (isset($last_ID_POLL) && !empty($choices))
+if (isset($last_id_poll) && !empty($choices))
 {
 	$rows = array();
 	foreach ($choices as $id => $label)
-		$rows[] = "$last_ID_POLL, '" . addslashes($label) . "', " . ($id + 1) . ", 0";
+		$rows[] = "$last_id_poll, '" . addslashes($label) . "', " . ($id + 1) . ", 0";
 	$choices = array();
 
 	convert_query("

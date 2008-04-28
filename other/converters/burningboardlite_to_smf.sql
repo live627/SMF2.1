@@ -135,8 +135,8 @@ SELECT
 	t.starterid AS id_member_started, t.lastposterid AS id_member_updated,
 	MIN(p.postid) AS id_first_msg, MAX(p.postid) AS id_last_msg,
 	t.pollid AS id_poll
-FROM ({$from_prefix}threads AS t, {$from_prefix}posts AS p)
-WHERE p.threadid = t.threadid
+FROM {$from_prefix}threads AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.threadid = t.threadid)
 GROUP BY t.threadid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -159,9 +159,9 @@ SELECT
 	allowsmilies AS smileys_enabled,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}posts AS p, {$from_prefix}threads AS t)
-	LEFT JOIN {$from_prefix}users AS u ON (u.userid = p.userid)
-WHERE t.threadid = p.threadid;
+FROM {$from_prefix}posts AS p
+	INNER JOIN {$from_prefix}threads AS t ON (t.threadid = p.threadid)
+	LEFT JOIN {$from_prefix}users AS u ON (u.userid = p.userid);
 ---*
 
 /******************************************************************************/
@@ -179,9 +179,9 @@ SELECT
 	IF(p.timeout = 0, 0, (p.starttime + 86400 * p.timeout)) AS expire_time,
 	SUBSTRING(IFNULL(u.username, ''), 1, 255) AS poster_name,
 	choicecount AS max_votes
-FROM ({$from_prefix}polls AS p, {$from_prefix}threads AS t)
-	LEFT JOIN {$from_prefix}users AS u ON (u.userid = t.starterid)
-WHERE p.threadid = t.threadid;
+FROM {$from_prefix}polls AS p
+	INNER JOIN {$from_prefix}threads AS t ON (p.threadid = t.threadid)
+	LEFT JOIN {$from_prefix}users AS u ON (u.userid = t.starterid);
 ---*
 
 /******************************************************************************/
@@ -462,6 +462,3 @@ if (!empty($rows))
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}
-
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;

@@ -1,9 +1,9 @@
 /* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
 
 /******************************************************************************/
----~ name: "vBulletin 3.5"
+---~ name: "vBulletin 3.6"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1.2"
 ---~ settings: "/admin/config.php", "/includes/config.php"
 ---~ from_prefix: "`" . $config['Database']['dbname'] . "`." . $config['Database']['tableprefix'] . ""
 ---~ table_test: "{$from_prefix}user"
@@ -15,22 +15,40 @@
 TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
+---{
+$ignore = true;
+$row['signature'] = preg_replace(
+	array(
+		'~\[(quote)=([^\]]+)\]~i',
+		'~\[(.+?)=&quot;(.+?)&quot;\]~is',
+	),
+	array(
+		'[$1=&quot;$2&quot;]',
+		'[$1=$2]',
+	), strtr($row['signature'], array('"' => '&quot;')));
+$row['signature'] = substr($row['signature'], 0, 65534);
+---}
 SELECT
-	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name, 
+	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
 	SUBSTRING(u.username, 1, 255) AS real_name,
 	SUBSTRING(u.password, 1, 64) AS passwd,
 	SUBSTRING(u.email, 1, 255) AS email_address,
 	SUBSTRING(u.homepage, 1, 255) AS website_title,
 	SUBSTRING(u.homepage, 1, 255) AS website_url,
 	SUBSTRING(u.icq, 1, 255) AS icq, SUBSTRING(u.aim, 1, 16) AS aim,
-	SUBSTRING(u.yahoo, 1, 32) AS yim,
+	SUBSTRING(u.yahoo, 1, 32) AS yim, SUBSTRING(u.msn, 1, 255) AS msn,
 	SUBSTRING(IF(u.customtitle, u.usertitle, ''), 1, 255) AS usertitle,
 	u.lastvisit AS last_login, u.joindate AS date_registered, u.posts,
-	u.reputation AS karma_good, u.birthday_search AS birthdate,
+	u.reputation AS karmaGood, u.birthday_search AS birthdate,
 	SUBSTRING(u.ipaddress, 1, 255) AS member_ip,
 	SUBSTRING(u.ipaddress, 1, 255) AS member_ip2,
-	SUBSTRING(u.msn, 1, 255) AS msn,
-	CASE u.usergroupid WHEN 6 THEN 1 WHEN 5 THEN 2 WHEN 7 THEN 2 ELSE 0 END AS id_group,
+	CASE
+		WHEN u.usergroupid = 6 THEN 1
+		WHEN u.usergroupid = 5 THEN 2
+		WHEN u.usergroupid = 7 THEN 2
+		ELSE 0
+	END AS id_group,
+	CASE WHEN u.usergroupid IN (3, 4) THEN 0 ELSE 1 END AS is_activated,
 	SUBSTRING(u.salt, 1, 5) AS password_salt,
 	SUBSTRING(ut.signature, 1, 65534) AS signature, '' AS lngfile,
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
@@ -43,17 +61,41 @@ WHERE u.userid != 0;
 ---*
 
 /******************************************************************************/
+--- Converting administrators...
+/******************************************************************************/
+
+---{
+$request = convert_query("
+	SELECT userid AS id_member
+	FROM {$from_prefix}administrator");
+$admins = array();
+while ($row = mysql_fetch_assoc($request))
+	$admins[] = $row['id_member'];
+mysql_free_result($request);
+
+convert_query("
+	UPDATE {$to_prefix}members
+	SET id_group = 1
+	WHERE id_member IN (" . implode(',', $admins) .  ")");
+---}
+
+/******************************************************************************/
 --- Converting categories...
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}categories;
 
+ALTER TABLE {$to_prefix}categories
+CHANGE COLUMN id_cat id_cat SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+CHANGE COLUMN cat_order cat_order SMALLINT(5) NOT NULL;
+
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
-	displayorder AS cat_order
+	displayorder AS cat_order, '' AS canCollapse
 FROM {$from_prefix}forum
-WHERE parentid = -1;
+WHERE parentid = -1
+ORDER BY cat_order;
 ---*
 
 /******************************************************************************/
@@ -64,6 +106,10 @@ TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
 WHERE id_board != 0;
+
+ALTER TABLE {$to_prefix}boards
+CHANGE COLUMN id_board id_board SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+CHANGE COLUMN id_cat id_cat SMALLINT(5) NOT NULL;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -77,6 +123,49 @@ WHERE parentid != -1;
 ---*
 
 /******************************************************************************/
+--- Assigning boards to categories...
+/******************************************************************************/
+
+---{
+$request = convert_query("
+	SELECT forumid AS id_cat
+	FROM {$from_prefix}forum
+	WHERE parentid = '-1'");
+
+$cats = array();
+while ($row = mysql_fetch_assoc($request))
+	$cats[$row['id_cat']] = $row['id_cat'];
+mysql_free_result($request);
+
+// Get the boards now
+$request = convert_query("
+	SELECT forumid AS id_board, parentid AS id_cat
+	FROM {$from_prefix}forum
+	WHERE parentid != '-1'");
+
+while ($row = mysql_fetch_assoc($request))
+{
+	foreach ($cats as $key => $value)
+	{
+		if ($key == $row['id_cat'])
+		{
+			convert_query("
+				UPDATE {$to_prefix}boards
+				SET id_cat = '$key'
+				WHERE id_board = '$row[id_board]'");
+		}
+	}
+}
+mysql_free_result($request);
+
+// id_parent is 0 when the id_cat and id_parent are equal.
+convert_query("
+	UPDATE {$to_prefix}boards
+	SET id_parent = 0
+	WHERE id_parent = id_cat");
+---}
+
+/******************************************************************************/
 --- Converting topics...
 /******************************************************************************/
 
@@ -86,6 +175,9 @@ TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
+---{
+$ignore = true;
+---}
 SELECT
 	t.threadid AS id_topic, t.forumid AS id_board, t.sticky AS is_sticky,
 	t.pollid AS id_poll, t.views AS num_views, t.postuserid AS id_member_started,
@@ -109,8 +201,17 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 ---{
-$row['body'] = preg_replace('~\[(quote)=([^\]]+)\]~i', '[$1=&quot;$2&quot;]', strtr($row['body'], array('"' => '&quot;')));
-$row['body'] = substr(preg_replace('~\[(url|email)=&quot;(.+?)&quot;\]~i', '[$1=$2]', $row['body']), 0, 65534);
+$ignore = true;
+$row['body'] = preg_replace(
+	array(
+		'~\[(quote)=([^\]]+)\]~i',
+		'~\[(.+?)=&quot;(.+?)&quot;\]~is',
+	),
+	array(
+		'[$1=&quot;$2&quot;]',
+		'[$1=$2]',
+	), strtr($row['body'], array('"' => '&quot;')));
+$row['body'] = substr($row['body'], 0, 65534);
 ---}
 SELECT
 	p.postid AS id_msg, p.threadid AS id_topic, p.dateline AS poster_time,
@@ -140,6 +241,9 @@ TRUNCATE {$to_prefix}poll_choices;
 TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
+---{
+$ignore = true;
+---}
 SELECT
 	p.pollid AS id_poll, SUBSTRING(p.question, 1, 255) AS question,
 	IF(p.active = 0, 1, 0) AS voting_locked, p.multiple AS max_votes,
@@ -156,6 +260,7 @@ FROM {$from_prefix}poll AS p
 
 ---* {$to_prefix}poll_choices
 ---{
+$ignore = true;
 $no_add = true;
 $keys = array('id_poll', 'id_choice', 'label', 'votes');
 
@@ -185,7 +290,17 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 ---{
-$row['body'] = preg_replace('~\[(quote)=([^\]]+)\]~i', '[$1=&quot;$2&quot;]', $row['body']);
+$ignore = true;
+$row['body'] = preg_replace(
+	array(
+		'~\[(quote)=([^\]]+)\]~i',
+		'~\[(.+?)=&quot;(.+?)&quot;\]~is',
+	),
+	array(
+		'[$1=&quot;$2&quot;]',
+		'[$1=$2]',
+	), strtr($row['body'], array('"' => '&quot;')));
+$row['body'] = substr($row['body'], 0, 65534);
 ---}
 SELECT
 	pm.pmid AS id_pm, pmt.fromuserid AS id_member_from, pmt.dateline AS msgtime,
@@ -204,9 +319,9 @@ WHERE pm.folderid != -1;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pm.pmid AS id_pm, pm.touserid AS id_member, pm.readtime != 0 AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}pmreceipt AS pm;
 ---*
 
@@ -284,6 +399,9 @@ if (!empty($rows))
 			(", $rows) . ")");
 ---}
 
+ALTER TABLE {$to_prefix}smileys
+ORDER BY code DESC;
+
 /******************************************************************************/
 --- Converting attachments...
 /******************************************************************************/
@@ -291,7 +409,7 @@ if (!empty($rows))
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($vb_settings))
 {
@@ -309,6 +427,15 @@ if (!isset($vb_settings))
 	}
 	mysql_free_result($result);
 }
+
+// Is this an image???
+$attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
+if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
+	$attachmentExtention = '';
+
+// Set the default empty values.
+$width = '0';
+$height = '0';
 
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (empty($vb_settings['attachfile']))
@@ -331,7 +458,11 @@ elseif ($vb_settings['attachfile'] == 2)
 		return;
 }
 
-$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+// Is an an image?
+if (!empty($attachmentExtension))
+	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $newfilename);
+
+$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
 $id_attach++;
 ---}
 SELECT

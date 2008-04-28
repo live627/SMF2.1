@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "PunBB 1.2.5"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1"
 ---~ settings: "/config.php"
 ---~ from_prefix: "`$db_name`.$db_prefix"
 ---~ table_test: "{$from_prefix}users"
@@ -31,11 +31,11 @@ SELECT
 	SUBSTRING(yahoo, 1, 32) AS yim, SUBSTRING(msn, 1, 255) AS msn,
 	IF(email_setting = 0, 0, 1) AS hide_email,
 	timezone AS time_offset, SUBSTRING(registration_ip, 1, 255) AS member_ip,
-	SUBSTRING(registration_ip, 1, 255) AS member_ip2,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS avatar, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
+	SUBSTRING(registration_ip, 1, 255) AS member_ip2
 FROM {$from_prefix}users
 WHERE id != 1;
 ---*
@@ -140,8 +140,8 @@ SELECT
 	t.id AS id_topic, t.sticky AS is_sticky, t.forum_id AS id_board,
 	t.num_replies AS num_replies, t.num_views AS num_views, t.closed AS locked,
 	MIN(p.id) AS id_first_msg, t.last_post_id AS id_last_msg
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
-WHERE p.topic_id = t.id
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.topic_id = t.id)
 GROUP BY t.id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -149,14 +149,14 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, p.poster_id AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}posts AS p)
-WHERE p.id = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.id = t.id_last_msg);
 ---*
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, p.poster_id AS id_member_started
-FROM ({$to_prefix}topics AS t, {$from_prefix}posts AS p)
-WHERE p.id = t.id_first_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.id = t.id_first_msg);
 ---*
 
 /******************************************************************************/
@@ -166,18 +166,22 @@ WHERE p.id = t.id_first_msg;
 TRUNCATE {$to_prefix}messages;
 
 ---* {$to_prefix}messages 200
+---{
+$row['poster_name'] = substr($row['poster_name'], 0, 255);
+$row['poster_email'] = is_null($row['poster_email']) ? 'convert@emaple.com' : substr($row['poster_name'], 0, 255);
+---}
 SELECT
 	p.id AS id_msg, p.topic_id AS id_topic, t.forum_id AS id_board,
 	p.posted AS poster_time, p.poster_id AS id_member,
 	SUBSTRING(t.subject, 1, 255) AS subject,
-	SUBSTRING(IFNULL(u.username, p.poster), 1, 255) AS poster_name,
+	CASE WHEN u.username = 'Guest' THEN p.poster ELSE u.username END AS poster_name,
+	CASE WHEN u.email = 'Guest' THEN poster_email ELSE u.email END AS poster_email,
 	SUBSTRING(p.poster_ip, 1, 255) AS poster_ip,
-	SUBSTRING(IFNULL(u.email, poster_email), 1, 255) AS poster_email,
 	IF(p.hide_smilies = 0, 1, 0) AS smileys_enabled,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body
-FROM ({$from_prefix}posts AS p, {$from_prefix}topics AS t)
-	LEFT JOIN {$from_prefix}users AS u ON (u.id = p.poster_id)
-WHERE t.id = p.topic_id;
+FROM {$from_prefix}posts AS p
+	INNER JOIN {$from_prefix}topics AS t ON (t.id = p.topic_id)
+	LEFT JOIN {$from_prefix}users AS u ON (u.id = p.poster_id);
 ---*
 
 /******************************************************************************/
@@ -351,6 +355,3 @@ if (!empty($rows))
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}
-
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;

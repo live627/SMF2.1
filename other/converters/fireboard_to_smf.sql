@@ -13,24 +13,24 @@
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}members;
-ALTER TABLE {$to_prefix}members
-CHANGE password_salt passwordSalt VARCHAR(50) NOT NULL;  
 
+ALTER TABLE {$to_prefix}members
+CHANGE password_salt password_salt VARCHAR(50) NOT NULL;  
 
 ---* {$to_prefix}members
 SELECT
-	/* // !!! We could use m.name for the realName? */
+	/* // !!! We could use m.name for the real_name? */
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
 	SUBSTRING(m.username, 1, 255) AS real_name,
 	SUBSTRING(fb.signature, 1, 65534) AS signature, fb.posts,
 	SUBSTRING(SUBSTRING_INDEX(m.password, ':', 1), 1, 64) AS passwd, SUBSTRING_INDEX(m.password, ':', -1) AS password_salt,
-	fb.karma AS karma_good, SUBSTRING(m.email, 1, 255) AS email_address,
+	fb.karma AS karmaGood, SUBSTRING(m.email, 1, 255) AS email_address,
 	SUBSTRING(cd.country, 1, 255) AS location,
 	IF(m.activation = 1, 0, 1) AS is_activated,
 	UNIX_TIMESTAMP(m.registerDate) AS date_registered,
 	UNIX_TIMESTAMP(m.lastvisitDate) AS last_login,
 	IF(cd.params LIKE '%email=0%', 1, 0) AS hide_email,
-	IF(m.usertype = 'superadministrator' OR m.usertype = 'administrator' OR m.usertype = 'Super Administrator', 1, 0) AS id_group,
+	IF(m.usertype = 'superadministrator' OR m.usertype = 'administrator'OR m.usertype = 'Super Administrator', 1, 0) AS id_group,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS website_title, '' AS website_url, '' AS icq,
 	'' AS aim, '' AS yim, '' AS msn, '' AS time_format, '' AS avatar,
@@ -85,9 +85,9 @@ SELECT
 	t.id AS id_topic, t.catid AS id_board, t.ordering AS is_sticky, t.locked,
 	t.hits AS num_views, t.userid AS id_member_started,
 	MIN(m.id) AS id_first_msg, MAX(m.id) AS id_last_msg
-FROM ({$from_prefix}fb_messages AS t, {$from_prefix}fb_messages AS m)
+FROM {$from_prefix}fb_messages AS t
+	INNER JOIN {$from_prefix}fb_messages AS m ON (m.thread = t.id)
 WHERE t.parent = 0
-	AND m.thread = t.id
 GROUP BY t.id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -95,8 +95,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.userid AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}fb_messages AS m)
-WHERE m.thread = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}fb_messages AS m ON (m.thread = t.id_last_msg);
 ---*
 
 /******************************************************************************/
@@ -110,8 +110,6 @@ TRUNCATE {$to_prefix}attachments;
 ---{
 $row['body'] = preg_replace('~\[file name=.+?\]http.+?\[/file\]~i', '', $row['body']);
 $row['body'] = preg_replace('~\[img size=(\d+)\]~i', '[img width=$1]', $row['body']);
-$row['body'] = strtr($row['body'], array("\\\''" => "'", '\\&quot;' => '&quot;', '\r\n' => "\r\n"));
-$row['subject'] = strtr($row['subject'], array("\\\''" => "'", '\\&quot;' => '&quot;', '\r\n' => " "));
 ---}
 SELECT
 	m.id AS id_msg, m.thread AS id_topic, m.time AS poster_time,
@@ -120,8 +118,8 @@ SELECT
 	SUBSTRING(m.email, 1, 255) AS poster_email,
 	SUBSTRING(m.ip, 1, 255) AS poster_ip, m.catid AS id_board,
 	SUBSTRING(mt.message, 1, 65534) AS body, '' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}fb_messages AS m, {$from_prefix}fb_messages_text AS mt)
-WHERE mt.mesid = m.id;
+FROM {$from_prefix}fb_messages AS m
+	INNER JOIN {$from_prefix}fb_messages_text AS mt ON (mt.mesid = m.id);
 ---*
 
 /******************************************************************************/
@@ -219,12 +217,12 @@ if (!empty($rows))
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename(basename($row['filelocation']), $ID_ATTACH);
+$newfilename = getAttachmentFilename(basename($row['filelocation']), $id_attach);
 if (strlen($newfilename) <= 255 && copy($row['filelocation'], $attachmentUploadDir . '/' . $newfilename))
 {
 	@touch($attachmentUploadDir . '/' . $newfilename, filemtime($row['filelocation']));
-	$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes(basename($row['filelocation'])) . "', $row[id_msg], 0";
-	$ID_ATTACH++;
+	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes(basename($row['filelocation'])) . "', $row[id_msg], 0";
+	$id_attach++;
 }
 ---}
 SELECT mesid AS id_msg, filelocation
@@ -241,10 +239,10 @@ $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_member');
 
 $newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/_fbfiles_dist/avatars/', $attachmentUploadDir . '/' . $newfilename))
+if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/avatars/', $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
-	++$ID_ATTACH;
+	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
+	$id_attach++;
 }
 ---}
 SELECT userid AS id_member, avatar AS filename

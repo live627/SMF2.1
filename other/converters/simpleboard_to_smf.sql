@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Simpleboard 1.0 and 1.1"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1"
 ---~ settings: "/configuration.php", "../../configuration.php", "../../../configuration.php"
 ---~ from_prefix: "`$mosConfig_db`.$mosConfig_dbprefix"
 ---~ table_test: "{$from_prefix}users"
@@ -20,7 +20,7 @@ SELECT
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
 	SUBSTRING(m.username, 1, 255) AS real_name,
 	SUBSTRING(sb.signature, 1, 65534) AS signature, sb.posts,
-	sb.karma AS karma_good, SUBSTRING(m.password, 1, 64) AS passwd,
+	sb.karma AS karmaGood, SUBSTRING(m.password, 1, 64) AS passwd,
 	SUBSTRING(m.email, 1, 255) AS email_address,
 	SUBSTRING(cd.country, 1, 255) AS location,
 	IF(m.activation = 1, 0, 1) AS is_activated,
@@ -83,9 +83,9 @@ SELECT
 	t.id AS id_topic, t.catid AS id_board, t.ordering AS is_sticky, t.locked,
 	t.hits AS num_views, t.userid AS id_member_started,
 	MIN(m.id) AS id_first_msg, MAX(m.id) AS id_last_msg
-FROM ({$from_prefix}sb_messages AS t, {$from_prefix}sb_messages AS m)
+FROM {$from_prefix}sb_messages AS t
+	INNER JOIN {$from_prefix}sb_messages AS m ON (m.thread = t.id)
 WHERE t.parent = 0
-	AND m.thread = t.id
 GROUP BY t.id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -93,8 +93,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.userid AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}sb_messages AS m)
-WHERE m.thread = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}sb_messages AS m ON (m.thread = t.id_last_msg);
 ---*
 
 /******************************************************************************/
@@ -106,18 +106,18 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 ---{
-$row['body'] = preg_replace('~[file name=.+?]http.+?[/file]~i', '', $row['body']);
-$row['body'] = preg_replace('~[img size=(\d+)]~i', '[img width=$1]', $row['body']);
+$row['body'] = preg_replace('~\[file name=.+?\]http.+?\[/file\]~i', '', $row['body']);
+$row['body'] = preg_replace('~\[img size=(\d+)\]~i', '[img width=$1]', $row['body']);
 ---}
 SELECT
 	m.id AS id_msg, m.thread AS id_topic, m.time AS poster_time,
-	SUBSTRING(m.subject, 1, 255), m.userid AS id_member,
+	SUBSTRING(m.subject, 1, 255) AS subject, m.userid AS id_member,
 	SUBSTRING(m.name, 1, 255) AS poster_name,
 	SUBSTRING(m.email, 1, 255) AS poster_email,
 	SUBSTRING(m.ip, 1, 255) AS poster_ip, m.catid AS id_board,
 	SUBSTRING(mt.message, 1, 65534) AS body, '' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}sb_messages AS m, {$from_prefix}sb_messages_text AS mt)
-WHERE mt.mesid = m.id;
+FROM {$from_prefix}sb_messages AS m
+	INNER JOIN {$from_prefix}sb_messages_text AS mt ON (mt.mesid = m.id);
 ---*
 
 /******************************************************************************/
@@ -206,9 +206,6 @@ if (!empty($rows))
 			(", $rows) . ")");
 ---}
 
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
-
 /******************************************************************************/
 --- Converting attachments...
 /******************************************************************************/
@@ -240,7 +237,7 @@ $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_member');
 
 $newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_simpleboard/avatars/, $attachmentUploadDir . '/' . $newfilename))
+if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_simpleboard/avatars/', $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
 	$id_attach++;

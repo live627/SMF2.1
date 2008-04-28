@@ -95,9 +95,9 @@ SELECT
 	IFNULL(uf.uid, 0) AS id_member_started, t.replies AS num_replies,
 	t.views AS num_views, t.closed AS locked, MIN(p.pid) AS id_first_msg,
 	MAX(p.pid) AS id_last_msg, IF(t.pollopts != '', t.tid, 0) AS id_poll
-FROM ({$from_prefix}threads AS t, {$from_prefix}posts AS p)
+FROM {$from_prefix}threads AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.tid = t.tid)
 	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = t.author)
-WHERE p.tid = t.tid
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -105,9 +105,9 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, uf.uid AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}posts AS p, {$from_prefix}members AS uf)
-WHERE p.pid = t.id_last_msg
-	AND BINARY uf.username = p.author;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.pid = t.id_last_msg)
+	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -180,7 +180,8 @@ WHERE pollopts != '';
 
 ---* {$to_prefix}log_polls
 SELECT t.tid AS id_poll, mem.uid AS id_member
-FROM ({$from_prefix}threads AS t, {$from_prefix}members AS mem)
+FROM {$from_prefix}threads AS t
+	INNER JOIN {$from_prefix}members AS mem
 WHERE LOCATE(CONCAT(' ', mem.username, ' '), t.pollopts, LENGTH(t.pollopts) - LOCATE('#|#', REVERSE(t.pollopts)) + 2)
 	AND t.pollopts != '';
 ---*
@@ -216,9 +217,9 @@ TRUNCATE {$to_prefix}pm_recipients;
 SELECT
 	pm.u2uid AS id_pm, uf.uid AS id_member, pm.isnew = 'no' AS is_read,
 	'' AS labels
-FROM ({$from_prefix}u2u AS pm, {$from_prefix}members AS uf)
-WHERE pm.folder != 'outbox'
-	AND BINARY uf.username = pm.msgto;
+FROM {$from_prefix}u2u AS pm
+	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = pm.msgto)
+WHERE pm.folder != 'outbox';
 ---*
 
 /******************************************************************************/
@@ -229,8 +230,8 @@ TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
 SELECT uf.uid AS id_member, f.tid AS id_topic
-FROM ({$from_prefix}favorites AS f, {$from_prefix}members AS uf)
-WHERE BINARY uf.username = f.username;
+FROM {$from_prefix}favorites AS f
+	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = f.username);
 ---*
 
 /******************************************************************************/
@@ -274,7 +275,8 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT u.uid AS id_member, f.fid AS id_board
-FROM ({$from_prefix}forums AS f, {$from_prefix}members AS u)
+FROM {$from_prefix}forums AS f
+	INNER JOIN {$from_prefix}members AS u
 WHERE f.moderator != ''
 	AND FIND_IN_SET(u.username, f.moderator);
 ---*
@@ -335,9 +337,6 @@ if (!empty($rows))
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}
-
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
 
 /******************************************************************************/
 --- Converting attachments...

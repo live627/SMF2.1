@@ -98,12 +98,12 @@ SELECT
 	t.TOPIC_VIEWS AS num_views, t.FORUM_ID AS id_board,
 	t.PIN_STATE AS is_sticky, MIN(p.POST_ID) AS id_first_msg,
 	MAX(p.POST_ID) AS id_last_msg
-FROM ({$from_prefix}forum_topics AS t, {$from_prefix}forum_posts AS p)
+FROM {$from_prefix}forum_topics AS t
+	INNER JOIN {$from_prefix}forum_posts AS p ON (p.TOPIC_ID = t.TOPIC_ID)
 	LEFT JOIN {$from_prefix}forum_polls AS pl ON (pl.POLL_ID = t.TOPIC_ID)
 	LEFT JOIN {$to_prefix}members AS memf ON (memf.tempID = t.TOPIC_STARTER)
 	LEFT JOIN {$to_prefix}members AS meml ON (meml.tempID = t.TOPIC_LAST_POSTER)
-WHERE p.TOPIC_ID = t.TOPIC_ID
-	AND t.MOVED_TO IS NULL
+WHERE t.MOVED_TO IS NULL
 GROUP BY t.TOPIC_ID
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -169,9 +169,9 @@ FROM {$from_prefix}forum_polls;
 
 ---* {$to_prefix}log_polls
 SELECT pl.ID AS id_poll, mem.id_member
-FROM ({$from_prefix}forum_poll_voters AS v, {$from_prefix}forum_polls AS pl, {$to_prefix}members AS mem)
-WHERE pl.POLL_ID = v.POLL_ID
-	AND mem.tempID = v.MEMBER_ID;
+FROM {$from_prefix}forum_poll_voters AS v
+	INNER JOIN {$from_prefix}forum_polls AS pl ON (pl.POLL_ID = v.POLL_ID)
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = v.MEMBER_ID);
 ---*
 
 /******************************************************************************/
@@ -203,9 +203,9 @@ SELECT
 	pm.MESSAGE_ID AS id_pm, mem.id_member,
 	(pm.READ_STATE = 1) | (pm.REPLY << 1) AS is_read,
 	'' AS labels
-FROM ({$from_prefix}message_data AS pm, {$to_prefix}members AS mem)
-WHERE pm.VIRTUAL_DIR = 'in'
-	AND mem.tempID = pm.RECIPIENT_ID;
+FROM {$from_prefix}message_data AS pm
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = pm.RECIPIENT_ID)
+WHERE pm.VIRTUAL_DIR = 'in';
 ---*
 
 /******************************************************************************/
@@ -216,10 +216,10 @@ TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.TOPIC_ID AS id_topic, tv.SENT AS sent
-FROM ({$from_prefix}forum_subscriptions AS s, {$to_prefix}members AS mem)
+FROM {$from_prefix}forum_subscriptions AS s
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempId = s.MEMBER_ID)
 	LEFT JOIN {$from_prefix}topic_views AS tv ON (tv.TOPIC_ID = s.TOPIC_ID AND tv.MEMBER_ID = s.MEMBER_ID)
-WHERE s.TOPIC_ID != 0
-	AND mem.tempId = s.MEMBER_ID;
+WHERE s.TOPIC_ID != 0;
 ---*
 
 /******************************************************************************/
@@ -228,9 +228,9 @@ WHERE s.TOPIC_ID != 0
 
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.FORUM_ID AS id_board
-FROM ({$from_prefix}forum_subscriptions AS s, {$to_prefix}members AS mem)
-WHERE s.TOPIC_ID = 0
-	AND mem.tempId = s.MEMBER_ID;
+FROM {$from_prefix}forum_subscriptions AS s
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempId = s.MEMBER_ID)
+WHERE s.TOPIC_ID = 0;
 ---*
 
 /******************************************************************************/
@@ -241,8 +241,8 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT mem.id_member, mods.FORUM_ID AS id_board
-FROM ({$from_prefix}forum_moderators AS mods, {$to_prefix}members AS mem)
-WHERE mem.tempID = mods.MEMBER_ID;
+FROM {$from_prefix}forum_moderators AS mods
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = mods.MEMBER_ID);
 ---*
 
 /******************************************************************************/
@@ -253,8 +253,8 @@ TRUNCATE {$to_prefix}log_topics;
 
 ---* {$to_prefix}log_topics
 SELECT tv.TOPIC_ID AS id_topic, mem.id_member, tv.VIEWED AS log_time
-FROM ({$from_prefix}topic_views AS tv, {$to_prefix}members AS mem)
-WHERE mem.tempID = tv.MEMBER_ID;
+FROM {$from_prefix}topic_views AS tv
+	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = tv.MEMBER_ID);
 ---*
 
 /******************************************************************************/
@@ -285,6 +285,6 @@ if (strlen($newfilename) <= 255 && copy($ib_uploads . '/' . $row['filename'], $a
 SELECT
 	p.POST_ID AS id_msg, p.ATTACH_ID AS oldEncrypt, p.ATTACH_HITS AS downloads,
 	a.FILE_NAME AS filename
-FROM ({$from_prefix}forum_posts AS p, {$from_prefix}attachments AS a)
-WHERE a.ID = p.ATTACH_ID;
+FROM {$from_prefix}forum_posts AS p
+	INNER JOIN {$from_prefix}attachments AS a ON (a.ID = p.ATTACH_ID);
 ---*

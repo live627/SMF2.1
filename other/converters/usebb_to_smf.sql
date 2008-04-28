@@ -81,9 +81,9 @@ SELECT
 	t.status_locked AS locked, t.first_post_id AS id_first_msg,
 	t.last_post_id AS id_last_msg, pf.poster_id AS id_member_started,
 	pl.poster_id AS id_member_updated
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS pf, {$from_prefix}posts AS pl)
-WHERE pf.id = t.first_post_id
-	AND pl.id = t.last_post_id
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS pf ON (pf.id = t.first_post_id)
+	INNER JOIN {$from_prefix}posts AS pl ON (pl.id = t.last_post_id)
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
 ---*
@@ -107,10 +107,10 @@ SELECT
 	p.post_edit_time AS modified_time,
 	SUBSTRING(REPLACE(p.content, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
-FROM ({$from_prefix}posts AS p, {$from_prefix}topics AS t)
+FROM {$from_prefix}posts AS p
+	INNER JOIN {$from_prefix}topics AS t ON (t.id = p.topic_id)
 	LEFT JOIN {$from_prefix}members AS mem ON (mem.id = p.poster_id)
-	LEFT JOIN {$from_prefix}members AS edit_mem ON (edit_mem.id = p.post_edit_by)
-WHERE t.id = p.topic_id;
+	LEFT JOIN {$from_prefix}members AS edit_mem ON (edit_mem.id = p.post_edit_by);
 ---*
 
 /******************************************************************************/

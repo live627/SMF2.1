@@ -97,8 +97,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, m.user_ID AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}message AS m)
-WHERE m.ID = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}message AS m ON (m.ID = t.id_last_msg);
 ---*
 
 /******************************************************************************/
@@ -175,9 +175,9 @@ ORDER BY po.ID;
 
 ---* {$to_prefix}log_polls
 SELECT pv.poll_ID AS id_poll, pv.user_ID AS id_member, pc.id_choice
-FROM ({$from_prefix}mod_POLL_vote AS pv, {$to_prefix}poll_choices AS pc)
-WHERE pv.user_ID != 0
-	AND pc.tempID = pv.xoption;
+FROM {$from_prefix}mod_POLL_vote AS pv
+	INNER JOIN {$to_prefix}poll_choices AS pc ON (pc.tempID = pv.xoption)
+WHERE pv.user_ID != 0;
 ---*
 
 ALTER TABLE {$to_prefix}poll_choices

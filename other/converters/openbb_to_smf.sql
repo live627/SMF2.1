@@ -90,9 +90,9 @@ SELECT
 	t.posterid AS id_member_started, t.lastposterid AS id_member_updated,
 	t.replies AS num_replies, t.views AS num_views, t.pollid AS id_poll,
 	MIN(p.id) AS id_first_msg, MAX(p.id) AS id_last_msg
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
-WHERE p.threadid = t.id
-	AND t.totopic = 0
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.threadid = t.id)
+WHERE t.totopic = 0
 GROUP BY id_topic
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -137,8 +137,8 @@ TRUNCATE {$to_prefix}log_polls;
 SELECT
 	p.id AS id_poll, SUBSTRING(t.title, 1, 255) AS question,
 	t.posterid AS id_member, SUBSTRING(t.poster, 1, 255) AS poster_name
-FROM ({$from_prefix}polls AS p, {$from_prefix}topics AS t)
-WHERE t.pollid = p.id;
+FROM {$from_prefix}polls AS p
+	INNER JOIN {$from_prefix}topics AS t ON (t.pollid = p.id);
 ---*
 
 /******************************************************************************/
@@ -169,7 +169,8 @@ FROM {$from_prefix}polls;
 
 ---* {$to_prefix}log_polls
 SELECT p.id AS id_poll, m.id AS id_member, 0 AS id_choice
-FROM ({$from_prefix}polls AS p, {$from_prefix}profiles AS m)
+FROM {$from_prefix}polls AS p
+	INNER JOIN {$from_prefix}profiles AS m
 WHERE FIND_IN_SET(m.username, p.total);
 ---*
 
@@ -200,9 +201,9 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT pm.id AS id_pm, m.id AS id_member, isread AS is_read, '' AS labels
-FROM ({$from_prefix}pmsg AS pm, {$from_prefix}profiles AS m)
-WHERE pm.box != 'outbox'
-	AND m.username = pm.accept;
+FROM {$from_prefix}pmsg AS pm
+	INNER JOIN {$from_prefix}profiles AS m ON (m.username = pm.accept)
+WHERE pm.box != 'outbox';
 ---*
 
 /******************************************************************************/
@@ -213,9 +214,9 @@ TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
 SELECT m.id AS id_member, threadid AS id_topic, visit AS sent
-FROM ({$from_prefix}favorites AS f, {$from_prefix}profiles AS m)
-WHERE BINARY m.username = f.username
-	AND f.email = 1;
+FROM {$from_prefix}favorites AS f
+	INNER JOIN {$from_prefix}profiles AS m ON (BINARY m.username = f.username)
+WHERE f.email = 1;
 ---*
 
 /******************************************************************************/
@@ -252,6 +253,6 @@ $rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) .
 $id_attach++;
 ---}
 SELECT p.id AS id_msg, a.filecontent, a.downloaded AS downloads, a.filename
-FROM ({$from_prefix}attachments AS a, {$from_prefix}posts AS p)
-WHERE p.attachid = a.id;
+FROM {$from_prefix}attachments AS a
+	INNER JOIN {$from_prefix}posts AS p ON (p.attachid = a.id);
 ---*

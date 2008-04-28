@@ -99,10 +99,10 @@ SELECT
 	IF(t.topics_is_poll = 1, pl.poll_id, 0) AS id_poll,
 	t.topics_pinned AS is_sticky, MIN(p.posts_id) AS id_first_msg,
 	MAX(p.posts_id) AS id_last_msg
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.posts_topic = t.topics_id)
 	LEFT JOIN {$from_prefix}polls AS pl ON (pl.poll_topic = t.topics_id)
-WHERE p.posts_topic = t.topics_id
-	AND t.topics_moved = 0
+WHERE t.topics_moved = 0
 GROUP BY t.topics_id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -126,9 +126,9 @@ SELECT
 	SUBSTRING(p.posts_author_name, 1, 255) AS poster_name,
 	SUBSTRING(mem.members_email, 1, 255) AS poster_email,
 	t.topics_forum AS id_board, '' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}posts AS p, {$from_prefix}topics AS t)
-	LEFT JOIN {$from_prefix}members AS mem ON (mem.members_id = p.posts_author)
-WHERE t.topics_id = p.posts_topic;
+FROM {$from_prefix}posts AS p
+	INNER JOIN {$from_prefix}topics AS t ON (t.topics_id = p.posts_topic)
+	LEFT JOIN {$from_prefix}members AS mem ON (mem.members_id = p.posts_author);
 ---*
 
 /******************************************************************************/
@@ -177,8 +177,8 @@ FROM {$from_prefix}polls;
 
 ---* {$to_prefix}log_polls
 SELECT p.poll_id AS id_poll, v.vote_user AS id_member
-FROM ({$from_prefix}voters AS v, {$from_prefix}polls AS p)
-WHERE v.vote_topic = p.poll_topic;
+FROM {$from_prefix}voters AS v
+	INNER JOIN {$from_prefix}polls AS p ON (v.vote_topic = p.poll_topic);
 ---*
 
 /******************************************************************************/

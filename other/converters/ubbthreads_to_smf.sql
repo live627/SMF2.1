@@ -83,10 +83,10 @@ SELECT
 	p.B_PosterId AS id_member_started, p.B_Replies AS num_replies,
 	p.B_Counter AS num_views, IF(p.B_Status = 'C', 1, 0) AS locked,
 	b.Bo_Number AS id_board, MAX(p2.B_Number) AS id_last_msg
-FROM ({$from_prefix}Posts AS p, {$from_prefix}Boards AS b, {$from_prefix}Posts AS p2)
+FROM {$from_prefix}Posts AS p
+	INNER JOIN {$from_prefix}Boards AS b ON (b.Bo_Keyword = p.B_Board)
+	INNER JOIN {$from_prefix}Posts AS p2 ON (p2.B_Main = p.B_Number)
 WHERE p.B_Topic = 1
-	AND b.Bo_Keyword = p.B_Board
-	AND p2.B_Main = p.B_Number
 GROUP BY p.B_Number
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -94,8 +94,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, p.B_PosterId AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}Posts AS p)
-WHERE p.B_Number = t.id_last_msg;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}Posts AS p ON (p.B_Number = t.id_last_msg);
 ---*
 
 /******************************************************************************/
@@ -116,9 +116,9 @@ SELECT
 	b.Bo_Number AS id_board,
 	SUBSTRING(REPLACE(p.B_Body, '<br>', '<br />'), 1, 65534) AS body,
 	'' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}Posts AS p, {$from_prefix}Boards AS b)
-	LEFT JOIN {$from_prefix}Users AS u ON (u.U_Number = p.B_PosterId)
-WHERE b.Bo_Keyword = p.B_Board;
+FROM {$from_prefix}Posts AS p
+	INNER JOIN {$from_prefix}Boards AS b ON (b.Bo_Keyword = p.B_Board)
+	LEFT JOIN {$from_prefix}Users AS u ON (u.U_Number = p.B_PosterId);
 ---*
 
 /******************************************************************************/
@@ -144,11 +144,11 @@ SELECT
 	pt.B_PosterId AS id_member, pt.B_Number AS id_topic,
 	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS poster_name,
 	pm.P_NoResults AS hide_results
-FROM ({$from_prefix}PollQuestions AS pq, {$from_prefix}PollMain AS pm, {$from_prefix}Posts AS pt)
+FROM {$from_prefix}PollQuestions AS pq
+	INNER JOIN {$from_prefix}PollMain AS pm ON (pm.P_Id = pq.P_PollId)
+	INNER JOIN {$from_prefix}Posts AS pt ON (pt.B_Poll = pq.P_PollId)
 	LEFT JOIN {$from_prefix}Users AS u ON (u.U_Number = pt.B_PosterId)
-WHERE pm.P_Id = pq.P_PollId
-	AND pt.B_Poll = pq.P_PollId
-	AND pt.B_Main = 1
+WHERE pt.B_Main = 1
 GROUP BY pq.P_PollId;
 ---*
 
@@ -202,8 +202,8 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT mods.Mod_Uid AS id_member, b.Bo_Number AS id_board
-FROM ({$from_prefix}Moderators AS mods, {$from_prefix}Boards AS b)
-WHERE b.Bo_Keyword = mods.Mod_Board;
+FROM {$from_prefix}Moderators AS mods
+	INNER JOIN {$from_prefix}Boards AS b ON (b.Bo_Keyword = mods.Mod_Board);
 ---*
 
 /******************************************************************************/

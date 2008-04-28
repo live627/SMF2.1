@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Invision Power Board"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1"
 ---~ settings: "/conf_global.php"
 ---~ globals: INFO
 ---~ from_prefix: "`$INFO[sql_database]`.$INFO[sql_tbl_prefix]"
@@ -70,7 +70,7 @@ SELECT
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	'' AS time_format, '' AS usertitle, '' AS member_ip, '' AS secret_question,
 	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
-	'' AS smiley_set, '' AS password_salt, '' AS member_ip2
+	'' AS smiley_set, '' AS password_salt, '' AS member_ip
 FROM {$from_prefix}members
 WHERE id != 0;
 ---*
@@ -99,7 +99,7 @@ WHERE id_board != 0;
 ---* {$to_prefix}boards
 SELECT
 	id AS id_board, topics AS num_topics, posts AS num_posts,
-	SUBSTRING(name, 1, 255) AS name,
+	SUBSTRING(name, 1, 255) AS name, 
 	SUBSTRING(description, 1, 65534) AS description, position AS board_order,
 	category AS id_cat, parent_id AS id_parent, '-1,0' AS member_groups
 FROM {$from_prefix}forums;
@@ -121,9 +121,9 @@ SELECT
 	pl.pid AS id_poll, t.posts AS num_replies, t.views AS num_views,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg,
 	t.state = 'closed' AS locked
-FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
+FROM {$from_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.topic_id = t.tid)
 	LEFT JOIN {$from_prefix}polls AS pl ON (pl.tid = t.tid)
-WHERE p.topic_id = t.tid
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -215,7 +215,7 @@ if (is_array($choices))
 	foreach ($choices as $choice)
 	{
 		$choice = addslashes_recursive($choice);
-		$rows[] = "$row[id_poll], SUBSTRING('" . implode("', 1, 255), '", $choice) . "'";
+		$rows[] = "$row[id_poll], SUBSTRING('" . implode("', 1, 255), SUBSTRING('", $choice) . "', 1, 255)";
 	}
 ---}
 SELECT pid AS id_poll, choices
@@ -290,9 +290,9 @@ WHERE vid != 'sent';
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT
+SELECT 
 	msg_id AS id_pm, recipient_id AS id_member, read_state = 1 AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}messages
 WHERE vid != 'sent';
 ---*
@@ -365,7 +365,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT
-			g_id AS id_group, g_title AS group_name, g_max_messages AS max_messages,
+			g_id AS id_group, g_title AS group_name, g_max_messages AS maxMessages,
 			g_view_board AS view_stats, g_mem_info AS view_mlist,
 			g_view_board AS who_view, g_use_search AS search_posts, g_email_friend AS send_topic,
 			g_edit_profile AS profile_identity_own, g_post_new_topics AS post_new,
@@ -390,9 +390,9 @@ while (true)
 		{
 			convert_query("
 				INSERT INTO {$to_prefix}membergroups
-					(id_group, group_name, max_messages, online_color, stars)
+					(id_group, group_name, maxMessages, online_color, stars)
 				VALUES
-					($row[id_group] + 3, SUBSRING('$row[group_name]', 1, 255), $row[max_messages], '', '')");
+					($row[id_group] + 3, SUBSTRING('$row[group_name]', 1, 255), $row[maxMessages], '', '')");
 			$groupID = $row['id_group'] + 3;
 		}
 		else
@@ -407,7 +407,7 @@ while (true)
 
 		unset($row['id_group']);
 		unset($row['group_name']);
-		unset($row['max_messages']);
+		unset($row['maxMessages']);
 
 		foreach ($row as $key => $value)
 			if ($value == 1)
@@ -706,9 +706,6 @@ if (!empty($rows))
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}
-
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
 
 /******************************************************************************/
 --- Converting settings...

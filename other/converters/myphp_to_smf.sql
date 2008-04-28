@@ -82,9 +82,9 @@ SELECT
 	t.views AS num_views, t.topped = 'yes' AS is_sticky, t.status = 2 AS locked,
 	mem.uid AS id_member_started, MIN(p.pid) AS id_first_msg,
 	MAX(p.pid) AS id_last_msg
-FROM ({$from_prefix}topic AS t, {$from_prefix}post AS p)
+FROM {$from_prefix}topic AS t
+	INNER JOIN {$from_prefix}post AS p ON (p.tid = t.tid)
 	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = t.author)
-WHERE p.tid = t.tid
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -92,9 +92,9 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, mem.uid AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}post AS p, {$from_prefix}member AS mem)
-WHERE p.pid = t.id_last_msg
-	AND BINARY mem.username = p.author;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}post AS p ON (p.pid = t.id_last_msg)
+	INNER JOIN {$from_prefix}member AS mem ON (BINARY mem.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -116,9 +116,9 @@ SELECT
 	SUBSTRING(REPLACE(p.message, '\n', '<br />'), 1, 65534) AS body,
 	SUBSTRING(IF(p.subject = '', CONCAT('Re:', t.name), p.subject), 1, 255) AS subject,
 	'' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}post AS p, {$from_prefix}topic AS t)
-	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = p.author)
-WHERE t.tid = p.tid;
+FROM {$from_prefix}post AS p
+	INNER JOIN {$from_prefix}topic AS t ON (t.tid = p.tid)
+	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -156,8 +156,8 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT pm.id AS id_pm, mem.uid AS id_member, '' AS labels
-FROM ({$from_prefix}privmsg AS pm, {$from_prefix}member AS mem)
-WHERE BINARY mem.username = pm.receiver;
+FROM {$from_prefix}privmsg AS pm
+	INNER JOIN {$from_prefix}member AS mem ON (BINARY mem.username = pm.receiver);
 ---*
 
 /******************************************************************************/

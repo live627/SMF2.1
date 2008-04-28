@@ -3,8 +3,9 @@
 /******************************************************************************/
 ---~ name: "XMB 1.9 Nexus"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 1.1"
 ---~ settings: "/config.php"
+---~ defines: IN_CODE
 ---~ from_prefix: "`$dbname`.$tablepre"
 ---~ table_test: "{$from_prefix}members"
 
@@ -15,6 +16,10 @@
 TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
+---{
+// Because this will get slashes removed the extra ones.
+$row['signature'] = stripslashes($row['signature']);
+---}
 SELECT
 	uid AS id_member, SUBSTRING(username, 1, 80) AS member_name,
 	regdate AS date_registered, postnum AS posts, lastvisit AS last_login,
@@ -37,7 +42,8 @@ SELECT
 	END AS id_group, '' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list,
 	'' AS message_labels, '' AS time_format, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt, '' AS member_ip2
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
+	'' AS member_ip2
 FROM {$from_prefix}members
 WHERE uid != 0;
 ---*
@@ -53,8 +59,8 @@ TRUNCATE {$to_prefix}categories;
 $row['name'] = stripslashes($row['name']);
 ---}
 SELECT
-	(fid + 1) AS id_cat, SUBSTRING(name, 1, 255) AS name,
-	displayorder + 2 AS cat_order
+	fid AS id_cat, SUBSTRING(name, 1, 255) AS name,
+	(displayorder + 2) AS cat_order
 FROM {$from_prefix}forums
 WHERE type = 'group';
 ---*
@@ -95,11 +101,12 @@ TRUNCATE {$to_prefix}log_mark_read;
 SELECT
 	t.tid AS id_topic, t.topped AS is_sticky, t.fid AS id_board,
 	IFNULL(uf.uid, 0) AS id_member_started, t.replies AS num_replies,
-	t.views AS num_views, t.closed AS locked, MIN(p.pid) AS id_first_msg,
+	t.views AS num_views,
+	CASE WHEN t.closed = 'yes' THEN 1 ELSE 0 END AS locked, MIN(p.pid) AS id_first_msg,
 	MAX(p.pid) AS id_last_msg, IF(t.pollopts != '', t.tid, 0) AS id_poll
-FROM ({$from_prefix}threads AS t, {$from_prefix}posts AS p)
+FROM {$from_prefix}threads AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.tid = t.tid)
 	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = t.author)
-WHERE p.tid = t.tid
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -107,9 +114,9 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, uf.uid AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}posts AS p, {$from_prefix}members AS uf)
-WHERE p.pid = t.id_last_msg
-	AND BINARY uf.username = p.author;
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}posts AS p ON (p.pid = t.id_last_msg)
+	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -121,6 +128,7 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 ---{
+$ignore = true;
 $row['subject'] = stripslashes($row['subject']);
 $row['body'] = preg_replace('~\[align=(center|right|left)\](.+?)\[/align\]~i', '[$1]$2[/$1]', stripslashes($row['body']));
 ---}
@@ -131,10 +139,20 @@ SELECT
 	SUBSTRING(uf.email, 1, 255) AS poster_email,
 	SUBSTRING(p.useip, 1, 255) AS poster_ip, p.fid AS id_board,
 	IF(p.smileyoff = 0, 1, 0) AS smileys_enabled,
-	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 255) AS body,
+	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'' AS modified_name, 'xx' AS icon
 FROM {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = p.author);
+---*
+
+/******************************************************************************/
+--- Converting posts (part2)
+/******************************************************************************/
+
+---* {$to_prefix}messages (update id_topic)
+SELECT p.tid AS id_topic, p.subject
+FROM {$from_prefix}posts AS p
+WHERE p.subject != '';
 ---*
 
 /******************************************************************************/
@@ -182,7 +200,8 @@ WHERE pollopts != '';
 
 ---* {$to_prefix}log_polls
 SELECT t.tid AS id_poll, mem.uid AS id_member
-FROM ({$from_prefix}threads AS t, {$from_prefix}members AS mem)
+FROM {$from_prefix}threads AS t
+	INNER JOIN {$from_prefix}members AS mem
 WHERE LOCATE(CONCAT(' ', mem.username, ' '), t.pollopts, LENGTH(t.pollopts) - LOCATE('#|#', REVERSE(t.pollopts)) + 2)
 	AND t.pollopts != '';
 ---*
@@ -217,10 +236,10 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	pm.u2uid AS id_pm, uf.uid AS id_member, pm.readstatus = 'yes' AS is_read,
-	'' AS labels
-FROM ({$from_prefix}u2u AS pm, {$from_prefix}members AS uf)
-WHERE pm.folder != 'outbox'
-	AND BINARY uf.username = pm.msgto;
+	'-1' AS labels
+FROM {$from_prefix}u2u AS pm
+	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = pm.msgto)
+WHERE pm.folder != 'outbox';
 ---*
 
 /******************************************************************************/
@@ -230,9 +249,12 @@ WHERE pm.folder != 'outbox'
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
+---{
+$ignore = true;
+---}
 SELECT uf.uid AS id_member, f.tid AS id_topic
-FROM ({$from_prefix}favorites AS f, {$from_prefix}members AS uf)
-WHERE BINARY uf.username = f.username;
+FROM {$from_prefix}favorites AS f
+	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = f.username);
 ---*
 
 /******************************************************************************/
@@ -323,7 +345,8 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT u.uid AS id_member, f.fid AS id_board
-FROM ({$from_prefix}forums AS f, {$from_prefix}members AS u)
+FROM {$from_prefix}forums AS f
+	INNER JOIN {$from_prefix}members AS u
 WHERE f.moderator != ''
 	AND FIND_IN_SET(u.username, f.moderator);
 ---*
@@ -378,9 +401,6 @@ if (!empty($rows))
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}
-
-ALTER TABLE {$to_prefix}smileys
-ORDER BY LENGTH(code) DESC;
 
 /******************************************************************************/
 --- Converting attachments...
