@@ -103,6 +103,7 @@ $txt['package_will_fail_warning'] = 'At least one error was encountered during a
 	This error may be caused by a conflict between the package you\'re trying to install and another package you have already installed, an error in the package, a package which requires another package that you don\'t have installed yet, or a package designed for another version of SMF.';
 // Don't use entities in the below string.
 $txt['package_will_fail_popup'] = 'Are you sure you wish to continue installing this modification, even though it will not install successfully?';
+$txt['package_will_fail_popup_uninstall'] = 'Are you sure you wish to continue uninstalling this modification, even though it will not uninstall successfully?';
 $txt['package_install_now'] = 'Install Now';
 $txt['package_uninstall_now'] = 'Uninstall Now';
 $txt['package_other_themes'] = 'Install in Other Themes';

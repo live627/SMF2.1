@@ -275,7 +275,7 @@ function template_view_package()
 		echo '
 		<tr class="titlebg">
 			<td align="right">
-				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" ', !empty($context['has_failure']) ? 'onclick="return confirm(\'' . $txt['package_will_fail_popup'] . '\');"' : '', '/>
+				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" ', !empty($context['has_failure']) ? 'onclick="return confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\');"' : '', '/>
 			</td>
 		</tr>';
 	}

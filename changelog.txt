@@ -110,6 +110,7 @@ April 2008
  ! iPhone uses the same engine as the iPod but different agents so detect the iPod as an iPhone as well. (Load,php, script.js) [Feature 1951]
  + Updated the installer to use a similar style to the upgrade tool, cleaning things up in the process. (install.php, Install language file)
  & Language entry for not_activated was added to the wrong language file. (Admin and ManageMembers language files) [Bug 1953]
+ * Use a different warning message when uninstalling a mod that contains errors. (Packages template, Packages language file) [Bug 1837]
 
 
 March 2008
