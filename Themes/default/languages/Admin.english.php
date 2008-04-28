@@ -259,7 +259,6 @@ $txt['undefined_gender'] = 'Undefined';
 $txt['age'] = 'User age';
 $txt['activation_status'] = 'Activation Status';
 $txt['activated'] = 'Activated';
-$txt['not_activated'] = 'Not activated';
 $txt['primary'] = 'Primary';
 $txt['additional'] = 'Additional';
 $txt['messenger_address'] = 'Messenger Address';

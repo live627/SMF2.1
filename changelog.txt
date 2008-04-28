@@ -109,6 +109,7 @@ April 2008
  ! Show the full path for the database filename in SQLite. (install.php) [Bug 1729]
  ! iPhone uses the same engine as the iPod but different agents so detect the iPod as an iPhone as well. (Load,php, script.js) [Feature 1951]
  + Updated the installer to use a similar style to the upgrade tool, cleaning things up in the process. (install.php, Install language file)
+ & Language entry for not_activated was added to the wrong language file. (Admin and ManageMembers language files) [Bug 1953]
 
 
 March 2008
