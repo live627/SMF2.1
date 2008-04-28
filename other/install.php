@@ -623,7 +623,7 @@ function doStep0()
 							</tr><tr id="db_filename_contain" style="display: none;">
 								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database_file'], ':</label></td>
 								<td>
-									<input type="text" name="db_filename" id="db_name_input" value="', empty($db_name) ? 'smf_' . substr(md5(microtime()), 0, 10) : $db_name, '" size="30" /><br />
+									<input type="text" name="db_filename" id="db_name_input" value="', empty($db_name) ? dirname(__FILE__) . '/smf_' . substr(md5(microtime()), 0, 10) : $db_name, '" size="30" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_file_info'], '</div>
 								</td>
 							</tr><tr>
@@ -714,6 +714,19 @@ function doStep1()
 		return false;
 	}
 
+	// Duplicate name in the same dir?  Can't do that with SQLite.  Weird things happen.
+	if (file_exists($_POST['db_filename'] . (substr($_POST['db_filename'], -3) != '.db' ? '.db' : '')))
+	{
+		echo '
+				<div class="error_message">
+					<div style="color: red;">', $txt['error_db_filename_exists'], '</div>
+					<br />
+					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+				</div>';
+
+		return false;
+	}
+
 	// What type are they trying?
 	$db_type = preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']);
 	$db_prefix = preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix']);
@@ -730,7 +743,6 @@ function doStep1()
 
 		return false;
 	}
-
 
 	// Take care of these variables...
 	$vars = array(

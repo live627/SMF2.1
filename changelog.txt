@@ -103,6 +103,11 @@ April 2008
  ! Upgrade now requires the Install language file, and uses this for some of the primary language strings. (upgrade.php, Install language file)
  ! Don't allow the use of numeric prefixes for SQLite. (install.php) [Bug 1672]
  ! Make posting keyboard shortcuts (alt+s, ctrl+b etc) work in Firefox on the post page. (editor.js)
+ ! The syntax for REGEXP is slightly different from RLIKE in SQLite. (Subs-DB-sqlite.php) [Bug 1936]
+ ! In some cases search relevance returned doubles but the database expected integers so now they are casted as integers. (Search.php) [Bug 1714]
+ ! Check to see if the database filename exists for SQLite.  If so just return an error. (install.php, Install language file) [Bug 1731]
+ ! Show the full path for the database filename in SQLite. (install.php) [Bug 1729]
+ ! iPhone uses the same engine as the iPod but different agents so detect the iPod as an iPhone as well. (Load,php, script.js) [Feature 1951]
 
 
 March 2008

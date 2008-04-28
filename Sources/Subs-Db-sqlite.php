@@ -278,7 +278,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
 
 	// Or RLIKE.
-	$db_string = str_replace(' RLIKE ', ' REGEXP ', $db_string);
+	$db_string = preg_replace('~AND\s*(.+?)\s*RLIKE\s*(\{string:.+?\})~', 'AND REGEXP(\1, \2)', $db_string);
 
 	// INSTR?  No support for that buddy :(
 	if (preg_match('~INSTR\((.+?),\s(.+?)\)~', $db_string, $matches) === 1)

@@ -173,6 +173,7 @@ $txt['error_script_outdated'] = 'This install script is out of date! The current
 	It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are installing the latest version.';
 $txt['error_db_filename'] = 'You must enter a name for the database file name for SQLite.';
 $txt['error_db_prefix_numeric'] = 'The selected database type does not support the use of numeric prefixes.';
+$txt['error_db_filename_exists'] = 'The database that you are trying to create exists.  Please delete the current database file or enter another name.';
 
 $txt['upgrade_upgrade_utility'] = 'SMF Upgrade Utility';
 $txt['upgrade_warning'] = 'Warning!';
