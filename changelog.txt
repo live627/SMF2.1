@@ -108,6 +108,7 @@ April 2008
  ! Check to see if the database filename exists for SQLite.  If so just return an error. (install.php, Install language file) [Bug 1731]
  ! Show the full path for the database filename in SQLite. (install.php) [Bug 1729]
  ! iPhone uses the same engine as the iPod but different agents so detect the iPod as an iPhone as well. (Load,php, script.js) [Feature 1951]
+ + Updated the installer to use a similar style to the upgrade tool, cleaning things up in the process. (install.php, Install language file)
 
 
 March 2008

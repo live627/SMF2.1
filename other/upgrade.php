@@ -3873,7 +3873,7 @@ function template_welcome_message()
 
 				if (typeof(window.smfVersion) != "string")
 					return;
-				window.smfVersion = window.smfVersion.replace(/SMF/g, \'\');
+				window.smfVersion = window.smfVersion.replace(/SMF\s?/g, \'\');
 
 				smfVer = document.getElementById("smfVersion");
 				yourVer = document.getElementById("yourVersion");

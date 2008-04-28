@@ -71,104 +71,62 @@ $databases = array(
 initialize_inputs();
 load_lang_file();
 
-header('Content-Type: text/html; charset=' . (isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1'));
+// This is what we are.
+$installurl = $_SERVER['PHP_SELF'];
+// This is where SMF is.
+$smfsite = 'http://www.simplemachines.org/smf';
 
-echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"', !empty($txt['lang_rtl']) ? ' dir="rtl"' : '', '>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
-		<title>', $txt['smf_installer'], '</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
-		<style type="text/css">
-			body
-			{
-				background-color: #E5E5E8;
-				margin: 0px;
-				padding: 0px;
-			}
-			body, td
-			{
-				color: #000000;
-				font-size: small;
-				font-family: verdana, sans-serif;
-			}
-			div#header
-			{
-				background-image: url(Themes/default/images/catbg.jpg);
-				background-repeat: repeat-x;
-				background-color: #88A6C0;
-				padding: 22px 4% 12px 4%;
-				color: white;
-				font-family: Georgia, serif;
-				font-size: xx-large;
-				border-bottom: 1px solid black;
-				height: 40px;
-			}
-			div#content
-			{
-				padding: 20px 30px;
-			}
-			div.error_message
-			{
-				border: 2px dashed red;
-				background-color: #E1E1E1;
-				margin: 1ex 4ex;
-				padding: 1.5ex;
-			}
-			div.panel
-			{
-				border: 1px solid gray;
-				background-color: #F6F6F6;
-				margin: 1ex 0;
-				padding: 1.2ex;
-			}
-			div.panel h2
-			{
-				margin: 0;
-				margin-bottom: 0.5ex;
-				padding-bottom: 3px;
-				border-bottom: 1px dashed black;
-				font-size: 14pt;
-				font-weight: normal;
-			}
-			div.panel h3
-			{
-				margin: 0;
-				margin-bottom: 2ex;
-				font-size: 10pt;
-				font-weight: normal;
-			}
-			form
-			{
-				margin: 0;
-			}
-			td.textbox
-			{
-				padding-top: 2px;
-				font-weight: bold;
-				white-space: nowrap;
-				padding-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 2ex;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="Themes/default/images/smflogo.gif" style="width: 258px; float: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';" alt="Simple Machines" border="0" /></a>
-			<div title="Moogle Express!">', $txt['smf_installer'], '</div>
-		</div>
-		<div id="content">';
+// All the steps in detail.
+// Number,Name,Function,Progress Weight.
+$incontext['steps'] = array(
+	0 => array(1, $txt['install_step_welcome'], 'Welcome', 0),
+	1 => array(2, $txt['install_step_writable'], 'CheckFilesWritable', 10),
+	2 => array(3, $txt['install_step_databaseset'], 'DatabaseSettings', 15),
+	3 => array(4, $txt['install_step_forum'], 'ForumSettings', 40),
+	4 => array(5, $txt['install_step_databasechange'], 'DatabasePopulation', 15),
+	5 => array(6, $txt['install_step_admin'], 'AdminAccount', 20),
+	6 => array(7, $txt['install_step_delete'], 'DeleteInstall', 0),
+);
 
-if (function_exists('doStep' . $_GET['step']))
-	call_user_func('doStep' . $_GET['step']);
+// Default title...
+$incontext['page_title'] = $txt['smf_installer'];
 
-echo '
-		</div>
-	</body>
-</html>';
+// What step are we on?
+$incontext['current_step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
+
+// Loop through all the steps doing each one as required.
+$incontext['overall_percent'] = 0;
+foreach ($incontext['steps'] as $num => $step)
+{
+	if ($num >= $incontext['current_step'])
+	{
+		// The current weight of this step in terms of overall progress.
+		$incontext['step_weight'] = $step[3];
+		// Make sure we reset the skip button.
+		$incontext['skip'] = false;
+
+		// Call the step and if it returns false that means pause!
+		if (function_exists($step[2]) && $step[2]() === false)
+			break;
+		elseif (function_exists($step[2]))
+			$incontext['current_step']++;
+
+		// No warnings pass on.
+		$incontext['warning'] = '';
+	}
+	$incontext['overall_percent'] += $step[3];
+}
+
+// Actually do the template stuff.
+installExit();
 
 function initialize_inputs()
 {
 	global $databases;
+
+	// Just so people using older versions of PHP aren't left in the cold.
+	if (!isset($_SERVER['PHP_SELF']))
+		$_SERVER['PHP_SELF'] = isset($GLOBALS['HTTP_SERVER_VARS']['PHP_SELF']) ? $GLOBALS['HTTP_SERVER_VARS']['PHP_SELF'] : 'install.php';
 
 	// Turn off magic quotes runtime and enable error reporting.
 	if (function_exists('set_magic_quotes_runtime'))
@@ -258,9 +216,9 @@ function initialize_inputs()
 // Load the list of language files, and the current language file.
 function load_lang_file()
 {
-	global $txt;
+	global $txt, $incontext;
 
-	$GLOBALS['detected_languages'] = array();
+	$incontext['detected_languages'] = array();
 
 	// Make sure the languages directory actually exists.
 	if (file_exists(dirname(__FILE__) . '/Themes/default/languages'))
@@ -270,13 +228,13 @@ function load_lang_file()
 		while ($entry = $dir->read())
 		{
 			if (substr($entry, 0, 8) == 'Install.' && substr($entry, -4) == '.php')
-				$GLOBALS['detected_languages'][$entry] = ucfirst(substr($entry, 8, strlen($entry) - 12));
+				$incontext['detected_languages'][$entry] = ucfirst(substr($entry, 8, strlen($entry) - 12));
 		}
 		$dir->close();
 	}
 
 	// Didn't find any, show an error message!
-	if (empty($GLOBALS['detected_languages']))
+	if (empty($incontext['detected_languages']))
 	{
 		// Let's not cache this message, eh?
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -314,63 +272,100 @@ function load_lang_file()
 	if (!isset($_SESSION['installer_temp_lang']) || !file_exists(dirname(__FILE__) . '/Themes/default/languages/' . $_SESSION['installer_temp_lang']))
 	{
 		// Use the first one...
-		list ($_SESSION['installer_temp_lang']) = array_keys($GLOBALS['detected_languages']);
+		list ($_SESSION['installer_temp_lang']) = array_keys($incontext['detected_languages']);
 
 		// If we have english and some other language, use the other language.  We Americans hate english :P.
-		if ($_SESSION['installer_temp_lang'] == 'Install.english.php' && count($GLOBALS['detected_languages']) > 1)
-			list (, $_SESSION['installer_temp_lang']) = array_keys($GLOBALS['detected_languages']);
+		if ($_SESSION['installer_temp_lang'] == 'Install.english.php' && count($incontext['detected_languages']) > 1)
+			list (, $_SESSION['installer_temp_lang']) = array_keys($incontext['detected_languages']);
 	}
 
 	// And now include the actual language file itself.
 	require_once(dirname(__FILE__) . '/Themes/default/languages/' . $_SESSION['installer_temp_lang']);
 }
 
-// Step zero: Finding out how and where to install.
-function doStep0()
+// This handy function loads some settings and the like.
+function load_database()
 {
-	global $txt, $databases;
+	global $db_prefix, $db_connection, $db_character_set, $sourcedir, $language;
+	global $smcFunc, $mbname, $scripturl, $boardurl, $modSettings, $db_type, $db_name, $db_user;
 
-	// Just so people using older versions of PHP aren't left in the cold.
-	if (!isset($_SERVER['PHP_SELF']))
-		$_SERVER['PHP_SELF'] = isset($GLOBALS['HTTP_SERVER_VARS']['PHP_SELF']) ? $GLOBALS['HTTP_SERVER_VARS']['PHP_SELF'] : 'install.php';
+	// Need this to check whether we need the database password.
+	require(dirname(__FILE__) . '/Settings.php');
+	if (!defined('SMF'))
+		define('SMF', 1);
+	if (empty($smcFunc))
+		$smcFunc = array();
 
-	// Show a language selection...
-	if (count($GLOBALS['detected_languages']) > 1)
+	$modSettings['disableQueryCheck'] = true;
+
+	// Connect the database.
+	if (!$db_connection)
 	{
-		echo '
-				<div style="padding-bottom: 2ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
-					<form action="', $_SERVER['PHP_SELF'], '" method="get">
-						<label for="installer_language">', $txt['installer_language'], ':</label> <select id="installer_language" name="lang_file" onchange="location.href = \'', $_SERVER['PHP_SELF'], '?lang_file=\' + this.options[this.selectedIndex].value;">';
+		require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+		if (@version_compare(PHP_VERSION, '5') == -1)
+			require_once($sourcedir . '/Subs-Compat.php');
 
-		foreach ($GLOBALS['detected_languages'] as $lang => $name)
-			echo '
-							<option', isset($_SESSION['installer_temp_lang']) && $_SESSION['installer_temp_lang'] == $lang ? ' selected="selected"' : '', ' value="', $lang, '">', $name, '</option>';
+		if (!$db_connection)
+			$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('persist' => $db_persist));
+	}
+}
 
-		echo '
-						</select>
+// This is called upon exiting the installer, for template etc.
+function installExit($fallThrough = false)
+{
+	global $incontext, $installurl, $txt;
 
-						<noscript><input type="submit" value="', $txt['installer_language_set'], '" /></noscript>
-					</form>
-				</div>';
+	// Send character set.
+	header('Content-Type: text/html; charset=' . (isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1'));
+
+	// We usually dump our templates out.
+	if (!$fallThrough)
+	{
+		// The top install bit.
+		template_install_above();
+
+		// Call the template.
+		if (isset($incontext['sub_template']))
+		{
+			$incontext['form_url'] = $installurl . '?step=' . $incontext['current_step'];
+
+			call_user_func('template_' . $incontext['sub_template']);
+		}
+		//!!! REMOVE THIS!!
+		else
+		{
+			if (function_exists('doStep' . $_GET['step']))
+				call_user_func('doStep' . $_GET['step']);
+		}
+		// Show the footer.
+		template_install_below();
 	}
 
-	// Check the PHP version.
-	if ((!function_exists('version_compare') || version_compare($GLOBALS['required_php_version'], PHP_VERSION) > 0) && !isset($_GET['overphp']))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_php_too_low'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_bad_try_again'], '
-				</div>';
+	// Bang - gone!
+	die();
+}
 
-		return false;
+function Welcome()
+{
+	global $incontext, $txt, $databases, $installurl;
+
+	$incontext['page_title'] = $txt['install_welcome'];
+	$incontext['sub_template'] = 'welcome_message';
+
+	// Done the submission?
+	if (isset($_POST['contbutt']))
+		return true;
+
+	// Check the PHP version.
+	if ((!function_exists('version_compare') || version_compare($GLOBALS['required_php_version'], PHP_VERSION) > 0))
+	{
+		$incontext['warning'] = $txt['error_php_too_low'];
 	}
 
 	// See if we think they have already installed it?
 	if (file_exists(dirname(__FILE__) . '/Settings.php'))
 	{
-		$probably_installed = 0;
+		$probably_installed = 2;
 		foreach (file(dirname(__FILE__) . '/Settings.php') as $line)
 		{
 			if (preg_match('~^\$db_passwd\s=\s\'([^\']+)\';$~', $line))
@@ -380,15 +375,11 @@ function doStep0()
 		}
 
 		if ($probably_installed == 2)
-			echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_already_installed'], '</div>
-				</div>';
+			$incontext['warning'] = $txt['error_already_installed'];
 	}
 
 	// Is some database support even compiled in?
-	$foundDBCount = 0;
-
+	$incontext['supported_databases'] = array();
 	foreach ($databases as $key => $db)
 	{
 		if ($db['supported'])
@@ -402,12 +393,12 @@ function doStep0()
 			else
 			{
 				$db_type = $key;
-				$foundDBCount++;
+				$incontext['supported_databases'][] = $db;
 			}
 		}
 	}
 
-	if (empty($foundDBCount))
+	if (empty($incontext['supported_databases']))
 		$error = empty($notFoundSQLFile) ? 'error_db_missing' : 'error_db_script_missing';
 	// How about session support?  Some crazy sysadmin remove it?
 	elseif (!function_exists('session_start'))
@@ -422,446 +413,358 @@ function doStep0()
 
 	// Since each of the three messages would look the same, anyway...
 	if (isset($error))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt[$error], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-
-	// Make sure all the files are properly writable (has its own messages...)
-	if (!make_files_writable())
-		return false;
+		$incontext['error'] = $txt[$error];
 
 	// Mod_security blocks everything that smells funny. Let SMF handle security.
 	if (!fixModSecurity() && !isset($_GET['overmodsecurity']))
+		$incontext['error'] = $txt['error_mod_security'] . '<br /><br /><a href="' . $installurl . '?overmodsecurity=true">' . $txt['error_message_click'] . '</a> ' . $txt['error_message_bad_try_again'];
+
+	return false;
+}
+
+function CheckFilesWritable()
+{
+	global $txt, $incontext;
+
+	$incontext['page_title'] = $txt['ftp_checking_writable'];
+	$incontext['sub_template'] = 'chmod_files';
+
+	$writable_files = array(
+		'attachments',
+		'avatars',
+		'cache',
+		'Packages',
+		'Packages/installed.list',
+		'Smileys',
+		'Themes',
+		'agreement.txt',
+		'Settings.php',
+		'Settings_bak.php'
+	);
+	$extra_files = array(
+		'Themes/classic/index.template.php',
+		'Themes/classic/style.css'
+	);
+	foreach ($incontext['detected_languages'] as $lang => $temp)
+		$extra_files[] = 'Themes/default/languages/' . $lang;
+
+	$failure = false;
+
+	// With mod_security installed, we could attempt to fix it with .htaccess.
+	if (function_exists('apache_get_modules') && in_array('mod_security', apache_get_modules()))
+		$writable_files[] = file_exists(dirname(__FILE__) . '/.htaccess') ? '.htaccess' : '.';
+
+	// On linux, it's easy - just use is_writable!
+	if (substr(__FILE__, 1, 2) != ':\\')
 	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_mod_security'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true&amp;overmodsecurity=true">', $txt['error_message_click'], '</a> ', $txt['error_message_bad_try_again'], '
-				</div>';
+		foreach ($writable_files as $file)
+		{
+			if (!is_writable(dirname(__FILE__) . '/' . $file))
+			{
+				@chmod(dirname(__FILE__) . '/' . $file, 0755);
+
+				// Well, 755 hopefully worked... if not, try 777.
+				$failure |= !is_writable(dirname(__FILE__) . '/' . $file) && !@chmod(dirname(__FILE__) . '/' . $file, 0777);
+			}
+		}
+		foreach ($extra_files as $file)
+			@chmod(dirname(__FILE__) . (empty($file) ? '' : '/' . $file), 0777);
+	}
+	// Windows is trickier.  Let's try opening for r+...
+	else
+	{
+		foreach ($writable_files as $file)
+		{
+			// Folders can't be opened for write... but the index.php in them can ;).
+			if (is_dir(dirname(__FILE__) . '/' . $file))
+				$file .= '/index.php';
+
+			// Funny enough, chmod actually does do something on windows - it removes the read only attribute.
+			@chmod(dirname(__FILE__) . '/' . $file, 0777);
+			$fp = @fopen(dirname(__FILE__) . '/' . $file, 'r+');
+
+			// Hmm, okay, try just for write in that case...
+			if (!$fp)
+				$fp = @fopen(dirname(__FILE__) . '/' . $file, 'w');
+
+			$failure |= !$fp;
+			@fclose($fp);
+		}
+		foreach ($extra_files as $file)
+			@chmod(dirname(__FILE__) . (empty($file) ? '' : '/' . $file), 0777);
+	}
+
+	if (!isset($_SERVER))
+		return !$failure;
+
+	// Put the list into context.
+	$incontext['writable_files'] = $writable_files;
+
+	// It's not going to be possible to use FTP on windows to solve the problem...
+	if ($failure && substr(__FILE__, 1, 2) == ':\\')
+	{
+		$incontext['error'] = $txt['error_windows_chmod'] . '
+					<ul style="margin: 2.5ex; font-family: monospace;">
+						<li>' . implode('</li>
+						<li>', $writable_files) . '</li>
+					</ul>';
 
 		return false;
 	}
-
-
-	// Set up the defaults.
-	$db_server = 'localhost';
-	$db_user = '';
-	$db_name = '';
-	$db_passwd = '';
-	foreach ($databases as $db)
+	// We're going to have to use... FTP!
+	elseif ($failure)
 	{
-		// Override with the defaults for this DB if appropriate.
-		if ($db['supported'])
+		// Load any session data we might have...
+		if (!isset($_POST['ftp_username']) && isset($_SESSION['installer_temp_ftp']))
 		{
-			if (isset($db['default_host']))
-				$db_server = @ini_get($db['default_host']) or $db_server = 'localhost';
-			if (isset($db['default_user']))
+			$_POST['ftp_server'] = $_SESSION['installer_temp_ftp']['server'];
+			$_POST['ftp_port'] = $_SESSION['installer_temp_ftp']['port'];
+			$_POST['ftp_username'] = $_SESSION['installer_temp_ftp']['username'];
+			$_POST['ftp_password'] = $_SESSION['installer_temp_ftp']['password'];
+			$_POST['ftp_path'] = $_SESSION['installer_temp_ftp']['path'];
+		}
+
+		if (isset($_POST['ftp_username']))
+		{
+			$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
+
+			if ($ftp->error === false)
 			{
-				$db_user = @ini_get($db['default_user']);
-				$db_name = @ini_get($db['default_user']);
+				// Try it without /home/abc just in case they messed up.
+				if (!$ftp->chdir($_POST['ftp_path']))
+				{echo 'sddsgdsgs';
+					$incontext['ftp_error'] = $ftp->last_message;
+					$ftp->chdir(preg_replace('~^/home[2]?/[^/]+?~', '', $_POST['ftp_path']));
+				}
 			}
-			if (isset($db['default_password']))
-				$db_passwd = @ini_get($db['default_password']);
-			if (isset($db['default_port']))
-				$db_port = @ini_get($db['default_port']);
-
-			break;
 		}
-	}
 
-	// Override for repost.
-	if (isset($_POST['ftp_username']))
-	{
-		$db_user = $_POST['ftp_username'];
-		$db_name = $_POST['ftp_username'];
-	}
-
-	// This is just because it makes it easier for people on Lycos/Tripod UK :P.
-	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'members.lycos.co.uk' && defined('LOGIN'))
-	{
-		$db_user = LOGIN;
-		$db_name = LOGIN . '_uk_db';
-	}
-
-	// Should we use a non standard port?
-	if (!empty($db_port))
-		$db_server .= ':' . $db_port;
-
-	// What host and port are we on?
-	$host = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST'];
-
-	// Now, to put what we've learned together... and add a path.
-	$url = 'http' . (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 's' : '') . '://' . $host . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
-
-	// Check if the database sessions will even work.
-	$test_dbsession = @ini_get('session.auto_start') != 1 && @version_compare(PHP_VERSION, '4.2.0') != -1;
-
-	echo '
-				<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
-				<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
-					<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-					<b style="text-decoration: underline;">', $txt['error_warning_notice'], '</b><br />
-					<div style="padding-left: 6ex;">
-						', sprintf($txt['error_script_outdated'], '<i id="smfVersion" style="white-space: nowrap;">??</i>', '<i id="yourVersion" style="white-space: nowrap;">' . $GLOBALS['current_smf_version'] . '</i>'), '
-					</div>
-				</div>
-				<div class="panel">
-					<form action="' . $_SERVER['PHP_SELF'] . '?step=1" method="post">
-						<h2>', $txt['install_settings'], '</h2>
-						<h3>', $txt['install_settings_info'], '</h3>
-
-						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
-							<tr>
-								<td width="20%" valign="top" class="textbox"><label for="mbname_input">', $txt['install_settings_name'], ':</label></td>
-								<td>
-									<input type="text" name="mbname" id="mbname_input" value="', $txt['install_settings_name_default'], '" size="65" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_name_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox"><label for="boardurl_input">', $txt['install_settings_url'], ':</label></td>
-								<td>
-									<input type="text" name="boardurl" id="boardurl_input" value="', $url, '" size="65" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_url_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox">', $txt['install_settings_compress'], ':</td>
-								<td>
-									<input type="checkbox" name="compress" id="compress_check" checked="checked" /> <label for="compress_check">', $txt['install_settings_compress_title'], '</label><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_compress_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox">', $txt['install_settings_dbsession'], ':</td>
-								<td>
-									<input type="checkbox" name="dbsession" id="dbsession_check" checked="checked" /> <label for="dbsession_check">', $txt['install_settings_dbsession_title'], '</label><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $test_dbsession ? $txt['install_settings_dbsession_info1'] : $txt['install_settings_dbsession_info2'], '</div>
-								</td>
-							</tr>';
-	if (strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1)
-		echo '
-							<tr>
-								<td valign="top" class="textbox">', $txt['install_settings_utf8'], ':</td>
-								<td>
-									<input type="checkbox" name="utf8" id="utf8_check" /> <label for="utf8_check">', $txt['install_settings_utf8_title'], '</label><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_utf8_info'], '</div>
-								</td>
-							</tr>';
-
-	echo '
-							<tr>
-								<td valign="top" class="textbox">', $txt['install_settings_stats'], ':</td>
-								<td>
-									<input type="checkbox" name="stats" id="stats_check" /> <label for="stats_check">', $txt['install_settings_stats_title'], '</label><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_stats_info'], '</div>
-								</td>
-							</tr>
-						</table>
-
-						<h2>', $txt['db_settings'], '</h2>
-						<h3>', $txt['db_settings_info'], '</h3>
-
-						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">';
-
-	// More than one database type?
-	if ($foundDBCount > 1)
-	{
-		echo '
-							<tr>
-								<td width="20%" valign="top" class="textbox"><label for="db_type_input">', $txt['db_settings_type'], ':</label></td>
-								<td>
-									<select name="db_type" id="db_type_input" onchange="toggleDBInput();">';
-
-	foreach ($databases as $key => $db)
-		if ($db['supported'])
-			echo '
-										<option value="', $key, '">', $db['name'], '</option>';
-
-	echo '
-									</select><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_type_info'], '</div>
-								</td>
-							</tr>';
-	}
-	else
-	{
-		echo '
-							<input type="hidden" name="db_type" value="', $db_type, '" />';
-	}
-
-	echo '
-							<tr id="db_server_contain">
-								<td width="20%" valign="top" class="textbox"><label for="db_server_input">', $txt['db_settings_server'], ':</label></td>
-								<td>
-									<input type="text" name="db_server" id="db_server_input" value="', $db_server, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_server_info'], '</div>
-								</td>
-							</tr><tr id="db_user_contain">
-								<td valign="top" class="textbox"><label for="db_user_input">', $txt['db_settings_username'], ':</label></td>
-								<td>
-									<input type="text" name="db_user" id="db_user_input" value="', $db_user, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_username_info'], '</div>
-								</td>
-							</tr><tr id="db_passwd_contain">
-								<td valign="top" class="textbox"><label for="db_passwd_input">', $txt['db_settings_password'], ':</label></td>
-								<td>
-									<input type="password" name="db_passwd" id="db_passwd_input" value="', $db_passwd, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_password_info'], '</div>
-								</td>
-							</tr><tr id="db_name_contain">
-								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database'], ':</label></td>
-								<td>
-									<input type="text" name="db_name" id="db_name_input" value="', empty($db_name) ? 'smf' : $db_name, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_info'], '</div>
-								</td>
-							</tr><tr id="db_filename_contain" style="display: none;">
-								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database_file'], ':</label></td>
-								<td>
-									<input type="text" name="db_filename" id="db_name_input" value="', empty($db_name) ? dirname(__FILE__) . '/smf_' . substr(md5(microtime()), 0, 10) : $db_name, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_file_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_prefix_input">', $txt['db_settings_prefix'], ':</label></td>
-								<td>
-									<input type="text" name="db_prefix" id="db_prefix_input" value="smf_" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_prefix_info'], '</div>
-								</td>
-							</tr>
-						</table>
-
-						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';"><input type="submit" value="', $txt['install_settings_proceed'], '" /></div>
-					</form>
-				</div>';
-
-	// Allow the toggling of input boxes for SQLite etc.
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function toggleDBInput()
+		if (!isset($ftp) || $ftp->error !== false)
 		{
-			// What state is it?';
+			if (!isset($ftp))
+				$ftp = new ftp_connection(null);
+			// Save the error so we can mess with listing...
+			elseif ($ftp->error !== false && !isset($incontext['ftp_error']))
+				$incontext['ftp_error'] = $ftp->last_message === null ? '' : $ftp->last_message;
 
-	if (!isset($databases['sqlite']) || empty($databases['sqlite']['supported']))
-		echo '
-			var showAll = true;';
-	elseif ($foundDBCount < 2)
-		echo '
-			var showAll = false;';
-	// If we have more than one DB including SQLite what should we be doing?
-	else
-		echo '
-			var showAll = document.getElementById(\'db_type_input\').value == \'sqlite\' ? false : true;';
+			list ($username, $detect_path, $found_path) = $ftp->detect_path(dirname(__FILE__));
 
-	echo '
-			document.getElementById(\'db_passwd_contain\').style.display = showAll ? \'\' : \'none\';
-			document.getElementById(\'db_server_contain\').style.display = showAll ? \'\' : \'none\';
-			document.getElementById(\'db_user_contain\').style.display = showAll ? \'\' : \'none\';
-			document.getElementById(\'db_name_contain\').style.display = showAll ? \'\' : \'none\';
-			document.getElementById(\'db_filename_contain\').style.display = !showAll ? \'\' : \'none\';
+			if ($found_path || !isset($_POST['ftp_path']))
+				$_POST['ftp_path'] = $detect_path;
+
+			if (!isset($_POST['ftp_username']))
+				$_POST['ftp_username'] = $username;
+
+			// Set the username etc, into context.
+			$incontext['ftp'] = array(
+				'server' => isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost',
+				'port' => isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21',
+				'username' => isset($_POST['ftp_username']) ? $_POST['ftp_username'] : '',
+				'path' => $_POST['ftp_path'],
+				'path_msg' => !empty($found_path) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'],
+			);
+
+			return false;
 		}
-		toggleDBInput();
-		// Latest version?
-		function smfCurrentVersion()
+		else
 		{
-			var smfVer, yourVer;
+			$_SESSION['installer_temp_ftp'] = array(
+				'server' => $_POST['ftp_server'],
+				'port' => $_POST['ftp_port'],
+				'username' => $_POST['ftp_username'],
+				'password' => $_POST['ftp_password'],
+				'path' => $_POST['ftp_path']
+			);
 
-			if (typeof(window.smfVersion) != "string")
-				return;
-			window.smfVersion = window.smfVersion.replace(/SMF/g, \'\');
+			foreach ($writable_files as $file)
+			{
+				if (!is_writable(dirname(__FILE__) . '/' . $file))
+					$ftp->chmod($file, 0755);
+				if (!is_writable(dirname(__FILE__) . '/' . $file))
+					$ftp->chmod($file, 0777);
+			}
 
-			smfVer = document.getElementById("smfVersion");
-			yourVer = document.getElementById("yourVersion");
-
-			setInnerHTML(smfVer, window.smfVersion);
-
-			var currentVersion = getInnerHTML(yourVer);
-			if (currentVersion < window.smfVersion)
-				document.getElementById(\'version_warning\').style.display = \'\';
+			$ftp->close();
 		}
-		add_load_event(smfCurrentVersion);
-	// ]]></script>';
+	}
 
 	return true;
 }
 
-// Step one: Do the SQL thang.
-function doStep1()
+function DatabaseSettings()
 {
-	global $txt, $db_connection, $smcFunc, $databases, $modSettings, $db_type, $sourcedir, $db_prefix;
+	global $txt, $databases, $incontext, $smcFunc;
 
-	if (substr($_POST['boardurl'], -10) == '/index.php')
-		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
-	elseif (substr($_POST['boardurl'], -1) == '/')
-		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -1);
-	if (substr($_POST['boardurl'], 0, 7) != 'http://' && substr($_POST['boardurl'], 0, 7) != 'file://' && substr($_POST['boardurl'], 0, 8) != 'https://')
-		$_POST['boardurl'] = 'http://' . $_POST['boardurl'];
+	$incontext['sub_template'] = 'database_settings';
+	$incontext['page_title'] = $txt['db_settings'];
+	$incontext['continue'] = 1;
 
-	// You better enter enter a database name for SQLite.
-	if (isset($_POST['db_filename']) && trim($_POST['db_filename']) == '')
+	// Set up the defaults.
+	$incontext['db']['server'] = 'localhost';
+	$incontext['db']['user'] = '';
+	$incontext['db']['name'] = '';
+	$incontext['db']['pass'] = '';
+	$incontext['db']['type'] = '';
+	$incontext['supported_databases'] = array();
+
+	$foundOne = false;
+	foreach ($databases as $key => $db)
 	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_filename'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-
-	// Duplicate name in the same dir?  Can't do that with SQLite.  Weird things happen.
-	if (file_exists($_POST['db_filename'] . (substr($_POST['db_filename'], -3) != '.db' ? '.db' : '')))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_filename_exists'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-
-	// What type are they trying?
-	$db_type = preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']);
-	$db_prefix = preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix']);
-
-	// Is the prefix numeric, yet we don't support it?
-	if (preg_match('~^\d~', $db_prefix) && empty($databases[$db_type]['support_numeric_prefix']))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_prefix_numeric'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-
-	// Take care of these variables...
-	$vars = array(
-		'boardurl' => $_POST['boardurl'],
-		'boarddir' => addslashes(dirname(__FILE__)),
-		'sourcedir' => addslashes(dirname(__FILE__)) . '/Sources',
-		'cachedir' => addslashes(dirname(__FILE__)) . '/cache',
-		'db_type' => $db_type,
-		'db_name' => $_POST['db_type'] == 'sqlite' && isset($_POST['db_filename']) ? $_POST['db_filename'] : $_POST['db_name'],
-		'db_user' => $_POST['db_user'],
-		'db_passwd' => isset($_POST['db_passwd']) ? $_POST['db_passwd'] : '',
-		'db_server' => $_POST['db_server'],
-		'db_prefix' => $db_prefix,
-		'mbname' => $_POST['mbname'],
-		'language' => substr($_SESSION['installer_temp_lang'], 8, -4),
-		// The cookiename is special; we want it to be the same if it ever needs to be reinstalled with the same info.
-		'cookiename' => 'SMFCookie' . abs(crc32($_POST['db_name'] . preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix'])) % 1000),
-	);
-
-	if (!updateSettingsFile($vars) && substr(__FILE__, 1, 2) == ':\\')
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_windows_chmod'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-
-	// Make sure it works.
-	require(dirname(__FILE__) . '/Settings.php');
-
-	// Better find the database file!
-	if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', sprintf($txt['error_db_file'], 'Subs-Db-' . $db_type . '.php'), '</div>
-
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-		return false;
-	}
-
-	// Now include it for database functions!
-	define('SMF', 1);
-	$modSettings['disableQueryCheck'] = true;
-	if (empty($smcFunc))
-		$smcFunc = array();
-	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
-
-	// What - running PHP4? The shame!
-	if (@version_compare(PHP_VERSION, '5') == -1)
-		require_once($sourcedir . '/Subs-Compat.php');
-
-	// Attempt a connection.
-	$needsDB = !empty($databases[$db_type]['always_has_db']);
-	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
-
-	// No dice?  Let's try adding the prefix they specified, just in case they misread the instructions ;).
-	if ($db_connection == null)
-	{
-		$db_error = @$smcFunc['db_error']();
-
-		$db_connection = smf_db_initiate($db_server, $db_name, $_POST['db_prefix'] . $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
-		if ($db_connection != null)
+		// Override with the defaults for this DB if appropriate.
+		if ($db['supported'])
 		{
-			$db_user = $_POST['db_prefix'] . $db_user;
-			updateSettingsFile(array('db_user' => $db_user));
+			$incontext['supported_databases'][$key] = $db;
+
+			if (!$foundOne)
+			{
+				if (isset($db['default_host']))
+					$incontext['db']['server'] = @ini_get($db['default_host']) or $incontext['db']['server'] = 'localhost';
+				if (isset($db['default_user']))
+				{
+					$incontext['db']['user'] = @ini_get($db['default_user']);
+					$incontext['db']['name'] = @ini_get($db['default_user']);
+				}
+				if (isset($db['default_password']))
+					$incontext['db']['pass'] = @ini_get($db['default_password']);
+				if (isset($db['default_port']))
+					$db_port = @ini_get($db['default_port']);
+
+				$incontext['db']['type'] = $key;
+				$foundOne = true;
+			}
 		}
 	}
 
-	// Still no connection?  Big fat error message :P.
-	if (!$db_connection)
+	// Override for repost.
+	if (isset($_POST['db_user']))
 	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_connect'], '</div>
+		$incontext['db']['user'] = $_POST['db_user'];
+		$incontext['db']['name'] = $_POST['db_name'];
+		$incontext['db']['server'] = $_POST['db_server'];
+		$incontext['db']['prefix'] = $_POST['db_prefix'];
+	}
+	else
+		$incontext['db']['prefix'] = 'smf_';
 
-					<div style="margin: 2.5ex; font-family: monospace;"><b>', $db_error, '</b></div>
-
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-		return false;
+	// This is just because it makes it easier for people on Lycos/Tripod UK :P.
+	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'members.lycos.co.uk' && defined('LOGIN'))
+	{
+		$incontext['db']['user'] = LOGIN;
+		$incontext['db']['name'] = LOGIN . '_uk_db';
 	}
 
-	// Do they meet the install requirements?
-	// !!! Old client, new server?
-	if (version_compare($databases[$db_type]['version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_too_low'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
+	// Should we use a non standard port?
+	if (!empty($db_port))
+		$incontext['db']['server'] .= ':' . $db_port;
 
-		return false;
-	}
-
-	// Let's try that database on for size... assuming we haven't already lost the opportunity.
-	if ($db_name != '' && !$needsDB)
+	// Are we submitting?
+	if (isset($_POST['db_type']))
 	{
-		$smcFunc['db_query']('', "
-			CREATE DATABASE IF NOT EXISTS `$db_name`",
-			array(
-				'security_override' => true,
-				'db_error_skip' => true,
-			),
-			$db_connection
+		if (isset($_POST['db_filename']))
+		{
+			// You better enter enter a database name for SQLite.
+			if (trim($_POST['db_filename']) == '')
+			{
+				$incontext['error'] = $txt['error_db_filename'];
+				return false;
+			}
+			// Duplicate name in the same dir?  Can't do that with SQLite.  Weird things happen.
+			if (file_exists($_POST['db_filename'] . (substr($_POST['db_filename'], -3) != '.db' ? '.db' : '')))
+			{
+				$incontext['error'] = $txt['error_db_filename_exists'];
+				return false;
+			}
+		}
+
+		// What type are they trying?
+		$db_type = preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']);
+		$db_prefix = preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix']);
+
+		// Is the prefix numeric, yet we don't support it?
+		if (preg_match('~^\d~', $db_prefix) && empty($databases[$db_type]['support_numeric_prefix']))
+		{
+			$incontext['error'] = $txt['error_db_prefix_numeric'];
+			return false;
+		}
+
+
+		// Take care of these variables...
+		$vars = array(
+			'db_type' => $db_type,
+			'db_name' => $_POST['db_type'] == 'sqlite' && isset($_POST['db_filename']) ? $_POST['db_filename'] : $_POST['db_name'],
+			'db_user' => $_POST['db_user'],
+			'db_passwd' => isset($_POST['db_passwd']) ? $_POST['db_passwd'] : '',
+			'db_server' => $_POST['db_server'],
+			'db_prefix' => $db_prefix,
+			// The cookiename is special; we want it to be the same if it ever needs to be reinstalled with the same info.
+			'cookiename' => 'SMFCookie' . abs(crc32($_POST['db_name'] . preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix'])) % 1000),
 		);
 
-		// Okay, let's try the prefix if it didn't work...
-		if (!$smcFunc['db_select_db']($db_name, $db_connection) && $db_name != '')
+		// God I hope it saved!
+		if (!updateSettingsFile($vars) && substr(__FILE__, 1, 2) == ':\\')
+		{
+			$incontext['error'] = $txt['error_windows_chmod'];
+			return false;
+		}
+
+		// Make sure it works.
+		require(dirname(__FILE__) . '/Settings.php');
+
+		// Better find the database file!
+		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+		{
+			$incontext['error'] = sprintf($txt['error_db_file'], 'Subs-Db-' . $db_type . '.php');
+			return false;
+		}
+
+		// Now include it for database functions!
+		define('SMF', 1);
+		$modSettings['disableQueryCheck'] = true;
+		if (empty($smcFunc))
+			$smcFunc = array();
+		require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+
+		// What - running PHP4? The shame!
+		if (@version_compare(PHP_VERSION, '5') == -1)
+			require_once($sourcedir . '/Subs-Compat.php');
+
+		// Attempt a connection.
+		$needsDB = !empty($databases[$db_type]['always_has_db']);
+		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
+
+		// No dice?  Let's try adding the prefix they specified, just in case they misread the instructions ;).
+		if ($db_connection == null)
+		{
+			$db_error = @$smcFunc['db_error']();
+
+			$db_connection = smf_db_initiate($db_server, $db_name, $_POST['db_prefix'] . $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
+			if ($db_connection != null)
+			{
+				$db_user = $_POST['db_prefix'] . $db_user;
+				updateSettingsFile(array('db_user' => $db_user));
+			}
+		}
+
+		// Still no connection?  Big fat error message :P.
+		if (!$db_connection)
+		{
+			$incontext['error'] = $txt['error_db_connect'] . '<div style="margin: 2.5ex; font-family: monospace;"><b>' . $db_error . '</b></div>';
+			return false;
+		}
+
+		// Do they meet the install requirements?
+		// !!! Old client, new server?
+		if (version_compare($databases[$db_type]['version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
+		{
+			$incontext['error'] = $txt['error_db_too_low'];
+			return false;
+		}
+
+		// Let's try that database on for size... assuming we haven't already lost the opportunity.
+		if ($db_name != '' && !$needsDB)
 		{
 			$smcFunc['db_query']('', "
-				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`",
+				CREATE DATABASE IF NOT EXISTS `$db_name`",
 				array(
 					'security_override' => true,
 					'db_error_skip' => true,
@@ -869,26 +772,125 @@ function doStep1()
 				$db_connection
 			);
 
-			if ($smcFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
+			// Okay, let's try the prefix if it didn't work...
+			if (!$smcFunc['db_select_db']($db_name, $db_connection) && $db_name != '')
 			{
-				$db_name = $_POST['db_prefix'] . $db_name;
-				updateSettingsFile(array('db_name' => $db_name));
+				$smcFunc['db_query']('', "
+					CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`",
+					array(
+						'security_override' => true,
+						'db_error_skip' => true,
+					),
+					$db_connection
+				);
+	
+				if ($smcFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
+				{
+					$db_name = $_POST['db_prefix'] . $db_name;
+					updateSettingsFile(array('db_name' => $db_name));
+				}
+			}
+
+			// Okay, now let's try to connect...
+			if (!$smcFunc['db_select_db']($db_name, $db_connection))
+			{
+				$incontext['error'] = sprintf($txt['error_db_database'], $db_name);
+				return false;
 			}
 		}
 
-		// Okay, now let's try to connect...
-		if (!$smcFunc['db_select_db']($db_name, $db_connection))
-		{
-			echo '
-					<div class="error_message">
-						<div style="color: red;">', sprintf($txt['error_db_database'], $db_name), '</div>
-						<br />
-						<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-					</div>';
+		return true;
+	}
 
+	return false;
+}
+
+// Let's start with basic forum type settings.
+function ForumSettings()
+{
+	global $txt, $incontext, $databases, $smcFunc, $db_connection;
+
+	$incontext['sub_template'] = 'forum_settings';
+	$incontext['page_title'] = $txt['install_settings'];
+
+	// What host and port are we on?
+	$host = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST'];
+
+	// Now, to put what we've learned together... and add a path.
+	$incontext['detected_url'] = 'http' . (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 's' : '') . '://' . $host . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
+
+	// Check if the database sessions will even work.
+	$incontext['test_dbsession'] = @ini_get('session.auto_start') != 1 && @version_compare(PHP_VERSION, '4.2.0') != -1;
+	$incontext['utf8_should_work'] = strpos(strtolower(PHP_OS), 'win') === false || @version_compare(PHP_VERSION, '4.2.3') != -1;
+
+	$incontext['continue'] = 1;
+
+	// Submitting?
+	if (isset($_POST['boardurl']))
+	{
+		if (substr($_POST['boardurl'], -10) == '/index.php')
+			$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
+		elseif (substr($_POST['boardurl'], -1) == '/')
+			$_POST['boardurl'] = substr($_POST['boardurl'], 0, -1);
+		if (substr($_POST['boardurl'], 0, 7) != 'http://' && substr($_POST['boardurl'], 0, 7) != 'file://' && substr($_POST['boardurl'], 0, 8) != 'https://')
+			$_POST['boardurl'] = 'http://' . $_POST['boardurl'];
+
+		// Save these variables.
+		$vars = array(
+			'boardurl' => $_POST['boardurl'],
+			'boarddir' => addslashes(dirname(__FILE__)),
+			'sourcedir' => addslashes(dirname(__FILE__)) . '/Sources',
+			'cachedir' => addslashes(dirname(__FILE__)) . '/cache',
+			'mbname' => $_POST['mbname'],
+			'language' => substr($_SESSION['installer_temp_lang'], 8, -4),
+		);
+
+		// Must save!
+		if (!updateSettingsFile($vars) && substr(__FILE__, 1, 2) == ':\\')
+		{
+			$incontext['error'] = $txt['error_windows_chmod'];
 			return false;
 		}
+
+		// Make sure it works.
+		require(dirname(__FILE__) . '/Settings.php');
+
+		// UTF-8 requires a setting to override the language charset.
+		if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
+		{
+			if (version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check']))) > 0)
+			{
+				$incontext['error'] = sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']);
+				return false;
+			}
+			else
+				// Set the character set here.
+				updateSettingsFile(array('db_character_set' => 'utf8'));
+		}
+
+		// Good, skip on.
+		return true;
 	}
+
+	return false;
+}
+
+// Step one: Do the SQL thang.
+function DatabasePopulation()
+{
+	global $txt, $db_connection, $smcFunc, $databases, $modSettings, $db_type, $sourcedir, $db_prefix, $incontext, $db_name;
+
+	$incontext['sub_template'] = 'populate_database';
+	$incontext['page_title'] = $txt['db_populate'];
+	$incontext['continue'] = 1;
+
+	// Already done?
+	if (isset($_POST['pop_done']))
+		return true;
+
+	// Reload settings.
+	require(dirname(__FILE__) . '/Settings.php');
+	load_database();
 
 	// Before running any of the queries, let's make sure another version isn't already installed.
 	$result = $smcFunc['db_query']('', '
@@ -908,42 +910,19 @@ function doStep1()
 		// Do they match?  If so, this is just a refresh so charge on!
 		if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] != $GLOBALS['current_smf_version'])
 		{
-			echo '
-					<div class="error_message">
-						<div style="color: red;">', $txt['error_versions_do_not_match'], '</div>
-						<br />
-						<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-					</div>';
-
+			$incontext['error'] = $txt['error_versions_do_not_match'];
 			return false;
 		}
 	}
 
-	// UTF-8 requires a setting to override the language charset.
-	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
-	{
-		if (version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check']))) > 0)
-		{
-			echo '
-					<div class="error_message">
-						<div style="color: red;">', sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']), '</div>
-						<br />
-						<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-					</div>';
-
-			return false;
-		}
-		else
-		{
-			updateSettingsFile(array('db_character_set' => 'utf8'));
-			$smcFunc['db_query']('', '
-				SET NAMES utf8',
-				array(
-					'db_error_skip' => true,
-				)
-			);
-		}
-	}
+	// If doing UTF8, select it.
+	if (!empty($db_character_set) && $db_character_set == 'utf8' && !empty($databases[$db_type]['utf8_support']))
+		$smcFunc['db_query']('', '
+			SET NAMES utf8',
+			array(
+				'db_error_skip' => true,
+			)
+		);
 
 	$replaces = array(
 		'{$db_prefix}' => $db_prefix,
@@ -976,8 +955,14 @@ function doStep1()
 
 	// Execute the SQL.
 	$current_statement = '';
-	$failures = array();
 	$exists = array();
+	$incontext['failures'] = array();
+	$incontext['sql_results'] = array(
+		'tables' => 0,
+		'inserts' => 0,
+		'table_dups' => 0,
+		'insert_dups' => 0,
+	);
 	foreach ($sql_lines as $count => $line)
 	{
 		// No comments allowed!
@@ -991,6 +976,7 @@ function doStep1()
 		// Does this table already exist?  If so, don't insert more data into it!
 		if (preg_match('~^\s*INSERT INTO ([^\s\n\r]+?)~', $current_statement, $match) != 0 && in_array($match[1], $exists))
 		{
+			$incontext['sql_results']['insert_dups']++;
 			$current_statement = '';
 			continue;
 		}
@@ -1000,19 +986,38 @@ function doStep1()
 			// Error 1050: Table already exists!
 			//!!! Needs to be made better!
 			if (($db_type != 'mysql' || mysql_errno($db_connection) === 1050) && preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) == 1)
+			{
 				$exists[] = $match[1];
+				$incontext['sql_results']['table_dups']++;
+			}
 			else
 			{
-				$failures[$count] = $smcFunc['db_error']();
+				$incontext['failures'][$count] = $smcFunc['db_error']();
 			}
+		}
+		else
+		{
+			if (preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) == 1)
+				$incontext['sql_results']['tables']++;
+			else
+				$incontext['sql_results']['inserts']++;
 		}
 
 		$current_statement = '';
 	}
 
+	// Sort out the context for the SQL.
+	foreach ($incontext['sql_results'] as $key => $number)
+	{
+		if ($number == 0)
+			unset($incontext['sql_results'][$key]);
+		else
+			$incontext['sql_results'][$key] = sprintf($txt['db_populate_' . $key], $number);
+	}
+
 	// Make sure UTF will be used globally.
 	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
-		$smcFunc['db_insert']('',
+		$smcFunc['db_insert']('replace',
 			$db_prefix . 'settings',
 			array(
 				'variable' => 'string-255', 'value' => 'string-65534',
@@ -1117,254 +1122,104 @@ function doStep1()
 
 		if (!empty($db_messed))
 		{
-			$failures[-1] = $smcFunc['db_error']();
+			$incontext['failures'][-1] = $smcFunc['db_error']();
 			break;
 		}
-	}
-
-	if (!empty($failures))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_queries'], '</div>
-					<div style="margin: 2.5ex;">';
-
-		foreach ($failures as $line => $fail)
-			echo '
-						<b>', $txt['error_db_queries_line'], $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '<br />';
-
-		echo '
-					</div>
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
 	}
 
 	// Check for the ALTER privilege.
 	if (!empty($databases[$db_type]['alter_support']) && $smcFunc['db_query']('', "ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD", array('security_override' => true, 'db_error_skip' => true)) === false)
 	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_alter_priv'], '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
+		$incontext['error'] = $txt['error_db_alter_priv'];
 		return false;
 	}
 
 	if (!empty($exists))
-		echo '
-				<div class="panel">
-					<h2>', $txt['user_refresh_install'], '</h2>
-					', $txt['user_refresh_install_desc'], '
-				</div>';
+	{
+		$incontext['page_title'] = $txt['user_refresh_install'];
+		$incontext['was_refresh'] = true;
+	}
 
-	return doStep2a();
+	return false;
 }
 
-// Step two-A: Ask for the administrator login information.
-function doStep2a()
+// Ask for the administrator login information.
+function AdminAccount()
 {
-	global $txt, $db_type, $db_connection, $databases, $smcFunc;
+	global $txt, $db_type, $db_connection, $databases, $smcFunc, $incontext, $db_prefix, $db_passwd, $sourcedir;
+
+	$incontext['sub_template'] = 'admin_account';
+	$incontext['page_title'] = $txt['user_settings'];
+	$incontext['continue'] = 1;
+
+	// Skipping?
+	if (!empty($_POST['skip']))
+		return true;
 
 	// Need this to check whether we need the database password.
 	require(dirname(__FILE__) . '/Settings.php');
+	load_database();
+
+	// Define the sha1 function, if it doesn't exist.
+	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
+		require_once($sourcedir . '/Subs-Compat.php');
 
 	if (!isset($_POST['username']))
 		$_POST['username'] = '';
 	if (!isset($_POST['email']))
 		$_POST['email'] = '';
 
-	echo '
-				<div class="panel">
-					<form action="' . $_SERVER['PHP_SELF'] . '?step=2" method="post" onsubmit="if (this.password1.value == this.password2.value) return true; else {alert(\'', $txt['error_user_settings_again_match'], '\'); return false;}">
-						<h2>', $txt['user_settings'], '</h2>
-						<h3>', $txt['user_settings_info'], '</h3>
+	$incontext['username'] = $_POST['username'];
+	$incontext['email'] = $_POST['email'];
 
-						<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 2ex;">
-							<tr>
-								<td width="18%" valign="top" class="textbox"><label for="username">', $txt['user_settings_username'], ':</label></td>
-								<td>
-									<input type="text" name="username" id="username" value="', $_POST['username'], '" size="40" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_username_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox"><label for="password1">', $txt['user_settings_password'], ':</label></td>
-								<td>
-									<input type="password" name="password1" id="password1" size="40" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_password_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox"><label for="password2">', $txt['user_settings_again'], ':</label></td>
-								<td>
-									<input type="password" name="password2" id="password2" size="40" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_again_info'], '</div>
-								</td>
-							</tr><tr>
-								<td valign="top" class="textbox"><label for="email">', $txt['user_settings_email'], ':</label></td>
-								<td>
-									<input type="text" name="email" id="email" value="', $_POST['email'], '" size="40" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_email_info'], '</div>
-								</td>
-							</tr>
-						</table>';
-
-	if (empty($db_type) || $db_type != 'sqlite')
-	{
-		echo '
-
-						<h2>', $txt['user_settings_database'], '</h2>
-						<h3>', $txt['user_settings_database_info'], '</h3>
-
-						<div style="margin-bottom: 2ex; padding-', empty($txt['lang_rtl']) ? 'left' : 'right', ': 17%;">
-							<input type="password" name="password3" size="30" />
-						</div>';
-	}
-
-	echo '
-						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
-							<input type="submit" value="', $txt['user_settings_proceed'], '" />';
+	$incontext['require_db_confirm'] = empty($db_type) || $db_type != 'sqlite';
 
 	// Only allow skipping if we think they already have an account setup.
-	if (function_exists('smf_db_initiate'))
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member
+		FROM {db_prefix}members
+		WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)
+		LIMIT 1',
+		array(
+			'db_error_skip' => true,
+			'admin_group' => 1,
+		)
+	);
+	if ($smcFunc['db_num_rows']($request) != 0)
+		$incontext['skip'] = 1;
+	$smcFunc['db_free_result']($request);
+
+	// Trying to create an account?
+	if (isset($_POST['password1']) && !empty($_POST['contbutt']))
 	{
-		if (!$db_connection)
+		// Wrong password?
+		if ($incontext['require_db_confirm'] && $_POST['password3'] != $db_passwd)
 		{
-			$needsDB = !empty($databases[$db_type]['always_has_db']);
-			$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
-			if ($db_connection && !$needsDB)
-				$smcFunc['db_select_db']($db_name, $db_connection);
-			if ($db_connection)
-			{
-				$request = $smcFunc['db_query']('', '
-					SELECT id_member
-					FROM {db_prefix}members
-					WHERE id_group = {int:admin_group} OR FIND_IN_SET({int:admin_group}, additional_groups)
-					LIMIT 1',
-					array(
-						'db_error_skip' => true,
-						'admin_group' => 1,
-					)
-				);
-				if ($smcFunc['db_num_rows']($request) != 0)
-				{
-					echo '
-							<input type="submit" name="skip_account" value="', $txt['user_settings_skip'], '" onclick="return confirm(\'', addcslashes($txt['user_settings_skip_sure'], "'"), '\');" />';
-				}
-				$smcFunc['db_free_result']($request);
-			}
+			$incontext['error'] = $txt['error_db_connect'];
+			return false;
 		}
-	}
+		// Not matching passwords?
+		if ($_POST['password1'] != $_POST['password2'])
+		{
+			$incontext['error'] = $txt['error_user_settings_again_match'];
+			return false;
+		}
+		// No password?
+		if (strlen($_POST['password1']) < 4)
+		{
+			$incontext['error'] = $txt['error_user_settings_no_password'];
+			return false;
+		}
+		if (!file_exists($sourcedir . '/Subs.php'))
+		{
+			$incontext['error'] = $txt['error_subs_missing'];
+			return false;
+		}
 
-	echo '
-						</div>
-					</form>
-				</div>';
+		// Update the main contact email?
+		if (!empty($_POST['email']) && (empty($webmaster_email) || $webmaster_email == 'noreply@myserver.com'))
+			updateSettingsFile(array('webmaster_email' => $_POST['email']));
 
-	return true;
-}
-
-// Step two: Create the administrator, and finish.
-function doStep2()
-{
-	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename;
-	global $smcFunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
-	global $current_smf_version, $databases, $sourcedir, $forum_version, $modSettings, $user_info, $language;
-
-	// Load the SQL server login information.
-	require_once(dirname(__FILE__) . '/Settings.php');
-	define('SMF', 1);
-	if (empty($smcFunc))
-		$smcFunc = array();
-	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
-
-	// Define the sha1 function, if it doesn't exist.
-	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
-		require_once($sourcedir . '/Subs-Compat.php');
-
-	if (!isset($_POST['password3']) && (empty($db_type) || $db_type != 'sqlite') && !empty($_POST['skip_account']))
-		return doStep2a();
-
-	$needsDB = !empty($databases[$db_type]['always_has_db']);
-	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, !empty($_POST['password3']) ? $_POST['password3'] : (!empty($_POST['skip_account']) ? $db_passwd : ''), $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
-	if (!$db_connection)
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_db_connect'], '</div>
-				</div>';
-
-		return doStep2a();
-	}
-	if (!$needsDB && !$smcFunc['db_select_db']($db_name, $db_connection))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', sprintf($txt['error_db_database'], $db_name), '</div>
-				</div>
-				<br />';
-
-		return doStep2a();
-	}
-
-	// Let them try again...
-	if ($_POST['password1'] != $_POST['password2'] && empty($_POST['skip_account']))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_user_settings_again_match'], '</div>
-				</div>
-				<br />';
-
-		return doStep2a();
-	}
-	// No password?
-	elseif (strlen($_POST['password1']) < 4 && empty($_POST['skip_account']))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_user_settings_no_password'], '</div>
-				</div>
-				<br />';
-
-		return doStep2a();
-	}
-
-	if (!file_exists($sourcedir . '/Subs.php'))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_subs_missing'], '</div>
-				</div>
-				<br />';
-
-		return doStep2a();
-	}
-
-	if (!empty($_POST['email']) && (empty($webmaster_email) || $webmaster_email == 'noreply@myserver.com'))
-		updateSettingsFile(array('webmaster_email' => $_POST['email']));
-
-	chdir(dirname(__FILE__));
-
-	require_once($sourcedir . '/Errors.php');
-	require_once($sourcedir . '/Subs.php');
-	require_once($sourcedir . '/Load.php');
-	require_once($sourcedir . '/Security.php');
-	require_once($sourcedir . '/Subs-Auth.php');
-
-	if (isset($db_character_set) && !empty($databases[$db_type]['utf8_support']))
-		$smcFunc['db_query']('', '
-			SET NAMES {raw:db_character_set}',
-			array(
-				'db_character_set' => $db_character_set,
-				'db_error_skip' => true,
-			)
-		);
-
-	if (empty($_POST['skip_account']))
-	{
 		// Work out whether we're going to have dodgy characters and remove them.
 		$invalid_characters = preg_match('~[<>&"\'=\\\]~', $_POST['username']) != 0;
 		$_POST['username'] = preg_replace('~[<>&"\'=\\\]~', '', $_POST['username']);
@@ -1382,71 +1237,30 @@ function doStep2()
 		);
 		if ($smcFunc['db_num_rows']($result) != 0)
 		{
-			list ($id, $salt) = $smcFunc['db_fetch_row']($result);
+			list ($incontext['member_id'], $incontext['member_salt']) = $smcFunc['db_fetch_row']($result);
 			$smcFunc['db_free_result']($result);
 
-			echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_user_settings_taken'], '</div>
-				</div>
-				<br />';
+			$incontext['account_existed'] = $txt['error_user_settings_taken'];
 		}
-		elseif ($invalid_characters || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
+		elseif ($invalid_characters || $_POST['username'] == '' || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
 		{
-			// Initialize some variables needed for the language file.
-			$context = array(
-				'forum_name' => $mbname,
-			);
-			$modSettings = array(
-				'lastActive' => '15',
-				'hotTopicPosts' => '15',
-				'hotTopicVeryPosts' => '25',
-				'smfVersion' => $current_smf_version,
-			);
-			$scripturl = $boardurl . '/index.php';
-
-			require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
-			echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_invalid_characters_username'], '</div>
-				</div>
-				<br />';
-
 			// Try the previous step again.
-			return doStep2a();
+			$incontext['error'] = $txt['error_invalid_characters_username'];
+			return false;
 		}
-		elseif (empty($_POST['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smcFunc['db_unescape_string']($_POST['email'])) === 0 || strlen($smcFunc['db_unescape_string']($_POST['email'])) > 255)
+		elseif (empty($_POST['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['email'])) === 0 || strlen(stripslashes($_POST['email'])) > 255)
 		{
-			// Artificially fill some of the globals needed for the language files.
-			$context = array(
-				'forum_name' => $mbname,
-			);
-			$modSettings = array(
-				'lastActive' => '15',
-				'hotTopicPosts' => '15',
-				'hotTopicVeryPosts' => '25',
-				'smfVersion' => $current_smf_version,
-			);
-			$scripturl = $boardurl . '/index.php';
-
-			require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
-			require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'Login')));
-			echo '
-				<div class="error_message">
-					<div style="color: red;">', sprintf($txt['error_valid_email_needed'], $_POST['username']), '</div>
-				</div>
-				<br />';
-
 			// One step back, this time fill out a proper email address.
-			return doStep2a();
+			$incontext['error'] = sprintf($txt['error_valid_email_needed'], $_POST['username']);
+			return false;
 		}
 		elseif ($_POST['username'] != '')
 		{
-			$salt = substr(md5(rand()), 0, 4);
+			$incontext['member_salt'] = substr(md5(rand()), 0, 4);
 
 			// Format the username properly.
 			$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
-			$ip = isset($_SERVER['REMOTE_ADDR']) ? $smcFunc['db_escape_string'](substr($smcFunc['db_unescape_string']($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
+			$ip = isset($_SERVER['REMOTE_ADDR']) ? substr($_SERVER['REMOTE_ADDR'], 0, 255) : '';
 
 			$request = $smcFunc['db_insert']('',
 				$db_prefix . 'members',
@@ -1462,7 +1276,7 @@ function doStep2()
 				array(
 					stripslashes($_POST['username']), stripslashes($_POST['username']), sha1(strtolower(stripslashes($_POST['username'])) . stripslashes($_POST['password1'])), stripslashes($_POST['email']),
 					1, 0, time(), 0,
-					$salt, '', '', '',
+					$incontext['member_salt'], '', '', '',
 					$ip, $ip, '', '',
 					'', '', '', '',
 					'', '', '', '', '',
@@ -1474,33 +1288,67 @@ function doStep2()
 			// Awww, crud!
 			if ($request === false)
 			{
-				echo '
-					<div class="error_message">
-						<div style="color: red;">', $txt['error_user_settings_query'], '</div>
-
-						<div style="margin: 2ex;">', nl2br(htmlspecialchars($smcFunc['db_error']($db_connection))), '</div>
-
-						<a href="', $_SERVER['PHP_SELF'], '?step=2">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-					</div>';
-
+				$incontext['error'] = $txt['error_user_settings_query'] . '<br />
+				<div style="margin: 2ex;">' . nl2br(htmlspecialchars($smcFunc['db_error']($db_connection))) . '</div>';
 				return false;
 			}
 
-			$id = $smcFunc['db_insert_id']("{$db_prefix}members", 'id_member');
+			$incontext['member_id'] = $smcFunc['db_insert_id']("{$db_prefix}members", 'id_member');
 		}
+
+		// If we're here we're good.
+		return true;
 	}
+
+	return false;
+}
+
+// Final step, clean up and a complete message!
+function DeleteInstall()
+{
+	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename, $incontext;
+	global $smcFunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
+	global $current_smf_version, $databases, $sourcedir, $forum_version, $modSettings, $user_info, $language, $db_type;
+
+	$incontext['page_title'] = $txt['congratulations'];
+	$incontext['sub_template'] = 'delete_install';
+	$incontext['continue'] = 0;
+
+	require(dirname(__FILE__) . '/Settings.php');
+	load_database();
+
+	chdir(dirname(__FILE__));
+
+	require_once($sourcedir . '/Errors.php');
+	require_once($sourcedir . '/Subs.php');
+	require_once($sourcedir . '/Load.php');
+	require_once($sourcedir . '/Security.php');
+	require_once($sourcedir . '/Subs-Auth.php');
+
+	// Bring a warning over.
+	if (!empty($incontext['account_existed']))
+		$incontext['warning'] = $incontext['account_existed'];
+
+	if (!empty($db_character_set) && !empty($databases[$db_type]['utf8_support']))
+		$smcFunc['db_query']('', '
+			SET NAMES {raw:db_character_set}',
+			array(
+				'db_character_set' => $db_character_set,
+				'db_error_skip' => true,
+			)
+		);
 
 	// As track stats is by default enabled let's add some activity.
 	$smcFunc['db_insert']('ignore',
 		'{db_prefix}log_activity',
 		array('date' => 'date', 'topics' => 'int', 'posts' => 'int', 'registers' => 'int'),
-		array(strftime('%Y-%m-%d', time()), 1, 1, (!empty($id) ? 1 : 0)),
+		array(strftime('%Y-%m-%d', time()), 1, 1, (!empty($incontext['member_id']) ? 1 : 0)),
 		array('date')
 	);
 
 	// Automatically log them in ;).
-	if (isset($id) && isset($salt))
-		setLoginCookie(3153600 * 60, $id, sha1(sha1(strtolower($_POST['username']) . $_POST['password1']) . $salt));
+	if (isset($incontext['member_id']) && isset($incontext['member_salt']))
+		setLoginCookie(3153600 * 60, $incontext['member_id'], sha1(sha1(strtolower($_POST['username']) . $_POST['password1']) . $incontext['member_salt']));
 
 	$result = $smcFunc['db_query']('', '
 		SELECT value
@@ -1575,43 +1423,6 @@ function doStep2()
 		updateStats('subject', 1, htmlspecialchars($txt['default_topic_subject']));
 	$smcFunc['db_free_result']($request);
 
-	echo '
-				<div class="panel">
-					<h2>', $txt['congratulations'], '</h2>
-					<br />
-					', $txt['congratulations_help'], '<br />
-					<br />';
-
-	if (is_writable(dirname(__FILE__)) && substr(__FILE__, 1, 2) != ':\\')
-		echo '
-					<i>', $txt['still_writable'], '</i><br />
-					<br />';
-
-	// Don't show the box if it's like 99% sure it won't work :P.
-	if (isset($_SESSION['installer_temp_ftp']) || is_writable(dirname(__FILE__)) || is_writable(__FILE__))
-		echo '
-					<div style="margin: 1ex; font-weight: bold;">
-						<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete();" /> ', $txt['delete_installer'], !isset($_SESSION['installer_temp_ftp']) ? ' ' . $txt['delete_installer_maybe'] : '', '</label>
-					</div>
-					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-						function doTheDelete()
-						{
-							var theCheck = document.getElementById ? document.getElementById("delete_self") : document.all.delete_self;
-							var tempImage = new Image();
-
-							tempImage.src = "', $_SERVER['PHP_SELF'], '?delete=1&ts_" + (new Date().getTime());
-							tempImage.width = 0;
-							theCheck.disabled = true;
-						}
-					// ]]></script>
-					<br />';
-
-	echo '
-					', sprintf($txt['go_to_your_forum'], $boardurl . '/index.php'), '<br />
-					<br />
-					', $txt['good_luck'], '
-				</div>';
-
 	// Now is the perfect time to fetch the SM files.
 	require_once($sourcedir . '/ScheduledTasks.php');
 	// Sanity check that they loaded earlier!
@@ -1622,11 +1433,15 @@ function doStep2()
 
 		// We've just installed!
 		$user_info['ip'] = $_SERVER['REMOTE_ADDR'];
-		$user_info['id'] = isset($id) ? $id : 0;
+		$user_info['id'] = isset($incontext['member_id']) ? $incontext['member_id'] : 0;
 		logAction('install', array('version' => $forum_version), 'admin');
 	}
 
-	return true;
+	// Some final context for the template.
+	$incontext['dir_still_writable'] = is_writable(dirname(__FILE__)) && substr(__FILE__, 1, 2) != ':\\';
+	$incontext['probably_delete_install'] = isset($_SESSION['installer_temp_ftp']) || is_writable(dirname(__FILE__)) || is_writable(__FILE__);
+
+	return false;
 }
 
 // http://www.faqs.org/rfcs/rfc959.html
@@ -1969,226 +1784,6 @@ class ftp_connection
 	}
 }
 
-function make_files_writable()
-{
-	global $txt;
-
-	$writable_files = array(
-		'attachments',
-		'avatars',
-		'cache',
-		'Packages',
-		'Packages/installed.list',
-		'Smileys',
-		'Themes',
-		'agreement.txt',
-		'Settings.php',
-		'Settings_bak.php'
-	);
-	$extra_files = array(
-		'Themes/classic/index.template.php',
-		'Themes/classic/style.css'
-	);
-	foreach ($GLOBALS['detected_languages'] as $lang => $temp)
-		$extra_files[] = 'Themes/default/languages/' . $lang;
-
-	$failure = false;
-
-	// With mod_security installed, we could attempt to fix it with .htaccess.
-	if (function_exists('apache_get_modules') && in_array('mod_security', apache_get_modules()))
-		$writable_files[] = file_exists(dirname(__FILE__) . '/.htaccess') ? '.htaccess' : '.';
-
-	// On linux, it's easy - just use is_writable!
-	if (substr(__FILE__, 1, 2) != ':\\')
-	{
-		foreach ($writable_files as $file)
-		{
-			if (!is_writable(dirname(__FILE__) . '/' . $file))
-			{
-				@chmod(dirname(__FILE__) . '/' . $file, 0755);
-
-				// Well, 755 hopefully worked... if not, try 777.
-				$failure |= !is_writable(dirname(__FILE__) . '/' . $file) && !@chmod(dirname(__FILE__) . '/' . $file, 0777);
-			}
-		}
-		foreach ($extra_files as $file)
-			@chmod(dirname(__FILE__) . (empty($file) ? '' : '/' . $file), 0777);
-	}
-	// Windows is trickier.  Let's try opening for r+...
-	else
-	{
-		foreach ($writable_files as $file)
-		{
-			// Folders can't be opened for write... but the index.php in them can ;).
-			if (is_dir(dirname(__FILE__) . '/' . $file))
-				$file .= '/index.php';
-
-			// Funny enough, chmod actually does do something on windows - it removes the read only attribute.
-			@chmod(dirname(__FILE__) . '/' . $file, 0777);
-			$fp = @fopen(dirname(__FILE__) . '/' . $file, 'r+');
-
-			// Hmm, okay, try just for write in that case...
-			if (!$fp)
-				$fp = @fopen(dirname(__FILE__) . '/' . $file, 'w');
-
-			$failure |= !$fp;
-			@fclose($fp);
-		}
-		foreach ($extra_files as $file)
-			@chmod(dirname(__FILE__) . (empty($file) ? '' : '/' . $file), 0777);
-	}
-
-	if (!isset($_SERVER))
-		return !$failure;
-
-	// It's not going to be possible to use FTP on windows to solve the problem...
-	if ($failure && substr(__FILE__, 1, 2) == ':\\')
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', $txt['error_windows_chmod'], '</div>
-					<ul style="margin: 2.5ex; font-family: monospace;">
-						<li>', implode('</li>
-						<li>', $writable_files), '</li>
-					</ul>
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-	// We're going to have to use... FTP!
-	elseif ($failure)
-	{
-		// Load any session data we might have...
-		if (!isset($_POST['ftp_username']) && isset($_SESSION['installer_temp_ftp']))
-		{
-			$_POST['ftp_server'] = $_SESSION['installer_temp_ftp']['server'];
-			$_POST['ftp_port'] = $_SESSION['installer_temp_ftp']['port'];
-			$_POST['ftp_username'] = $_SESSION['installer_temp_ftp']['username'];
-			$_POST['ftp_password'] = $_SESSION['installer_temp_ftp']['password'];
-			$_POST['ftp_path'] = $_SESSION['installer_temp_ftp']['path'];
-		}
-
-		if (isset($_POST['ftp_username']))
-		{
-			$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
-
-			if ($ftp->error === false)
-			{
-				// Try it without /home/abc just in case they messed up.
-				if (!$ftp->chdir($_POST['ftp_path']))
-				{
-					$ftp_error = $ftp->last_message;
-					$ftp->chdir(preg_replace('~^/home[2]?/[^/]+?~', '', $_POST['ftp_path']));
-				}
-			}
-		}
-
-		if (!isset($ftp) || $ftp->error !== false)
-		{
-			if (!isset($ftp))
-				$ftp = new ftp_connection(null);
-			// Save the error so we can mess with listing...
-			elseif ($ftp->error !== false && !isset($ftp_error))
-				$ftp_error = $ftp->last_message === null ? '' : $ftp->last_message;
-
-			list ($username, $detect_path, $found_path) = $ftp->detect_path(dirname(__FILE__));
-
-			if ($found_path || !isset($_POST['ftp_path']))
-				$_POST['ftp_path'] = $detect_path;
-
-			if (!isset($_POST['ftp_username']))
-				$_POST['ftp_username'] = $username;
-
-			echo '
-				<div class="panel">
-					<h2>', $txt['ftp_setup'], '</h2>
-					<h3>', $txt['ftp_setup_info'], '</h3>';
-
-			if (isset($ftp_error))
-				echo '
-					<div class="error_message">
-						<div style="color: red;">
-							', $txt['error_ftp_no_connect'], '<br />
-							<br />
-							<code>', $ftp_error, '</code>
-						</div>
-					</div>
-					<br />';
-
-			echo '
-					<form action="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true" method="post">
-
-						<table width="520" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-bottom: 1ex;">
-							<tr>
-								<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
-								<td>
-									<div style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', '; margin-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 1px;"><label for="ftp_port" class="textbox"><b>', $txt['ftp_port'], ':&nbsp;</b></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" /></div>
-									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost', '" style="width: 70%;" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_server_info'], '</div>
-								</td>
-							</tr><tr>
-								<td width="26%" valign="top" class="textbox"><label for="ftp_username">', $txt['ftp_username'], ':</label></td>
-								<td>
-									<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($_POST['ftp_username']) ? $_POST['ftp_username'] : '', '" style="width: 99%;" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_username_info'], '</div>
-								</td>
-							</tr><tr>
-								<td width="26%" valign="top" class="textbox"><label for="ftp_password">', $txt['ftp_password'], ':</label></td>
-								<td>
-									<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
-									<div style="font-size: smaller; margin-bottom: 3ex;">', $txt['ftp_password_info'], '</div>
-								</td>
-							</tr><tr>
-								<td width="26%" valign="top" class="textbox"><label for="ftp_path">', $txt['ftp_path'], ':</label></td>
-								<td style="padding-bottom: 1ex;">
-									<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $_POST['ftp_path'], '" style="width: 99%;" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($found_path) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'], '</div>
-								</td>
-							</tr>
-						</table>
-
-						<div style="margin: 1ex; margin-top: 2ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';"><input type="submit" value="', $txt['ftp_connect'], '" /></div>
-					</form>
-
-					<h2>', $txt['ftp_setup_why'], '</h2>
-					<h3>', $txt['ftp_setup_why_info'], '</h3>
-
-					<ul style="margin: 2.5ex; font-family: monospace;">
-						<li>', implode('</li>
-						<li>', $writable_files), '</li>
-					</ul>
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['ftp_setup_again'], '
-
-				</div>';
-
-			return false;
-		}
-		else
-		{
-			$_SESSION['installer_temp_ftp'] = array(
-				'server' => $_POST['ftp_server'],
-				'port' => $_POST['ftp_port'],
-				'username' => $_POST['ftp_username'],
-				'password' => $_POST['ftp_password'],
-				'path' => $_POST['ftp_path']
-			);
-
-			foreach ($writable_files as $file)
-			{
-				if (!is_writable(dirname(__FILE__) . '/' . $file))
-					$ftp->chmod($file, 0755);
-				if (!is_writable(dirname(__FILE__) . '/' . $file))
-					$ftp->chmod($file, 0777);
-			}
-
-			$ftp->close();
-		}
-	}
-
-	return true;
-}
-
 function updateSettingsFile($vars)
 {
 	// Modify Settings.php.
@@ -2310,6 +1905,550 @@ function fixModSecurity()
 	}
 	else
 		return false;
+}
+
+function template_install_above()
+{
+	global $incontext, $txt, $smfsite, $installurl;
+
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"', !empty($txt['lang_rtl']) ? ' dir="rtl"' : '', '>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
+		<title>', $txt['smf_installer'], '</title>
+		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
+		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
+	</head>
+	<body>
+		<div id="header">
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $smfsite, '/smflogo.gif" style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';" alt="Simple Machines" border="0" /></a>
+			<div title="Moogle Express!">', $txt['smf_installer'], '</div>
+		</div>
+		<div id="content">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
+			<tr>
+				<td width="250" valign="top" style="padding-right: 10px;">
+					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
+						<tr>
+							<td class="titlebg">', $txt['upgrade_steps'], '</td>
+						</tr>
+						<tr>
+							<td class="windowbg2">';
+
+	foreach ($incontext['steps'] as $num => $step)
+		echo '
+						<span class="', $num < $incontext['current_step'] ? 'stepdone' : ($num == $incontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">', $txt['upgrade_step'], ' ', $step[0], ': ', $step[1], '</span><br />';
+
+	echo '
+							</td>
+						</tr>
+						<tr>
+							<td class="titlebg">', $txt['upgrade_progress'], '</td>
+						</tr>
+						<tr>
+							<td class="windowbg2">
+								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
+									<div id="overall_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $incontext['overall_percent'], '%</div>
+									<div id="overall_progress" style="width: ', $incontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td width="100%" valign="top">';
+
+	// Have we got a language drop down - if so do it on the first step only.
+	if (!empty($incontext['detected_languages']) && count($incontext['detected_languages']) > 1 && $incontext['current_step'] == 0)
+	{
+		echo '
+		<div style="padding-bottom: 2ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
+			<form action="', $installurl, '" method="get">
+				<label for="installer_language">', $txt['installer_language'], ':</label> <select id="installer_language" name="lang_file" onchange="location.href = \'', $installurl, '?lang_file=\' + this.options[this.selectedIndex].value;">';
+
+		foreach ($incontext['detected_languages'] as $lang => $name)
+			echo '
+					<option', isset($_SESSION['installer_temp_lang']) && $_SESSION['installer_temp_lang'] == $lang ? ' selected="selected"' : '', ' value="', $lang, '">', $name, '</option>';
+
+		echo '
+				</select>
+				<noscript><input type="submit" value="', $txt['installer_language_set'], '" /></noscript>
+			</form>
+		</div>';
+	}
+
+	echo '
+					<div class="panel">
+						<h2>', $incontext['page_title'], '</h2>
+						<div style="max-height: 560px; overflow: auto;">';
+}
+
+function template_install_below()
+{
+	global $incontext, $txt;
+
+	echo '
+								<div align="right" style="margin: 1ex;">';
+
+	if (!empty($incontext['continue']))
+		echo '
+									<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '" />';
+	if (!empty($incontext['skip']))
+		echo '
+									<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '" />';
+
+	echo '
+								</div>
+							</form>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		</div>
+	</body>
+</html>';
+}
+
+// Welcome them to the wonderful world of SMF!
+function template_welcome_message()
+{
+	global $incontext, $installurl, $txt;
+
+	echo '
+	<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
+	<form action="', $incontext['form_url'], '" method="post">
+		<h3>', sprintf($txt['install_welcome_desc'], $GLOBALS['current_smf_version']), '</h3>
+		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
+			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<b style="text-decoration: underline;">', $txt['error_warning_notice'], '</b><br />
+			<div style="padding-left: 6ex;">
+				', sprintf($txt['error_script_outdated'], '<i id="smfVersion" style="white-space: nowrap;">??</i>', '<i id="yourVersion" style="white-space: nowrap;">' . $GLOBALS['current_smf_version'] . '</i>'), '
+			</div>
+		</div>';
+
+	// Show the warnings, or not.
+	if (template_warning_divs())
+		echo '
+		<h3>', $txt['install_all_lovely'], '</h3>';
+
+	echo '
+		<div style="height: 100px;"></div>';
+
+	// Say we want the continue button!
+	if (empty($incontext['error']))
+		$incontext['continue'] = 1;
+
+	// For the latest version stuff.
+	echo '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			// Latest version?
+			function smfCurrentVersion()
+			{
+				var smfVer, yourVer;
+
+				if (typeof(window.smfVersion) != "string")
+					return;
+				window.smfVersion = window.smfVersion.replace(/SMF\s?/g, \'\');
+
+				smfVer = document.getElementById("smfVersion");
+				yourVer = document.getElementById("yourVersion");
+
+				setInnerHTML(smfVer, window.smfVersion);
+
+				var currentVersion = getInnerHTML(yourVer);
+				if (currentVersion < window.smfVersion)
+					document.getElementById(\'version_warning\').style.display = \'\';
+			}
+			add_load_event(smfCurrentVersion);
+		// ]]></script>';
+}
+
+// A shortcut for any warning stuff.
+function template_warning_divs()
+{
+	global $txt, $incontext;
+
+	// Errors are very serious..
+	if (!empty($incontext['error']))
+		echo '
+		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
+			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<b style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</b><br />
+			<div style="padding-left: 6ex;">
+				', $incontext['error'], '
+			</div>
+		</div>';
+	// A warning message?
+	elseif (!empty($incontext['warning']))
+		echo '
+		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
+			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
+			<div style="padding-left: 6ex;">
+				', $incontext['warning'], '
+			</div>
+		</div>';
+
+	return empty($incontext['error']) && empty($incontext['warning']);
+}
+
+function template_chmod_files()
+{
+	global $txt, $incontext;
+
+	echo '
+		<h3>', $txt['ftp_setup_why_info'], '</h3>
+		<ul style="margin: 2.5ex; font-family: monospace;">
+			<li>', implode('</li>
+			<li>', $incontext['writable_files']), '</li>
+		</ul>';
+
+	// This is serious!
+	if (!template_warning_divs())
+		return;
+
+	echo '
+		<hr />
+		<h3>', $txt['ftp_setup_info'], '</h3>';
+
+	if (!empty($incontext['ftp_error']))
+		echo '
+		<div class="error_message">
+			<div style="color: red;">
+				', $txt['error_ftp_no_connect'], '<br />
+				<br />
+				<code>', $incontext['ftp_error'], '</code>
+			</div>
+		</div>
+		<br />';
+
+	echo '
+		<form action="', $incontext['form_url'], '" method="post">
+			<table width="520" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-bottom: 1ex;">
+				<tr>
+					<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
+					<td>
+						<div style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', '; margin-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 1px;"><label for="ftp_port" class="textbox"><b>', $txt['ftp_port'], ':&nbsp;</b></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $incontext['ftp']['port'], '" /></div>
+						<input type="text" size="30" name="ftp_server" id="ftp_server" value="', $incontext['ftp']['server'], '" style="width: 70%;" />
+						<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_server_info'], '</div>
+					</td>
+				</tr><tr>
+					<td width="26%" valign="top" class="textbox"><label for="ftp_username">', $txt['ftp_username'], ':</label></td>
+					<td>
+						<input type="text" size="50" name="ftp_username" id="ftp_username" value="', $incontext['ftp']['username'], '" style="width: 99%;" />
+						<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_username_info'], '</div>
+					</td>
+				</tr><tr>
+					<td width="26%" valign="top" class="textbox"><label for="ftp_password">', $txt['ftp_password'], ':</label></td>
+					<td>
+						<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
+						<div style="font-size: smaller; margin-bottom: 3ex;">', $txt['ftp_password_info'], '</div>
+					</td>
+				</tr><tr>
+					<td width="26%" valign="top" class="textbox"><label for="ftp_path">', $txt['ftp_path'], ':</label></td>
+					<td style="padding-bottom: 1ex;">
+						<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $incontext['ftp']['path'], '" style="width: 99%;" />
+						<div style="font-size: smaller; margin-bottom: 2ex;">', $incontext['ftp']['path_msg'], '</div>
+					</td>
+				</tr>
+			</table>
+			<div style="margin: 1ex; margin-top: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';"><input type="submit" value="', $txt['ftp_connect'], '" /></div>
+		</form>
+		<a href="', $incontext['form_url'], '">', $txt['error_message_click'], '</a> ', $txt['ftp_setup_again'];
+}
+
+// Get the database settings prepared.
+function template_database_settings()
+{
+	global $incontext, $installurl, $txt;
+
+	echo '
+	<form action="', $incontext['form_url'], '" method="post">
+		<h3>', $txt['db_settings_info'], '</h3>';
+
+	template_warning_divs();
+
+	echo '
+		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">';
+
+	// More than one database type?
+	if (count($incontext['supported_databases']) > 1)
+	{
+		echo '
+			<tr>
+				<td width="20%" valign="top" class="textbox"><label for="db_type_input">', $txt['db_settings_type'], ':</label></td>
+				<td>
+					<select name="db_type" id="db_type_input" onchange="toggleDBInput();">';
+
+	foreach ($incontext['supported_databases'] as $key => $db)
+			echo '
+						<option value="', $key, '">', $db['name'], '</option>';
+
+	echo '
+					</select><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_type_info'], '</div>
+				</td>
+			</tr>';
+	}
+	else
+	{
+		echo '
+			<input type="hidden" name="db_type" value="', $incontext['db']['type'], '" />';
+	}
+
+	echo '
+			<tr id="db_server_contain">
+				<td width="20%" valign="top" class="textbox"><label for="db_server_input">', $txt['db_settings_server'], ':</label></td>
+				<td>
+					<input type="text" name="db_server" id="db_server_input" value="', $incontext['db']['server'], '" size="30" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_server_info'], '</div>
+				</td>
+			</tr><tr id="db_user_contain">
+				<td valign="top" class="textbox"><label for="db_user_input">', $txt['db_settings_username'], ':</label></td>
+				<td>
+					<input type="text" name="db_user" id="db_user_input" value="', $incontext['db']['user'], '" size="30" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_username_info'], '</div>
+				</td>
+			</tr><tr id="db_passwd_contain">
+				<td valign="top" class="textbox"><label for="db_passwd_input">', $txt['db_settings_password'], ':</label></td>
+				<td>
+					<input type="password" name="db_passwd" id="db_passwd_input" value="', $incontext['db']['pass'], '" size="30" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_password_info'], '</div>
+				</td>
+			</tr><tr id="db_name_contain">
+				<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database'], ':</label></td>
+				<td>
+					<input type="text" name="db_name" id="db_name_input" value="', empty($incontext['db']['name']) ? 'smf' : $incontext['db']['name'], '" size="30" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_info'], '</div>
+				</td>
+			</tr><tr id="db_filename_contain" style="display: none;">
+				<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database_file'], ':</label></td>
+				<td>
+					<input type="text" name="db_filename" id="db_name_input" value="', empty($incontext['db']['name']) ? dirname(__FILE__) . '/smf_' . substr(md5(microtime()), 0, 10) : $incontext['db']['name'], '" size="30" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_file_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox"><label for="db_prefix_input">', $txt['db_settings_prefix'], ':</label></td>
+				<td>
+					<input type="text" name="db_prefix" id="db_prefix_input" value="', $incontext['db']['prefix'], '" size="30" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_prefix_info'], '</div>
+				</td>
+			</tr>
+		</table>';
+
+	// Allow the toggling of input boxes for SQLite etc.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function toggleDBInput()
+		{
+			// What state is it?';
+
+	if (!isset($incontext['supported_databases']['sqlite']))
+		echo '
+			var showAll = true;';
+	elseif (count($incontext['supported_databases']) < 2)
+		echo '
+			var showAll = false;';
+	// If we have more than one DB including SQLite what should we be doing?
+	else
+		echo '
+			var showAll = document.getElementById(\'db_type_input\').value == \'sqlite\' ? false : true;';
+
+	echo '
+			document.getElementById(\'db_passwd_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_server_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_user_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_name_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_filename_contain\').style.display = !showAll ? \'\' : \'none\';
+		}
+		toggleDBInput();
+	// ]]></script>';
+}
+
+// Stick in their forum settings.
+function template_forum_settings()
+{
+	global $incontext, $installurl, $txt;
+
+	echo '
+	<form action="', $incontext['form_url'], '" method="post">
+		<h3>', $txt['install_settings_info'], '</h3>';
+
+	template_warning_divs();
+
+	echo '
+		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
+			<tr>
+				<td width="20%" valign="top" class="textbox"><label for="mbname_input">', $txt['install_settings_name'], ':</label></td>
+				<td>
+					<input type="text" name="mbname" id="mbname_input" value="', $txt['install_settings_name_default'], '" size="65" />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_name_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox"><label for="boardurl_input">', $txt['install_settings_url'], ':</label></td>
+				<td>
+					<input type="text" name="boardurl" id="boardurl_input" value="', $incontext['detected_url'], '" size="65" /><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_url_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox">', $txt['install_settings_compress'], ':</td>
+				<td>
+					<input type="checkbox" name="compress" id="compress_check" checked="checked" /> <label for="compress_check">', $txt['install_settings_compress_title'], '</label><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_compress_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox">', $txt['install_settings_dbsession'], ':</td>
+				<td>
+					<input type="checkbox" name="dbsession" id="dbsession_check" checked="checked" /> <label for="dbsession_check">', $txt['install_settings_dbsession_title'], '</label><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $incontext['test_dbsession'] ? $txt['install_settings_dbsession_info1'] : $txt['install_settings_dbsession_info2'], '</div>
+				</td>
+			</tr>';
+
+	if ($incontext['utf8_should_work'])
+		echo '
+			<tr>
+				<td valign="top" class="textbox">', $txt['install_settings_utf8'], ':</td>
+				<td>
+					<input type="checkbox" name="utf8" id="utf8_check" /> <label for="utf8_check">', $txt['install_settings_utf8_title'], '</label><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_utf8_info'], '</div>
+				</td>
+			</tr>';
+
+	echo '
+			<tr>
+				<td valign="top" class="textbox">', $txt['install_settings_stats'], ':</td>
+				<td>
+					<input type="checkbox" name="stats" id="stats_check" /> <label for="stats_check">', $txt['install_settings_stats_title'], '</label><br />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['install_settings_stats_info'], '</div>
+				</td>
+			</tr>
+		</table>';
+}
+
+// Show results of the database population.
+function template_populate_database()
+{
+	global $incontext, $installurl, $txt;
+
+	echo '
+	<form action="', $incontext['form_url'], '" method="post">
+		<h3>', !empty($incontext['was_refresh']) ? $txt['user_refresh_install_desc'] : $txt['db_populate_info'], '</h3>
+		<ul>
+			<li>', implode('</li><li>', $incontext['sql_results']), '</li>
+		</ul>';
+
+	if (!empty($incontext['failures']))
+	{
+		echo '
+				<div style="color: red;">', $txt['error_db_queries'], '</div>
+				<ul>';
+
+		foreach ($incontext['failures'] as $line => $fail)
+			echo '
+						<li><b>', $txt['error_db_queries_line'], $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '</li>';
+
+		echo '
+				</ul>';
+	}
+
+	echo '
+		<h3>', $txt['db_populate_info2'], '</h3>';
+
+	template_warning_divs();
+
+	echo '
+	<input type="hidden" name="pop_done" value="1" />';
+}
+
+// Create the admin account.
+function template_admin_account()
+{
+	global $incontext, $installurl, $txt;
+
+	echo '
+	<form action="', $incontext['form_url'], '" method="post">
+		<h3>', $txt['user_settings_info'], '</h3>';
+
+	template_warning_divs();
+
+	echo '
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 2ex;">
+			<tr>
+				<td width="18%" valign="top" class="textbox"><label for="username">', $txt['user_settings_username'], ':</label></td>
+				<td>
+					<input type="text" name="username" id="username" value="', $incontext['username'], '" size="40" />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_username_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox"><label for="password1">', $txt['user_settings_password'], ':</label></td>
+				<td>
+					<input type="password" name="password1" id="password1" size="40" />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_password_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox"><label for="password2">', $txt['user_settings_again'], ':</label></td>
+				<td>
+					<input type="password" name="password2" id="password2" size="40" />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_again_info'], '</div>
+				</td>
+			</tr><tr>
+				<td valign="top" class="textbox"><label for="email">', $txt['user_settings_email'], ':</label></td>
+				<td>
+					<input type="text" name="email" id="email" value="', $incontext['email'], '" size="40" />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_email_info'], '</div>
+				</td>
+			</tr>
+		</table>';
+
+	if ($incontext['require_db_confirm'])
+		echo '
+		<h2>', $txt['user_settings_database'], '</h2>
+		<h3>', $txt['user_settings_database_info'], '</h3>
+
+		<div style="margin-bottom: 2ex; padding-', empty($txt['lang_rtl']) ? 'left' : 'right', ': 50px;">
+			<input type="password" name="password3" size="30" />
+		</div>';
+}
+
+// Tell them it's done, and to delete.
+function template_delete_install()
+{
+	global $incontext, $installurl, $txt, $boardurl;
+
+	echo '
+		<h3>', $txt['congratulations_help'], '</h3>';
+
+	template_warning_divs();
+
+	// Install directory still writable?
+	if ($incontext['dir_still_writable'])
+		echo '
+		<i>', $txt['still_writable'], '</i><br />
+		<br />';
+
+	// Don't show the box if it's like 99% sure it won't work :P.
+	if ($incontext['probably_delete_install'])
+		echo '
+		<div style="margin: 1ex; font-weight: bold;">
+			<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete();" /> ', $txt['delete_installer'], !isset($_SESSION['installer_temp_ftp']) ? ' ' . $txt['delete_installer_maybe'] : '', '</label>
+		</div>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			function doTheDelete()
+			{
+				var theCheck = document.getElementById ? document.getElementById("delete_self") : document.all.delete_self;
+				var tempImage = new Image();
+
+				tempImage.src = "', $installurl, '?delete=1&ts_" + (new Date().getTime());
+				tempImage.width = 0;
+				theCheck.disabled = true;
+			}
+		// ]]></script>
+		<br />';
+
+	echo '
+		', sprintf($txt['go_to_your_forum'], $boardurl . '/index.php'), '<br />
+		<br />
+		', $txt['good_luck'];
 }
 
 ?>

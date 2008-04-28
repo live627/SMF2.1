@@ -5,6 +5,14 @@
 $txt['lang_character_set'] = 'ISO-8859-1';
 $txt['lang_rtl'] = false;
 
+$txt['install_step_welcome'] = 'Welcome';
+$txt['install_step_writable'] = 'Writable Check';
+$txt['install_step_forum'] = 'Forum Settings';
+$txt['install_step_databaseset'] = 'Database Settings';
+$txt['install_step_databasechange'] = 'Database Population';
+$txt['install_step_admin'] = 'Admin Account';
+$txt['install_step_delete'] = 'Finalise Install';
+
 $txt['smf_installer'] = 'SMF Installer';
 $txt['installer_language'] = 'Language';
 $txt['installer_language_set'] = 'Set';
@@ -15,6 +23,10 @@ $txt['delete_installer'] = 'Click here to delete this install.php file now.';
 $txt['delete_installer_maybe'] = '<i>(doesn\'t work on all servers.)</i>';
 $txt['go_to_your_forum'] = 'Now you can see <a href="%s">your newly installed forum</a> and begin to use it.  You should first make sure you are logged in, after which you will be able to access the administration center.';
 $txt['good_luck'] = 'Good luck!<br />Simple Machines';
+
+$txt['install_welcome'] = 'Welcome';
+$txt['install_welcome_desc'] = 'Welcome to SMF. This script will guide you through the process for installing %1$s. We\'ll gather a few details about your forum over the next few steps, and after a couple of minutes your forum will be ready for use.';
+$txt['install_all_lovely'] = 'We\'ve completed some initial tests on your server and everything appears to be in order. Simply click the &quot;Continue&quot; button below to get started.'; 
 
 $txt['user_refresh_install'] = 'Forum Refreshed';
 $txt['user_refresh_install_desc'] = 'While installing, the installer found that (with the details you provided) one or more of the tables this installer might create already existed.<br />Any missing tables in your installation have been recreated with the default data, but no data was deleted from existing tables.';
@@ -69,8 +81,8 @@ $txt['error_message_click'] = 'Click here';
 $txt['error_message_try_again'] = 'to try this step again.';
 $txt['error_message_bad_try_again'] = 'to try installing anyway, but note that this is <i>strongly</i> discouraged.';
 
-$txt['install_settings'] = 'Basic Settings';
-$txt['install_settings_info'] = 'Just a few things for you to setup ;).';
+$txt['install_settings'] = 'Forum Settings';
+$txt['install_settings_info'] = 'This page requires you to define a few key settings for your forum. SMF has automatically detected key settings for you.';
 $txt['install_settings_name'] = 'Forum name';
 $txt['install_settings_name_info'] = 'This is the name of your forum, ie. &quot;The Testing Forum&quot;.';
 $txt['install_settings_name_default'] = 'My Community';
@@ -109,6 +121,14 @@ $txt['db_settings_database_file_info'] = 'This is the name of the file in which 
 $txt['db_settings_prefix'] = 'Table prefix';
 $txt['db_settings_prefix_info'] = 'The prefix for every table in the database.  <b>Do not install two forums with the same prefix!</b><br />This value allows for multiple installations in one database.';
 
+$txt['db_populate'] = 'Populated Database';
+$txt['db_populate_info'] = 'Your settings have now been saved and the database has been populated with all the data required to get your forum up and running. Summary of population:';
+$txt['db_populate_info2'] = 'Click &quot;Continue&quot; to progress to the admin account creation page.';
+$txt['db_populate_inserts'] = 'Inserted %1$d rows.';
+$txt['db_populate_tables'] = 'Created %1$d tables.';
+$txt['db_populate_insert_dups'] = 'Ignored %1$d duplicated inserts.';
+$txt['db_populate_table_dups'] = 'Ignored %1$d duplicated tables.';
+
 $txt['user_settings'] = 'Create Your Account';
 $txt['user_settings_info'] = 'The installer will now create a new administrator account for you.';
 $txt['user_settings_username'] = 'Your username';
@@ -125,6 +145,7 @@ $txt['user_settings_skip'] = 'Skip';
 $txt['user_settings_skip_sure'] = 'Are you sure you wish to skip admin account creation?';
 $txt['user_settings_proceed'] = 'Finish';
 
+$txt['ftp_checking_writable'] = 'Checking Files are Writable';
 $txt['ftp_setup'] = 'FTP Connection Information';
 $txt['ftp_setup_info'] = 'This installer can connect via FTP to fix the files that need to be writable and are not.  If this doesn\'t work for you, you will have to go in manually and make the files writable.  Please note that this doesn\'t support SSL right now.';
 $txt['ftp_server'] = 'Server';
@@ -173,6 +194,7 @@ $txt['error_script_outdated'] = 'This install script is out of date! The current
 	It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are installing the latest version.';
 $txt['error_db_filename'] = 'You must enter a name for the database file name for SQLite.';
 $txt['error_db_prefix_numeric'] = 'The selected database type does not support the use of numeric prefixes.';
+$txt['error_invalid_characters_username'] = 'Invalid character used in Username.';
 $txt['error_db_filename_exists'] = 'The database that you are trying to create exists.  Please delete the current database file or enter another name.';
 
 $txt['upgrade_upgrade_utility'] = 'SMF Upgrade Utility';
