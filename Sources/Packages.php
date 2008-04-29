@@ -642,6 +642,8 @@ function PackageInstallTest()
 		$ftp_status = create_chmod_control($chmod_files);
 		$context['ftp_needed'] = !empty($ftp_status['files']['notwritable']) && !empty($context['package_ftp']);
 	}
+
+	checkSubmitOnce('register');
 }
 
 // Apply another type of (avatar, language, etc.) package.
@@ -649,6 +651,10 @@ function PackageInstall()
 {
 	global $boarddir, $txt, $context, $boardurl, $scripturl, $sourcedir, $modSettings;
 	global $user_info, $smcFunc;
+
+	// Make sure we don't install this mod twice.
+	checkSubmitOnce('check');
+	checkSession();
 
 	// If there's no file, what are we installing?
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')

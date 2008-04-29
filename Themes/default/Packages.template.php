@@ -57,7 +57,7 @@ function template_view_package()
 		<br />';
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', $context['ftp_needed'] ? '' : '2', ';package=', $context['filename'], ';pid=', $context['install_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', $context['ftp_needed'] ? '' : '2', ';package=', $context['filename'], ';pid=', $context['install_id'], '" onsubmit="submitonce(this);" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['install_actions'], '</td>
@@ -275,7 +275,7 @@ function template_view_package()
 		echo '
 		<tr class="titlebg">
 			<td align="right">
-				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" ', !empty($context['has_failure']) ? 'onclick="return confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\');"' : '', '/>
+				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) && confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))"' : 'submitThisOnce(this)', ';" />
 			</td>
 		</tr>';
 	}
@@ -293,6 +293,8 @@ function template_view_package()
 	}
 		echo '
 			</table>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />', !$context['ftp_needed'] ? '
+			<input type="hidden" name="seqnum" value="' . $context['form_sequence_number'] . '" />' : '', '
 		</form>';
 
 	// Toggle options.
