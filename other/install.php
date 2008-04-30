@@ -365,7 +365,7 @@ function Welcome()
 	// See if we think they have already installed it?
 	if (file_exists(dirname(__FILE__) . '/Settings.php'))
 	{
-		$probably_installed = 2;
+		$probably_installed = 0;
 		foreach (file(dirname(__FILE__) . '/Settings.php') as $line)
 		{
 			if (preg_match('~^\$db_passwd\s=\s\'([^\']+)\';$~', $line))
