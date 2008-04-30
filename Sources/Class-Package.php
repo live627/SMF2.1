@@ -545,16 +545,36 @@ class xmlArray
 	}
 
 	// Parse out CDATA tags. (htmlspecialchars them...)
-	protected function _to_cdata($data)
+	function _to_cdata($data)
 	{
-		// Match all of the CDATA tags.
-		preg_match_all('/<!\[CDATA\[(.*?)\]\]>/s', $data, $match, PREG_SET_ORDER);
+		$inCdata = $inComment = false;
+		$output = '';
 
-		// Replace them with htmlentities'd versions.
-		foreach ($match as $m)
-			$data = str_replace($m[0], htmlentities($m[1], ENT_QUOTES), $data);
+		$parts = preg_split('~(<!\[CDATA\[|\]\]>|<!--|-->)~', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+		foreach ($parts as $part)
+		{
+			// Handle XML comments.
+			if (!$inCdata && $part === '<!--')
+				$inComment = true;
+			if ($inComment && $part === '-->')
+				$inComment = false;
+			elseif ($inComment)
+				continue;
 
-		return $data;
+			// Handle Cdata blocks.
+			elseif (!$inComment && $part === '<![CDATA[')
+				$inCdata = true;
+			elseif ($inCdata && $part === ']]>')
+				$inCdata = false;
+			elseif ($inCdata)
+				$output .= htmlentities($part, ENT_QUOTES);
+
+			// Everything else is kept as is.
+			else
+				$output .= $part;
+		}
+
+		return $output;
 	}
 
 	// Turn the CDATAs back to normal text.

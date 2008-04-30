@@ -67,8 +67,8 @@ April 2008
  ! Fixed some validation issues in the updated theme templates. (BoardIndex template) [Bug 1922]
  & Removed unused language string, "to delete_blank". (Post language file) [Bug 1913]
  ! Put the "future" display template into the default theme. (Display template)
- ! On PHP 4.2.0 seed the random generator. (Subs-Compat.php, index.php)
- ! Remove HTML recursively from normal user's posts. (Subs-Post.php)
+ ! On PHP 4.2.0 seed the random generator - reported by Jessica Hope. (Subs-Compat.php, index.php)
+ ! Remove HTML recursively from normal user's posts - reported by Jessica Hope. (Subs-Post.php)
  ! Custom profile fields wouldn't play nice in non-latin languages. (ManageSettings.php) [Bug 1885]
  ! Added some more randomization to CAPTCHA sound. (Subs-Sound.php) [Bug 1920]
  ! Mac wasn't being detected as windows. (Load.php) [Bug 1947]
@@ -112,6 +112,7 @@ April 2008
  & Language entry for not_activated was added to the wrong language file. (Admin and ManageMembers language files) [Bug 1953]
  * Use a different warning message when uninstalling a mod that contains errors. (Packages template, Packages language file) [Bug 1837]
  ! Try to prevent double submission of the modification installation form. (Packages.php, Packages template) [Bug 1950]
+ ! XML comments weren't properly parsed in package XML files. (Class-Package.php)
 
 
 March 2008
