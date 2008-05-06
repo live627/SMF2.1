@@ -284,11 +284,12 @@ TRUNCATE {$to_prefix}categories;
 
 ---{
 // Add a tempID column.
-$knownKeys = array();
-$knownColumns = array(
-	'tempID' => "ADD COLUMN tempID mediumint(8) NOT NULL default 0",
-);
-alterTable('categories', $knownKeys, $knownColumns);
+alterDatabase('categories', 'add column', array(
+	'name' => 'tempID',
+	'type' => 'mediumint',
+	'size' => 8,
+	'default' => 0));
+
 ---}
 
 /******************************************************************************/
@@ -329,9 +330,6 @@ if (empty($exists))
 
 TRUNCATE {$to_prefix}boards;
 
-DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
-
 ---* {$to_prefix}boards
 ---{
 $row['name'] = str_replace('\n', '<br />', $row['name']);
@@ -351,10 +349,7 @@ GROUP BY id_board;
 /******************************************************************************/
 
 ---{
-$knownColumns = array(
-	'tempID' => 'DROP tempID',
-);
-alterTable('categories', '', $knownColumns, '', false, true);
+alterDatabase('categories', 'remove column', 'tempID');
 
 // Lets fix the order.
 $request = convert_query("

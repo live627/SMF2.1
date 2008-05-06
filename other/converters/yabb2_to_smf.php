@@ -1385,7 +1385,7 @@ if (empty($preparsing))
 		return $field;
 	}
 
-	function doBlock($table, &$block)
+	function doBlock($table, &$block, $ignore = false)
 	{
 		global $to_prefix;
 
@@ -1418,7 +1418,7 @@ if (empty($preparsing))
 			$insert_block[] = '\'' . implode('\', \'', $row) . '\'';
 
 		convert_query("
-			INSERT INTO {$to_prefix}$table
+			INSERT" . (!empty($ignore) ? ' IGNORE' : '') . " INTO {$to_prefix}$table
 				(" . implode(', ', array_keys($block[0])) . ")
 			VALUES (" . implode("),
 				(", $insert_block) . ")");
