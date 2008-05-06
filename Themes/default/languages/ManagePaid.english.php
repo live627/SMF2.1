@@ -192,7 +192,7 @@ $txt['paid_empty_member'] = 'Paid subscription handler could not recover member 
 $txt['paid_could_not_find_member'] = 'Paid subscription handler could not find member with ID: %d';
 $txt['paid_count_not_find_subscription'] = 'Paid subscription handler could not find subscription for member ID: %1$s, subscription ID: %2$s';
 $txt['paid_count_not_find_subscription_log'] = 'Paid subscription handler could not find subscription log entry for member ID: %1$s, subscription ID: %2$s';
-$txt['paid_count_not_find_outstanding_payment'] = 'Coud not find outstanding payment entry for member ID: %1$s, subscription ID: %2$s so ignoring';
+$txt['paid_count_not_find_outstanding_payment'] = 'Could not find outstanding payment entry for member ID: %1$s, subscription ID: %2$s so ignoring';
 $txt['paid_admin_not_setup_gateway'] = 'Sorry but the admin has not yet finished setting up paid subscriptions - please check back later.';
 $txt['paid_make_recurring'] = 'Make this a recurring payment';
 
