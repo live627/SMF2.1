@@ -78,8 +78,6 @@ $txt['message'] = 'Message';
 $txt['redirects'] = 'Redirects';
 $txt['quick_modify'] = 'Modify Inline';
 
-$txt['profile'] = 'Profile';
-
 $txt['choose_pass'] = 'Choose password';
 $txt['verify_pass'] = 'Verify password';
 $txt['position'] = 'Position';
@@ -146,7 +144,6 @@ $txt['are_sure_remove_topic'] = 'Are you sure you want to remove this topic?';
 $txt['yes'] = 'Yes';
 $txt['no'] = 'No';
 
-$txt['search_results'] = 'Search Results';
 $txt['search_end_results'] = 'End of results';
 $txt['search_no_results'] = 'Sorry, no matches were found';
 $txt['search_on'] = 'on';
