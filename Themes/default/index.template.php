@@ -134,7 +134,10 @@ function template_html_above()
 
 	// We'll have to use the cookie to remember the header...
 	if ($context['user']['is_guest'])
+	{
 		$options['collapse_header'] = !empty($_COOKIE['upshrink']);
+		$options['collapse_header_ic'] = !empty($_COOKIE['upshrinkIC']);
+	}
 
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'], '
@@ -445,7 +448,7 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>
 		</div>';
-	
+
 }
 
 ?>
