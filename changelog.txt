@@ -10,6 +10,7 @@ May 2008
  ! More substring replacements for SQLite. (Themes.php) [Bug 2005]
  ! Can't use file_exists on an url.  It needs a path. (Subs-Menu.php) [Bug 1994]
  ! Remember the collapse state for guests and the info center. (index.template.php) [Bug 1977]
+ ! Comma format the stats for ssi_boardStats. (SSI.php) [Bug 1968]
 
 
 April 2008
