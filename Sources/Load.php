@@ -2321,6 +2321,13 @@ function cache_put_data($key, $value, $ttl = 120)
 	// Zend Platform/ZPS/etc.
 	elseif (function_exists('output_cache_put'))
 		output_cache_put($key, $value);
+	elseif (function_exists('xcache_set'))
+	{
+		if ($value === null)
+			xcache_unset($key);
+		else
+			xcache_set($key, $value, $ttl);
+	}
 	// Otherwise custom cache?
 	elseif (function_exists('fwrite'))
 	{
@@ -2384,6 +2391,8 @@ function cache_get_data($key, $ttl = 120)
 	// Zend's pricey stuff.
 	elseif (function_exists('output_cache_get'))
 		$value = output_cache_get($key, $ttl);
+	elseif (function_exists('xcache_get'))
+		$value = xcache_get($key);
 	// Otherwise it's SMF data!
 	elseif (file_exists($cachedir . '/data_' . $key . '.php') && filesize($cachedir . '/data_' . $key . '.php') > 10)
 	{

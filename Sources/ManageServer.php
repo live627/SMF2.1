@@ -468,6 +468,8 @@ function ModifyCacheSettings($return_config = false)
 		$detected = 'Zend';
 	elseif (function_exists('memcache_set'))
 		$detected = 'Memcached';
+	elseif (function_exists('xcache_set'))
+		$detected = 'XCache';
 	else
 		$detected = 'no_caching';
 

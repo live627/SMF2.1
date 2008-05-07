@@ -95,6 +95,7 @@ $txt['caching_information'] = '<div align="center"><b><u>Important! Read this fi
 		<li>Turck MMCache</li>
 		<li>Memcached</li>
 		<li>Zend Platform/Performance Suite (Not Zend Optimizer)</li>
+		<li>XCache</li>
 	</ul>
 	Caching will work best of you have PHP compiled with one of the above optimizers, or have memcache
 	available. If you do not have any optimizer installed SMF will do file based caching.<br /><br />
@@ -115,6 +116,7 @@ $txt['detected_eAccelerator'] = '<b style="color: green">SMF has detected that y
 $txt['detected_MMCache'] = '<b style="color: green">SMF has detected that your server has MMCache installed.';
 $txt['detected_Zend'] = '<b style="color: green">SMF has detected that your server has Zend installed.';
 $txt['detected_Memcached'] = '<b style="color: green">SMF has detected that your server has Memcached installed.';
+$txt['detected_xcache'] = '<b style="color: green">SMF has detected that your server has XCache installed.';
 
 $txt['cache_enable'] = 'Caching Level';
 $txt['cache_off'] = 'No caching';

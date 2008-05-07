@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 4                                                               ???
 ================================================================================
+May 2008
+--------------------------------------------------------------------------------
+ + Added support for XCache. (Admin.php, Load.php, ManageServer.php, Subs-Admin.php, ManageSettings language file) [Feature 1937]
+
+
 April 2008
 --------------------------------------------------------------------------------
  * The link to import a smiley was not correct. (ManageSmileys.php, ManageSmileys template) [Bug 1862]
