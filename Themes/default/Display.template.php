@@ -32,7 +32,7 @@ function template_main()
 		// Are they not allowed to vote but allowed to view the options?
 		if ($context['poll']['show_results'] || !$context['allow_vote'])
 		{
-			echo '					
+			echo '
 		<dl>';
 
 			// Show each option with its corresponding percentage bar.
@@ -68,7 +68,7 @@ function template_main()
 			<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
 
 			echo '
-		
+
 			', $context['allow_poll_view'] ? '<strong>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</strong>' : '',
 		'</p>';
 		}
@@ -92,7 +92,7 @@ function template_main()
 			foreach ($context['poll']['options'] as $option)
 				echo '
 						<li>', $option['vote_button'], ' <label for="', $option['id'], '">', $option['option'], '</label></li>';
-	
+
 			echo '
 					</ul>
 				</li>
@@ -268,7 +268,7 @@ function template_main()
 			// Is this user allowed to modify this member's karma?
 			if ($message['member']['karma']['allow'])
 				echo '
-							<li>	
+							<li>
 								<a href="', $scripturl, '?action=modifykarma;sa=applaud;uid=', $message['member']['id'], ';topic=', $context['current_topic'], '.' . $context['start'], ';m=', $message['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaApplaudLabel'], '</a>
 								<a href="', $scripturl, '?action=modifykarma;sa=smite;uid=', $message['member']['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';m=', $message['id'], ';sesc=', $context['session_id'], '">', $modSettings['karmaSmiteLabel'], '</a>
 							</li>';
@@ -362,7 +362,7 @@ function template_main()
 				</div>
 				<div class="postarea">
 					<div class="keyinfo">
-						<div class="messageicon floatleft" d="subject_', $message['id'], '"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
+						<div class="messageicon floatleft" id="subject_', $message['id'], '"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
 						<h5 id="subject_', $message['id'], '"><a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a></h5>
 						<div class="smalltext">&#171; <strong>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</div>
 						<div id="msg_', $message['id'], '_quick_mod"></div>
@@ -556,7 +556,7 @@ function template_main()
 		<div class="nav floatright">', template_button_strip($normal_buttons, 'top'), '</div>
 		<div style="clear: both;">', $context['previous_next'], '</div>
 	</div>';
-	
+
 	if ($settings['linktree_inline'])
 		theme_linktree();
 
@@ -605,7 +605,7 @@ function template_main()
 		<h3 class="catbg headerpadding">
 			<a href="javascript:oQuickReply.swap();">
 				<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" />
-			</a> 
+			</a>
 			<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
 		</h3>
 		<div class="smallpadding windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
