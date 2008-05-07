@@ -6,6 +6,9 @@ SMF 2.0 Beta 4                                                               ???
 May 2008
 --------------------------------------------------------------------------------
  + Added support for XCache. (Admin.php, Load.php, ManageServer.php, Subs-Admin.php, ManageSettings language file) [Feature 1937]
+ ! When issuing a warning, check to see if there are no errors before sending them a notification about the warning. (Profile-Actions.php) [Bug 1955, Bug 1996]
+ ! More substring replacements for SQLite. (Themes.php) [Bug 2005]
+ ! Can't use file_exists on an url.  It needs a path. (Subs-Menu.php) [Bug 1994]
 
 
 April 2008

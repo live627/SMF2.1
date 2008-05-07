@@ -47,7 +47,7 @@ function createMenu($menuData, $menuOptions = array())
 	}
 
 	// Work out where we should get our images from.
-	$context['menu_image_path'] = file_exists($settings['images_url'] . '/admin/change_menu.png') ? $settings['images_url'] . '/admin' : $settings['default_images_url'] . '/admin';
+	$context['menu_image_path'] = file_exists($settings['theme_dir'] . '/images/admin/change_menu.png') ? $settings['images_url'] . '/admin' : $settings['default_images_url'] . '/admin';
 
 	/* Note menuData is array of form:
 

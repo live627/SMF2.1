@@ -163,7 +163,7 @@ function issueWarning($memID)
 
 		// Do we actually have to issue them with a PM?
 		$id_notice = 0;
-		if (!empty($_POST['warn_notify']))
+		if (!empty($_POST['warn_notify']) && empty($issueErrors))
 		{
 			$_POST['warn_sub'] = trim($_POST['warn_sub']);
 			$_POST['warn_body'] = trim($_POST['warn_body']);
@@ -332,7 +332,7 @@ function issueWarning($memID)
 			list ($context['warned_message_subject']) = $smcFunc['db_fetch_row']($request);
 		}
 		$smcFunc['db_free_result']($request);
-		
+
 	}
 
 	// Didn't find the message?
