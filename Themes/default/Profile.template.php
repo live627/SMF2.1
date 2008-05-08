@@ -717,12 +717,12 @@ function template_trackUser()
 						', (empty($context['last_ip2']) ? '' : '<br /><span class="smalltext">(<a href="' . $scripturl . '?action=helpadmin;help=whytwoip" onclick="return reqWin(this.href);">' . $txt['why_two_ip_address'] . '</a>)</span>'), '
 					</td>
 					<td class="windowbg2" align="left">
-						<a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip'], ';">', $context['last_ip'], '</a>';
+						<a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip'], '">', $context['last_ip'], '</a>';
 
 	// Second address detected?
 	if (!empty($context['last_ip2']))
 		echo '
-						, <a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip2'], ';">', $context['last_ip2'], '</a>';
+						, <a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip2'], '">', $context['last_ip2'], '</a>';
 
 	echo '
 					</td>
