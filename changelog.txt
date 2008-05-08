@@ -13,6 +13,7 @@ May 2008
  ! Comma format the stats for ssi_boardStats. (SSI.php) [Bug 1968]
  ! When adding a ban or reporting a post to a moderator, make sure to use the UTF-8 compatible htmlspecialchars function. (ManageBans.php, SendTopic.php) [Bug 1958,1963]
  ! When viewing the posts of watched users, take into account the smileys and check if they are to be shown or not. (ModerationCenter.php) [Bug 1966]
+ ! After sending the Location header in Settings.php, just exit. (Settings.php) [Bug 2010]
 
 
 April 2008
