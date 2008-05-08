@@ -1078,7 +1078,7 @@ function ViewWatchedUsers()
 	// This is all the information required for a watched user listing.
 	$listOptions = array(
 		'id' => 'watch_user_list',
-		'title' => $txt['mc_watched_users_title'] . ' - ' . $txt['mc_watched_users_member'],
+		'title' => $txt['mc_watched_users_title'] . ' - ' . ($context['view_posts'] ? $txt['mc_watched_users_post'] : $txt['mc_watched_users_member']),
 		'width' => '85%',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $context['view_posts'] ? $txt['mc_watched_users_no_posts'] : $txt['mc_watched_users_none'],

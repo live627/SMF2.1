@@ -16,6 +16,7 @@ May 2008
  ! After sending the Location header in Settings.php, just exit. (Settings.php) [Bug 2010]
  ! Fixed a JavaScript syntax error that occurred when operations failed. (Packages template) [Bug 1651]
  * The wrong sub_action was being set when toggling the sidebar on the admin panel. (GenericMenu template) [Bug 2003]
+ ! The title for the watch users by posts was wrong. (ModerationCenter.php) [Bug 1990]
 
 
 April 2008
