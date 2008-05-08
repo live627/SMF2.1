@@ -452,6 +452,8 @@ function SendMailing($clean_only = false)
 	$context['send_pm'] = !empty($_POST['send_pm']) ? 1 : 0;
 	$context['total_emails'] = !empty($_POST['total_emails']) ? (int) $_POST['total_emails'] : 0;
 	$context['max_id_member'] = !empty($_POST['max_id_member']) ? (int) $_POST['max_id_member'] : 0;
+	$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
+	$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
 
 	// Create our main context.
 	$context['recipients'] = array(
@@ -532,8 +534,6 @@ function SendMailing($clean_only = false)
 	{
 		$context['subject'] = htmlspecialchars($_POST['subject']);
 		$context['message'] = htmlspecialchars($_POST['message']);
-		$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
-		$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
 
 		// Prepare the message for HTML.
 		if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
