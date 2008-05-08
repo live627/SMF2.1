@@ -1361,7 +1361,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.id_topic, m.id_board, m.id_member, m.subject, m.body, m.poster_time,
-			m.approved, mem.member_name
+			m.approved, mem.member_name, m.smileys_enabled
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
@@ -1385,7 +1385,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 			'id_topic' => $row['id_topic'],
 			'author_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
 			'subject' => $row['subject'],
-			'body' => parse_bbc($row['body']),
+			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
 			'poster_time' => timeformat($row['poster_time']),
 			'approved' => $row['approved'],
 			'can_delete' => $delete_boards == array(0) || in_array($row['id_board'], $delete_boards),
