@@ -459,7 +459,7 @@ function ReportToModerator2()
 		// Now just add our report...
 		if ($id_report)
 		{
-			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
+			$posterComment = strtr($smcFunc['htmlspecialchars']($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_reported_comments',
