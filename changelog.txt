@@ -17,6 +17,7 @@ May 2008
  ! Fixed a JavaScript syntax error that occurred when operations failed. (Packages template) [Bug 1651]
  * The wrong sub_action was being set when toggling the sidebar on the admin panel. (GenericMenu template) [Bug 2003]
  ! The title for the watch users by posts was wrong. (ModerationCenter.php) [Bug 1990]
+ * Use a more noticeable icon for the notification notice popup when looking at the warnings issues to a user on the profile page. (Profile template) [Bug 1993]
 
 
 April 2008
