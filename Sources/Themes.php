@@ -1175,7 +1175,7 @@ function ThemeInstall()
 
 	if ((!empty($_FILES['theme_gz']) && (!isset($_FILES['theme_gz']['error']) || $_FILES['theme_gz']['error'] != 4)) || !empty($_REQUEST['theme_gz']))
 		$method = 'upload';
-	elseif (isset($_REQUEST['theme_dir']) && realpath($_REQUEST['theme_dir']) != realpath($boarddir . '/Themes') && file_exists($_REQUEST['theme_dir']))
+	elseif (isset($_REQUEST['theme_dir']) && rtrim(realpath($_REQUEST['theme_dir']), '/\\') != realpath($boarddir . '/Themes') && file_exists($_REQUEST['theme_dir']))
 		$method = 'path';
 	else
 		$method = 'copy';

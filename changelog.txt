@@ -19,6 +19,7 @@ May 2008
  ! The title for the watch users by posts was wrong. (ModerationCenter.php) [Bug 1990]
  * Use a more noticeable icon for the notification notice popup when looking at the warnings issues to a user on the profile page. (Profile template) [Bug 1993]
  ! It was possible to get undefined errors when sending newsletters and not sending a PM with it. (ManageNews.php) [Bug 1962]
+ ! Trim the trailing slashes from theme_dir when creating a copy of the default theme. (Themes.php) [Bug 1782]
 
 
 April 2008
