@@ -22,6 +22,8 @@ May 2008
  ! Trim the trailing slashes from theme_dir when creating a copy of the default theme. (Themes.php) [Bug 1782]
  + Added icons to the quick admin tasks in the admin home page. Thanks to m3talc0re for the icons. (Admin.php, Admin template, admin.css) [Feature 1639]
  ! The language editor didn't take into account utf8 language files when saving. (ManageServer.php) [Bug 1791,2012]
+ + When making a copy of the default theme, generate a theme_info.xml file. (Themes.php) [Feature 201]
+ ! When making a copy of the default theme, increase the time limit. (Themes.php)
 
 
 April 2008

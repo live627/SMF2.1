@@ -1191,6 +1191,10 @@ function ThemeInstall()
 		umask(0);
 		mkdir($theme_dir, 0777);
 
+		@set_time_limit(600);
+		if (function_exists('apache_reset_timeout'))
+			apache_reset_timeout();
+
 		// Copy over the default non-theme files.
 		$to_copy = array('/style.css', '/index.php', '/index.template.php');
 		foreach ($to_copy as $file)
@@ -1206,6 +1210,62 @@ function ThemeInstall()
 		$theme_name = $_REQUEST['copy'];
 		$images_url = $boardurl . '/Themes/' . basename($theme_dir) . '/images';
 		$theme_dir = realpath($theme_dir);
+
+		// Lets get some data for the new theme.
+		$request = $smcFunc['db_query']('', '
+			SELECT variable, value
+			FROM {db_prefix}themes
+			WHERE variable IN ({string:theme_templates}, {string:theme_layers}, {string:based_on})
+				AND id_member = {int:no_member}
+				AND id_theme = {int:default_theme}',
+			array(
+				'no_member' => 0,
+				'default_theme' => 1,
+				'theme_templates' => 'theme_templates',
+				'theme_layers' => 'theme_layers',
+				'based_on' => 'based_on',
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if ($row['variable'] == 'theme_templates')
+				$theme_templates = $row['value'];
+			elseif ($row['variable'] == 'theme_layers')
+				$theme_layers = $row['value'];
+			elseif ($row['variable'] == 'based_on')
+				$based_on = $row['value'];
+			else
+				continue;
+		}
+		$smcFunc['db_free_result']($request);
+
+		// Lets add a theme_info.xml to this theme.
+		$xml_info = '<' . '?xml version="1.0"?' . '>
+<theme-info xmlns="http://www.simplemachines.org/xml/theme-info" xmlns:smf="http://www.simplemachines.org/">
+	<!-- For the id, always use something unique - put your name, a colon, and then the package name. -->
+	<id>smf:' . $smcFunc['strtolower'](str_replace(array(' '), '_', $_REQUEST['copy'])) . '</id>
+	<version>' . $modSettings['smfVersion'] . '</version>
+	<!-- Theme name, used purely for aesthetics. -->
+	<name>' . $_REQUEST['copy'] . '</name>
+	<!-- Author: your email address or contact information. The name attribute is optional. -->
+	<author name="Simple Machines">info@simplemachines.org</author>
+	<!-- Website... where to get updates and more information. -->
+	<website>http://www.simplemachines.org/</website>
+	<!-- Template layers to use, defaults to "main". -->
+	<layers>' . (empty($theme_layers) ? 'html,body' : $theme_layers) . '</layers>
+	<!-- Templates to load on startup. Default is "index". -->
+	<templates>' . (empty($theme_templates) ? 'index' : $theme_templates) . '</templates>
+	<!-- Base this theme off another? Default is blank, or no. It could be "default". -->
+	<based-on>' . (empty($based_on) ? 'default' : $based_on) . '</based-on>
+</theme-info>';
+
+		// Now write it.
+		$fp = @fopen($theme_dir . '/theme_info.xml', 'w+');
+		if ($fp)
+		{
+			fwrite($fp, $xml_info);
+			fclose($fp);
+		}
 	}
 	elseif (isset($_REQUEST['theme_dir']) && $method == 'path')
 	{
