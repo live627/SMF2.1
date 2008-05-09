@@ -25,6 +25,7 @@ May 2008
  + When making a copy of the default theme, generate a theme_info.xml file. (Themes.php) [Feature 201]
  ! When making a copy of the default theme, increase the time limit. (Themes.php)
  ! When splitting topics, take into account the user defined messages per page setting. (SplitTopics.php) [Feature 1970]
+ ! When loading themes that have custom Settings template and language file, load the language before the template and force a language reload. (Themes.php) [Bug 1935]
 
 
 April 2008

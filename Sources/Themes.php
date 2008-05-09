@@ -786,12 +786,12 @@ function SetThemeSettings()
 
 	loadTheme($_GET['th'], false);
 
+	// Also load the actual themes language file - in case of special settings.
+	loadLanguage('Settings', '', true, true);
+
 	// Let the theme take care of the settings.
 	loadTemplate('Settings');
 	loadSubTemplate('settings');
-
-	// Also load the actual themes language file - in case of special settings.
-	loadLanguage('Settings');
 
 	// Submitting!
 	if (isset($_POST['submit']))
