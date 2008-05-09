@@ -572,14 +572,14 @@ function AdminHome()
 
 	// The format of this array is: permission, action, title, description.
 	$quick_admin_tasks = array(
-		array('', 'credits', 'support_credits_title', 'support_credits_info'),
-		array('admin_forum', 'featuresettings', 'modSettings_title', 'modSettings_info'),
-		array('admin_forum', 'maintain', 'maintain_title', 'maintain_info'),
-		array('manage_permissions', 'permissions', 'edit_permissions', 'edit_permissions_info'),
-		array('admin_forum', 'theme;sa=admin;sesc=' . $context['session_id'], 'theme_admin', 'theme_admin_info'),
-		array('admin_forum', 'packages', 'package', 'package_info'),
-		array('manage_smileys', 'smileys', 'smileys_manage', 'smileys_manage_info'),
-		array('moderate_forum', 'viewmembers', 'admin_users', 'member_center_info'),
+		array('', 'credits', 'support_credits_title', 'support_credits_info', 'support_and_credits.png'),
+		array('admin_forum', 'featuresettings', 'modSettings_title', 'modSettings_info', 'features_and_options.png'),
+		array('admin_forum', 'maintain', 'maintain_title', 'maintain_info', 'forum_maintenance.png'),
+		array('manage_permissions', 'permissions', 'edit_permissions', 'edit_permissions_info', 'permissions.png'),
+		array('admin_forum', 'theme;sa=admin;sesc=' . $context['session_id'], 'theme_admin', 'theme_admin_info', 'themes_and_layout.png'),
+		array('admin_forum', 'packages', 'package', 'package_info', 'packages.png'),
+		array('manage_smileys', 'smileys', 'smileys_manage', 'smileys_manage_info', 'smilies_and_messageicons.png'),
+		array('moderate_forum', 'viewmembers', 'admin_users', 'member_center_info', 'members.png'),
 	);
 
 	$context['quick_admin_tasks'] = array();
@@ -593,6 +593,7 @@ function AdminHome()
 			'link' => '<a href="' . $scripturl . '?action=admin;area=' . $task[1] . '">' . $txt[$task[2]] . '</a>',
 			'title' => $txt[$task[2]],
 			'description' => $txt[$task[3]],
+			'icon' => $task[4],
 			'is_last' => false
 		);
 	}
