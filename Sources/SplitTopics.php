@@ -252,7 +252,7 @@ function SplitExecute()
 // Get a selective list of topics...
 function SplitSelectTopics()
 {
-	global $txt, $scripturl, $topic, $context, $modSettings, $original_msgs, $smcFunc;
+	global $txt, $scripturl, $topic, $context, $modSettings, $original_msgs, $smcFunc, $options;
 
 	$context['page_title'] = $txt['split'] . ' - ' . $txt['select_split_posts'];
 
@@ -282,6 +282,9 @@ function SplitSelectTopics()
 	// Using the "select" sub template.
 	$context['sub_template'] = isset($_REQUEST['xml']) ? 'split' : 'select';
 
+	// Are we using a custom messages per page?
+	$context['messages_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
+
 	// Get the message ID's from before the move.
 	if (isset($_REQUEST['xml']))
 	{
@@ -296,11 +299,13 @@ function SplitSelectTopics()
 				AND id_msg NOT IN ({array_int:no_split_msgs})') . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 				AND approved = {int:is_approved}') . '
 			ORDER BY id_msg DESC
-			LIMIT ' . $context['not_selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
+			LIMIT {int:start}, {int:messages_per_page}',
 			array(
 				'current_topic' => $topic,
 				'no_split_msgs' => empty($_SESSION['split_selection'][$topic]) ? array() : $_SESSION['split_selection'][$topic],
 				'is_approved' => 1,
+				'start' => $context['not_selected']['start'],
+				'messages_per_page' => $context['messages_per_page'],
 			)
 		);
 		// You can't split the last message off.
@@ -318,11 +323,13 @@ function SplitSelectTopics()
 					AND id_msg IN ({array_int:split_msgs})' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 					AND approved = {int:is_approved}') . '
 				ORDER BY id_msg DESC
-				LIMIT ' . $context['selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
+				LIMIT {int:start}, {int:messages_per_page}',
 				array(
 					'current_topic' => $topic,
 					'split_msgs' => $_SESSION['split_selection'][$topic],
 					'is_approved' => 1,
+					'start' => $context['selected']['start'],
+					'messages_per_page' => $context['messages_per_page'],
 				)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -384,12 +391,12 @@ function SplitSelectTopics()
 
 	// Fix an oversized starting page (to make sure both pageindexes are properly set).
 	if ($context['selected']['start'] >= $context['selected']['num_messages'])
-		$context['selected']['start'] = $context['selected']['num_messages'] <= $modSettings['defaultMaxMessages'] ? 0 : ($context['selected']['num_messages'] - (($context['selected']['num_messages'] % $modSettings['defaultMaxMessages']) == 0 ? $modSettings['defaultMaxMessages'] : ($context['selected']['num_messages'] % $modSettings['defaultMaxMessages'])));
+		$context['selected']['start'] = $context['selected']['num_messages'] <= $context['messages_per_page'] ? 0 : ($context['selected']['num_messages'] - (($context['selected']['num_messages'] % $context['messages_per_page']) == 0 ? $context['messages_per_page'] : ($context['selected']['num_messages'] % $context['messages_per_page'])));
 
 	// Build a page list of the not-selected topics...
-	$context['not_selected']['page_index'] = constructPageIndex($scripturl . '?action=splittopics;sa=selectTopics;subname=' . strtr(urlencode($_REQUEST['subname']), array('%' => '%%')) . ';topic=' . $topic . '.%d;start2=' . $context['selected']['start'], $context['not_selected']['start'], $context['not_selected']['num_messages'], $modSettings['defaultMaxMessages'], true);
+	$context['not_selected']['page_index'] = constructPageIndex($scripturl . '?action=splittopics;sa=selectTopics;subname=' . strtr(urlencode($_REQUEST['subname']), array('%' => '%%')) . ';topic=' . $topic . '.%d;start2=' . $context['selected']['start'], $context['not_selected']['start'], $context['not_selected']['num_messages'], $context['messages_per_page'], true);
 	// ...and one of the selected topics.
-	$context['selected']['page_index'] = constructPageIndex($scripturl . '?action=splittopics;sa=selectTopics;subname=' . strtr(urlencode($_REQUEST['subname']), array('%' => '%%')) . ';topic=' . $topic . '.' . $context['not_selected']['start'] . ';start2=%d', $context['selected']['start'], $context['selected']['num_messages'], $modSettings['defaultMaxMessages'], true);
+	$context['selected']['page_index'] = constructPageIndex($scripturl . '?action=splittopics;sa=selectTopics;subname=' . strtr(urlencode($_REQUEST['subname']), array('%' => '%%')) . ';topic=' . $topic . '.' . $context['not_selected']['start'] . ';start2=%d', $context['selected']['start'], $context['selected']['num_messages'], $context['messages_per_page'], true);
 
 	// Get the messages and stick them into an array.
 	$request = $smcFunc['db_query']('', '
@@ -400,11 +407,13 @@ function SplitSelectTopics()
 			AND id_msg NOT IN ({array_int:no_split_msgs})') . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 			AND approved = {int:is_approved}') . '
 		ORDER BY m.id_msg DESC
-		LIMIT ' . $context['not_selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
+		LIMIT {int:start}, {int:messages_per_page}',
 		array(
 			'current_topic' => $topic,
 			'no_split_msgs' => !empty($_SESSION['split_selection'][$topic]) ? $_SESSION['split_selection'][$topic] : array(),
 			'is_approved' => 1,
+			'start' => $context['not_selected']['start'],
+			'messages_per_page' => $context['messages_per_page'],
 		)
 	);
 	$context['messages'] = array();
@@ -436,11 +445,13 @@ function SplitSelectTopics()
 				AND m.id_msg IN ({array_int:split_msgs})' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
 				AND approved = {int:is_approved}') . '
 			ORDER BY m.id_msg DESC
-			LIMIT ' . $context['selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
+			LIMIT {int:start}, {int:messages_per_page}',
 			array(
 				'current_topic' => $topic,
 				'split_msgs' => $_SESSION['split_selection'][$topic],
 				'is_approved' => 1,
+				'start' => $context['selected']['start'],
+				'messages_per_page' => $context['messages_per_page'],
 			)
 		);
 		$context['messages'] = array();
