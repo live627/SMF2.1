@@ -21,6 +21,7 @@ May 2008
  ! It was possible to get undefined errors when sending newsletters and not sending a PM with it. (ManageNews.php) [Bug 1962]
  ! Trim the trailing slashes from theme_dir when creating a copy of the default theme. (Themes.php) [Bug 1782]
  + Added icons to the quick admin tasks in the admin home page. Thanks to m3talc0re for the icons. (Admin.php, Admin template, admin.css) [Feature 1639]
+ ! The language editor didn't take into account utf8 language files when saving. (ManageServer.php) [Bug 1791,2012]
 
 
 April 2008

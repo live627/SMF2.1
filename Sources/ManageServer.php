@@ -1095,7 +1095,7 @@ function ModifyLanguage()
 	list($theme_id, $file_id) = empty($_REQUEST['tfid']) || strpos($_REQUEST['tfid'], '+') === false ? array(1, '') : explode('+', $_REQUEST['tfid']);
 
 	// Clean the ID - just in case.
-	preg_match('~([A-Za-z0-9_]+)~', $context['lang_id'], $matches);
+	preg_match('~([A-Za-z0-9_-]+)~', $context['lang_id'], $matches);
 	$context['lang_id'] = $matches[1];
 
 	// Get all the theme data.
