@@ -320,7 +320,7 @@ function secret_answerInput()
 
 function secret_answer2()
 {
-	global $txt, $context, $modSettings, $smcFunc;
+	global $txt, $context, $modSettings, $smcFunc, $sourcedir;
 
 	checkSession();
 
@@ -332,7 +332,7 @@ function secret_answer2()
 
 	// Get the information from the database.
 	$request = $smcFunc['db_query']('', '
-		SELECT id_member, real_name, member_name, secret_answer, secret_question, openid_uri
+		SELECT id_member, real_name, member_name, secret_answer, secret_question, openid_uri, email_address
 		FROM {db_prefix}members
 		WHERE id_member = {int:id_member}
 		LIMIT 1',
@@ -368,6 +368,14 @@ function secret_answer2()
 	// They have to be the same too.
 	if ($_POST['passwrd1'] != $_POST['passwrd2'])
 		fatal_lang_error('passwords_dont_match', false);
+
+	// Make sure they have a strong enough password.
+	require_once($sourcedir . '/Subs-Auth.php');
+	$passwordError = validatePassword($_POST['passwrd1'], $row['member_name'], array($row['email_address']));
+
+	// Invalid?
+	if ($passwordError != null)
+		fatal_lang_error('profile_error_password_' . $passwordError, false);
 
 	// Alright, so long as 'yer sure.
 	updateMemberData($row['id_member'], array('passwd' => sha1(strtolower($row['member_name']) . $_POST['passwrd1'])));
