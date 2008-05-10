@@ -35,6 +35,7 @@ May 2008
  ! Always set the timezone on install, to avoid errors. (install.php) [Bug 2019]
  ! The WYSIWYG editor wasn't doing too well with complex paragraphs, and some crazy embedded styles. (Subs-Editor.php)
  ! Don't show warning PMs as being from the "guest" membergroup. (PersonalMessage.php) [Bug 1997]
+ ! Don't give a javascript error if the BBC buttons are disabled. (GenericControls template, script.js) [Bug 1972]
 
 
 April 2008

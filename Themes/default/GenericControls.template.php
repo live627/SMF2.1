@@ -139,7 +139,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		var editorHandle', $editor_id, ' = new SmfEditor(\'', $context['session_id'], '\', \'', $editor_id, '\', ', $editor_context['rich_active'] ? 'true' : 'false', ', \'', $editor_context['rich_active'] ? $editor_context['rich_value'] : '', '\', \'', $editor_context['width'], '\', \'', $editor_context['height'], '\', ', empty($modSettings['disable_wysiwyg']) ? 0 : 1, ');';
 
 		// Create the controls.
-		if (!empty($context['bbc_tags']))
+		if (!empty($context['bbc_tags']) && $context['show_bbc'])
 		{
 			foreach ($context['bbc_tags'] as $row)
 				foreach ($row as $image => $tag)

@@ -677,6 +677,10 @@ SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
 {
 	var oCodeHandle = document.getElementById('cmd_' + sCode);
 
+	// If it don't exist we cannot create it!
+	if (!oCodeHandle)
+		return false;
+
 	this.aButtonControls[sCode] = {
 		oCodeHandle: oCodeHandle,
 		sCode: sCode,
