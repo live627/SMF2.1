@@ -33,6 +33,7 @@ May 2008
  ! Make the page title HTML safe. (Subs.php, index templates) [Bug 2015]
  ! If the user makes an error when creating admin account on install, protect the variables. (install.php) [Bug 1613]
  ! Always set the timezone on install, to avoid errors. (install.php) [Bug 2019]
+ ! The WYSIWYG editor wasn't doing too well with complex paragraphs, and some crazy embedded styles. (Subs-Editor.php)
 
 
 April 2008

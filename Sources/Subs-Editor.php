@@ -141,7 +141,7 @@ function html_to_bbc($text)
 	$text = strtr($text, array("\n" => ' ', "\r" => ''));
 
 	// Though some of us love paragraphs the parser will do better with breaks.
-	$text = preg_replace('~</p>\s*?<p>~i', '<br />', $text);
+	$text = preg_replace('~</p>(\s*?)<p~i', '</p><br /><p', $text);
 
 	// If there's a trailing break get rid of it - Firefox tends to add one.
 	$text = preg_replace('~<br\s?/?>$~i', '', $text);
@@ -305,13 +305,21 @@ function html_to_bbc($text)
 						break;
 
 						case 'font-size':
+							// Sometimes people put decimals where decimals should not be.
+							if (preg_match('~(\d)+\.\d+(p[xt])~i', $style_value, $matches))
+								$style_value = $matches[1] . $matches[2];
+
 							$curCloseTags .= '[/size]';
 							$replacement .= '[size=' . $style_value . ']';
 						break;
 
 						case 'font-family':
+							// Only get the first freaking font if there's a list!
+							if (strpos($style_value, ',') !== false)
+								$style_value = substr($style_value, 0, strpos($style_value, ','));
+
 							$curCloseTags .= '[/font]';
-							$replacement .= '[font=' . $style_value . ']';
+							$replacement .= '[font=' . strtr($style_value, array("'" => '')) . ']';
 						break;
 
 						// This is a hack for images with dimensions embedded.
@@ -879,7 +887,7 @@ function legalise_bbc($text)
 							}
 						}
 						// Add the other tags back as they were in the wrong order before.
-						foreach (array_reverse($to_add_back) as $tag)
+						foreach ($to_add_back as $tag)
 						{
 							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $tag['type'] . ']');
@@ -892,7 +900,7 @@ function legalise_bbc($text)
 						}
 
 						// Set what the tags are these days...
-						foreach ($to_add_back as $tag)
+						foreach (array_reverse($to_add_back) as $tag)
 							array_push($current_tags, $tag);
 					}
 					// What if it isn't block level and we've never heard of it? Remove it!
