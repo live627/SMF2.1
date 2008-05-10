@@ -1149,7 +1149,7 @@ function TrackIP($memID = 0)
 		$context['ip'] = trim($_REQUEST['searchip']);
 
 	if (preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $context['ip']) == 0)
-		fatal_lang_error('invalid_ip', false);
+		fatal_lang_error('invalid_tracking_ip', false);
 
 	$ip_var = str_replace('*', '%', $context['ip']);
 	$ip_string = strpos($ip_var, '%') === false ? '= {string:ip_address}' : 'LIKE {string:ip_address}';

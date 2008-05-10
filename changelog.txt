@@ -36,6 +36,7 @@ May 2008
  ! The WYSIWYG editor wasn't doing too well with complex paragraphs, and some crazy embedded styles. (Subs-Editor.php)
  ! Don't show warning PMs as being from the "guest" membergroup. (PersonalMessage.php) [Bug 1997]
  ! Don't give a javascript error if the BBC buttons are disabled. (GenericControls template, script.js) [Bug 1972]
+ & The error message for invalid range when tracking an IP was setting a bad example. (Profile-View.php, Errors language file) [Bug 1991]
 
 
 April 2008
