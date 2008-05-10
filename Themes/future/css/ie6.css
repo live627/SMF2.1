@@ -1,7 +1,7 @@
 /* special styles for IE6 */
-#mainframe
+body
 {
-	font-size: 80%;
+	font: 90%/100% Verdana, Helvetica, sans-serif;
 }
 #postbuttons
 {

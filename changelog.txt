@@ -38,6 +38,8 @@ May 2008
  ! Don't give a javascript error if the BBC buttons are disabled. (GenericControls template, script.js) [Bug 1972]
  & The error message for invalid range when tracking an IP was setting a bad example. (Profile-View.php, Errors language file) [Bug 1991]
  ! It's now possible to resize richedit controls - but only on Firefox so far. (script.js, resize-handle.gif)
+ * Fixed too big font-sizes in IE7/IE6 for default theme, future theme (default/css/ie6.css, future/css/ie7.css) [Bug 1892]
+ * Added missing icons in admin sections/menu (Admin.php) [Bug 1759]
 
 
 April 2008
