@@ -209,6 +209,13 @@ function initialize_inputs()
 		exit;
 	}
 
+	// PHP 5 might cry if we don't do this now.
+	if (function_exists('date_default_timezone_set'))
+	{
+		$server_offset = @mktime(0, 0, 0, 1, 1, 1970);
+		date_default_timezone_set('Etc/GMT' . ($server_offset > 0 ? '+' : '') . ($server_offset / 3600));
+	}
+
 	// Force an integer step, defaulting to 0.
 	$_GET['step'] = (int) @$_GET['step'];
 }
