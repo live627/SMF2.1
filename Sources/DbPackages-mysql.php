@@ -272,7 +272,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	$query = '
 		ALTER TABLE ' . $table_name . '
 		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
+			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ';
 	$smcFunc['db_query']('', $query,
 		'security_override'
@@ -349,7 +349,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 	$smcFunc['db_query']('', '
 		ALTER TABLE ' . $table_name . '
 		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
+			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ',
 		'security_override'
 	);

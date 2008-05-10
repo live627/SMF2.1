@@ -287,7 +287,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	$query = '
 		ALTER TABLE ' . $table_name . '
 		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'');
+			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'');
 	$smcFunc['db_query']('', $query,
 		'security_override'
 	);
