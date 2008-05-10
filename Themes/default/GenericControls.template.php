@@ -130,7 +130,12 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 	if ($display_controls == 'all' || in_array('message', $display_controls))
 	{
 		echo '
-					<textarea class="editor" name="', $editor_id, '" id="', $editor_id, '" rows="', $editor_context['rows'], '" cols="', $editor_context['columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $editor_context['width'], '; height: ', $editor_context['height'], ';', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $editor_context['value'], '</textarea>
+					<div>
+						<div>
+							<textarea class="editor" name="', $editor_id, '" id="', $editor_id, '" rows="', $editor_context['rows'], '" cols="', $editor_context['columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $editor_context['width'], '; height: ', $editor_context['height'], ';', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $editor_context['value'], '</textarea>
+						</div>
+						<div id="', $editor_id, '_resizer" style="display: none; width: ', $editor_context['width'], '" class="richedit_resize"></div>
+					</div>
 					<input type="hidden" name="', $editor_id, '_mode" id="', $editor_id, '_mode" value="0" />';
 
 		// Now it's all drawn out we'll actually setup the box.

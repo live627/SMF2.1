@@ -1,3 +1,10 @@
+// Until we find a better way, this keeps the current resize state for editors.
+oSmfEditorCurrentResize = {
+	uid: null,
+	y: 0,
+	iy: 0,
+};
+
 // Make an editor!!
 function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight, bRichEditOff)
 {
@@ -22,6 +29,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 
 	// These hold the breadcrumb.
 	this.oBreadHandle = null;
+	this.oResizerElement = null;
 
 	this.oSmileyPopupWindow = null;
 	this.sCurSessionId = sSessionId;
@@ -55,8 +63,6 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 		unformat: 'removeFormatting',
 		toggle: 'toggleView'
 	}
-	//smfExec['increase_height'] = makeEditorTaller;
-	//smfExec['decrease_height'] = makeEditorShorter;
 
 	// Any special breadcrumb mappings to ensure we show a consistant tag name.
 	this.breadCrumbNameTags = {
@@ -293,7 +299,7 @@ SmfEditor.prototype.init = function()
 		if (is_ff)
 		{
 			this.oFrameDocument.addEventListener('keyup', function(ev) {this.instanceRef.editorKeyUp();}, true);
-			this.oFrameDocument.addEventListener('mouseup', function(ev) {this.instanceRef.editorKeyUp();}, true);
+			this.oFrameDocument.addEventListener('mouseup', function(ev) {SmfEndEditorResize(); this.instanceRef.editorKeyUp();}, true);
 			this.oFrameDocument.addEventListener('keydown', function(ev) {this.instanceRef.shortcutCheck(ev);}, true);
 			this.oTextHandle.addEventListener('keydown', function(ev) {this.instanceRef.shortcutCheck(ev);}, true);
 		}
@@ -305,6 +311,7 @@ SmfEditor.prototype.init = function()
 			}
 			this.oFrameDocument.onmouseup = function(ev)
 			{
+				SmfEndEditorResize();
 				this.instanceRef.editorKeyUp();
 			}
 		}
@@ -323,6 +330,25 @@ SmfEditor.prototype.init = function()
 
 	// Make sure we set the message mode correctly.
 	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
+
+	// Show the resizer.
+	if (document.getElementById(this.sUniqueId + '_resizer') && is_ff)
+	{
+		this.oResizerElement = document.getElementById(this.sUniqueId + '_resizer');
+		this.oResizerElement.style.display = '';
+		createEventListener(this.oResizerElement);
+		this.oResizerElement.instanceRef = this;
+
+		if (is_ff)
+			this.oResizerElement.addEventListener('mousedown', function(ev) {this.instanceRef.startResize();}, false);
+		else
+		{
+			this.oResizerElement.onmousedown = function(ev)
+			{
+				this.instanceRef.startResize();
+			}
+		}
+	}
 
 	// Set the text - if WYSIWYG is enabled that is.
 	if (this.bRichTextEnabled)
@@ -383,6 +409,63 @@ SmfEditor.prototype.editorKeyUp = function()
 {
 	// Rebuild the breadcrumb.
 	this.updateEditorControls();
+}
+
+SmfEditor.prototype.startResize = function()
+{
+	if (oSmfEditorCurrentResize['uid'] != null)
+		return;
+
+	oSmfEditorCurrentResize['uid'] = this.iArrayPosition;
+	oSmfEditorCurrentResize['y'] = 0;
+	oSmfEditorCurrentResize['iy'] = 0;
+
+	if (is_ff)
+	{
+		window.addEventListener('mousemove', SmfDoEditorResize, false);
+		document.addEventListener('mouseup', SmfEndEditorResize, false);
+		this.oFrameDocument.addEventListener('mousemove', function(ev) {this.instanceRef.doResize(ev);}, true);
+	}
+	else
+	{
+		document.onmousemove = SmfDoEditorResize;
+		document.onmouseup = SmfEndEditorResize;
+		this.oFrameDocument.onmousemove = function(ev)
+			{
+				if (!ev)
+					ev = window.event;
+
+				this.instanceRef.doResize(ev);
+			}
+	}
+}
+
+// This is kind of a cheat, as it only works over the IFRAME.
+SmfEditor.prototype.doResize = function(ev)
+{
+	if (!ev)
+		ev = window.event;
+
+	if (!ev || oSmfEditorCurrentResize['uid'] == null)
+		return;
+
+	newCords = smf_mousePose(ev);
+
+	iOldY = oSmfEditorCurrentResize['iy'];
+	oSmfEditorCurrentResize['iy'] = newCords[1];
+	oSmfEditorCurrentResize['y'] = 0;
+
+	// First pixel?
+	if (iOldY == 0)
+		return;
+
+	this.resizeTextArea(-2, 0, true);
+}
+
+// Just remove any effects.
+SmfEditor.prototype.endResize = function()
+{
+	//document.removeEventListener('mouseup', SmfDoEditorResize, false);
 }
 
 // Rebuild the breadcrumb etc - and set things to the correct context.
@@ -1289,40 +1372,51 @@ SmfEditor.prototype.resizeTextArea = function(newHeight, newWidth, is_change)
 	if (is_change)
 	{
 		// We'll assume pixels but may not be.
-		newHeight = _calculateNewDimension(this.oTextHandle.style.height, newHeight);
-		newWidth = _calculateNewDimension(this.oTextHandle.style.width, newWidth);
+		newHeight = this._calculateNewDimension(this.oTextHandle.style.height, newHeight);
+		if (newWidth)
+			newWidth = this._calculateNewDimension(this.oTextHandle.style.width, newWidth);
 	}
 
 	// Do the HTML editor - but only if it's enabled!
 	if (this.bRichTextPossible)
 	{
 		this.oFrameHandle.style.height = newHeight;
-		this.oFrameHandle.style.width = newWidth;
+		if (newWidth)
+			this.oFrameHandle.style.width = newWidth;
 	}
 	// Do the text box regardless!
 	this.oTextHandle.style.height = newHeight;
-	this.oTextHandle.style.width = newWidth;
+	if (newWidth)
+		this.oTextHandle.style.width = newWidth;
 }
 
 // A utility instruction to save repetition when trying to work out what to change on a height/width.
 SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
 {
 	// We'll assume pixels but may not be.
-	changeReg = change_size.toString().match(/(\d+)(\D*)/);
+	changeReg = change_size.toString().match(/(-)?(\d+)(\D*)/);
 	curReg = old_size.toString().match(/(\d+)(\D*)/);
 
-	if (!changeReg[2])
-		changeReg[2] = 'px';
+	if (!changeReg[3])
+		changeReg[3] = 'px';
+
+	if (changeReg[1] == '-')
+		changeReg[2] = 0 - changeReg[2];
 
 	// Both the same type?
-	if (changeReg[2] == curReg[2])
-		new_size = (parseInt(changeReg[1]) + parseInt(curReg[1])).toString() + changeReg[2];
+	if (changeReg[3] == curReg[2])
+	{
+		new_size = parseInt(changeReg[2]) + parseInt(curReg[1]);
+		if (new_size < 50)
+			new_size = 50;
+		new_size = new_size.toString() + changeReg[3];
+	}
 	// Is the change a percentage?
-	else if (changeReg[2] == '%')
-		new_size = (parseInt(curReg[1]) + parseInt((parseInt(changeReg[1]) * parseInt(curReg[1])) / 100)).toString() + 'px';
+	else if (changeReg[3] == '%')
+		new_size = (parseInt(curReg[1]) + parseInt((parseInt(changeReg[2]) * parseInt(curReg[1])) / 100)).toString() + 'px';
 	// Otherwise just guess!
 	else
-		new_size = (parseInt(curReg[1]) + (parseInt(changeReg[1]) / 10)).toString() + '%';
+		new_size = (parseInt(curReg[1]) + (parseInt(changeReg[2]) / 10)).toString() + '%';
 
 	return new_size;
 }
@@ -1426,4 +1520,50 @@ SmfEditor.prototype.shortcutCheck = function(ev)
 			return false;
 		}
 	}
+}
+
+// This resizes an editor.
+function SmfDoEditorResize(evnt)
+{
+	if (!evnt)
+		evnt = window.event;
+
+	if (!evnt || oSmfEditorCurrentResize['uid'] == null || !smf_editorArray[oSmfEditorCurrentResize['uid']])
+		return;
+
+	newCords = smf_mousePose(evnt);
+
+	iOldY = oSmfEditorCurrentResize['y'];
+	oSmfEditorCurrentResize['y'] = newCords[1];
+	oSmfEditorCurrentResize['iy'] = 0;
+
+	// First pixel?
+	if (iOldY == 0)
+		return;
+
+	smf_editorArray[oSmfEditorCurrentResize['uid']].resizeTextArea(oSmfEditorCurrentResize['y'] - iOldY, 0, true);
+}
+
+function SmfEndEditorResize(evnt)
+{
+	if (!evnt)
+		evnt = window.event;
+
+	if (oSmfEditorCurrentResize['uid'] == null || !smf_editorArray[oSmfEditorCurrentResize['uid']])
+		return;
+
+	// Remove the event...
+	if (is_ff)
+	{
+		document.removeEventListener('mousemove', SmfDoEditorResize, false);
+		document.removeEventListener('mouseup', SmfEndEditorResize, false);
+	}
+	else
+	{
+		document.onmousemove = null;
+		document.onmouseup = null;
+	}
+
+	smf_editorArray[oSmfEditorCurrentResize['uid']].endResize();
+	oSmfEditorCurrentResize['uid'] = null;
 }

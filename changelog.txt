@@ -37,6 +37,7 @@ May 2008
  ! Don't show warning PMs as being from the "guest" membergroup. (PersonalMessage.php) [Bug 1997]
  ! Don't give a javascript error if the BBC buttons are disabled. (GenericControls template, script.js) [Bug 1972]
  & The error message for invalid range when tracking an IP was setting a bad example. (Profile-View.php, Errors language file) [Bug 1991]
+ ! It's now possible to resize richedit controls - but only on Firefox so far. (script.js, resize-handle.gif)
 
 
 April 2008
