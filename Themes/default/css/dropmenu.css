@@ -58,7 +58,7 @@ ul.admin_menu li
 ul.admin_menu li ul li
 {
 	background: none;
-	width: 16em;
+	width: 19em;
 	float: none;
 	margin: 0;
 	padding: 0;
@@ -98,6 +98,10 @@ ul.admin_menu li ul li a
 	text-transform: none;
 	color: black;
 }
+ul.admin_menu li ul li a.subsection
+{
+	background: url(../images/admin/subsection.gif) no-repeat 98% 50%;
+}
 ul.admin_menu li ul li a.chosen
 {
 	font-weight: bold;
@@ -105,6 +109,10 @@ ul.admin_menu li ul li a.chosen
 ul.admin_menu li ul li a:hover, #admin_menu ul li ul li:hover
 {
 	background: #C8E2FB;
+}
+ul.admin_menu li ul li a.subsection:hover
+{
+	background: url(../images/admin/subsection.gif) no-repeat 98% 50% #C8E2FB;
 }
 ul.admin_menu li > ul
 {
@@ -118,7 +126,7 @@ ul.admin_menu li:hover ul, ul.admin_menu li.over ul
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {
 	display: block;
-	left: 15.3em;
+	left: 18em;
 }
 
 ul.admin_menu a:hover
