@@ -27,7 +27,7 @@ May 2008
  ! When splitting topics, take into account the user defined messages per page setting. (SplitTopics.php) [Feature 1970]
  ! When loading themes that have custom Settings template and language file, load the language before the template and force a language reload. (Themes.php) [Bug 1935]
  ! Password strength was not being checked when passwords were reset using a secret question. (Reminder.php) [Bug 1959]
-
+ + Added integrate_output_error hook for integrations that want to display errors in the integrated script instead of SMF. (Errors.php)
 
 April 2008
 --------------------------------------------------------------------------------

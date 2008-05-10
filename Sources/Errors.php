@@ -245,10 +245,14 @@ function error_handler($error_level, $error_string, $file, $line)
 
 	$message = log_error($error_level . ': ' . $error_string, $error_type, $file, $line);
 
+	//Let's give integrations a chance to ouput a bit differently
+	if (isset($modSettings['integrate_output_error']) && function_exists($modSettings['integrate_output _error']))
+		$modSettings['integrate_output_error']($message, $error_type, $error_level, $file, $line);
+
 	// Dying on these errors only causes MORE problems (blank pages!)
 	if ($file == 'Unknown')
 		return;
-
+		
 	// If this is an E_ERROR or E_USER_ERROR.... die.  Violently so.
 	if ($error_level % 255 == E_ERROR)
 		obExit(false);
