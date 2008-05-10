@@ -31,6 +31,7 @@ May 2008
  ! Package functions wern't always using default correctly. (DbPackages-mysql.php, DbPackages-sqlite.php) [Bug 2022]
  ! Some functions were renamed when they shouldn't have been. (ManageSmileys.php, Reminder.php) [Bug 2011]
  ! Make the page title HTML safe. (Subs.php, index templates) [Bug 2015]
+ ! If the user makes an error when creating admin account on install, protect the variables. (install.php) [Bug 1613]
 
 
 April 2008

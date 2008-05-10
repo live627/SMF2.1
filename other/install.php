@@ -1169,8 +1169,8 @@ function AdminAccount()
 	if (!isset($_POST['email']))
 		$_POST['email'] = '';
 
-	$incontext['username'] = $_POST['username'];
-	$incontext['email'] = $_POST['email'];
+	$incontext['username'] = htmlspecialchars(stripslashes($_POST['username']));
+	$incontext['email'] = htmlspecialchars(stripslashes($_POST['email']));
 
 	$incontext['require_db_confirm'] = empty($db_type) || $db_type != 'sqlite';
 
