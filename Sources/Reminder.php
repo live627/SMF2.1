@@ -41,10 +41,10 @@ if (!defined('SMF'))
 	void setPassword2()
 		// !!!
 
-	void secret_answerInput()
+	void SecretAnswerInput()
 		// !!!
 
-	void secret_answer2()
+	void SecretAnswer2()
 		// !!!
 */
 
@@ -62,7 +62,7 @@ function RemindMe()
 	// Delegation can be useful sometimes.
 	$subActions = array(
 		'picktype' => 'RemindPick',
-		'secret2' => 'secret_answer2',
+		'secret2' => 'SecretAnswer2',
 		'setpassword' =>'setPassword',
 		'setpassword2' =>'setPassword2'
 	);
@@ -175,7 +175,7 @@ function RemindPick()
 	// Otherwise are ready to answer the question?
 	elseif (isset($_POST['reminder_type']) && $_POST['reminder_type'] == 'secret')
 	{
-		return secret_answerInput();
+		return SecretAnswerInput();
 	}
 
 	// No we're here setup the context for template number 2!
@@ -275,7 +275,7 @@ function setPassword2()
 }
 
 // Get the secret answer.
-function secret_answerInput()
+function SecretAnswerInput()
 {
 	global $txt, $context, $smcFunc;
 
@@ -318,7 +318,7 @@ function secret_answerInput()
 	$context['sub_template'] = 'ask';
 }
 
-function secret_answer2()
+function SecretAnswer2()
 {
 	global $txt, $context, $modSettings, $smcFunc, $sourcedir;
 

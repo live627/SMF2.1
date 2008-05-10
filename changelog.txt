@@ -29,6 +29,7 @@ May 2008
  ! Password strength was not being checked when passwords were reset using a secret question. (Reminder.php) [Bug 1959]
  + Added integrate_output_error hook for integrations that want to display errors in the integrated script instead of SMF. (Errors.php)
  ! Package functions wern't always using default correctly. (DbPackages-mysql.php, DbPackages-sqlite.php) [Bug 2022]
+ ! Some functions were renamed when they shouldn't have been. (ManageSmileys.php, Reminder.php) [Bug 2011]
 
 
 April 2008

@@ -42,7 +42,7 @@ if (!defined('SMF'))
 	void EditSmileys()
 		// !!!
 
-	void Editsmiley_order()
+	void EditSmileyOrder()
 		// !!!
 
 	void InstallSmileySet()
@@ -73,7 +73,7 @@ function ManageSmileys()
 		'import' => 'EditSmileySets',
 		'modifyset' => 'EditSmileySets',
 		'modifysmiley' => 'EditSmileys',
-		'setorder' => 'Editsmiley_order',
+		'setorder' => 'EditSmileyOrder',
 		'settings' => 'EditSmileySettings',
 		'install' => 'InstallSmileySet'
 	);
@@ -1185,7 +1185,7 @@ function list_getNumSmileys()
 	return $numSmileys;
 }
 
-function Editsmiley_order()
+function EditSmileyOrder()
 {
 	global $modSettings, $context, $settings, $txt, $boarddir, $smcFunc;
 
