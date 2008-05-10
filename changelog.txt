@@ -34,6 +34,7 @@ May 2008
  ! If the user makes an error when creating admin account on install, protect the variables. (install.php) [Bug 1613]
  ! Always set the timezone on install, to avoid errors. (install.php) [Bug 2019]
  ! The WYSIWYG editor wasn't doing too well with complex paragraphs, and some crazy embedded styles. (Subs-Editor.php)
+ ! Don't show warning PMs as being from the "guest" membergroup. (PersonalMessage.php) [Bug 1997]
 
 
 April 2008
