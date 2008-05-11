@@ -178,7 +178,7 @@ function html_to_bbc($text)
 				$found = array_search($file, $smileysto);
 				// Note the weirdness here is to stop double spaces between smileys.
 				if ($found)
-					$matches[1][$k] = '-[]-smf_smily_start#|#' . $smileysfrom[$found] . '-[]-smf_smily_end#|#';
+					$matches[1][$k] = '-[]-smf_smily_start#|#' . htmlspecialchars($smileysfrom[$found]) . '-[]-smf_smily_end#|#';
 				else
 					$matches[1][$k] = '';
 			}
@@ -203,7 +203,7 @@ function html_to_bbc($text)
 				);
 				$mappings = array();
 				while ($row = $smcFunc['db_fetch_assoc']($request))
-					$mappings[$row['filename']] = $row['code'];
+					$mappings[$row['filename']] = htmlspecialchars($row['code']);
 				$smcFunc['db_free_result']($request);
 
 				foreach ($matches[1] as $k => $file)
