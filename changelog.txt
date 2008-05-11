@@ -41,6 +41,7 @@ May 2008
  * Fixed too big font-sizes in IE7/IE6 for default theme, future theme (default/css/ie6.css, future/css/ie7.css) [Bug 1892]
  * Added missing icons in admin sections/menu (Admin.php) [Bug 1759]
  * Changed dots to background arrow for drop-menus with child menus (dropmenu.css, GenericMenu.template) [Bug 1187]
+ * Typos in forum.css (default/css/forum.css, future/css/forum.css) [Bug 2030]
 
 April 2008
 --------------------------------------------------------------------------------

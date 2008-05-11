@@ -12,7 +12,7 @@ h3#newsfader
 }
 #smfNewsFader span
 {
-	font-weight: bold:
+	font-weight: bold;
 }
 #smfFadeScroller
 {
@@ -196,7 +196,7 @@ form#infocenter_login ul.horizlist label
 {
 	display: block;
 	padding: 0.5em 0.5em 0.1em 0.5em;
-	margin: 0
+	margin: 0;
 	border-bottom: none;
 }
 #message_index_jump_to
