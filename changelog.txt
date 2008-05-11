@@ -50,6 +50,7 @@ May 2008
  ! JavaScript doesn't like commas at the end of the last element in an array.  It goes crazy. (editor.js) [Bug 2032]
  ! Flash wasn't being disabled properly on the BBC button menu. (Subs-Editor.php) [Bug 2033]
  ! Smileys with HTML in their code were dissapearing on post. (Subs-Editor.php) [Bug 2038]
+ & Tweak the number of voters text, to stress it's current members only. (index language file) [Bug 2008]
 
 
 April 2008
