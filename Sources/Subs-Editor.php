@@ -762,8 +762,8 @@ function legalise_bbc($text)
 				$disabled[trim($tag)] = true;
 		}
 
-		if (empty($modSettings['enableEmbeddedFlash']))
-			$disabled['flash'] = true;
+	if (empty($modSettings['enableEmbeddedFlash']))
+		$disabled['flash'] = true;
 
 	$all_tags = parse_bbc(false);
 	$valid_tags = array();
@@ -1248,16 +1248,18 @@ function create_control_richedit($editorOptions)
 	$context['show_bbc'] = !empty($modSettings['enableBBC']) && !empty($settings['show_bbc']);
 
 	// Generate a list of buttons that shouldn't be shown - this should be the fastest way to do this.
+	$disabled_tags = array();
 	if (!empty($modSettings['disabledBBC']))
-	{
 		$disabled_tags = explode(',', $modSettings['disabledBBC']);
-		foreach ($disabled_tags as $tag)
-		{
-			if ($tag == 'list')
-				$context['disabled_tags']['orderlist'] = true;
+	if (empty($modSettings['enableEmbeddedFlash']))
+		$disabled_tags[] = 'flash';
 
-			$context['disabled_tags'][trim($tag)] = true;
-		}
+	foreach ($disabled_tags as $tag)
+	{
+		if ($tag == 'list')
+			$context['disabled_tags']['orderlist'] = true;
+
+		$context['disabled_tags'][trim($tag)] = true;
 	}
 
 	// Switch the URLs back... now we're back to whatever the main sub template is.  (like folder in PersonalMessage.)

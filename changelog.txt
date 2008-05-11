@@ -48,6 +48,7 @@ May 2008
  ! Only show the closing form tag if not in the last step. (install.php) [Bug 2029]
  ! Changed the way that prefix are validated when installing.  (install.php, Install language file) [Bug 1735]
  ! JavaScript doesn't like commas at the end of the last element in an array.  It goes crazy. (editor.js) [Bug 2032]
+ ! Flash wasn't being disabled properly on the BBC button menu. (Subs-Editor.php) [Bug 2033]
 
 
 April 2008
