@@ -740,6 +740,9 @@ function DatabaseSettings()
 		// Make sure it works.
 		require(dirname(__FILE__) . '/Settings.php');
 
+		if (empty($sourcedir))
+			$sourcedir = dirname(__FILE__) . '/Sources';
+
 		// Better find the database file!
 		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
 		{
