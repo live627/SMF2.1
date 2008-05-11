@@ -411,7 +411,7 @@ function PackageGBrowse()
 					$package['can_install'] = false;
 
 				$already_exists = getPackageInfo(basename($package['filename']));
-				$package['download_conflict'] = !empty($already_exists) && $already_exists['id'] == $package['id'] && $already_exists['version'] != $package['version'];
+				$package['download_conflict'] = is_array($already_exists) && $already_exists['id'] == $package['id'] && $already_exists['version'] != $package['version'];
 
 				$package['href'] = $url . '/' . $package['filename'];
 				$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
@@ -505,7 +505,7 @@ function PackageGBrowse()
 			$context['package_list'][$ps_id]['items'][$i]['can_install'] = false;
 
 			$packageInfo = getPackageInfo($url . '/' . $package['filename']);
-			if (!empty($packageInfo) && $packageInfo['xml']->exists('install'))
+			if (is_array($packageInfo) && $packageInfo['xml']->exists('install'))
 			{
 				$installs = $packageInfo['xml']->set('install');
 				foreach ($installs as $install)
@@ -586,8 +586,9 @@ function PackageDownload()
 	}
 
 	// First make sure it's a package.
-	if (getPackageInfo($url . $_REQUEST['package']) == false)
-		fatal_lang_error('corrupt_compatable', false);
+	$packageInfo = getPackageInfo($url . $_REQUEST['package']);
+	if (!is_array($packageInfo))
+		fatal_lang_error($packageInfo);
 
 	// Use FTP if necessary.
 	create_chmod_control(array($boarddir . '/Packages/' . $package_name), array('destination_url' => $scripturl . '?action=admin;area=packages;get;sa=download' . (isset($_GET['server']) ? ';server=' . $_GET['server'] : '') . (isset($_REQUEST['auto']) ? ';auto' : '') . ';package=' . $_REQUEST['package'] . (isset($_REQUEST['conflict']) ? ';conflict' : '') . ';sesc=' . $context['session_id'], 'crash_on_error' => true));
@@ -602,7 +603,7 @@ function PackageDownload()
 
 	$context['package'] = getPackageInfo($package_name);
 
-	if (empty($context['package']))
+	if (!is_array($context['package']))
 		fatal_lang_error('package_cant_download', false);
 
 	if ($context['package']['type'] == 'modification')
@@ -660,7 +661,7 @@ function PackageUpload()
 	$context['package_server'] = '';
 
 	// Not really a package, you lazy bum!
-	if (empty($context['package']))
+	if (!is_array($context['package']))
 	{
 		@unlink($destination);
 		fatal_lang_error('package_upload_error_broken', false);

@@ -238,6 +238,10 @@ function PackageInstallTest()
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);
+
+	if (!is_array($packageInfo))
+		fatal_lang_error($packageInfo);
+
 	$packageInfo['filename'] = $context['filename'];
 	$context['package_name'] = isset($packageInfo['name']) ? $packageInfo['name'] : $context['filename'];
 
@@ -766,6 +770,9 @@ function PackageInstall()
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);
+	if (!is_array($packageInfo))
+		fatal_lang_error($packageInfo);
+
 	$packageInfo['filename'] = $context['filename'];
 
 	// Set the type of extraction...
@@ -1279,7 +1286,7 @@ function PackageBrowse()
 			}
 
 			$packageInfo = getPackageInfo($package);
-			if ($packageInfo === false)
+			if (!is_array($packageInfo))
 				continue;
 
 			$packageInfo['installed_id'] = isset($installed_mods[$packageInfo['id']]) ? $installed_mods[$packageInfo['id']]['id'] : 0;

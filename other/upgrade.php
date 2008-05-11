@@ -1648,6 +1648,9 @@ function CleanupMods()
 		// Get the modifications data if applicable.
 		$filename = $package['filename'];
 		$packageInfo = getPackageInfo($filename);
+		if (!is_array($packageInfo))
+			continue;
+
 		$info = parsePackageInfo($packageInfo['xml'], $test, 'uninstall');
 		// Also get the reinstall details...
 		if (isset($_POST['remove']))

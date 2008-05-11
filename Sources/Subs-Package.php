@@ -90,7 +90,7 @@ if (!defined('SMF'))
 	array getPackageInfo(string filename)
 		- loads a package's information and returns a representative array.
 		- expects the file to be a package in Packages/.
-		- returns false if the package-info is invalid.
+		- returns a error string if the package-info is invalid.
 		- returns a basic array of id, version, filename, and similar
 		  information.
 		- in the array returned, an xmlArray is available in 'xml'.
@@ -555,15 +555,19 @@ function getPackageInfo($gzfilename)
 	else
 	{
 		if (!file_exists($boarddir . '/Packages/' . $gzfilename))
-			return false;
+			return 'package_get_error_not_found';
 
 		if (is_file($boarddir . '/Packages/' . $gzfilename))
 			$packageInfo = read_tgz_file($boarddir . '/Packages/' . $gzfilename, '*/package-info.xml', true);
 		elseif (file_exists($boarddir . '/Packages/' . $gzfilename . '/package-info.xml'))
 			$packageInfo = file_get_contents($boarddir . '/Packages/' . $gzfilename . '/package-info.xml');
 		else
-			return false;
+			return 'package_get_error_missing_xml';
 	}
+
+	// Nothing?
+	if (empty($packageInfo))
+		return 'package_get_error_is_zero';
 
 	// Parse package-info.xml into an xmlArray.
 	loadClassFile('Class-Package.php');
@@ -571,7 +575,7 @@ function getPackageInfo($gzfilename)
 
 	// !!! Error message of some sort?
 	if (!$packageInfo->exists('package-info[0]'))
-		return false;
+		return 'package_get_error_packageinfo_corrupt';
 
 	$packageInfo = $packageInfo->path('package-info[0]');
 
