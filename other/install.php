@@ -707,10 +707,12 @@ function DatabaseSettings()
 				return false;
 			}
 		}
-/// !!!
+
 		// What type are they trying?
 		$db_type = preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']);
-		$db_prefix = $databases[$db_type]['validate_prefix']($_POST['db_prefix']);
+		$db_prefix = $_POST['db_prefix'];
+		// Validate the prefix.
+		$databases[$db_type]['validate_prefix']($db_prefix);
 
 		if ($db_prefix !== true)
 		{
