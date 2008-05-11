@@ -52,7 +52,7 @@ if (!defined('SMF'))
 		  logouts by images or javascript.
 		- doesn't check the session if internal is true.
 		- redirects back to $_SESSION['logout_url'], if it exists.
-		- accessed via ?action=logout;sc=...
+		- accessed via ?action=logout;sesc=...
 
 	string md5_hmac(string data, string key)
 		- old style SMF 1.0.x/YaBB SE 1.5.x hashing.

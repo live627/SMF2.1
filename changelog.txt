@@ -42,6 +42,8 @@ May 2008
  * Added missing icons in admin sections/menu (Admin.php) [Bug 1759]
  * Changed dots to background arrow for drop-menus with child menus (dropmenu.css, GenericMenu.template) [Bug 1187]
  * Typos in forum.css (default/css/forum.css, future/css/forum.css) [Bug 2030]
+ & When toggling the sidebar, set the subaction only if its being set. (GenericMenu template) [Bug 2034]
+ ! Some places were still using 'sc' instead of 'sesc' for sessions in the url. (Several files) [Bug 2031]
 
 April 2008
 --------------------------------------------------------------------------------
