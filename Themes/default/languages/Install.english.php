@@ -26,7 +26,7 @@ $txt['good_luck'] = 'Good luck!<br />Simple Machines';
 
 $txt['install_welcome'] = 'Welcome';
 $txt['install_welcome_desc'] = 'Welcome to SMF. This script will guide you through the process for installing %1$s. We\'ll gather a few details about your forum over the next few steps, and after a couple of minutes your forum will be ready for use.';
-$txt['install_all_lovely'] = 'We\'ve completed some initial tests on your server and everything appears to be in order. Simply click the &quot;Continue&quot; button below to get started.'; 
+$txt['install_all_lovely'] = 'We\'ve completed some initial tests on your server and everything appears to be in order. Simply click the &quot;Continue&quot; button below to get started.';
 
 $txt['user_refresh_install'] = 'Forum Refreshed';
 $txt['user_refresh_install_desc'] = 'While installing, the installer found that (with the details you provided) one or more of the tables this installer might create already existed.<br />Any missing tables in your installation have been recreated with the default data, but no data was deleted from existing tables.';
@@ -196,6 +196,7 @@ $txt['error_db_filename'] = 'You must enter a name for the database file name fo
 $txt['error_db_prefix_numeric'] = 'The selected database type does not support the use of numeric prefixes.';
 $txt['error_invalid_characters_username'] = 'Invalid character used in Username.';
 $txt['error_db_filename_exists'] = 'The database that you are trying to create exists.  Please delete the current database file or enter another name.';
+$txt['error_db_prefix_reserved'] = 'The prefix that you entered is a reserved prefix.  Please enter another prefix.';
 
 $txt['upgrade_upgrade_utility'] = 'SMF Upgrade Utility';
 $txt['upgrade_warning'] = 'Warning!';

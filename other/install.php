@@ -44,8 +44,11 @@ $databases = array(
 		'utf8_support' => true,
 		'utf8_version' => '4.1.0',
 		'utf8_version_check' => 'return mysql_get_server_info();',
-		'support_numeric_prefix' => true,
 		'alter_support' => true,
+		'validate_prefix' => create_function('&$value', '
+			$value = preg_replace(\'~[^A-Za-z0-9_\$]~\', \'\', $value);
+			return true;
+		'),
 	),
 	'postgresql' => array(
 		'name' => 'PostgreSQL',
@@ -53,8 +56,16 @@ $databases = array(
 		'function_check' => 'pg_connect',
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'supported' => function_exists('pg_connect'),
-		'support_numeric_prefix' => true,
 		'always_has_db' => true,
+		'validate_prefix' => create_function('&$value', '
+			$value = preg_replace(\'~[^A-Za-z0-9_\$]~\', \'\', $value);
+
+			// Is it reserved?
+			if ($value == \'pg_\')
+				return $txt[\'error_db_prefix_reserved\'];
+
+			return true;
+		'),
 	),
 	'sqlite' => array(
 		'name' => 'SQLite',
@@ -62,8 +73,22 @@ $databases = array(
 		'function_check' => 'sqlite_open',
 		'version_check' => 'return 1;',
 		'supported' => function_exists('sqlite_open'),
-		'support_numeric_prefix' => false,
 		'always_has_db' => true,
+		'validate_prefix' => create_function('&$value', '
+			global $incontext, $txt;
+
+			$value = preg_replace(\'~[^A-Za-z0-9_\$]~\', \'\', $value);
+
+			// Is it reserved?
+			if ($value == \'sqlite_\')
+				return $txt[\'error_db_prefix_reserved\'];
+
+			// Is the prefix numeric?
+			if (preg_match(\'~^\d~\', $value))
+				return $txt[\'error_db_prefix_numeric\'];
+
+			return true;
+		'),
 	),
 );
 
@@ -682,18 +707,16 @@ function DatabaseSettings()
 				return false;
 			}
 		}
-
+/// !!!
 		// What type are they trying?
 		$db_type = preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']);
-		$db_prefix = preg_replace('~[^A-Za-z0-9_$]~', '', $_POST['db_prefix']);
+		$db_prefix = $databases[$db_type]['validate_prefix']($_POST['db_prefix']);
 
-		// Is the prefix numeric, yet we don't support it?
-		if (preg_match('~^\d~', $db_prefix) && empty($databases[$db_type]['support_numeric_prefix']))
+		if ($db_prefix !== true)
 		{
-			$incontext['error'] = $txt['error_db_prefix_numeric'];
+			$incontext['error'] = $db_prefix;
 			return false;
 		}
-
 
 		// Take care of these variables...
 		$vars = array(
@@ -790,7 +813,7 @@ function DatabaseSettings()
 					),
 					$db_connection
 				);
-	
+
 				if ($smcFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
 				{
 					$db_name = $_POST['db_prefix'] . $db_name;
@@ -1993,19 +2016,28 @@ function template_install_below()
 {
 	global $incontext, $txt;
 
-	echo '
+
+	if (!empty($incontext['continue']) || !empty($incontext['skip']))
+	{
+		echo '
 								<div align="right" style="margin: 1ex;">';
 
-	if (!empty($incontext['continue']))
-		echo '
+		if (!empty($incontext['continue']))
+			echo '
 									<input type="submit" id="contbutt" name="contbutt" value="', $txt['upgrade_continue'], '" />';
-	if (!empty($incontext['skip']))
-		echo '
+		if (!empty($incontext['skip']))
+			echo '
 									<input type="submit" id="skip" name="skip" value="', $txt['upgrade_skip'], '" />';
+		echo '
+								</div>';
+	}
+
+	// Show the closin form tag and other data only if not in the last step
+	if (count($incontext['steps']) - 1 == (int) $incontext['current_step'])
+		echo '
+							</form>';
 
 	echo '
-								</div>
-							</form>
 						</div>
 					</div>
 				</td>
@@ -2189,7 +2221,7 @@ function template_database_settings()
 
 	foreach ($incontext['supported_databases'] as $key => $db)
 			echo '
-						<option value="', $key, '">', $db['name'], '</option>';
+						<option value="', $key, '"', isset($_POST['db_type']) && $_POST['db_type'] == $key ? ' selected="selected"' : '', '>', $db['name'], '</option>';
 
 	echo '
 					</select><br />

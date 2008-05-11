@@ -94,13 +94,14 @@ class paypal_display
 		}
 
 		// If it's repeatable do soem javascript to respect this idea.
-		$return_data['javascript'] = '
-			document.write(\'<label for="do_paypal_recur"><input type="checkbox" name="do_paypal_recur" id="do_paypal_recur" checked="checked" onclick="switchPaypalRecur();" />' . $txt['paid_make_recurring'] . '</label><br />\');
+		if (!empty($sub_data['repeatable']))
+			$return_data['javascript'] = '
+				document.write(\'<label for="do_paypal_recur"><input type="checkbox" name="do_paypal_recur" id="do_paypal_recur" checked="checked" onclick="switchPaypalRecur();" />' . $txt['paid_make_recurring'] . '</label><br />\');
 
-			function switchPaypalRecur()
-			{
-				document.getElementById("paypal_cmd").value = document.getElementById("do_paypal_recur").checked ? "_xclick-subscriptions" : "_xclick";
-			}';
+				function switchPaypalRecur()
+				{
+					document.getElementById("paypal_cmd").value = document.getElementById("do_paypal_recur").checked ? "_xclick-subscriptions" : "_xclick";
+				}';
 
 		return $return_data;
 	}
