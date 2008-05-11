@@ -123,7 +123,7 @@ function template_admin()
 	{
 		echo '
 				<td style="padding: 1em 1em 2em 1em;" width="50%">
-					', (!empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : ''), '
+					', (!empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['default_images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : ''), '
 					<div style="font-weight: bold; font-size: 1.1em;">', $task['link'], '</div>
 					', $task['description'], '
 				</td>';
