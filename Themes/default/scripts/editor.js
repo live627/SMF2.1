@@ -2,7 +2,7 @@
 oSmfEditorCurrentResize = {
 	uid: null,
 	y: 0,
-	iy: 0,
+	iy: 0
 };
 
 // Make an editor!!
