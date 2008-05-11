@@ -40,6 +40,10 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.aKeyboardShortcuts = new Array();
 	this.oSmfSmileys = new Object;
 
+	// This tracks the cursor position on IE to avoid refocus problems.
+	this.cursorX = 0;
+	this.cursorY = 0;
+
 	// This is all the elements that can have a simple execCommand.
 	this.oSimpleExec = {
 		b: 'bold',
@@ -294,6 +298,7 @@ SmfEditor.prototype.init = function()
 		this.oFrameDocument.body.className = 'rich_editor';
 		// Listen for input.
 		this.oFrameDocument.instanceRef = this;
+		this.oFrameHandle.instanceRef = this;
 		this.oTextHandle.instanceRef = this;
 
 		if (is_ff)
@@ -313,6 +318,19 @@ SmfEditor.prototype.init = function()
 			{
 				SmfEndEditorResize();
 				this.instanceRef.editorKeyUp();
+			}
+
+			// Internet explorer forgets where it was when we blur!
+			if (is_ie)
+			{
+				this.oFrameHandle.onblur = function (ev)
+				{
+					this.instanceRef.editorBlur();
+				}
+				this.oFrameHandle.onfocus = function (ev)
+				{
+					this.instanceRef.editorFocus();
+				}
 			}
 		}
 
@@ -409,6 +427,22 @@ SmfEditor.prototype.editorKeyUp = function()
 {
 	// Rebuild the breadcrumb.
 	this.updateEditorControls();
+}
+
+SmfEditor.prototype.editorBlur = function()
+{
+	if (!is_ie)
+		return;
+
+	// Need to do something here.
+}
+
+SmfEditor.prototype.editorFocus = function()
+{
+	if (!is_ie)
+		return;
+
+	// Need to do something here.
 }
 
 SmfEditor.prototype.startResize = function()
