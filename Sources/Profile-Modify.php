@@ -1862,7 +1862,7 @@ function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
 			LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = {int:current_member})
 		WHERE ln.id_member = {int:selected_member}
 		ORDER BY {raw:sort}
-		LIMIT {raw:offset}, {raw:items_per_page}',
+		LIMIT {int:offset}, {int:items_per_page}',
 		array(
 			'current_member' => $user_info['id'],
 			'is_approved' => 1,

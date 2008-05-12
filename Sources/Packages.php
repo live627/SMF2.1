@@ -391,6 +391,9 @@ function PackageInstallTest()
 			else
 				$mod_actions = parseModification(@file_get_contents($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']), true, $action['reverse'], $theme_paths);
 
+			if (count($mod_actions) == 1 && isset($mod_actions[0]) && $mod_actions[0]['type'] == 'error' && $mod_actions[0]['filename'] == '-')
+				$mod_actions[0]['filename'] = $action['filename'];
+
 			foreach ($mod_actions as $key => $mod_action)
 			{
 				// Lets get the last section of the file name.
@@ -480,7 +483,7 @@ function PackageInstallTest()
 					$actual_filename = $key;
 
 				// We just need it for actual parse changes.
-				if (!in_array($mod_action['type'], array('result', 'opened', 'saved', 'end', 'missing', 'skipping', 'chmod')))
+				if (!in_array($mod_action['type'], array('error', 'result', 'opened', 'saved', 'end', 'missing', 'skipping', 'chmod')))
 				{
 					if (empty($mod_action['is_custom']))
 						$context['actions'][$actual_filename]['operations'][] = array(

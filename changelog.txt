@@ -51,6 +51,8 @@ May 2008
  ! Sorting bans by triggers resulted in a database error. (ManageBans.php) [Bug 2036]
  ! Scheduled tasks is no longer a subsection of Forum Maintenance. (Admin.php, ManageMaitenance.php, ManageMaintenance template, Admin and ManageMaintenance language files) [Feature 1322]
  ! Added the Tasks Log, Spider Log and Ban Log to the Logs section. (various files) [Feature 1319]
+ ! Fixed some PostgreSQL bugs. (ManageNews.php, ManageSearchEngines.php, Subs-Db-postgresql.php, Profile-Modify.php) [Bug 2047,2048,2050]
+ ! If a modification is malformed don't give undefined index errors, and tell them which file it is. (Packages.php) [Bug 2046]
 
 
 April 2008
