@@ -205,7 +205,6 @@ $txt['scheduled_task_time_offset'] = 'Note the start time should be the offset a
 
 $txt['scheduled_view_log'] = 'View Log';
 $txt['scheduled_log_empty'] = 'There are currently no items in the log.';
-$txt['scheduled_log'] = 'Task Log';
 $txt['scheduled_log_time_run'] = 'Time Run';
 $txt['scheduled_log_time_taken'] = 'Time taken';
 $txt['scheduled_log_time_taken_seconds'] = '%1$d seconds';

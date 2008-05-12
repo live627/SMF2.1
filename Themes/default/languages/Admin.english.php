@@ -214,6 +214,8 @@ $txt['maintain_common'] = 'Common Tasks';
 $txt['maintain_common_desc'] = 'Perform common tasks here such as making backups, pruning and checking for errors.';
 $txt['maintain_tasks'] = 'Scheduled Tasks';
 $txt['maintain_tasks_desc'] = 'Manage all the tasks scheduled by SMF.';
+$txt['scheduled_log'] = 'Task Log';
+$txt['scheduled_log_desc'] = 'Lists logs of the tasks that have be ran.';
 $txt['admin_log'] = 'Admin Log';
 $txt['admin_log_desc'] = 'Lists administrative tasks that have been performed by admins of your forum.';
 $txt['moderation_log'] = 'Moderation Log';
@@ -259,6 +261,7 @@ $txt['undefined_gender'] = 'Undefined';
 $txt['age'] = 'User age';
 $txt['activation_status'] = 'Activation Status';
 $txt['activated'] = 'Activated';
+$txt['not_activated'] = 'Not activated';
 $txt['primary'] = 'Primary';
 $txt['additional'] = 'Additional';
 $txt['messenger_address'] = 'Messenger Address';
@@ -573,7 +576,7 @@ $txt['admin_browse_register_new'] = 'Register New Member';
 
 $txt['search_engines'] = 'Search Engines';
 $txt['spiders'] = 'Spiders';
-$txt['spider_logs'] = 'Logs';
+$txt['spider_logs'] = 'Spider Logs';
 $txt['spider_stats'] = 'Stats';
 
 $txt['paid_subscriptions'] = 'Paid Subscriptions';

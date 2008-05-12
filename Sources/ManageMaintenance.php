@@ -148,9 +148,6 @@ function ManageMaintenance()
 		'movetopics' => 'activity_move_topics_maintenance',
 		'optimize' => 'OptimizeTables',
 		'recount' => 'AdminBoardRecount',
-		'taskedit' => 'EditTask',
-		'tasklog' => 'TaskLog',
-		'tasks' => 'ScheduledTasks',
 		'version' => 'VersionDetail',
 	);
 
@@ -168,9 +165,6 @@ function ManageMaintenance()
 		'tabs' => array(
 			'general' => array(
 				'description' => $txt['maintain_common_desc'],
-			),
-			'tasks' => array(
-				'description' => $txt['maintain_tasks_desc'],
 			),
 		),
 	);
@@ -272,6 +266,47 @@ function Maintenance()
 	$context['page_title'] = $txt['maintain_title'];
 }
 
+// !!!
+function ManageScheduledTasks()
+{
+	global $context, $txt, $modSettings;
+
+	isAllowedTo('admin_forum');
+
+	loadLanguage('ManageMaintenance');
+	loadTemplate('ManageMaintenance');
+
+	$subActions = array(
+		'taskedit' => 'EditTask',
+		'tasklog' => 'TaskLog',
+		'tasks' => 'ScheduledTasks',
+	);
+
+	// We need to find what's the action.
+	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]))
+		$context['sub_action'] = $_REQUEST['sa'];
+	else
+		$context['sub_action'] = 'tasks';
+
+	// Now for the lovely tabs. That we all love.
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['maintain_title'],
+		'help' => '',
+		'description' => $txt['maintain_info'],
+		'tabs' => array(
+			'tasks' => array(
+				'description' => $txt['maintain_tasks_desc'],
+			),
+			'tasklog' => array(
+				'description' => $txt['scheduled_log_desc'],
+			),
+		),
+	);
+
+	// Call it.
+	$subActions[$context['sub_action']]();
+}
+
 // List all the scheduled task in place on the forum.
 function ScheduledTasks()
 {
@@ -359,13 +394,13 @@ function ScheduledTasks()
 			}
 		}
 
-		redirectexit('action=admin;area=maintain;sa=tasks;done');
+		redirectexit('action=admin;area=scheduledtasks;done');
 	}
 
 	$listOptions = array(
 		'id' => 'scheduled_tasks',
 		'title' => $txt['maintain_tasks'],
-		'base_href' => $scripturl . '?action=admin;area=maintain;sa=tasks',
+		'base_href' => $scripturl . '?action=admin;area=scheduledtasks',
 		'get_items' => array(
 			'function' => 'list_getScheduledTasks',
 		),
@@ -378,7 +413,7 @@ function ScheduledTasks()
 				'data' => array(
 					'sprintf' => array(
 						'format' => '
-							<a href="' . $scripturl . '?action=admin;area=maintain;sa=taskedit;tid=%1$d">%2$s</a><br /><span class="smalltext">%3$s</span>',
+							<a href="' . $scripturl . '?action=admin;area=scheduledtasks;sa=taskedit;tid=%1$d">%2$s</a><br /><span class="smalltext">%3$s</span>',
 						'params' => array(
 							'id' => false,
 							'name' => false,
@@ -440,15 +475,12 @@ function ScheduledTasks()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=maintain;sa=tasks',
+			'href' => $scripturl . '?action=admin;area=scheduledtasks',
 		),
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<div style="float: left;">
-						[<a href="' . $scripturl . '?action=admin;area=maintain;sa=tasklog">' . $txt['scheduled_view_log'] . '</a>]
-					</div>
 					<div style="float: right;">
 						<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" />
 						<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" />
@@ -574,7 +606,7 @@ function EditTask()
 		CalculateNextTrigger($_GET['tid'], true);
 
 		// Return to the main list.
-		redirectexit('action=admin;area=maintain;sa=tasks');
+		redirectexit('action=admin;area=scheduledtasks');
 	}
 
 	// Load the task, understand? Que? Que?
@@ -614,6 +646,9 @@ function TaskLog()
 {
 	global $scripturl, $context, $txt, $smcFunc, $sourcedir;
 
+	// Lets load the language just incase we are outside the Scheduled area.
+	loadLanguage('ManageMaintenance');
+
 	// Empty the log?
 	if (!empty($_POST['removeAll']))
 	{
@@ -632,7 +667,7 @@ function TaskLog()
 		'items_per_page' => 30,
 		'title' => $txt['scheduled_log'],
 		'no_items_label' => $txt['scheduled_log_empty'],
-		'base_href' => $scripturl . '?action=admin;area=maintain;sa=tasklog',
+		'base_href' => $scripturl . '?action=admin;area=scheduledtasks;sa=tasklog',
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getTaskLogEntries',
@@ -682,7 +717,7 @@ function TaskLog()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=maintain;sa=tasklog',
+			'href' => $scripturl . '?action=admin;area=scheduledtasks;sa=tasklog',
 		),
 		'additional_rows' => array(
 			array(
@@ -708,7 +743,7 @@ function TaskLog()
 	$context['default_list'] = 'task_log';
 
 	// Make it all look tify.
-	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
+	$context[$context['admin_menu_name']]['current_subsection'] = 'tasklog';
 	$context['page_title'] = $txt['scheduled_log'];
 }
 

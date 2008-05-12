@@ -327,6 +327,7 @@ function template_show_spider_logs()
 	template_show_list('spider_logs');
 
 	echo '
+	<br />
 	<form action="', $scripturl, '?action=admin;area=sengines;sa=logs;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 		<tr class="catbg">

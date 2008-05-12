@@ -674,6 +674,10 @@ function SpiderLogs()
 {
 	global $context, $txt, $sourcedir, $scripturl, $smcFunc, $modSettings;
 
+	// Load the template and language just incase.
+	loadLanguage('Search');
+	loadTemplate('ManageSearch');
+
 	// Did they want to delete some entries?
 	if (!empty($_POST['delete_entries']) && !empty($_POST['older']))
 	{

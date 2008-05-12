@@ -417,7 +417,15 @@ function AdminMain()
 					'function' => 'ManageMaintenance',
 					'subsections' => array(
 						'general' => array($txt['maintain_common'], 'admin_forum'),
+					),
+				),
+				'scheduledtasks' => array(
+					'label' => $txt['maintain_tasks'],
+					'file' => 'ManageMaintenance.php',
+					'function' => 'ManageScheduledTasks',
+					'subsections' => array(
 						'tasks' => array($txt['maintain_tasks'], 'admin_forum'),
+						'tasklog' => array($txt['scheduled_log'], 'admin_forum'),
 					),
 				),
 				'mailqueue' => array(
@@ -445,6 +453,9 @@ function AdminMain()
 						'errorlog' => array($txt['errlog'], 'admin_forum', 'enabled' => !empty($modSettings['enableErrorLogging']), 'url' => $scripturl . '?action=admin;area=logs;sa=errorlog;desc'),
 						'adminlog' => array($txt['admin_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
 						'modlog' => array($txt['moderation_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
+						'banlog' => array($txt['ban_log'], 'manage_bans'),
+						'spiderlog' => array($txt['spider_logs'], 'admin_forum'),
+						'tasklog' => array($txt['scheduled_log'], 'admin_forum'),
 					),
 				),
 				'repairboards' => array(
@@ -590,7 +601,7 @@ function AdminHome()
 	if ($context['admin_area'] == 'credits')
 		loadTemplate(false, 'who');
 
-	// The format of this array is: permission, action, title, description.
+	// The format of this array is: permission, action, title, description, icon.
 	$quick_admin_tasks = array(
 		array('', 'credits', 'support_credits_title', 'support_credits_info', 'support_and_credits.png'),
 		array('admin_forum', 'featuresettings', 'modSettings_title', 'modSettings_info', 'features_and_options.png'),
@@ -992,6 +1003,9 @@ function AdminLogs()
 		'errorlog' => array('ManageErrors.php', 'ViewErrorLog'),
 		'adminlog' => array('Modlog.php', 'ViewModlog'),
 		'modlog' => array('Modlog.php', 'ViewModlog'),
+		'banlog' => array('ManageBans.php', 'BanLog'),
+		'spiderlog' => array('ManageSearchEngines.php', 'SpiderLogs'),
+		'tasklog' => array('ManageMaintenance.php', 'TaskLog'),
 	);
 
 	$sub_action = isset($_REQUEST['sa']) && isset($log_functions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'errorlog';
@@ -1014,6 +1028,15 @@ function AdminLogs()
 			),
 			'modlog' => array(
 				'description' => $txt['moderation_log_desc'],
+			),
+			'banlog' => array(
+				'description' => $txt['ban_log_description'],
+			),
+			'spiderlog' => array(
+				'description' => '',
+			),
+			'tasklog' => array(
+				'description' => $txt['scheduled_log_desc'],
 			),
 		),
 	);
