@@ -35,6 +35,5 @@ if (is_ie5up && !is_ie7up && document.body.filters)
 
 			i--;
 		}
-	}	}
 	}
 }
