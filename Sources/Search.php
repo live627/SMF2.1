@@ -1542,7 +1542,8 @@ function PlushSearch2()
 							if (isset($inserts[$row[2]]))
 								continue;
 
-							$inserts[$row[2]] = (int) $row;
+							foreach ($row as $key => $value)
+								$inserts[$row[2]][] = (int) $row[$key];
 						}
 						$smcFunc['db_free_result']($ignoreRequest);
 
