@@ -241,6 +241,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'alter_table_spiders' => array(
 			'~(.+)~' => '',
 		),
+		'consolidate_spider_stats' => array(
+			'~MONTH(log_time), DAYOFMONTH(log_time)~' => 'MONTH(CAST(log_time AS integer)), DAYOFMONTH(CAST(log_time AS integer))',
+		),
 		'attach_download_increase' => array(
 			'~LOW_PRIORITY~' => '',
 		),
