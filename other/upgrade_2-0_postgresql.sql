@@ -268,6 +268,35 @@ else
 ---}
 ---#
 
+---# Adding search ability to custom fields.
+---{
+if ($smcFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		ADD COLUMN passwd_flood varchar(12)");
+
+	upgrade_query("
+		UPDATE {$db_prefix}members
+		SET passwd_flood = ''");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		ALTER COLUMN passwd_flood SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		ALTER COLUMN passwd_flood SET default ''");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}members
+		ADD COLUMN passwd_flood varchar(12) NOT NULL default ''");
+}
+---}
+---#
+
 /******************************************************************************/
 --- Adding weekly maintenance task.
 /******************************************************************************/

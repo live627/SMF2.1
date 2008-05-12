@@ -57,6 +57,7 @@ May 2008
  ! Added the Tasks Log, Spider Log and Ban Log to the Logs section. (various files) [Feature 1319]
  ! Fixed some PostgreSQL bugs. (ManageNews.php, ManageSearchEngines.php, Subs-Db-postgresql.php, Profile-Modify.php) [Bug 2047,2048,2050]
  ! If a modification is malformed don't give undefined index errors, and tell them which file it is. (Packages.php) [Bug 2046]
+ + Add database level login brute force protection. (Load.php, LogInOut.php, Error language file, upgrade and install scripts)
 
 
 April 2008

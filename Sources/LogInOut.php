@@ -60,6 +60,9 @@ if (!defined('SMF'))
 
 	string phpBB3_password_check(string passwd, string passwd_hash)
 		- Custom encryption for phpBB3 based passwords.
+
+	void validatePasswordFlood(id_member, password_flood_value = false, was_correct = false)
+		// !!!
 */
 
 // Ask them for their login information.
@@ -213,7 +216,7 @@ function Login2()
 	// Load the data up!
 	$request = $smcFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt,
-			openid_uri
+			openid_uri, passwd_flood
 		FROM {db_prefix}members
 		WHERE member_name = {string:user_name}
 		LIMIT 1',
@@ -227,7 +230,8 @@ function Login2()
 		$smcFunc['db_free_result']($request);
 
 		$request = $smcFunc['db_query']('', '
-			SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
+			SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt, openid_uri,
+			passwd_flood
 			FROM {db_prefix}members
 			WHERE email_address = {string:user_name}
 			LIMIT 1',
@@ -261,6 +265,9 @@ function Login2()
 			$sha_passwd = $user_settings['passwd'];
 		else
 		{
+			// Don't allow this!
+			validatePasswordFlood($user_settings['id_member'], $user_settings['passwd_flood']);
+
 			$_SESSION['failed_login'] = @$_SESSION['failed_login'] + 1;
 
 			if ($_SESSION['failed_login'] >= $modSettings['failed_login_threshold'])
@@ -281,6 +288,9 @@ function Login2()
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
 	{
+		// Let's be cautious, no hacking please. thanx.
+		validatePasswordFlood($user_settings['id_member'], $user_settings['passwd_flood']);
+
 		// Maybe we were too hasty... let's try some other authentication methods.
 		$other_passwords = array();
 
@@ -351,8 +361,17 @@ function Login2()
 			}
 		}
 	}
+	elseif (!empty($user_settings['passwd_flood']))
+	{
+		// Let's be sure they wern't a little hacker.
+		validatePasswordFlood($user_settings['id_member'], $user_settings['passwd_flood'], true);
+
+		// If we got here then we can reset the flood counter.
+		updateMemberData($user_settings['id_member'], array('passwd_flood' => ''));
+	}
+
 	// Correct password, but they've got no salt; fix it!
-	elseif ($user_settings['password_salt'] == '')
+	if ($user_settings['password_salt'] == '')
 	{
 		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
 		updateMemberData($user_settings['id_member'], array('password_salt' => $user_settings['password_salt']));
@@ -590,4 +609,46 @@ function phpBB3_password_check($passwd, $passwd_hash)
 	// Return now.
 	return $output;
 }
+
+// This protects against brute force attacks on a member's password. Importantly even if the password was right we DON'T TELL THEM!
+function validatePasswordFlood($id_member, $password_flood_value = false, $was_correct = false)
+{
+	global $smcFunc, $cookiename, $sourcedir;
+
+	// As this is only brute protection, we allow 5 attempts every 10 seconds.
+
+	// Destroy any session or cookie data about this member, as they validated wrong.
+	require_once($sourcedir . '/Subs-Auth.php');
+
+	setLoginCookie(-3600, 0);
+	if (isset($_SESSION['login_' . $cookiename]))
+		unset($_SESSION['login_' . $cookiename]);
+
+	// We need a member!
+	if (!$id_member)
+		fatal_lang_error('no_access');
+
+	// Right, have we got a flood value?
+	if ($password_flood_value !== false)
+		@list ($time_stamp, $number_tries) = explode('|', $password_flood_value);
+
+	// Timestamp invalid or non-existant?
+	if (empty($number_tries) || $time_stamp < (time() - 10))
+	{
+		// If it wasn't *that* long ago, don't give them another five goes.
+		$number_tries = !empty($number_tries) && $time_stamp < (time() - 20) ? 2 : 0;
+		$time_stamp = time();
+	}
+
+	$number_tries++;
+
+	// Broken the law?
+	if ($number_tries > 5)
+		fatal_lang_error('login_threshold_brute_fail', 'critical');
+
+	// Otherwise set the members data. If they correct on their first attempt then we actually clear it, otherwise we set it!
+	updateMemberData($id_member, array('passwd_flood' => $was_correct && $number_tries == 1 ? '' : $time_stamp . '|' . $number_tries));
+	
+}
+
 ?>

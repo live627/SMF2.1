@@ -370,6 +370,13 @@ function loadUserSettings()
 		}
 		else
 			$id_member = 0;
+
+		// If we no longer have the member maybe they're being all hackey, stop brute force!
+		if (!$id_member || !empty($user_settings['passwd_flood']))
+		{
+			require_once($sourcedir . '/LogInOut.php');
+			validatePasswordFlood(!empty($user_settings['id_member']) ? $user_settings['id_member'] : $id_member, !empty($user_settings['passwd_flood']) ? $user_settings['passwd_flood'] : false, $id_member != 0);
+		}
 	}
 
 	// Found 'im, let's set up the variables.

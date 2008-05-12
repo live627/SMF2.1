@@ -190,6 +190,7 @@ $txt['ban_name_exists'] = 'The name of this ban already exists. Please chose a d
 $txt['recycle_no_valid_board'] = 'No valid board selected for recycle topics';
 
 $txt['login_threshold_fail'] = 'Sorry, you are out of login chances.  Please come back and try again later.';
+$txt['login_threshold_brute_fail'] = 'Sorry, but you\'ve reached your login attempts threshold.  Please wait 30 seconds and try again later.';
 
 $txt['who_off'] = 'You cannot access Who\'s Online right now because it is disabled.';
 

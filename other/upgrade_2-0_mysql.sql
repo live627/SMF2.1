@@ -880,6 +880,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_digest (
 ALTER TABLE {$db_prefix}members
 CHANGE COLUMN notifyOnce notify_regularity tinyint(4) unsigned NOT NULL default '1';
 ---#
+
 /******************************************************************************/
 --- Making changes to the package manager.
 /******************************************************************************/
@@ -1831,6 +1832,11 @@ if (!isset($modSettings['admin_features']))
 			('admin_features', '$enabled_features')");
 }
 ---}
+---#
+
+---# Adding advanced password brute force protection to "members" table...
+ALTER TABLE {$db_prefix}members
+ADD passwd_flood varchar(12) NOT NULL default '';
 ---#
 
 /******************************************************************************/

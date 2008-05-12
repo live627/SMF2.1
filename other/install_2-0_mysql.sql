@@ -1296,6 +1296,7 @@ CREATE TABLE {$db_prefix}members (
   password_salt varchar(5) NOT NULL default '',
   ignore_boards tinytext NOT NULL,
   warning tinyint(4) NOT NULL default '0',
+  passwd_flood varchar(12) NOT NULL default '',
   PRIMARY KEY (id_member),
   KEY memberName (member_name(30)),
   KEY date_registered (date_registered),

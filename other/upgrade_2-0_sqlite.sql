@@ -167,6 +167,11 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 ---}
 ---#
 
+---# Adding advanced password brute force protection to "members" table...
+ALTER TABLE {$db_prefix}members
+ADD passwd_flood varchar(12) NOT NULL default '';
+---#
+
 /******************************************************************************/
 --- Adding weekly maintenance task.
 /******************************************************************************/
