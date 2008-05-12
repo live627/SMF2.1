@@ -823,6 +823,7 @@ function MergeIndex()
 
 	if (!isset($_GET['from']))
 		fatal_lang_error('no_access');
+	$_GET['from'] = (int) $_GET['from'];
 
 	$_REQUEST['targetboard'] = isset($_REQUEST['targetboard']) ? (int) $_REQUEST['targetboard'] : $board;
 	$context['target_board'] = $_REQUEST['targetboard'];
@@ -965,7 +966,7 @@ function MergeExecute($topics = array())
 
 	// Handle URLs from MergeIndex.
 	if (!empty($_GET['from']) && !empty($_GET['to']))
-		$topics = array($_GET['from'], $_GET['to']);
+		$topics = array((int) $_GET['from'], (int) $_GET['to']);
 
 	// If we came from a form, the topic IDs came by post.
 	if (!empty($_POST['topics']) && is_array($_POST['topics']))
@@ -1529,8 +1530,8 @@ function MergeDone()
 	global $txt, $context;
 
 	// Make sure the template knows everything...
-	$context['target_board'] = $_GET['targetboard'];
-	$context['target_topic'] = $_GET['to'];
+	$context['target_board'] = (int) $_GET['targetboard'];
+	$context['target_topic'] = (int) $_GET['to'];
 
 	$context['page_title'] = $txt['merge'];
 	$context['sub_template'] = 'merge_done';
