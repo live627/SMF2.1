@@ -422,6 +422,7 @@ function AdminMain()
 				'scheduledtasks' => array(
 					'label' => $txt['maintain_tasks'],
 					'file' => 'ManageMaintenance.php',
+					'icon' => 'scheduled.gif',
 					'function' => 'ManageScheduledTasks',
 					'subsections' => array(
 						'tasks' => array($txt['maintain_tasks'], 'admin_forum'),
