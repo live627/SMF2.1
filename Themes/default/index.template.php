@@ -327,8 +327,8 @@ function template_body_below()
 	echo '
 	<div id="footerarea" class="headerpadding topmargin clearfix">
 		<ul class="smalltext">
-			<li><a id="button_php" href="http://www.mysql.com/" target="_blank" class="new_win"><span>', $txt['powered_by_mysql'], '</span></a></li>
-			<li><a id="button_mysql" href="http://www.php.net/" target="_blank" class="new_win"><span>', $txt['powered_by_php'], '</span></a></li>
+			<li><a id="button_mysql" href="http://www.mysql.com/" target="_blank" class="new_win"><span>', $txt['powered_by_mysql'], '</span></a></li>
+			<li><a id="button_php" href="http://www.php.net/" target="_blank" class="new_win"><span>', $txt['powered_by_php'], '</span></a></li>
 			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win"><span>', $txt['valid_html'], '</span></a></li>
 			<li><a id="button_css" href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank" class="new_win"><span>', $txt['valid_css'], '</span></a></li>
 			<li class="copywrite">', theme_copyright(), '</li>
