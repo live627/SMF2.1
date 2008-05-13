@@ -218,7 +218,7 @@ function Login2()
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt,
 			openid_uri, passwd_flood
 		FROM {db_prefix}members
-		WHERE member_name = {string:user_name}
+		WHERE LOWER(member_name) = {string:user_name}
 		LIMIT 1',
 		array(
 			'user_name' => $_REQUEST['user'],
@@ -648,7 +648,7 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 
 	// Otherwise set the members data. If they correct on their first attempt then we actually clear it, otherwise we set it!
 	updateMemberData($id_member, array('passwd_flood' => $was_correct && $number_tries == 1 ? '' : $time_stamp . '|' . $number_tries));
-	
+
 }
 
 ?>

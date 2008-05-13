@@ -61,6 +61,8 @@ May 2008
  ! Casting an array as an integer is not a good idea.  Lets loop through the array and cast it's values as integers. (Search.php) [Bug 1961]
  ! Keep things consistent and make Spider Logs -> Spider Log. (Admin language file) [Bug 2045]
  ! Scheduled Tasks page was using the Forum Maintenance title. (ManageMaintenance.php, ManageMaintenance language file) [Bug 2044]
+ ! When warning a member because of a message, make sure that the msg id is casted as an integer. (Profile-Actions.php) [Bug 2065]
+ ! Fields in SQLite are case sensitive. (Subs-Db-sqlite.php, LogInOut.php)
 
 
 April 2008

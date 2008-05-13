@@ -323,7 +323,7 @@ function issueWarning($memID)
 				AND {query_see_board}
 			LIMIT 1',
 			array(
-				'message' => $_REQUEST['msg'],
+				'message' => (int) $_REQUEST['msg'],
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) != 0)
