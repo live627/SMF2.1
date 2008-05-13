@@ -576,7 +576,7 @@ $txt['admin_browse_register_new'] = 'Register New Member';
 
 $txt['search_engines'] = 'Search Engines';
 $txt['spiders'] = 'Spiders';
-$txt['spider_logs'] = 'Spider Logs';
+$txt['spider_logs'] = 'Spider Log';
 $txt['spider_stats'] = 'Stats';
 
 $txt['paid_subscriptions'] = 'Paid Subscriptions';

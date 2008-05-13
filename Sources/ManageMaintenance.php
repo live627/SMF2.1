@@ -290,7 +290,7 @@ function ManageScheduledTasks()
 
 	// Now for the lovely tabs. That we all love.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['maintain_title'],
+		'title' => &$txt['scheduled_tasks_title'],
 		'help' => '',
 		'description' => $txt['maintain_info'],
 		'tabs' => array(
