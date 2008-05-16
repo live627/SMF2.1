@@ -619,7 +619,7 @@ function smf_db_error_backtrace($error_message, $log_message = '', $error_type =
 	if (function_exists('log_error'))
 		log_error($log_message, 'critical', $file, $line);
 
-	if (function_exists('fatal_error') && $error_type && $error_type != E_USER_ERROR)
+	if (function_exists('fatal_error') && isset($error_type) && $error_type != E_USER_ERROR)
 	{
 		fatal_error($error_message, $error_type);
 

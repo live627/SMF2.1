@@ -64,6 +64,11 @@ May 2008
  ! When warning a member because of a message, make sure that the msg id is casted as an integer. (Profile-Actions.php) [Bug 2065]
  ! Fields in SQLite are case sensitive. (Subs-Db-sqlite.php, LogInOut.php)
  ! Remember the database filename for SQLite if an error occurs on install. (install.php) [Bug 2052]
+ ! Some request variables were not being casted as integers when giving someone a +/- karma. (Karma.php) [Bug 2099]
+ ! When searching, it was still possible to get a database error if the search relevance was a double instead of an integer. (Search.php) [Bug 1714]
+ ! Some links had extra unneeded semicolons at the end. (Subs-BoardIndex.php, Profile template) [Bug 2080,2082]
+ ! Unapproved posts in the moderation area didn't take into account if smileys were enabled or not. (PostModeration.php) [Bug 2094]
+ ! Strip slashes for database name on install. (install.php) [Bug 2052]
 
 
 April 2008

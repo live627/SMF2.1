@@ -249,7 +249,7 @@ function UnapprovedPosts()
 	// Get all unapproved posts.
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
-			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.smileys_enabled,
 			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
@@ -286,7 +286,7 @@ function UnapprovedPosts()
 			'counter' => $context['start'] + $count++,
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'subject' => $row['subject'],
-			'body' => parse_bbc($row['body']),
+			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
 			'time' => timeformat($row['poster_time']),
 			'poster' => array(
 				'id' => $row['id_member'],

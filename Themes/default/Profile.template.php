@@ -826,7 +826,7 @@ function template_trackIP()
 		foreach ($context['ips'] as $ip => $memberlist)
 			echo '
 				<tr>
-					<td class="windowbg2"><a href="', $context['base_url'], ';searchip=', $ip, ';">', $ip, '</a></td>
+					<td class="windowbg2"><a href="', $context['base_url'], ';searchip=', $ip, '">', $ip, '</a></td>
 					<td class="windowbg2">', implode(', ', $memberlist), '</td>
 				</tr>';
 	echo '

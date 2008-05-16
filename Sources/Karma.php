@@ -143,10 +143,10 @@ function ModifyKarma()
 
 	// Figure out where to go back to.... the topic?
 	if (!empty($topic))
-		redirectexit('topic=' . $topic . '.' . $_REQUEST['start'] . '#msg' . $_REQUEST['m']);
+		redirectexit('topic=' . $topic . '.' . $_REQUEST['start'] . '#msg' . (int) $_REQUEST['m']);
 	// Hrm... maybe a personal message?
 	elseif (isset($_REQUEST['f']))
-		redirectexit('action=pm;f=' . $_REQUEST['f'] . ';start=' . $_REQUEST['start'] . (isset($_REQUEST['l']) ? ';l=' . $_REQUEST['l'] : '') . (isset($_REQUEST['pm']) ? '#' . $_REQUEST['pm'] : ''));
+		redirectexit('action=pm;f=' . $_REQUEST['f'] . ';start=' . $_REQUEST['start'] . (isset($_REQUEST['l']) ? ';l=' . (int) $_REQUEST['l'] : '') . (isset($_REQUEST['pm']) ? '#' . (int) $_REQUEST['pm'] : ''));
 	// JavaScript as a last resort.
 	else
 	{
