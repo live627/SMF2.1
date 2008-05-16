@@ -281,7 +281,7 @@ function template_main()
 			// Show the member's gender icon?
 			if (!empty($settings['show_gender']) && $message['member']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
 				echo '
-							<li">', $txt['gender'], ': ', $message['member']['gender']['image'], '</li>';
+							<li>', $txt['gender'], ': ', $message['member']['gender']['image'], '</li>';
 
 			// Show how many posts they have made.
 			if (!isset($context['disabled_fields']['posts']))
