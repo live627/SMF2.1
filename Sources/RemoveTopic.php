@@ -867,7 +867,7 @@ function removeMessage($message, $decreasePostCount = true)
 					UPDATE {db_prefix}boards
 					SET
 						num_topics = num_topics + {int:num_topics_inc},
-						num_posts = num_posts + 1' . 
+						num_posts = num_posts + 1' .
 							($message > $last_board_msg ? ', id_last_msg = {int:id_merged_msg}' : '') . '
 					WHERE id_board = {int:recycle_board}',
 					array(

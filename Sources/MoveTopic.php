@@ -369,10 +369,6 @@ function MoveTopic2()
 	// Notify people that this topic has been moved?
 	sendNotifications($topic, 'move');
 
-	// Update the cache?
-	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
-		cache_put_data('topic_board-' . $topic, null, 120);
-
 	// Why not go back to the original board in case they want to keep moving?
 	if (!isset($_REQUEST['goback']))
 		redirectexit('board=' . $board . '.0');
@@ -596,6 +592,11 @@ function moveTopics($topics, $toBoard)
 	updateSettings(array(
 		'calendar_updated' => time(),
 	));
+
+	// Update the cache?
+	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 3)
+		foreach ($topics as $topic_id)
+			cache_put_data('topic_board-' . $topic_id, null, 120);
 
 	require_once($sourcedir . '/Subs-Post.php');
 

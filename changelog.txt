@@ -69,6 +69,7 @@ May 2008
  ! Some links had extra unneeded semicolons at the end. (Subs-BoardIndex.php, Profile template) [Bug 2080,2082]
  ! Unapproved posts in the moderation area didn't take into account if smileys were enabled or not. (PostModeration.php) [Bug 2094]
  ! Strip slashes for database name on install. (install.php) [Bug 2052]
+ ! Make sure the cache is properly cleared whenever a topic is moved from one board to another. (MoveTopic.php) [Bug 2111]
 
 
 April 2008
