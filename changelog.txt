@@ -74,6 +74,7 @@ May 2008
  ! When registering a user via the admin panel, set the ip to the local host ip. (Subs-Members.php) [Bug 2083]
  ! Sometimes when deleting attachments they wouldn't delete. (ManageAttachments.php) [Bug 2089]
  ! Don't use hard coded language string for the prompts in the rich editor. (Subs-Editor.php, editor.js, index language file) [Feature 2067]
+ ! When ever possible use fatal_error over trigger error for database errors. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2057]
 
 
 April 2008
