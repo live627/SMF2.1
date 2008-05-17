@@ -1972,11 +1972,14 @@ function Post2()
 // General function for topic announcements.
 function AnnounceTopic()
 {
-	global $context, $txt;
+	global $context, $txt, $topic;
 
 	isAllowedTo('announce_topic');
 
 	validateSession();
+
+	if (empty($topic))
+		fatal_lang_error('topic_gone', false);
 
 	loadLanguage('Post');
 	loadTemplate('Post');
@@ -2069,7 +2072,7 @@ function AnnouncementSend()
 	$context['start'] = empty($_REQUEST['start']) ? 0 : (int) $_REQUEST['start'];
 	$groups = array_merge($board_info['groups'], array(1));
 
-	if (!empty($_POST['membergroups']))
+	if (isset($_POST['membergroups']))
 		$_POST['who'] = explode(',', $_POST['membergroups']);
 
 	// Check whether at least one membergroup was selected.

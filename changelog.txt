@@ -79,6 +79,8 @@ May 2008
  ! Added the page offset to the board link for Moderation Log entries. (Modlog.php) [Bug 2097]
  ! Redirect after submitting a moderation comment to prevent double submission. (ModerationCenter.php) [Bug 1779]
  ! Some databases require you to have a GROUP BY clause when using HAVING. (Display.php) [Bug 2086]
+ ! Announcing a topic to only regular members threw an error after the first batch. (Post.php) [Bug 2061]
+ ! Make sure only valid topics can be announced. (Post.php) [Bug 2064]
 
 
 April 2008
