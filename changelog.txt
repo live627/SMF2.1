@@ -75,6 +75,7 @@ May 2008
  ! Sometimes when deleting attachments they wouldn't delete. (ManageAttachments.php) [Bug 2089]
  ! Don't use hard coded language string for the prompts in the rich editor. (Subs-Editor.php, editor.js, index language file) [Feature 2067]
  ! When ever possible use fatal_error over trigger error for database errors. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2057]
+ & Removed duplicate language string entry for calendar_link_event. (index language file) [Bug 2051]
 
 
 April 2008

@@ -463,7 +463,6 @@ $txt['event_delete'] = 'Delete Event';
 $txt['calendar_post_event'] = 'Post Event';
 $txt['calendar'] = 'Calendar';
 $txt['calendar_link'] = 'Link to Calendar';
-$txt['calendar_link_event'] = 'Link Event';
 $txt['calendar_upcoming'] = 'Upcoming Calendar';
 $txt['calendar_today'] = 'Today\'s Calendar';
 $txt['calendar_week'] = 'Week';
