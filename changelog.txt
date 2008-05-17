@@ -71,6 +71,7 @@ May 2008
  ! Strip slashes for database name on install. (install.php) [Bug 2052]
  ! Make sure the cache is properly cleared whenever a topic is moved from one board to another. (MoveTopic.php) [Bug 2111]
  * Gender images were not displayed on posts properly. (Display template) [Bug 2100]
+ ! When registering a user via the admin panel, set the ip to the local host ip. (Subs-Members.php) [Bug 2083]
 
 
 April 2008
