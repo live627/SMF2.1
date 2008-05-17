@@ -1037,11 +1037,11 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 SmfEditor.prototype.insertLink = function(sType)
 {
 	if (sType == 'email')
-		var sPromptText = 'Please enter the email address.';
+		var sPromptText = oEditorStrings['prompt_text_email'];
 	else if (sType == 'ftp')
-		var sPromptText = 'Please enter the ftp address.';
+		var sPromptText = oEditorStrings['prompt_text_ftp'];
 	else
-		var sPromptText = 'Please enter the URL you wish to link to.';
+		var sPromptText = oEditorStrings['prompt_text_url'];
 
 	// IE has a nice prompt for this - others don't.
 	if (sType != 'email' && sType != 'ftp' && is_ie)

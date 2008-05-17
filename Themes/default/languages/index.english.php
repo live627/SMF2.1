@@ -717,4 +717,9 @@ $txt['restore_topic'] = 'Restore Topic';
 $txt['restore_message'] = 'Restore Message';
 $txt['quick_mod_restore'] = 'Restore Selected';
 
+// Editor prompt.
+$txt['prompt_text_email'] = 'Please enter the email address.';
+$txt['prompt_text_email'] = 'Please enter the ftp address.';
+$txt['prompt_text_email'] = 'Please enter the URL you wish to link to.';
+
 ?>

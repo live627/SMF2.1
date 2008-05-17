@@ -1059,7 +1059,10 @@ function create_control_richedit($editorOptions)
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
 			var oEditorStrings= {
 				wont_work: \'' . addcslashes($txt['rich_edit_wont_work'], "'") . '\',
-				func_disabled: \'' . addcslashes($txt['rich_edit_function_disabled'], "'") . '\'
+				func_disabled: \'' . addcslashes($txt['rich_edit_function_disabled'], "'") . '\',
+				prompt_text_email: \'' . addcslashes($txt['prompt_text_email'], "'") . '\',
+				prompt_text_ftp: \'' . addcslashes($txt['prompt_text_email'], "'") . '\',
+				prompt_text_url: \'' . addcslashes($txt['prompt_text_email'], "'") . '\'
 			}
 		// ]]></script>
 		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js"></script>';
