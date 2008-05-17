@@ -77,6 +77,7 @@ May 2008
  ! When ever possible use fatal_error over trigger error for database errors. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2057]
  & Removed duplicate language string entry for calendar_link_event. (index language file) [Bug 2051]
  ! Added the page offset to the board link for Moderation Log entries. (Modlog.php) [Bug 2097]
+ ! Redirect after submitting a moderation comment to prevent double submission. (ModerationCenter.php) [Bug 1779]
 
 
 April 2008

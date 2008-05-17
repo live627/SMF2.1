@@ -772,6 +772,7 @@ function ModReport()
 
 		// In it goes.
 		if (!empty($newComment))
+		{
 			$smcFunc['db_insert']('',
 				'{db_prefix}log_comments',
 				array(
@@ -784,6 +785,10 @@ function ModReport()
 				),
 				array('id_comment')
 			);
+
+			// Redirect to prevent double submittion.
+			redirectexit($scripturl . '?action=moderate;area=reports;report=' . $context['report']['id']);
+		}
 	}
 
 	$context['report'] = array(
