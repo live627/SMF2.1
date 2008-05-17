@@ -72,6 +72,7 @@ May 2008
  ! Make sure the cache is properly cleared whenever a topic is moved from one board to another. (MoveTopic.php) [Bug 2111]
  * Gender images were not displayed on posts properly. (Display template) [Bug 2100]
  ! When registering a user via the admin panel, set the ip to the local host ip. (Subs-Members.php) [Bug 2083]
+ ! Sometimes when deleting attachments they wouldn't delete. (ManageAttachments.php) [Bug 2089]
 
 
 April 2008

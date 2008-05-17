@@ -829,7 +829,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = a.id_member)' : ($query_type == 'messages' ? '
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)' : '')) . '
 			LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)
-			LEFT JOIN {db_prefix}attachments AS thumb_parent ON (a.attachment_type = {int:thumb_attachment_type} AND thumb_parent.id_thumb = a.id_attach)
+			LEFT JOIN {db_prefix}attachments AS thumb_parent ON (thumb.attachment_type = {int:thumb_attachment_type} AND thumb_parent.id_thumb = a.id_attach)
 		WHERE ' . $condition,
 		$query_parameter
 	);
