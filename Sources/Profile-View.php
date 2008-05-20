@@ -1539,7 +1539,7 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 		// Work out what the name of the action is.
 		if (isset($txt['trackEdit_action_' . $row['action']]))
 			$action_text = $txt['trackEdit_action_' . $row['action']];
-		elseif (isset($txt[$row['action']])) 
+		elseif (isset($txt[$row['action']]))
 			$action_text = $txt[$row['action']];
 		// Custom field?
 		elseif (isset($context['custom_field_titles'][$row['action']]))

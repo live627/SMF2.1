@@ -81,6 +81,7 @@ May 2008
  ! Some databases require you to have a GROUP BY clause when using HAVING. (Display.php) [Bug 2086]
  ! Announcing a topic to only regular members threw an error after the first batch. (Post.php) [Bug 2061]
  ! Make sure only valid topics can be announced. (Post.php) [Bug 2064]
+ ! A poll's expiration date was not being checked in SSI. (SSI.php) [Bug 2121]
 
 
 April 2008
