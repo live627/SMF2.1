@@ -84,6 +84,7 @@ May 2008
  ! A poll's expiration date was not being checked in SSI. (SSI.php) [Bug 2121]
  ! Users with permission to manage membergroups were not shown the manage membergroups button in the admin menu. (Admin.php) [Bug 2126]
  ! The email form occasionally showed the user's user name instead of their display name. (SendTopic.php) [Bug 1874]
+ ! The integrate_fix_url hook was not working properly. (News.php) [Bug 2132]
 
 
 April 2008
