@@ -82,6 +82,7 @@ May 2008
  ! Announcing a topic to only regular members threw an error after the first batch. (Post.php) [Bug 2061]
  ! Make sure only valid topics can be announced. (Post.php) [Bug 2064]
  ! A poll's expiration date was not being checked in SSI. (SSI.php) [Bug 2121]
+ ! Users with permission to manage membergroups were not shown the manage membergroups button in the admin menu. (Admin.php) [Bug 2126]
 
 
 April 2008

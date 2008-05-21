@@ -331,7 +331,7 @@ function AdminMain()
 					'file' => 'ManageMembergroups.php',
 					'function' => 'ModifyMembergroups',
 					'icon' => 'membergroups.gif',
-					'permission' => array('manage_members'),
+					'permission' => array('manage_membergroups'),
 					'subsections' => array(
 						'index' => array($txt['membergroups_edit_groups'], 'manage_membergroups'),
 						'add' => array($txt['membergroups_new_group'], 'manage_membergroups'),
