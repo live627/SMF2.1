@@ -198,7 +198,7 @@ function CustomEmail()
 	elseif (isset($_REQUEST['msg']))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT IFNULL(mem.email_address, m.poster_email) AS email, m.poster_name AS name, IFNULL(mem.id_member, 0) AS id_member, hide_email
+			SELECT IFNULL(mem.email_address, m.poster_email) AS email, IFNULL(mem.real_name, m.poster_name) AS name, IFNULL(mem.id_member, 0) AS id_member, hide_email
 			FROM {db_prefix}messages AS m
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.id_msg = {int:id_msg}',
