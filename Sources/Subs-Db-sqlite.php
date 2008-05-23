@@ -288,8 +288,8 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_values[$search] = '%' . $db_values[$search] . '%';
 	}
 
-	// Lets remove ASC and DESC from ORDER BY clause.
-	if (preg_match('~GROUP BY.+$~is', $db_string, $matches))
+	// Lets remove ASC and DESC from GROUP BY clause.
+	if (preg_match('~GROUP BY .*? (?:ASC|DESC)~is', $db_string, $matches))
 	{
 		$replace = str_replace(array('ASC', 'DESC'), '', $matches[0]);
 		$db_string = str_replace($matches[0], $replace, $db_string);

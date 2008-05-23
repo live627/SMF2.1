@@ -1946,7 +1946,7 @@ function ModerationSettings()
 	// Does the user have any settings yet?
 	if (empty($user_settings['mod_prefs']))
 	{
-		$mod_blocks = 'nwrg';
+		$mod_blocks = 'npwgr';
 		$pref_binary = 5;
 		$show_reports = 1;
 	}

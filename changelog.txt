@@ -85,6 +85,8 @@ May 2008
  ! Users with permission to manage membergroups were not shown the manage membergroups button in the admin menu. (Admin.php) [Bug 2126]
  ! The email form occasionally showed the user's user name instead of their display name. (SendTopic.php) [Bug 1874]
  ! The integrate_fix_url hook was not working properly. (News.php) [Bug 2132]
+ ! The regular expression to remove the DESC from the GROUP BY in SQLite was a bit too greedy. (Subs-Db-sqlite.php)
+ ! Added moderation notes as part of the default items in the Moderation Center. (ModerationCenter.php) [Feature 2122]
 
 
 April 2008
