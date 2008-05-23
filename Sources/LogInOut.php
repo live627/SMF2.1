@@ -221,7 +221,7 @@ function Login2()
 		WHERE ' . ($smcFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name') . ' = {string:user_name}
 		LIMIT 1',
 		array(
-			'user_name' => $_REQUEST['user'],
+			'user_name' => $smcFunc['db_case_sensitive'] ? strtolower($_REQUEST['user']) : $_REQUEST['user'],
 		)
 	);
 	// Probably mistyped or their email, try it as an email address. (member_name first, though!)
