@@ -1074,7 +1074,7 @@ SmfEditor.prototype.insertImage = function(sSrc)
 {
 	if (!sSrc)
 	{
-		sSrc = prompt('Enter image location', 'http://');
+		sSrc = prompt(oEditorStrings['prompt_text_img'], 'http://');
 		if (!sSrc || sSrc.length < 10)
 			return;
 	}
