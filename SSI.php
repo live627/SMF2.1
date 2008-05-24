@@ -1891,6 +1891,8 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 	$attachments = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
+		$filename = preg_replace('~&amp;#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '&#\\1;', htmlspecialchars($row['filename']));
+
 		// Is it an image?
 		$attachments[$row['id_attach']] = array(
 			'member' => array(
@@ -1899,11 +1901,11 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>',
 			),
 			'file' => array(
-				'filename' => htmlspecialchars($row['filename']),
+				'filename' => $filename,
 				'filesize' => round($row['filesize'] /1024, 2) . $txt['kilobyte'],
 				'downloads' => $row['downloads'],
 				'href' => $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'],
-				'link' => '<img src="' . $settings['images_url'] . '/icons/clip.gif" alt="" /> <a href="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . '">' . htmlspecialchars($row['filename']) . '</a>',
+				'link' => '<img src="' . $settings['images_url'] . '/icons/clip.gif" alt="" /> <a href="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . '">' . $filename . '</a>',
 				'is_image' => !empty($row['width']) && !empty($row['height']) && !empty($modSettings['attachmentShowImages']),
 			),
 			'topic' => array(
@@ -1923,10 +1925,10 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 				'id' => $id_thumb,
 				'width' => $row['width'],
 				'height' => $row['height'],
-				'img' => '<img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . ';image" alt="' . htmlspecialchars($row['filename']) . '" />',
-				'thumb' => '<img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image" alt="' . htmlspecialchars($row['filename']) . '" />',
+				'img' => '<img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . ';image" alt="' . $filename . '" />',
+				'thumb' => '<img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image" alt="' . $filename . '" />',
 				'href' => $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image',
-				'link' => '<a href="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . ';image"><img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image" alt="' . htmlspecialchars($row['filename']) . '" /></a>',
+				'link' => '<a href="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $row['id_attach'] . ';image"><img src="' . $scripturl . '?action=dlattach;topic=' . $row['id_topic'] . '.0;attach=' . $id_thumb . ';image" alt="' . $filename . '" /></a>',
 			);
 		}
 	}
