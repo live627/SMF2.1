@@ -683,7 +683,7 @@ function resetPassword($memID, $username = null)
 			fatal_lang_error('need_username', false);
 
 		// Only these characters are permitted.
-		if (in_array($user, array('_', '|')) || preg_match('~[<>&"\'=\\\]~', $user) != 0 || strpos($user, '[code') !== false || strpos($user, '[/code') !== false)
+		if (in_array($user, array('_', '|')) || preg_match('~[<>&"\'=\\\\]~', preg_replace('~&#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '', $user)) != 0 || strpos($user, '[code') !== false || strpos($user, '[/code') !== false)
 			fatal_lang_error('error_invalid_characters_username', false);
 
 		if (stristr($user, $txt['guest_title']) !== false)

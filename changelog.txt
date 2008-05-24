@@ -93,6 +93,7 @@ May 2008
  ! Added IE/Opera support to the textarea resizing function. (editor.js)
  ! Fixed wrapping bbc tags around the current caret position in WYSIWYG mode for FF. (editor.js)
  ! Move cursor to the end of the inserted bbc tags if something was selected. (editor.js)
+ ! Allow HTML entities to be used as username, allowing latin character sets to be used for non-latin usernames. (LogInOut.php, Subs-Auth.php, Subs-Members.php, sha1.js) [Bug 1466]
 
 
 April 2008
