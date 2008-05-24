@@ -779,22 +779,22 @@ function createEventListener(oTarget)
 		{
 			oTarget.addEventListener = function (sEvent, funcHandler, bCapture)
 			{
-				oTarget.attachEvent("on" + sEvent, funcHandler);
+				oTarget.attachEvent('on' + sEvent, funcHandler);
 			}
 			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture)
 			{
-				oTarget.detachEvent("on" + sEvent, funcHandler);
+				oTarget.detachEvent('on' + sEvent, funcHandler);
 			}
 		}
 		else
 		{
 			oTarget.addEventListener = function (sEvent, funcHandler, bCapture)
 			{
-				oTarget["on" + sEvent] = funcHandler;
+				oTarget['on' + sEvent] = funcHandler;
 			}
 			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture)
 			{
-				oTarget["on" + sEvent] = null;
+				oTarget['on' + sEvent] = null;
 			}
 		}
 	}
@@ -1095,20 +1095,20 @@ IconList.prototype.collapseList = function()
 }
 
 // Handy shortcuts for getting the mouse position on the screen - only used for IE at the moment.
-function smf_mousePose(evnt)
+function smf_mousePose(oEvent)
 {
 	var x = 0;
 	var y = 0;
 
-	if (evnt.pageX)
+	if (oEvent.pageX)
 	{
-		y = evnt.pageY;
-		x = evnt.pageX;
+		y = oEvent.pageY;
+		x = oEvent.pageX;
 	}
-	else if (evnt.clientX)
+	else if (oEvent.clientX)
 	{
-		x = evnt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
-		y = evnt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+		x = oEvent.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+		y = oEvent.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
 	}
 
 	return [x, y];

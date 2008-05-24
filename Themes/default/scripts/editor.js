@@ -1,9 +1,3 @@
-// Until we find a better way, this keeps the current resize state for editors.
-oSmfEditorCurrentResize = {
-	uid: null,
-	y: 0,
-	iy: 0
-};
 
 // Make an editor!!
 function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight, bRichEditOff)
@@ -21,7 +15,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = (is_ie5up || is_ff || is_opera95up) && !bRichEditOff;
+	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up) && !bRichEditOff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -157,11 +151,27 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.sFormId = 'postmodify';
 	this.iArrayPosition = smf_editorArray.length;
 
+	// Current resize state.
+	this.oSmfEditorCurrentResize = {};
+
 	this.init();
 }
 
 SmfEditor.prototype.init = function()
 {
+	// Define the event wrapper functions.
+	var oCaller = this;
+	this.aEventWrappers = {
+		editorKeyUp: function(oEvent) {return oCaller.editorKeyUp(oEvent);},
+		shortcutCheck: function(oEvent) {return oCaller.shortcutCheck(oEvent);},
+		editorBlur: function(oEvent) {return oCaller.editorBlur(oEvent);},
+		editorFocus: function(oEvent) {return oCaller.editorFocus(oEvent);},
+		startResize: function(oEvent) {return oCaller.startResize(oEvent);},
+		resizeOverDocument: function(oEvent) {return oCaller.resizeOverDocument(oEvent);},
+		endResize: function(oEvent) {return oCaller.endResize(oEvent);},
+		resizeOverIframe: function(oEvent) {return oCaller.resizeOverIframe(oEvent);}
+	};
+
 	// Set the textHandle.
 	this.oTextHandle = document.getElementById(this.sUniqueId);
 
@@ -181,8 +191,10 @@ SmfEditor.prototype.init = function()
 		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
 
 		// Create some handy shortcuts.
-		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : this.oFrameHandle.contentWindow.document;
-		this.oFrameWindow = this.oFrameHandle.contentWindow;
+		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : (typeof(this.oFrameHandle.contentWindow) == 'undefined' ? this.oFrameHandle.document : this.oFrameHandle.contentWindow.document);
+		this.oFrameWindow = typeof(this.oFrameHandle.contentWindow) == 'undefined' ? this.oFrameHandle.document.parentWindow : this.oFrameHandle.contentWindow;
+
+
 
 		// Create the debug window... and stick this under the main frame - make it invisible by default.
 		this.oBreadHandle = document.createElement('div');
@@ -296,42 +308,29 @@ SmfEditor.prototype.init = function()
 
 		// Apply the class...
 		this.oFrameDocument.body.className = 'rich_editor';
+
 		// Listen for input.
 		this.oFrameDocument.instanceRef = this;
 		this.oFrameHandle.instanceRef = this;
 		this.oTextHandle.instanceRef = this;
 
-		if (is_ff)
-		{
-			this.oFrameDocument.addEventListener('keyup', function(ev) {this.instanceRef.editorKeyUp();}, true);
-			this.oFrameDocument.addEventListener('mouseup', function(ev) {SmfEndEditorResize(); this.instanceRef.editorKeyUp();}, true);
-			this.oFrameDocument.addEventListener('keydown', function(ev) {this.instanceRef.shortcutCheck(ev);}, true);
-			this.oTextHandle.addEventListener('keydown', function(ev) {this.instanceRef.shortcutCheck(ev);}, true);
-		}
-		else
-		{
-			this.oFrameDocument.onkeyup = function (ev)
-			{
-				this.instanceRef.editorKeyUp();
-			}
-			this.oFrameDocument.onmouseup = function(ev)
-			{
-				SmfEndEditorResize();
-				this.instanceRef.editorKeyUp();
-			}
+		// Attach addEventListener for those browsers that don't support it.
+		createEventListener(this.oFrameHandle);
+		createEventListener(this.oFrameDocument);
+		createEventListener(this.oTextHandle);
+		createEventListener(window);
+		createEventListener(document);
 
-			// Internet explorer forgets where it was when we blur!
-			if (is_ie)
-			{
-				this.oFrameHandle.onblur = function (ev)
-				{
-					this.instanceRef.editorBlur();
-				}
-				this.oFrameHandle.onfocus = function (ev)
-				{
-					this.instanceRef.editorFocus();
-				}
-			}
+		// Attach functions to the key and mouse events.
+		this.oFrameDocument.addEventListener('keyup', this.aEventWrappers.editorKeyUp, true);
+		this.oFrameDocument.addEventListener('mouseup', this.aEventWrappers.editorKeyUp, true);
+		this.oFrameDocument.addEventListener('keydown', this.aEventWrappers.shortcutCheck, true);
+		this.oTextHandle.addEventListener('keydown', this.aEventWrappers.shortcutCheck, true);
+
+		if (is_ie)
+		{
+			this.oFrameDocument.addEventListener('blur', this.aEventWrappers.editorBlur, true);
+			this.oFrameDocument.addEventListener('focus', this.aEventWrappers.editorFocus, true);
 		}
 
 		// Show the iframe only if wysiwyrg is on - and hide the text area.
@@ -350,22 +349,16 @@ SmfEditor.prototype.init = function()
 	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
 
 	// Show the resizer.
-	if (document.getElementById(this.sUniqueId + '_resizer') && is_ff)
+	if (document.getElementById(this.sUniqueId + '_resizer'))
 	{
+		// Currently nothing is being resized...I assume!
+		window.smf_oCurrentResizeEditor = null;
+
 		this.oResizerElement = document.getElementById(this.sUniqueId + '_resizer');
 		this.oResizerElement.style.display = '';
-		createEventListener(this.oResizerElement);
-		this.oResizerElement.instanceRef = this;
 
-		if (is_ff)
-			this.oResizerElement.addEventListener('mousedown', function(ev) {this.instanceRef.startResize();}, false);
-		else
-		{
-			this.oResizerElement.onmousedown = function(ev)
-			{
-				this.instanceRef.startResize();
-			}
-		}
+		createEventListener(this.oResizerElement);
+		this.oResizerElement.addEventListener('mousedown', this.aEventWrappers.startResize, false);
 	}
 
 	// Set the text - if WYSIWYG is enabled that is.
@@ -443,63 +436,6 @@ SmfEditor.prototype.editorFocus = function()
 		return;
 
 	// Need to do something here.
-}
-
-SmfEditor.prototype.startResize = function()
-{
-	if (oSmfEditorCurrentResize['uid'] != null)
-		return;
-
-	oSmfEditorCurrentResize['uid'] = this.iArrayPosition;
-	oSmfEditorCurrentResize['y'] = 0;
-	oSmfEditorCurrentResize['iy'] = 0;
-
-	if (is_ff)
-	{
-		window.addEventListener('mousemove', SmfDoEditorResize, false);
-		document.addEventListener('mouseup', SmfEndEditorResize, false);
-		this.oFrameDocument.addEventListener('mousemove', function(ev) {this.instanceRef.doResize(ev);}, true);
-	}
-	else
-	{
-		document.onmousemove = SmfDoEditorResize;
-		document.onmouseup = SmfEndEditorResize;
-		this.oFrameDocument.onmousemove = function(ev)
-			{
-				if (!ev)
-					ev = window.event;
-
-				this.instanceRef.doResize(ev);
-			}
-	}
-}
-
-// This is kind of a cheat, as it only works over the IFRAME.
-SmfEditor.prototype.doResize = function(ev)
-{
-	if (!ev)
-		ev = window.event;
-
-	if (!ev || oSmfEditorCurrentResize['uid'] == null)
-		return;
-
-	newCords = smf_mousePose(ev);
-
-	iOldY = oSmfEditorCurrentResize['iy'];
-	oSmfEditorCurrentResize['iy'] = newCords[1];
-	oSmfEditorCurrentResize['y'] = 0;
-
-	// First pixel?
-	if (iOldY == 0)
-		return;
-
-	this.resizeTextArea(-2, 0, true);
-}
-
-// Just remove any effects.
-SmfEditor.prototype.endResize = function()
-{
-	//document.removeEventListener('mouseup', SmfDoEditorResize, false);
 }
 
 // Rebuild the breadcrumb etc - and set things to the correct context.
@@ -1490,10 +1426,10 @@ SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCodeName)
 }
 
 // Check whether the key has triggered a shortcut?
-SmfEditor.prototype.checkShortcut = function(ev)
+SmfEditor.prototype.checkShortcut = function(oEvent)
 {
 	// To be a shortcut it needs to be one of these, duh!
-	if (!ev.altKey && !ev.ctrlKey)
+	if (!oEvent.altKey && !oEvent.ctrlKey)
 		return false;
 
 	sReturnCode = false;
@@ -1502,7 +1438,7 @@ SmfEditor.prototype.checkShortcut = function(ev)
 	for (i = 0; i < this.aKeyboardShortcuts.length; i++)
 	{
 		// Found something?
-		if (ev.altKey == this.aKeyboardShortcuts[i].alt && ev.ctrlKey == this.aKeyboardShortcuts[i].ctrl && ev.keyCode == this.aKeyboardShortcuts[i].key)
+		if (oEvent.altKey == this.aKeyboardShortcuts[i].alt && oEvent.ctrlKey == this.aKeyboardShortcuts[i].ctrl && oEvent.keyCode == this.aKeyboardShortcuts[i].key)
 			sReturnCode = this.aKeyboardShortcuts[i].code;
 	}
 
@@ -1510,9 +1446,9 @@ SmfEditor.prototype.checkShortcut = function(ev)
 }
 
 // The actual event check for the above!
-SmfEditor.prototype.shortcutCheck = function(ev)
+SmfEditor.prototype.shortcutCheck = function(oEvent)
 {
-	sFoundCode = this.checkShortcut(ev);
+	sFoundCode = this.checkShortcut(oEvent);
 
 	// Run it and exit.
 	if (sFoundCode)
@@ -1542,12 +1478,12 @@ SmfEditor.prototype.shortcutCheck = function(ev)
 
 		if (cancelEvent)
 		{
-			if (is_ie && ev.cancelBubble)
-				ev.cancelBubble = true;
-			else if (ev.stopPropagation)
+			if (is_ie && oEvent.cancelBubble)
+				oEvent.cancelBubble = true;
+			else if (oEvent.stopPropagation)
 			{
-				ev.stopPropagation();
-				ev.preventDefault();
+				oEvent.stopPropagation();
+				oEvent.preventDefault();
 			}
 
 			void(0);
@@ -1556,48 +1492,93 @@ SmfEditor.prototype.shortcutCheck = function(ev)
 	}
 }
 
-// This resizes an editor.
-function SmfDoEditorResize(evnt)
+// This is the method called after clicking the resize bar.
+SmfEditor.prototype.startResize = function(oEvent)
 {
-	if (!evnt)
-		evnt = window.event;
+	if (window.event)
+		oEvent = window.event;
 
-	if (!evnt || oSmfEditorCurrentResize['uid'] == null || !smf_editorArray[oSmfEditorCurrentResize['uid']])
-		return;
+	if (!oEvent || window.smf_oCurrentResizeEditor != null)
+		return true;
 
-	newCords = smf_mousePose(evnt);
+	window.smf_oCurrentResizeEditor = this.iArrayPosition;
 
-	iOldY = oSmfEditorCurrentResize['y'];
-	oSmfEditorCurrentResize['y'] = newCords[1];
-	oSmfEditorCurrentResize['iy'] = 0;
+	var aCurCoordinates = smf_mousePose(oEvent);
+	this.oSmfEditorCurrentResize.old_y = aCurCoordinates[1];
+	this.oSmfEditorCurrentResize.old_rel_y = null;
+	this.oSmfEditorCurrentResize.cur_height = parseInt(this.oTextHandle.style.height);
 
-	// First pixel?
-	if (iOldY == 0)
-		return;
+	// Set the necessary events for resizing.
+	var oResizeEntity = is_ie ? document : window;
+	oResizeEntity.addEventListener('mousemove', this.aEventWrappers.resizeOverDocument, false);
+	this.oFrameDocument.addEventListener('mousemove', this.aEventWrappers.resizeOverIframe, false);
+	document.addEventListener('mouseup', this.aEventWrappers.endResize, true);
+	this.oFrameDocument.addEventListener('mouseup', this.aEventWrappers.endResize, true);
 
-	smf_editorArray[oSmfEditorCurrentResize['uid']].resizeTextArea(oSmfEditorCurrentResize['y'] - iOldY, 0, true);
+	return false;
 }
 
-function SmfEndEditorResize(evnt)
+// This is kind of a cheat, as it only works over the IFRAME.
+SmfEditor.prototype.resizeOverIframe = function(oEvent)
 {
-	if (!evnt)
-		evnt = window.event;
+	if (window.event)
+		oEvent = window.event;
 
-	if (oSmfEditorCurrentResize['uid'] == null || !smf_editorArray[oSmfEditorCurrentResize['uid']])
-		return;
+	if (!oEvent || window.smf_oCurrentResizeEditor == null)
+		return true;
 
-	// Remove the event...
-	if (is_ff)
-	{
-		document.removeEventListener('mousemove', SmfDoEditorResize, false);
-		document.removeEventListener('mouseup', SmfEndEditorResize, false);
-	}
+	newCords = smf_mousePose(oEvent);
+
+	if (this.oSmfEditorCurrentResize.old_rel_y == null)
+		this.oSmfEditorCurrentResize.old_rel_y = newCords[1];
 	else
 	{
-		document.onmousemove = null;
-		document.onmouseup = null;
+		var iNewHeight = newCords[1] - this.oSmfEditorCurrentResize.old_rel_y + this.oSmfEditorCurrentResize.cur_height;
+		if (iNewHeight < 0)
+			this.endResize();
+		else
+			this.resizeTextArea(iNewHeight + 'px', 0, false);
 	}
 
-	smf_editorArray[oSmfEditorCurrentResize['uid']].endResize();
-	oSmfEditorCurrentResize['uid'] = null;
+	return false;
+}
+
+// This resizes an editor.
+SmfEditor.prototype.resizeOverDocument = function (oEvent)
+{
+	if (window.event)
+		oEvent = window.event;
+
+	if (!oEvent || window.smf_oCurrentResizeEditor == null)
+		return true;
+
+	newCords = smf_mousePose(oEvent);
+
+	var iNewHeight = newCords[1] - this.oSmfEditorCurrentResize.old_y + this.oSmfEditorCurrentResize.cur_height;
+	if (iNewHeight < 0)
+		this.endResize();
+	else
+		this.resizeTextArea(iNewHeight + 'px', 0, false);
+
+	return false;
+}
+
+SmfEditor.prototype.endResize = function (oEvent)
+{
+	if (window.event)
+		oEvent = window.event;
+
+	if (window.smf_oCurrentResizeEditor == null)
+		return true;
+
+	window.smf_oCurrentResizeEditor = null;
+
+	// Remove the event...
+	var oResizeEntity = is_ie ? document : window;
+	oResizeEntity.removeEventListener('mousemove', this.aEventWrappers.resizeOverDocument, false);
+	this.oFrameDocument.removeEventListener('mousemove', this.aEventWrappers.resizeOverIframe, false);
+	document.removeEventListener('mouseup', this.aEventWrappers.endResize, true);
+	this.oFrameDocument.removeEventListener('mouseup', this.aEventWrappers.endResize, true);
+
+	return false;
 }

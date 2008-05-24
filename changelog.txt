@@ -88,6 +88,9 @@ May 2008
  ! The regular expression to remove the DESC from the GROUP BY in SQLite was a bit too greedy. (Subs-Db-sqlite.php)
  ! Added moderation notes as part of the default items in the Moderation Center. (ModerationCenter.php) [Feature 2122]
  ! Logging in and out was not working in PostgreSQL due to the case sensitive names. (LogInOut.php) [Bug 2127]
+ ! Removed WYSIWYG support for IE 5.0 as it didn't work properly. (editor.js)
+ ! Revised event handling by the WYSIWYG editor so that they work within OOP context. (editor.js)
+ ! Added IE/Opera support to the textarea resizing function. (editor.js)
 
 
 April 2008
