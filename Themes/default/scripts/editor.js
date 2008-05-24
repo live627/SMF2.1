@@ -768,6 +768,8 @@ SmfEditor.prototype.addButton = function(sCode, sBefore, sAfter)
 	}
 
 	oCodeHandle.code = sCode;
+
+	return true;
 }
 
 // Populate/handle the select boxes.
@@ -1043,7 +1045,7 @@ SmfEditor.prototype.getSelect = function(bWantText, bWantHTMLText)
 			var oSelection = this.oFrameWindow.getSelection();
 			if (oSelection.rangeCount > 0)
 			{
-				oRange = oSelection.getRangeAt(0);
+				var oRange = oSelection.getRangeAt(0);
 				var oClonedSelection = oRange.cloneContents();
 				var oDiv = this.oFrameDocument.createElement('div');
 				oDiv.appendChild(oClonedSelection);
@@ -1410,19 +1412,19 @@ SmfEditor.prototype.registerShortcut = function(sLetter, sModifiers, sCodeName)
 	if (!sCodeName)
 		return;
 
-	var aNewShortcut = {
+	var oNewShortcut = {
 		code : sCodeName,
 		key: sLetter.toUpperCase().charCodeAt(0),
 		alt : false,
 		ctrl : false
 	};
 
-	sSplitModifiers = sModifiers.split(',');
-	for(i = 0; i < sSplitModifiers.length; i++)
-		if (typeof(aNewShortcut[sSplitModifiers[i]]) != 'undefined')
-			aNewShortcut[sSplitModifiers[i]] = true;
+	var aSplitModifiers = sModifiers.split(',');
+	for(var i = 0, n = aSplitModifiers.length; i < n; i++)
+		if (typeof(oNewShortcut[aSplitModifiers[i]]) != 'undefined')
+			oNewShortcut[aSplitModifiers[i]] = true;
 
-	this.aKeyboardShortcuts[this.aKeyboardShortcuts.length] = aNewShortcut;
+	this.aKeyboardShortcuts[this.aKeyboardShortcuts.length] = oNewShortcut;
 }
 
 // Check whether the key has triggered a shortcut?
@@ -1486,10 +1488,11 @@ SmfEditor.prototype.shortcutCheck = function(oEvent)
 				oEvent.preventDefault();
 			}
 
-			void(0);
 			return false;
 		}
 	}
+
+	return true;
 }
 
 // This is the method called after clicking the resize bar.
