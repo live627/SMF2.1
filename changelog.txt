@@ -92,6 +92,7 @@ May 2008
  ! Revised event handling by the WYSIWYG editor so that they work within OOP context. (editor.js)
  ! Added IE/Opera support to the textarea resizing function. (editor.js)
  ! Fixed wrapping bbc tags around the current caret position in WYSIWYG mode for FF. (editor.js)
+ ! Move cursor to the end of the inserted bbc tags if something was selected. (editor.js)
 
 
 April 2008

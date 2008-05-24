@@ -641,29 +641,18 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 			}
 			else
 			{
+				// If the cursor needs to be positioned, insert the last fragment first.
 				if (iMoveCursorBack > 0 && sText.length > iMoveCursorBack)
 				{
-					// If the cursor needs to be positioned, insert the last fragment first...
-					this.smf_execCommand('inserthtml', false, sText.substr(sText.length - iMoveCursorBack));
-
-					// And move the cursor back.
-					var oRange = this.oFrameDocument.createRange();
-					var oText = this.oFrameDocument.body.lastChild;
-					oRange.setStart(oText, oText.nodeValue.length - iMoveCursorBack);
-					oRange.setEnd(oText, oText.nodeValue.length - iMoveCursorBack);
-					oRange.insertNode(this.oFrameDocument.createTextNode(''));
+					var oSelection = this.getSelect(false, false);
+					var oRange = oSelection.getRangeAt(0);
+					//oRange.deleteContents();
+					oRange.insertNode(this.oFrameDocument.createTextNode(sText.substr(sText.length - iMoveCursorBack)));
 				}
 
 				this.smf_execCommand('inserthtml', false, sText.substr(0, sText.length - iMoveCursorBack));
 
-/*				var oRange = this.oFrameDocument.createRange();
-				var oText = this.oFrameDocument.body.lastChild;
-				oRange.setStart(oText, oText.nodeValue.length - iMoveCursorBack);
-				oRange.setEnd(oText, oText.nodeValue.length - iMoveCursorBack);
-				oRange.insertNode(this.oFrameDocument.createTextNode(''));
-				this.setFocus();
-				this.smf_execCommand('unselect', false, '');
-*/				//this.oFrameDocument.body.focus();
+				//this.oFrameDocument.body.focus();
 				//alert(oRange);
 
 				// This is a git - we need to do all kinds of crap. Thanks to this page:
@@ -980,9 +969,9 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 	if (!this.aButtonControls[sCode])
 		return;
 
-	var oSelection = this.getSelect(true, true);
-	if (oSelection.length == 0)
-		oSelection = '';
+	var sSelection = this.getSelect(true, true);
+	if (sSelection.length == 0)
+		sSelection = '';
 
 	var sLeftTag = this.aButtonControls[sCode].sBefore;
 	var sRightTag = this.aButtonControls[sCode].sAfter;
@@ -990,8 +979,13 @@ SmfEditor.prototype.insertCustomHTML = function(sCode)
 	// Are we overwriting?
 	if (sRightTag == '')
 		this.insertText(sLeftTag);
+	// If something was selected, replace and position cursor at the end of it.
+	else if (sSelection.length > 0)
+		this.insertText(sLeftTag + sSelection + sRightTag, false, false, 0);
+	// Wrap the tags around the cursor position.
 	else
-		this.insertText(sLeftTag + oSelection + sRightTag, false, false, sRightTag.length);
+		this.insertText(sLeftTag + sRightTag, false, false, sRightTag.length);
+
 }
 
 // Insert a URL link.
