@@ -641,8 +641,31 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 			}
 			else
 			{
-				// Think this will do actually?
-				this.smf_execCommand('inserthtml', false, sText);
+				if (iMoveCursorBack > 0 && sText.length > iMoveCursorBack)
+				{
+					// If the cursor needs to be positioned, insert the last fragment first...
+					this.smf_execCommand('inserthtml', false, sText.substr(sText.length - iMoveCursorBack));
+
+					// And move the cursor back.
+					var oRange = this.oFrameDocument.createRange();
+					var oText = this.oFrameDocument.body.lastChild;
+					oRange.setStart(oText, oText.nodeValue.length - iMoveCursorBack);
+					oRange.setEnd(oText, oText.nodeValue.length - iMoveCursorBack);
+					oRange.insertNode(this.oFrameDocument.createTextNode(''));
+				}
+
+				this.smf_execCommand('inserthtml', false, sText.substr(0, sText.length - iMoveCursorBack));
+
+/*				var oRange = this.oFrameDocument.createRange();
+				var oText = this.oFrameDocument.body.lastChild;
+				oRange.setStart(oText, oText.nodeValue.length - iMoveCursorBack);
+				oRange.setEnd(oText, oText.nodeValue.length - iMoveCursorBack);
+				oRange.insertNode(this.oFrameDocument.createTextNode(''));
+				this.setFocus();
+				this.smf_execCommand('unselect', false, '');
+*/				//this.oFrameDocument.body.focus();
+				//alert(oRange);
+
 				// This is a git - we need to do all kinds of crap. Thanks to this page:
 				// http://www.richercomponents.com/Forums/ShowPost.aspx?PostID=2777
 				// Create a new span element first...
@@ -1159,12 +1182,10 @@ SmfEditor.prototype.toggleView = function(bView)
 	}
 
 	// Overriding or alternating?
-	if (typeof(bView) != 'undefined')
-		bNewView = bView;
-	else
-		bNewView = !this.bRichTextEnabled;
+	if (typeof(bView) == 'undefined')
+		bView = !this.bRichTextEnabled;
 
-	this.requestParsedMessage(bNewView);
+	this.requestParsedMessage(bView);
 
 	return true;
 }
