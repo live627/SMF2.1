@@ -96,6 +96,7 @@ May 2008
  ! Allow HTML entities to be used as username, allowing latin character sets to be used for non-latin usernames. (LogInOut.php, Subs-Auth.php, Subs-Members.php, sha1.js) [Bug 1466]
  ! Remove HTML-entities from the shown filename. (Display.php, ManageAttachments.php, SSI.php)
  ! Attempt to send a proper filename when downloading a non-ASCII named attachment. (Display.php)
+ ! The links to set individual board's permissions were incorrect. (ManageBoards.php, ManageBoards template)
 
 
 April 2008

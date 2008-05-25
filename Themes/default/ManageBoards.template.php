@@ -57,7 +57,7 @@ function template_main()
 			echo '
 							<tr class="windowbg', $alternate ? '' : '2', '">
 								<td style="padding-left: ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '">', $board['name'], !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '&nbsp;&nbsp;&nbsp;<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"><img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a>' : '', '</td>
-								<td width="10%" align="right">', $context['can_manage_permissions'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=switch;boardid=' . $board['id'] . ';sesc=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a>' : '', '</td>
+								<td width="10%" align="right">', $context['can_manage_permissions'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';sesc=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a>' : '', '</td>
 								<td width="10%" align="right"><a href="', $scripturl, '?action=admin;area=manageboards;move=', $board['id'], '">', $txt['mboards_move'], '</a></td>
 								<td width="10%" style="padding-right: 1ex;" align="right"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
 							</tr>';
