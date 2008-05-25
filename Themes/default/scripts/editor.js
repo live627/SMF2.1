@@ -642,18 +642,14 @@ SmfEditor.prototype.insertText = function(sText, bClear, bForceEntityReverse, iM
 			else
 			{
 				// If the cursor needs to be positioned, insert the last fragment first.
-				if (iMoveCursorBack > 0 && sText.length > iMoveCursorBack)
+				if (typeof(iMoveCursorBack) != 'undefined' && iMoveCursorBack > 0 && sText.length > iMoveCursorBack)
 				{
 					var oSelection = this.getSelect(false, false);
 					var oRange = oSelection.getRangeAt(0);
-					//oRange.deleteContents();
 					oRange.insertNode(this.oFrameDocument.createTextNode(sText.substr(sText.length - iMoveCursorBack)));
 				}
 
-				this.smf_execCommand('inserthtml', false, sText.substr(0, sText.length - iMoveCursorBack));
-
-				//this.oFrameDocument.body.focus();
-				//alert(oRange);
+				this.smf_execCommand('inserthtml', false, typeof(iMoveCursorBack) == 'undefined' ? sText : sText.substr(0, sText.length - iMoveCursorBack));
 
 				// This is a git - we need to do all kinds of crap. Thanks to this page:
 				// http://www.richercomponents.com/Forums/ShowPost.aspx?PostID=2777
