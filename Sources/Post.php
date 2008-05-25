@@ -1875,7 +1875,7 @@ function Post2()
 	}
 
 	// Turn notification on or off.  (note this just blows smoke if it's already on or off.)
-	if (!empty($_POST['notify']))
+	if (!empty($_POST['notify']) && allowedTo('mark_any_notify'))
 	{
 		if (allowedTo('mark_any_notify'))
 			$smcFunc['db_insert']('ignore',

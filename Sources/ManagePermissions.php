@@ -90,6 +90,10 @@ if (!defined('SMF'))
 	void loadIllegalPermissions()
 		// !!!
 
+	void loadIllegalGuestPermissions()
+		- loads the permissions that can not be given to guests.
+		- stores the permissions in $context['non_guest_permissions'].
+
 	void ModifyPostModeration()
 		// !!!
 */
@@ -474,6 +478,7 @@ function SetQuickGroups()
 	checkSession();
 
 	loadIllegalPermissions();
+	loadIllegalGuestPermissions();
 
 	// Make sure only one of the quick options was selected.
 	if ((!empty($_POST['predefined']) && ((isset($_POST['copy_from']) && $_POST['copy_from'] != 'empty') || !empty($_POST['permissions']))) || (!empty($_POST['copy_from']) && $_POST['copy_from'] != 'empty' && !empty($_POST['permissions'])))
@@ -558,6 +563,8 @@ function SetQuickGroups()
 					// No dodgy permissions please!
 					if (!empty($context['illegal_permissions']) && in_array($perm, $context['illegal_permissions']))
 						continue;
+					if ($group_id == -1 && in_array($perm, $context['non_guest_permissions']))
+						continue;
 
 					if ($group_id != 1 && $group_id != 3)
 						$inserts[] = array($perm, $group_id, $add_deny);
@@ -607,7 +614,13 @@ function SetQuickGroups()
 		$inserts = array();
 		foreach ($_POST['group'] as $group_id)
 			foreach ($target_perm as $perm => $add_deny)
+			{
+				// Are these for guests?
+				if ($group_id == -1 && in_array($perm, $context['non_guest_permissions']))
+					continue;
+
 				$inserts[] = array($perm, $group_id, $bid, $add_deny);
+			}
 
 		// Delete the previous global board permissions...
 		$smcFunc['db_query']('', '
@@ -679,6 +692,9 @@ function SetQuickGroups()
 			$permChange = array();
 			foreach ($_POST['group'] as $groupID)
 			{
+				if ($groupID == -1 && in_array($permission, $context['non_guest_permissions']))
+					continue;
+
 				if ($permissionType == 'membergroup' && $groupID != 1 && $groupID != 3 && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
 					$permChange[] = array($permission, $groupID, $add_deny);
 				elseif ($permissionType != 'membergroup')
@@ -1079,6 +1095,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 	global $smcFunc, $context;
 
 	loadIllegalPermissions();
+	loadIllegalGuestPermissions();
 
 	// Levels by group... restrict, standard, moderator, maintenance.
 	$groupLevels = array(
@@ -1227,8 +1244,17 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 	// Make sure we're not granting someone too many permissions!
 	foreach ($groupLevels['global'][$level] as $k => $permission)
+	{
 		if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
 			unset($groupLevels['global'][$level][$k]);
+
+		if ($group == -1 && in_array($permission, $context['non_guest_permissions']))
+			unset($groupLevels['global'][$level][$k]);
+	}
+	if ($group == -1)
+		foreach ($groupLevels['board'][$level] as $k => $permission)
+			if (in_array($permission, $context['non_guest_permissions']))
+				unset($groupLevels['board'][$level][$k]);
 
 	// Reset all cached permissions.
 	updateSettings(array('settings_updated' => time()));
@@ -1501,34 +1527,6 @@ function loadAllPermissions($loadType = 'classic')
 		),
 	);
 
-	// This is just a helpful array of permissions guests... cannot have.
-	$non_guest_permissions = array(
-		'karma_edit',
-		'pm_read',
-		'pm_send',
-		'profile_identity',
-		'profile_extra',
-		'profile_title',
-		'profile_remove',
-		'profile_server_avatar',
-		'profile_upload_avatar',
-		'profile_remote_avatar',
-		'mark_any_notify',
-		'mark_notify',
-		'admin_forum',
-		'manage_boards',
-		'manage_attachments',
-		'manage_smileys',
-		'edit_news',
-		'access_mod_center',
-		'moderate_forum',
-		'issue_warning',
-		'manage_membergroups',
-		'manage_permissions',
-		'manage_bans',
-		'send_mail',
-	);
-
 	// All permission groups that will be shown in the left column on classic view.
 	$leftPermissionGroups = array(
 		'general',
@@ -1538,6 +1536,9 @@ function loadAllPermissions($loadType = 'classic')
 		'topic',
 		'post',
 	);
+
+	// We need to know what permissions we can't give to guests.
+	loadIllegalGuestPermissions();
 
 	// Some permissions are hidden if features are off.
 	$hiddenPermissions = array();
@@ -1615,7 +1616,7 @@ function loadAllPermissions($loadType = 'classic')
 					);
 
 			// If this is a guest permission we don't do it if it's the guest group.
-			if (isset($context['group']['id']) && $context['group']['id'] == -1 && in_array($permission, $non_guest_permissions))
+			if (isset($context['group']['id']) && $context['group']['id'] == -1 && in_array($permission, $context['non_guest_permissions']))
 				continue;
 
 			// This is where we set up the permission dependant on the view.
@@ -2133,6 +2134,39 @@ function loadIllegalPermissions()
 		$context['illegal_permissions'][] = 'manage_membergroups';
 	if (!allowedTo('manage_permissions'))
 		$context['illegal_permissions'][] = 'manage_permissions';
+}
+
+// Load all the permissions that can not be given to guests.
+function loadIllegalGuestPermissions()
+{
+	global $context;
+
+	$context['non_guest_permissions'] = array(
+		'karma_edit',
+		'pm_read',
+		'pm_send',
+		'profile_identity',
+		'profile_extra',
+		'profile_title',
+		'profile_remove',
+		'profile_server_avatar',
+		'profile_upload_avatar',
+		'profile_remote_avatar',
+		'mark_any_notify',
+		'mark_notify',
+		'admin_forum',
+		'manage_boards',
+		'manage_attachments',
+		'manage_smileys',
+		'edit_news',
+		'access_mod_center',
+		'moderate_forum',
+		'issue_warning',
+		'manage_membergroups',
+		'manage_permissions',
+		'manage_bans',
+		'send_mail',
+	);
 }
 
 // Present a nice way of applying post moderation.

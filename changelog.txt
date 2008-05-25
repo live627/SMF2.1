@@ -98,6 +98,8 @@ May 2008
  ! Attempt to send a proper filename when downloading a non-ASCII named attachment. (Display.php)
  ! The links to set individual board's permissions were incorrect. (ManageBoards.php, ManageBoards template)
  ! Fixed inserting smileys not working properly in Opera. (editor.js)
+ ! Make sure only those allowed to receive notifications can request them. (Post.php) [Bug 2095]
+ ! Guests could receive disallowed permissions when copied from another group or profile. (ManagePermissions.php)
 
 
 April 2008
