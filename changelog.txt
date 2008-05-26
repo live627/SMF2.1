@@ -100,6 +100,7 @@ May 2008
  ! Fixed inserting smileys not working properly in Opera. (editor.js)
  ! Make sure only those allowed to receive notifications can request them. (Post.php) [Bug 2095]
  ! Guests could receive disallowed permissions when copied from another group or profile. (ManagePermissions.php)
+ * No arrow were shown on highlighted menus with submenus (GenericMenu.template) [Bug 2044]
 
 
 April 2008

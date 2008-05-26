@@ -141,7 +141,7 @@ function template_generic_menu_dropdown_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-						<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">' , $area['icon'] , $area['label'], '</a>';
+						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '' , '" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">' , $area['icon'] , $area['label'], '</a>';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
