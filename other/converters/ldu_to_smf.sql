@@ -71,7 +71,7 @@ SELECT
 	fs.fs_postcount AS num_posts, fs_topiccount AS num_topics,
 	fs_countposts = 0 AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}{$db_forum_sections} AS fs
-	INNER JOIN {$to_prefix}categories AS c ON (BINARY c.name = fs.fs_category);
+	INNER JOIN {$to_prefix}categories AS c ON (c.name = fs.fs_category);
 ---*
 
 /******************************************************************************/

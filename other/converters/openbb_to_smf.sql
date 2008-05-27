@@ -122,7 +122,7 @@ SELECT
 	SUBSTRING(REPLACE(p.message, '\n', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
 FROM {$from_prefix}posts AS p
-	LEFT JOIN {$from_prefix}profiles AS m ON (BINARY m.username = p.poster);
+	LEFT JOIN {$from_prefix}profiles AS m ON (m.username = p.poster);
 ---*
 
 /******************************************************************************/
@@ -215,7 +215,7 @@ TRUNCATE {$to_prefix}log_notify;
 ---* {$to_prefix}log_notify
 SELECT m.id AS id_member, threadid AS id_topic, visit AS sent
 FROM {$from_prefix}favorites AS f
-	INNER JOIN {$from_prefix}profiles AS m ON (BINARY m.username = f.username)
+	INNER JOIN {$from_prefix}profiles AS m ON (m.username = f.username)
 WHERE f.email = 1;
 ---*
 

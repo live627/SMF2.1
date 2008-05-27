@@ -379,7 +379,7 @@ elseif (empty($vb_settings['usefileavatar']))
 	fwrite($fp, $row['filedata']);
 	fclose($fp);
 }
-elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['userid'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $newfilename))
+elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['id_member'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $newfilename))
 	return;
 
 $rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";

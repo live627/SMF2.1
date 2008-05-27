@@ -9,7 +9,6 @@
 ]]></search>
 			<add><![CDATA[		// AEF Login Method?
         $other_passwords[] = md5($user_settings['password_salt'] . $_REQUEST['passwrd']);
-
 ]]></add>
 		</operation>
 	</file>

@@ -425,6 +425,21 @@ function loadSettings()
 			print_error("Sorry, the database connection information used in the specified installation of SMF cannot access the installation of " . $convert_data['name'] . ".  This may either mean that the installation doesn\'t exist, or that the Database account used does not have permissions to access it.\n\nThe error that was received from the Database: " . $smcFunc['db_error'](), true);
 		convert_free_result($result);
 	}
+
+	// Attempt to allow big selects, only for mysql so far though.
+	if ($smcFunc['db_title'] == 'MySQL')
+	{
+		$results = $smcFunc['db_query']('', "SELECT @@SQL_BIG_SELECTS, @@SQL_MAX_JOIN_SIZE", 'security_override');
+		list($big_selects, $sql_max_join) = $smcFunc['db_fetch_row']($results);
+
+		// Only waste a query if its worth it.
+		if (empty($big_selects) || ($big_selects != 1 && $big_selects != '1'))
+			$smcFunc['db_query']('', "SET @@SQL_BIG_SELECTS = 1", 'security_override');
+
+		// Lets set MAX_JOIN_SIZE to something we should
+		if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615'))
+			$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
+	}
 }
 
 function find_convert_scripts()
@@ -2373,6 +2388,27 @@ function convert_query($string, $return_error = false)
 			if ($result !== false)
 				return $result;
 		}
+
+		// Attempt to allow big selects, only for mysql so far though.
+		if ($smcFunc['db_title'] == 'MySQL' && (trim($db_errno) == 1104 || strpos($db_error, 'use SET SQL_BIG_SELECTS=1') !== false))
+		{
+			$results = $smcFunc['db_query']('', "SELECT @@SQL_BIG_SELECTS, @SQL_MAX_JOIN_SIZE", 'security_override');
+			list($big_selects, $sql_max_join) = $smcFunc['db_fetch_row']($results);
+
+			// Only waste a query if its worth it.
+			if (empty($big_selects) || ($big_selects != 1 && $big_selects != '1'))
+				$smcFunc['db_query']('', "SET @@SQL_BIG_SELECTS = 1", 'security_override');
+
+			// Lets set MAX_JOIN_SIZE to something we should
+			if (empty($sql_max_join) || ($sql_max_join = '18446744073709551615' && sql_max_join = '18446744073709551615'))
+				$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
+
+			// Try again.
+			$result = $smcFunc['db_query']('', $string, 'security_override');
+
+			if ($result !== false)
+				return $result;
+		}
 	}
 	elseif ($convert_dbs == 'odbc')
 		$db_error = odbc_errormsg($GLOBALS['odbc_connection']);
@@ -2671,9 +2707,9 @@ function cmdStep0()
 	if (!isset($_SERVER['argv']))
 		$_SERVER['argv'] = array();
 
-	// Lets put a nice message for those who didn't specify anything.
+	// If its empty, force help.
 	if (empty($_SERVER['argv'][1]))
-		print_error('SMF Command-line Converter, please use --help for more info.', true);
+		$_SERVER['argv'][1] = '--help';
 
 	// Lets get the path_to and path_from
 	foreach ($_SERVER['argv'] as $i => $arg)

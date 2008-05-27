@@ -89,7 +89,7 @@ SELECT
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg
 FROM {$from_prefix}threads AS t
 	INNER JOIN {$from_prefix}posts AS p ON (p.tid = t.tid)
-	LEFT JOIN {$from_prefix}users AS ul ON (BINARY ul.username = t.lastposter)
+	LEFT JOIN {$from_prefix}users AS ul ON (ul.username = t.lastposter)
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;

@@ -131,7 +131,7 @@ while (true)
 			INNER JOIN {$from_prefix}user AS u
 			INNER JOIN {$to_prefix}membergroups AS mg
 		WHERE FIND_IN_SET(uc.userclass_id, REPLACE(u.user_class, '.', ','))
-			AND BINARY CONCAT('e107 ', uc.userclass_name) = mg.group_name
+			AND CONCAT('e107 ', uc.userclass_name) = mg.group_name
 		ORDER BY id_member
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
@@ -233,7 +233,7 @@ SELECT
 FROM {$from_prefix}forum AS f
 	INNER JOIN {$from_prefix}forum AS c
 	LEFT JOIN {$from_prefix}userclass_classes AS uc ON (uc.userclass_id = f.forum_class)
-	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('e107 ', uc.userclass_name))
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('e107 ', uc.userclass_name))
 WHERE f.forum_parent != 0;
 ---*
 

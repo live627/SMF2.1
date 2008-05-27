@@ -158,7 +158,7 @@ SELECT
 	'' AS member_ip2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}bbranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
-	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', r.rank_title))
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', r.rank_title))
 WHERE u.user_id != 1
 GROUP BY u.user_id;
 ---*
@@ -177,7 +177,7 @@ while (true)
 		SELECT mg.id_group, mem.id_member
 		FROM {$from_prefix}bbgroups AS g
 			LEFT JOIN {$from_prefix}bbuser_group AS ug ON (ug.group_id = g.group_id)
-			LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', g.group_name))
+			LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', g.group_name))
 			LEFT JOIN {$to_prefix}members AS mem ON (mem.id_member = ug.user_id)
 		WHERE g.group_single_user = 0
 		ORDER BY id_member
@@ -508,7 +508,7 @@ $request = convert_query("
 		aa.auth_announce, aa.auth_vote, aa.auth_pollcreate, aa.auth_mod
 	FROM {$from_prefix}bbauth_access AS aa
 		INNER JOIN {$from_prefix}bbgroups AS g ON (g.group_id = aa.group_id)
-		INNER JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', g.group_name))");
+		INNER JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', g.group_name))");
 while ($row = mysql_fetch_assoc($request))
 {
 	$this_group = array();

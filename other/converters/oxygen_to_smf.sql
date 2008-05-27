@@ -97,7 +97,7 @@ SELECT
 	MAX(p.pid) AS id_last_msg, IF(t.pollopts != '', t.tid, 0) AS id_poll
 FROM {$from_prefix}threads AS t
 	INNER JOIN {$from_prefix}posts AS p ON (p.tid = t.tid)
-	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = t.author)
+	LEFT JOIN {$from_prefix}members AS uf ON (uf.username = t.author)
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -107,7 +107,7 @@ HAVING id_first_msg != 0
 SELECT t.id_topic, uf.uid AS id_member_updated
 FROM {$to_prefix}topics AS t
 	INNER JOIN {$from_prefix}posts AS p ON (p.pid = t.id_last_msg)
-	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = p.author);
+	INNER JOIN {$from_prefix}members AS uf ON (uf.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -132,7 +132,7 @@ SELECT
 	REPLACE(p.message, '<br>', '<br />') AS body, '' AS modified_name,
 	'xx' AS icon
 FROM {$from_prefix}posts AS p
-	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = p.author);
+	LEFT JOIN {$from_prefix}members AS uf ON (uf.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -148,7 +148,7 @@ SELECT
 	t.tid AS id_poll, SUBSTRING(t.subject, 1, 255) AS question,
 	SUBSTRING(t.author, 1, 255) AS poster_name, uf.uid AS id_member
 FROM {$from_prefix}threads AS t
-	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = t.author)
+	LEFT JOIN {$from_prefix}members AS uf ON (uf.username = t.author)
 WHERE t.pollopts != '';
 ---*
 
@@ -202,8 +202,8 @@ SELECT
 	SUBSTRING(pm.msgfrom, 1, 255) AS from_name, pm.subject AS subject,
 	pm.message AS body
 FROM {$from_prefix}u2u AS pm
-	LEFT JOIN {$from_prefix}members AS uf ON (BINARY uf.username = pm.msgfrom)
-	LEFT JOIN {$from_prefix}members AS uf2 ON (BINARY uf2.username = pm.msgto)
+	LEFT JOIN {$from_prefix}members AS uf ON (uf.username = pm.msgfrom)
+	LEFT JOIN {$from_prefix}members AS uf2 ON (uf2.username = pm.msgto)
 WHERE pm.folder != 'outbox';
 ---*
 
@@ -218,7 +218,7 @@ SELECT
 	pm.u2uid AS id_pm, uf.uid AS id_member, pm.isnew = 'no' AS is_read,
 	'' AS labels
 FROM {$from_prefix}u2u AS pm
-	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = pm.msgto)
+	INNER JOIN {$from_prefix}members AS uf ON (uf.username = pm.msgto)
 WHERE pm.folder != 'outbox';
 ---*
 
@@ -231,7 +231,7 @@ TRUNCATE {$to_prefix}log_notify;
 ---* {$to_prefix}log_notify
 SELECT uf.uid AS id_member, f.tid AS id_topic
 FROM {$from_prefix}favorites AS f
-	INNER JOIN {$from_prefix}members AS uf ON (BINARY uf.username = f.username);
+	INNER JOIN {$from_prefix}members AS uf ON (uf.username = f.username);
 ---*
 
 /******************************************************************************/

@@ -178,7 +178,7 @@ SELECT
 	'' AS member_ip2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
-	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', r.rank_title))
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', r.rank_title))
 WHERE u.user_id != -1
 GROUP BY u.user_id;
 ---*
@@ -534,7 +534,7 @@ $request = convert_query("
 		aa.auth_announce, aa.auth_vote, aa.auth_pollcreate, aa.auth_mod
 	FROM {$from_prefix}auth_access AS aa
 		INNER JOIN {$from_prefix}groups AS g ON (g.group_id = aa.group_id)
-		INNER JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', g.group_name));");
+		INNER JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', g.group_name));");
 while ($row = mysql_fetch_assoc($request))
 {
 	$this_group = array();

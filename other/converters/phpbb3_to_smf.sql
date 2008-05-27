@@ -153,22 +153,38 @@ $row['signature'] = preg_replace(
 		'~\[/quote(:.+?)?\]~is',
 		'~\[b(:.+?)?\]~is',
 		'~\[/b(:.+?)?\]~is',
+		'~\[i(:.+?)?\]~is',
+		'~\[/i(:.+?)?\]~is',
+		'~\[u(:.+?)?\]~is',
+		'~\[/u(:.+?)?\]~is',
 		'~\[url:(.+?)\]~is',
+		'~\[url=(.+?):(.+?)\]~is',
 		'~\[/url:(.+?)?\]~is',
 		'~\[img:(.+?)?\]~is',
 		'~\[/img:(.+?)?\]~is',
-		'~\[size=([789]|[012]\d)\]~is',
+		'~\[size=([789]|[012]\d)(:.+?)\]~is',
+		'~\[/size(:.+?)\]~is',
+		'~\[color=([789]|[012]\d)(:.+?)\]~is',
+		'~\[color:(.+?)?\]~is',
 	),
 	array(
 		'[quote author="$1"]',
 		'[/quote]',
 		'[b]',
 		'[/b]',
+		'[i]',
+		'[/i]',
+		'[u]',
+		'[/u]',
 		'[url]',
+		'[url=$1]',
 		'[/url]',
 		'[img]',
 		'[/img]',
 		'[size=$1px]',
+		'[/size]',
+		'[color=$1]',
+		'[/color]',
 	), $row['signature']);
 
 $row['signature'] = substr($row['signature'], 0, 65534);
@@ -180,7 +196,7 @@ SELECT
 	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS last_login,
 	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
-	u.user_posts AS posts, IF(u.user_rank = 1, 1, mg.id_group) AS id_group,
+	u.user_posts AS posts, IF(u.user_rank = 1, 1, IFNULL(mg.id_group, 0)) AS id_group,
 	u.user_new_privmsg AS instant_messages,
 	SUBSTRING(u.user_email, 1, 255) AS email_address,
 	u.user_unread_privmsg AS unread_messages,
@@ -203,7 +219,7 @@ SELECT
 	u.user_ip AS member_ip2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
-	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', r.rank_title))
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', r.rank_title))
 WHERE u.group_id NOT IN (1, 6)
 GROUP BY u.user_id;
 ---*
@@ -223,7 +239,7 @@ while (true)
 		FROM {$from_prefix}groups AS g
 			INNER JOIN {$from_prefix}user_group AS ug ON (ug.group_id = g.group_id)
 			INNER JOIN {$to_prefix}members AS mem ON (mem.id_member = ug.user_id)
-			INNER JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', g.group_name))
+			INNER JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', g.group_name))
 		WHERE g.group_name NOT IN ('GUESTS', 'REGISTERED_COPPA', 'BOTS')
 		ORDER BY id_member
 		LIMIT $_REQUEST[start], 250");
@@ -337,7 +353,7 @@ $row['name'] = str_replace('\n', '<br />', $row['name']);
 SELECT
 	f.forum_id AS id_board, CASE WHEN f.parent_id = c.tempID THEN 0 ELSE f.parent_id END AS id_parent, f.left_id AS board_order, f.forum_posts AS num_posts,
 	f.forum_last_post_id AS id_last_msg, SUBSTRING(f.forum_name, 1, 255) AS name, c.id_cat AS id_cat, '-1,0' AS member_groups,
-	SUBSTRING(BINARY f.forum_desc, 1, 65534) AS description, f.forum_topics AS num_topics, f.forum_last_post_id AS id_last_msg
+	SUBSTRING(f.forum_desc, 1, 65534) AS description, f.forum_topics AS num_topics, f.forum_last_post_id AS id_last_msg
 FROM {$from_prefix}forums AS f
 	LEFT JOIN {$to_prefix}categories AS c ON (c.tempID = f.parent_id)
 WHERE forum_type = 1
@@ -411,31 +427,47 @@ $row['body'] = preg_replace(
 		'~\[/quote(:.+?)?\]~is',
 		'~\[b(:.+?)?\]~is',
 		'~\[/b(:.+?)?\]~is',
+		'~\[i(:.+?)?\]~is',
+		'~\[/i(:.+?)?\]~is',
+		'~\[u(:.+?)?\]~is',
+		'~\[/u(:.+?)?\]~is',
 		'~\[url:(.+?)\]~is',
+		'~\[url=(.+?):(.+?)\]~is',
 		'~\[/url:(.+?)?\]~is',
 		'~\[img:(.+?)?\]~is',
 		'~\[/img:(.+?)?\]~is',
-		'~\[size=([789]|[012]\d)\]~is',
+		'~\[size=([789]|[012]\d)(:.+?)\]~is',
+		'~\[/size(:.+?)\]~is',
+		'~\[color=([789]|[012]\d)(:.+?)\]~is',
+		'~\[color:(.+?)?\]~is',
 	),
 	array(
 		'[quote author="$1"]',
 		'[/quote]',
 		'[b]',
 		'[/b]',
+		'[i]',
+		'[/i]',
+		'[u]',
+		'[/u]',
 		'[url]',
+		'[url=$1]',
 		'[/url]',
 		'[img]',
 		'[/img]',
 		'[size=$1px]',
+		'[/size]',
+		'[color=$1]',
+		'[/color]',
 	), $row['body']);
 ---}
 SELECT
 	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id AS id_board,
-	p.post_time AS poster_time, p.poster_id AS id_member, BINARY p.post_subject AS subject,
+	p.post_time AS poster_time, p.poster_id AS id_member, p.post_subject AS subject,
 	m.username AS poster_name, m.user_email AS poster_email, p.poster_ip AS poster_ip,
 	p.enable_smilies AS smileys_enabled, p.post_edit_time AS modified_time,
 	CASE p.post_edit_user WHEN 0 THEN '' ELSE m2.username END AS modified_name,
-	BINARY p.post_text AS body
+	p.post_text AS body
 FROM {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}users AS m ON (m.user_id = p.poster_id)
 	LEFT JOIN {$from_prefix}users AS m2 ON (m2.user_id = p.post_edit_user);
@@ -465,7 +497,7 @@ WHERE t.poll_title != '';
 ---* {$to_prefix}poll_choices
 SELECT
 	topic_id AS id_poll, poll_option_id AS id_choice,
-	SUBSTRING(BINARY poll_option_text, 1, 255) AS label, poll_option_total AS votes
+	SUBSTRING(poll_option_text, 1, 255) AS label, poll_option_total AS votes
 FROM {$from_prefix}poll_options;
 ---*
 
@@ -489,7 +521,7 @@ TRUNCATE {$to_prefix}personal_messages;
 SELECT
 	pm.msg_id AS id_pm, pm.author_id AS id_member_from, pm.message_time AS msgtime,
 	SUBSTRING(uf.username, 1, 255) AS from_name, SUBSTRING(pm.message_subject, 1, 255) AS subject,
-	SUBSTRING(REPLACE(IF(pm.bbcode_uid = '', pm.message_text, REPLACE(REPLACE(BINARY pm.message_text, CONCAT(':1:', pm.bbcode_uid), ''), CONCAT(':', pm.bbcode_uid), '')), '\n', '<br />'), 1, 65534) AS body
+	SUBSTRING(REPLACE(IF(pm.bbcode_uid = '', pm.message_text, REPLACE(REPLACE(pm.message_text, CONCAT(':1:', pm.bbcode_uid), ''), CONCAT(':', pm.bbcode_uid), '')), '\n', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}privmsgs AS pm
 	LEFT JOIN {$from_prefix}users AS uf ON (uf.user_id = pm.author_id);
 ---*

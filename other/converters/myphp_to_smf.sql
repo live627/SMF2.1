@@ -84,7 +84,7 @@ SELECT
 	MAX(p.pid) AS id_last_msg
 FROM {$from_prefix}topic AS t
 	INNER JOIN {$from_prefix}post AS p ON (p.tid = t.tid)
-	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = t.author)
+	LEFT JOIN {$from_prefix}member AS mem ON (mem.username = t.author)
 GROUP BY t.tid
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -94,7 +94,7 @@ HAVING id_first_msg != 0
 SELECT t.id_topic, mem.uid AS id_member_updated
 FROM {$to_prefix}topics AS t
 	INNER JOIN {$from_prefix}post AS p ON (p.pid = t.id_last_msg)
-	INNER JOIN {$from_prefix}member AS mem ON (BINARY mem.username = p.author);
+	INNER JOIN {$from_prefix}member AS mem ON (mem.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -118,7 +118,7 @@ SELECT
 	'' AS modified_name, 'xx' AS icon
 FROM {$from_prefix}post AS p
 	INNER JOIN {$from_prefix}topic AS t ON (t.tid = p.tid)
-	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = p.author);
+	LEFT JOIN {$from_prefix}member AS mem ON (mem.username = p.author);
 ---*
 
 /******************************************************************************/
@@ -145,7 +145,7 @@ SELECT
 	SUBSTRING(pm.topic, 1, 255) AS subject,
 	SUBSTRING(REPLACE(pm.message, '\n', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}privmsg AS pm
-	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = pm.sender);
+	LEFT JOIN {$from_prefix}member AS mem ON (mem.username = pm.sender);
 ---*
 
 /******************************************************************************/
@@ -157,7 +157,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT pm.id AS id_pm, mem.uid AS id_member, '' AS labels
 FROM {$from_prefix}privmsg AS pm
-	INNER JOIN {$from_prefix}member AS mem ON (BINARY mem.username = pm.receiver);
+	INNER JOIN {$from_prefix}member AS mem ON (mem.username = pm.receiver);
 ---*
 
 /******************************************************************************/

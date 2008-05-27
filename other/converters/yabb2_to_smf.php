@@ -538,7 +538,7 @@ if (empty($preparsing))
 					(id_pm, id_member, labels)
 				SELECT pm.id_pm, mem.id_member, '' AS labels
 				FROM {$to_prefix}personal_messages AS pm
-					INNER JOIN {$to_prefix}members AS mem ON (BINARY mem.member_name = pm.temp_to_name)
+					INNER JOIN {$to_prefix}members AS mem ON (mem.member_name = pm.temp_to_name)
 				WHERE pm.temp_to_name != ''");
 
 			pastTime(-4);
