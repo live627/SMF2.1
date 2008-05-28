@@ -293,7 +293,7 @@ function template_view_package()
 	}
 		echo '
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />', !$context['ftp_needed'] ? '
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />', (isset($context['form_sequence_number']) && !$context['ftp_needed']) ? '
 			<input type="hidden" name="seqnum" value="' . $context['form_sequence_number'] . '" />' : '', '
 		</form>';
 
