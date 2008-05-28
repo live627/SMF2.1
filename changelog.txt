@@ -101,6 +101,7 @@ May 2008
  ! Make sure only those allowed to receive notifications can request them. (Post.php) [Bug 2095]
  ! Guests could receive disallowed permissions when copied from another group or profile. (ManagePermissions.php)
  * No arrow were shown on highlighted menus with submenus (GenericMenu.template) [Bug 2044]
+ ! The subject of the 'report to moderator' mail notification wasn't properly encoded. (SendTopic.php) [Bug 1856]
 
 
 April 2008

@@ -511,7 +511,7 @@ function ReportToModerator2()
 		$emaildata = loadEmailTemplate('report_to_moderator', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		// Send it to the moderator.
-		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], $user_info['email'], null, null, false, 1);
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], $user_info['email'], null, false, 1);
 	}
 	$smcFunc['db_free_result']($request);
 
