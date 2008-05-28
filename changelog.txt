@@ -103,6 +103,7 @@ May 2008
  * No arrow were shown on highlighted menus with submenus. (GenericMenu template) [Bug 2044]
  * Fixed some validation issues on admin pages. (Admin template, GenericMenu template) [Bug 2146]
  ! The subject of the 'report to moderator' mail notification wasn't properly encoded. (SendTopic.php) [Bug 1856]
+ ! When browsing avatars the popup address was wrong if using a custom avatar directory. (ManageAttachments.php) [Bug 2139]
 
 
 April 2008
