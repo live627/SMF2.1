@@ -516,7 +516,7 @@ function smfSuggest(sessionID, textID)
 			xmlRequestHandle.abort();
 
 		// Clean the text handle.
-		searchString = escape(textToEntities(searchString).replace(/&#(\d+);/g, "%#$1%")).replace(/%26/g, "%25%23038%25");
+		searchString = searchString.php_to8bit().php_urlencode();
 
 		// Get the document.
 		xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);

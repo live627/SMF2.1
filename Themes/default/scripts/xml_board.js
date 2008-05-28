@@ -59,7 +59,7 @@ function modify_topic_save(cur_session_id)
 		return true;
 
 	var i, x = new Array();
-	x[x.length] = 'subject=' + escape(textToEntities(document.forms.quickModForm['subject'].value)).replace(/\+/g, "%2B");
+	x[x.length] = 'subject=' + document.forms.quickModForm['subject'].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 	x[x.length] = 'topic=' + parseInt(document.forms.quickModForm.elements['topic'].value);
 	x[x.length] = 'msg=' + parseInt(document.forms.quickModForm.elements['msg'].value);
 

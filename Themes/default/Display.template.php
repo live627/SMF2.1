@@ -362,7 +362,7 @@ function template_main()
 				</div>
 				<div class="postarea">
 					<div class="keyinfo">
-						<div class="messageicon floatleft" id="subject_', $message['id'], '"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
+						<div class="messageicon floatleft"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
 						<h5 id="subject_', $message['id'], '"><a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a></h5>
 						<div class="smalltext">&#171; <strong>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</div>
 						<div id="msg_', $message['id'], '_quick_mod"></div>

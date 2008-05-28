@@ -1191,7 +1191,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	}
 
 	// Get the text.
-	var sText = escape(textToEntities(this.getText(true, !bView).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+	var sText = this.getText(true, !bView).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 
 	this.tmpMethod = sendXMLDocument;
 	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=' + (bView ? 1 : 0) + ';sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
