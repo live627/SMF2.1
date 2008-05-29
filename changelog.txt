@@ -5,6 +5,7 @@ SMF 2.0 Beta 4                                                               ???
 ================================================================================
 May 2008
 --------------------------------------------------------------------------------
+ ! Tell PostgreSQL how to convert an integer into a timestamp (Subs-Db-Postgresql.php) [Bug 2048]
  + Added support for XCache. (Admin.php, Load.php, ManageServer.php, Subs-Admin.php, ManageSettings language file) [Feature 1937]
  ! When issuing a warning, check to see if there are no errors before sending them a notification about the warning. (Profile-Actions.php) [Bug 1955, Bug 1996]
  ! More substring replacements for SQLite. (Themes.php) [Bug 2005]
