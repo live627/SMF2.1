@@ -110,6 +110,7 @@ May 2008
  ! Standardized and centralized the url encoding and 8 bit conversion of JavaScript textual parameters (script.js, editor.js, register.js, suggest.js, xml_board.js, xml_topic.js)
  ! Fixed the registration name check not working properly with HTML entities. (Register.php)
  * Fixed duplicate ID causing the quick edit subject to appear at the wrong place. (Display template)
+ ! Fixed ISO-8859-9 and added ISO-8859-15 to the JavaScript character set conversion. (script.js)
 
 
 April 2008

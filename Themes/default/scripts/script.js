@@ -181,7 +181,6 @@ String.prototype.php_to8bit = function () {
 	{
 		return this.smf_toEntities();
 	}
-
 	else if (smf_charset == 'ISO-8859-2')
 	{
 		return this.php_strtr(
@@ -194,7 +193,14 @@ String.prototype.php_to8bit = function () {
 		return this.php_strtr(
 			'\u011e\u0130\u015e\u011f\u0131\u015f',
 			'\xd0\xdd\xde\xf0\xfd\xfe'
-		);
+		).smf_toEntities();
+	}
+	else if (smf_charset == 'ISO-8859-15')
+	{
+		return this.php_strtr(
+			'\u20ac\u0160\u0161\u017d\u017e\u0152\u0153\u0178',
+			'\xa4\xa6\xa8\xb4\xb8\xbc\xbd\xbe'
+		).smf_toEntities();
 	}
 	else if (smf_charset == 'tis-620')
 	{
