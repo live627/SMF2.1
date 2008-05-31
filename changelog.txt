@@ -114,6 +114,7 @@ May 2008
  ! PostgreSQL won't like group by on not all columns. (Display.php, Subs-Db-postgresql.php)
  ! Make sure mail queue emails are parsed as strings. (ScheduledTasks.php) [Bug 1841]
  ! If there's nothing to search for due to some dodgy characters, then just skip it. (Search.php) [Bug 2088]
+ ! Make sure the page title really does handle entities correctly. (Subs.php) [Bug 2077]
 
 
 April 2008

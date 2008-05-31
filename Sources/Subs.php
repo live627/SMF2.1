@@ -3171,7 +3171,7 @@ function setupThemeContext($forceload = false)
 		$context['page_title'] = '';
 
 	// Set some specific vars.
-	$context['page_title_html_safe'] = $smcFunc['htmlspecialchars']($context['page_title']);
+	$context['page_title_html_safe'] = $smcFunc['htmlspecialchars'](un_htmlspecialchars($context['page_title']));
 	$context['meta_keywords'] = !empty($modSettings['meta_keywords']) ? $modSettings['meta_keywords'] : 'PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum';
 	$context['forum_name_html_safe'] = $smcFunc['htmlspecialchars']($context['forum_name']);
 }
