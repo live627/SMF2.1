@@ -111,6 +111,7 @@ May 2008
  ! Fixed the registration name check not working properly with HTML entities. (Register.php)
  * Fixed duplicate ID causing the quick edit subject to appear at the wrong place. (Display template)
  ! Fixed ISO-8859-9 and added ISO-8859-5 and ISO-8859-15 to the JavaScript character set conversion. (script.js)
+ ! PostgreSQL won't like group by on not all columns. (Display.php, Subs-Db-postgresql.php)
 
 
 April 2008
