@@ -1291,6 +1291,9 @@ function PlushSearch2()
 							}
 						}
 
+						// Nothing to search for?
+						if (empty($subject_query['where']))
+							continue;
 
 						$ignoreRequest = $smcFunc['db_search_query']('insert_log_search_topics', ($smcFunc['db_support_ignore'] ? ( '
 							INSERT IGNORE INTO {db_prefix}' . ($createTemporary ? 'tmp_' : '') . 'log_search_topics

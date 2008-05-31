@@ -113,6 +113,7 @@ May 2008
  ! Fixed ISO-8859-9 and added ISO-8859-5 and ISO-8859-15 to the JavaScript character set conversion. (script.js)
  ! PostgreSQL won't like group by on not all columns. (Display.php, Subs-Db-postgresql.php)
  ! Make sure mail queue emails are parsed as strings. (ScheduledTasks.php) [Bug 1841]
+ ! If there's nothing to search for due to some dodgy characters, then just skip it. (Search.php) [Bug 2088]
 
 
 April 2008
