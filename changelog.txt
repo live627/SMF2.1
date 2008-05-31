@@ -115,6 +115,7 @@ May 2008
  ! Make sure mail queue emails are parsed as strings. (ScheduledTasks.php) [Bug 1841]
  ! If there's nothing to search for due to some dodgy characters, then just skip it. (Search.php) [Bug 2088]
  ! Make sure the page title really does handle entities correctly. (Subs.php) [Bug 2077]
+ ! The JavaScript character set conversion was still not fully identical to a typical form submission process. (script.js)
 
 
 April 2008
