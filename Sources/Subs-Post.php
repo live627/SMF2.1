@@ -796,9 +796,15 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	static $cur_insert = array();
 	static $cur_insert_len = 0;
 
+	if ($cur_insert_len == 0)
+		$cur_insert = array();
+
 	// If we're flushing, make the final inserts - also if we're near the MySQL length limit!
 	if (($flush || $cur_insert_len > 800000) && !empty($cur_insert))
 	{
+		// Only do these once.
+		$cur_insert_len = 0;
+
 		// Dump the data...
 		$smcFunc['db_insert']('',
 			'{db_prefix}mail_queue',
@@ -811,8 +817,6 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		);
 
 		$cur_insert = array();
-		$cur_insert_len = 0;
-
 		$context['flush_mail'] = false;
 	}
 
@@ -864,7 +868,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		}
 
 		// Now add the current insert to the array...
-		$cur_insert[] = array(time(), $to, $message, $subject, $headers, ($send_html ? 1 : 0), $priority);
+		$cur_insert[] = array(time(), (string) $to, (string) $message, (string) $subject, (string) $headers, ($send_html ? 1 : 0), $priority);
 		$cur_insert_len += $this_insert_len;
 	}
 
