@@ -225,7 +225,7 @@ function setPassword2()
 
 	// Get the code as it should be from the database.
 	$request = $smcFunc['db_query']('', '
-		SELECT validation_code, member_name, email_address
+		SELECT validation_code, member_name, email_address, passwd_flood
 		FROM {db_prefix}members
 		WHERE id_member = {int:id_member}
 			AND is_activated = {int:is_activated}
@@ -242,7 +242,7 @@ function setPassword2()
 	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('invalid_userid', false);
 
-	list ($realCode, $username, $email) = $smcFunc['db_fetch_row']($request);
+	list ($realCode, $username, $email, $flood_value) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
 	// Is the password actually valid?
@@ -255,7 +255,16 @@ function setPassword2()
 
 	// Quit if this code is not right.
 	if (empty($_POST['code']) || substr($realCode, 0, 10) != substr(md5($_POST['code']), 0, 10))
+	{
+		// Stop brute force attacks like this.
+		require_once($sourcedir . '/LogInOut.php');
+		validatePasswordFlood($_POST['u'], $flood_value, false);
+	
 		fatal_error($txt['invalid_activation_code'], false);
+	}
+
+	// Just in case, flood control.
+	validatePasswordFlood($_POST['u'], $flood_value, true);
 
 	// User validated.  Update the database!
 	updateMemberData($_POST['u'], array('validation_code' => '', 'passwd' => sha1(strtolower($username) . $_POST['passwrd1'])));
