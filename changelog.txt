@@ -9,6 +9,8 @@ June 2008
  ! Added some compression to the character set conversion schemas. (script.js)
  * Image inconsistency on ManagePermissions. (ManagePermissions template) [Bug 2147]
  ! Fixed the auto suggest not supporting non-UTF8 character sets. (Subs-Editor.php) [Bug 1895]
+ & Viewing membergroups was missing the associated action. (Who language file) [Bug 2149]
+ ! Don't log the user into the online log if they are entering a verification code or generally using xml - as the action won't make sense anyway. (index.php) [Bug 2149]
 
 
 May 2008

@@ -182,7 +182,7 @@ function smf_main()
 		fatal_lang_error('not_a_topic', false);
 
 	// Do some logging, unless this is an attachment, avatar, theme option or XML feed.
-	if (empty($_REQUEST['action']) || !in_array($_REQUEST['action'], array('dlattach', 'jsoption', '.xml', 'xmlhttp')))
+	if ((empty($_REQUEST['action']) || !in_array($_REQUEST['action'], array('dlattach', 'jsoption', '.xml', 'xmlhttp', 'verificationcode'))) && !isset($_GET['xml']))
 	{
 		// Log this user as online.
 		writeLog();
