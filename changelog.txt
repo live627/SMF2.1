@@ -18,6 +18,7 @@ June 2008
  ! The number of permissions per group was being miscounted slightly. (ManagePermissions.php) [Bug 2108]
  ! Split topics wouldn't always work on PostgreSQL due to bad grouping. (SplitTopics.php) [Bug 2090]
  ! Applying signature settings would replace all instances of an over-ratio image sig. (ManageSettings.php) [Bug 2085]
+ ! If the user can select more than one option in a poll - limit it to the number of options. (Display.php, SSI.php)
 
 
 May 2008

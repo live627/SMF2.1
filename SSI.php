@@ -1108,7 +1108,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		);
 	}
 
-	$return['allowed_warning'] = $row['max_votes'] > 1 ? sprintf($txt['poll_options6'], $row['max_votes']) : '';
+	$return['allowed_warning'] = $row['max_votes'] > 1 ? sprintf($txt['poll_options6'], min(count($options), $row['max_votes'])) : '';
 
 	if ($output_method != 'echo')
 		return $return;
@@ -1269,7 +1269,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 		);
 	}
 
-	$return['allowed_warning'] = $row['max_votes'] > 1 ? sprintf($txt['poll_options6'], $row['max_votes']) : '';
+	$return['allowed_warning'] = $row['max_votes'] > 1 ? sprintf($txt['poll_options6'], min(count($options), $row['max_votes'])) : '';
 
 	if ($output_method != 'echo')
 		return $return;
