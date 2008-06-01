@@ -388,7 +388,38 @@ function template_set_settings()
 				<tr class="windowbg2">
 					<td style="padding-bottom: 2ex;">', $txt['actual_theme_dir'], '</td>
 					<td style="padding-bottom: 2ex;"><input type="text" name="options[theme_dir]" value="', $context['theme_settings']['actual_theme_dir'], '" size="50" style="max-width: 100%; width: 50ex;" /></td>
+				</tr>';
+
+	// Do we allow theme variants?
+	if (!empty($context['theme_variants']))
+	{
+		echo '
+				<tr class="catbg">
+					<td colspan="2"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme_variants'], '</td>
 				</tr>
+				<tr class="windowbg2">
+					<td colspan="2">
+						', $txt['theme_variants_default'], ':
+						<select name="options[default_variant]" onchange="changeVariant(this.value)">';
+
+		foreach ($context['theme_variants'] as $key => $variant)
+			echo '
+							<option value="', $key, '" ', $context['default_variant'] == $key ? 'selected="selected"' : '', '>', $variant['label'], '</option>';
+
+		echo '
+						</select>
+						<br /><img src="', $context['theme_variants'][$context['default_variant']]['thumbnail'], '" id="variant_preview"/>
+					</td>
+				</tr>
+				<tr class="windowbg2">
+					<td colspan="2">
+						<input type="hidden" name="options[disable_user_variant]" value="0" />
+						<label for="disable_user_variant"><input type="checkbox" name="options[disable_user_variant]" id="disable_user_variant"', !empty($context['theme_settings']['disable_user_variant']) ? ' checked="checked"' : '', ' value="1" class="check" /> ', $txt['theme_variants_user_disable'], '</label>
+					</td>
+				</tr>';
+	}
+
+	echo '
 				<tr class="catbg">
 					<td colspan="2"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme_options'], '</td>
 				</tr>';
@@ -439,6 +470,31 @@ function template_set_settings()
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</form>';
+
+	if (!empty($context['theme_variants']))
+	{
+		echo '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var oThumbnails = {';
+
+		// All the variant thumbnails.
+		$count = 1;
+		foreach ($context['theme_variants'] as $key => $variant)
+		{
+			echo '
+			', $key, ': \'', $variant['thumbnail'], '\'', (count($context['theme_variants']) == $count ? '' : ',');
+			$count++;
+		}
+
+		echo '
+		}
+
+		function changeVariant(sVariant)
+		{
+			document.getElementById(\'variant_preview\').src = oThumbnails[sVariant];
+		}
+		// ]]></script>';
+	}
 }
 
 // This template allows for the selection of different themes ;).
@@ -446,26 +502,88 @@ function template_pick()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
+	echo '
+	<form action="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">';
+
 	// Just go through each theme and show its information - thumbnail, etc.
 	foreach ($context['available_themes'] as $theme)
+	{
 		echo '
 	<table align="center" width="85%" cellpadding="3" cellspacing="0" border="0" class="tborder">
 		<tr class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
-			<td rowspan="2" width="126" height="120"><img src="', $theme['thumbnail_href'], '" alt="" /></td>
+			<td rowspan="2" width="126" height="120"><img src="', $theme['thumbnail_href'], '" id="theme_thumb_', $theme['id'], '" alt="" /></td>
 			<td valign="top" style="padding-top: 5px;">
-				<div style="font-size: larger; padding-bottom: 6px;"><b><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';sesc=', $context['session_id'], '">', $theme['name'], '</a></b></div>
+				<div>
+					<div style="font-size: larger; float: left;">
+						<b><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';sesc=', $context['session_id'], '">', $theme['name'], '</a></b>
+					</div>
+					<div style="float: right;">';
+
+		if (!empty($theme['variants']))
+		{
+			echo '
+						<b>', $theme['pick_label'], '</b>: <select name="vrt[', $theme['id'], ']" onchange="changeVariant', $theme['id'], '(this.value);">';
+
+			foreach ($theme['variants'] as $key => $variant)
+			{
+				echo '
+							<option value="', $key, '" ', $theme['selected_variant'] == $key ? 'selected="selected"' : '', '>', $variant['label'], '</option>';
+			}
+			echo '
+						</select>
+						<noscript>
+							<input type="submit" name="save[', $theme['id'], ']" value="', $txt['save'], '" />
+						</noscript>';
+		}
+
+		echo '
+					</div>
+				</div><br /><br />
 				', $theme['description'], '
 			</td>
 		</tr>
 		<tr class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
 			<td valign="bottom" align="right" style="padding: 6px; padding-top: 0;">
 				<div style="float: left;" class="smalltext"><i>', $theme['num_users'], ' ', ($theme['num_users'] == 1 ? $txt['theme_user'] : $txt['theme_users']), '</i></div>
-				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';sesc=', $context['session_id'], '">', $txt['theme_set'], '</a> |
-				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';sesc=', $context['session_id'], '">', $txt['theme_preview'], '</a>
+				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';sesc=', $context['session_id'], '" id="theme_use_', $theme['id'], '">', $txt['theme_set'], '</a> |
+				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';sesc=', $context['session_id'], '" id="theme_preview_', $theme['id'], '">', $txt['theme_preview'], '</a>
 			</td>
 		</tr>
 	</table>
 	<br />';
+
+		if (!empty($theme['variants']))
+		{
+			echo '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var sBaseUseUrl = \'', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';sesc=', $context['session_id'], '\';
+		var sBasePreviewUrl = \'', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';sesc=', $context['session_id'], '\';
+		var oThumbnails', $theme['id'], ' = {';
+
+			// All the variant thumbnails.
+			$count = 1;
+			foreach ($theme['variants'] as $key => $variant)
+			{
+				echo '
+			', $key, ': \'', $variant['thumbnail'], '\'', (count($theme['variants']) == $count ? '' : ',');
+			$count++;
+			}
+
+			echo '
+		}
+
+		function changeVariant', $theme['id'], '(sVariant)
+		{
+			document.getElementById(\'theme_thumb_', $theme['id'], '\').src = oThumbnails', $theme['id'], '[sVariant];
+			document.getElementById(\'theme_use_', $theme['id'], '\').href = sBaseUseUrl + \';vrt=\' + sVariant;
+			document.getElementById(\'theme_preview_', $theme['id'], '\').href = sBasePreviewUrl + \';vrt=\' + sVariant + \';variant=\' + sVariant;
+		}
+		// ]]></script>';
+		}
+	}
+
+	echo '
+	</form>';
 }
 
 // Okay, that theme was installed successfully!

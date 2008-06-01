@@ -116,6 +116,7 @@ May 2008
  ! If there's nothing to search for due to some dodgy characters, then just skip it. (Search.php) [Bug 2088]
  ! Make sure the page title really does handle entities correctly. (Subs.php) [Bug 2077]
  ! The JavaScript character set conversion was still not fully identical to a typical form submission process. (script.js)
+ + It is now possible for themes to define "variations" (Such as colours) and have SMF do all the UI for it. (Themes.php, Load.php, Themes and index templates, Themes language file)
  ! Added some compression to the character set conversion schemas. (script.js)
 
 

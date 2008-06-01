@@ -68,7 +68,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b21"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b4"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -86,10 +86,10 @@ function template_html_above()
 		echo '
 	<meta name="robots" content="noindex" />';
 
-	// The ?b21 part of this link is just here to make sure browsers don't cache it wrongly.
+	// The ?b4 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?b21" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b21" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?b4" />
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b4" media="print" />';
 
 	/* Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are big...)
 		Thus, in Internet Explorer 4, 5, and Opera 6 this will show fonts one size smaller than usual.

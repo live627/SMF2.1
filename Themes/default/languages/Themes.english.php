@@ -35,6 +35,7 @@ $txt['theme_preview'] = 'preview &raquo;';
 $txt['theme_set'] = 'use this theme';
 $txt['theme_user'] = 'person is using this theme.';
 $txt['theme_users'] = 'people are using this theme.';
+$txt['theme_pick_variant'] = 'Select Variant';
 
 $txt['theme_edit'] = 'Edit Theme';
 $txt['theme_edit_style'] = 'Modify the style.css file. (colors, fonts, etc.)';
@@ -45,12 +46,16 @@ $txt['theme_edit_save'] = 'Save Changes';
 $txt['theme_global_description'] = 'This is the default theme, which means your theme will change along with the administrators\' settings and the board you are viewing.';
 
 $txt['theme_url_config'] = 'Theme URLs and Configuration';
+$txt['theme_variants'] = 'Theme Variants';
 $txt['theme_options'] = 'Theme Options and Preferences';
 $txt['actual_theme_name'] = 'This theme\'s name: ';
 $txt['actual_theme_dir'] = 'This theme\'s directory: ';
 $txt['actual_theme_url'] = 'This theme\'s URL: ';
 $txt['actual_images_url'] = 'This theme\'s images URL: ';
 $txt['current_theme_style'] = 'This theme\'s style: ';
+
+$txt['theme_variants_default'] = 'Default theme variant';
+$txt['theme_variants_user_disable'] = 'Disable user variant selection';
 
 $txt['show_group_key'] = 'Show group key on board index';
 $txt['additional_options_collapsable'] = 'Enable collapsible additional post options';

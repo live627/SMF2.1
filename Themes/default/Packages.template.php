@@ -1418,7 +1418,7 @@ function template_view_operations()
 		<title>', $txt['operation_title'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b21"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b4"></script>
 	</head>
 	<body>
 	<div class="tborder" style="width: 100%;">
