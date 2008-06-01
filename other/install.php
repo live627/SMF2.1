@@ -1038,7 +1038,13 @@ function DatabasePopulation()
 			if (preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) == 1)
 				$incontext['sql_results']['tables']++;
 			else
-				$incontext['sql_results']['inserts']++;
+			{
+				preg_match_all('~\)[,;]~', $current_statement, $matches);
+				if (!empty($matches[0]))
+					$incontext['sql_results']['inserts'] += count($matches[0]);
+				else
+					$incontext['sql_results']['inserts']++;
+			}
 		}
 
 		$current_statement = '';
