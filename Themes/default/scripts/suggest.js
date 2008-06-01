@@ -38,6 +38,8 @@ function smfSuggest(sessionID, textID)
 		textHandle.addEventListener('change', autoSuggestUpdate, false);
 		textHandle.addEventListener('blur', autoSuggestHide, false);
 		textHandle.addEventListener('focus', autoSuggestUpdate, false);
+
+		return true;
 	}
 
 	// Was it an enter key - if so assume they are trying to select something.
@@ -121,6 +123,8 @@ function smfSuggest(sessionID, textID)
 			selectedDiv = toHighlight;
 			itemMouseOver({'srcElement': selectedDiv});
 		}
+		
+		return true;
 	}
 
 	// Functions for integration.
@@ -178,6 +182,8 @@ function smfSuggest(sessionID, textID)
 		suggestDivHandle.style.left = parentPos[0] + 'px';
 		suggestDivHandle.style.top = (parentPos[1] + textHandle.offsetHeight) + 'px';
 		suggestDivHandle.style.width = textHandle.style.width;
+
+		return true;
 	}
 
 	// Do something after clicking an item.
@@ -370,6 +376,8 @@ function smfSuggest(sessionID, textID)
 		}
 
 		displayData = newDisplayData;
+
+		return true;
 	}
 
 	// Refocus the element.
@@ -435,6 +443,8 @@ function smfSuggest(sessionID, textID)
 			autoSuggestHide();
 		else
 			autoSuggestShow();
+
+		return true;
 	}
 
 	// Get a new suggestion.
@@ -520,6 +530,8 @@ function smfSuggest(sessionID, textID)
 
 		// Get the document.
 		xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);
+
+		return true;
 	}
 
 	// Auto initialise!

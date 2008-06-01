@@ -118,6 +118,7 @@ May 2008
  ! The JavaScript character set conversion was still not fully identical to a typical form submission process. (script.js)
  + It is now possible for themes to define "variations" (Such as colours) and have SMF do all the UI for it. (Themes.php, Load.php, Themes and index templates, Themes language file)
  ! Added some compression to the character set conversion schemas. (script.js)
+ ! Fixed the auto suggest not supporting non-UTF8 character sets. (Subs-Editor.php) [Bug 1895]
 
 
 April 2008
