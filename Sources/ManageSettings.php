@@ -930,8 +930,11 @@ function ModifySignatureSettings($return_config = false)
 			$request = $smcFunc['db_query']('', '
 				SELECT id_member, signature
 				FROM {db_prefix}members
-				WHERE id_member BETWEEN ' . $_GET['step'] . ' AND ' . $_GET['step'] . ' + 49',
+				WHERE id_member BETWEEN ' . $_GET['step'] . ' AND ' . $_GET['step'] . ' + 49
+					AND id_group != {int:admin_group}
+					AND NOT FIND_IN_SET({int:admin_group}, additional_groups)',
 				array(
+					'admin_group' => 1,
 				)
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -1004,6 +1007,7 @@ function ModifySignatureSettings($return_config = false)
 					// Try to find all the images!
 					if (!empty($matches))
 					{
+						$image_count_holder = array();
 						foreach ($matches[0] as $key => $image)
 						{
 							$width = -1; $height = -1;
@@ -1011,8 +1015,28 @@ function ModifySignatureSettings($return_config = false)
 							// Too many images?
 							if (!empty($sig_limits[3]) && $img_count > $sig_limits[3])
 							{
-								$replaces[$image] = '';
-								break;
+								// If we've already had this before we only want to remove the excess.
+								if (isset($image_count_holder[$image]))
+								{
+									$img_offset = -1;
+									$rep_img_count = 0;
+									while ($img_offset !== false)
+									{
+										$img_offset = strpos($sig, $image, $img_offset + 1);
+										$rep_img_count++;
+										if ($rep_img_count > $image_count_holder[$image])
+										{
+											// Only replace the excess.
+											$sig = substr($sig, 0, $img_offset) . str_replace($image, '', substr($sig, $img_offset));
+											// Stop looping.
+											$img_offset = false;
+										}
+									}
+								}
+								else
+									$replaces[$image] = '';
+
+								continue;
 							}
 
 							// Does it have predefined restraints? Width first.
@@ -1062,7 +1086,12 @@ function ModifySignatureSettings($return_config = false)
 
 							// Did we come up with some changes? If so remake the string.
 							if ($width != -1 || $height != -1)
+							{
 								$replaces[$image] = '[img' . ($width != -1 ? ' width=' . round($width) : '') . ($height != -1 ? ' height=' . round($height) : '') . ']' . $matches[7][$key] . '[/img]';
+							}
+
+							// Record that we got one.
+							$image_count_holder[$image] = isset($image_count_holder[$image]) ? $image_count_holder[$image] + 1 : 1;
 						}
 						if (!empty($replaces))
 							$sig = str_replace(array_keys($replaces), array_values($replaces), $sig);
