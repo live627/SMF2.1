@@ -20,6 +20,7 @@ June 2008
  ! Applying signature settings would replace all instances of an over-ratio image sig. (ManageSettings.php) [Bug 2085]
  ! If the user can select more than one option in a poll - limit it to the number of options. (Display.php, SSI.php)
  ! The UTF-8 check on install wouldn't work due to lack of server connection. (install.php) [Bug 2054]
+ ! SQLite should not return error text if connection fails, instead hold it in db_error. (Subs-Db-sqlite.php) [Bug 1730]
 
 
 May 2008

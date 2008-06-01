@@ -34,7 +34,7 @@ if (!defined('SMF'))
 // Initialize the database settings
 function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
-	global $smcFunc, $mysql_set_mode, $db_in_transact;
+	global $smcFunc, $mysql_set_mode, $db_in_transact, $sqlite_error;
 
 	// Map some database specific functions, only do this once.
 	if (!isset($smcFunc['db_fetch_assoc']) || $smcFunc['db_fetch_assoc'] != 'sqlite_fetch_array')
@@ -73,7 +73,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 	if (!$connection)
 	{
 		if (!empty($db_options['non_fatal']))
-			return $sqlite_error;
+			return null;
 		else
 			db_fatal_error();
 	}
@@ -378,10 +378,10 @@ function smf_db_insert_id($table, $field, $connection = null)
 // Keeps the connection handle.
 function smf_db_last_error()
 {
-	global $db_connection;
+	global $db_connection, $sqlite_error;
 
 	$query_errno = sqlite_last_error($db_connection);
-	return sqlite_error_string($query_errno);
+	return $query_errno || empty($sqlite_error) ? sqlite_error_string($query_errno) : $sqlite_error;
 }
 
 // Do a transaction.
