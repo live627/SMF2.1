@@ -73,6 +73,8 @@ if (!defined('SMF'))
 	void ModifyPruningSettings()
 		// !!!
 
+	void disablePostModeration()
+		// !!!
 // !!!
 */
 
@@ -272,9 +274,16 @@ function ModifyCoreFeatures($return_config = false)
 		'pm' => array(
 			'url' => 'action=admin;area=permissions;sa=postmod',
 			'setting_callback' => create_function('$value', '
+				global $sourcedir;
+
 				// Cant use warning post moderation if disabled!
 				if (!$value)
+				{
+					require_once($sourcedir . \'/PostModeration.php\');
+					approveAllData();
+
 					return array(\'warning_moderate\' => 0);
+				}
 				else
 					return array();
 			'),

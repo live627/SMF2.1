@@ -69,7 +69,7 @@ $txt['password_success'] = 'Your password was changed successfully.<br />Click <
 $txt['secret_why_blank'] = 'why is this blank?';
 
 $txt['authentication_reminder'] = 'Authentication Reminder';
-$txt['password_reminder_desc'] = 'If you\'ve forgotten your login details, don\'t worry, they can be retrieved. To start this process please enter your username or password below.';
+$txt['password_reminder_desc'] = 'If you\'ve forgotten your login details, don\'t worry, they can be retrieved. To start this process please enter your username or email address below.';
 $txt['authentication_options'] = 'Please select one of the two options below';
 $txt['authentication_openid_email'] = 'Email me a reminder of my OpenID identity';
 $txt['authentication_openid_secret'] = 'Answer my &quot;secret question&quot; to display my OpenID identity';

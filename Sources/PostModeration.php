@@ -512,4 +512,50 @@ function ApproveMessage()
 	redirectexit('topic=' . $topic . '.msg' . $_REQUEST['msg']. '#msg' . $_REQUEST['msg']);
 }
 
+// This is a helper function - basically approve everything!
+function approveAllData()
+{
+	global $smcFunc, $sourcedir;
+
+	// Start with messages and topics.
+	$request = $smcFunc['db_query']('', '
+		SELECT id_msg
+		FROM {db_prefix}messages
+		WHERE approved = {int:not_approved}',
+		array(
+			'not_approved' => 0,
+		)
+	);
+	$msgs = array();
+	while ($row = $smcFunc['db_fetch_row']($request))
+		$msgs[] = $row[0];
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($msgs))
+	{
+		require_once($sourcedir . '/Subs-Post.php');
+		approvePosts($msgs);
+	}
+
+	// Now do attachments
+	$request = $smcFunc['db_query']('', '
+		SELECT id_attach
+		FROM {db_prefix}attachments
+		WHERE approved = {int:not_approved}',
+		array(
+			'not_approved' => 0,
+		)
+	);
+	$attaches = array();
+	while ($row = $smcFunc['db_fetch_row']($request))
+		$attaches[] = $row[0];
+	$smcFunc['db_free_result']($request);
+
+	if (!empty($attaches))
+	{
+		require_once($sourcedir . '/ManageAttachments.php');
+		ApproveAttachments($attaches);
+	}
+}
+
 ?>
