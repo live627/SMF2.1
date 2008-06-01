@@ -16,6 +16,7 @@ June 2008
  ! Upgrade could turn back on post moderation - bad boy! (upgrade_2-0_mysql.sql) [Bug 2133]
  ! Add the brute force check to reminder emails. (Reminder.php)
  ! The number of permissions per group was being miscounted slightly. (ManagePermissions.php) [Bug 2108]
+ ! Split topics wouldn't always work on PostgreSQL due to bad grouping. (SplitTopics.php) [Bug 2090]
 
 
 May 2008

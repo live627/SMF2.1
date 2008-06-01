@@ -377,8 +377,8 @@ function SplitSelectTopics()
 		SELECT ' . (empty($_SESSION['split_selection'][$topic]) ? '0' : 'm.id_msg IN ({array_int:split_msgs})') . ' AS is_selected, COUNT(*) AS num_messages
 		FROM {db_prefix}messages AS m
 		WHERE m.id_topic = {int:current_topic}' . (!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
-			AND approved = {int:is_approved}') . '
-		GROUP BY is_selected',
+			AND approved = {int:is_approved}') . (empty($_SESSION['split_selection'][$topic]) ? '' : '
+		GROUP BY is_selected'),
 		array(
 			'current_topic' => $topic,
 			'split_msgs' => !empty($_SESSION['split_selection'][$topic]) ? $_SESSION['split_selection'][$topic] : array(),
