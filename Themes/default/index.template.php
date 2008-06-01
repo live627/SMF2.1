@@ -435,14 +435,12 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 	}
 
 	if (empty($buttons))
-		return empty($context['theme_updated']) ? '<td>&nbsp;</td>' : '';
+		return '';
 
 	// Make the last one, as easy as possible.
 	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
-	//!!! TEMP.
-
-		echo '
+	echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '">
 			<ul class="clearfix">
 				<li>', implode('</li><li>', $buttons), '</li>

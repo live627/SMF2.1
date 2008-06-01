@@ -62,8 +62,6 @@ function MessageIndex()
 	else
 		loadTemplate('MessageIndex', 'forum');
 
-	//!!! TEMP.
-	$context['theme_updated'] = true;
 	$context['name'] = $board_info['name'];
 	$context['description'] = $board_info['description'];
 	// How many topics do we have in total?

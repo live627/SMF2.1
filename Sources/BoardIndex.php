@@ -57,9 +57,6 @@ function BoardIndex()
 	else
 		loadTemplate('BoardIndex', 'forum');
 
-	//!!! TEMP.
-	$context['theme_updated'] = true;
-
 	// Do not let search engines index anything if there is a random thing in $_GET.
 	if (!empty($_GET) && (count($_GET) > 1 || !isset($_GET[session_name()])))
 		$context['robot_no_index'] = true;
@@ -139,7 +136,10 @@ function BoardIndex()
 // Collapse or expand a category
 function CollapseCategory()
 {
-	global $user_info, $sourcedir;
+	global $user_info, $sourcedir, $context;
+
+	// Just in case, no need, no need.
+	$context['robot_no_index'] = true;
 
 	if (!isset($_GET['sa']))
 		fatal_lang_error('no_access');
