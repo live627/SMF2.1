@@ -68,7 +68,7 @@ function template_permission_index()
 		echo '
 				<tr class="windowbg">
 					<td colspan="7">
-						<a href="#" onclick="smfPermissionsPanelToggle.toggle(); return false;"><img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'expand' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '</a>
+						<a href="#" onclick="smfPermissionsPanelToggle.toggle(); return false;"><img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '</a>
 					</td>
 				</tr>
 				<tr class="windowbg" id="permissions_panel_advanced">
