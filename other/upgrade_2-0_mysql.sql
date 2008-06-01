@@ -1070,13 +1070,19 @@ ADD INDEX warning (warning);
 ---#
 
 ---# Ensuring warning settings are present...
-INSERT IGNORE INTO {$db_prefix}settings
-	(variable, value)
-VALUES
-	('warning_settings', '1,20,0'),
-	('warning_watch', '10'),
-	('warning_moderate', '35'),
-	('warning_mute', '60');
+---{
+// Only do this if not already done.
+if (empty($modSettings['warning_settings']))
+{
+	upgrade_query("
+		INSERT IGNORE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('warning_settings', '1,20,0'),
+			('warning_watch', '10'),
+			('warning_moderate', '35'),
+			('warning_mute', '60')");
+}
 ---#
 
 /******************************************************************************/

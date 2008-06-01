@@ -13,6 +13,7 @@ June 2008
  ! Don't log the user into the online log if they are entering a verification code or generally using xml - as the action won't make sense anyway. (index.php) [Bug 2149]
  ! When you turn off post moderation, approve everything. (PostModeration.php, ManageSettings.php) [Bug 2138]
  & The password reminder text made about as much sense as being vegetarian. (Profile language file) [Bug 2151]
+ ! Upgrade could turn back on post moderation - bad boy! (upgrade_2-0_mysql.sql) [Bug 2133]
 
 
 May 2008
