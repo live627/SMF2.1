@@ -1653,7 +1653,15 @@ function loadAllPermissions($loadType = 'classic')
 			}
 
 			if (in_array($permission, $hiddenPermissions))
-				$context['hidden_permissions'][] = $permission;
+			{
+				if ($permissionArray[0])
+				{
+					$context['hidden_permissions'][] = $permission . '_own';
+					$context['hidden_permissions'][] = $permission . '_any';
+				}
+				else
+					$context['hidden_permissions'][] = $permission;
+			}
 		}
 		ksort($context['permissions'][$permissionType]['columns']);
 	}
