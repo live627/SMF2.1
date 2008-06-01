@@ -175,7 +175,7 @@ $txt['paid_sub_return'] = 'Return to Subscriptions';
 $txt['paid_current_desc'] = 'Below is a list of all your current and previous subscriptions. To extend an existing subscription simply select it from the list above.';
 $txt['paid_admin_add'] = 'Add This Subscription';
 
-$txt['paid_not_set_currency'] = 'You have not setup your currency yet. Please do so from the <a href-"%1$s">Settings</a> section before continuing.';
+$txt['paid_not_set_currency'] = 'You have not setup your currency yet. Please do so from the <a href="%1$s">Settings</a> section before continuing.';
 $txt['paid_no_cost_value'] = 'You must enter a cost and subscription length.';
 $txt['paid_all_freq_blank'] = 'You must enter a cost for at least one of the four durations.';
 
