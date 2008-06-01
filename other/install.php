@@ -893,6 +893,9 @@ function ForumSettings()
 		// UTF-8 requires a setting to override the language charset.
 		if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
 		{
+			// This needs to connect to the server for the version check sometimes.
+			load_database();
+
 			if (version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check']))) > 0)
 			{
 				$incontext['error'] = sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']);
