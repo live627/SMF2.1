@@ -743,28 +743,25 @@ function legalise_bbc($text)
 {
 	global $modSettings;
 
+	// Don't care about the texts that are too short.
 	if (strlen($text) < 3)
 		return $text;
 
 	// We are going to cycle through the BBC and keep track of tags as they arise - in order. If get to a block level tag we're going to make sure it's not in a non-block level tag!
 	// This will keep the order of tags that are open.
 	$current_tags = array();
+
 	// This will quickly let us see if the tag is active.
 	$active_tags = array();
 
-	$disabled = array();
-	// Only do current tags.
-	if (!empty($modSettings['disabledBBC']))
-		{
-			$temp = explode(',', strtolower($modSettings['disabledBBC']));
+	// A list of tags that's disabled by the admin.
+	$disabled = empty($modSettings['disabledBBC']) ? array() : array_flip(explode(',', strtolower($modSettings['disabledBBC'])));
 
-			foreach ($temp as $tag)
-				$disabled[trim($tag)] = true;
-		}
-
+	// Add flash if it's disabled as embedded tag.
 	if (empty($modSettings['enableEmbeddedFlash']))
 		$disabled['flash'] = true;
 
+	// Get a list of all the tags that are not disabled.
 	$all_tags = parse_bbc(false);
 	$valid_tags = array();
 	foreach ($all_tags as $tag)
@@ -773,81 +770,65 @@ function legalise_bbc($text)
 			$valid_tags[$tag['tag']] = !empty($tag['block_level']);
 	}
 
-	// Don't worry if we're in a code/noubbc.
+	// Don't worry if we're in a code/nobbc.
 	$in_code_nobbc = false;
-
-	// These keep track of where we are!
-	$new_text = $text;
-	$new_text_offset = 0;
 
 	// Right - we're going to start by going through the whole lot to make sure we don't have align stuff crossed as this happens load and is stupid!
 	$align_tags = array('left', 'center', 'right', 'pre');
-	foreach ($align_tags as $k => $tag)
-		if (!isset($valid_tags[$tag]))
-			unset($align_tags[$k]);
-	if (!empty($align_tags))
+	
+	// Remove those align tags that are not valid.
+	$align_tags = array_intersect($align_tags, array_keys($valid_tags));
+		
+	// These keep track of where we are!
+	if (!empty($align_tags) && count($matches = preg_split('~(\\[/?(?:' . implode('|', $align_tags) . ')\\])~', $text, -1, PREG_SPLIT_DELIM_CAPTURE)) > 1)
 	{
-		$current_tag = '';
-		while (preg_match('~\[(/)*(' . implode('|', $align_tags) . ')\]~', $text, $matches) != false)
+		// The first one is never a tag.
+		$isTag = false;
+		
+		// By default we're not inside a tag too.
+		$insideTag = null;
+		
+		foreach ($matches as $i => $match)
 		{
-			// Get the offset first.
-			$offset = strpos($text, $matches[0]);
-
-			// Is it a closing tag?
-			if ($matches[1] == '/')
+			// We're only interested in tags, not text.
+			if ($isTag)
 			{
-				// Is it the current tag?
-				if ($matches[2] == $current_tag)
-				{
-					$current_tag = '';
-				}
-				// Otherwise delete it - not important!
+				$isClosingTag = substr($match, 1, 1) === '/';
+				$tagName = substr($match, $isClosingTag ? 2 : 1, -1);
+				
+				// We're closing the exact same tag that we opened.
+				if ($isClosingTag && $insideTag === $tagName)
+					$insideTag = null;
+				
+				// We're opening a tag and we're not yet inside one either
+				elseif (!$isClosingTag && $insideTag === null)
+					$insideTag = $tagName;
+					
+				// In all other cases, this tag must be invalid
 				else
-				{
-					$new_text = substr($new_text, 0, $new_text_offset + $offset) . substr($new_text, $new_text_offset + $offset + strlen($matches[0]));
-					$new_text_offset -= strlen($matches[0]);
-				}
-			}
-			// Otherwise if it's new and we have a tag already assume we DO want to change and hence close the last one.
-			else
-			{
-				if ($current_tag != '' && $matches[2] != $current_tag)
-				{
-					$new_text = substr($new_text, 0, $new_text_offset + $offset) . '[/' . $current_tag . ']' . substr($new_text, $new_text_offset + $offset);
-					$new_text_offset += strlen('[/' . $current_tag . ']');
-				}
-				// A repeat tag gets removed.
-				elseif ($matches[2] == $current_tag)
-				{
-					$new_text = substr($new_text, 0, $new_text_offset + $offset) . substr($new_text, $new_text_offset + $offset + strlen($matches[0]));
-					$new_text_offset -= strlen($matches[0]);
-				}
-				$current_tag = $matches[2];
+					unset($matches[$i]);
 			}
 
-			// Finally trim text again.
-			$text = substr($text, $offset + strlen($matches[0]));
-			$new_text_offset += $offset + strlen($matches[0]);
+			// The next one is gonna be the other one.
+			$isTag = !$isTag;
 		}
+		
+		// We're still inside a tag and had no chance for closure?
+		if ($insideTag !== null)
+			$matches[] = '[/' . $insideTag . ']';
+		
+		// And a complete text string again.
+		$text = implode('', $matches);
 	}
-
+	
 	// Quickly remove any tags which are back to back.
-	$strip_b2b_tags = array();
-	foreach ($valid_tags as $tag => $dummy)
-	{
-		if ($tag != 'td')
-			$strip_b2b_tags['~\[' . $tag . '[^<>\[\]]*\]\s*\[/' . $tag . '\]~'] = '';
-	}
+	$backToBackPattern = '~\\[(' . implode('|', array_diff(array_keys($valid_tags), array('td'))) . ')[^<>\\[\\]]*\\]\s*\\[/\\1\\]~';
 	$lastlen = 0;
-	while (strlen($new_text) != $lastlen)
-	{
-		$lastlen = strlen($new_text);
-		$new_text = preg_replace(array_keys($strip_b2b_tags), array_values($strip_b2b_tags), $new_text);
-	}
+	while (strlen($text) !== $lastlen)
+		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
 
 	// In case things changed above set these back to normal.
 	$in_code_nobbc = false;
-	$text = $new_text;
 	$new_text_offset = 0;
 
 	for ($i = 0; $i < strlen($text); $i++)
@@ -858,7 +839,7 @@ function legalise_bbc($text)
 			// Is this actually an end tag?
 			if ($text{$i + 1} == '/')
 			{
-				preg_match('~\[/([A-Za-z]+)\]~', substr($text, $i), $matches);
+				preg_match('~\\[/([A-Za-z]+)\\]~', substr($text, $i), $matches);
 				// Is it valid, eh?
 				if (!empty($matches) && isset($valid_tags[$matches[1]]))
 				{
@@ -889,13 +870,13 @@ function legalise_bbc($text)
 						// Add the other tags back as they were in the wrong order before.
 						foreach ($to_add_back as $tag)
 						{
-							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
+							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $tag['type'] . ']');
 						}
 						// And reopen...
 						foreach (array_reverse($to_add_back) as $tag)
 						{
-							$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+							$text = substr($text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($text, $i + strlen($matches[0]) + $new_text_offset);
 							$new_text_offset += strlen($tag['content']);
 						}
 
@@ -914,21 +895,21 @@ function legalise_bbc($text)
 						// Close all the current tags...
 						foreach (array_reverse($current_tags) as $tag)
 						{
-							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
+							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $tag['type'] . ']');
 						}
 
 						// ... and reopen them again.
 						foreach ($current_tags as $tag)
 						{
-							$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+							$text = substr($text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($text, $i + strlen($matches[0]) + $new_text_offset);
 							$new_text_offset += strlen($tag['content']);
 						}
 					}
 				}
 
 				// Now move on.
-				$i += strlen($matches[0]) - 1;
+				$i += isset($matches[0]) ? strlen($matches[0]) - 1 : 1;
 			}
 			// Starting a tag.
 			else
@@ -958,13 +939,13 @@ function legalise_bbc($text)
 								}
 
 							// First add in the new closing tag...
-							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $matches[1] . ']' . substr($new_text, $i + $new_text_offset);
+							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $matches[1] . ']' . substr($text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $matches[1] . ']');
 
 							// Then find and remove the next one!
-							$tag_offset = strpos($new_text, '[/' . $matches[1] . ']', $i + $new_text_offset);
+							$tag_offset = strpos($text, '[/' . $matches[1] . ']', $i + $new_text_offset);
 							if ($tag_offset !== false)
-								$new_text = substr($new_text, 0, $tag_offset) . substr($new_text, $tag_offset + strlen('[/' . $matches[1] . ']'));
+								$text = substr($text, 0, $tag_offset) . substr($text, $tag_offset + strlen('[/' . $matches[1] . ']'));
 
 						}
 
@@ -985,14 +966,14 @@ function legalise_bbc($text)
 						// Close all the old ones.
 						foreach (array_reverse($current_tags) as $tag)
 						{
-							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
+							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $tag['type'] . ']');
 						}
 						// Open all the new ones again - if we're not going into a code type tag!
 						if ($matches[1] != 'code' && $matches[1] != 'nobbc')
 							foreach ($current_tags as $tag)
 							{
-								$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+								$text = substr($text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($text, $i + strlen($matches[0]) + $new_text_offset);
 								$new_text_offset += strlen($tag['content']);
 							}
 					}
@@ -1011,18 +992,15 @@ function legalise_bbc($text)
 	// What, there's still some open tags?!
 	foreach (array_reverse($current_tags) as $tag)
 	{
-		$new_text .= '[/' . $tag['type'] . ']';
+		$text .= '[/' . $tag['type'] . ']';
 	}
 
 	// Final clean up of back to back tags.
 	$lastlen = 0;
-	while (strlen($new_text) != $lastlen)
-	{
-		$lastlen = strlen($new_text);
-		$new_text = preg_replace(array_keys($strip_b2b_tags), array_values($strip_b2b_tags), $new_text);
-	}
+	while (strlen($text) !== $lastlen)
+		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
 
-	return $new_text;
+	return $text;
 }
 
 // Compatibility function - used in 1.1 for showing a post box.
