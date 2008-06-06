@@ -11,7 +11,7 @@ $txt['install_step_forum'] = 'Forum Settings';
 $txt['install_step_databaseset'] = 'Database Settings';
 $txt['install_step_databasechange'] = 'Database Population';
 $txt['install_step_admin'] = 'Admin Account';
-$txt['install_step_delete'] = 'Finalise Install';
+$txt['install_step_delete'] = 'Finalize Install';
 
 $txt['smf_installer'] = 'SMF Installer';
 $txt['installer_language'] = 'Language';
