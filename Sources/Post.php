@@ -171,9 +171,7 @@ function Post()
 			}
 		}
 		else
-		{
 			$context['becomes_approved'] = true;
-		}
 
 		$context['can_lock'] = allowedTo('lock_any') || ($user_info['id'] == $ID_MEMBER_POSTER && allowedTo('lock_own'));
 		$context['can_sticky'] = allowedTo('make_sticky') && !empty($modSettings['enableStickyTopics']);
