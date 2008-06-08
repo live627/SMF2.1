@@ -100,8 +100,8 @@ function smf_db_create_word_search($size)
 
 	$smcFunc['db_query']('', '
 		CREATE TABLE {db_prefix}log_search_words (
-			id_word {raw:size} unsigned NOT NULL default {string:string_zero},
-			id_msg int(10) unsigned NOT NULL default {string:string_zero},
+			id_word {raw:size} NOT NULL default {string:string_zero},
+			id_msg int NOT NULL default {string:string_zero},
 			PRIMARY KEY (id_word, id_msg)
 		)',
 		array(

@@ -24,6 +24,7 @@ June 2008
  ! Do a better job counting inserts on the installer. (install.php) [Bug 2087]
  ! Fixed a bug causing a nasty loop on entering invalid BBC tags. (Subs-Editor.php) [Bug 2166]
  ! Optimized the first half of the legalise_bbc function. (Subs-Editor.php)
+ ! Could not create custom search index in PostgreSQL due to syntax errors. (DbSearch-postgresql.php)
 
 
 May 2008
