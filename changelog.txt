@@ -28,6 +28,7 @@ June 2008
  ! The ban list wasn't working on PostgreSQL. (ManageBans.php) [Bug 2049]
  ! The list control now supports setting the default sort direction. (Subs-List.php)
  ! Sort the ban list by newest first, by default. (ManageBans.php) [Bug 2136]
+ ! Automatically approve any messages or posts being moved towards the recycle bin. (RemoveTopic.php, MoveTopic.php) [Bug 2134]
 
 
 May 2008

@@ -262,7 +262,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	if (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 && !$ignoreRecycling)
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_topic, id_board
+			SELECT id_topic, id_board, unapproved_posts, approved
 			FROM {db_prefix}topics
 			WHERE id_topic IN ({array_int:topics})
 				AND id_board != {int:recycle_board}
@@ -280,14 +280,16 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			{
 				$recycleTopics[] = $row['id_topic'];
 
-				// Set the id_previous_board for this topic.
+				// Set the id_previous_board for this topic - and make it unlocked and not sticky.
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}topics
-					SET id_previous_board = {int:id_previous_board}
+					SET id_previous_board = {int:id_previous_board}, locked = {int:not_locked}, is_sticky = {int:not_sticky}
 					WHERE id_topic = {int:id_topic}',
 					array(
 						'id_previous_board' => $row['id_board'],
 						'id_topic' => $row['id_topic'],
+						'not_locked' => 0,
+						'not_sticky' => 0,
 					)
 				);
 			}
@@ -301,20 +303,6 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 				array(
 					'recycle_topics' => $recycleTopics,
 					'recycled' => 'recycled',
-				)
-			);
-
-			// De-sticky and unlock topics.
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}topics
-				SET
-					locked = {int:not_locked},
-					is_sticky = {int:not_sticky}
-				WHERE id_topic IN ({array_int:recycle_topics})',
-				array(
-					'recycle_topics' => $recycleTopics,
-					'not_locked' => 0,
-					'not_sticky' => 0,
 				)
 			);
 
@@ -775,10 +763,6 @@ function removeMessage($message, $decreasePostCount = true)
 		list ($isRead, $last_board_msg) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
-		// Even if it's being recycled respect approval state.
-		$unapproved_posts = $row['approved'] ? 0 : 1;
-		$approved = $row['approved'] ? 1 : 0;
-
 		// Is there an existing topic in the recycle board to group this post with?
 		$request = $smcFunc['db_query']('', '
 			SELECT id_topic, id_first_msg, id_last_msg
@@ -803,7 +787,7 @@ function removeMessage($message, $decreasePostCount = true)
 				),
 				array(
 					$modSettings['recycle_board'], $row['id_member'], $row['id_member'], $message,
-					$message, $unapproved_posts, $approved, $row['id_topic'],
+					$message, 0, 1, $row['id_topic'],
 				),
 				array('id_topic')
 			);
@@ -819,13 +803,15 @@ function removeMessage($message, $decreasePostCount = true)
 				SET
 					id_topic = {int:id_topic},
 					id_board = {int:recycle_board},
-					icon = {string:recycled}
+					icon = {string:recycled},
+					approved = {int:is_approved}
 				WHERE id_msg = {int:id_msg}',
 				array(
 					'id_topic' => $topicID,
 					'recycle_board' => $modSettings['recycle_board'],
 					'id_msg' => $message,
 					'recycled' => 'recycled',
+					'is_approved' => 1,
 				)
 			);
 
@@ -862,32 +848,19 @@ function removeMessage($message, $decreasePostCount = true)
 				);
 
 			// Add one topic and post to the recycle bin board.
-			if ($approved)
-				$smcFunc['db_query']('', '
-					UPDATE {db_prefix}boards
-					SET
-						num_topics = num_topics + {int:num_topics_inc},
-						num_posts = num_posts + 1' .
-							($message > $last_board_msg ? ', id_last_msg = {int:id_merged_msg}' : '') . '
-					WHERE id_board = {int:recycle_board}',
-					array(
-						'num_topics_inc' => empty($id_recycle_topic) ? 1 : 0,
-						'recycle_board' => $modSettings['recycle_board'],
-						'id_merged_msg' => $message,
-					)
-				);
-			else
-				$smcFunc['db_query']('', '
-					UPDATE {db_prefix}boards
-					SET
-						unapproved_topics = unapproved_topics + {int:num_topics_inc},
-						unapproved_posts = unapproved_posts + 1
-					WHERE id_board = {int:recycle_board}',
-					array(
-						'num_topics_inc' => empty($id_recycle_topic) ? 1 : 0,
-						'recycle_board' => $modSettings['recycle_board'],
-					)
-				);
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}boards
+				SET
+					num_topics = num_topics + {int:num_topics_inc},
+					num_posts = num_posts + 1' .
+						($message > $last_board_msg ? ', id_last_msg = {int:id_merged_msg}' : '') . '
+				WHERE id_board = {int:recycle_board}',
+				array(
+					'num_topics_inc' => empty($id_recycle_topic) ? 1 : 0,
+					'recycle_board' => $modSettings['recycle_board'],
+					'id_merged_msg' => $message,
+				)
+			);
 
 			// Lets increase the num_replies, and the first/last message ID as appropriate.
 			if (!empty($id_recycle_topic))
@@ -909,6 +882,18 @@ function removeMessage($message, $decreasePostCount = true)
 			// Make sure we update the search subject index.
 			updateStats('subject', $topicID, $row['subject']);
 		}
+
+		// If it wasn't approved don't keep it in the queue.
+		if (!$row['approved'])
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}approval_queue
+				WHERE id_msg = {int:id_msg}
+					AND id_attach = {int:id_attach}',
+				array(
+					'id_msg' => $message,
+					'id_attach' => 0,
+				)
+			);
 	}
 
 	$smcFunc['db_query']('', '
