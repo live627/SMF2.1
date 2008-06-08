@@ -26,6 +26,8 @@ June 2008
  ! Optimized the first half of the legalise_bbc function. (Subs-Editor.php)
  ! Could not create custom search index in PostgreSQL due to syntax errors. (DbSearch-postgresql.php)
  ! The ban list wasn't working on PostgreSQL. (ManageBans.php) [Bug 2049]
+ ! The list control now supports setting the default sort direction. (Subs-List.php)
+ ! Sort the ban list by newest first, by default. (ManageBans.php) [Bug 2136]
 
 
 May 2008

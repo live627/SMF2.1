@@ -199,7 +199,8 @@ function BanList()
 		'id' => 'ban_list',
 		'items_per_page' => 20,
 		'base_href' => $scripturl . '?action=admin;area=ban;sa=list',
-		'default_sort_col' => 'name',
+		'default_sort_col' => 'added',
+		'default_sort_dir' => 'desc',
 		'get_items' => array(
 			'function' => 'list_getBans',
 		),
