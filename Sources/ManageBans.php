@@ -357,10 +357,8 @@ function list_getBans($start, $items_per_page, $sort)
 	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(bi.id_ban) AS num_triggers
+		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes
 		FROM {db_prefix}ban_groups AS bg
-			LEFT JOIN {db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
-		GROUP BY bg.id_ban_group
 		ORDER BY ' . $sort . '
 		LIMIT ' . $start . ', ' . $items_per_page,
 		array(
@@ -368,8 +366,29 @@ function list_getBans($start, $items_per_page, $sort)
 	);
 	$bans = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
 		$bans[$row['id_ban_group']] = $row;
+		$bans[$row['id_ban_group']]['num_triggers'] = 0;
+	}
 	$smcFunc['db_free_result']($request);
+
+	// Count the triggers.
+	if (!empty($bans))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT bg.id_ban_group, COUNT(bi.id_ban) AS num_triggers
+			FROM {db_prefix}ban_groups AS bg
+				INNER JOIN {db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
+			WHERE bg.id_ban_group IN ({array_int:ban_group_ids})
+			GROUP BY bg.id_ban_group',
+			array(
+				'ban_group_ids' => array_keys($bans),
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$bans[$row['id_ban_group']]['num_triggers'] = $row['num_triggers'];
+		$smcFunc['db_free_result']($request);
+	}
 
 	return $bans;
 }

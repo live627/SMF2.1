@@ -25,6 +25,7 @@ June 2008
  ! Fixed a bug causing a nasty loop on entering invalid BBC tags. (Subs-Editor.php) [Bug 2166]
  ! Optimized the first half of the legalise_bbc function. (Subs-Editor.php)
  ! Could not create custom search index in PostgreSQL due to syntax errors. (DbSearch-postgresql.php)
+ ! The ban list wasn't working on PostgreSQL. (ManageBans.php) [Bug 2049]
 
 
 May 2008
