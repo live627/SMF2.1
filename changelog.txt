@@ -24,6 +24,7 @@ June 2008
  ! Do a better job counting inserts on the installer. (install.php) [Bug 2087]
  ! Fixed a bug causing a nasty loop on entering invalid BBC tags. (Subs-Editor.php) [Bug 2166]
  ! Optimized the first half of the legalise_bbc function. (Subs-Editor.php)
+ ! SMF currently doesn't support fulltext searching for PostgreSQL. (DbSearch-postgresql.php)
 
 
 May 2008
