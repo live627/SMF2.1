@@ -51,14 +51,10 @@ function template_main()
 			</table>';
 
 			if (!empty($button_set))
-			echo '
-			<table cellpadding="0" cellspacing="0" align="right" style="margin-right: 2ex;">
-				<tr>
-					<td>
-						', template_button_strip($button_set, 'top', true), '
-					</td>
-				</tr>
-			</table><br />';
+				echo '
+			<div id="readbuttons_bottom" class="readbuttons clearfix marginbottom">
+				', template_button_strip($button_set, 'top'), '
+			</div>';
 		}
 		else
 		{

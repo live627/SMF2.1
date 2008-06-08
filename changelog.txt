@@ -29,6 +29,8 @@ June 2008
  ! The list control now supports setting the default sort direction. (Subs-List.php)
  ! Sort the ban list by newest first, by default. (ManageBans.php) [Bug 2136]
  ! Automatically approve any messages or posts being moved towards the recycle bin. (RemoveTopic.php, MoveTopic.php) [Bug 2134]
+ * The recent posts template was displaying horribly. (Recent template)
+ + Added support for webslices, and used them for recent posts. (News.php, BoardIndex template, Xml template, index language file)
 
 
 May 2008

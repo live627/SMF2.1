@@ -325,4 +325,54 @@ function template_generic_xml_recursive($xml_data, $parent_ident, $child_ident, 
 	echo "\n", str_repeat("\t", $level), '</', $parent_ident, '>';
 }
 
+function template_webslice_header_above()
+{
+	global $settings;
+
+	echo '
+	<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/wireless.css" type="text/css" />';
+}
+
+function template_webslice_header_below()
+{
+}
+
+// This shows a webslice of the recent posts.
+function template_webslice_recent_posts()
+{
+	global $context, $scripturl, $txt;
+
+	echo '
+	<div style="width: 100%; height: 100%; border: 1px solid black; padding: 0; margin: 0 0 0 0; font: 100.01%/100% Verdana, Helvetica, sans-serif;">
+		<div style="background-color: #080436; color: #FFFFFF; padding: 4px;">
+			', $txt['recent_posts'], '
+		</div>';
+
+	$alternate = 0;
+	foreach ($context['recent_posts_data'] as $item)
+	{
+		echo '
+		<div style="background-color: ', $alternate ? '#ECEDF3' : '#F6F6F6', '; font-size: 90%; padding: 2px;">
+			<strong><a href="', $item['link'], '">', $item['subject'], '</a></strong> ', $txt['by'], ' ', (!empty($item['poster']['link']) ? '<a href="' . $item['poster']['link'] . '">' . $item['poster']['name'] . '</a>' : $item['poster']['name']), '
+		</div>';
+		$alternate = !$alternate;
+	}
+
+	echo '
+	</div>
+	<div style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0 0 0 0; font: 100.01%/100% Verdana, Helvetica, sans-serif;">
+		<div style="font-size: xx-small; text-align: right;">';
+
+	if ($context['user']['is_guest'])
+		echo '
+			<a href="', $scripturl, '?action=login">', $txt['login'], '</a>';
+	else
+		echo '
+			', $context['user']['name'], ', ', $txt['msg_alert_you_have'], ' <a href="', $scripturl, '?action=pm">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase'], '</a>', $txt['newmessages4'], ' ', $context['user']['unread_messages'], ' ', $context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1'];
+
+	echo '
+		</div>
+	</div>';
+}
+
 ?>
