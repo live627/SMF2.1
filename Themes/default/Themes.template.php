@@ -408,7 +408,7 @@ function template_set_settings()
 
 		echo '
 						</select>
-						<br /><img src="', $context['theme_variants'][$context['default_variant']]['thumbnail'], '" id="variant_preview"/>
+						<br /><img src="', $context['theme_variants'][$context['default_variant']]['thumbnail'], '" id="variant_preview" />
 					</td>
 				</tr>
 				<tr class="windowbg2">

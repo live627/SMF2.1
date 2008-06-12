@@ -768,8 +768,8 @@ function ViewSubscribedUsers()
 						<input type="submit" name="add" value="' . $txt['paid_add_subscription'] . '" />
 					</div>
 					<div style="float: right;">
-						<input type="submit" name="finished" value="' . $txt['complete_selected'] . '" onclick="return confirm(\'' . $txt['complete_are_sure'] . '\');"/>
-						<input type="submit" name="delete" value="' . $txt['delete_selected'] . '" onclick="return confirm(\'' . $txt['delete_are_sure'] . '\');"/>
+						<input type="submit" name="finished" value="' . $txt['complete_selected'] . '" onclick="return confirm(\'' . $txt['complete_are_sure'] . '\');" />
+						<input type="submit" name="delete" value="' . $txt['delete_selected'] . '" onclick="return confirm(\'' . $txt['delete_are_sure'] . '\');" />
 					</div>
 				',
 				'class' => 'titlebg',

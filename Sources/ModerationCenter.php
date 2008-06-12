@@ -1716,7 +1716,7 @@ function ViewWarningTemplates()
 				'position' => 'below_table_data',
 				'value' => '
 					<input type="submit" name="add" value="' . $txt['mc_warning_template_add'] . '" />
-					<input type="submit" name="delete" value="' . $txt['mc_warning_template_delete'] . '" onclick="return confirm(\'' . $txt['mc_warning_template_delete_confirm'] . '\');"/>',
+					<input type="submit" name="delete" value="' . $txt['mc_warning_template_delete'] . '" onclick="return confirm(\'' . $txt['mc_warning_template_delete_confirm'] . '\');" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),

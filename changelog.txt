@@ -23,7 +23,7 @@ June 2008
  ! SQLite should not return error text if connection fails, instead hold it in db_error. (Subs-Db-sqlite.php) [Bug 1730]
  ! Do a better job counting inserts on the installer. (install.php) [Bug 2087]
  ! Fixed a bug causing a nasty loop on entering invalid BBC tags. (Subs-Editor.php) [Bug 2166]
- ! Optimized the first half of the legalise_bbc function. (Subs-Editor.php)
+ ! Optimized the first half of the legalise_bbc function. (Subs-Editor.php)s
  ! Could not create custom search index in PostgreSQL due to syntax errors. (DbSearch-postgresql.php)
  ! The ban list wasn't working on PostgreSQL. (ManageBans.php) [Bug 2049]
  ! The list control now supports setting the default sort direction. (Subs-List.php)
@@ -31,7 +31,8 @@ June 2008
  ! Automatically approve any messages or posts being moved towards the recycle bin. (RemoveTopic.php, MoveTopic.php) [Bug 2134]
  * The recent posts template was displaying horribly. (Recent template)
  + Added support for webslices, and used them for recent posts. (News.php, BoardIndex template, Xml template, index language file)
-
+ ! A space is needed before the /> in xhtml or else pages will not validate. (Many files) [Bug 2206]
+ 
 
 May 2008
 --------------------------------------------------------------------------------

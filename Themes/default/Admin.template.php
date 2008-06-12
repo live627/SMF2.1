@@ -1784,7 +1784,7 @@ function template_modify_language_entries()
 
 	echo '
 				</select>
-				<input type="submit" value="', $txt['go'], '"/>
+				<input type="submit" value="', $txt['go'], '" />
 			</td>
 		</tr>';
 
