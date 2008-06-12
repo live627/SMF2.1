@@ -410,6 +410,23 @@ function BrowseFiles()
 					'reverse' => $context['browse_type'] === 'avatars' ? 'mem.last_login DESC' : 'm.id_msg DESC',
 				),
 			),
+			'downloads' => array(
+				'header' => array(
+					'value' => $txt['downloads'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData','
+						global $txt;
+
+						return comma_format($rowData[\'downloads\']);
+					'),
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'a.downloads',
+					'reverse' => 'a.downloads DESC',
+				),
+			),
 			'check' => array(
 				'header' => array(
 					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',

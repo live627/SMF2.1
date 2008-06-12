@@ -32,7 +32,8 @@ June 2008
  * The recent posts template was displaying horribly. (Recent template)
  + Added support for webslices, and used them for recent posts. (News.php, BoardIndex template, Xml template, index language file)
  ! A space is needed before the /> in xhtml or else pages will not validate. (Many files) [Bug 2206]
- 
+ ! Show the number of downloads for attachments when managing attachments from the admin panel. (ManageAttachments.php) [Bug 2208]
+
 
 May 2008
 --------------------------------------------------------------------------------
