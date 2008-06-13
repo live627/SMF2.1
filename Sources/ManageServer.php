@@ -109,7 +109,7 @@ if (!defined('SMF'))
 	ie.	array('password', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth'),
 
 	* A permission - for picking groups who have a permission.
-	ie.	array('permission', 'manage_groups'),
+	ie.	array('permissions', 'manage_groups'),
 
 	* A BBC selection box.
 	ie.	array('bbc', 'sig_bbc'),
