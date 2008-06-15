@@ -34,6 +34,7 @@ June 2008
  ! A space is needed before the /> in xhtml or else pages will not validate. (Many files) [Bug 2206]
  ! Show the number of downloads for attachments when managing attachments from the admin panel. (ManageAttachments.php) [Bug 2208]
  ! Use CURRENT_TIMESTAMP instead of UNIX_TIMESTAMP() to get the current timestamp in queries (SSI.php) [Bug 2203]
+ ! The query to check for ALTER privileges was still using {$db_prefix} and ID_BOARD, causing it to always fail. [Bug 2220]
 
 
 May 2008
