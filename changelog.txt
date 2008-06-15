@@ -33,6 +33,7 @@ June 2008
  + Added support for webslices, and used them for recent posts. (News.php, BoardIndex template, Xml template, index language file)
  ! A space is needed before the /> in xhtml or else pages will not validate. (Many files) [Bug 2206]
  ! Show the number of downloads for attachments when managing attachments from the admin panel. (ManageAttachments.php) [Bug 2208]
+ ! Use CURRENT_TIMESTAMP instead of UNIX_TIMESTAMP() to get the current timestamp in queries (SSI.php) [Bug 2203]
 
 
 May 2008
