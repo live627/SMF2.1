@@ -363,7 +363,9 @@ function template_main()
 				<div class="postarea">
 					<div class="keyinfo">
 						<div class="messageicon floatleft"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></div>
-						<h5 id="subject_', $message['id'], '"><a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a></h5>
+						<h5 id="subject_', $message['id'], '">
+							<a href="', $message['href'], '" rel="nofollow">', $message['subject'], '</a>
+						</h5>
 						<div class="smalltext">&#171; <strong>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</div>
 						<div id="msg_', $message['id'], '_quick_mod"></div>
 					</div>';
@@ -672,8 +674,8 @@ function template_main()
 			sScriptUrl: "', $scripturl, '",
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
-			sTemplateBodyEdit: \'<div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" tabindex="8" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" tabindex="9" onclick="return oQuickModify.modifyCancel();" /></div>\',
-			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="60" style="width: 99%;" maxlength="80" tabindex="6" />\',
+			sTemplateBodyEdit: \'<div id="quick_edit_body_container"><div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" tabindex="8" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" tabindex="9" onclick="return oQuickModify.modifyCancel();" /></div></div>\',
+			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />\',
 			sTemplateBodyNormal: \'%body%\',
 			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
 			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')",
