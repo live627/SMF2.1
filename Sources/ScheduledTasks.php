@@ -401,7 +401,7 @@ function scheduled_approval_notification()
 // Do some daily cleaning up.
 function scheduled_daily_maintenance()
 {
-	global $smcFunc, $modSettings, $sourcedir;
+	global $smcFunc, $modSettings, $sourcedir, $db_type;
 
 	// First clean out the data cache.
 	clean_cache('data');
@@ -472,6 +472,19 @@ function scheduled_daily_maintenance()
 		require_once($sourcedir . '/ManageSearchEngines.php');
 		consolidateSpiderStats();
 	}
+
+	// Check the database version - for some buggy MySQL version.
+	if ($db_type == 'mysql' && in_array($smcFunc['db_server_info'](), array('5.0.50', '5.0.51', '5.0.51a')))
+		updateSettings(array('db_mysql_group_by_fix' => '1'));
+	elseif (!empty($modSettings['db_mysql_group_by_fix']))
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}settings
+			WHERE variable = {string:mysql_fix}',
+			array(
+				'mysql_fix' => 'db_mysql_group_by_fix',
+			)
+		);
+		
 
 	// Log we've done it...
 	return true;

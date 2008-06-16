@@ -2117,7 +2117,7 @@ function UpgradeTemplate()
 // Delete the damn thing!
 function DeleteUpgrade()
 {
-	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info, $maintenance;
+	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info, $maintenance, $smcFunc, $db_type;
 
 	// Now it's nice to have some of the basic SMF source files.
 	if (!isset($_GET['ssi']))
@@ -2169,6 +2169,10 @@ function DeleteUpgrade()
 		$user_info['id'] = $upcontext['user']['id'];
 	logAction('upgrade', array('version' => $forum_version), 'admin');
 	$user_info['id'] = 0;
+
+	// Save the current database version.
+	if ($db_type == 'mysql' && in_array($smcFunc['db_server_info'](), array('5.0.50', '5.0.51', '5.0.51a')))
+		updateSettings(array('db_mysql_group_by_fix' => '1'));
 
 	if ($command_line)
 	{
