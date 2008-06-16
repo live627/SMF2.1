@@ -6,6 +6,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 	this.refreshVerifyPassword = refreshVerifyPassword;
 
 	var verificationFields = new Array();
+	var verificationFieldLength = 0;
 	var textStrings = regTextStrings ? regTextStrings : new Array();
 	var passwordLevel = passwordDifficultyLevel ? passwordDifficultyLevel : 0;
 
@@ -38,13 +39,17 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			eventHandler = refreshMainPassword;
 
 		// Store this field.
-		verificationFields[fieldType] = Array(6);
-		verificationFields[fieldType][0] = fieldID;
-		verificationFields[fieldType][1] = inputHandle;
-		verificationFields[fieldType][2] = imageHandle;
-		verificationFields[fieldType][3] = divHandle;
-		verificationFields[fieldType][4] = fieldType;
-		verificationFields[fieldType][5] = inputHandle.style.backgroundColor;
+		vFieldIndex = fieldType == 'reserved' ? fieldType + verificationFieldLength : fieldType;
+		verificationFields[vFieldIndex] = Array(6);
+		verificationFields[vFieldIndex][0] = fieldID;
+		verificationFields[vFieldIndex][1] = inputHandle;
+		verificationFields[vFieldIndex][2] = imageHandle;
+		verificationFields[vFieldIndex][3] = divHandle;
+		verificationFields[vFieldIndex][4] = fieldType;
+		verificationFields[vFieldIndex][5] = inputHandle.style.backgroundColor;
+
+		// Keep a count to it!
+		verificationFieldLength++;
 
 		// Step to it!
 		if (eventHandler)
@@ -133,7 +138,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 				stringIndex = 'password_reserved';
 
 			// Any reserved fields?
-			for (var i = 0; i < verificationFields.length; i++)
+			for (i in verificationFields)
 			{
 				if (verificationFields[i][4] == 'reserved' && verificationFields[i][1].value && curPass.indexOf(verificationFields[i][1].value) != -1)
 					stringIndex = 'password_reserved';

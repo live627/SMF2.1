@@ -38,6 +38,7 @@ June 2008
  * Fixed validation issue in MessageIndex template. (MessageIndex template) [Bug 2218]
  ! TrackIP wasn't respecting board permissions. (Profile-View.php) [Bug 2223]
  ! The WYSIWYG editor seems to work with Safari so lets allow it. (editor.js) [Bug 1484]
+ ! The javascript password verification wasn't stopping use of email as password. (register.js) [Bug 2215]
 
 
 May 2008
