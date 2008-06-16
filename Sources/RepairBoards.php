@@ -378,12 +378,12 @@ function loadForumTests()
 					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
 					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved
-				HAVING id_first_msg != (CASE WHEN MIN(ma.id_msg) > 0 THEN
+				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved, ma.id_msg, mu.id_msg
+				HAVING t.id_first_msg != (CASE WHEN MIN(ma.id_msg) > 0 THEN
 						CASE WHEN MIN(mu.id_msg) > 0 THEN
 							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
 						MIN(ma.id_msg) END ELSE
-					MIN(mu.id_msg) END) OR id_last_msg != (CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END)
+					MIN(mu.id_msg) END) OR t.id_last_msg != (CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END)
 					OR t.approved != mf.approved
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
@@ -434,7 +434,7 @@ function loadForumTests()
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
 					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic, t.num_replies, mf.approved
+				GROUP BY t.id_topic, t.num_replies, mf.approved, ma.id_msg
 				HAVING num_replies != (CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END)
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '

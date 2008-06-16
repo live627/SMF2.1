@@ -42,6 +42,7 @@ June 2008
  ! The editor resizer doesn't work on the rubbish versions of Opera. (editor.js) [Bug 1468]
  ! Fixed possible undefined index but in Search. (Search.php) [Bug 2205]
  ! PostgreSQL doesn't support full text. (SearchAPI-Fulltext.php) [Bug 2197]
+ ! Some repair queries wern't working on RepairBoards. (RepairBoards.php) [Bug 2120]
 
 
 May 2008
