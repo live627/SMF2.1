@@ -1073,8 +1073,9 @@ function list_getIPMessageCount($where, $where_vars = array())
 
 	$request = $smcFunc['db_query']('', '
 		SELECT COUNT(*) AS messageCount
-		FROM {db_prefix}messages
-		WHERE ' . $where,
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE {query_see_board} AND ' . $where,
 		$where_vars
 	);
 	list ($count) = $smcFunc['db_fetch_row']($request);
@@ -1094,8 +1095,9 @@ function list_getIPMessages($start, $items_per_page, $sort, $where, $where_vars 
 			m.id_msg, m.poster_ip, IFNULL(mem.real_name, m.poster_name) AS display_name, mem.id_member,
 			m.subject, m.poster_time, m.id_topic, m.id_board
 		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE ' . $where . '
+		WHERE {query_see_board} AND ' . $where . '
 		ORDER BY ' . $sort . '
 		LIMIT ' . $start . ', ' . $items_per_page,
 		array_merge($where_vars, array(
@@ -1193,7 +1195,7 @@ function TrackIP($memID = 0)
 		'get_count' => array(
 			'function' => 'list_getIPMessageCount',
 			'params' => array(
-				'poster_ip ' . $ip_string,
+				'm.poster_ip ' . $ip_string,
 				array('ip_address' => $ip_var),
 			),
 		),
