@@ -15,7 +15,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up) && !bRichEditOff;
+	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari) && !bRichEditOff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;

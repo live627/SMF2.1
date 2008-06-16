@@ -37,6 +37,7 @@ June 2008
  ! The query to check for ALTER privileges was still using {$db_prefix} and ID_BOARD, causing it to always fail. (install.php) [Bug 2220]
  * Fixed validation issue in MessageIndex template. (MessageIndex template) [Bug 2218]
  ! TrackIP wasn't respecting board permissions. (Profile-View.php) [Bug 2223]
+ ! The WYSIWYG editor seems to work with Safari so lets allow it. (editor.js) [Bug 1484]
 
 
 May 2008
