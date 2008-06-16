@@ -804,7 +804,7 @@ function PlushSearch2()
 				if ($smcFunc['strtolower']($s) == $smcFunc['strtolower']($word))
 					unset($suggestions[$i]);
 				// Plus, don't suggest something the user thinks is rude!
-				if ($suggestions[$i] != censorText($s))
+				elseif ($suggestions[$i] != censorText($s))
 					unset($suggestions[$i]);
 			}
 
