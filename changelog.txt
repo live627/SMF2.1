@@ -41,6 +41,7 @@ June 2008
  ! The javascript password verification wasn't stopping use of email as password. (register.js) [Bug 2215]
  ! The editor resizer doesn't work on the rubbish versions of Opera. (editor.js) [Bug 1468]
  ! Fixed possible undefined index but in Search. (Search.php) [Bug 2205]
+ ! PostgreSQL doesn't support full text. (SearchAPI-Fulltext.php) [Bug 2197]
 
 
 May 2008

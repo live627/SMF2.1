@@ -47,8 +47,8 @@ class fulltext_search
 	protected $bannedWords = array();
 	// What is the minimum word length?
 	protected $min_word_length = 4;
-	// What databases support the custom index?
-	protected $supported_databases = array('mysql', 'postgresql');
+	// What databases support the fulltext index?
+	protected $supported_databases = array('mysql');
 
 	public function __construct()
 	{
