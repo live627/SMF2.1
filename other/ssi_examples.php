@@ -3,9 +3,9 @@
 require(dirname(__FILE__) . '/SSI.php');
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<title> << :: SMF SSI.php 2.0 Beta 4 :: >> </title><?php
+		<title> &lt;&lt; :: SMF SSI.php 2.0 Beta 4 :: &gt;&gt; </title><?php
 
 	echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
@@ -38,7 +38,7 @@ require(dirname(__FILE__) . '/SSI.php');
 			<br />
 			To use SSI.php in your page add at the very top of your page before the &lt;html&gt; tag on line 1:<br />
 			<div style="font-family: monospace;">
-				&lt;?php require(&quot;<?php echo addslashes($user_info['is_admin'] ? realpath($boarddir . '/SSI.php') : 'SSI.php'); ?>&quot;); ?&gt;
+				&lt;?php require(&quot;<?php echo ($user_info['is_admin'] ? realpath($boarddir . '/SSI.php') : 'SSI.php'); ?>&quot;); ?&gt;
 			</div>
 			<br />
 
