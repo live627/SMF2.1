@@ -35,6 +35,7 @@ June 2008
  ! Show the number of downloads for attachments when managing attachments from the admin panel. (ManageAttachments.php) [Bug 2208]
  ! Use CURRENT_TIMESTAMP instead of UNIX_TIMESTAMP() to get the current timestamp in queries (SSI.php) [Bug 2203]
  ! The query to check for ALTER privileges was still using {$db_prefix} and ID_BOARD, causing it to always fail. (install.php) [Bug 2220]
+ * Fixed validation issue in MessageIndex template. (MessageIndex template) [Bug 2218]
 
 
 May 2008
