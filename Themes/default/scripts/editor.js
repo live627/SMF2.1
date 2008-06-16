@@ -349,7 +349,7 @@ SmfEditor.prototype.init = function()
 	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
 
 	// Show the resizer.
-	if (document.getElementById(this.sUniqueId + '_resizer'))
+	if (document.getElementById(this.sUniqueId + '_resizer') && (!is_opera || is_opera95up))
 	{
 		// Currently nothing is being resized...I assume!
 		window.smf_oCurrentResizeEditor = null;

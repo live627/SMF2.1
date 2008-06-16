@@ -39,6 +39,7 @@ June 2008
  ! TrackIP wasn't respecting board permissions. (Profile-View.php) [Bug 2223]
  ! The WYSIWYG editor seems to work with Safari so lets allow it. (editor.js) [Bug 1484]
  ! The javascript password verification wasn't stopping use of email as password. (register.js) [Bug 2215]
+ ! The editor resizer doesn't work on the rubbish versions of Opera. (editor.js) [Bug 1468]
 
 
 May 2008
