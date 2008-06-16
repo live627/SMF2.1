@@ -1020,7 +1020,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 			INNER JOIN {db_prefix}poll_choices AS pc ON (pc.id_poll = p.id_poll)' : '') . '
 			LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member > {int:no_member} AND lp.id_member = {int:current_member})
 		WHERE p.voting_locked = {int:voting_opened}
-			AND (p.expire_time = {int:no_expiration} OR CURRENT_TIMESTAMP < p.expire_time)
+			AND (p.expire_time = {int:no_expiration} OR {int:current_time} < p.expire_time)
 			AND ' . ($user_info['is_guest'] ? 'p.guest_vote = {int:guest_vote_allowed}' : 'lp.id_choice IS NULL') . '
 			AND ' . $user_info['query_wanna_see_board'] . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_allowed_list})' : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
@@ -1035,6 +1035,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 			'no_member' => 0,
 			'voting_opened' => 0,
 			'no_expiration' => 0,
+			'current_time' => time(),
 			'recycle_enable' => $modSettings['recycle_board'],
 		)
 	);
