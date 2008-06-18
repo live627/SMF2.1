@@ -43,6 +43,7 @@ June 2008
  ! PostgreSQL doesn't support full text. (SearchAPI-Fulltext.php) [Bug 2197]
  ! Some repair queries wern't working on RepairBoards. (RepairBoards.php) [Bug 2120]
  ! Work around an annoying bug in some MySQL versions. (upgrade.php, install.php, ScheduledTasks.php, Display.php)
+ ! Password reminders did not work when using a validation code. (Reminder.php) [Bug 2232]
 
 
 May 2008

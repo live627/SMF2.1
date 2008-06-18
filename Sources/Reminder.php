@@ -253,13 +253,14 @@ function setPassword2()
 	if ($passwordError != null)
 		fatal_lang_error('profile_error_password_' . $passwordError, false);
 
+	require_once($sourcedir . '/LogInOut.php');
+
 	// Quit if this code is not right.
 	if (empty($_POST['code']) || substr($realCode, 0, 10) != substr(md5($_POST['code']), 0, 10))
 	{
 		// Stop brute force attacks like this.
-		require_once($sourcedir . '/LogInOut.php');
 		validatePasswordFlood($_POST['u'], $flood_value, false);
-	
+
 		fatal_error($txt['invalid_activation_code'], false);
 	}
 
