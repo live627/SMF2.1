@@ -190,7 +190,7 @@ function template_body_above()
 			<li id="name">', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></li>';
 	else
 		echo '
-			<li id="name">', $txt['hello_guest'], $txt['guest'], '</li>';
+			<li id="name">', $txt['hello_guest'], ' <em>', $txt['guest'], '</em></li>';
 
 	echo '
 		</ul>
@@ -250,7 +250,7 @@ function template_body_above()
 		echo '
 				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 				<form class="windowbg" id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-					' , sprintf($txt['welcome_guest'], $txt['guest_title']) , '<br />
+					' , $txt['login_or_register'], '<br />
 					<input type="text" name="user" size="10" />
 					<input type="password" name="passwrd" size="10" />
 					<select name="cookielength">

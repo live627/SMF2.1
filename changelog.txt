@@ -47,6 +47,7 @@ June 2008
  ! Users loaded in loadMemberContext() are never guests. (Load.php) [Bug 2224]
  ! Backup wasn't working in PostgreSQL. (DbExtra-xxx.php) [Bug 2235]
  ! Finally got repair boards to work on all databases by doing more work, I'm afraid. (RepairBoards.php) [Bug 2234]
+ & Change the formatting of the guest welcome text on the semantic theme. (index template, index language file) [Bug 2233]
 
 
 May 2008
