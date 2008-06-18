@@ -45,6 +45,8 @@ June 2008
  ! Work around an annoying bug in some MySQL versions. (upgrade.php, install.php, ScheduledTasks.php, Display.php)
  ! Password reminders did not work when using a validation code. (Reminder.php) [Bug 2232]
  ! Users loaded in loadMemberContext() are never guests. (Load.php) [Bug 2224]
+ ! Backup wasn't working in PostgreSQL. (DbExtra-xxx.php) [Bug 2235]
+ ! Finally got repair boards to work on all databases by doing more work, I'm afraid. (RepairBoards.php) [Bug 2234]
 
 
 May 2008

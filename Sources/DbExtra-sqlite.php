@@ -208,7 +208,7 @@ function smf_db_insert_sql($tableName)
 
 	// Get everything from the table.
 	$result = $smcFunc['db_query']('', '
-		SELECT
+		SELECT *
 		FROM {raw:table}',
 		array(
 			'table' => $tableName,

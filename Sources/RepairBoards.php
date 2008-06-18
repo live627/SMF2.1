@@ -358,7 +358,7 @@ function loadForumTests()
 		),
 		'stats_topics' => array(
 			'substeps' => array(
-				'step_size' => 500,
+				'step_size' => 200,
 				'step_max' => '
 					SELECT MAX(id_topic)
 					FROM {db_prefix}topics'
@@ -378,19 +378,17 @@ function loadForumTests()
 					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
 					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved, ma.id_msg, mu.id_msg
-				HAVING t.id_first_msg != (CASE WHEN MIN(ma.id_msg) > 0 THEN
-						CASE WHEN MIN(mu.id_msg) > 0 THEN
-							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
-						MIN(ma.id_msg) END ELSE
-					MIN(mu.id_msg) END) OR t.id_last_msg != (CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END)
-					OR t.approved != mf.approved
+				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
 				global $smcFunc;
 				$row[\'firstmsg_approved\'] = (int) $row[\'firstmsg_approved\'];
 				$row[\'myid_first_msg\'] = (int) $row[\'myid_first_msg\'];
 				$row[\'myid_last_msg\'] = (int) $row[\'myid_last_msg\'];
+
+				// Not really a problem?
+				if ($row[\'myid_first_msg\'] == $row[\'myid_first_msg\'] && $row[\'myid_first_msg\'] == $row[\'myid_first_msg\'] && $row[\'approved\'] == $row[\'firstmsg_approved\'])
+					return false;
 
 				$memberStartedID = (int) getMsgMemberID($row[\'myid_first_msg\']);
 				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
@@ -408,6 +406,10 @@ function loadForumTests()
 			'message_function' => create_function('$row', '
 				global $txt, $context;
 
+				// A pretend error?
+				if ($row[\'myid_first_msg\'] == $row[\'myid_first_msg\'] && $row[\'myid_first_msg\'] == $row[\'myid_first_msg\'] && $row[\'approved\'] == $row[\'firstmsg_approved\'])
+					return false;
+
 				if ($row[\'id_first_msg\'] != $row[\'myid_first_msg\'])
 					$context[\'repair_errors\'][] = sprintf($txt[\'repair_stats_topics_1\'], $row[\'id_topic\'], $row[\'id_first_msg\']);
 				if ($row[\'id_last_msg\'] != $row[\'myid_last_msg\'])
@@ -421,7 +423,7 @@ function loadForumTests()
 		// Find topics with incorrect num_replies.
 		'stats_topics2' => array(
 			'substeps' => array(
-				'step_size' => 1000,
+				'step_size' => 300,
 				'step_max' => '
 					SELECT MAX(id_topic)
 					FROM {db_prefix}topics'
@@ -434,12 +436,15 @@ function loadForumTests()
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
 					LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic, t.num_replies, mf.approved, ma.id_msg
-				HAVING num_replies != (CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END)
+				GROUP BY t.id_topic, t.num_replies, mf.approved
 				ORDER BY t.id_topic',
 			'fix_processing' => create_function('$row', '
 				global $smcFunc;
 				$row[\'my_num_replies\'] = (int) $row[\'my_num_replies\'];
+
+				// Not really a problem?
+				if ($row[\'my_num_replies\'] == $row[\'num_replies\'])
+					return false;
 
 				$smcFunc[\'db_query\'](\'\', "
 					UPDATE {db_prefix}topics
@@ -449,7 +454,18 @@ function loadForumTests()
 					)
 				);
 			'),
-			'messages' => array('repair_stats_topics_3', 'id_topic', 'num_replies'),
+			'message_function' => create_function('$row', '
+				global $txt, $context;
+
+				// Just joking?
+				if ($row[\'my_num_replies\'] == $row[\'num_replies\'])
+					return false;
+
+				if ($row[\'num_replies\'] != $row[\'my_num_replies\'])
+					$context[\'repair_errors\'][] = sprintf($txt[\'repair_stats_topics_3\'], $row[\'id_topic\'], $row[\'num_replies\']);
+
+				return true;
+			'),
 		),
 		// Find topics with incorrect unapproved_posts.
 		'stats_topics3' => array(
