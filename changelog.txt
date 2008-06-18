@@ -44,6 +44,7 @@ June 2008
  ! Some repair queries wern't working on RepairBoards. (RepairBoards.php) [Bug 2120]
  ! Work around an annoying bug in some MySQL versions. (upgrade.php, install.php, ScheduledTasks.php, Display.php)
  ! Password reminders did not work when using a validation code. (Reminder.php) [Bug 2232]
+ ! Users loaded in loadMemberContext() are never guests. (Load.php) [Bug 2224]
 
 
 May 2008

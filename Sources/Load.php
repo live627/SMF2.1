@@ -1086,7 +1086,6 @@ function loadMemberContext($user, $display_custom_fields = false)
 		'username' => $profile['member_name'],
 		'name' => $profile['real_name'],
 		'id' => $profile['id_member'],
-		'is_guest' => $profile['id_member'] == 0,
 		'is_buddy' => $profile['buddy'],
 		'is_reverse_buddy' => in_array($user_info['id'], $buddy_list),
 		'buddies' => $buddy_list,
