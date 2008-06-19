@@ -974,24 +974,26 @@ function QuickModeration()
 	if (!empty($removeCache))
 	{
 		// They can only delete their own topics. (we wouldn't be here if they couldn't do that..)
-		if (!empty($board) && !allowedTo('remove_any'))
+		$result = $smcFunc['db_query']('', '
+			SELECT id_topic, id_board
+			FROM {db_prefix}topics
+			WHERE id_topic IN ({array_int:removed_topic_ids})' . (!empty($board) && !allowedTo('remove_any') ? '
+				AND id_member_started = {int:current_member}' : '') . '
+			LIMIT ' . count($removeCache),
+			array(
+				'current_member' => $user_info['id'],
+				'removed_topic_ids' => $removeCache,
+			)
+		);
+
+		$removeCache = array();
+		$removeCacheBoards = array();
+		while ($row = $smcFunc['db_fetch_assoc']($result))
 		{
-			$result = $smcFunc['db_query']('', '
-				SELECT id_topic, id_board
-				FROM {db_prefix}topics
-				WHERE id_topic IN ({array_int:removed_topic_ids})
-					AND id_member_started = {int:current_member}
-				LIMIT ' . count($removeCache),
-				array(
-					'current_member' => $user_info['id'],
-					'removed_topic_ids' => $removeCache,
-				)
-			);
-			$removeCache = array();
-			while ($row = $smcFunc['db_fetch_assoc']($result))
-				$removeCache[] = $row;
-			$smcFunc['db_free_result']($result);
+			$removeCache[] = $row['id_topic'];
+			$removeCacheBoards[$row['id_topic']] = $row['id_board'];
 		}
+		$smcFunc['db_free_result']($result);
 
 		// Maybe *none* were their own topics.
 		if (!empty($removeCache))
@@ -999,7 +1001,7 @@ function QuickModeration()
 			// Gotta send the notifications *first*!
 			foreach ($removeCache as $topic)
 			{
-				logAction('remove', array('topic' => $topic['id_topic'], 'board' => $topic['id_board']));
+				logAction('remove', array('topic' => $topic, 'board' => $removeCacheBoards[$topic]));
 				sendNotifications($topic, 'remove');
 			}
 

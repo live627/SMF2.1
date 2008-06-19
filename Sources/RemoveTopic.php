@@ -1043,6 +1043,7 @@ function RestoreTopic()
 					'count_posts' => $row['count_posts'],
 					'subject' => $row['subject'],
 					'previous_board' => $row['id_previous_board'],
+					'possible_prev_board' => $row['possible_prev_board'],
 					'current_topic' => $row['id_topic'],
 					'current_board' => $row['id_board'],
 					'members' => array(),
@@ -1177,7 +1178,7 @@ function RestoreTopic()
 			if (empty($count_posts))
 			{
 				// Lets get the members that need their post count restored.
-				$request = $smcFunc['db_query']('', '
+				$request2 = $smcFunc['db_query']('', '
 					SELECT id_member
 					FROM {db_prefix}messages
 					WHERE id_topic = {int:topic}',
@@ -1186,13 +1187,15 @@ function RestoreTopic()
 					)
 				);
 
-				while ($row = $smcFunc['db_fetch_assoc']($request))
-					updateMemberData($row['id_member'], array('posts' => '+'));
+				while ($member = $smcFunc['db_fetch_assoc']($request2))
+					updateMemberData($member['id_member'], array('posts' => '+'));
+				$smcFunc['db_free_result']($request2);
 			}
-
+			
 			// Log it.
 			logAction('restore_topic', array('topic' => $row['id_topic'], 'board' => $row['id_board'], 'board_to' => $row['id_previous_board']));
 		}
+		$smcFunc['db_free_result']($request);
 	}
 
 	// Didn't find some things?
