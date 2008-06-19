@@ -48,9 +48,9 @@ June 2008
  ! Backup wasn't working in PostgreSQL. (DbExtra-xxx.php) [Bug 2235]
  ! Finally got repair boards to work on all databases by doing more work, I'm afraid. (RepairBoards.php) [Bug 2234]
  & Change the formatting of the guest welcome text on the semantic theme. (index template, index language file) [Bug 2233]
- ! Users could not delete their own topics using quick moderation. (MessageIndex.php)
- ! Removing and restoring topics wasn't always logged properly. (MessageIndex.php, RemoveTopic.php)
- ! Multiple topics could not be restored at the same time using quick moderation. (RemoveTopic.php)
+ ! Users could not delete their own topics using quick moderation. (MessageIndex.php) [Bug 2236]
+ ! Removing and restoring topics wasn't always logged properly. (MessageIndex.php, RemoveTopic.php) [Bug 1827]
+ ! Multiple topics could not be restored at the same time using quick moderation. (RemoveTopic.php) [Bug 2239]
 
 
 May 2008
