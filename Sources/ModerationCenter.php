@@ -1118,8 +1118,8 @@ function ViewWatchedUsers()
 					),
 				),
 				'sort' => array(
-					'default' => 'member_name',
-					'reverse' => 'member_name DESC',
+					'default' => 'real_name',
+					'reverse' => 'real_name DESC',
 				),
 			),
 			'warning' => array(
@@ -1248,7 +1248,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 	global $smcFunc, $txt, $scripturl, $modSettings, $user_info, $context;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT id_member, member_name, last_login, posts, warning
+		SELECT id_member, real_name, last_login, posts, warning
 		FROM {db_prefix}members
 		WHERE warning >= {int:warning_watch}
 		ORDER BY {raw:sort}
@@ -1264,7 +1264,7 @@ function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $d
 	{
 		$watched_users[$row['id_member']] = array(
 			'id' => $row['id_member'],
-			'name' => $row['member_name'],
+			'name' => $row['real_name'],
 			'last_login' => $row['last_login'] ? timeformat($row['last_login']) : $txt['never'],
 			'last_post' => $txt['not_applicable'],
 			'last_post_id' => 0,
@@ -1366,7 +1366,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.id_topic, m.id_board, m.id_member, m.subject, m.body, m.poster_time,
-			m.approved, mem.member_name, m.smileys_enabled
+			m.approved, mem.real_name, m.smileys_enabled
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
@@ -1388,7 +1388,7 @@ function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query
 		$member_posts[$row['id_msg']] = array(
 			'id' => $row['id_msg'],
 			'id_topic' => $row['id_topic'],
-			'author_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+			'author_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 			'subject' => $row['subject'],
 			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
 			'poster_time' => timeformat($row['poster_time']),

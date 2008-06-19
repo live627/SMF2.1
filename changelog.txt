@@ -51,6 +51,7 @@ June 2008
  ! Users could not delete their own topics using quick moderation. (MessageIndex.php) [Bug 2236]
  ! Removing and restoring topics wasn't always logged properly. (MessageIndex.php, RemoveTopic.php) [Bug 1827]
  ! Multiple topics could not be restored at the same time using quick moderation. (RemoveTopic.php) [Bug 2239]
+ ! A member's username was being shown instead of their display name when viewing warned members. (ModerationCenter.php) [Bug 1965]
 
 
 May 2008
