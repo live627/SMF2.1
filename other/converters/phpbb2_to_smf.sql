@@ -74,8 +74,8 @@ if (!isset($board_timezone))
 		FROM {$from_prefix}config
 		WHERE config_name = 'board_timezone'
 		LIMIT 1");
-	list ($board_timezone) = mysql_fetch_row($request2);
-	mysql_free_result($request2);
+	list ($board_timezone) = convert_fetch_row($request2);
+	convert_free_result($request2);
 
 	// Find out where uploaded avatars go
 	$request2 = convert_query("
@@ -84,11 +84,11 @@ if (!isset($board_timezone))
 		WHERE variable = 'custom_avatar_enabled'
 		LIMIT 1");
 
-	if (mysql_num_rows($request2))
-		list ($custom_avatar_enabled) = mysql_fetch_row($request2);
+	if (convert_num_rows($request2))
+		list ($custom_avatar_enabled) = convert_fetch_row($request2);
 	else
 		$custom_avatar_enabled = false;
-	mysql_free_result($request2);
+	convert_free_result($request2);
 
 	if ($custom_avatar_enabled)
 	{
@@ -98,7 +98,7 @@ if (!isset($board_timezone))
 			FROM {$to_prefix}settings
 			WHERE variable = 'custom_avatar_dir'
 			LIMIT 1");
-		list ($avatar_dir) = mysql_fetch_row($request2);
+		list ($avatar_dir) = convert_fetch_row($request2);
 		$attachmentType = '1';
 	}
 	else
@@ -109,18 +109,18 @@ if (!isset($board_timezone))
 			FROM {$to_prefix}settings
 			WHERE variable = 'attachmentUploadDir'
 			LIMIT 1");
-		list ($avatar_dir) = mysql_fetch_row($request2);
+		list ($avatar_dir) = convert_fetch_row($request2);
 		$attachmentType = '0';
 	}
-	mysql_free_result($request2);
+	convert_free_result($request2);
 
 	$request2 = convert_query("
 		SELECT config_value
 		FROM {$from_prefix}config
 		WHERE config_name = 'avatar_path'
 		LIMIT 1");
-	$phpbb_avatar_upload_path = $_POST['path_from'] . '/' . mysql_result($request2, 0, 'config_value');
-	mysql_free_result($request2);
+	$phpbb_avatar_upload_path = $_POST['path_from'] . '/' . convert_result($request2, 0, 'config_value');
+	convert_free_result($request2);
 }
 
 // time_offset = phpBB user TZ - phpBB board TZ.
@@ -205,7 +205,7 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
 	$last_member = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		if (empty($last_member))
 			$last_member = $row['id_member'];
@@ -232,10 +232,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $_REQUEST['start'] = 0;
 
@@ -449,7 +449,7 @@ $request = convert_query("
 		CASE auth_pollcreate WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_pollcreate,
 		forum_id AS id_board
 	FROM {$from_prefix}forums");
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	// Accumulate permissions in here - the keys are id_groups.
 	$this_board = array(
@@ -515,7 +515,7 @@ while ($row = mysql_fetch_assoc($request))
 				(id_group, id_board, permission)
 			VALUES" . substr($setString, 0, -1));
 }
-mysql_free_result($request);
+convert_free_result($request);
 ---}
 ---#
 
@@ -535,7 +535,7 @@ $request = convert_query("
 	FROM {$from_prefix}auth_access AS aa
 		INNER JOIN {$from_prefix}groups AS g ON (g.group_id = aa.group_id)
 		INNER JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', g.group_name));");
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	$this_group = array();
 
@@ -608,8 +608,8 @@ while ($row = mysql_fetch_assoc($request))
 		FROM {$to_prefix}boards
 		WHERE id_board = $row[id_board]
 		LIMIT 1");
-	list ($member_groups) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($member_groups) = convert_fetch_row($result);
+	convert_free_result($result);
 
 	convert_query("
 		UPDATE {$to_prefix}boards
@@ -617,7 +617,7 @@ while ($row = mysql_fetch_assoc($request))
 		WHERE id_board = $row[id_board]
 		LIMIT 1");
 }
-mysql_free_result($request);
+convert_free_result($request);
 ---}
 ---#
 
@@ -633,8 +633,8 @@ $request = convert_query("
 	FROM {$from_prefix}config
 	WHERE config_name = 'avatar_gallery_path'
 	LIMIT 1");
-list ($phpbb_avatar_gallery_path) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($phpbb_avatar_gallery_path) = convert_fetch_row($request);
+convert_free_result($request);
 
 // Find the path for SMF avatars.
 $request = convert_query("
@@ -642,8 +642,8 @@ $request = convert_query("
 	FROM {$to_prefix}settings
 	WHERE variable = 'avatar_directory'
 	LIMIT 1");
-list ($smf_avatar_directory) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($smf_avatar_directory) = convert_fetch_row($request);
+convert_free_result($request);
 
 $phpbb_avatar_gallery_path = $_POST['path_from'] . '/' . $phpbb_avatar_gallery_path;
 

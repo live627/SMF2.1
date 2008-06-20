@@ -382,7 +382,7 @@ while (true)
 		WHERE g_id NOT IN (1, 4, 5)
 		LIMIT $_REQUEST[start], 100");
 	$perms = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$row = addslashes_recursive($row);
 		// If this is NOT an existing membergroup add it (1-5 = existing.)
@@ -425,10 +425,10 @@ while (true)
 				(', $perms) . ")");
 
 	$_REQUEST['start'] += 100;
-	if (mysql_num_rows($result) < 100)
+	if (convert_num_rows($result) < 100)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $_REQUEST['start'] = 0;
@@ -477,12 +477,12 @@ $result = convert_query("
 	WHERE g_id != 5 AND g_id != 1 AND g_id != 4");
 $groups = array();
 $groupMask = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = convert_fetch_assoc($result))
 {
 	$groups[] = $row['id_group'];
 	$groupMask[$row['id_group']] = $row['perms'];
 }
-mysql_free_result($result);
+convert_free_result($result);
 
 function magicMask(&$group)
 {
@@ -537,7 +537,7 @@ while (true)
 		FROM {$from_prefix}forums
 		LIMIT $_REQUEST[start], 100");
 	$perms = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$row = addslashes_recursive($row);
 
@@ -634,10 +634,10 @@ while (true)
 				', $perms));
 
 	$_REQUEST['start'] += 100;
-	if (mysql_num_rows($result) < 100)
+	if (convert_num_rows($result) < 100)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $_REQUEST['start'] = 0;
@@ -678,16 +678,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)

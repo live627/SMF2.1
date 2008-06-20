@@ -74,8 +74,8 @@ if (!isset($board_timezone))
 		FROM {$from_prefix}config
 		WHERE config_name = 'board_timezone'
 		LIMIT 1");
-	list ($board_timezone) = mysql_fetch_row($request2);
-	mysql_free_result($request2);
+	list ($board_timezone) = convert_fetch_row($request2);
+	convert_free_result($request2);
 
 	// Find out where uploaded avatars go
 	$request2 = convert_query("
@@ -84,11 +84,11 @@ if (!isset($board_timezone))
 		WHERE variable = 'custom_avatar_enabled'
 		LIMIT 1");
 
-	if (mysql_num_rows($request2))
-		list ($custom_avatar_enabled) = mysql_fetch_row($request2);
+	if (convert_num_rows($request2))
+		list ($custom_avatar_enabled) = convert_fetch_row($request2);
 	else
 		$custom_avatar_enabled = false;
-	mysql_free_result($request2);
+	convert_free_result($request2);
 
 	if ($custom_avatar_enabled)
 	{
@@ -98,7 +98,7 @@ if (!isset($board_timezone))
 			FROM {$to_prefix}settings
 			WHERE variable = 'custom_avatar_dir'
 			LIMIT 1");
-		list ($avatar_dir) = mysql_fetch_row($request2);
+		list ($avatar_dir) = convert_fetch_row($request2);
 		$attachmentType = '1';
 	}
 	else
@@ -109,18 +109,18 @@ if (!isset($board_timezone))
 			FROM {$to_prefix}settings
 			WHERE variable = 'attachmentUploadDir'
 			LIMIT 1");
-		list ($avatar_dir) = mysql_fetch_row($request2);
+		list ($avatar_dir) = convert_fetch_row($request2);
 		$attachmentType = '0';
 	}
-	mysql_free_result($request2);
+	convert_free_result($request2);
 
 	$request2 = convert_query("
 		SELECT config_value
 		FROM {$from_prefix}config
 		WHERE config_name = 'avatar_path'
 		LIMIT 1");
-	$phpbb_avatar_upload_path = $_POST['path_from'] . '/' . mysql_result($request2, 0, 'config_value');
-	mysql_free_result($request2);
+	$phpbb_avatar_upload_path = $_POST['path_from'] . '/' . convert_result($request2, 0, 'config_value');
+	convert_free_result($request2);
 }
 
 // time_offset = phpBB user TZ - phpBB board TZ.
@@ -150,6 +150,7 @@ if ($row['signature_uid'] != '')
 $row['signature'] = preg_replace(
 	array(
 		'~\[quote=&quot;(.+?)&quot;(:.+?)?\]~is',
+		'~\[quote(:.+?)?\]~is',
 		'~\[/quote(:.+?)?\]~is',
 		'~\[b(:.+?)?\]~is',
 		'~\[/b(:.+?)?\]~is',
@@ -158,17 +159,29 @@ $row['signature'] = preg_replace(
 		'~\[u(:.+?)?\]~is',
 		'~\[/u(:.+?)?\]~is',
 		'~\[url:(.+?)\]~is',
+		'~\[/url:(.+?)?\]~is',
 		'~\[url=(.+?):(.+?)\]~is',
 		'~\[/url:(.+?)?\]~is',
+		'~\<a(.+?) href="(.+?)">(.+?)</a>~is',
 		'~\[img:(.+?)?\]~is',
 		'~\[/img:(.+?)?\]~is',
-		'~\[size=([789]|[012]\d)(:.+?)\]~is',
-		'~\[/size(:.+?)\]~is',
-		'~\[color=([789]|[012]\d)(:.+?)\]~is',
-		'~\[color:(.+?)?\]~is',
+		'~\[size=(.+?):(.+?)\]~is',
+		'~\[/size(:.+?)?\]~is',
+		'~\[color=(.+?):(.+?)\]~is',
+		'~\[/color(:.+?)?\]~is',
+		'~\[code=(.+?):(.+?)?\]~is',
+		'~\[code(:.+?)?\]~is',
+		'~\[/code(:.+?)?\]~is',
+		'~\[list=(.+?):(.+?)?\]~is',
+		'~\[list(:.+?)?\]~is',
+		'~\[/list(:.+?)?\]~is',
+		'~\[\*(:.+?)?\]~is',
+		'~\[/\*(:.+?)?\]~is',
+		'~<!-- (.+?) -->~is',
 	),
 	array(
 		'[quote author="$1"]',
+		'[quote]',
 		'[/quote]',
 		'[b]',
 		'[/b]',
@@ -177,15 +190,34 @@ $row['signature'] = preg_replace(
 		'[u]',
 		'[/u]',
 		'[url]',
+		'[/url]',
 		'[url=$1]',
 		'[/url]',
+		'[url=$2]$3[/url]',
 		'[img]',
 		'[/img]',
 		'[size=$1px]',
 		'[/size]',
 		'[color=$1]',
 		'[/color]',
+		'[code=$1]',
+		'[code]',
+		'[/code]',
+		'[list type=$1]',
+		'[list]',
+		'[/list]',
+		'[li]',
+		'[/li]',
+		'',
 	), $row['signature']);
+
+$row['signature'] = preg_replace('~\[size=(.+?)px\]~is', "[size=" . ('\1' > '99' ? 99 : '"\1"') . "px]", $row['signature']);
+
+// This just does the stuff that it isn't work parsing in a regex.
+$row['signature'] = strtr($row['signature'], array(
+	'[list type=1]' => '[list type=decimal]',
+	'[list type=a]' => '[list type=lower-alpha]',
+	));
 
 $row['signature'] = substr($row['signature'], 0, 65534);
 unset($row['signature_uid']);
@@ -245,7 +277,7 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
 	$last_member = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		if (empty($last_member))
 			$last_member = $row['id_member'];
@@ -272,10 +304,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $_REQUEST['start'] = 0;
 
@@ -329,8 +361,8 @@ $request = convert_query("
 	SELECT COUNT(*)
 	FROM {$to_prefix}categories
 	WHERE name = 'Uncategorized Boards'");
-list ($exists) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($exists) = convert_fetch_row($request);
+convert_free_result($request);
 
 if (empty($exists))
 	convert_query("
@@ -373,7 +405,7 @@ $request = convert_query("
 	FROM {$to_prefix}categories
 	ORDER BY cat_order");
 $order = 1;
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	convert_query("
 		UPDATE {$to_prefix}categories
@@ -421,9 +453,11 @@ TRUNCATE {$to_prefix}messages;
 
 ---* {$to_prefix}messages 200
 ---{
+// This does the major work first
 $row['body'] = preg_replace(
 	array(
 		'~\[quote=&quot;(.+?)&quot;(:.+?)?\]~is',
+		'~\[quote(:.+?)?\]~is',
 		'~\[/quote(:.+?)?\]~is',
 		'~\[b(:.+?)?\]~is',
 		'~\[/b(:.+?)?\]~is',
@@ -432,17 +466,29 @@ $row['body'] = preg_replace(
 		'~\[u(:.+?)?\]~is',
 		'~\[/u(:.+?)?\]~is',
 		'~\[url:(.+?)\]~is',
+		'~\[/url:(.+?)?\]~is',
 		'~\[url=(.+?):(.+?)\]~is',
 		'~\[/url:(.+?)?\]~is',
+		'~\<a(.+?) href="(.+?)">(.+?)</a>~is',
 		'~\[img:(.+?)?\]~is',
 		'~\[/img:(.+?)?\]~is',
-		'~\[size=([789]|[012]\d)(:.+?)\]~is',
-		'~\[/size(:.+?)\]~is',
-		'~\[color=([789]|[012]\d)(:.+?)\]~is',
-		'~\[color:(.+?)?\]~is',
+		'~\[size=(.+?):(.+?)\]~is',
+		'~\[/size(:.+?)?\]~is',
+		'~\[color=(.+?):(.+?)\]~is',
+		'~\[/color(:.+?)?\]~is',
+		'~\[code=(.+?):(.+?)?\]~is',
+		'~\[code(:.+?)?\]~is',
+		'~\[/code(:.+?)?\]~is',
+		'~\[list=(.+?):(.+?)?\]~is',
+		'~\[list(:.+?)?\]~is',
+		'~\[/list(:.+?)?\]~is',
+		'~\[\*(:.+?)?\]~is',
+		'~\[/\*(:.+?)?\]~is',
+		'~<!-- (.+?) -->~is',
 	),
 	array(
 		'[quote author="$1"]',
+		'[quote]',
 		'[/quote]',
 		'[b]',
 		'[/b]',
@@ -451,15 +497,34 @@ $row['body'] = preg_replace(
 		'[u]',
 		'[/u]',
 		'[url]',
+		'[/url]',
 		'[url=$1]',
 		'[/url]',
+		'[url=$2]$3[/url]',
 		'[img]',
 		'[/img]',
 		'[size=$1px]',
 		'[/size]',
 		'[color=$1]',
 		'[/color]',
+		'[code=$1]',
+		'[code]',
+		'[/code]',
+		'[list type=$1]',
+		'[list]',
+		'[/list]',
+		'[li]',
+		'[/li]',
+		'',
 	), $row['body']);
+
+$row['body'] = preg_replace('~\[size=(.+?)px\]~is', "[size=" . ('\1' > '99' ? 99 : '"\1"') . "px]", $row['body']);
+
+// This just does the stuff that it isn't work parsing in a regex.
+$row['body'] = strtr($row['body'], array(
+	'[list type=1]' => '[list type=decimal]',
+	'[list type=a]' => '[list type=lower-alpha]',
+	));
 ---}
 SELECT
 	p.post_id AS id_msg, p.topic_id AS id_topic, p.forum_id AS id_board,
@@ -483,7 +548,7 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	t.topic_id AS id_poll, t.poll_title AS question, t.poll_max_options AS max_votes, (t.poll_start + t.poll_length) AS expire_time,
+	t.topic_id AS id_poll, t.poll_title AS question, t.poll_max_options AS max_votes, IF((t.poll_start + t.poll_length) < 0, 0, (t.poll_start + t.poll_length)) AS expire_time,
 	t.poll_vote_change AS change_vote, t.topic_poster AS id_member, m.username AS poster_name
 FROM {$from_prefix}topics AS t
 	LEFT JOIN {$from_prefix}users AS m ON (m.user_id = t.topic_poster)
@@ -506,6 +571,9 @@ FROM {$from_prefix}poll_options;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
+---{
+$i{gnore = true;
+---}
 SELECT topic_id AS id_poll, vote_user_id AS id_member, poll_option_id AS id_choice
 FROM {$from_prefix}poll_votes
 WHERE vote_user_id > 0;
@@ -555,8 +623,8 @@ if (!isset($oldAttachmentDir))
 		FROM {$from_prefix}config
 		WHERE config_name = 'upload_path'
 		LIMIT 1");
-	list ($oldAttachmentDir) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($oldAttachmentDir) = convert_fetch_row($result);
+	convert_free_result($result);
 
 	if (empty($oldAttachmentDir) || !file_exists($_POST['path_from'] . '/' . $oldAttachmentDir))
 		$oldAttachmentDir = $_POST['path_from'] . '/file';
@@ -570,8 +638,8 @@ if (empty($id_attach))
 	$result = convert_query("
 		SELECT MAX(id_attach) + 1
 		FROM {$to_prefix}attachments");
-	list ($id_attach) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($id_attach) = convert_fetch_row($result);
+	convert_free_result($result);
 
 	$id_attach = empty($id_attach) ? 1 : $id_attach;
 }

@@ -218,8 +218,8 @@ if (!isset($yAttachmentDir))
 		FROM {$from_prefix}{$dbtables['registry']}
 		WHERE name = 'attachmentdir'
 		LIMIT 1");
-	list ($yAttachmentDir) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($yAttachmentDir) = convert_fetch_row($result);
+	convert_free_result($result);
 }
 
 if (!file_exists($yAttachmentDir))

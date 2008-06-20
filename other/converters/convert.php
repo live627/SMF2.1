@@ -2450,6 +2450,58 @@ function convert_query($string, $return_error = false)
 	die;
 }
 
+// Provide a easy way to give our converters an insert id.
+function convert_insert_id($result)
+{
+	global $smcFunc;
+
+	return $smcFunc['db_insert_id']($result);
+}
+
+// Provide a way to find the affected rows.
+function convert_affected_rows()
+{
+	global $smcFunc;
+
+	return	$smcFunc['db_affected_rows']();
+}
+
+// Provide a way to do results with offsets
+fucntion convert_result($request, $offset = 0, $field_name = '')
+{
+	global $smcFunc;
+
+	// SQlite is a pain, This should hopefully work.
+	if ($smcFunc['db_title'] == 'SQLite')
+	{
+		// Perform the query.
+		$result = $smcFunc['db_query']('', $request, 'security_override');
+
+		// Now loop throuh it with an array (for ease of use for field_name).
+		$t = 0;
+		while ($row = sqlite_fetch_array($result))
+		{
+			// If its not our offset, Add, and get on with it.
+			if ($t != $offset)
+			{
+				++$t;
+				continue;
+			}
+
+			// We want to be that lazy.. Um I mean, Specific?
+			if ($field_name != '')
+				return $row[$field_name];
+			else
+				return $row[0];
+		}	
+	}
+	// Luckily Postgresql is with it.
+	elseif ($smcFunc['db_title'] == 'PostgreSQL')
+		return pg_fetch_result($request, $offset, $field_name);
+	else
+		return mysql_result($request, $offset, $field_name);
+}
+
 function convert_free_result($result)
 {
 	global $smcFunc;
@@ -2463,9 +2515,9 @@ function convert_free_result($result)
 
 	$type = get_resource_type($result);
 	if ($type == 'odbc result')
-		odbc_free_result($result);
+		return odbc_free_result($result);
 	else
-		$smcFunc['db_free_result']($result);
+		return $smcFunc['db_free_result']($result);
 }
 
 function convert_fetch_assoc($result)

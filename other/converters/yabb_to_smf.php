@@ -193,9 +193,9 @@ if (empty($preparsing))
 			FROM {$to_prefix}membergroups
 			WHERE id_group NOT IN (2, 3)");
 		$groups = array('Administrator' => 1, 'Moderator' => 0);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = convert_fetch_assoc($request))
 			$groups[$row['group_name']] = $row['id_group'];
-		mysql_free_result($request);
+		convert_free_result($request);
 
 		$file_n = 0;
 		$dir = dir($yabb['memberdir']);
@@ -470,12 +470,12 @@ if (empty($preparsing))
 					FROM {$to_prefix}members
 					WHERE member_name IN ('" . implode("', '", array_keys($names)) . "')
 					LIMIT " . count($names));
-				while ($row = mysql_fetch_assoc($result))
+				while ($row = convert_fetch_assoc($result))
 				{
 					foreach ($names[strtolower(addslashes($row['member_name']))] as $k => $v)
 						$names[strtolower(addslashes($row['member_name']))][$k] = $row['id_member'];
 				}
-				mysql_free_result($result);
+				convert_free_result($result);
 				$names = array();
 
 				doBlock('personal_messages', $block);
@@ -491,12 +491,12 @@ if (empty($preparsing))
 				FROM {$to_prefix}members
 				WHERE member_name IN ('" . implode("', '", array_keys($names)) . "')
 				LIMIT " . count($names));
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = convert_fetch_assoc($result))
 			{
 				foreach ($names[strtolower(addslashes($row['member_name']))] as $k => $v)
 					$names[strtolower(addslashes($row['member_name']))][$k] = $row['id_member'];
 			}
-			mysql_free_result($result);
+			convert_free_result($result);
 			$names = array();
 
 			doBlock('personal_messages', $block);
@@ -582,9 +582,9 @@ if (empty($preparsing))
 			FROM {$to_prefix}membergroups
 			WHERE id_group NOT IN (2, 3)");
 		$groups = array('Administrator' => 1, 'Moderator' => 0);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = convert_fetch_assoc($request))
 			$groups[$row['group_name']] = $row['id_group'];
-		mysql_free_result($request);
+		convert_free_result($request);
 
 		$cats = file($yabb['vardir'] . '/cat.txt');
 		$board_order = 1;
@@ -658,14 +658,14 @@ if (empty($preparsing))
 			SELECT id_cat, tempID
 			FROM {$to_prefix}categories
 			WHERE tempID != ''");
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = convert_fetch_assoc($result))
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
 				SET id_cat = $row[id_cat]
 				WHERE tempCatID = '$row[tempID]'");
 		}
-		mysql_free_result($result);
+		convert_free_result($result);
 
 		foreach ($moderators as $boardid => $names)
 		{
@@ -674,8 +674,8 @@ if (empty($preparsing))
 				FROM {$to_prefix}boards
 				WHERE tempID = '$boardid'
 				LIMIT 1");
-			list ($id_board) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($id_board) = convert_fetch_row($result);
+			convert_free_result($result);
 
 			convert_query("
 				INSERT INTO {$to_prefix}moderators
@@ -722,9 +722,9 @@ if (empty($preparsing))
 			SELECT id_board, tempID
 			FROM {$to_prefix}boards");
 		$boards = array();
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = convert_fetch_assoc($result))
 			$boards[$row['tempID']] = $row['id_board'];
-		mysql_free_result($result);
+		convert_free_result($result);
 
 		$file_n = 0;
 		$dir = dir($yabb['memberdir']);
@@ -745,8 +745,8 @@ if (empty($preparsing))
 				FROM {$to_prefix}members
 				WHERE member_name = '" . substr($entry, 0, -4) . "'
 				LIMIT 1");
-			list ($id_member) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($id_member) = convert_fetch_row($result);
+			convert_free_result($result);
 
 			$logData = file($yabb['memberdir'] . '/' . $entry);
 			foreach ($logData as $log)
@@ -838,9 +838,9 @@ if (empty($preparsing))
 			FROM {$to_prefix}boards
 			WHERE tempID != ''");
 		$boards = array();
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = convert_fetch_assoc($result))
 			$boards[$row['tempID']] = $row['id_board'];
-		mysql_free_result($result);
+		convert_free_result($result);
 
 		$data_n = 0;
 		$block = array();
@@ -938,7 +938,7 @@ if (empty($preparsing))
 				FROM {$to_prefix}topics
 				WHERE tempID != id_topic
 				LIMIT $_GET[substep], 150");
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = convert_fetch_assoc($result))
 			{
 				convert_query("
 					UPDATE {$to_prefix}log_topics
@@ -947,10 +947,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += 150;
-			if (mysql_num_rows($result) < 150)
+			if (convert_num_rows($result) < 150)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		convert_query("
@@ -984,7 +984,7 @@ if (empty($preparsing))
 				FROM {$to_prefix}topics
 				WHERE tempID != id_topic
 				LIMIT $_GET[substep], 150");
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = convert_fetch_assoc($result))
 			{
 				if (!file_exists($yabb['datadir'] . '/' . $row['tempID'] . '.mail'))
 					continue;
@@ -1002,10 +1002,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += 150;
-			if (mysql_num_rows($result) < 150)
+			if (convert_num_rows($result) < 150)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 	}
 
@@ -1046,7 +1046,7 @@ if (empty($preparsing))
 				FROM {$to_prefix}topics
 				WHERE tempID != id_topic
 				LIMIT $_GET[substep], 100");
-			while ($topic = mysql_fetch_assoc($result))
+			while ($topic = convert_fetch_assoc($result))
 			{
 				$messages = file($yabb['datadir'] . '/' . $topic['tempID'] . '.txt');
 				if (empty($messages))
@@ -1102,10 +1102,10 @@ if (empty($preparsing))
 				pastTime(++$_GET['substep']);
 			}
 
-			if (mysql_num_rows($result) < 100)
+			if (convert_num_rows($result) < 100)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		doBlock('messages', $block);
@@ -1117,7 +1117,7 @@ if (empty($preparsing))
 
 		if ($_GET['substep'] == 0)
 		{
-			mysql_query("
+			convert_query("
 				ALTER TABLE {$to_prefix}messages
 				ORDER BY poster_time");
 		}
@@ -1127,20 +1127,20 @@ if (empty($preparsing))
 		$request = convert_query("
 			SELECT @msg := IFNULL(MAX(id_msg), 0)
 			FROM {$to_prefix}messages");
-		mysql_free_result($request);
+		convert_free_result($request);
 
 		while (true)
 		{
 			pastTime($_GET['substep']);
 
-			mysql_query("
+			convert_query("
 				UPDATE {$to_prefix}messages
 				SET id_msg = (@msg := @msg + 1)
 				WHERE id_msg = 0
 				LIMIT 150");
 
 			$_GET['substep'] += 150;
-			if (mysql_affected_rows() < 150)
+			if (convert_affected_rows() < 150)
 				break;
 		}
 
@@ -1165,7 +1165,7 @@ if (empty($preparsing))
 					INNER JOIN {$to_prefix}members AS mem ON (mem.member_name = m.poster_name)
 				WHERE m.id_member = 0
 				LIMIT 150");
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = convert_fetch_assoc($result))
 			{
 				convert_query("
 					UPDATE {$to_prefix}messages
@@ -1175,10 +1175,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += 150;
-			if (mysql_num_rows($result) < 150)
+			if (convert_num_rows($result) < 150)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 	}
 
@@ -1196,8 +1196,8 @@ if (empty($preparsing))
 			FROM {$to_prefix}settings
 			WHERE variable = 'attachmentUploadDir'
 			LIMIT 1");
-		list ($attachmentUploadDir) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($attachmentUploadDir) = convert_fetch_row($result);
+		convert_free_result($result);
 
 		// Danger, Will Robinson!
 		if ($yabb['upload_dir'] == $attachmentUploadDir)
@@ -1206,8 +1206,8 @@ if (empty($preparsing))
 		$result = convert_query("
 			SELECT MAX(id_attach)
 			FROM {$to_prefix}attachments");
-		list ($id_attach) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($id_attach) = convert_fetch_row($result);
+		convert_free_result($result);
 
 		$id_attach++;
 
@@ -1222,7 +1222,7 @@ if (empty($preparsing))
 				FROM {$to_prefix}messages
 				WHERE temp_filename != ''
 				LIMIT $_GET[substep], 100");
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = convert_fetch_assoc($result))
 			{
 				$size = filesize($yabb['upload_dir'] . '/' . $row['temp_filename']);
 				$filename = getAttachmentFilename($row['temp_filename'], $id_attach);
@@ -1243,10 +1243,10 @@ if (empty($preparsing))
 					VALUES" . substr($setString, 0, -1));
 
 			$_GET['substep'] += 100;
-			if (mysql_num_rows($result) < 100)
+			if (convert_num_rows($result) < 100)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		convert_query("
@@ -1308,23 +1308,23 @@ if (empty($preparsing))
 					INNER JOIN {$to_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				GROUP BY t.id_topic
 				LIMIT $_GET[substep], 150");
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = convert_fetch_assoc($result))
 			{
 				$result2 = convert_query("
 					SELECT id_member
 					FROM {$to_prefix}messages
 					WHERE id_msg = $row[id_last_msg]
 					LIMIT 1");
-				list ($row['id_member_updated']) = mysql_fetch_row($result2);
-				mysql_free_result($result2);
+				list ($row['id_member_updated']) = convert_fetch_row($result2);
+				convert_free_result($result2);
 
 				$result2 = convert_query("
 					SELECT id_member
 					FROM {$to_prefix}messages
 					WHERE id_msg = $row[id_first_msg]
 					LIMIT 1");
-				list ($row['id_member_started']) = mysql_fetch_row($result2);
-				mysql_free_result($result2);
+				list ($row['id_member_started']) = convert_fetch_row($result2);
+				convert_free_result($result2);
 
 				convert_query("
 					UPDATE {$to_prefix}topics
@@ -1335,10 +1335,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += 150;
-			if (mysql_num_rows($result) < 150)
+			if (convert_num_rows($result) < 150)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		if ($_GET['substep'] > -1)
@@ -1397,9 +1397,9 @@ if (empty($preparsing))
 				FROM {$to_prefix}members
 				WHERE member_name IN ('" . implode("', '", array_keys($block_names)) . "')
 				LIMIT " . count($block_names));
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = convert_fetch_assoc($request))
 				unset($block[$block_names[$row['member_name']]]);
-			mysql_free_result($request);
+			convert_free_result($request);
 
 			if (empty($block))
 				return;

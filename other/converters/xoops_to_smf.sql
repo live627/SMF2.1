@@ -200,8 +200,8 @@ if (!isset($oldAttachmentDir))
 		FROM {$from_prefix}config
 		WHERE conf_name = 'dir_attachment'
 		LIMIT 1");
-	list ($oldAttachmentDir) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($oldAttachmentDir) = convert_fetch_row($result);
+	convert_free_result($result);
 
 	if (empty($oldAttachmentDir) || is_dir($oldAttachmentDir))
 		$oldAttachmentDir = $_POST['path_from'] . '/uploads/newbb';

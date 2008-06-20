@@ -17,13 +17,13 @@ DELETE FROM {$to_prefix}membergroups
 WHERE group_name LIKE 'e107%';
 
 ---{
-	$request = mysql_query("
+	$request = convert_query("
 		SELECT e107_value
 		FROM {$from_prefix}core
 		WHERE e107_name = 'pref'
 		LIMIT 1");
-	list($prefs) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list($prefs) = convert_fetch_row($request);
+	convert_free_result($request);
 
 	$prefs = @unserialize(strtr($prefs, array("\n" => ' ', "\r" => ' ')));
 
@@ -37,7 +37,7 @@ WHERE group_name LIKE 'e107%';
 					(SUBSTRING('e107 " . addslashes($groupname) . "', 1, 255), $prefs[forum_thresholds], '', '')";
 
 		if (!empty($inserts))
-			mysql_query("
+			convert_query("
 				INSERT INTO {$to_prefix}membergroups
 					(group_name, min_posts, online_color, stars)
 				VALUES " . substr($inserts, 0, -1));
@@ -125,7 +125,7 @@ while (true)
 {
 	pastTime($substep);
 
-	$result = mysql_query("
+	$result = convert_query("
 		SELECT u.user_id AS id_member, mg.id_group
 		FROM {$from_prefix}userclass_classes AS uc
 			INNER JOIN {$from_prefix}user AS u
@@ -136,7 +136,7 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
 	$last_member = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		if (empty($last_member))
 			$last_member = $row['id_member'];
@@ -145,7 +145,7 @@ while (true)
 		{
 			$additional_groups = addslashes($additional_groups);
 
-			mysql_query("
+			convert_query("
 				UPDATE {$to_prefix}members
 				SET additional_groups = '$additional_groups'
 				WHERE id_member = $last_member
@@ -163,10 +163,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $_REQUEST['start'] = 0;
 
@@ -174,7 +174,7 @@ if ($last_member != 0)
 {
 	$additional_groups = addslashes($additional_groups);
 
-	mysql_query("
+	convert_query("
 		UPDATE {$to_prefix}members
 		SET additional_groups = '$additional_groups'
 		WHERE id_member = $last_member
@@ -347,13 +347,13 @@ FROM {$from_prefix}polls AS p
 /******************************************************************************/
 
 ---{
-$request = mysql_query("
+$request = convert_query("
 	SELECT
 		poll_id, poll_options, poll_votes
 	FROM {$from_prefix}polls AS p
 		INNER JOIN {$from_prefix}forum_t AS t ON (p.poll_datestamp = t.thread_id)");
 $inserts = '';
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	$separateOptions = explode(chr(1), $row['poll_options']);
 	$countOptions = count($separateOptions);
@@ -366,10 +366,10 @@ while ($row = mysql_fetch_assoc($request))
 				('$row[poll_id]', '$i', '$separateOptions[$i]', '$separateVotes[$i]'),";
 	}
 }
-mysql_free_result($request);
+convert_free_result($request);
 
 if ($inserts !== '')
-	mysql_query("
+	convert_query("
 		INSERT INTO {$to_prefix}poll_choices
 			(id_poll, id_choice, label, votes)
 		VALUES " . substr($inserts, 0, -1));
@@ -454,17 +454,17 @@ VALUES ('permission_enable_by_board', '0');
 
 ---# Do all board permissions...
 ---{
-$request = mysql_query("
+$request = convert_query("
 	SELECT forum_id
 	FROM {$from_prefix}forum
 	WHERE forum_class = 251");
 $readonlyBoards = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$readonlyBoards[] = $row['forum_id'];
-mysql_free_result($request);
+convert_free_result($request);
 
 if (!empty($readonlyBoards))
-	mysql_query("
+	convert_query("
 		UPDATE {$to_prefix}boards
 		SET permission_mode = 4
 		WHERE id_board IN (" . implode(', ', $readonlyBoards) . ")
@@ -500,27 +500,27 @@ while (true)
 {
 	pastTime($substep);
 
-	$result = mysql_query("
+	$result = convert_query("
 		SELECT banlist_ip, banlist_reason
 		FROM {$from_prefix}banlist
 		LIMIT $_REQUEST[start], 250");
 	$ban_time = time();
 	$ban_num = 0;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$ban_num++;
-		mysql_query("
+		convert_query("
 			INSERT INTO {$to_prefix}ban_groups
 				(name, ban_time, expire_time, notes, reason, cannot_access)
 			VALUES ('migrated_ban_$ban_num', $ban_time, NULL, '', '" . addslashes($row['banlist_reason']) . "', 1)");
-		$ID_BAN_GROUP = mysql_insert_id();
+		$ID_BAN_GROUP = convert_insert_id();
 
 		if (empty($ID_BAN_GROUP))
 			continue;
 
 		if (strpos($row['banlist_ip'], '@') !== false)
 		{
-			mysql_query("
+			convert_query("
 				INSERT INTO {$to_prefix}ban_items
 					(ID_BAN_GROUP, email_address, hostname)
 				VALUES ($ID_BAN_GROUP, '" . addslashes($row['banlist_ip']) . "', '')");
@@ -542,7 +542,7 @@ while (true)
 			$ip_high4 = $octet4;
 			$ip_low4 = $octet4;
 
-			mysql_query("
+			convert_query("
 				INSERT INTO {$to_prefix}ban_items
 					(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, email_address, hostname)
 				VALUES ($ID_BAN_GROUP, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
@@ -551,10 +551,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $_REQUEST['start'] = 0;
 ---}
@@ -562,28 +562,28 @@ $_REQUEST['start'] = 0;
 
 ---# Moving banned user...
 ---{
-$request = mysql_query("
+$request = convert_query("
 	SELECT user_id
 	FROM {$from_prefix}user
 	WHERE user_ban = 1");
-if (mysql_num_rows($request) > 0)
+if (convert_num_rows($request) > 0)
 {
-	mysql_query("
+	convert_query("
 		INSERT INTO {to_prefix}ban_groups
 			(name, ban_time, expire_time, reason, notes, cannot_access)
 			VALUES ('migrated_ban_users', $ban_time, NULL, '', 'Imported from e107', 1)");
-		$ID_BAN_GROUP = mysql_insert_id();
+		$ID_BAN_GROUP = convert_insert_id();
 
 	if (empty($ID_BAN_GROUP))
 		continue;
 
 	$inserts = '';
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = convert_fetch_assoc($request))
 		$inserts .= "
 			($ID_BAN_GROUP, $row[user_id], '', ''),";
-	mysql_free_result($request);
+	convert_free_result($request);
 
-	mysql_query("
+	convert_query("
 		INSERT INTO {$to_prefix}ban_items
 			(ID_BAN_GROUP, id_member, email_address, hostname)
 		VALUES " . substr($inserts, 0, -1));
@@ -606,7 +606,7 @@ $request = convert_query("
 	WHERE e107_name LIKE 'emote_%'");
 
 $smileys_dir = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$smileys_dir[] = $row['smiley_dir'];
 
 // Find the path for SMF smileys.
@@ -615,8 +615,8 @@ $request = convert_query("
 	FROM {$to_prefix}settings
 	WHERE variable = 'smileys_dir'
 	LIMIT 1");
-list ($smf_smileys_dir) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($smf_smileys_dir) = convert_fetch_row($request);
+convert_free_result($request);
 
 foreach ($smileys_dir as $dir)
 {
@@ -635,7 +635,7 @@ $request = convert_query("
 	SELECT variable, value
 	FROM {$to_prefix}settings
 	WHERE variable IN ('smiley_sets_known', 'smiley_sets_names')");
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	if ($row['variable'] == 'smiley_sets_known')
 	{
@@ -648,23 +648,23 @@ while ($row = mysql_fetch_assoc($request))
 		$smiley_sets_names_array = explode("\n", $row['value']);
 	}
 }
-mysql_free_result($request);
+convert_free_result($request);
 
 // Get the max smiley_order
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 // SMF known smileys
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 // Get the smileys sets from e107
 $request = convert_query("
@@ -673,7 +673,7 @@ $request = convert_query("
 	WHERE e107_name LIKE 'emote_%'");
 
 $insert = '';
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	$smileys_set = @unserialize($row['smiley_codes']);
 
@@ -717,12 +717,12 @@ while ($row = mysql_fetch_assoc($request))
 		}
 	}
 }
-mysql_free_result($request);
+convert_free_result($request);
 
 // Insert the new smileys
 if (!empty($insert))
 {
-	mysql_query("
+	convert_query("
 		INSERT INTO {$to_prefix}smileys
 			(code, filename, description, smiley_order, hidden)
 		VALUES " . substr($insert, 0, -1));

@@ -38,7 +38,7 @@ while (true)
 			INNER JOIN {$from_prefix}permission AS p ON (r.rid=p.rid)
 		WHERE  p.perm LIKE '%administer forums%'
 		LIMIT $_REQUEST[start], 250");
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		convert_query("
 			UPDATE {$to_prefix}members
@@ -48,10 +48,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $_REQUEST['start'] = 0;
@@ -71,8 +71,8 @@ $request = convert_query("
 	FROM {$from_prefix}variable
 	WHERE name ='forum_containers'
 	LIMIT 1");
-list($containers) = mysql_fetch_row($request);
-mysql_free_result($request);
+list($containers) = convert_fetch_row($request);
+convert_free_result($request);
 $cont = unserialize($containers);
 	
 foreach ($cont as $categories)
@@ -83,8 +83,8 @@ foreach ($cont as $categories)
 		FROM {$from_prefix}term_data
 		WHERE tid = $categories
 		LIMIT 1");
-	list($name) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list($name) = convert_fetch_row($request);
+	convert_free_result($request);
 	
 	
 	convert_query("
@@ -105,12 +105,12 @@ $request = convert_query("
 	INNER JOIN {$from_prefix}term_data AS t ON (c.id_cat = t.tid)
 	ORDER BY t.weight ASC, c.name ASC");
 
-while ($row= mysql_fetch_array($request))
+while ($row= convert_fetch_assoc($request))
 	convert_query("
 		UPDATE {$to_prefix}categories
 		SET cat_order = " . ++$neworder . "
 		WHERE id_cat = $row[id_cat]");
-mysql_free_result($request);		
+convert_free_result($request);		
 ---}
 
 /******************************************************************************/
@@ -148,8 +148,8 @@ $request = convert_query("
 	FROM {$from_prefix}variable
 	WHERE name ='forum_containers'
 	LIMIT 1");
-list($containers) = mysql_fetch_row($request);
-mysql_free_result($request);
+list($containers) = convert_fetch_row($request);
+convert_free_result($request);
 $cont = unserialize($containers);
 	
 foreach ($cont as $categories)
@@ -159,8 +159,8 @@ foreach ($cont as $categories)
 		FROM {$from_prefix}term_data
 		WHERE tid = $categories
 		LIMIT 1");
-	list($name) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list($name) = convert_fetch_row($request);
+	convert_free_result($request);
 	
 	convert_query("
 		DELETE FROM {$to_prefix}boards
@@ -179,12 +179,12 @@ $request = convert_query("
 		INNER JOIN {$from_prefix}term_data AS t ON (b.id_board = t.tid)
 	ORDER BY t.weight ASC, b.name ASC");
 
-while ($row= mysql_fetch_array($request))
+while ($row= convert_fetch_assoc($request))
 	convert_query("
 		UPDATE {$to_prefix}boards
 		SET board_order = " . ++$neworder . "
 		WHERE id_board = $row[id_board]");
-mysql_free_result($request);
+convert_free_result($request);
 		
 ---}
 
@@ -337,7 +337,7 @@ while (true)
 		WHERE  b.count_posts = 0
 		GROUP BY m.id_member
 		LIMIT $_REQUEST[start], 250");
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$row['posts'] = (int) $row['posts'];
 
@@ -349,10 +349,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $_REQUEST['start'] = 0;

@@ -245,7 +245,7 @@ while (true)
 		SELECT Add_Owner AS id_member, Add_Member AS ID_BUDDY
 		FROM {$from_prefix}AddressBook
 		LIMIT $_REQUEST[start], 250");
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$row['ID_BUDDY'] = (int) $row['ID_BUDDY'];
 
@@ -257,10 +257,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 250;
-	if (mysql_num_rows($result) < 250)
+	if (convert_num_rows($result) < 250)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $_REQUEST['start'] = 0;

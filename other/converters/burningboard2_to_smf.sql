@@ -38,7 +38,7 @@ TRUNCATE {$to_prefix}members;
 TRUNCATE {$to_prefix}attachments;
 
 ---{
-$test = mysql_query("
+$test = convert_query("
 	SELECT groupcombinationid
 	FROM {$from_prefix}groupcombinations
 	LIMIT 1");
@@ -66,13 +66,13 @@ if (!isset($admin_groups))
 	$admin_groups = array();
 	$gmod_groups = array();
 
-	$result = mysql_query("
+	$result = convert_query("
 		SELECT groupid, securitylevel
 		FROM {$from_prefix}groups
 		WHERE securitylevel > 1");
 	if ($result)
 	{
-		while ($row2 = mysql_fetch_assoc($result))
+		while ($row2 = convert_fetch_assoc($result))
 		{
 			if ($row2['securitylevel'] > 3)
 				$admin_groups[] = $row2['groupid'];
@@ -82,11 +82,11 @@ if (!isset($admin_groups))
 	}
 	else
 	{
-		$result = mysql_query("
+		$result = convert_query("
 			SELECT groupid, issupermod, canuseacp
 			FROM {$from_prefix}groups
 			WHERE issupermod OR canuseacp");
-		while ($row2 = mysql_fetch_assoc($result))
+		while ($row2 = convert_fetch_assoc($result))
 		{
 			if ($row2['canuseacp'])
 				$admin_groups[] = $row2['groupid'];
@@ -94,7 +94,7 @@ if (!isset($admin_groups))
 				$gmod_groups[] = $row2['groupid'];
 		}
 	}
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $allGroups = explode(',', $row['id_group']);
 // Default to nothing...
@@ -185,7 +185,7 @@ WHERE id_board != 0;
 ---* {$to_prefix}boards
 SELECT
 	boardid AS id_board, parentid AS id_parent, boardorder AS board_order,
-	SUBSTRING(title, 1, 255) AS name, SUBSTRING(description, 1, 65534),
+	SUBSTRING(title, 1, 255) AS name, SUBSTRING(description, 1, 65534) AS description,
 	threadcount AS num_topics, postcount AS num_posts, '-1, 0' AS member_groups
 FROM {$from_prefix}boards
 WHERE isboard = 1;
@@ -372,7 +372,7 @@ while (true)
 		LIMIT " . (int) $_REQUEST['start'] . ", 25");
 	$ban_time = time();
 	$ban_count = $_REQUEST['start'] + 1;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$ips = explode("\n", $row['value']);
 		foreach ($ips as $ip)
@@ -401,7 +401,7 @@ while (true)
 				VALUES
 					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
 
-			$ID_BAN_GROUP = mysql_insert_id();
+			$ID_BAN_GROUP = convert_insert_id();
 
 			if (empty($ID_BAN_GROUP))
 				continue;
@@ -414,10 +414,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 25;
-	if (mysql_num_rows($result) < 25)
+	if (convert_num_rows($result) < 25)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $_REQUEST['start'] = 0;
 ---}
@@ -440,7 +440,7 @@ while (true)
 		LIMIT " . (int) $_REQUEST['start'] . ", 25");
 	$ban_time = time();
 	$ban_count = $_REQUEST['start'] + 1;
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		$emails = explode("\n", $row['value']);
 		foreach ($emails as $email)
@@ -456,7 +456,7 @@ while (true)
 				VALUES
 					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
 
-			$ID_BAN_GROUP = mysql_insert_id();
+			$ID_BAN_GROUP = convert_insert_id();
 
 			if (empty($ID_BAN_GROUP))
 				continue;
@@ -470,10 +470,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 25;
-	if (mysql_num_rows($result) < 25)
+	if (convert_num_rows($result) < 25)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 $_REQUEST['start'] = 0;
 ---}
@@ -510,16 +510,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)

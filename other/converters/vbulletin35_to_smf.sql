@@ -255,16 +255,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)
@@ -301,13 +301,13 @@ if (!isset($vb_settings))
 		WHERE varname IN ('attachfile', 'attachpath', 'usefileavatar', 'avatarpath')
 		LIMIT 4");
 	$vb_settings = array();
-	while ($row2 = mysql_fetch_assoc($result))
+	while ($row2 = convert_fetch_assoc($result))
 	{
 		if (substr($row2['value'], 0, 2) == './')
 			$row2['value'] = $_POST['path_from'] . substr($row2['value'], 1);
 		$vb_settings[$row2['varname']] = $row2['value'];
 	}
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
@@ -357,13 +357,13 @@ if (!isset($vb_settings))
 		WHERE varname IN ('attachfile', 'attachpath', 'usefileavatar', 'avatarpath')
 		LIMIT 4");
 	$vb_settings = array();
-	while ($row2 = mysql_fetch_assoc($result))
+	while ($row2 = convert_fetch_assoc($result))
 	{
 		if (substr($row2['value'], 0, 2) == './')
 			$row2['value'] = $_POST['path_from'] . substr($row2['value'], 1);
 		$vb_settings[$row2['varname']] = $row2['value'];
 	}
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 

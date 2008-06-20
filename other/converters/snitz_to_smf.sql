@@ -190,12 +190,12 @@ $result = convert_query("
 	FROM {$from_prefix}FORUM_BADWORDS");
 $censor_vulgar = array();
 $censor_proper = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = convert_fetch_assoc($result))
 {
 	$censor_vulgar[] = $row['B_BADWORD'];
 	$censor_proper[] = $row['B_REPLACE'];
 }
-mysql_free_result($result);
+convert_free_result($result);
 
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));

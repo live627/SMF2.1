@@ -72,16 +72,16 @@ while (true)
 		FROM {$from_prefix}members
 		WHERE im_ignore_list RLIKE '[a-z]'
 		LIMIT 512");
-	while ($row2 = mysql_fetch_assoc($request))
+	while ($row2 = convert_fetch_assoc($request))
 	{
 		$request2 = convert_query("
 			SELECT id_member
 			FROM {$to_prefix}members
 			WHERE FIND_IN_SET(member_name, '" . addslashes($row2['im_ignore_list']) . "')");
 		$im_ignore_list = '';
-		while ($row3 = mysql_fetch_assoc($request2))
+		while ($row3 = convert_fetch_assoc($request2))
 			$im_ignore_list .= ',' . $row3['id_member'];
-		mysql_free_result($request2);
+		convert_free_result($request2);
 
 		convert_query("
 			UPDATE {$to_prefix}members
@@ -89,9 +89,9 @@ while (true)
 			WHERE id_member = $row2[id_member]
 			LIMIT 1");
 	}
-	if (mysql_num_rows($request) < 512)
+	if (convert_num_rows($request) < 512)
 		break;
-	mysql_free_result($request);
+	convert_free_result($request);
 }
 ---}
 
@@ -130,14 +130,14 @@ $request = convert_query("
 	FROM {$from_prefix}membergroups
 	WHERE id_group = 1 OR id_group > 7");
 $member_groups = array();
-while ($row2 = mysql_fetch_row($request))
+while ($row2 = convert_fetch_row($request))
 	$member_groups[trim($row2[0])] = $row2[1];
-mysql_free_result($request);
+convert_free_result($request);
 
 $result = convert_query("
 	SELECT TRIM(member_groups) AS member_groups, id_cat
 	FROM {$from_prefix}categories");
-while ($row2 = mysql_fetch_assoc($result))
+while ($row2 = convert_fetch_assoc($result))
 {
 	if (trim($row2['member_groups']) == '')
 		$groups = '-1,0,2';
@@ -312,8 +312,8 @@ $result = convert_query("
 	SELECT COUNT(*)
 	FROM {$from_prefix}topics
 	WHERE notifies != ''");
-list ($numNotifies) = mysql_fetch_row($result);
-mysql_free_result($result);
+list ($numNotifies) = convert_fetch_row($result);
+convert_free_result($result);
 
 $_GET['start'] = (int) @$_GET['start'];
 
@@ -353,8 +353,8 @@ if (!isset($yAttachmentDir))
 		FROM {$from_prefix}settings
 		WHERE variable = 'attachmentUploadDir'
 		LIMIT 1");
-	list ($yAttachmentDir) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($yAttachmentDir) = convert_fetch_row($result);
+	convert_free_result($result);
 }
 
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
@@ -472,9 +472,9 @@ $result_mods = convert_query("
 	FROM {$to_prefix}members
 	WHERE member_name IN ('" . implode("', '", $members) . "')
 	LIMIT " . count($members));
-while ($row_mods = mysql_fetch_assoc($result_mods))
+while ($row_mods = convert_fetch_assoc($result_mods))
 	$rows[] = "$row[id_board], $row_mods[id_member]";
-mysql_free_result($result_mods);
+convert_free_result($result_mods);
 ---}
 SELECT id_board, moderators AS id_member
 FROM {$from_prefix}boards;
@@ -488,25 +488,28 @@ TRUNCATE {$to_prefix}ban_items;
 TRUNCATE {$to_prefix}ban_groups;
 
 ---{
-function ip2range($fullip)
+if (!function_exists('ip2range'))
 {
-	$ip_parts = explode('.', $fullip);
-	if (count($ip_parts) != 4)
-		return array();
-	$ip_array = array();
-	for ($i = 0; $i < 4; $i++)
+	function ip2range($fullip)
 	{
-		if ($ip_parts[$i] == '*')
-			$ip_array[$i] = array('low' => '0', 'high' => '255');
-		elseif (preg_match('/^(\d{1,3})\-(\d{1,3})$/', $ip_parts[$i], $range))
-			$ip_array[$i] = array('low' => $range[1], 'high' => $range[2]);
-		elseif (is_numeric($ip_parts[$i]))
-			$ip_array[$i] = array('low' => $ip_parts[$i], 'high' => $ip_parts[$i]);
+		$ip_parts = explode('.', $fullip);
+		if (count($ip_parts) != 4)
+			return array();
+		$ip_array = array();
+		for ($i = 0; $i < 4; $i++)
+		{
+			if ($ip_parts[$i] == '*')
+				$ip_array[$i] = array('low' => '0', 'high' => '255');
+			elseif (preg_match('/^(\d{1,3})\-(\d{1,3})$/', $ip_parts[$i], $range))
+				$ip_array[$i] = array('low' => $range[1], 'high' => $range[2]);
+			elseif (is_numeric($ip_parts[$i]))
+				$ip_array[$i] = array('low' => $ip_parts[$i], 'high' => $ip_parts[$i]);
+		}
+		if (count($ip_array) == 4)
+			return $ip_array;
+		else
+			return array();
 	}
-	if (count($ip_array) == 4)
-		return $ip_array;
-	else
-		return array();
 }
 
 $request = convert_query("
@@ -514,7 +517,7 @@ $request = convert_query("
 	FROM {$from_prefix}banned AS ban
 		LEFT JOIN {$from_prefix}members AS mem ON (mem.member_name = ban.value)");
 $rows = array();
-while ($row2 = mysql_fetch_assoc($request))
+while ($row2 = convert_fetch_assoc($request))
 {
 	if ($row2['type'] == 'ip' && preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $row2['value']))
 	{
@@ -526,7 +529,7 @@ while ($row2 = mysql_fetch_assoc($request))
 	elseif ($row2['type'] == 'username' && !empty($row2['id_member']))
 		$rows[] = "0, 0, 0, 0, 0, 0, 0, 0, '', '', $row2[id_member]";
 }
-mysql_free_result($request);
+convert_free_result($request);
 
 // If there were values in the old table, insert them.
 if (!empty($rows))
@@ -535,7 +538,7 @@ if (!empty($rows))
 		INSERT INTO {$to_prefix}ban_groups
 			(name, ban_time, expire_time, cannot_access, reason, notes)
 		VALUES ('yabbse_bans', " . time() . ", NULL, 1, '', 'Imported from YaBB SE'");
-	$ID_BAN_GROUP = mysql_insert_id();
+	$ID_BAN_GROUP = convert_insert_id();
 
 	convert_query("
 		INSERT INTO {$to_prefix}ban_items
@@ -575,14 +578,14 @@ $request = convert_query("
 	FROM {$from_prefix}membergroups");
 $membergroups = array();
 $setString = ',';
-while ($row2 = mysql_fetch_assoc($request))
+while ($row2 = convert_fetch_assoc($request))
 {
 	$membergroups[$row2['id_group']] = addslashes($row2['membergroup']);
 	if ($row2['id_group'] > 8)
 		$setString .= "
 		($row2[id_group], '" . $membergroups[$row2['id_group']] . "', '', -1, ''),";
 }
-mysql_free_result($request);
+convert_free_result($request);
 
 $grouptitles = array('Administrator', 'Global Moderator', 'Moderator', 'Newbie', 'Junior Member', 'Full Member', 'Senior Member', 'Hero');
 for ($i = 1; $i < 9; $i ++)
@@ -621,9 +624,9 @@ $result = convert_query("
 	FROM {$to_prefix}membergroups
 	WHERE id_group > 8");
 $groups = array();
-while ($row2 = mysql_fetch_assoc($result))
+while ($row2 = convert_fetch_assoc($result))
 	$groups[] = $row2['id_group'];
-mysql_free_result($result);
+convert_free_result($result);
 
 $setString = '';
 foreach ($groups as $group)

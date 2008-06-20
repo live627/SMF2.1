@@ -302,8 +302,8 @@ $result = convert_query("
 		topicperpage AS defaultMaxTopics, memberperpage AS defaultMaxMembers,
 		floodctrl AS spamWaitTime, tickercontents AS news
 	FROM {$from_prefix}settings");
-$row = mysql_fetch_assoc($result);
-mysql_free_result($result);
+$row = convert_fetch_assoc($result);
+convert_free_result($result);
 
 $settings = array();
 foreach ($row as $key => $value)
@@ -326,14 +326,14 @@ $result = convert_query("
 		adminemail AS webmaster_email
 	FROM {$from_prefix}settings");
 
-$row = mysql_fetch_assoc($result);
+$row = convert_fetch_assoc($result);
 $settings = array();
 foreach ($row as $key => $value)
 	$settings[$key] = "'$value'";
 
 updateSettingsFile($settings);
 
-mysql_free_result($result);
+convert_free_result($result);
 ---}
 ---#
 
@@ -373,16 +373,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)

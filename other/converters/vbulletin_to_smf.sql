@@ -250,16 +250,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)
@@ -317,6 +317,7 @@ $keys = array('id_attach', 'size', 'filename', 'id_member');
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) > 255)
 	return;
+
 $fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
 if (!$fp)
 	return;

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>smf_converter:Software_login_fix</id>
+	<name>Software login fix</name>
+	<version>1.0</version>
+	<type>modification</type>
+	<install>
+		<modification>Software_login_fix.xml</modification>
+	</install>
+	<uninstall>
+		<readme type="inline">It is highly recomended you do not uninstall this mod unless you are absoultely sure what you are doing. Removing this may prevent users from being able to login if they have not since the conversion to SMF</readme>
+		<modification>Software_login_fix.xml</modification>
+	</uninstall>
+</package-info>

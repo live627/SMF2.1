@@ -58,8 +58,8 @@ if (!isset($allowedExt))
 		FROM {$from_prefix}config
 		WHERE conf_name = 'o_avatars_dir'
 		LIMIT 1");
-	list ($oldAttachmentDir) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($oldAttachmentDir) = convert_fetch_row($result);
+	convert_free_result($result);
 
 	if (!file_exists($oldAttachmentDir))
 		$oldAttachmentDir = $_POST['path_from'] . '/' . $oldAttachmentDir;
@@ -227,13 +227,13 @@ while (true)
 			LEFT JOIN {$from_prefix}users AS u ON (u.username = b.username)
 		LIMIT $_REQUEST[start], 50");
 	$ban_time = time();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = convert_fetch_assoc($result))
 	{
 		convert_query("
 			INSERT INTO {$to_prefix}ban_groups
 				(name, ban_time, expire_time, reason, notes, cannot_access)
 			VALUES ('migrated_ban_$row[id]', $ban_time, $row[expire], '', '$row[message]', 1)");
-		$ID_BAN_GROUP = mysql_insert_id();
+		$ID_BAN_GROUP = convert_insert_id();
 
 		if (empty($ID_BAN_GROUP))
 			continue;
@@ -286,10 +286,10 @@ while (true)
 	}
 
 	$_REQUEST['start'] += 50;
-	if (mysql_num_rows($result) < 50)
+	if (convert_num_rows($result) < 50)
 		break;
 
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 $_REQUEST['start'] = 0;
@@ -327,16 +327,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)

@@ -69,9 +69,9 @@ $request = convert_query("
 	SELECT userid AS id_member
 	FROM {$from_prefix}administrator");
 $admins = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$admins[] = $row['id_member'];
-mysql_free_result($request);
+convert_free_result($request);
 
 convert_query("
 	UPDATE {$to_prefix}members
@@ -133,9 +133,9 @@ $request = convert_query("
 	WHERE parentid = '-1'");
 
 $cats = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$cats[$row['id_cat']] = $row['id_cat'];
-mysql_free_result($request);
+convert_free_result($request);
 
 // Get the boards now
 $request = convert_query("
@@ -143,7 +143,7 @@ $request = convert_query("
 	FROM {$from_prefix}forum
 	WHERE parentid != '-1'");
 
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 {
 	foreach ($cats as $key => $value)
 	{
@@ -156,7 +156,7 @@ while ($row = mysql_fetch_assoc($request))
 		}
 	}
 }
-mysql_free_result($request);
+convert_free_result($request);
 
 // id_parent is 0 when the id_cat and id_parent are equal.
 convert_query("
@@ -370,16 +370,16 @@ $specificSmileys = array(
 $request = convert_query("
 	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
-list ($count) = mysql_fetch_row($request);
-mysql_free_result($request);
+list ($count) = convert_fetch_row($request);
+convert_free_result($request);
 
 $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = convert_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
-mysql_free_result($request);
+convert_free_result($request);
 
 $rows = array();
 foreach ($specificSmileys as $code => $name)
@@ -399,9 +399,6 @@ if (!empty($rows))
 			(", $rows) . ")");
 ---}
 
-ALTER TABLE {$to_prefix}smileys
-ORDER BY code DESC;
-
 /******************************************************************************/
 --- Converting attachments...
 /******************************************************************************/
@@ -419,13 +416,13 @@ if (!isset($vb_settings))
 		WHERE varname IN ('attachfile', 'attachpath', 'usefileavatar', 'avatarpath')
 		LIMIT 4");
 	$vb_settings = array();
-	while ($row2 = mysql_fetch_assoc($result))
+	while ($row2 = convert_fetch_assoc($result))
 	{
 		if (substr($row2['value'], 0, 2) == './')
 			$row2['value'] = $_POST['path_from'] . substr($row2['value'], 1);
 		$vb_settings[$row2['varname']] = $row2['value'];
 	}
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 // Is this an image???
@@ -488,13 +485,13 @@ if (!isset($vb_settings))
 		WHERE varname IN ('attachfile', 'attachpath', 'usefileavatar', 'avatarpath')
 		LIMIT 4");
 	$vb_settings = array();
-	while ($row2 = mysql_fetch_assoc($result))
+	while ($row2 = convert_fetch_assoc($result))
 	{
 		if (substr($row2['value'], 0, 2) == './')
 			$row2['value'] = $_POST['path_from'] . substr($row2['value'], 1);
 		$vb_settings[$row2['varname']] = $row2['value'];
 	}
-	mysql_free_result($result);
+	convert_free_result($result);
 }
 
 
