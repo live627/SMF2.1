@@ -831,168 +831,258 @@ function legalise_bbc($text)
 	$in_code_nobbc = false;
 	$new_text_offset = 0;
 
-	for ($i = 0; $i < strlen($text); $i++)
+	// These keep track of where we are!
+	if (count($parts = preg_split(sprintf('~(\\[)(/?)(%1$s)([^\\]]*\\])~', implode('|', array_keys($valid_tags))), $text, -1, PREG_SPLIT_DELIM_CAPTURE)) > 1)
 	{
-		// Got a start of a tag?
-		if ($text{$i} == '[')
+		// Start with just text.
+		$isTag = false;
+		
+		// Start outside [nobbc] or [code] blocks.
+		$inCode = false;
+		$inNoBbc = false;
+		
+		// A buffer containing all opened inline elements.
+		$inlineElements = array();
+
+		// A buffer containing all opened block elements.
+		$blockElements = array();
+		
+	
+		// $i: text, $i + 1: '[', $i + 2: '/', $i + 3: tag, $i + 4: tag tail.
+		for ($i = 0, $n = count($parts) - 1; $i < $n; $i += 5)
 		{
-			// Is this actually an end tag?
-			if ($text{$i + 1} == '/')
+			$tag = $parts[$i + 3];
+			$isOpeningTag = $parts[$i + 2] === '';
+			$isClosingTag = $parts[$i + 2] === '/';
+			$isBlockLevelTag = $valid_tags[$tag];
+			
+			// Special case: inside [code] blocks any code is left untouched.
+			if ($tag === 'code')
 			{
-				preg_match('~\\[/([A-Za-z]+)\\]~', substr($text, $i), $matches);
-				// Is it valid, eh?
-				if (!empty($matches) && isset($valid_tags[$matches[1]]))
+				// We're inside a code block and closing it.
+				if ($inCode && $isClosingTag)
 				{
-					// These are special.
-					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
-						$in_code_nobbc = false;
-					// As long as we're not in code and nobbc and it's been started note it's no longer in action.
-					elseif (!$in_code_nobbc && !empty($active_tags[$matches[1]]))
-					{
-						$to_add_back = array();
-						// We need to make sure we have the tags closed in the right order.
-						while ($tag = array_pop($current_tags))
-						{
-							// This was the one we are closing so stop.
-							if ($tag['type'] == $matches[1])
-							{
-								// Remove the right active bit.
-								foreach ($active_tags[$matches[1]] as $k => $v)
-									if ($v == $tag['content'])
-										unset($active_tags[$matches[1]][$k]);
-								break;
-							}
-							else
-							{
-								$to_add_back[] = $tag;
-							}
-						}
-						// Add the other tags back as they were in the wrong order before.
-						foreach ($to_add_back as $tag)
-						{
-							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($text, $i + $new_text_offset);
-							$new_text_offset += strlen('[/' . $tag['type'] . ']');
-						}
-						// And reopen...
-						foreach (array_reverse($to_add_back) as $tag)
-						{
-							$text = substr($text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($text, $i + strlen($matches[0]) + $new_text_offset);
-							$new_text_offset += strlen($tag['content']);
-						}
-
-						// Set what the tags are these days...
-						foreach (array_reverse($to_add_back) as $tag)
-							array_push($current_tags, $tag);
-					}
-					// What if it isn't block level and we've never heard of it? Remove it!
-					elseif (!$in_code_nobbc && !$valid_tags[$matches[1]])
-					{
-						//!!! Do something here?
-					}
-					// What if it's a block level tag we are ending? We need to close any open tags and reopen them afterwards!
-					elseif (!$in_code_nobbc && $valid_tags[$matches[1]])
-					{
-						// Close all the current tags...
-						foreach (array_reverse($current_tags) as $tag)
-						{
-							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($text, $i + $new_text_offset);
-							$new_text_offset += strlen('[/' . $tag['type'] . ']');
-						}
-
-						// ... and reopen them again.
-						foreach ($current_tags as $tag)
-						{
-							$text = substr($text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($text, $i + strlen($matches[0]) + $new_text_offset);
-							$new_text_offset += strlen($tag['content']);
-						}
-					}
+					$inCode = false;
+					
+					// Reopen tags that were closed before the code block.
+					if (!empty($inlineElements))
+						$parts[$i + 4] .= '[' . implode('][', array_keys($inlineElements)) . ']';
 				}
-
-				// Now move on.
-				$i += isset($matches[0]) ? strlen($matches[0]) - 1 : 1;
+					
+				// We're outside a coding and nobbc block and opening it.
+				elseif (!$inCode && !$inNoBbc && $isOpeningTag)
+				{
+					// If there are still inline elements left open, close them now.
+					if (!empty($inlineElements))
+					{
+						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
+						//$inlineElements = array();
+					}
+					
+					$inCode = true;
+				}
+					
+				// Nothing further to do.
+				continue;
 			}
-			// Starting a tag.
-			else
+			
+			// Special case: inside [nobbc] blocks any BBC is left untouched.
+			elseif ($tag === 'nobbc')
 			{
-				// Get the tag.
-				preg_match('~\[([A-Za-z]+)[^\]]*\]~', substr($text, $i), $matches);
-
-				// It's possible that this wasn't actually a tag after all - if not continue!
-				if (!isset($matches[0]) || strpos(substr($text, $i), $matches[0]) !== 0)
-					$matches = array();
-
-				// Is it actually valid?!
-				if (!empty($matches) && isset($valid_tags[$matches[1]]))
+				// We're inside a nobbc block and closing it.
+				if ($inNoBbc && $isClosingTag)
 				{
-					// Not block level?
-					if (!$in_code_nobbc && !$valid_tags[$matches[1]])
-					{
-						// Can't have two tags active that are the same - close the previous one!
-						if (!empty($active_tags[$matches[1]]) && in_array($matches[0], $active_tags[$matches[1]]))
-						{
-							// Remove this tag.
-							foreach ($active_tags[$matches[1]] as $k => $v)
-								if ($v == $matches[0])
-								{
-									unset($active_tags[$matches[1]][$k]);
-									break;
-								}
-
-							// First add in the new closing tag...
-							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $matches[1] . ']' . substr($text, $i + $new_text_offset);
-							$new_text_offset += strlen('[/' . $matches[1] . ']');
-
-							// Then find and remove the next one!
-							$tag_offset = strpos($text, '[/' . $matches[1] . ']', $i + $new_text_offset);
-							if ($tag_offset !== false)
-								$text = substr($text, 0, $tag_offset) . substr($text, $tag_offset + strlen('[/' . $matches[1] . ']'));
-
-						}
-
-						// As long as it's not nobbc, track it.
-						if ($matches[1] != 'nobbc')
-						{
-							$active_tags[$matches[1]][] = $matches[0];
-							$tag = array(
-								'type' => $matches[1],
-								'content' => $matches[0],
-							);
-							array_push($current_tags, $tag);
-						}
-					}
-					// If it's a block level then we need to close all active tags and reopen them!
-					elseif (!$in_code_nobbc)
-					{
-						// Close all the old ones.
-						foreach (array_reverse($current_tags) as $tag)
-						{
-							$text = substr($text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($text, $i + $new_text_offset);
-							$new_text_offset += strlen('[/' . $tag['type'] . ']');
-						}
-						// Open all the new ones again - if we're not going into a code type tag!
-						if ($matches[1] != 'code' && $matches[1] != 'nobbc')
-							foreach ($current_tags as $tag)
-							{
-								$text = substr($text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($text, $i + strlen($matches[0]) + $new_text_offset);
-								$new_text_offset += strlen($tag['content']);
-							}
-					}
-
-					// If it's code or nobbc we need to note it.
-					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
-						$in_code_nobbc = true;
+					$inNoBbc = false;
+					
+					// Some inline elements might've been closed that need reopening.
+					if (!empty($inlineElements))
+						$parts[$i + 4] .= '[' . implode('][', array_keys($inlineElements)) . ']';
 				}
-				// Move on quite a bit!
-				elseif (!empty($matches))
-					$i += strlen($matches[0]) - 1;
+					
+				// We're outside a nobbc and coding block and opening it.
+				elseif (!$inNoBbc && !$inCode && $isOpeningTag)
+				{
+					// Can't have inline elements still opened.
+					if (!empty($inlineElements))
+					{
+						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
+						//$inlineElements = array();
+					}
+					
+					$inNoBbc = true;
+				}
+					
+				continue;
+			}
+			
+			// So, we're inside one of the special blocks: ignore any tag.
+			elseif ($inCode || $inNoBbc)
+				continue;
+				
+			
+				
+			
+			
+			// We're dealing with an opening tag.
+			if ($isOpeningTag)
+			{
+				// Everyting inside the square brackets of the opening tag.
+				$elementContent = $parts[$i + 3] . substr($parts[$i + 4], 0, -1);
+				
+				// A block level opening tag.				
+				if ($isBlockLevelTag)
+				{
+					// Are there inline elements still open?
+					if (!empty($inlineElements))
+					{
+						// Close all the inline tags, a block tag is coming...
+						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
+						
+						// Now open them again, we're inside the block tag now.
+						$parts[$i + 5] = '[' . implode('][', array_keys($inlineElements)) . ']' . $parts[$i + 5];
+					}
+					
+					$blockElements[] = $tag;
+				}
+				
+				// Inline opening tag.
+				else 
+				{
+					// Can't have two opening elements with the same contents!
+					if (isset($inlineElements[$elementContent]))
+					{
+						// Get rid of this tag.
+						$parts[$i + 1] = $parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
+						
+						// Now try to find the corresponding closing tag.
+						$curLevel = 1;
+						for ($j = $i + 5, $m = count($parts) - 1; $j < $m; $j += 5)
+						{
+							// Find the tags with the same tagname
+							if ($parts[$j + 3] === $tag)
+							{
+								// If it's an opening tag, increase the level.
+								if ($parts[$j + 2] === '')
+									$curLevel++;
+									
+								// A closing tag, decrease the level.
+								else
+								{
+									$curLevel--;
+									
+									// Gotcha! Clean out this closing tag gone rogue.
+									if ($curLevel === 0)
+									{
+										$parts[$j + 1] = $parts[$j + 2] = $parts[$j + 3] = $parts[$j + 4] = '';
+										break;
+									}
+								}
+							}
+						}
+					}
+					
+					// Otherwise, add this one to the list.
+					else
+						$inlineElements[$elementContent] = $tag;
+				}
+				
+			}
+			
+			// Closing tag.
+			else 
+			{
+				// Closing the block tag.
+				if ($isBlockLevelTag)
+				{
+					// Close the elements that should've been closed by closing this tag.
+					if (!empty($blockElements))
+					{
+						$addClosingTags = array();
+						while ($element = array_pop($blockElements))
+						{
+							if ($element === $tag)
+								break;
+								
+							// Still a block tag was open not equal to this tag.
+							$addClosingTags[] = $element['type'];
+						}
+						
+						if (!empty($addClosingTags))
+							$parts[$i + 1] = '[/' . implode('][/', array_reverse($addClosingTags)) . ']' . $parts[$i + 1];
+
+						// Apparently the closing tag was not found on the stack.
+						if (!is_string($element) || $element !== $tag)
+						{
+							// Get rid of this particular closing tag, it was never opened.
+							$parts[$i + 1] = substr($parts[$i + 1], 0, -1);
+							$parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
+							continue;
+						}
+					}
+					else
+					{
+						// Get rid of this closing tag!
+						$parts[$i + 1] = $parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
+						continue;
+					}
+					
+					// Inline elements are still left opened?
+					if (!empty($inlineElements))
+					{
+						// Close them first..
+						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
+						
+						// Then reopen them.
+						$parts[$i + 5] = '[' . implode('][', array_keys($inlineElements)) . ']' . $parts[$i + 5];
+					}
+					
+				}
+				
+				// Inline tag.
+				else
+				{
+					// Are we expecting this tag to end?
+					if (in_array($tag, $inlineElements))
+					{
+						foreach (array_reverse($inlineElements, true) as $tagContentToBeClosed => $tagToBeClosed)
+						{
+							// Closing it one way or the other.
+							unset($inlineElements[$tagContentToBeClosed]);
+							
+							// Was this the tag we were looking for?
+							if ($tagToBeClosed === $tag)
+								break;
+								
+							// Nope, close it and look further!
+							else
+								$parts[$i] .= '[/' . $tagToBeClosed . ']';
+						}
+					}
+
+					// Unexpected closing tag, ex-ter-mi-nate.
+					else 
+						$parts[$i + 1] = $parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
+				}
 			}
 		}
-	}
-
-	// What, there's still some open tags?!
-	foreach (array_reverse($current_tags) as $tag)
-	{
-		$text .= '[/' . $tag['type'] . ']';
+		
+		// Close the code tags.
+		if ($inCode)
+			$parts[$i] .= '[/code]';
+			
+		// The same for nobbc tags.
+		elseif ($inNoBbc)
+			$parts[$i] .= '[/nobbc]';
+		
+		// Still inline tags left unclosed? Close them now, better late than never.
+		elseif (!empty($inlineElements))
+			$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
+			
+		// Now close the block elements.
+		if (!empty($blockElements))
+			$parts[$i] .= '[/' . implode('][/', array_reverse($blockElements)) . ']';
+		
+		$text = implode('', $parts);
 	}
 
 	// Final clean up of back to back tags.
