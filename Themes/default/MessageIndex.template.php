@@ -173,12 +173,12 @@ function template_main()
 
 		echo '
 						</tr>
-					</thead>';
+					</thead>
+					<tbody>';
 
 		if (!empty($settings['display_who_viewing']))
 		{
 			echo '
-					<tbody>
 						<tr class="windowbg2">
 							<td colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '" class="headerpadding smalltext">';
 			if ($settings['display_who_viewing'] == 1)
@@ -331,11 +331,11 @@ function template_main()
 			echo '
 								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return document.forms.quickModForm.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
 							</td>
-						</tr>
-					</tbody>';
+						</tr>';
 		}
 
 		echo '
+					</tbody>
 				</table>
 			</div>
 			<a name="bot"></a>';

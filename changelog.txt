@@ -53,6 +53,7 @@ June 2008
  ! Multiple topics could not be restored at the same time using quick moderation. (RemoveTopic.php) [Bug 2239]
  ! A member's username was being shown instead of their display name when viewing warned members. (ModerationCenter.php) [Bug 1965]
  ! Optimized the second half of the legalise_bbc function. (Subs-Editor.php) [Bug 2181]
+ * The message index was not always valid xhtml. (MessageIndex template) [Bug 2249]
 
 
 May 2008
