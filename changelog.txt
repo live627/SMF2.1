@@ -54,6 +54,7 @@ June 2008
  ! A member's username was being shown instead of their display name when viewing warned members. (ModerationCenter.php) [Bug 1965]
  ! Optimized the second half of the legalise_bbc function. (Subs-Editor.php) [Bug 2181]
  * The message index was not always valid xhtml. (MessageIndex template) [Bug 2249]
+ ! PostgreSQL didn't know how to find an integer in a set. (install_2-0_postgresql.sql)
 
 
 May 2008
