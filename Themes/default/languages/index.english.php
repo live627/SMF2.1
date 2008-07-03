@@ -591,6 +591,7 @@ $txt['merge_no_poll'] = 'No poll';
 
 $txt['response_prefix'] = 'Re: ';
 $txt['current_icon'] = 'Current Icon';
+$txt['message_icon'] = 'Message Icon';
 
 $txt['smileys_current'] = 'Current Smiley Set';
 $txt['smileys_none'] = 'No Smileys';

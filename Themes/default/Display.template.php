@@ -703,7 +703,7 @@ function template_main()
 			iBoardId: ', $context['current_board'], ',
 			iTopicId: ', $context['current_topic'], ',
 			sSessionId: "', $context['session_id'], '",
-			sLabelIconList: "Message Icon",
+			sLabelIconList: "', $txt['message_icon'], '",
 			sBoxBackground: "transparent",
 			sBoxBackgroundHover: "#ffffff",
 			iBoxBorderWidthHover: 1,
