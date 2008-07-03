@@ -474,7 +474,8 @@ function scheduled_daily_maintenance()
 	}
 
 	// Check the database version - for some buggy MySQL version.
-	if ($db_type == 'mysql' && in_array($smcFunc['db_server_info'](), array('5.0.50', '5.0.51', '5.0.51a')))
+	$server_version = $smcFunc['db_server_info']();
+	if ($db_type == 'mysql' && in_array(substr($server_version, 0, 6), array('5.0.50', '5.0.51')))
 		updateSettings(array('db_mysql_group_by_fix' => '1'));
 	elseif (!empty($modSettings['db_mysql_group_by_fix']))
 		$smcFunc['db_query']('', '
