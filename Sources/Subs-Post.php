@@ -1101,7 +1101,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			}
 		}
 
-		if (!empty($row['ignored']))
+		// Note that postgreSQL can return a lowercase t/f for FIND_IN_SET
+		if (!empty($row['ignored']) || strtolower($row['ignored']) === 't')
 		{
 			$log['failed'][$row['id_member']] = sprintf($txt['pm_error_ignored_by_user'], $row['real_name']);
 			unset($all_to[array_search($row['id_member'], $all_to)]);

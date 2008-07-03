@@ -11,6 +11,7 @@ July 2008
  ! Ensure ban triggers a logged even for new bans. (ManageBans.php) [Bug 2287]
  ! Accept slightly longer color names. (Subs.php) [Bug 2237]
  & The label for message icons hadn't been made translatable on Display. (Display template, index language file) [Bug 2292]
+ ! Sending personal messages was reporting users were ignoring you on PostgreSQL. (Subs-Post.php) [Bug 2260]
 
 
 June 2008
