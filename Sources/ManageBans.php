@@ -646,6 +646,7 @@ function BanEdit()
 			if ($addBan && !empty($_POST['ban_suggestion']) && is_array($_POST['ban_suggestion']))
 			{
 				$ban_triggers = array();
+				$ban_logs = array();
 				if (in_array('main_ip', $_POST['ban_suggestion']) && !empty($_POST['main_ip']))
 				{
 					$ip_parts = ip2range($_POST['main_ip']);
@@ -665,6 +666,10 @@ function BanEdit()
 							'',
 							0,
 						);
+
+					$ban_logs[] = array(
+						'ip_range' => $_POST['main_ip'],
+					);
 				}
 				if (in_array('hostname', $_POST['ban_suggestion']) && !empty($_POST['hostname']))
 				{
@@ -680,6 +685,9 @@ function BanEdit()
 						'',
 						0,
 					);
+					$ban_logs[] = array(
+						'hostname' => $_POST['hostname'],
+					);
 				}
 				if (in_array('email', $_POST['ban_suggestion']) && !empty($_POST['email']))
 				{
@@ -692,6 +700,9 @@ function BanEdit()
 						'',
 						substr($_POST['email'], 0, 255),
 						0,
+					);
+					$ban_logs[] = array(
+						'email' => $_POST['email'],
 					);
 				}
 				if (in_array('user', $_POST['ban_suggestion']) && (!empty($_POST['bannedUser']) || !empty($_POST['user'])))
@@ -726,6 +737,9 @@ function BanEdit()
 						'',
 						(int) $_POST['bannedUser'],
 					);
+					$ban_logs[] = array(
+						'member' => $_POST['bannedUser'],
+					);
 				}
 
 				if (!empty($_POST['ban_suggestion']['ips']) && is_array($_POST['ban_suggestion']['ips']))
@@ -756,6 +770,9 @@ function BanEdit()
 							'',
 							0,
 						);
+						$ban_logs[] = array(
+							'ip_range' => $ip,
+						);
 					}
 				}
 			}
@@ -780,7 +797,17 @@ function BanEdit()
 			{
 				// Put in the ban group ID.
 				foreach ($ban_triggers as $k => $trigger)
+				{
 					array_unshift($ban_triggers[$k], $_REQUEST['bg']);
+				}
+
+				// Log what we are doing!
+				foreach ($ban_logs as $log_details)
+				{
+					logAction('ban', $log_details + array(
+						'new' => 1,
+					));
+				}
 
 				$smcFunc['db_insert']('',
 					'{db_prefix}ban_items',

@@ -8,6 +8,7 @@ July 2008
  ! COPPA wasn't working right as guets can't access it. (index.php) [Bug 2291]
  * If the deliminator is 'null' when finding members with javascript it means we only can handle one name. (Help template)
  ! Use the above change to ensure ban triggers only use one username. (ManageBans template) [Bug 2288]
+ ! Ensure ban triggers a logged even for new bans. (ManageBans.php) [Bug 2287]
 
 
 June 2008
