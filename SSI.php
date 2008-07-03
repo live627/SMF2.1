@@ -865,8 +865,8 @@ function ssi_queryMembers($query_where, $query_where_params = array(), $query_li
 		echo '
 		</table>';
 
-	// Send back the data.
-	return $memberContext;
+	// Send back the data. Make sure to only return the members we just loaded.
+	return array_intersect_key($memberContext, array_flip($members));
 }
 
 // Show some basic stats:  Total This: XXXX, etc.
