@@ -14,6 +14,7 @@ July 2008
  ! Sending personal messages was reporting users were ignoring you on PostgreSQL. (Subs-Post.php) [Bug 2260]
  & A language string (login_or_register) was duplicated in Login template. (Login template and language file) [Bug 2263]
  ! The SSI function ssi_queryMembers returned unreliable results if called more than once. (SSI.php) [Bug 2241]
+ ! The javascript addslashes function wasn't escaping single quotes, breaking some popup smileys. (script.js) [Bug 2265]
 
 
 June 2008
