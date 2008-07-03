@@ -78,7 +78,7 @@ function template_ban_edit()
 											', $txt['ban_on_username'], ':<br />';
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '
-											<input type="text" name="user" id="user" value="" size="40" onfocus="document.getElementById(\'user_check\').checked = true;" />&nbsp;<a href="', $scripturl, '?action=findmember;input=user;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>';
+											<input type="text" name="user" id="user" value="" size="40" onfocus="document.getElementById(\'user_check\').checked = true;" />&nbsp;<a href="', $scripturl, '?action=findmember;input=user;delim=null;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>';
 		else
 			echo '
 											', $context['ban_suggestions']['member']['link'], '
@@ -242,7 +242,7 @@ function template_ban_edit_trigger()
 								', $txt['ban_on_username'], ':<br />
 								<input type="text" name="user" id="user" value="', $context['ban_trigger']['banneduser']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'user_ban\');" />
 							</td><td valign="bottom">
-								<a href="', $scripturl, '?action=findmember;input=user;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
+								<a href="', $scripturl, '?action=findmember;input=user;delim=null;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
 							</td>
 						</tr><tr>
 							<td colspan="3" align="right"><br />
