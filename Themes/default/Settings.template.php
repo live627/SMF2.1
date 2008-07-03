@@ -164,6 +164,7 @@ function template_settings()
 			'id' => 'smiley_sets_default',
 			'label' => $txt['smileys_default_set_for_theme'],
 			'options' => $context['smiley_sets'],
+			'type' => 'text',
 		),
 		array(
 			'id' => 'show_modify',

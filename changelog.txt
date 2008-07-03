@@ -16,6 +16,7 @@ July 2008
  ! The SSI function ssi_queryMembers returned unreliable results if called more than once. (SSI.php) [Bug 2241]
  ! The javascript addslashes function wasn't escaping single quotes, breaking some popup smileys. (script.js) [Bug 2265]
  ! The hack for a bugger version of MySQL wasn't quite right. (ScheduledTasks.php, install and upgrade scripts) [Bug 2283]
+ ! Setting a theme smiley set wasn't working right. (Settings templates) [Bug 1973]
 
 
 June 2008
