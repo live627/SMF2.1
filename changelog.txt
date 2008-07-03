@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 4                                                               ???
 ================================================================================
+July 2008
+--------------------------------------------------------------------------------
+ ! COPPA wasn't working right as guets can't access it. (index.php) [Bug 2291]
+
+
 June 2008
 --------------------------------------------------------------------------------
  + It is now possible for themes to define "variations" (Such as colours) and have SMF do all the UI for it. (Themes.php, Load.php, Themes and index templates, Themes language file)
