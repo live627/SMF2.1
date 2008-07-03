@@ -22,7 +22,7 @@ $txt['decline'] = 'I Do Not Agree';
 $txt['warning'] = 'Warning!';
 $txt['only_members_can_access'] = 'Only registered members are allowed to access this section.';
 $txt['login_below'] = 'Please login below or';
-$txt['login_or_register'] = 'register an account';
+$txt['register_an_account'] = 'register an account';
 $txt['login_with_forum'] = 'with %s.';
 // Use numeric entities in the below two strings.
 $txt['may_change_in_profile'] = 'You may change it after you login by going to the profile page, or by visiting this page after you login:';

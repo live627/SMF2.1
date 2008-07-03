@@ -12,6 +12,7 @@ July 2008
  ! Accept slightly longer color names. (Subs.php) [Bug 2237]
  & The label for message icons hadn't been made translatable on Display. (Display template, index language file) [Bug 2292]
  ! Sending personal messages was reporting users were ignoring you on PostgreSQL. (Subs-Post.php) [Bug 2260]
+ & A language string (login_or_register) was duplicated in Login template. (Login template and language file) [Bug 2263]
  ! The SSI function ssi_queryMembers returned unreliable results if called more than once. (SSI.php) [Bug 2241]
 
 
