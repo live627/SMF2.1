@@ -17,6 +17,7 @@ July 2008
  ! The javascript addslashes function wasn't escaping single quotes, breaking some popup smileys. (script.js) [Bug 2265]
  ! The hack for a bugger version of MySQL wasn't quite right. (ScheduledTasks.php, install and upgrade scripts) [Bug 2283]
  ! Setting a theme smiley set wasn't working right. (Settings templates) [Bug 1973]
+ ! Searching for members somtimes would show unapproved members. (Memberlist.php) [Bug 2227]
 
 
 June 2008
