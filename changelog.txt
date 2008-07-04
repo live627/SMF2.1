@@ -18,6 +18,7 @@ July 2008
  ! The hack for a bugger version of MySQL wasn't quite right. (ScheduledTasks.php, install and upgrade scripts) [Bug 2283]
  ! Setting a theme smiley set wasn't working right. (Settings templates) [Bug 1973]
  ! Searching for members somtimes would show unapproved members. (Memberlist.php) [Bug 2227]
+ ! Removed the package function saveInstalledPackages() as the data it saves to a file is now stored in the database. (Subs-Package.php)
 
 
 June 2008
