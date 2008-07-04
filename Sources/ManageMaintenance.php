@@ -1900,7 +1900,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	if ($can_write)
 	{
 		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
-		@flock($fp, LOCK_EX);
+		@flock($fh, LOCK_EX);
 		fwrite($fh, '<?php' . "\n");
 	}
 
@@ -1971,7 +1971,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	if ($can_write)
 	{
 		fwrite($fh, '?>');
-		@flock($fp, LOCK_UN);
+		@flock($fh, LOCK_UN);
 		fclose($fh);
 
 		// If we couldn't find the file don't cache it!
