@@ -697,7 +697,7 @@ function smf_udf_dayofmonth($date)
 }
 
 // We need this since sqlite_libversion() doesn't take any parameters.
-function smf_db_libversion($void)
+function smf_db_libversion($void = null)
 {
 	return sqlite_libversion();
 }

@@ -21,6 +21,7 @@ July 2008
  ! Removed the package function saveInstalledPackages() as the data it saves to a file is now stored in the database. (Subs-Package.php)
  ! Fixed incorrect locking of cache file for the language cache. (ManageMaintenance.php)
  ! Fixed javascript error when editing poll. (Poll template) [Bug 2306]
+ ! db_server_info was failing on SQLite. (Subs-Db-sqlite.php) [Bug 2301]
 
 
 June 2008
