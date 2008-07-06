@@ -275,7 +275,7 @@ function template_view_package()
 		echo '
 		<tr class="titlebg">
 			<td align="right">
-				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) && confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))"' : 'submitThisOnce(this)', ';" />
+				<input type="submit" value="', $context['uninstalling'] ? $txt['package_uninstall_now'] : $txt['package_install_now'], '" onclick="return ', !empty($context['has_failure']) ? '(submitThisOnce(this) &amp;&amp; confirm(\'' . ($context['uninstalling'] ? $txt['package_will_fail_popup_uninstall'] : $txt['package_will_fail_popup']) . '\'))"' : 'submitThisOnce(this)', ';" />
 			</td>
 		</tr>';
 	}
@@ -631,7 +631,7 @@ function template_browse()
 		foreach ($context['available_mods'] as $i => $package)
 		{
 			echo '
-						<tr class=', $alt ? 'windowbg2' : 'windowbg', '>
+						<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
 							<td>', ++$i, '.</td>
 							<td>', $package['name'], '</td>
 							<td>
@@ -852,7 +852,7 @@ function template_browse()
 			</tr>
 		</table>
 		<form action="', $scripturl, '?action=admin;area=packages;sa=browse" method="get">
-		<table id="advanced_box" name="advanced_box" width="400" align="right" cellspacing="0" cellpadding="2" class="tborder">
+		<table id="advanced_box" width="400" align="right" cellspacing="0" cellpadding="2" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $txt['package_advanced_options'], '
@@ -990,7 +990,7 @@ function template_servers()
 				</td>
 			</tr><tr>
 				<td class="catbg">', $txt['package_download_by_url'], '</td>
-			</tr>
+			</tr><tr>
 				<td class="windowbg2">
 					<form action="', $scripturl, '?action=admin;area=packages;get;sa=download;byurl;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 						<table border="0" cellspacing="0" cellpadding="4">

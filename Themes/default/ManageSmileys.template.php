@@ -83,21 +83,21 @@ function template_modifyset()
 		echo '
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_sets_name">', $txt['smiley_sets_name'], '</label>: </b></td>
-				<td><input type="text" name="smiley_sets_name" value="', $context['current_set']['name'], '" /></td>
+				<td><input type="text" name="smiley_sets_name" id="smiley_sets_name" value="', $context['current_set']['name'], '" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_sets_path">', $txt['smiley_sets_url'], '</label>: </b></td>
 				<td>
 					', $modSettings['smileys_url'], '/';
 		if ($context['current_set']['id'] == 'default')
-			echo '<b>default</b><input type="hidden" name="smiley_sets_path" value="default" />';
+			echo '<b>default</b><input type="hidden" name="smiley_sets_path" id="smiley_sets_path" value="default" />';
 		elseif (empty($context['smiley_set_dirs']))
 			echo '
-					<input type="text" name="smiley_sets_path" value="', $context['current_set']['path'], '" /> ';
+					<input type="text" name="smiley_sets_path" id="smiley_sets_path" value="', $context['current_set']['path'], '" /> ';
 		else
 		{
 			echo '
-					<select name="smiley_sets_path">';
+					<select name="smiley_sets_path" id="smiley_sets_path">';
 			foreach ($context['smiley_set_dirs'] as $smiley_set_dir)
 				echo '
 						<option value="', $smiley_set_dir['id'], '"', $smiley_set_dir['current'] ? ' selected="selected"' : '', $smiley_set_dir['selectable'] ? '' : ' disabled="disabled"', '>', $smiley_set_dir['id'], '</option>';
@@ -109,7 +109,7 @@ function template_modifyset()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_sets_default">', $txt['smiley_set_select_default'], '</label>: </b></td>
-				<td><input type="checkbox" name="smiley_sets_default" value="1"', $context['current_set']['selected'] ? ' checked="checked"' : '', ' class="check" /></td>
+				<td><input type="checkbox" name="smiley_sets_default" id="smiley_sets_default" value="1"', $context['current_set']['selected'] ? ' checked="checked"' : '', ' class="check" /></td>
 			</tr>';
 
 		// If this is a new smiley set they have the option to import smileys already in the directory.
@@ -117,7 +117,7 @@ function template_modifyset()
 			echo '
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_sets_import">', $txt['smiley_set_import_directory'], '</label>: </b></td>
-				<td><input type="checkbox" name="smiley_sets_import" value="1" class="check" /></td>
+				<td><input type="checkbox" name="smiley_sets_import" id="smiley_sets_import" value="1" class="check" /></td>
 			</tr>';
 
 		echo '
@@ -157,18 +157,18 @@ function template_modifysmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_code">', $txt['smileys_code'], '</label>: </b></td>
-				<td><input type="text" name="smiley_code" value="', $context['current_smiley']['code'], '" /></td>
+				<td><input type="text" name="smiley_code" id="smiley_code" value="', $context['current_smiley']['code'], '" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_filename">', $txt['smileys_filename'], '</label>: </b></td>
 				<td>';
 			if (empty($context['filenames']))
 				echo '
-					<input type="text" name="smiley_filename" value="', $context['current_smiley']['filename'], '" />';
+					<input type="text" name="smiley_filename" id="smiley_filename" value="', $context['current_smiley']['filename'], '" />';
 			else
 			{
 				echo '
-					<select name="smiley_filename" onchange="updatePreview();">';
+					<select name="smiley_filename" id="smiley_filename" onchange="updatePreview();">';
 				foreach ($context['filenames'] as $filename)
 					echo '
 						<option value="', $filename['id'], '"', $filename['selected'] ? ' selected="selected"' : '', '>', $filename['id'], '</option>';
@@ -180,12 +180,12 @@ function template_modifysmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_description">', $txt['smileys_description'], '</label>: </b></td>
-				<td><input type="text" name="smiley_description" value="', $context['current_smiley']['description'], '" /></td>
+				<td><input type="text" name="smiley_description" id="smiley_description" value="', $context['current_smiley']['description'], '" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="smiley_location">', $txt['smileys_location'], '</label>: </b></td>
 				<td>
-					<select name="smiley_location">
+					<select name="smiley_location" id="smiley_location">
 						<option value="0"', $context['current_smiley']['location'] == 0 ? ' selected="selected"' : '', '>
 							', $txt['smileys_location_form'], '
 						</option>
@@ -261,11 +261,11 @@ function template_addsmiley()
 				<td style="padding-bottom: 2ex;" width="60%">';
 	if (empty($context['filenames']))
 		echo '
-					<input type="text" name="smiley_filename" value="', $context['current_smiley']['filename'], '" onchange="selectMethod(\'existing\');" />';
+					<input type="text" name="smiley_filename" id="smiley_filename" value="', $context['current_smiley']['filename'], '" onchange="selectMethod(\'existing\');" />';
 	else
 	{
 		echo '
-						<select name="smiley_filename" onchange="updatePreview();selectMethod(\'existing\');">';
+						<select name="smiley_filename" id="smiley_filename" onchange="updatePreview();selectMethod(\'existing\');">';
 		foreach ($context['filenames'] as $filename)
 			echo '
 							<option value="', $filename['id'], '"', $filename['selected'] ? ' selected="selected"' : '', '>', $filename['id'], '</option>';
@@ -310,16 +310,16 @@ function template_addsmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%"><b><label for="smiley_code">', $txt['smileys_code'], '</label>: </b></td>
-				<td width="60%"><input type="text" name="smiley_code" value="" /></td>
+				<td width="60%"><input type="text" name="smiley_code" id="smiley_code" value="" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%"><b><label for="smiley_description">', $txt['smileys_description'], '</label>: </b></td>
-				<td width="60%"><input type="text" name="smiley_description" value="" /></td>
+				<td width="60%"><input type="text" name="smiley_description" id="smiley_description" value="" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%"><b><label for="smiley_location">', $txt['smileys_location'], '</label>: </b></td>
 				<td width="60%">
-					<select name="smiley_location">
+					<select name="smiley_location" id="smiley_location">
 						<option value="0" selected="selected">
 							', $txt['smileys_location_form'], '
 						</option>
@@ -465,16 +465,16 @@ function template_editicon()
 	echo '
 			<tr class="windowbg2">
 				<td align="right"><b><label for="icon_filename">', $txt['smileys_filename'], '</label>: </b><br /><span class="smalltext">', $txt['icons_filename_all_gif'], '</span></td>
-				<td><input type="text" name="icon_filename" value="', !empty($context['icon']['filename']) ? $context['icon']['filename'] . '.gif' : '', '" /></td>
+				<td><input type="text" name="icon_filename" id="icon_filename" value="', !empty($context['icon']['filename']) ? $context['icon']['filename'] . '.gif' : '', '" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="icon_description">', $txt['smileys_description'], '</label>: </b></td>
-				<td><input type="text" name="icon_description" value="', !empty($context['icon']['title']) ? $context['icon']['title'] : '', '" /></td>
+				<td><input type="text" name="icon_description" id="icon_description" value="', !empty($context['icon']['title']) ? $context['icon']['title'] : '', '" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><b><label for="icon_board_select">', $txt['icons_board'], '</label>: </b></td>
 				<td>
-					<select id="icon_board_select" name="icon_board">
+					<select name="icon_board" id="icon_board_select">
 						<option value="0"', empty($context['icon']['board_id']) ? ' selected="selected"' : '', '>', $txt['icons_edit_icons_all_boards'], '</option>';
 
 	foreach ($context['categories'] as $category)
@@ -494,7 +494,7 @@ function template_editicon()
 			<tr class="windowbg2">
 				<td align="right"><b><label for="icon_location">', $txt['smileys_location'], '</label>: </b></td>
 				<td>
-					<select name="icon_location">
+					<select name="icon_location" id="icon_location">
 						<option value="0"', empty($context['icon']['after']) ? ' selected="selected"' : '', '>', $txt['icons_location_first_icon'], '</option>';
 
 	// Print the list of all the icons it can be put after...

@@ -123,7 +123,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		// If the smileys popup is to be shown... show it!
 		if (!empty($context['smileys']['popup']))
 			echo '
-					<a href="javascript:editorHandle', $editor_id, '.showMoreSmileys(\'', $editor_id, '\', \'', $txt['more_smileys_title'], '\', \'', $txt['more_smileys_pick'], '\', \'', $txt['more_smileys_close_window'], '\', \'', $settings['theme_url'], '\');">[', $txt['more_smileys'], ']</a>';
+					<a onclick="editorHandle', $editor_id, '.showMoreSmileys(\'', $editor_id, '\', \'', $txt['more_smileys_title'], '\', \'', $txt['more_smileys_pick'], '\', \'', $txt['more_smileys_close_window'], '\', \'', $settings['theme_url'], '\'); return false;" href="#">[', $txt['more_smileys'], ']</a>';
 	}
 
 	// Finally the most important bit - the actual text box to write in!
@@ -222,7 +222,7 @@ function template_control_autosuggest($suggest_id)
 	$suggest_context = &$context['controls']['autosuggest'][$suggest_id];
 
 	echo '
-	<input autocomplete="off" type="text" name="', $suggest_id, '" id="', $suggest_id, '" value="', $suggest_context['value'], '" tabindex="', $context['tabindex']++, '" size="', $suggest_context['size'], '" style="width: ', $suggest_context['width'], ';" />';
+	<input type="text" name="', $suggest_id, '" id="', $suggest_id, '" value="', $suggest_context['value'], '" tabindex="', $context['tabindex']++, '" size="', $suggest_context['size'], '" style="width: ', $suggest_context['width'], ';" />';
 
 	if (!empty($suggest_context['button']))
 		echo '

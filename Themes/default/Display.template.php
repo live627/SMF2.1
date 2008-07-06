@@ -543,9 +543,15 @@ function template_main()
 			</div>
 		</div>';
 	}
+	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
+		echo '
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+
 	echo '
-	</div>
-	<a name="lastPost"></a>';
+	</form>';
+	echo '
+</div>
+<a name="lastPost"></a>';
 
 	// As before, build the custom button right.
 	if ($context['can_add_poll'])
@@ -554,11 +560,11 @@ function template_main()
 		$normal_buttons['custom'] = array('text' => 'mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']);
 
 	echo '
-	<div class="clearfix marginbottom" id="postbuttons_lower">
-		<div class="middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
-		<div class="nav floatright">', template_button_strip($normal_buttons, 'top'), '</div>
-		<div style="clear: both;">', $context['previous_next'], '</div>
-	</div>';
+<div class="clearfix marginbottom" id="postbuttons_lower">
+	<div class="middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
+	<div class="nav floatright">', template_button_strip($normal_buttons, 'top'), '</div>
+	<div style="clear: both;">', $context['previous_next'], '</div>
+</div>';
 
 	if ($settings['linktree_inline'])
 		theme_linktree();
@@ -585,59 +591,52 @@ function template_main()
 		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => '{SUBMIT}', 'custom' => ' name="restore_selected" ');
 
 	echo '
-	<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
-
-	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
-		echo '
-	<input type="hidden" name="sc" value="', $context['session_id'], '" />';
-
-	echo '
-	</form>';
+<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	// Show the jumpto box, or actually...let Javascript do it.
 	echo '
-	<div class="tborder">
-		<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '" id="display_jump_to">&nbsp;</div>
-	</div><br />';
+<div class="tborder">
+	<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '" id="display_jump_to">&nbsp;</div>
+</div><br />';
 
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
 	{
 		echo '
-	<a name="quickreply"></a>
-	<div class="tborder" id="quickreplybox">
-		<h3 class="catbg headerpadding">
-			<a href="javascript:oQuickReply.swap();">
-				<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" />
-			</a>
-			<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
-		</h3>
-		<div class="smallpadding windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-			<div class="smallpadding floatleft" id="warning">
-				', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong>' : '', $context['oldTopicError'] ? '</p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong>' : '', '
-			</div>
-			<div>
-				', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
-				<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
-					<input type="hidden" name="topic" value="', $context['current_topic'], '" />
-					<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
-					<input type="hidden" name="icon" value="xx" />
-					<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
-					<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
-					<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
-					<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
-					<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
-					<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
-					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';
+<a name="quickreply"></a>
+<div class="tborder" id="quickreplybox">
+	<h3 class="catbg headerpadding">
+		<a href="javascript:oQuickReply.swap();">
+			<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" />
+		</a>
+		<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
+	</h3>
+	<div class="smallpadding windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
+		<div class="smallpadding floatleft" id="warning">
+			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong>' : '', $context['oldTopicError'] ? '</p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong>' : '', '
+		</div>
+		<div>
+			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
+			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
+				<input type="hidden" name="topic" value="', $context['current_topic'], '" />
+				<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
+				<input type="hidden" name="icon" value="xx" />
+				<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
+				<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
+				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
+				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
+				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
+				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
+				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';
 		if ($context['show_spellchecking'])
 			echo '
-					<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" tabindex="5" />';
+				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" tabindex="5" />';
 		echo '
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-					<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-				</form>
-			</div>
+				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+			</form>
 		</div>
-	</div>';
+	</div>
+</div>';
 	}
 
 	if ($context['show_spellchecking'])
@@ -675,17 +674,17 @@ function template_main()
 			sScriptUrl: "', $scripturl, '",
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
-			sTemplateBodyEdit: \'<div id="quick_edit_body_container"><div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" tabindex="8" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" tabindex="9" onclick="return oQuickModify.modifyCancel();" /></div></div>\',
+			sTemplateBodyEdit: \'<div id="quick_edit_body_container"><div id="error_box" style="padding: 4px; color: red;"><\' + \'/div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%<\' + \'/textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" tabindex="8" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" tabindex="9" onclick="return oQuickModify.modifyCancel();" /><\' + \'/div><\' + \'/div>\',
 			sTemplateSubjectEdit: \'<input type="text" style="width: 90%; margin: 0 0 1.5em 0;" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />\',
 			sTemplateBodyNormal: \'%body%\',
-			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
+			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%<\' + \'/a>\',
 			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')",
 			sErrorBorderStyle: "1px solid red"
 		});
 
 		aJumpTo[aJumpTo.length] = new JumpTo({
 			sContainerId: "display_jump_to",
-			sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':</label> %dropdown_list%",
+			sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':<" + "/label> %dropdown_list%",
 			iCurBoardId: ', $context['current_board'], ',
 			iCurBoardChildLevel: ', $context['jump_to']['child_level'], ',
 			sCurBoardName: "', $context['jump_to']['board_name'], '",

@@ -219,7 +219,7 @@ function template_main()
 				echo '
 							<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
 								<th align="left" width="25%" style="padding-left: 3ex;">
-									<a name="', $month['id'], '" id="link_', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse || yearElements[', $id, '].toggleMonth(', $month['id'], ');"><img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> ', $month['month'], ' ', $month['year'], '</a>
+									<a name="m', $month['id'], '" id="m', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse || yearElements[', $id, '].toggleMonth(', $month['id'], ');"><img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> ', $month['month'], ' ', $month['year'], '</a>
 								</th>
 								<th align="center" width="15%">', $month['new_topics'], '</th>
 								<th align="center" width="15%">', $month['new_posts'], '</th>

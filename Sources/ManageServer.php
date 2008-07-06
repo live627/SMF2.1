@@ -1684,6 +1684,15 @@ function prepareDBSettingContext(&$config_vars)
 				elseif (isset($txt['groups_' . $config_var[1]]))
 					$context['config_vars'][$config_var[1]]['label'] = $txt['groups_' . $config_var[1]];
 			}
+
+			// Set the subtext in case it's part of the label.
+			// !!! Temporary. Preventing divs inside label tags.
+			$divPos = strpos($context['config_vars'][$config_var[1]]['label'], '<div');
+			if ($divPos !== false)
+			{
+				$context['config_vars'][$config_var[1]]['subtext'] = preg_replace('~</?div[^>]*>~', '', substr($context['config_vars'][$config_var[1]]['label'], $divPos));
+				$context['config_vars'][$config_var[1]]['label'] =  substr($context['config_vars'][$config_var[1]]['label'], 0, $divPos);
+			}
 		}
 	}
 

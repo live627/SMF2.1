@@ -158,13 +158,13 @@ function template_admin()
 
 				for (var i = 0; i < window.smfAnnouncements.length; i++)
 				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "</a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</div>";
+					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "<" + "/div>";
 					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
 					str += "\n		" + window.smfAnnouncements[i].message;
-					str += "\n	</div>";
+					str += "\n	<" + "/div>";
 				}
 
-				setInnerHTML(document.getElementById("smfAnnouncements"), str + "</div>");
+				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
 			}
 
 			function smfAnnouncementsFixHeight()
@@ -187,7 +187,7 @@ function template_admin()
 
 				var currentVersion = getInnerHTML(yourVer);
 				if (currentVersion != window.smfVersion)
-					setInnerHTML(yourVer, "<span style=\"color: red;\">" + currentVersion + "</span>");
+					setInnerHTML(yourVer, "<span style=\"color: red;\">" + currentVersion + "<" + "/span>");
 			}
 
 			// Sort out the update window
@@ -693,7 +693,7 @@ function template_edit_censored()
 
 										function addNewWord()
 										{
-											setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /></div><div id="moreCensoredWords"></div>\');
+											setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
 										}
 									// ]]></script><br />
 								</td>
@@ -902,7 +902,7 @@ function template_show_settings()
 							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
 
 				echo '
-							<td valign="top" ', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' style="color: red; font-weight: bold;"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</label></td>
+							<td valign="top" ', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' style="color: red; font-weight: bold;"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</td>
 							<td class="windowbg2" width="50%">',
 								$config_var['preinput'];
 
@@ -941,7 +941,7 @@ function template_show_settings()
 				elseif ($config_var['type'] == 'bbc')
 				{
 					echo '
-								<fieldset id="enabledBBCTags">
+								<fieldset id="', $config_var['name'], '">
 									<legend>', $txt['bbcTagsToUse_select'], '</legend>
 									<table width="100%">
 										<tr>';
@@ -1246,7 +1246,7 @@ function template_admin_search_results()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="4" cellspacing="0" class="tborder" />
+	<table width="100%" cellpadding="4" cellspacing="0" class="tborder">
 		<tr>
 			<td class="catbg">
 				', $txt['admin_search_results'], '
@@ -1277,14 +1277,16 @@ function template_admin_search_results()
 				</p>';
 	}
 
-	echo '
-				<ol class="search_results">';
-	foreach ($context['search_results'] as $result)
+	else
 	{
-		// Is it a result from the online manual?
-		if ($context['search_type'] == 'online')
+		echo '
+				<ol class="search_results">';
+		foreach ($context['search_results'] as $result)
 		{
-			echo '
+			// Is it a result from the online manual?
+			if ($context['search_type'] == 'online')
+			{
+				echo '
 					<li class="windowbg">
 						<p>
 							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank" class="new_win"><strong>', $result['messages'][0]['subject'], '</strong></a>
@@ -1295,25 +1297,27 @@ function template_admin_search_results()
 							', $result['messages'][0]['body'], '
 						</p>
 					</li>';
-		}
-		// Otherwise it's... not!
-		else
-		{
-			echo '
+			}
+			// Otherwise it's... not!
+			else
+			{
+				echo '
 					<li class="windowbg">
 						<a href="', $result['url'], '">', $result['name'], '</a> [', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'] , ']';
 
-			if ($result['help'])
-				echo '
+				if ($result['help'])
+					echo '
 						<br /><span class="smalltext">', $result['help'], '</span>';
 
-			echo '
+				echo '
 					</li>';
+			}
 		}
+		echo '
+				</ol>';
 	}
 
 	echo '
-				</ol>
 			</td>
 		</tr>
 	</table>';

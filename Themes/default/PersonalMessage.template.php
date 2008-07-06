@@ -964,9 +964,9 @@ function template_send()
 
 	echo '
 									<div id="suggest_template_to" style="visibility: hidden; display: none;">
-										<input type="hidden" name="recipient_to[]" value="{MEMBER_ID}" />
-										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
-										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+										<input type="hidden" name="recipient_to[]" value="::MEMBER_ID::" />
+										<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="recipient_link_to_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
+										<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" />
 									</div>
 								</td>
 							</tr><tr valign="top" id="bcc_div">
@@ -990,9 +990,9 @@ function template_send()
 
 	echo '
 									<div id="suggest_template_bcc" style="visibility: hidden; display: none;">
-										<input type="hidden" name="recipient_bcc[]" value="{MEMBER_ID}" />
-										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_bcc_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
-										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+										<input type="hidden" name="recipient_bcc[]" value="::MEMBER_ID::" />
+										<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="recipient_link_bcc_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
+										<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" />
 									</div>
 								</td>
 							</tr><tr>
@@ -1432,12 +1432,12 @@ function template_add_rule()
 				}
 				criteriaNum++
 
-				setOuterHTML(document.getElementById("criteriaAddHere"), \'<br /><select name="ruletype[\' + criteriaNum + \']" id="ruletype\' + criteriaNum + \'" onchange="updateRuleDef(\' + criteriaNum + \'); rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_criteria_pick']), ':</option><option value="mid">', addslashes($txt['pm_rule_mid']), '</option><option value="gid">', addslashes($txt['pm_rule_gid']), '</option><option value="sub">', addslashes($txt['pm_rule_sub']), '</option><option value="msg">', addslashes($txt['pm_rule_msg']), '</option><option value="bud">', addslashes($txt['pm_rule_bud']), '</option></select>&nbsp;<span id="defdiv\' + criteriaNum + \'" style="display: none;"><input type="text" name="ruledef[\' + criteriaNum + \']" id="ruledef\' + criteriaNum + \'" onkeyup="rebuildRuleDesc();" value="" /></span><span id="defseldiv\' + criteriaNum + \'" style="display: none;"><select name="ruledefgroup[\' + criteriaNum + \']" id="ruledefgroup\' + criteriaNum + \'" onchange="rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_sel_group']), '</option>';
+				setOuterHTML(document.getElementById("criteriaAddHere"), \'<br /><select name="ruletype[\' + criteriaNum + \']" id="ruletype\' + criteriaNum + \'" onchange="updateRuleDef(\' + criteriaNum + \'); rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_criteria_pick']), ':<\' + \'/option><option value="mid">', addslashes($txt['pm_rule_mid']), '<\' + \'/option><option value="gid">', addslashes($txt['pm_rule_gid']), '<\' + \'/option><option value="sub">', addslashes($txt['pm_rule_sub']), '<\' + \'/option><option value="msg">', addslashes($txt['pm_rule_msg']), '<\' + \'/option><option value="bud">', addslashes($txt['pm_rule_bud']), '<\' + \'/option><\' + \'/select>&nbsp;<span id="defdiv\' + criteriaNum + \'" style="display: none;"><input type="text" name="ruledef[\' + criteriaNum + \']" id="ruledef\' + criteriaNum + \'" onkeyup="rebuildRuleDesc();" value="" /><\' + \'/span><span id="defseldiv\' + criteriaNum + \'" style="display: none;"><select name="ruledefgroup[\' + criteriaNum + \']" id="ruledefgroup\' + criteriaNum + \'" onchange="rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_sel_group']), '<\' + \'/option>';
 
 	foreach ($context['groups'] as $id => $group)
-		echo '<option value="', $id, '">', strtr($group, array("'" => "\'")), '</option>';
+		echo '<option value="', $id, '">', strtr($group, array("'" => "\'")), '<\' + \'/option>';
 
-	echo '</select></span><span id="criteriaAddHere"></span>\');
+	echo '<\' + \'/select><\' + \'/span><span id="criteriaAddHere"><\' + \'/span>\');
 			}
 
 			function addActionOption()
@@ -1450,13 +1450,13 @@ function template_add_rule()
 				}
 				actionNum++
 
-				setOuterHTML(document.getElementById("actionAddHere"), \'<br /><select name="acttype[\' + actionNum + \']" id="acttype\' + actionNum + \'" onchange="updateActionDef(\' + actionNum + \'); rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_sel_action']), ':</option><option value="lab">', addslashes($txt['pm_rule_label']), '</option><option value="del">', addslashes($txt['pm_rule_delete']), '</option></select>&nbsp;<span id="labdiv\' + actionNum + \'" style="display: none;"><select name="labdef[\' + actionNum + \']" id="labdef\' + actionNum + \'" onchange="rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_sel_label']), '</option>';
+				setOuterHTML(document.getElementById("actionAddHere"), \'<br /><select name="acttype[\' + actionNum + \']" id="acttype\' + actionNum + \'" onchange="updateActionDef(\' + actionNum + \'); rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_sel_action']), ':<\' + \'/option><option value="lab">', addslashes($txt['pm_rule_label']), '<\' + \'/option><option value="del">', addslashes($txt['pm_rule_delete']), '<\' + \'/option><\' + \'/select>&nbsp;<span id="labdiv\' + actionNum + \'" style="display: none;"><select name="labdef[\' + actionNum + \']" id="labdef\' + actionNum + \'" onchange="rebuildRuleDesc();"><option value="">', addslashes($txt['pm_rule_sel_label']), '<\' + \'/option>';
 
 	foreach ($context['labels'] as $label)
 		if ($label['id'] != -1)
-			echo '<option value="', ($label['id'] + 1), '">', addslashes($label['name']), '</option>';
+			echo '<option value="', ($label['id'] + 1), '">', addslashes($label['name']), '<\' + \'/option>';
 
-	echo '</select></span><span id="actionAddHere"></span>\');
+	echo '<\' + \'/select><\' + \'/span><span id="actionAddHere"><\' + \'/span>\');
 			}
 
 			function updateRuleDef(optNum)
@@ -1621,9 +1621,7 @@ function template_add_rule()
 	$isFirst = true;
 	foreach ($context['rule']['criteria'] as $k => $criteria)
 	{
-		if ($isFirst)
-			$isFirst = false;
-		elseif ($criteria['t'] == '')
+		if (!$isFirst && $criteria['t'] == '')
 			echo '<div id="removeonjs1">';
 		else
 			echo '<br />';
@@ -1652,12 +1650,14 @@ function template_add_rule()
 					</span>';
 
 		// If this is the dummy we add a means to hide for non js users.
-		if ($criteria['t'] == '')
+		if ($isFirst)
+			$isFirst = false;
+		elseif ($criteria['t'] == '')
 			echo '</div>';
 	}
 
 	echo '
-					<span id="criteriaAddHere"></span> <a href="javascript:addCriteriaOption(); void(0);" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
+					<span id="criteriaAddHere"></span> <a href="#" onclick="addCriteriaOption(); return false;" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -1686,9 +1686,7 @@ function template_add_rule()
 	$isFirst = true;
 	foreach ($context['rule']['actions'] as $k => $action)
 	{
-		if ($isFirst)
-			$isFirst = false;
-		elseif ($action['t'] == '')
+		if (!$isFirst && $action['t'] == '')
 			echo '<div id="removeonjs2">';
 		else
 			echo '<br />';
@@ -1711,13 +1709,15 @@ function template_add_rule()
 						</select>
 					</span>';
 
-		if ($action['t'] == '')
+		if ($isFirst)
+			$isFirst = false;
+		elseif ($action['t'] == '')
 			echo '
 				</div>';
 	}
 
 	echo '
-					<span id="actionAddHere"></span> <a href="javascript:addActionOption(); void(0);" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+					<span id="actionAddHere"></span> <a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
 				</td>
 			</tr>
 		</table>

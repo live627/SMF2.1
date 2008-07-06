@@ -298,7 +298,7 @@ function ModifyMailSettings($return_config = false)
 		'',
 			array('select', 'birthday_email', $emails, 'value' => empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email'], 'javascript' => 'onchange="fetch_birthday_preview()"'),
 			'birthday_subject' => array('text', 'birthday_subject', 'value' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
-			'birthday_body' => array('large_text', 'birthday_body', 'value' => $body, 'disabled' => true, 'size' => (strlen($body) / 20) * 1.5),
+			'birthday_body' => array('large_text', 'birthday_body', 'value' => $body, 'disabled' => true, 'size' => ceil(strlen($body) / 25)),
 		'',
 
 	);

@@ -16,8 +16,8 @@ function template_main()
 			</tr>';
 	if (!empty($context['move_board']))
 		echo '
-			<tr class="windowbg2" height="30">
-				<td>', $context['move_title'], ' [<a href="', $scripturl, '?action=admin;area=manageboards">', $txt['mboards_cancel_moving'], '</a>]</td>
+			<tr class="windowbg2">
+				<td style="padding: 20px;">', $context['move_title'], ' [<a href="', $scripturl, '?action=admin;area=manageboards">', $txt['mboards_cancel_moving'], '</a>]</td>
 			</tr>';
 
 	// Loop through every categories, listing the boards in each as we go.
@@ -447,7 +447,7 @@ function template_modify_board()
 	echo '
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
-				<input type="hidden" name="rid" value="', $context['redirect_location'], '">
+				<input type="hidden" name="rid" value="', $context['redirect_location'], '" />
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 
 	// If this board has no children don't bother with the next confirmation screen.
@@ -457,7 +457,7 @@ function template_modify_board()
 
 	if (isset($context['board']['is_new']))
 		echo '
-				<input type="hidden" name="cur_cat" value="', $context['board']['category'], '">
+				<input type="hidden" name="cur_cat" value="', $context['board']['category'], '" />
 				<input type="submit" name="add" value="', $txt['mboards_new_board'], '" onclick="return !isEmptyText(this.form.board_name);" />';
 	else
 		echo '

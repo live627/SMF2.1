@@ -797,7 +797,7 @@ function template_edit_style()
 				if (!identical)
 				{
 					var data = previewData + "";
-					data = data.replace(/<link rel="stylesheet"[^>]+?>/, "<style type=\"text/css\" id=\"css_preview_sheet\">" + document.forms.stylesheetForm.entire_file.value + "</style>");
+					data = data.replace(/<link rel="stylesheet"[^>]+?>/, "<style type=\"text/css\" id=\"css_preview_sheet\">" + document.forms.stylesheetForm.entire_file.value + "<" + "/style>");
 
 					frames["css_preview_box"].document.open();
 					frames["css_preview_box"].document.write(data);

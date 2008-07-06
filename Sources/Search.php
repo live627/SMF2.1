@@ -1981,8 +1981,8 @@ function prepareSearchContext($reset = false)
 		'category' => array(
 			'id' => $message['id_cat'],
 			'name' => $message['cat_name'],
-			'href' => $scripturl . '#' . $message['id_cat'],
-			'link' => '<a href="' . $scripturl . '#' . $message['id_cat'] . '">' . $message['cat_name'] . '</a>'
+			'href' => $scripturl . '#c' . $message['id_cat'],
+			'link' => '<a href="' . $scripturl . '#c' . $message['id_cat'] . '">' . $message['cat_name'] . '</a>'
 		)
 	));
 	determineTopicClass($output);

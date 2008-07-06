@@ -26,6 +26,7 @@ July 2008
  ! Do a bit more validation on the subject choice when moving, merging and spliting topics. (MoveTopic.php, SplitTopics.php) [Bug 2307]
  * Subject line was overlapping buttons when inline editing (Display.template)
  * Poll editing links were laid out below instead off to the right when you had voted (Display.template, style.css, forum.css, ie6.css)
+ * Fixed HTML layout to comply with SGML/tidy standards. (several files)
 
 
 June 2008

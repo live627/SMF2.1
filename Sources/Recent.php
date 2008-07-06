@@ -124,7 +124,7 @@ function RecentPosts()
 				fatal_lang_error('no_access', false);
 
 			$context['linktree'][] = array(
-				'url' => $scripturl . '#' . (int) $_REQUEST['c'],
+				'url' => $scripturl . '#c' . (int) $_REQUEST['c'],
 				'name' => $name
 			);
 		}
@@ -317,8 +317,8 @@ function RecentPosts()
 			'category' => array(
 				'id' => $row['id_cat'],
 				'name' => $row['cname'],
-				'href' => $scripturl . '#' . $row['id_cat'],
-				'link' => '<a href="' . $scripturl . '#' . $row['id_cat'] . '">' . $row['cname'] . '</a>'
+				'href' => $scripturl . '#c' . $row['id_cat'],
+				'link' => '<a href="' . $scripturl . '#c' . $row['id_cat'] . '">' . $row['cname'] . '</a>'
 			),
 			'board' => array(
 				'id' => $row['id_board'],
@@ -613,7 +613,7 @@ function UnreadTopics()
 		$smcFunc['db_free_result']($request);
 
 		$context['linktree'][] = array(
-			'url' => $scripturl . '#' . (int) $_REQUEST['c'][0],
+			'url' => $scripturl . '#c' . (int) $_REQUEST['c'][0],
 			'name' => $name
 		);
 	}

@@ -676,7 +676,7 @@ function statPanel($memID)
 
 	// Now that we know the total, calculate the percentage.
 	foreach ($context['popular_boards'] as $id_board => $board_data)
-		$context['popular_boards'][$id_board]['posts_percent'] = $max_percent == 0 ? 0 : comma_format(($board_data['posts_percent'] / $max_percent) * 100, 2);
+		$context['popular_boards'][$id_board]['posts_percent'] = $max_percent == 0 ? 0 : comma_format(($board_data['posts_percent'] / $max_percent) * 100, 0);
 
 	// Now get the 10 boards this user has most often participated in.
 	$result = $smcFunc['db_query']('', '
@@ -709,7 +709,7 @@ function statPanel($memID)
 
 	foreach ($context['board_activity'] as $id_board => $board_data)
 	{
-		$context['board_activity'][$id_board]['relative_percent'] = $max_percent == 0 ? 0 : ($board_data['percent'] / $max_percent) * 100;
+		$context['board_activity'][$id_board]['relative_percent'] = $max_percent == 0 ? 0 : min(ceil(($board_data['percent'] / $max_percent) * 100), 100);
 		$context['board_activity'][$id_board]['percent'] = $board_data['percent'];
 	}
 

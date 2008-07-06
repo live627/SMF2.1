@@ -25,12 +25,16 @@ function smfSuggest(sessionID, textID)
 	this.onSubmit = onElementSubmitted;
 	this.registerCallback = registerCallback;
 
-	xmlRequestHandle = null;
+	var xmlRequestHandle = null;
 
 	function init()
 	{
 		if (!window.XMLHttpRequest)
 			return false;
+
+		// Disable autocomplete in IE.
+		if (typeof(textHandle.autocomplete) != 'undefined')
+			textHandle.autocomplete = 'off';
 
 		createEventListener(textHandle);
 		textHandle.addEventListener('keydown', checkEnter, false);
@@ -72,7 +76,6 @@ function smfSuggest(sessionID, textID)
 				ev.preventDefault();
 			}
 
-			void(0);
 			return false;
 		}
 		// Up/Down arrow?
@@ -266,7 +269,7 @@ function smfSuggest(sessionID, textID)
 				deleteCode = 'suggestHandle' + textID + '.deleteItem(' + curUser.memberid + ');';
 
 				// Parse in any variables.
-				newNode.innerHTML = newNode.innerHTML.replace(/\{MEMBER_NAME\}/g, curUser.membername).replace(/'*(\{|%7B)MEMBER_ID(\}|%7D)'*/g, curUser.memberid).replace(/'*\{DELETE_MEMBER_URL\}'*/g, deleteCode);
+				newNode.innerHTML = newNode.innerHTML.replace(/::MEMBER_NAME::/g, curUser.membername).replace(/'*(::|%3A%3A)MEMBER_ID(::|%3A%3A)'*/g, curUser.memberid).replace(/'*::DELETE_MEMBER_URL::'*/g, deleteCode);
 
 				newNode.style.visibility = 'visible';
 				newNode.style.display = '';

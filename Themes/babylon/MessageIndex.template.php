@@ -359,7 +359,7 @@ function template_main()
 			if (typeof(window.XMLHttpRequest) != "undefined")
 				aJumpTo[aJumpTo.length] = new JumpTo({
 					sContainerId: "message_index_jump_to",
-					sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':</label> %dropdown_list%",
+					sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':<" + "/label> %dropdown_list%",
 					iCurBoardId: ', $context['current_board'], ',
 					iCurBoardChildLevel: ', $context['jump_to']['child_level'], ',
 					sCurBoardName: "', $context['jump_to']['board_name'], '",
@@ -412,7 +412,7 @@ function template_main()
 	function modify_topic_hide_edit(subject)
 	{
 		// Re-template the subject!
-		setInnerHTML(cur_subject_div, \'<a href="', $scripturl, '?topic=\' + cur_topic_id + \'.0">\' + subject + \'</a>\');
+		setInnerHTML(cur_subject_div, \'<a href="', $scripturl, '?topic=\' + cur_topic_id + \'.0">\' + subject + \'<\' + \'/a>\');
 	}
 // ]]></script>';
 

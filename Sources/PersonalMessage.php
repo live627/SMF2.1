@@ -1944,14 +1944,14 @@ function MessagePost2()
 	if (!empty($_POST['recipient_to']))
 	{
 		foreach ($_POST['recipient_to'] as $recipient)
-			if ($recipient != '{MEMBER_ID}')
+			if ($recipient != '::MEMBER_ID::')
 				$context['recipient_ids']['to'][] = (int) $recipient;
 	}
 	// Same for bcc...
 	if (!empty($_POST['recipient_bcc']))
 	{
 		foreach ($_POST['recipient_bcc'] as $recipient)
-			if ($recipient != '{MEMBER_ID}')
+			if ($recipient != '::MEMBER_ID::')
 				$context['recipient_ids']['bcc'][] = (int) $recipient;
 	}
 

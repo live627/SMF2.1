@@ -410,11 +410,11 @@ function PermissionByBoard()
 	$context['page_title'] = $txt['permissions_boards'];
 	$context['edit_all'] = isset($_GET['edit']);
 
-	checkSession('request');
-
 	// Saving?
 	if (!empty($_POST['save_changes']) && !empty($_POST['boardprofile']))
 	{
+		checkSession('request');
+
 		$changes = array();
 		foreach ($_POST['boardprofile'] as $board => $profile)
 		{

@@ -86,13 +86,13 @@ function template_latest_news()
 
 				for (var i = 0; i < window.smfAnnouncements.length; i++)
 				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "</a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</div>";
+					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "<" + "/div>";
 					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
 					str += "\n		" + window.smfAnnouncements[i].message;
-					str += "\n	</div>";
+					str += "\n	<" + "/div>";
 				}
 
-				setInnerHTML(document.getElementById("smfAnnouncements"), str + "</div>");
+				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
 			}
 
 			add_load_event(smfSetAnnouncements);
@@ -221,16 +221,22 @@ function template_notes()
 				</td>
 			</tr>
 			<tr>
-				<td class="windowbg2" align="left" style="padding: 0;">
+				<td class="windowbg2" align="left" style="padding: 0;">';
+
+	if (!empty($context['notes']))
+	{
+		echo '
 					<ul class="moderation_notes">';
 
-	// Cycle through the notes.
-	foreach ($context['notes'] as $note)
-		echo '
+		// Cycle through the notes.
+		foreach ($context['notes'] as $note)
+			echo '
 						<li class="smalltext"><a href="', $note['delete_href'], '"><img src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="" /></a> <b>', $note['author']['link'], ':</b> ', $note['text'], '</li>';
 
+		echo '
+					</ul>';
+	}
 	echo '
-					</ul>
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -376,7 +382,7 @@ function template_unapproved_posts()
 								', $item['counter'], '
 							</td>
 							<td width="75%" class="middletext">
-								&nbsp;<a href="', $scripturl, '#', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic']['id'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a>
+								&nbsp;<a href="', $scripturl, '#c', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic']['id'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a>
 							</td>
 							<td class="middletext" align="right" style="padding: 0 1ex; white-space: nowrap;">
 								', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '
@@ -414,7 +420,7 @@ function template_unapproved_posts()
 		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td align="right">
-					<select name="do" onchange="if (this.value != 0 && confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
+					<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
 						<option value="0">', $txt['with_selected'], ':</option>
 						<option value="0">-------------------</option>
 						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
@@ -492,7 +498,7 @@ function template_unapproved_attachments()
 	echo '
 			<tr class="titlebg">
 				<td colspan="5" align="right">
-					<select name="do" onchange="if (this.value != 0 && confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
+					<select name="do" onchange="if (this.value != 0 &amp;&amp; confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
 						<option value="0">', $txt['with_selected'], ':</option>
 						<option value="0">-------------------</option>
 						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
@@ -764,7 +770,7 @@ function template_show_notice()
 		</style>
 	</head>
 	<body>
-		<table width="100%" cellpadding="5" cellspacing="0" class="tborder" />
+		<table width="100%" cellpadding="5" cellspacing="0" class="tborder">
 			<tr>
 				<td class="catbg">
 					', $txt['show_notice'], '
@@ -828,6 +834,7 @@ function template_warn_template()
 					<td colspan="2">
 						<label for="make_personal">
 							 <b>', $txt['mc_warning_template_personal'], '</b>
+						</label>
 						<div class="smalltext">', $txt['mc_warning_template_personal_desc'], '</div>
 					</td>
 				</tr>';

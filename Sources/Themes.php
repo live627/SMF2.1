@@ -192,8 +192,6 @@ function ThemeAdmin()
 	// If we aren't submitting - that is, if we are about to...
 	if (!isset($_POST['submit']))
 	{
-		checkSession('get');
-
 		loadTemplate('Themes');
 
 		// Make our known themes a little easier to work with.
@@ -323,8 +321,6 @@ function ThemeList()
 		redirectexit('action=admin;area=theme;sa=list;sesc=' . $context['session_id']);
 	}
 
-	checkSession('get');
-
 	loadTemplate('Themes');
 
 	$request = $smcFunc['db_query']('', '
@@ -387,8 +383,6 @@ function SetThemeOptions()
 
 	if (empty($_GET['th']) && empty($_GET['id']))
 	{
-		checkSession('get');
-
 		$request = $smcFunc['db_query']('', '
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
@@ -673,8 +667,6 @@ function SetThemeOptions()
 		redirectexit('action=admin;area=theme;sesc=' . $sc . ';sa=reset');
 	}
 
-	checkSession('get');
-
 	$old_id = $settings['theme_id'];
 	$old_settings = $settings;
 
@@ -848,8 +840,6 @@ function SetThemeSettings()
 		redirectexit('action=admin;area=theme;sa=settings;th=' . $_GET['th'] . ';sesc=' . $sc);
 	}
 
-	checkSession('get');
-
 	$context['sub_template'] = 'set_settings';
 	$context['page_title'] = $txt['theme_settings'];
 
@@ -963,8 +953,6 @@ function PickTheme()
 {
 	global $txt, $sc, $context, $modSettings, $user_info, $language, $smcFunc, $settings;
 
-	checkSession('get');
-
 	loadLanguage('Profile');
 	loadTemplate('Themes');
 
@@ -987,6 +975,8 @@ function PickTheme()
 	// Have we made a desicion, or are we just browsing?
 	if (isset($_GET['th']))
 	{
+		checkSession('get');
+
 		$_GET['th'] = (int) $_GET['th'];
 
 		// Save for this user.
@@ -1662,8 +1652,6 @@ function EditTheme()
 
 	if (empty($_GET['th']))
 	{
-		checkSession('get');
-
 		$request = $smcFunc['db_query']('', '
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
@@ -1866,8 +1854,6 @@ function EditTheme()
 			return;
 		}
 	}
-	else
-		checkSession('get');
 
 	$context['allow_save'] = is_writable($theme_dir . '/' . $_REQUEST['filename']);
 	$context['allow_save_filename'] = strtr($theme_dir . '/' . $_REQUEST['filename'], array($boarddir => '...'));

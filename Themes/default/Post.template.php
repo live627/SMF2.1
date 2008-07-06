@@ -92,7 +92,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" /><span id="pollMoreOptions"></span>\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'<\' + \'/label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" /><span id="pollMoreOptions"><\' + \'/span>\');
 			}';
 
 	// If we are making a calendar event we want to ensure we show the current days in a month etc... this is done here.
@@ -382,7 +382,7 @@ function template_main()
 		}
 
 		echo '
-									<span id="pollMoreOptions"></span> <a href="javascript:addPollOption(); void(0);">(', $txt['poll_add_option'], ')</a>
+									<span id="pollMoreOptions"></span> <a href="#" onclick="addPollOption(); return false;">(', $txt['poll_add_option'], ')</a>
 								</td>
 							</tr>
 							<tr>
@@ -408,9 +408,9 @@ function template_main()
 							<tr>
 								<td align="right"></td>
 								<td class="smalltext">
-									<input type="radio" id="poll_hide" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_anyone'], '<br />
-									<input type="radio" id="poll_hide" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_voted'], '<br />
-									<input type="radio" id="poll_hide" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="check" /> ', $txt['poll_results_expire'], '<br />
+									<input type="radio" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_anyone'], '<br />
+									<input type="radio" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_voted'], '<br />
+									<input type="radio" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="check" /> ', $txt['poll_results_expire'], '<br />
 									<br />
 								</td>
 							</tr>';
@@ -537,13 +537,13 @@ function template_main()
 											if (allowed_attachments <= 0)
 												return alert("', $txt['more_attachments_error'], '");
 
-											setOuterHTML(document.getElementById("moreAttachments"), \'<br /><input type="file" size="48" name="attachment[]" /><span id="moreAttachments"></span>\');
+											setOuterHTML(document.getElementById("moreAttachments"), \'<br /><input type="file" size="48" name="attachment[]" /><span id="moreAttachments"><\' + \'/span>\');
 											allowed_attachments = allowed_attachments - 1;
 
 											return true;
 										}
 									// ]]></script>
-									<span id="moreAttachments"></span> <a href="javascript:addAttachment(); void(0);">(', $txt['more_attachments'], ')</a><br />
+									<span id="moreAttachments"></span> <a href="#" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')</a><br />
 									<noscript><input type="file" size="48" name="attachment[]" /><br /></noscript>';
 		else
 			echo '
@@ -723,10 +723,10 @@ function template_main()
 				var numNewPosts = newPosts.length;
 				if (numNewPosts != 0)
 				{
-					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
+					var newTable = \'<span id="new_replies"><\' + \'/span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
-					newTable += \'</table>\';
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /><\' + \'/div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'<\' + \'/td><\' + \'/tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a><\' + \'/div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div><\' + \'/td><\' + \'/tr>\';
+					newTable += \'<\' + \'/table>\';
 					setOuterHTML(document.getElementById("new_replies"), newTable);
 				}
 

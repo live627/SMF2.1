@@ -316,7 +316,7 @@ function template_summary()
 		echo '
 				<tr>
 					<td><b>', $txt['website'], ': </b></td>
-					<td><a href="', $context['member']['website']['url'], '" target="_blank" class="new_win">', $context['member']['website']['title'], '</a></td>
+					<td>', empty($context['member']['website']['url']) ? '' : '<a href="' . $context['member']['website']['url'] . '" target="_blank" class="new_win">' . $context['member']['website']['title'] . '</a>', '</td>
 				</tr>';
 
 	echo '
@@ -487,7 +487,7 @@ function template_showPosts()
 								', $post['counter'], '
 							</td>
 							<td width="75%" class="middletext">
-								&nbsp;<a href="', $scripturl, '#', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a>
+								&nbsp;<a href="', $scripturl, '#c', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a>
 							</td>
 							<td class="middletext" align="right" style="padding: 0 1ex; white-space: nowrap;">
 								', $txt['on'], ': ', $post['time'], '
@@ -1356,7 +1356,7 @@ function template_profile_pm_settings()
 							<tr>
 								<td colspan="2">
 									<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
-									<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 && !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
+									<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 &amp;&amp; !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
 										<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
 										<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
 										<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
@@ -2362,7 +2362,7 @@ function template_profile_group_manage()
 									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
 								</td>
 								<td>
-									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group'] == 1 ? 'onchange="if (this.value != 1 && !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
+									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
 		// Fill the select box with all primary member groups that can be assigned to a member.
 		foreach ($context['member_groups'] as $member_group)
 			if (!empty($member_group['can_be_primary']))
@@ -2545,6 +2545,106 @@ function template_profile_avatar_select()
 											<select name="file" id="file" size="10" style="display: none;" onchange="showAvatar()" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');" disabled="disabled"><option></option></select>
 										</td>
 									</tr></table>
+									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+										var files = ["' . implode('", "', $context['avatar_list']) . '"];
+										var avatar = document.getElementById("avatar");
+										var cat = document.getElementById("cat");
+										var selavatar = "' . $context['avatar_selected'] . '";
+										var avatardir = "' . $modSettings['avatar_url'] . '/";
+										var size = avatar.alt.substr(3, 2) + " " + avatar.alt.substr(0, 2) + String.fromCharCode(117, 98, 116);
+										var file = document.getElementById("file");
+
+										if (avatar.src.indexOf("blank.gif") > -1)
+											changeSel(selavatar);
+										else
+											previewExternalAvatar(avatar.src)
+
+										function changeSel(selected)
+										{
+											if (cat.selectedIndex == -1)
+												return;
+
+											if (cat.options[cat.selectedIndex].value.indexOf("/") > 0)
+											{
+												var i;
+												var count = 0;
+
+												file.style.display = "inline";
+												file.disabled = false;
+
+												for (i = file.length; i >= 0; i = i - 1)
+													file.options[i] = null;
+
+												for (i = 0; i < files.length; i++)
+													if (files[i].indexOf(cat.options[cat.selectedIndex].value) == 0)
+													{
+														var filename = files[i].substr(files[i].indexOf("/") + 1);
+														var showFilename = filename.substr(0, filename.lastIndexOf("."));
+														showFilename = showFilename.replace(/[_]/g, " ");
+
+														file.options[count] = new Option(showFilename, files[i]);
+
+														if (filename == selected)
+														{
+															if (file.options.defaultSelected)
+																file.options[count].defaultSelected = true;
+															else
+																file.options[count].selected = true;
+														}
+
+														count++;
+													}
+
+												if (file.selectedIndex == -1 && file.options[0])
+													file.options[0].selected = true;
+
+												showAvatar();
+											}
+											else
+											{
+												file.style.display = "none";
+												file.disabled = true;
+												document.getElementById("avatar").src = avatardir + cat.options[cat.selectedIndex].value;
+												document.getElementById("avatar").style.width = "";
+												document.getElementById("avatar").style.height = "";
+											}
+										}
+
+										function showAvatar()
+										{
+											if (file.selectedIndex == -1)
+												return;
+
+											document.getElementById("avatar").src = avatardir + file.options[file.selectedIndex].value;
+											document.getElementById("avatar").alt = file.options[file.selectedIndex].text;
+											document.getElementById("avatar").alt += file.options[file.selectedIndex].text == size ? "!" : "";
+											document.getElementById("avatar").style.width = "";
+											document.getElementById("avatar").style.height = "";
+										}
+
+										function previewExternalAvatar(src)
+										{
+											if (!document.getElementById("avatar"))
+												return;
+
+											var maxHeight = ', !empty($modSettings['avatar_max_height_external']) ? $modSettings['avatar_max_height_external'] : 0, ';
+											var maxWidth = ', !empty($modSettings['avatar_max_width_external']) ? $modSettings['avatar_max_width_external'] : 0, ';
+											var tempImage = new Image();
+
+											tempImage.src = src;
+											if (maxWidth != 0 && tempImage.width > maxWidth)
+											{
+												document.getElementById("avatar").style.height = parseInt((maxWidth * tempImage.height) / tempImage.width) + "px";
+												document.getElementById("avatar").style.width = maxWidth + "px";
+											}
+											else if (maxHeight != 0 && tempImage.height > maxHeight)
+											{
+												document.getElementById("avatar").style.width = parseInt((maxHeight * tempImage.width) / tempImage.height) + "px";
+												document.getElementById("avatar").style.height = maxHeight + "px";
+											}
+											document.getElementById("avatar").src = src;
+										}
+									// ]]></script>
 								</td>
 							</tr>';
 	}
@@ -2578,117 +2678,11 @@ function template_profile_avatar_select()
 									</tr></table>
 								</td>
 								<td valign="top">
-									', ($context['member']['avatar']['id_attach'] > 0 ? '<img src="' . $context['member']['avatar']['href'] . (strpos($context['member']['avatar']['href'], '?') === false ? '?' : '&amp;') . 'time=' . time() . '" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" /><br /><br />' : ''), '
+									', ($context['member']['avatar']['id_attach'] > 0 ? '<img src="' . $context['member']['avatar']['href'] . (strpos($context['member']['avatar']['href'], '?') === false ? '?' : '&amp;') . 'time=' . time() . '" alt="" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" /><br /><br />' : ''), '
 									<input type="file" size="48" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" />
 								</td>
 							</tr>';
 	}
-
-	/* If the user is allowed to choose avatars stored on the server, the below javascript is used to update the
-	file listing of avatars as the user changes catergory. It also updates the preview image as they choose
-	different files on the select box. */
-	if (!empty($context['member']['avatar']['allow_server_stored']))
-		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var files = ["' . implode('", "', $context['avatar_list']) . '"];
-		var avatar = document.getElementById("avatar");
-		var cat = document.getElementById("cat");
-		var selavatar = "' . $context['avatar_selected'] . '";
-		var avatardir = "' . $modSettings['avatar_url'] . '/";
-		var size = avatar.alt.substr(3, 2) + " " + avatar.alt.substr(0, 2) + String.fromCharCode(117, 98, 116);
-		var file = document.getElementById("file");
-
-		if (avatar.src.indexOf("blank.gif") > -1)
-			changeSel(selavatar);
-		else
-			previewExternalAvatar(avatar.src)
-
-		function changeSel(selected)
-		{
-			if (cat.selectedIndex == -1)
-				return;
-
-			if (cat.options[cat.selectedIndex].value.indexOf("/") > 0)
-			{
-				var i;
-				var count = 0;
-
-				file.style.display = "inline";
-				file.disabled = false;
-
-				for (i = file.length; i >= 0; i = i - 1)
-					file.options[i] = null;
-
-				for (i = 0; i < files.length; i++)
-					if (files[i].indexOf(cat.options[cat.selectedIndex].value) == 0)
-					{
-						var filename = files[i].substr(files[i].indexOf("/") + 1);
-						var showFilename = filename.substr(0, filename.lastIndexOf("."));
-						showFilename = showFilename.replace(/[_]/g, " ");
-
-						file.options[count] = new Option(showFilename, files[i]);
-
-						if (filename == selected)
-						{
-							if (file.options.defaultSelected)
-								file.options[count].defaultSelected = true;
-							else
-								file.options[count].selected = true;
-						}
-
-						count++;
-					}
-
-				if (file.selectedIndex == -1 && file.options[0])
-					file.options[0].selected = true;
-
-				showAvatar();
-			}
-			else
-			{
-				file.style.display = "none";
-				file.disabled = true;
-				document.getElementById("avatar").src = avatardir + cat.options[cat.selectedIndex].value;
-				document.getElementById("avatar").style.width = "";
-				document.getElementById("avatar").style.height = "";
-			}
-		}
-
-		function showAvatar()
-		{
-			if (file.selectedIndex == -1)
-				return;
-
-			document.getElementById("avatar").src = avatardir + file.options[file.selectedIndex].value;
-			document.getElementById("avatar").alt = file.options[file.selectedIndex].text;
-			document.getElementById("avatar").alt += file.options[file.selectedIndex].text == size ? "!" : "";
-			document.getElementById("avatar").style.width = "";
-			document.getElementById("avatar").style.height = "";
-		}
-
-		function previewExternalAvatar(src)
-		{
-			if (!document.getElementById("avatar"))
-				return;
-
-			var maxHeight = ', !empty($modSettings['avatar_max_height_external']) ? $modSettings['avatar_max_height_external'] : 0, ';
-			var maxWidth = ', !empty($modSettings['avatar_max_width_external']) ? $modSettings['avatar_max_width_external'] : 0, ';
-			var tempImage = new Image();
-
-			tempImage.src = src;
-			if (maxWidth != 0 && tempImage.width > maxWidth)
-			{
-				document.getElementById("avatar").style.height = parseInt((maxWidth * tempImage.height) / tempImage.width) + "px";
-				document.getElementById("avatar").style.width = maxWidth + "px";
-			}
-			else if (maxHeight != 0 && tempImage.height > maxHeight)
-			{
-				document.getElementById("avatar").style.width = parseInt((maxHeight * tempImage.width) / tempImage.height) + "px";
-				document.getElementById("avatar").style.height = maxHeight + "px";
-			}
-			document.getElementById("avatar").src = src;
-		}
-	// ]]></script>';
 }
 
 // Callback for modifying karam.

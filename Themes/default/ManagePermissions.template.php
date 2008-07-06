@@ -880,8 +880,8 @@ function template_inline_permissions()
 	global $context, $settings, $options, $txt, $modSettings;
 
 	echo '
-		<fieldset id="', $context['current_permission'], '_groups">
-			<legend><a href="javascript:void(0);" onclick="document.getElementById(\'', $context['current_permission'], '_groups\').style.display = \'none\';document.getElementById(\'', $context['current_permission'], '_groups_link\').style.display = \'block\'; return false;">', $txt['avatar_select_permission'], '</a></legend>';
+		<fieldset id="', $context['current_permission'], '">
+			<legend><a href="javascript:void(0);" onclick="document.getElementById(\'', $context['current_permission'], '\').style.display = \'none\';document.getElementById(\'', $context['current_permission'], '_groups_link\').style.display = \'block\'; return false;">', $txt['avatar_select_permission'], '</a></legend>';
 	if (empty($modSettings['permission_enable_deny']))
 		echo '
 			<table width="100%" border="0">';
@@ -915,10 +915,10 @@ function template_inline_permissions()
 			</table>
 		</fieldset>
 
-		<a href="javascript:void(0);" onclick="document.getElementById(\'', $context['current_permission'], '_groups\').style.display = \'block\'; document.getElementById(\'', $context['current_permission'], '_groups_link\').style.display = \'none\'; return false;" id="', $context['current_permission'], '_groups_link" style="display: none;">[ ', $txt['avatar_select_permission'], ' ]</a>
+		<a href="javascript:void(0);" onclick="document.getElementById(\'', $context['current_permission'], '\').style.display = \'block\'; document.getElementById(\'', $context['current_permission'], '_groups_link\').style.display = \'none\'; return false;" id="', $context['current_permission'], '_groups_link" style="display: none;">[ ', $txt['avatar_select_permission'], ' ]</a>
 
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			document.getElementById("', $context['current_permission'], '_groups").style.display = "none";
+			document.getElementById("', $context['current_permission'], '").style.display = "none";
 			document.getElementById("', $context['current_permission'], '_groups_link").style.display = "";
 		// ]]></script>';
 }

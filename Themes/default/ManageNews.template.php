@@ -38,7 +38,7 @@ function template_edit_news()
 
 							function addNewsItem()
 							{
-								setOuterHTML(document.getElementById("moreNewsItems"), \'<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;"></textarea></div><div id="moreNewsItems"></div>\');
+								setOuterHTML(document.getElementById("moreNewsItems"), \'<div style="margin-bottom: 2ex;"><textarea rows="3" cols="65" name="news[]" style="width: 85%;"><\' + \'/textarea><\' + \'/div><div id="moreNewsItems"><\' + \'/div>\');
 							}
 						// ]]></script>
 						<noscript>
@@ -163,10 +163,8 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_7">
 					<td width="50%">
-						<label for="email_force">
-							<b>', $txt['admin_news_select_override_notify'], ':</b>
-							<div class="smalltext">', $txt['email_force'], '</div>
-						</label>
+						<label for="email_force"><b>', $txt['admin_news_select_override_notify'], ':</b></label>
+						<div class="smalltext">', $txt['email_force'], '</div>
 					</td>
 					<td width="50%">
 						<input type="checkbox" name="email_force" id="email_force" value="1" class="check" />

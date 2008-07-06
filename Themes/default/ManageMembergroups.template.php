@@ -184,7 +184,7 @@ function template_edit_group()
 				<tr class="windowbg2">
 					<th align="left" id="group_hidden_text"><label for="group_hidden_input">', $txt['membergroups_edit_hidden'], ':</label></th>
 					<td>
-						<select name="group_hidden" id="group_hidden_input" onchange="if (this.value == 2 && !confirm(\'', $txt['membergroups_edit_hidden_warning'], '\')) this.value = 0;">
+						<select name="group_hidden" id="group_hidden_input" onchange="if (this.value == 2 &amp;&amp; !confirm(\'', $txt['membergroups_edit_hidden_warning'], '\')) this.value = 0;">
 							<option value="0" ', $context['group']['hidden'] ? '' : 'selected="selected"', '>', $txt['membergroups_edit_hidden_no'], '</option>
 							<option value="1" ', $context['group']['hidden'] == 1 ? 'selected="selected"' : '', '>', $txt['membergroups_edit_hidden_boardindex'], '</option>
 							<option value="2" ', $context['group']['hidden'] == 2 ? 'selected="selected"' : '', '>', $txt['membergroups_edit_hidden_all'], '</option>
@@ -199,10 +199,8 @@ function template_edit_group()
 		echo '
 				<tr class="windowbg2" valign="top">
 					<th align="left" id="group_inherit_text">
-						<label for="group_inherit_input">
-							', $txt['membergroups_edit_inherit_permissions'], ':
-							<div class="smalltext" style="font-weight: normal;">', $txt['membergroups_edit_inherit_permissions_desc'], '</div>
-						</label>
+						<label for="group_inherit_input">', $txt['membergroups_edit_inherit_permissions'], '</label>:
+						<div class="smalltext" style="font-weight: normal;">', $txt['membergroups_edit_inherit_permissions_desc'], '</div>
 					</th>
 					<td>
 						<select name="group_inherit" id="group_inherit_input">
@@ -438,9 +436,9 @@ function template_group_members()
 					<td align="left">
 						', template_control_autosuggest('toAdd'), '
 						<div id="suggest_template_toAdd" style="visibility: hidden; display: none;">
-							<input type="hidden" name="member_add[]" value="{MEMBER_ID}" />
-							<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_toAdd_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
-							<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+							<input type="hidden" name="member_add[]" value="::MEMBER_ID::" />
+							<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="recipient_link_toAdd_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
+							<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" />
 						</div>
 					</td>
 				</tr><tr class="windowbg2">

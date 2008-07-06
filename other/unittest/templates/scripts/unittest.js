@@ -1,6 +1,9 @@
 function UnitTest(oOptions)
 {
 	this.opt = oOptions;
+	this.aCurTests = [];
+	this.iThreadsOpen = 0;
+	this.iMaxThreads = 4;
 	this.init();
 }
 
@@ -14,15 +17,15 @@ UnitTest.prototype.init = function ()
 UnitTest.prototype.buildTable = function ()
 {
 	var oTargetDiv = document.getElementById(this.opt.sTargetDivId);
-	var sTable = '<a href="#" onclick="' + this.opt.sSelf + '.applyTest(null, null)">[Test all]</a><br /><br />';
+	var sTable = '<a href="#" onclick="return ' + this.opt.sSelf + '.applyTest(null, null);">[Test all]</a><br /><br />';
 
 	for (var i = 0, n = this.opt.aTests.length; i < n; i++)
 	{
-		sTable += '<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor" style="margin-bottom: 10px;"><tr class="titlebg" style="padding-top: 5px;"><td colspan="3">Test "' + this.opt.aTests[i].sId + '" <a href="#" onclick="' + this.opt.sSelf + '.applyTest(\'' + this.opt.aTests[i].sId + '\', null)">[Test group]</a></td></tr><tr class="catbg3"><td>Name</td><td>Action</td><td>Result</td></tr>';
+		sTable += '<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor" style="margin-bottom: 10px;"><tr class="titlebg" style="padding-top: 5px;"><td colspan="3">Test "' + this.opt.aTests[i].sId + '" <a href="#" onclick="return ' + this.opt.sSelf + '.applyTest(\'' + this.opt.aTests[i].sId + '\', null);">[Test group]</a></td></tr><tr class="catbg3"><td>Name</td><td>Action</td><td>Result</td></tr>';
 
 		for (var j = 0, m = this.opt.aTests[i].aSubTests.length; j < m; j++)
 		{
-			sTable += '<tr class="windowbg"><td onmouseover="' + this.opt.sSelf + '.oMouseOver.showDescription(\'' + this.opt.aTests[i].aSubTests[j].sName + '\', \'' + this.opt.aTests[i].aSubTests[j].sDescription.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '<br />') + '\')" onmouseout="' + this.opt.sSelf + '.oMouseOver.hideDescription()">' + this.opt.aTests[i].aSubTests[j].sName + '<div class="error smalltext" id="error_' + this.opt.aTests[i].sId + '-' + this.opt.aTests[i].aSubTests[j].sId + '" style="display: none; width: 50%;"></div></td><td><a href="#" onclick="' + this.opt.sSelf + '.applyTest(\'' + this.opt.aTests[i].sId + '\', \'' + this.opt.aTests[i].aSubTests[j].sId + '\')">[Test me]</a></td><td><div id="img_placeholder_' + this.opt.aTests[i].sId + '-' + this.opt.aTests[i].aSubTests[j].sId + '"></div></td></tr>';
+			sTable += '<tr class="windowbg"><td onmouseover="' + this.opt.sSelf + '.oMouseOver.showDescription(\'' + this.opt.aTests[i].aSubTests[j].sName + '\', \'' + this.opt.aTests[i].aSubTests[j].sDescription.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '<br />') + '\')" onmouseout="' + this.opt.sSelf + '.oMouseOver.hideDescription()">' + this.opt.aTests[i].aSubTests[j].sName + '<div class="error smalltext" id="error_' + this.opt.aTests[i].sId + '-' + this.opt.aTests[i].aSubTests[j].sId + '" style="display: none; width: 90%;"></div></td><td><a href="#" onclick="return ' + this.opt.sSelf + '.applyTest(\'' + this.opt.aTests[i].sId + '\', \'' + this.opt.aTests[i].aSubTests[j].sId + '\');">[Test me]</a></td><td><div id="img_placeholder_' + this.opt.aTests[i].sId + '-' + this.opt.aTests[i].aSubTests[j].sId + '"></div></td></tr>';
 		}
 
 		sTable += '</table>';
@@ -34,6 +37,7 @@ UnitTest.prototype.buildTable = function ()
 
 UnitTest.prototype.applyTest = function (sTestId, sSubTestId)
 {
+	this.aCurTests = [];
 	for (var i = 0, n = this.opt.aTests.length; i < n; i++)
 	{
 		if (sTestId == null || this.opt.aTests[i].sId == sTestId)
@@ -42,19 +46,49 @@ UnitTest.prototype.applyTest = function (sTestId, sSubTestId)
 			{
 				if (sSubTestId == null || sSubTestId == this.opt.aTests[i].aSubTests[j].sId)
 				{
-					var oImage = document.getElementById('img_placeholder_' + this.opt.aTests[i].sId + '-' + this.opt.aTests[i].aSubTests[j].sId);
-					setInnerHTML(oImage, '<img src="' + smf_images_url + '/icons/field_check.gif" alt="" />');
+					this.aCurTests[this.aCurTests.length] = this.opt.aTests[i].sId + '-' + this.opt.aTests[i].aSubTests[j].sId;
 				}
 			}
 		}
 	}
 
-	getXMLDocument(this.opt.sScriptUrl + '?sa=test' + (sTestId == null ? '' : ';test=' + sTestId + (sSubTestId == null ? '' : ';subtest=' + sSubTestId)) + ';xml', this.onTestReady);
+	this.checkTest();
+	setInterval(this.opt.sSelf + '.checkTest();', 1000);
+
+	// Cancle the click.
+	return false;
 }
+
+UnitTest.prototype.checkTest = function()
+{
+	if (this.aCurTests.length > 0 && this.iThreadsOpen < this.iMaxThreads)
+	{
+		for (var i in this.aCurTests)
+		{
+			var aTestParts = this.aCurTests[i].split('-');
+			var oImage = document.getElementById('img_placeholder_' + aTestParts[0] + '-' + aTestParts[1]);
+			setInnerHTML(oImage, '<img src="' + smf_images_url + '/icons/field_check.gif" alt="" />');
+
+			this.tmpMethod = getXMLDocument;
+			this.tmpMethod(this.opt.sScriptUrl + '?sa=test;test=' + aTestParts[0] + ';subtest=' + aTestParts[1] + ';xml', this.onTestReady);
+			delete tmpMethod;
+			//getXMLDocument(this.opt.sScriptUrl + '?sa=test;test=' + aTestParts[0] + ';subtest=' + aTestParts[1] + ';xml', this.onTestReady);
+
+			delete this.aCurTests[i];
+			this.iThreadsOpen++;
+
+			break;
+		}
+	}
+}
+
 
 UnitTest.prototype.onTestReady = function (oXmlDoc)
 {
 	var aResults = oXmlDoc.getElementsByTagName('results')[0].getElementsByTagName('result');
+
+	this.iThreadsOpen--;
+	this.checkTest();
 
 	for (var i = 0, n = aResults.length; i < n; i++)
 	{
@@ -74,7 +108,10 @@ UnitTest.prototype.onTestReady = function (oXmlDoc)
 			setInnerHTML(oImage, '<img src="' + smf_images_url + '/icons/field_invalid.gif" alt="" />');
 
 			oErrorDiv.style.display = 'block';
-			setInnerHTML(oErrorDiv, aResults[i].firstChild.nodeValue.replace(/\n/g, '<br />'));
+			var sError = '';
+			for (var j = 0, m = aResults[i].childNodes.length; j < m; j++)
+				sError += aResults[i].childNodes[j].nodeValue.replace(/\n/g, '<br />')
+			setInnerHTML(oErrorDiv, sError);
 		}
 	}
 }

@@ -873,9 +873,15 @@ function SpiderStats()
 	$date_select = '
 		' . $txt['spider_stats_select_month'] . ':
 		<select name="new_date" onchange="document.spider_stat_list.submit();">';
-	foreach ($date_choices as $id => $text)
+
+	if (empty($date_choices))
 		$date_select .= '
+			<option></option>';
+	else
+		foreach ($date_choices as $id => $text)
+			$date_select .= '
 			<option value="' . $id . '"' . ($current_date == $id ? ' selected="selected"' : '') . '>' . $text . '</option>';
+
 	$date_select .= '
 		</select>
 		<noscript>

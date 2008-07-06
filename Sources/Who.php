@@ -497,6 +497,7 @@ function Credits($in_admin = false)
 {
 	global $context, $modSettings, $forum_copyright, $forum_version, $boardurl, $txt, $user_info;
 
+	// Don't blink. Don't even blink. Blink and you're dead.
 	loadLanguage('Who');
 
 	$context['credits'] = array(

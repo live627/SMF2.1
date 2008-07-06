@@ -52,7 +52,7 @@ function template_main()
 
 			if (!empty($button_set))
 				echo '
-			<div id="readbuttons_bottom" class="readbuttons clearfix marginbottom">
+			<div class="readbuttons clearfix marginbottom">
 				', template_button_strip($button_set, 'top'), '
 			</div>';
 		}
@@ -201,7 +201,7 @@ function template_unread()
 			</table>
 		</td></tr>
 	</table>
-	<div id="readbuttons_bottom" class="readbuttons clearfix marginbottom">
+	<div class="readbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
 		', !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
 	</div>
@@ -334,7 +334,7 @@ function template_replies()
 			</table>
 		</td></tr>
 	</table>
-	<div id="readbuttons_bottom" class="readbuttons clearfix marginbottom">
+	<div class="readbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
 		', !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
 	</div>

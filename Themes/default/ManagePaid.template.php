@@ -80,7 +80,7 @@ function template_modify_subscription()
 	// Put a checkbox in for each group
 	foreach ($context['groups'] as $id => $name)
 		echo '
-						<label for="addgroup_', $id, '"><input type="checkbox" id="addgroup_', $id, '" name="addgroup[', $id, ']" ', in_array($id, $context['sub']['add_groups']) ? 'checked="checked"' : '', ' ', !empty($context['disable_groups']) ? 'disabled="disabled"' : '', ' class="check">&nbsp;<span class="smalltext">', $name, '</span></label><br />';
+						<label for="addgroup_', $id, '"><input type="checkbox" id="addgroup_', $id, '" name="addgroup[', $id, ']"', in_array($id, $context['sub']['add_groups']) ? ' checked="checked"' : '', ' ', !empty($context['disable_groups']) ? ' disabled="disabled"' : '', ' class="check" />&nbsp;<span class="smalltext">', $name, '</span></label><br />';
 
 	echo '
 				</td>
@@ -128,7 +128,7 @@ function template_modify_subscription()
 				</td>
 			</tr><tr class="windowbg">
 				<td colspan="2" align="left">
-					<input type="radio" name="duration_type" id="duration_type_fixed" value="flexible" ', !empty($context['sub']['duration']) && $context['sub']['duration'] == 'flexible' ? 'checked="checked"' : '', ' class="check" onclick="toggleDuration(\'flexible\');" />
+					<input type="radio" name="duration_type" id="duration_type_flexible" value="flexible" ', !empty($context['sub']['duration']) && $context['sub']['duration'] == 'flexible' ? 'checked="checked"' : '', ' class="check" onclick="toggleDuration(\'flexible\');" />
 					<b>', $txt['paid_mod_flexible_price'], '</b>
 				</td>
 			</tr><tr class="windowbg2">
@@ -141,10 +141,11 @@ function template_modify_subscription()
 		echo '
 							<tr class="windowbg2" valign="top">
 								<td width="50%" align="right"><label for="allow_partial_check">', $txt['paid_mod_allow_partial'], '</label>:<br /><span class="smalltext">', $txt['paid_mod_allow_partial_desc'], '</span></td>
-								<td><input type="checkbox" name="allow_partial" id="allow_partial_check"', empty($context['sub']['allow_partial']) ? '' : ' checked="checked"', ' class="check" /></td>';
+								<td><input type="checkbox" name="allow_partial" id="allow_partial_check"', empty($context['sub']['allow_partial']) ? '' : ' checked="checked"', ' class="check" /></td>
+							</tr>';
 
 	echo '
-							</tr><tr class="windowbg2">
+							<tr class="windowbg2">
 								<td colspan="2" width="100%">
 									<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="tborder">
 										<tr class="titlebg">
