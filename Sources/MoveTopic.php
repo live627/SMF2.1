@@ -239,47 +239,54 @@ function MoveTopic2()
 	// Rename the topic...
 	if (isset($_POST['reset_subject'], $_POST['custom_subject']) && $_POST['custom_subject'] != '')
 	{
-		$_POST['custom_subject'] = $smcFunc['htmlspecialchars']($_POST['custom_subject']);
+		$_POST['custom_subject'] = strtr($smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['custom_subject'])), array("\r" => '', "\n" => '', "\t" => ''));
+		// Keep checking the length.
+		if ($smcFunc['strlen']($_POST['custom_subject']) > 100)
+			$_POST['custom_subject'] = $smcFunc['substr']($_POST['custom_subject'], 0, 100);
 
-		if (isset($_POST['enforce_subject']))
+		// If it's still valid move onwards and upwards.
+		if ($_POST['custom_subject'] != '')
 		{
-			// Get a response prefix, but in the forum's default language.
-			if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
+			if (isset($_POST['enforce_subject']))
 			{
-				if ($language === $user_info['language'])
-					$context['response_prefix'] = $txt['response_prefix'];
-				else
+				// Get a response prefix, but in the forum's default language.
+				if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
 				{
-					loadLanguage('index', $language, false);
-					$context['response_prefix'] = $txt['response_prefix'];
-					loadLanguage('index');
+					if ($language === $user_info['language'])
+						$context['response_prefix'] = $txt['response_prefix'];
+					else
+					{
+						loadLanguage('index', $language, false);
+						$context['response_prefix'] = $txt['response_prefix'];
+						loadLanguage('index');
+					}
+					cache_put_data('response_prefix', $context['response_prefix'], 600);
 				}
-				cache_put_data('response_prefix', $context['response_prefix'], 600);
+	
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}messages
+					SET subject = {string:subject}
+					WHERE id_topic = {int:current_topic}',
+					array(
+						'current_topic' => $topic,
+						'subject' => $context['response_prefix'] . $_POST['custom_subject'],
+					)
+				);
 			}
 
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}messages
-				SET subject = {string:subject}
-				WHERE id_topic = {int:current_topic}',
+				SET subject = {string:custom_subject}
+				WHERE id_msg = {int:id_first_msg}',
 				array(
-					'current_topic' => $topic,
-					'subject' => $context['response_prefix'] . $_POST['custom_subject'],
+					'id_first_msg' => $id_first_msg,
+					'custom_subject' => $_POST['custom_subject'],
 				)
 			);
+
+			// Fix the subject cache.
+			updateStats('subject', $topic, $_POST['custom_subject']);
 		}
-
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}messages
-			SET subject = {string:custom_subject}
-			WHERE id_msg = {int:id_first_msg}',
-			array(
-				'id_first_msg' => $id_first_msg,
-				'custom_subject' => $_POST['custom_subject'],
-			)
-		);
-
-		// Fix the subject cache.
-		updateStats('subject', $topic, $_POST['custom_subject']);
 	}
 
 	// Create a link to this in the old board.

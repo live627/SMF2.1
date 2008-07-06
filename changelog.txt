@@ -23,6 +23,7 @@ July 2008
  ! Fixed javascript error when editing poll. (Poll template) [Bug 2306]
  ! db_server_info was failing on SQLite. (Subs-Db-sqlite.php) [Bug 2301]
  & Clarified the meaning of "Default Personal Text". (ManageSettings and Help language files)
+ ! Do a bit more validation on the subject choice when moving, merging and spliting topics. (MoveTopic.php, SplitTopics.php) [Bug 2307]
 
 
 June 2008

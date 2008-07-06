@@ -203,7 +203,7 @@ function SplitExecute()
 {
 	global $txt, $board, $topic, $context, $user_info, $smcFunc, $modSettings;
 
-	// They blanked the subject name.
+	// Clean up the subject.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
 		$_POST['subname'] = $txt['new_topic'];
 
@@ -683,22 +683,29 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		fatal_lang_error('cant_insert_topic');
 
 	// Move the messages over to the other topic.
-	$new_subject = $smcFunc['htmlspecialchars']($new_subject);
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}messages
-		SET
-			id_topic = {int:id_topic},
-			subject = {string:new_subject}
-		WHERE id_msg IN ({array_int:split_msgs})',
-		array(
-			'split_msgs' => $splitMessages,
-			'id_topic' => $split2_ID_TOPIC,
-			'new_subject' => $new_subject,
-		)
-	);
+	$new_subject = strtr($smcFunc['htmltrim']($smcFunc['htmlspecialchars']($new_subject)), array("\r" => '', "\n" => '', "\t" => ''));
+	// Check the subject length.
+	if ($smcFunc['strlen']($new_subject) > 100)
+		$new_subject = $smcFunc['substr']($new_subject, 0, 100);
+	// Valid subject?
+	if ($new_subject != '')
+	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}messages
+			SET
+				id_topic = {int:id_topic},
+				subject = {string:new_subject}
+			WHERE id_msg IN ({array_int:split_msgs})',
+			array(
+				'split_msgs' => $splitMessages,
+				'id_topic' => $split2_ID_TOPIC,
+				'new_subject' => $new_subject,
+			)
+		);
 
-	// Cache the new topics subject... we can do it now as all the subjects are the same!
-	updateStats('subject', $split2_ID_TOPIC, $new_subject);
+		// Cache the new topics subject... we can do it now as all the subjects are the same!
+		updateStats('subject', $split2_ID_TOPIC, $new_subject);
+	}
 
 	// Any associated reported posts better follow...
 	$smcFunc['db_query']('', '
@@ -1163,7 +1170,16 @@ function MergeExecute($topics = array())
 
 	// Determine the subject of the newly merged topic - was a custom subject specified?
 	if (empty($_POST['subject']) && isset($_POST['custom_subject']) && $_POST['custom_subject'] != '')
-		$target_subject = $smcFunc['htmlspecialchars']($_POST['custom_subject']);
+	{
+		$target_subject = strtr($smcFunc['htmltrim']($smcFunc['htmlspecialchars']($_POST['custom_subject'])), array("\r" => '', "\n" => '', "\t" => ''));
+		// Keep checking the length.
+		if ($smcFunc['strlen']($target_subject) > 100)
+			$target_subject = $smcFunc['substr']($target_subject, 0, 100);
+
+		// Nothing left - odd but pick the first topics subject.
+		if ($target_subject == '')
+			$target_subject = $topic_data[$firstTopic]['subject'];
+	}
 	// A subject was selected from the list.
 	elseif (!empty($topic_data[(int) $_POST['subject']]['subject']))
 		$target_subject = $topic_data[(int) $_POST['subject']]['subject'];
