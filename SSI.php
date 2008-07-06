@@ -842,20 +842,24 @@ function ssi_queryMembers($query_where, $query_where_params = array(), $query_li
 		echo '
 		<table border="0" class="ssi_table">';
 
+	$query_members = array();
 	foreach ($members as $member)
 	{
 		// Load their context data.
 		if (!loadMemberContext($member))
 			continue;
 
+		// Store this member's information.
+		$query_members[$member] = $memberContext[$member];
+
 		// Only do something if we're echo'ing.
 		if ($output_method == 'echo')
 			echo '
 			<tr>
 				<td align="right" valign="top" nowrap="nowrap">
-					', $memberContext[$member]['link'], '
-					<br />', $memberContext[$member]['blurb'], '
-					<br />', $memberContext[$member]['avatar']['image'], '
+					', $query_members[$member]['link'], '
+					<br />', $query_members[$member]['blurb'], '
+					<br />', $query_members[$member]['avatar']['image'], '
 				</td>
 			</tr>';
 	}
@@ -865,8 +869,8 @@ function ssi_queryMembers($query_where, $query_where_params = array(), $query_li
 		echo '
 		</table>';
 
-	// Send back the data. Make sure to only return the members we just loaded.
-	return array_intersect_key($memberContext, array_flip($members));
+	// Send back the data.
+	return $query_members;
 }
 
 // Show some basic stats:  Total This: XXXX, etc.
