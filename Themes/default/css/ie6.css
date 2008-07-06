@@ -3,3 +3,8 @@ body
 {
 	font: 90%/100% Verdana, Helvetica, sans-serif;
 }
+* html #poll_options ul.horizlist dl.options dd, * html #poll_options ul.horizlist dl.options dt
+{
+	margin: 0;
+	padding: 0;
+}

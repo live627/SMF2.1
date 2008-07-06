@@ -33,44 +33,45 @@ function template_main()
 		if ($context['poll']['show_results'] || !$context['allow_vote'])
 		{
 			echo '
-		<dl>';
+		<ul class="horizlist clearfix">
+			<li>
+				<dl class="options">';
 
 			// Show each option with its corresponding percentage bar.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-			<dt', $option['voted_this'] ? ' class="voted"' : '', '>', $option['option'], '</dt>
-			<dd>', $context['allow_poll_view'] ? '
-				' . $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '
-			</dd>';
+					<dt', $option['voted_this'] ? ' class="voted"' : '', '>', $option['option'], '</dt>
+					<dd>', $context['allow_poll_view'] ? $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '</dd>';
 
 			echo '
-		</dl>
-		<p>';
+				</dl>
+			</li>
+			<li>';
 
 			// If they are allowed to revote - show them a link!
 			if ($context['allow_change_vote'])
 				echo '
-			<a href="', $scripturl, '?action=vote;topic=', $context['current_topic'], '.', $context['start'], ';poll=', $context['poll']['id'], ';sesc=', $context['session_id'], '">', $txt['poll_change_vote'], '</a><br />';
+				<a href="', $scripturl, '?action=vote;topic=', $context['current_topic'], '.', $context['start'], ';poll=', $context['poll']['id'], ';sesc=', $context['session_id'], '">', $txt['poll_change_vote'], '</a><br />';
 
 			// If we're viewing the results... maybe we want to go back and vote?
 			if ($context['poll']['show_results'] && $context['allow_vote'])
 				echo '
-			<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_return_vote'], '</a><br />';
+				<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_return_vote'], '</a><br />';
 
 			// If they're allowed to lock the poll, show a link!
 			if ($context['poll']['lock'])
 				echo '
-			<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
+				<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
 
 			// If they're allowed to edit the poll... guess what... show a link!
 			if ($context['poll']['edit'])
 				echo '
-			<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
+				<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
 
 			echo '
-
-			', $context['allow_poll_view'] ? '<strong>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</strong>' : '',
-		'</p>';
+			</li>
+		</ul>
+		<p>', $context['allow_poll_view'] ? '<strong>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</strong>' : '',  '</p>';
 		}
 		// They are allowed to vote! Go to it!
 		else
@@ -675,7 +676,7 @@ function template_main()
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
 			sTemplateBodyEdit: \'<div id="quick_edit_body_container"><div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" tabindex="8" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" tabindex="9" onclick="return oQuickModify.modifyCancel();" /></div></div>\',
-			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />\',
+			sTemplateSubjectEdit: \'<input type="text" style="width: 90%; margin: 0 0 1.5em 0;" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />\',
 			sTemplateBodyNormal: \'%body%\',
 			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
 			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')",

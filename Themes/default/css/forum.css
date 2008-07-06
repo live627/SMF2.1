@@ -249,20 +249,18 @@ form#infocenter_login ul.horizlist label
 	margin: 0;
 	padding: 0 0 0 3em;
 }
-#poll_options dl
+#poll_options ul.horizlist dl.options
 {
-	padding: 0;
+	padding: 0 0 0.5em 5em;
 	margin: 0;
+	clear: both;
 }
-#poll_options dt
+#poll_options ul.horizlist dl.options dt
 {
 	float: left;
-	white-space: nowrap;
-	margin: 0 0 0 5em;
 }
-#poll_options dd
+#poll_options ul.horizlist ul.horizlist li
 {
-	margin: 0 0 0 15%;
 }
 #poll_options p
 {
