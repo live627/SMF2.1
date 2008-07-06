@@ -26,15 +26,15 @@ function template_main()
 			function saveEntities()
 			{
 				document.forms.postmodify.question.value = document.forms.postmodify.question.value.replace(/&#/g, "&#38;#");
-				for (i in document.forms.postmodify)
-					if (document.forms.postmodify[i].name.indexOf("options") == 0)
+				for (var i = 0; i < document.forms.postmodify.elements.length; i++)
+					if (document.forms.postmodify.elements[i].id.substr(0, 8) == "options-")
 						document.forms.postmodify[i].value = document.forms.postmodify[i].value.replace(/&#/g, "&#38;#");
 			}
 		// ]]></script>';
 
 	// Start the main poll form.
 	echo '
-		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);saveEntities();" name="postmodify" id="postmodify">
+		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); saveEntities();" name="postmodify" id="postmodify">
 			<table width="75%" align="center" cellpadding="3" cellspacing="0">
 				<tr>
 					<td valign="bottom" colspan="2">', theme_linktree(), '</td>

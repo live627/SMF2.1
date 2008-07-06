@@ -20,6 +20,8 @@ July 2008
  ! Searching for members somtimes would show unapproved members. (Memberlist.php) [Bug 2227]
  ! Removed the package function saveInstalledPackages() as the data it saves to a file is now stored in the database. (Subs-Package.php)
  ! Fixed incorrect locking of cache file for the language cache. (ManageMaintenance.php)
+ ! Fixed javascript error when editing poll. (Poll template) [Bug 2306]
+
 
 June 2008
 --------------------------------------------------------------------------------
