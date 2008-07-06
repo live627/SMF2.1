@@ -625,7 +625,6 @@ function registerMember(&$regOptions, $return_errors = false)
 		'buddy_list' => '',
 		'pm_ignore_list' => '',
 		'message_labels' => '',
-		'personal_text' => '',
 		'website_title' => '',
 		'website_url' => '',
 		'location' => '',
