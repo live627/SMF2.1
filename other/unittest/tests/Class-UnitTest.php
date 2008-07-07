@@ -2,6 +2,8 @@
 
 	abstract class UnitTest
 	{
+		public $isMultiThreadSafe = true;
+		
 		// A function that does initializations needed for any of the tests to start.
 		public function initialize()
 		{

@@ -49,6 +49,7 @@
 			
 			$context['tests'][] = array(
 				'id' => $test['id'],
+				'isMultiThreadSafe' => $test['isMultiThreadSafe'],
 				'sub_tests' => $context_subTests,
 			);
 			
@@ -167,6 +168,7 @@
 			// Add this test to the list, including its sub tests.
 			$tests[] = array(
 				'id' => substr($className, 9),
+				'isMultiThreadSafe' => $classInstance->isMultiThreadSafe,
 				'sub_tests' => $classInstance->getTests(),
 			);
 		}

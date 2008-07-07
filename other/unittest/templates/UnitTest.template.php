@@ -20,6 +20,7 @@ function template_ut_index()
 		echo '
 				{
 					sId: \'', $test['id'], '\',
+					bIsMultiThreadSafe: ', $test['isMultiThreadSafe'] ? 'true' : 'false', ',
 					aSubTests: [';
 		foreach ($test['sub_tests'] as $subTest)
 			echo '

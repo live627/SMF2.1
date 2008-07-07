@@ -4,6 +4,7 @@ function UnitTest(oOptions)
 	this.aCurTests = [];
 	this.iThreadsOpen = 0;
 	this.iMaxThreads = 4;
+	this.aMultiThreadedTests = []
 	this.init();
 }
 
@@ -21,6 +22,9 @@ UnitTest.prototype.buildTable = function ()
 
 	for (var i = 0, n = this.opt.aTests.length; i < n; i++)
 	{
+		if (this.opt.aTests[i].bIsMultiThreadSafe)
+			this.aMultiThreadedTests[this.aMultiThreadedTests.length] = this.opt.aTests[i].sId;
+
 		sTable += '<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor" style="margin-bottom: 10px;"><tr class="titlebg" style="padding-top: 5px;"><td colspan="3">Test "' + this.opt.aTests[i].sId + '" <a href="#" onclick="return ' + this.opt.sSelf + '.applyTest(\'' + this.opt.aTests[i].sId + '\', null);">[Test group]</a></td></tr><tr class="catbg3"><td>Name</td><td>Action</td><td>Result</td></tr>';
 
 		for (var j = 0, m = this.opt.aTests[i].aSubTests.length; j < m; j++)
@@ -66,18 +70,21 @@ UnitTest.prototype.checkTest = function()
 		for (var i in this.aCurTests)
 		{
 			var aTestParts = this.aCurTests[i].split('-');
-			var oImage = document.getElementById('img_placeholder_' + aTestParts[0] + '-' + aTestParts[1]);
-			setInnerHTML(oImage, '<img src="' + smf_images_url + '/icons/field_check.gif" alt="" />');
 
-			this.tmpMethod = getXMLDocument;
-			this.tmpMethod(this.opt.sScriptUrl + '?sa=test;test=' + aTestParts[0] + ';subtest=' + aTestParts[1] + ';xml', this.onTestReady);
-			delete tmpMethod;
-			//getXMLDocument(this.opt.sScriptUrl + '?sa=test;test=' + aTestParts[0] + ';subtest=' + aTestParts[1] + ';xml', this.onTestReady);
+			if (this.iThreadsOpen == 0 || in_array(aTestParts[0], this.aMultiThreadedTests))
+			{
+				var oImage = document.getElementById('img_placeholder_' + aTestParts[0] + '-' + aTestParts[1]);
+				setInnerHTML(oImage, '<img src="' + smf_images_url + '/icons/field_check.gif" alt="" />');
 
-			delete this.aCurTests[i];
-			this.iThreadsOpen++;
+				this.tmpMethod = getXMLDocument;
+				this.tmpMethod(this.opt.sScriptUrl + '?sa=test;test=' + aTestParts[0] + ';subtest=' + aTestParts[1] + ';xml', this.onTestReady);
+				delete tmpMethod;
 
-			break;
+				delete this.aCurTests[i];
+				this.iThreadsOpen++;
+
+				break;
+			}
 		}
 	}
 }
