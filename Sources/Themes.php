@@ -1351,7 +1351,7 @@ function ThemeInstall()
 		$request = $smcFunc['db_query']('', '
 			SELECT variable, value
 			FROM {db_prefix}themes
-			WHERE variable IN ({string:theme_templates}, {string:theme_layers}, {string:based_on})
+			WHERE variable IN ({string:theme_templates}, {string:theme_layers})
 				AND id_member = {int:no_member}
 				AND id_theme = {int:default_theme}',
 			array(
@@ -1359,7 +1359,6 @@ function ThemeInstall()
 				'default_theme' => 1,
 				'theme_templates' => 'theme_templates',
 				'theme_layers' => 'theme_layers',
-				'based_on' => 'based_on',
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -1368,8 +1367,6 @@ function ThemeInstall()
 				$theme_templates = $row['value'];
 			elseif ($row['variable'] == 'theme_layers')
 				$theme_layers = $row['value'];
-			elseif ($row['variable'] == 'based_on')
-				$based_on = $row['value'];
 			else
 				continue;
 		}
@@ -1392,7 +1389,7 @@ function ThemeInstall()
 	<!-- Templates to load on startup. Default is "index". -->
 	<templates>' . (empty($theme_templates) ? 'index' : $theme_templates) . '</templates>
 	<!-- Base this theme off another? Default is blank, or no. It could be "default". -->
-	<based-on>' . (empty($based_on) ? 'default' : $based_on) . '</based-on>
+	<based-on></based-on>
 </theme-info>';
 
 		// Now write it.
