@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "PHPKit 1.6.4 "
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/Pkinc/Rep/Sites/Include/Data/Sql.php"
 ---~ from_prefix:  "`" . pkSQLDATABASE. "`. ". pkSQLPREFIX. "_"
 ---~ table_test: "{$from_prefix}user"

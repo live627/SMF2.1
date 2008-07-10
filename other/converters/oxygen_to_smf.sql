@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Oxygen 1.1"
 /******************************************************************************/
----~ version: "SMF 2.0 Beta 4"
+---~ version: "SMF 2.0"
 ---~ settings: "/include/config.php"
 ---~ from_prefix: "`$dbname`.$tablepre"
 ---~ table_test: "{$from_prefix}members"

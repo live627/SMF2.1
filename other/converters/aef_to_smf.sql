@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "AEF 1.0.x"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/universal.php", "/dbtables.php"
 ---~ globals: $dbtables
 ---~ defines: AEF
@@ -185,6 +185,9 @@ FROM {$from_prefix}{$dbtables['pm']};
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
+---{
+$ignore = true;
+---}
 /* Assume all notifications are sent or we might get mass mailings. */
 SELECT
 	notify_mid AS id_member, notify_tid AS id_topic, 1 AS sent
@@ -196,6 +199,9 @@ FROM {$from_prefix}{$dbtables['notify_topic']};
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
+---{
+$ignore = true;
+---}
 /* Assume all notifications are sent or we might get mass mailings. */
 SELECT
 	notify_mid AS id_member, notify_fid AS id_topic, 1 AS sent

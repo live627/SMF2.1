@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Invision Power Board 2"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/conf_global.php"
 ---~ globals: INFO
 ---~ from_prefix: "`$INFO[sql_database]`.$INFO[sql_tbl_prefix]"
@@ -526,47 +526,53 @@ while ($row = convert_fetch_assoc($result))
 }
 convert_free_result($result);
 
-function magicMask(&$group)
+if (!function_exists('magicMask'))
 {
-	/*
-	Right... don't laugh... here we explode the string to an array. Then we replace each group
-	with the groups that use this mask. Then we remove duplicates and then we implode it again
-	*/
-
-	global $groupMask;
-
-	if ($group != '*')
+	function magicMask(&$group)
 	{
-		$groupArray = explode(',', $group);
+		/*
+		Right... don't laugh... here we explode the string to an array. Then we replace each group
+		with the groups that use this mask. Then we remove duplicates and then we implode it again
+		*/
 
-		$newGroups = array();
-		foreach ($groupMask as $id => $perms)
+		global $groupMask;
+
+		if ($group != '*')
 		{
-			$perm = explode(',', $perms);
-			foreach ($perm as $realPerm)
-				if (in_array($realPerm, $groupArray) && !in_array($id, $newGroups))
-					$newGroups[] = $id;
-		}
+			$groupArray = explode(',', $group);
 
-		$group = implode(',', $newGroups);
+			$newGroups = array();
+			foreach ($groupMask as $id => $perms)
+			{
+				$perm = explode(',', $perms);
+				foreach ($perm as $realPerm)
+					if (in_array($realPerm, $groupArray) && !in_array($id, $newGroups))
+						$newGroups[] = $id;
+			}
+
+			$group = implode(',', $newGroups);
+		}
 	}
 }
 
-function smfGroup(&$group)
+if (!function_exists('smfGroup'))
 {
-	foreach ($group as $key => $value)
+	function smfGroup(&$group)
 	{
-		// Admin doesn't need to have his permissions done.
-		if ($value == 4)
-			unset($group[$key]);
-		elseif ($value == 2)
-			$group[$key] = -1;
-		elseif ($value == 3)
-			$group[$key] = 0;
-		elseif ($value > 5)
-			$group[$key] = $value + 3;
-		else
-			unset($group[$key]);
+		foreach ($group as $key => $value)
+		{
+			// Admin doesn't need to have his permissions done.
+			if ($value == 4)
+				unset($group[$key]);
+			elseif ($value == 2)
+				$group[$key] = -1;
+			elseif ($value == 3)
+				$group[$key] = 0;
+			elseif ($value > 5)
+				$group[$key] = $value + 3;
+			else
+				unset($group[$key]);
+		}
 	}
 }
 

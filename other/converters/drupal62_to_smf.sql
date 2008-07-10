@@ -1,6 +1,6 @@
 ---~ name: "Drupal 6.2 "
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/drupal_migration.php"
 ---~ from_prefix: "`" . $drupal_database . "`.$drupal_prefix"
 ---~ table_test: "{$from_prefix}users"

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Snitz Forums"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ parameters: snitz_database text=MySQL database used by Snitz
 ---~ from_prefix: "`$snitz_database`."
 ---~ table_test: "{$from_prefix}FORUM_MEMBERS"

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Quick Silver Forum 1.2.1"
 /******************************************************************************/
----~ version: "SMF 1.1 RC3"
+---~ version: "SMF 2.0"
 ---~ settings: "/settings.php"
 ---~ from_prefix: "`$set[db_name]`.$set[prefix]"
 ---~ table_test: "{$from_prefix}users"

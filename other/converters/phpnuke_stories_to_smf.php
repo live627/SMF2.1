@@ -2,7 +2,7 @@
 
 $convert_data = array(
 	'name' => 'PHP Nuke Stories 7.9',
-	'version' => 'SMF 1.1',
+	'version' => 'SMF 2.0',
 	'settings' => array("/config.php", "/includes/constants.php"),
 	'defines' => array('IN_PHPBB'),
 	'parameters' => array(

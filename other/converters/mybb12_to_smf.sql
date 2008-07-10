@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MyBulletinBoard 1.2"
 /******************************************************************************/
----~ version: "SMF 1.1"
+---~ version: "SMF 2.0"
 ---~ settings: "/inc/config.php"
 ---~ globals: config
 ---~ from_prefix: "`{$config['database']}`.{$config['table_prefix']}"
@@ -161,6 +161,9 @@ FROM {$from_prefix}polls;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
+---{
+$ignore = true;
+---}
 SELECT pid AS id_poll, uid AS id_member, voteoption AS id_choice
 FROM {$from_prefix}pollvotes;
 ---*
