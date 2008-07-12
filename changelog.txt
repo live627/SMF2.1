@@ -29,6 +29,7 @@ July 2008
  * Fixed HTML layout to comply with SGML/tidy standards. (several files)
  ! The default personal text setting was not working correctly. (Subs-Members.php) [Bug 2302]
  ! The theme URLs were being set incorrectly when making a copy of the default theme. (Themes.php) [Bug 2312]
+ ! Lowered the number of pages shown when clicking the '...' in the pagination to 50. (script.js) [Feature 1304]
 
 
 June 2008

@@ -681,16 +681,17 @@ function hashAdminPassword(doForm, username, cur_session_id)
 function expandPages(spanNode, baseURL, firstPage, lastPage, perPage)
 {
 	var replacement = '', i, oldLastPage = 0;
+	var perPageLimit = 50;
 
 	// The dots were bold, the page numbers are not (in most cases).
 	spanNode.style.fontWeight = 'normal';
 	spanNode.onclick = '';
 
 	// Prevent too many pages to be loaded at once.
-	if ((lastPage - firstPage) / perPage > 100)
+	if ((lastPage - firstPage) / perPage > perPageLimit)
 	{
 		oldLastPage = lastPage;
-		lastPage = firstPage + 100 * perPage;
+		lastPage = firstPage + perPageLimit * perPage;
 	}
 
 	// Calculate the new pages.
