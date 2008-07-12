@@ -468,7 +468,7 @@ function dumpTags($data, $i, $tag = null, $xml_format = '')
 	foreach ($data as $key => $val)
 	{
 		// Skip it, it's been set to null.
-		if ($val == null)
+		if ($val === null)
 			continue;
 
 		// If a tag was passed, use it instead of the key.
