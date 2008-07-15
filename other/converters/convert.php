@@ -83,7 +83,7 @@ function initialize_inputs()
 
 	// Add slashes, as long as they aren't already being added.
 	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0)
-		$_POST = stripslashes_recursive($_POST);
+		$_POST = convert_stripslashes_recursive($_POST);
 
 	// This is really quite simple; if ?delete is on the URL, delete the converter...
 	if (isset($_GET['delete']))
@@ -264,6 +264,15 @@ function loadSettings()
 		require_once($sourcedir . '/Security.php');
 	}
 
+	// Currently SQLite and PostgreSQL do not have support for cross database work.
+	if (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')) && $command_line)
+		return print_error('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.', true);
+	elseif (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')))
+	{
+		show_header();
+		return doStep0('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.');
+	}
+
 	$found = empty($convert_data['settings']);
 	foreach ($convert_data['settings'] as $file)
 		$found |= file_exists($_POST['path_from'] . $file);
@@ -406,10 +415,11 @@ function loadSettings()
 	}
 
 	if (isset($convert_data['from_prefix']))
-		$from_prefix = eval('return "' . $convert_data['from_prefix'] . '";');
+		$from_prefix = eval('return "' . FixDbPrefix($convert_data['from_prefix'], $smcFunc['db_title']) . '";');
 
 	if (preg_match('~^`[^`]+`.\d~', $from_prefix) != 0)
 		$from_prefix = strtr($from_prefix, array('`' => ''));
+
 
 	if ($_REQUEST['start'] == 0 && empty($_GET['substep']) && empty($_GET['cstep']) && ($_GET['step'] == 1 || $_GET['step'] == 2) && isset($convert_data['table_test']))
 	{
@@ -543,6 +553,123 @@ function find_convert_scripts()
 	return true;
 }
 
+// Looks at the converter and returns the steps that it's able to make.
+function findSteps()
+{
+	global $current_type;
+
+	// For now just SQL file support.
+	if (substr($_SESSION['convert_script'], -4) == '.php' || empty($_SESSION['convert_script']))
+		return;
+
+	// Load the file.
+	$lines = file(dirname(__FILE__) . '/' . $_SESSION['convert_script']);
+
+	// Need an outside counter for the steps.
+	$count_steps = 1;
+	$steps = array();
+	foreach ($lines as $line_number => $line)
+	{
+		// Get rid of any comments in the beginning of the line...
+		if (substr(trim($line), 0, 2) === '/*')
+			$line = preg_replace('~/\*.+?\*/~', '', $line);
+
+		if (trim($line) === '')
+			continue;
+
+		// We found the treasure :P.
+		if (substr($line, 0, 4) === '--- ')
+		{
+			$steps[$count_steps] = array(
+				'name' => trim(substr(htmlspecialchars($line), 4)),
+				'cur_step_line' => $line_number,
+				'prev_step_line' => 0,
+				'next_step_line' => 0,
+				'count' => $count_steps,
+			);
+
+			// Previous step line number.
+			if (isset($steps[$count_steps - 1]))
+			{
+				$steps[$count_steps]['prev_step_line'] = $steps[$count_steps - 1]['cur_step_line'];
+				$steps[$count_steps - 1]['next_step_line'] = $line_number;
+			}
+			$count_steps++;
+		}
+		else
+			continue;
+	}
+
+	return $steps;
+}
+
+function findSupportedCharsets()
+{
+	global $smcFunc;
+
+	// Just assume these.
+	if ($smcFunc['db_title'] == 'SQLite')
+		return $charsets = array(
+			'ISO-8859-1' => 'latin1',
+			'UTF-8' => 'utf8',
+		);
+
+	// The character sets used in SMF's language files with their db equivalent.
+	$charsets = array(
+		// Chinese-traditional.
+		'big5' => 'big5',
+		// Chinese-simplified.
+		'gbk' => 'gbk',
+		// West European.
+		'ISO-8859-1' => 'latin1',
+		// Romanian.
+		'ISO-8859-2' => 'latin2',
+		// Turkish.
+		'ISO-8859-9' => 'latin5',
+		// West European with Euro sign.
+		'ISO-8859-15' => 'latin9',
+		// Thai.
+		'tis-620' => 'tis620',
+		// Persian, Chinese, etc.
+		'UTF-8' => 'utf8',
+		// Russian.
+		'windows-1251' => 'cp1251',
+		// Greek.
+		'windows-1253' => 'utf8',
+		// Hebrew.
+		'windows-1255' => 'utf8',
+		// Arabic.
+		'windows-1256' => 'cp1256',
+	);
+
+	// Get a list of character sets supported by your Database server.
+	$result = @$smcFunc['db_query']('', "
+		SHOW CHARACTER SET", 'security_override');
+	$db_charsets = array();
+	while ($row = $smcFunc['db_fetch_assoc']($result))
+		$db_charsets[] = $row['Charset'];
+
+	// Character sets supported by both Database and SMF's language files.
+	return $charsets = array_intersect($charsets, $db_charsets);
+}
+
+// Correct the prefix
+function FixDbPrefix($prefix, $db_type)
+{
+	if ($db_type == 'MySQL')
+		return $prefix;
+	elseif ($db_type == 'PostgreSQL')
+	{
+		$temp = explode('.', $prefix);
+		return str_replace('`', '', $temp[0] . '.public.' . $temp[1]);
+	}
+	elseif ($db_type == 'SQLite')
+		return str_replace(array('`', '.'), '', $prefix);
+	else
+		die('Unknown Database: ' . $db_type);
+}
+
+// Main Window
 function doStep0($error_message = null)
 {
 	global $convert_data;
@@ -719,99 +846,7 @@ function doStep0($error_message = null)
 	return;
 }
 
-// Looks at the converter and returns the steps that it's able to make.
-function findSteps()
-{
-	global $current_type;
-
-	// For now just SQL file support.
-	if (substr($_SESSION['convert_script'], -4) == '.php' || empty($_SESSION['convert_script']))
-		return;
-
-	// Load the file.
-	$lines = file(dirname(__FILE__) . '/' . $_SESSION['convert_script']);
-
-	// Need an outside counter for the steps.
-	$count_steps = 1;
-	$steps = array();
-	foreach ($lines as $line_number => $line)
-	{
-		// Get rid of any comments in the beginning of the line...
-		if (substr(trim($line), 0, 2) === '/*')
-			$line = preg_replace('~/\*.+?\*/~', '', $line);
-
-		if (trim($line) === '')
-			continue;
-
-		// We found the treasure :P.
-		if (substr($line, 0, 4) === '--- ')
-		{
-			$steps[$count_steps] = array(
-				'name' => trim(substr(htmlspecialchars($line), 4)),
-				'cur_step_line' => $line_number,
-				'prev_step_line' => 0,
-				'next_step_line' => 0,
-				'count' => $count_steps,
-			);
-
-			// Previous step line number.
-			if (isset($steps[$count_steps - 1]))
-			{
-				$steps[$count_steps]['prev_step_line'] = $steps[$count_steps - 1]['cur_step_line'];
-				$steps[$count_steps - 1]['next_step_line'] = $line_number;
-			}
-			$count_steps++;
-		}
-		else
-			continue;
-	}
-
-	return $steps;
-}
-
-function findSupportedCharsets()
-{
-	global $smcFunc;
-
-	// The character sets used in SMF's language files with their db equivalent.
-	$charsets = array(
-		// Chinese-traditional.
-		'big5' => 'big5',
-		// Chinese-simplified.
-		'gbk' => 'gbk',
-		// West European.
-		'ISO-8859-1' => 'latin1',
-		// Romanian.
-		'ISO-8859-2' => 'latin2',
-		// Turkish.
-		'ISO-8859-9' => 'latin5',
-		// West European with Euro sign.
-		'ISO-8859-15' => 'latin9',
-		// Thai.
-		'tis-620' => 'tis620',
-		// Persian, Chinese, etc.
-		'UTF-8' => 'utf8',
-		// Russian.
-		'windows-1251' => 'cp1251',
-		// Greek.
-		'windows-1253' => 'utf8',
-		// Hebrew.
-		'windows-1255' => 'utf8',
-		// Arabic.
-		'windows-1256' => 'cp1256',
-	);
-
-	// Get a list of character sets supported by your Database server.
-	$result = @$smcFunc['db_query']('', "
-		SHOW CHARACTER SET", 'security_override');
-	$db_charsets = array();
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-		$db_charsets[] = $row['Charset'];
-
-	// Character sets supported by both Database and SMF's language files.
-	return $charsets = array_intersect($charsets, $db_charsets);
-}
-
+// Do the main step.
 function doStep1()
 {
 	global $from_prefix, $to_prefix, $convert_data, $command_line, $smcFunc;
@@ -1138,7 +1173,7 @@ function doStep1()
 						$type = 'ignore';
 
 					// Simple, if its not set or if its not in that array, force default.
-					if (empty($type) || !in_array($type, array('ignore', 'replace', 'insert', 'insert ignore'))
+					if (empty($type) || !in_array($type, array('ignore', 'replace', 'insert', 'insert ignore')))
 						$type = 'insert';
 
 					// Finally, insert the data. true in this ignores the prefix.
@@ -2184,23 +2219,20 @@ function addslashes_recursive($var)
 	}
 }
 
-if (!function_exists('stripslashes_recursive'))
+// Remove slashes recursively...
+function convert_stripslashes_recursive($var, $level = 0)
 {
-	// Remove slashes recursively...
-	function stripslashes_recursive($var, $level = 0)
-	{
-		if (!is_array($var))
-			return stripslashes($var);
+	if (!is_array($var))
+		return stripslashes($var);
 
-		// Reindex the array without slashes, this time.
-		$new_var = array();
+	// Reindex the array without slashes, this time.
+	$new_var = array();
 
-		// Strip the slashes from every element.
-		foreach ($var as $k => $v)
-			$new_var[stripslashes($k)] = $level > 25 ? null : stripslashes_recursive($v, $level + 1);
+	// Strip the slashes from every element.
+	foreach ($var as $k => $v)
+		$new_var[stripslashes($k)] = $level > 25 ? null : convert_stripslashes_recursive($v, $level + 1);
 
-		return $new_var;
-	}
+	return $new_var;
 }
 
 if (!function_exists('updateSettingsFile'))
@@ -2364,13 +2396,25 @@ function convert_query($string, $return_error = false)
 			$not_smf_dbs = true;
 		}
 		else
-			$result = @$smcFunc['db_query']('', $string, 'overide_security');
+			$result = $smcFunc['db_query']('', $string,
+				array(
+					'overide_security' => true,
+					'db_error_skip' => true,
+			));
 	}
 	else
-		$result = $smcFunc['db_query']('', $string, 'overide_security');
+		$result = $smcFunc['db_query']('', $string,
+			array(
+				'overide_security' => true,
+				'db_error_skip' => true,
+			)
+		);
+
+echo '<pre>', print_r($result, true), '</pre><hr />';
 
 	if ($result !== false || $return_error)
 		return $result;
+
 
 	if (empty($not_smf_dbs))
 	{
@@ -2411,7 +2455,7 @@ function convert_query($string, $return_error = false)
 				$smcFunc['db_query']('', "SET @@SQL_BIG_SELECTS = 1", 'security_override');
 
 			// Lets set MAX_JOIN_SIZE to something we should
-			if (empty($sql_max_join) || ($sql_max_join = '18446744073709551615' && sql_max_join = '18446744073709551615'))
+			if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615'))
 				$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
 
 			// Try again.
@@ -2471,10 +2515,10 @@ function convert_insert($table, $columns, $block, $type = 'insert', $no_prefix =
 		$type = 'ignore';
 	
 	// Unless I say, we are using a prefix.
-	if (empty($no_prefix)
+	if (empty($no_prefix))
 		$table = '{db_prefix}' . $table;
 
-	return $smcFUnc['db_insert']($type, $table, $columns, $block, array());
+	return $smcFunc['db_insert']($type, $table, $columns, $block, array());
 }
 
 // Provide a easy way to give our converters an insert id.
@@ -2494,7 +2538,7 @@ function convert_affected_rows()
 }
 
 // Provide a way to do results with offsets
-fucntion convert_result($request, $offset = 0, $field_name = '')
+function convert_result($request, $offset = 0, $field_name = '')
 {
 	global $smcFunc;
 
@@ -2658,11 +2702,10 @@ function alterDatabase($table, $type, $parms, $no_prefix = false)
 		{
 			$count = count($parms);
 			$i = 0;
-			for ($i < $count)
+			for ($i = 0; $i < $count; $i++)
 			{
 				if ($parms{$i} == '_')
 					break;
-				++$i;
 			}
 			$new_string = strtoupper($parms{($i + 1)});
 			$parms = substr($new_string, 0, $i) . substr($new_string, $i + 1);
