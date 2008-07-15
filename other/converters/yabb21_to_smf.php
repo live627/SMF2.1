@@ -1049,7 +1049,8 @@ if (empty($preparsing))
 			while ($row = mysql_fetch_assoc($result))
 				convert_query("
 					DELETE {$to_prefix}log_topics
-					SET id_topic = $row[id_topic]");
+					SET id_topic = $row[id_topic]
+					LIMIT 1");
 			mysql_free_result($result);
 
 			pastTime(-3);
@@ -1925,14 +1926,31 @@ if (empty($preparsing))
 		// Remove the temp column from the table and put the primary key back.
 		if ($_GET['substep'] >= -1)
 		{
+			$result = convert_query("
+				SELECT ID_POLL
+				FROM {$to_prefix}poll_choices
+				GROUP BY ID_POLL
+				HAVING COUNT(ID_CHOICE) > 1");
+
+			while ($row = mysql_fetch_assoc($result))
+				convert_query("
+					DELETE {$to_prefix}poll_choices
+					SET ID_POLL = $row[ID_POLL]
+					LIMIT 1");
+			mysql_free_result($result);
+
+			pastTime(-2);
+		}
+		if ($_GET['substep'] >= -2)
+		{
 			alterDatabase('poll_choices', 'add index', array(
 				'type' => 'primary'
 				'columns' => array('id_poll', 'id_choice'),
 			));
 
-			pastTime(-2);
+			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] >= -3)
 		{
 			alterDatabase('messages', 'add index', array(
 				'type' => 'unique',
@@ -1940,15 +1958,15 @@ if (empty($preparsing))
 				'columns' => array('id_poll', 'id_topic'),
 			));
 
-			pastTime(-3);
-		}
-		if ($_GET['substep'] >= -3)
-		{
-			alterDatabase('topics', 'remove column', 'temp_id');
-
 			pastTime(-4);
 		}
 		if ($_GET['substep'] >= -4)
+		{
+			alterDatabase('topics', 'remove column', 'temp_id');
+
+			pastTime(-5);
+		}
+		if ($_GET['substep'] >= -5)
 			alterDatabase('polls', 'remove column', 'temp_id');
 	}
 
