@@ -31,6 +31,8 @@ July 2008
  ! The theme URLs were being set incorrectly when making a copy of the default theme. (Themes.php) [Bug 2312]
  ! Lowered the number of pages shown when clicking the '...' in the pagination to 50. (script.js) [Feature 1304]
  ! Since PHP tends to be a bit more lenient with comparisons, make sure to do a type check for 'null' in dumpTags(). (News.php) [Bug 2321]
+ ! Users deleting themselves wern't being logged properly. (Subs-Members.php) [Bug 2316]
+ ! If we haven't loaded a theme, we can't do a proper fatal_lang_error, so die gracefully. (Errors.php)
 
 
 June 2008

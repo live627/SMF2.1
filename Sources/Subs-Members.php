@@ -173,15 +173,19 @@ function deleteMembers($users, $check_not_admin = false)
 		// Add it to both the moderation and admin logs as it effects both.
 		$log_inserts[] = array(
 			time(), 3, $user_info['id'], $user_info['ip'], 'delete_member',
-			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1])),
+			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1], 'member_acted' => $user_info['name'])),
 		);
 		$log_inserts[] = array(
 			time(), 1, $user_info['id'], $user_info['ip'], 'delete_member',
-			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1])),
+			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1], 'member_acted' => $user_info['name'])),
 		);
+
+		// Remove any cached data if enabled.
+		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
+			cache_put_data('user_settings-' . $user[0], null, 60);
 	}
 
-	// Do the actual logging.
+	// Do the actual logging...
 	if (!empty($log_inserts) && !empty($modSettings['modlog_enabled']))
 		$smcFunc['db_insert']('',
 			'{db_prefix}log_actions',

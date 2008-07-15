@@ -1147,6 +1147,20 @@ function loadEssentialThemeData()
 	}
 	$smcFunc['db_free_result']($result);
 
+	// Check we have some directories setup.
+	if (empty($settings['template_dirs']))
+	{
+		$settings['template_dirs'] = array($settings['theme_dir']);
+
+		// Based on theme (if there is one).
+		if (!empty($settings['base_theme_dir']))
+			$settings['template_dirs'][] = $settings['base_theme_dir'];
+
+		// Lastly the default theme.
+		if ($settings['theme_dir'] != $settings['default_theme_dir'])
+			$settings['template_dirs'][] = $settings['default_theme_dir'];
+	}
+
 	// Assume we want this.
 	$context['forum_name'] = $mbname;
 

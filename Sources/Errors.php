@@ -172,6 +172,10 @@ function fatal_lang_error($error, $log = 'general', $sprintf = array())
 {
 	global $txt, $language, $modSettings, $user_info;
 
+	// If we have no theme stuff we can't have the lanuage file...
+	if (empty($settings))
+		die($error);
+
 	$reload_lang_file = true;
 	// Log the error in the forum's language, but don't waste the time if we aren't logging
 	if ($log || (!empty($modSettings['enableErrorLogging']) && $modSettings['enableErrorLogging'] == 2))
