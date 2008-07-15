@@ -264,15 +264,6 @@ function loadSettings()
 		require_once($sourcedir . '/Security.php');
 	}
 
-	// Currently SQLite and PostgreSQL do not have support for cross database work.
-	if (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')) && $command_line)
-		return print_error('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.', true);
-	elseif (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')))
-	{
-		show_header();
-		return doStep0('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.');
-	}
-
 	$found = empty($convert_data['settings']);
 	foreach ($convert_data['settings'] as $file)
 		$found |= file_exists($_POST['path_from'] . $file);
@@ -391,6 +382,15 @@ function loadSettings()
 
 	// Create a connection to the SMF database.
 	loadDatabase();
+
+	// Currently SQLite and PostgreSQL do not have support for cross database work.
+	if (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')) && $command_line)
+		return print_error('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.', true);
+	elseif (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')))
+	{
+		show_header();
+		return doStep0('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.');
+	}
 
 	// UTF8
 	$charset = findSupportedCharsets();
