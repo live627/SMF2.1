@@ -31,7 +31,6 @@ if (!function_exists('convert_query'))
 	exit;
 }
 
-
 if (empty($preparsing))
 {
 	// Memory, please!!
@@ -66,10 +65,7 @@ if (empty($preparsing))
 			FROM {$to_prefix}settings
 			WHERE variable = 'convert_{$var_name}'");
 
-		convert_query("
-			REPLACE INTO {$to_prefix}convert_settings
-				(variable, value)
-			VALUES ('convert_{$var_name}', '{$insert_value}')");
+		convert_insert('settings', array('variable', 'value'), array('convert_' . $var_name, $insert_value), 'replace');
 	}
 
 	function fetchConverterSettings($var_name)
@@ -78,7 +74,7 @@ if (empty($preparsing))
 
 		$request = convert_query("
 			SELECT value
-			FROM {$to_prefix}convert_settings
+			FROM {$to_prefix}settings
 			WHERE variable = 'convert_{$var_name}'");
 
 		if (convert_num_rows($request) < 1)
@@ -93,10 +89,7 @@ if (empty($preparsing))
 		global $to_prefix, $sets;
 		echo 'Creating the new category...';
 
-		convert_query("
-			INSERT IGNORE INTO {$to_prefix}categories
-				(catOrder, name, canCollapse)
-			VALUES ('100', 'PHP-Nuke Stories' , '1')");
+		convert_insert('categories', array('cat_order', 'name', 'can_collapse'), array('100', 'PHP-Nuke Stories' , '1'), 'insert');
 		$sets['cat_id'] = convert_insert_id();
 
 		saveConverterSettings('cat_id', $sets['cat_id']);
@@ -115,7 +108,7 @@ if (empty($preparsing))
 		{
 			// Get the current max ids.
 			$result = convert_query("
-				SELECT MAX(ID_MSG)
+				SELECT MAX(id_msg)
 				FROM {$to_prefix}messages");
 			list($sets['max_id_msg']) = convert_fetch_row($result);
 			saveConverterSettings('max_id_msg', $sets['max_id_msg']);
@@ -125,7 +118,7 @@ if (empty($preparsing))
 		{
 			// Get the current max ids.
 			$result = convert_query("
-				SELECT MAX(ID_TOPIC)
+				SELECT MAX(id_topic)
 				FROM {$to_prefix}topics");
 			list($sets['max_id_topic']) = convert_fetch_row($result);
 			saveConverterSettings('max_id_topic', $sets['max_id_topic']);
@@ -135,7 +128,7 @@ if (empty($preparsing))
 		{
 			// Get the current max ids.
 			$result = convert_query("
-				SELECT MAX(ID_BOARD)
+				SELECT MAX(id_board)
 				FROM {$to_prefix}boards");
 			list($sets['max_id_board']) = convert_fetch_row($result);
 			saveConverterSettings('max_id_board', $sets['max_id_board']);
@@ -152,11 +145,9 @@ if (empty($preparsing))
 
 		if (empty($sets['board_default_id']))
 		{
-			convert_query("
-				INSERT IGNORE INTO {$to_prefix}boards
-					(ID_CAT, boardOrder, name, description)
-				VALUES ({$sets['cat_id']}, '0', 'General Stories' , '')");
+			convert_insert('boards', array('id_cat', 'board_order', 'name', 'description'), array($sets['cat_id'], '0', 'General Stories' , ''), 'insert');
 			$sets['board_default_id'] = convert_insert_id();
+
 			saveConverterSettings('board_default_id', $sets['board_default_id']);
 		}
 	}
@@ -175,15 +166,13 @@ if (empty($preparsing))
 			FROM {$from_prefix}stories_cat");
 
 		$story_boards = array();
-		$boardOrder = $sets['max_id_board'] + 1;
+		$board_order = $sets['max_id_board'] + 1;
 		while ($row = convert_fetch_assoc($request))
 		{
-			++$boardOrder;
+			++$board_order;
 
-			convert_query("
-				INSERT IGNORE INTO {$to_prefix}boards
-				(ID_CAT, boardOrder, name, description)
-				VALUES ('{$sets['cat_id']}', '{$boardOrder}', '" . htmlspecialchars($row['title']) . "' , '')");
+			convert_insert('boards', array('id_cat', 'board_order', 'name', 'description'), array($sets['cat_id'], $board_order, htmlspecialchars($row['title']) , ''), 'insert');
+
 			$sets['story_boards'][$row['catid']] = convert_insert_id();
 		}
 
@@ -230,11 +219,8 @@ if (empty($preparsing))
 				$row['subject'] = addslashes($row['subject']);
 				$row['id_topic'] = 0;
 
-				convert_query("
-					INSERT IGNORE INTO {$to_prefix}messages
-							(ID_TOPIC, ID_BOARD, posterTime, subject, posterName, ID_MEMBER, posterEmail, posterIP, body)
-					VALUES ({$row['id_topic']}, {$row['id_board']}, {$row['poster_time']},'{$row['subject']}', '{$row['poster_name']}', '{$row['id_member']}', '{$row['email_address']}', '{$row['member_ip']}', '{$row['body']}')
-					");
+				convert_insert('messages', array('id_topic', 'id_board', 'poster_time', 'subject', 'poster_name', 'id_member', 'poster_email', 'poster_ip', 'body'),
+					array($row['id_topic'], $row['id_board'], $row['poster_time'], $row['subject'], $row['poster_name'], $row['id_member'], $row['email_address'], $row['member_ip'], $row['body']), 'insert');
 				$sets['id_messages'][$row['id_topic_old']] = convert_insert_id();
 			}
 
@@ -289,11 +275,8 @@ if (empty($preparsing))
 				$row['id_board'] = !empty($row['id_board_old']) ? $sets['story_boards'][$row['id_board_old']] : $sets['board_default_id'];
 				$row['id_msg'] = $sets['id_messages'][$row['id_topic']];
 
-				convert_query("
-					INSERT IGNORE INTO {$to_prefix}topics
-							(ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, ID_MEMBER_STARTED)
-					VALUES ({$row['id_board']}, {$row['id_msg']}, {$row['id_msg']}, {$row['id_member']})
-					");
+				convert_insert('topics', array('id_board', 'id_first_msg', 'id_last_msg', 'id_member_started'),
+					array($row['id_board'], $row['id_msg'], $row['id_msg'], $row['id_member']), 'insert');
 				$sets['id_topics'][$row['id_topic']] = convert_insert_id();
 			}
 
@@ -314,23 +297,43 @@ if (empty($preparsing))
 
 		$request = convert_query("
 			SELECT
-				m.ID_MSG AS m_id_msg, m.ID_TOPIC AS m_id_topic, t.ID_FIRST_MSG AS t_id_msg, t.ID_TOPIC AS t_id_topic
+				m.id_msg AS m_id_msg, m.id_topic AS m_id_topic, t.id_first_msg AS t_id_msg, t.id_topic AS t_id_topic
 			FROM {$to_prefix}topics AS t
-				INNER JOIN {$to_prefix}messages AS m ON (t.ID_FIRST_MSG = m.ID_MSG)
-			WHERE m.ID_TOPIC = 0");
+				INNER JOIN {$to_prefix}messages AS m ON (t.id_first_msg = m.id_msg)
+			WHERE m.id_topic = 0");
 
 		while ($row = convert_fetch_assoc($request))
 		{
 			convert_query("
 				UPDATE {$to_prefix}messages
-				SET ID_TOPIC = {$row['t_id_topic']}
-				WHERE ID_MSG = {$row['m_id_msg']}");
+				SET id_topic = {$row['t_id_topic']}
+				WHERE id_msg = {$row['m_id_msg']}");
 		}
 	}
 
 	function convertStep8()
 	{
-		global $to_prefix, $sets;
-convert_query("UPDATE `SMF_conversions-phpnuke79-SMF1`.`smf_members` SET `passwd` = 'password' WHERE `smf_members`.`ID_MEMBER` =2 LIMIT 1 ;");
+		global $to_prefix, $from_prefix, $sets, $sourcedir;
+		echo 'Reattributing posts...';
+
+		if (empty($sourcedir))
+			$sourcedir = $_POST['path_to'] . '/Sources';
+
+		require_once($sourcedir . '/Subs-Members.php');
+
+		$request = convert_query("
+			SELECT COUNT(id_msg) AS user_posts, id_member
+			FROM {$to_prefix}messages
+			GROUP BY id_member");
+
+		while ($row = convert_fetch_assoc($request))
+		{
+			convert_query("
+				UPDATE {$to_prefix}members
+				SET posts = {$row['user_posts']}
+				WHERE id_member = {$row['id_member']}");
+		}
 	}
 }
+
+?>

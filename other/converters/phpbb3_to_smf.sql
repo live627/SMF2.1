@@ -99,7 +99,7 @@ if (!isset($board_timezone))
 			WHERE variable = 'custom_avatar_dir'
 			LIMIT 1");
 		list ($avatar_dir) = convert_fetch_row($request2);
-		$attachmentType = '1';
+		$attachment_type = '1';
 	}
 	else
 	{
@@ -110,7 +110,7 @@ if (!isset($board_timezone))
 			WHERE variable = 'attachmentUploadDir'
 			LIMIT 1");
 		list ($avatar_dir) = convert_fetch_row($request2);
-		$attachmentType = '0';
+		$attachment_type = '0';
 	}
 	convert_free_result($request2);
 
@@ -136,8 +136,15 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 
 	convert_query("
 		INSERT INTO {$to_prefix}attachments
-			(id_msg, id_member, filename, attachmentType)
-		VALUES (0, $row[id_member], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255), " . $attachmentType . ")");
+			(id_msg, id_member, filename, attachment_type)
+		VALUES (0, $row[id_member], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255), " . $attachment_type . ")");
+
+	convert_insert('attachments', array('id_msg', 'id_member', 'filename', 'attachment_type'),
+		array(0, $row['id_member'], substr(addslashes($smf_avatar_filename), 0, 255), $attachment_type)
+	);
+
+
+
 	$row['avatar'] = '';
 }
 elseif ($row['user_avatar_type'] == 3)
@@ -229,7 +236,7 @@ SELECT
 	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
 	u.user_posts AS posts, IF(u.user_rank = 1, 1, IFNULL(mg.id_group, 0)) AS id_group,
-	u.user_new_privmsg AS instant_messages,
+    u.user_new_privmsg AS instant_messages,
 	SUBSTRING(u.user_email, 1, 255) AS email_address,
 	u.user_unread_privmsg AS unread_messages,
 	SUBSTRING(u.user_msnm, 1, 255) AS msn,
@@ -337,7 +344,6 @@ alterDatabase('categories', 'add column', array(
 	'type' => 'mediumint',
 	'size' => 8,
 	'default' => 0));
-
 ---}
 
 /******************************************************************************/
@@ -365,10 +371,7 @@ list ($exists) = convert_fetch_row($request);
 convert_free_result($request);
 
 if (empty($exists))
-	convert_query("
-		INSERT INTO {$to_prefix}categories
-			(tempID, name, cat_order)
-		VALUES (0, 'Uncategorized Boards', 1)");
+	convert_insert('categories', array('tempID', 'name', 'cat_order'), array(0, 'Uncategorized Boards', 1), 'replace');
 ---}
 ---#
 
@@ -377,6 +380,8 @@ if (empty($exists))
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
+DELETE FROM {$to_prefix}board_permissions
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{
@@ -549,7 +554,7 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}polls
 SELECT
 	t.topic_id AS id_poll, t.poll_title AS question, t.poll_max_options AS max_votes, IF((t.poll_start + t.poll_length) < 0, 0, (t.poll_start + t.poll_length)) AS expire_time,
-	t.poll_vote_change AS change_vote, t.topic_poster AS id_member, m.username AS poster_name
+    t.poll_vote_change AS change_vote, t.topic_poster AS id_member, m.username AS poster_name
 FROM {$from_prefix}topics AS t
 	LEFT JOIN {$from_prefix}users AS m ON (m.user_id = t.topic_poster)
 WHERE t.poll_title != '';
@@ -572,7 +577,7 @@ FROM {$from_prefix}poll_options;
 
 ---* {$to_prefix}log_polls
 ---{
-$i{gnore = true;
+$ignore = true;
 ---}
 SELECT topic_id AS id_poll, vote_user_id AS id_member, poll_option_id AS id_choice
 FROM {$from_prefix}poll_votes
@@ -601,6 +606,9 @@ FROM {$from_prefix}privmsgs AS pm
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
+---{
+$ignore = true;
+---}
 SELECT
 	pm.msg_id AS id_pm, pm.user_id AS id_member, '-1' AS labels,
 	CASE pm.pm_unread WHEN 1 THEN 0 ELSE 1 END AS is_read, pm.pm_deleted AS deleted

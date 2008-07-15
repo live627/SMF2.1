@@ -61,9 +61,8 @@ WHERE parentid = -1;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -206,7 +205,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	pm.pmid AS id_pm, pm.touserid AS id_member, pm.readtime != 0 AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}pmreceipt AS pm;
 ---*
 
@@ -273,15 +272,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif, $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('variable', 'value'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

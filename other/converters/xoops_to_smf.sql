@@ -53,9 +53,8 @@ FROM {$from_prefix}bb_categories;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{

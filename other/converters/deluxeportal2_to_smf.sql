@@ -14,8 +14,15 @@
 
 TRUNCATE {$to_prefix}members;
 
-ALTER TABLE {$to_prefix}members
-CHANGE password_salt password_salt varchar(16) NOT NULL default '';
+---{
+alterDatabase('members', 'change column', array(
+	'old_name' => 'password_salt',
+	'name' => 'password_salt',
+	'type' => 'varchar',
+	'size' => 16,
+	'default' => '',
+));
+---}
 
 ---* {$to_prefix}members
 SELECT
@@ -55,9 +62,8 @@ WHERE parentid = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -181,7 +187,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	privatemessageid AS id_pm, touserid AS id_member, isread = 1 AS is_read,
-	'' AS label
+	'-1' AS label
 FROM {$from_prefix}privatemessage
 WHERE folder != 'sent';
 ---*

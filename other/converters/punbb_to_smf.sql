@@ -110,9 +110,8 @@ FROM {$from_prefix}categories;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{
@@ -229,23 +228,17 @@ while (true)
 	$ban_time = time();
 	while ($row = convert_fetch_assoc($result))
 	{
-		convert_query("
-			INSERT INTO {$to_prefix}ban_groups
-				(name, ban_time, expire_time, reason, notes, cannot_access)
-			VALUES ('migrated_ban_$row[id]', $ban_time, $row[expire], '', '$row[message]', 1)");
-		$ID_BAN_GROUP = convert_insert_id();
+		convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+			array("migrated_ban_" . $row['id'], $ban_time, $row['expire'], '', $row['message'], 1)
+		);
 
-		if (empty($ID_BAN_GROUP))
+		$id_ban_group = convert_insert_id();
+
+		if (empty($id_ban_group))
 			continue;
 
 		if (!empty($row['email']))
-		{
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, email_address, hostname)
-				VALUES
-					($ID_BAN_GROUP, '$row[email]', '')");
-		}
+			convert_insert('ban_items', array('id_ban_group', 'email_address', 'hostname'), array($id_ban_group, $row['email'], ''), 'replace');
 		if (!empty($row['ip']))
 		{
 			$ips = explode(' ', $row['ip']);
@@ -269,20 +262,13 @@ while (true)
 				$ip_low4 = isset($sections[3]) ? $sections[3] : 0;
 				$ip_high4 = isset($sections[3]) ? $sections[3] : 255;
 
-				convert_query("
-					INSERT INTO {$to_prefix}ban_items
-						(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, email_address, hostname)
-					VALUES ($ID_BAN_GROUP, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
+				convert_insert('ban_items', array('id_ban_group', 'ip_low1', 'ip_high1', 'ip_low2', 'ip_high2', 'ip_low3', 'ip_high3', 'ip_low4', 'ip_high4', 'email_address', 'hostname'),
+					array($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', ''));
 			}
 		}
 		if (!empty($row['username']) && !empty($row['user_id']))
-		{
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, id_member, email_address, hostname)
-				VALUES
-					($ID_BAN_GROUP, $row[user_id], '', '')");
-		}
+			convert_insert('ban_items', array('id_ban_group', 'id_member', 'email_address', 'hostname'),
+				array($id_ban_group, $row[user_id], '', ''));
 	}
 
 	$_REQUEST['start'] += 50;
@@ -345,13 +331,9 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}

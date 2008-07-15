@@ -29,18 +29,14 @@ WHERE group_name LIKE 'e107%';
 
 	if (isset($prefs['forum_levels']) && isset($prefs['forum_thresholds']))
 	{
-		$inserts = '';
+		$inserts = array();
 		$post_count = explode(',', $prefs['forum_thresholds']);
 		foreach (explode(',', $prefs['forum_levels']) as $k => $groupname)
 			if ($groupname !== '')
-				$inserts .= "
-					(SUBSTRING('e107 " . addslashes($groupname) . "', 1, 255), $prefs[forum_thresholds], '', '')";
+				$inserts[] = array(substr("e107 " . addslashes($groupname), 0, 255), $prefs['forum_thresholds'], '', '');
 
 		if (!empty($inserts))
-			convert_query("
-				INSERT INTO {$to_prefix}membergroups
-					(group_name, min_posts, online_color, stars)
-				VALUES " . substr($inserts, 0, -1));
+			convert_insert('membergroups', array('group_name', 'min_posts', 'online_color', 'stars'), $inserts);
 	}
 ---}
 
@@ -206,9 +202,8 @@ WHERE forum_parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -352,7 +347,7 @@ $request = convert_query("
 		poll_id, poll_options, poll_votes
 	FROM {$from_prefix}polls AS p
 		INNER JOIN {$from_prefix}forum_t AS t ON (p.poll_datestamp = t.thread_id)");
-$inserts = '';
+$inserts = array();
 while ($row = convert_fetch_assoc($request))
 {
 	$separateOptions = explode(chr(1), $row['poll_options']);
@@ -362,17 +357,13 @@ while ($row = convert_fetch_assoc($request))
 	for ($i = 0; $i <= $countOptions-2; $i++)
 	{
 		if (!empty($separateOptions))
-			$inserts .= "
-				('$row[poll_id]', '$i', '$separateOptions[$i]', '$separateVotes[$i]'),";
+			$inserts[] = array($row['poll_id'], $i, $separateOptions[$i], $separateVotes[$i]);
 	}
 }
 convert_free_result($request);
 
 if ($inserts !== '')
-	convert_query("
-		INSERT INTO {$to_prefix}poll_choices
-			(id_poll, id_choice, label, votes)
-		VALUES " . substr($inserts, 0, -1));
+	convert_insert('poll_choices', array('id_poll', 'id_choice', 'label', 'votes'), $inserts);
 ---}
 
 
@@ -448,9 +439,9 @@ WHERE t.thread_active = 99
 --- Converting board access...
 /******************************************************************************/
 
-REPLACE INTO {$to_prefix}settings
-	(variable, value)
-VALUES ('permission_enable_by_board', '0');
+---{
+convert_insert('settings', array('variable', 'value'), array('permission_enable_by_board', 0), 'replace');
+---}
 
 ---# Do all board permissions...
 ---{
@@ -466,7 +457,7 @@ convert_free_result($request);
 if (!empty($readonlyBoards))
 	convert_query("
 		UPDATE {$to_prefix}boards
-		SET permission_mode = 4
+		SET id_profile = 4
 		WHERE id_board IN (" . implode(', ', $readonlyBoards) . ")
 		LIMIT " . count($readonlyBoards));
 ---}
@@ -509,21 +500,20 @@ while (true)
 	while ($row = convert_fetch_assoc($result))
 	{
 		$ban_num++;
-		convert_query("
-			INSERT INTO {$to_prefix}ban_groups
-				(name, ban_time, expire_time, notes, reason, cannot_access)
-			VALUES ('migrated_ban_$ban_num', $ban_time, NULL, '', '" . addslashes($row['banlist_reason']) . "', 1)");
-		$ID_BAN_GROUP = convert_insert_id();
 
-		if (empty($ID_BAN_GROUP))
+		convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'notes', 'reason', 'cannot_access'),
+			array("migrated_ban_" . $ban_num, $ban_time, NULL, 'Migrated from e107', addslashes($row['banlist_reason']), 1)
+		);
+		$id_ban_group = convert_insert_id();
+
+		if (empty($id_ban_group))
 			continue;
 
 		if (strpos($row['banlist_ip'], '@') !== false)
 		{
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, email_address, hostname)
-				VALUES ($ID_BAN_GROUP, '" . addslashes($row['banlist_ip']) . "', '')");
+			convert_insert('ban_items', array('id_ban_group', 'email_address', 'hostname'),
+				array($id_ban_group, addslashes($row['banlist_ip']), '')
+			);
 			continue;
 		}
 		else
@@ -542,10 +532,9 @@ while (true)
 			$ip_high4 = $octet4;
 			$ip_low4 = $octet4;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, email_address, hostname)
-				VALUES ($ID_BAN_GROUP, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
+			convert_insert('ban_items', array('id_ban_group', 'ip_low1', 'ip_high1', 'ip_low2', 'ip_high2', 'ip_low3', 'ip_high3', 'ip_low4', 'ip_high4', 'email_address', 'hostname'),
+				array($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')
+			);
 			continue;
 		}
 	}
@@ -568,25 +557,20 @@ $request = convert_query("
 	WHERE user_ban = 1");
 if (convert_num_rows($request) > 0)
 {
-	convert_query("
-		INSERT INTO {to_prefix}ban_groups
-			(name, ban_time, expire_time, reason, notes, cannot_access)
-			VALUES ('migrated_ban_users', $ban_time, NULL, '', 'Imported from e107', 1)");
-		$ID_BAN_GROUP = convert_insert_id();
+	convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'notes', 'cannot_access'),
+		array("migrated_ban_users", $ban_time, NULL, 'Migrated from e107', 1)
+	);
+	$id_ban_group = convert_insert_id();
 
-	if (empty($ID_BAN_GROUP))
+	if (empty($id_ban_group))
 		continue;
 
-	$inserts = '';
+	$inserts = array();
 	while ($row = convert_fetch_assoc($request))
-		$inserts .= "
-			($ID_BAN_GROUP, $row[user_id], '', ''),";
+		$inserts[] = array($id_ban_group, $row['user_id'], '', '');
 	convert_free_result($request);
 
-	convert_query("
-		INSERT INTO {$to_prefix}ban_items
-			(ID_BAN_GROUP, id_member, email_address, hostname)
-		VALUES " . substr($inserts, 0, -1));
+	convert_insert('ban_items', array('id_ban_group', 'id_member', 'email_address', 'hostname'), $inserts);
 }
 ---}
 ---#
@@ -672,7 +656,7 @@ $request = convert_query("
 	FROM {$from_prefix}core
 	WHERE e107_name LIKE 'emote_%'");
 
-$insert = '';
+$insert = array();
 while ($row = convert_fetch_assoc($request))
 {
 	$smileys_set = @unserialize($row['smiley_codes']);
@@ -712,8 +696,7 @@ while ($row = convert_fetch_assoc($request))
 
 			$count++;
 			$name = substr($filename, 0, strrpos($filename, '.'));
-			$insert .= "
-			('$code', '$filename', '$name', $count, '$hidden'),";
+			$insert[] = array($code, $filename, $name, $count, $hidden);
 		}
 	}
 }
@@ -721,20 +704,13 @@ convert_free_result($request);
 
 // Insert the new smileys
 if (!empty($insert))
-{
-	convert_query("
-		INSERT INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order, hidden)
-		VALUES " . substr($insert, 0, -1));
-}
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order', 'hidden'), $insert);
 
 // Set the new known smileys
-convert_query("
-	REPLACE INTO {$to_prefix}settings
-		(variable, value)
-	VALUES
-		('smiley_sets_known', '$smiley_sets_known'),
-		('smiley_sets_names', '$smiley_sets_names')");
-
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('smiley_sets_known', $smiley_sets_known)
+		array('smiley_sets_names', $smiley_sets_names)
+	), 'replace');
 ---}
 ---#

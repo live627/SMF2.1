@@ -65,9 +65,8 @@ WHERE forum_parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -207,7 +206,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	notes_id AS id_pm, notes_recipient AS id_member, notes_isRead AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}notes;
 ---*
 

@@ -6,7 +6,7 @@
 ---~ version: "SMF 2.0"
 ---~ settings: "/config.php", "/constants.php"
 ---~ variable: "$applName = 'zorum';"
----~ from_prefix: "`$dboard_name`.{$applName}_"
+---~ from_prefix: "`$dbName`.{$applName}_"
 ---~ table_test: "{$from_prefix}zorumuser"
 
 /******************************************************************************/
@@ -15,8 +15,13 @@
 
 TRUNCATE {$to_prefix}members;
 
-ALTER TABLE {$to_prefix}members
-ADD COLUMN tempID int(10) unsigned NOT NULL default 0;
+---{
+alterDatabase('members', 'add column', array(
+	'name' => 'temp_id',
+	'type' => 'int',
+	'size' => 10,
+	'default' => 0));
+---}
 
 ---* {$to_prefix}members
 SELECT
@@ -54,9 +59,8 @@ WHERE iscat = 1;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -145,9 +149,19 @@ FROM {$from_prefix}poll AS p
 /******************************************************************************/
 
 /* This makes counting the votes up much, much easier. */
-ALTER TABLE {$to_prefix}poll_choices
-DROP PRIMARY KEY,
-ADD COLUMN ID_TEMP int(10) unsigned NOT NULL auto_increment PRIMARY KEY;
+---{
+alterDatabase('poll_choices', 'remove index', 'primary');
+alterDatabase('poll_choices', 'add column', array(
+	'name' => 'id_temp',
+	'type' => 'int',
+	'size' => 10,
+	'auto' => true,
+	'default' => 0));
+alterDatabase('poll_choices', 'add index', array(
+	'type' => 'primary'
+	'columns' => array('id_temp'),
+	));
+---}
 
 ---* {$to_prefix}poll_choices
 ---{
@@ -172,9 +186,14 @@ WHERE s.type = 65536
 GROUP BY pc.ID_TEMP;
 ---*
 
-ALTER TABLE {$to_prefix}poll_choices
-DROP COLUMN ID_TEMP,
-ADD PRIMARY KEY (id_poll, id_choice);
+---{
+alterDatabase('poll_choices', 'remove index', 'primary');
+alterDatabase('poll_choices', 'remove column', 'id_temp');
+alterDatabase('poll_choices', 'add index', array(
+	'type' => 'primary'
+	'columns' => array('id_poll', 'id_choice'),
+	));
+---}
 
 /******************************************************************************/
 --- Converting poll votes...
@@ -215,8 +234,9 @@ WHERE s.type = 8;
 --- Cleaning up...
 /******************************************************************************/
 
-ALTER TABLE {$to_prefix}members
-DROP COLUMN tempID;
+---{
+alterDatabase('members', 'remove column', 'temp_id');
+---}
 
 /******************************************************************************/
 --- Converting attachments...

@@ -70,9 +70,8 @@ WHERE type = 'group';
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -83,7 +82,7 @@ SELECT
 	fid AS id_board, fup AS id_parent, displayorder AS board_order,
 	SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, threads AS num_topics,
-	posts AS num_posts, '-1,0' AS member_groups
+	posts AS num_posts, '-1,0,1' AS member_groups
 FROM {$from_prefix}forums
 WHERE type != 'group';
 ---*
@@ -253,8 +252,8 @@ TRUNCATE {$to_prefix}log_notify;
 $ignore = true;
 ---}
 SELECT uf.uid AS id_member, f.tid AS id_topic
-FROM {$from_prefix}favorites AS f
-	INNER JOIN {$from_prefix}members AS uf ON (uf.username = f.username);
+FROM ({$from_prefix}favorites AS f, {$from_prefix}members AS uf)
+WHERE uf.username = f.username;
 ---*
 
 /******************************************************************************/
@@ -269,7 +268,7 @@ TRUNCATE {$to_prefix}ban_groups;
 // Give the ban a unique name.
 $group_count = isset($group_count) ? $group_count + 1 : $_REQUEST['start'] + 1;
 $row['name'] .= $group_count;
-$row['ID_BAN_GROUP'] = $group_count;
+$row['id_ban_group'] = $group_count;
 ---}
 SELECT
 	'Migrated_' AS name, dateline AS ban_time, 'Migrated from XMB' AS notes,
@@ -281,7 +280,7 @@ FROM {$from_prefix}banned;
 ---{
 // Check we give a valid ban group.
 $item_count = isset($item_count) ? $item_count + 1 : $_REQUEST['start'] + 1;
-$row['ID_BAN_GROUP'] = $item_count;
+$row['id_ban_group'] = $item_count;
 ---}
 SELECT
 	ip1 AS ip_low1, ip1 AS ip_high1, ip2 AS ip_low2, ip2 AS ip_high2,
@@ -307,14 +306,10 @@ convert_free_result($result);
 
 $settings = array();
 foreach ($row as $key => $value)
-	$settings[] = "('" . addslashes($key) . "', SUBSTRING('" . addslashes($value) . "', 1, 65534))";
+	$settings[] = array(addslashes($key), substr(addslashes($value), 0, 65534)));
 
 if (!empty($settings))
-	convert_query("
-		REPLACE INTO {$to_prefix}settings
-			(variable, value)
-		VALUES " . implode(',
-			', $settings));
+	convert_insert('settings', array('variable', 'value'), $settings, 'replace');
 ---}
 ---#
 
@@ -391,15 +386,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

@@ -107,14 +107,18 @@ if (empty($preparsing))
 		// Add a temp column for members.
 		if ($_REQUEST['start'] == 0)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}membergroups
-				DROP COLUMN tempMembers,
-				DROP COLUMN tempID", true);
-			convert_query("
-				ALTER TABLE {$to_prefix}membergroups
-				ADD COLUMN tempMembers longtext,
-				ADD COLUMN tempID int NOT NULL default 0");
+			alterDatabase('membergroups', 'remove column', 'temp_members');
+			alterDatabase('membergroups', 'remove column', 'temp_id');
+			alterDatabase('membergroups', 'add column', array(
+				'name' => 'temp_members',
+				'type' => 'longtext',
+			));
+			alterDatabase('membergroups', 'add column', array(
+				'name' => 'temp_id',
+				'type' => 'int',
+				'size' => 10,
+				'default' => 0,
+			));
 		}
 
 		$groups = file($eblah['prefs'] . '/Ranks2.txt');
@@ -131,14 +135,14 @@ if (empty($preparsing))
 			elseif (preg_match('~(\d+) => \{$~', $group, $match) != 0)
 			{
 				$current_group = &$extraGroups[];
-				$current_group['tempID'] = $match[1];
+				$current_group['temp_id'] = $match[1];
 			}
 			elseif (isset($current_group) && preg_match('~^(.+?) = [\'(](.+?)[\'\)]$~', $group, $match) != 0)
 			{
 				if ($match[1] == 'name')
 					$current_group['group_name'] = addslashes($match[2]);
 				elseif ($match[1] == 'members')
-					$current_group['tempMembers'] = addslashes($match[2]);
+					$current_group['temp_members'] = addslashes($match[2]);
 				elseif ($match[1] == 'pcount')
 				{
 					$current_group['min_posts'] = max(0, (int) $match[2]);
@@ -150,7 +154,7 @@ if (empty($preparsing))
 			}
 		}
 
-		unset($knownGroups[3]['tempMembers']);
+		unset($knownGroups[3]['temp_members']);
 
 		if (!empty($_SESSION['purge']))
 		{
@@ -165,25 +169,17 @@ if (empty($preparsing))
 		if (!empty($knownGroups))
 		{
 			foreach ($knownGroups as $i => $v)
-				$knownGroups[$i] = "$i, SUBSTRING('$v[group_name]', 1, 80), SUBSTRING('" . @$v['online_color'] . "', 1, 20), 0, '', '" . @$v['tempMembers'] . "'";
+				$knownGroups[$i] = array($i, substr('$v[group_name]', 0, 80), substr(@$v['online_color'], 0, 20), 0, '', @$v['temp_members']);
 
-			convert_query("
-				REPLACE INTO {$to_prefix}membergroups
-					(id_group, group_name, online_color, min_posts, stars, tempMembers)
-				VALUES (" . implode("),
-					(", $knownGroups) . ")");
+			convert_insert('membergroups', array('id_group', 'group_name', 'online_color', 'min_posts', 'stars', 'temp_members'), $knownGroups, 'replace');
 		}
 
 		if (!empty($extraGroups))
 		{
 			foreach ($extraGroups as $i => $v)
-				$extraGroups[$i] = "$v[tempID], SUBSTRING('$v[group_name]', 1, 80), SUBSTRING('" . @$v['online_color'] . "', 1, 20), " . (isset($v['min_posts']) ? $v['min_posts'] : -1) . ", '', '" . @$v['tempMembers'] . "'";
+				$extraGroups[$i] = array($v['temp_id'], substr($v['group_name'], 0, 80), substr(@$v['online_color'], 0, 20), (isset($v['min_posts']) ? $v['min_posts'] : -1), '', @$v['temp_members']);
 
-			convert_query("
-				REPLACE INTO {$to_prefix}membergroups
-					(tempID, group_name, online_color, min_posts, stars, tempMembers)
-				VALUES (" . implode("),
-					(", $extraGroups) . ")");
+			convert_insert('membergroups', array('temp_id', 'group_name', 'online_color', 'min_posts', 'stars', 'temp_members'), $extraGroups, 'replace');
 		}
 	}
 
@@ -201,23 +197,27 @@ if (empty($preparsing))
 		if ($_GET['substep'] == 0)
 		{
 			// Get rid of the primary key... we have to resort anyway.
-			convert_query("
-				ALTER TABLE {$to_prefix}members
-				DROP PRIMARY KEY,
-				CHANGE COLUMN id_member id_member mediumint(8) unsigned NOT NULL default 0");
+			alterDatabase('members', 'remove index', 'primary');
+			alterDatabase('members', 'change column', array(
+				'old_name' => 'id_member',
+				'name' => 'id_member',
+				'type' => 'mediumint',
+				'size' => 8,
+				'default' => 0,
+			));
 		}
 
 		pastTime(0);
 
 		$request = convert_query("
-			SELECT id_group, tempMembers
+			SELECT id_group, temp_members
 			FROM {$to_prefix}membergroups
-			WHERE tempMembers != ''");
+			WHERE temp_members != ''");
 		$groups = array();
 		$addGroups = array();
 		while ($row = convert_fetch_assoc($request))
 		{
-			$members = explode(',', $row['tempMembers']);
+			$members = explode(',', $row['temp_members']);
 			foreach ($members as $member)
 			{
 				if (trim($member) == '')
@@ -347,14 +347,23 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}members
-				ORDER BY id_member = 0, date_registered");
+				ORDER BY id_member, date_registered");
 			pastTime(-2);
 		}
 		if ($_GET['substep'] >= -2)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}members
-				CHANGE COLUMN id_member id_member mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY");
+			alterDatabase('members', 'change column', array(
+				'old_name' => 'id_member',
+				'name' => 'id_member',
+				'type' => 'mediumint',
+				'size' => 8,
+				'default' => 0,
+				'auto' => true,
+			));
+			alterDatabase('members', 'add index', array(
+				'type' => 'primary'
+				'columns' => array('id_temp'),
+			));
 
 			pastTime(-3);
 		}
@@ -367,11 +376,7 @@ if (empty($preparsing))
 			pastTime(-4);
 		}
 		if ($_GET['substep'] >= -3)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}membergroups
-				DROP tempMembers");
-		}
+			alterDatabase('membergroups', 'remove column', 'temp_members');
 	}
 
 	function convertStep3()
@@ -426,15 +431,11 @@ if (empty($preparsing))
 		$settings['censor_vulgar'] = addslashes(implode("\n", $vulgar));
 		$settings['censor_proper'] = addslashes(implode("\n", $proper));
 
-		$setString = '';
+		$setString = array();
 		foreach ($settings as $var => $val)
-			$setString .= "
-				('$var', SUBSTRING('$val', 1, 65534)),";
+			$setString[] = array($var, substr('$val', 0, 65534));
 
-		convert_query("
-			REPLACE INTO {$to_prefix}settings
-				(variable, value)
-			VALUES" . substr($setString, 0, -1));
+		convert_insert('settings', array('variable', 'value'), $setString, 'replace');
 	}
 
 	function convertStep4()
@@ -450,14 +451,21 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] == 0)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}personal_messages
-				DROP COLUMN temp_to_name", true);
-			convert_query("
-				ALTER TABLE {$to_prefix}personal_messages
-				CHANGE COLUMN id_pm id_pm int(10) unsigned NOT NULL default 0,
-				DROP PRIMARY KEY,
-				ADD temp_to_name tinytext");
+			alterDatabase('personal_messages', 'remove column', 'temp_to_name');
+			alterDatabase('personal_messages', 'remove index', 'primary');
+			alterDatabase('personal_messages', 'change column', array(
+				'old_name' => 'id_member',
+				'name' => 'id_member',
+				'type' => 'mediumint',
+				'size' => 8,
+				'default' => 0,
+			));
+			alterDatabase('personal_messages', 'add column', array(
+				'name' => 'temp_to_name',
+				'type' => 'tinytext',
+				'size' => 10,
+				'default' => 0,
+			));
 		}
 
 		echo 'Converting personal messages...';
@@ -544,20 +552,28 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				ORDER BY id_pm = 0, msgtime");
+				ORDER BY id_pm, msgtime");
 
 			pastTime(-2);
 		}
 		if ($_GET['substep'] >= -2)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}personal_messages
-				CHANGE COLUMN id_pm id_pm int(10) unsigned NOT NULL auto_increment PRIMARY KEY");
+			alterDatabase('personal_messages', 'change column', array(
+				'old_name' => 'id_pm',
+				'name' => 'id_pm',
+				'type' => 'int',
+				'size' => 10,
+			));
+			alterDatabase('personal_messages', 'add index', array(
+				'type' => 'primary'
+				'columns' => array('id_temp'),
+			));
 
 			pastTime(-3);
 		}
 		if ($_GET['substep'] >= -3)
 		{
+			/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
 			convert_query("
 				INSERT INTO {$to_prefix}pm_recipients
 					(id_pm, id_member, labels)
@@ -570,9 +586,7 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] >= -4)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}personal_messages
-				DROP temp_to_name");
+			alterDatabase('personal_messages', 'remove column', 'temp_to_name');
 
 			pastTime(-5);
 		}
@@ -601,34 +615,36 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] == 0)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}categories
-				DROP COLUMN tempID", true);
-			convert_query("
-				ALTER TABLE {$to_prefix}categories
-				ADD tempID tinytext");
-			convert_query("
-				ALTER TABLE {$to_prefix}boards
-				DROP COLUMN tempID,
-				DROP COLUMN tempCatID", true);
-			convert_query("
-				ALTER TABLE {$to_prefix}boards
-				ADD tempID tinytext,
-				ADD tempCatID tinytext");
+			alterDatabase('categories', 'remove column', 'temp_id');
+			alterDatabase('boards', 'remove column', 'temp_id');
+			alterDatabase('boards', 'remove column', 'temp_cat_id');
+
+			alterDatabase('categories', 'add column', array(
+				'name' => 'temp_id',
+				'type' => 'tinytext',
+			));
+			alterDatabase('boards', 'add column', array(
+				'name' => 'temp_id',
+				'type' => 'tinytext',
+			));
+			alterDatabase('boards', 'add column', array(
+				'name' => 'temp_cat_id',
+				'type' => 'tinytext',
+			));
 		}
 
 		pastTime(0);
 
 		$request = convert_query("
-			SELECT id_group, group_name, tempID
+			SELECT id_group, group_name, temp_id
 			FROM {$to_prefix}membergroups
 			WHERE id_group NOT IN (2, 3)");
 		$groups = array('Administrator' => 1, 'member' => 0);
 		while ($row = convert_fetch_assoc($request))
 		{
 			$groups[$row['group_name']] = $row['id_group'];
-			if ($row['tempID'] != '')
-				$groups[$row['tempID']] = $row['id_group'];
+			if ($row['temp_id'] != '')
+				$groups[$row['temp_id']] = $row['id_group'];
 		}
 		convert_free_result($request);
 
@@ -644,7 +660,7 @@ if (empty($preparsing))
 			$row = array(
 				'name' => substr($data[0], 0, 255),
 				'cat_order' => $i + 1,
-				'tempID' => trim($data[1]),
+				'temp_id' => trim($data[1]),
 			);
 
 			$cat_rows[] = addslashes_recursive($row);
@@ -667,9 +683,9 @@ if (empty($preparsing))
 				'name' => substr($data[3], 0, 255),
 				'description' => substr($data[1], 0, 255),
 				'board_order' => $i + 1,
-				'tempCatID' => isset($board_cats[trim($data[0])]) ? $board_cats[trim($data[0])] : 1,
+				'temp_cat_id' => isset($board_cats[trim($data[0])]) ? $board_cats[trim($data[0])] : 1,
 				'count_posts' => !empty($data[9]),
-				'tempID' => $data[0],
+				'temp_id' => $data[0],
 				'member_groups' => '-1,0',
 			);
 
@@ -686,15 +702,15 @@ if (empty($preparsing))
 		doBlock('boards', $board_rows);
 
 		$result = convert_query("
-			SELECT id_cat, tempID
+			SELECT id_cat, temp_id
 			FROM {$to_prefix}categories
-			WHERE tempID != ''");
+			WHERE temp_id != ''");
 		while ($row = convert_fetch_assoc($result))
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
 				SET id_cat = $row[id_cat]
-				WHERE tempCatID = '$row[tempID]'");
+				WHERE temp_cat_id = '$row[temp_id]'");
 		}
 		convert_free_result($result);
 
@@ -703,11 +719,12 @@ if (empty($preparsing))
 			$result = convert_query("
 				SELECT id_board
 				FROM {$to_prefix}boards
-				WHERE tempID = '$boardid'
+				WHERE temp_id = '$boardid'
 				LIMIT 1");
 			list ($id_board) = convert_fetch_row($result);
 			convert_free_result($result);
 
+			/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
 			convert_query("
 				INSERT INTO {$to_prefix}moderators
 					(id_board, id_member)
@@ -717,17 +734,9 @@ if (empty($preparsing))
 				LIMIT " . count($names));
 		}
 
-		convert_query("
-			ALTER TABLE {$to_prefix}categories
-			DROP COLUMN tempID");
-
-		convert_query("
-			ALTER TABLE {$to_prefix}boards
-			DROP COLUMN tempCatID");
-
-		convert_query("
-			ALTER TABLE {$to_prefix}membergroups
-			DROP COLUMN tempID");
+		alterDatabase('categories', 'remove column', 'temp_id');
+		alterDatabase('boards', 'remove column', 'temp_cat_id');
+		alterDatabase('membergroups', 'remove column', 'temp_id');
 	}
 
 	function convertStep6()
@@ -745,23 +754,24 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] == 0)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}log_topics
-				DROP COLUMN tempID", true);
-			convert_query("
-				ALTER TABLE {$to_prefix}log_topics
-				ADD tempID int(10) unsigned NOT NULL default 0,
-				DROP PRIMARY KEY");
+			alterDatabase('log_topics', 'remove column', 'temp_id');
+			alterDatabase('log_topics', 'remove index', 'primary');
+			alterDatabase('log_topics', 'add column', array(
+				'name' => 'temp_id',
+				'type' => 'int',
+				'size' => 10,
+				'default' => 0,
+			));
 		}
 
 		echo 'Converting mark read data...';
 
 		$result = convert_query("
-			SELECT id_board, tempID
+			SELECT id_board, temp_id
 			FROM {$to_prefix}boards");
 		$boards = array();
 		while ($row = convert_fetch_assoc($result))
-			$boards[$row['tempID']] = $row['id_board'];
+			$boards[$row['temp_id']] = $row['id_board'];
 		convert_free_result($result);
 
 		$file_n = 0;
@@ -799,7 +809,7 @@ if (empty($preparsing))
 
 				if (is_numeric(trim($parts[0])) && trim($parts[0]) > 10000)
 				{
-					$row['tempID'] = trim($parts[0]);
+					$row['temp_id'] = trim($parts[0]);
 					$topics_block[] = $row;
 				}
 				else
@@ -854,19 +864,30 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] == 0)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				DROP COLUMN tempID,
-				DROP COLUMN tempSubject", true);
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				CHANGE COLUMN id_topic id_topic mediumint(8) unsigned NOT NULL default 0,
-				DROP PRIMARY KEY,
-				ADD tempID int(10) unsigned NOT NULL default 0,
-				ADD tempSubject tinytext NOT NULL default '',
-				DROP INDEX lastMessage,
-				DROP INDEX firstMessage,
-				DROP INDEX poll");
+			alterDatabase('topics', 'remove column', 'temp_id');
+			alterDatabase('topics', 'remove column', 'temp_subject');
+			alterDatabase('topics', 'remove index', 'primary');
+			alterDatabase('topics', 'remove index', 'lastMessage');
+			alterDatabase('topics', 'remove index', 'firstMessage');
+			alterDatabase('topics', 'remove index', 'poll');
+			alterDatabase('topics', 'change column', array(
+				'old_name' => 'id_topic',
+				'name' => 'id_tpic',
+				'type' => 'mediumint',
+				'size' => 8,
+				'default' => 0,
+			));
+			alterDatabase('topics', 'add column', array(
+				'name' => 'temp_id',
+				'type' => 'int',
+				'size' => 10,
+				'default' => 0,
+			));
+			alterDatabase('topics', 'add column', array(
+				'name' => 'temp_subject',
+				'type' => 'tinytext',
+				'default' => '',
+			));
 		}
 
 		echo 'Converting topics (part 1)...';
@@ -886,12 +907,12 @@ if (empty($preparsing))
 		}
 
 		$result = convert_query("
-			SELECT id_board, tempID
+			SELECT id_board, temp_id
 			FROM {$to_prefix}boards
-			WHERE tempID != ''");
+			WHERE temp_id != ''");
 		$boards = array();
 		while ($row = convert_fetch_assoc($result))
-			$boards[$row['tempID']] = $row['id_board'];
+			$boards[$row['temp_id']] = $row['id_board'];
 		convert_free_result($result);
 
 		$data_n = 0;
@@ -910,18 +931,18 @@ if (empty($preparsing))
 					continue;
 
 				$topicInfo = explode('|', rtrim($topicData));
-				$tempID = (int) $topicInfo[0];
+				$temp_id = (int) $topicInfo[0];
 
-				if (!file_exists($eblah['messages'] . '/' . $tempID . '.txt'))
+				if (!file_exists($eblah['messages'] . '/' . $temp_id . '.txt'))
 					continue;
 
 				$block[] = array(
-					'tempID' => $tempID,
-					'tempSubject' => addslashes($topicInfo[1]),
+					'temp_id' => $temp_id,
+					'temp_subject' => addslashes($topicInfo[1]),
 					'id_board' => (int) $id_board,
-					'is_sticky' => (int) in_array($tempID, $stickies),
+					'is_sticky' => (int) in_array($temp_id, $stickies),
 					'locked' => (int) $topicInfo[6],
-					'num_views' => (int) @implode('', @file($eblah['messages'] . '/' . $tempID . '.view')),
+					'num_views' => (int) @implode('', @file($eblah['messages'] . '/' . $temp_id . '.view')),
 				);
 
 				if (count($block) > 100)
@@ -940,8 +961,8 @@ if (empty($preparsing))
 		{
 			convert_query("
 				UPDATE {$to_prefix}topics
-				SET tempID = id_topic
-				WHERE tempID = 0");
+				SET temp_id = id_topic
+				WHERE temp_id = 0");
 
 			pastTime(-2);
 		}
@@ -949,15 +970,24 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				ORDER BY id_topic = 0, tempID");
+				ORDER BY id_topic, temp_id");
 
 			pastTime(-3);
 		}
 		if ($_GET['substep'] >= -3)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				CHANGE COLUMN id_topic id_topic mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY");
+			alterDatabase('topics', 'change column', array(
+				'old_name' => 'id_topic',
+				'name' => 'id_topic',
+				'type' => 'mediumint',
+				'size' => 8,
+				'default' => 0,
+				'auto' => true,
+			));
+			alterDatabase('topics', 'add index', array(
+				'type' => 'primary'
+				'columns' => array('id_topic'),
+			));
 
 			pastTime(-4);
 		}
@@ -974,11 +1004,7 @@ if (empty($preparsing))
 		global $to_prefix, $eblah;
 
 		if ($_GET['substep'] == 0)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}boards
-				DROP COLUMN tempID");
-		}
+			alterDatabase('boards', 'remove column', 'temp_id');
 
 		echo 'Converting topics (part 2)...';
 
@@ -987,16 +1013,16 @@ if (empty($preparsing))
 			pastTime($_GET['substep']);
 
 			$result = convert_query("
-				SELECT id_topic, tempID
+				SELECT id_topic, temp_id
 				FROM {$to_prefix}topics
-				WHERE tempID != id_topic
+				WHERE temp_id != id_topic
 				LIMIT $_GET[substep], 150");
 			while ($row = convert_fetch_assoc($result))
 			{
 				convert_query("
 					UPDATE {$to_prefix}log_topics
 					SET id_topic = $row[id_topic]
-					WHERE tempID = $row[tempID]");
+					WHERE temp_id = $row[temp_id]");
 			}
 
 			$_GET['substep'] += 150;
@@ -1010,10 +1036,11 @@ if (empty($preparsing))
 			DELETE FROM {$to_prefix}log_topics
 			WHERE id_topic = 0 OR id_member = 0");
 
-		convert_query("
-			ALTER IGNORE TABLE {$to_prefix}log_topics
-			DROP COLUMN tempID,
-			ADD PRIMARY KEY (id_topic, id_member)");
+		alterDatabase('log_topics', 'remove column', 'temp_id');
+		alterDatabase('log_topics', 'add index', array(
+			'type' => 'primary'
+			'columns' => array('id_topic', 'id_member'),
+		));
 	}
 
 	function convertStep9()
@@ -1033,19 +1060,20 @@ if (empty($preparsing))
 			pastTime($_GET['substep']);
 
 			$result = convert_query("
-				SELECT id_topic, tempID
+				SELECT id_topic, temp_id
 				FROM {$to_prefix}topics
-				WHERE tempID != id_topic
+				WHERE temp_id != id_topic
 				LIMIT $_GET[substep], 150");
 			while ($row = convert_fetch_assoc($result))
 			{
-				if (!file_exists($eblah['messages'] . '/Mail/' . $row['tempID'] . '.mail'))
+				if (!file_exists($eblah['messages'] . '/Mail/' . $row['temp_id'] . '.mail'))
 					continue;
 
-				$list = file($eblah['messages'] . '/Mail/' . $row['tempID'] . '.mail');
+				$list = file($eblah['messages'] . '/Mail/' . $row['temp_id'] . '.mail');
 				foreach ($list as $k => $v)
 					$list[$k] = addslashes(htmlspecialchars(rtrim($v)));
 
+				/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
 				convert_query("
 					INSERT INTO {$to_prefix}log_notify
 						(id_topic, id_member)
@@ -1076,21 +1104,25 @@ if (empty($preparsing))
 		if ($_GET['substep'] == 0)
 		{
 			// Remove the auto_incrementing so we know we get the right order.
-			convert_query("
-				ALTER TABLE {$to_prefix}messages
-				CHANGE COLUMN id_msg id_msg int(10) unsigned NOT NULL default 0,
-				DROP PRIMARY KEY,
-				DROP INDEX topic,
-				DROP INDEX id_board");
+			alterDatabase('messages', 'remove index', 'primary');
+			alterDatabase('messages', 'remove index', 'topic');
+			alterDatabase('messages', 'remove index', 'id_board');
+			alterDatabase('messages', 'change column', array(
+				'old_name' => 'id_msg',
+				'name' => 'id_msg',
+				'type' => 'int',
+				'size' => 10,
+				'default' => 0,
+			));
 
 			if (isset($eblah['uploaddir']))
 			{
-				convert_query("
-					ALTER TABLE {$to_prefix}messages
-					DROP COLUMN temp_filename", true);
-				convert_query("
-					ALTER TABLE {$to_prefix}messages
-					ADD COLUMN temp_filename tinytext NOT NULL default ''");
+				alterDatabase('messages', 'remove column', 'temp_filename');
+				alterDatabase('personal_messages', 'add column', array(
+					'name' => 'temp_filename',
+					'type' => 'tinytext',
+					'default' => '',
+				));
 			}
 		}
 
@@ -1100,13 +1132,13 @@ if (empty($preparsing))
 		while (true)
 		{
 			$result = convert_query("
-				SELECT id_topic, tempID, id_board, tempSubject
+				SELECT id_topic, temp_id, id_board, temp_subject
 				FROM {$to_prefix}topics
-				WHERE tempID != id_topic
+				WHERE temp_id != id_topic
 				LIMIT $_GET[substep], 100");
 			while ($topic = convert_fetch_assoc($result))
 			{
-				$messages = file($eblah['messages'] . '/' . $topic['tempID'] . '.txt');
+				$messages = file($eblah['messages'] . '/' . $topic['temp_id'] . '.txt');
 				if (empty($messages))
 				{
 					convert_query("
@@ -1132,7 +1164,7 @@ if (empty($preparsing))
 					$row = array(
 						'id_topic' => $topic['id_topic'],
 						'id_board' => $topic['id_board'],
-						'subject' => substr(($msgn == 0 ? '' : 'Re: ') . $topic['tempSubject'], 0, 255),
+						'subject' => substr(($msgn == 0 ? '' : 'Re: ') . $topic['temp_subject'], 0, 255),
 						'poster_name' => substr($message[0], 0, 255),
 						'body' => substr(preg_replace('~\[quote author=.+? link=.+?\]~i', '[quote]', strtr($message[1], array('<br>' => '<br />'))), 0, 65534),
 						'poster_ip' => substr($message[2], 0, 255),
@@ -1200,9 +1232,18 @@ if (empty($preparsing))
 				break;
 		}
 
-		convert_query("
-			ALTER TABLE {$to_prefix}messages
-			CHANGE COLUMN id_msg id_msg int(10) unsigned NOT NULL auto_increment PRIMARY KEY");
+		alterDatabase('messages', 'change column', array(
+			'old_name' => 'id_msg',
+			'name' => 'id_msg',
+			'type' => 'int',
+			'size' => 10,
+			'auto' => true,
+			'default' => 0,
+		));
+		alterDatabase('messages', 'add index', array(
+			'type' => 'primary'
+			'columns' => array('id_msg'),
+		));
 	}
 
 	function convertStep12()
@@ -1271,7 +1312,7 @@ if (empty($preparsing))
 		{
 			pastTime($_GET['substep']);
 
-			$setString = '';
+			$setString = array();
 
 			$result = convert_query("
 				SELECT id_msg, temp_filename
@@ -1289,19 +1330,15 @@ if (empty($preparsing))
 
 						if (strlen($file) <= 255 && copy($eblah['uploaddir'] . '/' . $file, $attachmentUploadDir . '/' . $filename))
 						{
-							$setString .= "
-								($id_attach, $size, 0, '" . addslashes($file) . "', $row[id_msg]),";
+							$setString[] = array($id_attach, $size, 0, ,addslashes($file), $row['id_msg']);
 
 							$id_attach++;
 						}
 					}
 			}
 
-			if ($setString != '')
-				convert_query("
-					INSERT INTO {$to_prefix}attachments
-						(id_attach, size, downloads, filename, id_msg)
-					VALUES" . substr($setString, 0, -1));
+			if (!empty($setString))
+				convert_insert('attachments', array('id_attach', 'size', 'downloads', 'filename', 'id_msg'), $setString);
 
 			$_GET['substep'] += 100;
 			if (convert_num_rows($result) < 100)
@@ -1310,9 +1347,7 @@ if (empty($preparsing))
 			convert_free_result($result);
 		}
 
-		convert_query("
-			ALTER TABLE {$to_prefix}messages
-			DROP temp_filename");
+		alterDatabase('messages', 'remove column', 'temp_filename');
 	}
 
 	function convertStep14()
@@ -1323,41 +1358,43 @@ if (empty($preparsing))
 
 		if ($_GET['substep'] <= 0)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				DROP COLUMN tempID");
+			alterDatabase('topics', 'remove column', 'temp_id');
 
 			pastTime(1);
 		}
 		if ($_GET['substep'] <= 1)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}messages
-				ADD UNIQUE INDEX topic (id_topic, id_msg)");
+			alterDatabase('messages', 'add index', array(
+				'type' => 'unique'
+				'name' => 'topic',
+				'columns' => array('id_topic', 'id_msg'),
+			));
 
 			pastTime(2);
 		}
 		if ($_GET['substep'] <= 2)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				ADD UNIQUE INDEX poll (id_poll, id_topic)");
+			alterDatabase('topics', 'add index', array(
+				'type' => 'unique'
+				'name' => 'poll',
+				'columns' => array('id_poll', 'id_topic'),
+			));
 
 			pastTime(3);
 		}
 		if ($_GET['substep'] <= 3)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				DROP COLUMN tempSubject");
+			alterDatabase('topics', 'remove column', 'temp_subject');
 
 			pastTime(4);
 		}
 		if ($_GET['substep'] <= 4)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}messages
-				ADD UNIQUE INDEX id_board (id_board, id_msg)");
+			alterDatabase('topics', 'add index', array(
+				'type' => 'unique'
+				'name' => 'id_board',
+				'columns' => array('id_board', 'id_msg'),
+			));
 		}
 	}
 
@@ -1412,17 +1449,21 @@ if (empty($preparsing))
 
 		if ($_GET['substep'] > -1)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				ADD UNIQUE INDEX lastMessage (id_last_msg, id_board)");
+			alterDatabase('topics', 'add index', array(
+				'type' => 'unique'
+				'name' => 'last_message'
+				'columns' => array('id_last_msg', 'id_board'),
+			));
 
 			pastTime(-2);
 		}
 		if ($_GET['substep'] > -2)
 		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				ADD UNIQUE INDEX firstMessage (id_first_msg, id_board)");
+			alterDatabase('topics', 'add index', array(
+				'type' => 'unique'
+				'name' => 'first_message',
+				'columns' => array('id_poll', 'id_topic'),
+			));
 		}
 	}
 

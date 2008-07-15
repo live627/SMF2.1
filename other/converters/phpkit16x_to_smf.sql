@@ -23,6 +23,74 @@ elseif (preg_match('/avauser/i', $row['avatar']))
 	$row['avatar'] = '';
 else
 	$row['avatar'] = $row['avatar'];
+
+$row['signature'] = preg_replace(
+	array(
+		'~\[D\]~is',
+		'~\[/D\]~is',
+		'~\[CODE\]~is',
+		'~\[/CODE\]~is',
+		'~\[LIST=1\]~is',
+		'~\[/LIST=1\]~is',
+		'~\[LIST=a\]~is',
+		'~\[/LIST=a\]~is',
+		'~\[H2\]~is',
+		'~\[/H2\]~is',
+		'~\[H3\]~is',
+		'~\[/H3\]~is',
+		'~\[H4\]~is',
+		'~\[/H4\]~is',
+		'~\[P\]~is',
+		'~\[/P\]~is',
+		'~\[BLOCK\]~is',
+		'~\[/BLOCK\]~is',
+		'~\[gray\]~is',
+		'~\[/gray\]~is',
+		'~\[royalblue\]~is',
+		'~\[/royalblue\]~is',
+		'~\[navy\]~is',
+		'~\[/navy\]~is',
+		'~\[orange\]~is',
+		'~\[/orange\]~is',
+		'~\[yellow\]~is',
+		'~\[/yellow\]~is',
+		'~\[DimGray\]~is',
+		'~\[/DimGray\]~is',
+	),
+	array(
+		'[s]',
+		'[/s]',
+		'[code]',
+		'[/code]',
+		'[list type=decimal]',
+		'[/list]',
+		'[list type=lower-alpha]',
+		'[/list]',
+		'[size=18pt]',
+		'[/size]',
+		'[size=16pt]',
+		'[/size]',
+		'[size=14pt]',
+		'[/size]',
+		'',
+		'',
+		'',
+	    '',
+		'[color=#AAAAAA]',
+		'[/color]',
+		'[color=#0099FF]',
+		'[/color]',
+		'[color=#003399]',
+		'[/color]',
+		'[color=#FF7F00]',
+		'[/color]',
+		'[color=#FFFF00]',
+		'[/color]',
+		'[color=#333333]',
+		'[/color]',
+	),
+	htmlspecialchars(trim($row['signature']))
+);
 ---}
 
 SELECT
@@ -64,10 +132,7 @@ TRUNCATE {$to_prefix}categories;
 
 ---{
 //  PHPKit has no categories, so we only have to clean SMF's categories table and create a General Category */
-convert_query("
-	INSERT IGNORE INTO {$to_prefix}categories
-		(id_cat, cat_order, name, can_collapse)
-	VALUES ('1', '0', 'General Category' , '1')");
+convert_insert('categories', array('id_cat', 'cat_order', 'name', 'can_collapse'), array(1, 0, 'General Category', 1), 'insert ignore');
 ---}
 
 /******************************************************************************/
@@ -76,7 +141,7 @@ convert_query("
 
 TRUNCATE {$to_prefix}boards;
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -137,7 +202,7 @@ HAVING id_first_msg != 0
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT
+SELECT DISTINCT
 	forumnotify_userid AS id_member, forumnotify_threadid AS id_topic
 FROM {$from_prefix}forumnotify;
 ---*
@@ -151,6 +216,18 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 ---{
+if ($row['subject']=='')
+{
+	$request = convert_query("
+		SELECT forumpost_title
+		FROM {$from_prefix}forumpost
+		WHERE forumpost_threadid = $row[id_topic]
+		ORDER BY forumpost_id ASC
+		LIMIT 1	");
+	
+	while ($row2 = convert_fetch_assoc($request))
+		$row['subject'] = $row2['forumpost_title'];
+}		
 $row['body'] = preg_replace(
 	array(
 		'~\[D\]~is',
@@ -331,12 +408,7 @@ while ($row = convert_fetch_assoc($request))
 	$row['tempmods'] = trim(preg_replace('/-/', ' ', $row['tempmods']));
 	$mod = explode(' ', $row['tempmods']);
 	foreach ($mod as $moderators)
-	{
-		convert_query("
-			INSERT IGNORE INTO {$to_prefix}moderators
-				(id_board, id_member)
-			VALUES ($row[id_board] , '$moderators')");
-	}
+		convert_insert('moderators', array('id_board', 'id_board'), array($row['id_board'], $moderators), 'insert');
 }
 convert_free_result($request);			
 ---}
@@ -423,11 +495,11 @@ $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
 $censored_proper = preg_replace('/.*/','*',$censor_proper);
 
-convert_query("
-	REPLACE INTO {$to_prefix}settings
-		(variable, value)
-	VALUES ('censor_vulgar', '$censored_vulgar'),
-		('censor_proper', '$censored_proper[0]')");
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('censor_vulgar', $censored_vulgar)
+		array('censor_proper', $censored_proper[0])
+	), 'replace');
 ---}
 ---#
 
@@ -450,18 +522,15 @@ $request = convert_query("
 
 // Only insert if we have results
 if (convert_num_rows($request) > 0)
-	 convert_query("
-		INSERT IGNORE INTO {$to_prefix}ban_groups
-			(ID_BAN_GROUP, name, cannot_access, notes)
-		VALUES (1, '$row[member_name]', '1', 'imported Bans from phpkit')");	
+		convert_insert('ban_groups', array('id_ban_group', 'name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+			array(1, "migrated_ban_" . $row['member_name'], time(), NULL, '', 'Migrated from phpkit', 1),
+			'insert ignore'
+		);
 
 $banid = 1;
 while ($row = convert_fetch_assoc($request))
 {
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}ban_items
-			(ID_BAN, ID_BAN_GROUP, id_member)
-		VALUES ($row[id_member], 1, $row[id_member])");
+	convert_insert('ban_items', array('id_ban', 'id_ban_group', 'id_member'), array($row['id_member'], 1, $row['id_member']), 'insert');
 
 	++$banid;
 }
@@ -515,13 +584,9 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	++$count;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}

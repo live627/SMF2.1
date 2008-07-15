@@ -56,9 +56,8 @@ FROM {$from_prefix}category;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -145,8 +144,15 @@ FROM {$from_prefix}mod_POLL_topic AS pt
 --- Converting poll options...
 /******************************************************************************/
 
-ALTER TABLE {$to_prefix}poll_choices
-ADD COLUMN tempID int(10) unsigned NOT NULL default 0;
+---{
+alterDatabase('poll_choices', 'add column', array(
+	'name' => 'temp_id',
+	'type' => 'int',
+	'size' => 10,
+	'default' => 0,
+));
+
+---}
 
 ---* {$to_prefix}poll_choices
 ---{
@@ -162,7 +168,7 @@ $row['id_choice'] = ++$_SESSION['convert_last_choice'];
 SELECT
 	po.topic_ID AS id_poll, 0 AS id_choice,
 	SUBSTRING(po.option_name, 1, 255) AS label, COUNT(pv.ID) AS votes,
-	po.ID AS tempID
+	po.ID AS temp_id
 FROM {$from_prefix}mod_POLL_option AS po
 	LEFT JOIN {$from_prefix}mod_POLL_vote AS pv ON (pv.xoption = po.ID)
 GROUP BY po.ID
@@ -176,12 +182,13 @@ ORDER BY po.ID;
 ---* {$to_prefix}log_polls
 SELECT pv.poll_ID AS id_poll, pv.user_ID AS id_member, pc.id_choice
 FROM {$from_prefix}mod_POLL_vote AS pv
-	INNER JOIN {$to_prefix}poll_choices AS pc ON (pc.tempID = pv.xoption)
+	INNER JOIN {$to_prefix}poll_choices AS pc ON (pc.temp_id = pv.xoption)
 WHERE pv.user_ID != 0;
 ---*
 
-ALTER TABLE {$to_prefix}poll_choices
-DROP COLUMN tempID;
+---{
+alterDatabase('poll_choices', 'remove column', 'temp_id');
+---}
 
 /******************************************************************************/
 --- Converting personal messages (step 1)...
@@ -211,7 +218,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	ID AS id_pm, to_user AS id_member, b_read != 'no' AS is_read, '' AS labels
+	ID AS id_pm, to_user AS id_member, b_read != 'no' AS is_read, '-1' AS labels
 FROM {$from_prefix}pm;
 ---*
 

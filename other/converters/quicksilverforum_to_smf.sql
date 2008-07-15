@@ -37,7 +37,7 @@ SELECT
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS member_ip, '' AS secret_question,
 	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
-	'' AS smiley_set, '' AS password_salt, '' AS member_ip2
+	'' AS smiley_set, '' AS password_salt
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}groups AS g ON (g.group_id = u.user_group)
 WHERE u.user_id != 1;
@@ -62,9 +62,8 @@ WHERE forum_parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -185,14 +184,10 @@ if (isset($last_id_poll) && !empty($choices))
 {
 	$rows = array();
 	foreach ($choices as $id => $label)
-		$rows[] = "$last_id_poll, '" . addslashes($label) . "', " . ($id + 1) . ", 0";
+		$rows[] = array($last_id_poll, addslashes($label), ($id + 1), 0);
 	$choices = array();
 
-	convert_query("
-		INSERT INTO {$to_prefix}poll_choices
-			(id_poll, label, id_choice, votes)
-		VALUES (" . implode('),
-			(', $rows) . ")");
+	convert_insert('poll_choices', array('id_poll', 'label', 'id_choice', 'votes'), $rows, 'replace');
 }
 ---}
 

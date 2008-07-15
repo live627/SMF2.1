@@ -39,7 +39,7 @@ SELECT
 	SUBSTRING(u.yahoo, 1, 32) AS yim, SUBSTRING(u.msn, 1, 255) AS msn,
 	SUBSTRING(IF(u.customtitle, u.usertitle, ''), 1, 255) AS usertitle,
 	u.lastvisit AS last_login, u.joindate AS date_registered, u.posts,
-	u.reputation AS karmaGood, u.birthday_search AS birthdate,
+	u.reputation AS karma_good, u.birthday_search AS birthdate,
 	SUBSTRING(u.ipaddress, 1, 255) AS member_ip,
 	SUBSTRING(u.ipaddress, 1, 255) AS member_ip2,
 	CASE
@@ -85,14 +85,26 @@ convert_query("
 
 TRUNCATE {$to_prefix}categories;
 
-ALTER TABLE {$to_prefix}categories
-CHANGE COLUMN id_cat id_cat SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-CHANGE COLUMN cat_order cat_order SMALLINT(5) NOT NULL;
+---{
+alterDatabase('categories', 'change column', array(
+	'old_name' => 'id_cat',
+	'name' => 'id_cat',
+	'type' => 'smallint',
+	'size' => 5,
+	'auto' => true,
+));
+alterDatabase('categories', 'change column', array(
+	'old_name' => 'cat_order',
+	'name' => 'cat_order',
+	'type' => 'smallint',
+	'size' => 5,
+));
+---}
 
 ---* {$to_prefix}categories
 SELECT
 	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
-	displayorder AS cat_order, '' AS canCollapse
+	displayorder AS cat_order, '' AS can_collapse
 FROM {$from_prefix}forum
 WHERE parentid = -1
 ORDER BY cat_order;
@@ -103,13 +115,24 @@ ORDER BY cat_order;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
-ALTER TABLE {$to_prefix}boards
-CHANGE COLUMN id_board id_board SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-CHANGE COLUMN id_cat id_cat SMALLINT(5) NOT NULL;
+---{
+alterDatabase('bards', 'change column', array(
+	'old_name' => 'id_board',
+	'name' => 'id_board',
+	'type' => 'smallint',
+	'size' => 5,
+	'auto' => true,
+));
+alterDatabase('boards', 'change column', array(
+	'old_name' => 'id_cat',
+	'name' => 'id_cat',
+	'type' => 'smallint',
+	'size' => 5,
+));
+---}
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -388,15 +411,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

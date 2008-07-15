@@ -31,9 +31,9 @@ SELECT
 	SUBSTRING(signature, 1, 65534) AS signature,
 	emailnotification AS notify_announcements, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS location, '' AS msn,
-	'' AS time_format, '' AS avatar, '' AS member_ip, '' AS member_ip2, '' AS secret_question,
+	'' AS time_format, '' AS avatar, '' AS member_ip, '' AS secret_question,
 	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
-	'' AS smiley_set, '' AS password_salt
+	'' AS smiley_set, '' AS password_salt, '' AS member_ip2
 FROM {$from_prefix}user
 WHERE userid != 0;
 ---*
@@ -57,9 +57,8 @@ WHERE parentid = -1;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -200,7 +199,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	privatemessageid AS id_pm, touserid AS id_member,
-	messageread = 1 AS is_read, '' AS labels
+	messageread = 1 AS is_read, '-1' AS labels
 FROM {$from_prefix}privatemessage
 WHERE folderid != 'sent';
 ---*
@@ -268,15 +267,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

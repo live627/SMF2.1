@@ -26,7 +26,7 @@ SELECT
 	SUBSTRING(mem.website_url, 1, 255) AS website_url, mem.last_login,
 	mem.birthdate, SUBSTRING(mem.icq, 1, 255) AS icq,
 	SUBSTRING(IFNULL(mem.real_name, mem.member_name), 1, 255) AS real_name,
-	mem.notifyOnce, REPLACE(mem.lngfile, '.lng', '') AS lngfile,
+	mem.notifyOnce AS notify_once, REPLACE(mem.lngfile, '.lng', '') AS lngfile,
 	SUBSTRING(mem.email_address, 1, 255) AS email_address,
 	SUBSTRING(mem.aim, 1, 16) AS aim,
 	SUBSTRING(mem.personal_text, 1, 255) AS personal_text,
@@ -40,8 +40,8 @@ SELECT
 	SUBSTRING(mem.location, 1, 255) AS location, mem.time_offset,
 	SUBSTRING(mem.avatar, 1, 255) AS avatar,
 	SUBSTRING(mem.usertitle, 1, 255) AS usertitle,
-	mem.im_email_notify AS pm_email_notify, mem.karmaBad, mem.karmaGood,
-	mem.notifyAnnouncements,
+	mem.im_email_notify AS pm_email_notify, mem.karma_bad, mem.karma_good,
+	mem.notify_announcements,
 	SUBSTRING(mem.secret_question, 1, 255) AS secret_question,
 	IF(mem.secret_answer = '', '', MD5(mem.secret_answer)) AS secret_answer,
 	CASE
@@ -111,15 +111,14 @@ FROM {$from_prefix}categories;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
 	id_board, id_cat, SUBSTRING(name, 1, 255) AS name, board_order,
 	SUBSTRING(description, 1, 65534) AS description, num_topics, num_posts,
-	`count` AS countPosts, '-1,0' AS member_groups
+	`count` AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}boards;
 ---*
 
@@ -321,6 +320,7 @@ while ($_GET['start'] < $numNotifies)
 {
 	pastTime($substep);
 
+	/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}log_notify
 			(id_member, id_topic)
@@ -388,7 +388,7 @@ TRUNCATE {$to_prefix}log_activity;
 ---* {$to_prefix}log_activity
 SELECT
 	(year * 10000 + month * 100 + day) AS date, hits, topics, posts, registers,
-	mostOn
+	mostOn as most_on
 FROM {$from_prefix}log_activity;
 ---*
 
@@ -415,6 +415,7 @@ SELECT id_board, id_member
 FROM {$from_prefix}log_boards;
 ---*
 
+/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
 REPLACE INTO {$to_prefix}log_boards
 	(id_board, id_member)
 SELECT lmr.id_board, lmr.id_member
@@ -522,28 +523,23 @@ while ($row2 = convert_fetch_assoc($request))
 	if ($row2['type'] == 'ip' && preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $row2['value']))
 	{
 		$ip_parts = ip2range($row2['value']);
-		$rows[] = "{$ip_parts[0]['low']}, {$ip_parts[0]['high']}, {$ip_parts[1]['low']}, {$ip_parts[1]['high']}, {$ip_parts[2]['low']}, {$ip_parts[2]['high']}, {$ip_parts[3]['low']}, {$ip_parts[3]['high']}, '', '', 0";
+		$rows[] = array($ip_parts[0]['low'], $ip_parts[0]['high'], $ip_parts[1]['low'], $ip_parts[1]['high'], $ip_parts[2]['low'], $ip_parts[2]['high'], $ip_parts[3]['low'], $ip_parts[3]['high'], '', '', 0);
 	}
 	elseif ($row2['type'] == 'email')
-		$rows[] = "0, 0, 0, 0, 0, 0, 0, 0, '', '$row2[value]', 0";
+		$rows[] = array(0, 0, 0, 0, 0, 0, 0, 0, '', $row2['value'], 0);
 	elseif ($row2['type'] == 'username' && !empty($row2['id_member']))
-		$rows[] = "0, 0, 0, 0, 0, 0, 0, 0, '', '', $row2[id_member]";
+		$rows[] = array(0, 0, 0, 0, 0, 0, 0, 0, '', '', $row2['id_member']);
 }
 convert_free_result($request);
 
 // If there were values in the old table, insert them.
 if (!empty($rows))
 {
-	convert_query("
-		INSERT INTO {$to_prefix}ban_groups
-			(name, ban_time, expire_time, cannot_access, reason, notes)
-		VALUES ('yabbse_bans', " . time() . ", NULL, 1, '', 'Imported from YaBB SE'");
-	$ID_BAN_GROUP = convert_insert_id();
+	convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+		array("migrated_ban", time(), NULL, '', 'Migrated from YaBB SE', 1)
+	$id_ban_group = convert_insert_id();
 
-	convert_query("
-		INSERT INTO {$to_prefix}ban_items
-			(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, id_member)
-		VALUES ($ID_BAN_GROUP, " . implode("), ($ID_BAN_GROUP, ", $rows) . ')');
+	convert_insert('ban_items', array('id_ban_group', 'ip_low1', 'ip_high1', 'ip_low2', 'ip_high2', 'ip_low3', 'ip_high3', 'ip_low4', 'ip_high4', 'hostname', 'email_address', 'id_member'), $rows, 1)
 }
 ---}
 
@@ -573,17 +569,26 @@ DELETE FROM {$to_prefix}membergroups
 WHERE id_group > 8;
 
 ---{
+$setString = array(
+	array(1, $membergroups[1], '#FF0000', -1, '5#staradmin.gif'),
+	array(2, $membergroups[8], '#0000FF', -1, '5#stargmod.gif'),
+	array(3, $membergroups[2], '', -1, '5#starmod.gif'),
+	array(4, $membergroups[3], '', 0, '1#star.gif'),
+	array(5, $membergroups[4], '', $JrPostNum, '2#star.gif'),
+	array(6, $membergroups[5], '', $FullPostNum, '3#star.gif'),
+	array(7, $membergroups[6], '', $SrPostNum, '4#star.gif'),
+	array(8, $membergroups[7], '', $GodPostNum, '5#star.gif'),
+);
+
 $request = convert_query("
 	SELECT id_group, membergroup
 	FROM {$from_prefix}membergroups");
 $membergroups = array();
-$setString = ',';
 while ($row2 = convert_fetch_assoc($request))
 {
 	$membergroups[$row2['id_group']] = addslashes($row2['membergroup']);
 	if ($row2['id_group'] > 8)
-		$setString .= "
-		($row2[id_group], '" . $membergroups[$row2['id_group']] . "', '', -1, ''),";
+		$setString[] = array($row2['id_group'], $membergroups[$row2['id_group']], '', -1, '');
 }
 convert_free_result($request);
 
@@ -591,18 +596,7 @@ $grouptitles = array('Administrator', 'Global Moderator', 'Moderator', 'Newbie',
 for ($i = 1; $i < 9; $i ++)
 	$membergroups[$i] = isset($membergroups[$i]) ? $membergroups[$i] : $grouptitles[$i - 1];
 
-convert_query("
-	REPLACE INTO {$to_prefix}membergroups
-		(id_group, group_name, online_color, min_posts, stars)
-	VALUES (1, '$membergroups[1]', '#FF0000', -1, '5#staradmin.gif'),
-		(2, '$membergroups[8]', '#0000FF', -1, '5#stargmod.gif'),
-		(3, '$membergroups[2]', '', -1, '5#starmod.gif'),
-		(4, '$membergroups[3]', '', 0, '1#star.gif'),
-		(5, '$membergroups[4]', '', '$JrPostNum', '2#star.gif'),
-		(6, '$membergroups[5]', '', '$FullPostNum', '3#star.gif'),
-		(7, '$membergroups[6]', '', '$SrPostNum', '4#star.gif'),
-		(8, '$membergroups[7]', '', '$GodPostNum', '5#star.gif')" .
-		substr($setString, 0, -1));
+convert_insert('membergroups', array('id_group', 'group_name', 'online_color', 'min_posts', 'stars'), $setString, 'replace');
 ---}
 
 ---{
@@ -628,33 +622,35 @@ while ($row2 = convert_fetch_assoc($result))
 	$groups[] = $row2['id_group'];
 convert_free_result($result);
 
-$setString = '';
+$setString = array();
 foreach ($groups as $group)
 {
 	foreach ($permissions as $permission)
-		$setString .= "
-			($group, '$permission'),";
+		$setString[] = array($group, $permission);
 }
 
 if (!empty($setString))
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}permissions
-			(id_group, permission)
-		VALUES " . substr($setString, 0, -1));
+	convert_insert('permissions', array('id_group', 'permission'), $setString, 'insert ignore');
 
-$setString = '';
+$setString = array();
+$board_profiles = array()
 foreach ($groups as $group)
 {
 	foreach ($board_permissions as $permission)
-		$setString .= "
-			($group, 0, '$permission'),";
+	{
+		$setString[] = array($group + 4, 0, $permission);
+		$board_profiles[] = $group + 4;
+	}
 }
 
 if (!empty($setString))
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}board_permissions
-			(id_group, id_board, permission)
-		VALUES " . substr($setString, 0, -1));
+	convert_insert('board_permissions', array('id_profile', 'permission'), $setString, 'insert ignore');
+
+// This will set all the boards using custom permissions to their new profiles
+convert_query("
+	UPDATE {$to_prefix}boards
+	SET id_profile = id_board + 4
+	WHERE id_board IN (" . implode(',', $board_profiles) . ")");
 ---}
 
 /******************************************************************************/

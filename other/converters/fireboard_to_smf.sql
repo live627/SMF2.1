@@ -14,8 +14,15 @@
 
 TRUNCATE {$to_prefix}members;
 
-ALTER TABLE {$to_prefix}members
-CHANGE password_salt password_salt VARCHAR(50) NOT NULL;  
+---{
+alterDatabase('members', 'change column', array(
+	'old_name' => 'password_salt',
+	'name' => 'password_salt',
+	'type' => 'varchar',
+	'size' => 50,
+	'default' => '',
+));
+---}
 
 ---* {$to_prefix}members
 SELECT
@@ -24,7 +31,7 @@ SELECT
 	SUBSTRING(m.username, 1, 255) AS real_name,
 	SUBSTRING(fb.signature, 1, 65534) AS signature, fb.posts,
 	SUBSTRING(SUBSTRING_INDEX(m.password, ':', 1), 1, 64) AS passwd, SUBSTRING_INDEX(m.password, ':', -1) AS password_salt,
-	fb.karma AS karmaGood, SUBSTRING(m.email, 1, 255) AS email_address,
+	fb.karma AS karma_good, SUBSTRING(m.email, 1, 255) AS email_address,
 	SUBSTRING(cd.country, 1, 255) AS location,
 	IF(m.activation = 1, 0, 1) AS is_activated,
 	UNIX_TIMESTAMP(m.registerDate) AS date_registered,
@@ -58,9 +65,8 @@ WHERE parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -197,15 +203,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

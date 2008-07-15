@@ -62,9 +62,8 @@ FROM {$from_prefix}cat;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -174,8 +173,14 @@ FROM {$to_prefix}topics AS t
 /******************************************************************************/
 
 /* We need this, unfortunately, for the log_polls table. */
-ALTER TABLE {$to_prefix}poll_choices
-ADD COLUMN tempID int(10) unsigned NOT NULL default 0;
+---{
+alterDatabase('poll_choices', 'add column', array(
+	'name' => 'temp_id',
+	'type' => 'int',
+	'size' => 10,
+	'default' => 0,
+	));
+---}
 
 ---* {$to_prefix}poll_choices
 ---{
@@ -197,7 +202,7 @@ else
 $row['id_choice'] = $_SESSION['id_choice'];
 ---}
 SELECT
-	id AS tempID, poll_id AS id_poll, 1 AS id_choice,
+	id AS temp_id, poll_id AS id_poll, 1 AS id_choice,
 	SUBSTRING(name, 1, 255) AS label, `count` AS votes
 FROM {$from_prefix}poll_opt;
 ---*
@@ -211,11 +216,12 @@ SELECT
 	pot.poll_id AS id_poll, pot.user_id AS id_member,
 	pc.id_choice AS id_choice
 FROM {$from_prefix}poll_opt_track AS pot
-	INNER JOIN {$to_prefix}poll_choices AS pc ON (pc.tempID = pot.poll_opt);
+	INNER JOIN {$to_prefix}poll_choices AS pc ON (pc.temp_id = pot.poll_opt);
 ---*
 
-ALTER TABLE {$to_prefix}poll_choices
-DROP tempID;
+---{
+alterDatabase('poll_choices', 'remove column', 'temp_id');
+---}
 
 /******************************************************************************/
 --- Converting personal messages (step 1)...
@@ -258,7 +264,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	id AS id_pm, duser_id AS id_member, read_stamp != 0 AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}pmsg
 WHERE fldr != 3;
 ---*
@@ -352,15 +358,12 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
+
 ---}
 
 /******************************************************************************/

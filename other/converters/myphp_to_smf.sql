@@ -46,19 +46,17 @@ FROM {$from_prefix}member;
 
 TRUNCATE {$to_prefix}categories;
 
-INSERT INTO {$to_prefix}categories
-	(id_cat, name)
-VALUES
-	(1, 'General Category');
+---{
+convert_insert('categories', array('id_cat', 'cat_order', 'name', 'can_collapse'), array(1, 0, 'General Category', 1), 'insert ignore');
+---}
 
 /******************************************************************************/
 --- Converting boards...
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -184,10 +182,10 @@ convert_free_result($result);
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
 
-convert_query("
-	REPLACE INTO {$to_prefix}settings
-		(variable, value)
-	VALUES ('censor_vulgar', '$censored_vulgar'),
-		('censor_proper', '$censored_proper')");
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('censor_vulgar', $censored_vulgar)
+		array('censor_proper', $censored_proper)
+	), 'replace');
 ---}
 ---#

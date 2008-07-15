@@ -53,9 +53,8 @@ WHERE type = 'c';
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile >;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -185,7 +184,7 @@ WHERE pm.folder != 2;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT pmid AS id_pm, toid AS id_member, readtime != 0 AS is_read, '' AS labels
+SELECT pmid AS id_pm, toid AS id_member, readtime != 0 AS is_read, '-1' AS labels
 FROM {$from_prefix}privatemessages
 WHERE folder != 2;
 ---*
@@ -234,11 +233,11 @@ convert_free_result($result);
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
 
-convert_query("
-	REPLACE INTO {$to_prefix}settings
-		(variable, value)
-	VALUES ('censor_vulgar', '$censored_vulgar'),
-		('censor_proper', '$censored_proper')");
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('censor_vulgar', $censored_vulgar)
+		array('censor_proper', $censored_proper)
+	), 'replace');
 ---}
 ---#
 
@@ -260,7 +259,7 @@ FROM {$from_prefix}moderators;
 TRUNCATE {$to_prefix}log_topics;
 
 ---* {$to_prefix}log_topics
-SELECT tid AS id_topic, uid AS id_member, dateline AS log_time
+SELECT tid AS id_topic, uid AS id_member, dateline AS logTime
 FROM {$from_prefix}threadsread;
 ---*
 

@@ -16,12 +16,19 @@
 
 TRUNCATE {$to_prefix}members;
 
-ALTER TABLE {$to_prefix}members
-DROP COLUMN tempID;
-
-ALTER TABLE {$to_prefix}members
-ADD COLUMN tempID varchar(32),
-ADD INDEX tempID (tempID(32));
+---{
+alterDatabase('members', 'remove column', 'temp_id');
+alterDatabase('members', 'add column', array(
+	'name' => 'temp_id',
+	'type' => 'varchar',
+	'size' => 32,
+));
+alterDatabase('members', 'add index', array(
+	'type' => 'index',
+	'name' => 'temp_id',
+	'columns' => array('temp_id'),
+));
+---}
 
 ---* {$to_prefix}members
 SELECT
@@ -44,7 +51,7 @@ SELECT
 	TIME_ADJUST AS time_offset, HIDE_EMAIL AS hide_email,
 	SUBSTRING(msnNAME, 1, 255) AS msn, LAST_ACTIVITY AS last_login,
 	GENDER AS gender, SUBSTRING(MEMBER_NAME, 1, 255) AS real_name,
-	MEMBER_ID AS tempID, '' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list,
+	MEMBER_ID AS temp_id, '' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list,
 	'' AS message_labels, '' AS time_format, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
 	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
@@ -68,9 +75,8 @@ FROM {$from_prefix}categories;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -101,8 +107,8 @@ SELECT
 FROM {$from_prefix}forum_topics AS t
 	INNER JOIN {$from_prefix}forum_posts AS p ON (p.TOPIC_ID = t.TOPIC_ID)
 	LEFT JOIN {$from_prefix}forum_polls AS pl ON (pl.POLL_ID = t.TOPIC_ID)
-	LEFT JOIN {$to_prefix}members AS memf ON (memf.tempID = t.TOPIC_STARTER)
-	LEFT JOIN {$to_prefix}members AS meml ON (meml.tempID = t.TOPIC_LAST_POSTER)
+	LEFT JOIN {$to_prefix}members AS memf ON (memf.temp_id = t.TOPIC_STARTER)
+	LEFT JOIN {$to_prefix}members AS meml ON (meml.temp_id = t.TOPIC_LAST_POSTER)
 WHERE t.MOVED_TO IS NULL
 GROUP BY t.TOPIC_ID
 HAVING id_first_msg != 0
@@ -127,7 +133,7 @@ SELECT
 	SUBSTRING(mem.email_address, 1, 255) AS poster_email
 FROM {$from_prefix}forum_posts AS p
 	LEFT JOIN {$from_prefix}forum_topics AS t ON (t.TOPIC_ID = p.TOPIC_ID)
-	LEFT JOIN {$to_prefix}members AS mem ON (mem.tempID = p.AUTHOR);
+	LEFT JOIN {$to_prefix}members AS mem ON (mem.temp_id = p.AUTHOR);
 ---*
 
 /******************************************************************************/
@@ -143,7 +149,7 @@ SELECT
 	p.ID AS id_poll, SUBSTRING(p.POLL_TITLE, 1, 255) AS question,
 	mem.id_member, SUBSTRING(p.POLL_STARTER_N, 1, 255) AS poster_name
 FROM {$from_prefix}forum_polls AS p
-	LEFT JOIN {$to_prefix}members AS mem ON (mem.tempID = p.POLL_STARTER);
+	LEFT JOIN {$to_prefix}members AS mem ON (mem.temp_id = p.POLL_STARTER);
 ---*
 
 /******************************************************************************/
@@ -171,7 +177,7 @@ FROM {$from_prefix}forum_polls;
 SELECT pl.ID AS id_poll, mem.id_member
 FROM {$from_prefix}forum_poll_voters AS v
 	INNER JOIN {$from_prefix}forum_polls AS pl ON (pl.POLL_ID = v.POLL_ID)
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = v.MEMBER_ID);
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = v.MEMBER_ID);
 ---*
 
 /******************************************************************************/
@@ -188,7 +194,7 @@ SELECT
 	SUBSTRING(pm.FROM_NAME, 1, 255) AS from_name,
 	mem.id_member AS id_member_from
 FROM {$from_prefix}message_data AS pm
-	LEFT JOIN {$to_prefix}members AS mem ON (mem.tempID = pm.FROM_ID)
+	LEFT JOIN {$to_prefix}members AS mem ON (mem.temp_id = pm.FROM_ID)
 WHERE pm.VIRTUAL_DIR = 'in';
 ---*
 
@@ -202,9 +208,9 @@ TRUNCATE {$to_prefix}pm_recipients;
 SELECT
 	pm.MESSAGE_ID AS id_pm, mem.id_member,
 	(pm.READ_STATE = 1) | (pm.REPLY << 1) AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}message_data AS pm
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = pm.RECIPIENT_ID)
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = pm.RECIPIENT_ID)
 WHERE pm.VIRTUAL_DIR = 'in';
 ---*
 
@@ -242,7 +248,7 @@ TRUNCATE {$to_prefix}moderators;
 ---* {$to_prefix}moderators
 SELECT mem.id_member, mods.FORUM_ID AS id_board
 FROM {$from_prefix}forum_moderators AS mods
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = mods.MEMBER_ID);
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = mods.MEMBER_ID);
 ---*
 
 /******************************************************************************/
@@ -254,15 +260,8 @@ TRUNCATE {$to_prefix}log_topics;
 ---* {$to_prefix}log_topics
 SELECT tv.TOPIC_ID AS id_topic, mem.id_member, tv.VIEWED AS log_time
 FROM {$from_prefix}topic_views AS tv
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = tv.MEMBER_ID);
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = tv.MEMBER_ID);
 ---*
-
-/******************************************************************************/
---- Cleaning up...
-/******************************************************************************/
-
-ALTER TABLE {$to_prefix}members
-DROP COLUMN tempID;
 
 /******************************************************************************/
 --- Converting attachments...
@@ -288,3 +287,11 @@ SELECT
 FROM {$from_prefix}forum_posts AS p
 	INNER JOIN {$from_prefix}attachments AS a ON (a.ID = p.ATTACH_ID);
 ---*
+
+/******************************************************************************/
+--- Cleaning up...
+/******************************************************************************/
+
+---{
+alterDatabase('members', 'remove column', 'temp_id');
+---}

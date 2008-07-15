@@ -40,19 +40,17 @@ FROM {$from_prefix}users;
 
 TRUNCATE {$to_prefix}categories;
 
-INSERT INTO {$to_prefix}categories
-	(id_cat, name)
-VALUES
-	(1, 'General Category');
+---{
+convert_insert('categories', array('id_cat', 'name'), array(1, 'General Category'));
+---}
 
 /******************************************************************************/
 --- Converting boards...
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -149,7 +147,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	private_message_id AS id_pm, to_user_id AS id_member, read_flag AS is_read,
-	to_del_flag AS deleted, '' AS labels
+	to_del_flag AS deleted, '-1' AS labels
 FROM {$from_prefix}private_messages;
 ---*
 

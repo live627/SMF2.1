@@ -57,9 +57,8 @@ GROUP BY Cat_Number;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -190,7 +189,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	M_Number AS id_pm, M_Uid AS id_member, M_Status != 'N' AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}Messages;
 ---*
 

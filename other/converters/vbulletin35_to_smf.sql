@@ -16,7 +16,7 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name, 
+	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
 	SUBSTRING(u.username, 1, 255) AS real_name,
 	SUBSTRING(u.password, 1, 64) AS passwd,
 	SUBSTRING(u.email, 1, 255) AS email_address,
@@ -49,7 +49,7 @@ WHERE u.userid != 0;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
 	displayorder AS cat_order
 FROM {$from_prefix}forum
@@ -61,9 +61,8 @@ WHERE parentid = -1;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -204,10 +203,10 @@ WHERE pm.folderid != -1;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pm.pmid AS id_pm, pm.touserid AS id_member, pm.readtime != 0 AS is_read,
-	'' AS labels
-FROM {$from_prefix}pmreceipt AS pm;
+	'-1' AS labels
+FROM {$from_prefix}pm AS pm
 ---*
 
 /******************************************************************************/
@@ -273,15 +272,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif, $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('variable', 'value'), $rows, 'replace');
 ---}
 
 /******************************************************************************/
@@ -291,7 +286,7 @@ if (!empty($rows))
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads', 'width', 'height');
 
 if (!isset($vb_settings))
 {
@@ -310,6 +305,18 @@ if (!isset($vb_settings))
 	convert_free_result($result);
 }
 
+// Get $id_attach.
+if (empty($id_attach))
+{
+	$result = convert_query("
+		SELECT MAX(id_attach) + 1
+		FROM {$to_prefix}attachments");
+	list ($id_attach) = convert_fetch_row($result);
+	convert_free_result($result);
+
+	$id_attach = empty($id_attach) ? 1 : $id_attach;
+}
+
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (empty($vb_settings['attachfile']))
 {
@@ -322,16 +329,25 @@ if (empty($vb_settings['attachfile']))
 }
 elseif ($vb_settings['attachfile'] == 1)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . $row['userid'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $newfilename))
+	if (!copy($vb_settings['attachpath'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $newfilename))
 		return;
 }
 elseif ($vb_settings['attachfile'] == 2)
 {
-	if (!copy($vb_settings['attachpath'] . '/' . chunk_split($row['userid'], 1, '/') . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $newfilename))
+	if (!copy($vb_settings['attachpath'] . '/' . $row['attachmentid'] . '.attach', $attachmentUploadDir . '/' . $newfilename))
 		return;
 }
 
-$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+// Set the default empty values.
+$width = '0';
+$height = '0';
+
+// Is an an image?
+$attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
+if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
+	list ($width, $height) = getimagesize($attachmentUploadDir . '/' . $newfilename);
+
+$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";
 $id_attach++;
 ---}
 SELECT

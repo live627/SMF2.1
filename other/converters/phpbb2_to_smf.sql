@@ -99,7 +99,7 @@ if (!isset($board_timezone))
 			WHERE variable = 'custom_avatar_dir'
 			LIMIT 1");
 		list ($avatar_dir) = convert_fetch_row($request2);
-		$attachmentType = '1';
+		$attachment_type = '1';
 	}
 	else
 	{
@@ -110,7 +110,7 @@ if (!isset($board_timezone))
 			WHERE variable = 'attachmentUploadDir'
 			LIMIT 1");
 		list ($avatar_dir) = convert_fetch_row($request2);
-		$attachmentType = '0';
+		$attachment_type = '0';
 	}
 	convert_free_result($request2);
 
@@ -134,10 +134,7 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
 	@copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $avatar_dir . '/' . $smf_avatar_filename);
 
-	convert_query("
-		INSERT INTO {$to_prefix}attachments
-			(id_msg, id_member, filename, attachmentType)
-		VALUES (0, $row[id_member], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255), " . $attachmentType . ")");
+	convert_insert('attachments', array('id_msg', 'id_member', 'filename', 'attachment_type'), array(0, $row['id_member'], addslashes($smf_avatar_filename), $attachment_type), 'replace');
 	$row['avatar'] = '';
 }
 elseif ($row['user_avatar_type'] == 3)
@@ -270,9 +267,8 @@ FROM {$from_prefix}categories;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -426,12 +422,12 @@ FROM {$from_prefix}privmsgs AS pm
 --- Converting board access...
 /******************************************************************************/
 
-REPLACE INTO {$to_prefix}settings
-	(variable, value)
-VALUES ('permission_enable_by_board', '1');
+---{
+convert_insert('settings', array('variable', 'value'), array('permission_enable_by_board', 1), 'replace');
+----}
 
 UPDATE {$to_prefix}boards
-SET permission_mode = 1;
+SET id_profile = id_board + 4;
 
 ---# Do all board permissions...
 ---{
@@ -505,15 +501,11 @@ while ($row = convert_fetch_assoc($request))
 	foreach ($this_board as $id_group => $permissions)
 	{
 		foreach ($permissions as $perm)
-			$setString .= "
-			($id_group, $row[id_board], '$perm'),";
+			$setString[] = array($id_group, $row['id_board'] + 4, $perm);
 	}
 
-	if ($setString != '')
-		convert_query("
-			INSERT IGNORE INTO {$to_prefix}board_permissions
-				(id_group, id_board, permission)
-			VALUES" . substr($setString, 0, -1));
+	if (!empty($setString))
+		convert_insert('board_permissions', array('id_group', 'id_profile', 'permission'), $setString);
 }
 convert_free_result($request);
 ---}
@@ -588,19 +580,15 @@ while ($row = convert_fetch_assoc($request))
 		$this_group[] = 'split_any';
 	}
 
-	$setString = '';
+	$setString = array();
 	$this_group = array_unique($this_group);
 	foreach ($this_group as $perm)
 	{
-		$setString .= "
-			($row[id_group], $row[id_board], '$perm'),";
+		$setString[] = array($row['id_group'], $row['id_board'] + 4, $perm);
 	}
 
-	if ($setString != '')
-		convert_query("
-			INSERT IGNORE INTO {$to_prefix}board_permissions
-				(id_group, id_board, permission)
-			VALUES" . substr($setString, 0, -1));
+	if (!empty($setString))
+		convert_insert('board_permissions', array('id_group', 'id_profile', 'permission'), $setString, 'insert ignore');
 
 	// Give group access to board.
 	$result = convert_query("

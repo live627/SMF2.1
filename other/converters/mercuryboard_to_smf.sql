@@ -62,9 +62,8 @@ WHERE forum_parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -185,14 +184,10 @@ if (isset($last_id_poll) && !empty($choices))
 {
 	$rows = array();
 	foreach ($choices as $id => $label)
-		$rows[] = "$last_id_poll, '" . addslashes($label) . "', " . ($id + 1) . ", 0";
+		$rows[] = array($last_id_poll, addslashes($label), ($id + 1), 0);
 	$choices = array();
 
-	convert_query("
-		INSERT INTO {$to_prefix}poll_choices
-			(id_poll, label, id_choice, votes)
-		VALUES (" . implode('),
-			(', $rows) . ")");
+	convert_insert('board_permissions', array('id_poll', 'label', 'id_choice', 'votes'), $rows);
 }
 ---}
 
@@ -231,7 +226,7 @@ WHERE p.pm_folder != 1;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT pm_id AS id_pm, pm_to AS id_member, pm_read AS is_read, '' AS labels
+SELECT pm_id AS id_pm, pm_to AS id_member, pm_read AS is_read, '-1' AS labels
 FROM {$from_prefix}pmsystem
 WHERE pm_folder != 1;
 ---*

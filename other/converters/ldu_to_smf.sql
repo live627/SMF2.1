@@ -59,9 +59,8 @@ ORDER BY fs_order;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -195,6 +194,6 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	pm_id AS id_pm, pm_touserid AS id_member, pm_state != 0 AS is_read,
-	'' AS labels
+	'-1' AS labels
 FROM {$from_prefix}{$db_pm};
 ---*

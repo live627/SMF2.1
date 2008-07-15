@@ -86,11 +86,9 @@ foreach ($cont as $categories)
 	list($name) = convert_fetch_row($request);
 	convert_free_result($request);
 	
-	
-	convert_query("
-		INSERT IGNORE INTO {$to_prefix}categories
-			(id_cat, name, catorder)
-		VALUES ('$categories' , '$name' ,0)");
+	convert_insert('categories', array('id_cat', 'name', 'catorder'),
+		array($categories, $name ,0)
+	);
 }	
 ---}
 
@@ -118,17 +116,16 @@ convert_free_result($request);
 /******************************************************************************/
 TRUNCATE {$to_prefix}boards;
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{
 $no_add = true;
 $keys = array('id_board', 'name', 'description', 'id_parent', 'id_cat');
 
-$request = convert_query("
-	INSERT IGNORE INTO {$to_prefix}boards
-		(id_board, name, description, id_parent, id_cat)
-	VALUES ('$row[id_board]' , '$row[name]' , '$row[description]' , '$row[id_parent]' , '$row[id_cat]')");
+convert_insert('boards', array('id_board', 'name', 'description', 'id_parent', 'id_cat'),
+	array($row['id_board'], $row['name'], $row['description'], $row['id_parent'], $row['id_cat']),
+	'insert ignore');
 ---}
 
 SELECT t.tid AS id_board, SUBSTRING(t.name, 1, 255) AS name, SUBSTRING(t.description, 1, 255) AS description, 
@@ -198,6 +195,12 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 ---{
+/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
+/*
+Actually its not a mysql specific query, but why are we doing this?
+Just letting the select do its work would be a better option here
+*/
+
 $no_add = true;
 $keys = array('id_topic', 'id_board', 'is_sticky', 'id_first_msg', 'id_last_msg', 'id_member_started', 'id_member_updated');
 

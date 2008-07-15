@@ -1113,8 +1113,19 @@ function doStep1()
 								$row['real_name'] = strtr($row['real_name'], array('\'' => '&#039;'));
 						}
 
+						// Not adding anything?
 						if (empty($no_add))
-							$rows[] = "'" . implode("', '", addslashes_recursive($row)) . "'";
+						{
+							// You don't know where its been.
+							$temp = array();
+
+							// Simply loop each row, clean it and put it in a temp array.
+							foreach ($row as $dirty_string)
+								$temp[] = addslashes_recursive($dirty_string);
+
+							// Now that mess is over. Save it.
+							$rows[] = $temp;
+						}
 						else
 							$no_add = false;
 
@@ -1122,17 +1133,17 @@ function doStep1()
 							$keys = array_keys($row);
 					}
 
-					if (isset($ignore) && $ignore == true)
-						$ignore = 'IGNORE';
-					else
-						$ignore = '';
+					// Provide legacy for $ignore
+					if (!empty($ignore) && $ignore == 'ignore')
+						$type = 'ignore';
 
+					// Simple, if its not set or if its not in that array, force default.
+					if (empty($type) || !in_array($type, array('ignore', 'replace', 'insert', 'insert ignore'))
+						$type = 'insert';
+
+					// Finally, insert the data. true in this ignores the prefix.
 					if (!empty($rows))
-						convert_query("
-							INSERT $ignore INTO $special_table
-								(" . implode(', ', $keys) . ")
-							VALUES (" . implode('),
-								(', $rows) . ")");
+						convert_insert($special_table, $keys, $rows, $type, true);
 
 					$_REQUEST['start'] += $special_limit;
 					if (empty($special_max) && convert_num_rows($special_result) < $special_limit)
@@ -1771,7 +1782,7 @@ function doStep2()
 				break;
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
-				if ($row['attachmentType'] == 1)
+				if ($row['attachment_type'] == 1)
 				{
 					$request2 = convert_query("
 						SELECT value
@@ -2450,6 +2461,22 @@ function convert_query($string, $return_error = false)
 	die;
 }
 
+// Inserting stuff?
+function convert_insert($table, $columns, $block, $type = 'insert', $no_prefix = false)
+{
+	global $smcFunc;
+
+	// Correct the type. We used this as it was easier to understand its meaning.
+	if ($type == 'insert ignore')
+		$type = 'ignore';
+	
+	// Unless I say, we are using a prefix.
+	if (empty($no_prefix)
+		$table = '{db_prefix}' . $table;
+
+	return $smcFUnc['db_insert']($type, $table, $columns, $block, array());
+}
+
 // Provide a easy way to give our converters an insert id.
 function convert_insert_id($result)
 {
@@ -2610,6 +2637,42 @@ function alterDatabase($table, $type, $parms, $no_prefix = false)
 		$smcFunc['db_add_column']($table, $parms, $extra_parms);
 	elseif ($type == 'remove column')
 		$smcFunc['db_remove_column']($table, $parms, $extra_parms);
+	elseif ($type == 'change column')
+	{
+		// Remove the old_name column just incase it confuses SMF.
+		$temp_column_name = $parms['old_name'];
+		unset($parms['old_name']);
+
+		$smcFunc['db_change_column']($table, $temp_column_name, $parms, $extra_parms);
+	}
+	elseif ($type == 'add index' || $type == 'add key')
+		$smcFunc['db_add_index']($table, $parms, $extra_parms);
+	elseif ($type == 'remove index' || $type == 'remove key')
+	{
+		// Attemp it for 2.0 and hope for the best!
+		$smcFunc['db_remove_index']($table, $parms, $extra_parms);
+
+		// Since SMF 1.1 used camel case in its ids. Lets try to detect that.
+		// Best we can do is only do this for mysql users. Sorry mates.
+		if ($smcFunc['db_title'] == 'MySQL' && $parms != strtolower($parms) && strtolower(substr(parms, 0, 2)) != 'id')
+		{
+			$count = count($parms);
+			$i = 0;
+			for ($i < $count)
+			{
+				if ($parms{$i} == '_')
+					break;
+				++$i;
+			}
+			$new_string = strtoupper($parms{($i + 1)});
+			$parms = substr($new_string, 0, $i) . substr($new_string, $i + 1);
+		
+			$smcFunc['db_remove_index']($table, $parms, $extra_parms);
+		}
+		// Its an id column, which is easier.
+		elseif ($smcFunc['db_title'] == 'MySQL' && $parms != strtolower($parms) && strtolower(substr(parms, 0, 2)) == 'id')
+			$smcFunc['db_remove_index']($table, strtolower($parms), $extra_parms);
+	}
 	else
 		print_error('Unkown type called in alterDatabase.' . var_dump(function_exists('debug_backtrace') ? debug_backtrace() : 'Unable to backtrace'));
 }

@@ -20,7 +20,7 @@ SELECT
 	m.id AS id_member, SUBSTRING(m.username, 1, 80) AS member_name,
 	SUBSTRING(m.username, 1, 255) AS real_name,
 	SUBSTRING(sb.signature, 1, 65534) AS signature, sb.posts,
-	sb.karma AS karmaGood, SUBSTRING(m.password, 1, 64) AS passwd,
+	sb.karma AS karma_good, SUBSTRING(m.password, 1, 64) AS passwd,
 	SUBSTRING(m.email, 1, 255) AS email_address,
 	SUBSTRING(cd.country, 1, 255) AS location,
 	IF(m.activation = 1, 0, 1) AS is_activated,
@@ -56,9 +56,8 @@ WHERE parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -195,15 +194,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

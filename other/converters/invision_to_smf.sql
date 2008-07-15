@@ -92,9 +92,8 @@ WHERE id >= 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
@@ -365,7 +364,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT
-			g_id AS id_group, g_title AS group_name, g_max_messages AS maxMessages,
+			g_id AS id_group, g_title AS group_name, g_max_messages AS max_messages,
 			g_view_board AS view_stats, g_mem_info AS view_mlist,
 			g_view_board AS who_view, g_use_search AS search_posts, g_email_friend AS send_topic,
 			g_edit_profile AS profile_identity_own, g_post_new_topics AS post_new,
@@ -388,11 +387,9 @@ while (true)
 		// If this is NOT an existing membergroup add it (1-5 = existing.)
 		if ($row['id_group'] > 5)
 		{
-			convert_query("
-				INSERT INTO {$to_prefix}membergroups
-					(id_group, group_name, maxMessages, online_color, stars)
-				VALUES
-					($row[id_group] + 3, SUBSTRING('$row[group_name]', 1, 255), $row[maxMessages], '', '')");
+			convert_insert('membergroups', array('id_group', 'group_name', 'max_messages', 'online_color', 'stars'),
+				array($row[id_group] + 3, substr($row['group_name'], 0, 255), $row['max_messages'], '', '')
+			);
 			$groupID = $row['id_group'] + 3;
 		}
 		else
@@ -407,22 +404,18 @@ while (true)
 
 		unset($row['id_group']);
 		unset($row['group_name']);
-		unset($row['maxMessages']);
+		unset($row['max_messages']);
 
 		foreach ($row as $key => $value)
 			if ($value == 1)
-				$perms[] = $groupID . ', \'' . $key . '\'';
+				$perms[] = array($groupID, $key);
 		foreach ($manual_perms as $key)
 			if ($value == 1 && $groupID != -1)
-				$perms[] = $groupID . ', \'' . $key . '\'';
+				$perms[] = array($groupID, $key);
 	}
 
 	if (!empty($perms))
-		convert_query("
-			REPLACE INTO {$to_prefix}permissions
-				(id_group, permission)
-			VALUES (" . implode('),
-				(', $perms) . ")");
+		convert_insert('permissions', array('id_group', 'permission'), $perms, 'replace');
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)
@@ -484,47 +477,53 @@ while ($row = convert_fetch_assoc($result))
 }
 convert_free_result($result);
 
-function magicMask(&$group)
+if (!function_exists('magicMask'))
 {
-	/*
-	Right... don't laugh... here we explode the string to an array. Then we replace each group
-	with the groups that use this mask. Then we remove duplicates and then we implode it again
-	*/
-
-	global $groupMask;
-
-	if ($group != '*')
+	function magicMask(&$group)
 	{
-		$groupArray = explode(',', $group);
+		/*
+		Right... don't laugh... here we explode the string to an array. Then we replace each group
+		with the groups that use this mask. Then we remove duplicates and then we implode it again
+		*/
 
-		$newGroups = array();
-		foreach ($groupMask as $id => $perms)
+		global $groupMask;
+
+		if ($group != '*')
 		{
-			$perm = explode(',', $perms);
-			foreach ($perm as $realPerm)
-				if (in_array($realPerm, $groupArray) && !in_array($id, $newGroups))
-					$newGroups[] = $id;
-		}
+			$groupArray = explode(',', $group);
 
-		$group = implode(',', $newGroups);
+			$newGroups = array();
+			foreach ($groupMask as $id => $perms)
+			{
+				$perm = explode(',', $perms);
+				foreach ($perm as $realPerm)
+					if (in_array($realPerm, $groupArray) && !in_array($id, $newGroups))
+						$newGroups[] = $id;
+			}
+
+			$group = implode(',', $newGroups);
+		}
 	}
 }
 
-function smfGroup(&$group)
+if (!function_exists('smfGroup'))
 {
-	foreach ($group as $key => $value)
+	function smfGroup(&$group)
 	{
-		// Admin doesn't need to have his permissions done.
-		if ($value == 4)
-			unset($group[$key]);
-		elseif ($value == 2)
-			$group[$key] = -1;
-		elseif ($value == 3)
-			$group[$key] = 0;
-		elseif ($value > 5)
-			$group[$key] = $value + 3;
-		else
-			unset($group[$key]);
+		foreach ($group as $key => $value)
+		{
+			// Admin doesn't need to have his permissions done.
+			if ($value == 4)
+				unset($group[$key]);
+			elseif ($value == 2)
+				$group[$key] = -1;
+			elseif ($value == 3)
+				$group[$key] = 0;
+			elseif ($value > 5)
+				$group[$key] = $value + 3;
+			else
+				unset($group[$key]);
+		}
 	}
 }
 
@@ -622,16 +621,12 @@ while (true)
 			// Now we have $tempGroup filled with all the permissions for each group - better do something with it!
 			foreach ($tempGroup as $groupno => $group)
 				foreach ($group as $permission => $dummy)
-					$perms[] = '(' . $row['id_board'] . ', ' . $groupno . ', \'' . $permission . '\')';
+					$perms[] = array($row['id_board'], $groupno, $permission);
 		}
 	}
 
 	if (!empty($perms))
-		convert_query("
-			REPLACE INTO {$to_prefix}board_permissions
-				(id_board, id_group, permission)
-			VALUES " . implode(',
-				', $perms));
+		convert_insert('board_permissions', array('id_board', 'id_group', 'permission'), $perms, 'replace');
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)
@@ -696,31 +691,27 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/
 --- Converting settings...
 /******************************************************************************/
 
-REPLACE INTO {$to_prefix}settings
-	(variable, value)
-VALUES
-	('hotTopicPosts', '{$INFO['hot_topic']}'),
-	('defaultMaxMessages', '{$INFO['display_max_posts']}'),
-	('defaultMaxTopics', '{$INFO['display_max_topics']}'),
-	('spamWaitTime', '{$INFO['flood_control']}'),
-	('onlineEnable', '{$INFO['allow_online_list']}');
-
 ---{
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('hotTopicPosts', $INFO['hot_topic'])
+		array('defaultMaxMessages', $INFO['display_max_posts'])
+		array('defaultMaxTopics', $INFO['display_max_topics'])
+		array('spamWaitTime', $INFO['flood_control'])
+		array('onlineEnable', $INFO['allow_online_list'])
+	), 'replace');
+
 updateSettingsFile(array(
 	'mbname' => '\'' . addcslashes($INFO['board_name'], '\'\\') . '\'',
 	'mmessage' => '\'' . addcslashes($INFO['offline_msg'], '\'\\') . '\''

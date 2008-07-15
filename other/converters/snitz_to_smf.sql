@@ -58,16 +58,15 @@ FROM {$from_prefix}FORUM_CATEGORY;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 SELECT
 	FORUM_ID AS id_board, CAT_ID AS id_cat, F_ORDER AS board_order,
 	SUBSTRING(F_SUBJECT, 1, 255) AS name,
 	SUBSTRING(F_DESCRIPTION, 1, 65534) AS description, F_TOPICS AS num_topics,
-	F_COUNT AS num_posts, F_COUNT_M_POSTS = 0 AS countPosts,
+	F_COUNT AS num_posts, F_COUNT_M_POSTS = 0 AS count_posts,
 	'-1,0' AS member_groups
 FROM {$from_prefix}FORUM_FORUM;
 ---*
@@ -200,11 +199,11 @@ convert_free_result($result);
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
 
-convert_query("
-	REPLACE INTO {$to_prefix}settings
-		(variable, value)
-	VALUES ('censor_vulgar', '$censored_vulgar'),
-		('censor_proper', '$censored_proper')");
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('censor_vulgar', $censored_vulgar)
+		array('censor_proper', $censored_proper)
+	), 'replace');
 ---}
 ---#
 

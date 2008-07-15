@@ -58,9 +58,6 @@ while (true)
 $_REQUEST['start'] = 0;
 ---}
 
-
-
-
 /******************************************************************************/
 --- Converting categories...
 /******************************************************************************/
@@ -121,10 +118,13 @@ convert_free_result($request);
 /******************************************************************************/
 TRUNCATE {$to_prefix}boards;
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 ---* {$to_prefix}boards
 ---{
+/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
+/* WHY ARE WE REALLY DOING IT THIS WAY? LET CONVERT.PHP HANDLE THIS */
+
 $no_add = true;
 $keys = array('id_board', 'name', 'description', 'id_parent', 'id_cat');
 $request = convert_query("
@@ -200,6 +200,9 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 ---{
+/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
+/* WHY ARE WE REALLY DOING IT THIS WAY? LET CONVERT.PHP HANDLE THIS */
+
 $no_add = true;
 $keys = array('id_topic', 'id_board', 'is_sticky', 'id_first_msg', 'id_last_msg', 'id_member_started', 'id_member_updated');
 

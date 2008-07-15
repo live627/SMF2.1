@@ -14,8 +14,16 @@
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}members;
-ALTER TABLE {$to_prefix}members
-CHANGE COLUMN password_salt password_salt varchar(8) NOT NULL default '';
+
+---{
+alterDatabase('members', 'change column', array(
+	'old_name' => 'password_salt',
+	'name' => 'password_salt',
+	'type' => 'varchar',
+	'size' => 8,
+	'default' => '',
+));
+---}
 
 ---* {$to_prefix}members
 SELECT
@@ -57,9 +65,8 @@ WHERE type = 'c';
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -67,7 +74,7 @@ SELECT
 	fid AS id_board, SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, disporder AS board_order,
 	posts AS num_posts, threads AS num_topics, pid AS id_parent,
-	usepostcounts != 'yes' AS countPosts, '-1,0' AS member_groups
+	usepostcounts != 'yes' AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}forums
 WHERE type = 'f';
 ---*
@@ -247,11 +254,11 @@ convert_free_result($result);
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
 
-convert_query("
-	REPLACE INTO {$to_prefix}settings
-		(variable, value)
-	VALUES ('censor_vulgar', '$censored_vulgar'),
-		('censor_proper', '$censored_proper')");
+convert_insert('settings', array('variable', 'value'),
+	array(
+		array('censor_vulgar', $censored_vulgar)
+		array('censor_proper', $censored_proper)
+	), 'replace');
 ---}
 ---#
 

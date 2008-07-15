@@ -62,9 +62,8 @@ WHERE type = 'group';
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_prfile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -246,7 +245,7 @@ TRUNCATE {$to_prefix}ban_groups;
 // Give the ban a unique name.
 $group_count = isset($group_count) ? $group_count + 1 : $_REQUEST['start'] + 1;
 $row['name'] .= $group_count;
-$row['ID_BAN_GROUP'] = $group_count;
+$row['id_ban_group'] = $group_count;
 ---}
 SELECT
 	'migrated_' AS name, '' AS reason, dateline AS ban_time,
@@ -258,7 +257,7 @@ FROM {$from_prefix}banned;
 ---{
 // Check we give a valid ban group.
 $item_count = isset($item_count) ? $item_count + 1 : $_REQUEST['start'] + 1;
-$row['ID_BAN_GROUP'] = $item_count;
+$row['id_ban_group'] = $item_count;
 ---}
 SELECT
 	ip1 AS ip_low1, ip1 AS ip_high1, ip2 AS ip_low2, ip2 AS ip_high2,
@@ -327,15 +326,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/

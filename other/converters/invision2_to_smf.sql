@@ -96,9 +96,8 @@ WHERE parent_id = -1;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -308,19 +307,25 @@ GROUP BY mt_msg_id, mt_to_id;
 /******************************************************************************/
 
 ---{
-convert_query("
-	UPDATE ({$to_prefix}personal_messages AS pm, {$from_prefix}message_topics AS m)
-	SET pm.deleted_by_sender = '0'
-	WHERE m.mt_msg_id = pm.id_pm
-		AND m.mt_vid_folder = 'sent'
-");
+$request = convert_query("
+	SELECT pm.id_pm
+	FROM {$to_prefix}personal_messages AS pm
+		INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = pm.id_pm && m.mt_vid_folder = 'sent')");
+while ($row = convert_fetch_row($request))
+	convert_query("
+		UPDATE {$to_prefix}personal_messages
+		SET deleted_by_sender = '0'
+		WHERE id_pm = $row[id_pm]");
 
-convert_query("
-	UPDATE ({$to_prefix}pm_recipients AS r, {$from_prefix}message_topics AS m)
-	SET r.deleted = '0'
-	WHERE m.mt_msg_id = r.id_pm
-		AND m.mt_vid_folder != 'sent'
-");
+$request = convert_query("
+	SELECT pm.id_pm
+	FROM {$to_prefix}pm_recipients AS r
+		INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = r.id_pm && m.mt_vid_folder != 'sent')");
+while ($row = convert_fetch_row($request))
+	convert_query("
+		UPDATE {$to_prefix}personal_messages
+		SET deleted = '0'
+		WHERE id_pm = $row[id_pm]");
 ---}
 
 /******************************************************************************/
@@ -407,7 +412,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT
-			g_id AS id_group, g_title AS group_name, g_max_messages AS maxMessages,
+			g_id AS id_group, g_title AS group_name, g_max_messages AS max_messages,
 			g_view_board AS view_stats, g_mem_info AS view_mlist,
 			g_view_board AS who_view, g_use_search AS search_posts, g_email_friend AS send_topic,
 			g_edit_profile AS profile_identity_own, g_post_new_topics AS post_new,
@@ -430,11 +435,8 @@ while (true)
 		// If this is NOT an existing membergroup add it (1-5 = existing.)
 		if ($row['id_group'] > 5)
 		{
-			convert_query("
-				INSERT INTO {$to_prefix}membergroups
-					(id_group, group_name, maxMessages, online_color, stars)
-				VALUES
-					($row[id_group] + 3, SUBSTRING('$row[group_name]', 1, 255), $row[maxMessages], '', '')");
+			convert_insert('membergroups', array('id_group', 'group_name', 'max_messages', 'online_color', 'stars'),
+				array($row[id_group] + 3, $row[group_name], $row[max_messages], '', ''));
 			$groupID = $row['id_group'] + 3;
 		}
 		else
@@ -449,22 +451,18 @@ while (true)
 
 		unset($row['id_group']);
 		unset($row['group_name']);
-		unset($row['maxMessages']);
+		unset($row['max_messages']);
 
 		foreach ($row as $key => $value)
 			if ($value == 1)
-				$perms[] = $groupID . ', \'' . $key . '\'';
+				$perms[] = array($groupID, $key);
 		foreach ($manual_perms as $key)
 			if ($value == 1 && $groupID != -1)
-				$perms[] = $groupID . ', \'' . $key . '\'';
+				$perms[] = array($groupID, $key);
 	}
 
 	if (!empty($perms))
-		convert_query("
-			REPLACE INTO {$to_prefix}permissions
-				(id_group, permission)
-			VALUES (" . implode('),
-				(', $perms) . ")");
+		convert_insert('permissions', array('id_group', 'permission'), $perms, 'replace');
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)
@@ -671,16 +669,12 @@ while (true)
 			// Now we have $tempGroup filled with all the permissions for each group - better do something with it!
 			foreach ($tempGroup as $groupno => $group)
 				foreach ($group as $permission => $dummy)
-					$perms[] = '(' . $row['id_board'] . ', ' . $groupno . ', \'' . $permission . '\')';
+					$perms[] = array($row['id_board'] + 4, $groupno, $permission);
 		}
 	}
 
 	if (!empty($perms))
-		convert_query("
-			REPLACE INTO {$to_prefix}board_permissions
-				(id_board, id_group, permission)
-			VALUES " . implode(',
-				', $perms));
+		convert_insert('board_permissions', array('id_profile', 'id_group', 'permission'), $perms, 'replace');
 
 	$_REQUEST['start'] += 100;
 	if (convert_num_rows($result) < 100)
@@ -745,15 +739,11 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "'$code', '{$name}.gif', '$name', $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
 
 /******************************************************************************/
@@ -810,10 +800,7 @@ while ($row = convert_fetch_assoc($result))
 	if ($found == false)
 		continue;
 
-	convert_query("
-		REPLACE INTO {$to_prefix}settings
-			(variable, value)
-		VALUES ('" . addslashes($row['config_name']) . "', '" . addslashes($row['config_value']) . "')");
+	convert_insert('settings', array('variable', 'value'), array(addslashes($row['config_name']), addslashes($row['config_value'])), 'replace');
 }
 convert_free_result($result);
 
@@ -882,7 +869,7 @@ FROM {$from_prefix}attachments;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('id_attach', 'size', 'filename', 'id_member', 'width', 'height', 'attachmentType');
+$keys = array('id_attach', 'size', 'filename', 'id_member', 'width', 'height', 'attachment_type');
 
 if (!isset($oldAttachmentDir))
 {
@@ -929,7 +916,7 @@ if ($custom_avatar_enabled)
 		WHERE variable = 'custom_avatar_dir'
 		LIMIT 1");
 	list ($avatar_dir) = convert_fetch_row($request2);
-	$attachmentType = '1';
+	$attachment_type = '1';
 }
 else
 {
@@ -940,7 +927,7 @@ else
 		WHERE variable = 'attachmentUploadDir'
 		LIMIT 1");
 	list ($avatar_dir) = convert_fetch_row($request2);
-	$attachmentType = '0';
+	$attachment_type = '0';
 }
 convert_free_result($request2);
 
@@ -957,7 +944,7 @@ if (strlen($smf_avatar_filename) <= 255 && copy($ipb_avatar, $avatar_dir . '/' .
 	$filesize = filesize($ipb_avatar);
 	$id_member = $row['id_member'];
 
-	$rows[] = "'$id_attach', '$filesize', '" . addslashes($smf_avatar_filename) . "', '$id_member', '$width', '$height', '$attachmentType'";
+	$rows[] = "'$id_attach', '$filesize', '" . addslashes($smf_avatar_filename) . "', '$id_member', '$width', '$height', '$attachment_type'";
 }
 ---}
 SELECT id AS id_member, avatar_location AS filename, avatar_size AS dimension

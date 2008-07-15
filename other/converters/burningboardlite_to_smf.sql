@@ -104,9 +104,8 @@ WHERE isboard = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
-
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_board != 0;
+WHERE id_profile > 4;
 
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
@@ -240,7 +239,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 ---* {$to_prefix}pm_recipients
 SELECT
 	pm.privatemessageid AS id_pm, pm.recipientid AS id_member, 1 AS is_read,
-	IF(pm.deletepm = 1, 1, 0) AS deleted, '' AS labels
+	IF(pm.deletepm = 1, 1, 0) AS deleted, '-1' AS labels
 FROM {$from_prefix}privatemessage AS pm;
 ---*
 
@@ -318,21 +317,18 @@ while (true)
 			$ip_low4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 0;
 			$ip_high4 = isset($sections[3]) && $sections[3] != '*' ? $sections[3] : 255;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_groups
-					(name, ban_time, expire_time, notes, cannot_access, reason)
-				VALUES
-					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
 
-			$ID_BAN_GROUP = convert_insert_id();
+			convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+				array("migrated_ban_" . $ban_count++, $ban_time, NULL, '', 'Migrated from Burning Board', 1)
+			);
+			$id_ban_group = convert_insert_id();
 
-			if (empty($ID_BAN_GROUP))
+			if (empty($id_ban_group))
 				continue;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, email_address, hostname)
-				VALUES ($ID_BAN_GROUP, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
+			convert_insert('ban_items', array('id_ban_group', 'ip_low1', 'ip_high1', 'ip_low2', 'ip_high2', 'ip_low3', 'ip_high3', 'ip_low4', 'ip_high4', 'email_address', 'hostname'),
+				array($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')
+			);
 		}
 	}
 
@@ -373,22 +369,18 @@ while (true)
 			if (empty($email))
 				continue;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_groups
-					(name, ban_time, expire_time, notes, cannot_access, reason)
-				VALUES
-					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
+			convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'reason', 'notes', 'cannot_access'),
+				array("migrated_ban_" . $ban_count, $ban_time, NULL, '', 'Migrated from Burning Board', 1)
+			);
 
-			$ID_BAN_GROUP = convert_insert_id();
+			$id_ban_group = convert_insert_id();
 
-			if (empty($ID_BAN_GROUP))
+			if (empty($id_ban_group))
 				continue;
 
-			convert_query("
-				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, email_address, hostname)
-				VALUES
-					($ID_BAN_GROUP, SUBSTRING('$email', 1, 255), '')");
+			convert_insert('ban_items', array('id_ban_group', 'email_address', 'hostname'),
+				array($id_ban_group, $email, '')
+			);
 		}
 	}
 
@@ -451,13 +443,9 @@ foreach ($specificSmileys as $code => $name)
 		continue;
 
 	$count++;
-	$rows[] = "SUBSTRING('$code', 1, 30), SUBSTRING('{$name}.gif', 1, 48), SUBSTRING('$name', 1, 80), $count";
+	$rows[] = array($code, $name . '.gif', $name, $count);
 }
 
 if (!empty($rows))
-	convert_query("
-		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smiley_order)
-		VALUES (" . implode("),
-			(", $rows) . ")");
+	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order'), $rows, 'replace');
 ---}
