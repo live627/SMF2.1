@@ -1,18 +1,20 @@
 h1
 {
 	font-size: 18px;
-	margin: 1ex 1ex 1ex 1ex;
 }
 h2
 {
 	font-size: 18px;
 	border-bottom: solid 1px;
-	padding-bottom: 1ex;
+	padding-bottom: 0.5em;
+	margin: 2em 0 0.5em 0;
 }
 h3, h4, h5, h6
 {
 	font-size: 16px;
-	margin: 0;
+	margin: 2em 0 0.5em 0;
+	font-weight: normal;
+	padding: 0 0 0.5em 0.5em;
 }
 p
 {
@@ -57,13 +59,32 @@ table#reference1 th, table#reference2 th
 ol
 {
 	font-weight: bold;
-	list-style-type: square;
-	margin-bottom: 2ex;
-	margin-top: 3ex;
+	list-style-type: disc;
+	margin-bottom: 1em;
+	margin-top: 1em;
+	line-height: 1.5em;
 }
 ol.la
 {
 	font-weight: normal;
 	list-style-type: circle;
-	margin: 0 0 2ex 4ex;
+	margin: 0.5em 0 1em 0;
+	padding-left: 1.5em;
+}
+/* we need some air between the lines :) */
+#helpmain p
+{
+	line-height: 1.5em;
+}
+/* put back the bullets please */
+#helpmain ul
+{
+	margin: 0 0 1em 2em;
+	padding-left: 1em;
+}
+#helpmain ul li
+{
+	line-height: 1.5em;
+	list-style-type: disc;
+	padding-left: 0.2em;
 }

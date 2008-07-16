@@ -27,7 +27,7 @@ table
 /* set a fontsize that will look the same in all browsers. */
 body
 {
-	font: 100.01%/100% Verdana, Helvetica, sans-serif;
+	font: 90%/90% Verdana, Helvetica, sans-serif;
 	background: #E5E5E8;
 	margin: 0;
 	padding: 12px 0 4px 0;
@@ -158,20 +158,20 @@ ul.normallist li
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
 .smalltext
 {
-	font-size: x-small;
+	font-size: 0.8em;
 	font-family: verdana, sans-serif;
 }
 .middletext
 {
-	font-size: 90%;
+	font-size: 0.9em;
 }
 .normaltext
 {
-	font-size: small;
+	font-size: 1em;
 }
 .largetext
 {
-	font-size: large;
+	font-size: 1.4em;
 }
 
 /* This style will make sure all headers use the same padding throughout. */

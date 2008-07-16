@@ -33,6 +33,8 @@ July 2008
  ! Since PHP tends to be a bit more lenient with comparisons, make sure to do a type check for 'null' in dumpTags(). (News.php) [Bug 2321]
  ! Users deleting themselves wern't being logged properly. (Subs-Members.php) [Bug 2316]
  ! If we haven't loaded a theme, we can't do a proper fatal_lang_error, so die gracefully. (Errors.php)
+ * Fixed differences with default fontsize in browsers (default/style.css, default/css/ie6.css, default/css/ie7.css)
+ * Updated Help.template css withbetter styles (default/css/help.css) 
 
 
 June 2008
