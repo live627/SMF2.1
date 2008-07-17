@@ -170,7 +170,7 @@ function fatal_error($error, $log = 'general')
 // A fatal error with a message stored in the language file.
 function fatal_lang_error($error, $log = 'general', $sprintf = array())
 {
-	global $txt, $language, $modSettings, $user_info;
+	global $txt, $language, $modSettings, $user_info, $settings;
 
 	// If we have no theme stuff we can't have the lanuage file...
 	if (empty($settings))

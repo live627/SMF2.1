@@ -388,6 +388,9 @@ function Register2($verifiedOpenID = false)
 		$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
+	// Make sure they are clean, dammit!
+	$regOptions['theme_vars'] = htmlspecialchars__recursive($regOptions['theme_vars']);
+
 	// If Quick Reply hasn't been set then set it to be shown but collapsed.
 	if (!isset($regOptions['theme_vars']['display_quick_reply']))
 		$regOptions['theme_vars']['display_quick_reply'] = 1;
@@ -396,16 +399,22 @@ function Register2($verifiedOpenID = false)
 	$request = $smcFunc['db_query']('', '
 		SELECT col_name, field_name, field_type, field_length, mask, show_reg
 		FROM {db_prefix}custom_fields
-		WHERE show_reg != {int:reg_disabled}
-			AND active = {int:is_active}',
+		WHERE active = {int:is_active}',
 		array(
-			'reg_disabled' => 0,
 			'is_active' => 1,
 		)
 	);
 	$custom_field_errors = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
+		// Don't allow overriding of the theme variables.
+		if (isset($regOptions['theme_vars'][$row['col_name']]))
+			unset($regOptions['theme_vars'][$row['col_name']]);
+
+		// Not actually showing it then?
+		if (!$row['show_reg'])
+			continue;
+
 		// We only care for text fields as the others are valid to be empty.
 		if (!in_array($row['field_type'], array('check', 'select', 'radio')))
 		{
@@ -479,9 +488,12 @@ function Register2($verifiedOpenID = false)
 	spamProtection('register');
 
 	// We'll do custom fields after as then we get to use the helper function!
-	require_once($sourcedir . '/Profile.php');
-	require_once($sourcedir . '/Profile-Modify.php');
-	makeCustomFieldChanges($memberID, 'register');
+	if (!empty($_POST['customfield']))
+	{
+		require_once($sourcedir . '/Profile.php');
+		require_once($sourcedir . '/Profile-Modify.php');
+		makeCustomFieldChanges($memberID, 'register');
+	}
 
 	// If COPPA has been selected then things get complicated, setup the template.
 	if (!empty($modSettings['coppaAge']) && !isset($_POST['skip_coppa']))

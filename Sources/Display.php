@@ -548,7 +548,7 @@ function Display()
 	// This is information about which page is current, and which page we're on - in case you don't like the constructed page index. (again, wireles..)
 	$context['page_info'] = array(
 		'current_page' => $_REQUEST['start'] / $context['messages_per_page'] + 1,
-		'num_pages' => floor($context['total_visible_posts'] / $context['messages_per_page']) + 1
+		'num_pages' => floor(($context['total_visible_posts'] - 1) / $context['messages_per_page']) + 1,
 	);
 
 	// Figure out all the link to the next/prev/first/last/etc. for wireless mainly.

@@ -35,6 +35,9 @@ July 2008
  ! If we haven't loaded a theme, we can't do a proper fatal_lang_error, so die gracefully. (Errors.php)
  * Fixed differences with default fontsize in browsers (default/style.css, default/css/ie6.css, default/css/ie7.css)
  * Updated Help.template css withbetter styles (default/css/help.css) 
+ ! Make sure that custom fields are cleaned correctly from registration. (Profile.php, Profile-Modify.php, Register.php) [Bug 2309]
+ ! Make sure custom field restrictions cannot be bypassed. (Profile-Modify.php) [Bug 2310]
+ ! Wireless was showing the wrong total pages on display. (Display.php)
 
 
 June 2008

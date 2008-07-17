@@ -41,7 +41,7 @@ if (!defined('SMF'))
 	void profileSaveAvatarData(int id_member, array &errors)
 		// !!!
 
-	void makeCustomFieldChanges(int id_member, string area)
+	void makeCustomFieldChanges(int id_member, string area, bool sanitize = true)
 		// !!!
 
 	void summary(int id_member)
@@ -980,7 +980,7 @@ function saveProfileFields()
 	{
 		makeThemeChanges($context['id_member'], isset($_POST['id_theme']) ? (int) $_POST['id_theme'] : $old_profile['id_theme']);
 		if (!empty($_REQUEST['sa']))
-			makeCustomFieldChanges($context['id_member'], $_REQUEST['sa']);
+			makeCustomFieldChanges($context['id_member'], $_REQUEST['sa'], false);
 	}
 
 	// Free memory!
@@ -1051,7 +1051,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		//makeAvatarChanges($memID, $post_errors);
 		makeNotificationChanges($memID);
 		if (!empty($_REQUEST['sa']))
-			makeCustomFieldChanges($memID, $_REQUEST['sa']);
+			makeCustomFieldChanges($memID, $_REQUEST['sa'], false);
 
 		foreach ($profile_bools as $var)
 			if (isset($_POST[$var]))
@@ -1073,12 +1073,29 @@ function makeThemeChanges($memID, $id_theme)
 {
 	global $modSettings, $smcFunc, $context;
 
+	// Don't allow any overriding of custom fields with default or non-default options.
+	$request = $smcFunc['db_query']('', '
+		SELECT col_name
+		FROM {db_prefix}custom_fields
+		WHERE active = {int:is_active}',
+		array(
+			'is_active' => 1,
+		)
+	);
+	$custom_fields = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$custom_fields[] = $row['col_name'];
+	$smcFunc['db_free_result']($request);
+
 	// These are the theme changes...
 	$themeSetArray = array();
 	if (isset($_POST['options']) && is_array($_POST['options']))
 	{
 		foreach ($_POST['options'] as $opt => $val)
 		{
+			if (in_array($opt, $custom_fields))
+				continue;
+
 			// These need to be controlled.
 			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
 				$val = max(0, min($val, 50));
@@ -1091,6 +1108,9 @@ function makeThemeChanges($memID, $id_theme)
 	if (isset($_POST['default_options']) && is_array($_POST['default_options']))
 		foreach ($_POST['default_options'] as $opt => $val)
 		{
+			if (in_array($opt, $custom_fields))
+				continue;
+
 			// These need to be controlled.
 			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
 				$val = max(0, min($val, 50));
@@ -1181,9 +1201,12 @@ function makeNotificationChanges($memID)
 }
 
 // Save any changes to the custom profile fields...
-function makeCustomFieldChanges($memID, $area)
+function makeCustomFieldChanges($memID, $area, $sanitize = true)
 {
 	global $context, $smcFunc, $user_profile, $user_info, $modSettings;
+
+	if ($sanitize && isset($_POST['customfield']))
+		$_POST['customfield'] = htmlspecialchars__recursive($_POST['customfield']);
 
 	$where = $area == 'register' ? 'show_reg != 0' : 'show_profile = {string:area}';
 
