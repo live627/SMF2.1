@@ -62,7 +62,7 @@ if (!defined('SMF'))
 		  apostrophes (')!
 		- if a variable is already set to what you want to change it to, that
 		  variable will be skipped over; it would be unnecessary to reset.
-		- if use_update is true, UPDATEs will be used instead of REPALCE.
+		- if use_update is true, UPDATEs will be used instead of REPLACE.
 		- when use_update is true, the value can be true or false to increment
 		  or decrement it, respectively.
 
@@ -966,7 +966,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			content: only available for unparsed_content, closed,
 			  unparsed_commas_content, and unparsed_equals_content.
 			  $1 is replaced with the content of  the tag.  Parameters
-			  are repalced in the form {param}.  For unparsed_commas_content,
+			  are replaced in the form {param}.  For unparsed_commas_content,
 			  $2, $3, ..., $n are replaced.
 
 			before: only when content is not used, to go before any

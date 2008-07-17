@@ -1286,7 +1286,13 @@ function AdminAccount()
 
 			$incontext['account_existed'] = $txt['error_user_settings_taken'];
 		}
-		elseif ($invalid_characters || $_POST['username'] == '' || strlen($_POST['username']) > 25 || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
+		elseif ($_POST['username'] == '' || strlen($_POST['username']) > 25)
+		{
+			// Try the previous step again.
+			$incontext['error'] = $_POST['username'] == '' ? $txt['error_username_left_empty'] : $txt['error_username_too_long'];
+			return false;
+		}
+		elseif ($invalid_characters || $_POST['username'] == '_' || $_POST['username'] == '|' || strpos($_POST['username'], '[code') !== false || strpos($_POST['username'], '[/code') !== false)
 		{
 			// Try the previous step again.
 			$incontext['error'] = $txt['error_invalid_characters_username'];

@@ -38,6 +38,7 @@ July 2008
  ! Make sure that custom fields are cleaned correctly from registration. (Profile.php, Profile-Modify.php, Register.php) [Bug 2309]
  ! Make sure custom field restrictions cannot be bypassed. (Profile-Modify.php) [Bug 2310]
  ! Wireless was showing the wrong total pages on display. (Display.php)
+ & Username error messages wern't that informative on install. (install.php, Install language file) [Bug 2300]
 
 
 June 2008
