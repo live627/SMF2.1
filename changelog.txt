@@ -49,6 +49,8 @@ July 2008
  * removed PHP/MYSQL/CSS buttons, addd XHTML, RSS and WAP2 text links instead. (default/index.template, default/css/froum.css, default/style.css) [Bug 2058]
  * Synced IMG alt and A title tags for IM buttons, for consistency (Load.php) [2101]
  * cleaned up latest-themes section (other/latest-themes.js, simlemachines.org/SMF/latest-themes.js) 
+ * cleaned up latest-packages as well (other/latest-packages.js, simplemachines.org/SMF/latest-packages.js) 
+ * moved inline styles, advanced search icon now have title/alt tags filled and the menu items have alt tag on the a tag ( default/css/index.css, default/index.template.php ) [2079]
 
 
 June 2008

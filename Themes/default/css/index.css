@@ -219,3 +219,8 @@ ul#linktree li span
 {
 	text-align: center;
 }
+/* the upshrink buttons */
+#upshrink, #advsearch
+{
+	margin: 0 1ex;
+}

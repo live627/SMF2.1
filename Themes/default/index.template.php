@@ -182,7 +182,7 @@ function template_body_above()
 		<ul id="greeting_section" class="titlebg2">
 			<li id="time" class="smalltext floatright">
 				' , $context['current_time'], '
-				<a href="#" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>
+				<a href="#" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" /></a>
 			</li>';
 
 	if ($context['user']['is_logged'])
@@ -278,7 +278,7 @@ function template_body_above()
 		</div>
 		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-				<a href="', $scripturl, '?action=search;advanced"><img src="'.$settings['images_url'].'/filter.gif" align="middle" style="margin: 0 1ex;" alt="" /></a>
+				<a href="', $scripturl, '?action=search;advanced" title="', $txt['search_advanced'], '"><img id="advsearch" src="'.$settings['images_url'].'/filter.gif" align="middle" alt="', $txt['search_advanced'], '" /></a>
 				<input type="text" name="search" value="" style="width: 190px;" />&nbsp;
 				<input type="submit" name="submit" value="', $txt['search'], '" style="width: 11ex;" />
 				<input type="hidden" name="advanced" value="0" />';
@@ -409,7 +409,7 @@ function template_menu()
 	{
 		echo '
 			<li id="button_', $act, '">
-				<a', $button['active_button'] ? ' class="active"' : '', ' href="', $button['href'], '">
+				<a', $button['active_button'] ? ' class="active"' : '', ' title="', $act , '" href="', $button['href'], '">
 					<span', isset($button['is_last']) ? ' class="last"' : '', '>', ($button['active_button'] ? '<em>' : ''), $button['title'], ($button['active_button'] ? '</em>' : ''), '</span>
 				</a>
 			</li>';
