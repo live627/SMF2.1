@@ -48,6 +48,7 @@ July 2008
  * removed hr element and used css to create divider between subject and post (default/Display.template, default/css/forum.css) [Bug 1933]
  * removed PHP/MYSQL/CSS buttons, addd XHTML, RSS and WAP2 text links instead. (default/index.template, default/css/froum.css, default/style.css) [Bug 2058]
  * Synced IMG alt and A title tags for IM buttons, for consistency (Load.php) [2101]
+ * cleaned up latest-themes section (other/latest-themes.js, simlemachines.org/SMF/latest-themes.js) [2145]
 
 
 June 2008

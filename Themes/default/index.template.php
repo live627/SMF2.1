@@ -336,7 +336,7 @@ function template_body_below()
 	// Show the load time?
 	if ($context['show_load_time'])
 		echo '
-		<p class="smalltext">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
+		<p class="smalltext" id="show_loadtime">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
 
 	echo '
 	</div>

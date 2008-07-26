@@ -169,16 +169,15 @@ function smf_themesBack()
 }
 
 window.smfLatestThemes = '\
-	<div id="smfLatestThemesWindow" class="tborder">\
-		<h3 class="catbg" style="padding: 4px; margin: 0;">Latest Themes</h3>\
-		<div style="padding: 5px;">\
-			<img src="http://www.simplemachines.org/smf/images/themes.png" width="102" height="98" style="float: right; margin: 10px;" alt="(package)" />\
-			<ul style="list-style: none; padding: 5px;">';
+	<div id="smfLatestThemesWindow">\
+		<div>\
+			<img src="http://www.simplemachines.org/smf/images/themes.png" width="102" height="98" style="float: right; margin: 0 0 10px 10px;" alt="(package)" />\
+			<ul style="list-style: none; padding: 0; margin: 0 0 0 5px;">';
 for(var i=0; i < smf_latestThemes.length; i++)
 {
 	var id_theme = smf_latestThemes[i];
 	window.smfLatestThemes += '\
-				<li><a href="javascript:smf_themesMoreInfo(' + id_theme + ');void(0);">' + smf_themeInfo[id_theme].name + ' by ' + smf_themeInfo[id_theme].author + '</a></li>';
+				<li style="list-style: none;"><a href="javascript:smf_themesMoreInfo(' + id_theme + ');void(0);">' + smf_themeInfo[id_theme].name + ' by ' + smf_themeInfo[id_theme].author + '</a></li>';
 }
 
 window.smfLatestThemes += '\

@@ -215,3 +215,7 @@ ul#linktree li span
 	text-align: left;
 	padding-left: 0.5em;
 }
+#show_loadtime
+{
+	text-align: center;
+}
