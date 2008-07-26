@@ -217,7 +217,6 @@ $txt['new'] = 'New';
 
 $txt['view_all_members'] = 'View All Members';
 $txt['view'] = 'View';
-$txt['email'] = 'Email';
 
 $txt['viewing_members'] = 'Viewing Members %1$s to %2$s';
 $txt['of_total_members'] = 'of %1$s total members';
@@ -227,7 +226,6 @@ $txt['forgot_your_password'] = 'Forgot your password?';
 $txt['date'] = 'Date';
 // Use numeric entities in the below string.
 $txt['from'] = 'From';
-$txt['subject'] = 'Subject';
 $txt['check_new_messages'] = 'Check for new messages';
 $txt['to'] = 'To';
 
@@ -330,17 +328,11 @@ $txt['info_center_title'] = '%s - Info Center';
 $txt['send_topic'] = 'Send this topic';
 
 $txt['sendtopic_title'] = 'Send the topic &quot;%s&quot; to a friend.';
-// Use numeric entities in the below three strings.
-$txt['sendtopic_dear'] = 'Dear %s,';
-$txt['sendtopic_this_topic'] = 'I want you to check out "%s" on %s.  To view it, please click this link';
-$txt['sendtopic_thanks'] = 'Thanks';
 $txt['sendtopic_sender_name'] = 'Your name';
 $txt['sendtopic_sender_email'] = 'Your email address';
 $txt['sendtopic_receiver_name'] = 'Recipient\'s name';
 $txt['sendtopic_receiver_email'] = 'Recipient\'s email address';
 $txt['sendtopic_comment'] = 'Add a comment';
-// Use numeric entities in the below string.
-$txt['sendtopic2'] = 'A comment has also been added regarding this topic';
 
 $txt['allow_user_email'] = 'Allow users to email you?';
 

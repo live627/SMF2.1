@@ -206,7 +206,6 @@ $txt['activate_changed_email'] = 'You\'ve changed your email address. In order t
 $txt['no_reminder_email'] = 'Unable to send reminder email.';
 $txt['send_email'] = 'Send an email to';
 $txt['to_ask_password'] = 'to ask for your authentication details';
-$txt['password_reminder'] = 'Password Reminder';
 
 $txt['user_email'] = 'Username/Email';
 

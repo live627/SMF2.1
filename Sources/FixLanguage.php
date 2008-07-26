@@ -836,7 +836,6 @@ $txtChanges = array(
 		394 => 'no_reminder_email',
 		395 => 'send_email',
 		396 => 'to_ask_password',
-		669 => 'password_reminder',
 		'smf100' => 'user_email',
 		'timeformat_easy0' => 'timeformat_default',
 		'rtm8' => 'poster',

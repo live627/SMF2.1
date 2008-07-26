@@ -40,6 +40,7 @@ July 2008
  ! Wireless was showing the wrong total pages on display. (Display.php)
  & Username error messages wern't that informative on install. (install.php, Install language file) [Bug 2300]
  ! Don't bother logging certain OpenID error messages. (Subs-OpenID.php) [Bug 2334]
+ & Removed some duplicated and/or unused strings. (index and Profile language files) [Bug 2263]
 
 
 June 2008
