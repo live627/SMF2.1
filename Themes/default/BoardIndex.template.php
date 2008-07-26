@@ -124,7 +124,7 @@ function template_main()
 			{
 				echo '
 			<tr>
-				<td class="windowbg icon">
+				<td', !empty($board['children']) ? ' rowspan="2"' : '', ' class="windowbg icon">
 					<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 				// If the board or children is new, show an indicator.
@@ -160,6 +160,28 @@ function template_main()
 					echo '
 					<p class="moderators">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
 
+				// Show some basic information about the number of posts, etc.
+					echo '
+				</td>
+				<td', !empty($board['children']) ? ' rowspan="2"' : '', ' class="windowbg stats smalltext">
+					', $board['posts'], ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
+					', $board['is_redirect'] ? '' : $board['topics'] . ' ' . $txt['board_topics'], '
+				</td>
+				<td', !empty($board['children']) ? ' rowspan="2"' : '', ' class="windowbg2 smalltext lastpost">';
+
+				/* The board's and children's 'last_post's have:
+				time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
+				link, href, subject, start (where they should go for the first unread post.),
+				and member. (which has id, name, link, href, username in it.) */
+				if (!empty($board['last_post']['id']))
+					echo '
+					<strong>', $txt['last_post'], '</strong>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
+					', $txt['in'], ' ', $board['last_post']['link'], '<br />
+					', $txt['on'], ' ', $board['last_post']['time'];
+				echo '
+				</td>
+			</tr>';
+
 				// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
 				if (!empty($board['children']))
 				{
@@ -181,30 +203,10 @@ function template_main()
 						$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 					}
 					echo '
-					<p class="windowbg3 smalltext children"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</p>';
-				}
-
-				// Show some basic information about the number of posts, etc.
-					echo '
-				</td>
-				<td class="windowbg stats smalltext">
-					', $board['posts'], ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
-					', $board['is_redirect'] ? '' : $board['topics'] . ' ' . $txt['board_topics'], '
-				</td>
-				<td class="windowbg2 smalltext lastpost">';
-
-				/* The board's and children's 'last_post's have:
-				time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
-				link, href, subject, start (where they should go for the first unread post.),
-				and member. (which has id, name, link, href, username in it.) */
-				if (!empty($board['last_post']['id']))
-					echo '
-					<strong>', $txt['last_post'], '</strong>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
-					', $txt['in'], ' ', $board['last_post']['link'], '<br />
-					', $txt['on'], ' ', $board['last_post']['time'];
-				echo '
-				</td>
+			<tr>
+				<td class="windowbg3 smalltext largepadding"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</td>
 			</tr>';
+				}
 			}
 			echo '
 		</table>';

@@ -511,6 +511,13 @@ code
 	overflow: auto;
 	line-height: 1.3em;
 }
+/* add a visual divider between subject and post */ 
+.post
+{
+	margin-top: 0.7em;
+	padding-top: 0.7em;
+	border-top: solid 1px #888;
+}
 
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
 .signature
