@@ -426,6 +426,7 @@ function EditBoard()
 		$context['board']['name'] = htmlspecialchars(strtr($context['board']['name'], array('&amp;' => '&')));
 		$context['board']['description'] = htmlspecialchars($context['board']['description']);
 		$context['board']['no_children'] = empty($boards[$_REQUEST['boardid']]['tree']['children']);
+		$context['board']['is_recycle'] = !empty($modSettings['recycle_enable']) && $modSettings['recycle_enable'] == $context['board']['id'];
 	}
 
 	// As we may have come from the permissions screen keep track of where we should go on save.
@@ -724,8 +725,10 @@ function EditBoardSettings($return_config = false)
 	$request = $smcFunc['db_query']('', '
 		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
 		FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)',
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+		WHERE redirect = {string:empty_string}',
 		array(
+			'empty_string' => '',
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))

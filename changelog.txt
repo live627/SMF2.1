@@ -41,6 +41,7 @@ July 2008
  & Username error messages wern't that informative on install. (install.php, Install language file) [Bug 2300]
  ! Don't bother logging certain OpenID error messages. (Subs-OpenID.php) [Bug 2334]
  & Removed some duplicated and/or unused strings. (index and Profile language files) [Bug 2263]
+ ! Don't allow the recycle bin board to be made into a redirection board. (ManageBoards.php, ManageBoards template, ManageBoards language file) [Bug 2253]
 
 
 June 2008

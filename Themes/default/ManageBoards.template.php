@@ -370,13 +370,14 @@ function template_modify_board()
 				<b', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</b><br />
 				<span class="smalltext">', $txt['mboards_redirect_desc'], '</span><br />
 				', $context['board']['topics'] ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled'] . '</span><br />' : '', '
+				', !empty($context['board']['is_recycle']) ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled_recycle'] . '</span><br />' : '', '
 			</td>
 			<td valign="top" align="left">
 				<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['topics'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="check" />
 			</td>
 		</tr>';
 
-	if (!$context['board']['topics'])
+	if (!$context['board']['topics'] && empty($context['board']['is_recycle']))
 	{
 		echo '
 		<tr class="windowbg2" id="redirect_address_div">
