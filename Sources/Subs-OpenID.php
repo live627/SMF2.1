@@ -188,8 +188,12 @@ function smf_openID_return()
 {
 	global $smcFunc, $user_info, $user_profile, $sourcedir, $modSettings, $context, $sc, $user_settings;
 
+	// Is OpenID even enabled?
+	if (empty($modSettings['enableOpenID']))
+		fatal_lang_error('no_access', false);
+
 	if (!isset($_GET['openid_mode']))
-		fatal_lang_error('openid_return_no_mode');
+		fatal_lang_error('openid_return_no_mode', false);
 
 	// !!! Check for error status!
 	if ($_GET['openid_mode'] != 'id_res')
