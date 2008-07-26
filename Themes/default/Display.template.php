@@ -612,7 +612,7 @@ function template_main()
 	</h3>
 	<div class="smallpadding windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 		<div class="smallpadding floatleft" id="warning">
-			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong>' : '', $context['oldTopicError'] ? '</p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong>' : '', '
+			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
 		</div>
 		<div>
 			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '

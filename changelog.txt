@@ -43,6 +43,7 @@ July 2008
  & Removed some duplicated and/or unused strings. (index and Profile language files) [Bug 2263]
  ! Don't allow the recycle bin board to be made into a redirection board. (ManageBoards.php, ManageBoards template, ManageBoards language file) [Bug 2253]
  ! Don't list redirection boards on the ignore boards page. (Profile-Modify.php) [Bug 2330]
+ * Fixed validation error which could occur on the display page for quick reply. (Display template) [Bug 2331]
 
 
 June 2008
