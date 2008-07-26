@@ -215,8 +215,9 @@ ul#linktree li span
 	text-align: left;
 	padding-left: 0.5em;
 }
-#show_loadtime
+p#show_loadtime
 {
+	display: block;	
 	text-align: center;
 }
 /* the upshrink buttons */
