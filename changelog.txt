@@ -34,7 +34,7 @@ July 2008
  ! Users deleting themselves wern't being logged properly. (Subs-Members.php) [Bug 2316]
  ! If we haven't loaded a theme, we can't do a proper fatal_lang_error, so die gracefully. (Errors.php)
  * Fixed differences with default fontsize in browsers (default/style.css, default/css/ie6.css, default/css/ie7.css)
- * Updated Help.template css withbetter styles (default/css/help.css) 
+ * Updated Help.template css withbetter styles (default/css/help.css)
  ! Make sure that custom fields are cleaned correctly from registration. (Profile.php, Profile-Modify.php, Register.php) [Bug 2309]
  ! Make sure custom field restrictions cannot be bypassed. (Profile-Modify.php) [Bug 2310]
  ! Wireless was showing the wrong total pages on display. (Display.php)
@@ -44,6 +44,9 @@ July 2008
  ! Don't allow the recycle bin board to be made into a redirection board. (ManageBoards.php, ManageBoards template, ManageBoards language file) [Bug 2253]
  ! Don't list redirection boards on the ignore boards page. (Profile-Modify.php) [Bug 2330]
  * Fixed validation error which could occur on the display page for quick reply. (Display template) [Bug 2331]
+ * wrapping child boards line created trouble in IE7, narrow browser widths didn't "fill out" same spot. (default/BoardIndex.template, default/css/forum.css) [Bug 1865]
+ * removed hr element and used css to create divider between subject and post (default/Display.template, default/css/forum.css) [Bug 1933]
+ * removed PHP/MYSQL/CSS buttons, addd XHTML, RSS and WAP2 text links instead. (default/index.template, default/css/froum.css, default/style.css) [Bug 2058]
 
 
 June 2008
