@@ -2015,9 +2015,11 @@ function ignoreboards($memID)
 			'. (!empty($cur_profile['ignore_boards']) ? 'b.id_board IN ({array_int:ignore_boards})' : '0') . ' AS is_ignored
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE {query_see_board}',
+		WHERE {query_see_board}
+			AND redirect = {string:empty_string}',
 		array(
 			'ignore_boards' => !empty($cur_profile['ignore_boards']) ? explode(',',$cur_profile['ignore_boards']) : array(),
+			'empty_string' => '',
 		)
 	);
 	$context['num_boards'] = $smcFunc['db_num_rows']($request);
