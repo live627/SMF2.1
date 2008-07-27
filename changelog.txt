@@ -53,6 +53,7 @@ July 2008
  * moved inline styles, advanced search icon now have title/alt tags filled and the menu items have alt tag on the a tag ( default/css/index.css, default/index.template.php ) [2079]
  * Restoring a message from a topic in the recycle bin wasn't working right. (Display template) [Bug 2340]
  ! Protect against redirecting to a deleted topic on quick moderation. (Display.php) [Bug 2339]
+ ! Clarify whether a topic has been locked or unlocked in the moderation log - and stickies too. (LockTopic.php, Modlog language file) [Bug 2333]
 
 
 June 2008

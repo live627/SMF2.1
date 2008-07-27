@@ -103,7 +103,7 @@ function LockTopic()
 
 	// If they are allowed a "moderator" permission, log it in the moderator log.
 	if (!$user_lock)
-		logAction('lock', array('topic' => $topic, 'board' => $board));
+		logAction($locked ? 'lock' : 'unlock', array('topic' => $topic, 'board' => $board));
 	// Notify people that this topic has been locked?
 	sendNotifications($topic, empty($locked) ? 'unlock' : 'lock');
 
@@ -157,7 +157,7 @@ function Sticky()
 	);
 
 	// Log this sticky action - always a moderator thing.
-	logAction('sticky', array('topic' => $topic, 'board' => $board));
+	logAction(empty($is_sticky) ? 'sticky' : 'unsticky', array('topic' => $topic, 'board' => $board));
 	// Notify people that this topic has been stickied?
 	if (empty($is_sticky))
 		sendNotifications($topic, 'sticky');
