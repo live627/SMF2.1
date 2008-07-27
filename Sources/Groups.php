@@ -383,8 +383,8 @@ function MembergroupMembers()
 
 	// Load up the group details.
 	$request = $smcFunc['db_query']('', '
-		SELECT id_group AS id, group_name AS name, min_posts = {int:min_posts} AS assignable, hidden, online_color,
-			stars, description, min_posts != {int:min_posts} AS is_post_group
+		SELECT id_group AS id, group_name AS name, CASE WHEN min_posts = {int:min_posts} THEN 1 ELSE 0 END AS assignable, hidden, online_color,
+			stars, description, CASE WHEN min_posts != {int:min_posts} THEN 1 ELSE 0 END AS is_post_group
 		FROM {db_prefix}membergroups
 		WHERE id_group = {int:id_group}
 		LIMIT 1',
