@@ -587,7 +587,7 @@ function template_main()
 
 	// Restore messages?
 	if ($context['can_restore_msg'])
-		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => '{SUBMIT}', 'custom' => ' name="restore_selected" ');
+		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => 'javascript:document.quickModForm.submit();', 'custom' => ' name="restore_selected" ');
 
 	echo '
 <div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';

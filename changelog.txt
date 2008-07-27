@@ -51,6 +51,7 @@ July 2008
  * cleaned up latest-themes section (other/latest-themes.js, simlemachines.org/SMF/latest-themes.js) 
  * cleaned up latest-packages as well (other/latest-packages.js, simplemachines.org/SMF/latest-packages.js) 
  * moved inline styles, advanced search icon now have title/alt tags filled and the menu items have alt tag on the a tag ( default/css/index.css, default/index.template.php ) [2079]
+ * Restoring a message from a topic in the recycle bin wasn't working right. (Display template) [Bug 2340]
 
 
 June 2008
