@@ -55,6 +55,7 @@ July 2008
  ! Protect against redirecting to a deleted topic on quick moderation. (Display.php) [Bug 2339]
  ! Clarify whether a topic has been locked or unlocked in the moderation log - and stickies too. (LockTopic.php, Modlog language file) [Bug 2333]
  ! Fixed a couple of PostgreSQL bugs. (Groups.php) [Bugs 2251,2244]
+ ! The recount function was setting id_last_msg incorrectly on boards. (ManageMaintenance.php) [Bug 2162]
 
 
 June 2008

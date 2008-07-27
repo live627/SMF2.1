@@ -1786,7 +1786,7 @@ function AdminBoardRecount()
 	$smcFunc['db_free_result']($request);
 
 	$request = $smcFunc['db_query']('', '
-		SELECT /*!40001 SQL_NO_CACHE */ id_board, id_parent, id_last_msg, child_level
+		SELECT /*!40001 SQL_NO_CACHE */ id_board, id_parent, id_last_msg, child_level, id_msg_updated
 		FROM {db_prefix}boards',
 		array(
 		)
@@ -1801,33 +1801,37 @@ function AdminBoardRecount()
 
 	krsort($resort_me);
 
-	$lastMsg = array();
+	$lastModifiedMsg = array();
 	foreach ($resort_me as $rows)
 		foreach ($rows as $row)
 		{
 			// The latest message is the latest of the current board and its children.
-			if (isset($lastMsg[$row['id_board']]))
-				$curLastMsg = max($row['local_last_msg'], $lastMsg[$row['id_board']]);
+			if (isset($lastModifiedMsg[$row['id_board']]))
+			{
+				$curLastModifiedMsg = max($row['local_last_msg'], $lastModifiedMsg[$row['id_board']]);
+				
+			}
 			else
-				$curLastMsg = $row['local_last_msg'];
+				$curLastModifiedMsg = $row['local_last_msg'];
 
 			// If what is and what should be the latest message differ, an update is necessary.
-			if ($curLastMsg != $row['id_last_msg'])
+			if ($row['local_last_msg'] != $row['id_last_msg'] || $curLastModifiedMsg != $row['id_msg_updated'])
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET id_last_msg = {int:id_last_msg}
+					SET id_last_msg = {int:id_last_msg}, id_msg_updated = {int:id_msg_updated}
 					WHERE id_board = {int:id_board}',
 					array(
-						'id_last_msg' => $curLastMsg,
+						'id_last_msg' => $row['local_last_msg'],
+						'id_msg_updated' => $curLastModifiedMsg,
 						'id_board' => $row['id_board'],
 					)
 				);
 
-			// Parent boards inherit the latest message of their children.
-			if (isset($lastMsg[$row['id_parent']]))
-				$lastMsg[$row['id_parent']] = max($row['local_last_msg'], $lastMsg[$row['id_parent']]);
+			// Parent boards inherit the latest modified message of their children.
+			if (isset($lastModifiedMsg[$row['id_parent']]))
+				$lastModifiedMsg[$row['id_parent']] = max($row['local_last_msg'], $lastModifiedMsg[$row['id_parent']]);
 			else
-				$lastMsg[$row['id_parent']] = $row['local_last_msg'];
+				$lastModifiedMsg[$row['id_parent']] = $row['local_last_msg'];
 		}
 
 	// Update all the basic statistics.

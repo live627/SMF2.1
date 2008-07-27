@@ -2889,6 +2889,7 @@ function updateLastMessages($setboards, $id_msg = 0)
 	}
 	else
 	{
+		// Just to note - there should only be one board passed if we are doing this.
 		foreach ($setboards as $id_board)
 			$lastMsg[$id_board] = $id_msg;
 	}
