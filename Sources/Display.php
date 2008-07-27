@@ -1578,9 +1578,12 @@ function QuickInTopicModeration()
 	// Delete all the messages we know they can delete. ($messages)
 	foreach ($messages as $message => $info)
 	{
-		// Just skip the first message.
+		// Just skip the first message - if it's not the last.
 		if ($message == $first_message && $message != $last_message)
 			continue;
+		// If the first message is going then don't bother going back to the topic as we're effectively deleting it.
+		elseif ($message == $first_message)
+			$topicGone = true;
 
 		removeMessage($message);
 
@@ -1589,7 +1592,7 @@ function QuickInTopicModeration()
 			logAction('delete', array('topic' => $topic, 'subject' => $info[0], 'member' => $info[1], 'board' => $board));
 	}
 
-	redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);
+	redirectexit(!empty($topicGone) ? 'board=' . $board : 'topic=' . $topic . '.' . $_REQUEST['start']);
 }
 
 ?>
