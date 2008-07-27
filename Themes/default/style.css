@@ -27,7 +27,7 @@ table
 /* set a fontsize that will look the same in all browsers. */
 body
 {
-	font: 90%/90% Verdana, Helvetica, sans-serif;
+	font: 95%/90% Verdana, Helvetica, sans-serif;
 	background: #E5E5E8;
 	margin: 0;
 	padding: 12px 0 4px 0;
@@ -163,7 +163,7 @@ ul.normallist li
 }
 .middletext
 {
-	font-size: 0.9em;
+	font-size: 0.85em;
 }
 .normaltext
 {
