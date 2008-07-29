@@ -532,7 +532,7 @@ $txt['quickmod_confirm'] = 'Are you sure you want to do this?';
 $txt['spell_check'] = 'Spell Check';
 
 $txt['quick_reply'] = 'Quick Reply';
-$txt['quick_reply_desc'] = 'With a <i>Quick-Reply</i> you can use bulletin board code and smileys as you would in a normal post, but much more conveniently.';
+$txt['quick_reply_desc'] = 'With <i>Quick-Reply</i> you can write a post when viewing a topic without loading a new page. You can still use bulletin board code and smileys as you would in a normal post.';
 $txt['quick_reply_warning'] = 'Warning: this topic is currently locked!<br />Only admins and moderators can reply.';
 $txt['wait_for_approval'] = 'Note: this post will not display until it\'s been approved by a moderator.';
 

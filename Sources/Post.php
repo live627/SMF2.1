@@ -202,9 +202,12 @@ function Post()
 	// !!! These won't work if you're posting an event!
 	$context['can_notify'] = allowedTo('mark_any_notify');
 	$context['can_move'] = allowedTo('move_any');
+	$context['move'] = !empty($_REQUEST['move']);
+	$context['announce'] = !empty($_REQUEST['announce']);
 	// You can only annouce topics that will get approved...
 	$context['can_announce'] = allowedTo('announce_topic') && $context['becomes_approved'];
 	$context['locked'] = !empty($locked) || !empty($_REQUEST['lock']);
+
 	// Generally don't show the approval box... (Assume we want things approved)
 	$context['show_approval'] = false;
 

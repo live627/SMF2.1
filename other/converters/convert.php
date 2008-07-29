@@ -1867,7 +1867,7 @@ function doStep2()
 			print_line('rebuilding indexes for topics..');
 		db_extend('packages');
 
-		$indexes = $smcFunc['db_list_indexes']('{db_prefix}topics', true);
+		$indexes = $smcFunc['db_list_indexes']('topics', true);
 
 		if (!isset($indexes['PRIMARY']))
 			$smcFunc['db_add_index']('topics', array(
@@ -1909,7 +1909,7 @@ function doStep2()
 			print_line('rebuilding indexes for messages..');
 		db_extend('packages');
 
-		$indexes = $smcFunc['db_list_indexes']('{db_prefix}messages', true);
+		$indexes = $smcFunc['db_list_indexes']('messages', true);
 
 		if (!isset($indexes['PRIMARY']))
 			$smcFunc['db_add_index']('messages', array(

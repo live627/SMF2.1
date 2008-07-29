@@ -57,6 +57,14 @@ July 2008
  ! Fixed a couple of PostgreSQL bugs. (Groups.php) [Bugs 2251,2244]
  ! The recount function was setting id_last_msg incorrectly on boards. (ManageMaintenance.php) [Bug 2162]
  ! When adding a label to PM's the redirect was using the wrong anchor name. (PersonalMessage.php) [Bug 2242]
+ * Classic theme was missing some text strings. (index template) [Bug 2354]
+ ! Fixed javascript error expanding stats in the stats page. (stats.js) [Bug 2351]
+ ! Category names wern't getting properly cleaned in the jump to box. (Xml.php) [Bug 2345]
+ ! Make all Package database functions add a prefix unless told otherwise. (DbPackage-xxxx.php, upgrade.php, ManagePosts.php, convert.php) [Bug 1952]
+ ! Checkboxes for move and annouce wern't being remembered upon preview. (Post.php, Post template) [Bug 2305]
+ & Reworded the quick reply description. (index language file) [Bug 1886]
+ ! Don't increment a users post count until their post has been approved. (Subs-Post.php, RemoveTopic.php, MoveTopic.php, Subs-Members.php) [Bug 2004]
+ ! Don't allow people to remove every admin from the admin group. (Subs-Membergroups.php) [Bug 2102]
 
 
 June 2008

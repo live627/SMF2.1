@@ -241,6 +241,18 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 			$members[$key] = (int) $value;
 	}
 
+	// Before we get started, let's check we won't leave the admin group empty!
+	if ($groups === null || in_array(1, $groups))
+	{
+		$admins = array();
+		listMembergroupMembers_Href($admins, 1);
+
+		// Remove any admins if there are too many.
+		$non_changing_admins = array_diff(array_keys($admins), $members);
+		if (!empty($non_changing_admins))
+			$members = array_diff($members, array_keys($admins));
+	}
+
 	// Just in case.
 	if (empty($members))
 		return false;
@@ -556,13 +568,13 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 	);
 	$members = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$members[] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+		$members[$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 	$smcFunc['db_free_result']($request);
 
 	// If there are more than $limit members, add a 'more' link.
 	if ($limit !== null && count($members) > $limit)
 	{
-		unset($members[$limit]);
+		array_pop($members);
 		return true;
 	}
 	else

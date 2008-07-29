@@ -13,17 +13,17 @@ function template_popup()
 		<meta name="robots" content="noindex" />
 		<title>', $context['page_title'], '</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
-		<style type="text/css">';
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>';
 
 	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
 	if ($context['browser']['needs_size_fix'])
 		echo '
-			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
+		<style type="text/css">
+			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);
+		</style>';
 
 	// Just show the help text and a "close window" link.
 	echo '
-		</style>
 	</head>
 	<body style="margin: 1ex;">
 		<div class="popuptext">

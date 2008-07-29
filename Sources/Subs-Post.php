@@ -2013,7 +2013,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	}
 
 	// Increase the post counter for the user that created the post.
-	if (!empty($posterOptions['update_post_count']) && !empty($posterOptions['id']))
+	if (!empty($posterOptions['update_post_count']) && !empty($posterOptions['id']) && $msgOptions['approved'])
 	{
 		// Are you the one that happened to create this post?
 		if ($user_info['id'] == $posterOptions['id'])
@@ -2502,9 +2502,10 @@ function approvePosts($msgs, $approve = true)
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.approved, m.id_topic, m.id_board, t.id_first_msg, t.id_last_msg,
 			m.body, m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.id_member,
-			t.approved AS topic_approved
+			t.approved AS topic_approved, b.count_posts
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_msg IN ({array_int:message_list})
 			AND m.approved = {int:approved_state}',
@@ -2519,6 +2520,7 @@ function approvePosts($msgs, $approve = true)
 	$board_changes = array();
 	$notification_topics = array();
 	$notification_posts = array();
+	$member_post_changes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Easy...
@@ -2586,6 +2588,10 @@ function approvePosts($msgs, $approve = true)
 		$topic_changes[$row['id_topic']]['unapproved_posts'] += $approve ? -1 : 1;
 		$board_changes[$row['id_board']]['unapproved_posts'] += $approve ? -1 : 1;
 		$board_changes[$row['id_board']]['posts'] += $approve ? 1 : -1;
+
+		// Post count for the user?
+		if ($row['id_member'])
+			$member_post_changes[$row['id_member']]['post_change'] = isset($member_post_changes[$row['id_member']]['post_change']) ? $member_post_changes[$row['id_member']]['post_change'] + 1 : 1;
 	}
 	$smcFunc['db_free_result']($request);
 
@@ -2692,6 +2698,11 @@ function approvePosts($msgs, $approve = true)
 
 	// Update the last messages on the boards...
 	updateLastMessages(array_keys($board_changes));
+
+	// Post count for the members?
+	if (!empty($member_post_changes))
+		foreach ($member_post_changes as $id_member => $count_change)
+			updateMemberData($id_member, array('posts' => 'posts ' . ($approve ? '+' : '-') .  ' ' . $count_change))
 
 	return true;
 }

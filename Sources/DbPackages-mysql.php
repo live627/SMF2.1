@@ -130,7 +130,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			// Otherwise we have to sort through the columns and add/remove ones which are wrong!
 			else
 			{
-				$old_columns = $smcFunc['db_list_columns']($table_name);
+				$old_columns = $smcFunc['db_list_columns']($table_name, false, array('no_prefix' => true));
 				foreach ($old_columns as $k => $v)
 					$old_columns[$k] = strtolower($v);
 				foreach ($columns as $column)
@@ -251,7 +251,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	$db_package_log[] = array('remove_column', $table_name, $column_info['name']);
 
 	// Does it exist - if so don't add it again!
-	$columns = $smcFunc['db_list_columns']($table_name);
+	$columns = $smcFunc['db_list_columns']($table_name, false, array('no_prefix' => true));
 	foreach ($columns as $column)
 		if ($column == $column_info['name'])
 		{
@@ -291,7 +291,7 @@ function smf_db_remove_column($table_name, $column_name, $parameters = array(), 
 		$table_name = $db_prefix . $table_name;
 
 	// Does it exist?
-	$columns = $smcFunc['db_list_columns']($table_name, true);
+	$columns = $smcFunc['db_list_columns']($table_name, true, array('no_prefix' => true));
 	foreach ($columns as $column)
 		if ($column['name'] == $column_name)
 		{
@@ -318,7 +318,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		$table_name = $db_prefix . $table_name;
 
 	// Check it does exist!
-	$columns = $smcFunc['db_list_columns']($table_name, true);
+	$columns = $smcFunc['db_list_columns']($table_name, true, array('no_prefix' => true));
 	$old_info = null;
 	foreach ($columns as $column)
 		if ($column['name'] == $old_column)
@@ -385,7 +385,7 @@ function smf_db_add_index($table_name, $index_info, $parameters = array(), $if_e
 	$db_package_log[] = array('remove_index', $table_name, $index_info['name']);
 
 	// Let's get all our indexes.
-	$indexes = $smcFunc['db_list_indexes']($table_name);
+	$indexes = $smcFunc['db_list_indexes']($table_name, false, array('no_prefix' => true));
 	// Do we already have it?
 	foreach ($indexes as $index)
 	{
@@ -428,7 +428,7 @@ function smf_db_remove_index($table_name, $index_name, $parameters = array(), $e
 		$table_name = $db_prefix . $table_name;
 
 	// Better exist!
-	$indexes = $smcFunc['db_list_indexes']($table_name, true);
+	$indexes = $smcFunc['db_list_indexes']($table_name, true, array('no_prefix' => true));
 
 	foreach ($indexes as $index)
 	{
@@ -468,25 +468,29 @@ function smf_db_calculate_type($type_name, $type_size = null, $reverse = false)
 }
 
 // Get table structure.
-function smf_db_table_structure($table_name)
+function smf_db_table_structure($table_name, $parameters = array())
 {
 	global $smcFunc, $db_prefix;
 
-	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
+	// Nothing to hide Mr Hidey Man.
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	return array(
 		'name' => $table_name,
-		'columns' => $smcFunc['db_list_columns']($table_name, true),
-		'indexes' => $smcFunc['db_list_indexes']($table_name, true),
+		'columns' => $smcFunc['db_list_columns']($table_name, true, array('no_prefix' => true)),
+		'indexes' => $smcFunc['db_list_indexes']($table_name, true, array('no_prefix' => true)),
 	);
 }
 
 // Return column information for a table.
-function smf_db_list_columns($table_name, $detail = false)
+function smf_db_list_columns($table_name, $detail = false, $parameters = array())
 {
 	global $smcFunc, $db_prefix;
 
-	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
+	// Add a prefix chap?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	$result = $smcFunc['db_query']('', '
 		SHOW FIELDS
@@ -535,11 +539,13 @@ function smf_db_list_columns($table_name, $detail = false)
 }
 
 // What about some index information?
-function smf_db_list_indexes($table_name, $detail = false)
+function smf_db_list_indexes($table_name, $detail = false, $parameters = array())
 {
 	global $smcFunc, $db_prefix;
 
-	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
+	// Are you prefixed with yourself?
+	if (empty($parameters['no_prefix']))
+		$table_name = $db_prefix . $table_name;
 
 	$result = $smcFunc['db_query']('', '
 		SHOW KEYS

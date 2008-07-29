@@ -140,7 +140,7 @@ function onDocReceived(XMLDoc)
 			}
 		}
 		// Adjust the link to collapse instead of expand
-		document.getElementById("link_" + curId).href = smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + curId + "#" + curId;
+		document.getElementById("m" + curId).href = smf_prepareScriptUrl(smf_scripturl) + "action=stats;collapse=" + curId + "#" + curId;
 	}
 
 	doingExpandCollapse = false;

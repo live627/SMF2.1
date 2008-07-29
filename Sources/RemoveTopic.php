@@ -243,11 +243,13 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			WHERE m.id_topic IN ({array_int:topics})
 				AND m.icon != {string:recycled}
 				AND b.count_posts = {int:do_count_posts}
+				AND m.approved = {int:is_approved}
 			GROUP BY m.id_member',
 			array(
 				'do_count_posts' => 0,
 				'recycled' => 'recycled',
 				'topics' => $topics,
+				'is_approved' => 1,
 			)
 		);
 		if ($smcFunc['db_num_rows']($requestMembers) > 0)
@@ -911,7 +913,7 @@ function removeMessage($message, $decreasePostCount = true)
 
 	// If the poster was registered and the board this message was on incremented
 	// the member's posts when it was posted, decrease his or her post count.
-	if (!empty($row['id_member']) && $decreasePostCount && empty($row['count_posts']))
+	if (!empty($row['id_member']) && $decreasePostCount && empty($row['count_posts']) && $row['approved'])
 		updateMemberData($row['id_member'], array('posts' => '-'));
 
 	// Only remove posts if they're not recycled.
@@ -1179,16 +1181,19 @@ function RestoreTopic()
 			{
 				// Lets get the members that need their post count restored.
 				$request2 = $smcFunc['db_query']('', '
-					SELECT id_member
+					SELECT id_member, COUNT(id_msg) AS post_count
 					FROM {db_prefix}messages
-					WHERE id_topic = {int:topic}',
+					WHERE id_topic = {int:topic}
+						AND approved = {int:is_approved}
+					GROUP BY id_member',
 					array(
 						'topic' => $row['id_topic'],
+						'is_approved' => 1,
 					)
 				);
 
 				while ($member = $smcFunc['db_fetch_assoc']($request2))
-					updateMemberData($member['id_member'], array('posts' => '+'));
+					updateMemberData($member['id_member'], array('posts' => 'posts + ' . $member['post_count']));
 				$smcFunc['db_free_result']($request2);
 			}
 			
@@ -1254,9 +1259,11 @@ function mergePosts($msgs = array(), $from_topic, $target_topic)
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}messages
-			WHERE id_msg IN ({array_int:messages})',
+			WHERE id_msg IN ({array_int:messages})
+				AND approved = {int:is_approved}',
 			array(
 				'messages' => $msgs,
+				'is_approved' => 1,
 			)
 		);
 

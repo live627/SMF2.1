@@ -66,7 +66,7 @@ function GetJumpTo()
 	// Make the board safe for display.
 	foreach ($context['jump_to'] as $id_cat => $cat)
 	{
-		$cat['name'] = un_htmlspecialchars(strip_tags($cat['name']));
+		$context['jump_to'][$id_cat]['name'] = un_htmlspecialchars(strip_tags($cat['name']));
 		foreach ($cat['boards'] as $id_board => $board)
 		{
 			$context['jump_to'][$id_cat]['boards'][$id_board]['name'] = un_htmlspecialchars(strip_tags($board['name']));

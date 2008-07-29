@@ -231,12 +231,12 @@ function ModifyPostSettings($return_config = false)
 		{
 			db_extend('packages');
 
-			$colData = $smcFunc['db_list_columns']( $db_prefix . 'messages', true);
+			$colData = $smcFunc['db_list_columns']('messages', true);
 			foreach ($colData as $column)
 				if ($column['name'] == 'body')
 					$body_type = $column['type'];
 
-			$indData = $smcFunc['db_list_indexes']( $db_prefix . 'messages', true);
+			$indData = $smcFunc['db_list_indexes']('messages', true);
 			foreach ($indData as $index)
 				foreach ($index['columns'] as $column)
 					if ($column == 'body' && $index['type'] == 'fulltext')

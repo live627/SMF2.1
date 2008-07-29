@@ -341,9 +341,11 @@ function MoveTopic2()
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}messages
-			WHERE id_topic = {int:current_topic}',
+			WHERE id_topic = {int:current_topic}
+				AND approved = {int:is_approved}',
 			array(
 				'current_topic' => $topic,
+				'is_approved' => 1,
 			)
 		);
 		$posters = array();

@@ -1079,6 +1079,7 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND b.count_posts = {int:count_posts})
 			WHERE m.id_member = {int:guest_id}
+				AND m.approved = {int:is_approved}
 				AND m.icon != {string:recycled_icon}
 				AND ' . $query,
 			array(
@@ -1086,6 +1087,7 @@ function reattributePosts($memID, $email = false, $membername = false, $post_cou
 				'guest_id' => 0,
 				'email_address' => $email,
 				'member_name' => $membername,
+				'is_approved' => 1,
 				'recycled_icon' => 'recycled',
 			)
 		);
