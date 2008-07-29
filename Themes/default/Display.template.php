@@ -615,10 +615,13 @@ function template_main()
 		</div>
 		<div>
 			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
+			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
+			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
 				<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 				<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
 				<input type="hidden" name="icon" value="xx" />
+				<input type="hidden" name="from_qr" value="1" />
 				<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
 				<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
 				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />

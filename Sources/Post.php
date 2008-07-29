@@ -707,7 +707,7 @@ function Post()
 		$context['icon'] = $row['icon'];
 
 		// Show an "approve" box if the user can approve it, and the message isn't approved.
-		if (!$row['approved'])
+		if (!$row['approved'] && !$context['show_approval'])
 			$context['show_approval'] = allowedTo('approve_posts');
 
 		// Load up 'em attachments!
@@ -1005,6 +1005,9 @@ function Post()
 		$context['page_title'] = $txt['preview'] . ' - ' . strip_tags($context['preview_subject']);
 	elseif (empty($topic))
 		$context['page_title'] = $txt['start_new_topic'];
+	// This means they came from quick reply, and have to enter verification details.
+	elseif (!empty($_REQUEST['from_qr']))
+		$context['page_title'] = $txt['enter_verification_details'];
 	else
 		$context['page_title'] = $txt['post_reply'];
 
@@ -1159,6 +1162,9 @@ function Post2()
 
 		if (is_array($context['require_verification']))
 		{
+			// If it's someone from quick reply, don't show them errors.
+			if (!empty($_REQUEST['from_qr']))
+				return Post();
 			$post_errors = array_merge($post_errors, $context['require_verification']);
 		}
 	}
@@ -1357,7 +1363,7 @@ function Post2()
 
 		// Can they approve it?
 		$can_approve = allowedTo('approve_posts');
-		$becomesApproved = $modSettings['postmod_active'] ? ($can_approve && !$row['approved'] ? (isset($_REQUEST['approved']) ? 1 : 0) : $row['approved']) : 1;
+		$becomesApproved = $modSettings['postmod_active'] ? ($can_approve && !$row['approved'] ? (!empty($_REQUEST['approve']) ? 1 : 0) : $row['approved']) : 1;
 		$approve_has_changed = $row['approved'] != $becomesApproved;
 
 		if (!allowedTo('moderate_forum') || !$posterIsGuest)

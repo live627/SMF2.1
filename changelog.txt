@@ -65,6 +65,12 @@ July 2008
  & Reworded the quick reply description. (index language file) [Bug 1886]
  ! Don't increment a users post count until their post has been approved. (Subs-Post.php, RemoveTopic.php, MoveTopic.php, Subs-Members.php) [Bug 2004]
  ! Don't allow people to remove every admin from the admin group. (Subs-Membergroups.php) [Bug 2102]
+ ! Don't show the group link tree if you're in the moderation center. (Groups.php) [Bug 2332]
+ * Warn a user who is about to remove themselves from the admin group. (ManageMembergroups template, ManageMembers language file) [Bug 2243]
+ ! Approving a message during an edit wasn't actually working. (Post.php) [Bug 2165]
+ ! Don't allow moving of a topic to the same board as it came from. (MoveTopic.php) [Bug 2304]
+ ! Set more default values in the install and upgrade scripts. (install and upgrade scripts) [Bug 2329]
+ ! If people are using quick reply, and need to enter verification details, give them some notice. (Display.php, Display templates, Post.php, index and Post language files) [Bug 2278]
 
 
 June 2008

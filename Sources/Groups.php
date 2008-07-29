@@ -64,6 +64,11 @@ function Groups()
 	// Default to sub action 'index' or 'settings' depending on permissions.
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'index';
 
+	// Get the template stuff up and running.
+	loadLanguage('ManageMembers');
+	loadLanguage('ModerationCenter');
+	loadTemplate('ManageMembergroups');
+
 	// If we can see the moderation center, and this has a mod bar entry, add the mod center bar.
 	if (allowedTo('access_mod_center') || $user_info['mod_cache']['bq'] != '0=1' || $user_info['mod_cache']['gq'] != '0=1' || allowedTo('manage_membergroups'))
 	{
@@ -71,17 +76,14 @@ function Groups()
 		$_GET['area'] = $_REQUEST['sa'] == 'requests' ? 'groups' : 'viewgroups';
 		ModerationMain(true);
 	}
-
-	// Get the template stuff up and running.
-	loadLanguage('ManageMembers');
-	loadLanguage('ModerationCenter');
-	loadTemplate('ManageMembergroups');
-
-	// Add something to the link tree, for normal people.
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=groups',
-		'name' => $txt['groups'],
-	);
+	// Otherwise add something to the link tree, for normal people.
+	else
+	{
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=groups',
+			'name' => $txt['groups'],
+		);
+	}
 
 	// Call the actual function.
 	$subActions[$_REQUEST['sa']][0]();

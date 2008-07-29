@@ -67,6 +67,8 @@ $txt['membergroups_members_last_active'] = 'Last Active';
 $txt['membergroups_members_additional_only'] = 'Add as additional group only.';
 $txt['membergroups_members_group_moderators'] = 'Group Moderators';
 $txt['membergroups_members_description'] = 'Description';
+// Use javascript escaping in the below.
+$txt['membergroups_members_deadmin_confirm'] = 'Are you sure you wish to remove yourself from the Administration group?';
 
 $txt['membergroups_postgroups'] = 'Post groups';
 $txt['membergroups_settings'] = 'Membergroup Settings';

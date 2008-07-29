@@ -1054,7 +1054,7 @@ CREATE TABLE {$db_prefix}log_packages (
   package_id varchar(255) NOT NULL,
   name varchar(255) NOT NULL,
   version varchar(255) NOT NULL,
-  id_member_installed int NOT NULL,
+  id_member_installed int NOT NULL default '0',
   member_installed varchar(255) NOT NULL,
   time_installed int NOT NULL default '0',
   id_member_removed int NOT NULL default '0',
@@ -1124,7 +1124,7 @@ CREATE INDEX {$db_prefix}log_reported_id_msg ON {$db_prefix}log_reported (id_msg
 
 CREATE TABLE {$db_prefix}log_reported_comments (
   id_comment integer primary key,
-  id_report int NOT NULL,
+  id_report int NOT NULL default '0',
   id_member int NOT NULL,
   membername varchar(255) NOT NULL,
   comment varchar(255) NOT NULL,
@@ -1145,8 +1145,8 @@ CREATE INDEX {$db_prefix}log_reported_comments_time_sent ON {$db_prefix}log_repo
 
 CREATE TABLE {$db_prefix}log_scheduled_tasks (
   id_log integer primary key,
-  id_task smallint NOT NULL,
-  time_run int NOT NULL,
+  id_task smallint NOT NULL default '0',
+  time_run int NOT NULL default '0',
   time_taken float NOT NULL default '0'
 );
 
@@ -1206,7 +1206,7 @@ CREATE TABLE {$db_prefix}log_search_topics (
 CREATE TABLE {$db_prefix}log_spider_hits (
 	id_hit integer primary key,
   id_spider smallint NOT NULL default '0',
-  log_time int NOT NULL,
+  log_time int NOT NULL default '0',
   url varchar(255) NOT NULL,
   processed smallint NOT NULL default '0'
 );
@@ -1735,9 +1735,9 @@ CREATE TABLE {$db_prefix}poll_choices (
 
 CREATE TABLE {$db_prefix}scheduled_tasks (
   id_task integer primary key,
-  next_time int NOT NULL,
-  time_offset int NOT NULL,
-  time_regularity smallint NOT NULL,
+  next_time int NOT NULL default '0',
+  time_offset int NOT NULL default '0',
+  time_regularity smallint NOT NULL default '0',
   time_unit varchar(1) NOT NULL default 'h',
   disabled smallint NOT NULL default '0',
   task varchar(24) NOT NULL default ''

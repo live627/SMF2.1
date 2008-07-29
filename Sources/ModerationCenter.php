@@ -877,7 +877,7 @@ function ModReport()
 	require_once($sourcedir . '/Subs-List.php');
 	loadLanguage('Modlog');
 
-	// This is all the information required for a watched user listing.
+	// This is all the information from the moderation log.
 	$listOptions = array(
 		'id' => 'moderation_actions_list',
 		'title' => $txt['mc_modreport_modactions'],

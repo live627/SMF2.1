@@ -991,7 +991,7 @@ CREATE TABLE {$db_prefix}log_packages (
   package_id tinytext NOT NULL,
   name tinytext NOT NULL,
   version tinytext NOT NULL,
-  id_member_installed mediumint(8) NOT NULL,
+  id_member_installed mediumint(8) NOT NULL default '0',
   member_installed tinytext NOT NULL,
   time_installed int(10) NOT NULL default '0',
   id_member_removed mediumint(8) NOT NULL default '0',
@@ -1048,7 +1048,7 @@ CREATE TABLE {$db_prefix}log_reported (
 
 CREATE TABLE {$db_prefix}log_reported_comments (
   id_comment mediumint(8) unsigned NOT NULL auto_increment,
-  id_report mediumint(8) NOT NULL,
+  id_report mediumint(8) NOT NULL default '0',
   id_member mediumint(8) NOT NULL,
   membername tinytext NOT NULL,
   comment tinytext NOT NULL,
@@ -1065,8 +1065,8 @@ CREATE TABLE {$db_prefix}log_reported_comments (
 
 CREATE TABLE {$db_prefix}log_scheduled_tasks (
   id_log mediumint(8) NOT NULL auto_increment,
-  id_task smallint(5) NOT NULL,
-  time_run int(10) NOT NULL,
+  id_task smallint(5) NOT NULL default '0',
+  time_run int(10) NOT NULL default '0',
   time_taken float NOT NULL default '0',
   PRIMARY KEY (id_log)
 ) ENGINE=MyISAM;
@@ -1122,7 +1122,7 @@ CREATE TABLE {$db_prefix}log_search_topics (
 CREATE TABLE {$db_prefix}log_spider_hits (
 	id_hit int(10) unsigned NOT NULL auto_increment,
   id_spider smallint(5) unsigned NOT NULL default '0',
-  log_time int(10) unsigned NOT NULL,
+  log_time int(10) unsigned NOT NULL default '0',
   url tinytext NOT NULL,
   processed tinyint(3) NOT NULL default '0',
   PRIMARY KEY (id_hit),
@@ -1596,9 +1596,9 @@ CREATE TABLE {$db_prefix}poll_choices (
 
 CREATE TABLE {$db_prefix}scheduled_tasks (
   id_task smallint(5) NOT NULL auto_increment,
-  next_time int(10) NOT NULL,
-  time_offset int(10) NOT NULL,
-  time_regularity smallint(5) NOT NULL,
+  next_time int(10) NOT NULL default '0',
+  time_offset int(10) NOT NULL default '0',
+  time_regularity smallint(5) NOT NULL default '0',
   time_unit varchar(1) NOT NULL default 'h',
   disabled tinyint(3) NOT NULL default '0',
   task varchar(24) NOT NULL default '',

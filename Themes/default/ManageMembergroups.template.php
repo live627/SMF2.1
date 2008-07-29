@@ -405,7 +405,7 @@ function template_group_members()
 					<td', empty($context['group']['assignable']) ? ' colspan="2"' : '', '>', $member['posts'], '</td>';
 		if (!empty($context['group']['assignable']))
 			echo '
-					<td align="center" width="4%"><input type="checkbox" name="rem[]" value="', $member['id'], '" class="check" /></td>';
+					<td align="center" width="4%"><input type="checkbox" name="rem[]" value="', $member['id'], '" class="check" ', ($context['user']['id'] == $member['id'] && $context['group']['id'] == 1 ? 'onclick="if (this.checked) return confirm(\'' . $txt['membergroups_members_deadmin_confirm'] . '\')" ' : ''), '/></td>';
 		echo '
 				</tr>';
 	}

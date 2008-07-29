@@ -534,6 +534,9 @@ $txt['spell_check'] = 'Spell Check';
 $txt['quick_reply'] = 'Quick Reply';
 $txt['quick_reply_desc'] = 'With <i>Quick-Reply</i> you can write a post when viewing a topic without loading a new page. You can still use bulletin board code and smileys as you would in a normal post.';
 $txt['quick_reply_warning'] = 'Warning: this topic is currently locked!<br />Only admins and moderators can reply.';
+$txt['quick_reply_verification'] = 'After submitting your post you will be directed to the regular post page to verify your post %1$s.';
+$txt['quick_reply_verification_guests'] = '(required for all guests)';
+$txt['quick_reply_verification_posts'] = '(required for all users with less than %1$d posts)';
 $txt['wait_for_approval'] = 'Note: this post will not display until it\'s been approved by a moderator.';
 
 $txt['notification_enable_board'] = 'Are you sure you wish to enable notification of new topics for this board?';
