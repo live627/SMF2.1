@@ -787,7 +787,7 @@ function ModReport()
 			);
 
 			// Redirect to prevent double submittion.
-			redirectexit($scripturl . '?action=moderate;area=reports;report=' . $context['report']['id']);
+			redirectexit($scripturl . '?action=moderate;area=reports;report=' . $_REQUEST['report']);
 		}
 	}
 

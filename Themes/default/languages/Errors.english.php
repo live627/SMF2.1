@@ -218,7 +218,6 @@ $txt['no_dump_database'] = 'Only administrators can make database backups!';
 $txt['pm_not_yours'] = 'The personal message you\'re trying to quote is not your own or does not exist, please go back and try again.';
 $txt['mangled_post'] = 'Mangled form data - please go back and try again.';
 $txt['quoted_post_deleted'] = 'The post you are trying to quote either does not exist, was deleted, or is no longer viewable by you.';
-$txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
 $txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['labels_too_many'] = 'Sorry, %s messages already had the maximum amount of labels allowed!';
 

@@ -44,6 +44,7 @@ $txt['pm_successfully_sent'] = 'PM successfully sent to \'%s\'.';
 $txt['pm_send_report'] = 'Send report';
 $txt['pm_save_outbox'] = 'Save a copy in my outbox';
 $txt['pm_undisclosed_recipients'] = 'Undisclosed recipients';
+$txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
 
 $txt['pm_read'] = 'Read';
 $txt['pm_replied'] = 'Replied To';

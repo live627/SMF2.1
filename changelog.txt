@@ -71,6 +71,8 @@ July 2008
  ! Don't allow moving of a topic to the same board as it came from. (MoveTopic.php) [Bug 2304]
  ! Set more default values in the install and upgrade scripts. (install and upgrade scripts) [Bug 2329]
  ! If people are using quick reply, and need to enter verification details, give them some notice. (Display.php, Display templates, Post.php, index and Post language files) [Bug 2278]
+ & A language entry was in the wrong file. (Errors and PersonalMessage language files) [Bug 2358]
+ ! Fixed typo in moderation center. (ModerationCenter.php) [Bug 2357]
 
 
 June 2008
