@@ -73,6 +73,7 @@ July 2008
  ! If people are using quick reply, and need to enter verification details, give them some notice. (Display.php, Display templates, Post.php, index and Post language files) [Bug 2278]
  & A language entry was in the wrong file. (Errors and PersonalMessage language files) [Bug 2358]
  ! Fixed typo in moderation center. (ModerationCenter.php) [Bug 2357]
+ * Quick preview wasn't working. (Post template)
 
 
 June 2008

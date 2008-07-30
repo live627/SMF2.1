@@ -643,9 +643,9 @@ function template_main()
 						{
 							// Handle the WYSIWYG editor.
 							if (textFields[i] == "', $context['post_box_name'], '" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.bRichTextEnabled)
-								x[x.length] = "message_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+								x[x.length] = "message_mode=1&" + textFields[i] + "=" + editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 							else
-								x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+								x[x.length] = textFields[i] + "=" + document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 						}
 					for (i in numericFields)
 						if (document.forms.postmodify.elements[numericFields[i]] && typeof(document.forms.postmodify[numericFields[i]].value) != "undefined")
