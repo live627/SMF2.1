@@ -74,6 +74,7 @@ July 2008
  & A language entry was in the wrong file. (Errors and PersonalMessage language files) [Bug 2358]
  ! Fixed typo in moderation center. (ModerationCenter.php) [Bug 2357]
  * Quick preview wasn't working. (Post template)
+ ! The page index was shown incorrectly when users were denied their request to view all posts in a topic. (Display.php) [Bug 2314]
 
 
 June 2008

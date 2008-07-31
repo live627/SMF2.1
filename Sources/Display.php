@@ -535,13 +535,12 @@ function Display()
 	}
 
 	// If all is set, but not allowed... just unset it.
-	if (isset($_REQUEST['all']) && empty($modSettings['enableAllMessages']))
+	$can_show_all = !empty($modSettings['enableAllMessages']) && $context['total_visible_posts'] > $context['messages_per_page'] && $context['total_visible_posts'] < $modSettings['enableAllMessages'];
+	if (isset($_REQUEST['all']) && !$can_show_all)
 		unset($_REQUEST['all']);
 	// Otherwise, it must be allowed... so pretend start was -1.
 	elseif (isset($_REQUEST['all']))
-	{
 		$_REQUEST['start'] = -1;
-	}
 
 	// Construct the page index, allowing for the .START method...
 	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $context['total_visible_posts'], $context['messages_per_page'], true);
@@ -563,7 +562,7 @@ function Display()
 	);
 
 	// If they are viewing all the posts, show all the posts, otherwise limit the number.
-	if (!empty($modSettings['enableAllMessages']) && $context['total_visible_posts'] > $context['messages_per_page'] && $context['total_visible_posts'] < $modSettings['enableAllMessages'])
+	if ($can_show_all)
 	{
 		if (isset($_REQUEST['all']))
 		{
@@ -1283,7 +1282,7 @@ function Download()
 
 		elseif ($context['browser']['is_ie'])
 			header('Content-Disposition: attachment; filename="' . urlencode(preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name)) . '"');
-		
+
 		else
 			header('Content-Disposition: attachment; filename="' . $utf8name . '"');
 	}
