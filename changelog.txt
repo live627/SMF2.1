@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 4                                                               ???
 ================================================================================
+August 2008
+--------------------------------------------------------------------------------
+! All messages would appear as new when a board was marked as read. (Display.php) [Bug 2365]
+
+
 July 2008
 --------------------------------------------------------------------------------
  ! COPPA wasn't working right as guets can't access it. (index.php) [Bug 2291]
