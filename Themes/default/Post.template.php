@@ -484,10 +484,10 @@ function template_main()
 													</tr>
 													<tr>
 														<td class="smalltext"><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="check" /> ', $txt['dont_use_smileys'], '</label></td>', '
-														<td class="smalltext">', $context['can_move'] ? '<input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="check" ' . !empty($context['move']) ? 'checked="checked" ' : '' . '/> ' . $txt['move_after2'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_move'] ? '<input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="check" ' . (!empty($context['move']) ? 'checked="checked" ' : '') . '/> ' . $txt['move_after2'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
-														<td class="smalltext">', $context['can_announce'] && $context['is_first_post'] ? '<label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="check" ' . !empty($context['announce']) ? 'checked="checked" ' : '' . '/> ' . $txt['announce_topic'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_announce'] && $context['is_first_post'] ? '<label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="check" ' . (!empty($context['announce']) ? 'checked="checked" ' : '') . '/> ' . $txt['announce_topic'] . '</label>' : '', '</td>
 														<td class="smalltext">', $context['show_approval'] ? '<label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="check" ' . ($context['show_approval'] == 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label>' : '', '</td>
 													</tr>
 												</table>
