@@ -78,6 +78,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 							<option value="navy">', $txt['navy'], '</option>
 							<option value="maroon">', $txt['maroon'], '</option>
 							<option value="limeGreen">', $txt['lime_green'], '</option>
+							<option value="white">', $txt['white'], '</option>
 						</select>';
 		echo '<br />';
 

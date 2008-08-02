@@ -401,3 +401,11 @@ else
 CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_started, id_board);
 ---#
 
+/******************************************************************************/
+--- Providing more room for ignoring boards.
+/******************************************************************************/
+
+---# Changing ignore_boards column to a larger field type...
+ALTER TABLE {$db_prefix}members
+ALTER COLUMN ignore_boards TYPE text;
+---#

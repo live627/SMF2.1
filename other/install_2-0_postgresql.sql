@@ -1642,7 +1642,7 @@ CREATE TABLE {$db_prefix}members (
   id_post_group smallint NOT NULL default '0',
   total_time_logged_in int NOT NULL default '0',
   password_salt varchar(5) NOT NULL default '',
-  ignore_boards varchar(255) NOT NULL,
+  ignore_boards text NOT NULL,
   warning smallint NOT NULL default '0',
   passwd_flood varchar(12) NOT NULL default '',
   PRIMARY KEY (id_member)

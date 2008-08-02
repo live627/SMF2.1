@@ -7,6 +7,11 @@ August 2008
 --------------------------------------------------------------------------------
  ! All messages would appear as new when a board was marked as read. (Display.php) [Bug 2365]
  ! Link to the last post in the topic on the board index for guests instead of the last post on the entire forum. (Subs-BoardIndex.php) [Bug 1925]
+ ! Change the ignore_boards column from tinytext to text to allow more boards to be ignored.  Note:  At this time this doesn't effect existing SQLite installs. (upgrade and install SQL files) [Bug 2323]
+ ! Added white to the list of colors in the generic controls. (GenericControls template, Post language file) [Bug 2361]
+ ! /me was removing the preceding newline. (Subs-Post.php) [Bug 2228]
+ ! The error log filter was escaping the _ character in the display text. (ManageErrors.php)
+ ! Added a column header for the news column to avoid confusion with the preview column when editing news items. (ManageNews template) [Bug 2247]
 
 
 July 2008

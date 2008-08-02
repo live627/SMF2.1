@@ -245,7 +245,7 @@ $nameChanges = array(
 		'ID_POST_GROUP' => 'ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default \'0\'',
 		'totalTimeLoggedIn' => 'totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default \'0\'',
 		'passwordSalt' => 'passwordSalt password_salt varchar(5) NOT NULL default \'\'',
-		'ignoreBoards' => 'ignoreBoards ignore_boards tinytext NOT NULL',
+		'ignoreBoards' => 'ignoreBoards ignore_boards text NOT NULL',
 		'memberIP2' => 'memberIP2 member_ip2 tinytext NOT NULL',
 	),
 	'messages' => array(
@@ -1783,7 +1783,7 @@ DROP COLUMN permission_mode;
 
 ---# Adding column to hold the boards being ignored ...
 ALTER TABLE {$db_prefix}members
-ADD ignore_boards tinytext NOT NULL;
+ADD ignore_boards text NOT NULL;
 ---#
 
 ---# Purge flood control ...
@@ -2261,6 +2261,15 @@ ADD INDEX member_started (id_member_started, id_board);
 ---# Adding another index to the topics table...
 ALTER TABLE {$db_prefix}topics
 ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
+---#
+
+/******************************************************************************/
+--- Providing more room for ignoring boards.
+/******************************************************************************/
+
+---# Changing ignore_boards column to a larger field type...
+ALTER TABLE {$db_prefix}members
+CHANGE ignore_boards ignore_boards text NOT NULL;
 ---#
 
 /******************************************************************************/

@@ -10,7 +10,7 @@ function template_edit_news()
 		<form action="', $scripturl, '?action=admin;area=news;sa=editnews" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify">
 			<table width="85%" cellpadding="3" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
-					<th width="50%"></th>
+					<th width="50%">', $txt['admin_edit_news'], '</th>
 					<th align="left" width="45%">', $txt['preview'], '</th>
 					<th align="center" width="5%"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></th>
 				</tr>';
