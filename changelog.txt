@@ -26,6 +26,7 @@ August 2008
  + Added a database specific function to escape LIKE wildcards. (Subs-Db-xxx.sql)
  ! When filtering the error log use the database specific wildcard escaping. (ManageErrors.php) [Bug 2184]
  ! Don't show messenger icons in the mini profile if the person can't view the poster's profile. (Display template) [Bug 228]
+ ! URLs that contained single digit octets weren't being auto linked correctly. (Subs.php) [Bug 454]
 
 
 July 2008
