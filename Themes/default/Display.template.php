@@ -184,7 +184,7 @@ function template_main()
 	if (!empty($settings['display_who_viewing']))
 	{
 		echo '
-	<div id="whoisviewing" class="smalltext smallpadding">';
+	<div id="whoisviewing" class="smalltext headerpadding windowbg2">';
 
 		// Show just numbers...?
 		if ($settings['display_who_viewing'] == 1)
