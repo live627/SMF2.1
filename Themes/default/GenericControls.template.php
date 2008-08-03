@@ -83,7 +83,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		echo '<br />';
 
 		$found_button = false;
-		// Print the buttom row of buttons!
+		// Print the bottom row of buttons!
 		foreach ($context['bbc_tags'][1] as $image => $tag)
 		{
 			if (isset($tag['before']))
