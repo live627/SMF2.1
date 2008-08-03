@@ -242,14 +242,15 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 	}
 
 	// Before we get started, let's check we won't leave the admin group empty!
-	if ($groups === null || in_array(1, $groups))
+	if ($groups === null || $groups == 1 || (is_array($groups) && in_array(1, $groups)))
 	{
 		$admins = array();
 		listMembergroupMembers_Href($admins, 1);
 
 		// Remove any admins if there are too many.
 		$non_changing_admins = array_diff(array_keys($admins), $members);
-		if (!empty($non_changing_admins))
+
+		if (empty($non_changing_admins))
 			$members = array_diff($members, array_keys($admins));
 	}
 
