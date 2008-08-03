@@ -19,6 +19,8 @@ August 2008
  ! Fixed javascript error when looking at your own warnings. (Profile template) [Bug 2373]
  ! Give the who is online area the right look on Display. (Display template) [Bug 2369]
  ! It simply isn't possible to send a guest an email from Personal Messages as we don't have their address - so remove the code that does that. (PersonalMessage template) [Bug 2374]
+ ! Don't try to fix mods by default in the upgrader. (upgrade.php)
+ ! Attempt to automatically get the arrow right on sorted lists that start descending. (Subs-List.php) [Bug 1678]
 
 
 July 2008

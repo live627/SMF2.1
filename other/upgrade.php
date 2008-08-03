@@ -2840,7 +2840,7 @@ function protected_alter($change, $substep, $is_test = false)
 	$found = false;
 	if ($change['type'] === 'column')
 	{
-		$columns = $smcFunc['db_list_columns']($change['table'], true);
+		$columns = $smcFunc['db_list_columns']( $db_prefix . $change['table'], true);
 		foreach ($columns as $column)
 		{
 			// Found it?
@@ -4432,7 +4432,10 @@ function template_clean_mods()
 				<td width="10%">', $package['version'], '</td>
 				<td width="15%">', $package['file_count'], ' <span class="smalltext">[<a href="#" onclick="alert(\'The following files are affected by this modification:\\n\\n', strtr(implode('<br />', $package['files']), array('\\' => '\\\\', '<br />' => '\\n')), '\'); return false;">details</a>]</td>
 				<td width="20%"><span style="font-weight: bold; color: ', $package['color'], '">', $package['status'], '</span></td>
-				<td width="5%" align="center"><input type="checkbox" name="remove[', $package['id'], ']" ', $package['color'] == 'green' ? 'disabled="disabled"' : 'checked="checked"', ' /></td>
+				<td width="5%" align="center">
+					<input type="hidden" name="remove[', $package['id'], ']" value="0" />
+					<input type="checkbox" name="remove[', $package['id'], ']" ', $package['color'] == 'green' ? 'disabled="disabled"' : '', ' />
+				</td>
 			</tr>';
 	}
 	echo '
