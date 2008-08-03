@@ -61,7 +61,7 @@ function createList($listOptions)
 		else
 			$list_context['sort'] = array(
 				'id' => $listOptions['default_sort_col'],
-				'desc' => (!empty($listOptions['default_sort_dir']) && $listOptions['default_sort_dir'] == 'desc') || (!empty($listOptions['columns'][$listOptions['default_sort_col']]['sort']['default']) && substr($listOptions['columns'][$listOptions['default_sort_col']]['sort']['default'], -4, 4)) ? true : false,
+				'desc' => (!empty($listOptions['default_sort_dir']) && $listOptions['default_sort_dir'] == 'desc') || (!empty($listOptions['columns'][$listOptions['default_sort_col']]['sort']['default']) && substr($listOptions['columns'][$listOptions['default_sort_col']]['sort']['default'], -4, 4) == 'desc') ? true : false,
 			);
 
 		// Set the database column sort.
