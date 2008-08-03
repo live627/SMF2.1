@@ -25,6 +25,7 @@ August 2008
  ! Give the WYSWIYG editor the same tab index as the window it replaces. (editor.js) [Bug 2362]
  + Added a database specific function to escape LIKE wildcards. (Subs-Db-xxx.sql)
  ! When filtering the error log use the database specific wildcard escaping. (ManageErrors.php) [Bug 2184]
+ ! Don't show messenger icons in the mini profile if the person can't view the poster's profile. (Display template) [Bug 228]
 
 
 July 2008

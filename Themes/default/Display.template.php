@@ -308,7 +308,7 @@ function template_main()
 							<li>', $message['member']['blurb'], '</li>';
 
 			// This shows the popular messaging icons.
-			if ($message['member']['has_messenger'])
+			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
 				echo '
 							<li>
 								<ul class="nolist">

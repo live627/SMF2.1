@@ -347,7 +347,8 @@ function template_main()
 								<br />';
 
 			// This shows the popular messaging icons.
-			echo '
+			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
+				echo '
 								', !isset($context['disabled_fields']['icq']) ? $message['member']['icq']['link'] : '', '
 								', !isset($context['disabled_fields']['msn']) ? $message['member']['msn']['link'] : '', '
 								', !isset($context['disabled_fields']['aim']) ? $message['member']['aim']['link'] : '', '
