@@ -18,6 +18,7 @@ August 2008
  ! When searching with excluded words you could get a database error. (Search.php) [Bug 2376]
  ! Fixed javascript error when looking at your own warnings. (Profile template) [Bug 2373]
  ! Give the who is online area the right look on Display. (Display template) [Bug 2369]
+ ! It simply isn't possible to send a guest an email from Personal Messages as we don't have their address - so remove the code that does that. (PersonalMessage template) [Bug 2374]
 
 
 July 2008

@@ -282,11 +282,7 @@ function template_folder()
 									<a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $message['member']['online']['label'] . '" />' : $message['member']['online']['label'], '</a>';
 				}
 			}
-			elseif (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
-				echo '
-									<br />
-									<br />
-									<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $message['member']['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
+
 			echo '
 								</div>
 							</td>
