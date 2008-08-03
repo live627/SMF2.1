@@ -16,6 +16,8 @@ August 2008
  ! The list of messenger icons should no longer result in empty list items nor an empty list. (Display template, Load.php) [Bug 2370,1933]
  ! Message approval wasn't working. (Subs-Post.php) [Bug 2375]
  ! When searching with excluded words you could get a database error. (Search.php) [Bug 2376]
+ ! Fixed javascript error when looking at your own warnings. (Profile template) [Bug 2373]
+
 
 July 2008
 --------------------------------------------------------------------------------

@@ -2177,8 +2177,13 @@ function template_issueWarning()
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById(\'warndiv1\').style.display = "";
-		document.getElementById(\'warndiv2\').style.display = "none";
-		modifyWarnNotify();
+		document.getElementById(\'warndiv2\').style.display = "none";';
+
+	if (!$context['user']['is_owner'])
+		echo '
+		modifyWarnNotify();';
+
+	echo '
 	// ]]></script>';
 }
 
