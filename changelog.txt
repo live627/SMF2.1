@@ -14,6 +14,7 @@ August 2008
  ! Added a column header for the news column to avoid confusion with the preview column when editing news items. (ManageNews template) [Bug 2247]
  ! Fixed up a few of the warning template replacements. (Profile-Actions.php, Profile language file) [Bug 2371]
  ! The list of messenger icons should no longer result in empty list items nor an empty list. (Display template, Load.php) [Bug 2370,1933]
+ ! Message approval wasn't working. (Subs-Post.php) [Bug 2375]
 
 
 July 2008

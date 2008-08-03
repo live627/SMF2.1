@@ -2591,7 +2591,7 @@ function approvePosts($msgs, $approve = true)
 
 		// Post count for the user?
 		if ($row['id_member'])
-			$member_post_changes[$row['id_member']]['post_change'] = isset($member_post_changes[$row['id_member']]['post_change']) ? $member_post_changes[$row['id_member']]['post_change'] + 1 : 1;
+			$member_post_changes[$row['id_member']] = isset($member_post_changes[$row['id_member']]) ? $member_post_changes[$row['id_member']] + 1 : 1;
 	}
 	$smcFunc['db_free_result']($request);
 
