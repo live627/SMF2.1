@@ -128,7 +128,8 @@ function Memberlist()
 		'posts' => array(
 			'label' => $txt['posts'],
 			'width' => '115',
-			'colspan' => '2'
+			'colspan' => '2',
+			'default_sort_rev' => true,
 		)
 	);
 
@@ -263,11 +264,11 @@ function MLAll()
 		$context['letter_links'] .= '<a href="' . $scripturl . '?action=mlist;sa=all;start=' . chr($i) . '#letter' . chr($i) . '">' . strtoupper(chr($i)) . '</a> ';
 
 	// Sort out the column information.
-	foreach ($context['columns'] as $col => $dummy)
+	foreach ($context['columns'] as $col => $column_details)
 	{
 		$context['columns'][$col]['href'] = $scripturl . '?action=mlist;sort=' . $col . ';start=0';
 
-		if (!isset($_REQUEST['desc']) && $col == $_REQUEST['sort'])
+		if ((!isset($_REQUEST['desc']) && $col == $_REQUEST['sort']) || ($col != $_REQUEST['sort'] && !empty($column_details['default_sort_rev'])))
 			$context['columns'][$col]['href'] .= ';desc';
 
 		$context['columns'][$col]['link'] = '<a href="' . $context['columns'][$col]['href'] . '" rel="nofollow">' . $context['columns'][$col]['label'] . '</a>';
@@ -275,7 +276,7 @@ function MLAll()
 	}
 
 	$context['sort_by'] = $_REQUEST['sort'];
-	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'down' : 'up';
+	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'up' : 'down';
 
 	// Construct the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=mlist;sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['num_members'], $modSettings['defaultMaxMembers']);
@@ -299,40 +300,40 @@ function MLAll()
 			'up' => '(IFNULL(lo.log_time, 1=1)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') DESC, real_name DESC'
 		),
 		'real_name' => array(
-			'down' => 'mem.real_name ASC',
-			'up' => 'mem.real_name DESC'
+			'down' => 'mem.real_name DESC',
+			'up' => 'mem.real_name ASC'
 		),
 		'email_address' => array(
-			'down' => allowedTo('moderate_forum') ? 'mem.email_address ASC' : 'mem.hide_email ASC, mem.email_address ASC',
-			'up' => allowedTo('moderate_forum') ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC'
+			'down' => allowedTo('moderate_forum') ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC',
+			'up' => allowedTo('moderate_forum') ? 'mem.email_address ASC' : 'mem.hide_email ASC, mem.email_address ASC'
 		),
 		'website_url' => array(
-			'down' => 'LENGTH(mem.website_url) > 0 DESC, IFNULL(mem.website_url, 1=1) ASC, mem.website_url ASC',
-			'up' => 'LENGTH(mem.website_url) > 0 ASC, IFNULL(mem.website_url, 1=1) DESC, mem.website_url DESC'
+			'down' => 'LENGTH(mem.website_url) > 0 ASC, IFNULL(mem.website_url, 1=1) DESC, mem.website_url DESC',
+			'up' => 'LENGTH(mem.website_url) > 0 DESC, IFNULL(mem.website_url, 1=1) ASC, mem.website_url ASC'
 		),
 		'icq' => array(
-			'down' => 'LENGTH(mem.icq) > 0 DESC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 ASC, mem.icq ASC',
-			'up' => 'LENGTH(mem.icq) > 0 ASC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 DESC, mem.icq DESC'
+			'down' => 'LENGTH(mem.icq) > 0 ASC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 DESC, mem.icq DESC',
+			'up' => 'LENGTH(mem.icq) > 0 DESC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 ASC, mem.icq ASC'
 		),
 		'aim' => array(
-			'down' => 'LENGTH(mem.aim) > 0 DESC, IFNULL(mem.aim, 1=1) ASC, mem.aim ASC',
-			'up' => 'LENGTH(mem.aim) > 0 ASC, IFNULL(mem.aim, 1=1) DESC, mem.aim DESC'
+			'down' => 'LENGTH(mem.aim) > 0 ASC, IFNULL(mem.aim, 1=1) DESC, mem.aim DESC',
+			'up' => 'LENGTH(mem.aim) > 0 DESC, IFNULL(mem.aim, 1=1) ASC, mem.aim ASC'
 		),
 		'yim' => array(
-			'down' => 'LENGTH(mem.yim) > 0 DESC, IFNULL(mem.yim, 1=1) ASC, mem.yim ASC',
-			'up' => 'LENGTH(mem.yim) > 0 ASC, IFNULL(mem.yim, 1=1) DESC, mem.yim DESC'
+			'down' => 'LENGTH(mem.yim) > 0 ASC, IFNULL(mem.yim, 1=1) DESC, mem.yim DESC',
+			'up' => 'LENGTH(mem.yim) > 0 DESC, IFNULL(mem.yim, 1=1) ASC, mem.yim ASC'
 		),
 		'msn' => array(
-			'down' => 'LENGTH(mem.msn) > 0 DESC, IFNULL(mem.msn, 1=1) ASC, mem.msn ASC',
-			'up' => 'LENGTH(mem.msn) > 0 ASC, IFNULL(mem.msn, 1=1) DESC, mem.msn DESC'
+			'down' => 'LENGTH(mem.msn) > 0 ASC, IFNULL(mem.msn, 1=1) DESC, mem.msn DESC',
+			'up' => 'LENGTH(mem.msn) > 0 DESC, IFNULL(mem.msn, 1=1) ASC, mem.msn ASC'
 		),
 		'registered' => array(
-			'down' => 'mem.date_registered ASC',
-			'up' => 'mem.date_registered DESC'
+			'down' => 'mem.date_registered DESC',
+			'up' => 'mem.date_registered ASC'
 		),
 		'id_group' => array(
-			'down' => 'IFNULL(mg.group_name, 1=1) ASC, mg.group_name ASC',
-			'up' => 'IFNULL(mg.group_name, 1=1) DESC, mg.group_name DESC'
+			'down' => 'IFNULL(mg.group_name, 1=1) DESC, mg.group_name DESC',
+			'up' => 'IFNULL(mg.group_name, 1=1) ASC, mg.group_name ASC'
 		),
 		'posts' => array(
 			'down' => 'mem.posts DESC',
