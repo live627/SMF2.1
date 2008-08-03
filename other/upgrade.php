@@ -1510,7 +1510,10 @@ function CleanupMods()
 
 	// Skipping first?
 	if (!empty($_POST['skip']))
+	{
+		unset($_POST['skip']);
 		return true;
+	}
 
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
 	if (!isset($_GET['ssi']) || !function_exists('mktree'))
@@ -1679,7 +1682,7 @@ function CleanupMods()
 				foreach ($results as $action)
 				{
 					// Something we can remove? Probably means it existed!
-					if (($action['type'] == 'replace' || $action['type'] == 'append') && !in_array($action['filename'], $files))
+					if (($action['type'] == 'replace' || $action['type'] == 'append' || (!empty($action['filename']) && $action['type'] == 'failure')) && !in_array($action['filename'], $files))
 						$files[] = $action['filename'];
 					if ($action['type'] == 'failure')
 					{
