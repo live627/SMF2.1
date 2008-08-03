@@ -59,6 +59,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_title' => 'SQLite',
 			'db_sybase' => true,
 			'db_case_sensitive' => true,
+			'db_escape_wildcard_string' => 'smf_db_escape_wildcard_string',
 		);
 
 	if (substr($db_name, -3) != '.db')
@@ -727,4 +728,20 @@ function smf_udf_regexp($exp, $search)
 	return 0;
 }
 
+// Escape the LIKE wildcards so that they match the character and not the wildcard.
+// The optional second parameter turns human readable wildcards into SQL wildcards.
+function smf_db_escape_wildcard_string($string, $translate_human_wildcards=false)
+{
+	$replacements = array(
+		'%' => '\%',
+		'\\' => '\\\\',
+	);
+
+	if ($translate_human_wildcards)
+		$replacements += array(
+			'*' => '%',
+		);
+
+	return strtr($string, $replacements);
+}
 ?>

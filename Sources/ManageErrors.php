@@ -83,7 +83,7 @@ function ViewErrorLog()
 		$filter = array(
 			'variable' => $_GET['filter'],
 			'value' => array(
-				'sql' => in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%')
+				'sql' => in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : $smcFunc['db_escape_wildcard_string']($_GET['value']),
 			),
 			'href' => ';filter=' . $_GET['filter'] . ';value=' . $_GET['value'],
 			'entity' => $filters[$_GET['filter']]
@@ -136,9 +136,9 @@ function ViewErrorLog()
 
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', addcslashes($row['message'], '\\_%'));
+		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', $smcFunc['db_escape_wildcard_string']($row['message']));
 		if ($search_message == $filter['value']['sql'])
-			$search_message = addcslashes($row['message'], '\\_%');
+			$search_message = $smcFunc['db_escape_wildcard_string']($row['message']);
 		$show_message = strtr(strtr(preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '$1', $row['message']), array("\r" => '', '<br />' => "\n", '<' => '&lt;', '>' => '&gt;', '"' => '&quot;')), array("\n" => '<br />'));
 
 		$context['errors'][$row['id_error']] = array(
@@ -151,7 +151,7 @@ function ViewErrorLog()
 			'timestamp' => $row['log_time'],
 			'url' => array(
 				'html' => htmlspecialchars($scripturl . $row['url']),
-				'href' => base64_encode(addcslashes($row['url'], '\\_%'))
+				'href' => base64_encode($smcFunc['db_escape_wildcard_string']($row['url']))
 			),
 			'message' => array(
 				'html' => $show_message,
@@ -274,7 +274,7 @@ function ViewErrorLog()
 			'label' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
 			'description' => isset($txt['errortype_' . $row['error_type'] . '_desc']) ? $txt['errortype_' . $row['error_type'] . '_desc'] : '',
 			'url' => $scripturl . '?action=admin;area=logs;sa=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
-			'is_selected' => isset($filter) && $filter['value']['sql'] == addcslashes($row['error_type'], '\\_%'),
+			'is_selected' => isset($filter) && $filter['value']['sql'] == $smcFunc['db_escape_wildcard_string']($row['error_type']),
 		);
 	}
 	$smcFunc['db_free_result']($request);

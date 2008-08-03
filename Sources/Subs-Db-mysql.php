@@ -59,6 +59,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_title' => 'MySQL',
 			'db_sybase' => false,
 			'db_case_sensitive' => false,
+			'db_escape_wildcard_string' => 'smf_db_escape_wildcard_string',
 		);
 
 	if (!empty($db_options['persist']))
@@ -689,4 +690,21 @@ function smf_db_error_backtrace($error_message, $log_message = '', $error_type =
 		trigger_error($error_message . ($line !== null ? '<i>(' . basename($file) . '-' . $line . ')</i>' : ''));
 }
 
+// Escape the LIKE wildcards so that they match the character and not the wildcard.
+// The optional second parameter turns human readable wildcards into SQL wildcards.
+function smf_db_escape_wildcard_string($string, $translate_human_wildcards=false)
+{
+	$replacements = array(
+		'%' => '\%',
+		'_' => '\_',
+		'\\' => '\\\\',
+	);
+
+	if ($translate_human_wildcards)
+		$replacements += array(
+			'*' => '%',
+		);
+
+	return strtr($string, $replacements);
+}
 ?>

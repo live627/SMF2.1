@@ -23,6 +23,8 @@ August 2008
  ! Attempt to automatically get the arrow right on sorted lists that start descending. (Subs-List.php) [Bug 1678]
  ! The memberlist direction arrow wasn't really right, so fix it. (Memberlist.php) [Bug 1253]
  ! Give the WYSWIYG editor the same tab index as the window it replaces. (editor.js) [Bug 2362]
+ + Added a database specific function to escape LIKE wildcards. (Subs-Db-xxx.sql)
+ ! When filtering the error log use the database specific wildcard escaping. (ManageErrors.php) [Bug 2184]
 
 
 July 2008
