@@ -188,12 +188,13 @@ SmfEditor.prototype.init = function()
 		this.oFrameHandle.id = 'html_' + this.sUniqueId;
 		this.oFrameHandle.className = 'rich_editor_frame';
 		this.oFrameHandle.style.display = 'none';
+		this.oFrameHandle.tabIndex = this.oTextHandle.tabIndex;
 		this.oTextHandle.parentNode.appendChild(this.oFrameHandle);
+
 
 		// Create some handy shortcuts.
 		this.oFrameDocument = this.oFrameHandle.contentDocument ? this.oFrameHandle.contentDocument : (typeof(this.oFrameHandle.contentWindow) == 'undefined' ? this.oFrameHandle.document : this.oFrameHandle.contentWindow.document);
 		this.oFrameWindow = typeof(this.oFrameHandle.contentWindow) == 'undefined' ? this.oFrameHandle.document.parentWindow : this.oFrameHandle.contentWindow;
-
 
 
 		// Create the debug window... and stick this under the main frame - make it invisible by default.

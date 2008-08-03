@@ -22,6 +22,7 @@ August 2008
  ! Don't try to fix mods by default in the upgrader. (upgrade.php)
  ! Attempt to automatically get the arrow right on sorted lists that start descending. (Subs-List.php) [Bug 1678]
  ! The memberlist direction arrow wasn't really right, so fix it. (Memberlist.php) [Bug 1253]
+ ! Give the WYSWIYG editor the same tab index as the window it replaces. (editor.js) [Bug 2362]
 
 
 July 2008
