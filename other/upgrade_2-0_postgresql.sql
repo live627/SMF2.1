@@ -68,6 +68,11 @@ upgrade_query("
 ---}
 ---#
 
+---# Changing default_values column to a larger field type...
+ALTER TABLE {$db_prefix}custom_fields
+ALTER COLUMN default_value TYPE varchar(255);
+---#
+
 /******************************************************************************/
 --- Adding new board specific features.
 /******************************************************************************/

@@ -803,7 +803,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 	private tinyint(3) NOT NULL default '0',
 	active tinyint(3) NOT NULL default '1',
 	bbc tinyint(3) NOT NULL default '0',
-	default_value varchar(8) NOT NULL default '0',
+	default_value tinytext NOT NULL,
 	PRIMARY KEY (id_field),
 	UNIQUE col_name (col_name)
 ) ENGINE=MyISAM{$db_collation};
@@ -812,6 +812,11 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 ---# Adding search ability to custom fields.
 ALTER TABLE {$db_prefix}custom_fields
 ADD COLUMN can_search tinyint(3) NOT NULL default '0' AFTER bbc;
+---#
+
+---# Fixing default value field length.
+ALTER TABLE {$db_prefix}custom_fields
+CHANGE COLUMN default_value default_value tinytext NOT NULL;
 ---#
 
 ---# Enhancing privacy settings for custom fields.

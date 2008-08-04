@@ -920,7 +920,7 @@ CREATE TABLE {$db_prefix}custom_fields (
   active smallint NOT NULL default '1',
   bbc smallint NOT NULL default '0',
   can_search smallint NOT NULL default '0',
-  default_value varchar(8) NOT NULL default '0',
+  default_value varchar(255) NOT NULL,
   PRIMARY KEY (id_field)
 );
 
