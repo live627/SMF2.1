@@ -182,7 +182,7 @@ function Post()
 	else
 	{
 		$context['becomes_approved'] = true;
-		if ((!$context['make_event'] || !empty($board)) && (!isset($_REQUEST['poll']) || $modSettings['pollMode'] != '1'))
+		if ((!$context['make_event'] || !empty($board)))
 		{
 			if (!allowedTo('post_new') && allowedTo('post_unapproved_topics'))
 				$context['becomes_approved'] = false;
@@ -1258,13 +1258,10 @@ function Post2()
 	{
 		// Do like, the permissions, for safety and stuff...
 		$becomesApproved = true;
-		if (!isset($_REQUEST['poll']) || $modSettings['pollMode'] != '1')
-		{
-			if ($modSettings['postmod_active'] && !allowedTo('post_new') && allowedTo('post_unapproved_topics'))
-				$becomesApproved = false;
-			else
-				isAllowedTo('post_new');
-		}
+		if ($modSettings['postmod_active'] && !allowedTo('post_new') && allowedTo('post_unapproved_topics'))
+			$becomesApproved = false;
+		else
+			isAllowedTo('post_new');
 
 		if (isset($_POST['lock']))
 		{
