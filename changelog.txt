@@ -30,6 +30,7 @@ August 2008
  ! Small tweak to the javascript URL in the display template to stop stupid search engine linking. (Display template) [Bug 2380]
  ! Setting a default value with select boxes and custom profile fields wasn't working that great. (upgrade and install scripts) [Bug 1978]
  ! Posting polls was bypassing the approvals process. (Post.php) [Bug 2379]
+ ! Weights wern't being applied correctly in search. (Search.php) [Bug 2226]
 
 
 July 2008
