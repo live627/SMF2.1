@@ -1553,7 +1553,7 @@ function mktree($strPath, $mode)
 	}
 	else
 	{
-		mkdir($strPath, $mode);
+		@mkdir($strPath, $mode);
 		$test = @opendir($strPath);
 		if ($test)
 		{

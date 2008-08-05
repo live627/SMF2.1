@@ -38,6 +38,7 @@ August 2008
  ! Support some more common password salts. (LogInOut.php) [Bug 1954]
  ! The unread and unreadreplies actions was only taking the user custom topics per page into account for the pagination but not the topics themselves. (Recent.php) [Bug 2356]
  ! Sometimes entries were being added to the moderation log when nothing was changed. (Post.php)
+ ! Surpress mkdir errors in the package manager. (Subs-Package.php) [Bug 2384]
 
 
 July 2008
