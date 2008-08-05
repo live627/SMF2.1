@@ -1617,6 +1617,9 @@ function CleanupMods()
 	if (!empty($upcontext['user']['version']))
 		$_SESSION['version_emulate'] = $upcontext['user']['version'];
 
+	// Before we get started, don't report notice errors.
+	$oldErrorReporting = error_reporting(E_ALL ^ E_NOTICE);
+
 	if (!mktree($boarddir . '/Packages/temp', 0755))
 	{
 		deltree($boarddir . '/Packages/temp', false);
@@ -1751,6 +1754,9 @@ function CleanupMods()
 			}
 		}
 	}
+
+	// Put errors back on a sec.
+	error_reporting($oldErrorReporting);
 
 	// Check everything is writable.
 	if ($test && !empty($upcontext['packages']))
