@@ -36,6 +36,7 @@ August 2008
  ! Surpress error notice messages when cleaning up mods. (upgrade.php) [Bug 2187]
  ! Don't error on duplicate indexes on install, and fix a undefined index. (install.php) [Bug 2183]
  ! Support some more common password salts. (LogInOut.php) [Bug 1954]
+ ! The unread and unreadreplies actions was only taking the user custom topics per page into account for the pagination but not the topics themselves. (Recent.php) [Bug 2356]
 
 
 July 2008

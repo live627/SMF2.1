@@ -827,7 +827,7 @@ function UnreadTopics()
 				'is_approved' => 1,
 				'sort' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
 				'offset' => $_REQUEST['start'],
-				'limit' => $modSettings['defaultMaxTopics'],
+				'limit' => $context['topics_per_page'],
 			))
 		);
 	}
@@ -905,7 +905,7 @@ function UnreadTopics()
 				'is_approved' => 1,
 				'order' => $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
 				'offset' => $_REQUEST['start'],
-				'limit' => $modSettings['defaultMaxTopics'],
+				'limit' => $context['topics_per_page'],
 			))
 		);
 	}
@@ -1049,7 +1049,7 @@ function UnreadTopics()
 				array_merge($query_parameters, array(
 					'order' => (in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? $_REQUEST['sort'] : 't.sortKey') . ($ascending ? '' : ' DESC'),
 					'offset' => $_REQUEST['start'],
-					'limit' => $modSettings['defaultMaxTopics'],
+					'limit' => $context['topics_per_page'],
 				))
 			);
 		else
@@ -1073,7 +1073,7 @@ function UnreadTopics()
 					'is_approved' => 1,
 					'order' =>  $_REQUEST['sort'] . ($ascending ? '' : ' DESC'),
 					'offset' => $_REQUEST['start'],
-					'limit' => $modSettings['defaultMaxTopics'],
+					'limit' => $context['topics_per_page'],
 				))
 			);
 
