@@ -323,6 +323,11 @@ function Login2()
 			$other_passwords[] = md5(md5($_POST['passwrd']) . $user_settings['password_salt']);
 			// Hmm.. p'raps it's Invision 2 style?
 			$other_passwords[] = md5(md5($user_settings['password_salt']) . md5($_POST['passwrd']));
+			// Some common md5 ones.
+			$other_passwords[] = md5($user_settings['password_salt'] . $_POST['passwrd']);
+			$other_passwords[] = md5($_POST['passwrd'] . $user_settings['password_salt']);
+			$other_passwords[] = md5($_POST['passwrd']);
+			$other_passwords[] = md5(md5($_POST['passwrd']));
 		}
 
 		// Maybe they are using a hash from before the password fix.
