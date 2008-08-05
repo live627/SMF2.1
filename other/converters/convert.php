@@ -30,6 +30,10 @@ $GLOBALS['required_postgresql_version'] = '7.4.10';
 // Buy some time
 set_time_limit(0);
 
+// When in debug mode, we log our errors. Request hasn't been properly setup yet though.
+if (isset($_GET['debug']) || isset($_POST['debug']))
+	set_error_handler('error_handler');
+
 // We now have CLI support.
 if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 {
@@ -2410,16 +2414,18 @@ function convert_query($string, $return_error = false)
 			)
 		);
 
-echo '<pre>', print_r($result, true), '</pre><hr />';
-
 	if ($result !== false || $return_error)
 		return $result;
-
 
 	if (empty($not_smf_dbs))
 	{
 		$db_error = $smcFunc['db_error']();
 		$db_errno = $smcFunc['db_title'] == 'MySQL' ? mysql_errno() : ($smcFunc['db_title'] == 'SQLite' ? sqlite_last_error() : ($smcFunc['db_title'] == 'PostgreSQL' ? pg_last_error() : $smcFunc['db_error']()));
+
+		// FIrst log it.
+		// In the future this may return the actual file it came from.
+		if (isset($_GET['debug']) || isset($_POST['debug']))
+			convert_error_hanlder($db_error, $string, 'Converter File', $db_errno, true);
 
 		// Error numbers:
 		//    1016: Can't open file '....MYI'
@@ -2953,5 +2959,100 @@ function print_line($line, $return = true)
 		print_error($line . ($return ? "\n" : ''), false, true);
 	else
 		echo $line . ($return ? '<br />' . "\n" : '');
+}
+
+// Handles our errors.
+function convert_error_hanlder($error_level, $error_string, $file, $line, $is_database_error = false)
+{
+	global $command_line;
+
+	// Our error_log
+	$convert_error_log = dirname(__FILE__) . '/convert_error_log';
+
+	// Is it Database Specific?
+	if (!empty($is_database_error))
+	{
+		/*
+			Note, Unlike php this is slightly different.
+			error_level = errror from database
+			error_string = original query
+		*/
+
+		// The array is easier than using \r as well makes it easier for command line.
+		$error_array = array(
+			'',
+			"The database encountered an error on line (from query), " . $line . "."; // . ", from file, " . $file . ".";
+			"The error received was:",
+			"---",
+			$error_level,
+			"---",
+			"The query ran was:",
+			"---",
+			$error_string,
+			"---",
+		);
+	}
+	else
+	{
+		// Generate a simple error message familer to PHP errors, expect we do them one better.
+		$error_array = array(
+			'',
+			$error_level % 255 == E_ERROR ? 'Error' : ($error_level % 255 == E_WARNING ? 'Warning' : 'Notice') . ': ' . $error_string . ' in ' . $file . ' on line ' . $line,
+			"Backtrace report",
+			"---"
+		);
+
+		// Lets leave a paper trail.
+		$backtrace = debug_backtrace();
+
+		// Now loop through our backtrace for output.
+		foreach ($backtrace as $trail)
+		{
+			foreach ($trail as $key => $value)
+			{
+				if (!is_array($value))
+					$error_array[] = "\t " . $key . " (key): " . $value;
+				else
+				{
+					$error_array[] = "\t" . $key . " (key): ";
+
+					foreach ($value as $vkey => $vvalue)
+						$error_array[] = "\t\t" . $vkey . " (key): " . $vvalue;
+				}
+			}
+
+			// Add an extra return.
+			$error_array[] = "";
+		}
+	}
+
+	// Open the file up for writing (with pointer at end).
+	$fp = fopen($convert_error_log, 'a+');
+
+	// Can't open it!
+	if (!$fp)
+		$no_write_file = true;
+
+	// Send it out to the error log. Only if we can though.
+	if (empty($no_write_file))
+	{
+		// The world implodes!
+		$error_data = implode("\r", $error_array);
+
+		fwrite($fp, $error_data);
+		fclose($fp);
+	}	
+
+	// Based on if we are command line or not, this will handle things for us.
+	if ($command_line)
+	{
+		$error_data = implode("\n", $error_array);
+		print_error($error_data);
+	}
+	else
+	{
+		$error_data = implode("<br />\r", $error_array);
+		echo $error_data;
+	}
 }
 ?>

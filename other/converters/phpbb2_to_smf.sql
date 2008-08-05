@@ -169,10 +169,10 @@ SELECT
 	u.user_sig_bbcode_uid AS signature_uid, u.user_avatar_type,
 	u.user_notify_pm AS pm_email_notify, u.user_active AS is_activated,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
-	'' AS personal_text, '' AS time_format, '' AS usertitle, '' AS member_ip,
+	'' AS personal_text, '' AS time_format, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
 	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
-	'' AS member_ip2
+	u.user_registered_ip AS memberIP, u.user_registered_ip AS memberIP2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', r.rank_title))

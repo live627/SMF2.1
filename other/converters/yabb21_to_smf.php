@@ -342,14 +342,14 @@ if (empty($preparsing))
 		pastTime(-1);
 
 		// Part 2: Now we get to resort the members table!
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}members
 				ORDER BY id_member, date_registered");
 			pastTime(-2);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] <= -2)
 		{
 			alterDatabase('members', 'add index', array(
 				'type' => 'primary',
@@ -365,7 +365,7 @@ if (empty($preparsing))
 
 			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -3)
+		if ($_GET['substep'] <= -3)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}members
@@ -477,7 +477,7 @@ if (empty($preparsing))
 				$row = array(
 					'from_name' => substr(htmlspecialchars($userData[$i][0]), 0, 255),
 					'subject' => substr($userData[$i][1], 0, 255),
-					'msgtime' => empty($userData[$i][2]) ? (int) $userData[$i][2] : '0',
+					'msgtime' => !empty($userData[$i][2]) ? (int) $userData[$i][2] : '0',
 					'body' => substr($userData[$i][3], 0, 65534),
 					'id_member_from' => 0,
 					'deleted_by_sender' => 1,
@@ -529,7 +529,7 @@ if (empty($preparsing))
 		pastTime(-1);
 
 		// Part 2: Now we get to resort the personal messages table!
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
@@ -537,7 +537,7 @@ if (empty($preparsing))
 
 			pastTime(-2);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] <= -2)
 		{
 			alterDatabase('personal_messages', 'add index', array(
 				'type' => 'primary',
@@ -553,7 +553,7 @@ if (empty($preparsing))
 
 			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -3)
+		if ($_GET['substep'] <= -3)
 		{
 			/*!!! CONVERT THIS FROM MYSQL SPECIFIC QUERY!!! */
 			convert_query("
@@ -566,12 +566,12 @@ if (empty($preparsing))
 
 			pastTime(-4);
 		}
-		if ($_GET['substep'] >= -4)
+		if ($_GET['substep'] <= -4)
 		{
 			alterDatabase('personal_messages', 'remove column', 'temp_to_name');
 			pastTime(-5);
 		}
-		if ($_GET['substep'] >= -5)
+		if ($_GET['substep'] <= -5)
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
 				ORDER BY id_pm");
@@ -732,19 +732,19 @@ if (empty($preparsing))
 		}
 
 		pastTime(-1);
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			alterDatabase('categories', 'remove column', 'temp_id');
 
 			pastTime(-2);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] <= -2)
 		{
 			alterDatabase('boards', 'remove column', 'temp_cat_id');
 
 			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -3)
+		if ($_GET['substep'] <= -3)
 		{
 			alterDatabase('moderators', 'add index', array(
 				'type' => 'primary',
@@ -944,7 +944,7 @@ if (empty($preparsing))
 
 		pastTime(-1);
 
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			convert_query("
 				UPDATE {$to_prefix}topics
@@ -953,7 +953,7 @@ if (empty($preparsing))
 
 			pastTime(-2);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] <= -2)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
@@ -961,7 +961,7 @@ if (empty($preparsing))
 
 			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -3)
+		if ($_GET['substep'] <= -3)
 		{
 			alterDatabase('topics', 'add index', array(
 				'type' => 'primary',
@@ -978,7 +978,7 @@ if (empty($preparsing))
 
 			pastTime(-4);
 		}
-		if ($_GET['substep'] >= -4)
+		if ($_GET['substep'] <= -4)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
@@ -1029,7 +1029,7 @@ if (empty($preparsing))
 
 		pastTime(-1);
 
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			convert_query("
 				DELETE FROM {$to_prefix}log_topics
@@ -1038,7 +1038,7 @@ if (empty($preparsing))
 
 			pastTime(-2);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] <= -2)
 		{
 			$result = convert_query("
 				SELECT id_topic
@@ -1055,7 +1055,7 @@ if (empty($preparsing))
 
 			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -3)
+		if ($_GET['substep'] <= -3)
 		{
 			alterDatabase('log_topics', 'add index', array(
 				'type' => 'primary',
@@ -1275,7 +1275,7 @@ if (empty($preparsing))
 
 		pastTime(-1);
 
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			alterDatabase('messages', 'change column', array(
 				'old_name' => 'id_msg',
@@ -1411,7 +1411,7 @@ if (empty($preparsing))
 
 		pastTime(-1);
 
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 			alterDatabase('messages', 'remove column', 'temp_filename');
 	}
 
@@ -1696,7 +1696,7 @@ if (empty($preparsing))
 
 		pastTime(-1);
 
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			alterDatabase('polls', 'add index', array(
 				'type' => 'primary'
@@ -1924,7 +1924,7 @@ if (empty($preparsing))
 		pastTime(-1);
 
 		// Remove the temp column from the table and put the primary key back.
-		if ($_GET['substep'] >= -1)
+		if ($_GET['substep'] <= -1)
 		{
 			$result = convert_query("
 				SELECT ID_POLL
@@ -1941,7 +1941,7 @@ if (empty($preparsing))
 
 			pastTime(-2);
 		}
-		if ($_GET['substep'] >= -2)
+		if ($_GET['substep'] <= -2)
 		{
 			alterDatabase('poll_choices', 'add index', array(
 				'type' => 'primary'
@@ -1950,7 +1950,7 @@ if (empty($preparsing))
 
 			pastTime(-3);
 		}
-		if ($_GET['substep'] >= -3)
+		if ($_GET['substep'] <= -3)
 		{
 			alterDatabase('messages', 'add index', array(
 				'type' => 'unique',
@@ -1960,13 +1960,13 @@ if (empty($preparsing))
 
 			pastTime(-4);
 		}
-		if ($_GET['substep'] >= -4)
+		if ($_GET['substep'] <= -4)
 		{
 			alterDatabase('topics', 'remove column', 'temp_id');
 
 			pastTime(-5);
 		}
-		if ($_GET['substep'] >= -5)
+		if ($_GET['substep'] <= -5)
 			alterDatabase('polls', 'remove column', 'temp_id');
 	}
 

@@ -526,6 +526,12 @@ FROM {$from_prefix}forum_tracker;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
+---{
+$ignore = true;
+
+if (empty($row['id_member']))
+	unset($row);
+---}
 SELECT member_id AS id_member, forum_id AS id_board
 FROM {$from_prefix}moderators
 WHERE member_id != -1;

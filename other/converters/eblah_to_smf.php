@@ -804,7 +804,6 @@ if (empty($preparsing))
 					continue;
 
 				$row = array();
-				$row['log_time'] = (int) trim($parts[1]);
 				$row['id_member'] = $id_member;
 
 				if (is_numeric(trim($parts[0])) && trim($parts[0]) > 10000)
@@ -1368,6 +1367,16 @@ if (empty($preparsing))
 				'type' => 'unique'
 				'name' => 'topic',
 				'columns' => array('id_topic', 'id_msg'),
+			));
+			alterDatabase('messages', 'add index', array(
+				'type' => 'unique'
+				'name' => 'id_board',
+				'columns' => array('id_board', 'id_msg'),
+			));
+			alterDatabase('messages', 'add index', array(
+				'type' => 'unique'
+				'name' => 'id_member',
+				'columns' => array('id_member', 'id_msg'),
 			));
 
 			pastTime(2);
