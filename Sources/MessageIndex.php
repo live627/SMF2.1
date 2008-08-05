@@ -1001,7 +1001,8 @@ function QuickModeration()
 			// Gotta send the notifications *first*!
 			foreach ($removeCache as $topic)
 			{
-				logAction('remove', array('topic' => $topic, 'board' => $removeCacheBoards[$topic]));
+				// Only log the topic ID if it's not in the recycle board.
+				logAction('remove', array((empty($modSettings['recycle_enable']) || $modSettings['recycle_board'] != $removeCacheBoards[$topic] ? 'topic' : 'old_topic_id') => $topic, 'board' => $removeCacheBoards[$topic]));
 				sendNotifications($topic, 'remove');
 			}
 
