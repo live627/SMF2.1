@@ -1405,7 +1405,7 @@ SmfEditor.prototype._calculateNewDimension = function(old_size, change_size)
 	return new_size;
 }
 
-// Regstier default keyboard shortcuts.
+// Register default keyboard shortcuts.
 SmfEditor.prototype.registerDefaultShortcuts = function()
 {
 	if (is_ff)
