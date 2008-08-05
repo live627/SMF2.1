@@ -140,7 +140,7 @@ function DeleteMessage()
 	$full_topic = removeMessage($_REQUEST['msg']);
 
 	if (allowedTo('delete_any') && (!allowedTo('delete_own') || $poster != $user_info['id']))
-		logAction('delete', array('topic' => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
+		logAction('delete', array('topic' => $topic, 'subject' => $subject, 'member' => $poster, 'board' => $board));
 
 	// We want to redirect back to recent action.
 	if (isset($_REQUEST['recent']))
@@ -1196,7 +1196,7 @@ function RestoreTopic()
 					updateMemberData($member['id_member'], array('posts' => 'posts + ' . $member['post_count']));
 				$smcFunc['db_free_result']($request2);
 			}
-			
+
 			// Log it.
 			logAction('restore_topic', array('topic' => $row['id_topic'], 'board' => $row['id_board'], 'board_to' => $row['id_previous_board']));
 		}

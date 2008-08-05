@@ -32,6 +32,7 @@ August 2008
  ! Posting polls was bypassing the approvals process. (Post.php) [Bug 2379]
  ! Weights wern't being applied correctly in search. (Search.php) [Bug 2226]
  ! The moderation log wasn't showing the moderator names. (Modlog.php)
+ ! The poster was not being logged correctly when individual messages were deleted. (RemoveTopic.php) [Bug 1657]
 
 
 July 2008
