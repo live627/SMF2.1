@@ -33,6 +33,7 @@ August 2008
  ! Weights wern't being applied correctly in search. (Search.php) [Bug 2226]
  ! The moderation log wasn't showing the moderator names. (Modlog.php)
  ! The poster was not being logged correctly when individual messages were deleted. (RemoveTopic.php) [Bug 1657]
+ ! Surpress error notice messages when cleaning up mods. (upgrade.php) [Bug 2187]
 
 
 July 2008
