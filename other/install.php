@@ -916,7 +916,7 @@ function ForumSettings()
 // Step one: Do the SQL thang.
 function DatabasePopulation()
 {
-	global $txt, $db_connection, $smcFunc, $databases, $modSettings, $db_type, $sourcedir, $db_prefix, $incontext, $db_name;
+	global $txt, $db_connection, $smcFunc, $databases, $modSettings, $db_type, $sourcedir, $db_prefix, $incontext, $db_name, $boardurl;
 
 	$incontext['sub_template'] = 'populate_database';
 	$incontext['page_title'] = $txt['db_populate'];
@@ -965,7 +965,7 @@ function DatabasePopulation()
 	$replaces = array(
 		'{$db_prefix}' => $db_prefix,
 		'{$boarddir}' => $smcFunc['db_escape_string'](dirname(__FILE__)),
-		'{$boardurl}' => $_POST['boardurl'],
+		'{$boardurl}' => $boardurl,
 		'{$enableCompressedOutput}' => isset($_POST['compress']) ? '1' : '0',
 		'{$databaseSession_enable}' => isset($_POST['dbsession']) ? '1' : '0',
 		'{$smf_version}' => $GLOBALS['current_smf_version'],
@@ -1028,7 +1028,8 @@ function DatabasePopulation()
 				$exists[] = $match[1];
 				$incontext['sql_results']['table_dups']++;
 			}
-			else
+			// Don't error on duplicate indexes.
+			elseif (!preg_match('~^\s*CREATE INDEX ([^\n\r]+?)~', $current_statement, $match))
 			{
 				$incontext['failures'][$count] = $smcFunc['db_error']();
 			}
@@ -1073,7 +1074,7 @@ function DatabasePopulation()
 		);
 
 	// Maybe we can auto-detect better cookie settings?
-	preg_match('~^http[s]?://([^\.]+?)([^/]*?)(/.*)?$~', $_POST['boardurl'], $matches);
+	preg_match('~^http[s]?://([^\.]+?)([^/]*?)(/.*)?$~', $boardurl, $matches);
 	if (!empty($matches))
 	{
 		// Default = both off.
