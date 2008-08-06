@@ -41,6 +41,7 @@ August 2008
  ! Surpress mkdir errors in the package manager. (Subs-Package.php) [Bug 2384]
  ! When deleting topics, if the topic is going to be gone forever, don't link the topic ID. (RemoveTopic.php, MessageIndex.php) [Bug 2338]
  ! Moderators couldn't warn a member due to a certain post. (Profile-Actions.php) [Bug 2387]
+ ! If a database engine doesn't give us the size of an index or a table then just default to not applicable. (ManageSearch.php, ManageSearch template) [Bug 440]
 
 
 July 2008

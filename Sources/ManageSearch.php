@@ -416,10 +416,23 @@ function EditSearchMethod()
 			$smcFunc['db_free_result']($request);
 		}
 	}
+	else
+		$context['table_info'] = array(
+			'data_length' => $txt['not_applicable'],
+			'index_length' => $txt['not_applicable'],
+			'fulltext_length' => $txt['not_applicable'],
+			'custom_index_length' => $txt['not_applicable'],
+		);
 
 	// Format the data and index length in kilobytes.
 	foreach ($context['table_info'] as $type => $size)
-		$context['table_info'][$type] = comma_format($context['table_info'][$type] / 1024);
+	{
+		// If it's not numeric then just break.  This database engine doesn't support size.
+		if (!is_numeric($size))
+			break;
+
+		$context['table_info'][$type] = comma_format($context['table_info'][$type] / 1024) . ' ' . $txt['search_method_kilobytes'];
+	}
 
 	$context['custom_index'] = !empty($modSettings['search_custom_index_config']);
 	$context['partial_custom_index'] = !empty($modSettings['search_custom_index_resume']) && empty($modSettings['search_custom_index_config']);

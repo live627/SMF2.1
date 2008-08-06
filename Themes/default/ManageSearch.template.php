@@ -77,8 +77,8 @@ function template_select_search_method()
 		echo '
 			<tr class="windowbg2">
 				<td colspan="3">
-					<b>', $txt['search_method_messages_table_space'], ':</b> ', $context['table_info']['data_length'], ' ', $txt['search_method_kilobytes'], ' <br />
-					<b>', $txt['search_method_messages_index_space'], ':</b> ', $context['table_info']['index_length'], ' ', $txt['search_method_kilobytes'], '<br />', $context['double_index'] ? '
+					<b>', $txt['search_method_messages_table_space'], ':</b> ', $context['table_info']['data_length'], ' <br />
+					<b>', $txt['search_method_messages_index_space'], ':</b> ', $context['table_info']['index_length'], ' <br />', $context['double_index'] ? '
 					' . $txt['search_double_index'] . '<br />' : '', '
 					<br />
 				</td>
@@ -109,7 +109,7 @@ function template_select_search_method()
 	else
 		echo '
 						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exsits'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;sesc=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
-						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['fulltext_length'], ' ', $txt['search_method_kilobytes'];
+						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['fulltext_length'];
 	echo '
 					</span>
 				</td>';
@@ -125,11 +125,11 @@ function template_select_search_method()
 	if ($context['custom_index'])
 		echo '
 						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exsits'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;sesc=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
-						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'], ' ', $txt['search_method_kilobytes'];
+						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
 	elseif ($context['partial_custom_index'])
 		echo '
 						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_partial'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;sesc=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>] [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;resume;sesc=', $context['session_id'], '">', $txt['search_index_custom_resume'], '</a>]<br />
-						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'], ' ', $txt['search_method_kilobytes'];
+						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
 	else
 		echo '
 						<b>', $txt['search_index_label'], ':</b> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex">', $txt['search_index_create_custom'], '</a>]';
