@@ -419,6 +419,20 @@ FROM {$from_prefix}privmsgs AS pm
 ---*
 
 /******************************************************************************/
+--- Converting topic notifications...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}log_notify;
+
+---* {$to_prefix}log_notify
+---{
+$ignore = true;
+---}
+SELECT user_id AS id_member, topic_id AS id_topic
+FROM {$from_prefix}topics_watch;
+---*
+
+/******************************************************************************/
 --- Converting board access...
 /******************************************************************************/
 

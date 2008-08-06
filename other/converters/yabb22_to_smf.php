@@ -134,7 +134,7 @@ if (empty($preparsing))
 				if ($match[3] < 1)
 					$newbie = true;
 			}
-			elseif (preg_match('~\$NoPost\[(\d+)\] = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
+			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0) 
 			{
 				$match = addslashes_recursive($match);
 				$extraGroups[] = array(substr($match[2]), 0, 80), substr($match[5], 0, 20), 0, substr("$match[3]#$match[4]", 0, 255));
@@ -1952,7 +1952,7 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] <= -3)
 		{
-			alterDatabase('messages', 'add index', array(
+			alterDatabase('topics', 'add index', array(
 				'type' => 'unique',
 				'name' => 'poll',
 				'columns' => array('id_poll', 'id_topic'),
