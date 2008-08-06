@@ -40,6 +40,7 @@ August 2008
  ! Sometimes entries were being added to the moderation log when nothing was changed. (Post.php)
  ! Surpress mkdir errors in the package manager. (Subs-Package.php) [Bug 2384]
  ! When deleting topics, if the topic is going to be gone forever, don't link the topic ID. (RemoveTopic.php, MessageIndex.php) [Bug 2338]
+ ! Moderators couldn't warn a member due to a certain post. (Profile-Actions.php) [Bug 2387]
 
 
 July 2008
