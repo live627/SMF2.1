@@ -223,11 +223,16 @@ function smf_db_insert_sql($tableName)
 		return '';
 
 	$fields = array_keys($smcFunc['db_fetch_assoc']($result));
+
+	// SQLite fetches an array so we need to filter out the numberic index for the columns.
+	foreach ($fields as $key => $name)
+		if (is_numeric($name))
+			unset($fields[$key]);
+
 	$smcFunc['db_data_seek']($result, 0);
 
 	// Start it off with the basic INSERT INTO.
-	$data = '';
-	$insert_msg = $crlf . 'INSERT INTO ' . $tableName . $crlf . "\t" . '(' . implode(', ', $fields) . ')' . $crlf . 'VALUES ' . $crlf . "\t";
+	$data = 'BEGIN TRANSACTION;' . $crlf;
 
 	// Loop through each row.
 	while ($row = $smcFunc['db_fetch_row']($result))
@@ -246,14 +251,12 @@ function smf_db_insert_sql($tableName)
 			else
 				$field_list[] = '\'' . $smcFunc['db_escape_string']($row[$j]) . '\'';
 		}
-
-		// 'Insert' the data.
-		$data .= $insert_msg . '(' . implode(', ', $field_list) . ');';
+		$data .= 'INSERT INTO ' . $tableName . ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $field_list) . ');' . $crlf;
 	}
 	$smcFunc['db_free_result']($result);
 
 	// Return an empty string if there were no rows.
-	return $num_rows == 0 ? '' : $data;
+	return $num_rows == 0 ? '' : $data . 'COMMIT;' . $crlf;
 }
 
 // Get the schema (CREATE) for a table.
@@ -267,90 +270,43 @@ function smf_db_table_sql($tableName)
 	$crlf = "\r\n";
 
 	// Start the create table...
-	$schema_create = 'CREATE TABLE ' . $tableName . ' (' . $crlf;
+	$schema_create = '';
 	$index_create = '';
 	$seq_create = '';
 
-	// Find all the fields.
+	// Lets get the create statement directly from SQLite.
 	$result = $smcFunc['db_query']('', '
-		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
-		FROM information_schema.columns
-		WHERE table_name = {string:table}
-		ORDER BY ordinal_position',
+		SELECT sql
+		FROM sqlite_master
+		WHERE type = {string:type}
+			AND name = {string:table_name}',
 		array(
-			'table' => $tableName,
+			'type' => 'table',
+			'table_name' => $tableName,
 		)
 	);
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-	{
-		if ($row['data_type'] == 'character varying')
-			$row['data_type'] = 'varchar';
-		elseif ($row['data_type'] == 'character')
-			$row['data_type'] = 'char';
-		if ($row['character_maximum_length'])
-			$row['data_type'] .= '(' . $row['character_maximum_length'] . ')';
-
-		// Make the CREATE for this column.
-		$schema_create .= '  ' . $row['column_name'] . ' ' . $row['data_type'] . ($row['is_nullable'] != 'YES' ? ' NOT NULL' : '');
-
-		// Add a default...?
-		if (trim($row['column_default']) != '')
-		{
-			$schema_create .= ' default ' . $row['column_default'] . '';
-
-			// Auto increment?
-			if (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
-			{
-				// Get to find the next variable first!
-				$count_req = $smcFunc['db_query']('', '
-					SELECT MAX({raw:column})
-					FROM {raw:table}',
-					array(
-						'column' => $row['column_name'],
-						'table' => $tableName,
-					)
-				);
-				list ($max_ind) = $smcFunc['db_fetch_row']($count_req);
-				$smcFunc['db_free_result']($count_req);
-				//!!! Get the right bloody start!
-				$seq_create .= 'CREATE SEQUENCE ' . $matches[1] . ' START WITH ' . ($max_ind+ 1) . ';' . $crlf . $crlf;
-			}
-		}
-
-		$schema_create .= ',' . $crlf;
-	}
+	list ($schema_create) = $smcFunc['db_fetch_row']($result);
 	$smcFunc['db_free_result']($result);
 
-	// Take off the last comma.
-	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
-
+	// Now the indexes.
 	$result = $smcFunc['db_query']('', '
-		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
-		FROM pg_class AS c, pg_class AS c2, pg_index AS i
-		WHERE c.relname = {string:table}
-			AND c.oid = i.indrelid
-			AND i.indexrelid = c2.oid',
+		SELECT sql
+		FROM sqlite_master
+		WHERE type = {string:type}
+			AND tbl_name = {string:table_name}',
 		array(
-			'table' => $tableName,
+			'type' => 'index',
+			'table_name' => $tableName,
 		)
 	);
 	$indexes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($result))
-	{
-		if ($row['is_primary'])
-		{
-			if (preg_match('~\(([^\)]+?)\)~i', $row['inddef'], $matches) == 0)
-				continue;
-
-			$index_create .= $crlf . 'ALTER TABLE ' . $tableName . ' ADD PRIMARY KEY (' . $matches[1] . ');';
-		}
-		else
-			$index_create .= $crlf . $row['inddef'] . ';';
-	}
+		if (trim($row['sql']) != '')
+			$indexes[] = $row['sql'];
 	$smcFunc['db_free_result']($result);
 
-	// Finish it off!
-	$schema_create .= $crlf . ');';
+	$index_create .= implode(';' . $crlf, $indexes);
+	$schema_create = empty($indexes) ? rtrim($schema_create) : $schema_create . ';' . $crlf . $crlf;
 
 	return $seq_create . $schema_create . $index_create;
 }

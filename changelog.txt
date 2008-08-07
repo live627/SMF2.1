@@ -42,6 +42,9 @@ August 2008
  ! When deleting topics, if the topic is going to be gone forever, don't link the topic ID. (RemoveTopic.php, MessageIndex.php) [Bug 2338]
  ! Moderators couldn't warn a member due to a certain post. (Profile-Actions.php) [Bug 2387]
  ! If a database engine doesn't give us the size of an index or a table then just default to not applicable. (ManageSearch.php, ManageSearch template) [Bug 440]
+ + Added ALTER support for SQLite. (DbExtra-sqlite.php, DbPackages-sqlite.php) [Feature 1586]
+ ! Updated the upgrade script to use the new method. (upgrade_2-0_sqlite.sql)
+ ! Fixed a few issues with smf_db_insert_sql and smf_db_table_sql so that they work properly with SQLite. (DbExtra-sqlite.php)
 
 
 July 2008

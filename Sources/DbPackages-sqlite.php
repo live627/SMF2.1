@@ -66,6 +66,7 @@ function db_packages_init()
 		$smcFunc += array(
 			'db_add_column' => 'smf_db_add_column',
 			'db_add_index' => 'smf_db_add_index',
+			'db_alter_table' => 'smf_db_alter_table',
 			'db_calculate_type' => 'smf_db_calculate_type',
 			'db_change_column' => 'smf_db_change_column',
 			'db_create_table' => 'smf_db_create_table',
@@ -108,8 +109,11 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		$table_name = $db_prefix . $table_name;
 
 	// First - no way do we touch SMF tables.
-	if (in_array(strtolower($table_name), $reservedTables))
+	// Commented out for now.  We need to alter SMF tables in order to use this in the upgrade.
+/*
+ 	if (in_array(strtolower($table_name), $reservedTables))
 		return false;
+*/
 
 	// Log that we'll want to remove this on uninstall.
 	$db_package_log[] = array('remove_table', $table_name);
@@ -212,7 +216,9 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	$table_query .= ')';
 
-	$smcFunc['db_transaction']('begin');
+	if (empty($parameters['skip_transaction']))
+		$smcFunc['db_transaction']('begin');
+
 	// Do the table and indexes...
 	$smcFunc['db_query']('', $table_query,
 		'security_override'
@@ -222,7 +228,8 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		'security_override'
 	);
 
-	$smcFunc['db_transaction']('commit');
+	if (empty($parameters['skip_transaction']))
+		$smcFunc['db_transaction']('commit');
 }
 
 // Drop a table.
@@ -243,8 +250,8 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 	{
 		$query = 'DROP TABLE ' . $table_name;
 		$smcFunc['db_query']('', $query,
-		'security_override'
-	);
+			'security_override'
+		);
 
 		return true;
 	}
@@ -277,20 +284,9 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 				return false;
 		}
 
-	// Get the specifics...
-	$column_info['size'] = isset($column_info['size']) ? $column_info['size'] : null;
-	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
-	if ($size !== null)
-		$type = $type . '(' . $size . ')';
-
-	// Now add the thing!
-	$query = '
-		ALTER TABLE ' . $table_name . '
-		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'');
-	$smcFunc['db_query']('', $query,
-		'security_override'
-	);
+	// Alter the table to add the column.
+	if ($smcFunc['db_alter_table']($table_name, array('add' => array($column_info))) === false)
+		return false;
 
 	return true;
 }
@@ -302,7 +298,10 @@ function smf_db_remove_column($table_name, $column_name, $parameters = array(), 
 	if (empty($parameters['no_prefix']))
 		$table_name = $db_prefix . $table_name;
 
-	return true;
+	if ($smcFunc['db_alter_table']($table_name, array('remove' => $column_info)))
+		return true;
+	else
+		return false;
 }
 
 // Change a column.
@@ -314,9 +313,10 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 	if (empty($parameters['no_prefix']))
 		$table_name = $db_prefix . $table_name;
 
-	// Can't do anything with SQLite!
-	//!!! Remove, copy, then add column?
-	return true;
+	if ($smcFunc['db_alter_table']($table_name, array('change' => $column_info)))
+		return true;
+	else
+		return false;
 }
 
 // Add an index.
@@ -487,7 +487,7 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 				$primaries[] = $row['name'];
 
 			// Can we split out the size?
-			if (preg_match('~(.+?)\s*(\(\d+\))~i', $row['type'], $matches))
+			if (preg_match('~(.+?)\s*\((\d+)\)~i', $row['type'], $matches))
 			{
 				$type = $matches[1];
 				$size = $matches[2];
@@ -568,6 +568,211 @@ function smf_db_list_indexes($table_name, $detail = false, $parameters = array()
 	$smcFunc['db_free_result']($result);
 
 	return $indexes;
+}
+
+function smf_db_alter_table($table_name, $columns)
+{
+	global $smcFunc, $db_prefix, $db_name, $boarddir;
+
+	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
+
+	// Lets get the current columns for the table.
+	$current_columns = $smcFunc['db_list_columns']($table_name, true);
+
+	// Lets get a list of columns for the temp table.
+	$temp_table_columns = array();
+
+	// Lets see if we have columns to remove or columns that are being added that already exists.
+	foreach ($current_columns as $key => $column)
+	{
+		$exists = false;
+		if (isset($columns['remove']))
+			foreach ($columns['remove'] as $drop)
+				if ($drop['name'] == $column['name'])
+				{
+					$exists = true;
+					break;
+				}
+
+		if (isset($columns['add']))
+			foreach ($columns['add'] as $key2 => $add)
+				if ($add['name'] == $column['name'])
+				{
+					unset($columns['add'][$key2]);
+					break;
+				}
+
+		// Doesn't exists then we 'remove'.
+		if (!$exists)
+			$temp_table_columns[] = $column['name'];
+	}
+
+	// If they are equal then that means that the column that we are adding exists or it doesn't exists and we are not looking to change any one of them.
+	if (count($temp_table_columns) == count($current_columns) && empty($columns['change']) && empty($columns['add']))
+		return true;
+
+	// Drop the temp table.
+	$smcFunc['db_query']('', '
+		DROP TABLE {raw:temp_table_name}',
+		array(
+			'temp_table_name' => $table_name . '_tmp',
+			'db_error_skip' => true,
+		)
+	);
+
+	// Lets make a backup of the current database.
+	// We only want the first backup of a table modification.  So if there is a backup file and older than an hour just delete and back up again
+	$db_backup_file = $boarddir . '/Packages/backups/backup_' . $table_name . '_' . basename($db_name) . md5($table_name . $db_name);
+	if (file_exists($db_backup_file) && time() - filemtime($db_backup_file) > 3600)
+	{
+		@unlink($db_backup_file);
+		@copy($db_name, $db_backup_file);
+	}
+	elseif (!file_exists($db_backup_file))
+		@copy($db_name, $db_backup_file);
+
+	// Start
+	$smcFunc['db_transaction']('begin');
+
+	// If we don't have temp tables then everything crapped out.  Just exit.
+	if (empty($temp_table_columns))
+		return false;
+
+	// Lets create the temporary table.
+	$createTempTable = $smcFunc['db_query']('', '
+		CREATE TEMPORARY TABLE {raw:temp_table_name}
+		(
+			{raw:columns}
+		);',
+		array(
+			'temp_table_name' => $table_name . '_tmp',
+			'columns' => implode(', ', $temp_table_columns),
+			'db_error_skip' => true,
+		)
+	) !== false;
+
+	if (!$createTempTable)
+		return false;
+
+	// Insert into temp table.
+	$smcFunc['db_query']('', '
+		INSERT INTO {raw:temp_table_name}
+			({raw:columns})
+		SELECT {raw:columns}
+		FROM {raw:table_name}',
+		array(
+			'table_name' => $table_name,
+			'columns' => implode(', ', $temp_table_columns),
+			'temp_table_name' => $table_name . '_tmp',
+		)
+	);
+
+	// Drop the current table.
+	$dropTable = $smcFunc['db_query']('', '
+		DROP TABLE {raw:table_name}',
+		array(
+			'table_name' => $table_name,
+			'db_error_skip' => true,
+		)
+	) !== false;
+
+	// If you can't drop the main table then there is no where to go from here. Just return.
+	if (!$dropTable)
+		return false;
+
+	// We need to keep tract of the structure for the current columns and the new columns.
+	$new_columns = array();
+	$column_names = array();
+
+	// Lets get the ones that we already have first.
+	foreach ($current_columns as $name => $column)
+	{
+		if (in_array($name, $temp_table_columns))
+		{
+			$new_columns[$name] = array(
+				'name' => $name,
+				'type' => $column['type'],
+				'size' => isset($column['size']) ? (int) $column['size'] : null,
+				'null' => $column['null'],
+				'auto' => isset($column['auto']) ? $column['auto'] : false,
+				'default' => isset($column['default']) ? $column['default'] : '',
+			);
+
+			// Lets keep track of the name for the column.
+			$column_names[$name] = $name;
+		}
+	}
+
+	// Now the new.
+	if (!empty($columns['add']))
+		foreach ($columns['add'] as $add)
+		{
+			$new_columns[$add['name']] = array(
+				'name' => $add['name'],
+				'type' => $add['type'],
+				'size' => $add['size'],
+				'null' => $add['null'],
+				'auto' => isset($add['auto']) ? $add['auto'] : false,
+				'default' => isset($add['default']) ? $add['default'] : '',
+			);
+
+			// Lets keep track of the name for the column.
+			$column_names[$add['name']] = strstr('int', $add['type']) ? ' 0 AS ' . $add['name'] : ' {string:empty_string} AS ' . $add['name'];
+		}
+
+	// Now to change a column.  Not drop but change it.
+	if (isset($columns['change']))
+		foreach ($columns['change'] as $change)
+			if (isset($new_columns[$change['name']]))
+				$new_columns[$change['name']] = array(
+					'name' => $change['name'],
+					'type' => $change['type'],
+					'size' => $change['size'],
+					'null' => $change['null'],
+					'auto' => isset($change['auto']) ? $change['auto'] : false,
+					'default' => isset($change['default']) ? $change['default'] : '',
+				);
+
+	// Now lets create the table.
+	$createTable = $smcFunc['db_create_table']($table_name, $new_columns, array(), array('no_prefix' => true, 'skip_transaction' => true));
+
+	// Did it create correctly?
+	if ($createTable === false)
+		return false;
+
+	// Back to it's original table.
+	$insertData = $smcFunc['db_query']('', '
+		INSERT INTO {raw:table_name}
+			({raw:columns})
+		SELECT ' . implode(', ', $column_names) . '
+		FROM {raw:temp_table_name}',
+		array(
+			'table_name' => $table_name,
+			'columns' => implode(', ', array_keys($new_columns)),
+			'columns_select' => implode(', ', $column_names),
+			'temp_table_name' => $table_name . '_tmp',
+			'empty_string' => '',
+		)
+	);
+
+	// Did everything insert correctly?
+	if (!$insertData)
+		return false;
+
+	// Drop the temp table.
+	$smcFunc['db_query']('', '
+		DROP TABLE {raw:temp_table_name}',
+		array(
+			'temp_table_name' => $table_name . '_tmp',
+			'db_error_skip' => true,
+		)
+	);
+
+	// Commit or else there is no point in doing the previous steps.
+	$smcFunc['db_transaction']('commit');
+
+	// We got here so we good.  The temp table should be deleted ir not it will be gone later on >:D.
+	return true;
 }
 
 ?>

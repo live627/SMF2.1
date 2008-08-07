@@ -6,75 +6,19 @@
 
 ---# Adding search ability to custom fields.
 ---{
-$request = $smcFunc['db_query']('', '
-	SELECT *
-	FROM {db_prefix}custom_fields
-	LIMIT 1',
-	array(
-	)
-);
-$row = $smcFunc['db_fetch_assoc']($request);
-$smcFunc['db_free_result']($request);
+$smcFunc['db_alter_table']('custom_fields', array(
+	'add' => array(
+		'can_search' => array(
+			'name' => 'can_search',
+			'null' => false,
+			'default' => 0,
+			'type' => 'smallint',
+			'size' => 255,
+			'auto' => false,
+		),
+	),
+));
 
-if (!in_array('can_search', array_keys($row)))
-{
-	$smcFunc['db_transaction']('begin');
-	$smcFunc['db_query']('', "
-		CREATE TEMPORARY TABLE {$db_prefix}custom_fields_tmp
-		(
-			id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
-			mask, show_reg, show_display, show_profile, private, active, bbc, default_value
-		)",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		INSERT INTO {$db_prefix}custom_fields_tmp
-		SELECT
-			id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
-			mask, show_reg, show_display, show_profile, private, active, bbc, default_value
-		FROM {$db_prefix}custom_fields",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		DROP TABLE {$db_prefix}custom_fields",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		CREATE TABLE {$db_prefix}custom_fields
-		(
-			id_field integer primary key,
-			col_name varchar(12) NOT NULL default '',
-			field_name varchar(40) NOT NULL default '',
-			field_desc varchar(255) NOT NULL,
-			field_type varchar(8) NOT NULL default 'text',
-			field_length smallint NOT NULL default '255',
-			field_options varchar(255) NOT NULL,
-			mask varchar(255) NOT NULL,
-			show_reg smallint NOT NULL default '0',
-			show_display smallint NOT NULL default '0',
-			show_profile varchar(20) NOT NULL default 'forumProfile',
-			private smallint NOT NULL default '0',
-			active smallint NOT NULL default '1',
-			bbc smallint NOT NULL default '0',
-			can_search smallint NOT NULL default '0',
-			default_value varchar(8) NOT NULL default '0'
-		)",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		INSERT INTO {$db_prefix}custom_fields
-		SELECT
-			id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
-			mask, show_reg, show_display, show_profile, private, active, bbc, default_value, 0 AS can_search
-		FROM {$db_prefix}custom_fields_tmp",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		DROP TABLE {$db_prefix}custom_fields_tmp",
-		'security_override'
-	);
-	$smcFunc['db_transaction']('commit');
-}
 if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] < '2.0 Beta 4')
 {
 upgrade_query("
@@ -168,8 +112,18 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 ---#
 
 ---# Adding advanced password brute force protection to "members" table...
-ALTER TABLE {$db_prefix}members
-ADD passwd_flood varchar(12) NOT NULL default '';
+$smcFunc['db_alter_table']('members', array(
+	'add' => array(
+		'passwd_flood' => array(
+			'name' => 'passwd_flood',
+			'null' => false,
+			'default' => '',
+			'type' => 'varchar',
+			'size' => 12,
+			'auto' => false,
+		),
+	)
+));
 ---#
 
 /******************************************************************************/
@@ -213,71 +167,18 @@ $smcFunc['db_insert']('ignore',
 
 ---# Adding multiple attachment path functionality.
 ---{
-$request = $smcFunc['db_query']('', '
-	SELECT *
-	FROM {db_prefix}attachments
-	LIMIT 1',
-	array(
+$smcFunc['db_alter_table']('attachments', array(
+	'add' => array(
+		'id_folder' => array(
+			'name' => 'id_folder',
+			'null' => false,
+			'default' => 1,
+			'type' => 'smallint',
+			'size' => 255,
+			'auto' => false,
+		),
 	)
-);
-$row = $smcFunc['db_fetch_assoc']($request);
-$smcFunc['db_free_result']($request);
-
-if (!in_array('id_folder', array_keys($row)))
-{
-	$smcFunc['db_transaction']('begin');
-	$smcFunc['db_query']('', "
-		CREATE TEMPORARY TABLE {$db_prefix}attachments_tmp (
-			id_attach, id_thumb, id_msg, id_member, attachment_type, filename,
-			fileext, size, downloads, width, height, mime_type, approved
-		)",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		INSERT INTO {$db_prefix}attachments_tmp
-		SELECT
-			id_attach, id_thumb, id_msg, id_member, attachment_type, filename,
-			fileext, size, downloads, width, height, mime_type, approved
-		FROM {$db_prefix}attachments",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		DROP TABLE {$db_prefix}attachments",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		CREATE TABLE {$db_prefix}attachments (
-			id_attach integer primary key,
-			id_thumb int NOT NULL default '0',
-			id_msg int NOT NULL default '0',
-			id_member int NOT NULL default '0',
-			id_folder smallint NOT NULL default '1',
-			attachment_type smallint NOT NULL default '0',
-			filename varchar(255) NOT NULL,
-			fileext varchar(8) NOT NULL default '',
-			size int NOT NULL default '0',
-			downloads int NOT NULL default '0',
-			width int NOT NULL default '0',
-			height int NOT NULL default '0',
-			mime_type varchar(20) NOT NULL default '',
-			approved smallint NOT NULL default '1'
-		)",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		INSERT INTO {$db_prefix}attachments
-		SELECT
-			id_attach, id_thumb, id_msg, id_member, attachment_type, filename,
-			fileext, size, downloads, width, height, mime_type, approved, 0 AS id_folder
-		FROM {$db_prefix}attachments_tmp",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		DROP TABLE {$db_prefix}attachments_tmp",
-		'security_override'
-	);
-	$smcFunc['db_transaction']('commit');
-}
+));
 ---}
 ---#
 
@@ -287,73 +188,24 @@ if (!in_array('id_folder', array_keys($row)))
 
 ---# Adding restore from recycle feature...
 ---{
-$request = $smcFunc['db_query']('', '
-	SELECT *
-	FROM {db_prefix}topics
-	LIMIT 1',
-	array(
+$smcFunc['db_alter_table']('topics', array(
+	'add' => array(
+		'id_previous_board' => array(
+			'name' => 'id_previous_board',
+			'null' => false,
+			'default' => 0,
+			'type' => 'smallint',
+			'auto' => false,
+		),
+		'id_previous_topic' => array(
+			'name' => 'id_previous_topic',
+			'null' => false,
+			'default' => 0,
+			'type' => 'int',
+			'auto' => false,
+		),
 	)
-);
-$row = $smcFunc['db_fetch_assoc']($request);
-$smcFunc['db_free_result']($request);
-
-if (!in_array('id_previous_topic', array_keys($row)))
-{
-	$smcFunc['db_transaction']('begin');
-	$smcFunc['db_query']('', "
-		CREATE TEMPORARY TABLE {$db_prefix}topics_tmp (
-			id_topic, is_sticky, id_board, id_first_msg, id_last_msg, id_member_started,
-			id_member_updated, id_poll, num_replies, num_views, locked, unapproved_posts, approved
-		)",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		INSERT INTO {$db_prefix}topics_tmp
-		SELECT
-			id_topic, is_sticky, id_board, id_first_msg, id_last_msg, id_member_started,
-			id_member_updated, id_poll, num_replies, num_views, locked, unapproved_posts, approved
-		FROM {$db_prefix}topics",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		DROP TABLE {$db_prefix}topics",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		CREATE TABLE {$db_prefix}topics (
-			id_topic integer primary key,
-			is_sticky smallint NOT NULL default '0',
-			id_board smallint NOT NULL default '0',
-			id_first_msg int NOT NULL default '0',
-			id_last_msg int NOT NULL default '0',
-			id_member_started int NOT NULL default '0',
-			id_member_updated int NOT NULL default '0',
-			id_poll int NOT NULL default '0',
-			id_previous_board smallint NOT NULL default '0',
-			id_previous_topic int NOT NULL default '0',
-			num_replies int NOT NULL default '0',
-			num_views int NOT NULL default '0',
-			locked smallint NOT NULL default '0',
-			unapproved_posts smallint NOT NULL default '0',
-			approved smallint NOT NULL default '1'
-		)",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		INSERT INTO {$db_prefix}topics
-		SELECT
-			id_topic, is_sticky, id_board, id_first_msg, id_last_msg, id_member_started,
-			id_member_updated, id_poll, num_replies, num_views, locked, unapproved_posts, approved,
-			0 AS id_previous_board, 0 AS id_previous_topic
-		FROM {$db_prefix}topics_tmp",
-		'security_override'
-	);
-	$smcFunc['db_query']('', "
-		DROP TABLE {$db_prefix}topics_tmp",
-		'security_override'
-	);
-	$smcFunc['db_transaction']('commit');
-}
+));
 ---}
 ---#
 
