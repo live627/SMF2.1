@@ -45,6 +45,7 @@ August 2008
  + Added ALTER support for SQLite. (DbExtra-sqlite.php, DbPackages-sqlite.php) [Feature 1586]
  ! Updated the upgrade script to use the new method. (upgrade_2-0_sqlite.sql)
  ! Fixed a few issues with smf_db_insert_sql and smf_db_table_sql so that they work properly with SQLite. (DbExtra-sqlite.php)
+ ! Fixed mysql_real_escape_string compatibility problems for PHP < 4.3. (Subs-Compat.php)
 
 
 July 2008

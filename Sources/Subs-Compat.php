@@ -235,4 +235,12 @@ if (@version_compare(PHP_VERSION, '4.2.0') == -1)
 	}
 }
 
+if (!function_exists('mysql_real_escape_string'))
+{
+	function mysql_real_escape_string($string, $connection = null)
+	{
+		return mysql_escape_string($string);
+	}
+}
+
 ?>
