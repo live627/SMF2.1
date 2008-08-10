@@ -78,7 +78,7 @@ function Packages()
 	// Load all the basic stuff.
 	require_once($sourcedir . '/Subs-Package.php');
 	loadLanguage('Packages');
-	loadTemplate('Packages');
+	loadTemplate('Packages', 'packages');
 
 	// Set up the linktree and title so it's already done.
 	$context['linktree'][] = array(

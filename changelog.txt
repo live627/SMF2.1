@@ -46,6 +46,11 @@ August 2008
  ! Updated the upgrade script to use the new method. (upgrade_2-0_sqlite.sql)
  ! Fixed a few issues with smf_db_insert_sql and smf_db_table_sql so that they work properly with SQLite. (DbExtra-sqlite.php)
  ! Fixed mysql_real_escape_string compatibility problems for PHP < 4.3. (Subs-Compat.php)
+ + Added a css file for the package manager. (packages.css, Packages.php, PackageGet.php)
+ * Don't collapse sections when only one item is in the section or it is the only section. (Packages template) [Bug 2390]
+ & Grammer for board access text. (ManageBoards language file) [Bug 2402]
+ * Javascript variable to identify safari browsers was using the wrong variable. (editor.js) [Bug 2397]
+ & Made the text for sending emails on database connection errors generic. (Admin language file) [Bug 2406]
 
 
 July 2008

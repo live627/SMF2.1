@@ -1048,90 +1048,93 @@ function template_package_list()
 	// List out the packages...
 	else
 	{
+		echo '
+		<ul id="package_list">';
 		foreach ($context['package_list'] as $i => $packageSection)
 		{
 			echo '
-			<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
+				<li>
+					<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
 
 			if (!empty($packageSection['text']))
 				echo '
-			<h3>', $packageSection['text'], '</h3>';
+					<h3>', $packageSection['text'], '</h3>';
 
 			echo '
-			<div id="package_section_', $i, '" class="tborder">';
+					<ol id="package_section_', $i, '" class="tborder">';
 
 			$alt = false;
 
 			foreach ($packageSection['items'] as $id => $package)
 			{
+				echo '
+						<li>';
 				// Textual message. Could be empty just for a blank line...
 				if ($package['is_text'])
 					echo '
-					', $package['name'], '<br /><br />';
+							', empty($package['name']) ? '&nbsp;' : $package['name'];
 				// This is supposed to be a rule..
 				elseif ($package['is_line'])
 					echo '
-					<hr />';
+							<hr />';
 				// A remote link.
 				elseif ($package['is_remote'])
+				{
 					echo '
-					<b>', $package['link'], '</b><br /><br />';
+							<b>', $package['link'], '</b>';
+				}
 				// Otherwise, it's a package.
 				else
 				{
-					echo '
-					<div class="windowbg', $alt ? '2' : '', '">';
 					// 1. Some mod [ Download ].
 					echo '
-						<span style="font-size: larger;">
-						<a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['count'], '. ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
+							<h4><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
 						echo '<img src="', $settings['images_url'], '/icons/package_', $package['is_current'] ? 'installed' : 'old', '.gif" width="12" height="11" align="middle" style="margin-left: 2ex;" alt="', $package['is_current'] ? $txt['package_installed_current'] : $txt['package_installed_old'], '" />';
 
-					echo '</span>
-						<div id="package_section_', $i, '_pkg_', $id, '">';
+					echo '</h4>
+							<ul id="package_section_', $i, '_pkg_', $id, '">';
 
 					// Show the mod type?
 					if ($package['type'] != '')
 						echo '
-						', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '<br />';
+								<li>', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '</li>';
 					// Show the version number?
 					if ($package['version'] != '')
 						echo '
-						', $txt['mod_version'], ':&nbsp; ', $package['version'], '<br />';
+								<li>', $txt['mod_version'], ':&nbsp; ', $package['version'], '</li>';
 					// How 'bout the author?
 					if (!empty($package['author']) && $package['author']['name'] != '' && isset($package['author']['link']))
 						echo '
-						', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '<br />';
+								<li>', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '</li>';
 					// The homepage....
 					if ($package['author']['website']['link'] != '')
 						echo '
-						', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '<br />';
+								<li>', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '</li>';
 
 					// Desciption: bleh bleh!
 					// Location of file: http://someplace/.
 					echo '
-						', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a>
-							<div style="max-height: 15em; overflow: auto;">', $txt['package_description'], ':&nbsp; ', $package['description'], '</div>
-						</div>
-						<br />
-					</div>';
-					$alt = !$alt;
+							<li>', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a></li>
+							<li class="description">', $txt['package_description'], ':&nbsp; ', $package['description'], '</li>
+						</ul>';
 				}
+				$alt = !$alt;
+				echo '
+					</li>';
 			}
 			echo '
-				</div>';
-
+				</ol>
+			</li>';
 		}
 		echo '
-					<br />';
+		</ul>';
 
 	}
 
 	echo '
-					</div>
 					</td>
 				</tr>
 			</table>
@@ -1147,6 +1150,7 @@ function template_package_list()
 		// Now go through and turn off all the sections.
 		if (!empty($context['package_list']))
 		{
+			$section_count = count($context['package_list']);
 			echo '
 			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 			foreach ($context['package_list'] as $section => $ps)
@@ -1157,7 +1161,7 @@ function template_package_list()
 					ps_', $section, '.useCookie(0);
 					ps_', $section, '.addToggleImage("ps_img_', $section, '", "/upshrink.gif", "/upshrink2.gif");
 					ps_', $section, '.addTogglePanel("package_section_', $section, '");
-					ps_', $section, '.toggle();';
+					ps_', $section, '.toggle(', count($ps['items']) == 1 || $section_count == 1 ? 'false' : 'true', ');';
 
 				foreach ($ps['items'] as $id => $package)
 				{

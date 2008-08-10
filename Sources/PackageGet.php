@@ -56,7 +56,7 @@ function PackageGet()
 
 	// Use the Packages template... no reason to separate.
 	loadLanguage('Packages');
-	loadTemplate('Packages');
+	loadTemplate('Packages', 'packages');
 
 	// Add the appropriate items to the link tree.
 	$context['linktree'][] = array(
