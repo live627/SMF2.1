@@ -17,7 +17,7 @@ var is_opera95up = is_opera95;
 var is_ff = ua.indexOf("firefox") != -1 && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
-var is_safari13beta = ua.indexOf('applewebkit') != -1;
+var is_safari = ua.indexOf('applewebkit') != -1;
 
 var is_ie = ua.indexOf("msie") != -1  && !is_opera;
 var is_ie4 = is_ie && ua.indexOf("msie 4") != -1;
@@ -415,7 +415,7 @@ function submitonce(theform)
 function submitThisOnce(form)
 {
 	// Hateful, hateful fix for Safari 1.3 beta.
-	if (is_safari13beta)
+	if (is_safari)
 		return !smf_formSubmitted;
 
 	if (typeof(form.form) != "undefined")

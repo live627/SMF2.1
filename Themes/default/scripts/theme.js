@@ -1,5 +1,5 @@
 // Add a fix for code stuff?
-if ((is_ie && !is_ie4) || is_safari13beta || is_ff)
+if ((is_ie && !is_ie4) || is_safari || is_ff)
 	add_load_event(smf_codeBoxFix);
 
 // The purpose of this code is to fix the height of overflow: auto div blocks, because IE can't figure it out for itself.
@@ -9,7 +9,7 @@ function smf_codeBoxFix()
 
 	for (var i = codeFix.length - 1; i > 0; i--)
 	{
-		if (is_safari13beta)
+		if (is_safari)
 		{
 			if ((codeFix[i].className == "code" || codeFix[i].className == "post" || codeFix[i].className == "signature") && codeFix[i].offsetHeight < 20)
 				codeFix[i].style.height = (codeFix[i].offsetHeight + 20) + "px";
