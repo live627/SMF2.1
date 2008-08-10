@@ -48,7 +48,6 @@ if (!function_exists('convert_query'))
 	</head>
 	<body>
 		<h1>Sorry, this file can\'t work alone</h1>
-
 		<p>Please download convert.php from <a href="http://www.simplemachines.org/">www.simplemachines.org</a> and use it.  This file should be in the same directory as it.</p>
 	</body>
 </html>';
