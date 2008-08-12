@@ -572,7 +572,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	);
 	// You can't select ALL the messages!
 	if ($smcFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('slected_all_posts', false);
+		fatal_lang_error('selected_all_posts', false);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		// Get the right first and last message dependant on approved state...

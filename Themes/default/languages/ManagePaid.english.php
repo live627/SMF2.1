@@ -29,9 +29,9 @@ $txt['paid_enabled_desc'] = 'This must be checked the paid subscriptions to be u
 $txt['paid_email'] = 'Send Notification Emails';
 $txt['paid_email_desc'] = 'Inform the admin when a subscription automatically changes.';
 $txt['paid_email_to'] = 'Email for Correspondence';
-$txt['paid_email_to_desc'] = 'Comma seperated list of addresses to email notifications to in addition to forum admins.';
+$txt['paid_email_to_desc'] = 'Comma-seperated list of addresses to email notifications to in addition to forum admins.';
 $txt['paidsubs_test'] = 'Enable test mode';
-$txt['paidsubs_test_desc'] = 'This puts the paid subscriptions mod into &quot;test&quot; mode, which will, whereever possible, use sandbox payment methods in paypal etc. Do not enable unless you know what you are doing!';
+$txt['paidsubs_test_desc'] = 'This puts the paid subscriptions into &quot;test&quot; mode, which will, whereever possible, use sandbox payment methods in PayPal, Authorize.net etc. Do not enable unless you know what you are doing!';
 $txt['paid_email_no'] = 'Do not send any notifications';
 $txt['paid_email_error'] = 'Inform when subscription fails';
 $txt['paid_email_all'] = 'Inform on all automatic subscription changes';
@@ -137,8 +137,11 @@ $txt['add_subscriber'] = 'Add New Subscriber';
 $txt['edit_subscriber'] = 'Edit Subscriber';
 $txt['delete_selected'] = 'Delete Selected';
 $txt['complete_selected'] = 'Complete Selected';
-$txt['delete_are_sure'] = 'Are you sure you want to delete all record of the selected subscriptions?';
+
+// !!! These strings are used in conjunction with JavaScript.  Use numeric entities.
+$txt['delete_are_sure'] = 'Are you sure you want to delete all records of the selected subscriptions?';
 $txt['complete_are_sure'] = 'Are you sure you want to complete the selected subscriptions?';
+
 $txt['start_date'] = 'Start Date';
 $txt['end_date'] = 'End Date';
 $txt['start_date_and_time'] = 'Start Date and Time';

@@ -1680,7 +1680,7 @@ function Post2()
 				if (in_array('bad_filename', $attachmentOptions['errors']))
 					fatal_error(basename($attachmentOptions['name']) . '.<br />' . $txt['restricted_filename'] . '.', 'critical');
 				if (in_array('taken_filename', $attachmentOptions['errors']))
-					fatal_lang_error('filename_exisits');
+					fatal_lang_error('filename_exists');
 			}
 		}
 	}
