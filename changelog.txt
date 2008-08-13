@@ -51,6 +51,7 @@ August 2008
  & Grammer for board access text. (ManageBoards language file) [Bug 2402]
  * Javascript variable to identify safari browsers was using the wrong variable. (editor.js) [Bug 2397]
  & Made the text for sending emails on database connection errors generic. (Admin language file) [Bug 2406]
+ & Improved the wording and included extra information for news and newsletters help text. (Help language file) [Bug 2246]
 
 
 July 2008
