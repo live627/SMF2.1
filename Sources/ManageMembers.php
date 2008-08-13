@@ -1145,7 +1145,8 @@ function AdminApprove()
 			foreach ($member_info as $member)
 			{
 				$replacements = array(
-					'USERNAME' => $member['name'],
+					'NAME' => $member['name'],
+					'USERNAME' => $member['username'],
 					'PROFILELINK' => $scripturl . '?action=profile',
 				);
 

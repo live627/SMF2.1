@@ -106,12 +106,13 @@ This is due to the following reason: {REASON}
 	'admin_approve_accept' => array(
 		/*
 			@additional_params: admin_approve_accept
+				NAME: The display name of the member.
 				USERNAME: The user name for the member receiving the email.
 				PROFILELINK: The URL of the profile page.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
-		'body' => 'Welcome, {USERNAME}!
+		'body' => 'Welcome, {NAME}!
 
 Your account has been activated manually by the admin and you can now login and post. Your username is: {USERNAME}
 

@@ -52,6 +52,7 @@ August 2008
  * Javascript variable to identify safari browsers was using the wrong variable. (editor.js) [Bug 2397]
  & Made the text for sending emails on database connection errors generic. (Admin language file) [Bug 2406]
  & Improved the wording and included extra information for news and newsletters help text. (Help language file) [Bug 2246]
+ ! When an admin changed a member's display named and approved an account, the display name would be sent in the email as the username to log in. (ManageMembers.php, EmailTemplates language file) [Bug 2419]
 
 
 July 2008
