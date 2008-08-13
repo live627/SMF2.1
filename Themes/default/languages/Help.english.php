@@ -57,15 +57,15 @@ $helptxt['edit_news'] = '
 		<li>
 			<b>News</b><br />
 			This section allows you to set the text for news items displayed on the Board Index page.
-			Add any item you want (e.g., &quot;Don\'t miss the conference this Tuesday&quot;). Each news item should go in a separate box, and they are displayed randomly.
+			Add any item you want (e.g., &quot;Don\'t miss the conference this Tuesday&quot;). Each news item is displayed randomly and should be placed in a separate box.
 		</li>
 		<li>
 			<b>Newsletters</b><br />
-			This section allows you to send out newsletters to the members of the forum. First you select the groups that you want to send the newsletter to. You can also select groups that can never receive the newsletter, as well as additional members and email addresses that will receive the newsletter. You will then get to type the message you want to send as well as select whether you want it to be sent to members as a personal message or as an email.
+			This section allows you to send out newsletters to the members of the forum via personal message or email. First select the groups that you want to receive the newsletter, and those you don\’t want to receive the newsletter. If you wish, you can add additional members and email addresses that will receive the newsletter. Finally, input the message you want to send and select whether you want it to be sent to members as a personal message or as an email.
 		</li>
 		<li>
 			<b>Settings</b><br />
-				This section contains a few settings that relate to news and newsletters, including selecting what groups can do certain permissions and a setting for whether you want XML/RSS support enabled on the forum.
+				This section contains a few settings that relate to news and newsletters, including selecting what groups can edit forum news or send newsletters. There is also an setting to configure whether you want news feeds enabled on the forum, as well as a setting to configure the length (how many characters are displayed) for each news post from a news feed.
 		</li>
 	</ul>';
 
