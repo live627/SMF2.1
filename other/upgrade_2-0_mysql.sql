@@ -461,6 +461,56 @@ VALUES
 	(3, 'MSN', 'msn', '');
 ---#
 
+---# Adding additional spiders.
+---{
+$additional_spiders = array(
+	'googlebot' => array('Google', 'googlebot', ''),
+	'Googlebot-Mobile' => array('Google (Mobile)', 'Googlebot-Mobile', ''),
+	'Googlebot-Image' => array('Google (Image)', 'Googlebot-Image', ''),
+	'Mediapartners-Google' => array('Google (AdSense)', 'Mediapartners-Google', ''),
+	'AdsBot-Google' => array('Google (Adwords)', 'AdsBot-Google', ''),
+	'slurp' => array('Yahoo!', 'slurp', ''),
+	'YahooSeeker/M1A1-R2D2' => array('Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
+	'Yahoo-MMCrawler' => array('Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
+	'yahoo' => array('Yahoo! (Publisher)', 'yahoo', ''),
+	'MSNBOT_Mobile' => array('MSN (Mobile)', 'MSNBOT_Mobile', ''),
+	'msnbot-media' => array('MSN (Media)', 'msnbot-media', ''),
+	'msnbot' => array('MSN', 'msnbot', ''),
+	'twiceler' => array('Cuil', 'twiceler', ''),
+	'Teoma' => array('Ask', 'Teoma', ''),
+	'Baiduspider' => array('Baidu', 'Baiduspider', ''),
+	'Gigabot' => array('Gigablast', 'Gigabot', ''),
+	'ia_archiver-web.archive.org' => array('InternetArchive', 'ia_archiver-web.archive.org', ''),
+	'ia_archiver' => array('Alexa', 'ia_archiver', ''),
+	'omgilibot' => array('Omgili', 'omgilibot', ''),
+	'Speedy Spider' => array('EntireWeb', 'Speedy Spider', ''),
+);
+
+// Lets get the current spiders.
+$request = upgrade_query("
+		SELECT user_agent
+		FROM {$db_prefix}spiders");
+
+while ($row = mysql_fetch_assoc($request))
+	if (isset($additional_spiders[$row['user_agent']])))
+		unset($additional_spiders[$row['user-agent']]);
+
+// Do we have anything to insert?
+if (!empty($additional_spiders))
+{
+	$inserts = array();
+	foreach ($additional_spiders as $spider)
+		$inserts[] = "('$spider[0]', '$spider[1]', '$spider[2]')";
+
+	upgrade_query("
+		INSERT INTO {$db_prefix}spiders
+			(spider_name, user_agent, ip_info)
+		VALUES " . implode(',
+			', $inserts));
+}
+---}
+---#
+
 ---# Creating spider hit tracking table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_hits (
 	id_hit int(10) unsigned NOT NULL auto_increment,

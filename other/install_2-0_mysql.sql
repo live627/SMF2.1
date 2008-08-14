@@ -1879,8 +1879,25 @@ CREATE TABLE {$db_prefix}spiders (
 INSERT INTO {$db_prefix}spiders
 	(id_spider, spider_name, user_agent, ip_info)
 VALUES (1, 'Google', 'googlebot', ''),
-	(2, 'Yahoo!', 'slurp', ''),
-	(3, 'MSN', 'msn', '');
+	(2, 'Google (Mobile)', 'Googlebot-Mobile', ''),
+	(3, 'Google (Image)', 'Googlebot-Image', ''),
+	(4, 'Google (AdSense)', 'Mediapartners-Google', ''),
+	(5, 'Google (Adwords)', 'AdsBot-Google', ''),
+	(6, 'Yahoo!', 'slurp', ''),
+	(7, 'Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
+	(8, 'Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
+	(9, 'Yahoo! (Publisher)', 'yahoo', ''),
+	(10, 'MSN (Mobile)', 'MSNBOT_Mobile', ''),
+	(11, 'MSN (Media)', 'msnbot-media', ''),
+	(12, 'MSN', 'msnbot', ''),
+	(13, 'Cuil', 'twiceler', ''),
+	(14, 'Ask', 'Teoma', ''),
+	(15, 'Baidu', 'Baiduspider', ''),
+	(16, 'Gigablast', 'Gigabot', ''),
+	(17, 'InternetArchive', 'ia_archiver-web.archive.org', ''),
+	(18, 'Alexa', 'ia_archiver', ''),
+	(19, 'Omgili', 'omgilibot', ''),
+	(20, 'EntireWeb', 'Speedy Spider', '');
 
 #
 # Table structure for table `subscriptions`
