@@ -62,7 +62,8 @@ August 2008
  & Removed a load of unused language entries. (Various files) [Bug 2404]
  * Add titles to the post moderation setting images page thing. (ManagePermissions template) [Bug 2418]
  * Fixed validation error in permissions template. (ManagePermissions template) [Bug 2415]
- & Some language entries were missing a closing bold tag. [Bug 2429]
+ & Some language entries were missing a closing bold tag. (ManageSettings language file) [Bug 2429]
+ ! It was impossible to quick edit an unapproved post. (Post.php) [Bug 2093]
 
 
 July 2008
