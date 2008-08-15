@@ -62,6 +62,7 @@ August 2008
  & Removed a load of unused language entries. (Various files) [Bug 2404]
  * Add titles to the post moderation setting images page thing. (ManagePermissions template) [Bug 2418]
  * Fixed validation error in permissions template. (ManagePermissions template) [Bug 2415]
+ & Some language entries were missing a closing bold tag. [Bug 2429]
 
 
 July 2008

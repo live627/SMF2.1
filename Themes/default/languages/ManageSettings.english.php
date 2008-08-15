@@ -111,12 +111,12 @@ $txt['caching_information'] = '<div align="center"><b><u>Important! Read this fi
 	<hr />';
 
 $txt['detected_no_caching'] = '<b style="color: red;">SMF has not been able to detect a compatible accelerator on your server.</b>';
-$txt['detected_APC'] = '<b style="color: green">SMF has detected that your server has APC installed.';
-$txt['detected_eAccelerator'] = '<b style="color: green">SMF has detected that your server has eAccelerator installed.';
-$txt['detected_MMCache'] = '<b style="color: green">SMF has detected that your server has MMCache installed.';
-$txt['detected_Zend'] = '<b style="color: green">SMF has detected that your server has Zend installed.';
-$txt['detected_Memcached'] = '<b style="color: green">SMF has detected that your server has Memcached installed.';
-$txt['detected_XCache'] = '<b style="color: green">SMF has detected that your server has XCache installed.';
+$txt['detected_APC'] = '<b style="color: green">SMF has detected that your server has APC installed.</b>';
+$txt['detected_eAccelerator'] = '<b style="color: green">SMF has detected that your server has eAccelerator installed.</b>';
+$txt['detected_MMCache'] = '<b style="color: green">SMF has detected that your server has MMCache installed.</b>';
+$txt['detected_Zend'] = '<b style="color: green">SMF has detected that your server has Zend installed.</b>';
+$txt['detected_Memcached'] = '<b style="color: green">SMF has detected that your server has Memcached installed.</b>';
+$txt['detected_XCache'] = '<b style="color: green">SMF has detected that your server has XCache installed.</b>';
 
 $txt['cache_enable'] = 'Caching Level';
 $txt['cache_off'] = 'No caching';
