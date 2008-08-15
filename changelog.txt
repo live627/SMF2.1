@@ -60,6 +60,8 @@ August 2008
  ! Adding calendar holidays could result in trying to put in titles that were too long. (ManageCalendar.php, ManageCalendar template) [Bug 2425]
  ! Protect against a missing variable in permission management. (ManagePermissions.php) [Bug 2424]
  & Removed a load of unused language entries. (Various files) [Bug 2404]
+ * Add titles to the post moderation setting images page thing. (ManagePermissions template) [Bug 2418]
+ * Fixed validation error in permissions template. (ManagePermissions template) [Bug 2415]
 
 
 July 2008
