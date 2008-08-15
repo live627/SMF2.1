@@ -69,7 +69,6 @@ $txt['paid_name'] = 'Name';
 $txt['paid_status'] = 'Status';
 $txt['paid_cost'] = 'Cost';
 $txt['paid_duration'] = 'Duration';
-$txt['paid_span'] = 'Span';
 $txt['paid_active'] = 'Active';
 $txt['paid_pending'] = 'Pending Payment';
 $txt['paid_finished'] = 'Finished';
@@ -186,8 +185,6 @@ $txt['paid_all_freq_blank'] = 'You must enter a cost for at least one of the fou
 $txt['paid_no_data'] = 'No valid data was sent to the script.';
 
 $txt['paypal_could_not_connect'] = 'Could not connect to PayPal server';
-$txt['paypal_unverified_subject'] = 'Unverified Paypal Transaction';
-$txt['paypal_unverified_body'] = 'A user attempted to add a paid subscription to your forum, but the transaction was unverified.';
 $txt['paid_sub_not_active'] = 'That subscription is not taking any new users!';
 $txt['paid_disabled'] = 'Paid subscriptions are currently disabled!';
 $txt['paid_unknown_transaction_type'] = 'Unknown Paid Subscriptions transaction type.';
@@ -203,8 +200,6 @@ $txt['subscriptions'] = 'Subscriptions';
 $txt['subscription'] = 'Subscription';
 $txt['paid_subs_desc'] = 'Below is a list of all the subscriptions which are available on this forum.';
 $txt['paid_subs_none'] = 'There are currently no paid subscriptions available!';
-$txt['paid_subs_view'] = 'View Subscriptions';
-$txt['paid_subs_settings'] = 'Settings';
 
 $txt['paid_current'] = 'Existing Subscriptions';
 $txt['pending_payments'] = 'Pending Payments';

@@ -192,6 +192,10 @@ function EditHoliday()
 	{
 		checkSession();
 
+		// Not too long good sir?
+		$_REQUEST['title'] = substr($_REQUEST['title'], 0, 30);
+		$_REQUEST['holiday'] = (int) $_REQUEST['holiday'];
+
 		if (isset($_REQUEST['delete']))
 			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}calendar_holidays
@@ -218,7 +222,7 @@ function EditHoliday()
 				$smcFunc['db_insert']('',
 					'{db_prefix}calendar_holidays',
 					array(
-						'event_date' => 'date', 'title' => 'string-48',
+						'event_date' => 'date', 'title' => 'string-30',
 					),
 					array(
 						$date, $_REQUEST['title'],

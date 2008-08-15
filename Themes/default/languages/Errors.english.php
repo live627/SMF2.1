@@ -14,7 +14,6 @@ $txt['topic_locked'] = 'This topic is locked, you are not allowed to post or mod
 $txt['no_password'] = 'Password field empty';
 $txt['already_a_user'] = 'The username you tried to use already exists.';
 $txt['cant_move'] = 'You are not allowed to move topics...';
-$txt['members_only'] = 'This service is only for members...';
 $txt['login_to_post'] = 'To post you must be logged in. If you don\'t have an account yet, please <a href="' . $scripturl . '?action=register">register</a>.';
 $txt['passwords_dont_match'] = 'Passwords aren\'t the same.';
 $txt['register_to_use'] = 'Sorry, you must register before using this feature.';

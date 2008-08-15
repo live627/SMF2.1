@@ -47,7 +47,6 @@ if (!defined('SMF'))
 		// !!!
 
 	void ModifyMembergroup()
-		- modify (local and global) permissions.
 		// !!!
 
 	void ModifyMembergroup2()
@@ -731,6 +730,9 @@ function SetQuickGroups()
 function ModifyMembergroup()
 {
 	global $context, $txt, $modSettings, $smcFunc, $sourcedir;
+
+	if (!isset($_GET['group']))
+		fatal_lang_error('no_access');
 
 	$context['group']['id'] = (int) $_GET['group'];
 

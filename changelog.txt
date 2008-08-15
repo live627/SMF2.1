@@ -54,6 +54,12 @@ August 2008
  & Improved the wording and included extra information for news and newsletters help text. (Help language file) [Bug 2246]
  ! When an admin changed a member's display named and approved an account, the display name would be sent in the email as the username to log in. (ManageMembers.php, EmailTemplates language file) [Bug 2419]
  + Added additional spiders to the default list. (install and upgrade sql files) [Feature 1545]
+ ! SQLite doesn't support setting character sets. (Subs-Db-sqlite.php) [Bug 2411]
+ ! Use some spider specific text strings for some actions. (Who.php, ManageSearchEngines.php, Who language file) [Bug 2428]
+ ! Show the spider log with newest first as default. (ManageSearchEngines.php) [Bug 2427]
+ ! Adding calendar holidays could result in trying to put in titles that were too long. (ManageCalendar.php, ManageCalendar template) [Bug 2425]
+ ! Protect against a missing variable in permission management. (ManagePermissions.php) [Bug 2424]
+ & Removed a load of unused language entries. (Various files) [Bug 2404]
 
 
 July 2008

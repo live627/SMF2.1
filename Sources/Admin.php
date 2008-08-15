@@ -49,12 +49,6 @@ if (!defined('SMF'))
 	void ManageCopyright()
 		// !!!
 
-	void CleanupPermissions()
-		- cleans up file permissions, in the hopes of making things work
-		  smoother and potentially more securely.
-		- can set permissions to either restrictive, free, or standard.
-		- accessed via ?action=admin;area=cleanperms.
-
 	void AdminSearch()
 		// !!
 

@@ -35,7 +35,7 @@ if (!defined('SMF'))
 		- is enabled with the who_enabled setting.
 		- is accessed via ?action=who.
 
-	array determineActions(array urls)
+	array determineActions(array urls, string preferred_prefix = false)
 		- determine the actions of the members passed in urls.
 		- urls should be a single url (string) or an array of arrays, each
 		  inner array being (serialized request data, id_member).
@@ -255,7 +255,7 @@ function Who()
 
 }
 
-function determineActions($urls)
+function determineActions($urls, $preferred_prefix = false)
 {
 	global $txt, $user_info, $modSettings, $smcFunc, $context;
 
@@ -357,10 +357,10 @@ function determineActions($urls)
 			}
 			// A subaction anyone can view... if the language string is there, show it.
 			elseif (isset($actions['sa']) && isset($txt['whoall_' . $actions['action'] . '_' . $actions['sa']]))
-				$data[$k] = $txt['whoall_' . $actions['action'] . '_' . $actions['sa']];
+				$data[$k] = isset($txt[$preferred_prefix . $actions['action'] . '_' . $actions['sa']]) ? $txt[$preferred_prefix . $actions['action'] . '_' . $actions['sa']] : $txt['whoall_' . $actions['action'] . '_' . $actions['sa']];
 			// An action any old fellow can look at. (if ['whoall_' . $action] exists, we know everyone can see it.)
 			elseif (isset($txt['whoall_' . $actions['action']]))
-				$data[$k] = $txt['whoall_' . $actions['action']];
+				$data[$k] = isset($txt[$preferred_prefix . $actions['action']]) ? $txt[$preferred_prefix . $actions['action']] : $txt['whoall_' . $actions['action']];
 			// Viewable if and only if they can see the board...
 			elseif (isset($txt['whotopic_' . $actions['action']]))
 			{

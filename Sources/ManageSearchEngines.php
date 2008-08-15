@@ -732,8 +732,8 @@ function SpiderLogs()
 					'class' => 'windowbg',
 				),
 				'sort' => array(
-					'default' => 'sl.id_hit',
-					'reverse' => 'sl.id_hit DESC',
+					'default' => 'sl.id_hit DESC',
+					'reverse' => 'sl.id_hit',
 				),
 			),
 			'viewing' => array(
@@ -776,7 +776,7 @@ function SpiderLogs()
 
 		// Now stick in the new URLs.
 		require_once($sourcedir . '/Who.php');
-		$urls = determineActions($urls);
+		$urls = determineActions($urls, 'whospider_');
 		foreach ($urls as $k => $new_url)
 		{
 			$context['spider_logs']['rows'][$k]['viewing']['value'] = $new_url;

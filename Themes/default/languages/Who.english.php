@@ -11,18 +11,17 @@ $txt['who_user'] = 'User';
 $txt['who_time'] = 'Time';
 $txt['who_action'] = 'Action';
 $txt['who_show1'] = 'Show ';
-$txt['who_show2'] = ' and sort them by ';
-$txt['who_show3'] = ' in ';
-$txt['who_show4'] = ' order.';
 $txt['who_show_members_only'] = 'Members Only';
 $txt['who_show_guests_only'] = 'Guests Only';
 $txt['who_show_spiders_only'] = 'Spiders Only';
 $txt['who_show_all'] = 'Everyone';
-$txt['who_sort_asc'] = 'Ascending';
-$txt['who_sort_desc'] = 'Descending';
 $txt['who_no_online_spiders'] = 'There are currently no spiders online.';
 $txt['who_no_online_guests'] = 'There are currently no guests online.';
 $txt['who_no_online_members'] = 'There are currently no members online.';
+
+$txt['whospider_login'] = 'Viewing the login page.';
+$txt['whospider_register'] = 'Viewing the registration page.';
+$txt['whospider_reminder'] = 'Viewing the reminder page.';
 
 $txt['whoall_activate'] = 'Activating their account.';
 $txt['whoall_emailuser'] = 'Sending email to another member.';
@@ -67,7 +66,6 @@ $txt['whotopic_vote'] = 'Voting in <a href="' . $scripturl . '?topic=%d.0">%s</a
 
 $txt['whopost_quotefast'] = 'Quoting a post from &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot;.';
 
-$txt['whoadmin_detailedversion'] = 'Doing a detailed version check.';
 $txt['whoadmin_editagreement'] = 'Editing the registration agreement.';
 $txt['whoadmin_featuresettings'] = 'Editing forum features and options.';
 $txt['whoadmin_modlog'] = 'Viewing the moderator log.';

@@ -6,14 +6,9 @@
 $txt['permissions_title'] = 'Manage Permissions';
 $txt['permissions_modify'] = 'Modify';
 $txt['permissions_view'] = 'View';
-$txt['permissions_access'] = 'Access';
 $txt['permissions_allowed'] = 'Allowed';
 $txt['permissions_denied'] = 'Denied';
 $txt['permission_cannot_edit'] = '<strong>Note:</strong> You cannot edit this permission profile as it is a predefined profile included within the forum software by default. If you wish to change the permissions of this profile you must first create a duplicate profile. You can carry out this task by clicking <a href="%1$s">here</a>.';
-
-$txt['permissions_switch'] = 'Switch To';
-$txt['permissions_global'] = 'Global';
-$txt['permissions_local'] = 'Local';
 
 $txt['permissions_for_profile'] = 'Permissions for Profile';
 $txt['permissions_boards_desc'] = 'The list below shows which set of permissions has been assigned to each board on your forum. You may edit the assigned permission profile by either clicking the board name or select &quot;edit all&quot; from the bottom of the page. To edit the profile itself simply click the profile name.';
@@ -325,7 +320,6 @@ $txt['permission_settings_submit'] = 'Save';
 $txt['permission_settings_enable_deny'] = 'Enable the option to deny permissions';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['permission_disable_deny_warning'] = 'Turning off this option will update \\\'Deny\\\'-permissions to \\\'Disallow\\\'.';
-$txt['permission_by_membergroup_desc'] = 'Here you can set all global permissions for each membergroup. These permissions are valid on all boards that have not been overridden by local permissions set in the \'Permissions by board\'-screen.';
 $txt['permission_by_board_desc'] = 'Here you can set which permissions profile a board uses. You can create new permission profiles from the &quot;Edit Profiles&quot; menu.';
 $txt['permission_settings_desc'] = 'Here you can set who has permission to change permissions, as well as how sophisticated the permission system should be.';
 $txt['permission_settings_enable_postgroups'] = 'Enable permissions for post count based groups';
