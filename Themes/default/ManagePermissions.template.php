@@ -1031,6 +1031,7 @@ function template_postmod_permissions()
 					</td>
 				</tr>
 			</table>
+		</form>
 	<p class="smalltext" style="padding-left: 10px;">
 		<b>', $txt['permissions_post_moderation_legend'], ':</b><br />
 		<img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />

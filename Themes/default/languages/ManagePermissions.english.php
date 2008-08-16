@@ -289,7 +289,7 @@ $txt['permissiongroup_simple_notification'] = 'Request notifications';
 $txt['permissiongroup_simple_attach'] = 'Post attachments';
 $txt['permissiongroup_simple_moderate'] = 'Moderate the board';
 
-$txt['permissionname_simple_post_unapproved_replies_own'] = 'Post replies to a topic - but require approval';
+$txt['permissionname_simple_post_unapproved_replies_own'] = 'Post replies to their own topic - but require approval';
 $txt['permissionname_simple_post_unapproved_replies_any'] = 'Post replies to any topic - but require approval';
 $txt['permissionname_simple_post_reply_own'] = 'Post replies to a topic they started';
 $txt['permissionname_simple_post_reply_any'] = 'Post replies to any topic';

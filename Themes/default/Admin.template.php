@@ -826,7 +826,7 @@ function template_show_settings()
 		echo $context['settings_insert_above'];
 
 	echo '
-	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '"', !empty($context['force_form_onsubmit']) ? ' onsubmit="' . $context['force_form_onsubmit'] . '"' : '', '>
 		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
 			<tr>
 				<td>

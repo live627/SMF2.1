@@ -913,22 +913,6 @@ function createEventListener(oTarget)
 	}
 }
 
-function findCoords(oElement)
-{
-	if (typeof(oElement.tagName) == 'undefined')
-		return {'iX': 0, 'iY': 0};
-
-	var bSkipMe = in_array(oElement.tagName.toLowerCase(), ['tr', 'form', 'tbody', 'div']);
-
-	if (oElement.parentNode == null || typeof(oElement.parentNode.offsetLeft) == 'undefined')
-		return {'iX': bSkipMe ? 0 : oElement.offsetLeft, 'iY': bSkipMe ? 0 : oElement.offsetTop};
-	else
-	{
-		var aAdd = findCoords(oElement.parentNode);
-		return {'iX': (bSkipMe ? 0 : oElement.offsetLeft) + aAdd.iX, 'iY': (bSkipMe ? 0 : oElement.offsetTop) + aAdd.iY};
-	}
-}
-
 // This function will retrieve the contents needed for the jump to boxes.
 function grabJumpToContent()
 {

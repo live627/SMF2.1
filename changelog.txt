@@ -64,6 +64,14 @@ August 2008
  * Fixed validation error in permissions template. (ManagePermissions template) [Bug 2415]
  & Some language entries were missing a closing bold tag. (ManageSettings language file) [Bug 2429]
  ! It was impossible to quick edit an unapproved post. (Post.php) [Bug 2093]
+ ! Make sure to clean the ignore boards POST variable even when you aren't coming from the ignore boards profile page. (Profile-Modify.php)
+ ! Set quick reply to shown but collapsed for the initial user when installing the forum. (install sql files) [Bug 1845]
+ - Removed an artifact javascript function. (script.js) [Bug 2222]
+ * Added the ability to add an onsubmit action for admin settings pages. (Admin template)
+ ! Added a javascript notice if an admin selects the recycle board option without selecting a specific board to use as the recycling board. (ManageBoards.php) [Bug 2412]
+ & Added text string for above option. (ManageBoards language file) [Bug 2412]
+ & Improved the text string for the simplied post moderation reply for one's own topics. (ManagePermissions language file) [Bug 2416]
+ * The post moderation permission page was missing a closing form tag. (ManagePermissions template file) [Bug 2409]
 
 
 July 2008
