@@ -72,6 +72,7 @@ August 2008
  & Added text string for above option. (ManageBoards language file) [Bug 2412]
  & Improved the text string for the simplied post moderation reply for one's own topics. (ManagePermissions language file) [Bug 2416]
  * The post moderation permission page was missing a closing form tag. (ManagePermissions template file) [Bug 2409]
+ ! The ignore boards feature could cause a database error under certain conditions. (Load.php)
 
 
 July 2008
