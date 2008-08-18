@@ -488,7 +488,7 @@ function template_main()
 													</tr>
 													<tr>
 														<td class="smalltext">', $context['can_announce'] && $context['is_first_post'] ? '<label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="check" ' . (!empty($context['announce']) ? 'checked="checked" ' : '') . '/> ' . $txt['announce_topic'] . '</label>' : '', '</td>
-														<td class="smalltext">', $context['show_approval'] ? '<label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="check" ' . ($context['show_approval'] == 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['show_approval'] ? '<label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="check" ' . ($context['show_approval'] === 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label>' : '', '</td>
 													</tr>
 												</table>
 											</div>
