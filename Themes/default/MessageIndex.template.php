@@ -211,9 +211,9 @@ function template_main()
 
 			// Calculate the colour class of the topic.
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
-				$colour_class = $topic['approved'] ? 'approvebg' : 'approvetbg';
+				$color_class = $topic['approved'] ? 'approvebg' : 'approvetbg';
 			else
-				$colour_class = !empty($settings['seperate_sticky_lock']) && $topic['is_sticky'] ? 'windowbg3' : 'windowbg';
+				$color_class = !empty($settings['seperate_sticky_lock']) && $topic['is_sticky'] ? 'windowbg3' : 'windowbg';
 
 			echo '
 						<tr>
@@ -223,7 +223,7 @@ function template_main()
 							<td class="windowbg2 icon2">
 								<img src="', $topic['first_post']['icon_url'], '" alt="" />
 							</td>
-							<td class="subject ', $colour_class, '" ', (!empty($topic['quick_mod']['remove']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>';
+							<td class="subject ', $color_class, '" ', (!empty($topic['quick_mod']['remove']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>';
 
 			if (!empty($settings['seperate_sticky_lock']))
 				echo '
