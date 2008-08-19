@@ -204,16 +204,16 @@ function template_main()
 		foreach ($context['topics'] as $topic)
 		{
 			// Do we want to seperate the sticky and lock status out?
-			if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
+			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_sticky'));
-			if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
+			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
 
 			// Calculate the colour class of the topic.
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
 				$color_class = $topic['approved'] ? 'approvebg' : 'approvetbg';
 			else
-				$color_class = !empty($settings['seperate_sticky_lock']) && $topic['is_sticky'] ? 'windowbg3' : 'windowbg';
+				$color_class = !empty($settings['separate_sticky_lock']) && $topic['is_sticky'] ? 'windowbg3' : 'windowbg';
 
 			echo '
 						<tr>
@@ -225,7 +225,7 @@ function template_main()
 							</td>
 							<td class="subject ', $color_class, '" ', (!empty($topic['quick_mod']['remove']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>';
 
-			if (!empty($settings['seperate_sticky_lock']))
+			if (!empty($settings['separate_sticky_lock']))
 				echo '
 								' , $topic['is_locked'] ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" id="lockicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '' , '
 								' , $topic['is_sticky'] ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" id="stickyicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '';
