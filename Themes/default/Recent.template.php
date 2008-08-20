@@ -184,7 +184,7 @@ function template_unread()
 			if ($showCheckboxes)
 				echo '
 					<td class="windowbg2" valign="middle" align="center">
-						<input type="checkbox" name="topics[]" value="', $topic['id'], '" />
+						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />
 					</td>';
 
 			echo '
@@ -323,7 +323,7 @@ function template_replies()
 		if ($showCheckboxes)
 			echo '
 					<td class="windowbg2" valign="middle" align="center">
-						<input type="checkbox" name="topics[]" value="', $topic['id'], '" />
+						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />
 					</td>';
 
 		echo '
