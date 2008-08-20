@@ -294,7 +294,7 @@ function template_main()
 			{
 				foreach ($message['member']['custom_fields'] as $custom)
 					echo '
-							<li>', $custom['title'], ': ', $custom['value'], '/li>';
+							<li>', $custom['title'], ': ', $custom['value'], '</li>';
 			}
 
 			// Show avatars, images, etc.?
