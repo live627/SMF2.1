@@ -529,18 +529,19 @@ function SendMailing($clean_only = false)
 
 	require_once($sourcedir . '/Subs-Post.php');
 
-	// Prepare the message (etc).
-	if (!$context['send_pm'])
-	{
-		$context['subject'] = htmlspecialchars($_POST['subject']);
-		$context['message'] = htmlspecialchars($_POST['message']);
+	// Save the message and its subject in $context
+	$context['subject'] = htmlspecialchars($_POST['subject']);
+	$context['message'] = htmlspecialchars($_POST['message']);
 
+	// Prepare the message for sending it as HTML
+	if (!$context['send_pm'] && !empty($_POST['send_html']))
+	{
 		// Prepare the message for HTML.
-		if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
+		if (!empty($_POST['parse_html']))
 			$_POST['message'] = str_replace(array("\n", '  '), array('<br />' . "\n", '&nbsp; '), $_POST['message']);
 
 		// This is here to prevent spam filters from tagging this as spam.
-		if (!empty($_POST['send_html']) && preg_match('~\<html~i', $_POST['message']) == 0)
+		if (preg_match('~\<html~i', $_POST['message']) == 0)
 		{
 			if (preg_match('~\<body~i', $_POST['message']) == 0)
 				$_POST['message'] = '<html><head><title>' . $_POST['subject'] . '</title></head>' . "\n" . '<body>' . $_POST['message'] . '</body></html>';
@@ -560,14 +561,17 @@ function SendMailing($clean_only = false)
 		'{$latest_member.name}'
 	);
 
+	// We might need this in a bit
+	$cleanLatestMember = empty($_POST['send_html']) || $context['send_pm'] ? un_htmlspecialchars($modSettings['latestRealName']) : $modSettings['latestRealName'];
+
 	// Replace in all the standard things.
 	$_POST['message'] = str_replace($variables,
 		array(
 			!empty($_POST['send_html']) ? '<a href="' . $scripturl . '">' . $scripturl . '</a>' : $scripturl,
 			timeformat(forum_time(), false),
-			!empty($_POST['send_html']) ? '<a href="' . $scripturl . '?action=profile;u=' . $modSettings['latestMember'] . '">' . $modSettings['latestRealName'] . '</a>' : $modSettings['latestRealName'],
+			!empty($_POST['send_html']) ? '<a href="' . $scripturl . '?action=profile;u=' . $modSettings['latestMember'] . '">' . $cleanLatestMember . '</a>' : ($context['send_pm'] ? '[url=' . $scripturl . '?action=profile;u=' . $modSettings['latestMember'] . ']' . $cleanLatestMember . '[/url]' : $cleanLatestMember),
 			$modSettings['latestMember'],
-			$modSettings['latestRealName']
+			$cleanLatestMember
 		), $_POST['message']);
 	$_POST['subject'] = str_replace($variables,
 		array(
@@ -698,18 +702,31 @@ function SendMailing($clean_only = false)
 			if (array_intersect($groups, $context['recipients']['exclude_groups']))
 				continue;
 
-			$to_member = array(
-				$row['email_address'],
-				!empty($_POST['send_html']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $scripturl . '?action=profile;u=' . $row['id_member'],
-				$row['id_member'],
-				$row['real_name']
-			);
+			// We might need this
+			$cleanMemberName = empty($_POST['send_html']) || $context['send_pm'] ? un_htmlspecialchars($row['real_name']) : $row['real_name'];
 
-			// Send the actual email off, replacing the member dependent variables - or a PM!
+			// Replace the member-dependant variables
+			$message = str_replace($from_member,
+				array(
+					$row['email_address'],
+					!empty($_POST['send_html']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $cleanMemberName . '</a>' : ($context['send_pm'] ? '[url=' . $scripturl . '?action=profile;u=' . $row['id_member'] . ']' . $cleanMemberName . '[/url]' : $cleanMemberName),
+					$row['id_member'],
+					$cleanMemberName,
+				), $_POST['message']);
+			
+			$subject = str_replace($from_member,
+				array(
+					$row['email_address'],
+					$row['real_name'],
+					$row['id_member'],
+					$row['real_name'],
+				), $_POST['subject']);
+
+			// Send the actual email - or a PM!
 			if (!$context['send_pm'])
-				sendmail($row['email_address'], str_replace($from_member, $to_member, $_POST['subject']), str_replace($from_member, $to_member, $_POST['message']), null, null, !empty($_POST['send_html']), 5);
+				sendmail($row['email_address'], $subject, $message, null, null, !empty($_POST['send_html']), 5);
 			else
-				sendpm(array('to' => array($row['id_member']), 'bcc' => array()), $_POST['subject'], $_POST['message']);
+				sendpm(array('to' => array($row['id_member']), 'bcc' => array()), $subject, $message);
 		}
 		$smcFunc['db_free_result']($result);
 	}

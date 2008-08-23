@@ -76,6 +76,8 @@ August 2008
  ! Post template was defaulting to approve unapproved posts. (Post template) [Bug 2432]
  * The message index template had picked up an old typo. (MessageIndex template) [Bug 2436]
  ! Better sanitization for paid subscription posts upon saving a subscription. (ManagePaid.php)
+ ! Member-dependant variables weren't parsed when sending newsletters via personal messages (ManageNews.php) [Bug 2445]
+ ! It was possible to get undefined index errors when sending out newsletters (ManageNews.php)
 
 July 2008
 --------------------------------------------------------------------------------
