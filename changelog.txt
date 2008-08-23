@@ -78,6 +78,7 @@ August 2008
  ! Better sanitization for paid subscription posts upon saving a subscription. (ManagePaid.php)
  ! Member-dependant variables weren't parsed when sending newsletters via personal messages (ManageNews.php) [Bug 2445]
  ! It was possible to get undefined index errors when sending out newsletters (ManageNews.php)
+ * Code boxes with just a single line of code now get their horizontal scrollbar again if needed (theme.js) [Bug 2446]
 
 July 2008
 --------------------------------------------------------------------------------
