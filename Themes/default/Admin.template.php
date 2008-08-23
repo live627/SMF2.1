@@ -10,7 +10,7 @@ function template_admin()
 	echo '
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
-				<td align="center" colspan="2" class="largetext">', $txt['admin_center'], '</td>
+				<td align="center" colspan="2" class="largetext headerpadding">', $txt['admin_center'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="top" style="padding: 7px;">
 					<b>', $txt['hello_guest'], ' ', $context['user']['name'], '!</b>

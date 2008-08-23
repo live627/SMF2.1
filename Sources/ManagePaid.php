@@ -400,7 +400,7 @@ function ModifySubscription()
 			$span = $_POST['span_value'] . $_POST['span_unit'];
 
 			// Sort out the cost.
-			$cost = array('fixed' => $_POST['cost']);
+			$cost = array('fixed' => sprintf('%01.2f', strtr($_POST['cost'], ',', '.')));
 
 			// There needs to be something.
 			if (empty($_POST['span_value']) || empty($_POST['cost']))
@@ -412,10 +412,10 @@ function ModifySubscription()
 			$span = 'F';
 
 			$cost = array(
-				'day' => $_POST['cost_day'],
-				'week' => $_POST['cost_week'],
-				'month' => $_POST['cost_month'],
-				'year' => $_POST['cost_year'],
+				'day' => sprintf('%01.2f', strtr($_POST['cost_day'], ',', '.')),
+				'week' => sprintf('%01.2f', strtr($_POST['cost_week'], ',', '.')),
+				'month' => sprintf('%01.2f', strtr($_POST['cost_month'], ',', '.')),
+				'year' => sprintf('%01.2f', strtr($_POST['cost_year'], ',', '.')),
 			);
 
 			if (empty($_POST['cost_day']) && empty($_POST['cost_week']) && empty($_POST['cost_month']) && empty($_POST['cost_year']))

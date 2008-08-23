@@ -75,6 +75,7 @@ August 2008
  ! The ignore boards feature could cause a database error under certain conditions. (Load.php)
  ! Post template was defaulting to approve unapproved posts. (Post template) [Bug 2432]
  * The message index template had picked up an old typo. (MessageIndex template) [Bug 2436]
+ ! Better sanitization for paid subscription posts upon saving a subscription. (ManagePaid.php)
 
 July 2008
 --------------------------------------------------------------------------------
