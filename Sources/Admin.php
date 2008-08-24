@@ -532,14 +532,21 @@ function AdminHome()
 			$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
 			$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
 
+			$deletekeys = true;
 			if ($return_data != 'void')
 			{
 				list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
 				$_SESSION['copy_key'] = $key;
-				$copy_settings = $key . ',' . (int) $_SESSION['copy_expire'];
-				updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
+
+				if ($_SESSION['copy_expire'] > time())
+				{
+					$deletekeys = false;
+					$copy_settings = $key . ',' . (int) $_SESSION['copy_expire'];
+					updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
+				}
 			}
-			else
+
+			if ($deletekeys)
 			{
 				$_SESSION['copy_expire'] = '';
 				$smcFunc['db_query']('', '
@@ -666,6 +673,14 @@ function ManageCopyright()
 		if ($return_data != 'void')
 		{
 			list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
+			
+			if ($_SESSION['copy_expire'] <= time())
+			{
+				// So sorry but that has already expired.
+				$_SESSION['copy_expire'] = '';
+				fatal_lang_error('copyright_failed');
+			}
+
 			$_SESSION['copy_key'] = $_POST['copy_code'];
 			$copy_settings = $_POST['copy_code'] . ',' . (int) $_SESSION['copy_expire'];
 			updateSettings(array('copy_settings' => $copy_settings, 'copyright_key' => $copyright_key));
