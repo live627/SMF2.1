@@ -286,6 +286,11 @@ function reloadSettings()
 			db_fatal_error(true);
 	}
 
+	// This allows admins to turn on or off particular features.
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
+	// Is post moderation alive and well?
+	$modSettings['postmod_active'] = in_array('pm', $context['admin_features']);
+
 	// Integration is cool.
 	if (defined('SMF_INTEGRATION_SETTINGS'))
 		$modSettings = unserialize(SMF_INTEGRATION_SETTINGS) + $modSettings;
@@ -661,6 +666,7 @@ function loadBoard()
 				'num_topics' => $row['num_topics'],
 				'unapproved_topics' => $row['unapproved_topics'],
 				'unapproved_posts' => $row['unapproved_posts'],
+				'unapproved_user_topics' => 0,
 				'parent_boards' => getBoardParents($row['id_parent']),
 				'parent' => $row['id_parent'],
 				'child_level' => $row['child_level'],
@@ -687,6 +693,28 @@ function loadBoard()
 					);
 			}
 			while ($row = $smcFunc['db_fetch_assoc']($request));
+
+			// If the board only contains unapproved posts and the user isn't an approver then they can't see any topics.
+			// If that is the case do an additional check to see if they have any topics waiting to be approved.
+			if ($board_info['num_topics'] == 0 && $modSettings['postmod_active'] && !allowedTo('approve_posts'))
+			{
+				$smcFunc['db_free_result']($request); // Free the previous result
+
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(id_topic)
+					FROM {db_prefix}topics
+					WHERE id_member_started={int:id_member}
+						AND approved = {int:unapproved}
+						AND id_board = {int:board}',
+					array(
+						'id_member' => $user_info['id'],
+						'unapproved' => 0,
+						'board' => $board,
+					)
+				);
+
+				list ($board_info['unapproved_user_topics']) = $smcFunc['db_fetch_row']($request);
+			}
 
 			if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] >= 3))
 			{
@@ -1605,11 +1633,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Compatibility.
 	if (!isset($settings['theme_version']))
 		$modSettings['memberCount'] = $modSettings['totalMembers'];
-
-	// This allows us to change the way things look for the admin.
-	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
-	// Is post moderation alive and well?
-	$modSettings['postmod_active'] = in_array('pm', $context['admin_features']);
 
 	// If we think we have mail to send, let's offer up some possibilities... robots get pain (Now with scheduled task support!)
 	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())

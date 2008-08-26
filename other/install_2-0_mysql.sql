@@ -1857,7 +1857,9 @@ VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0),
 	(':\'(', 'cry.gif', '{$default_cry_smiley}', 15, 0),
 	('>:D', 'evil.gif', '{$default_evil_smiley}', 16, 1),
 	('^-^', 'azn.gif', '{$default_azn_smiley}', 17, 1),
-	('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
+	('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1),
+	(':))', 'laugh.gif', '{$default_laugh_smiley}', 19, 1),
+	('%*_*%', 'police.gif', '{$default_police_smiley}', 20, 1);
 # --------------------------------------------------------
 
 #
