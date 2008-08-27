@@ -633,7 +633,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 
 	// Do the insert.
 	$smcFunc['db_query']('', '
-		' . $queryTitle . ' INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
+		' . $queryTitle . ' INTO ' . $table . '(`' . implode('`, `', $indexed_columns) . '`)
 		VALUES
 			' . implode(',
 			', $insertRows),
