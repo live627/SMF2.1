@@ -137,7 +137,7 @@ if (!defined('SMF'))
 // Load the $modSettings array.
 function reloadSettings()
 {
-	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set;
+	global $modSettings, $boarddir, $smcFunc, $txt, $db_character_set, $context;
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (!empty($db_character_set))
@@ -286,10 +286,8 @@ function reloadSettings()
 			db_fatal_error(true);
 	}
 
-	// This allows admins to turn on or off particular features.
-	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
 	// Is post moderation alive and well?
-	$modSettings['postmod_active'] = in_array('pm', $context['admin_features']);
+	$modSettings['postmod_active'] = isset($modSettings['admin_features']) ? in_array('pm', explode(',', $modSettings['admin_features'])) : true;
 
 	// Integration is cool.
 	if (defined('SMF_INTEGRATION_SETTINGS'))
@@ -1633,6 +1631,9 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Compatibility.
 	if (!isset($settings['theme_version']))
 		$modSettings['memberCount'] = $modSettings['totalMembers'];
+
+	// This allows us to change the way things look for the admin.
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
 
 	// If we think we have mail to send, let's offer up some possibilities... robots get pain (Now with scheduled task support!)
 	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
