@@ -172,7 +172,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			);
 			$default = 'default nextval(\'' . $table_name . '_seq\')';
 		}
-		elseif (isset($column['default']) && $column['default'] != null)
+		elseif (isset($column['default']) && $column['default'] !== null)
 			$default = 'default \'' . $column['default'] . '\'';
 		else
 			$default = '';
@@ -184,7 +184,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$type = $type . '(' . $size . ')';
 
 		// Now just put it together!
-		$table_query .= "\n\t" .$column['name'] .' ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default;
+		$table_query .= "\n\t\"" . $column['name'] . '" ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default;
 	}
 
 	// Loop through the indexes a sec...
