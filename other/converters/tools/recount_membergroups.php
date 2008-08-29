@@ -327,7 +327,7 @@ function doStep4()
 			ALTER TABLE {$db_prefix}membergroups AUTO_INCREMENT=" . ++$max_cat_id);
 	}
 
-	script_modify_column('members', 'id_group', $column_default['id_group']);
+	script_modify_column('members', 'id_group', array_merge($column_default['id_group'], array('auto' => true)));
 	script_modify_column('members', 'id_post_group', $column_default['id_group']);
 	foreach ($tables AS $table => $column)
 		script_modify_column($table, $column, $column_default[$column]);
