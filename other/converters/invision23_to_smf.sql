@@ -291,7 +291,7 @@ $row['body'] = addslashes(preg_replace(
 		'[email=$1]$2[/email]',
 		'[url=$1]$2[/url]',
 		'[url=$1]$2[/url]',
-	), ltrim($row['body'])));
+	), ltrim(stripslashes($row['signature']))));
 $row['body'] = substr(strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />')), 0, 65534);
 ---}
 SELECT
@@ -379,6 +379,9 @@ FROM {$from_prefix}polls;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
+---{
+$ignore = true;
+---}
 SELECT pl.pid AS id_poll, v.member_id AS id_member
 FROM {$from_prefix}voters AS v
 	LEFT JOIN {$from_prefix}polls AS pl ON (pl.tid = v.tid)
@@ -463,7 +466,7 @@ $row['body'] = addslashes(preg_replace(
 		'[email=$1]$2[/email]',
 		'[url=$1]$2[/url]',
 		'[url=$1]$2[/url]',
-	), ltrim($row['body'])));
+	), ltrim(stripslashes($row['signature']))));
 $row['body'] = strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />'));
 ---}
 SELECT

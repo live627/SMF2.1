@@ -49,12 +49,19 @@ function initialize_inputs()
 // Welcome you.
 function doStep0()
 {
-	global $this_url;
+	global $this_url, $user_info;
+
+	// No Powers, No good.
+	if ($user_info['is_guest'] || !$user_info['is_admin'])
+	{
+		ssi_login();
+		exit;
+	}
 
 echo '
 <form method="post" action="', $this_url, '?step=1">
 	<div class="panel">
-		<h2>Welcome</h2>
+		<h2>Welcome, ', $user_info['username'], '</h2>
 		<p>Welcome to the recount Boards ID script.</p>
 		<div class="error_message">BE SURE TO RUN BACKUPS BEFORE PROCEEDING WITH THIS!!!</div>
 		<p>This script will recount all your boards IDs to use lower numbers. Why? Well some people during conversions may receive extremely high board IDs that can cause issues. The purpose of this script to to help prevent that by recounting the ids.</p>
@@ -200,7 +207,7 @@ function doStep4()
 	}
 
 	foreach ($tables AS $table)
-		script_modify_column($table, 'id_board', array('type' => 'smallint'));
+		script_modify_column($table, 'id_board', array('type' => 'smallint', 'auto' => true));
 
 	script_modify_column('boards', 'id_parent', array('type' => 'smallint'));
 

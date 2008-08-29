@@ -4,14 +4,14 @@
 $path = dirname(__FILE__) . '/drop_in';
 
 // Set this to disallowed files/directories.
-$disallowed = array('.svn', '.cvsignore', '.htaccess', 'index.php');
+$disallowed = array('.svn', '.cvsignore', '.htaccess', 'index.php', '.DS_Store', 'Thumbs.db');
 
 // Find all the files.
 $files = scandir($path);
 
 // Remove the bad files automatically.
 foreach ($files as $key => $file)
-	if (in_array(trim($file), array_merge($disallowed, array('.', '..'))))
+	if (in_array(trim($file), array_merge($disallowed, array('.', '..', basename(__FILE__)))))
 		unset($files[$key]);
 
 // This will hold the array of all changes soon.

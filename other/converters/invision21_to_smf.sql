@@ -582,7 +582,7 @@ while (true)
 		if ($row['id_group'] > 5)
 		{
 			convert_insert('membergroups', array('id_group', 'group_name', 'max_messages', 'online_color', 'stars'),
-				array($row[id_group] + 3, $row[group_name], $row[max_messages], '', ''));
+				array($row[id_group] + 3, $row[group_name], $row[max_messages], '', ''), 'ignore');
 
 			$groupID = $row['id_group'] + 3;
 		}

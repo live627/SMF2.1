@@ -119,13 +119,13 @@ elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 	$row['avatar'] = '';
 }
 elseif ($row['user_avatar_type'] == 3)
-	$row['avatar'] = substr('gallery/' . $row['avatar'], 1, 255);
+	$row['avatar'] = substr('gallery/' . $row['avatar'], 0, 255);
 unset($row['user_avatar_type']);
 
 $row['signature'] = preg_replace('~\[size=([789]|[012]\d)\]~i', '[size=$1px]', $row['signature']);
 if ($row['signature_uid'] != '')
 	$row['signature'] = preg_replace('~(:u:|:1:|:)' . preg_quote($row['signature_uid'], '~') . '~i', '', $row['signature']);
-$row['signature'] = substr($row['signature'], 1, 65534);
+$row['signature'] = substr($row['signature'], 0, 65534);
 unset($row['signature_uid']);
 
 $row['date_registered'] = @strtotime($row['date_registered']);
@@ -281,7 +281,7 @@ SELECT
 	t.topic_id AS id_topic, t.topic_type = 1 AS is_sticky,
 	t.topic_first_post_id AS id_first_msg, t.topic_last_post_id AS id_last_msg,
 	t.topic_poster AS id_member_started, p.poster_id AS id_member_updated,
-	t.forum_id AS id_board, v.vote_id AS id_poll, t.topic_status = 1 AS locked,
+	t.forum_id AS id_board, IF(v.vote_id <> 0, v.vote_id, 0) AS id_poll, t.topic_status = 1 AS locked,
 	t.topic_replies AS num_replies, t.topic_views AS num_views
 FROM {$from_prefix}bbtopics AS t
 	LEFT JOIN {$from_prefix}bbposts AS p ON (p.post_id = t.topic_last_post_id)
@@ -307,7 +307,7 @@ SELECT
 	SUBSTRING(IFNULL(u.user_email, ''), 1, 255) AS poster_email,
 	SUBSTRING(IF(IFNULL(pt.post_subject, '') = '', t.topic_title, pt.post_subject), 1, 255) AS subject,
 	SUBSTRING(IF(IFNULL(p.post_username, '') = '', u.username, p.post_username), 1, 255) AS poster_name,
-	p.enable_smilies AS smileys_enabled, p.post_edit_time AS modified_time,
+	p.enable_smilies AS smileys_enabled, IF(p.post_edit_time <> 0, p.post_edit_time, 0) AS modified_time,
 	CONCAT_WS('.', CONV(SUBSTRING(p.poster_ip, 1, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 3, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 5, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 7, 2), 16, 10)) AS poster_ip,
 	SUBSTRING(REPLACE(REPLACE(IF(pt.bbcode_uid = '', pt.post_text, REPLACE(REPLACE(REPLACE(pt.post_text, CONCAT(':u:', pt.bbcode_uid), ''), CONCAT(':1:', pt.bbcode_uid), ''), CONCAT(':', pt.bbcode_uid), '')), '\n', '<br />'), '"', '"'), 1, 65534) AS body,
 	p.forum_id AS id_board, '' AS modified_name, 'xx' AS icon

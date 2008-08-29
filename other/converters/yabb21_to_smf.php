@@ -1298,12 +1298,17 @@ if (empty($preparsing))
 
 		// Change the block size as needed
 		$block_size = 150;
-		// How long to take a break?
-		$time_out = 5;
 
 		echo 'Converting posts (part 3)...';
 
-		while (true)
+		$request = convert_query("
+			SELECT COUNT(m.id_msg)
+			FROM {$to_prefix}messages AS m
+				INNER JOIN {$to_prefix}members AS mem ON (m.poster_name = mem.member_name)
+			WHERE m.id_member = 0");
+		list($max_messages) = mysql_fetch_row($request);
+
+		while ($_GET['substep'] < $max_messages)
 		{
 			$result = convert_query("
 				SELECT m.id_msg, mem.id_member
@@ -1320,13 +1325,10 @@ if (empty($preparsing))
 					WHERE id_msg = $row[id_msg]");
 			convert_free_result($result);
 
-			// We need a time out.
-			sleep($time_out);
-
 			if ($numRows < 1)
 				break;
 			else
-				pastTime(12);
+				pastTime($_GET['substep']);
 		}
 	}
 
