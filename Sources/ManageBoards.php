@@ -432,6 +432,9 @@ function EditBoard()
 	// As we may have come from the permissions screen keep track of where we should go on save.
 	$context['redirect_location'] = isset($_GET['rid']) && $_GET['rid'] == 'permissions' ? 'permissions' : 'boards';
 
+	// We might need this to hide links to certain areas.
+	$context['can_manage_permissions'] = allowedTo('manage_permissions');
+
 	// Default membergroups.
 	$context['groups'] = array(
 		-1 => array(

@@ -319,7 +319,7 @@ function template_modify_board()
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['permission_profile'], ':</b><br />
-				<span class="smalltext">', sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;sesc=' . $context['session_id']), '</span><br />
+				<span class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;sesc=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</span><br />
 			</td>
 			<td valign="top" align="left">
 				<select name="profile">';
