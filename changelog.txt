@@ -83,6 +83,7 @@ August 2008
  ! A user couldn't see their own unapproved topics if the board contained only unapproved topics. (Load.php, MessageIndex.php) [Bug 2458]
  ! Put field names between the appropriate classifiers when creating a table. (DbPackages-mysql.php, DbPackages-postgresql.php, Subs-Db-mysql.php, Subs-Db-postgresql.php)
  ! A column's default value can be 0 but not null, so check it properly. (DbPackages-mysql.php, DbPackages-postgresql.php)
+ ! Messages are now always marked as read for guests (Display.php) [Bug 2364]
 
 July 2008
 --------------------------------------------------------------------------------
