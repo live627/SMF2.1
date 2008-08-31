@@ -139,7 +139,6 @@ $helptxt['time_format'] = '<b>Time Format</b><br />
 	&nbsp;&nbsp;%T<b>*</b> - current time, equal to %H:%M:%S <br />
 	&nbsp;&nbsp;%y - 2 digit year (00 to 99) <br />
 	&nbsp;&nbsp;%Y - 4 digit year<br />
-	&nbsp;&nbsp;%Z - time zone or name or abbreviation <br />
 	&nbsp;&nbsp;%% - a literal \'%\' character <br />
 	<br />
 	<i>* Does not work on Windows-based servers.</i></span>';
