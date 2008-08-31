@@ -2933,6 +2933,9 @@ function url_image_size($url)
 {
 	global $sourcedir;
 
+	// Make sure it is a proper URL.
+	$url = str_replace(' ', '%20', $url);
+
 	// Can we pull this from the cache... please please?
 	if (($temp = cache_get_data('url_image_size-' . md5($url), 240)) !== null)
 		return $temp;
@@ -2941,11 +2944,17 @@ function url_image_size($url)
 	// Get the host to pester...
 	preg_match('~^\w+://(.+?)/(.*)$~', $url, $match);
 
+	echo $url, '<br />';
+
 	// Can't figure it out, just try the image size.
 	if ($url == '' || $url == 'http://' || $url == 'https://')
+	{
 		return false;
+	}
 	elseif (!isset($match[1]))
+	{
 		$size = @getimagesize($url);
+	}
 	else
 	{
 		// Try to connect to the server... give it half a second.
