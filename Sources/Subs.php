@@ -2944,8 +2944,6 @@ function url_image_size($url)
 	// Get the host to pester...
 	preg_match('~^\w+://(.+?)/(.*)$~', $url, $match);
 
-	echo $url, '<br />';
-
 	// Can't figure it out, just try the image size.
 	if ($url == '' || $url == 'http://' || $url == 'https://')
 	{
