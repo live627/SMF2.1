@@ -667,7 +667,7 @@ function TaskLog()
 		'items_per_page' => 30,
 		'title' => $txt['scheduled_log'],
 		'no_items_label' => $txt['scheduled_log_empty'],
-		'base_href' => $scripturl . '?action=admin;area=scheduledtasks;sa=tasklog',
+		'base_href' => $context['admin_area'] == 'scheduledtasks' ? $scripturl . '?action=admin;area=scheduledtasks;sa=tasklog' : $scripturl . '?action=admin;area=logs;sa=tasklog',
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getTaskLogEntries',
@@ -717,7 +717,7 @@ function TaskLog()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=scheduledtasks;sa=tasklog',
+			'href' => $context['admin_area'] == 'scheduledtasks' ? $scripturl . '?action=admin;area=scheduledtasks;sa=tasklog' : $scripturl . '?action=admin;area=logs;sa=tasklog',
 		),
 		'additional_rows' => array(
 			array(

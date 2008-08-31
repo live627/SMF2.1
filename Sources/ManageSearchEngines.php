@@ -699,7 +699,7 @@ function SpiderLogs()
 		'id' => 'spider_logs',
 		'items_per_page' => 20,
 		'no_items_label' => $txt['spider_logs_empty'],
-		'base_href' => $scripturl . '?action=admin;area=sengines;sa=logs',
+		'base_href' => $context['admin_area'] == 'sengines' ? $scripturl . '?action=admin;area=sengines;sa=logs' : $scripturl . '?action=admin;area=logs;sa=spiderlog',
 		'default_sort_col' => 'log_time',
 		'get_items' => array(
 			'function' => 'list_getSpiderLogs',

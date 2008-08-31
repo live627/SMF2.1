@@ -1431,7 +1431,7 @@ function BanLog()
 	$listOptions = array(
 		'id' => 'ban_log',
 		'items_per_page' => 30,
-		'base_href' => $scripturl . '?action=admin;area=ban;sa=log',
+		'base_href' => $context['admin_area'] == 'ban' ? $scripturl . '?action=admin;area=ban;sa=log' : $scripturl . '?action=admin;area=logs;sa=banlog',
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getBanLogEntries',
@@ -1519,7 +1519,7 @@ function BanLog()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=ban;sa=log',
+			'href' => $context['admin_area'] == 'ban' ? $scripturl . '?action=admin;area=ban;sa=log' : $scripturl . '?action=admin;area=logs;sa=banlog',
 			'include_start' => true,
 			'include_sort' => true,
 		),
@@ -1527,8 +1527,8 @@ function BanLog()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<input type="submit" name="removeAll" value="' . $txt['ban_log_remove_all'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_all_confirm'] . '\');" />
-					<input type="submit" name="removeSelected" value="' . $txt['ban_log_remove_selected'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_selected_confirm'] . '\');" />',
+					<input type="submit" name="removeSelected" value="' . $txt['ban_log_remove_selected'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_selected_confirm'] . '\');" />
+					<input type="submit" name="removeAll" value="' . $txt['ban_log_remove_all'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_all_confirm'] . '\');" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
