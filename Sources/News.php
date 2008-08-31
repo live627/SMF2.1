@@ -706,7 +706,7 @@ function getXmlRecent($xml_format)
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.id_topic, t.id_board,
 			b.name AS bname, t.num_replies, m.id_member, m.icon, mf.id_member AS id_first_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, mf.subject AS first_subject,
-			IFNULL(memf.real_name, mf.poster_name) AS firstPosterName, mem.hide_email,
+			IFNULL(memf.real_name, mf.poster_name) AS first_poster_name, mem.hide_email,
 			IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
@@ -780,7 +780,7 @@ function getXmlRecent($xml_format)
 				'subject' => cdata_parse($row['subject']),
 				'body' => cdata_parse($row['body']),
 				'starter' => array(
-					'name' => cdata_parse($row['firstPosterName']),
+					'name' => cdata_parse($row['first_poster_name']),
 					'id' => $row['id_first_member'],
 					'link' => !empty($row['id_first_member']) ? $scripturl . '?action=profile;u=' . $row['id_first_member'] : ''
 				),

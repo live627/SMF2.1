@@ -86,6 +86,7 @@ August 2008
  ! Messages are now always marked as read for guests (Display.php) [Bug 2364]
  ! Don't show a link to the permission profile area when a user can't manage permissions. (ManageBoards.php, ManageBoards template) [Bug 2476]
  ! Remove any HTML from category and board names when building the list of boards for quick moderation (MessageIndex.php) [Bug 2478]
+ ! Use a capital-less identifier when querying the name of the first poster for RSS feeds. (News.php) [Bug 2470]
 
 July 2008
 --------------------------------------------------------------------------------
