@@ -631,9 +631,9 @@ function MessageIndex()
 			// Make the boards safe for display.
 			foreach ($context['move_to_boards'] as $id_cat => $cat)
 			{
-				$context['move_to_boards'][$id_cat]['name'] = un_htmlspecialchars(strip_tags($cat['name']));
+				$context['move_to_boards'][$id_cat]['name'] = strip_tags($cat['name']);
 				foreach ($cat['boards'] as $id_board => $board)
-					$context['move_to_boards'][$id_cat]['boards'][$id_board]['name'] = un_htmlspecialchars(strip_tags($board['name']));
+					$context['move_to_boards'][$id_cat]['boards'][$id_board]['name'] = strip_tags($board['name']);
 			}
 
 			// With no other boards to see, it's useless to move.
