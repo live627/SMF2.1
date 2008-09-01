@@ -1149,7 +1149,7 @@ function checkLogin()
 			$upcontext['upgrade_status']['pass'] = $upcontext['user']['pass'];
 
 			// Set the language to that of the user?
-			if ($user_language != $upcontext['language'] && file_exists($boarddir . '/Themes/default/languages/index.' . basename($user_language, '.lng') . '.php'))
+			if (isset($user_language) && $user_language != $upcontext['language'] && file_exists($boarddir . '/Themes/default/languages/index.' . basename($user_language, '.lng') . '.php'))
 			{
 				$user_language = basename($user_language, '.lng');
 				$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . $user_language . '.php')), 0, 4096);

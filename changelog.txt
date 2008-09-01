@@ -91,6 +91,7 @@ August 2008
  & Removed the %Z option from the helptext for the timeformat as it wasn't very useful and could cause confusion. (Help language file)
  ! Encode spaces in the URL before checking the image size. (Subs.php) [Bug 2342]
  * Copywrite notice was too small. (index.css) [Bug 2389]
+ ! Upgrade was throwing an error if you disable security. (upgrade.php)
 
 
 July 2008
