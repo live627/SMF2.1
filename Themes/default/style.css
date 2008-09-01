@@ -689,7 +689,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .buttonlist_bottom ul li a.active
 {
-	background: url(images/mirrotab_active_last.gif) no-repeat top right;
+	background: url(images/mirrortab_active_last.gif) no-repeat top right;
 }
 .buttonlist_bottom ul li a.active span em
 {

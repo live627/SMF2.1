@@ -202,6 +202,7 @@ ul#linktree li span
 {
 	display: block;
 	line-height: 0;
+	font-size: small;
 	padding: 1em;
 }
 #footerarea ul li.copywrite, #footerarea ul li.last

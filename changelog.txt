@@ -90,6 +90,7 @@ August 2008
  ! Redirect to the right admin area after clearing a log. (ManageBans.php, ManageMaintenance.php, ManageSearchEngines.php) [Bug 2463]
  & Removed the %Z option from the helptext for the timeformat as it wasn't very useful and could cause confusion. (Help language file)
  ! Encode spaces in the URL before checking the image size. (Subs.php) [Bug 2342]
+ * Copywrite notice was too small. (index.css) [Bug 2389]
 
 
 July 2008
