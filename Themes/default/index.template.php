@@ -329,7 +329,7 @@ function template_body_below()
 		<ul class="smalltext">
 			<li class="copywrite">', theme_copyright(), '</li>
 			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win" title="', $txt['valid_html'], '"><span>XHTML</span></a></li>
-			<li><a id="button_rss" href="', $scripturl , '?action=.xml" class="new_win"><span>RSS</span></a></li>
+			<li><a id="button_rss" href="', $scripturl , '?type=rss;action=.xml" class="new_win"><span>RSS</span></a></li>
 			<li class="last"><a id="button_wap2" href="', $scripturl , '?wap2" class="new_win"><span>WAP2</span></a></li>
 		</ul>';
 
