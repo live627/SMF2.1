@@ -1072,7 +1072,7 @@ function list_getIPMessageCount($where, $where_vars = array())
 	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*) AS messageCount
+		SELECT COUNT(*) AS message_count
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE {query_see_board} AND ' . $where,

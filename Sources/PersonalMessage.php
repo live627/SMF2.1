@@ -133,7 +133,7 @@ function MessageMain()
 	{
 		// !!! Why do we do this?  It seems like if they have any limit we should use it.
 		$request = $smcFunc['db_query']('', '
-			SELECT MAX(max_messages) AS topLimit, MIN(max_messages) AS bottomLimit
+			SELECT MAX(max_messages) AS top_limit, MIN(max_messages) AS bottom_limit
 			FROM {db_prefix}membergroups
 			WHERE id_group IN ({array_int:users_groups})',
 			array(
@@ -1456,7 +1456,7 @@ function MessagePost()
 	{
 		// How many messages have they sent this last hour?
 		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(pr.id_pm) AS postCount
+			SELECT COUNT(pr.id_pm) AS post_count
 			FROM {db_prefix}personal_messages AS pm
 				INNER JOIN {db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
 			WHERE pm.id_member_from = {int:current_member}
@@ -1894,7 +1894,7 @@ function MessagePost2()
 	{
 		// How many have they sent this last hour?
 		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(pr.id_pm) AS postCount
+			SELECT COUNT(pr.id_pm) AS post_count
 			FROM {db_prefix}personal_messages AS pm
 				INNER JOIN {db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
 			WHERE pm.id_member_from = {int:current_member}
@@ -2974,7 +2974,7 @@ function ReportMessage()
 	{
 		// First, pull out the message contents, and verify it actually went to them!
 		$request = $smcFunc['db_query']('', '
-			SELECT pm.subject, pm.body, pm.msgtime, pm.id_member_from, IFNULL(m.real_name, pm.from_name) AS senderName
+			SELECT pm.subject, pm.body, pm.msgtime, pm.id_member_from, IFNULL(m.real_name, pm.from_name) AS sender_name
 			FROM {db_prefix}personal_messages AS pm
 				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
 				LEFT JOIN {db_prefix}members AS m ON (m.id_member = pm.id_member_from)

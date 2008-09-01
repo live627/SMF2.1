@@ -98,7 +98,7 @@ function ViewMembers()
 
 	// Get counts on every type of activation - for sections and filtering alike.
 	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*) AS totalMembers, is_activated
+		SELECT COUNT(*) AS total_members, is_activated
 		FROM {db_prefix}members
 		WHERE is_activated != {int:is_activated}
 		GROUP BY is_activated',

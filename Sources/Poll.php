@@ -304,7 +304,7 @@ function EditPoll()
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			t.id_member_started, p.id_poll, p.question, p.hide_results, p.expire_time, p.max_votes, p.change_vote,
-			m.subject, p.guest_vote, p.id_member AS pollStarter
+			m.subject, p.guest_vote, p.id_member AS poll_starter
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
@@ -331,7 +331,7 @@ function EditPoll()
 
 	// Can you do this?
 	if ($context['is_edit'] && !allowedTo('poll_edit_any'))
-		isAllowedTo('poll_edit_' . ($user_info['id'] == $pollinfo['id_member_started'] || ($pollinfo['pollStarter'] != 0 && $user_info['id'] == $pollinfo['pollStarter']) ? 'own' : 'any'));
+		isAllowedTo('poll_edit_' . ($user_info['id'] == $pollinfo['id_member_started'] || ($pollinfo['poll_starter'] != 0 && $user_info['id'] == $pollinfo['poll_starter']) ? 'own' : 'any'));
 	elseif (!$context['is_edit'] && !allowedTo('poll_add_any'))
 		isAllowedTo('poll_add_' . ($user_info['id'] == $pollinfo['id_member_started'] ? 'own' : 'any'));
 
@@ -583,7 +583,7 @@ function EditPoll2()
 
 	// Get the starter and the poll's ID - if it's an edit.
 	$request = $smcFunc['db_query']('', '
-		SELECT t.id_member_started, t.id_poll, p.id_member AS pollStarter
+		SELECT t.id_member_started, t.id_poll, p.id_member AS poll_starter
 		FROM {db_prefix}topics AS t
 			LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 		WHERE t.id_topic = {int:current_topic}
@@ -606,7 +606,7 @@ function EditPoll2()
 
 	// Check if they have the power to add or edit the poll.
 	if ($isEdit && !allowedTo('poll_edit_any'))
-		isAllowedTo('poll_edit_' . ($user_info['id'] == $bcinfo['id_member_started'] || ($bcinfo['pollStarter'] != 0 && $user_info['id'] == $bcinfo['pollStarter']) ? 'own' : 'any'));
+		isAllowedTo('poll_edit_' . ($user_info['id'] == $bcinfo['id_member_started'] || ($bcinfo['poll_starter'] != 0 && $user_info['id'] == $bcinfo['poll_starter']) ? 'own' : 'any'));
 	elseif (!$isEdit && !allowedTo('poll_add_any'))
 		isAllowedTo('poll_add_' . ($user_info['id'] == $bcinfo['id_member_started'] ? 'own' : 'any'));
 
@@ -850,7 +850,7 @@ function RemovePoll()
 	if (!allowedTo('poll_remove_any'))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT t.id_member_started, p.id_member AS pollStarter
+			SELECT t.id_member_started, p.id_member AS poll_starter
 			FROM {db_prefix}topics AS t
 				INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 			WHERE t.id_topic = {int:current_topic}

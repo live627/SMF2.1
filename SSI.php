@@ -318,8 +318,8 @@ function ssi_queryPosts($query_where, $query_where_params = array(), $query_limi
 	$request = $smcFunc['db_query']('substring', '
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
-			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS is_read, 0 AS new_from' : '
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS is_read,
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ', ' . ($limit_body ? 'SUBSTRING(m.body, 1, 384) AS body' : 'm.body') . ', m.smileys_enabled
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
@@ -367,7 +367,7 @@ function ssi_queryPosts($query_where, $query_where_params = array(), $query_limi
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>',
-			'new' => !empty($row['isRead']),
+			'new' => !empty($row['is_read']),
 			'new_from' => $row['new_from'],
 		);
 	}
@@ -429,8 +429,8 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 	$request = $smcFunc['db_query']('substring', '
 		SELECT
 			m.poster_time, ms.subject, m.id_topic, m.id_member, m.id_msg, b.id_board, b.name AS board_name, t.num_replies, t.num_views,
-			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, ' . ($user_info['is_guest'] ? '1 AS is_read, 0 AS new_from' : '
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS is_read,
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ', SUBSTRING(m.body, 1, 384) AS body, m.smileys_enabled, m.icon
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
@@ -496,8 +496,8 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#new" rel="nofollow">' . $row['subject'] . '</a>',
 			// Retained for compatibility - is technically incorrect!
-			'new' => !empty($row['isRead']),
-			'is_new' => empty($row['isRead']),
+			'new' => !empty($row['is_read']),
+			'is_new' => empty($row['is_read']),
 			'new_from' => $row['new_from'],
 			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" border="0" />',
 		);
@@ -574,8 +574,8 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 	// Find boards with lots of posts.
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			b.name, b.num_topics, b.num_posts, b.id_board,' . (!$user_info['is_guest'] ? ' 1 AS isRead' : '
-			(IFNULL(lb.id_msg, 0) >= b.id_last_msg) AS isRead') . '
+			b.name, b.num_topics, b.num_posts, b.id_board,' . (!$user_info['is_guest'] ? ' 1 AS is_read' : '
+			(IFNULL(lb.id_msg, 0) >= b.id_last_msg) AS is_read') . '
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
 		WHERE ' . $user_info['query_wanna_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
@@ -594,7 +594,7 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 			'num_posts' => $row['num_posts'],
 			'num_topics' => $row['num_topics'],
 			'name' => $row['name'],
-			'new' => empty($row['isRead']),
+			'new' => empty($row['is_read']),
 			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>'
 		);

@@ -269,7 +269,7 @@ function template_show_month_grid($grid_name)
 	{
 		echo '
 			<tr class="titlebg">
-				<td style="font-size: ', $calendar_data['size'] == 'large' ? 'x-large' : 'x-small', ';" align="center" colspan="', $colspan, '">';
+				<td class="headerpadding" style="font-size: ', $calendar_data['size'] == 'large' ? 'x-large' : 'x-small', ';" align="center" colspan="', $colspan, '">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'])
 			echo '
@@ -433,7 +433,7 @@ function template_show_week_grid($grid_name)
 	{
 		echo '
 			<tr>
-				<td class="titlebg" align="center" colspan="2" style="font-size: large;">';
+				<td class="titlebg headerpadding" align="center" colspan="2" style="font-size: large;">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
@@ -454,7 +454,7 @@ function template_show_week_grid($grid_name)
 		{
 			echo '
 			<tr>
-				<td class="catbg" colspan="2">
+				<td class="catbg smallpadding" colspan="2">
 					', $txt['days'][$day['day_of_week']], '
 				</td>
 			</tr>

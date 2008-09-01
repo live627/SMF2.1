@@ -88,7 +88,7 @@ function BrowseMailQueue()
 
 	// How many items do we have?
 	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*) AS queueSize, MIN(time_sent) AS oldest
+		SELECT COUNT(*) AS queue_size, MIN(time_sent) AS oldest
 		FROM {db_prefix}mail_queue',
 		array(
 		)
@@ -257,7 +257,7 @@ function list_getMailQueueSize()
 
 	// How many items do we have?
 	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*) AS queueSize
+		SELECT COUNT(*) AS queue_size
 		FROM {db_prefix}mail_queue',
 		array(
 		)
@@ -373,7 +373,7 @@ function ClearMailQueue()
 	{
 		// How many items do we have?
 		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(*) AS queueSize
+			SELECT COUNT(*) AS queue_size
 			FROM {db_prefix}mail_queue',
 			array(
 			)

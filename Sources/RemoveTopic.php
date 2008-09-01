@@ -752,7 +752,7 @@ function removeMessage($message, $decreasePostCount = true)
 	{
 		// Check if the recycle board exists and if so get the read status.
 		$request = $smcFunc['db_query']('', '
-			SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen, id_last_msg
+			SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS is_seen, id_last_msg
 			FROM {db_prefix}boards AS b
 				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
 			WHERE b.id_board = {int:recycle_board}',
