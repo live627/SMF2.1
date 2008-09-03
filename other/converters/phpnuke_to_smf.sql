@@ -278,7 +278,7 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.topic_id AS id_topic, t.topic_type = 1 AS is_sticky,
+	t.topic_id AS id_topic, (t.topic_type = 1 OR t.topic_type = 2) AS is_sticky,
 	t.topic_first_post_id AS id_first_msg, t.topic_last_post_id AS id_last_msg,
 	t.topic_poster AS id_member_started, p.poster_id AS id_member_updated,
 	t.forum_id AS id_board, IF(v.vote_id <> 0, v.vote_id, 0) AS id_poll, t.topic_status = 1 AS locked,

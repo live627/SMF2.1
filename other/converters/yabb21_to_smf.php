@@ -111,7 +111,7 @@ if (empty($preparsing))
 	{
 		global $to_prefix, $yabb;
 
-		echo 'Converting membergroups...';
+		print_line('Converting membergroups...');
 
 		$knownGroups = array();
 		$extraGroups = array();
@@ -165,7 +165,7 @@ if (empty($preparsing))
 		// Change the block size as needed
 		$block_size = 100;
 
-		echo 'Converting members...';
+		print_line('Converting members...');
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
 			convert_query("
@@ -317,7 +317,7 @@ if (empty($preparsing))
 			foreach ($text_columns as $text_column => $max_size)
 				$row[$text_column] = isset($row[$text_column]) ? substr($row[$text_column], 0, $max_size) : '';
 
-			if ($row['birthdate'] == '0001-01-01' && parse_time($data['bday'], false) != 0)
+			if ($row['birthdate'] == '0001-01-01' && !empty($data['bday']) && parse_time($data['bday'], false) != 0)
 				$row['birthdate'] = strftime('%Y-%m-%d', parse_time($data['bday'], false));
 
 			if (file_exists($yabb['memberdir'] . '/' . substr($entry, 0, -4) . '.karma'))
@@ -377,7 +377,7 @@ if (empty($preparsing))
 	{
 		global $to_prefix, $yabb;
 
-		echo 'Converting settings...';
+		print_line('Converting settings...');
 
 		$temp = file($yabb['vardir'] . '/reservecfg.txt');
 		$settings = array(
@@ -448,7 +448,7 @@ if (empty($preparsing))
 			));
 		}
 
-		echo 'Converting personal messages...';
+		print_line('Converting personal messages...');
 
 		$names = array();
 
@@ -581,7 +581,7 @@ if (empty($preparsing))
 	{
 		global $to_prefix, $yabb;
 
-		echo 'Converting boards and categories...';
+		print_line('Converting boards and categories...');
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
 		{
@@ -777,7 +777,7 @@ if (empty($preparsing))
 			));
 		}
 
-		echo 'Converting mark read data...';
+		print_line('Converting mark read data...');
 
 		$result = convert_query("
 			SELECT id_board, temp_id
@@ -889,7 +889,7 @@ if (empty($preparsing))
 			));
 		}
 
-		echo 'Converting topics (part 1)...';
+		print_line('Converting topics (part 1)...');
 
 		$result = convert_query("
 			SELECT id_board, temp_id
@@ -996,7 +996,7 @@ if (empty($preparsing))
 		if ($_GET['substep'] == 0)
 			alterDatabase('boards', 'remove column', 'temp_id');
 
-		echo 'Converting topics (part 2)...';
+		print_line('Converting topics (part 2)...');
 
 		$request = convert_query("
 			SELECT COUNT(*)
@@ -1076,7 +1076,7 @@ if (empty($preparsing))
 			convert_query("
 				TRUNCATE {$to_prefix}log_notify");
 
-		echo 'Converting notifications...';
+		print_line('Converting notifications...');
 
 		$request = convert_query("
 			SELECT COUNT(*)
@@ -1158,7 +1158,7 @@ if (empty($preparsing))
 				));
 		}
 
-		echo 'Converting posts (part 1 - this may take some time)...';
+		print_line('Converting posts (part 1 - this may take some time)...');
 
 		$block = array();
 		while (true)
@@ -1250,7 +1250,7 @@ if (empty($preparsing))
 				ORDER BY poster_time");
 		}
 
-		echo 'Converting posts (part 2)...';
+		print_line('Converting posts (part 2)...');
 
 		$request = convert_query("
 			SELECT @msg := IFNULL(MAX(id_msg), 0)
@@ -1299,7 +1299,7 @@ if (empty($preparsing))
 		// Change the block size as needed
 		$block_size = 150;
 
-		echo 'Converting posts (part 3)...';
+		print_line('Converting posts (part 3)...');
 
 		$request = convert_query("
 			SELECT COUNT(m.id_msg)
@@ -1339,7 +1339,7 @@ if (empty($preparsing))
 		// Change the block size as needed
 		$block_size = 100;
 
-		echo 'Converting attachments (if the mod is installed)...';
+		print_line('Converting attachments (if the mod is installed)...');
 
 		if (!isset($yabb['uploaddir']))
 			return;
@@ -1421,7 +1421,7 @@ if (empty($preparsing))
 	{
 		global $to_prefix, $yabb;
 
-		echo 'Cleaning up (part 1)...';
+		print_line('Cleaning up (part 1)...');
 
 		if ($_GET['substep'] <= 0)
 		{
@@ -1467,7 +1467,7 @@ if (empty($preparsing))
 		// Change the block size as needed
 		$block_size = 150;
 
-		echo 'Cleaning up (part 2)...';
+		print_line('Cleaning up (part 2)...');
 
 		while ($_GET['substep'] >= 0)
 		{
@@ -1568,7 +1568,7 @@ if (empty($preparsing))
 			));
 		}
 
-		echo 'Converting polls and poll choices...';
+		print_line('Converting polls and poll choices...');
 
 		$file_n = 0;
 		$dir = dir($yabb['datadir']);
@@ -1722,7 +1722,7 @@ if (empty($preparsing))
 		// Change the block size as needed
 		$block_size = 200;
 
-		echo 'Converting polls and poll choices (part 2)...';
+		print_line('Converting polls and poll choices (part 2)...');
 
 		while (true)
 		{
@@ -1761,7 +1761,7 @@ if (empty($preparsing))
 		// Change the block size as needed
 		$block_size = 50;
 
-		echo 'Converting poll votes...';
+		print_line('Converting poll votes...');
 
 		$file_n = 0;
 		$dir = dir($yabb['datadir']);
@@ -1929,15 +1929,15 @@ if (empty($preparsing))
 		if ($_GET['substep'] <= -1)
 		{
 			$result = convert_query("
-				SELECT ID_POLL
+				SELECT id_poll
 				FROM {$to_prefix}poll_choices
-				GROUP BY ID_POLL
-				HAVING COUNT(ID_CHOICE) > 1");
+				GROUP BY id_poll
+				HAVING COUNT(id_choice) > 1");
 
 			while ($row = mysql_fetch_assoc($result))
 				convert_query("
 					DELETE {$to_prefix}poll_choices
-					SET ID_POLL = $row[ID_POLL]
+					SET id_poll = $row[id_poll]
 					LIMIT 1");
 			mysql_free_result($result);
 

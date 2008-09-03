@@ -26,7 +26,7 @@ SELECT
 	SUBSTRING(mem.website_url, 1, 255) AS website_url, mem.last_login,
 	mem.birthdate, SUBSTRING(mem.icq, 1, 255) AS icq,
 	SUBSTRING(IFNULL(mem.real_name, mem.member_name), 1, 255) AS real_name,
-	mem.notifyOnce AS notify_once, REPLACE(mem.lngfile, '.lng', '') AS lngfile,
+	mem.notify_once AS notify_once, REPLACE(mem.lngfile, '.lng', '') AS lngfile,
 	SUBSTRING(mem.email_address, 1, 255) AS email_address,
 	SUBSTRING(mem.aim, 1, 16) AS aim,
 	SUBSTRING(mem.personal_text, 1, 255) AS personal_text,
@@ -421,7 +421,7 @@ REPLACE INTO {$to_prefix}log_boards
 SELECT lmr.id_board, lmr.id_member
 FROM {$from_prefix}log_mark_read AS lmr
 	LEFT JOIN {$from_prefix}log_boards AS lb ON (lb.id_board = lmr.id_board AND lb.id_member = lmr.id_member)
-WHERE lb.logTime < lmr.logTime;
+WHERE lb.log_time < lmr.log_time;
 
 ---* {$to_prefix}log_mark_read
 SELECT id_board, id_member
@@ -435,7 +435,7 @@ FROM {$from_prefix}log_mark_read;
 TRUNCATE {$to_prefix}log_karma;
 
 ---* {$to_prefix}log_karma
-SELECT ID_TARGET, ID_EXECUTOR, logTime, action
+SELECT id_target, id_executor, log_time, action
 FROM {$from_prefix}log_karma;
 ---*
 
@@ -551,8 +551,8 @@ TRUNCATE {$to_prefix}calendar;
 
 ---* {$to_prefix}calendar
 SELECT
-	id AS ID_EVENT, CONCAT(year, '-', month + 1, '-', day) AS startDate,
-	CONCAT(year, '-', month + 1, '-', day) AS endDate, id_board AS id_board,
+	id AS ID_EVENT, CONCAT(year, '-', month + 1, '-', day) AS start_date,
+	CONCAT(year, '-', month + 1, '-', day) AS end_date, id_board AS id_board,
 	id_topic AS id_topic, id_member AS id_member,
 	SUBSTRING(title, 1, 48) AS title
 FROM {$from_prefix}calendar;

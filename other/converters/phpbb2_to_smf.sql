@@ -172,7 +172,7 @@ SELECT
 	'' AS personal_text, '' AS time_format, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
 	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
-	u.user_registered_ip AS memberIP, u.user_registered_ip AS memberIP2
+	u.user_registered_ip AS member_ip, u.user_registered_ip AS member_ip2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', r.rank_title))
@@ -300,7 +300,7 @@ TRUNCATE {$to_prefix}log_mark_read;
 $ignore = true;
 ---}
 SELECT
-	t.topic_id AS id_topic, t.topic_type = 1 AS is_sticky,
+	t.topic_id AS id_topic, (t.topic_type = 1 OR t.topic_type = 2) AS is_sticky,
 	t.topic_first_post_id AS id_first_msg, t.topic_last_post_id AS id_last_msg,
 	t.topic_poster AS id_member_started, p.poster_id AS id_member_updated,
 	t.forum_id AS id_board, IF(v.vote_id != 0, v.vote_id, 0) AS id_poll, t.topic_status = 1 AS locked,

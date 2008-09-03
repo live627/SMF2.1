@@ -338,9 +338,9 @@ if ($last_member != 0)
 TRUNCATE {$to_prefix}categories;
 
 ---{
-// Add a tempID column.
+// Add a temp_id column.
 alterDatabase('categories', 'add column', array(
-	'name' => 'tempID',
+	'name' => 'temp_id',
 	'type' => 'mediumint',
 	'size' => 8,
 	'default' => 0));
@@ -354,7 +354,7 @@ TRUNCATE {$to_prefix}categories;
 
 ---# Converting categories...
 ---* {$to_prefix}categories
-SELECT forum_id AS tempID, SUBSTRING(forum_name, 1, 255) AS name, left_id AS cat_order
+SELECT forum_id AS temp_id, SUBSTRING(forum_name, 1, 255) AS name, left_id AS cat_order
 FROM {$from_prefix}forums
 WHERE forum_type = 0
 ORDER BY left_id;
@@ -371,7 +371,7 @@ list ($exists) = convert_fetch_row($request);
 convert_free_result($request);
 
 if (empty($exists))
-	convert_insert('categories', array('tempID', 'name', 'cat_order'), array(0, 'Uncategorized Boards', 1), 'replace');
+	convert_insert('categories', array('temp_id', 'name', 'cat_order'), array(0, 'Uncategorized Boards', 1), 'replace');
 ---}
 ---#
 
@@ -388,11 +388,11 @@ WHERE id_profile > 4;
 $row['name'] = str_replace('\n', '<br />', $row['name']);
 ---}
 SELECT
-	f.forum_id AS id_board, CASE WHEN f.parent_id = c.tempID THEN 0 ELSE f.parent_id END AS id_parent, f.left_id AS board_order, f.forum_posts AS num_posts,
+	f.forum_id AS id_board, CASE WHEN f.parent_id = c.temp_id THEN 0 ELSE f.parent_id END AS id_parent, f.left_id AS board_order, f.forum_posts AS num_posts,
 	f.forum_last_post_id AS id_last_msg, SUBSTRING(f.forum_name, 1, 255) AS name, c.id_cat AS id_cat, '-1,0' AS member_groups,
 	SUBSTRING(f.forum_desc, 1, 65534) AS description, f.forum_topics AS num_topics, f.forum_last_post_id AS id_last_msg
 FROM {$from_prefix}forums AS f
-	LEFT JOIN {$to_prefix}categories AS c ON (c.tempID = f.parent_id)
+	LEFT JOIN {$to_prefix}categories AS c ON (c.temp_id = f.parent_id)
 WHERE forum_type = 1
 GROUP BY id_board;
 ---*
@@ -402,7 +402,7 @@ GROUP BY id_board;
 /******************************************************************************/
 
 ---{
-alterDatabase('categories', 'remove column', 'tempID');
+alterDatabase('categories', 'remove column', 'temp_id');
 
 // Lets fix the order.
 $request = convert_query("
@@ -441,7 +441,7 @@ $row['id_poll'] = is_null($row['id_poll']) ? '0' : $row['id_poll'];
 ---}
 SELECT
 	t.topic_id AS id_topic, t.forum_id AS id_board, t.topic_first_post_id AS id_first_msg,
-	CASE t.topic_type WHEN 1 THEN 1 ELSE 0 END AS is_sticky,
+	CASE t.topic_type WHEN 1 THEN 1 WHEN 2 THEN 1 ELSE 0 END AS is_sticky,
 	t.topic_last_post_id AS id_last_msg, t.topic_poster AS id_member_started,
 	t.topic_last_poster_id AS id_member_updated, po.topic_id AS id_poll,
 	t.topic_replies AS num_replies, t.topic_views AS num_views,

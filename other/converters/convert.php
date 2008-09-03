@@ -1106,7 +1106,7 @@ function doStep1()
 					if (!isset($id_attach, $attachmentUploadDir))
 					{
 						$result = convert_query("
-							SELECT MAX(ID_ATTACH) + 1
+							SELECT MAX(id_attach) + 1
 							FROM {$to_prefix}attachments");
 						list ($id_attach) = $smcFunc['db_fetch_row']($result);
 						$smcFunc['db_free_result']($result);
@@ -2174,7 +2174,7 @@ function removeAllAttachments()
 
 	// !!! This should probably be done in chunks too.
 	$result = convert_query("
-		SELECT ID_ATTACH, filename
+		SELECT id_attach, filename
 		FROM {$to_prefix}attachments");
 	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
@@ -2182,7 +2182,7 @@ function removeAllAttachments()
 		$clean_name = strtr($row['filename'], 'ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
 		$clean_name = strtr($clean_name, array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', 'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
 		$clean_name = preg_replace(array('/\s/', '/[^\w_\.\-]/'), array('_', ''), $clean_name);
-		$enc_name = $row['ID_ATTACH'] . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
+		$enc_name = $row['id_attach'] . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
 		$clean_name = preg_replace('~\.[\.]+~', '.', $clean_name);
 
 		if (file_exists($attachmentUploadDir . '/' . $enc_name))

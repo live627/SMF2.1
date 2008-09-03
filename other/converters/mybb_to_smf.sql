@@ -259,7 +259,7 @@ FROM {$from_prefix}moderators;
 TRUNCATE {$to_prefix}log_topics;
 
 ---* {$to_prefix}log_topics
-SELECT tid AS id_topic, uid AS id_member, dateline AS logTime
+SELECT tid AS id_topic, uid AS id_member, dateline AS log_time
 FROM {$from_prefix}threadsread;
 ---*
 

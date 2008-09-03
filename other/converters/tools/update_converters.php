@@ -1,7 +1,7 @@
 <?php
 
 // Set this to the directory containing all the files we want to update.
-$path = dirname(__FILE__) . '/drop_in';
+$path = dirname(__FILE__);
 
 // Set this to disallowed files/directories.
 $disallowed = array('.svn', '.cvsignore', '.htaccess', 'index.php', '.DS_Store', 'Thumbs.db');
@@ -21,35 +21,37 @@ $replaces = array();
 $REPLACE_CAPITALS = array(
 	'ID_MEMBER', 'ID_GROUP', 'ICQ', 'AIM', 'MSN', 'YIM', 'ID_CAT', 'ID_BOARD', 'ID_PARENT', 'ID_TOPIC',
 	'ID_FIRST_MSG', 'ID_LAST_MSG', 'ID_MEMBER_STARTED', 'ID_MEMBER_UPDATED', 'ID_POLL', 'ID_CHOICE',
-	'ID_PM', 'ID_MEMBER_FROM', 'ID_MSG', 'ID_MSG_UPDATED', 'ID_POST_GROUP', 'ID_ATTACH', 'ID_BAN_GROUP'
+	'ID_PM', 'ID_MEMBER_FROM', 'ID_MSG', 'ID_MSG_UPDATED', 'ID_POST_GROUP', 'ID_ATTACH', 'ID_BAN_GROUP',
+	'ID_TARGET', 'ID_EXECUTOR',
 );
 
 // Camel case ones
 $replaceCamel = array(
-	'memberName', 'hideEmail', 'timeOffset', 'messageLabels', 'personalText', 'timeFormat', 'fromName'
+	'memberName', 'hideEmail', 'timeOffset', 'messageLabels', 'personalText', 'timeFormat', 'fromName',
 	'secretQuestion', 'secretAnswer', 'passwordSalt', 'additionalGroups', 'smileySet', 'catOrder',
-	'childLevel', 'numTopics', 'numPosts', 'boardOrder', 'isSticky', 'numReplies', 'numViews',
-	'posterTime', 'posterName', 'modifiedName', 'posterEmail', 'smileysEnabled', 'minPosts', 'maxVotes'
-	'modifiedTime', 'votingLocked', 'expireTime', 'hideResults', 'changeVote', 'notifyOnce',
+	'childLevel', 'numTopics', 'numPosts', 'boardOrder', 'isSticky', 'numReplies', 'numViews', 'endDate',
+	'posterTime', 'posterName', 'modifiedName', 'posterEmail', 'smileysEnabled', 'minPosts', 'maxVotes',
+	'modifiedTime', 'votingLocked', 'expireTime', 'hideResults', 'changeVote', 'notifyOnce','startDate',
 	'deletedBySender', 'smileyOrder', 'lastLogin', 'realName', 'emailAddress', 'myNumReplies', 'numMsg',
-	'websiteTitle', 'websiteUrl', 'groupName', , 'onlineColor', 'dateRegistered', 'notifyAnnouncements'
+	'websiteTitle', 'websiteUrl', 'groupName', 'onlineColor', 'dateRegistered', 'notifyAnnouncements',
 	'instantMessages', 'unreadMessages', 'showOnline', 'memberGroups', 'lastEdited', 'totalMessages',
 	'latestMember', 'latestRealName', 'totalMembers', 'totalTopics', 'disableHashTime', 'karmaBad',
-	'karmaGood', 'canCollapse', 'countPosts', 'maxMessages', 'attachmentType'
+	'karmaGood', 'canCollapse', 'countPosts', 'maxMessages', 'attachmentType', 'oldEncrypt', 'eventDate',
+	'logTime', 'totalTimeLoggedIn', 'notifyTypes',
 );
 
 // Special ones
 $replace_special = array(
-	'memberIP', 'memberIP2', 'maxMsgID', 'posterIP'
+	'memberIP', 'memberIP2', 'maxMsgID', 'posterIP', 'tempID',
 );
 
 // Take care of capitals
 foreach ($REPLACE_CAPITALS as $rpl)
 	$replaces[$rpl] = strtolower($rpl);
 
-// Do a recursive loop to remove camels.
+// Do a loop to remove camels.
 foreach ($replaceCamel as $rpl)
-	$replaces[$rpl] = removeCamelCase__recursive($rpl);
+	$replaces[$rpl] = removeCamelCase($rpl);
 
 // Speical ones.
 foreach ($replace_special as $rpl)
@@ -59,6 +61,8 @@ foreach ($replace_special as $rpl)
 		$replaces[$rpl] = substr($rpl, 0, 6) . '_' . strtolower(str_replace(substr($rpl, 0, 6), '', $rpl));
 	elseif ($rpl == 'maxMsgID')
 		$replaces['maxMsgID'] = 'max_msg_id';
+	elseif ($rpl == 'tempID')
+		$replaces['tempID'] = 'temp_id';
 }
 
 // Now we loop through all file and do a strtr fix.
@@ -74,36 +78,23 @@ foreach ($files as $file)
 }
 
 // This recusrivly removes camel cases
-function removeCamelCase__recursive($string, $depth = 0)
+function removeCamelCase($string)
 {
-	// In SMF we shouldn't have more than 5 camel cases (hopefully).
-	if ($depth > 5)
-		return;
-
-	// If the string is the same, return it.
-	if ($string == strtolower($string))
-		return $string;
-
 	// Count the string up.
-	$count = count($string);
-	$i = 0;
+	$count = strlen($string);
 
 	// For each character, try to find a hump.
-	for ($i < $count)
+	$new_string = '';
+	for ($i = 0; $i < $count; $i++)
 	{
+		$temp = $string{$i};
 		// We found it!
-		if ($string{$i} != strtolower($string{$i}))
-			break;
-		++$i;
+		if ($string{$i} == strtolower($string{$i}))
+			$new_string .= $string{$i};
+		else
+			$new_string .= '_' . strtolower($string{$i});
 	}
 
-	// Remove a camel hump.
-	$new_string = strtolower($string{($i)});
-
-	// Add the underscore before and after the hump.
-	$string = substr($new_string, 0, ($i - 1)) . '_' . substr($new_string, $i);
-
-	// Recursivly fix it.
-	return removeCamelCase__recursive($string, ++$depth);
+	return $new_string;
 }
 ?>

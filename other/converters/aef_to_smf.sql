@@ -21,7 +21,7 @@ SELECT
 	id AS id_member, SUBSTRING(username, 1, 80) AS member_name,
 	r_time AS date_registered, posts, SUBSTRING(password, 1, 64) AS passwd,
 	SUBSTRING(www, 1, 255) AS website_title,
-	SUBSTRING(www, 1, 255) AS website_url, lastLogin AS last_login,
+	SUBSTRING(www, 1, 255) AS website_url, last_login AS last_login,
 	birth_date AS birthdate, SUBSTRING(icq, 1, 255) AS icq,
 	SUBSTRING(IFNULL(realname, username), 1, 255) AS real_name,
 	SUBSTRING(email, 1, 255) AS email_address, 	language AS lngfile,

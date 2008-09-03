@@ -370,7 +370,7 @@ WHERE ID_HOLIDAY > 95;
 ---* {$to_prefix}calendar_holidays
 SELECT
 	SUBSTRING(title, 1, 30) AS title,
-	CONCAT(year, '-', month, '-', mday) AS eventDate
+	CONCAT(year, '-', month, '-', mday) AS event_date
 FROM {$from_prefix}calendar_events
 WHERE event_repeat = 1
 	AND repeat_unit = 'y';
@@ -839,7 +839,7 @@ $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 	$attachmentExtention = '';
 
-$oldFilename = strtr($row['oldEncrypt'], array('upload:' => ''));
+$oldFilename = strtr($row['old_encrypt'], array('upload:' => ''));
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
@@ -857,7 +857,7 @@ if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, 
 }
 ---}
 SELECT
-	attach_pid AS id_msg, attach_location AS oldEncrypt,
+	attach_pid AS id_msg, attach_location AS old_encrypt,
 	attach_hits AS downloads, attach_file AS filename
 FROM {$from_prefix}attachments;
 ---*

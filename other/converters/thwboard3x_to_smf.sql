@@ -60,7 +60,7 @@ SELECT
 	SUBSTRING(userhomepage, 1, 255) AS _, SUBSTRING(usericq, 1, 255) AS icq, 
 	SUBSTRING(useraim, 1, 16) AS aim, '' AS yim, userinvisible AS _,
 	SUBSTRING(usermsn, 1, 255) AS msn, SUBSTRING(usersignature, 1, 65534) AS signature, 
-	userhideemail AS _, '' AS totalTimeLoggedIn, 
+	userhideemail AS _, '' AS total_time_logged_in, 
 	IF(useractivate = '0', 1, 0) AS is_activated, u.userbday AS birthdate
 FROM {$from_prefix}user;
 ---*

@@ -233,7 +233,7 @@ $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/uploads/attachments/' . $row['oldEncrypt'] . '.' . $row['ext'], $attachmentUploadDir . '/' . $newfilename))
+if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/uploads/attachments/' . $row['old_encrypt'] . '.' . $row['ext'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
 
@@ -241,7 +241,7 @@ if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/uploads/attachme
 }
 ---}
 SELECT
-	upload_post AS id_msg, upload_name AS filename, upload_file AS oldEncrypt,
+	upload_post AS id_msg, upload_name AS filename, upload_file AS old_encrypt,
 	upload_size AS size, upload_ext AS ext, upload_hits AS downloads
 FROM {$from_prefix}uploads;
 ---*

@@ -40,7 +40,7 @@ SELECT
 	SUBSTRING(buddylist, 1, 255) AS buddy_list,
 	SUBSTRING(regip, 1, 255) AS member_ip, SUBSTRING(regip, 1, 255) AS member_ip2,
 	SUBSTRING(ignorelist, 1, 255) AS pm_ignore_list,
-	timeonline AS totalTimeLoggedIn,
+	timeonline AS total_time_logged_in,
 	CASE
 		WHEN birthday = '' THEN '0001-01-01'
 		ELSE CONCAT_WS('-', RIGHT(birthday, 4), SUBSTRING(birthday, LOCATE('-', birthday) + 1, LOCATE('-', birthday, LOCATE('-', birthday) + 1) - LOCATE('-', birthday) - 1), LEFT(birthday, LOCATE('-', birthday) - 1))

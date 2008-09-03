@@ -122,7 +122,7 @@ FROM {$from_prefix}members AS m
 WHERE m.id != 0;
 ---{
 // Get the buddies.
-$id_member = $row['ID_MEMBER'];
+$id_member = $row['id_member'];
 $result = convert_query("
 	SELECT friends_friend_id
 	FROM {$from_prefix}profile_friends
@@ -135,9 +135,9 @@ if (mysql_num_rows($result) > 0)
 	$row['buddy_list'] = addslashes(implode(',', $buddy));
 }
 
-if (!empty($row['additionalGroups']))
+if (!empty($row['additional_groups']))
 {
-	$temp = explode(',', $row['additionalGroups']))
+	$temp = explode(',', $row['additional_groups']))
 	$groups = array();
 	foreach ($temp as $grp)
 	{
@@ -151,9 +151,9 @@ if (!empty($row['additionalGroups']))
 		elseif ($grp == 3)
 			$groups[] = 0;
 		else
-			$groups[] = $row['ID_GROUP'];
+			$groups[] = $row['id_group'];
 	}
-	$row['additionalGroups'] = implode(',', array_unique($groups));
+	$row['additional_groups'] = implode(',', array_unique($groups));
 }
 ---}
 ---*
@@ -633,7 +633,7 @@ while (true)
 				$groupID = -1;
 			elseif ($row['id_group'] == 3)
 				$groupID = 0;
-			elseif ($row['ID_GROUP'] == $INFO['admin_group'])
+			elseif ($row['id_group'] == $INFO['admin_group'])
 				$groupID = 1;
 			else
 				$groupID = $row['id_group'];
@@ -1050,7 +1050,7 @@ $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 	$attachmentExtention = '';
 
-$oldFilename = strtr($row['oldEncrypt'], array('upload:' => ''));
+$oldFilename = strtr($row['old_encrypt'], array('upload:' => ''));
 $newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
@@ -1068,7 +1068,7 @@ if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, 
 }
 ---}
 SELECT
-	attach_rel_id AS id_msg, attach_location AS oldEncrypt,
+	attach_rel_id AS id_msg, attach_location AS old_encrypt,
 	attach_hits AS downloads, attach_file AS filename
 FROM {$from_prefix}attachments;
 ---*

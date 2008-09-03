@@ -282,7 +282,7 @@ if (strlen($newfilename) <= 255 && copy($ib_uploads . '/' . $row['filename'], $a
 }
 ---}
 SELECT
-	p.POST_ID AS id_msg, p.ATTACH_ID AS oldEncrypt, p.ATTACH_HITS AS downloads,
+	p.POST_ID AS id_msg, p.ATTACH_ID AS old_encrypt, p.ATTACH_HITS AS downloads,
 	a.FILE_NAME AS filename
 FROM {$from_prefix}forum_posts AS p
 	INNER JOIN {$from_prefix}attachments AS a ON (a.ID = p.ATTACH_ID);

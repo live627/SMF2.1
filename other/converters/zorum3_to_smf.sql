@@ -25,7 +25,7 @@ alterDatabase('members', 'add column', array(
 
 ---* {$to_prefix}members
 SELECT
-	id AS tempID, SUBSTRING(name, 1, 80) AS member_name,
+	id AS temp_id, SUBSTRING(name, 1, 80) AS member_name,
 	SUBSTRING(name, 1, 255) AS real_name,
 	SUBSTRING(email, 1, 255) AS email_address,
 	SUBSTRING(password, 1, 64) AS passwd, IF(isAdm, 1, If(isMod, 2, 0)) AS id_group,
@@ -91,7 +91,7 @@ SELECT
 FROM {$from_prefix}topic AS t
 	INNER JOIN {$from_prefix}message AS m ON (m.tid = t.id)
 	LEFT JOIN {$from_prefix}poll AS p ON (p.tid = t.id)
-	LEFT JOIN {$to_prefix}members AS memf ON (memf.tempID = t.ownerId)
+	LEFT JOIN {$to_prefix}members AS memf ON (memf.temp_id = t.ownerId)
 GROUP BY t.id
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
@@ -101,7 +101,7 @@ HAVING id_first_msg != 0
 SELECT t.id_topic, meml.id_member AS id_member_updated
 FROM {$to_prefix}topics AS t
 	INNER JOIN {$from_prefix}message AS m ON (m.id = t.id_last_msg)
-	INNER JOIN {$to_prefix}members AS meml ON (meml.tempID = m.ownerId);
+	INNER JOIN {$to_prefix}members AS meml ON (meml.temp_id = m.ownerId);
 ---*
 
 /******************************************************************************/
@@ -123,7 +123,7 @@ SELECT
 	'' AS modified_name, 'xx' AS icon
 FROM {$from_prefix}message AS m
 	INNER JOIN {$from_prefix}topic AS t ON (t.id = m.tid)
-	LEFT JOIN {$to_prefix}members AS mem ON (mem.tempID = m.ownerId)
+	LEFT JOIN {$to_prefix}members AS mem ON (mem.temp_id = m.ownerId)
 	LEFT JOIN {$from_prefix}zorumuser AS u ON (u.id = m.ownerId);
 ---*
 
@@ -140,7 +140,7 @@ SELECT
 	p.id AS id_poll, SUBSTRING(p.question, 1, 255) AS question, mem.id_member,
 	SUBSTRING(IFNULL(mem.member_name, u.name), 1, 255) AS poster_name
 FROM {$from_prefix}poll AS p
-	LEFT JOIN {$to_prefix}members AS mem ON (mem.tempID = p.ownerId)
+	LEFT JOIN {$to_prefix}members AS mem ON (mem.temp_id = p.ownerId)
 	LEFT JOIN {$from_prefix}zorumuser AS u ON (u.id = p.ownerId);
 ---*
 
@@ -202,7 +202,7 @@ alterDatabase('poll_choices', 'add index', array(
 ---* {$to_prefix}log_polls
 SELECT s.objid AS id_poll, mem.id_member, s.info AS id_choice
 FROM {$from_prefix}subscribe AS s
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = s.userid)
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = s.userid)
 WHERE s.type = 65536;
 ---*
 
@@ -215,7 +215,7 @@ TRUNCATE {$to_prefix}log_notify;
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.objid AS id_topic
 FROM {$from_prefix}subscribe AS s
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = s.userid)
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = s.userid)
 WHERE s.type = 16;
 ---*
 
@@ -226,7 +226,7 @@ WHERE s.type = 16;
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.objid AS id_board
 FROM {$from_prefix}subscribe AS s
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempID = s.userid)
+	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = s.userid)
 WHERE s.type = 8;
 ---*
 

@@ -29,7 +29,7 @@ SELECT
 	UNIX_TIMESTAMP(REPLACE(M_DATE, '\0', '')) AS date_registered,
 	SUBSTRING(M_TITLE, 1, 255) AS usertitle,
 	UNIX_TIMESTAMP(REPLACE(M_LASTHEREDATE, '\0', '')) AS last_login, M_HIDE_EMAIL AS hide_email,
-	IF(M_RECEIVE_EMAIL, 4, 0) AS notifyTypes, M_DOB AS birthdate,
+	IF(M_RECEIVE_EMAIL, 4, 0) AS notify_types, M_DOB AS birthdate,
 	CASE M_SEX WHEN 'Male' THEN 1 WHEN 'Female' THEN 2 ELSE 0 END AS gender,
 	SUBSTRING(IF(IFNULL(M_USERNAME, '') = '', M_NAME, M_USERNAME), 1, 80) AS member_name,
 	SUBSTRING(M_LAST_IP, 1, 255) AS member_ip, '' AS lngfile, '' AS buddy_list,
