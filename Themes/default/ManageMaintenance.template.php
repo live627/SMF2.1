@@ -183,7 +183,7 @@ function template_activity_maintain_backup()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<label for="struct"><input type="checkbox" name="struct" id="struct" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" class="check" /> ', $txt['maintain_backup_struct'], '</label><br />
+	<label for="struct"><input type="checkbox" name="struct" id="struct" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" class="check" checked="checked" /> ', $txt['maintain_backup_struct'], '</label><br />
 	<label for="data"><input type="checkbox" name="data" id="data" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" checked="checked" class="check" /> ', $txt['maintain_backup_data'], '</label><br />
 	<br />
 	<label for="compress"><input type="checkbox" name="compress" id="compress" value="gzip" checked="checked" class="check" /> ', $txt['maintain_backup_gz'], '</label>

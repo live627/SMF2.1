@@ -1367,7 +1367,7 @@ function template_core_features()
 			</td>
 		</tr>
 		<tr>
-			<td>';
+			<td class="windowbg2">';
 
 	foreach ($context['features'] as $id => $feature)
 	{

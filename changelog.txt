@@ -92,7 +92,8 @@ August 2008
  ! Encode spaces in the URL before checking the image size. (Subs.php) [Bug 2342]
  * Copywrite notice was too small. (index.css) [Bug 2389]
  ! Upgrade was throwing an error if you disable security. (upgrade.php)
-
+ * When making a backup of the forum, include the table structure by default. (ManageMaintenance template) [Bug 2489]
+ * Add the windowbg2 class to the Core Features page to ensure it's readable on darker themes. (Admin template)
 
 July 2008
 --------------------------------------------------------------------------------
