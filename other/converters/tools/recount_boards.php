@@ -206,9 +206,12 @@ function doStep4()
 			ALTER TABLE {$db_prefix}boards AUTO_INCREMENT=" . ++$max_cat_id);
 	}
 
+	// Fix our column names.
 	foreach ($tables AS $table)
-		script_modify_column($table, 'id_board', array('type' => 'smallint', 'auto' => true));
+		script_modify_column($table, 'id_board', array('type' => 'smallint'));
 
+	// Some manual changes.
+	script_modify_column('boards', 'id_board', array('auto' => true));
 	script_modify_column('boards', 'id_parent', array('type' => 'smallint'));
 
 	echo '

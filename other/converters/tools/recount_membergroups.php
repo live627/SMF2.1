@@ -284,7 +284,6 @@ function doStep3()
 					UPDATE {$db_prefix}{$table}
 					SET {$column} = '{$user_groups}'
 					WHERE {$key_column} = {$key_select}");
-
 			}
 		}
 	}
@@ -327,10 +326,14 @@ function doStep4()
 			ALTER TABLE {$db_prefix}membergroups AUTO_INCREMENT=" . ++$max_cat_id);
 	}
 
-	script_modify_column('members', 'id_group', array_merge($column_default['id_group'], array('auto' => true)));
-	script_modify_column('members', 'id_post_group', $column_default['id_group']);
+	// Change our columns.
 	foreach ($tables AS $table => $column)
 		script_modify_column($table, $column, $column_default[$column]);
+
+	// Some manual changes.
+	script_modify_column('membergroups', 'id_group', array('auto' => true));
+	script_modify_column('members', 'id_group', $column_default['id_group']);
+	script_modify_column('members', 'id_post_group', $column_default['id_group']);
 
 	// Call it directly
 	doStep5();

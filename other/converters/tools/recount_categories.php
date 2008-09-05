@@ -189,8 +189,12 @@ function doStep4()
 			ALTER TABLE {$db_prefix}categories AUTO_INCREMENT=" . ++$max_cat_id);
 	}
 
+	// Change our columns back.
 	foreach ($tables AS $table)
-		script_modify_column($table, 'id_cat', array('type' => 'tinyint', 'auto' => true));
+		script_modify_column($table, 'id_cat', array('type' => 'tinyint'));
+
+	// Some manual changes.
+	script_modify_column('categories', 'id_cat', array('auto' => true));
 
 	// Call it directly
 	doStep5();
