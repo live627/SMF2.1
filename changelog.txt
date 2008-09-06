@@ -1,7 +1,37 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 4                                                               ???
+SMF 2.0 Beta 4 Public                                                        ???
+================================================================================
+September 2008
+--------------------------------------------------------------------------------
+ * Copywrite notice was too small. (index.css) [Bug 2389]
+ ! Upgrade was throwing an error if you disable security. (upgrade.php)
+ * When making a backup of the forum, include the table structure by default. (ManageMaintenance template) [Bug 2489]
+ * Add the windowbg2 class to the Core Features page to ensure it's readable on darker themes. (Admin template)
+ ! The edit box was not being set up correctly on quick edit. (xml_topic.js) [Bug 2488]
+
+
+August 2008
+--------------------------------------------------------------------------------
+ ! Better sanitization for paid subscription posts upon saving a subscription. (ManagePaid.php)
+ ! Member-dependant variables weren't parsed when sending newsletters via personal messages (ManageNews.php) [Bug 2445]
+ ! It was possible to get undefined index errors when sending out newsletters (ManageNews.php)
+ * Code boxes with just a single line of code now get their horizontal scrollbar again if needed (theme.js) [Bug 2446]
+ ! Some smileys weren't being used. (install sql files, Install language file) [Bug 2466]
+ ! A user couldn't see their own unapproved topics if the board contained only unapproved topics. (Load.php, MessageIndex.php) [Bug 2458]
+ ! Put field names between the appropriate classifiers when creating a table. (DbPackages-mysql.php, DbPackages-postgresql.php, Subs-Db-mysql.php, Subs-Db-postgresql.php)
+ ! A column's default value can be 0 but not null, so check it properly. (DbPackages-mysql.php, DbPackages-postgresql.php)
+ ! Messages are now always marked as read for guests (Display.php) [Bug 2364]
+ ! Don't show a link to the permission profile area when a user can't manage permissions. (ManageBoards.php, ManageBoards template) [Bug 2476]
+ ! Remove any HTML from category and board names when building the list of boards for quick moderation (MessageIndex.php) [Bug 2478]
+ ! Use a capital-less identifier when querying the name of the first poster for RSS feeds. (News.php) [Bug 2470]
+ ! Redirect to the right admin area after clearing a log. (ManageBans.php, ManageMaintenance.php, ManageSearchEngines.php) [Bug 2463]
+ & Removed the %Z option from the helptext for the timeformat as it wasn't very useful and could cause confusion. (Help language file)
+ ! Encode spaces in the URL before checking the image size. (Subs.php) [Bug 2342]
+
+
+SMF 2.0 Beta 4                                                    20 August 2008
 ================================================================================
 August 2008
 --------------------------------------------------------------------------------
@@ -75,25 +105,7 @@ August 2008
  ! The ignore boards feature could cause a database error under certain conditions. (Load.php)
  ! Post template was defaulting to approve unapproved posts. (Post template) [Bug 2432]
  * The message index template had picked up an old typo. (MessageIndex template) [Bug 2436]
- ! Better sanitization for paid subscription posts upon saving a subscription. (ManagePaid.php)
- ! Member-dependant variables weren't parsed when sending newsletters via personal messages (ManageNews.php) [Bug 2445]
- ! It was possible to get undefined index errors when sending out newsletters (ManageNews.php)
- * Code boxes with just a single line of code now get their horizontal scrollbar again if needed (theme.js) [Bug 2446]
- ! Some smileys weren't being used. (install sql files, Install language file) [Bug 2466]
- ! A user couldn't see their own unapproved topics if the board contained only unapproved topics. (Load.php, MessageIndex.php) [Bug 2458]
- ! Put field names between the appropriate classifiers when creating a table. (DbPackages-mysql.php, DbPackages-postgresql.php, Subs-Db-mysql.php, Subs-Db-postgresql.php)
- ! A column's default value can be 0 but not null, so check it properly. (DbPackages-mysql.php, DbPackages-postgresql.php)
- ! Messages are now always marked as read for guests (Display.php) [Bug 2364]
- ! Don't show a link to the permission profile area when a user can't manage permissions. (ManageBoards.php, ManageBoards template) [Bug 2476]
- ! Remove any HTML from category and board names when building the list of boards for quick moderation (MessageIndex.php) [Bug 2478]
- ! Use a capital-less identifier when querying the name of the first poster for RSS feeds. (News.php) [Bug 2470]
- ! Redirect to the right admin area after clearing a log. (ManageBans.php, ManageMaintenance.php, ManageSearchEngines.php) [Bug 2463]
- & Removed the %Z option from the helptext for the timeformat as it wasn't very useful and could cause confusion. (Help language file)
- ! Encode spaces in the URL before checking the image size. (Subs.php) [Bug 2342]
- * Copywrite notice was too small. (index.css) [Bug 2389]
- ! Upgrade was throwing an error if you disable security. (upgrade.php)
- * When making a backup of the forum, include the table structure by default. (ManageMaintenance template) [Bug 2489]
- * Add the windowbg2 class to the Core Features page to ensure it's readable on darker themes. (Admin template)
+
 
 July 2008
 --------------------------------------------------------------------------------

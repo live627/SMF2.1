@@ -145,7 +145,7 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 	sBodyText = sBodyText.replace(/\$/g, '{&dollarfix;$}');
 
 	// Actually create the content, with a bodge for disappearing dollar signs.
-	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/%body%/, sBodyText).replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/\{&dollarfix;\$\}/g, '$'));
+	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/%body%/, sBodyText).replace(/\{&dollarfix;\$\}/g, '$'));
 
 	// Replace the subject part.
 	this.oCurSubjectDiv = document.getElementById('subject_' + this.sCurMessageId.substr(4));
