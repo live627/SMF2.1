@@ -336,8 +336,8 @@ function ssi_queryPosts($query_where, $query_where_params = array(), $query_limi
 	$posts = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$preview = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
 		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
+		$preview = strip_tags(strtr($row['body'], array('<br />' => '&#10;')));
 
 		// Censor it!
 		censorText($row['subject']);

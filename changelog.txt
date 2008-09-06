@@ -10,6 +10,7 @@ September 2008
  * When making a backup of the forum, include the table structure by default. (ManageMaintenance template) [Bug 2489]
  * Add the windowbg2 class to the Core Features page to ensure it's readable on darker themes. (Admin template)
  ! The edit box was not being set up correctly on quick edit. (xml_topic.js) [Bug 2488]
+ ! The SSI query posts function unnecessarily parsed each message twice. (SSI.php) [Bug 2484]
 
 
 August 2008
