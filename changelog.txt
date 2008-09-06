@@ -14,7 +14,7 @@ September 2008
  ! Make the $field parameter optional for $smcFunc['db_insert_id']. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2498]
  ! Add detection for Opera 9.6 (script.js) [Bug 2495]
  ! Fix the jumpto box containing entities. (script.js) [Bug 1025]
-
+ ! Don't show the editor's resizer in Google Chrome, as that browser supports textarea resizing by default. (script.js, editor.js)
 
 August 2008
 --------------------------------------------------------------------------------

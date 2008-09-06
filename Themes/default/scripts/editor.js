@@ -15,7 +15,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 	this.showDebug = false;
 	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari) && !bRichEditOff;
+	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari || is_chrome) && !bRichEditOff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -350,7 +350,7 @@ SmfEditor.prototype.init = function()
 	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
 
 	// Show the resizer.
-	if (document.getElementById(this.sUniqueId + '_resizer') && (!is_opera || is_opera95up))
+	if (document.getElementById(this.sUniqueId + '_resizer') && (!is_opera || is_opera95up) && !(is_chrome && !this.bRichTextEnabled))
 	{
 		// Currently nothing is being resized...I assume!
 		window.smf_oCurrentResizeEditor = null;
@@ -845,7 +845,7 @@ SmfEditor.prototype.buttonEventHandler = function(oSrcElement, sEventType)
 	// Are handling a hover?
 	if (sEventType == 'mouseover' || sEventType == 'mouseout')
 	{
-		// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSWIYG we toggle current state.
+		// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSIWYG we toggle current state.
 		var bIsHighlight = sEventType == 'mouseover';
 		if (this.bRichTextEnabled && this.aButtonControls[oSrcElement.code].bIsActive)
 			bIsHighlight = !bIsHighlight;

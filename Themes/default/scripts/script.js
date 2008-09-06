@@ -18,7 +18,8 @@ var is_opera95up = is_opera95 || is_opera96;
 var is_ff = ua.indexOf("firefox") != -1 && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
-var is_safari = ua.indexOf('applewebkit') != -1;
+var is_chrome = ua.indexOf('chrome') != -1;
+var is_safari = ua.indexOf('applewebkit') != -1 && !is_chrome;
 
 var is_ie = ua.indexOf("msie") != -1  && !is_opera;
 var is_ie4 = is_ie && ua.indexOf("msie 4") != -1;
