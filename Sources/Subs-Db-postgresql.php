@@ -408,7 +408,7 @@ function smf_db_affected_rows($result = null)
 	return pg_affected_rows($result == null ? $db_last_result : $result);
 }
 
-function smf_db_insert_id($table, $field, $connection = null)
+function smf_db_insert_id($table, $field = null, $connection = null)
 {
 	global $db_connection, $smcFunc, $db_prefix;
 

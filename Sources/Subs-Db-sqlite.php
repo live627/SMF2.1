@@ -369,7 +369,7 @@ function smf_db_affected_rows($connection = null)
 	return sqlite_changes($connection == null ? $db_connection : $connection);
 }
 
-function smf_db_insert_id($table, $field, $connection = null)
+function smf_db_insert_id($table, $field = null, $connection = null)
 {
 	global $db_connection, $db_prefix;
 
