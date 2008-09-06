@@ -11,7 +11,9 @@ September 2008
  * Add the windowbg2 class to the Core Features page to ensure it's readable on darker themes. (Admin template)
  ! The edit box was not being set up correctly on quick edit. (xml_topic.js) [Bug 2488]
  ! The SSI query posts function unnecessarily parsed each message twice. (SSI.php) [Bug 2484]
- ! The $field parameter optional for $smcFunc['db_insert_id']. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2498]
+ ! Make the $field parameter optional for $smcFunc['db_insert_id']. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2498]
+ ! Add detection for Opera 9.6 (script.js) [Bug 2495]
+ ! Fix the jumpto box containing entities. (script.js) [Bug 1025]
 
 
 August 2008
