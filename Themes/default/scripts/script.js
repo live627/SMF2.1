@@ -12,7 +12,8 @@ var is_opera7 = ua.indexOf("opera/7") != -1 || ua.indexOf("opera 7") != -1;
 var is_opera8 = ua.indexOf("opera/8") != -1 || ua.indexOf("opera 8") != -1;
 var is_opera9 = ua.indexOf("opera/9") != -1 || ua.indexOf("opera 9") != -1;
 var is_opera95 = ua.indexOf("opera/9.5") != -1 || ua.indexOf("opera 9.5") != -1;
-var is_opera95up = is_opera95;
+var is_opera96 = ua.indexOf("opera/9.6") != -1 || ua.indexOf("opera 9.6") != -1;
+var is_opera95up = is_opera95 || is_opera96;
 
 var is_ff = ua.indexOf("firefox") != -1 && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
@@ -274,6 +275,15 @@ String.prototype.php_urlencode = function()
 	return escape(this).replace(/\+/g, '%2b').replace('*', '%2a').replace('/', '%2f').replace('@', '%40');
 }
 
+String.prototype._replaceEntities = function(sInput, sNum) 
+{
+     return String.fromCharCode(parseInt(sNum));
+}
+
+String.prototype.removeEntities = function()
+{
+     return this.replace(/&(?:amp;)?#(\d+);/g, this._replaceEntities);
+}
 
 // Open a new window.
 function reqWin(desktopURL, alternateWidth, alternateHeight, noScrollbars)
@@ -929,7 +939,7 @@ function grabJumpToContent()
 			aBoardsAndCategories[aBoardsAndCategories.length] = {
 				id: parseInt(items[i].getAttribute('id')),
 				isCategory: items[i].getAttribute('type') == 'category',
-				name: items[i].firstChild.nodeValue,
+				name: items[i].firstChild.nodeValue.removeEntities(),
 				is_current: false,
 				childLevel: parseInt(items[i].getAttribute('childlevel'))
 			}
@@ -959,7 +969,7 @@ JumpTo.prototype.showSelect = function ()
 	var sChildLevelPrefix = '';
 	for (var i = this.opt.iCurBoardChildLevel; i > 0; i--)
 		sChildLevelPrefix += this.opt.sBoardChildLevelIndicator;
-	setInnerHTML(document.getElementById(this.opt.sContainerId), this.opt.sJumpToTemplate.replace(/%select_id%/, this.opt.sContainerId + '_select').replace(/%dropdown_list%/, '<select name="' + this.opt.sContainerId + '_select" id="' + this.opt.sContainerId + '_select" ' + (typeof(document.implementation) == 'undefined' ? 'onmouseover="grabJumpToContent();" ' : '') + (typeof(document.onbeforeactivate) == 'undefined' ? 'onfocus' : 'onbeforeactivate') + '="grabJumpToContent();"><option value="?board=' + this.opt.iCurBoardId + '.0">' + sChildLevelPrefix + this.opt.sBoardPrefix + this.opt.sCurBoardName + '</option></select>&nbsp;<input type="button" value="' + this.opt.sGoButtonLabel + '" onclick="window.location.href = \'' + smf_scripturl + '?board=' + this.opt.iCurBoardId + '.0\';" />'));
+	setInnerHTML(document.getElementById(this.opt.sContainerId), this.opt.sJumpToTemplate.replace(/%select_id%/, this.opt.sContainerId + '_select').replace(/%dropdown_list%/, '<select name="' + this.opt.sContainerId + '_select" id="' + this.opt.sContainerId + '_select" ' + (typeof(document.implementation) == 'undefined' ? 'onmouseover="grabJumpToContent();" ' : '') + (typeof(document.onbeforeactivate) == 'undefined' ? 'onfocus' : 'onbeforeactivate') + '="grabJumpToContent();"><option value="?board=' + this.opt.iCurBoardId + '.0">' + sChildLevelPrefix + this.opt.sBoardPrefix + this.opt.sCurBoardName.removeEntities() + '</option></select>&nbsp;<input type="button" value="' + this.opt.sGoButtonLabel + '" onclick="window.location.href = \'' + smf_scripturl + '?board=' + this.opt.iCurBoardId + '.0\';" />'));
 	this.dropdownList = document.getElementById(this.opt.sContainerId + '_select');
 }
 
