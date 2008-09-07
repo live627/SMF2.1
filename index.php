@@ -82,7 +82,7 @@ reloadSettings();
 cleanRequest();
 $context = array();
 
-// Seed the random generator for PHP < 4.2.0.
+// Seed the random generator.
 if (empty($modSettings['rand_seed']) || mt_rand(1, 250) == 69)
 	smf_seed_generator();
 
