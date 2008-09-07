@@ -112,7 +112,7 @@ function Login2()
 		else
 			trigger_error('Login2(): Cannot be logged in without a session or cookie', E_USER_ERROR);
 
-		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
+		$user_settings['password_salt'] = substr(md5(mt_rand()), 0, 4);
 		updateMemberData($user_info['id'], array('password_salt' => $user_settings['password_salt']));
 
 		setLoginCookie($timeout - time(), $user_info['id'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
@@ -341,7 +341,7 @@ function Login2()
 		if (in_array($user_settings['passwd'], $other_passwords))
 		{
 			$user_settings['passwd'] = $sha_passwd;
-			$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
+			$user_settings['password_salt'] = substr(md5(mt_rand()), 0, 4);
 
 			// Update the password and set up the hash.
 			updateMemberData($user_settings['id_member'], array('passwd' => $user_settings['passwd'], 'password_salt' => $user_settings['password_salt']));
@@ -378,7 +378,7 @@ function Login2()
 	// Correct password, but they've got no salt; fix it!
 	if ($user_settings['password_salt'] == '')
 	{
-		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
+		$user_settings['password_salt'] = substr(md5(mt_rand()), 0, 4);
 		updateMemberData($user_settings['id_member'], array('password_salt' => $user_settings['password_salt']));
 	}
 

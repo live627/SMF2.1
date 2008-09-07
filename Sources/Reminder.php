@@ -146,7 +146,8 @@ function RemindPick()
 	if (empty($row['secret_question']) || (isset($_POST['reminder_type']) && $_POST['reminder_type'] == 'email'))
 	{
 		// Randomly generate a new password, with only alpha numeric characters that is a max length of 10 chars.
-		$password = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
+		require_once($sourcedir . '/Subs-Members.php');
+		$password = generateValidationCode();
 
 		require_once($sourcedir . '/Subs-Post.php');
 		$replacements = array(

@@ -573,7 +573,7 @@ if (isset($_GET['data']))
 else
 {
 	$upcontext['current_step'] = 0;
-	$upcontext['rid'] = rand(0, 5000);
+	$upcontext['rid'] = mt_rand(0, 5000);
 	$upcontext['upgrade_status'] = array(
 		'curstep' => 0,
 		'lang' => isset($_GET['lang']) ? $_GET['lang'] : basename($language, '.lng'),
@@ -1144,7 +1144,7 @@ function checkLogin()
 				$upcontext['user']['id'] = 1;
 				$upcontext['user']['name'] = 'Administrator';
 			}
-			$upcontext['user']['pass'] = rand(0,60000);
+			$upcontext['user']['pass'] = mt_rand(0,60000);
 			// This basically is used to match the GET variables to Settings.php.
 			$upcontext['upgrade_status']['pass'] = $upcontext['user']['pass'];
 

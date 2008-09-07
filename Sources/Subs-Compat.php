@@ -215,26 +215,6 @@ if (!function_exists('array_combine'))
 	}
 }
 
-// Make sure random means random.
-if (@version_compare(PHP_VERSION, '4.2.0') == -1)
-{
-	function smf_seed_generator()
-	{
-		global $modSettings;
-
-		if (empty($modSettings['rand_seed']))
-		{
-			$modSettings['rand_seed'] = microtime() * 1000000;
-			updateSettings(array('rand_seed' => $modSettings['rand_seed']));
-		}
-		$seed = ($modSettings['rand_seed'] + ((double) microtime() * 1000003)) & 0x7fffffff;
-		srand($seed);
-		// Change the seed?
-		if (rand(1, 250) == 69)
-			updateSettings(array('rand_seed' => rand()));
-	}
-}
-
 if (!function_exists('mysql_real_escape_string'))
 {
 	function mysql_real_escape_string($string, $connection = null)

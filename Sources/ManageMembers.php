@@ -1158,11 +1158,13 @@ function AdminApprove()
 	// Maybe we're sending it off for activation?
 	elseif ($_POST['todo'] == 'require_activation')
 	{
+		require_once($sourcedir . '/Subs-Members.php');
+		
 		// We have to do this for each member I'm afraid.
 		foreach ($member_info as $member)
 		{
 			// Generate a random activation code.
-			$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
+			$validation_code = generateValidationCode();
 
 			// Set these members for activation - I know this includes two id_member checks but it's safer than bodging $condition ;).
 			$smcFunc['db_query']('', '

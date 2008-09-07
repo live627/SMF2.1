@@ -277,7 +277,8 @@ function loadProfileFields($force_reload = false)
 				// Do they need to revalidate? If so schedule the function!
 				if (!empty($modSettings[\'send_validation_onChange\']) && !allowedTo(\'moderate_forum\'))
 				{
-					$profile_vars[\'validation_code\'] = substr(preg_replace(\'/\W/\', \'\', md5(rand())), 0, 10);
+					require_once($sourcedir . \'/Subs-Members.php\');
+					$profile_vars[\'validation_code\'] = generateValidationCode();
 					$profile_vars[\'is_activated\'] = 2;
 					$context[\'profile_execute_on_save\'][] = \'profileSendActivation\';
 					unset($context[\'profile_execute_on_save\'][\'reload_user\']);

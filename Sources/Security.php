@@ -728,7 +728,7 @@ function checkSubmitOnce($action, $is_fatal = true)
 	{
 		$context['form_sequence_number'] = 0;
 		while (empty($context['form_sequence_number']) || in_array($context['form_sequence_number'], $_SESSION['forms']))
-			$context['form_sequence_number'] = rand(1, 16000000);
+			$context['form_sequence_number'] = mt_rand(1, 16000000);
 	}
 	// Check whether the submitted number can be found in the session.
 	elseif ($action == 'check')

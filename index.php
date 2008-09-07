@@ -83,7 +83,7 @@ cleanRequest();
 $context = array();
 
 // Seed the random generator for PHP < 4.2.0.
-if (@version_compare(PHP_VERSION, '4.2.0') == -1)
+if (empty($modSettings['rand_seed']) || mt_rand(1, 250) == 69)
 	smf_seed_generator();
 
 // Before we get carried away, are we doing a scheduled task? If so save CPU cycles by jumping out!

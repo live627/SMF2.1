@@ -263,6 +263,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'alter_table_boards' => array(
 			'~(.+)~' => '',
 		),
+		'get_random_number' => array(
+			'RAND' => 'RANDOM',
+		),
 		'set_character_set' => array(
 			'~(.+)~' => '',
 		),

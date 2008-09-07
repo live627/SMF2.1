@@ -2125,9 +2125,9 @@ function loadSession()
 		// This is here to stop people from using bad junky PHPSESSIDs.
 		if (isset($_REQUEST[session_name()]) && preg_match('~^[A-Za-z0-9]{16,32}$~', $_REQUEST[session_name()]) == 0 && !isset($_COOKIE[session_name()]))
 		{
-			$_REQUEST[session_name()] = md5(md5('smf_sess_' . time()) . rand());
-			$_GET[session_name()] = md5(md5('smf_sess_' . time()) . rand());
-			$_POST[session_name()] = md5(md5('smf_sess_' . time()) . rand());
+			$_REQUEST[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
+			$_GET[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
+			$_POST[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
 		}
 
 		// Use database sessions? (they don't work in 4.1.x!)
@@ -2161,7 +2161,7 @@ function loadSession()
 
 	// Set the randomly generated code.
 	if (!isset($_SESSION['rand_code']))
-		$_SESSION['rand_code'] = md5(session_id() . rand());
+		$_SESSION['rand_code'] = md5(session_id() . mt_rand());
 	$sc = $_SESSION['rand_code'];
 }
 
@@ -2352,7 +2352,7 @@ function cache_put_data($key, $value, $ttl = 120)
 	// eAccelerator...
 	elseif (function_exists('eaccelerator_put'))
 	{
-		if (rand(0, 10) == 1)
+		if (mt_rand(0, 10) == 1)
 			eaccelerator_gc();
 
 		if ($value === null)
@@ -2363,7 +2363,7 @@ function cache_put_data($key, $value, $ttl = 120)
 	// Turck MMCache?
 	elseif (function_exists('mmcache_put'))
 	{
-		if (rand(0, 10) == 1)
+		if (mt_rand(0, 10) == 1)
 			mmcache_gc();
 
 		if ($value === null)

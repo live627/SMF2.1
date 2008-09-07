@@ -1,7 +1,7 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 4 Public                                                        ???
+SMF 2.0 Beta 4 Public                                           7 September 2008
 ================================================================================
 September 2008
 --------------------------------------------------------------------------------
@@ -20,6 +20,7 @@ September 2008
  ! Make sure verification with guests works properly with quick reply. (Post.php, Post template, Errors language file) [Bug 2447]
  ! Add name and email boxes for guests using quick reply. (Display.php, Display template)
  ! Saving of custom profile fields was not always working correctly. (Profile-Modify.php) [Bug 2487]
+ ! Change the way random numbers are generated for the session and reminder variables. (several files)
 
 
 August 2008

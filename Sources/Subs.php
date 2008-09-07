@@ -3058,7 +3058,7 @@ function setupThemeContext($forceload = false)
 		// Gotta be special for the javascript.
 		$context['fader_news_lines'][$i] = strtr(addslashes($context['news_lines'][$i]), array('/' => '\/', '<a href=' => '<a hre" + "f='));
 	}
-	$context['random_news_line'] = $context['news_lines'][rand(0, count($context['news_lines']) - 1)];
+	$context['random_news_line'] = $context['news_lines'][mt_rand(0, count($context['news_lines']) - 1)];
 
 	if (!$user_info['is_guest'])
 	{
@@ -3301,7 +3301,7 @@ function theme_copyright($get_it = false)
 		return $found;
 
 	// Naughty, naughty.
-	if (rand(0, 2) == 1)
+	if (mt_rand(0, 2) == 1)
 	{
 		$temporary = preg_replace('~<!--.+?-->~s', '', ob_get_contents());
 		if (strpos($temporary, '<!--') !== false)
@@ -3517,7 +3517,7 @@ function host_from_ip($ip)
 		$host = false;
 
 	// Try the Linux host command, perhaps?
-	if (!isset($host) && (strpos(strtolower(PHP_OS), 'win') === false || strpos(strtolower(PHP_OS), 'darwin') !== false) && rand(0, 1) == 1)
+	if (!isset($host) && (strpos(strtolower(PHP_OS), 'win') === false || strpos(strtolower(PHP_OS), 'darwin') !== false) && mt_rand(0, 1) == 1)
 	{
 		if (!isset($modSettings['host_to_dis']))
 			$test = @shell_exec('host -W 1 ' . @escapeshellarg($ip));
@@ -3536,7 +3536,7 @@ function host_from_ip($ip)
 	}
 
 	// This is nslookup; usually only Windows, but possibly some Unix?
-	if (!isset($host) && strpos(strtolower(PHP_OS), 'win') !== false && strpos(strtolower(PHP_OS), 'darwin') === false && rand(0, 1) == 1)
+	if (!isset($host) && strpos(strtolower(PHP_OS), 'win') !== false && strpos(strtolower(PHP_OS), 'darwin') === false && mt_rand(0, 1) == 1)
 	{
 		$test = @shell_exec('nslookup -timeout=1 ' . @escapeshellarg($ip));
 		if (strpos($test, 'Non-existent domain') !== false)
@@ -3926,4 +3926,27 @@ function setupMenuContext()
 	if (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 && isset($context['menu_buttons']['pm']))
 		$context['menu_buttons']['pm']['title'] .= ' [<strong>'. $context['user']['unread_messages'] . '</strong>]';
 }
+
+// Generate a random seed and ensure it's stored in settings.
+function smf_seed_generator()
+{
+	global $modSettings;
+
+	// Never existed?
+	if (empty($modSettings['rand_seed']))
+	{
+		$modSettings['rand_seed'] = microtime() * 1000000;
+		updateSettings(array('rand_seed' => $modSettings['rand_seed']));
+	}
+
+	if (@version_compare(PHP_VERSION, '4.2.0') == -1)
+	{
+		$seed = ($modSettings['rand_seed'] + ((double) microtime() * 1000003)) & 0x7fffffff;
+		mt_srand($seed);
+	}
+
+	// Change the seed.
+	updateSettings(array('rand_seed' => mt_rand()));
+}
+
 ?>

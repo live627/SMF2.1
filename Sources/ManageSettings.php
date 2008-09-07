@@ -697,7 +697,7 @@ function ModifySpamSettings($return_config = false)
 
 	// Generate a sample registration image.
 	$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-	$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+	$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(mt_rand());
 
 	$config_vars = array(
 				array('check', 'reg_verification'),
@@ -1648,7 +1648,7 @@ function EditCustomProfiles()
 
 			// If there is nothing to the name, then let's start out own - for foreign languages etc.
 			if (empty($colname))
-				$colname = 'cust_' . rand(1, 999);
+				$colname = 'cust_' . mt_rand(1, 999);
 
 			// Check this is unique.
 			$unique = false;
@@ -1665,7 +1665,7 @@ function EditCustomProfiles()
 				if ($smcFunc['db_num_rows']($request) == 0)
 					$unique = true;
 				else
-					$colname .= rand(0, 9);
+					$colname .= mt_rand(0, 9);
 				$smcFunc['db_free_result']($request);
 
 				if (strlen($colname) >= 12 && !$unique)

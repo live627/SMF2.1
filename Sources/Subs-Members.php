@@ -524,13 +524,13 @@ function registerMember(&$regOptions, $return_errors = false)
 	// Generate a validation code if it's supposed to be emailed.
 	$validation_code = '';
 	if ($regOptions['require'] == 'activation')
-		$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
+		$validation_code = generateValidationCode();
 
 	// If you haven't put in a password generate one.
 	if ($regOptions['interface'] == 'admin' && $regOptions['password'] == '' && $regOptions['auth_method'] == 'password')
 	{
-		srand(time() + 1277);
-		$regOptions['password'] = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
+		mt_srand(time() + 1277);
+		$regOptions['password'] = generateValidationCode();
 		$regOptions['password_check'] = $regOptions['password'];
 	}
 	// Does the first password match the second?
@@ -543,7 +543,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		if ($regOptions['auth_method'] == 'password')
 			$reg_errors[] = array('lang', 'no_password');
 		else
-			$regOptions['password'] = sha1(rand());
+			$regOptions['password'] = sha1(mt_rand());
 	}
 
 	// Now perform hard password validation as required.
@@ -614,7 +614,7 @@ function registerMember(&$regOptions, $return_errors = false)
 		'member_name' => $regOptions['username'],
 		'email_address' => $regOptions['email'],
 		'passwd' => sha1(strtolower($regOptions['username']) . $regOptions['password']),
-		'password_salt' => substr(md5(rand()), 0, 4) ,
+		'password_salt' => substr(md5(mt_rand()), 0, 4) ,
 		'posts' => 0,
 		'date_registered' => time(),
 		'member_ip' => $regOptions['interface'] == 'admin' ? '127.0.0.1' : $user_info['ip'],
@@ -1309,6 +1309,23 @@ function populateDuplicateMembers(&$members)
 				$member_track[] = $m['id'];
 			}
 		}
+}
+
+// Generate a random validation code.
+function generateValidationCode()
+{
+	global $smcFunc, $modSettings;
+	
+	$request = $smcFunc['db_query']('get_random_number', '
+		SELECT RAND()',
+		array(
+		)
+	);
+	
+	list ($dbRand) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+	
+	return substr(preg_replace('/\W/', '', sha1(microtime() . mt_rand() . $dbRand . $modSettings['rand_seed'])), 0, 10);	
 }
 
 ?>

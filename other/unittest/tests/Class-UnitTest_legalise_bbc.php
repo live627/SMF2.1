@@ -159,7 +159,7 @@
 					
 					// Generate 500,000 random characters.
 					for ($i = 0; $i < 50000; $i++)
-						$this->_tests[$testID]['input'] .= pack('C*', rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126), rand(32, 126));
+						$this->_tests[$testID]['input'] .= pack('C*', mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126), mt_rand(32, 126));
 						
 					// Remove closing square brackets.
 					$this->_tests[$testID]['input'] = strtr($this->_tests[$testID]['input'], array(']' => ''));

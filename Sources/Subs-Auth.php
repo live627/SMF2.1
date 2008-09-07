@@ -203,7 +203,7 @@ if (!function_exists('session_regenerate_id'))
 		if (headers_sent())
 			return false;
 
-		session_id(strtolower(md5(uniqid(rand(), true))));
+		session_id(strtolower(md5(uniqid(mt_rand(), true))));
 		return true;
 	}
 
@@ -672,7 +672,7 @@ function resetPassword($memID, $username = null)
 	}
 
 	// Generate a random password.
-	$newPassword = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
+	$newPassword = substr(preg_replace('/\W/', '', md5(mt_rand())), 0, 10);
 	$newPassword_sha1 = sha1(strtolower($user) . $newPassword);
 
 	// Do some checks on the username if needed.

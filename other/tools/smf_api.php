@@ -401,7 +401,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		'real_name' => "'$username'",
 		'email_address' => "'" . addslashes($email) . "'",
 		'passwd' => "'" . sha1(strtolower($username) . $password) . "'",
-		'password_salt' => "'" . substr(md5(rand()), 0, 4) . "'",
+		'password_salt' => "'" . substr(md5(mt_rand()), 0, 4) . "'",
 		'posts' => '0',
 		'date_registered' => (string) time(),
 		'is_activated' => '1',
@@ -760,7 +760,7 @@ function smf_loadSession()
 
 		// This is here to stop people from using bad junky PHPSESSIDs.
 		if (isset($_REQUEST[session_name()]) && preg_match('~^[A-Za-z0-9]{32}$~', $_REQUEST[session_name()]) == 0 && !isset($_COOKIE[session_name()]))
-			$_COOKIE[session_name()] = md5(md5('smf_sess_' . time()) . rand());
+			$_COOKIE[session_name()] = md5(md5('smf_sess_' . time()) . mt_rand());
 
 		// Use database sessions?
 		if (!empty($smf_settings['databaseSession_enable']) && $smf_connection)
@@ -777,7 +777,7 @@ function smf_loadSession()
 
 	// Set the randomly generated code.
 	if (!isset($_SESSION['rand_code']))
-		$_SESSION['rand_code'] = md5(session_id() . rand());
+		$_SESSION['rand_code'] = md5(session_id() . mt_rand());
 	$smf_user_info['session_id'] = &$_SESSION['rand_code'];
 
 	if (!isset($_SESSION['USER_AGENT']))

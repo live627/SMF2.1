@@ -88,6 +88,10 @@ reloadSettings();
 // Clean the request variables.
 cleanRequest();
 
+// Seed the random generator?
+if (empty($modSettings['rand_seed']) || mt_rand(1, 250) == 69)
+	smf_seed_generator();
+
 // Check on any hacking attempts.
 if (isset($_REQUEST['GLOBALS']) || isset($_COOKIE['GLOBALS']))
 	die('Hacking attempt...');
@@ -738,11 +742,11 @@ function ssi_randomMember($random_type = '', $output_method = 'echo')
 	if ($random_type == 'day')
 	{
 		// Set the seed to change only once per day.
-		srand(floor(time() / 86400));
+		mt_srand(floor(time() / 86400));
 	}
 
 	// Get the lowest ID we're interested in.
-	$member_id = rand(0, $modSettings['latestMember']);
+	$member_id = mt_rand(0, $modSettings['latestMember']);
 
 	$where_query = '
 		id_member >= {int:selected_member}
@@ -772,7 +776,7 @@ function ssi_randomMember($random_type = '', $output_method = 'echo')
 
 	// Just to be sure put the random generator back to something... random.
 	if ($random_type != '')
-		srand(time());
+		mt_srand(time());
 
 	return $result;
 }

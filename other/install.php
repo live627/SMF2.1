@@ -970,7 +970,7 @@ function DatabasePopulation()
 		'{$databaseSession_enable}' => isset($_POST['dbsession']) ? '1' : '0',
 		'{$smf_version}' => $GLOBALS['current_smf_version'],
 		'{$current_time}' => time(),
-		'{$sched_task_offset}' => 82800 + rand(0, 86399),
+		'{$sched_task_offset}' => 82800 + mt_rand(0, 86399),
 	);
 
 	foreach ($txt as $key => $value)
@@ -1307,7 +1307,7 @@ function AdminAccount()
 		}
 		elseif ($_POST['username'] != '')
 		{
-			$incontext['member_salt'] = substr(md5(rand()), 0, 4);
+			$incontext['member_salt'] = substr(md5(mt_rand()), 0, 4);
 
 			// Format the username properly.
 			$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);

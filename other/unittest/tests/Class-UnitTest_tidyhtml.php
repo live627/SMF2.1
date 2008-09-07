@@ -1123,7 +1123,7 @@
 			
 			
 			// Apparently windows can't handle large stdin values, therefor a file streaming is needed..
-			$tempFile = $cachedir . '/tmp_validator_' . md5(rand(0, 10000000000)) . '.html';
+			$tempFile = $cachedir . '/tmp_validator_' . md5(mt_rand(0, 10000000000)) . '.html';
 			file_put_contents($tempFile, $html);
 			
 			
