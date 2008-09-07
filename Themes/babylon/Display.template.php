@@ -640,7 +640,15 @@ function template_main()
 				<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
 				<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
 				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
-				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
+				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
+
+		// Guests just need more.
+		if ($context['user']['is_guest'])
+			echo '
+				<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" />
+				<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" /><br />';
+
+		echo '
 				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
 				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
 				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';

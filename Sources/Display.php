@@ -1004,7 +1004,11 @@ function Display()
 
 	// Load up the "double post" sequencing magic.
 	if (!empty($options['display_quick_reply']))
+	{
 		checkSubmitOnce('register');
+		$context['name'] = isset($_SESSION['guest_name']) ? $_SESSION['guest_name'] : '';
+		$context['email'] =isset($_SESSION['guest_email']) ? $_SESSION['guest_email'] :  '';
+	}
 }
 
 // Callback for the message display.

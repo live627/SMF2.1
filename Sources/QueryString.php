@@ -198,7 +198,8 @@ function cleanRequest()
 		$_POST = $removeMagicQuoteFunction($_POST);
 		$_COOKIE = $removeMagicQuoteFunction($_COOKIE);
 		foreach ($_FILES as $k => $dummy)
-			$_FILES[$k]['name'] = $removeMagicQuoteFunction($_FILES[$k]['name']);
+			if (isset($_FILES[$k]['name']))
+				$_FILES[$k]['name'] = $removeMagicQuoteFunction($_FILES[$k]['name']);
 	}
 
 	// Add entities to GET.  This is kinda like the slashes on everything else.

@@ -1227,7 +1227,13 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 	$log_changes = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		if ($row['private'] != 0 && (!allowedTo('admin_forum') || ($memID == $user_info['id'] && $row['private'] == 2)) && ($area != 'register' || $row['show_reg'] == 0))
+		/* This means don't save if:
+			- The user is NOT an admin.
+			- The data is not freely viewable and editable by users.
+			- The data is not invisible to users but editable by the owner (or if it is the user is not the owner)
+			- The area isn't registration, and if it is that the field is not suppossed to be shown there.
+		*/
+		if ($row['private'] != 0 && !allowedTo('admin_forum') && ($memID != $user_info['id'] || $row['private'] != 2) && ($area != 'register' || $row['show_reg'] == 0))
 			continue;
 
 		// Validate the user data.
@@ -1263,7 +1269,7 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 		}
 
 		// Did it change?
-		if ((!empty($value) && (!isset($user_profile[$memID]['options'][$row['col_name']]) || $user_profile[$memID]['options'][$row['col_name']] != $value)) || (empty($value) && !empty($user_profile[$memID]['options'][$row['col_name']])))
+		if (!isset($user_profile[$memID]['options'][$row['col_name']]) || $user_profile[$memID]['options'][$row['col_name']] != $value)
 		{
 			$log_changes[] = array(
 				'action' => 'customfield_' . $row['col_name'],

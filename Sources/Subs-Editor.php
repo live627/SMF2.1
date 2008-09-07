@@ -764,10 +764,13 @@ function legalise_bbc($text)
 	// Get a list of all the tags that are not disabled.
 	$all_tags = parse_bbc(false);
 	$valid_tags = array();
+	$self_closing_tags = array();
 	foreach ($all_tags as $tag)
 	{
 		if (!isset($disabled[$tag['tag']]))
 			$valid_tags[$tag['tag']] = !empty($tag['block_level']);
+		if (isset($tag['type']) && $tag['type'] == 'closed')
+			$self_closing_tags[] = $tag['tag'];
 	}
 
 	// Don't worry if we're in a code/nobbc.
@@ -820,12 +823,19 @@ function legalise_bbc($text)
 		// And a complete text string again.
 		$text = implode('', $matches);
 	}
-	
+
 	// Quickly remove any tags which are back to back.
 	$backToBackPattern = '~\\[(' . implode('|', array_diff(array_keys($valid_tags), array('td'))) . ')[^<>\\[\\]]*\\]\s*\\[/\\1\\]~';
 	$lastlen = 0;
 	while (strlen($text) !== $lastlen)
 		$lastlen = strlen($text = preg_replace($backToBackPattern, '', $text));
+
+	// Need to sort the tags my name length.
+	function sort_array_length($a, $b)
+	{
+		return strlen($a) < strlen($b) ? 1 : -1;
+	}
+	uksort($valid_tags, 'sort_array_length');
 
 	// In case things changed above set these back to normal.
 	$in_code_nobbc = false;
@@ -855,7 +865,7 @@ function legalise_bbc($text)
 			$isOpeningTag = $parts[$i + 2] === '';
 			$isClosingTag = $parts[$i + 2] === '/';
 			$isBlockLevelTag = $valid_tags[$tag];
-			
+
 			// Special case: inside [code] blocks any code is left untouched.
 			if ($tag === 'code')
 			{
@@ -944,9 +954,9 @@ function legalise_bbc($text)
 					
 					$blockElements[] = $tag;
 				}
-				
+
 				// Inline opening tag.
-				else 
+				elseif (!in_array($tag, $self_closing_tags)) 
 				{
 					// Can't have two opening elements with the same contents!
 					if (isset($inlineElements[$elementContent]))
@@ -1077,11 +1087,11 @@ function legalise_bbc($text)
 		// Still inline tags left unclosed? Close them now, better late than never.
 		elseif (!empty($inlineElements))
 			$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
-			
+		
 		// Now close the block elements.
 		if (!empty($blockElements))
 			$parts[$i] .= '[/' . implode('][/', array_reverse($blockElements)) . ']';
-		
+	
 		$text = implode('', $parts);
 	}
 

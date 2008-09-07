@@ -615,8 +615,7 @@ function template_main()
 		<div class="smallpadding floatleft" id="warning">
 			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
 		</div>
-		<div>
-			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
+		<div>', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
 			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
@@ -627,7 +626,15 @@ function template_main()
 				<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
 				<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
 				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
-				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
+				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
+
+		// Guests just need more.
+		if ($context['user']['is_guest'])
+			echo '
+				<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" />
+				<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" /><br />';
+
+		echo '
 				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
 				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
 				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';

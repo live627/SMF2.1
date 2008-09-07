@@ -15,6 +15,12 @@ September 2008
  ! Add detection for Opera 9.6 (script.js) [Bug 2495]
  ! Fix the jumpto box containing entities. (script.js) [Bug 1025]
  ! Don't show the editor's resizer in Google Chrome, as that browser supports textarea resizing by default. (script.js, editor.js)
+ ! Closing of BBC tags wasn't working right on all tags, particularly br and hr. (Subs-Editor.php) [Bug 2494]
+ ! Only protect file names where they exist. (QueryString.php) [Bug 2493]
+ ! Make sure verification with guests works properly with quick reply. (Post.php, Post template, Errors language file) [Bug 2447]
+ ! Add name and email boxes for guests using quick reply. (Display.php, Display template)
+ ! Saving of custom profile fields was not always working correctly. (Profile-Modify.php) [Bug 2487]
+
 
 August 2008
 --------------------------------------------------------------------------------

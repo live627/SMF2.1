@@ -491,7 +491,7 @@ function Post()
 				$context['post_error']['messages'][] = $txt['error_' . $post_error];
 
 				// If it's not a minor error flag it as such.
-				if (!in_array($post_error, array('new_reply', 'not_approved', 'new_replies', 'old_topic')))
+				if (!in_array($post_error, array('new_reply', 'not_approved', 'new_replies', 'old_topic', 'need_qr_verification')))
 					$context['error_type'] = 'serious';
 			}
 		}
@@ -1158,15 +1158,15 @@ function Post2()
 		$verificationOptions = array(
 			'id' => 'post',
 		);
-		$context['require_verification'] = create_control_verification($verificationOptions, true);
-
-		if (is_array($context['require_verification']))
+		$context['require_verification'] = create_control_verification($verificationOptions, empty($_REQUEST['from_qr']));
+		// If it's someone from quick reply, don't show them errors.
+		if (!empty($_REQUEST['from_qr']))
 		{
-			// If it's someone from quick reply, don't show them errors.
-			if (!empty($_REQUEST['from_qr']))
+				$context['post_error']['need_qr_verification'] = true;
 				return Post();
-			$post_errors = array_merge($post_errors, $context['require_verification']);
 		}
+		elseif (is_array($context['require_verification']))
+			$post_errors = array_merge($post_errors, $context['require_verification']);
 	}
 
 	require_once($sourcedir . '/Subs-Post.php');

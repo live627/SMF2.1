@@ -227,7 +227,7 @@ function template_main()
 	{
 		echo '
 							<tr>
-								<td align="right" valign="top">
+								<td align="right" valign="top"', !empty($context['post_error']['need_qr_verification']) ? ' style="color: red;"' : '', '>
 									<b>', $txt['verification'], ':</b>
 								</td>
 								<td>
