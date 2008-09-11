@@ -172,7 +172,7 @@ SELECT
 	'' AS personal_text, '' AS time_format, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
 	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
-	u.user_registered_ip AS member_ip, u.user_registered_ip AS member_ip2
+	IFNULL(u.user_registered_ip, '') AS member_ip, IFNULL(u.user_registered_ip, '') AS member_ip2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('phpBB ', r.rank_title))
