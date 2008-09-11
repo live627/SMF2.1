@@ -1,11 +1,21 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
 Changelog started January 1, 2004; Currently at $Revision$.
 
-SMF 2.0 Beta 4 Public                                           7 September 2008
+SMF 2.0 RC1                                                                  ???
 ================================================================================
 September 2008
 --------------------------------------------------------------------------------
  ! INET_ATON() didn't support all possible IP addresses (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
+ & Removed unused text string. (PersonalMessage language file) [Bug 2525]
+ & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2530,2518]
+ ! Trimmed some of the old holidays. (install files) [Bug 2527]
+ & Spelling fix and changing the PHP site link to the non-country specific version. (Help language file) [Bug 2530]
+
+
+SMF 2.0 Beta 4 Public                                           7 September 2008
+================================================================================
+September 2008
+--------------------------------------------------------------------------------
  * Copywrite notice was too small. (index.css) [Bug 2389]
  ! Upgrade was throwing an error if you disable security. (upgrade.php)
  * When making a backup of the forum, include the table structure by default. (ManageMaintenance template) [Bug 2489]
@@ -22,10 +32,6 @@ September 2008
  ! Add name and email boxes for guests using quick reply. (Display.php, Display template)
  ! Saving of custom profile fields was not always working correctly. (Profile-Modify.php) [Bug 2487]
  ! Change the way random numbers are generated for the session and reminder variables. (several files)
- & Removed unused text string. (PersonalMessage language file) [Bug 2525]
- & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2530,2518]
- ! Trimmed some of the old holidays. (install files) [Bug 2527]
- & Spelling fix and changing the PHP site link to the non-country specific version. (Help language file) [Bug 2530]
 
 
 August 2008
