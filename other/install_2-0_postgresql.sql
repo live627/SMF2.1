@@ -17,12 +17,12 @@ CREATE OR REPLACE FUNCTION IFNULL (int4, int4) RETURNS int4 AS
   'SELECT COALESCE($1, $2) AS result'
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS int4 AS
+CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
   'SELECT
-    split_part($1, ''.'', 1)::int4 * (256 * 256 * 256) +
-    split_part($1, ''.'', 2)::int4 * (256 * 256) +
-    split_part($1, ''.'', 3)::int4 * 256 +
-    split_part($1, ''.'', 4)::int4 AS result'
+    split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
+    split_part($1, ''.'', 2)::int8 * (256 * 256) +
+    split_part($1, ''.'', 3)::int8 * 256 +
+    split_part($1, ''.'', 4)::int8 AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION INET_NTOA(bigint) RETURNS text AS

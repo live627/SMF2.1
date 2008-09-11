@@ -5,6 +5,7 @@ SMF 2.0 Beta 4 Public                                           7 September 2008
 ================================================================================
 September 2008
 --------------------------------------------------------------------------------
+ ! INET_ATON() didn't support all possible IP addresses (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  * Copywrite notice was too small. (index.css) [Bug 2389]
  ! Upgrade was throwing an error if you disable security. (upgrade.php)
  * When making a backup of the forum, include the table structure by default. (ManageMaintenance template) [Bug 2489]

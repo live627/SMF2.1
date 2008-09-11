@@ -458,3 +458,17 @@ CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_
 ALTER TABLE {$db_prefix}members
 ALTER COLUMN ignore_boards TYPE text;
 ---#
+
+/*****************************************************************************/
+--- Fixing a bug with the inet_aton() function...
+/*****************************************************************************/
+
+---# Changing inet_aton function to use bigint instead of int...
+CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
+  'SELECT
+    split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
+    split_part($1, ''.'', 2)::int8 * (256 * 256) +
+    split_part($1, ''.'', 3)::int8 * 256 +
+    split_part($1, ''.'', 4)::int8 AS result'
+LANGUAGE 'sql';
+---#
