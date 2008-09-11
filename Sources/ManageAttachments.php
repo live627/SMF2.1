@@ -1779,8 +1779,8 @@ function attachDirStatus($dir, $expected_files)
 {
 	if (!is_dir($dir))
 		return array('does_not_exist', true, '');
-	elseif (!is_writeable($dir))
-		return array('not_writeable', true, '');
+	elseif (!is_writable($dir))
+		return array('not_writable', true, '');
 
 	// Everything is okay so far, start to scan through the directory.
 	$dir_size = 0;

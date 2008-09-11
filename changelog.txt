@@ -22,6 +22,9 @@ September 2008
  ! Add name and email boxes for guests using quick reply. (Display.php, Display template)
  ! Saving of custom profile fields was not always working correctly. (Profile-Modify.php) [Bug 2487]
  ! Change the way random numbers are generated for the session and reminder variables. (several files)
+ & Removed unused text string. (PersonalMessage language file) [Bug 2525]
+ & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2350,2518]
+ ! Trimmed some of the old holidays. (install files) [Bug 2527]
 
 
 August 2008

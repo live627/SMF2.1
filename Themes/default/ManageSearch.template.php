@@ -108,7 +108,7 @@ function template_select_search_method()
 						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_fulltext_cannot_create'];
 	else
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exsits'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;sesc=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
+						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;sesc=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
 						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['fulltext_length'];
 	echo '
 					</span>
@@ -124,7 +124,7 @@ function template_select_search_method()
 					<span class="smalltext">';
 	if ($context['custom_index'])
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exsits'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;sesc=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
+						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;sesc=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
 						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
 	elseif ($context['partial_custom_index'])
 		echo '

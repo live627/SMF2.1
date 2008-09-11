@@ -1597,7 +1597,7 @@ function template_add_rule()
 			</tr>
 			<tr class="windowbg">
 				<td colspan="2">
-					<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabed'], '</div>
+					<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabled'], '</div>
 				</td>
 			</tr>
 		</table><br />
