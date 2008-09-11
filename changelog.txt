@@ -25,6 +25,7 @@ September 2008
  & Removed unused text string. (PersonalMessage language file) [Bug 2525]
  & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2350,2518]
  ! Trimmed some of the old holidays. (install files) [Bug 2527]
+ & Spelling fix and changing the PHP site link to the non-country specific version. (Help language file) [Bug 2350]
 
 
 August 2008
