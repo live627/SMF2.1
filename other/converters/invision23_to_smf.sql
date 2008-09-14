@@ -127,7 +127,7 @@ $result = convert_query("
 	SELECT friends_friend_id
 	FROM {$from_prefix}profile_friends
 	WHERE friends_member_id = {$id_member}");
-if (mysql_num_rows($result) > 0)
+if (convert_num_rows($result) > 0)
 {
 	$buddy = array();
 	while ($row = mysql_fetch_assoc($result))
@@ -1004,7 +1004,7 @@ $result = convert_query("
 	SELECT cs_value
 	FROM {$from_prefix}cache_store
 		WHERE cs_key = 'stats'");
-list ($inv_stats) = mysql_fetch_row($result);
+list ($inv_stats) = convert_fetch_row($result);
 $inv_stats = unserialize($inv_stats);
 
 if (!empty($inv_stats['most_count']) && !empty($inv_stats['most_date']))

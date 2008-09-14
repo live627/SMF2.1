@@ -239,7 +239,7 @@ while ($row = mysql_fetch_assoc($result))
 	$censor_vulgar[] = $row['badword'];
 	$censor_proper[] = $row['replacement'];
 }
-mysql_free_result($result);
+convert_free_result($result);
 
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
@@ -290,8 +290,8 @@ if (!isset($oldAttachmentDir))
 		FROM {$from_prefix}settings
 		WHERE name = 'uploadspath'
 		LIMIT 1");
-	list ($oldAttachmentDir) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($oldAttachmentDir) = convert_fetch_row($result);
+	convert_free_result($result);
 
 	$oldAttachmentDir = $_POST['path_from'] . ltrim($oldAttachmentDir, '.');
 }

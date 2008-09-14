@@ -289,7 +289,19 @@ function script_query($query)
 				'ID_CAT',
 				'catOrder',
 			), $query);
-		return db_query($query, __FILE__, __LINE__);
+		$return = db_query($query, __FILE__, __LINE__);
+
+		// We need to find our backtrace.
+		if ($return !== false)
+			return $query;
+		else
+		{
+			echo 'The recount process has received an error<br />';
+			echo '<blockquote>' . mysql_errno() . ':' . mysql_error() . '</blockquote><br />';
+			echo 'Was caused by this query:<blockquote>' . $query . '</blockquote><br />';
+			if (function_exists('debug_backtrace'))
+				echo 'We attempted to find the backtrace:<pre>' . var_dump(debug_backtrace()) . '</pre>';
+		}
 	}
 	else
 		exit('No valid version of SMF found');

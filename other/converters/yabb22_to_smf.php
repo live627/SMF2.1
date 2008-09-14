@@ -211,7 +211,7 @@ if (empty($preparsing))
 		$groups = array('Administrator' => 1, 'Global Moderator' => 2, 'Moderator' => 0);
 		while ($row = mysql_fetch_assoc($request))
 			$groups[$row['group_name']] = $row['id_group'];
-		mysql_free_result($request);
+		convert_free_result($request);
 
 		$file_n = 0;
 		$dir = dir($yabb['memberdir']);
@@ -516,7 +516,7 @@ if (empty($preparsing))
 				while ($row = mysql_fetch_assoc($result))
 					foreach ($names[strtolower(addslashes($row['member_name']))] as $k => $v)
 						$names[strtolower(addslashes($row['member_name']))][$k] = $row['id_member'];
-				mysql_free_result($result);
+				convert_free_result($result);
 				$names = array();
 
 				doBlock('personal_messages', $block);
@@ -537,7 +537,7 @@ if (empty($preparsing))
 				foreach ($names[strtolower(addslashes($row['member_name']))] as $k => $v)
 					$names[strtolower(addslashes($row['member_name']))][$k] = $row['id_member'];
 			}
-			mysql_free_result($result);
+			convert_free_result($result);
 			$names = array();
 
 			doBlock('personal_messages', $block);
@@ -638,7 +638,7 @@ if (empty($preparsing))
 		$groups = array('Administrator' => 1, 'Global Moderator' => 2, 'Moderator' => 0);
 		while ($row = mysql_fetch_assoc($request))
 			$groups[$row['group_name']] = $row['id_group'];
-		mysql_free_result($request);
+		convert_free_result($request);
 
 		$cat_data = file($yabb['boardsdir'] . '/forum.master');
 		$cat_order = array();
@@ -726,7 +726,7 @@ if (empty($preparsing))
 				SET id_cat = $row[id_cat]
 				WHERE tempCatID = '$row[temp_id]'");
 		}
-		mysql_free_result($result);
+		convert_free_result($result);
 
 		foreach ($moderators as $boardid => $names)
 		{
@@ -735,8 +735,8 @@ if (empty($preparsing))
 				FROM {$to_prefix}boards
 				WHERE temp_id = '$boardid'
 				LIMIT 1");
-			list ($id_board) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($id_board) = convert_fetch_row($result);
+			convert_free_result($result);
 
 			convert_query("
 				INSERT INTO {$to_prefix}moderators
@@ -807,7 +807,7 @@ if (empty($preparsing))
 		$boards = array();
 		while ($row = mysql_fetch_assoc($result))
 			$boards[$row['temp_id']] = $row['id_board'];
-		mysql_free_result($result);
+		convert_free_result($result);
 
 		$file_n = 0;
 		$dir = dir($yabb['memberdir']);
@@ -828,8 +828,8 @@ if (empty($preparsing))
 				FROM {$to_prefix}members
 				WHERE member_name = '" . substr($entry, 0, -4) . "'
 				LIMIT 1");
-			list ($id_member) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($id_member) = convert_fetch_row($result);
+			convert_free_result($result);
 
 			$logData = file($yabb['memberdir'] . '/' . $entry);
 			foreach ($logData as $log)
@@ -916,7 +916,7 @@ if (empty($preparsing))
 		$boards = array();
 		while ($row = mysql_fetch_assoc($result))
 			$boards[$row['temp_id']] = $row['id_board'];
-		mysql_free_result($result);
+		convert_free_result($result);
 
 		$data_n = 0;
 		$block = array();
@@ -1025,8 +1025,8 @@ if (empty($preparsing))
 			SELECT COUNT(*)
 			FROM {$to_prefix}topics
 			WHERE temp_id != id_topic");
-		list ($topicCount) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($topicCount) = convert_fetch_row($request);
+		convert_free_result($request);
 
 		while ($_GET['substep'] <= $topicCount)
 		{
@@ -1047,7 +1047,7 @@ if (empty($preparsing))
 
 			$_GET['substep'] += $block_size;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		pastTime(-1);
@@ -1074,7 +1074,7 @@ if (empty($preparsing))
 					DELETE FROM {$to_prefix}log_topics
 					WHERE id_topic = $row[id_topic]
 					LIMIT 1");
-			mysql_free_result($result);
+			convert_free_result($result);
 
 			pastTime(-3);
 		}
@@ -1109,8 +1109,8 @@ if (empty($preparsing))
 			SELECT COUNT(*)
 			FROM {$to_prefix}topics
 			WHERE temp_id != id_topic");
-		list ($count) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($count) = convert_fetch_row($request);
+		convert_free_result($request);
 
 		while ($_GET['substep'] < $count)
 		{
@@ -1140,10 +1140,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += $block_size;
-			if (mysql_num_rows($result) < $block_size)
+			if (convert_num_rows($result) < $block_size)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 	}
 
@@ -1254,10 +1254,10 @@ if (empty($preparsing))
 				pastTime(++$_GET['substep']);
 			}
 
-			if (mysql_num_rows($result) < $block_size)
+			if (convert_num_rows($result) < $block_size)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		doBlock('messages', $block);
@@ -1272,7 +1272,7 @@ if (empty($preparsing))
 
 		if ($_GET['substep'] == 0)
 		{
-			mysql_query("
+			convert_query("
 				ALTER TABLE {$to_prefix}messages
 				ORDER BY poster_time");
 
@@ -1288,19 +1288,19 @@ if (empty($preparsing))
 			SELECT COUNT(*)
 			FROM {$to_prefix}messages
 			WHERE id_msg = 0");
-		list($uncompleted_messages) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list($uncompleted_messages) = convert_fetch_row($request);
+		convert_free_result($request);
 
 		if (!empty($uncompleted_messages))
 		{
 			$request = convert_query("
 				SELECT @msg := IFNULL(MAX(id_msg), 0)
 				FROM {$to_prefix}messages");
-			mysql_free_result($request);
+			convert_free_result($request);
 
 			while(!empty($uncompleted_messages))
 			{
-				mysql_query("
+				convert_query("
 					UPDATE {$to_prefix}messages
 					SET id_msg = (@msg := @msg + 1)
 					WHERE id_msg = 0
@@ -1313,7 +1313,7 @@ if (empty($preparsing))
 			SELECT COUNT(*)
 			FROM {$to_prefix}messages
 			WHERE id_msg = 0");
-		list($uncompleted_messages) = mysql_fetch_row($request);	
+		list($uncompleted_messages) = convert_fetch_row($request);	
 		if empty($uncompleted_messages))
 			break;
 			}
@@ -1350,14 +1350,14 @@ if (empty($preparsing))
 				WHERE m.poster_name = mem.member_name
 					AND m.id_member = 0
 				LIMIT $block_size");
-			$numRows = mysql_num_rows($result);
+			$numRows = convert_num_rows($result);
 
 			while ($row = mysql_fetch_assoc($result))
 				convert_query("
 					UPDATE {$to_prefix}messages
 					SET id_member = $row[id_member]
 					WHERE id_msg = $row[id_msg]");
-			mysql_free_result($result);
+			convert_free_result($result);
 
 			// Just so the user knows something occured.
 			$_GET['substep'] += $block_size;
@@ -1386,8 +1386,8 @@ if (empty($preparsing))
 			FROM {$to_prefix}settings
 			WHERE variable = 'attachmentUploadDir'
 			LIMIT 1");
-		list ($attachmentUploadDir) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($attachmentUploadDir) = convert_fetch_row($result);
+		convert_free_result($result);
 
 		// Danger, Will Robinson!
 		if ($yabb['uploaddir'] == $attachmentUploadDir)
@@ -1396,8 +1396,8 @@ if (empty($preparsing))
 		$result = convert_query("
 			SELECT MAX(id_attach)
 			FROM {$to_prefix}attachments");
-		list ($id_attach) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($id_attach) = convert_fetch_row($result);
+		convert_free_result($result);
 
 		$id_attach++;
 
@@ -1446,10 +1446,10 @@ if (empty($preparsing))
 					VALUES" . substr($setString, 0, -1));
 
 			$_GET['substep'] += $block_size;
-			if (mysql_num_rows($result) < $block_size)
+			if (convert_num_rows($result) < $block_size)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		pastTime(-1);
@@ -1526,7 +1526,7 @@ if (empty($preparsing))
 				GROUP BY t.id_topic
 				LIMIT $_GET[substep], $block_size");
 			
-			if (!mysql_num_rows($result))
+			if (!convert_num_rows($result))
 			{
 				$_GET['substep'] = -1;
 				pastTime(-1);
@@ -1539,16 +1539,16 @@ if (empty($preparsing))
 					FROM {$to_prefix}messages
 					WHERE id_msg = $row[id_last_msg]
 					LIMIT 1");
-				list ($row['id_member_updated']) = mysql_fetch_row($result2);
-				mysql_free_result($result2);
+				list ($row['id_member_updated']) = convert_fetch_row($result2);
+				convert_free_result($result2);
 
 				$result2 = convert_query("
 					SELECT id_member
 					FROM {$to_prefix}messages
 					WHERE id_msg = $row[id_first_msg]
 					LIMIT 1");
-				list ($row['id_member_started']) = mysql_fetch_row($result2);
-				mysql_free_result($result2);
+				list ($row['id_member_started']) = convert_fetch_row($result2);
+				convert_free_result($result2);
 
 				convert_query("
 					UPDATE {$to_prefix}topics
@@ -1559,10 +1559,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += $block_size;
-			if (mysql_num_rows($result) < $block_size)
+			if (convert_num_rows($result) < $block_size)
 				break;
 
-			mysql_free_result($result);
+			convert_free_result($result);
 		}
 
 		if ($_GET['substep'] > -1)
@@ -1703,7 +1703,7 @@ if (empty($preparsing))
 								$pollChoicesBlock[$keyID]['id_poll'] = $row['id_topic'];
 					}
 				}
-				mysql_free_result($request);
+				convert_free_result($request);
 
 				doBlock('polls', $pollQuestionsBlock);
 				doBlock('poll_choices', $pollChoicesBlock);
@@ -1742,7 +1742,7 @@ if (empty($preparsing))
 							$pollChoicesBlock[$keyID]['id_poll'] = $row['id_topic'];
 				}
 			}
-			mysql_free_result($request);
+			convert_free_result($request);
 
 			doBlock('polls', $pollQuestionsBlock);
 			doBlock('poll_choices', $pollChoicesBlock);
@@ -1794,10 +1794,10 @@ if (empty($preparsing))
 			}
 
 			$_GET['substep'] += $block_size;
-			if (mysql_num_rows($request) < $block_size)
+			if (convert_num_rows($request) < $block_size)
 				break;
 
-			mysql_free_result($request);
+			convert_free_result($request);
 		}
 	}
 
@@ -1988,7 +1988,7 @@ if (empty($preparsing))
 					DELETE FROM {$to_prefix}poll_choices
 					WHERE id_poll = $row[id_poll]
 					LIMIT 1");
-			mysql_free_result($result);
+			convert_free_result($result);
 
 			pastTime(-2);
 		}
@@ -2077,7 +2077,7 @@ if (empty($preparsing))
 				if (isset($block_names[$row['member_name']]))
 					unset($block[$block_names[$row['member_name']]]);
 			}
-			mysql_free_result($request);
+			convert_free_result($request);
 
 			if (empty($block))
 				return;

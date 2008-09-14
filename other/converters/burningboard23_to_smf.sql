@@ -408,7 +408,7 @@ while (true)
 				VALUES
 					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
 
-			$id_ban_group = mysql_insert_id();
+			$id_ban_group = convert_insert_id();
 
 			if (empty($id_ban_group))
 				continue;
@@ -463,7 +463,7 @@ while (true)
 				VALUES
 					('migrated_ban_" . ($ban_count++) . "', $ban_time, 0, 'Migrated from Burning Board', 1, '')");
 
-			$id_ban_group = mysql_insert_id();
+			$id_ban_group = convert_insert_id();
 
 			if (empty($id_ban_group))
 				continue;

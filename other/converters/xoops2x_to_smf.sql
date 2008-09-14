@@ -257,7 +257,7 @@ FROM {$from_prefix}priv_msgs;
 TRUNCATE {$to_prefix}moderators;
 ---#
 ---{
-$request = mysql_query("
+$request = convert_query("
 		SELECT forum_id AS id_board, forum_moderator 
 		FROM {$from_prefix}bb_forums;");
 	
@@ -273,7 +273,7 @@ $request = mysql_query("
 		}		
 	}
 
-mysql_free_result($request);
+convert_free_result($request);
 	
 ---}
 ---#
@@ -298,13 +298,13 @@ $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 // Get the XOOPS Attachments path
-$request = mysql_query("
+$request = convert_query("
 	SELECT conf_value
 	FROM {$from_prefix}config
 	WHERE conf_name ='dir_attachments'; ");
 		
-list ($xoops_attachment_path) = mysql_fetch_row($request);
-mysql_free_result($request);	
+list ($xoops_attachment_path) = convert_fetch_row($request);
+convert_free_result($request);	
 		
 $attachments = unserialize(base64_decode($row['attachment']));	
 foreach ($attachments as $attachedfile)
@@ -318,7 +318,7 @@ foreach ($attachments as $attachedfile)
 				{
 					$size=filesize($oldfile);
 					@touch($attachmentUploadDir . '/' .$newfilename, filemtime($attachedfile['name_saved']));	
-					mysql_query("
+					convert_query("
 						INSERT IGNORE INTO {$to_prefix}attachments
 						(id_attach, id_msg, filename, size)
 						VALUES ('$id_attach','$row[post_id]', 

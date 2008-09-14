@@ -1051,7 +1051,7 @@ if (empty($preparsing))
 					DELETE {$to_prefix}log_topics
 					SET id_topic = $row[id_topic]
 					LIMIT 1");
-			mysql_free_result($result);
+			convert_free_result($result);
 
 			pastTime(-3);
 		}
@@ -1306,7 +1306,7 @@ if (empty($preparsing))
 			FROM {$to_prefix}messages AS m
 				INNER JOIN {$to_prefix}members AS mem ON (m.poster_name = mem.member_name)
 			WHERE m.id_member = 0");
-		list($max_messages) = mysql_fetch_row($request);
+		list($max_messages) = convert_fetch_row($request);
 
 		while ($_GET['substep'] < $max_messages)
 		{
@@ -1939,7 +1939,7 @@ if (empty($preparsing))
 					DELETE {$to_prefix}poll_choices
 					SET id_poll = $row[id_poll]
 					LIMIT 1");
-			mysql_free_result($result);
+			convert_free_result($result);
 
 			pastTime(-2);
 		}

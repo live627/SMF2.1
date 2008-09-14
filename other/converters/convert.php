@@ -32,7 +32,7 @@ set_time_limit(0);
 
 // When in debug mode, we log our errors. Request hasn't been properly setup yet though.
 if (isset($_GET['debug']) || isset($_POST['debug']))
-	set_error_handler('error_handler');
+	set_error_handler('convert_error_handler');
 
 // We now have CLI support.
 if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
@@ -92,6 +92,7 @@ function initialize_inputs()
 	// This is really quite simple; if ?delete is on the URL, delete the converter...
 	if (isset($_GET['delete']))
 	{
+		@unlink(dirname(__FILE__) . '/convert_error_log');
 		@unlink(__FILE__);
 		if (preg_match('~_to_smf\.(php|sql)$~', $_SESSION['convert_script']) != 0)
 			@unlink(dirname(__FILE__) . '/' . $_SESSION['convert_script']);
@@ -99,6 +100,9 @@ function initialize_inputs()
 
 		exit;
 	}
+	// Empty the error log?
+	if (isset($_REQUEST['empty_error_log']))
+		@unlink(dirname(__FILE__) . '/convert_error_log');
 
 	// The current step - starts at 0.
 	$_GET['step'] = (int) @$_GET['step'];
@@ -827,6 +831,15 @@ function doStep0($error_message = null)
 							</td>
 						</tr>';
 	}
+
+	// Empty our error log?
+	echo '
+						</tr><tr>
+							<td valign="top" class="textbox" style="padding-top: 2ex;"><label for="empty_error_log">Empty the convert error log?</label></td>
+							<td valign="top" style="padding-top: 2ex; padding-bottom: 1ex;">
+								<input type="checkbox" name="empty_error_log" value="1"/>
+							</td>
+						</tr>';
 
 	echo '
 					</table>
@@ -2962,7 +2975,7 @@ function print_line($line, $return = true)
 }
 
 // Handles our errors.
-function convert_error_hanlder($error_level, $error_string, $file, $line, $is_database_error = false)
+function convert_error_handler($error_level, $error_string, $file, $line, $is_database_error = false)
 {
 	global $command_line;
 
@@ -2981,7 +2994,7 @@ function convert_error_hanlder($error_level, $error_string, $file, $line, $is_da
 		// The array is easier than using \r as well makes it easier for command line.
 		$error_array = array(
 			'',
-			"The database encountered an error on line (from query), " . $line . "."; // . ", from file, " . $file . ".";
+			"The database encountered an error on line (from query), " . $line . ".", // . ", from file, " . $file . ".";
 			"The error received was:",
 			"---",
 			$error_level,
@@ -3044,15 +3057,10 @@ function convert_error_hanlder($error_level, $error_string, $file, $line, $is_da
 	}	
 
 	// Based on if we are command line or not, this will handle things for us.
-	if ($command_line)
-	{
-		$error_data = implode("\n", $error_array);
-		print_error($error_data);
-	}
-	else
-	{
-		$error_data = implode("<br />\r", $error_array);
-		echo $error_data;
-	}
+	if ($command_line && !$is_database_error)
+		print_error($error_data[1]);
+	// If its not command lind and not a database error, echo the error info (without backtrack).
+	elseif (!$is_database_error)
+		echo $error_array[1];
 }
 ?>
