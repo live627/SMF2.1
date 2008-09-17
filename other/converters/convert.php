@@ -818,7 +818,7 @@ function doStep0($error_message = null)
 	}
 
 	// Now for the steps.
-	if (!empty($steps) || 1==0)
+	if (!empty($steps) && 1==0)
 	{
 		echo '
 						<tr>
