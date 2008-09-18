@@ -460,7 +460,7 @@ ALTER COLUMN ignore_boards TYPE text;
 ---#
 
 /*****************************************************************************/
---- Fixing a bug with the inet_aton() function...
+--- Fixing a bug with the inet_aton() function.
 /*****************************************************************************/
 
 ---# Changing inet_aton function to use bigint instead of int...
@@ -471,4 +471,19 @@ CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
     split_part($1, ''.'', 3)::int8 * 256 +
     split_part($1, ''.'', 4)::int8 AS result'
 LANGUAGE 'sql';
+---#
+
+/*****************************************************************************/
+--- Making additional changes to handle results from fixed inet_aton().
+/*****************************************************************************/
+
+---# Adding an IFNULL to handle 8-bit integers returned by inet_aton
+CREATE OR REPLACE FUNCTION IFNULL(int8, int8) RETURNS int8 AS
+  'SELECT COALESCE($1, $2) AS result'
+LANGUAGE 'sql';
+---#
+
+---# Changing ip column in log_sessions to int8
+ALTER TABLE {$db_prefix}log_session
+ALTER COLUMN ip TYPE int8;
 ---#

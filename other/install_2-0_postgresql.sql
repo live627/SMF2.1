@@ -17,6 +17,10 @@ CREATE OR REPLACE FUNCTION IFNULL (int4, int4) RETURNS int4 AS
   'SELECT COALESCE($1, $2) AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION IFNULL (int8, int8) RETURNS int8 AS
+  'SELECT COALESCE($1, $2) AS result'
+LANGUAGE 'sql';
+
 CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
   'SELECT
     split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +
@@ -1179,7 +1183,7 @@ CREATE TABLE {$db_prefix}log_online (
   log_time int NOT NULL default '0',
   id_member int NOT NULL default '0',
   id_spider smallint NOT NULL default '0',
-  ip int NOT NULL default '0',
+  ip int8 NOT NULL default '0',
   url text NOT NULL,
   PRIMARY KEY (session)
 );
