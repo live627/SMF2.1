@@ -532,7 +532,7 @@ $txt['admin_search_section_sections'] = 'Section';
 $txt['admin_search_section_settings'] = 'Setting';
 
 $txt['core_settings_title'] = 'Core Features';
-$txt['mods_cat_features'] = 'Options';
+$txt['mods_cat_features'] = 'General';
 $txt['mods_cat_security_general'] = 'General';
 $txt['antispam_title'] = 'Anti-Spam';
 $txt['mods_cat_modifications_misc'] = 'Miscellaneous';
