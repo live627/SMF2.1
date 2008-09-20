@@ -1360,7 +1360,7 @@ function template_core_features()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
+	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="3">
 				', $txt['core_settings_title'], '

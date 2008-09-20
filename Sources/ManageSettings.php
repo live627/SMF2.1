@@ -79,7 +79,7 @@ if (!defined('SMF'))
 */
 
 // This just avoids some repetition.
-function loadGeneralSettingParameters(&$subActions, $defaultAction = '')
+function loadGeneralSettingParameters(&$subActions = array(), $defaultAction = '')
 {
 	global $context, $txt, $sourcedir;
 
@@ -108,7 +108,6 @@ function ModifyFeatureSettings()
 
 	$subActions = array(
 		'basic' => 'ModifyBasicSettings',
-		'core' => 'ModifyCoreFeatures',
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
 		'sig' => 'ModifySignatureSettings',
@@ -117,7 +116,7 @@ function ModifyFeatureSettings()
 		'pruning' => 'ModifyPruningSettings',
 	);
 
-	loadGeneralSettingParameters($subActions, 'core');
+	loadGeneralSettingParameters($subActions, 'basic');
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
@@ -125,8 +124,6 @@ function ModifyFeatureSettings()
 		'help' => 'featuresettings',
 		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
-			'core' => array(
-			),
 			'basic' => array(
 			),
 			'layout' => array(
@@ -216,6 +213,8 @@ function ModifyModSettings()
 function ModifyCoreFeatures($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	loadGeneralSettingParameters();
 
 	/* This is an array of all the features that can be enabled/disabled - each option can have the following:
 		title		- Text title of this item (If standard string does not exist).

@@ -144,13 +144,18 @@ function AdminMain()
 			'title' => $txt['admin_config'],
 			'permission' => array('admin_forum'),
 			'areas' => array(
+				'corefeatures' => array(
+					'label' => $txt['core_settings_title'],
+					'file' => 'ManageSettings.php',
+					'function' => 'ModifyCoreFeatures',
+					'icon' => 'corefeatures.gif',
+				),
 				'featuresettings' => array(
 					'label' => $txt['modSettings_title'],
 					'file' => 'ManageSettings.php',
 					'function' => 'ModifyFeatureSettings',
 					'icon' => 'features.gif',
 					'subsections' => array(
-						'core' => array($txt['core_settings_title']),
 						'basic' => array($txt['mods_cat_features']),
 						'layout' => array($txt['mods_cat_layout']),
 						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),

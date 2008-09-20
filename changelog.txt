@@ -11,7 +11,8 @@ September 2008
  & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2530,2518]
  ! Trimmed some of the old holidays. (install files) [Bug 2527]
  & Spelling fix and changing the PHP site link to the non-country specific version. (Help language file) [Bug 2530]
-
+ * Put the Core Features in their own area of the admin centre (Admin.php, ManageSettings.php, Admin template)
+ * Added a new icon for the Core Features area and replaced a few others with some more descriptive icons. (various images)
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
 ================================================================================
