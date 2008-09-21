@@ -361,7 +361,7 @@ if (empty($preparsing))
 				'auto' => true,
 			));
 			alterDatabase('members', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_temp'),
 			));
 
@@ -565,7 +565,7 @@ if (empty($preparsing))
 				'size' => 10,
 			));
 			alterDatabase('personal_messages', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_temp'),
 			));
 
@@ -788,13 +788,18 @@ if (empty($preparsing))
 			if (strrchr($entry, '.') != '.log')
 				continue;
 
-			$result = convert_query("
-				SELECT id_member
-				FROM {$to_prefix}members
-				WHERE member_name = '" . substr($entry, 0, -4) . "'
-				LIMIT 1");
-			list ($id_member) = convert_fetch_row($result);
-			convert_free_result($result);
+			if (!is_numeric(substr($entry, 0, -4)))
+			{
+				$result = convert_query("
+					SELECT id_member
+					FROM {$to_prefix}members
+					WHERE member_name = '" . substr($entry, 0, -4) . "'
+					LIMIT 1");
+				list ($id_member) = convert_fetch_row($result);
+				convert_free_result($result);
+			}
+			else
+				$id_member = substr($entry, 0, -4);
 
 			$logData = file($eblah['members'] . '/' . $entry);
 			foreach ($logData as $log)
@@ -984,7 +989,7 @@ if (empty($preparsing))
 				'auto' => true,
 			));
 			alterDatabase('topics', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_topic'),
 			));
 
@@ -1037,7 +1042,7 @@ if (empty($preparsing))
 
 		alterDatabase('log_topics', 'remove column', 'temp_id');
 		alterDatabase('log_topics', 'add index', array(
-			'type' => 'primary'
+			'type' => 'primary',
 			'columns' => array('id_topic', 'id_member'),
 		));
 	}
@@ -1240,7 +1245,7 @@ if (empty($preparsing))
 			'default' => 0,
 		));
 		alterDatabase('messages', 'add index', array(
-			'type' => 'primary'
+			'type' => 'primary',
 			'columns' => array('id_msg'),
 		));
 	}
@@ -1329,7 +1334,7 @@ if (empty($preparsing))
 
 						if (strlen($file) <= 255 && copy($eblah['uploaddir'] . '/' . $file, $attachmentUploadDir . '/' . $filename))
 						{
-							$setString[] = array($id_attach, $size, 0, ,addslashes($file), $row['id_msg']);
+							$setString[] = array($id_attach, $size, 0, addslashes($file), $row['id_msg']);
 
 							$id_attach++;
 						}
@@ -1364,17 +1369,17 @@ if (empty($preparsing))
 		if ($_GET['substep'] <= 1)
 		{
 			alterDatabase('messages', 'add index', array(
-				'type' => 'unique'
+				'type' => 'unique',
 				'name' => 'topic',
 				'columns' => array('id_topic', 'id_msg'),
 			));
 			alterDatabase('messages', 'add index', array(
-				'type' => 'unique'
+				'type' => 'unique',
 				'name' => 'id_board',
 				'columns' => array('id_board', 'id_msg'),
 			));
 			alterDatabase('messages', 'add index', array(
-				'type' => 'unique'
+				'type' => 'unique',
 				'name' => 'id_member',
 				'columns' => array('id_member', 'id_msg'),
 			));
@@ -1384,7 +1389,7 @@ if (empty($preparsing))
 		if ($_GET['substep'] <= 2)
 		{
 			alterDatabase('topics', 'add index', array(
-				'type' => 'unique'
+				'type' => 'unique',
 				'name' => 'poll',
 				'columns' => array('id_poll', 'id_topic'),
 			));
@@ -1400,7 +1405,7 @@ if (empty($preparsing))
 		if ($_GET['substep'] <= 4)
 		{
 			alterDatabase('topics', 'add index', array(
-				'type' => 'unique'
+				'type' => 'unique',
 				'name' => 'id_board',
 				'columns' => array('id_board', 'id_msg'),
 			));
@@ -1459,8 +1464,8 @@ if (empty($preparsing))
 		if ($_GET['substep'] > -1)
 		{
 			alterDatabase('topics', 'add index', array(
-				'type' => 'unique'
-				'name' => 'last_message'
+				'type' => 'unique',
+				'name' => 'last_message',
 				'columns' => array('id_last_msg', 'id_board'),
 			));
 
@@ -1469,7 +1474,7 @@ if (empty($preparsing))
 		if ($_GET['substep'] > -2)
 		{
 			alterDatabase('topics', 'add index', array(
-				'type' => 'unique'
+				'type' => 'unique',
 				'name' => 'first_message',
 				'columns' => array('id_poll', 'id_topic'),
 			));
@@ -1484,7 +1489,7 @@ if (empty($preparsing))
 
 	function parse_time($field, $use_now = true)
 	{
-		$field = trim(str_replace(array(' um ', ' de ', ' en ', ' la ', ' om '), ' at ', $field));
+		$field = trim(str_replace(array(' um', ' de', ' en', ' la', ' om', ' at'), '', $field));
 
 		if ($field == '')
 			$field = $use_now ? time() : 0;
@@ -1530,11 +1535,7 @@ if (empty($preparsing))
 		foreach ($block as $row)
 			$insert_block[] = '\'' . implode('\', \'', $row) . '\'';
 
-		convert_query("
-			INSERT" . (!empty($ignore) ? ' IGNORE' : '') . " INTO {$to_prefix}$table
-				(" . implode(', ', array_keys($block[0])) . ")
-			VALUES (" . implode("),
-				(", $insert_block) . ")");
+		convert_insert($table, array_keys($block[0]), $block, 'insert', $no_prefix);
 
 		$block = array();
 	}

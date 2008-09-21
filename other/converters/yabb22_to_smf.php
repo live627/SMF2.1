@@ -42,12 +42,6 @@ if (!function_exists('convert_query'))
 		header('Location: http://' . (empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST']) . (strtr(dirname($_SERVER['PHP_SELF']), '\\', '/') == '/' ? '' : strtr(dirname($_SERVER['PHP_SELF']), '\\', '/')) . '/convert.php?convert_script=' . basename(__FILE__));
 	else
 	{
-		if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
-		{
-			print_line('This converter is not a standalone converter. Please download convert.php from http://www.simplemachines.org and use it. This file should be in the same directory as it.');
-			exit;
-		}
-
 		echo '<html>
 	<head>
 		<title>Unable to continue!</title>
@@ -70,7 +64,7 @@ if (empty($preparsing))
 
 	function load_converter_settings()
 	{
-		global $yabb;
+		global $yabb, $block_settings;
 
 		if (isset($_SESSION['convert_parameters']['db_purge']))
 			$_SESSION['purge'] = !empty($_SESSION['convert_parameters']['db_purge']);
@@ -111,13 +105,43 @@ if (empty($preparsing))
 			if (preg_match('~\$([^ =]+?)\s*=\s*[q]?([\^"\']?)(.+?)\\2;~', $line, $match) != 0)
 				$yabb[$match[1]] = $match[2] == '^' ? addslashes($match[3]) : $match[3];
 		}
+
+		// Change these to reflect the sections you want to change their block sizes.
+		// !!! Note that the commented value is the default value for your reference.
+		$block_settings = array(
+			'members' => 100, // 100
+			'pms' => 100, // 100
+			'topics' => 1000, // 100
+			'posts1' => 5000, // 100
+			'posts2' => 10000, // 150
+			'attachments' => 100, // 100
+			'cleanup' => 150, // 150
+			'polls1' => 50, // 50
+			'polls2' => 200, // 200
+			'polls3' => 50, // 50
+		);
 	}
 
 	function convertStep1()
 	{
+		global $to_prefix, $db_character_set;
+
+		convert_query("
+			DROP TABLE IF EXISTS {$to_prefix}convert");
+
+		convert_query("
+			CREATE TABLE {$to_prefix}convert (
+				real_id TINYTEXT NOT NULL ,
+				temp TINYTEXT NOT NULL ,
+				type TINYTEXT NOT NULL
+			) CHARACTER SET utf8 COLLATE utf8_general_ci");
+	}
+
+	function convertStep2()
+	{
 		global $to_prefix, $yabb;
 
-		print_line('Converting membergroups...');
+		print_line('Converting membergroups...', false);
 
 		$knownGroups = array();
 		$extraGroups = array();
@@ -140,7 +164,7 @@ if (empty($preparsing))
 				if ($match[3] < 1)
 					$newbie = true;
 			}
-			elseif (preg_match('~\$NoPost\[(\d+)\] = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
+			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0) 
 			{
 				$match = addslashes_recursive($match);
 				$extraGroups[] = "SUBSTRING('$match[2]', 1, 80), SUBSTRING('$match[5]', 1, 20), 0, SUBSTRING('$match[3]#$match[4]', 1, 255)";
@@ -176,30 +200,19 @@ if (empty($preparsing))
 		}
 	}
 
-	function convertStep2()
+	function convertStep3()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 100;
+		$block_size = $block_settings['members'];
 
-		print_line('Converting members...');
+		print_line('Converting members...', false);
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
 		{
 			convert_query("
 				TRUNCATE {$to_prefix}members");
-		}
-		if ($_GET['substep'] == 0)
-		{
-			// Get rid of the primary key... we have to resort anyway.
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-			);
-			$alterColumns = array(
-				'id_member' => 'CHANGE COLUMN id_member id_member mediumint(8) unsigned NOT NULL default 0',
-			);
-			alterTable('members', $knownKeys, '', $alterColumns);
 		}
 
 		pastTime(0);
@@ -336,7 +349,7 @@ if (empty($preparsing))
 			foreach ($text_columns as $text_column => $max_size)
 				$row[$text_column] = isset($row[$text_column]) ? substr($row[$text_column], 0, $max_size) : '';
 
-			if (!empty($data['bday']) && $row['birthdate'] == '0001-01-01' && parse_time($data['bday'], false) != 0)
+			if ($row['birthdate'] == '0001-01-01' && !empty($data['bday']) && parse_time($data['bday'], false) != 0)
 				$row['birthdate'] = strftime('%Y-%m-%d', parse_time($data['bday'], false));
 
 			if (file_exists($yabb['memberdir'] . '/' . substr($entry, 0, -4) . '.karma'))
@@ -358,41 +371,17 @@ if (empty($preparsing))
 
 		doBlock('members', $block);
 
-		pastTime(-1);
-
 		// Part 2: Now we get to resort the members table!
-		if ($_GET['substep'] <= -1)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}members
-				ORDER BY id_member, date_registered");
-			pastTime(-2);
-		}
-		if ($_GET['substep'] <= -2)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_member)',
-			);
-			$alterColumns = array(
-				'id_member' => 'CHANGE COLUMN id_member id_member mediumint(8) unsigned NOT NULL auto_increment',
-			);
-			alterTable('members', $knownKeys, '', $alterColumns, true);
-
-			pastTime(-3);
-		}
-		if ($_GET['substep'] <= -3)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}members
-				ORDER BY id_member");
-		}
+		convert_query("
+			ALTER TABLE {$to_prefix}members
+			ORDER BY id_member");
 	}
 
-	function convertStep3()
+	function convertStep4()
 	{
 		global $to_prefix, $yabb;
 
-		print_line('Converting settings...');
+		print_line('Converting settings...', false);
 
 		$temp = file($yabb['vardir'] . '/reservecfg.txt');
 		$settings = array(
@@ -430,18 +419,19 @@ if (empty($preparsing))
 			$setString .= "
 				('$var', SUBSTRING('$val', 1, 65534)),";
 
+
 		convert_query("
 			REPLACE INTO {$to_prefix}settings
 				(variable, value)
 			VALUES" . substr($setString, 0, -1));
 	}
 
-	function convertStep4()
+	function convertStep5()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 100;
+		$block_size = $block_settings['pms'];
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
 		{
@@ -450,22 +440,8 @@ if (empty($preparsing))
 			convert_query("
 				TRUNCATE {$to_prefix}pm_recipients");
 		}
-		if ($_GET['substep'] == 0)
-		{
-			// Set the keys and columns to alter.
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-			);
-			$knownColumns = array(
-				'temp_toName' => 'ADD COLUMN temp_toName tinytext',
-			);
-			$alterColumns = array(
-				'id_pm' => 'CHANGE COLUMN id_pm id_pm int(10) unsigned NOT NULL default 0',
-			);
-			alterTable('personal_messages', $knownKeys, $knownColumns, $alterColumns);
-		}
 
-		print_line('Converting personal messages...');
+		print_line('Converting personal messages (part 1)...', false);
 
 		$names = array();
 
@@ -478,8 +454,10 @@ if (empty($preparsing))
 				break;
 			if ($file_n++ < $_GET['substep'])
 				continue;
-			if (strrchr($entry, '.') != '.msg')
+			if (strrchr($entry, '.') != '.msg' && strrchr($entry, '.') != '.outbox')
 				continue;
+
+			$is_outbox = strrchr($entry, '.') == '.outbox';
 
 			$userData = file($yabb['memberdir'] . '/' . $entry);
 			foreach ($userData as $i => $v)
@@ -488,17 +466,17 @@ if (empty($preparsing))
 				if (count($userData[$i]) <= 2 || empty($userData[$i]))
 					continue;
 
-				if (substr($userData[$i][7], -10) == '#nosmileys')
-					$userData[$i][7] = substr($userData[$i][7], 0, -10);
+				if (isset($userData[$i][3]) && substr($userData[$i][3], -10) == '#nosmileys')
+					$userData[$i][3] = substr($userData[$i][3], 0, -10);
 
 				$row = array(
 					'from_name' => substr(htmlspecialchars($userData[$i][1]), 0, 255),
 					'subject' => substr($userData[$i][5], 0, 255),
-					'msgtime' => empty($userData[$i][6]) ? (int) $userData[$i][6] : '0',
-					'body' => substr($userData[$i][7], 0, 65534),
+					'msgtime' => !empty($userData[$i][6]) ? (int) $userData[$i][6] : '0',
+					'body' => substr(!empty($userData[$i][3]) || empty($userData[$i][7]) ? $userData[$i][3] : $userData[$i][7], 0, 65534),
 					'id_member_from' => 0,
-					'deleted_by_sender' => 1,
-					'temp_toName' => htmlspecialchars(substr($entry, 0, -4)),
+					'deleted_by_sender' => $is_outbox ? 0 : 1,
+					'temp' => htmlspecialchars(substr($entry, 0, -4)),
 				);
 
 				$names[strtolower(addslashes($row['from_name']))][] = &$row['id_member_from'];
@@ -546,7 +524,7 @@ if (empty($preparsing))
 		pastTime(-1);
 
 		// Part 2: Now we get to resort the personal messages table!
-		if ($_GET['substep'] <= -1)
+		if ($_GET['substep'] >= -1)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
@@ -554,40 +532,21 @@ if (empty($preparsing))
 
 			pastTime(-2);
 		}
-		if ($_GET['substep'] <= -2)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_pm)',
-			);
-			$alterColumns = array(
-				'id_pm' => 'CHANGE COLUMN id_pm id_pm int(10) unsigned NOT NULL auto_increment',
-			);
-			alterTable('personal_messages', $knownKeys, '', $alterColumns, true);
-
-			pastTime(-3);
-		}
-		if ($_GET['substep'] <= -3)
+		if ($_GET['substep'] >= -2)
 		{
 			convert_query("
 				INSERT IGNORE INTO {$to_prefix}pm_recipients
 					(id_pm, id_member, labels, is_read)
 				SELECT pm.id_pm, mem.id_member, -1 AS labels, 1 AS is_read
-				FROM ({$to_prefix}personal_messages AS pm, {$to_prefix}members AS mem)
-				WHERE mem.member_name = pm.temp_toName
-					AND pm.temp_toName != ''");
+				FROM {$to_prefix}personal_messages AS pm
+					INNER JOIN {$to_prefix}convert AS c ON (c.real_id = pm.id_pm)
+					INNER JOIN {$to_prefix}members AS mem ON (mem.member_name = c.temp)
+				WHERE c.type = 'personal_messages'
+					AND pm.deleted_by_sender = 1");
 
-			pastTime(-4);
+			pastTime(-3);
 		}
-		if ($_GET['substep'] <= -4)
-		{
-			$knownColumns = array(
-				'temp_toName' => 'DROP temp_toName',
-			);
-			alterTable('personal_messages', '', $knownColumns, false, true);
-
-			pastTime(-5);
-		}
-		if ($_GET['substep'] <= -5)
+		if ($_GET['substep'] >= -3)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
@@ -595,11 +554,11 @@ if (empty($preparsing))
 		}
 	}
 
-	function convertStep5()
+	function convertStep6()
 	{
 		global $to_prefix, $yabb;
 
-		print_line('Converting boards and categories...');
+		print_line('Converting boards and categories...', false);
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
 		{
@@ -609,26 +568,6 @@ if (empty($preparsing))
 				TRUNCATE {$to_prefix}boards");
 			convert_query("
 				TRUNCATE {$to_prefix}moderators");
-		}
-		if ($_GET['substep'] == 0)
-		{
-			// Handle the categories table and columns
-			$knownColumns = array(
-				'temp_id' => 'ADD COLUMN temp_id tinytext',
-			);
-			alterTable('categories', '', $knownColumns);
-
-			// Use the $knownColumns frm before and add tempCatID then alter boards table.
-			$knownColumns += array(
-				'tempCatID' => 'ADD COLUMN tempCatID tinytext',
-			);
-			alterTable('boards', '', $knownColumns);
-
-			// Drop the primary key for moderators
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-			);
-			alterTable('moderators', $knownKeys);
 		}
 
 		$request = convert_query("
@@ -671,7 +610,7 @@ if (empty($preparsing))
 				$cats[$match[1]]['can_collapse'] = !empty($match[4]);
 			}
 			elseif (preg_match('~^@categoryorder = qw\((.+?)\);~', $line, $match) != 0)
-				$cat_order = array_flip(explode(' ', ' ', strtolower(trim($match[1]))));
+				$cat_order = array_flip(explode(' ', strtolower(trim($match[1]))));
 		}
 
 		$cat_rows = array();
@@ -681,11 +620,20 @@ if (empty($preparsing))
 			$row = array(
 				'name' => str_replace(array('qq~', 'qw~'), '', substr($cat['name'], 0, 255)),
 				'cat_order' => (int) @$cat_order[$temp_id],
-				'temp_id' => $temp_id,
+				'temp' => $temp_id,
 			);
 			$cat_rows[] = addslashes_recursive($row);
 		}
 		doBlock('categories', $cat_rows);
+
+		$request = convert_query("
+			SELECT cat.id_cat AS id_cat, con.temp AS cat_temp
+			FROM {$to_prefix}categories AS cat
+				INNER JOIN {$to_prefix}convert AS con ON (con.real_id = cat.id_cat)
+			WHERE con.type = 'categories'");
+		$catids = array();
+		while ($row = mysql_fetch_assoc($request))
+			$catids[$row['cat_temp']] = $row['id_cat'];
 
 		$board_data = file($yabb['boardsdir'] . '/forum.control');
 		$board_order = 1;
@@ -700,13 +648,13 @@ if (empty($preparsing))
 			$tempCatID = strtolower(trim($tempCatID));
 
 			$row = array(
-				'name' => str_replace(array('qq~', 'qw~'), '', substr($boards[$temp_id], 0, 255)),
+				'name' => !isset($boards[$temp_id]) ? $temp_id : str_replace(array('qq~', 'qw~'), '', substr($boards[$temp_id], 0, 255)),
 				'description' => substr($description, 0, 255),
-				'count_posts' => empty($doCountPosts),
+				'count_posts' => empty($doCountPosts) ? 0 : 1,
 				'board_order' => $board_order++,
-				'member_groups' => $cats[$tempCatID]['groups'],
-				'temp_id' => $temp_id,
-				'tempCatID' => $tempCatID,
+				'member_groups' => !empty($tempCatID) && !empty($cats[$tempCatID]['groups']) ? $cats[$tempCatID]['groups'] : '1',
+				'temp' => $temp_id,
+				'id_cat' => !empty($tempcatID) ? $catids[$tempCatID] : 1,
 			);
 
 			$board_rows[] = addslashes_recursive($row);
@@ -715,68 +663,107 @@ if (empty($preparsing))
 		}
 		doBlock('boards', $board_rows);
 
-		$result = convert_query("
-			SELECT id_cat, temp_id
-			FROM {$to_prefix}categories
-			WHERE temp_id != ''");
-		while ($row = mysql_fetch_assoc($result))
-		{
-			convert_query("
-				UPDATE {$to_prefix}boards
-				SET id_cat = $row[id_cat]
-				WHERE tempCatID = '$row[temp_id]'");
-		}
-		convert_free_result($result);
-
 		foreach ($moderators as $boardid => $names)
 		{
 			$result = convert_query("
-				SELECT id_board
-				FROM {$to_prefix}boards
-				WHERE temp_id = '$boardid'
+				SELECT b.id_board
+				FROM {$to_prefix}boards AS b
+					INNER JOIN {$to_prefix}convert AS con
+				WHERE con.temp = '$boardid'
 				LIMIT 1");
 			list ($id_board) = convert_fetch_row($result);
 			convert_free_result($result);
 
 			convert_query("
-				INSERT INTO {$to_prefix}moderators
+				INSERT IGNORE INTO {$to_prefix}moderators
 					(id_board, id_member)
 				SELECT $id_board, id_member
 				FROM {$to_prefix}members
 				WHERE member_name IN ('" . implode("', '", addslashes_recursive($names)) . "')
 				LIMIT " . count($names));
 		}
-
-		pastTime(-1);
-		if ($_GET['substep'] <= -1)
-		{
-			$knownColumns = array(
-				'temp_id' => 'DROP COLUMN temp_id',
-			);
-			alterTable('categories', '', $knownColumns, '', false, true);
-
-			pastTime(-2);
-		}
-		if ($_GET['substep'] <= -2)
-		{
-			$knownColumns = array(
-				'tempCatID' => 'DROP COLUMN tempCatID',
-			);
-			alterTable('boards', '', $knownColumns, '', false, true);
-
-			pastTime(-3);
-		}
-		if ($_GET['substep'] <= -3)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_board, id_member)',
-			);
-			alterTable('moderators', $knownKeys, '', '', true);
-		}
 	}
 
-	function convertStep6()
+	function convertStep7()
 	{
+		global $to_prefix, $yabb, $block_settings;
+
+		// Change the block size as needed
+		$block_size = $block_settings['topics']; //100;
+
+		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
+		{
+			convert_query("
+				TRUNCATE {$to_prefix}topics");
+		}
+
+		print_line('Converting topics (part 1)...', false);
+
+		$result = convert_query("
+			SELECT b.id_board, con.temp
+			FROM {$to_prefix}boards AS b
+				INNER JOIN {$to_prefix}convert AS con ON (con.real_id = b.id_board)
+			WHERE con.type = 'boards'");
+		$boards = array();
+		while ($row = mysql_fetch_assoc($result))
+			$boards[$row['temp']] = $row['id_board'];
+		convert_free_result($result);
+
+		$data_n = 0;
+		$block = array();
+		foreach ($boards as $boardname => $id_board)
+		{
+			if ($_GET['substep'] < 0)
+				break;
+			if (!file_exists($yabb['boardsdir'] . '/' . $boardname . '.txt'))
+				continue;
+
+			$topicListing = file($yabb['boardsdir'] . '/' . $boardname . '.txt');
+			$topicListing = array_reverse($topicListing);
+
+			foreach ($topicListing as $topicData)
+			{
+				if ($data_n++ < $_GET['substep'])
+					continue;
+
+				$topicInfo = explode('|', rtrim($topicData));
+				$temp_id = (int) $topicInfo[0];
+
+				if (!file_exists($yabb['datadir'] . '/' . $temp_id . '.txt'))
+					continue;
+
+				$views = @file($yabb['datadir'] . '/' . $temp_id . '.ctb');
+				$views = !empty($views[2]) && $views[2] > 1 ? $views[2] - 1 : 0;
+
+				$block[] = array(
+					'temp' => $temp_id,
+					'id_board' => $id_board,
+					'is_sticky' => isset($topicInfo[8]) && strpos($topicInfo[8], 's') !== false ? 1 : 0,
+					'locked' => isset($topicInfo[8]) && strpos($topicInfo[8], 'l') !== false ? 1 : 0,
+					'num_views' => $views < 0 ? 0 : $views,
+					// Give this some bs value.
+					'id_last_msg' => $temp_id,
+					'id_first_msg' => $temp_id,
+				);
+
+				if (count($block) > $block_size)
+				{
+					doBlock('topics', $block);
+					pastTime($data_n);
+				}
+			}
+		}
+
+		doBlock('topics', $block);
+
+		convert_query("
+			ALTER TABLE {$to_prefix}topics
+			ORDER BY id_topic");
+	}
+
+	function convertStep8()
+	{
+return;
 		global $to_prefix, $yabb;
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
@@ -788,25 +775,27 @@ if (empty($preparsing))
 			convert_query("
 				TRUNCATE {$to_prefix}log_topics");
 		}
-		if ($_GET['substep'] == 0)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-			);
-			$knownColumns = array(
-				'temp_id' => 'ADD COLUMN temp_id int(10) unsigned NOT NULL default 0',
-			);
-			alterTable('log_topics', $knownKeys, $knownColumns);
-		}
 
-		print_line('Converting mark read data...');
+		print_line('Converting mark read data...', false);
 
 		$result = convert_query("
-			SELECT id_board, temp_id
-			FROM {$to_prefix}boards");
+			SELECT b.id_board, con.temp
+			FROM {$to_prefix}boards AS b
+				INNER JOIN {$to_prefix}convert AS con ON (con.real_id = b.id_board)
+			WHERE con.type = 'boards'");
 		$boards = array();
 		while ($row = mysql_fetch_assoc($result))
-			$boards[$row['temp_id']] = $row['id_board'];
+			$boards[$row['temp']] = $row['id_board'];
+		convert_free_result($result);
+
+		$result = convert_query("
+			SELECT t.id_topic, con.temp
+			FROM {$to_prefix}topics AS t
+				INNER JOIN {$to_prefix}convert AS con ON (con.real_id = t.id_topic)
+			WHERE con.type = 'topics'");
+		$topics = array();
+		while ($row = mysql_fetch_assoc($result))
+			$topics[$row['temp']] = $row['id_topic'];
 		convert_free_result($result);
 
 		$file_n = 0;
@@ -841,9 +830,9 @@ if (empty($preparsing))
 				$row = array();
 				$row['id_member'] = $id_member;
 
-				if (is_numeric(trim($parts[0])) && trim($parts[0]) > 10000)
+				if (is_numeric(trim($parts[0])) && isset($topics[trim($parts[0])]) && trim($parts[0]) > 10000)
 				{
-					$row['temp_id'] = trim($parts[0]);
+					$row['id_topic'] = $topics[trim($parts[0])];
 					$topics_block[] = $row;
 				}
 				else
@@ -864,295 +853,28 @@ if (empty($preparsing))
 			// Because of the way steps are done, we have to flush all of these at once, or none.
 			if (count($mark_read_block) > 250 || count($boards_block) > 250 || count($topics_block) > 250)
 			{
-				doBlock('log_mark_read', $mark_read_block);
-				doBlock('log_boards', $boards_block);
-				doBlock('log_topics', $topics_block);
+				doBlock('log_mark_read', $mark_read_block, true);
+				doBlock('log_boards', $boards_block, true);
+				doBlock('log_topics', $topics_block, true);
 
 				pastTime($file_n);
 			}
 		}
 		$dir->close();
 
-		doBlock('log_mark_read', $mark_read_block);
-		doBlock('log_boards', $boards_block);
-		doBlock('log_topics', $topics_block);
-	}
-
-	function convertStep7()
-	{
-		global $to_prefix, $yabb;
-
-		// Change the block size as needed
-		$block_size = 100;
-
-		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
-		{
-			convert_query("
-				TRUNCATE {$to_prefix}topics");
-		}
-		if ($_GET['substep'] == 0)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-				'poll' => 'DROP INDEX poll',
-				'firstMessage' => 'DROP INDEX firstMessage',
-				'lastMessage' => 'DROP INDEX lastMessage',
-			);
-			$knownColumns = array(
-				'temp_id' => 'ADD COLUMN temp_id int(10) unsigned NOT NULL default 0'
-			);
-			$alterColumns = array(
-				'id_topic' => 'CHANGE COLUMN id_topic id_topic mediumint(8) unsigned NOT NULL default 0',
-			);
-			alterTable('topics', $knownKeys, $knownColumns, $alterColumns);
-		}
-
-		print_line('Converting topics (part 1)...');
-
-		$result = convert_query("
-			SELECT id_board, temp_id
-			FROM {$to_prefix}boards
-			WHERE temp_id != ''");
-		$boards = array();
-		while ($row = mysql_fetch_assoc($result))
-			$boards[$row['temp_id']] = $row['id_board'];
-		convert_free_result($result);
-
-		$data_n = 0;
-		$block = array();
-		foreach ($boards as $boardname => $id_board)
-		{
-			if ($_GET['substep'] < 0)
-				break;
-			if (!file_exists($yabb['boardsdir'] . '/' . $boardname . '.txt'))
-				continue;
-
-			$topicListing = file($yabb['boardsdir'] . '/' . $boardname . '.txt');
-			foreach ($topicListing as $topicData)
-			{
-				if ($data_n++ < $_GET['substep'])
-					continue;
-
-				$topicInfo = explode('|', rtrim($topicData));
-				$temp_id = (int) $topicInfo[0];
-
-				if (!file_exists($yabb['datadir'] . '/' . $temp_id . '.txt'))
-					continue;
-
-				$views = @file($yabb['datadir'] . '/' . $temp_id . '.ctb');
-				$views = empty($views[2]) || $views[2] < 1 ? 0 : $views[2] - 1;
-
-				$block[] = array(
-					'temp_id' => $temp_id,
-					'id_board' => (int) $id_board,
-					'is_sticky' => isset($topicInfo[8]) && strpos($topicInfo[8], 's') !== false ? 1 : 0,
-					'locked' => isset($topicInfo[8]) && strpos($topicInfo[8], 'l') !== false ? 1 : 0,
-					'num_views' => $views < 0 ? 0 : $views,
-				);
-
-				if (count($block) > $block_size)
-				{
-					doBlock('topics', $block);
-					pastTime($data_n);
-				}
-			}
-		}
-
-		doBlock('topics', $block);
-
-		pastTime(-1);
-
-		if ($_GET['substep'] <= -1)
-		{
-			convert_query("
-				DELETE FROM {$to_prefix}topics
-				WHERE id_topic = 0");
-
-			convert_query("
-				UPDATE {$to_prefix}topics
-				SET temp_id = id_topic
-				WHERE temp_id = 0");
-
-			pastTime(-2);
-		}
-		if ($_GET['substep'] <= -2)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				ORDER BY id_topic, temp_id");
-
-			pastTime(-3);
-		}
-		if ($_GET['substep'] <= -3)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_topic)',
-			);
-			$alterColumns = array(
-				'id_topic' => 'CHANGE COLUMN id_topic id_topic mediumint(8) unsigned NOT NULL auto_increment',
-			);
-			alterTable('topics', $knownKeys, '', $alterColumns, true);
-
-			pastTime(-4);
-		}
-		if ($_GET['substep'] <= -4)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}topics
-				ORDER BY id_topic");
-		}
-	}
-
-	function convertStep8()
-	{
-		global $to_prefix, $yabb;
-
-	return;
-		// Change the block size as needed
-		$block_size = 10000; //250;
-
-		if ($_GET['substep'] == 0)
-		{
-			$knownColumns = array(
-				'temp_id' => 'DROP COLUMN temp_id',
-			);
-			alterTable('boards', '', $knownColumns, '', false, true);
-		}
-
-		print_line('Converting topics (part 2)...');
-
-		$request = convert_query("
-			SELECT COUNT(*)
-			FROM {$to_prefix}topics
-			WHERE temp_id != id_topic");
-		list ($topicCount) = convert_fetch_row($request);
-		convert_free_result($request);
-
-		while ($_GET['substep'] <= $topicCount)
-		{
-			pastTime($_GET['substep']);
-
-			$result = convert_query("
-				SELECT id_topic, temp_id
-				FROM {$to_prefix}topics
-				WHERE temp_id != id_topic
-				LIMIT $_GET[substep], $block_size");
-			while ($row = mysql_fetch_assoc($result))
-			{
-				convert_query("
-					UPDATE {$to_prefix}log_topics
-					SET id_topic = $row[id_topic]
-					WHERE temp_id = $row[temp_id]");
-			}
-
-			$_GET['substep'] += $block_size;
-
-			convert_free_result($result);
-		}
-
-		pastTime(-1);
-
-		if ($_GET['substep'] <= -1)
-		{
-			convert_query("
-				DELETE FROM {$to_prefix}log_topics
-				WHERE id_topic = 0 
-					OR id_member = 0");
-
-			pastTime(-2);
-		}
-		if ($_GET['substep'] <= -2)
-		{
-			$result = convert_query("
-				SELECT id_topic
-				FROM {$to_prefix}log_topics
-				GROUP BY id_topic
-				HAVING COUNT(id_member) > 1");
-
-			while ($row = mysql_fetch_assoc($result))
-				convert_query("
-					DELETE FROM {$to_prefix}log_topics
-					WHERE id_topic = $row[id_topic]
-					LIMIT 1");
-			convert_free_result($result);
-
-			pastTime(-3);
-		}
-		if ($_GET['substep'] <= -3)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_topic, id_member)',
-			);
-			$knownColumns = array(
-				'temp_id' => 'DROP COLUMN temp_id',
-			);
-			alterTable('log_topics', $knownKeys, $knownColumns, '', true, true);
-		}
+		doBlock('log_mark_read', $mark_read_block, true);
+		doBlock('log_boards', $boards_block, true);
+		doBlock('log_topics', $topics_block, true);
+		
+		print_line($file_n . ' Converted...', true);
 	}
 
 	function convertStep9()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 150;
-
-		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
-		{
-			convert_query("
-				TRUNCATE {$to_prefix}log_notify");
-		}
-
-		print_line('Converting notifications...');
-
-		$request = convert_query("
-			SELECT COUNT(*)
-			FROM {$to_prefix}topics
-			WHERE temp_id != id_topic");
-		list ($count) = convert_fetch_row($request);
-		convert_free_result($request);
-
-		while ($_GET['substep'] < $count)
-		{
-			pastTime($_GET['substep']);
-
-			$result = convert_query("
-				SELECT id_topic, temp_id
-				FROM {$to_prefix}topics
-				WHERE temp_id != id_topic
-				LIMIT $_GET[substep], $block_size");
-			while ($row = mysql_fetch_assoc($result))
-			{
-				if (!file_exists($yabb['datadir'] . '/' . $row['temp_id'] . '.mail'))
-					continue;
-
-				$list = file($yabb['datadir'] . '/' . $row['temp_id'] . '.mail');
-				foreach ($list as $k => $v)
-					list ($list[$k]) = explode('|', htmlspecialchars(addslashes(rtrim($v))));
-
-				convert_query("
-					INSERT IGNORE INTO {$to_prefix}log_notify
-						(id_topic, id_member)
-					SELECT $row[id_topic], id_member
-					FROM {$to_prefix}members
-					WHERE member_name IN ('" . implode("', '", $list) . "')
-					LIMIT " . count($list));
-			}
-
-			$_GET['substep'] += $block_size;
-			if (convert_num_rows($result) < $block_size)
-				break;
-
-			convert_free_result($result);
-		}
-	}
-
-	function convertStep10()
-	{
-		global $to_prefix, $yabb;
-
-		// Change the block size as needed
-		$block_size = 100;
+		$block_size = $block_settings['posts1']; //100;
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
 		{
@@ -1161,43 +883,22 @@ if (empty($preparsing))
 			convert_query("
 				TRUNCATE {$to_prefix}attachments");
 		}
-		if ($_GET['substep'] == 0)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-				'topic' => 'DROP INDEX topic',
-				'id_board' => 'DROP INDEX id_board',
-				'id_topic' => 'DROP INDEX id_topic',
-				'id_member' => 'DROP INDEX id_member',
-			);
-			$alterColumns = array(
-				'id_msg' => 'CHANGE COLUMN id_msg id_msg int(10) unsigned NOT NULL default 0',
-			);
 
-			// Do we have attachments?
-			if (isset($yabb['uploaddir']))
-				$knownColumns = array(
-					'temp_filename' => "ADD COLUMN temp_filename tinytext NOT NULL",
-				);
-			else
-				$knownColumns = array();
-
-			alterTable('messages', $knownKeys, $knownColumns, $alterColumns);
-		}
-
-		print_line('Converting posts (part 1 - this may take some time)...');
+		print_line('Converting posts (part 1 - this may take some time)...', false);
 
 		$block = array();
 		while (true)
 		{
 			$result = convert_query("
-				SELECT id_topic, temp_id, id_board
-				FROM {$to_prefix}topics
-				WHERE temp_id != id_topic
-				LIMIT $_GET[substep], $block_size");
+				SELECT t.id_topic, con.temp, t.id_board
+				FROM {$to_prefix}topics AS t
+					INNER JOIN {$to_prefix}convert AS con ON (con.real_id = t.id_topic)
+				WHERE con.type = 'topics'
+					AND t.id_first_msg = con.temp
+				LIMIT $block_size");
 			while ($topic = mysql_fetch_assoc($result))
 			{
-				$messages = file($yabb['datadir'] . '/' . $topic['temp_id'] . '.txt');
+				$messages = file($yabb['datadir'] . '/' . $topic['temp'] . '.txt');
 				if (empty($messages))
 				{
 					convert_query("
@@ -1236,22 +937,35 @@ if (empty($preparsing))
 						'modified_name' => substr($message[11], 0, 255),
 					);
 
-					if (isset($yabb['uploaddir']))
-					{
-						if (isset($message[12]) && file_exists($yabb['uploaddir'] . '/' . $message[12]))
-							$row['temp_filename'] = $message[12];
-						else
-							$row['temp_filename'] = '';
-					}
+					// Do we have attachments?.
+					if (isset($yabb['uploaddir']) && !empty($message[12]) && file_exists($yabb['uploaddir'] . '/' . $message[12]))
+						convert_insert('convert', array('real_id', 'temp', 'type'), array($message[12], $row['poster_time'] . ':' . $row['poster_name'], 'msg_attach'), 'insert');
 
 					$block[] = addslashes_recursive($row);
 
+					$_GET['substep'] += count($block);
 					if (count($block) > $block_size)
-						doBlock('messages', $block);
+					{
+						list($first, $last) = doBlock('messages', $block, false, true, true);
+
+						convert_query("
+							UPDATE {$to_prefix}topics
+							SET id_first_msg = {$first},
+								id_last_msg = {$last}
+							WHERE id_topic = {$topic['id_topic']}");
+					}
 				}
 
-				doBlock('messages', $block);
-				pastTime(++$_GET['substep']);
+				$_GET['substep'] += count($block);
+				list($first, $last) = doBlock('messages', $block, false, true, true);
+
+				convert_query("
+					UPDATE {$to_prefix}topics
+					SET id_first_msg = {$first},
+						id_last_msg = {$last}
+					WHERE id_topic = {$topic['id_topic']}");
+
+				pastTime($_GET['substep']);
 			}
 
 			if (convert_num_rows($result) < $block_size)
@@ -1263,84 +977,17 @@ if (empty($preparsing))
 		doBlock('messages', $block);
 	}
 
-	function convertStep11()
+
+	function convertStep10()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 100000; //150;
+		$block_size = $block_settings['posts2']; // 150;
+		// How long to take a break?
+		$_GET['substep'] = 0;
 
-		if ($_GET['substep'] == 0)
-		{
-			convert_query("
-				ALTER TABLE {$to_prefix}messages
-				ORDER BY poster_time");
-
-			// At least give it something, since we don't use it in a query.	
-			$_GET['substep'] = 1;
-		}
-
-		print_line('Converting posts (part 2)...');
-
-		pastTime($_GET['substep']);
-
-		$request = convert_query("
-			SELECT COUNT(*)
-			FROM {$to_prefix}messages
-			WHERE id_msg = 0");
-		list($uncompleted_messages) = convert_fetch_row($request);
-		convert_free_result($request);
-
-		if (!empty($uncompleted_messages))
-		{
-			$request = convert_query("
-				SELECT @msg := IFNULL(MAX(id_msg), 0)
-				FROM {$to_prefix}messages");
-			convert_free_result($request);
-
-			while(!empty($uncompleted_messages))
-			{
-				convert_query("
-					UPDATE {$to_prefix}messages
-					SET id_msg = (@msg := @msg + 1)
-					WHERE id_msg = 0
-					LIMIT $block_size");
-
-				$_GET['substep'] += $block_size;
-				pastTime($_GET['substep']);
-
-		$request = convert_query("
-			SELECT COUNT(*)
-			FROM {$to_prefix}messages
-			WHERE id_msg = 0");
-		list($uncompleted_messages) = convert_fetch_row($request);	
-		if empty($uncompleted_messages))
-			break;
-			}
-		}
-
-		pastTime(-1);
-
-		if ($_GET['substep'] <= -1)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_msg)',
-			);
-			$alterColumns = array(
-				'id_msg' => 'CHANGE COLUMN id_msg id_msg int(10) unsigned NOT NULL auto_increment',
-			);
-			alterTable('messages', $knownKeys, '', $alterColumns, true);
-		}
-	}
-
-	function convertStep12()
-	{
-		global $to_prefix, $yabb;
-
-		// Change the block size as needed
-		$block_size = 100000; // 150
-
-		print_line('Converting posts (part 3)...');
+		print_line('Converting posts (part 2)...', false);
 
 		while (true)
 		{
@@ -1359,7 +1006,6 @@ if (empty($preparsing))
 					WHERE id_msg = $row[id_msg]");
 			convert_free_result($result);
 
-			// Just so the user knows something occured.
 			$_GET['substep'] += $block_size;
 
 			if ($numRows < 1)
@@ -1369,14 +1015,14 @@ if (empty($preparsing))
 		}
 	}
 
-	function convertStep13()
+	function convertStep11()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 100;
+		$block_size = $block_settings['attachments'];
 
-		print_line('Converting attachments (if the mod is installed)...');
+		print_line('Converting attachments (if the mod is installed)...', false);
 
 		if (!isset($yabb['uploaddir']))
 			return;
@@ -1408,9 +1054,10 @@ if (empty($preparsing))
 			$setString = '';
 
 			$result = convert_query("
-				SELECT id_msg, temp_filename
-				FROM {$to_prefix}messages
-				WHERE temp_filename != ''
+				SELECT m.id_msg, con.temp
+				FROM {$to_prefix}messages AS m
+					INNER JOIN {$to_prefix}convert AS con ON (con.real_id = CONCAT(m.poster_time, ':', m.poster_name))
+				WHERE con.type = 'msg_attach'
 				LIMIT $_GET[substep], $block_size");
 			while ($row = mysql_fetch_assoc($result))
 			{
@@ -1451,71 +1098,18 @@ if (empty($preparsing))
 
 			convert_free_result($result);
 		}
-
-		pastTime(-1);
-
-		if ($_GET['substep'] <= -1)
-		{
-			$knownColumns = array(
-				'temp_filename' => 'DROP COLUMN temp_filename'
-			);
-			alterTable('messages', '', $knownColumns, '', false, true);
-		}
 	}
 
-	function convertStep14()
+	function convertStep12()
 	{
-		global $to_prefix, $yabb;
-
-		print_line('Cleaning up (part 1)...');
-
-		if ($_GET['substep'] <= 0)
-		{
-			$knownKeys = array(
-				'topic' => 'ADD UNIQUE INDEX topic (id_topic, id_msg)'
-			);
-			alterTable('messages', $knownKeys, '', true);
-
-			pastTime(1);
-		}
-		if ($_GET['substep'] <= 1)
-		{
-			$knownKeys = array(
-				'id_board' => 'ADD UNIQUE INDEX id_board (id_board, id_msg)',
-			);
-			alterTable('messages', $knownKeys, '', true);
-
-			pastTime(2);
-		}
-		if ($_GET['substep'] <= 2)
-		{
-			$knownKeys = array(
-				'id_topic' => 'ADD KEY id_topic (id_topic)',
-			);
-			alterTable('messages', $knownKeys, '', true);
-
-			pastTime(3);
-		}
-		if ($_GET['substep'] <= 3)
-		{
-			$knownKeys = array(
-				'id_member' => 'ADD UNIQUE INDEX id_member (id_member, id_msg)',
-			);
-			alterTable('messages', $knownKeys, '', true);
-
-		}
-	}
-
-	function convertStep15()
-	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 150; // 150;
+		$block_size = $block_settings['cleanup'];
 
-		print_line('Cleaning up (part 2)...');
+		print_line('Cleaning up...', false);
 
-		while ($_GET['substep'] > -1)
+		while ($_GET['substep'] >= 0)
 		{
 			pastTime($_GET['substep']);
 
@@ -1525,13 +1119,6 @@ if (empty($preparsing))
 				WHERE m.id_topic = t.id_topic
 				GROUP BY t.id_topic
 				LIMIT $_GET[substep], $block_size");
-			
-			if (!convert_num_rows($result))
-			{
-				$_GET['substep'] = -1;
-				pastTime(-1);
-			}
-
 			while ($row = mysql_fetch_assoc($result))
 			{
 				$result2 = convert_query("
@@ -1564,31 +1151,14 @@ if (empty($preparsing))
 
 			convert_free_result($result);
 		}
-
-		if ($_GET['substep'] > -1)
-		{
-			$knownKeys = array(
-				'lastMessage' => 'ADD UNIQUE INDEX lastMessage (id_last_msg, id_board)',
-			);
-			alterTable('topics', $knownKeys, '', true);
-
-			pastTime(-2);
-		}
-		if ($_GET['substep'] >= -2)
-		{
-			$knownKeys = array(
-				'firstMessage' => 'ADD UNIQUE INDEX firstMessage (id_first_msg, id_board)',
-			);
-			alterTable('topics', $knownKeys, '', true);
-		}
 	}
 
-	function convertStep16()
+	function convertStep13()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 25; // 50
+		$block_size = $block_settings['polls1'];
 
 		// If set remove the old data
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
@@ -1601,28 +1171,13 @@ if (empty($preparsing))
 				TRUNCATE {$to_prefix}log_polls");
 		}
 
-		// Drop the indexes to prevent Dup keys errors
-		if ($_GET['substep'] == 0)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'DROP PRIMARY KEY',
-			);
-			$knownColumns = array(
-				'temp_id' => 'ADD temp_id int(10) unsigned NOT NULL default 0',
-			);
-			$alterColumns = array(
-				'id_poll' => 'CHANGE COLUMN id_poll id_poll MEDIUMINT(8) unsigned NOT NULL default 0',
-			);
-			alterTable('polls', $knownKeys, $knownColumns, $alterColumns);
-			alterTable('poll_choices', $knownKeys);
-		}
-
-		print_line('Converting polls and poll choices...');
+		print_line('Converting polls and poll choices (part 1)...', false);
 
 		$file_n = 0;
 		$dir = dir($yabb['datadir']);
 		$pollQuestionsBlock = array();
 		$pollChoicesBlock = array();
+		$member_names = array();
 		while ($entry = $dir->read())
 		{
 			if ($_GET['substep'] < 0)
@@ -1630,10 +1185,7 @@ if (empty($preparsing))
 			if ($file_n++ < $_GET['substep'])
 				continue;
 			if (strrchr($entry, '.') != '.poll')
-			{
-				++$_GET['substep'];
 				continue;
-			}
 
 			$pollData = file($yabb['datadir'] . '/' . $entry);
 
@@ -1655,8 +1207,9 @@ if (empty($preparsing))
 						'change_vote' => 0,
 						'id_member' => 0,
 						'poster_name' => empty($pollData[$i][3]) ? 'Guest' : substr(htmlspecialchars($pollData[$i][3]), 0, 255),
-						'temp_id' => (int) $id_poll,
+						'temp' => (int) $id_poll,
 					);
+
 					$pollQuestionsBlock[] = addslashes_recursive($pollQuestions);
 				}
 
@@ -1664,7 +1217,7 @@ if (empty($preparsing))
 				if (count($pollData[$i]) == 2)
 				{
 					$pollChoices = array(
-						'id_poll' => $id_poll,
+						'id_poll' => (int) $id_poll,
 						'id_choice' => $i - 1, // Make sure to subtract the first row since that's the question
 						'label' => $pollData[$i][1],
 						'votes' => (int) $pollData[$i][0],
@@ -1673,113 +1226,84 @@ if (empty($preparsing))
 				}
 			}
 
-			// Since we are basing this off questions lets put the number of rows to a lower ammount since it will be more with the choices
-			if (count($file_n) > $block_size)
+			$name_temp = array();
+			foreach ($pollQuestionsBlock as $temp)
+				if ($temp['poster_name'] != 'Guest')
+					$name_temp[] = $temp['poster_name'];
+
+			if (!empty($name_temp))
 			{
-				// Set the id_topic
-				$topics = array();
-				foreach ($pollQuestionsBlock as $question)
-					$topics[] = $question['temp_id'];
+				$names = array();
+				$temp = '"' . implode(',', $name_temp) . '"';
 
-				// Select the members
 				$request = convert_query("
-					SELECT id_member_started AS id_member, temp_id, id_topic
-					FROM {$to_prefix}topics
-					WHERE temp_id IN (" . implode(',', $topics) . ")");
-
+					SELECT id_member, real_name
+					FROM {$to_prefix}members
+					WHERE real_name IN ({$temp})");
 				while ($row = mysql_fetch_assoc($request))
-				{
-					// Assign id_poll id_member to the pollQuestion
-					foreach ($pollQuestionsBlock as $keyID => $questions)
-					{
-						if (isset($pollQuestionsBlock[$keyID]['id_member']) && $pollQuestionsBlock[$keyID]['id_member'] == $row['id_member'])
-								$pollQuestionsBlock[$keyID]['id_member'] = $row['id_member'];
-					}
-					// Assign id_poll to the choices
-					foreach ($pollChoicesBlock as $keyID => $choices)
-					{
-						foreach ($choices as $key => $choice)
-							if ($key == 'id_poll' && $choice == $row['temp_id'])
-								$pollChoicesBlock[$keyID]['id_poll'] = $row['id_topic'];
-					}
-				}
+					$names[$row['real_name']] = $row['id_member'];
 				convert_free_result($request);
 
-				doBlock('polls', $pollQuestionsBlock);
-				doBlock('poll_choices', $pollChoicesBlock);
-
-				// Increase the time
-				pastTime($file_n);
+				$request = convert_query("
+					SELECT id_member, member_name
+					FROM {$to_prefix}members
+					WHERE member_name IN ({$temp}) AND real_name NOT IN ({$temp})");
+				while ($row = mysql_fetch_assoc($request))
+					$names[$row['member_name']] = $row['id_member'];
+				convert_free_result($request);
 			}
+
+			foreach ($pollQuestionsBlock as $key => $poll)
+				$pollQuestionsBlock[$key]['id_member'] = $poll['poster_name'] == 'Guest' || !isset($names[$poll['poster_name']]) ? 0 : $names[$poll['poster_name']];
+
+			// Then insert it.
+			doBlock('polls', $pollQuestionsBlock);
+
+			$poll_ids = array();
+			// Now get the correct ids.
+			$request = convert_query("
+				SELECT p.id_poll, con.temp
+				FROM {$to_prefix}polls AS p
+					INNER JOIN {$to_prefix}convert AS con ON (con.real_id = p.id_poll)
+				WHERE con.type = 'polls'");
+			while  ($row = mysql_fetch_assoc($request))
+				$poll_ids[$row['temp']] = $row['id_poll'];
+
+			foreach ($pollChoicesBlock as $key => $choice)
+				$pollChoicesBlock[$key]['id_poll'] = $poll_ids[$choice['id_poll']];
+
+			// Now for the choices.
+			doBlock('poll_choices', $pollChoicesBlock);
+
+			// Increase the time
+			$_GET['substep'] += $file_n;
+			pastTime($_GET['substep']);
 		}
 		$dir->close();
 
-		if (!empty($pollQuestionsBlock) && !empty($pollChoicesBlock))
-		{
-			$topics = array();
-			foreach ($pollQuestionsBlock as $question)
-				$topics[] = $question['temp_id'];
-
-			// Select the members
-			$request = convert_query("
-				SELECT id_member_started AS id_member, temp_id, id_topic
-				FROM {$to_prefix}topics
-				WHERE temp_id IN (" . implode(',', $topics) . ")");
-
-			while ($row = mysql_fetch_assoc($request))
-			{
-				// Assign id_poll id_member to the pollQuestion
-				foreach ($pollQuestionsBlock as $keyID => $questions)
-				{
-					if (isset($pollQuestionsBlock[$keyID]['id_member']) && $pollQuestionsBlock[$keyID]['id_member'] == $row['temp_id'])
-							$pollQuestionsBlock[$keyID]['id_member'] = $row['id_member'];
-				}
-				// Assign id_poll to the choices
-				foreach ($pollChoicesBlock as $keyID => $choices)
-				{
-					foreach ($choices as $key => $choice)
-						if ($key == 'id_poll' && $choice == $row['temp_id'])
-							$pollChoicesBlock[$keyID]['id_poll'] = $row['id_topic'];
-				}
-			}
-			convert_free_result($request);
-
-			doBlock('polls', $pollQuestionsBlock);
-			doBlock('poll_choices', $pollChoicesBlock);
-		}
-
-		pastTime(-1);
-
-		if ($_GET['substep'] <= -1)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_poll)',
-			);
-			$alterColumns = array(
-				'id_poll' => 'CHANGE COLUMN id_poll id_poll MEDIUMINT(8) unsigned NOT NULL auto_increment',
-			);
-			alterTable('polls', $knownKeys, '', $alterColumns, true, true);
-		}
 	}
 
-	function convertStep17()
+	function convertStep14()
 	{
-		global $to_prefix;
+		global $to_prefix, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 200;
+		$block_size = $block_settings['polls2'];
 
-		print_line('Converting polls and poll choices (part 2)...');
+		print_line('Converting polls and poll choices (part 2)...', false);
 
 		while (true)
 		{
 			pastTime($_GET['substep']);
 
 			$request = convert_query("
-				SELECT p.id_poll, t.id_topic
-				FROM ({$to_prefix}polls AS p, {$to_prefix}topics AS t)
-				WHERE p.temp_id = t.temp_id
-				LIMIT $_GET[substep], $block_size");
+				SELECT p.id_poll, pcon.temp, t.id_topic
+				FROM {$to_prefix}polls AS p
+					INNER JOIN {$to_prefix}convert AS pcon ON (pcon.real_id = p.id_poll)
+					INNER JOIN {$to_prefix}convert AS tcon ON (tcon.temp = pcon.temp)
+					INNER JOIN {$to_prefix}topics AS t ON (t.id_topic = tcon.real_id)
+				WHERE pcon.type = 'polls'
+					AND tcon.type = 'topics'");
 
 			while ($row = mysql_fetch_assoc($request))
 			{
@@ -1790,7 +1314,7 @@ if (empty($preparsing))
 				convert_query("
 					UPDATE {$to_prefix}poll_choices
 					SET id_poll = $row[id_poll]
-					WHERE id_poll = $row[id_topic]");
+					WHERE id_poll = $row[temp]");
 			}
 
 			$_GET['substep'] += $block_size;
@@ -1801,14 +1325,14 @@ if (empty($preparsing))
 		}
 	}
 
-	function convertStep18()
+	function convertStep15()
 	{
-		global $to_prefix, $yabb;
+		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
-		$block_size = 50;
+		$block_size = $block_settings['polls3'];
 
-		print_line('Converting poll votes...');
+		print_line('Converting poll votes...', false);
 
 		$file_n = 0;
 		$dir = dir($yabb['datadir']);
@@ -1844,7 +1368,7 @@ if (empty($preparsing))
 						'id_poll' => 0,
 						'id_member' => 0,
 						'id_choice' => !empty($pollVotesData[$i][2]) ? (int) $pollVotesData[$i][2] : 0,
-						'temp_id' => $id_poll,
+						'temp' => $id_poll,
 						'member_name' => trim($pollVotesData[$i][1])
 					);
 
@@ -1865,7 +1389,28 @@ if (empty($preparsing))
 				{
 					foreach ($pollVotesBlock as $key => $avlue)
 					{
-						if (isset($pollVotesBlock[$key]['member_name']) && $pollVotesBlock[$key]['member_name'] == $row['member_name'])
+						if (isset($avlue['member_name']) && $avlue['member_name'] == $row['member_name'])
+						{
+							// Assign id_member
+							$pollVotesBlock[$key]['id_member'] = $row['id_member'];
+
+							// Now lets unset member_name since we don't need it any more
+							unset($pollVotesBlock[$key]['member_name'], $pollVotesBlock[$key]['member_name']);
+						}
+					}
+				}
+
+				$request = convert_query("
+					SELECT id_member, real_name
+					FROM {$to_prefix}members
+					WHERE real_name IN ('" . implode("','", $members) . "')");
+
+				// Asssign the id_member to the poll.
+				while ($row = mysql_fetch_assoc($request))
+				{
+					foreach ($pollVotesBlock as $key => $avlue)
+					{
+						if (isset($avlue['member_name']) && $avlue['member_name'] == $row['real_name'])
 						{
 							// Assign id_member
 							$pollVotesBlock[$key]['id_member'] = $row['id_member'];
@@ -1878,20 +1423,20 @@ if (empty($preparsing))
 
 				// Get the id_poll form the temp ID
 				$request = convert_query("
-					SELECT id_poll, temp_id
-					FROM {$to_prefix}polls
-					WHERE temp_id IN (" . implode(',', $pollIdsBlock) . ")");
+					SELECT p.id_poll, con.temp
+					FROM {$to_prefix}polls AS p
+						INNER JOIN {$to_prefix}convert AS con ON (con.real_id = p.id_poll)
+					WHERE con.temp IN (" . implode(',', $pollIdsBlock) . ")");
 
 				// Assign the id_poll
 				while ($row = mysql_fetch_assoc($request))
 				{
 					foreach ($pollVotesBlock as $key => $value)
 					{
-						if (isset($pollVotesBlock[$key]['temp_id']) && $pollVotesBlock[$key]['temp_id'] == $row['temp_id'])
+						if (isset($pollVotesBlock[$key]['temp']) && $pollVotesBlock[$key]['temp'] == $row['temp'])
 						{
 							$pollVotesBlock[$key]['id_poll'] = $row['id_poll'];
-							//unset($pollVotesBlock[$key]['temp_id'], $pollVotesBlock[$key]['temp_id']);
-							$pollVotesBlock[$key]['temp_id'] = 0;
+							unset($pollVotesBlock[$key]['temp'], $pollVotesBlock[$key]['temp']);
 						}
 					}
 				}
@@ -1900,7 +1445,7 @@ if (empty($preparsing))
 				foreach ($pollVotesBlock as $key => $value)
 				{
 					if (isset($pollVotesBlock[$key]['member_name']))
-						unset($pollVotesBlock[$key]['member_name'], $pollVotesBlock[$key]['member_name']);
+						unset($pollVotesBlock[$key]);
 				}
 
 				doBlock('log_polls', $pollVotesBlock, true);
@@ -1910,122 +1455,6 @@ if (empty($preparsing))
 			}
 		}
 		$dir->close();
-
-		if (!empty($members))
-		{
-			$request = convert_query("
-				SELECT id_member, member_name
-				FROM {$to_prefix}members
-				WHERE member_name IN ('" . implode("','", $members) . "')");
-
-			// Asssign the id_member to the poll.
-			while ($row = mysql_fetch_assoc($request))
-			{
-				foreach ($pollVotesBlock as $key => $avlue)
-				{
-					if (isset($pollVotesBlock[$key]['member_name']) && $pollVotesBlock[$key]['member_name'] == $row['member_name'])
-					{
-						// Assign id_member
-						$pollVotesBlock[$key]['id_member'] = $row['id_member'];
-
-						// Now lets unset member_name since we don't need it any more
-						unset($pollVotesBlock[$key]['member_name'], $pollVotesBlock[$key]['member_name']);
-					}
-				}
-			}
-		}
-
-		if (!empty($pollIdsBlock))
-		{
-			// Get the id_poll form the temp ID
-			$request = convert_query("
-				SELECT id_poll, temp_id
-				FROM {$to_prefix}polls
-				WHERE temp_id IN (" . implode(',', $pollIdsBlock) . ")");
-
-			// Assign the id_poll
-			while ($row = mysql_fetch_assoc($request))
-			{
-				foreach ($pollVotesBlock as $key => $value)
-				{
-					if (isset($pollVotesBlock[$key]['temp_id']) && $pollVotesBlock[$key]['temp_id'] == $row['temp_id'])
-					{
-						// Assign the id_poll
-						$pollVotesBlock[$key]['id_poll'] = $row['id_poll'];
-
-						// We don't need you any more so...BYE!!!
-						//unset($pollVotesBlock[$key]['temp_id'], $pollVotesBlock[$key]['temp_id']);
-						$pollVotesBlock[$key]['temp_id'] = 0;
-					}
-				}
-			}
-		}
-
-		// Lets unset the remaining member_names
-		foreach ($pollVotesBlock as $key => $value)
-		{
-			if (isset($pollVotesBlock[$key]['member_name']))
-				unset($pollVotesBlock[$key]['member_name'], $pollVotesBlock[$key]['member_name']);
-		}
-
-		// Do the remaining block
-		if (!empty($pollVotesBlock))
-			doBlock('log_polls', $pollVotesBlock);
-
-		pastTime(-1);
-
-		// Remove the temp column from the table and put the primary key back.
-		if ($_GET['substep'] <= -1)
-		{
-			$result = convert_query("
-				SELECT id_poll
-				FROM {$to_prefix}poll_choices
-				GROUP BY id_poll
-				HAVING COUNT(id_choice) > 1");
-
-			while ($row = mysql_fetch_assoc($result))
-				convert_query("
-					DELETE FROM {$to_prefix}poll_choices
-					WHERE id_poll = $row[id_poll]
-					LIMIT 1");
-			convert_free_result($result);
-
-			pastTime(-2);
-		}
-		if ($_GET['substep'] <= -2)
-		{
-			$knownKeys = array(
-				'PRIMARY' => 'ADD PRIMARY KEY (id_poll, id_choice)',
-			);
-			alterTable('poll_choices', $knownKeys, '', '', true);
-
-			pastTime(-3);
-		}
-		if ($_GET['substep'] <= -3)
-		{
-			$knownKeys = array(
-				'poll' => 'ADD UNIQUE INDEX poll (id_poll, id_topic)',
-			);
-			alterTable('topics', $knownKeys, '', true);
-
-			pastTime(-4);
-		}
-		if ($_GET['substep'] <= -4)
-		{
-			$knownColumns = array(
-				'temp_id' => 'DROP COLUMN temp_id'
-			);
-			alterTable('topics', '', $knownColumns, '', false, true);
-
-			pastTime(-5);
-		}
-		if ($_GET['substep'] <= -5)
-		{
-			$knownColumns = array(
-				'temp_id' => 'DROP COLUMN temp_id',
-			);
-			alterTable('polls', '', $knownColumns, '', true, true);
-		}
 	}
 
 	function fixRelativePath($path, $cwd_path)
@@ -2036,7 +1465,7 @@ if (empty($preparsing))
 
 	function parse_time($field, $use_now = true)
 	{
-		$field = trim(str_replace(array(' um ', ' de ', ' en ', ' la ', ' om '), ' at ', $field));
+		$field = trim(str_replace(array(' um', ' de', ' en', ' la', ' om', ' at'), '', $field));
 
 		if ($field == '')
 			$field = $use_now ? time() : 0;
@@ -2050,16 +1479,12 @@ if (empty($preparsing))
 		return $field;
 	}
 
-	function doBlock($table, &$block, $force_ignore = false)
+	function doBlock($table, &$block, $ignore = false, $return_first = false, $return_last = false, $no_prefix = false)
 	{
 		global $to_prefix;
 
 		if (empty($block))
 			return;
-
-		// If converting mark as read data make the insert be ignore into
-		if (!empty($force_ignore) || in_array($table, array('log_mark_read', 'log_boards', 'log_topics', 'log_polls')))
-			$ignore = TRUE;
 
 		if ($table == 'members')
 		{
@@ -2086,16 +1511,34 @@ if (empty($preparsing))
 		}
 
 		$insert_block = array();
+		$first = 0;
+		$last = 0;
 		foreach ($block as $row)
-			$insert_block[] = '\'' . implode('\', \'', $row) . '\'';
+		{
+			if (isset($row['temp']))
+			{
+				$temp = $row['temp'];
+				unset($row['temp']);
+			}
+			
+			$result = convert_insert($table, array_keys($row), $row, 'insert', $no_prefix);
 
-		convert_query("
-			INSERT" . (!empty($ignore) ? ' IGNORE' : '') . " INTO {$to_prefix}$table
-				(" . implode(', ', array_keys($block[0])) . ")
-			VALUES (" . implode("),
-				(", $insert_block) . ")");
+			$last = convert_insert_id($result);
+			if (empty($first))
+				$first = $last;
+
+			if (isset($temp))
+				convert_insert('convert', array('real_id', 'temp', 'type'), array($last, $temp, $table), 'insert');
+		}
 
 		$block = array();
+		
+		if ($return_first && $return_last)
+			return array($first, $last);
+		elseif ($return_first)
+			return $first;
+		elseif ($return_last)
+			return $last;
 	}
 }
 

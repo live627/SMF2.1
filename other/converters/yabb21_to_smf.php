@@ -137,7 +137,7 @@ if (empty($preparsing))
 			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0) 
 			{
 				$match = addslashes_recursive($match);
-				$extraGroups[] = array(substr($match[2]), 0, 80), substr($match[5], 0, 20), 0, substr("$match[3]#$match[4]", 0, 255));
+				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), 0, substr("$match[3]#$match[4]", 0, 255));
 			}
 		}
 
@@ -1701,7 +1701,7 @@ if (empty($preparsing))
 		if ($_GET['substep'] <= -1)
 		{
 			alterDatabase('polls', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_poll'),
 			));
 			alterDatabase('polls', 'change column', array(
@@ -1946,7 +1946,7 @@ if (empty($preparsing))
 		if ($_GET['substep'] <= -2)
 		{
 			alterDatabase('poll_choices', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_poll', 'id_choice'),
 			));
 
@@ -1980,7 +1980,7 @@ if (empty($preparsing))
 
 	function parse_time($field, $use_now = true)
 	{
-		$field = trim(str_replace(array(' um ', ' de ', ' en ', ' la ', ' om '), ' at ', $field));
+		$field = trim(str_replace(array(' um', ' de', ' en', ' la', ' om', ' at'), '', $field));
 
 		if ($field == '')
 			$field = $use_now ? time() : 0;
@@ -2029,7 +2029,7 @@ if (empty($preparsing))
 			unset($block_names);
 		}
 
-		$smcFunc['db_insert']('insert', $table, array_keys($block[0]), $block, array());
+		convert_insert($table, array_keys($block[0]), $block, 'insert', $no_prefix);
 
 		$block = array();
 	}

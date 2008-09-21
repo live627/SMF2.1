@@ -332,7 +332,7 @@ if (empty($preparsing))
 				'default' => 0,
 			));
 			alterDatabase('members', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_member'),
 			));
 
@@ -532,7 +532,7 @@ if (empty($preparsing))
 				'auto' => true,
 			));
 			alterDatabase('personal_messages', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_temp'),
 			));
 
@@ -939,7 +939,7 @@ if (empty($preparsing))
 				'auto' => true,
 			));
 			alterDatabase('topics', 'add index', array(
-				'type' => 'primary'
+				'type' => 'primary',
 				'columns' => array('id_topic'),
 			));
 
@@ -990,7 +990,7 @@ if (empty($preparsing))
 
 		alterDatabase('log_topics', 'remove column', 'temp_id');
 		alterDatabase('members', 'add index', array(
-			'type' => 'primary'
+			'type' => 'primary',
 			'columns' => array('id_topic', 'id_member'),
 		));
 	}
@@ -1408,7 +1408,7 @@ if (empty($preparsing))
 
 	function parse_time($field, $use_now = true)
 	{
-		$field = trim(str_replace(array(' um ', ' de ', ' en ', ' la ', ' om '), ' at ', $field));
+		$field = trim(str_replace(array(' um', ' de', ' en', ' la', ' om', ' at'), '', $field));
 
 		if ($field == '')
 			$field = $use_now ? time() : 0;
@@ -1450,7 +1450,7 @@ if (empty($preparsing))
 			unset($block_names);
 		}
 
-		$smcFunc['db_insert']('insert', $table, array_keys($block[0]), $block, array());
+		convert_insert($table, array_keys($block[0]), $block, 'insert', $no_prefix);
 
 		$block = array();
 	}

@@ -22,6 +22,7 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 define('SMF', 'convert');
+error_reporting(E_ALL);
 
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';
@@ -47,7 +48,10 @@ else
 	initialize_inputs();
 }
 
-show_header();
+if (!empty($_GET['step']))
+	$current_step = $_GET['step'];
+
+template_convert_above();
 
 if (!empty($_GET['step']) && ($_GET['step'] == 1 || $_GET['step'] == 2))
 	echo '
@@ -61,7 +65,7 @@ if (!empty($_GET['step']) && ($_GET['step'] == 1 || $_GET['step'] == 2))
 	echo '
 			</div>';
 
-show_footer();
+template_convert_below();
 
 function initialize_inputs()
 {
@@ -102,7 +106,10 @@ function initialize_inputs()
 	}
 	// Empty the error log?
 	if (isset($_REQUEST['empty_error_log']))
+	{
+		unset($_REQUEST['empty_error_log']);
 		@unlink(dirname(__FILE__) . '/convert_error_log');
+	}
 
 	// The current step - starts at 0.
 	$_GET['step'] = (int) @$_GET['step'];
@@ -155,8 +162,11 @@ function preparse_sql($script_filename)
 	for ($i = 0, $n = count($matches[1]); $i < $n; $i++)
 	{
 		// String value?
-		if (in_array($matches[1][$i], array('name', 'table_test', 'from_prefix', 'version', 'database_type')))
+		if (in_array($matches[1][$i], array('name', 'table_test', 'from_prefix', 'version', 'database_type', 'block_size', 'step2_block_size')))
 			$convert_data[$matches[1][$i]] = stripslashes(substr(trim($matches[2][$i]), 1, -1));
+		// Maybe it is a eval statement? 
+		elseif ($matches[1][$i] == 'eval')
+			$convert_data['eval'][] = $matches[2][$i];
 		// No... so it must be an array.
 		else
 		{
@@ -179,6 +189,10 @@ function preparse_sql($script_filename)
 		$convert_data['settings'] = array();
 	if (empty($convert_data['variable']))
 		$convert_data['variable'] = array();
+
+	// Merge all eval statements together.
+	if (!empty($convert_data['eval']))
+		$convert_data['eval'] = implode("\r", $convert_data['eval']);
 
 	if (!empty($convert_data['parameters']))
 	{
@@ -243,7 +257,7 @@ function preparse_php($script_filename)
 function loadSettings()
 {
 	global $convert_data, $from_prefix, $to_prefix, $convert_dbs, $command_line, $smcFunc;
-	global $db_persist, $db_connection, $db_server, $db_user, $db_passwd;
+	global $db_persist, $db_connection, $db_server, $db_user, $db_passwd, $modSettings;
 	global $db_type, $db_name, $ssi_db_user, $ssi_db_passwd, $sourcedir, $db_prefix;
 
 	foreach ($convert_data['defines'] as $define)
@@ -254,23 +268,17 @@ function loadSettings()
 	foreach ($convert_data['globals'] as $global)
 		global $$global;
 
+	if (!empty($convert_data['eval']))
+		eval($convert_data['eval']);
+
 	// Cannot find Settings.php?
-	if (!file_exists($_POST['path_to'] . '/Settings.php') && !$command_line)
+	if (!$command_line && !file_exists($_POST['path_to'] . '/Settings.php'))
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('This converter was unable to find SMF in the path you specified.<br /><br />Please double check the path, and that it is already installed there.');
 	}
-	elseif (!file_exists($_POST['path_to'] . '/Settings.php') && $command_line)
+	elseif ($command_line && !file_exists($_POST['path_to'] . '/Settings.php'))
 		return print_error('This converter was unable to find SMF in the path you specified.<br /><br />Please double check the path, and that it is already installed there.', true);
-	else
-	{
-		require_once($_POST['path_to'] . '/Settings.php');
-		require_once($sourcedir . '/QueryString.php');
-		require_once($sourcedir . '/Subs.php');
-		require_once($sourcedir . '/Errors.php');
-		require_once($sourcedir . '/Load.php');
-		require_once($sourcedir . '/Security.php');
-	}
 
 	$found = empty($convert_data['settings']);
 	foreach ($convert_data['settings'] as $file)
@@ -280,20 +288,20 @@ function loadSettings()
 		Check if open_basedir is enabled.  If it's enabled and the converter file was not found then that means
 		that the user hasn't moved the files to the public html dir.  With this enabled and the file not found, we can't go anywhere from here.
 	*/
-	if (@ini_get('open_basedir') != '' && !$found && !$command_line)
+	if (!$command_line && @ini_get('open_basedir') != '' && !$found)
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('The converter detected that your host has open_basedir enabled on this server.  Please ask your host to disable this setting or try moving the contents of your ' . $convert_data['name'] . ' to the public html folder of your site.');
 	}
-	elseif (@ini_get('open_basedir') != '' && !$found && $command_line)
+	elseif ($command_line && @ini_get('open_basedir') != '' && !$found)
 		return print_error('The converter detected that your host has open_basedir enabled on this server.  Please ask your host to disable this setting or try moving the contents of your ' . $convert_data['name'] . ' to the public html folder of your site.', true);
 
-	if (!$found && !$command_line)
+	if (!$command_line && !$found)
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('Unable to find the settings for ' . $convert_data['name'] . '.  Please double check the path and try again.');
 	}
-	elseif (!$found && !$command_line)
+	elseif (!$command_line && !$found)
 		return print_error('Unable to find the settings for ' . $convert_data['name'] . '.  Please double check the path and try again.', true);
 
 	// Any parameters to speak of?
@@ -325,24 +333,30 @@ function loadSettings()
 	}
 
 	// Everything should be alright now... no cross server includes, we hope...
-	require_once($_POST['path_to'] . '/Settings.php');
+	require($_POST['path_to'] . '/Settings.php');
+	require($sourcedir . '/QueryString.php');
+	require($sourcedir . '/Subs.php');
+	require($sourcedir . '/Errors.php');
+	require($sourcedir . '/Load.php');
+	require($sourcedir . '/Security.php');
 	$GLOBALS['boardurl'] = $boardurl;
+	$modSettings['disableQueryCheck'] = true; // !!! Do we really need this?
 
-	if ($_SESSION['convert_db_pass'] != $db_passwd  && !$command_line)
+	if (!$command_line && $_SESSION['convert_db_pass'] != $db_passwd )
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('The database password you entered was incorrect.  Please make sure you are using the right password (for the SMF user!) and try it again.  If in doubt, use the password from Settings.php in the SMF installation.');
 	}
-	elseif ($_SESSION['convert_db_pass'] != $db_passwd  && $command_line)
+	elseif ($command_line && $_SESSION['convert_db_pass'] != $db_passwd )
 		return print_error('The database password you entered was incorrect.  Please make sure you are using the right password (for the SMF user!) and try it again.  If in doubt, use the password from Settings.php in the SMF installation.', true);
 
 	// Check the steps that we have decided to go through.
-	if (isset($_POST['do_steps']) && empty($_POST['do_steps']) && !$command_line)
+	if (!$command_line && isset($_POST['do_steps']) && empty($_POST['do_steps']))
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('You must select at least one step to convert.');
 	}
-	elseif (isset($_POST['do_steps']) && !$command_line)
+	elseif (!$command_line && isset($_POST['do_steps']))
 	{
 		unset($_SESSION['do_steps']);
 		foreach ($_POST['do_steps'] as $next_step_line => $step)
@@ -378,25 +392,26 @@ function loadSettings()
 			register_shutdown_function(create_function('', '$GLOBALS[\'ado_connection\']->Close();'));
 		}
 	}
-	elseif (isset($convert_data['database_type']) && !$command_line)
+	elseif (!$command_line && isset($convert_data['database_type']))
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('PHP doesn\'t support the database type this converter was written for, \'' . $convert_data['database_type'] . '\'.');
 	}
-	elseif (isset($convert_data['database_type']) && $command_line)
+	elseif ($command_line && isset($convert_data['database_type']))
 		return print_error('PHP doesn\'t support the database type this converter was written for, \'' . $convert_data['database_type'] . '\'.', true);
 	else
 		$convert_dbs = 'smf_db';
 
 	// Create a connection to the SMF database.
 	loadDatabase();
+	db_extend('packages');
 
 	// Currently SQLite and PostgreSQL do not have support for cross database work.
-	if (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')) && $command_line)
+	if ($command_line && in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')))
 		return print_error('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.', true);
 	elseif (in_array($smcFunc['db_title'], array('SQLite', 'PostgreSQL')))
 	{
-		show_header();
+		template_convert_above();
 		return doStep0('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.');
 	}
 
@@ -423,7 +438,7 @@ function loadSettings()
 	}
 
 	if (isset($convert_data['from_prefix']))
-		$from_prefix = eval('return "' . FixDbPrefix($convert_data['from_prefix'], $smcFunc['db_title']) . '";');
+		$from_prefix = eval('return "' . fixDbPrefix($convert_data['from_prefix'], $smcFunc['db_title']) . '";');
 
 	if (preg_match('~^`[^`]+`.\d~', $from_prefix) != 0)
 		$from_prefix = strtr($from_prefix, array('`' => ''));
@@ -434,12 +449,12 @@ function loadSettings()
 		$result = convert_query("
 			SELECT COUNT(*)
 			FROM " . eval('return "' . $convert_data['table_test'] . '";'), true);
-		if ($result === false && !$command_line)
+		if (!$command_line && $result === false)
 		{
-			show_header();
+			template_convert_above();
 			doStep0('Sorry, the database connection information used in the specified installation of SMF cannot access the installation of ' . $convert_data['name'] . '.  This may either mean that the installation doesn\'t exist, or that the Database account used does not have permissions to access it.<br /><br />The error that was received from the Database was: ' . $smcFunc['db_error']());
 		}
-		elseif ($result === false && $command_line)
+		elseif ($command_line && $result === false)
 			print_error("Sorry, the database connection information used in the specified installation of SMF cannot access the installation of " . $convert_data['name'] . ".  This may either mean that the installation doesn\'t exist, or that the Database account used does not have permissions to access it.\n\nThe error that was received from the Database: " . $smcFunc['db_error'](), true);
 		convert_free_result($result);
 	}
@@ -455,13 +470,15 @@ function loadSettings()
 			$smcFunc['db_query']('', "SET @@SQL_BIG_SELECTS = 1", 'security_override');
 
 		// Lets set MAX_JOIN_SIZE to something we should
-		if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && sql_max_join == '18446744073709551615'))
+		if (empty($sql_max_join) || ($sql_max_join == '18446744073709551615' && $sql_max_join == '18446744073709551615'))
 			$smcFunc['db_query']('', "SET @@SQL_MAX_JOIN_SIZE = 18446744073709551615", 'security_override');
 	}
 }
 
-function find_convert_scripts()
+function findConvertScripts()
 {
+	global $convert_data;
+	
 	if (isset($_REQUEST['convert_script']))
 	{
 		if ($_REQUEST['convert_script'] != '' && preg_match('~^[a-z0-9\-_\.]*_to_smf\.(sql|php)$~i', $_REQUEST['convert_script']) != 0)
@@ -564,18 +581,49 @@ function find_convert_scripts()
 // Looks at the converter and returns the steps that it's able to make.
 function findSteps()
 {
-	global $current_type;
+	global $current_type, $convert_data;
 
-	// For now just SQL file support.
-	if (substr($_SESSION['convert_script'], -4) == '.php' || empty($_SESSION['convert_script']))
-		return;
+	// No file?
+	if (empty($_SESSION['convert_script']))
+		return array();
+
+	$steps = array();
+	$count_steps = 1;
+
+	// Can we support php files?
+	if (substr($_SESSION['convert_script'], -4) == '.php')
+	{
+		// Load the file.
+		if (empty($convert_data))
+		{
+			$preparsing = true;
+			require(dirname(__FILE__) . '/' . $_SESSION['convert_script']);
+		}
+
+		if (!empty($convert_data['steps']))
+			return $convert_data['steps'];
+		elseif (!empty($convert_data['num_steps']))
+		{
+			$i = 1;
+			while ($i <= $convert_data['num_steps'])
+			{
+				$steps[$count_steps] = array(
+					'name' => 'SubStep #' . $i,
+					'cur_step_line' => $i,
+					'prev_step_line' => $i - 1,
+					'next_step_line' => $i + 1,
+					'count' => $count_steps++,
+				);
+				++$i;
+			}
+			return $steps;
+		}
+	}
 
 	// Load the file.
 	$lines = file(dirname(__FILE__) . '/' . $_SESSION['convert_script']);
 
 	// Need an outside counter for the steps.
-	$count_steps = 1;
-	$steps = array();
 	foreach ($lines as $line_number => $line)
 	{
 		// Get rid of any comments in the beginning of the line...
@@ -662,7 +710,7 @@ function findSupportedCharsets()
 }
 
 // Correct the prefix
-function FixDbPrefix($prefix, $db_type)
+function fixDbPrefix($prefix, $db_type)
 {
 	if ($db_type == 'MySQL')
 		return $prefix;
@@ -680,9 +728,10 @@ function FixDbPrefix($prefix, $db_type)
 // Main Window
 function doStep0($error_message = null)
 {
-	global $convert_data;
+	global $convert_data, $current_step;
 
-	if (find_convert_scripts())
+	$current_step = 0;
+	if (findConvertScripts())
 		return true;
 
 	// If these aren't set (from an error..) default to the current directory.
@@ -856,7 +905,7 @@ function doStep0($error_message = null)
 
 	if ($error_message !== null)
 	{
-		show_footer();
+		template_convert_below();
 		exit;
 	}
 
@@ -867,6 +916,9 @@ function doStep0($error_message = null)
 function doStep1()
 {
 	global $from_prefix, $to_prefix, $convert_data, $command_line, $smcFunc;
+	global $current_step, $current_substep, $last_step;
+
+	$current_step = 1;
 
 	if (substr($_SESSION['convert_script'], -4) == '.php')
 		return run_php_converter();
@@ -1011,18 +1063,18 @@ function doStep1()
 					{
 						$special_table = $match[1];
 						$special_update = $match[2] != '' ? substr($match[2], 9, -1) : '';
-						$special_limit = empty($match[3]) ? 500 : (int) $match[3];
+						$special_limit = empty($match[3]) ? (!empty($convert['block_size']) ? $convert['block_size'] : 500) : (int) $match[3];
 					}
 					elseif (preg_match('~^([^ ()]+?) \(update (.+?)\)$~', trim($special_table), $match) != 0)
 					{
 						$special_table = $match[1];
 						$special_update = $match[2];
-						$special_limit = 200;
+						$special_limit = (!empty($convert['block_size']) ? $convert['block_size'] : 200);
 					}
 					else
 					{
 						$special_update = false;
-						$special_limit = 500;
+						$special_limit = (!empty($convert['block_size']) ? $convert['block_size'] : 500);
 					}
 				}
 				else
@@ -1181,8 +1233,7 @@ function doStep1()
 						else
 							$no_add = false;
 
-						if (empty($keys))
-							$keys = array_keys($row);
+						$keys = array_keys($row);
 					}
 
 					// Provide legacy for $ignore
@@ -1254,15 +1305,17 @@ function run_php_converter()
 
 function doStep2()
 {
-	global $convert_data, $from_prefix, $to_prefix, $modSettings, $command_line, $smcFunc, $sourcedir;
+	global $convert_data, $from_prefix, $to_prefix, $modSettings, $command_line;
+	global $smcFunc, $sourcedir, $current_step;
 
+	$current_step = 2;
 	$_GET['step'] = '2';
 
 	$debug = false;
 	if (isset($_GET['debug']))
 		$debug = true;
 
-	print_line(($command_line ? ' * ' : '') . 'Recalculating forum statistics... ');
+	print_line(($command_line ? ' * ' : '') . 'Recalculating forum statistics... ', false);
 
 	if ($_GET['substep'] <= 0)
 	{
@@ -1567,7 +1620,7 @@ function doStep2()
 					LEFT JOIN {$to_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				GROUP BY t.id_topic
 				HAVING num_msg = 0
-				LIMIT $_REQUEST[start], 200");
+				LIMIT $_REQUEST[start], " . (!empty($convert_data['step2_block_size']) ? $convert_data['step2_block_size'] : 200));
 
 			$numRows = $smcFunc['db_num_rows']($resultTopic);
 
@@ -1617,7 +1670,7 @@ function doStep2()
 					LEFT JOIN {$to_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				GROUP BY t.id_topic
 				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg OR num_replies != my_num_replies
-				LIMIT $_REQUEST[start], 200");
+				LIMIT $_REQUEST[start], " . (!empty($convert_data['step2_block_size']) ? $convert_data['step2_block_size'] : 200));
 
 			$numRows = $smcFunc['db_num_rows']($resultTopic);
 
@@ -1829,7 +1882,7 @@ function doStep2()
 					AND (RIGHT(filename, 4) IN ('.gif', '.jpg', '.png', '.bmp') OR RIGHT(filename, 5) = '.jpeg')
 					AND width = 0
 					AND height = 0
-				LIMIT $_REQUEST[start], 500");
+				LIMIT $_REQUEST[start], " . (!empty($convert_data['step2_block_size']) ? $convert_data['step2_block_size'] : 500));
 			if ($smcFunc['db_num_rows']($request) == 0)
 				break;
 			while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -1979,8 +2032,9 @@ function doStep2()
 
 function doStep3()
 {
-	global $boardurl, $convert_data, $command_line;
+	global $boardurl, $convert_data, $command_line, $current_step;
 
+	$current_step = 3;
 	if ($command_line)
 	{
 		print_line('Conversion Complete!');
@@ -2017,105 +2071,119 @@ function doStep3()
 	return true;
 }
 
-function show_header()
+function template_convert_above()
 {
-	global $convert_data, $time_start;
+	global $convert_data, $time_start, $current_step, $last_step;
+
 	$time_start = time();
+	$smfsite = 'http://simplemachines.org/smf';
+
+	$current_action = '';
+	$mainsteps = findSteps();
+
+	if (empty($current_step))
+	{
+		if ((empty($_SESSION['convert_script']) || empty($_REQUEST['convert_script'])) && !empty($convert_data))
+			$current_step = 0;
+		elseif (empty($_GET['step']))
+			$current_step = 1;
+		elseif (!empty($_GET['step']))
+			$current_step = $_GET['step'] + 1;
+	}
+	else
+		$current_step += 1;
+
+	if (isset($_REQUEST['substep']))
+		$current_substep = $_REQUEST['substep'];
+	else
+		$current_substep = 0;
+
+	$steps = array(
+		0 => 'Select Script',
+		1 => 'Welcome',
+		2 => 'Main Conversion',
+		3 => 'Recount Totals and Statistics',
+		4 => 'Done',
+	);
 
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-	<title>', isset($convert_data['name']) ? $convert_data['name'] . ' to ' : '', 'SMF Converter</title>
-		<style type="text/css">
-			body
-			{
-				background-color: #E5E5E8;
-				margin: 0px;
-				padding: 0px;
-			}
-			body, td
-			{
-				color: #000000;
-				font-size: small;
-				font-family: verdana, sans-serif;
-			}
-			div#header
-			{
-				background-image: url(Themes/default/images/catbg.jpg);
-				background-repeat: repeat-x;
-				background-color: #88A6C0;
-				padding: 22px 4% 12px 4%;
-				color: white;
-				font-family: Georgia, serif;
-				font-size: xx-large;
-				border-bottom: 1px solid black;
-				height: 40px;
-			}
-			div#content
-			{
-				padding: 20px 30px;
-			}
-			div.error_message
-			{
-				border: 2px dashed red;
-				background-color: #E1E1E1;
-				margin: 1ex 4ex;
-				padding: 1.5ex;
-			}
-			div.panel
-			{
-				border: 1px solid gray;
-				background-color: #F6F6F6;
-				margin: 1ex 0;
-				padding: 1.2ex;
-			}
-			div.panel h2
-			{
-				margin: 0;
-				margin-bottom: 0.5ex;
-				padding-bottom: 3px;
-				border-bottom: 1px dashed black;
-				font-size: 14pt;
-				font-weight: normal;
-			}
-			div.panel h3
-			{
-				margin: 0;
-				margin-bottom: 2ex;
-				font-size: 10pt;
-				font-weight: normal;
-			}
-			form
-			{
-				margin: 0;
-			}
-			td.textbox
-			{
-				padding-top: 2px;
-				font-weight: bold;
-				white-space: nowrap;
-				padding-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 2ex;
-			}
-		</style>
+		<title>', isset($convert_data['name']) ? $convert_data['name'] . ' to ' : '', 'SMF Converter</title>
+		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
+		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 	</head>
 	<body>
 		<div id="header">
 			<div title="Bahamut!">', isset($convert_data['name']) ? $convert_data['name'] . ' to ' : '', 'SMF Converter</div>
 		</div>
-		<div id="content">';
+		<div id="content">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
+			<tr>
+				<td width="250" valign="top" style="padding-right: 10px;">
+					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
+						<tr>
+							<td class="titlebg">Steps</td>
+						</tr>
+						<tr>
+							<td class="windowbg2">';
+
+	// Loop through each step.
+	foreach ($steps as $num => $step)
+	{
+		echo '
+						<span class="', $num < $current_step ? 'stepdone' : ($num == $current_step ? 'stepcurrent' : 'stepwaiting'), '">', $step, '</span><br />';
+
+		// Do we have information about step 2?
+		if ($num == 2 /*&& isset($_REQUEST['convert_script'])*/)
+		{
+			foreach ($mainsteps as $substep)
+				echo '
+						<span class="', $current_step > 2 ? 'stepdone' : ($current_step == 2 ? 'stepcurrent' : 'stepwaiting'), '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- ', ucfirst(trim(str_replace('Converting ', '', $substep['name']))), '</span><br />';
+		}
+	}
+// Menus
+
+	echo '
+							</td>
+						</tr>';
+
+/*
+	// Not ready yet. For the Future.
+	echo '
+						<tr>
+							<td class="titlebg">Progress</td>
+						</tr>
+						<tr>
+							<td class="windowbg2">
+								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
+									<div id="overall_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $incontext['overall_percent'], '%</div>
+									<div id="overall_progress" style="width: ', $incontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
+								</div>
+							</td>
+						</tr>';
+*/
+
+	echo '
+					</table>
+				</td>
+				<td width="100%" valign="top">';
 }
 
 // Show the footer.
-function show_footer()
+function template_convert_below()
 {
 	echo '
+				</td>
+			</tr>
+		</table>
 		</div>
 	</body>
 </html>';
 }
 
 // Check if we've passed the time limit..
-function pastTime($substep = null)
+function pastTime($substep = null, $force = false)
 {
 	global $time_start, $command_line;
 
@@ -2136,7 +2204,7 @@ function pastTime($substep = null)
 	if (function_exists('apache_reset_timeout'))
 		apache_reset_timeout();
 
-	if (time() - $time_start < 10)
+	if (time() - $time_start < 10 && !$force)
 		return;
 
 	echo '
@@ -2169,7 +2237,7 @@ function pastTime($substep = null)
 				}
 			// ]]></script>';
 
-	show_footer();
+	template_convert_below();
 	exit;
 }
 
@@ -2233,6 +2301,15 @@ function addslashes_recursive($var)
 		foreach ($var as $k => $v)
 			$var[$k] = addslashes_recursive($v);
 		return $var;
+	}
+}
+
+if (!function_exists('un_htmlspecialchars'))
+{
+	// Removes special entities from strings.  Compatibility...
+	function un_htmlspecialchars($string)
+	{
+		return strtr($string, array_flip(get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES)) + array('&#039;' => '\'', '&nbsp;' => ' '));
 	}
 }
 
@@ -2520,22 +2597,57 @@ function convert_query($string, $return_error = false)
 			</form>
 		</div>';
 
-	show_footer();
+	template_convert_below();
 	die;
 }
 
 // Inserting stuff?
 function convert_insert($table, $columns, $block, $type = 'insert', $no_prefix = false)
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
+
+	// Unless I say, we are using a prefix.
+	if (empty($no_prefix))
+		$table = $db_prefix . $table;
 
 	// Correct the type. We used this as it was easier to understand its meaning.
 	if ($type == 'insert ignore')
 		$type = 'ignore';
-	
-	// Unless I say, we are using a prefix.
-	if (empty($no_prefix))
-		$table = '{db_prefix}' . $table;
+
+	$keys = $columns;
+	$columns = array();
+	$temp = array();
+
+	// Loop through the info.
+	$column_info = $smcFunc['db_list_columns']($table, true, array('no_prefix' => true));
+	foreach ($column_info as $col)
+		// Only get the useful ones.
+		if (in_array($col['name'], $keys))
+		{
+			if (in_array($col['type'], array('float', 'string', 'int', 'date')))
+				$data_type = $col['type'];
+			elseif (in_array($col['type'], array('tinyint', 'smallint', 'mediumnint', 'bigint')))
+				$data_type = 'int';
+			else
+				$data_type = 'string';
+			$temp[$col['name']] = $data_type;
+		}
+
+	// Loop through each key and put it back hopefully in the same order.
+	foreach ($keys as $col)
+	{
+		if (isset($temp[$col]))
+			$columns[$col] = $temp[$col];
+		else
+		{
+			if (strpos('id', $col) || strpos('min', $col) || strpos('date', $col))
+				$data_type = 'int';
+			else
+				$data_type = 'string';
+
+			$columns[$col] = $data_type;
+		}
+	}
 
 	return $smcFunc['db_insert']($type, $table, $columns, $block, array());
 }
@@ -2860,15 +2972,6 @@ function copy_dir($source, $dest)
 		}
 	}
 	closedir($dir);
-}
-
-if (!function_exists('un_htmlspecialchars'))
-{
-	// Removes special entities from strings.  Compatibility...
-	function un_htmlspecialchars($string)
-	{
-		return strtr($string, array_flip(get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES)) + array('&#039;' => '\'', '&nbsp;' => ' '));
-	}
 }
 
 // CLI
