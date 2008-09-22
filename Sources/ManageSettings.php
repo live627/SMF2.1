@@ -407,7 +407,7 @@ function ModifyCoreFeatures($return_config = false)
 				$feature['save_callback'](!empty($_POST[$post_var_prefix . $id]));
 		}
 
-		redirectexit('action=admin;area=featuresettings;sa=core;sesc=' . $context['session_id']);
+		redirectexit('action=admin;area=corefeatures;sesc=' . $context['session_id']);
 	}
 
 	// Put them in context.
