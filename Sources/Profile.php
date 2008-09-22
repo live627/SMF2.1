@@ -48,6 +48,8 @@ function ModifyProfile($post_errors = array())
 		loadLanguage('Profile');
 	loadTemplate('Profile');
 
+	require_once($sourcedir . '/Subs-Menu.php');
+
 	// Did we get the user by name...
 	if (isset($_REQUEST['user']))
 		$memberResult = loadMemberData($_REQUEST['user'], true, 'profile');
@@ -89,132 +91,231 @@ function ModifyProfile($post_errors = array())
 				bool $hidden:		Does this not actually appear on the menu?
 				bool $load_member:	Should we load the member context for this area?
 	*/
-	$context['profile_areas'] = array(
+	$profile_areas = array(
 		'info' => array(
 			'title' => $txt['profileInfo'],
-			'include' => 'Profile-View.php',
 			'areas' => array(
 				'summary' => array(
-					'own' => array('profile_view_any', 'profile_view_own'),
-					'any' => array('profile_view_any'),
+					'label' => $txt['summary'],
+					'file' => 'Profile-View.php',
+					'function' => 'summary',
+					'permission' => array(
+						'own' => 'profile_view_own',
+						'any' => 'profile_view_any',
+					),
 				),
-				'statPanel' => array(
-					'own' => array('profile_view_any', 'profile_view_own'),
-					'any' => array('profile_view_any'),
+				'statistics' => array(
+					'label' => $txt['statPanel'],
+					'file' => 'Profile-View.php',
+					'function' => 'statPanel',
 					'load_member' => true,
+					'permission' => array(
+						'own' => 'profile_view_own',
+						'any' => 'profile_view_any',
+					),
 				),
-				'showPosts' => array(
-					'own' => array('profile_view_any', 'profile_view_own'),
-					'any' => array('profile_view_any'),
+				'contributions' => array(
+					'label' => $txt['showContributions'],
+					'file' => 'Profile-View.php',
+					'function' => 'showPosts',
 					'load_member' => true,
+					'subsections' => array(
+						'posts' => array($txt['showPosts'], 'profile_view_any'),
+						'topics' => array($txt['showTopics'], 'profile_view_any'),
+						'attach' => array($txt['showAttachments'], 'profile_view_any'),
+					),
+					'permission' => array(
+						'own' => 'profile_view_own',
+						'any' => 'profile_view_any',
+					),
 				),
-				'showPermissions' => array(
-					'own' => array('manage_permissions'),
-					'any' => array('manage_permissions'),
+				'permissions' => array(
+					'label' => $txt['showPermissions'],
+					'file' => 'Profile-View.php',
+					'function' => 'showPermissions',
+					'permission' => array(
+						'own' => 'manage_permissions',
+						'any' => 'manage_permissions',
+					),
 				),
 				'tracking' => array(
-					'own' => array('moderate_forum'),
-					'any' => array('moderate_forum'),
+					'label' => $txt['trackUser'],
+					'file' => 'Profile-View.php',
+					'function' => 'tracking',
+					'subsections' => array(
+						'user' => array($txt['trackUser'], 'moderate_forum'),
+						'ip' => array($txt['trackIP'], 'moderate_forum'),
+						'edits' => array($txt['trackEdits'], 'moderate_forum'),
+					),
+					'permission' => array(
+						'own' => 'moderate_forum',
+						'any' => 'moderate_forum',
+					),
 				),
 			),
 		),
 		'edit_profile' => array(
 			'title' => $txt['profileEdit'],
-			'include' => 'Profile-Modify.php',
 			'areas' => array(
 				'account' => array(
-					'own' => array('profile_identity_any', 'profile_identity_own', 'manage_membergroups'),
-					'any' => array('profile_identity_any', 'manage_membergroups'),
+					'label' => $txt['account'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'account',
 					'sc' => 'post',
 					'password' => true,
+					'permission' => array(
+						'own' => array('profile_identity_any', 'profile_identity_own', 'manage_membergroups'),
+						'any' => array('profile_identity_any', 'manage_membergroups'),
+					),
 				),
-				'forumProfile' => array(
-					'own' => array('profile_extra_any', 'profile_extra_own'),
-					'any' => array('profile_extra_any'),
+				'forumprofile' => array(
+					'label' => $txt['forumprofile'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'forumProfile',
 					'sc' => 'post',
+					'permission' => array(
+						'own' => array('profile_extra_any', 'profile_extra_own'),
+						'any' => array('profile_extra_any'),
+					),
 				),
 				'theme' => array(
-					'own' => array('profile_extra_any', 'profile_extra_own'),
-					'any' => array('profile_extra_any'),
+					'label' => $txt['theme'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'theme',
 					'sc' => 'post',
+					'permission' => array(
+						'own' => array('profile_extra_any', 'profile_extra_own'),
+						'any' => array('profile_extra_any'),
+					),
 				),
 				'authentication' => array(
-					'own' => array('profile_identity_any', 'profile_identity_own'),
-					'any' => array('profile_identity_any'),
+					'label' => $txt['authentication'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'authentication',
 					'enabled' => !empty($modSettings['enableOpenID']) || !empty($cur_profile['openid_uri']),
 					'sc' => 'post',
 					'hidden' => empty($cur_profile['openid_uri']),
+					'permission' => array(
+						'own' => array('profile_identity_any', 'profile_identity_own'),
+						'any' => array('profile_identity_any'),
+					),
 				),
 				'notification' => array(
-					'own' => array('profile_extra_any', 'profile_extra_own'),
-					'any' => array('profile_extra_any'),
+					'label' => $txt['notification'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'notification',
 					'sc' => 'post',
+					'permission' => array(
+						'own' => array('profile_extra_any', 'profile_extra_own'),
+						'any' => array('profile_extra_any'),
+					),
 				),
 				'pmprefs' => array(
-					'own' => array('pm_read'),
-					'any' => array('profile_extra_any'),
+					'label' => $txt['pmprefs'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'pmprefs',
 					'sc' => 'post',
+					'permission' => array(
+						'own' => array('pm_read'),
+						'any' => array('profile_extra_any'),
+					),
 				),
 				'ignoreboards' => array(
-					'own' => array('profile_extra_any', 'profile_extra_own'),
-					'any' => array('profile_extra_any'),
+					'label' => $txt['ignoreboards'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'ignoreboards',
 					'enabled' => !empty($modSettings['allow_ignore_boards']),
 					'sc' => 'post',
+					'permission' => array(
+						'own' => array('profile_extra_any', 'profile_extra_own'),
+						'any' => array('profile_extra_any'),
+					),
 				),
-				'editBuddies' => array(
-					'own' => array('profile_extra_any', 'profile_extra_own'),
-					'any' => array(),
+				'buddies' => array(
+					'label' => $txt['editBuddies'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'editBuddies',
 					'enabled' => !empty($modSettings['enable_buddylist']) && $context['user']['is_owner'],
 					'sc' => 'post',
+					'permission' => array(
+						'own' => array('profile_extra_any', 'profile_extra_own'),
+						'any' => array(),
+					),
 				),
-				'groupMembership' => array(
-					'own' => array('profile_view_own'),
-					'any' => array('manage_membergroups'),
+				'groupmembership' => array(
+					'label' => $txt['groupMembership'],
+					'file' => 'Profile-Modify.php',
+					'function' => 'groupMembership',
 					'enabled' => !empty($modSettings['show_group_membership']) && $context['user']['is_owner'],
 					'sc' => 'request',
+					'permission' => array(
+						'own' => array('profile_view_own'),
+						'any' => array('manage_membergroups'),
+					),
 				),
 			),
 		),
 		'profile_action' => array(
 			'title' => $txt['profileAction'],
-			'include' => 'Profile-Actions.php',
 			'areas' => array(
-				'send_pm' => array(
-					'own' => array(),
-					'any' => array('pm_send'),
-					'enabled' => !$context['user']['is_owner'],
-					'href' => $scripturl . '?action=pm;sa=send;u=' . $memID,
+				'sendpm' => array(
 					'label' => $txt['profileSendIm'],
+					'href' => $scripturl . '?action=pm;sa=send;u=' . $memID,
+					'enabled' => !$context['user']['is_owner'],
+					'permission' => array(
+						'own' => array(),
+						'any' => array('pm_send'),
+					),
 				),
-				'issueWarning' => array(
-					'own' => array('issue_warning'),
-					'any' => array('issue_warning'),
-					'enabled' => $modSettings['warning_settings']{0} == 1 && (!$context['user']['is_owner'] || $cur_profile['warning']),
+				'issuewarning' => array(
 					'label' => $context['user']['is_owner'] && $cur_profile['warning'] ? $txt['profile_view_warnings'] : $txt['profile_issue_warning'],
+					'enabled' => $modSettings['warning_settings']{0} == 1 && (!$context['user']['is_owner'] || $cur_profile['warning']),
+					'file' => 'Profile-Actions.php',
+					'function' => 'issueWarning',
+					'permission' => array(
+						'own' => array('issue_warning'),
+						'any' => array('issue_warning'),
+					),
 				),
-				'banUser' => array(
-					'own' => array(),
-					'any' => array('manage_bans'),
-					'enabled' => $cur_profile['id_group'] != 1 && !in_array(1, explode(',', $cur_profile['additional_groups'])),
-					'href' => $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID,
+				'banuser' => array(
 					'label' => $txt['profileBanUser'],
+					'href' => $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID,
+					'enabled' => $cur_profile['id_group'] != 1 && !in_array(1, explode(',', $cur_profile['additional_groups'])),
+					'permission' => array(
+						'own' => array(),
+						'any' => array('manage_bans'),
+					),
 				),
 				'subscriptions' => array(
-					'own' => array('profile_view_own'),
-					'any' => array('moderate_forum'),
+					'label' => $txt['subscriptions'],
+					'file' => 'Profile-Actions.php',
+					'function' => 'subscriptions',
 					'enabled' => !empty($modSettings['paid_enabled']),
+					'permission' => array(
+						'own' => array('profile_view_own'),
+						'any' => array('moderate_forum'),
+					),
 				),
-				'deleteAccount' => array(
-					'own' => array('profile_remove_any', 'profile_remove_own'),
-					'any' => array('profile_remove_any'),
+				'deleteaccount' => array(
+					'label' => $txt['deleteAccount'],
+					'file' => 'Profile-Actions.php',
+					'function' => 'deleteAccount',
 					'sc' => 'post',
 					'password' => true,
+					'permission' => array(
+						'own' => array('profile_remove_any', 'profile_remove_own'),
+						'any' => array('profile_remove_any'),
+					),
 				),
-				'activateAccount' => array(
-					'own' => array(),
-					'any' => array('moderate_forum'),
+				'activateaccount' => array(
+					'file' => 'Profile-Actions.php',
+					'function' => 'activateAccount',
 					'sc' => 'get',
 					'hidden' => true,
+					'permission' => array(
+						'own' => array(),
+						'any' => array('moderate_forum'),
+					),
 				),
 			),
 		),
@@ -227,21 +328,21 @@ function ModifyProfile($post_errors = array())
 	$context['password_areas'] = array();
 	$security_checks = array();
 	$include_file = false;
-	foreach ($context['profile_areas'] as $section_id => $section)
+	foreach ($profile_areas as $section_id => $section)
 	{
 		// Not even enabled?
 		if (isset($section['enabled']) && $section['enabled'] == false)
 		{
-			unset($context['profile_areas'][$section_id]);
+			unset($profile_areas[$section_id]);
 			continue;
 		}
 
 		foreach ($section['areas'] as $area_id => $area)
 		{
 			// Were we trying to see this?
-			if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && !empty($area[$context['user']['is_owner'] ? 'own' : 'any']))
+			if (isset($_REQUEST['area']) && $_REQUEST['area'] == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && !empty($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']))
 			{
-				$security_checks['permission'] = $area[$context['user']['is_owner'] ? 'own' : 'any'];
+				$security_checks['permission'] = $area['permission'][$context['user']['is_owner'] ? 'own' : 'any'];
 
 				// Are we saving data in a valid area?
 				if (isset($area['sc']) && isset($_REQUEST['save']))
@@ -254,7 +355,7 @@ function ModifyProfile($post_errors = array())
 				if (!empty($area['validate']))
 					$security_checks['validate'] = true;
 
-				// Load this users data?
+				// Load this user's data?
 				if (!empty($area['load_member']))
 				{
 					loadMemberContext($memID);
@@ -267,10 +368,10 @@ function ModifyProfile($post_errors = array())
 			}
 
 			// Can we do this?
-			if ((!isset($area['enabled']) || $area['enabled'] != false) && !empty($area[$context['user']['is_owner'] ? 'own' : 'any']) && allowedTo($area[$context['user']['is_owner'] ? 'own' : 'any']) && empty($area['hidden']))
+			if ((!isset($area['enabled']) || $area['enabled'] != false) && !empty($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']) && allowedTo($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']) && empty($area['hidden']))
 			{
 				// Replace the contents with a link.
-				$context['profile_areas'][$section_id]['areas'][$area_id] = '<a href="' . (isset($area['href']) ? $area['href'] : $scripturl . '?action=profile;u=' . $memID . ';sa=' . $area_id) . '">' . (isset($area['label']) ? $area['label'] : $txt[$area_id]) . '</a>';
+				$profile_areas[$section_id]['areas'][$area_id]['permission'] = true;
 				// Should we do this by default?
 				if ($defaultAction === false)
 				{
@@ -283,28 +384,23 @@ function ModifyProfile($post_errors = array())
 			}
 			// Otherwise unset it!
 			else
-				unset($context['profile_areas'][$section_id]['areas'][$area_id]);
+				unset($profile_areas[$section_id]['areas'][$area_id]);
 		}
 
 		// Is there nothing left?
-		if (empty($context['profile_areas'][$section_id]['areas']))
-			unset($context['profile_areas'][$section_id]);
+		if (empty($profile_areas[$section_id]['areas']))
+			unset($profile_areas[$section_id]);
 	}
 
 	// If we have no sub-action find the default or drop out.
-	$context['menu_item_selected'] = '';
-	if (!isset($_REQUEST['sa']) && $defaultAction !== false)
+	if (!isset($_REQUEST['area']) && $defaultAction !== false)
 	{
-		$_REQUEST['sa'] = $defaultAction;
+		$_REQUEST['area'] = $defaultAction;
 		if ($defaultInclude)
 			$include_file = $defaultInclude;
 	}
 	else
 		isAllowedTo('profile_view_' . ($context['user']['is_owner'] ? 'own' : 'any'));
-
-	// Set the selected items.
-	$context['menu_item_selected'] = $_REQUEST['sa'];
-	$context['sub_template'] = $_REQUEST['sa'];
 
 	// Now the context is setup have we got any security checks to carry out additional to that above?
 	if (isset($security_checks['session']))
@@ -314,30 +410,49 @@ function ModifyProfile($post_errors = array())
 	if (isset($security_checks['permission']))
 		isAllowedTo($security_checks['permission']);
 
-	// File to include?
-	if ($include_file)
-		require_once($sourcedir . '/' . $include_file);
-
-	// All the subactions that require a user password in order to validate.
-	$context['require_password'] = in_array($context['menu_item_selected'], $context['password_areas']);
-
 	// Is there an updated message to show?
 	if (isset($_GET['updated']))
 		$context['profile_updated'] = $txt['profile_updated_own'];
 
-	// This is here so the menu won't be shown unless it's actually needed.
-	if (!isset($context['profile_areas']['info']['areas']['trackUser']) && !isset($context['profile_areas']['info']['areas']['showPermissions']) && !isset($context['profile_areas']['edit_profile']) && !isset($context['profile_areas']['profile_action']['areas']['banUser']) && !isset($context['profile_areas']['profile_action']['areas']['issueWarning']) && !isset($context['profile_areas']['profile_action']['areas']['deleteAccount']))
-		$context['profile_areas'] = array();
+	// Set a few options for the menu.
+	$menuOptions = array(
+		'disable_url_session_check' => true,
+		'extra_url_parameters' => array(
+			'u' => $context['id_member'],
+		),
+	);
 
-	// Make sure that the subaction function does exist!
-	if (!function_exists($_REQUEST['sa']))
+	// Actually create the menu!
+	$profile_include_data = createMenu($profile_areas, $menuOptions);
+	unset($profile_areas);
+
+	// Make a note of the Unique ID for this menu.
+	$context['profile_menu_id'] = $context['max_menu_id'];
+	$context['profile_menu_name'] = 'menu_data_' . $context['profile_menu_id'];
+
+	// Set the template for this area.
+	$context['menu_item_selected'] = $profile_include_data['current_area'];
+
+	// Set the template for this area.
+	$context['sub_template'] = $profile_include_data['function'];
+
+	// File to include?
+	if (isset($profile_include_data['file']))
+		require_once($sourcedir . '/' . $profile_include_data['file']);
+
+	// Make sure that the area function does exist!
+	if (!isset($profile_include_data['function']) || !function_exists($profile_include_data['function']))
+	{
+		destroyMenu();
 		fatal_lang_error('no_access');
+	}
+
+	// All the subactions that require a user password in order to validate.
+	$context['require_password'] = in_array($profile_include_data['current_area'], $context['password_areas']);
 
 	// If we're in wireless then we have a cut down template...
 	if (WIRELESS && $context['sub_template'] == 'summary' && WIRELESS_PROTOCOL != 'wap')
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_profile';
-	else
-		$context['template_layers'][] = 'profile';
 
 	// These will get populated soon!
 	$post_errors = array();
@@ -383,12 +498,12 @@ function ModifyProfile($post_errors = array())
 			$profile_vars['member_ip'] = $user_info['ip'];
 
 		// Now call the sub-action function...
-		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'activateAccount')
+		if (isset($_REQUEST['area']) && $_REQUEST['area'] == 'activateaccount')
 		{
 			if (empty($post_errors))
 				activateAccount($memID);
 		}
-		elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'deleteAccount')
+		elseif (isset($_REQUEST['area']) && $_REQUEST['area'] == 'deleteaccount')
 		{
 			if (empty($post_errors))
 			{
@@ -397,19 +512,19 @@ function ModifyProfile($post_errors = array())
 				redirectexit();
 			}
 		}
-		elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'groupMembership' && empty($post_errors))
+		elseif (isset($_REQUEST['area']) && $_REQUEST['area'] == 'groupmembership' && empty($post_errors))
 		{
 			$msg = groupMembership2($profile_vars, $post_errors, $memID);
 
 			// Whatever we've done, we have nothing else to do here...
-			redirectexit('action=profile;u=' . $memID . ';sa=groupMembership' . (!empty($msg) ? ';msg=' . $msg : ''));
+			redirectexit('action=profile;u=' . $memID . ';area=groupmembership' . (!empty($msg) ? ';msg=' . $msg : ''));
 		}
 		// Authentication changes?
-		elseif (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'authentication')
+		elseif (isset($_REQUEST['area']) && $_REQUEST['area'] == 'authentication')
 		{
 			authentication($memID, true);
 		}
-		elseif (isset($_REQUEST['sa']) && in_array($_REQUEST['sa'], array('account', 'forumProfile', 'theme', 'pmprefs')))
+		elseif (isset($_REQUEST['area']) && in_array($_REQUEST['area'], array('account', 'forumprofile', 'theme', 'pmprefs')))
 			saveProfileFields();
 		else
 		{
@@ -492,16 +607,16 @@ function ModifyProfile($post_errors = array())
 	}
 	// If it's you then we should redirect upon save.
 	elseif (!empty($profile_vars) && $context['user']['is_owner'])
-		redirectexit('action=profile;sa=' . $_REQUEST['sa'] . ';updated');
+		redirectexit('action=profile;area=' . $_REQUEST['area'] . ';updated');
 	elseif (!empty($force_redirect))
-		redirectexit('action=profile;u=' . $memID . ';sa=' . $_REQUEST['sa']);
+		redirectexit('action=profile;u=' . $memID . ';area=' . $_REQUEST['area']);
 
 	// Call the appropriate subaction function.
-	$_REQUEST['sa']($memID);
+	$profile_include_data['function']($memID);
 
 	// Set the page title if it's not already set...
 	if (!isset($context['page_title']))
-		$context['page_title'] = $txt['profile'] . ' - ' . $txt[$_REQUEST['sa']];
+		$context['page_title'] = $txt['profile'] . ' - ' . $txt[$_REQUEST['area']];
 }
 
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.

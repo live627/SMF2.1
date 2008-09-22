@@ -34,13 +34,22 @@ function createMenu($menuData, $menuOptions = array())
 	global $context, $settings, $options, $txt, $modSettings, $scripturl, $smcFunc, $user_info, $sourcedir;
 
 	// First are we toggling use of the side bar generally?
-	if (isset($_GET['togglebar']))
+	if (isset($_GET['togglebar']) && !$user_info['is_guest'])
 	{
-		$context['admin_preferences']['tb'] = (int) $_GET['togglebar'];
-
-		// Update the users preferences.
-		require_once($sourcedir . '/Subs-Admin.php');
-		updateAdminPreferences();
+		// Save the new dropdown menu state.
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}themes',
+			array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
+			array(
+				array(
+					'id_member' => $user_info['id'],
+					'id_theme' => $settings['theme_id'],
+					'variable' => 'use_sidebar_menu',
+					'value' => empty($options['use_sidebar_menu']) ? '1' : '0',
+				),
+			),
+			array('id_member', 'id_theme', 'variable')
+		);
 
 		// Redirect as this seems to work best.
 		redirectexit('action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . ';sesc=' . $context['session_id']);
@@ -88,6 +97,21 @@ function createMenu($menuData, $menuOptions = array())
 	// What is the current area selected?
 	if (isset($menuOptions['current_area']) || isset($_GET['area']))
 		$menu_context['current_area'] = isset($menuOptions['current_area']) ? $menuOptions['current_area'] : $_GET['area'];
+
+	// Build a list of additional parameters that should go in the URL.
+	$extraUrlParameters = array();
+	if (!empty($menuOptions['extra_url_parameters']))
+		foreach ($menuOptions['extra_url_parameters'] as $key => $value)
+			$extraUrlParameters[$key] = $value;
+
+	// Only include the session ID in the URL if it's strictly necessary.
+	if (empty($menuOptions['disable_url_session_check']))
+		$extraUrlParameters['sesc'] = $context['session_id'];
+
+	// Flatten the extra parameters array and put it in the menu context array.
+	$menu_context['extra_parameters'] = '';
+	foreach ($extraUrlParameters as $key => $value)
+		$menu_context['extra_parameters'] .= ';' . $key . '=' . $value;
 
 	$include_data = array();
 
@@ -221,8 +245,8 @@ function createMenu($menuData, $menuOptions = array())
 	// What type of menu is this?
 	if (!isset($menuOptions['menu_type']))
 	{
-		$menuOptions['menu_type'] = '_' . (!empty($context['admin_preferences']['tb']) ? 'sidebar' : 'dropdown');
-		$menu_context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
+		$menuOptions['menu_type'] = '_' . (empty($options['use_sidebar_menu']) ? 'dropdown' : 'sidebar');
+		$menu_context['can_toggle_drop_down'] = !$user_info['is_guest'] && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
 	}
 	else
 		$menu_context['can_toggle_drop_down'] = !empty($menuOptions['can_toggle_drop_down']);

@@ -424,7 +424,7 @@ function loadProfileFields($force_reload = false)
 		'member_name' => array(
 			'type' => allowedTo('admin_forum') && isset($_GET['changeusername']) ? 'text' : 'label',
 			'label' => $txt['username'],
-			'subtext' => allowedTo('admin_forum') && !isset($_GET['changeusername']) ? '(<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';sa=account;changeusername" style="font-style: italic;">' . $txt['username_change'] . '</a>)' : '',
+			'subtext' => allowedTo('admin_forum') && !isset($_GET['changeusername']) ? '(<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=account;changeusername" style="font-style: italic;">' . $txt['username_change'] . '</a>)' : '',
 			'log_change' => true,
 			'permission' => 'profile_identity',
 			'prehtml' => allowedTo('admin_forum') && isset($_GET['changeusername']) ? '<div style="color: red;">' . $txt['username_warning'] . '</div>' : '',
@@ -1340,7 +1340,7 @@ function editBuddies($memID)
 		updateMemberData($memID, array('buddy_list' => $user_profile[$memID]['buddy_list']));
 
 		// Redirect off the page because we don't like all this ugly query stuff to stick in the history.
-		redirectexit('action=profile;u=' . $memID . ';sa=editBuddies');
+		redirectexit('action=profile;u=' . $memID . ';area=buddies');
 	}
 	elseif (isset($_POST['new_buddy']))
 	{
@@ -1381,7 +1381,7 @@ function editBuddies($memID)
 		}
 
 		// Back to the buddy list!
-		redirectexit('action=profile;u=' . $memID . ';sa=editBuddies');
+		redirectexit('action=profile;u=' . $memID . ';area=buddies');
 	}
 
 	// Get all the users "buddies"...
@@ -1650,10 +1650,10 @@ function notification($memID)
 	$listOptions = array(
 		'id' => 'board_notification_list',
 		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_boards'],
-		'width' => '85%',
+		'width' => '100%',
 		'no_items_label' => $txt['notifications_boards_none'] . '<br /><br />' . $txt['notifications_boards_howto'],
 		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;sa=notification;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
 		'default_sort_col' => 'board_name',
 		'get_items' => array(
 			'function' => 'list_getBoardNotifications',
@@ -1727,11 +1727,11 @@ function notification($memID)
 	$listOptions = array(
 		'id' => 'topic_notification_list',
 		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_topics'],
-		'width' => '85%',
+		'width' => '100%',
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['notifications_topics_none'] . '<br /><br />' . $txt['notifications_topics_howto'],
 		'no_items_align' => 'left',
-		'base_href' => $scripturl . '?action=profile;sa=notification;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;area=notification;u=' . $memID,
 		'default_sort_col' => 'last_post',
 		'get_items' => array(
 			'function' => 'list_getTopicNotifications',
@@ -3072,7 +3072,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 					'APPYNAME' => $old_profile['member_name'],
 					'GROUPNAME' => $group_name,
 					'REASON' => $_POST['reason'],
-					'MODLINK' => $scripturl . '?action=groups;sa=requests',
+					'MODLINK' => $scripturl . '?action=groups;area=requests',
 				);
 
 				$emaildata = loadEmailTemplate('request_membership', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);

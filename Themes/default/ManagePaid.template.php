@@ -407,7 +407,7 @@ function template_user_subscription()
 
 	echo '
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=subscriptions;confirm" method="post">
-		<table border="0" cellspacing="1" cellpadding="3" align="center" width="85%" class="bordercolor">
+		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $txt['subscriptions'], '
@@ -490,7 +490,7 @@ function template_user_subscription()
 	}
 
 	echo '
-		<table border="0" cellspacing="1" cellpadding="3" align="center" width="85%" class="bordercolor">
+		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="4">
 					', $txt['paid_current'], '

@@ -9,57 +9,11 @@ function template_profile_above()
 	echo '
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
 
-	// Assuming there are actually some areas the user can visit...
-	if (!empty($context['profile_areas']))
-	{
-		echo '
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
-			<tr>
-				<td width="180" valign="top">
-					<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="170">';
-
-		// Loop through every area, displaying its name as a header.
-		foreach ($context['profile_areas'] as $section)
-		{
-			echo '
-						<tr>
-							<td class="catbg">', $section['title'], '</td>
-						</tr>
-						<tr class="windowbg2">
-							<td class="smalltext">';
-
-			// For every section of the area display it, and bold it if it's the current area.
-			foreach ($section['areas'] as $i => $area)
-				if ($i == $context['menu_item_selected'])
-					echo '
-								<b>', $area, '</b><br />';
-				else
-					echo '
-								', $area, '<br />';
-			echo '
-								<br />
-							</td>
-						</tr>';
-		}
-		echo '
-					</table>
-				</td>
-				<td width="100%" valign="top">';
-	}
-	// If no areas exist just open up a containing table.
-	else
-	{
-		echo '
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
-			<tr>
-				<td width="100%" valign="top">';
-	}
-
 	// If an error occurred while trying to save previously, give the user a clue!
 	if (!empty($context['post_errors']))
 	{
 		echo '
-					<table width="85%" cellpadding="0" cellspacing="0" border="0" align="center">
+					<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
 						<tr>
 							<td>', template_error_message(), '</td>
 						</tr>
@@ -70,7 +24,7 @@ function template_profile_above()
 	if (!empty($context['profile_updated']))
 	{
 		echo '
-					<table width="85%" cellpadding="0" cellspacing="0" border="0" align="center">
+					<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
 						<tr>
 							<td>
 								<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed green; color: green;">
@@ -85,12 +39,7 @@ function template_profile_above()
 // Template for closing off table started in profile_above.
 function template_profile_below()
 {
-	global $context, $settings, $options;
 
-	echo '
-				</td>
-			</tr>
-		</table>';
 }
 
 // This template displays users details without any option to edit them.
@@ -100,7 +49,7 @@ function template_summary()
 
 	// First do the containing table and table header.
 	echo '
-<table border="0" cellpadding="4" cellspacing="1" align="center" class="bordercolor">
+<table width="100%" border="0" cellpadding="4" cellspacing="1" align="center" class="bordercolor">
 	<tr class="titlebg">
 		<td width="420" height="26">
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
@@ -415,24 +364,6 @@ function template_summary()
 			', $context['member']['avatar']['image'], '<br /><br />
 			', $context['member']['blurb'], '
 		</td>
-	</tr>';
-
-	// Finally, if applicable, span the bottom of the table with links to other useful member functions.
-	echo '
-	<tr class="titlebg">
-		<td colspan="2">', $txt['additional_info'], ':</td>
-	</tr>
-	<tr>
-		<td class="windowbg2" colspan="2">';
-	if (!$context['user']['is_owner'] && $context['can_send_pm'])
-		echo '
-			<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['send_member_pm'], '.</a><br />
-			<br />';
-	echo '
-			<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=showPosts">', $txt['show_latest'], ' ', $txt['posts_member'], '.</a><br />
-			<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=statPanel">', $txt['statPanel_show'], '.</a><br />
-			<br />
-		</td>
 	</tr>
 </table>';
 }
@@ -443,19 +374,10 @@ function template_showPosts()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="3" height="26">
 					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showPosts'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
-				</td>
-			</tr>
-			<tr class="windowbg" valign="middle">
-				<td colspan="3">
-					<span>
-						', (isset($context['attachments']) || !empty($context['is_topics']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts">', $txt['show_member_posts'], '</a> |
-						', (empty($context['is_topics']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;topics">', $txt['show_member_topics'], '</a> |
-						', (!isset($context['attachments']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach">', $txt['show_member_attachments'], '</a>
-					</span>
 				</td>
 			</tr>
 			<tr class="catbg3">
@@ -478,7 +400,7 @@ function template_showPosts()
 		foreach ($context['posts'] as $post)
 		{
 			echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="0" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="0" class="bordercolor" align="center">
 			<tr>
 				<td width="100%">
 					<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor" align="center">
@@ -530,7 +452,7 @@ function template_showPosts()
 	else
 	{
 		echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td width="25%">
 					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
@@ -578,7 +500,7 @@ function template_showPosts()
 
 	// Start the bottom bit.
 	echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
 
 	// No posts? Just end the table with a informative message.
 	if ((isset($context['attachments']) && empty($context['attachments'])) || (!isset($context['attachments']) && empty($context['posts'])))
@@ -605,7 +527,7 @@ function template_editBuddies()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="8" height="26">
 					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['editBuddies'], '
@@ -675,24 +597,6 @@ function template_editBuddies()
 			</tr>
 		</table>
 	</form>';
-}
-
-function template_tracking_above()
-{
-	global $context;
-
-	echo '
-	<div align="center">
-		<div align="left" style="width: 90%">';
-
-	template_generic_menu_tabs($context['tracking_tabs']);
-}
-
-function template_tracking_below()
-{
-	echo '
-		</div>
-	</div>';
 }
 
 // This template shows an admin information on a users IP addresses used and errors attributed to them.
@@ -846,7 +750,7 @@ function template_showPermissions()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<table width="90%" border="0" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+		<table width="100%" border="0" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="2" height="26">
 					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['showPermissions'], '
@@ -986,7 +890,7 @@ function template_statPanel()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="4" height="26">&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['statPanel_generalStats'], ' - ', $context['member']['name'], '</td>
 			</tr>';
@@ -1127,8 +1031,8 @@ function template_edit_options()
 
 	// The main header!
 	echo '
-		<form action="', (!empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;save'), '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+		<form action="', (!empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;area=' . $context['menu_item_selected'] . ';save'), '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
+			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
@@ -1405,6 +1309,11 @@ function template_profile_theme_settings()
 											</td>
 										</tr><tr>
 											<td colspan="2">
+												<input type="hidden" name="default_options[use_sidebar_menu]" value="0" />
+												<label for="use_sidebar_menu"><input type="checkbox" name="default_options[use_sidebar_menu]" id="use_sidebar_menu" value="1"', !empty($context['member']['options']['use_sidebar_menu']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['use_sidebar_menu'], '</label>
+											</td>
+										</tr><tr>
+											<td colspan="2">
 												<input type="hidden" name="default_options[show_no_avatars]" value="0" />
 												<label for="show_no_avatars"><input type="checkbox" name="default_options[show_no_avatars]" id="show_no_avatars" value="1"', !empty($context['member']['options']['show_no_avatars']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['show_no_avatars'], '</label>
 											</td>
@@ -1522,7 +1431,7 @@ function template_notification()
 
 	// The main containing header.
 	echo '
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
@@ -1979,7 +1888,7 @@ function template_issueWarning()
 
 	echo '
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=issueWarning" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" width="85%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="2" height="26">
 					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $context['user']['is_owner'] ? $txt['profile_warning_level'] : $txt['profile_issue_warning'], '
@@ -2119,7 +2028,7 @@ function template_issueWarning()
 
 	// Previous warnings?
 	echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="4">
 					', $txt['profile_warning_previous'], '
@@ -2195,7 +2104,7 @@ function template_deleteAccount()
 	// The main containing header.
 	echo '
 		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;

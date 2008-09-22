@@ -11,8 +11,13 @@ September 2008
  & Fixed some misspelled text indices. (ManageAttachments.php, PersonalMessage and ManageSearch template files, PersonalMessage, Search, and Admin language files) [Bug 2530,2518]
  ! Trimmed some of the old holidays. (install files) [Bug 2527]
  & Spelling fix and changing the PHP site link to the non-country specific version. (Help language file) [Bug 2530]
- * Put the Core Features in their own area of the admin centre (Admin.php, ManageSettings.php, Admin template)
+ * Put the Core Features in their own area of the admin centre. (Admin.php, ManageSettings.php, Admin template)
  * Added a new icon for the Core Features area and replaced a few others with some more descriptive icons. (various images)
+ + The profile section now uses generic menus. (Profile.php, Profile-Actions.php, Profile-Modify.php, Profile-View.php)
+ * Adjusted the profile and paid subscription templates to reflect this. (Profile template, ManagePaid template)
+ * Toggling the toolbar is now no longer an admin preference, but available to all users. (Subs-Menu.php)
+ & Added language strings for the Show Contributions area and removed some obsolete strings. (Profile language file)
+
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
 ================================================================================

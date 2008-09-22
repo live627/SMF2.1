@@ -238,6 +238,7 @@ function summary($memID)
 	loadCustomFields($memID);
 }
 
+// !!! This function needs to be split up properly.
 // Show all posts by the current user
 function showPosts($memID)
 {
@@ -252,12 +253,26 @@ function showPosts($memID)
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_show_posts']) && $context['load_average'] >= $modSettings['loadavg_show_posts'])
 		fatal_lang_error('loadavg_show_posts_disabled', false);
 
+	// Create the tabs for the template.
+	$context[$context['profile_menu_name']]['tab_data'] = array(
+		'title' => $txt['showContributions'],
+		'description' => $txt['showContributions_help'],
+		'tabs' => array(
+			'posts' => array(
+			),
+			'topics' => array(
+			),
+			'attach' => array(
+			),
+		),
+	);
+
 	// If we're specifically dealing with attachments use that function!
-	if (isset($_GET['attach']))
+	if (isset($_GET['sa']) && $_GET['sa'] == 'attach')
 		return showAttachments($memID);
 
 	// Are we just viewing topics?
-	$context['is_topics'] = isset($_GET['topics']) ? true : false;
+	$context['is_topics'] = isset($_GET['sa']) && $_GET['sa'] == 'topics' ? true : false;
 
 	// If just deleting a message, do it and then redirect back.
 	if (isset($_GET['delete']) && !$context['is_topics'])
@@ -269,7 +284,7 @@ function showPosts($memID)
 		removeMessage((int) $_GET['delete']);
 
 		// Back to... where we are now ;).
-		redirectexit('action=profile;u=' . $memID . ';sa=showPosts;start=' . $_GET['start']);
+		redirectexit('action=profile;u=' . $memID . ';area=contributions;start=' . $_GET['start']);
 	}
 
 	// Default to 10.
@@ -324,7 +339,7 @@ function showPosts($memID)
 	$maxIndex = (int) $modSettings['defaultMaxMessages'];
 
 	// Make sure the starting place makes sense and construct our friend the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts' . ($context['is_topics'] ? ';topics' : '') . (!empty($board) ? ';board=' . $board : ''), $context['start'], $msgCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contrubutions' . ($context['is_topics'] ? ';sa=topics' : '') . (!empty($board) ? ';board=' . $board : ''), $context['start'], $msgCount, $maxIndex);
 	$context['current_page'] = $context['start'] / $maxIndex;
 
 	// Reverse the query if we're past 50% of the pages for better performance.
@@ -765,58 +780,38 @@ function tracking($memID)
 {
 	global $sourcedir, $context, $txt, $scripturl, $modSettings;
 
-	$areas = array(
+	$subActions = array(
 		'edits' => array('trackEdits'),
 		'user' => array('trackUser'),
 		'ip' => array('TrackIP'),
 	);
 
-	$context['tracking_area'] = isset($_GET['area']) && isset($areas[$_GET['area']]) ? $_GET['area'] : 'user';
+	$context['tracking_area'] = isset($_GET['sa']) && isset($subActions[$_GET['sa']]) ? $_GET['sa'] : 'user';
 
 	if (isset($types[$context['tracking_area']][1]))
 		require_once($sourcedir . '/' . $types[$context['tracking_area']][1]);
 
-	// Currently a cheat - profile should use generic menu all the time?
-	loadTemplate('GenericMenu');
-
-	$context['tracking_tabs'] = array(
-		'current_area' => $context['tracking_area'],
-		'current_action' => 'profile',
-		'current_subsection' => 'tracking',
-		'tab_data' => array(
-			'title' => $txt['tracking'],
-			'description' => $txt['tracking_description'],
-		),
-	);
-
-	$context['tabs'] = array(
-		'user' => array(
-			'label' => $txt['trackUser'],
-			'url' => $scripturl . '?action=profile;sa=tracking;area=user;u=' . $memID,
-			'is_selected' => $context['tracking_area'] == 'user',
-		),
-		'ip' => array(
-			'label' => $txt['trackIP'],
-			'url' => $scripturl . '?action=profile;sa=tracking;area=ip;u=' . $memID,
-			'is_selected' => $context['tracking_area'] == 'ip',
-		),
-		'edits' => array(
-			'label' => $txt['trackEdits'],
-			'url' => $scripturl . '?action=profile;sa=tracking;area=edits;u=' . $memID,
-			'is_selected' => $context['tracking_area'] == 'edits',
+	// Create the tabs for the template.
+	$context[$context['profile_menu_name']]['tab_data'] = array(
+		'title' => $txt['tracking'],
+		'description' => $txt['tracking_description'],
+		'tabs' => array(
+			'user' => array(
+			),
+			'ip' => array(
+			),
+			'edits' => array(
+			),
 		),
 	);
 
 	// Moderation must be on to track edits.
 	if (empty($modSettings['modlog_enabled']))
-		unset($context['tabs']['edits']);
-
-	// Put the menu in a layer.
-	$context['template_layers'][] = 'tracking';
+		unset($context[$context['profile_menu_name']]['tab_data']['edits']);
 
 	// Pass on to the actual function.
-	$context['sub_template'] = $areas[$context['tracking_area']][0];
-	$areas[$context['tracking_area']][0]($memID);
+	$context['sub_template'] = $subActions[$context['tracking_area']][0];
+	$subActions[$context['tracking_area']][0]($memID);
 }
 
 function trackUser($memID)

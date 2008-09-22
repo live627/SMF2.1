@@ -681,7 +681,7 @@ $txt['visual_verification_request_new'] = 'Request another image';
 // Sub menu labels
 $txt['summary'] = 'Summary';
 $txt['account'] = 'Account Settings';
-$txt['forumProfile'] = 'Forum Profile';
+$txt['forumprofile'] = 'Forum Profile';
 
 $txt['modSettings_title'] = 'Features and Options';
 $txt['package'] = 'Packages';

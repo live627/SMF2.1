@@ -27,7 +27,7 @@ function template_generic_menu_sidebar_above()
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
 			echo '
-						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), ';sesc=', $context['session_id'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu2.png" alt="!" /></a>';
+						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu2.png" alt="!" /></a>';
 		echo '
 						</td>
 					</tr>
@@ -45,14 +45,14 @@ function template_generic_menu_sidebar_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-							<b><a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a></b><br />';
+							<b><a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a></b><br />';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
 			}
 			else
 				echo '
-							<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a><br />';
+							<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a><br />';
 		}
 
 		echo '
@@ -103,7 +103,7 @@ function template_generic_menu_dropdown_above()
 			<tr>
 				<td class="mirrortab_first"></td>
 				<td class="mirrortab_back">
-					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sesc=', $context['session_id'], ';togglebar=1"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="*" /><span>!</span></a>
+					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], $menu_context['extra_parameters'], ';togglebar=1"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="*" /><span>!</span></a>
 				</td>
 				<td class="mirrortab_last"></td>
 			</tr>
@@ -141,14 +141,14 @@ function template_generic_menu_dropdown_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '' , '" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">' , $area['icon'] , $area['label'], '</a>';
+						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '' , '" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '">' , $area['icon'] , $area['label'], '</a>';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
 			}
 			else
 				echo '
-						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '"', !empty($area['subsections']) ? ' class="subsection"' : '' , '>' , $area['icon'] , $area['label'] , '</a>';
+						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '"', !empty($area['subsections']) ? ' class="subsection"' : '' , '>' , $area['icon'] , $area['label'] , '</a>';
 
 			// Is there any subsections?
 			if (!empty($area['subsections']))
@@ -167,7 +167,7 @@ function template_generic_menu_dropdown_above()
 					$url = isset($sub['url']) ? $sub['url'] : (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i) . ';sa=' . $sa;
 
 					echo '
-								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, ';sesc=', $context['session_id'], '">' , $sub['label'], '</a>';
+								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, $menu_context['extra_parameters'], '">' , $sub['label'], '</a>';
 
 					echo '
 							</li>';
@@ -298,14 +298,14 @@ function template_generic_menu_tabs(&$menu_context)
 				echo '
 						<td class="maintab_active_first">&nbsp;</td>
 						<td valign="top" class="maintab_active_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
 						</td>
 						<td class="maintab_active_last">&nbsp;</td>';
 			}
 			else
 				echo '
 						<td valign="top" class="maintab_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
 						</td>';
 		}
 
