@@ -154,12 +154,12 @@ if (empty($preparsing))
 			{
 				$match = addslashes_recursive($match);
 				$id_group = $match[1] == 'Administrator' ? 1 : ($match[1] == 'Global Moderator' ? 2 : 3);
-				$knownGroups[] = "$id_group, SUBSTRING('$match[2]', 1, 80), SUBSTRING('$match[5]', 1, 20), '-1', SUBSTRING('$match[3]#$match[4]', 1, 255)";
+				$knownGroups[] = array($id_group, substr($match[2], 0, 80), substr($match[5], 0, 20), '-1', substr($match[3] . '#' . $match[4], 0, 255));
 			}
 			elseif (preg_match('~\$Post\{\'(\d+)\'\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0)
 			{
 				$match = addslashes_recursive($match);
-				$extraGroups[] = "SUBSTRING('$match[2]', 1, 80), SUBSTRING('$match[5]', 1, 20), " . max(0, $match[3]) . ", SUBSTRING('$match[3]#$match[4]', 1, 255)";
+				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), max(0, $match[0]), substr($match[3] . '#' . $match[4], 0, 255);
 
 				if ($match[3] < 1)
 					$newbie = true;
@@ -167,7 +167,7 @@ if (empty($preparsing))
 			elseif (preg_match('~\$NoPost\{(\d+)\} = [\'|"]([^|]*)\|(\d*)\|([^|]*)\|([^|]*)~', $group, $match) != 0) 
 			{
 				$match = addslashes_recursive($match);
-				$extraGroups[] = "SUBSTRING('$match[2]', 1, 80), SUBSTRING('$match[5]', 1, 20), 0, SUBSTRING('$match[3]#$match[4]', 1, 255)";
+				$extraGroups[] = array(substr($match[2], 0, 80), substr($match[5], 0, 20), '-1', substr($match[3] . '#' . $match[4], 0, 255);
 			}
 		}
 
@@ -182,22 +182,10 @@ if (empty($preparsing))
 		}
 
 		if (!empty($knownGroups))
-		{
-			convert_query("
-				REPLACE INTO {$to_prefix}membergroups
-					(id_group, group_name, online_color, min_posts, stars)
-				VALUES (" . implode("),
-					(", $knownGroups) . ")");
-		}
+			convert_insert('membergroups', array('id_group', 'group_name', 'online_color', 'min_posts', 'stars'), $knownGroups, 'replace');
 
 		if (!empty($extraGroups))
-		{
-			convert_query("
-				REPLACE INTO {$to_prefix}membergroups
-					(group_name, online_color, min_posts, stars)
-				VALUES (" . implode("),
-					(", $extraGroups) . ")");
-		}
+			convert_insert('membergroups', array('group_name', 'online_color', 'min_posts', 'stars'), $extraGroups, 'replace');
 	}
 
 	function convertStep3()
@@ -414,16 +402,11 @@ if (empty($preparsing))
 			'reserveNames' => addslashes(strtr(implode('', file($yabb['vardir'] . '/reserve.txt')), array("\r" => ''))),
 		);
 
-		$setString = '';
+		$settings = array();
 		foreach ($settings as $var => $val)
-			$setString .= "
-				('$var', SUBSTRING('$val', 1, 65534)),";
+			$settings[] = array($var, substr($val, 0, 65534));
 
-
-		convert_query("
-			REPLACE INTO {$to_prefix}settings
-				(variable, value)
-			VALUES" . substr($setString, 0, -1));
+		convert_insert('settings', array('variable', 'value'), $settings, 'replace');
 	}
 
 	function convertStep5()
@@ -534,6 +517,7 @@ if (empty($preparsing))
 		}
 		if ($_GET['substep'] >= -2)
 		{
+			// !!! This is still heavily MySQL dependant.
 			convert_query("
 				INSERT IGNORE INTO {$to_prefix}pm_recipients
 					(id_pm, id_member, labels, is_read)
@@ -547,11 +531,9 @@ if (empty($preparsing))
 			pastTime(-3);
 		}
 		if ($_GET['substep'] >= -3)
-		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
 				ORDER BY id_pm");
-		}
 	}
 
 	function convertStep6()
@@ -674,6 +656,7 @@ if (empty($preparsing))
 			list ($id_board) = convert_fetch_row($result);
 			convert_free_result($result);
 
+			// !!! This is heavily MySQL Depdendant.
 			convert_query("
 				INSERT IGNORE INTO {$to_prefix}moderators
 					(id_board, id_member)
@@ -692,10 +675,8 @@ if (empty($preparsing))
 		$block_size = $block_settings['topics']; //100;
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
-		{
 			convert_query("
 				TRUNCATE {$to_prefix}topics");
-		}
 
 		print_line('Converting topics (part 1)...', false);
 
@@ -1051,7 +1032,7 @@ return;
 		{
 			pastTime($_GET['substep']);
 
-			$setString = '';
+			$attachments = array();
 
 			$result = convert_query("
 				SELECT m.id_msg, con.temp
@@ -1079,18 +1060,14 @@ return;
 					if (!empty($attachmentExtension))
 						list ($width, $height) = getimagesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
 
-					$setString .= "
-						($id_attach, $size, 0, '" . addslashes($row['temp_filename']) . "', $row[id_msg], '$width', '$height'),";
+					$attachments[] = array($id_attach, $size, 0, addslashes($row['temp_filename']), $row['id_msg'], $width, $height);
 
 					$id_attach++;
 				}
 			}
 
-			if ($setString != '')
-				convert_query("
-					INSERT INTO {$to_prefix}attachments
-						(id_attach, size, downloads, filename, id_msg, width, height)
-					VALUES" . substr($setString, 0, -1));
+			if (!empty($attachments))
+				convert_insert('attachments', array('id_attach', 'size', 'downloads', 'filename', 'id_msg', 'width', 'height'), $attachments, 'insert');
 
 			$_GET['substep'] += $block_size;
 			if (convert_num_rows($result) < $block_size)

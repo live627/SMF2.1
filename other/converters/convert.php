@@ -189,6 +189,8 @@ function preparse_sql($script_filename)
 		$convert_data['settings'] = array();
 	if (empty($convert_data['variable']))
 		$convert_data['variable'] = array();
+	if (empty($convert_data['database_support']))
+		$convert_data['database_support'] = array('mysql');
 
 	// Merge all eval statements together.
 	if (!empty($convert_data['eval']))
@@ -243,6 +245,8 @@ function preparse_php($script_filename)
 		$convert_data['settings'] = array();
 	if (empty($convert_data['variable']))
 		$convert_data['variable'] = array();
+	if (empty($convert_data['database_support']))
+		$convert_data['database_support'] = array('mysql');
 
 	foreach ($convert_data['globals'] as $k => $v)
 	{
@@ -413,6 +417,15 @@ function loadSettings()
 	{
 		template_convert_above();
 		return doStep0('The converter detected that you are using ' . $smcFunc['db_title'] . '. The SMF Converter does not currently support this database type.');
+	}
+
+	// Does this converter support the current database type being used?
+	if ($command_line && !in_array(strtolower($smcFunc['db_title']), $convert_data['database_support']))
+		return print_error('The converter detected that you are using ' . $smcFunc['db_title'] . '. This converter only supports ' . explode (', ', $convert_data['database_support']) . '.', true);
+	elseif (!in_array(strtolower($smcFunc['db_title']), $convert_data['database_support']))
+	{
+		template_convert_above();
+		return print_error('The converter detected that you are using ' . $smcFunc['db_title'] . '. This converter only supports ' . explode (', ', $convert_data['database_support']) . '.', true);
 	}
 
 	// UTF8
