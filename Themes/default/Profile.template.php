@@ -1506,7 +1506,7 @@ function template_groupMembership()
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=profile;area=groupnembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+		<form action="', $scripturl, '?action=profile;area=groupmembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
 					<td height="26">

@@ -550,7 +550,7 @@ function showAttachments($memID)
 	$sort =	$sortTypes[$context['sort_order']];
 
 	// Let's get ourselves a lovely page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts;attach;sort=' . $sort . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contributions;sa=attach;sort=' . $sort . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
 
 	// Retrieve a some attachments.
 	$request = $smcFunc['db_query']('', '
@@ -836,7 +836,7 @@ function trackUser($memID)
 		'title' => $txt['errors_by'] . ' ' . $context['member']['name'],
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['no_errors_from_user'],
-		'base_href' => $scripturl . '?action=profile;sa=tracking;area=user;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;area=tracking;sa=user;u=' . $memID,
 		'default_sort_col' => 'date',
 		'get_items' => array(
 			'function' => 'list_getUserErrors',
@@ -859,7 +859,7 @@ function trackUser($memID)
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<a href="' . $scripturl . '?action=profile;sa=tracking;area=ip;searchip=%1$s">%1$s</a>',
+						'format' => '<a href="' . $scripturl . '?action=profile;area=tracking;sa=ip;searchip=%1$s">%1$s</a>',
 						'params' => array(
 							'ip' => false,
 						),
@@ -952,7 +952,7 @@ function trackUser($memID)
 	$context['ips'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['ips'][] = '<a href="' . $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $row['poster_ip'] . '">' . $row['poster_ip'] . '</a>';
+		$context['ips'][] = '<a href="' . $scripturl . '?action=profile;area=tracking;sa=ip;searchip=' . $row['poster_ip'] . '">' . $row['poster_ip'] . '</a>';
 		$ips[] = $row['poster_ip'];
 	}
 	$smcFunc['db_free_result']($request);
@@ -970,7 +970,7 @@ function trackUser($memID)
 	$context['error_ips'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$context['error_ips'][] = '<a href="' . $scripturl . '?action=profile;sa=tracking;area=ip;searchip=' . $row['ip'] . '">' . $row['ip'] . '</a>';
+		$context['error_ips'][] = '<a href="' . $scripturl . '?action=profile;area=tracking;sa=ip;searchip=' . $row['ip'] . '">' . $row['ip'] . '</a>';
 		$ips[] = $row['ip'];
 	}
 	$smcFunc['db_free_result']($request);
@@ -1139,7 +1139,7 @@ function TrackIP($memID = 0)
 	else
 	{
 		$context['ip'] = $user_profile[$memID]['member_ip'];
-		$context['base_url'] = $scripturl . '?action=profile;sa=tracking;area=ip;u=' . $memID;
+		$context['base_url'] = $scripturl . '?action=profile;area=tracking;sa=ip;u=' . $memID;
 	}
 
 	// Searching?
@@ -1418,7 +1418,7 @@ function trackEdits($memID)
 		'title' => $txt['trackEdits'],
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $txt['trackEdit_no_edits'],
-		'base_href' => $scripturl . '?action=profile;sa=tracking;area=edits;u=' . $memID,
+		'base_href' => $scripturl . '?action=profile;area=tracking;sa=edits;u=' . $memID,
 		'default_sort_col' => 'time',
 		'get_items' => array(
 			'function' => 'list_getProfileEdits',
