@@ -576,7 +576,7 @@ function template_editBuddies()
 	// Add a new buddy?
 	echo '
 	<br />
-	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=editBuddies" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=buddies" method="post" accept-charset="', $context['character_set'], '">
 		<table width="65%" cellpadding="4" cellspacing="0" class="tborder" align="center">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['buddy_add'], '</td>
@@ -825,7 +825,7 @@ function template_showPermissions()
 			<tr class="catbg">
 				<td align="left" colspan="2">
 					<a name="board_permissions"></a>
-					<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';sa=showPermissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
+					<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 						', $txt['showPermissions_select'], ':
 						<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
 							<option value="0"', $context['board'] == 0 ? ' selected="selected"' : '', '>', $txt['showPermissions_global'], '</option>';
@@ -1443,7 +1443,7 @@ function template_notification()
 					</td>
 				</tr><tr>
 					<td class="windowbg2" width="100%">
-						<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">';
+						<form action="', $scripturl, '?action=profile;area=notification;save" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">';
 
 	// Allow notification on announcements to be disabled?
 	if (!empty($modSettings['allow_disableAnnounce']))
@@ -1506,8 +1506,8 @@ function template_groupMembership()
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=profile;save;sa=groupMembership" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
+		<form action="', $scripturl, '?action=profile;area=groupnembership;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
@@ -1559,7 +1559,7 @@ function template_groupMembership()
 	else
 	{
 		echo '
-			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="catbg">
 					<td colspan="2">
 						', $txt['current_membergroups'], '
@@ -1612,7 +1612,7 @@ function template_groupMembership()
 		{
 			echo '
 			<br />
-			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="catbg">
 					<td>
 						', $txt['available_groups'], '
@@ -1686,8 +1686,8 @@ function template_ignoreboards()
 		}
 	// ]]></script>
 
-	<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
+	<form action="', $scripturl, '?action=profile;area=ignoreboards;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+			<table border="0" width="100%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
@@ -1887,7 +1887,7 @@ function template_issueWarning()
 	// ]]></script>';
 
 	echo '
-	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=issueWarning" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="2" height="26">
@@ -2103,7 +2103,7 @@ function template_deleteAccount()
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+		<form action="', $scripturl, '?action=profile;area=deleteaccount;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
@@ -2689,8 +2689,8 @@ function template_authentication_method()
 	// The main header!
 	echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
-		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+		<form action="', $scripturl, '?action=profile;area=authentication;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
+			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26" >
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
