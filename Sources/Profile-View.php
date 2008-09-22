@@ -267,6 +267,9 @@ function showPosts($memID)
 		),
 	);
 
+	// Set the page title
+	$context['page_title'] = $txt['showContributions'] . ' - ' . $user_profile[$memID]['real_name'];
+
 	// If we're specifically dealing with attachments use that function!
 	if (isset($_GET['sa']) && $_GET['sa'] == 'attach')
 		return showAttachments($memID);
@@ -361,8 +364,6 @@ function showPosts($memID)
 
 		$range_limit = $reverse ? 'id_msg < ' . ($min_msg_member + $margin) : 'id_msg > ' . ($max_msg_member - $margin);
 	}
-
-	$context['page_title'] = $txt['latest_posts'] . ' ' . $user_profile[$memID]['real_name'];
 
 	// Find this user's posts.  The left join on categories somehow makes this faster, weird as it looks.
 	$looped = false;

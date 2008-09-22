@@ -428,6 +428,7 @@ function ModifyCoreFeatures($return_config = false)
 		updateSettings(array('admin_features' => ''));
 
 	$context['sub_template'] = 'core_features';
+	$context['page_title'] = $txt['core_settings_title'];
 }
 
 function ModifyBasicSettings($return_config = false)
