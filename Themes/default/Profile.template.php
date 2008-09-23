@@ -95,7 +95,7 @@ function template_summary()
 		echo '
 				<tr>
 					<td><b>', $txt['profile_warning_level'], ': </b></td>
-					<td><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=issueWarning">', $context['member']['warning'], '%</a>';
+					<td><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning">', $context['member']['warning'], '%</a>';
 
 		// Can we provide information on what this means?
 		if (!empty($context['warning_status']))
@@ -115,7 +115,7 @@ function template_summary()
 					<td width="40%">
 						<b>', $txt['ip'], ': </b>
 					</td><td>
-						<a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['member']['ip'], '">', $context['member']['ip'], '</a>
+						<a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['member']['ip'], '">', $context['member']['ip'], '</a>
 					</td>
 				</tr>';
 
@@ -171,7 +171,7 @@ function template_summary()
 			echo '
 				<tr>
 					<td colspan="2">
-						<span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;sa=activateAccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)
+						<span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)
 					</td>
 				</tr>';
 
@@ -425,7 +425,7 @@ function template_showPosts()
 
 			if ($post['can_delete'])
 				echo '
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;start=', $context['start'], ';delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;start=', $context['start'], ';delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
 			if ($post['can_delete'] && ($post['can_mark_notify'] || $post['can_reply']))
 				echo '
 								', $context['menu_separator'];
@@ -455,25 +455,25 @@ function template_showPosts()
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td width="25%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
 						', $txt['show_attach_filename'], '
 						', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td width="12%" align="center">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
 						', $txt['show_attach_downloads'], '
 						', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td width="30%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
 						', $txt['message'], '
 						', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td>
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
 					', $txt['show_attach_posted'], '
 					', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
@@ -564,7 +564,7 @@ function template_editBuddies()
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>
 				<td align="center">', $buddy['msn']['link'], '</td>
-				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=editBuddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
+				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=buddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
 			</tr>';
 
 		$alternate = !$alternate;
@@ -621,12 +621,12 @@ function template_trackUser()
 						', (empty($context['last_ip2']) ? '' : '<br /><span class="smalltext">(<a href="' . $scripturl . '?action=helpadmin;help=whytwoip" onclick="return reqWin(this.href);">' . $txt['why_two_ip_address'] . '</a>)</span>'), '
 					</td>
 					<td class="windowbg2" align="left">
-						<a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip'], '">', $context['last_ip'], '</a>';
+						<a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['last_ip'], '">', $context['last_ip'], '</a>';
 
 	// Second address detected?
 	if (!empty($context['last_ip2']))
 		echo '
-						, <a href="', $scripturl, '?action=profile;sa=tracking;area=ip;searchip=', $context['last_ip2'], '">', $context['last_ip2'], '</a>';
+						, <a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['last_ip2'], '">', $context['last_ip2'], '</a>';
 
 	echo '
 					</td>
@@ -1588,7 +1588,7 @@ function template_groupMembership()
 			// Can they leave their group?
 			if ($group['can_leave'])
 				echo '
-							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';sa=groupMembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
+							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
 			echo '
 						</div>
 					</td>
@@ -1629,7 +1629,7 @@ function template_groupMembership()
 							<b>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</b>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
 						<div style="float: right">
-							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';sa=groupMembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';sa=groupMembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
+							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 						</div>
 					</td>
 				</tr>';

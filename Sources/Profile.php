@@ -260,7 +260,7 @@ function ModifyProfile($post_errors = array())
 			'areas' => array(
 				'sendpm' => array(
 					'label' => $txt['profileSendIm'],
-					'href' => $scripturl . '?action=pm;sa=send;u=' . $memID,
+					'custom_url' => $scripturl . '?action=pm;sa=send',
 					'enabled' => !$context['user']['is_owner'],
 					'permission' => array(
 						'own' => array(),
@@ -279,7 +279,7 @@ function ModifyProfile($post_errors = array())
 				),
 				'banuser' => array(
 					'label' => $txt['profileBanUser'],
-					'href' => $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID,
+					'custom_url' => $scripturl . '?action=admin;area=ban;sa=add',
 					'enabled' => $cur_profile['id_group'] != 1 && !in_array(1, explode(',', $cur_profile['additional_groups'])),
 					'permission' => array(
 						'own' => array(),

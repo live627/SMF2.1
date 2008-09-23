@@ -17,6 +17,8 @@ September 2008
  * Adjusted the profile and paid subscription templates to reflect this. (Profile template, ManagePaid template)
  * Toggling the toolbar is now no longer an admin preference, but available to all users. (Subs-Menu.php)
  & Added language strings for the Show Contributions area and removed some obsolete strings. (Profile language file)
+ ! The number of members requiring approval wasn't collected quite right. (ManageMembers.php) [Bug 2577]
+ & Changed a few instances of 'non-existant' to their proper spelling. (ManageMaintenance language file) [Bug 2570]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

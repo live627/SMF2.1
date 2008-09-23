@@ -110,7 +110,7 @@ function ViewMembers()
 	$context['awaiting_activation'] = 0;
 	$context['awaiting_approval'] = 0;
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['activation_numbers'][$row['is_activated']] = $row['totalMembers'];
+		$context['activation_numbers'][$row['is_activated']] = $row['total_members'];
 	$smcFunc['db_free_result']($request);
 
 	foreach ($context['activation_numbers'] as $activation_type => $total_members)
