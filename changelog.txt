@@ -5,6 +5,7 @@ SMF 2.0 RC1                                                                  ???
 ================================================================================
 September 2008
 --------------------------------------------------------------------------------
+ ! Typo (upgrade_2-0_postgresql.sql)
  ! A couple of additional changes were needed now that inet_aton() returns 8-bit integers (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  ! INET_ATON() didn't support all possible IP addresses (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  & Removed unused text string. (PersonalMessage language file) [Bug 2525]

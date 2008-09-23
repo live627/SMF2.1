@@ -483,7 +483,7 @@ CREATE OR REPLACE FUNCTION IFNULL(int8, int8) RETURNS int8 AS
 LANGUAGE 'sql';
 ---#
 
----# Changing ip column in log_sessions to int8
-ALTER TABLE {$db_prefix}log_session
+---# Changing ip column in log_online to int8
+ALTER TABLE {$db_prefix}log_online
 ALTER COLUMN ip TYPE int8;
 ---#
