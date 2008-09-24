@@ -20,6 +20,7 @@ September 2008
  & Added language strings for the Show Contributions area and removed some obsolete strings. (Profile language file)
  ! The number of members requiring approval wasn't collected quite right. (ManageMembers.php) [Bug 2577]
  & Changed a few instances of 'non-existant' to their proper spelling. (ManageMaintenance language file) [Bug 2570]
+ ! The core features page wasn't saving changes and didn't have a page title. (ManageSettings.php, Admin template file) [Bug 2584]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
