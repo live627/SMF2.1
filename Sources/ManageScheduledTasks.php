@@ -47,10 +47,6 @@ if (!defined('SMF'))
 
 	array list_getNumTaskLog()
 		// !!!
-
-	void AdminTask()
-		- Handles minor maintenance tasks.
-		- Sets up a layer, some key context information, and passes execution to the task function.
 */
 
 // !!!
@@ -574,89 +570,6 @@ function list_getNumTaskLogEntries()
 	$smcFunc['db_free_result']($request);
 
 	return $num_entries;
-}
-
-// Get things ready for minor admin tasks.
-function AdminTask()
-{
-	global $txt, $scripturl, $context, $helptxt, $user_info, $smcFunc;
-
-	checkSession('request');
-
-	loadLanguage('Help');
-
-	if (!isset($_GET['activity']) || !function_exists('activity_' . $_GET['activity']))
-		fatal_lang_error('no_access');
-
-	$context['maintain_activity'] = $_GET['activity'];
-
-	// Let's load up the boards in case they are useful.
-	$result = $smcFunc['db_query']('', '
-		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
-		FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE {query_see_board}',
-		array(
-		)
-	);
-	$context['categories'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-	{
-		if (!isset($context['categories'][$row['id_cat']]))
-			$context['categories'][$row['id_cat']] = array(
-				'name' => $row['cat_name'],
-				'boards' => array()
-			);
-
-		$context['categories'][$row['id_cat']]['boards'][] = array(
-			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'child_level' => $row['child_level']
-		);
-	}
-	$smcFunc['db_free_result']($result);
-
-	// Get membergroups - for deleting members and the like.
-	$result = $smcFunc['db_query']('', '
-		SELECT id_group, group_name
-		FROM {db_prefix}membergroups',
-		array(
-		)
-	);
-	$context['membergroups'] = array(
-		array(
-			'id' => 0,
-			'name' => $txt['maintain_members_ungrouped']
-		),
-	);
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-	{
-		$context['membergroups'][] = array(
-			'id' => $row['id_group'],
-			'name' => $row['group_name']
-		);
-	}
-	$smcFunc['db_free_result']($result);
-
-	// Just loading the template?
-	if (empty($_POST['do']))
-	{
-		$context['sub_template'] = 'activity_' . $context['maintain_activity'];
-
-		// Help text or page title?
-		$context['help_text'] = isset($helptxt[$context['maintain_activity']]) ? $context['maintain_activity'] : false;
-		$context['page_title'] = isset($txt[$context['maintain_activity']]) ? $txt[$context['maintain_activity']] : $txt['maintain_general'];
-
-		// Setup the layer.
-		$context['template_layers'][] = 'maintain';
-	}
-
-	// Call the function - telling them what we're up to.
-	call_user_func_array('activity_' . $_GET['activity'], array('do_action' => !empty($_POST['do'])));
-
-	// If we're done then go away.
-	if (!empty($_POST['do']))
-		redirectexit('action=admin;area=maintain;done');
 }
 
 ?>
