@@ -162,7 +162,7 @@ function RemoveOldTopics2()
 
 	// No boards at all?  Forget it then :/.
 	if (empty($_POST['boards']))
-		redirectexit('action=admin;area=maintain');
+		redirectexit('action=admin;area=maintain;sa=topics');
 
 	// This should exist, but we can make sure.
 	$_POST['delete_type'] = isset($_POST['delete_type']) ? $_POST['delete_type'] : 'nothing';
@@ -219,7 +219,7 @@ function RemoveOldTopics2()
 	// Log an action into the moderation log.
 	logAction('pruned', array('days' => $_POST['maxdays']));
 
-	redirectexit('action=admin;area=maintain;done');
+	redirectexit('action=admin;area=maintain;sa=topics;done=purgeold');
 }
 
 // Removes the passed id_topic's. (permissions are NOT checked here!)

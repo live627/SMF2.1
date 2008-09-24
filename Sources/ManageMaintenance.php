@@ -30,14 +30,23 @@ if (!defined('SMF'))
 	void ManageMaintenance()
 		// !!!
 
-	void Maintenance()
-		- shows a listing of maintenance options - including repair, recount,
-		  optimize, database dump, clear logs, and remove old posts.
-		- handles directly the tasks of clearing logs.
-		- requires the admin_forum permission.
-		- uses the maintain_forum admin area.
-		- shows the maintain sub template of the Admin template.
-		- accessed by ?action=admin;area=maintain.
+	void MaintainDatabase()
+		// !!!
+
+	void MaintainMembers()
+		// !!!
+
+	void MaintainTopics()
+		// !!!
+	
+	void MaintainCleanCache()
+		// !!!
+	
+	void MaintainFindFixErrors()
+		// !!!
+
+	void MaintainEmptyUnimportantLogs()
+		// !!!
 
 	void ConvertUtf8()
 		- converts the data and database tables to UTF-8 character set.
@@ -95,25 +104,21 @@ if (!defined('SMF'))
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
 		// !!!
 
-	mixed activity_move_topics_maintenance(bool do_action = true)
+	void MaintainReattributePosts()
+		// !!!
+
+	void MaintainDownloadBackup()
+		// !!!
+
+	void MaintainPurgeInactiveMembers()
+		// !!!
+
+	void MaintainRemoveOldPosts(bool do_action = true)
+		// !!!
+
+	mixed MaintainMassMoveTopics()
 		- Moves topics from one board to another.
 		- User the not_done template to pause the process.
-
-	void activity_maintain_reattribute_posts(bool do_action = true)
-		// !!!
-
-	void activity_maintain_backup(bool do_action = true)
-		// !!!
-
-	void activity_maintain_members(bool do_action = true)
-		// !!!
-
-	void activity_maintain_old(bool do_action = true)
-		// !!!
-
-	void AdminTask()
-		- Handles minor maintenance tasks.
-		- Sets up a layer, some key context information, and passes execution to the task function.
 */
 
 // The maintenance access point.
@@ -128,134 +133,244 @@ function ManageMaintenance()
 	loadLanguage('ManageMaintenance');
 	loadTemplate('ManageMaintenance');
 
-	// So many things you can - but frankly I won't let you - just these!
+	// This uses admin tabs - as it should!
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['maintain_title'],
+		'help' => &$txt['maintenance_general'],
+		'description' => $txt['maintain_info'],
+		'tabs' => array(
+			'database' => array(),
+			'routine' => array(),
+			'members' => array(),
+			'topics' => array(),
+		),
+	);
+
+	// So many things you can do - but frankly I won't let you - just these!
 	$subActions = array(
-		'admintask' => 'AdminTask',
-		'cleancache' => 'Maintenance',
-		'convertentities' => 'ConvertEntities',
-		'convertutf8' => 'ConvertUtf8',
-		'destroy' => 'Maintenance',
-		'logs' => 'Maintenance',
-		'general' => 'Maintenance',
-		'movetopics' => 'activity_move_topics_maintenance',
-		'optimize' => 'OptimizeTables',
-		'recount' => 'AdminBoardRecount',
-		'version' => 'VersionDetail',
+		'database' => array(
+			'function' => 'MaintainDatabase',
+			'template' => 'maintain_database',
+			'activities' => array(
+				'optimize' => 'OptimizeTables',
+				'backup' => 'MaintainDownloadBackup',
+				'convertentities' => 'ConvertEntities',
+				'convertutf8' => 'ConvertUtf8',
+			),
+		),
+		'routine' => array(
+			'function' => 'MaintainRoutine',
+			'template' => 'maintain_routine',
+			'activities' => array(
+				'version' => 'VersionDetail',
+				'repair' => 'MaintainFindFixErrors',
+				'recount' => 'AdminBoardRecount',
+				'logs' => 'MaintainEmptyUnimportantLogs',
+				'cleancache' => 'MaintainCleanCache',
+			),
+		),
+		'members' => array(
+			'function' => 'MaintainMembers',
+			'template' => 'maintain_members',
+			'activities' => array(
+				'reattribute' => 'MaintainReattributePosts',
+				'purgeinactive' => 'MaintainPurgeInactiveMembers',
+			),
+		),
+		'topics' => array(
+			'function' => 'MaintainTopics',
+			'template' => 'maintain_topics',
+			'activities' => array(
+				'massmove' => 'MaintainMassMoveTopics',
+				'pruneold' => 'MaintainRemoveOldPosts',
+			),
+		),
+		'destroy' => array(
+			'function' => 'Destroy',
+			'activities' => array(),
+		),
 	);
 
 	// Yep, sub-action time!
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]))
-		$context['sub_action'] = $_REQUEST['sa'];
+		$subAction = $_REQUEST['sa'];
 	else
-		$context['sub_action'] = 'general';
+		$subAction = 'database';
 
-	// This uses admin tabs - as it should!
-	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['maintain_title'],
-		'help' => '',
-		'description' => $txt['maintain_info'],
-		'tabs' => array(
-			'general' => array(
-				'description' => $txt['maintain_common_desc'],
-			),
-		),
-	);
+	// Doing something special?
+	if (isset($_REQUEST['activity']) && isset($subActions[$subAction]['activities'][$_REQUEST['activity']]))
+		$activity = $_REQUEST['activity'];
+
+	// Set a few things.
+	$context['page_title'] = $txt['maintain_title'];
+	$context['sub_action'] = $subAction;
+	$context['sub_template'] = !empty($subActions[$subAction]['template']) ? $subActions[$subAction]['template'] : '';
 
 	// Finally fall through to what we are doing.
-	$subActions[$context['sub_action']]();
+	$subActions[$subAction]['function']();
+	
+	// Any special activity?
+	if (isset($activity))
+		$subActions[$subAction]['activities'][$activity]();
 }
 
-// Miscellaneous maintenance..
-function Maintenance()
+// Supporting function for the database maintenance area.
+function MaintainDatabase()
 {
-	global $context, $txt, $user_info, $db_character_set, $db_type;
-	global $modSettings, $sourcedir, $cachedir, $smcFunc;
-
-	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
-	{
-		checkSession('get');
-
-		// No one's online now.... MUHAHAHAHA :P.
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_online',
-			array(
-			)
-		);
-
-		// Dump the banning logs.
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_banned',
-			array(
-			)
-		);
-
-		// Start id_error back at 0 and dump the error log.
-		$smcFunc['db_query']('truncate_table', '
-			TRUNCATE {db_prefix}log_errors',
-			array(
-			)
-		);
-
-		// Clear out the spam log.
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_floodcontrol',
-			array(
-			)
-		);
-
-		// Clear out the karma actions.
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}log_karma',
-			array(
-			)
-		);
-
-		// Last but not least, the search logs!
-		$smcFunc['db_query']('truncate_table', '
-			TRUNCATE {db_prefix}log_search_topics',
-			array(
-			)
-		);
-		$smcFunc['db_query']('truncate_table', '
-			TRUNCATE {db_prefix}log_search_messages',
-			array(
-			)
-		);
-		$smcFunc['db_query']('truncate_table', '
-			TRUNCATE {db_prefix}log_search_results',
-			array(
-			)
-		);
-
-		updateSettings(array('search_pointer' => 0));
-
-		$context['maintenance_finished'] = true;
-	}
-	elseif (isset($_GET['sa']) && $_GET['sa'] == 'destroy')
-	{
-		// Oh noes!
-		echo '<html><head><title>', $context['forum_name'], ' deleted!</title></head>
-			<body style="background-color: orange; font-family: arial, sans-serif; text-align: center;">
-			<div style="margin-top: 8%; font-size: 400%; color: black;">Oh my, you killed ', $context['forum_name'], '!</div>
-			<div style="margin-top: 7%; font-size: 500%; color: red;"><b>You lazy bum!</b></div>
-			</body></html>';
-		obExit(false);
-	}
-	elseif (isset($_GET['sa']) && $_GET['sa'] == 'cleancache' && is_dir($cachedir))
-	{
-		// Just wipe the whole cache directory!
-		clean_cache();
-
-		$context['maintenance_finished'] = true;
-	}
-	else
-		$context['maintenance_finished'] = isset($_GET['done']);
-
+	global $context, $db_type, $db_character_set, $modSettings, $smcFunc;
+	
+	// Show some conversion options?
 	$context['convert_utf8'] = $db_type == 'mysql' && (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smcFunc['db_server_info']())) <= 0;
 	$context['convert_entities'] = $db_type == 'mysql' && isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
+}
 
-	$context['sub_template'] = 'maintain';
-	$context['page_title'] = $txt['maintain_title'];
+// Supporting function for the routine maintenance area.
+function MaintainRoutine()
+{
+	global $context, $txt;
+	
+	if (isset($_GET['done']) && $_GET['done'] == 'recount')
+		$context['maintenance_finished'] = &$txt['maintain_recount'];
+}
+
+// Supporting function for the members maintenance area.
+function MaintainMembers()
+{
+	global $context, $smcFunc, $txt;
+	
+	// Get membergroups - for deleting members and the like.
+	$result = $smcFunc['db_query']('', '
+		SELECT id_group, group_name
+		FROM {db_prefix}membergroups',
+		array(
+		)
+	);
+	$context['membergroups'] = array(
+		array(
+			'id' => 0,
+			'name' => $txt['maintain_members_ungrouped']
+		),
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($result))
+	{
+		$context['membergroups'][] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name']
+		);
+	}
+	$smcFunc['db_free_result']($result);
+}
+
+// Supporting function for the topics maintenance area.
+function MaintainTopics()
+{
+	global $context, $smcFunc, $txt;
+	
+	// Let's load up the boards in case they are useful.
+	$result = $smcFunc['db_query']('', '
+		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
+		FROM {db_prefix}boards AS b
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+		WHERE {query_see_board}',
+		array(
+		)
+	);
+	$context['categories'] = array();
+	while ($row = $smcFunc['db_fetch_assoc']($result))
+	{
+		if (!isset($context['categories'][$row['id_cat']]))
+			$context['categories'][$row['id_cat']] = array(
+				'name' => $row['cat_name'],
+				'boards' => array()
+			);
+
+		$context['categories'][$row['id_cat']]['boards'][] = array(
+			'id' => $row['id_board'],
+			'name' => $row['name'],
+			'child_level' => $row['child_level']
+		);
+	}
+	$smcFunc['db_free_result']($result);
+	
+	if (isset($_GET['done']) && $_GET['done'] == 'purgeold')
+		$context['maintenance_finished'] = &$txt['maintain_old'];
+	elseif (isset($_GET['done']) && $_GET['done'] == 'massmove')
+		$context['maintenance_finished'] = &$txt['move_topics_maintenance'];
+}
+
+// Find and fix all errors.
+function MaintainFindFixErrors()
+{
+	global $sourcedir;
+	
+	require_once($sourcedir . '/RepairBoards.php');
+	RepairBoards();
+}
+
+// Wipes the whole cache directory.
+function MaintainCleanCache()
+{
+	global $context, $txt;
+	
+	// Just wipe the whole cache directory!
+	clean_cache();
+
+	$context['maintenance_finished'] = &$txt['maintain_cache'];
+}
+
+// Empties all uninmportant logs
+function MaintainEmptyUnimportantLogs()
+{
+	global $context, $smcFunc, $txt;
+	
+	checkSession();
+	
+	// No one's online now.... MUHAHAHAHA :P.
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_online');
+
+	// Dump the banning logs.
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_banned');
+
+	// Start id_error back at 0 and dump the error log.
+	$smcFunc['db_query']('truncate_table', '
+		TRUNCATE {db_prefix}log_errors');
+
+	// Clear out the spam log.
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_floodcontrol');
+
+	// Clear out the karma actions.
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_karma');
+
+	// Last but not least, the search logs!
+	$smcFunc['db_query']('truncate_table', '
+		TRUNCATE {db_prefix}log_search_topics');
+
+	$smcFunc['db_query']('truncate_table', '
+		TRUNCATE {db_prefix}log_search_messages');
+
+	$smcFunc['db_query']('truncate_table', '
+		TRUNCATE {db_prefix}log_search_results');
+
+	updateSettings(array('search_pointer' => 0));
+	
+	$context['maintenance_finished'] = &$txt['maintain_logs'];
+}
+
+// Oh noes!
+function Destroy()
+{
+	global $context;
+
+	echo '<html><head><title>', $context['forum_name'], ' deleted!</title></head>
+		<body style="background-color: orange; font-family: arial, sans-serif; text-align: center;">
+		<div style="margin-top: 8%; font-size: 400%; color: black;">Oh my, you killed ', $context['forum_name'], '!</div>
+		<div style="margin-top: 7%; font-size: 500%; color: red;"><b>You lazy bum!</b></div>
+		</body></html>';
+	obExit(false);
 }
 
 // Convert both data and database tables to UTF-8 character set.
@@ -805,7 +920,7 @@ function OptimizeTables()
 
 	isAllowedTo('admin_forum');
 
-	checkSession('get');
+	checkSession('post');
 
 	ignore_user_abort(true);
 	db_extend();
@@ -858,7 +973,7 @@ function AdminBoardRecount()
 
 	isAllowedTo('admin_forum');
 
-	checkSession('get');
+	checkSession('post');
 
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';
@@ -1312,7 +1427,7 @@ function AdminBoardRecount()
 	require_once($sourcedir . '/ScheduledTasks.php');
 	CalculateNextTrigger();
 
-	redirectexit('action=admin;area=maintain;done');
+	redirectexit('action=admin;area=maintain;sa=routine;done=recount');
 }
 
 // Perform a detailed version check.  A very good thing ;).
@@ -1456,12 +1571,9 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 }
 
 // Removing old posts doesn't take much as we really pass through.
-function activity_maintain_reattribute_posts($do_action = true)
+function MaintainReattributePosts()
 {
-	global $sourcedir, $context;
-
-	if (!$do_action || !isset($_POST['to']))
-		return true;
+	global $sourcedir, $context, $txt;
 
 	// Find the member.
 	require_once($sourcedir . '/Subs-Auth.php');
@@ -1479,37 +1591,23 @@ function activity_maintain_reattribute_posts($do_action = true)
 	// Now call the reattribute function.
 	require_once($sourcedir . '/Subs-Members.php');
 	reattributePosts($memID, $email, $membername, !empty($_POST['posts']));
+
+	$context['maintenance_finished'] = &$txt['maintain_reattribute_posts'];
 }
 
 // Handling function for the backup stuff.
-function activity_maintain_backup($do_action = true)
+function MaintainDownloadBackup()
 {
-	global $sourcedir, $context, $smcFunc;
-
-	if (!$do_action)
-	{
-		// Setup the help button.
-		$context['help_text'] = 'maintenance_backup';
-
-		return true;
-	}
-
+	global $sourcedir;
+	
 	require_once($sourcedir . '/DumpDatabase.php');
 	DumpDatabase2();
 }
 
 // Removing old members?
-function activity_maintain_members($do_action = true)
+function MaintainPurgeInactiveMembers()
 {
-	global $sourcedir, $context, $smcFunc;
-
-	if (!$do_action)
-	{
-		// Setup the help button.
-		$context['help_text'] = 'maintenance_members';
-
-		return true;
-	}
+	global $sourcedir, $context, $smcFunc, $txt;
 
 	$_POST['maxdays'] = (int) $_POST['maxdays'];
 	if (!empty($_POST['groups']) && $_POST['maxdays'])
@@ -1581,33 +1679,23 @@ function activity_maintain_members($do_action = true)
 		require_once($sourcedir . '/Subs-Members.php');
 		deleteMembers($members);
 	}
+
+	$context['maintenance_finished'] = &$txt['maintain_members'];
 }
 
 // Removing old posts doesn't take much as we really pass through.
-function activity_maintain_old($do_action = true)
+function MaintainRemoveOldPosts()
 {
-	global $sourcedir, $context;
-
-	if (!$do_action)
-	{
-		// We have a different help string.
-		$context['help_text'] = 'maintenance_rot';
-
-		return true;
-	}
+	global $sourcedir, $context, $txt;
 
 	// Actually do what we're told!
 	require_once($sourcedir . '/RemoveTopic.php');
 	RemoveOldTopics2();
 }
 
-function activity_move_topics_maintenance($do_action = true)
+function MaintainMassMoveTopics()
 {
 	global $smcFunc, $sourcedir, $context, $txt;
-
-	// Not doing it - nothing to do!
-	if (!$do_action)
-		return true;
 
 	// Only admins.
 	isAllowedTo('admin_forum');
@@ -1649,7 +1737,7 @@ function activity_move_topics_maintenance($do_action = true)
 		$total_topics = (int) $_REQUEST['totaltopics'];
 
 	// Seems like we need this here.
-	$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
+	$context['continue_get_data'] = '?action=admin;area=maintain;sa=topics;activity=massmove;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
 
 	// We have topics to move so start the process.
 	if (!empty($total_topics))
@@ -1677,7 +1765,7 @@ function activity_move_topics_maintenance($do_action = true)
 			{
 				cache_put_data('board-' . $id_board_from, null, 120);
 				cache_put_data('board-' . $id_board_to, null, 120);
-				redirectexit('action=admin;area=maintain;done');
+				redirectexit('action=admin;area=maintain;sa=topics;done=massmove');
 			}
 
 			// Lets move them.
@@ -1692,7 +1780,7 @@ function activity_move_topics_maintenance($do_action = true)
 			{
 				// What's the percent?
 				$context['continue_percent'] = round(100 * ($context['start'] / $total_topics), 1);
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=movetopics;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=topics;activity=massmove;id_board_from=' . $id_board_from . ';id_board_to=' . $id_board_to . ';totaltopics=' . $total_topics . ';start=' . $context['start'] . ';sesc=' . $context['session_id'];
 
 				// Let the template system do it's thang.
 				return;
@@ -1704,90 +1792,7 @@ function activity_move_topics_maintenance($do_action = true)
 	cache_put_data('board-' . $id_board_from, null, 120);
 	cache_put_data('board-' . $id_board_to, null, 120);
 
-	redirectexit('action=admin;area=maintain;done');
-}
-
-// Get things ready for minor admin tasks.
-function AdminTask()
-{
-	global $txt, $scripturl, $context, $helptxt, $user_info, $smcFunc;
-
-	checkSession('request');
-
-	loadLanguage('Help');
-
-	if (!isset($_GET['activity']) || !function_exists('activity_' . $_GET['activity']))
-		fatal_lang_error('no_access');
-
-	$context['maintain_activity'] = $_GET['activity'];
-
-	// Let's load up the boards in case they are useful.
-	$result = $smcFunc['db_query']('', '
-		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
-		FROM {db_prefix}boards AS b
-			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE {query_see_board}',
-		array(
-		)
-	);
-	$context['categories'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-	{
-		if (!isset($context['categories'][$row['id_cat']]))
-			$context['categories'][$row['id_cat']] = array(
-				'name' => $row['cat_name'],
-				'boards' => array()
-			);
-
-		$context['categories'][$row['id_cat']]['boards'][] = array(
-			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'child_level' => $row['child_level']
-		);
-	}
-	$smcFunc['db_free_result']($result);
-
-	// Get membergroups - for deleting members and the like.
-	$result = $smcFunc['db_query']('', '
-		SELECT id_group, group_name
-		FROM {db_prefix}membergroups',
-		array(
-		)
-	);
-	$context['membergroups'] = array(
-		array(
-			'id' => 0,
-			'name' => $txt['maintain_members_ungrouped']
-		),
-	);
-	while ($row = $smcFunc['db_fetch_assoc']($result))
-	{
-		$context['membergroups'][] = array(
-			'id' => $row['id_group'],
-			'name' => $row['group_name']
-		);
-	}
-	$smcFunc['db_free_result']($result);
-
-	// Just loading the template?
-	if (empty($_POST['do']))
-	{
-		$context['sub_template'] = 'activity_' . $context['maintain_activity'];
-
-		// Help text or page title?
-		$context['help_text'] = isset($helptxt[$context['maintain_activity']]) ? $context['maintain_activity'] : false;
-		$context['page_title'] = isset($txt[$context['maintain_activity']]) ? $txt[$context['maintain_activity']] : $txt['maintain_general'];
-
-		// Setup the layer.
-		$context['template_layers'][] = 'maintain';
-	}
-
-	// Call the function - telling them what we're up to.
-	call_user_func_array('activity_' . $_GET['activity'], array('do_action' => !empty($_POST['do'])));
-
-	// If we're done then go away.
-	if (!empty($_POST['do']))
-		redirectexit('action=admin;area=maintain;done');
+	redirectexit('action=admin;area=maintain;sa=topics;done=massmove');
 }
 
 ?>

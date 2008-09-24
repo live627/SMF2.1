@@ -429,11 +429,8 @@ function ModifyProfile($post_errors = array())
 	$context['profile_menu_id'] = $context['max_menu_id'];
 	$context['profile_menu_name'] = 'menu_data_' . $context['profile_menu_id'];
 
-	// Set the template for this area.
+	// Set the selected item.
 	$context['menu_item_selected'] = $profile_include_data['current_area'];
-
-	// Set the template for this area.
-	$context['sub_template'] = $profile_include_data['function'];
 
 	// File to include?
 	if (isset($profile_include_data['file']))
@@ -445,6 +442,10 @@ function ModifyProfile($post_errors = array())
 		destroyMenu();
 		fatal_lang_error('no_access');
 	}
+
+	// Set the template for this area and add the profile layer.
+	$context['sub_template'] = $profile_include_data['function'];
+	$context['template_layers'][] = 'profile';
 
 	// All the subactions that require a user password in order to validate.
 	$context['require_password'] = in_array($profile_include_data['current_area'], $context['password_areas']);

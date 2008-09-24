@@ -207,13 +207,16 @@ $txt['settings_not_writable'] = 'These settings cannot be changed because Settin
 
 $txt['maintain_title'] = 'Forum Maintenance';
 $txt['maintain_info'] = 'Optimize tables, make backups, check for errors, and prune boards with these tools.';
-$txt['maintain_done'] = 'Maintenance Completed.';
+$txt['maintain_sub_database'] = 'Database';
+$txt['maintain_sub_routine'] = 'Routine';
+$txt['maintain_sub_members'] = 'Members';
+$txt['maintain_sub_topics'] = 'Topics';
+$txt['maintain_done'] = 'The maintenance task \'%1$s\' was executed successfully.';
 $txt['maintain_no_errors'] = 'Congratulations, no errors found!  Thanks for checking.';
 
-$txt['maintain_common'] = 'Common Tasks';
-$txt['maintain_common_desc'] = 'Perform common tasks here such as making backups, pruning and checking for errors.';
 $txt['maintain_tasks'] = 'Scheduled Tasks';
 $txt['maintain_tasks_desc'] = 'Manage all the tasks scheduled by SMF.';
+
 $txt['scheduled_log'] = 'Task Log';
 $txt['scheduled_log_desc'] = 'Lists logs of the tasks that have be ran.';
 $txt['admin_log'] = 'Admin Log';

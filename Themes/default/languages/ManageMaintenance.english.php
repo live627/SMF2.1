@@ -120,18 +120,24 @@ $txt['errortype_template_desc'] = 'Errors related to the loading of templates.';
 $txt['errortype_user'] = 'User';
 $txt['errortype_user_desc'] = 'Errors resulting from user errors.  Includes failed passwords, trying to login when banned, and trying to do an action for which they do not have permission.';
 
-$txt['maintain_general'] = 'General Maintenance';
-$txt['maintain_recount'] = 'Recount all forum totals and statistics.';
-$txt['maintain_errors'] = 'Find and repair any errors.';
-$txt['maintain_logs'] = 'Empty out unimportant logs.';
-$txt['maintain_cache'] = 'Empty the file cache.';
-$txt['maintain_optimize'] = 'Optimize all tables to improve performance.';
-$txt['maintain_version'] = 'Check all files against current versions.';
+$txt['maintain_recount'] = 'Recount all forum totals and statistics';
+$txt['maintain_recount_info'] = 'Should the total replies of a topic or the number of PMs in your inbox be incorrect: this function will recount all saved counts and statistics for you.';
+$txt['maintain_errors'] = 'Find and repair any errors';
+$txt['maintain_errors_info'] = 'If, for example, posts or topics are missing after a server crash, this function may help finding them again.';
+$txt['maintain_logs'] = 'Empty out unimportant logs';
+$txt['maintain_logs_info'] = 'This function will empty out all unimportant logs. This should be avoided unless something\'s wrong, but it doesn\'t hurt anything.';
+$txt['maintain_cache'] = 'Empty the file cache';
+$txt['maintain_cache_info'] = 'If, for whatever reason, the file cache needs to be cleared, this is the link you need.';
+$txt['maintain_optimize'] = 'Optimize all tables';
+$txt['maintain_optimize_info'] = 'This task allows you to optimize all tables. This will get rid of overhead, effectively making the tables smaller in size and your forum faster!';
+$txt['maintain_version'] = 'Check all files against current versions';
+$txt['maintain_version_info'] = 'This maintenance task allows you to do a detailed version check of all forum files against the official list of latest versions.';
+$txt['maintain_run_now'] = 'Run task now';
 $txt['maintain_return'] = 'Back to Forum Maintenance';
 
 $txt['maintain_backup'] = 'Backup Database';
 $txt['maintain_backup_struct'] = 'Save the table structure.';
-$txt['maintain_backup_data'] = 'Save the table data. (the important stuff.)';
+$txt['maintain_backup_data'] = 'Save the table data (the important stuff).';
 $txt['maintain_backup_gz'] = 'Compress the file with gzip.';
 $txt['maintain_backup_save'] = 'Download';
 
@@ -158,59 +164,6 @@ $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
 $txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
 
-$txt['scheduled_tasks_title'] = 'Scheduled Tasks';
-$txt['scheduled_tasks_header'] = 'All Scheduled Tasks';
-$txt['scheduled_tasks_name'] = 'Task Name';
-$txt['scheduled_tasks_next_time'] = 'Next Due';
-$txt['scheduled_tasks_regularity'] = 'Regularity';
-$txt['scheduled_tasks_enabled'] = 'Enabled';
-$txt['scheduled_tasks_run_now'] = 'Run Now';
-$txt['scheduled_tasks_save_changes'] = 'Save Changes';
-$txt['scheduled_tasks_time_offset'] = '<strong>Note:</strong> All times given below are <em>server time</em> and do not take any time offsets setup within SMF into account.';
-$txt['scheduled_tasks_were_run'] = 'All selected tasks were completed';
-
-$txt['scheduled_tasks_na'] = 'N/A';
-$txt['scheduled_task_approval_notification'] = 'Approval Notifications';
-$txt['scheduled_task_desc_approval_notification'] = 'Send out emails to all moderators summarizing posts awaiting approval.';
-$txt['scheduled_task_auto_optimize'] = 'Optimize Database';
-$txt['scheduled_task_desc_auto_optimize'] = 'Optimize the database to resolve fragmentation issues.';
-$txt['scheduled_task_daily_maintenance'] = 'Daily Maintenance';
-$txt['scheduled_task_desc_daily_maintenance'] = 'Runs essential daily maintenance on the forum - should not be disabled.';
-$txt['scheduled_task_daily_digest'] = 'Daily Notification Summary';
-$txt['scheduled_task_desc_daily_digest'] = 'Emails out the daily digest for notification subscribers.';
-$txt['scheduled_task_weekly_digest'] = 'Weekly Notification Summary';
-$txt['scheduled_task_desc_weekly_digest'] = 'Emails out the weekly digest for notification subscribers.';
-$txt['scheduled_task_fetchSMfiles'] = 'Fetch Simple Machines Files';
-$txt['scheduled_task_desc_fetchSMfiles'] = 'Retrieves javascript files containing notifications of updates and other information.';
-$txt['scheduled_task_birthdayemails'] = 'Send Birthday Emails';
-$txt['scheduled_task_desc_birthdayemails'] = 'Sends out emails wishing members a happy birthday.';
-$txt['scheduled_task_weekly_maintenance'] = 'Weekly Maintenance';
-$txt['scheduled_task_desc_weekly_maintenance'] = 'Runs essential weekly maintenance on the forum - should not be disabled.';
-$txt['scheduled_task_paid_subscriptions'] = 'Paid Subscription Checks';
-$txt['scheduled_task_desc_paid_subscriptions'] = 'Sends out any necessary paid subscription reminders and removes expired member subscriptions.';
-
-$txt['scheduled_task_reg_starting'] = 'Starting at %s';
-$txt['scheduled_task_reg_repeating'] = 'repeating every %1$d %2$s';
-$txt['scheduled_task_reg_unit_m'] = 'minute(s)';
-$txt['scheduled_task_reg_unit_h'] = 'hour(s)';
-$txt['scheduled_task_reg_unit_d'] = 'day(s)';
-$txt['scheduled_task_reg_unit_w'] = 'week(s)';
-
-$txt['scheduled_task_edit'] = 'Edit Scheduled Task';
-$txt['scheduled_task_edit_repeat'] = 'Repeat task every';
-$txt['scheduled_task_edit_pick_unit'] = 'Pick Unit';
-$txt['scheduled_task_edit_interval'] = 'Interval';
-$txt['scheduled_task_edit_start_time'] = 'Start Time';
-$txt['scheduled_task_edit_start_time_desc'] = 'Time the first instance of the day should start (hours:minutes)';
-$txt['scheduled_task_time_offset'] = 'Note the start time should be the offset against the current server time. Current server time is: %1$s';
-
-$txt['scheduled_view_log'] = 'View Log';
-$txt['scheduled_log_empty'] = 'There are currently no items in the log.';
-$txt['scheduled_log_time_run'] = 'Time Run';
-$txt['scheduled_log_time_taken'] = 'Time taken';
-$txt['scheduled_log_time_taken_seconds'] = '%1$d seconds';
-$txt['scheduled_log_empty_log'] = 'Empty Log';
-
 $txt['utf8_title'] = 'Convert the database and data to UTF-8';
 $txt['utf8_introduction'] = 'UTF-8 is an international character set covering nearly all languages around the world. Converting your database and data to UTF-8 can make it easier to support multiple languages on the same board. It also can enhance search and sorting capabilities for languages with non-latin characters.';
 $txt['utf8_warning'] = 'If you want to convert your data and database to UTF-8, be aware of the following:
@@ -233,12 +186,6 @@ $txt['entity_convert_title'] = 'Convert HTML-entities to UTF-8 characters';
 $txt['entity_convert_only_utf8'] = 'The database needs to be in UTF-8 format before HTML-entities can be converted to UTF-8';
 $txt['entity_convert_introduction'] = 'This function will convert all characters that are stored in the database as HTML-entities to UTF-8 characters. This is especially useful when you have just converted your forum from a character set like ISO-8859-1 while non-latin characters were used on the forum. The browser then sends all characters as HTML-entities. For example, the HTML-entity &amp;#945; represents the greek letter &#945; (alpha). Converting entities to UTF-8 will improve searching and sorting of text and reduce storage size.';
 $txt['entity_convert_proceed'] = 'Proceed';
-
-$txt['maintain_common_task_database'] = 'Database';
-$txt['maintain_common_task_routine'] = 'Routine';
-$txt['maintain_common_task_members'] = 'Members';
-$txt['maintain_common_task_topics'] = 'Topics';
-$txt['maintain_common_task_misc'] = 'Miscellaneous';
 
 // Move topics out.
 $txt['move_topics_maintenance'] = 'Move Topics';

@@ -20,6 +20,9 @@ September 2008
  ! The number of members requiring approval wasn't collected quite right. (ManageMembers.php) [Bug 2577]
  & Changed a few instances of 'non-existant' to their proper spelling. (ManageMaintenance language file) [Bug 2570]
  ! Moved the scheduled tasks functions to their own source file, template and language file. (Admin.php, ManageMaintenance.php, ManageMaintenance template, ManageMaintenance language file, ManageScheduledTasks.php, ManageScheduledTasks template, ManageScheduledTasks language file)
+ ! Restructured the forum maintenance area. (Admin.php, ManageMaintenance.php, RemoveTopic.php, RepairBoards.php) [Bug 1322]
+ * Adjusted the admin and forum maintenance templates for the above change. (Admin template, ManageMaintenance template) [Bug 1322]
+ & Added language strings for the two changes above and removed a few obsolete ones. (Admin language file, Help language file, ManageMaintenance language file) [Bug 1322]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

@@ -797,12 +797,9 @@ function tracking($memID)
 		'title' => $txt['tracking'],
 		'description' => $txt['tracking_description'],
 		'tabs' => array(
-			'user' => array(
-			),
-			'ip' => array(
-			),
-			'edits' => array(
-			),
+			'user' => array(),
+			'ip' => array(),
+			'edits' => array(),
 		),
 	);
 

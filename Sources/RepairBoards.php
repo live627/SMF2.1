@@ -80,7 +80,7 @@ function RepairBoards()
 
 	// Start displaying errors without fixing them.
 	if (isset($_GET['fixErrors']))
-		checkSession('get');
+		checkSession('post');
 
 	// Will want this.
 	loadForumTests();
@@ -122,7 +122,7 @@ function RepairBoards()
 			$context['raw_data'] .= '
 						' . $txt['maintain_no_errors'] . '<br />
 						<br />
-						<a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['maintain_return'] . '</a>';
+						<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine">' . $txt['maintain_return'] . '</a>';
 
 		$context['raw_data'] .= '
 					</td>
@@ -159,7 +159,7 @@ function RepairBoards()
 					<td class="windowbg">
 						' . $txt['errors_fixed'] . '<br />
 						<br />
-						<a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['maintain_return'] . '</a>
+						<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine">' . $txt['maintain_return'] . '</a>
 					</td>
 				</tr>
 			</table>';

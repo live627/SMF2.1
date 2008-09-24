@@ -299,7 +299,7 @@ function template_credits()
 				<td class="windowbg2">
 					<b>', $txt['support_versions'], ':</b><br />
 					', $txt['support_versions_forum'], ':
-					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
+					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
 					<i id="smfVersion" style="white-space: nowrap;">??</i><br />';
 
@@ -424,7 +424,7 @@ function template_view_versions()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<table width="94%" cellpadding="3" cellspacing="1" border="0" align="center" class="bordercolor">
+		<table width="100%" cellpadding="4" cellspacing="1" border="0" align="center" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['admin_version_check'], '</td>
 			</tr><tr class="windowbg">

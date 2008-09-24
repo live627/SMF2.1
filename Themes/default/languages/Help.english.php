@@ -490,7 +490,6 @@ $helptxt['membergroups'] = 'In SMF there are two types of groups that your membe
 
 $helptxt['calendar_how_edit'] = 'You can edit these events by clicking on the red asterisk (*) next to their names.';
 
-$helptxt['maintenance_general'] = 'From here, you are able to optimize all your tables (makes them smaller and faster!), make sure you have the newest versions, find any errors that might be messing up your board, recount totals, and empty logs.<br /><br />The last two should be avoided unless something is wrong, but don\'t hurt anything.';
 $helptxt['maintenance_backup'] = 'This area allows you to save a copy of all the posts, settings, members, and other information in your forum to a very large file.<br /><br />It is recommended that you do this often, perhaps weekly, for safety and security.';
 $helptxt['maintenance_rot'] = 'This allows you to <b>completely</b> and <b>irrevocably</b> remove old topics.  It is recommended that you try to make a backup first, just in case you remove something you didn\'t mean to.<br /><br />Use this option with care.';
 $helptxt['maintenance_members'] = 'This allows you to <b>completely</b> and <b>irrevocably</b> remove member accounts from your forum.  It is <b>highly</b> recommended that you try to make a backup first, just in case you remove something you didn\'t mean to.<br /><br />Use this option with care.';
