@@ -420,7 +420,7 @@ function AdminMain()
 				),
 				'scheduledtasks' => array(
 					'label' => $txt['maintain_tasks'],
-					'file' => 'ManageMaintenance.php',
+					'file' => 'ManageScheduledTasks.php',
 					'icon' => 'scheduled.gif',
 					'function' => 'ManageScheduledTasks',
 					'subsections' => array(

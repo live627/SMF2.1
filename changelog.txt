@@ -5,7 +5,6 @@ SMF 2.0 RC1                                                                  ???
 ================================================================================
 September 2008
 --------------------------------------------------------------------------------
- ! Typo (upgrade_2-0_postgresql.sql)
  ! A couple of additional changes were needed now that inet_aton() returns 8-bit integers (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  ! INET_ATON() didn't support all possible IP addresses (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  & Removed unused text string. (PersonalMessage language file) [Bug 2525]
@@ -20,7 +19,7 @@ September 2008
  & Added language strings for the Show Contributions area and removed some obsolete strings. (Profile language file)
  ! The number of members requiring approval wasn't collected quite right. (ManageMembers.php) [Bug 2577]
  & Changed a few instances of 'non-existant' to their proper spelling. (ManageMaintenance language file) [Bug 2570]
- ! The core features page wasn't saving changes and didn't have a page title. (ManageSettings.php, Admin template file) [Bug 2584]
+ ! Moved the scheduled tasks functions to their own source file, template and language file. (Admin.php, ManageMaintenance.php, ManageMaintenance template, ManageMaintenance language file, ManageScheduledTasks.php, ManageScheduledTasks template, ManageScheduledTasks language file)
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

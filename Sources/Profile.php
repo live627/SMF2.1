@@ -243,7 +243,7 @@ function ModifyProfile($post_errors = array())
 					),
 				),
 				'groupmembership' => array(
-					'label' => $txt['groupMembership'],
+					'label' => $txt['groupmembership'],
 					'file' => 'Profile-Modify.php',
 					'function' => 'groupMembership',
 					'enabled' => !empty($modSettings['show_group_membership']) && $context['user']['is_owner'],
@@ -261,7 +261,6 @@ function ModifyProfile($post_errors = array())
 				'sendpm' => array(
 					'label' => $txt['profileSendIm'],
 					'custom_url' => $scripturl . '?action=pm;sa=send',
-					'enabled' => !$context['user']['is_owner'],
 					'permission' => array(
 						'own' => array(),
 						'any' => array('pm_send'),
