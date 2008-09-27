@@ -160,7 +160,7 @@ $request = upgrade_query("
 
 while ($row = $smcFunc['db_fetch_assoc']($request))
 	if (isset($additional_spiders[$row['user_agent']]))
-		unset($additional_spiders[$row['user-agent']]);
+		unset($additional_spiders[$row['user_agent']]);
 
 // Do we have anything to insert?
 if (!empty($additional_spiders))
