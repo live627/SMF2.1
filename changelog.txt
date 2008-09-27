@@ -24,6 +24,9 @@ September 2008
  * Adjusted the admin and forum maintenance templates for the above change. (Admin template, ManageMaintenance template) [Bug 1322]
  & Added language strings for the two changes above and removed a few obsolete ones. (Admin language file, Help language file, ManageMaintenance language file) [Bug 1322]
  ! Make sure we get compatibility going early enough in the upgrade script. (upgrade.php) [Bug 2590]
+ ! Remove a unnecessary guest check. (Display template) [Bug 2591]
+ * Fixed XHTML error in Display template. (Display template) [Bug 2594]
+ ! Posts per day on newbies sometimes displayed a little funny. (Profile template) [Bug 2567]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

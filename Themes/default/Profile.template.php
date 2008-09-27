@@ -80,7 +80,7 @@ function template_summary()
 		echo '
 				<tr>
 					<td><b>', $txt['profile_posts'], ': </b></td>
-					<td>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</td>
+					<td>', $context['member']['posts'], ($context['member']['posts_per_day'] != $txt['not_applicable'] ? ' (' . $context['member']['posts_per_day'] . ' ' . $txt['posts_per_day'] . ')' : ''), '</td>
 				</tr>';
 
 	echo '
