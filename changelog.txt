@@ -23,6 +23,7 @@ September 2008
  ! Restructured the forum maintenance area. (Admin.php, ManageMaintenance.php, RemoveTopic.php, RepairBoards.php) [Bug 1322]
  * Adjusted the admin and forum maintenance templates for the above change. (Admin template, ManageMaintenance template) [Bug 1322]
  & Added language strings for the two changes above and removed a few obsolete ones. (Admin language file, Help language file, ManageMaintenance language file) [Bug 1322]
+ ! Make sure we get compatibility going early enough in the upgrade script. (upgrade.php) [Bug 2590]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
