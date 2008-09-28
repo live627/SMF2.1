@@ -856,15 +856,15 @@ function legalise_bbc($text)
 
 		// A buffer containing all opened block elements.
 		$blockElements = array();
-		
-	
+
+
 		// $i: text, $i + 1: '[', $i + 2: '/', $i + 3: tag, $i + 4: tag tail.
 		for ($i = 0, $n = count($parts) - 1; $i < $n; $i += 5)
 		{
 			$tag = $parts[$i + 3];
 			$isOpeningTag = $parts[$i + 2] === '';
 			$isClosingTag = $parts[$i + 2] === '/';
-			$isBlockLevelTag = $valid_tags[$tag];
+			$isBlockLevelTag = isset($valid_tags[$tag]) && $valid_tags[$tag];
 
 			// Special case: inside [code] blocks any code is left untouched.
 			if ($tag === 'code')
