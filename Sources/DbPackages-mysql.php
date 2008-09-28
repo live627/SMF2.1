@@ -523,7 +523,7 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 				$size = null;
 			}
 
-			$columns[] = array(
+			$columns[$row['Field']] = array(
 				'name' => $row['Field'],
 				'null' => $row['Null'] != 'YES' ? false : true,
 				'default' => isset($row['Default']) ? $row['Default'] : null,

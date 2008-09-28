@@ -667,7 +667,7 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 			// Make the type generic.
 			list ($type, $size) = $smcFunc['db_calculate_type']($row['data_type'], $row['character_maximum_length'], true);
 
-			$columns[] = array(
+			$columns[$row['column_name']] = array(
 				'name' => $row['column_name'],
 				'null' => $row['is_nullable'] ? true : false,
 				'default' => $default,

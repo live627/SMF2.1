@@ -31,6 +31,7 @@ September 2008
  ! Changes to core settings broke admin search. (ManageSettings.php)
  + Add option to force cookies to be secure where HTTPS is in use. (Subs-Auth.php, ManageSettings.php, ManageSettings and Help language files) [Bug 2583]
  ! Allow deleting of smileys from the smiley edit screen. (ManageSmileys.php, ManageSmileys template and language files)
+ ! Return the list of columns in a table as an associative array. (DbPackages-xxxx.php) [Bug 2569]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
