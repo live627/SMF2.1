@@ -35,13 +35,6 @@ if (!defined('SMF'))
 		- updates the most online statistics.
 		- is accessed by ?action=boardindex.
 
-	bool calendarDoIndex()
-		- prepares the calendar data for the board index.
-		- takes care of caching it for speed.
-		- depends upon these settings: cal_showevents,
-		  cal_showbdays, cal_showholidays.
-		- returns whether there is anything to display.
-
 	void CollapseCategory()
 		// !!!
 */
