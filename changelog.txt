@@ -34,6 +34,7 @@ September 2008
  ! Return the list of columns in a table as an associative array. (DbPackages-xxxx.php) [Bug 2569]
  ! The custom index search was generating errors, if it worked at all. (SearchAPI-Custom.php) [Bug 2407]
  ! Make the attachment restriction warnings more clear and concise, and accurate. (Post.php, Post template, Post language file) [Bug 2556]
+ * Some lists wern't showing bullets when they should. (Who template, ManageSettings language file) [Bug 2531]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

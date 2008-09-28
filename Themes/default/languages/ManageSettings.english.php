@@ -90,7 +90,7 @@ $txt['karmaSmiteLabel'] = 'Karma smite label';
 
 $txt['caching_information'] = '<div align="center"><b><u>Important! Read this first before enabling these features.</b></u></div><br />
 	SMF supports caching through the use of accelerators. The currently supported accelerators include:<br />
-	<ul>
+	<ul class="normallist">
 		<li>APC</li>
 		<li>eAccelerator</li>
 		<li>Turck MMCache</li>

@@ -113,7 +113,7 @@ function template_credits()
 		<h4>', $section['title'], '</h4>';
 
 		echo '
-		<ul>';
+		<ul class="normallist">';
 
 		foreach ($section['groups'] as $group)
 		{
