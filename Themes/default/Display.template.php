@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Display
+// Version: 2.0 RC1; Display
 
 function template_main()
 {

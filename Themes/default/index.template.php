@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; index
+// Version: 2.0 RC1; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -44,7 +44,7 @@ function template_init()
 
 	/* The version this template/theme is for.
 		This should probably be the version of SMF it was created for. */
-	$settings['theme_version'] = '2.0 Beta 4';
+	$settings['theme_version'] = '2.0 RC1';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
 	$settings['use_tabs'] = true;
@@ -73,8 +73,8 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b4"></script>
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?b4"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -94,12 +94,12 @@ function template_html_above()
 		echo '
 	<meta name="robots" content="noindex" />';
 
-	// The ?b4 part of this link is just here to make sure browsers don't cache it wrongly.
+	// The ?rc1 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?b4" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?rc1" />';
 
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b4" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc1" media="print" />';
 
 	// IE7 needs some fixes for styles.
 	if ($context['browser']['is_ie7'])

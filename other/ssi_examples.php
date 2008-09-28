@@ -5,7 +5,7 @@ require(dirname(__FILE__) . '/SSI.php');
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<title> &lt;&lt; :: SMF SSI.php 2.0 Beta 4 :: &gt;&gt; </title><?php
+		<title> &lt;&lt; :: SMF SSI.php 2.0 RC1 :: &gt;&gt; </title><?php
 
 	echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
@@ -28,7 +28,7 @@ require(dirname(__FILE__) . '/SSI.php');
 	</head>
 	<body>
 			<h1>SMF SSI.php Functions</h1>
-			Current Version: 2.0 Beta 4<br />
+			Current Version: 2.0 RC1<br />
 			<br />
 			This file is used to demonstrate the capabilities of SSI.php using PHP include functions.<br />
 			The examples show the include tag, then the results of it. Examples are separated by horizontal rules.<br />

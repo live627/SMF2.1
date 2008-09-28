@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Packages
+// Version: 2.0 RC1; Packages
 
 function template_main()
 {
@@ -1422,7 +1422,7 @@ function template_view_operations()
 		<title>', $txt['operation_title'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b4"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
 	</head>
 	<body>
 	<div class="tborder" style="width: 100%;">

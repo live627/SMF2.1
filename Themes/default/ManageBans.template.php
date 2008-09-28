@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; ManageBans
+// Version: 2.0 RC1; ManageBans
 
 function template_ban_edit()
 {

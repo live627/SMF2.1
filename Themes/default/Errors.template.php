@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Errors
+// Version: 2.0 RC1; Errors
 
 // !!!
 /*	This template file contains only the sub template fatal_error. It is

@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Profile
+// Version: 2.0 RC1; Profile
 
 // Template for the profile side bar - goes before any other profile template.
 function template_profile_above()

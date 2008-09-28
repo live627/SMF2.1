@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; ManageMembers
+// Version: 2.0 RC1; ManageMembers
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

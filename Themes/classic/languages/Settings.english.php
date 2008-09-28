@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Settings
+// Version: 2.0 RC1; Settings
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 

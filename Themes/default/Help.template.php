@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Help
+// Version: 2.0 RC1; Help
 
 function template_popup()
 {
