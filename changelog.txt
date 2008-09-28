@@ -35,6 +35,8 @@ September 2008
  ! The custom index search was generating errors, if it worked at all. (SearchAPI-Custom.php) [Bug 2407]
  ! Make the attachment restriction warnings more clear and concise, and accurate. (Post.php, Post template, Post language file) [Bug 2556]
  * Some lists wern't showing bullets when they should. (Who template, ManageSettings language file) [Bug 2531]
+ * Browsing a package server wasn't dealing with headings and titles. (Packages template) [Bug 2564]
+ * Only show ordered lists on the package page if there is more than one package. (Packages.php, Packages template)
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

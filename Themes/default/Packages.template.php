@@ -1049,104 +1049,111 @@ function template_package_list()
 	else
 	{
 		echo '
-		<ul id="package_list">';
+					<ul id="package_list">';
 		foreach ($context['package_list'] as $i => $packageSection)
 		{
 			echo '
-				<li>
-					<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
+						<li>
+							<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
 
 			if (!empty($packageSection['text']))
 				echo '
-					<h3>', $packageSection['text'], '</h3>';
+							<h3>', $packageSection['text'], '</h3>';
 
 			echo '
-					<ol id="package_section_', $i, '" class="tborder">';
+							<', $context['list_type'], ' id="package_section_', $i, '" class="tborder">';
 
 			$alt = false;
 
 			foreach ($packageSection['items'] as $id => $package)
 			{
 				echo '
-						<li>';
+								<li>';
 				// Textual message. Could be empty just for a blank line...
 				if ($package['is_text'])
 					echo '
-							', empty($package['name']) ? '&nbsp;' : $package['name'];
+									', empty($package['name']) ? '&nbsp;' : $package['name'];
 				// This is supposed to be a rule..
 				elseif ($package['is_line'])
 					echo '
-							<hr />';
+									<hr />';
 				// A remote link.
 				elseif ($package['is_remote'])
 				{
 					echo '
-							<b>', $package['link'], '</b>';
+									<b>', $package['link'], '</b>';
+				}
+				// A title?
+				elseif ($package['is_heading'] || $package['is_title'])
+				{
+					echo '
+									<b>', $package['name'], '</b>';
 				}
 				// Otherwise, it's a package.
 				else
 				{
 					// 1. Some mod [ Download ].
 					echo '
-							<h4><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
+									<h4><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
 						echo '<img src="', $settings['images_url'], '/icons/package_', $package['is_current'] ? 'installed' : 'old', '.gif" width="12" height="11" align="middle" style="margin-left: 2ex;" alt="', $package['is_current'] ? $txt['package_installed_current'] : $txt['package_installed_old'], '" />';
 
-					echo '</h4>
-							<ul id="package_section_', $i, '_pkg_', $id, '">';
+					echo '
+									</h4>
+									<ul id="package_section_', $i, '_pkg_', $id, '">';
 
 					// Show the mod type?
 					if ($package['type'] != '')
 						echo '
-								<li>', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '</li>';
+										<li>', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '</li>';
 					// Show the version number?
 					if ($package['version'] != '')
 						echo '
-								<li>', $txt['mod_version'], ':&nbsp; ', $package['version'], '</li>';
+										<li>', $txt['mod_version'], ':&nbsp; ', $package['version'], '</li>';
 					// How 'bout the author?
 					if (!empty($package['author']) && $package['author']['name'] != '' && isset($package['author']['link']))
 						echo '
-								<li>', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '</li>';
+										<li>', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '</li>';
 					// The homepage....
 					if ($package['author']['website']['link'] != '')
 						echo '
-								<li>', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '</li>';
+										<li>', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '</li>';
 
 					// Desciption: bleh bleh!
 					// Location of file: http://someplace/.
 					echo '
-							<li>', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a></li>
-							<li class="description">', $txt['package_description'], ':&nbsp; ', $package['description'], '</li>
-						</ul>';
+										<li>', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a></li>
+										<li class="description">', $txt['package_description'], ':&nbsp; ', $package['description'], '</li>
+									</ul>';
 				}
 				$alt = !$alt;
 				echo '
-					</li>';
+								</li>';
 			}
 			echo '
-				</ol>
-			</li>';
+							</', $context['list_type'], '>
+						</li>';
 		}
 		echo '
-		</ul>';
+					</ul>';
 
 	}
 
 	echo '
-					</td>
-				</tr>
-			</table>
-			<table border="0" width="100%" cellspacing="1" cellpadding="4">
-				<tr>
-					<td class="smalltext">
-						', $txt['package_installed_key'], '
-						<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" width="12" height="11" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
-						<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" width="12" height="11" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
-					</td>
-				</tr>
-			</table>';
+				</td>
+			</tr>
+		</table>
+		<table border="0" width="100%" cellspacing="1" cellpadding="4">
+			<tr>
+				<td class="smalltext">
+					', $txt['package_installed_key'], '
+					<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" width="12" height="11" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
+					<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" width="12" height="11" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
+				</td>
+			</tr>
+		</table>';
 		// Now go through and turn off all the sections.
 		if (!empty($context['package_list']))
 		{

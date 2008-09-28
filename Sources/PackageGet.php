@@ -272,6 +272,9 @@ function PackageGBrowse()
 	if ((isset($_GET['absolute']) || isset($_GET['relative'])) && !url_exists($_GET['package']))
 		fatal_lang_error('packageget_unable', false, array($url . '/index.php'));
 
+	// Might take some time.
+	@set_time_limit(600);
+
 	// Read packages.xml and parse into xmlArray. (the true tells it to trim things ;).)
 	loadClassFile('Class-Package.php');
 	$listing = new xmlArray(fetch_web_data($_GET['package']), true);
@@ -294,6 +297,9 @@ function PackageGBrowse()
 
 	$context['page_title'] = $txt['package_servers'] . ($name != '' ? ' - ' . $name : '');
 	$context['package_server'] = $server;
+
+	// By default we use an unordered list, unless there are no lists with more than one package.
+	$context['list_type'] = 'ul';
 
 	$instmods = loadInstalledPackages();
 
@@ -487,6 +493,8 @@ function PackageGBrowse()
 			if (!in_array($package['type'], array('title', 'text')))
 				$context['package_list'][$packageSection]['items'][] = $package;
 
+			if ($package['count'] > 1)
+				$context['list_type'] = 'ol';
 		}
 
 		$packageSection++;
