@@ -168,8 +168,8 @@ function template_main()
 	// Show the page index... "Pages: [1]".
 	echo '
 <div class="clearfix margintop" id="postbuttons">
-	<div class="margintop middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
 	<div class="next">', $context['previous_next'], '</div>
+	<div class="margintop middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
 	<div class="nav floatright">', template_button_strip($normal_buttons, 'bottom'), '</div>
 </div>';
 
