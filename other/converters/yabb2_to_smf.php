@@ -674,10 +674,9 @@ if (empty($preparsing))
 				'description' => substr($description, 0, 255),
 				'count_posts' => empty($doCountPosts),
 				'board_order' => $board_order++,
-				'member_groups' => $cats[$tempCatID]['groups'],
+				'member_groups' => !empty($cats[$tempCatID]['groups']) ? $cats[$tempCatID]['groups'] : '-1,0',
 				'temp_id' => $temp_id,
 				'tempCatID' => $tempCatID,
-				'membergroups' => '-1,0',
 			);
 			$board_rows[] = addslashes_recursive($row);
 

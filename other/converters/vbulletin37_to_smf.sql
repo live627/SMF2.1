@@ -343,9 +343,7 @@ WHERE pmt.pmtextid = pm.pmtextid
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT
-	pm.pmid AS id_pm, pm.userid AS id_member, pm.messageread != 0 AS is_read,
-	'-1' AS labels
+SELECT pmid AS id_pm, userid AS id_member, messageread != 0 AS is_read, '-1' AS labels
 FROM {$from_prefix}pm;
 ---*
 
