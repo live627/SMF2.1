@@ -113,14 +113,14 @@ function MoveTopic()
 	{
 		if (!isset($context['categories'][$row['id_cat']]))
 			$context['categories'][$row['id_cat']] = array (
-				'name' => $row['cat_name'],
+				'name' => strip_tags($row['cat_name']),
 				'boards' => array(),
 			);
 
 		$context['categories'][$row['id_cat']]['boards'][] = array(
 			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'category' => $row['cat_name'],
+			'name' => strip_tags($row['name']),
+			'category' => strip_tags($row['cat_name']),
 			'child_level' => $row['child_level'],
 			'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'] && $row['id_board'] != $board,
 		);

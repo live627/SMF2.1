@@ -38,6 +38,7 @@ September 2008
  * Browsing a package server wasn't dealing with headings and titles. (Packages template) [Bug 2564]
  * Only show ordered lists on the package page if there is more than one package. (Packages.php, Packages template)
  * Display template needed a tweak to get the page numbers in the same place as the bottom. (Display template) [Bug 2549]
+ ! Strip tags from board and catergory names for the move drop down box. (MoveTopic.php) [Bug 2547]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
