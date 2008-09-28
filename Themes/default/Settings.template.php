@@ -17,6 +17,11 @@ function template_options()
 			'default' => true,
 		),
 		array(
+			'id' => 'use_sidebar_menu',
+			'label' => $txt['use_sidebar_menu'],
+			'default' => true,
+		),
+		array(
 			'id' => 'show_no_avatars',
 			'label' => $txt['show_no_avatars'],
 			'default' => true,
