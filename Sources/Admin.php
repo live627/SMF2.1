@@ -34,9 +34,6 @@ if (!defined('SMF'))
 		- passes execution onto the relevant admin section.
 		- if the passed section is not found it shows the admin home page.
 
-	void adminIndex($area)
-		// !!!
-
 	void AdminHome()
 		- prepares all the data necessary for the administration front page.
 		- uses the Admin template along with the admin sub template.
