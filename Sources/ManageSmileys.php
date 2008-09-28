@@ -803,51 +803,66 @@ function EditSmileys()
 		// Create/modify a smiley.
 		elseif (isset($_POST['smiley']))
 		{
-			$_POST['smiley'] = (int) $_POST['smiley'];
-			$_POST['smiley_code'] = htmltrim__recursive($_POST['smiley_code']);
-			$_POST['smiley_filename'] = htmltrim__recursive($_POST['smiley_filename']);
-			$_POST['smiley_location'] = empty($_POST['smiley_location']) || $_POST['smiley_location'] > 2 || $_POST['smiley_location'] < 0 ? 0 : (int) $_POST['smiley_location'];
+			// Is it a delete?
+			if (!empty($_POST['deletesmiley']))
+			{
+				$smcFunc['db_query']('', '
+					DELETE FROM {db_prefix}smileys
+					WHERE id_smiley = {int:current_smiley}',
+					array(
+						'current_smiley' => $_POST['smiley'],
+					)
+				);
+			}
+			// Otherwise an edit.
+			else
+			{
+				$_POST['smiley'] = (int) $_POST['smiley'];
+				$_POST['smiley_code'] = htmltrim__recursive($_POST['smiley_code']);
+				$_POST['smiley_filename'] = htmltrim__recursive($_POST['smiley_filename']);
+				$_POST['smiley_location'] = empty($_POST['smiley_location']) || $_POST['smiley_location'] > 2 || $_POST['smiley_location'] < 0 ? 0 : (int) $_POST['smiley_location'];
 
-			// Make sure some code was entered.
-			if (empty($_POST['smiley_code']))
-				fatal_lang_error('smiley_has_no_code');
+				// Make sure some code was entered.
+				if (empty($_POST['smiley_code']))
+					fatal_lang_error('smiley_has_no_code');
 
-			// Also make sure a filename was given.
-			if (empty($_POST['smiley_filename']))
-				fatal_lang_error('smiley_has_no_filename');
+				// Also make sure a filename was given.
+				if (empty($_POST['smiley_filename']))
+					fatal_lang_error('smiley_has_no_filename');
 
-			// Check whether the new code has duplicates. It should be unique.
-			$request = $smcFunc['db_query']('', '
-				SELECT id_smiley
-				FROM {db_prefix}smileys
-				WHERE code = {raw:mysql_binary_type} {string:smiley_code}' . (empty($_POST['smiley']) ? '' : '
-					AND id_smiley != {int:current_smiley}'),
-				array(
-					'current_smiley' => $_POST['smiley'],
-					'mysql_binary_type' => $smcFunc['db_title'] == 'MySQL' ? 'BINARY' : '',
-					'smiley_code' => $_POST['smiley_code'],
-				)
-			);
-			if ($smcFunc['db_num_rows']($request) > 0)
-				fatal_lang_error('smiley_not_unique');
-			$smcFunc['db_free_result']($request);
+				// Check whether the new code has duplicates. It should be unique.
+				$request = $smcFunc['db_query']('', '
+					SELECT id_smiley
+					FROM {db_prefix}smileys
+					WHERE code = {raw:mysql_binary_type} {string:smiley_code}' . (empty($_POST['smiley']) ? '' : '
+						AND id_smiley != {int:current_smiley}'),
+					array(
+						'current_smiley' => $_POST['smiley'],
+						'mysql_binary_type' => $smcFunc['db_title'] == 'MySQL' ? 'BINARY' : '',
+						'smiley_code' => $_POST['smiley_code'],
+					)
+				);
+				if ($smcFunc['db_num_rows']($request) > 0)
+					fatal_lang_error('smiley_not_unique');
+				$smcFunc['db_free_result']($request);
 
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}smileys
-				SET
-					code = {string:smiley_code},
-					filename = {string:smiley_filename},
-					description = {string:smiley_description},
-					hidden = {int:smiley_location}
-				WHERE id_smiley = {int:current_smiley}',
-				array(
-					'smiley_location' => $_POST['smiley_location'],
-					'current_smiley' => $_POST['smiley'],
-					'smiley_code' => $_POST['smiley_code'],
-					'smiley_filename' => $_POST['smiley_filename'],
-					'smiley_description' => $_POST['smiley_description'],
-				)
-			);
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}smileys
+					SET
+						code = {string:smiley_code},
+						filename = {string:smiley_filename},
+						description = {string:smiley_description},
+						hidden = {int:smiley_location}
+					WHERE id_smiley = {int:current_smiley}',
+					array(
+						'smiley_location' => $_POST['smiley_location'],
+						'current_smiley' => $_POST['smiley'],
+						'smiley_code' => $_POST['smiley_code'],
+						'smiley_filename' => $_POST['smiley_filename'],
+						'smiley_description' => $_POST['smiley_description'],
+					)
+				);
+			}
 
 			// Sort all smiley codes for more accurate parsing (longest code first).
 			sortSmileyTable();

@@ -201,6 +201,7 @@ function template_modifysmiley()
 			<tr class="windowbg2">
 				<td align="right" colspan="2">
 					<input type="submit" value="', $txt['smileys_save'], '" />
+					<input type="submit" name="deletesmiley" value="', $txt['smileys_delete'], '" onclick="return confirm(\'', $txt['smileys_delete_confirm'], '\');" />
 				</td>
 			</tr>
 		</table>

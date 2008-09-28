@@ -39,6 +39,9 @@ $txt['smileys_filename'] = 'Filename';
 $txt['smileys_description'] = 'Tooltip or description';
 $txt['smileys_remove'] = 'Remove';
 $txt['smileys_save'] = 'Save Changes';
+$txt['smileys_delete'] = 'Delete Smiley';
+// Use entities in the below string.
+$txt['smileys_delete_confirm'] = 'Are you sure you wish to delete this smiley?';
 $txt['smileys_with_selected'] = 'With Selected';
 $txt['smileys_make_hidden'] = 'Make Hidden';
 $txt['smileys_show_on_post'] = 'Show on Post Form';
