@@ -967,6 +967,12 @@ ALTER TABLE {$db_prefix}log_packages
 ADD db_changes text NOT NULL AFTER themes_installed;
 ---#
 
+---# Changing URL to SMF package server...
+UPDATE TABLE {$db_prefix}package_servers
+SET url = 'http://custom.simplemachines.org/packages/mods'
+WHERE url = 'http://mods.simplemachines.org';
+---#
+
 /******************************************************************************/
 --- Creating mail queue functionality.
 /******************************************************************************/

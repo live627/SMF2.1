@@ -1391,7 +1391,7 @@ CREATE TABLE {$db_prefix}package_servers (
 
 INSERT INTO {$db_prefix}package_servers
 	(name, url)
-VALUES ('Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org');
+VALUES ('Simple Machines Third-party Mod Site', 'http://custom.simplemachines.org/packages/mods');
 # --------------------------------------------------------
 
 #

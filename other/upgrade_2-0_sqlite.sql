@@ -254,6 +254,16 @@ $smcFunc['db_alter_table']('topics', array(
 ---#
 
 /******************************************************************************/
+--- Making changes to the package manager.
+/******************************************************************************/
+
+---# Changing URL to SMF package server...
+UPDATE TABLE {$db_prefix}package_servers
+SET url = 'http://custom.simplemachines.org/packages/mods'
+WHERE url = 'http://mods.simplemachines.org';
+---#
+
+/******************************************************************************/
 --- Adding general table indexes.
 /******************************************************************************/
 
