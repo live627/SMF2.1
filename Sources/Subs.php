@@ -3877,7 +3877,7 @@ function setupMenuContext()
 				if (!empty($button['is_last']))
 				{
 					if (isset($last_button))
-						$menu_buttons[$last_button]['is_last'] = false;
+						unset($menu_buttons[$last_button]['is_last']);
 					$last_button = $act;
 				}
 

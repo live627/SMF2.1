@@ -40,6 +40,7 @@ September 2008
  * Display template needed a tweak to get the page numbers in the same place as the bottom. (Display template) [Bug 2549]
  ! Strip tags from board and catergory names for the move drop down box. (MoveTopic.php) [Bug 2547]
  ! Change the URL to the Simple Machines package server. (upgrade and install scripts) [Bug 2395]
+ ! Tweak how is_last is removed on the setupMenuContext function. (Subs.php) [Bug 2534]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
