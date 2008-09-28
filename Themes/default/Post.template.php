@@ -553,9 +553,11 @@ function template_main()
 		if (!empty($modSettings['attachmentCheckExtensions']))
 			echo '
 									', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
-		echo '
-									', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], !empty($modSettings['attachmentNumPerPostLimit']) ? ', ' . $txt['maxAttachPerPost'] . ': ' . $modSettings['attachmentNumPerPostLimit'] : '', '<br />';
 
+		if (!empty($context['attachment_restrictions']))
+			echo '
+									', $txt['attach_restrictions'], ' ', implode(', ', $context['attachment_restrictions']), '.<br />';
+			
 		if (!$context['can_post_attachment_unapproved'])
 			echo '
 									<span style="color: red;">', $txt['attachment_requires_approval'], '</span><br />';

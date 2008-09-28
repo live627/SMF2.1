@@ -1052,7 +1052,6 @@ function Post()
 	$context['post_box_name'] = $editorOptions['id'];
 
 	$context['attached'] = '';
-	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
 	$context['make_poll'] = isset($_REQUEST['poll']);
 
 	// Message icons - customized icons are off?
@@ -1082,6 +1081,17 @@ function Post()
 
 	if (!empty($topic) && !empty($modSettings['topicSummaryPosts']))
 		getTopic();
+
+	// If the user can post attachments prepare the warning labels.
+	if ($context['can_post_attachment'])
+	{
+		$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
+		$context['attachment_restrictions'] = array();
+		$attachmentRestrictionTypes = array('attachmentNumPerPostLimit', 'attachmentPostLimit', 'attachmentSizeLimit');
+		foreach ($attachmentRestrictionTypes as $type)
+			if (!empty($modSettings[$type]))
+				$context['attachment_restrictions'][] = sprintf($txt['attach_restrict_' . $type], $modSettings[$type]);
+	}
 
 	$context['back_to_topic'] = isset($_REQUEST['goback']) || (isset($_REQUEST['msg']) && !isset($_REQUEST['subject']));
 	$context['show_additional_options'] = !empty($_POST['additional_options']) || !empty($_SESSION['temp_attachments']) || !empty($deleted_attachments);

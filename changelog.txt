@@ -33,6 +33,7 @@ September 2008
  ! Allow deleting of smileys from the smiley edit screen. (ManageSmileys.php, ManageSmileys template and language files)
  ! Return the list of columns in a table as an associative array. (DbPackages-xxxx.php) [Bug 2569]
  ! The custom index search was generating errors, if it worked at all. (SearchAPI-Custom.php) [Bug 2407]
+ ! Make the attachment restriction warnings more clear and concise, and accurate. (Post.php, Post template, Post language file) [Bug 2556]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

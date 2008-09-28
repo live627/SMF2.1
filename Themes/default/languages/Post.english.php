@@ -92,7 +92,6 @@ $txt['votes'] = 'votes';
 $txt['attach'] = 'Attach';
 $txt['attached'] = 'Attached';
 $txt['allowed_types'] = 'Allowed file types';
-$txt['max_size'] = 'Maximum attachment size allowed';
 $txt['cant_upload_type'] = 'You cannot upload that type of file. The only allowed extensions are';
 $txt['uncheck_unwatchd_attach'] = 'Uncheck the attachments you no longer want attached';
 $txt['restricted_filename'] = 'That is a restricted filename. Please try a different filename.';
@@ -113,7 +112,10 @@ $txt['reported_by'] = 'has been reported by';
 $txt['board_moderate'] = 'on a board you moderate';
 $txt['report_comment'] = 'The reporter has made the following comment';
 
-$txt['maxAttachPerPost'] = 'per post';
+$txt['attach_restrict_attachmentPostLimit'] = 'maximum total size %1$dKB';
+$txt['attach_restrict_attachmentSizeLimit'] = 'maximum individual size %1$dKB';
+$txt['attach_restrict_attachmentNumPerPostLimit'] = '%1$d per post';
+$txt['attach_restrictions'] = 'Restrictions:';
 
 $txt['post_additionalopt'] = 'Additional Options...';
 $txt['sticky_after'] = 'Sticky this topic.';
