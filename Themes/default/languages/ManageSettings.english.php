@@ -47,6 +47,7 @@ $txt['pruneSpiderHitLog'] = 'Remove search engine hit logs older than:<div class
 $txt['cookieTime'] = 'Default login cookies length (in minutes)';
 $txt['localCookies'] = 'Enable local storage of cookies<div class="smalltext">(SSI won\'t work well with this on.)</div>';
 $txt['globalCookies'] = 'Use subdomain independent cookies<div class="smalltext">(turn off local cookies first!)</div>';
+$txt['secureCookies'] = 'Force cookies to be secure<div class="smalltext">(This only applies if you are using HTTPS - don\'t use otherwise!)</div>';
 $txt['securityDisable'] = 'Disable administration security';
 $txt['send_validation_onChange'] = 'Require reactivation after email change';
 $txt['approveAccountDeletion'] = 'Require admin approval when member deletes account';

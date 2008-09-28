@@ -27,6 +27,9 @@ September 2008
  ! Remove a unnecessary guest check. (Display template) [Bug 2591]
  * Fixed XHTML error in Display template. (Display template) [Bug 2594]
  ! Posts per day on newbies sometimes displayed a little funny. (Profile template) [Bug 2567]
+ ! When copying the default theme also include some key css. (Themes.php) [Bug 2588]
+ ! Changes to core settings broke admin search. (ManageSettings.php)
+ + Add option to force cookies to be secure where HTTPS is in use. (Subs-Auth.php, ManageSettings.php, ManageSettings and Help language files) [Bug 2583]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

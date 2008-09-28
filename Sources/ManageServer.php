@@ -389,6 +389,7 @@ function ModifyOtherSettings($return_config = false)
 			array('int', 'cookieTime'),
 			array('check', 'localCookies'),
 			array('check', 'globalCookies'),
+			array('check', 'secureCookies', 'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
 		'',
 			// Database repair, optimization, etc.
 			array('int', 'autoOptMaxOnline'),

@@ -214,8 +214,6 @@ function ModifyCoreFeatures($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
-	loadGeneralSettingParameters();
-
 	/* This is an array of all the features that can be enabled/disabled - each option can have the following:
 		title		- Text title of this item (If standard string does not exist).
 		desc		- Description of this feature (If standard string does not exist).
@@ -355,6 +353,8 @@ function ModifyCoreFeatures($return_config = false)
 			$return_data[] = array('switch', isset($data['title']) ? $data['title'] : $txt['core_settings_item_' . $id]);
 		return $return_data;
 	}
+
+	loadGeneralSettingParameters();
 
 	// Are we saving?
 	if (isset($_POST['save']))

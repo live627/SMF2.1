@@ -133,7 +133,7 @@ function setLoginCookie($cookie_length, $id, $password = '')
 		if (isset($array[3]) && $array[3] != $cookie_state)
 		{
 			$cookie_url = url_parts($array[3] & 1 > 0, $array[3] & 2 > 0);
-			setcookie($cookiename, serialize(array(0, '', 0)), time() - 3600, $cookie_url[1], $cookie_url[0], 0);
+			setcookie($cookiename, serialize(array(0, '', 0)), time() - 3600, $cookie_url[1], $cookie_url[0], !empty($modSettings['secureCookies']));
 		}
 	}
 
@@ -142,11 +142,11 @@ function setLoginCookie($cookie_length, $id, $password = '')
 	$cookie_url = url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies']));
 
 	// Set the cookie, $_COOKIE, and session variable.
-	setcookie($cookiename, $data, time() + $cookie_length, $cookie_url[1], $cookie_url[0], 0);
+	setcookie($cookiename, $data, time() + $cookie_length, $cookie_url[1], $cookie_url[0], !empty($modSettings['secureCookies']));
 
 	// If subdomain-independent cookies are on, unset the subdomain-dependent cookie too.
 	if (empty($id) && !empty($modSettings['globalCookies']))
-		setcookie($cookiename, $data, time() + $cookie_length, $cookie_url[1], '', 0);
+		setcookie($cookiename, $data, time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
 
 	// Any alias URLs?  This is mainly for use with frames, etc.
 	if (!empty($modSettings['forum_alias_urls']))
@@ -165,7 +165,7 @@ function setLoginCookie($cookie_length, $id, $password = '')
 			if ($cookie_url[0] == '')
 				$cookie_url[0] = strtok($alias, '/');
 
-			setcookie($cookiename, $data, time() + $cookie_length, $cookie_url[1], $cookie_url[0], 0);
+			setcookie($cookiename, $data, time() + $cookie_length, $cookie_url[1], $cookie_url[0], !empty($modSettings['secureCookies']));
 		}
 
 		$boardurl = $temp;
@@ -188,7 +188,7 @@ function setLoginCookie($cookie_length, $id, $password = '')
 
 		// Version 4.3.2 didn't store the cookie of the new session.
 		if (version_compare(PHP_VERSION, '4.3.2') === 0)
-			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
 
 		$_SESSION['login_' . $cookiename] = $data;
 	}

@@ -1331,8 +1331,11 @@ function ThemeInstall()
 		if (function_exists('apache_reset_timeout'))
 			apache_reset_timeout();
 
+		// Create a css subdirectory.
+		mkdir($theme_dir . '/css', 0777);
+
 		// Copy over the default non-theme files.
-		$to_copy = array('/style.css', '/index.php', '/index.template.php');
+		$to_copy = array('/style.css', '/index.php', '/index.template.php', '/css/index.css', '/css/dropmenu.css');
 		foreach ($to_copy as $file)
 		{
 			copy($settings['default_theme_dir'] . $file, $theme_dir . $file);

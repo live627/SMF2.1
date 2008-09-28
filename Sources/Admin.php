@@ -784,6 +784,9 @@ function AdminSearchInternal()
 {
 	global $context, $txt, $helptxt, $scripturl, $sourcedir;
 
+	// Try to get some more memory.
+	@ini_set('memory_limit', '128M');
+
 	// Load a lot of language files.
 	$language_files = array(
 		'Help', 'ManageMail', 'ManageSettings', 'ManageCalendar', 'ManageBoards', 'ManagePaid', 'ManagePermissions', 'Search',
