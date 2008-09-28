@@ -197,38 +197,6 @@ function BrowseMailQueue()
 
 	loadTemplate('ManageMail');
 	$context['sub_template'] = 'browse';
-	return;
-
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=mailqueue;sa=browse', $_REQUEST['start'], $mailQueueSize, 20);
-	$context['start'] = $_REQUEST['start'];
-
-	// Even if it's disabled we should still show the mail queue, in case there's stuff left!
-	$request = $smcFunc['db_query']('', '
-		SELECT id_mail, time_sent, recipient, priority, subject
-		FROM {db_prefix}mail_queue
-		ORDER BY id_mail ASC
-		LIMIT ' . $context['start'] . ', 20',
-		array(
-		)
-	);
-	$context['mails'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['mails'][] = array(
-			'id' => $row['id_mail'],
-			'time' => timeformat($row['time_sent']),
-			'age' => time_since(time() - $row['time_sent']),
-			'recipient' => '<a href="mailto:' . $row['recipient'] . '">' . $row['recipient'] . '</a>',
-			'priority' => $row['priority'],
-			'priority_text' => isset($txt['mq_mpriority_' . $row['priority']]) ? $txt['mq_mpriority_' . $row['priority']] : $txt['mq_mpriority_1'],
-			'subject' => strlen($row['subject']) > 50 ? substr($row['subject'], 0, 47) . '...' : $row['subject'],
-		);
-	}
-	$smcFunc['db_free_result']($request);
-
-	// Setup the template stuff.
-	loadTemplate('ManageMail');
-	$context['sub_template'] = 'browse';
 }
 
 function list_getMailQueue($start, $items_per_page, $sort)
