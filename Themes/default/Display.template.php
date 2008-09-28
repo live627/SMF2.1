@@ -214,6 +214,7 @@ function template_main()
 	// Get all the messages...
 	while ($message = $context['get_message']())
 	{
+		$is_first_post = !isset($is_first_post) ? true : false;
 		$ignoring = false;
 		echo '
 		<div class="bordercolor">';
@@ -230,7 +231,7 @@ function template_main()
 			<a name="msg', $message['id'], '"></a>', $message['first_new'] ? '<a name="new"></a>' : '';
 
 		echo '
-			<div class="clearfix ', !$message['first_new'] ? 'topborder ' : '', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', ' largepadding">';
+			<div class="clearfix ', !$is_first_post ? 'topborder ' : '', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', ' largepadding">';
 
 		// Show information about the poster of this message.
 		echo '

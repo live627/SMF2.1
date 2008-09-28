@@ -41,6 +41,7 @@ September 2008
  ! Strip tags from board and catergory names for the move drop down box. (MoveTopic.php) [Bug 2547]
  ! Change the URL to the Simple Machines package server. (upgrade and install scripts) [Bug 2395]
  ! Tweak how is_last is removed on the setupMenuContext function. (Subs.php) [Bug 2534]
+ * Top border on posts was sometimes missing. (Display template) [Bug 2586]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
