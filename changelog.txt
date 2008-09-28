@@ -42,6 +42,7 @@ September 2008
  ! Change the URL to the Simple Machines package server. (upgrade and install scripts) [Bug 2395]
  ! Tweak how is_last is removed on the setupMenuContext function. (Subs.php) [Bug 2534]
  * Top border on posts was sometimes missing. (Display template) [Bug 2586]
+ ! The togglebar function wasn't putting in the right variables all the time. (GenericMenu template) [Bug 2517]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
