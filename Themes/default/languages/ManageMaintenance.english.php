@@ -203,7 +203,7 @@ $txt['reattribute_current_member'] = 'Attribute posts to member';
 $txt['reattribute_increase_posts'] = 'Add posts to users post count';
 $txt['reattribute'] = 'Reattribute';
 // Don't use entities in the below string.
-$txt['reattribute_confirm'] = 'Are you sure you want to attribute all guests post with %type% of "%find%" to member "%member_to%"?';
+$txt['reattribute_confirm'] = 'Are you sure you want to attribute all guest posts with %type% of "%find%" to member "%member_to%"?';
 $txt['reattribute_confirm_username'] = 'a username';
 $txt['reattribute_confirm_email'] = 'an email address';
 $txt['reattribute_cannot_find_member'] = 'Could not find member to attribute posts to.';
