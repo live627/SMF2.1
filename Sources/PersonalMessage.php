@@ -199,9 +199,11 @@ function MessageMain()
 			SELECT labels, is_read, COUNT(*) AS num
 			FROM {db_prefix}pm_recipients
 			WHERE id_member = {int:current_member}
+				AND deleted = {int:not_deleted}
 			GROUP BY labels, is_read',
 			array(
 				'current_member' => $user_info['id'],
+				'not_deleted' => 0,
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -2612,6 +2614,9 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 			)
 		);
 	}
+
+	// Any cached numbers may be wrong now.
+	cache_put_data('labelCounts:' . $user_info['id'], null, 720);
 }
 
 // Mark personal messages read.
@@ -2670,7 +2675,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 		$smcFunc['db_free_result']($result);
 
 		// Need to store all this.
-		cache_put_data('labelCounts:' . $user_info['id'], $context['labels'], 720);
+		cache_put_data('labelCounts:' . $owner, $context['labels'], 720);
 		updateMemberData($owner, array('unread_messages' => $total_unread));
 
 		// If it was for the current member, reflect this in the $user_info array too.

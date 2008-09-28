@@ -43,6 +43,7 @@ September 2008
  ! Tweak how is_last is removed on the setupMenuContext function. (Subs.php) [Bug 2534]
  * Top border on posts was sometimes missing. (Display template) [Bug 2586]
  ! The togglebar function wasn't putting in the right variables all the time. (GenericMenu template) [Bug 2517]
+ ! Sometimes the number of unread messages might be cached and calculated wrong for personal messages. (PersonalMessage.php) [Bug 2580]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
