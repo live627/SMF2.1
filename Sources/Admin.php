@@ -1022,7 +1022,7 @@ function AdminLogs()
 		'modlog' => array('Modlog.php', 'ViewModlog'),
 		'banlog' => array('ManageBans.php', 'BanLog'),
 		'spiderlog' => array('ManageSearchEngines.php', 'SpiderLogs'),
-		'tasklog' => array('ManageMaintenance.php', 'TaskLog'),
+		'tasklog' => array('ManageScheduledTasks.php', 'TaskLog'),
 	);
 
 	$sub_action = isset($_REQUEST['sa']) && isset($log_functions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'errorlog';
