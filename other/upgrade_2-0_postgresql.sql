@@ -447,7 +447,7 @@ else
 /******************************************************************************/
 
 ---# Changing URL to SMF package server...
-UPDATE TABLE {$db_prefix}package_servers
+UPDATE {$db_prefix}package_servers
 SET url = 'http://custom.simplemachines.org/packages/mods'
 WHERE url = 'http://mods.simplemachines.org';
 ---#
