@@ -49,7 +49,7 @@ September 2008
  ! Paid subscription reminder emails could have HTML tags in them. (ScheduledTasks.php) [Bug 2621]
  ! With lots of themes installed but not all visible, admins might not see the whole game. (Themes.php) [Bug 2440]
  ! Tracking users had an error in PostgreSQL. (Profile-View.php) [Bug 2623]
-
+ ! The who's online page was sometimes picking the wrong strings. (Who.php) [Bug 2616]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

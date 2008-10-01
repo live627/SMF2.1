@@ -357,10 +357,10 @@ function determineActions($urls, $preferred_prefix = false)
 			}
 			// A subaction anyone can view... if the language string is there, show it.
 			elseif (isset($actions['sa']) && isset($txt['whoall_' . $actions['action'] . '_' . $actions['sa']]))
-				$data[$k] = isset($txt[$preferred_prefix . $actions['action'] . '_' . $actions['sa']]) ? $txt[$preferred_prefix . $actions['action'] . '_' . $actions['sa']] : $txt['whoall_' . $actions['action'] . '_' . $actions['sa']];
+				$data[$k] = $preferred_prefix && isset($txt[$preferred_prefix . $actions['action'] . '_' . $actions['sa']]) ? $txt[$preferred_prefix . $actions['action'] . '_' . $actions['sa']] : $txt['whoall_' . $actions['action'] . '_' . $actions['sa']];
 			// An action any old fellow can look at. (if ['whoall_' . $action] exists, we know everyone can see it.)
 			elseif (isset($txt['whoall_' . $actions['action']]))
-				$data[$k] = isset($txt[$preferred_prefix . $actions['action']]) ? $txt[$preferred_prefix . $actions['action']] : $txt['whoall_' . $actions['action']];
+				$data[$k] = $preferred_prefix && isset($txt[$preferred_prefix . $actions['action']]) ? $txt[$preferred_prefix . $actions['action']] : $txt['whoall_' . $actions['action']];
 			// Viewable if and only if they can see the board...
 			elseif (isset($txt['whotopic_' . $actions['action']]))
 			{
