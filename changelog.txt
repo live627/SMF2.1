@@ -58,6 +58,7 @@ September 2008
  ! Languages with agreements in them wouldn't install. (ManageServer.php) [Bug 2622]
  ! Give more information with a database error. (Subs-Db-xxxxx.php) [Bug 2582]
  ! Repairing the forum could fail on fixing missing topics. (RepairBoards.php) [Bug 2624]
+ ! In rare cases, uploading an avatar could get SMF stuck in an infinite loop. (Subs-Graphics.php)
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

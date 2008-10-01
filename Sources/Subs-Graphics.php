@@ -163,9 +163,14 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	elseif ($fp)
 	{
 		$fp2 = fopen($url, 'rb');
-		while (!feof($fp2))
-			fwrite($fp, fread($fp2, 8192));
-		fclose($fp2);
+		if ($fp2 !== false)
+		{
+			while (!feof($fp2))
+				fwrite($fp, fread($fp2, 8192));
+			fclose($fp2);
+		}
+		else
+			$sizes = array(-1, -1, -1);
 		fclose($fp);
 	}
 	// We can't get to the file.
