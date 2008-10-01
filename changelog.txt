@@ -47,6 +47,8 @@ September 2008
  ! Allow admins to enable the sidebar for all members. (Settings template)
  * Changed license.txt in all theme folders from Lewis Media to Simple Machines LLC. 
  ! Paid subscription reminder emails could have HTML tags in them. (ScheduledTasks.php) [Bug 2621]
+ ! With lots of themes installed but not all visible, admins might not see the whole game. (Themes.php) [Bug 2440]
+
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
