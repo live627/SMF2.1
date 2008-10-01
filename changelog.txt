@@ -57,6 +57,7 @@ September 2008
  * Classic theme was fetching on2.gif, which sn't used in that theme (Classic BoardIndex template) [Bug 2327]
  ! Languages with agreements in them wouldn't install. (ManageServer.php) [Bug 2622]
  ! Give more information with a database error. (Subs-Db-xxxxx.php) [Bug 2582]
+ ! Repairing the forum could fail on fixing missing topics. (RepairBoards.php) [Bug 2624]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

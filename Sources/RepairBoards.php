@@ -286,7 +286,7 @@ function loadForumTests()
 				WHERE t.id_topic IS NULL
 				GROUP BY m.id_topic',
 			'fix_processing' => create_function('$row', '
-				global $smcFunc;
+				global $smcFunc, $salvageBoardID;
 
 				// Only if we don\'t have a reasonable idea of where to put it.
 				if ($row[\'id_board\'] == 0)
