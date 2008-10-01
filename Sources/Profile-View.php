@@ -977,23 +977,9 @@ function trackUser($memID)
 	$context['members_in_range'] = array();
 	if (!empty($ips))
 	{
+		// Get member ID's which are in messages...
 		$request = $smcFunc['db_query']('', '
-			SELECT id_member, real_name
-			FROM {db_prefix}members
-			WHERE id_member != {int:current_member}
-				AND member_ip IN ({array_string:ip_list})',
-			array(
-				'current_member' => $memID,
-				'ip_list' => $ips,
-			)
-		);
-		if ($smcFunc['db_num_rows']($request) > 0)
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$context['members_in_range'][$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
-		$smcFunc['db_free_result']($request);
-
-		$request = $smcFunc['db_query']('', '
-			SELECT mem.id_member, mem.real_name
+			SELECT mem.id_member
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.poster_ip IN ({array_string:ip_list})
@@ -1004,9 +990,40 @@ function trackUser($memID)
 				'ip_list' => $ips,
 			)
 		);
-		if ($smcFunc['db_num_rows']($request) > 0)
+		$message_members = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$message_members[] = $row['id_member'];
+		$smcFunc['db_free_result']($request);
+
+		// Fetch their names, cause of the GROUP BY doesn't like giving us that normally.
+		if (!empty($message_members))
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT id_member, real_name
+				FROM {db_prefix}members
+				WHERE id_member IN ({array_int:message_members})',
+				array(
+					'message_members' => $message_members,
+					'ip_list' => $ips,
+				)
+			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$context['members_in_range'][$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
+			$smcFunc['db_free_result']($request);
+		}
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, real_name
+			FROM {db_prefix}members
+			WHERE id_member != {int:current_member}
+				AND member_ip IN ({array_string:ip_list})',
+			array(
+				'current_member' => $memID,
+				'ip_list' => $ips,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['members_in_range'][$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 		$smcFunc['db_free_result']($request);
 	}
 }
