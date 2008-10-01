@@ -506,7 +506,7 @@ function DownloadLanguage()
 		foreach ($_POST['copy_file'] as $file)
 		{
 			// Check it's not very bad.
-			if (strpos($file, '..') !== false || substr($file, 0, 6) != 'Themes')
+			if (strpos($file, '..') !== false || (substr($file, 0, 6) != 'Themes' && !preg_match('~agreement\.[A-Za-z-_0-9]+\.txt$~', $file)))
 				fatal_error($txt['languages_download_illegal_paths']);
 
 			$chmod_files[] = $boarddir . '/' . $file;
