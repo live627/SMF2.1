@@ -52,6 +52,7 @@ September 2008
  ! The who's online page was sometimes picking the wrong strings. (Who.php) [Bug 2616]
  & Help language file was corrupt somehow. (Help language file) [Bug 2609]
  ! Reattributing posts wasn't properly escaping a language string. (ManageMaintenance template) [Bug 2599]
+ ! Expand the list of IP addresses associated with whois servers. (Profile-View.php) [Bug 2602]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
