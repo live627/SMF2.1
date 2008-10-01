@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Version: 2.0 RC1; Help
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
@@ -61,7 +61,7 @@ $helptxt['edit_news'] = '
 		</li>
 		<li>
 			<b>Newsletters</b><br />
-			This section allows you to send out newsletters to the members of the forum via personal message or email. First select the groups that you want to receive the newsletter, and those you don\’t want to receive the newsletter. If you wish, you can add additional members and email addresses that will receive the newsletter. Finally, input the message you want to send and select whether you want it to be sent to members as a personal message or as an email.
+			This section allows you to send out newsletters to the members of the forum via personal message or email. First select the groups that you want to receive the newsletter, and those you don\�t want to receive the newsletter. If you wish, you can add additional members and email addresses that will receive the newsletter. Finally, input the message you want to send and select whether you want it to be sent to members as a personal message or as an email.
 		</li>
 		<li>
 			<b>Settings</b><br />

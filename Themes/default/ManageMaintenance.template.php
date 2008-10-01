@@ -200,13 +200,13 @@ function template_maintain_members()
 			{
 				if (!document.getElementById(\'from_email\').value)
 					valid = false;
-				warningMessage = warningMessage.replace(/%type%/, \'', $txt['reattribute_confirm_email'], '\').replace(/%find%/, document.getElementById(\'from_email\').value);
+				warningMessage = warningMessage.replace(/%type%/, \'', addcslashes($txt['reattribute_confirm_email'], "'"), '\').replace(/%find%/, document.getElementById(\'from_email\').value);
 			}
 			else
 			{
 				if (!document.getElementById(\'from_name\').value)
 					valid = false;
-				warningMessage = warningMessage.replace(/%type%/, \'', $txt['reattribute_confirm_username'], '\').replace(/%find%/, document.getElementById(\'from_name\').value);
+				warningMessage = warningMessage.replace(/%type%/, \'', addcslashes($txt['reattribute_confirm_username'], "'"), '\').replace(/%find%/, document.getElementById(\'from_name\').value);
 			}
 
 			document.getElementById(\'do_attribute\').disabled = valid ? \'\' : \'disabled\';
