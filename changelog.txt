@@ -54,6 +54,7 @@ September 2008
  ! Reattributing posts wasn't properly escaping a language string. (ManageMaintenance template) [Bug 2599]
  ! Expand the list of IP addresses associated with whois servers. (Profile-View.php) [Bug 2602]
  & Fixed a few minor typos. (Help, EmailTemplates, ManagePermissions language files) [Bug 2601]
+ * Classic theme was fetching on2.gif, which sn't used in that theme (Classic BoardIndex template) [Bug 2327]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
@@ -221,7 +222,10 @@ July 2008
  * cleaned up latest-themes section (other/latest-themes.js, simlemachines.org/SMF/latest-themes.js)
  * cleaned up latest-packages as well (other/latest-packages.js, simplemachines.org/SMF/latest-packages.js)
  * moved inline styles, advanced search icon now have title/alt tags filled and the menu items have alt tag on the a tag ( default/css/index.css, default/index.template.php ) [Bug 2079]
- * Classic theme was fetching on2.gif, which sn't used in that theme ( classic/BoardIndex.template.php) [Bug 2327]
+ * Restoring a message from a topic in the recycle bin wasn't working right. (Display template) [Bug 2340]
+ ! Protect against redirecting to a deleted topic on quick moderation. (Display.php) [Bug 2339]
+ ! Clarify whether a topic has been locked or unlocked in the moderation log - and stickies too. (LockTopic.php, Modlog language file) [Bug 2333]
+ ! Fixed a couple of PostgreSQL bugs. (Groups.php) [Bugs 2251,2244]
  ! The recount function was setting id_last_msg incorrectly on boards. (ManageMaintenance.php) [Bug 2162]
  ! When adding a label to PM's the redirect was using the wrong anchor name. (PersonalMessage.php) [Bug 2242]
  * Classic theme was missing some text strings. (index template) [Bug 2354]
@@ -242,6 +246,7 @@ July 2008
  ! Fixed typo in moderation center. (ModerationCenter.php) [Bug 2357]
  * Quick preview wasn't working. (Post template)
  ! The page index was shown incorrectly when users were denied their request to view all posts in a topic. (Display.php) [Bug 2314]
+
 
 June 2008
 --------------------------------------------------------------------------------
