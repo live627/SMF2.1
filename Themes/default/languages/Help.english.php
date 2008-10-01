@@ -178,7 +178,7 @@ $helptxt['modlog'] = '<b>Moderation Log</b><br />
 	This section allows members of the moderation team to track all the moderation actions that the forum moderators have performed. To ensure that
 	moderators cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.';
 $helptxt['adminlog'] = '<b>Admin Log</b><br />
-	This section allows members of the admin team to track some of the administrative actions that have occured on the forum. To ensure that
+	This section allows members of the admin team to track some of the administrative actions that have occurred on the forum. To ensure that
 	admins cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.';
 $helptxt['warning_enable'] = '<b>User Warning System</b><br />
 	This feature enables members of the admin and moderation team to issue warnings to users - and to use a users warning level to determine the
@@ -236,7 +236,7 @@ $helptxt['manage_files'] = '
 			Configure where attachments are stored and set restrictions on the types of attachments.<br /><br />
 		</li><li>
 			<b>Avatar Settings</b><br />
-			Configure where avarars are stored and manage resizing of avatars.<br /><br />
+			Configure where avatars are stored and manage resizing of avatars.<br /><br />
 		</li><li>
 			<b>File Maintenance</b><br />
 			Check and repair any error in the attachment directory and delete selected attachments.<br /><br />
@@ -434,7 +434,7 @@ $helptxt['registration_method'] = 'This option determines what method of registr
 $helptxt['register_openid'] = '<b>Authenticate with OpenID</b><br />
 	OpenID is a means of using one username across different websites, to simplify the online experience. To use OpenID you first need to create an OpenID account - a list of providers can be found on the <a href="http://openid.net/" target="_blank">OpenID Official Site</a><br /><br />
 	Once you have an OpenID account simply enter your unique identification URL into the OpenID input box and submit. You will then be taken to your providers site to verify your identity before being passed back to this site.<br /><br />
-	On your first visit to this site you will be asked to confirm a couple of details before you will be recognised, after which you can login to this site and change your profile settings using just your OpenID.<br /><br />
+	On your first visit to this site you will be asked to confirm a couple of details before you will be recognized, after which you can login to this site and change your profile settings using just your OpenID.<br /><br />
 	For more information please visit the <a href="http://openid.net/" target="_blank">OpenID Official Site</a>';
 
 $helptxt['send_validation_onChange'] = 'When this option is checked all members who change their email address in their profile will have to reactivate their account from an email sent to that address';

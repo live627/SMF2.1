@@ -947,10 +947,10 @@ You can view this members profile by clicking the link below:
 				REALNAME: Recipients name
 			@description:
 		*/
-		'subject' => 'Paid Subscription Error Occured',
+		'subject' => 'Paid Subscription Error Occurred',
 		'body' => '{REALNAME},
 
-The following error occured when processing a paid subscription
+The following error occurred when processing a paid subscription
 ---------------------------------------------------------------
 {ERROR}
 
@@ -1028,7 +1028,7 @@ Enjoy your day today, {REALNAME}!
 	),
 	'karlbenson2' => array(
 		'subject' => 'Your Birthday Greeting',
-		'body' => 'We hope your birthday is the best ever cloudly, sunny or whatever the weather.
+		'body' => 'We hope your birthday is the best ever cloudy, sunny or whatever the weather.
 Have lots of birthday cake and fun, and tell us what you have done.
 
 We hope this message brought you cheer, and make it last, until same time same place, next year.
