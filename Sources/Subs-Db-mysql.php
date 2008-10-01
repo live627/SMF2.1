@@ -137,7 +137,7 @@ function smf_db_replacement__callback($matches)
 	{
 		case 'int':
 			if (!is_numeric($replacement) || (string) $replacement !== (string) (int) $replacement)
-				smf_db_error_backtrace('Wrong value type sent to the database. Integer expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+				smf_db_error_backtrace('Wrong value type sent to the database. Integer expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 			return (string) (int) $replacement;
 		break;
 
@@ -150,12 +150,12 @@ function smf_db_replacement__callback($matches)
 			if (is_array($replacement))
 			{
 				if (empty($replacement))
-					smf_db_error_backtrace('Database error, given array of integer values is empty.', '', E_USER_ERROR, __FILE__, __LINE__);
+					smf_db_error_backtrace('Database error, given array of integer values is empty. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 
 				foreach ($replacement as $key => $value)
 				{
 					if (!is_numeric($value) || (string) $value !== (string) (int) $value)
-						smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+						smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 
 					$replacement[$key] = (string) (int) $value;
 				}
@@ -163,7 +163,7 @@ function smf_db_replacement__callback($matches)
 				return implode(', ', $replacement);
 			}
 			else
-				smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+				smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 
 		break;
 
@@ -171,7 +171,7 @@ function smf_db_replacement__callback($matches)
 			if (is_array($replacement))
 			{
 				if (empty($replacement))
-					smf_db_error_backtrace('Database error, given array of string values is empty.', '', E_USER_ERROR, __FILE__, __LINE__);
+					smf_db_error_backtrace('Database error, given array of string values is empty. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 
 				foreach ($replacement as $key => $value)
 					$replacement[$key] = sprintf('\'%1$s\'', mysql_real_escape_string($value, $connection));
@@ -179,19 +179,19 @@ function smf_db_replacement__callback($matches)
 				return implode(', ', $replacement);
 			}
 			else
-				smf_db_error_backtrace('Wrong value type sent to the database. Array of strings expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+				smf_db_error_backtrace('Wrong value type sent to the database. Array of strings expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 		break;
 
 		case 'date':
 			if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
 				return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
 			else
-				smf_db_error_backtrace('Wrong value type sent to the database. Date expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+				smf_db_error_backtrace('Wrong value type sent to the database. Date expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 		break;
 
 		case 'float':
 			if (!is_numeric($replacement))
-				smf_db_error_backtrace('Wrong value type sent to the database. Floating point number expected.', '', E_USER_ERROR, __FILE__, __LINE__);
+				smf_db_error_backtrace('Wrong value type sent to the database. Floating point number expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
 			return (string) (float) $replacement;
 		break;
 
@@ -205,7 +205,7 @@ function smf_db_replacement__callback($matches)
 		break;
 
 		default:
-			smf_db_error_backtrace('Undefined type used in the database query', '', false, __FILE__, __LINE__);
+			smf_db_error_backtrace('Undefined type used in the database query. (' . $matches[2] . ')', '', false, __FILE__, __LINE__);
 		break;
 	}
 }
