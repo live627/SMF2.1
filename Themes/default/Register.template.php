@@ -555,13 +555,13 @@ function template_verification_sound()
 	else
 		echo '
 			<object type="audio/x-wav" data="', $context['verification_sound_href'], '">
-				<a href="', $context['verification_sound_href'], '">', $context['verification_sound_href'], '</a>
+				<a href="', $context['verification_sound_href'], '" rel="nofollow">', $context['verification_sound_href'], '</a>
 			</object>';
 	echo '
 			<br />
-			<a href="', $context['verification_sound_href'], ';sound">', $txt['visual_verification_sound_again'], '</a><br />
+			<a href="', $context['verification_sound_href'], ';sound" rel="nofollow">', $txt['visual_verification_sound_again'], '</a><br />
 			<a href="javascript:self.close();">', $txt['visual_verification_sound_close'], '</a><br />
-			<a href="', $context['verification_sound_href'], '">', $txt['visual_verification_sound_direct'], '</a>
+			<a href="', $context['verification_sound_href'], '" rel="nofollow">', $txt['visual_verification_sound_direct'], '</a>
 		</div>
 	</body>
 </html>';

@@ -1264,7 +1264,7 @@ function reapplySubscriptions($users)
 }
 
 // Add or extend a subscription of a user.
-function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTime = 0, $forceEndTime = 0)
+function addSubscription($id_subscribe, $id_member, $renewal = 0, $forceStartTime = 0, $forceEndTime = 0)
 {
 	global $context, $smcFunc;
 
@@ -1280,10 +1280,10 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 	// Grab the duration.
 	$duration = $curSub['num_length'];
 
-	// If this is a renewel change the duration to be correct.
-	if (!empty($renewel))
+	// If this is a renewal change the duration to be correct.
+	if (!empty($renewal))
 	{
-		switch ($renewel)
+		switch ($renewal)
 		{
 			case 'D':
 				$duration = 86400;
