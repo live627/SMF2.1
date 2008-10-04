@@ -65,6 +65,9 @@ September 2008
  ! When a package wants to redirect handle the situation where they don't provide their own text. (Packages.php) [Bug 2631]
  ! Don't rewrite line breaks on files that we think are unicode. (Display.php) [Bug 2627]
  ! When deleting a board make sure any boards using it are reset. (Themes.php) [Bug 2473]
+ ! Make sure admin help can only take a string. (Help.php) [Bug 1273]
+ ! Don't allow ourselves to try to send notifications if the topics gone missing. (Subs-Post.php) [Bug 2408]
+ ! Restoring a message from the recycle bin could through a database error if it was going to be a last message. (RemoveTopic.php) [Bug 2413]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

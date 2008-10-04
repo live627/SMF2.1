@@ -173,7 +173,7 @@ function template_maintain_members()
 		function swapMembers()
 		{
 			membersSwap = !membersSwap;
-			membersForm = document.getElementById(\'membersForm\');
+			var membersForm = document.getElementById(\'membersForm\');
 
 			document.getElementById("membersIcon").src = smf_images_url + (membersSwap ? "/collapse.gif" : "/expand.gif");
 			setInnerHTML(document.getElementById("membersText"), membersSwap ? "', $txt['maintain_members_choose'], '" : "', $txt['maintain_members_all'], '");
@@ -286,7 +286,7 @@ function template_maintain_topics()
 			function swapRot()
 			{
 				rotSwap = !rotSwap;
-				rotForm = document.getElementById(\'rotForm\');
+				var rotForm = document.getElementById(\'rotForm\');
 
 				document.getElementById("rotIcon").src = smf_images_url + (rotSwap ? "/collapse.gif" : "/expand.gif");
 				setInnerHTML(document.getElementById("rotText"), rotSwap ? "', $txt['maintain_old_choose'], '" : "', $txt['maintain_old_all'], '");

@@ -287,7 +287,7 @@ function setup_fatal_error_context($error_message)
 		$context['page_title'] = $context['error_title'];
 
 	// Display the error message - wireless?
-	if (WIRELESS)
+	if (defined('WIRELESS') && WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_error';
 	// Load the template and set the sub template.
 	else

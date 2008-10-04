@@ -1586,6 +1586,9 @@ function sendNotifications($topics, $type, $exclude = array(), $members_only = a
 		trigger_error('sendNotifications(): topics not found', E_USER_NOTICE);
 
 	$topics = array_keys($topicData);
+	// Just in case they've gone walkies.
+	if (empty($topics))
+		return;
 
 	// Insert all of these items into the digest log for those who want notifications later.
 	$digest_insert = array();

@@ -80,7 +80,7 @@ function RepairBoards()
 
 	// Start displaying errors without fixing them.
 	if (isset($_GET['fixErrors']))
-		checkSession('post');
+		checkSession('get');
 
 	// Will want this.
 	loadForumTests();

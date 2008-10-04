@@ -1317,24 +1317,6 @@ function mergePosts($msgs = array(), $from_topic, $target_topic)
 	}
 	$smcFunc['db_free_result']($request);
 
-	// Update the topic details.
-	$smcFunc['db_query']('', '
-		UPDATE {db_prefix}topics
-		SET
-			id_first_msg = {int:id_first_msg},
-			id_last_msg = {int:id_last_msg},
-			num_replies = {int:num_replies},
-			unapproved_posts = {int:unapproved_posts}
-		WHERE id_topic = {int:target_topic}',
-		array(
-			'id_first_msg' => $target_topic_data['id_first_msg'],
-			'id_last_msg' => $target_topic_data['id_last_msg'],
-			'num_replies' => $target_topic_data['num_replies'],
-			'unapproved_posts' => $target_topic_data['unapproved_posts'],
-			'target_topic' => $target_topic,
-		)
-	);
-
 	// We have a new post count for the board.
 	$smcFunc['db_query']('', '
 		UPDATE {db_prefix}boards
@@ -1432,6 +1414,24 @@ function mergePosts($msgs = array(), $from_topic, $target_topic)
 			)
 		);
 	}
+
+	// Finally get around to updating the destination topic, now all indexes etc on the source are fixed.
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}topics
+		SET
+			id_first_msg = {int:id_first_msg},
+			id_last_msg = {int:id_last_msg},
+			num_replies = {int:num_replies},
+			unapproved_posts = {int:unapproved_posts}
+		WHERE id_topic = {int:target_topic}',
+		array(
+			'id_first_msg' => $target_topic_data['id_first_msg'],
+			'id_last_msg' => $target_topic_data['id_last_msg'],
+			'num_replies' => $target_topic_data['num_replies'],
+			'unapproved_posts' => $target_topic_data['unapproved_posts'],
+			'target_topic' => $target_topic,
+		)
+	);
 
 	// Need it to update some stats.
 	require_once($sourcedir . '/Subs-Post.php');
