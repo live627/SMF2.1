@@ -2279,6 +2279,9 @@ function profileSaveGroups(&$value)
 	// The account page allows the change of your id_group - but not to admin!.
 	if (allowedTo('admin_forum') || ((int) $value != 1 && $old_profile['id_group'] != 1))
 		$value = (int) $value;
+	// ... otherwise it's the old group sir.
+	else
+		$value = $old_profile['id_group'];
 
 	// Find the additional membergroups (if any)
 	if (isset($_POST['additional_groups']) && is_array($_POST['additional_groups']))

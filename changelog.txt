@@ -61,6 +61,7 @@ September 2008
  ! In rare cases, uploading an avatar could get SMF stuck in an infinite loop. (Subs-Graphics.php)
  ! Try stop spiders indexing verification stuff. (Register and GenericControls templates) [Bug 2626]
  ! Minor typo in ManagePaid. (ManagePaid.php) [Bug 2628]
+ ! Protection stopping people making themselves admins wasn't quite what was required. (Profile-Modify.php) [Bug 2632]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
