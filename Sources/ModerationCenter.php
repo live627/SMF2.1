@@ -1144,7 +1144,7 @@ function ViewWatchedUsers()
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<a href="' . $scripturl . '?action=profile;u=%1$d;sa=showPosts">%2$s</a>',
+						'format' => '<a href="' . $scripturl . '?action=profile;u=%1$d;area=contributions;sa=posts">%2$s</a>',
 						'params' => array(
 							'id' => false,
 							'posts' => false,

@@ -29,6 +29,15 @@ if (!defined('SMF'))
 	It also allows the user to change some of their or another's preferences,
 	and such things.  It uses the following functions:
 
+	void loadProfileFields(bool force_reload = false)
+		// !!!
+
+	void setupProfileContext(array fields)
+		// !!!
+
+	void saveProfileFields()
+		// !!!
+
 	void saveProfileChanges(array &profile_variables, array &errors, int id_member)
 		// !!!
 
@@ -38,31 +47,10 @@ if (!defined('SMF'))
 	void makeNotificationChanges(int id_member)
 		// !!!
 
-	void profileSaveAvatarData(int id_member, array &errors)
-		// !!!
-
 	void makeCustomFieldChanges(int id_member, string area, bool sanitize = true)
 		// !!!
 
-	void summary(int id_member)
-		// !!!
-
-	void showPosts(int id_member)
-		// !!!
-
-	void showAttachments(int id_member)
-		// !!!
-
-	void statPanel(int id_member)
-		// !!!
-
-	void trackUser(int id_member)
-		// !!!
-
-	void TrackIP(int id_member = none)
-		// !!!
-
-	void showPermissions(int id_member)
+	void editBuddies(int id_member)
 		// !!!
 
 	void account(int id_member)
@@ -95,13 +83,46 @@ if (!defined('SMF'))
 	array list_getBoardNotifications(int start, int items_per_page, string sort, int memID)
 		// !!!
 
-	void groupMembership(int id_member)
-		// !!!
-
 	void loadThemeOptions(int id_member)
 		// !!!
 
 	void ignoreboards(int id_member)
+		// !!!
+
+	bool profileLoadLanguages()
+		// !!!
+
+	bool profileLoadGroups()
+		// !!!
+
+	bool profileLoadSignatureData()
+		// !!!
+
+	bool profileLoadAvatarData()
+		// !!!
+
+	bool profileSaveGroups(mixed &value)
+		// !!!
+
+	mixed profileSaveAvatarData(array &value)
+		// !!!
+
+	mixed profileValidateSignature(mixed &value)
+		// !!!
+
+	bool profileValidateEmail(string email, int id_member = none)
+		// !!!
+
+	void profileReloadUser()
+		// !!!
+
+	void profileSendActivation()
+		// !!!
+
+	void groupMembership(int id_member)
+		// !!!
+
+	mixed groupMembership2(array profile_vars, array post_erros, int id_member)
 		// !!!
 
 	Adding new fields to the profile:
