@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Profile
+// Version: 2.0 Beta 4; Profile
 
 // Template for the profile side bar - goes before any other profile template.
 function template_profile_above()
@@ -7,39 +7,13 @@ function template_profile_above()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/profile.css" />
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
-
-	// If an error occurred while trying to save previously, give the user a clue!
-	if (!empty($context['post_errors']))
-	{
-		echo '
-					<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
-						<tr>
-							<td>', template_error_message(), '</td>
-						</tr>
-					</table>';
-	}
-
-	// If the profile was update successfully let the user know this
-	if (!empty($context['profile_updated']))
-	{
-		echo '
-					<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
-						<tr>
-							<td>
-								<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed green; color: green;">
-									', $context['profile_updated'], '
-								</div>
-							</td>
-						</tr>
-					</table>';
-	}
 }
 
 // Template for closing off table started in profile_above.
 function template_profile_below()
 {
-
 }
 
 // This template displays users details without any option to edit them.
@@ -47,325 +21,231 @@ function template_summary()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	// First do the containing table and table header.
+	// Display the basic information about the user
 	echo '
-<table width="100%" border="0" cellpadding="4" cellspacing="1" align="center" class="bordercolor">
-	<tr class="titlebg">
-		<td width="420" height="26">
-			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-			', $txt['summary'], ' - ', $context['member']['name'], '
-		</td>
-		<td align="center" width="150">', $txt['picture_text'], '</td>
-	</tr>';
-
-	// Do the left hand column - where all the important user info is displayed.
-	echo '
-	<tr>
-		<td class="windowbg" width="420">
-			<table border="0" cellspacing="0" cellpadding="2" width="100%">
-				<tr>
-					<td><b>', $txt['name'], ': </b></td>
-					<td>', $context['member']['name'], '</td>
-				</tr>';
-	if (!empty($modSettings['titlesEnable']) && $context['member']['title'] != '')
-	{
+<div id="profileview">
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
+		', $txt['summary'], '
+	</h3>
+	<div id="basicinfo"><div class="windowbg">
+		<span class="topslice"><span></span></span>
+		<div class="content">
+			<h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4>
+			', $context['member']['avatar']['image'], '
+			<ul>';
+			
+	// What about if we allow email only via the forum??
+	if ($context['member']['show_email'] == 'yes' || $context['member']['show_email'] == 'no_through_forum' || $context['member']['show_email'] == 'yes_permission_override')
 		echo '
-				<tr>
-					<td><b>', $txt['custom_title'], ': </b></td>
-					<td>', $context['member']['title'], '</td>
-				</tr>';
-	}
+				<li><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '" title="', $context['member']['show_email'] == 'yes' || $context['member']['show_email'] == 'yes_permission_override' ? $context['member']['email'] : '', '" rel="nofollow"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['email'], '" /></a></li>';
 
+	// Don't show an icon if they haven't specified a website.
+	if ($context['member']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
+		echo '
+				<li><a href="', $context['member']['website']['url'], '" title="' . $context['member']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a></li>';
+
+	echo '
+				', !isset($context['disabled_fields']['icq']) && !empty($context['member']['icq']['link']) ? '<li>' . $context['member']['icq']['link'] . '</li>' : '', '
+				', !isset($context['disabled_fields']['msn']) && !empty($context['member']['msn']['link']) ? '<li>' . $context['member']['msn']['link'] . '</li>' : '', '
+				', !isset($context['disabled_fields']['aim']) && !empty($context['member']['aim']['link']) ? '<li>' . $context['member']['aim']['link'] . '</li>' : '', '
+				', !isset($context['disabled_fields']['yim']) && !empty($context['member']['yim']['link']) ? '<li>' . $context['member']['yim']['link'] . '</li>' : '', '
+			</ul>
+			<span id="userstatus">', $context['can_send_pm'] ? '<a href="' . $context['member']['online']['href'] . '" title="' . $context['member']['online']['label'] . '" rel="nofollow">' : '', $settings['use_image_buttons'] ? '<img src="' . $context['member']['online']['image_href'] . '" alt="' . $context['member']['online']['text'] . '" align="middle" />' : $context['member']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $context['member']['online']['text'] . '</span>' : '', ' ';
+			
+	// Can they add this member as a buddy?
+	if (!empty($context['can_have_buddy']) && !$context['user']['is_owner'])
+		echo '<a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';sesc=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
+					
+	echo '		
+			</span>';
+			
+	echo '
+			<p>';
+					
+	if (!$context['user']['is_owner'] && $context['can_send_pm'])
+		echo '			
+				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '.</a><br />';
+	echo '
+				<a href="', $scripturl, '?action=profile;area=contributions;u=', $context['id_member'], '">', $txt['showContributions'], '</a><br />
+				<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '">', $txt['statPanel'], '</a>
+			</p>';
+
+			
+	echo '
+		</div>
+		<span class="botslice"><span></span></span>
+	</div></div>
+	<div id="detailedinfo"><div class="windowbg2">
+		<span class="topslice"><span></span></span>
+		<div class="content">
+			<dl>';
+				
+				
 	if (!isset($context['disabled_fields']['posts']))
 		echo '
-				<tr>
-					<td><b>', $txt['profile_posts'], ': </b></td>
-					<td>', $context['member']['posts'], ($context['member']['posts_per_day'] != $txt['not_applicable'] ? ' (' . $context['member']['posts_per_day'] . ' ' . $txt['posts_per_day'] . ')' : ''), '</td>
-				</tr>';
-
-	echo '
-				<tr>
-					<td><b>', $txt['position'], ': </b></td>
-					<td>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</td>
-				</tr>';
-
-	// Can they issue a warning?
-	if ($context['can_issue_warning'] && !$context['user']['is_owner'] && $context['member']['warning'])
-	{
+				<dt>', $txt['profile_posts'], ': </dt>
+				<dd>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</dd>';
+				
+	// Only show the email address fully if it's not hidden - and we reveal the email.
+	if ($context['member']['show_email'] == 'yes')
 		echo '
-				<tr>
-					<td><b>', $txt['profile_warning_level'], ': </b></td>
-					<td><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning">', $context['member']['warning'], '%</a>';
+				<dt>', $txt['email'], ': </dt>
+				<dd><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></dd>';
 
-		// Can we provide information on what this means?
-		if (!empty($context['warning_status']))
-			echo '
-					<span class="smalltext">(', $context['warning_status'], ')</span>';
-
+	// ... Or if the one looking at the profile is an admin they can see it anyway.
+	elseif ($context['member']['show_email'] == 'yes_permission_override')
 		echo '
-					</td>
-				</tr>';
-	}
+				<dt>', $txt['email'], ': </dt>
+				<dd><i><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></i></dd>';
 
-	// If the person looking is allowed, they can check the members IP address and hostname.
-	if ($context['can_see_ip'])
-	{
+								
+	if (!empty($modSettings['titlesEnable']) && !empty($context['member']['title']))
 		echo '
-				<tr>
-					<td width="40%">
-						<b>', $txt['ip'], ': </b>
-					</td><td>
-						<a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['member']['ip'], '">', $context['member']['ip'], '</a>
-					</td>
-				</tr>';
-
-		if (empty($modSettings['disableHostnameLookup']))
-			echo '
-				<tr>
-					<td width="40%">
-						<b>', $txt['hostname'], ': </b>
-					</td><td width="55%">
-						<div title="', $context['member']['hostname'], '" style="width: 100%; overflow: hidden; font-style: italic;">', $context['member']['hostname'], '</div>
-					</td>
-				</tr>';
-	}
+				<dt>', $txt['custom_title'], ': </dt>
+				<dd>', $context['member']['title'], '</dd>';
+	
+	if (!empty($context['member']['blurb']))
+		echo '
+				<dt>', $txt['personal_text'], ': </dt>
+				<dd>', $context['member']['blurb'], '</dd>';
 
 	// If karma enabled show the members karma.
 	if ($modSettings['karmaMode'] == '1')
 		echo '
-				<tr>
-					<td>
-						<b>', $modSettings['karmaLabel'], ' </b>
-					</td><td>
-						', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '
-					</td>
-				</tr>';
+				<dt>', $modSettings['karmaLabel'], ' </dt>
+				<dd>', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</dd>';
+
 	elseif ($modSettings['karmaMode'] == '2')
 		echo '
-				<tr>
-					<td>
-						<b>', $modSettings['karmaLabel'], ' </b>
-					</td><td>
-						+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '
-					</td>
-				</tr>';
-	echo '
-				<tr>
-					<td><b>', $txt['date_registered'], ': </b></td>
-					<td>', $context['member']['registered'], '</td>
-				</tr><tr>
-					<td><b>', $txt['lastLoggedIn'], ': </b></td>
-					<td>', $context['member']['last_login'], '</td>
-				</tr>';
+				<dt>', $modSettings['karmaLabel'], ' </dt>
+				<dd>+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '</dd>';
+	
+	if (!isset($context['disabled_fields']['gender']) && !empty($context['disabled_fields']['gender']))
+		echo '
+				<dt>', $txt['gender'], ': </dt>
+				<dd>', $context['member']['gender']['name'], '</dd>';
 
+	echo '
+				<dt>', $txt['age'], ':</dt>
+				<dd>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/bdaycake.gif" width="40" alt="" />' : ''), '</dd>';
+
+	if (!isset($context['disabled_fields']['location']) && !empty($context['member']['location']))
+		echo '
+				<dt>', $txt['location'], ':</dt>
+				<dd>', $context['member']['location'], '</dd>';
+					
+	echo '
+			</dl>';
+						
+	// Are there any custom profile fields for the summary?
+	if (!empty($context['custom_fields']))
+	{
+			echo '
+			<dl>';
+				
+		foreach ($context['custom_fields'] as $field)
+		{
+			echo '
+				<dt>', $field['name'], ':</dt>
+				<dd>', $field['output_html'], '</dd>';
+		}
+
+		echo '
+			</dl>';
+	}
+	
+	echo '
+			<dl', !isset($context['signature_enabled']) ? 'class="noborder"' : '', '>';
+				
+	// Can they issue a warning?
+	if ($context['can_issue_warning'] && !$context['user']['is_owner'] && $context['member']['warning'])
+	{
+		echo '	
+				<dt>', $txt['profile_warning_level'], ': </dt>
+				<dd><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning">', $context['member']['warning'], '%</a>';
+
+		// Can we provide information on what this means?
+		if (!empty($context['warning_status']))
+			echo '<span class="smalltext">(', $context['warning_status'], ')</span>';
+
+		echo '</dd>';
+	}
+	
 	// Is this member requiring activation and/or banned?
 	if (!empty($context['activate_message']) || !empty($context['member']['bans']))
 	{
-		echo '
-				<tr>
-					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr>';
 
 		// If the person looking at the summary has permission, and the account isn't activated, give the viewer the ability to do it themselves.
 		if (!empty($context['activate_message']))
 			echo '
-				<tr>
-					<td colspan="2">
-						<span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)
-					</td>
-				</tr>';
+				<dt class="clear"><span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
 
 		// If the current member is banned, show a message and possibly a link to the ban.
 		if (!empty($context['member']['bans']))
 		{
 			echo '
-				<tr>
-					<td colspan="2">
-						<span style="color: red;">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').style.display = document.getElementById(\'ban_info\').style.display == \'none\' ? \'\' : \'none\';return false;">' . $txt['view_ban'] . '</a>]
-					</td>
-				</tr>
-				<tr id="ban_info" style="display: none;">
-					<td colspan="2">
-						<b>', $txt['user_banned_by_following'], ':</b>';
+				<dt class="clear"><span style="color: red;">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').style.display = document.getElementById(\'ban_info\').style.display == \'none\' ? \'\' : \'none\';return false;">' . $txt['view_ban'] . '</a>]</dt>
+				<dt class="clear" id="ban_info" style="display: none;">
+					<strong>', $txt['user_banned_by_following'], ':</strong>';
 
 			foreach ($context['member']['bans'] as $ban)
 				echo '
-						<br /><span class="smalltext">', $ban['explanation'], '</span>';
+					<br /><span class="smalltext">', $ban['explanation'], '</span>';
 
 			echo '
-					</td>
-				</tr>';
+				</dt>';
 		}
 	}
-
-	// Messenger type information.
+	
 	echo '
-				<tr>
-					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['icq']))
-		echo '
-				<tr>
-					<td><b>', $txt['icq'], ':</b></td>
-					<td>', $context['member']['icq']['link_text'], '</td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['aim']))
-		echo '
-				<tr>
-					<td><b>', $txt['aim'], ': </b></td>
-					<td>', $context['member']['aim']['link_text'], '</td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['msn']))
-		echo '
-				<tr>
-					<td><b>', $txt['msn'], ': </b></td>
-					<td>', $context['member']['msn']['link_text'], '</td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['yim']))
-		echo '
-				<tr>
-					<td><b>', $txt['yim'], ': </b></td>
-					<td>', $context['member']['yim']['link_text'], '</td>
-				</tr>';
-
-	echo '
-				<tr>
-					<td><b>', $txt['email'], ': </b></td>
-					<td>';
-
-	// Only show the email address fully if it's not hidden - and we reveal the email.
-	if ($context['member']['show_email'] == 'yes')
-		echo '
-						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a>';
-	// What about if we allow email only via the forum??
-	elseif ($context['member']['show_email'] == 'no_through_forum')
-		echo '
-						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '" rel="nofollow"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['email'], '" /></a>';
-
-	// ... Or if the one looking at the profile is an admin they can see it anyway.
-	elseif ($context['member']['show_email'] == 'yes_permission_override')
-		echo '
-						<i><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></i>';
-
-	// That must mean the email is hidden.
-	else
-		echo '
-						<i>', $txt['hidden'], '</i>';
-
-	// Some more information.
-	echo '
-					</td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['website']))
-		echo '
-				<tr>
-					<td><b>', $txt['website'], ': </b></td>
-					<td>', empty($context['member']['website']['url']) ? '' : '<a href="' . $context['member']['website']['url'] . '" target="_blank" class="new_win">' . $context['member']['website']['title'] . '</a>', '</td>
-				</tr>';
-
-	echo '
-				<tr>
-					<td><b>', $txt['current_status'], ' </b></td>
-					<td>
-						<i>', $context['can_send_pm'] ? '<a href="' . $context['member']['online']['href'] . '" title="' . $context['member']['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $context['member']['online']['image_href'] . '" alt="' . $context['member']['online']['text'] . '" align="middle" />' : $context['member']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $context['member']['online']['text'] . '</span>' : '', '</i>';
-
-	// Can they add this member as a buddy?
-	if (!empty($context['can_have_buddy']) && !$context['user']['is_owner'])
-		echo '
-						&nbsp;&nbsp;<a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';sesc=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
-
-	echo '
-					</td>
-				</tr><tr>
-					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['gender']))
-		echo '
-				<tr>
-					<td><b>', $txt['gender'], ': </b></td>
-					<td>', $context['member']['gender']['name'], '</td>
-				</tr>';
-
-	echo '
-				<tr>
-					<td><b>', $txt['age'], ':</b></td>
-					<td>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/bdaycake.gif" width="40" alt="" />' : ''), '</td>
-				</tr>';
-
-	if (!isset($context['disabled_fields']['location']))
-		echo '
-				<tr>
-					<td><b>', $txt['location'], ':</b></td>
-					<td>', $context['member']['location'], '</td>
-				</tr>';
-
-	echo '
-				<tr>
-					<td><b>', $txt['local_time'], ':</b></td>
-					<td>', $context['member']['local_time'], '</td>
-				</tr><tr>';
-
-	if (!empty($modSettings['userLanguage']))
-		echo '
-					<td><b>', $txt['language'], ':</b></td>
-					<td>', $context['member']['language'], '</td>
-				</tr><tr>';
-
-	echo '
-					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr>';
-
-	// Are there any custom profile fields for the summary?
-	if (!empty($context['custom_fields']))
+				<dt>', $txt['date_registered'], ': </dt>
+				<dd>', $context['member']['registered'], '</dd>
+				<dt>', $txt['lastLoggedIn'], ': </dt>
+				<dd>', $context['member']['last_login'], '</dd>';
+				
+	// If the person looking is allowed, they can check the members IP address and hostname.
+	if ($context['can_see_ip'])
 	{
-		foreach ($context['custom_fields'] as $field)
-		{
-			echo '
-				<tr valign="top">
-					<td><b>', $field['name'], ':</b></td>
-					<td>', $field['output_html'], '</td>
-				</tr>';
-		}
-
+		if (!empty($context['member']['ip']))
 		echo '
-				<tr>
-					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr>';
+				<dt>', $txt['ip'], ': </dt>
+				<dd><a href="', $scripturl, '?action=profile;area=tracking;sa=ip;searchip=', $context['member']['ip'], '">', $context['member']['ip'], '</a></dd>';
+
+		if (empty($modSettings['disableHostnameLookup']) && !empty($context['member']['ip']))
+			echo '
+				<dt>', $txt['hostname'], ': </dt>
+				<dd>', $context['member']['hostname'], '</dd>';
 	}
+
+	echo '
+				<dt>', $txt['local_time'], ':</dt>
+				<dd>', $context['member']['local_time'], '</dd>';
+
+	if (!empty($modSettings['userLanguage']) && !empty($context['member']['language']))
+		echo '
+				<dt>', $txt['language'], ':</dt>
+				<dd>', $context['member']['language'], '</dd>';
+				
+
+
+	echo '
+			</dl>';
 
 	// Show the users signature.
 	if ($context['signature_enabled'])
 		echo '
-				<tr>
-					<td colspan="2" height="25">
-						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;">
-							<tr>
-								<td style="padding-bottom: 0.5ex;"><b>', $txt['signature'], ':</b></td>
-							</tr><tr>
-								<td colspan="2" width="100%" class="smalltext"><div class="signature">', $context['member']['signature'], '</div></td>
-							</tr>
-						</table>
-					</td>
-				</tr>';
+			<div class="signature">
+				<h5>', $txt['signature'], ':</h5>
+				', $context['member']['signature'], '
+			</div>';
 
 	echo '
-			</table>
-		</td>';
-
-	// Now print the second column where the members avatar/text is shown.
-	echo '
-		<td class="windowbg" valign="middle" align="center" width="150">
-			', $context['member']['avatar']['image'], '<br /><br />
-			', $context['member']['blurb'], '
-		</td>
-	</tr>
-</table>';
+		</div>
+		<span class="botslice"><span></span></span>
+	</div></div>
+<div style="clear: both;"></div>
+</div>';
 }
 
 // Template for showing all the posts of the user, in chronological order.
@@ -548,7 +428,7 @@ function template_editBuddies()
 	if (empty($context['buddies']))
 		echo '
 			<tr class="windowbg">
-				<td colspan="8" align="center"><b>', $txt['no_buddies'], '</b></td>
+				<td colspan="8" align="center"><strong>', $txt['no_buddies'], '</strong></td>
 			</tr>';
 
 	// Now loop through each buddy showing info on each.
@@ -564,7 +444,7 @@ function template_editBuddies()
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>
 				<td align="center">', $buddy['msn']['link'], '</td>
-				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=buddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
+				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=buddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
 			</tr>';
 
 		$alternate = !$alternate;
@@ -583,7 +463,7 @@ function template_editBuddies()
 			</tr>
 			<tr class="windowbg">
 				<td width="45%">
-					<b>', $txt['who_member'], ':</b>
+					<strong>', $txt['who_member'], ':</strong>
 				</td>
 				<td width="55%">
 					<input type="text" name="new_buddy" id="new_buddy" size="25" />
@@ -610,7 +490,7 @@ function template_trackUser()
 			<table border="0" cellspacing="1" cellpadding="4" align="left" width="100%">
 				<tr class="titlebg">
 					<td colspan="2">
-						<b>', $txt['view_ips_by'], ' ', $context['member']['name'], '</b>
+						<strong>', $txt['view_ips_by'], ' ', $context['member']['name'], '</strong>
 					</td>
 				</tr>';
 
@@ -958,7 +838,7 @@ function template_statPanel()
 		echo '
 							<td width="2%" valign="bottom"></td>
 						</tr><tr>
-							<td width="100%" colspan="26" align="center"><b>', $txt['statPanel_timeOfDay'], '</b></td>
+							<td width="100%" colspan="26" align="center"><strong>', $txt['statPanel_timeOfDay'], '</strong></td>
 						</tr>';
 	}
 	echo '
@@ -1090,7 +970,7 @@ function template_edit_options()
 			echo '
 							<tr valign="top">
 								<td width="40%">
-									<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
+									<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</strong>';
 
 			// Does it have any subtext to show?
 			if (!empty($field['subtext']))
@@ -1167,7 +1047,7 @@ function template_edit_options()
 		{
 			echo '
 							<tr valign="top">
-								<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+								<td width="40%"><strong>', $field['name'], ': </strong><div class="smalltext">', $field['desc'], '</div></td>
 								<td>', $field['input_html'], '</td>
 							</tr>';
 		}
@@ -1191,7 +1071,7 @@ function template_edit_options()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </b>
+									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
@@ -1524,7 +1404,7 @@ function template_groupMembership()
 		echo '
 				<tr class="windowbg">
 					<td align="center" class="error">
-						<b>', $context['update_message'], '</b>
+						<strong>', $context['update_message'], '</strong>
 					</td>
 				</tr>';
 
@@ -1581,7 +1461,7 @@ function template_groupMembership()
 			echo '
 					<td>
 						<div style="float: left;">
-							<label for="primary_', $group['id'], '"><b>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</b>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
+							<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
 						</div>
 						<div style="float: right">';
 
@@ -1626,7 +1506,7 @@ function template_groupMembership()
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>
 						<div style="float: left;">
-							<b>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</b>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
+							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
 						<div style="float: right">
 							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
@@ -1912,17 +1792,17 @@ function template_issueWarning()
 		echo '
 						<tr class="windowbg">
 							<td width="40%">
-								<b>', $txt['profile_warning_name'], ':</b>
+								<strong>', $txt['profile_warning_name'], ':</strong>
 							</td>
 							<td>
-								<b>', $context['member']['name'], '</b>
+								<strong>', $context['member']['name'], '</strong>
 							</td>
 						</tr>';
 
 	echo '
 			<tr class="windowbg" valign="top">
 				<td width="30%">
-					<b>', $txt['profile_warning_level'], ':</b>';
+					<strong>', $txt['profile_warning_level'], ':</strong>';
 
 	// Is there only so much they can apply?
 	if ($context['warning_limit'])
@@ -1965,7 +1845,7 @@ function template_issueWarning()
 		echo '
 			<tr class="windowbg" valign="top">
 				<td width="30%">
-					<b>', $txt['profile_warning_reason'], ':</b>
+					<strong>', $txt['profile_warning_reason'], ':</strong>
 					<div class="smalltext">', $txt['profile_warning_reason_desc'], '</div>
 				</td>
 				<td>
@@ -1979,7 +1859,7 @@ function template_issueWarning()
 			</tr>
 			<tr class="windowbg">
 				<td width="30%">
-					<b>', $txt['profile_warning_notify'], ':</b>
+					<strong>', $txt['profile_warning_notify'], ':</strong>
 				</td>
 				<td>
 					<input type="checkbox" name="warn_notify" id="warn_notify" onclick="modifyWarnNotify();" ', $context['warning_data']['notify'] ? 'checked="checked"' : '', ' />
@@ -1987,7 +1867,7 @@ function template_issueWarning()
 			</tr>
 			<tr class="windowbg">
 				<td width="30%">
-					<b>', $txt['profile_warning_notify_subject'], ':</b>
+					<strong>', $txt['profile_warning_notify_subject'], ':</strong>
 				</td>
 				<td>
 					<input type="text" name="warn_sub" id="warn_sub" value="', empty($context['warning_data']['notify_subject']) ? $txt['profile_warning_notify_template_subject'] : $context['warning_data']['notify_subject'], '" size="50" style="width: 80%;" />
@@ -1995,7 +1875,7 @@ function template_issueWarning()
 			</tr>
 			<tr class="windowbg" valign="top">
 				<td width="30%">
-					<b>', $txt['profile_warning_notify_body'], ':</b>
+					<strong>', $txt['profile_warning_notify_body'], ':</strong>
 				</td>
 				<td>
 					<select name="warn_temp" id="warn_temp" disabled="disabled" onchange="populateNotifyTemplate();" style="font-size: x-small;">
@@ -2141,7 +2021,7 @@ function template_deleteAccount()
 							</td>
 						</tr><tr>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'right' : 'left', '">
-								<b', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : ''), '>', $txt['current_password'], ': </b>
+								<b', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : ''), '>', $txt['current_password'], ': </strong>
 							</td>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'left' : 'right', '">
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2211,7 +2091,7 @@ function template_profile_save()
 		{
 			echo '
 							<tr valign="top">
-								<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+								<td width="40%"><strong>', $field['name'], ': </strong><div class="smalltext">', $field['desc'], '</div></td>
 								<td>', $field['input_html'], '</td>
 							</tr>';
 		}
@@ -2226,7 +2106,7 @@ function template_profile_save()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </b>
+									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
@@ -2272,7 +2152,7 @@ function template_profile_group_manage()
 	echo '
 							<tr>
 								<td valign="top">
-									<b>', $txt['primary_membergroup'], ': </b>
+									<strong>', $txt['primary_membergroup'], ': </strong>
 									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
 								</td>
 								<td>
@@ -2289,7 +2169,7 @@ function template_profile_group_manage()
 								</td>
 							</tr>
 							<tr>
-								<td valign="top"><b>', $txt['additional_membergroups'], ':</b></td>
+								<td valign="top"><strong>', $txt['additional_membergroups'], ':</strong></td>
 								<td>
 									<div id="additional_groupsList">
 										<input type="hidden" name="additional_groups[]" value="0" />';
@@ -2319,7 +2199,7 @@ function template_profile_birthdate()
 	echo '
 							<tr>
 								<td width="40%">
-									<b>', $txt['dob'], ':</b>
+									<strong>', $txt['dob'], ':</strong>
 									<div class="smalltext">', $txt['dob_year'], ' - ', $txt['dob_month'], ' - ', $txt['dob_day'], '</div>
 								</td>
 								<td class="smalltext">
@@ -2338,7 +2218,7 @@ function template_profile_ignore_list_modify()
 	echo '
 							<tr>
 								<td valign="top">
-									<b>', $txt['ignorelist'], ':</b>
+									<strong>', $txt['ignorelist'], ':</strong>
 									<div class="smalltext">
 										', $txt['username_line'], '<br />
 										<br />
@@ -2359,7 +2239,7 @@ function template_profile_signature_modify()
 	echo '
 							<tr>
 								<td width="40%" valign="top">
-									<b>', $txt['signature'], ':</b>
+									<strong>', $txt['signature'], ':</strong>
 									<div class="smalltext">', $txt['sig_info'], '</div><br />
 									<br />';
 
@@ -2439,7 +2319,7 @@ function template_profile_avatar_select()
 									<table width="100%" cellpadding="5" cellspacing="0" border="0" style="height: 25ex;"><tr>
 										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"', ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : ''), ' class="check" /></td>
 										<td valign="top" style="padding-left: 1ex;">
-											<b', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></b>
+											<b', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
 											<div style="margin: 2ex;"><img name="avatar" id="avatar" src="', !empty($context['member']['avatar']['allow_external']) && $context['member']['avatar']['choice'] == 'external' ? $context['member']['avatar']['external'] : $modSettings['avatar_url'] . '/blank.gif', '" alt="Do Nothing" /></div>
 										</td>
 									</tr></table>
@@ -2571,7 +2451,7 @@ function template_profile_avatar_select()
 								<td valign="top" style="padding: 0 2px;">
 									<table width="100%" cellpadding="5" cellspacing="0" border="0"><tr>
 										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_external" value="external"', ($context['member']['avatar']['choice'] == 'external' ? ' checked="checked"' : ''), ' class="check" /></td>
-										<td valign="top" style="padding-left: 1ex;"><b><label for="avatar_choice_external">', $txt['my_own_pic'], ':</label></b><div class="smalltext">', $txt['avatar_by_url'], '</div></td>
+										<td valign="top" style="padding-left: 1ex;"><strong><label for="avatar_choice_external">', $txt['my_own_pic'], ':</label></strong><div class="smalltext">', $txt['avatar_by_url'], '</div></td>
 									</tr></table>
 								</td>
 								<td valign="top">
@@ -2588,7 +2468,7 @@ function template_profile_avatar_select()
 								<td valign="top" style="padding: 0 2px;">
 									<table width="100%" cellpadding="5" cellspacing="0" border="0"><tr>
 										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_upload" value="upload"', ($context['member']['avatar']['choice'] == 'upload' ? ' checked="checked"' : ''), ' class="check" /></td>
-										<td valign="top" style="padding-left: 1ex;"><b><label for="avatar_choice_upload">', $txt['avatar_will_upload'], ':</label></b></td>
+										<td valign="top" style="padding-left: 1ex;"><strong><label for="avatar_choice_upload">', $txt['avatar_will_upload'], ':</label></strong></td>
 									</tr></table>
 								</td>
 								<td valign="top">
@@ -2606,7 +2486,7 @@ function template_profile_karma_modify()
 
 		echo '
 							<tr>
-								<td valign="top"><b>', $modSettings['karmaLabel'], '</b></td>
+								<td valign="top"><strong>', $modSettings['karmaLabel'], '</strong></td>
 								<td>
 									', $modSettings['karmaApplaudLabel'], ' <input type="text" name="karma_good" size="4" value="', $context['member']['karma']['good'], '" onchange="setInnerHTML(document.getElementById(\'karmaTotal\'), this.value - this.form.karma_bad.value);" style="margin-right: 2ex;" /> ', $modSettings['karmaSmiteLabel'], ' <input type="text" name="karma_bad" size="4" value="', $context['member']['karma']['bad'], '" onchange="this.form.karma_good.onchange();" /><br />
 									(', $txt['total'], ': <span id="karmaTotal">', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</span>)
@@ -2622,7 +2502,7 @@ function template_profile_timeformat_modify()
 	echo '
 							<tr>
 								<td width="40%">
-									<b>', $txt['time_format'], ':</b><br />
+									<strong>', $txt['time_format'], ':</strong><br />
 									<a href="', $scripturl, '?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="', !$context['right_to_left'] ? 'left' : 'right', '" style="', !$context['right_to_left'] ? 'padding-right' : 'padding-left', ': 1ex;" /></a>
 									<span class="smalltext">', $txt['date_format'], '</span>
 								</td>
@@ -2646,7 +2526,7 @@ function template_profile_timeoffset_modify()
 
 	echo '
 							<tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset'], ':</b><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
+								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
 								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="currentDate = new Date(', $context['current_forum_time_js'], '); document.getElementById(\'time_offset\').value = autoDetectTimeOffset(currentDate); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
 							</tr>';
 }
@@ -2658,7 +2538,7 @@ function template_profile_theme_pick()
 
 	echo '
 							<tr>
-								<td colspan="2" width="40%"><b>', $txt['current_theme'], ':</b> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['id_member'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
+								<td colspan="2" width="40%"><strong>', $txt['current_theme'], ':</strong> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['id_member'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
 							</tr>';
 }
 
@@ -2670,7 +2550,7 @@ function template_profile_smiley_pick()
 	echo '
 							<tr>
 								<td colspan="2" width="40%">
-									<b>', $txt['smileys_current'], ':</b>
+									<strong>', $txt['smileys_current'], ':</strong>
 									<select name="smiley_set" onchange="document.getElementById(\'smileypr\').src = this.selectedIndex == 0 ? \'', $settings['images_url'], '/blank.gif\' : \'', $modSettings['smileys_url'], '/\' + (this.selectedIndex != 1 ? this.options[this.selectedIndex].value : \'', !empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'], '\') + \'/smiley.gif\';">';
 	foreach ($context['smiley_sets'] as $set)
 		echo '
@@ -2710,7 +2590,7 @@ function template_authentication_method()
 									<input type="radio" name="authenticate" value="openid" id="auth_openid" ', $context['auth_method'] == 'openid' ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
 								</td>
 								<td colspan="2">
-									<label for="auth_openid"><b>', $txt['authenticate_openid'], ':</b></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+									<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
 								</td>
 							</tr>
 							<tr>
@@ -2733,7 +2613,7 @@ function template_authentication_method()
 									<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', $context['auth_method'] == 'password' ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
 								</td>
 								<td colspan="2">
-									<label for="auth_pass"><b>', $txt['authenticate_password'], ':</b></label>
+									<label for="auth_pass"><strong>', $txt['authenticate_password'], ':</strong></label>
 								</td>
 							</tr>
 							<tr>
