@@ -38,10 +38,10 @@ if (!defined('SMF'))
 
 	void MaintainTopics()
 		// !!!
-	
+
 	void MaintainCleanCache()
 		// !!!
-	
+
 	void MaintainFindFixErrors()
 		// !!!
 
@@ -208,7 +208,7 @@ function ManageMaintenance()
 
 	// Finally fall through to what we are doing.
 	$subActions[$subAction]['function']();
-	
+
 	// Any special activity?
 	if (isset($activity))
 		$subActions[$subAction]['activities'][$activity]();
@@ -218,7 +218,7 @@ function ManageMaintenance()
 function MaintainDatabase()
 {
 	global $context, $db_type, $db_character_set, $modSettings, $smcFunc;
-	
+
 	// Show some conversion options?
 	$context['convert_utf8'] = $db_type == 'mysql' && (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smcFunc['db_server_info']())) <= 0;
 	$context['convert_entities'] = $db_type == 'mysql' && isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
@@ -228,7 +228,7 @@ function MaintainDatabase()
 function MaintainRoutine()
 {
 	global $context, $txt;
-	
+
 	if (isset($_GET['done']) && $_GET['done'] == 'recount')
 		$context['maintenance_finished'] = &$txt['maintain_recount'];
 }
@@ -237,7 +237,7 @@ function MaintainRoutine()
 function MaintainMembers()
 {
 	global $context, $smcFunc, $txt;
-	
+
 	// Get membergroups - for deleting members and the like.
 	$result = $smcFunc['db_query']('', '
 		SELECT id_group, group_name
@@ -265,7 +265,7 @@ function MaintainMembers()
 function MaintainTopics()
 {
 	global $context, $smcFunc, $txt;
-	
+
 	// Let's load up the boards in case they are useful.
 	$result = $smcFunc['db_query']('', '
 		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
@@ -291,7 +291,7 @@ function MaintainTopics()
 		);
 	}
 	$smcFunc['db_free_result']($result);
-	
+
 	if (isset($_GET['done']) && $_GET['done'] == 'purgeold')
 		$context['maintenance_finished'] = &$txt['maintain_old'];
 	elseif (isset($_GET['done']) && $_GET['done'] == 'massmove')
@@ -302,7 +302,7 @@ function MaintainTopics()
 function MaintainFindFixErrors()
 {
 	global $sourcedir;
-	
+
 	require_once($sourcedir . '/RepairBoards.php');
 	RepairBoards();
 }
@@ -311,7 +311,7 @@ function MaintainFindFixErrors()
 function MaintainCleanCache()
 {
 	global $context, $txt;
-	
+
 	// Just wipe the whole cache directory!
 	clean_cache();
 
@@ -322,9 +322,9 @@ function MaintainCleanCache()
 function MaintainEmptyUnimportantLogs()
 {
 	global $context, $smcFunc, $txt;
-	
+
 	checkSession();
-	
+
 	// No one's online now.... MUHAHAHAHA :P.
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_online');
@@ -356,7 +356,7 @@ function MaintainEmptyUnimportantLogs()
 		TRUNCATE {db_prefix}log_search_results');
 
 	updateSettings(array('search_pointer' => 0));
-	
+
 	$context['maintenance_finished'] = &$txt['maintain_logs'];
 }
 
@@ -1393,7 +1393,7 @@ function AdminBoardRecount()
 			if (isset($lastModifiedMsg[$row['id_board']]))
 			{
 				$curLastModifiedMsg = max($row['local_last_msg'], $lastModifiedMsg[$row['id_board']]);
-				
+
 			}
 			else
 				$curLastModifiedMsg = $row['local_last_msg'];
@@ -1599,7 +1599,7 @@ function MaintainReattributePosts()
 function MaintainDownloadBackup()
 {
 	global $sourcedir;
-	
+
 	require_once($sourcedir . '/DumpDatabase.php');
 	DumpDatabase2();
 }

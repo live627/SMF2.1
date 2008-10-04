@@ -264,7 +264,7 @@ function MoveTopic2()
 					}
 					cache_put_data('response_prefix', $context['response_prefix'], 600);
 				}
-	
+
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}messages
 					SET subject = {string:subject}
@@ -452,7 +452,7 @@ function moveTopics($topics, $toBoard)
 		SELECT lmr.id_member, lmr.id_msg, t.id_topic
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board
-				AND lmr.id_msg > t.id_first_msg	AND lmr.id_msg > {int:protect_lmr_msg})
+				AND lmr.id_msg > t.id_first_msg AND lmr.id_msg > {int:protect_lmr_msg})
 			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = lmr.id_member)
 		WHERE t.id_topic IN ({array_int:topics})
 			AND lmr.id_msg > IFNULL(lt.id_msg, 0)',

@@ -133,7 +133,7 @@ function getBirthdayRange($low_date, $high_date)
 		SELECT id_member, real_name, YEAR(birthdate) AS birth_year, birthdate
 		FROM {db_prefix}members
 		WHERE YEAR(birthdate) != {string:year_one}
-			AND	(' . $allyear_part . '
+			AND (' . $allyear_part . '
 				OR DATE_FORMAT(birthdate, {string:year_low}) BETWEEN {date:low_date} AND {date:high_date}' . ($year_low == $year_high ? '' : '
 				OR DATE_FORMAT(birthdate, {string:year_high}) BETWEEN {date:low_date} AND {date:high_date}') . ')
 			AND is_activated = {int:is_activated}',

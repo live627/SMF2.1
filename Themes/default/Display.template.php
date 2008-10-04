@@ -594,7 +594,7 @@ function template_main()
 		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => 'javascript:document.quickModForm.submit();', 'custom' => ' name="restore_selected" ');
 
 	echo '
-<div id="moderationbuttons">', 	template_button_strip($mod_buttons, 'bottom'), '</div>';
+<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom'), '</div>';
 
 	// Show the jumpto box, or actually...let Javascript do it.
 	echo '

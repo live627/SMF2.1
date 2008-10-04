@@ -677,7 +677,7 @@ function ManageCopyright()
 		if ($return_data != 'void')
 		{
 			list ($_SESSION['copy_expire'], $copyright_key) = explode('|', $return_data);
-			
+
 			if ($_SESSION['copy_expire'] <= time())
 			{
 				// So sorry but that has already expired.

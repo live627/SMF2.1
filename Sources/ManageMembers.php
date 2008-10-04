@@ -1159,7 +1159,7 @@ function AdminApprove()
 	elseif ($_POST['todo'] == 'require_activation')
 	{
 		require_once($sourcedir . '/Subs-Members.php');
-		
+
 		// We have to do this for each member I'm afraid.
 		foreach ($member_info as $member)
 		{

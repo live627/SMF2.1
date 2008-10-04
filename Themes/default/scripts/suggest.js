@@ -126,7 +126,7 @@ function smfSuggest(sessionID, textID)
 			selectedDiv = toHighlight;
 			itemMouseOver({'srcElement': selectedDiv});
 		}
-		
+
 		return true;
 	}
 

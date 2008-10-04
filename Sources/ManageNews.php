@@ -713,7 +713,7 @@ function SendMailing($clean_only = false)
 					$row['id_member'],
 					$cleanMemberName,
 				), $_POST['message']);
-			
+
 			$subject = str_replace($from_member,
 				array(
 					$row['email_address'],

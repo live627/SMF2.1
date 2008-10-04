@@ -12,7 +12,7 @@ ul.admin_menu, ul.admin_menu li ul
 	list-style: none;
 }
 ul.admin_menu
-{	
+{
 	display: table-cell;
 }
 * html #adm_container, * html ul.admin_menu

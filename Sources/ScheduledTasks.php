@@ -485,7 +485,7 @@ function scheduled_daily_maintenance()
 				'mysql_fix' => 'db_mysql_group_by_fix',
 			)
 		);
-		
+
 
 	// Log we've done it...
 	return true;

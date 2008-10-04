@@ -213,13 +213,13 @@ ul#linktree li span
 /* page created in.. */
 #footerarea p
 {
-	clear: both;	
+	clear: both;
 	text-align: left;
 	padding-left: 0.5em;
 }
 p#show_loadtime
 {
-	display: block;	
+	display: block;
 	text-align: center;
 }
 /* the upshrink buttons */

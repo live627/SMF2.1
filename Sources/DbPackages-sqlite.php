@@ -109,7 +109,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		$table_name = $db_prefix . $table_name;
 
 	// First - no way do we touch SMF tables.
-	// Commented out for now.  We need to alter SMF tables in order to use this in the upgrade.
+	// Commented out for now. We need to alter SMF tables in order to use this in the upgrade.
 /*
  	if (in_array(strtolower($table_name), $reservedTables))
 		return false;

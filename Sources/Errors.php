@@ -34,8 +34,8 @@ if (!defined('SMF'))
 		- this is used for database connection error handling.
 		- loadavg means this is a load average problem, not a database error.
 
-	string log_error(string error_message, string error_type = general
-			string filename = none,	int line = none)
+	string log_error(string error_message, string error_type = general,
+			string filename = none, int line = none)
 		- logs an error, if error logging is enabled.
 		- depends on the enableErrorLogging setting.
 		- filename and line should be __FILE__ and __LINE__, respectively.
@@ -256,7 +256,7 @@ function error_handler($error_level, $error_string, $file, $line)
 	// Dying on these errors only causes MORE problems (blank pages!)
 	if ($file == 'Unknown')
 		return;
-		
+
 	// If this is an E_ERROR or E_USER_ERROR.... die.  Violently so.
 	if ($error_level % 255 == E_ERROR)
 		obExit(false);

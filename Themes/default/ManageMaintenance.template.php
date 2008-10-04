@@ -34,7 +34,7 @@ function template_maintain_database()
 				</form>
 			</td>
 		</tr>';
-	
+
 	// Show an option to convert to UTF-8 if we're not on UTF-8 yet.
 	if ($context['convert_utf8'])
 	{
@@ -169,7 +169,7 @@ function template_maintain_members()
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var warningMessage = \'\';
 		var membersSwap = false;
-		
+
 		function swapMembers()
 		{
 			membersSwap = !membersSwap;
@@ -185,7 +185,7 @@ function template_maintain_members()
 					membersForm.elements[i].checked = !membersSwap;
 			}
 		}
-		
+
 		function checkAttributeValidity()
 		{
 			origText = \'', $txt['reattribute_confirm'], '\';
@@ -308,7 +308,7 @@ function template_maintain_topics()
 		<tr class="windowbg">
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=topics;activity=pruneold" method="post" accept-charset="', $context['character_set'], '" id="rotForm">';
-				
+
 	// The otherwise hidden "choose which boards to prune".
 	echo '
 					<a name="rotLink"></a>', $txt['maintain_old_since_days1'], '<input type="text" name="maxdays" value="30" size="3" />', $txt['maintain_old_since_days2'], '<br />
@@ -387,7 +387,7 @@ function template_maintain_topics()
 			echo '
 						<option value="', $board['id'], '"> ', str_repeat('==', $board['child_level']), '=&gt;&nbsp;', $board['name'], '</option>';
 	}
-	
+
 	echo '
 					</select>
 					<label for="id_board_to">', $txt['move_topics_to'], '</label>

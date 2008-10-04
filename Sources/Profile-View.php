@@ -547,7 +547,7 @@ function showAttachments($memID)
 	$context['sort_order'] = isset($_GET['sort']) && isset($sortTypes[$_GET['sort']]) ? $_GET['sort'] : 'posted';
 	$context['sort_direction'] = isset($_GET['asc']) ? 'up' : 'down';
 
-	$sort =	$sortTypes[$context['sort_order']];
+	$sort = $sortTypes[$context['sort_order']];
 
 	// Let's get ourselves a lovely page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contributions;sa=attach;sort=' . $sort . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);

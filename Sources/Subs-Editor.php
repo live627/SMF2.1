@@ -778,19 +778,19 @@ function legalise_bbc($text)
 
 	// Right - we're going to start by going through the whole lot to make sure we don't have align stuff crossed as this happens load and is stupid!
 	$align_tags = array('left', 'center', 'right', 'pre');
-	
+
 	// Remove those align tags that are not valid.
 	$align_tags = array_intersect($align_tags, array_keys($valid_tags));
-		
+
 	// These keep track of where we are!
 	if (!empty($align_tags) && count($matches = preg_split('~(\\[/?(?:' . implode('|', $align_tags) . ')\\])~', $text, -1, PREG_SPLIT_DELIM_CAPTURE)) > 1)
 	{
 		// The first one is never a tag.
 		$isTag = false;
-		
+
 		// By default we're not inside a tag too.
 		$insideTag = null;
-		
+
 		foreach ($matches as $i => $match)
 		{
 			// We're only interested in tags, not text.
@@ -798,15 +798,15 @@ function legalise_bbc($text)
 			{
 				$isClosingTag = substr($match, 1, 1) === '/';
 				$tagName = substr($match, $isClosingTag ? 2 : 1, -1);
-				
+
 				// We're closing the exact same tag that we opened.
 				if ($isClosingTag && $insideTag === $tagName)
 					$insideTag = null;
-				
+
 				// We're opening a tag and we're not yet inside one either
 				elseif (!$isClosingTag && $insideTag === null)
 					$insideTag = $tagName;
-					
+
 				// In all other cases, this tag must be invalid
 				else
 					unset($matches[$i]);
@@ -815,11 +815,11 @@ function legalise_bbc($text)
 			// The next one is gonna be the other one.
 			$isTag = !$isTag;
 		}
-		
+
 		// We're still inside a tag and had no chance for closure?
 		if ($insideTag !== null)
 			$matches[] = '[/' . $insideTag . ']';
-		
+
 		// And a complete text string again.
 		$text = implode('', $matches);
 	}
@@ -846,17 +846,16 @@ function legalise_bbc($text)
 	{
 		// Start with just text.
 		$isTag = false;
-		
+
 		// Start outside [nobbc] or [code] blocks.
 		$inCode = false;
 		$inNoBbc = false;
-		
+
 		// A buffer containing all opened inline elements.
 		$inlineElements = array();
 
 		// A buffer containing all opened block elements.
 		$blockElements = array();
-
 
 		// $i: text, $i + 1: '[', $i + 2: '/', $i + 3: tag, $i + 4: tag tail.
 		for ($i = 0, $n = count($parts) - 1; $i < $n; $i += 5)
@@ -873,12 +872,12 @@ function legalise_bbc($text)
 				if ($inCode && $isClosingTag)
 				{
 					$inCode = false;
-					
+
 					// Reopen tags that were closed before the code block.
 					if (!empty($inlineElements))
 						$parts[$i + 4] .= '[' . implode('][', array_keys($inlineElements)) . ']';
 				}
-					
+
 				// We're outside a coding and nobbc block and opening it.
 				elseif (!$inCode && !$inNoBbc && $isOpeningTag)
 				{
@@ -888,14 +887,14 @@ function legalise_bbc($text)
 						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
 						//$inlineElements = array();
 					}
-					
+
 					$inCode = true;
 				}
-					
+
 				// Nothing further to do.
 				continue;
 			}
-			
+
 			// Special case: inside [nobbc] blocks any BBC is left untouched.
 			elseif ($tag === 'nobbc')
 			{
@@ -903,12 +902,12 @@ function legalise_bbc($text)
 				if ($inNoBbc && $isClosingTag)
 				{
 					$inNoBbc = false;
-					
+
 					// Some inline elements might've been closed that need reopening.
 					if (!empty($inlineElements))
 						$parts[$i + 4] .= '[' . implode('][', array_keys($inlineElements)) . ']';
 				}
-					
+
 				// We're outside a nobbc and coding block and opening it.
 				elseif (!$inNoBbc && !$inCode && $isOpeningTag)
 				{
@@ -918,28 +917,24 @@ function legalise_bbc($text)
 						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
 						//$inlineElements = array();
 					}
-					
+
 					$inNoBbc = true;
 				}
-					
+
 				continue;
 			}
-			
+
 			// So, we're inside one of the special blocks: ignore any tag.
 			elseif ($inCode || $inNoBbc)
 				continue;
-				
-			
-				
-			
-			
+
 			// We're dealing with an opening tag.
 			if ($isOpeningTag)
 			{
 				// Everyting inside the square brackets of the opening tag.
 				$elementContent = $parts[$i + 3] . substr($parts[$i + 4], 0, -1);
-				
-				// A block level opening tag.				
+
+				// A block level opening tag.
 				if ($isBlockLevelTag)
 				{
 					// Are there inline elements still open?
@@ -947,11 +942,11 @@ function legalise_bbc($text)
 					{
 						// Close all the inline tags, a block tag is coming...
 						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
-						
+
 						// Now open them again, we're inside the block tag now.
 						$parts[$i + 5] = '[' . implode('][', array_keys($inlineElements)) . ']' . $parts[$i + 5];
 					}
-					
+
 					$blockElements[] = $tag;
 				}
 
@@ -963,7 +958,7 @@ function legalise_bbc($text)
 					{
 						// Get rid of this tag.
 						$parts[$i + 1] = $parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
-						
+
 						// Now try to find the corresponding closing tag.
 						$curLevel = 1;
 						for ($j = $i + 5, $m = count($parts) - 1; $j < $m; $j += 5)
@@ -974,12 +969,12 @@ function legalise_bbc($text)
 								// If it's an opening tag, increase the level.
 								if ($parts[$j + 2] === '')
 									$curLevel++;
-									
+
 								// A closing tag, decrease the level.
 								else
 								{
 									$curLevel--;
-									
+
 									// Gotcha! Clean out this closing tag gone rogue.
 									if ($curLevel === 0)
 									{
@@ -990,14 +985,14 @@ function legalise_bbc($text)
 							}
 						}
 					}
-					
+
 					// Otherwise, add this one to the list.
 					else
 						$inlineElements[$elementContent] = $tag;
 				}
-				
+
 			}
-			
+
 			// Closing tag.
 			else 
 			{
@@ -1012,11 +1007,11 @@ function legalise_bbc($text)
 						{
 							if ($element === $tag)
 								break;
-								
+
 							// Still a block tag was open not equal to this tag.
 							$addClosingTags[] = $element['type'];
 						}
-						
+
 						if (!empty($addClosingTags))
 							$parts[$i + 1] = '[/' . implode('][/', array_reverse($addClosingTags)) . ']' . $parts[$i + 1];
 
@@ -1035,19 +1030,18 @@ function legalise_bbc($text)
 						$parts[$i + 1] = $parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
 						continue;
 					}
-					
+
 					// Inline elements are still left opened?
 					if (!empty($inlineElements))
 					{
 						// Close them first..
 						$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
-						
+
 						// Then reopen them.
 						$parts[$i + 5] = '[' . implode('][', array_keys($inlineElements)) . ']' . $parts[$i + 5];
 					}
 					
 				}
-				
 				// Inline tag.
 				else
 				{
@@ -1058,11 +1052,11 @@ function legalise_bbc($text)
 						{
 							// Closing it one way or the other.
 							unset($inlineElements[$tagContentToBeClosed]);
-							
+
 							// Was this the tag we were looking for?
 							if ($tagToBeClosed === $tag)
 								break;
-								
+
 							// Nope, close it and look further!
 							else
 								$parts[$i] .= '[/' . $tagToBeClosed . ']';
@@ -1075,23 +1069,23 @@ function legalise_bbc($text)
 				}
 			}
 		}
-		
+
 		// Close the code tags.
 		if ($inCode)
 			$parts[$i] .= '[/code]';
-			
+
 		// The same for nobbc tags.
 		elseif ($inNoBbc)
 			$parts[$i] .= '[/nobbc]';
-		
+
 		// Still inline tags left unclosed? Close them now, better late than never.
 		elseif (!empty($inlineElements))
 			$parts[$i] .= '[/' . implode('][/', array_reverse($inlineElements)) . ']';
-		
+
 		// Now close the block elements.
 		if (!empty($blockElements))
 			$parts[$i] .= '[/' . implode('][/', array_reverse($blockElements)) . ']';
-	
+
 		$text = implode('', $parts);
 	}
 

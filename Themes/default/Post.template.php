@@ -557,7 +557,7 @@ function template_main()
 		if (!empty($context['attachment_restrictions']))
 			echo '
 									', $txt['attach_restrictions'], ' ', implode(', ', $context['attachment_restrictions']), '.<br />';
-			
+
 		if (!$context['can_post_attachment_unapproved'])
 			echo '
 									<span style="color: red;">', $txt['attachment_requires_approval'], '</span><br />';

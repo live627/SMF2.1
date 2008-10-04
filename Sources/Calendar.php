@@ -395,7 +395,8 @@ function clock()
 	elseif (!$omfg && !isset($_REQUEST['time']))
 	{
 		$context['sub_template'] = 'hms';
-		$context['clockicons'] = unserialize(base64_decode('YTozOntzOjE6ImgiO2E6NTp7aTowO2k6MTY7aToxO2k6ODtpOjI7aTo0O2k6MztpOjI7aTo0O2k6MTt9czoxOiJtIjthOjY6e2k6MDtpOjMyO2k6MTtpOjE2O2k6MjtpOjg7aTozO2k6NDtpOjQ7aToyO2k6NTtpOjE7fXM6MToicyI7YTo2OntpOjA7aTozMjtpOjE7aToxNjtpOjI7aTo4O2k6MztpOjQ7aTo0O2k6MjtpOjU7aToxO319'));	}
+		$context['clockicons'] = unserialize(base64_decode('YTozOntzOjE6ImgiO2E6NTp7aTowO2k6MTY7aToxO2k6ODtpOjI7aTo0O2k6MztpOjI7aTo0O2k6MTt9czoxOiJtIjthOjY6e2k6MDtpOjMyO2k6MTtpOjE2O2k6MjtpOjg7aTozO2k6NDtpOjQ7aToyO2k6NTtpOjE7fXM6MToicyI7YTo2OntpOjA7aTozMjtpOjE7aToxNjtpOjI7aTo4O2k6MztpOjQ7aTo0O2k6MjtpOjU7aToxO319'));
+	}
 	elseif ($omfg)
 	{
 		$context['sub_template'] = 'omfg';
