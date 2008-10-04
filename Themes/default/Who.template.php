@@ -100,7 +100,7 @@ function template_credits()
 	// The most important part - the credits :P.
 	echo '
 	<div class="tborder windowbg2" id="credits">
-		<h3>', $txt['credits'], '</h3>';
+		<h3 class="headerpadding">', $txt['credits'], '</h3>';
 
 	foreach ($context['credits'] as $section)
 	{
@@ -110,7 +110,7 @@ function template_credits()
 
 		if (isset($section['title']))
 			echo '
-		<h4>', $section['title'], '</h4>';
+		<h4 class="marginbottom">', $section['title'], '</h4>';
 
 		echo '
 		<ul class="normallist">';
@@ -118,7 +118,7 @@ function template_credits()
 		foreach ($section['groups'] as $group)
 		{
 			echo '
-			<li>';
+			<li class="smallpadding">';
 
 			if (isset($group['title']))
 			echo '
@@ -145,8 +145,8 @@ function template_credits()
 	}
 
 	echo '
-		<h3>', $txt['credits_copyright'], '</h3>
-		<h4>', $txt['credits_forum'], '</h4>', '
+		<h3 class="headerpadding">', $txt['credits_copyright'], '</h3>
+		<h4 class="margintop">', $txt['credits_forum'], '</h4>', '
 		<p>', $context['copyrights']['smf'];
 
 	if (!empty($context['copyright_removal_validate']))

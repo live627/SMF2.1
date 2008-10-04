@@ -3,6 +3,33 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC1                                                                  ???
 ================================================================================
+October 2008
+--------------------------------------------------------------------------------
+ ! Paid subscription reminder emails could have HTML tags in them. (ScheduledTasks.php) [Bug 2621]
+ ! With lots of themes installed but not all visible, admins might not see the whole game. (Themes.php) [Bug 2440]
+ ! Tracking users had an error in PostgreSQL. (Profile-View.php) [Bug 2623]
+ ! The who's online page was sometimes picking the wrong strings. (Who.php) [Bug 2616]
+ & Help language file was corrupt somehow. (Help language file) [Bug 2609]
+ ! Reattributing posts wasn't properly escaping a language string. (ManageMaintenance template) [Bug 2599]
+ ! Expand the list of IP addresses associated with whois servers. (Profile-View.php) [Bug 2602]
+ & Fixed a few minor typos. (Help, EmailTemplates, ManagePermissions language files) [Bug 2601]
+ * Classic theme was fetching on2.gif, which sn't used in that theme (Classic BoardIndex template) [Bug 2327]
+ ! Languages with agreements in them wouldn't install. (ManageServer.php) [Bug 2622]
+ ! Give more information with a database error. (Subs-Db-xxxxx.php) [Bug 2582]
+ ! Repairing the forum could fail on fixing missing topics. (RepairBoards.php) [Bug 2624]
+ ! In rare cases, uploading an avatar could get SMF stuck in an infinite loop. (Subs-Graphics.php)
+ ! Try stop spiders indexing verification stuff. (Register and GenericControls templates) [Bug 2626]
+ ! Minor typo in ManagePaid. (ManagePaid.php) [Bug 2628]
+ ! Protection stopping people making themselves admins wasn't quite what was required. (Profile-Modify.php) [Bug 2632]
+ ! When a package wants to redirect handle the situation where they don't provide their own text. (Packages.php) [Bug 2631]
+ ! Don't rewrite line breaks on files that we think are unicode. (Display.php) [Bug 2627]
+ ! When deleting a board make sure any boards using it are reset. (Themes.php) [Bug 2473]
+ ! Make sure admin help can only take a string. (Help.php) [Bug 1273]
+ ! Don't allow ourselves to try to send notifications if the topics gone missing. (Subs-Post.php) [Bug 2408]
+ ! Restoring a message from the recycle bin could through a database error if it was going to be a last message. (RemoveTopic.php) [Bug 2413]
+ ! Load the new profile stylesheet when in the profile section. (Profile.php) [Feature 2634]
+ * Add some extra padding to the credits template. (Who template)
+
 September 2008
 --------------------------------------------------------------------------------
  ! A couple of additional changes were needed now that inet_aton() returns 8-bit integers (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
@@ -46,28 +73,6 @@ September 2008
  ! Sometimes the number of unread messages might be cached and calculated wrong for personal messages. (PersonalMessage.php) [Bug 2580]
  ! Allow admins to enable the sidebar for all members. (Settings template)
  * Changed license.txt in all theme folders from Lewis Media to Simple Machines LLC. 
- ! Paid subscription reminder emails could have HTML tags in them. (ScheduledTasks.php) [Bug 2621]
- ! With lots of themes installed but not all visible, admins might not see the whole game. (Themes.php) [Bug 2440]
- ! Tracking users had an error in PostgreSQL. (Profile-View.php) [Bug 2623]
- ! The who's online page was sometimes picking the wrong strings. (Who.php) [Bug 2616]
- & Help language file was corrupt somehow. (Help language file) [Bug 2609]
- ! Reattributing posts wasn't properly escaping a language string. (ManageMaintenance template) [Bug 2599]
- ! Expand the list of IP addresses associated with whois servers. (Profile-View.php) [Bug 2602]
- & Fixed a few minor typos. (Help, EmailTemplates, ManagePermissions language files) [Bug 2601]
- * Classic theme was fetching on2.gif, which sn't used in that theme (Classic BoardIndex template) [Bug 2327]
- ! Languages with agreements in them wouldn't install. (ManageServer.php) [Bug 2622]
- ! Give more information with a database error. (Subs-Db-xxxxx.php) [Bug 2582]
- ! Repairing the forum could fail on fixing missing topics. (RepairBoards.php) [Bug 2624]
- ! In rare cases, uploading an avatar could get SMF stuck in an infinite loop. (Subs-Graphics.php)
- ! Try stop spiders indexing verification stuff. (Register and GenericControls templates) [Bug 2626]
- ! Minor typo in ManagePaid. (ManagePaid.php) [Bug 2628]
- ! Protection stopping people making themselves admins wasn't quite what was required. (Profile-Modify.php) [Bug 2632]
- ! When a package wants to redirect handle the situation where they don't provide their own text. (Packages.php) [Bug 2631]
- ! Don't rewrite line breaks on files that we think are unicode. (Display.php) [Bug 2627]
- ! When deleting a board make sure any boards using it are reset. (Themes.php) [Bug 2473]
- ! Make sure admin help can only take a string. (Help.php) [Bug 1273]
- ! Don't allow ourselves to try to send notifications if the topics gone missing. (Subs-Post.php) [Bug 2408]
- ! Restoring a message from the recycle bin could through a database error if it was going to be a last message. (RemoveTopic.php) [Bug 2413]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
