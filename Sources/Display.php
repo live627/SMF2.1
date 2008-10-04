@@ -1308,12 +1308,20 @@ function Download()
 	// For text files.....
 	if (!isset($_REQUEST['image']) && in_array($file_ext, array('txt', 'css', 'htm', 'html', 'php', 'xml')))
 	{
-		if (strpos($_SERVER['HTTP_USER_AGENT'], 'Windows') !== false)
-			$callback = create_function('$buffer', 'return preg_replace(\'~[\r]?\n~\', "\r\n", $buffer);');
-		elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false)
-			$callback = create_function('$buffer', 'return preg_replace(\'~[\r]?\n~\', "\r", $buffer);');
-		else
-			$callback = create_function('$buffer', 'return preg_replace(\'~\r~\', "\r\n", $buffer);');
+		// We need to check this isn't unicode before we start messing around with it!
+		$fp = fopen($filename, 'rb');
+		$header = fread($fp, 2);
+		fclose($fp);
+
+		if ($header != chr(255).chr(254) && $header != chr(254).chr(255))
+		{
+			if (strpos($_SERVER['HTTP_USER_AGENT'], 'Windows') !== false)
+				$callback = create_function('$buffer', 'return preg_replace(\'~[\r]?\n~\', "\r\n", $buffer);');
+			elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false)
+				$callback = create_function('$buffer', 'return preg_replace(\'~[\r]?\n~\', "\r", $buffer);');
+			else
+				$callback = create_function('$buffer', 'return preg_replace(\'~\r~\', "\r\n", $buffer);');
+		}
 	}
 
 	// Since we don't do output compression for files this large...

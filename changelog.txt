@@ -63,6 +63,7 @@ September 2008
  ! Minor typo in ManagePaid. (ManagePaid.php) [Bug 2628]
  ! Protection stopping people making themselves admins wasn't quite what was required. (Profile-Modify.php) [Bug 2632]
  ! When a package wants to redirect handle the situation where they don't provide their own text. (Packages.php) [Bug 2631]
+ ! Don't rewrite line breaks on files that we think are unicode. (Display.php) [Bug 2627]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008
