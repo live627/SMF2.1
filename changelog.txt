@@ -29,6 +29,8 @@ October 2008
  ! Restoring a message from the recycle bin could through a database error if it was going to be a last message. (RemoveTopic.php) [Bug 2413]
  ! Load the new profile stylesheet when in the profile section. (Profile.php) [Feature 2634]
  * Add some extra padding to the credits template. (Who template)
+ ! Settings pages could have invalid XHTML. (Admin template) [Bug 2454]
+
 
 September 2008
 --------------------------------------------------------------------------------

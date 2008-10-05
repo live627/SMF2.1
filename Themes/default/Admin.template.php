@@ -873,7 +873,7 @@ function template_show_settings()
 		}
 
 		echo '
-						<tr class="windowbg2" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>';
+						<tr class="windowbg2"', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
 
 		if (is_array($config_var))
 		{
