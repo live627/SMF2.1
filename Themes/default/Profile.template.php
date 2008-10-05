@@ -7,7 +7,6 @@ function template_profile_above()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/profile.css" />
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
 }
 
@@ -163,13 +162,16 @@ function template_summary()
 	{
 		echo '	
 				<dt>', $txt['profile_warning_level'], ': </dt>
-				<dd><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning">', $context['member']['warning'], '%</a>';
+				<dd>
+					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning">', $context['member']['warning'], '%</a>';
 
 		// Can we provide information on what this means?
 		if (!empty($context['warning_status']))
-			echo '<span class="smalltext">(', $context['warning_status'], ')</span>';
+			echo '
+					<span class="smalltext">(', $context['warning_status'], ')</span>';
 
-		echo '</dd>';
+		echo '
+				</dd>';
 	}
 	
 	// Is this member requiring activation and/or banned?
