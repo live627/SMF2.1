@@ -174,7 +174,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$done_primary = true;
 			continue;
 		}
-		elseif (isset($column['default']) && $column['default'] != null)
+		elseif (isset($column['default']) && $column['default'] !== null)
 			$default = 'default \'' . $column['default'] . '\'';
 		else
 			$default = '';

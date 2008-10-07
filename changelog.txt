@@ -30,6 +30,7 @@ October 2008
  ! Load the new profile stylesheet when in the profile section. (Profile.php) [Feature 2634]
  * Add some extra padding to the credits template. (Who template)
  ! Settings pages could have invalid XHTML. (Admin template) [Bug 2454]
+ ! SQLite wasn't setting default values right. (DbPackages-sqlite.php) [Bug 2646]
 
 
 September 2008
