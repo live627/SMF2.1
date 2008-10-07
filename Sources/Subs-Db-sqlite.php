@@ -530,7 +530,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 				);
 
 				// Make a note that the replace actually overwrote.
-				if (smf_db_affected_rows() != 0)
+				if ($smcFunc['db_affected_rows']() != 0)
 					unset($data[$k]);
 			}
 	}
