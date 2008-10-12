@@ -42,10 +42,10 @@ function createMenu($menuData, $menuOptions = array())
 			array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 			array(
 				array(
-					'id_member' => $user_info['id'],
-					'id_theme' => $settings['theme_id'],
-					'variable' => 'use_sidebar_menu',
-					'value' => empty($options['use_sidebar_menu']) ? '1' : '0',
+					$user_info['id'],
+					$settings['theme_id'],
+					'use_sidebar_menu',
+					empty($options['use_sidebar_menu']) ? '1' : '0',
 				),
 			),
 			array('id_member', 'id_theme', 'variable')
