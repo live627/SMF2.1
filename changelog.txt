@@ -31,6 +31,7 @@ October 2008
  * Add some extra padding to the credits template. (Who template)
  ! Settings pages could have invalid XHTML. (Admin template) [Bug 2454]
  ! SQLite wasn't setting default values right. (DbPackages-sqlite.php) [Bug 2646]
+ ! Make sure to use the proper unescape function if the magic_quotes_sybase directive is enabled. (QueryString.php) [Bug 2661]
 
 
 September 2008
