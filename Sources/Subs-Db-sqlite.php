@@ -504,13 +504,13 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		{
 			// Are we restricting the length?
 			if (strpos($type, 'string-') !== false)
-				$actualType = sprintf($columnName . ' = SUBSTR({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
+				$actualType = sprintf($columnName . ' = SUBSTR({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
 			else
-				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
+				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $columnName);
 
 			// If it's a key we don't actally update it.
 			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND ') . substr($actualType,0, -2);
+				$where .= (empty($where) ? '' : ' AND ') . substr($actualType, 0, -2);
 			else
 				$updateData .= $actualType;
 
