@@ -68,6 +68,10 @@ function ModifyProfile($post_errors = array())
 	list ($memID) = $memberResult;
 	$context['id_member'] = $memID;
 	$cur_profile = $user_profile[$memID];
+	
+	// Let's have some information about this member ready, too.
+	loadMemberContext($memID);
+	$context['member'] = $memberContext[$memID];
 
 	// Is this the profile of the user himself or herself?
 	$context['user']['is_owner'] = $memID == $user_info['id'];
@@ -108,7 +112,6 @@ function ModifyProfile($post_errors = array())
 					'label' => $txt['statPanel'],
 					'file' => 'Profile-View.php',
 					'function' => 'statPanel',
-					'load_member' => true,
 					'permission' => array(
 						'own' => 'profile_view_own',
 						'any' => 'profile_view_any',
@@ -118,7 +121,6 @@ function ModifyProfile($post_errors = array())
 					'label' => $txt['showContributions'],
 					'file' => 'Profile-View.php',
 					'function' => 'showPosts',
-					'load_member' => true,
 					'subsections' => array(
 						'posts' => array($txt['showPosts'], 'profile_view_any'),
 						'topics' => array($txt['showTopics'], 'profile_view_any'),
@@ -354,13 +356,6 @@ function ModifyProfile($post_errors = array())
 				if (!empty($area['validate']))
 					$security_checks['validate'] = true;
 
-				// Load this user's data?
-				if (!empty($area['load_member']))
-				{
-					loadMemberContext($memID);
-					$context['member'] = $memberContext[$memID];
-				}
-
 				// Need to include the file?
 				if (!empty($section['include']))
 					$include_file = $section['include'];
@@ -508,7 +503,6 @@ function ModifyProfile($post_errors = array())
 			if (empty($post_errors))
 			{
 				deleteAccount2($profile_vars, $post_errors, $memID);
-
 				redirectexit();
 			}
 		}

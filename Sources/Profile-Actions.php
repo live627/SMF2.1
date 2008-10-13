@@ -566,10 +566,7 @@ function subscriptions($memID)
 
 	// No gateways yet?
 	if (empty($gateways))
-	{
-		destroyMenu($context['profile_menu_id']);
 		fatal_error($txt['paid_admin_not_setup_gateway']);
-	}
 
 	// Get the current subscriptions.
 	$request = $smcFunc['db_query']('', '

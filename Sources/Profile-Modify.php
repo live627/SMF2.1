@@ -1860,7 +1860,7 @@ function notification($memID)
 	createList($listOptions);
 
 	// What options are set?
-	$context['member'] = array(
+	$context['member'] += array(
 		'notify_announcements' => $user_profile[$memID]['notify_announcements'],
 		'notify_send_body' => $user_profile[$memID]['notify_send_body'],
 		'notify_types' => $user_profile[$memID]['notify_types'],
@@ -2188,7 +2188,7 @@ function profileLoadGroups()
 	}
 	$smcFunc['db_free_result']($request);
 
-	$context['member']['group'] = $user_settings['id_group'];
+	$context['member']['group_id'] = $user_settings['id_group'];
 
 	return true;
 }
@@ -2237,9 +2237,7 @@ function profileLoadAvatarData()
 	$context['avatar_url'] = $modSettings['avatar_url'];
 
 	// Default context.
-	$context['member']['avatar'] = array(
-		'name' => $cur_profile['avatar'],
-		'href' => empty($cur_profile['id_attach']) ? '' : (empty($cur_profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $cur_profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $cur_profile['filename']),
+	$context['member']['avatar'] += array(
 		'custom' => stristr($cur_profile['avatar'], 'http://') ? $cur_profile['avatar'] : 'http://',
 		'selection' => $cur_profile['avatar'] == '' || stristr($cur_profile['avatar'], 'http://') ? '' : $cur_profile['avatar'],
 		'id_attach' => $cur_profile['id_attach'],

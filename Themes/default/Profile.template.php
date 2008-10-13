@@ -64,7 +64,7 @@ function template_summary()
 					
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '			
-				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '.</a><br />';
+				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '</a><br />';
 	echo '
 				<a href="', $scripturl, '?action=profile;area=contributions;u=', $context['id_member'], '">', $txt['showContributions'], '</a><br />
 				<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '">', $txt['statPanel'], '</a>
@@ -2158,7 +2158,7 @@ function template_profile_group_manage()
 									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
 								</td>
 								<td>
-									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
+									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group_id'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
 		// Fill the select box with all primary member groups that can be assigned to a member.
 		foreach ($context['member_groups'] as $member_group)
 			if (!empty($member_group['can_be_primary']))
