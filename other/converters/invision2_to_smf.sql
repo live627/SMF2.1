@@ -306,27 +306,33 @@ GROUP BY mt_msg_id, mt_to_id;
 --- Converting personal messages (step 3)...
 /******************************************************************************/
 
+---* {$to_prefix}pm_recipients
 ---{
-$request = convert_query("
-	SELECT pm.id_pm
-	FROM {$to_prefix}personal_messages AS pm
-		INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = pm.id_pm && m.mt_vid_folder = 'sent')");
-while ($row = convert_fetch_row($request))
-	convert_query("
-		UPDATE {$to_prefix}personal_messages
-		SET deleted_by_sender = '0'
-		WHERE id_pm = $row[id_pm]");
-
-$request = convert_query("
-	SELECT pm.id_pm
-	FROM {$to_prefix}pm_recipients AS r
-		INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = r.id_pm && m.mt_vid_folder != 'sent')");
-while ($row = convert_fetch_row($request))
-	convert_query("
-		UPDATE {$to_prefix}personal_messages
+$no_add = true;
+convert_query("
+		UPDATE {$to_prefix}pm_recipients AS pm
 		SET deleted = '0'
-		WHERE id_pm = $row[id_pm]");
+		WHERE id_pm = " . $row['id_pm']);
 ---}
+SELECT r.id_pm, m.mt_vid_folder AS folder
+FROM {$to_prefix}pm_recipients AS r
+	INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = r.id_pm)
+WHERE m.mt_vid_folder != 'sent';
+---*
+
+---* {$to_prefix}pm_recipients
+---{
+$no_add = true;
+convert_query("
+	UPDATE {$to_prefix}personal_messages
+	SET deleted_by_sender = '0'
+		WHERE id_pm = " . $row['id_pm']);
+---}
+SELECT pm.id_pm, m.mt_vid_folder AS folder
+FROM {$to_prefix}personal_messages AS pm
+	INNER JOIN {$from_prefix}message_topics AS m ON (m.mt_msg_id = pm.id_pm)
+WHERE m.mt_vid_folder = 'sent';
+---*
 
 /******************************************************************************/
 --- Converting topic notifications...
@@ -436,7 +442,7 @@ while (true)
 		if ($row['id_group'] > 5)
 		{
 			convert_insert('membergroups', array('id_group', 'group_name', 'max_messages', 'online_color', 'stars'),
-				array($row[id_group] + 3, $row[group_name], $row[max_messages], '', ''));
+				array($row[id_group] + 3, $row[group_name], $row[max_messages], '', ''), 'insert ignore');
 			$groupID = $row['id_group'] + 3;
 		}
 		else

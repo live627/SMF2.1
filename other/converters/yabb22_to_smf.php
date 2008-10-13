@@ -913,7 +913,7 @@ return;
 						'icon' => substr($message[5], 0, 16),
 						'poster_ip' => substr($message[7], 0, 255),
 						'body' => substr(preg_replace('~\[quote author=.+? link=.+?\]~i', '[quote]', $message[8]), 0, 65534),
-						'smileys_enabled' => (int) !empty($message[9]) ? 1 : 0,
+						'smileys_enabled' => empty($message[9]) ? 1 : 0,
 						'modified_time' => !empty($message[10]) ? $message[10] : 0,
 						'modified_name' => substr($message[11], 0, 255),
 					);
@@ -1035,9 +1035,9 @@ return;
 			$attachments = array();
 
 			$result = convert_query("
-				SELECT m.id_msg, con.temp
+				SELECT m.id_msg, con.real_id as temp_filename
 				FROM {$to_prefix}messages AS m
-					INNER JOIN {$to_prefix}convert AS con ON (con.real_id = CONCAT(m.poster_time, ':', m.poster_name))
+					INNER JOIN {$to_prefix}convert AS con ON (con.temp = CONCAT(m.poster_time, ':', m.poster_name))
 				WHERE con.type = 'msg_attach'
 				LIMIT $_GET[substep], $block_size");
 			while ($row = mysql_fetch_assoc($result))

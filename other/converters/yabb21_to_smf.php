@@ -288,7 +288,7 @@ if (empty($preparsing))
 
 			$row = array(
 				'member_name' => substr(htmlspecialchars(trim($name)), 0, 80),
-				'passwd' => strlen($data['password']) == 22 ? bin2hex(base64_decode($data['password'])) : md5($data['password']),
+				'passwd' => strlen($data['password']) == 22 ? implode('', unpack('H*', base64_decode($data['password']))) : $data['password'],
 				'real_name' => htmlspecialchars($data['realname']),
 				'email_address' => htmlspecialchars($data['email']),
 				'website_title' => isset($data['website']) ? htmlspecialchars($data['webtitle']) : '',
