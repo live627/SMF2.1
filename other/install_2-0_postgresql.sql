@@ -86,6 +86,10 @@ CREATE OR REPLACE FUNCTION CONCAT (text, text) RETURNS text AS
   'SELECT $1 || $2 AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION INSTR (text, text) RETURNS boolean AS
+  'SELECT (POSITION($2 in $1) != 0) AS result'
+LANGUAGE 'sql';
+
 #
 # Create PostgreSQL operators.
 #

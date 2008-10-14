@@ -5,6 +5,7 @@ SMF 2.0 RC1                                                                  ???
 ================================================================================
 October 2008
 --------------------------------------------------------------------------------
+ ! PostgreSQL doesn't have instr() (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 2657]
  ! Paid subscription reminder emails could have HTML tags in them. (ScheduledTasks.php) [Bug 2621]
  ! With lots of themes installed but not all visible, admins might not see the whole game. (Themes.php) [Bug 2440]
  ! Tracking users had an error in PostgreSQL. (Profile-View.php) [Bug 2623]

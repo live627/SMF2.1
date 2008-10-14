@@ -497,3 +497,12 @@ LANGUAGE 'sql';
 ALTER TABLE {$db_prefix}log_online
 ALTER COLUMN ip TYPE int8;
 ---#
+
+/*****************************************************************************/
+--- Adding additional functions
+/*****************************************************************************/
+
+---# Adding instr()
+CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS boolean AS
+  'SELECT (POSITION($2 IN $1) != 0) AS result'
+LANGUAGE 'sql';
