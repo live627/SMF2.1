@@ -34,6 +34,7 @@ October 2008
  ! SQLite wasn't setting default values right. (DbPackages-sqlite.php) [Bug 2646]
  ! Make sure to use the proper unescape function if the magic_quotes_sybase directive is enabled. (QueryString.php) [Bug 2661]
  ! Toggling the menu wasn't working properly with SQLite. (Subs-Menu.php) [Bug 2635]
+ ! Opera and IE appear to prefer octetstream over octet-stream. (Display.php) [Bug 2652]
 
 
 September 2008
