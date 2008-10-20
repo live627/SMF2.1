@@ -154,6 +154,15 @@ function ModifyProfile($post_errors = array())
 						'any' => 'moderate_forum',
 					),
 				),
+				'viewwarning' => array(
+					'file' => 'Profile-View.php',
+					'function' => 'viewWarning',
+					'select' => 'summary',
+					'permission' => array(
+						'own' => array('profile_view_own'),
+						'any' => array('profile_view_any'),
+					),
+				),
 			),
 		),
 		'edit_profile' => array(
@@ -312,7 +321,7 @@ function ModifyProfile($post_errors = array())
 					'file' => 'Profile-Actions.php',
 					'function' => 'activateAccount',
 					'sc' => 'get',
-					'hidden' => true,
+					'select' => 'summary',
 					'permission' => array(
 						'own' => array(),
 						'any' => array('moderate_forum'),
@@ -329,6 +338,7 @@ function ModifyProfile($post_errors = array())
 	$context['password_areas'] = array();
 	$security_checks = array();
 	$include_file = false;
+
 	foreach ($profile_areas as $section_id => $section)
 	{
 		// Not even enabled?
@@ -357,8 +367,8 @@ function ModifyProfile($post_errors = array())
 					$security_checks['validate'] = true;
 
 				// Need to include the file?
-				if (!empty($section['include']))
-					$include_file = $section['include'];
+				if (!empty($area['file']))
+					$include_file = $area['file'];
 			}
 
 			// Can we do this?
@@ -370,7 +380,7 @@ function ModifyProfile($post_errors = array())
 				if ($defaultAction === false)
 				{
 					$defaultAction = $area_id;
-					$defaultInclude = !empty($section['include']) ? $section['include'] : false;
+					$defaultInclude = !empty($area['file']) ? $area['file'] : false;
 				}
 				// Password required - only if not on OpenID.
 				if (!empty($area['password']) && empty($cur_profile['openid_uri']))
@@ -415,7 +425,6 @@ function ModifyProfile($post_errors = array())
 			'u' => $context['id_member'],
 		),
 	);
-
 	// Actually create the menu!
 	$profile_include_data = createMenu($profile_areas, $menuOptions);
 	unset($profile_areas);

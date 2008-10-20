@@ -71,6 +71,9 @@ if (!defined('SMF'))
 
 	void showPermissions(int id_member)
 		// !!!
+
+	void viewWarning(int id_member)
+		// !!!
 */
 
 // View a summary.
@@ -90,6 +93,7 @@ function summary($memID)
 		'can_issue_warning' => allowedTo('issue_warning') && $modSettings['warning_settings']{0} == 1,
 	);
 	$context['member'] = &$memberContext[$memID];
+	$context['can_view_warning'] = (allowedTo('issue_warning') && !$context['user']['is_owner']) || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $context['user']['is_owner']));
 
 	// Are there things we don't show?
 	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
@@ -1790,6 +1794,100 @@ function showPermissions($memID)
 		$context['member']['permissions']['board'][$row['permission']]['is_denied'] |= empty($row['add_deny']);
 	}
 	$smcFunc['db_free_result']($request);
+}
+
+// View a members warnings?
+function viewWarning($memID)
+{
+	global $modSettings, $context, $sourcedir, $txt, $scripturl;
+
+	// Firstly, can we actually even be here?
+	if (!allowedTo('issue_warning') && (empty($modSettings['warning_show']) || ($modSettings['warning_show'] == 1 && !$context['user']['is_owner'])))
+		fatal_lang_error('no_access');
+
+	// Let's use a generic list to get all the current warnings, and use the issue warnings grab-a-granny thing.
+	require_once($sourcedir . '/Subs-List.php');
+	require_once($sourcedir . '/Profile-Actions.php');
+
+	$listOptions = array(
+		'id' => 'view_warnings',
+		'title' => $txt['profile_viewwarning_previous_warnings'],
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['profile_viewwarning_no_warnings'],
+		'base_href' => $scripturl . '?action=profile;area=viewwarning;sa=user;u=' . $memID,
+		'default_sort_col' => 'log_time',
+		'get_items' => array(
+			'function' => 'list_getUserWarnings',
+			'params' => array(
+				$memID,
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getUserWarningCount',
+			'params' => array(
+				$memID,
+			),
+		),
+		'columns' => array(
+			'log_time' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_time'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'lc.log_time DESC',
+					'reverse' => 'lc.log_time',
+				),
+			),
+			'reason' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_reason'],
+					'style' => 'width: 50%',
+				),
+				'data' => array(
+					'db' => 'reason',
+				),
+			),
+			'level' => array(
+				'header' => array(
+					'value' => $txt['profile_warning_previous_level'],
+				),
+				'data' => array(
+					'db' => 'counter',
+				),
+				'sort' => array(
+					'default' => 'lc.counter DESC',
+					'reverse' => 'lc.counter',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'after_title',
+				'value' => '<span class="smalltext">' . $txt['profile_viewwarning_desc'] . '</span>',
+				'class' => 'windowbg',
+				'style' => 'padding: 2ex;',
+			),
+		),
+	);
+
+	// Create the list for viewing.
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	// Create some common text bits for the template.
+	$context['level_effects'] = array(
+		0 => '',
+		$modSettings['warning_watch'] => $txt['profile_warning_effect_watch'],
+		$modSettings['warning_moderate'] => $txt['profile_warning_effect_moderation'],
+		$modSettings['warning_mute'] => $txt['profile_warning_effect_mute'],
+	);
+	$context['current_level'] = 0;
+	foreach ($context['level_effects'] as $limit => $dummy)
+		if ($context['member']['warning'] >= $limit)
+			$context['current_level'] = $limit;
 }
 
 ?>

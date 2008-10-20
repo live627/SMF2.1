@@ -264,18 +264,7 @@ function issueWarning($memID)
 			$context['current_level'] = $limit;
 
 	// Load up all the old warnings - count first!
-	$request = $smcFunc['db_query']('', '
-		SELECT COUNT(*)
-		FROM {db_prefix}log_comments
-		WHERE id_recipient = {int:selected_member}
-			AND comment_type = {string:warning}',
-		array(
-			'selected_member' => $memID,
-			'warning' => 'warning',
-		)
-	);
-	list ($context['total_warnings']) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
+	$context['total_warnings'] = list_getUserWarningCount($memID);
 
 	// Make the page index.
 	$context['start'] = (int) $_REQUEST['start'];
@@ -283,35 +272,7 @@ function issueWarning($memID)
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=issuewarning', $context['start'], $context['total_warnings'], $perPage);
 
 	// Now do the data itself.
-	$request = $smcFunc['db_query']('', '
-		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
-			lc.log_time, lc.body, lc.counter, lc.id_notice
-		FROM {db_prefix}log_comments AS lc
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
-		WHERE lc.id_recipient = {int:selected_member}
-			AND lc.comment_type = {string:warning}
-		ORDER BY log_time DESC
-		LIMIT ' . $context['start'] . ', ' . $perPage,
-		array(
-			'selected_member' => $memID,
-			'warning' => 'warning',
-		)
-	);
-	$context['previous_warnings'] = array();
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		$context['previous_warnings'][] = array(
-			'issuer' => array(
-				'id' => $row['id_member'],
-				'link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
-			),
-			'time' => timeformat($row['log_time']),
-			'reason' => $row['body'],
-			'counter' => $row['counter'] > 0 ? '+' . $row['counter'] : $row['counter'],
-			'id_notice' => $row['id_notice'],
-		);
-	}
-	$smcFunc['db_free_result']($request);
+	$context['previous_warnings'] = list_getUserWarnings($context['start'], $perPage, 'log_time DESC', $memID);
 
 	// Are they warning because of a message?
 	if (isset($_REQUEST['msg']) && 0 < (int) $_REQUEST['msg'])
@@ -381,6 +342,65 @@ function issueWarning($memID)
 	foreach ($context['notification_templates'] as $k => $name)
 		$context['notification_templates'][$k]['body'] = strtr($name['body'], array('{MEMBER}' => $context['member']['name'], '{MESSAGE}' => '[url=' . $scripturl . '?msg=' . $context['warning_for_message'] . ']' . $context['warned_message_subject'] . '[/url]', '{SCRIPTURL}' => $scripturl, '{FORUMNAME}' => $mbname, '{REGARDS}' => $txt['regards_team']));
 
+}
+
+// Get the number of warnings a user has.
+function list_getUserWarningCount($memID)
+{
+	global $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT COUNT(*)
+		FROM {db_prefix}log_comments
+		WHERE id_recipient = {int:selected_member}
+			AND comment_type = {string:warning}',
+		array(
+			'selected_member' => $memID,
+			'warning' => 'warning',
+		)
+	);
+	list ($total_warnings) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	return $total_warnings;
+}
+
+// Get the data about a users warnings.
+function list_getUserWarnings($start, $items_per_page, $sort, $memID)
+{
+	global $smcFunc, $scripturl;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
+			lc.log_time, lc.body, lc.counter, lc.id_notice
+		FROM {db_prefix}log_comments AS lc
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+		WHERE lc.id_recipient = {int:selected_member}
+			AND lc.comment_type = {string:warning}
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+			'selected_member' => $memID,
+			'warning' => 'warning',
+		)
+	);
+	$previous_warnings = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$previous_warnings[] = array(
+			'issuer' => array(
+				'id' => $row['id_member'],
+				'link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
+			),
+			'time' => timeformat($row['log_time']),
+			'reason' => $row['body'],
+			'counter' => $row['counter'] > 0 ? '+' . $row['counter'] : $row['counter'],
+			'id_notice' => $row['id_notice'],
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $previous_warnings;
 }
 
 // Present a screen to make sure the user wants to be deleted

@@ -263,7 +263,8 @@ function createMenu($menuData, $menuOptions = array())
 
 	// Almost there - load the template and add to the template layers.
 	loadTemplate(isset($menuOptions['template_name']) ? $menuOptions['template_name'] : 'GenericMenu');
-	$context['template_layers'][] = (isset($menuOptions['layer_name']) ? $menuOptions['layer_name'] : 'generic_menu') . $menuOptions['menu_type'];
+	$menu_context['layer_name'] = (isset($menuOptions['layer_name']) ? $menuOptions['layer_name'] : 'generic_menu') . $menuOptions['menu_type'];
+	$context['template_layers'][] = $menu_context['layer_name'];
 
 	// Check we had something - for sanity sake.
 	if (empty($include_data))
@@ -284,10 +285,15 @@ function destroyMenu($menu_id = 'last')
 {
 	global $context;
 
-	if ($menu_id == 'last' && isset($context['max_menu_id']) && isset($context['menu_data_' . $context['max_menu_id']]))
-		unset($context['menu_data_' . $context['max_menu_id']]);
-	elseif (isset($context['menu_data_' . $menu_id]));
-		unset($context['menu_data_' . $menu_id]);
+	$menu_name = $menu_id == 'last' && isset($context['max_menu_id']) && isset($context['menu_data_' . $context['max_menu_id']]) ? 'menu_data_' . $context['max_menu_id'] : 'menu_data_' . $menu_id;
+	if (!isset($context[$menu_name]))
+		return false;
+
+	$layer_index = array_search($context[$menu_name]['layer_name'], $context['template_layers']);
+	if ($layer_index !== false)
+		unset($context['template_layers'][$layer_index]);
+
+	unset($context[$menu_name]);
 }
 
 ?>

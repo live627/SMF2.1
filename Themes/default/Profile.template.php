@@ -156,14 +156,14 @@ function template_summary()
 	
 	echo '
 			<dl', !isset($context['signature_enabled']) ? 'class="noborder"' : '', '>';
-				
-	// Can they issue a warning?
-	if ($context['can_issue_warning'] && !$context['user']['is_owner'] && $context['member']['warning'])
+
+	// Can they view/issue a warning?
+	if ($context['can_view_warning'] && $context['member']['warning'])
 	{
 		echo '	
 				<dt>', $txt['profile_warning_level'], ': </dt>
 				<dd>
-					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=issuewarning">', $context['member']['warning'], '%</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=', $context['can_issue_warning'] ? 'issuewarning' : 'viewwarning', '">', $context['member']['warning'], '%</a>';
 
 		// Can we provide information on what this means?
 		if (!empty($context['warning_status']))
@@ -1620,12 +1620,12 @@ function template_ignoreboards()
 		</form>';
 }
 
-// Show a lovely interface for issuing warnings.
-function template_issueWarning()
+// Simple load some theme variables common to several warning templates.
+function template_load_warning_variables()
 {
-	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+	global $modSettings, $context;
 
-	$warningBarWidth = 200;
+	$context['warningBarWidth'] = 200;
 	// Setup the colors - this is a little messy for theming.
 	$context['colors'] = array(
 		0 => 'green',
@@ -1639,12 +1639,82 @@ function template_issueWarning()
 	foreach ($context['colors'] as $limit => $color)
 		if ($context['member']['warning'] >= $limit)
 			$context['current_color'] = $color;
+}
+
+// Show all warnings of a user?
+function template_viewWarning()
+{
+	global $context, $txt, $scripturl, $settings;
+
+	template_load_warning_variables();
+
+	echo '
+	<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
+		<tr class="titlebg">
+			<td colspan="2" height="26">
+				&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', sprintf($txt['profile_viewwarning_for_user'], $context['member']['name']), '
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="100%">
+				<table border="0" width="100%" cellspacing="0" cellpadding="2" align="center">
+					<tr class="windowbg">
+						<td width="40%">
+							<strong>', $txt['profile_warning_name'], ':</strong>
+						</td>
+						<td>
+							', $context['member']['name'], '
+						</td>
+					</tr>
+					<tr class="windowbg" valign="top">
+						<td width="30%">
+							<strong>', $txt['profile_warning_level'], ':</strong>
+						</td>
+						<td>
+							<div>
+								<div>
+									<div style="font-size: 8pt; height: 12pt; width: ', $context['warningBarWidth'], 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+										<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
+										<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>';
+
+	// There's some impact of this?
+	if (!empty($context['level_effects'][$context['current_level']]))
+		echo '
+					<tr class="windowbg">
+						<td width="40%">
+							<strong>', $txt['profile_viewwarning_impact'], ':</strong>
+						</td>
+						<td>
+							', $context['level_effects'][$context['current_level']], '
+						</td>
+					</tr>';
+
+	echo '
+				</table>
+			</td>
+		</tr>
+	</table>';
+
+	template_show_list('view_warnings');
+}
+
+// Show a lovely interface for issuing warnings.
+function template_issueWarning()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	template_load_warning_variables();
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function setWarningBarPos(curEvent, isMove, changeAmount)
 		{
-			barWidth = ', $warningBarWidth, ';
+			barWidth = ', $context['warningBarWidth'], ';
 
 			// Are we passing the amount to change it by?
 			if (changeAmount)
@@ -1820,12 +1890,12 @@ function template_issueWarning()
 								<a href="#" onclick="changeWarnLevel(-5); return false;">&#171;</a>
 								<a href="#" onclick="changeWarnLevel(5); return false;">&#187;</a>
 							</span>
-							<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $warningBarWidth, 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
+							<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $context['warningBarWidth'], 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
 								<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
 								<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
 							</div>
 						</div>
-						<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div" class="smalltext">', $context['level_effects'][$context['current_level']], '</span></div>
+						<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div">', $context['level_effects'][$context['current_level']], '</span></div>
 						<input type="hidden" name="warning_level" id="warning_level" value="SAME" />
 					</div>
 					<div id="warndiv2">

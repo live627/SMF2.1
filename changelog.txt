@@ -38,6 +38,9 @@ October 2008
  ! pg_escape_string only supports one parameter on older versions of PHP. (Subs-Db-postgresql.php) [Bug 2675]
  ! URL decode URLs on servers without support for ; in the URL. (QueryString.php) [Bug 2669]
  ! Changed the warning show option to enable you to show warning status to moderators, all users or just those who are warned. (Display template, ManageSettings.php, ManageSettings language file)
+ & Renamed some warning text strings to make them non-user specific. (Profile language file)
+ ! Destroy menu now kills the template layer that was used to put it in. (Subs-Menu.php)
+ ! Allow users to see their warnings from their profile, if the admin allows. (Profile.php, Profile-View.php, Profile-Actions.php, Profile template, Profile language file) [Bug 2663]
 
 
 September 2008

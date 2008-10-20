@@ -292,8 +292,8 @@ $txt['username_warning'] = 'To change this member\'s username, the forum must al
 $txt['show_member_posts'] = 'View Member Posts';
 $txt['show_member_topics'] = 'View Member Topics';
 $txt['show_member_attachments'] = 'View Member Attachments';
-$txt['show_posts_none'] = 'User has not yet made any posts.';
-$txt['show_attachments_none'] = 'User has not yet posted any attachments.';
+$txt['show_posts_none'] = 'No posts have yet been made.';
+$txt['show_attachments_none'] = 'No attachments have yet been posted.';
 $txt['show_attach_filename'] = 'Filename';
 $txt['show_attach_downloads'] = 'Downloads';
 $txt['show_attach_posted'] = 'Posted';
@@ -359,11 +359,11 @@ $txt['profile_warning_reason'] = 'Reason for Warning';
 $txt['profile_warning_reason_desc'] = 'This is required and will be logged.';
 $txt['profile_warning_effect_none'] = 'None.';
 $txt['profile_warning_effect_watch'] = 'User will be added to moderator watch list.';
-$txt['profile_warning_is_watch'] = 'User is being watched';
+$txt['profile_warning_is_watch'] = 'being watched';
 $txt['profile_warning_effect_moderation'] = 'All users posts will be moderated.';
-$txt['profile_warning_is_moderation'] = 'User has posts moderated';
+$txt['profile_warning_is_moderation'] = 'posts are moderated';
 $txt['profile_warning_effect_mute'] = 'User will not be able to post.';
-$txt['profile_warning_is_muted'] = 'User cannot post';
+$txt['profile_warning_is_muted'] = 'cannot post';
 $txt['profile_warning_effect_text'] = 'Level >= %1$d: %2$s';
 $txt['profile_warning_notify'] = 'Send a Notification';
 $txt['profile_warning_notify_template'] = 'Select template:';
@@ -393,6 +393,13 @@ $txt['profile_warning_previous_time'] = 'Time';
 $txt['profile_warning_previous_level'] = 'Points';
 $txt['profile_warning_previous_reason'] = 'Reason';
 $txt['profile_warning_previous_notice'] = 'View Notice Sent to Member';
+
+$txt['viewwarning'] = 'View Warnings';
+$txt['profile_viewwarning_for_user'] = 'Warnings for %1$s';
+$txt['profile_viewwarning_no_warnings'] = 'No warnings have yet been issued.';
+$txt['profile_viewwarning_desc'] = 'Below is a summary of all the warnings that have been issued by the forum moderation team.';
+$txt['profile_viewwarning_previous_warnings'] = 'Previous Warnings';
+$txt['profile_viewwarning_impact'] = 'Warning Impact';
 
 $txt['subscriptions'] = 'Paid Subscriptions';
 
