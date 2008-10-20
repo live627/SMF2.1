@@ -642,7 +642,7 @@ function ModifyModerationSettings($return_config = false)
 			array('int', 'warning_mute'),
 			'rem1' => array('int', 'user_limit'),
 			'rem2' => array('int', 'warning_decrement'),
-			array('check', 'warning_show'),
+			array('select', 'warning_show', array($txt['setting_warning_show_mods'], $txt['setting_warning_show_user'], $txt['setting_warning_show_all'])),
 	);
 
 	if ($return_config)

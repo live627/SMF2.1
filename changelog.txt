@@ -37,6 +37,7 @@ October 2008
  ! Opera and IE appear to prefer octetstream over octet-stream. (Display.php) [Bug 2652]
  ! pg_escape_string only supports one parameter on older versions of PHP. (Subs-Db-postgresql.php) [Bug 2675]
  ! URL decode URLs on servers without support for ; in the URL. (QueryString.php) [Bug 2669]
+ ! Changed the warning show option to enable you to show warning status to moderators, all users or just those who are warned. (Display template, ManageSettings.php, ManageSettings language file)
 
 
 September 2008

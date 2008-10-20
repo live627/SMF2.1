@@ -166,7 +166,10 @@ $txt['setting_warning_moderate'] = 'Warning level for post moderation<div class=
 $txt['setting_warning_mute'] = 'Warning level for user muting<div class="smalltext">The user warning level after which a user cannot post any further - 0 to disable.</div>';
 $txt['setting_user_limit'] = 'Maximum user warning points per day<div class="smalltext">This value is the maximum amount of warning points a single moderator can assign to a user in a 24 hour period - 0 for no limit.</div>';
 $txt['setting_warning_decrement'] = 'Warning points to decrement from users every 24 hours<div class="smalltext">Only applies to users not warned within last 24 hours - set to 0 to disable.</div>';
-$txt['setting_warning_show'] = 'Show warning status to all users<div class="smalltext">If disabled only moderators can see the warning status of a user.</div>';
+$txt['setting_warning_show'] = 'Users who can see warning status<div class="smalltext">Determines who can see the warning level of users on the forum.</div>';
+$txt['setting_warning_show_mods'] = 'Moderators Only';
+$txt['setting_warning_show_user'] = 'Moderators and Warned Users';
+$txt['setting_warning_show_all'] = 'All Users';
 
 $txt['signature_settings'] = 'Signature Settings';
 $txt['signature_settings_desc'] = 'Use the settings on this page to decide how member signatures should be treated in SMF.';
