@@ -1560,7 +1560,7 @@ function EditCustomProfiles()
 		$context['field'] = array(
 			'name' => '',
 			'desc' => '',
-			'profile_area' => 'forumProfile',
+			'profile_area' => 'forumprofile',
 			'reg' => false,
 			'display' => false,
 			'type' => 'text',

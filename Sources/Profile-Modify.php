@@ -3094,7 +3094,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 					'APPYNAME' => $old_profile['member_name'],
 					'GROUPNAME' => $group_name,
 					'REASON' => $_POST['reason'],
-					'MODLINK' => $scripturl . '?action=groups;area=requests',
+					'MODLINK' => $scripturl . '?action=moderate;area=groups;sa=requests',
 				);
 
 				$emaildata = loadEmailTemplate('request_membership', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);

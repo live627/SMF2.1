@@ -41,6 +41,7 @@ October 2008
  & Renamed some warning text strings to make them non-user specific. (Profile language file)
  ! Destroy menu now kills the template layer that was used to put it in. (Subs-Menu.php)
  ! Allow users to see their warnings from their profile, if the admin allows. (Profile.php, Profile-View.php, Profile-Actions.php, Profile template, Profile language file) [Bug 2663]
+ ! Group membership notification emails were linking to an incorrect approval address. (Profile-Modify.php) [Bug 2692]
 
 
 September 2008
