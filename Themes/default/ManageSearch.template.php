@@ -338,14 +338,14 @@ function template_show_spider_logs()
 		<tr class="windowbg">
 			<td>
 				', $txt['spider_logs_delete_older'], '
-				<input type="text" name="older" value="7" size="3" />
+				<input type="text" name="older" id="older" value="7" size="3" />
 				', $txt['spider_logs_delete_day'], '
 			</td>
 		</tr>
 		<tr class="catbg">
 			<td align="right">
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" />
+				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" onclick="if (document.getElementById(\'older\').value < 1 && !confirm(\'' . addcslashes($txt['spider_logs_delete_confirm'], "'") . '\')) return false; return true;" />
 			</td>
 		</tr>
 	</table>

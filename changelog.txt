@@ -44,6 +44,7 @@ October 2008
  ! Group membership notification emails were linking to an incorrect approval address. (Profile-Modify.php) [Bug 2692]
  ! When viewing unapproved posts and topics ensure we retain the current board within the page index. (PostModeration.php) [Bug 2697]
  ! Make sure the xcache actually has some capacity before trying to cache anything. (Load.php) [Bug 2694]
+ ! Allow emptying out the whole spider log by putting in a zero for the time limit. (ManageSearchEngines.php, ManageSearch template, Search language file) [Bug 2684]
 
 
 September 2008

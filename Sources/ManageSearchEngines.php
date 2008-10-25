@@ -679,7 +679,7 @@ function SpiderLogs()
 	loadTemplate('ManageSearch');
 
 	// Did they want to delete some entries?
-	if (!empty($_POST['delete_entries']) && !empty($_POST['older']))
+	if (!empty($_POST['delete_entries']) && isset($_POST['older']))
 	{
 		checkSession();
 
