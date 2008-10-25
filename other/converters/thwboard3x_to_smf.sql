@@ -50,18 +50,18 @@ $row['signature'] = preg_replace(
 $row['signature'] = htmlspecialchars($row['signature']);
 ---}
 SELECT
-	userid AS id_member, SUBSTRING(username, 1, 255) AS _,
-	SUBSTRING(username, 1, 255) AS _, useremail AS _,
+	userid AS id_member, SUBSTRING(username, 1, 255) AS member_name,
+	SUBSTRING(username, 1, 255) AS real_name, useremail AS email_address,
 	SUBSTRING(userpassword, 1, 60) AS passwd, userposts AS posts, 
 	SUBSTRING(usertitle, 1, 255) AS usertitle,
-	userlocation AS location, userlastpost AS _, 	
-	IF(userisadmin = '1', 1, 0) AS id_group, userjoin AS _,
-	SUBSTRING(userhomepage, 1, 255) AS _, useravatar AS avatar,
-	SUBSTRING(userhomepage, 1, 255) AS _, SUBSTRING(usericq, 1, 255) AS icq, 
-	SUBSTRING(useraim, 1, 16) AS aim, '' AS yim, userinvisible AS _,
+	userlocation AS location, userlastpost AS last_login, 	
+	IF(userisadmin = '1', 1, 0) AS id_group, userjoin AS date_registered,
+	SUBSTRING(userhomepage, 1, 255) AS website_url, useravatar AS avatar,
+	SUBSTRING(userhomepage, 1, 255) AS website_title, SUBSTRING(usericq, 1, 255) AS icq, 
+	SUBSTRING(useraim, 1, 16) AS aim, '' AS yim, userinvisible AS show_online,
 	SUBSTRING(usermsn, 1, 255) AS msn, SUBSTRING(usersignature, 1, 65534) AS signature, 
-	userhideemail AS _, '' AS total_time_logged_in, 
-	IF(useractivate = '0', 1, 0) AS is_activated, u.userbday AS birthdate
+	userhideemail AS hide_email, '' AS total_time_logged_in, 
+	IF(useractivate = '0', 1, 0) AS is_activated, userbday AS birthdate
 FROM {$from_prefix}user;
 ---*
 
@@ -73,7 +73,7 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT 
-	categoryid AS id_cat, categoryname AS name, categoryorder AS _
+	categoryid AS id_cat, categoryname AS name, categoryorder AS cat_order
 FROM {$from_prefix}category;
 ---*
 
@@ -87,9 +87,9 @@ WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	boardid AS id_board, SUBSTRING(boardname, 1, 255) AS name, '-1,0,1,2' AS _, 
-	SUBSTRING(boarddescription, 1, 65534) AS description, boardorder AS _,
-	boardposts AS _, boardthreads AS _, categoryid AS id_cat
+	boardid AS id_board, SUBSTRING(boardname, 1, 255) AS name, '-1,0,1,2' AS member_groups, 
+	SUBSTRING(boarddescription, 1, 65534) AS description, boardorder AS board_order,
+	boardposts AS num_posts, boardthreads AS num_topics, categoryid AS id_cat
 FROM {$from_prefix}board;
 ---*
 
@@ -108,11 +108,11 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}topics
 SELECT
 	t.threadid AS id_topic, t.boardid AS id_board, 
-	t.threadtop AS _, t.threadviews AS _, 
+	t.threadtop AS is_sticky, t.threadviews AS num_views, 
 	u.userid AS id_member_started, 
 	r.userid AS id_member_updated, 
 	MIN(p.postid) AS id_first_msg, MAX(p.postid) AS id_last_msg, 
-	t.threadviews AS _, 	t.threadclosed AS locked
+	t.threadviews AS num_replies, 	t.threadclosed AS locked
 FROM {$from_prefix}thread AS t
 	LEFT JOIN {$from_prefix}user AS u ON (t.threadauthor = u.username)
 	INNER JOIN {$from_prefix}post AS p ON (p.threadid=t.threadid)
@@ -165,13 +165,13 @@ $row['body'] = htmlspecialchars($row['body']);
 ---}
 SELECT
 	p.postid AS id_msg, p.threadid AS id_topic,
-	t.boardid  AS id_board, p.posttime AS _, 
+	t.boardid  AS id_board, p.posttime AS poster_time, 
 	p.userid AS id_member,	p.postlastedittime AS id_msg_MODIFIED,
 	t.threadtopic AS subject,
-	IF(p.postguestname != '',p.postguestname, u.username) AS _, 
-	u.useremail AS _,	p.postip AS poster_ip, 
-	p.postsmilies AS _, p.postlastedittime AS _, 
-	p.postlasteditby AS _, p.posttext AS body, 'xx' AS icon
+	IF(p.postguestname != '',p.postguestname, u.username) AS poster_name, 
+	u.useremail AS poster_email,	p.postip AS poster_ip, 
+	p.postsmilies AS smileys_enabled, p.postlastedittime AS modified_time, 
+	p.postlasteditby AS modified_name, p.posttext AS body, 'xx' AS icon
 FROM {$from_prefix}post AS p
 	INNER JOIN {$from_prefix}thread AS t ON (t.threadid = p.threadid)
 	LEFT JOIN {$from_prefix}user AS u ON (u.userid = p.userid)
@@ -220,7 +220,7 @@ $row['body'] = htmlspecialchars($row['body']);
 ---}
 SELECT
 	pm.pmid AS id_pm, pm.pmfromid AS id_member_from, pm.pmtime AS msgtime,
-	IF(u.username IS NULL, 'Guest', SUBSTRING(u.username, 1, 255)) AS _,
+	IF(u.username IS NULL, 'Guest', SUBSTRING(u.username, 1, 255)) AS from_name,
 	SUBSTRING(pm.pmtopic, 1, 255) AS subject,
 	SUBSTRING(pm.pmtext, 1, 65534) AS body
 FROM {$from_prefix}pm AS pm
@@ -240,7 +240,3 @@ SELECT
 	'' AS deleted, '-1' AS labels
 FROM {$from_prefix}pm;
 ---*
-
-
-
-
