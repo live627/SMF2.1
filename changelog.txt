@@ -42,6 +42,8 @@ October 2008
  ! Destroy menu now kills the template layer that was used to put it in. (Subs-Menu.php)
  ! Allow users to see their warnings from their profile, if the admin allows. (Profile.php, Profile-View.php, Profile-Actions.php, Profile template, Profile language file) [Bug 2663]
  ! Group membership notification emails were linking to an incorrect approval address. (Profile-Modify.php) [Bug 2692]
+ ! When viewing unapproved posts and topics ensure we retain the current board within the page index. (PostModeration.php) [Bug 2697]
+ ! Make sure the xcache actually has some capacity before trying to cache anything. (Load.php) [Bug 2694]
 
 
 September 2008
