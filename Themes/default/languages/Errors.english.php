@@ -271,7 +271,7 @@ $txt['package_cant_download'] = 'You cannot download or install new packages bec
 $txt['package_upload_error'] = 'Could not upload package, please check directory permissions!';
 $txt['package_upload_error_exists'] = 'The file you are uploading already exists on the server. Please delete it first then try again.';
 $txt['package_upload_error_supports'] = 'The package manager currently allows only these file types: %1$s.';
-$txt['package_upload_error_broken'] = 'The package you tried to upload either is not a valid package or has become corrupted.';
+$txt['package_upload_error_broken'] = 'Package upload failed due to the following error:<br />&quot;%1$s&quot;';
 
 $txt['package_get_error_not_found'] = 'The package you are trying to install cannot be located. You may want to manually upload the package to your Packages directory.';
 $txt['package_get_error_missing_xml'] = 'The package you are attempting to install is missing the package-info.xml that must be in the root package directory.';

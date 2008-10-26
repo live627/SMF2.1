@@ -47,6 +47,7 @@ October 2008
  ! Allow emptying out the whole spider log by putting in a zero for the time limit. (ManageSearchEngines.php, ManageSearch template, Search language file) [Bug 2684]
  ! It shouodn't be possible to set a default value for text fields. (DbExtra-mysql.php) [Bug 2690]
  ! If post size limit is into mediumtext territory then respect it on the insert. (Subs-Post.php) [Bug 2691]
+ ! Improve the error message when uploading a package fails. (PackageGet.php, Packages language file) [Bug 2689]
 
 
 September 2008

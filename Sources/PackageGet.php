@@ -672,7 +672,8 @@ function PackageUpload()
 	if (!is_array($context['package']))
 	{
 		@unlink($destination);
-		fatal_lang_error('package_upload_error_broken', false);
+		loadLanguage('Errors');
+		fatal_lang_error('package_upload_error_broken', false, &$txt[$context['package']]);
 	}
 
 	if ($context['package']['type'] == 'modification')
