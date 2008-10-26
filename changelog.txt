@@ -48,6 +48,7 @@ October 2008
  ! It shouodn't be possible to set a default value for text fields. (DbExtra-mysql.php) [Bug 2690]
  ! If post size limit is into mediumtext territory then respect it on the insert. (Subs-Post.php) [Bug 2691]
  ! Improve the error message when uploading a package fails. (PackageGet.php, Packages language file) [Bug 2689]
+ ! Updated the text in the language install screen to use a list, cause it looks better. (ManageSettings language file)
 
 
 September 2008
