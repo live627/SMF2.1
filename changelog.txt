@@ -46,6 +46,7 @@ October 2008
  ! Make sure the xcache actually has some capacity before trying to cache anything. (Load.php) [Bug 2694]
  ! Allow emptying out the whole spider log by putting in a zero for the time limit. (ManageSearchEngines.php, ManageSearch template, Search language file) [Bug 2684]
  ! It shouodn't be possible to set a default value for text fields. (DbExtra-mysql.php) [Bug 2690]
+ ! If post size limit is into mediumtext territory then respect it on the insert. (Subs-Post.php) [Bug 2691]
 
 
 September 2008
