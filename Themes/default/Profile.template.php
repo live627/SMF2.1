@@ -972,7 +972,7 @@ function template_edit_options()
 			echo '
 							<tr valign="top">
 								<td width="40%">
-									<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</strong>';
+									<strong', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</strong>';
 
 			// Does it have any subtext to show?
 			if (!empty($field['subtext']))
@@ -1073,7 +1073,7 @@ function template_edit_options()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
+									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
@@ -2093,7 +2093,7 @@ function template_deleteAccount()
 							</td>
 						</tr><tr>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'right' : 'left', '">
-								<b', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : ''), '>', $txt['current_password'], ': </strong>
+								<strong', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : ''), '>', $txt['current_password'], ': </strong>
 							</td>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'left' : 'right', '">
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2178,7 +2178,7 @@ function template_profile_save()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
+									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
@@ -2391,7 +2391,7 @@ function template_profile_avatar_select()
 									<table width="100%" cellpadding="5" cellspacing="0" border="0" style="height: 25ex;"><tr>
 										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"', ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : ''), ' class="check" /></td>
 										<td valign="top" style="padding-left: 1ex;">
-											<b', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
+											<strong', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
 											<div style="margin: 2ex;"><img name="avatar" id="avatar" src="', !empty($context['member']['avatar']['allow_external']) && $context['member']['avatar']['choice'] == 'external' ? $context['member']['avatar']['external'] : $modSettings['avatar_url'] . '/blank.gif', '" alt="Do Nothing" /></div>
 										</td>
 									</tr></table>
@@ -2598,7 +2598,7 @@ function template_profile_timeoffset_modify()
 
 	echo '
 							<tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
+								<td width="40%"><strong', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
 								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="currentDate = new Date(', $context['current_forum_time_js'], '); document.getElementById(\'time_offset\').value = autoDetectTimeOffset(currentDate); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
 							</tr>';
 }
