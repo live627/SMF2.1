@@ -331,7 +331,8 @@ function smf_db_table_sql($tableName)
 			// Make a special case of auto-timestamp.
 			if ($row['Default'] == 'CURRENT_TIMESTAMP')
 				$schema_create .= ' /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */';
-			else
+			// Text shouldn't have a default.
+			elseif (!empty($row['Default']) || strpos(strtolower($row['Type']), 'text') === false)
 				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : '\'' . $smcFunc['db_escape_string']($row['Default']) . '\'');
 		}
 
