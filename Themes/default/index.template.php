@@ -445,7 +445,6 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>
 		</div>';
-
 }
 
 ?>
