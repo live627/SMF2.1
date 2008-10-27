@@ -918,7 +918,7 @@ function template_edit_options()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt['profile'], '
+						', $txt['profile'], !$context['user']['is_owner'] ? ' - &quot;' . $context['member']['name'] . '&quot;' : '', '
 					</td>
 				</tr>';
 

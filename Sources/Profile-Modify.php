@@ -1444,7 +1444,8 @@ function account($memID)
 	global $context, $txt;
 
 	loadThemeOptions($memID);
-	loadCustomFields($memID, 'account');
+	if (allowedTo(array('profile_identity_own', 'profile_identity_any')))
+		loadCustomFields($memID, 'account');
 
 	$context['sub_template'] = 'edit_options';
 	$context['page_desc'] = $txt['account_info'];
@@ -1465,7 +1466,8 @@ function forumProfile($memID)
 	global $context, $user_profile, $user_info, $txt, $modSettings;
 
 	loadThemeOptions($memID);
-	loadCustomFields($memID, 'forumProfile');
+	if (allowedTo(array('profile_extra_own', 'profile_extra_any')))
+		loadCustomFields($memID, 'forumProfile');
 
 	$context['sub_template'] = 'edit_options';
 	$context['page_desc'] = $txt['forumProfile_info'];
@@ -1583,7 +1585,8 @@ function theme($memID)
 	global $txt, $context, $user_profile, $modSettings, $settings, $user_info, $smcFunc;
 
 	loadThemeOptions($memID);
-	loadCustomFields($memID, 'theme');
+	if (allowedTo(array('profile_extra_own', 'profile_extra_any')))
+		loadCustomFields($memID, 'theme');
 
 	$context['sub_template'] = 'edit_options';
 	$context['page_desc'] = $txt['theme_info'];
@@ -2242,9 +2245,9 @@ function profileLoadAvatarData()
 		'selection' => $cur_profile['avatar'] == '' || stristr($cur_profile['avatar'], 'http://') ? '' : $cur_profile['avatar'],
 		'id_attach' => $cur_profile['id_attach'],
 		'filename' => $cur_profile['filename'],
-		'allow_server_stored' => allowedTo('profile_server_avatar') || !$context['user']['is_owner'],
-		'allow_upload' => allowedTo('profile_upload_avatar') || !$context['user']['is_owner'],
-		'allow_external' => allowedTo('profile_remote_avatar') || !$context['user']['is_owner'],
+		'allow_server_stored' => allowedTo('profile_server_avatar') || (!$context['user']['is_owner'] && allowedTo('profile_extra_any')),
+		'allow_upload' => allowedTo('profile_upload_avatar') || (!$context['user']['is_owner'] && allowedTo('profile_extra_any')),
+		'allow_external' => allowedTo('profile_remote_avatar') || (!$context['user']['is_owner'] && allowedTo('profile_extra_any')),
 	);
 
 	// Actually - nothing?

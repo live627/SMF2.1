@@ -49,6 +49,7 @@ October 2008
  ! If post size limit is into mediumtext territory then respect it on the insert. (Subs-Post.php) [Bug 2691]
  ! Improve the error message when uploading a package fails. (PackageGet.php, Packages language file) [Bug 2689]
  ! Updated the text in the language install screen to use a list, cause it looks better. (ManageSettings language file)
+ ! Make it possible to have only the "change your custom title" permission. (Profile-Modify.php, Profile.php) [Bug 2701]
 
 
 September 2008

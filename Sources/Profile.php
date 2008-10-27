@@ -185,8 +185,8 @@ function ModifyProfile($post_errors = array())
 					'function' => 'forumProfile',
 					'sc' => 'post',
 					'permission' => array(
-						'own' => array('profile_extra_any', 'profile_extra_own'),
-						'any' => array('profile_extra_any'),
+						'own' => array('profile_extra_any', 'profile_extra_own', 'profile_title_own', 'profile_title_any'),
+						'any' => array('profile_extra_any', 'profile_title_any'),
 					),
 				),
 				'theme' => array(
