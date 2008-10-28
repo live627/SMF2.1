@@ -212,9 +212,9 @@ function EditAgreement()
 		while ($entry = $dir->read())
 			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && file_exists($boarddir . '/agreement.' . $matches[1] . '.txt'))
 			{
-				$context['editable_agreements']['_' . $matches[1]] = $smcFunc['ucwords'](strtr($matches[1], '_', ' '));
+				$context['editable_agreements']['.' . $matches[1]] = $smcFunc['ucwords'](strtr($matches[1], '_', ' '));
 				// Are we editing this?
-				if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '_' . $matches[1])
+				if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '.' . $matches[1])
 					$context['current_agreement'] = '.' . $matches[1];
 			}
 		$dir->close();

@@ -684,24 +684,23 @@ function template_edit_agreement()
 				</td>
 			</tr>';
 
-	// Are there more than one language to choose from?
+	// Is there more than one language to choose from?
 	if (count($context['editable_agreements']) > 1)
 	{
 		echo '
 			<tr class="windowbg2">
 				<td align="center">
 					<div align="left" style="width: 94%">
-						<form action="', $scripturl, '?action=admin;area=regcenter" id="change_reg" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
+						<form action="', $scripturl, '?action=admin;area=regcenter;sa=agreement" id="change_reg" method="post" accept-charset="', $context['character_set'], '">
 							<b>', $txt['admin_agreement_select_language'], ':</b>&nbsp;
 							<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();">';
 
 		foreach ($context['editable_agreements'] as $file => $name)
 			echo '
-								<option value="', $file, '" ', $context['current_agreement'] == $file ? 'selected="selected"' : '', '>', $name, '</option>';
+								<option value="', $file, '"', $context['current_agreement'] == $file ? ' selected="selected"' : '', '>', $name, '</option>';
 
 		echo '
 							</select>
-							<input type="hidden" name="sa" value="agreement" />
 							<input type="hidden" name="sc" value="', $context['session_id'], '" />
 							<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" />
 						</form>
@@ -713,7 +712,7 @@ function template_edit_agreement()
 	echo '
 			<tr class="windowbg2">
 				<td align="center" style="padding-bottom: 1ex; padding-top: 2ex;">
-					<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">';
+					<form action="', $scripturl, '?action=admin;area=regcenter;sa=agreement" method="post" accept-charset="', $context['character_set'], '">';
 
 	// Show the actual agreement in an oversized text box.
 	echo '
@@ -722,7 +721,6 @@ function template_edit_agreement()
 						<br />
 						<input type="submit" value="', $txt['save'], '" />
 						<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
-						<input type="hidden" name="sa" value="agreement" />
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					</form>
 				</td>
