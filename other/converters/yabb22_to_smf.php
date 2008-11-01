@@ -713,15 +713,16 @@ if (empty($preparsing))
 				if (!file_exists($yabb['datadir'] . '/' . $temp_id . '.txt'))
 					continue;
 
-				$views = @file($yabb['datadir'] . '/' . $temp_id . '.ctb');
-				$views = !empty($views[2]) && $views[2] > 1 ? $views[2] - 1 : 0;
+				$views = @implode('', file($yabb['datadir'] . '/' . $tempID . '.ctb'));
+				if (preg_match('~\'views\',"([^"]+)"~', $views, $match) != 0)
+					$views = $match[1];
 
 				$block[] = array(
 					'temp' => $temp_id,
 					'id_board' => $id_board,
 					'is_sticky' => isset($topicInfo[8]) && strpos($topicInfo[8], 's') !== false ? 1 : 0,
 					'locked' => isset($topicInfo[8]) && strpos($topicInfo[8], 'l') !== false ? 1 : 0,
-					'num_views' => $views < 0 ? 0 : $views,
+					'num_views' => (int) $views < 0 ? 0 : $views,
 					// Give this some bs value.
 					'id_last_msg' => $temp_id,
 					'id_first_msg' => $temp_id,
