@@ -1,0 +1,69 @@
+/* special styles for IE6 */
+/* the main menu */
+#main_menu ul li
+{
+	width: 1%;
+}
+#main_menu ul li a
+{
+	height: 1%;
+}
+#main_menu ul li a span
+{
+	white-space: nowrap;
+}
+#main_menu ul
+{
+	display: inline-block;
+}
+#main_menu ul
+{
+	display: inline;
+}
+
+#main_menu
+{
+	text-align: center;
+}
+/* a fix for the background for user section */
+#mainframe #upper_section li.user
+{
+	background: none;
+}
+#mainframe ul#upper_section li.user ul
+{
+	padding-left: 0;
+}
+/* **************** */
+/* from MessageIndex.template */
+/* **************** */
+#messageindex table
+{
+	margin-top: 5px;
+}
+#messageindex table th
+{
+	border-bottom: solid 1px white;
+}
+/* **************** */
+/* from Display.template */
+/* **************** */
+#forumposts .postarea .post
+{
+	float: none;
+}
+.buttonlist ul li
+{
+	width: 1%;
+	white-space: nowrap;
+}
+#forumposts .buttonlist ul
+{
+	clear: right;
+	height: 1%;
+}
+#forumposts h3.catbg
+{
+	margin-top: 8px;
+	clear: both;
+}		

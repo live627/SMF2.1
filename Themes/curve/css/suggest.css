@@ -1,0 +1,20 @@
+/* These are for the auto suggest floating div type thing. */
+.auto_suggest_div
+{
+	border: 1px solid black;
+	position: absolute;
+}
+
+/* An auto suggest item */
+.auto_suggest_item
+{
+	background-color: #DDDDDD;
+}
+
+/* hovered auto suggest item */
+.auto_suggest_item_hover
+{
+	background-color: #888888;
+	cursor: pointer;
+	color: #EEEEEE;
+}

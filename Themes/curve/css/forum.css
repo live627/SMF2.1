@@ -1,0 +1,498 @@
+/* ************************************* */
+/* styles from BoardIndex.template       */
+/* ************************************* */
+p#stats
+{
+	margin: 0;
+	padding: 5px 0 5px 0;
+	text-align: right;
+	font-size: 0.85em;
+}
+/* the illustrative icons */
+h3.catbg img.icon, h3.titlebg img.icon, h4.titlebg img.icon
+{
+	margin: 4px 5px 0 0;
+	float: left;
+}
+h3.catbg img.icon
+{
+	float: right;
+}
+img#upshrink_ic
+{
+	margin: 10px 10px 0 0;
+}
+/* each category have a container */
+.category_frame
+{
+	padding-top: 5px;
+}
+/* float the unread link */
+.category_frame span.tools
+{
+	float: right;
+}
+.category_frame span.tools .unreadlink
+{
+	padding-right: 1em;
+}
+/* float the items */
+ul.category
+{
+	margin: 0 4px 0 2px;
+	padding: 0;
+}
+ul.category li.board
+{
+	border-bottom: solid 2px white;
+	clear: both;
+	border-top: solid 2px white;
+}
+ul.category li.board ul li
+{
+	float: left;
+	padding-bottom: 2000px;
+	margin-bottom: -2000px;
+}
+ul.category li.board ul
+{
+	overflow: hidden;
+}
+ul.category li.board ul li.icon
+{
+	padding-top: 4px;
+	width: 55px;	
+	text-align: center;
+	border-right: solid 1px white;
+}
+ul.category li.board ul li.icon img
+{
+	margin: auto;
+}
+ul.category li.board ul li.info
+{
+	width: 50%;	
+	border-right: solid 1px white;
+}
+/* the board title! */
+ul.category li.board ul li.info h4
+{
+	margin: 0;
+	padding: 8px 0 0 8px;
+	color: #d97b33;
+}
+ul.category li.board ul li.info h4 a
+{
+	font-size: 1.1em;
+	color: #d97b33;
+}
+ul.category li.board ul li.info p
+{
+	margin: 0;
+	padding: 2px 0 2px 8px;
+}
+ul.category li.board ul li.stats
+{
+	width: 15%;	
+	font-size: 0.85em;
+	text-align: center;
+	vertical-align: middle;
+	border-right: solid 2px white;
+}
+ul.category li.board ul li.lastpost
+{
+	width: 25%;
+	font-size: 0.9em;
+}
+ul.category li.board ul li h4, ul.category li.board ul li p
+{
+	margin: 0;
+	padding: 8px;	
+}
+/* the posting icons */
+#posting_icons
+{
+	font-size: 0.8em;
+	height: 1.5em;
+	padding: 0.5em 1em 0.5em 2em;
+	clear: both;
+	line-height: 1.5em;
+}
+#posting_icons img
+{
+	vertical-align: middle;
+}
+#posting_icons p
+{
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+#posting_icons .buttonlist
+{
+	float: right;
+}
+
+/* the newsfader */
+#smfFadeScroller
+{
+	text-align: center;
+	padding: 2em;
+	height: 40px;
+}
+/* the info center framing */
+#infocenter_frame
+{
+	background: url(../images/theme/ic_bg.png) repeat-y;
+}
+#infocenter_frame div.frame
+{
+	padding: 3px 15px;
+	display: block;
+	background: url(../images/theme/ic_bg2.png) top right repeat-y;
+}
+span#upperframe
+{
+	margin-top: 4em;
+	padding: 0;
+	display: block;
+	background: url(../images/theme/ic_bg_top.png) top left no-repeat;
+}
+span#upperframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(../images/theme/ic_bg_top2.png) top right no-repeat;
+}
+span#lowerframe
+{
+	padding: 0;
+	display: block;
+	background: url(../images/theme/ic_bg_bot.png) bottom left no-repeat;
+}
+span#lowerframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(../images/theme/ic_bg_bot2.png) bottom right no-repeat;
+}
+/* the infocenter items */
+#upshrinkHeaderIC
+{
+	margin-top: 4px;
+}
+dl#ic_recentposts
+{
+	margin: 0 0 0.5em 0;
+	padding: 0.5em;
+	line-height: 1.3em;
+}
+dl#ic_recentposts dt
+{
+	float: left;
+}
+dl#ic_recentposts dd
+{
+	text-align: right;
+}
+#upshrinkHeaderIC p
+{
+	margin: 0 0 0.5em 0;
+	padding: 0.5em;
+}
+#upshrinkHeaderIC p.last
+{
+	margin: 0;
+	padding: 0.5em;
+	border-top: dotted 2px #bbb;
+}
+#upshrinkHeaderIC p.inline
+{
+	border: none;
+	margin: 0;
+	padding: 0.2em 0.5em 0.2em 0.5em;
+}
+#upshrinkHeaderIC p.stats
+{
+	font-size: 1.2em;
+	padding-top: 8px;
+}
+form#ic_login
+{
+	padding: 0.5em;
+	height: 2em; 
+}
+form#ic_login ul li
+{
+	margin: 0;
+	padding: 0;
+	float: left;
+	width: 20%;
+	text-align: center;
+}
+form#ic_login ul li label
+{
+	display: block;
+}
+/* rounded bars needs a different background here */
+#upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
+{
+	background: url(../images/catbg_left_ic.png) no-repeat;
+}
+#upshrinkHeaderIC h3.catbg
+{
+	background: url(../images/catbg_ic.png) repeat-x;
+}
+#upshrinkHeaderIC h3.catbg span.right, #upshrinkHeaderIC h3.catbg2 span.right
+{
+	background: url(../images/catbg_right_ic.png) no-repeat;
+}
+#upshrinkHeaderIC h4.titlebg span.left
+{
+	background: url(../images/titlebg_left_ic.png) no-repeat;
+}
+#upshrinkHeaderIC h4.titlebg
+{
+	background: url(../images/titlebg_ic.png) repeat-x;
+}
+#upshrinkHeaderIC h4.titlebg span.right
+{
+	background: url(../images/titlebg_right_ic.png) no-repeat;
+}
+
+/* ************************************* */
+/* styles from MessageIndex.template     */
+/* ************************************* */
+#messageindex
+{
+	clear: both;
+}
+/* the page naviagtion area */
+.pagesection
+{
+	font-size: 0.9em;
+	padding-left: 0.5em;
+}
+/* define the table */
+#messageindex table
+{
+	width: 100%;
+}
+#messageindex .icon1, #messageindex .icon2, #messageindex .stats
+{
+	text-align: center;
+}
+#topic_icons
+{
+	clear: both;
+	margin-top: 1em;
+}
+#messageindex table thead
+{
+	border-bottom: solid 1px white;
+}
+/* the subject column */
+#messageindex td.subject
+{
+	padding: 4px;
+}
+#messageindex td.subject p, #messageindex td.stats, #messageindex td.lastpost
+{
+	font-size: 0.85em;
+	padding: 0;
+	margin: 0;
+}
+#messageindex td.lastpost
+{
+	font-size: 0.9em;
+	line-height: 100%;
+	padding: 4px;
+}
+#messageindex td.stickybg2
+{
+	background-image: url(../images/icons/quick_sticky.gif);
+	background-repeat: no-repeat;
+	background-position: 98% 4px;
+}
+#messageindex td.lockedbg2, #messageindex td.stickybglockedbg2
+{
+	background-image: url(../images/icons/quick_lock.gif);
+	background-repeat: no-repeat;
+	background-position: 98% 4px;
+}
+#messageindex td.lastpost
+{
+	background-image: none;
+}
+/* ************************************* */
+/* styles from Display.template          */
+/* ************************************* */
+#postbuttons div.buttons
+{
+	padding: 0.5em;
+	width: 40%;
+	float: right;
+}
+#postbuttons div.middletext
+{
+	width: 60%;
+	float: left;
+}
+#postbuttons span
+{
+	display: block;
+	text-align: right;
+}
+#postbuttons span.lower
+{
+	clear: right;
+}
+#postbuttons .buttonlist
+{
+	float: right;
+}
+/* onto the posts */
+#forumposts
+{
+	clear: both;
+}
+/* author and topic informaton */
+#forumposts h3 span#author, #forumposts h3 span#top_subject
+{
+	width: 20%;
+	display: block;
+	float: left;
+}
+#forumposts h3 span#top_subject
+{
+	width: 70%;
+}
+#forumposts h3 img
+{
+	float: left;
+	margin: 4px 0.5em 0 0;
+}
+#forumposts h3.catbg
+{
+	margin-bottom: 3px;
+}
+p#whoisviewing
+{
+	margin: 0;
+	padding: 0.5em;
+}
+/* to adress a single post, also using "bordercolor" class */
+#forumposts .singlepost
+{
+}
+/* poster and postarea + moderation area underneath */
+.poster
+{
+	float: left;
+	width: 17%;
+}
+.postarea, .moderatorbar
+{
+	margin-left: 18%;
+}
+.moderatorbar
+{
+	clear: right;
+}
+/* poster details and list of items */
+.poster h4, .poster ul
+{
+	padding: 0;
+	margin: 0 1em 0 1.5em;
+}
+.poster h4
+{
+	margin: 0.2em 0 0.4em 1.1em;
+	font-size: 120%;
+}
+.poster h4, .poster h4 a
+{
+	color: #c06002;
+}
+.poster ul ul
+{
+	margin: 0.3em 1em 0 0;
+	padding: 0;
+}
+.poster ul ul li
+{
+	display: inline;
+}
+.poster li.stars, .poster li.blurb, li.postcount, li.im_icons
+{
+	padding-top: 0.7em;
+}
+.postarea .keyinfo .messageicon
+{
+	float: left;
+	margin: 0 0.5em 2em 0;
+}
+.postarea .keyinfo
+{
+	float: left;
+	width: 50%;
+}
+.postarea ul.quickbuttons, .postarea .modifybutton
+{
+	clear: right;
+	float: right;
+	margin: 8px 20px 0 0;
+	text-align: right;
+}
+.postarea ul.quickbuttons
+{
+		width: 45%;
+}
+.postarea ul.quickbuttons a:hover
+{
+	text-decoration: none;
+	color: #a70;
+}
+.postarea .post
+{
+	float: left;
+	clear: right;
+}
+.postarea .post .inner
+{
+	padding: 1em 1em 0 0;
+	margin: 0 1em 0 0;
+	border-top: solid 1px #99a;
+}
+#forumposts .modified, #forumposts .reportlinks
+{
+	width: 45%;
+	padding-bottom: 0.5em;
+}
+#forumposts .modified
+{
+	float: left;
+}
+#forumposts .reportlinks
+{
+	margin-right: 1em;
+	text-align: right;
+	clear: right;
+	float: right;
+}
+#forumposts .signature
+{
+	clear: right;
+	width: 98%;
+	border-top: solid 1px #aaa;
+	padding-top: 0.5em;
+}
+#forumposts span.botslice
+{
+	clear: both;
+}
+/* ************************************* */
+/* styles from Recent.template           */
+/* ************************************* */

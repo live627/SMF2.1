@@ -1,0 +1,476 @@
+/* ************************************* */
+/* Styles from index.template            */
+/* ************************************* */
+
+/* the framing graphics */
+#header
+{
+	background: url(../images/theme/top_bg.png) #fefefe no-repeat top left;
+}
+#header div.frame
+{
+	background: url(../images/theme/top_bg_frame.png) no-repeat top right;
+	display: block;
+	padding: 5px 20px 0 20px;
+}
+
+/* the content section */
+#content_section
+{
+	background: url(../images/theme/left.png) #fff repeat-y left;
+}
+#content_section div.frame
+{
+	background: url(../images/theme/right.png) repeat-y right;
+	display: block;
+	padding: 0px 20px 0px 20px;
+}
+
+/* the main title, always stay at 45 pixels in height! */
+h1
+{
+	height: 45px;
+	line-height: 45px;
+	font-size: 1.8em;
+	font-family: Geneva, verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+/* float these items to the right */
+h2.sitelogo, img#smflogo, img#upshrink
+{
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+/* float these items to the right */
+h3
+{
+	margin-bottom: 3px;
+}
+/* and be sure they stay apart :) */
+img#upshrink, #upper_section, #main_menu, ul#navigation, #content_section
+{
+	clear: both;
+}
+/* the upshrink image needs some tweaking */
+img#upshrink
+{
+	margin: -10px 1em 1em 0;
+}
+/* ..so does the SMF logo */
+img#smflogo
+{
+	margin-top: 4px;
+}
+/* the upper_section, float the two each way */
+ul#upper_section
+{
+	margin: 0;
+	padding: 5px;
+}
+ul#upper_section li ul li.greeting
+{
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+ul#upper_section li.news
+{
+	width: 50%;
+	float: right;
+	text-align: right;
+}
+ul#upper_section li.user
+{
+	width: 50%;
+	float: left;
+}
+ul#upper_section li.user p
+{
+	float: left;
+	margin: 0 1em 0 0;
+	padding: 0;
+}
+ul#upper_section li.user ul
+{
+	margin-left: 16px;
+	padding-left: 10px;
+	min-height: 70px;
+}
+ul#upper_section li.news h3, ul#upper_section li.news p
+{
+	display: inline;
+}
+ul#upper_section li.news form
+{
+	clear: both;
+	padding-top: 10px; 
+}
+
+/* the dropdown menus */
+.dropmenu ul
+{
+	z-index: 100;
+	display: table;
+	padding: 5px;
+	margin: 0 auto 0 auto;
+}
+.dropmenu ul li, ul#navigation li
+{
+	float: left;
+}
+.dropmenu ul li a
+{
+	display: block;
+	font-size: 0.9em;
+	color: black;
+}
+.dropmenu ul li a:hover
+{
+	color: #b82;
+	text-decoration: none;
+}
+.dropmenu ul li a span
+{
+	display: block;
+	height: 19px;
+	line-height: 19px;
+	padding: 0 0 0 8px;
+}
+/* the active one gets a background */
+.dropmenu ul li a.active
+{
+	background: url(../images/theme/menu_background.png) no-repeat top right;
+	padding: 0;
+	margin-left: 12px;
+	color: white;
+	font-weight: bold;
+}
+.dropmenu ul li a.active span
+{
+	position: relative;
+	left: -8px;
+	background: url(../images/theme/menu_background.png) no-repeat top left;
+}
+.dropmenu ul li a.active
+{
+	font-weight: bold;
+}
+
+/* the submenus.. */
+.dropmenu ul ul
+{
+	z-index: 80;
+	position: absolute;
+	width: 198px;
+	left: -999em;
+	background: url(../images/theme/submenu_background.png) 0 2px no-repeat;
+	border-bottom: solid 1px #5e5e5e;
+	padding: 12px 0 0 0;
+}
+
+.dropmenu ul ul li
+{
+	padding: 0;
+	margin: 0;
+}
+.dropmenu ul ul li a
+{
+	display: block;
+	width: 198px;
+	padding: 2px 0 4px 0;
+	background: white;
+	border-left: solid 1px #5e5e5e;
+	border-right: solid 1px #5e5e5e;
+}
+.dropmenu ul ul li a:hover
+{
+	background: #889;
+	color: white;
+}
+.dropmenu ul li:hover ul 
+{
+	left: auto;
+	margin: 0;
+}
+.dropmenu li ul ul 
+{
+	margin: -10px 0 0 90px;
+}
+.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul 
+{
+	left: -999em;
+}
+.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul 
+{
+	left: auto;
+}
+#main_menu
+{
+	padding: 1em 0 0.5em 0;
+	margin: 0 1em 0 1em;
+	border-bottom: solid 1px #aaa;
+}
+/* the button lists used everywhere */
+.buttonlist ul
+{
+	z-index: 100;
+	display: table;
+	padding: 5px;
+	margin: 0;
+}
+.buttonlist ul li
+{
+	float: left;
+}
+.buttonlist ul li a
+{
+	display: block;
+	font-size: 0.8em;
+	color: black;
+	background: url(../images/theme/button_bg.png) no-repeat top right;
+	padding: 0;
+	margin-left: 12px;
+	text-transform: uppercase;
+}
+.buttonlist ul li a:hover
+{
+	color: #b82;
+	text-decoration: none;
+}
+.buttonlist ul li a span
+{
+	position: relative;
+	left: -6px;
+	background: url(../images/theme/button_bg.png) no-repeat top left;
+	display: block;
+	height: 19px;
+	line-height: 18px;
+	padding: 0 0 0 6px;
+}
+/* the active one */
+.buttonlist ul li a.active
+{
+	background: url(../images/theme/active_button_bg.png) no-repeat top right;
+	padding: 0;
+	margin-left: 12px;
+	color: white;
+	font-weight: bold;
+}
+.buttonlist ul li a.active span
+{
+	background: url(../images/theme/active_button_bg.png) no-repeat top left;
+}
+.buttonlist ul li a.active
+{
+	font-weight: bold;
+}
+/* a smaller quick-button list */
+ul.quickbuttons li
+{
+	display: inline;
+}
+ul.quickbuttons li a:hover img
+{
+	text-decoration: none;
+	color: orange;
+}
+/* the navigation list */
+ul#navigation
+{
+	margin: 0;
+	font-size: 0.9em;
+	padding: 1em 0.4em;
+}
+ul#navigation li
+{
+	float: none;
+	font-size: 0.95em;
+	display: inline;
+}
+/* the font size changer panel */
+p#fontsize_panel
+{
+	position: absolute;
+	margin-top: -26px;
+	color: white;
+}
+p#fontsize_panel img
+{
+	border: solid 1px #557B9C;
+	margin-right: 2px;
+	padding: 3px;
+}
+/* the footer wih copyright links etc. */
+#footer_section
+{
+	text-align: center;
+	background: url(../images/theme/bot_bg.png) no-repeat top left;
+}
+#footer_section span.smalltext
+{
+	font-size: 100%;
+}
+#footer_section div.frame
+{
+	background: url(../images/theme/bot_bg_frame.png) no-repeat top right;
+	display: block;
+	padding: 60px 0 0 0;
+}
+#footer_section ul li, #footer_section p
+{
+	font-size: 0.8em;
+}
+#footer_section ul li
+{
+	display: inline;
+	padding-right: 5px;
+}
+#footer_section ul li.copyright
+{
+	display: block;
+}
+
+/* setup the rounded header bars */
+h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg
+{
+	height: 31px;
+	line-height: 31px;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+h3.catbg a, h3.catbg
+{
+	color: white;
+}
+h3.catbg2 a, h3.catbg2
+{
+	color: #feb;
+}
+h3.catbg a:hover
+{
+	color: #fd9;
+	text-decoration: none;
+}
+h3.catbg2 a:hover
+{
+	color: #fff;
+	text-decoration: none;
+}
+h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
+{
+	color: black;
+}
+h3.titlebg a:hover, h4.titlebg a:hover
+{
+	color: orange;
+	text-decoration: none;
+}
+h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right
+{
+	display: block;
+	width: 9px;
+	height: 31px;
+}
+h3.catbg span.left, h3.catbg2 span.left
+{
+	float: left;
+	background: url(../images/catbg_left.png) no-repeat;
+}
+h3.catbg span.right, h3.catbg2 span.right
+{
+	float: right;
+	background: url(../images/catbg_right.png) no-repeat;
+}
+h4.titlebg span.left,h4.titlebg span.right
+{
+	display: block;
+	width: 9px;
+	height: 31px;
+}
+h4.titlebg span.left
+{
+	float: left;
+	background: url(../images/titlebg_left.png) no-repeat;
+}
+h4.titlebg span.right
+{
+	float: right;
+	background: url(../images/titlebg_right.png) no-repeat;
+}
+
+/* the round corners of each box */
+.windowbg span.topslice
+{
+	display: block;
+	background: url(../images/theme/windowbg_topslice.png) top left no-repeat;
+}
+.windowbg span.topslice span
+{
+	display: block;
+	background: url(../images/theme/windowbg_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.windowbg span.botslice
+{
+	display: block;
+	background: url(../images/theme/windowbg_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.windowbg span.botslice span
+{
+	display: block;
+	background: url(../images/theme/windowbg_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+
+.windowbg2 span.topslice
+{
+	display: block;
+	background: url(../images/theme/windowbg2_topslice.png) top left no-repeat;
+}
+.windowbg2 span.topslice span
+{
+	display: block;
+	background: url(../images/theme/windowbg2_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.windowbg2 span.botslice
+{
+	display: block;
+	background: url(../images/theme/windowbg2_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.windowbg2 span.botslice span
+{
+	display: block;
+	background: url(../images/theme/windowbg2_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+
+.approvebg span.topslice
+{
+	display: block;
+	background: url(../images/theme/approvebg_topslice.png) top left no-repeat;
+}
+.approvebg span.topslice span
+{
+	display: block;
+	background: url(../images/theme/approvebg_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.approvebg span.botslice
+{
+	display: block;
+	background: url(../images/theme/approvebg_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.approvebg span.botslice span
+{
+	display: block;
+	background: url(../images/theme/approvebg_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+

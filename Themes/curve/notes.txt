@@ -1,0 +1,5 @@
+- h1 is forum title, can be changed by theme setting
+- h2 is "slogan", can be changed by theme setting, otherwise SMF logo
+- removed loggedin info + stats
+- added width settable in admin
+- added font-size changes for accessibilty

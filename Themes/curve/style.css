@@ -1,0 +1,547 @@
+/* ************************************* */
+/* Common styles for the theme           */
+/* ************************************* */
+
+/* Normal, standard links. */
+a:link, a:visited
+{
+	color: #346;
+	text-decoration: none;
+}
+a:hover
+{
+	text-decoration: underline;
+}
+
+/* Tables should show empty cells. */
+table
+{
+	empty-cells: show;
+}
+
+/* set the background gradient */
+html
+{
+	background: url(images/theme/backdrop.png) repeat-x #E9EEF2;
+}
+
+/* set a fontsize that will look the same in all browsers. */
+body
+{
+	font: 78%/115% verdana, Helvetica, sans-serif;
+	margin: 5px auto;
+	padding: 25px 0 20px 0;
+	width: 85%;
+	max-width: 1600px;
+	min-width: 650px;
+}
+
+/* use dark grey for the text, leaving black for headers etc */
+body, td, th , tr
+{
+	color: #444444;
+}
+
+/* lets give all forms zero padding/margins */
+form
+{
+	padding: 0px;
+	margin: 0px;
+}
+
+/* Input boxes - just a bit smaller than normal so they align well. */
+input, textarea, button
+{
+	color: #000000;
+	font: 80%/105% verdana, Helvetica, sans-serif;
+}
+input, button
+{
+	font-size: 90%;
+}
+
+textarea
+{
+	color: #000000;
+	font: 100%/130% verdana, Helvetica, sans-serif;
+}
+
+/* All input elements that are checkboxes or radio buttons. */
+input.check
+{
+}
+
+/* Selects are a bit smaller, because it makes them look even better 8). */
+select
+{
+	font-weight: normal;
+	color: #000000;
+	font: 90%/105% verdana, Helvetica, sans-serif;
+}
+
+/* Standard horizontal rule.. ([hr], etc.) */
+hr, .hrcolor
+{
+	height: 1px;
+	border: 0;
+	color: #666666;
+	background-color: #666666;
+}
+
+/* By default set the color on these tags as black. */
+h1, h2, h3, h4, h5, h6, h7
+{
+	color: black;
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
+}
+
+/* No image should have a border when linked. */
+a img
+{
+	border: 0;
+}
+
+/* No lines around buttons in Firefox! */
+a
+{
+	outline: none;
+}
+
+/* Reset all lists. */
+ul, ul li
+{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+/* ************************************* */
+/* Some handy custom classes             */
+/* ************************************* */
+
+/* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
+.smalltext, tr.smalltext th
+{
+	font-size: 0.85em;
+	font-family: verdana, sans-serif;
+}
+.middletext
+{
+	font-size: 0.9em;
+	line-height: 1em; 
+}
+.normaltext
+{
+	font-size: 1em;
+}
+.largetext
+{
+	font-size: 1.4em;
+}
+
+/* ************************************* */
+/* Some specific SMF elements            */
+/* ************************************* */
+
+/* A quote, perhaps from another post. */
+blockquote
+{
+	color: #000000;
+	background-color: #D7DAEC;
+	border: 1px solid #000000;
+	margin: 1px;
+	padding: 1px;
+	font-size: x-small;
+	line-height: 1.4em;
+}
+
+/* A code block - maybe even PHP ;). */
+code
+{
+	color: #000000;
+	background-color: #dddddd;
+	display: block;
+	font-family: "courier new", "times new roman", monospace;
+	font-size: x-small;
+	line-height: 1.3em;
+	/* Put a nice border around it. */
+	border: 1px solid #000000;
+	margin: 1px auto 1px auto;
+	padding: 1px;
+	width: 99%;
+	overflow: auto;
+	white-space: nowrap;
+	/* Stop after about 24 lines, and just show a scrollbar. */
+	max-height: 24em;
+}
+
+/* The "Quote:" and "Code:" header parts... */
+.quoteheader, .codeheader
+{
+	color: #000000;
+	text-decoration: none;
+	font-style: normal;
+	font-weight: bold;
+	font-size: x-small;
+	line-height: 1.2em;
+	width: 100%;
+}
+
+/* For links to change the code stuff... */
+.codeoperation
+{
+	font-weight: normal;
+}
+
+/* Styling for BBC tags */
+.bbc_color a
+{
+	color: inherit;
+}
+
+.bbc_img
+{
+	border: 0;
+}
+
+.bbc_list
+{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.bbc_size
+{
+	line-height: 1.3em;
+}
+
+.bbc_table
+{
+	font: inherit;
+	color: inherit;
+}
+
+.bbc_table td
+{
+	font: inherit;
+	color: inherit;
+	vertical-align: top;
+}
+
+.bbc_u
+{
+	text-decoration: underline;
+}
+
+/* Generally, those [?] icons.  This makes your cursor a help icon. */
+.help
+{
+	cursor: help;
+}
+
+/* /me uses this a lot. (emote, try typing /me in a post.) */
+.meaction
+{
+	color: red;
+}
+
+/* The main post box - this makes it as wide as possible. */
+.editor
+{
+	width: 96%;
+}
+
+/* Highlighted text - such as search results. */
+.highlight
+{
+	background-color: yellow;
+	font-weight: bold;
+	color: black;
+}
+
+/* A more discreet highlight colour, for selected membergroups etc. */
+.highlight2
+{
+	background-color: #B3F4B0;
+	color: black;
+}
+
+/* ************************************* */
+/* Real common classes                   */
+/* ************************************* */
+
+.titlebg, .titlebg2, tr.titlebg td, tr.titlebg2 td
+{
+	color: black;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 1.1em;
+	font-weight: bold;
+	background: url(images/titlebg.png) repeat-x;
+}
+.catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
+{
+	color: white;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 1.1em;
+	font-weight: bold;
+	background: url(images/catbg.png) repeat-x;
+}
+/* adjust the table versions of headers */
+tr.titlebg td, tr.titlebg2 td
+{
+	padding: 6px;
+}
+tr.catbg td, tr.catbg2 td, td.catbg, td.catbg2, tr.catbg th, tr.catbg2 th, th.catbg, th.catbg2
+{
+	padding: 6px;
+}
+tr.titlebg td a, tr.titlebg2 td a
+{
+	color: black;
+}
+tr.catbg td a, tr.catbg2 td a, .catbg a
+{
+	color: white;
+}
+tr.catbg th.smalltext
+{
+	font-size: 0.9em;
+}
+/* Alternating backgrounds for posts, and several other sections of the forum. */
+.windowbg, #preview_body
+{
+	color: #000000;
+	background-color: #e7eaef;
+}
+.windowbg2
+{
+	color: #000000;
+	background-color: #f0f4f7;
+}
+.windowbg3
+{
+	color: #000000;
+	background-color: #cacdd3;
+}
+
+/* Color for background of posts requiring approval */
+.approvebg
+{
+	color: #000000;
+	background-color: #ffeaea;
+}
+/* Color for background of *topics* requiring approval */
+.approvetbg
+{
+	color: #000000;
+	background-color: #E4A17C;
+}
+/* sticky posts have a different background */
+.stickybg
+{
+	background: #e8d8cf;
+}
+.stickybg2
+{
+	background: #f2e3d9;
+}
+/* locked posts too! */
+.lockedbg
+{
+	background: #d4dce2;
+	font-style: italic;
+}
+.lockedbg2
+{
+	background: #d8e1e7;
+	font-style: italic;
+}
+/* finally - sticky and locked */
+.stickybglockedbg
+{
+	background: #d4dce2;
+	font-style: italic;
+}
+.stickybglockedbg2
+{
+	font-style: italic;
+	background: #d8e1e7;
+}
+/* the today container in calendar */
+.calendar_today
+{
+	background-color: #FFFFFF;
+}
+
+/* Posts and personal messages displayed throughout the forum. */
+.post, .personalmessage
+{
+	width: 100%;
+	overflow: auto;
+	line-height: 1.4em;
+}
+
+/* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
+.signature
+{
+	width: 100%;
+	overflow: auto;
+	padding-bottom: 3px;
+	line-height: 1.3em;
+}
+/* lists in these need some re-styling */
+.post ul li, .personalmessage ul li, .signature ul li 
+{
+	list-style: disc outside;
+	margin: 0 0 0 2em;
+}
+.post ul li li, .personalmessage ul li li, .signature ul li li 
+{
+	list-style: circle outside;
+	margin: 0 0 0 2em;
+}
+
+
+/* Sometimes there will be an error when you post */
+.error
+{
+	color: red;
+}
+
+/* Calendar colours for birthdays, events and holidays */
+.birthday
+{
+	color: #920AC4;
+}
+
+.event
+{
+	color: #078907;
+}
+
+.holiday
+{
+	color: #000080;
+}
+
+/* Colours for warnings */
+.warn_mute
+{
+	color: red;
+}
+
+.warn_moderate
+{
+	color: orange;
+}
+
+.warn_watch
+{
+	color: green;
+}
+
+a.moderation_link, a.moderation_link:visited
+{
+	color: red;
+	font-weight: bold;
+}
+
+.openid_login
+{
+	background: white url(images/openid.gif) no-repeat;
+	padding-left: 18px;
+}
+
+/* The AJAX notifier */
+#ajax_in_progress
+{
+	background: #32CD32;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-size: 18pt;
+	padding: 3px;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+#ajax_in_progress a
+{
+	color: white;
+	text-decoration: underline;
+	font-size: smaller;
+	float: right;
+}
+.description
+{
+	padding: 1em;
+	font-size: 0.9em;
+	line-height: 1.5em;
+	border: solid 1px #bbb;
+	background: #f5f5f0;
+	margin: 0 0 1em 0;
+}
+/* some helping classes to place buttonlists */
+.align_right
+{
+	float: right;
+}
+.align_left
+{
+	float: left;
+}
+.pagesection
+{
+	height: 2em;	
+}
+/* a general table class */
+table.table_grid
+{
+	border-collapse: collapse;
+}
+table.table_grid td
+{
+	padding: 3px;
+	border-bottom: solid 1px white;
+	border-right: solid 1px white;
+}
+/* Helping style to clear floated items. */
+.clearfix:after 
+{
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.clearfix 
+{
+	display: inline-block;
+}
+
+/* Hides from IE-mac. \*/
+* html .clearfix 
+{
+	height: 1%;
+}
+.clearfix 
+{
+	display: block;
+}
+/* End hide from IE-mac. */
+
+/* ************************************* */
+/* Buttons and menus                     */
+/* ************************************* */
+
+/* the old type of menu, with images */
+.oldbuttonlist
+{
+	text-align: right;
+	padding: 0.5em;
+}

@@ -1,0 +1,143 @@
+/* ************************************* */
+/* styles from Profile.template       */
+/* ************************************* */
+
+/* The basic user info on the left */
+#basicinfo
+{
+	width: 20%;
+	float: left;
+}
+#detailedinfo
+{
+	width: 79%;
+	float: right;
+}
+#basicinfo .content, #detailedinfo .content
+{
+	padding: 0px 10px;
+}
+#basicinfo h4
+{
+	font-size: 180%;
+	font-weight: 100;
+	line-height: 105%;
+	white-space: normal;
+	overflow: hidden;
+}
+#basicinfo h4 span.position
+{
+	font-size: 65%;
+	font-weight: 100;
+	display: block;
+}
+#basicinfo img.avatar
+{
+	display: block;
+	margin: 10px 0 0 0;
+}
+#basicinfo ul
+{
+	list-style-type: none;
+	margin: 10px 0 0 0;
+}
+#basicinfo ul li
+{
+	display: block;
+	float: left;
+	margin-right: 5px;
+	height: 20px;
+}
+#basicinfo span#userstatus
+{
+	display: block;
+	clear: both;
+}
+#basicinfo span#userstatus img
+{
+	vertical-align: middle;
+}
+#detailedinfo div.content dl
+{
+	clear: both;
+	overflow: auto;
+	height: 0.1%;
+	margin: 0 0 18px 0;
+	padding: 0 0 15px 0;
+	border-bottom: 1px #ccc solid;
+}
+#detailedinfo div.content dt
+{
+	width: 30%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+	font-weight: bold;
+	clear: both;
+}
+#detailedinfo div.content dd
+{
+	width: 70%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+#detailedinfo div.content dl.noborder
+{
+	border-bottom: 0px;
+}
+#detailedinfo div.content dt.clear
+{
+	width: 100%;
+}
+.signature
+{
+	overflow: auto;
+}
+.signature h5
+{
+	font-size: 100%;
+	margin-bottom: 5px;
+}
+
+/* the old style profile menus */
+#left_admsection
+{
+	width: 150px;
+	float: left;
+}
+#main_admsection
+{
+	margin-left: 160px;
+}
+#main_admsection #basicinfo, #main_admsection #detailedinfo
+{
+	width: 100%;
+}
+#main_admsection #basicinfo h4
+{
+	float: left;
+}
+#main_admsection #basicinfo img.avatar
+{
+	float: right;
+	vertical-align: top;
+}
+#main_admsection #basicinfo ul
+{
+	clear: left;
+	padding-top: 10px;
+}
+#main_admsection #basicinfo span#userstatus
+{
+	clear: left;
+}
+#main_admsection #basicinfo p#infolinks
+{
+	display: none;
+	clear: both;
+}
+#main_admsection #basicinfo .botslice
+{
+	clear: both;
+}
