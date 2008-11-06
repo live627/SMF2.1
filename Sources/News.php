@@ -741,7 +741,7 @@ function getXmlRecent($xml_format)
 				'title' => cdata_parse($row['subject']),
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'description' => cdata_parse($row['body']),
-				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
+				'author' => in_array(showEmailAddress(!empty($row['hide_email']), $row['id_member']), array('yes', 'yes_permission_override')) ? $row['poster_email'] : null,
 				'category' => cdata_parse($row['bname']),
 				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
 				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
