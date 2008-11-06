@@ -52,6 +52,7 @@ October 2008
  ! Make it possible to have only the "change your custom title" permission. (Profile-Modify.php, Profile.php) [Bug 2701]
  ! Managing multilingual registration agreements wasn't quite working correctly. (ManageRegistration.php) [Bug 2696]
  & Split up the 'reply' text string, as it was used as both verb and noun. (index language file, Display template) [Bug 2714]
+ * When sending out newsletters, make sure to remember whether we're sending them as personal messages or not. (ManageNews template) [Bug 2414]
 
 
 September 2008

@@ -694,9 +694,9 @@ function SendMailing($clean_only = false)
 				$groups = array($row['id_group'], $row['id_post_group']);
 			else
 				$groups = array_merge(
-						array($row['id_group'], $row['id_post_group']),
-						explode(',', $row['additional_groups'])
-					);
+					array($row['id_group'], $row['id_post_group']),
+					explode(',', $row['additional_groups'])
+				);
 
 			// Excluded groups?
 			if (array_intersect($groups, $context['recipients']['exclude_groups']))

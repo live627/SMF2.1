@@ -252,6 +252,7 @@ function template_email_members_send()
 			<input type="hidden" name="start" value="', $context['start'], '" />
 			<input type="hidden" name="total_emails" value="', $context['total_emails'], '" />
 			<input type="hidden" name="max_id_member" value="', $context['max_id_member'], '" />
+			<input type="hidden" name="send_pm" value="', $context['send_pm'], '" />
 			<input type="hidden" name="send_html" value="', $context['send_html'], '" />
 			<input type="hidden" name="parse_html" value="', $context['parse_html'], '" />';
 
