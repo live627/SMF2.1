@@ -119,27 +119,12 @@ ul, ul li
 /* We can define lists to be lists tho! */
 ul.normallist
 {
-	padding-left:	2em;
+	padding-left: 2em;
 }
 
 ul.normallist li
 {
 	list-style: disc;
-}
-
-/* NOTE: REMOVE THIS??!?!?!! */
-/* But do use them in the posts area! */
-.post ul
-{
-	padding-left:	2em;
-}
-.post ul li
-{
-	list-style: disc;
-}
-.post ul li li
-{
-	list-style: circle;
 }
 
 /* ************************************* */
@@ -317,6 +302,17 @@ code
 {
 	margin-top: 0;
 	margin-bottom: 0;
+	margin-left: 2em;
+}
+
+.bbc_list li
+{
+	list-style: disc;
+}
+
+.bbc_list li li
+{
+	list-style: circle;
 }
 
 .bbc_size

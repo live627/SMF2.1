@@ -294,7 +294,8 @@ function template_generic_menu_tabs(&$menu_context)
 
 		// the end of tabs
 		echo '
-		</ul>';
+		</ul>
+	</div>';
 	}
 	// ...if not use the old style
 	else

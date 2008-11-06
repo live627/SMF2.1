@@ -210,6 +210,17 @@ code
 {
 	margin-top: 0;
 	margin-bottom: 0;
+	margin-left: 2em;
+}
+
+.bbc_list li
+{
+	list-style: disc;
+}
+
+.bbc_list li li
+{
+	list-style: circle;
 }
 
 .bbc_size
