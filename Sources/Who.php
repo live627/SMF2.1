@@ -75,7 +75,7 @@ function Who()
 		fatal_lang_error('who_off', false);
 
 	// Load the 'Who' template.
-	loadTemplate('Who');
+	loadTemplate('Who', 'who');
 	loadLanguage('Who');
 
 	// Sort out... the column sorting.
