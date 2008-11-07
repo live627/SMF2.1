@@ -36,7 +36,7 @@ if (isset($_GET['debug']) || isset($_POST['debug']))
 	set_error_handler('convert_error_handler');
 
 // We now have CLI support.
-if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
+if ((php_sapi_name() == 'cli' || (isset($_SERVER['TERM']) && $_SERVER['TERM'] == 'xterm')) && empty($_SERVER['REMOTE_ADDR']))
 {
 	$command_line = true;
 	cmdStep0();

@@ -241,7 +241,7 @@ $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_member');
 
 $newfilename = 'avatar_' . $row['id_member'] . strrchr($row['filename'], '.');
-if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/avatars/', $attachmentUploadDir . '/' . $newfilename))
+if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/components/com_fireboard/avatars/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($newfilename) . "', $row[id_member]";
 	$id_attach++;
