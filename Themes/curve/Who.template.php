@@ -8,19 +8,14 @@ function template_main()
 
 	// Display the table header and linktree.
 	echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>
-	<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
-	<table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder">
-		<tr class="titlebg">
-			<td colspan="3">
-				', $txt['who_title'], '
-			</td>
-		</tr>
-		<tr class="catbg">
-			<td width="30%"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '" rel="nofollow">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td style="width: 14ex;"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=time', $context['sort_direction'] == 'down' && $context['sort_by'] == 'time' ? ';asc' : '', '" rel="nofollow">', $txt['who_time'], ' ', $context['sort_by'] == 'time' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td>', $txt['who_action'], '</td>
-		</tr>';
+	<div class="tborder" id="whos_online">
+		<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['who_title'], '</h3>
+			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				<span class="who"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '" rel="nofollow">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></span>
+				<span class="time"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=time', $context['sort_direction'] == 'down' && $context['sort_by'] == 'time' ? ';asc' : '', '" rel="nofollow">', $txt['who_time'], ' ', $context['sort_by'] == 'time' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></span>
+				<span class="action">', $txt['who_action'], '</span>
+			</h4>';
 
 	// This is used to alternate the color of the background.
 	$alternate = true;
@@ -30,31 +25,30 @@ function template_main()
 	{
 		// $alternate will either be true or false. If it's true, use "windowbg2" and otherwise use "windowbg".
 		echo '
-		<tr class="windowbg', $alternate ? '2' : '', '">
-			<td>';
+			<div class="clearfix">
+				<ul class="windowbg', $alternate ? '2' : '', '">
+					<li class="who">';
 
 		// Guests don't have information like icq, msn, y!, and aim... and they can't be messaged.
 		if (!$member['is_guest'])
-		{
 			echo '
-				<div style="float: right; width: 14ex;">
-					', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="middle" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
-					', $member['icq']['link'], ' ', $member['msn']['link'], ' ', $member['yim']['link'], ' ', $member['aim']['link'], '
-				</div>';
-		}
+						<span>
+							', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
+							', $member['icq']['link'], ' ', $member['msn']['link'], ' ', $member['yim']['link'], ' ', $member['aim']['link'], '
+						</span>';
 
-		echo '
-				<span', $member['is_hidden'] ? ' style="font-style: italic;"' : '', '>', $member['is_guest'] ? $member['name'] : '<a href="' . $member['href'] . '" title="' . $txt['profile_of'] . ' ' . $member['name'] . '"' . (empty($member['color']) ? '' : ' style="color: ' . $member['color'] . '"') . '>' . $member['name'] . '</a>', '</span>';
+		echo $member['is_hidden'] ? '<em>' : '', $member['is_guest'] ? $member['name'] : '<a href="' . $member['href'] . '" title="' . $txt['profile_of'] . ' ' . $member['name'] . '"' . (empty($member['color']) ? '' : ' style="color: ' . $member['color'] . '"') . '>' . $member['name'] . '</a>', $member['is_hidden'] ? '</em>' : '';
 
 		if (!empty($member['ip']))
 			echo '
-				(<a href="' . $scripturl . '?action=', ($member['is_guest'] ? 'trackip' : 'profile;sa=tracking;area=ip;u=' . $member['id']), ';searchip=' . $member['ip'] . '">' . $member['ip'] . '</a>)';
+						(<a href="' . $scripturl . '?action=', ($member['is_guest'] ? 'trackip' : 'profile;sa=tracking;area=ip;u=' . $member['id']), ';searchip=' . $member['ip'] . '">' . $member['ip'] . '</a>)';
 
 		echo '
-			</td>
-			<td nowrap="nowrap">', $member['time'], '</td>
-			<td>', $member['action'], '</td>
-		</tr>';
+					</li>
+					<li class="time">', $member['time'], '</li>
+					<li class="action">', $member['action'], '</li>
+				</ul>
+			</div>';
 
 		// Switch alternate to whatever it wasn't this time. (true -> false -> true -> false, etc.)
 		$alternate = !$alternate;
@@ -63,19 +57,13 @@ function template_main()
 	// No members?
 	if (empty($context['members']))
 		echo '
-		<tr class="windowbg2">
-			<td colspan="3" align="center">
+			<div id="whos_none" class="windowbg2">
 				', $txt['who_no_online_' . ($context['show_by'] == 'guests' || $context['show_by'] == 'spiders' ? $context['show_by'] : 'members')], '
-			</td>
-		</tr>';
+			</div>';
 
 	echo '
-		<tr class="catbg">
-			<td colspan="3">
-				<div style="float: left;">
-					<b>', $txt['pages'], ':</b> ', $context['page_index'], '
-				</div>
-				<div class="smalltext" style="float: right; font-weight: normal;">', $txt['who_show1'], '
+			<h4 id="pages_below" class="titlebg"><span class="left"></span><span class="right"></span>
+				<span class="selectbox">', $txt['who_show1'], '
 					<select name="show" onchange="document.forms.whoFilter.submit();">';
 
 	foreach ($context['show_methods'] as $value => $label)
@@ -86,11 +74,11 @@ function template_main()
 					<noscript>
 						<input type="submit" value="', $txt['go'], '" />
 					</noscript>
-				</div>
-			</td>
-		</tr>
-	</table>
-	</form>';
+				</span>
+				', $txt['pages'], ': ', $context['page_index'], '
+			</h4>
+		</form>
+	</div>';
 }
 
 function template_credits()
@@ -100,7 +88,7 @@ function template_credits()
 	// The most important part - the credits :P.
 	echo '
 	<div class="tborder windowbg2" id="credits">
-		<h3>', $txt['credits'], '</h3>';
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['credits'], '</h3>';
 
 	foreach ($context['credits'] as $section)
 	{
