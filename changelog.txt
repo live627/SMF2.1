@@ -3,6 +3,13 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC1                                                                  ???
 ================================================================================
+November 2008
+--------------------------------------------------------------------------------
+ & Split up the 'reply' text string, as it was used as both verb and noun. (index language file, Display template) [Bug 2714]
+ * When sending out newsletters, make sure to remember whether we're sending them as personal messages or not. (ManageNews template) [Bug 2414]
+ ! Email addresses weren't hidden properly in recent posts RSS feeds. (News.php) [Bug 2615]
+ & Replaced the warning icons on the Display template with some that reflect their nature better. (warn.gif, warning_moderate.gif, warning_mute.gif, warning_watch.gif) [Bug 977]
+
 October 2008
 --------------------------------------------------------------------------------
  ! PostgreSQL doesn't have instr() (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 2657]
@@ -51,9 +58,7 @@ October 2008
  ! Updated the text in the language install screen to use a list, cause it looks better. (ManageSettings language file)
  ! Make it possible to have only the "change your custom title" permission. (Profile-Modify.php, Profile.php) [Bug 2701]
  ! Managing multilingual registration agreements wasn't quite working correctly. (ManageRegistration.php) [Bug 2696]
- & Split up the 'reply' text string, as it was used as both verb and noun. (index language file, Display template) [Bug 2714]
- * When sending out newsletters, make sure to remember whether we're sending them as personal messages or not. (ManageNews template) [Bug 2414]
- ! Email addresses weren't hidden properly in recent posts RSS feeds. (News.php) [Bug 2615]
+
 
 September 2008
 --------------------------------------------------------------------------------
