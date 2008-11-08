@@ -8,7 +8,8 @@ November 2008
  & Split up the 'reply' text string, as it was used as both verb and noun. (index language file, Display template) [Bug 2714]
  * When sending out newsletters, make sure to remember whether we're sending them as personal messages or not. (ManageNews template) [Bug 2414]
  ! Email addresses weren't hidden properly in recent posts RSS feeds. (News.php) [Bug 2615]
- & Replaced the warning icons on the Display template with some that reflect their nature better. (warn.gif, warning_moderate.gif, warning_mute.gif, warning_watch.gif) [Bug 977]
+ * Replaced the warning icons on the Display template with some that reflect their nature better. (warn.gif, warning_moderate.gif, warning_mute.gif, warning_watch.gif) [Bug 977]
+ & Made capitalization of forum timestamps optional on a per-language basis. (Subs.php, index language file) [Bug 416]
 
 October 2008
 --------------------------------------------------------------------------------
