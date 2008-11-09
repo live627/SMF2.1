@@ -136,7 +136,7 @@ function cleanRequest()
 
 		// Replace ';' with '&' and '&something&' with '&something=&'.  (this is done for compatibility...)
 		// !!! smflib
-		parse_str(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(urldecode($_SERVER['QUERY_STRING']), array(';?' => '&', ';' => '&'))), $_GET);
+		parse_str(preg_replace('/&(\w+)(?=&|$)/', '&$1=', strtr(urldecode($_SERVER['QUERY_STRING']), array(';?' => '&', ';' => '&', '%00' => '', "\0" => ''))), $_GET);
 
 		// Magic quotes still applies with parse_str - so clean it up.
 		if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))

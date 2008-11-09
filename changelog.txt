@@ -10,10 +10,15 @@ November 2008
  ! Email addresses weren't hidden properly in recent posts RSS feeds. (News.php) [Bug 2615]
  * Replaced the warning icons on the Display template with some that reflect their nature better. (warn.gif, warning_moderate.gif, warning_mute.gif, warning_watch.gif) [Bug 977]
  & Made capitalization of forum timestamps optional on a per-language basis. (Subs.php, index language file) [Bug 416]
- + Added Sphinx search	 files to the repository. (sphinx_config.php, SearchAPI-Sphinx.php)
+ + Added Sphinx search files to the repository. (sphinx_config.php, SearchAPI-Sphinx.php)
  ! Added a method to the Search API's allowing to dynamically determine which methods it supports. (Search.php, SearchAPI-Custom.php, SearchAPI-Fulltext.php, SearchAPI-Sphinx.php, SearchAPI-Standard.php)
  ! Fixed the subject only search not working properly in Sphinx. (SearchAPI-Sphinx.php) [Bug 1567]
  ! Mails sent to Yahoo and Hotmail accounts no longer need special treatment. (Subs-Post.php) [Bug 1910]
+ ! Added a check to prevent null byte insertion. (QueryString.php)
+ ! Added an additional check on theme data insertion. (Themes.php)
+ ! Prevent certain ascii data to appear in avatars. (Subs-Graphics.php)
+ ! Added an .htaccess for the packages directory. (Packages/.htaccess)
+ ! Fixed a few undefined index notices. (SSI.php, Help.php)
 
 
 October 2008

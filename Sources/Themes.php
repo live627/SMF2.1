@@ -1609,6 +1609,29 @@ function SetJavaScript()
 	if (empty($_GET['var']) || !isset($_GET['val']))
 		redirectexit($settings['images_url'] . '/blank.gif');
 
+	$reservedVars = array(
+		'actual_theme_url',
+		'actual_images_url',
+		'base_theme_dir',
+		'base_theme_url',
+		'default_images_url',
+		'default_theme_dir',
+		'default_theme_url',
+		'default_template',
+		'images_url',
+		'number_recent_posts',
+		'smiley_sets_default',
+		'theme_dir',
+		'theme_id',
+		'theme_layers',
+		'theme_templates',
+		'theme_url',
+	);
+
+	// Can't change reserved vars.
+	if (in_array(strtolower($_GET['var']), $reservedVars))
+		redirectexit($settings['images_url'] . '/blank.gif');
+
 	// Use a specific theme?
 	if (isset($_GET['th']) || isset($_GET['id']))
 	{

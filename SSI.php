@@ -99,11 +99,8 @@ elseif (isset($_REQUEST['ssi_theme']) && (int) $_REQUEST['ssi_theme'] == (int) $
 	die('Hacking attempt...');
 elseif (isset($_COOKIE['ssi_theme']) && (int) $_COOKIE['ssi_theme'] == (int) $ssi_theme)
 	die('Hacking attempt...');
-elseif (isset($_REQUEST['ssi_layers']))
-{
-	if ((function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() ? addslashes($_REQUEST['ssi_layers']) : $_REQUEST['ssi_layers']) == htmlspecialchars($ssi_layers))
-		die('Hacking attempt...');
-}
+elseif (isset($_REQUEST['ssi_layers'], $ssi_layers) && (@get_magic_quotes_gpc() ? stripslashes($_REQUEST['ssi_layers']) : $_REQUEST['ssi_layers']) == $ssi_layers)
+	die('Hacking attempt...');
 if (isset($_REQUEST['context']))
 	die('Hacking attempt...');
 

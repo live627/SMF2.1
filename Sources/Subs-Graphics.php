@@ -157,7 +157,16 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	$fp = fopen($destName, 'wb');
 	if ($fp && substr($url, 0, 7) == 'http://')
 	{
-		fwrite($fp, fetch_web_data($url));
+		$fileContents = fetch_web_data($url);
+
+		// Though not an exhaustive list, better safe than sorry.
+		if (preg_match('~(iframe|\\<\\?php|\\<\\?|\\<%|html|eval|body|script)~', $fileContents) === 1)
+		{
+			fclose($fp);
+			return false;
+		}
+
+		fwrite($fp, $fileContents);
 		fclose($fp);
 	}
 	elseif ($fp)
