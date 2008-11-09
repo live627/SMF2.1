@@ -325,7 +325,7 @@ function PlushSearch2()
 	// Create an instance of the search API and check it is valid for this version of SMF.
 	$search_class_name = $modSettings['search_index'] . '_search';
 	$searchAPI = new $search_class_name();
-	if (!$searchAPI || (method_exists($searchAPI, 'isValid') && !$searchAPI->isValid()) || $search_versions['forum_version'] < $searchAPI->min_smf_version || $search_versions['search_version'] > $searchAPI->version_compatible)
+	if (!$searchAPI || ($searchAPI->supportsMethod('isValid') && !$searchAPI->isValid()) || $search_versions['forum_version'] < $searchAPI->min_smf_version || $search_versions['search_version'] > $searchAPI->version_compatible)
 	{
 		// Log the error.
 		loadLanguage('Errors');
@@ -713,7 +713,7 @@ function PlushSearch2()
 		);
 
 		// Sort the indexed words (large words -> small words -> excluded words).
-		if (method_exists($searchAPI, 'searchSort'))
+		if ($searchAPI->supportsMethod('searchSort'))
 			usort($orParts[$orIndex], 'searchSort');
 
 		foreach ($orParts[$orIndex] as $word)
@@ -733,7 +733,7 @@ function PlushSearch2()
 				$excludedPhrases[] = $word;
 
 			// Have we got indexes to prepare?
-			if (method_exists($searchAPI, 'prepareIndexes'))
+			if ($searchAPI->supportsMethod('prepareIndexes'))
 				$searchAPI->prepareIndexes($word, $searchWords[$orIndex], $excludedIndexWords, $is_excluded);
 		}
 
@@ -938,19 +938,21 @@ function PlushSearch2()
 
 	// *** Reserve an ID for caching the search results.
 
-	// Does this search method have it's own query function?
-	if (method_exists($searchAPI, 'searchQuery'))
+	$query_params = array_merge($search_params, array(
+		'min_msg_id' => isset($minMsgID) ? (int) $minMsgID : 0,
+		'max_msg_id' => isset($maxMsgID) ? (int) $maxMsgID : 0,
+		'memberlist' => !empty($memberlist) ? $memberlist : array(),
+	));
+
+	// Can this search rely on the API given the parameters?
+	if ($searchAPI->supportsMethod('searchQuery', $query_params))
 	{
 		$participants = array();
 		$searchArray = array();
 
-		$query_params = array_merge($search_params, array(
-			'min_msg_id' => isset($minMsgID) ? (int) $minMsgID : 0,
-			'max_msg_id' => isset($maxMsgID) ? (int) $maxMsgID : 0,
-			'memberlist' => !empty($memberlist) ? $memberlist : array(),
-		));
 		$num_results = $searchAPI->searchQuery($query_params, $searchWords, $excludedIndexWords, $participants, $searchArray);
 	}
+
 	// Update the cache if the current search term is not yet cached.
 	else
 	{
@@ -1353,7 +1355,7 @@ function PlushSearch2()
 
 				$indexedResults = 0;
 				// We building an index?
-				if (method_exists($searchAPI, 'indexedWordQuery'))
+				if ($searchAPI->supportsMethod('indexedWordQuery', $query_params))
 				{
 					$inserts = array();
 					$smcFunc['db_search_query']('drop_tmp_log_search_messages', '
@@ -1508,7 +1510,7 @@ function PlushSearch2()
 				}
 
 				// Did we either get some indexed results, or otherwise did not do an indexed query?
-				if (!empty($indexedResults) || !method_exists($searchAPI, 'indexedWordQuery'))
+				if (!empty($indexedResults) || !$searchAPI->supportsMethod('indexedWordQuery', $query_params))
 				{
 					$relevance = '1000 * (';
 					$new_weight_total = 0;

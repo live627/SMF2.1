@@ -65,11 +65,28 @@ class fulltext_search
 		$this->canDoBooleanSearch = version_compare($smcFunc['db_server_info']($db_connection), '4.0.1', '>=') == 1;
 
 		$this->bannedWords = empty($modSettings['search_banned_words']) ? array() : explode(',', $modSettings['search_banned_words']);
-		$this->min_word_length = $this->__getMinWordLength();
+		$this->min_word_length = $this->_getMinWordLength();
+	}
+
+	// Check whether the method can be performed by this API.
+	public function supportsMethod($methodName, $query_params = null)
+	{
+		switch ($methodName)
+		{
+			case 'searchSort':
+			case 'prepareIndexes':
+			case 'indexedWordQuery':
+				return true;
+			break;
+
+			default:
+				return false;
+			break;
+		}
 	}
 
 	// What is the minimum word length full text supports?
-	protected function __getMinWordLength()
+	protected function _getMinWordLength()
 	{
 		global $smcFunc;
 

@@ -69,6 +69,26 @@ class custom_search
 		$this->min_word_length = $this->indexSettings['bytes_per_word'];
 	}
 
+	// Check whether the search can be performed by this API.
+	public function supportsMethod($methodName, $query_params = null)
+	{
+		switch ($methodName)
+		{
+			case 'isValid':
+			case 'searchSort':
+			case 'prepareIndexes':
+			case 'indexedWordQuery':
+				return true;
+			break;
+
+			default:
+
+				// All other methods, too bad dunno you.
+				return false;
+			return;
+		}
+	}
+
 	// If the settings don't exist we can't continue.
 	public function isValid()
 	{
