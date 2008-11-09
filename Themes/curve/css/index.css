@@ -99,6 +99,10 @@ ul#upper_section li.user ul
 	padding-left: 10px;
 	min-height: 70px;
 }
+ul#upper_section li.user ul li
+{
+	margin-bottom: 2px;
+}
 ul#upper_section li.news h3, ul#upper_section li.news p
 {
 	display: inline;
@@ -106,7 +110,7 @@ ul#upper_section li.news h3, ul#upper_section li.news p
 ul#upper_section li.news form
 {
 	clear: both;
-	padding-top: 10px; 
+	padding-top: 10px;
 }
 
 /* the dropdown menus */
@@ -473,4 +477,3 @@ h4.titlebg span.right
 	background: url(../images/theme/approvebg_botslice2.png) top right no-repeat;
 	height: 11px;
 }
-

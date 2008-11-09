@@ -217,7 +217,8 @@ function template_body_above()
 				echo '				
 					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
 		
-			echo '				
+			echo '
+					<li>' , $context['current_time'], '</li>
 				</ul>';
 		}
 		// Otherwise they're a guest - this time ask them to either register or login - lazy bums...

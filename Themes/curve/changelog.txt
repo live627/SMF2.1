@@ -7,7 +7,8 @@ October 2008
 --------------------------------------------------------------------------------
  * Updated Curve's profile template to include the new 'view warning' action. (Profile template)
  * Converted Who.template (Who template)
- & The background of generic menus in Curve was overruled unintentionally. (dropmenu.css)
+ * The background of generic menus in Curve was overruled unintentionally. (dropmenu.css)
+ * Re-introduced the current time in the upper section. (index template)
 
 Legend:
 --------------------------------------------------------------------------------
