@@ -1,7 +1,6 @@
-/* tweak the admin menu abit! */
+/* Tweak the admin menu a bit! */
 #adm_container
 {
-	background: none;
 	font-weight: normal;
 }
 #adm_container ul#adm_menu

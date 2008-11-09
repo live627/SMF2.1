@@ -6,8 +6,8 @@ SMF 2.0 RC1                                                                  ???
 October 2008
 --------------------------------------------------------------------------------
  * Updated Curve's profile template to include the new 'view warning' action. (Profile template)
- * Converted Who.template (Who.template)
-
+ * Converted Who.template (Who template)
+ & The background of generic menus in Curve was overruled unintentionally. (dropmenu.css)
 
 Legend:
 --------------------------------------------------------------------------------
