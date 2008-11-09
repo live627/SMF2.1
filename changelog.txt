@@ -13,6 +13,7 @@ November 2008
  + Added Sphinx search	 files to the repository. (sphinx_config.php, SearchAPI-Sphinx.php)
  ! Added a method to the Search API's allowing to dynamically determine which methods it supports. (Search.php, SearchAPI-Custom.php, SearchAPI-Fulltext.php, SearchAPI-Sphinx.php, SearchAPI-Standard.php)
  ! Fixed the subject only search not working properly in Sphinx. (SearchAPI-Sphinx.php) [Bug 1567]
+ ! Mails sent to Yahoo and Hotmail accounts no longer need special treatment. (Subs-Post.php) [Bug 1910]
 
 
 October 2008

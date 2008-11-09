@@ -637,13 +637,14 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	// If the recipient list isn't an array, make it one.
 	$to_array = is_array($to) ? $to : array($to);
 
-	// Sadly Hotmail & Yahoo mail don't support character sets properly.
+	// Once upon a time, Hotmail could not interpret non-ASCII mails.
+	// In honour of those days, it's still called the 'hotmail fix'.
 	if ($hotmail_fix === null)
 	{
 		$hotmail_to = array();
 		foreach ($to_array as $i => $to_address)
 		{
-			if (preg_match('~@(yahoo|hotmail|att|comcast|bellsouth)\.[a-zA-Z\.]{2,6}$~i', $to_address) === 1)
+			if (preg_match('~@(att|comcast|bellsouth)\.[a-zA-Z\.]{2,6}$~i', $to_address) === 1)
 			{
 				$hotmail_to[] = $to_address;
 				$to_array = array_diff($to_array, array($to_address));
