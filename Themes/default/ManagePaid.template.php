@@ -406,7 +406,7 @@ function template_user_subscription()
 	global $context, $txt, $scripturl, $modSettings;
 
 	echo '
-	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=subscriptions;confirm" method="post">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=subscriptions;confirm" method="post">
 		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="2">
