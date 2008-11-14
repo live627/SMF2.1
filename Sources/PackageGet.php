@@ -673,7 +673,7 @@ function PackageUpload()
 	{
 		@unlink($destination);
 		loadLanguage('Errors');
-		fatal_lang_error('package_upload_error_broken', false, &$txt[$context['package']]);
+		fatal_lang_error('package_upload_error_broken', false, $txt[$context['package']]);
 	}
 
 	if ($context['package']['type'] == 'modification')
