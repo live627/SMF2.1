@@ -19,7 +19,7 @@ November 2008
  ! Prevent certain ascii data to appear in avatars. (Subs-Graphics.php)
  ! Added an .htaccess for the packages directory. (Packages/.htaccess)
  ! Fixed a few undefined index notices. (SSI.php, Help.php)
-
+ ! Recalculating the amount of replies per topic wasn't quite working correctly with PostgreSQL. (RepairBoards.php) [Bug 2670]
 
 October 2008
 --------------------------------------------------------------------------------
