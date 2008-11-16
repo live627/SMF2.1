@@ -79,7 +79,7 @@ if (!defined('SMF'))
 */
 
 // This just avoids some repetition.
-function loadGeneralSettingParameters(&$subActions = array(), $defaultAction = '')
+function loadGeneralSettingParameters($subActions = array(), $defaultAction = '')
 {
 	global $context, $txt, $sourcedir;
 
