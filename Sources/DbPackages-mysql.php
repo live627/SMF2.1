@@ -173,7 +173,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$default = '';
 
 		// Sort out the size... and stuff...
-		$column['size'] = isset($column['size']) ? $column['size'] : null;
+		$column['size'] = isset($column['size']) && is_numeric($column_info['size']) ? $column['size'] : null;
 		list ($type, $size) = $smcFunc['db_calculate_type']($column['type'], $column['size']);
 		if ($size !== null)
 			$type = $type . '(' . $size . ')';
@@ -263,7 +263,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 		}
 
 	// Get the specifics...
-	$column_info['size'] = isset($column_info['size']) ? $column_info['size'] : null;
+	$column_info['size'] = isset($column_info['size']) && is_numeric($column_info['size']) ? $column_info['size'] : null;
 	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
 	if ($size !== null)
 		$type = $type . '(' . $size . ')';
@@ -339,7 +339,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		$column_info['auto'] = $old_info['auto'];
 	if (!isset($column_info['type']))
 		$column_info['type'] = $old_info['type'];
-	if (!isset($column_info['size']))
+	if (!isset($column_info['size']) || !is_numeric($column_info['size']))
 		$column_info['size'] = $old_info['size'];
 
 	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
