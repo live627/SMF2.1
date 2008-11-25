@@ -528,7 +528,14 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 	}
 	// Also check if you typed your password correctly.
 	elseif (empty($post_errors))
+	{
 		deleteMembers($memID);
+
+		require_once($sourcedir . '/LogInOut.php');
+		LogOut(true);
+
+		redirectExit();
+	}
 }
 
 // Function for doing all the paid subscription stuff - kinda.
