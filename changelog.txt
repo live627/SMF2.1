@@ -22,6 +22,7 @@ November 2008
  ! Recalculating the amount of replies per topic wasn't quite working correctly with PostgreSQL. (RepairBoards.php) [Bug 2670]
  ! Users deleting their own accounts were improperly redirected. (Profile-Actions.php) [Bug 2760]
  ! Allow some of the database operation functions to accept an empty string as size parameter. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2761]
+ ! Fixed a typo in one of the comments. (Search.php) [Bug 2754]
 
 
 October 2008
