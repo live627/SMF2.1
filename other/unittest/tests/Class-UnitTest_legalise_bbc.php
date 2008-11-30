@@ -118,6 +118,14 @@
 				'input' => '[quote]a[/quote',
 				'output' => '[quote]a[/quote[/quote]',
 			),
+			'incomplete_tags_2' => array(
+				'name' => 'Incomplete tags (2)',
+				'description' => "Make sure that crippled tags are ignored.\n\nOpen tag with a postfix.",
+				'input' => '[sabc]xyz',
+				'output' => '[sabc]xyz',
+			),
+			
+			
 			'tags_with_content_1' => array(
 				'name' => 'Tags with properties (1)',
 				'description' => "Make sure that tags with content are properly handled.\n\nStandard quote tag.",

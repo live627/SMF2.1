@@ -24,7 +24,7 @@ November 2008
  ! Allow some of the database operation functions to accept an empty string as size parameter. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2761]
  ! Fixed a typo in one of the comments. (Search.php) [Bug 2754]
  ! Sorting bans by number of trigger caused a database error. (ManageBans.php) [Bug 2770]
-
+ ! Partially matching tags were in some cases interpreted by legalise_bbc as full matches. (Subs-Editor.php) [Bug 2767]
 
 October 2008
 --------------------------------------------------------------------------------
