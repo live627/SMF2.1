@@ -199,7 +199,7 @@ function template_main()
 	}
 
 	echo '
-	<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : confirm(\'' . $txt['quickmod_confirm'] . '\');">';
+	<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : false">';
 
 	// These are some cache image buttons we may want.
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -210,12 +210,15 @@ function template_main()
 	$restore_message_button = create_button('restore_topic.gif', 'restore_message', 'restore_message', 'align="middle"');
 
 	$ignoredMsgs = array();
+	$messageIDs = array();
 
 	// Get all the messages...
 	while ($message = $context['get_message']())
 	{
 		$is_first_post = !isset($is_first_post) ? true : false;
 		$ignoring = false;
+		$messageIDs[] = $message['id'];
+
 		echo '
 		<div class="bordercolor">';
 
@@ -417,7 +420,7 @@ function template_main()
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
 			echo '
-						<li><input type="checkbox" name="msgs[]" value="', $message['id'], '" class="check" ', empty($settings['use_tabs']) ? 'onclick="document.getElementById(\'quickmodSubmit\').style.display = \'\';"' : '', ' /></li>';
+						<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
 
 		// Show the post itself, finally!
 		echo '
@@ -546,9 +549,6 @@ function template_main()
 			</div>
 		</div>';
 	}
-	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
-		echo '
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 
 	echo '
 	</form>';
@@ -582,16 +582,9 @@ function template_main()
 		'calendar' => array('test' => 'calendar_post', 'text' => 'calendar_link', 'image' => 'linktocal.gif', 'lang' => true, 'url' => $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id']),
 	);
 
-	if ($context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
-		$mod_buttons[] = array('text' => 'quickmod_delete_selected', 'image' => 'delete_selected.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['quickmod_confirm'] . '\');" id="quickmodSubmit"', 'url' => 'javascript:document.quickModForm.submit();');
-
 	// Restore topic. eh?  No monkey business.
 	if ($context['can_restore_topic'])
 		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';sesc=' . $context['session_id']);
-
-	// Restore messages?
-	if ($context['can_restore_msg'])
-		$mod_buttons[] = array('text' => 'quick_mod_restore', 'image' => '', 'lang' => true, 'url' => 'javascript:document.quickModForm.submit();', 'custom' => ' name="restore_selected" ');
 
 	echo '
 <div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom'), '</div>';
@@ -676,9 +669,25 @@ function template_main()
 		sJumpAnchor: "quickreply"
 	});';
 
-	if (empty($settings['use_tabs']) && $context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
 		echo '
-	document.getElementById("quickmodSubmit").style.display = "none";';
+	var oInTopicModeration = new InTopicModeration({
+		sSelf: \'oInTopicModeration\',
+		sCheckboxContainerMask: \'in_topic_mod_check_\',
+		aMessageIds: [\'', implode('\', \'', $messageIDs), '\'],
+		sSessionId: \'', $context['session_id'], '\',
+		sButtonStrip: \'moderationbuttons\',
+		bUseImageButton: false,
+		bCanRemove: ', $context['can_remove_post'] ? 'true' : 'false', ',
+		sRemoveButtonLabel: \'', $txt['quickmod_delete_selected'], '\',
+		sRemoveButtonImage: \'delete_selected.gif\',
+		sRemoveButtonConfirm: \'', $txt['quickmod_confirm'], '\',
+		bCanRestore: ', $context['can_restore_msg'] ? 'true' : 'false', ',
+		sRestoreButtonLabel: \'', $txt['quick_mod_restore'], '\',
+		sRestoreButtonImage: \'restore_selected.gif\',
+		sRestoreButtonConfirm: \'', $txt['quickmod_confirm'], '\',
+		sFormId: \'quickModForm\'
+	});';
 
 	echo '
 	if (typeof(window.XMLHttpRequest) != "undefined")

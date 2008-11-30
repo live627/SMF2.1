@@ -25,6 +25,11 @@ November 2008
  ! Fixed a typo in one of the comments. (Search.php) [Bug 2754]
  ! Sorting bans by number of trigger caused a database error. (ManageBans.php) [Bug 2770]
  ! Partially matching tags were in some cases interpreted by legalise_bbc as full matches. (Subs-Editor.php) [Bug 2767]
+ ! Fixed in-topic-restore not working properly. (Display template) [Bug 2651]
+ ! Moved in-topic-moderation function to object oriented and external JavaScript. (Display template, xml_topic.js)
+ + Added a counter to the remove/restore buttons in case an in topic selection is being made (xml_topic.js)
+ * Added a theme-specific JavaScript function to add menu items dynamically. (index template, theme.js)
+
 
 October 2008
 --------------------------------------------------------------------------------

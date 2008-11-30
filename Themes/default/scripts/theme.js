@@ -37,3 +37,20 @@ function smf_codeBoxFix()
 		}
 	}
 }
+
+function smf_addButton(sButtonStripId, bUseImage, oOptions)
+{
+	var oButtonStrip = document.getElementById(sButtonStripId);
+	var aItems = oButtonStrip.getElementsByTagName('span');
+
+	// Remove the 'last' class from the last item.
+	var oLastSpan = aItems[aItems.length - 1];
+	oLastSpan.className = oLastSpan.className.replace(/\s*last/, '');
+
+	// Add the button.
+	var oButtonStripList = oButtonStrip.getElementsByTagName('ul')[0];
+	var oNewButton = document.createElement('li');
+	setInnerHTML(oNewButton, '<a href="' + oOptions.sUrl + '" ' + (typeof(oOptions.sCustom) == 'string' ? oOptions.sCustom : '') + '><span class="last"' + (typeof(oOptions.sId) == 'string' ? ' id="' + oOptions.sId + '"': '') + '>' + oOptions.sText + '</span></a>');
+
+	oButtonStripList.appendChild(oNewButton);
+}

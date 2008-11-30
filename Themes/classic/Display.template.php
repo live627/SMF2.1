@@ -227,16 +227,18 @@ function template_main()
 	</tr>
 </table>';
 
-	//if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
-		echo '
-<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : confirm(\'' . $txt['quickmod_confirm'] . '\');">';
+	echo '
+<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : false;">';
 
 	echo '
 <table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
 	// Get all the messages...
+	$messageIDs = array();
 	while ($message = $context['get_message']())
 	{
+		$messageIDs[] = $message['id'];
+
 		echo '
 	<tr><td style="padding: 1px 1px 0 1px;">';
 
@@ -418,7 +420,7 @@ function template_main()
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
 			echo '
-									<input type="checkbox" name="msgs[]" value="', $message['id'], '" class="check" />';
+									<div style="display: none;" id="in_topic_mod_check_', $message['id'], '"></div>';
 
 		// Show the post itself, finally!
 		echo '
@@ -566,16 +568,13 @@ function template_main()
 	echo '
 		<td valign="top" align="right" class="smalltext"> <span class="nav"> ', $context['previous_next'], '</span></td>
 	</tr><tr>
-		<td align="left" colspan="2" style="padding-top: 4px;">
+		<td align="left" colspan="2" style="padding-top: 4px;" id="moderationbuttons">
 			', theme_show_mod_buttons(), '
 		</td>
 	</tr>
 </table>';
 
 	// This button has an identity crisis: it wishes it were an image. (kinda like the characters in The Wizard of Oz.)
-	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
-		echo '
-	<input type="hidden" name="sc" value="', $context['session_id'], '">';
 	echo '
 </form>';
 
@@ -654,6 +653,26 @@ function template_main()
 		sImageCollapsed: "collapse.gif",
 		sImageExpanded: "expand.gif",
 		sJumpAnchor: "quickreply"
+	});';
+
+	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])
+		echo '
+	var oInTopicModeration = new InTopicModeration({
+		sSelf: \'oInTopicModeration\',
+		sCheckboxContainerMask: \'in_topic_mod_check_\',
+		aMessageIds: [\'', implode('\', \'', $messageIDs), '\'],
+		sSessionId: \'', $context['session_id'], '\',
+		sButtonStrip: \'moderationbuttons\',
+		bUseImageButton: true,
+		bCanRemove: ', $context['can_remove_post'] ? 'true' : 'false', ',
+		sRemoveButtonLabel: \'', $txt['quickmod_delete_selected'], '\',
+		sRemoveButtonImage: \'', $settings['lang_images_url'], '/delete_selected.gif\',
+		sRemoveButtonConfirm: \'', $txt['quickmod_confirm'], '\',
+		bCanRestore: ', $context['can_restore_msg'] ? 'true' : 'false', ',
+		sRestoreButtonLabel: \'', $txt['quick_mod_restore'], '\',
+		sRestoreButtonImage: \'', $settings['lang_images_url'], '/restore_selected.gif\',
+		sRestoreButtonConfirm: \'', $txt['quickmod_confirm'], '\',
+		sFormId: \'quickModForm\'
 	});';
 
 	echo '
@@ -748,9 +767,6 @@ function theme_show_mod_buttons()
 
 	if ($context['calendar_post'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/linktocal.gif" alt="' . $txt['calendar_link'] . '" border="0" />' : $txt['calendar_link']) . '</a>';
-
-	if ($context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
-		$moderationButtons[] = $settings['use_image_buttons'] ? '<input type="image" name="submit" src="' . $settings['lang_images_url'] . '/delete_selected.gif" alt="' . $txt['quickmod_delete_selected'] . '" style="background-color: transparent;" />' : '<a href="javascript:document.forms.quickModForm.submit();">' . $txt['quickmod_delete_selected'] . '</a>';
 
 	return implode($context['menu_separator'], $moderationButtons);
 }

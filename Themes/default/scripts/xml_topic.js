@@ -14,7 +14,10 @@ QuickReply.prototype.quote = function (iMessageId, sSessionId, bTemplateUpgraded
 		if (bTemplateUpgraded)
 			return true;
 		else
+		{
 			window.location.href = smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=post;quote=' + iMessageId + ';topic=' + this.opt.iTopicId + '.' + this.opt.iStart + ';sesc=' + sSessionId;
+			return false;
+		}
 	}
 	else
 	{
@@ -153,6 +156,8 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 
 	sSubjectText = XMLDoc.getElementsByTagName('subject')[0].childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
 	setInnerHTML(this.oCurSubjectDiv, this.opt.sTemplateSubjectEdit.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
+
+	return true;
 }
 
 // Function in case the user presses cancel (or other circumstances cause it).
@@ -239,6 +244,113 @@ QuickModify.prototype.onModifyDone = function (XMLDoc)
 		document.forms.quickModForm.subject.style.border = error.getAttribute('in_subject') == '1' ? this.opt.sErrorBorderStyle : '';
 	}
 }
+
+function InTopicModeration(oOptions)
+{
+	this.opt = oOptions;
+	this.bButtonsShown = false;
+	this.iNumSelected = 0;
+	this.init();
+}
+
+InTopicModeration.prototype.init = function()
+{
+	// Add checkboxes to all the messages.
+	for (var i = 0, n = this.opt.aMessageIds.length; i < n; i++)
+	{
+		// Create the checkbox.
+		var oCheckbox = document.createElement('input');
+		oCheckbox.type = 'checkbox';
+		oCheckbox.className = 'check';
+		oCheckbox.name = 'msgs[]';
+		oCheckbox.value = this.opt.aMessageIds[i];
+		oCheckbox.instanceRef = this;
+		oCheckbox.onclick = function () {
+			this.instanceRef.handleClick(this);
+		}
+
+		// Append it to the container
+		var oCheckboxContainer = document.getElementById(this.opt.sCheckboxContainerMask + this.opt.aMessageIds[i]);
+		oCheckboxContainer.appendChild(oCheckbox);
+		oCheckboxContainer.style.display = '';
+	}
+}
+
+InTopicModeration.prototype.handleClick = function(oCheckbox)
+{
+	if (!this.bButtonsShown)
+	{
+		// Add the 'remove selected items' button.
+		if (this.opt.bCanRemove)
+			smf_addButton(this.opt.sButtonStrip, this.opt.bUseImageButton, {
+				sId: this.opt.sSelf + '_remove_button',
+				sText: this.opt.sRemoveButtonLabel,
+				sImage: this.opt.sRemoveButtonImage,
+				sUrl: '#',
+				sCustom: ' onclick="return ' + this.opt.sSelf + '.handleSubmit(\'remove\')"'
+			});
+
+		// Add the 'restore selected items' button.
+		if (this.opt.bCanRestore)
+			smf_addButton(this.opt.sButtonStrip, this.opt.bUseImageButton, {
+				sId: this.opt.sSelf + '_restore_button',
+				sText: this.opt.sRestoreButtonLabel,
+				sImage: this.opt.sRestoreButtonImage,
+				sUrl: '#',
+				sCustom: ' onclick="return ' + this.opt.sSelf + '.handleSubmit(\'restore\')"'
+			});
+
+		// Adding these buttons once should be enough.
+		this.bButtonsShown = true;
+	}
+
+	// Keep stats on how many items were selected.
+	this.iNumSelected += oCheckbox.checked ? 1 : -1;
+
+	// Show the number of messages selected in the button.
+	if (this.opt.bCanRemove && !this.opt.bUseImageButton)
+		setInnerHTML(document.getElementById(this.opt.sSelf + '_remove_button'), this.opt.sRemoveButtonLabel + ' [' + this.iNumSelected + ']');
+
+	if (this.opt.bCanRestore && !this.opt.bUseImageButton)
+		setInnerHTML(document.getElementById(this.opt.sSelf + '_restore_button'), this.opt.sRestoreButtonLabel + ' [' + this.iNumSelected + ']');
+}
+
+InTopicModeration.prototype.handleSubmit = function (sSubmitType)
+{
+	var oForm = document.getElementById(this.opt.sFormId);
+
+	// Make sure this form isn't submitted in another way than this function.
+	var oInput = document.createElement('input');
+	oInput.type = 'hidden';
+	oInput.name = 'sc';
+	oInput.value = this.opt.sSessionId;
+	oForm.appendChild(oInput);
+
+	switch (sSubmitType)
+	{
+		case 'remove':
+			if (!confirm(this.opt.sRemoveButtonConfirm))
+				return false;
+
+			oForm.action = oForm.action.replace(/;restore_selected=1/, '');
+		break;
+
+		case 'restore':
+			if (!confirm(this.opt.sRestoreButtonConfirm))
+				return false;
+
+			oForm.action = oForm.action + ';restore_selected=1';
+		break;
+
+		default:
+			return false;
+		break;
+	}
+
+	oForm.submit();
+	return true;
+}
+
 
 // *** Other functions...
 function expandThumb(thumbID)

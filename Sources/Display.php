@@ -1508,7 +1508,7 @@ function approved_attach_sort($a, $b)
 // In-topic quick moderation.
 function QuickInTopicModeration()
 {
-	global $sourcedir, $topic, $board, $user_info, $smcFunc, $modSettings;
+	global $sourcedir, $topic, $board, $user_info, $smcFunc, $modSettings, $context;
 
 	// Check the session = get or post.
 	checkSession('request');
