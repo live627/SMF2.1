@@ -171,7 +171,7 @@ function template_split()
 // This is just to hold off some errors if people are stupid.
 if (!function_exists('template_button_strip'))
 {
-	function template_button_strip($button_strip, $direction = 'top', $force_reset = false, $custom_td = '')
+	function template_button_strip($button_strip, $direction = 'top', $custom_td = '')
 	{
 	}
 	function template_menu()

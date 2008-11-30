@@ -421,7 +421,7 @@ function template_menu()
 }
 
 // Generate a strip of buttons.
-function template_button_strip($button_strip, $direction = 'top', $force_reset = false, $custom_td = '')
+function template_button_strip($button_strip, $direction = 'top', $custom_td = '')
 {
 	global $settings, $context, $txt, $scripturl;
 
@@ -430,7 +430,7 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 	foreach ($button_strip as $key => $value)
 	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
+			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 	}
 
 	if (empty($buttons))

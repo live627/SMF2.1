@@ -284,21 +284,16 @@ function template_manual_intro()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
+		<div class="nav floatright">', template_button_strip($mark_read_button, 'top'), '</div>
 		<table border="0" width="100%" cellspacing="0" cellpadding="5">
 			<tr>
 				<td align="', !$context['right_to_left'] ? 'left' : 'right', '" class="smalltext">
 					<img src="' . $settings['images_url'] . '/new_some.gif" alt="" align="middle" /> ', $txt['manual_index_new_posts'], '
 					<img src="' . $settings['images_url'] . '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" /> ', $txt['manual_index_no_new'], '
 				</td>
-				<td align="', !$context['right_to_left'] ? 'right' : 'left', '">
-					<table cellpadding="0" cellspacing="0" border="0" style="position: relative; top: -5px;">
-						<tr>
-							', template_button_strip($mark_read_button, 'top', false, 'align="right" class="smalltext"'), '
-						</tr>
-					</table>
-				</td>
 			</tr>
-		</table>';
+		</table>
+		';
 	}
 	else
 	{
@@ -319,7 +314,7 @@ function template_manual_intro()
 
 		echo '
 						</td>
-						', template_button_strip($mark_read_button, 'top', false, 'align="right" class="smalltext"'), '
+						', template_button_strip($mark_read_button, 'top', 'align="right" class="smalltext"'), '
 					</tr>
 				</table>
 			</div><br />';
@@ -374,18 +369,10 @@ function template_manual_intro()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<table width="100%" cellpadding="0" cellspacing="0" border="0">
-				<tr>
-					<td class="middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</td>
-					<td align="right" style="padding-right: 1ex;">
-						<table cellpadding="0" cellspacing="0">
-							<tr>
-								', template_button_strip($mindex_buttons, 'bottom'), '
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>';
+			<div id="modbuttons_top" class="modbuttons clearfix margintop">
+				<div class="floatleft middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</div>
+				', template_button_strip($mindex_buttons, 'bottom'), '
+			</div>';
 	}
 	else
 	{
@@ -396,7 +383,7 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($mindex_buttons, 'bottom', false, 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
 							</tr>
 						</table>
 					</td>
@@ -404,41 +391,43 @@ function template_manual_intro()
 			</table>';
 	}
 	echo '
-			<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-				<tr class="titlebg">
-					<td width="9%" colspan="2"></td>
-					<td><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_subject'], '</a></td>
-					<td width="14%"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_started_by'], '</a></td>
-					<td width="4%" align="center"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_replies'], '</a></td>
-					<td width="4%" align="center"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_views'], '</a></td>
-					<td width="22%"><a href="javascript:sortLastPost();">', $txt['manual_index_last_post'], ' &nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_down.gif" alt="" border="0" name="sort-arrow" /></a></td>
-				</tr>
-				<tr>
-					<td class="windowbg2" valign="middle" align="center" width="5%"><img src="', $settings['images_url'], '/topic/my_normal_poll.gif" alt="" /></td>
-					<td class="windowbg2" valign="middle" align="center" width="4%"><img src="', $settings['images_url'], '/post/xx.gif" alt="" align="middle" /></td>
-					<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;page=index#topic" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;page=index#topic"><img id="message-new-or-not" src="', $settings['lang_images_url'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
-					<td class="windowbg2" valign="middle" width="14%"><a href="', $scripturl, '?action=help;page=profile" class="board">', $txt['manual_index_topic_starter'], '</a></td>
-					<td class="windowbg" valign="middle" width="4%" align="center">0</td>
-					<td class="windowbg" valign="middle" width="4%" align="center">0</td>
-					<td class="windowbg2" valign="middle" width="22%"><span class="smalltext">', $txt['manual_index_last_poster'], '</span></td>
-				</tr>
-			</table>';
+			<div class="tborder" id="messageindex">
+				<table cellspacing="1" class="bordercolor boardsframe">
+					<thead>
+						<tr>
+							<th class="catbg3 headerpadding" width="9%" colspan="2"></th>
+							<th class="catbg3 headerpadding"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_subject'], '</a></th>
+							<th class="catbg3 headerpadding" width="14%"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_started_by'], '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_replies'], '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_views'], '</a></th>
+							<th class="catbg3 headerpadding" width="22%"><a href="javascript:sortLastPost();">', $txt['manual_index_last_post'], ' &nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_down.gif" alt="" border="0" name="sort-arrow" /></a></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="windowbg2">
+							<td class="windowbg2" valign="middle" align="center" width="5%"><img src="', $settings['images_url'], '/topic/my_normal_poll.gif" alt="" /></td>
+							<td class="windowbg2" valign="middle" align="center" width="4%"><img src="', $settings['images_url'], '/post/xx.gif" alt="" align="middle" /></td>
+							<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;page=index#topic" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;page=index#topic"><img id="message-new-or-not" src="', $settings['lang_images_url'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
+							<td class="windowbg2" valign="middle" width="14%"><a href="', $scripturl, '?action=help;page=profile" class="board">', $txt['manual_index_topic_starter'], '</a></td>
+							<td class="windowbg" valign="middle" width="4%" align="center">0</td>
+							<td class="windowbg" valign="middle" width="4%" align="center">0</td>
+							<td class="windowbg2" valign="middle" width="22%"><span class="smalltext">', $txt['manual_index_last_poster'], '</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="marginbottom"></div>';
 
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
+			<div class="nav floatright">', template_button_strip($mindex_buttons, 'top'), '</div>
 			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 				<tr>
 					<td class="middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</td>
-					<td align="right" style="padding-right: 1ex;">
-						<table cellpadding="0" cellspacing="0">
-							<tr>
-								', template_button_strip($mindex_buttons, 'top'), '
-							</tr>
-						</table>
-					</td>
 				</tr>
-			</table>';
+			</table>
+			';
 	}
 	else
 	{
@@ -449,7 +438,7 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($mindex_buttons, 'bottom', false, 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
 							</tr>
 						</table>
 					</td>
@@ -537,15 +526,9 @@ function template_manual_intro()
 			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 				<tr>
 					<td class="middletext" valign="bottom" style="padding-bottom: 4px;"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-					<td align="right" style="padding-right: 1ex;">
-						<table cellpadding="0" cellspacing="0">
-							<tr>
-								', template_button_strip($display_buttons, 'bottom'), '
-							</tr>
-						</table>
-					</td>
 				</tr>
-			</table>';
+			</table>
+			<div class="nav floatright">', template_button_strip($display_buttons, 'bottom'), '</div>';
 	}
 	else
 	{
@@ -556,7 +539,7 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($display_buttons, 'bottom', false, 'align="right" style="font-size: smaller;"'), '
+								', template_button_strip($display_buttons, 'bottom', 'align="right" style="font-size: smaller;"'), '
 							</tr>
 						</table>
 					</td>
@@ -626,16 +609,10 @@ function template_manual_intro()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
+			<div class="nav floatright">', template_button_strip($display_buttons, 'top'), '</div>
 			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 				<tr>
 					<td class="middletext"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-					<td align="right" style="padding-right: 1ex;">
-						<table cellpadding="0" cellspacing="0">
-							<tr>
-								', template_button_strip($display_buttons, 'top', false), '
-							</tr>
-						</table>
-					</td>
 				</tr>
 			</table>';
 	}
@@ -648,7 +625,7 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($display_buttons, 'top', false, 'align="right" style="font-size: smaller;"'), '
+								', template_button_strip($display_buttons, 'top', 'align="right" style="font-size: smaller;"'), '
 							</tr>
 						</table>
 					</td>

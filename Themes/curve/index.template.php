@@ -433,7 +433,7 @@ function template_menu()
 }
 
 // Generate a strip of buttons.
-function template_button_strip($button_strip, $direction = '', $force_reset = false, $custom_td = '')
+function template_button_strip($button_strip, $direction = '', $custom_td = '')
 {
 	global $settings, $context, $txt, $scripturl;
 

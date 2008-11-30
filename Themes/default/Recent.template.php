@@ -63,7 +63,7 @@ function template_main()
 				<tr>
 					<td class="catbg" colspan="3" align="right">
 						<table><tr>
-						', template_button_strip($button_set, 'top', true), '
+						', template_button_strip($button_set, 'top'), '
 						</tr></table>
 					</td>
 				</tr>';
@@ -114,12 +114,14 @@ function template_unread()
 				'url' => 'javascript:document.quickModForm.submit();',
 			);
 	}
+
 	echo '
 	<div id="readbuttons_top" class="readbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($mark_read) ? template_button_strip($mark_read, 'bottom') : '', '
-	</div>
+		', !empty($mark_read) && !empty($settings['use_tabs']) ? template_button_strip($mark_read, 'bottom') : '', '
+	</div>';
 
+	echo '
 	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor">
 		<tr><td>
 			<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
@@ -192,18 +194,28 @@ function template_unread()
 	}
 
 	if (!empty($context['topics']) && !$context['showing_all_topics'])
-			echo '
+		echo '
 				<tr class="titlebg">
 					<td colspan="', $showCheckboxes ? '8' : '7', '" align="right" class="middletext"><a href="', $scripturl, '?action=unread;all', $context['querystring_board_limits'], '">', $txt['unread_topics_all'], '</a></td>
 				</tr>';
 
+	if (empty($settings['use_tabs']) && !empty($mark_read))
 		echo '
+				<tr>
+					<td class="catbg" colspan="', $showCheckboxes ? '8' : '7', '" align="right">
+						<table><tr>
+						', template_button_strip($mark_read, 'top', true), '
+						</tr></table>
+					</td>
+				</tr>';
+
+	echo '
 			</table>
 		</td></tr>
 	</table>
 	<div class="readbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
+		', !empty($settings['use_tabs']) && !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
 	</div>
 	<br />';
 
@@ -258,12 +270,14 @@ function template_replies()
 				'url' => 'javascript:document.quickModForm.submit();',
 			);
 	}
-	echo '
+	if (!empty($settings['use_tabs']))
+		echo '
 	<div id="readbuttons_top" class="readbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
 		', !empty($mark_read) ? template_button_strip($mark_read, 'bottom') : '', '
-	</div>
+	</div>';
 
+	echo '
 	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor">
 		<tr><td>
 			<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
@@ -329,6 +343,15 @@ function template_replies()
 		echo '
 				</tr>';
 	}
+	if (empty($settings['use_tabs']) && !empty($mark_read))
+		echo '
+				<tr>
+					<td class="catbg" colspan="', $showCheckboxes ? '8' : '7', '" align="right">
+						<table><tr>
+						', template_button_strip($mark_read, 'top', true), '
+						</tr></table>
+					</td>
+				</tr>';
 
 	echo '
 			</table>
@@ -336,7 +359,7 @@ function template_replies()
 	</table>
 	<div class="readbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
+		', !empty($settings['use_tabs']) && !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
 	</div>
 	<br />';
 

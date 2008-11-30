@@ -30,6 +30,8 @@ November 2008
  + Added a counter to the remove/restore buttons in case an in topic selection is being made (xml_topic.js)
  * Added a theme-specific JavaScript function to add menu items dynamically. (index template, theme.js)
  ! Removed trivial comment from Subs-Post.php (Subs-Post.php) [Bug 2645]
+ * Cleaned up the template_button_strip function (index template, Help template) [Bug 2640]
+ * Fixed button_strip not properly implemented for older themes on several pages (Recent template, Help template)
 
 
 October 2008
