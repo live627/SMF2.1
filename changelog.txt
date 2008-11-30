@@ -29,6 +29,7 @@ November 2008
  ! Moved in-topic-moderation function to object oriented and external JavaScript. (Display template, xml_topic.js)
  + Added a counter to the remove/restore buttons in case an in topic selection is being made (xml_topic.js)
  * Added a theme-specific JavaScript function to add menu items dynamically. (index template, theme.js)
+ ! Removed trivial comment from Subs-Post.php (Subs-Post.php) [Bug 2645]
 
 
 October 2008

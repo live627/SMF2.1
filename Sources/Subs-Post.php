@@ -1110,9 +1110,6 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			continue;
 		}
 
-		// Does the recipient even have permission to read this message?
-
-
 		// Send a notification, if enabled - taking into account buddy list!.
 		if (!empty($row['email_address']) && ($row['pm_email_notify'] == 1 || ($row['pm_email_notify'] > 1 && ($row['is_buddy'] || !empty($modSettings['enable_buddylist'])))) && $row['is_activated'] == 1)
 			$notifications[empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']][] = $row['email_address'];
