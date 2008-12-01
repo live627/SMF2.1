@@ -184,7 +184,7 @@ function Post()
 		$context['becomes_approved'] = true;
 		if ((!$context['make_event'] || !empty($board)))
 		{
-			if (!allowedTo('post_new') && allowedTo('post_unapproved_topics'))
+			if ($modSettings['postmod_active'] && !allowedTo('post_new') && allowedTo('post_unapproved_topics'))
 				$context['becomes_approved'] = false;
 			else
 				isAllowedTo('post_new');
