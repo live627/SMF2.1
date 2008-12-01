@@ -36,6 +36,8 @@ November 2008
  ! Make sure the range boundaries for a repair check are only calculated once for each check. (RepairBoards.php)
  ! Prevent a duplicate key error from occuring in case the message being salvaged was already part of an existing topic. (RepairBoards.php) [Bug 2725]
  ! Make sure the default error handler is always enabled again after parsing the database file during the upgrade process. (upgrade.php)
+ ! Fixed JavaScript error caused by currentStyle property that's not defined in all browsers. (theme.js, babylon index template)
+ ! Fixed code box select JavaScript not working properly in Safari. (script.js) [Bug 2769]
 
 
 October 2008
