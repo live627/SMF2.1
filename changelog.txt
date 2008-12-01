@@ -32,6 +32,9 @@ November 2008
  ! Removed trivial comment from Subs-Post.php (Subs-Post.php) [Bug 2645]
  * Cleaned up the template_button_strip function (index template, Help template) [Bug 2640]
  * Fixed button_strip not properly implemented for older themes on several pages (Recent template, Help template)
+ ! Fixed 'repair boards' function could in some cases skip an ID to be checked. (RepairBoards.php)
+ ! Make sure the range boundaries for a repair check are only calculated once for each check. (RepairBoards.php)
+ ! Prevent a duplicate key error from occuring in case the message being salvaged was already part of an existing topic. (RepairBoards.php) [Bug 2725]
 
 
 October 2008
