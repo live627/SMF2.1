@@ -185,7 +185,7 @@ function getBoardIndex($boardIndexOptions)
 			);
 
 			// Counting child board posts is... slow :/.
-			if (!empty($boardIndexOptions['countChildPosts']))
+			if (!empty($boardIndexOptions['countChildPosts']) && !$row_board['is_redirect'])
 			{
 				$this_category[$row_board['id_parent']]['posts'] += $row_board['num_posts'];
 				$this_category[$row_board['id_parent']]['topics'] += $row_board['num_topics'];
@@ -215,7 +215,7 @@ function getBoardIndex($boardIndexOptions)
 					break;
 				}
 
-			if (isset($parent_map[$row_board['id_parent']]))
+			if (isset($parent_map[$row_board['id_parent']]) && !$row_board['is_redirect'])
 			{
 				$parent_map[$row_board['id_parent']][0]['posts'] += $row_board['num_posts'];
 				$parent_map[$row_board['id_parent']][0]['topics'] += $row_board['num_topics'];
