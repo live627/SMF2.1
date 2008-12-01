@@ -35,6 +35,7 @@ November 2008
  ! Fixed 'repair boards' function could in some cases skip an ID to be checked. (RepairBoards.php)
  ! Make sure the range boundaries for a repair check are only calculated once for each check. (RepairBoards.php)
  ! Prevent a duplicate key error from occuring in case the message being salvaged was already part of an existing topic. (RepairBoards.php) [Bug 2725]
+ ! Make sure the default error handler is always enabled again after parsing the database file during the upgrade process. (upgrade.php)
 
 
 October 2008

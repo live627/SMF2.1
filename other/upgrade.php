@@ -2596,7 +2596,10 @@ function parse_sql($filename)
 
 				// Have we already done something?
 				if (isset($_GET['xml']) && $done_something)
+				{
+					restore_error_handler();
 					return $upcontext['current_debug_item_num'] >= $upcontext['debug_items'] ? true : false;
+				}
 
 				if ($do_current)
 				{
@@ -2686,7 +2689,10 @@ function parse_sql($filename)
 		}
 		// If this is xml based and we're just getting the item name then that's grand.
 		elseif ($support_js && !isset($_GET['xml']) && $upcontext['current_debug_item_name'] != '' && $do_current)
+		{
+			restore_error_handler();
 			return false;
+		}
 
 		// Clean up by cleaning any step info.
 		$step_progress = array();
