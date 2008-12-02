@@ -1881,8 +1881,8 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
 			LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = att.id_thumb)') . '
-		WHERE att.attachment_type = 0
-			' . (!empty($attachment_ext) ? '
+		WHERE att.attachment_type = 0' . ($attachments_boards === array(0) ? '' : '
+			AND m.id_board IN ({array_int:boards_can_see})') . (!empty($attachment_ext) ? '
 			AND att.fileext IN ({array_string:attachment_ext})' : '') . '
 		ORDER BY att.id_attach DESC
 		LIMIT {int:num_attachments}',

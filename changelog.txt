@@ -45,6 +45,7 @@ November 2008
  ! The reserved table name array wasn't always matched in case the database prefix or database name contained capitals. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php)
  ! Dropping tables would not properly work when done from the SSI interface. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2751]
  ! The 'create table' function didn't match the list of existing tables properly. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php)
+ ! The SSI recent attachments function didn't respect the board access permissions properly. (SSI.php) [Bug 2737]
 
 
 October 2008
