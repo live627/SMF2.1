@@ -92,7 +92,7 @@ function db_packages_init()
 		'pm_recipients', 'poll_choices', 'polls', 'scheduled_tasks', 'sessions', 'settings', 'smileys',
 		'themes', 'topics');
 	foreach ($reservedTables as $k => $table_name)
-		$reservedTables[$k] = $db_prefix . $table_name;
+		$reservedTables[$k] = strtolower($db_prefix . $table_name);
 
 	// We in turn may need the extra stuff.
 	db_extend('extra');
@@ -120,45 +120,42 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// This table not exist?
 	$tables = $smcFunc['db_list_tables']();
-	foreach ($tables as $table)
+	if (in_array($table_name, $tables))
 	{
-		if ($table == $table_name)
+		// This is a sad day... drop the table?
+		if ($if_exists == 'overwrite')
+			$smcFunc['db_drop_table']($table_name, array('no_prefix' => true));
+		elseif ($if_exists == 'ignore')
+			return true;
+		elseif ($if_exists == 'error')
+			return false;
+		// Otherwise we have to sort through the columns and add/remove ones which are wrong!
+		else
 		{
-			// This is a sad day... drop the table?
-			if ($if_exists == 'overwrite')
-				$smcFunc['db_drop_table']($table_name, array('no_prefix' => true));
-			elseif ($if_exists == 'ignore')
-				return true;
-			elseif ($if_exists == 'error')
-				return false;
-			// Otherwise we have to sort through the columns and add/remove ones which are wrong!
-			else
+			$old_columns = $smcFunc['db_list_columns']($table_name, false, array('no_prefix' => true));
+			foreach ($old_columns as $k => $v)
+				$old_columns[$k] = strtolower($v);
+			foreach ($columns as $column)
 			{
-				$old_columns = $smcFunc['db_list_columns']($table_name, false, array('no_prefix' => true));
-				foreach ($old_columns as $k => $v)
-					$old_columns[$k] = strtolower($v);
-				foreach ($columns as $column)
+				// Already exists?
+				if (in_array(strtolower($column['name']), $old_columns))
 				{
-					// Already exists?
-					if (in_array(strtolower($column['name']), $old_columns))
-					{
-						$k = array_search(strtolower($column['name']), $old_columns);
-						unset($old_columns[$k]);
-					}
-					// Doesn't - add it!
-					else
-						$smcFunc['db_add_column']($table_name, $column, array('no_prefix' => true));
+					$k = array_search(strtolower($column['name']), $old_columns);
+					unset($old_columns[$k]);
 				}
-				// Whatever is left needs to be removed.
-				if ($if_exists == 'update_remove')
-				{
-					foreach ($old_columns as $column)
-						$smcFunc['db_remove_column']($table_name, $column, array('no_prefix' => true));
-				}
-
-				// All done!
-				return true;
+				// Doesn't - add it!
+				else
+					$smcFunc['db_add_column']($table_name, $column, array('no_prefix' => true));
 			}
+			// Whatever is left needs to be removed.
+			if ($if_exists == 'update_remove')
+			{
+				foreach ($old_columns as $column)
+					$smcFunc['db_remove_column']($table_name, $column, array('no_prefix' => true));
+			}
+
+			// All done!
+			return true;
 		}
 	}
 
@@ -238,17 +235,16 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 	global $reservedTables, $smcFunc, $db_prefix;
 
 	// What's that - you don't want my prefix?
-	if (empty($parameters['no_prefix']))
-		$table_name = $db_prefix . $table_name;
+	$complete_table_name = empty($parameters['no_prefix']) ? $db_prefix . $table_name : $table_name;
 
 	// God no - dropping one of these = bad.
-	if (in_array(strtolower($table_name), $reservedTables))
+	if (in_array(strtolower($complete_table_name), $reservedTables))
 		return false;
 
 	// Does it exist?
-	if (in_array($table_name, $smcFunc['db_list_tables']()))
+	if (in_array($complete_table_name, $smcFunc['db_list_tables']()))
 	{
-		$query = 'DROP TABLE ' . $table_name;
+		$query = 'DROP TABLE ' . $complete_table_name;
 		$smcFunc['db_query']('', $query,
 			'security_override'
 		);

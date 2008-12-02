@@ -42,6 +42,9 @@ November 2008
  ! Make sure redirection boards don't count towards the total post count (Subs-BoardIndex.php) [Bug 2704]
  ! The message index showed the 'create topic' button in some cases when the user didn't have permission to create a topic. (MessageIndex.php) [Bug 2740]
  ! Newly created replies could in some cases become unapproved, eventhough the post moderation feature was turned off. (Post.php)
+ ! The reserved table name array wasn't always matched in case the database prefix or database name contained capitals. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php)
+ ! Dropping tables would not properly work when done from the SSI interface. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2751]
+ ! The 'create table' function didn't match the list of existing tables properly. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php)
 
 
 October 2008
