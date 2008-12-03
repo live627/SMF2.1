@@ -1,0 +1,79 @@
+/* ************************************* */
+/* styles from Register.template       */
+/* ************************************* */
+.register_form dt
+{
+	clear: left;
+	float: left;
+	width: 50%;
+	padding:0.5em;
+	display: block;
+}
+.register_form dt p
+{
+	padding: 0;
+	margin: 0;	
+}
+.register_form dd
+{
+	padding: 0.5em;
+	min-height: 15px;	
+}
+.register_captcha
+{
+	min-height: 80px;
+}
+*
+{
+	padding: 0;
+	margin: 0;
+}
+
+/* ************************************* */
+/* styles from Login.template           */
+/* ************************************* */
+
+/* ************************************* */
+/* styles from Search.template           */
+/* ************************************* */
+#search_error
+{
+	font-style: italic;
+	padding: 0.3em 1em;
+}
+#searchform, #simple_search p 
+{
+	padding: 0.5em;
+	margin: 0;
+}
+#simple_search, #advanced_search
+{
+	text-align: center;
+	padding-top: 1em;
+}
+#advanced_search dl
+{
+	margin: auto;
+	width: 500px;
+}
+#advanced_search dt
+{
+	padding: 0.2em;
+	font-weight: bold;
+	text-align: right;
+	width: 20%;
+	float: left;
+}
+#advanced_search dt.options
+{
+	padding-bottom: 4em;
+}
+#advanced_search dd
+{
+	padding: 0.2em;
+	text-align: left;
+}
+#advanced_search dd.options
+{
+	padding-bottom: 3em;
+}

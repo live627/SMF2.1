@@ -1,4 +1,7 @@
-/* Who is online page */
+/* ************************************* */
+/* styles from Who.template           */
+/* ************************************* */
+
 #whos_online h4.titlebg span.who, #whos_online h4.titlebg span.time,#whos_online h4.titlebg span.action,
 #whos_online li.who, #whos_online li.time,#whos_online li.action
 {
