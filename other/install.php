@@ -54,7 +54,7 @@ $databases = array(
 		'name' => 'PostgreSQL',
 		'version' => '7.4.10',
 		'function_check' => 'pg_connect',
-		'version_check' => '$version = pg_version(); return $version[\'client\'];',
+		'version_check' => '$request = pg_query(\'SELECT version()\'); list ($version) = pg_fetch_row($request); return $version;',
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
 		'validate_prefix' => create_function('&$value', '

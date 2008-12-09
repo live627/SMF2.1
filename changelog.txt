@@ -6,6 +6,7 @@ SMF 2.0 RC1                                                                  ???
 December 2008
 --------------------------------------------------------------------------------
  ! The size property wasn't properly handled by the create table functions in the database layer (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2761]
+ ! Attempt an alternative way of retrieving the version as the pg_version function doesn't exist yet in PHP 4.x. (install.php) [Bug 2790]
 
 
 November 2008
