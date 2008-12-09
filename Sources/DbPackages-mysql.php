@@ -173,7 +173,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$default = '';
 
 		// Sort out the size... and stuff...
-		$column['size'] = isset($column['size']) && is_numeric($column_info['size']) ? $column['size'] : null;
+		$column['size'] = isset($column['size']) && is_numeric($column['size']) ? $column['size'] : null;
 		list ($type, $size) = $smcFunc['db_calculate_type']($column['type'], $column['size']);
 		if ($size !== null)
 			$type = $type . '(' . $size . ')';
