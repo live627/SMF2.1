@@ -11,6 +11,7 @@ December 2008
  ! Message icons available for all boards could not be managed by non-admins. (ManageSmileys.php) [Bug 2788]
  & Added a required permission to the description of the poll_post permission. (ManagePermissions language file) [Bug 2786]
  ! Unsubscribe from notifications in profile didn't work properly. (Profile-Modify.php) [Bug 2781]
+ ! JumpTo didn't link properly to the categories. (script.js) [Bug 2778]
 
 
 November 2008
