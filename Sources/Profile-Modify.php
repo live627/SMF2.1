@@ -1725,7 +1725,7 @@ function notification($memID)
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=profile;save',
+			'href' => $scripturl . '?action=profile;area=notification;save',
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
@@ -1840,7 +1840,7 @@ function notification($memID)
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=profile;save',
+			'href' => $scripturl . '?action=profile;area=notification;save',
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
