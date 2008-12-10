@@ -12,6 +12,9 @@ December 2008
  & Added a required permission to the description of the poll_post permission. (ManagePermissions language file) [Bug 2786]
  ! Unsubscribe from notifications in profile didn't work properly. (Profile-Modify.php) [Bug 2781]
  ! JumpTo didn't link properly to the categories. (script.js) [Bug 2778]
+ + Made a new admin section for language-related settings. (Admin.php, ManageSettings.php, ManageServer.php) [Feature 1323]
+ * Adjusted the Admin template accordingly and added a section icon. (ManageServer template, admin/languages.gif) [Feature 1323]
+ & Added a few strings for the new language settings area. (Admin language file) [Feature 1323]
 
 
 November 2008

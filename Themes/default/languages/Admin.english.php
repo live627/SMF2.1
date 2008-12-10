@@ -490,7 +490,12 @@ $txt['not_done_continue'] = 'Continue';
 $txt['core_configuration'] = 'Core Configuration';
 $txt['other_configuration'] = 'Feature Configuration';
 $txt['caching_settings'] = 'Caching';
+
 $txt['language_configuration'] = 'Languages';
+$txt['language_description'] = 'This section allows you to edit languages installed on your forum, download new ones from the Simple Machines website. You may also edit language-related settings here.';
+$txt['language_edit'] = 'Edit Languages';
+$txt['language_add'] = 'Add Language';
+$txt['language_settings'] = 'Settings';
 
 $txt['copyright_ends_in'] = 'Your subscription to remove the SMF copyright notice ends in <b>%1$s</b> days.';
 $txt['copyright_click_renew'] = 'Click <a href="http://www.simplemachines.org/copyright/renew.php?key=%1$s" style="color: red;">here</a> to renew';

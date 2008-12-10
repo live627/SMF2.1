@@ -1413,21 +1413,14 @@ function template_core_features()
 	// ]]></script>';
 }
 
-// View the languages, and maybe add some.
-function template_language_files()
+// Add a new language
+function template_add_language()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
-	// Show the main list.
-	template_show_list('language_list');
-
-	// Temporary until languages installing on PM works.
-	//return;
-	// Add a new language?
 	echo '
-	<br />
-	<form action="', $scripturl, '?action=admin;area=serversettings;sa=languages;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=add;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<table align="center" width="100%" cellpadding="5" cellspacing="1" class="bordercolor">
 		<tr class="titlebg">
 			<td>
 				', $txt['add_language'], '
@@ -1685,7 +1678,7 @@ function template_modify_language_entries()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=serversettings;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">
@@ -1764,7 +1757,7 @@ function template_modify_language_entries()
 	</table>
 	</form><br />
 
-	<form action="', $scripturl, '?action=admin;area=serversettings;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">

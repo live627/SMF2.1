@@ -172,6 +172,17 @@ function AdminMain()
 						'moderation' => array($txt['moderation_settings_short'], 'enabled' => substr($modSettings['warning_settings'], 0, 1) == 1),
 					),
 				),
+				'languages' => array(
+					'label' => $txt['language_configuration'],
+					'file' => 'ManageServer.php',
+					'function' => 'ManageLanguages',
+					'icon' => 'languages.gif',
+					'subsections' => array(
+						'edit' => array($txt['language_edit']),
+						'add' => array($txt['language_add']),
+						'settings' => array($txt['language_settings']),
+					),
+				),
 				'serversettings' => array(
 					'label' => $txt['admin_server_settings'],
 					'file' => 'ManageServer.php',
@@ -180,7 +191,6 @@ function AdminMain()
 					'subsections' => array(
 						'core' => array($txt['core_configuration']),
 						'other' => array($txt['other_configuration']),
-						'languages' => array($txt['language_configuration']),
 						'cache' => array($txt['caching_settings']),
 					),
 				),

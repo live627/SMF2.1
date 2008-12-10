@@ -140,9 +140,6 @@ function ModifySettings()
 
 	$subActions = array(
 		'core' => 'ModifyCoreSettings',
-		'downloadlang' => 'DownloadLanguage',
-		'editlang' => 'ModifyLanguage',
-		'languages' => 'ModifyLanguageSettings',
 		'other' => 'ModifyOtherSettings',
 		'cache' => 'ModifyCacheSettings',
 	);
@@ -480,6 +477,57 @@ function ModifyCacheSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
+// Interface for adding a new language
+function AddLanguage()
+{
+	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smcFunc, $scripturl;
+
+	// Are we searching for new languages courtesy of Simple Machines?
+	if (!empty($_POST['smf_add_sub']))
+	{
+		// Need fetch_web_data.
+		require_once($sourcedir . '/Subs-Package.php');
+
+		$context['smf_search_term'] = trim($_POST['smf_add']);
+
+		// We're going to use this URL.
+		$url = 'http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => '')));
+
+		// Load the class file and stick it into an array.
+		loadClassFile('Class-Package.php');
+		$language_list = new xmlArray(fetch_web_data($url), true);
+
+		// Check it exists.
+		if (!$language_list->exists('languages'))
+			$context['smf_error'] = 'no_response';
+		else
+		{
+			$language_list = $language_list->path('languages[0]');
+			$lang_files = $language_list->set('language');
+			$context['smf_languages'] = array();
+			foreach ($lang_files as $file)
+			{
+				// Were we searching?
+				if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $context['smf_search_term']) === false)
+					continue;
+
+				$context['smf_languages'][] = array(
+					'id' => $file->fetch('id'),
+					'name' => $smcFunc['ucwords']($file->fetch('name')),
+					'version' => $file->fetch('version'),
+					'utf8' => $file->fetch('utf8'),
+					'description' => $file->fetch('description'),
+					'link' => $scripturl . '?action=admin;area=languages;sa=downloadlang;did=' . $file->fetch('id') . ';sesc=' . $context['session_id'],
+				);
+			}
+			if (empty($context['smf_languages']))
+				$context['smf_error'] = 'no_files';
+		}
+	}
+
+	$context['sub_template'] = 'add_language';
+}
+
 // Download a language file from the Simple Machines website.
 function DownloadLanguage()
 {
@@ -526,7 +574,7 @@ function DownloadLanguage()
 			$archive_content = read_tgz_file('http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), $boarddir, false, true, $install_files);
 			// Make sure the files aren't stuck in the cache.
 			package_flush_cache();
-			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id']);
+			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages;sesc=' . $context['session_id']);
 
 			clean_cache('lang');
 			return;
@@ -830,8 +878,40 @@ function DownloadLanguage()
 	$context['default_list'] = 'lang_main_files_list';
 }
 
+// This is the main function for the language area.
+function ManageLanguages()
+{
+	global $context, $txt, $scripturl, $modSettings;
+
+	loadLanguage('ManageSettings');
+
+	$context['page_title'] = $txt['edit_languages'];
+	$context['sub_template'] = 'show_settings';
+
+	$subActions = array(
+		'edit' => 'ModifyLanguages',
+		'add' => 'AddLanguage',
+		'settings' => 'ModifyLanguageSettings',
+		'downloadlang' => 'DownloadLanguage',
+		'editlang' => 'ModifyLanguage',
+	);
+
+	// By default we're managing languages.
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'edit';
+	$context['sub_action'] = $_REQUEST['sa'];
+
+	// Load up all the tabs...
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['language_configuration'],
+		'description' => &$txt['language_description'],
+	);
+
+	// Call the right function for this sub-acton.
+	$subActions[$_REQUEST['sa']]();
+}
+
 // This lists all the current languages and allows editing of them.
-function ModifyLanguageSettings()
+function ModifyLanguages()
 {
 	global $txt, $context, $scripturl;
 	global $user_info, $smcFunc, $sourcedir, $language, $boarddir, $forum_version;
@@ -847,13 +927,10 @@ function ModifyLanguageSettings()
 		}
 	}
 
-	loadLanguage('ManageSettings');
-	$context['page_title'] = $txt['edit_languages'];
-
 	$listOptions = array(
 		'id' => 'language_list',
 		'items_per_page' => 20,
-		'base_href' => $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id'],
+		'base_href' => $scripturl . '?action=admin;area=languages;sesc=' . $context['session_id'],
 		'title' => $txt['edit_languages'],
 		'get_items' => array(
 			'function' => 'list_getLanguages',
@@ -881,7 +958,7 @@ function ModifyLanguageSettings()
 					'function' => create_function('$rowData', '
 						global $scripturl, $context;
 
-						return sprintf(\'<a href="%1$s?action=admin;area=serversettings;sa=editlang;lid=%2$s;sesc=%3$s">%4$s</a>\', $scripturl, $rowData[\'id\'], $context[\'session_id\'], $rowData[\'name\']);
+						return sprintf(\'<a href="%1$s?action=admin;area=languages;sa=editlang;lid=%2$s;sesc=%3$s">%4$s</a>\', $scripturl, $rowData[\'id\'], $context[\'session_id\'], $rowData[\'name\']);
 					'),
 				),
 			),
@@ -912,7 +989,7 @@ function ModifyLanguageSettings()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id'],
+			'href' => $scripturl . '?action=admin;area=languages;sesc=' . $context['session_id'],
 		),
 		'additional_rows' => array(
 			array(
@@ -952,50 +1029,7 @@ function ModifyLanguageSettings()
 	require_once($sourcedir . '/Subs-List.php');
 	createList($listOptions);
 
-	// Are we searching for new languages courtesy of Simple Machines?
-	if (!empty($_POST['smf_add_sub']))
-	{
-		// Need fetch_web_data.
-		require_once($sourcedir . '/Subs-Package.php');
-
-		$context['smf_search_term'] = trim($_POST['smf_add']);
-
-		// We're going to use this URL.
-		$url = 'http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => '')));
-
-		// Load the class file and stick it into an array.
-		loadClassFile('Class-Package.php');
-		$language_list = new xmlArray(fetch_web_data($url), true);
-
-		// Check it exists.
-		if (!$language_list->exists('languages'))
-			$context['smf_error'] = 'no_response';
-		else
-		{
-			$language_list = $language_list->path('languages[0]');
-			$lang_files = $language_list->set('language');
-			$context['smf_languages'] = array();
-			foreach ($lang_files as $file)
-			{
-				// Were we searching?
-				if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $context['smf_search_term']) === false)
-					continue;
-
-				$context['smf_languages'][] = array(
-					'id' => $file->fetch('id'),
-					'name' => $smcFunc['ucwords']($file->fetch('name')),
-					'version' => $file->fetch('version'),
-					'utf8' => $file->fetch('utf8'),
-					'description' => $file->fetch('description'),
-					'link' => $scripturl . '?action=admin;area=serversettings;sa=downloadlang;did=' . $file->fetch('id') . ';sesc=' . $context['session_id'],
-				);
-			}
-			if (empty($context['smf_languages']))
-				$context['smf_error'] = 'no_files';
-		}
-	}
-
-	$context['sub_template'] = 'language_files';
+	$context['sub_template'] = 'show_list';
 	$context['default_list'] = 'language_list';
 }
 
@@ -1078,6 +1112,127 @@ function list_getLanguages()
 
 	// Return how many we have.
 	return $languages;
+}
+
+// Edit language related settings.
+function ModifyLanguageSettings()
+{
+	global $scripturl, $context, $settings, $txt, $helptxt, $sc, $boarddir, $sourcedir, $smcFunc, $modSettings;
+
+	// Warn the user if the backup of Settings.php failed.
+	$settings_not_writable = !is_writable($boarddir . '/Settings.php');
+	$settings_backup_fail = !@is_writable($boarddir . '/Settings_bak.php') || !@copy($boarddir . '/Settings.php', $boarddir . '/Settings_bak.php');
+
+	/* If you're writing a mod, it's a bad idea to add things here....
+	For each option:
+		variable name, description, type (constant), size/possible values, helptext.
+	OR	an empty string for a horizontal rule.
+	OR	a string for a titled section. */
+	$config_vars = array(
+		'language' => array('language', &$txt['default_language'], 'select', array()),
+		array('userLanguage', &$txt['userLanguage'], 'check', null, 'userLanguage'),
+	);
+
+	// Find the available language files.
+	$language_directories = array(
+		$settings['default_theme_dir'] . '/languages',
+		$settings['actual_theme_dir'] . '/languages',
+	);
+	if (!empty($settings['base_theme_dir']))
+		$language_directories[] = $settings['base_theme_dir'] . '/languages';
+	$language_directories = array_unique($language_directories);
+
+	// Find available language files.
+	foreach ($language_directories as $language_dir)
+	{
+		if (!file_exists($language_dir))
+			continue;
+
+		$dir = dir($language_dir);
+		while ($entry = $dir->read())
+			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches))
+				$config_vars['language'][3][$matches[1]] = array($matches[1], $smcFunc['ucwords'](strtr($matches[1], '_', ' ')));
+		$dir->close();
+	}
+
+	// Saving some settings?
+	if (isset($_REQUEST['save']))
+	{
+		checkSession('post');
+		$config_post_settings = array();
+		$config_post_dbsettings = array();
+
+		// Loop trough the defined settings and sanitize their posted values.
+		foreach ($config_vars as $variable => $config_var)
+		{
+			// Should this go into Settings.php, or straight into the DB?
+			$config_type = 'config_post_' . (is_string($variable) ? 'settings' : 'dbsettings');
+
+			// A checkboxes?
+			if ($config_var[2] == 'check')
+				${$config_type}[$config_var[0]] = !empty($_POST[$config_var[0]]) ? 1 : 0;
+
+			// A select box, then?
+			elseif ($config_var[2] == 'select')
+				${$config_type}[$config_var[0]] = isset($_POST[$config_var[0]]) && isset($config_var[3][$_POST[$config_var[0]]]) ? $_POST[$config_var[0]] : '';
+
+			// We might want to add slashes if this needs to go into the settings file.
+			if (is_string($variable) && is_string(${$config_type}[$config_var[0]]))
+				${$config_type}[$config_var[0]] = '\'' . addcslashes(${$config_type}[$config_var[0]], '\'\\') . '\'';
+		}
+
+		// Update the database settings.
+		if (!empty($config_post_dbsettings))
+			updateSettings($config_post_dbsettings);
+
+		// Update the settings file.
+		if (!empty($config_post_settings))
+		{
+			require_once($sourcedir . '/Subs-Admin.php');
+			updateSettingsFile($config_post_settings);
+		}
+
+		// Get out of here.
+		redirectexit($scripturl . '?action=admin;area=languages;sa=settings');
+	}
+
+	// Setup the template stuff.
+	$context['post_url'] = $scripturl . '?action=admin;area=languages;sa=settings;save';
+	$context['settings_title'] = $txt['language_settings'];
+	$context['save_disabled'] = $settings_not_writable;
+
+	if ($settings_not_writable)
+		$context['settings_message'] = '<div align="center"><b>' . $txt['settings_not_writable'] . '</b></div><br />';
+	elseif ($settings_backup_fail)
+		$context['settings_message'] = '<div align="center"><b>' . $txt['admin_backup_fail'] . '</b></div><br />';
+
+	// Fill the config array.
+	$context['config_vars'] = array();
+	foreach ($config_vars as $identifier => $config_var)
+	{
+		if (!is_array($config_var) || !isset($config_var[1]))
+			$context['config_vars'][] = $config_var;
+		else
+		{
+			$varname = $config_var[0];
+			global $$varname;
+
+			$context['config_vars'][] = array(
+				'label' => $config_var[1],
+				'help' => isset($config_var[4]) ? $config_var[4] : '',
+				'type' => $config_var[2],
+				'size' => empty($config_var[3]) ? 0 : $config_var[3],
+				'data' => isset($config_var[3]) && is_array($config_var[3]) ? $config_var[3] : array(),
+				'name' => $config_var[0],
+				'value' => is_string($identifier) ? htmlspecialchars($$varname) : htmlspecialchars($modSettings[$varname]),
+				'disabled' => $settings_not_writable,
+				'invalid' => false,
+				'javascript' => '',
+				'preinput' => '',
+				'postinput' => '',
+			);
+		}
+	}
 }
 
 // Edit a particular set of language entries.
@@ -1385,7 +1540,7 @@ function ModifyLanguage()
 	if ($madeSave)
 	{
 		clean_cache('lang');
-		redirectexit('action=admin;area=serversettings;sa=editlang;lid=' . $context['lang_id'] . ';sesc=' . $context['session_id']);
+		redirectexit('action=admin;area=languages;sa=editlang;lid=' . $context['lang_id'] . ';sesc=' . $context['session_id']);
 	}
 }
 

@@ -439,9 +439,8 @@ function ModifyBasicSettings($return_config = false)
 			// Big Options... polls, sticky, bbc....
 			array('select', 'pollMode', array(&$txt['disable_polls'], &$txt['enable_polls'], &$txt['polls_as_topics'])),
 		'',
-			// Basic stuff, user languages, titles, flash, permissions...
+			// Basic stuff, titles, flash, permissions...
 			array('check', 'allow_guestAccess'),
-			array('check', 'userLanguage'),
 			array('check', 'allow_editDisplayName'),
 			array('check', 'allow_hideOnline'),
 			array('check', 'titlesEnable'),

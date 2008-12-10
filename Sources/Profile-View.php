@@ -563,7 +563,7 @@ function showAttachments($memID)
 	$sort = $sortTypes[$context['sort_order']];
 
 	// Let's get ourselves a lovely page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contributions;sa=attach;sort=' . $sort . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contributions;sa=attach;sort=' . $context['sort_order'] . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
 
 	// Retrieve a some attachments.
 	$request = $smcFunc['db_query']('', '
