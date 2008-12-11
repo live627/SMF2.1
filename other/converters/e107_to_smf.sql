@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "e107 ver.0.7.7"
 /******************************************************************************/
----~ version: "SMF 2.0"
+---~ version: "SMF 1.1"
 ---~ settings: "/e107_config.php"
 ---~ from_prefix: "`$mySQLdefaultdb`.$mySQLprefix"
 ---~ globals: "$IMAGES_DIRECTORY"
@@ -29,14 +29,18 @@ WHERE group_name LIKE 'e107%';
 
 	if (isset($prefs['forum_levels']) && isset($prefs['forum_thresholds']))
 	{
-		$inserts = array();
+		$inserts = '';
 		$post_count = explode(',', $prefs['forum_thresholds']);
 		foreach (explode(',', $prefs['forum_levels']) as $k => $groupname)
 			if ($groupname !== '')
-				$inserts[] = array(substr("e107 " . addslashes($groupname), 0, 255), $prefs['forum_thresholds'], '', '');
+				$inserts .= "
+					(SUBSTRING('e107 " . addslashes($groupname) . "', 1, 255), $prefs[forum_thresholds], '', '')";
 
 		if (!empty($inserts))
-			convert_insert('membergroups', array('group_name', 'min_posts', 'online_color', 'stars'), $inserts);
+			convert_query("
+				INSERT INTO {$to_prefix}membergroups
+					(group_name, min_posts, online_color, stars)
+				VALUES " . substr($inserts, 0, -1));
 	}
 ---}
 
@@ -123,16 +127,14 @@ while (true)
 
 	$result = convert_query("
 		SELECT u.user_id AS id_member, mg.id_group
-		FROM {$from_prefix}userclass_classes AS uc
-			INNER JOIN {$from_prefix}user AS u
-			INNER JOIN {$to_prefix}membergroups AS mg
+		FROM ({$from_prefix}userclass_classes AS uc, {$from_prefix}user AS u, {$to_prefix}membergroups AS mg)
 		WHERE FIND_IN_SET(uc.userclass_id, REPLACE(u.user_class, '.', ','))
 			AND CONCAT('e107 ', uc.userclass_name) = mg.group_name
 		ORDER BY id_member
 		LIMIT $_REQUEST[start], 250");
 	$additional_groups = '';
 	$last_member = 0;
-	while ($row = convert_fetch_assoc($result))
+	while ($row = mysql_fetch_assoc($result))
 	{
 		if (empty($last_member))
 			$last_member = $row['id_member'];
@@ -202,8 +204,9 @@ WHERE forum_parent = 0;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
+
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_profile > 4;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
@@ -225,8 +228,7 @@ SELECT
 		WHEN 0 THEN '-1,0'
 		ELSE IFNULL(mg.id_group, '')
 	END AS member_groups
-FROM {$from_prefix}forum AS f
-	INNER JOIN {$from_prefix}forum AS c
+FROM ({$from_prefix}forum AS f, {$from_prefix}forum AS c)
 	LEFT JOIN {$from_prefix}userclass_classes AS uc ON (uc.userclass_id = f.forum_class)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('e107 ', uc.userclass_name))
 WHERE f.forum_parent != 0;
@@ -314,7 +316,7 @@ FROM {$from_prefix}forum_t AS m
 /******************************************************************************/
 
 ---* {$to_prefix}messages (update id_topic)
-SELECT m.thread_id AS id_topic, m.thread_name AS subject
+SELECT m.thread_id AS id_topic, SUBSTRING(m.thread_name, 1, 255) AS subject
 FROM {$from_prefix}forum_t AS m
 WHERE m.thread_parent = 0;
 ---*
@@ -333,8 +335,8 @@ SELECT
 	0 AS voting_locked, 1 AS max_votes, p.poll_end_datestamp AS expire_time,
 	0 AS hide_results, 0 AS change_vote, p.poll_admin_id AS id_member,
 	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(t.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS poster_name
-FROM {$from_prefix}polls AS p
-	INNER JOIN {$from_prefix}forum_t AS t ON (p.poll_datestamp = t.thread_id);
+FROM ({$from_prefix}polls AS p, {$from_prefix}forum_t AS t)
+WHERE p.poll_datestamp = t.thread_id;
 ---*
 
 /******************************************************************************/
@@ -345,10 +347,10 @@ FROM {$from_prefix}polls AS p
 $request = convert_query("
 	SELECT
 		poll_id, poll_options, poll_votes
-	FROM {$from_prefix}polls AS p
-		INNER JOIN {$from_prefix}forum_t AS t ON (p.poll_datestamp = t.thread_id)");
-$inserts = array();
-while ($row = convert_fetch_assoc($request))
+	FROM ({$from_prefix}polls AS p, {$from_prefix}forum_t AS t)
+	WHERE p.poll_datestamp = t.thread_id");
+$inserts = '';
+while ($row = mysql_fetch_assoc($request))
 {
 	$separateOptions = explode(chr(1), $row['poll_options']);
 	$countOptions = count($separateOptions);
@@ -357,13 +359,17 @@ while ($row = convert_fetch_assoc($request))
 	for ($i = 0; $i <= $countOptions-2; $i++)
 	{
 		if (!empty($separateOptions))
-			$inserts[] = array($row['poll_id'], $i, $separateOptions[$i], $separateVotes[$i]);
+			$inserts .= "
+				('$row[poll_id]', '$i', '$separateOptions[$i]', '$separateVotes[$i]'),";
 	}
 }
 convert_free_result($request);
 
 if ($inserts !== '')
-	convert_insert('poll_choices', array('id_poll', 'id_choice', 'label', 'votes'), $inserts);
+	convert_query("
+		INSERT INTO {$to_prefix}poll_choices
+			(id_poll, id_choice, label, votes)
+		VALUES " . substr($inserts, 0, -1));
 ---}
 
 
@@ -401,8 +407,8 @@ SELECT
 	pm.pm_sent AS msgtime,
 	SUBSTRING(pm.pm_subject, 1, 255) AS subject,
 	SUBSTRING(pm.pm_text, 1, 65534) AS body
-FROM {$from_prefix}private_msg AS pm
-	INNER JOIN {$from_prefix}user AS uf ON (uf.user_id = pm.pm_from);
+FROM ({$from_prefix}private_msg AS pm, {$from_prefix}user AS uf)
+WHERE uf.user_id = pm.pm_from;
 ---*
 
 /******************************************************************************/
@@ -415,8 +421,8 @@ TRUNCATE {$to_prefix}pm_recipients;
 SELECT
 	pm.pm_id AS id_pm, ut.user_id AS id_member, 0 AS bcc,
 	IF (pm.pm_read_del = 0, 0, 1) AS is_read, 0 AS deleted, '-1' AS labels
-FROM {$from_prefix}private_msg AS pm
-	INNER JOIN {$from_prefix}user AS ut ON (ut.user_id = pm.pm_to);
+FROM ({$from_prefix}private_msg AS pm, {$from_prefix}user AS ut)
+WHERE ut.user_id = pm.pm_to;
 ---*
 
 /******************************************************************************/
@@ -428,9 +434,9 @@ TRUNCATE {$to_prefix}log_notify;
 ---* {$to_prefix}log_notify
 SELECT
 	u.user_id AS id_member, t.thread_id AS id_topic, 0 AS sent
-FROM {$from_prefix}forum_t AS t
-	INNER JOIN {$from_prefix}user AS u ON (u.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1))
-WHERE t.thread_active = 99
+FROM ({$from_prefix}forum_t AS t, {$from_prefix}user AS u)
+WHERE u.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1)
+	AND t.thread_active = 99
 	AND t.thread_parent = 0;
 ---*
 
@@ -439,9 +445,9 @@ WHERE t.thread_active = 99
 --- Converting board access...
 /******************************************************************************/
 
----{
-convert_insert('settings', array('variable', 'value'), array('permission_enable_by_board', 0), 'replace');
----}
+REPLACE INTO {$to_prefix}settings
+	(variable, value)
+VALUES ('permission_enable_by_board', '0');
 
 ---# Do all board permissions...
 ---{
@@ -450,14 +456,14 @@ $request = convert_query("
 	FROM {$from_prefix}forum
 	WHERE forum_class = 251");
 $readonlyBoards = array();
-while ($row = convert_fetch_assoc($request))
+while ($row = mysql_fetch_assoc($request))
 	$readonlyBoards[] = $row['forum_id'];
 convert_free_result($request);
 
 if (!empty($readonlyBoards))
 	convert_query("
 		UPDATE {$to_prefix}boards
-		SET id_profile = 4
+		SET permission_mode = 4
 		WHERE id_board IN (" . implode(', ', $readonlyBoards) . ")
 		LIMIT " . count($readonlyBoards));
 ---}
@@ -471,8 +477,7 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT f.forum_id AS id_board, u.user_id AS id_member
-FROM {$from_prefix}forum AS f
-	INNER JOIN {$from_prefix}user AS u
+FROM ({$from_prefix}forum AS f, {$from_prefix}user AS u)
 WHERE FIND_IN_SET(u.user_name, REPLACE(f.forum_moderators, ', ', ','));
 ---*
 
@@ -497,13 +502,13 @@ while (true)
 		LIMIT $_REQUEST[start], 250");
 	$ban_time = time();
 	$ban_num = 0;
-	while ($row = convert_fetch_assoc($result))
+	while ($row = mysql_fetch_assoc($result))
 	{
 		$ban_num++;
-
-		convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'notes', 'reason', 'cannot_access'),
-			array("migrated_ban_" . $ban_num, $ban_time, NULL, 'Migrated from e107', addslashes($row['banlist_reason']), 1)
-		);
+		convert_query("
+			INSERT INTO {$to_prefix}ban_groups
+				(name, ban_time, expire_time, notes, reason, cannot_access)
+			VALUES ('migrated_ban_$ban_num', $ban_time, NULL, '', '" . addslashes($row['banlist_reason']) . "', 1)");
 		$id_ban_group = convert_insert_id();
 
 		if (empty($id_ban_group))
@@ -511,9 +516,10 @@ while (true)
 
 		if (strpos($row['banlist_ip'], '@') !== false)
 		{
-			convert_insert('ban_items', array('id_ban_group', 'email_address', 'hostname'),
-				array($id_ban_group, addslashes($row['banlist_ip']), '')
-			);
+			convert_query("
+				INSERT INTO {$to_prefix}ban_items
+					(id_ban_group, email_address, hostname)
+				VALUES ($id_ban_group, '" . addslashes($row['banlist_ip']) . "', '')");
 			continue;
 		}
 		else
@@ -532,9 +538,10 @@ while (true)
 			$ip_high4 = $octet4;
 			$ip_low4 = $octet4;
 
-			convert_insert('ban_items', array('id_ban_group', 'ip_low1', 'ip_high1', 'ip_low2', 'ip_high2', 'ip_low3', 'ip_high3', 'ip_low4', 'ip_high4', 'email_address', 'hostname'),
-				array($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')
-			);
+			convert_query("
+				INSERT INTO {$to_prefix}ban_items
+					(id_ban_group, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, email_address, hostname)
+				VALUES ($id_ban_group, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
 			continue;
 		}
 	}
@@ -557,20 +564,25 @@ $request = convert_query("
 	WHERE user_ban = 1");
 if (convert_num_rows($request) > 0)
 {
-	convert_insert('ban_groups', array('name', 'ban_time', 'expire_time', 'notes', 'cannot_access'),
-		array("migrated_ban_users", $ban_time, NULL, 'Migrated from e107', 1)
-	);
-	$id_ban_group = convert_insert_id();
+	convert_query("
+		INSERT INTO {to_prefix}ban_groups
+			(name, ban_time, expire_time, reason, notes, cannot_access)
+			VALUES ('migrated_ban_users', $ban_time, NULL, '', 'Imported from e107', 1)");
+		$id_ban_group = convert_insert_id();
 
 	if (empty($id_ban_group))
 		continue;
 
-	$inserts = array();
-	while ($row = convert_fetch_assoc($request))
-		$inserts[] = array($id_ban_group, $row['user_id'], '', '');
+	$inserts = '';
+	while ($row = mysql_fetch_assoc($request))
+		$inserts .= "
+			($id_ban_group, $row[user_id], '', ''),";
 	convert_free_result($request);
 
-	convert_insert('ban_items', array('id_ban_group', 'id_member', 'email_address', 'hostname'), $inserts);
+	convert_query("
+		INSERT INTO {$to_prefix}ban_items
+			(id_ban_group, id_member, email_address, hostname)
+		VALUES " . substr($inserts, 0, -1));
 }
 ---}
 ---#
@@ -590,7 +602,7 @@ $request = convert_query("
 	WHERE e107_name LIKE 'emote_%'");
 
 $smileys_dir = array();
-while ($row = convert_fetch_assoc($request))
+while ($row = mysql_fetch_assoc($request))
 	$smileys_dir[] = $row['smiley_dir'];
 
 // Find the path for SMF smileys.
@@ -619,7 +631,7 @@ $request = convert_query("
 	SELECT variable, value
 	FROM {$to_prefix}settings
 	WHERE variable IN ('smiley_sets_known', 'smiley_sets_names')");
-while ($row = convert_fetch_assoc($request))
+while ($row = mysql_fetch_assoc($request))
 {
 	if ($row['variable'] == 'smiley_sets_known')
 	{
@@ -646,7 +658,7 @@ $request = convert_query("
 	SELECT code
 	FROM {$to_prefix}smileys");
 $currentCodes = array();
-while ($row = convert_fetch_assoc($request))
+while ($row = mysql_fetch_assoc($request))
 	$currentCodes[] = $row['code'];
 convert_free_result($request);
 
@@ -656,8 +668,8 @@ $request = convert_query("
 	FROM {$from_prefix}core
 	WHERE e107_name LIKE 'emote_%'");
 
-$insert = array();
-while ($row = convert_fetch_assoc($request))
+$insert = '';
+while ($row = mysql_fetch_assoc($request))
 {
 	$smileys_set = @unserialize($row['smiley_codes']);
 
@@ -696,7 +708,8 @@ while ($row = convert_fetch_assoc($request))
 
 			$count++;
 			$name = substr($filename, 0, strrpos($filename, '.'));
-			$insert[] = array($code, $filename, $name, $count, $hidden);
+			$insert .= "
+			('$code', '$filename', '$name', $count, '$hidden'),";
 		}
 	}
 }
@@ -704,13 +717,20 @@ convert_free_result($request);
 
 // Insert the new smileys
 if (!empty($insert))
-	convert_insert('smileys', array('code', 'filename', 'description', 'smiley_order', 'hidden'), $insert);
+{
+	convert_query("
+		INSERT INTO {$to_prefix}smileys
+			(code, filename, description, smiley_order, hidden)
+		VALUES " . substr($insert, 0, -1));
+}
 
 // Set the new known smileys
-convert_insert('settings', array('variable', 'value'),
-	array(
-		array('smiley_sets_known', $smiley_sets_known)
-		array('smiley_sets_names', $smiley_sets_names)
-	), 'replace');
+convert_query("
+	REPLACE INTO {$to_prefix}settings
+		(variable, value)
+	VALUES
+		('smiley_sets_known', '$smiley_sets_known'),
+		('smiley_sets_names', '$smiley_sets_names')");
+
 ---}
 ---#
