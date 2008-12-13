@@ -256,12 +256,15 @@ function PackageInstallTest()
 		SELECT version, themes_installed, db_changes
 		FROM {db_prefix}log_packages
 		WHERE package_id = {string:current_package}
-			AND install_state = {int:installed}',
+			AND install_state != {int:not_installed}
+		ORDER BY time_installed DESC
+		LIMIT 1',
 		array(
-			'installed' => 1,
+			'not_installed'	=> 0,
 			'current_package' => $packageInfo['id'],
 		)
 	);
+	
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$old_themes = explode(',', $row['themes_installed']);
@@ -284,15 +287,16 @@ function PackageInstallTest()
 		}
 	}
 
-	// Wait, it's not installed yet!
-	if (!isset($old_version) && $context['uninstalling'])
-	{
-		deltree($boarddir . '/Packages/temp');
-		fatal_lang_error('package_cant_uninstall', false);
-	}
 	// Uninstalling?
-	elseif ($context['uninstalling'])
+	if ($context['uninstalling'])
 	{
+		// Wait, it's not installed yet!
+		if (!isset($old_version) && $context['uninstalling'])
+		{
+			deltree($boarddir . '/Packages/temp');
+			fatal_lang_error('package_cant_uninstall', false);
+		}
+
 		$actions = parsePackageInfo($packageInfo['xml'], true, 'uninstall');
 
 		// Gadzooks!  There's no uninstaller at all!?
@@ -797,9 +801,11 @@ function PackageInstall()
 		SELECT version, themes_installed, db_changes
 		FROM {db_prefix}log_packages
 		WHERE package_id = {string:current_package}
-			AND install_state = {int:installed}',
+			AND install_state != {int:not_installed}
+		ORDER BY time_installed DESC
+		LIMIT 1',
 		array(
-			'installed' => 1,
+			'not_installed'	=> 0,
 			'current_package' => $packageInfo['id'],
 		)
 	);
