@@ -19,6 +19,7 @@ December 2008
  ! A query used in a 'show users attachments' didn't work properly PostgreSQL. (Profile-View.php) [Bug 2773]
  ! Performing an upgrade of the same modification could not be done twice in a row. (Packages.php) [Bug 2702]
  * Fixed IE 6 not properly positioning the right aligned button strips. (ie6.css)
+ * Fixed menu buttons getting a different color after being visited in IE. (style.css)
 
 
 November 2008

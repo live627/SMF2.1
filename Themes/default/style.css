@@ -612,7 +612,7 @@ a.moderation_link, a.moderation_link:visited
 	padding: 0;
 	display: inline;
 }
-.buttonlist ul li a, .buttonlist_bottom ul li a
+.buttonlist ul li a, .buttonlist ul li a:visited, .buttonlist_bottom ul li a, .buttonlist_bottom ul li a:visited
 {
 	float: left;
 	display: block;
