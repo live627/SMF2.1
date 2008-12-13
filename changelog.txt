@@ -18,6 +18,7 @@ December 2008
  ! The autosuggest didn't work properly in case PHP would handle parsing the query string. (suggest.js) [Bug 2799]
  ! A query used in a 'show users attachments' didn't work properly PostgreSQL. (Profile-View.php) [Bug 2773]
  ! Performing an upgrade of the same modification could not be done twice in a row. (Packages.php) [Bug 2702]
+ * Fixed IE 6 not properly positioning the right aligned button strips. (ie6.css)
 
 
 November 2008

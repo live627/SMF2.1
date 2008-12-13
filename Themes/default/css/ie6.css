@@ -4,3 +4,8 @@
 	margin: 0;
 	padding: 0;
 }
+
+.modbuttons .buttonlist_bottom ul, .modbuttons .buttonlist ul, .floatright .buttonlist ul, .floatright .buttonlist_bottom ul, .readbuttons .buttonlist ul, .readbuttons .buttonlist_bottom ul
+{
+	float: right;
+}
