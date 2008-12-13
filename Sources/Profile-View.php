@@ -579,7 +579,7 @@ function showAttachments($memID)
 			AND b.id_board IN ({array_int:boards_list})' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}') . '
 		ORDER BY {raw:sort}
-		LIMIT {raw:offset}, {raw:limit}',
+		LIMIT {int:offset}, {int:limit}',
 		array(
 			'boards_list' => $boardsAllowed,
 			'attachment_type' => 0,
