@@ -24,6 +24,8 @@ December 2008
  * The 'exclude sticky topics' option could no longer be selected when using the 'removing old topics' feature. (ManageMaintenance template) [Bug 2793]
  * The permission check used to enable the quick subject modify function was incorrect. (MessageIndex template)
  * In some themes, the quick subject modify function wasn't working properly. (MessageIndex template) [Bug 2797]
+ * Added both 'add poll' and 'mark as unread' buttons to the button strips on the display page for the default theme, as there seems to be sufficient space. (Display.php, Display template) [Bug 2787]
+ & Shortened the button text from 'Restore message' to 'Restore', as there wasn't enough space. (Index language file)
 
 
 November 2008

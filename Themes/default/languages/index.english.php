@@ -714,7 +714,7 @@ $txt['subscribe_webslice'] = 'Subscribe to Webslice';
 
 // Restore topic
 $txt['restore_topic'] = 'Restore Topic';
-$txt['restore_message'] = 'Restore Message';
+$txt['restore_message'] = 'Restore';
 $txt['quick_mod_restore'] = 'Restore Selected';
 
 // Editor prompt.
