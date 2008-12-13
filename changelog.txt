@@ -22,6 +22,8 @@ December 2008
  * Fixed menu buttons getting a different color after being visited in IE. (style.css)
  ! Fixed incorrect header sent with downloadable binary files. (Display.php) [Bug 2792, Bug 2652]
  * The 'exclude sticky topics' option could no longer be selected when using the 'removing old topics' feature. (ManageMaintenance template) [Bug 2793]
+ * The permission check used to enable the quick subject modify function was incorrect. (MessageIndex template)
+ * In some themes, the quick subject modify function wasn't working properly. (MessageIndex template) [Bug 2797]
 
 
 November 2008

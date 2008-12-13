@@ -223,7 +223,7 @@ function template_main()
 							<td class="windowbg2 icon2">
 								<img src="', $topic['first_post']['icon_url'], '" alt="" />
 							</td>
-							<td class="subject ', $color_class, '" ', (!empty($topic['quick_mod']['remove']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>';
+							<td class="subject ', $color_class, '" ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>';
 
 			if (!empty($settings['separate_sticky_lock']))
 				echo '
