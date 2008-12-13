@@ -1362,9 +1362,16 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 			deltree($action['filename']);
 		elseif ($action['type'] == 'remove-file')
 		{
-			package_chmod($action['filename']);
+			// Make sure the file exists before deleting it.
+			if (file_exists($action['filename']))
+			{
+				package_chmod($action['filename']);
+				$failure |= !unlink($action['filename']);
+			}
 
-			$failure |= !unlink($action['filename']);
+			// The file that was supposed to be deleted couldn't be found.
+			else
+				$failure = true;
 		}
 	}
 

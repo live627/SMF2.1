@@ -27,6 +27,7 @@ December 2008
  * Added both 'add poll' and 'mark as unread' buttons to the button strips on the display page for the default theme, as there seems to be sufficient space. (Display.php, Display template) [Bug 2787]
  & Shortened the button text from 'Restore message' to 'Restore', as there wasn't enough space. (Index language file)
  ! The can_reply_approved context variable didn't take the post moderation master setting into account. (Display.php) [Bug 2783]
+ ! Make sure a file to be deleted during the install of a package is checked for existence first. (Subs-Package.php) [Bug 2739]
 
 
 November 2008
