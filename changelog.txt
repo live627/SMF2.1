@@ -21,6 +21,7 @@ December 2008
  * Fixed IE 6 not properly positioning the right aligned button strips. (ie6.css)
  * Fixed menu buttons getting a different color after being visited in IE. (style.css)
  ! Fixed incorrect header sent with downloadable binary files. (Display.php) [Bug 2792, Bug 2652]
+ * The 'exclude sticky topics' option could no longer be selected when using the 'removing old topics' feature. (ManageMaintenance template) [Bug 2793]
 
 
 November 2008

@@ -270,7 +270,7 @@ function template_maintain_members()
 // Template for the topic maintenance tasks.
 function template_maintain_topics()
 {
-	global $scripturl, $txt, $context, $settings;
+	global $scripturl, $txt, $context, $settings, $modSettings;
 
 	// If maintenance has finished tell the user.
 	if (!empty($context['maintenance_finished']))
