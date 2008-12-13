@@ -532,7 +532,7 @@ function smfSuggest(sessionID, textID)
 		searchString = searchString.php_to8bit().php_urlencode();
 
 		// Get the document.
-		xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);
+		xmlRequestHandle = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;time=' + (new Date().getTime()), onSuggestionReceived);
 
 		return true;
 	}
