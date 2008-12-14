@@ -30,6 +30,8 @@ December 2008
  ! Make sure a file to be deleted during the install of a package is checked for existence first. (Subs-Package.php) [Bug 2739]
  ! Fixed the user not being able to change their openID settings in case the openID has been switched off. (Profile.php) [Bug 2780]
  ! Prevent an attachment to not be shown in case a thumbnail could not be created. (Profile.php) [Bug 2801]
+ ! No longer allow setting the personal messages options through the profile screen without profile_extra_own permission. Without profile permissions, there shouldn't be access to the profile screen. (Profile.php)
+ ! Some settings could not be changed from the PM section. (Profile-Modify.php)
 
 
 November 2008

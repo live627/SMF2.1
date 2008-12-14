@@ -221,10 +221,12 @@ function ModifyProfile($post_errors = array())
 						'any' => array('profile_extra_any'),
 					),
 				),
+				// Without profile_extra_own, settings are accessible from the PM section.
 				'pmprefs' => array(
 					'label' => $txt['pmprefs'],
 					'file' => 'Profile-Modify.php',
 					'function' => 'pmprefs',
+					'enabled' => allowedTo(array('profile_extra_own', 'profile_extra_any')),
 					'sc' => 'post',
 					'permission' => array(
 						'own' => array('pm_read'),

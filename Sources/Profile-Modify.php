@@ -597,7 +597,7 @@ function loadProfileFields($force_reload = false)
 		'pm_prefs' => array(
 			'type' => 'callback',
 			'callback_func' => 'pm_settings',
-			'permission' => 'profile_extra',
+			'permission' => 'pm_read',
 			'preload' => create_function('', '
 				global $context, $cur_profile;
 				$context[\'display_mode\'] = $cur_profile[\'pm_prefs\'] & 3;
