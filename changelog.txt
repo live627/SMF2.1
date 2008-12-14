@@ -41,6 +41,7 @@ December 2008
  ! Bad URL error when downloading a non-existent package. (PackageGet.php, Subs-Package.php) [Bug 2764]
  ! Make sure no invalid XML characters are being sent through XMLHTTP (QueryString.php, Xml template) [Bug 2777]
  ! Some invisible characters in the lower ASCII range were not properly trimmed. (Load.php)
+ ! The version_compatible property of the standard search API was incorrect. (SearchAPI-Standard.php) [Bug 2776]
 
 
 November 2008
