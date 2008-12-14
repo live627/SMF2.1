@@ -2719,8 +2719,10 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false)
 
 	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d))?(.+)$~', $url, $match);
 
-	// An FTP url.  We should try connecting and RETRieving it...
-	if (isset($match[1]) && $match[1] == 'ftp')
+	// An FTP url. We should try connecting and RETRieving it...
+	if (empty($match[1]))
+		return false;
+	elseif ($match[1] == 'ftp')
 	{
 		// Include the file containing the ftp_connection class.
 		loadClassFile('Class-Package.php');

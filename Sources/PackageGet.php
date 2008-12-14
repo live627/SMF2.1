@@ -539,6 +539,10 @@ function PackageDownload()
 	// Security is good...
 	checkSession('get');
 
+	// To download something, we need a valid server or url.
+	if (empty($_GET['server']) && (!isset($_REQUEST['byurl']) || empty($_POST['filename'])))
+		fatal_lang_error('package_get_error_is_zero', false);
+
 	if (isset($_GET['server']))
 	{
 		$server = (int) $_GET['server'];

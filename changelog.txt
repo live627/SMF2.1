@@ -37,7 +37,8 @@ December 2008
  ! Fixed JavaScript error causing the switch from OpenID to password to fail. (register.js) [Bug 2779]
  ! Default values were not always properly set in the database structure of a backup. (DbExra-mysql.php) [Bug 2690]
  * Added a 'modify message' title to the quick modify button. (Display template) [Bug 2802]
- ! Both spider log and ban log didn't have page titles. (ManageBans.php, ManageSearchEngines.php) [Bug 2803]
+ ! Both the spider log and the ban log didn't have page titles. (ManageBans.php, ManageSearchEngines.php) [Bug 2803]
+ ! Bad URL error when downloading a non-existent package. (PackageGet.php, Subs-Package.php) [Bug 2764]
 
 
 November 2008
