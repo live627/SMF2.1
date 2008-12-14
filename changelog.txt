@@ -43,6 +43,7 @@ December 2008
  ! Some invisible characters in the lower ASCII range were not properly trimmed. (Load.php)
  ! The version_compatible property of the standard search API was incorrect. (SearchAPI-Standard.php) [Bug 2776]
  & Fixed a typo in $txt['critical_settings_info']. (repair_settings language file) [Bug 2775]
+ * The 'Posting' help page wasn't XHTML valid.  (Help template, Help language file) [Bug 2771]
 
 
 November 2008

@@ -1778,7 +1778,8 @@ function template_manual_posting()
 		<tr>
 			<td>', $txt['manual_posting_bbc_shadow'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/shadow.gif" alt="', $txt['manual_posting_bbc_shadow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
-			<td>', $txt['manual_posting_shadow_code'], '<td>
+			<td>', $txt['manual_posting_shadow_code'], '</td>
+			<td>
 				<div style="filter: Shadow(color=red, direction=240); width: 30px;">
 					', $txt['manual_posting_shadow_output'], '
 				</div>
@@ -1789,7 +1790,7 @@ function template_manual_posting()
 			<td>', $txt['manual_posting_bbc_move'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/move.gif" alt="', $txt['manual_posting_bbc_move'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_move_code'], '</td>
-			<td><marquee>', $txt['manual_posting_move_output'], '</marquee></td>
+			<td>', $context['browser']['is_ie'] ? '<marquee>' . $txt['manual_posting_move_output'] . '</marquee>' : '', '</td>
 			<td>', $txt['manual_posting_move_comment'], '</td>
 		</tr>
 				<tr>

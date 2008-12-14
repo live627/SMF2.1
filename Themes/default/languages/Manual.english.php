@@ -581,7 +581,7 @@ $txt['manual_posting_list_code'] = '[list]<br />[li]SMF[/li]<br />[li]YaBB SE[/l
 $txt['manual_posting_list_output'] = '<ul class="normallist"><li>SMF</li><li>YaBB SE</li></ul>';
 $txt['manual_posting_list_comment'] = 'While you can add as many items as you wish, each item must be contained by the correct opening and closing tags. You can also style your list item bullets with special opening tags and no closing tags, but this option doesn\'t currently output valid XHTML.';
 $txt['manual_posting_list_buttom_code'] = '[list]<br />[o]circle<br />[O]circle<br />[0]circle<br />[*]disc<br />[@]disc<br />[+]square<br />[x]square<br />[#]square<br />[/list]';
-$txt['manual_posting_list_buttom_output'] = '<ul class="normallist"><li type="circle">circle<br /><li type="circle">circle<br /><li type="circle">circle<br /><li type="disc">disc<br /><li type="disc">disc<br /><li type="square">square<br /><li type="square">square<br /><li type="square">square<br /></ul>';
+$txt['manual_posting_list_buttom_output'] = '<ul class="normallist"><li style="list-style-type: circle;">circle</li><li style="list-style-type: circle;">circle</li><li style="list-style-type: circle;">circle</li><li style="list-style-type: disc;">disc</li><li style="list-style-type: disc;">disc</li><li style="list-style-type: square;">square</li><li style="list-style-type: square;">square</li><li style="list-style-type: square;">square</li></ul>';
 $txt['manual_posting_bbc_abbr'] = 'Abbreviation';
 $txt['manual_posting_abbr_code'] = '[abbr=exemlpi gratia]eg[/abbr]';
 $txt['manual_posting_abbr_output'] = 'eg';
