@@ -783,6 +783,7 @@ function SpiderLogs()
 		}
 	}
 
+	$context['page_title'] = $txt['spider_logs'];
 	$context['sub_template'] = 'show_spider_logs';
 	$context['default_list'] = 'spider_logs';
 }
