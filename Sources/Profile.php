@@ -340,6 +340,7 @@ function ModifyProfile($post_errors = array())
 	$context['password_areas'] = array();
 	$security_checks = array();
 	$include_file = false;
+	$requestedAreaValid = false;
 
 	foreach ($profile_areas as $section_id => $section)
 	{
@@ -371,6 +372,9 @@ function ModifyProfile($post_errors = array())
 				// Need to include the file?
 				if (!empty($area['file']))
 					$include_file = $area['file'];
+				
+				// The area requested by the user turns out to be a valid and enabled one.
+				$requestedAreaValid = true;
 			}
 
 			// Can we do this?
@@ -405,7 +409,7 @@ function ModifyProfile($post_errors = array())
 		if ($defaultInclude)
 			$include_file = $defaultInclude;
 	}
-	else
+	elseif (!isset($_REQUEST['area']) || !$requestedAreaValid)
 		isAllowedTo('profile_view_' . ($context['user']['is_owner'] ? 'own' : 'any'));
 
 	// Now the context is setup have we got any security checks to carry out additional to that above?
