@@ -7,7 +7,7 @@ function template_sendbody()
 
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>
-	<message view="', $context['view'], '">', $context['message'], '</message>
+	<message view="', $context['view'], '">', cleanXml($context['message']), '</message>
 </smf>';
 }
 
@@ -17,7 +17,7 @@ function template_quotefast()
 
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>
-	<quote>', $context['quote']['xml'], '</quote>
+	<quote>', cleanXml($context['quote']['xml']), '</quote>
 </smf>';
 }
 
@@ -27,8 +27,8 @@ function template_modifyfast()
 
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>
-	<subject><![CDATA[', $context['message']['subject'], ']]></subject>
-	<message id="msg_', $context['message']['id'], '"><![CDATA[', $context['message']['body'], ']]></message>
+	<subject><![CDATA[', cleanXml($context['message']['subject']), ']]></subject>
+	<message id="msg_', $context['message']['id'], '"><![CDATA[', cleanXml($context['message']['body']), ']]></message>
 </smf>';
 
 }
@@ -43,13 +43,13 @@ function template_modifydone()
 	if (empty($context['message']['errors']))
 	{
 		echo '
-		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt['by'] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>
-		<subject is_first="', $context['message']['first_in_topic'] ? '1' : '0', '"><![CDATA[', $context['message']['subject'], ']]></subject>
+		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : cleanXml('&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt['by'] . ' ' . $context['message']['modified']['name'] . '</i> &#187;'), ']]></modified>
+		<subject is_first="', $context['message']['first_in_topic'] ? '1' : '0', '"><![CDATA[', cleanXml($context['message']['subject']), ']]></subject>
 		<body><![CDATA[', $context['message']['body'], ']]></body>';
 	}
 	else
 		echo '
-		<error in_subject="', $context['message']['error_in_subject'] ? '1' : '0', '" in_body="', $context['message']['error_in_body'] ? '1' : '0', '"><![CDATA[', implode('<br />', $context['message']['errors']), ']]></error>';
+		<error in_subject="', $context['message']['error_in_subject'] ? '1' : '0', '" in_body="', cleanXml($context['message']['error_in_body']) ? '1' : '0', '"><![CDATA[', implode('<br />', $context['message']['errors']), ']]></error>';
 	echo '
 	</message>
 </smf>';
@@ -65,14 +65,14 @@ function template_modifytopicdone()
 	if (empty($context['message']['errors']))
 	{
 		echo '
-		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt['by'] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>';
+		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : cleanXml('&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt['by'] . ' ' . $context['message']['modified']['name'] . '</i> &#187;'), ']]></modified>';
 		if (!empty($context['message']['subject']))
 			echo '
-		<subject><![CDATA[', $context['message']['subject'], ']]></subject>';
+		<subject><![CDATA[', cleanXml($context['message']['subject']), ']]></subject>';
 	}
 	else
 		echo '
-		<error in_subject="', $context['message']['error_in_subject'] ? '1' : '0', '"><![CDATA[', implode('<br />', $context['message']['errors']), ']]></error>';
+		<error in_subject="', $context['message']['error_in_subject'] ? '1' : '0', '"><![CDATA[', cleanXml(implode('<br />', $context['message']['errors'])), ']]></error>';
 	echo '
 	</message>
 </smf>';
@@ -92,7 +92,7 @@ function template_post()
 	if (!empty($context['post_error']['messages']))
 		foreach ($context['post_error']['messages'] as $message)
 			echo '
-		<error><![CDATA[', $message, ']]></error>';
+		<error><![CDATA[', cleanXml($message), ']]></error>';
 	echo '
 		<caption name="guestname" color="', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? 'red' : '', '" />
 		<caption name="email" color="', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? 'red' : '', '" />
@@ -111,8 +111,8 @@ function template_post()
 			echo '
 		<post id="', $post['id'], '">
 			<time><![CDATA[', $post['time'], ']]></time>
-			<poster><![CDATA[', $post['poster'], ']]></poster>
-			<message><![CDATA[', $post['message'], ']]></message>
+			<poster><![CDATA[', cleanXml($post['poster']), ']]></poster>
+			<message><![CDATA[', cleanXml($post['message']), ']]></message>
 		</post>';
 		echo '
 	</new_posts>';
@@ -159,9 +159,9 @@ function template_split()
 		else
 			echo '
 	<change id="', $change['id'], '" curAction="insert" section="', $change['section'], '">
-		<subject><![CDATA[', $change['insert_value']['subject'], ']]></subject>
-		<body><![CDATA[', $change['insert_value']['body'], ']]></body>
-		<poster><![CDATA[', $change['insert_value']['poster'], ']]></poster>
+		<subject><![CDATA[', cleanXml($change['insert_value']['subject']), ']]></subject>
+		<body><![CDATA[', cleanXml($change['insert_value']['body']), ']]></body>
+		<poster><![CDATA[', cleanXml($change['insert_value']['poster']), ']]></poster>
 	</change>';
 	}
 	echo '
@@ -204,12 +204,12 @@ function template_results()
 				<relevance>', $topic['relevance'], '</relevance>
 				<board>
 					<id>', $topic['board']['id'], '</id>
-					<name>', $topic['board']['name'], '</name>
+					<name>', cleanXml($topic['board']['name']), '</name>
 					<href>', $topic['board']['href'], '</href>
 				</board>
 				<category>
 					<id>', $topic['category']['id'], '</id>
-					<name>', $topic['category']['name'], '</name>
+					<name>', cleanXml($topic['category']['name']), '</name>
 					<href>', $topic['category']['href'], '</href>
 				</category>
 				<messages>';
@@ -218,15 +218,15 @@ function template_results()
 				echo '
 					<message>
 						<id>', $message['id'], '</id>
-						<subject><![CDATA[', $message['subject_highlighted'] != '' ? $message['subject_highlighted'] : $message['subject'], ']]></subject>
-						<body><![CDATA[', $message['body_highlighted'] != '' ? $message['body_highlighted'] : $message['body'], ']]></body>
+						<subject><![CDATA[', cleanXml($message['subject_highlighted'] != '' ? $message['subject_highlighted'] : $message['subject']), ']]></subject>
+						<body><![CDATA[', cleanXml($message['body_highlighted'] != '' ? $message['body_highlighted'] : $message['body']), ']]></body>
 						<time>', $message['time'], '</time>
 						<timestamp>', $message['timestamp'], '</timestamp>
 						<start>', $message['start'], '</start>
 
 						<author>
 							<id>', $message['member']['id'], '</id>
-							<name>', $message['member']['name'], '</name>
+							<name>', cleanXml($message['member']['name']), '</name>
 							<href>', $message['member']['href'], '</href>
 						</author>
 					</message>';
@@ -253,10 +253,10 @@ function template_jump_to()
 	foreach ($context['jump_to'] as $category)
 	{
 		echo '
-	<item type="category" id="', $category['id'], '"><![CDATA[', $category['name'], ']]></item>';
+	<item type="category" id="', $category['id'], '"><![CDATA[', cleanXml($category['name']), ']]></item>';
 		foreach ($category['boards'] as $board)
 			echo '
-	<item type="board" id="', $board['id'], '" childlevel="', $board['child_level'], '"><![CDATA[', $board['name'], ']]></item>';
+	<item type="board" id="', $board['id'], '" childlevel="', $board['child_level'], '"><![CDATA[', cleanXml($board['name']), ']]></item>';
 	}
 	echo '
 </smf>';
@@ -270,7 +270,7 @@ function template_message_icons()
 <smf>';
 	foreach ($context['icons'] as $icon)
 		echo '
-	<icon value="', $icon['value'], '" url="', $icon['url'], '"><![CDATA[', $icon['name'], ']]></icon>';
+	<icon value="', $icon['value'], '" url="', $icon['url'], '"><![CDATA[', cleanXml($icon['name']), ']]></icon>';
 	echo '
 </smf>';
 }
@@ -281,7 +281,7 @@ function template_check_username()
 
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>
-	<username valid="', $context['valid_username'] ? 1 : 0, '">', $context['checked_username'], '</username>
+	<username valid="', $context['valid_username'] ? 1 : 0, '">', cleanXml($context['checked_username']), '</username>
 </smf>';
 }
 
@@ -317,7 +317,7 @@ function template_generic_xml_recursive($xml_data, $parent_ident, $child_ident, 
 			if (!empty($data['attributes']))
 				foreach ($data['attributes'] as $k => $v)
 					echo ' ' . $k . '="' . $v . '"';
-			echo '><![CDATA[', $data['value'], ']]></', $child_ident, '>';
+			echo '><![CDATA[', cleanXml($data['value']), ']]></', $child_ident, '>';
 		}
 
 	}
@@ -345,7 +345,7 @@ function template_webslice_recent_posts()
 	echo '
 	<div style="width: 100%; height: 100%; border: 1px solid black; padding: 0; margin: 0 0 0 0; font: 100.01%/100% Verdana, Helvetica, sans-serif;">
 		<div style="background-color: #080436; color: #FFFFFF; padding: 4px;">
-			', $txt['recent_posts'], '
+			', cleanXml($txt['recent_posts']), '
 		</div>';
 
 	$alternate = 0;
@@ -353,7 +353,7 @@ function template_webslice_recent_posts()
 	{
 		echo '
 		<div style="background-color: ', $alternate ? '#ECEDF3' : '#F6F6F6', '; font-size: 90%; padding: 2px;">
-			<strong><a href="', $item['link'], '">', $item['subject'], '</a></strong> ', $txt['by'], ' ', (!empty($item['poster']['link']) ? '<a href="' . $item['poster']['link'] . '">' . $item['poster']['name'] . '</a>' : $item['poster']['name']), '
+			<strong><a href="', $item['link'], '">', cleanXml($item['subject']), '</a></strong> ', cleanXml($txt['by']), ' ', cleanXml(!empty($item['poster']['link']) ? '<a href="' . $item['poster']['link'] . '">' . $item['poster']['name'] . '</a>' : $item['poster']['name']), '
 		</div>';
 		$alternate = !$alternate;
 	}
@@ -368,7 +368,7 @@ function template_webslice_recent_posts()
 			<a href="', $scripturl, '?action=login">', $txt['login'], '</a>';
 	else
 		echo '
-			', $context['user']['name'], ', ', $txt['msg_alert_you_have'], ' <a href="', $scripturl, '?action=pm">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase'], '</a>', $txt['newmessages4'], ' ', $context['user']['unread_messages'], ' ', $context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1'];
+			', cleanXml($context['user']['name']), ', ', cleanXml($txt['msg_alert_you_have']), ' <a href="', $scripturl, '?action=pm">', cleanXml($context['user']['messages']), ' ', cleanXml($context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase']), '</a>', cleanXml($txt['newmessages4'] . ' ' . $context['user']['unread_messages']), ' ', cleanXml($context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1']);
 
 	echo '
 		</div>

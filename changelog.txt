@@ -39,6 +39,8 @@ December 2008
  * Added a 'modify message' title to the quick modify button. (Display template) [Bug 2802]
  ! Both the spider log and the ban log didn't have page titles. (ManageBans.php, ManageSearchEngines.php) [Bug 2803]
  ! Bad URL error when downloading a non-existent package. (PackageGet.php, Subs-Package.php) [Bug 2764]
+ ! Make sure no invalid XML characters are being sent through XMLHTTP (QueryString.php, Xml template) [Bug 2777]
+ ! Some invisible characters in the lower ASCII range were not properly trimmed. (Load.php)
 
 
 November 2008

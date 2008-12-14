@@ -75,6 +75,10 @@ if (!defined('SMF'))
 		- does not effect keys, only changes values.
 		- may call itself recursively if necessary.
 
+	string cleanXml(string var)
+		- removes invalid XML characters to assure the input string being
+		  parsed properly.
+
 	string ob_sessrewrite(string buffer)
 		- rewrites the URLs outputted to have the session ID, if the user
 		  is not accepting cookies and is using a standard web browser.
@@ -469,6 +473,15 @@ function validate_unicode__recursive($var)
 	}
 
 	return $var;
+}
+
+// Clean up the XML to make sure it doesn't contain invalid characters.
+function cleanXml($string)
+{
+	global $context;
+
+	// http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+	return preg_replace('~[\x00-\x08\x0B\x0C\x0E-\x19' . ($context['utf8'] ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{D800}-\x{DFFF}\x{FFFE}\x{FFFF}' : pack('C*', 0xED, 0xA0, 0x80) . '-' . pack('C*', 0xED, 0xBF, 0xBF, 0xEF, 0xBF, 0xBE, 0xEF, 0xBF, 0xBF)) : '') . ']~' . ($context['utf8'] ? 'u' : ''), '', $string);
 }
 
 // Rewrite URLs to include the session ID.
