@@ -84,7 +84,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			return false;
 
 		var curElement, curType;
-		for (i = 0; i < document.getElementById(formID).elements.length; i++)
+		for (var i = 0, n = document.getElementById(formID).elements.length; i < n; i++)
 		{
 			curElement = document.getElementById(formID).elements[i];
 
@@ -138,7 +138,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 				stringIndex = 'password_reserved';
 
 			// Any reserved fields?
-			for (i in verificationFields)
+			for (var i in verificationFields)
 			{
 				if (verificationFields[i][4] == 'reserved' && verificationFields[i][1].value && curPass.indexOf(verificationFields[i][1].value) != -1)
 					stringIndex = 'password_reserved';

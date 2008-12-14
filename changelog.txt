@@ -33,7 +33,8 @@ December 2008
  ! No longer allow setting the personal messages options through the profile screen without profile_extra_own permission. Without profile permissions, there shouldn't be access to the profile screen. (Profile.php)
  ! Some settings could not be changed from the PM section. (Profile-Modify.php)
  ! The profile button wasn't visible in case the user was only allowed to edit their custom title. (Subs.php)
- ! Access to a non-standard profile area by users without the profile_view_* permission was blocked. (Profile.php)
+ ! Access to a non-standard profile area by users without the profile_view_* permission was blocked. (Profile.php) [Bug 2784]
+ ! Fixed JavaScript error causing the switch from OpenID to password to fail. (register.js) [Bug 2779]
 
 
 November 2008
