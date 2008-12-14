@@ -1356,7 +1356,10 @@ function ssi_pollVote()
 
 	// Check if they have already voted, or voting is locked.
 	$request = $smcFunc['db_query']('', '
-		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.expire_time, p.max_votes, p.guest_vote, t.id_topic
+		SELECT 
+			p.id_poll, p.voting_locked, p.expire_time, p.max_votes, p.guest_vote,
+			t.id_topic,
+			IFNULL(lp.id_choice, -1) AS selected
 		FROM {db_prefix}polls AS p
 			INNER JOIN {db_prefix}topics AS t ON (t.id_poll = {int:current_poll})
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -1392,17 +1395,6 @@ function ssi_pollVote()
 		// Already voted?
 		elseif (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))
 			redirectexit('topic=' . $row['id_topic'] . '.0');
-
-		$request = $smcFunc['db_query']('', '
-			SELECT MIN(id_member)
-			FROM {db_prefix}log_polls
-			WHERE id_poll = {int:current_poll}',
-			array(
-				'current_poll' => $row['id_poll'],
-			)
-		);
-		list ($guest_id) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
 	}
 
 	$options = array();
@@ -1412,7 +1404,7 @@ function ssi_pollVote()
 		$id = (int) $id;
 
 		$options[] = $id;
-		$inserts[] = array($_POST['poll'], $user_info['is_guest'] ? $guest_id : $user_info['id'], $id);
+		$inserts[] = array($_POST['poll'], $user_info['id'], $id);
 	}
 
 	// Add their vote in to the tally.
