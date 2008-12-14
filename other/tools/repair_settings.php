@@ -38,7 +38,7 @@ $txt['recommend_blank'] = '<i>(blank)</i>';
 $txt['database_settings_hidden'] = 'Some settings are not being shown because the database connection information is incorrect.';
 
 $txt['critical_settings'] = 'Critical Settings';
-$txt['critical_settings_info'] = 'These are the settings most likely to be screwing up your board, but try the things below (especially the path and URL ones) if these don\'t help.  You can click on the recommendded value to use it.';
+$txt['critical_settings_info'] = 'These are the settings most likely to be screwing up your board, but try the things below (especially the path and URL ones) if these don\'t help.  You can click on the recommended value to use it.';
 $txt['maintenance'] = 'Maintenance Mode';
 $txt['maintenance0'] = 'Off (recommended)';
 $txt['maintenance1'] = 'Enabled';
