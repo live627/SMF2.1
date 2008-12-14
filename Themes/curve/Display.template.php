@@ -596,10 +596,10 @@ function template_main()
 		<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
 	</h3>
 	<div class="smallpadding windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-		<div class="smallpadding floatleft" id="warning">
+		<div class="smallpadding floatleft" id="quickReplyWarning">
 			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
 		</div>
-		<div>', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
+		<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
 			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
@@ -630,6 +630,7 @@ function template_main()
 				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 			</form>
 		</div>
+		<div style="clear: both;"></div>
 	</div>
 </div>';
 	}

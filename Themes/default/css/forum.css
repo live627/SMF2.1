@@ -338,16 +338,28 @@ ul.postingbuttons li
 #quickReplyOptions div
 {
 	text-align: center;
-	margin-left: 26%;
 	border-left: solid 1px #aaa;
 }
-#quickReplyOptions #warning
+
+#quickReplyOptions #quickReplyWarning
 {
 	border: none;
 	text-align: left;
 	margin: 0;
 	width: 25%;
+	float: left;
 }
+#quickReplyOptions #quickReplyContent
+{
+	float: left;
+	width: 74%;
+}
+
+#quickReplyOptions #quickReplyContent textarea, #quickReplyOptions #quickReplyContent input
+{
+	margin-bottom: .5em;
+}
+
 /* ************************************* */
 /* styles from Recent.template           */
 /* ************************************* */

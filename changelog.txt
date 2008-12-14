@@ -45,7 +45,8 @@ December 2008
  & Fixed a typo in $txt['critical_settings_info']. (repair_settings language file) [Bug 2775]
  * The 'Posting' help page wasn't XHTML valid.  (Help template, Help language file) [Bug 2771]
  ! Fixed guests getting an undefined index on voting at an SSI poll. (SSI.php) [Bug 2733]
- ! The SSI guest voting feature was storing an incorrect ID in the log_poll table. (SSI.php)
+ ! The SSI guest voting feature was storing an incorrect ID in the log_polls table. (SSI.php)
+ * The Quick Reply description in combination with the 'topic locked' warning was taking more space than available at that spot. (forum.css, Display template)
 
 
 November 2008
