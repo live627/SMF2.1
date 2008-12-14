@@ -1452,8 +1452,12 @@ function loadAttachmentContext($id_msg)
 					}
 				}
 
-				$attachmentData[$i]['width'] = $attachment['thumb_width'];
-				$attachmentData[$i]['height'] = $attachment['thumb_height'];
+				// Only adjust dimensions on successful thumbnail creation.
+				if (!empty($attachment['thumb_width']) && !empty($attachment['thumb_height']))
+				{
+					$attachmentData[$i]['width'] = $attachment['thumb_width'];
+					$attachmentData[$i]['height'] = $attachment['thumb_height'];
+				}
 			}
 
 			if (!empty($attachment['id_thumb']))

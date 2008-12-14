@@ -29,6 +29,7 @@ December 2008
  ! The can_reply_approved context variable didn't take the post moderation master setting into account. (Display.php) [Bug 2783]
  ! Make sure a file to be deleted during the install of a package is checked for existence first. (Subs-Package.php) [Bug 2739]
  ! Fixed the user not being able to change their openID settings in case the openID has been switched off. (Profile.php) [Bug 2780]
+ ! Prevent an attachment to not be shown in case a thumbnail could not be created. (Profile.php) [Bug 2801]
 
 
 November 2008
