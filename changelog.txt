@@ -50,6 +50,9 @@ December 2008
  ! Store each file using the UNIX line breaks. (several files) [Bug 2727]
  * Added a CSS class for alerts and moved each alert and error to their respective CSS class. (several files) [Bug 2720]
  * The online image on the Display page was in some themes no longer linked properly to the PM screen. (Display template) [Bug 2718]
+ ! Make the UTF-8 option checked by default during install in case PostgreSQL is selected as database. (install.php) [Bug 2676]
+ ! Fixed the version detection for PostgreSQL in the installer as the version label used started with non-numeric characters. (install.php)
+ ! Fixed a few undefined indexes caused by the database type not known during the install. (install.php)
 
 
 November 2008
