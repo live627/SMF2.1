@@ -49,6 +49,7 @@ December 2008
  * The Quick Reply description in combination with the 'topic locked' warning was taking more space than available at that spot. (forum.css, Display template) [Bug 2731]
  ! Store each file using the UNIX line breaks. (several files) [Bug 2727]
  * Added a CSS class for alerts and moved each alert and error to their respective CSS class. (several files) [Bug 2720]
+ * The online image on the Display page was in some themes no longer linked properly to the PM screen. (Display template) [Bug 2718]
 
 
 November 2008

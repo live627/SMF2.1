@@ -236,9 +236,9 @@ function template_main()
 					<h4>'; 
 		// Show online and offline buttons?
 		if (!empty($modSettings['onlineEnable']) && !$message['member']['is_guest'])
-			echo 	'<img src="' . $message['member']['online']['image_href'] . '" alt="' . $message['member']['online']['text'] . '" />&nbsp;';
+			echo  $context['can_send_pm'] ? '<a href="' . $message['member']['online']['href'] . '" title="' . $message['member']['online']['label'] . '">' : '', '<img src="', $message['member']['online']['image_href'], '" alt="', $message['member']['online']['text'], '" />', $context['can_send_pm'] ? '</a>' : '', '&nbsp;';
 		
-		echo 	$message['member']['link'], '</h4>
+		echo $message['member']['link'], '</h4>
 					<ul class="smalltext" id="msg_', $message['id'], '_extra_info">';
 
 		// Show the member's custom title, if they have one.
