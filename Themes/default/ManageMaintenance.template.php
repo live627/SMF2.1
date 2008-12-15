@@ -462,7 +462,7 @@ function template_convert_utf8()
 				</td>
 			</tr><tr>
 				<td class="windowbg2">
-					', $context['charset_about_detected'], isset($context['charset_warning']) ? ' <span style="color: red;">' . $context['charset_warning'] . '</span>' : '', '<br />
+					', $context['charset_about_detected'], isset($context['charset_warning']) ? ' <span class="alert">' . $context['charset_warning'] . '</span>' : '', '<br />
 					<br />
 				</td>
 			</tr><tr>

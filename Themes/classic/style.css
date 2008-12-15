@@ -404,3 +404,15 @@ ol.search_results li
 	cursor: pointer;
 	color: #EEEEEE;
 }
+
+/* Sometimes there will be an error when you post */
+.error
+{
+	color: red;
+}
+
+/* Messages that somehow need to attract the attention. */
+.alert
+{
+	color: red;
+}

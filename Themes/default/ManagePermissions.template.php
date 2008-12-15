@@ -8,7 +8,7 @@ function template_permission_index()
 	// Not allowed to edit?
 	if (!$context['can_modify'])
 	echo '
-		<div style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
+		<div style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;" class="alert">
 			', sprintf($txt['permission_cannot_edit'], $scripturl . '?action=admin;area=permissions;sa=profiles'), '
 		</div>';
 

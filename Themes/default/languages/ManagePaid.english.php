@@ -57,7 +57,7 @@ $txt['nochex_email'] = 'Nochex email address';
 $txt['nochex_email_desc'] = 'Email of a merchant account at Nochex. Leave blank if you are not using Nochex';
 $txt['paid_settings_save'] = 'Save';
 
-$txt['paid_note'] = '<b style="color: red;">Note:</b><br />For subscriptions to be automatically updated for your users, you
+$txt['paid_note'] = '<strong class="alert">Note:</strong><br />For subscriptions to be automatically updated for your users, you
 	will need to setup a return URL for each of your payment methods. For all payment types, this return URL should be set as:<br /><br />
 	&nbsp;&nbsp;&bull;&nbsp;&nbsp;<b>' . $boardurl . '/subscriptions.php</b><br /><br />
 	You can edit the link for paypal directly, by clicking <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-ipn-notify" target="_blank">here</a>.<br />

@@ -207,7 +207,7 @@ function template_list_themes()
 			</tr>
 			<tr class="windowbg2">
 				<td style="padding-left: 5ex;" class="smalltext">
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex; padding-bottom: 2px;">', $txt['themeadmin_list_theme_dir'], ':</div> <b style="', $theme['valid_path'] ? '' : 'color: red; ', 'white-space: nowrap;">', $theme['theme_dir'], '</b>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</div>
+					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex; padding-bottom: 2px;">', $txt['themeadmin_list_theme_dir'], ':</div> <b style="white-space: nowrap;"', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], '</b>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</div>
 					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_theme_url'], ':</div> <b style="white-space: nowrap;">', $theme['theme_url'], '</b></div>
 					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_images_url'], ':</div> <b style="white-space: nowrap;">', $theme['images_url'], '</b></div>
 				</td>
@@ -713,7 +713,7 @@ function template_edit_style()
 
 	if ($context['session_error'])
 		echo '
-		<div style="color: red; padding: 2ex;">
+		<div class="error" style="padding: 2ex;">
 			', $txt['error_session_timeout'], '
 		</div>';
 
@@ -869,13 +869,13 @@ function template_edit_template()
 
 	if ($context['session_error'])
 		echo '
-				<div style="color: red; padding: 2ex; padding-top: 1ex;">
+				<div class="error" style="padding: 2ex; padding-top: 1ex;">
 					', $txt['error_session_timeout'], '
 				</div>';
 
 	if (isset($context['parse_error']))
 		echo '
-				<div style="color: red; padding: 2ex; padding-top: 1ex;">
+				<div class="error" style="padding: 2ex; padding-top: 1ex;">
 					', $txt['themeadmin_edit_error'], '
 					<div style="padding-left: 4ex;"><tt>', $context['parse_error'], '</tt></div>
 				</div>';
@@ -916,7 +916,7 @@ function template_edit_file()
 
 	if ($context['session_error'])
 		echo '
-				<div style="color: red; padding: 2ex;">
+				<div class="error" style="padding: 2ex;">
 					', $txt['error_session_timeout'], '
 				</div>';
 

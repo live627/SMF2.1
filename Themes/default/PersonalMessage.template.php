@@ -38,7 +38,7 @@ function template_pm_above()
 									<div align="left" style="border: 1px solid black; height: 7px; width: 100px;">
 										<div style="border: 0; background-color: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], 'px;"></div>
 									</div>
-									<span', ($context['limit_bar']['percent'] > 90 ? ' style="color: red;"' : ''), '>', $context['limit_bar']['text'], '</span>
+									<span', ($context['limit_bar']['percent'] > 90 ? ' class="alert"' : ''), '>', $context['limit_bar']['text'], '</span>
 								</div>
 								<br />';
 			}
@@ -571,7 +571,7 @@ function template_search()
 		echo '
 			<tr>
 				<td class="windowbg">
-					<div style="color: red; margin: 1ex 0 2ex 3ex;">
+					<div style="margin: 1ex 0 2ex 3ex;" class="error">
 						', implode('<br />', $context['search_errors']['messages']), '
 					</div>
 				</td>
@@ -930,7 +930,7 @@ function template_send()
 								<td></td>
 								<td align="left">
 									<b>', $txt['error_while_submitting'], '</b>
-									<div style="color: red; margin: 1ex 0 2ex 3ex;">
+									<div class="error" style="margin: 1ex 0 2ex 3ex;">
 										', implode('<br />', $context['post_error']['messages']), '
 									</div>
 								</td>
@@ -940,7 +940,7 @@ function template_send()
 	// To and bcc. Include a button to search for members.
 	echo '
 							<tr valign="top">
-								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt['pm_to'], ':</b></td>
+								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_to'], ':</b></td>
 								<td class="smalltext">
 									', template_control_autosuggest('to'), '<span class="smalltext" id="bcc_link" style="display: none;"><a href="#" onclick="document.getElementById(\'bcc_div\').style.display = \'\';document.getElementById(\'bcc_link\').style.display = \'none\';return false;">', $txt['make_bcc'], '</a> <a href="', $scripturl, '?action=helpadmin;help=pm_bcc" onclick="return reqWin(this.href);">(?)</a></span>';
 
@@ -966,7 +966,7 @@ function template_send()
 									</div>
 								</td>
 							</tr><tr valign="top" id="bcc_div">
-								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt['pm_bcc'], ':</b></td>
+								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</b></td>
 								<td class="smalltext">
 									', template_control_autosuggest('bcc');
 
@@ -992,7 +992,7 @@ function template_send()
 									</div>
 								</td>
 							</tr><tr>
-								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' style="color: red;"' : ''), '>', $txt['subject'], ':</b></td>
+								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</b></td>
 								<td><input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" /></td>
 							</tr>';
 

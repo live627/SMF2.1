@@ -91,7 +91,7 @@ function template_admin()
 
 		if ($context['copyright_expires'] < 30)
 			echo '
-							<div style="color: red;">', sprintf($txt['copyright_click_renew'], $context['copyright_key']), '</div>';
+							<div class="alert">', sprintf($txt['copyright_click_renew'], $context['copyright_key']), '</div>';
 
 		echo '<br />';
 	}
@@ -187,7 +187,7 @@ function template_admin()
 
 				var currentVersion = getInnerHTML(yourVer);
 				if (currentVersion != window.smfVersion)
-					setInnerHTML(yourVer, "<span style=\"color: red;\">" + currentVersion + "<" + "/span>");
+					setInnerHTML(yourVer, "<span class=\"alert\">" + currentVersion + "<" + "/span>");
 			}
 
 			// Sort out the update window
@@ -404,7 +404,7 @@ function template_credits()
 
 				var currentVersion = getInnerHTML(yourVer);
 				if (currentVersion != window.smfVersion)
-					setInnerHTML(yourVer, "<span style=\"color: red;\">" + currentVersion + "</span>");
+					setInnerHTML(yourVer, "<span class=\"alert\">" + currentVersion + "</span>");
 			}';
 
 	// IE 4 is rather annoying, this wouldn't be necessary...
@@ -902,7 +902,7 @@ function template_show_settings()
 							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
 
 				echo '
-							<td valign="top" ', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' style="color: red; font-weight: bold;"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</td>
+							<td valign="top" ', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</td>
 							<td class="windowbg2" width="50%">',
 								$config_var['preinput'];
 
@@ -1433,7 +1433,7 @@ function template_add_language()
 
 	if (!empty($context['smf_error']))
 		echo '
-				<div class="smalltext" style="color: red;">', $txt['add_language_error_' . $context['smf_error']], '</div>';
+				<div class="smalltext error">', $txt['add_language_error_' . $context['smf_error']], '</div>';
 
 	echo '
 			</td>
@@ -1514,7 +1514,7 @@ function template_download_language()
 	if (!empty($context['error_message']))
 		echo '
 	<div style="width: 98%; border: 1px solid red; background-color: #DDDDDD;">
-		<span style="color: red;">', $context['error_message'], '</span>
+		<span class="error">', $context['error_message'], '</span>
 	</div>';
 
 	// Provide something of an introduction...
@@ -1691,7 +1691,7 @@ function template_modify_language_entries()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2">
-				<span style="color: red;">', $context['lang_file_not_writable_message'], '</span>
+				<span class="alert">', $context['lang_file_not_writable_message'], '</span>
 			</td>
 		</tr>';
 
@@ -1790,7 +1790,7 @@ function template_modify_language_entries()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2">
-				<span style="color: red;">', $context['entries_not_writable_message'], '</span>
+				<span class="alert">', $context['entries_not_writable_message'], '</span>
 			</td>
 		</tr>';
 

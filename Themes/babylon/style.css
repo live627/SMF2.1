@@ -296,6 +296,19 @@ code
 	padding-bottom: 3px;
 	line-height: 1.3em;
 }
+
+/* Sometimes there will be an error when you post */
+.error
+{
+	color: red;
+}
+
+/* Messages that somehow need to attract the attention. */
+.alert
+{
+	color: red;
+}
+
 /* No image should have a border when linked */
 a img{
 	border: 0;

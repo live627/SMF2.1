@@ -37,7 +37,7 @@ function template_modify_subscription()
 		echo '
 			<tr class="windowbg">
 				<td colspan="2">
-					<span class="smalltext" style="color: red;">', $txt['paid_mod_edit_note'], '</span>
+					<span class="smalltext" class="alert">', $txt['paid_mod_edit_note'], '</span>
 				</td>
 			</tr>';
 

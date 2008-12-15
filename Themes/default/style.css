@@ -530,6 +530,12 @@ code
 	color: red;
 }
 
+/* Messages that somehow need to attract the attention. */
+.alert
+{
+	color: red;
+}
+
 /* Calendar colours for birthdays, events and holidays */
 .birthday
 {

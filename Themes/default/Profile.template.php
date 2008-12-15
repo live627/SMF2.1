@@ -181,13 +181,13 @@ function template_summary()
 		// If the person looking at the summary has permission, and the account isn't activated, give the viewer the ability to do it themselves.
 		if (!empty($context['activate_message']))
 			echo '
-				<dt class="clear"><span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
+				<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
 
 		// If the current member is banned, show a message and possibly a link to the ban.
 		if (!empty($context['member']['bans']))
 		{
 			echo '
-				<dt class="clear"><span style="color: red;">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').style.display = document.getElementById(\'ban_info\').style.display == \'none\' ? \'\' : \'none\';return false;">' . $txt['view_ban'] . '</a>]</dt>
+				<dt class="clear"><span class="alert">', $txt['user_is_banned'], '</span>&nbsp;[<a href="#" onclick="document.getElementById(\'ban_info\').style.display = document.getElementById(\'ban_info\').style.display == \'none\' ? \'\' : \'none\';return false;">' . $txt['view_ban'] . '</a>]</dt>
 				<dt class="clear" id="ban_info" style="display: none;">
 					<strong>', $txt['user_banned_by_following'], ':</strong>';
 
@@ -972,7 +972,7 @@ function template_edit_options()
 			echo '
 							<tr valign="top">
 								<td width="40%">
-									<strong', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</strong>';
+									<strong', !empty($field['is_error']) ? ' class="error"' : '', '>', $field['label'], '</strong>';
 
 			// Does it have any subtext to show?
 			if (!empty($field['subtext']))
@@ -1073,7 +1073,7 @@ function template_edit_options()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
+									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
@@ -2080,7 +2080,7 @@ function template_deleteAccount()
 	// If they are deleting their account AND the admin needs to approve it - give them another piece of info ;)
 	if ($context['needs_approval'])
 		echo '
-								<div style="color: red; border: 2px dashed red; padding: 4px;">', $txt['deleteAccount_approval'], '</div><br />
+								<div class="alert" style="border: 2px dashed red; padding: 4px;">', $txt['deleteAccount_approval'], '</div><br />
 							</td>
 						</tr><tr>
 							<td align="center" colspan="2">';
@@ -2089,11 +2089,11 @@ function template_deleteAccount()
 	if ($context['user']['is_owner'])
 	{
 		echo '
-								<span style="color: red;">', $txt['own_profile_confirm'], '</span><br /><br />
+								<span class="alert">', $txt['own_profile_confirm'], '</span><br /><br />
 							</td>
 						</tr><tr>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'right' : 'left', '">
-								<strong', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : ''), '>', $txt['current_password'], ': </strong>
+								<strong', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : ''), '>', $txt['current_password'], ': </strong>
 							</td>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'left' : 'right', '">
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2107,7 +2107,7 @@ function template_deleteAccount()
 	else
 	{
 		echo '
-								<div style="color: red; margin-bottom: 2ex;">', $txt['deleteAccount_warning'], '</div>
+								<div class="alert" style=" margin-bottom: 2ex;">', $txt['deleteAccount_warning'], '</div>
 							</td>
 						</tr>';
 
@@ -2178,7 +2178,7 @@ function template_profile_save()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </strong>
+									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
@@ -2202,7 +2202,7 @@ function template_error_message()
 	global $context, $txt;
 
 	echo '
-		<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
+		<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;" class="error">
 			<span style="text-decoration: underline;">', !empty($context['custom_error_title']) ? $context['custom_error_title'] : $txt['profile_errors_occurred'], ':</span>
 			<ul>';
 
@@ -2391,7 +2391,7 @@ function template_profile_avatar_select()
 									<table width="100%" cellpadding="5" cellspacing="0" border="0" style="height: 25ex;"><tr>
 										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"', ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : ''), ' class="check" /></td>
 										<td valign="top" style="padding-left: 1ex;">
-											<strong', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
+											<strong', (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
 											<div style="margin: 2ex;"><img name="avatar" id="avatar" src="', !empty($context['member']['avatar']['allow_external']) && $context['member']['avatar']['choice'] == 'external' ? $context['member']['avatar']['external'] : $modSettings['avatar_url'] . '/blank.gif', '" alt="Do Nothing" /></div>
 										</td>
 									</tr></table>
@@ -2598,7 +2598,7 @@ function template_profile_timeoffset_modify()
 
 	echo '
 							<tr>
-								<td width="40%"><strong', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
+								<td width="40%"><strong', (isset($context['modify_error']['bad_offset']) ? ' class="error"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
 								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="currentDate = new Date(', $context['current_forum_time_js'], '); document.getElementById(\'time_offset\').value = autoDetectTimeOffset(currentDate); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
 							</tr>';
 }

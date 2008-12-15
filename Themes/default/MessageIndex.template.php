@@ -196,7 +196,7 @@ function template_main()
 			echo '
 						<tr class="windowbg2">
 							<td colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '" class="smalltext headerpadding">
-									<span style="color: red;">!</span> ', $context['unapproved_posts_message'], '
+									<span class="alert">!</span> ', $context['unapproved_posts_message'], '
 							</td>
 						</tr>';
 		}

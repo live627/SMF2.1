@@ -23,7 +23,7 @@ function template_main()
 		echo '
 			<tr>
 				<td class="windowbg">
-					<div style="color: red; margin: 1ex 0 2ex 3ex;">
+					<div class="alert" style="margin: 1ex 0 2ex 3ex;">
 						', implode('<br />', $context['search_errors']['messages']), '
 					</div>
 				</td>

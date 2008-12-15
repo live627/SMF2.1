@@ -129,7 +129,7 @@ function template_event_post()
 								<td></td>
 								<td>
 									', $context['error_type'] == 'serious' ? '<b>' . $txt['error_while_submitting'] . '</b>' : '', '
-									<div style="color: red; margin: 1ex 0 2ex 3ex;">
+									<div class="error" style="margin: 1ex 0 2ex 3ex;">
 										', implode('<br />', $context['post_error']['messages']), '
 									</div>
 								</td>
@@ -138,7 +138,7 @@ function template_event_post()
 	echo '
 							<tr>
 								<td align="right">
-									<b', isset($context['post_error']['no_event']) ? ' style="color: red;"' : '', '>', $txt['calendar_event_title'], '</b>
+									<b', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</b>
 								</td>
 								<td class="smalltext">
 									<input type="text" name="evtitle" maxlength="30" size="30" value="', $context['event']['title'], '" style="width: 90%;" />

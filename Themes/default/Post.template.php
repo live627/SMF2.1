@@ -169,7 +169,7 @@ function template_main()
 									<div style="padding: 0px; font-weight: bold;', empty($context['error_type']) || $context['error_type'] != 'serious' ? ' display: none;' : '', '" id="error_serious">
 										', $txt['error_while_submitting'], '
 									</div>
-									<div style="color: red; margin: 1ex 0 2ex 3ex;" id="error_list">
+									<div class="error" style="margin: 1ex 0 2ex 3ex;" id="error_list">
 										', empty($context['post_error']['messages']) ? '' : implode('<br />', $context['post_error']['messages']), '
 									</div>
 								</td>
@@ -202,7 +202,7 @@ function template_main()
 	{
 		echo '
 							<tr>
-								<td align="right" style="font-weight: bold;', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? 'color: red;' : '', '" id="caption_guestname">
+								<td align="right" style="font-weight: bold;"', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? ' class="error"' : '', ' id="caption_guestname">
 									', $txt['name'], ':
 								</td>
 								<td>
@@ -213,7 +213,7 @@ function template_main()
 		if (empty($modSettings['guest_post_no_email']))
 			echo '
 							<tr>
-								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? 'color: red;' : '', '" id="caption_email">
+								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? ' class="error"' : '', ' id="caption_email">
 									', $txt['email'], ':
 								</td>
 								<td>
@@ -227,7 +227,7 @@ function template_main()
 	{
 		echo '
 							<tr>
-								<td align="right" valign="top"', !empty($context['post_error']['need_qr_verification']) ? ' style="color: red;"' : '', '>
+								<td align="right" valign="top"', !empty($context['post_error']['need_qr_verification']) ? ' class="error"' : '', '>
 									<b>', $txt['verification'], ':</b>
 								</td>
 								<td>
@@ -241,7 +241,7 @@ function template_main()
 	{
 		echo '
 							<tr>
-								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_event']) ? 'color: red;' : '', '" id="caption_evtitle">
+								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_event']) ? ' class="error"' : '', ' id="caption_evtitle">
 									', $txt['calendar_event_title'], '
 								</td>
 								<td class="smalltext">
@@ -330,7 +330,7 @@ function template_main()
 	// Now show the subject box for this post.
 	echo '
 							<tr>
-								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_subject']) ? 'color: red;' : '', '" id="caption_subject">
+								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_subject']) ? ' class="error"' : '', ' id="caption_subject">
 									', $txt['subject'], ':
 								</td>
 								<td>
@@ -360,7 +360,7 @@ function template_main()
 	{
 		echo '
 							<tr>
-								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_question']) ? 'color: red;' : '', '" id="caption_question">
+								<td align="right" style="font-weight: bold;"', isset($context['post_error']['no_question']) ? ' class="error"' : '', ' id="caption_question">
 									', $txt['poll_question'], ':
 								</td>
 								<td align="left">
@@ -560,7 +560,7 @@ function template_main()
 
 		if (!$context['can_post_attachment_unapproved'])
 			echo '
-									<span style="color: red;">', $txt['attachment_requires_approval'], '</span><br />';
+									<span class="alert">', $txt['attachment_requires_approval'], '</span><br />';
 
 		echo '
 								</td>

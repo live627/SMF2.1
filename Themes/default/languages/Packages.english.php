@@ -113,9 +113,9 @@ $txt['package_theme_failure_warning'] = 'At least one error was encountered duri
 
 $txt['package_bytes'] = 'bytes';
 
-$txt['package_action_missing'] = '<b style="color: red;">File not found</b>';
-$txt['package_action_error'] = '<b style="color: red;">Modification parse error</b>';
-$txt['package_action_failure'] = '<b style="color: red;">Test failed</b>';
+$txt['package_action_missing'] = '<b class="error">File not found</b>';
+$txt['package_action_error'] = '<b class="error">Modification parse error</b>';
+$txt['package_action_failure'] = '<b class="error">Test failed</b>';
 $txt['package_action_success'] = '<b>Test successful</b>';
 $txt['package_action_skipping'] = '<b>Skipping file</b>';
 
@@ -241,7 +241,7 @@ $txt['package_restore_permissions_pre_change'] = '%1$s (%3$s)';
 $txt['package_restore_permissions_post_change'] = '%2$s (%3$s - was %2$s)';
 $txt['package_restore_permissions_action_skipped'] = '<em>Skipped</em>';
 $txt['package_restore_permissions_action_success'] = '<span style="color: green;">Success</span>';
-$txt['package_restore_permissions_action_failure'] = '<span style="color: red;">Failed</span>';
+$txt['package_restore_permissions_action_failure'] = '<span class="error">Failed</span>';
 $txt['package_restore_permissions_action_done'] = 'SMF has attempted to restore the selected files back to their original permissions, the results can be seen below. If a change failed, or for a more detailed view of file permissions, please see the <a href="%1$s">File Permissions</a> section.';
 
 $txt['package_file_perms_warning'] = 'Please Note';

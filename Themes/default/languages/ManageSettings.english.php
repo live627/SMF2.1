@@ -111,7 +111,7 @@ $txt['caching_information'] = '<div align="center"><b><u>Important! Read this fi
 	%s
 	<hr />';
 
-$txt['detected_no_caching'] = '<b style="color: red;">SMF has not been able to detect a compatible accelerator on your server.</b>';
+$txt['detected_no_caching'] = '<b class="alert">SMF has not been able to detect a compatible accelerator on your server.</b>';
 $txt['detected_APC'] = '<b style="color: green">SMF has detected that your server has APC installed.</b>';
 $txt['detected_eAccelerator'] = '<b style="color: green">SMF has detected that your server has eAccelerator installed.</b>';
 $txt['detected_MMCache'] = '<b style="color: green">SMF has detected that your server has MMCache installed.</b>';

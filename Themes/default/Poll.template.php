@@ -20,7 +20,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' style="color: red;"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="25" /><span id="pollMoreOptions"></span>\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="25" /><span id="pollMoreOptions"></span>\');
 			}
 
 			function saveEntities()
@@ -56,7 +56,7 @@ function template_main()
 									<div style="padding: 0px; font-weight: bold;">
 										', $context['is_edit'] ? $txt['error_while_editing_poll'] : $txt['error_while_adding_poll'], ':
 									</div>
-									<div style="color: red; margin: 1ex 0 2ex 3ex;">
+									<div class="error" style="margin: 1ex 0 2ex 3ex;">
 										', empty($context['poll_error']['messages']) ? '' : implode('<br />', $context['poll_error']['messages']), '
 									</div>
 								</td>
@@ -64,7 +64,7 @@ function template_main()
 
 	echo '
 							<tr>
-								<td align="right" ', (isset($context['poll_error']['no_question']) ? ' style="color: red;"' : ''), '><b>' . $txt['poll_question'] . ':</b></td>
+								<td align="right" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '><b>' . $txt['poll_question'] . ':</b></td>
 								<td align="left"><input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" /></td>
 							</tr><tr>
 								<td></td>
@@ -73,7 +73,7 @@ function template_main()
 	foreach ($context['choices'] as $choice)
 	{
 		echo '
-									<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' style="color: red;"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" />';
+									<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" />';
 
 		// Does this option have a vote count yet, or is it new?
 		if ($choice['votes'] != -1)
