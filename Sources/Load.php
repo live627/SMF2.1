@@ -1733,8 +1733,8 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 		{
 			loadLanguage('Errors');
 			echo '
-<div style="color: red; padding: 2ex; background-color: white; border: 2px dashed;">
-	<a href="', $scripturl . '?action=admin;area=theme;sa=settings;th=1;sesc=' . $context['session_id'], '" style="color: red;">', $txt['theme_dir_wrong'], '</a>
+<div class="alert" style="padding: 2ex; background-color: white; border: 2px dashed;">
+	<a href="', $scripturl . '?action=admin;area=theme;sa=settings;th=1;sesc=' . $context['session_id'], '" class="alert">', $txt['theme_dir_wrong'], '</a>
 </div>';
 		}
 

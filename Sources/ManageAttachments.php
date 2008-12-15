@@ -1756,7 +1756,7 @@ function list_getAttachDirs()
 			'path' => $dir,
 			'current_size' => $size,
 			'num_files' => $expected_files[$id],
-			'status' => ($error ? '<span style="color: red;">' : '') . sprintf($txt['attach_dir_' . $status], $sc) . ($error ? '</span>' : ''),
+			'status' => ($error ? '<span class="error">' : '') . sprintf($txt['attach_dir_' . $status], $sc) . ($error ? '</span>' : ''),
 		);
 	}
 

@@ -1022,7 +1022,7 @@ function ModifyLanguages()
 	if (!is_writable($boarddir . '/Settings.php'))
 		$listOptions['additional_rows'][] = array(
 				'position' => 'after_title',
-				'value' => '<span class="smalltext" style="color: red;">' . $txt['language_settings_writable'] . '</span>',
+				'value' => '<span class="smalltext alert">' . $txt['language_settings_writable'] . '</span>',
 				'class' => 'windowbg',
 			);
 

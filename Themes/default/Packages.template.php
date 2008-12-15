@@ -36,7 +36,7 @@ function template_view_package()
 	{
 		echo '
 				<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9; margin-top: 0;">
-					<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+					<div style="float: left; width: 2ex; font-size: 2em;" class="alert">!!</div>
 						<b style="text-decoration: underline;">', $txt['package_will_fail_title'], '</b><br />
 						<div style="padding-left: 6ex;">
 							', $txt['package_will_fail_warning'], '

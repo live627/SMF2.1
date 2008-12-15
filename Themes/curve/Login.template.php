@@ -22,7 +22,7 @@ function template_login()
 			echo '
 				</tr><tr class="windowbg">
 					<td align="center" colspan="2" style="padding: 1ex;">
-						<b style="color: red;">', $error, '</b>
+						<b class="error">', $error, '</b>
 					</td>';
 
 	// Or perhaps there's some special description for this time?
@@ -66,7 +66,7 @@ function template_login()
 	// If they have deleted their account, give them a chance to change their mind.
 	if (isset($context['login_show_undelete']))
 		echo '
-					<td align="right"><b style="color: red;">', $txt['undelete_account'], ':</b></td>
+					<td align="right"><b class="alert">', $txt['undelete_account'], ':</b></td>
 					<td><input type="checkbox" name="undelete" class="check" /></td>
 				</tr><tr class="windowbg">';
 	echo '
@@ -228,7 +228,7 @@ function template_admin_login()
 
 	if (!empty($context['incorrect_password']))
 		echo '
-				<span style="color: red;" class="smalltext">', $txt['admin_incorrect_password'], '</span><br />';
+				<span class="smalltext error">', $txt['admin_incorrect_password'], '</span><br />';
 
 	echo '
 				<input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" />

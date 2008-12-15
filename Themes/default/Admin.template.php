@@ -881,7 +881,7 @@ function template_show_settings()
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
 				echo '
-							<td colspan="3" align="center" ', $config_var['type'] == 'warning' ? 'style="color: red; padding: 2em;"' : '', '>
+							<td colspan="3" align="center" ', $config_var['type'] == 'warning' ? 'class="alert" style="padding: 2em;"' : '', '>
 								', $config_var['label'], '
 							</td>';
 			}

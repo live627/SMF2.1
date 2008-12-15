@@ -1182,7 +1182,7 @@ function ModifySignatureSettings($return_config = false)
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
 	$context['settings_title'] = $txt['signature_settings'];
 
-	$context['settings_message'] = '<div align="center" class="smalltext" style="color: red;">' . sprintf($txt['signature_settings_warning'], $sc) . '</div>';
+	$context['settings_message'] = '<div align="center" class="smalltext alert">' . sprintf($txt['signature_settings_warning'], $sc) . '</div>';
 
 	prepareDBSettingContext($config_vars);
 }

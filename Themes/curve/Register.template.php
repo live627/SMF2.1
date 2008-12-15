@@ -83,7 +83,7 @@ function template_before()
 	if (!empty($context['registration_errors']))
 	{
 		echo '
-	<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
+	<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;" class="error">
 		<span style="text-decoration: underline;">', $txt['registration_errors_occurred'], '</span>
 		<ul>';
 
@@ -220,7 +220,7 @@ function template_before()
 			else
 			{
 			echo '
-				<dt><b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
+				<dt><b', !empty($field['is_error']) ? ' class="error"' : '', '>', $field['label'], '</b>';
 
 			// Does it have any subtext to show?
 			if (!empty($field['subtext']))
@@ -619,7 +619,7 @@ function template_edit_agreement()
 	if (!empty($context['warning']))
 		echo '
 			<tr class="windowbg2">
-				<td style="color: red; font-weight: bold;" align="center">
+				<td class="alert" style="font-weight: bold;" align="center">
 					', $context['warning'], '
 				</td>
 			</tr>';

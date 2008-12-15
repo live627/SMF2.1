@@ -3238,7 +3238,7 @@ function template_header()
 			{
 				echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
-			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
+			<div class="alert" style="float: left; width: 2ex; font-size: 2em;">!!</div>
 			<b style="text-decoration: underline;">', empty($securityFiles) ? $txt['cache_writable_head'] : $txt['security_risk'], '</b><br />
 			<div style="padding-left: 6ex;">';
 
@@ -3260,7 +3260,7 @@ function template_header()
 		{
 			$showed_banned = true;
 			echo '
-				<div class="windowbg" style="margin: 2ex; padding: 2ex; border: 2px dashed red; color: red;">
+				<div class="alert" class="windowbg" style="margin: 2ex; padding: 2ex; border: 2px dashed red;">
 					', sprintf($txt['you_are_post_banned'], $user_info['is_guest'] ? $txt['guest_title'] : $user_info['name']);
 
 			if (!empty($_SESSION['ban']['cannot_post']['reason']))
