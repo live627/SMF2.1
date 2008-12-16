@@ -1451,7 +1451,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'shadow',
 				'type' => 'unparsed_commas',
 				'test' => '[#0-9a-zA-Z\-]{3,12},(left|right|top|bottom|[0123]\d{0,2})\]',
-				'before' => $context['browser']['is_ie'] ? '<span style="filter: Shadow(color=$1, direction=$2); height: 1.2em;\">' : '<span style="text-shadow: $1 $2">',
+				'before' => $context['browser']['is_ie'] ? '<span style="display: inline-block; filter: Shadow(color=$1, direction=$2); height: 1.2em;">' : '<span style="text-shadow: $1 $2">',
 				'after' => '</span>',
 				'validate' => $context['browser']['is_ie'] ? create_function('&$tag, &$data, $disabled', '
 					if ($data[1] == \'left\')
@@ -1465,15 +1465,15 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					else
 						$data[1] = (int) $data[1];') : create_function('&$tag, &$data, $disabled', '
 					if ($data[1] == \'top\' || (is_numeric($data[1]) && $data[1] < 50))
-						return \'0 -2px\';
+						$data[1] =  \'0 -2px 1px\';
 					elseif ($data[1] == \'right\' || (is_numeric($data[1]) && $data[1] < 100))
-						return \'2px 0\';
+						$data[1] = \'2px 0 1px\';
 					elseif ($data[1] == \'bottom\' || (is_numeric($data[1]) && $data[1] < 190))
-						return \'0 2px\';
+						$data[1] = \'0 2px 1px\';
 					elseif ($data[1] == \'left\' || (is_numeric($data[1]) && $data[1] < 280))
-						return \'-2px 0\';
+						$data[1] = \'-2px 0 1px\';
 					else
-						return \'0 0\';'),
+						$data[1] = \'1px 1px 1px\';'),
 			),
 			array(
 				'tag' => 'time',

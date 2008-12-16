@@ -55,6 +55,8 @@ December 2008
  ! Fixed a few undefined indexes caused by the database type not known during the install. (install.php)
  ! Fixed the syntax of the 'SET NAMES' query not being right for PostgreSQL. (Subs-Db-postgresql.php) [Bug 2676]
  ! Fixed typo in the template causing a malfunction in the inline edit feature. (Display template)
+ ! The shadow bulletin board code didn't work properly in IE. (Subs.php) [Bug 2266]
+ ! Fixed the shadow-text style not being implemented properly for the newer browsers supporting CSS 3. (Subs.php) [Bug 2366]
 
 
 November 2008
