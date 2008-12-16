@@ -123,22 +123,15 @@ function smf_db_list_tables($db = false, $filter = false)
 {
 	global $smcFunc;
 
-	if ($filter == false)
-	{
-		$filter = ' WHERE schemaname = \'public\'';
-	}
-	else
-	{
-		$filter = ' WHERE tablename LIKE \'' . $filter . '\' AND schemaname = \'public\'';
-	}
-
 	$request = $smcFunc['db_query']('', '
-	    SELECT tablename
-	    FROM pg_tables
-	    {raw:filter}
-	    ORDER BY tablename',
-	    array(
-	        'filter' => $filter,
+		SELECT tablename
+		FROM pg_tables
+		WHERE schemaname = {string:schema_public}' . ($filter == false ? '' : '
+			AND tablename LIKE {string:filter}') . '
+		ORDER BY tablename',
+		array(
+			'schema_public' => 'public',
+			'filter' => $filter,
 		)
 	);
 

@@ -263,6 +263,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'select_message_icons' => array(
 			'~(.)$~' => '$1 ORDER BY icon_order',
 		),
+		'set_character_set' => array(
+			'~SET\\s+NAMES\\s([a-zA-Z0-9\\-_]+)~' => 'SET NAMES \'$1\'',
+		),
 	);
 
 	if (isset($replacements[$identifier]))
@@ -729,4 +732,5 @@ function smf_db_escape_wildcard_string($string, $translate_human_wildcards=false
 
 	return strtr($string, $replacements);
 }
+
 ?>
