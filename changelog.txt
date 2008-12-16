@@ -54,6 +54,7 @@ December 2008
  ! Fixed the version detection for PostgreSQL in the installer as the version label used started with non-numeric characters. (install.php)
  ! Fixed a few undefined indexes caused by the database type not known during the install. (install.php)
  ! Fixed the syntax of the 'SET NAMES' query not being right for PostgreSQL. (Subs-Db-postgresql.php) [Bug 2676]
+ ! Fixed typo in the template causing a malfunction in the inline edit feature. (Display template)
 
 
 November 2008
