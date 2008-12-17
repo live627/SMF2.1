@@ -659,7 +659,7 @@ function smf_udf_inet_ntoa($n)
 	$msk = 16777216.0;
 	$n += 0.0;
 		if ($n < 1)
-			return('0.0.0.0');
+			return '0.0.0.0';
 
 	for ($i = 0; $i < 4; $i++)
 	{
@@ -670,7 +670,7 @@ function smf_udf_inet_ntoa($n)
 	};
 
 	$a = join('.', $t);
-	return($a);
+	return $a;
 }
 
 // Emulate FIND_IN_SET.
