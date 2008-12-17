@@ -1418,20 +1418,20 @@ function ModifyLanguage()
 		$final_saves = array();
 
 		$context['file_entries'] = array();
-		foreach ($entries as $k => $v)
+		foreach ($entries as $entryKey => $entryValue)
 		{
 			// Ignore some things we set separately.
 			$ignore_files = array('lang_character_set', 'lang_locale', 'lang_dictionary', 'lang_spelling', 'lang_rtl');
-			if (in_array($k, $ignore_files))
+			if (in_array($entryKey, $ignore_files))
 				continue;
 
 			// These are arrays that need breaking out.
 			$arrays = array('days', 'days_short', 'months', 'months_titles', 'months_short');
-			if (in_array($k, $arrays))
+			if (in_array($entryKey, $arrays))
 			{
 				// Get off the first bits.
-				$v['entry'] = substr($v['entry'], strpos($v['entry'], '(') + 1, strrpos($v['entry'], ')') - strpos($v['entry'], '('));
-				$v['entry'] = explode(',', strtr($v['entry'], array(' ' => '')));
+				$entryValue['entry'] = substr($entryValue['entry'], strpos($entryValue['entry'], '(') + 1, strrpos($entryValue['entry'], ')') - strpos($entryValue['entry'], '('));
+				$entryValue['entry'] = explode(',', strtr($entryValue['entry'], array(' ' => '')));
 
 				// Now create an entry for each item.
 				$cur_index = 0;
@@ -1439,30 +1439,30 @@ function ModifyLanguage()
 					'enabled' => false,
 					'entries' => array(),
 				);
-				foreach ($v['entry'] as $id => $v2)
+				foreach ($entryValue['entry'] as $id => $subValue)
 				{
 					// Is this a new index?
-					if (preg_match('~^(\d+)~', $v2, $matches))
+					if (preg_match('~^(\d+)~', $subValue, $matches))
 					{
 						$cur_index = $matches[1];
-						$v2 = substr($v2, strpos($v2, '\''));
+						$subValue = substr($subValue, strpos($subValue, '\''));
 					}
 
 					// Clean up some bits.
-					$v2 = strtr($v2, array('"' => '', '\'' => '', ')' => ''));
+					$subValue = strtr($subValue, array('"' => '', '\'' => '', ')' => ''));
 
 					// Can we save?
-					if (isset($save_strings[$k . '-+- ' . $cur_index]))
+					if (isset($save_strings[$entryKey . '-+- ' . $cur_index]))
 					{
-						$save_cache['entries'][$cur_index] = strtr($save_strings[$k . '-+- ' . $cur_index], array('\'' => ''));
+						$save_cache['entries'][$cur_index] = strtr($save_strings[$entryKey . '-+- ' . $cur_index], array('\'' => ''));
 						$save_cache['enabled'] = true;
 					}
 					else
-						$save_cache['entries'][$cur_index] = $v2;
+						$save_cache['entries'][$cur_index] = $subValue;
 
 					$context['file_entries'][] = array(
-						'key' => $k . '-+- ' . $cur_index,
-						'value' => $v2,
+						'key' => $entryKey . '-+- ' . $cur_index,
+						'value' => $subValue,
 						'rows' => 1,
 					);
 					$cur_index++;
@@ -1488,29 +1488,29 @@ function ModifyLanguage()
 						$cur_index++;
 					}
 					// Now create the string!
-					$final_saves[$k] = array(
-						'find' => $v['full'],
-						'replace' => '$' . $v['type'] . '[\'' . $k . '\'] = array(' . implode(', ', $items) . ');',
+					$final_saves[$entryKey] = array(
+						'find' => $entryValue['full'],
+						'replace' => '$' . $entryValue['type'] . '[\'' . $entryKey . '\'] = array(' . implode(', ', $items) . ');',
 					);
 				}
 			}
 			else
 			{
 				// Saving?
-				if (isset($save_strings[$k]) && $save_strings[$k] != $v['entry'])
+				if (isset($save_strings[$entryKey]) && $save_strings[$entryKey] != $entryValue['entry'])
 				{
 					// Set the new value.
-					$v['entry'] = $save_strings[$k];
+					$entryValue['entry'] = $save_strings[$entryKey];
 					// And we know what to save now!
-					$final_saves[$k] = array(
-						'find' => $v['full'],
-						'replace' => '$' . $v['type'] . '[\'' . $k . '\'] = ' . $save_strings[$k] . ';',
+					$final_saves[$entryKey] = array(
+						'find' => $entryValue['full'],
+						'replace' => '$' . $entryValue['type'] . '[\'' . $entryKey . '\'] = ' . $save_strings[$entryKey] . ';',
 					);
 				}
 
-				$editing_string = cleanLangString($v['entry'], true);
+				$editing_string = cleanLangString($entryValue['entry'], true);
 				$context['file_entries'][] = array(
-					'key' => $k,
+					'key' => $entryKey,
 					'value' => $editing_string,
 					'rows' => (int) (strlen($editing_string) / 38) + substr_count($editing_string, "\n") + 1,
 				);

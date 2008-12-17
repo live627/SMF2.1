@@ -989,10 +989,10 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		$criteria = unserialize($row['criteria']);
 		// Note we don't check the buddy status cause deletion from buddy = madness!
 		$delete = false;
-		foreach ($criteria as $c)
+		foreach ($criteria as $criterium)
 		{
 			$match = false;
-			if (($c['t'] == 'mid' && $c['v'] == $from['id']) || ($c['t'] == 'gid' && in_array($c['v'], $user_info['groups'])) || ($c['t'] == 'sub' && strpos($subject, $c['v']) !== false) || ($c['t'] == 'msg' && strpos($message, $c['v']) !== false))
+			if (($criterium['t'] == 'mid' && $criterium['v'] == $from['id']) || ($criterium['t'] == 'gid' && in_array($criterium['v'], $user_info['groups'])) || ($criterium['t'] == 'sub' && strpos($subject, $criterium['v']) !== false) || ($criterium['t'] == 'msg' && strpos($message, $criterium['v']) !== false))
 				$delete = true;
 			// If we're adding and one criteria don't match then we stop!
 			elseif (!$row['is_or'])

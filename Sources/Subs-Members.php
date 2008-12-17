@@ -1298,15 +1298,15 @@ function populateDuplicateMembers(&$members)
 
 			// Check we don't have lots of the same member.
 			$member_track = array($member['id_member']);
-			foreach ($members[$key]['duplicate_members'] as $k => $m)
+			foreach ($members[$duplicate_id_member]['duplicate_members'] as $duplicate_id_member => $duplicate_member)
 			{
-				if (in_array($m['id'], $member_track))
+				if (in_array($duplicate_member['id'], $member_track))
 				{
-					unset($members[$key]['duplicate_members'][$k]);
+					unset($members[$duplicate_id_member]['duplicate_members'][$duplicate_id_member]);
 					continue;
 				}
 
-				$member_track[] = $m['id'];
+				$member_track[] = $duplicate_member['id'];
 			}
 		}
 }

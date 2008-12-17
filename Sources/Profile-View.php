@@ -1611,9 +1611,9 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 			$members[$row['id_member']] = $row['member_name'];
 		$smcFunc['db_free_result']($request);
 
-		foreach ($edits as $k => $v)
-			if (isset($members[$v['id_member']]))
-				$edits[$k]['member_link'] = '<a href="' . $scripturl . '?action=profile;u=' . $v['id_member'] . '">' . $members[$v['id_member']] . '</a>';
+		foreach ($edits as $key => $value)
+			if (isset($members[$value['id_member']]))
+				$edits[$key]['member_link'] = '<a href="' . $scripturl . '?action=profile;u=' . $value['id_member'] . '">' . $members[$value['id_member']] . '</a>';
 	}
 
 	return $edits;

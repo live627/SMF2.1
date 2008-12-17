@@ -1712,23 +1712,23 @@ function EditTheme()
 		}
 		$smcFunc['db_free_result']($request);
 
-		foreach ($context['themes'] as $k => $v)
+		foreach ($context['themes'] as $key => $theme)
 		{
 			// There has to be a Settings template!
-			if (!file_exists($v['theme_dir'] . '/index.template.php') && !file_exists($v['theme_dir'] . '/style.css'))
-				unset($context['themes'][$k]);
+			if (!file_exists($theme['theme_dir'] . '/index.template.php') && !file_exists($theme['theme_dir'] . '/style.css'))
+				unset($context['themes'][$key]);
 			else
 			{
-				if (!isset($v['theme_templates']))
+				if (!isset($theme['theme_templates']))
 					$templates = array('index');
 				else
-					$templates = explode(',', $v['theme_templates']);
+					$templates = explode(',', $theme['theme_templates']);
 
 				foreach ($templates as $template)
-					if (file_exists($v['theme_dir'] . '/' . $template . '.template.php'))
+					if (file_exists($theme['theme_dir'] . '/' . $template . '.template.php'))
 					{
 						// Fetch the header... a good 256 bytes should be more than enough.
-						$fp = fopen($v['theme_dir'] . '/' . $template . '.template.php', 'rb');
+						$fp = fopen($theme['theme_dir'] . '/' . $template . '.template.php', 'rb');
 						$header = fread($fp, 256);
 						fclose($fp);
 
@@ -1736,12 +1736,12 @@ function EditTheme()
 						if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . $template . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
 						{
 							$ver = $match[1];
-							if (!isset($context['themes'][$k]['version']) || $context['themes'][$k]['version'] > $ver)
-								$context['themes'][$k]['version'] = $ver;
+							if (!isset($context['themes'][$key]['version']) || $context['themes'][$key]['version'] > $ver)
+								$context['themes'][$key]['version'] = $ver;
 						}
 					}
 
-				$context['themes'][$k]['can_edit_style'] = file_exists($v['theme_dir'] . '/style.css');
+				$context['themes'][$key]['can_edit_style'] = file_exists($theme['theme_dir'] . '/style.css');
 			}
 		}
 

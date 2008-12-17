@@ -1593,11 +1593,11 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			);
 		}
 
-		foreach ($codes as $c)
+		foreach ($codes as $code)
 		{
 			// If we are not doing every tag only do ones we are interested in.
-			if (empty($parse_tags) || in_array($c['tag'], $parse_tags))
-				$bbc_codes[substr($c['tag'], 0, 1)][] = $c;
+			if (empty($parse_tags) || in_array($code['tag'], $parse_tags))
+				$bbc_codes[substr($code['tag'], 0, 1)][] = $code;
 		}
 		$codes = null;
 	}
@@ -3427,11 +3427,11 @@ function db_debug_junk()
 		$entries = array();
 		$total_t = 0;
 		$total_s = 0;
-		foreach ($cache_hits as $h)
+		foreach ($cache_hits as $cache_hit)
 		{
-			$entries[] = $h['d'] . ' ' . $h['k'] . ': ' . comma_format($h['t'], 5) . ' - ' . $h['s'] . ' bytes';
-			$total_t += $h['t'];
-			$total_s += $h['s'];
+			$entries[] = $cache_hit['d'] . ' ' . $cache_hit['k'] . ': ' . comma_format($cache_hit['t'], 5) . ' - ' . $cache_hit['s'] . ' bytes';
+			$total_t += $cache_hit['t'];
+			$total_s += $cache_hit['s'];
 		}
 
 		echo '

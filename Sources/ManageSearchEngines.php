@@ -495,11 +495,11 @@ function SpiderCheck()
 				$ip = ip2range($ip);
 				if (!empty($ip))
 				{
-					foreach ($ip as $k => $v)
+					foreach ($ip as $key => $value)
 					{
-						if ($v['low'] > $ip_parts[$k + 1] || $v['high'] < $ip_parts[$k + 1])
+						if ($value['low'] > $ip_parts[$key + 1] || $value['high'] < $ip_parts[$key + 1])
 							break;
-						elseif ($k == 3)
+						elseif ($key == 3)
 							$_SESSION['id_robot'] = $spider['id_spider'];
 					}
 				}

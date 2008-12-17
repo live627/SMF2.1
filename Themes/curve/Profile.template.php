@@ -1952,9 +1952,9 @@ function template_issueWarning()
 						<option value="-1">', $txt['profile_warning_notify_template'], '</option>
 						<option value="-1">------------------------------</option>';
 
-		foreach ($context['notification_templates'] as $k => $v)
+		foreach ($context['notification_templates'] as $id_template => $template)
 			echo '
-						<option value="', $k, '">', $v['title'], '</option>';
+						<option value="', $id_template, '">', $template['title'], '</option>';
 
 		echo '
 					</select>

@@ -3359,9 +3359,9 @@ function ApplyRules($all_messages = false)
 		{
 			$match = false;
 			// Loop through all the criteria hoping to make a match.
-			foreach ($rule['criteria'] as $c)
+			foreach ($rule['criteria'] as $criterium)
 			{
-				if (($c['t'] == 'mid' && $c['v'] == $row['id_member_from']) || ($c['t'] == 'gid' && $c['v'] == $row['id_group']) || ($c['t'] == 'sub' && strpos($row['subject'], $c['v']) !== false) || ($c['t'] == 'msg' && strpos($row['body'], $c['v']) !== false))
+				if (($criterium['t'] == 'mid' && $criterium['v'] == $row['id_member_from']) || ($criterium['t'] == 'gid' && $criterium['v'] == $row['id_group']) || ($criterium['t'] == 'sub' && strpos($row['subject'], $criterium['v']) !== false) || ($criterium['t'] == 'msg' && strpos($row['body'], $criterium['v']) !== false))
 					$match = true;
 				// If we're adding and one criteria don't match then we stop!
 				elseif ($rule['logic'] == 'and')
@@ -3378,14 +3378,14 @@ function ApplyRules($all_messages = false)
 					$actions['deletes'][] = $row['id_pm'];
 				else
 				{
-					foreach ($rule['actions'] as $a)
+					foreach ($rule['actions'] as $ruleAction)
 					{
-						if ($a['t'] == 'lab')
+						if ($ruleAction['t'] == 'lab')
 						{
 							// Get a basic pot started!
 							if (!isset($actions['labels'][$row['id_pm']]))
 								$actions['labels'][$row['id_pm']] = empty($row['labels']) ? array() : explode(',', $row['labels']);
-							$actions['labels'][$row['id_pm']][] = $a['v'];
+							$actions['labels'][$row['id_pm']][] = $ruleAction['v'];
 						}
 					}
 				}
