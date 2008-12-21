@@ -60,6 +60,7 @@ December 2008
  ! A few return statements were not properly formatted. (PersonalMessages.php, Subs-Db_sqlite.php) [Bug 2810]
  ! Use more descriptive names for some of the variables. (ManageSearchEngines.php, ManageServer.php, PersonalMessage.php, Profile-View.php, Subs-Members.php, Subs-Post.php, Subs.php, Themes.php, Profile template) [Bug 2809]
  ! Clear a user's settings cache after toggling the dropdown menu. (Subs-Menu.php)
+ * Use a proper alternate text for the 'send PM' button. (Display template) [Bug 2667]
 
 
 November 2008
