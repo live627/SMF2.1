@@ -59,6 +59,7 @@ December 2008
  ! Fixed the shadow-text style not being implemented properly for the newer browsers supporting CSS 3. (Subs.php) [Bug 2366]
  ! A few return statements were not properly formatted. (PersonalMessages.php, Subs-Db_sqlite.php) [Bug 2810]
  ! Use more descriptive names for some of the variables. (ManageSearchEngines.php, ManageServer.php, PersonalMessage.php, Profile-View.php, Subs-Members.php, Subs-Post.php, Subs.php, Themes.php, Profile template) [Bug 2809]
+ ! Clear a user's settings cache after toggling the dropdown menu. (Subs-Menu.php)
 
 
 November 2008

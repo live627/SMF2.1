@@ -51,6 +51,11 @@ function createMenu($menuData, $menuOptions = array())
 			array('id_member', 'id_theme', 'variable')
 		);
 
+		// Clear the theme settings cache for this user.
+		$themes = explode(',', $modSettings['knownThemes']);
+		foreach ($themes as $theme)
+			cache_put_data('theme_settings-' . $theme . ':' . $user_info['id'], null, 60);
+
 		// Redirect as this seems to work best.
 		redirectexit('action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';sesc=' . $context['session_id']);
 	}

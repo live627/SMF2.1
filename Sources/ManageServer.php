@@ -214,7 +214,6 @@ function ModifyCoreSettings()
 		array('mbname', &$txt['admin_title'], 'text', 30),
 		array('webmaster_email', &$txt['admin_webmaster_email'], 'text', 30),
 		array('cookiename', &$txt['cookie_name'], 'text', 20),
-		'language' => array('language', &$txt['default_language'], 'select', array()),
 		'',
 		array('boardurl', &$txt['admin_url'], 'text', 36),
 		array('boarddir', &$txt['boarddir'], 'text', 36),
@@ -222,27 +221,6 @@ function ModifyCoreSettings()
 		array('cachedir', &$txt['cachedir'], 'text', 36),
 		'',
 	);
-
-	// Find the available language files.
-	$language_directories = array(
-		$settings['default_theme_dir'] . '/languages',
-		$settings['actual_theme_dir'] . '/languages',
-	);
-	if (!empty($settings['base_theme_dir']))
-		$language_directories[] = $settings['base_theme_dir'] . '/languages';
-	$language_directories = array_unique($language_directories);
-
-	foreach ($language_directories as $language_dir)
-	{
-		if (!file_exists($language_dir))
-			continue;
-
-		$dir = dir($language_dir);
-		while ($entry = $dir->read())
-			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches))
-				$config_vars['language'][3][$matches[1]] = array($matches[1], $smcFunc['ucwords'](strtr($matches[1], '_', ' ')));
-		$dir->close();
-	}
 
 	// Setup the template stuff.
 	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;sa=core';
