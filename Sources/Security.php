@@ -706,7 +706,16 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 		return '';
 	// A session error occurred, show the error.
 	elseif ($is_fatal)
-		fatal_lang_error($error, isset($log_error) ? 'user' : false);
+	{
+		if (isset($_GET['xml']))
+		{
+			ob_end_clean();
+			header('HTTP/1.1 403 Forbidden - Session timeout');
+			die;
+		}
+		else
+			fatal_lang_error($error, isset($log_error) ? 'user' : false);
+	}
 	// A session error occurred, return the error to the calling function.
 	else
 		return $error;

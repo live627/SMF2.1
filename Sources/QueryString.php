@@ -484,6 +484,18 @@ function cleanXml($string)
 	return preg_replace('~[\x00-\x08\x0B\x0C\x0E-\x19' . ($context['utf8'] ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{D800}-\x{DFFF}\x{FFFE}\x{FFFF}' : pack('C*', 0xED, 0xA0, 0x80) . '-' . pack('C*', 0xED, 0xBF, 0xBF, 0xEF, 0xBF, 0xBE, 0xEF, 0xBF, 0xBF)) : '') . ']~' . ($context['utf8'] ? 'u' : ''), '', $string);
 }
 
+function JavaScriptEscape($string)
+{
+	return '\'' . strtr($string, array(
+		"\r" => '',
+		"\n" => '\\n',
+		'\\' => '\\\\',
+		'\'' => '\\\'',
+		'</' => '<\' + \'/',
+		'script' => 'scri\' +\'pt',
+	)) . '\'';
+}
+
 // Rewrite URLs to include the session ID.
 function ob_sessrewrite($buffer)
 {

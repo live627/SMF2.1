@@ -592,7 +592,7 @@ function smf_sessionKeepAlive()
 	if (smf_scripturl && curTime - lastKeepAliveCheck > 900000)
 	{
 		var tempImage = new Image();
-		tempImage.src = smf_scripturl + (smf_scripturl.indexOf('?') == -1 ? '?' : '&') + 'action=keepalive;' + curTime;
+		tempImage.src = smf_scripturl + (smf_scripturl.indexOf('?') == -1 ? '?' : '&') + 'action=keepalive;time=' + curTime;
 		lastKeepAliveCheck = curTime;
 	}
 
