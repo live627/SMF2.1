@@ -8,6 +8,18 @@ function template_profile_above()
 
 	echo '
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
+
+	// If an error occurred while trying to save previously, give the user a clue!
+	if (!empty($context['post_errors']))
+		echo '
+					', template_error_message();
+
+	// If the profile was update successfully, let the user know this.
+	if (!empty($context['profile_updated']))
+		echo '
+					<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed green; color: green;">
+						', $context['profile_updated'], '
+					</div>';
 }
 
 // Template for closing off table started in profile_above.
