@@ -1508,9 +1508,13 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 			$attempts[] = array($settings['base_theme_dir'], $template, $language, $settings['base_theme_url']);
 		}
 
-		// Fallback on the default theme if necessary.
+		// Fall back on the default theme if necessary.
 		$attempts[] = array($settings['default_theme_dir'], $template, $lang, $settings['default_theme_url']);
 		$attempts[] = array($settings['default_theme_dir'], $template, $language, $settings['default_theme_url']);
+
+		// Fall back on the English language if none of the preferred languages can be found.
+		if (!in_array('english', array($lang, $language)))
+			$attempts[] = array($settings['default_theme_dir'], $template, 'english', $settings['default_theme_url']);
 
 		// Try to find the language file.
 		foreach ($attempts as $k => $file)
@@ -1529,7 +1533,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 						}
 					}
 				}
-				// If the cache directory is not writable we're having a bad day.
+				// If the cache directory is not writable, we're having a bad day.
 				else
 					$do_include = false;
 

@@ -64,6 +64,7 @@ December 2008
  ! Fixed XML requests returning an error screen on session timeout, sending an HTTP 304 response code instead. (Security.php)
  ! Fixed keepalive action failing due to sending an integer value as separate request parameter. (script.js)
  ! Added a function allowing to escape JavaScript strings, necessary to get strings properly passed from template to JavaScript. (QueryString.php)
+ ! Try to fall back on the English language if none of the preferred languages can be found. (Load.php) [Bug 2743]
 
 
 November 2008
