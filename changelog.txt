@@ -65,6 +65,7 @@ December 2008
  ! Fixed keepalive action failing due to sending an integer value as separate request parameter. (script.js)
  ! Added a function allowing to escape JavaScript strings, necessary to get strings properly passed from template to JavaScript. (QueryString.php)
  ! Try to fall back on the English language if none of the preferred languages can be found. (Load.php) [Bug 2743]
+ * Try to do a better job at styling the subject edit box in quick edit mode. (Display template, forum.css) [Bug 2175]
 
 
 November 2008

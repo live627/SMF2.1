@@ -298,15 +298,17 @@ form#infocenter_login ul.horizlist label
 }
 .messageicon
 {
-	width: 40px;
-	margin-right: 10px;
+	float: left;
+	margin: 0 0.5em 0.5em 0;
 }
-
+div.postarea .keyinfo
+{
+	float: left;
+	width: 60%;
+}
 ul.postingbuttons
 {
 	float: right;
-	position: relative;
-	margin-top: -2.5em;
 	padding-right: 1em;
 }
 ul.postingbuttons li

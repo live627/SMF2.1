@@ -506,11 +506,11 @@ code
 	width: 100%;
 	overflow: auto;
 	line-height: 1.3em;
+	clear: both;
 }
 /* add a visual divider between subject and post */ 
 .post
 {
-	margin-top: 0.7em;
 	padding-top: 0.7em;
 	border-top: solid 1px #888;
 }
