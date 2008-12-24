@@ -1514,7 +1514,10 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 
 		// Fall back on the English language if none of the preferred languages can be found.
 		if (!in_array('english', array($lang, $language)))
+		{
+			$attempts[] = array($settings['theme_dir'], $template, 'english', $settings['theme_url']);
 			$attempts[] = array($settings['default_theme_dir'], $template, 'english', $settings['default_theme_url']);
+		}
 
 		// Try to find the language file.
 		foreach ($attempts as $k => $file)

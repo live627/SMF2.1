@@ -1581,6 +1581,10 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Initialize the theme.
 	loadSubTemplate('init', 'ignore');
 
+	// Any theme-related strings that need to be loaded?
+	if (!empty($settings['require_theme_strings']))
+		loadLanguage('ThemeStrings');
+
 	// We allow theme variants, because we're cool.
 	$context['theme_variant'] = '';
 	if (!empty($settings['theme_variants']))
@@ -1655,14 +1659,14 @@ function loadTheme($id_theme = 0, $initialize = true)
 			$ts = $type == 'mailq' ? $modSettings['mail_next_send'] : $modSettings['next_task_time'];
 
 			$context['html_headers'] .= '
-				<script language="JavaScript" type="text/javascript">
-					function smfAutoTask()
-					{
-						var tempImage = new Image();
-						tempImage.src = "' . $scripturl . '?scheduled=' . $type . ';ts=' . $ts . '";
-					}
-					window.setTimeout("smfAutoTask();", 1);
-				</script>';
+	<script language="JavaScript" type="text/javascript">
+		function smfAutoTask()
+		{
+			var tempImage = new Image();
+			tempImage.src = "' . $scripturl . '?scheduled=' . $type . ';ts=' . $ts . '";
+		}
+		window.setTimeout("smfAutoTask();", 1);
+	</script>';
 		}
 	}
 
@@ -1688,7 +1692,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : (file_exists($settings['default_theme_dir']. '/css/' . $sheet . '.css') ? 'default_theme_url' : '');
 			if ($sheet_path)
 			{
-				$context['html_headers'] .= '<link rel="stylesheet" type="text/css" id="' . $sheet . '_css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
+				$context['html_headers'] .= "\n\t" . '<link rel="stylesheet" type="text/css" id="' . $sheet . '_css" href="' . $settings[$sheet_path] . '/css/' . $sheet . '.css" />';
 				if ($db_show_debug === true)
 					$context['debug']['sheets'][] = $sheet . '(' . basename($settings[$sheet_path]) . ')';
 			}
