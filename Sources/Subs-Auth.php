@@ -258,6 +258,9 @@ function InMaintenance()
 	loadLanguage('Login');
 	loadTemplate('Login');
 
+	// Send a 503 header, so search engines don't bother indexing while we're in maintenance mode.
+	header('HTTP/1.1 503 Service Temporarily Unavailable');
+
 	// Basic template stuff..
 	$context['sub_template'] = 'maintenance';
 	$context['title'] = &$mtitle;

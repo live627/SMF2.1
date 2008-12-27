@@ -32,29 +32,44 @@ if (!defined('SMF'))
 	void ModifySettings()
 		// !!!
 
-	void ModifySettings2()
-		// !!!
-
-	void ModifyCoreSettings()
+	void ModifyGeneralSettings()
 		- shows an interface for the settings in Settings.php to be changed.
 		- uses the rawdata sub template (not theme-able.)
 		- requires the admin_forum permission.
 		- uses the edit_settings administration area.
 		- contains the actual array of settings to show from Settings.php.
-		- accessed from ?action=admin;area=serversettings.
+		- accessed from ?action=admin;area=serversettings;sa=general.
 
-	void ModifyCoreSettings2()
-		- saves those settings set from ?action=admin;area=serversettings to the
-		  Settings.php file.
+	void ModifyDatabaseSettings()
+		- shows an interface for the settings in Settings.php to be changed.
+		- uses the rawdata sub template (not theme-able.)
 		- requires the admin_forum permission.
-		- contains arrays of the types of data to save into Settings.php.
-		- redirects back to ?action=admin;area=serversettings.
-		- accessed from ?action=admin;area=serversettings;save.
+		- uses the edit_settings administration area.
+		- contains the actual array of settings to show from Settings.php.
+		- accessed from ?action=admin;area=serversettings;sa=database.
 
-	void ModifyOtherSettings()
+	void ModifyCookieSettings()
 		// !!!
 
 	void ModifyCacheSettings()
+		// !!!
+
+	void AddLanguage()
+		// !!!
+
+	void DownloadLanguage()
+		// !!!
+
+	void ManageLanguages()
+		// !!!
+
+	void ModifyLanguages()
+		// !!!
+
+	int list_getNumLanguages()
+		// !!!
+
+	array list_getLanguages()
 		// !!!
 
 	void ModifyLanguageSettings()
@@ -63,14 +78,21 @@ if (!defined('SMF'))
 	void ModifyLanguage()
 		// !!!
 
-	void DownloadLanguage()
+	void prepareServerSettingsContext(array config_vars)
 		// !!!
 
 	void prepareDBSettingContext(array config_vars)
 		// !!!
 
+	void saveSettings(array config_vars)
+		- saves those settings set from ?action=admin;area=serversettings to the
+		  Settings.php file and the database.
+		- requires the admin_forum permission.
+		- contains arrays of the types of data to save into Settings.php.
+
 	void saveDBSettings(array config_vars)
 		// !!!
+
 */
 
 /*	Adding options to one of the setting screens isn't hard. Call prepareDBSettingsContext;
@@ -126,26 +148,27 @@ if (!defined('SMF'))
 // This is the main pass through function, it creates tabs and the like.
 function ModifySettings()
 {
-	global $context, $txt, $scripturl, $modSettings;
-
-	if (isset($_GET['save']))
-		return ModifySettings2();
+	global $context, $txt, $scripturl, $boarddir;
 
 	// This is just to keep the database password more secure.
 	isAllowedTo('admin_forum');
-	checkSession('get');
+	checkSession('request');
+
+	// The settings are in here, I swear!
+	loadLanguage('ManageSettings');
 
 	$context['page_title'] = $txt['admin_server_settings'];
 	$context['sub_template'] = 'show_settings';
 
 	$subActions = array(
-		'core' => 'ModifyCoreSettings',
-		'other' => 'ModifyOtherSettings',
+		'general' => 'ModifyGeneralSettings',
+		'database' => 'ModifyDatabaseSettings',
+		'cookie' => 'ModifyCookieSettings',
 		'cache' => 'ModifyCacheSettings',
 	);
 
 	// By default we're editing the core settings
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'core';
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'general';
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Load up all the tabs...
@@ -155,41 +178,29 @@ function ModifySettings()
 		'description' => $txt['admin_basic_settings'],
 	);
 
-	// Call the right function for this sub-acton.
+	// Warn the user if there's any relevant information regarding Settings.php.
+	if ($_REQUEST['sa'] != 'cache')
+	{
+		// Warn the user if the backup of Settings.php failed.
+		$settings_not_writable = !is_writable($boarddir . '/Settings.php');
+		$settings_backup_fail = !@is_writable($boarddir . '/Settings_bak.php') || !@copy($boarddir . '/Settings.php', $boarddir . '/Settings_bak.php');
+	
+		if ($settings_not_writable)
+			$context['settings_message'] = '<div align="center"><b>' . $txt['settings_not_writable'] . '</b></div><br />';
+		elseif ($settings_backup_fail)
+			$context['settings_message'] = '<div align="center"><b>' . $txt['admin_backup_fail'] . '</b></div><br />';
+
+		$context['settings_not_writable'] = $settings_not_writable;
+	}
+
+	// Call the right function for this sub-action.
 	$subActions[$_REQUEST['sa']]();
 }
 
-// This function basically just redirects to the right save function.
-function ModifySettings2()
+// General forum settings - forum name, maintenance mode, etc.
+function ModifyGeneralSettings($return_config = false)
 {
-	global $context, $txt, $scripturl, $modSettings;
-
-	isAllowedTo('admin_forum');
-
-	// Quick session check...
-	checkSession();
-
-	$subActions = array(
-		'core' => 'ModifyCoreSettings2',
-		'other' => 'ModifyOtherSettings',
-		'cache' => 'ModifyCacheSettings',
-	);
-
-	// Default to core (I assume)
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'core';
-
-	// Actually call the saving function.
-	$subActions[$_REQUEST['sa']]();
-}
-
-// Basic forum settings - database name, host, etc.
-function ModifyCoreSettings()
-{
-	global $scripturl, $context, $settings, $txt, $sc, $boarddir, $smcFunc;
-
-	// Warn the user if the backup of Settings.php failed.
-	$settings_not_writable = !is_writable($boarddir . '/Settings.php');
-	$settings_backup_fail = !@is_writable($boarddir . '/Settings_bak.php') || !@copy($boarddir . '/Settings.php', $boarddir . '/Settings_bak.php');
+	global $scripturl, $context, $txt, $sc;
 
 	/* If you're writing a mod, it's a bad idea to add things here....
 	For each option:
@@ -197,215 +208,143 @@ function ModifyCoreSettings()
 	OR	an empty string for a horizontal rule.
 	OR	a string for a titled section. */
 	$config_vars = array(
-		array('db_server', &$txt['database_server'], 'text'),
-		array('db_user', &$txt['database_user'], 'text'),
-		array('db_passwd', &$txt['database_password'], 'password'),
-		array('db_name', &$txt['database_name'], 'text'),
-		array('db_prefix', &$txt['database_prexfix'], 'text'),
-		array('db_persist', &$txt['db_persist'], 'check', null, 'db_persist'),
-		array('db_error_send', &$txt['db_error_send'], 'check'),
-		array('ssi_db_user', &$txt['ssi_db_user'], 'text', null, 'ssi_db_user'),
-		array('ssi_db_passwd', &$txt['ssi_db_passwd'], 'password'),
+		array('mbname', &$txt['admin_title'], 'file', 'text', 30),
 		'',
-		array('maintenance', &$txt['admin_maintain'], 'check'),
-		array('mtitle', &$txt['maintenance_subject'], 'text', 36),
-		array('mmessage', &$txt['maintenance_message'], 'text', 36),
+		array('maintenance', &$txt['admin_maintain'], 'file', 'check'),
+		array('mtitle', &$txt['maintenance_subject'], 'file', 'text', 36),
+		array('mmessage', &$txt['maintenance_message'], 'file', 'text', 36),
 		'',
-		array('mbname', &$txt['admin_title'], 'text', 30),
-		array('webmaster_email', &$txt['admin_webmaster_email'], 'text', 30),
-		array('cookiename', &$txt['cookie_name'], 'text', 20),
+		array('webmaster_email', &$txt['admin_webmaster_email'], 'file', 'text', 30),
 		'',
-		array('boardurl', &$txt['admin_url'], 'text', 36),
-		array('boarddir', &$txt['boarddir'], 'text', 36),
-		array('sourcedir', &$txt['sourcesdir'], 'text', 36),
-		array('cachedir', &$txt['cachedir'], 'text', 36),
-		'',
-	);
-
-	// Setup the template stuff.
-	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;sa=core';
-	$context['settings_title'] = $txt['core_configuration'];
-	$context['save_disabled'] = $settings_not_writable;
-
-	if ($settings_not_writable)
-		$context['settings_message'] = '<div align="center"><b>' . $txt['settings_not_writable'] . '</b></div><br />';
-	elseif ($settings_backup_fail)
-		$context['settings_message'] = '<div align="center"><b>' . $txt['admin_backup_fail'] . '</b></div><br />';
-
-	// Fill the config array.
-	$context['config_vars'] = array();
-	foreach ($config_vars as $config_var)
-	{
-		if (!is_array($config_var) || !isset($config_var[1]))
-			$context['config_vars'][] = $config_var;
-		else
-		{
-			$varname = $config_var[0];
-			global $$varname;
-
-			$context['config_vars'][] = array(
-				'label' => $config_var[1],
-				'help' => isset($config_var[4]) ? $config_var[4] : '',
-				'type' => $config_var[2],
-				'size' => empty($config_var[3]) ? 0 : $config_var[3],
-				'data' => isset($config_var[3]) && is_array($config_var[3]) ? $config_var[3] : array(),
-				'name' => $config_var[0],
-				'value' => htmlspecialchars($$varname),
-				'disabled' => $settings_not_writable,
-				'invalid' => false,
-				'javascript' => '',
-				'preinput' => '',
-				'postinput' => '',
-			);
-		}
-	}
-}
-
-// Put the core settings in Settings.php.
-function ModifyCoreSettings2()
-{
-	global $boarddir, $sc, $cookiename, $modSettings, $user_settings;
-	global $sourcedir, $context, $cachedir;
-
-	// Fix the darn stupid cookiename! (more may not be allowed, but these for sure!)
-	if (isset($_POST['cookiename']))
-		$_POST['cookiename'] = preg_replace('~[,;\s\.$]+~' . ($context['utf8'] ? 'u' : ''), '', $_POST['cookiename']);
-
-	// Fix the forum's URL if necessary.
-	if (substr($_POST['boardurl'], -10) == '/index.php')
-		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
-	elseif (substr($_POST['boardurl'], -1) == '/')
-		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -1);
-	if (substr($_POST['boardurl'], 0, 7) != 'http://' && substr($_POST['boardurl'], 0, 7) != 'file://' && substr($_POST['boardurl'], 0, 8) != 'https://')
-		$_POST['boardurl'] = 'http://' . $_POST['boardurl'];
-
-	// Any passwords?
-	$config_passwords = array(
-		'db_passwd',
-		'ssi_db_passwd',
-	);
-
-	// All the strings to write.
-	$config_strs = array(
-		'mtitle', 'mmessage',
-		'language', 'mbname', 'boardurl',
-		'cookiename',
-		'webmaster_email',
-		'db_name', 'db_user', 'db_server', 'db_prefix', 'ssi_db_user',
-		'boarddir', 'sourcedir', 'cachedir',
-	);
-	// All the numeric variables.
-	$config_ints = array(
-	);
-	// All the checkboxes.
-	$config_bools = array(
-		'db_persist', 'db_error_send',
-		'maintenance',
-	);
-
-	// Now sort everything into a big array, and figure out arrays and etc.
-	$config_vars = array();
-	foreach ($config_passwords as $config_var)
-	{
-		if (isset($_POST[$config_var][1]) && $_POST[$config_var][0] == $_POST[$config_var][1])
-			$config_vars[$config_var] = '\'' . addcslashes($_POST[$config_var][0], '\'\\') . '\'';
-	}
-	foreach ($config_strs as $config_var)
-	{
-		if (isset($_POST[$config_var]))
-			$config_vars[$config_var] = '\'' . addcslashes($_POST[$config_var], '\'\\') . '\'';
-	}
-	foreach ($config_ints as $config_var)
-	{
-		if (isset($_POST[$config_var]))
-			$config_vars[$config_var] = (int) $_POST[$config_var];
-	}
-	foreach ($config_bools as $key)
-	{
-		if (!empty($_POST[$key]))
-			$config_vars[$key] = '1';
-		else
-			$config_vars[$key] = '0';
-	}
-
-	require_once($sourcedir . '/Subs-Admin.php');
-	updateSettingsFile($config_vars);
-
-	// If the cookie name was changed, reset the cookie.
-	if (isset($config_vars['cookiename']) && $cookiename != $_POST['cookiename'])
-	{
-		$origSC = $sc;
-		include_once($sourcedir . '/Subs-Auth.php');
-
-		// Remove the old cookie.
-		setLoginCookie(-3600, 0);
-
-		// Set the new one.
-		$cookiename = $_POST['cookiename'];
-		setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
-
-		redirectexit('action=admin;area=serversettings;sa=core;sesc=' . $origSC, $context['server']['needs_login_fix']);
-	}
-
-	redirectexit('action=admin;area=serversettings;sa=core;sesc=' . $sc);
-}
-
-// This function basically edits anything which is configuration and stored in the database, except for caching.
-function ModifyOtherSettings($return_config = false)
-{
-	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
-
-	// In later life we may move the setting definitions out of the language files, but for now it's RC2 and I can't be bothered.
-	loadLanguage('ManageSettings');
-
-	// Define the variables we want to edit.
-	$config_vars = array(
-			// Cookies...
-			array('int', 'cookieTime'),
-			array('check', 'localCookies'),
-			array('check', 'globalCookies'),
-			array('check', 'secureCookies', 'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
-		'',
-			// Database repair, optimization, etc.
-			array('int', 'autoOptMaxOnline'),
-			array('check', 'autoFixDatabase'),
-		'',
-			array('check', 'enableCompressedOutput'),
-			array('check', 'databaseSession_enable'),
-			array('check', 'databaseSession_loose'),
-			array('int', 'databaseSession_lifetime'),
+		array('enableCompressedOutput', &$txt['enableCompressedOutput'], 'db', 'check', null, 'enableCompressedOutput'),
+		array('disableHostnameLookup', &$txt['disableHostnameLookup'], 'db', 'check', null, 'disableHostnameLookup'),
 	);
 
 	if ($return_config)
 		return $config_vars;
 
-	// Are we saving?
-	if (isset($_GET['save']))
+	// Setup the template stuff.
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=general;save';
+	$context['settings_title'] = $txt['general_settings'];
+
+	// Saving settings?
+	if (isset($_REQUEST['save']))
 	{
-		// Make the SMTP password a little harder to see in a backup etc.
-		if (!empty($_POST['smtp_password'][1]))
-		{
-			$_POST['smtp_password'][0] = base64_encode($_POST['smtp_password'][0]);
-			$_POST['smtp_password'][1] = base64_encode($_POST['smtp_password'][1]);
-		}
-		saveDBSettings($config_vars);
-		redirectexit('action=admin;area=serversettings;sa=other;sesc=' . $sc);
+		saveSettings($config_vars);
+		redirectexit('action=admin;area=serversettings;sa=general;sesc=' . $sc);
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;sa=other';
-	$context['settings_title'] = $txt['other_configuration'];
+	// Fill the config array.
+	prepareServerSettingsContext($config_vars);
+}
 
-	// Prepare the template.
-	prepareDBSettingContext($config_vars);
+// Basic database and paths settings - database name, host, etc.
+function ModifyDatabaseSettings($return_config = false)
+{
+	global $scripturl, $context, $settings, $txt, $sc, $boarddir;
+
+	/* If you're writing a mod, it's a bad idea to add things here....
+	For each option:
+		variable name, description, type (constant), size/possible values, helptext.
+	OR	an empty string for a horizontal rule.
+	OR	a string for a titled section. */
+	$config_vars = array(
+		array('db_server', &$txt['database_server'], 'file', 'text'),
+		array('db_user', &$txt['database_user'], 'file', 'text'),
+		array('db_passwd', &$txt['database_password'], 'file', 'password'),
+		array('db_name', &$txt['database_name'], 'file', 'text'),
+		array('db_prefix', &$txt['database_prexfix'], 'file', 'text'),
+		array('db_persist', &$txt['db_persist'], 'file', 'check', null, 'db_persist'),
+		array('db_error_send', &$txt['db_error_send'], 'file', 'check'),
+		array('ssi_db_user', &$txt['ssi_db_user'], 'file', 'text', null, 'ssi_db_user'),
+		array('ssi_db_passwd', &$txt['ssi_db_passwd'], 'file', 'password'),
+		'',
+		array('autoFixDatabase', &$txt['autoFixDatabase'], 'db', 'check'),
+		array('autoOptMaxOnline', &$txt['autoOptMaxOnline'], 'db', 'int'),
+		'',		
+		array('boardurl', &$txt['admin_url'], 'file', 'text', 36),
+		array('boarddir', &$txt['boarddir'], 'file', 'text', 36),
+		array('sourcedir', &$txt['sourcesdir'], 'file', 'text', 36),
+		array('cachedir', &$txt['cachedir'], 'file', 'text', 36),
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Setup the template stuff.
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=database;save';
+	$context['settings_title'] = $txt['database_paths_settings'];
+	$context['save_disabled'] = $context['settings_not_writable'];
+
+	// Saving settings?
+	if (isset($_REQUEST['save']))
+	{
+		saveSettings($config_vars);
+		redirectexit('action=admin;area=serversettings;sa=database;sesc=' . $sc);
+	}
+
+	// Fill the config array.
+	prepareServerSettingsContext($config_vars);
+}
+
+// This function basically edits anything which is configuration and stored in the database, except for caching.
+function ModifyCookieSettings($return_config = false)
+{
+	global $context, $scripturl, $txt, $sourcedir, $sc, $modSettings, $cookiename, $user_settings;
+
+	// Define the variables we want to edit.
+	$config_vars = array(
+		// Cookies...
+		array('cookiename', &$txt['cookie_name'], 'file', 'text', 20),
+		array('cookieTime', &$txt['cookieTime'], 'db', 'int'),
+		array('localCookies', &$txt['localCookies'], 'db', 'check'),
+		array('globalCookies', &$txt['globalCookies'], 'db', 'check'),
+		array('secureCookies', &$txt['secureCookies'], 'db', 'check', 'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
+		'',
+		// Sessions
+		array('databaseSession_enable', &$txt['databaseSession_enable'], 'db', 'check'),
+		array('databaseSession_loose', &$txt['databaseSession_loose'], 'db', 'check'),
+		array('databaseSession_lifetime', &$txt['databaseSession_lifetime'], 'db', 'int'),
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=cookie;save';
+	$context['settings_title'] = $txt['cookies_sessions_settings'];
+
+	// Saving settings?
+	if (isset($_REQUEST['save']))
+	{
+		saveSettings($config_vars);
+		
+		// If the cookie name was changed, reset the cookie.
+		if ($cookiename != $_POST['cookiename'])
+		{
+			$origSC = $sc;
+			include_once($sourcedir . '/Subs-Auth.php');
+
+			// Remove the old cookie.
+			setLoginCookie(-3600, 0);
+
+			// Set the new one.
+			$cookiename = $_POST['cookiename'];
+			setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
+
+			redirectexit('action=admin;area=serversettings;sa=cookie;sesc=' . $origSC, $context['server']['needs_login_fix']);
+		}
+
+		redirectexit('action=admin;area=serversettings;sa=cookie;sesc=' . $sc);
+	}
+
+	// Fill the config array.
+	prepareServerSettingsContext($config_vars);
 }
 
 // Simply modifying cache functions
 function ModifyCacheSettings($return_config = false)
 {
 	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
-
-	// Cache information is in here, honest.
-	loadLanguage('ManageSettings');
 
 	// Define the variables we want to edit.
 	$config_vars = array(
@@ -429,7 +368,7 @@ function ModifyCacheSettings($return_config = false)
 		redirectexit('action=admin;area=serversettings;sa=cache;sesc=' . $sc);
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;sa=cache';
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=cache;save';
 	$context['settings_title'] = $txt['caching_settings'];
 	$context['settings_message'] = $txt['caching_information'];
 
@@ -1093,9 +1032,9 @@ function list_getLanguages()
 }
 
 // Edit language related settings.
-function ModifyLanguageSettings()
+function ModifyLanguageSettings($return_config = false)
 {
-	global $scripturl, $context, $settings, $txt, $helptxt, $sc, $boarddir, $sourcedir, $smcFunc, $modSettings;
+	global $scripturl, $context, $txt, $sc, $boarddir, $settings, $smcFunc;
 
 	// Warn the user if the backup of Settings.php failed.
 	$settings_not_writable = !is_writable($boarddir . '/Settings.php');
@@ -1107,9 +1046,12 @@ function ModifyLanguageSettings()
 	OR	an empty string for a horizontal rule.
 	OR	a string for a titled section. */
 	$config_vars = array(
-		'language' => array('language', &$txt['default_language'], 'select', array()),
-		array('userLanguage', &$txt['userLanguage'], 'check', null, 'userLanguage'),
+		'language' => array('language', &$txt['default_language'], 'file', 'select', array(), null, 'disabled' => $settings_not_writable),
+		array('userLanguage', &$txt['userLanguage'], 'db', 'check', null, 'userLanguage'),
 	);
+
+	if ($return_config)
+		return $config_vars;
 
 	// Find the available language files.
 	$language_directories = array(
@@ -1129,49 +1071,15 @@ function ModifyLanguageSettings()
 		$dir = dir($language_dir);
 		while ($entry = $dir->read())
 			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches))
-				$config_vars['language'][3][$matches[1]] = array($matches[1], $smcFunc['ucwords'](strtr($matches[1], '_', ' ')));
+				$config_vars['language'][4][$matches[1]] = array($matches[1], $smcFunc['ucwords'](strtr($matches[1], '_', ' ')));
 		$dir->close();
 	}
 
-	// Saving some settings?
+	// Saving settings?
 	if (isset($_REQUEST['save']))
 	{
-		checkSession('post');
-		$config_post_settings = array();
-		$config_post_dbsettings = array();
-
-		// Loop trough the defined settings and sanitize their posted values.
-		foreach ($config_vars as $variable => $config_var)
-		{
-			// Should this go into Settings.php, or straight into the DB?
-			$config_type = 'config_post_' . (is_string($variable) ? 'settings' : 'dbsettings');
-
-			// A checkboxes?
-			if ($config_var[2] == 'check')
-				${$config_type}[$config_var[0]] = !empty($_POST[$config_var[0]]) ? 1 : 0;
-
-			// A select box, then?
-			elseif ($config_var[2] == 'select')
-				${$config_type}[$config_var[0]] = isset($_POST[$config_var[0]]) && isset($config_var[3][$_POST[$config_var[0]]]) ? $_POST[$config_var[0]] : '';
-
-			// We might want to add slashes if this needs to go into the settings file.
-			if (is_string($variable) && is_string(${$config_type}[$config_var[0]]))
-				${$config_type}[$config_var[0]] = '\'' . addcslashes(${$config_type}[$config_var[0]], '\'\\') . '\'';
-		}
-
-		// Update the database settings.
-		if (!empty($config_post_dbsettings))
-			updateSettings($config_post_dbsettings);
-
-		// Update the settings file.
-		if (!empty($config_post_settings))
-		{
-			require_once($sourcedir . '/Subs-Admin.php');
-			updateSettingsFile($config_post_settings);
-		}
-
-		// Get out of here.
-		redirectexit($scripturl . '?action=admin;area=languages;sa=settings');
+		saveSettings($config_vars);
+		redirectexit('action=admin;area=languages;sa=settings;sesc=' . $sc);
 	}
 
 	// Setup the template stuff.
@@ -1185,32 +1093,7 @@ function ModifyLanguageSettings()
 		$context['settings_message'] = '<div align="center"><b>' . $txt['admin_backup_fail'] . '</b></div><br />';
 
 	// Fill the config array.
-	$context['config_vars'] = array();
-	foreach ($config_vars as $identifier => $config_var)
-	{
-		if (!is_array($config_var) || !isset($config_var[1]))
-			$context['config_vars'][] = $config_var;
-		else
-		{
-			$varname = $config_var[0];
-			global $$varname;
-
-			$context['config_vars'][] = array(
-				'label' => $config_var[1],
-				'help' => isset($config_var[4]) ? $config_var[4] : '',
-				'type' => $config_var[2],
-				'size' => empty($config_var[3]) ? 0 : $config_var[3],
-				'data' => isset($config_var[3]) && is_array($config_var[3]) ? $config_var[3] : array(),
-				'name' => $config_var[0],
-				'value' => is_string($identifier) ? htmlspecialchars($$varname) : htmlspecialchars($modSettings[$varname]),
-				'disabled' => $settings_not_writable,
-				'invalid' => false,
-				'javascript' => '',
-				'preinput' => '',
-				'postinput' => '',
-			);
-		}
-	}
+	prepareServerSettingsContext($config_vars);
 }
 
 // Edit a particular set of language entries.
@@ -1741,6 +1624,39 @@ function cleanLangString($string, $to_display = true)
 	return $new_string;
 }
 
+// Helper function, it sets up the context for the manage server settings.
+function prepareServerSettingsContext(&$config_vars)
+{
+	global $context, $modSettings;
+	
+	$context['config_vars'] = array();
+	foreach ($config_vars as $identifier => $config_var)
+	{
+		if (!is_array($config_var) || !isset($config_var[1]))
+			$context['config_vars'][] = $config_var;
+		else
+		{
+			$varname = $config_var[0];
+			global $$varname;
+
+			$context['config_vars'][] = array(
+				'label' => $config_var[1],
+				'help' => isset($config_var[5]) ? $config_var[5] : '',
+				'type' => $config_var[3],
+				'size' => empty($config_var[4]) ? 0 : $config_var[4],
+				'data' => isset($config_var[4]) && is_array($config_var[4]) ? $config_var[4] : array(),
+				'name' => $config_var[0],
+				'value' => $config_var[2] == 'file' ? htmlspecialchars($$varname) : (isset($modSettings[$config_var[0]]) ? htmlspecialchars($modSettings[$config_var[0]]) : (in_array($config_var[3], array('int', 'float')) ? 0 : '')),
+				'disabled' => !empty($context['settings_not_writable']) || !empty($config_var['disabled']),
+				'invalid' => false,
+				'javascript' => '',
+				'preinput' => '',
+				'postinput' => '',
+			);
+		}
+	}
+}
+
 // Helper function, it sets up the context for database settings.
 function prepareDBSettingContext(&$config_vars)
 {
@@ -1882,6 +1798,97 @@ function prepareDBSettingContext(&$config_vars)
 			);
 		}
 	}
+}
+
+// Helper function. Saves settings by putting them in Settings.php or saving them in the settings table.
+function saveSettings(&$config_vars)
+{
+	global $boarddir, $sc, $cookiename, $modSettings, $user_settings;
+	global $sourcedir, $context, $cachedir;
+
+	// Fix the darn stupid cookiename! (more may not be allowed, but these for sure!)
+	if (isset($_POST['cookiename']))
+		$_POST['cookiename'] = preg_replace('~[,;\s\.$]+~' . ($context['utf8'] ? 'u' : ''), '', $_POST['cookiename']);
+
+	// Fix the forum's URL if necessary.
+	if (isset($_POST['boardurl']))
+	{
+		if (substr($_POST['boardurl'], -10) == '/index.php')
+			$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
+		elseif (substr($_POST['boardurl'], -1) == '/')
+			$_POST['boardurl'] = substr($_POST['boardurl'], 0, -1);
+		if (substr($_POST['boardurl'], 0, 7) != 'http://' && substr($_POST['boardurl'], 0, 7) != 'file://' && substr($_POST['boardurl'], 0, 8) != 'https://')
+			$_POST['boardurl'] = 'http://' . $_POST['boardurl'];
+	}
+
+	// Any passwords?
+	$config_passwords = array(
+		'db_passwd',
+		'ssi_db_passwd',
+	);
+
+	// All the strings to write.
+	$config_strs = array(
+		'mtitle', 'mmessage',
+		'language', 'mbname', 'boardurl',
+		'cookiename',
+		'webmaster_email',
+		'db_name', 'db_user', 'db_server', 'db_prefix', 'ssi_db_user',
+		'boarddir', 'sourcedir', 'cachedir',
+	);
+	// All the numeric variables.
+	$config_ints = array(
+	);
+	// All the checkboxes.
+	$config_bools = array(
+		'db_persist', 'db_error_send',
+		'maintenance',
+	);
+
+	// Now sort everything into a big array, and figure out arrays and etc.
+	$new_settings = array();
+	foreach ($config_passwords as $config_var)
+	{
+		if (isset($_POST[$config_var][1]) && $_POST[$config_var][0] == $_POST[$config_var][1])
+			$new_settings[$config_var] = '\'' . addcslashes($_POST[$config_var][0], '\'\\') . '\'';
+	}
+	foreach ($config_strs as $config_var)
+	{
+		if (isset($_POST[$config_var]))
+			$new_settings[$config_var] = '\'' . addcslashes($_POST[$config_var], '\'\\') . '\'';
+	}
+	foreach ($config_ints as $config_var)
+	{
+		if (isset($_POST[$config_var]))
+			$new_settings[$config_var] = (int) $_POST[$config_var];
+	}
+	foreach ($config_bools as $key)
+	{
+		if (!empty($_POST[$key]))
+			$new_settings[$key] = '1';
+		else
+			$new_settings[$key] = '0';
+	}
+
+	// Save the relevant settings in the Settings.php file.
+	require_once($sourcedir . '/Subs-Admin.php');
+	updateSettingsFile($new_settings);
+
+	// Now loopt through the remaining (database-based) settings.
+	$new_settings = array();
+	foreach ($config_vars as $config_var)
+	{
+		// We just saved the file-based settings, so skip their definitions.
+		if (!is_array($config_var) || $config_var[2] == 'file')
+			continue;
+
+		// Rewrite the definition a bit.
+		$new_settings[] = array($config_var[3], $config_var[0]);
+	}
+
+	// Save the new database-based settings, if any.
+	if (!empty($new_settings))
+		saveDBSettings($new_settings);
 }
 
 // Helper function for saving database settings.

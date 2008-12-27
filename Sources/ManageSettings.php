@@ -113,7 +113,6 @@ function ModifyFeatureSettings()
 		'sig' => 'ModifySignatureSettings',
 		'profile' => 'ShowCustomProfiles',
 		'profileedit' => 'EditCustomProfiles',
-		'pruning' => 'ModifyPruningSettings',
 	);
 
 	loadGeneralSettingParameters($subActions, 'basic');
@@ -135,8 +134,6 @@ function ModifyFeatureSettings()
 			),
 			'profile' => array(
 				'description' => $txt['custom_profile_desc'],
-			),
-			'pruning' => array(
 			),
 		),
 	);
@@ -563,7 +560,6 @@ function ModifyLayoutSettings($return_config = false)
 		'',
 			// This is like debugging sorta.
 			array('check', 'timeLoadPageEnable'),
-			array('check', 'disableHostnameLookup'),
 		'',
 			// Meta.
 			array('text', 'meta_keywords', 'size' => 50),
@@ -1858,7 +1854,10 @@ function EditCustomProfiles()
 
 function ModifyPruningSettings($return_config = false)
 {
-	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+	global $txt, $scripturl, $sourcedir, $context, $settings, $sc, $modSettings;
+
+	// Make sure we understand what's going on.
+	loadLanguage('ManageSettings');
 
 	$config_vars = array(
 			// Even do the pruning?
@@ -1878,6 +1877,9 @@ function ModifyPruningSettings($return_config = false)
 
 	if ($return_config)
 		return $config_vars;
+
+	// We'll need this in a bit.
+	require_once($sourcedir . '/ManageServer.php');
 
 	// Saving?
 	if (isset($_GET['save']))
@@ -1904,17 +1906,16 @@ function ModifyPruningSettings($return_config = false)
 			$_POST['pruningOptions'] = '';
 
 		saveDBSettings($savevar);
-		redirectexit('action=admin;area=featuresettings;sa=pruning');
+		redirectexit('action=admin;area=logs;sa=pruning');
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=pruning';
+	$context['post_url'] = $scripturl . '?action=admin;area=logs;save;sa=pruning';
 	$context['settings_title'] = $txt['pruning_title'];
+	$context['sub_template'] = 'show_settings';
 
 	// Get the actual values
 	if (!empty($modSettings['pruningOptions']))
-	{
 		@list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = explode(',', $modSettings['pruningOptions']);
-	}
 	else
 		@list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = array(0, 0, 0, 0, 0,);
 

@@ -286,6 +286,9 @@ function setup_fatal_error_context($error_message)
 	if (empty($context['page_title']))
 		$context['page_title'] = $context['error_title'];
 
+	// Whatever it is, it's not good! Make sure bots understand that.
+	header('HTTP/1.1 500 Internal Server Error');
+
 	// Display the error message - wireless?
 	if (defined('WIRELESS') && WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_error';

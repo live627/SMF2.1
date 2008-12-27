@@ -67,6 +67,11 @@ December 2008
  ! Try to fall back on the English language if none of the preferred languages can be found. (Load.php) [Bug 2743]
  * Try to do a better job at styling the subject edit box in quick edit mode. (Display template, forum.css) [Bug 2175]
  ! Allow theme authors to easily load an additional language file for theme-related strings. (Load.php) [Feature 2829]
+ ! Moved the log pruning settings to the admin log section. (Admin.php, ManageSettings.php)
+ ! Send http header 503 when the forum is in maintenance mode, so search engines don't bother indexing it. (Subs-Auth.php)
+ ! Send http header 500 when an operation results in a fatal error, so search engines don't bother indexing it. (Errors.php)
+ ! Redesigned the server settings area and moved a few settings to it. (Admin.php, ManageServer.php) [Bug 1323]
+ & Added a few new strings for the new server settings sections. (Admin language file) [Bug 1323]
 
 
 November 2008

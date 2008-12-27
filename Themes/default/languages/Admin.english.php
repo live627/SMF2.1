@@ -487,8 +487,9 @@ $txt['not_done_title'] = 'Not done yet!';
 $txt['not_done_reason'] = 'To avoid overloading your server, the process has been temporarily paused.  It should automatically continue in a few seconds.  If it doesn\'t, please click continue below.';
 $txt['not_done_continue'] = 'Continue';
 
-$txt['core_configuration'] = 'Core Configuration';
-$txt['other_configuration'] = 'Feature Configuration';
+$txt['general_settings'] = 'General';
+$txt['database_paths_settings'] = 'Database and Paths';
+$txt['cookies_sessions_settings'] = 'Cookies and Sessions';
 $txt['caching_settings'] = 'Caching';
 
 $txt['language_configuration'] = 'Languages';

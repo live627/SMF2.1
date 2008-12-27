@@ -158,7 +158,6 @@ function AdminMain()
 						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),
 						'sig' => array($txt['signature_settings_short']),
 						'profile' => array($txt['custom_profile_shorttitle'], 'enabled' => in_array('cp', $context['admin_features'])),
-						'pruning' => array($txt['pruning_title']),
 					),
 				),
 				'securitysettings' => array(
@@ -189,8 +188,9 @@ function AdminMain()
 					'function' => 'ModifySettings',
 					'icon' => 'server.gif',
 					'subsections' => array(
-						'core' => array($txt['core_configuration']),
-						'other' => array($txt['other_configuration']),
+						'general' => array($txt['general_settings']),
+						'database' => array($txt['database_paths_settings']),
+						'cookie' => array($txt['cookies_sessions_settings']),
 						'cache' => array($txt['caching_settings']),
 					),
 				),
@@ -466,6 +466,7 @@ function AdminMain()
 						'banlog' => array($txt['ban_log'], 'manage_bans'),
 						'spiderlog' => array($txt['spider_logs'], 'admin_forum'),
 						'tasklog' => array($txt['scheduled_log'], 'admin_forum'),
+						'pruning' => array($txt['pruning_title'], 'admin_forum'),
 					),
 				),
 				'repairboards' => array(
@@ -864,11 +865,15 @@ function AdminSearchInternal()
 		array('ModifyTopicSettings', 'area=postsettings;sa=topics'),
 		array('EditSearchSettings', 'area=managesearch;sa=settings'),
 		array('EditSmileySettings', 'area=smileys;sa=settings'),
-		array('ModifyOtherSettings', 'area=serversettings;sa=other'),
+		array('ModifyGeneralSettings', 'area=serversettings;sa=general'),
+		array('ModifyDatabaseSettings', 'area=serversettings;sa=database'),
+		array('ModifyCookieSettings', 'area=serversettings;sa=cookie'),
 		array('ModifyCacheSettings', 'area=serversettings;sa=cache'),
+		array('ModifyLanguageSettings', 'area=languages;sa=settings'),
 		array('ModifyRegistrationSettings', 'area=regcenter;sa=settings'),
 		array('ManageSearchEngineSettings', 'area=sengines;sa=settings'),
 		array('ModifySubscriptionSettings', 'area=paidsubscribe;sa=settings'),
+		array('ModifyPruningSettings', 'area=logs;sa=pruning'),
 	);
 
 	foreach ($settings_search as $setting_area)
@@ -1033,6 +1038,7 @@ function AdminLogs()
 		'banlog' => array('ManageBans.php', 'BanLog'),
 		'spiderlog' => array('ManageSearchEngines.php', 'SpiderLogs'),
 		'tasklog' => array('ManageScheduledTasks.php', 'TaskLog'),
+		'pruning' => array('ManageSettings.php', 'ModifyPruningSettings'),
 	);
 
 	$sub_action = isset($_REQUEST['sa']) && isset($log_functions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'errorlog';
@@ -1064,6 +1070,8 @@ function AdminLogs()
 			),
 			'tasklog' => array(
 				'description' => $txt['scheduled_log_desc'],
+			),
+			'pruning' => array(
 			),
 		),
 	);
