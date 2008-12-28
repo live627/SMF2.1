@@ -467,7 +467,6 @@ function template_editBuddies()
 				</td>
 				<td width="55%">
 					<input type="text" name="new_buddy" id="new_buddy" size="25" />
-					<a href="', $scripturl, '?action=findmember;input=new_buddy;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="top" /></a>
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -476,7 +475,18 @@ function template_editBuddies()
 				</td>
 			</tr>
 		</table>
-	</form>';
+	</form>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var oAddBuddySuggest = new smc_AutoSuggest({
+			sSelf: \'oAddBuddySuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'new_buddy\',
+			sControlId: \'new_buddy\',
+			sSearchType: \'member\',
+			bItemList: false
+		});
+	// ]]></script>';
 }
 
 // This template shows an admin information on a users IP addresses used and errors attributed to them.

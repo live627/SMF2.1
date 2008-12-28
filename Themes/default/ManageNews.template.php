@@ -64,7 +64,7 @@ function template_email_members()
 		function toggleAdvanced(mode)
 		{
 			// What styles are we doing?
-			divStyle = mode ? "" : "none";
+			var divStyle = mode ? "" : "none";
 
 			for (var i = 0; i < 20; i++)
 				if (document.getElementById("advanced_div_" + i))
@@ -122,7 +122,7 @@ function template_email_members()
 					</td>
 					<td width="50%">
 						<input type="text" name="members" id="members" value="" size="30" />
-						<a href="', $scripturl, '?action=findmember;input=members;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="top" /></a>
+						<div id="members_container"></div>
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_3">
@@ -153,7 +153,7 @@ function template_email_members()
 					</td>
 					<td width="50%">
 						<input type="text" name="exclude_members" id="exclude_members" value="" size="30" />
-						<a href="', $scripturl, '?action=findmember;input=exclude_members;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="top" /></a>
+						<div id="exclude_members_container"></div>
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_6">
@@ -181,9 +181,34 @@ function template_email_members()
 
 	// Make the javascript stuff visible.
 	echo '
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById("advanced_select_div").style.display = "";
 		toggleAdvanced(0);
+		var oMemberSuggest = new smc_AutoSuggest({
+			sSelf: \'oMemberSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'members\',
+			sControlId: \'members\',
+			sSearchType: \'member\',
+			bItemList: true,
+			sPostName: \'member_list\',
+			sURLMask: \'action=profile;u=%item_id%\',
+			sItemListContainerId: \'members_container\',
+			aListItems: []
+		});
+		var oExcludeMemberSuggest = new smc_AutoSuggest({
+			sSelf: \'oExcludeMemberSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'exclude_members\',
+			sControlId: \'exclude_members\',
+			sSearchType: \'member\',
+			bItemList: true,
+			sPostName: \'exclude_member_list\',
+			sURLMask: \'action=profile;u=%item_id%\',
+			sItemListContainerId: \'exclude_members_container\',
+			aListItems: []
+		});
 	// ]]></script>';
 }
 

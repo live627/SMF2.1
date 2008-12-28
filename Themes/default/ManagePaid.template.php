@@ -264,8 +264,7 @@ function template_modify_user_subscription()
 			<tr class="windowbg2">
 				<td align="right"><b>', $txt['paid_username'], ':</b><br /><span class="smalltext">', $txt['one_username'], '</span></td>
 				<td>
-					<input type="text" name="name" id="name" value="', $context['sub']['username'], '" size="30" />
-					<a href="', $scripturl, '?action=findmember;input=name;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" border="0" alt="', $txt['find_members'], '" align="top" /></a>
+					<input type="text" name="name" id="name_control" value="', $context['sub']['username'], '" size="30" />
 				</td>
 			</tr>';
 
@@ -355,7 +354,18 @@ function template_modify_user_subscription()
 			</tr>
 		</table>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
+	</form>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var oAddMemberSuggest = new smc_AutoSuggest({
+			sSelf: \'oAddMemberSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'name_subscriber\',
+			sControlId: \'name_control\',
+			sSearchType: \'member\',
+			bItemList: false
+		});
+	// ]]></script>';
 
 	if (!empty($context['pending_payments']))
 	{

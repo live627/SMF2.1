@@ -178,7 +178,7 @@ function template_edit_group()
 					<th align="left" id="group_moderators_text"><label for="group_moderators">', $txt['moderators'], ':</label></th>
 					<td>
 						<input type="text" name="group_moderators" id="group_moderators" value="', $context['group']['moderator_list'], '" size="30" />
-						<a href="', $scripturl, '?action=findmember;input=group_moderators;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
+						<div id="moderator_container"></div>
 					</td>
 				</tr>
 				<tr class="windowbg2">
@@ -289,7 +289,32 @@ function template_edit_group()
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
-		</form>';
+		</form>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			var oModeratorSuggest = new smc_AutoSuggest({
+				sSelf: \'oModeratorSuggest\',
+				sSessionId: \'', $context['session_id'], '\',
+				sSuggestId: \'group_moderators\',
+				sControlId: \'group_moderators\',
+				sSearchType: \'member\',
+				bItemList: true,
+				sPostName: \'moderator_list\',
+				sURLMask: \'action=profile;u=%item_id%\',
+				sItemListContainerId: \'moderator_container\',
+				aListItems: [';
+
+			foreach ($context['group']['moderators'] as $id_member => $member_name)
+				echo '
+							{
+								sItemId: ', JavaScriptEscape($id_member), ',
+								sItemName: ', JavaScriptEscape($member_name), '
+							}', $id_member == $context['group']['last_moderator_id'] ? '' : ',';
+
+			echo '
+				]
+			});
+		// ]]></script>';
 
 	if ($context['group']['allow_post_group'])
 		echo '
@@ -434,12 +459,8 @@ function template_group_members()
 				</tr><tr class="windowbg2" valign="top">
 					<td align="right" width="50%"><b>', $txt['membergroups_members_add_desc'], ':</b></td>
 					<td align="left">
-						', template_control_autosuggest('toAdd'), '
-						<div id="suggest_template_toAdd" style="visibility: hidden; display: none;">
-							<input type="hidden" name="member_add[]" value="::MEMBER_ID::" />
-							<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="recipient_link_toAdd_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
-							<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" />
-						</div>
+						<input type="text" name="toAdd" id="toAdd" value="" />
+						<div id="toAddItemContainer"></div>
 					</td>
 				</tr><tr class="windowbg2">
 					<td colspan="2" align="center">
@@ -451,7 +472,21 @@ function template_group_members()
 
 	echo '
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
-		</form>';
+		</form>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			var oAddMemberSuggest = new smc_AutoSuggest({
+				sSelf: \'oAddMemberSuggest\',
+				sSessionId: \'', $context['session_id'], '\',
+				sSuggestId: \'to_suggest\',
+				sControlId: \'toAdd\',
+				sSearchType: \'member\',
+				sPostName: \'member_add\',
+				sURLMask: \'action=profile;u=%item_id%\',
+				bItemList: true,
+				sItemListContainerId: \'toAddItemContainer\'
+			});
+		// ]]></script>';
 }
 
 // Allow the moderator to enter a reason to each user being rejected.

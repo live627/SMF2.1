@@ -229,7 +229,7 @@ function template_maintain_members()
 					<input type="text" name="from_email" id="from_email" value="" onclick="document.getElementById(\'type_email\').checked = \'checked\'; document.getElementById(\'from_name\').value = \'\';" /><br />
 					<label for="type_name"><input type="radio" name="type" id="type_name" value="name" class="check" />', $txt['reattribute_username'], '</label>
 					<input type="text" name="from_name" id="from_name" value="" onclick="document.getElementById(\'type_name\').checked = \'checked\'; document.getElementById(\'from_email\').value = \'\';" /></p>
-					<p>', $txt['reattribute_current_member'], ': <input type="text" name="to" id="to" value="" /> <a href="', $scripturl, '?action=findmember;input=to;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a></p>
+					<p>', $txt['reattribute_current_member'], ': <input type="text" name="to" id="to" value="" /></p>
 					<p><input type="checkbox" name="posts" id="posts" checked="checked" class="check" />
 					<label for="posts">', $txt['reattribute_increase_posts'], '</label></p>
 					<p><input type="submit" id="do_attribute" value="', $txt['reattribute'], '" onclick="if (!checkAttributeValidity()) return false; return confirm(warningMessage);" /></p>
@@ -264,7 +264,18 @@ function template_maintain_members()
 				</form>
 			</td>
 		</tr>
-	</table>';
+	</table>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var oAttributeMemberSuggest = new smc_AutoSuggest({
+			sSelf: \'oAttributeMemberSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'attributeMember\',
+			sControlId: \'to\',
+			sSearchType: \'member\',
+			bItemList: false
+		});
+	// ]]></script>';
 }
 
 // Template for the topic maintenance tasks.

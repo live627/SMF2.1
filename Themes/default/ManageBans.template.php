@@ -78,7 +78,7 @@ function template_ban_edit()
 											', $txt['ban_on_username'], ':<br />';
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '
-											<input type="text" name="user" id="user" value="" size="40" onfocus="document.getElementById(\'user_check\').checked = true;" />&nbsp;<a href="', $scripturl, '?action=findmember;input=user;delim=null;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>';
+											<input type="text" name="user" id="user" value="" size="40" />';
 		else
 			echo '
 											', $context['ban_suggestions']['member']['link'], '
@@ -187,6 +187,7 @@ function template_ban_edit()
 	}
 	echo '
 	</table>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function updateStatus()
 		{
@@ -196,6 +197,22 @@ function template_ban_edit()
 			document.getElementById("cannot_login").disabled = document.getElementById("full_ban").checked;
 		}
 		add_load_event(updateStatus);
+
+		var oAddMemberSuggest = new smc_AutoSuggest({
+			sSelf: \'oAddMemberSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'user\',
+			sControlId: \'user\',
+			sSearchType: \'member\',
+			bItemList: false
+		});
+
+		function onUpdateName(oAutoSuggest)
+		{
+			document.getElementById(\'user_check\').checked = true;
+			return true;
+		}
+		oAddMemberSuggest.registerCallback(\'onBeforeUpdate\', \'onUpdateName\');
 	// ]]></script>';
 }
 
@@ -217,7 +234,6 @@ function template_ban_edit_trigger()
 							<td align="left" valign="top">
 								', $txt['ban_on_ip'], ':<br />
 								<input type="text" name="ip" value="', $context['ban_trigger']['ip']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'ip_ban\');" />
-							</td><td>
 							</td>
 						</tr><tr>';
 				if (empty($modSettings['disableHostnameLookup']))
@@ -226,7 +242,6 @@ function template_ban_edit_trigger()
 							<td align="left" valign="top">
 								', $txt['ban_on_hostname'], ':<br />
 								<input type="text" name="hostname" value="', $context['ban_trigger']['hostname']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'hostname_ban\');" />
-							</td><td>
 							</td>
 						</tr><tr>';
 				echo '
@@ -234,18 +249,15 @@ function template_ban_edit_trigger()
 							<td align="left" valign="top">
 								', $txt['ban_on_email'], ':<br />
 								<input type="text" name="email" value="', $context['ban_trigger']['email']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'email_ban\');" />
-							</td><td>
 							</td>
 						</tr><tr>
 							<td valign="bottom"><input type="radio" name="bantype" value="user_ban"', $context['ban_trigger']['banneduser']['selected'] ? ' checked="checked"' : '', ' /></td>
 							<td align="left" valign="top">
 								', $txt['ban_on_username'], ':<br />
 								<input type="text" name="user" id="user" value="', $context['ban_trigger']['banneduser']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'user_ban\');" />
-							</td><td valign="bottom">
-								<a href="', $scripturl, '?action=findmember;input=user;delim=null;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
 							</td>
 						</tr><tr>
-							<td colspan="3" align="right"><br />
+							<td colspan="2" align="right"><br />
 								<input type="submit" name="', $context['ban_trigger']['is_new'] ? 'add_new_trigger' : 'edit_trigger', '" value="', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger_submit'] : $txt['ban_edit_trigger_submit'], '" />
 							</td>
 						</tr>
@@ -256,7 +268,25 @@ function template_ban_edit_trigger()
 		<input type="hidden" name="bi" value="' . $context['ban_trigger']['id'] . '" />
 		<input type="hidden" name="bg" value="' . $context['ban_trigger']['group'] . '" />
 		<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
-	</form>';
+	</form>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var oAddMemberSuggest = new smc_AutoSuggest({
+			sSelf: \'oAddMemberSuggest\',
+			sSessionId: \'', $context['session_id'], '\',
+			sSuggestId: \'username\',
+			sControlId: \'user\',
+			sSearchType: \'member\',
+			bItemList: false
+		});
+
+		function onUpdateName(oAutoSuggest)
+		{
+			selectRadioByName(oAutoSuggest.oTextHandle.form.bantype, \'user_ban\');
+			return true;
+		}
+		oAddMemberSuggest.registerCallback(\'onBeforeUpdate\', \'onUpdateName\');
+	// ]]></script>';
 }
 
 ?>

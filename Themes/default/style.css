@@ -834,3 +834,28 @@ a.moderation_link, a.moderation_link:visited
 	color: #e0e0ff;
 	text-decoration: none;
 }
+
+/* These are for the auto suggest floating div type thing. */
+.auto_suggest_div
+{
+	border: 1px solid #505050;
+	position: absolute;
+	font-size: .7em;
+}
+
+/* An auto suggest item */
+.auto_suggest_item
+{
+	background-color: #FAFAFA;
+	padding: 2px;
+}
+
+/* hovered auto suggest item */
+.auto_suggest_item_hover
+{
+	background: url(images/autosuggest_back.gif) repeat-x;
+	background-color: #7897B4;
+	padding: 2px;
+	cursor: pointer;
+	color: white;
+}

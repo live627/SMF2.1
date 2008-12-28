@@ -520,7 +520,7 @@ function EditBoard()
 		);
 
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.real_name
+		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}moderators AS mods
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
 		WHERE mods.id_board = {int:current_board}',
@@ -530,10 +530,13 @@ function EditBoard()
 	);
 	$context['board']['moderators'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['board']['moderators'][] = $row['real_name'];
+		$context['board']['moderators'][$row['id_member']] = $row['real_name'];
 	$smcFunc['db_free_result']($request);
 
 	$context['board']['moderator_list'] = empty($context['board']['moderators']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['board']['moderators']) . '&quot;';
+
+	if (!empty($context['board']['moderators']))
+		list ($context['board']['last_moderator_id']) = array_slice(array_keys($context['board']['moderators']), -1);
 
 	// Get all the themes...
 	$request = $smcFunc['db_query']('', '
@@ -607,6 +610,14 @@ function EditBoard2()
 		$boardOptions['board_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 
 		$boardOptions['moderator_string'] = $_POST['moderators'];
+
+		if (isset($_POST['moderator_list']) && is_array($_POST['moderator_list']))
+		{
+			$moderators = array();
+			foreach ($_POST['moderator_list'] as $moderator)
+				$moderators[] = (int) $moderator;
+			$boardOptions['moderators'] = $moderators;
+		}
 
 		// Are they doing redirection?
 		$boardOptions['redirect'] = !empty($_POST['redirect_enable']) && isset($_POST['redirect_address']) && trim($_POST['redirect_address']) != '' ? trim($_POST['redirect_address']) : '';

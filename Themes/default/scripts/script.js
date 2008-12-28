@@ -276,14 +276,14 @@ String.prototype.php_urlencode = function()
 	return escape(this).replace(/\+/g, '%2b').replace('*', '%2a').replace('/', '%2f').replace('@', '%40');
 }
 
-String.prototype._replaceEntities = function(sInput, sNum)
+String.prototype._replaceEntities = function(sInput, sDummy, sNum)
 {
 	return String.fromCharCode(parseInt(sNum));
 }
 
 String.prototype.removeEntities = function()
 {
-	return this.replace(/&(?:amp;)?#(\d+);/g, this._replaceEntities);
+	return this.replace(/&(amp;)?#(\d+);/g, this._replaceEntities);
 }
 
 // Open a new window.

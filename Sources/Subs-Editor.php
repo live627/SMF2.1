@@ -44,9 +44,6 @@ if (!defined('SMF'))
 	void create_control_richedit(&array editorOptions)
 		// !!
 
-	void create_control_autosuggest(&array suggestOptions)
-		// !!
-
 	void create_control_verification(&array suggestOptions)
 		// !!
 
@@ -1347,41 +1344,6 @@ function create_control_richedit($editorOptions)
 	}
 }
 
-// Create an an autosuggest box?
-function create_control_autosuggest(&$suggestOptions)
-{
-	global $txt, $modSettings, $options, $smcFunc;
-	global $context, $settings, $user_info, $sourcedir;
-
-	// First autosuggest means we need to set up some bits...
-	if (empty($context['controls']['autosuggest']))
-	{
-		// Will want the template.
-		loadTemplate('GenericControls', 'suggest');
-
-		// Javascript is cool... says Grudge
-		$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/suggest.js"></script>';
-	}
-
-	// Need an ID and something to search for to suggest!
-	assert(isset($suggestOptions['id']));
-	assert(isset($suggestOptions['search_type']));
-	// Check the search type is registered.
-	assert(AutoSuggestHandler($suggestOptions['search_type']));
-
-	// Log this into our collection.
-	$context['controls']['autosuggest'][$suggestOptions['id']] = array(
-		'id' => $suggestOptions['id'],
-		'value' => !empty($suggestOptions['value']) ? $suggestOptions['value'] : '',
-		'search_type' => $suggestOptions['search_type'],
-		'size' => !empty($suggestOptions['size']) ? $suggestOptions['size'] : 40,
-		'width' => !empty($suggestOptions['width']) ? $suggestOptions['width'] : '200px',
-		'button' => !empty($suggestOptions['button']) ? $suggestOptions['button'] : false,
-		'callbacks' => !empty($suggestOptions['callbacks']) ? $suggestOptions['callbacks'] : array(),
-	);
-}
-
 // Create a anti-bot verification control?
 function create_control_verification(&$verificationOptions, $do_test = false)
 {
@@ -1653,8 +1615,8 @@ function AutoSuggest_Search_Member()
 		)
 	);
 	$xml_data = array(
-		'members' => array(
-			'identifier' => 'member',
+		'items' => array(
+			'identifier' => 'item',
 			'children' => array(),
 		),
 	);
@@ -1662,7 +1624,7 @@ function AutoSuggest_Search_Member()
 	{
 		$row['real_name'] = strtr($row['real_name'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
 
-		$xml_data['members']['children'][] = array(
+		$xml_data['items']['children'][] = array(
 			'attributes' => array(
 				'id' => $row['id_member'],
 			),

@@ -608,16 +608,6 @@ function MembergroupMembers()
 	}
 	$smcFunc['db_free_result']($request);
 
-	// Create a pretty auto suggest box for the member names.
-	require_once($sourcedir . '/Subs-Editor.php');
-
-	$suggestOptions = array(
-		'id' => 'toAdd',
-		'search_type' => 'member',
-		'width' => '130px',
-	);
-	create_control_autosuggest($suggestOptions);
-
 	// Select the template.
 	$context['sub_template'] = 'group_members';
 	$context['page_title'] = $txt['membergroups_members_title'] . ': ' . $context['group']['name'];

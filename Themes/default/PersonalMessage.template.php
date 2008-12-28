@@ -858,22 +858,6 @@ function template_send()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	// This function stops people appearing on both bcc and to.
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function onRecipientAdd(recipientType, memberID)
-		{
-			// Check whether it exists on the other type.
-			if (document.getElementById(\'suggest_template_\' + (recipientType == \'to\' ? \'bcc\' : \'to\') + \'_\' + memberID))
-			{
-				if (recipientType == \'to\')
-					suggestHandlebcc.deleteItem(memberID);
-				else
-					suggestHandleto.deleteItem(memberID);
-			}
-		}
-	// ]]></script>';
-
 	// Show which messages were sent successfully and which failed.
 	if (!empty($context['send_log']))
 	{
@@ -941,57 +925,37 @@ function template_send()
 	echo '
 							<tr valign="top">
 								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_to'], ':</b></td>
-								<td class="smalltext">
-									', template_control_autosuggest('to'), '<span class="smalltext" id="bcc_link" style="display: none;"><a href="#" onclick="document.getElementById(\'bcc_div\').style.display = \'\';document.getElementById(\'bcc_link\').style.display = \'none\';return false;">', $txt['make_bcc'], '</a> <a href="', $scripturl, '?action=helpadmin;help=pm_bcc" onclick="return reqWin(this.href);">(?)</a></span>';
+								<td>';
 
-	// Any existing recipients?
-	if (!empty($context['recipients']['to']))
-	{
-		foreach ($context['recipients']['to'] as $member)
-		{
-			echo '
-									<div id="suggest_template_to_', $member['id'], '">
-										<input type="hidden" name="recipient_to[]" value="', $member['id'], '" />
-										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_to_', $member['id'], '" class="extern">', $member['name'], '</a>
-										<input type="image" name="delete_recipient" value="', $member['id'], '" onclick="return suggestHandleto.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
-									</div>';
-		}
-	}
+	// Autosuggest will be added by the JavaScript later on.
+	echo '
+									<input type="text" name="to" id="to_control" value="', $context['to_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" />';
+
+	// A link to add BCC, only visible with JavaScript enabled.
+	echo '
+									<span class="smalltext" id="bcc_link_container" style="display: none;"></span>';
+
+	// A div that'll contain the items found by the autosuggest.
+	echo '
+									<div id="to_item_list_container"></div>';
 
 	echo '
-									<div id="suggest_template_to" style="visibility: hidden; display: none;">
-										<input type="hidden" name="recipient_to[]" value="::MEMBER_ID::" />
-										<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="recipient_link_to_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
-										<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" />
-									</div>
 								</td>
-							</tr><tr valign="top" id="bcc_div">
-								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</b></td>
-								<td class="smalltext">
-									', template_control_autosuggest('bcc');
+							</tr>';
 
-	// Any existing BCC recipients?
-	if (!empty($context['recipients']['bcc']))
-	{
-		foreach ($context['recipients']['bcc'] as $member)
-		{
-			echo '
-									<div id="suggest_template_bcc_', $member['id'], '">
-										<input type="hidden" name="recipient_bcc[]" value="', $member['id'], '" />
-										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_bcc_', $member['id'], '" class="extern">', $member['name'], '</a>
-										<input type="image" name="delete_recipient" value="', $member['id'], '" onclick="return suggestHandlebcc.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
-									</div>';
-		}
-	}
-
+	// This BCC row will be hidden by default if JavaScript is enabled.
 	echo '
-									<div id="suggest_template_bcc" style="visibility: hidden; display: none;">
-										<input type="hidden" name="recipient_bcc[]" value="::MEMBER_ID::" />
-										<a href="', $scripturl, '?action=profile;u=::MEMBER_ID::" id="recipient_link_bcc_::MEMBER_ID::" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">::MEMBER_NAME::</a>
-										<input type="image" onclick="return \'::DELETE_MEMBER_URL::\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" />
-									</div>
+							<tr valign="top" id="bcc_div">
+								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_bcc']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</b></td>
+								<td>
+									<input type="text" name="bcc" id="bcc_control" value="', $context['bcc_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" />
+									<div id="bcc_item_list_container"></div>
 								</td>
-							</tr><tr>
+							</tr>';
+
+	// The subject of the PM.
+	echo '
+							<tr>
 								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</b></td>
 								<td><input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" /></td>
 							</tr>';
@@ -1091,12 +1055,44 @@ function template_send()
 		</table>';
 
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
-
-	if (empty($context['recipients']['bcc']))
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc1"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			var oPersonalMessageSend = new smf_PersonalMessageSend({
+				sSelf: \'oPersonalMessageSend\',
+				sSessionId: \'', $context['session_id'], '\',
+				sToControlId: \'to_control\',
+				aToRecipients: [';
+	foreach ($context['recipients']['to'] as $i => $member)
 		echo '
-			document.getElementById(\'bcc_div\').style.display = \'none\';
-			document.getElementById(\'bcc_link\').style.display = \'\';';
+					{
+						sItemId: ', JavaScriptEscape($member['id']), ',
+						sItemName: ', JavaScriptEscape($member['name']), '
+					}', $i == count($context['recipients']['to']) - 1 ? '' : ',';
+
+	echo '
+				],
+				aBccRecipients: [';
+	foreach ($context['recipients']['bcc'] as $i => $member)
+		echo '
+					{
+						sItemId: ', JavaScriptEscape($member['id']), ',
+						sItemName: ', JavaScriptEscape($member['name']), '
+					}', $i == count($context['recipients']['bcc']) - 1 ? '' : ',';
+
+	echo '
+				],
+				sBccControlId: \'bcc_control\',
+				sBccDivId: \'bcc_div\',
+				sBccLinkId: \'bcc_link\',
+				sBccLinkContainerId: \'bcc_link_container\',
+				bBccShowByDefault: ', empty($context['recipients']['bcc']) && empty($context['bcc_value']) ? 'false' : 'true', ',
+				sShowBccLinkTemplate: ', JavaScriptEscape('
+					<a href="#" id="bcc_link">' . $txt['make_bcc'] . '</a> <a href="' . $scripturl . '?action=helpadmin;help=pm_bcc" onclick="return reqWin(this.href);">(?)</a>'
+				), '
+			});
+		
+		';
 
 	echo '
 			function saveEntities()

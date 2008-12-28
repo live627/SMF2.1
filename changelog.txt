@@ -72,6 +72,13 @@ December 2008
  ! Send http header 500 when an operation results in a fatal error, so search engines don't bother indexing it. (Errors.php)
  ! Redesigned the server settings area and moved a few settings to it. (Admin.php, ManageServer.php) [Bug 1323]
  & Added a few new strings for the new server settings sections. (Admin language file) [Bug 1323]
+ ! Restructured the autosuggest function, moving all configurable things to the template. (suggest.js, Subs-Editor.php)
+ ! Autosuggest wasn't generic enough to handle non-member types. (suggest.js) [Bug 2595]
+ ! Cleaned up the recipient handling logic in the PM send form. (PersonalMessage.php, PersonalMessage template)
+ ! Added autosuggest function to most member searching controls. (Groups.php, ManageBoards.php, ManageMemberGroups.php, ManageNews.php, ManageBans template, ManageBoards template, ManageMaintenance template, ManageMembergroups template, ManageNews template, ManagePaid template, Profile template) [Bug 2815, Bug 2571, Bug 2548, Bug 1758]
+ * Move the autosuggest style options from a separate css file to the main style.css as the control is too generic. (style.css, suggest.css)
+ * Restyled the autosuggest to make the items more readable and fit into the theme. (style.css)
+ ! Fixed old IE versions unable to deal with non-capturing parentheses in regular expressions. (script.js)
 
 
 November 2008

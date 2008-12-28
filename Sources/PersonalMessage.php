@@ -50,7 +50,7 @@ if (!defined('SMF'))
 	void MessagePost()
 		// !!! ?action=pm;sa=post
 
-	void messagePostError(array error_types, string to, string bcc)
+	void messagePostError(array error_types, array named_recipients, array recipient_ids)
 		// !!!
 
 	void MessagePost2()
@@ -1678,21 +1678,9 @@ function MessagePost()
 	// Store the ID for old compatibility.
 	$context['post_box_name'] = $editorOptions['id'];
 
-	// And make the to box...
-	$suggestOptions = array(
-		'id' => 'to',
-		'search_type' => 'member',
-		'width' => '130px',
-		'button' => $txt['pm_add'],
-		'callbacks' => array(
-			'onadd' => 'onRecipientAdd',
-		),
-	);
-	create_control_autosuggest($suggestOptions);
-	// ...and make the BCC.
-	$suggestOptions['id'] = 'bcc';
-	create_control_autosuggest($suggestOptions);
-
+	$context['to_value'] = '';
+	$context['bcc_value'] = '';
+	
 	$context['require_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
 	if ($context['require_verification'])
 	{
@@ -1708,7 +1696,7 @@ function MessagePost()
 }
 
 // An error in the message...
-function messagePostError($error_types, $to, $bcc)
+function messagePostError($error_types, $named_recipients, $recipient_ids = array())
 {
 	global $txt, $context, $scripturl, $modSettings;
 	global $smcFunc, $user_info, $sourcedir;
@@ -1725,9 +1713,9 @@ function messagePostError($error_types, $to, $bcc)
 		'to' => array(),
 		'bcc' => array(),
 	);
-	if (!empty($context['recipient_ids']['to']) || !empty($context['recipient_ids']['bcc']))
+	if (!empty($recipient_ids['to']) || !empty($recipient_ids['bcc']))
 	{
-		$allRecipients = array_merge($context['recipient_ids']['to'], $context['recipient_ids']['bcc']);
+		$allRecipients = array_merge($recipient_ids['to'], $recipient_ids['bcc']);
 
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member, real_name
@@ -1739,7 +1727,7 @@ function messagePostError($error_types, $to, $bcc)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			$recipientType = in_array($row['id_member'], $context['recipient_ids']['bcc']) ? 'bcc' : 'to';
+			$recipientType = in_array($row['id_member'], $recipient_ids['bcc']) ? 'bcc' : 'to';
 			$context['recipients'][$recipientType][] = array(
 				'id' => $row['id_member'],
 				'name' => $row['real_name'],
@@ -1852,22 +1840,8 @@ function messagePostError($error_types, $to, $bcc)
 		$context['visual_verification_id'] = $verificationOptions['id'];
 	}
 
-	// Get the sugget box done too.
-	$suggestOptions = array(
-		'id' => 'to',
-		'search_type' => 'member',
-		'width' => '130px',
-		'value' => $to,
-		'button' => $txt['pm_add'],
-		'callbacks' => array(
-			'onadd' => 'onRecipientAdd',
-		),
-	);
-	create_control_autosuggest($suggestOptions);
-	// ...and make the BCC.
-	$suggestOptions['id'] = 'bcc';
-	$suggestOptions['value'] = '';
-	create_control_autosuggest($suggestOptions);
+	$context['to_value'] = empty($named_recipients['to']) ? '' : '&quot;' . implode('&quot;, &quot;', $named_recipients['to']) . '&quot;';
+	$context['bcc_value'] = empty($named_recipients['bcc']) ? '' : '&quot;' . implode('&quot;, &quot;', $named_recipients['bcc']) . '&quot;';
 
 	// No check for the previous submission is needed.
 	checkSubmitOnce('free');
@@ -1936,122 +1910,102 @@ function MessagePost2()
 	$_REQUEST['subject'] = isset($_REQUEST['subject']) ? trim($_REQUEST['subject']) : '';
 	$_REQUEST['to'] = empty($_POST['to']) ? (empty($_GET['to']) ? '' : $_GET['to']) : $_POST['to'];
 	$_REQUEST['bcc'] = empty($_POST['bcc']) ? (empty($_GET['bcc']) ? '' : $_GET['bcc']) : $_POST['bcc'];
+	
+	// Route the input from the 'u' parameter to the 'to'-list.
+	if (!empty($_POST['u']))
+		$_POST['recipient_to'] = explode(',', $_POST['u']);
 
-	// Try and work out who they are mailing to.
-	$context['recipient_ids'] = array(
-		'to' => array(),
-		'bcc' => array(),
-	);
-
-	if (!empty($_POST['recipient_to']))
+	// Construct the list of recipients.	
+	$recipientList = array();
+	$namedRecipientList = array();
+	$namesNotFound = array();
+	foreach (array('to', 'bcc') as $recipientType)
 	{
-		foreach ($_POST['recipient_to'] as $recipient)
-			if ($recipient != '::MEMBER_ID::')
-				$context['recipient_ids']['to'][] = (int) $recipient;
-	}
-	// Same for bcc...
-	if (!empty($_POST['recipient_bcc']))
-	{
-		foreach ($_POST['recipient_bcc'] as $recipient)
-			if ($recipient != '::MEMBER_ID::')
-				$context['recipient_ids']['bcc'][] = (int) $recipient;
-	}
-
-	// Format the to and bcc members.
-	$input = array(
-		'to' => array(),
-		'bcc' => array()
-	);
-
-	// Passed some through the long way?
-	if (empty($_REQUEST['u']))
-	{
-		// To who..?
-		if (!empty($_REQUEST['to']))
+		
+		// First, let's see if there's user ID's given.
+		$recipientList[$recipientType] = array();
+		if (!empty($_POST['recipient_' . $recipientType]) && is_array($_POST['recipient_' . $recipientType]))
+		{
+			foreach ($_POST['recipient_' . $recipientType] as $recipient)
+				$recipientList[$recipientType][] = (int) $recipient;
+		}
+		
+		// Are there also literal names set?
+		if (!empty($_REQUEST[$recipientType]))
 		{
 			// We're going to take out the "s anyway ;).
-			$_REQUEST['to'] = strtr($_REQUEST['to'], array('\\"' => '"'));
-
-			preg_match_all('~"([^"]+)"~', $_REQUEST['to'], $matches);
-			$input['to'] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['to']))));
-		}
-
-		// Your secret's safe with me!
-		if (!empty($_REQUEST['bcc']))
-		{
-			// We're going to take out the "s anyway ;).
-			$_REQUEST['bcc'] = strtr($_REQUEST['bcc'], array('\\"' => '"'));
-
-			preg_match_all('~"([^"]+)"~', $_REQUEST['bcc'], $matches);
-			$input['bcc'] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['bcc']))));
-		}
-
-		foreach ($input as $rec_type => $rec)
-		{
-			foreach ($rec as $index => $member)
-				if (strlen(trim($member)) > 0)
-					$input[$rec_type][$index] = $smcFunc['htmlspecialchars']($smcFunc['strtolower'](trim($member)));
+			$recipientString = strtr($_REQUEST[$recipientType], array('\\"' => '"'));
+			
+			preg_match_all('~"([^"]+)"~', $recipientString, $matches);
+			$namedRecipientList[$recipientType] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $recipientString))));
+			
+			foreach ($namedRecipientList[$recipientType] as $index => $recipient)
+			{
+				if (strlen(trim($recipient)) > 0)
+					$namedRecipientList[$recipientType][$index] = $smcFunc['htmlspecialchars']($smcFunc['strtolower'](trim($recipient)));
 				else
-					unset($input[$rec_type][$index]);
-		}
+					unset($namedRecipientList[$recipientType][$index]);
+			}
+			
+			if (!empty($namedRecipientList[$recipientType]))
+			{
+				$foundMembers = findMembers($namedRecipientList[$recipientType]);
 
-		// Find the requested members - bcc and to.
-		$foundMembers = findMembers(array_merge($input['to'], $input['bcc']));
-
-		// Store IDs of the members that were found.
-		foreach ($foundMembers as $member)
-		{
-			// It's easier this way.
-			$member['name'] = strtr($member['name'], array('&#039;' => '\''));
-
-			foreach ($input as $rec_type => $to_members)
-				if (array_intersect(array($smcFunc['strtolower']($member['username']), $smcFunc['strtolower']($member['name']), $smcFunc['strtolower']($member['email'])), $to_members))
+				// Assume all are not found, until proven otherwise.
+				$namesNotFound[$recipientType] = $namedRecipientList[$recipientType];
+				
+				foreach ($foundMembers as $member)
 				{
-					$context['recipient_ids'][$rec_type][] = $member['id'];
-
-					// Get rid of this username. The ones that remain were not found.
-					$input[$rec_type] = array_diff($input[$rec_type], array($smcFunc['strtolower']($member['username']), $smcFunc['strtolower']($member['name']), $smcFunc['strtolower']($member['email'])));
+					$testNames = array(
+						$smcFunc['strtolower']($member['username']),
+						$smcFunc['strtolower']($member['name']),
+						$smcFunc['strtolower']($member['email']),
+					);
+					
+					if (count(array_intersect($testNames, $namedRecipientList[$recipientType])) !== 0)
+					{
+						$recipientList[$recipientType][] = $member['id'];
+		
+						// Get rid of this username, since we found it.
+						$namesNotFound[$recipientType] = array_diff($namesNotFound[$recipientType], $testNames);
+					}
 				}
+			}
 		}
-	}
-	else
-	{
-		$_REQUEST['u'] = explode(',', $_REQUEST['u']);
-		foreach ($_REQUEST['u'] as $key => $uID)
-			$_REQUEST['u'][$key] = (int) $uID;
-		$_REQUEST['u'] = array_unique($_REQUEST['u']);
 
-		$request = $smcFunc['db_query']('', '
-			SELECT id_member
-			FROM {db_prefix}members
-			WHERE id_member IN ({array_int:user_list})
-			LIMIT ' . count($_REQUEST['u']),
-			array(
-				'user_list' => $_REQUEST['u'],
-			)
-		);
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$context['recipient_ids']['to'][] = $row['id_member'];
-		$smcFunc['db_free_result']($request);
+		// Selected a recipient to be deleted? Remove them now.
+		if (!empty($_POST['delete_recipient']))
+			$recipientList[$recipientType] = array_diff($recipientList[$recipientType], array((int) $_POST['delete_recipient']));
+		
+		// Make sure we don't include the same name twice
+		$recipientList[$recipientType] = array_unique($recipientList[$recipientType]);
 	}
-	$context['recipient_ids']['to'] = array_unique($context['recipient_ids']['to']);
-	$context['recipient_ids']['bcc'] = array_unique($context['recipient_ids']['bcc']);
 
 	// Are we changing the recipients some how?
-	if (!empty($_POST['delete_recipient']))
-	{
-		$is_recipient_change = true;
-		$recipient_id = (int) $_POST['delete_recipient'];
-		foreach ($context['recipient_ids'] as $rec_type => $dummy)
-			foreach ($context['recipient_ids'][$rec_type] as $k => $member)
-			{
-				if ($member == $recipient_id)
-					unset($context['recipient_ids'][$rec_type][$k]);
-			}
-	}
-	elseif (!empty($_POST['to_submit']) || !empty($_POST['bcc_submit']))
-		$is_recipient_change = true;
+	$is_recipient_change = !empty($_POST['delete_recipient']) || !empty($_POST['to_submit']) || !empty($_POST['bcc_submit']);
 
+	// Check if there's at least one recipient.
+	if (empty($recipientList['to']) && empty($recipientList['bcc']))
+		$post_errors[] = 'no_to';
+
+	// Make sure that we remove the members who did get it from the screen.
+	if (!$is_recipient_change)
+	{
+		foreach ($recipientList as $recipientType => $dummy)
+		{
+			if (!empty($namesNotFound[$recipientType]))
+			{
+				$post_errors[] = 'bad_' . $recipientType;
+				
+				// Since we already have a post error, remove the previous one.
+				$post_errors = array_diff($post_errors, array('no_to'));
+				
+				foreach ($namesNotFound[$recipientType] as $name)
+					$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $name);
+			}
+		}		
+	}
+	
 	// Did they make any mistakes?
 	if ($_REQUEST['subject'] == '')
 		$post_errors[] = 'no_subject';
@@ -2059,8 +2013,6 @@ function MessagePost2()
 		$post_errors[] = 'no_message';
 	elseif (!empty($modSettings['max_messageLength']) && $smcFunc['strlen']($_REQUEST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
-	if (empty($context['recipient_ids']['to']) && empty($context['recipient_ids']['bcc']) && empty($_REQUEST['u']))
-		$post_errors[] = 'no_to';
 
 	// Wrong verification code?
 	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'])
@@ -2078,8 +2030,8 @@ function MessagePost2()
 	}
 
 	// If they did, give a chance to make ammends.
-	if (!empty($post_errors) && empty($is_recipient_change))
-		return messagePostError($post_errors, empty($input['to']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['to']) . '&quot;', empty($input['bcc']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['bcc']) . '&quot;');
+	if (!empty($post_errors) && !$is_recipient_change && !isset($_REQUEST['preview']))
+		return messagePostError($post_errors, $namedRecipientList, $recipientList);
 
 	// Want to take a second glance before you send?
 	if (isset($_REQUEST['preview']))
@@ -2100,24 +2052,32 @@ function MessagePost2()
 		$context['page_title'] = $txt['preview'] . ' - ' . $context['preview_subject'];
 
 		// Pretend they messed up :P.
-		return messagePostError(array(), empty($input['to']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['to']) . '&quot;', empty($input['bcc']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['bcc']) . '&quot;');
+		return messagePostError(array(), $namedRecipientList, $recipientList);
 	}
+	
 	// Adding a recipient cause javascript ain't working?
-	elseif (!empty($is_recipient_change))
+	elseif ($is_recipient_change)
 	{
 		// Maybe we couldn't find one?
-		foreach ($input as $rec_type => $rec)
+		foreach ($namesNotFound as $recipientType => $names)
 		{
-			// Either bad_to or bad_bcc.
-			$post_errors[] = 'bad_' . $rec_type;
-			foreach ($rec as $i => $member)
-			{
-				$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $input[$rec_type][$i]);
-			}
+			$post_errors[] = 'bad_' . $recipientType;
+			foreach ($names as $name)
+				$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $name);
 		}
 
-		return messagePostError(array(), empty($input['to']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['to']) . '&quot;', empty($input['bcc']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['bcc']) . '&quot;');
+		return messagePostError(array(), $namedRecipientList, $recipientList);
 	}
+
+	// Before we send the PM, let's make sure we don't have an abuse of numbers.
+	elseif (!empty($modSettings['max_pm_recipients']) && count($recipientList['to']) + count($recipientList['bcc']) > $modSettings['max_pm_recipients'] && !allowedTo(array('moderate_forum', 'send_mail', 'admin_forum')))
+	{
+		$context['send_log'] = array(
+			'sent' => array(),
+			'failed' => array(sprintf($txt['pm_too_many_recipients'], $modSettings['max_pm_recipients'])),
+		);
+		return messagePostError($post_errors, $namedRecipientList, $recipientList);
+	}	
 
 	// Protect from message spamming.
 	spamProtection('pm');
@@ -2125,50 +2085,16 @@ function MessagePost2()
 	// Prevent double submission of this form.
 	checkSubmitOnce('check');
 
-	// Initialize member ID array.
-	$recipients = $context['recipient_ids'];
 
-	// Before we send the PM, let's make sure we don't have an abuse of numbers.
-	if (!empty($modSettings['max_pm_recipients']) && count($recipients['to']) + count($recipients['bcc']) > $modSettings['max_pm_recipients'] && !allowedTo(array('moderate_forum', 'send_mail', 'admin_forum')))
-	{
+	// Do the actual sending of the PM.
+	if (!empty($recipientList['to']) || !empty($recipientList['bcc']))
+		$context['send_log'] = sendpm($recipientList, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0);
+	else
 		$context['send_log'] = array(
 			'sent' => array(),
-			'failed' => array(sprintf($txt['pm_too_many_recipients'], $modSettings['max_pm_recipients'])),
+			'failed' => array()
 		);
-	}
-	// Do the actual sending of the PM.
-	else
-	{
-		if (!empty($recipients['to']) || !empty($recipients['bcc']))
-			$context['send_log'] = sendpm($recipients, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0);
-		else
-			$context['send_log'] = array(
-				'sent' => array(),
-				'failed' => array()
-			);
-
-		$sentIDs = array_keys($context['send_log']['sent']);
-		// Make sure that we remove the members who did get it from the screen.
-		foreach ($context['recipient_ids'] as $rec_type => $dummy)
-			foreach ($context['recipient_ids'][$rec_type] as $k => $member)
-			{
-				if (in_array($member, $sentIDs))
-					unset($context['recipient_ids'][$rec_type][$k]);
-			}
-	}
-
-	// Add a log message for all recipients that were not found.
-	foreach ($input as $rec_type => $rec)
-	{
-		// Either bad_to or bad_bcc.
-		if (!empty($rec) && !in_array('bad_' . $rec_type, $post_errors))
-			$post_errors[] = 'bad_' . $rec_type;
-		foreach ($rec as $i => $member)
-		{
-			$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $input[$rec_type][$i]);
-		}
-	}
-
+	
 	// Mark the message as "replied to".
 	if (!empty($context['send_log']['sent']) && !empty($_REQUEST['replied_to']) && isset($_REQUEST['f']) && $_REQUEST['f'] == 'inbox')
 	{
@@ -2186,7 +2112,10 @@ function MessagePost2()
 
 	// If one or more of the recipient were invalid, go back to the post screen with the failed usernames.
 	if (!empty($context['send_log']['failed']))
-		return messagePostError($post_errors, empty($input['to']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['to']) . '&quot;', empty($input['bcc']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['bcc']) . '&quot;');
+		return messagePostError($post_errors, $namesNotFound, array(
+			'to' => array_intersect($recipientList['to'], $context['send_log']['failed']),
+			'bcc' => array_intersect($recipientList['bcc'], $context['send_log']['failed'])
+		));
 
 	// Go back to the where they sent from, if possible...
 	redirectexit($context['current_label_redirect']);

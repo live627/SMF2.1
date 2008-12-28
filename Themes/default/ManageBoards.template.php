@@ -357,7 +357,7 @@ function template_modify_board()
 			</td>
 			<td valign="top" align="left" style="white-space: nowrap;">
 				<input type="text" name="moderators" id="moderators" value="', $context['board']['moderator_list'], '" size="30" />
-				<a href="', $scripturl, '?action=findmember;input=moderators;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
+				<div id="moderator_container"></div>
 			</td>
 		</tr>
 		<tr class="windowbg2">
@@ -468,7 +468,32 @@ function template_modify_board()
 			</td>
 		</tr>
 	</table>
-</form>';
+</form>
+<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	var oModeratorSuggest = new smc_AutoSuggest({
+		sSelf: \'oModeratorSuggest\',
+		sSessionId: \'', $context['session_id'], '\',
+		sSuggestId: \'moderators\',
+		sControlId: \'moderators\',
+		sSearchType: \'member\',
+		bItemList: true,
+		sPostName: \'moderator_list\',
+		sURLMask: \'action=profile;u=%item_id%\',
+		sItemListContainerId: \'moderator_container\',
+		aListItems: [';
+
+	foreach ($context['board']['moderators'] as $id_member => $member_name)
+		echo '
+					{
+						sItemId: ', JavaScriptEscape($id_member), ',
+						sItemName: ', JavaScriptEscape($member_name), '
+					}', $id_member == $context['board']['last_moderator_id'] ? '' : ',';
+
+	echo '
+		]
+	});
+// ]]></script>';
 
 	// Javascript for deciding what to show.
 	echo '

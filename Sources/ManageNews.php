@@ -327,6 +327,22 @@ function ComposeMailing()
 		}
 	}
 
+	if (isset($_POST['member_list']) && is_array($_POST['member_list']))
+	{
+		$members = array();
+		foreach ($_POST['member_list'] as $member_id)
+			$members[] = (int) $member_id;
+		$_POST['members'] = implode(',', $members);
+	}
+
+	if (isset($_POST['exclude_member_list']) && is_array($_POST['exclude_member_list']))
+	{
+		$members = array();
+		foreach ($_POST['exclude_member_list'] as $member_id)
+			$members[] = (int) $member_id;
+		$_POST['exclude_members'] = implode(',', $members);
+	}
+
 	// Clean the other vars.
 	SendMailing(true);
 

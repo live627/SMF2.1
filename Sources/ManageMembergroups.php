@@ -802,36 +802,63 @@ function EditMembergroup()
 				'current_group' => $_REQUEST['group'],
 			)
 		);
-		if (!empty($moderator_string) && $_POST['min_posts'] == -1 && $_REQUEST['group'] != 3)
+		if ((!empty($moderator_string) || !empty($_POST['moderator_list'])) && $_POST['min_posts'] == -1 && $_REQUEST['group'] != 3)
 		{
 			// Get all the usernames from the string
-			$moderator_string = strtr(preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($moderator_string), ENT_QUOTES), array('&quot;' => '"'));
-			preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
-			$moderators = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $moderator_string)));
-			for ($k = 0, $n = count($moderators); $k < $n; $k++)
+			if (!empty($moderator_string))
 			{
-				$moderators[$k] = trim($moderators[$k]);
+				$moderator_string = strtr(preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($moderator_string), ENT_QUOTES), array('&quot;' => '"'));
+				preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
+				$moderators = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $moderator_string)));
+				for ($k = 0, $n = count($moderators); $k < $n; $k++)
+				{
+					$moderators[$k] = trim($moderators[$k]);
 
-				if (strlen($moderators[$k]) == 0)
-					unset($moderators[$k]);
+					if (strlen($moderators[$k]) == 0)
+						unset($moderators[$k]);
+				}
+
+				// Find all the id_member's for the member_name's in the list.
+				$group_moderators = array();
+				if (!empty($moderators))
+				{
+					$request = $smcFunc['db_query']('', '
+						SELECT id_member
+						FROM {db_prefix}members
+						WHERE member_name IN ({array_string:moderators}) OR real_name IN ({array_string:moderators})
+						LIMIT ' . count($moderators),
+						array(
+							'moderators' => $moderators,
+						)
+					);
+					while ($row = $smcFunc['db_fetch_assoc']($request))
+						$group_moderators[] = $row['id_member'];
+					$smcFunc['db_free_result']($request);
+				}
 			}
-
-			// Find all the id_member's for the member_name's in the list.
-			$group_moderators = array();
-			if (!empty($moderators))
+			else
 			{
-				$request = $smcFunc['db_query']('', '
-					SELECT id_member
-					FROM {db_prefix}members
-					WHERE member_name IN ({array_string:moderators}) OR real_name IN ({array_string:moderators})
-					LIMIT ' . count($moderators),
-					array(
-						'moderators' => $moderators,
-					)
-				);
-				while ($row = $smcFunc['db_fetch_assoc']($request))
-					$group_moderators[] = $row['id_member'];
-				$smcFunc['db_free_result']($request);
+				$moderators = array();
+				foreach ($_POST['moderator_list'] as $moderator)
+					$moderators[] = (int) $moderator;
+
+				$group_moderators = array();
+				if (!empty($moderators))
+				{
+					$request = $smcFunc['db_query']('', '
+						SELECT id_member
+						FROM {db_prefix}members
+						WHERE id_member IN ({array_int:moderators})
+						LIMIT {int:num_moderators}',
+						array(
+							'moderators' => $moderators,
+							'num_moderators' => count($moderators),
+						)
+					);
+					while ($row = $smcFunc['db_fetch_assoc']($request))
+						$group_moderators[] = $row['id_member'];
+					$smcFunc['db_free_result']($request);
+				}
 			}
 
 			// Found some?
@@ -900,7 +927,7 @@ function EditMembergroup()
 
 	// Get any moderators for this group
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.real_name
+		SELECT mem.id_member, mem.real_name
 		FROM {db_prefix}group_moderators AS mods
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
 		WHERE mods.id_group = {int:current_group}',
@@ -910,10 +937,13 @@ function EditMembergroup()
 	);
 	$context['group']['moderators'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['group']['moderators'][] = $row['real_name'];
+		$context['group']['moderators'][$row['id_member']] = $row['real_name'];
 	$smcFunc['db_free_result']($request);
 
 	$context['group']['moderator_list'] = empty($context['group']['moderators']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['group']['moderators']) . '&quot;';
+
+	if (!empty($context['group']['moderators']))
+		list ($context['group']['last_moderator_id']) = array_slice(array_keys($context['group']['moderators']), -1);
 
 	// Get a list of boards this membergroup is allowed to see.
 	$context['boards'] = array();
