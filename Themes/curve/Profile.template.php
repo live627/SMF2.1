@@ -2516,6 +2516,7 @@ function template_profile_avatar_select()
 												document.getElementById("avatar").style.width = parseInt((maxHeight * tempImage.width) / tempImage.height) + "px";
 												document.getElementById("avatar").style.height = maxHeight + "px";
 											}
+											document.getElementById("avatar").alt = "";
 											document.getElementById("avatar").src = src;
 										}
 									// ]]></script>

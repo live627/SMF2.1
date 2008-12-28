@@ -81,6 +81,7 @@ December 2008
  ! Fixed old IE versions unable to deal with non-capturing parentheses in regular expressions. (script.js)
  ! The column size is incorrectly interpreted from the field definition given by MySQL. (DbPackages-mysql.php) [Bug 2842]
  ! A comment line still mentioned the old style column names. (Subs-Editor.php) [Bug 2840]
+ * Make sure the alt-value of the avatar preview doesn't contain a value from a previously selected avatar. (Profile template) [Bug 2838]
 
 
 November 2008
