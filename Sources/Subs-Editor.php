@@ -1593,7 +1593,7 @@ function AutoSuggestHandler($checkRegistered = null)
 	}
 }
 
-// Search for a member - by realName or memberName by default.
+// Search for a member - by real_name or member_name by default.
 function AutoSuggest_Search_Member()
 {
 	global $user_info, $txt, $smcFunc;
