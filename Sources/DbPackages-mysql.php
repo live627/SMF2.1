@@ -516,7 +516,7 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 			$auto = strpos($row['Extra'], 'auto_increment') !== false ? true : false;
 
 			// Can we split out the size?
-			if (preg_match('~(.+?)\s*(\(\d+\))~i', $row['Type'], $matches))
+			if (preg_match('~(.+?)\s*\((\d+)\)~i', $row['Type'], $matches) === 1)
 			{
 				$type = $matches[1];
 				$size = $matches[2];

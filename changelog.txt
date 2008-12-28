@@ -79,6 +79,7 @@ December 2008
  * Move the autosuggest style options from a separate css file to the main style.css as the control is too generic. (style.css, suggest.css)
  * Restyled the autosuggest to make the items more readable and fit into the theme. (style.css)
  ! Fixed old IE versions unable to deal with non-capturing parentheses in regular expressions. (script.js)
+ ! The column size is incorrectly interpreted from the field definition given by MySQL. (DbPackages-mysql.php) [Bug 2842]
 
 
 November 2008
