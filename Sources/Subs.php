@@ -223,8 +223,17 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			'memberlist_updated' => time(),
 		);
 
-		// Are we using registration approval?
-		if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
+		// #1 latest member ID, #2 the real name for a new registration.
+		if (is_numeric($parameter1))
+		{
+			$changes['latestMember'] = $parameter1;
+			$changes['latestRealName'] = $parameter2;
+
+			updateSettings(array('totalMembers' => true), true);
+		}
+
+		// We need to calculate the totals.
+		else
 		{
 			// Update the latest activated member (highest id_member) and count.
 			$result = $smcFunc['db_query']('', '
@@ -251,50 +260,21 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			list ($changes['latestRealName']) = $smcFunc['db_fetch_row']($result);
 			$smcFunc['db_free_result']($result);
 
-			// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
-			$result = $smcFunc['db_query']('', '
-				SELECT COUNT(*)
-				FROM {db_prefix}members
-				WHERE is_activated IN (3, 4)',
-				array(
-				)
-			);
-			list ($changes['unapprovedMembers']) = $smcFunc['db_fetch_row']($result);
-			$smcFunc['db_free_result']($result);
-		}
-		// If $parameter1 is a number, it's the new id_member and #2 is the real name for a new registration.
-		elseif ($parameter1 !== null && $parameter1 !== false)
-		{
-			$changes['latestMember'] = $parameter1;
-			$changes['latestRealName'] = $parameter2;
-
-			updateSettings(array('totalMembers' => true), true);
-		}
-		// If $parameter1 is false, and approval is off, we need change nothing.
-		elseif ($parameter1 !== false)
-		{
-			// Update the latest member (highest id_member) and count.
-			$result = $smcFunc['db_query']('', '
-				SELECT COUNT(*), MAX(id_member)
-				FROM {db_prefix}members',
-				array(
-				)
-			);
-			list ($changes['totalMembers'], $changes['latestMember']) = $smcFunc['db_fetch_row']($result);
-			$smcFunc['db_free_result']($result);
-
-			// Get the latest member's display name.
-			$result = $smcFunc['db_query']('', '
-				SELECT real_name
-				FROM {db_prefix}members
-				WHERE id_member = {int:id_member}
-				LIMIT 1',
-				array(
-					'id_member' => (int) $changes['latestMember'],
-				)
-			);
-			list ($changes['latestRealName']) = $smcFunc['db_fetch_row']($result);
-			$smcFunc['db_free_result']($result);
+			// Are we using registration approval?
+			if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
+			{
+				// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
+				$result = $smcFunc['db_query']('', '
+					SELECT COUNT(*)
+					FROM {db_prefix}members
+					WHERE is_activated IN ({array_int:activation_status})',
+					array(
+						'activation_status' => array(3, 4),
+					)
+				);
+				list ($changes['unapprovedMembers']) = $smcFunc['db_fetch_row']($result);
+				$smcFunc['db_free_result']($result);
+			}
 		}
 
 		updateSettings($changes);
