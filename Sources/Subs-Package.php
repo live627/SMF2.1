@@ -116,7 +116,7 @@ if (!defined('SMF'))
 		- parses special identifiers out of the specified path.
 		- returns the parsed path.
 
-	void deltree(string path, bool delete_directory = false)
+	void deltree(string path, bool delete_directory = true)
 		- deletes a directory, and all the files and direcories inside it.
 		- requires access to delete these files.
 
