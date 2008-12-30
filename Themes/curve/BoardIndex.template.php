@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; BoardIndex
+// Version: 2.0 RC1; BoardIndex
 
 function template_main()
 {
@@ -231,7 +231,7 @@ function template_info_center()
 	// Here's where the "Info Center" starts...
 	echo '
 	<span id="upperframe"><span></span></span>
-	<div id="infocenter_frame"><div class="frame">
+	<div id="roundframe"><div class="frame">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<a href="#" onclick="infoHeader.toggle(); return false;"><img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" /></a>
 			', sprintf($txt['info_center_title'], $context['forum_name']), '
@@ -368,7 +368,7 @@ function template_info_center()
 
 	echo $context['show_who'] ? '</a>' : '', '
 			</p>
-			<p class="inline">';
+			<p class="inline smalltext">';
 
 	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
 	if (!empty($context['users_online']))
@@ -384,7 +384,7 @@ function template_info_center()
 
 	echo '
 			</p>
-			<p class="last middletext">
+			<p class="last smalltext">
 				', $txt['most_online_today'], ': <strong>', $modSettings['mostOnlineToday'], '</strong>.
 				', $txt['most_online_ever'], ': ', $modSettings['mostOnline'], ' (' , timeformat($modSettings['mostDate']), ')
 			</p>';

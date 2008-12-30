@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Login
+// Version: 2.0 RC1; Login
 
 // This is just the basic "login" form.
 function template_login()
@@ -9,7 +9,7 @@ function template_login()
 	echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
-		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
+		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 			<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
 				<tr class="titlebg">
 					<td colspan="2">
@@ -22,7 +22,7 @@ function template_login()
 			echo '
 				</tr><tr class="windowbg">
 					<td align="center" colspan="2" style="padding: 1ex;">
-						<b class="error">', $error, '</b>
+						<strong class="error">', $error, '</strong>
 					</td>';
 
 	// Or perhaps there's some special description for this time?
@@ -66,7 +66,7 @@ function template_login()
 	// If they have deleted their account, give them a chance to change their mind.
 	if (isset($context['login_show_undelete']))
 		echo '
-					<td align="right"><b class="alert">', $txt['undelete_account'], ':</b></td>
+					<td align="right"><strong class="alert">', $txt['undelete_account'], ':</strong></td>
 					<td><input type="checkbox" name="undelete" class="check" /></td>
 				</tr><tr class="windowbg">';
 	echo '
@@ -228,7 +228,7 @@ function template_admin_login()
 
 	if (!empty($context['incorrect_password']))
 		echo '
-				<span class="smalltext error">', $txt['admin_incorrect_password'], '</span><br />';
+				<span class="error" class="smalltext">', $txt['admin_incorrect_password'], '</span><br />';
 
 	echo '
 				<input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" />

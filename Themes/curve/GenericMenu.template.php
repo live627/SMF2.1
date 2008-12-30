@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; GenericMenu
+// Version: 2.0 RC1; GenericMenu
 
 // This contains the html for the side bar of the admin center, which is used for all admin pages.
 function template_generic_menu_sidebar_above()
@@ -22,7 +22,7 @@ function template_generic_menu_sidebar_above()
 		// Show the section header - and pump up the line spacing for readability.
 		echo '
 			<div class="adm_section">
-				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<h3 class="titlebg2">
 					', $section['title'];
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
@@ -104,7 +104,7 @@ function template_generic_menu_dropdown_above()
 		</p>';
 
 	echo '
-	<div id="adm_container" class="dropmenu titlebg">
+	<div id="adm_container" class="dropmenu">
 		<ul id="adm_menu">';
 
 	// Main areas first.

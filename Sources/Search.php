@@ -74,7 +74,7 @@ function PlushSearch1()
 	loadLanguage('Search');
 	// Don't load this in XML mode.
 	if (!isset($_REQUEST['xml']))
-		loadTemplate('Search');
+		loadTemplate('Search', 'search');
 
 	// Check the user's permissions.
 	isAllowedTo('search_posts');
@@ -187,6 +187,9 @@ function PlushSearch1()
 			'name' => $category['name'],
 			'child_ids' => array_keys($category['boards'])
 		);
+		// support for Curve
+		$context['categories'][$category['id']]['child_ids'] = array_keys($category['boards']);
+		
 		$temp_boards = array_merge($temp_boards, array_values($category['boards']));
 	}
 
@@ -303,7 +306,7 @@ function PlushSearch2()
 
 	loadLanguage('Search');
 	if (!isset($_REQUEST['xml']))
-		loadTemplate('Search');
+		loadTemplate('Search', 'search');
 	//If we're doing XML we need to use the results template regardless really.
 	else
 		$context['sub_template'] = 'results';

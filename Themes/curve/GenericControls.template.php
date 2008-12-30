@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; GenericControls
+// Version: 2.0 RC1; GenericControls
 
 // This function displays all the stuff you get with a richedit box - BBC, smileys etc.
 function template_control_richedit($editor_id, $display_controls = 'all')
@@ -215,6 +215,33 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 	}
 }
 
+// Display an auto suggest box.
+function template_control_autosuggest($suggest_id)
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	$suggest_context = &$context['controls']['autosuggest'][$suggest_id];
+
+	echo '
+	<input type="text" name="', $suggest_id, '" id="', $suggest_id, '" value="', $suggest_context['value'], '" tabindex="', $context['tabindex']++, '" size="', $suggest_context['size'], '" style="width: ', $suggest_context['width'], ';" />';
+
+	if (!empty($suggest_context['button']))
+		echo '
+	<input type="submit" name="', $suggest_id, '_submit" value="', $suggest_context['button'], '" onclick="return suggestHandle', $suggest_id, '.onSubmit();" />';
+
+	echo '
+	<div class="auto_suggest_div" id="suggest_div_', $suggest_id, '" style="visibility: hidden;"></div>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var suggestHandle', $suggest_id, ' = new smfSuggest(\'', $context['session_id'], '\', \'', $suggest_id, '\');';
+
+	if (!empty($suggest_context['callbacks']))
+		foreach ($suggest_context['callbacks'] as $type => $function)
+			echo '
+			suggestHandle', $suggest_id, '.registerCallback(\'', $type, '\', ', $function, ');';
+	echo '
+	// ]]></script>';
+}
+
 // What's this, verification?!
 function template_control_verification($verify_id, $display_type = 'all', $reset = false)
 {
@@ -259,7 +286,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 				<img src="', $verify_context['image_href'], ';letter=5" alt="', $txt['visual_verification_description'], '" id="verification_image_', $verify_id, '_5" />';
 			echo '
 				<div class="smalltext" style="margin: 4px 0 8px 0;">
-					<a href="', $verify_context['image_href'], ';sound" id="visual_verification_', $verify_id, '_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_', $verify_id, '_refresh">', $txt['visual_verification_request_new'], '</a><br /><br />
+					<a href="', $verify_context['image_href'], ';sound" id="visual_verification_', $verify_id, '_sound" rel="nofollow">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_', $verify_id, '_refresh">', $txt['visual_verification_request_new'], '</a><br /><br />
 					', $txt['visual_verification_description'], ':<br />
 					<input type="text" name="', $verify_id, '_vv[code]" value="', !empty($verify_context['text_value']) ? $verify_context['text_value'] : '', '" size="30" tabindex="', $context['tabindex']++, '" />
 				</div>';

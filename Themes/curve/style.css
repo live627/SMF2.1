@@ -28,9 +28,9 @@ html
 /* set a fontsize that will look the same in all browsers. */
 body
 {
-	font: 78%/115% verdana, Helvetica, sans-serif;
+	font: 75%/125% verdana, Helvetica, sans-serif;
 	margin: 5px auto;
-	padding: 25px 0 20px 0;
+	padding: 5px 0 20px 0;
 	width: 85%;
 	max-width: 1600px;
 	min-width: 650px;
@@ -131,10 +131,12 @@ ul, ul li
 {
 	font-size: 0.9em;
 	line-height: 1em; 
+	font-family: verdana, sans-serif;
 }
 .normaltext
 {
 	font-size: 1em;
+	line-height: 1.2em; 
 }
 .largetext
 {

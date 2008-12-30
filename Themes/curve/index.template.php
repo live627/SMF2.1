@@ -230,7 +230,7 @@ function template_body_above()
 			echo '
 				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 				<form id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-					' , $txt['login_or_register'], '<br />
+					<div class="info">' , $txt['login_or_register'], '</div>
 					<input type="text" name="user" size="10" />
 					<input type="password" name="passwrd" size="10" />
 					<select name="cookielength">
@@ -241,7 +241,7 @@ function template_body_above()
 						<option value="-1" selected="selected">', $txt['forever'], '</option>
 					</select>
 					<input type="submit" value="', $txt['login'], '" /><br />
-					', $txt['quick_login_dec'];
+					<div class="info">', $txt['quick_login_dec'], '</div>';
 
 			if (!empty($modSettings['enableOpenID']))
 				echo'
@@ -254,7 +254,7 @@ function template_body_above()
 	
 		echo '
 			</li>
-			<li class="news middletext">';
+			<li class="news normaltext">';
 	
 		// Show a random news item? (or you could pick one from news_lines...)
 		if (!empty($settings['enable_news']))
@@ -436,7 +436,7 @@ function template_menu()
 }
 
 // Generate a strip of buttons.
-function template_button_strip($button_strip, $direction = '', $custom_td = '')
+function template_button_strip($button_strip, $direction = '', $force_reset = false, $custom_td = '')
 {
 	global $settings, $context, $txt, $scripturl;
 

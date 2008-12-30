@@ -1,39 +1,4 @@
 /* ************************************* */
-/* styles from Register.template       */
-/* ************************************* */
-.register_form dt
-{
-	clear: left;
-	float: left;
-	width: 50%;
-	padding:0.5em;
-	display: block;
-}
-.register_form dt p
-{
-	padding: 0;
-	margin: 0;	
-}
-.register_form dd
-{
-	padding: 0.5em;
-	min-height: 15px;	
-}
-.register_captcha
-{
-	min-height: 80px;
-}
-*
-{
-	padding: 0;
-	margin: 0;
-}
-
-/* ************************************* */
-/* styles from Login.template           */
-/* ************************************* */
-
-/* ************************************* */
 /* styles from Search.template           */
 /* ************************************* */
 #search_error
@@ -59,7 +24,6 @@
 #advanced_search dt
 {
 	padding: 0.2em;
-	font-weight: bold;
 	text-align: right;
 	width: 20%;
 	float: left;
@@ -77,3 +41,52 @@
 {
 	padding-bottom: 3em;
 }
+dl#search_options
+{
+	padding-top: 1em;
+}
+span.enhanced
+{
+	font-size: 115%;
+	display: block;
+}
+fieldset
+{
+	text-align: left;
+	padding: 0;
+	border: none;
+	margin: 1em 0 0 0;
+}
+fieldset ul
+{
+	padding: 5px;
+}
+fieldset ul li
+{
+	float: left;
+	width: 32%;
+}
+fieldset h5
+{
+	clear: both;
+	padding: 2px;
+}
+fieldset h5 a
+{
+	text-decoration: none;
+}
+fieldset p
+{
+	clear: both;
+	padding: 4px;
+	text-align: center;
+	margin-top: 5px;
+}
+#searchBoardsExpand
+{
+	padding: 0.3em 1em;
+}
+/* ************************************* */
+/* styles from Recent.template           */
+/* ************************************* */
+

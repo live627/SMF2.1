@@ -82,6 +82,10 @@ ul#upper_section li.news
 	float: right;
 	text-align: right;
 }
+#guest_form .info
+{
+	padding: 4px 0 ;
+}
 ul#upper_section li.user
 {
 	width: 50%;
@@ -124,39 +128,42 @@ ul#upper_section li.news form
 .dropmenu ul li, ul#navigation li
 {
 	float: left;
+	margin-right: 2px;
 }
 .dropmenu ul li a
 {
 	display: block;
 	font-size: 0.9em;
 	color: black;
-}
-.dropmenu ul li a:hover
-{
-	color: #b82;
-	text-decoration: none;
+	padding: 0 8px 0 0;
 }
 .dropmenu ul li a span
 {
 	display: block;
 	height: 19px;
 	line-height: 19px;
-	padding: 0 0 0 8px;
+	padding-left: 8px;
 }
 /* the active one gets a background */
 .dropmenu ul li a.active
 {
-	background: url(../images/theme/menu_background.png) no-repeat top right;
-	padding: 0;
-	margin-left: 12px;
+	background: url(../images/theme/menu_bg_right.png) no-repeat top right;
 	color: white;
 	font-weight: bold;
 }
+.dropmenu ul li a:hover
+{
+	color: #fff;
+	text-decoration: none;
+	background: url(../images/theme/active_button_right.png) no-repeat top right;
+}
 .dropmenu ul li a.active span
 {
-	position: relative;
-	left: -8px;
-	background: url(../images/theme/menu_background.png) no-repeat top left;
+	background: url(../images/theme/menu_bg_left.png) no-repeat top left;
+}
+.dropmenu ul li a:hover span
+{
+	background: url(../images/theme/active_button_left.png) no-repeat top left;
 }
 .dropmenu ul li a.active
 {
@@ -193,6 +200,10 @@ ul#upper_section li.news form
 {
 	background: #889;
 	color: white;
+}
+.dropmenu ul ul li a:hover span
+{
+	background: none;
 }
 .dropmenu ul li:hover ul 
 {
@@ -234,42 +245,47 @@ ul#upper_section li.news form
 	display: block;
 	font-size: 0.8em;
 	color: black;
-	background: url(../images/theme/button_bg.png) no-repeat top right;
-	padding: 0;
-	margin-left: 12px;
+	background: url(../images/theme/button_bg_right.png) no-repeat top right;
+	padding: 0 8px 0 0;
+	margin-left: 5px;
 	text-transform: uppercase;
 }
 .buttonlist ul li a:hover
 {
-	color: #b82;
+	background: url(../images/theme/active_button_right.png) no-repeat top right;
+	color: #fff;
 	text-decoration: none;
 }
 .buttonlist ul li a span
 {
-	position: relative;
-	left: -6px;
-	background: url(../images/theme/button_bg.png) no-repeat top left;
+	background: url(../images/theme/button_bg_left.png) no-repeat top left;
 	display: block;
 	height: 19px;
-	line-height: 18px;
+	line-height: 17px;
 	padding: 0 0 0 6px;
+}
+.buttonlist ul li a:hover span
+{
+	background: url(../images/theme/active_button_left.png) no-repeat;
 }
 /* the active one */
 .buttonlist ul li a.active
 {
-	background: url(../images/theme/active_button_bg.png) no-repeat top right;
-	padding: 0;
-	margin-left: 12px;
+	background: url(../images/theme/active_button_right.png) no-repeat top right;
 	color: white;
 	font-weight: bold;
 }
 .buttonlist ul li a.active span
 {
-	background: url(../images/theme/active_button_bg.png) no-repeat top left;
+	background: url(../images/theme/active_button_left.png) no-repeat top left;
 }
 .buttonlist ul li a.active
 {
 	font-weight: bold;
+}
+.buttonlist ul li a.active:hover
+{
+	color: orange;
 }
 /* a smaller quick-button list */
 ul.quickbuttons li
@@ -297,8 +313,7 @@ ul#navigation li
 /* the font size changer panel */
 p#fontsize_panel
 {
-	position: absolute;
-	margin-top: -26px;
+	text-align: right;
 	color: white;
 }
 p#fontsize_panel img
@@ -476,4 +491,41 @@ h4.titlebg span.right
 	display: block;
 	background: url(../images/theme/approvebg_botslice2.png) top right no-repeat;
 	height: 11px;
+}
+/* alternative framing */
+#roundframe
+{
+	background: url(../images/theme/ic_bg.png) repeat-y;
+}
+#roundframe div.frame
+{
+	padding: 3px 15px;
+	display: block;
+	background: url(../images/theme/ic_bg2.png) top right repeat-y;
+}
+span#upperframe
+{
+	padding: 0;
+	display: block;
+	background: url(../images/theme/ic_bg_top.png) top left no-repeat;
+}
+span#upperframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(../images/theme/ic_bg_top2.png) top right no-repeat;
+}
+span#lowerframe
+{
+	padding: 0;
+	display: block;
+	background: url(../images/theme/ic_bg_bot.png) bottom left no-repeat;
+}
+span#lowerframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(../images/theme/ic_bg_bot2.png) bottom right no-repeat;
 }

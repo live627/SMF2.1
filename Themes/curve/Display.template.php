@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; Display
+// Version: 2.0 RC1; Display
 
 function template_main()
 {
@@ -553,8 +553,9 @@ function template_main()
 	// Show the page index... "Pages: [1]".
 	echo '
 <div id="postbuttons">
-	<div class="middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
-	', template_button_strip($normal_buttons, 'bottom'), '<span class="lower">', $context['previous_next'], '</span>
+	', template_button_strip($normal_buttons, 'right'), '
+	<div class="middletext" id="pagelinks">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
+	<span class="lower">', $context['previous_next'], '</span>
 </div>';
 
 
@@ -589,14 +590,14 @@ function template_main()
 		echo '
 <a name="quickreply"></a>
 <div class="tborder" id="quickreplybox">
-	<h3 class="catbg headerpadding">
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
 		<a href="javascript:oQuickReply.swap();">
 			<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" />
 		</a>
 		<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
 	</h3>
-	<div class="smallpadding windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-		<div class="smallpadding floatleft" id="quickReplyWarning">
+	<div class="windowbg" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
+		<div id="quickReplyWarning" class="smalltext">
 			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
 		</div>
 		<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
@@ -630,7 +631,7 @@ function template_main()
 				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 			</form>
 		</div>
-		<div style="clear: both;"></div>
+		<br style="clear: both;" />
 	</div>
 </div>';
 	}

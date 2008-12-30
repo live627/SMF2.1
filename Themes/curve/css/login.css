@@ -1,0 +1,30 @@
+/* ************************************* */
+/* styles from Register.template       */
+/* ************************************* */
+.register_form dt
+{
+	clear: left;
+	float: left;
+	width: 50%;
+	padding:0.5em;
+	display: block;
+}
+.register_form dt p
+{
+	padding: 0;
+	margin: 0;	
+}
+.register_form dd
+{
+	padding: 0.5em;
+	min-height: 15px;	
+}
+.register_captcha
+{
+	min-height: 80px;
+}
+
+/* ************************************* */
+/* styles from Login.template           */
+/* ************************************* */
+
