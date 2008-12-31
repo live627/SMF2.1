@@ -84,7 +84,7 @@ December 2008
  * Make sure the alt-value of the avatar preview doesn't contain a value from a previously selected avatar. (Profile template) [Bug 2838]
  ! Default value in deltree function documentation was wrong. (Subs-Package.php) [Bug 2831]
  ! The 'latest member' wasn't always determined properly. (Subs-Members.php, Subs.php) [Bug 2830]
- * Various corrections to Curve css and templates.  
+ ! Indices weren't always removed correctly when using the db_remove_index function. (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2812]
 
 
 November 2008

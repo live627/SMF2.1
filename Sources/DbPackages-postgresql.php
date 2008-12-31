@@ -559,6 +559,7 @@ function smf_db_remove_index($table_name, $index_name, $parameters = array(), $e
 		{
 			// Drop the bugger...
 			$smcFunc['db_query']('', '
+				ALTER TABLE ' . $table_name . '
 				DROP INDEX ' . $index_name,
 				'security_override'
 			);
