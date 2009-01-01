@@ -3,8 +3,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC1                                                                  ???
 ================================================================================
-January 2008
+January 2009
+--------------------------------------------------------------------------------
  ! Upcoming birthdates were incorrectly calculated causing the list to be empty during the turn of the year. (Subs-Calendar.php) [Bug 2856]
+ & Updated the copyright to include 2009. (index language file)
 
 
 December 2008

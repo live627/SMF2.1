@@ -529,7 +529,7 @@ function CreateMessageIndex()
 		);
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_msg >= {int:starting_id} AS todo, COUNT(*) AS num_mesages
+			SELECT id_msg >= {int:starting_id} AS todo, COUNT(*) AS num_messages
 			FROM {db_prefix}messages
 			GROUP BY todo',
 			array(
@@ -537,7 +537,7 @@ function CreateMessageIndex()
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$num_messages[empty($row['todo']) ? 'done' : 'todo'] = $row['num_mesages'];
+			$num_messages[empty($row['todo']) ? 'done' : 'todo'] = $row['num_messages'];
 
 		if (empty($num_messages['todo']))
 		{
