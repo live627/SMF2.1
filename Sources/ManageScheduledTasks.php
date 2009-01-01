@@ -356,8 +356,8 @@ function EditTask()
 		if (!isset($matches[1]) || $matches[1] > 23)
 			$matches[1] = 0;
 
-		// Now the offset is easy; easy peasy - except we need to offset by 23 hours...
-		$offset = 82800 + $matches[1] * 3600 + $matches[2] * 60;
+		// Now the offset is easy; easy peasy - except we need to offset by a few hours...
+		$offset = $matches[1] * 3600 + $matches[2] * 60 - date('Z');
 
 		// The other time bits are simple!
 		$interval = max((int) $_POST['regularity'], 1);
