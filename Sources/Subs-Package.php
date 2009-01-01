@@ -2815,7 +2815,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 				return fetch_web_data($location, $post_data, $keep_alive, $redirection_level + 1);
 			}
 		}
-		if (strpos($response, ' 200 ') === false && strpos($response, ' 201 ') === false)
+		elseif (strpos($response, ' 200 ') === false && strpos($response, ' 201 ') === false)
 			return false;
 
 		// Skip the headers...
