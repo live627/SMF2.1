@@ -2796,8 +2796,9 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			fwrite($fp, $post_data);
 		}
 
-		// Make sure we get a 200 OK.
 		$response = fgets($fp, 768);
+
+		// Redirect in case this location is permanently or temporarily moved.
 		if ($redirection_level < 3 && (strpos($response, ' 301 ') !== false || strpos($response, ' 302 ') !== false || strpos($response, ' 307 ') !== false))
 		{
 			$header = '';
@@ -2815,6 +2816,8 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 				return fetch_web_data($location, $post_data, $keep_alive, $redirection_level + 1);
 			}
 		}
+
+		// Make sure we get a 200 OK.
 		elseif (strpos($response, ' 200 ') === false && strpos($response, ' 201 ') === false)
 			return false;
 
