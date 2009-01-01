@@ -296,7 +296,7 @@ function loadProfileFields($force_reload = false)
 				$isValid = profileValidateEmail($value, $context[\'id_member\']);
 
 				// Do they need to revalidate? If so schedule the function!
-				if (!empty($modSettings[\'send_validation_onChange\']) && !allowedTo(\'moderate_forum\'))
+				if ($isValid === true && !empty($modSettings[\'send_validation_onChange\']) && !allowedTo(\'moderate_forum\'))
 				{
 					require_once($sourcedir . \'/Subs-Members.php\');
 					$profile_vars[\'validation_code\'] = generateValidationCode();
