@@ -8,6 +8,7 @@ January 2009
  ! Upcoming birthdates were incorrectly calculated causing the list to be empty during the turn of the year. (Subs-Calendar.php) [Bug 2856]
  & Updated the copyright to include 2009. (index language file)
  ! The offset for scheduled tasks was in some cases stored with an incorrect time offset. (ManageScheduledTasks.php) [Bug 2855]
+ ! The fetch_web_data function didn't support URL redirection. (Subs-Package.php) [Bug 2854]
 
 
 December 2008

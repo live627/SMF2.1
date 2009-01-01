@@ -2712,7 +2712,7 @@ function package_create_backup($id = 'backup')
 }
 
 // Get the contents of a URL, irrespective of allow_url_fopen.
-function fetch_web_data($url, $post_data = '', $keep_alive = false)
+function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection_level = 0)
 {
 	global $webmaster_email;
 	static $keep_alive_dom = null, $keep_alive_fp = null;
@@ -2798,6 +2798,23 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false)
 
 		// Make sure we get a 200 OK.
 		$response = fgets($fp, 768);
+		if ($redirection_level < 3 && (strpos($response, ' 301 ') !== false || strpos($response, ' 302 ') !== false || strpos($response, ' 307 ') !== false))
+		{
+			$header = '';
+			$location = '';
+			while(!feof($fp) && trim($header = fgets($fp, 4096)) != '')
+				if (strpos($header, 'Location:') !== false)
+					$location = trim(substr($header, strpos($header, ':') + 1));
+
+			if (empty($location))
+				return false;
+			else
+			{
+				if (!$keep_alive)
+					fclose($fp);
+				return fetch_web_data($location, $post_data, $keep_alive, $redirection_level + 1);
+			}
+		}
 		if (strpos($response, ' 200 ') === false && strpos($response, ' 201 ') === false)
 			return false;
 
