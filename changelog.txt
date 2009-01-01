@@ -10,6 +10,7 @@ January 2009
  ! The offset for scheduled tasks was in some cases stored with an incorrect time offset. (ManageScheduledTasks.php) [Bug 2855]
  ! The fetch_web_data function didn't support URL redirection. (Subs-Package.php) [Bug 2854]
  * Contents of large messages were being clipped in Firefox due to the CSS overflow being set to 'auto'. (Display template, Index template, ff.css)
+ ! Included APBoard login method for allowing easy conversion. (LogInOut.php) [Bug 2857]
 
 
 December 2008
