@@ -463,7 +463,7 @@ function template_main()
 		{
 			echo '
 									<hr width="100%" size="1" class="hrcolor" />
-									<div style="overflow: auto; width: 100%;">';
+									<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
 
 			$last_approved_state = 1;
 			foreach ($message['attachment'] as $attachment)
