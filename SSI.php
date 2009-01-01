@@ -298,7 +298,7 @@ function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method
 	// Restrict the posts required...
 	$query_where = '
 		m.id_msg IN ({array_int:message_list})' . ($override_permissions ? '' : '
-			AND {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
+			AND {query_wanna_see_board}') . ($modSettings['postmod_active'] ? '
 			AND m.approved = {int:is_approved}' : '');
 	$query_where_params = array(
 		'message_list' => $post_ids,
