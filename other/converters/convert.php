@@ -836,17 +836,41 @@ function doStep0($error_message = null)
 			echo '
 						</tr><tr>';
 
-			if ($param['type'] == 'text')
-				echo '
-							<td valign="top" class="textbox"><label for="', $param['id'], '">', $param['label'], ':</label></td>
-							<td style="padding-bottom: 1ex;">
-								<input type="text" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" />';
-			elseif ($param['type'] == 'checked' || $param['type'] == 'checkbox')
+			// Is it a checkbox?
+			if ($param['type'] == 'checked' || $param['type'] == 'checkbox')
 				echo '
 							<td valign="top" class="textbox"></td>
 							<td style="padding-bottom: 1ex;">
 								<input type="hidden" name="', $param['id'], '" value="0" />
 								<label for="', $param['id'], '"><input type="checkbox" name="', $param['id'], '" id="', $param['id'], '" value="1"', $param['type'] == 'checked' ? ' checked="checked"' : '', ' /> ', $param['label'], '</label>';
+			// How about a list?
+			elseif (($param['type'] == 'list' || $param['type'] == 'select') && isset($param['options']) && is_array($param['options']))
+			{
+				echo '
+							<td valign="top" class="textbox"></td>
+							<td style="padding-bottom: 1ex;">
+								<input type="hidden" name="', $param['id'], '" value="0" />
+								<label for="', $param['id'], '"><select name="', $param['id'], '" id="', $param['id'], '">';
+								
+					foreach ($param['options'] as $id => $option)
+						echo '
+									<option value="', $id, '"', (isset($param['default_option']) && $param['default_option'] == $id ? ' selected="selected"' : ''), '>', $option, '</option>';
+									
+				echo '
+								</select></label>';
+			
+			}
+			elseif ($param['type'] == 'password')
+				echo '
+							<td valign="top" class="textbox"><label for="', $param['id'], '">', $param['label'], ':</label></td>
+							<td style="padding-bottom: 1ex;">
+								<input type="password" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" />';
+			// Fall back to text.
+			else
+				echo '
+							<td valign="top" class="textbox"><label for="', $param['id'], '">', $param['label'], ':</label></td>
+							<td style="padding-bottom: 1ex;">
+								<input type="text" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" />';
 
 			echo '
 							</td>';

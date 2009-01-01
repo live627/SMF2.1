@@ -22,7 +22,7 @@ if empty($INFO['admin_group']))
 
 ---* {$to_prefix}members
 ---{
-$row['signature'] = addslashes(preg_replace(
+$row['signature'] = preg_replace(
 	array(
 		'~<!--QuoteBegin.*?-->.+?<!--QuoteEBegin-->~is',
 		'~<!--QuoteEnd-->.+?<!--QuoteEEnd-->~is',
@@ -71,9 +71,9 @@ $row['signature'] = addslashes(preg_replace(
 		'[font=$1]',
 		'[font=$1]',
 		'[/font]',
-		'[size=$2]',
-		'[size=$2]',
-		'[size=$2]',
+		'[size=$1]',
+		'[size=$1]',
+		'[size=$1]',
 		'[/size]',
 		'[$1list]',
 		'[list type=lower-alpha]',
@@ -92,7 +92,7 @@ $row['signature'] = addslashes(preg_replace(
 		'[email=$1]$2[/email]',
 		'[url=$1]$2[/url]',
 		'[url=$1]$2[/url]',
-	), ltrim(stripslashes($row['signature']))));
+	), ltrim(stripslashes($row['signature'])));
 $row['signature'] = substr(strtr(strtr($row['signature'], '<>', '[]'), array('[br /]' => '<br />')), 0, 65534);
 ---}
 SELECT

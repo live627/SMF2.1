@@ -745,7 +745,6 @@ if (empty($preparsing))
 
 	function convertStep8()
 	{
-return;
 		global $to_prefix, $yabb;
 
 		if ($_GET['substep'] == 0 && !empty($_SESSION['purge']))
