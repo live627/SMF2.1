@@ -3,6 +3,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC1                                                                  ???
 ================================================================================
+January 2008
+ ! Upcoming birthdates were incorrectly calculated causing the list to be empty during the turn of the year. (Subs-Calendar.php) [Bug 2856]
+
+
 December 2008
 --------------------------------------------------------------------------------
  ! The size property wasn't properly handled by the create table functions in the database layer (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2761]

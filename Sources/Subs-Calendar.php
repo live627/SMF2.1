@@ -117,13 +117,6 @@ function getBirthdayRange($low_date, $high_date)
 {
 	global $scripturl, $modSettings, $smcFunc;
 
-	// Birthdays people set without specifying a year (no age, see?) are the easiest ;).
-	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
-		$allyear_part = 'birthdate BETWEEN {date:all_year_low} AND {date:all_year_dec}
-			OR birthdate BETWEEN {date:all_year_jan} AND {date:all_year_high}';
-	else
-		$allyear_part = 'birthdate BETWEEN {date:all_year_low} AND {date:all_year_high}';
-
 	// We need to search for any birthday in this range, and whatever year that birthday is on.
 	$year_low = (int) substr($low_date, 0, 4);
 	$year_high = (int) substr($high_date, 0, 4);
@@ -133,21 +126,24 @@ function getBirthdayRange($low_date, $high_date)
 		SELECT id_member, real_name, YEAR(birthdate) AS birth_year, birthdate
 		FROM {db_prefix}members
 		WHERE YEAR(birthdate) != {string:year_one}
-			AND (' . $allyear_part . '
-				OR DATE_FORMAT(birthdate, {string:year_low}) BETWEEN {date:low_date} AND {date:high_date}' . ($year_low == $year_high ? '' : '
-				OR DATE_FORMAT(birthdate, {string:year_high}) BETWEEN {date:low_date} AND {date:high_date}') . ')
+			AND MONTH(birthdate) != {int:no_month}
+			AND DAY(birthdate) != {int:no_day}
+			AND YEAR(birthdate) <= {int:max_year}
+			AND (
+				DATE_FORMAT(birthdate, {string:year_low}) BETWEEN {date:low_date} AND {date:high_date}' . ($year_low == $year_high ? '' : '
+				OR DATE_FORMAT(birthdate, {string:year_high}) BETWEEN {date:low_date} AND {date:high_date}') . '
+			)
 			AND is_activated = {int:is_activated}',
 		array(
 			'is_activated' => 1,
+			'no_month' => 0,
+			'no_day' => 0,
 			'year_one' => '0001',
 			'year_low' => $year_low . '-%m-%d',
-			'year_high' => $year_low . '-%m-%d',
+			'year_high' => $year_high . '-%m-%d',
 			'low_date' => $low_date,
 			'high_date' => $high_date,
-			'all_year_low' => '0004' . substr($low_date, 4),
-			'all_year_high' => '0004' . substr($high_date, 4),
-			'all_year_jan' => '0004-01-01',
-			'all_year_dec' => '0004-12-31',
+			'max_year' => $year_high,
 		)
 	);
 	$bday = array();
