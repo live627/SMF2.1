@@ -273,7 +273,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 		AND b.id_board NOT IN ({array_int:exclude_boards})') . '
 		' . ($include_boards === null ? '' : '
 		AND b.id_board IN ({array_int:include_boards})') . '
-		AND ' . $user_info['query_wanna_see_board'] . ($modSettings['postmod_active'] ? '
+		AND {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
 		AND m.approved = {int:is_approved}' : '');
 
 	$query_where_params = array(
@@ -297,9 +297,9 @@ function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method
 
 	// Restrict the posts required...
 	$query_where = '
-		m.id_msg IN ({array_int:message_list})
-		' . ($override_permissions ? '' : 'AND ' . $user_info['query_wanna_see_board']) . ($modSettings['postmod_active'] ? '
-		AND m.approved = {int:is_approved}' : '');
+		m.id_msg IN ({array_int:message_list})' . ($override_permissions ? '' : '
+			AND {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
+			AND m.approved = {int:is_approved}' : '');
 	$query_where_params = array(
 		'message_list' => $post_ids,
 		'is_approved' => 1,
@@ -445,7 +445,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 			AND b.id_board NOT IN ({array_int:exclude_boards})') . '
 			' . (empty($include_boards) ? '' : '
 			AND b.id_board IN ({array_int:include_boards})') . '
-			AND ' . $user_info['query_wanna_see_board'] . ($modSettings['postmod_active'] ? '
+			AND {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}
 			AND m.approved = {int:is_approved}' : '') . '
 		ORDER BY t.id_last_msg DESC
@@ -579,7 +579,7 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 			(IFNULL(lb.id_msg, 0) >= b.id_last_msg) AS is_read') . '
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
-		WHERE ' . $user_info['query_wanna_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+		WHERE {query_wanna_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_board}' : '') . '
 		ORDER BY b.num_posts DESC
 		LIMIT ' . $num_top,
@@ -654,10 +654,10 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE ' . $user_info['query_wanna_see_board'] . ($modSettings['postmod_active'] ? '
+		WHERE {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . (!empty($topic_ids) ? '
 			AND t.id_topic IN ({array_int:topic_list})' : '') . '
-			AND ' . $user_info['query_wanna_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND {query_wanna_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_enable}' : '') . '
 		ORDER BY t.num_' . ($type != 'replies' ? 'views' : 'replies') . ' DESC
 		LIMIT ' . $num_topics,
@@ -1027,7 +1027,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		WHERE p.voting_locked = {int:voting_opened}
 			AND (p.expire_time = {int:no_expiration} OR {int:current_time} < p.expire_time)
 			AND ' . ($user_info['is_guest'] ? 'p.guest_vote = {int:guest_vote_allowed}' : 'lp.id_choice IS NULL') . '
-			AND ' . $user_info['query_wanna_see_board'] . (!in_array(0, $boardsAllowed) ? '
+			AND {query_wanna_see_board}' . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_allowed_list})' : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_enable}' : '') . '
 		ORDER BY ' . ($topPollInstead ? 'pc.votes' : 'p.id_poll') . ' DESC
@@ -1170,7 +1170,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 			INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE t.id_topic = {int:current_topic}
-			AND ' . $user_info['query_see_board'] . (!in_array(0, $boardsAllowed) ? '
+			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_allowed_see})' : '') . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . '
 		LIMIT 1',
@@ -1365,7 +1365,7 @@ function ssi_pollVote()
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = {int:current_member})
 		WHERE p.id_poll = {int:current_poll}
-			AND ' . $user_info['query_see_board'] . ($modSettings['postmod_active'] ? '
+			AND {query_see_board}' . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . '
 		LIMIT 1',
 		array(
@@ -1756,7 +1756,7 @@ function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
 		WHERE cal.start_date <= {date:current_date}
 			AND cal.end_date >= {date:current_date}
-			AND (cal.id_board = {int:no_board} OR ' . $user_info['query_wanna_see_board'] . ')
+			AND (cal.id_board = {int:no_board} OR {query_wanna_see_board})
 		ORDER BY cal.start_date DESC
 		LIMIT ' . $max_events,
 		array(

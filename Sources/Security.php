@@ -897,7 +897,7 @@ function boardsAllowedTo($permission, $check_access = true)
 		WHERE bp.id_group IN ({array_int:group_list}, {int:moderator_group})
 			AND bp.permission = {string:permission}
 			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})' .
-			($check_access ? ' AND ' . $user_info['query_see_board'] : ''),
+			($check_access ? ' AND {query_see_board}' : ''),
 		array(
 			'current_member' => $user_info['id'],
 			'group_list' => $groups,
