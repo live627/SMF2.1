@@ -218,18 +218,18 @@ function smf_db_quote($db_string, $db_values, $connection = null)
 {
 	global $db_callback, $db_connection;
 
-	// With nothing to quote/escape, simply return.
-	if (empty($db_values))
-		return $db_string;
+	// Only bother if there's something to replace.
+	if (strpos($db_string, '{') !== false)
+	{
+		// This is needed by the callback function.
+		$db_callback = array($db_values, $connection == null ? $db_connection : $connection);
 
-	// This is needed by the callback function.
-	$db_callback = array($db_values, $connection == null ? $db_connection : $connection);
+		// Do the quoting and escaping
+		$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
 
-	// Do the quoting and escaping
-	$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
-
-	// Clear this global variable.
-	$db_callback = array();
+		// Clear this global variable.
+		$db_callback = array();
+	}
 
 	return $db_string;
 }
