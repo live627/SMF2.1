@@ -14,6 +14,7 @@ January 2009
  ! The db_quote function didn't replace predefined variables in case no parameters were sent to it. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2853]
  ! Several occurrences of query_see_board and query_wanna_see_board weren't yet abstracted. (SSI.php, Security.php) [Bug 2850]
  ! Don't deactivate an account in case the user changes their email address to something invalid. (Profile.php) [Bug 2843]
+ * Try to do a better job at linking to the most relevant post moderation area. (BoardIndex template, MessageIndex template) [Bug 2298]
 
 
 December 2008
