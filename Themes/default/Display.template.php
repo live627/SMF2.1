@@ -430,7 +430,7 @@ function template_main()
 							', $txt['post_awaiting_approval'], '
 						</div>';
 		echo '
-						', $message['body'], '
+						<div class="inner">', $message['body'], '</div>
 					</div>', $message['can_modify'] ? '
 					<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" class="modifybutton" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '';
 
@@ -487,55 +487,54 @@ function template_main()
 		echo '
 					</div>
 				</div>
-				<div class="moderatorbar">
-						<div class="smalltext floatleft" id="modified_', $message['id'], '">';
+				<div class="moderatorbar">';
 
 		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
-							&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
+					<div class="smalltext floatleft" id="modified_', $message['id'], '">
+						&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;
+					</div>';
 
 		echo '
-						</div>
-						<div class="smalltext floatright">';
+					<div class="smalltext largepadding floatright">';
 
 		// Maybe they want to report this post to the moderator(s)?
 		if ($context['can_report_moderator'])
 			echo '
-							<a href="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $message['counter'], ';msg=', $message['id'], '">', $txt['report_to_mod'], '</a> &nbsp;';
+						<a href="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $message['counter'], ';msg=', $message['id'], '">', $txt['report_to_mod'], '</a> &nbsp;';
 
 		// Can we issue a warning because of this post?  Remember, we can't give guests warnings.
 		if ($context['can_issue_warning'] && !$message['is_message_author'] && !$message['member']['is_guest'])
 			echo '
-							<a href="', $scripturl, '?action=profile;u=', $message['member']['id'], ';sa=issueWarning;msg=', $message['id'], '"><img src="', $settings['images_url'], '/warn.gif" alt="', $txt['issue_warning_post'], '" title="', $txt['issue_warning_post'], '" border="0" /></a>';
+						<a href="', $scripturl, '?action=profile;u=', $message['member']['id'], ';sa=issueWarning;msg=', $message['id'], '"><img src="', $settings['images_url'], '/warn.gif" alt="', $txt['issue_warning_post'], '" title="', $txt['issue_warning_post'], '" border="0" /></a>';
 		echo '
-							<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
+						<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
 		// Show the IP to this user for this post - because you can moderate?
 		if ($context['can_moderate_forum'] && !empty($message['member']['ip']))
 			echo '
-							<a href="', $scripturl, '?action=trackip;searchip=', $message['member']['ip'], '">', $message['member']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
+						<a href="', $scripturl, '?action=trackip;searchip=', $message['member']['ip'], '">', $message['member']['ip'], '</a> <a href="', $scripturl, '?action=helpadmin;help=see_admin_ip" onclick="return reqWin(this.href);" class="help">(?)</a>';
 		// Or, should we show it because this is you?
 		elseif ($message['can_see_ip'])
 			echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $message['member']['ip'], '</a>';
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $message['member']['ip'], '</a>';
 		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
 		elseif (!$context['user']['is_guest'])
 			echo '
-							<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
+						<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
 		// Otherwise, you see NOTHING!
 		else
 			echo '
-							', $txt['logged'];
+						', $txt['logged'];
 
 		echo '
-						</div>';
+					</div>';
 
 		// Show the member's signature?
 		if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 			echo '
-						<hr width="100%" size="1" style="clear: right;" class="margintop hrcolor" />
-						<div class="signature">', $message['member']['signature'], '</div>';
+					<div class="signature">', $message['member']['signature'], '</div>';
 
 		echo '
 				</div>

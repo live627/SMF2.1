@@ -16,6 +16,7 @@ January 2009
  ! Don't deactivate an account in case the user changes their email address to something invalid. (Profile.php) [Bug 2843]
  * Try to do a better job at linking to the most relevant post moderation area. (BoardIndex template, MessageIndex template) [Bug 2298]
  * Set a title attribute for the toggle buttons in the core features area. (Admin template) [Bug 2848]
+ * Do a better job at handling the post and signature CSS-wise. (Display template, style.css, forum.css, ie6.css, ie7.css) [Bug 2798] [Bug 2654]
 
 
 December 2008

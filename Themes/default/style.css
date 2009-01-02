@@ -503,13 +503,17 @@ code
 /* Posts and personal messages displayed throughout the forum. */
 .post, .personalmessage
 {
-	width: 100%;
 	overflow: auto;
 	line-height: 1.3em;
-	clear: both;
+	width: 100%;
+}
+.postarea .post
+{
+	clear: right;
+	float: left;
 }
 /* add a visual divider between subject and post */ 
-.post
+.post .inner
 {
 	padding-top: 0.7em;
 	border-top: solid 1px #888;
@@ -518,9 +522,11 @@ code
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
 .signature
 {
+	clear: right;
+	padding: 1em 0 3px 0;
+	border-top: solid 1px #888;
 	width: 100%;
 	overflow: auto;
-	padding-bottom: 3px;
 	line-height: 1.3em;
 }
 

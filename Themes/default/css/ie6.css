@@ -9,3 +9,8 @@
 {
 	float: right;
 }
+
+.postarea .post
+{
+	clear: none;
+}
