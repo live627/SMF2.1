@@ -17,6 +17,7 @@ January 2009
  * Try to do a better job at linking to the most relevant post moderation area. (BoardIndex template, MessageIndex template) [Bug 2298]
  * Set a title attribute for the toggle buttons in the core features area. (Admin template) [Bug 2848]
  * Do a better job at handling the post and signature CSS-wise. (Display template, style.css, forum.css, ie6.css, ie7.css) [Bug 2798] [Bug 2654]
+ ! The smiley parser could in some cases parse a smiley from an already parsed smiley if one smiley code would be a subset of the other. (Subs.php) [Bug 2480]
 
 
 December 2008

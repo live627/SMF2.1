@@ -2337,14 +2337,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 function parsesmileys(&$message)
 {
 	global $modSettings, $txt, $user_info, $context, $smcFunc;
-	static $smileyfromcache = array(), $smileytocache = array();
+	static $smileyPregSearch = array(), $smileyPregReplacements = array();
 
 	// No smiley set at all?!
 	if ($user_info['smiley_set'] == 'none')
 		return;
 
 	// If the smiley array hasn't been set, do it now.
-	if (empty($smileyfromcache))
+	if (empty($smileyPregSearch))
 	{
 		// Use the default smileys if it is disabled. (better for "portability" of smileys.)
 		if (empty($modSettings['smiley_enable']))
@@ -2390,19 +2390,23 @@ function parsesmileys(&$message)
 		$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0';
 
 		// This smiley regex makes sure it doesn't parse smileys within code tags (so [url=mailto:David@bla.com] doesn't parse the :D smiley)
+		$smileyPregReplacements = array();
+		$searchParts = array();
 		for ($i = 0, $n = count($smileysfrom); $i < $n; $i++)
 		{
-			$smileyfromcache[] = '/(?<=[>:\?\.\s' . $non_breaking_space . '[\]()*\\\;]|^)(' . preg_quote($smileysfrom[$i], '/') . '|' . preg_quote(htmlspecialchars($smileysfrom[$i], ENT_QUOTES), '/') . ')(?=[^[:alpha:]0-9]|$)/' . ($context['utf8'] ? 'u' : '');
+			$smileyCode = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysfrom[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')). '" title="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" class="smiley" />';
 
-			// Escape a bunch of smiley-related characters in the description so it doesn't get a double dose :P.
-			// Note the class is important - it allows the WYSIWYG editor to keep XHTML compatible.
-			$smileytocache[] = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysfrom[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')). '" title="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" class="smiley" />';
+			$smileyPregReplacements[$smileysfrom[$i]] = $smileyCode;
+			$smileyPregReplacements[htmlspecialchars($smileysfrom[$i], ENT_QUOTES)] = $smileyCode;
+			$searchParts[] = preg_quote($smileysfrom[$i], '~');
+			$searchParts[] = preg_quote(htmlspecialchars($smileysfrom[$i]), '~');
 		}
+
+		$smileyPregSearch = '~(?<=[>:\?\.\s' . $non_breaking_space . '[\]()*\\\;]|^)(' . implode('|', $searchParts) . ')(?=[^[:alpha:]0-9]|$)~e' . ($context['utf8'] ? 'u' : '');
 	}
 
 	// Replace away!
-	// !!! There must be a way to speed this up.
-	$message = preg_replace($smileyfromcache, $smileytocache, $message);
+	$message = preg_replace($smileyPregSearch, 'isset($smileyPregReplacements[\'$1\']) ? $smileyPregReplacements[\'$1\'] : \'\'', $message);
 }
 
 // Highlight any code...
