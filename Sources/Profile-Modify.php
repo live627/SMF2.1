@@ -822,7 +822,7 @@ function loadProfileFields($force_reload = false)
 	foreach ($profile_fields as $key => $field)
 	{
 		// Do we have permission to do this?
-		if (isset($field['permission']) && !allowedTo($field['permission'] . '_' . ($context['user']['is_owner'] ? 'own' : 'any')) && !allowedTo($field['permission']))
+		if (isset($field['permission']) && !allowedTo(($context['user']['is_owner'] ? array($field['permission'] . '_own', $field['permission'] . '_any') : $field['permission'] . '_any')) && !allowedTo($field['permission']))
 			unset($profile_fields[$key]);
 
 		// Is it enabled?
