@@ -81,19 +81,19 @@ function ModifyProfile($post_errors = array())
 		Possible fields:
 			For Section:
 				string $title:		Section title.
-				bool $enabled:		Should section be shown?
 				array $areas:		Array of areas within this section.
 
 			For Areas:
-				array $own:		Array of permissions to determine who can access this area - if the user is the owner of the profile.
-				array $any:		As above if the user is not the owner of the profile.
-				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
-				string $href:		Optional href for area.
+				string $label:		Text string that will be used to show the area in the menu.
+				string $file:		Optional text string that may contain a file name that's needed for inclusion in order to display the area properly.
+				string $custom_url:	Optional href for area.
+				string $function:	Function to execute for this section.
 				bool $enabled:		Should area be shown?
-				bool $validate:		Does the session need to be checked before accessing this section on save?
 				string $sc:		Session check validation to do on save - note without this save will get unset - if set.
 				bool $hidden:		Does this not actually appear on the menu?
-				bool $load_member:	Should we load the member context for this area?
+				bool $password:		Whether to require the user's password in order to save the data in the area.
+				array $subsections:	Array of sucsections, in order of appearance.
+				array $permission:	Array of permissions to determine who can access this area. Should contain arrays $own and $any.
 	*/
 	$profile_areas = array(
 		'info' => array(
