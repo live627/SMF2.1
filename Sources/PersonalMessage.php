@@ -303,6 +303,10 @@ function messageIndexBar($area)
 		),
 	);
 
+	// Without pm_send permission, no need to show the 'New message' section.
+	if (!allowedTo('pm_send'))
+		unset($context['pm_areas']['folders']['areas']['send'], $context['pm_areas']['folders']['areas'][''], $context['pm_areas']['folders']['areas']['sent']);
+
 	// Handle labels.
 	if (empty($context['currently_using_labels']))
 		unset($context['pm_areas']['labels']);

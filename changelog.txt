@@ -21,6 +21,7 @@ January 2009
  ! Guests viewing an out of reach attachment were redirected to that attachment after logging in. (Load.php) [Bug 2847]
  ! url_exists function returned false on HTTP response codes 201/301/302/307, while they are currently supported by the fetch_web_data function. (Subs-Packages.php) [Bug 2699]
  ! On creating a board, the configured permission profile was ignored and overwritten by the parent board's permission profile. (ManageBoards.php, ManageBoards template, ManagePermission language file) [Bug 2823]
+ ! Hide the not-so-relevant PM sections in case the user has no permissions to send PM's. (PersonalMessage.php) [Bug 2860]
 
 
 December 2008
