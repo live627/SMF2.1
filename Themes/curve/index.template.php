@@ -112,6 +112,10 @@ function template_html_above()
 	elseif ($context['browser']['is_ie6'])
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
+	// Firefox - all versions - too!
+	elseif ($context['browser']['is_firefox'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '

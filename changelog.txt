@@ -9,7 +9,7 @@ January 2009
  & Updated the copyright to include 2009. (index language file)
  ! The offset for scheduled tasks was in some cases stored with an incorrect time offset. (ManageScheduledTasks.php) [Bug 2855]
  ! The fetch_web_data function didn't support URL redirection. (Subs-Package.php) [Bug 2854]
- * Contents of large messages were being clipped in Firefox due to the CSS overflow being set to 'auto'. (Display template, Index template, ff.css)
+ * Contents of large messages were being clipped in Firefox due to the CSS overflow being set to 'auto'. (Display template, Index template, ff.css) [Bug 2759]
  ! Included APBoard login method for allowing easy conversion. (LogInOut.php) [Bug 2857]
  ! The db_quote function didn't replace predefined variables in case no parameters were sent to it. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2853]
  ! Several occurrences of query_see_board and query_wanna_see_board weren't yet abstracted. (SSI.php, Security.php) [Bug 2850]
