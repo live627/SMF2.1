@@ -462,7 +462,7 @@ function url_exists($url)
 	$head = fread($fid, 1024);
 	fclose($fid);
 
-	return preg_match('~^HTTP/.+\s+200~i', $head) == 1;
+	return preg_match('~^HTTP/.+\s+(20[01]|30[127])~i', $head) == 1;
 }
 
 // Load the installed packages.
@@ -2799,11 +2799,11 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		$response = fgets($fp, 768);
 
 		// Redirect in case this location is permanently or temporarily moved.
-		if ($redirection_level < 3 && (strpos($response, ' 301 ') !== false || strpos($response, ' 302 ') !== false || strpos($response, ' 307 ') !== false))
+		if ($redirection_level < 3 && preg_match('~^HTTP/\S+\s+30[127]~i', $response) === 1)
 		{
 			$header = '';
 			$location = '';
-			while(!feof($fp) && trim($header = fgets($fp, 4096)) != '')
+			while (!feof($fp) && trim($header = fgets($fp, 4096)) != '')
 				if (strpos($header, 'Location:') !== false)
 					$location = trim(substr($header, strpos($header, ':') + 1));
 
@@ -2818,7 +2818,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 		}
 
 		// Make sure we get a 200 OK.
-		elseif (strpos($response, ' 200 ') === false && strpos($response, ' 201 ') === false)
+		elseif (preg_match('~^HTTP/\S+\s+20[01]~i', $response) === 0)
 			return false;
 
 		// Skip the headers...
