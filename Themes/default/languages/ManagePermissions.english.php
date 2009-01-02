@@ -15,6 +15,7 @@ $txt['permissions_boards_desc'] = 'The list below shows which set of permissions
 $txt['permissions_board_all'] = 'Edit All';
 $txt['permission_profile'] = 'Permission Profile';
 $txt['permission_profile_desc'] = 'Which <a href="%1$s">permission set</a> the board should use.';
+$txt['permission_profile_inherit'] = 'Inherit from parent board';
 
 $txt['permissions_profile'] = 'Profile';
 $txt['permissions_profiles_desc'] = 'Permission profiles are assigned to individual boards to allow you to easily manage your security settings. From this area you can create, edit and delete permission profiles.';

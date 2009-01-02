@@ -624,6 +624,7 @@ function EditBoard2()
 
 		// Profiles...
 		$boardOptions['profile'] = $_POST['profile'];
+		$boardOptions['inherit_permissions'] = $_POST['profile'] == -1;
 
 		// We need to know what used to be case in terms of redirection.
 		if (!empty($_POST['boardid']))

@@ -323,9 +323,14 @@ function template_modify_board()
 			</td>
 			<td valign="top" align="left">
 				<select name="profile">';
+
+	if (isset($context['board']['is_new']))
+		echo '
+					<option value="-1">[', $txt['permission_profile_inherit'], ']</option>';
+
 	foreach ($context['profiles'] as $id => $profile)
 		echo '
-				<option value="', $id, '" ', $id == $context['board']['profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
+					<option value="', $id, '" ', $id == $context['board']['profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
 
 	echo '
 				</select>
