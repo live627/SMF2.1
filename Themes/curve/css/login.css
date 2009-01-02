@@ -1,30 +1,63 @@
 /* ************************************* */
 /* styles from Register.template       */
 /* ************************************* */
+#register_screen
+{
+	width: 80%;
+	min-width: 600px;
+}
+.register_error
+{
+	border: 1px dashed red;
+	padding: 5px;
+	margin: 0 1ex 1ex 1ex;
+}
+.register_error span
+{
+	text-decoration: underline;
+}
+dl.register_form
+{
+	padding: 10px;
+}
 .register_form dt
 {
-	clear: left;
+	width:  50%;
 	float: left;
-	width: 50%;
-	padding:0.5em;
-	display: block;
+	padding: 5px 1em 5px 5px;
+	text-align: right;
+	font-weight: bold;
 }
-.register_form dt p
+.register_form dt span.smalltext
 {
-	padding: 0;
-	margin: 0;	
+	font-weight: normal;
 }
 .register_form dd
 {
-	padding: 0.5em;
-	min-height: 15px;	
+	padding: 8px;
+	min-height:15px;
+}
+.register_form dt span
+{
+	display: block;
 }
 .register_captcha
 {
-	min-height: 80px;
+	height: 85px;
 }
-
+.coppa_contact
+{
+	padding: 4px;
+	width: 32ex;
+	background-color: white;
+	color: black;
+	margin-left: 5ex;
+	border: 1px solid black;
+}
 /* ************************************* */
-/* styles from Login.template           */
+/* styles from Login.template       */
 /* ************************************* */
-
+#admin_login .centertext
+{
+	padding: 1em;
+}

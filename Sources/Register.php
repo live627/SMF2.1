@@ -66,7 +66,7 @@ function Register($reg_errors = array())
 		redirectexit();
 
 	loadLanguage('Login');
-	loadTemplate('Register');
+	loadTemplate('Register','login');
 
 	// All the basic template information...
 	$context['sub_template'] = 'before';
@@ -501,7 +501,7 @@ function Register2($verifiedOpenID = false)
 	// Basic template variable setup.
 	elseif (!empty($modSettings['registration_method']))
 	{
-		loadTemplate('Register');
+		loadTemplate('Register', 'login');
 
 		$context += array(
 			'page_title' => &$txt['register'],
@@ -522,7 +522,7 @@ function Activate()
 	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smcFunc, $language;
 
 	loadLanguage('Login');
-	loadTemplate('Login');
+	loadTemplate('Login', 'login');
 
 	if (empty($_REQUEST['u']) && empty($_POST['user']))
 	{
@@ -673,7 +673,7 @@ function CoppaForm()
 	global $context, $modSettings, $txt, $smcFunc;
 
 	loadLanguage('Login');
-	loadTemplate('Register');
+	loadTemplate('Register','login');
 
 	// No User ID??
 	if (!isset($_GET['member']))
@@ -764,7 +764,7 @@ function VerificationCode()
 	elseif (isset($_REQUEST['sound']))
 	{
 		loadLanguage('Login');
-		loadTemplate('Register');
+		loadTemplate('Register', 'login');
 
 		$context['verification_sound_href'] = $scripturl . '?action=verificationcode;rand=' . md5(mt_rand()) . ($verification_id ? ';vid=' . $verification_id : '') . ';format=.wav';
 		$context['sub_template'] = 'verification_sound';

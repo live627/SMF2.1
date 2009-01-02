@@ -225,8 +225,7 @@ function template_results()
 	if ($context['compact'])
 	{
 		echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>
-	<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+	<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		// Quick moderation set to checkboxes? Oh, how fun :/.
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)

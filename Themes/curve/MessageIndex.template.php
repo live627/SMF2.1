@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; MessageIndex
+// Version: 2.0 RC1; MessageIndex
 
 function template_main()
 {
@@ -140,7 +140,7 @@ function template_main()
 	<form action="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" style="clear: both;" name="quickModForm" id="quickModForm">';
 
 		echo '
-			<div class="tborder" id="messageindex">
+			<div class="tborder topic_table" id="messageindex">
 				<table class="table_grid" cellspacing="0">
 					<thead>
 						<tr class="catbg">';

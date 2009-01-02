@@ -77,7 +77,7 @@ function Login()
 	else
 	{
 		loadLanguage('Login');
-		loadTemplate('Login');
+		loadTemplate('Login', 'login');
 		$context['sub_template'] = 'login';
 	}
 
@@ -166,7 +166,7 @@ function Login2()
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_login';
 	else
 	{
-		loadTemplate('Login');
+		loadTemplate('Login', 'login');
 		$context['sub_template'] = 'login';
 	}
 

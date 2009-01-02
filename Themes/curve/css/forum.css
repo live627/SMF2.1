@@ -243,11 +243,11 @@ form#ic_login ul li label
 	padding: 1em 0 0.5em 0;
 }
 /* define the table */
-#messageindex table
+.topic_table table
 {
 	width: 100%;
 }
-#messageindex .icon1, #messageindex .icon2, #messageindex .stats
+.topic_table .icon1, .topic_table .icon2, .topic_table .stats
 {
 	text-align: center;
 }
@@ -259,40 +259,40 @@ form#ic_login ul li label
 {
 	margin: 0;
 }
-#messageindex table thead
+.topic_table table thead
 {
 	border-bottom: solid 1px white;
 }
 /* the subject column */
-#messageindex td.subject
+.topic_table td.subject
 {
 	padding: 4px;
 }
-#messageindex td.subject p, #messageindex td.stats, #messageindex td.lastpost
+.topic_table td.subject p, .topic_table td.stats, .topic_table td.lastpost
 {
 	font-size: 0.85em;
 	padding: 0;
 	margin: 0;
 }
-#messageindex td.lastpost
+.topic_table td.lastpost,.topic_table td.lastpost
 {
 	font-size: 0.9em;
 	line-height: 100%;
 	padding: 4px;
 }
-#messageindex td.stickybg2
+.topic_table td.stickybg2
 {
 	background-image: url(../images/icons/quick_sticky.gif);
 	background-repeat: no-repeat;
 	background-position: 98% 4px;
 }
-#messageindex td.lockedbg2, #messageindex td.stickybglockedbg2
+.topic_table td.lockedbg2, .topic_table td.stickybglockedbg2
 {
 	background-image: url(../images/icons/quick_lock.gif);
 	background-repeat: no-repeat;
 	background-position: 98% 4px;
 }
-#messageindex td.lastpost
+.topic_table td.lastpost
 {
 	background-image: none;
 }
@@ -482,3 +482,16 @@ p#whoisviewing
 /* ************************************* */
 /* styles from Recent.template           */
 /* ************************************* */
+#readbuttons_top .pagelinks,#readbuttons .pagelinks
+{
+	padding-bottom: 1em;
+	width: 60%;
+}
+#readbuttons .pagelinks
+{
+	padding-top: 1em;;
+}
+#recent
+{
+	clear: both;
+}

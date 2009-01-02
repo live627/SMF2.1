@@ -99,10 +99,10 @@ function template_before()
 
 	echo '
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
-	<div>
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', $txt['register'], ' - ', $txt['required_info'], '
-		</h3>
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		', $txt['register'], ' - ', $txt['required_info'], '
+	</h3>
+	<div id="register_screen">
 		<dl class="register_form">
 			<dt>', $txt['choose_username'], ': <span class="smalltext">', $txt['identification_by_smf'], '</span></dt>
 			<dd><input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" />
@@ -302,17 +302,17 @@ function template_before()
 	// Require them to agree here?
 	if ($context['require_agreement'])
 		echo '
-			<p>', $context['agreement'], '</p>
-		<div class="centertext">
-			<div>
-				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
-			</div>';
+	<p class="description">', $context['agreement'], '</p>
+	<div class="centertext">
+		<div>
+			<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
+		</div>';
 
 			echo '
-			<div>
-				<input type="submit" name="regSubmit" value="', $txt['register'], '" />
-			</div>
+		<div>
+			<input type="submit" name="regSubmit" value="', $txt['register'], '" />
 		</div>
+	</div>
 </form>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
@@ -493,67 +493,69 @@ function template_admin_register()
 					document.forms.postForm.emailPassword.disabled = false;
 			}
 		// ]]></script>
-		<div>
-			<h3 class="titlebg">', $txt['admin_browse_register_new'], '</h3>';
+		<h3 class="titlebg">
+			', $txt['admin_browse_register_new'], '
+		</h3>
+		<div id="register_screen">';
 	if (!empty($context['registration_done']))
 		echo '
 			<p>', $context['registration_done'], '</p><hr />';
 	echo '
-		<dl class="register_form">
-			<dt>
-				<label for="user_input">', $txt['admin_register_username'], ':</label>
-				<span class="smalltext">', $txt['admin_register_username_desc'], '</span>
-			</dt>
-			<dd>
-				<input type="text" name="user" id="user_input" size="30" maxlength="25" />
-			</dd>
-			<dt>
-				<label for="email_input">', $txt['admin_register_email'], ':</label>
-				<span class="smalltext">', $txt['admin_register_email_desc'], '</span>
-			</dt>
-			<dd>
-				<input type="text" name="email" id="email_input" size="30" />
-			</dd>
-			<dt>
-				<label for="password_input">', $txt['admin_register_password'], ':</label>
-				<span class="smalltext">', $txt['admin_register_password_desc'], '</span>
-			</dt>
-			<dd>
-				<input type="password" name="password" id="password_input" size="30" />
-			</dd>
-			<dt>
-				<label for="group_select">', $txt['admin_register_group'], ':</label>
-				<span class="smalltext">', $txt['admin_register_group_desc'], '</span>
-			</dt>
-			<dd>
-				<select name="group" id="group_select">';
+			<dl class="register_form">
+				<dt>
+					<label for="user_input">', $txt['admin_register_username'], ':</label>
+					<span class="smalltext">', $txt['admin_register_username_desc'], '</span>
+				</dt>
+				<dd>
+					<input type="text" name="user" id="user_input" size="30" maxlength="25" />
+				</dd>
+				<dt>
+					<label for="email_input">', $txt['admin_register_email'], ':</label>
+					<span class="smalltext">', $txt['admin_register_email_desc'], '</span>
+				</dt>
+				<dd>
+					<input type="text" name="email" id="email_input" size="30" />
+				</dd>
+				<dt>
+					<label for="password_input">', $txt['admin_register_password'], ':</label>
+					<span class="smalltext">', $txt['admin_register_password_desc'], '</span>
+				</dt>
+				<dd>
+					<input type="password" name="password" id="password_input" size="30" />
+				</dd>
+				<dt>
+					<label for="group_select">', $txt['admin_register_group'], ':</label>
+					<span class="smalltext">', $txt['admin_register_group_desc'], '</span>
+				</dt>
+				<dd>
+					<select name="group" id="group_select">';
 
 	foreach ($context['member_groups'] as $id => $name)
 		echo '
 						<option value="', $id, '">', $name, '</option>';
 	echo '
-				</select>
-			</dd>
-			<dt>
-				<label for="emailPassword_check">', $txt['admin_register_email_detail'], ':</label>
-				<span class="smalltext">', $txt['admin_register_email_detail_desc'], '</span>
-			</dt>
-			<dd>
-				<input type="checkbox" name="emailPassword" id="emailPassword_check" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="check" />
-			</dd>
-			<dt>
-				<label for="emailActivate_check">', $txt['admin_register_email_activate'], ':</label>
-			</dt>
-			<dd>
-				<input type="checkbox" name="emailActivate" id="emailActivate_check"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' checked="checked"' : '', ' onclick="onCheckChange();" class="check" />
-			</dd>
-			<dt>
-			</dt>
-			<dd>
-				<input type="submit" name="regSubmit" value="', $txt['register'], '" />
-				<input type="hidden" name="sa" value="register" />			
-			</dd>
-		</dl>
+					</select>
+				</dd>
+				<dt>
+					<label for="emailPassword_check">', $txt['admin_register_email_detail'], ':</label>
+					<span class="smalltext">', $txt['admin_register_email_detail_desc'], '</span>
+				</dt>
+				<dd>
+					<input type="checkbox" name="emailPassword" id="emailPassword_check" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="check" />
+				</dd>
+				<dt>
+					<label for="emailActivate_check">', $txt['admin_register_email_activate'], ':</label>
+				</dt>
+				<dd>
+					<input type="checkbox" name="emailActivate" id="emailActivate_check"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' checked="checked"' : '', ' onclick="onCheckChange();" class="check" />
+				</dd>
+				<dt>
+				</dt>
+				<dd>
+					<input type="submit" name="regSubmit" value="', $txt['register'], '" />
+					<input type="hidden" name="sa" value="register" />			
+				</dd>
+			</dl>
 		</div>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
@@ -566,7 +568,7 @@ function template_edit_agreement()
 
 	// Just a big box to edit the text file ;).
 	echo '
-		<div>
+		<div class="tborder">
 			<h3 class="titlebg">', $txt['registration_agreement'], '</h3>';
 
 	// Warning for if the file isn't writable.
@@ -578,7 +580,7 @@ function template_edit_agreement()
 	if (count($context['editable_agreements']) > 1)
 	{
 		echo '
-			<div align="left" style="width: 94%">
+			<div class="information">
 				<form action="', $scripturl, '?action=admin;area=regcenter" id="change_reg" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
 					<b>', $txt['admin_agreement_select_language'], ':</b>&nbsp;
 					<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();">';
@@ -597,16 +599,16 @@ function template_edit_agreement()
 	}
 
 	echo '
-			<div>
+			<div class="tborder">
 				<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">';
 
 	// Show the actual agreement in an oversized text box.
 	echo '
 					<textarea cols="70" rows="20" name="agreement" style="width: 100%;">', $context['agreement'], '</textarea>
-					<div>
+					<p>
 						<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt['admin_agreement'], '.</label>
-					</div>
-					<input type="submit" value="', $txt['save'], '" />
+					</p>
+					<p><input type="submit" value="', $txt['save'], '" /></p>
 					<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
 					<input type="hidden" name="sa" value="agreement" />
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -621,7 +623,7 @@ function template_edit_reserved_words()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
-			<div class="windowbg2">
+			<div class="tborder">
 				<h3 class="titlebg">', $txt['admin_reserved_set'], '</h3>
 					<div style="width: 80%;">
 						<h4>', $txt['admin_reserved_line'], '</h4>

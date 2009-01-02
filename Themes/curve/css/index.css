@@ -24,6 +24,7 @@
 	background: url(../images/theme/right.png) repeat-y right;
 	display: block;
 	padding: 0px 20px 0px 20px;
+	min-height: 200px;
 }
 
 /* the main title, always stay at 45 pixels in height! */
@@ -99,7 +100,7 @@ ul#upper_section li.user p
 }
 ul#upper_section li.user ul
 {
-	margin-left: 16px;
+	margin-left: 0px;
 	padding-left: 10px;
 	min-height: 70px;
 }
@@ -528,4 +529,50 @@ span#lowerframe span
 	height: 12px;
 	display: block;
 	background: url(../images/theme/ic_bg_bot2.png) bottom right no-repeat;
+}
+/* the login css needs to be everywhere */
+.login
+{
+	width: 480px;
+	margin: 0 auto;
+}
+.login dt, .login dd
+{
+	margin: 0;
+	height: 2.5em;
+	width: 45%;
+}
+.login dt
+{
+	float: left;
+	text-align: right;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+.login dd
+{
+	width: 54%;
+	float: right;
+	text-align: left;
+}
+.login p
+{
+	clear: both;
+	text-align: center;
+}
+.login h3 img
+{
+	float: left;
+	margin: 4px 0.5em 0 0;
+}
+/* for maintenace mode */
+#maintenace
+{
+	width: 75%;
+	min-width: 520px;
+	text-align: left;
+}
+#maintenace img.align_left
+{
+	margin-right: 1em;
 }

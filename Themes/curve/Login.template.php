@@ -9,75 +9,60 @@ function template_login()
 	echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
-		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-			<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
-				<tr class="titlebg">
-					<td colspan="2">
-						<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['login'], '
-					</td>';
+		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
+		<div class="tborder login">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
+			</h3>
+			<span id="upperframe"><span></span></span>
+			<div id="roundframe"><div class="frame">';
 
 	// Did they make a mistake last time?
 	if (!empty($context['login_errors']))
 		foreach ($context['login_errors'] as $error)
 			echo '
-				</tr><tr class="windowbg">
-					<td align="center" colspan="2" style="padding: 1ex;">
-						<strong class="error">', $error, '</strong>
-					</td>';
+				<p class="error">', $error, '</p>';
 
 	// Or perhaps there's some special description for this time?
 	if (isset($context['description']))
 		echo '
-				</tr><tr class="windowbg">
-					<td align="center" colspan="2">
-						<b>', $context['description'], '</b><br />
-						<br />
-					</td>';
+				<p class="description">', $context['description'], '</p>';
 
 	// Now just get the basic information - username, password, etc.
 	echo '
-				</tr><tr class="windowbg">
-					<td width="50%" align="right"><b>', $txt['username'], ':</b></td>
-					<td><input type="text" name="user" size="20" value="', $context['default_username'], '" /></td>
-				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt['password'], ':</b></td>
-					<td><input type="password" name="passwrd" value="', $context['default_password'], '" size="20" /></td>
-				</tr>';
+				<dl>
+					<dt>', $txt['username'], ':</dt>
+					<dd><input type="text" name="user" size="20" value="', $context['default_username'], '" /></dd>
+					<dt>', $txt['password'], ':</dt>
+					<dd><input type="password" name="passwrd" value="', $context['default_password'], '" size="20" /></dd>
+				</dl>';
 
 	if (!empty($modSettings['enableOpenID']))
-		echo '<tr class="windowbg">
-					<td colspan="2" align="center"><b>&mdash;', $txt['or'], '&mdash;</b></td>
-				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt['openid'], ':</b></td>
-					<td>
-						<input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
-					</td>
-				</tr><tr class="windowbg">
-					<td colspan="2" align="center"><hr /></td>
-				</tr>';
+		echo '<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
+				<dl>
+					<dt>', $txt['openid'], ':</dt>
+					<dd><input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i></dd>
+				</dl><hr />';
 
-	echo '<tr class="windowbg">
-					<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
-					<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '"', $context['never_expire'] ? ' disabled="disabled"' : '', ' /></td>
-				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt['always_logged_in'], ':</b></td>
-					<td><input type="checkbox" name="cookieneverexp"', $context['never_expire'] ? ' checked="checked"' : '', ' class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
-				</tr><tr class="windowbg">';
+	echo '
+				<dl>
+					<dt>', $txt['mins_logged_in'], ':</dt>
+					<dd><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '"', $context['never_expire'] ? ' disabled="disabled"' : '', ' /></dd>
+					<dt>', $txt['always_logged_in'], ':</dt>
+					<dd><input type="checkbox" name="cookieneverexp"', $context['never_expire'] ? ' checked="checked"' : '', ' class="check" onclick="this.form.cookielength.disabled = this.checked;" /></dd>';
 	// If they have deleted their account, give them a chance to change their mind.
 	if (isset($context['login_show_undelete']))
 		echo '
-					<td align="right"><strong class="alert">', $txt['undelete_account'], ':</strong></td>
-					<td><input type="checkbox" name="undelete" class="check" /></td>
-				</tr><tr class="windowbg">';
+					<dt class="alert">', $txt['undelete_account'], ':</dt>
+					<dd><input type="checkbox" name="undelete" class="check" /></dd>';
 	echo '
-					<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
-				</tr><tr class="windowbg">
-					<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a><br /><br /></td>
-				</tr>
-			</table>
-
-			<input type="hidden" name="hash_passwrd" value="" />
-		</form>';
+				</dl>
+				<p><input type="submit" value="', $txt['login'], '" /></p>
+				<p class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</p>
+				<input type="hidden" name="hash_passwrd" value="" />
+			</div></div>
+			<span id="lowerframe"><span></span></span>
+		</div></form>';
 
 	// Focus on the correct input - username or password.
 	echo '
@@ -93,64 +78,57 @@ function template_kick_guest()
 
 	// This isn't that much... just like normal login but with a message at the top.
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
-
-		<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-			<table border="0" cellspacing="0" cellpadding="3" class="tborder" align="center">
-				<tr class="catbg">
-					<td>', $txt['warning'], '</td>
-				</tr><tr>';
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
+	<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
+		<div class="tborder login">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['warning'], '
+			</h3>';
 
 	// Show the message or default message.
 	echo '
-					<td class="windowbg" style="padding-top: 2ex; padding-bottom: 2ex;">
-						', empty($context['kick_message']) ? $txt['only_members_can_access'] : $context['kick_message'], '<br />
-						', $txt['login_below'], ' <a href="', $scripturl, '?action=register">', $txt['register_an_account'], '</a> ', sprintf($txt['login_with_forum'], $context['forum_name']), '
-					</td>';
+			<p class="information centertext">
+				', empty($context['kick_message']) ? $txt['only_members_can_access'] : $context['kick_message'], '<br />
+				', $txt['login_below'], ' <a href="', $scripturl, '?action=register">', $txt['register_an_account'], '</a> ', sprintf($txt['login_with_forum'], $context['forum_name']), '
+			</p>';
 
 	// And now the login information.
 	echo '
-				</tr><tr class="titlebg">
-					<td><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['login'], '</td>
-				</tr><tr>
-					<td class="windowbg">
-						<table border="0" cellpadding="3" cellspacing="0" align="center">
-							<tr>
-								<td align="right"><b>', $txt['username'], ':</b></td>
-								<td><input type="text" name="user" size="20" /></td>
-							</tr><tr>
-								<td align="right"><b>', $txt['password'], ':</b></td>
-								<td><input type="password" name="passwrd" size="20" /></td>
-							</tr>';
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt=""  /> ', $txt['login'], '
+			</h3>
+			<span id="upperframe"><span></span></span>
+			<div id="roundframe"><div class="frame">
+				<dl>
+					<dt>', $txt['username'], ':</dt>
+					<dd><input type="text" name="user" size="20" /></dd>
+					<dt>', $txt['password'], ':</dt>
+					<dd><input type="password" name="passwrd" size="20" /></dd>';
 
 	if (!empty($modSettings['enableOpenID']))
-		echo '<tr>
-								<td colspan="2" align="center"><b>&mdash;', $txt['or'], '&mdash;</b></td>
-							</tr><tr>
-								<td align="right"><b>', $txt['openid'], ':</b></td>
-								<td><input type="text" name="openid_url" class="openid_login" size="17" /></td>
-							</tr><tr>
-								<td colspan="2" align="center"><hr /></td>
-							</tr>';
+		echo '
+				</dl>
+				<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
+				<dl>
+					<dt>', $txt['openid'], ':</dt>
+					<dd><input type="text" name="openid_url" class="openid_login" size="17" /></dd>
+				</dl>
+				<hr />
+				<dl>';
 
-	echo '<tr>
-								<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
-								<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></td>
-							</tr><tr>
-								<td align="right"><b>', $txt['always_logged_in'], ':</b></td>
-								<td><input type="checkbox" name="cookieneverexp" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
-							</tr><tr>
-								<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
-							</tr><tr>
-								<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a><br /><br /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-
+	echo '
+					<dt>', $txt['mins_logged_in'], ':</dt>
+					<dd><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></dd>
+					<dt>', $txt['always_logged_in'], ':</dt>
+					<dd><input type="checkbox" name="cookieneverexp" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></dd>
+				</dl>
+				<p class="centertext"><input type="submit" value="', $txt['login'], '" /></p>
+				<p class="centertext smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a></p>
+			</div></div>
+			<span id="lowerframe"><span></span></span>
 			<input type="hidden" name="hash_passwrd" value="" />
-		</form>';
+		</div>
+	</form>';
 
 	// Do the focus thing...
 	echo '
@@ -167,39 +145,33 @@ function template_maintenance()
 	// Display the administrator's message at the top.
 	echo '
 <form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
-	<table border="0" width="86%" cellspacing="0" cellpadding="3" class="tborder" align="center">
-		<tr class="titlebg">
-			<td colspan="2">', $context['title'], '</td>
-		</tr><tr>
-			<td class="windowbg" width="44" align="center" style="padding: 1ex;">
-				<img src="', $settings['images_url'], '/construction.gif" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
-			</td>
-			<td class="windowbg">', $context['description'], '</td>
-		</tr><tr class="titlebg">
-			<td colspan="2">', $txt['admin_login'], '</td>
-		</tr><tr>';
-
-	// And now all the same basic login stuff from before.
-	echo '
-			<td colspan="2" class="windowbg">
-				<table border="0" width="90%" align="center">
-					<tr>
-						<td><b>', $txt['username'], ':</b></td>
-						<td><input type="text" name="user" size="15" /></td>
-						<td><b>', $txt['password'], ':</b></td>
-						<td><input type="password" name="passwrd" size="10" /> &nbsp;</td>
-					</tr><tr>
-						<td><b>', $txt['mins_logged_in'], ':</b></td>
-						<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /> &nbsp;</td>
-						<td><b>', $txt['always_logged_in'], ':</b></td>
-						<td><input type="checkbox" name="cookieneverexp" class="check" /></td>
-					</tr><tr>
-						<td align="center" colspan="4"><input type="submit" value="', $txt['login'], '" style="margin-top: 1ex; margin-bottom: 1ex;" /></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+	<div class="tborder login" id="maintenace">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $context['title'], '
+		</h3>
+		<p class="description">
+			<img class="align_left" src="', $settings['images_url'], '/construction.gif" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
+			', $context['description'], '<br style="clear: both;" />
+		</p>
+		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			', $txt['admin_login'], '
+		</h4>
+		<span id="upperframe"><span></span></span>
+		<div id="roundframe"><div class="frame">
+			<dl>
+				<dt>', $txt['username'], ':</dt>
+				<dd><input type="text" name="user" size="15" /></dd>
+				<dt>', $txt['password'], ':</dt>
+				<dd><input type="password" name="passwrd" size="10" /></dd>
+				<dt>', $txt['mins_logged_in'], ':</dt>
+				<dd><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></dd>
+				<dt>', $txt['always_logged_in'], ':</dt>
+				<dd><input type="checkbox" name="cookieneverexp" class="check" /></dd>
+			</dl>
+			<p class="centertext"><input type="submit" value="', $txt['login'], '" /></p>
+		</div></div>	
+		<span id="lowerframe"><span></span></span>
+	</div>
 </form>';
 }
 
@@ -213,28 +185,21 @@ function template_admin_login()
 <script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 <form action="', $scripturl, $context['get_data'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin" onsubmit="hashAdminPassword(this, \'', $context['user']['username'], '\', \'', $context['session_id'], '\');">
-	<table border="0" width="400" cellspacing="0" cellpadding="3" class="tborder" align="center">
-		<tr class="titlebg">
-			<td align="left">
-				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['login'], '
-			</td>
-		</tr>';
-
-	// We just need the password.
-	echo '
-		<tr class="windowbg">
-			<td align="center" style="padding: 1ex 0;">
-				<b>', $txt['password'], ':</b> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="middle" /></a><br />';
+	<div class="tborder login" id="admin_login">
+		<h3 class="titlebg">
+			<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
+		</h3>
+		<div class="windowbg2 centertext" style="padding: 1em;">
+			<strong>', $txt['password'], ':</strong> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '"  /></a><br />';
 
 	if (!empty($context['incorrect_password']))
 		echo '
-				<span class="error" class="smalltext">', $txt['admin_incorrect_password'], '</span><br />';
+			<div class="error centertext">', $txt['admin_incorrect_password'], '</div>';
 
 	echo '
-				<input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" />
-			</td>
-		</tr>
-	</table>';
+			<input type="submit" style="margin-top: 1em;" value="', $txt['login'], '" />
+		</div>
+	</div>';
 
 	// Make sure to output all the old post data.
 	echo $context['post_data'], '

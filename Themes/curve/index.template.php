@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Beta 4; index
+// Version: 2.0 RC1; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -198,7 +198,7 @@ function template_body_above()
 		{
 			if (!empty($context['user']['avatar']))
 				echo '
-				<p>', $context['user']['avatar']['image'], '</p>';
+				<p class="avatar">', $context['user']['avatar']['image'], '</p>';
 
 			echo '
 				<ul>
