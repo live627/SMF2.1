@@ -24,6 +24,7 @@ January 2009
  ! On creating a board, the configured permission profile was ignored and overwritten by the parent board's permission profile. (ManageBoards.php, ManageBoards template, ManagePermission language file) [Bug 2823]
  ! Hide the not-so-relevant PM sections in case the user has no permissions to send PM's. (PersonalMessage.php) [Bug 2860]
  ! The permission check on whether a user could edit their own profile did not take into account the *_any permissions. (Profile-Modify.php) [Bug 2808]
+ ! Make sure post banned users can not use SMF's email interface. (Security.php) [Bug 2859]
 
 
 December 2008

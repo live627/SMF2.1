@@ -927,13 +927,14 @@ function showEmailAddress($userProfile_hideEmail, $userProfile_id)
 
 	// Should this users email address be shown?
 	// If you're guest and the forum is set to hide email for guests: no.
+	// If the user is post-banned: no.
 	// If it's your own profile and you've set your address hidden: yes_permission_override.
 	// If you're a moderator with sufficient permissions: yes_permission_override.
 	// If the user has set their email address to be hidden: no.
 	// If the forum is set to show full email addresses: yes.
 	// Otherwise: no_through_forum.
 
-	return !empty($modSettings['guest_hideContacts']) && $user_info['is_guest'] ? 'no' : ((!$user_info['is_guest'] && $user_info['id'] == $userProfile_id && !$userProfile_hideEmail) || allowedTo('moderate_forum') ? 'yes_permission_override' : ($userProfile_hideEmail ? 'no' : (!empty($modSettings['make_email_viewable']) ? 'yes' : 'no_through_forum')));
+	return (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || isset($_SESSION['ban']['cannot_post']) ? 'no' : ((!$user_info['is_guest'] && $user_info['id'] == $userProfile_id && !$userProfile_hideEmail) || allowedTo('moderate_forum') ? 'yes_permission_override' : ($userProfile_hideEmail ? 'no' : (!empty($modSettings['make_email_viewable']) ? 'yes' : 'no_through_forum')));
 }
 
 ?>
