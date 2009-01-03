@@ -460,7 +460,7 @@ function DownloadLanguage()
 	// Some lovely context.
 	$context['download_id'] = $_GET['did'];
 	$context['sub_template'] = 'download_language';
-	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'languages';
+	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'add';
 
 	// Can we actually do the installation - and do they want to?
 	if (!empty($_POST['do_install']) && !empty($_POST['copy_file']))
@@ -1104,7 +1104,7 @@ function ModifyLanguage()
 	loadLanguage('ManageSettings');
 
 	// Select the languages tab.
-	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'languages';
+	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'edit';
 	$context['page_title'] = $txt['edit_languages'];
 	$context['sub_template'] = 'modify_language_entries';
 
