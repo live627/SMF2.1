@@ -25,6 +25,7 @@ January 2009
  ! Hide the not-so-relevant PM sections in case the user has no permissions to send PM's. (PersonalMessage.php) [Bug 2860]
  ! The permission check on whether a user could edit their own profile did not take into account the *_any permissions. (Profile-Modify.php) [Bug 2808]
  ! Make sure post banned users can not use SMF's email interface. (Security.php) [Bug 2859]
+ * Prevent the recent posts area from showing its items all over the place. (BoardIndex template, forum.css)
 
 
 December 2008

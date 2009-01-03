@@ -275,7 +275,7 @@ function template_info_center()
 					<p class="section">
 						<a href="', $scripturl, '?action=recent"><img src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" /></a>
 					</p>
-					<div class="windowbg2 sectionbody hslice" id="recent_posts_content"><div class="entry-title" style="display: none;">', $context['forum_name_html_safe'], ' - ', $txt['recent_posts'], '</div><div class="entry-content" style="display: none;"><a rel="feedurl" href="', $scripturl, '?action=.xml;type=webslice">', $txt['subscribe_webslice'], '</a></div>';
+					<div class="windowbg2 sectionbody hslice clearfix" id="recent_posts_content"><div class="entry-title" style="display: none;">', $context['forum_name_html_safe'], ' - ', $txt['recent_posts'], '</div><div class="entry-content" style="display: none;"><a rel="feedurl" href="', $scripturl, '?action=.xml;type=webslice">', $txt['subscribe_webslice'], '</a></div>';
 
 		// Only show one post.
 		if ($settings['number_recent_posts'] == 1)

@@ -112,17 +112,29 @@ table.boardsframe p.children
 /* recent posts - or just one recent post */
 dl#infocenter_recentposts
 {
+	float: left;
+	width: 100%;
 	padding: 0;
 	margin: 0;
 }
 dl#infocenter_recentposts dt
 {
+	clear: left;
 	float: left;
 	padding: 0.1em;
+	width: 68%;
+	white-space: nowrap;
+	overflow: hidden;
 }
 dl#infocenter_recentposts dd
 {
+	clear: right;
+	float: right;
 	padding: 0.1em;
+	width: 25%;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
 }
 /* login form */
 form#infocenter_login ul.horizlist label
