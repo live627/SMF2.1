@@ -5,6 +5,7 @@ SMF 2.0 RC1                                                                  ???
 ================================================================================
 January 2009
 --------------------------------------------------------------------------------
+ ! Added a DAY() function to PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  ! Upcoming birthdates were incorrectly calculated causing the list to be empty during the turn of the year. (Subs-Calendar.php) [Bug 2856]
  & Updated the copyright to include 2009. (index language file)
  ! The offset for scheduled tasks was in some cases stored with an incorrect time offset. (ManageScheduledTasks.php) [Bug 2855]

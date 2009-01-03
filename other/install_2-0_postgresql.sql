@@ -3,7 +3,7 @@
 
 #
 # Create PostgreSQL functions.
-# Some taken from http://www.xach.com/aolserver/mysql-functions.sql.
+# Some taken from http://www.xach.com/aolserver/mysql-functions.sql and http://pgfoundry.org/projects/mysqlcompat/.
 
 CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS
   'SELECT timestamp ''epoch'' + $1 * interval ''1 second'' AS result'
@@ -61,6 +61,10 @@ LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION MONTH (timestamp) RETURNS integer AS
   'SELECT CAST (EXTRACT(MONTH FROM $1) AS integer) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION day(date) RETURNS integer AS
+  'SELECT EXTRACT(DAY FROM DATE($1))::integer AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION DAYOFMONTH (timestamp) RETURNS integer AS
