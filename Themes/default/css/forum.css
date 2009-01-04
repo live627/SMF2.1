@@ -236,45 +236,58 @@ form#infocenter_login ul.horizlist label
 {
 	text-align: right;
 }
+
+/* Poll question */
+h4#pollquestion
+{
+	padding: 1em 0 1em 2em;
+}
+
+/* Poll vote options */
 #poll_options ul.options
 {
-	margin: 0;
-	padding: 0 0 0.5em 5em;
+	border-top: 1px solid #696969;
+	padding: 1em 2.5em 0 2em;
+	margin: 0 0 1em 0;
 }
-#poll_options ul.options li
+#poll_options div.submitbutton
 {
-	float: none;
-	padding: 0;
-}
-#poll_options p.submitbutton
-{
+	border-bottom: 1px solid #696969;
 	clear: both;
-	padding: 0 0 0.5em 5em;
-	margin: 0;
+	padding: 0 0 1em 2em;
+	margin: 0 0 1em 0;
 }
-#poll_options p.pollmoderation
+
+/* Poll results */
+#poll_options dl.options
 {
-	margin: 0;
-	padding: 0 0 0 3em;
+	border: solid #696969;
+	border-width: 1px 0;
+	padding: 1em 2.5em 0 2em;
+	margin: 0 0 1em 0;
 }
-#poll_options ul.horizlist dl.options
+#poll_options dl.options dt.voted
 {
-	padding: 0 0 0.5em 5em;
-	margin: 0;
-	clear: both;
+	font-weight: bold;
 }
-#poll_options ul.horizlist dl.options dt
+#poll_options dl.options dd
 {
-	float: left;
+	margin: 0.5em 0 1em 0;
 }
-#poll_options ul.horizlist ul.horizlist li
-{
-}
+
+/* Poll notices */
 #poll_options p
 {
-	margin: 0 0 0.2em 0;
-	padding: 0.2em 0 0.5em 5em;
+	margin: 0 1.5em 0.2em 1.5em;
+	padding: 0 0.5em 0.5em 0.5em;
 }
+
+div#pollmoderation
+{
+	margin: -1em 0 0 2em;
+	padding: 0;
+}
+
 .approve_post
 {
 	margin: 2ex; 

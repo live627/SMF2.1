@@ -763,6 +763,10 @@ function Display()
 			)
 		);
 
+		// Make the lock and edit permissions defined above more directly accessible.
+		$context['allow_lock_poll'] = $context['poll']['lock'];
+		$context['allow_edit_poll'] = $context['poll']['edit'];
+
 		// You're allowed to vote if:
 		// 1. the poll did not expire, and
 		// 2. you're either not a guest OR guest voting is enabled... and
