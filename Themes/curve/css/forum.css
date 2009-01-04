@@ -326,6 +326,58 @@ form#ic_login ul li label
 {
 	padding-top: 1em;
 }
+
+/* Poll question */
+h4#pollquestion
+{
+	padding: 1em 0 1em 2em;
+}
+
+/* Poll vote options */
+#poll_options ul.options
+{
+	border-top: 1px solid #696969;
+	padding: 1em 2.5em 0 2em;
+	margin: 0 0 1em 0;
+}
+#poll_options div.submitbutton
+{
+	border-bottom: 1px solid #696969;
+	clear: both;
+	padding: 0 0 1em 2em;
+	margin: 0 0 1em 0;
+}
+
+/* Poll results */
+#poll_options dl.options
+{
+	border: solid #696969;
+	border-width: 1px 0;
+	padding: 1em 2.5em 0 2em;
+	margin: 0 0 1em 0;
+}
+#poll_options dl.options dt.voted
+{
+	font-weight: bold;
+}
+#poll_options dl.options dd
+{
+	margin: 0.5em 0 1em 0;
+}
+
+/* Poll notices */
+#poll_options p
+{
+	margin: 0 1.5em 0.2em 1.5em;
+	padding: 0 0.5em 0.5em 0.5em;
+}
+
+div#pollmoderation
+{
+	margin: 0 0 0 1em;
+	padding: 0;
+}
+
 /* onto the posts */
 #forumposts
 {

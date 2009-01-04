@@ -1034,7 +1034,7 @@ function template_package_confirm()
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>' . $context['page_title'] . '</td>
+				<td>', $context['page_title'], '</td>
 			</tr>
 			<tr>
 				<td width="100%" align="left" valign="middle" class="windowbg2">
@@ -1449,22 +1449,23 @@ function template_view_operations()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
 	</head>
 	<body>
 	<div class="tborder" style="width: 100%;">
 		<div class="titlebg" style="padding: 6px;">
 			', $txt['operation_find'], '
-			<a href="javascript:void(0);" onclick="return smfSelectText(\'find_pre\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+			<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
 		</div>
 		<div class="windowbg2" style="padding: 4px;">
-			<pre id="find_pre" style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</pre>
+			<code id="find_code" style="overflow: auto; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
 		</div>
 		<div class="titlebg" style="padding: 6px;">
 			', $txt[$operation_text], '
-			<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_pre\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
+			<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
 		</div>
 		<div class="windowbg2" style="padding: 4px;">
-			<pre id="replace_pre" style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</pre>
+			<code id="replace_code" style="overflow: auto; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</code>
 		</div>
 	</div>
 	</body>

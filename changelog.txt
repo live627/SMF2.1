@@ -5,7 +5,6 @@ SMF 2.0 RC1                                                                  ???
 ================================================================================
 January 2009
 --------------------------------------------------------------------------------
- ! Added a DAY() function to PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  ! Upcoming birthdates were incorrectly calculated causing the list to be empty during the turn of the year. (Subs-Calendar.php) [Bug 2856]
  & Updated the copyright to include 2009. (index language file)
  ! The offset for scheduled tasks was in some cases stored with an incorrect time offset. (ManageScheduledTasks.php) [Bug 2855]
@@ -23,12 +22,14 @@ January 2009
  ! url_exists function returned false on HTTP response codes 201/301/302/307, while they are currently supported by the fetch_web_data function. (Subs-Packages.php) [Bug 2699]
  ! On creating a board, the configured permission profile was ignored and overwritten by the parent board's permission profile. (ManageBoards.php, ManageBoards template, ManagePermission language file) [Bug 2823]
  ! Hide the not-so-relevant PM sections in case the user has no permissions to send PM's. (PersonalMessage.php) [Bug 2860]
+ ! Added a DAY() function to PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql)
  ! The permission check on whether a user could edit their own profile did not take into account the *_any permissions. (Profile-Modify.php) [Bug 2808]
  ! Make sure post banned users can not use SMF's email interface. (Security.php) [Bug 2859]
  * Prevent the recent posts area from showing its items all over the place. (BoardIndex template, forum.css)
  ! The jumpto box items in some cases were shown in the wrong order (script.js) [Bug 2865, Bug 412]
  * Completely redesigned the looks and layout of polls. (Display.php, Display template, forum.css) [Bug 2506], [Bug 1949], [Bug 2485]
  ! The new smiley parser didn't parse smileys containing apostrophes properly yet. (Subs.php)
+ * Viewing code in a package manager operation window wasn't working properly in Internet Explorer. (Packages template) [Bug 1803]
 
 
 December 2008

@@ -18,60 +18,30 @@ function template_main()
 	<h3 class="titlebg headerpadding">
 		<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
 	</h3>
-	<h4 class="windowbg headerpadding">
-		', $txt['poll_question'], ': <span class="plainstyle">', $context['poll']['question'];
-
-		if (!empty($context['poll']['expire_time']))
-			echo '
-		&nbsp;(', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ': ', $context['poll']['expire_time'], ')';
-
-		echo '
-		</span>
+	<h4 class="windowbg headerpadding" id="pollquestion">
+		', $context['poll']['question'], '
 	</h4>
 	<div class="windowbg clearfix" id="poll_options">';
+
 		// Are they not allowed to vote but allowed to view the options?
 		if ($context['poll']['show_results'] || !$context['allow_vote'])
 		{
 			echo '
-		<ul class="horizlist clearfix">
-			<li>
-				<dl class="options">';
+		<dl class="options">';
 
 			// Show each option with its corresponding percentage bar.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-					<dt', $option['voted_this'] ? ' class="voted"' : '', '>', $option['option'], '</dt>
-					<dd>', $context['allow_poll_view'] ? $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '</dd>';
+			<dt class="middletext ', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
+			<dd class="middletext">', $context['allow_poll_view'] ? $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '</dd>';
 
 			echo '
-				</dl>
-			</li>
-			<li>';
+		</dl>';
 
-			// If they are allowed to revote - show them a link!
-			if ($context['allow_change_vote'])
-				echo '
-				<a href="', $scripturl, '?action=vote;topic=', $context['current_topic'], '.', $context['start'], ';poll=', $context['poll']['id'], ';sesc=', $context['session_id'], '">', $txt['poll_change_vote'], '</a><br />';
-
-			// If we're viewing the results... maybe we want to go back and vote?
-			if ($context['poll']['show_results'] && $context['allow_vote'])
-				echo '
-				<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_return_vote'], '</a><br />';
-
-			// If they're allowed to lock the poll, show a link!
-			if ($context['poll']['lock'])
-				echo '
-				<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
-
-			// If they're allowed to edit the poll... guess what... show a link!
-			if ($context['poll']['edit'])
-				echo '
-				<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
-
+		if ($context['allow_poll_view'])
 			echo '
-			</li>
-		</ul>
-		<p>', $context['allow_poll_view'] ? '<strong>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</strong>' : '',  '</p>';
+		<p><b>', $txt['poll_total_voters'], ':</b> ', $context['poll']['total_votes'], '</p>';
+
 		}
 		// They are allowed to vote! Go to it!
 		else
@@ -85,49 +55,45 @@ function template_main()
 			<p class="smallpadding">', $context['poll']['allowed_warning'], '</p>';
 
 			echo '
-			<ul class="horizlist">
-				<li>
-					<ul class="options">';
+			<ul class="options">';
 
 			// Show each option with its button - a radio likely.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-						<li>', $option['vote_button'], ' <label for="', $option['id'], '">', $option['option'], '</label></li>';
+				<li class="middletext">', $option['vote_button'], ' <label for="', $option['id'], '">', $option['option'], '</label></li>';
 
 			echo '
-					</ul>
-				</li>
-				<li>
-					<p class="pollmoderation">';
-
-			// Allowed to view the results? (without voting!)
-			if ($context['allow_poll_view'])
-				echo '
-						<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';viewResults">', $txt['poll_results'], '</a><br />';
-
-			// Show a link for locking the poll as well...
-			if ($context['poll']['lock'])
-				echo '
-						<a href="', $scripturl, '?action=lockvoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock']), '</a><br />';
-
-			// Want to edit it? Click right here......
-			if ($context['poll']['edit'])
-				echo '
-						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a><br />';
-
-				echo '
-					</p>
-				</li>
 			</ul>
-			<p class="submitbutton">
+
+			<div class="submitbutton">
 				<input type="submit" value="', $txt['poll_vote'], '" />
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
-			</p>
+			</div>
 		</form>';
 		}
 
+	// Is the clock ticking?
+	if (!empty($context['poll']['expire_time']))
 		echo '
+	<p><b>', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ':</b> ', $context['poll']['expire_time'], '</p>';
+
+	echo '
 	</div>
+</div>
+<div id="pollmoderation">';
+
+	// Build the poll moderation button array.
+	$poll_buttons = array(
+		'vote' => array('test' => 'allow_vote', 'text' => 'poll_return_vote', 'image' => 'poll_options.gif', 'lang' => true, 'url' => $scripturl . '?topic=' . $context['current_topic'] . '.' . $context['start']),
+		'results' => array('test' => 'allow_poll_view', 'text' => 'poll_results', 'image' => 'poll_results.gif', 'lang' => true, 'url' => $scripturl . '?topic=' . $context['current_topic'] . '.' . $context['start'] . ';viewResults'),
+		'change_vote' => array('test' => 'allow_poll_view', 'text' => 'poll_change_vote', 'image' => 'poll_change_vote.gif', 'lang' => true, 'url' => $scripturl . '?action=vote;topic=' . $context['current_topic'] . '.' . $context['start'] . ';poll=' . $context['poll']['id'] . ';sesc=' . $context['session_id']),
+		'lock' => array('test' => 'allow_lock_poll', 'text' => (!$context['poll']['is_locked'] ? 'poll_lock' : 'poll_unlock'), 'image' => 'poll_lock.gif', 'lang' => true, 'url' => $scripturl . '?action=lockvoting;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
+		'edit' => array('test' => 'allow_edit_poll', 'text' => 'poll_edit', 'image' => 'poll_edit.gif', 'lang' => true, 'url' => $scripturl . '?action=editpoll;topic=' . $context['current_topic'] . '.' . $context['start']),
+	);
+
+	template_button_strip($poll_buttons);
+
+echo '
 </div>';
 	}
 
