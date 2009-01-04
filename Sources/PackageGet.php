@@ -255,6 +255,18 @@ function PackageGBrowse()
 
 		// Clear any "relative" URL.  Since "server" is not present, "relative" is garbage.
 		unset($_GET['relative']);
+
+		$token = checkConfirm('get_absolute_url');
+		if ($token !== true)
+		{
+			$context['sub_template'] = 'package_confirm';
+		
+			$context['page_title'] = $txt['smf183'];
+			$context['confirm_message'] = sprintf($txt['package_confirm_view_package_content'], htmlspecialchars($_GET['absolute']));
+			$context['proceed_href'] = $scripturl . '?action=packageget;sa=browse;absolute=' . urlencode($_GET['absolute']) . ';confirm=' . $token;
+			
+			return;
+		}
 	}
 	// Minimum required parameter did not exist so dump out.
 	else

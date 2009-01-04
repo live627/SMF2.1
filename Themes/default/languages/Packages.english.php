@@ -252,4 +252,8 @@ $txt['package_file_perms_warning_desc'] = '
 	<li>This functionality is mainly applicable on non-Windows based servers - it will not work as expected on Windows in regards to permission flags.</li>
 	<li>Before proceeding make sure you have an FTP client installed in case you do make an error and need to FTP into the server to remedy it.</li>';
 
+$txt['package_confirm_view_package_content'] = 'Are you sure you want to view the package contents from this location:<br /><br />%1$s';
+$txt['package_confirm_proceed'] = 'Proceed';
+$txt['package_confirm_go_back'] = 'Go back';
+
 ?>
