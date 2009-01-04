@@ -1648,7 +1648,15 @@ function MessagePost()
 				);
 			$smcFunc['db_free_result']($request);
 		}
+
+		// Get a literal name list in case the user has JavaScript disabled.
+		$names = array();
+		foreach ($context['recipients']['to'] as $to)
+			$names[] = $to['name'];
+		$context['to_value'] = empty($names) ? '' : '&quot;' . implode('&quot;, &quot;', $names) . '&quot;';
 	}
+	else
+		$context['to_value'] = '';
 
 	// Set the defaults...
 	$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];
@@ -1682,7 +1690,6 @@ function MessagePost()
 	// Store the ID for old compatibility.
 	$context['post_box_name'] = $editorOptions['id'];
 
-	$context['to_value'] = '';
 	$context['bcc_value'] = '';
 	
 	$context['require_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];

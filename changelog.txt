@@ -30,6 +30,7 @@ January 2009
  * Completely redesigned the looks and layout of polls. (Display.php, Display template, forum.css) [Bug 2506], [Bug 1949], [Bug 2485]
  ! The new smiley parser didn't parse smileys containing apostrophes properly yet. (Subs.php)
  * Viewing code in a package manager operation window wasn't working properly in Internet Explorer. (Packages template) [Bug 1803]
+ ! Recipients fields are empty when replying to a PM with JavaScript disabled. (PersonalMessage.php) [Bug 2867]
 
 
 December 2008
