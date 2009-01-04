@@ -420,7 +420,7 @@ function template_info_center()
 
 	echo '
 						</div>
-						<hr />
+						<hr class="hrcolor" />
 						<div class="smalltext">
 							', $txt['most_online_today'], ': <b>', $modSettings['mostOnlineToday'], '</b>.
 							', $txt['most_online_ever'], ': ', $modSettings['mostOnline'], ' (' , timeformat($modSettings['mostDate']), ')
