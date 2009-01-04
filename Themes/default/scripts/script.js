@@ -1006,15 +1006,17 @@ JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 		var j, sChildLevelPrefix, oOption;
 
 		// If we've reached the currently selected board add all items so far.
-		if (!aBoardsAndCategories[i].isCategory && aBoardsAndCategories[i].id == this.opt.iCurBoardId && !bIE5x)
+		if (!aBoardsAndCategories[i].isCategory && aBoardsAndCategories[i].id == this.opt.iCurBoardId)
 		{
-			this.dropdownList.insertBefore(oListFragment, this.dropdownList.options[0]);
-			oListFragment = document.createDocumentFragment();
-			continue;
+			if (bIE5x)
+				iIndexPointer = this.dropdownList.options.length;
+			else
+			{
+				this.dropdownList.insertBefore(oListFragment, this.dropdownList.options[0]);
+				oListFragment = document.createDocumentFragment();
+				continue;
+			}
 		}
-		else if (aBoardsAndCategories[i].id == this.opt.iCurBoardId && bIE5x)
-			iIndexPointer = this.dropdownList.options.length;
-
 
 		if (aBoardsAndCategories[i].isCategory)
 			oListFragment.appendChild(oDashOption.cloneNode(true));
