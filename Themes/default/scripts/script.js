@@ -1006,7 +1006,7 @@ JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 		var j, sChildLevelPrefix, oOption;
 
 		// If we've reached the currently selected board add all items so far.
-		if (aBoardsAndCategories[i].id == this.opt.iCurBoardId && !bIE5x)
+		if (!aBoardsAndCategories[i].isCategory && aBoardsAndCategories[i].id == this.opt.iCurBoardId && !bIE5x)
 		{
 			this.dropdownList.insertBefore(oListFragment, this.dropdownList.options[0]);
 			oListFragment = document.createDocumentFragment();
