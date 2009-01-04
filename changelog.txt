@@ -28,6 +28,7 @@ January 2009
  * Prevent the recent posts area from showing its items all over the place. (BoardIndex template, forum.css)
  ! The jumpto box items in some cases were shown in the wrong order (script.js) [Bug 2865, Bug 412]
  * Completely redesigned the looks and layout of polls. (Display.php, Display template, forum.css) [Bug 2506], [Bug 1949], [Bug 2485]
+ ! The new smiley parser didn't parse smileys containing apostrophes properly yet. (Subs.php)
 
 
 December 2008

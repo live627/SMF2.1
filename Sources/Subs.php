@@ -2399,7 +2399,7 @@ function parsesmileys(&$message)
 			$smileyPregReplacements[$smileysfrom[$i]] = $smileyCode;
 			$smileyPregReplacements[htmlspecialchars($smileysfrom[$i], ENT_QUOTES)] = $smileyCode;
 			$searchParts[] = preg_quote($smileysfrom[$i], '~');
-			$searchParts[] = preg_quote(htmlspecialchars($smileysfrom[$i]), '~');
+			$searchParts[] = preg_quote(htmlspecialchars($smileysfrom[$i], ENT_QUOTES), '~');
 		}
 
 		$smileyPregSearch = '~(?<=[>:\?\.\s' . $non_breaking_space . '[\]()*\\\;]|^)(' . implode('|', $searchParts) . ')(?=[^[:alpha:]0-9]|$)~e' . ($context['utf8'] ? 'u' : '');
