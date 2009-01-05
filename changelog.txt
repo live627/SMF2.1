@@ -34,6 +34,7 @@ January 2009
  ! Fixed polls not properly being displayed in right-to-left mode. (Display.php, SSI.php) [Bug 2868]
  * The horizontal ruler at the bottom of the board index info center needed a hrcolor class. (BoardIndex template) [Bug 2644]
  * The theme advertised to be valid HTML 4 instead of valid XMHTML 1. (index template) [Bug 2501]
+ ! Detect user agents 'Iceweasel' and 'IceCat' and categorize them as 'FireFox', as they are pretty much based on the same source code. (Load.php, script.js) [Bug 2486]
 
 
 December 2008

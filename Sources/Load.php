@@ -1489,9 +1489,10 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_mac_ie' => strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.') !== false && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false,
 		'is_web_tv' => strpos($_SERVER['HTTP_USER_AGENT'], 'WebTV') !== false,
 		'is_konqueror' => strpos($_SERVER['HTTP_USER_AGENT'], 'Konqueror') !== false,
-		'is_firefox' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== false,
-		'is_firefox1' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox/1.') !== false,
-		'is_firefox2' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox/2.') !== false,
+		'is_firefox' => preg_match('~(Firefox|Ice[wW]easel|IceCat)/~', $_SERVER['HTTP_USER_AGENT']) === 1,
+		'is_firefox1' => preg_match('~(Firefox|Ice[wW]easel|IceCat)/1\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
+		'is_firefox2' => preg_match('~(Firefox|Ice[wW]easel|IceCat)/2\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
+		'is_firefox3' => preg_match('~(Firefox|Ice[wW]easel|IceCat)/3\\.~', $_SERVER['HTTP_USER_AGENT']) === 1,
 		'is_iphone' => strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'iPod') !== false,
 	);
 
