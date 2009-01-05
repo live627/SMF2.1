@@ -33,6 +33,7 @@ January 2009
  ! Recipients fields are empty when replying to a PM with JavaScript disabled. (PersonalMessage.php) [Bug 2867]
  ! Fixed polls not properly being displayed in right-to-left mode. (Display.php, SSI.php) [Bug 2868]
  * The horizontal ruler at the bottom of the board index info center needed a hrcolor class. (BoardIndex template) [Bug 2644]
+ * The theme advertised to be valid HTML 4 instead of valid XMHTML 1. (index template) [Bug 2501]
 
 
 December 2008
