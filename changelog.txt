@@ -35,6 +35,7 @@ January 2009
  * The horizontal ruler at the bottom of the board index info center needed a hrcolor class. (BoardIndex template) [Bug 2644]
  * The theme advertised to be valid HTML 4 instead of valid XMHTML 1. (index template) [Bug 2501]
  ! Detect user agents 'Iceweasel' and 'IceCat' and categorize them as 'FireFox', as they are pretty much based on the same source code. (Load.php, script.js) [Bug 2486]
+ ! Fixed a typo in a comment. (Subs-Post.php) [Bug 2876]
 
 
 December 2008
@@ -438,7 +439,7 @@ July 2008
  ! Fixed javascript error expanding stats in the stats page. (stats.js) [Bug 2351]
  ! Category names wern't getting properly cleaned in the jump to box. (Xml.php) [Bug 2345]
  ! Make all Package database functions add a prefix unless told otherwise. (DbPackage-xxxx.php, upgrade.php, ManagePosts.php, convert.php) [Bug 1952]
- ! Checkboxes for move and annouce wern't being remembered upon preview. (Post.php, Post template) [Bug 2305]
+ ! Checkboxes for move and announce wern't being remembered upon preview. (Post.php, Post template) [Bug 2305]
  & Reworded the quick reply description. (index language file) [Bug 1886]
  ! Don't increment a users post count until their post has been approved. (Subs-Post.php, RemoveTopic.php, MoveTopic.php, Subs-Members.php) [Bug 2004]
  ! Don't allow people to remove every admin from the admin group. (Subs-Membergroups.php) [Bug 2102]
@@ -773,7 +774,7 @@ March 2008
  ! getEventRange didn't always include the link index of events. (Subs-Calendar.php) [Bug 1848]
  ! Change the index on the manage mail queue to make it faster. (install and upgrade scripts)
  ! Reverse the logic behind the priority flag on mails to work to MySQL's natural sorting advantage. (Many files)
- ! Annoucements and newsletters are now sent lower priority than notifications as they can go whenever. (ManageNews.php, Post.php)
+ ! Announcements and newsletters are now sent lower priority than notifications as they can go whenever. (ManageNews.php, Post.php)
  ! Make sure password/activation emails are sent right away. (Several files)
  ! Don't show areas of the moderation centre to people who can't access them. (ModerationCenter.php) [Bug 1810]
  ! Added variables for IE8. (Load.php, script.js)
@@ -4802,7 +4803,7 @@ November 2004:
  ! Attempted to make the dump database functionality ask for more memory. (DumpDatabase.php)
  * Added a few labels to the avatar section of the profile. (Profile template)
  ! Handle & -> &amp; in board descriptions on creation and edit. (ManageBoards.php)
- ! Fixed a possible error in topic annoucenment if permissions were already screwed up. (Post.php)
+ ! Fixed a possible error in topic announcenment if permissions were already screwed up. (Post.php)
  ! [quote] and /me are no longer effected negatively in [code] blocks. (Subs-Post.php)
  ! Fixed a small typo in the help. (profile help files)
  * The wrong language strings were being used for 'Total Topics'. (BoardIndex template)

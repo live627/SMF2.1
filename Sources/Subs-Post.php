@@ -2552,7 +2552,7 @@ function approvePosts($msgs, $approve = true)
 			$board_changes[$row['id_board']]['unapproved_topics'] += $approve ? -1 : 1;
 			$board_changes[$row['id_board']]['topics'] += $approve ? 1 : -1;
 
-			// Note we need to ensure we annouce this topic!
+			// Note we need to ensure we announce this topic!
 			$notification_topics[] = array(
 				'body' => $row['body'],
 				'subject' => $row['subject'],

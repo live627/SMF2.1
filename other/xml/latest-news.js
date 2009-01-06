@@ -12,7 +12,7 @@ $latest_news = Array(
 		'time' => 1205781621,
 
 		'subject_english' => 'SMF 2.0 Beta 4 Released',
-		'message_english' => 'Simple Machines are very pleased to annouce the release of the first public beta of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
+		'message_english' => 'Simple Machines are very pleased to announce the release of the first public beta of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=228921.0',
 		'author_english' => 'Grudge',
 	),
@@ -79,7 +79,7 @@ $latest_news = Array(
 		'time' => 1156203139,
 
 		'subject_english' => 'SMF 1.1 RC3',
-		'message_english' => 'Release Candidate 3 of SMF 1.1 has been released! This is the final update to SMF 1.1 before it goes final - and includes UTF support as well as numerous bug fixes. Please read the annoucement for details - and only upgrade if you are comfortable running software yet to go gold.',
+		'message_english' => 'Release Candidate 3 of SMF 1.1 has been released! This is the final update to SMF 1.1 before it goes final - and includes UTF support as well as numerous bug fixes. Please read the announcement for details - and only upgrade if you are comfortable running software yet to go gold.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=107112.0',
 		'author_english' => 'Grudge',
 	),
