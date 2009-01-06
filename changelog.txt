@@ -38,6 +38,7 @@ January 2009
  ! Fixed a typo in a comment. (Subs-Post.php) [Bug 2876]
  * Removed trailing spaces whereever they could be found. (several files) [Bug 2872]
  ! A few poll buttons would in some cases show when the action wasn't allowed. (Display.php, Display template) [Bug 2872]
+ ! Some of the issue warning links were still using the old URL structure and therefor not working properly. (ModerationCenter.php,  Display template) [Bug 2877]
 
 
 December 2008

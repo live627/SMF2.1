@@ -1130,7 +1130,7 @@ function ViewWatchedUsers()
 					'function' => create_function('$member', '
 						global $scripturl;
 
-						return allowedTo(\'issue_warning\') ? \'<a href="\' . $scripturl . \'?action=profile;u=\' . $member[\'id\'] . \';sa=issueWarning">\' . $member[\'warning\'] . \'%</a>\' : $member[\'warning\'] . \'%\';
+						return allowedTo(\'issue_warning\') ? \'<a href="\' . $scripturl . \'?action=profile;area=issuewarning;u=\' . $member[\'id\'] . \'">\' . $member[\'warning\'] . \'%</a>\' : $member[\'warning\'] . \'%\';
 					'),
 				),
 				'sort' => array(
