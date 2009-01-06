@@ -948,7 +948,7 @@ function legalise_bbc($text)
 				}
 
 				// Inline opening tag.
-				elseif (!in_array($tag, $self_closing_tags)) 
+				elseif (!in_array($tag, $self_closing_tags))
 				{
 					// Can't have two opening elements with the same contents!
 					if (isset($inlineElements[$elementContent]))
@@ -991,7 +991,7 @@ function legalise_bbc($text)
 			}
 
 			// Closing tag.
-			else 
+			else
 			{
 				// Closing the block tag.
 				if ($isBlockLevelTag)
@@ -1061,7 +1061,7 @@ function legalise_bbc($text)
 					}
 
 					// Unexpected closing tag, ex-ter-mi-nate.
-					else 
+					else
 						$parts[$i + 1] = $parts[$i + 2] = $parts[$i + 3] = $parts[$i + 4] = '';
 				}
 			}

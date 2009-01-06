@@ -24,7 +24,7 @@ ul.admin_menu li
 {
 	position: relative;
 	float: left;
-	padding-right: 4px; 
+	padding-right: 4px;
 	text-transform: uppercase;
 }
 ul.admin_menu li h4
@@ -55,12 +55,12 @@ ul.admin_menu li ul li
 	margin: 0;
 	padding: 0;
 }
-ul.admin_menu li ul 
+ul.admin_menu li ul
 {
 	margin: 0 0 0 8px;
 	z-index: 90;
 	display: none;
-	position: absolute; 
+	position: absolute;
 	top: 100%;
 	border: solid 1px #808080;
 	background: #F8F8FB;
@@ -68,7 +68,7 @@ ul.admin_menu li ul
 ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 {
 	display: none;
-	position: absolute; 
+	position: absolute;
 	left: -999em;
 	top: 0;
 	border: solid 1px #A0A0A0;
@@ -88,9 +88,9 @@ ul.admin_menu li ul li a.chosen
 {
 	font-weight: bold;
 }
-ul.admin_menu li ul li a:hover, #admin_menu ul li ul li:hover 
+ul.admin_menu li ul li a:hover, #admin_menu ul li ul li:hover
 {
-	background: #C8E2FB; 
+	background: #C8E2FB;
 }
 ul.admin_menu li > ul
 {
@@ -99,7 +99,7 @@ ul.admin_menu li > ul
 }
 ul.admin_menu li:hover ul, ul.admin_menu li.over ul
 {
-	display: block; 
+	display: block;
 }
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {

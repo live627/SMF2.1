@@ -32,14 +32,14 @@ function template_main()
 			// Show each option with its corresponding percentage bar.
 			foreach ($context['poll']['options'] as $option)
 				echo '
-			<dt class="middletext ', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
+			<dt class="middletext', $option['voted_this'] ? ' voted' : '', '">', $option['option'], '</dt>
 			<dd class="middletext">', $context['allow_poll_view'] ? $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)' : '', '</dd>';
 
 			echo '
 		</dl>';
 
-		if ($context['allow_poll_view'])
-			echo '
+			if ($context['allow_poll_view'])
+				echo '
 		<p><b>', $txt['poll_total_voters'], ':</b> ', $context['poll']['total_votes'], '</p>';
 
 		}
@@ -72,28 +72,28 @@ function template_main()
 		</form>';
 		}
 
-	// Is the clock ticking?
-	if (!empty($context['poll']['expire_time']))
-		echo '
-	<p><b>', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ':</b> ', $context['poll']['expire_time'], '</p>';
+		// Is the clock ticking?
+		if (!empty($context['poll']['expire_time']))
+			echo '
+		<p><b>', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ':</b> ', $context['poll']['expire_time'], '</p>';
 
-	echo '
+		echo '
 	</div>
 </div>
 <div id="pollmoderation">';
 
-	// Build the poll moderation button array.
-	$poll_buttons = array(
-		'vote' => array('test' => 'allow_vote', 'text' => 'poll_return_vote', 'image' => 'poll_options.gif', 'lang' => true, 'url' => $scripturl . '?topic=' . $context['current_topic'] . '.' . $context['start']),
-		'results' => array('test' => 'allow_poll_view', 'text' => 'poll_results', 'image' => 'poll_results.gif', 'lang' => true, 'url' => $scripturl . '?topic=' . $context['current_topic'] . '.' . $context['start'] . ';viewResults'),
-		'change_vote' => array('test' => 'allow_poll_view', 'text' => 'poll_change_vote', 'image' => 'poll_change_vote.gif', 'lang' => true, 'url' => $scripturl . '?action=vote;topic=' . $context['current_topic'] . '.' . $context['start'] . ';poll=' . $context['poll']['id'] . ';sesc=' . $context['session_id']),
-		'lock' => array('test' => 'allow_lock_poll', 'text' => (!$context['poll']['is_locked'] ? 'poll_lock' : 'poll_unlock'), 'image' => 'poll_lock.gif', 'lang' => true, 'url' => $scripturl . '?action=lockvoting;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
-		'edit' => array('test' => 'allow_edit_poll', 'text' => 'poll_edit', 'image' => 'poll_edit.gif', 'lang' => true, 'url' => $scripturl . '?action=editpoll;topic=' . $context['current_topic'] . '.' . $context['start']),
-	);
+		// Build the poll moderation button array.
+		$poll_buttons = array(
+			'vote' => array('test' => 'allow_return_vote', 'text' => 'poll_return_vote', 'image' => 'poll_options.gif', 'lang' => true, 'url' => $scripturl . '?topic=' . $context['current_topic'] . '.' . $context['start']),
+			'results' => array('test' => 'allow_poll_view', 'text' => 'poll_results', 'image' => 'poll_results.gif', 'lang' => true, 'url' => $scripturl . '?topic=' . $context['current_topic'] . '.' . $context['start'] . ';viewResults'),
+			'change_vote' => array('test' => 'allow_change_vote', 'text' => 'poll_change_vote', 'image' => 'poll_change_vote.gif', 'lang' => true, 'url' => $scripturl . '?action=vote;topic=' . $context['current_topic'] . '.' . $context['start'] . ';poll=' . $context['poll']['id'] . ';sesc=' . $context['session_id']),
+			'lock' => array('test' => 'allow_lock_poll', 'text' => (!$context['poll']['is_locked'] ? 'poll_lock' : 'poll_unlock'), 'image' => 'poll_lock.gif', 'lang' => true, 'url' => $scripturl . '?action=lockvoting;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
+			'edit' => array('test' => 'allow_edit_poll', 'text' => 'poll_edit', 'image' => 'poll_edit.gif', 'lang' => true, 'url' => $scripturl . '?action=editpoll;topic=' . $context['current_topic'] . '.' . $context['start']),
+		);
 
-	template_button_strip($poll_buttons);
+		template_button_strip($poll_buttons);
 
-echo '
+		echo '
 </div>';
 	}
 
@@ -199,7 +199,7 @@ echo '
 		// Show information about the poster of this message.
 		echo '
 				<div class="poster">
-					<h4>'; 
+					<h4>';
 		// Show online and offline buttons?
 		if (!empty($modSettings['onlineEnable']) && !$message['member']['is_guest'])
 			echo  $context['can_send_pm'] ? '<a href="' . $message['member']['online']['href'] . '" title="' . $message['member']['online']['label'] . '">' : '', '<img src="', $message['member']['online']['image_href'], '" alt="', $message['member']['online']['text'], '" />', $context['can_send_pm'] ? '</a>' : '', '&nbsp;';

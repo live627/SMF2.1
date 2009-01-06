@@ -206,20 +206,20 @@ ul#upper_section li.news form
 {
 	background: none;
 }
-.dropmenu ul li:hover ul 
+.dropmenu ul li:hover ul
 {
 	left: auto;
 	margin: 0;
 }
-.dropmenu li ul ul 
+.dropmenu li ul ul
 {
 	margin: -10px 0 0 90px;
 }
-.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul 
+.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul
 {
 	left: -999em;
 }
-.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul 
+.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul
 {
 	left: auto;
 }

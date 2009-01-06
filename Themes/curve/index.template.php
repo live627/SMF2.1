@@ -139,7 +139,7 @@ function template_html_above()
 		echo '
 	<link rel="index" href="', $scripturl, '?board=', $context['current_board'], '.0" />';
 
-	// the alternative fontsizes 
+	// the alternative fontsizes.
 	echo '
 	<link rel="alternate stylesheet" type="text/css" media="screen" title="mediumtext" href="', $settings['theme_url'], '/css/mediumtext.css" />
 	<link rel="alternate stylesheet" type="text/css" media="screen" title="bigtext" href="', $settings['theme_url'], '/css/bigtext.css" />';
@@ -190,7 +190,7 @@ function template_body_above()
 		<h1 class="forumtitle"><a href="', $scripturl, '">
 			', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '
 		</a></h1>
-		', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<h2 class="sitelogo">' . $settings['site_slogan'] . '</h2>', ' 
+		', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<h2 class="sitelogo">' . $settings['site_slogan'] . '</h2>', '
 		<a href="#" onclick="mainHeader.toggle(); return false;">
 			<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.png' : 'upshrink2.png', '" alt="*" title="', $txt['upshrink_description'], '" />
 		</a>

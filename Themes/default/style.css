@@ -208,26 +208,26 @@ ul.nolist li
 	display: inline;
 }
 /* Helping style to clear floated items. */
-.clearfix:after 
+.clearfix:after
 {
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
     visibility: hidden;
 }
 
-.clearfix 
+.clearfix
 {
 	display: inline-block;
 }
 
 /* Hides from IE-mac. \*/
-* html .clearfix 
+* html .clearfix
 {
 	height: 1%;
 }
-.clearfix 
+.clearfix
 {
 	display: block;
 }
@@ -512,7 +512,7 @@ code
 	clear: right;
 	float: left;
 }
-/* add a visual divider between subject and post */ 
+/* add a visual divider between subject and post */
 .post .inner
 {
 	padding-top: 0.7em;

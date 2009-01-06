@@ -244,7 +244,7 @@ function smf_db_drop_table($table_name, $parameters = array(), $error = 'fatal')
 	if (in_array($full_table_name, $smcFunc['db_list_tables']()))
 	{
 		$query = 'DROP TABLE ' . $complete_table_name;
-		$smcFunc['db_query']('', 
+		$smcFunc['db_query']('',
 			$query,
 			'security_override'
 		);

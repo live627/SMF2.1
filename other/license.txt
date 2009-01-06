@@ -42,8 +42,8 @@ such as patches. The following restrictions apply to Modifications:
 	a. A Modification must not alter or remove any copyright notices in
 the Software or Package, generated or otherwise.
 	b. When a Modification to the Package is released, a non-exclusive
-royalty-free right is granted to Simple Machines LLC to distribute the 
-Modification in future versions of the Package provided such versions remain 
+royalty-free right is granted to Simple Machines LLC to distribute the
+Modification in future versions of the Package provided such versions remain
 available under the terms of this Agreement in addition to any other license(s)
 of the initial developer.
 	c. Any Distribution of a Modified Package or derivative requires

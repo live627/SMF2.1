@@ -258,7 +258,9 @@ September 2008
  ! The togglebar function wasn't putting in the right variables all the time. (GenericMenu template) [Bug 2517]
  ! Sometimes the number of unread messages might be cached and calculated wrong for personal messages. (PersonalMessage.php) [Bug 2580]
  ! Allow admins to enable the sidebar for all members. (Settings template)
- * Changed license.txt in all theme folders from Lewis Media to Simple Machines LLC. 
+ * Changed license.txt in all theme folders from Lewis Media to Simple Machines LLC.
+ * Removed trailing spaces whereever they could be found. (several files) [Bug 2872]
+ ! A few poll buttons would in some cases show when the action wasn't allowed. (Display.php, Display template) [Bug 2872]
 
 
 SMF 2.0 Beta 4 Public                                           7 September 2008

@@ -317,7 +317,7 @@ function Login2()
 			$other_passwords[] = phpBB3_password_check($_POST['passwrd'], $user_settings['passwd']);
 
 			// APBoard 2 Login Method.
-			$other_passwords[] = md5(crypt($_REQUEST['passwrd'], 'CRYPT_MD5')); 
+			$other_passwords[] = md5(crypt($_REQUEST['passwrd'], 'CRYPT_MD5'));
 		}
 		// The hash should be 40 if it's SHA-1, so we're safe with more here too.
 		elseif (strlen($user_settings['passwd']) == 32)

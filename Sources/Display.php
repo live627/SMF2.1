@@ -793,6 +793,11 @@ function Display()
 		// 6. the poll creator has said you can!
 		$context['allow_change_vote'] = !$context['poll']['is_expired'] && !$user_info['is_guest'] && empty($pollinfo['voting_locked']) && allowedTo('poll_vote') && $context['poll']['has_voted'] && $context['poll']['change_vote'];
 
+		// You're allowed to return to voting options if:
+		// 1. you are (still) allowed to vote.
+		// 2. you are currently seeing the results.
+		$context['allow_return_vote'] = $context['allow_vote'] && $context['poll']['show_results'];
+
 		// Calculate the percentages and bar lengths...
 		$divisor = $realtotal == 0 ? 1 : $realtotal;
 

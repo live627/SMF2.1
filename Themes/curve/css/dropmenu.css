@@ -10,16 +10,16 @@
 
 #adm_container ul li a
 {
-	cursor: pointer; 
+	cursor: pointer;
 }
 #adm_container ul li ul li a
 {
 	padding-top: 5px;
 	padding-bottom: 5px;
-	padding-left: 10px; 
+	padding-left: 10px;
 	width: 193px;
 }
-#adm_container ul li ul ul 
+#adm_container ul li ul ul
 {
 	margin: -10px 0 0 120px;
 }

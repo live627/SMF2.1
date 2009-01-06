@@ -130,13 +130,13 @@ ul, ul li
 .middletext
 {
 	font-size: 0.9em;
-	line-height: 1em; 
+	line-height: 1em;
 	font-family: verdana, sans-serif;
 }
 .normaltext
 {
 	font-size: 1em;
-	line-height: 1.2em; 
+	line-height: 1.2em;
 }
 .largetext
 {
@@ -410,12 +410,12 @@ tr.catbg th.smalltext
 }
 
 /* lists in these need some re-styling */
-.post ul li, .personalmessage ul li, .signature ul li 
+.post ul li, .personalmessage ul li, .signature ul li
 {
 	list-style: disc outside;
 	margin: 0 0 0 2em;
 }
-.post ul li li, .personalmessage ul li li, .signature ul li li 
+.post ul li li, .personalmessage ul li li, .signature ul li li
 {
 	list-style: circle outside;
 	margin: 0 0 0 2em;
@@ -545,26 +545,26 @@ table.table_grid td
 	border-right: solid 1px white;
 }
 /* Helping style to clear floated items. */
-.clearfix:after 
+.clearfix:after
 {
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
     visibility: hidden;
 }
 
-.clearfix 
+.clearfix
 {
 	display: inline-block;
 }
 
 /* Hides from IE-mac. \*/
-* html .clearfix 
+* html .clearfix
 {
 	height: 1%;
 }
-.clearfix 
+.clearfix
 {
 	display: block;
 }

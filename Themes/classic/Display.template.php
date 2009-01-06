@@ -106,7 +106,7 @@ function template_main()
 						<a href="', $scripturl, '?action=vote;topic=', $context['current_topic'], '.', $context['start'], ';poll=', $context['poll']['id'], ';sesc=', $context['session_id'], '">', $txt['poll_change_vote'], '</a><br />';
 
 			// If we're viewing the results... maybe we want to go back and vote?
-			if ($context['poll']['show_results'] && $context['allow_vote'])
+			if ($context['poll']['allow_return_vote'])
 				echo '
 						<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_return_vote'], '</a><br />';
 
