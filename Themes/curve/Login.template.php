@@ -303,7 +303,7 @@ function template_admin_openid_disabled()
 				<td align="left">
 					', $txt['openid_admin_disallowed_desc'], '<br />
 					<hr />
-					', sprintf($txt['openid_admin_disallowed_desc2'], $scripturl . '?action=profile;sa=account;u=' . $context['user']['id']), '
+					', sprintf($txt['openid_admin_disallowed_desc2'], $scripturl . '?action=profile;area=account;u=' . $context['user']['id']), '
 				</td>
 			</tr>
 		</table>

@@ -1008,7 +1008,7 @@ function PickTheme()
 				$_SESSION['id_variant'] = 0;
 			}
 
-			redirectexit('action=profile;sa=theme');
+			redirectexit('action=profile;area=theme');
 		}
 
 		// If changing members or guests - and there's a variant - assume changing default variant.
@@ -1072,7 +1072,7 @@ function PickTheme()
 					$_SESSION['id_variant'] = 0;
 			}
 
-			redirectexit('action=profile;u=' . (int) $_REQUEST['u'] . ';sa=theme');
+			redirectexit('action=profile;u=' . (int) $_REQUEST['u'] . ';area=theme');
 		}
 	}
 
