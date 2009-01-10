@@ -357,7 +357,6 @@ function template_folder()
 			// Show the member's signature?
 			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 				echo '
-								<hr width="100%" size="1" class="hrcolor" />
 								<div class="signature">', $message['member']['signature'], '</div>';
 
 			echo '

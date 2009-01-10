@@ -47,6 +47,7 @@ January 2009
  * Moved the 'remove poll' button from the moderation button strip to the poll buton strip. (Display template) [Bug 2873]
  * The lower button strip wasn't getting the proper amount of padding. (style.css)  
  ! The banned email check on registration did not work properly for bans that were set to never expire. (Security.php) [Bug 2883]
+ * The signature was displayed with two lines above in both the profile summary and the Personal Messages index. (Profile template, PersonalMessage template) [Bug 2882]
 
 
 December 2008

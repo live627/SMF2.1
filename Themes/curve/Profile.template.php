@@ -155,7 +155,7 @@ function template_summary()
 	}
 	
 	echo '
-			<dl', !isset($context['signature_enabled']) ? 'class="noborder"' : '', '>';
+			<dl', empty($context['signature_enabled']) ? ' class="noborder"' : '', '>';
 
 	// Can they view/issue a warning?
 	if ($context['can_view_warning'] && $context['member']['warning'])
