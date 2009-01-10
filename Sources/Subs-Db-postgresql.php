@@ -255,7 +255,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			'~(.)$~' => '$1 ORDER BY b.board_order',
 		),
 		'get_random_number' => array(
-			'RAND' => 'RANDOM',
+			'~RAND~' => 'RANDOM',
 		),
 		'messageindex_fetch_boards' => array(
 			'~(.)$~' => '$1 ORDER BY b.board_order',
