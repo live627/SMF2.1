@@ -97,8 +97,11 @@ function template_main()
 			// If they're allowed to edit the poll... guess what... show a link!
 			if ($context['poll']['edit'])
 				echo '
-						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
+						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a><br />';
 
+			if ($context['can_remove_poll'])
+				echo '
+						<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">', $txt['poll_remove'], '</a>';
 			echo '
 					</td>
 				</tr>', $context['allow_poll_view'] ? '
@@ -146,7 +149,11 @@ function template_main()
 			// Want to edit it?  Click right here......
 			if ($context['poll']['edit'])
 				echo '
-							<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
+							<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a><br />';
+
+			if ($context['can_remove_poll'])
+				echo '
+						<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">', $txt['poll_remove'], '</a>';
 
 			echo '
 						</td>

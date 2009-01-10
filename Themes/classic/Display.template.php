@@ -118,7 +118,11 @@ function template_main()
 			// If they're allowed to edit the poll... guess what... show a link!
 			if ($context['poll']['edit'])
 				echo '
-						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
+						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a><br />';
+
+			if ($context['can_remove_poll'])
+				echo '
+						<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">', $txt['poll_remove'], '</a>';
 
 			echo '
 					</td>
@@ -167,7 +171,11 @@ function template_main()
 			// Want to edit it?  Click right here......
 			if ($context['poll']['edit'])
 				echo '
-							<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
+							<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a><br />';
+
+			if ($context['can_remove_poll'])
+				echo '
+						<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">', $txt['poll_remove'], '</a>';
 
 			echo '
 						</td>
@@ -762,8 +770,6 @@ function theme_show_mod_buttons()
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_sticky.gif" alt="' . (empty($context['is_sticky']) ? $txt['set_sticky'] : $txt['set_nonsticky']) . '" border="0" />' : (empty($context['is_sticky']) ? $txt['set_sticky'] : $txt['set_nonsticky'])) . '</a>';
 	if ($context['can_merge'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/merge.gif" alt="' . $txt['merge'] . '" border="0" />' : $txt['merge']) . '</a>';
-	if ($context['can_remove_poll'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 
 	if ($context['calendar_post'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/linktocal.gif" alt="' . $txt['calendar_link'] . '" border="0" />' : $txt['calendar_link']) . '</a>';
