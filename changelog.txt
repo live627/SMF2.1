@@ -52,6 +52,7 @@ January 2009
  ! No longer support mb_convert_case as UTF8 alternative for ucwords as it behaves differently than ucwords. (Load.php) [Bug 2880]
  * The calendar board index icon in some cases was positioned too low. (forum.css) [Bug 2603]
  ! Both the Postgresql and sqlite database layers did not replace the random function properly. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2878]
+ * Added a bit more padding to the AJAX in progress bar. (style.css) [Bug 2653] 
 
 
 December 2008

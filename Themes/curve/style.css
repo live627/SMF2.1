@@ -486,7 +486,7 @@ a.moderation_link, a.moderation_link:visited
 	text-align: center;
 	font-weight: bold;
 	font-size: 18pt;
-	padding: 3px;
+	padding: 0.4em;
 	width: 100%;
 	position: fixed;
 	top: 0;
