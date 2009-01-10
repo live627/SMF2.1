@@ -45,6 +45,7 @@ January 2009
  ! Autocomplete was not turned off in Opera by the JavaScript auto suggest function. (suggest.js) [Bug 2888]
  ! The pruning options assignment was done incorrectly (ManageSettings.php) [Bug 2884]
  * Moved the 'remove poll' button from the moderation button strip to the poll buton strip. (Display template) [Bug 2873]
+ * The lower button strip wasn't getting the proper amount of padding. (style.css)  
 
 
 December 2008

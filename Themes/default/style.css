@@ -67,6 +67,7 @@ textarea
 /* All input elements that are checkboxes or radio buttons. */
 input.check
 {
+	border: none;
 }
 
 /* Selects are a bit smaller, because it makes them look even better 8). */
@@ -664,7 +665,7 @@ a.moderation_link, a.moderation_link:visited
 .buttonlist ul li a span.last, .buttonlist_bottom ul li a span.last
 {
 	background: url(images/maintab_last.gif) no-repeat bottom right;
-	padding: 0.1em 1em 0.5em 0.5em;
+	padding: 0.1em 1.5em 0.5em 0.5em;
 }
 
 /* For links that are basically submit buttons. */
