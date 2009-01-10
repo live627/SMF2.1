@@ -248,13 +248,12 @@ function reloadSettings()
 		'ucfirst' => $utf8 ? create_function('$string', '
 			global $smcFunc;
 			return $smcFunc[\'strtoupper\']($smcFunc[\'substr\']($string, 0, 1)) . $smcFunc[\'substr\']($string, 1);') : 'ucfirst',
-		'ucwords' => $utf8 ? (function_exists('mb_convert_case') ? create_function('$string', '
-			return mb_convert_case($string, MB_CASE_TITLE, \'UTF-8\');') : create_function('$string', '
+		'ucwords' => $utf8 ? create_function('$string', '
 			global $smcFunc;
 			$words = preg_split(\'~([\s\r\n\t]+)~\', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
 			for ($i = 0, $n = count($words); $i < $n; $i += 2)
 				$words[$i] = $smcFunc[\'ucfirst\']($words[$i]);
-			return implode(\'\', $words);')) : 'ucwords',
+			return implode(\'\', $words);') : 'ucwords',
 	);
 
 	// Some mods may already be using $func, so lets be nice and make it accessible to them, but only if its not defined yet.
