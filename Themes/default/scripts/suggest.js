@@ -261,7 +261,7 @@ smc_AutoSuggest.prototype.handleSubmit = function()
 }
 
 // Positions the box correctly on the window.
-smc_AutoSuggest.prototype.postitionDiv = function()
+smc_AutoSuggest.prototype.positionDiv = function()
 {
 	// Only do it once.
 	if (this.bPositionComplete)
@@ -389,7 +389,7 @@ smc_AutoSuggest.prototype.autoSuggestShow = function()
 		this.oHideTimer = false;
 	}
 
-	this.postitionDiv();
+	this.positionDiv();
 
 	this.oSuggestDivHandle.style.visibility = 'visible';
 	this.oSuggestDivHandle.style.display = '';
