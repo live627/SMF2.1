@@ -59,6 +59,7 @@ smc_AutoSuggest.prototype.init = function init()
 
 	// Disable autocomplete in any browser by obfuscating the name.
 	this.oTextHandle.name = 'dummy_' + Math.floor(Math.random() * 1000000);
+	this.oTextHandle.autocomplete = 'off';
 
 	this.oTextHandle.instanceRef = this;
 

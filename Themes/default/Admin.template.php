@@ -1520,7 +1520,7 @@ function template_download_language()
 
 	// Provide something of an introduction...
 	echo '
-	<form action="', $scripturl, '?action=admin;area=serversettings;sa=downloadlang;did=', $context['download_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td>

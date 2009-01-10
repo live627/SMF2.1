@@ -546,7 +546,11 @@ function template_modify_group_simple($type)
 			if ($permission['hidden'] || $permissionGroup['hidden'])
 			{
 				echo '
-									<input type="hidden" name="perm[', $type, '][', $permission['id'], ']" value="', $permission['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['select'], '" />';
+							<tr style="display: none;">
+								<td>
+									<input type="hidden" name="perm[', $type, '][', $permission['id'], ']" value="', $permission['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['select'], '" />
+								</td>
+							</tr>';
 			}
 			else
 			{
@@ -793,6 +797,10 @@ function template_modify_group_classic($type)
 				// If it's hidden keep the last value.
 				if ($permission['hidden'] || $permissionGroup['hidden'])
 				{
+					echo '
+							<tr style="display: none;">
+								<td>';
+
 					if ($permission['has_own_any'])
 						echo '
 									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']" value="', $permission['own']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['own']['select'], '" />
@@ -800,6 +808,9 @@ function template_modify_group_classic($type)
 					else
 						echo '
 									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['id'], ']" value="', $permission['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['select'], '" />';
+					echo '
+								</td>
+							</tr>';
 				}
 				else
 				{

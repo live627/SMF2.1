@@ -345,7 +345,7 @@ function template_show_spider_logs()
 		<tr class="catbg">
 			<td align="right">
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" onclick="if (document.getElementById(\'older\').value < 1 && !confirm(\'' . addcslashes($txt['spider_logs_delete_confirm'], "'") . '\')) return false; return true;" />
+				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" onclick="if (document.getElementById(\'older\').value &lt; 1 &amp;&amp; !confirm(\'' . addcslashes($txt['spider_logs_delete_confirm'], "'") . '\')) return false; return true;" />
 			</td>
 		</tr>
 	</table>

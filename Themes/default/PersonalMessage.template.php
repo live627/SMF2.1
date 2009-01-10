@@ -1498,9 +1498,9 @@ function template_add_rule()
 					if (document.forms.addrule.elements[i].id.substr(0, 8) == "ruletype")
 					{
 						if (foundCriteria)
-							joinText = document.getElementById("logic").value == "and" ? " ', $txt['pm_readable_and'], ' " : " ', $txt['pm_readable_or'], ' ";
+							joinText = document.getElementById("logic").value == \'and\' ? ', JavaScriptEscape(' ' . $txt['pm_readable_and'] . ' '), ' : ', JavaScriptEscape(' ' . $txt['pm_readable_or'] . ' '), ';
 						else
-							joinText = "";
+							joinText = \'\';
 						foundCriteria = true;
 
 						curNum = document.forms.addrule.elements[i].id.match(/\d+/);
@@ -1515,23 +1515,23 @@ function template_add_rule()
 						curDef = smf_htmlspecialchars(curDef);
 						// What type of test is this?
 						if (curVal == "mid" && curDef)
-							text += joinText + "', $txt['pm_readable_member'], '".replace("{MEMBER}", curDef);
+							text += joinText + ', JavaScriptEscape($txt['pm_readable_member']), '.replace("{MEMBER}", curDef);
 						else if (curVal == "gid" && curDef && groups[curDef])
-							text += joinText + "', $txt['pm_readable_group'], '".replace("{GROUP}", groups[curDef]);
+							text += joinText + ', JavaScriptEscape($txt['pm_readable_group']), '.replace("{GROUP}", groups[curDef]);
 						else if (curVal == "sub" && curDef)
-							text += joinText + "', $txt['pm_readable_subject'], '".replace("{SUBJECT}", curDef);
+							text += joinText + ', JavaScriptEscape($txt['pm_readable_subject']), '.replace("{SUBJECT}", curDef);
 						else if (curVal == "msg" && curDef)
-							text += joinText + "', $txt['pm_readable_body'], '".replace("{BODY}", curDef);
+							text += joinText + ', JavaScriptEscape($txt['pm_readable_body']), '.replace("{BODY}", curDef);
 						else if (curVal == "bud" && !hadBuddy)
 						{
-							text += joinText + "', $txt['pm_readable_buddy'], '";
+							text += joinText + ', JavaScriptEscape($txt['pm_readable_buddy']), ';
 							hadBuddy = true;
 						}
 					}
 					if (document.forms.addrule.elements[i].id.substr(0, 7) == "acttype")
 					{
 						if (foundAction)
-							joinText = " ', $txt['pm_readable_and'], ' ";
+							joinText = ', JavaScriptEscape(' ' . $txt['pm_readable_and'] . ' '), ';
 						else
 							joinText = "";
 						foundAction = true;
@@ -1546,9 +1546,9 @@ function template_add_rule()
 						curDef = smf_htmlspecialchars(curDef);
 						// Now pick the actions.
 						if (curVal == "lab" && curDef && labels[curDef])
-							actionText += joinText + "', $txt['pm_readable_label'], '".replace("{LABEL}", labels[curDef]);
+							actionText += joinText + ', JavaScriptEscape($txt['pm_readable_label']), '.replace("{LABEL}", labels[curDef]);
 						else if (curVal == "del")
-							actionText += joinText + "', $txt['pm_readable_delete'], '";
+							actionText += joinText + ', JavaScriptEscape($txt['pm_readable_delete']), ';
 					}
 				}
 
@@ -1558,8 +1558,8 @@ function template_add_rule()
 				else
 				{
 					if (actionText != "")
-						text += " ', $txt['pm_readable_then'], ' " + actionText;
-					text = "', $txt['pm_readable_start'], '" + text + "', $txt['pm_readable_end'], '";
+						text += ', JavaScriptEscape(' ' . $txt['pm_readable_then'] . ' '), ' + actionText;
+					text = ', JavaScriptEscape($txt['pm_readable_start']), ' + text + ', JavaScriptEscape($txt['pm_readable_end']), ';
 				}
 
 				// Set the actual HTML!

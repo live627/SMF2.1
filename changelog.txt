@@ -39,6 +39,10 @@ January 2009
  * Removed trailing spaces whereever they could be found. (several files) [Bug 2872]
  ! A few poll buttons would in some cases show when the action wasn't allowed. (Display.php, Display template) [Bug 2872]
  ! Some of the issue warning links were still using the old URL structure and therefor not working properly. (ModerationCenter.php,  Display template) [Bug 2877]
+ * Fixed language package download form redirecting to an old URL. (Admin template)
+ * Fixed a few xHTML validation errors. (ManageSearch template, ManagePermissions template, PersonalMessage template)
+ ! Fixed a notice in the awaiting approval/activation screens, caused by the duplicate members check. (Subs-Members.php)
+ ! Autocomplete was not turned off in Opera by the JavaScript auto suggest function. (suggest.js) [Bug 2888]
 
 
 December 2008
