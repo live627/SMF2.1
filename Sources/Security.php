@@ -593,7 +593,7 @@ function isBannedEmail($email, $restriction, $error)
 			INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
 		WHERE {string:email} LIKE bi.email_address
 			AND (bg.' . $restriction . ' = {int:cannot_access} OR bg.cannot_access = {int:cannot_access})
-			AND bg.expire_time >= {int:now}',
+			AND (bg.expire_time IS NULL OR bg.expire_time >= {int:now})',
 		array(
 			'email' => $email,
 			'cannot_access' => 1,
