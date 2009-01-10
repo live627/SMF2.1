@@ -50,6 +50,7 @@ January 2009
  * The signature was displayed with two lines above in both the profile summary and the Personal Messages index. (Profile template, PersonalMessage template) [Bug 2882]
  ! Fixed a typo in an AutoSuggest method name. (suggest.js) [Bug 2881]
  ! No longer support mb_convert_case as UTF8 alternative for ucwords as it behaves differently than ucwords. (Load.php) [Bug 2880]
+ * The calendar board index icon in some cases was positioned too low. (forum.css) [Bug 2603]
 
 
 December 2008

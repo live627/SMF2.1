@@ -108,6 +108,7 @@ table.boardsframe p.children
 	margin-left: 3%;
 	padding: 0.3em;
 	border-left: solid #a0a0a0 1px;
+	min-height: 25px;
 }
 /* recent posts - or just one recent post */
 dl#infocenter_recentposts
