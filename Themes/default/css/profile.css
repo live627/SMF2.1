@@ -19,7 +19,7 @@
 }
 #profileview #detailedinfo .content
 {
-	padding: 0.7em 1.3em;
+	padding: 0.7em 1.2em;
 }
 
 
@@ -84,7 +84,6 @@
 {
 	clear: both;
 	overflow: auto;
-	height: 0.1%;
 	margin: 0 0 18px 0;
 	padding: 0 0 15px 0;
 	border-bottom: 1px #ccc solid;
@@ -107,7 +106,7 @@
 }
 #detailedinfo div.content dl.noborder
 {
-	border-bottom: 0px;
+	border-bottom: 0;
 }
 #detailedinfo div.content dt.clear
 {

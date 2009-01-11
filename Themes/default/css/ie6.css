@@ -14,3 +14,9 @@
 {
 	clear: none;
 }
+
+/* Profile template */
+#detailedinfo div.content dl
+{
+	height: 0.1%;
+}

@@ -87,7 +87,7 @@ function template_summary()
 		</div>
 		<span class="botslice"><span></span></span>
 	</div></div>
-	<div id="detailedinfo"><div class="windowbg2">
+	<div id="detailedinfo"><div class="windowbg2 clearfix">
 		<span class="topslice"><span></span></span>
 		<div class="content">
 			<dl>';
