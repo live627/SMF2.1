@@ -319,7 +319,7 @@ function template_info_center()
 					<p class="section">
 						<a href="', $scripturl, '?action=calendar' . '"><img src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a>
 					</p>
-					<div class="sectionbody windowbg2">';
+					<div class="sectionbody windowbg2 middletext">';
 
 		// Holidays like "Christmas", "Chanukah", and "We Love [Unknown] Day" :P.
 		if (!empty($context['calendar_holidays']))
