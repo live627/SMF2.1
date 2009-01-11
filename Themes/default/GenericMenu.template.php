@@ -99,32 +99,30 @@ function template_generic_menu_dropdown_above()
 
 	if (!empty($menu_context['can_toggle_drop_down']))
 		echo '
-		<table cellpadding="0" cellspacing="0" id="menu_toggle">
-			<tr>
-				<td class="mirrortab_first"></td>
-				<td class="mirrortab_back">
-					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=1;sesc=', $context['session_id'], '"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="*" /><span>!</span></a>
-				</td>
-				<td class="mirrortab_last"></td>
-			</tr>
-		</table>';
+		<div id="menu_toggle">
+			<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=1;sesc=', $context['session_id'], '"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="*" /></a>
+		</div>';
 
 	echo '
 	<div id="adm_container">
 		<ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
 
 	// Main areas first.
+	$s = 0;
 	foreach ($menu_context['sections'] as $section)
 	{
+		$s ++;
+		$is_last = $s == count($menu_context['sections']);
+		
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li class="chosen"><h4>', $section['title'] , '</h4>
+			<li class="chosen', $is_last ? ' last' : '', '"><h4>', $section['title'] , '</h4>
 				<ul>';
 		}
 		else
 			echo '
-			<li><h4>', $section['title'] , '</h4>
+			<li', $is_last ? ' class="last"' : '', '><h4>', $section['title'] , '</h4>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)

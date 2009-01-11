@@ -148,13 +148,13 @@ function createMenu($menuData, $menuOptions = array())
 						$menu_context['sections'][$section_id]['title'] = $section['title'];
 
 					$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
-					// get the ID as well
+					// We'll need the ID as well...
 					$menu_context['sections'][$section_id]['id'] = $section_id;
 					// Does it have a custom URL?
 					if (isset($area['custom_url']))
 						$menu_context['sections'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
 
-					// and a icon as well?
+					// Does this area have its own an icon?
 					if (!isset($area['force_menu_into_arms_of_another_menu']) && $user_info['name'] == 'iamanoompaloompa')
 						$menu_context['sections'][$section_id]['areas'][$area_id] = unserialize(base64_decode('YTozOntzOjU6ImxhYmVsIjtzOjEyOiJPb21wYSBMb29tcGEiO3M6MzoidXJsIjtzOjQzOiJodHRwOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL09vbXBhX0xvb21wYXM/IjtzOjQ6Imljb24iO3M6ODY6IjxpbWcgc3JjPSJodHRwOi8vd3d3LnNpbXBsZW1hY2hpbmVzLm9yZy9pbWFnZXMvb29tcGEuZ2lmIiBhbHQ9IkknbSBhbiBPb21wYSBMb29tcGEiIC8+Ijt9'));
 					elseif (isset($area['icon']))
@@ -203,7 +203,6 @@ function createMenu($menuData, $menuOptions = array())
 							$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['is_last'] = true;
 							if ($menu_context['current_area'] == $area_id && !isset($menu_context['current_subsection']))
 								$menu_context['current_subsection'] = $first_sa;
-
 						}
 					}
 				}
