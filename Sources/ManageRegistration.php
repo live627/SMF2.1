@@ -138,7 +138,7 @@ function AdminRegister()
 			'check_email_ban' => false,
 			'send_welcome_email' => isset($_POST['emailPassword']),
 			'require' => isset($_POST['emailActivate']) ? 'activation' : 'nothing',
-			'memberGroup' => empty($_POST['group']) ? 0 : (int) $_POST['group'],
+			'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
 		);
 
 		require_once($sourcedir . '/Subs-Members.php');
@@ -160,26 +160,31 @@ function AdminRegister()
 	$context['page_title'] = $txt['registration_center'];
 
 	// Load the assignable member groups.
-	$request = $smcFunc['db_query']('', '
-		SELECT group_name, id_group
-		FROM {db_prefix}membergroups
-		WHERE id_group != {int:moderator_group}
-			AND min_posts = {int:min_posts}' . (allowedTo('admin_forum') ? '' : '
-			AND id_group != {int:admin_group}') . '
-			AND hidden != {int:hidden_group}
-		ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
-		array(
-			'moderator_group' => 3,
-			'min_posts' => -1,
-			'admin_group' => 1,
-			'hidden_group' => 2,
-			'newbie_group' => 4,
-		)
-	);
-	$context['member_groups'] = array(0 => &$txt['admin_register_group_none']);
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$context['member_groups'][$row['id_group']] = $row['group_name'];
-	$smcFunc['db_free_result']($request);
+	if (allowedTo('manage_membergroups'))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT group_name, id_group
+			FROM {db_prefix}membergroups
+			WHERE id_group != {int:moderator_group}
+				AND min_posts = {int:min_posts}' . (allowedTo('admin_forum') ? '' : '
+				AND id_group != {int:admin_group}') . '
+				AND hidden != {int:hidden_group}
+			ORDER BY min_posts, CASE WHEN id_group < {int:newbie_group} THEN id_group ELSE 4 END, group_name',
+			array(
+				'moderator_group' => 3,
+				'min_posts' => -1,
+				'admin_group' => 1,
+				'hidden_group' => 2,
+				'newbie_group' => 4,
+			)
+		);
+		$context['member_groups'] = array(0 => $txt['admin_register_group_none']);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['member_groups'][$row['id_group']] = $row['group_name'];
+		$smcFunc['db_free_result']($request);
+	}
+	else
+		$context['member_groups'] = array();
 }
 
 // I hereby agree not to be a lazy bum.

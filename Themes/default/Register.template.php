@@ -623,7 +623,12 @@ function template_admin_register()
 				<td width="50%" align="left">
 					<input type="password" name="password" id="password_input" size="30" /><br />
 				</td>
-			</tr><tr class="windowbg2">
+			</tr>';
+
+	if (!empty($context['member_groups']))
+	{
+		echo '
+			<tr class="windowbg2">
 				<th width="50%" align="right">
 					<label for="group_select">', $txt['admin_register_group'], ':</label>
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_group_desc'], '</div>
@@ -631,13 +636,17 @@ function template_admin_register()
 				<td width="50%" align="left">
 					<select name="group" id="group_select">';
 
-	foreach ($context['member_groups'] as $id => $name)
-		echo '
+		foreach ($context['member_groups'] as $id => $name)
+			echo '
 						<option value="', $id, '">', $name, '</option>';
-	echo '
+		echo '
 					</select><br />
 				</td>
-			</tr><tr class="windowbg2">
+			</tr>';
+	}
+
+	echo '
+			<tr class="windowbg2">
 				<th width="50%" align="right">
 					<label for="emailPassword_check">', $txt['admin_register_email_detail'], ':</label>
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_email_detail_desc'], '</div>
