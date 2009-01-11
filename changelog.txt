@@ -57,6 +57,7 @@ January 2009
  ! Selecting a membergroup when registering someone from the admin area now requires the manage_membergroups permission. (ManageRegistration.php, Register template) [Bug 2816]
  ! Fixed approving posts on boards with 'Count Posts' disabled increased the posters post count. (Subs-Post.php) [Bug 2814]
  * Restructured the dropmenu styles to make the generic menus more flexible. (dropmenu.css, GenericMenu template) [Bug 1187], [Bug 2866]
+ ! Notifications regarding the (un)locking of topics weren't always reporting the right status. (MessageIndex.php) [Bug 2891]   
 
 
 December 2008

@@ -1120,7 +1120,7 @@ function QuickModeration()
 	foreach ($lockCache as $topic)
 	{
 		logAction('lock', array('topic' => $topic, 'board' => $lockCacheBoards[$topic]));
-		sendNotifications($topic, $lockStatus ? 'lock' : 'unlock');
+		sendNotifications($topic, $lockStatus[$topic] ? 'lock' : 'unlock');
 	}
 	foreach ($stickyCache as $topic)
 	{
