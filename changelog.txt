@@ -55,6 +55,7 @@ January 2009
  * Added a bit more padding to the AJAX in progress bar. (style.css) [Bug 2653] 
  ! The current theme area should act like a shortcut to the current theme's settings. (Admin.php) [Bug 2863] 
  ! Selecting a membergroup when registering someone from the admin area now requires the manage_membergroups permission. (ManageRegistration.php, Register template) [Bug 2816]
+ ! Fixed approving posts on boards with 'Count Posts' disabled increased the posters post count. (Subs-Post.php) [Bug 2814]
 
 
 December 2008
