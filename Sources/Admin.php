@@ -212,12 +212,6 @@ function AdminMain()
 					'function' => 'ThemesMain',
 					'custom_url' => $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id'],
 					'icon' => 'current_theme.gif',
-					'subsections' => array(
-						'admin' => array($txt['themeadmin_admin_title']),
-						'list' => array($txt['themeadmin_list_title']),
-						'reset' => array($txt['themeadmin_reset_title']),
-						'edit' => array($txt['themeadmin_edit_title']),
-					),
 				),
 				'theme' => array(
 					'label' => $txt['theme_admin'],
@@ -479,10 +473,6 @@ function AdminMain()
 	);
 
 	$menuOptions = array();
-
-	// Add a work around for editing current theme.
-	if (isset($_GET['area']) && $_GET['area'] == 'theme' && isset($_GET['th']) && $_GET['th'] == $settings['theme_id'])
-		$menuOptions['current_area'] = 'current_theme';
 
 	// Make sure the administrator has a valid session...
 	validateSession();
