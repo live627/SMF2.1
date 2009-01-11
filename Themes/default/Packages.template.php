@@ -1458,14 +1458,14 @@ function template_view_operations()
 			<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
 		</div>
 		<div class="windowbg2" style="padding: 4px;">
-			<code id="find_code" style="overflow: auto; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
+			<code id="find_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
 		</div>
 		<div class="titlebg" style="padding: 6px;">
 			', $txt[$operation_text], '
 			<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
 		</div>
 		<div class="windowbg2" style="padding: 4px;">
-			<code id="replace_code" style="overflow: auto; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</code>
+			<code id="replace_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['replace'], '</code>
 		</div>
 	</div>
 	</body>

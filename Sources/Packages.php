@@ -1477,8 +1477,8 @@ function ViewOperations()
 
 	// Ok lets get the content of the file.
 	$context['operations'] = array(
-		'search' => nl2br(str_replace("\t", "&nbsp;&nbsp;&nbsp;", $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['search_original'], ENT_QUOTES))),
-		'replace' => nl2br(str_replace("\t", "&nbsp;&nbsp;&nbsp;", $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['replace_original'], ENT_QUOTES))),
+		'search' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['search_original'], ENT_QUOTES),
+		'replace' => $smcFunc['htmlspecialchars']($mod_actions[$_REQUEST['operation_key']]['replace_original'], ENT_QUOTES),
 		'position' => $mod_actions[$_REQUEST['operation_key']]['position'],
 	);
 
