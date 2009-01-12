@@ -61,6 +61,10 @@ January 2009
  ! Made the 'delete item' text for autosuggest items translatable. (suggest.js, PersonalMessage.js, various template files)
  & Added a language new string to support this change. (index language file)
  ! Internet Explorer 7 doesn't require a javascript fix for the dropdown menu's, so don't override its mouseover events. (script.js, menu.js)
+ ! Change the way binary strings are built up from using the pack function to using double quoted strings. (Load.php, QueryString.php, Register.php, Search.php, Subs-Members.php, Subs-Post.php, Subs.php)
+ ! Define custom properties of prototyped built-in JavaScript classes on forehand to make sure Chrome likes it. (script.js)
+ ! In case the WYSIWYG editor has no selection, its getRange method function should return null; caused an error in Chrome. (editor.js)
+ * Inline message icon modification was no longer working properly due to a missing div. (Display templates)
 
 
 December 2008

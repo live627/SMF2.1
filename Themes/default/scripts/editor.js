@@ -1088,7 +1088,7 @@ SmfEditor.prototype.getRange = function()
 	if (is_ie && oSelection.createRange)
 		return oSelection.createRange();
 
-	return oSelection.getRangeAt(0);
+	return oSelection.rangeCount == 0 ? null : oSelection.getRangeAt(0);
 }
 
 // Get the current element.
