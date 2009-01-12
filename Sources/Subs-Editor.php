@@ -303,7 +303,7 @@ function html_to_bbc($text)
 
 						case 'font-size':
 							// Sometimes people put decimals where decimals should not be.
-							if (preg_match('~(\d)+\.\d+(p[xt])~i', $style_value, $matches))
+							if (preg_match('~(\d)+\.\d+(p[xt])~i', $style_value, $matches) === 1)
 								$style_value = $matches[1] . $matches[2];
 
 							$curCloseTags .= '[/size]';
@@ -367,7 +367,7 @@ function html_to_bbc($text)
 	$text = $replacement;
 
 	// Let's pull out any legacy alignments.
-	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(align="*(left|center|right)"*)[^<>]*?(/?)>~i', $text, $matches) != false)
+	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(align="*(left|center|right)"*)[^<>]*?(/?)>~i', $text, $matches) === 1)
 	{
 		// Find the position in the text of this tag over again.
 		$start_pos = strpos($text, $matches[0]);
@@ -399,7 +399,7 @@ function html_to_bbc($text)
 	}
 
 	// Let's do some special stuff for fonts - cause we all love fonts.
-	while (preg_match('~<font\s+([^<>]*)>~i', $text, $matches) != false)
+	while (preg_match('~<font\s+([^<>]*)>~i', $text, $matches) === 1)
 	{
 		// Find the position of this again.
 		$start_pos = strpos($text, $matches[0]);
@@ -487,7 +487,7 @@ function html_to_bbc($text)
 	}
 
 	// I love my own image...
-	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) != false)
+	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) === 1)
 	{
 		// Find the position of the image.
 		$start_pos = strpos($text, $matches[0]);
@@ -560,7 +560,7 @@ function html_to_bbc($text)
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
 	// What about URL's - the pain in the ass of the tag world.
-	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
+	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) === 1)
 	{
 		// Find the position of the URL.
 		$start_pos = strpos($text, $matches[0]);
