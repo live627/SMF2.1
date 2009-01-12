@@ -2225,7 +2225,7 @@ function template_error_message()
 	global $context, $txt;
 
 	echo '
-		<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;" class="error">
+		<div class="windowbg error" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;">
 			<span style="text-decoration: underline;">', !empty($context['custom_error_title']) ? $context['custom_error_title'] : $txt['profile_errors_occurred'], ':</span>
 			<ul>';
 

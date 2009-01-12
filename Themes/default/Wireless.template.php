@@ -1022,7 +1022,7 @@ function template_wap2_pm()
 			echo '
 				<form action="', $scripturl, '?action=pm;sa=send2;wap2" method="post">
 					<p class="catbg">', $txt['new_message'], '</p>', empty($context['post_error']['messages']) ? '' : '
-					<p class="windowbg" class="error">' . implode('<br />', $context['post_error']['messages']) . '</p>', '
+					<p class="windowbg error">' . implode('<br />', $context['post_error']['messages']) . '</p>', '
 					<p class="windowbg">
 						<b>', $txt['pm_to'], ':</b> ';
 			if (empty($context['recipients']['to']))

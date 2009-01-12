@@ -83,7 +83,7 @@ function template_before()
 	if (!empty($context['registration_errors']))
 	{
 		echo '
-	<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;" class="error">
+	<div class="windowbg error" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red;">
 		<span style="text-decoration: underline;">', $txt['registration_errors_occurred'], '</span>
 		<ul>';
 
