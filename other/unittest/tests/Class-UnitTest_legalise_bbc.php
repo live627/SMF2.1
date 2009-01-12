@@ -124,13 +124,17 @@
 				'input' => '[sabc]xyz',
 				'output' => '[sabc]xyz',
 			),
-			
-			
 			'tags_with_content_1' => array(
 				'name' => 'Tags with properties (1)',
 				'description' => "Make sure that tags with content are properly handled.\n\nStandard quote tag.",
 				'input' => 'a[i]b[quote author=Compuart link=topic=245544.msg1586074#msg1586074 date=1214018832]c[/quote]d[/i]e',
 				'output' => 'a[i]b[/i][quote author=Compuart link=topic=245544.msg1586074#msg1586074 date=1214018832][i]c[/i][/quote][i]d[/i]e',
+			),
+			'hr_tags_1' => array(
+				'name' => 'hr tags (1)',
+				'description' => "Make sure that hr tags are properly handled.\n\n.",
+				'input' => "[hr]a\n[hr]",
+				'output' => "[hr]a\n[hr]",
 			),
 		);
 		
@@ -181,7 +185,7 @@
 				return true;
 				
 			else
-				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", $this->_tests[$testID]['input'], $this->_tests[$testID]['output'], $output);
+				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($this->_tests[$testID]['output']), htmlspecialchars($output));
 		}
 		
 		public function getTestDescription($testID)

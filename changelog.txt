@@ -65,6 +65,9 @@ January 2009
  ! Define custom properties of prototyped built-in JavaScript classes on forehand to make sure Chrome likes it. (script.js)
  ! In case the WYSIWYG editor has no selection, its getRange method function should return null; caused an error in Chrome. (editor.js)
  * Inline message icon modification was no longer working properly due to a missing div. (Display templates)
+ * Some classes were defined twice in the same HTML tag. (Subs.php, Profile templates, Login templates, ManagePaid templates, Register templates, Wireless templates) [Bug 2894]
+ ! Self-closing tags were treated as block tags by the legalise_bbc function causing unnecessary close tags to be added while switching from WYSIWYG to normal text. (Subs-Editor.php) [Bug 2895]
+ ! The amount of line breaks was incorrect for [hr]-tags when switching from WYSIWYG to normal text mode. (Subs-Editor.php) [Bug 2179]
 
 
 December 2008

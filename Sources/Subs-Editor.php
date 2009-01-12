@@ -551,7 +551,8 @@ function html_to_bbc($text)
 		'~<(td|th)(\s(.)*?)*?>~i' => '[td]',
 		'~</(td|th)>~i' => '[/td]',
 		'~<br\s*/*>~i' => "\n",
-		'~<hr[^<>]*>~i' => '[hr]',
+		'~(.+?)(<hr[^<>]*>)~si' => "$1\n\$2",
+		'~<hr[^<>]*>~i' => "[hr]\n",
 	);
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
@@ -860,7 +861,7 @@ function legalise_bbc($text)
 			$tag = $parts[$i + 3];
 			$isOpeningTag = $parts[$i + 2] === '';
 			$isClosingTag = $parts[$i + 2] === '/';
-			$isBlockLevelTag = isset($valid_tags[$tag]) && $valid_tags[$tag];
+			$isBlockLevelTag = isset($valid_tags[$tag]) && $valid_tags[$tag] && !in_array($tag, $self_closing_tags);
 
 			// Special case: inside [code] blocks any code is left untouched.
 			if ($tag === 'code')
