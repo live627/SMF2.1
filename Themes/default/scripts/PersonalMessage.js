@@ -41,6 +41,7 @@ smf_PersonalMessageSend.prototype.init = function()
 		sSearchType: 'member',
 		sPostName: 'recipient_to',
 		sURLMask: 'action=profile;u=%item_id%',
+		sTextDeleteItem: this.opt.sTextDeleteItem,
 		bItemList: true,
 		sItemListContainerId: 'to_item_list_container',
 		aListItems: this.opt.aToRecipients
@@ -55,6 +56,7 @@ smf_PersonalMessageSend.prototype.init = function()
 		sSearchType: 'member',
 		sPostName: 'recipient_bcc',
 		sURLMask: 'action=profile;u=%item_id%',
+		sTextDeleteItem: this.opt.sTextDeleteItem,
 		bItemList: true,
 		sItemListContainerId: 'bcc_item_list_container',
 		aListItems: this.opt.aBccRecipients

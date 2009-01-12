@@ -1060,6 +1060,7 @@ function template_send()
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',
 				sSessionId: \'', $context['session_id'], '\',
+				sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 				sToControlId: \'to_control\',
 				aToRecipients: [';
 	foreach ($context['recipients']['to'] as $i => $member)

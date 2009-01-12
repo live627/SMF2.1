@@ -26,7 +26,9 @@ function smc_AutoSuggest(oOptions)
 	// Are there any items that should be added in advance?
 	this.aListItems = typeof(this.opt.aListItems) == 'object' ? this.opt.aListItems : [];
 
-	this.sItemTemplate = typeof(this.opt.sItemTemplate) == 'string' ? this.opt.sItemTemplate : '<input type="hidden" name="%post_name%[]" value="%item_id%" /><a href="%item_href%" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">%item_name%</a>&nbsp;<input type="image" src="%images_url%/pm_recipient_delete.gif" onclick="return %self%.deleteAddedItem(%item_id%);" alt="%delete_text%" />';
+	this.sItemTemplate = typeof(this.opt.sItemTemplate) == 'string' ? this.opt.sItemTemplate : '<input type="hidden" name="%post_name%[]" value="%item_id%" /><a href="%item_href%" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">%item_name%</a>&nbsp;<input type="image" src="%images_url%/pm_recipient_delete.gif" onclick="return %self%.deleteAddedItem(%item_id%);" alt="%delete_text%" title="%delete_text%" />';
+
+	this.sTextDeleteItem = typeof(this.opt.sTextDeleteItem) == 'string' ? this.opt.sTextDeleteItem : '';
 
 	this.oCallback = {};
 	this.bDoAutoAdd = false;
@@ -337,7 +339,7 @@ smc_AutoSuggest.prototype.addItemLink = function (sItemId, sItemName, bFromSubmi
 
 	var oNewDiv = document.createElement('div');
 	oNewDiv.id = 'suggest_' + this.opt.sSuggestId + '_' + sItemId;
-	setInnerHTML(oNewDiv, this.sItemTemplate.replace(/%post_name%/g, this.opt.sPostName).replace(/%item_id%/g, sItemId).replace(/%item_href%/g, smf_prepareScriptUrl(smf_scripturl) + this.opt.sURLMask.replace(/%item_id%/g, sItemId)).replace(/%item_name%/g, sItemName).replace(/%images_url%/g, smf_images_url).replace(/%self%/g, this.opt.sSelf).replace(/%delete_text%/g, 'Delete item'));
+	setInnerHTML(oNewDiv, this.sItemTemplate.replace(/%post_name%/g, this.opt.sPostName).replace(/%item_id%/g, sItemId).replace(/%item_href%/g, smf_prepareScriptUrl(smf_scripturl) + this.opt.sURLMask.replace(/%item_id%/g, sItemId)).replace(/%item_name%/g, sItemName).replace(/%images_url%/g, smf_images_url).replace(/%self%/g, this.opt.sSelf).replace(/%delete_text%/g, this.sTextDeleteItem));
 	this.oItemList.appendChild(oNewDiv);
 
 	// Clear the div a bit.

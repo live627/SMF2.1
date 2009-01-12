@@ -204,6 +204,7 @@ function template_ban_edit()
 			sSuggestId: \'user\',
 			sControlId: \'user\',
 			sSearchType: \'member\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			bItemList: false
 		});
 
@@ -277,6 +278,7 @@ function template_ban_edit_trigger()
 			sSuggestId: \'username\',
 			sControlId: \'user\',
 			sSearchType: \'member\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			bItemList: false
 		});
 

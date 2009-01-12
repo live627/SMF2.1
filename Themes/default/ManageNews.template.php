@@ -194,6 +194,7 @@ function template_email_members()
 			bItemList: true,
 			sPostName: \'member_list\',
 			sURLMask: \'action=profile;u=%item_id%\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			sItemListContainerId: \'members_container\',
 			aListItems: []
 		});
@@ -206,6 +207,7 @@ function template_email_members()
 			bItemList: true,
 			sPostName: \'exclude_member_list\',
 			sURLMask: \'action=profile;u=%item_id%\',
+			sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 			sItemListContainerId: \'exclude_members_container\',
 			aListItems: []
 		});
