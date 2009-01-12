@@ -60,6 +60,7 @@ January 2009
  ! Notifications regarding the (un)locking of topics weren't always reporting the right status. (MessageIndex.php) [Bug 2891]   
  ! Made the 'delete item' text for autosuggest items translatable. (suggest.js, PersonalMessage.js, various template files)
  & Added a language new string to support this change. (index language file)
+ ! Internet Explorer 7 doesn't require a javascript fix for the dropdown menu's, so don't override its mouseover events. (script.js, menu.js)
 
 
 December 2008

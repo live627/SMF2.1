@@ -23,7 +23,7 @@ function smfMenu(menuID)
 			return false;
 
 		// Don't need it?
-		if (!is_ie)
+		if (!is_ie6down)
 			return false;
 
 		// Get all potential child nodes.
@@ -71,19 +71,6 @@ function smfMenu(menuID)
 		{
 			// ... but only if it's not too close to the mouse!
 			itemPos = smf_itemPos(killPile[elementID]);
-
-			// Mouse near the X boundaries?
-			//!!! This doesn't really work!
-			/*var tolerance = 25;
-			if (mousePos[0] > itemPos[0] - tolerance && mousePos[0] < itemPos[0] + killPile[elementID].offsetWidth + tolerance)
-			{
-				// .. and the Y?
-				if (mousePos[1] > itemPos[1] - tolerance && mousePos[1] < itemPos[1] + killPile[elementID].offsetHeight + tolerance)
-				{
-					setTimeout(function() {killElement(elementID);}, 10);
-					return true;
-				}
-			}*/
 
 			// Otherwise delete!
 			killPile[elementID].className = killPile[elementID].className.replace(" over", "");

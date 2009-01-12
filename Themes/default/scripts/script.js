@@ -29,6 +29,7 @@ var is_ie55 = is_ie && ua.indexOf("msie 5.5") != -1;
 var is_ie5up = is_ie && !is_ie4;
 var is_ie6 = is_ie && ua.indexOf("msie 6") != -1;
 var is_ie6up = is_ie5up && !is_ie55 && !is_ie5;
+var is_ie6down = is_ie6 || is_ie5 || is_ie4;
 var is_ie7 = is_ie && ua.indexOf("msie 7") != -1;
 var is_ie7up = is_ie6up && !is_ie6;
 var is_ie7down = is_ie7 || is_ie6 || is_ie5 || is_ie4;
