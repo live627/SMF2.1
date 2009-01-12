@@ -379,20 +379,23 @@ function html_to_bbc($text)
 		{
 			$end_length = strlen('</' . $matches[1] . '>');
 			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
+			
+
+			// Remove the align from that tag so it's never checked again.
+			$tag = substr($text, $start_pos, strlen($matches[0]));
+			$content = substr($text, $start_pos + strlen($matches[0]), $end_pos - $start_pos - strlen($matches[0]));
+			$tag = str_replace($matches[2], '', $tag);
+	
+			// Put the tags back into the body.
+			$text = substr($text, 0, $start_pos) . $tag . '[' . $matches[3] . ']' . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos);
+			
 		}
 		else
 		{
-			$end_length = 0;
-			$end_pos = $start_pos + strlen($matches[0]);
+			// Just get rid of this evil tag.
+			$text = substr($text, 0, $start_pos) . substr($text, $start_pos + strlen($matches[0]));
+			
 		}
-
-		// Remove the align from that tag so it's never checked again.
-		$tag = substr($text, $start_pos, strlen($matches[0]));
-		$content = substr($text, $start_pos + strlen($matches[0]), $end_pos - $start_pos - strlen($matches[0]));
-		$tag = str_replace($matches[2], '', $tag);
-
-		// Put the tags back into the body.
-		$text = substr($text, 0, $start_pos) . '[' . $matches[3] . ']' . $tag . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos + $end_length);
 	}
 
 	// Let's do some special stuff for fonts - cause we all love fonts.

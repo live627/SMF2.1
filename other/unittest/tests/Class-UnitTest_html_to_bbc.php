@@ -9,6 +9,19 @@
 				'input' => '<hr></hr>a<div><br></div><div><hr></hr></div>',
 				'output' => "[hr]\na\n\n[hr]\n",
 			),
+			'tables_1' => array(
+				'name' => 'tables (1)',
+				'description' => "Make sure that tables are properly handled.\n\nRight aligned table cell.",
+				'input' => '<table><tr><td align="right">a</td></tr></table>',
+				'output' => "[table][tr][td][right]a[/right][/td][/tr][/table]",
+			),
+			'tables_2' => array(
+				'name' => 'tables (1)',
+				'description' => "Make sure that tables are properly handled.\n\n.Right aligned table cell but with no closure.",
+				'input' => '<table><tr><td align="right">a</tr></table>',
+				'output' => "[table][tr]a[/tr][/table]",
+			),
+
 		);
 		
 		public function initialize()
