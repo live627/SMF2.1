@@ -385,8 +385,9 @@ function template_main()
 		// Show the post itself, finally!
 		echo '
 					</ul>';
+
 		if ($ignoring)
-			echo '<div id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
+			echo '<div id="msg_', $message['id'], '_ignored_prompt" style="display: none; clear: left">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
 
 		echo '
 					<div class="post" id="msg_', $message['id'], '"', '>';
