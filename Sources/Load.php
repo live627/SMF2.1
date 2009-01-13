@@ -1570,12 +1570,13 @@ function loadTheme($id_theme = 0, $initialize = true)
 		if ($cur_language !== 'english')
 			loadLanguage('Modifications', 'english', false);
 
-		// Load each template.... and attempt to load its associated language file.
+		// Load each template...
 		foreach ($templates as $template)
-		{
 			loadTemplate($template, $template);
-			loadLanguage($template . '+Modifications', '', false);
-		}
+
+		// ...and attempt to load their associated language files.
+		$required_files = implode('+', $templates + array('Modifications'));
+		loadLanguage($required_files, '', false);
 
 		// Custom template layers?
 		if (isset($settings['theme_layers']))
