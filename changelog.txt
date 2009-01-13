@@ -74,6 +74,7 @@ January 2009
  * Prevent feedback messages from creating a gap between menu and content. (Profile template, profile.css) [Bug 2893] 
  ! The container of the inline message icon changer wasn't getting the proper width in all browsers. (script.js) [Bug 2176]
  ! Do a proper check on the availability of a Personal Message. (PersonalMessage.php)
+ * Don't show a border below vote options if there's no expiration date set. (Display template, forum.css)
 
 
 December 2008

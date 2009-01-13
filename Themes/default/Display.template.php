@@ -65,7 +65,7 @@ function template_main()
 			echo '
 			</ul>
 
-			<div class="submitbutton">
+			<div class="submitbutton', !empty($context['poll']['expire_time']) ? ' border' : '', '">
 				<input type="submit" value="', $txt['poll_vote'], '" />
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
 			</div>

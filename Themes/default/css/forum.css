@@ -253,9 +253,13 @@ h4#pollquestion
 }
 #poll_options div.submitbutton
 {
-	border-bottom: 1px solid #696969;
 	clear: both;
 	padding: 0 0 1em 2em;
+}
+
+#poll_options div.submitbutton.border
+{
+	border-bottom: 1px solid #696969;
 	margin: 0 0 1em 0;
 }
 
