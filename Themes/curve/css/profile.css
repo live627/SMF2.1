@@ -141,3 +141,28 @@
 {
 	clear: both;
 }
+
+/* Simple feedback messages */
+div#profile_error, div#profile_success
+{
+	margin-bottom: 0.5em;
+	padding: 1ex 2ex;
+	border: 1px solid;
+}
+
+div#profile_error
+{
+	border-color: red;
+	color: red;
+}
+
+div#profile_error span
+{
+	text-decoration: underline;
+}
+
+div#profile_success
+{
+	border-color: green;
+	color: green;
+}

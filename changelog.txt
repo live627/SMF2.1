@@ -71,6 +71,7 @@ January 2009
  ! The WYSIWYG table cell alignment conversion wasn't working properly, causing pasted tables to be parsed incorrectly. (Subs-Editor.php)
  * The message index produced invalid xHTML code in case there were no messages. (MessageIndex templates) [Bug 2889]
  * Make sure the tabs in the help section align properly. (Help template, help.css) [Bug 2698] 
+ * Prevent feedback messages from creating a gap between menu and content. (Profile template, profile.css) [Bug 2893] 
 
 
 December 2008
