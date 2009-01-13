@@ -72,7 +72,8 @@ January 2009
  * The message index produced invalid xHTML code in case there were no messages. (MessageIndex templates) [Bug 2889]
  * Make sure the tabs in the help section align properly. (Help template, help.css) [Bug 2698] 
  * Prevent feedback messages from creating a gap between menu and content. (Profile template, profile.css) [Bug 2893] 
- ! The container of the inline message icon changer wasn't getting the proper width in all browsers. (script.js) [Bug 2176] 
+ ! The container of the inline message icon changer wasn't getting the proper width in all browsers. (script.js) [Bug 2176]
+ ! Do a proper check on the availability of a Personal Message. (PersonalMessage.php)
 
 
 December 2008

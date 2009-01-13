@@ -471,8 +471,13 @@ function MessageFolder()
 	// ... but wait - what if we want to start from a specific message?
 	if (isset($_GET['pmid']))
 	{
-		$_GET['pmid'] = (int) $_GET['pmid'];
-		$context['current_pm'] = $_GET['pmid'];
+		$pmID = (int) $_GET['pmid'];
+
+		// Make sure you have access to this PM.
+		if (!isAccessiblePM($pmID, $context['folder'] == 'sent' ? 'outbox' : 'inbox'))
+			fatal_lang_error('no_access');
+
+		$context['current_pm'] = $pmID;
 
 		// With only one page of PM's we're gonna want page 1.
 		if ($max_messages <= $modSettings['defaultMaxMessages'])
@@ -490,7 +495,7 @@ function MessageFolder()
 					array(
 						'current_member' => $user_info['id'],
 						'not_deleted' => 0,
-						'id_pm' => $_GET['pmid'],
+						'id_pm' => $pmID,
 					)
 				);
 			else
@@ -504,7 +509,7 @@ function MessageFolder()
 					array(
 						'current_member' => $user_info['id'],
 						'not_deleted' => 0,
-						'id_pm' => $_GET['pmid'],
+						'id_pm' => $pmID,
 					)
 				);
 
@@ -514,6 +519,15 @@ function MessageFolder()
 			// To stop the page index's being abnormal, start the page on the page the message would normally be located on...
 			$_GET['start'] = $modSettings['defaultMaxMessages'] * (int) ($_GET['start'] / $modSettings['defaultMaxMessages']);
 		}
+	}
+
+	// Sanitize and validate pmsg variable if set.
+	if (isset($_GET['pmsg']))
+	{
+		$pmsg = (int) $_GET['pmsg'];
+
+		if (!isAccessiblePM($pmsg, $context['folder'] == 'sent' ? 'outbox' : 'inbox'))
+			fatal_lang_error('no_access');
 	}
 
 	// Set up the page index.
@@ -549,16 +563,16 @@ function MessageFolder()
 						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:id_member})') : '') . '
 				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
-					AND pm.deleted_by_sender = {int:not_deleted}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+					AND pm.deleted_by_sender = {int:not_deleted}' : '1=1') . (empty($pmsg) ? '' : '
 					AND pm.id_pm = {int:id_pm}') . '
 				GROUP BY pm.id_pm_head
-				ORDER BY sort_param' . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				ORDER BY sort_param' . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
 				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
 				array(
 					'current_member' => $user_info['id'],
 					'not_deleted' => 0,
 					'id_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
-					'id_pm' => (int) $_GET['pmsg'],
+					'id_pm' => $pmsg,
 					'sort' => $_GET['sort'],
 				)
 			);
@@ -579,7 +593,7 @@ function MessageFolder()
 						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:id_member})') : '') . '
 				WHERE ' . (empty($sub_pms) ? '0=1' : 'pm.id_pm IN ({array_int:pm_list})') . '
-				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
 				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
 				array(
 					'current_member' => $user_info['id'],
@@ -602,7 +616,7 @@ function MessageFolder()
 						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
 				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
-					AND pm.deleted_by_sender = {int:deleted_by}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+					AND pm.deleted_by_sender = {int:deleted_by}' : '1=1') . (empty($pmsg) ? '' : '
 					AND pm.id_pm = {int:pmsg}') . '
 				GROUP BY pm.id_pm_head
 				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
@@ -612,7 +626,7 @@ function MessageFolder()
 					'deleted_by' => 0,
 					'sort' => $_GET['sort'],
 					'pm_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
-					'pmsg' => isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0,
+					'pmsg' => isset($pmsg) ? (int) $pmsg : 0,
 				)
 			);
 		}
@@ -631,16 +645,16 @@ function MessageFolder()
 					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
 			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {raw:current_member}
-				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($pmsg) ? '' : '
 				AND pm.id_pm = {int:pmsg}') . '
-			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
 			LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
 			array(
 				'current_member' => $user_info['id'],
 				'is_deleted' => 0,
 				'sort' => $_GET['sort'],
 				'pm_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
-				'pmsg' => isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0,
+				'pmsg' => isset($pmsg) ? (int) $pmsg : 0,
 			)
 		);
 	}
@@ -664,7 +678,7 @@ function MessageFolder()
 		}
 
 		// Keep track of the last message so we know what the head is without another query!
-		if ((empty($context['current_pm']) && (empty($options['view_newest_pm_first']) || !isset($lastData))) || empty($lastData) || (!empty($context['current_pm']) && $context['current_pm'] == $row['id_pm']))
+		if ((empty($pmID) && (empty($options['view_newest_pm_first']) || !isset($lastData))) || empty($lastData) || (!empty($pmID) && $pmID == $row['id_pm']))
 			$lastData = array(
 				'id' => $row['id_pm'],
 				'head' => $row['id_pm_head'],
@@ -675,7 +689,7 @@ function MessageFolder()
 	if (!empty($pms))
 	{
 		// Select the correct current message.
-		if (empty($context['current_pm']))
+		if (empty($pmID))
 			$context['current_pm'] = $lastData['id'];
 
 		// This is a list of the pm's that are used for "full" display.
@@ -1482,7 +1496,11 @@ function MessagePost()
 	// Quoting/Replying to a message?
 	if (!empty($_REQUEST['pmsg']))
 	{
-		$_REQUEST['pmsg'] = (int) $_REQUEST['pmsg'];
+		$pmsg = (int) $_REQUEST['pmsg'];
+
+		// Make sure this is yours.
+		if (!isAccessiblePM($pmsg))
+			fatal_lang_error('no_access');
 
 		// Work out whether this is one you've received?
 		$request = $smcFunc['db_query']('', '
@@ -1494,7 +1512,7 @@ function MessagePost()
 			LIMIT 1',
 			array(
 				'current_member' => $user_info['id'],
-				'id_pm' => $_REQUEST['pmsg'],
+				'id_pm' => $pmsg,
 			)
 		);
 		$isReceived = $smcFunc['db_num_rows']($request) != 0;
@@ -1516,7 +1534,7 @@ function MessagePost()
 			array(
 				'current_member' => $user_info['id'],
 				'id_pm_head_empty' => 0,
-				'id_pm' => $_REQUEST['pmsg'],
+				'id_pm' => $pmsg,
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) == 0)
@@ -1613,7 +1631,7 @@ function MessagePost()
 					AND pmr.bcc = {int:not_bcc}',
 				array(
 					'current_member' => $user_info['id'],
-					'id_pm' => $_REQUEST['pmsg'],
+					'id_pm' => $pmsg,
 					'not_bcc' => 0,
 				)
 			);
@@ -2887,7 +2905,12 @@ function ReportMessage()
 	if (empty($modSettings['enableReportPM']) || empty($_REQUEST['pmsg']))
 		fatal_lang_error('no_access', false);
 
-	$context['pm_id'] = (int) $_REQUEST['pmsg'];
+	$pmsg = (int) $_REQUEST['pmsg'];
+	
+	if (!isAccessiblePM($pmsg, 'inbox'))
+		fatal_lang_error('no_access');
+
+	$context['pm_id'] = $pmsg;
 	$context['page_title'] = $txt['pm_report_title'];
 
 	// If we're here, just send the user to the template, with a few useful context bits.
@@ -3398,6 +3421,55 @@ function LoadRules($reload = false)
 			$context['rules'][$row['id_rule']]['actions'][] = array('t' => 'del', 'v' => 1);
 	}
 	$smcFunc['db_free_result']($request);
+}
+
+// Check if the PM is available to the current user.
+function isAccessiblePM($pmID, $validFor = 'in_or_outbox')
+{
+	global $user_info, $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT 
+			pm.id_member_from = {int:id_current_member} AND pm.deleted_by_sender = {int:not_deleted} AS valid_for_outbox,
+			pmr.id_pm IS NOT NULL valid_for_inbox
+		FROM {db_prefix}personal_messages AS pm
+			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.id_member = {int:id_current_member} AND pmr.deleted = {int:not_deleted})
+		WHERE pm.id_pm = {int:id_pm}
+			AND ((pm.id_member_from = {int:id_current_member} AND pm.deleted_by_sender = {int:not_deleted}) OR pmr.id_pm IS NOT NULL)',	
+		array(
+			'id_pm' => $pmID,
+			'id_current_member' => $user_info['id'],
+			'not_deleted' => 0,
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) === 0)
+	{
+		$smcFunc['db_free_result']($request);
+		return false;
+	}
+
+	$validationResult = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	switch ($validFor)
+	{
+		case 'inbox':
+			return !empty($validationResult['valid_for_inbox']);
+		break;
+
+		case 'outbox':
+			return !empty($validationResult['valid_for_outbox']);
+		break;
+
+		case 'in_or_outbox':
+			return !empty($validationResult['valid_for_inbox']) || !empty($validationResult['valid_for_outbox']);
+		break;
+
+		default:
+			trigger_error('Undefined validation type given', E_USER_ERROR);
+		break;
+	}
 }
 
 ?>
