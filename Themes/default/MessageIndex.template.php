@@ -140,14 +140,14 @@ function template_main()
 
 		echo '
 			<div class="tborder" id="messageindex">
-				<table cellspacing="1" class="bordercolor boardsframe">
-					<thead>
-						<tr>';
+				<table cellspacing="1" class="bordercolor boardsframe">';
 
 		// Are there actually any topics to show?
 		if (!empty($context['topics']))
 		{
 			echo '
+					<thead>
+						<tr>
 							<th width="9%" colspan="2" class="catbg3 headerpadding">&nbsp;</th>
 							<th class="catbg3 headerpadding"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
 							<th class="catbg3 headerpadding" width="11%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
@@ -165,15 +165,11 @@ function template_main()
 			elseif (!empty($options['display_quick_mod']))
 				echo '
 							<th class="catbg3 headerpadding" width="4%"></th>';
-		}
-		// No topics.... just say, "sorry bub".
-		else
 			echo '
-							<th class="catbg3" colspan="7"><strong>', $txt['msg_alert_none'], '</strong></th>';
-
-		echo '
 						</tr>
-					</thead>
+					</thead>';
+		}
+		echo '
 					<tbody>';
 
 		if (!empty($settings['display_who_viewing']))
@@ -200,6 +196,13 @@ function template_main()
 							</td>
 						</tr>';
 		}
+
+		// No topics.... just say, "sorry bub".
+		if (empty($context['topics']))
+			echo '
+						<tr class="windowbg2">
+							<td class="catbg3" colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '"><strong>', $txt['msg_alert_none'], '</strong></td>
+						</tr>';
 
 		foreach ($context['topics'] as $topic)
 		{

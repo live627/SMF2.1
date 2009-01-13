@@ -69,6 +69,7 @@ January 2009
  ! Self-closing tags were treated as block tags by the legalise_bbc function causing unnecessary close tags to be added while switching from WYSIWYG to normal text. (Subs-Editor.php) [Bug 2895]
  ! The amount of line breaks was incorrect for [hr]-tags when switching from WYSIWYG to normal text mode. (Subs-Editor.php) [Bug 2179]
  ! The WYSIWYG table cell alignment conversion wasn't working properly, causing pasted tables to be parsed incorrectly. (Subs-Editor.php)
+ * The message index produced invalid xHTML code in case there were no messages. (MessageIndex templates) [Bug 2889]
 
 
 December 2008
