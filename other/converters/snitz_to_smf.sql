@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Snitz Forums"
 /******************************************************************************/
----~ version: "SMF 2.0"
+---~ version: "SMF 1.1"
 ---~ parameters: snitz_database text=MySQL database used by Snitz
 ---~ from_prefix: "`$snitz_database`."
 ---~ table_test: "{$from_prefix}FORUM_MEMBERS"
@@ -13,6 +13,14 @@
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}members;
+DROP TABLE IF EXISTS {$to_prefix}convert;
+
+CREATE TABLE IF NOT EXISTS {$to_prefix}convert (
+  old_id_topic int(10) unsigned NULL default '0',
+  old_id_msg int(10) unsigned NULL default '0',
+  msg_date bigint(20) unsigned NULL default '0',
+  type varchar(80) NOT NULL default ''
+ ) TYPE=MyISAM;
 
 ---* {$to_prefix}members
 SELECT
@@ -41,6 +49,26 @@ FROM {$from_prefix}FORUM_MEMBERS;
 ---*
 
 /******************************************************************************/
+--- Preparing Conversion (part 1)...
+/******************************************************************************/
+
+---* {$to_prefix}convert 200
+SELECT
+	REPLY_ID AS old_id_msg, 'msg' AS type, R_DATE AS msg_date, TOPIC_ID AS old_id_topic
+FROM {$from_prefix}forum_reply;
+---*
+
+/******************************************************************************/
+--- Preparing Conversion (part 2)...
+/******************************************************************************/
+
+---* {$to_prefix}convert 200
+SELECT
+	TOPIC_ID AS old_id_topic, 'topic' AS type, T_DATE AS msg_date
+FROM {$from_prefix}FORUM_TOPICS;
+---*
+
+/******************************************************************************/
 --- Converting categories...
 /******************************************************************************/
 
@@ -58,8 +86,9 @@ FROM {$from_prefix}FORUM_CATEGORY;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
+
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_profile > 4;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
@@ -72,67 +101,11 @@ FROM {$from_prefix}FORUM_FORUM;
 ---*
 
 /******************************************************************************/
---- Converting posts (this may take some time)...
-/******************************************************************************/
-
-TRUNCATE {$to_prefix}messages;
-TRUNCATE {$to_prefix}attachments;
-
----{
-$_SESSION['convert_topics'] = array();
----}
-
----* {$to_prefix}messages 100
----{
-$no_add = true;
-$keys = array('id_topic', 'id_board', 'poster_time', 'id_member', 'subject', 'poster_name', 'poster_email', 'poster_ip', 'body', 'modified_name', 'modified_time', 'icon');
-
-if (!in_array($row['id_topic'], $_SESSION['convert_topics']))
-{
-	if ($row['Tmodified_name'] == '')
-		$row['Tmodified_name'] = "''";
-	else
-		$row['Tmodified_name'] = "'" . addslashes(substr($row['Tmodified_name'], 0, 255)) . "'";
-
-	$rows[] = "$row[id_topic], $row[id_board], $row[Tposter_time], $row[Tid_member], '" . addslashes(substr($row['subject'], 0, 255)) . "', '" . addslashes(substr($row['Tposter_name'], 0, 255)) . "', '" . addslashes(substr($row['Tposter_email'], 0, 255)) . "', '" . substr($row['Tposter_ip'], 0, 255) . "', '" . addslashes(substr($row['Tbody'], 0, 65534)) . "',  $row[Tmodified_name], " . (int) $row['Tmodified_time'] . ", 'xx'";
-
-	$_SESSION['convert_topics'][] = $row['id_topic'];
-}
-
-if (!empty($row['Rposter_time']))
-{
-	if ($row['Rmodified_name'] == '')
-		$row['Rmodified_name'] = "''";
-	else
-		$row['Rmodified_name'] = "'" . addslashes(substr($row['Rmodified_name'], 0, 255)) . "'";
-
-	$rows[] = "$row[id_topic], $row[id_board], $row[Rposter_time], $row[Rid_member], 'Re: " . addslashes(substr($row['subject'], 0, 255)) . "', '" . addslashes(substr($row['Rposter_name'], 0, 255)) . "', '" . addslashes(substr($row['Rposter_email'], 0, 255)) . "', '" . substr($row['Rposter_ip'], 0, 255) . "', '" . addslashes(substr($row['Rbody'], 0, 65534)) . "', $row[Rmodified_name], " . (int) $row['Rmodified_time'] . ", 'xx'";
-}
----}
-SELECT
-	ft.TOPIC_ID AS id_topic, ft.FORUM_ID AS id_board, T_SUBJECT AS subject,
-	UNIX_TIMESTAMP(REPLACE(ft.T_DATE, '\0', '')) AS Tposter_time, T_AUTHOR AS Tid_member,
-	T_IP AS Tposter_ip, IFNULL(ftm.real_name, '') AS Tposter_name,
-	REPLACE(REPLACE(T_MESSAGE, '\n', '<br />'), '\r', '') AS Tbody,
-	IFNULL(ftm.email_address, '') AS Tposter_email, fte.real_name AS Tmodified_name,
-	UNIX_TIMESTAMP(REPLACE(ft.T_LAST_EDIT, '\0', '')) AS Tmodified_time,
-	UNIX_TIMESTAMP(REPLACE(fr.R_DATE, '\0', '')) AS Rposter_time, R_AUTHOR AS Rid_member,
-	R_IP AS Rposter_ip, IFNULL(frm.real_name, '') AS Rposter_name,
-	REPLACE(REPLACE(REPLACE(R_MESSAGE, '\n', ''), '\r', ''), M_SIG, '') AS Rbody,
-	IFNULL(frm.email_address, '') AS Rposter_email, fre.real_name AS Rmodified_name,
-	UNIX_TIMESTAMP(REPLACE(fr.R_LAST_EDIT, '\0', '')) AS Rmodified_time
-FROM {$from_prefix}FORUM_TOPICS AS ft
-	INNER JOIN {$from_prefix}FORUM_REPLY AS fr ON (fr.TOPIC_ID = ft.TOPIC_ID)
-	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.id_member = ft.T_AUTHOR)
-	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = ft.T_LAST_EDITBY)
-	LEFT JOIN {$to_prefix}members AS frm ON (frm.id_member = fr.R_AUTHOR)
-	LEFT JOIN {$to_prefix}members AS fre ON (fre.id_member = fr.R_LAST_EDITBY)
-ORDER BY IFNULL(fr.R_DATE, ft.T_DATE);
----*
-
-/******************************************************************************/
 --- Converting topics...
 /******************************************************************************/
+ALTER TABLE {$to_prefix}convert ORDER BY msg_date;
+ALTER TABLE {$to_prefix}convert 
+	ADD id_msg INT( 12 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 TRUNCATE {$to_prefix}topics;
 TRUNCATE {$to_prefix}log_topics;
@@ -145,17 +118,63 @@ SELECT
 	MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg,
 	t.T_AUTHOR AS id_member_started, t.T_LAST_POST_AUTHOR AS id_member_updated,
 	t.T_REPLIES AS num_replies, t.T_VIEW_COUNT AS num_views, t.T_STATUS = 0 AS locked
-FROM {$from_prefix}FORUM_TOPICS AS t
-	INNER JOIN {$to_prefix}messages AS m ON (m.id_topic = t.TOPIC_ID)
+FROM ({$from_prefix}FORUM_TOPICS AS t, {$to_prefix}convert AS m)
+WHERE m.old_id_topic = t.TOPIC_ID
 GROUP BY t.TOPIC_ID
 HAVING id_first_msg != 0
 	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
---- Converting topic notifications...
+--- Converting posts ( part 1 - this may take some time)...
 /******************************************************************************/
 
+TRUNCATE {$to_prefix}messages;
+TRUNCATE {$to_prefix}attachments;
+
+---* {$to_prefix}messages 200
+---{
+$ignore = true;
+---}
+
+SELECT
+	c.id_msg AS id_msg, ft.TOPIC_ID AS id_topic, ft.FORUM_ID AS id_board, ft.T_SUBJECT AS subject,
+	UNIX_TIMESTAMP(REPLACE(ft.T_DATE, '\0', '')) AS poster_time, ft.T_AUTHOR AS id_member,
+	ft.T_IP AS poster_ip, IFNULL(ftm.real_name, '') AS poster_name,
+	REPLACE(REPLACE(T_MESSAGE, '\n', '<br />'), '\r', '') AS body,
+	IFNULL(ftm.email_address, '') AS poster_email, fte.real_name AS modified_name,
+	UNIX_TIMESTAMP(REPLACE(ft.T_LAST_EDIT, '\0', '')) AS modified_time
+FROM {$to_prefix}convert AS c
+	LEFT JOIN {$from_prefix}FORUM_TOPICS AS ft ON (c.old_id_topic = ft.TOPIC_ID)
+	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.id_member = ft.T_AUTHOR)
+	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = ft.T_LAST_EDITBY)	
+WHERE c.type = 'topic';
+---*
+
+/******************************************************************************/
+--- Converting posts ( part 2 - this may take some time)...
+/******************************************************************************/
+
+---* {$to_prefix}messages 200
+SELECT
+	c.id_msg AS id_msg, fr.TOPIC_ID AS id_topic, fr.FORUM_ID AS id_board, ft.T_SUBJECT AS subject,
+	UNIX_TIMESTAMP(REPLACE(fr.R_DATE, '\0', '')) AS poster_time, fr.R_AUTHOR AS id_member,
+	fr.R_IP AS poster_ip, IFNULL(ftm.real_name, '') AS poster_name,
+	REPLACE(REPLACE(R_MESSAGE, '\n', '<br />'), '\r', '') AS body,
+	IFNULL(ftm.email_address, '') AS poster_email, fte.real_name AS modified_name,
+	UNIX_TIMESTAMP(REPLACE(fr.R_LAST_EDIT, '\0', '')) AS modified_time
+FROM {$to_prefix}convert AS c
+	INNER JOIN {$from_prefix}FORUM_TOPICS AS ft ON (c.old_id_topic = ft.TOPIC_ID)
+	INNER JOIN {$from_prefix}FORUM_REPLY AS fr ON (c.old_id_msg = fr.REPLY_ID)
+	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.id_member = fr.R_AUTHOR)
+	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = fr.R_LAST_EDITBY)	
+WHERE c.type = 'msg';
+---*
+
+/******************************************************************************/
+--- Converting topic notifications...
+/******************************************************************************/
+DROP TABLE IF EXISTS {$to_prefix}convert;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
@@ -189,7 +208,7 @@ $result = convert_query("
 	FROM {$from_prefix}FORUM_BADWORDS");
 $censor_vulgar = array();
 $censor_proper = array();
-while ($row = convert_fetch_assoc($result))
+while ($row = mysql_fetch_assoc($result))
 {
 	$censor_vulgar[] = $row['B_BADWORD'];
 	$censor_proper[] = $row['B_REPLACE'];
@@ -199,11 +218,11 @@ convert_free_result($result);
 $censored_vulgar = addslashes(implode("\n", $censor_vulgar));
 $censored_proper = addslashes(implode("\n", $censor_proper));
 
-convert_insert('settings', array('variable', 'value'),
-	array(
-		array('censor_vulgar', $censored_vulgar)
-		array('censor_proper', $censored_proper)
-	), 'replace');
+convert_query("
+	REPLACE INTO {$to_prefix}settings
+		(variable, value)
+	VALUES ('censor_vulgar', '$censored_vulgar'),
+		('censor_proper', '$censored_proper')");
 ---}
 ---#
 

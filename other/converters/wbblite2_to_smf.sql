@@ -156,12 +156,27 @@ TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
+---{
+// Find out assigned polls
+$request = convert_query("
+	SELECT 
+		pollID
+	FROM {$from_prefix}{$wbb_prefix}post 
+	WHERE threadID = $row[id_topic] AND pollID > 0
+	GROUP BY threadID");
+
+list ($pollID) = convert_fetch_row($request);
+convert_free_result($request);
+if ($pollID > 0)
+	$row['id_poll'] = $pollID;
+---}
+
 SELECT
 	t.threadID AS id_topic, t.is_sticky AS is_sticky, t.boardID AS id_board,
 	t.replies AS num_replies, t.views AS num_views, t.isClosed AS locked,
 	t.userID AS id_member_started, t.lastPosterID AS id_member_updated,
 	t.firstPostID AS id_first_msg, MAX(p.postid) AS id_last_msg,
-	t.polls AS id_poll
+	p.pollID AS id_poll
 FROM {$from_prefix}{$wbb_prefix}thread AS t
 	LEFT JOIN {$from_prefix}{$wbb_prefix}post AS p ON (p.threadID = t.threadID)
 GROUP BY t.threadID
@@ -248,7 +263,8 @@ FROM {$from_prefix}wbb1_1_post AS p
 /******************************************************************************/
 --- Converting polls...
 /******************************************************************************/
-
+ALTER TABLE {$to_prefix}poll_choices
+	ADD old_choice INT( 12 ) unsigned NOT NULL;
 TRUNCATE {$to_prefix}polls;
 TRUNCATE {$to_prefix}poll_choices;
 TRUNCATE {$to_prefix}log_polls;
@@ -262,7 +278,6 @@ SELECT
 FROM {$from_prefix}{$wcf_prefix}poll AS p 
 	LEFT JOIN {$from_prefix}{$wbb_prefix}post AS m ON (p.pollID = m.pollID) 
 	LEFT JOIN {$from_prefix}{$wbb_prefix}thread AS t ON (m.threadID = t.threadID);
-
 ---*
 
 /******************************************************************************/
@@ -278,8 +293,9 @@ if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != 
 }
 $row['id_choice'] = ++$_SESSION['convert_last_choice'];
 ---}
-SELECT pollID AS id_poll, 1 AS id_choice,
-SUBSTRING(pollOption, 1, 255) AS label, votes AS votes
+SELECT 
+	pollID AS id_poll, 1 AS id_choice, SUBSTRING(pollOption, 1, 255) AS label, 
+	votes AS votes, pollOptionID AS old_choice
 FROM {$from_prefix}{$wcf_prefix}poll_option
 ORDER BY pollID;
 ---*
@@ -290,15 +306,17 @@ ORDER BY pollID;
 
 ---* {$to_prefix}log_polls
 SELECT 
-	pollID AS id_poll, userID AS id_member, pollOptionID AS id_choice
-FROM {$from_prefix}{$wcf_prefix}poll_option_vote
+	v.pollID AS id_poll, v.userID AS id_member, c.id_choice AS id_choice
+FROM {$from_prefix}{$wcf_prefix}poll_option_vote AS v
+	LEFT JOIN {$to_prefix}poll_choices AS c ON (v.pollOptionID = c.old_choice)
 GROUP BY id_poll, id_member;
 ---*
-
 
 /******************************************************************************/
 --- Converting attachments...
 /******************************************************************************/
+ALTER TABLE {$to_prefix}poll_choices
+	DROP old_choice;
 
 ---* {$to_prefix}attachments
 ---{
@@ -438,7 +456,7 @@ while ($row = convert_fetch_assoc($request))
 	$request2 = convert_query("
 		SELECT
 			userID id_member, whiteUserID AS buddy_list
-		FROM {$from_prefix}{$wcf_prefix}whitelist
+		FROM {$from_prefix}{$wcf_prefix}user_whitelist
 		WHERE userID = $row[tmp_member]");
 
 	while ($row2 = convert_fetch_assoc($request2))
