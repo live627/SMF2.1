@@ -75,6 +75,7 @@ January 2009
  ! The container of the inline message icon changer wasn't getting the proper width in all browsers. (script.js) [Bug 2176]
  ! Do a proper check on the availability of a Personal Message. (PersonalMessage.php)
  * Don't show a border below vote options if there's no expiration date set. (Display template, forum.css)
+ ! Always load the English version of the Modifications and (if applicable) ThemeStrings language files as a means of fallback. (Load.php) [Bug 2743]
 
 
 December 2008

@@ -1235,7 +1235,7 @@ function loadMemberContext($user, $display_custom_fields = false)
 function loadTheme($id_theme = 0, $initialize = true)
 {
 	global $user_info, $user_settings, $board_info, $sc;
-	global $txt, $boardurl, $scripturl, $mbname, $modSettings;
+	global $txt, $boardurl, $scripturl, $mbname, $modSettings, $language;
 	global $context, $settings, $options, $sourcedir, $ssi_theme, $smcFunc;
 
 	// The theme was specified by parameter.
@@ -1564,6 +1564,11 @@ function loadTheme($id_theme = 0, $initialize = true)
 		else
 			$templates = array('index');
 
+		// Fall back to the English version of the Modifications files, if necessary.
+		$cur_language = isset($user_info['language']) ? $user_info['language'] : $language;
+		if ($cur_language !== 'english')
+			loadLanguage('Modifications', 'english', false);
+
 		// Load each template.... and attempt to load its associated language file.
 		foreach ($templates as $template)
 		{
@@ -1583,7 +1588,12 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Any theme-related strings that need to be loaded?
 	if (!empty($settings['require_theme_strings']))
-		loadLanguage('ThemeStrings');
+	{
+		$cur_language = isset($user_info['language']) ? $user_info['language'] : $language;
+		if ($cur_language !== 'english')
+			loadLanguage('ThemeStrings', 'english', false);
+		loadLanguage('ThemeStrings', '', false);
+	}
 
 	// We allow theme variants, because we're cool.
 	$context['theme_variant'] = '';
