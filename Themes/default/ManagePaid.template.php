@@ -186,7 +186,7 @@ function template_modify_subscription()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 
 }
@@ -210,7 +210,7 @@ function template_delete_subscription()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 
 }
@@ -353,7 +353,7 @@ function template_modify_user_subscription()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[

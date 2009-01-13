@@ -215,7 +215,7 @@ function template_main()
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'])
 			echo '
-			<a href="', $scripturl, '?action=markasread;sa=all;sesc=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']), '</a>';
+			<a href="', $scripturl, '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']), '</a>';
 		echo '
 		</td>
 	</tr>';

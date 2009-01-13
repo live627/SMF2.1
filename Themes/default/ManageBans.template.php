@@ -125,7 +125,7 @@ function template_ban_edit()
 					' . $txt['ban_add_notes'] : '', '
 					<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
 					<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
 		</tr>';
@@ -179,7 +179,7 @@ function template_ban_edit()
 					</tr>
 					</table>
 					<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
 		</tr>';
@@ -268,7 +268,7 @@ function template_ban_edit_trigger()
 		</table>
 		<input type="hidden" name="bi" value="' . $context['ban_trigger']['id'] . '" />
 		<input type="hidden" name="bg" value="' . $context['ban_trigger']['group'] . '" />
-		<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
+		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 	</form>
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[

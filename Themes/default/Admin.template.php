@@ -206,7 +206,7 @@ function template_admin()
 					setInnerHTML(updateBody, window.smfUpdateNotice);
 
 				// Parse in the package download URL if it exists in the string.
-				document.getElementById("update-link").href = "', $scripturl, '?action=admin;area=packages;pgdownload;auto;package=" + window.smfUpdatePackage + ";sesc=', $context['session_id'], '";
+				document.getElementById("update-link").href = "', $scripturl, '?action=admin;area=packages;pgdownload;auto;package=" + window.smfUpdatePackage + ";', $context['session_var'], '=', $context['session_id'], '";
 
 				// If we decide to override life into "red" mode, do it.
 				if (typeof(window.smfUpdateCritical) != "undefined")
@@ -281,7 +281,7 @@ function template_manage_copyright()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -732,7 +732,7 @@ function template_edit_censored()
 				</tr>
 			</table>
 
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 
@@ -999,7 +999,7 @@ function template_show_settings()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 
 	if (!empty($context['settings_post_javascript']))
@@ -1070,7 +1070,7 @@ function template_edit_profile_field()
 	// ]]></script>';
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;fid=', $context['fid'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;fid=', $context['fid'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="80%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">', $context['page_title'], '</td>
@@ -1230,7 +1230,7 @@ function template_edit_profile_field()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 
 	// Get the java bits right!
@@ -1360,7 +1360,7 @@ function template_core_features()
 	}
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=corefeatures;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=corefeatures;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="3">
@@ -1376,7 +1376,7 @@ function template_core_features()
 				<div class="features">
 					<img class="features_image png_fix" src="', $settings['default_images_url'], '/admin/feature_', $id, '.png" alt="', $feature['title'], '" />
 					<div class="features_switch" id="js_feature_', $id, '" style="display: none;">
-						<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');">
+						<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;', $context['session_var'], '=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');">
 							<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.gif" id="switch_', $id, '" style="margin-top: 1.3em;" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" title="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
 						</a>
 					</div>
@@ -1420,7 +1420,7 @@ function template_add_language()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=languages;sa=add;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=add;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="100%" cellpadding="5" cellspacing="1" class="bordercolor">
 		<tr class="titlebg">
 			<td>
@@ -1520,7 +1520,7 @@ function template_download_language()
 
 	// Provide something of an introduction...
 	echo '
-	<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=downloadlang;did=', $context['download_id'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td>
@@ -1679,7 +1679,7 @@ function template_modify_language_entries()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">
@@ -1758,7 +1758,7 @@ function template_modify_language_entries()
 	</table>
 	</form><br />
 
-	<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=languages;sa=editlang;lid=', $context['lang_id'], ';', $context['session_var'], '=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
 	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">

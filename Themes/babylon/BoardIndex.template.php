@@ -155,7 +155,7 @@ function template_main()
 				// Has it outstanding posts for approval?
 				if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
 					echo '
-					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', ($board['unapproved_topics'] > $board['unapproved_posts'] ? 'topics' : 'posts'), ';brd=', $board['id'], ';sesc=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', ($board['unapproved_topics'] > $board['unapproved_posts'] ? 'topics' : 'posts'), ';brd=', $board['id'], ';', $context['session_var'], '=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 		echo '
 			<br />
 			', $board['description'];
@@ -182,7 +182,7 @@ function template_main()
 						// Does the child have any posts awaiting approval?!
 						if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
 						{
-							$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > $child['unapproved_posts'] ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';sesc=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
+							$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > $child['unapproved_posts'] ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 						}
 
 						$children[] = $child['new'] ? '<b>' . $child['link'] . '</b>' : $child['link'];
@@ -234,7 +234,7 @@ function template_main()
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'])
 			echo '
-			<a href="', $scripturl, '?action=markasread;sa=all;sesc=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']), '</a>';
+			<a href="', $scripturl, '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']), '</a>';
 		echo '
 		</td>
 	</tr>

@@ -232,7 +232,7 @@ function template_imode_boardindex()
 		echo '
 			<tr><td><a href="', $scripturl, '?action=unread;imode">', $txt['wireless_recent_unread_posts'], '</a></td></tr>
 			<tr><td><a href="', $scripturl, '?action=unreadreplies;imode">', $txt['wireless_recent_unread_replies'], '</a></td></tr>
-			<tr><td><a href="', $scripturl, '?action=logout;sesc=', $context['session_id'], ';imode">', $txt['wireless_options_logout'], '</a></td></tr>';
+			<tr><td><a href="', $scripturl, '?action=logout;', $context['session_var'], '=', $context['session_id'], ';imode">', $txt['wireless_options_logout'], '</a></td></tr>';
 	}
 	echo '
 		</table>';
@@ -295,7 +295,7 @@ function template_imode_display()
 			<tr><td>', $message['first_new'] ? '
 				<a name="new"></a>' : '',
 				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
-				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
+				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 				', $wireless_message, '
 			</td></tr>';
 	}
@@ -313,10 +313,10 @@ function template_imode_display()
 	{
 		if ($context['can_sticky'])
 			echo '
-				<tr><td><a href="', $scripturl, '?action=sticky;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';imode">', $txt['wireless_display_' . ($context['is_sticky'] ? 'unsticky' : 'sticky')], '</a></td></tr>';
+				<tr><td><a href="', $scripturl, '?action=sticky;topic=', $context['current_topic'], '.', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';imode">', $txt['wireless_display_' . ($context['is_sticky'] ? 'unsticky' : 'sticky')], '</a></td></tr>';
 		if ($context['can_lock'])
 			echo '
-				<tr><td><a href="', $scripturl, '?action=lock;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';imode">', $txt['wireless_display_' . ($context['is_locked'] ? 'unlock' : 'lock')], '</a></td></tr>';
+				<tr><td><a href="', $scripturl, '?action=lock;topic=', $context['current_topic'], '.', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';imode">', $txt['wireless_display_' . ($context['is_locked'] ? 'unlock' : 'lock')], '</a></td></tr>';
 	}
 
 	echo '
@@ -345,7 +345,7 @@ function template_imode_post()
 					<input type="hidden" name="icon" value="wireless" />
 					<input type="hidden" name="goback" value="', $context['back_to_topic'] || !empty($options['return_to_post']) ? '1' : '0', '" />
 					<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />', isset($context['current_topic']) ? '
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />', isset($context['current_topic']) ? '
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />' : '', '
 					<input type="hidden" name="notify" value="', $context['notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
 				</td></tr>
@@ -387,7 +387,7 @@ function template_imode_pm()
 	if ($_REQUEST['action'] == 'findmember')
 	{
 		echo '
-		<form action="', $scripturl, '?action=findmember;sesc=', $context['session_id'], ';imode" method="post">
+		<form action="', $scripturl, '?action=findmember;', $context['session_var'], '=', $context['session_id'], ';imode" method="post">
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['wireless_pm_search_member'], '</font></td></tr>
 				<tr bgcolor="#b6dbff"><td>', $txt['find_members'], '</td></tr>
@@ -477,7 +477,7 @@ function template_imode_pm()
 			}
 			echo '
 				', empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
-							<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';sesc=', $context['session_id'], ';imode">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
+							<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';', $context['session_var'], '=', $context['session_id'], ';imode">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
 							<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';imode">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 						</tr></td>
 						<tr><td>
@@ -490,7 +490,7 @@ function template_imode_pm()
 						<tr><td>
 							<input type="submit" value="', $txt['send_message'], '" />
 							<input type="hidden" name="outbox" value="', $context['copy_to_outbox'] ? '1' : '0', '" />
-							<input type="hidden" name="sc" value="', $context['session_id'], '" />
+							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 							<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
 							<input type="hidden" name="folder" value="', $context['folder'], '" />
@@ -739,7 +739,7 @@ function template_imode_ban_edit()
 		</table>
 		<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
 		<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -802,7 +802,7 @@ function template_wap2_boardindex()
 		echo '
 		<p class="windowbg"><a href="', $scripturl, '?action=unread;wap2">', $txt['wireless_recent_unread_posts'], '</a></p>
 		<p class="windowbg"><a href="', $scripturl, '?action=unreadreplies;wap2">', $txt['wireless_recent_unread_replies'], '</a></p>
-		<p class="windowbg"><a href="', $scripturl, '?action=logout;sesc=', $context['session_id'], ';wap2">', $txt['wireless_options_logout'], '</a></p>';
+		<p class="windowbg"><a href="', $scripturl, '?action=logout;', $context['session_var'], '=', $context['session_id'], ';wap2">', $txt['wireless_options_logout'], '</a></p>';
 	}
 }
 
@@ -861,7 +861,7 @@ function template_wap2_display()
 		<a name="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
 			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
-			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
+			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 			', $wireless_message, '
 		</p>';
 		$alternate = !$alternate;
@@ -880,10 +880,10 @@ function template_wap2_display()
 	{
 		if ($context['can_sticky'])
 			echo '
-				<p class="windowbg"><a href="', $scripturl, '?action=sticky;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_display_' . ($context['is_sticky'] ? 'unsticky' : 'sticky')], '</a></p>';
+				<p class="windowbg"><a href="', $scripturl, '?action=sticky;topic=', $context['current_topic'], '.', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';wap2">', $txt['wireless_display_' . ($context['is_sticky'] ? 'unsticky' : 'sticky')], '</a></p>';
 		if ($context['can_lock'])
 			echo '
-				<p class="windowbg"><a href="', $scripturl, '?action=lock;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_display_' . ($context['is_locked'] ? 'unlock' : 'lock')], '</a></p>';
+				<p class="windowbg"><a href="', $scripturl, '?action=lock;topic=', $context['current_topic'], '.', $context['start'], ';', $context['session_var'], '=', $context['session_id'], ';wap2">', $txt['wireless_display_' . ($context['is_locked'] ? 'unlock' : 'lock')], '</a></p>';
 	}
 }
 
@@ -938,7 +938,7 @@ function template_wap2_post()
 				<input type="hidden" name="icon" value="wireless" />
 				<input type="hidden" name="goback" value="', $context['back_to_topic'] || !empty($options['return_to_post']) ? '1' : '0', '" />
 				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />', isset($context['current_topic']) ? '
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />', isset($context['current_topic']) ? '
 				<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />' : '', '
 				<input type="hidden" name="notify" value="', $context['notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
 			</p>
@@ -953,7 +953,7 @@ function template_wap2_pm()
 	if ($_REQUEST['action'] == 'findmember')
 	{
 		echo '
-				<form action="', $scripturl, '?action=findmember;sesc=', $context['session_id'], ';wap2" method="post">
+				<form action="', $scripturl, '?action=findmember;', $context['session_var'], '=', $context['session_id'], ';wap2" method="post">
 					<p class="catbg">', $txt['wireless_pm_search_member'], '</p>
 					<p class="titlebg">', $txt['find_members'], '</p>
 					<p class="windowbg">
@@ -1036,7 +1036,7 @@ function template_wap2_pm()
 			}
 			echo '
 				', empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
-						<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
+						<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';', $context['session_var'], '=', $context['session_id'], ';wap2">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
 						<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';wap2">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 					</p>
 					<p class="windowbg">
@@ -1049,7 +1049,7 @@ function template_wap2_pm()
 					<p class="windowbg">
 						<input type="submit" value="', $txt['send_message'], '" />
 						<input type="hidden" name="outbox" value="', $context['copy_to_outbox'] ? '1' : '0', '" />
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 						<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
 						<input type="hidden" name="folder" value="', $context['folder'], '" />
@@ -1278,7 +1278,7 @@ function template_wap2_ban_edit()
 	echo '
 		<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
 		<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 

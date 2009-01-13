@@ -171,7 +171,7 @@ function template_error_log()
 		echo '
 			<input type="hidden" name="desc" value="1" />';
 	echo '
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 

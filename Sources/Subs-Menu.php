@@ -57,7 +57,7 @@ function createMenu($menuData, $menuOptions = array())
 			cache_put_data('theme_settings-' . $theme . ':' . $user_info['id'], null, 60);
 
 		// Redirect as this seems to work best.
-		redirectexit('action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';sesc=' . $context['session_id']);
+		redirectexit('action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Work out where we should get our images from.

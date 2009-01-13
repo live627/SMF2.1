@@ -1392,7 +1392,7 @@ function pauseAttachmentMaintenance($to_fix, $max_substep = 0)
 	if (time() - array_sum(explode(' ', $time_start)) < 3)
 		return;
 
-	$context['continue_get_data'] = '?action=admin;area=manageattachments;sa=repair' . (isset($_GET['fixErrors']) ? ';fixErrors' : '') . ';step=' . $_GET['step'] . ';substep=' . $_GET['substep'] . ';sesc=' . $context['session_id'];
+	$context['continue_get_data'] = '?action=admin;area=manageattachments;sa=repair' . (isset($_GET['fixErrors']) ? ';fixErrors' : '') . ';step=' . $_GET['step'] . ';substep=' . $_GET['substep'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';
 	$context['continue_countdown'] = '2';
@@ -1640,7 +1640,7 @@ function ManageAttachmentPaths()
 
 	$listOptions = array(
 		'id' => 'attach_paths',
-		'base_href' => $scripturl . '?action=admin;area=manageattachments;sa=attachpaths;sesc=' . $context['session_id'],
+		'base_href' => $scripturl . '?action=admin;area=manageattachments;sa=attachpaths;' . $context['session_var'] . '=' . $context['session_id'],
 		'title' => $txt['attach_paths'],
 		'get_items' => array(
 			'function' => 'list_getAttachDirs',
@@ -1697,7 +1697,7 @@ function ManageAttachmentPaths()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=manageattachments;sa=attachpaths;sesc=' . $context['session_id'],
+			'href' => $scripturl . '?action=admin;area=manageattachments;sa=attachpaths;' . $context['session_var'] . '=' . $context['session_id'],
 		),
 		'additional_rows' => array(
 			array(

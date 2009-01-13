@@ -404,7 +404,7 @@ function ModifyCoreFeatures($return_config = false)
 				$feature['save_callback'](!empty($_POST[$post_var_prefix . $id]));
 		}
 
-		redirectexit('action=admin;area=corefeatures;sesc=' . $context['session_id']);
+		redirectexit('action=admin;area=corefeatures;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Put them in context.
@@ -414,7 +414,7 @@ function ModifyCoreFeatures($return_config = false)
 			'title' => isset($feature['title']) ? $feature['title'] : $txt['core_settings_item_' . $id],
 			'desc' => isset($feature['desc']) ? $feature['desc'] : $txt['core_settings_item_' . $id . '_desc'],
 			'enabled' => in_array($id, $context['admin_features']),
-			'url' => !empty($feature['url']) ? $scripturl . '?' . $feature['url'] . ';sesc=' . $context['session_id'] : '',
+			'url' => !empty($feature['url']) ? $scripturl . '?' . $feature['url'] . ';' . $context['session_var'] . '=' . $context['session_id'] : '',
 		);
 
 	// Are they a new user?

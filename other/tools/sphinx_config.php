@@ -190,7 +190,7 @@ function step_2()
 			</table>
 			<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
 				<input type="submit" value="Proceed" />
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			</div>
 		</form>';
 
@@ -227,7 +227,7 @@ function step_3()
 		<br />
 		<form action="' . $_SERVER['PHP_SELF'] . '?step=999" method="post" target="_blank">
 			<input type="submit" value="Generate sphinx.conf" />
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form><br />
 
 		<h4>Some file actions</h4>
@@ -264,7 +264,7 @@ function step_3()
 				<option value="sphinx"', !empty($modSettings['search_index']) && $modSettings['search_index'] === 'sphinx' ? ' selected="selected"' : '', '>Sphinx</option>
 			</select>
 			<input type="submit" value="Change Search Index" />
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form><br />
 		<br />
 

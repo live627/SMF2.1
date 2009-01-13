@@ -186,7 +186,7 @@ function BrowseMailQueue()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '[<a href="' . $scripturl . '?action=admin;area=mailqueue;sa=clear;sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['mailqueue_clear_list_warning'] . '\');">' . $txt['mailqueue_clear_list'] . '</a>]',
+				'value' => '[<a href="' . $scripturl . '?action=admin;area=mailqueue;sa=clear;' . $context['session_var'] . '=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['mailqueue_clear_list_warning'] . '\');">' . $txt['mailqueue_clear_list'] . '</a>]',
 				'class' => 'titlebg',
 			),
 		),
@@ -379,7 +379,7 @@ function pauseMailQueueClear()
 	if (time() - array_sum(explode(' ', $time_start)) < 5)
 		return;
 
-	$context['continue_get_data'] = '?action=admin;area=mailqueue;sa=clear;te=' . $_GET['te'] . ';sent=' . $_GET['sent'] . ';sesc=' . $context['session_id'];
+	$context['continue_get_data'] = '?action=admin;area=mailqueue;sa=clear;te=' . $_GET['te'] . ';sent=' . $_GET['sent'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';
 	$context['continue_countdown'] = '2';

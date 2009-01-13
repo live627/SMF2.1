@@ -597,7 +597,7 @@ function template_main()
 
 	echo '
 			<input type="hidden" name="additional_options" value="', $context['show_additional_options'] ? 1 : 0, '" />
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 		</form>';
 
@@ -756,9 +756,9 @@ function template_main()
 			function insertQuoteFast(messageid)
 			{
 				if (window.XMLHttpRequest)
-					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
+					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), onDocReceived);
 				else
-					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
+					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";', $context['session_var'], '=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + (editorHandle', $context['post_box_name'], '.bRichTextEnabled ? 1 : 0), 240, 90);
 				return true;
 			}
 			function onDocReceived(XMLDoc)
@@ -963,7 +963,7 @@ function template_announce()
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 			<input type="hidden" name="move" value="', $context['move'], '" />
 			<input type="hidden" name="goback" value="', $context['go_back'], '" />
@@ -989,7 +989,7 @@ function template_announcement_send()
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 			<input type="hidden" name="move" value="', $context['move'], '" />
 			<input type="hidden" name="goback" value="', $context['go_back'], '" />

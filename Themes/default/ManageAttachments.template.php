@@ -98,7 +98,7 @@ function template_maintenance()
 					</tr><tr>
 						<td>', $txt['attachment_manager_total_avatars'], ':</td><td>', $context['num_avatars'], '</td>
 					</tr><tr>
-						<td>', $txt['attachmentdir_size' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;sesc=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
+						<td>', $txt['attachmentdir_size' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;', $context['session_var'], '=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
 					</tr><tr>
 						<td>', $txt['attachment_space' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</td>
 					</tr>
@@ -116,20 +116,20 @@ function template_maintenance()
 					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
 					', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="attachments" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="byAge" />
 				</form>
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
 					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
 					', $txt['attachment_remove_size'], ' <input type="text" name="size" id="size" value="100" size="4" /> ', $txt['kilobyte'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="attachments" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="bySize" />
 				</form>
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
 					', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="avatars" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="byAge" />
 				</form>
 			</td>
@@ -173,7 +173,7 @@ function template_attachment_repair()
 	else
 	{
 		echo '
-	<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
 		<tr>
 			<td class="titlebg">', $txt['repair_attachments'], '</td>

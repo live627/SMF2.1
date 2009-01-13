@@ -50,7 +50,7 @@ function template_edit_news()
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 
@@ -176,7 +176,7 @@ function template_email_members()
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 
 	// Make the javascript stuff visible.
@@ -241,7 +241,7 @@ function template_email_members_compose()
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="email_force" value="', $context['email_force'], '" />
 			<input type="hidden" name="total_emails" value="', $context['total_emails'], '" />
 			<input type="hidden" name="max_id_member" value="', $context['max_id_member'], '" />';
@@ -273,7 +273,7 @@ function template_email_members_send()
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="subject" value="', $context['subject'], '" />
 			<input type="hidden" name="message" value="', $context['message'], '" />
 			<input type="hidden" name="start" value="', $context['start'], '" />

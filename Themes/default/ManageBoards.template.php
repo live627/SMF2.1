@@ -57,7 +57,7 @@ function template_main()
 			echo '
 							<tr class="windowbg', $alternate ? '' : '2', '">
 								<td style="padding-left: ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '">', $board['name'], !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '&nbsp;&nbsp;&nbsp;<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"><img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a>' : '', '</td>
-								<td width="10%" align="right">', $context['can_manage_permissions'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';sesc=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a>' : '', '</td>
+								<td width="10%" align="right">', $context['can_manage_permissions'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a>' : '', '</td>
 								<td width="10%" align="right"><a href="', $scripturl, '?action=admin;area=manageboards;move=', $board['id'], '">', $txt['mboards_move'], '</a></td>
 								<td width="10%" style="padding-right: 1ex;" align="right"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></td>
 							</tr>';
@@ -81,7 +81,7 @@ function template_main()
 								<td colspan="4" align="right"><br /><input type="submit" value="', $txt['mboards_new_board'], '" /></td>
 							</tr>
 						</table>
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					</form>
 				</td>
 			</tr>';
@@ -157,7 +157,7 @@ function template_modify_category()
 				<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />
 				<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" />';
 	echo '
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	// If this category is empty we don't bother with the next confirmation screen.
 	if ($context['category']['is_empty'])
@@ -227,7 +227,7 @@ function template_confirm_category_delete()
 	</table>
 
 	<input type="hidden" name="confirmation" value="1" />
-	<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 </form>';
 }
 
@@ -319,7 +319,7 @@ function template_modify_board()
 		<tr valign="top" class="windowbg2">
 			<td>
 				<b>', $txt['permission_profile'], ':</b><br />
-				<span class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;sesc=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</span><br />
+				<span class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;' . $context['session_var'] . '=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</span><br />
 			</td>
 			<td valign="top" align="left">
 				<select name="profile">';
@@ -454,7 +454,7 @@ function template_modify_board()
 		<tr class="windowbg2">
 			<td colspan="2" align="right">
 				<input type="hidden" name="rid" value="', $context['redirect_location'], '" />
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	// If this board has no children don't bother with the next confirmation screen.
 	if ($context['board']['no_children'])
@@ -586,7 +586,7 @@ function template_confirm_board_delete()
 	</table>
 
 	<input type="hidden" name="confirmation" value="1" />
-	<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 </form>';
 }
 

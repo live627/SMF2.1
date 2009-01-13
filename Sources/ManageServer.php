@@ -434,7 +434,7 @@ function AddLanguage()
 					'version' => $file->fetch('version'),
 					'utf8' => $file->fetch('utf8'),
 					'description' => $file->fetch('description'),
-					'link' => $scripturl . '?action=admin;area=languages;sa=downloadlang;did=' . $file->fetch('id') . ';sesc=' . $context['session_id'],
+					'link' => $scripturl . '?action=admin;area=languages;sa=downloadlang;did=' . $file->fetch('id') . ';' . $context['session_var'] . '=' . $context['session_id'],
 				);
 			}
 			if (empty($context['smf_languages']))
@@ -491,7 +491,7 @@ function DownloadLanguage()
 			$archive_content = read_tgz_file('http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), $boarddir, false, true, $install_files);
 			// Make sure the files aren't stuck in the cache.
 			package_flush_cache();
-			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages;sesc=' . $context['session_id']);
+			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages;' . $context['session_var'] . '=' . $context['session_id']);
 
 			clean_cache('lang');
 			return;
@@ -847,7 +847,7 @@ function ModifyLanguages()
 	$listOptions = array(
 		'id' => 'language_list',
 		'items_per_page' => 20,
-		'base_href' => $scripturl . '?action=admin;area=languages;sesc=' . $context['session_id'],
+		'base_href' => $scripturl . '?action=admin;area=languages;' . $context['session_var'] . '=' . $context['session_id'],
 		'title' => $txt['edit_languages'],
 		'get_items' => array(
 			'function' => 'list_getLanguages',
@@ -906,7 +906,7 @@ function ModifyLanguages()
 			),
 		),
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=languages;sesc=' . $context['session_id'],
+			'href' => $scripturl . '?action=admin;area=languages;' . $context['session_var'] . '=' . $context['session_id'],
 		),
 		'additional_rows' => array(
 			array(
@@ -1401,7 +1401,7 @@ function ModifyLanguage()
 	if ($madeSave)
 	{
 		clean_cache('lang');
-		redirectexit('action=admin;area=languages;sa=editlang;lid=' . $context['lang_id'] . ';sesc=' . $context['session_id']);
+		redirectexit('action=admin;area=languages;sa=editlang;lid=' . $context['lang_id'] . ';' . $context['session_var'] . '=' . $context['session_id']);
 	}
 }
 

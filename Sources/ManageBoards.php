@@ -189,7 +189,7 @@ function ManageBoardsMain()
 					$context['categories'][$catid]['move_link'] = array(
 						'child_level' => 0,
 						'label' => $txt['mboards_order_before'] . ' \'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
-						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=before;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=before;' . $context['session_var'] . '=' . $context['session_id'],
 					);
 
 				if (!$context['categories'][$catid]['boards'][$boardid]['move'])
@@ -197,12 +197,12 @@ function ManageBoardsMain()
 					array(
 						'child_level' => $boards[$boardid]['level'],
 						'label' => $txt['mboards_order_after'] . '\'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
-						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=after;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=after;' . $context['session_var'] . '=' . $context['session_id'],
 					),
 					array(
 						'child_level' => $boards[$boardid]['level'] + 1,
 						'label' => $txt['mboards_order_child_of'] . ' \'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
-						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=child;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=child;' . $context['session_var'] . '=' . $context['session_id'],
 					),
 				);
 
@@ -230,7 +230,7 @@ function ManageBoardsMain()
 				$context['categories'][$catid]['move_link'] = array(
 					'child_level' => 0,
 					'label' => $txt['mboards_order_before'] . ' \'' . htmlspecialchars($tree['node']['name']) . '\'',
-					'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_cat=' . $catid . ';move_to=top;sesc=' . $context['session_id'],
+					'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_cat=' . $catid . ';move_to=top;' . $context['session_var'] . '=' . $context['session_id'],
 				);
 		}
 	}
@@ -688,7 +688,7 @@ function EditBoard2()
 	}
 
 	if (isset($_REQUEST['rid']) && $_REQUEST['rid'] == 'permissions')
-		redirectexit('action=admin;area=permissions;sa=board;sesc=' . $context['session_id']);
+		redirectexit('action=admin;area=permissions;sa=board;' . $context['session_var'] . '=' . $context['session_id']);
 	else
 		redirectexit('action=admin;area=manageboards');
 }

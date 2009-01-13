@@ -557,7 +557,7 @@ function template_admin_register()
 				</dd>
 			</dl>
 		</div>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -592,7 +592,7 @@ function template_edit_agreement()
 		echo '
 					</select>
 					<input type="hidden" name="sa" value="agreement" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" />
 				</form>
 			</div>';
@@ -611,7 +611,7 @@ function template_edit_agreement()
 					<p><input type="submit" value="', $txt['save'], '" /></p>
 					<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
 					<input type="hidden" name="sa" value="agreement" />
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</div>
 		</div>';
@@ -638,7 +638,7 @@ function template_edit_reserved_words()
 					</div>
 			</div>
 			<input type="hidden" name="sa" value="reservednames" />
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 

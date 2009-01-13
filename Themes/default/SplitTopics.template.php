@@ -23,7 +23,7 @@ function template_ask()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -55,7 +55,7 @@ function template_select()
 		<table width="100%"><tr><td colspan="2" align="center">
 			<input type="hidden" name="subname" value="', $context['new_subject'], '" />
 			<input type="submit" value="', $txt['split'], '" />
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</td></tr><tr><td valign="top" width="50%">
 			<table id="table_not_selected" border="0" width="98%" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 				<tr class="titlebg">
@@ -278,7 +278,7 @@ function template_merge()
 		echo '
 									<tr>
 										<td valign="bottom">
-											<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';sesc=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
+											<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
 										</td>
 										<td valign="middle" style="white-space: nowrap;">
 											<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '

@@ -71,7 +71,7 @@ function template_main()
 					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" /></td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 
@@ -155,7 +155,7 @@ function template_custom_email()
 			<input type="hidden" name="', $key, '" value="', $value, '" />';
 
 	echo '
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 
@@ -177,7 +177,7 @@ function template_report()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 

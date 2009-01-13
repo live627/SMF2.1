@@ -55,7 +55,7 @@ function template_main()
 		<input type="hidden" name="goback" value="1" />';
 
 	echo '
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 	</form>';
 }

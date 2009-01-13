@@ -70,7 +70,7 @@ function template_edit_scheduled_tasks()
 				</td>
 			</tr><tr class="windowbg">
 				<td colspan="2" align="center">
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" />
 				</td>
 			</tr>

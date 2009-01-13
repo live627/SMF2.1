@@ -15,11 +15,11 @@ function template_main()
 		$button_set = array();
 
 		if ($post['can_delete'])
-			$button_set['delete'] = array('text' => 'remove', 'image' => 'delete.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['remove_message'] . '?\');"', 'url' => $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;sesc=' . $context['session_id']);
+			$button_set['delete'] = array('text' => 'remove', 'image' => 'delete.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['remove_message'] . '?\');"', 'url' => $scripturl . '?action=deletemsg;msg=' . $post['id'] . ';topic=' . $post['topic'] . ';recent;' . $context['session_var'] . '=' . $context['session_id']);
 		if ($post['can_reply'])
 		{
 			$button_set['reply'] = array('text' => 'reply', 'image' => 'reply_sm.gif', 'lang' => true, 'url' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start']);
-			$button_set['quote'] = array('text' => 'reply_quote', 'image' => 'quote.gif', 'lang' => true, 'url' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';sesc=' . $context['session_id']);
+			$button_set['quote'] = array('text' => 'reply_quote', 'image' => 'quote.gif', 'lang' => true, 'url' => $scripturl . '?action=post;topic=' . $post['topic'] . '.' . $post['start'] . ';quote=' . $post['id'] . ';' . $context['session_var'] . '=' . $context['session_id']);
 		}
 		if ($post['can_mark_notify'])
 			$button_set['notify'] = array('text' => 'notify_replies', 'image' => 'notify_sm.gif', 'lang' => true, 'url' => $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start']);
@@ -88,7 +88,7 @@ function template_unread()
 	if ($showCheckboxes)
 		echo '
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
-		<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
+		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		<input type="hidden" name="qaction" value="markread" />
 		<input type="hidden" name="redirect_url" value="action=unread;start=', $context['start'], (!empty($context['showing_all_topics']) ? ';all' : ''), '" />';
 
@@ -103,7 +103,7 @@ function template_unread()
 	{
 		// Generate the button strip.
 		$mark_read = array(
-			'markread' => array('text' => !empty($context['no_board_limits']) ? 'mark_as_read' : 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id']),
+			'markread' => array('text' => !empty($context['no_board_limits']) ? 'mark_as_read' : 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';' . $context['session_var'] . '=' . $context['session_id']),
 		);
 
 		if ($showCheckboxes)
@@ -252,14 +252,14 @@ function template_replies()
 	if ($showCheckboxes)
 		echo '
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
-		<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
+		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		<input type="hidden" name="qaction" value="markread" />
 		<input type="hidden" name="redirect_url" value="action=unreadreplies;start=', $context['start'], (!empty($context['showing_all_topics']) ? ';all' : ''), '" />';
 
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 	{
 		$mark_read = array(
-			'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=unreadreplies;topics=' . $context['topics_to_mark'] . ';sesc=' . $context['session_id']),
+			'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=unreadreplies;topics=' . $context['topics_to_mark'] . ';' . $context['session_var'] . '=' . $context['session_id']),
 		);
 
 		if ($showCheckboxes)

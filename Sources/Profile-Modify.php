@@ -1731,7 +1731,7 @@ function notification($memID)
 			'hidden_fields' => array(
 				'u' => $memID,
 				'sa' => $context['menu_item_selected'],
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
 			),
 		),
 		'additional_rows' => array(
@@ -1846,7 +1846,7 @@ function notification($memID)
 			'hidden_fields' => array(
 				'u' => $memID,
 				'sa' => $context['menu_item_selected'],
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
 			),
 		),
 		'additional_rows' => array(

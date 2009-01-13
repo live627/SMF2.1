@@ -881,7 +881,7 @@ function GroupRequests()
 			'include_sort' => true,
 			'include_start' => true,
 			'hidden_fields' => array(
-				'sc' => $context['session_id'],
+				$context['session_var'] => $context['session_id'],
 			),
 		),
 		'additional_rows' => array(

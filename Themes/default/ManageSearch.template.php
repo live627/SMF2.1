@@ -44,7 +44,7 @@ function template_modify_weights()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function calculateNewValues()
@@ -102,13 +102,13 @@ function template_select_search_method()
 					<span class="smalltext">';
 	if (empty($context['fulltext_index']) && empty($context['cannot_create_fulltext']))
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createfulltext;sesc=', $context['session_id'], '">', $txt['search_method_fulltext_create'], '</a>]';
+						<b>', $txt['search_index_label'], ':</b> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createfulltext;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_method_fulltext_create'], '</a>]';
 	elseif (empty($context['fulltext_index']) && !empty($context['cannot_create_fulltext']))
 		echo '
 						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_fulltext_cannot_create'];
 	else
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;sesc=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
+						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
 						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['fulltext_length'];
 	echo '
 					</span>
@@ -124,11 +124,11 @@ function template_select_search_method()
 					<span class="smalltext">';
 	if ($context['custom_index'])
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;sesc=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
+						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
 						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
 	elseif ($context['partial_custom_index'])
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_partial'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;sesc=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>] [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;resume;sesc=', $context['session_id'], '">', $txt['search_index_custom_resume'], '</a>]<br />
+						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_partial'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>] [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;resume;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_resume'], '</a>]<br />
 						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
 	else
 		echo '
@@ -171,7 +171,7 @@ function template_select_search_method()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -199,7 +199,7 @@ function template_create_index()
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -228,7 +228,7 @@ function template_create_index_progress()
 		<input type="hidden" name="step" value="', $context['step'], '" />
 		<input type="hidden" name="start" value="', $context['start'], '" />
 		<input type="hidden" name="bytes_per_word" value="', $context['index_settings']['bytes_per_word'], '" />
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var countdown = 10;
@@ -328,7 +328,7 @@ function template_show_spider_logs()
 
 	echo '
 	<br />
-	<form action="', $scripturl, '?action=admin;area=sengines;sa=logs;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=admin;area=sengines;sa=logs;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 	<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 		<tr class="catbg">
 			<td>
@@ -344,7 +344,7 @@ function template_show_spider_logs()
 		</tr>
 		<tr class="catbg">
 			<td align="right">
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" onclick="if (document.getElementById(\'older\').value &lt; 1 &amp;&amp; !confirm(\'' . addcslashes($txt['spider_logs_delete_confirm'], "'") . '\')) return false; return true;" />
 			</td>
 		</tr>

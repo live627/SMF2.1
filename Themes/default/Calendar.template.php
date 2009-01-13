@@ -24,7 +24,7 @@ function template_main()
 	// Show a little "post event" button?
 	if ($context['can_post'])
 		echo '
-						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';sesc=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar_post_event', 'calendar_post_event', 'align="middle"'), '</a>';
+						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';', $context['session_var'], '=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar_post_event', 'calendar_post_event', 'align="middle"'), '</a>';
 	echo '
 					</td>
 					<td align="center">
@@ -48,7 +48,7 @@ function template_main()
 	// Show another post button just for symmetry.
 	if ($context['can_post'])
 		echo '
-						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';sesc=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar_post_event', 'calendar_post_event', 'align="middle"'), '</a>';
+						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';', $context['session_var'], '=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar_post_event', 'calendar_post_event', 'align="middle"'), '</a>';
 	echo '
 					</td>
 				</tr>
@@ -238,7 +238,7 @@ function template_event_post()
 									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" />';
 
 	echo '
-									<input type="hidden" name="sc" value="', $context['session_id'], '" />
+									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 									<input type="hidden" name="eventid" value="', $context['event']['eventid'], '" />
 								</td>
 							</tr>';
@@ -336,7 +336,7 @@ function template_show_month_grid($grid_name)
 				// Should the day number be a link?
 				if (!empty($modSettings['cal_daysaslink']) && $context['can_post'])
 						echo '
-					<a href="', $scripturl, '?action=calendar;sa=post;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';day=', $day['day'], ';sesc=', $context['session_id'], '">', $day['day'], '</a>';
+					<a href="', $scripturl, '?action=calendar;sa=post;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';day=', $day['day'], ';', $context['session_var'], '=', $context['session_id'], '">', $day['day'], '</a>';
 					else
 						echo '
 					', $day['day'];

@@ -87,7 +87,7 @@ function template_edit_holiday()
 				<input type="submit" name="delete" value="', $txt['holidays_button_remove'], '" />
 				<input type="hidden" name="holiday" value="', $context['holiday']['id'], '" />';
 	echo '
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			</td>
 		</tr>
 	</table>

@@ -614,7 +614,7 @@ function AdminHome()
 		array('admin_forum', 'featuresettings', 'modSettings_title', 'modSettings_info', 'features_and_options.png'),
 		array('admin_forum', 'maintain', 'maintain_title', 'maintain_info', 'forum_maintenance.png'),
 		array('manage_permissions', 'permissions', 'edit_permissions', 'edit_permissions_info', 'permissions.png'),
-		array('admin_forum', 'theme;sa=admin;sesc=' . $context['session_id'], 'theme_admin', 'theme_admin_info', 'themes_and_layout.png'),
+		array('admin_forum', 'theme;sa=admin;' . $context['session_var'] . '=' . $context['session_id'], 'theme_admin', 'theme_admin_info', 'themes_and_layout.png'),
 		array('admin_forum', 'packages', 'package', 'package_info', 'packages.png'),
 		array('manage_smileys', 'smileys', 'smileys_manage', 'smileys_manage_info', 'smilies_and_messageicons.png'),
 		array('moderate_forum', 'viewmembers', 'admin_users', 'member_center_info', 'members.png'),
@@ -905,7 +905,7 @@ function AdminSearchInternal()
 				$name = preg_replace('~<(div|span)\sclass="smalltext">.+?</div>~', '', $name);
 
 				$context['search_results'][] = array(
-					'url' => (substr($item[1], 0, 4) == 'area' ? $scripturl . '?action=admin;' . $item[1] : $item[1]) . ';sesc=' . $context['session_id'] . ((substr($item[1], 0, 4) == 'area' && $section == 'settings' ? '#' . $item[0][0] : '')),
+					'url' => (substr($item[1], 0, 4) == 'area' ? $scripturl . '?action=admin;' . $item[1] : $item[1]) . ';' . $context['session_var'] . '=' . $context['session_id'] . ((substr($item[1], 0, 4) == 'area' && $section == 'settings' ? '#' . $item[0][0] : '')),
 					'name' => $name,
 					'type' => $section,
 					'help' => shorten_subject(isset($item[2]) ? $helptxt[$item2] : (isset($helptxt[$found]) ? $helptxt[$found] : ''), 255),

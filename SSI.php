@@ -129,9 +129,12 @@ else
 		error_reporting($temp);
 	}
 
-	if (!isset($_SESSION['rand_code']))
-		$_SESSION['rand_code'] = '';
-	$sc = &$_SESSION['rand_code'];
+	if (!isset($_SESSION['session_value']))
+	{
+		$_SESSION['session_var'] = substr(md5(mt_rand() . session_id() . mt_rand()), 0, rand(7, 12));
+		$_SESSION['session_value'] = md5(session_id() . mt_rand());
+	}
+	$sc = $_SESSION['session_value'];
 }
 
 // Get rid of $board and $topic... do stuff loadBoard would do.
@@ -1010,7 +1013,7 @@ function ssi_topPoll($output_method = 'echo')
 // Show the most recently posted poll.
 function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 {
-	global $db_prefix, $txt, $settings, $boardurl, $sc, $user_info, $context, $smcFunc, $modSettings;
+	global $db_prefix, $txt, $settings, $boardurl, $user_info, $context, $smcFunc, $modSettings;
 
 	$boardsAllowed = array_intersect(boardsAllowedTo('poll_view'), boardsAllowedTo('poll_vote'));
 
@@ -1141,7 +1144,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 					<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $sc, '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 	}
 	else
@@ -1151,7 +1154,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 
 function ssi_showPoll($topic = null, $output_method = 'echo')
 {
-	global $db_prefix, $txt, $settings, $boardurl, $sc, $user_info, $context, $smcFunc, $modSettings;
+	global $db_prefix, $txt, $settings, $boardurl, $user_info, $context, $smcFunc, $modSettings;
 
 	$boardsAllowed = boardsAllowedTo('poll_view');
 
@@ -1302,7 +1305,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 						<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
 					</tr>
 				</table>
-				<input type="hidden" name="sc" value="', $sc, '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			</form>';
 	}
 	elseif ($return['allow_view_results'])

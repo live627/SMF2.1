@@ -1457,7 +1457,8 @@ function loadTheme($id_theme = 0, $initialize = true)
 	if (!isset($context['html_headers']))
 		$context['html_headers'] = '';
 	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';
-	$context['session_id'] = $sc;
+	$context['session_var'] = $_SESSION['session_var'];
+	$context['session_id'] = $_SESSION['session_value'];
 	$context['forum_name'] = $mbname;
 	$context['current_action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 	$context['current_subaction'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : null;
@@ -1748,7 +1749,7 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 			loadLanguage('Errors');
 			echo '
 <div class="alert" style="padding: 2ex; background-color: white; border: 2px dashed;">
-	<a href="', $scripturl . '?action=admin;area=theme;sa=settings;th=1;sesc=' . $context['session_id'], '" class="alert">', $txt['theme_dir_wrong'], '</a>
+	<a href="', $scripturl . '?action=admin;area=theme;sa=settings;th=1;' . $context['session_var'] . '=' . $context['session_id'], '" class="alert">', $txt['theme_dir_wrong'], '</a>
 </div>';
 		}
 
@@ -2174,9 +2175,12 @@ function loadSession()
 		$HTTP_SESSION_VARS['php_412_bugfix'] = true;
 
 	// Set the randomly generated code.
-	if (!isset($_SESSION['rand_code']))
-		$_SESSION['rand_code'] = md5(session_id() . mt_rand());
-	$sc = $_SESSION['rand_code'];
+	if (!isset($_SESSION['session_var']))
+	{
+		$_SESSION['session_value'] = md5(session_id() . mt_rand());
+		$_SESSION['session_var'] = substr(preg_replace('~^\d+~', '', sha1(mt_rand() . session_id() . mt_rand())), 0, rand(7, 12));
+	}
+	$sc = $_SESSION['session_value'];
 }
 
 function sessionOpen($save_path, $session_name)

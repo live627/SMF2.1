@@ -69,7 +69,7 @@ function template_find_members()
 		// ]]></script>
 	</head>
 	<body>
-		<form action="', $scripturl, '?action=findmember;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=findmember;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<table border="0" width="100%" cellpadding="4" cellspacing="0" class="tborder">
 				<tr class="titlebg">
 					<td align="center" colspan="2">', $txt['find_members'], '</td>

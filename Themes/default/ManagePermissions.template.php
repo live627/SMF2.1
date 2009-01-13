@@ -183,7 +183,7 @@ function template_permission_index()
 			<input type="hidden" name="pid" value="', $context['profile']['id'], '" />';
 
 		echo '
-			<input type="hidden" name="sc" value="' . $context['session_id'] . '" />';
+			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />';
 	}
 	else
 		echo '
@@ -225,7 +225,7 @@ function template_by_board()
 			echo '
 				<tr class="windowbg2">
 					<td width="60%" align="left">
-						<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;sesc=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
+						<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';rid=permissions;', $context['session_var'], '=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
 					</td>
 					<td width="40%" align="left">';
 			if ($context['edit_all'])
@@ -242,7 +242,7 @@ function template_by_board()
 			}
 			else
 				echo '
-						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $board['profile'], ';sesc=', $context['session_id'], '">', $board['profile_name'], '</a>';
+						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $board['profile'], ';', $context['session_var'], '=', $context['session_id'], '">', $board['profile_name'], '</a>';
 
 			echo '
 					</td>
@@ -259,13 +259,13 @@ function template_by_board()
 						<input type="submit" name="save_changes" value="', $txt['save'], '" />';
 	else
 		echo '
-						<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;sesc=', $context['session_id'], '">', $txt['permissions_board_all'], '</a>';
+						<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;', $context['session_var'], '=', $context['session_id'], '">', $txt['permissions_board_all'], '</a>';
 
 	echo '
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 }
 
@@ -297,7 +297,7 @@ function template_edit_profiles()
 						<input type="text" name="rename_profile[', $profile['id'], ']" value="', $profile['name'], '" />';
 		else
 			echo '
-						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $profile['id'], ';sesc=', $context['session_id'], '">', $profile['name'], '</a>';
+						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $profile['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $profile['name'], '</a>';
 
 		echo '
 					</td><td>
@@ -312,7 +312,7 @@ function template_edit_profiles()
 	echo '
 				<tr class="titlebg">
 					<td colspan="3" align="right">
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
 
 	if ($context['can_edit_something'])
 		echo '
@@ -355,7 +355,7 @@ function template_edit_profiles()
 				</tr>
 				<tr class="titlebg">
 					<td align="right" colspan="2">
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="submit" name="create" value="', $txt['permissions_profile_new_create'], '" />
 					</td>
 				</tr>
@@ -455,7 +455,7 @@ function template_modify_group()
 
 	echo '
 			</table>
-			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>';
 
 }
@@ -942,7 +942,7 @@ function template_postmod_permissions()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-		<form action="' . $scripturl . '?action=admin;area=permissions;sa=postmod;sesc=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
+		<form action="' . $scripturl . '?action=admin;area=permissions;sa=postmod;', $context['session_var'], '=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
 			<table width="100%" border="0" cellpadding="5" cellspacing="1" class="tborder">
 				<tr class="catbg">
 					<td colspan="13">

@@ -638,14 +638,29 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 	global $sc, $modSettings, $boardurl;
 
 	// Is it in as $_POST['sc']?
-	if ($type == 'post' && (!isset($_POST['sc']) || $_POST['sc'] != $sc))
-		$error = 'session_timeout';
+	if ($type == 'post')
+	{
+		$check = isset($_POST[$_SESSION['session_var']]) ? $_POST[$_SESSION['session_var']] : (empty($modSettings['strictSessionCheck']) && isset($_POST['sc']) ? $_POST['sc'] : null);
+		if ($check !== $sc)
+			$error = 'session_timeout';
+	}
+
 	// How about $_GET['sesc']?
-	elseif ($type == 'get' && (!isset($_GET['sesc']) || $_GET['sesc'] != $sc))
-		$error = 'session_verify_fail';
+	elseif ($type == 'get')
+	{
+		$check = isset($_GET[$_SESSION['session_var']]) ? $_GET[$_SESSION['session_var']] : (empty($modSettings['strictSessionCheck']) && isset($_GET['sesc']) ? $_GET['sesc'] : null);
+		if ($check !== $sc)
+			$error = 'session_verify_fail';
+	}
+
 	// Or can it be in either?
-	elseif ($type == 'request' && (!isset($_GET['sesc']) || $_GET['sesc'] != $sc) && (!isset($_POST['sc']) || $_POST['sc'] != $sc))
-		$error = 'session_verify_fail';
+	elseif ($type == 'request')
+	{
+		$check = isset($_GET[$_SESSION['session_var']]) ? $_GET[$_SESSION['session_var']] : (empty($modSettings['strictSessionCheck']) && isset($_GET['sesc']) ? $_GET['sesc'] : (isset($_POST[$_SESSION['session_var']]) ? $_POST[$_SESSION['session_var']] : (empty($modSettings['strictSessionCheck']) && isset($_POST['sc']) ? $_POST['sc'] : null)));
+
+		if ($check !== $sc)
+			$error = 'session_verify_fail';
+	}
 
 	// Verify that they aren't changing user agents on us - that could be bad.
 	if ((!isset($_SESSION['USER_AGENT']) || $_SESSION['USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) && empty($modSettings['disableCheckUA']))

@@ -66,7 +66,7 @@ function template_summary()
 			
 	// Can they add this member as a buddy?
 	if (!empty($context['can_have_buddy']) && !$context['user']['is_owner'])
-		echo '<a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';sesc=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
+		echo '<a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';', $context['session_var'], '=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
 					
 	echo '		
 			</span>';
@@ -193,7 +193,7 @@ function template_summary()
 		// If the person looking at the summary has permission, and the account isn't activated, give the viewer the ability to do it themselves.
 		if (!empty($context['activate_message']))
 			echo '
-				<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
+				<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
 
 		// If the current member is banned, show a message and possibly a link to the ban.
 		if (!empty($context['member']['bans']))
@@ -319,14 +319,14 @@ function template_showPosts()
 
 			if ($post['can_delete'])
 				echo '
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;start=', $context['start'], ';delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;start=', $context['start'], ';delete=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
 			if ($post['can_delete'] && ($post['can_mark_notify'] || $post['can_reply']))
 				echo '
 								', $context['menu_separator'];
 			if ($post['can_reply'])
 				echo '
 					<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '">', $reply_button, '</a>', $context['menu_separator'], '
-					<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], ';sesc=', $context['session_id'], '">', $quote_button, '</a>';
+					<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $quote_button, '</a>';
 			if ($post['can_reply'] && $post['can_mark_notify'])
 				echo '
 								', $context['menu_separator'];
@@ -1107,7 +1107,7 @@ function template_edit_options()
 
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
-									<input type="hidden" name="sc" value="', $context['session_id'], '" />
+									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 									<input type="hidden" name="u" value="', $context['id_member'], '" />
 									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 								</td>
@@ -1386,7 +1386,7 @@ function template_notification()
 
 							<div align="', !$context['right_to_left'] ? 'right' : 'left', '">
 								<input type="submit" style="margin: 0 1ex 1ex 1ex;" value="', $txt['notify_save'], '" />
-								<input type="hidden" name="sc" value="', $context['session_id'], '" />
+								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 								<input type="hidden" name="u" value="', $context['id_member'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 							</div>
@@ -1493,7 +1493,7 @@ function template_groupMembership()
 			// Can they leave their group?
 			if ($group['can_leave'])
 				echo '
-							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
+							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
 			echo '
 						</div>
 					</td>
@@ -1534,7 +1534,7 @@ function template_groupMembership()
 							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
 						<div style="float: right">
-							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
+							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 						</div>
 					</td>
 				</tr>';
@@ -1568,7 +1568,7 @@ function template_groupMembership()
 	}
 
 	echo '
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="hidden" name="u" value="', $context['id_member'], '" />
 			</form>';
 }
@@ -1994,7 +1994,7 @@ function template_issueWarning()
 			</tr>
 			<tr class="catbg">
 				<td colspan="2" align="right">
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" />
 				</td>
 			</tr>
@@ -2121,7 +2121,7 @@ function template_deleteAccount()
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'left' : 'right', '">
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<input type="submit" value="', $txt['yes'], '" />
-								<input type="hidden" name="sc" value="', $context['session_id'], '" />
+								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 								<input type="hidden" name="u" value="', $context['id_member'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 							</td>';
@@ -2156,7 +2156,7 @@ function template_deleteAccount()
 						<tr>
 							<td colspan="2" class="windowbg2" align="center" style="padding-top: 2ex;">
 								<input type="submit" value="', $txt['delete'], '" />
-								<input type="hidden" name="sc" value="', $context['session_id'], '" />
+								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 								<input type="hidden" name="u" value="', $context['id_member'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 							</td>';
@@ -2212,7 +2212,7 @@ function template_profile_save()
 
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
-									<input type="hidden" name="sc" value="', $context['session_id'], '" />
+									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 									<input type="hidden" name="u" value="', $context['id_member'], '" />
 									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 								</td>
@@ -2317,7 +2317,7 @@ function template_profile_ignore_list_modify()
 									<div class="smalltext">
 										', $txt['username_line'], '<br />
 										<br />
-										[<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=LB;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);">', $txt['find_members'], '</a>]
+										[<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=LB;', $context['session_var'], '=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);">', $txt['find_members'], '</a>]
 									</div>
 								</td>
 								<td>
@@ -2633,7 +2633,7 @@ function template_profile_theme_pick()
 
 	echo '
 							<tr>
-								<td colspan="2" width="40%"><strong>', $txt['current_theme'], ':</strong> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['id_member'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
+								<td colspan="2" width="40%"><strong>', $txt['current_theme'], ':</strong> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['id_member'], ';', $context['session_var'], '=', $context['session_id'], '">', $txt['change'], '</a></td>
 							</tr>';
 }
 
@@ -2736,7 +2736,7 @@ function template_authentication_method()
 							<tr>
 								<td align="right" colspan="3">
 									<input type="submit" value="', $txt['change_profile'], '" />
-									<input type="hidden" name="sc" value="', $context['session_id'], '" />
+									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 									<input type="hidden" name="u" value="', $context['id_member'], '" />
 									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 								</td>

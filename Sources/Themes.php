@@ -318,7 +318,7 @@ function ThemeList()
 			);
 		}
 
-		redirectexit('action=admin;area=theme;sa=list;sesc=' . $context['session_id']);
+		redirectexit('action=admin;area=theme;sa=list;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	loadTemplate('Themes');
@@ -1444,7 +1444,7 @@ function ThemeInstall()
 			$extracted = read_tgz_file($_REQUEST['theme_gz'], $boarddir . '/Themes/' . $theme_name, false, true);
 		}
 		else
-			redirectexit('action=admin;area=theme;sa=admin;sesc=' . $context['session_id']);
+			redirectexit('action=admin;area=theme;sa=admin;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Something go wrong?
@@ -1560,7 +1560,7 @@ function ThemeInstall()
 		updateSettings(array('knownThemes' => strtr($modSettings['knownThemes'] . ',' . $id_theme, array(',,' => ','))));
 	}
 
-	redirectexit('action=admin;area=theme;sa=install;theme_id=' . $id_theme . ';sesc=' . $context['session_id']);
+	redirectexit('action=admin;area=theme;sa=install;theme_id=' . $id_theme . ';' . $context['session_var'] . '=' . $context['session_id']);
 }
 
 // Possibly the simplest and best example of how to ues the template system.
@@ -1795,7 +1795,7 @@ function EditTheme()
 				'is_template' => false,
 				'is_image' => false,
 				'is_editable' => false,
-				'href' => $scripturl . '?action=admin;area=theme;th=' . $_GET['th'] . ';sesc=' . $context['session_id'] . ';sa=edit;directory=' . $temp,
+				'href' => $scripturl . '?action=admin;area=theme;th=' . $_GET['th'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;directory=' . $temp,
 				'size' => '',
 			));
 		}
@@ -1866,7 +1866,7 @@ function EditTheme()
 				fwrite($fp, $_POST['entire_file']);
 				fclose($fp);
 
-				redirectexit('action=admin;area=theme;th=' . $_GET['th'] . ';sesc=' . $context['session_id'] . ';sa=edit;directory=' . dirname($_REQUEST['filename']));
+				redirectexit('action=admin;area=theme;th=' . $_GET['th'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;directory=' . dirname($_REQUEST['filename']));
 			}
 		}
 		// Session timed out.
@@ -1972,7 +1972,7 @@ function get_file_listing($path, $relative)
 				'is_template' => false,
 				'is_image' => false,
 				'is_editable' => false,
-				'href' => $scripturl . '?action=admin;area=theme;th=' . $_GET['th'] . ';sesc=' . $context['session_id'] . ';sa=edit;directory=' . $relative . $entry,
+				'href' => $scripturl . '?action=admin;area=theme;th=' . $_GET['th'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;directory=' . $relative . $entry,
 				'size' => '',
 			);
 		else
@@ -1990,7 +1990,7 @@ function get_file_listing($path, $relative)
 				'is_template' => preg_match('~\.template\.php$~', $entry) != 0,
 				'is_image' => preg_match('~\.(jpg|jpeg|gif|bmp|png)$~', $entry) != 0,
 				'is_editable' => is_writable($path . '/' . $entry) && preg_match('~\.(php|pl|css|js|vbs|xml|xslt|txt|xsl|html|htm|shtm|shtml|asp|aspx|cgi|py)$~', $entry) != 0,
-				'href' => $scripturl . '?action=admin;area=theme;th=' . $_GET['th'] . ';sesc=' . $context['session_id'] . ';sa=edit;filename=' . $relative . $entry,
+				'href' => $scripturl . '?action=admin;area=theme;th=' . $_GET['th'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;filename=' . $relative . $entry,
 				'size' => $size,
 				'last_modified' => timeformat(filemtime($path . '/' . $entry)),
 			);
@@ -2040,7 +2040,7 @@ function CopyTemplate()
 		fwrite($fp, file_get_contents($filename));
 		fclose($fp);
 
-		redirectexit('action=admin;area=theme;th=' . $context['theme_id'] . ';sesc=' . $context['session_id'] . ';sa=copy');
+		redirectexit('action=admin;area=theme;th=' . $context['theme_id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=copy');
 	}
 	elseif (isset($_REQUEST['lang_file']) && preg_match('~^[^\./\\\\:\0]\.[^\./\\\\:\0]$~', $_REQUEST['lang_file']) != 0)
 	{
@@ -2055,7 +2055,7 @@ function CopyTemplate()
 		fwrite($fp, file_get_contents($filename));
 		fclose($fp);
 
-		redirectexit('action=admin;area=theme;th=' . $context['theme_id'] . ';sesc=' . $context['session_id'] . ';sa=copy');
+		redirectexit('action=admin;area=theme;th=' . $context['theme_id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=copy');
 	}
 
 	$templates = array();

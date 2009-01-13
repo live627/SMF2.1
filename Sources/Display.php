@@ -669,7 +669,7 @@ function Display()
 				'id' => $row['id_event'],
 				'title' => $row['title'],
 				'can_edit' => allowedTo('calendar_edit_any') || ($row['id_member'] == $user_info['id'] && allowedTo('calendar_edit_own')),
-				'modify_href' => $scripturl . '?action=post;msg=' . $topicinfo['id_first_msg'] . ';topic=' . $topic . '.0;calendar;eventid=' . $row['id_event'] . ';sesc=' . $context['session_id'],
+				'modify_href' => $scripturl . '?action=post;msg=' . $topicinfo['id_first_msg'] . ';topic=' . $topic . '.0;calendar;eventid=' . $row['id_event'] . ';' . $context['session_var'] . '=' . $context['session_id'],
 				'start_date' => timeformat($start_date, $date_string, 'forum'),
 				'start_timestamp' => forum_time(true, $start_date),
 				'end_date' => timeformat($end_date, $date_string, 'forum'),
@@ -1539,7 +1539,7 @@ function QuickInTopicModeration()
 
 	// We are restoring messages. We handle this in another place.
 	if (isset($_REQUEST['restore_selected']))
-		redirectexit('action=restoretopic;msgs=' . implode(',', $messages) . ';sesc=' . $context['session_id']);
+		redirectexit('action=restoretopic;msgs=' . implode(',', $messages) . ';' . $context['session_var'] . '=' . $context['session_id']);
 
 	// Allowed to delete any message?
 	if (allowedTo('delete_any'))
