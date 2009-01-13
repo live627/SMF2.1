@@ -369,10 +369,10 @@ function template_manual_intro()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div id="modbuttons_top" class="modbuttons clearfix margintop">
-				<div class="floatleft middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</div>
-				', template_button_strip($mindex_buttons, 'bottom'), '
-			</div>';
+				<div class="clearfix margintop" id="modbuttons_top">
+					<div class="margintop middletext floatleft"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</div>
+					<div class="nav floatright">', template_button_strip($mindex_buttons, 'bottom'), '</div>
+				</div>';
 	}
 	else
 	{
@@ -392,7 +392,7 @@ function template_manual_intro()
 	}
 	echo '
 			<div class="tborder" id="messageindex">
-				<table cellspacing="1" class="bordercolor boardsframe">
+				<table cellspacing="1" cellpadding="3" class="bordercolor boardsframe">
 					<thead>
 						<tr>
 							<th class="catbg3 headerpadding" width="9%" colspan="2"></th>
@@ -415,19 +415,13 @@ function template_manual_intro()
 						</tr>
 					</tbody>
 				</table>
-			</div>
-			<div class="marginbottom"></div>';
+			</div>';
 
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div class="nav floatright">', template_button_strip($mindex_buttons, 'top'), '</div>
-			<table width="100%" cellpadding="0" cellspacing="0" border="0">
-				<tr>
-					<td class="middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</td>
-				</tr>
-			</table>
-			';
+			<div class="middletext floatleft">', $txt['manual_index_pages'], ': [<b>1</b>]</div>
+			<div class="nav floatright">', template_button_strip($mindex_buttons, 'top'), '</div>';
 	}
 	else
 	{
@@ -523,11 +517,7 @@ function template_manual_intro()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<table width="100%" cellpadding="0" cellspacing="0" border="0">
-				<tr>
-					<td class="middletext" valign="bottom" style="padding-bottom: 4px;"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-				</tr>
-			</table>
+			<div class="margintop middletext floatleft"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</div>
 			<div class="nav floatright">', template_button_strip($display_buttons, 'bottom'), '</div>';
 	}
 	else
