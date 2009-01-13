@@ -184,7 +184,7 @@ function ThemesMain()
 
 function ThemeAdmin()
 {
-	global $context, $sc, $boarddir, $modSettings, $smcFunc;
+	global $context, $boarddir, $modSettings, $smcFunc;
 
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
@@ -253,7 +253,7 @@ function ThemeAdmin()
 		if ((int) $_POST['theme_reset'] == 0 || in_array($_POST['theme_reset'], $_POST['options']['known_themes']))
 			updateMemberData(null, array('id_theme' => (int) $_POST['theme_reset']));
 
-		redirectexit('action=admin;area=theme;sesc=' . $sc . ';sa=admin');
+		redirectexit('action=admin;area=theme;' . $context['session_var'] . '=' . $context['session_id'] . ';sa=admin');
 	}
 }
 
@@ -375,7 +375,7 @@ function ThemeList()
 // Administrative global settings.
 function SetThemeOptions()
 {
-	global $txt, $sc, $context, $settings, $modSettings, $smcFunc;
+	global $txt, $context, $settings, $modSettings, $smcFunc;
 
 	$_GET['th'] = isset($_GET['th']) ? (int) $_GET['th'] : (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 
@@ -513,7 +513,7 @@ function SetThemeOptions()
 		cache_put_data('theme_settings-' . $_GET['th'], null, 90);
 		cache_put_data('theme_settings-1', null, 90);
 
-		redirectexit('action=admin;area=theme;sesc=' . $sc . ';sa=reset');
+		redirectexit('action=admin;area=theme;' . $context['session_var'] . '=' . $context['session_id'] . ';sa=reset');
 	}
 	elseif (isset($_POST['submit']) && $_POST['who'] == 1)
 	{
@@ -630,7 +630,7 @@ function SetThemeOptions()
 			}
 		}
 
-		redirectexit('action=admin;area=theme;sesc=' . $sc . ';sa=reset');
+		redirectexit('action=admin;area=theme;' . $context['session_var'] . '=' . $context['session_id'] . ';sa=reset');
 	}
 	elseif (!empty($_GET['who']) && $_GET['who'] == 2)
 	{
@@ -664,7 +664,7 @@ function SetThemeOptions()
 			)
 		);
 
-		redirectexit('action=admin;area=theme;sesc=' . $sc . ';sa=reset');
+		redirectexit('action=admin;area=theme;' . $context['session_var'] . '=' . $context['session_id'] . ';sa=reset');
 	}
 
 	$old_id = $settings['theme_id'];
@@ -748,7 +748,7 @@ function SetThemeOptions()
 // Administrative global settings.
 function SetThemeSettings()
 {
-	global $txt, $sc, $context, $settings, $modSettings, $sourcedir, $smcFunc;
+	global $txt, $context, $settings, $modSettings, $sourcedir, $smcFunc;
 
 	if (empty($_GET['th']) && empty($_GET['id']))
 		return ThemeAdmin();
@@ -837,7 +837,7 @@ function SetThemeSettings()
 		// Invalidate the cache.
 		updateSettings(array('settings_updated' => time()));
 
-		redirectexit('action=admin;area=theme;sa=settings;th=' . $_GET['th'] . ';sesc=' . $sc);
+		redirectexit('action=admin;area=theme;sa=settings;th=' . $_GET['th'] . ';' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	$context['sub_template'] = 'set_settings';
@@ -896,7 +896,7 @@ function SetThemeSettings()
 // Remove a theme from the database.
 function RemoveTheme()
 {
-	global $modSettings, $sc, $smcFunc;
+	global $modSettings, $context, $smcFunc;
 
 	checkSession('get');
 
@@ -955,13 +955,13 @@ function RemoveTheme()
 	// Remove any cached language files to keep space minimum!
 	clean_cache('lang');
 
-	redirectexit('action=admin;area=theme;sa=list;sesc=' . $sc);
+	redirectexit('action=admin;area=theme;sa=list;' . $context['session_var'] . '=' . $context['session_id']);
 }
 
 // Choose a theme from a list.
 function PickTheme()
 {
-	global $txt, $sc, $context, $modSettings, $user_info, $language, $smcFunc, $settings;
+	global $txt, $context, $modSettings, $user_info, $language, $smcFunc, $settings;
 
 	loadLanguage('Profile');
 	loadTemplate('Themes');
@@ -1044,14 +1044,14 @@ function PickTheme()
 				);
 			}
 
-			redirectexit('action=admin;area=theme;sa=admin;sesc=' . $sc);
+			redirectexit('action=admin;area=theme;sa=admin;' . $context['session_var'] . '=' . $context['session_id']);
 		}
 		// Change the default/guest theme.
 		elseif ($_REQUEST['u'] == '-1')
 		{
 			updateSettings(array('theme_guests' => (int) $_GET['th']));
 
-			redirectexit('action=admin;area=theme;sa=admin;sesc=' . $sc);
+			redirectexit('action=admin;area=theme;sa=admin;' . $context['session_var'] . '=' . $context['session_id']);
 		}
 		// Change a specific member's theme.
 		else

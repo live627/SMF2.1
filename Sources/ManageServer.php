@@ -200,7 +200,7 @@ function ModifySettings()
 // General forum settings - forum name, maintenance mode, etc.
 function ModifyGeneralSettings($return_config = false)
 {
-	global $scripturl, $context, $txt, $sc;
+	global $scripturl, $context, $txt;
 
 	/* If you're writing a mod, it's a bad idea to add things here....
 	For each option:
@@ -231,7 +231,7 @@ function ModifyGeneralSettings($return_config = false)
 	if (isset($_REQUEST['save']))
 	{
 		saveSettings($config_vars);
-		redirectexit('action=admin;area=serversettings;sa=general;sesc=' . $sc);
+		redirectexit('action=admin;area=serversettings;sa=general;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Fill the config array.
@@ -241,7 +241,7 @@ function ModifyGeneralSettings($return_config = false)
 // Basic database and paths settings - database name, host, etc.
 function ModifyDatabaseSettings($return_config = false)
 {
-	global $scripturl, $context, $settings, $txt, $sc, $boarddir;
+	global $scripturl, $context, $settings, $txt, $boarddir;
 
 	/* If you're writing a mod, it's a bad idea to add things here....
 	For each option:
@@ -280,7 +280,7 @@ function ModifyDatabaseSettings($return_config = false)
 	if (isset($_REQUEST['save']))
 	{
 		saveSettings($config_vars);
-		redirectexit('action=admin;area=serversettings;sa=database;sesc=' . $sc);
+		redirectexit('action=admin;area=serversettings;sa=database;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Fill the config array.
@@ -290,7 +290,7 @@ function ModifyDatabaseSettings($return_config = false)
 // This function basically edits anything which is configuration and stored in the database, except for caching.
 function ModifyCookieSettings($return_config = false)
 {
-	global $context, $scripturl, $txt, $sourcedir, $sc, $modSettings, $cookiename, $user_settings;
+	global $context, $scripturl, $txt, $sourcedir, $modSettings, $cookiename, $user_settings;
 
 	// Define the variables we want to edit.
 	$config_vars = array(
@@ -334,7 +334,7 @@ function ModifyCookieSettings($return_config = false)
 			redirectexit('action=admin;area=serversettings;sa=cookie;sesc=' . $origSC, $context['server']['needs_login_fix']);
 		}
 
-		redirectexit('action=admin;area=serversettings;sa=cookie;sesc=' . $sc);
+		redirectexit('action=admin;area=serversettings;sa=cookie;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Fill the config array.
@@ -344,7 +344,7 @@ function ModifyCookieSettings($return_config = false)
 // Simply modifying cache functions
 function ModifyCacheSettings($return_config = false)
 {
-	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
+	global $context, $scripturl, $txt, $helptxt, $modSettings;
 
 	// Define the variables we want to edit.
 	$config_vars = array(
@@ -365,7 +365,7 @@ function ModifyCacheSettings($return_config = false)
 		$modSettings['cache_enable'] = 1;
 		cache_put_data('modSettings', null, 90);
 
-		redirectexit('action=admin;area=serversettings;sa=cache;sesc=' . $sc);
+		redirectexit('action=admin;area=serversettings;sa=cache;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;sa=cache;save';
@@ -1034,7 +1034,7 @@ function list_getLanguages()
 // Edit language related settings.
 function ModifyLanguageSettings($return_config = false)
 {
-	global $scripturl, $context, $txt, $sc, $boarddir, $settings, $smcFunc;
+	global $scripturl, $context, $txt, $boarddir, $settings, $smcFunc;
 
 	// Warn the user if the backup of Settings.php failed.
 	$settings_not_writable = !is_writable($boarddir . '/Settings.php');
@@ -1079,7 +1079,7 @@ function ModifyLanguageSettings($return_config = false)
 	if (isset($_REQUEST['save']))
 	{
 		saveSettings($config_vars);
-		redirectexit('action=admin;area=languages;sa=settings;sesc=' . $sc);
+		redirectexit('action=admin;area=languages;sa=settings;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Setup the template stuff.

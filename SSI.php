@@ -230,7 +230,7 @@ function ssi_menubar($output_method = 'echo')
 // Show a logout link.
 function ssi_logout($redirect_to = '', $output_method = 'echo')
 {
-	global $context, $txt, $scripturl, $sc;
+	global $context, $txt, $scripturl;
 
 	if ($redirect_to != '')
 		$_SESSION['logout_url'] = $redirect_to;
@@ -239,7 +239,7 @@ function ssi_logout($redirect_to = '', $output_method = 'echo')
 	if ($context['user']['is_guest'])
 		return false;
 
-	$link = '<a href="' . $scripturl . '?action=logout;sesc=' . $sc . '">' . $txt['logout'] . '</a>';
+	$link = '<a href="' . $scripturl . '?action=logout;' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['logout'] . '</a>';
 
 	if ($output_method == 'echo')
 		echo $link;
@@ -1747,7 +1747,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 // Show the most recent events.
 function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 {
-	global $db_prefix, $user_info, $scripturl, $modSettings, $txt, $sc, $smcFunc;
+	global $db_prefix, $user_info, $scripturl, $modSettings, $txt, $context, $smcFunc;
 
 	// Find all events which are happening in the near future that the member can see.
 	$request = $smcFunc['db_query']('', '
@@ -1791,7 +1791,7 @@ function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 			'id' => $row['id_event'],
 			'title' => $row['title'],
 			'can_edit' => allowedTo('calendar_edit_any') || ($row['id_member'] == $user_info['id'] && allowedTo('calendar_edit_own')),
-			'modify_href' => $scripturl . '?action=' . ($row['id_board'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $row['id_first_msg'] . ';topic=' . $row['id_topic'] . '.0;calendar;') . 'eventid=' . $row['id_event'] . ';sesc=' . $sc,
+			'modify_href' => $scripturl . '?action=' . ($row['id_board'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $row['id_first_msg'] . ';topic=' . $row['id_topic'] . '.0;calendar;') . 'eventid=' . $row['id_event'] . ';' . $context['session_var'] . '=' . $context['session_id'],
 			'href' => $row['id_board'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
 			'link' => $row['id_board'] == 0 ? $row['title'] : '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['title'] . '</a>',
 			'start_date' => $row['start_date'],

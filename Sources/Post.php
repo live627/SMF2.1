@@ -582,7 +582,7 @@ function Post()
 		$context['icon'] = isset($_REQUEST['icon']) ? preg_replace('~[\./\\\\*\':"<>]~', '', $_REQUEST['icon']) : 'xx';
 
 		// Set the destination action for submission.
-		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . (isset($_REQUEST['msg']) ? ';msg=' . $_REQUEST['msg'] . ';sesc=' . $sc : '') . (isset($_REQUEST['poll']) ? ';poll' : '');
+		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . (isset($_REQUEST['msg']) ? ';msg=' . $_REQUEST['msg'] . ';' . $context['session_var'] . '=' . $context['session_id'] : '') . (isset($_REQUEST['poll']) ? ';poll' : '');
 		$context['submit_label'] = isset($_REQUEST['msg']) ? $txt['save'] : $txt['post'];
 
 		// Previewing an edit?
@@ -729,7 +729,7 @@ function Post()
 		}
 
 		// Set the destinaton.
-		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . ';msg=' . $_REQUEST['msg'] . ';sesc=' . $sc . (isset($_REQUEST['poll']) ? ';poll' : '');
+		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . ';msg=' . $_REQUEST['msg'] . ';' . $context['session_var'] . '=' . $context['session_id'] . (isset($_REQUEST['poll']) ? ';poll' : '');
 		$context['submit_label'] = $txt['save'];
 	}
 	// Posting...

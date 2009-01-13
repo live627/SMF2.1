@@ -440,7 +440,7 @@ function checkActivation()
 function DoLogin()
 {
 	global $txt, $scripturl, $user_info, $user_settings, $smcFunc;
-	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
+	global $cookiename, $maintenance, $modSettings, $context, $sourcedir;
 
 	// Load cookie authentication stuff.
 	require_once($sourcedir . '/Subs-Auth.php');
@@ -494,7 +494,7 @@ function DoLogin()
 	if (empty($maintenance) || allowedTo('admin_forum'))
 		redirectexit('action=login2;sa=check;member=' . $user_info['id'], $context['server']['needs_login_fix']);
 	else
-		redirectexit('action=logout;sesc=' . $sc, $context['server']['needs_login_fix']);
+		redirectexit('action=logout;' . $context['session_var'] . '=' . $context['session_id'], $context['server']['needs_login_fix']);
 }
 
 // Log the user out.

@@ -1186,7 +1186,7 @@ function ModifySignatureSettings($return_config = false)
 // Just pause the signature applying thing.
 function pauseSignatureApplySettings()
 {
-	global $context, $txt, $sig_start, $sc;
+	global $context, $txt, $sig_start;
 
 	// Try get more time...
 	@set_time_limit(600);
@@ -1197,7 +1197,7 @@ function pauseSignatureApplySettings()
 	if (time() - array_sum(explode(' ', $sig_start)) < 3)
 		return;
 
-	$context['continue_get_data'] = '?action=admin;area=featuresettings;sa=sig;apply;step=' . $_GET['step'] . ';sesc=' . $sc;
+	$context['continue_get_data'] = '?action=admin;area=featuresettings;sa=sig;apply;step=' . $_GET['step'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';
 	$context['continue_countdown'] = '2';

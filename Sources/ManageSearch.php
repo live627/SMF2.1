@@ -121,7 +121,7 @@ function ManageSearch()
 
 function EditSearchSettings($return_config = false)
 {
-	global $txt, $context, $sc, $scripturl, $sourcedir;
+	global $txt, $context, $scripturl, $sourcedir;
 
 	// What are we editing anyway?
 	$config_vars = array(
@@ -151,7 +151,7 @@ function EditSearchSettings($return_config = false)
 		checkSession();
 
 		saveDBSettings($config_vars);
-		redirectexit('action=admin;area=managesearch;sa=settings;sesc=' . $sc);
+		redirectexit('action=admin;area=managesearch;sa=settings;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
 	// Prep the template!

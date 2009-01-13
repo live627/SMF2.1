@@ -54,7 +54,7 @@ if (!defined('SMF'))
 
 function RepairBoards()
 {
-	global $txt, $scripturl, $db_connection, $sc, $context, $sourcedir;
+	global $txt, $scripturl, $db_connection, $context, $sourcedir;
 	global $salvageCatID, $salvageBoardID, $smcFunc, $errorTests;
 
 	isAllowedTo('admin_forum');
@@ -116,7 +116,7 @@ function RepairBoards()
 						<br />', $context['repair_errors']) . '<br />
 						<br />
 						' . $txt['errors_fix'] . '<br />
-						<b><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;sesc=' . $sc . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></b>';
+						<b><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></b>';
 		}
 		else
 			$context['raw_data'] .= '
