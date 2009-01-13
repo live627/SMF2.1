@@ -111,7 +111,7 @@ function createMenu($menuData, $menuOptions = array())
 
 	// Only include the session ID in the URL if it's strictly necessary.
 	if (empty($menuOptions['disable_url_session_check']))
-		$extraUrlParameters['sesc'] = $context['session_id'];
+		$extraUrlParameters[$context['session_var']] = $context['session_id'];
 
 	// Flatten the extra parameters array and put it in the menu context array.
 	$menu_context['extra_parameters'] = '';
