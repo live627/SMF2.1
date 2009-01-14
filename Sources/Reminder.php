@@ -211,6 +211,8 @@ function setPassword2()
 {
 	global $context, $txt, $modSettings, $smcFunc, $sourcedir;
 
+	checkSession();
+
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
 		fatal_lang_error('no_access', false);
 
