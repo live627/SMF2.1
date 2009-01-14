@@ -321,7 +321,7 @@ function ModifyCookieSettings($return_config = false)
 		// If the cookie name was changed, reset the cookie.
 		if ($cookiename != $_POST['cookiename'])
 		{
-			$origSC = $sc;
+			$original_session_id = $context['session_id'];
 			include_once($sourcedir . '/Subs-Auth.php');
 
 			// Remove the old cookie.
@@ -331,7 +331,7 @@ function ModifyCookieSettings($return_config = false)
 			$cookiename = $_POST['cookiename'];
 			setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
-			redirectexit('action=admin;area=serversettings;sa=cookie;sesc=' . $origSC, $context['server']['needs_login_fix']);
+			redirectexit('action=admin;area=serversettings;sa=cookie;' . $context['session_var'] . '=' . $original_session_id, $context['server']['needs_login_fix']);
 		}
 
 		redirectexit('action=admin;area=serversettings;sa=cookie;' . $context['session_var'] . '=' . $context['session_id']);
