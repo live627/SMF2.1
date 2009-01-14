@@ -1575,7 +1575,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 			loadTemplate($template, $template);
 
 		// ...and attempt to load their associated language files.
-		$required_files = implode('+', $templates + array('Modifications'));
+		$required_files = implode('+', array_merge($templates, array('Modifications')));
 		loadLanguage($required_files, '', false);
 
 		// Custom template layers?
