@@ -17,7 +17,6 @@ ul.admin_menu, ul.admin_menu li ul
 ul.admin_menu
 {
 	background: url(../images/admintab_right.gif) top right no-repeat;
-	padding-right: 3px;
 }
 
 ul.admin_menu a
@@ -71,11 +70,12 @@ ul.admin_menu li.chosen h4
 /* Second layer of menu items */
 ul.admin_menu li ul
 {
-	margin: 0;
 	z-index: 90;
 	display: none;
 	position: absolute;
 	top: 100%;
+	/* IE6 needs a fixed width to prevent the menu from going haywire */
+	width: 19em;
 	border: solid 1px #808080;
 	border-left: solid 2px #6888A7;
 	background: #F8F8FB;
@@ -90,8 +90,6 @@ ul.admin_menu li ul li
 {
 	background: none;
 	width: 19em;
-	float: none;
-	margin: 0;
 	padding: 0;
 }
 
