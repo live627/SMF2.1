@@ -3901,6 +3901,8 @@ function setupMenuContext()
 		$current_action = 'search';
 	elseif ($context['current_action'] == 'theme')
 		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
+	elseif (in_array($context['current_action'], array('login2', 'reminder')))
+		$current_action = 'login';
 
 	$context['menu_buttons'][$current_action]['active_button'] = true;
 

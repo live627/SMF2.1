@@ -77,6 +77,7 @@ January 2009
  * Don't show a border below vote options if there's no expiration date set. (Display template, forum.css)
  ! Always load the English version of the Modifications and (if applicable) ThemeStrings language files as a means of fallback. (Load.php) [Bug 2743]
  ! Update the session check system to make it a bit less predictable. (several files)
+ ! Highlight the login tab when asking for a password reminder. (Subs.php) [Bug 2911]
 
 
 December 2008
