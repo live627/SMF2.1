@@ -156,6 +156,7 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta
 ---#
 
 ---# Adding advanced password brute force protection to "members" table...
+---{
 $smcFunc['db_alter_table']('members', array(
 	'add' => array(
 		'passwd_flood' => array(
@@ -168,6 +169,7 @@ $smcFunc['db_alter_table']('members', array(
 		),
 	)
 ));
+---}
 ---#
 
 /******************************************************************************/

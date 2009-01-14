@@ -78,6 +78,7 @@ January 2009
  ! Always load the English version of the Modifications and (if applicable) ThemeStrings language files as a means of fallback. (Load.php) [Bug 2743]
  ! Update the session check system to make it a bit less predictable. (several files)
  ! Highlight the login tab when asking for a password reminder. (Subs.php) [Bug 2911]
+ ! Upgrading an SQLite forum failed on adding the passwd_flood column. (upgrade_2-0_sqlite.sql) [Bug 2907] 
 
 
 December 2008
