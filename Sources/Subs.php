@@ -2381,11 +2381,6 @@ function parsesmileys(&$message)
 				list ($smileysfrom, $smileysto, $smileysdescs) = $temp;
 		}
 
-
-		$smileysfrom[] = ':uuddlrlrba:';
-		$smileysto[] = 'kona.jpg';
-		$smileysdescs[] = '';
-
 		// The non-breaking-space is a complex thing...
 		$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : "\xC2\xA0") : '\xA0';
 

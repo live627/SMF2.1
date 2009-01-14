@@ -817,17 +817,17 @@
 				'Profile_3' => array(
 					'name' => 'Profile (3)',
 					'description' => "Show posts",
-					'url' => $scripturl . '?action=profile;area=contributions;sa=posts',
+					'url' => $scripturl . '?action=profile;area=showposts;sa=messages',
 				),
 				'Profile_4' => array(
 					'name' => 'Profile (4)',
 					'description' => "Show topics",
-					'url' => $scripturl . '?action=profile;area=contributions;sa=topics',
+					'url' => $scripturl . '?action=profile;area=showposts;sa=topics',
 				),
 				'Profile_5' => array(
 					'name' => 'Profile (5)',
 					'description' => "Show attachments",
-					'url' => $scripturl . '?action=profile;area=contributions;sa=attach',
+					'url' => $scripturl . '?action=profile;area=showposts;sa=attach',
 				),
 				'Profile_6' => array(
 					'name' => 'Profile (6)',

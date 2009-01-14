@@ -268,10 +268,10 @@ function showPosts($memID)
 
 	// Create the tabs for the template.
 	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => $txt['showContributions'],
-		'description' => $txt['showContributions_help'],
+		'title' => $txt['showPosts'],
+		'description' => $txt['showPosts_help'],
 		'tabs' => array(
-			'posts' => array(
+			'messages' => array(
 			),
 			'topics' => array(
 			),
@@ -281,7 +281,7 @@ function showPosts($memID)
 	);
 
 	// Set the page title
-	$context['page_title'] = $txt['showContributions'] . ' - ' . $user_profile[$memID]['real_name'];
+	$context['page_title'] = $txt['showPosts'] . ' - ' . $user_profile[$memID]['real_name'];
 
 	// If we're specifically dealing with attachments use that function!
 	if (isset($_GET['sa']) && $_GET['sa'] == 'attach')
@@ -300,7 +300,7 @@ function showPosts($memID)
 		removeMessage((int) $_GET['delete']);
 
 		// Back to... where we are now ;).
-		redirectexit('action=profile;u=' . $memID . ';area=contributions;start=' . $_GET['start']);
+		redirectexit('action=profile;u=' . $memID . ';area=showposts;start=' . $_GET['start']);
 	}
 
 	// Default to 10.
@@ -355,7 +355,7 @@ function showPosts($memID)
 	$maxIndex = (int) $modSettings['defaultMaxMessages'];
 
 	// Make sure the starting place makes sense and construct our friend the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contributions' . ($context['is_topics'] ? ';sa=topics' : '') . (!empty($board) ? ';board=' . $board : ''), $context['start'], $msgCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=showposts' . ($context['is_topics'] ? ';sa=topics' : '') . (!empty($board) ? ';board=' . $board : ''), $context['start'], $msgCount, $maxIndex);
 	$context['current_page'] = $context['start'] / $maxIndex;
 
 	// Reverse the query if we're past 50% of the pages for better performance.
@@ -563,7 +563,7 @@ function showAttachments($memID)
 	$sort = $sortTypes[$context['sort_order']];
 
 	// Let's get ourselves a lovely page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=contributions;sa=attach;sort=' . $context['sort_order'] . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';area=showposts;sa=attach;sort=' . $context['sort_order'] . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
 
 	// Retrieve a some attachments.
 	$request = $smcFunc['db_query']('', '

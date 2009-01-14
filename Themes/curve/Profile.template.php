@@ -78,7 +78,7 @@ function template_summary()
 		echo '			
 				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '.</a><br />';
 	echo '
-				<a href="', $scripturl, '?action=profile;area=contributions;u=', $context['id_member'], '">', $txt['showContributions'], '</a><br />
+				<a href="', $scripturl, '?action=profile;area=showposts;u=', $context['id_member'], '">', $txt['showPosts'], '</a><br />
 				<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '">', $txt['statPanel'], '</a>
 			</p>';
 
@@ -269,7 +269,7 @@ function template_showPosts()
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="3" height="26">
-					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showPosts'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
+					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
 				</td>
 			</tr>
 			<tr class="catbg3">
@@ -317,7 +317,7 @@ function template_showPosts()
 
 			if ($post['can_delete'])
 				echo '
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;start=', $context['start'], ';delete=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;start=', $context['start'], ';delete=', $post['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
 			if ($post['can_delete'] && ($post['can_mark_notify'] || $post['can_reply']))
 				echo '
 								', $context['menu_separator'];
@@ -347,25 +347,25 @@ function template_showPosts()
 		<table border="0" width="100%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td width="25%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
 						', $txt['show_attach_filename'], '
 						', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td width="12%" align="center">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
 						', $txt['show_attach_downloads'], '
 						', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td width="30%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
 						', $txt['message'], '
 						', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td>
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=contributions;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';area=showposts;sa=attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
 					', $txt['show_attach_posted'], '
 					', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>

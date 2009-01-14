@@ -117,12 +117,12 @@ function ModifyProfile($post_errors = array())
 						'any' => 'profile_view_any',
 					),
 				),
-				'contributions' => array(
-					'label' => $txt['showContributions'],
+				'showposts' => array(
+					'label' => $txt['showPosts'],
 					'file' => 'Profile-View.php',
 					'function' => 'showPosts',
 					'subsections' => array(
-						'posts' => array($txt['showPosts'], 'profile_view_any'),
+						'messages' => array($txt['showMessages'], 'profile_view_any'),
 						'topics' => array($txt['showTopics'], 'profile_view_any'),
 						'attach' => array($txt['showAttachments'], 'profile_view_any'),
 					),

@@ -79,6 +79,8 @@ January 2009
  ! Update the session check system to make it a bit less predictable. (several files)
  ! Highlight the login tab when asking for a password reminder. (Subs.php) [Bug 2911]
  ! Upgrading an SQLite forum failed on adding the passwd_flood column. (upgrade_2-0_sqlite.sql) [Bug 2907] 
+ ! Renamed 'Show Contributions' back to 'Show Posts' to prevent unnecessary confusion. (Profile.php, Profile-View.php, Subs.php, Profile template, Profile language file)
+ 
 
 
 December 2008

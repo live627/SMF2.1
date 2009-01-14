@@ -143,9 +143,9 @@ $txt['deleteAccount_confirm'] = 'Are you completely sure you want to delete this
 $txt['deleteAccount_approval'] = 'Please note that the forum moderators will have to approve this account\'s deletion before it will be removed.';
 
 $txt['profileInfo'] = 'Profile Info';
-$txt['showContributions'] = 'Show Contributions';
-$txt['showContributions_help'] = 'This section allows you to view all contributions by this member. Note that you can only see contributions in areas you have access to.';
-$txt['showPosts'] = 'Posts';
+$txt['showPosts'] = 'Show Posts';
+$txt['showPosts_help'] = 'This section allows you to view all posts made by this member. Note that you can only see posts made in areas you currently have access to.';
+$txt['showMessages'] = 'Messages';
 $txt['showTopics'] = 'Topics';
 $txt['showAttachments'] = 'Attachments';
 $txt['statPanel'] = 'Show Stats';
