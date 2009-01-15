@@ -1336,9 +1336,9 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 // Takes care of voting - don't worry, this is done automatically.
 function ssi_pollVote()
 {
-	global $db_prefix, $user_info, $sc, $smcFunc, $sourcedir, $modSettings;
+	global $context, $db_prefix, $user_info, $sc, $smcFunc, $sourcedir, $modSettings;
 
-	if (!isset($_POST['sc']) || $_POST['sc'] != $sc || empty($_POST['options']) || !isset($_POST['poll']))
+	if (!isset($_POST[$context['session_var']]) || $_POST[$context['session_var']] != $sc || empty($_POST['options']) || !isset($_POST['poll']))
 	{
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

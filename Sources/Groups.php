@@ -631,7 +631,7 @@ function GroupRequests()
 	$where_parameters = array();
 
 	// We've submitted?
-	if (isset($_POST['sc']) && !empty($_POST['groupr']) && !empty($_POST['req_action']))
+	if (isset($_POST[$context['session_var']]) && !empty($_POST['groupr']) && !empty($_POST['req_action']))
 	{
 		checkSession('post');
 

@@ -302,7 +302,7 @@ function ReportToModerator()
 	isAllowedTo('report_any');
 
 	// If they're posting, it should be processed by ReportToModerator2.
-	if (isset($_POST['sc']) || isset($_POST['submit']))
+	if (isset($_POST[$context['session_var']]) || isset($_POST['submit']))
 		ReportToModerator2();
 
 	// We need a message ID to check!

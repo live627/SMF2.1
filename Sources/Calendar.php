@@ -169,7 +169,7 @@ function CalendarPost()
 		$_REQUEST['eventid'] = (int) $_REQUEST['eventid'];
 
 	// Submitting?
-	if (isset($_POST['sc'], $_REQUEST['eventid']))
+	if (isset($_POST[$context['session_var']], $_REQUEST['eventid']))
 	{
 		checkSession();
 

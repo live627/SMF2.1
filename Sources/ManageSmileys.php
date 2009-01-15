@@ -199,7 +199,7 @@ function EditSmileySets()
 	$context[$context['admin_menu_name']]['current_subsection'] = 'editsets';
 
 	// They must've been submitted a form.
-	if (isset($_POST['sc']))
+	if (isset($_POST[$context['session_var']]))
 	{
 		checkSession();
 
@@ -528,7 +528,7 @@ function AddSmiley()
 		);
 
 	// Submitting a form?
-	if (isset($_POST['sc'], $_POST['smiley_code']))
+	if (isset($_POST[$context['session_var']], $_POST['smiley_code']))
 	{
 		checkSession();
 
@@ -761,7 +761,7 @@ function EditSmileys()
 	$context[$context['admin_menu_name']]['current_subsection'] = 'editsmileys';
 
 	// Submitting a form?
-	if (isset($_POST['sc']))
+	if (isset($_POST[$context['session_var']]))
 	{
 		checkSession();
 
@@ -1502,7 +1502,7 @@ function EditMessageIcons()
 
 
 	// Submitting a form?
-	if (isset($_POST['sc']))
+	if (isset($_POST[$context['session_var']]))
 	{
 		checkSession();
 

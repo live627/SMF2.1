@@ -188,7 +188,7 @@ function EditHoliday()
 	$context['sub_template'] = 'edit_holiday';
 
 	// Submitting?
-	if (isset($_POST['sc']) && (isset($_REQUEST['delete']) || $_REQUEST['title'] != ''))
+	if (isset($_POST[$context['session_var']]) && (isset($_REQUEST['delete']) || $_REQUEST['title'] != ''))
 	{
 		checkSession();
 

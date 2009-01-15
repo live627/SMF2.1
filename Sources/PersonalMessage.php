@@ -2664,7 +2664,7 @@ function ManageLabels()
 			$the_labels[$label['id']] = $label['name'];
 	}
 
-	if (isset($_POST['sc']))
+	if (isset($_POST[$context['session_var']]))
 	{
 		checkSession('post');
 

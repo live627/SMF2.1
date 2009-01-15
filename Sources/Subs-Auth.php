@@ -332,7 +332,7 @@ function adminLogin()
 	}
 
 	// Now go through $_POST.  Make sure the session hash is sent.
-	$_POST['sc'] = $context['session_id'];
+	$_POST[$context['session_var']] = $context['session_id'];
 	foreach ($_POST as $k => $v)
 		$context['post_data'] .= adminLogin_outputPostVars($k, $v);
 
