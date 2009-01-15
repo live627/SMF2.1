@@ -56,7 +56,7 @@ if (!defined('SMF'))
 		- supports all character sets used by SMF's language files.
 		- redirects to ?action=admin;area=maintain after finishing.
 		- is linked from the maintenance screen (if applicable).
-		- accessed by ?action=admin;area=maintain;sa=convertutf8.
+		- accessed by ?action=admin;area=maintain;sa=database;activity=convertutf8.
 
 	void ConvertEntities()
 		- converts HTML-entities to UTF-8 characters.
@@ -65,7 +65,7 @@ if (!defined('SMF'))
 		- only works if UTF-8 has been set as database and global character set.
 		- is divided in steps of 10 seconds.
 		- is linked from the maintenance screen (if applicable).
-		- accessed by ?action=admin;area=maintain;sa=convertentities.
+		- accessed by ?action=admin;area=maintain;sa=database;activity=convertentities.
 
 	void OptimizeTables()
 		- optimizes all tables in the database and lists how much was saved.
@@ -74,7 +74,7 @@ if (!defined('SMF'))
 		- shows as the maintain_forum admin area.
 		- updates the optimize scheduled task such that the tables are not
 		  automatically optimized again too soon.
-		- accessed from ?action=admin;area=maintain;sa=optimize.
+		- accessed from ?action=admin;area=maintain;sa=database;activity=optimize.
 
 	void AdminBoardRecount()
 		- recounts many forum totals that can be recounted automatically
@@ -89,7 +89,7 @@ if (!defined('SMF'))
 		- updates the last message posted in boards and children.
 		- updates member count, latest member, topic count, and message count.
 		- redirects back to ?action=admin;area=maintain when complete.
-		- accessed via ?action=admin;area=maintain;sa=recount.
+		- accessed via ?action=admin;area=maintain;sa=database;activity=recount.
 
 	void VersionDetail()
 		- parses the comment headers in all files for their version information
@@ -99,7 +99,7 @@ if (!defined('SMF'))
 		- requires the admin_forum permission.
 		- uses the view_versions admin area.
 		- loads the view_versions sub template (in the Admin template.)
-		- accessed through ?action=admin;area=maintain;sa=version.
+		- accessed through ?action=admin;area=maintain;sa=database;activity=version.
 
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
 		// !!!
@@ -217,11 +217,16 @@ function ManageMaintenance()
 // Supporting function for the database maintenance area.
 function MaintainDatabase()
 {
-	global $context, $db_type, $db_character_set, $modSettings, $smcFunc;
+	global $context, $db_type, $db_character_set, $modSettings, $smcFunc, $txt;
 
 	// Show some conversion options?
 	$context['convert_utf8'] = $db_type == 'mysql' && (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smcFunc['db_server_info']())) <= 0;
 	$context['convert_entities'] = $db_type == 'mysql' && isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
+
+	if (isset($_GET['done']) && $_GET['done'] == 'convertutf8')
+		$context['maintenance_finished'] = &$txt['utf8_title'];
+	if (isset($_GET['done']) && $_GET['done'] == 'convertentities')
+		$context['maintenance_finished'] = &$txt['entity_convert_title'];
 }
 
 // Supporting function for the routine maintenance area.
@@ -714,7 +719,7 @@ function ConvertUtf8()
 	require_once($sourcedir . '/Subs-Charset.php');
 	fix_serialized_columns();
 
-	redirectexit('action=admin;area=maintain');
+	redirectexit('action=admin;area=maintain;done=convertutf8');
 }
 
 // Convert HTML-entities to their UTF-8 character equivalents.
@@ -734,7 +739,7 @@ function ConvertEntities()
 
 	$context['start_time'] = time();
 
-	$context['first_step'] = !isset($_REQUEST['sesc']);
+	$context['first_step'] = !isset($_REQUEST[$context['session_var']]);
 	$context['last_step'] = false;
 
 	// The first step is just a text screen with some explanation.
@@ -749,7 +754,7 @@ function ConvertEntities()
 	$context['continue_countdown'] = 3;
 
 	// Now we're actually going to convert...
-	checkSession('get');
+	checkSession('request');
 
 	// A list of tables ready for conversion.
 	$tables = array(
@@ -895,7 +900,7 @@ function ConvertEntities()
 			{
 				// Calculate an approximation of the percentage done.
 				$context['continue_percent'] = round(100 * ($context['table'] + ($context['start'] / $max_value)) / $context['num_tables'], 1);
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=convertentities;table=' . $context['table'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=database;activity=convertentities;table=' . $context['table'] . ';start=' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				return;
 			}
 		}
@@ -908,7 +913,7 @@ function ConvertEntities()
 
 	// If we're here, we must be done.
 	$context['continue_percent'] = 100;
-	$context['continue_get_data'] = '?action=admin;area=maintain';
+	$context['continue_get_data'] = '?action=admin;area=maintain;sa=database;done=convertentities';
 	$context['last_step'] = true;
 	$context['continue_countdown'] = -1;
 }
@@ -1041,7 +1046,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=0;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=0;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$context['continue_percent'] = round((100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1096,7 +1101,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=1;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=1;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$context['continue_percent'] = round((200 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1149,7 +1154,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=2;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=2;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$context['continue_percent'] = round((300 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1202,7 +1207,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=3;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=3;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$context['continue_percent'] = round((400 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1255,7 +1260,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=4;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=4;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$context['continue_percent'] = round((500 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1301,7 +1306,7 @@ function AdminBoardRecount()
 
 		if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 		{
-			$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=6;start=0;' . $context['session_var'] . '=' . $context['session_id'];
+			$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=6;start=0;' . $context['session_var'] . '=' . $context['session_id'];
 			$context['continue_percent'] = round(700 / $total_steps);
 
 			return;
@@ -1344,7 +1349,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=6;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=routine;activity=recount;step=6;start=' . $_REQUEST['start'] . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$context['continue_percent'] = round((700 + 100 * $_REQUEST['start'] / $modSettings['maxMsgID']) / $total_steps);
 
 				return;

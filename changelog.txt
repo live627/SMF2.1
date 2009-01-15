@@ -81,6 +81,7 @@ January 2009
  ! Upgrading an SQLite forum failed on adding the passwd_flood column. (upgrade_2-0_sqlite.sql) [Bug 2907] 
  ! Renamed 'Show Contributions' back to 'Show Posts' to prevent unnecessary confusion. (Profile.php, Profile-View.php, Subs.php, Profile template, Profile language file)
  * Show a link back to the message index when starting a new topic in wireless mode. (Wireless template) [Bug 2906]
+ ! A few maintenance areas weren't properly redirecting to their new location yet. (ManageMaintenance.php, ManageMaintenance.template.php) [Bug 2927] 
 
 
 December 2008

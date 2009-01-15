@@ -6,6 +6,13 @@ function template_maintain_database()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
+	// If maintenance has finished tell the user.
+	if (!empty($context['maintenance_finished']))
+		echo '
+			<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed green; color: green;">
+				', sprintf($txt['maintain_done'], $context['maintenance_finished']), '
+			</div>';
+
 	echo '
 	<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
 		<tr class="titlebg">
@@ -479,7 +486,7 @@ function template_convert_utf8()
 				</td>
 			</tr><tr>
 				<td class="windowbg2" align="center">
-					<form action="', $scripturl, '?action=admin;area=maintain;sa=convertutf8" method="post" accept-charset="', $context['character_set'], '">
+					<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertutf8" method="post" accept-charset="', $context['character_set'], '">
 						<table><tr>
 							<th align="right">', $txt['utf8_source_charset'], ': </th>
 							<td><select name="src_charset">';
@@ -522,7 +529,7 @@ function template_convert_entities()
 			</tr>
 			<tr>
 				<td class="windowbg2" align="center">
-					<form action="', $scripturl, '?action=admin;area=maintain;sa=convertentities;start=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+					<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertentities;start=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 						<input type="submit" value="', $txt['entity_convert_proceed'], '" />
 					</form>
 				</td>
