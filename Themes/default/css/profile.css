@@ -124,9 +124,9 @@
 /* Simple feedback messages */
 div#profile_error, div#profile_success
 {
-	margin-bottom: 0.5em;
 	padding: 1ex 2ex;
-	border: 1px solid;
+	border: solid;
+	border-width: 1px 1px 0 1px;
 }
 
 div#profile_error

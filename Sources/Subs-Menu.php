@@ -260,9 +260,9 @@ function createMenu($menuData, $menuOptions = array())
 	{
 		$context['dropdown_html_inserted'] = true;
 		if (file_exists($settings['theme_dir']. '/css/dropmenu.css'))
-			$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/dropmenu.css" />';
+			$context['html_headers'] .= "\n\t" . '<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/dropmenu.css" />';
 		else
-			$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/dropmenu_default.css" />';
+			$context['html_headers'] .= "\n\t" . '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/dropmenu_default.css" />';
 	}
 
 	// Almost there - load the template and add to the template layers.
