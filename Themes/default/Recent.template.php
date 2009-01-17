@@ -62,9 +62,9 @@ function template_main()
 				echo '
 				<tr>
 					<td class="catbg" colspan="3" align="right">
-						<table><tr>
+						<table><tr><td>
 						', template_button_strip($button_set, 'top'), '
-						</tr></table>
+						</td></tr></table>
 					</td>
 				</tr>';
 
@@ -117,8 +117,12 @@ function template_unread()
 
 	echo '
 	<div id="readbuttons_top" class="readbuttons clearfix margintop">
-		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($mark_read) && !empty($settings['use_tabs']) ? template_button_strip($mark_read, 'bottom') : '', '
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+	
+	if (!empty($mark_read) && !empty($settings['use_tabs']))
+		template_button_strip($mark_read, 'bottom');
+
+	echo '
 	</div>';
 
 	echo '
@@ -203,9 +207,9 @@ function template_unread()
 		echo '
 				<tr>
 					<td class="catbg" colspan="', $showCheckboxes ? '8' : '7', '" align="right">
-						<table><tr>
-						', template_button_strip($mark_read, 'top', true), '
-						</tr></table>
+						<table><tr><td>
+						', template_button_strip($mark_read, 'top'), '
+						</td></tr></table>
 					</td>
 				</tr>';
 
@@ -214,8 +218,12 @@ function template_unread()
 		</td></tr>
 	</table>
 	<div class="readbuttons clearfix marginbottom">
-		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($settings['use_tabs']) && !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+	
+	if (!empty($settings['use_tabs']) && !empty($mark_read))
+		template_button_strip($mark_read, 'top');
+
+	echo '
 	</div>
 	<br />';
 
@@ -271,11 +279,16 @@ function template_replies()
 			);
 	}
 	if (!empty($settings['use_tabs']))
+	{
 		echo '
 	<div id="readbuttons_top" class="readbuttons clearfix margintop">
-		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($mark_read) ? template_button_strip($mark_read, 'bottom') : '', '
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		if (!empty($mark_read))
+			template_button_strip($mark_read, 'bottom');
+
+		echo '
 	</div>';
+	}
 
 	echo '
 	<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor">
@@ -347,9 +360,9 @@ function template_replies()
 		echo '
 				<tr>
 					<td class="catbg" colspan="', $showCheckboxes ? '8' : '7', '" align="right">
-						<table><tr>
-						', template_button_strip($mark_read, 'top', true), '
-						</tr></table>
+						<table><tr><td>
+							', template_button_strip($mark_read, 'top'), '
+						</td></tr></table>
 					</td>
 				</tr>';
 
@@ -358,8 +371,12 @@ function template_replies()
 		</td></tr>
 	</table>
 	<div class="readbuttons clearfix marginbottom">
-		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
-		', !empty($settings['use_tabs']) && !empty($mark_read) ? template_button_strip($mark_read, 'top') : '', '
+		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+
+	if (!empty($settings['use_tabs']) && !empty($mark_read))
+		template_button_strip($mark_read, 'top');
+
+	echo '
 	</div>
 	<br />';
 

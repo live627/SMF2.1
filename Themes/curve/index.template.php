@@ -440,17 +440,15 @@ function template_menu()
 }
 
 // Generate a strip of buttons.
-function template_button_strip($button_strip, $direction = '', $force_reset = false, $custom_td = '')
+function template_button_strip($button_strip, $direction = '', $custom_td = '')
 {
 	global $settings, $context, $txt, $scripturl;
 
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
-	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a ' . (isset($value['active']) ? 'class="active" ' : '') . 'href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
-	}
+			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 
 	if (empty($buttons))
 		return '';
@@ -459,7 +457,7 @@ function template_button_strip($button_strip, $direction = '', $force_reset = fa
 	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
 	echo '
-		<div class="buttonlist', !empty($direction) ? ' align_' . $direction : '' , '">
+		<div class="buttonlist', empty($direction) ? '' : ' align_' . $direction, '">
 			<ul>
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>

@@ -314,7 +314,9 @@ function template_manual_intro()
 
 		echo '
 						</td>
-						', template_button_strip($mark_read_button, 'top', 'align="right" class="smalltext"'), '
+						<td>
+							', template_button_strip($mark_read_button, 'top', 'align="right" class="smalltext"'), '
+						</td>
 					</tr>
 				</table>
 			</div><br />';
@@ -383,7 +385,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -432,7 +436,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -529,7 +535,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($display_buttons, 'bottom', 'align="right" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($display_buttons, 'bottom', 'align="right" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -615,7 +623,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($display_buttons, 'top', 'align="right" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($display_buttons, 'top', 'align="right" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>

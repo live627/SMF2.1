@@ -319,7 +319,9 @@ function template_manual_intro()
 
 		echo '
 						</td>
-						', template_button_strip($mark_read_button, 'top', false, 'align="right" class="smalltext"'), '
+						<td>
+							', template_button_strip($mark_read_button, 'top', false, 'align="right" class="smalltext"'), '
+						</td>
 					</tr>
 				</table>
 			</div><br />';
@@ -379,9 +381,9 @@ function template_manual_intro()
 					<td class="middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</td>
 					<td align="right" style="padding-right: 1ex;">
 						<table cellpadding="0" cellspacing="0">
-							<tr>
+							<tr><td>
 								', template_button_strip($mindex_buttons, 'bottom'), '
-							</tr>
+							</td></tr>
 						</table>
 					</td>
 				</tr>
@@ -396,7 +398,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($mindex_buttons, 'bottom', false, 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($mindex_buttons, 'bottom', false, 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -432,9 +436,9 @@ function template_manual_intro()
 					<td class="middletext">', $txt['manual_index_pages'], ': [<b>1</b>]</td>
 					<td align="right" style="padding-right: 1ex;">
 						<table cellpadding="0" cellspacing="0">
-							<tr>
+							<tr><td>
 								', template_button_strip($mindex_buttons, 'top'), '
-							</tr>
+							</td></tr>
 						</table>
 					</td>
 				</tr>
@@ -449,7 +453,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($mindex_buttons, 'bottom', false, 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($mindex_buttons, 'bottom', false, 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -540,7 +546,9 @@ function template_manual_intro()
 					<td align="right" style="padding-right: 1ex;">
 						<table cellpadding="0" cellspacing="0">
 							<tr>
-								', template_button_strip($display_buttons, 'bottom'), '
+								<td>
+									', template_button_strip($display_buttons, 'bottom'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -556,7 +564,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($display_buttons, 'bottom', false, 'align="right" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($display_buttons, 'bottom', false, 'align="right" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -632,7 +642,9 @@ function template_manual_intro()
 					<td align="right" style="padding-right: 1ex;">
 						<table cellpadding="0" cellspacing="0">
 							<tr>
-								', template_button_strip($display_buttons, 'top', false), '
+								<td>
+									', template_button_strip($display_buttons, 'top', false), '
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -648,7 +660,9 @@ function template_manual_intro()
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
-								', template_button_strip($display_buttons, 'top', false, 'align="right" style="font-size: smaller;"'), '
+								<td>
+									', template_button_strip($display_buttons, 'top', false, 'align="right" style="font-size: smaller;"'), '
+								</td>
 							</tr>
 						</table>
 					</td>

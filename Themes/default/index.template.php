@@ -436,10 +436,8 @@ function template_button_strip($button_strip, $direction = 'top', $custom_td = '
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
-	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
-	}
+			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 
 	if (empty($buttons))
 		return '';

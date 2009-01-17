@@ -71,8 +71,12 @@ function template_unread()
 	}
 
 	echo '
-	<div id="readbuttons_top">
-		', !empty($mark_read) && !empty($settings['use_tabs']) ? template_button_strip($mark_read, 'right') : '', '
+	<div id="readbuttons_top">';
+
+	if (!empty($mark_read) && !empty($settings['use_tabs']))
+		template_button_strip($mark_read, 'right');
+
+	echo '
 		<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 	</div>';
 
@@ -166,7 +170,7 @@ function template_unread()
 		echo '
 				<tr>
 					<td class="catbg" colspan="', $showCheckboxes ? '6' : '5', '" align="right">
-								', template_button_strip($mark_read, 'top', true), '
+								', template_button_strip($mark_read, 'top'), '
 					</td>
 				</tr>';
 
@@ -174,8 +178,12 @@ function template_unread()
 			</tbody>
 		</table>
 	</div>
-	<div id="readbuttons">
-		', !empty($settings['use_tabs']) && !empty($mark_read) ? template_button_strip($mark_read, 'right') : '', '
+	<div id="readbuttons">';
+
+	if (!empty($settings['use_tabs']) && !empty($mark_read))
+		template_button_strip($mark_read, 'right');
+
+	echo '
 		<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 	</div>
 	<br />';
@@ -234,8 +242,12 @@ function template_replies()
 	}
 
 	echo '
-	<div id="readbuttons_top">
-		', !empty($mark_read) && !empty($settings['use_tabs']) ? template_button_strip($mark_read, 'right') : '', '
+	<div id="readbuttons_top">';
+
+	if (!empty($mark_read) && !empty($settings['use_tabs']))
+		template_button_strip($mark_read, 'right');
+
+	echo '
 		<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 	</div>';
 
@@ -325,7 +337,7 @@ function template_replies()
 		echo '
 				<tr>
 					<td class="catbg" colspan="', $showCheckboxes ? '6' : '5', '" align="right">
-								', template_button_strip($mark_read, 'top', true), '
+						', template_button_strip($mark_read, 'top'), '
 					</td>
 				</tr>';
 
@@ -333,8 +345,12 @@ function template_replies()
 			</tbody>
 		</table>
 	</div>
-	<div id="readbuttons">
-		', !empty($settings['use_tabs']) && !empty($mark_read) ? template_button_strip($mark_read, 'right') : '', '
+	<div id="readbuttons">';
+	
+	if (!empty($settings['use_tabs']) && !empty($mark_read))
+		template_button_strip($mark_read, 'right');
+
+	echo '
 		<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 	</div>
 	<br />';

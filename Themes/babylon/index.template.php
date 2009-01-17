@@ -490,7 +490,7 @@ function template_menu()
 // Generate a strip of buttons, out of buttons.
 function template_button_strip($button_strip, $direction = 'top', $custom_td = '')
 {
-	global $settings, $buttons, $context, $txt, $scripturl;
+	global $settings, $context, $txt, $scripturl;
 
 	if (empty($button_strip))
 		return '';
@@ -498,14 +498,14 @@ function template_button_strip($button_strip, $direction = 'top', $custom_td = '
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
-	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '>' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . ($value['lang'] ? $context['user']['language'] . '/' : '') . $value['image'] . '" alt="' . $txt[$value['text']] . '" border="0" />' : $txt[$value['text']]) . '</a>';
-	}
+			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['content']) ? $value['content'] : (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '>' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . ($value['lang'] ? $context['user']['language'] . '/' : '') . $value['image'] . '" alt="' . $txt[$value['text']] . '" border="0" />' : $txt[$value['text']])) . '</a>';
 
+	if (empty($button_strip))
+		return '';
 
 	echo '
-		<td ', $custom_td, '>', implode($context['menu_separator'], $buttons) , '</td>';
+		<div ', $custom_td, '>', implode($context['menu_separator'], $buttons) , '</div>';
 }
 
 ?>

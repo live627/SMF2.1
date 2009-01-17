@@ -93,6 +93,7 @@ January 2009
  ! Personal Messages couldn't be shown as conversations in sqlite. (Subs-Db-sqlite.php, PersonalMessage.php) [Bug 1590]
  ! The INSERT IGNORE command in the sqlite layer didn't do the ignore part very well. (Subs-Db-sqlite.php) [Bug 2926]
  ! In rare cases (with cache mode set to 3) an incorrect error might be shown after posting a reply to a topic that no longer exists due to a move or a merge. (Post.php) [Bug 2408]
+ * Synchronzied all themes with regards to the template_button_strip function so they won't cause any xHTML errors any longer. (index template, Help template, Recent template, Combat template) [Bug 2938]
 
 
 December 2008
