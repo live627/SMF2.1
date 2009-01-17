@@ -90,6 +90,8 @@ January 2009
  ! The backup and alter function of the sqlite DB layer wouldn't work properly in case the .db extension wasn't set. (DbPackages-sqlite.php, DbExtra-sqlite.php)
  ! The remove_column function of the sqlite DB layer caused a PHP error. (DbPackages-sqlite.php)
  ! The sortSmileyTable function didn't work properly when using sqlite. (DbPackages-sqlite.php) [Bug 2438]
+ ! Personal Messages couldn't be shown as conversations in sqlite. (Subs-Db-sqlite.php, PersonalMessage.php) [Bug 1590]
+ ! The INSERT IGNORE command in the sqlite layer didn't do the ignore part very well. (Subs-Db-sqlite.php) [Bug 2926]
 
 
 December 2008

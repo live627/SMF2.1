@@ -496,48 +496,6 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		$priv_trans = true;
 	}
 
-	// SQLite doesn't support replace or insert ignore so we need to work around it.
-	if ($method == 'replace')
-	{
-		// Setup an UPDATE template.
-		$updateData = '';
-		$where = '';
-		$count = 0;
-		foreach ($columns as $columnName => $type)
-		{
-			// Are we restricting the length?
-			if (strpos($type, 'string-') !== false)
-				$actualType = sprintf($columnName . ' = SUBSTR({string:%1$s}, 1, ' . substr($type, 7) . '), ', $count);
-			else
-				$actualType = sprintf($columnName . ' = {%1$s:%2$s}, ', $type, $count);
-
-			// If it's a key we don't actally update it.
-			if (in_array($columnName, $keys))
-				$where .= (empty($where) ? '' : ' AND ') . substr($actualType, 0, -2);
-			else
-				$updateData .= $actualType;
-
-			$count++;
-		}
-		$updateData = substr($updateData, 0, -2);
-
-		// Try and update the entries.
-		if (!empty($updateData))
-			foreach ($data as $k => $entry)
-			{
-				$smcFunc['db_query']('', '
-					UPDATE ' . $table . '
-					SET ' . $updateData . '
-					' . (empty($where) ? '' : ' WHERE ' . $where),
-					$entry, $connection
-				);
-
-				// Make a note that the replace actually overwrote.
-				if ($smcFunc['db_affected_rows']() != 0)
-					unset($data[$k]);
-			}
-	}
-
 	if (!empty($data))
 	{
 		// Create the mold for a single row insert.
@@ -560,13 +518,21 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 		foreach ($data as $dataRow)
 			$insertRows[] = smf_db_quote($insertData, array_combine($indexed_columns, $dataRow), $connection);
 
+		$commands = array(
+			'replace' => 'REPLACE INTO',
+			'insert' => 'INSERT INTO',
+			'ignore' => 'INSERT OR IGNORE INTO',
+		);
+		$curCommand = isset($commands[$method]) ? $commands[$method] : 'INSERT INTO';
+
 		foreach ($insertRows as $entry)
 			// Do the insert.
 			$smcFunc['db_query']('', '
-				INSERT INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
+				{raw:command} ' . $table . '(' . implode(', ', $indexed_columns) . ')
 				VALUES
 					' . $entry,
 				array(
+					'command' => $curCommand,
 					'security_override' => true,
 					'db_error_skip' => true,
 				),
