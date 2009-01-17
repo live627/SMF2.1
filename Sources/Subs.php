@@ -467,8 +467,7 @@ function updateMemberData($members, $data)
 					SELECT member_name
 					FROM {db_prefix}members
 					WHERE ' . $condition,
-					array(
-					)
+					$parameters
 				);
 				while ($row = $smcFunc['db_fetch_assoc']($request))
 					$member_names[] = $row['member_name'];

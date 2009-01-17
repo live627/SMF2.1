@@ -86,6 +86,7 @@ January 2009
  ! The visual and non-visual verification did not work properly on imode and WAP2. (Subs-Editor.php, GenericControls template, Wireless template) [Bug 2930]
  ! Several links to 'track IP' were losing the user ID. (Profile-View.php, Profile template) [Bug 2936]
  ! Calling the fromCharCode function in JavaScript using 'this' as prefix caused a JavaScript error in some cases. (script.js)
+ ! The updateMemberData function would cause a database error in case it would be used as integration function. (Subs.php) [Bug 2914]
 
 
 December 2008
