@@ -1186,7 +1186,7 @@ function Post2()
 	if (!empty($topic))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT locked, is_sticky, id_poll, approved, num_replies, id_first_msg, id_member_started
+			SELECT locked, is_sticky, id_poll, approved, num_replies, id_first_msg, id_member_started, id_board
 			FROM {db_prefix}topics
 			WHERE id_topic = {int:current_topic}
 			LIMIT 1',
@@ -1196,6 +1196,14 @@ function Post2()
 		);
 		$topic_info = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($request);
+
+		// Though the topic should be there, it might have vanished.
+		if (!is_array($topic_info))
+			fatal_lang_error('topic_doesnt_exist');
+
+		// Did this topic suddenly move? Just checking...
+		if ($topic_info['id_board'] != $board)
+			fatal_lang_error('not_a_topic');
 	}
 
 	// Replying to a topic?

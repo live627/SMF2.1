@@ -92,6 +92,7 @@ January 2009
  ! The sortSmileyTable function didn't work properly when using sqlite. (DbPackages-sqlite.php) [Bug 2438]
  ! Personal Messages couldn't be shown as conversations in sqlite. (Subs-Db-sqlite.php, PersonalMessage.php) [Bug 1590]
  ! The INSERT IGNORE command in the sqlite layer didn't do the ignore part very well. (Subs-Db-sqlite.php) [Bug 2926]
+ ! In rare cases (with cache mode set to 3) an incorrect error might be shown after posting a reply to a topic that no longer exists due to a move or a merge. (Post.php) [Bug 2408]
 
 
 December 2008
