@@ -81,9 +81,10 @@ January 2009
  ! Upgrading an SQLite forum failed on adding the passwd_flood column. (upgrade_2-0_sqlite.sql) [Bug 2907] 
  ! Renamed 'Show Contributions' back to 'Show Posts' to prevent unnecessary confusion. (Profile.php, Profile-View.php, Subs.php, Profile template, Profile language file)
  * Show a link back to the message index when starting a new topic in wireless mode. (Wireless template) [Bug 2906]
- ! A few maintenance areas weren't properly redirecting to their new location yet. (ManageMaintenance.php, ManageMaintenance.template.php) [Bug 2927] 
+ ! A few maintenance areas weren't properly redirecting to their new location yet. (ManageMaintenance.php, ManageMaintenance template) [Bug 2927] 
  ! The captcha class was sometimes instantiated unnecessary, causing a JavaScript error. (Subs-Editor.php)
  ! The visual and non-visual verification did not work properly on imode and WAP2. (Subs-Editor.php, GenericControls template, Wireless template) [Bug 2930]
+ ! Several links to 'track IP' were losing the user ID. (Profile-View.php, Profile template) [Bug 2936]
 
 
 December 2008
@@ -448,8 +449,8 @@ July 2008
  ! db_server_info was failing on SQLite. (Subs-Db-sqlite.php) [Bug 2301]
  & Clarified the meaning of "Default Personal Text". (ManageSettings and Help language files)
  ! Do a bit more validation on the subject choice when moving, merging and spliting topics. (MoveTopic.php, SplitTopics.php) [Bug 2307]
- * Subject line was overlapping buttons when inline editing (Display.template)
- * Poll editing links were laid out below instead off to the right when you had voted (Display.template, style.css, forum.css, ie6.css)
+ * Subject line was overlapping buttons when inline editing (Display template)
+ * Poll editing links were laid out below instead off to the right when you had voted (Display template, style.css, forum.css, ie6.css)
  * Fixed HTML layout to comply with SGML/tidy standards. (several files)
  ! The default personal text setting was not working correctly. (Subs-Members.php) [Bug 2302]
  ! The theme URLs were being set incorrectly when making a copy of the default theme. (Themes.php) [Bug 2312]
