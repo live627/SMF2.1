@@ -275,6 +275,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'attach_download_increase' => array(
 			'~LOW_PRIORITY~' => '',
 		),
+		'pm_conversation_list' => array(
+			'~ORDER BY id_pm~' => 'ORDER BY MAX(pm.id_pm)',
+		),
 	);
 
 	if (isset($replacements[$identifier]))
@@ -282,7 +285,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 
 	// SQLite doesn't support count(distinct).
 	$db_string = trim($db_string);
-	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
+	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT(*) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
 
 	// Or RLIKE.
 	$db_string = preg_replace('~AND\s*(.+?)\s*RLIKE\s*(\{string:.+?\})~', 'AND REGEXP(\1, \2)', $db_string);
