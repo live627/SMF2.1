@@ -290,6 +290,8 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 // We can't reliably do this on SQLite - damn!
 function smf_db_remove_column($table_name, $column_name, $parameters = array(), $error = 'fatal')
 {
+	global $smcFunc, $db_prefix;
+
 	// Are we gonna prefix?
 	if (empty($parameters['no_prefix']))
 		$table_name = $db_prefix . $table_name;
@@ -571,10 +573,12 @@ function smf_db_alter_table($table_name, $columns)
 {
 	global $smcFunc, $db_prefix, $db_name, $boarddir;
 
+	$db_file = substr($db_name, -3) === '.db' ? $db_name : $db_name . '.db';
+
 	$table_name = str_replace('{db_prefix}', $db_prefix, $table_name);
 
 	// Lets get the current columns for the table.
-	$current_columns = $smcFunc['db_list_columns']($table_name, true);
+	$current_columns = $smcFunc['db_list_columns']($table_name, true, array('no_prefix' => true));
 
 	// Lets get a list of columns for the temp table.
 	$temp_table_columns = array();
@@ -619,14 +623,14 @@ function smf_db_alter_table($table_name, $columns)
 
 	// Lets make a backup of the current database.
 	// We only want the first backup of a table modification.  So if there is a backup file and older than an hour just delete and back up again
-	$db_backup_file = $boarddir . '/Packages/backups/backup_' . $table_name . '_' . basename($db_name) . md5($table_name . $db_name);
+	$db_backup_file = $boarddir . '/Packages/backups/backup_' . $table_name . '_' . basename($db_file) . md5($table_name . $db_file);
 	if (file_exists($db_backup_file) && time() - filemtime($db_backup_file) > 3600)
 	{
 		@unlink($db_backup_file);
-		@copy($db_name, $db_backup_file);
+		@copy($db_file, $db_backup_file);
 	}
 	elseif (!file_exists($db_backup_file))
-		@copy($db_name, $db_backup_file);
+		@copy($db_file, $db_backup_file);
 
 	// Start
 	$smcFunc['db_transaction']('begin');

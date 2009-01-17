@@ -322,8 +322,7 @@ function smf_db_get_backup()
 {
 	global $db_name;
 
-	if (substr($db_name, -3) != 'db')
-		$db_name .= '.db';
+	$db_file = substr($db_name, -3) === '.db' ? $db_name : $db_name . '.db';
 
 	// Add more info if zipped...
 	$ext = '';
@@ -331,13 +330,13 @@ function smf_db_get_backup()
 		$ext = '.gz';
 
 	// Do the remaining headers.
-	header('Content-Disposition: attachment; filename="' . $db_name . $ext . '"');
+	header('Content-Disposition: attachment; filename="' . $db_file . $ext . '"');
 	header('Cache-Control: private');
 	header('Connection: close');
 
 	// Literally dump the contents.  Try reading the file first.
-	if (@readfile($db_name) == null)
-		echo file_get_contents($db_name);
+	if (@readfile($db_file) == null)
+		echo file_get_contents($db_file);
 
 	obExit(false);
 }
