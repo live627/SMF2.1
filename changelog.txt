@@ -82,6 +82,8 @@ January 2009
  ! Renamed 'Show Contributions' back to 'Show Posts' to prevent unnecessary confusion. (Profile.php, Profile-View.php, Subs.php, Profile template, Profile language file)
  * Show a link back to the message index when starting a new topic in wireless mode. (Wireless template) [Bug 2906]
  ! A few maintenance areas weren't properly redirecting to their new location yet. (ManageMaintenance.php, ManageMaintenance.template.php) [Bug 2927] 
+ ! The captcha class was sometimes instantiated unnecessary, causing a JavaScript error. (Subs-Editor.php)
+ ! The visual and non-visual verification did not work properly on imode and WAP2. (Subs-Editor.php, GenericControls template, Wireless template) [Bug 2930]
 
 
 December 2008

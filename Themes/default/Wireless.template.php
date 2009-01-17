@@ -325,17 +325,36 @@ function template_imode_display()
 
 function template_imode_post()
 {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// !!! $modSettings['guest_post_no_email']
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;imode" method="post">
-			<table border="0" cellspacing="0" cellpadding="0">', $context['locked'] ? '
-				<tr><td>' . $txt['topic_locked_no_reply'] . '</td></tr>' : '', isset($context['name']) ? '
-				<tr><td>' . (isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? '<font color="#cc0000">' . $txt['username'] . '</font>' : $txt['username']) . ':</td></tr>
-				<tr><td><input type="text" name="guestname" value="' . $context['name'] . '" /></td></tr>' : '', isset($context['email']) ? '
-				<tr><td>' . (isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? '<font color="#cc0000">' . $txt['email'] . '</font>' : $txt['email']) . ':</td></tr>
-				<tr><td><input type="text" name="email" value="' . $context['email'] . '" /></td></tr>' : '', '
+			<table border="0" cellspacing="0" cellpadding="0">';
+	
+	if ($context['locked'])
+			echo '
+				<tr><td>' . $txt['topic_locked_no_reply'] . '</td></tr>';
+	
+	if (isset($context['name']) && isset($context['email']))
+	{
+		echo '
+				<tr><td>', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? '<font color="#cc0000">' . $txt['username'] . '</font>' : $txt['username'], ':</td></tr>
+				<tr><td><input type="text" name="guestname" value="', $context['name'], '" /></td></tr>';
+	
+		if (empty($modSettings['guest_post_no_email']))
+			echo '
+				<tr><td>', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? '<font color="#cc0000">' . $txt['email'] . '</font>' : $txt['email'], ':</td></tr>
+				<tr><td><input type="text" name="email" value="', $context['email'], '" /></td></tr>';
+	}
+
+	// !!! Needs a more specific imode template.
+	if ($context['require_verification'])
+		echo '
+				<tr><td>', !empty($context['post_error']['need_qr_verification']) ? '<font color="#cc0000">' . $txt['verification'] . '</font>' : $txt['verification'], ':</td></tr>
+				<tr><td>', template_control_verification($context['visual_verification_id'], 'all'), '</td></tr>';
+
+	echo '
 				<tr><td>', isset($context['post_error']['no_subject']) ? '<font color="#FF0000">' . $txt['subject'] . '</font>' : $txt['subject'], ':</td></tr>
 				<tr><td><input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' maxlength="80" /></td></tr>
 				<tr><td>', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? '<font color="#ff0000">' . $txt['message'] . '</font>' : $txt['message'], ':</td></tr>
@@ -911,21 +930,39 @@ function template_wap2_login()
 
 function template_wap2_post()
 {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// !!! $modSettings['guest_post_no_email']
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;wap2" method="post">
-			<p class="titlebg">', $context['page_title'], '</p>', $context['locked'] ? '
+			<p class="titlebg">', $context['page_title'], '</p>';
+			
+	if ($context['locked'])
+		echo '
 			<p class="windowbg">
 				' . $txt['topic_locked_no_reply'] . '
-			</p>' : '', isset($context['name']) ? '
+			</p>';
+
+	if (isset($context['name']) && isset($context['email']))
+	{
+		echo '
 			<p class="windowbg"' . (isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? ' style="color: #ff0000"' : '') . '>
 				' . $txt['username'] . ': <input type="text" name="guestname" value="' . $context['name'] . '" />
-			</p>' : '', isset($context['email']) ? '
+			</p>';
+	
+		if (empty($modSettings['guest_post_no_email']))
+			echo '
 			<p class="windowbg"' . (isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? ' style="color: #ff0000"' : '') . '>
 				' . $txt['email'] . ': <input type="text" name="email" value="' . $context['email'] . '" />
-			</p>' : '', '
+			</p>';
+	}
+
+	if ($context['require_verification'])
+		echo '
+			<p class="windowbg"', !empty($context['post_error']['need_qr_verification']) ? ' style="color: #ff0000"' : '', '>
+				' . $txt['verification'] . ': ', template_control_verification($context['visual_verification_id'], 'all'), '
+			</p>';
+
+	echo '
 			<p class="windowbg"', isset($context['post_error']['no_subject']) ? ' style="color: #ff0000"' : '', '>
 				', $txt['subject'], ': <input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' maxlength="80" />
 			</p>

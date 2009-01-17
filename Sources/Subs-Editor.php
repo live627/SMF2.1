@@ -1389,10 +1389,11 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 	$thisVerification = &$context['controls']['verification'][$verificationOptions['id']];
 
 	// Add javascript for the object.
-	$context['insert_after_template'] .= '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		verification' . $verificationOptions['id'] . 'Handle = new smfCaptcha("' . $thisVerification['image_href'] . '", "' . $verificationOptions['id'] . '", ' . ($context['use_graphic_library'] ? 1 : 0) . ');
-		// ]]></script>';
+	if ($context['controls']['verification'][$verificationOptions['id']]['show_visual'] && !WIRELESS)
+		$context['insert_after_template'] .= '
+			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			verification' . $verificationOptions['id'] . 'Handle = new smfCaptcha("' . $thisVerification['image_href'] . '", "' . $verificationOptions['id'] . '", ' . ($context['use_graphic_library'] ? 1 : 0) . ');
+			// ]]></script>';
 
 	// Is there actually going to be anything?
 	if (empty($thisVerification['show_visual']) && empty($thisVerification['number_questions']))
