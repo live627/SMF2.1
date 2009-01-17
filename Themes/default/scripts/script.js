@@ -165,13 +165,13 @@ String.prototype.php_to8bit = function () {
 		{
 			n = this.charCodeAt(i);
 			if (n < 128)
-				sReturn += this.fromCharCode(n)
+				sReturn += String.fromCharCode(n)
 			else if (n < 2048)
-				sReturn += this.fromCharCode(192 | n >> 6) + this.fromCharCode(128 | n & 63);
+				sReturn += String.fromCharCode(192 | n >> 6) + String.fromCharCode(128 | n & 63);
 			else if (n < 65536)
-				sReturn += this.fromCharCode(224 | n >> 12) + this.fromCharCode(128 | n >> 6 & 63) + this.fromCharCode(128 | n & 63);
+				sReturn += String.fromCharCode(224 | n >> 12) + String.fromCharCode(128 | n >> 6 & 63) + String.fromCharCode(128 | n & 63);
 			else
-				sReturn += this.fromCharCode(240 | n >> 18) + this.fromCharCode(128 | n >> 12 & 63) + this.fromCharCode(128 | n >> 6 & 63) + this.fromCharCode(128 | n & 63);
+				sReturn += String.fromCharCode(240 | n >> 18) + String.fromCharCode(128 | n >> 12 & 63) + String.fromCharCode(128 | n >> 6 & 63) + String.fromCharCode(128 | n & 63);
 		}
 
 		return sReturn;
@@ -285,7 +285,7 @@ String.prototype.php_urlencode = function()
 
 String.prototype._replaceEntities = function(sInput, sDummy, sNum)
 {
-	return this.fromCharCode(parseInt(sNum));
+	return String.fromCharCode(parseInt(sNum));
 }
 
 String.prototype.removeEntities = function()

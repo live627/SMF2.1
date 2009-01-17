@@ -85,6 +85,7 @@ January 2009
  ! The captcha class was sometimes instantiated unnecessary, causing a JavaScript error. (Subs-Editor.php)
  ! The visual and non-visual verification did not work properly on imode and WAP2. (Subs-Editor.php, GenericControls template, Wireless template) [Bug 2930]
  ! Several links to 'track IP' were losing the user ID. (Profile-View.php, Profile template) [Bug 2936]
+ ! Calling the fromCharCode function in JavaScript using 'this' as prefix caused a JavaScript error in some cases. (script.js)
 
 
 December 2008
