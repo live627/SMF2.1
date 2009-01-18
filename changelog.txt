@@ -95,6 +95,7 @@ January 2009
  ! In rare cases (with cache mode set to 3) an incorrect error might be shown after posting a reply to a topic that no longer exists due to a move or a merge. (Post.php) [Bug 2408]
  * Synchronzied all themes with regards to the template_button_strip function so they won't cause any xHTML errors any longer. (index template, Help template, Recent template, Combat template) [Bug 2938]
  * Several JavaScript function and method calls contained scriptURL's that were not taking advantage of the smf_prepareScriptUrl function. (index template, Help template, Packages template, Post template, SplitTopics template, Themes template) [Bug 2935]
+ ! The calculation of the total number of posts was including the recycle bin posts. (Subs.php) [Bug 2092]
 
  
 December 2008
