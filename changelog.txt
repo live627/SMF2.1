@@ -97,6 +97,7 @@ January 2009
  * Several JavaScript function and method calls contained scriptURL's that were not taking advantage of the smf_prepareScriptUrl function. (index template, Help template, Packages template, Post template, SplitTopics template, Themes template) [Bug 2935]
  ! The calculation of the total number of posts was including the recycle bin posts. (Subs.php) [Bug 2092]
  ! Fixed install not creating an admin account for sqlite database. (Subs_Db-sqlite.php) [Bug 2940]
+ * The wireless boardindex could add too many span's in case both the board and its children contained new messages. (Wireless template) [Bug 2928]
 
  
 December 2008
