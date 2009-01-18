@@ -572,7 +572,7 @@ function MessageFolder()
 					'current_member' => $user_info['id'],
 					'not_deleted' => 0,
 					'id_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
-					'id_pm' => $pmsg,
+					'id_pm' => isset($pmsg) ? $pmsg : '0',
 					'sort' => $_GET['sort'],
 				)
 			);
@@ -815,7 +815,7 @@ function MessageFolder()
 				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') . ($context['sort_by'] == 'name' ? '
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:id_member})' : '') . '
 			WHERE pm.id_pm IN ({array_int:display_pms})' . ($context['folder'] == 'sent' ? '
-			GROUP BY pm.id_pm' : '') . '
+			GROUP BY pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name' : '') . '
 			ORDER BY ' . ($context['display_mode'] == 2 ? 'pm.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . '
 			LIMIT ' . count($display_pms),
 			array(
@@ -2541,7 +2541,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.deleted = {int:not_deleted})
 		WHERE pm.deleted_by_sender = {int:is_deleted}
 			' . str_replace('id_pm', 'pm.id_pm', $where) . '
-		GROUP BY pmr.id_pm
+		GROUP BY pmr.id_pm, recipient
 		HAVING recipient IS null',
 		array(
 			'not_deleted' => 0,
@@ -3431,7 +3431,7 @@ function isAccessiblePM($pmID, $validFor = 'in_or_outbox')
 	$request = $smcFunc['db_query']('', '
 		SELECT 
 			pm.id_member_from = {int:id_current_member} AND pm.deleted_by_sender = {int:not_deleted} AS valid_for_outbox,
-			pmr.id_pm IS NOT NULL valid_for_inbox
+			pmr.id_pm IS NOT NULL AS valid_for_inbox
 		FROM {db_prefix}personal_messages AS pm
 			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.id_member = {int:id_current_member} AND pmr.deleted = {int:not_deleted})
 		WHERE pm.id_pm = {int:id_pm}
