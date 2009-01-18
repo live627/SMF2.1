@@ -117,6 +117,10 @@ function template_html_above()
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
 
+	// RTL languages require an additional stylesheet.
+	if ($context['right_to_left'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '

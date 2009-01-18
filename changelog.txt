@@ -97,11 +97,12 @@ January 2009
  * Several JavaScript function and method calls contained scriptURL's that were not taking advantage of the smf_prepareScriptUrl function. (index template, Help template, Packages template, Post template, SplitTopics template, Themes template) [Bug 2935]
  ! The calculation of the total number of posts was including the recycle bin posts. (Subs.php) [Bug 2092]
  ! Fixed install not creating an admin account for sqlite database. (Subs_Db-sqlite.php) [Bug 2940]
- * The wireless boardindex could add too many span's in case both the board and its children contained new messages. (Wireless template) [Bug 2928]
+ * The wireless boardindex could add too many spans in case both the board and its children contained new messages. (Wireless template) [Bug 2928]
  ! Fixed a few database errors that could occur in certain Personal Message screens when using PostgreSQL. (PersonalMessage.php, Subs-Db-Postgresql.php) [Bug 2921]
  ! The password salt should remain flexible in length, so that it doesn't interfere with converted forums. (upgrade_2-0_mysql.php, install_2-0_sqlite.sql, install_2-0_postgresql.sql, install_2-0_mysql.sql) [Bug 2943]
+ * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css)  
 
- 
+
 December 2008
 --------------------------------------------------------------------------------
  ! The size property wasn't properly handled by the create table functions in the database layer (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2761]
