@@ -94,8 +94,9 @@ January 2009
  ! The INSERT IGNORE command in the sqlite layer didn't do the ignore part very well. (Subs-Db-sqlite.php) [Bug 2926]
  ! In rare cases (with cache mode set to 3) an incorrect error might be shown after posting a reply to a topic that no longer exists due to a move or a merge. (Post.php) [Bug 2408]
  * Synchronzied all themes with regards to the template_button_strip function so they won't cause any xHTML errors any longer. (index template, Help template, Recent template, Combat template) [Bug 2938]
+ * Several JavaScript function and method calls contained scriptURL's that were not taking advantage of the smf_prepareScriptUrl function. (index template, Help template, Packages template, Post template, SplitTopics template, Themes template) [Bug 2935]
 
-
+ 
 December 2008
 --------------------------------------------------------------------------------
  ! The size property wasn't properly handled by the create table functions in the database layer (DbPackages-mysql.php, DbPackages-postgresql.php, DbPackages-sqlite.php) [Bug 2761]

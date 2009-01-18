@@ -474,7 +474,7 @@ function template_manual_intro()
 					<img src="', $settings['images_url'], '/topic/normal_poll.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_poll'], '</td>
 					<td class="smalltext" align="right" valign="middle">
 						<form action="', $scripturl, '?action=help;page=index" method="get" accept-charset="', $context['character_set'], '">
-							<label for="jumpto">', $txt['manual_index_jump_to'], '</label>: <select name="jumpto" id="jumpto" onchange="if (this.options[this.selectedIndex].value) window.location.href=\'', $scripturl, '?action=help;page=index\' + this.options[this.selectedIndex].value;">
+							<label for="jumpto">', $txt['manual_index_jump_to'], '</label>: <select name="jumpto" id="jumpto" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.options[this.selectedIndex].value;">
 								<option value="">
 									', $txt['manual_index_destination'], ':
 								</option>
@@ -493,7 +493,7 @@ function template_manual_intro()
 								<option value="#message">
 									=&gt; ', $txt['manual_index_another_board'], '
 								</option>
-							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = \'', $scripturl, '?action=help;page=index\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
+							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
 						</form>
 					</td>
 				</tr>
@@ -673,7 +673,7 @@ function template_manual_intro()
 			<div style="padding-top: 4px; padding-bottom: 4px;"></div>
 			<div align="right" style="float: right; margin-bottom: 1ex;">
 				<form action="', $scripturl, '?action=help;page=index" method="get" accept-charset="', $context['character_set'], '">
-					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href=\'', $scripturl, '?action=help;page=index\' + this.options[this.selectedIndex].value;">
+					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.options[this.selectedIndex].value;">
 						<option value="">
 							', $txt['manual_index_destination'], ':
 						</option>
@@ -692,7 +692,7 @@ function template_manual_intro()
 						<option value="#message">
 							=&gt; ', $txt['manual_index_another_board'], '
 						</option>
-					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = \'', $scripturl, '?action=help;page=index\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
+					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
 				</form>
 			</div><br />
 			<br clear="all" />
