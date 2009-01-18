@@ -386,7 +386,7 @@ function template_manual_intro()
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
 								<td>
-									', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+									', template_button_strip($mindex_buttons, 'bottom', 'align="right"  style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
 							</tr>
 						</table>
@@ -437,7 +437,7 @@ function template_manual_intro()
 							<tr>
 								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
 								<td>
-									', template_button_strip($mindex_buttons, 'bottom', 'align="right" nowrap="nowrap" style="font-size: smaller;"'), '
+									', template_button_strip($mindex_buttons, 'bottom', 'align="right"  style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
 							</tr>
 						</table>
