@@ -96,6 +96,7 @@ January 2009
  * Synchronzied all themes with regards to the template_button_strip function so they won't cause any xHTML errors any longer. (index template, Help template, Recent template, Combat template) [Bug 2938]
  * Several JavaScript function and method calls contained scriptURL's that were not taking advantage of the smf_prepareScriptUrl function. (index template, Help template, Packages template, Post template, SplitTopics template, Themes template) [Bug 2935]
  ! The calculation of the total number of posts was including the recycle bin posts. (Subs.php) [Bug 2092]
+ ! Fixed install not creating an admin account for sqlite database. (Subs_Db-sqlite.php) [Bug 2940]
 
  
 December 2008
