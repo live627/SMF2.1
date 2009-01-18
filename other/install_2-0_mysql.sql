@@ -1257,7 +1257,7 @@ CREATE TABLE {$db_prefix}members (
   smiley_set varchar(48) NOT NULL default '',
   id_post_group smallint(5) unsigned NOT NULL default '0',
   total_time_logged_in int(10) unsigned NOT NULL default '0',
-  password_salt varchar(5) NOT NULL default '',
+  password_salt varchar(255) NOT NULL default '',
   ignore_boards text NOT NULL,
   warning tinyint(4) NOT NULL default '0',
   passwd_flood varchar(12) NOT NULL default '',

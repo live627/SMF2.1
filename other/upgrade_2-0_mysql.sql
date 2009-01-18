@@ -244,7 +244,7 @@ $nameChanges = array(
 		'smileySet' => 'smileySet smiley_set varchar(48) NOT NULL default \'\'',
 		'ID_POST_GROUP' => 'ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default \'0\'',
 		'totalTimeLoggedIn' => 'totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default \'0\'',
-		'passwordSalt' => 'passwordSalt password_salt varchar(5) NOT NULL default \'\'',
+		'passwordSalt' => 'passwordSalt password_salt varchar(255) NOT NULL default \'\'',
 		'ignoreBoards' => 'ignoreBoards ignore_boards text NOT NULL',
 		'memberIP2' => 'memberIP2 member_ip2 tinytext NOT NULL',
 	),
