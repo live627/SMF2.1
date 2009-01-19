@@ -640,7 +640,7 @@ function validatePasswordFlood($id_member, $password_flood_value = false, $was_c
 	if ($password_flood_value !== false)
 		@list ($time_stamp, $number_tries) = explode('|', $password_flood_value);
 
-	// Timestamp invalid or non-existant?
+	// Timestamp invalid or non-existent?
 	if (empty($number_tries) || $time_stamp < (time() - 10))
 	{
 		// If it wasn't *that* long ago, don't give them another five goes.
