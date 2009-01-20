@@ -1043,7 +1043,7 @@ function sortSpiderTable()
 	db_extend('packages');
 
 	// Add a sorting column.
-	$smcFunc['db_add_column']('spiders', array('name' => 'temp_order', 'size' => 8, 'type' => 'mediumint'));
+	$smcFunc['db_add_column']('spiders', array('name' => 'temp_order', 'size' => 8, 'type' => 'mediumint', 'null' => false));
 
 	// Set the contents of this column.
 	$smcFunc['db_query']('set_spider_order', '

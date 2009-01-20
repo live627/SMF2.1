@@ -296,7 +296,7 @@ function smf_db_remove_column($table_name, $column_name, $parameters = array(), 
 	if (empty($parameters['no_prefix']))
 		$table_name = $db_prefix . $table_name;
 
-	if ($smcFunc['db_alter_table']($table_name, array('remove' => $column_info)))
+	if ($smcFunc['db_alter_table']($table_name, array('remove' => array(array('name' => $column_name)))))
 		return true;
 	else
 		return false;
@@ -311,7 +311,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 	if (empty($parameters['no_prefix']))
 		$table_name = $db_prefix . $table_name;
 
-	if ($smcFunc['db_alter_table']($table_name, array('change' => $column_info)))
+	if ($smcFunc['db_alter_table']($table_name, array('change' => array(array('name' => $old_column) + $column_info))))
 		return true;
 	else
 		return false;

@@ -1740,7 +1740,7 @@ function sortSmileyTable()
 	db_extend('packages');
 
 	// Add a sorting column.
-	$smcFunc['db_add_column']('smileys', array('name' => 'temp_order', 'size' => 8, 'type' => 'mediumint'));
+	$smcFunc['db_add_column']('smileys', array('name' => 'temp_order', 'size' => 8, 'type' => 'mediumint', 'null' => false));
 
 	// Set the contents of this column.
 	$smcFunc['db_query']('set_smiley_order', '

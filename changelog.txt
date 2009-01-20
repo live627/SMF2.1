@@ -106,6 +106,7 @@ January 2009
  ! Updating message icons caused a database error for the sqlite database layer. (ManageSmileys.php) [Bug 2950]
  * Fixed JavaScript errors occurring on the selection of options for the database backup function. (ManageMaintenance template) [Bug 2959]
  ! The forms used in generic lists were not properly working. (Subs-List.php) [Bug 2953]
+ ! The package database functions for the sqlite database layer to modify, add and drop columns weren't working properly. (DbPackages-sqlite.php, ManageSmileys.php, ManageSearchEngines.php) [Bug 2951]
 
 
 December 2008
