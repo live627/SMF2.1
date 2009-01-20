@@ -186,7 +186,7 @@ function createList($listOptions)
 			$list_context['form']['hidden_fields'] = array();
 
 		// Always add a session check field.
-		$list_context['form']['hidden_fields']['sc'] = $context['session_id'];
+		$list_context['form']['hidden_fields'][$context['session_var']] = $context['session_id'];
 
 		// Include the starting page as hidden field?
 		if (!empty($list_context['form']['include_start']) && !empty($list_context['start']))
