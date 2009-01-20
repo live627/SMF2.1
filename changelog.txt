@@ -109,6 +109,7 @@ January 2009
  ! The package database functions for the sqlite database layer to modify, add and drop columns weren't working properly. (DbPackages-sqlite.php, ManageSmileys.php, ManageSearchEngines.php) [Bug 2951]
  * The tab index order was wrong when visual verification was required for a search. (Search template) [Bug 2949]
  * The visual verification doesn't use a tab index for it's questions. (GenericControls template) [Bug 2948]
+ ! The calandar required in some cases the database specific 'DAY' function which was not supported by sqlite. (Subs-Calendar.php) [Bug 2947]
 
 
 December 2008

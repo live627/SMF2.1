@@ -127,7 +127,7 @@ function getBirthdayRange($low_date, $high_date)
 		FROM {db_prefix}members
 		WHERE YEAR(birthdate) != {string:year_one}
 			AND MONTH(birthdate) != {int:no_month}
-			AND DAY(birthdate) != {int:no_day}
+			AND DAYOFMONTH(birthdate) != {int:no_day}
 			AND YEAR(birthdate) <= {int:max_year}
 			AND (
 				DATE_FORMAT(birthdate, {string:year_low}) BETWEEN {date:low_date} AND {date:high_date}' . ($year_low == $year_high ? '' : '
