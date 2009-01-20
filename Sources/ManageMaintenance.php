@@ -978,7 +978,7 @@ function AdminBoardRecount()
 
 	isAllowedTo('admin_forum');
 
-	checkSession('post');
+	checkSession('request');
 
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';

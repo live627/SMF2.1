@@ -101,6 +101,7 @@ January 2009
  ! Fixed a few database errors that could occur in certain Personal Message screens when using PostgreSQL. (PersonalMessage.php, Subs-Db-Postgresql.php) [Bug 2921]
  ! The password salt should remain flexible in length, so that it doesn't interfere with converted forums. (upgrade_2-0_mysql.php, install_2-0_sqlite.sql, install_2-0_postgresql.sql, install_2-0_mysql.sql) [Bug 2943]
  * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css)  
+ ! Fixed recount totals and statistics resulting in a session timeout. (ManageMaintenance.php) [Bug 2962]
 
 
 December 2008
