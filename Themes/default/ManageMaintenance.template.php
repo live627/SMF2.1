@@ -36,7 +36,7 @@ function template_maintain_database()
 					<p><label for="struct"><input type="checkbox" name="struct" id="struct" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" class="check" checked="checked" /> ', $txt['maintain_backup_struct'], '</label><br />
 					<label for="data"><input type="checkbox" name="data" id="data" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" checked="checked" class="check" /> ', $txt['maintain_backup_data'], '</label><br />
 					<label for="compress"><input type="checkbox" name="compress" id="compress" value="gzip" checked="checked" class="check" /> ', $txt['maintain_backup_gz'], '</label></p>
-					<p><input type="submit" value="', $txt['maintain_backup_save'], '" onclick="return document.getElementById(\'struct\').checked || document.getElementById(\'data\').checked;" /></p>
+					<p><input type="submit" value="', $txt['maintain_backup_save'], '" id="submitDump" onclick="return document.getElementById(\'struct\').checked || document.getElementById(\'data\').checked;" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>

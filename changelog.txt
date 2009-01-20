@@ -104,6 +104,7 @@ January 2009
  ! Fixed recount totals and statistics resulting in a session timeout. (ManageMaintenance.php) [Bug 2962]
  & $txt['remove_message'] appeared twice in the index language file. (index language file) [Bug 2961]
  ! Updating message icons caused a database error for the sqlite database layer. (ManageSmileys.php) [Bug 2950]
+ * Fixed JavaScript errors occurring on the selection of options for the database backup function. (ManageMaintenance template) [Bug 2959]
 
 
 December 2008
