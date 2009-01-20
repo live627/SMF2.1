@@ -102,6 +102,7 @@ January 2009
  ! The password salt should remain flexible in length, so that it doesn't interfere with converted forums. (upgrade_2-0_mysql.php, install_2-0_sqlite.sql, install_2-0_postgresql.sql, install_2-0_mysql.sql) [Bug 2943]
  * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css)  
  ! Fixed recount totals and statistics resulting in a session timeout. (ManageMaintenance.php) [Bug 2962]
+ & $txt['remove_message'] appeared twice in the index language file. (index language file) [Bug 2961]
 
 
 December 2008

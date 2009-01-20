@@ -113,7 +113,6 @@ $txt['admin_login'] = 'Administration Login';
 // Use numeric entities in the below string.
 $txt['topic'] = 'Topic';
 $txt['help'] = 'Help';
-$txt['remove_message'] = 'Remove message';
 $txt['notify'] = 'Notify';
 $txt['notify_request'] = 'Do you want a notification email if someone replies to this topic?';
 // Use numeric entities in the below string.
