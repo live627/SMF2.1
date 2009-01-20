@@ -41,10 +41,10 @@ function template_main()
 					<table border="0" cellpadding="2" cellspacing="0">
 						<tr>
 							<td>
-								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
+								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" />
 							</td>
 							<td>
-								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />', '
+								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" />', '
 							</td>
 						</tr>';
 		if (empty($modSettings['search_simple_fulltext']))
@@ -62,7 +62,7 @@ function template_main()
 						<b>', $txt['search_visual_verification_label'], ':</b>
 						<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
 						<div style="text-align: right;">
-							<input type="submit" name="submit" value="' . $txt['search'] . '" />
+							<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" />
 						</div>
 					</div>';
 		}
@@ -82,7 +82,7 @@ function template_main()
 									<b>', $txt['search_for'], ':</b>
 								</td>
 								<td>
-									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
+									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" />
 									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 										function initSearch()
 										{
@@ -94,7 +94,7 @@ function template_main()
 									// ]]></script>
 								</td>
 								<td>
-									<select name="searchtype">
+									<select name="searchtype" tabindex="', $context['tabindex']++, '">
 										<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['all_words'], '</option>
 										<option value="2"', !empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['any_words'], '</option>
 									</select>
@@ -117,7 +117,7 @@ function template_main()
 									<b>', $txt['by_user'], ':</b>
 								</td>
 								<td>
-									<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" />
+									<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" tabindex="', $context['tabindex']++, '" />
 								</td>
 							</tr>
 							<tr>
@@ -125,7 +125,7 @@ function template_main()
 									<b>', $txt['search_order'], ':</b>
 								</td>
 								<td>
-									<select name="sort">
+									<select name="sort" tabindex="', $context['tabindex']++, '">
 										<option value="relevance|desc">', $txt['search_orderby_relevant_first'], '</option>
 										<option value="num_replies|desc">', $txt['search_orderby_large_first'], '</option>
 										<option value="num_replies|asc">', $txt['search_orderby_small_first'], '</option>
@@ -139,14 +139,14 @@ function template_main()
 									<b>', $txt['search_options'], ':</b>
 								</td>
 								<td>
-									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_show_complete_messages'], '</label><br />
-									<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_subject_only'], '</label>
+									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_show_complete_messages'], '</label><br />
+									<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_subject_only'], '</label>
 								</td>
 							</tr>
 						</table>
 					</div>
 					<div style="text-align: center; padding: 1em;">
-						<b>', $txt['search_post_age'], ': </b> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
+						<b>', $txt['search_post_age'], ': </b> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" /> ', $txt['days_word'], '.
 					</div>';
 
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
@@ -173,7 +173,7 @@ function template_main()
 
 				if (!empty($board) && empty($board['child_ids']))
 					echo '
-									<label for="brd', $board['id'], '" style="margin-left: ', $board['child_level'], 'ex;"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="check" />', $board['name'], '</label>';
+									<label for="brd', $board['id'], '" style="margin-left: ', $board['child_level'], 'ex;"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" />', $board['name'], '</label>';
 				elseif (!empty($board))
 					echo '
 									<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $board['child_ids']), ']); return false;" style="text-decoration: underline;">', $board['name'], '</a>';
@@ -189,7 +189,7 @@ function template_main()
 
 			echo '
 						</table><br />
-						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
+						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" tabindex="', $context['tabindex']++, '" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
 					</fieldset> ';
 		}
 
@@ -207,7 +207,7 @@ function template_main()
 					<br />';
 
 		echo '
-					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt['search'], '" /></div>';
+					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt['search'], '" tabindex="', $context['tabindex']++, '" /></div>';
 	}
 
 	echo '
@@ -402,7 +402,7 @@ function template_results()
 			echo '
 			<tr class="titlebg">
 				<td colspan="8" align="right">
-					<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
+					<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', ' tabindex="', $context['tabindex']++, '">
 						<option value="">--------</option>', $context['can_remove'] ? '
 						<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
 						<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
@@ -415,7 +415,7 @@ function template_results()
 			if ($context['can_move'])
 			{
 					echo '
-					<select id="moveItTo" name="move_to" disabled="disabled">';
+					<select id="moveItTo" name="move_to" disabled="disabled" tabindex="', $context['tabindex']++, '">';
 
 					foreach ($context['move_to_boards'] as $category)
 					{
