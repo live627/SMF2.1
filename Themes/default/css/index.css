@@ -125,24 +125,30 @@ h2 em
 	display: block;
 	padding: 0.1em 0.5em 0.5em 0.5em;
 }
-#main_menu li a span.last
+#main_menu li.last a span
 {
 	background: url(../images/maintab_last.gif) no-repeat bottom right;
 	padding: 0.1em 1em 0.5em 0.5em;
 }
-#main_menu li a.active span em
+#main_menu li.active a span em
 {
 	padding: 0.1em 0.5em 0.5em 0.5em;
 	display: block;
 	font-style: normal;
 	background: url(../images/maintab_active_back.gif) repeat-x bottom right;
 }
-#main_menu li a.active span
+#main_menu li.active a span
 {
 	background: url(../images/maintab_active_first.gif) no-repeat bottom left;
 	padding: 0 0 0 8px;
 }
-#main_menu li a.active
+#main_menu li.last.active
+{
+	float: left;
+	background: url(../images/maintab_last.gif) no-repeat bottom right;
+	padding: 0 8px 0 0;
+}
+#main_menu li.active a
 {
 	background: url(../images/maintab_active_last.gif) no-repeat bottom right;
 	padding-right: 8px;

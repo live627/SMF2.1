@@ -419,10 +419,17 @@ function template_menu()
 
 	foreach ($context['menu_buttons'] as $act => $button)
 	{
+		$classes = array();
+		if (!empty($button['active_button']))
+			$classes[] = 'active';
+		if (!empty($button['is_last']))
+			$classes[] = 'last';
+		$classes = implode(' ', $classes);
+		
 		echo '
-			<li id="button_', $act, '">
-				<a', $button['active_button'] ? ' class="active"' : '', ' title="', $act , '" href="', $button['href'], '">
-					<span', isset($button['is_last']) ? ' class="last"' : '', '>', ($button['active_button'] ? '<em>' : ''), $button['title'], ($button['active_button'] ? '</em>' : ''), '</span>
+			<li id="button_', $act, '"', !empty($classes) ? ' class="' . $classes . '"' : '', '>
+				<a title="', $act, '" href="', $button['href'], '">
+					<span>', ($button['active_button'] ? '<em>' : ''), $button['title'], ($button['active_button'] ? '</em>' : ''), '</span>
 				</a>
 			</li>';
 	}

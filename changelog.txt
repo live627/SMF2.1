@@ -103,13 +103,14 @@ January 2009
  * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css)  
  ! Fixed recount totals and statistics resulting in a session timeout. (ManageMaintenance.php) [Bug 2962]
  & $txt['remove_message'] appeared twice in the index language file. (index language file) [Bug 2961]
- ! Updating message icons caused a database error for the sqlite database layer. (ManageSmileys.php) [Bug 2950]
+ ! Updating message icons caused a database error for the SQLite database layer. (ManageSmileys.php) [Bug 2950]
  * Fixed JavaScript errors occurring on the selection of options for the database backup function. (ManageMaintenance template) [Bug 2959]
  ! The forms used in generic lists were not properly working. (Subs-List.php) [Bug 2953]
- ! The package database functions for the sqlite database layer to modify, add and drop columns weren't working properly. (DbPackages-sqlite.php, ManageSmileys.php, ManageSearchEngines.php) [Bug 2951]
+ ! The package database functions for the SQLite database layer to modify, add and drop columns weren't working properly. (DbPackages-sqlite.php, ManageSmileys.php, ManageSearchEngines.php) [Bug 2951]
  * The tab index order was wrong when visual verification was required for a search. (Search template) [Bug 2949]
- * The visual verification doesn't use a tab index for it's questions. (GenericControls template) [Bug 2948]
- ! The calandar required in some cases the database specific 'DAY' function which was not supported by sqlite. (Subs-Calendar.php) [Bug 2947]
+ * The visual verification didn't have a tab index set for its questions. (GenericControls template) [Bug 2948]
+ ! The calendar required the database specific 'DAY' function in some cases, which is not supported by SQLite. (Subs-Calendar.php) [Bug 2947]
+ ! Do a better job at highlighting the last item of the main menu. (Subs.php, index template, index.css) [Bug 2968]
 
 
 December 2008
