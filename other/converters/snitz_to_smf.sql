@@ -118,7 +118,8 @@ SELECT
 	MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg,
 	t.T_AUTHOR AS id_member_started, t.T_LAST_POST_AUTHOR AS id_member_updated,
 	t.T_REPLIES AS num_replies, t.T_VIEW_COUNT AS num_views, t.T_STATUS = 0 AS locked
-FROM ({$from_prefix}FORUM_TOPICS AS t, {$to_prefix}convert AS m)
+FROM {$from_prefix}FORUM_TOPICS AS t
+	INNER JOIN {$to_prefix}convert AS m
 WHERE m.old_id_topic = t.TOPIC_ID
 GROUP BY t.TOPIC_ID
 HAVING id_first_msg != 0

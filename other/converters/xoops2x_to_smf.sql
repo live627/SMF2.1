@@ -148,7 +148,8 @@ HAVING id_first_msg != 0
 
 ---* {$to_prefix}topics (update id_topic)
 SELECT t.id_topic, p.uid AS id_member_updated
-FROM ({$to_prefix}topics AS t, {$from_prefix}bb_posts AS p)
+FROM {$to_prefix}topics AS t
+	INNER JOIN {$from_prefix}bb_posts AS p
 WHERE p.post_id = t.id_last_msg;
 ---*
 

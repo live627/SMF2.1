@@ -252,7 +252,8 @@ TRUNCATE {$to_prefix}log_notify;
 $ignore = true;
 ---}
 SELECT uf.uid AS id_member, f.tid AS id_topic
-FROM ({$from_prefix}favorites AS f, {$from_prefix}members AS uf)
+FROM {$from_prefix}favorites AS f
+	INNER JOIN {$from_prefix}members AS uf
 WHERE uf.username = f.username;
 ---*
 

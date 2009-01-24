@@ -508,7 +508,9 @@ $request = convert_query("
 		aa.forum_id AS id_board, mg.id_group AS id_group, aa.auth_post,
 		aa.auth_reply, aa.auth_edit, aa.auth_delete, aa.auth_sticky,
 		aa.auth_announce, aa.auth_vote, aa.auth_pollcreate, aa.auth_mod
-	FROM ({$from_prefix}bbauth_access AS aa, {$from_prefix}bbgroups AS g, {$to_prefix}membergroups AS mg)
+	FROM {$from_prefix}bbauth_access AS aa
+		INNER JOIN {$from_prefix}bbgroups AS g
+		INNER JOIN {$to_prefix}membergroups AS mg
 	WHERE g.group_id = aa.group_id
 		AND mg.group_name = CONCAT('phpBB ', g.group_name)");
 while ($row = convert_fetch_assoc($request))

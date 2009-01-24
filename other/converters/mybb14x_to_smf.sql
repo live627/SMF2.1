@@ -87,7 +87,8 @@ SELECT
 	t.poll AS id_poll, t.views AS _, t.uid AS id_member_started,
 	ul.uid AS id_member_updated, t.replies AS _, t.closed AS locked,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg
-FROM ({$from_prefix}threads AS t, {$from_prefix}posts AS p)
+FROM {$from_prefix}threads AS t
+	INNER JOIN {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}users AS ul ON (BINARY ul.username = t.lastposter)
 WHERE p.tid = t.tid
 GROUP BY t.tid
@@ -114,7 +115,8 @@ SELECT
 	p.edittime AS _,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
-FROM ({$from_prefix}posts AS p, {$from_prefix}threads AS t)
+FROM {$from_prefix}posts AS p
+	INNER JOIN {$from_prefix}threads AS t
 	LEFT JOIN {$from_prefix}users AS u ON (u.uid = p.uid)
 	LEFT JOIN {$from_prefix}users AS edit_u ON (edit_u.uid = p.edituid)
 WHERE t.tid = p.tid;

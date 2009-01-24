@@ -6,6 +6,7 @@
 ---~ version: "SMF 1.1"
 ---~ settings: "/admin/config.php", "/includes/config.php"
 ---~ from_prefix: "`" . $config['Database']['dbname'] . "`." . $config['Database']['tableprefix'] . ""
+---~ globals: config
 ---~ table_test: "{$from_prefix}user"
 
 /******************************************************************************/
@@ -184,7 +185,8 @@ SELECT
 	ul.userid AS id_member_updated, t.replycount AS num_replies,
 	IF(t.open, 0, 1) AS locked, MIN(p.postid) AS id_first_msg,
 	MAX(p.postid) AS id_last_msg
-FROM ({$from_prefix}thread AS t, {$from_prefix}post AS p)
+FROM {$from_prefix}thread AS t
+	INNER JOIN {$from_prefix}post AS p
 	LEFT JOIN {$from_prefix}user AS ul ON (ul.username = t.lastposter)
 WHERE p.threadid = t.threadid
 GROUP BY t.threadid
@@ -234,7 +236,8 @@ SELECT
 	p.allowsmilie AS smileys_enabled,
 	REPLACE(p.pagetext, '<br>', '<br />') AS body, '' AS poster_email,
 	'' AS modified_name, 'xx' AS icon
-FROM ({$from_prefix}post AS p, {$from_prefix}thread AS t)
+FROM {$from_prefix}post AS p
+	INNER JOIN {$from_prefix}thread AS t
 WHERE t.threadid = p.threadid;
 ---*
 
@@ -331,7 +334,8 @@ SELECT
 	SUBSTRING(pmt.fromusername, 1, 255) AS from_name,
 	SUBSTRING(pmt.title, 1, 255) AS subject,
 	SUBSTRING(REPLACE(pmt.message, '<br>', '<br />'), 1, 65534) AS body
-FROM ({$from_prefix}pm AS pm, {$from_prefix}pmtext AS pmt)
+FROM {$from_prefix}pm AS pm
+	INNER JOIN {$from_prefix}pmtext AS pmt
 WHERE pmt.pmtextid = pm.pmtextid
 	AND pm.folderid != -1;
 ---*
@@ -536,6 +540,7 @@ $rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) .
 $id_attach++;
 ---}
 SELECT ca.userid AS id_member, ca.filedata, ca.filename, u.avatarrevision
-FROM ({$from_prefix}customavatar AS ca, {$from_prefix}user AS u)
+FROM {$from_prefix}customavatar AS ca
+	INNER JOIN {$from_prefix}user AS u
 WHERE u.userid = ca.userid;
 ---*

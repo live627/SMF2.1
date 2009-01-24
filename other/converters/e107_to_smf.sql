@@ -127,7 +127,9 @@ while (true)
 
 	$result = convert_query("
 		SELECT u.user_id AS id_member, mg.id_group
-		FROM ({$from_prefix}userclass_classes AS uc, {$from_prefix}user AS u, {$to_prefix}membergroups AS mg)
+	FROM {$from_prefix}userclass_classes AS uc
+		INNER JOIN {$from_prefix}user AS u
+		INNER JOIN {$to_prefix}membergroups AS mg
 		WHERE FIND_IN_SET(uc.userclass_id, REPLACE(u.user_class, '.', ','))
 			AND CONCAT('e107 ', uc.userclass_name) = mg.group_name
 		ORDER BY id_member
@@ -228,7 +230,8 @@ SELECT
 		WHEN 0 THEN '-1,0'
 		ELSE IFNULL(mg.id_group, '')
 	END AS member_groups
-FROM ({$from_prefix}forum AS f, {$from_prefix}forum AS c)
+FROM {$from_prefix}forum AS f
+	INNER JOIN {$from_prefix}forum AS c
 	LEFT JOIN {$from_prefix}userclass_classes AS uc ON (uc.userclass_id = f.forum_class)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (mg.group_name = CONCAT('e107 ', uc.userclass_name))
 WHERE f.forum_parent != 0;
@@ -335,7 +338,8 @@ SELECT
 	0 AS voting_locked, 1 AS max_votes, p.poll_end_datestamp AS expire_time,
 	0 AS hide_results, 0 AS change_vote, p.poll_admin_id AS id_member,
 	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(t.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS poster_name
-FROM ({$from_prefix}polls AS p, {$from_prefix}forum_t AS t)
+FROM {$from_prefix}polls AS p
+	INNER JOIN {$from_prefix}forum_t AS t
 WHERE p.poll_datestamp = t.thread_id;
 ---*
 
@@ -347,7 +351,8 @@ WHERE p.poll_datestamp = t.thread_id;
 $request = convert_query("
 	SELECT
 		poll_id, poll_options, poll_votes
-	FROM ({$from_prefix}polls AS p, {$from_prefix}forum_t AS t)
+	FROM {$from_prefix}polls AS p
+		INNER JOIN {$from_prefix}forum_t AS t
 	WHERE p.poll_datestamp = t.thread_id");
 $inserts = '';
 while ($row = mysql_fetch_assoc($request))
@@ -407,7 +412,8 @@ SELECT
 	pm.pm_sent AS msgtime,
 	SUBSTRING(pm.pm_subject, 1, 255) AS subject,
 	SUBSTRING(pm.pm_text, 1, 65534) AS body
-FROM ({$from_prefix}private_msg AS pm, {$from_prefix}user AS uf)
+FROM {$from_prefix}private_msg AS pm
+	INNER JOIN {$from_prefix}user AS uf
 WHERE uf.user_id = pm.pm_from;
 ---*
 
@@ -421,7 +427,8 @@ TRUNCATE {$to_prefix}pm_recipients;
 SELECT
 	pm.pm_id AS id_pm, ut.user_id AS id_member, 0 AS bcc,
 	IF (pm.pm_read_del = 0, 0, 1) AS is_read, 0 AS deleted, '-1' AS labels
-FROM ({$from_prefix}private_msg AS pm, {$from_prefix}user AS ut)
+FROM {$from_prefix}private_msg AS pm
+	INNER JOIN {$from_prefix}user AS ut
 WHERE ut.user_id = pm.pm_to;
 ---*
 
@@ -434,7 +441,8 @@ TRUNCATE {$to_prefix}log_notify;
 ---* {$to_prefix}log_notify
 SELECT
 	u.user_id AS id_member, t.thread_id AS id_topic, 0 AS sent
-FROM ({$from_prefix}forum_t AS t, {$from_prefix}user AS u)
+FROM {$from_prefix}forum_t AS t
+	INNER JOIN {$from_prefix}user AS u
 WHERE u.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1)
 	AND t.thread_active = 99
 	AND t.thread_parent = 0;
@@ -477,7 +485,8 @@ TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
 SELECT f.forum_id AS id_board, u.user_id AS id_member
-FROM ({$from_prefix}forum AS f, {$from_prefix}user AS u)
+FROM {$from_prefix}forum AS f
+	INNER JOIN {$from_prefix}user AS u
 WHERE FIND_IN_SET(u.user_name, REPLACE(f.forum_moderators, ', ', ','));
 ---*
 

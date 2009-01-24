@@ -1,6 +1,7 @@
 <?php
 
-call_user_func(update_main());
+// Run the main script.
+update_main();
 
 function update_main()
 {
@@ -17,14 +18,20 @@ function update_main()
 
 	// Remove the bad files automatically.
 	foreach ($files as $key => $file)
-		if (in_array(trim($file), array_merge($disallowed, array('.', '..', basename(__FILE__)))))
+		if (in_array(trim($file), array_merge($disallowed, array('.', '..', 'tools', basename(__FILE__)))) || (isset($_REQUEST['file']) && $_REQUEST['file'] != $file))
 			unset($files[$key]);
+
+	// No files?
+	if (empty($files))
+		exit('There are no such files!');
 
 	$steps = array(
 		1 => 'indices',
 		2 => 'mysql_funcs',
+		3 => 'short_join',
 	);
 
+	// Run each step.
 	foreach ($steps as $step)
 	{
 		$func = 'convert_update_' . $step;
@@ -103,6 +110,44 @@ function convert_update_mysql_funcs()
 	DoUpdates('strtr', $replaces);
 }
 
+// Remove the short joins
+function convert_update_short_join()
+{
+	global $files, $path;
+
+	// Now we loop through all file and do a strtr fix.
+	$replaces = array();
+	foreach ($files as $file)
+	{
+		// Get the contents of the file.
+		$file_contents = file_get_contents($path . '/' . $file);
+
+		// Try to find any short joins.
+		preg_match_all('~(\t)*FROM \(([^\)]+)\)~is', $file_contents, $matches);
+
+		// Lets loop trhough all the matches.
+		foreach ($matches[2] as $key => $string)
+		{
+			// Explode the short join.
+			$temp = explode(', ', $string);
+
+			// Start off the new string with some padding (maybe).
+			$newstring = $matches[1][$key] . 'FROM ' . $temp[0];
+			unset($temp[0]);
+
+			// Now all others we will inner join.
+			foreach ($temp as $str)
+				$newstring .= "\n" . $matches[1][$key] . '	INNER JOIN ' . $str;
+
+			// Now get it ready to go out.
+			$replaces[$matches[0][$key]] = $newstring;
+		}
+	}
+
+	// Now do updates to all files.
+	DoUpdates('strtr', $replaces);
+}
+
 // This recusrivly removes camel cases
 function removeCamelCase($string)
 {
@@ -133,9 +178,15 @@ function DoUpdates($type = 'strtr', $updates)
 		// Now we loop through all file and do a strtr fix.
 		foreach ($files as $file)
 		{
+			if (in_array($file, array('convert.php', 'index.php', 'Settings.php', 'tools')))
+				continue;
+
 			$file_contents = file_get_contents($path . '/' . $file);
 		
 			$new_contents = strtr($file_contents, $updates);
+
+			// Trim the fat!
+			$new_contents = trim($new_contents);
 
 			// Only bother and update if its been updated.
 			if ($new_contents != $file_contents)
@@ -144,4 +195,5 @@ function DoUpdates($type = 'strtr', $updates)
 		return true;
 	}
 }
+
 ?>

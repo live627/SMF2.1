@@ -713,7 +713,7 @@ if (empty($preparsing))
 				if (!file_exists($yabb['datadir'] . '/' . $temp_id . '.txt'))
 					continue;
 
-				$views = @implode('', file($yabb['datadir'] . '/' . $tempID . '.ctb'));
+				$views = @implode('', file($yabb['datadir'] . '/' . $temp_id . '.ctb'));
 				if (preg_match('~\'views\',"([^"]+)"~', $views, $match) != 0)
 					$views = $match[1];
 
@@ -974,7 +974,8 @@ if (empty($preparsing))
 		{
 			$result = convert_query("
 				SELECT m.id_msg, mem.id_member
-				FROM ({$to_prefix}messages AS m, {$to_prefix}members AS mem)
+	FROM {$to_prefix}messages AS m
+		INNER JOIN {$to_prefix}members AS mem
 				WHERE m.poster_name = mem.member_name
 					AND m.id_member = 0
 				LIMIT $block_size");
@@ -1092,7 +1093,8 @@ if (empty($preparsing))
 
 			$result = convert_query("
 				SELECT t.id_topic, MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg
-				FROM ({$to_prefix}topics AS t, {$to_prefix}messages AS m)
+	FROM {$to_prefix}topics AS t
+		INNER JOIN {$to_prefix}messages AS m
 				WHERE m.id_topic = t.id_topic
 				GROUP BY t.id_topic
 				LIMIT $_GET[substep], $block_size");
