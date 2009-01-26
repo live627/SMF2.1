@@ -115,6 +115,9 @@ January 2009
  ! Some maintenance tasks were missing session checks. (ManageMaintenance.php)
  * The message context got lost after submitting a quick edit form in topic display. (Display template) [Bug 2974]
  ! Warning templates were injected with a username and subject that were HTML-escaped twice. (Profile-Actions.php) [Bug 2973]
+ ! The unescaped version of forum_name was used in several places where it should've been escaped. (Load.php, ManageMaintenance.php, Register.php, Subs.php, ViewQuery.php, BoardIndex template, Login template, Printpage template, Wireless template, Login language file, Profile language file) [Bug 2971]
+ * Applied JavaScript escaping to the quick modify instantiation parameters. (Display template)
+ ! The JavaScript escape function left HTML links intact, which by some browsers get parsed. (QueryString.php)
 
 
 December 2008

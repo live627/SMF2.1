@@ -180,10 +180,10 @@ function template_body_above()
 			<h1>';
 
 	if (empty($settings['header_logo_url']))
-		echo $context['forum_name'];
+		echo $context['forum_name_html_safe'];
 	else
 		echo '
-				<img src="', $settings['header_logo_url'], '" alt="', $context['forum_name'], '" />';
+				<img src="', $settings['header_logo_url'], '" alt="', $context['forum_name_html_safe'], '" />';
 
 	echo '
 			</h1>

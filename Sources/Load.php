@@ -1460,6 +1460,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	$context['session_var'] = $_SESSION['session_var'];
 	$context['session_id'] = $_SESSION['session_value'];
 	$context['forum_name'] = $mbname;
+	$context['forum_name_html_safe'] = $smcFunc['htmlspecialchars']($context['forum_name']);
 	$context['current_action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 	$context['current_subaction'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : null;
 	if (isset($modSettings['load_average']))
@@ -1521,7 +1522,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Set the top level linktree up.
 	array_unshift($context['linktree'], array(
 		'url' => $scripturl,
-		'name' => $context['forum_name']
+		'name' => $context['forum_name_html_safe']
 	));
 
 	// This allows sticking some HTML on the page output - useful for controls.

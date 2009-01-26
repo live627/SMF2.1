@@ -63,7 +63,7 @@ function ViewQuery()
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<title>', $context['forum_name'], '</title>
+		<title>', $context['forum_name_html_safe'], '</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
 		<style type="text/css">
 			body

@@ -22,7 +22,7 @@ function template_wap_boardindex()
 	// This is the "main" card...
 	echo '
 	<card id="main" title="', $context['page_title'], '">
-		<p><b>', $context['forum_name'], '</b><br /></p>';
+		<p><b>', $context['forum_name_html_safe'], '</b><br /></p>';
 
 	// Show an anchor for each category.
 	foreach ($context['categories'] as $category)
@@ -204,7 +204,7 @@ function template_imode_boardindex()
 
 	echo '
 		<table border="0" cellspacing="0" cellpadding="0">
-			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $context['forum_name'], '</font></td></tr>';
+			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $context['forum_name_html_safe'], '</font></td></tr>';
 	$count = 0;
 	foreach ($context['categories'] as $category)
 	{
@@ -791,7 +791,7 @@ function template_wap2_boardindex()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<p class="catbg">', $context['forum_name'], '</p>';
+		<p class="catbg">', $context['forum_name_html_safe'], '</p>';
 
 	$count = 0;
 	foreach ($context['categories'] as $category)

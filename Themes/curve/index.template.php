@@ -188,7 +188,7 @@ function template_body_above()
 
 	echo '
 		<h1 class="forumtitle"><a href="', $scripturl, '">
-			', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '
+			', empty($settings['header_logo_url']) ? $context['forum_name_html_safe'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name_html_safe'] . '" />' , '
 		</a></h1>
 		', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<h2 class="sitelogo">' . $settings['site_slogan'] . '</h2>', '
 		<a href="#" onclick="mainHeader.toggle(); return false;">

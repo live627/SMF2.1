@@ -73,7 +73,7 @@ function template_print_above()
 	echo '
 	</head>
 	<body>
-		<h1 class="largetext">', $context['forum_name'], '</h1>
+		<h1 class="largetext">', $context['forum_name_html_safe'], '</h1>
 		<h2 class="normaltext">', $context['category_name'], ' => ', (!empty($context['parent_boards']) ? implode(' => ', $context['parent_boards']) . ' => ' : ''), $context['board_name'], ' => ', $txt['topic_started'], ': ', $context['poster_name'], ' ', $txt['search_on'], ' ', $context['post_time'] . '</h2>
 
 		<table width="90%" cellpadding="0" cellspacing="0" border="0">

@@ -687,15 +687,25 @@ function template_main()
 	if (typeof(window.XMLHttpRequest) != "undefined")
 	{
 		var oQuickModify = new QuickModify({
-			sScriptUrl: "', $scripturl, '",
+			sScriptUrl: ', JavaScriptEscape($scripturl), ',
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
-			sTemplateBodyEdit: \'<div id="error_box" class="error" style="padding: 4px;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br /><input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" tabindex="8" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" tabindex="9" onclick="return oQuickModify.modifyCancel();" /></div>\',
-			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="60" style="width: 99%;" maxlength="80" tabindex="6" />\',
-			sTemplateBodyNormal: \'%body%\',
-			sTemplateSubjectNormal: \'<a hre\' + \'f="', $scripturl, '\' + \'?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
-			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')",
-			sErrorBorderStyle: "1px solid red"
+			sTemplateBodyEdit: ', JavaScriptEscape('
+				<div id="quick_edit_body_container">
+					<div id="error_box" class="error" style="padding: 4px;"></div>
+					<textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;" tabindex="7">%body%</textarea><br />
+					<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
+					<input type="hidden" name="msg" value="%msg_id%" />
+					<div style="text-align: center;">
+						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
+					</div>
+				</div>'), ',
+			sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />'), ',
+			sTemplateBodyNormal: ', JavaScriptEscape('%body%'), ',
+			sTemplateSubjectNormal: ', JavaScriptEscape('<a href="' . $scripturl . '?topic=' . $context['current_topic'] . '.msg%msg_id%#msg%msg_id%">%subject%</a>'), ',
+			sTemplateTopSubject: ', JavaScriptEscape($txt['topic'] . ': %subject% &nbsp;(' . $txt['read'] . ' ' . $context['num_views'] . ' ' . $txt['times'] . ')'), ',
+			sErrorBorderStyle: ', JavaScriptEscape('1px solid red'), '
 		});
 
 		aJumpTo[aJumpTo.length] = new JumpTo({

@@ -370,9 +370,9 @@ function Destroy()
 {
 	global $context;
 
-	echo '<html><head><title>', $context['forum_name'], ' deleted!</title></head>
+	echo '<html><head><title>', $context['forum_name_html_safe'], ' deleted!</title></head>
 		<body style="background-color: orange; font-family: arial, sans-serif; text-align: center;">
-		<div style="margin-top: 8%; font-size: 400%; color: black;">Oh my, you killed ', $context['forum_name'], '!</div>
+		<div style="margin-top: 8%; font-size: 400%; color: black;">Oh my, you killed ', $context['forum_name_html_safe'], '!</div>
 		<div style="margin-top: 7%; font-size: 500%; color: red;"><b>You lazy bum!</b></div>
 		</body></html>';
 	obExit(false);

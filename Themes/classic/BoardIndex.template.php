@@ -237,7 +237,7 @@ function template_info_center()
 <br />
 <table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 	<tr class="titlebg">
-		<td align="center" colspan="2">', sprintf($txt['info_center_title'], $context['forum_name']), '</td>
+		<td align="center" colspan="2">', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '</td>
 	</tr>';
 
 	// This is the "Recent Posts" bar.
