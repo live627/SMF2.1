@@ -1587,6 +1587,8 @@ function MaintainReattributePosts()
 {
 	global $sourcedir, $context, $txt;
 
+	checkSession();
+
 	// Find the member.
 	require_once($sourcedir . '/Subs-Auth.php');
 	$members = findMembers($_POST['to']);
@@ -1624,6 +1626,8 @@ function MaintainPurgeInactiveMembers()
 	$_POST['maxdays'] = (int) $_POST['maxdays'];
 	if (!empty($_POST['groups']) && $_POST['maxdays'])
 	{
+		checkSession();
+
 		$groups = array();
 		foreach ($_POST['groups'] as $id => $dummy)
 			$groups[] = (int) $id;

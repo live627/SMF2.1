@@ -8,6 +8,7 @@ function template_main()
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
+	<a name="top"></a>
 	<div class="tborder" id="childboards">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['parent_boards'], '</h3>';
 
