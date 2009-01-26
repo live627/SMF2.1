@@ -111,7 +111,7 @@ January 2009
  * The visual verification didn't have a tab index set for its questions. (GenericControls template) [Bug 2948]
  ! The calendar required the database specific 'DAY' function in some cases, which is not supported by SQLite. (Subs-Calendar.php) [Bug 2947]
  ! Do a better job at highlighting the last item of the main menu. (Subs.php, index template, index.css) [Bug 2968]
- * Top anchor was missing in the message index template. (MessageIndex template) [Bug 2980]
+ * Top anchor was missing in the message index template. (MessageIndex template) [Bug 2975]
  ! Some maintenance tasks were missing session checks. (ManageMaintenance.php)
 
 
