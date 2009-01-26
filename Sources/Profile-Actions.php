@@ -340,8 +340,7 @@ function issueWarning($memID)
 
 	// Replace all the common variables in the templates.
 	foreach ($context['notification_templates'] as $k => $name)
-		$context['notification_templates'][$k]['body'] = strtr($name['body'], array('{MEMBER}' => $context['member']['name'], '{MESSAGE}' => '[url=' . $scripturl . '?msg=' . $context['warning_for_message'] . ']' . $context['warned_message_subject'] . '[/url]', '{SCRIPTURL}' => $scripturl, '{FORUMNAME}' => $mbname, '{REGARDS}' => $txt['regards_team']));
-
+		$context['notification_templates'][$k]['body'] = strtr($name['body'], array('{MEMBER}' => un_htmlspecialchars($context['member']['name']), '{MESSAGE}' => '[url=' . $scripturl . '?msg=' . $context['warning_for_message'] . ']' . un_htmlspecialchars($context['warned_message_subject']) . '[/url]', '{SCRIPTURL}' => $scripturl, '{FORUMNAME}' => $mbname, '{REGARDS}' => $txt['regards_team']));
 }
 
 // Get the number of warnings a user has.

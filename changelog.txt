@@ -114,6 +114,7 @@ January 2009
  * Top anchor was missing in the message index template. (MessageIndex template) [Bug 2975]
  ! Some maintenance tasks were missing session checks. (ManageMaintenance.php)
  * The message context got lost after submitting a quick edit form in topic display. (Display template) [Bug 2974]
+ ! Warning templates were injected with a username and subject that were HTML-escaped twice. (Profile-Actions.php) [Bug 2973]
 
 
 December 2008
