@@ -486,13 +486,18 @@ function cleanXml($string)
 
 function JavaScriptEscape($string)
 {
+	global $scripturl;
+
 	return '\'' . strtr($string, array(
 		"\r" => '',
 		"\n" => '\\n',
+		"\t" => '\\t',
 		'\\' => '\\\\',
 		'\'' => '\\\'',
 		'</' => '<\' + \'/',
 		'script' => 'scri\' +\'pt',
+		'<a href' => '<a hr\' + \'ef',
+		$scripturl => $scripturl . '\' + \'',
 	)) . '\'';
 }
 
