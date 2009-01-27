@@ -167,6 +167,19 @@ function smf_db_optimize_table($table)
 
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
+	$request = $smcFunc['db_query']('', '
+		VACUUM {raw:table}',
+		array(
+			'table' => $table,
+		)
+	);
+	if (!$request)
+		return -1;
+
+	$row = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	// The function returns nothing.
 	return 0;
 }
 

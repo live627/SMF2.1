@@ -121,6 +121,7 @@ January 2009
  ! The tabs and scriptURL's didn't get replaced by the JavaScript escape function. (QueryString.php) [Bug 2993]
  ! Searching for members by age in some cases also returned members that hadn't submitted their birth dates. (ManageMembers.php) [Bug 2992]
  ! Merging Multiple topics and then unchecking one or more could cause a fatal error. (SplitTopics.php) [Bug 2994]
+ ! The optimize_table function for SQLite database layer wasn't implemented. (DbExtra-sqlite.php) [Bug 2991]
 
 
 December 2008
