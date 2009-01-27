@@ -123,6 +123,7 @@ January 2009
  ! Merging Multiple topics and then unchecking one or more could cause a fatal error. (SplitTopics.php) [Bug 2994]
  ! The optimize_table function for SQLite database layer wasn't implemented. (DbExtra-sqlite.php) [Bug 2991]
  ! The attachment upload directory was incorrectly determined in case of uploading avatars with multiple upload directories enabled. (Subs-Graphics.php) [Bug 2990]
+ * The gender field was not visible in the profile summary. (Profile template) [Bug 2988]
 
 
 December 2008

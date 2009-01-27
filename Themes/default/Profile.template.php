@@ -132,7 +132,7 @@ function template_summary()
 				<dt>', $modSettings['karmaLabel'], ' </dt>
 				<dd>+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '</dd>';
 	
-	if (!isset($context['disabled_fields']['gender']) && !empty($context['disabled_fields']['gender']))
+	if (!isset($context['disabled_fields']['gender']) && !empty($context['member']['gender']['name']))
 		echo '
 				<dt>', $txt['gender'], ': </dt>
 				<dd>', $context['member']['gender']['name'], '</dd>';
