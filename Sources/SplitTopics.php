@@ -1425,18 +1425,16 @@ function MergeExecute($topics = array())
 	$smcFunc['db_free_result']($request);
 
 	// Merge topic notifications.
-	if (!empty($_POST['notifications']) && is_array($_POST['notifications']))
+	$notifications = isset($_POST['notifications']) && is_array($_POST['notifications']) ? array_intersect($topics, $_POST['notifications']) : array();
+	if (!empty($notifications))
 	{
-		// Check if the notification array contains valid topics.
-		if (count(array_diff($_POST['notifications'], $topics)) > 0)
-			fatal_lang_error('no_board');
 		$request = $smcFunc['db_query']('', '
 			SELECT id_member, MAX(sent) AS sent
 			FROM {db_prefix}log_notify
 			WHERE id_topic IN ({array_int:topics_list})
 			GROUP BY id_member',
 			array(
-				'topics_list' => $_POST['notifications'],
+				'topics_list' => $notifications,
 			)
 		);
 		if ($smcFunc['db_num_rows']($request) > 0)
