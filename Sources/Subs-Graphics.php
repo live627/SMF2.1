@@ -147,7 +147,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		'type' => empty($modSettings['custom_avatar_enabled']) ? 0 : 1,
 	);
 
-	$destName = (empty($modSettings['custom_avatar_enabled']) ? $modSettings['attachmentUploadDir'] : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
+	$destName = (empty($modSettings['custom_avatar_enabled']) ? (is_array($modSettings['attachmentUploadDir']) ? $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']] : $modSettings['attachmentUploadDir']) : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 
 	$success = false;
 	$sizes = url_image_size($url);
