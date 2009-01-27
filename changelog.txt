@@ -124,6 +124,7 @@ January 2009
  ! The optimize_table function for SQLite database layer wasn't implemented. (DbExtra-sqlite.php) [Bug 2991]
  ! The attachment upload directory was incorrectly determined in case of uploading avatars with multiple upload directories enabled. (Subs-Graphics.php) [Bug 2990]
  * The gender field was not visible in the profile summary. (Profile template) [Bug 2988]
+ ! Some <html> tags were not properly mentioning the xmlns or rtl attributes. (install.php, upgrade.php, Karma.php, ManageMaintenance.php, Subs-Auth.php, ViewQuery.php) [Bug 2986]
 
 
 December 2008

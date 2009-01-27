@@ -187,7 +187,7 @@ function initialize_inputs()
 
 		if (!headers_sent())
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>', $_GET['pass_string'], '</title>
 	</head>
@@ -277,7 +277,7 @@ function load_lang_file()
 		header('Cache-Control: no-cache');
 
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>SMF Installer: Error!</title>
 	</head>

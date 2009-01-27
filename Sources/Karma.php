@@ -40,7 +40,7 @@ if (!defined('SMF'))
 // Modify a user's karma.
 function ModifyKarma()
 {
-	global $modSettings, $txt, $user_info, $topic, $smcFunc;
+	global $modSettings, $txt, $user_info, $topic, $smcFunc, $context;
 
 	// If the mod is disabled, show an error.
 	if (empty($modSettings['karmaMode']))
@@ -151,7 +151,7 @@ function ModifyKarma()
 	else
 	{
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<title>...</title>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -176,7 +176,7 @@ function BookOfUnknown()
 		redirectexit('about:mozilla');
 
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<title>The Book of Unknown, ', @$_GET['verse'] == '2:18' ? '2:18' : '4:16', '</title>
 		<style type="text/css">

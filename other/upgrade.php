@@ -625,6 +625,8 @@ $upcontext['is_large_forum'] = (empty($modSettings['smfVersion']) || $modSetting
 // Default title...
 $upcontext['page_title'] = isset($modSettings['smfVersion']) ? 'Updating Your SMF Install!' : 'Upgrading from YaBB SE!';
 
+$upcontext['right_to_left'] = isset($txt['lang_rtl']) ? $txt['lang_rtl'] : false;
+
 if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 {
 	$command_line = true;
@@ -3534,7 +3536,7 @@ function template_upgrade_above()
 	global $modSettings, $txt, $smfsite, $settings, $upcontext, $upgradeurl;
 
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"', $upcontext['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
