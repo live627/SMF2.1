@@ -368,7 +368,7 @@ function ViewMemberlist()
 
 						// Make sure that members that didn't set their birth year are not queried.
 						$query_parts[] = ($param_info['db_fields'][0]) . ' > {date:dec_zero_date}';
-						$where_params['dec_zero_date'] = '0000-12-31';
+						$where_params['dec_zero_date'] = '0004-12-31';
 					}
 				}
 				// Special case - equals a date.

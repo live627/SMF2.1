@@ -119,6 +119,7 @@ January 2009
  * Applied JavaScript escaping to the quick modify instantiation parameters. (Display template)
  ! The JavaScript escape function left HTML links intact, which by some browsers get parsed. (QueryString.php)
  ! The tabs and scriptURL's didn't get replaced by the JavaScript escape function. (QueryString.php) [Bug 2993]
+ ! Searching for members by age in some cases also returned members that hadn't submitted their birth dates. (ManageMembers.php) [Bug 2992]
 
 
 December 2008
