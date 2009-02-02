@@ -521,7 +521,7 @@ function Credits($in_admin = false)
 						'Bjoern &quot;Bloc&quot; Kristiansen',
 						'Juan &quot;JayBachatero&quot; Hernandez',
 						'Michael &quot;Thantos&quot; Miller',
-						'Aäron van Geffen',
+						'A&auml;ron van Geffen',
 						'Theodore &quot;Orstio&quot; Hildebrandt',
 					),
 				),
@@ -572,7 +572,7 @@ function Credits($in_admin = false)
 					'members' => array(
 						'Jack &quot;akabugeyes&quot; Thorsen',
 						'Daniel Diehl',
-						'Brad &quot;IchBin™&quot; Grow',
+						'Brad &quot;IchBin&trade;&quot; Grow',
 						'Alundra',
 						'Peter Duggan',
 						'Dannii Willis',
