@@ -3538,6 +3538,7 @@ function template_upgrade_above()
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', $upcontext['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
+		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />

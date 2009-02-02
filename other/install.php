@@ -1983,6 +1983,7 @@ function template_install_above()
 <html xmlns="http://www.w3.org/1999/xhtml"', !empty($txt['lang_rtl']) ? ' dir="rtl"' : '', '>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
+		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
 		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />

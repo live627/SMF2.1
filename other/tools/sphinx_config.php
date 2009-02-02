@@ -452,6 +452,7 @@ function template_sphinx_config_above($title)
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+		<meta name="robots" content="noindex" />
 		<title>SMF Sphinx Configuration Utility</title>
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
