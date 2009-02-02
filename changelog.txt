@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC1                                                                  ???
 ================================================================================
+February 2009
+--------------------------------------------------------------------------------
+ * A few button strip background images were not properly made transparent. (images/maintab_last.gif, images/mirrortab_last.gif) [Bug 3005]
+
+
 January 2009
 --------------------------------------------------------------------------------
  ! Upcoming birthdates were incorrectly calculated causing the list to be empty during the turn of the year. (Subs-Calendar.php) [Bug 2856]
