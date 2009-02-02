@@ -381,6 +381,7 @@ function clock()
 	$context['offimg'] = $settings['images_url'] . '/off.gif';
 
 	$context['page_title'] = 'Anyone know what time it is?';
+	$context['robot_no_index'] = true;
 
 	$omfg = isset($_REQUEST['omfg']);
 	$bcd = !isset($_REQUEST['rb']) && !isset($_REQUEST['omfg']) && !isset($_REQUEST['time']);
