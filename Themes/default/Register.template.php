@@ -127,7 +127,7 @@ function template_before()
 						</td>
 						<td>
 							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" />
-							<label for="allow_email"><input type="checkbox" name="allow_email" id="allow_email" class="check" /> ', $txt['allow_user_email'], '</label>
+							<label for="allow_email"><input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="check" /> ', $txt['allow_user_email'], '</label>
 						</td>
 					</tr>';
 
@@ -299,18 +299,18 @@ function template_before()
 			// Maybe it's a text box - very likely!
 			elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
 				echo '
-							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' />';
+							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' />';
 
 			// You "checking" me out? ;)
 			elseif ($field['type'] == 'check')
 				echo '
-							<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" class="check" ', $field['input_attr'], ' />';
+							<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" class="check" ', $field['input_attr'], ' />';
 
 			// Always fun - select boxes!
 			elseif ($field['type'] == 'select')
 			{
 				echo '
-							<select name="', $key, '" id="', $key, '">';
+							<select name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '">';
 
 				if (isset($field['options']))
 				{
@@ -372,7 +372,7 @@ function template_before()
 			</td>
 		</tr><tr>
 			<td align="center" class="windowbg2">
-				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
+				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
 			</td>
 		</tr>
 	</table>';
@@ -380,7 +380,7 @@ function template_before()
 	echo '
 	<br />
 	<div align="center">
-		<input type="submit" name="regSubmit" value="', $txt['register'], '" />
+		<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
 	</div>
 </form>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
@@ -607,7 +607,7 @@ function template_admin_register()
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_username_desc'], '</div>
 				</th>
 				<td width="50%" align="left">
-					<input type="text" name="user" id="user_input" size="30" maxlength="25" />
+					<input type="text" name="user" id="user_input" size="30" maxlength="25" tabindex="', $context['tabindex']++, '" />
 				</td>
 			</tr><tr class="windowbg2">
 				<th width="50%" align="right">
@@ -615,7 +615,7 @@ function template_admin_register()
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_email_desc'], '</div>
 				</th>
 				<td width="50%" align="left">
-					<input type="text" name="email" id="email_input" size="30" />
+					<input type="text" name="email" id="email_input" size="30" tabindex="', $context['tabindex']++, '" />
 				</td>
 			</tr><tr class="windowbg2">
 				<th width="50%" align="right">
@@ -623,7 +623,7 @@ function template_admin_register()
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_password_desc'], '</div>
 				</th>
 				<td width="50%" align="left">
-					<input type="password" name="password" id="password_input" size="30" /><br />
+					<input type="password" name="password" id="password_input" tabindex="', $context['tabindex']++, '" size="30" /><br />
 				</td>
 			</tr>';
 
@@ -636,7 +636,7 @@ function template_admin_register()
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_group_desc'], '</div>
 				</th>
 				<td width="50%" align="left">
-					<select name="group" id="group_select">';
+					<select name="group" id="group_select" tabindex="', $context['tabindex']++, '">';
 
 		foreach ($context['member_groups'] as $id => $name)
 			echo '
@@ -654,18 +654,18 @@ function template_admin_register()
 					<div class="smalltext" style="font-weight: normal;">', $txt['admin_register_email_detail_desc'], '</div>
 				</th>
 				<td width="50%" align="left">
-					<input type="checkbox" name="emailPassword" id="emailPassword_check" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="check" /><br />
+					<input type="checkbox" name="emailPassword" id="emailPassword_check" tabindex="', $context['tabindex']++, '" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="check" /><br />
 				</td>
 			</tr><tr class="windowbg2">
 				<th width="50%" align="right">
 					<label for="emailActivate_check">', $txt['admin_register_email_activate'], ':</label>
 				</th>
 				<td width="50%" align="left">
-					<input type="checkbox" name="emailActivate" id="emailActivate_check"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' checked="checked"' : '', ' onclick="onCheckChange();" class="check" /><br />
+					<input type="checkbox" name="emailActivate" id="emailActivate_check" tabindex="', $context['tabindex']++, '"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' checked="checked"' : '', ' onclick="onCheckChange();" class="check" /><br />
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="100%" colspan="2" align="right">
-					<input type="submit" name="regSubmit" value="', $txt['register'], '" />
+					<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
 					<input type="hidden" name="sa" value="register" />
 				</td>
 			</tr>
@@ -704,7 +704,7 @@ function template_edit_agreement()
 					<div align="left" style="width: 94%">
 						<form action="', $scripturl, '?action=admin;area=regcenter;sa=agreement" id="change_reg" method="post" accept-charset="', $context['character_set'], '">
 							<b>', $txt['admin_agreement_select_language'], ':</b>&nbsp;
-							<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();">';
+							<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();" tabindex="', $context['tabindex']++, '">';
 
 		foreach ($context['editable_agreements'] as $file => $name)
 			echo '
@@ -713,7 +713,7 @@ function template_edit_agreement()
 		echo '
 							</select>
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" />
+							<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" tabindex="', $context['tabindex']++, '" />
 						</form>
 					</div>
 				</td>
@@ -728,9 +728,9 @@ function template_edit_agreement()
 	// Show the actual agreement in an oversized text box.
 	echo '
 						<textarea cols="70" rows="20" name="agreement" style="width: 94%; margin-bottom: 1ex;">', $context['agreement'], '</textarea><br />
-						<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt['admin_agreement'], '.</label><br />
+						<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement" tabindex="', $context['tabindex']++, '"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt['admin_agreement'], '.</label><br />
 						<br />
-						<input type="submit" value="', $txt['save'], '" />
+						<input type="submit" value="', $txt['save'], '" tabindex="', $context['tabindex']++, '" />
 						<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					</form>
@@ -757,13 +757,13 @@ function template_edit_reserved_words()
 							<textarea cols="30" rows="6" name="reserved" style="width: 98%;">', implode("\n", $context['reserved_words']), '</textarea><br />
 
 							<div align="left" style="margin-top: 2ex;">
-								<label for="matchword"><input type="checkbox" name="matchword" id="matchword" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_whole'], '</label><br />
-								<label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_case'], '</label><br />
-								<label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_user'], '</label><br />
-								<label for="matchname"><input type="checkbox" name="matchname" id="matchname" ', $context['reserved_word_options']['match_name'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_display'], '</label><br />
+								<label for="matchword"><input type="checkbox" name="matchword" id="matchword" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_whole'], '</label><br />
+								<label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_case'], '</label><br />
+								<label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_user'], '</label><br />
+								<label for="matchname"><input type="checkbox" name="matchname" id="matchname" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_name'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_display'], '</label><br />
 							</div>
 
-							<input type="submit" value="', $txt['save'], '" name="save_reserved_names" style="margin: 1ex;" />
+							<input type="submit" value="', $txt['save'], '" name="save_reserved_names" tabindex="', $context['tabindex']++, '" style="margin: 1ex;" />
 						</div>
 					</td>
 				</tr>
