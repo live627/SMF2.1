@@ -8,6 +8,8 @@ February 2009
  * A few button strip background images were not properly made transparent. (images/maintab_last.gif, images/mirrortab_last.gif) [Bug 3005]
  * Fixed a spacing issue in the ignore boards screen. (Profile template) [Bug 3003]
  ! Some names in the credits were not properly HTML safe. (Who.php) [Bug 3002]
+ ! Set a meta index to prevent robots from indexing certain files, in case an admin forgets to remove them. (install.php, create_backup.php, repair_settings.php, restore_backup.php, smfinfo.php) [Bug 2995]
+ ! Fixed several JavaScript errors and notices surrounding registration. (register.js, captcha.js, Subs-Editor.php, Profile template, Register template, Reminder template)
 
 
 January 2009

@@ -23,12 +23,12 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			return;
 
 		// Get the handles.
-		inputHandle = document.getElementById(fieldID);
-		imageHandle = document.getElementById(fieldID + '_img') ? document.getElementById(fieldID + '_img') : false;
-		divHandle = document.getElementById(fieldID + '_div') ? document.getElementById(fieldID + '_div') : false;
+		var inputHandle = document.getElementById(fieldID);
+		var imageHandle = document.getElementById(fieldID + '_img') ? document.getElementById(fieldID + '_img') : false;
+		var divHandle = document.getElementById(fieldID + '_div') ? document.getElementById(fieldID + '_div') : false;
 
 		// What is the event handler?
-		eventHandler = false;
+		var eventHandler = false;
 		if (fieldType == 'pwmain')
 			eventHandler = refreshMainPassword;
 		else if (fieldType == 'pwverify')
@@ -39,7 +39,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			eventHandler = refreshMainPassword;
 
 		// Store this field.
-		vFieldIndex = fieldType == 'reserved' ? fieldType + verificationFieldLength : fieldType;
+		var vFieldIndex = fieldType == 'reserved' ? fieldType + verificationFieldLength : fieldType;
 		verificationFields[vFieldIndex] = Array(6);
 		verificationFields[vFieldIndex][0] = fieldID;
 		verificationFields[vFieldIndex][1] = inputHandle;
@@ -70,7 +70,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 	// A button to trigger a username search?
 	function addUsernameSearchTrigger(elementID)
 	{
-		buttonHandle = document.getElementById(elementID);
+		var buttonHandle = document.getElementById(elementID);
 
 		// Attach the event to this element.
 		createEventListener(buttonHandle);
@@ -115,6 +115,8 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 				}
 			}
 		}
+
+		return true;
 	}
 
 	// What is the password state?
@@ -178,9 +180,11 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 
 		// Check and set valid status!
 		var isValid = verificationFields['pwmain'][1].value == verificationFields['pwverify'][1].value && refreshMainPassword(true);
-		alt = textStrings[isValid == 1 ? 'password_valid' : 'password_no_match'] ? textStrings[isValid == 1 ? 'password_valid' : 'password_no_match'] : '';
+		var alt = textStrings[isValid == 1 ? 'password_valid' : 'password_no_match'] ? textStrings[isValid == 1 ? 'password_valid' : 'password_no_match'] : '';
 		setVerificationImage(verificationFields['pwverify'][2], isValid, alt);
 		verificationFields['pwverify'][1].style.backgroundColor = isValid ? validColor : invalidColor;
+
+		return true;
 	}
 
 	// If the username is changed just revert the status of whether it's valid!
@@ -193,11 +197,13 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 		if (verificationFields['username'][1].style.backgroundColor)
 			verificationFields['username'][1].style.backgroundColor = verificationFields['username'][5];
 		// Check the image is correct.
-		alt = textStrings['username_check'] ? textStrings['username_check'] : '';
+		var alt = textStrings['username_check'] ? textStrings['username_check'] : '';
 		setVerificationImage(verificationFields['username'][2], 'check', alt);
 
 		// Check the password is still OK.
 		refreshMainPassword();
+
+		return true;
 	}
 
 	// This is a pass through function that ensures we don't do any of the AJAX notification stuff.
@@ -223,6 +229,8 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 		// Request a search on that username.
 		checkName = curUsername.php_to8bit().php_urlencode();
 		getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=register;sa=usernamecheck;xml;username=' + checkName, checkUsernameCallback);
+
+		return true;
 	}
 
 	// Callback for getting the username data.
@@ -234,7 +242,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 			isValid = true;
 
 		// What to alt?
-		alt = textStrings[isValid == 1 ? 'username_valid' : 'username_invalid'] ? textStrings[isValid == 1 ? 'username_valid' : 'username_invalid'] : '';
+		var alt = textStrings[isValid == 1 ? 'username_valid' : 'username_invalid'] ? textStrings[isValid == 1 ? 'username_valid' : 'username_invalid'] : '';
 
 		verificationFields['username'][1].style.backgroundColor = isValid == 1 ? validColor : invalidColor;
 		setVerificationImage(verificationFields['username'][2], isValid == 1, alt);
@@ -254,5 +262,7 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 		imageHandle.src = smf_images_url + '/icons/' + curImage;
 		imageHandle.alt = alt;
 		imageHandle.title = alt;
+
+		return true;
 	}
 }

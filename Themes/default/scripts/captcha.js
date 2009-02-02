@@ -13,7 +13,7 @@ function smfCaptcha(imageURL, uniqueID, useLibrary, letterCount)
 	function autoCreate()
 	{
 		// Is there anything to cycle images with - if so attach the refresh image functio.?
-		cycleHandle = document.getElementById('visual_verification' + uniqueID + '_refresh');
+		var cycleHandle = document.getElementById('visual_verification' + uniqueID + '_refresh');
 		if (cycleHandle)
 		{
 			createEventListener(cycleHandle);
@@ -21,7 +21,7 @@ function smfCaptcha(imageURL, uniqueID, useLibrary, letterCount)
 		}
 
 		// Maybe a voice is here to spread light?
-		soundHandle = document.getElementById('visual_verification' + uniqueID + '_sound');
+		var soundHandle = document.getElementById('visual_verification' + uniqueID + '_sound');
 		if (soundHandle)
 		{
 			createEventListener(soundHandle);
@@ -72,7 +72,6 @@ function smfCaptcha(imageURL, uniqueID, useLibrary, letterCount)
 				ev.stopPropagation();
 				ev.preventDefault();
 			}
-			void(0);
 		}
 
 		return popupFailed;
