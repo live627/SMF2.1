@@ -962,9 +962,9 @@ the cache go to Admin => Maintenance => Clean Cache.
 		$fileContents = preg_replace('~\$(scripturl|boardurl)~', '#' . "$" .'1', $fileContents);
 	}
 	// Forumname/images/regards?
-	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\]~', $fileContents, $match))
+	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(context|settings|txt)\[\'?(forum_name|forum_name_html_safe|images_url|130|regards_team)\'?\]~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\])~', '#' . "$" .'1', $fileContents);
+		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|forum_name_html_safe|images_url|130|regards_team)\'?\])~', '#' . "$" .'1', $fileContents);
 	}
 	// Remove variables.
 	if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents, $match))
