@@ -10,8 +10,8 @@ February 2009
  ! Some names in the credits were not properly HTML safe. (Who.php) [Bug 3002]
  ! Set a meta index to prevent robots from indexing certain files, in case an admin forgets to remove them. (install.php, create_backup.php, repair_settings.php, restore_backup.php, smfinfo.php) [Bug 2995]
  ! Fixed several JavaScript errors and notices surrounding registration. (register.js, captcha.js, Subs-Editor.php, Profile template, Register template, Reminder template)
- ! Fixed upgrade replacing language strings incorrectly. (FixLanguage.php) [Bug 3004]
- * The register template contained a several controls without a proper tabindex. (Register template) [Bug 3004]
+ ! Fixed upgrade replacing language strings incorrectly. (FixLanguage.php) [Bug 2987]
+ * The register template contained a several controls without a proper tabindex. (Register template) [Bug 2997]
 
 
 January 2009
