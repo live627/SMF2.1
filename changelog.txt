@@ -13,6 +13,7 @@ February 2009
  ! Fixed upgrade replacing language strings incorrectly. (FixLanguage.php) [Bug 2987]
  * The register template contained a several controls without a proper tabindex. (Register template) [Bug 2997]
  ! The installer wasn't closing the HTML form tag properly. (install.php) [Bug 2985]
+ ! Some URL's created with BBC were not properly sanitized. (Subs-Post.php)
 
 
 January 2009
