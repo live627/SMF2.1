@@ -2071,8 +2071,8 @@ function template_install_below()
 								</div>';
 	}
 
-	// Show the closin form tag and other data only if not in the last step
-	if (count($incontext['steps']) - 1 == (int) $incontext['current_step'])
+	// Show the closing form tag and other data only if not in the last step
+	if (count($incontext['steps']) - 1 !== (int) $incontext['current_step'])
 		echo '
 							</form>';
 
@@ -2410,10 +2410,15 @@ function template_populate_database()
 
 	echo '
 	<form action="', $incontext['form_url'], '" method="post">
-		<h3>', !empty($incontext['was_refresh']) ? $txt['user_refresh_install_desc'] : $txt['db_populate_info'], '</h3>
+		<h3>', !empty($incontext['was_refresh']) ? $txt['user_refresh_install_desc'] : $txt['db_populate_info'], '</h3>';
+
+	if (!empty($incontext['sql_results']))
+	{
+		echo '
 		<ul>
 			<li>', implode('</li><li>', $incontext['sql_results']), '</li>
 		</ul>';
+	}
 
 	if (!empty($incontext['failures']))
 	{

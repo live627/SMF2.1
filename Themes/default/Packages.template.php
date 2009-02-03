@@ -1040,7 +1040,7 @@ function template_package_confirm()
 				<td width="100%" align="left" valign="middle" class="windowbg2">
 					', $context['confirm_message'], '<br />
 					<br />
-					[<a href="', $context['proceed_href'], '">', $txt['package_confirm_proceed'], '</a>] [<a href="JavaScript:history.go(-1);">', $txt['package_confirm_go_back'], '</a>]
+					<a href="', $context['proceed_href'], '">[ ', $txt['package_confirm_proceed'], ' ]</a> <a href="JavaScript:history.go(-1);">[ ', $txt['package_confirm_go_back'], ' ]</a>
 				</td>
 			</tr>
 		</table>';	

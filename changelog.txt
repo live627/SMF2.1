@@ -12,6 +12,7 @@ February 2009
  ! Fixed several JavaScript errors and notices surrounding registration. (register.js, captcha.js, Subs-Editor.php, Profile template, Register template, Reminder template)
  ! Fixed upgrade replacing language strings incorrectly. (FixLanguage.php) [Bug 2987]
  * The register template contained a several controls without a proper tabindex. (Register template) [Bug 2997]
+ ! The installer wasn't closing the HTML form tag properly. (install.php) [Bug 2985]
 
 
 January 2009
@@ -136,7 +137,6 @@ January 2009
  ! The attachment upload directory was incorrectly determined in case of uploading avatars with multiple upload directories enabled. (Subs-Graphics.php) [Bug 2990]
  * The gender field was not visible in the profile summary. (Profile template) [Bug 2988]
  ! Some <html> tags were not properly mentioning the xmlns or rtl attributes. (install.php, upgrade.php, Karma.php, ManageMaintenance.php, Subs-Auth.php, ViewQuery.php) [Bug 2986]
- ! The installer wasn't closing HTML form tag properly. (install.php) [Bug 2985]
 
 
 December 2008
