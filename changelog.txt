@@ -14,6 +14,7 @@ February 2009
  * The register template contained a several controls without a proper tabindex. (Register template) [Bug 2997]
  ! The installer wasn't closing the HTML form tag properly. (install.php) [Bug 2985]
  ! Some URL's created with BBC were not properly sanitized. (Subs-Post.php)
+ ! The copyright was still showing 2008 (several files) [Bug 3016]
 
 
 January 2009

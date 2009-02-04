@@ -1,14 +1,14 @@
 <?php
-/******************************************************************************
-* smfinfo.php                                                         *
-*******************************************************************************
+/**********************************************************************************
+* smfinfo.php                                                                     *
+***********************************************************************************
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
 * Software Version:           SMF 2.0 Beta 3 Public                               *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Originally coded by SlammedDime		*
-* Copyright 2006-2008 by:     Simple Machines LLC (http://www.simplemachines.org) *
+* Originally coded by SlammedDime                                                 *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
 * Support, News, Updates at:  http://www.simplemachines.org                       *
 ***********************************************************************************
@@ -21,7 +21,7 @@
 *                                                                                 *
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
-******************************************************************************/
+**********************************************************************************/
 
 initialize();
 
