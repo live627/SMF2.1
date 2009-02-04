@@ -1108,12 +1108,12 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		$bar = floor(($option[1] * 100) / $divisor);
 		$barWide = $bar == 0 ? 1 : floor(($bar * 5) / 3);
 		$return['options'][$i] = array(
-			'id' => 'options-' . $i,
+			'id' => 'options-' . ($topPollInstead ? 'top-' : 'recent-') . $i,
 			'percent' => $bar,
 			'votes' => $option[1],
 			'bar' => '<span style="white-space: nowrap;"><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'right' : 'left') . '.gif" alt="" /><img src="' . $settings['images_url'] . '/poll_middle.gif" width="' . $barWide . '" height="12" alt="-" /><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'left' : 'right') . '.gif" alt="" /></span>',
 			'option' => parse_bbc($option[0]),
-			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="check" />'
+			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . ($topPollInstead ? 'top-' : 'recent-') . $i . '" value="' . $i . '" class="check" />'
 		);
 	}
 

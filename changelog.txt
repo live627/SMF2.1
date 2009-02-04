@@ -15,6 +15,7 @@ February 2009
  ! The installer wasn't closing the HTML form tag properly. (install.php) [Bug 2985]
  ! Some URL's created with BBC were not properly sanitized. (Subs-Post.php)
  ! The copyright was still showing 2008 (several files) [Bug 3016]
+ ! The ssi_examples.shtml file was not fully maintained in comparison to ssi_examples.php. (ssi_examples.shtml, SSI.php) [Bug 3017]
 
 
 January 2009
