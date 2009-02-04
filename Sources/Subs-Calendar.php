@@ -733,18 +733,20 @@ function cache_getRecentEvents($eventOptions)
 		'expires' => time() + 3600,
 		'refresh_eval' => 'return \'' . strftime('%Y%m%d', forum_time(false)) . '\' != strftime(\'%Y%m%d\', forum_time(false)) || (!empty($modSettings[\'calendar_updated\']) && ' . time() . ' < $modSettings[\'calendar_updated\']);',
 		'post_retri_eval' => '
+			global $context, $scripturl, $user_info;
+
 			foreach ($cache_block[\'data\'][\'calendar_events\'] as $k => $event)
 			{
 				// Remove events that the user may not see or wants to ignore.
-				if ((count(array_intersect($GLOBALS[\'user_info\'][\'groups\'], $event[\'allowed_groups\'])) === 0 && !allowedTo(\'admin_forum\')) || in_array($event[\'id_board\'], $GLOBALS[\'user_info\'][\'ignoreboards\']))
+				if ((count(array_intersect($user_info[\'groups\'], $event[\'allowed_groups\'])) === 0 && !allowedTo(\'admin_forum\')) || in_array($event[\'id_board\'], $user_info[\'ignoreboards\']))
 					unset($cache_block[\'data\'][\'calendar_events\'][$k]);
 				else
 				{
 					// Whether the event can be edited depends on the permissions.
-					$cache_block[\'data\'][\'calendar_events\'][$k][\'can_edit\'] = allowedTo(\'calendar_edit_any\') || ($event[\'poster\'] == $GLOBALS[\'user_info\'][\'id\'] && allowedTo(\'calendar_edit_own\'));
+					$cache_block[\'data\'][\'calendar_events\'][$k][\'can_edit\'] = allowedTo(\'calendar_edit_any\') || ($event[\'poster\'] == $user_info[\'id\'] && allowedTo(\'calendar_edit_own\'));
 
 					// The added session code makes this URL not cachable.
-					$cache_block[\'data\'][\'calendar_events\'][$k][\'modify_href\'] = $GLOBALS[\'scripturl\'] . \'?action=\' . ($event[\'topic\'] == 0 ? \'calendar;sa=post;\' : \'post;msg=\' . $event[\'msg\'] . \';topic=\' . $event[\'topic\'] . \'.0;calendar;\') . \'eventid=\' . $event[\'id\'] . \';sesc=\' . $GLOBALS[\'sc\'];
+					$cache_block[\'data\'][\'calendar_events\'][$k][\'modify_href\'] = $scripturl . \'?action=\' . ($event[\'topic\'] == 0 ? \'calendar;sa=post;\' : \'post;msg=\' . $event[\'msg\'] . \';topic=\' . $event[\'topic\'] . \'.0;calendar;\') . \'eventid=\' . $event[\'id\'] . \';\' . $context[\'session_var\'] . \'=\' . $context[\'session_id\'];
 				}
 			}
 

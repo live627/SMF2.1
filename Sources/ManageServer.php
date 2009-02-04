@@ -875,7 +875,7 @@ function ModifyLanguages()
 					'function' => create_function('$rowData', '
 						global $scripturl, $context;
 
-						return sprintf(\'<a href="%1$s?action=admin;area=languages;sa=editlang;lid=%2$s;sesc=%3$s">%4$s</a>\', $scripturl, $rowData[\'id\'], $context[\'session_id\'], $rowData[\'name\']);
+						return sprintf(\'<a href="%1$s?action=admin;area=languages;sa=editlang;lid=%2$s;%3$s=%4$s">%5$s</a>\', $scripturl, $rowData[\'id\'], $context[\'session_var\'], $context[\'session_id\'], $rowData[\'name\']);
 					'),
 				),
 			),

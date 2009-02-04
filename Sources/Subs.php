@@ -3836,7 +3836,7 @@ function setupMenuContext()
 			),
 			'logout' => array(
 				'title' => $txt['logout'],
-				'href' => $scripturl . '?action=logout;sesc=%1$s',
+				'href' => $scripturl . '?action=logout;%1$s=%2$s',
 				'show' => !$user_info['is_guest'],
 				'sub_buttons' => array(
 				),
@@ -3884,7 +3884,7 @@ function setupMenuContext()
 
 	// Logging out requires the session id in the url.
 	if (isset($context['menu_buttons']['logout']))
-		$context['menu_buttons']['logout']['href'] = sprintf($context['menu_buttons']['logout']['href'], $context['session_id']);
+		$context['menu_buttons']['logout']['href'] = sprintf($context['menu_buttons']['logout']['href'], $context['session_var'], $context['session_id']);
 
 	// Figure out which action we are doing so we can set the active tab.
 	// Default to home.

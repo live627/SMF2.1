@@ -16,6 +16,7 @@ February 2009
  ! Some URL's created with BBC were not properly sanitized. (Subs-Post.php)
  ! The copyright was still showing 2008 (several files) [Bug 3016]
  ! The ssi_examples.shtml file was not fully maintained in comparison to ssi_examples.php. (ssi_examples.shtml, SSI.php) [Bug 3017]
+ ! Fixed a few remaining old style sesc remnants. (ManageServer.php, Subs-Calendar.php, Subs.php, Themes.php) [Bug 3019]
 
 
 January 2009

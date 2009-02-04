@@ -2266,7 +2266,7 @@ function template_menu()
 	// Otherwise, they might want to [logout]...
 	else
 		echo \'
-				<a href="\', $scripturl, \'?action=logout;sesc=\', $context[\'session_id\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/logout.gif" alt="\' . $txt[\'logout\'] . \'" border="0" />\' : $txt[\'logout\']), \'</a>\';
+				<a href="\', $scripturl, \'?action=logout;\', $context[\'session_var\'], \'=\', $context[\'session_id\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/logout.gif" alt="\' . $txt[\'logout\'] . \'" border="0" />\' : $txt[\'logout\']), \'</a>\';
 }
 
 ?>';
