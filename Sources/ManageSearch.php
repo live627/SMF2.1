@@ -441,7 +441,7 @@ function EditSearchMethod()
 
 function CreateMessageIndex()
 {
-	global $modSettings, $context, $smcFunc, $db_prefix;
+	global $modSettings, $context, $smcFunc, $db_prefix, $txt;
 
 	// Scotty, we need more time...
 	@set_time_limit(600);
@@ -449,6 +449,7 @@ function CreateMessageIndex()
 		apache_reset_timeout();
 
 	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
+	$context['page_title'] = $txt['search_index_custom'];
 
 	$messages_per_batch = 50;
 

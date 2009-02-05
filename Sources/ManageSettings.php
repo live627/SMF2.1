@@ -1859,6 +1859,8 @@ function ModifyPruningSettings($return_config = false)
 	// Make sure we understand what's going on.
 	loadLanguage('ManageSettings');
 
+	$context['page_title'] = $txt['pruning_title'];
+
 	$config_vars = array(
 			// Even do the pruning?
 			// The array indexes are there so we can remove/change them before saving.
