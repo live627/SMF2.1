@@ -6,6 +6,7 @@ SMF 2.0 RC2                                                                  ???
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
+ * Use a font instead of screen size dependant width for the mini profile in the Display template. (forum.css) 
 
 
 SMF 2.0 RC1                                                      4 February 2009

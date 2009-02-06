@@ -316,15 +316,15 @@ div#pollmoderation
 }
 #forumposts h3.catbg3 span#top_subject
 {
-	padding-left: 9%;
+	padding-left: 9.5em;
 }
 .poster
 {
-	width: 15%;
+	width: 15em;
 }
 .postarea
 {
-	margin-left: 16%;
+	margin-left: 16em;
 }
 .messageicon
 {
@@ -335,6 +335,7 @@ div.postarea .keyinfo
 {
 	float: left;
 	width: 60%;
+	min-height: 3em;
 }
 ul.postingbuttons
 {
@@ -357,7 +358,7 @@ ul.postingbuttons li
 }
 .postfooter
 {
-	margin-left: 16%;
+	margin-left: 16em;
 }
 .topborder
 {
@@ -366,7 +367,7 @@ ul.postingbuttons li
 .moderatorbar
 {
 	clear: right;
-	margin: 1em 0 0 16%;
+	margin: 1em 0 0 16em;
 }
 #quickReplyOptions div
 {
