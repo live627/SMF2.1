@@ -747,11 +747,17 @@ function SendMailing($clean_only = false)
 		$smcFunc['db_free_result']($result);
 	}
 
+	// If used our batch assume we still have a member.
+	if ($i >= $num_at_once)
+		$last_id_member = $context['start'];
+	// Or we didn't have one in range?
+	elseif (empty($last_id_member) && $context['start'] + $num_at_once < $context['max_id_member'])
+		$last_id_member = $context['start'] + $num_at_once;
 	// If we have no id_member then we're done.
-	if (empty($last_id_member) && empty($context['recipients']['emails']))
+	elseif (empty($last_id_member) && empty($context['recipients']['emails']))
 		redirectexit('action=admin');
-	else
-		$context['start'] = $last_id_member;
+
+	$context['start'] = $last_id_member;
 
 	// Working out progress is a black art of sorts.
 	$percentEmails = $context['total_emails'] == 0 ? 0 : ((count($context['recipients']['emails']) / $context['total_emails']) * ($context['total_emails'] / ($context['total_emails'] + $context['max_id_member'])));
