@@ -8,6 +8,7 @@ February 2009
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
  * Use a font instead of screen size dependant width for the mini profile in the Display template. (forum.css) 
  ! Sending newsletters would sometimes end prematurely. (ManageNews.php) [Bug 2245]
+ ! Don't allow people to move topics from the maintenance area to a redirection board. (ManageMaintenance.php) [Bug 3086]
 
 
 SMF 2.0 RC1                                                      4 February 2009
