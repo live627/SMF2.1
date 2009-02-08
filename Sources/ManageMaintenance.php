@@ -99,7 +99,7 @@ if (!defined('SMF'))
 		- requires the admin_forum permission.
 		- uses the view_versions admin area.
 		- loads the view_versions sub template (in the Admin template.)
-		- accessed through ?action=admin;area=maintain;sa=database;activity=version.
+		- accessed through ?action=admin;area=maintain;sa=routine;activity=version.
 
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
 		// !!!

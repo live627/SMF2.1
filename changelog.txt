@@ -9,6 +9,8 @@ February 2009
  * Use a font instead of screen size dependant width for the mini profile in the Display template. (forum.css) 
  ! Sending newsletters would sometimes end prematurely. (ManageNews.php) [Bug 2245]
  ! Don't allow people to move topics from the maintenance area to a redirection board. (ManageMaintenance.php) [Bug 3086]
+ ! Version check link from admin page was wrong. (Admin template) [Bug 3085,3078]
+ ! IP tracking link from who's online is wrong. (Who template) [Bug 3081]
 
 
 SMF 2.0 RC1                                                      4 February 2009
