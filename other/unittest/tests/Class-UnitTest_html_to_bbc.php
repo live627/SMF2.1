@@ -21,6 +21,19 @@
 				'input' => '<table><tr><td align="right">a</tr></table>',
 				'output' => "[table][tr]a[/tr][/table]",
 			),
+			'img_1' => array(
+				'name' => 'images (1)',
+				'description' => "Make sure that images that have no full path are rewriten to contain a full path.",
+				'input' => '<img src="Smileys/default/tongue.gif" alt=":P" title="Tongue" class="smiley" border="0">',
+				'output' => "[img alt=:P]{baseURL}/Smileys/default/tongue.gif[/img]",
+			),
+			'url_1' => array(
+				'name' => 'URLs (1)',
+				'description' => "Make sure that URLs that have no full path are rewriten to contain a full path.",
+				'input' => '<a href="test.html">test</a>',
+				'output' => "[url={baseURL}/test.html]test[/url]",
+			),
+				
 
 		);
 		
@@ -45,15 +58,27 @@
 		
 		public function doTest($testID)
 		{
+			global $scripturl;
+			
 			if (!isset($this->_tests[$testID]))
 				return 'Invalid test ID given';
 				
-			$output = html_to_bbc($this->_tests[$testID]['input']);
-			if ($output === $this->_tests[$testID]['output'])
+			$parsedurl = parse_url($scripturl);
+			$baseurl = $parsedurl['scheme'] . '://' . $parsedurl['host'] . (empty($parsedurl['port']) ? '' : ':' . $parsedurl['port']) . preg_replace('~/(?:index\\.php)?$~', '', $parsedurl['path']);
+		
+			$input = $this->_tests[$testID]['input'];
+			$expected_output = strtr($this->_tests[$testID]['output'], array(
+				'{baseURL}' => $baseurl,
+			));
+			
+
+			
+			$output = html_to_bbc($input);
+			if ($output === $expected_output)
 				return true;
 				
 			else
-				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($this->_tests[$testID]['output']), htmlspecialchars($output));
+				return sprintf("Unexpected output received from legalise_bbc().\nInput: %1\$s\nExpected output: %2\$s\nReal output: %3\$s", htmlspecialchars($this->_tests[$testID]['input']), htmlspecialchars($expected_output), htmlspecialchars($output));
 		}
 		
 		public function getTestDescription($testID)

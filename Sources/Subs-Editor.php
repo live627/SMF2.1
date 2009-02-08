@@ -132,7 +132,7 @@ function bbc_to_html($text)
 // The harder one - wysiwyg to BBC!
 function html_to_bbc($text)
 {
-	global $modSettings, $smcFunc, $sourcedir;
+	global $modSettings, $smcFunc, $sourcedir, $scripturl;
 
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ' ', "\r" => ''));
@@ -513,6 +513,17 @@ function html_to_bbc($text)
 		$tag = '';
 		if (!empty($src))
 		{
+			// Attempt to fix the path in case it's not present.
+			if (preg_match('~^https?://~i', $src) === 0 && is_array($parsedURL = parse_url($scripturl)) && isset($parsedURL['host']))
+			{
+				$baseURL = (isset($parsedURL['scheme']) ? $parsedURL['scheme'] : 'http') . '://' . $parsedURL['host'] . (empty($parsedURL['port']) ? '' : ':' . $parsedURL['port']);
+				
+				if (substr($src, 0, 1) === '/')
+					$src = $baseURL . $src;
+				else
+					$src = $baseURL . (empty($parsedURL['path']) ?  '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $src;
+			}
+			
 			$tag = '[img' . $params . ']' . $src . '[/img]';
 		}
 
@@ -577,12 +588,27 @@ function html_to_bbc($text)
 			if ($attrib == 'href')
 			{
 				$href = trim($value);
-				if (substr($href, 0, 6) == 'ftp://')
+				
+				// Are we dealing with an FTP link?				
+				if (preg_match('~^ftps?://~', $href) === 1)
 					$tag_type = 'ftp';
+					
+				// Or is this a link to an email address?
 				elseif (substr($href, 0, 7) == 'mailto:')
 				{
 					$tag_type = 'email';
 					$href = substr($href, 7);
+				}
+				
+				// No http(s), so attempt to fix this potential relative URL.
+				elseif (preg_match('~^https?://~i', $href) === 0 && is_array($parsedURL = parse_url($scripturl)) && isset($parsedURL['host']))
+				{
+					$baseURL = (isset($parsedURL['scheme']) ? $parsedURL['scheme'] : 'http') . '://' . $parsedURL['host'] . (empty($parsedURL['port']) ? '' : ':' . $parsedURL['port']);
+					
+					if (substr($href, 0, 1) === '/')
+						$href = $baseURL . $href;
+					else
+						$href = $baseURL . (empty($parsedURL['path']) ?  '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $href;
 				}
 			}
 
