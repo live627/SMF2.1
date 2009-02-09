@@ -176,7 +176,7 @@ function template_view_package()
 		{
 			echo '
 			<tr class="catbg">
-				<td colspan="6"><a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" /></a> ', $txt['package_other_themes'], '</td>
+				<td colspan="6"><a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $txt['package_other_themes'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" id="custom_changes">
@@ -214,7 +214,7 @@ function template_view_package()
 						<tr class="windowbg', $alternate ? '' : '2', '">
 							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" /></a>' : '', '</td>
 							<td width="30" style="padding-right: 2ex;">
-								<input type="checkbox" name="theme_changes[]" value="', !empty($action['value']) ? $action['value'] : '', '" id="dummy_theme_', $id, '[]" class="check" ', (!empty($action['not_mod']) ? '' : 'disabled="disabled"'), ' ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
+								<input type="checkbox" name="theme_changes[]" value="', !empty($action['value']) ? $action['value'] : '', '" id="dummy_theme_', $id, '" class="check" ', (!empty($action['not_mod']) ? '' : 'disabled="disabled"'), ' ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
 							</td>
 							<td style="padding-right: 2ex;">', $action['type'], '</td>
 							<td width="50%" style="padding-right: 2ex;">', $action['action'], '</td>
