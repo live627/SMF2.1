@@ -1057,8 +1057,8 @@ function PackageInstall()
 	if (file_exists($boarddir . '/Packages/temp'))
 		deltree($boarddir . '/Packages/temp');
 
-	// Just in case it's modified any language files let's remove them all.
-	clean_cache('lang');
+	// Just in case, let's clear the whole cache to avoid anything going up the swanny.
+	clean_cache();
 
 	// Restore file permissions?
 	create_chmod_control(array(), array(), true);

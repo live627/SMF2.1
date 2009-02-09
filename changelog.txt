@@ -15,6 +15,7 @@ February 2009
  ! Ftps protocol links were not properly translated to ftp tags in the WYSIWYG editor. (Subs-Editor.php) ! Relative links pasted in the WYSIWYG editor were not translated to full URL's. (Subs-Editor.php) [Bug 1806]
  * Some minor xhtml valid bugs in packages template. (Packages template) [Bug 3091]
  ! Added a validate username function. (Subs-Auth.php)
+ ! Always clear the cache after installing a package. (Packages.php) [Bug 3090]
 
 
 SMF 2.0 RC1                                                      4 February 2009
