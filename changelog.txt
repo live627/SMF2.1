@@ -11,10 +11,8 @@ February 2009
  ! Don't allow people to move topics from the maintenance area to a redirection board. (ManageMaintenance.php) [Bug 3086]
  ! Version check link from admin page was wrong. (Admin template) [Bug 3085,3078]
  ! IP tracking link from who's online is wrong. (Who template) [Bug 3081]
- ! Images copied from the site the forum was hosted on and pasted into a WYSIWYG editor were not properly parsed. (Subs-Editor.php) [Bug 3020]
- ! Ftps protocol links were not properly translated to ftp tags in the WYSIWYG editor. (Subs-Editor.php)
- ! Relative links pasted in the WYSIWYG editor were not translated to full URL's. (Subs-Editor.php) [Bug 1806]
-
+ ! Ensure the title link on the main menu buttons is the correct title. (index templates) [Bug 3088] ! Images copied from the site the forum was hosted on and pasted into a WYSIWYG editor were not properly parsed. (Subs-Editor.php) [Bug 3020]
+ ! Ftps protocol links were not properly translated to ftp tags in the WYSIWYG editor. (Subs-Editor.php) ! Relative links pasted in the WYSIWYG editor were not translated to full URL's. (Subs-Editor.php) [Bug 1806]
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================
