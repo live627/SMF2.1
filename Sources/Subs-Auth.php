@@ -101,6 +101,9 @@ if (!defined('SMF'))
 		- mails the new password to the email address of the user.
 		- if username is not set, only a new password is generated and sent.
 
+	string validateUsername(int memID, string username)
+		- checks a username obeys a load of rules. Returns null if fine.
+
 	string validatePassword(string password, string username,
 			array restrict_in = none)
 		- called when registering/choosing a password.
@@ -681,20 +684,7 @@ function resetPassword($memID, $username = null)
 	// Do some checks on the username if needed.
 	if ($username !== null)
 	{
-		// No name?!  How can you register with no name?
-		if ($user == '')
-			fatal_lang_error('need_username', false);
-
-		// Only these characters are permitted.
-		if (in_array($user, array('_', '|')) || preg_match('~[<>&"\'=\\\\]~', preg_replace('~&#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '', $user)) != 0 || strpos($user, '[code') !== false || strpos($user, '[/code') !== false)
-			fatal_lang_error('error_invalid_characters_username', false);
-
-		if (stristr($user, $txt['guest_title']) !== false)
-			fatal_lang_error('username_reserved', true, array($txt['guest_title']));
-
-		require_once($sourcedir . '/Subs-Members.php');
-		if (isReservedName($user, $memID, false))
-			fatal_error('(' . htmlspecialchars($user) . ') ' . $txt['name_in_use'], false);
+		validateUsername($user);
 
 		// Update the database...
 		updateMemberData($memID, array('member_name' => $user, 'passwd' => $newPassword_sha1));
@@ -714,6 +704,29 @@ function resetPassword($memID, $username = null)
 
 	// Send them the email informing them of the change - then we're done!
 	sendmail($email, $emaildata['subject'], $emaildata['body'], null, null, false, 0);
+}
+
+// Is this a valid username?
+function validateUsername($memID, $username)
+{
+	global $sourcedir, $txt;
+
+	// No name?!  How can you register with no name?
+	if ($username == '')
+		fatal_lang_error('need_username', false);
+
+	// Only these characters are permitted.
+	if (in_array($username, array('_', '|')) || preg_match('~[<>&"\'=\\\\]~', preg_replace('~&#(\\d{1,7}|x[0-9a-fA-F]{1,6});~', '', $username)) != 0 || strpos($username, '[code') !== false || strpos($username, '[/code') !== false)
+		fatal_lang_error('error_invalid_characters_username', false);
+
+	if (stristr($username, $txt['guest_title']) !== false)
+		fatal_lang_error('username_reserved', true, array($txt['guest_title']));
+
+	require_once($sourcedir . '/Subs-Members.php');
+	if (isReservedName($username, $memID, false))
+		fatal_error('(' . htmlspecialchars($username) . ') ' . $txt['name_in_use'], false);
+
+	return null;
 }
 
 // This function simply checks whether a password meets the current forum rules.
