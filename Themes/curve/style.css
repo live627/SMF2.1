@@ -130,13 +130,13 @@ ul, ul li
 .middletext
 {
 	font-size: 0.9em;
-	line-height: 1em;
+	line-height: 1em; 
 	font-family: verdana, sans-serif;
 }
 .normaltext
 {
 	font-size: 1em;
-	line-height: 1.2em;
+	line-height: 1.2em; 
 }
 .largetext
 {
@@ -284,7 +284,30 @@ code
 	background-color: #B3F4B0;
 	color: black;
 }
-
+/* the error messages */
+.errorbox
+{
+	padding: 1em;
+	border: 1px solid #cc3344; 
+	color: black; 
+	background-color: #ffe4e9;
+	margin-bottom: 1em;
+ }
+ .errorbox p.alert
+ {
+	padding: 0;
+	margin: 0;
+	float: left; 
+	width: 1em; 
+	font-size: 1.5em;
+ }
+  .errorbox h3
+ {
+	padding: 0;
+	margin: 0;
+	font-size: 1.1em;
+	text-decoration: underline;
+ }
 /* ************************************* */
 /* Real common classes                   */
 /* ************************************* */
@@ -410,12 +433,12 @@ tr.catbg th.smalltext
 }
 
 /* lists in these need some re-styling */
-.post ul li, .personalmessage ul li, .signature ul li
+.post ul li, .personalmessage ul li, .signature ul li 
 {
 	list-style: disc outside;
 	margin: 0 0 0 2em;
 }
-.post ul li li, .personalmessage ul li li, .signature ul li li
+.post ul li li, .personalmessage ul li li, .signature ul li li 
 {
 	list-style: circle outside;
 	margin: 0 0 0 2em;
@@ -486,7 +509,7 @@ a.moderation_link, a.moderation_link:visited
 	text-align: center;
 	font-weight: bold;
 	font-size: 18pt;
-	padding: 0.4em;
+	padding: 3px;
 	width: 100%;
 	position: fixed;
 	top: 0;
@@ -545,26 +568,26 @@ table.table_grid td
 	border-right: solid 1px white;
 }
 /* Helping style to clear floated items. */
-.clearfix:after
+.clearfix:after 
 {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
     visibility: hidden;
 }
 
-.clearfix
+.clearfix 
 {
 	display: inline-block;
 }
 
 /* Hides from IE-mac. \*/
-* html .clearfix
+* html .clearfix 
 {
 	height: 1%;
 }
-.clearfix
+.clearfix 
 {
 	display: block;
 }

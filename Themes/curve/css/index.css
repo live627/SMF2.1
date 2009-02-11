@@ -30,7 +30,6 @@
 /* the main title, always stay at 45 pixels in height! */
 h1
 {
-	height: 45px;
 	line-height: 45px;
 	font-size: 1.8em;
 	font-family: Geneva, verdana, sans-serif;
@@ -95,12 +94,12 @@ ul#upper_section li.user
 ul#upper_section li.user p
 {
 	float: left;
-	margin: 0 1em 0 0;
+	margin: 0 1em 3em 0;
 	padding: 0;
 }
 ul#upper_section li.user ul
 {
-	margin-left: 0px;
+	margin: 0;
 	padding-left: 10px;
 	min-height: 70px;
 }
@@ -115,202 +114,9 @@ ul#upper_section li.news h3, ul#upper_section li.news p
 ul#upper_section li.news form
 {
 	clear: both;
-	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
-/* the dropdown menus */
-.dropmenu ul
-{
-	z-index: 100;
-	display: table;
-	padding: 5px;
-	margin: 0 auto 0 auto;
-}
-.dropmenu ul li, ul#navigation li
-{
-	float: left;
-	margin-right: 2px;
-}
-.dropmenu ul li a
-{
-	display: block;
-	font-size: 0.9em;
-	color: black;
-	padding: 0 8px 0 0;
-}
-.dropmenu ul li a span
-{
-	display: block;
-	height: 19px;
-	line-height: 19px;
-	padding-left: 8px;
-}
-/* the active one gets a background */
-.dropmenu ul li a.active
-{
-	background: url(../images/theme/menu_bg_right.png) no-repeat top right;
-	color: white;
-	font-weight: bold;
-}
-.dropmenu ul li a:hover
-{
-	color: #fff;
-	text-decoration: none;
-	background: url(../images/theme/active_button_right.png) no-repeat top right;
-}
-.dropmenu ul li a.active span
-{
-	background: url(../images/theme/menu_bg_left.png) no-repeat top left;
-}
-.dropmenu ul li a:hover span
-{
-	background: url(../images/theme/active_button_left.png) no-repeat top left;
-}
-.dropmenu ul li a.active
-{
-	font-weight: bold;
-}
-
-/* the submenus.. */
-.dropmenu ul ul
-{
-	z-index: 80;
-	position: absolute;
-	width: 198px;
-	left: -999em;
-	background: url(../images/theme/submenu_background.png) 0 2px no-repeat;
-	border-bottom: solid 1px #5e5e5e;
-	padding: 12px 0 0 0;
-}
-
-.dropmenu ul ul li
-{
-	padding: 0;
-	margin: 0;
-}
-.dropmenu ul ul li a
-{
-	display: block;
-	width: 198px;
-	padding: 2px 0 4px 0;
-	background: white;
-	border-left: solid 1px #5e5e5e;
-	border-right: solid 1px #5e5e5e;
-}
-.dropmenu ul ul li a:hover
-{
-	background: #889;
-	color: white;
-}
-.dropmenu ul ul li a:hover span
-{
-	background: none;
-}
-.dropmenu ul li:hover ul
-{
-	left: auto;
-	margin: 0;
-}
-.dropmenu li ul ul
-{
-	margin: -10px 0 0 90px;
-}
-.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul
-{
-	left: -999em;
-}
-.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul
-{
-	left: auto;
-}
-#main_menu
-{
-	padding: 1em 0 0.5em 0;
-	margin: 0 1em 0 1em;
-	border-bottom: solid 1px #aaa;
-}
-/* the button lists used everywhere */
-.buttonlist ul
-{
-	z-index: 100;
-	display: table;
-	padding: 5px;
-	margin: 0;
-}
-.buttonlist ul li
-{
-	float: left;
-}
-.buttonlist ul li a
-{
-	display: block;
-	font-size: 0.8em;
-	color: black;
-	background: url(../images/theme/button_bg_right.png) no-repeat top right;
-	padding: 0 8px 0 0;
-	margin-left: 5px;
-	text-transform: uppercase;
-}
-.buttonlist ul li a:hover
-{
-	background: url(../images/theme/active_button_right.png) no-repeat top right;
-	color: #fff;
-	text-decoration: none;
-}
-.buttonlist ul li a span
-{
-	background: url(../images/theme/button_bg_left.png) no-repeat top left;
-	display: block;
-	height: 19px;
-	line-height: 17px;
-	padding: 0 0 0 6px;
-}
-.buttonlist ul li a:hover span
-{
-	background: url(../images/theme/active_button_left.png) no-repeat;
-}
-/* the active one */
-.buttonlist ul li a.active
-{
-	background: url(../images/theme/active_button_right.png) no-repeat top right;
-	color: white;
-	font-weight: bold;
-}
-.buttonlist ul li a.active span
-{
-	background: url(../images/theme/active_button_left.png) no-repeat top left;
-}
-.buttonlist ul li a.active
-{
-	font-weight: bold;
-}
-.buttonlist ul li a.active:hover
-{
-	color: orange;
-}
-/* a smaller quick-button list */
-ul.quickbuttons li
-{
-	display: inline;
-}
-ul.quickbuttons li a:hover img
-{
-	text-decoration: none;
-	color: orange;
-}
-/* the navigation list */
-ul#navigation
-{
-	margin: 0;
-	font-size: 0.9em;
-	padding: 1em 0.4em;
-}
-ul#navigation li
-{
-	float: none;
-	font-size: 0.95em;
-	display: inline;
-}
 /* the font size changer panel */
 p#fontsize_panel
 {

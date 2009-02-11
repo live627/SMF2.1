@@ -104,8 +104,8 @@ function template_generic_menu_dropdown_above()
 		</p>';
 
 	echo '
-	<div id="adm_container" class="dropmenu">
-		<ul id="adm_menu">';
+	<div id="admin_menu">
+		<ul class="dropmenu" id="dropdown_menu_', $context['cur_menu_id'], '">';
 
 	// Main areas first.
 	foreach ($menu_context['sections'] as $section)
@@ -113,12 +113,12 @@ function template_generic_menu_dropdown_above()
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li><a class="active" name="', $section['title'] , '"><span>', $section['title'] , '</span></a>
+			<li><a class="active firstlevel" name="', $section['title'] , '"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 		}
 		else
 			echo '
-			<li><a name="', $section['title'] , '"><span>', $section['title'] , '</span></a>
+			<li><a class="firstlevel" name="', $section['title'] , '"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)
@@ -135,14 +135,14 @@ function template_generic_menu_dropdown_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '' , '" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '">' , $area['icon'] , $area['label'], '</a>';
+						<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '"><span>' , $area['icon'] , $area['label'], '</span></a>';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
 			}
 			else
 				echo '
-						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '"', !empty($area['subsections']) ? ' class="subsection"' : '' , '>' , $area['icon'] , $area['label'] , !empty($area['subsections']) ? '...' : '' , '</a>';
+						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), $menu_context['extra_parameters'], '"><span>' , $area['icon'] , $area['label'] , !empty($area['subsections']) ? '...' : '' , '</span></a>';
 
 			// Is there any subsections?
 			if (!empty($area['subsections']))
@@ -161,16 +161,14 @@ function template_generic_menu_dropdown_above()
 					$url = isset($sub['url']) ? $sub['url'] : (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i) . ';sa=' . $sa;
 
 					echo '
-								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, $menu_context['extra_parameters'], '">' , $sub['label'], '</a>';
+								<a ', !empty($sub['selected']) ? 'class="active" ' : '', 'href="', $url, $menu_context['extra_parameters'], '"><span>' , $sub['label'], '</span></a>';
 
 					echo '
 							</li>';
 				}
-
 				echo '
 						</ul>';
 			}
-
 			echo '
 					</li>';
 		}
@@ -178,9 +176,9 @@ function template_generic_menu_dropdown_above()
 				</ul>
 			</li>';
 	}
-
 	echo '
-		</ul></div>';
+		</ul>
+	</div>';
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
@@ -269,8 +267,8 @@ function template_generic_menu_tabs(&$menu_context)
 
 		// The admin tabs.
 		echo '
-	<div class="dropmenu" id="adm_submenus">
-		<ul class="menu">';
+	<div  id="adm_submenus">
+		<ul class="dropmenu">';
 
 		// Print out all the items in this tab.
 		foreach ($tab_context['tabs'] as $sa => $tab)
@@ -282,13 +280,13 @@ function template_generic_menu_tabs(&$menu_context)
 			{
 				echo '
 			<li>
-				<a class="active" href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '"><span>' , $tab['label'], '</span></a>
+				<a class="firstlevel active" href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '"><span class="firstlevel">' , $tab['label'], '</span></a>
 			</li>';
 			}
 			else
 				echo '
 			<li>
-				<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '"><span>' , $tab['label'], '</span></a>
+				<a class="firstlevel" href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '"><span class="firstlevel">' , $tab['label'], '</span></a>
 			</li>';
 		}
 

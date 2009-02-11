@@ -99,9 +99,8 @@ function template_html_above()
 
 	// The ?b4 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?b4" />';
-
-	echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/dropmenu.css?b4" />
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?b4" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b4" media="print" />';
 
 	// IE7 needs some fixes for styles.
@@ -139,7 +138,7 @@ function template_html_above()
 		echo '
 	<link rel="index" href="', $scripturl, '?board=', $context['current_board'], '.0" />';
 
-	// the alternative fontsizes.
+	// the alternative fontsizes 
 	echo '
 	<link rel="alternate stylesheet" type="text/css" media="screen" title="mediumtext" href="', $settings['theme_url'], '/css/mediumtext.css" />
 	<link rel="alternate stylesheet" type="text/css" media="screen" title="bigtext" href="', $settings['theme_url'], '/css/bigtext.css" />';
@@ -161,6 +160,23 @@ function template_html_above()
 		mainHeader.addToggleImage("upshrink", "/upshrink.png", "/upshrink2.png");
 		mainHeader.addTogglePanel("upper_section");
 	// ]]></script>';
+
+	if($context['browser']['is_ie6'] && !$context['browser']['is_ie7'])
+		echo '
+	<script type="text/javascript"><!--//--><![CDATA[//><!--
+		sfHover = function() {
+			var sfEls = document.getElementById("menu_nav").getElementsByTagName("LI");
+			for (var i=0; i<sfEls.length; i++) {
+				sfEls[i].onmouseover=function() {
+					this.className+=" over";
+				}
+				sfEls[i].onmouseout=function() {
+					this.className=this.className.replace(new RegExp(" over\\b"), "");
+				}
+			}
+		}
+		if (window.attachEvent) window.attachEvent("onload", sfHover);
+	//--><!]]></script>';
 	
 	// the styleswitcher script (replace with internal function?)
 	echo '
@@ -187,10 +203,11 @@ function template_body_above()
 	<div id="header"><div class="frame">';
 
 	echo '
-		<h1 class="forumtitle"><a href="', $scripturl, '">
-			', empty($settings['header_logo_url']) ? $context['forum_name_html_safe'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name_html_safe'] . '" />' , '
-		</a></h1>
-		', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<h2 class="sitelogo">' . $settings['site_slogan'] . '</h2>', '
+		<h1 class="forumtitle">
+			<a href="', $scripturl, '">', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '
+			</a>
+		</h1>
+		', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<h2 class="sitelogo">' . $settings['site_slogan'] . '</h2>', ' 
 		<a href="#" onclick="mainHeader.toggle(); return false;">
 			<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.png' : 'upshrink2.png', '" alt="*" title="', $txt['upshrink_description'], '" />
 		</a>
@@ -203,7 +220,6 @@ function template_body_above()
 			if (!empty($context['user']['avatar']))
 				echo '
 				<p class="avatar">', $context['user']['avatar']['image'], '</p>';
-
 			echo '
 				<ul>
 					<li class="greeting">', $txt['hello_member_ndt'], ' <span>', $context['user']['name'], '</span></li>
@@ -258,15 +274,7 @@ function template_body_above()
 	
 		echo '
 			</li>
-			<li class="news normaltext">';
-	
-		// Show a random news item? (or you could pick one from news_lines...)
-		if (!empty($settings['enable_news']))
-			echo '
-				<h3>', $txt['news'], ': </h3>
-				<p>', $context['random_news_line'], '</p>';
-	
-		echo '
+			<li class="news normaltext">
 				<form id="search_form" style="margin: 0;" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 					<input type="text" name="search" value="" />&nbsp;
 					<input type="submit" name="submit" value="', $txt['search'], '" />
@@ -281,7 +289,15 @@ function template_body_above()
 			echo '
 					<input type="hidden" name="brd[', $context['current_board'], ']" value="', $context['current_board'], '" />';
 
-		echo '</form>
+		echo '</form>';
+
+		// Show a random news item? (or you could pick one from news_lines...)
+		if (!empty($settings['enable_news']))
+			echo '
+				<h3>', $txt['news'], ': </h3>
+				<p>', $context['random_news_line'], '</p>';
+
+		echo '
 			</li>
 		</ul>';
 	
@@ -384,15 +400,15 @@ function template_menu()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<div id="main_menu" class="dropmenu">
-			<ul>';
+		<div id="main_menu"><div class="center_wrapper">
+			<ul class="dropmenu" id="menu_nav">';
 
 	foreach ($context['menu_buttons'] as $act => $button)
 	{
 		echo '
 				<li id="button_', $act, '">
-					<a', $button['active_button'] ? ' class="active"' : '', ' href="', $button['href'], '" title="', $button['title'], '">
-						<span', isset($button['is_last']) ? ' class="last"' : '', '>', $button['title'], '</span>
+					<a class="', $button['active_button'] ? 'active ' : '', 'firstlevel" href="', $button['href'], '">
+						<span class="', isset($button['is_last']) ? 'last ' : '', 'firstlevel">', $button['title'], '</span>
 					</a>';
 		if (!empty($button['sub_buttons']))
 		{
@@ -403,8 +419,8 @@ function template_menu()
 			{
 				echo '
 						<li>
-							<a', !empty($childbutton['active_button']) ? ' class="active"' : '', ' href="', $childbutton['href'], '">
-								<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], '</span>
+							<a href="', $childbutton['href'], '">
+								<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
 							</a>';
 				// 3rd level menus :)				
 				if (!empty($childbutton['sub_buttons']))
@@ -436,19 +452,21 @@ function template_menu()
 
 	echo '
 			</ul>
-		</div>';
+		</div></div>';
 }
 
 // Generate a strip of buttons.
-function template_button_strip($button_strip, $direction = '', $custom_td = '')
+function template_button_strip($button_strip, $direction = '', $force_reset = false, $custom_td = '')
 {
 	global $settings, $context, $txt, $scripturl;
 
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
+	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
+			$buttons[] = '<a ' . (isset($value['active']) ? 'class="active" ' : '') . 'href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
+	}
 
 	if (empty($buttons))
 		return '';
@@ -457,7 +475,7 @@ function template_button_strip($button_strip, $direction = '', $custom_td = '')
 	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 
 	echo '
-		<div class="buttonlist', empty($direction) ? '' : ' align_' . $direction, '">
+		<div class="buttonlist', !empty($direction) ? ' align_' . $direction : '' , '">
 			<ul>
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>

@@ -3216,21 +3216,21 @@ function template_header()
 			if (!empty($securityFiles) || !is_writable($cachedir))
 			{
 				echo '
-		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
-			<div class="alert" style="float: left; width: 2ex; font-size: 2em;">!!</div>
-			<b style="text-decoration: underline;">', empty($securityFiles) ? $txt['cache_writable_head'] : $txt['security_risk'], '</b><br />
-			<div style="padding-left: 6ex;">';
+		<div class="errorbox">
+			<p class="alert">!!</p>
+			<h3>', empty($securityFiles) ? $txt['cache_writable_head'] : $txt['security_risk'], '</h3>
+			<p>';
 
 				foreach ($securityFiles as $securityFile)
 					echo '
-				', $txt['not_removed'], '<b>', $securityFile, '</b>!<br />';
+				', $txt['not_removed'], '<strong>', $securityFile, '</strong>!<br />';
 
 				if (!is_writable($cachedir))
 					echo '
-				<b>', $txt['cache_writable'], '</b><br />';
+				<strong>', $txt['cache_writable'], '</strong><br />';
 
 				echo '
-			</div>
+			</p>
 		</div>';
 			}
 		}

@@ -127,8 +127,8 @@ function template_main()
 
 	// Show the page index... "Pages: [1]".
 	echo '
-<div id="postbuttons">
-	<span>', $context['previous_next'], '</span>', template_button_strip($normal_buttons, 'bottom'), '
+<div id="postbuttons_upper">
+	<span>', $context['previous_next'], '</span>', template_button_strip($normal_buttons, 'right'), '
 	<div class="middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
 </div>';
 

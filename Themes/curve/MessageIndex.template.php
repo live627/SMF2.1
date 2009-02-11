@@ -8,7 +8,6 @@ function template_main()
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
-	<a name="top"></a>
 	<div class="tborder" id="childboards">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['parent_boards'], '</h3>';
 
@@ -142,14 +141,14 @@ function template_main()
 
 		echo '
 			<div class="tborder topic_table" id="messageindex">
-				<table class="table_grid" cellspacing="0">';
+				<table class="table_grid" cellspacing="0">
+					<thead>
+						<tr class="catbg">';
 
 		// Are there actually any topics to show?
 		if (!empty($context['topics']))
 		{
-			echo'
-					<thead>
-						<tr class="catbg">
+			echo '
 							<th scope="col" class="smalltext" width="8%" colspan="2">&nbsp;</th>
 							<th scope="col" class="smalltext"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a> / <a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
 							<th scope="col" class="smalltext" width="14%" align="center"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a> / <a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['views'], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
@@ -165,11 +164,15 @@ function template_main()
 			elseif (!empty($options['display_quick_mod']))
 				echo '
 							<th class="smalltext" width="4%"></th>';
-			echo'
-						</tr>
-					</thead>';
 		}
+		// No topics.... just say, "sorry bub".
+		else
+			echo '
+							<th class="smalltext" colspan="5"><strong>', $txt['msg_alert_none'], '</strong></th>';
+
 		echo '
+						</tr>
+					</thead>
 					<tbody>';
 
 		if (!empty($settings['display_who_viewing']))
@@ -196,14 +199,6 @@ function template_main()
 							</td>
 						</tr>';
 		}
-
-		// No topics.... just say, "sorry bub".
-		if (empty($context['topics']))
-			echo '
-						<tr class="windowbg2">
-							<th class="smalltext" colspan="5"><strong>', $txt['msg_alert_none'], '</strong></th>
-						</tr>';
-
 
 		foreach ($context['topics'] as $topic)
 		{

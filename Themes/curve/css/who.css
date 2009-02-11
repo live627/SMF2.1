@@ -17,12 +17,12 @@
 {
 	width: 30%;
 }
-#whos_online div.clearfix, #whos_none
+#whos_online div.clearfix, #whos_none 
 {
 	padding: 0.3em 0.4em;
 	margin: 2px 0;
 }
-#whos_none
+#whos_none 
 {
 	font-style: italic;
 	font-size: 90%;
@@ -34,12 +34,12 @@
 	float: right;
 	padding-right: 1em;
 }
-#whos_online h4#pages_below
+#whos_online h4#pages_below 
 {
 	font-weight: normal;
 	font-size: 95%;
 }
-#whos_online h4#pages_below span.selectbox
+#whos_online h4#pages_below span.selectbox 
 {
 	float: right;
 }

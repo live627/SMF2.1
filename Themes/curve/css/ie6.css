@@ -1,30 +1,44 @@
 /* special styles for IE6 */
 /* the main menu */
-#main_menu ul li
-{
-	width: 1%;
-}
-#main_menu ul li a
+.dropmenu
 {
 	height: 1%;
 }
-#main_menu ul li a span
+.dropmenu li
+{
+	width: 1px;
+}
+.dropmenu li a span
 {
 	white-space: nowrap;
 }
-#main_menu ul
+.dropmenu li a:hover
 {
-	display: inline-block;
+	text-decoration: none;
 }
-#main_menu ul
+.dropmenu li a.active
 {
-	display: inline;
+	background: url(../images/theme/menu_bg_right.gif) no-repeat top right;
 }
-
+.dropmenu li a.active span.firstlevel
+{
+	background: url(../images/theme/menu_bg_left.gif) no-repeat 3px 0;
+}
+/* the hover effects */
+.dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
+{
+	background: url(../images/theme/active_menu_right.gif) no-repeat top right;
+}
+.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
+{
+	background: url(../images/theme/active_menu_left.gif) no-repeat 3px 0;
+}
 #main_menu
 {
+	width: 99%;
 	text-align: center;
 }
+
 /* a fix for the background for user section */
 #mainframe #upper_section li.user
 {

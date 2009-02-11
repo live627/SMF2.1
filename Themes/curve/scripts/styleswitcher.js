@@ -7,7 +7,7 @@ var randomsetting="3 days" //"eachtime", "sessiononly", or "x days (replace x wi
 
 //////No need to edit beyond here//////////////
 
-function getCookie(Name) {
+function getCookie(Name) { 
 var re=new RegExp(Name+"=[^;]+", "i"); //construct RE to search for target name/value pair
 if (document.cookie.match(re)) //if cookie found
 return document.cookie.match(re)[0].split("=")[1] //return its value
@@ -86,5 +86,5 @@ setCookie("mysheet_r_days", randomsetting, parseInt(randomsetting)) //Also remem
 }
 else
 setStylesheet(getCookie("mysheet_r")) //just activate random alt stylesheet stored in cookie
-}
+} 
 }

@@ -129,11 +129,11 @@ ul.category li.board ul li h4, ul.category li.board ul li p
 	padding: 0;
 	float: left;
 }
-#posting_icons .buttonlist
+#postbuttons_upper ul li a span
 {
-	float: right;
+	line-height: 19px;
+	padding: 0 0 0 6px;
 }
-
 /* the newsfader */
 #smfFadeScroller
 {
@@ -185,7 +185,7 @@ dl#ic_recentposts dd
 form#ic_login
 {
 	padding: 0.5em;
-	height: 2em;
+	height: 2em; 
 }
 form#ic_login ul li
 {
@@ -468,7 +468,7 @@ p#whoisviewing
 {
 	clear: right;
 	float: right;
-	margin: 8px 20px 0 0;
+	margin: 8px 20px 10px 0;
 	text-align: right;
 }
 .postarea ul.quickbuttons
@@ -517,6 +517,15 @@ p#whoisviewing
 #forumposts span.botslice
 {
 	clear: both;
+}
+.attachments hr
+{
+	clear: both;
+	margin: 1em 0 1em 0;
+}
+.attachments
+{
+	padding: 1em 0.5em 2em 0.5em;
 }
 /* the quick-reply area */
 #quickReplyWarning

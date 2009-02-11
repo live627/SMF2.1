@@ -1,47 +1,10 @@
 /* special styles for IE7 */
-/* the main menu */
-#main_menu
-{
-	text-align: center;
-}
-#main_menu ul
-{
-	display: inline-block;
-}
-#main_menu ul
-{
-	display: inline;
-}
-#main_menu ul li
-{
-	display: inline-block;
-}
-#main_menu ul li
-{
-	display: inline;
-}
-#main_menu ul li a
-{
-	display: inline-block;
-}
-#main_menu ul li a
-{
-	cursor: pointer;
-	display: inline;
-}
+/* the hover effects */
+.dropmenu li:hover, .dropmenu li.hover 
+{  
+	position: static;  
+}  
 
-#main_menu ul ul
-{
-	display: block;
-	left: -999%;
-	text-align: left;
-}
-#main_menu ul li:hover ul
-{
-	top: auto;
-	margin-top: 1.5em;
-	left: auto;
-}
 /* **************** */
 /* from MessageIndex.template */
 /* **************** */

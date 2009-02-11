@@ -43,19 +43,6 @@ ol.search_results li
 	float: left;
 	margin: 0 1em 1em 1em;
 }
-/* tweak the sub tabs */
-#adm_submenus
-{
-	padding: 0 0 1em 0;
-}
-#adm_submenus ul.menu
-{
-	margin: 0 0 1em 0;
-}
-#adm_submenus ul li a span
-{
-	line-height: 17px;
-}
 /* the old style admin menus */
 #left_admsection
 {
