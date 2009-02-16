@@ -42,13 +42,16 @@ if (!defined('SMF'))
 // Show the board index!
 function BoardIndex()
 {
-	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings;
+	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings, $scripturl;
 
 	// For wireless, we use the Wireless template...
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_boardindex';
 	else
 		loadTemplate('BoardIndex', 'forum');
+
+	// Set a canonical URL for this page.
+	$context['canonical_url'] = $scripturl;
 
 	// Do not let search engines index anything if there is a random thing in $_GET.
 	if (!empty($_GET) && (count($_GET) > 1 || !isset($_GET[session_name()])))

@@ -99,6 +99,9 @@ function MessageIndex()
 		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%d', $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
 	$context['start'] = &$_REQUEST['start'];
 
+	// Set a canonical URL for this page.
+	$context['canonical_url'] = $scripturl . '?board=' . $board . '.' . $context['start'];
+
 	$context['links'] = array(
 		'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?board=' . $board . '.0' : '',
 		'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?board=' . $board . '.' . ($_REQUEST['start'] - $context['topics_per_page']) : '',

@@ -19,6 +19,7 @@ February 2009
  ! Sorting things didn't always work in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3131]
  ! Removing columns in PostgreSQL didn't work if the db prefix wasn't specified (DbPackages-postgresql.php) [Bug 3132]
  ! PostgreSQL doesn't support LIMIT in DELETE queries (ManagePaid.php, Subs-Db-postgresql.php) [Bug 3133]
+ + Present a canonical url for search engines to prevent duplicate content in their indices. (BoardIndex.php, Display.php, MessageIndex.php, Profile-View.php, index template) [Bug 3135]
 
 
 SMF 2.0 RC1                                                      4 February 2009

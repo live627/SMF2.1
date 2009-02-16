@@ -622,6 +622,9 @@ function Display()
 	$context['num_views'] = $topicinfo['num_views'];
 	$context['mark_unread_time'] = $topicinfo['new_from'];
 
+	// Set a canonical URL for this page.
+	$context['canonical_url'] = $scripturl . '?topic=' . $topic . '.' . $context['start'];
+
 	// For quick reply we need a response prefix in the default forum language.
 	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix', 600)))
 	{

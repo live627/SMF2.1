@@ -99,6 +99,11 @@ function template_html_above()
 		echo '
 	<meta name="robots" content="noindex" />';
 
+	// Present a canonical url for search engines to prevent duplicate content in their indices.
+	if (!empty($context['canonical_url']))
+		echo '
+	<link rel="canonical" href="', $context['canonical_url'], '" />';
+
 	/* Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are big...)
 		Thus, in Internet Explorer 4, 5, and Opera 6 this will show fonts one size smaller than usual.
 		Note that this is affected by whether IE 6 is in standards compliance mode.. if not, it will also be big.

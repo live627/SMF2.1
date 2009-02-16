@@ -95,6 +95,9 @@ function summary($memID)
 	$context['member'] = &$memberContext[$memID];
 	$context['can_view_warning'] = (allowedTo('issue_warning') && !$context['user']['is_owner']) || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $context['user']['is_owner']));
 
+	// Set a canonical URL for this page.
+	$context['canonical_url'] = $scripturl . '?action=profile;u=' . $memID;
+
 	// Are there things we don't show?
 	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
 

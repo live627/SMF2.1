@@ -97,6 +97,11 @@ function template_html_above()
 		echo '
 	<meta name="robots" content="noindex" />';
 
+	// Present a canonical url for search engines to prevent duplicate content in their indices.
+	if (!empty($context['canonical_url']))
+		echo '
+	<link rel="canonical" href="', $context['canonical_url'], '" />';
+
 	// The ?b4 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/dropmenu.css?b4" />
@@ -161,6 +166,7 @@ function template_html_above()
 		mainHeader.addTogglePanel("upper_section");
 	// ]]></script>';
 
+	// !!! This should definitely go into a separate javascript file! 
 	if($context['browser']['is_ie6'] && !$context['browser']['is_ie7'])
 		echo '
 	<script type="text/javascript"><!--//--><![CDATA[//><!--

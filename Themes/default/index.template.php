@@ -97,6 +97,11 @@ function template_html_above()
 		echo '
 	<meta name="robots" content="noindex" />';
 
+	// Present a canonical url for search engines to prevent duplicate content in their indices.
+	if (!empty($context['canonical_url']))
+		echo '
+	<link rel="canonical" href="', $context['canonical_url'], '" />';
+
 	// The ?rc1 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?rc1" />';
