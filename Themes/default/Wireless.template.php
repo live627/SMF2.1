@@ -192,7 +192,14 @@ function template_imode_above()
 	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD Compact HTML 1.0 Draft//EN">
 <html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
+		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />';
+
+	// Present a canonical url for search engines to prevent duplicate content in their indices.
+	if (!empty($context['canonical_url']))
+		echo '
+		<link rel="canonical" href="', $context['canonical_url'], '" />';
+
+	echo '
 		<title>', $context['page_title'], '</title>
 	</head>
 	<body>';
@@ -780,7 +787,14 @@ function template_wap2_above()
 <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
-		<title>', $context['page_title'], '</title>
+		<title>', $context['page_title'], '</title>';
+
+	// Present a canonical url for search engines to prevent duplicate content in their indices.
+	if (!empty($context['canonical_url']))
+		echo '
+		<link rel="canonical" href="', $context['canonical_url'], '" />';
+
+	echo '
 		<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/wireless.css" type="text/css" />
 	</head>
 	<body>';
