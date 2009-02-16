@@ -506,7 +506,12 @@ ALTER COLUMN ip TYPE int8;
 CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS boolean AS
   'SELECT (POSITION($2 IN $1) != 0) AS result'
 LANGUAGE 'sql';
+---#
 
 CREATE OR REPLACE FUNCTION day(date) RETURNS integer AS
   'SELECT EXTRACT(DAY FROM DATE($1))::integer AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION IFNULL(character varying, boolean) RETURNS character varying AS
+  'SELECT COALESCE($1, $2)::varchar AS result'
 LANGUAGE 'sql';

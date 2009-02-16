@@ -21,6 +21,10 @@ CREATE OR REPLACE FUNCTION IFNULL (int8, int8) RETURNS int8 AS
   'SELECT COALESCE($1, $2) AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION IFNULL (character varying, boolean) RETURNS character varying AS
+  'SELECT COALESCE($1, $2)::varchar AS result'
+LANGUAGE 'sql';
+
 CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
   'SELECT
     split_part($1, ''.'', 1)::int8 * (256 * 256 * 256) +

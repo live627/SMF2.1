@@ -16,6 +16,7 @@ February 2009
  * Some minor xhtml valid bugs in packages template. (Packages template) [Bug 3091]
  ! Added a validate username function. (Subs-Auth.php)
  ! Always clear the cache after installing a package. (Packages.php) [Bug 3090]
+ ! Sorting things didn't always work in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3131]
 
 
 SMF 2.0 RC1                                                      4 February 2009
