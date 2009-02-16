@@ -307,7 +307,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 // Remove a column.
 function smf_db_remove_column($table_name, $column_name, $parameters = array(), $error = 'fatal')
 {
-	global $smcFunc;
+	global $smcFunc, $db_prefix;
 
 	// Are we gonna prefix?
 	if (empty($parameters['no_prefix']))

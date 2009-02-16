@@ -17,6 +17,8 @@ February 2009
  ! Added a validate username function. (Subs-Auth.php)
  ! Always clear the cache after installing a package. (Packages.php) [Bug 3090]
  ! Sorting things didn't always work in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3131]
+ ! Removing columns in PostgreSQL didn't work if the db prefix wasn't specified (DbPackages-postgresql.php) [Bug 3132]
+ ! PostgreSQL doesn't support LIMIT in DELETE queries (ManagePaid.php, Subs-Db-postgresql.php) [Bug 3133]
 
 
 SMF 2.0 RC1                                                      4 February 2009
