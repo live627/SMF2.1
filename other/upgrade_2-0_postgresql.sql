@@ -513,5 +513,5 @@ CREATE OR REPLACE FUNCTION day(date) RETURNS integer AS
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION IFNULL(character varying, boolean) RETURNS character varying AS
-  'SELECT COALESCE($1, $2)::varchar AS result'
+  'SELECT COALESCE($1, CAST($2 AS varchar)) AS result'
 LANGUAGE 'sql';
