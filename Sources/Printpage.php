@@ -105,6 +105,9 @@ function PrintTopic()
 			$context['topic_subject'] = $row['subject'];
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Set a canonical URL for this page.
+	$context['canonical_url'] = $scripturl . '?topic=' . $topic . '.0';
 }
 
 ?>

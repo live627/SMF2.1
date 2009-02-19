@@ -187,7 +187,7 @@ function template_wap_below()
 // The cHTML protocol used for i-mode starts here.
 function template_imode_above()
 {
-	global $context, $settings, $options;
+	global $context, $settings, $options, $user_info;
 
 	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD Compact HTML 1.0 Draft//EN">
 <html', $context['right_to_left'] ? ' dir="rtl"' : '', '>
@@ -195,7 +195,7 @@ function template_imode_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />';
 
 	// Present a canonical url for search engines to prevent duplicate content in their indices.
-	if (!empty($context['canonical_url']))
+	if (!empty($user_info['possibly_robot']) && !empty($context['canonical_url']))
 		echo '
 		<link rel="canonical" href="', $context['canonical_url'], '" />';
 
@@ -781,7 +781,7 @@ function template_imode_below()
 // XHTMLMP (XHTML Mobile Profile) templates used for WAP 2.0 start here
 function template_wap2_above()
 {
-	global $context, $settings, $options;
+	global $context, $settings, $options, $user_info;
 
 	echo '<?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
@@ -790,7 +790,7 @@ function template_wap2_above()
 		<title>', $context['page_title'], '</title>';
 
 	// Present a canonical url for search engines to prevent duplicate content in their indices.
-	if (!empty($context['canonical_url']))
+	if (!empty($user_info['possibly_robot']) && !empty($context['canonical_url']))
 		echo '
 		<link rel="canonical" href="', $context['canonical_url'], '" />';
 
