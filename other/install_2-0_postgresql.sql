@@ -22,7 +22,11 @@ CREATE OR REPLACE FUNCTION IFNULL (int8, int8) RETURNS int8 AS
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION IFNULL (character varying, boolean) RETURNS character varying AS
-  'SELECT COALESCE($1, CAST($2 AS varchar)) AS result'
+  'SELECT COALESCE($1, CAST(CAST($2 AS int) AS varchar)) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION IFNULL (int, boolean) RETURNS int8 AS
+  'SELECT COALESCE($1, CAST($2 AS int)) AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS bigint AS
