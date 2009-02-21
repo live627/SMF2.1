@@ -684,7 +684,7 @@ function resetPassword($memID, $username = null)
 	// Do some checks on the username if needed.
 	if ($username !== null)
 	{
-		validateUsername($user);
+		validateUsername($memID, $user);
 
 		// Update the database...
 		updateMemberData($memID, array('member_name' => $user, 'passwd' => $newPassword_sha1));
