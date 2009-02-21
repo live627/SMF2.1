@@ -26,6 +26,7 @@ February 2009
  ! Some queries were causing DB errors in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3176] 
  ! Don't allow numeric db prefixes in PostgreSQL (install.php) [Bug 3180]
  ! Installing multiple copies of SMF on the same DB caused an error in PostgreSQL (install_2-0_postgresql.sql) [Bug 3181]
+ ! Trying to delete an account could cause an error in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3186]
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================

@@ -106,11 +106,16 @@ CREATE OR REPLACE FUNCTION INSTR (text, text) RETURNS boolean AS
   'SELECT (POSITION($2 in $1) != 0) AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION bool_not_eq_int (boolean, integer) RETURNS boolean AS
+  'SELECT CAST($1 AS integer) != $2 AS result'
+LANGUAGE 'sql';
+
 #
 # Create PostgreSQL operators.
 #
 
 CREATE OR REPLACE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
+CREATE OR REPLACE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer);
 
 #
 # Sequence for table `admin_info_files`
