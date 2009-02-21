@@ -21,6 +21,10 @@ CREATE OR REPLACE FUNCTION IFNULL (int8, int8) RETURNS int8 AS
   'SELECT COALESCE($1, $2) AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION IFNULL (character varying, character varying) RETURNS character varying AS
+  'SELECT COALESCE($1, $2) AS result'
+LANGUAGE 'sql';
+
 CREATE OR REPLACE FUNCTION IFNULL (character varying, boolean) RETURNS character varying AS
   'SELECT COALESCE($1, CAST(CAST($2 AS int) AS varchar)) AS result'
 LANGUAGE 'sql';

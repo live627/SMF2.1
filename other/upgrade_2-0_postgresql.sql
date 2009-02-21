@@ -512,6 +512,10 @@ CREATE OR REPLACE FUNCTION day(date) RETURNS integer AS
   'SELECT EXTRACT(DAY FROM DATE($1))::integer AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION IFNULL (character varying, character varying) RETURNS character varying AS
+  'SELECT COALESCE($1, $2) AS result'
+LANGUAGE 'sql';
+
 CREATE OR REPLACE FUNCTION IFNULL(character varying, boolean) RETURNS character varying AS
   'SELECT COALESCE($1, CAST(CAST($2 AS int) AS varchar)) AS result'
 LANGUAGE 'sql';
