@@ -567,7 +567,7 @@ function CheckFilesWritable()
 			{
 				// Try it without /home/abc just in case they messed up.
 				if (!$ftp->chdir($_POST['ftp_path']))
-				{echo 'sddsgdsgs';
+				{
 					$incontext['ftp_error'] = $ftp->last_message;
 					$ftp->chdir(preg_replace('~^/home[2]?/[^/]+?~', '', $_POST['ftp_path']));
 				}
