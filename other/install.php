@@ -66,6 +66,10 @@ $databases = array(
 			if ($value == \'pg_\')
 				return $txt[\'error_db_prefix_reserved\'];
 
+			// Is the prefix numeric?
+			if (preg_match(\'~^\d~\', $value))
+				return $txt[\'error_db_prefix_numeric\'];
+
 			return true;
 		'),
 	),

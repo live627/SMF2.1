@@ -110,7 +110,7 @@ LANGUAGE 'sql';
 # Create PostgreSQL operators.
 #
 
-CREATE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
+CREATE OR REPLACE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
 
 #
 # Sequence for table `admin_info_files`
