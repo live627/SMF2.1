@@ -923,7 +923,7 @@ function doStep0($error_message = null)
 						</tr><tr>
 							<td valign="top" class="textbox" style="padding-top: 2ex;"><label for="empty_error_log">Empty the convert error log?</label></td>
 							<td valign="top" style="padding-top: 2ex; padding-bottom: 1ex;">
-								<input type="checkbox" name="empty_error_log" value="1"/>
+								<input type="checkbox" name="empty_error_log" value="1" />
 							</td>
 						</tr>';
 
