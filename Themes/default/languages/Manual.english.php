@@ -7,6 +7,35 @@
    If you are looking at translating this into another language please
    visit the Simple Machines website for tools to assist! */
 
+// Categories
+$txt['manual_category_getting_started'] = 'Getting Started';
+$txt['manual_category_registering'] = 'Registering'; 
+$txt['manual_category_profile_features'] = 'Profile Features';
+$txt['manual_category_posting_basics'] = 'Posting Basics';
+$txt['manual_category_personal_messages'] = 'Personal Messages';
+$txt['manual_category_forum_tools'] = 'Forum Tools';
+
+// Sections
+$txt['manual_section_intro'] = 'Introduction';
+$txt['manual_section_main_menu'] = 'The Main Menu';
+$txt['manual_section_board_index'] = 'The Board Index';
+$txt['manual_section_message_view'] = 'The Message View';
+$txt['manual_section_topic_view'] = 'The Topic View';
+$txt['manual_section_registration_screen'] = 'The Registration Screen';
+$txt['manual_section_activating_account'] = 'Activating A New Account';
+$txt['manual_section_logging_in'] = 'Logging In';
+$txt['manual_section_password_reminders'] = 'Password Reminders';
+$txt['manual_section_profile_summary'] = 'The Profile Summary';
+$txt['manual_section_modifying_profiles'] = 'Modifying Profiles';
+$txt['manual_section_posting_topics'] = 'Posting Topics, Polls and Events';
+$txt['manual_section_modifying_posts'] = 'Modifying and Removing Posts';
+$txt['manual_section_smileys'] = 'Smileys and Bulletin Board Code';
+$txt['manual_section_sending_pms'] = 'Sending and Replying';
+$txt['manual_section_pm_options'] = 'Personal Messaging Options';
+$txt['manual_section_searching'] = 'Searching';
+$txt['manual_section_member_list'] = 'Member List';
+$txt['manual_section_calendar'] = 'Calendar';
+
 // Entries for template: index.
 $txt['manual_index_visit_simple_machines'] = 'Visit Simple Machines!';
 $txt['manual_index_intro'] = 'Introduction';

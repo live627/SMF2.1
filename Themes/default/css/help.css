@@ -1,25 +1,37 @@
-h1
+#helpmain
+{
+	padding: 1em;
+	border: 1px solid #696969;
+}
+
+#helpmain h1
 {
 	font-size: 18px;
 }
-h2
+
+#helpmain h2
 {
 	font-size: 18px;
 	border-bottom: solid 1px;
 	padding-bottom: 0.5em;
-	margin: 2em 0 0.5em 0;
+	margin: 0 0 0.5em 0;
 }
-h3, h4, h5, h6
+
+#helpmain h3, #helpmain h4, #helpmain h5, #helpmain h6
 {
 	font-size: 16px;
 	margin: 2em 0 0.5em 0;
 	font-weight: normal;
 	padding: 0 0 0.5em 0.5em;
 }
-p
+
+/* we need some air between the lines :) */
+#helpmain p
 {
 	margin: 0 0 1.5em 0;
+	line-height: 1.5em;
 }
+
 .board, .board:link
 {
 	text-decoration: underline;
@@ -56,7 +68,7 @@ table#reference1 th, table#reference2 th
 {
 	font-size: x-small;
 }
-ol
+#helpmain ol
 {
 	font-weight: bold;
 	list-style-type: disc;
@@ -64,18 +76,14 @@ ol
 	margin-top: 1em;
 	line-height: 1.5em;
 }
-ol.la
+#helpmain ol.la
 {
 	font-weight: normal;
 	list-style-type: circle;
 	margin: 0.5em 0 1em 0;
 	padding-left: 1.5em;
 }
-/* we need some air between the lines :) */
-#helpmain p
-{
-	line-height: 1.5em;
-}
+
 /* put back the bullets please */
 #helpmain ul
 {
@@ -90,13 +98,13 @@ ol.la
 }
 
 /* ...but leave the tab strips alone! */
-.buttonlist_bottom ul, .buttonlist ul
+#helpmain .buttonlist_bottom ul, #helpmain .buttonlist ul
 {
 	margin: 0 !important;
 	padding: 0 0 0 1em !important;
 }
 
-.buttonlist_bottom ul li, .buttonlist ul li
+#helpmain .buttonlist_bottom ul li, #helpmain .buttonlist ul li
 {
 	margin: 0 0.2em 0 0 !important;
 	padding: 0 !important; 

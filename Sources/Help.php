@@ -47,32 +47,153 @@ if (!defined('SMF'))
 // Redirect to the user help ;).
 function ShowHelp()
 {
-	global $settings, $user_info, $language, $context, $txt;
+	global $settings, $user_info, $language, $context, $txt, $sourcedir;
 
 	loadTemplate('Help');
 	loadLanguage('Manual');
 
-	// All the available pages.
-	$context['all_pages'] = array(
-		'index' => 'intro',
-		'registering' => 'register',
-		'loginout' => 'login',
-		'profile' => 'profile',
-		'post' => 'posting',
-		'pm' => 'pm',
-		'searching' => 'search',
+	$manual_areas = array(
+		'getting_started' => array(
+			'title' => $txt['manual_category_getting_started'],
+			'description' => '',
+			'areas' => array(
+				'introduction' => array(
+					'label' => $txt['manual_section_intro'],
+					'template' => 'manual_intro',
+				),
+				'main_menu' => array(
+					'label' => $txt['manual_section_main_menu'],
+					'template' => 'manual_main_menu',
+				),
+				'board_index' => array(
+					'label' => $txt['manual_section_board_index'],
+					'template' => 'manual_board_index',
+				),
+				'message_view' => array(
+					'label' => $txt['manual_section_message_view'],
+					'template' => 'manual_message_view',
+				),
+				'topic_view' => array(
+					'label' => $txt['manual_section_topic_view'],
+					'template' => 'manual_topic_view',
+				),
+			),
+		),
+		'registering' => array(
+			'title' => $txt['manual_category_registering'],
+			'description' => '',
+			'areas' => array(
+				'registration_screen' => array(
+					'label' => $txt['manual_section_registration_screen'],
+					'template' => 'manual_registration_screen',
+				),
+				'activating_account' => array(
+					'label' => $txt['manual_section_activating_account'],
+					'template' => 'manual_activating_account',
+				),
+				'logging_in' => array(
+					'label' => $txt['manual_section_logging_in'],
+					'template' => 'manual_logging_in',
+				),
+				'password_reminders' => array(
+					'label' => $txt['manual_section_password_reminders'],
+					'template' => 'manual_password_reminders',
+				),
+			),
+		),
+		'profile_features' => array(
+			'title' => $txt['manual_category_profile_features'],
+			'description' => '',
+			'areas' => array(
+				'profile_summary' => array(
+					'label' => $txt['manual_section_profile_summary'],
+					'template' => 'manual_profile_summary',
+				),
+				'modifying_profiles' => array(
+					'label' => $txt['manual_section_modifying_profiles'],
+					'template' => 'manual_modifying_profiles',
+				),
+			),
+		),
+		'posting_basics' => array(
+			'title' => $txt['manual_category_posting_basics'],
+			'description' => '',
+			'areas' => array(
+				'posting_topics' => array(
+					'label' => $txt['manual_section_posting_topics'],
+					'template' => 'manual_posting_topics',
+				),
+				'modifying_posts' => array(
+					'label' => $txt['manual_section_modifying_posts'],
+					'template' => 'manual_modifying_posts',
+				),
+				'smileys' => array(
+					'label' => $txt['manual_section_smileys'],
+					'template' => 'manual_smileys',
+				),
+			),
+		),
+		'personal_messages' => array(
+			'title' => $txt['manual_category_personal_messages'],
+			'description' => '',
+			'areas' => array(
+				'sending_pms' => array(
+					'label' => $txt['manual_section_sending_pms'],
+					'template' => 'manual_sending_pms',
+				),
+				'pm_options' => array(
+					'label' => $txt['manual_section_pm_options'],
+					'template' => 'manual_pm_options',
+				),
+			),
+		),
+		'forum_tools' => array(
+			'title' => $txt['manual_category_forum_tools'],
+			'description' => '',
+			'areas' => array(
+				'searching' => array(
+					'label' => $txt['manual_section_searching'],
+					'template' => 'manual_searching',
+				),
+				'member_list' => array(
+					'label' => $txt['manual_section_member_list'],
+					'template' => 'manual_member_list',
+				),
+				'calendar' => array(
+					'label' => $txt['manual_section_calendar'],
+					'template' => 'manual_calendar',
+				),
+			),
+		),
 	);
 
-	if (!isset($_GET['page']) || !is_string($_GET['page']) || !isset($context['all_pages'][$_GET['page']]))
-		$_GET['page'] = 'index';
+	// Set a few options for the menu.
+	$menu_options = array(
+		'disable_url_session_check' => true,
+	);
 
-	$context['current_page'] = $_GET['page'];
-	$context['sub_template'] = 'manual_' . $context['all_pages'][$context['current_page']];
+	require_once($sourcedir . '/Subs-Menu.php');
+	$manual_area_data = createMenu($manual_areas, $menu_options);
+	unset($manual_areas);
 
-	$context['template_layers'][] = 'manual';
-	$context['page_title'] = $txt['manual_smf_user_help'] . ': ' . $txt['manual_index_' . $context['all_pages'][$context['current_page']]];
+	// Make a note of the Unique ID for this menu.
+	$context['manual_menu_id'] = $context['max_menu_id'];
+	$context['manual_menu_name'] = 'menu_data_' . $context['manual_menu_id'];
+
+	// Get the selected item.
+	$context['manual_area_data'] = $manual_area_data;
+	$context['menu_item_selected'] = $manual_area_data['current_area'];
+
+	// Bring it on!
+	$context['sub_template'] = $manual_area_data['template'];
+	$context['page_title'] = $manual_area_data['label'] . ' - ' . $txt['manual_smf_user_help'];
+
+	// !!! Temporary until all sections are completed.
+	if (!function_exists('template_' . $manual_area_data['template']))
+		fatal_error('Sorry, this section of the manual is not done yet.');
 
 	// We actually need a special style sheet for help ;)
+	$context['template_layers'][] = 'manual';
 	$context['html_headers'] .= '
 		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/css/help.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/css/help.css" />';
 }

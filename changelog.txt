@@ -32,6 +32,7 @@ February 2009
  ! The personal messaging section now uses the generic menu templates. (PersonalMessage.php, PersonalMessage template) [Bug 1695] (CodeFest)
  ! The maximum amount of personal messages wasn't always cached properly. (PersonalMessage.php) (CodeFest)
  ! Update the HTML safe version of the page title dynamically last minute in case it was set at a later time. (Subs.php) (CodeFest)
+ ! Split up the help section and made it use generic menus. (Help.php, help.css, Help template, Manual language file) [Bug 3145] (CodeFest)
 
 
 SMF 2.0 RC1                                                      4 February 2009

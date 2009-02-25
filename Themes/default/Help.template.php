@@ -163,22 +163,8 @@ function template_manual_above()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div class="tborder" style="margin-top: 1ex;">
-		<div class="helpmenu titlebg" style="padding: 4px;">';
-
-	$menu_items = array();
-	foreach ($context['all_pages'] as $page_url => $page_txt)
-	{
-		if ($page_url == $context['current_page'])
-			$menu_items[] = '<span class="error" style="font-weight: bold;">' . $txt['manual_index_' . $page_txt] . '</span>';
-		else
-			$menu_items[] = '<a href="' . $scripturl . '?action=help;page=' . $page_url . '">' . $txt['manual_index_' . $page_txt] . '</a>';
-	}
-	echo implode(' &bull; ', $menu_items);
-
-	echo '
-		</div>
-		<div style="padding: 2ex;" id="helpmain" class="windowbg2">';
+		<div id="helpmain" class="windowbg2">
+			<h2>', $context['manual_area_data']['label'], '</h2>';
 }
 
 function template_manual_below()
@@ -186,22 +172,7 @@ function template_manual_below()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		</div>
-		<div class="helpmenu titlebg" style="padding: 4px;">';
-
-	$menu_items = array();
-	foreach ($context['all_pages'] as $page_url => $page_txt)
-	{
-		if ($page_url == $context['current_page'])
-			$menu_items[] = '<span class="error" style="font-weight: bold;">' . $txt['manual_index_' . $page_txt] . '</span>';
-		else
-			$menu_items[] = '<a href="' . $scripturl . '?action=help;page=' . $page_url . '">' . $txt['manual_index_' . $page_txt] . '</a>';
-	}
-	echo implode(' &bull; ', $menu_items);
-
-	echo '
-		</div>
-	</div>';
+		</div>';
 }
 
 // The introduction help page.
@@ -210,42 +181,55 @@ function template_manual_intro()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-
-	<p>', $txt['manual_index_you_have_arrived_part1'], '<a href="http://www.simplemachines.org/">', $txt['manual_index_you_have_arrived_link_site0'], '</a>', $txt['manual_index_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;page=index#board">', $txt['manual_index_you_have_arrived_link_site0_board'], '</a>', $txt['manual_index_you_have_arrived_part3'], '</p>
-	<p>', sprintf($txt['manual_index_guest_permit_read_part1'], $scripturl . '?action=credits'), '<a href="', $scripturl, '?action=help;page=registering">', $txt['manual_index_guest_permit_read_link_registering'], '</a>', $txt['manual_index_guest_permit_read_part2'], '</p>
+	<p>', $txt['manual_index_you_have_arrived_part1'], '<a href="http://www.simplemachines.org/">', $txt['manual_index_you_have_arrived_link_site0'], '</a>', $txt['manual_index_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;area=board_index">', $txt['manual_index_you_have_arrived_link_site0_board'], '</a>', $txt['manual_index_you_have_arrived_part3'], '</p>
+	<p>', sprintf($txt['manual_index_guest_permit_read_part1'], $scripturl . '?action=credits'), '<a href="', $scripturl, '?action=help;area=registration_screen">', $txt['manual_index_guest_permit_read_link_registering'], '</a>', $txt['manual_index_guest_permit_read_part2'], '</p>
 	<ol>
-		<li><a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_index_main_menu'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;page=index#board">', $txt['manual_index_sec_board_index'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_sec_msg_index'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;page=index#topic">', $txt['manual_index_sec_topic'], '</a></li>
-	</ol>
-	<h2 id="main">', $txt['manual_index_main_menu'], '</h2>
+		<li><a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_index_main_menu'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=board_index">', $txt['manual_index_sec_board_index'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_sec_msg_index'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_index_sec_topic'], '</a></li>
+	</ol>';
+}
+
+// The main menu page.
+function template_manual_main_menu()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<p>', $txt['manual_index_suppossing_guest'], '</p>
 	<ul>
-		<li>', $txt['manual_index_home_desc_part1'], '<a href="', $scripturl, '?action=help;page=index#board">', $txt['manual_index_home_desc_link_board'], '</a>', $txt['manual_index_home_desc_part2'], '</li>
+		<li>', $txt['manual_index_home_desc_part1'], '<a href="', $scripturl, '?action=help;area=board_index">', $txt['manual_index_home_desc_link_board'], '</a>', $txt['manual_index_home_desc_part2'], '</li>
 		<li>', $txt['manual_index_help_desc'], '</li>
-		<li>', $txt['manual_index_search_desc_part1'], '<a href="', $scripturl, '?action=help;page=searching">', $txt['manual_index_search_desc_link_searching'], '</a>', $txt['manual_index_search_desc_part2'], '</li>
-		<li>', $txt['manual_index_calendar_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#calendar">', $txt['manual_index_calendar_desc_link_posting_calendar'], '</a>', $txt['manual_index_calendar_desc_part2'], '</li>
-		<li>', $txt['manual_index_login_desc_part1'], '<a href="', $scripturl, '?action=help;page=loginout">', $txt['manual_index_login_desc_link_loginout'], '</a>', $txt['manual_index_login_desc_part2'], '</li>
-		<li>', $txt['manual_index_register_desc_part1'], '<a href="', $scripturl, '?action=help;page=registering">', $txt['manual_index_register_desc_link_registering'], '</a>', $txt['manual_index_register_desc_part2'], '</li>
+		<li>', $txt['manual_index_search_desc_part1'], '<a href="', $scripturl, '?action=help;area=searching">', $txt['manual_index_search_desc_link_searching'], '</a>', $txt['manual_index_search_desc_part2'], '</li>
+		<li>', $txt['manual_index_calendar_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#calendar">', $txt['manual_index_calendar_desc_link_posting_calendar'], '</a>', $txt['manual_index_calendar_desc_part2'], '</li>
+		<li>', $txt['manual_index_login_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_index_login_desc_link_loginout'], '</a>', $txt['manual_index_login_desc_part2'], '</li>
+		<li>', $txt['manual_index_register_desc_part1'], '<a href="', $scripturl, '?action=help;area=registration_screen">', $txt['manual_index_register_desc_link_registering'], '</a>', $txt['manual_index_register_desc_part2'], '</li>
 	</ul>
 	<p>', $txt['manual_index_once_registered'], '</p>
 	<ul>
 		<li>', $txt['manual_index_home_reg'], '</li>
 		<li>', $txt['manual_index_help_reg'], '</li>
 		<li>', $txt['manual_index_search_reg'], '</li>
-		<li>', $txt['manual_index_profile_reg_part1'], '<a href="', $scripturl, '?action=help;page=profile">', $txt['manual_index_profile_reg_link_profile'], '</a>', $txt['manual_index_profile_reg_part2'], '</li>
+		<li>', $txt['manual_index_profile_reg_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_index_profile_reg_link_profile'], '</a>', $txt['manual_index_profile_reg_part2'], '</li>
 		<li>', $txt['manual_index_calendar_reg'], '</li>
-		<li>', $txt['manual_index_logout_reg_part1'], '<a href="', $scripturl, '?action=help;page=loginout#logout">', $txt['manual_index_logout_reg_link_loginout_logout'], '</a>', $txt['manual_index_logout_reg_part2'], '</li>
+		<li>', $txt['manual_index_logout_reg_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#logout">', $txt['manual_index_logout_reg_link_loginout_logout'], '</a>', $txt['manual_index_logout_reg_part2'], '</li>
 	</ul>
-	<p>', $txt['manual_index_forum_admins_note_presentation'], '</p>
-	<h2 id="board">', $txt['manual_index_sec_board_index'], '</h2>
+	<p>', $txt['manual_index_forum_admins_note_presentation'], '</p>';
+}
+
+// The board index page.
+function template_manual_board_index()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<p>', $txt['manual_index_sec_board_index_def'], '</p>
 	<div style="border: solid 1px;">
 		<div style="padding: 2px 30px;">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_index_forum_name'], '</a></b></span></td>
+					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></b></span></td>
 				</tr>
 			</table><script language="JavaScript1.2" type="text/javascript">
 //<![CDATA[
@@ -271,7 +255,7 @@ function template_manual_intro()
 					</tr>
 					<tr id="collapseCategory" class="windowbg2">
 						<td class="windowbg" width="6%" align="center" valign="top"><img src="', $settings['images_url'], '/on.gif" id="board-new-or-not" alt="', $txt['manual_index_new_posts'], '" name="board-new-or-not" /></td>
-						<td align="left" class="windowbg"><b><a href="', $scripturl, '?action=help;page=index#message" class="board">', $txt['manual_index_board_name'], '</a></b><br />
+						<td align="left" class="windowbg"><b><a href="', $scripturl, '?action=help;area=message_view" class="board">', $txt['manual_index_board_name'], '</a></b><br />
 						', $txt['manual_index_board_desc'], '</td>
 						<td class="windowbg" valign="middle" align="center" style="width: 12ex;"><span class="smalltext">', $txt['manual_index_topics_posts'], '</span></td>
 						<td valign="middle" width="22%" class="windowbg">', $txt['manual_index_date_time'], '</td>
@@ -328,12 +312,19 @@ function template_manual_intro()
 		<ul>
 		<li>', $txt['manual_index_f_name'], '</li>
 		<li>', $txt['manual_index_cat'], '</li>
-		<li>', $txt['manual_index_b_name_part1'], '<a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_b_name_link_message'], '</a>', $txt['manual_index_b_name_part2'], '</li>
+		<li>', $txt['manual_index_b_name_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_b_name_link_message'], '</a>', $txt['manual_index_b_name_part2'], '</li>
 		<li>', $txt['manual_index_b_desc'], '</li>
 		<li>', $txt['manual_index_n_no_n_posts'], '</li>
 		<li>', $txt['manual_index_m_read'], '</li>
-	</ul>
-	<h2 id="message">', $txt['manual_index_sec_msg_index'], '</h2>
+	</ul>';
+}
+
+// The message index page.
+function template_manual_message_view()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<p>', $txt['manual_index_sec_msg_index_def'], '</p>
 	<div style="border: solid 1px;">
 		<div style="padding: 2px 30px;">
@@ -354,18 +345,18 @@ function template_manual_intro()
 </script>
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_index_forum_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_index_cat_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#message" class="nav">', $txt['manual_index_board_name'], '</a></b></span></td>
+					<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></b><br />
+					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></b><br />
+					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_index_board_name'], '</a></b></span></td>
 				</tr>
 			</table>';
 
 	// Create the buttons we need here...
 	$mindex_buttons = array(
 		'markmread' => array('text' => 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => 'javascript:markMessageRead();'),
-		'notify' => array('text' => 'manual_index_notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['manual_index_ru_sure_notify'] . '\');"', 'url' => $scripturl . '?action=help;page=index#message'),
-		'topic' => array('text' => 'manual_index_start_new', 'image' => 'new_topic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;page=post#newtopic'),
-		'poll' => array('text' => 'manual_index_new_poll', 'image' => 'new_poll.gif', 'lang' => true, 'url' => $scripturl . '?action=help;page=post#newpoll'),
+		'notify' => array('text' => 'manual_index_notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['manual_index_ru_sure_notify'] . '\');"', 'url' => $scripturl . '?action=help;area=message_view'),
+		'topic' => array('text' => 'manual_index_start_new', 'image' => 'new_topic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#newtopic'),
+		'poll' => array('text' => 'manual_index_new_poll', 'image' => 'new_poll.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#newpoll'),
 	);
 
 	if (!empty($settings['use_tabs']))
@@ -400,10 +391,10 @@ function template_manual_intro()
 					<thead>
 						<tr>
 							<th class="catbg3 headerpadding" width="9%" colspan="2"></th>
-							<th class="catbg3 headerpadding"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_subject'], '</a></th>
-							<th class="catbg3 headerpadding" width="14%"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_started_by'], '</a></th>
-							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_replies'], '</a></th>
-							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_index_views'], '</a></th>
+							<th class="catbg3 headerpadding"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_subject'], '</a></th>
+							<th class="catbg3 headerpadding" width="14%"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_started_by'], '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_replies'], '</a></th>
+							<th class="catbg3 headerpadding" width="4%" align="center"><a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_index_views'], '</a></th>
 							<th class="catbg3 headerpadding" width="22%"><a href="javascript:sortLastPost();">', $txt['manual_index_last_post'], ' &nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_down.gif" alt="" border="0" name="sort-arrow" /></a></th>
 						</tr>
 					</thead>
@@ -411,8 +402,8 @@ function template_manual_intro()
 						<tr class="windowbg2">
 							<td class="windowbg2" valign="middle" align="center" width="5%"><img src="', $settings['images_url'], '/topic/my_normal_poll.gif" alt="" /></td>
 							<td class="windowbg2" valign="middle" align="center" width="4%"><img src="', $settings['images_url'], '/post/xx.gif" alt="" align="middle" /></td>
-							<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;page=index#topic" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;page=index#topic"><img id="message-new-or-not" src="', $settings['lang_images_url'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
-							<td class="windowbg2" valign="middle" width="14%"><a href="', $scripturl, '?action=help;page=profile" class="board">', $txt['manual_index_topic_starter'], '</a></td>
+							<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;area=topic_view"><img id="message-new-or-not" src="', $settings['lang_images_url'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
+							<td class="windowbg2" valign="middle" width="14%"><a href="', $scripturl, '?action=help;area=profile_summary" class="board">', $txt['manual_index_topic_starter'], '</a></td>
 							<td class="windowbg" valign="middle" width="4%" align="center">0</td>
 							<td class="windowbg" valign="middle" width="4%" align="center">0</td>
 							<td class="windowbg2" valign="middle" width="22%"><span class="smalltext">', $txt['manual_index_last_poster'], '</span></td>
@@ -456,8 +447,8 @@ function template_manual_intro()
 					<img src="', $settings['images_url'], '/topic/normal_post_sticky.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_sticky'], '<br />
 					<img src="', $settings['images_url'], '/topic/normal_poll.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_poll'], '</td>
 					<td class="smalltext" align="right" valign="middle">
-						<form action="', $scripturl, '?action=help;page=index" method="get" accept-charset="', $context['character_set'], '">
-							<label for="jumpto">', $txt['manual_index_jump_to'], '</label>: <select name="jumpto" id="jumpto" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.options[this.selectedIndex].value;">
+						<form action="', $scripturl, '?action=help;area=topic_view" method="get" accept-charset="', $context['character_set'], '">
+							<label for="jumpto">', $txt['manual_index_jump_to'], '</label>: <select name="jumpto" id="jumpto" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.options[this.selectedIndex].value;">
 								<option value="">
 									', $txt['manual_index_destination'], ':
 								</option>
@@ -476,7 +467,7 @@ function template_manual_intro()
 								<option value="#message">
 									=&gt; ', $txt['manual_index_another_board'], '
 								</option>
-							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
+							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
 						</form>
 					</td>
 				</tr>
@@ -488,24 +479,30 @@ function template_manual_intro()
 		<li>', $txt['manual_index_page_number'], '</li>
 		<li>', $txt['manual_index_mark_read_button'], '</li>
 		<li>', $txt['manual_index_notify_button'], '</li>
-		<li>', $txt['manual_index_new_topic_poll_button_part1'], '<a href="', $scripturl, '?action=help;page=post">', $txt['manual_index_new_topic_poll_button_link_posting'], '</a>', $txt['manual_index_new_topic_poll_button_part2'], '</li>
+		<li>', $txt['manual_index_new_topic_poll_button_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics">', $txt['manual_index_new_topic_poll_button_link_posting'], '</a>', $txt['manual_index_new_topic_poll_button_part2'], '</li>
 		<li>', $txt['manual_index_subject_replies_etc'], '</li>
 		<li>', $txt['manual_index_topic_icons'], '</li>
 		<li>', $txt['manual_index_post_icons'], '</li>
-		<li>', $txt['manual_index_topic_subject_links_part1'], '<a href="', $scripturl, '?action=help;page=index#topic">', $txt['manual_index_topic_subject_links_link_topic'], '</a>', $txt['manual_index_topic_subject_links_part2'], '</li>
-		<li>', $txt['manual_index_where_topic_part1'], '<a href="', $scripturl, '?action=help;page=profile">', $txt['manual_index_where_topic_link_profile'], '</a>', $txt['manual_index_where_topic_part2'], '</li>
+		<li>', $txt['manual_index_topic_subject_links_part1'], '<a href="', $scripturl, '?action=help;area=topic_view">', $txt['manual_index_topic_subject_links_link_topic'], '</a>', $txt['manual_index_topic_subject_links_part2'], '</li>
+		<li>', $txt['manual_index_where_topic_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_index_where_topic_link_profile'], '</a>', $txt['manual_index_where_topic_part2'], '</li>
 		<li>', $txt['manual_index_jump_to_menu'], '</li>
-	</ul>
-	<h2 id="topic">', $txt['manual_index_sec_topic'], '</h2>
+	</ul>';
+}
+
+function template_manual_topic_view()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<p>', $txt['manual_index_ref_thread'], '</p>';
 
 	// The buttons...
 	$display_buttons = array(
-		'reply' => array('text' => 'manual_index_reply', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=help;page=post#reply'),
-		'notify' => array('text' => 'manual_index_notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['manual_index_ru_sure_enable_notify'] . '\');"', 'url' => $scripturl . '?action=help;page=post#topic'),
-		'markunread' => array('text' => 'manual_index_mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=help;page=post#topic'),
-		'sendtopic' => array('text' => 'manual_index_send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;page=post#topic'),
-		'print' => array('text' => 'manual_index_print', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=help;page=post#topic'),
+		'reply' => array('text' => 'manual_index_reply', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#reply'),
+		'notify' => array('text' => 'manual_index_notify', 'image' => 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['manual_index_ru_sure_enable_notify'] . '\');"', 'url' => $scripturl . '?action=help;area=topic_view'),
+		'markunread' => array('text' => 'manual_index_mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
+		'sendtopic' => array('text' => 'manual_index_send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
+		'print' => array('text' => 'manual_index_print', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=help;area=posting_topics#topic'),
 	);
 
 	echo '
@@ -513,10 +510,10 @@ function template_manual_intro()
 		<div style="padding: 2px 30px;">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_index_forum_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_index_cat_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#message" class="nav">', $txt['manual_index_board_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#topic" class="nav">', $txt['manual_index_topic_subject'], '</a></b></span></td>
+					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></b><br />
+					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></b><br />
+					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=message_view" class="nav">', $txt['manual_index_board_name'], '</a></b><br />
+					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=topic_view" class="nav">', $txt['manual_index_topic_subject'], '</a></b></span></td>
 				</tr>
 			</table>';
 
@@ -560,7 +557,7 @@ function template_manual_intro()
 								<td class="windowbg">
 									<table width="100%" cellpadding="5" cellspacing="0" style="table-layout: fixed;">
 										<tr>
-											<td valign="top" width="15%" rowspan="2" style="overflow: hidden;"><b><a href="', $scripturl, '?action=help;page=profile" class="board" title="', $txt['manual_index_view_author_profile'], '">', $txt['manual_index_author'], '</a></b><br />
+											<td valign="top" width="15%" rowspan="2" style="overflow: hidden;"><b><a href="', $scripturl, '?action=help;area=profile_summary" class="board" title="', $txt['manual_index_view_author_profile'], '">', $txt['manual_index_author'], '</a></b><br />
 											<span class="smalltext">', $txt['manual_index_member_group'], '<br />
 											', $txt['manual_index_post_group'], '<br />
 											<img src="', $settings['images_url'], '/star.gif" alt="*" border="0" /><br />
@@ -568,18 +565,18 @@ function template_manual_intro()
 											<br />
 											<br />
 											<br />
-											<a href="', $scripturl, '?action=help;page=profile" title="', $txt['manual_index_view_profile'], '"><img src="', $settings['images_url'], '/icons/profile_sm.gif" border="0" alt="', $txt['manual_index_view_profile'], '" /></a> <a href="mailto:author@some.address" title="', $txt['manual_index_email'], '"><img src="', $settings['images_url'], '/email_sm.gif" border="0" alt="', $txt['manual_index_email'], '" /></a> <a href="', $scripturl, '?action=help;page=pm" title="', $txt['manual_index_personal_msg'], '"><img src="', $settings['images_url'], '/im_off.gif" border="0" alt="', $txt['manual_index_personal_msg'], '" /></a></span></td>
+											<a href="', $scripturl, '?action=help;area=profile_summary" title="', $txt['manual_index_view_profile'], '"><img src="', $settings['images_url'], '/icons/profile_sm.gif" border="0" alt="', $txt['manual_index_view_profile'], '" /></a> <a href="mailto:author@some.address" title="', $txt['manual_index_email'], '"><img src="', $settings['images_url'], '/email_sm.gif" border="0" alt="', $txt['manual_index_email'], '" /></a> <a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_index_personal_msg'], '"><img src="', $settings['images_url'], '/im_off.gif" border="0" alt="', $txt['manual_index_personal_msg'], '" /></a></span></td>
 											<td valign="top" width="85%" height="100%">
 												<table width="100%" border="0">
 													<tr>
-														<td width="20" align="left" valign="middle"><a href="index.php?topic=2.msg2#msg2"><img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" /></a></td>
+														<td width="20" align="left" valign="middle"><img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" /></td>
 														<td align="left" valign="middle">
-															<b><a href="', $scripturl, '?action=help;page=index#topic" class="board">', $txt['manual_index_topic_subject'], '</a></b>
+															<b><a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_index_topic_subject'], '</a></b>
 															<div class="smalltext">
 																&laquo; ', $txt['manual_index_post_date_time'], ' &raquo;
 															</div>
 														</td>
-														<td align="right" valign="bottom" height="20" style="font-size: smaller;"><a href="', $scripturl, '?action=help;page=post#quote">', create_button('quote.gif', 'manual_index_reply_quote', 'quote', 'align="middle"'), '</a></td>
+														<td align="right" valign="bottom" height="20" style="font-size: smaller;"><a href="', $scripturl, '?action=help;area=posting_topics#quote">', create_button('quote.gif', 'manual_index_reply_quote', 'quote', 'align="middle"'), '</a></td>
 													</tr>
 												</table>
 												<hr width="100%" size="1" class="hrcolor" />
@@ -592,7 +589,7 @@ function template_manual_intro()
 											<td valign="bottom" class="smalltext">
 												<table width="100%" border="0" style="table-layout: fixed;">
 													<tr>
-														<td align="right" valign="bottom" class="smalltext"><a href="', $scripturl, '?action=help;page=index#topic" class="board" style="font-size: x-small;">', $txt['manual_index_report_to_mod'], '</a>&nbsp;&nbsp; <img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />&nbsp; ', $txt['manual_index_logged'], '</td>
+														<td align="right" valign="bottom" class="smalltext"><a href="', $scripturl, '?action=help;area=topic_view" class="board" style="font-size: x-small;">', $txt['manual_index_report_to_mod'], '</a>&nbsp;&nbsp; <img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />&nbsp; ', $txt['manual_index_logged'], '</td>
 													</tr>
 												</table>
 											</td>
@@ -635,8 +632,8 @@ function template_manual_intro()
 	echo '
 			<div style="padding-top: 4px; padding-bottom: 4px;"></div>
 			<div align="right" style="float: right; margin-bottom: 1ex;">
-				<form action="', $scripturl, '?action=help;page=index" method="get" accept-charset="', $context['character_set'], '">
-					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.options[this.selectedIndex].value;">
+				<form action="', $scripturl, '?action=help;area=topic_view" method="get" accept-charset="', $context['character_set'], '">
+					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.options[this.selectedIndex].value;">
 						<option value="">
 							', $txt['manual_index_destination'], ':
 						</option>
@@ -655,7 +652,7 @@ function template_manual_intro()
 						<option value="#message">
 							=&gt; ', $txt['manual_index_another_board'], '
 						</option>
-					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;page=index\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
+					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
 				</form>
 			</div><br />
 			<br clear="all" />
@@ -665,16 +662,16 @@ function template_manual_intro()
 		<li>', $txt['manual_index_navigation_tree'], '</li>
 		<li>', $txt['manual_index_prev_next'], '</li>
 		<li>', $txt['manual_index_page_no_link'], '</li>
-		<li>', $txt['manual_index_reply_button_part1'], '<a href="', $scripturl, '?action=help;page=post#reply">', $txt['manual_index_reply_button_link_posting_reply'], '</a>', $txt['manual_index_reply_button_part2'], '</li>
+		<li>', $txt['manual_index_reply_button_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#reply">', $txt['manual_index_reply_button_link_posting_reply'], '</a>', $txt['manual_index_reply_button_part2'], '</li>
 		<li>', $txt['manual_index_notify_button_enables'], '</li>
 		<li>', $txt['manual_index_mark_unread_button'], '</li>
 		<li>', $txt['manual_index_send_topic_button'], '</li>
 		<li>', $txt['manual_index_print_button'], '</li>
-		<li>', $txt['manual_index_author_name_link_part1'], '<a href="', $scripturl, '?action=help;page=profile">', $txt['manual_index_author_name_link_link_profile'], '</a></li>
+		<li>', $txt['manual_index_author_name_link_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_index_author_name_link_link_profile'], '</a></li>
 		<li>', $txt['manual_index_author_details'], '</li>
 		<li>', $txt['manual_index_topic_subject_links_start'], '</li>
-		<li>', $txt['manual_index_quote_button_part1'], '<a href="', $scripturl, '?action=help;page=post#quote">', $txt['manual_index_quote_button_link_posting_quote'], '</a>', $txt['manual_index_quote_button_part2'], '</li>
-		<li>', $txt['manual_index_modify_delete_part1'], '<a href="', $scripturl, '?action=help;page=post#modify">', $txt['manual_index_modify_delete_link_posting_modify'], '</a>', $txt['manual_index_modify_delete_part2'], '</li>
+		<li>', $txt['manual_index_quote_button_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#quote">', $txt['manual_index_quote_button_link_posting_quote'], '</a>', $txt['manual_index_quote_button_part2'], '</li>
+		<li>', $txt['manual_index_modify_delete_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#modify">', $txt['manual_index_modify_delete_link_posting_modify'], '</a>', $txt['manual_index_modify_delete_part2'], '</li>
 		<li>', $txt['manual_index_report_to_moderator'], '</li>
 		<li>', $txt['manual_index_logged_IP'], '</li>
 		<li>', $txt['manual_index_jump_to_menu_provides'], '</li>
@@ -682,28 +679,27 @@ function template_manual_intro()
 }
 
 // Logging in and out page.
-function template_manual_login()
+function template_manual_logging_in()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<p>', $txt['manual_loginout_complete_reg_part1'], '<a href="', $scripturl, '?action=help;page=registering">', $txt['manual_loginout_complete_reg_link_registering'], '</a>', $txt['manual_loginout_complete_reg_part2'], '</p>
+		<p>', $txt['manual_loginout_complete_reg_part1'], '<a href="', $scripturl, '?action=help;area=registration_screen">', $txt['manual_loginout_complete_reg_link_registering'], '</a>', $txt['manual_loginout_complete_reg_part2'], '</p>
 	<ol>
 		<li>
-			<a href="', $scripturl, '?action=help;page=loginout#login">', $txt['manual_loginout_sec_login'], '</a>
+			<a href="', $scripturl, '?action=help;area=logging_in#login">', $txt['manual_loginout_sec_login'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=loginout#screen">', $txt['manual_loginout_login_screen'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=loginout#quick">', $txt['manual_loginout_sub_quick_login'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_loginout_login_screen'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=logging_in#quick">', $txt['manual_loginout_sub_quick_login'], '</a></li>
 			</ol>
 		</li>
-		<li><a href="', $scripturl, '?action=help;page=loginout#logout">', $txt['manual_loginout_logout'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;page=loginout#reminder">', $txt['manual_loginout_sec_reminder'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=logging_in#logout">', $txt['manual_loginout_logout'], '</a></li>
 	</ol>
 	<h2 id="login">', $txt['manual_loginout_sec_login'], '</h2>
 	<p>', $txt['manual_loginout_login_desc'], '</p>
 	<h3 id="screen">', $txt['manual_loginout_login_screen'], '</h3>
-	<p>', $txt['manual_loginout_login_screen_desc_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_loginout_login_screen_desc_link_index_main'], '</a>', $txt['manual_loginout_login_screen_desc_part2'], '</p>
-	<form action="', $scripturl, '?action=help;page=loginout" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;">
+	<p>', $txt['manual_loginout_login_screen_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_login_screen_desc_link_index_main'], '</a>', $txt['manual_loginout_login_screen_desc_part2'], '</p>
+	<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;">
 		<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
 			<tr class="titlebg">
 				<td colspan="2"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['manual_loginout_login'], '</td>
@@ -728,21 +724,21 @@ function template_manual_login()
 				<td align="center" colspan="2"><input type="button" style="margin-top: 2ex;" value="Login" /></td>
 			</tr>
 			<tr class="windowbg">
-				<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=help;page=loginout#reminder" style="font-size: x-small;" class="board">', $txt['manual_loginout_forgot'], '?</a><br />
+				<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=help;area=password_reminders" style="font-size: x-small;" class="board">', $txt['manual_loginout_forgot'], '?</a><br />
 				<br /></td>
 			</tr>
 		</table>
 	</form><br />
 	<p>', $txt['manual_loginout_login_screen_explanation'], '</p>
 	<h3 id="quick">', $txt['manual_loginout_sub_quick_login'], '</h3>
-	<p>', $txt['manual_loginout_although_many_forums_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_loginout_although_many_forums_link_index_main'], '</a>', $txt['manual_loginout_although_many_forums_part2'], '</p>
+	<p>', $txt['manual_loginout_although_many_forums_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_although_many_forums_link_index_main'], '</a>', $txt['manual_loginout_although_many_forums_part2'], '</p>
 	<table cellspacing="0" cellpadding="0" border="0" align="center" width="400" class="tborder">
 		<tr>
 			<td style="border: solid 1px;">
 				<table width="99%" cellpadding="0" cellspacing="5" border="0">
 					<tr>
 						<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;">
-							<form action="', $scripturl, '?action=help;page=loginout" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0; text-align:right;">
+							<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0; text-align:right;">
 								<input type="text" size="10" /> <input type="password" size="10" /> <select>
 									<option>
 										', $txt['manual_loginout_hour'], '
@@ -770,10 +766,16 @@ function template_manual_login()
 	</table><br />
 	<p>', $txt['manual_loginout_use_quick_login'], '</p>
 	<h2 id="logout">', $txt['manual_loginout_logout'], '</h2>
-	<p>', $txt['manual_loginout_logout_desc_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_loginout_logout_desc_link_index_main'], '</a>', $txt['manual_loginout_logout_desc_part2'], '</p>
-	<h2 id="reminder">', $txt['manual_loginout_sec_reminder'], '</h2>
-	<p>', $txt['manual_loginout_reminder_desc_part1'], '<a href="', $scripturl, '?action=help;page=loginout#screen">', $txt['manual_loginout_reminder_desc_link_screen'], '</a>', $txt['manual_loginout_reminder_desc_part2'], '</p>
-	<form action="', $scripturl, '?action=help;page=loginout" method="post" accept-charset="', $context['character_set'], '">
+	<p>', $txt['manual_loginout_logout_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_loginout_logout_desc_link_index_main'], '</a>', $txt['manual_loginout_logout_desc_part2'], '</p>';
+}
+
+function template_manual_password_reminders()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
+	<p>', $txt['manual_loginout_reminder_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_loginout_reminder_desc_link_screen'], '</a>', $txt['manual_loginout_reminder_desc_part2'], '</p>
+	<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['manual_loginout_password_reminder'], '</td>
@@ -794,11 +796,10 @@ function template_manual_login()
 		</table>
 	</form>
 	<p>', $txt['manual_loginout_reminder_explanation'], '</p>';
-
 }
 
 // Sending personal messages.
-function template_manual_pm()
+function template_manual_sending_pms()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
@@ -806,16 +807,16 @@ function template_manual_pm()
 		<p>', $txt['manual_pm_community'], '</p>
 	<ol>
 		<li>
-			<a href="', $scripturl, '?action=help;page=pm#pm">', $txt['manual_pm_sec_pm'], '</a>
+			<a href="', $scripturl, '?action=help;area=sending_pms#pm">', $txt['manual_pm_sec_pm'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=pm#description">', $txt['manual_pm_pm_desc'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=pm#reading">', $txt['manual_pm_reading'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=sending_pms#description">', $txt['manual_pm_pm_desc'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=sending_pms#reading">', $txt['manual_pm_reading'], '</a></li>
 			</ol>
 		</li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=pm#interface">', $txt['manual_pm_sec_pm2'], '</a>
+			<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_sec_pm2'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=pm#starting">', $txt['manual_pm_start_reply'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=sending_pms#starting">', $txt['manual_pm_start_reply'], '</a></li>
 			</ol>
 		</li>
 	</ol>
@@ -825,9 +826,9 @@ function template_manual_pm()
 	<p>', $txt['manual_pm_pm_desc_2'], '</p>
 	<p>', $txt['manual_pm_pm_desc_3'], '</p>
 	<h3 id="reading">', $txt['manual_pm_reading'], '</h3>
-	<p>', $txt['manual_pm_reading_desc_part1'], '<a href="', $scripturl, '?action=help;page=loginout">', $txt['manual_pm_reading_desc_link_loginout'], '</a>', $txt['manual_pm_reading_desc_part2'], '<a href="', $scripturl, '?action=help;page=pm#interface">', $txt['manual_pm_reading_desc_link_loginout_interface'], '</a>', $txt['manual_pm_reading_desc_part3'], '</p>
+	<p>', $txt['manual_pm_reading_desc_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_reading_desc_link_loginout'], '</a>', $txt['manual_pm_reading_desc_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_reading_desc_link_loginout_interface'], '</a>', $txt['manual_pm_reading_desc_part3'], '</p>
 	<h2 id="interface">', $txt['manual_pm_sec_pm2'], '</h2>
-	<p>', $txt['manual_pm_pm_desc2_part1'], '<a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_pm_pm_desc2_link_index_message'], '</a>', $txt['manual_pm_pm_desc2_part2'], '</p>
+	<p>', $txt['manual_pm_pm_desc2_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_pm_pm_desc2_link_index_message'], '</a>', $txt['manual_pm_pm_desc2_part2'], '</p>
 	<div style="border: solid 1px;">
 		<div style="padding: 2px 30px;">
 			<script language="JavaScript1.2" type="text/javascript">
@@ -841,12 +842,12 @@ function template_manual_pm()
 			}
 //]]>
 </script>
-			<form action="', $scripturl, '?action=help;page=pm" method="post" accept-charset="', $context['character_set'], '">
+			<form action="', $scripturl, '?action=help;area=sending_pms" method="post" accept-charset="', $context['character_set'], '">
 				<table border="0" width="100%" cellspacing="0" cellpadding="3">
 					<tr>
-						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_pm_forum_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=pm#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=pm#interface" class="nav">', $txt['manual_pm_inbox'], '</a></b></span></td>
+						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a></b><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></b><br />
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></b></span></td>
 					</tr>
 				</table>
 				<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
@@ -873,14 +874,14 @@ function template_manual_pm()
 									<tr class="titlebg">
 										<td>&nbsp;</td>
 										<td style="width: 32ex;"><a href="javascript:sortLastPM();">', $txt['manual_pm_date'], '&nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_up.gif" alt="" border="0" name="sort-arrow" /></a></td>
-										<td width="46%"><a href="', $scripturl, '?action=help;page=pm#interface">', $txt['manual_pm_subject2'], '</a></td>
-										<td><a href="', $scripturl, '?action=help;page=pm#interface">', $txt['manual_pm_from'], '</a></td>
+										<td width="46%"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_subject2'], '</a></td>
+										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_from'], '</a></td>
 										<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
 									</tr>
 									<tr class="windowbg">
 										<td align="center" width="2%"><img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="" /></td>
 										<td>', $txt['manual_pm_date_and_time'], '</td>
-										<td><a href="', $scripturl, '?action=help;page=pm#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
+										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
 										<td>', $txt['manual_pm_another_member'], '</td>
 										<td align="center"><input type="checkbox" class="check" /></td>
 									</tr>
@@ -907,50 +908,50 @@ function template_manual_pm()
 		<li>', $txt['manual_pm_nav_tree'], '</li>
 		<li>', $txt['manual_pm_delete_button'], '</li>
 		<li>', $txt['manual_pm_outbox_button'], '</li>
-		<li>', $txt['manual_pm_new_msg2_part1'], '<a href="', $scripturl, '?action=help;page=post#newtopic">', $txt['manual_pm_new_msg2_link_posting_newtopic'], '</a>', $txt['manual_pm_new_msg2_part2'], '</li>
+		<li>', $txt['manual_pm_new_msg2_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#newtopic">', $txt['manual_pm_new_msg2_link_posting_newtopic'], '</a>', $txt['manual_pm_new_msg2_part2'], '</li>
 		<li>', $txt['manual_pm_reload'], '</li>
 		<li>', $txt['manual_pm_sort_by'], '</li>
 		<li>', $txt['manual_pm_main_subject'], '</li>
 		<li>', $txt['manual_pm_page_nos'], '</li>
 	</ul>
 	<h3 id="starting">', $txt['manual_pm_start_reply'], '</h3>
-	<p>', $txt['manual_pm_how_to_start_reply_part1'], '<a href="', $scripturl, '?action=help;page=loginout">', $txt['manual_pm_how_to_start_reply_link_loginout'], '</a>', $txt['manual_pm_how_to_start_reply_part2'], '</p>
+	<p>', $txt['manual_pm_how_to_start_reply_part1'], '<a href="', $scripturl, '?action=help;area=logging_in">', $txt['manual_pm_how_to_start_reply_link_loginout'], '</a>', $txt['manual_pm_how_to_start_reply_part2'], '</p>
 	<ul>
-		<li>', $txt['manual_pm_msg_link_part1'], '<a href="', $scripturl, '?action=help;page=pm#interface">', $txt['manual_pm_msg_link_link_interface'], '</a>', $txt['manual_pm_msg_link_part2'], '</li>
-		<li>', $txt['manual_pm_click_name_part1'], '<a href="', $scripturl, '?action=help;page=profile#info-all">', $txt['manual_pm_click_name_link_profile_info-all'], '</a>', $txt['manual_pm_click_name_part2'], '</li>
+		<li>', $txt['manual_pm_msg_link_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_msg_link_link_interface'], '</a>', $txt['manual_pm_msg_link_part2'], '</li>
+		<li>', $txt['manual_pm_click_name_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_pm_click_name_link_profile_info-all'], '</a>', $txt['manual_pm_click_name_part2'], '</li>
 		<li>', $txt['manual_pm_click_im_icon'], '</li>
-		<li>', $txt['manual_pm_click_pm_icon_part1'], '<a href="', $scripturl, '?action=help;page=profile#info-all">', $txt['manual_pm_click_pm_icon_link_profile_info-all'], '</a>', $txt['manual_pm_click_pm_icon_part2'], '</li>
-		<li>', $txt['manual_pm_reply_msg_part1'], '<a href="', $scripturl, '?action=help;page=post#reply">', $txt['manual_pm_reply_msg_link_posting_reply'], '</a>', $txt['manual_pm_reply_msg_part2'], '</li>
+		<li>', $txt['manual_pm_click_pm_icon_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms#info-all">', $txt['manual_pm_click_pm_icon_link_profile_info-all'], '</a>', $txt['manual_pm_click_pm_icon_part2'], '</li>
+		<li>', $txt['manual_pm_reply_msg_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#reply">', $txt['manual_pm_reply_msg_link_posting_reply'], '</a>', $txt['manual_pm_reply_msg_part2'], '</li>
 	</ul>';
 }
 
-function template_manual_profile()
+function template_manual_profile_summary()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
 	<p>', $txt['manual_profile_profile_screen'], '</p>
-	<p>', $txt['manual_profile_edit_profile_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_profile_edit_profile_link_index_main'], '</a>', $txt['manual_profile_edit_profile_part2'], '</p>
+	<p>', $txt['manual_profile_edit_profile_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_profile_edit_profile_link_index_main'], '</a>', $txt['manual_profile_edit_profile_part2'], '</p>
 	<ol>
 		<li>
-			<a href="', $scripturl, '?action=help;page=profile#all">', $txt['manual_profile_available_to_all'], '</a>
+			<a href="', $scripturl, '?action=help;area=profile_summary#all">', $txt['manual_profile_available_to_all'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=profile#info-all">', $txt['manual_profile_profile_info'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=profile_summary#info-all">', $txt['manual_profile_profile_info'], '</a></li>
 			</ol>
 		</li>
 				<li>
-			<a href="', $scripturl, '?action=help;page=profile#owners">', $txt['manual_profile_sec_normal'], '</a>
+			<a href="', $scripturl, '?action=help;area=modifying_profiles#owners">', $txt['manual_profile_sec_normal'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=profile#edit-owners">', $txt['manual_profile_modify_profile'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=profile#actions-owners">', $txt['manual_profile_actions'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#edit-owners">', $txt['manual_profile_modify_profile'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#actions-owners">', $txt['manual_profile_actions'], '</a></li>
 			</ol>
 		</li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=profile#admins">', $txt['manual_profile_sec_settings'], '</a>
+			<a href="', $scripturl, '?action=help;area=modifying_profiles#admins">', $txt['manual_profile_sec_settings'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=profile#info-admins">', $txt['manual_profile_profile_info'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=profile#edit-admins">', $txt['manual_profile_modify_profile'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=profile#actions-admins">', $txt['manual_profile_actions'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#info-admins">', $txt['manual_profile_profile_info'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#edit-admins">', $txt['manual_profile_modify_profile'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=modifying_profiles#actions-admins">', $txt['manual_profile_actions'], '</a></li>
 			</ol>
 		</li>
 	</ol>
@@ -1020,7 +1021,7 @@ function template_manual_profile()
 										</tr>
 										<tr>
 											<td><b>', $txt['manual_profile_status'], ':</b></td>
-											<td><i><a href="', $scripturl, '?action=help;page=pm" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')  "><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></i></td>
+											<td><i><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')  "><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></i></td>
 										</tr>
 										<tr>
 											<td colspan="2">
@@ -1073,10 +1074,10 @@ function template_manual_profile()
 								<td colspan="2" align="left">', $txt['manual_profile_other_info'], ':</td>
 							</tr>
 							<tr>
-								<td class="windowbg2" colspan="2" align="left"><a href="', $scripturl, '?action=help;page=profile#all" class="board">', $txt['manual_profile_send_pm'], '</a><br />
+								<td class="windowbg2" colspan="2" align="left"><a href="', $scripturl, '?action=help;area=profile_summary#all" class="board">', $txt['manual_profile_send_pm'], '</a><br />
 								<br />
-								<a href="', $scripturl, '?action=help;page=profile#all" class="board">', $txt['manual_profile_show_member_posts'], '</a><br />
-								<a href="', $scripturl, '?action=help;page=profile#all" class="board">', $txt['manual_profile_show_member_stats'], '</a><br />
+								<a href="', $scripturl, '?action=help;area=profile_summary#all" class="board">', $txt['manual_profile_show_member_posts'], '</a><br />
+								<a href="', $scripturl, '?action=help;area=profile_summary#all" class="board">', $txt['manual_profile_show_member_stats'], '</a><br />
 								<br /></td>
 							</tr>
 						</table>
@@ -1086,16 +1087,21 @@ function template_manual_profile()
 		</div>
 	</div><br />
 	<ul>
-		<li>', $txt['manual_profile_summary_part1'], '<a href="', $scripturl, '?action=help;page=profile#owners">', $txt['manual_profile_summary_link_owners'], '</a>', $txt['manual_profile_summary_part2'], '</li>
+		<li>', $txt['manual_profile_summary_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary#owners">', $txt['manual_profile_summary_link_owners'], '</a>', $txt['manual_profile_summary_part2'], '</li>
 		<li>', $txt['manual_profile_hide_email'], '</li>
-		<li>', $txt['manual_profile_empty_part1'], '<a href="', $scripturl, '?action=help;page=profile#owners">', $txt['manual_profile_empty_link_owners'], '</a>', $txt['manual_profile_empty_part2'], '</li>
-		<li>', $txt['manual_profile_send_member_pm_part1'], '<a href="', $scripturl, '?action=help;page=pm">', $txt['manual_profile_send_member_pm_link_pm'], '</a>', $txt['manual_profile_send_member_pm_part2'], '</li>
+		<li>', $txt['manual_profile_empty_part1'], '<a href="', $scripturl, '?action=help;area=modifying_profiles">', $txt['manual_profile_empty_link_owners'], '</a>', $txt['manual_profile_empty_part2'], '</li>
+		<li>', $txt['manual_profile_send_member_pm_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_send_member_pm_link_pm'], '</a>', $txt['manual_profile_send_member_pm_part2'], '</li>
 		<li>', $txt['manual_profile_show_last_posts'], '</li>
 		<li>', $txt['manual_profile_show_member_stats2'], '</li>
-	</ul>
-	<h2 id="owners">', $txt['manual_profile_sec_normal'], '</h2>
+	</ul>';
+}
+
+function template_manual_modifying_profiles()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<p>', $txt['manual_profile_normal_desc'], '</p>
-	<h3 id="edit-owners">', $txt['manual_profile_modify_profile'], '</h3>
 	<ul>
 		<li>', $txt['manual_profile_account_related'], '</li>
 		<li>', $txt['manual_profile_forum_profile_info'], '</li>
@@ -1111,33 +1117,33 @@ function template_manual_profile()
 								<td class="catbg">', $txt['manual_profile_profile_info2'], '</td>
 							</tr>
 							<tr class="windowbg2">
-								<td class="windowbg"><a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a><br />
-								<a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
-								<a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
+								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a><br />
+								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
+								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
 								<br /></td>
 							</tr>
 							<tr>
 								<td class="catbg">', $txt['manual_profile_modify_own_profile'], '</td>
 							</tr>
 							<tr class="windowbg2">
-								<td class="windowbg"><a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
-								<a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
-								<b><a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a></b><br />
-								<a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
-								<a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
+								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
+								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
+								<b><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a></b><br />
+								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
+								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
 								<br /></td>
 							</tr>
 							<tr>
 								<td class="catbg">', $txt['manual_profile_actions'], '</td>
 							</tr>
 							<tr class="windowbg2">
-								<td class="windowbg"><a href="', $scripturl, '?action=help;page=profile#owners" style="font-size: x-small;" class="board">', $txt['manual_profile_delete_account'], '</a><br />
+								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_delete_account'], '</a><br />
 								<br /></td>
 							</tr>
 						</table>
 					</td>
 					<td width="100%" valign="top">
-						<form action="', $scripturl, '?action=help;page=profile" method="post" accept-charset="', $context['character_set'], '">
+						<form action="', $scripturl, '?action=help;area=profile_summary" method="post" accept-charset="', $context['character_set'], '">
 							<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 								<tr class="titlebg">
 									<td height="26" align="left">&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" border="0" align="top" />&nbsp; ', $txt['manual_profile_edit_profile1'], '</td>
@@ -1151,7 +1157,7 @@ function template_manual_profile()
 									<td class="windowbg2" align="left">
 										<table border="0" width="100%" cellpadding="3">
 											<tr>
-												<td colspan="2" width="40%"><b>', $txt['manual_profile_current_theme'], ':</b>&nbsp;', $txt['manual_profile_board_default'], '&nbsp;<a href="', $scripturl, '?action=help;page=profile#owners" class="board">(', $txt['manual_profile_change'], ')</a></td>
+												<td colspan="2" width="40%"><b>', $txt['manual_profile_current_theme'], ':</b>&nbsp;', $txt['manual_profile_board_default'], '&nbsp;<a href="', $scripturl, '?action=help;area=modifying_profiles" class="board">(', $txt['manual_profile_change'], ')</a></td>
 											</tr>
 											<tr>
 												<td colspan="2">
@@ -1290,7 +1296,7 @@ function template_manual_profile()
 	</div><br />
 	<ul>
 		<li>', $txt['manual_profile_notify_email_prefs'], '</li>
-		<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;page=pm">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
+		<li>', $txt['manual_profile_pm_options_part1'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_profile_pm_options_link_pm'], '</a>', $txt['manual_profile_pm_options_part2'], '</li>
 	</ul>
 	<h3 id="actions-owners">', $txt['manual_profile_sub_actions'], '</h3>
 	<ul>
@@ -1305,31 +1311,31 @@ function template_manual_profile()
 					<td class="catbg">', $txt['manual_profile_profile_info'], '</td>
 				</tr>
 				<tr class="windowbg2">
-					<td class="windowbg"><b><a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a></b><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_user'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_ip'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_permissions'], '</a><br />
+					<td class="windowbg"><b><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a></b><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_user'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_ip'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_permissions'], '</a><br />
 					<br /></td>
 				</tr>
 				<tr>
 					<td class="catbg">', $txt['manual_profile_sub_modify_profile'], '</td>
 				</tr>
 				<tr class="windowbg2">
-					<td class="windowbg"><a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
+					<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
 					<br /></td>
 				</tr>
 				<tr>
 					<td class="catbg">', $txt['manual_profile_actions'], '</td>
 				</tr>
 				<tr class="windowbg2">
-					<td class="windowbg"><a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_ban_user'], '</a><br />
-					<a href="', $scripturl, '?action=help;page=profile#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_delete_account'], '</a><br />
+					<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_ban_user'], '</a><br />
+					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_delete_account'], '</a><br />
 					<br /></td>
 				</tr>
 			</table>
@@ -1356,62 +1362,62 @@ function template_manual_profile()
 
 }
 
-function template_manual_posting()
+function template_manual_posting_topics()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_posting_forum_about_part1'], '<a href="', $scripturl, '?action=help;page=post#bbcref">', $txt['manual_posting_forum_about_link_bbcref'], '</a>', $txt['manual_posting_forum_about_part2'], '<a href="', $scripturl, '?action=help;page=post#smileysref">', $txt['manual_posting_forum_about_link_bbcref_smileysref'], '</a>', $txt['manual_posting_forum_about_part3'], '</p>
+	<p>', $txt['manual_posting_forum_about_part1'], '<a href="', $scripturl, '?action=help;area=smileys">', $txt['manual_posting_forum_about_link_bbcref'], '</a>', $txt['manual_posting_forum_about_part2'], '<a href="', $scripturl, '?action=help;area=smileys#smileysref">', $txt['manual_posting_forum_about_link_bbcref_smileysref'], '</a>', $txt['manual_posting_forum_about_part3'], '</p>
 	<p>', $txt['manual_posting_please_note'], '</p>
 	<ol>
 		<li>
-			<a href="', $scripturl, '?action=help;page=post#basics">', $txt['manual_posting_sec_posting_basics'], '</a>
+			<a href="', $scripturl, '?action=help;area=posting_topics#basics">', $txt['manual_posting_sec_posting_basics'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=post#newtopic">', $txt['manual_posting_starting_topic'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#newpoll">', $txt['manual_posting_start_poll'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#calendar">', $txt['manual_posting_post_event'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#reply">', $txt['manual_posting_replying'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#quote">', $txt['manual_posting_quote_post'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#modify">', $txt['manual_posting_modify_delete'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#newtopic">', $txt['manual_posting_starting_topic'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#newpoll">', $txt['manual_posting_start_poll'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#calendar">', $txt['manual_posting_post_event'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#reply">', $txt['manual_posting_replying'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#quote">', $txt['manual_posting_quote_post'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#modify">', $txt['manual_posting_modify_delete'], '</a></li>
 			</ol>
 		</li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=post#standard">', $txt['manual_posting_sec_posting_options'], '</a>
+			<a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_sec_posting_options'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=post#messageicon">', $txt['manual_posting_sub_message_icon'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#bbc">', $txt['manual_posting_sub_bbc'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#smileys">', $txt['manual_posting_sub_smileys'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#messageicon">', $txt['manual_posting_sub_message_icon'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#bbc">', $txt['manual_posting_sub_bbc'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#smileys">', $txt['manual_posting_sub_smileys'], '</a></li>
 			</ol>
 		</li>
-		<li><a href="', $scripturl, '?action=help;page=post#tags">', $txt['manual_posting_sec_tags'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=posting_topics#tags">', $txt['manual_posting_sec_tags'], '</a></li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=post#additional">', $txt['manual_posting_sec_additional_options'], '</a>
+			<a href="', $scripturl, '?action=help;area=posting_topics#additional">', $txt['manual_posting_sec_additional_options'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=post#notify">', $txt['manual_posting_notify'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#return">', $txt['manual_posting_return'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#nosmileys">', $txt['manual_posting_no_smiley'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#attachments">', $txt['manual_posting_sub_attach'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#notify">', $txt['manual_posting_notify'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#return">', $txt['manual_posting_return'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#nosmileys">', $txt['manual_posting_no_smiley'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#attachments">', $txt['manual_posting_sub_attach'], '</a></li>
 			</ol>
 		</li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=post#references">', $txt['manual_posting_sec_references'], '</a>
+			<a href="', $scripturl, '?action=help;area=posting_topics#references">', $txt['manual_posting_sec_references'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=post#bbcref">', $txt['manual_posting_sub_SMF_bbc'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=post#smileysref">', $txt['manual_posting_sub_help_smileys'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_sub_SMF_bbc'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=posting_topics#smileysref">', $txt['manual_posting_sub_help_smileys'], '</a></li>
 			</ol>
 		</li>
 	</ol>
 	<h2 id="basics">', $txt['manual_posting_sec_posting_basics'], '</h2>
 	<h3 id="newtopic">', $txt['manual_posting_starting_topic'], '</h3>
-	<p>', $txt['manual_posting_starting_topic_desc_part1'], '<a href="', $scripturl, '?action=help;page=index#message">', $txt['manual_posting_starting_topic_desc_link_index_message'], '</a>', $txt['manual_posting_starting_topic_desc_part2'], '<a href="', $scripturl, '?action=help;page=post#standard">', $txt['manual_posting_starting_topic_desc_link_index_message_standard'], '</a>', $txt['manual_posting_starting_topic_desc_part3'], '</p>
+	<p>', $txt['manual_posting_starting_topic_desc_part1'], '<a href="', $scripturl, '?action=help;area=message_view">', $txt['manual_posting_starting_topic_desc_link_index_message'], '</a>', $txt['manual_posting_starting_topic_desc_part2'], '<a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_starting_topic_desc_link_index_message_standard'], '</a>', $txt['manual_posting_starting_topic_desc_part3'], '</p>
 	<div style="border: solid 1px;">
 		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;page=post" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
+			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table width="100%" align="center" cellpadding="0" cellspacing="3">
 					<tr>
-						<td valign="bottom" colspan="2"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_posting_forum_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_posting_cat_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#message" class="nav">', $txt['manual_posting_board_name'], '</a></b><br />
+						<td valign="bottom" colspan="2"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_forum_name'], '</a></b><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_cat_name'], '</a></b><br />
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_posting_board_name'], '</a></b><br />
 						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><i>', $txt['manual_posting_start_topic'], '</i></b></span></td>
 					</tr>
 				</table>
@@ -1423,7 +1429,7 @@ function template_manual_posting()
 						<td class="windowbg">
 							<table border="0" cellpadding="3" width="100%">
 								<tr class="windowbg">
-									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;page=post#standard">', $txt['manual_posting_std_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
+									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_std_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
 								</tr>
 								<tr>
 									<td align="right"><b>', $txt['manual_posting_subject'], ':</b></td>
@@ -1436,7 +1442,7 @@ function template_manual_posting()
 </textarea></td>
 								</tr>
 								<tr class="windowbg">
-									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;page=post#additional">', $txt['manual_posting_sec_additional_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
+									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;area=posting_topics#additional">', $txt['manual_posting_sec_additional_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
 								</tr>
 								<tr>
 									<td align="center" colspan="2"><span class="smalltext"><br />
@@ -1455,19 +1461,19 @@ function template_manual_posting()
 		<li>', $txt['manual_posting_spell_check'], '</li>
 	</ul>
 	<h3 id="newpoll">', $txt['manual_posting_start_poll'], '</h3>
-	<p>', $txt['manual_posting_poll_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#newtopic">', $txt['manual_posting_poll_desc_link_newtopic'], '</a>', $txt['manual_posting_poll_desc_part2'], '</p>
+	<p>', $txt['manual_posting_poll_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#newtopic">', $txt['manual_posting_poll_desc_link_newtopic'], '</a>', $txt['manual_posting_poll_desc_part2'], '</p>
 	<p>', $txt['manual_posting_poll_options'], '</p>
 	<p>', $txt['manual_posting_poll_note'], '</p>
 	<h3 id="calendar">', $txt['manual_posting_post_event'], '</h3>
-	<p>', $txt['manual_posting_event_desc_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_posting_event_desc_link_index_main'], '</a>', $txt['manual_posting_event_desc_part2'], '</p>
+	<p>', $txt['manual_posting_event_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_posting_event_desc_link_index_main'], '</a>', $txt['manual_posting_event_desc_part2'], '</p>
 	<h3 id="reply">', $txt['manual_posting_replying'], '</h3>
-	<p>', $txt['manual_posting_replying_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#newtopic">', $txt['manual_posting_replying_desc_link_newtopic'], '</a>', $txt['manual_posting_replying_desc_part2'], '</p>
-	<p>', $txt['manual_posting_quick_reply_part1'], '<a href="', $scripturl, '?action=help;page=post#bbc">', $txt['manual_posting_quick_reply_link_bbc'], '</a>', $txt['manual_posting_quick_reply_part2'], '<a href="', $scripturl, '?action=help;page=post#smileys">', $txt['manual_posting_quick_reply_link_bbc_smileys'], '</a>', $txt['manual_posting_quick_reply_part3'], '</p>
+	<p>', $txt['manual_posting_replying_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#newtopic">', $txt['manual_posting_replying_desc_link_newtopic'], '</a>', $txt['manual_posting_replying_desc_part2'], '</p>
+	<p>', $txt['manual_posting_quick_reply_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbc">', $txt['manual_posting_quick_reply_link_bbc'], '</a>', $txt['manual_posting_quick_reply_part2'], '<a href="', $scripturl, '?action=help;area=posting_topics#smileys">', $txt['manual_posting_quick_reply_link_bbc_smileys'], '</a>', $txt['manual_posting_quick_reply_part3'], '</p>
 	<h3 id="quote">', $txt['manual_posting_quote_post'], '</h3>
 	<p>', $txt['manual_posting_quote_desc'], '</p>
 	<ul>
-		<li>', $txt['manual_posting_quote_both_part1'], '<a href="', $scripturl, '?action=help;page=post#bbc">', $txt['manual_posting_quote_both_link_bbc'], '</a>', $txt['manual_posting_quote_both_part2'], '</li>
-		<li>', $txt['manual_posting_quote_independant_part1'], '<a href="', $scripturl, '?action=help;page=post#bbcref">', $txt['manual_posting_quote_independant_link_bbcref'], '</a>', $txt['manual_posting_quote_independant_part2'], '</li>
+		<li>', $txt['manual_posting_quote_both_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbc">', $txt['manual_posting_quote_both_link_bbc'], '</a>', $txt['manual_posting_quote_both_part2'], '</li>
+		<li>', $txt['manual_posting_quote_independant_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_quote_independant_link_bbcref'], '</a>', $txt['manual_posting_quote_independant_part2'], '</li>
 	</ul>
 	<h3 id="modify">', $txt['manual_posting_modify_delete'], '</h3>
 	<p>', $txt['manual_posting_modify_desc'], '</p>
@@ -1497,7 +1503,7 @@ function template_manual_posting()
 			}
 //]]>
 </script>
-			<form action="', $scripturl, '?action=help;page=post" method="post" accept-charset="', $context['character_set'], '" name="postmodify" style="margin: 0;" id="postmodify">
+			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" name="postmodify" style="margin: 0;" id="postmodify">
 				<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
 					<tr>
 						<td class="windowbg">
@@ -1634,12 +1640,12 @@ function template_manual_posting()
 	<p>', $txt['manual_posting_msg_icon_dropdown'], '</p>
 	<h3 id="bbc">', $txt['manual_posting_sub_bbc'], '</h3>
 	<p>', $txt['manual_posting_bbc_desc'], '</p>
-	<p>', $txt['manual_posting_bbc_ref_part1'], '<a href="', $scripturl, '?action=help;page=post#bbcref">', $txt['manual_posting_bbc_ref_link_bbcref'], '</a>', $txt['manual_posting_bbc_ref_part2'], '</p>
+	<p>', $txt['manual_posting_bbc_ref_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_bbc_ref_link_bbcref'], '</a>', $txt['manual_posting_bbc_ref_part2'], '</p>
 	<h3 id="smileys">', $txt['manual_posting_sub_smileys'], '</h3>
-	<p>', $txt['manual_posting_smiley_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#nosmileys">', $txt['manual_posting_smiley_desc_link_nosmileys'], '</a>', $txt['manual_posting_smiley_desc_part2'], '</p>
-	<p>', $txt['manual_posting_smiley_ref_part1'], '<a href="', $scripturl, '?action=help;page=post#smileysref">', $txt['manual_posting_smiley_ref_link_smileysref'], '</a>', $txt['manual_posting_smiley_ref_part2'], '</p>
+	<p>', $txt['manual_posting_smiley_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#nosmileys">', $txt['manual_posting_smiley_desc_link_nosmileys'], '</a>', $txt['manual_posting_smiley_desc_part2'], '</p>
+	<p>', $txt['manual_posting_smiley_ref_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#smileysref">', $txt['manual_posting_smiley_ref_link_smileysref'], '</a>', $txt['manual_posting_smiley_ref_part2'], '</p>
 	<h2 id="tags">', $txt['manual_posting_sec_tags'], '</h2>
-	<p>', $txt['manual_posting_tags_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#bbcref">', $txt['manual_posting_tags_desc_link_bbcref'], '</a>', $txt['manual_posting_tags_desc_part2'], '</p>
+	<p>', $txt['manual_posting_tags_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_tags_desc_link_bbcref'], '</a>', $txt['manual_posting_tags_desc_part2'], '</p>
 	<p>', $txt['manual_posting_note_tags'], '</p>
 	<h2 id="additional">', $txt['manual_posting_sec_additional_options'], '</h2>
 	<p>', $txt['manual_posting_sec_additional_options_desc'], '</p>
@@ -1662,7 +1668,7 @@ function template_manual_posting()
 			}
 //]]>
 </script>
-			<form action="', $scripturl, '?action=help;page=post" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
+			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
 					<tr>
 						<td class="windowbg">
@@ -1718,14 +1724,20 @@ function template_manual_posting()
 	<h3 id="return">', $txt['manual_posting_sub_return'], '</h3>
 	<p>', $txt['manual_posting_return_desc'], '</p>
 	<h3 id="nosmileys">', $txt['manual_posting_sub_no_smiley'], '</h3>
-	<p>', $txt['manual_posting_no_smiley_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#smileysref">', $txt['manual_posting_no_smiley_desc_link_smileysref'], '</a>', $txt['manual_posting_no_smiley_desc_part2'], '</p>
+	<p>', $txt['manual_posting_no_smiley_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#smileysref">', $txt['manual_posting_no_smiley_desc_link_smileysref'], '</a>', $txt['manual_posting_no_smiley_desc_part2'], '</p>
 	<h3 id="attachments">', $txt['manual_posting_sub_attach'], '</h3>
-	<p>', $txt['manual_posting_attach_desc_part1'], '<a href="', $scripturl, '?action=help;page=post#modify">', $txt['manual_posting_attach_desc_link_modify'], '</a>', $txt['manual_posting_attach_desc_part2'], '</p>
+	<p>', $txt['manual_posting_attach_desc_part1'], '<a href="', $scripturl, '?action=help;area=posting_topics#modify">', $txt['manual_posting_attach_desc_link_modify'], '</a>', $txt['manual_posting_attach_desc_part2'], '</p>
 	<ul>
 		<li>', $txt['manual_posting_attach_desc2'], '</li>
 		<li>', $txt['manual_posting_most_forums_attach'], '</li>
-	</ul>
-	<h2 id="references">', $txt['manual_posting_sec_references'], '</h2>
+	</ul>';
+}
+
+function template_manual_smileys()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<h3 id="bbcref">', $txt['manual_posting_sub_SMF_bbc'], '</h3>
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
 	<table id="reference1" cellspacing="4" cellpadding="2">
@@ -2206,21 +2218,21 @@ Simple
 }
 
 // The register help page.
-function template_manual_register()
+function template_manual_registration_screen()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<p>', $txt['manual_registering_you_have_arrived_part1'], '<a href="', $scripturl, '?action=help;page=profile">', $txt['manual_registering_you_have_arrived_link_profile'], '</a>', $txt['manual_registering_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;page=pm">', $txt['manual_registering_you_have_arrived_link_profile_pm'], '</a>', $txt['manual_registering_you_have_arrived_part3'], '</p>
+		<p>', $txt['manual_registering_you_have_arrived_part1'], '<a href="', $scripturl, '?action=help;area=profile_summary">', $txt['manual_registering_you_have_arrived_link_profile'], '</a>', $txt['manual_registering_you_have_arrived_part2'], '<a href="', $scripturl, '?action=help;area=sending_pms">', $txt['manual_registering_you_have_arrived_link_profile_pm'], '</a>', $txt['manual_registering_you_have_arrived_part3'], '</p>
 	<ol>
-		<li><a href="', $scripturl, '?action=help;page=registering#how-to">', $txt['manual_registering_sec_register'], '</a></li>
-		<li><a href="', $scripturl, '?action=help;page=registering#screen">', $txt['manual_registering_sec_reg_screen'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=registration_screen#how-to">', $txt['manual_registering_sec_register'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=registration_screen#screen">', $txt['manual_registering_sec_reg_screen'], '</a></li>
 	</ol>
 	<h2 id="how-to">', $txt['manual_registering_sec_register'], '</h2>
 	<p>', $txt['manual_registering_register_desc'], '</p>
 	<ul>
-		<li>', $txt['manual_registering_select_register_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_registering_select_register_link_index_main'], '</a>', $txt['manual_registering_select_register_part2'], '</li>
-		<li>', $txt['manual_registering_login_Scr_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_registering_login_Scr_link_index_main'], '</a>', $txt['manual_registering_login_Scr_part2'], '</li>
+		<li>', $txt['manual_registering_select_register_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_select_register_link_index_main'], '</a>', $txt['manual_registering_select_register_part2'], '</li>
+		<li>', $txt['manual_registering_login_Scr_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_registering_login_Scr_link_index_main'], '</a>', $txt['manual_registering_login_Scr_part2'], '</li>
 	</ul>
 	<table width="400" cellspacing="0" cellpadding="3" class="tborder" align="center">
 		<tr class="titlebg">
@@ -2228,13 +2240,13 @@ function template_manual_register()
 		</tr>
 		<tr>
 			<td class="windowbg" style="padding-top: 2ex; padding-bottom: 2ex;">', $txt['manual_registering_warning_desc_1'], '<br />
-			', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;page=registering#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</td>
+			', $txt['manual_registering_warning_desc_2'], '<a href="', $scripturl, '?action=help;area=registration_screen#screen" class="board">', $txt['manual_registering_warning_desc_3'], '</a>', $txt['manual_registering_warning_desc_4'], '</td>
 		</tr>
 	</table><br />
 	<h2 id="screen">', $txt['manual_registering_sec_reg_screen'], '</h2>
 	<div style="border: solid 1px;">
 		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;page=registering" method="post" accept-charset="', $context['character_set'], '">
+			<form action="', $scripturl, '?action=help;area=registration_screen" method="post" accept-charset="', $context['character_set'], '">
 				<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
 					<tr class="titlebg">
 						<td>', $txt['manual_registering_required_info'], '</td>
@@ -2286,7 +2298,7 @@ function template_manual_register()
 			</form>
 		</div>
 	</div><br />
-	<p>', $txt['manual_registering_reg_screen_requirements_part1'], '<a href="', $scripturl, '?action=help;page=loginout#screen">', $txt['manual_registering_reg_screen_requirements_link_loginout_screen'], '</a>', $txt['manual_registering_reg_screen_requirements_part2'], '</p>
+	<p>', $txt['manual_registering_reg_screen_requirements_part1'], '<a href="', $scripturl, '?action=help;area=logging_in#screen">', $txt['manual_registering_reg_screen_requirements_link_loginout_screen'], '</a>', $txt['manual_registering_reg_screen_requirements_part2'], '</p>
 	<ul>
 		<li>', $txt['manual_registering_email_activate'], '</li>
 		<li>', $txt['manual_registering_admin_approve'], '</li>
@@ -2294,30 +2306,30 @@ function template_manual_register()
 }
 
 // The search help page.
-function template_manual_search()
+function template_manual_searching()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
 	<p>', $txt['manual_searching_you_have_arrived'], '</p>
 	<ol>
-		<li><a href="', $scripturl, '?action=help;page=searching#starting">', $txt['manual_searching_sec_search'], '</a></li>
+		<li><a href="', $scripturl, '?action=help;area=searching#starting">', $txt['manual_searching_sec_search'], '</a></li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=searching#syntax">', $txt['manual_searching_sec_syntax'], '</a>
+			<a href="', $scripturl, '?action=help;area=searching#syntax">', $txt['manual_searching_sec_syntax'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=searching#quotes">', $txt['manual_searching_sub_quotes'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=searching#quotes">', $txt['manual_searching_sub_quotes'], '</a></li>
 			</ol>
 		</li>
 		<li>
-			<a href="', $scripturl, '?action=help;page=searching#searching">', $txt['manual_searching_sec_simple_adv'], '</a>
+			<a href="', $scripturl, '?action=help;area=searching#searching">', $txt['manual_searching_sec_simple_adv'], '</a>
 			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;page=searching#simple">', $txt['manual_searching_sub_simple'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;page=searching#advanced">', $txt['manual_searching_sub_adv'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=searching#simple">', $txt['manual_searching_sub_simple'], '</a></li>
+				<li><a href="', $scripturl, '?action=help;area=searching#advanced">', $txt['manual_searching_sub_adv'], '</a></li>
 			</ol>
 		</li>
 	</ol>
 	<h2 id="starting">', $txt['manual_searching_sec_search'], '</h2>
-	<p>', $txt['manual_searching_search_desc_part1'], '<a href="', $scripturl, '?action=help;page=index#main">', $txt['manual_searching_search_desc_link_index_main'], '</a>', $txt['manual_searching_search_desc_part2'], '</p>
+	<p>', $txt['manual_searching_search_desc_part1'], '<a href="', $scripturl, '?action=help;area=main_menu">', $txt['manual_searching_search_desc_link_index_main'], '</a>', $txt['manual_searching_search_desc_part2'], '</p>
 	<h2 id="syntax">', $txt['manual_searching_sec_syntax'], '</h2>
 	<p>', $txt['manual_searching_syntax_desc'], '</p>
 	<h3 id="quotes">', $txt['manual_searching_sub_quotes'], '</h3>
@@ -2329,11 +2341,11 @@ function template_manual_search()
 	<p>', $txt['manual_searching_adv_desc'], '</p>
 	<div style="border: solid 1px;">
 		<div style="padding: 2px 30px;">
-			<form action="', $scripturl, '?action=help;page=searching" method="post" accept-charset="', $context['character_set'], '">
+			<form action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
 				<table width="80%" border="0" cellspacing="0" cellpadding="3" align="center">
 					<tr>
-						<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=index#board" class="nav">', $txt['manual_searching_forum_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;page=searching#advanced" class="nav">', $txt['manual_searching_search'], '</a></b></span></td>
+						<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_searching_forum_name'], '</a></b><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=searching#advanced" class="nav">', $txt['manual_searching_search'], '</a></b></span></td>
 					</tr>
 				</table>
 				<table width="80%" border="0" cellspacing="0" cellpadding="4" align="center" class="tborder">
@@ -2421,7 +2433,7 @@ function template_manual_search()
 	</div><br />
 	<ul>
 		<li>', $txt['manual_searching_nav_tree'], '</li>
-		<li>', $txt['manual_searching_three_options_part1'], '<a href="', $scripturl, '?action=help;page=searching#syntax">', $txt['manual_searching_three_options_link_syntax'], '</a>', $txt['manual_searching_three_options_part2'], '</li>
+		<li>', $txt['manual_searching_three_options_part1'], '<a href="', $scripturl, '?action=help;area=searching#syntax">', $txt['manual_searching_three_options_link_syntax'], '</a>', $txt['manual_searching_three_options_part2'], '</li>
 		<li>', $txt['manual_searching_wildcard'], '</li>
 		<li>', $txt['manual_searching_results_as_messages'], '</li>
 		<li>', $txt['manual_searching_message_age'], '</li>
