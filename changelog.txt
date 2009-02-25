@@ -28,6 +28,7 @@ February 2009
  ! Installing multiple copies of SMF on the same DB caused an error in PostgreSQL (install_2-0_postgresql.sql) [Bug 3181]
  ! Trying to delete an account could cause an error in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3186]
  ! Viewing the list of watched users caused an error in PostgreSQL (ModerationCenter.php) [Bug 3208]
+ ! PostgreSQL doesn't support RLIKE (ManageBans.php, Subs-Db-postgresql.php) [Bug 3185]
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================

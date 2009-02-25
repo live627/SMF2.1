@@ -242,6 +242,14 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'alter_table_spiders' => array(
 			'~(.+)~' => '',
 		),
+		'ban_suggest_error_ips' => array(
+			'~RLIKE~' => '~',
+			'~\\.~' => '\.',
+		),
+		'ban_suggest_message_ips' => array(
+			'~RLIKE~' => '~',
+			'~\\.~' => '\.',
+		),
 		'consolidate_spider_stats' => array(
 			'~MONTH\(log_time\), DAYOFMONTH\(log_time\)~' => 'MONTH(CAST(CAST(log_time AS abstime) AS timestamp)), DAYOFMONTH(CAST(CAST(log_time AS abstime) AS timestamp))',
 		),
@@ -259,6 +267,15 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		),
 		'get_random_number' => array(
 			'~RAND~' => 'RANDOM',
+		),
+		'insert_log_search_topics' => array(
+			'~NOT RLIKE~' => '!~',
+		),
+		'insert_log_search_results_no_index' => array(
+			'~NOT RLIKE~' => '!~',
+		),
+		'insert_log_search_results_subject' => array(
+			'~NOT RLIKE~' => '!~',
 		),
 		'messageindex_fetch_boards' => array(
 			'~(.)$~' => '$1 ORDER BY b.board_order',
