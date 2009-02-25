@@ -2624,7 +2624,7 @@ function redirectexit($setLocation = '', $refresh = false)
 // Ends execution.  Takes care of template loading and remembering the previous URL.
 function obExit($header = null, $do_footer = null, $from_index = false)
 {
-	global $context, $settings, $modSettings, $txt;
+	global $context, $settings, $modSettings, $txt, $smcFunc;
 	static $header_done = false, $footer_done = false;
 
 	// Clear out the stat cache.
@@ -2641,6 +2641,10 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	// Has the template/header been done yet?
 	if ($do_header)
 	{
+		// Was the page title set last minute? Also update the HTML safe one.
+		if (!empty($context['page_title']) && empty($context['page_title_html_safe']))
+			$context['page_title_html_safe'] = $smcFunc['htmlspecialchars'](un_htmlspecialchars($context['page_title']));
+
 		// Start up the session URL fixer.
 		ob_start('ob_sessrewrite');
 

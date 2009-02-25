@@ -31,6 +31,7 @@ February 2009
  ! PostgreSQL doesn't support RLIKE (ManageBans.php, Subs-Db-postgresql.php) [Bug 3185]
  ! The personal messaging section now uses the generic menu templates. (PersonalMessage.php, PersonalMessage template) [Bug 1695] (CodeFest)
  ! The maximum amount of personal messages wasn't always cached properly. (PersonalMessage.php) (CodeFest)
+ ! Update the HTML safe version of the page title dynamically last minute in case it was set at a later time. (Subs.php) (CodeFest)
 
 
 SMF 2.0 RC1                                                      4 February 2009
