@@ -7,60 +7,27 @@ function template_pm_above()
 	global $context, $settings, $options, $txt;
 
 	echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>';
+			', theme_linktree();
 
-	echo '
-			<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
-				<td width="125" valign="top">
-					<table border="0" cellpadding="4" cellspacing="1" class="bordercolor" width="100">';
-	// Loop through every main area - giving a nice section heading.
-	foreach ($context['pm_areas'] as $section)
+	// Show the capacity bar, if available.
+	if (!empty($context['limit_bar']))
 	{
+		// !!! Hardcoded colors = bad.
 		echo '
-						<tr>
-							<td class="catbg">', $section['title'], '</td>
-						</tr>
-						<tr class="windowbg2">
-							<td class="smalltext" style="padding-bottom: 2ex;">';
-		// Each sub area.
-		foreach ($section['areas'] as $i => $area)
-		{
-			if (empty($area))
-				echo '<br />';
-			// Special case for the capacity bar.
-			elseif (!empty($area['limit_bar']))
-			{
-				// !!! Hardcoded colors = bad.
-				echo '
-								<br /><br />
-								<div align="center">
-									<b>', $txt['pm_capacity'], '</b>
-									<div align="left" style="border: 1px solid black; height: 7px; width: 100px;">
-										<div style="border: 0; background-color: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], 'px;"></div>
-									</div>
-									<span', ($context['limit_bar']['percent'] > 90 ? ' class="alert"' : ''), '>', $context['limit_bar']['text'], '</span>
-								</div>
-								<br />';
-			}
-			else
-			{
-				if ($i == $context['pm_area'])
-					echo '
-								<b>', $area['link'], (empty($area['unread_messages']) ? '' : ' (<b>' . $area['unread_messages'] . '</b>)'), '</b><br />';
-				else
-					echo '
-								', $area['link'], (empty($area['unread_messages']) ? '' : ' (<b>' . $area['unread_messages'] . '</b>)'), '<br />';
-			}
-		}
-		echo '
-							</td>
-						</tr>';
+			<table width="100%" cellspacing="1" cellpadding="3" class="bordercolor" style="margin-bottom: 1em">
+				<tr class="titlebg2">
+					<td width="200" align="right"><b>', $txt['pm_capacity'], ':</b></td>
+					<td width="50%" align="center">
+						<div align="left" style="background: #fff; border: 1px solid black; height: 7px; width: 75%">
+							<div style="border: 0; background: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], '%;"></div>
+						</div>
+					</td>
+					<td width="200"', $context['limit_bar']['percent'] > 90 ? ' class="alert"' : '', '>
+						', $context['limit_bar']['text'], '
+					</td>
+				</tr>
+			</table>';
 	}
-	echo '
-					</table>
-					<br />
-				</td>
-				<td valign="top">';
 }
 
 // Just the end of the index bar, nothing special.
@@ -68,9 +35,6 @@ function template_pm_below()
 {
 	global $context, $settings, $options;
 
-	echo '
-				</td>
-			</tr></table>';
 }
 
 function template_folder()
@@ -560,7 +524,7 @@ function template_search()
 		}
 	// ]]></script>
 <form action="', $scripturl, '?action=pm;sa=search2" method="post" accept-charset="', $context['character_set'], '" name="pmSearchForm">
-	<table border="0" width="75%" align="center" cellpadding="3" cellspacing="0" class="tborder">
+	<table border="0" width="100%" align="center" cellpadding="3" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">', $txt['pm_search_title'], '</td>
 		</tr>';
@@ -713,7 +677,7 @@ function template_search_results()
 	if (!empty($context['search_params']['show_complete']))
 	{
 		echo '
-		<table border="0" width="98%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
+		<table border="0" width="100%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="3">', $txt['pm_search_results'], '</td>
 			</tr>
@@ -862,7 +826,7 @@ function template_send()
 	{
 		echo '
 		<br />
-		<table border="0" width="80%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td>', $txt['pm_send_report'], '</td>
 			</tr>
@@ -1134,7 +1098,7 @@ function template_prune()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=prune" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['pm_prune_warning'], '\');">
-		<table width="60%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
+		<table width="100%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 			<tr class="catbg">
 				<td>', $txt['pm_prune'], '</td>
 			</tr>
@@ -1156,7 +1120,7 @@ function template_labels()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '">
-		<table width="60%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
+		<table width="100%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['pm_manage_labels'], '</td>
 			</tr>
@@ -1205,7 +1169,7 @@ function template_labels()
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
 	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 1ex;">
-		<table width="60%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
+		<table width="100%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2" align="left">
 					', $txt['pm_label_add_new'], '
@@ -1317,7 +1281,7 @@ function template_rules()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules" method="post" accept-charset="', $context['character_set'], '" name="manRules">
-		<table cellpadding="4" cellspacing="0" border="0" align="center" width="80%" class="tborder">
+		<table cellpadding="4" cellspacing="0" border="0" align="center" width="100%" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $txt['pm_manage_rules'], '

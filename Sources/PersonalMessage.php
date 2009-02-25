@@ -129,7 +129,9 @@ function MessageMain()
 		loadTemplate('PersonalMessage');
 
 	// Load up the members maximum message capacity.
-	if (!$user_info['is_admin'] && ($context['message_limit'] = cache_get_data('msgLimit:' . $user_info['id'], 360)) === null)
+	if ($user_info['is_admin'])
+		$context['message_limit'] = 0;
+	elseif (($context['message_limit'] = cache_get_data('msgLimit:' . $user_info['id'], 360)) === null)
 	{
 		// !!! Why do we do this?  It seems like if they have any limit we should use it.
 		$request = $smcFunc['db_query']('', '
@@ -148,8 +150,6 @@ function MessageMain()
 		// Save us doing it again!
 		cache_put_data('msgLimit:' . $user_info['id'], $context['message_limit'], 360);
 	}
-	else
-		$context['message_limit'] = 0;
 
 	// Prepare the context for the capacity bar.
 	if (!empty($context['message_limit']))
@@ -169,9 +169,19 @@ function MessageMain()
 	if ($user_settings['new_pm'])
 	{
 		$context['labels'] = $user_settings['message_labels'] == '' ? array() : explode(',', $user_settings['message_labels']);
-		foreach ($context['labels'] as $k => $v)
-			$context['labels'][(int) $k] = array('id' => $k, 'name' => trim($v), 'messages' => 0, 'unread_messages' => 0);
-		$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
+		foreach ($context['labels'] as $id_label => $label_name)
+			$context['labels'][(int) $id_label] = array(
+				'id' => $id_label,
+				'name' => trim($label_name),
+				'messages' => 0,
+				'unread_messages' => 0,
+			);
+		$context['labels'][-1] = array(
+			'id' => -1,
+			'name' => $txt['pm_msg_label_inbox'],
+			'messages' => 0,
+			'unread_messages' => 0,
+		);
 
 		ApplyRules();
 		updateMemberData($user_info['id'], array('new_pm' => 0));
@@ -190,9 +200,19 @@ function MessageMain()
 	if ($user_settings['new_pm'] || ($context['labels'] = cache_get_data('labelCounts:' . $user_info['id'], 720)) === null)
 	{
 		$context['labels'] = $user_settings['message_labels'] == '' ? array() : explode(',', $user_settings['message_labels']);
-		foreach ($context['labels'] as $k => $v)
-			$context['labels'][(int) $k] = array('id' => $k, 'name' => trim($v), 'messages' => 0, 'unread_messages' => 0);
-		$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
+		foreach ($context['labels'] as $id_label => $label_name)
+			$context['labels'][(int) $id_label] = array(
+				'id' => $id_label,
+				'name' => trim($label_name),
+				'messages' => 0,
+				'unread_messages' => 0,
+			);
+		$context['labels'][-1] = array(
+			'id' => -1,
+			'name' => $txt['pm_msg_label_inbox'],
+			'messages' => 0,
+			'unread_messages' => 0,
+		);
 
 		// Looks like we need to reseek!
 		$result = $smcFunc['db_query']('', '
@@ -270,16 +290,25 @@ function MessageMain()
 // A sidebar to easily access different areas of the section
 function messageIndexBar($area)
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $settings, $user_info;
+	global $txt, $context, $scripturl, $sourcedir, $sc, $modSettings, $settings, $user_info;
 
-	$context['pm_areas'] = array(
+	$pm_areas = array(
 		'folders' => array(
 			'title' => $txt['pm_messages'],
 			'areas' => array(
-				'send' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=send">' . $txt['new_message'] . '</a>', 'href' => $scripturl . '?action=pm;sa=send'),
-				'' => array(),
-				'inbox' => array('link' => '<a href="' . $scripturl . '?action=pm">' . $txt['inbox'] . '</a>', 'href' => $scripturl . '?action=pm'),
-				'sent' => array('link' => '<a href="' . $scripturl . '?action=pm;f=sent">' . $txt['sent_items'] . '</a>', 'href' => $scripturl . '?action=pm;f=sent'),
+				'send' => array(
+					'label' => $txt['new_message'],
+					'custom_url' => $scripturl . '?action=pm;sa=send',
+					'permission' => allowedTo('pm_send'),
+				),
+				'inbox' => array(
+					'label' => $txt['inbox'],
+					'custom_url' => $scripturl . '?action=pm',
+				),
+				'sent' => array(
+					'label' => $txt['sent_items'],
+					'custom_url' => $scripturl . '?action=pm;f=sent',
+				),
 			),
 		),
 		'labels' => array(
@@ -289,45 +318,70 @@ function messageIndexBar($area)
 		'actions' => array(
 			'title' => $txt['pm_actions'],
 			'areas' => array(
-				'search' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=search">' . $txt['pm_search_bar_title'] . '</a>', 'href' => $scripturl . '?action=pm;sa=search'),
-				'prune' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=prune">' . $txt['pm_prune'] . '</a>', 'href' => $scripturl . '?action=pm;sa=prune'),
+				'search' => array(
+					'label' => $txt['pm_search_bar_title'],
+					'custom_url' => $scripturl . '?action=pm;sa=search',
+				),
+				'prune' => array(
+					'label' => $txt['pm_prune'],
+					'custom_url' => $scripturl . '?action=pm;sa=prune'
+				),
 			),
 		),
 		'pref' => array(
 			'title' => $txt['pm_preferences'],
 			'areas' => array(
-				'manlabels' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=manlabels">' . $txt['pm_manage_labels'] . '</a>', 'href' => $scripturl . '?action=pm;sa=manlabels'),
-				'manrules' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=manrules">' . $txt['pm_manage_rules'] . '</a>', 'href' => $scripturl . '?action=pm;sa=manrules'),
-				'settings' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=settings">' . $txt['pm_settings'] . '</a>', 'href' => $scripturl . '?action=pm;sa=settings'),
+				'manlabels' => array(
+					'label' => $txt['pm_manage_labels'],
+					'custom_url' => $scripturl . '?action=pm;sa=manlabels',
+				),
+				'manrules' => array(
+					'label' => $txt['pm_manage_rules'],
+					'custom_url' => $scripturl . '?action=pm;sa=manrules',
+				),
+				'settings' => array(
+					'label' => $txt['pm_settings'],
+					'custom_url' => $scripturl . '?action=pm;sa=settings',
+				),
 			),
 		),
 	);
 
-	// Without pm_send permission, no need to show the 'New message' section.
-	if (!allowedTo('pm_send'))
-		unset($context['pm_areas']['folders']['areas']['send'], $context['pm_areas']['folders']['areas'][''], $context['pm_areas']['folders']['areas']['sent']);
-
 	// Handle labels.
 	if (empty($context['currently_using_labels']))
-		unset($context['pm_areas']['labels']);
+		unset($pm_areas['labels']);
 	else
 	{
 		// Note we send labels by id as it will have less problems in the querystring.
+		$unread_in_labels = 0;
 		foreach ($context['labels'] as $label)
 		{
 			if ($label['id'] == -1)
 				continue;
-			$context['pm_areas']['labels']['areas']['label' . $label['id']] = array(
-				'link' => '<a href="' . $scripturl . '?action=pm;l=' . $label['id'] . '">' . $label['name'] . '</a>',
-				'href' => $scripturl . '?action=pm;l=' . $label['id'],
-				'unread_messages' => &$context['labels'][(int) $label['id']]['unread_messages'],
-				'messages' => &$context['labels'][(int) $label['id']]['messages'],
+
+			// Count the amount of unread items in labels.
+			$unread_in_labels += $label['unread_messages'];
+
+			// Add the label to the menu.
+			$pm_areas['labels']['areas']['label' . $label['id']] = array(
+				'label' => $label['name'] . (!empty($label['unread_messages']) ? ' (<b>' . $label['unread_messages'] . '</b>)' : ''),
+				'custom_url' => $scripturl . '?action=pm;l=' . $label['id'],
+				'unread_messages' => $label['unread_messages'],
+				'messages' => $label['messages'],
 			);
 		}
+
+		if (!empty($unread_in_labels))
+			$pm_areas['labels']['title'] .= ' (' . $unread_in_labels . ')';
 	}
 
-	$context['pm_areas']['folders']['areas']['inbox']['unread_messages'] = &$context['labels'][-1]['unread_messages'];
-	$context['pm_areas']['folders']['areas']['inbox']['messages'] = &$context['labels'][-1]['messages'];
+	$pm_areas['folders']['areas']['inbox']['unread_messages'] = &$context['labels'][-1]['unread_messages'];
+ 	$pm_areas['folders']['areas']['inbox']['messages'] = &$context['labels'][-1]['messages'];
+	if (!empty($context['labels'][-1]['unread_messages']))
+	{
+		$pm_areas['folders']['areas']['inbox']['label'] .= ' (<b>' . $context['labels'][-1]['unread_messages'] . '</b>)';
+		$pm_areas['folders']['title'] .= ' (' . $context['labels'][-1]['unread_messages'] . ')';
+	}
 
 	// Do we have a limit on the amount of messages we can keep?
 	if (!empty($context['message_limit']))
@@ -341,13 +395,26 @@ function messageIndexBar($area)
 			'bar' => $bar > 100 ? 100 : (int) $bar,
 			'text' => sprintf($txt['pm_currently_using'], $user_info['messages'], $bar)
 		);
-
-		// Force it in to somewhere.
-		$context['pm_areas']['pref']['areas']['limit_bar'] = array('limit_bar' => true);
 	}
 
-	// Where we are now.
-	$context['pm_area'] = $area;
+	require_once($sourcedir . '/Subs-Menu.php');
+
+	// Set a few options for the menu.
+	$menuOptions = array(
+		'current_area' => $area,
+		'disable_url_session_check' => true,
+	);
+
+	// Actually create the menu!
+	$pm_include_data = createMenu($pm_areas, $menuOptions);
+	unset($pm_areas);
+
+	// Make a note of the Unique ID for this menu.
+	$context['pm_menu_id'] = $context['max_menu_id'];
+	$context['pm_menu_name'] = 'menu_data_' . $context['pm_menu_id'];
+
+	// Set the selected item.
+	$context['menu_item_selected'] = $pm_include_data['current_area'];
 
 	// obExit will know what to do!
 	if (!WIRELESS)
@@ -1440,7 +1507,7 @@ function MessageSearch2()
 	// Finish off the context.
 	$context['page_title'] = $txt['pm_search_title'];
 	$context['sub_template'] = 'search_results';
-	$context['pm_area'] = 'search';
+	$context['menu_data_' . $context['pm_menu_id']]['current_area'] = 'search';
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=pm;sa=search',
 		'name' => $txt['pm_search_bar_title'],
@@ -1730,7 +1797,7 @@ function messagePostError($error_types, $named_recipients, $recipient_ids = arra
 	global $txt, $context, $scripturl, $modSettings;
 	global $smcFunc, $user_info, $sourcedir;
 
-	$context['pm_area'] = 'send';
+	$context['menu_data_' . $context['pm_menu_id']]['current_area'] = 'send';
 
 	if (!WIRELESS)
 		$context['sub_template'] = 'send';

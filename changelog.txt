@@ -22,13 +22,16 @@ February 2009
  ! Removing columns in PostgreSQL didn't work if the db prefix wasn't specified (DbPackages-postgresql.php) [Bug 3132]
  ! PostgreSQL doesn't support LIMIT in DELETE queries (ManagePaid.php, Subs-Db-postgresql.php) [Bug 3133]
  + Present a canonical url for search engines to prevent duplicate content in their indices. (BoardIndex.php, Display.php, MessageIndex.php, Profile-View.php, index template, Printpage template, Wireless template) [Bug 3135]
- ! Change username was broken. (Profile-Modify.php) [Bug 3168]
+ ! Change username was broken. (Subs-Auth.php) [Bug 3168]
  ! Some queries were causing DB errors in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3176] 
  ! Don't allow numeric db prefixes in PostgreSQL (install.php) [Bug 3180]
  ! Installing multiple copies of SMF on the same DB caused an error in PostgreSQL (install_2-0_postgresql.sql) [Bug 3181]
  ! Trying to delete an account could cause an error in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3186]
  ! Viewing the list of watched users caused an error in PostgreSQL (ModerationCenter.php) [Bug 3208]
  ! PostgreSQL doesn't support RLIKE (ManageBans.php, Subs-Db-postgresql.php) [Bug 3185]
+ ! The personal messaging section now uses the generic menu templates. (PersonalMessage.php, PersonalMessage template) [Bug 1695] (CodeFest)
+ ! The maximum amount of personal messages wasn't always cached properly. (PersonalMessage.php) (CodeFest)
+
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================

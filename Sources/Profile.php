@@ -431,6 +431,7 @@ function ModifyProfile($post_errors = array())
 			'u' => $context['id_member'],
 		),
 	);
+
 	// Actually create the menu!
 	$profile_include_data = createMenu($profile_areas, $menuOptions);
 	unset($profile_areas);

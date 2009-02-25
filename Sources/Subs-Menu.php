@@ -247,7 +247,7 @@ function createMenu($menuData, $menuOptions = array())
 	}
 
 	// What type of menu is this?
-	if (!isset($menuOptions['menu_type']))
+	if (empty($menuOptions['menu_type']))
 	{
 		$menuOptions['menu_type'] = '_' . (empty($options['use_sidebar_menu']) ? 'dropdown' : 'sidebar');
 		$menu_context['can_toggle_drop_down'] = !$user_info['is_guest'] && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
