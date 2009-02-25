@@ -528,4 +528,4 @@ CREATE OR REPLACE FUNCTION bool_not_eq_int (boolean, integer) RETURNS boolean AS
   'SELECT CAST($1 AS integer) != $2 AS result'
 LANGUAGE 'sql';
 
-CREATE OR REPLACE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer);
+CREATE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer);

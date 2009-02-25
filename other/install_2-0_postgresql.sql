@@ -114,8 +114,8 @@ LANGUAGE 'sql';
 # Create PostgreSQL operators.
 #
 
-CREATE OR REPLACE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
-CREATE OR REPLACE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer);
+CREATE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
+CREATE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer);
 
 #
 # Sequence for table `admin_info_files`
