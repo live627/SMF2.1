@@ -74,10 +74,13 @@ function smf_db_backup_table($table, $backup_table)
 			)
 		);
 
-	//!!! Does not work at the moment!
+	//!!! Should we create backups of sequences as well?
 	$smcFunc['db_query']('', '
 		CREATE TABLE {raw:backup_table}
-		AS SELECT * FROM {raw:table}',
+		(
+			LIKE {raw:table}
+			INCLUDING DEFAULTS
+		)',
 		array(
 			'backup_table' => $backup_table,
 			'table' => $table,
