@@ -284,7 +284,7 @@ code
 	background-color: #B3F4B0;
 	color: black;
 }
-/* the error messages */
+/* Error messages */
 .errorbox
 {
 	padding: 1em;
@@ -292,22 +292,27 @@ code
 	color: black; 
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
- }
- .errorbox p.alert
- {
+}
+.errorbox h3
+{
+	padding: 0;
+	margin: 0;
+	font-size: 1.1em;
+	text-decoration: underline;
+}
+.errorbox p
+{
+	margin: 1em 0 0 0;
+}
+.errorbox p.alert
+{
 	padding: 0;
 	margin: 0;
 	float: left; 
 	width: 1em; 
 	font-size: 1.5em;
- }
-  .errorbox h3
- {
-	padding: 0;
-	margin: 0;
-	font-size: 1.1em;
-	text-decoration: underline;
- }
+}
+
 /* ************************************* */
 /* Real common classes                   */
 /* ************************************* */
