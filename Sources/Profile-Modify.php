@@ -2517,7 +2517,7 @@ function profileSaveAvatarData(&$value)
 
 				$extension = isset($extensions[$sizes[2]]) ? $extensions[$sizes[2]] : 'bmp';
 				$mime_type = 'image/' . ($extension == 'jpg' ? 'jpeg' : $extension);
-				$destName = 'avatar_' . $memID . '.' . $extension;
+				$destName = 'avatar_' . $memID . '_' . time() . '.' . $extension;
 				list ($width, $height) = getimagesize($_FILES['attachment']['tmp_name']);
 
 				// Remove previous attachments this member might have had.

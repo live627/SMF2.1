@@ -98,7 +98,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	global $modSettings, $sourcedir, $gd2, $smcFunc;
 
 	$ext = !empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg';
-	$destName = 'avatar_' . $memID . '.' . $ext;
+	$destName = 'avatar_' . $memID . '_' . time() . '.' . $ext;
 
 	$default_formats = array(
 		'1' => 'gif',

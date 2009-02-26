@@ -55,6 +55,10 @@ function RemoveTopic2()
 	// This file needs to be included for sendNotifications().
 	require_once($sourcedir . '/Subs-Post.php');
 
+	// Trying to fool us around, are we?
+	if (empty($topic))
+		redirectexit();
+
 	$request = $smcFunc['db_query']('', '
 		SELECT t.id_member_started, ms.subject, t.approved
 		FROM {db_prefix}topics AS t
