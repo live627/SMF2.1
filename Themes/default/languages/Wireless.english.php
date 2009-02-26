@@ -38,6 +38,9 @@ $txt['wireless_display_unsticky'] = 'Un-Sticky';
 $txt['wireless_display_lock'] = 'Lock';
 $txt['wireless_display_unlock'] = 'Unlock';
 
+$txt['wireless_end_code'] = 'End code';
+$txt['wireless_end_quote'] = 'End quote';
+
 $txt['wireless_profile_pm'] = 'Send Personal Message';
 $txt['wireless_ban_ip'] = 'Ban on IP';
 $txt['wireless_ban_hostname'] = 'Ban on Hostname';

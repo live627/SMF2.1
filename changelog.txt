@@ -41,6 +41,8 @@ February 2009
  ! The admin search didn't always use the proper title and help texts. (Admin.php) [Bug 3261] (CodeFest)
  ! Don't bother attempting to remove anything when there's no topic specified (RemoveTopic.php) [Bug 2056] (CodeFest)
  ! Store avatars with a timestamp in their filenames to allow better caching. (Profile-Modify.php, Subs-Graphics.php) [Bug 3255] (CodeFest)
+ * Updated the wireless templates to make quote and code blocks a lot more readable in wireless mode. (Wireless template) [Bug 3251,3239] (CodeFest)
+ & Added two language strings to support this change. (Wireless language file) [Bug 3251,3239] (CodeFest)
 
 
 SMF 2.0 RC1                                                      4 February 2009

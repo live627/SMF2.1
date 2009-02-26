@@ -97,11 +97,28 @@ function template_wap_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
+		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = strip_tags(str_replace(
+			array(
+				'<blockquote>',
+				'</blockquote>',
+				'<code>',
+				'</code>',
+				'<li>',
+				$txt['code_select'],
+			),
+			array(
+				'<br>',
+				'<br>--- ' . $txt['wireless_end_quote'] . ' ---<br>',
+				'<br>',
+				'<br>--- ' . $txt['wireless_end_code'] . ' ---<br>',
+				'<br>* ',
+				'',
+			), $message['body']), '<br>');
 
 		echo '
 		<p><u>', $message['member']['name'], '</u>:<br /></p>
-		<p>', $wireless_message, '<br /><br /></p>';
+		<p>', $message['body'], '<br /><br /></p>';
 	}
 
 	echo '
@@ -296,14 +313,31 @@ function template_imode_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
+		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = strip_tags(str_replace(
+			array(
+				'<blockquote>',
+				'</blockquote>',
+				'<code>',
+				'</code>',
+				'<li>',
+				$txt['code_select'],
+			),
+			array(
+				'<br>',
+				'<br>--- ' . $txt['wireless_end_quote'] . ' ---<br>',
+				'<br>',
+				'<br>--- ' . $txt['wireless_end_code'] . ' ---<br>',
+				'<br>* ',
+				'',
+			), $message['body']), '<br>');
 
 		echo '
 			<tr><td>', $message['first_new'] ? '
 				<a name="new"></a>' : '',
 				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
 				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
-				', $wireless_message, '
+				', $message['body'], '
 			</td></tr>';
 	}
 	echo '
@@ -572,7 +606,24 @@ function template_imode_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
+		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = strip_tags(str_replace(
+			array(
+				'<blockquote>',
+				'</blockquote>',
+				'<code>',
+				'</code>',
+				'<li>',
+				$txt['code_select'],
+			),
+			array(
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_quote'] . ' ---<br />',
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_code'] . ' ---<br />',
+				'<br />* ',
+				'',
+			), $message['body']), '<br>');
 
 		echo '
 		<table border="0" cellspacing="0" cellpadding="0">
@@ -888,14 +939,31 @@ function template_wap2_display()
 	while ($message = $context['get_message']())
 	{
 		// This is a special modification to the post so it will work on phones:
-		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
+		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = strip_tags(str_replace(
+			array(
+				'<blockquote>',
+				'</blockquote>',
+				'<code>',
+				'</code>',
+				'<li>',
+				$txt['code_select'],
+			),
+			array(
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_quote'] . ' ---<br />',
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_code'] . ' ---<br />',
+				'<br />* ',
+				'',
+			), $message['body']), '<br>');
 
 		echo $message['first_new'] ? '
 		<a name="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
 			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
 			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
-			', $wireless_message, '
+			', $message['body'], '
 		</p>';
 		$alternate = !$alternate;
 	}
@@ -1156,7 +1224,25 @@ function template_wap2_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$wireless_message = strip_tags(str_replace(array('<blockquote>', '</blockquote>', '<code>', '</code>', '<li>'), array('&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '&gt;&gt;&gt;&gt;', '&lt;&lt;&lt;&lt;', '<br />* '), $message['body']), '<br>');
+		$message['body'] = preg_replace('~<div class="(quote|code)header">(.+?)</div>~', '<br />--- $2 ---', $message['body']);
+		$message['body'] = strip_tags(str_replace(
+			array(
+				'<blockquote>',
+				'</blockquote>',
+				'<code>',
+				'</code>',
+				'<li>',
+				$txt['code_select'],
+			),
+			array(
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_quote'] . ' ---<br />',
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_code'] . ' ---<br />',
+				'<br />* ',
+				'',
+			), $message['body']), '<br>');
+
 		echo '
 			<p class="catbg">', $message['subject'], '</p>
 			<p class="titlebg">
