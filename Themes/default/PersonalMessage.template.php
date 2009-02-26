@@ -689,7 +689,7 @@ function template_search_results()
 	else
 	{
 		echo '
-		<table border="0" width="98%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
+		<table border="0" width="100%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="3">', $txt['pm_search_results'], '</td>
 			</tr>
@@ -785,7 +785,7 @@ function template_search_results()
 		// No results?
 		if (empty($context['personal_messages']))
 			echo '
-		<table width="98%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
+		<table width="100%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
 			<tr class="windowbg">
 				<td align="center">', $txt['pm_search_none_found'], '</td>
 			</tr>
@@ -795,7 +795,7 @@ function template_search_results()
 		<br />';
 
 		echo '
-		<table width="98%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
+		<table width="100%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
 			<tr class="catbg" height="30">
 				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
@@ -825,7 +825,6 @@ function template_send()
 	if (!empty($context['send_log']))
 	{
 		echo '
-		<br />
 		<table border="0" width="100%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td>', $txt['pm_send_report'], '</td>
@@ -847,8 +846,7 @@ function template_send()
 	// Show the preview of the personal message.
 	if (isset($context['preview_message']))
 	echo '
-		<br />
-		<table border="0" width="80%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
+		<table border="0" width="100%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td>', $context['preview_subject'], '</td>
 			</tr>
@@ -971,14 +969,15 @@ function template_send()
 	// Send, Preview, spellcheck buttons.
 	echo '
 							<tr>
-								<td align="right" colspan="2">
-									', template_control_richedit($context['post_box_name'], 'buttons'), '
-								</td>
-							</tr>
-							<tr>
 								<td></td>
 								<td align="left">
 									<label for="outbox"><input type="checkbox" name="outbox" id="outbox" value="1" tabindex="', $context['tabindex']++, '"', $context['copy_to_outbox'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['pm_save_outbox'], '</label>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" colspan="2">
+									<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
+									', template_control_richedit($context['post_box_name'], 'buttons'), '
 								</td>
 							</tr>
 						</table>
@@ -1201,7 +1200,7 @@ function template_report_message()
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=report;l=', $context['current_label_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<input type="hidden" name="pmsg" value="', $context['pm_id'], '" />
-		<table border="0" width="80%" cellspacing="0" class="tborder" align="center" cellpadding="4">
+		<table border="0" width="100%" cellspacing="0" class="tborder" align="center" cellpadding="4">
 			<tr class="titlebg">
 				<td>', $txt['pm_report_title'], '</td>
 			</tr>
@@ -1257,7 +1256,7 @@ function template_report_message_complete()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<table border="0" width="80%" cellspacing="0" class="tborder" align="center" cellpadding="4">
+		<table border="0" width="100%" cellspacing="0" class="tborder" align="center" cellpadding="4">
 			<tr class="titlebg">
 				<td>', $txt['pm_report_title'], '</td>
 			</tr>
@@ -1533,7 +1532,7 @@ function template_add_rule()
 
 	echo '
 	<form action="', $scripturl, '?action=pm;sa=manrules;save;rid=', $context['rid'], '" method="post" accept-charset="', $context['character_set'], '" name="addrule" id="addrule">
-		<table cellpadding="4" cellspacing="0" border="0" align="center" width="80%" class="tborder">
+		<table cellpadding="4" cellspacing="0" border="0" align="center" width="100%" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $context['rid'] == 0 ? $txt['pm_add_rule'] : $txt['pm_edit_rule'], '
@@ -1549,7 +1548,7 @@ function template_add_rule()
 				</td>
 			</tr>
 		</table><br />
-		<table cellpadding="4" cellspacing="0" border="0" align="center" width="80%" class="tborder">
+		<table cellpadding="4" cellspacing="0" border="0" align="center" width="100%" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $txt['pm_rule_description'], '
@@ -1626,7 +1625,7 @@ function template_add_rule()
 				</td>
 			</tr>
 		</table><br />
-		<table cellpadding="4" cellspacing="0" border="0" align="center" width="80%" class="tborder">
+		<table cellpadding="4" cellspacing="0" border="0" align="center" width="100%" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $txt['pm_rule_actions'], '
@@ -1677,7 +1676,7 @@ function template_add_rule()
 				</td>
 			</tr>
 		</table>
-		<table cellpadding="4" cellspacing="0" border="0" align="center" width="80%">
+		<table cellpadding="4" cellspacing="0" border="0" align="center" width="100%">
 			<tr>
 				<td align="right">
 					<input type="submit" name="save" value="', $txt['pm_rule_save'], '" />
