@@ -37,6 +37,8 @@ February 2009
  & The k in 'kB' should be lowercase. (index language file) [Bug 3262] (CodeFest)
  ! The membergroup report function was printing invalid colors. (Reports.php) [Bug 3269] (CodeFest)
  ! Signature validation could report invalid tags more than once. (Profile-Modify.php) [Bug 3253] (CodeFest)
+ ! Adjusted the URLs for the apnic, arin and ripe whois services to reflect their new locations. (Profile-View.php) [Bug 3257] (CodeFest)
+ ! The admin search didn't always use the proper title and help texts. (Admin.php) [Bug 3261] (CodeFest)
 
 
 SMF 2.0 RC1                                                      4 February 2009
