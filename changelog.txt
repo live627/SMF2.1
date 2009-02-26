@@ -34,6 +34,9 @@ February 2009
  ! Update the HTML safe version of the page title dynamically last minute in case it was set at a later time. (Subs.php) (CodeFest)
  ! Split up the help section and made it use generic menus. (Help.php, help.css, Help template, Manual language file) [Bug 3145] (CodeFest)
  ! Creation of backup tables didn't work in PostgreSQL (DbExtra-postgresql.php)
+ & The k in 'kB' should be lowercase. (index language file) [Bug 3262] (CodeFest)
+ ! The membergroup report function was printing invalid colors. (Reports.php) [Bug 3269] (CodeFest)
+
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================

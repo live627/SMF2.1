@@ -540,7 +540,7 @@ function MemberGroupsReport()
 		array(
 			'id_group' => -1,
 			'group_name' => $txt['membergroups_guests'],
-			'online_color' => '-',
+			'online_color' => '',
 			'min_posts' => -1,
 			'max_messages' => null,
 			'stars' => ''
@@ -548,7 +548,7 @@ function MemberGroupsReport()
 		array(
 			'id_group' => 0,
 			'group_name' => $txt['membergroups_members'],
-			'online_color' => '-',
+			'online_color' => '',
 			'min_posts' => -1,
 			'max_messages' => null,
 			'stars' => ''

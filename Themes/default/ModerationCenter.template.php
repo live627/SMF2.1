@@ -479,7 +479,7 @@ function template_unapproved_attachments()
 					', $item['filename'], '
 				</td>
 				<td align="right">
-					', $item['size'], 'kB
+					', $item['size'], $txt['kilobyte'], '
 				</td>
 				<td>
 					', $item['poster']['link'], '

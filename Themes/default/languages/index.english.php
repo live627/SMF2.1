@@ -380,7 +380,7 @@ $txt['delete'] = 'Delete';
 
 $txt['your_pms'] = 'Your Personal Messages';
 
-$txt['kilobyte'] = 'KB';
+$txt['kilobyte'] = 'kB';
 
 $txt['more_stats'] = '[More Stats]';
 
