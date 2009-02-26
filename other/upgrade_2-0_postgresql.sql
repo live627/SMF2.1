@@ -528,4 +528,11 @@ CREATE OR REPLACE FUNCTION bool_not_eq_int (boolean, integer) RETURNS boolean AS
   'SELECT CAST($1 AS integer) != $2 AS result'
 LANGUAGE 'sql';
 
-CREATE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer);
+---{
+$result = upgrade_query("SELECT oprname FROM pg_operator WHERE oprcode='bool_not_eq_int'");
+if($smcFunc['db_num_rows']($result) == 0)
+{
+	upgrade_query("
+		CREATE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer)");
+}
+---}
