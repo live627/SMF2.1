@@ -713,7 +713,7 @@ function template_search_results()
 			// !!! This still needs to be made pretty.
 			echo '
 		<br />
-		<table width="98%" align="center" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" align="center" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td align="left">
 					<div style="float: left;">
@@ -861,7 +861,7 @@ function template_send()
 
 	// Main message editing box.
 	echo '
-		<table border="0" width="80%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
+		<table border="0" width="100%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
 			<tr class="titlebg">
 				<td><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</td>
 			</tr><tr>
