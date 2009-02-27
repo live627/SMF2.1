@@ -24,7 +24,7 @@ $txt['admin_server_settings'] = 'Server Settings';
 $txt['admin_reserved_set'] = 'Set Reserved Names';
 $txt['admin_reserved_line'] = 'One reserved word per line.';
 $txt['admin_basic_settings'] = 'This page allows you to change the basic settings for your forum.  Be very careful with these settings, as they may render the forum dysfunctional.';
-$txt['admin_maintain'] = 'Maintenance Mode?';
+$txt['admin_maintain'] = 'Enable Maintenance Mode';
 $txt['admin_title'] = 'Forum Title';
 $txt['admin_url'] = 'Forum URL';
 $txt['cookie_name'] = 'Cookie Name';
@@ -32,8 +32,8 @@ $txt['admin_webmaster_email'] = 'Webmaster Email Address';
 $txt['boarddir'] = 'SMF Directory';
 $txt['sourcesdir'] = 'Sources Directory';
 $txt['cachedir'] = 'Cache Directory';
-$txt['admin_news'] = 'Enable News?';
-$txt['admin_guest_post'] = 'Enable Guest Posting?';
+$txt['admin_news'] = 'Enable News';
+$txt['admin_guest_post'] = 'Enable Guest Posting';
 $txt['admin_manage_members'] = 'Members';
 $txt['admin_main'] = 'Main';
 $txt['admin_config'] = 'Configuration';
@@ -53,27 +53,27 @@ $txt['admin_main_welcome'] = 'This is your &quot;%1$s&quot;.  From here, you can
 $txt['admin_news_desc'] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';
 $txt['administrators'] = 'Forum Administrators';
 $txt['admin_reserved_desc'] = 'Reserved names will keep members from registering certain usernames or using these words in their displayed names. Choose the options you wish to use from the bottom before submitting.';
-$txt['admin_activation_email'] = 'Send activation email to new members upon registration?';
+$txt['admin_activation_email'] = 'Send activation email to new members upon registration';
 $txt['admin_match_whole'] = 'Match whole name only. If unchecked, search within names.';
 $txt['admin_match_case'] = 'Match case. If unchecked, search will be case insensitive.';
 $txt['admin_check_user'] = 'Check username.';
 $txt['admin_check_display'] = 'Check display name.';
 $txt['admin_newsletter_send'] = 'You can email anyone from this page. The email addresses of the selected membergroups should appear below, but you may remove or add any email addresses you wish. Be sure that each address is separated in this fashion: \'address1; address2\'.';
 $txt['admin_fader_delay'] = 'Fading delay between items for the news fader';
-$txt['admin_bbc'] = 'Show BBC Buttons on Posting and PM Send Pages?';
+$txt['admin_bbc'] = 'Show BBC Buttons on Posting and PM Send Pages';
 
 $txt['admin_backup_fail'] = 'Failed to make backup of Settings.php - make sure Settings_bak.php exists and is writable.';
 $txt['modSettings_info'] = 'Change or set options that control how this forum operates.';
-$txt['database_server'] = 'Server on which the database resides:';
-$txt['database_user'] = 'Database Username:';
-$txt['database_password'] = 'Database Password:';
-$txt['database_name'] = 'Database Name:';
+$txt['database_server'] = 'Database Server';
+$txt['database_user'] = 'Database Username';
+$txt['database_password'] = 'Database Password';
+$txt['database_name'] = 'Database Name';
 $txt['registration_agreement'] = 'Registration Agreement';
 $txt['registration_agreement_desc'] = 'This agreement is shown when a user registers an account on this forum and has to be accepted before users can continue registration.';
-$txt['database_prexfix'] = 'Database Tables Prefix:';
+$txt['database_prexfix'] = 'Database Tables Prefix';
 $txt['errors_list'] = 'Listing of forum errors';
 $txt['errors_found'] = 'The following errors are fouling up your forum';
-$txt['errors_fix'] = 'Would you like to fix these errors?';
+$txt['errors_fix'] = 'Would you like to attempt to fix these errors?';
 $txt['errors_fixing'] = 'Fixing forum errors';
 $txt['errors_fixed'] = 'All errors fixed! Please check on any categories, boards, or topics created to decide what to do with them.';
 $txt['attachments_avatars'] = 'Attachments and Avatars';
@@ -233,8 +233,8 @@ $txt['ssi_db_passwd'] = 'Database password to use in SSI mode';
 
 $txt['default_language'] = 'Default Forum Language';
 
-$txt['maintenance_subject'] = 'Subject for display:';
-$txt['maintenance_message'] = 'Message for display:';
+$txt['maintenance_subject'] = 'Subject for display';
+$txt['maintenance_message'] = 'Message for display';
 
 $txt['errlog_desc'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the %1$s button at the bottom of the page.';
 
@@ -368,7 +368,7 @@ $txt['avatar_max_width_upload'] = 'Maximum width of uploaded avatar<div class="s
 $txt['avatar_max_height_upload'] = 'Maximum height of uploaded avatar<div class="smalltext">(0 for no limit)</div>';
 $txt['avatar_resize_upload'] = 'Resize oversized large avatars';
 $txt['avatar_resize_upload_note'] = '(requires GD module)';
-$txt['avatar_download_png'] = 'Use PNG for resized avatars?';
+$txt['avatar_download_png'] = 'Use PNG for resized avatars';
 $txt['avatar_gd_warning'] = 'The GD module is currently not installed. Some avatar features are disabled.';
 $txt['avatar_external'] = 'External avatars';
 $txt['avatar_upload'] = 'Uploadable avatars';

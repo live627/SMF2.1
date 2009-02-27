@@ -242,13 +242,13 @@ $txt['ban_type_register'] = 'register';
 $txt['ban_type_login'] = 'login';
 $txt['ban_type_access'] = 'access forum';
 
-$txt['show_online'] = 'Show others your online status?';
+$txt['show_online'] = 'Show others my online status';
 
 $txt['return_to_post'] = 'Return to topics after posting by default.';
 $txt['no_new_reply_warning'] = 'Don\'t warn on new replies made while posting.';
 $txt['recent_posts_at_top'] = 'Show most recent posts at the top.';
 $txt['recent_pms_at_top'] = 'Show most recent personal messages at top.';
-$txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
+$txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default.';
 
 $txt['timeformat_default'] = '(Forum Default)';
 $txt['timeformat_easy1'] = 'Month Day, Year, HH:MM:SS a/pm';
@@ -412,7 +412,7 @@ $txt['email_notify_buddies'] = 'From Buddies Only';
 $txt['email_notify_always'] = 'Always';
 
 $txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
-$txt['popup_messages'] = 'Show a popup when you receive new messages?';
+$txt['popup_messages'] = 'Show a popup when I receive new messages.';
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 $txt['pm_display_mode'] = 'Display personal messages';
 $txt['pm_display_mode_all'] = 'All at once';

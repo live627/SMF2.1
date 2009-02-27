@@ -336,7 +336,7 @@ $txt['sendtopic_receiver_name'] = 'Recipient\'s name';
 $txt['sendtopic_receiver_email'] = 'Recipient\'s email address';
 $txt['sendtopic_comment'] = 'Add a comment';
 
-$txt['allow_user_email'] = 'Allow users to email you?';
+$txt['allow_user_email'] = 'Allow users to email me';
 
 $txt['check_all'] = 'Check all';
 
@@ -632,7 +632,7 @@ $txt['change_color'] = 'Change Color';
 $txt['quickmod_delete_selected'] = 'Delete Selected';
 
 // In this string, don't use entities. (&amp;, etc.)
-$txt['show_personal_messages'] = 'You have received one or more new personal messages.\\nView them now (in a new window)?';
+$txt['show_personal_messages'] = 'You have received one or more new personal messages.\\nWould you like to open a new window to view them?';
 
 $txt['previous_next_back'] = '&laquo; previous';
 $txt['previous_next_forward'] = 'next &raquo;';

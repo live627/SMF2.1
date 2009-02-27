@@ -43,6 +43,7 @@ February 2009
  ! Store avatars with a timestamp in their filenames to allow better caching. (Profile-Modify.php, Subs-Graphics.php) [Bug 3255] (CodeFest)
  * Updated the wireless templates to make quote and code blocks a lot more readable in wireless mode. (Wireless template) [Bug 3251,3239] (CodeFest)
  & Added two language strings to support this change. (Wireless language file) [Bug 3251,3239] (CodeFest)
+ & Changed settings to be more consistent in terms of typography. (Admin language file, Help language file, index language file, ManageBoards language file, ManageSettings language file, Manual language file, Profile language file, Themes language file) [Bug 3275,3094]
 
 
 SMF 2.0 RC1                                                      4 February 2009

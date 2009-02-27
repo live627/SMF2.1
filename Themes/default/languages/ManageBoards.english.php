@@ -15,7 +15,7 @@ $txt['boardConfirm'] = 'Do you really want to delete this board?';
 
 $txt['catEdit'] = 'Edit Category';
 $txt['collapse_enable'] = 'Collapsible';
-$txt['collapse_desc'] = 'Allow users to collapse this category?';
+$txt['collapse_desc'] = 'Allow users to collapse this category';
 $txt['catModify'] = '(modify)';
 
 $txt['mboards_order_after'] = 'After ';

@@ -258,7 +258,16 @@ $helptxt['titlesEnable'] = 'Switching Custom Titles on will allow members with t
 $helptxt['topbottomEnable'] = 'This will add go up and go down buttons, so that member can go to the top and bottom of a page
 		without scrolling.';
 $helptxt['onlineEnable'] = 'This will show an image to indicate whether the member is online or offline';
-$helptxt['todayMod'] = 'This will show &quot;Today&quot;, or &quot;Yesterday&quot;, instead of the date.';
+$helptxt['todayMod'] = 'This will show &quot;Today&quot; or &quot;Yesterday&quot; instead of the date.<br /><br />
+		<b>Examples:</b><br /><br />
+		<dt>
+			<dt>Disabled</dt>
+			<dd>October 3, 2009 at 12:59:18 am</dd>
+			<dt>Only Today</dt>
+			<dd>Today at 12:59:18 am</dd>
+			<dt>Today &amp; Yesterday</dt>
+			<dd>Yesterday at 09:36:55 pm</dd>
+		</dt>';
 $helptxt['disableCustomPerPage'] = 'Check this option to stop users from customizing the amount of messages and topics to display per page on the Message Index and Topic Display page respectively.';
 $helptxt['enablePreviousNext'] = 'This will show a link to the next and previous topic.';
 $helptxt['pollMode'] = 'This selects whether polls are enabled or not. If polls are disabled, any existing polls will be hidden
