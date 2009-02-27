@@ -45,6 +45,8 @@ February 2009
  & Added two language strings to support this change. (Wireless language file) [Bug 3251,3239] (CodeFest)
  & Changed settings to be more consistent in terms of typography. (Admin language file, Help language file, index language file, ManageBoards language file, ManageSettings language file, Manual language file, Profile language file, Themes language file) [Bug 3275,3094]
  * Added a block with links to support resources to the Support & Credits page. (Admin.php, Admin template, Admin language file) [Bug 3092] (CodeFest)
+ ! Don't assign $txt variables by reference, as PHP's default pointers are more efficient. (lots of files) (CodeFest)
+ & $txt['database_prexfix'] should be identified as $txt['database_prefix'] instead. (Admin language file) [Bug 3279] (CodeFest)
 
 
 SMF 2.0 RC1                                                      4 February 2009

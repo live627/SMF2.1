@@ -68,12 +68,12 @@ function ViewErrorLog()
 
 	// You can filter by any of the following columns:
 	$filters = array(
-		'id_member' => &$txt['username'],
-		'ip' => &$txt['ip_address'],
-		'session' => &$txt['session'],
-		'url' => &$txt['error_url'],
-		'message' => &$txt['error_message'],
-		'error_type' => &$txt['error_type'],
+		'id_member' => $txt['username'],
+		'ip' => $txt['ip_address'],
+		'session' => $txt['session'],
+		'url' => $txt['error_url'],
+		'message' => $txt['error_message'],
+		'error_type' => $txt['error_type'],
 		'file' => $txt['file'],
 		'line' => $txt['line'],
 	);

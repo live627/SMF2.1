@@ -83,7 +83,7 @@ function Packages()
 	// Set up the linktree and title so it's already done.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => &$txt['package_manager']
+		'name' => $txt['package_manager']
 	);
 	$context['page_title'] = $txt['package'];
 
@@ -113,7 +113,7 @@ function Packages()
 
 	// Set up some tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['package_manager'],
+		'title' => $txt['package_manager'],
 		// !!! 'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
@@ -1077,7 +1077,7 @@ function PackageList()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=list;package=' . $_REQUEST['package'],
-		'name' => &$txt['list_file']
+		'name' => $txt['list_file']
 	);
 	$context['page_title'] .= ' - ' . $txt['list_file'];
 	$context['sub_template'] = 'list';
@@ -1122,7 +1122,7 @@ function ExamineFile()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=list;package=' . $_REQUEST['package'],
-		'name' => &$txt['package_examine_file']
+		'name' => $txt['package_examine_file']
 	);
 	$context['page_title'] .= ' - ' . $txt['package_examine_file'];
 	$context['sub_template'] = 'examine';
@@ -1154,7 +1154,7 @@ function InstalledList()
 	// Set up the linktree so things are purdy.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=installed',
-		'name' => &$txt['view_and_remove']
+		'name' => $txt['view_and_remove']
 	);
 	$context['page_title'] .= ' - ' . $txt['installed_packages'];
 	$context['sub_template'] = 'view_installed';
@@ -1219,7 +1219,7 @@ function PackageBrowse()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
-		'name' => &$txt['browse_packages']
+		'name' => $txt['browse_packages']
 	);
 	$context['page_title'] .= ' - ' . $txt['browse_packages'];
 	$context['sub_template'] = 'browse';
@@ -1397,7 +1397,7 @@ function PackageOptions()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=options',
-		'name' => &$txt['package_install_options']
+		'name' => $txt['package_install_options']
 	);
 	$context['page_title'] = $txt['package_settings'];
 	$context['sub_template'] = 'install_options';

@@ -224,9 +224,9 @@ function ShowAdminHelp()
 
 	// What help string should be used?
 	if (isset($helptxt[$_GET['help']]))
-		$context['help_text'] = &$helptxt[$_GET['help']];
+		$context['help_text'] = $helptxt[$_GET['help']];
 	elseif (isset($txt[$_GET['help']]))
-		$context['help_text'] = &$txt[$_GET['help']];
+		$context['help_text'] = $txt[$_GET['help']];
 	else
 		$context['help_text'] = $_GET['help'];
 

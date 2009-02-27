@@ -1052,7 +1052,7 @@ function AdminLogs()
 
 	// Setup some tab stuff.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['logs'],
+		'title' => $txt['logs'],
 		'help' => '',
 		'description' => $txt['maintain_info'],
 		'tabs' => array(

@@ -36,7 +36,7 @@ function ManageCalendar()
 	loadLanguage('ManageCalendar');
 
 	// Default text.
-	$context['explain_text'] = &$txt['calendar_desc'];
+	$context['explain_text'] = $txt['calendar_desc'];
 
 	// Little short on the ground of functions here... but things can and maybe will change...
 	$subActions = array(
@@ -49,7 +49,7 @@ function ManageCalendar()
 
 	// Set up the two tabs here...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['manage_calendar'],
+		'title' => $txt['manage_calendar'],
 		'help' => 'calendar',
 		'description' => $txt['calendar_settings_desc'],
 		'tabs' => array(

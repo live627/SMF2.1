@@ -135,8 +135,8 @@ function ManageMaintenance()
 
 	// This uses admin tabs - as it should!
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['maintain_title'],
-		'help' => &$txt['maintenance_general'],
+		'title' => $txt['maintain_title'],
+		'help' => $txt['maintenance_general'],
 		'description' => $txt['maintain_info'],
 		'tabs' => array(
 			'database' => array(),
@@ -224,9 +224,9 @@ function MaintainDatabase()
 	$context['convert_entities'] = $db_type == 'mysql' && isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
 
 	if (isset($_GET['done']) && $_GET['done'] == 'convertutf8')
-		$context['maintenance_finished'] = &$txt['utf8_title'];
+		$context['maintenance_finished'] = $txt['utf8_title'];
 	if (isset($_GET['done']) && $_GET['done'] == 'convertentities')
-		$context['maintenance_finished'] = &$txt['entity_convert_title'];
+		$context['maintenance_finished'] = $txt['entity_convert_title'];
 }
 
 // Supporting function for the routine maintenance area.
@@ -235,7 +235,7 @@ function MaintainRoutine()
 	global $context, $txt;
 
 	if (isset($_GET['done']) && $_GET['done'] == 'recount')
-		$context['maintenance_finished'] = &$txt['maintain_recount'];
+		$context['maintenance_finished'] = $txt['maintain_recount'];
 }
 
 // Supporting function for the members maintenance area.
@@ -300,9 +300,9 @@ function MaintainTopics()
 	$smcFunc['db_free_result']($result);
 
 	if (isset($_GET['done']) && $_GET['done'] == 'purgeold')
-		$context['maintenance_finished'] = &$txt['maintain_old'];
+		$context['maintenance_finished'] = $txt['maintain_old'];
 	elseif (isset($_GET['done']) && $_GET['done'] == 'massmove')
-		$context['maintenance_finished'] = &$txt['move_topics_maintenance'];
+		$context['maintenance_finished'] = $txt['move_topics_maintenance'];
 }
 
 // Find and fix all errors.
@@ -322,7 +322,7 @@ function MaintainCleanCache()
 	// Just wipe the whole cache directory!
 	clean_cache();
 
-	$context['maintenance_finished'] = &$txt['maintain_cache'];
+	$context['maintenance_finished'] = $txt['maintain_cache'];
 }
 
 // Empties all uninmportant logs
@@ -364,7 +364,7 @@ function MaintainEmptyUnimportantLogs()
 
 	updateSettings(array('search_pointer' => 0));
 
-	$context['maintenance_finished'] = &$txt['maintain_logs'];
+	$context['maintenance_finished'] = $txt['maintain_logs'];
 }
 
 // Oh noes!
@@ -1609,7 +1609,7 @@ function MaintainReattributePosts()
 	require_once($sourcedir . '/Subs-Members.php');
 	reattributePosts($memID, $email, $membername, !empty($_POST['posts']));
 
-	$context['maintenance_finished'] = &$txt['maintain_reattribute_posts'];
+	$context['maintenance_finished'] = $txt['maintain_reattribute_posts'];
 }
 
 // Handling function for the backup stuff.
@@ -1699,7 +1699,7 @@ function MaintainPurgeInactiveMembers()
 		deleteMembers($members);
 	}
 
-	$context['maintenance_finished'] = &$txt['maintain_members'];
+	$context['maintenance_finished'] = $txt['maintain_members'];
 }
 
 // Removing old posts doesn't take much as we really pass through.

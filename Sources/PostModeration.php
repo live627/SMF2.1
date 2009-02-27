@@ -230,7 +230,7 @@ function UnapprovedPosts()
 
 	// We have enough to make some pretty tabs!
 	$context[$context['moderation_menu_name']]['tab_data'] = array(
-		'title' => &$txt['mc_unapproved_posts'],
+		'title' => $txt['mc_unapproved_posts'],
 		'help' => 'postmod',
 		'description' => $txt['mc_unapproved_posts_desc'],
 	);

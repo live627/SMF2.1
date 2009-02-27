@@ -72,7 +72,7 @@ function RepairBoards()
 
 	// Make sure the tabs stay nice.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['maintain_title'],
+		'title' => $txt['maintain_title'],
 		'help' => '',
 		'description' => $txt['maintain_info'],
 		'tabs' => array(),

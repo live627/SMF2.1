@@ -135,7 +135,7 @@ function ThemesMain()
 	is_not_guest();
 
 	// Default the page title to Theme Administration by default.
-	$context['page_title'] = &$txt['themeadmin_title'];
+	$context['page_title'] = $txt['themeadmin_title'];
 
 	// Theme administration, removal, choice, or installation...
 	$subActions = array(
@@ -155,7 +155,7 @@ function ThemesMain()
 	if (!empty($context['admin_menu_name']))
 	{
 		$context[$context['admin_menu_name']]['tab_data'] = array(
-			'title' => &$txt['themeadmin_title'],
+			'title' => $txt['themeadmin_title'],
 			'help' => 'themes',
 			'description' => $txt['themeadmin_description'],
 			'tabs' => array(
@@ -1273,7 +1273,7 @@ function PickTheme()
 
 	ksort($context['available_themes']);
 
-	$context['page_title'] = &$txt['theme_pick'];
+	$context['page_title'] = $txt['theme_pick'];
 	$context['sub_template'] = 'pick';
 }
 

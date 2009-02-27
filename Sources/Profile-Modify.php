@@ -1539,7 +1539,7 @@ function getAvatars($directory, $level)
 		$result[] = array(
 			'filename' => 'blank.gif',
 			'checked' => in_array($context['member']['avatar']['server_pic'], array('', 'blank.gif')),
-			'name' => &$txt['no_pic'],
+			'name' => $txt['no_pic'],
 			'is_dir' => false
 		);
 	}
@@ -2153,7 +2153,7 @@ function profileLoadGroups()
 	$context['member_groups'] = array(
 		0 => array(
 			'id' => 0,
-			'name' => &$txt['no_primary_membergroup'],
+			'name' => $txt['no_primary_membergroup'],
 			'is_primary' => $cur_profile['id_group'] == 0,
 			'can_be_additional' => false,
 			'can_be_primary' => true,
@@ -2824,9 +2824,9 @@ function profileSendActivation()
 	// Send them to the done-with-registration-login screen.
 	loadTemplate('Register');
 	$context += array(
-		'page_title' => &$txt['profile'],
+		'page_title' => $txt['profile'],
 		'sub_template' => 'after',
-		'description' => &$txt['activate_changed_email']
+		'description' => $txt['activate_changed_email']
 	);
 
 	// We're gone!

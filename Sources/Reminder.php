@@ -200,7 +200,7 @@ function setPassword()
 
 	// Fill the context array.
 	$context += array(
-		'page_title' => &$txt['reminder_set_password'],
+		'page_title' => $txt['reminder_set_password'],
 		'sub_template' => 'set_password',
 		'code' => $_REQUEST['code'],
 		'memID' => (int) $_REQUEST['u']
@@ -278,12 +278,12 @@ function setPassword2()
 
 	loadTemplate('Login', 'login');
 	$context += array(
-		'page_title' => &$txt['reminder_password_set'],
+		'page_title' => $txt['reminder_password_set'],
 		'sub_template' => 'login',
 		'default_username' => $username,
 		'default_password' => $_POST['passwrd1'],
 		'never_expire' => false,
-		'description' => &$txt['reminder_password_set']
+		'description' => $txt['reminder_password_set']
 	);
 }
 
@@ -399,12 +399,12 @@ function SecretAnswer2()
 	// Tell them it went fine.
 	loadTemplate('Login', 'login');
 	$context += array(
-		'page_title' => &$txt['reminder_password_set'],
+		'page_title' => $txt['reminder_password_set'],
 		'sub_template' => 'login',
 		'default_username' => $row['member_name'],
 		'default_password' => $_POST['passwrd1'],
 		'never_expire' => false,
-		'description' => &$txt['reminder_password_set']
+		'description' => $txt['reminder_password_set']
 	);
 }
 

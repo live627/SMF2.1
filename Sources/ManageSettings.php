@@ -119,7 +119,7 @@ function ModifyFeatureSettings()
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['modSettings_title'],
+		'title' => $txt['modSettings_title'],
 		'help' => 'featuresettings',
 		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
@@ -159,7 +159,7 @@ function ModifySecuritySettings()
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['admin_security_moderation'],
+		'title' => $txt['admin_security_moderation'],
 		'help' => 'securitysettings',
 		'description' => $txt['security_settings_desc'],
 		'tabs' => array(
@@ -193,7 +193,7 @@ function ModifyModSettings()
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['admin_modifications'],
+		'title' => $txt['admin_modifications'],
 		'help' => 'modsettings',
 		'description' => $txt['modification_settings_desc'],
 		'tabs' => array(
@@ -434,7 +434,7 @@ function ModifyBasicSettings($return_config = false)
 
 	$config_vars = array(
 			// Big Options... polls, sticky, bbc....
-			array('select', 'pollMode', array(&$txt['disable_polls'], &$txt['enable_polls'], &$txt['polls_as_topics'])),
+			array('select', 'pollMode', array($txt['disable_polls'], $txt['enable_polls'], $txt['polls_as_topics'])),
 		'',
 			// Basic stuff, titles, flash, permissions...
 			array('check', 'allow_guestAccess'),
@@ -550,7 +550,7 @@ function ModifyLayoutSettings($return_config = false)
 			array('int', 'compactTopicPagesContiguous', null, $txt['contiguous_page_display'] . '<div class="smalltext">' . str_replace(' ', '&nbsp;', '"3" ' . $txt['to_display'] . ': <b>1 ... 4 [5] 6 ... 9</b>') . '<br />' . str_replace(' ', '&nbsp;', '"5" ' . $txt['to_display'] . ': <b>1 ... 3 4 [5] 6 7 ... 9</b>') . '</div>'),
 		'',
 			// Stuff that just is everywhere - today, search, online, etc.
-			array('select', 'todayMod', array(&$txt['today_disabled'], &$txt['today_only'], &$txt['yesterday_today'])),
+			array('select', 'todayMod', array($txt['today_disabled'], $txt['today_only'], $txt['yesterday_today'])),
 			array('check', 'topbottomEnable'),
 			array('check', 'onlineEnable'),
 			array('check', 'enableVBStyleLogin'),

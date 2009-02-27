@@ -774,9 +774,9 @@ function ModifyMembergroup()
 			fatal_lang_error('cannot_edit_permissions_inherited');
 	}
 	elseif ($context['group']['id'] == -1)
-		$context['group']['name'] = &$txt['membergroups_guests'];
+		$context['group']['name'] = $txt['membergroups_guests'];
 	else
-		$context['group']['name'] = &$txt['membergroups_members'];
+		$context['group']['name'] = $txt['membergroups_members'];
 
 	$context['profile']['id'] = empty($_GET['pid']) ? 0 : (int) $_GET['pid'];
 

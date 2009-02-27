@@ -504,7 +504,7 @@ function Register2($verifiedOpenID = false)
 		loadTemplate('Register', 'login');
 
 		$context += array(
-			'page_title' => &$txt['register'],
+			'page_title' => $txt['register'],
 			'sub_template' => 'after',
 			'description' => $modSettings['registration_method'] == 2 ? $txt['approval_after_registration'] : $txt['activate_after_registration']
 		);
@@ -658,12 +658,12 @@ function Activate()
 	}
 
 	$context += array(
-		'page_title' => &$txt['registration_successful'],
+		'page_title' => $txt['registration_successful'],
 		'sub_template' => 'login',
 		'default_username' => $row['member_name'],
 		'default_password' => '',
 		'never_expire' => false,
-		'description' => &$txt['activate_success']
+		'description' => $txt['activate_success']
 	);
 }
 
@@ -733,7 +733,7 @@ function CoppaForm()
 	else
 	{
 		$context += array(
-			'page_title' => &$txt['coppa_title'],
+			'page_title' => $txt['coppa_title'],
 			'sub_template' => 'coppa',
 		);
 

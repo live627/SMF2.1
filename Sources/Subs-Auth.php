@@ -268,7 +268,7 @@ function InMaintenance()
 	$context['sub_template'] = 'maintenance';
 	$context['title'] = &$mtitle;
 	$context['description'] = &$mmessage;
-	$context['page_title'] = &$txt['maintain_mode'];
+	$context['page_title'] = $txt['maintain_mode'];
 }
 
 function adminLogin()

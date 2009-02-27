@@ -61,11 +61,11 @@ function PackageGet()
 	// Add the appropriate items to the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => &$txt['package_manager']
+		'name' => $txt['package_manager']
 	);
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;get',
-		'name' => &$txt['package_get']
+		'name' => $txt['package_get']
 	);
 	$context['page_title'] = $txt['package'];
 
@@ -93,7 +93,7 @@ function PackageGet()
 
 	// Now create the tabs for the template.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['package_manager'],
+		'title' => $txt['package_manager'],
 		//'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(

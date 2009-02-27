@@ -124,7 +124,7 @@ if (!defined('SMF'))
 	ie.	array('check', 'nameInModSettingsAndSQL'),
 
 	 * A selection box.  Used for the selection of something from a list.
-	ie.	array('select', 'nameInModSettingsAndSQL', array('valueForSQL' => &$txt['displayedValue'])),
+	ie.	array('select', 'nameInModSettingsAndSQL', array('valueForSQL' => $txt['displayedValue'])),
 	Note that just saying array('first', 'second') will put 0 in the SQL for 'first'.
 
 	 * A password input box. Used for passwords, no less!
@@ -173,7 +173,7 @@ function ModifySettings()
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['admin_server_settings'],
+		'title' => $txt['admin_server_settings'],
 		'help' => 'serversettings',
 		'description' => $txt['admin_basic_settings'],
 	);
@@ -208,16 +208,16 @@ function ModifyGeneralSettings($return_config = false)
 	OR	an empty string for a horizontal rule.
 	OR	a string for a titled section. */
 	$config_vars = array(
-		array('mbname', &$txt['admin_title'], 'file', 'text', 30),
+		array('mbname', $txt['admin_title'], 'file', 'text', 30),
 		'',
-		array('maintenance', &$txt['admin_maintain'], 'file', 'check'),
-		array('mtitle', &$txt['maintenance_subject'], 'file', 'text', 36),
-		array('mmessage', &$txt['maintenance_message'], 'file', 'text', 36),
+		array('maintenance', $txt['admin_maintain'], 'file', 'check'),
+		array('mtitle', $txt['maintenance_subject'], 'file', 'text', 36),
+		array('mmessage', $txt['maintenance_message'], 'file', 'text', 36),
 		'',
-		array('webmaster_email', &$txt['admin_webmaster_email'], 'file', 'text', 30),
+		array('webmaster_email', $txt['admin_webmaster_email'], 'file', 'text', 30),
 		'',
-		array('enableCompressedOutput', &$txt['enableCompressedOutput'], 'db', 'check', null, 'enableCompressedOutput'),
-		array('disableHostnameLookup', &$txt['disableHostnameLookup'], 'db', 'check', null, 'disableHostnameLookup'),
+		array('enableCompressedOutput', $txt['enableCompressedOutput'], 'db', 'check', null, 'enableCompressedOutput'),
+		array('disableHostnameLookup', $txt['disableHostnameLookup'], 'db', 'check', null, 'disableHostnameLookup'),
 	);
 
 	if ($return_config)
@@ -249,23 +249,23 @@ function ModifyDatabaseSettings($return_config = false)
 	OR	an empty string for a horizontal rule.
 	OR	a string for a titled section. */
 	$config_vars = array(
-		array('db_server', &$txt['database_server'], 'file', 'text'),
-		array('db_user', &$txt['database_user'], 'file', 'text'),
-		array('db_passwd', &$txt['database_password'], 'file', 'password'),
-		array('db_name', &$txt['database_name'], 'file', 'text'),
-		array('db_prefix', &$txt['database_prexfix'], 'file', 'text'),
-		array('db_persist', &$txt['db_persist'], 'file', 'check', null, 'db_persist'),
-		array('db_error_send', &$txt['db_error_send'], 'file', 'check'),
-		array('ssi_db_user', &$txt['ssi_db_user'], 'file', 'text', null, 'ssi_db_user'),
-		array('ssi_db_passwd', &$txt['ssi_db_passwd'], 'file', 'password'),
+		array('db_server', $txt['database_server'], 'file', 'text'),
+		array('db_user', $txt['database_user'], 'file', 'text'),
+		array('db_passwd', $txt['database_password'], 'file', 'password'),
+		array('db_name', $txt['database_name'], 'file', 'text'),
+		array('db_prefix', $txt['database_prefix'], 'file', 'text'),
+		array('db_persist', $txt['db_persist'], 'file', 'check', null, 'db_persist'),
+		array('db_error_send', $txt['db_error_send'], 'file', 'check'),
+		array('ssi_db_user', $txt['ssi_db_user'], 'file', 'text', null, 'ssi_db_user'),
+		array('ssi_db_passwd', $txt['ssi_db_passwd'], 'file', 'password'),
 		'',
-		array('autoFixDatabase', &$txt['autoFixDatabase'], 'db', 'check'),
-		array('autoOptMaxOnline', &$txt['autoOptMaxOnline'], 'db', 'int'),
+		array('autoFixDatabase', $txt['autoFixDatabase'], 'db', 'check'),
+		array('autoOptMaxOnline', $txt['autoOptMaxOnline'], 'db', 'int'),
 		'',		
-		array('boardurl', &$txt['admin_url'], 'file', 'text', 36),
-		array('boarddir', &$txt['boarddir'], 'file', 'text', 36),
-		array('sourcedir', &$txt['sourcesdir'], 'file', 'text', 36),
-		array('cachedir', &$txt['cachedir'], 'file', 'text', 36),
+		array('boardurl', $txt['admin_url'], 'file', 'text', 36),
+		array('boarddir', $txt['boarddir'], 'file', 'text', 36),
+		array('sourcedir', $txt['sourcesdir'], 'file', 'text', 36),
+		array('cachedir', $txt['cachedir'], 'file', 'text', 36),
 	);
 
 	if ($return_config)
@@ -295,16 +295,16 @@ function ModifyCookieSettings($return_config = false)
 	// Define the variables we want to edit.
 	$config_vars = array(
 		// Cookies...
-		array('cookiename', &$txt['cookie_name'], 'file', 'text', 20),
-		array('cookieTime', &$txt['cookieTime'], 'db', 'int'),
-		array('localCookies', &$txt['localCookies'], 'db', 'check'),
-		array('globalCookies', &$txt['globalCookies'], 'db', 'check'),
-		array('secureCookies', &$txt['secureCookies'], 'db', 'check', 'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
+		array('cookiename', $txt['cookie_name'], 'file', 'text', 20),
+		array('cookieTime', $txt['cookieTime'], 'db', 'int'),
+		array('localCookies', $txt['localCookies'], 'db', 'check'),
+		array('globalCookies', $txt['globalCookies'], 'db', 'check'),
+		array('secureCookies', $txt['secureCookies'], 'db', 'check', 'disabled' => !isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on'),
 		'',
 		// Sessions
-		array('databaseSession_enable', &$txt['databaseSession_enable'], 'db', 'check'),
-		array('databaseSession_loose', &$txt['databaseSession_loose'], 'db', 'check'),
-		array('databaseSession_lifetime', &$txt['databaseSession_lifetime'], 'db', 'int'),
+		array('databaseSession_enable', $txt['databaseSession_enable'], 'db', 'check'),
+		array('databaseSession_loose', $txt['databaseSession_loose'], 'db', 'check'),
+		array('databaseSession_lifetime', $txt['databaseSession_lifetime'], 'db', 'int'),
 	);
 
 	if ($return_config)
@@ -819,8 +819,8 @@ function ManageLanguages()
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['language_configuration'],
-		'description' => &$txt['language_description'],
+		'title' => $txt['language_configuration'],
+		'description' => $txt['language_description'],
 	);
 
 	// Call the right function for this sub-acton.
@@ -1046,8 +1046,8 @@ function ModifyLanguageSettings($return_config = false)
 	OR	an empty string for a horizontal rule.
 	OR	a string for a titled section. */
 	$config_vars = array(
-		'language' => array('language', &$txt['default_language'], 'file', 'select', array(), null, 'disabled' => $settings_not_writable),
-		array('userLanguage', &$txt['userLanguage'], 'db', 'check', null, 'userLanguage'),
+		'language' => array('language', $txt['default_language'], 'file', 'select', array(), null, 'disabled' => $settings_not_writable),
+		array('userLanguage', $txt['userLanguage'], 'db', 'check', null, 'userLanguage'),
 	);
 
 	if ($return_config)

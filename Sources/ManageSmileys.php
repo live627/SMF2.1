@@ -81,13 +81,13 @@ function ManageSmileys()
 	// Default the sub-action to 'edit smiley settings'.
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'editsets';
 
-	$context['page_title'] = &$txt['smileys_manage'];
+	$context['page_title'] = $txt['smileys_manage'];
 	$context['sub_action'] = $_REQUEST['sa'];
 	$context['sub_template'] = $context['sub_action'];
 
 	// Load up all the tabs...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['smileys_manage'],
+		'title' => $txt['smileys_manage'],
 		'help' => 'smileys',
 		'description' => $txt['smiley_settings_explain'],
 		'tabs' => array(
@@ -746,7 +746,7 @@ function AddSmiley()
 		'id' => 0,
 		'code' => '',
 		'filename' => $context['filenames'][0]['id'],
-		'description' => &$txt['smileys_default_description'],
+		'description' => $txt['smileys_default_description'],
 		'location' => 0,
 		'is_new' => true,
 	);

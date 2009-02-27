@@ -114,12 +114,12 @@ function Ban()
 	// Default the sub-action to 'view ban list'.
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'list';
 
-	$context['page_title'] = &$txt['ban_title'];
+	$context['page_title'] = $txt['ban_title'];
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Tabs for browsing the different ban functions.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['ban_title'],
+		'title' => $txt['ban_title'],
 		'help' => 'ban_members',
 		'description' => $txt['ban_description'],
 		'tabs' => array(

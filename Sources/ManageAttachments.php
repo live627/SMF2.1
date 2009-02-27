@@ -150,7 +150,7 @@ function ManageAttachments()
 
 	// This uses admin tabs - as it should!
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['attachments_avatars'],
+		'title' => $txt['attachments_avatars'],
 		'help' => 'manage_files',
 		'description' => $txt['attachments_desc'],
 	);
@@ -168,7 +168,7 @@ function ManageAttachmentSettings($return_config = false)
 	$config_vars = array(
 		array('title', 'attachment_manager_settings'),
 			// Are attachments enabled?
-			array('select', 'attachmentEnable', array(&$txt['attachmentEnable_deactivate'], &$txt['attachmentEnable_enable_all'], &$txt['attachmentEnable_disable_new'])),
+			array('select', 'attachmentEnable', array($txt['attachmentEnable_deactivate'], $txt['attachmentEnable_enable_all'], $txt['attachmentEnable_disable_new'])),
 		'',
 			// Extension checks etc.
 			array('check', 'attachmentCheckExtensions'),
@@ -234,10 +234,10 @@ function ManageAvatarSettings($return_config = false)
 			array('text', 'avatar_max_height_external', 6),
 			array('select', 'avatar_action_too_large',
 				array(
-					'option_refuse' => &$txt['option_refuse'],
-					'option_html_resize' => &$txt['option_html_resize'],
-					'option_js_resize' => &$txt['option_js_resize'],
-					'option_download_and_resize' => &$txt['option_download_and_resize'],
+					'option_refuse' => $txt['option_refuse'],
+					'option_html_resize' => $txt['option_html_resize'],
+					'option_js_resize' => $txt['option_js_resize'],
+					'option_download_and_resize' => $txt['option_download_and_resize'],
 				),
 			),
 		// Uploadable avatars?
@@ -247,7 +247,7 @@ function ManageAvatarSettings($return_config = false)
 			array('text', 'avatar_max_height_upload', 6),
 			array('check', 'avatar_resize_upload'),
 			array('check', 'avatar_download_png'),
-			array('select', 'custom_avatar_enabled', array(&$txt['option_attachment_dir'], &$txt['option_specified_dir']), 'onchange' => 'updateStatus();'),
+			array('select', 'custom_avatar_enabled', array($txt['option_attachment_dir'], $txt['option_specified_dir']), 'onchange' => 'updateStatus();'),
 			array('text', 'custom_avatar_dir', 40, 'subtext' => $txt['custom_avatar_dir_desc'], 'invalid' => !$context['valid_custom_avatar_dir']),
 			array('text', 'custom_avatar_url', 40),
 	);

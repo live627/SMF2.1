@@ -70,8 +70,8 @@ function Memberlist()
 	// $subActions array format:
 	// 'subaction' => array('label', 'function', 'is_selected')
 	$subActions = array(
-		'all' => array(&$txt['view_all_members'], 'MLAll', $context['listing_by'] == 'all'),
-		'search' => array(&$txt['mlist_search'], 'MLSearch', $context['listing_by'] == 'search'),
+		'all' => array($txt['view_all_members'], 'MLAll', $context['listing_by'] == 'all'),
+		'search' => array($txt['mlist_search'], 'MLSearch', $context['listing_by'] == 'search'),
 	);
 
 	// Set up the sort links.
@@ -148,7 +148,7 @@ function Memberlist()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=mlist',
-		'name' => &$txt['members_list']
+		'name' => $txt['members_list']
 	);
 
 	$context['can_send_pm'] = allowedTo('pm_send');
