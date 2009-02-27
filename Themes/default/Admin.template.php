@@ -310,7 +310,20 @@ function template_credits()
 					<i>', $version['version'], '</i><br />';
 
 	echo '
+				</td>
+			</tr>
+		</table>';
 
+	// Point the admin to common support resources.
+	echo '
+		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 2ex;">
+			<tr class="titlebg">
+				<td>', $txt['support_resources'], '</td>
+			</tr>
+			<tr>
+				<td class="windowbg2">
+					<p>', $txt['support_resources_p1'], '</p>
+					<p>', $txt['support_resources_p2'], '</p>
 				</td>
 			</tr>
 		</table>';
