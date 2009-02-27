@@ -151,7 +151,7 @@ function template_before()
 			echo '
 			<dt></dt>
 			<dd>
-				<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <b>', $context['coppa_desc'], '.</b></label>
+				<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <strong>', $context['coppa_desc'], '.</strong></label>
 			</dd>';
 			
 		echo '
@@ -161,23 +161,23 @@ function template_before()
 		if (!empty($modSettings['enableOpenID']))
 		{
 			echo '
-		<hr />
+		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			', $txt['authenticate_label'], ':
+		</h4>
 		<dl class="register_form">
-			<dt>', $txt['authenticate_label'], ':</dt>
-			<dd></dd>
 			<dt>
 				<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
-				<label for="auth_pass"><b>', $txt['authenticate_password'], ':</b></label>
+				<label for="auth_pass">', $txt['authenticate_password'], ':</label>
 			</dt>	
 			<dd></dd>
-			<dt><i>', $txt['choose_pass'], ':</i></dt>
+			<dt><em>', $txt['choose_pass'], ':</em></dt>
 			<dd>
 				<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
 				<span id="smf_autov_pwmain_div" style="display: none;">
 					<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
 				</span>			
 			</dd>
-			<dt><i>', $txt['verify_pass'], ':</i></dt>
+			<dt><em>', $txt['verify_pass'], ':</em></dt>
 			<dd>
 				<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
 				<span id="smf_autov_pwverify_div" style="display: none;">
@@ -186,11 +186,11 @@ function template_before()
 			</dd>
 			<dt>
 				<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
-				<label for="auth_openid"><b>', $txt['authenticate_openid'], ':</b></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+				<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 			</dt>
 			<dd>
 			</dd>
-			<dt><i>', $txt['authenticate_openid_url'], ':</i></dt>
+			<dt><em>', $txt['authenticate_openid_url'], ':</em></dt>
 			<dd>
 				<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
 				<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>				
@@ -305,15 +305,13 @@ function template_before()
 	if ($context['require_agreement'])
 		echo '
 	<p class="description">', $context['agreement'], '</p>
-	<div class="centertext">
-		<div>
-			<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
-		</div>';
+	<p class="centertext">
+		<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <strong>', $txt['agree'], '</strong></label>
+	</p>';
 
-			echo '
-		<div>
-			<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
-		</div>
+	echo '
+	<div class="centertext">
+		<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
 	</div>
 </form>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
@@ -340,7 +338,7 @@ function template_before()
 	// Update the authentication status.
 	updateAuthMethod();';
 
-echo '
+	echo '
 // ]]></script>';
 }
 
@@ -413,14 +411,14 @@ function template_coppa_form()
 				<td align="left">', $context['forum_contacts'], '</td>
 			</tr><tr>
 				<td align="right">
-					<i>', $txt['coppa_form_address'], '</i>: ', $context['ul'], '<br />
+					<em>', $txt['coppa_form_address'], '</em>: ', $context['ul'], '<br />
 					', $context['ul'], '<br />
 					', $context['ul'], '<br />
 					', $context['ul'], '
 				</td>
 			</tr><tr>
 				<td align="right">
-					<i>', $txt['coppa_form_date'], '</i>: ', $context['ul'], '
+					<em>', $txt['coppa_form_date'], '</em>: ', $context['ul'], '
 					<br /><br />
 				</td>
 			</tr><tr>
@@ -444,11 +442,6 @@ function template_verification_sound()
 		<title>', $context['page_title'], '</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
 		<style type="text/css">';
-
-	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
-	if ($context['browser']['needs_size_fix'])
-		echo '
-			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
 
 	// Just show the help text and a "close window" link.
 	echo '
@@ -584,7 +577,7 @@ function template_edit_agreement()
 		echo '
 			<div class="information">
 				<form action="', $scripturl, '?action=admin;area=regcenter" id="change_reg" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
-					<b>', $txt['admin_agreement_select_language'], ':</b>&nbsp;
+					<strong>', $txt['admin_agreement_select_language'], ':</strong>&nbsp;
 					<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();" tabindex="', $context['tabindex']++, '">';
 
 		foreach ($context['editable_agreements'] as $file => $name)

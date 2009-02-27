@@ -25,7 +25,7 @@ function template_main()
 	{
 		// $alternate will either be true or false. If it's true, use "windowbg2" and otherwise use "windowbg".
 		echo '
-			<div class="clearfix">
+			<div class="members_list">
 				<ul class="windowbg', $alternate ? '2' : '', '">
 					<li class="who">';
 

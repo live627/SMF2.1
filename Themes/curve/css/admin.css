@@ -12,8 +12,8 @@ ol.search_results li
 /* new features settings screen */
 .features
 {
-	clear: both;
 	border-bottom: solid 1px #e0e0e0;
+	overflow: hidden;
 }
 .features_image
 {
@@ -43,55 +43,9 @@ ol.search_results li
 	float: left;
 	margin: 0 1em 1em 1em;
 }
-/* the old style admin menus */
-#left_admsection
-{
-	width: 150px;
-	float: left;
-}
-.adm_section h3
-{
-	padding: 0.5em 1em;
-}
-#adm_container
-{
-	border-bottom: solid 1px #ccc;
-	margin-bottom: 5px;
-}
-.left_admmenu li
-{
-	padding: 0 0 0 0.5em;
-}
-.left_admmenu
-{
-	margin-bottom: 1em;
-}
-#main_admsection
-{
-	margin-left: 160px;
-}
+
 .windowbg, .windowbg2
 {
 	padding-left: 1em;
 	padding-right: 1em;
-}
-tr.windowbg td, tr.windowbg2 td
-{
-	padding: 0.3em 0.7em;
-}
-#credits p
-{
-	padding: 0;
-	font-style: italic;
-	margin: 0;
-}
-/* common for all admin sections */
-h3.titlebg img
-{
-	vertical-align: middle;
-	margin-right: 0.5em;
-}
-h3.titlebg, tr.titlebg td
-{
-	padding-left: 0.7em;
 }

@@ -1,133 +1,45 @@
 /* ************************************* */
 /* styles from BoardIndex.template       */
 /* ************************************* */
-p#stats
-{
-	margin: 0;
-	padding: 5px 0 5px 0;
-	text-align: right;
-	font-size: 0.85em;
-}
-/* the illustrative icons */
-h3.catbg img.icon, h3.titlebg img.icon, h4.titlebg img.icon
-{
-	margin: 4px 5px 0 0;
-	float: left;
-}
-h3.catbg img.icon
-{
-	float: right;
-}
-img#upshrink_ic
-{
-	margin: 10px 10px 0 0;
-}
-/* each category have a container */
-.category_frame
-{
-	padding-top: 5px;
-}
-/* float the unread link */
-.category_frame span.tools
-{
-	float: right;
-}
-.category_frame span.tools .unreadlink
-{
-	padding-right: 1em;
-}
-/* float the items */
-ul.category
-{
-	margin: 0 4px 0 2px;
-	padding: 0;
-}
-ul.category li.board
-{
-	border-bottom: solid 2px white;
-	clear: both;
-	border-top: solid 2px white;
-}
-ul.category li.board ul li
-{
-	float: left;
-	padding-bottom: 2000px;
-	margin-bottom: -2000px;
-}
-ul.category li.board ul
-{
-	overflow: hidden;
-}
-ul.category li.board ul li.icon
-{
-	padding-top: 4px;
-	width: 55px;	
-	text-align: center;
-	border-right: solid 1px white;
-}
-ul.category li.board ul li.icon img
-{
-	margin: auto;
-}
-ul.category li.board ul li.info
-{
-	width: 50%;	
-	border-right: solid 1px white;
-}
 /* the board title! */
-ul.category li.board ul li.info h4
+.table_list tbody.content td.info a.subject
 {
+	font-weight: bold;
+	display: block;
+	padding-bottom: 2px;
+	font-size: 110%;
 	margin: 0;
-	padding: 8px 0 0 8px;
 	color: #d97b33;
 }
-ul.category li.board ul li.info h4 a
+.table_list tbody.content td.children
 {
-	font-size: 1.1em;
-	color: #d97b33;
+	color: #555;
+	font-size: 85%;
 }
-ul.category li.board ul li.info p
+/* we want some distance between the categories */
+.table_list tbody.content
 {
-	margin: 0;
-	padding: 2px 0 2px 8px;
+	margin-bottom: 1em;
 }
-ul.category li.board ul li.stats
-{
-	width: 15%;	
-	font-size: 0.85em;
-	text-align: center;
-	vertical-align: middle;
-	border-right: solid 2px white;
-}
-ul.category li.board ul li.lastpost
-{
-	width: 25%;
-	font-size: 0.9em;
-}
-ul.category li.board ul li h4, ul.category li.board ul li p
-{
-	margin: 0;
-	padding: 8px;	
-}
+
 /* the posting icons */
 #posting_icons
 {
 	font-size: 0.8em;
-	height: 1.5em;
-	padding: 0.5em 1em 0.5em 2em;
+	padding: 0.2em 1em 0.5em 2em;
 	clear: both;
-	line-height: 1.5em;
-	margin-bottom: 4em;
+	line-height: 1em;
+	margin-bottom: 2em;
 }
 #posting_icons img
 {
 	vertical-align: middle;
 }
-#posting_icons p
+#posting_icons .buttonlist
 {
 	margin: 0;
 	padding: 0;
-	float: left;
+	float: right;
 }
 #postbuttons_upper ul li a span
 {
@@ -224,7 +136,19 @@ form#ic_login ul li label
 {
 	background: url(../images/titlebg_right_ic.png) no-repeat;
 }
-
+img#upshrink_ic
+{
+	float: right;
+	margin: 10px 5px 0 0;
+}
+table.table_list a.unreadlink,table.table_list a.collapse
+{
+	float: right;
+}
+table.table_list a.collapse
+{
+	margin: 10px 5px 0 1em;
+}
 /* ************************************* */
 /* styles from MessageIndex.template     */
 /* ************************************* */
@@ -295,6 +219,18 @@ form#ic_login ul li label
 .topic_table td.lastpost
 {
 	background-image: none;
+}
+#childboards h3
+{
+	padding: 0;
+}
+#childboards .table_list thead
+{
+	display: none;
+}
+#childboards .table_list 
+{
+	margin-bottom: 1em;
 }
 /* ************************************* */
 /* styles from Display.template          */
@@ -464,7 +400,7 @@ p#whoisviewing
 	float: left;
 	width: 50%;
 }
-.postarea ul.quickbuttons, .postarea .modifybutton
+.postarea .modifybutton
 {
 	clear: right;
 	float: right;
@@ -473,7 +409,9 @@ p#whoisviewing
 }
 .postarea ul.quickbuttons
 {
-	width: 45%;
+	clear: right;
+	float: right;
+	text-align: right;
 }
 .postarea ul.quickbuttons a:hover
 {

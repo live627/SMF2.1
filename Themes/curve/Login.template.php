@@ -14,8 +14,8 @@ function template_login()
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
 			</h3>
-			<span id="upperframe"><span></span></span>
-			<div id="roundframe"><div class="frame">';
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">';
 
 	// Did they make a mistake last time?
 	if (!empty($context['login_errors']))
@@ -41,7 +41,7 @@ function template_login()
 		echo '<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
 				<dl>
 					<dt>', $txt['openid'], ':</dt>
-					<dd><input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i></dd>
+					<dd><input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em></dd>
 				</dl><hr />';
 
 	echo '
@@ -61,7 +61,7 @@ function template_login()
 				<p class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</p>
 				<input type="hidden" name="hash_passwrd" value="" />
 			</div></div>
-			<span id="lowerframe"><span></span></span>
+			<span class="lowerframe"><span></span></span>
 		</div></form>';
 
 	// Focus on the correct input - username or password.
@@ -97,8 +97,8 @@ function template_kick_guest()
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt=""  /> ', $txt['login'], '
 			</h3>
-			<span id="upperframe"><span></span></span>
-			<div id="roundframe"><div class="frame">
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">
 				<dl>
 					<dt>', $txt['username'], ':</dt>
 					<dd><input type="text" name="user" size="20" /></dd>
@@ -125,7 +125,7 @@ function template_kick_guest()
 				<p class="centertext"><input type="submit" value="', $txt['login'], '" /></p>
 				<p class="centertext smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a></p>
 			</div></div>
-			<span id="lowerframe"><span></span></span>
+			<span class="lowerframe"><span></span></span>
 			<input type="hidden" name="hash_passwrd" value="" />
 		</div>
 	</form>';
@@ -156,8 +156,8 @@ function template_maintenance()
 		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
 			', $txt['admin_login'], '
 		</h4>
-		<span id="upperframe"><span></span></span>
-		<div id="roundframe"><div class="frame">
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe"><div class="innerframe">
 			<dl>
 				<dt>', $txt['username'], ':</dt>
 				<dd><input type="text" name="user" size="15" /></dd>
@@ -170,7 +170,7 @@ function template_maintenance()
 			</dl>
 			<p class="centertext"><input type="submit" value="', $txt['login'], '" /></p>
 		</div></div>	
-		<span id="lowerframe"><span></span></span>
+		<span class="lowerframe"><span></span></span>
 	</div>
 </form>';
 }
@@ -221,27 +221,27 @@ function template_retry_activate()
 
 	// Just ask them for their code so they can try it again...
 	echo '
-		<br />
 		<form action="', $scripturl, '?action=activate;u=', $context['member_id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<table border="0" width="600" cellpadding="4" cellspacing="0" class="tborder" align="center">
-				<tr class="titlebg">
-					<td colspan="2">', $context['page_title'], '</td>';
+			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $context['page_title'], '
+			</h3>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">';
 
 	// You didn't even have an ID?
 	if (empty($context['member_id']))
 		echo '
-				</tr><tr class="windowbg">
-					<td align="right" width="40%">', $txt['invalid_activation_username'], ':</td>
-					<td><input type="text" name="user" size="30" /></td>';
+				<dl>
+					<dt>', $txt['invalid_activation_username'], ':</dt>
+					<dd><input type="text" name="user" size="30" /></dd>';
 
 	echo '
-				</tr><tr class="windowbg">
-					<td align="right" width="40%">', $txt['invalid_activation_retry'], ':</td>
-					<td><input type="text" name="code" size="30" /></td>
-				</tr><tr class="windowbg">
-					<td colspan="2" align="center" style="padding: 1ex;"><input type="submit" value="', $txt['invalid_activation_submit'], '" /></td>
-				</tr>
-			</table>
+					<dt>', $txt['invalid_activation_retry'], ':</dt>
+					<dd><input type="text" name="code" size="30" /></dd>
+				</dl>
+				<p><input type="submit" value="', $txt['invalid_activation_submit'], '" /></p>
+			</div></div>
+			<span class="lowerframe"><span></span></span>
 		</form>';
 }
 
@@ -252,36 +252,36 @@ function template_resend()
 
 	// Just ask them for their code so they can try it again...
 	echo '
-		<br />
 		<form action="', $scripturl, '?action=activate;sa=resend" method="post" accept-charset="', $context['character_set'], '">
-			<table border="0" width="600" cellpadding="4" cellspacing="0" class="tborder" align="center">
-				<tr class="titlebg">
-					<td colspan="2">', $context['page_title'], '</td>
-				</tr><tr class="windowbg">
-					<td align="right" width="40%">', $txt['invalid_activation_username'], ':</td>
-					<td><input type="text" name="user" size="40" value="', $context['default_username'], '" /></td>
-				</tr><tr class="windowbg">
-					<td colspan="2" style="padding-top: 3ex; padding-left: 3ex;">', $txt['invalid_activation_new'], '</td>
-				</tr><tr class="windowbg">
-					<td align="right" width="40%">', $txt['invalid_activation_new_email'], ':</td>
-					<td><input type="text" name="new_email" size="40" /></td>
-				</tr><tr class="windowbg">
-					<td align="right" width="40%">', $txt['invalid_activation_password'], ':</td>
-					<td><input type="password" name="passwd" size="30" /></td>
-				</tr><tr class="windowbg">';
+			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $context['page_title'], '
+			</h3>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerfame">
+				<dl>
+					<dt>', $txt['invalid_activation_username'], ':</dt>
+					<dd><input type="text" name="user" size="40" value="', $context['default_username'], '" /></dd>
+				</dl>	
+				<p>', $txt['invalid_activation_new'], '</p>
+				<dl>
+					<dt>', $txt['invalid_activation_new_email'], ':</dt>
+					<dd><input type="text" name="new_email" size="40" /></dd>
+					<dt>', $txt['invalid_activation_password'], ':</dt>
+					<dd><input type="password" name="passwd" size="30" /></dd>
+				</dl>';
 
 	if ($context['can_activate'])
 		echo '
-					<td colspan="2" style="padding-top: 3ex; padding-left: 3ex;">', $txt['invalid_activation_known'], '</td>
-				</tr><tr class="windowbg">
-					<td align="right" width="40%">', $txt['invalid_activation_retry'], ':</td>
-					<td><input type="text" name="code" size="30" /></td>
-				</tr><tr class="windowbg">';
+				<p>', $txt['invalid_activation_known'], '</p>
+				<dl>
+					<dt>', $txt['invalid_activation_retry'], ':</dt>
+					<dd><input type="text" name="code" size="30" /></dd>
+				</dl>';
 
 	echo '
-					<td colspan="2" align="center" style="padding: 1ex;"><input type="submit" value="', $txt['invalid_activation_resend'], '" /></td>
-				</tr>
-			</table>
+				<p><input type="submit" value="', $txt['invalid_activation_resend'], '" /></p>
+			</div></div>
+			<span class="lowerframe"><span></span></span>
 		</form>';
 }
 
@@ -292,22 +292,11 @@ function template_admin_openid_disabled()
 
 	// Tell them they can't do this - really sorry!
 	echo '
-	<div style="text-align: center">
-		<table border="0" width="480" cellspacing="0" cellpadding="3" class="tborder" align="center">
-			<tr class="titlebg">
-				<td align="left">
-					<img src="', $settings['images_url'], '/openid.gif" alt="" align="top" /> ', $txt['openid_admin_disabled'], '
-				</td>
-			</tr>
-			<tr class="windowbg">
-				<td align="left">
-					', $txt['openid_admin_disallowed_desc'], '<br />
-					<hr />
-					', sprintf($txt['openid_admin_disallowed_desc2'], $scripturl . '?action=profile;area=account;u=' . $context['user']['id']), '
-				</td>
-			</tr>
-		</table>
-	</div>';
+	<p class="align_center">
+		<img src="', $settings['images_url'], '/openid.gif" alt="" align="top" /> ', $txt['openid_admin_disabled'], '
+		', $txt['openid_admin_disallowed_desc'], '<br /><hr />
+		', sprintf($txt['openid_admin_disallowed_desc2'], $scripturl . '?action=profile;area=account;u=' . $context['user']['id']), '
+	</p>';
 }
 
 ?>

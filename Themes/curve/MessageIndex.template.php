@@ -8,60 +8,88 @@ function template_main()
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
-	<div class="tborder" id="childboards">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['parent_boards'], '</h3>';
-
-		echo '
-		<ul class="category windowbg2">';
+<div class="tborder" id="childboards">
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['parent_boards'], '</h3>
+	<div class="table_frame">
+		<table class="table_list">
+			<thead>
+				<tr><th colspan="4"></th></tr>
+			</thead>
+			<tfoot>
+				<tr><td colspan="4"></td></tr>
+			</tfoot>
+			<tbody class="content">	';
 
 		foreach ($context['boards'] as $board)
 		{
 			echo '
-			<li class="board">
-				<ul>
-					<li class="icon windowbg">
-						<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
+			<tr class="windowbg2">
+				<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '' , '>
+					<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 			// If the board or children is new, show an indicator.
 			if ($board['new'] || $board['children_new'])
 				echo '
-							<img src="', $settings['images_url'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+						<img src="', $settings['images_url'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
 			// Is it a redirection board?
 			elseif ($board['is_redirect'])
 				echo '
-							<img src="', $settings['images_url'], '/redirect.png" alt="*" title="*" border="0" />';
+						<img src="', $settings['images_url'], '/redirect.png" alt="*" title="*" border="0" />';
 			// No new posts at all! The agony!!
 			else
 				echo '
-							<img src="', $settings['images_url'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
+						<img src="', $settings['images_url'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
 
 			echo '
-						</a>
-					</li>
-					<li class="info">
-						<h4><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a>';
+					</a>
+				</td>
+				<td class="info">
+					<a class="subject" href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a>';
 
 			// Has it outstanding posts for approval?
 			if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
 				echo '
-							<a href="', $scripturl, '?action=moderate;area=postmod;sa=', ($board['unapproved_topics'] > $board['unapproved_posts'] ? 'topics' : 'posts'), ';brd=', $board['id'], ';', $context['session_var'], '=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=', ($board['unapproved_topics'] > $board['unapproved_posts'] ? 'topics' : 'posts'), ';brd=', $board['id'], ';', $context['session_var'], '=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 
 			echo '
-						</h4>
-						<p>', $board['description'] , '</p>';
+					
+					<p>', $board['description'] , '</p>';
 
 			// Show the "Moderators: ". Each has name, href, link, and id. (but we're gonna use link_moderators.)
 			if (!empty($board['moderators']))
 				echo '
-						<p class="moderators">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
+					<p class="moderators">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
 
+			// Show some basic information about the number of posts, etc.
+				echo '
+				</td>
+				<td class="stats windowbg">
+					<p>', $board['posts'], ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
+					', $board['is_redirect'] ? '' : $board['topics'] . ' ' . $txt['board_topics'], '
+					</p>
+				</td>
+				<td class="lastpost">';
+
+			/* The board's and children's 'last_post's have:
+			time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
+			link, href, subject, start (where they should go for the first unread post.),
+			and member. (which has id, name, link, href, username in it.) */
+			if (!empty($board['last_post']['id']))
+				echo '
+					<p><strong>', $txt['last_post'], '</strong>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
+					', $txt['in'], ' ', $board['last_post']['link'], '<br />
+					', $txt['on'], ' ', $board['last_post']['time'],'
+					</p>';
+			echo '
+				</td>
+			</tr>';
 			// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
 			if (!empty($board['children']))
 			{
 				// Sort the links into an array with new boards bold so it can be imploded.
 				$children = array();
 				/* Each child in each board's children has:
-					id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
+						id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
 				foreach ($board['children'] as $child)
 				{
 					if (!$child['is_redirect'])
@@ -76,37 +104,14 @@ function template_main()
 					$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 				}
 				echo '
-						<p class="children"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</p>';
+			<tr><td colspan="3" class="children windowbg"><strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '</td></tr>';
 			}
-
-			// Show some basic information about the number of posts, etc.
-			echo '
-					</li>
-					<li class="stats windowbg">
-						<p>', $board['posts'], ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
-						', $board['is_redirect'] ? '' : $board['topics'] . ' ' . $txt['board_topics'], '
-						</p>
-					</li>
-					<li class="lastpost">';
-
-			/* The board's and children's 'last_post's have:
-				time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
-				link, href, subject, start (where they should go for the first unread post.),
-				and member. (which has id, name, link, href, username in it.) */
-			if (!empty($board['last_post']['id']))
-				echo '
-						<p><strong>', $txt['last_post'], '</strong>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
-						', $txt['in'], ' ', $board['last_post']['link'], '<br />
-						', $txt['on'], ' ', $board['last_post']['time'],'
-						</p>';
-			echo '
-					</li>
-				</ul>
-			</li>';
 		}
 		echo '
-		</ul>
-	</div>';
+			</tbody>
+		</table>
+	</div>
+</div>';
 	}		
 
 

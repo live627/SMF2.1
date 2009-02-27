@@ -47,8 +47,8 @@ function template_main()
 	{
 		echo '
 		<div id="advanced_search">
-			<span id="upperframe"><span></span></span>
-			<div id="roundframe"><div class="frame">
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">
 				<input type="hidden" name="advanced" value="1" />
 				<span class="enhanced">
 					<strong>', $txt['search_for'], ':</strong>
@@ -95,7 +95,7 @@ function template_main()
 					<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.</dd>
 				</dl>
 			</div></div>
-			<span id="lowerframe"><span></span></span>';
+			<span class="lowerframe"><span></span></span>';
 
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
 		if (!empty($context['search_params']['topic']))

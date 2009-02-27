@@ -62,7 +62,7 @@ function template_init()
 	$settings['message_index_preview'] = false;
 	
 	/* Set the following variable to true if this theme requires the optional theme strings file to be loaded. */
-	$settings['require_theme_strings'] = false;
+	$settings['require_theme_strings'] = true;
 }
 
 // The main sub template above the content.
@@ -76,7 +76,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?b4"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js?b4"></script>
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?b4"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
@@ -104,7 +104,6 @@ function template_html_above()
 
 	// The ?b4 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/dropmenu.css?b4" />
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?b4" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?b4" media="print" />';
 
@@ -143,11 +142,6 @@ function template_html_above()
 		echo '
 	<link rel="index" href="', $scripturl, '?board=', $context['current_board'], '.0" />';
 
-	// the alternative fontsizes 
-	echo '
-	<link rel="alternate stylesheet" type="text/css" media="screen" title="mediumtext" href="', $settings['theme_url'], '/css/mediumtext.css" />
-	<link rel="alternate stylesheet" type="text/css" media="screen" title="bigtext" href="', $settings['theme_url'], '/css/bigtext.css" />';
-
 	// We'll have to use the cookie to remember the header...
 	if ($context['user']['is_guest'])
 	{
@@ -162,63 +156,40 @@ function template_html_above()
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
 		mainHeader.setOptions("collapse_header", "', $context['session_id'], '");
-		mainHeader.addToggleImage("upshrink", "/upshrink.png", "/upshrink2.png");
+		mainHeader.addToggleImage("upshrink", "/upshrink2.png", "/upshrink.png");
 		mainHeader.addTogglePanel("upper_section");
 	// ]]></script>';
 
-	// !!! This should definitely go into a separate javascript file! 
 	if($context['browser']['is_ie6'] && !$context['browser']['is_ie7'])
 		echo '
-	<script type="text/javascript"><!--//--><![CDATA[//><!--
-		sfHover = function() {
-			var sfEls = document.getElementById("menu_nav").getElementsByTagName("LI");
-			for (var i=0; i<sfEls.length; i++) {
-				sfEls[i].onmouseover=function() {
-					this.className+=" over";
-				}
-				sfEls[i].onmouseout=function() {
-					this.className=this.className.replace(new RegExp(" over\\b"), "");
-				}
-			}
-		}
-		if (window.attachEvent) window.attachEvent("onload", sfHover);
-	//--><!]]></script>';
-	
-	// the styleswitcher script (replace with internal function?)
-	echo '
-	<script type="text/javascript" 	src="', $settings['theme_url'], '/scripts/styleswitcher.js"></script>';
+	<script type="text/javascript" 	src="', $settings['theme_url'], '/scripts/mainmenu.js"></script>';
 	
 	echo '
 </head>
-<body>';
+<body id="bodyframe" class="average">';
 }
 
 function template_body_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// the font-size changer
 	echo '
-	<p id="fontsize_panel">
-		<a href="javascript:chooseStyle(\'none\', 1660)"><img src="', $settings['images_url'], '/theme/font_default.png" alt="*" /></a>
-		<a href="javascript:chooseStyle(\'mediumtext\', 1660)"><img src="', $settings['images_url'], '/theme/font_medium.png" alt="*" /></a>
-		<a href="javascript:chooseStyle(\'bigtext\', 1660)"><img src="', $settings['images_url'], '/theme/font_big.png" alt="*" /></a>
-	</p>';
-	
-	echo '
-	<div id="header"><div class="frame">';
+	<div id="header"><div class="frame">
+		<div id="top_section">
+			<h1 class="forumtitle">
+				<a href="', $scripturl, '">', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '</a>
+			</h1>';
 
+	// the upshrink image, right-floated
 	echo '
-		<h1 class="forumtitle">
-			<a href="', $scripturl, '">', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '
-			</a>
-		</h1>
-		', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<h2 class="sitelogo">' . $settings['site_slogan'] . '</h2>', ' 
-		<a href="#" onclick="mainHeader.toggle(); return false;">
-			<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.png' : 'upshrink2.png', '" alt="*" title="', $txt['upshrink_description'], '" />
-		</a>
-		<ul id="upper_section" class="middletext"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
-			<li class="user">';
+			<a href="#" onclick="mainHeader.toggle(); return false;">
+				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink2.png' : 'upshrink.png', '" alt="*" title="', $txt['upshrink_description'], '" />
+			</a>';
+	echo '
+			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<p class="sitelogo">' . $settings['site_slogan'] . '</p>', ' 
+		</div>
+		<div id="upper_section" class="middletext"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
+			<div class="user">';
 
 		// If the user is logged in, display stuff like their name, new messages, etc.
 		if ($context['user']['is_logged'])
@@ -279,8 +250,8 @@ function template_body_above()
 		}
 	
 		echo '
-			</li>
-			<li class="news normaltext">
+			</div>
+			<div class="news normaltext">
 				<form id="search_form" style="margin: 0;" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 					<input type="text" name="search" value="" />&nbsp;
 					<input type="submit" name="submit" value="', $txt['search'], '" />
@@ -300,13 +271,13 @@ function template_body_above()
 		// Show a random news item? (or you could pick one from news_lines...)
 		if (!empty($settings['enable_news']))
 			echo '
-				<h3>', $txt['news'], ': </h3>
+				<h2>', $txt['news'], ': </h2>
 				<p>', $context['random_news_line'], '</p>';
 
 		echo '
-			</li>
-		</ul>';
-	
+			</div>
+		</div>';
+
 		// Show the menu here, according to the menu sub template.
 		template_menu();
 
@@ -352,6 +323,7 @@ function template_html_below()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
+<script type="text/javascript"> QuickSwitchy_initialize(); </script>
 </body></html>';
 }
 
@@ -370,7 +342,8 @@ function theme_linktree($force_show = false)
 	$shown_linktree = true;
 
 	echo '
-		<ul id="navigation">';
+	<div id="navigate_section">
+		<ul>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
 	foreach ($context['linktree'] as $link_num => $tree)
@@ -397,7 +370,8 @@ function theme_linktree($force_show = false)
 			</li>';
 	}
 	echo '
-		</ul>';
+		</ul>
+	</div>';
 }
 
 // Show the menu up top. Something like [home] [help] [profile] [logout]...
@@ -406,7 +380,7 @@ function template_menu()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-		<div id="main_menu"><div class="center_wrapper">
+		<div id="main_menu">
 			<ul class="dropmenu" id="menu_nav">';
 
 	foreach ($context['menu_buttons'] as $act => $button)
@@ -458,7 +432,7 @@ function template_menu()
 
 	echo '
 			</ul>
-		</div></div>';
+		</div>';
 }
 
 // Generate a strip of buttons.

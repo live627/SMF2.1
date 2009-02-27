@@ -30,10 +30,8 @@ body
 {
 	font: 75%/125% verdana, Helvetica, sans-serif;
 	margin: 5px auto;
-	padding: 5px 0 20px 0;
-	width: 85%;
-	max-width: 1600px;
-	min-width: 650px;
+	padding: 15px 0 20px 0;
+	min-width: 450px;
 }
 
 /* use dark grey for the text, leaving black for headers etc */
@@ -146,7 +144,6 @@ ul, ul li
 {
 	text-align: center;
 }
-
 /* ************************************* */
 /* Some specific SMF elements            */
 /* ************************************* */
@@ -284,7 +281,7 @@ code
 	background-color: #B3F4B0;
 	color: black;
 }
-/* Error messages */
+/* the error messages */
 .errorbox
 {
 	padding: 1em;
@@ -292,27 +289,22 @@ code
 	color: black; 
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
-}
-.errorbox h3
-{
-	padding: 0;
-	margin: 0;
-	font-size: 1.1em;
-	text-decoration: underline;
-}
-.errorbox p
-{
-	margin: 1em 0 0 0;
-}
-.errorbox p.alert
-{
+ }
+ .errorbox p.alert
+ {
 	padding: 0;
 	margin: 0;
 	float: left; 
 	width: 1em; 
 	font-size: 1.5em;
-}
-
+ }
+  .errorbox h3
+ {
+	padding: 0;
+	margin: 0;
+	font-size: 1.1em;
+	text-decoration: underline;
+ }
 /* ************************************* */
 /* Real common classes                   */
 /* ************************************* */
@@ -572,30 +564,7 @@ table.table_grid td
 	border-bottom: solid 1px white;
 	border-right: solid 1px white;
 }
-/* Helping style to clear floated items. */
-.clearfix:after 
-{
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
-    visibility: hidden;
-}
 
-.clearfix 
-{
-	display: inline-block;
-}
-
-/* Hides from IE-mac. \*/
-* html .clearfix 
-{
-	height: 1%;
-}
-.clearfix 
-{
-	display: block;
-}
 /* End hide from IE-mac. */
 
 /* ************************************* */
@@ -608,7 +577,125 @@ table.table_grid td
 	text-align: right;
 	padding: 0.5em;
 }
+/* ************************************* */
+/* the round corners of curved boxes */
+/* ************************************* */
+.windowbg span.topslice
+{
+	display: block;
+	background: url(images/theme/windowbg_topslice.png) top left no-repeat;
+}
+.windowbg span.topslice span
+{
+	display: block;
+	background: url(images/theme/windowbg_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.windowbg span.botslice
+{
+	display: block;
+	background: url(images/theme/windowbg_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.windowbg span.botslice span
+{
+	display: block;
+	background: url(images/theme/windowbg_botslice2.png) top right no-repeat;
+	height: 11px;
+}
 
+.windowbg2 span.topslice
+{
+	display: block;
+	background: url(images/theme/windowbg2_topslice.png) top left no-repeat;
+}
+.windowbg2 span.topslice span
+{
+	display: block;
+	background: url(images/theme/windowbg2_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.windowbg2 span.botslice
+{
+	display: block;
+	background: url(images/theme/windowbg2_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.windowbg2 span.botslice span
+{
+	display: block;
+	background: url(images/theme/windowbg2_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+
+.approvebg span.topslice
+{
+	display: block;
+	background: url(images/theme/approvebg_topslice.png) top left no-repeat;
+}
+.approvebg span.topslice span
+{
+	display: block;
+	background: url(images/theme/approvebg_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.approvebg span.botslice
+{
+	display: block;
+	background: url(images/theme/approvebg_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.approvebg span.botslice span
+{
+	display: block;
+	background: url(images/theme/approvebg_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+/* alternative framing */
+.roundframe
+{
+	background: url(images/theme/ic_bg.png) repeat-y;
+}
+.roundframe div.innerframe
+{
+	padding: 0 10px;
+	display: block;
+	background: url(images/theme/ic_bg2.png) top right repeat-y;
+}
+div.innerframe dl,div.innerframe dt,div.innerframe p
+{
+	margin: 0;
+}
+div.innerframe p
+{
+	padding: 0.5em;
+}
+span.upperframe
+{
+	padding: 0;
+	display: block;
+	background: url(images/theme/ic_bg_top.png) top left no-repeat;
+}
+span.upperframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(images/theme/ic_bg_top2.png) top right no-repeat;
+}
+span.lowerframe
+{
+	padding: 0;
+	display: block;
+	background: url(images/theme/ic_bg_bot.png) bottom left no-repeat;
+}
+span.lowerframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(images/theme/ic_bg_bot2.png) bottom right no-repeat;
+}
 /* ************************************* */
 /* AutoSuggest                           */
 /* ************************************* */
@@ -633,3 +720,615 @@ table.table_grid td
 	cursor: pointer;
 	color: #EEEEEE;
 }
+ul.tabbuttons li
+{
+	float: left;
+}
+/******************************************/
+/*     Dropdown menus   */
+/*****************************************/
+#main_menu 
+{
+	width: 100%;
+	text-align: left;
+	padding: 2em 0 1em 7px;
+	margin: 0;
+}
+/* center the manin menu */
+#main_menu .dropmenu
+{
+	padding: 0 0 0 5px; 
+	margin: 0;
+}
+
+.dropmenu, .dropmenu ul 
+{
+	float: left;
+	width: 98%;
+	list-style: none;
+	line-height: 1;
+	padding: 0;
+	margin: 0 0 1em 0;
+}
+.dropmenu
+{
+	padding: 0 0 0 1%;
+}
+.dropmenu a 
+{
+	display: block;
+	color: #000000;
+	text-decoration: none;
+}
+.dropmenu a span
+{
+	display: block;
+	padding: 0 0 0 5px;
+	font-size: 0.9em;
+}
+/* the backgrounds first level only*/
+.dropmenu li a.firstlevel
+{
+	margin-right: 8px;
+}
+.dropmenu li a.firstlevel span.firstlevel
+{
+	display: block;
+	position: relative;
+	left: -5px;
+	padding-left: 5px;
+	height: 22px;
+	line-height: 19px;
+}
+.dropmenu li 
+{
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+.dropmenu li ul 
+{
+	position: absolute;
+	left: -999em;
+	height: auto;
+	width: 19.2em;
+	font-weight: normal;
+	margin: 0 0 0 -5px;
+	border-bottom: solid 1px #999;
+	background: url(images/theme/menu_gfx.png) -30px -80px no-repeat;
+	padding: 7px 0 0 0;
+	z-index: 90;
+}
+
+.dropmenu li li 
+{
+	width: 19em;
+	margin: 0;
+	border-left: solid 1px #999;
+	border-right: solid 1px #999;
+}
+.dropmenu li li a span
+{
+	display: block;
+	padding: 8px;
+}
+.dropmenu li ul ul 
+{
+	margin: -1.8em 0 0 13em;
+}
+
+/* the active button */
+.dropmenu li a.active
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% 0;
+	color: #ffffff;
+	font-weight: bold;
+}
+.dropmenu li a.active span.firstlevel
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 0 0;
+}
+/* the hover effects */
+.dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% -31px;
+	color: #ffffff;
+	cursor: pointer;
+	text-decoration: none;
+}
+.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 0 -31px;
+}
+/* the hover effects on level2 and 3*/
+.dropmenu li li a:hover
+{
+	background: #D4DBE4;
+	color: #000;
+	text-decoration: none;
+}
+.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul 
+{
+	left: -999em;
+}
+
+.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul 
+{
+	left: auto;
+}
+/* the button lists used everywhere */
+.buttonlist ul
+{
+	z-index: 100;
+	display: table;
+	padding: 5px;
+	margin: 0;
+}
+.buttonlist ul li
+{
+	float: left;
+}
+.buttonlist ul li a
+{
+	display: block;
+	font-size: 0.8em;
+	color: black;
+	background: url(images//theme/button_bg_right.png) no-repeat top right;
+	padding: 0 8px 0 0;
+	margin-left: 5px;
+	text-transform: uppercase;
+}
+.buttonlist ul li a:hover
+{
+	background: url(images//theme/active_menu_right.png) no-repeat top right;
+	color: #fff;
+	text-decoration: none;
+}
+.buttonlist ul li a span
+{
+	background: url(images//theme/button_bg_left.png) no-repeat top left;
+	display: block;
+	height: 24px;
+	line-height: 17px;
+	padding: 0 0 0 6px;
+}
+.buttonlist ul li a:hover span
+{
+	background: url(images//theme/active_menu_left.png) no-repeat;
+}
+/* the active one */
+.buttonlist ul li a.active
+{
+	background: url(images//theme/active_menu_right.png) no-repeat top right;
+	color: white;
+	font-weight: bold;
+}
+.buttonlist ul li a.active span
+{
+	background: url(images//theme/active_menu_left.png) no-repeat top left;
+}
+.buttonlist ul li a.active
+{
+	font-weight: bold;
+}
+.buttonlist ul li a.active:hover
+{
+	color: orange;
+}
+/* a smaller quick-button list */
+ul.quickbuttons li
+{
+	display: inline;
+}
+ul.quickbuttons li a:hover img
+{
+	text-decoration: none;
+	color: orange;
+}
+/* the navigation list */
+ul#navigation
+{
+	margin: 0;
+	font-size: 0.9em;
+	padding: 1em 0.4em;
+}
+ul#navigation li
+{
+	float: none;
+	font-size: 0.95em;
+	display: inline;
+}
+
+/* the menu dropdown toggle image */
+#menu_toggle
+{
+	float: right;
+	margin-right: 10px;
+}
+#menu_toggle span
+{
+	position: relative;
+	right: 5000px;
+}
+#adm_submenus
+{
+	padding-left: 2em;
+}
+#adm_submenus, #adm_submenus ul
+{
+	height: 3em;
+	overflow: auto;
+}
+/* ************************************* */
+/* Styles from index.template            */
+/* ************************************* */
+
+/* the framing graphics */
+#header
+{
+	background: url(images/theme/top_bg.png) #fefefe no-repeat top left;
+}
+#header div.frame
+{
+	background: url(images/theme/top_bg_frame.png) no-repeat top right;
+	display: block;
+	padding: 5px 20px 0 20px;
+}
+/* the content section */
+#content_section
+{
+	background: url(images/theme/left.png) #fff repeat-y left;
+}
+#content_section div.frame
+{
+	background: url(images/theme/right.png) repeat-y right;
+	display: block;
+	padding: 0px 20px 0px 20px;
+	min-height: 200px;
+}
+
+/* the main title, always stay at 45 pixels in height! */
+h1.forumtitle
+{
+	line-height: 45px;
+	font-size: 1.8em;
+	font-family: Geneva, verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+/* float these items to the right */
+h2.sitelogo, img#smflogo
+{
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+h3
+{
+	padding-bottom: 3px;
+}
+/* the upshrink image needs some tweaking */
+img#upshrink
+{
+	float: right;
+	margin: 1em;
+}
+/* ..so does the SMF logo */
+img#smflogo
+{
+	margin-top: 4px;
+}
+/* the upper_section, float the two each way */
+#upper_section
+{
+	padding: 5px;
+}
+#upper_section ul li.greeting
+{
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+#upper_section div.news
+{
+	width: 50%;
+	float: right;
+	text-align: right;
+}
+#guest_form .info
+{
+	padding: 4px 0 ;
+}
+div#upper_section div.user
+{
+	width: 50%;
+	float: left;
+}
+div#upper_section div.user p
+{
+	float: left;
+	margin: 0 1em 3em 0;
+	padding: 0;
+}
+div#upper_section div.user ul
+{
+	margin: 0;
+	padding-left: 10px;
+	min-height: 70px;
+}
+div#upper_section div.user ul li
+{
+	margin-bottom: 2px;
+}
+div#upper_section div.news p
+{
+	display: inline;
+}
+div#upper_section div.news form
+{
+	padding-bottom: 10px;
+}
+/* clearing the floats */
+#top_section
+{
+	min-height: 65px;
+}
+#upper_section
+{
+	overflow: hidden;
+}
+/* the navigation list */
+#navigate_section ul
+{
+	clear: both;
+	display: block;
+	min-height: 2em;
+	margin: 0;
+	font-size: 1em;
+	padding: 1em 0.4em;
+}
+#navigate_section ul li
+{
+	display: inline;
+	font-size: 0.95em;
+}
+/* the font size changer panel */
+p#fontsize_panel
+{
+	text-align: right;
+	color: white;
+}
+p#fontsize_panel img
+{
+	border: solid 1px #557B9C;
+	margin-right: 2px;
+	padding: 3px;
+}
+/* the footer wih copyright links etc. */
+#footer_section
+{
+	text-align: center;
+	background: url(images/theme/bot_bg.png) no-repeat top left;
+}
+#footer_section span.smalltext
+{
+	font-size: 100%;
+}
+#footer_section div.frame
+{
+	background: url(images/theme/bot_bg_frame.png) no-repeat top right;
+	display: block;
+	padding: 60px 0 0 0;
+}
+#footer_section ul li, #footer_section p
+{
+	font-size: 0.8em;
+}
+#footer_section ul li
+{
+	display: inline;
+	padding-right: 5px;
+}
+#footer_section ul li.copyright
+{
+	display: block;
+}
+
+/* define a typical table */
+table.table_list
+{
+	width: 100%;
+}
+table.table_list p
+{
+	padding: 0;
+	margin: 0;
+}
+table.table_list td,table.table_list th
+{
+	padding: 5px;
+}
+table.table_list tbody.header td
+{
+	padding: 0px;
+}
+table.table_list tbody.content td.stats
+{
+	font-size: 90%;
+	width: 15%;
+	text-align: center;
+}
+table.table_list tbody.content td.lastpost
+{
+	line-height: 1.2em;
+	font-size: 85%;
+	width: 24%;
+}
+table.table_list tbody.content td.icon
+{
+	text-align: center;
+	width: 6%;
+}
+
+/* setup the rounded header bars */
+h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, .table_list tbody.header td
+{
+	height: 31px;
+	line-height: 31px;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+h3.catbg a, h3.catbg, .table_list tbody.header td, .table_list tbody.header td a
+{
+	color: white;
+}
+h3.catbg2 a, h3.catbg2
+{
+	color: #feb;
+}
+h3.catbg a:hover, .table_list tbody.header td a:hover
+{
+	color: #fd9;
+	text-decoration: none;
+}
+h3.catbg2 a:hover
+{
+	color: #fff;
+	text-decoration: none;
+}
+h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
+{
+	color: black;
+}
+h3.titlebg a:hover, h4.titlebg a:hover
+{
+	color: orange;
+	text-decoration: none;
+}
+h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right,.table_list tbody.header td span.right,.table_list tbody.header td span.left
+{
+	display: block;
+	width: 9px;
+	height: 31px;
+}
+h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
+{
+	float: left;
+	background: url(images/catbg_left.png) no-repeat;
+}
+h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
+{
+	float: right;
+	background: url(images/catbg_right.png) no-repeat;
+}
+h4.titlebg span.left,h4.titlebg span.right
+{
+	display: block;
+	width: 9px;
+	height: 31px;
+}
+h4.titlebg span.left
+{
+	float: left;
+	background: url(images/titlebg_left.png) no-repeat;
+}
+h4.titlebg span.right
+{
+	float: right;
+	background: url(images/titlebg_right.png) no-repeat;
+}
+h4.titlebg img.icon
+{
+	float: left;
+	margin: 5px 8px 0 0;
+}
+
+/* the login css needs to be everywhere */
+.login
+{
+	width: 480px;
+	margin: 0 auto;
+}
+.login dt, .login dd
+{
+	margin: 0;
+	height: 2.5em;
+	width: 45%;
+}
+.login dt
+{
+	float: left;
+	text-align: right;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+.login dd
+{
+	width: 54%;
+	float: right;
+	text-align: left;
+}
+.login p
+{
+	text-align: center;
+}
+.login h3 img
+{
+	float: left;
+	margin: 4px 0.5em 0 0;
+}
+/* for maintenace mode */
+#maintenace
+{
+	width: 75%;
+	min-width: 520px;
+	text-align: left;
+}
+#maintenace img.align_left
+{
+	margin-right: 1em;
+}
+
+/* ************************** */
+/*  Styles for adaptive layout */
+/* ************************** */
+body#bodyframe.ultrawide
+{
+	padding-left: 10%;
+	padding-right: 10%;
+}
+body#bodyframe.wide
+{
+	padding-left: 7%;
+	padding-right: 7%;
+}
+body#bodyframe.normal
+{
+	padding-left: 3%;
+	padding-right: 3%;
+}
+body#bodyframe.narrow
+{
+	padding-left: 4px;
+	padding-right: 4px;
+}
+/* very narrow width */
+body#bodyframe.supernarrow
+{
+	margin: 0;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+body#bodyframe.supernarrow #upper_section .news
+{
+	width: 100%;
+	float: none;
+	text-align: left;
+}
+body#bodyframe.supernarrow #upper_section .user,body#bodyframe.supernarrow #smflogo
+{
+	display: none;
+}
+

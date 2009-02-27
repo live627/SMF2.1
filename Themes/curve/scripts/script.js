@@ -1342,3 +1342,55 @@ function smfSelectText(oCurElement, bActOnElement)
 
 	return false;
 }
+
+// make different widths use slightly different CSS
+
+var switchyLastWidth=0;
+
+function quickSwitchy() 
+{
+	change=document.getElementById('bodyframe');
+	var curWidth=document.body.clientWidth;
+	if (curWidth!=switchyLastWidth) 
+	{
+		switchyLastWidth=curWidth;
+		if (curWidth>1550) 
+		{
+			change.className="ultrawide";
+		} 
+		else if (curWidth>1150) 
+		{
+			change.className="wide";
+		} 
+		else if (curWidth>750) 
+		{
+			change.className="normal";
+		} 
+		else if (curWidth>580) 
+		{
+			change.className="narrow";
+		} 
+		else 
+		{
+			change.className="supernarrow";
+		}
+	}
+}
+
+function QuickSwitchy_initialize() 
+{
+	quickSwitchy();
+	if (window.addEventListener)
+	{
+		window.addEventListener('resize',quickSwitchy,false);
+	} 
+	else if (window.attachEvent)
+	{
+		window.attachEvent("onresize",quickSwitchy);
+	} 
+	else 
+	{
+		window.onresize=quickSwitchy;
+	}
+}
+

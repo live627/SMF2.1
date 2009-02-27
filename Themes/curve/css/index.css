@@ -13,7 +13,6 @@
 	display: block;
 	padding: 5px 20px 0 20px;
 }
-
 /* the content section */
 #content_section
 {
@@ -28,7 +27,7 @@
 }
 
 /* the main title, always stay at 45 pixels in height! */
-h1
+h1.forumtitle
 {
 	line-height: 45px;
 	font-size: 1.8em;
@@ -38,45 +37,39 @@ h1
 	float: left;
 }
 /* float these items to the right */
-h2.sitelogo, img#smflogo, img#upshrink
+h2.sitelogo, img#smflogo
 {
 	margin: 0;
 	padding: 0;
 	float: right;
 }
-/* float these items to the right */
 h3
 {
-	margin-bottom: 3px;
-}
-/* and be sure they stay apart :) */
-img#upshrink, #upper_section, #main_menu, ul#navigation, #content_section
-{
-	clear: both;
+	padding-bottom: 3px;
 }
 /* the upshrink image needs some tweaking */
 img#upshrink
 {
-	margin: -10px 1em 1em 0;
+	float: right;
+	margin: 1em;
 }
 /* ..so does the SMF logo */
 img#smflogo
 {
-	margin-top: 4px;
+	margin-left: 1em;
 }
 /* the upper_section, float the two each way */
-ul#upper_section
+#upper_section
 {
-	margin: 0;
 	padding: 5px;
 }
-ul#upper_section li ul li.greeting
+#upper_section ul li.greeting
 {
 	font-size: 1.3em;
 	font-weight: bold;
 	line-height: 1.5em;
 }
-ul#upper_section li.news
+#upper_section div.news
 {
 	width: 50%;
 	float: right;
@@ -86,37 +79,63 @@ ul#upper_section li.news
 {
 	padding: 4px 0 ;
 }
-ul#upper_section li.user
+div#upper_section div.user
 {
 	width: 50%;
 	float: left;
 }
-ul#upper_section li.user p
+div#upper_section div.user p
 {
 	float: left;
 	margin: 0 1em 3em 0;
 	padding: 0;
 }
-ul#upper_section li.user ul
+div#upper_section div.user ul
 {
 	margin: 0;
 	padding-left: 10px;
 	min-height: 70px;
 }
-ul#upper_section li.user ul li
+div#upper_section div.user ul li
 {
 	margin-bottom: 2px;
 }
-ul#upper_section li.news h3, ul#upper_section li.news p
+div#upper_section div.news p
 {
 	display: inline;
 }
-ul#upper_section li.news form
+div#upper_section div.news form
 {
-	clear: both;
 	padding-bottom: 10px;
 }
-
+/* clearing the floats */
+#top_section
+{
+	min-height: 65px;
+}
+#upper_section
+{
+	overflow: hidden;
+}
+/* the navigation list */
+#navigate_section
+{
+	margin-top: 10px;
+	padding: 10px 10px 0 3px;
+}
+#navigate_section ul
+{
+	display: block;
+	margin: 0;
+	font-size: 1em;
+	padding: 0.4em;
+	border-top: solid #ccc 1px;
+}
+#navigate_section ul li
+{
+	display: inline;
+	font-size: 0.95em;
+}
 /* the font size changer panel */
 p#fontsize_panel
 {
@@ -159,15 +178,51 @@ p#fontsize_panel img
 	display: block;
 }
 
+/* define a typical table */
+table.table_list
+{
+	width: 100%;
+}
+table.table_list p
+{
+	padding: 0;
+	margin: 0;
+}
+table.table_list td,table.table_list th
+{
+	padding: 5px;
+}
+table.table_list tbody.header td
+{
+	padding: 0px;
+}
+table.table_list tbody.content td.stats
+{
+	font-size: 90%;
+	width: 15%;
+	text-align: center;
+}
+table.table_list tbody.content td.lastpost
+{
+	line-height: 1.2em;
+	font-size: 85%;
+	width: 24%;
+}
+table.table_list tbody.content td.icon
+{
+	text-align: center;
+	width: 6%;
+}
+
 /* setup the rounded header bars */
-h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg
+h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, .table_list tbody.header td
 {
 	height: 31px;
 	line-height: 31px;
 	font-size: 1.2em;
 	font-weight: bold;
 }
-h3.catbg a, h3.catbg
+h3.catbg a, h3.catbg, .table_list tbody.header td, .table_list tbody.header td a
 {
 	color: white;
 }
@@ -175,7 +230,7 @@ h3.catbg2 a, h3.catbg2
 {
 	color: #feb;
 }
-h3.catbg a:hover
+h3.catbg a:hover, .table_list tbody.header td a:hover
 {
 	color: #fd9;
 	text-decoration: none;
@@ -194,18 +249,18 @@ h3.titlebg a:hover, h4.titlebg a:hover
 	color: orange;
 	text-decoration: none;
 }
-h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right
+h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right,.table_list tbody.header td span.right,.table_list tbody.header td span.left
 {
 	display: block;
 	width: 9px;
 	height: 31px;
 }
-h3.catbg span.left, h3.catbg2 span.left
+h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
 {
 	float: left;
 	background: url(../images/catbg_left.png) no-repeat;
 }
-h3.catbg span.right, h3.catbg2 span.right
+h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
 {
 	float: right;
 	background: url(../images/catbg_right.png) no-repeat;
@@ -226,116 +281,12 @@ h4.titlebg span.right
 	float: right;
 	background: url(../images/titlebg_right.png) no-repeat;
 }
-
-/* the round corners of each box */
-.windowbg span.topslice
+h4.titlebg img.icon
 {
-	display: block;
-	background: url(../images/theme/windowbg_topslice.png) top left no-repeat;
-}
-.windowbg span.topslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg_topslice2.png) top right no-repeat;
-	height: 11px;
-}
-.windowbg span.botslice
-{
-	display: block;
-	background: url(../images/theme/windowbg_botslice.png) top left no-repeat;
-	margin-bottom: 0.2em;
-}
-.windowbg span.botslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg_botslice2.png) top right no-repeat;
-	height: 11px;
+	float: left;
+	margin: 5px 8px 0 0;
 }
 
-.windowbg2 span.topslice
-{
-	display: block;
-	background: url(../images/theme/windowbg2_topslice.png) top left no-repeat;
-}
-.windowbg2 span.topslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg2_topslice2.png) top right no-repeat;
-	height: 11px;
-}
-.windowbg2 span.botslice
-{
-	display: block;
-	background: url(../images/theme/windowbg2_botslice.png) top left no-repeat;
-	margin-bottom: 0.2em;
-}
-.windowbg2 span.botslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg2_botslice2.png) top right no-repeat;
-	height: 11px;
-}
-
-.approvebg span.topslice
-{
-	display: block;
-	background: url(../images/theme/approvebg_topslice.png) top left no-repeat;
-}
-.approvebg span.topslice span
-{
-	display: block;
-	background: url(../images/theme/approvebg_topslice2.png) top right no-repeat;
-	height: 11px;
-}
-.approvebg span.botslice
-{
-	display: block;
-	background: url(../images/theme/approvebg_botslice.png) top left no-repeat;
-	margin-bottom: 0.2em;
-}
-.approvebg span.botslice span
-{
-	display: block;
-	background: url(../images/theme/approvebg_botslice2.png) top right no-repeat;
-	height: 11px;
-}
-/* alternative framing */
-#roundframe
-{
-	background: url(../images/theme/ic_bg.png) repeat-y;
-}
-#roundframe div.frame
-{
-	padding: 3px 15px;
-	display: block;
-	background: url(../images/theme/ic_bg2.png) top right repeat-y;
-}
-span#upperframe
-{
-	padding: 0;
-	display: block;
-	background: url(../images/theme/ic_bg_top.png) top left no-repeat;
-}
-span#upperframe span
-{
-	padding: 0;
-	height: 12px;
-	display: block;
-	background: url(../images/theme/ic_bg_top2.png) top right no-repeat;
-}
-span#lowerframe
-{
-	padding: 0;
-	display: block;
-	background: url(../images/theme/ic_bg_bot.png) bottom left no-repeat;
-}
-span#lowerframe span
-{
-	padding: 0;
-	height: 12px;
-	display: block;
-	background: url(../images/theme/ic_bg_bot2.png) bottom right no-repeat;
-}
 /* the login css needs to be everywhere */
 .login
 {
@@ -363,7 +314,6 @@ span#lowerframe span
 }
 .login p
 {
-	clear: both;
 	text-align: center;
 }
 .login h3 img
@@ -381,4 +331,63 @@ span#lowerframe span
 #maintenace img.align_left
 {
 	margin-right: 1em;
+}
+/* common for all admin sections */
+h3.titlebg img
+{
+	vertical-align: middle;
+	margin-right: 0.5em;
+}
+h3.titlebg, tr.titlebg td
+{
+	padding-left: 0.7em;
+}
+#admin_menu
+{
+	min-height: 2em;
+	padding-left: 2em;
+}
+#admin_content
+{
+	clear: left;
+}
+
+/* the old style admin menus */
+#left_admsection
+{
+	width: 150px;
+	float: left;
+}
+.adm_section h4.titlebg
+{
+	font-size: 95%;
+	margin-bottom: 5px;
+}
+#adm_container
+{
+	border-bottom: solid 1px #ccc;
+	margin-bottom: 5px;
+}
+.left_admmenu li
+{
+	padding: 0 0 0 0.5em;
+}
+.left_admmenu
+{
+	margin-bottom: 1.1em;
+}
+#main_admsection
+{
+	margin-left: 160px;
+}
+
+tr.windowbg td, tr.windowbg2 td
+{
+	padding: 0.3em 0.7em;
+}
+#credits p
+{
+	padding: 0;
+	font-style: italic;
+	margin: 0;
 }

@@ -30,3 +30,7 @@
 	margin-top: 8px;
 	clear: both;
 }
+#moderationbuttons
+{
+	overflow: hidden;
+}

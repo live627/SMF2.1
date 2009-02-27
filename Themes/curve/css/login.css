@@ -3,7 +3,7 @@
 /* ************************************* */
 #register_screen
 {
-	width: 80%;
+	width: 100%;
 	min-width: 600px;
 }
 .register_error
@@ -18,15 +18,22 @@
 }
 dl.register_form
 {
-	padding: 10px;
+	padding: 0;
 }
 .register_form dt
 {
-	width:  50%;
-	float: left;
-	padding: 5px 1em 5px 5px;
+	float: none;
+	margin: 0;
+	width:  35%;
+	position: absolute;
+	padding: 0;
 	text-align: right;
 	font-weight: bold;
+}
+.register_form dt em
+{
+	font-weight: normal;
+	font-style: normal;
 }
 .register_form dt span.smalltext
 {
@@ -34,8 +41,10 @@ dl.register_form
 }
 .register_form dd
 {
-	padding: 8px;
-	min-height:15px;
+	min-height: 3em;
+	float: none;
+	padding: 0 0 0 90px;
+	margin: 0 0 0 35%;
 }
 .register_form dt span
 {

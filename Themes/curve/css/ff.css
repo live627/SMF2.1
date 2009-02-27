@@ -6,3 +6,9 @@ See https://bugzilla.mozilla.org/show_bug.cgi?id=215055 for more info.
 {
 	overflow: visible;
 }
+
+/* Display.template */
+#quickreplybox h3.catbg
+{
+	margin: 0;
+}

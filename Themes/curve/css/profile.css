@@ -100,16 +100,6 @@
 	margin-bottom: 5px;
 }
 
-/* the old style profile menus */
-#left_admsection
-{
-	width: 150px;
-	float: left;
-}
-#main_admsection
-{
-	margin-left: 160px;
-}
 #main_admsection #basicinfo, #main_admsection #detailedinfo
 {
 	width: 100%;
@@ -149,7 +139,6 @@ div#profile_error, div#profile_success
 	padding: 1ex 2ex;
 	border: 1px solid;
 }
-
 div#profile_error
 {
 	border-color: red;

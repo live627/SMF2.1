@@ -152,7 +152,13 @@ function template_settings()
 		array(
 			'id' => 'site_slogan',
 			'label' => $txt['site_slogan'],
-			'description' => $txt['site_slogan'],
+			'description' => $txt['site_slogan_desc'],
+			'type' => 'text',
+		),
+		array(
+			'id' => 'forum_width',
+			'label' => $txt['forum_width'],
+			'description' => $txt['forum_width_desc'],
 			'type' => 'text',
 		),
 		array(
