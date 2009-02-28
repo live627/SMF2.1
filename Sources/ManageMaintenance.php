@@ -136,7 +136,6 @@ function ManageMaintenance()
 	// This uses admin tabs - as it should!
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['maintain_title'],
-		'help' => $txt['maintenance_general'],
 		'description' => $txt['maintain_info'],
 		'tabs' => array(
 			'database' => array(),
