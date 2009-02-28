@@ -4,7 +4,6 @@
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
 global $helptxt;
-$helptxt = array();
 
 $txt['close_window'] = 'Close window';
 

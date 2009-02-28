@@ -209,6 +209,9 @@ function ShowAdminHelp()
 	if (!isset($_GET['help']) || !is_string($_GET['help']))
 		fatal_lang_error('no_access');
 
+	if (!isset($helptxt))
+		$helptxt = array();
+
 	// Load the admin help language file and template.
 	loadLanguage('Help');
 
@@ -235,9 +238,7 @@ function ShowAdminHelp()
 
 	// Does this text contain a link that we should fill in?
 	if (preg_match('~%([0-9]+\$)?s\?~', $context['help_text'], $match))
-	{
 		$context['help_text'] = sprintf($context['help_text'], $scripturl, $context['session_id']);
-	}
 }
 
 ?>

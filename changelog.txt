@@ -47,6 +47,7 @@ February 2009
  * Added a block with links to support resources to the Support & Credits page. (Admin.php, Admin template, Admin language file) [Bug 3092] (CodeFest)
  ! Don't assign $txt variables by reference, as PHP's default pointers are more efficient. (lots of files) (CodeFest)
  & $txt['database_prexfix'] should be identified as $txt['database_prefix'] instead. (Admin language file) [Bug 3279] (CodeFest)
+ & Initialise $helptxt in a more appropriate location to make life easier for mod authors. (Help.php, Help language file) [Bug 2405] (CodeFest)
 
 
 SMF 2.0 RC1                                                      4 February 2009
