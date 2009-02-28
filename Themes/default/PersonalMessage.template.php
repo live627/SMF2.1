@@ -1076,7 +1076,7 @@ function template_ask_delete()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<table border="0" width="80%" cellpadding="4" cellspacing="1" class="bordercolor" align="center">
+		<table border="0" width="100%" cellpadding="4" cellspacing="1" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td>', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '</td>
 			</tr>
@@ -1560,7 +1560,7 @@ function template_add_rule()
 				</td>
 			</tr>
 		</table><br />
-		<table cellpadding="4" cellspacing="0" border="0" align="center" width="80%" class="tborder">
+		<table cellpadding="4" cellspacing="0" border="0" align="center" width="100%" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">
 					', $txt['pm_rule_criteria'], '
