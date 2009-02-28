@@ -190,7 +190,10 @@ function ShowHelp()
 
 	// !!! Temporary until all sections are completed.
 	if (!function_exists('template_' . $manual_area_data['template']))
-		fatal_error('Sorry, this section of the manual is not done yet.');
+	{
+		$context['robot_no_index'] = true;
+		fatal_error('Sorry, this section of the manual is not done yet.', false);
+	}
 
 	// We actually need a special style sheet for help ;)
 	$context['template_layers'][] = 'manual';
