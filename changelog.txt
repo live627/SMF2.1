@@ -49,6 +49,7 @@ February 2009
  & $txt['database_prexfix'] should be identified as $txt['database_prefix'] instead. (Admin language file) [Bug 3279] (CodeFest)
  & Initialise $helptxt in a more appropriate location to make life easier for mod authors. (Help.php, Help language file) [Bug 2405] (CodeFest)
  ! Don't bother outputting generic menus when in wireless mode. (Subs-Menu.php) (CodeFest)
+ ! The "top topic starters" weren't always being listed in the correct order in PostgreSQL (Stats.php, Subs-Db-postgresql.php) [Bug 3157]
 
 
 SMF 2.0 RC1                                                      4 February 2009
