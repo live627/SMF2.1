@@ -1343,54 +1343,55 @@ function smfSelectText(oCurElement, bActOnElement)
 	return false;
 }
 
-// make different widths use slightly different CSS
-
-var switchyLastWidth=0;
-
-function quickSwitchy() 
-{
-	change=document.getElementById('bodyframe');
-	var curWidth=document.body.clientWidth;
-	if (curWidth!=switchyLastWidth) 
-	{
-		switchyLastWidth=curWidth;
-		if (curWidth>1550) 
-		{
-			change.className="ultrawide";
-		} 
-		else if (curWidth>1150) 
-		{
-			change.className="wide";
-		} 
-		else if (curWidth>750) 
-		{
-			change.className="normal";
-		} 
-		else if (curWidth>580) 
-		{
-			change.className="narrow";
-		} 
-		else 
-		{
-			change.className="supernarrow";
-		}
-	}
+main_menu = function() {
+   var cssRule;
+   var newSelector;
+   for (var i = 0; i < document.styleSheets.length; i++)
+      for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
+         {
+         cssRule = document.styleSheets[i].rules[x];
+         if (cssRule.selectorText.indexOf("LI:hover") != -1)
+         {
+             newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
+            document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
+         }
+      }
+   var getElm = document.getElementById("main_menu").getElementsByTagName("LI");
+   for (var i=0; i<getElm.length; i++) {
+      getElm[i].onmouseover=function() {
+         this.className+=" iehover";
+      }
+      getElm[i].onmouseout=function() {
+         this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+      }
+   }
+}
+adm_menu = function() {
+   var cssRule;
+   var newSelector;
+   for (var i = 0; i < document.styleSheets.length; i++)
+      for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
+         {
+         cssRule = document.styleSheets[i].rules[x];
+         if (cssRule.selectorText.indexOf("LI:hover") != -1)
+         {
+             newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
+            document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
+         }
+      }
+   var getElm = document.getElementById("admin_menu").getElementsByTagName("LI");
+   for (var i=0; i<getElm.length; i++) {
+      getElm[i].onmouseover=function() {
+         this.className+=" iehover";
+      }
+      getElm[i].onmouseout=function() {
+         this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+      }
+   }
 }
 
-function QuickSwitchy_initialize() 
+if (window.attachEvent && is_ie6) 
 {
-	quickSwitchy();
-	if (window.addEventListener)
-	{
-		window.addEventListener('resize',quickSwitchy,false);
-	} 
-	else if (window.attachEvent)
-	{
-		window.attachEvent("onresize",quickSwitchy);
-	} 
-	else 
-	{
-		window.onresize=quickSwitchy;
-	}
+	window.attachEvent("onload", main_menu);
+	window.attachEvent("onload", adm_menu);
 }
-

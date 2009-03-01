@@ -16,37 +16,39 @@
 {
 	text-decoration: none;
 }
+/* use gif for ie6 */
+.dropmenu li ul 
+{
+	background: url(../images/theme/menu_gfx.gif) 0 -100px no-repeat;
+}
+
+/* the active button */
 .dropmenu li a.active
 {
-	background: url(../images/theme/menu_bg_right.gif) no-repeat top right;
+	background: url(../images/theme/menu_gfx.gif) no-repeat 100% 0;
 }
 .dropmenu li a.active span.firstlevel
 {
-	background: url(../images/theme/menu_bg_left.gif) no-repeat 3px 0;
+	background: url(../images/theme/menu_gfx.gif) no-repeat 0 0;
 }
 /* the hover effects */
 .dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
 {
-	background: url(../images/theme/active_menu_right.gif) no-repeat top right;
+	background: url(../images/theme/menu_gfx.gif) no-repeat 100% -31px;
 }
 .dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
 {
-	background: url(../images/theme/active_menu_left.gif) no-repeat 3px 0;
+	background: url(../images/theme/menu_gfx.gif) no-repeat 0 -31px;
 }
-#main_menu
+/* the user section needs some attention */
+#top_section
 {
-	width: 99%;
-	text-align: center;
+	height: 65px;
+	width: 100%;
 }
-
-/* a fix for the background for user section */
-#mainframe #upper_section li.user
+#content_section
 {
-	background: none;
-}
-#mainframe ul#upper_section li.user ul
-{
-	padding-left: 0;
+	width: 100%;
 }
 /* **************** */
 /* from MessageIndex.template */
@@ -81,3 +83,11 @@
 	margin-top: 8px;
 	clear: both;
 }		
+
+/* ******************* */
+/* Admin.template */
+/* ************************ */
+#main_admsection table
+{
+	width: 99%;
+}

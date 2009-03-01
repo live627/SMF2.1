@@ -160,13 +160,9 @@ function template_html_above()
 		mainHeader.addTogglePanel("upper_section");
 	// ]]></script>';
 
-	if($context['browser']['is_ie6'] && !$context['browser']['is_ie7'])
-		echo '
-	<script type="text/javascript" 	src="', $settings['theme_url'], '/scripts/mainmenu.js"></script>';
-	
 	echo '
 </head>
-<body id="bodyframe" class="average">';
+<body', !empty($settings['forum_width']) ? ' style="width: ' . $settings['forum_width'] . ';"' : '', '>';
 }
 
 function template_body_above()
@@ -186,7 +182,7 @@ function template_body_above()
 				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink2.png' : 'upshrink.png', '" alt="*" title="', $txt['upshrink_description'], '" />
 			</a>';
 	echo '
-			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<p class="sitelogo">' . $settings['site_slogan'] . '</p>', ' 
+			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 
 		</div>
 		<div id="upper_section" class="middletext"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<div class="user">';
@@ -323,7 +319,6 @@ function template_html_below()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-<script type="text/javascript"> QuickSwitchy_initialize(); </script>
 </body></html>';
 }
 

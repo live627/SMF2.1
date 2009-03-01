@@ -37,11 +37,12 @@ h1.forumtitle
 	float: left;
 }
 /* float these items to the right */
-h2.sitelogo, img#smflogo
+#siteslogan, img#smflogo
 {
 	margin: 0;
 	padding: 0;
 	float: right;
+	line-height: 3em;
 }
 h3
 {
@@ -345,7 +346,7 @@ h3.titlebg, tr.titlebg td
 #admin_menu
 {
 	min-height: 2em;
-	padding-left: 2em;
+	padding-left: 0;
 }
 #admin_content
 {

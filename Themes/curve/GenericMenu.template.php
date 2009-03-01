@@ -9,7 +9,7 @@ function template_generic_menu_sidebar_above()
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
 	<div id="main_container">
-		<div id="left_admsection">';
+		<div id="left_admsection"><span id="admin_menu"></span>';
 
 	// What one are we rendering?
 	$context['cur_menu_id'] = isset($context['cur_menu_id']) ? $context['cur_menu_id'] + 1 : 1;
@@ -111,12 +111,12 @@ function template_generic_menu_dropdown_above()
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li><a class="active firstlevel" name="', $section['title'] , '"><span class="firstlevel">', $section['title'] , '</span></a>
+			<li><a class="active firstlevel" href="#" name="', $section['title'] , '"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 		}
 		else
 			echo '
-			<li><a class="firstlevel" name="', $section['title'] , '"><span class="firstlevel">', $section['title'] , '</span></a>
+			<li><a class="firstlevel" href="#" name="', $section['title'] , '"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)

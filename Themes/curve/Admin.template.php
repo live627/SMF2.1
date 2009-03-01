@@ -8,22 +8,39 @@ function template_admin()
 
 	// Welcome message for the admin.
 	echo '
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
-			<tr class="titlebg">
-				<td align="center" colspan="2" class="largetext headerpadding">', $txt['admin_center'], '</td>
-			</tr><tr>
-				<td class="windowbg" valign="top" style="padding: 7px;">
-					<b>', $txt['hello_guest'], ' ', $context['user']['name'], '!</b>
-					<div style="font-size: 0.85em; padding-top: 1ex;">', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '</div>
-				</td>
-			</tr>
-		</table>';
+	<div id="admincenter">
+		<h3 class="titlebg"><span class="left"></span><span class="right"></span>';
+
+	if ($context['user']['is_admin'])
+		echo '
+			<div class="align_right">
+				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
+					<img src="' , $settings['images_url'] , '/filter.gif" alt="" />
+					<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
+					<select name="search_type">
+						<option value="internal" ', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
+						<option value="member" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
+						<option value="online" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
+					</select>
+					<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
+				</form>
+			</div>';
+	
+	echo 	$txt['admin_center'], '
+		</h3>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe"><div class="innerframe">
+			<div class="content">
+				<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>
+				', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '
+			</div>
+		</div></div>
+		<span class="lowerframe"><span></span></span>';
 
 	// Is there an update available?
 	echo '
 	<div id="update_section" style="display: none;">
-		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor" style="margin-top: 1.5ex;" id="update_table">
-			<tr class="titlebg">
+		<tr class="titlebg">
 				<td id="update_title">', $txt['update_available'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="top" style="padding: 0;">
@@ -31,21 +48,6 @@ function template_admin()
 				</td>
 			</tr>
 		</table>
-	</div>';
-
-	if ($context['user']['is_admin'])
-		echo '
-	<div class="bordercolor" style="padding: 1px; margin-top: 0.5em;">
-		<form class="titlebg2" style="margin: 0; padding: 5px 5px 5px 10px;" action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
-			<img src="' , $settings['images_url'] , '/filter.gif" alt="" style="float: right;" />
-			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
-			<select name="search_type">
-				<option value="internal" ', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
-				<option value="member" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
-				<option value="online" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
-			</select>
-			<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
-		</form>
 	</div>';
 
 	echo '
@@ -1246,81 +1248,69 @@ function template_admin_search_results()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="4" cellspacing="0" class="tborder">
-		<tr>
-			<td class="catbg">
-				', $txt['admin_search_results'], '
-			</td>
-		</tr>
-		<tr>
-			<td class="titlebg">
-				<div style="float: left;">
-					', sprintf($txt['admin_search_results_desc'], $context['search_term']), '
-				</div>
-				<div style="float: right;">
-					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
-						<input type="text" name="search_term" value="', $context['search_term'], '" />
-						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
-						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" />
-					</form>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="windowbg">';
+	<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+		<div class="align_right">
+			<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
+				<input type="text" name="search_term" value="', $context['search_term'], '" />
+				<input type="hidden" name="search_type" value="', $context['search_type'], '" />
+				<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" />
+			</form>
+		</div>
+	', $txt['admin_search_results'], '</h3>
+	<div class="windowbg nopadding">
+		<span class="topslice"><span></span></span>
+		<div class="content">
+			', sprintf($txt['admin_search_results_desc'], $context['search_term']);
 
 	if (empty($context['search_results']))
 	{
 		echo '
-				<p class="windowbg" align="center">
-					<strong>', $txt['admin_search_results_none'], '</strong>
-				</p>';
+			<p class="centertext"><strong>', $txt['admin_search_results_none'], '</strong></p>';
 	}
-
 	else
 	{
 		echo '
-				<ol class="search_results">';
+			<ol class="search_results">';
 		foreach ($context['search_results'] as $result)
 		{
 			// Is it a result from the online manual?
 			if ($context['search_type'] == 'online')
 			{
 				echo '
-					<li class="windowbg">
-						<p>
-							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank" class="new_win"><strong>', $result['messages'][0]['subject'], '</strong></a>
-							<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank" class="new_win">', $result['category']['name'], '</a> &nbsp;/&nbsp;
-							<a href="', $result['board']['href'], '" target="_blank" class="new_win">', $result['board']['name'], '</a> /</span>
-						</p>
-						<p class="quote">
-							', $result['messages'][0]['body'], '
-						</p>
-					</li>';
+				<li>
+					<p>
+						<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank" class="new_win"><strong>', $result['messages'][0]['subject'], '</strong></a>
+						<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank" class="new_win">', $result['category']['name'], '</a> &nbsp;/&nbsp;
+						<a href="', $result['board']['href'], '" target="_blank" class="new_win">', $result['board']['name'], '</a> /</span>
+					</p>
+					<p class="quote">
+						', $result['messages'][0]['body'], '
+					</p>
+				</li>';
 			}
 			// Otherwise it's... not!
 			else
 			{
 				echo '
-					<li class="windowbg">
-						<a href="', $result['url'], '">', $result['name'], '</a> [', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'] , ']';
+				<li class="windowbg">
+					<a href="', $result['url'], '">', $result['name'], '</a> [', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'] , ']';
 
 				if ($result['help'])
 					echo '
-						<br /><span class="smalltext">', $result['help'], '</span>';
+					<br /><span class="smalltext">', $result['help'], '</span>';
 
 				echo '
-					</li>';
+				</li>';
 			}
 		}
 		echo '
-				</ol>';
+			</ol>';
 	}
 
 	echo '
-			</td>
-		</tr>
-	</table>';
+		</div>
+		<span class="botslice"><span></span></span>
+	</div>';
 }
 
 // Turn on and off certain key features.

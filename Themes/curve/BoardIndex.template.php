@@ -46,7 +46,7 @@ function template_main()
 	}
 
 	echo '
-	<div class="table_frame">
+	<div id="boardindex_table">
 		<table class="table_list">
 			<thead>
 				<tr><th colspan="4"></th></tr>

@@ -186,24 +186,27 @@ function template_admin_login()
 
 <form action="', $scripturl, $context['get_data'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin" onsubmit="hashAdminPassword(this, \'', $context['user']['username'], '\', \'', $context['session_id'], '\');">
 	<div class="tborder login" id="admin_login">
-		<h3 class="titlebg">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" /> ', $txt['login'], '
 		</h3>
-		<div class="windowbg2 centertext" style="padding: 1em;">
-			<strong>', $txt['password'], ':</strong> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '"  /></a><br />';
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe"><div class="innerframe centertext">
+			<strong>', $txt['password'], ':</strong> 
+			<input type="password" name="admin_pass" size="24" /> 
+			<a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '"  /></a><br />';
 
 	if (!empty($context['incorrect_password']))
 		echo '
 			<div class="error centertext">', $txt['admin_incorrect_password'], '</div>';
 
 	echo '
-			<input type="submit" style="margin-top: 1em;" value="', $txt['login'], '" />
-		</div>
-	</div>';
+			<input type="submit" style="margin-top: 1em;" value="', $txt['login'], '" />';
 
 	// Make sure to output all the old post data.
 	echo $context['post_data'], '
-
+		</div></div>
+		<span class="lowerframe"><span></span></span>
+	</div>
 	<input type="hidden" name="admin_hash_pass" value="" />
 </form>';
 

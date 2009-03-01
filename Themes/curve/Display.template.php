@@ -128,7 +128,7 @@ function template_main()
 	// Show the page index... "Pages: [1]".
 	echo '
 <div id="postbuttons_upper">
-	<span>', $context['previous_next'], '</span>', template_button_strip($normal_buttons, 'right'), '
+	<div class="nextlinks">', $context['previous_next'], '</div>', template_button_strip($normal_buttons, 'right'), '
 	<div class="middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
 </div>';
 
@@ -548,7 +548,7 @@ function template_main()
 	// Show the jumpto box, or actually...let Javascript do it.
 	echo '
 <div class="tborder">
-	<div class="titlebg2" style="padding: 4px;" align="', !$context['right_to_left'] ? 'right' : 'left', '" id="display_jump_to">&nbsp;</div>
+	<div class="titlebg2 padding" style="text-align: ', !$context['right_to_left'] ? 'right' : 'left', ';" id="display_jump_to">&nbsp;</div>
 </div><br />';
 
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
@@ -562,42 +562,45 @@ function template_main()
 		</a>
 		<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
 	</h3>
-	<div class="windowbg clearfix" id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-		<div id="quickReplyWarning" class="smalltext">
-			', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
-		</div>
-		<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
-			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
-			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
-			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
-				<input type="hidden" name="topic" value="', $context['current_topic'], '" />
-				<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
-				<input type="hidden" name="icon" value="xx" />
-				<input type="hidden" name="from_qr" value="1" />
-				<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
-				<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
-				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
-				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
+	<div id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe"><div class="innerframe">
+			<div id="quickReplyWarning" class="smalltext">
+				', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
+			</div>
+			<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
+				', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
+				', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
+				<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
+					<input type="hidden" name="topic" value="', $context['current_topic'], '" />
+					<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
+					<input type="hidden" name="icon" value="xx" />
+					<input type="hidden" name="from_qr" value="1" />
+					<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
+					<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
+					<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
+					<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
 
-		// Guests just need more.
-		if ($context['user']['is_guest'])
-			echo '
-				<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" />
-				<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" /><br />';
+			// Guests just need more.
+			if ($context['user']['is_guest'])
+				echo '
+					<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" />
+					<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" /><br />';
 
-		echo '
-				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
-				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
-				<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';
-		if ($context['show_spellchecking'])
 			echo '
-				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" tabindex="5" />';
-		echo '
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-			</form>
-		</div>
-		<br style="clear: both;" />
+					<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
+					<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
+					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';
+			if ($context['show_spellchecking'])
+				echo '
+					<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" tabindex="5" />';
+			echo '
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+				</form>
+			</div>
+		</div></div>
+		<span class="lowerframe"><span></span></span>
 	</div>
 </div>';
 	}

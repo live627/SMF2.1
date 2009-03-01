@@ -49,3 +49,25 @@ ol.search_results li
 	padding-left: 1em;
 	padding-right: 1em;
 }
+h3.titlebg
+{
+	padding-left: 0;
+}
+h3.titlebg form
+{
+	font-size: 80%;
+}
+.windowbg.nopadding
+{
+	margin: 0;
+	padding: 0;
+}
+.windowbg ol
+{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.content
+{
+	padding: 0.5em;
+}

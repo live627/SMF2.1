@@ -16,18 +16,18 @@
 	color: #555;
 	font-size: 85%;
 }
-/* we want some distance between the categories */
-.table_list tbody.content
+/* hide the table header/footer parts - but its here for those needing to style it */
+#boardindex_table .table_list thead, #boardindex_table .table_list tfoot
 {
-	margin-bottom: 1em;
+	display: none;
 }
 
 /* the posting icons */
 #posting_icons
 {
 	font-size: 0.8em;
-	padding: 0.2em 1em 0.5em 2em;
-	clear: both;
+	padding: 0 1em 0.5em 2em;
+	margin: 0;
 	line-height: 1em;
 	margin-bottom: 2em;
 }
@@ -46,6 +46,11 @@
 	line-height: 19px;
 	padding: 0 0 0 6px;
 }
+#postbuttons_upper .nextlinks
+{
+	text-align: right;
+}
+
 /* the newsfader */
 #smfFadeScroller
 {
@@ -477,6 +482,10 @@ p#whoisviewing
 	width: 75%;
 	float: right;
 	padding: 0.5em 0;
+}
+#quickReplyOptions .innerframe
+{
+	overflow: hidden;
 }
 /* ************************************* */
 /* styles from Recent.template           */
