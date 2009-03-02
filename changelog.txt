@@ -52,6 +52,8 @@ February 2009
  ! The "top topic starters" weren't always being listed in the correct order in PostgreSQL (Stats.php, Subs-Db-postgresql.php) [Bug 3157]
  ! Trying to manually add a user to a paid subscription wasn't working in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3138]
  ! Sorting the memberlist by ICQ number caused an error in PostgreSQL (Memberlist.php) [Bug 3189]
+ ! Don't ignore errors when inserting data unless specifically told to (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 3296]
+ 
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================

@@ -568,7 +568,6 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 					' . $entry,
 				array(
 					'security_override' => true,
-					'db_error_skip' => true,
 				),
 				$connection
 			);
