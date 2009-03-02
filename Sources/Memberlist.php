@@ -312,8 +312,8 @@ function MLAll()
 			'up' => 'LENGTH(mem.website_url) > 0 DESC, IFNULL(mem.website_url, 1=1) ASC, mem.website_url ASC'
 		),
 		'icq' => array(
-			'down' => 'LENGTH(mem.icq) > 0 ASC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 DESC, mem.icq DESC',
-			'up' => 'LENGTH(mem.icq) > 0 DESC, IFNULL(mem.icq, 1=1) OR mem.icq = 0 ASC, mem.icq ASC'
+			'down' => 'LENGTH(mem.icq) > 0 ASC, mem.icq = 0 DESC, mem.icq DESC',
+			'up' => 'LENGTH(mem.icq) > 0 DESC, mem.icq = 0 ASC, mem.icq ASC'
 		),
 		'aim' => array(
 			'down' => 'LENGTH(mem.aim) > 0 ASC, IFNULL(mem.aim, 1=1) DESC, mem.aim DESC',
