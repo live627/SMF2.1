@@ -50,7 +50,7 @@ February 2009
  & Initialise $helptxt in a more appropriate location to make life easier for mod authors. (Help.php, Help language file) [Bug 2405] (CodeFest)
  ! Don't bother outputting generic menus when in wireless mode. (Subs-Menu.php) (CodeFest)
  ! The "top topic starters" weren't always being listed in the correct order in PostgreSQL (Stats.php, Subs-Db-postgresql.php) [Bug 3157]
-
+ ! Trying to manually add a user to a paid subscription wasn't working in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3138]
 
 SMF 2.0 RC1                                                      4 February 2009
 ================================================================================

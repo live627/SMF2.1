@@ -1461,9 +1461,9 @@ CREATE TABLE {$db_prefix}log_subscribed (
   end_time int NOT NULL default '0',
   payments_pending smallint NOT NULL default '0',
   status smallint NOT NULL default '0',
-  pending_details text NOT NULL,
+  pending_details text NOT NULL default '',
   reminder_sent smallint NOT NULL default '0',
-  vendor_ref varchar(255) NOT NULL,
+  vendor_ref varchar(255) NOT NULL default '',
   PRIMARY KEY (id_sublog)
 );
 

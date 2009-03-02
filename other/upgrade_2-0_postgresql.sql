@@ -469,6 +469,22 @@ ALTER TABLE {$db_prefix}members
 ALTER COLUMN ignore_boards TYPE text;
 ---#
 
+/******************************************************************************/
+--- Adding default values to a couple of columns in log_subscribed
+/******************************************************************************/
+
+---# Adding default value for pending_details column
+ALTER TABLE {$db_prefix}log_subscribed
+ALTER COLUMN pending_details
+SET DEFAULT '';
+---#
+
+---# Adding default value for vendor_ref column
+ALTER TABLE {$db_prefix}log_subscribed
+ALTER COLUMN vendor_ref
+SET DEFAULT '';
+---#
+
 /*****************************************************************************/
 --- Fixing a bug with the inet_aton() function.
 /*****************************************************************************/
