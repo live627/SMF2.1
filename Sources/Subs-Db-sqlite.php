@@ -678,13 +678,13 @@ function smf_udf_inet_ntoa($n)
 // Emulate FIND_IN_SET.
 function smf_udf_find_in_set($find, $groups)
 {
-	foreach (explode(',', $groups) as $group)
+	foreach (explode(',', $groups) as $key => $group)
 	{
 		if ($group == $find)
-			return true;
+			return $key + 1;
 	}
 
-	return false;
+	return 0;
 }
 
 // Emulate YEAR.

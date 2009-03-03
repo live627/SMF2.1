@@ -54,6 +54,7 @@ February 2009
  ! Sorting the memberlist by ICQ number caused an error in PostgreSQL (Memberlist.php) [Bug 3189]
  ! Don't ignore errors when inserting data unless specifically told to (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 3296]
  ! With some versions of PostgreSQL, SMF always thought the recipient of your PM was ignoring you, even if they weren't (Subs-Post.php) [Bug 3113]
+ ! The "top topic starters" weren't always being listed in the correct order in SQLite (Subs-Db-sqlite.php) [Bug 3293]
  
 
 SMF 2.0 RC1                                                      4 February 2009
