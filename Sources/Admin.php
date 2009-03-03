@@ -892,7 +892,9 @@ function AdminSearchInternal()
 				$search_data['settings'][] = array($var[(isset($var[2]) && in_array($var[2], array('file', 'db'))) ? 0 : 1], $setting_area[1]);
 	}
 
+	$context['page_title'] = $txt['admin_search_results'];
 	$context['search_results'] = array();
+
 	$search_term = strtolower($context['search_term']);
 	// Go through all the search data trying to find this text!
 	foreach ($search_data as $section => $data)
