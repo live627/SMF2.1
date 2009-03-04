@@ -56,6 +56,7 @@ February 2009
  ! With some versions of PostgreSQL, SMF always thought the recipient of your PM was ignoring you, even if they weren't (Subs-Post.php) [Bug 3113]
  ! The "top topic starters" weren't always being listed in the correct order in SQLite (Subs-Db-sqlite.php) [Bug 3293]
  ! The admin search function wasn't always using the correct page title. (Admin.php)
+ ! Filtering errors by type wasn't working in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3130]
 
 
 SMF 2.0 RC1                                                      4 February 2009

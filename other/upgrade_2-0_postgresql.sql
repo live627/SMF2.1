@@ -486,6 +486,23 @@ SET DEFAULT '';
 ---#
 
 /*****************************************************************************/
+--- Fixing column types in log_errors
+/*****************************************************************************/
+
+---# Changing 'ip' from char to varchar
+ALTER TABLE {$db_prefix}log_errors
+ALTER COLUMN ip TYPE varchar(16);
+
+ALTER TABLE {$db_prefix}log_errors
+ALTER COLUMN ip SET DEFAULT '';
+---#
+
+---# Changing 'error_type' from char to varchar
+ALTER TABLE {$db_prefix}log_errors
+ALTER COLUMN error_type TYPE varchar(15);
+---#
+
+/*****************************************************************************/
 --- Fixing a bug with the inet_aton() function.
 /*****************************************************************************/
 

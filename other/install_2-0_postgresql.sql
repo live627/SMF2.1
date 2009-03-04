@@ -1081,11 +1081,11 @@ CREATE TABLE {$db_prefix}log_errors (
   id_error int default nextval('{$db_prefix}log_errors_seq'),
   log_time int NOT NULL default '0',
   id_member int NOT NULL default '0',
-  ip char(16) NOT NULL default '                ',
+  ip varchar(16) NOT NULL default '',
   url text NOT NULL,
   message text NOT NULL,
   session char(32) NOT NULL default '                                ',
-  error_type char(15) NOT NULL default 'general',
+  error_type varchar(15) NOT NULL default 'general',
   file varchar(255) NOT NULL,
   line int NOT NULL default '0',
   PRIMARY KEY (id_error)
