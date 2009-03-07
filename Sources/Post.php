@@ -2038,12 +2038,11 @@ function AnnouncementSelectMembergroup()
 
 	// Get all membergroups that have access to the board the announcement was made on.
 	$request = $smcFunc['db_query']('', '
-		SELECT mg.id_group, mg.group_name, COUNT(mem.id_member) AS num_members
+		SELECT mg.id_group, COUNT(mem.id_member) AS num_members
 		FROM {db_prefix}membergroups AS mg
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_group = mg.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
 		WHERE mg.id_group IN ({array_int:group_list})
-		GROUP BY mg.id_group
-		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:newbie_id_group} THEN mg.id_group ELSE 4 END, mg.group_name',
+		GROUP BY mg.id_group',
 		array(
 			'group_list' => $groups,
 			'newbie_id_group' => 4,
@@ -2053,10 +2052,23 @@ function AnnouncementSelectMembergroup()
 	{
 		$context['groups'][$row['id_group']] = array(
 			'id' => $row['id_group'],
-			'name' => $row['group_name'],
+			'name' => '',
 			'member_count' => $row['num_members'],
 		);
 	}
+	$smcFunc['db_free_result']($request);
+
+	// Now get the membergroup names.
+	$request = $smcFunc['db_query']('', '
+		SELECT id_group, group_name
+		FROM {db_prefix}membergroups
+		WHERE id_group IN ({array_int:group_list})',
+		array(
+			'group_list' => $groups,
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+		$context['groups'][$row['id_group']]['name'] = $row['group_name'];
 	$smcFunc['db_free_result']($request);
 
 	// Get the subject of the topic we're about to announce.

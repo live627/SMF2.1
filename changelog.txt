@@ -6,6 +6,7 @@ SMF 2.0 RC2                                                                  ???
 March 2009
 --------------------------------------------------------------------------------
  ! Including quotes in the forum title would break newsletter sending. (ManageNews.php) [Bug 3289]
+ ! Announcing a topic wasn't working on PostgreSQL and was needlessly sorting. (Post.php) [Bug 3129]
 
 
 February 2009
