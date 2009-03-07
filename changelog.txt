@@ -57,6 +57,7 @@ February 2009
  ! The "top topic starters" weren't always being listed in the correct order in SQLite (Subs-Db-sqlite.php) [Bug 3293]
  ! The admin search function wasn't always using the correct page title. (Admin.php)
  ! Filtering errors by type wasn't working in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3130]
+ ! Including quotes in the forum title would break newsletter sending. (ManageNews.php) [Bug 3289]
 
 
 SMF 2.0 RC1                                                      4 February 2009

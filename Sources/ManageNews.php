@@ -443,8 +443,8 @@ function ComposeMailing()
 	$context['page_title'] = $txt['admin_newsletters'];
 	$context['sub_template'] = 'email_members_compose';
 
-	$context['default_subject'] = $context['forum_name'] . ': ' . $txt['subject'];
-	$context['default_message'] = $txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n" . '{$board_url}';
+	$context['default_subject'] = htmlspecialchars($context['forum_name'] . ': ' . $txt['subject']);
+	$context['default_message'] = htmlspecialchars($txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n" . '{$board_url})';
 }
 
 // Send out the mailing!
