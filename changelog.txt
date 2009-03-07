@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+March 2009
+--------------------------------------------------------------------------------
+ ! Including quotes in the forum title would break newsletter sending. (ManageNews.php) [Bug 3289]
+
+
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
