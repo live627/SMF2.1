@@ -1644,6 +1644,8 @@ function EditCustomProfiles()
 			// If there is nothing to the name, then let's start out own - for foreign languages etc.
 			if (empty($colname))
 				$colname = 'cust_' . mt_rand(1, 999);
+			else
+				$colname = 'cust_' . $colname;
 
 			// Check this is unique.
 			$unique = false;
@@ -1663,7 +1665,7 @@ function EditCustomProfiles()
 					$colname .= mt_rand(0, 9);
 				$smcFunc['db_free_result']($request);
 
-				if (strlen($colname) >= 12 && !$unique)
+				if (strlen($colname) >= 14 && !$unique)
 					fatal_lang_error('custom_option_not_unique');
 			}
 		}

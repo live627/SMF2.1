@@ -1598,16 +1598,16 @@ function SetJavaScript()
 {
 	global $settings, $user_info, $smcFunc, $options;
 
-	// Sorry, guests can't do this.
-	if ($user_info['is_guest'])
-		obExit(false);
-
 	// Check the session id.
 	checkSession('get');
 
 	// This good-for-nothing pixel is being used to keep the session alive.
 	if (empty($_GET['var']) || !isset($_GET['val']))
 		redirectexit($settings['images_url'] . '/blank.gif');
+
+	// Sorry, guests can't go any further than this..
+	if ($user_info['is_guest'] || $user_info['id'] == 0)
+		obExit(false);
 
 	$reservedVars = array(
 		'actual_theme_url',
@@ -1626,6 +1626,7 @@ function SetJavaScript()
 		'theme_layers',
 		'theme_templates',
 		'theme_url',
+		'name',
 	);
 
 	// Can't change reserved vars.

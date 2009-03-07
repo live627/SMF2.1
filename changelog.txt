@@ -8,6 +8,8 @@ March 2009
  ! Including quotes in the forum title would break newsletter sending. (ManageNews.php) [Bug 3289]
  ! Announcing a topic wasn't working on PostgreSQL and was needlessly sorting. (Post.php) [Bug 3129]
  ! Manage attachments was doing an unnecessary group, breaking PostgreSQL. (ManageAttachments.php) [Bug 3203]
+ ! Ensure custom profile fields use a prefix in the themes table. (ManageSettings.php) [Bug 2658]
+ ! Change around some of the security on theme java function to allow guests to keep their session alive but stop name being used. (Themes.php) [Bug 2658]
 
 
 February 2009
