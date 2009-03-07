@@ -983,8 +983,7 @@ function RepairAttachments()
 					LEFT JOIN {db_prefix}attachments AS tparent ON (tparent.id_thumb = thumb.id_attach)
 				WHERE thumb.id_attach BETWEEN {int:substep} AND {int:substep} + 499
 					AND thumb.attachment_type = {int:thumbnail}
-					AND tparent.id_attach IS NULL
-				GROUP BY thumb.id_attach',
+					AND tparent.id_attach IS NULL',
 				array(
 					'thumbnail' => 3,
 					'substep' => $_GET['substep'],
@@ -992,14 +991,18 @@ function RepairAttachments()
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($result))
 			{
-				$to_remove[] = $row['id_attach'];
-				$context['repair_errors']['missing_thumbnail_parent']++;
-
-				// If we are repairing remove the file from disk now.
-				if ($fix_errors && in_array('missing_thumbnail_parent', $to_fix))
+				// Only do anything once... just in case
+				if (!isset($to_remove[$row['id_attach']]))
 				{
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
-					@unlink($filename);
+					$to_remove[$row['id_attach']] = $row['id_attach'];
+					$context['repair_errors']['missing_thumbnail_parent']++;
+
+					// If we are repairing remove the file from disk now.
+					if ($fix_errors && in_array('missing_thumbnail_parent', $to_fix))
+					{
+						$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+						@unlink($filename);
+					}
 				}
 			}
 			if ($smcFunc['db_num_rows']($result) != 0)
