@@ -447,7 +447,7 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	global $settings, $context, $txt, $scripturl;
 
 	if (!is_array($strip_options))
-		$strip_options = array('custom_td' => $strip_options);
+		$strip_options = array();
 
 	// Create the buttons...
 	$buttons = array();
