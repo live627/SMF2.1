@@ -119,27 +119,26 @@ form#ic_login ul li label
 /* rounded bars needs a different background here */
 #upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
 {
-	background: url(../images/catbg_left_ic.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 0 -80px;
 }
 #upshrinkHeaderIC h3.catbg
 {
-	background: url(../images/catbg_ic.png) repeat-x;
 }
 #upshrinkHeaderIC h3.catbg span.right, #upshrinkHeaderIC h3.catbg2 span.right
 {
-	background: url(../images/catbg_right_ic.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 100% -80px;
 }
 #upshrinkHeaderIC h4.titlebg span.left
 {
-	background: url(../images/titlebg_left_ic.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 0 0;
 }
 #upshrinkHeaderIC h4.titlebg
 {
-	background: url(../images/titlebg_ic.png) repeat-x;
+	background: url(../images/theme/caps.png) repeat-x 0 -240px;
 }
 #upshrinkHeaderIC h4.titlebg span.right
 {
-	background: url(../images/titlebg_right_ic.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 100% 0;
 }
 img#upshrink_ic
 {

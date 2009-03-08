@@ -101,19 +101,10 @@ a img
 {
 	border: 0;
 }
-
 /* No lines around buttons in Firefox! */
 a
 {
 	outline: none;
-}
-
-/* Reset all lists. */
-ul, ul li
-{
-	padding: 0;
-	margin: 0;
-	list-style: none;
 }
 
 /* ************************************* */
@@ -149,6 +140,13 @@ ul, ul li
 .padding
 {
 	padding: 0.7em;
+}
+/* a quick reset list class. */
+ul.reset, ul.reset li
+{
+	padding: 0;
+	margin: 0;
+	list-style: none;
 }
 /* ************************************* */
 /* Some specific SMF elements            */
@@ -213,28 +211,6 @@ code
 .bbc_img
 {
 	border: 0;
-}
-
-.bbc_list
-{
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-left: 2em;
-}
-
-.bbc_list li
-{
-	list-style: disc;
-}
-
-.bbc_list li li
-{
-	list-style: circle;
-}
-
-.bbc_size
-{
-	line-height: 1.3em;
 }
 
 .bbc_table
@@ -321,7 +297,7 @@ code
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
-	background: url(images/titlebg.png) repeat-x;
+	background: url(images/theme/caps.png) repeat-x 0 -160px;
 }
 .catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
 {
@@ -329,7 +305,7 @@ code
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
-	background: url(images/catbg.png) repeat-x;
+	background: url(images/theme/caps.png) repeat-x 0 -200px;
 }
 /* adjust the table versions of headers */
 tr.titlebg td, tr.titlebg2 td
@@ -434,19 +410,6 @@ tr.catbg th.smalltext
 	padding-bottom: 3px;
 	line-height: 1.3em;
 }
-
-/* lists in these need some re-styling */
-.post ul li, .personalmessage ul li, .signature ul li 
-{
-	list-style: disc outside;
-	margin: 0 0 0 2em;
-}
-.post ul li li, .personalmessage ul li li, .signature ul li li 
-{
-	list-style: circle outside;
-	margin: 0 0 0 2em;
-}
-
 
 /* Sometimes there will be an error when you post */
 .error
@@ -660,13 +623,14 @@ table.table_grid td
 /* alternative framing */
 .roundframe
 {
-	background: url(images/theme/ic_bg.png) repeat-y;
+	background: url(images/theme/roundframe_repeat.png) repeat-y top left;
+	padding-left: 10px;
 }
 .roundframe div.innerframe
 {
-	padding: 0 10px;
+	padding: 0 10px 0 0;
 	display: block;
-	background: url(images/theme/ic_bg2.png) top right repeat-y;
+	background: url(images/theme/roundframe_repeat.png) top right repeat-y;
 }
 div.innerframe dl,div.innerframe dt,div.innerframe p
 {
@@ -680,27 +644,29 @@ span.upperframe
 {
 	padding: 0;
 	display: block;
-	background: url(images/theme/ic_bg_top.png) top left no-repeat;
+	background: url(images/theme/roundframe.png) top left no-repeat;
+	padding-left: 20px;
 }
 span.upperframe span
 {
 	padding: 0;
 	height: 12px;
 	display: block;
-	background: url(images/theme/ic_bg_top2.png) top right no-repeat;
+	background: url(images/theme/roundframe.png) top right no-repeat;
 }
 span.lowerframe
 {
 	padding: 0;
 	display: block;
-	background: url(images/theme/ic_bg_bot.png) bottom left no-repeat;
+	background: url(images/theme/roundframe.png) bottom left no-repeat;
+	padding-left: 20px;
 }
 span.lowerframe span
 {
 	padding: 0;
 	height: 12px;
 	display: block;
-	background: url(images/theme/ic_bg_bot2.png) bottom right no-repeat;
+	background: url(images/theme/roundframe.png) bottom right no-repeat;
 }
 /* ************************************* */
 /* AutoSuggest                           */
@@ -873,6 +839,9 @@ ul.tabbuttons li
 }
 .buttonlist ul li
 {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 	float: left;
 }
 .buttonlist ul li a
@@ -880,20 +849,20 @@ ul.tabbuttons li
 	display: block;
 	font-size: 0.8em;
 	color: black;
-	background: url(images//theme/button_bg_right.png) no-repeat top right;
+	background: url(images/theme/button_bg_right.png) no-repeat top right;
 	padding: 0 8px 0 0;
 	margin-left: 5px;
 	text-transform: uppercase;
 }
 .buttonlist ul li a:hover
 {
-	background: url(images//theme/active_menu_right.png) no-repeat top right;
+	background: url(images/theme/active_menu_right.png) no-repeat top right;
 	color: #fff;
 	text-decoration: none;
 }
 .buttonlist ul li a span
 {
-	background: url(images//theme/button_bg_left.png) no-repeat top left;
+	background: url(images/theme/button_bg_left.png) no-repeat top left;
 	display: block;
 	height: 24px;
 	line-height: 17px;
@@ -901,18 +870,18 @@ ul.tabbuttons li
 }
 .buttonlist ul li a:hover span
 {
-	background: url(images//theme/active_menu_left.png) no-repeat;
+	background: url(images/theme/active_menu_left.png) no-repeat;
 }
 /* the active one */
 .buttonlist ul li a.active
 {
-	background: url(images//theme/active_menu_right.png) no-repeat top right;
+	background: url(images/theme/active_menu_right.png) no-repeat top right;
 	color: white;
 	font-weight: bold;
 }
 .buttonlist ul li a.active span
 {
-	background: url(images//theme/active_menu_left.png) no-repeat top left;
+	background: url(images/theme/active_menu_left.png) no-repeat top left;
 }
 .buttonlist ul li a.active
 {
@@ -966,298 +935,5 @@ ul#navigation li
 	height: 3em;
 	overflow: auto;
 }
-/* ************************************* */
-/* Styles from index.template            */
-/* ************************************* */
 
-/* the framing graphics */
-#header
-{
-	background: url(images/theme/top_bg.png) #fefefe no-repeat top left;
-}
-#header div.frame
-{
-	background: url(images/theme/top_bg_frame.png) no-repeat top right;
-	display: block;
-	padding: 5px 20px 0 20px;
-}
-/* the content section */
-#content_section
-{
-	background: url(images/theme/left.png) #fff repeat-y left;
-}
-#content_section div.frame
-{
-	background: url(images/theme/right.png) repeat-y right;
-	display: block;
-	padding: 0px 20px 0px 20px;
-	min-height: 200px;
-}
-
-/* the main title, always stay at 45 pixels in height! */
-h1.forumtitle
-{
-	line-height: 45px;
-	font-size: 1.8em;
-	font-family: Geneva, verdana, sans-serif;
-	margin: 0;
-	padding: 0;
-	float: left;
-}
-/* float these items to the right */
-h2.sitelogo, img#smflogo
-{
-	margin: 0;
-	padding: 0;
-	float: right;
-}
-h3
-{
-	padding-bottom: 3px;
-}
-/* the upshrink image needs some tweaking */
-img#upshrink
-{
-	float: right;
-	margin: 1em;
-}
-/* ..so does the SMF logo */
-img#smflogo
-{
-	margin-top: 4px;
-}
-/* the upper_section, float the two each way */
-#upper_section
-{
-	padding: 5px;
-}
-#upper_section ul li.greeting
-{
-	font-size: 1.3em;
-	font-weight: bold;
-	line-height: 1.5em;
-}
-#upper_section div.news
-{
-	width: 50%;
-	float: right;
-	text-align: right;
-}
-#guest_form .info
-{
-	padding: 4px 0 ;
-}
-div#upper_section div.user
-{
-	width: 50%;
-	float: left;
-}
-div#upper_section div.user p
-{
-	float: left;
-	margin: 0 1em 3em 0;
-	padding: 0;
-}
-div#upper_section div.user ul
-{
-	margin: 0;
-	padding-left: 10px;
-	min-height: 70px;
-}
-div#upper_section div.user ul li
-{
-	margin-bottom: 2px;
-}
-div#upper_section div.news p
-{
-	display: inline;
-}
-div#upper_section div.news form
-{
-	padding-bottom: 10px;
-}
-/* clearing the floats */
-#top_section
-{
-	min-height: 65px;
-}
-#upper_section
-{
-	overflow: hidden;
-}
-/* the navigation list */
-#navigate_section ul
-{
-	clear: both;
-	display: block;
-	min-height: 2em;
-	margin: 0;
-	font-size: 1em;
-	padding: 1em 0.4em;
-}
-#navigate_section ul li
-{
-	display: inline;
-	font-size: 0.95em;
-}
-/* the font size changer panel */
-p#fontsize_panel
-{
-	text-align: right;
-	color: white;
-}
-p#fontsize_panel img
-{
-	border: solid 1px #557B9C;
-	margin-right: 2px;
-	padding: 3px;
-}
-/* the footer wih copyright links etc. */
-#footer_section
-{
-	text-align: center;
-	background: url(images/theme/bot_bg.png) no-repeat top left;
-}
-#footer_section span.smalltext
-{
-	font-size: 100%;
-}
-#footer_section div.frame
-{
-	background: url(images/theme/bot_bg_frame.png) no-repeat top right;
-	display: block;
-	padding: 60px 0 0 0;
-}
-#footer_section ul li, #footer_section p
-{
-	font-size: 0.8em;
-}
-#footer_section ul li
-{
-	display: inline;
-	padding-right: 5px;
-}
-#footer_section ul li.copyright
-{
-	display: block;
-}
-
-/* setup the rounded header bars */
-h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, .table_list tbody.header td
-{
-	height: 31px;
-	line-height: 31px;
-	font-size: 1.2em;
-	font-weight: bold;
-}
-h3.catbg a, h3.catbg, .table_list tbody.header td, .table_list tbody.header td a
-{
-	color: white;
-}
-h3.catbg2 a, h3.catbg2
-{
-	color: #feb;
-}
-h3.catbg a:hover, .table_list tbody.header td a:hover
-{
-	color: #fd9;
-	text-decoration: none;
-}
-h3.catbg2 a:hover
-{
-	color: #fff;
-	text-decoration: none;
-}
-h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
-{
-	color: black;
-}
-h3.titlebg a:hover, h4.titlebg a:hover
-{
-	color: orange;
-	text-decoration: none;
-}
-h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right,.table_list tbody.header td span.right,.table_list tbody.header td span.left
-{
-	display: block;
-	width: 9px;
-	height: 31px;
-}
-h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
-{
-	float: left;
-	background: url(images/catbg_left.png) no-repeat;
-}
-h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
-{
-	float: right;
-	background: url(images/catbg_right.png) no-repeat;
-}
-h4.titlebg span.left,h4.titlebg span.right,h3.titlebg span.left,h3.titlebg span.right
-{
-	display: block;
-	width: 9px;
-	height: 31px;
-}
-h4.titlebg span.left,h3.titlebg span.left
-{
-	float: left;
-	background: url(images/titlebg_left.png) no-repeat;
-}
-h4.titlebg span.right,h3.titlebg span.right
-{
-	float: right;
-	background: url(images/titlebg_right.png) no-repeat;
-}
-h4.titlebg img.icon
-{
-	float: left;
-	margin: 5px 8px 0 0;
-}
-
-/* the login css needs to be everywhere */
-.login
-{
-	width: 480px;
-	margin: 0 auto;
-}
-.login dt, .login dd
-{
-	margin: 0;
-	height: 2.5em;
-	width: 45%;
-}
-.login dt
-{
-	float: left;
-	text-align: right;
-	font-weight: bold;
-	line-height: 1.5em;
-}
-.login dd
-{
-	width: 54%;
-	float: right;
-	text-align: left;
-}
-.login p
-{
-	text-align: center;
-}
-.login h3 img
-{
-	float: left;
-	margin: 4px 0.5em 0 0;
-}
-/* for maintenace mode */
-#maintenace
-{
-	width: 75%;
-	min-width: 520px;
-	text-align: left;
-}
-#maintenace img.align_left
-{
-	margin-right: 1em;
-}
 

@@ -55,7 +55,7 @@ function template_main()
 			<p class="smallpadding">', $context['poll']['allowed_warning'], '</p>';
 
 			echo '
-			<ul class="options">';
+			<ul class="reset options">';
 
 			// Show each option with its button - a radio likely.
 			foreach ($context['poll']['options'] as $option)
@@ -104,7 +104,7 @@ function template_main()
 		echo '
 <div id="events" class="tborder marginbottom">
 	<h3 class="titlebg headerpadding">	', $txt['calendar_linked_events'], '</h3>
-	<ul class="windowbg largepadding">';
+	<ul class="reset windowbg largepadding">';
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
 		<li>
@@ -207,7 +207,7 @@ function template_main()
 			echo  $context['can_send_pm'] ? '<a href="' . $message['member']['online']['href'] . '" title="' . $message['member']['online']['label'] . '">' : '', '<img src="', $message['member']['online']['image_href'], '" alt="', $message['member']['online']['text'], '" />', $context['can_send_pm'] ? '</a>' : '', '&nbsp;';
 		
 		echo $message['member']['link'], '</h4>
-					<ul class="smalltext" id="msg_', $message['id'], '_extra_info">';
+					<ul class="reset smalltext" id="msg_', $message['id'], '_extra_info">';
 
 		// Show the member's custom title, if they have one.
 		if (isset($message['member']['title']) && $message['member']['title'] != '')
@@ -342,7 +342,7 @@ function template_main()
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
 		echo '	
-					<ul class="smalltext quickbuttons">';
+					<ul class="reset smalltext quickbuttons">';
 
 		// Maybe we can approve it, maybe we should?
 		if ($message['can_approve'])

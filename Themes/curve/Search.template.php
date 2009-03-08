@@ -117,7 +117,7 @@ function template_main()
 					<h5>
 						<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $cat['child_ids']), ']); return false;">', $cat['name'], '</a>
 					</h5>
-					<ul>';
+					<ul class="reset">';
 				foreach ($cat['boards'] as $board)
 				{
 				echo '

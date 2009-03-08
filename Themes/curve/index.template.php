@@ -191,7 +191,7 @@ function template_body_above()
 				echo '
 				<p class="avatar">', $context['user']['avatar']['image'], '</p>';
 			echo '
-				<ul>
+				<ul class="reset">
 					<li class="greeting">', $txt['hello_member_ndt'], ' <span>', $context['user']['name'], '</span></li>
 					<li><a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a></li>
 					<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';
@@ -295,7 +295,7 @@ function template_body_below()
 	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!
 	echo '
 	<div id="footer_section"><div class="frame">
-		<ul>
+		<ul class="reset">
 			<li class="copyright">', theme_copyright(), '</li>
 			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win" title="', $txt['valid_xhtml'], '"><span>XHTML</span></a></li>
 			<li><a id="button_rss" href="', $scripturl , '?action=.xml" class="new_win"><span>RSS</span></a></li>

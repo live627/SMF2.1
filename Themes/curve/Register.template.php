@@ -87,7 +87,7 @@ function template_before()
 		echo '
 	<div class="register_error">
 		<span>', $txt['registration_errors_occurred'], '</span>
-		<ul>';
+		<ul class="reset">';
 
 		// Cycle through each error and display an error message.
 		foreach ($context['registration_errors'] as $error)
@@ -623,7 +623,7 @@ function template_edit_reserved_words()
 					<div style="width: 80%;">
 						<h4>', $txt['admin_reserved_line'], '</h4>
 						<textarea cols="30" rows="6" name="reserved" style="width: 98%;">', implode("\n", $context['reserved_words']), '</textarea>
-						<ul>
+						<ul class="reset">
 							<li><label for="matchword"><input type="checkbox" name="matchword" id="matchword" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_whole'], '</label></li>
 							<li><label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_case'], '</label></li>
 							<li><label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_user'], '</label></li>

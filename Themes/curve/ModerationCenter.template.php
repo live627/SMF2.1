@@ -226,7 +226,7 @@ function template_notes()
 	if (!empty($context['notes']))
 	{
 		echo '
-					<ul class="moderation_notes">';
+					<ul class="reset moderation_notes">';
 
 		// Cycle through the notes.
 		foreach ($context['notes'] as $note)

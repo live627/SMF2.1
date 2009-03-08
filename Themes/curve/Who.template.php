@@ -26,7 +26,7 @@ function template_main()
 		// $alternate will either be true or false. If it's true, use "windowbg2" and otherwise use "windowbg".
 		echo '
 			<div class="members_list">
-				<ul class="windowbg', $alternate ? '2' : '', '">
+				<ul class="reset windowbg', $alternate ? '2' : '', '">
 					<li class="who">';
 
 		// Guests don't have information like icq, msn, y!, and aim... and they can't be messaged.
@@ -101,7 +101,7 @@ function template_credits()
 		<h4>', $section['title'], '</h4>';
 
 		echo '
-		<ul>';
+		<ul class="reset">';
 
 		foreach ($section['groups'] as $group)
 		{

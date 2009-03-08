@@ -35,7 +35,7 @@ function template_main()
 				<img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'upshrink2.gif' : 'upshrink.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" />
 			</a>&nbsp;', $txt['news'], '
 		</h3>
-		<ul id="smfFadeScroller"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
+		<ul class="reset" id="smfFadeScroller"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
 			
 			foreach ($context['news_lines'] as $news)
 				echo '<li>', $news, '</li>';

@@ -5,24 +5,26 @@
 /* the framing graphics */
 #header
 {
-	background: url(../images/theme/top_bg.png) #fefefe no-repeat top left;
+	background: url(../images/theme/frame.png) #fefefe no-repeat top left;
+	padding-left: 20px;
 }
 #header div.frame
 {
-	background: url(../images/theme/top_bg_frame.png) no-repeat top right;
+	background: url(../images/theme/frame.png) no-repeat top right;
 	display: block;
-	padding: 5px 20px 0 20px;
+	padding: 5px 20px 0 0px;
 }
 /* the content section */
 #content_section
 {
-	background: url(../images/theme/left.png) #fff repeat-y left;
+	background: url(../images/theme/frame_repeat.png) repeat-y top left;
+	padding-left: 20px;
 }
 #content_section div.frame
 {
-	background: url(../images/theme/right.png) repeat-y right;
+	background: url(../images/theme/frame_repeat.png) repeat-y right;
 	display: block;
-	padding: 0px 20px 0px 20px;
+	padding: 0px 20px 0px 0;
 	min-height: 200px;
 }
 
@@ -153,7 +155,8 @@ p#fontsize_panel img
 #footer_section
 {
 	text-align: center;
-	background: url(../images/theme/bot_bg.png) no-repeat top left;
+	background: url(../images/theme/frame.png) no-repeat bottom left;
+	padding-left: 20px;
 }
 #footer_section span.smalltext
 {
@@ -161,7 +164,7 @@ p#fontsize_panel img
 }
 #footer_section div.frame
 {
-	background: url(../images/theme/bot_bg_frame.png) no-repeat top right;
+	background: url(../images/theme/frame.png) no-repeat bottom right;
 	display: block;
 	padding: 60px 0 0 0;
 }
@@ -259,28 +262,29 @@ h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.righ
 h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
 {
 	float: left;
-	background: url(../images/catbg_left.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 0 -120px;
 }
 h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
 {
 	float: right;
-	background: url(../images/catbg_right.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 100% -120px;
 }
-h4.titlebg span.left,h4.titlebg span.right
+h4.titlebg span.left,h4.titlebg span.right, h3.titlebg span.left,h3.titlebg span.right
 {
 	display: block;
 	width: 9px;
 	height: 31px;
 }
-h4.titlebg span.left
+h4.titlebg span.left, h3.titlebg span.left
+
 {
 	float: left;
-	background: url(../images/titlebg_left.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 0 -40px;
 }
-h4.titlebg span.right
+h4.titlebg span.right, h3.titlebg span.right
 {
 	float: right;
-	background: url(../images/titlebg_right.png) no-repeat;
+	background: url(../images/theme/caps.png) no-repeat 100% -40px;
 }
 h4.titlebg img.icon
 {
