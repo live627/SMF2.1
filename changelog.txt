@@ -17,6 +17,7 @@ March 2009
  - Removed optional require_theme_strings, in favour of always loaded ThemeStrings as it's cached, and thus faster (As Curve always sets it) (Load.php)
  ! Generic menu now supports the idea of hidden menu items (ones which can be selected but are not shown) (Subs-Menu.php) [Bug 3303]
  ! Redid the profile security model and menu code to be clearer, avoid duplication and hopefully be less prone to coder error. (Profile.php)
+ ! Support longer AIM nicknames. (Profile-Modify.php, install and upgrade scripts) [Bug 3308]
 
 
 February 2009

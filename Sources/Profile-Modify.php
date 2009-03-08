@@ -186,7 +186,6 @@ function loadProfileFields($force_reload = false)
 			'label' => $txt['aim'],
 			'subtext' => $txt['your_aim'],
 			'size' => 24,
-			'input_attr' => array('maxlength="16"'),
 			'value' => strtr(empty($cur_profile['aim']) ? '' : $cur_profile['aim'], '+', ' '),
 			'permission' => 'profile_extra',
 			'input_validate' => create_function('&$value', '

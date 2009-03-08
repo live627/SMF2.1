@@ -222,7 +222,7 @@ $nameChanges = array(
 		'websiteTitle' => 'websiteTitle website_title tinytext NOT NULL',
 		'websiteUrl' => 'websiteUrl website_url tinytext NOT NULL',
 		'ICQ' => 'ICQ icq tinytext NOT NULL',
-		'AIM' => 'AIM aim varchar(16) NOT NULL default \'\'',
+		'AIM' => 'AIM aim tinytext NOT NULL',
 		'YIM' => 'YIM yim varchar(32) NOT NULL default \'\'',
 		'MSN' => 'MSN msn tinytext NOT NULL',
 		'hideEmail' => 'hideEmail hide_email tinyint(4) NOT NULL default \'0\'',
@@ -1860,6 +1860,11 @@ ADD log_type varchar(8) NOT NULL default 'post';
 ALTER TABLE {$db_prefix}log_floodcontrol
 DROP PRIMARY KEY,
 ADD PRIMARY KEY (ip(16), log_type(8));
+---#
+
+---# Adding support for longer AIM nicknames.
+ALTER TABLE {$db_prefix}members
+CHANGE COLUMN aim aim tinytext NOT NULL;
 ---#
 
 ---# Adding guest voting ...
