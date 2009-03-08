@@ -185,7 +185,7 @@ if (!function_exists('clean_cache'))
 		$dh = opendir($cachedir);
 		while ($file = readdir($dh))
 		{
-			if (!$type || substr($file, 0, strlen($type)) == $type)
+			if ($file != '.' && $file != '..' && $file != 'index.php' && $file != '.htaccess' && (!$type || substr($file, 0, strlen($type)) == $type))
 				@unlink($cachedir . '/' . $file);
 		}
 		closedir($dh);
