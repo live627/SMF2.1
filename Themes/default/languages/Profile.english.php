@@ -251,8 +251,8 @@ $txt['recent_pms_at_top'] = 'Show most recent personal messages at top.';
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default.';
 
 $txt['timeformat_default'] = '(Forum Default)';
-$txt['timeformat_easy1'] = 'Month Day, Year, HH:MM:SS a/pm';
-$txt['timeformat_easy2'] = 'Month Day, Year, HH:MM:SS (army time.)';
+$txt['timeformat_easy1'] = 'Month Day, Year, HH:MM:SS am/pm';
+$txt['timeformat_easy2'] = 'Month Day, Year, HH:MM:SS (24 hour)';
 $txt['timeformat_easy3'] = 'YYYY-MM-DD, HH:MM:SS';
 $txt['timeformat_easy4'] = 'DD Month YYYY, HH:MM:SS';
 $txt['timeformat_easy5'] = 'DD-MM-YYYY, HH:MM:SS';

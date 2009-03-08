@@ -18,6 +18,7 @@ March 2009
  ! Generic menu now supports the idea of hidden menu items (ones which can be selected but are not shown) (Subs-Menu.php) [Bug 3303]
  ! Redid the profile security model and menu code to be clearer, avoid duplication and hopefully be less prone to coder error. (Profile.php)
  ! Support longer AIM nicknames. (Profile-Modify.php, install and upgrade scripts) [Bug 3308]
+ ! Call Army Time, 24 hour time. (Manual and Profile language files) [Bug 3300]
 
 
 February 2009
