@@ -78,7 +78,8 @@ function createMenu($menuData, $menuOptions = array())
 				string $file:		Name of source file required for this area.
 				string $function:	Function to call when area is selected.
 				string $custom_url:	URL to use for this menu item.
-				bool $enabled:		Should this area even be shown?
+				bool $enabled:		Should this area even be accessible?
+				bool $hidden:		Should this area be visible?
 				string $select:		If set this item will not be displayed - instead the item indexed here shall be.
 				array $subsections:	Array of subsections from this area.
 
@@ -143,66 +144,70 @@ function createMenu($menuData, $menuOptions = array())
 						$include_data = $area;
 					}
 
-					// First time this section?
-					if (!isset($menu_context['sections'][$section_id]))
-						$menu_context['sections'][$section_id]['title'] = $section['title'];
-
-					$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
-					// We'll need the ID as well...
-					$menu_context['sections'][$section_id]['id'] = $section_id;
-					// Does it have a custom URL?
-					if (isset($area['custom_url']))
-						$menu_context['sections'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
-
-					// Does this area have its own an icon?
-					if (!isset($area['force_menu_into_arms_of_another_menu']) && $user_info['name'] == 'iamanoompaloompa')
-						$menu_context['sections'][$section_id]['areas'][$area_id] = unserialize(base64_decode('YTozOntzOjU6ImxhYmVsIjtzOjEyOiJPb21wYSBMb29tcGEiO3M6MzoidXJsIjtzOjQzOiJodHRwOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL09vbXBhX0xvb21wYXM/IjtzOjQ6Imljb24iO3M6ODY6IjxpbWcgc3JjPSJodHRwOi8vd3d3LnNpbXBsZW1hY2hpbmVzLm9yZy9pbWFnZXMvb29tcGEuZ2lmIiBhbHQ9IkknbSBhbiBPb21wYSBMb29tcGEiIC8+Ijt9'));
-					elseif (isset($area['icon']))
-						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $context['menu_image_path'] . '/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
-					else
-						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '';
-
-					// Did it have subsections?
-					if (!empty($area['subsections']))
+					// If this is hidden from view don't do the rest.
+					if (empty($area['hidden']))
 					{
-						$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'] = array();
-						$first_sa = 0;
-						foreach ($area['subsections'] as $sa => $sub)
+						// First time this section?
+						if (!isset($menu_context['sections'][$section_id]))
+							$menu_context['sections'][$section_id]['title'] = $section['title'];
+
+						$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
+						// We'll need the ID as well...
+						$menu_context['sections'][$section_id]['id'] = $section_id;
+						// Does it have a custom URL?
+						if (isset($area['custom_url']))
+							$menu_context['sections'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
+
+						// Does this area have its own an icon?
+						if (!isset($area['force_menu_into_arms_of_another_menu']) && $user_info['name'] == 'iamanoompaloompa')
+							$menu_context['sections'][$section_id]['areas'][$area_id] = unserialize(base64_decode('YTozOntzOjU6ImxhYmVsIjtzOjEyOiJPb21wYSBMb29tcGEiO3M6MzoidXJsIjtzOjQzOiJodHRwOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL09vbXBhX0xvb21wYXM/IjtzOjQ6Imljb24iO3M6ODY6IjxpbWcgc3JjPSJodHRwOi8vd3d3LnNpbXBsZW1hY2hpbmVzLm9yZy9pbWFnZXMvb29tcGEuZ2lmIiBhbHQ9IkknbSBhbiBPb21wYSBMb29tcGEiIC8+Ijt9'));
+						elseif (isset($area['icon']))
+							$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $context['menu_image_path'] . '/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
+						else
+							$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '';
+
+						// Did it have subsections?
+						if (!empty($area['subsections']))
 						{
-							if ((empty($sub[1]) || allowedTo($sub[1])) && (!isset($sub['enabled']) || !empty($sub['enabled'])))
+							$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'] = array();
+							$first_sa = 0;
+							foreach ($area['subsections'] as $sa => $sub)
 							{
-								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
-								// Custom URL?
-								if (isset($sub['url']))
-									$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['url'] = $sub['url'];
-
-								// A bit complicated - but is this set?
-								if ($menu_context['current_area'] == $area_id)
+								if ((empty($sub[1]) || allowedTo($sub[1])) && (!isset($sub['enabled']) || !empty($sub['enabled'])))
 								{
-									// Save which is the first...
-									if (empty($first_sa))
-										$first_sa = $sa;
-
-									// Is this the current subsection?
-									if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa)
-										$menu_context['current_subsection'] = $sa;
-									// Otherwise is it the default?
-									elseif (!isset($menu_context['current_subsection']) && !empty($sub[2]))
-										$menu_context['current_subsection'] = $sa;
+									$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
+									// Custom URL?
+									if (isset($sub['url']))
+										$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['url'] = $sub['url'];
+	
+									// A bit complicated - but is this set?
+									if ($menu_context['current_area'] == $area_id)
+									{
+										// Save which is the first...
+										if (empty($first_sa))
+											$first_sa = $sa;
+	
+										// Is this the current subsection?
+										if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa)
+											$menu_context['current_subsection'] = $sa;
+										// Otherwise is it the default?
+										elseif (!isset($menu_context['current_subsection']) && !empty($sub[2]))
+											$menu_context['current_subsection'] = $sa;
+									}
+									$last_sa = $sa;
 								}
-								$last_sa = $sa;
+								// Mark it as disabled...
+								else
+									$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['disabled'] = true;
 							}
-							// Mark it as disabled...
-							else
-								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['disabled'] = true;
-						}
 
-						// Set which one is last and selected in the group.
-						if (!empty($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']))
-						{
-							$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['is_last'] = true;
-							if ($menu_context['current_area'] == $area_id && !isset($menu_context['current_subsection']))
-								$menu_context['current_subsection'] = $first_sa;
+							// Set which one is last and selected in the group.
+							if (!empty($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']))
+							{
+								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['is_last'] = true;
+								if ($menu_context['current_area'] == $area_id && !isset($menu_context['current_subsection']))
+									$menu_context['current_subsection'] = $first_sa;
+							}
 						}
 					}
 				}
@@ -233,7 +238,7 @@ function createMenu($menuData, $menuOptions = array())
 
 	// If we didn't find the area we were looking for go to a default one.
 	if (isset($backup_area) && empty($found_section))
-		$context['current_area'] = $backup_area;
+		$menu_context['current_area'] = $backup_area;
 
 	// If still no data then return - nothing to show!
 	if (empty($menu_context['sections']))

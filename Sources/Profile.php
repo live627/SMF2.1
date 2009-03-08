@@ -333,30 +333,67 @@ function ModifyProfile($post_errors = array())
 		),
 	);
 
-	// Auto populate the above!
-	$defaultAction = false;
-	$defaultInclude = false;
-	$context['completed_save'] = false;
+	// Do some cleaning ready for the menu function.
 	$context['password_areas'] = array();
-	$security_checks = array();
-	$include_file = false;
-	$requestedAreaValid = false;
+	$current_area = isset($_REQUEST['area']) ? $_REQUEST['area'] : '';
 
 	foreach ($profile_areas as $section_id => $section)
 	{
-		// Not even enabled?
-		if (isset($section['enabled']) && $section['enabled'] == false)
-		{
-			unset($profile_areas[$section_id]);
-			continue;
-		}
-
+		// Do a bit of spring cleaning so to speak.
 		foreach ($section['areas'] as $area_id => $area)
 		{
-			// Were we trying to see this?
-			if (isset($_REQUEST['area']) && $_REQUEST['area'] == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && !empty($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']))
+			// If it said no permissions that meant it wasn't valid!
+			if (empty($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']))
+				$profile_areas[$section_id]['areas'][$area_id]['enabled'] = false;
+			// Otherwise pick the right set.
+			else
+				$profile_areas[$section_id]['areas'][$area_id]['permission'] = $area['permission'][$context['user']['is_owner'] ? 'own' : 'any'];
+
+			// Password required - only if not on OpenID.
+			if (!empty($area['password']) && empty($cur_profile['openid_uri']))
+				$context['password_areas'][] = $area_id;
+		}
+	}
+
+	// Is there an updated message to show?
+	if (isset($_GET['updated']))
+		$context['profile_updated'] = $txt['profile_updated_own'];
+
+	// Set a few options for the menu.
+	$menuOptions = array(
+		'disable_url_session_check' => true,
+		'current_area' => $current_area,
+		'extra_url_parameters' => array(
+			'u' => $context['id_member'],
+		),
+	);
+
+	// Actually create the menu!
+	$profile_include_data = createMenu($profile_areas, $menuOptions);
+
+	// Make a note of the Unique ID for this menu.
+	$context['profile_menu_id'] = $context['max_menu_id'];
+	$context['profile_menu_name'] = 'menu_data_' . $context['profile_menu_id'];
+
+	// Set the selected item - now it's been validated.
+	$current_area = $profile_include_data['current_area'];
+	$context['menu_item_selected'] = $current_area;
+
+	// Before we go any further, let's work on the area we've said is valid. Note this is done here just in case we every compromise the menu function in error!
+	$context['completed_save'] = false;
+	$security_checks = array();
+	$found_area = false;
+	foreach ($profile_areas as $section_id => $section)
+	{
+		// Do a bit of spring cleaning so to speak.
+		foreach ($section['areas'] as $area_id => $area)
+		{
+			// Is this our area?
+			if ($current_area == $area_id)
 			{
-				$security_checks['permission'] = $area['permission'][$context['user']['is_owner'] ? 'own' : 'any'];
+				// This can't happen - but is a security check.
+				if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($area['enabled']) && $area['enabled'] == false))
+					fatal_lang_error('no_access');
 
 				// Are we saving data in a valid area?
 				if (isset($area['sc']) && isset($_REQUEST['save']))
@@ -369,48 +406,22 @@ function ModifyProfile($post_errors = array())
 				if (!empty($area['validate']))
 					$security_checks['validate'] = true;
 
-				// Need to include the file?
-				if (!empty($area['file']))
-					$include_file = $area['file'];
-				
-				// The area requested by the user turns out to be a valid and enabled one.
-				$requestedAreaValid = true;
-			}
+				// Permissions for good measure.
+				if (!empty($profile_include_data['permission']))
+					$security_checks['permission'] = $profile_include_data['permission'];
 
-			// Can we do this?
-			if ((!isset($area['enabled']) || $area['enabled'] != false) && !empty($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']) && allowedTo($area['permission'][$context['user']['is_owner'] ? 'own' : 'any']) && empty($area['hidden']))
-			{
-				// Replace the contents with a link.
-				$profile_areas[$section_id]['areas'][$area_id]['permission'] = true;
-				// Should we do this by default?
-				if ($defaultAction === false)
-				{
-					$defaultAction = $area_id;
-					$defaultInclude = !empty($area['file']) ? $area['file'] : false;
-				}
-				// Password required - only if not on OpenID.
-				if (!empty($area['password']) && empty($cur_profile['openid_uri']))
-					$context['password_areas'][] = $area_id;
+				// Either way got something.
+				$found_area = true;
 			}
-			// Otherwise unset it!
-			else
-				unset($profile_areas[$section_id]['areas'][$area_id]);
 		}
-
-		// Is there nothing left?
-		if (empty($profile_areas[$section_id]['areas']))
-			unset($profile_areas[$section_id]);
 	}
 
-	// If we have no sub-action find the default or drop out.
-	if (!isset($_REQUEST['area']) && $defaultAction !== false)
-	{
-		$_REQUEST['area'] = $defaultAction;
-		if ($defaultInclude)
-			$include_file = $defaultInclude;
-	}
-	elseif (!isset($_REQUEST['area']) || !$requestedAreaValid)
-		isAllowedTo('profile_view_' . ($context['user']['is_owner'] ? 'own' : 'any'));
+	// Oh dear, some serious security lapse is going on here... we'll put a stop to that!
+	if (!$found_area)
+		fatal_lang_error('no_access');
+
+	// Release this now.
+	unset($profile_areas);
 
 	// Now the context is setup have we got any security checks to carry out additional to that above?
 	if (isset($security_checks['session']))
@@ -419,29 +430,6 @@ function ModifyProfile($post_errors = array())
 		validateSession();
 	if (isset($security_checks['permission']))
 		isAllowedTo($security_checks['permission']);
-
-	// Is there an updated message to show?
-	if (isset($_GET['updated']))
-		$context['profile_updated'] = $txt['profile_updated_own'];
-
-	// Set a few options for the menu.
-	$menuOptions = array(
-		'disable_url_session_check' => true,
-		'extra_url_parameters' => array(
-			'u' => $context['id_member'],
-		),
-	);
-
-	// Actually create the menu!
-	$profile_include_data = createMenu($profile_areas, $menuOptions);
-	unset($profile_areas);
-
-	// Make a note of the Unique ID for this menu.
-	$context['profile_menu_id'] = $context['max_menu_id'];
-	$context['profile_menu_name'] = 'menu_data_' . $context['profile_menu_id'];
-
-	// Set the selected item.
-	$context['menu_item_selected'] = $profile_include_data['current_area'];
 
 	// File to include?
 	if (isset($profile_include_data['file']))
@@ -509,12 +497,12 @@ function ModifyProfile($post_errors = array())
 			$profile_vars['member_ip'] = $user_info['ip'];
 
 		// Now call the sub-action function...
-		if (isset($_REQUEST['area']) && $_REQUEST['area'] == 'activateaccount')
+		if ($current_area == 'activateaccount')
 		{
 			if (empty($post_errors))
 				activateAccount($memID);
 		}
-		elseif (isset($_REQUEST['area']) && $_REQUEST['area'] == 'deleteaccount')
+		elseif ($current_area == 'deleteaccount')
 		{
 			if (empty($post_errors))
 			{
@@ -522,7 +510,7 @@ function ModifyProfile($post_errors = array())
 				redirectexit();
 			}
 		}
-		elseif (isset($_REQUEST['area']) && $_REQUEST['area'] == 'groupmembership' && empty($post_errors))
+		elseif ($current_area == 'groupmembership' && empty($post_errors))
 		{
 			$msg = groupMembership2($profile_vars, $post_errors, $memID);
 
@@ -530,11 +518,11 @@ function ModifyProfile($post_errors = array())
 			redirectexit('action=profile;u=' . $memID . ';area=groupmembership' . (!empty($msg) ? ';msg=' . $msg : ''));
 		}
 		// Authentication changes?
-		elseif (isset($_REQUEST['area']) && $_REQUEST['area'] == 'authentication')
+		elseif ($current_area == 'authentication')
 		{
 			authentication($memID, true);
 		}
-		elseif (isset($_REQUEST['area']) && in_array($_REQUEST['area'], array('account', 'forumprofile', 'theme', 'pmprefs')))
+		elseif (in_array($current_area, array('account', 'forumprofile', 'theme', 'pmprefs')))
 			saveProfileFields();
 		else
 		{
@@ -617,16 +605,16 @@ function ModifyProfile($post_errors = array())
 	}
 	// If it's you then we should redirect upon save.
 	elseif (!empty($profile_vars) && $context['user']['is_owner'])
-		redirectexit('action=profile;area=' . $_REQUEST['area'] . ';updated');
+		redirectexit('action=profile;area=' . $current_area . ';updated');
 	elseif (!empty($force_redirect))
-		redirectexit('action=profile;u=' . $memID . ';area=' . $_REQUEST['area']);
+		redirectexit('action=profile;u=' . $memID . ';area=' . $current_area);
 
 	// Call the appropriate subaction function.
 	$profile_include_data['function']($memID);
 
 	// Set the page title if it's not already set...
 	if (!isset($context['page_title']))
-		$context['page_title'] = $txt['profile'] . ' - ' . $txt[$_REQUEST['area']];
+		$context['page_title'] = $txt['profile'] . (isset($txt[$current_area]) ? ' - ' . $txt[$current_area] : '');
 }
 
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.

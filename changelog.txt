@@ -15,6 +15,8 @@ March 2009
  ! Quick in topic moderation was javascript erroring if you couldn't delete every message. (xml_topic.js, theme.js, Display templates) [Bug 3312]
  ! Gave Curve it's own settings language file and moved strings that should have been in it but wern't into it. (Settings and ThemeStrings language file)
  - Removed optional require_theme_strings, in favour of always loaded ThemeStrings as it's cached, and thus faster (As Curve always sets it) (Load.php)
+ ! Generic menu now supports the idea of hidden menu items (ones which can be selected but are not shown) (Subs-Menu.php) [Bug 3303]
+ ! Redid the profile security model and menu code to be clearer, avoid duplication and hopefully be less prone to coder error. (Profile.php)
 
 
 February 2009
