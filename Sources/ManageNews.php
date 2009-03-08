@@ -530,7 +530,7 @@ function SendMailing($clean_only = false)
 	// Finally - emails!
 	if (!empty($_POST['emails']))
 	{
-		$addressed = array_unique(explode(';', $_POST['emails']));
+		$addressed = array_unique(explode(';', strtr($_POST['emails'], array("\n" => ';', "\r" => ';', ',' => ';'))));
 		foreach ($addressed as $curmem)
 		{
 			$curmem = trim($curmem);
