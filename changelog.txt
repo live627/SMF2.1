@@ -24,6 +24,7 @@ March 2009
  ! Be more forgiving when people don't do what they're told and decide to separate newsletter recipients by comma or line break. (ManageNews.php) [Bug 3294]
  ! Ensure we always use INNER JOIN, if only for consistency. (DbExtra-postgresql.php) [Bug 2262]
  ! When logging an upgrade note down which admin it was. (upgrade.php) [Bug 3134]
+ ! Allow the URL tag as a cite on the quote tag, like we used to back in 1.1. (Subs.php) [Bug 2303]
 
 
 February 2009

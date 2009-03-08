@@ -996,6 +996,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			disallow_children: similar to, but very different from,
 			  require_children, if it is set the listed tags will not be
 			  parsed inside the tag.
+
+			parsed_tags_allowed: an array restricting what BBC can be in the
+			  parsed_equals parameter, if desired.
 		*/
 
 		$codes = array(
@@ -1355,10 +1358,12 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'quote',
-				'type' => 'unparsed_equals',
+				'type' => 'parsed_equals',
 				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': $1</div><blockquote>',
 				'after' => '</blockquote>',
 				'quoted' => 'optional',
+				// Don't allow everything to be embedded with the author name.
+				'parsed_tags_allowed' => array('url', 'iurl', 'ftp'),
 				'block_level' => true,
 			),
 			array(
@@ -2285,7 +2290,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			// For parsed content, we must recurse to avoid security problems.
 			if ($tag['type'] != 'unparsed_equals')
-				$data = parse_bbc($data);
+				$data = parse_bbc($data, !empty($tag['parsed_tags_allowed']) ? false : true, '', !empty($tag['parsed_tags_allowed']) ? $tag['parsed_tags_allowed'] : array());
 
 			$tag['after'] = strtr($tag['after'], array('$1' => $data));
 
