@@ -2176,9 +2176,9 @@ function DeleteUpgrade()
 	scheduled_fetchSMfiles(); // Now go get those files!
 
 	// Log what we've done.
-	if (empty($user_info['id']) && !empty($upcontext['user']['id']))
-		$user_info['id'] = $upcontext['user']['id'];
-	logAction('upgrade', array('version' => $forum_version), 'admin');
+	if (empty($user_info['id']))
+		$user_info['id'] = !empty($upcontext['user']['id']) ? $upcontext['user']['id'] : 0;
+	logAction('upgrade', array('version' => $forum_version, 'member' => $user_info['id']), 'admin');
 	$user_info['id'] = 0;
 
 	// Save the current database version.

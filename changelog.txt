@@ -23,6 +23,7 @@ March 2009
  ! Clean cache in upgrade was out of date, also it now doesn't try to delete period and period period. (upgrade.php, Subs.php) [Bug 2916]
  ! Be more forgiving when people don't do what they're told and decide to separate newsletter recipients by comma or line break. (ManageNews.php) [Bug 3294]
  ! Ensure we always use INNER JOIN, if only for consistency. (DbExtra-postgresql.php) [Bug 2262]
+ ! When logging an upgrade note down which admin it was. (upgrade.php) [Bug 3134]
 
 
 February 2009
