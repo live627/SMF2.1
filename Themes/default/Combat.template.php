@@ -2,9 +2,13 @@
 // Version: 2.0 RC1; Combat
 
 // Generate a strip of buttons, out of buttons.
-function template_button_strip($button_strip, $direction = 'top', $custom_td = '')
+function template_button_strip($button_strip, $direction = 'top', $strip_options = array())
 {
 	global $settings, $context, $txt, $scripturl;
+
+	// Compatability.
+	if (!is_array($strip_options))
+		$strip_options = array('custom_td' => $strip_options);
 
 	// Create the buttons...
 	$buttons = array();
@@ -12,14 +16,14 @@ function template_button_strip($button_strip, $direction = 'top', $custom_td = '
 		if (!isset($value['test']) || !empty($context[$value['test']]))
 			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 
-	if (empty($buttons))
-		return '';
-
-	// Make the last one, as easy as possible.
-	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+	if (!empty($buttons))
+	{
+		// Make the last one, as easy as possible.
+		$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+	}
 
 	echo '
-		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '">
+		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
 			<ul class="clearfix">
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>

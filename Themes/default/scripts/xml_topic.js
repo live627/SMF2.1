@@ -280,6 +280,10 @@ InTopicModeration.prototype.handleClick = function(oCheckbox)
 {
 	if (!this.bButtonsShown)
 	{
+		// Make sure it can go somewhere.
+		if (this.opt.sButtonStripDisplay && document.getElementById(this.opt.sButtonStripDisplay))
+			document.getElementById(this.opt.sButtonStripDisplay).style.display = "";
+
 		// Add the 'remove selected items' button.
 		if (this.opt.bCanRemove)
 			smf_addButton(this.opt.sButtonStrip, this.opt.bUseImageButton, {

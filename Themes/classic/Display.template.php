@@ -242,10 +242,11 @@ function template_main()
 <table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
 	// Get all the messages...
-	$messageIDs = array();
+	$removableMessageIDs = array();
 	while ($message = $context['get_message']())
 	{
-		$messageIDs[] = $message['id'];
+		if ($message['can_remove'])
+			$removableMessageIDs[] = $message['id'];
 
 		echo '
 	<tr><td style="padding: 1px 1px 0 1px;">';
@@ -668,7 +669,7 @@ function template_main()
 	var oInTopicModeration = new InTopicModeration({
 		sSelf: \'oInTopicModeration\',
 		sCheckboxContainerMask: \'in_topic_mod_check_\',
-		aMessageIds: [\'', implode('\', \'', $messageIDs), '\'],
+		aMessageIds: [\'', implode('\', \'', $removableMessageIDs), '\'],
 		sSessionId: \'', $context['session_id'], '\',
 		sButtonStrip: \'moderationbuttons\',
 		bUseImageButton: true,

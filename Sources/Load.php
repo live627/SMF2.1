@@ -1543,7 +1543,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	{
 		$context['template_layers'] = array(WIRELESS_PROTOCOL);
 		loadTemplate('Wireless');
-		loadLanguage('Wireless+index+Modifications');
+		loadLanguage('Wireless+index+Modifications+ThemeStrings');
 	}
 	// Output is fully XML, so no need for the index template.
 	elseif (isset($_REQUEST['xml']))
@@ -1566,17 +1566,19 @@ function loadTheme($id_theme = 0, $initialize = true)
 		else
 			$templates = array('index');
 
-		// Fall back to the English version of the Modifications files, if necessary.
+		// Fall back to the English version of the Modifications and Theme Strings files, if necessary.
 		$cur_language = isset($user_info['language']) ? $user_info['language'] : $language;
 		if ($cur_language !== 'english')
-			loadLanguage('Modifications', 'english', false);
+		{
+			loadLanguage('Modifications+ThemeStrings', 'english', false);
+		}
 
 		// Load each template...
 		foreach ($templates as $template)
 			loadTemplate($template, $template);
 
 		// ...and attempt to load their associated language files.
-		$required_files = implode('+', array_merge($templates, array('Modifications')));
+		$required_files = implode('+', array_merge($templates, array('Modifications+ThemeStrings')));
 		loadLanguage($required_files, '', false);
 
 		// Custom template layers?
@@ -1588,15 +1590,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Initialize the theme.
 	loadSubTemplate('init', 'ignore');
-
-	// Any theme-related strings that need to be loaded?
-	if (!empty($settings['require_theme_strings']))
-	{
-		$cur_language = isset($user_info['language']) ? $user_info['language'] : $language;
-		if ($cur_language !== 'english')
-			loadLanguage('ThemeStrings', 'english', false);
-		loadLanguage('ThemeStrings', '', false);
-	}
 
 	// We allow theme variants, because we're cool.
 	$context['theme_variant'] = '';

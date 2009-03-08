@@ -60,9 +60,6 @@ function template_init()
 
 	/* Does this theme use post previews on the message index? */
 	$settings['message_index_preview'] = false;
-	
-	/* Set the following variable to true if this theme requires the optional theme strings file to be loaded. */
-	$settings['require_theme_strings'] = false;
 }
 
 // The main sub template above the content.
@@ -445,9 +442,12 @@ function template_menu()
 }
 
 // Generate a strip of buttons.
-function template_button_strip($button_strip, $direction = 'top', $custom_td = '')
+function template_button_strip($button_strip, $direction = 'top', $strip_options = array())
 {
 	global $settings, $context, $txt, $scripturl;
+
+	if (!is_array($strip_options))
+		$strip_options = array('custom_td' => $strip_options);
 
 	// Create the buttons...
 	$buttons = array();
@@ -455,14 +455,14 @@ function template_button_strip($button_strip, $direction = 'top', $custom_td = '
 		if (!isset($value['test']) || !empty($context[$value['test']]))
 			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
 
-	if (empty($buttons))
-		return '';
-
-	// Make the last one, as easy as possible.
-	$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+	if (!empty($buttons))
+	{
+		// Make the last one, as easy as possible.
+		$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+	}
 
 	echo '
-		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '">
+		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
 			<ul class="clearfix">
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>

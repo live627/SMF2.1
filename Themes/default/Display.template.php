@@ -170,14 +170,15 @@ function template_main()
 	$restore_message_button = create_button('restore_topic.gif', 'restore_message', 'restore_message', 'align="middle"');
 
 	$ignoredMsgs = array();
-	$messageIDs = array();
+	$removableMessageIDs = array();
 
 	// Get all the messages...
 	while ($message = $context['get_message']())
 	{
 		$is_first_post = !isset($is_first_post) ? true : false;
 		$ignoring = false;
-		$messageIDs[] = $message['id'];
+		if ($message['can_remove'])
+			$removableMessageIDs[] = $message['id'];
 
 		echo '
 		<div class="bordercolor">';
@@ -540,7 +541,7 @@ function template_main()
 		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id']);
 
 	echo '
-<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom'), '</div>';
+<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom', array('id' => 'moderationbuttons_strip')), '</div>';
 
 	// Show the jumpto box, or actually...let Javascript do it.
 	echo '
@@ -628,9 +629,10 @@ function template_main()
 	var oInTopicModeration = new InTopicModeration({
 		sSelf: \'oInTopicModeration\',
 		sCheckboxContainerMask: \'in_topic_mod_check_\',
-		aMessageIds: [\'', implode('\', \'', $messageIDs), '\'],
+		aMessageIds: [\'', implode('\', \'', $removableMessageIDs), '\'],
 		sSessionId: \'', $context['session_id'], '\',
 		sButtonStrip: \'moderationbuttons\',
+		sButtonStripDisplay: \'moderationbuttons_strip\',
 		bUseImageButton: false,
 		bCanRemove: ', $context['can_remove_post'] ? 'true' : 'false', ',
 		sRemoveButtonLabel: \'', $txt['quickmod_delete_selected'], '\',

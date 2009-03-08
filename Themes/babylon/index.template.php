@@ -60,9 +60,6 @@ function template_init()
 
 	/* Does this theme use post previews on the message index? */
 	$settings['message_index_preview'] = false;
-	
-	/* Set the following variable to true if this theme requires the optional theme strings file to be loaded. */
-	$settings['require_theme_strings'] = false;
 }
 
 // The main sub template above the content.
@@ -493,12 +490,13 @@ function template_menu()
 }
 
 // Generate a strip of buttons, out of buttons.
-function template_button_strip($button_strip, $direction = 'top', $custom_td = '')
+function template_button_strip($button_strip, $direction = 'top', $strip_options = array())
 {
 	global $settings, $context, $txt, $scripturl;
 
-	if (empty($button_strip))
-		return '';
+	// Compatability.
+	if (!is_array($strip_options))
+		$strip_options = array('custom_td' => $strip_options);
 
 	// Create the buttons...
 	$buttons = array();
@@ -506,11 +504,8 @@ function template_button_strip($button_strip, $direction = 'top', $custom_td = '
 		if (!isset($value['test']) || !empty($context[$value['test']]))
 			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['content']) ? $value['content'] : (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '>' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . ($value['lang'] ? $context['user']['language'] . '/' : '') . $value['image'] . '" alt="' . $txt[$value['text']] . '" border="0" />' : $txt[$value['text']])) . '</a>';
 
-	if (empty($button_strip))
-		return '';
-
 	echo '
-		<div ', $custom_td, '>', implode($context['menu_separator'], $buttons) , '</div>';
+		<div ', isset($strip_options['custom_td']) ? $strip_options['custom_td'] : '', '', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>', implode($context['menu_separator'], $buttons) , '</div>';
 }
 
 ?>

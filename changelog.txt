@@ -10,6 +10,11 @@ March 2009
  ! Manage attachments was doing an unnecessary group, breaking PostgreSQL. (ManageAttachments.php) [Bug 3203]
  ! Ensure custom profile fields use a prefix in the themes table. (ManageSettings.php) [Bug 2658]
  ! Change around some of the security on theme java function to allow guests to keep their session alive but stop name being used. (Themes.php) [Bug 2658]
+ ! Update template_button_strip function to take an array as a third parameter, plus backwards support for old implementation. (index templates, Combat template)
+ ! You can now force the ID of a button strip being created. (index templates, Combat template)
+ ! Quick in topic moderation was javascript erroring if you couldn't delete every message. (xml_topic.js, theme.js, Display templates) [Bug 3312]
+ ! Gave Curve it's own settings language file and moved strings that should have been in it but wern't into it. (Settings and ThemeStrings language file)
+ - Removed optional require_theme_strings, in favour of always loaded ThemeStrings as it's cached, and thus faster (As Curve always sets it) (Load.php)
 
 
 February 2009

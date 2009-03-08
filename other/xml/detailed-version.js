@@ -253,6 +253,7 @@ window.smfLanguageVersions = {
 	'Settings': '2.0 RC1',
 	'Stats': '2.0 RC1',
 	'Themes': '2.0 RC1',
+	'ThemeStrings': '2.0 RC1',
 	'Who': '2.0 RC1',
 	'Wireless': '2.0 RC1'
 };
