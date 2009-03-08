@@ -276,10 +276,10 @@ function smf_db_table_sql($tableName)
 
 	$result = $smcFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
-		FROM pg_class AS c, pg_class AS c2, pg_index AS i
-		WHERE c.relname = {string:table}
-			AND c.oid = i.indrelid
-			AND i.indexrelid = c2.oid',
+		FROM pg_class AS c
+			INNER JOIN pg_index AS i ON (i.indrelid = c.oid)
+			INNER JOIN pg_class AS c2 ON (c2.oid = i.indexrelid)
+		WHERE c.relname = {string:table}',
 		array(
 			'table' => $tableName,
 		)
