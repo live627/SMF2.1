@@ -130,7 +130,7 @@ function MembergroupIndex()
 		'base_href' => $scripturl . '?action=admin;area=membergroups' . (isset($_REQUEST['sort2']) ? ';sort2=' . urlencode($_REQUEST['sort2']) : ''),
 		'default_sort_col' => 'name',
 		'get_items' => array(
-			'file' => 'Subs-Membergroups.php',
+			'file' =>  $sourcedir . '/Subs-Membergroups.php',
 			'function' => 'list_getMembergroups',
 			'params' => array(
 				'regular',
@@ -254,7 +254,7 @@ function MembergroupIndex()
 			'desc' => 'desc2',
 		),
 		'get_items' => array(
-			'file' => 'Subs-Membergroups.php',
+			'file' =>  $sourcedir . '/Subs-Membergroups.php',
 			'function' => 'list_getMembergroups',
 			'params' => array(
 				'post_count',
