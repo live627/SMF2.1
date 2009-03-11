@@ -36,7 +36,8 @@ March 2009
  ! Suppress apache_reset_timeout warning notices especially from safe mode. (Lots of files) [Bug 2811]
  ! Missing xmlns and other xhtml warnings (repair_settings.php) [Bug 3150]
  ! Advanced profile field radio set to 0 wouldn't show as selected (Profile.php) [Bug 3103]
- 
+ * Non-selected/checked inputs cause unnecessary spaces and unnecessary id causing invalid xhtml (Admin.template.php)
+
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]

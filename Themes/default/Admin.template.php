@@ -40,9 +40,9 @@ function template_admin()
 			<img src="' , $settings['images_url'] , '/filter.gif" alt="" style="float: right;" />
 			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
 			<select name="search_type">
-				<option value="internal" ', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
-				<option value="member" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
-				<option value="online" ', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? 'selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
+				<option value="internal"', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
+				<option value="member"', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
+				<option value="online"', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
 			</select>
 			<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
 		</form>
@@ -866,7 +866,7 @@ function template_show_settings()
 		if (is_array($config_var) && $config_var['type'] == 'title')
 		{
 			echo '
-						<tr class="', !empty($config_var['class']) ? $config_var['class'] : 'titlebg', '" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>
+						<tr class="', !empty($config_var['class']) ? $config_var['class'] : 'titlebg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
 							<td colspan="3">
 								', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 								', $config_var['label'], '
@@ -894,7 +894,7 @@ function template_show_settings()
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
 				echo '
-							<td colspan="3" align="center" ', $config_var['type'] == 'warning' ? 'class="alert" style="padding: 2em;"' : '', '>
+							<td colspan="3" align="center"', $config_var['type'] == 'warning' ? ' class="alert" style="padding: 2em;"' : '', '>
 								', $config_var['label'], '
 							</td>';
 			}
@@ -915,14 +915,14 @@ function template_show_settings()
 							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
 
 				echo '
-							<td valign="top" ', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</td>
+							<td valign="top"', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</td>
 							<td class="windowbg2" width="50%">',
 								$config_var['preinput'];
 
 				// Show a check box.
 				if ($config_var['type'] == 'check')
 					echo '
-								<input type="checkbox"', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '" ', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="check" />';
+								<input type="checkbox"', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="check" />';
 				// Escape (via htmlspecialchars.) the text box.
 				elseif ($config_var['type'] == 'password')
 					echo '
@@ -1106,25 +1106,25 @@ function template_edit_profile_field()
 				</td>
 				<td width="50%">
 					<select name="profile_area">
-						<option value="none" ', $context['field']['profile_area'] == 'none' ? 'selected="selected"' : '', '>', $txt['custom_edit_profile_none'], '</option>
-						<option value="account" ', $context['field']['profile_area'] == 'account' ? 'selected="selected"' : '', '>', $txt['account'], '</option>
-						<option value="forumProfile" ', $context['field']['profile_area'] == 'forumProfile' ? 'selected="selected"' : '', '>', $txt['forumprofile'], '</option>
-						<option value="theme" ', $context['field']['profile_area'] == 'theme' ? 'selected="selected"' : '', '>', $txt['theme'], '</option>
+						<option value="none"', $context['field']['profile_area'] == 'none' ? ' selected="selected"' : '', '>', $txt['custom_edit_profile_none'], '</option>
+						<option value="account"', $context['field']['profile_area'] == 'account' ? ' selected="selected"' : '', '>', $txt['account'], '</option>
+						<option value="forumProfile"', $context['field']['profile_area'] == 'forumProfile' ? ' selected="selected"' : '', '>', $txt['forumprofile'], '</option>
+						<option value="theme"', $context['field']['profile_area'] == 'theme' ? ' selected="selected"' : '', '>', $txt['theme'], '</option>
 					</select>
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%"><b>', $txt['custom_edit_registration'], ':</b></td>
 				<td width="50%">
 					<select name="reg" id="reg">
-						<option value="0" ', $context['field']['reg'] == 0 ? 'selected="selected"' : '', '>', $txt['custom_edit_registration_disable'], '</option>
-						<option value="1" ', $context['field']['reg'] == 1 ? 'selected="selected"' : '', '>', $txt['custom_edit_registration_allow'], '</option>
-						<option value="2" ', $context['field']['reg'] == 2 ? 'selected="selected"' : '', '>', $txt['custom_edit_registration_require'], '</option>
+						<option value="0"', $context['field']['reg'] == 0 ? ' selected="selected"' : '', '>', $txt['custom_edit_registration_disable'], '</option>
+						<option value="1"', $context['field']['reg'] == 1 ? ' selected="selected"' : '', '>', $txt['custom_edit_registration_allow'], '</option>
+						<option value="2"', $context['field']['reg'] == 2 ? ' selected="selected"' : '', '>', $txt['custom_edit_registration_require'], '</option>
 					</select>
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%"><b>', $txt['custom_edit_display'], ':</b></td>
 				<td width="50%">
-					<input type="checkbox" name="display" id="display" ', $context['field']['display'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="catbg">
 				<td colspan="2">', $txt['custom_edit_input'], ':</td>
@@ -1134,11 +1134,11 @@ function template_edit_profile_field()
 				</td>
 				<td width="50%">
 					<select name="field_type" id="field_type" onchange="updateInputBoxes();">
-						<option value="text" ', $context['field']['type'] == 'text' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_text'], '</option>
-						<option value="textarea" ', $context['field']['type'] == 'textarea' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_textarea'], '</option>
-						<option value="select" ', $context['field']['type'] == 'select' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_select'], '</option>
-						<option value="radio" ', $context['field']['type'] == 'radio' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_radio'], '</option>
-						<option value="check" ', $context['field']['type'] == 'check' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_check'], '</option>
+						<option value="text"', $context['field']['type'] == 'text' ? ' selected="selected"' : '', '>', $txt['custom_profile_type_text'], '</option>
+						<option value="textarea"', $context['field']['type'] == 'textarea' ? ' selected="selected"' : '', '>', $txt['custom_profile_type_textarea'], '</option>
+						<option value="select"', $context['field']['type'] == 'select' ? ' selected="selected"' : '', '>', $txt['custom_profile_type_select'], '</option>
+						<option value="radio"', $context['field']['type'] == 'radio' ? ' selected="selected"' : '', '>', $txt['custom_profile_type_radio'], '</option>
+						<option value="check"', $context['field']['type'] == 'check' ? ' selected="selected"' : '', '>', $txt['custom_profile_type_check'], '</option>
 					</select>
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="max_length_div">
@@ -1160,7 +1160,7 @@ function template_edit_profile_field()
 			</tr><tr class="windowbg2" id="bbc_div">
 				<td width="50%"><b>', $txt['custom_edit_bbc'], '</b></td>
 				<td width="50%">
-					<input type="checkbox" name="bbc" ', $context['field']['bbc'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="bbc"', $context['field']['bbc'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="options_div">
 				<td width="50%">
@@ -1173,7 +1173,7 @@ function template_edit_profile_field()
 	foreach ($context['field']['options'] as $k => $option)
 	{
 		echo '
-					', $k == 0 ? '' : '<br />', '<input type="radio" name="default_select" value="', $k, '" id="', $k, '" ', $context['field']['default_select'] == substr(md5($option), 0, 8) ? 'checked="checked"' : '', '/><input type="text" name="select_option[', $k, ']" value="', $option, '" />';
+					', $k == 0 ? '' : '<br />', '<input type="radio" name="default_select" value="', $k, '"', $context['field']['default_select'] == substr(md5($option), 0, 8) ? ' selected="selected"' : '', ' /><input type="text" name="select_option[', $k, ']" value="', $option, '" />';
 	}
 	echo '
 					<span id="addopt"></span>
@@ -1182,7 +1182,7 @@ function template_edit_profile_field()
 			</tr><tr class="windowbg2" id="default_div">
 				<td width="50%"><b>', $txt['custom_edit_default'], ':</b></td>
 				<td width="50%">
-					<input type="checkbox" name="default_check" ', $context['field']['default_check'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="default_check"', $context['field']['default_check'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="catbg">
 				<td colspan="2">', $txt['custom_edit_advanced'], ':</td>
@@ -1193,10 +1193,10 @@ function template_edit_profile_field()
 				</td>
 				<td width="50%">
 					<select name="mask" id="mask" onchange="updateInputBoxes();">
-						<option value="none" ', $context['field']['mask'] == 'none' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_none'], '</option>
-						<option value="email" ', $context['field']['mask'] == 'email' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_email'], '</option>
-						<option value="number" ', $context['field']['mask'] == 'number' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_number'], '</option>
-						<option value="regex" ', substr($context['field']['mask'], 0, 5) == 'regex' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_regex'], '</option>
+						<option value="none"', $context['field']['mask'] == 'none' ? ' selected="selected"' : '', '>', $txt['custom_edit_mask_none'], '</option>
+						<option value="email"', $context['field']['mask'] == 'email' ? ' selected="selected"' : '', '>', $txt['custom_edit_mask_email'], '</option>
+						<option value="number"', $context['field']['mask'] == 'number' ? ' selected="selected"' : '', '>', $txt['custom_edit_mask_number'], '</option>
+						<option value="regex"', substr($context['field']['mask'], 0, 5) == 'regex' ? ' selected="selected"' : '', '>', $txt['custom_edit_mask_regex'], '</option>
 					</select>
 					<div id="regex_div">
 						<input type="text" name="regex" value="', $context['field']['regex'], '" size="30" />
@@ -1209,10 +1209,10 @@ function template_edit_profile_field()
 				</td>
 				<td width="50%">
 					<select name="private" id="private" onchange="updateInputBoxes();">
-						<option value="0" ', $context['field']['private'] == 0 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_all'], '</option>
-						<option value="1" ', $context['field']['private'] == 1 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_see'], '</option>
-						<option value="2" ', $context['field']['private'] == 2 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_owner'], '</option>
-						<option value="3" ', $context['field']['private'] == 3 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_none'], '</option>
+						<option value="0"', $context['field']['private'] == 0 ? ' selected="selected"' : '', '>', $txt['custom_edit_privacy_all'], '</option>
+						<option value="1"', $context['field']['private'] == 1 ? ' selected="selected"' : '', '>', $txt['custom_edit_privacy_see'], '</option>
+						<option value="2"', $context['field']['private'] == 2 ? ' selected="selected"' : '', '>', $txt['custom_edit_privacy_owner'], '</option>
+						<option value="3"', $context['field']['private'] == 3 ? ' selected="selected"' : '', '>', $txt['custom_edit_privacy_none'], '</option>
 					</select>
 				</td>
 			</tr><tr class="windowbg2" id="can_search_div">
@@ -1221,7 +1221,7 @@ function template_edit_profile_field()
 					<div class="smalltext">', $txt['custom_edit_can_search_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="checkbox" name="can_search" ', $context['field']['can_search'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="can_search"', $context['field']['can_search'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%">
@@ -1229,7 +1229,7 @@ function template_edit_profile_field()
 					<div class="smalltext">', $txt['custom_edit_active_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="checkbox" name="active" ', $context['field']['active'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="active"', $context['field']['active'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="titlebg">
 				<td colspan="4" align="center">
@@ -1396,8 +1396,8 @@ function template_core_features()
 					<h4>', ($feature['enabled'] && $feature['url'] ? '<a href="' . $feature['url'] . '">' . $feature['title'] . '</a>' : $feature['title']), '</h4>
 					<p>', $feature['desc'], '</p>
 					<div id="plain_feature_', $id, '">
-						<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1" ', $feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
-						<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0" ', !$feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
+						<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1"', $feature['enabled'] ? ' checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
+						<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0"', !$feature['enabled'] ? ' checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
 					</div>
 				</div>';
 
@@ -1602,7 +1602,7 @@ function template_download_language()
 				', $file['exists'] ? ($file['exists'] == 'same' ? $txt['languages_download_exists_same'] : $txt['languages_download_exists_different']) : $txt['no'], '
 			</td>
 			<td>
-				<input type="checkbox" name="copy_file[]" value="', $file['generaldest'], '" ', ($file['default_copy'] ? 'checked="checked"' : ''), ' class="check" />
+				<input type="checkbox" name="copy_file[]" value="', $file['generaldest'], '"', ($file['default_copy'] ? ' checked="checked"' : ''), ' class="check" />
 			</td>
 		</tr>';
 		}
@@ -1760,12 +1760,12 @@ function template_modify_language_entries()
 				<b>', $txt['languages_rtl'], ':</b>
 			</td>
 			<td>
-				<input type="checkbox" name="rtl" ', $context['primary_settings']['rtl'] ? 'checked="checked"' : '', ' class="check" />
+				<input type="checkbox" name="rtl"', $context['primary_settings']['rtl'] ? ' checked="checked"' : '', ' class="check" />
 			</td>
 		</tr>
 		<tr class="titlebg">
 			<td colspan="2" align="right">
-				<input type="submit" name="save_main" value="', $txt['save'], '" ', $context['lang_file_not_writable_message'] ? 'disabled="disabled"' : '', '/>
+				<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' />
 			</td>
 		</tr>
 	</table>
@@ -1790,7 +1790,7 @@ function template_modify_language_entries()
 
 		foreach ($theme['files'] as $file)
 			echo '
-					<option value="', $id_theme, '+', $file['id'], '" ', $file['selected'] ? 'selected="selected"' : '', '> =&gt; ', $file['name'], '</option>';
+					<option value="', $id_theme, '+', $file['id'], '"', $file['selected'] ? ' selected="selected"' : '', '> =&gt; ', $file['name'], '</option>';
 	}
 
 	echo '
@@ -1863,7 +1863,7 @@ function template_modify_language_entries()
 	echo '
 		<tr class="titlebg">
 			<td colspan="2" align="right">
-				<input type="submit" name="save_entries" value="', $txt['save'], '" ', !empty($context['entries_not_writable_message']) ? 'disabled="disabled"' : '', '/>
+				<input type="submit" name="save_entries" value="', $txt['save'], '"', !empty($context['entries_not_writable_message']) ? ' disabled="disabled"' : '', ' />
 			</td>
 		</tr>
 	</table>
