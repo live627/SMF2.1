@@ -32,6 +32,7 @@ March 2009
  * Search had some text appearing (Search.template.php) [Bug 3101]
  * Reports had some extra spaces depending on conditionals (Reports.template.php) [Bug 3215]
  * Prevent registration audio verification popups getting indexed by search engines (Register.template.php) [Bug 2996]
+ * Messageindex top anchor wasn't getting included if there were no child boards (MessageIndex.template.php) [Bug 3318]
  
 February 2009
 --------------------------------------------------------------------------------

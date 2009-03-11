@@ -5,10 +5,12 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
+	echo '
+		<a name="top"></a>';
+	
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
-	<a name="top"></a>
 	<div class="tborder marginbottom" id="childboards">
 		<table cellspacing="1" class="bordercolor boardsframe">
 			<tr>

@@ -5,6 +5,9 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
+	echo '
+		<a name="top"></a>';
+
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
