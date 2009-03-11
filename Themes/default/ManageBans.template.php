@@ -196,9 +196,12 @@ function template_ban_edit()
 			document.getElementById("cannot_register").disabled = document.getElementById("full_ban").checked;
 			document.getElementById("cannot_login").disabled = document.getElementById("full_ban").checked;
 		}
-		add_load_event(updateStatus);
+		add_load_event(updateStatus);';
 
-		var oAddMemberSuggest = new smc_AutoSuggest({
+	// Auto suggest only needed for adding new bans, not editing
+	if ($context['ban']['is_new'])
+		echo '
+			var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',
 			sSessionId: \'', $context['session_id'], '\',
 			sSuggestId: \'user\',
@@ -213,8 +216,9 @@ function template_ban_edit()
 			document.getElementById(\'user_check\').checked = true;
 			return true;
 		}
-		oAddMemberSuggest.registerCallback(\'onBeforeUpdate\', \'onUpdateName\');
-	// ]]></script>';
+		oAddMemberSuggest.registerCallback(\'onBeforeUpdate\', \'onUpdateName\');';
+
+	echo '// ]]></script>';
 }
 
 function template_ban_edit_trigger()
