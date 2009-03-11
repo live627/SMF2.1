@@ -52,6 +52,7 @@ March 2009
  ! Admins weren't excluded from minimum posts required to give karma (Load.php, Karma.php) [Bug 3285]
  ! Known themes query should make sure id_member = 0 (Themes.php) [Bug 3277]
  ! We should ensure IIS login fix applies only to IIS, not just running under CGI (Load.php) [Bug 2285]
+ ! Adding calendar holiday caused undefined index (ManageCalendar.php) [Bug 3178]
 
 February 2009
 --------------------------------------------------------------------------------
