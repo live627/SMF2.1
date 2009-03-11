@@ -152,6 +152,14 @@ function ModifySettings()
 
 	// This is just to keep the database password more secure.
 	isAllowedTo('admin_forum');
+
+	// Load up all the tabs...
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => $txt['admin_server_settings'],
+		'help' => 'serversettings',
+		'description' => $txt['admin_basic_settings'],
+	);
+
 	checkSession('request');
 
 	// The settings are in here, I swear!
@@ -170,13 +178,6 @@ function ModifySettings()
 	// By default we're editing the core settings
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'general';
 	$context['sub_action'] = $_REQUEST['sa'];
-
-	// Load up all the tabs...
-	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => $txt['admin_server_settings'],
-		'help' => 'serversettings',
-		'description' => $txt['admin_basic_settings'],
-	);
 
 	// Warn the user if there's any relevant information regarding Settings.php.
 	if ($_REQUEST['sa'] != 'cache')
