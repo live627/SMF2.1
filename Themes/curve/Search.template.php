@@ -238,8 +238,8 @@ function template_results()
 		if (!empty($context['topics']))
 		{
 			echo '
-				<td width="4%"></td>
-				<td width="4%"></td>
+				<td width="4%">&nbsp;</td>
+				<td width="4%">&nbsp;</td>
 				<td width="56%">', $txt['subject'], '</td>
 				<td width="6%" align="center">', $txt['search_relevance'], '</td>
 				<td width="12%">', $txt['started_by'], '</td>
