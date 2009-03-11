@@ -159,7 +159,7 @@ function ScheduledTasks()
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);
 			if (function_exists('apache_reset_timeout'))
-				apache_reset_timeout();
+				@apache_reset_timeout();
 
 			// Do the task...
 			$completed = call_user_func('scheduled_' . $row['task']);

@@ -158,7 +158,7 @@ function step2()
 		@ini_set('memory_limit', '128M');
 	@set_time_limit(300);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	$data = @read_gz_file($_POST['path']);
 
@@ -608,7 +608,7 @@ function nextLine($line, $max, $failures)
 
 	@set_time_limit(300);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	if (!isset($_GET['line']) || $_GET['line'] < $line)
 		$_GET['line'] = $line;

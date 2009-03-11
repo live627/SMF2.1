@@ -1338,7 +1338,7 @@ function ThemeInstall()
 
 		@set_time_limit(600);
 		if (function_exists('apache_reset_timeout'))
-			apache_reset_timeout();
+			@apache_reset_timeout();
 
 		// Create a css subdirectory.
 		mkdir($theme_dir . '/css', 0777);

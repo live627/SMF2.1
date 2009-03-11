@@ -149,7 +149,7 @@ function DumpDatabase2()
 	foreach ($tables as $tableName)
 	{
 		if (function_exists('apache_reset_timeout'))
-			apache_reset_timeout();
+			@apache_reset_timeout();
 
 		// Are we dumping the structures?
 		if (isset($_REQUEST['struct']))

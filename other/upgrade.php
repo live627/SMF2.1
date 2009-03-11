@@ -3047,7 +3047,7 @@ function nextSubstep($substep)
 
 	@set_time_limit(300);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	if (time() - $start_time <= $timeLimitThreshold)
 		return;

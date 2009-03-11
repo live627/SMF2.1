@@ -2664,7 +2664,7 @@ function package_create_backup($id = 'backup')
 
 	@set_time_limit(300);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	if (function_exists('gzopen'))
 	{

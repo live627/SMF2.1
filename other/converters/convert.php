@@ -2239,7 +2239,7 @@ function pastTime($substep = null, $force = false)
 
 	@set_time_limit(300);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	if (time() - $time_start < 10 && !$force)
 		return;

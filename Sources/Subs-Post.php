@@ -776,7 +776,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 			// Wait, wait, I'm still sending here!
 			@set_time_limit(300);
 			if (function_exists('apache_reset_timeout'))
-				apache_reset_timeout();
+				@apache_reset_timeout();
 		}
 	}
 	else
@@ -1402,7 +1402,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 		// Almost done, almost done... don't stop me just yet!
 		@set_time_limit(300);
 		if (function_exists('apache_reset_timeout'))
-			apache_reset_timeout();
+			@apache_reset_timeout();
 	}
 	fputs($socket, 'QUIT' . "\r\n");
 	fclose($socket);

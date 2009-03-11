@@ -172,7 +172,7 @@ function step2()
 	@set_time_limit(300);
 	ignore_user_abort(true);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	$db_connection = @mysql_pconnect($_POST['db_server'], $_POST['db_user'], $_POST['db_passwd']);
 	if (!$db_connection)
@@ -605,7 +605,7 @@ function nextRow($row, $table, $max_rows, $max_tables, $fp = null)
 
 	@set_time_limit(300);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	if (!isset($_GET['table']) || $_GET['table'] < $table)
 		$_GET['table'] = $table;

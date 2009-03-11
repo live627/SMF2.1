@@ -446,7 +446,7 @@ function CreateMessageIndex()
 	// Scotty, we need more time...
 	@set_time_limit(600);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 	$context['page_title'] = $txt['search_index_custom'];

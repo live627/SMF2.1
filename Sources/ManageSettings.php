@@ -1191,7 +1191,7 @@ function pauseSignatureApplySettings()
 	// Try get more time...
 	@set_time_limit(600);
 	if (function_exists('apache_reset_timeout'))
-		apache_reset_timeout();
+		@apache_reset_timeout();
 
 	// Have we exhausted all the time we allowed?
 	if (time() - array_sum(explode(' ', $sig_start)) < 3)

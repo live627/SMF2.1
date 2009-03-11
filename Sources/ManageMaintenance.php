@@ -611,7 +611,7 @@ function ConvertUtf8()
 	{
 		// Just to make sure it doesn't time out.
 		if (function_exists('apache_reset_timeout'))
-			apache_reset_timeout();
+			@apache_reset_timeout();
 
 		$table_charsets = array();
 
@@ -796,7 +796,7 @@ function ConvertEntities()
 		$primary_keys = array();
 
 		if (function_exists('apache_reset_timeout'))
-			apache_reset_timeout();
+			@apache_reset_timeout();
 
 		// Get a list of text columns.
 		$columns = array();

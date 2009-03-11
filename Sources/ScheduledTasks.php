@@ -984,7 +984,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);
 			if (function_exists('apache_reset_timeout'))
-				apache_reset_timeout();
+				@apache_reset_timeout();
 		}
 		else
 			smtp_mail(array($email['to']), $email['subject'], $email['body'], $email['send_html'] ? $email['headers'] : 'Mime-Version: 1.0' . "\r\n" . $email['headers']);
@@ -1301,7 +1301,7 @@ function scheduled_birthdayemails()
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);
 			if (function_exists('apache_reset_timeout'))
-				apache_reset_timeout();
+				@apache_reset_timeout();
 
 		}
 	}
