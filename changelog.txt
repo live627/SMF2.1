@@ -25,6 +25,7 @@ March 2009
  ! When logging an upgrade note down which admin it was. (upgrade.php) [Bug 3134]
  ! Allow the URL tag as a cite on the quote tag, like we used to back in 1.1. (Subs.php) [Bug 2303]
  ! Sourcedir is needed before calling those files (ManageMembergroups.php) [Bug 3115]
+ * For members use the profile version of tracking by ip (Display.template.php core/curve/babylon/classic) [Bug 3163]
 
 February 2009
 --------------------------------------------------------------------------------
