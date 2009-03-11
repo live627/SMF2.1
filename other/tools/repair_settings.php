@@ -89,7 +89,7 @@ if (isset($_POST['submit']))
 
 // Note that we're using the default URLs because we aren't even going to try to use Settings.php's settings.
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
  		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_repair_settings'], '</title>
@@ -506,7 +506,8 @@ function show_settings()
 
 			echo '
 							<td width="20%" valign="top" class="textbox" style="padding-bottom: 1ex;">
-								<label for="', $setting, '">', $txt[$setting], ':</label>', !isset($settings[$setting]) && $info[1] != 'check' ? '<br />
+								<label', $info[1] != 'int' ? ' for="'. $setting. '"' : '', '>', $txt[$setting], ':', '</label>',
+								!isset($settings[$setting]) && $info[1] != 'check' ? '<br />
 								' . $txt['no_value'] : '', '
 							</td>
 							<td style="padding-bottom: 1ex;">';
