@@ -23,7 +23,7 @@ SELECT
 	SUBSTRING(www, 1, 255) AS website_title,
 	SUBSTRING(www, 1, 255) AS website_url, last_login AS last_login,
 	birth_date AS birthdate, SUBSTRING(icq, 1, 255) AS icq,
-	SUBSTRING(IFNULL(realname, username), 1, 255) AS real_name,
+	SUBSTRING(IF(realname !='', realname, username), 1, 255) AS real_name,
 	SUBSTRING(email, 1, 255) AS email_address, 	language AS lngfile,
 	SUBSTRING(aim, 1, 16) AS aim, SUBSTRING(users_text, 1, 255) AS personal_text,
 	hideemail AS hide_email, SUBSTRING(r_ip, 1, 255) AS member_ip,
@@ -134,7 +134,7 @@ FROM {$from_prefix}{$dbtables['polls']} AS p
 
 ---* {$to_prefix}poll_choices
 SELECT
-	poo_poid AS id_poll, pooid AS id_choice, SUBSTRING(poo_option, 2, 255) AS label, poo_votes AS votes
+	poo_poid AS id_poll, pooid AS id_choice, SUBSTRING(poo_option, 1, 255) AS label, poo_votes AS votes
 FROM {$from_prefix}{$dbtables['poll_options']};
 ---*
 
