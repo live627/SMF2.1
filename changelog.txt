@@ -37,6 +37,7 @@ March 2009
  ! Missing xmlns and other xhtml warnings (repair_settings.php) [Bug 3150]
  ! Advanced profile field radio set to 0 wouldn't show as selected (Profile.php) [Bug 3103]
  * Non-selected/checked inputs cause unnecessary spaces and unnecessary id causing invalid xhtml (Admin.template.php)
+ * When editing advanced profile fields default selected radios would never show selected (Admin.template.php)
 
 February 2009
 --------------------------------------------------------------------------------
