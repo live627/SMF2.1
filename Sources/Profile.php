@@ -653,7 +653,7 @@ function loadCustomFields($memID, $area = 'summary')
 	{
 		// Shortcut.
 		$exists = $memID && isset($user_profile[$memID], $user_profile[$memID]['options'][$row['col_name']]);
-		$value = $exists && isset($user_profile[$memID]['options'][$row['col_name']]) ? $user_profile[$memID]['options'][$row['col_name']] : ''; 
+		$value = $exists ? $user_profile[$memID]['options'][$row['col_name']] : ''; 
 
 		// If this was submitted already then make the value the posted version.
 		if (isset($_POST['customfield']) && isset($_POST['customfield'][$row['col_name']]))

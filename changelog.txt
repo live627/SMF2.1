@@ -44,6 +44,7 @@ March 2009
  * Add/Remove buddy link wouldn't always fit on the same line, so move it down (Profile.template.php) [Bug 3256]
  * Empty ul for guests/regular users causing invalid xhtml (Display.template.php) [Bug 3099] [Bug 2444]
  ! Session verification failure in Server Settings could lead to undefined indexes [Bug 3319]
+ ! Advanced profile field radio set to 0 wouldn't show as selected, better fix (Profile.php) [Bug 3103]
 
 February 2009
 --------------------------------------------------------------------------------
