@@ -14,7 +14,7 @@ function template_fatal_error()
 
 	echo '
 <div>
-	<table border="0" width="80%" cellspacing="0" align="center" cellpadding="4" class="tborder">
+	<table border="0" width="100%" cellspacing="0" align="center" cellpadding="4" class="tborder">
 		<tr class="titlebg">
 			<td>', $context['error_title'], '</td>
 		</tr>
