@@ -54,7 +54,7 @@ function ModifyKarma()
 
 	// If you don't have enough posts, tough luck.
 	// !!! Should this be dropped in favor of post group permissions?  Should this apply to the member you are smiting/applauding?
-	if ($user_info['posts'] < $modSettings['karmaMinPosts'])
+	if (!$user_info['is_admin'] && $user_info['posts'] < $modSettings['karmaMinPosts'])
 		fatal_lang_error('not_enough_posts_karma', true, array($modSettings['karmaMinPosts']));
 
 	// And you can't modify your own, punk! (use the profile if you need to.)

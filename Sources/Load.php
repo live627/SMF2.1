@@ -1173,7 +1173,8 @@ function loadMemberContext($user, $display_custom_fields = false)
 		'karma' => array(
 			'good' => $profile['karma_good'],
 			'bad' => $profile['karma_bad'],
-			'allow' => !$user_info['is_guest'] && $user_info['posts'] >= $modSettings['karmaMinPosts'] && allowedTo('karma_edit') && !empty($modSettings['karmaMode']) && $user_info['id'] != $user
+			'allow' => !$user_info['is_guest'] && !empty($modSettings['karmaMode']) && $user_info['id'] != $user && allowedTo('karma_edit') && 
+			($user_info['posts'] >= $modSettings['karmaMinPosts'] || $user_info['is_admin']),
 		),
 		'ip' => htmlspecialchars($profile['member_ip']),
 		'ip2' => htmlspecialchars($profile['member_ip2']),
