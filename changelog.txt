@@ -49,7 +49,8 @@ March 2009
  ! Aim needs a default to avoid not-null error (install_2-0_postgresql.sql, install_2-0_sqlite.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3308]
  ! Prevent ;debug from appearing in canonical tag (QueryString.php)
  ! Display & Pm wasn't freeing results causing errors with mysql trace enabled (Display.php, PersonalMessage.php) [Bug 3301]
- ! Admins weren't excluded from minimum posts required to give karma [Bug 3285]
+ ! Admins weren't excluded from minimum posts required to give karma (Load.php, Karma.php) [Bug 3285]
+ ! Known themes query should make sure id_member = 0 (Themes.php) [Bug 3277]
 
 February 2009
 --------------------------------------------------------------------------------
