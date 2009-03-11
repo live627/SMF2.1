@@ -2087,7 +2087,7 @@ INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'name', '{
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_url', '{$boardurl}/Themes/babylon');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'images_url', '{$boardurl}/Themes/babylon/images');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_dir', '{$boarddir}/Themes/babylon');
-INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (1, 3, 'display_quick_reply', '1');
+INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (-1, 1, 'display_quick_reply', '1');
 COMMIT;
 
 # --------------------------------------------------------

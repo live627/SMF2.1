@@ -39,6 +39,7 @@ March 2009
  * Non-selected/checked inputs cause unnecessary spaces and unnecessary id causing invalid xhtml (Admin.template.php)
  * When editing advanced profile fields default selected radios would never show selected (Admin.template.php)
  ! Required adv profile fields couldn't be 0 (Register.php) [Bug 2805]
+ ! Quick reply was supposed to be enabled but collapsed by default (install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_sqlite.sql) [Bug 3173]
 
 February 2009
 --------------------------------------------------------------------------------

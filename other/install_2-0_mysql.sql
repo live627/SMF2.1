@@ -1938,7 +1938,7 @@ VALUES (1, 'name', '{$default_theme_name}'),
 	(3, 'images_url', '{$boardurl}/Themes/babylon/images'),
 	(3, 'theme_dir', '{$boarddir}/Themes/babylon');
 
-INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (1, 3, 'display_quick_reply', '1');
+INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (-1, 1, 'display_quick_reply', '1');
 # --------------------------------------------------------
 
 #
