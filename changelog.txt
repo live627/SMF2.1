@@ -29,6 +29,7 @@ March 2009
  ! New installs should ship with calendar max year to something more distant, and min year more relevant (install scripts) [Bug 3160]
  ! In admin link to admin modlog instead of moderate version (ManageSettings.php) [Bug 3125]
  ! Warning system, make sure things which are disabled stay disabled. (Profile-View.php) [Bug 3104]
+ * Search had some text appearing (Search.template.php) [Bug 3101]
  
 February 2009
 --------------------------------------------------------------------------------

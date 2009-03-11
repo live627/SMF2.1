@@ -44,7 +44,7 @@ function template_main()
 								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" />
 							</td>
 							<td>
-								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" />', '
+								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="'. $context['tabindex']++. '" />', '
 							</td>
 						</tr>';
 		if (empty($modSettings['search_simple_fulltext']))
