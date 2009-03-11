@@ -228,6 +228,9 @@ $row['signature'] = strtr($row['signature'], array(
 
 $row['signature'] = substr($row['signature'], 0, 65534);
 unset($row['signature_uid']);
+
+if (!is_numeric($row['id_group']))
+	$row['id_group'] = 0;
 ---}
 SELECT
 	u.user_id AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
