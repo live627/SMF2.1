@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "IkonBoard 3.1.x"
 /******************************************************************************/
----~ version: "SMF 2.0"
+---~ version: "SMF 1.1"
 ---~ parameters: ib_database text=MySQL database used by IkonBoard
 ---~ parameters: ib_prefix text=Prefix used by IkonBoard
 ---~ parameters: ib_uploads text=Path to the uploads directory
@@ -16,19 +16,17 @@
 
 TRUNCATE {$to_prefix}members;
 
----{
-alterDatabase('members', 'remove column', 'temp_id');
-alterDatabase('members', 'add column', array(
-	'name' => 'temp_id',
-	'type' => 'varchar',
-	'size' => 32,
-));
-alterDatabase('members', 'add index', array(
-	'type' => 'index',
-	'name' => 'temp_id',
-	'columns' => array('temp_id'),
-));
----}
+DROP TABLE IF EXISTS {$to_prefix}tmp_messages;
+
+ALTER TABLE {$to_prefix}members
+ADD COLUMN temp_id varchar(32),
+ADD INDEX temp_id (temp_id(32));
+
+CREATE TABLE IF NOT EXISTS {$to_prefix}tmp_messages (
+  old_id_msg int(12) NOT NULL default '0',
+  old_id_topic int(12) NOT NULL default '0',
+  date int(15) NOT NULL default '0'
+ );
 
 ---* {$to_prefix}members
 SELECT
@@ -37,7 +35,6 @@ SELECT
 	SUBSTRING(MEMBER_PASSWORD, 1, 64) AS passwd,
 	SUBSTRING(MEMBER_EMAIL, 1, 255) AS email_address,
 	MEMBER_JOINED AS date_registered, SUBSTRING(MEMBER_IP, 1, 255) AS member_ip,
-	SUBSTRING(MEMBER_IP, 1, 255) AS member_ip2,
 	SUBSTRING(IF(MEMBER_AVATAR = 'noavatar' OR INSTR(MEMBER_AVATAR, 'upload') != 0, '', MEMBER_AVATAR), 1, 255) AS avatar,
 	MEMBER_POSTS AS posts, SUBSTRING(AOLNAME, 1, 16) AS aim,
 	SUBSTRING(icqNUMBER, 1, 255) AS icq,
@@ -54,7 +51,8 @@ SELECT
 	MEMBER_ID AS temp_id, '' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list,
 	'' AS message_labels, '' AS time_format, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
+	SUBSTRING(MEMBER_IP, 1, 255) AS member_ip2
 FROM {$from_prefix}member_profiles;
 ---*
 
@@ -65,7 +63,7 @@ FROM {$from_prefix}member_profiles;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT
+SELECT 
 	CAT_ID AS id_cat, SUBSTRING(CAT_NAME, 1, 255) AS name, CAT_POS AS cat_order
 FROM {$from_prefix}categories;
 ---*
@@ -75,8 +73,9 @@ FROM {$from_prefix}categories;
 /******************************************************************************/
 
 TRUNCATE {$to_prefix}boards;
+
 DELETE FROM {$to_prefix}board_permissions
-WHERE id_profile > 4;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
@@ -87,6 +86,18 @@ SELECT
 FROM {$from_prefix}forum_info;
 ---*
 
+
+/******************************************************************************/
+--- preparing messages..
+/******************************************************************************/
+
+---* {$to_prefix}tmp_messages 500
+
+SELECT POST_ID AS old_id_msg, POST_DATE as date, TOPIC_ID AS old_id_topic
+FROM {$from_prefix}forum_posts;
+---*
+
+
 /******************************************************************************/
 --- Converting topics...
 /******************************************************************************/
@@ -96,16 +107,27 @@ TRUNCATE {$to_prefix}log_topics;
 TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
+ALTER TABLE {$to_prefix}tmp_messages ORDER BY date;
+ALTER TABLE {$to_prefix}tmp_messages 
+	ADD id_msg INT( 12 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+	
+ALTER TABLE {$to_prefix}tmp_messages  
+	ADD INDEX old_id_msg (old_id_msg);
+	
+ALTER TABLE {$to_prefix}tmp_messages  
+	ADD INDEX old_id_topic (old_id_topic);
+
+
 ---* {$to_prefix}topics
 SELECT
 	t.TOPIC_ID AS id_topic, t.TOPIC_STATE = 'closed' AS locked,
 	t.TOPIC_POSTS AS num_replies, memf.id_member AS id_member_started,
 	meml.id_member AS id_member_updated, pl.ID AS id_poll,
 	t.TOPIC_VIEWS AS num_views, t.FORUM_ID AS id_board,
-	t.PIN_STATE AS is_sticky, MIN(p.POST_ID) AS id_first_msg,
-	MAX(p.POST_ID) AS id_last_msg
+	t.PIN_STATE AS is_sticky, MIN(temp.id_msg) AS id_first_msg,
+	MAX(temp.id_msg) AS id_last_msg
 FROM {$from_prefix}forum_topics AS t
-	INNER JOIN {$from_prefix}forum_posts AS p ON (p.TOPIC_ID = t.TOPIC_ID)
+	LEFT JOIN {$to_prefix}tmp_messages AS temp ON (t.TOPIC_ID = temp.old_id_topic)
 	LEFT JOIN {$from_prefix}forum_polls AS pl ON (pl.POLL_ID = t.TOPIC_ID)
 	LEFT JOIN {$to_prefix}members AS memf ON (memf.temp_id = t.TOPIC_STARTER)
 	LEFT JOIN {$to_prefix}members AS meml ON (meml.temp_id = t.TOPIC_LAST_POSTER)
@@ -124,14 +146,15 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 SELECT
-	p.POST_ID AS id_msg, mem.id_member, p.ENABLE_EMO AS smileys_enabled,
+	temp.id_msg AS id_msg, mem.id_member, p.ENABLE_EMO AS smileys_enabled,
 	SUBSTRING(p.IP_ADDR, 1, 255) AS poster_ip, p.POST_DATE AS poster_time,
 	SUBSTRING(t.TOPIC_TITLE, 1, 255) AS subject,
 	SUBSTRING(REPLACE(p.POST, '<br>', '<br />'), 1, 65534) AS body,
 	p.TOPIC_ID AS id_topic, p.FORUM_ID AS id_board,
 	SUBSTRING(mem.member_name, 1, 255) AS poster_name,
 	SUBSTRING(mem.email_address, 1, 255) AS poster_email
-FROM {$from_prefix}forum_posts AS p
+FROM {$to_prefix}tmp_messages AS temp
+	INNER JOIN {$from_prefix}forum_posts AS p ON (p.POST_ID = temp.old_id_msg)
 	LEFT JOIN {$from_prefix}forum_topics AS t ON (t.TOPIC_ID = p.TOPIC_ID)
 	LEFT JOIN {$to_prefix}members AS mem ON (mem.temp_id = p.AUTHOR);
 ---*
@@ -176,8 +199,10 @@ FROM {$from_prefix}forum_polls;
 ---* {$to_prefix}log_polls
 SELECT pl.ID AS id_poll, mem.id_member
 FROM {$from_prefix}forum_poll_voters AS v
-	INNER JOIN {$from_prefix}forum_polls AS pl ON (pl.POLL_ID = v.POLL_ID)
-	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = v.MEMBER_ID);
+	INNER JOIN {$from_prefix}forum_polls AS pl
+	INNER JOIN {$to_prefix}members AS mem
+WHERE pl.POLL_ID = v.POLL_ID
+	AND mem.temp_id = v.MEMBER_ID;
 ---*
 
 /******************************************************************************/
@@ -210,8 +235,9 @@ SELECT
 	(pm.READ_STATE = 1) | (pm.REPLY << 1) AS is_read,
 	'-1' AS labels
 FROM {$from_prefix}message_data AS pm
-	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = pm.RECIPIENT_ID)
-WHERE pm.VIRTUAL_DIR = 'in';
+	INNER JOIN {$to_prefix}members AS mem
+WHERE pm.VIRTUAL_DIR = 'in'
+	AND mem.temp_id = pm.RECIPIENT_ID;
 ---*
 
 /******************************************************************************/
@@ -223,9 +249,10 @@ TRUNCATE {$to_prefix}log_notify;
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.TOPIC_ID AS id_topic, tv.SENT AS sent
 FROM {$from_prefix}forum_subscriptions AS s
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempId = s.MEMBER_ID)
+	INNER JOIN {$to_prefix}members AS mem
 	LEFT JOIN {$from_prefix}topic_views AS tv ON (tv.TOPIC_ID = s.TOPIC_ID AND tv.MEMBER_ID = s.MEMBER_ID)
-WHERE s.TOPIC_ID != 0;
+WHERE s.TOPIC_ID != 0
+	AND mem.tempId = s.MEMBER_ID;
 ---*
 
 /******************************************************************************/
@@ -235,8 +262,9 @@ WHERE s.TOPIC_ID != 0;
 ---* {$to_prefix}log_notify
 SELECT mem.id_member, s.FORUM_ID AS id_board
 FROM {$from_prefix}forum_subscriptions AS s
-	INNER JOIN {$to_prefix}members AS mem ON (mem.tempId = s.MEMBER_ID)
-WHERE s.TOPIC_ID = 0;
+	INNER JOIN {$to_prefix}members AS mem
+WHERE s.TOPIC_ID = 0
+	AND mem.tempId = s.MEMBER_ID;
 ---*
 
 /******************************************************************************/
@@ -248,7 +276,8 @@ TRUNCATE {$to_prefix}moderators;
 ---* {$to_prefix}moderators
 SELECT mem.id_member, mods.FORUM_ID AS id_board
 FROM {$from_prefix}forum_moderators AS mods
-	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = mods.MEMBER_ID);
+	INNER JOIN {$to_prefix}members AS mem
+WHERE mem.temp_id = mods.MEMBER_ID;
 ---*
 
 /******************************************************************************/
@@ -260,8 +289,16 @@ TRUNCATE {$to_prefix}log_topics;
 ---* {$to_prefix}log_topics
 SELECT tv.TOPIC_ID AS id_topic, mem.id_member, tv.VIEWED AS log_time
 FROM {$from_prefix}topic_views AS tv
-	INNER JOIN {$to_prefix}members AS mem ON (mem.temp_id = tv.MEMBER_ID);
+	INNER JOIN {$to_prefix}members AS mem
+WHERE mem.temp_id = tv.MEMBER_ID;
 ---*
+
+/******************************************************************************/
+--- Cleaning up...
+/******************************************************************************/
+
+ALTER TABLE {$to_prefix}members
+DROP COLUMN temp_id;
 
 /******************************************************************************/
 --- Converting attachments...
@@ -282,16 +319,9 @@ if (strlen($newfilename) <= 255 && copy($ib_uploads . '/' . $row['filename'], $a
 }
 ---}
 SELECT
-	p.POST_ID AS id_msg, p.ATTACH_ID AS old_encrypt, p.ATTACH_HITS AS downloads,
+	temp.id_msg AS id_msg, p.ATTACH_ID AS old_encrypt, p.ATTACH_HITS AS downloads,
 	a.FILE_NAME AS filename
 FROM {$from_prefix}forum_posts AS p
-	INNER JOIN {$from_prefix}attachments AS a ON (a.ID = p.ATTACH_ID);
+INNER JOIN {$to_prefix}tmp_messages AS temp ON (temp.old_id_msg = p.POST_ID)
+INNER JOIN {$from_prefix}attachments AS a ON (a.ID = p.ATTACH_ID);
 ---*
-
-/******************************************************************************/
---- Cleaning up...
-/******************************************************************************/
-
----{
-alterDatabase('members', 'remove column', 'temp_id');
----}
