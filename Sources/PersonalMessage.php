@@ -934,7 +934,10 @@ function prepareMessageContext($type = 'subject', $reset = false)
 	{
 		$subject = $smcFunc['db_fetch_assoc']($subjects_request);
 		if (!$subject)
+		{
+			$smcFunc['db_free_result']($subjects_request);
 			return false;
+		}
 
 		$subject['subject'] = $subject['subject'] == '' ? $txt['no_subject'] : $subject['subject'];
 		censorText($subject['subject']);
@@ -972,7 +975,12 @@ function prepareMessageContext($type = 'subject', $reset = false)
 	// Get the next one... bail if anything goes wrong.
 	$message = $smcFunc['db_fetch_assoc']($messages_request);
 	if (!$message)
+	{
+		if ($type != 'subject')
+			$smcFunc['db_free_result']($messages_request);
+
 		return false;
+	}
 
 	// Use '(no subject)' if none was specified.
 	$message['subject'] = $message['subject'] == '' ? $txt['no_subject'] : $message['subject'];

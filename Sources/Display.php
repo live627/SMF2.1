@@ -1048,7 +1048,10 @@ function prepareDisplayContext($reset = false)
 	// Attempt to get the next message.
 	$message = $smcFunc['db_fetch_assoc']($messages_request);
 	if (!$message)
+	{
+		$smcFunc['db_free_result']($messages_request);
 		return false;
+	}
 
 	// $context['icon_sources'] says where each icon should come from - here we set up the ones which will always exist!
 	if (empty($context['icon_sources']))
