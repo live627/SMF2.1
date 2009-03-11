@@ -26,7 +26,8 @@ March 2009
  ! Allow the URL tag as a cite on the quote tag, like we used to back in 1.1. (Subs.php) [Bug 2303]
  ! Sourcedir is needed before calling those files (ManageMembergroups.php) [Bug 3115]
  * For members use the profile version of tracking by ip (Display.template.php core/curve/babylon/classic) [Bug 3163]
-
+ ! New installs should ship with calendar max year to something more distant, and min year more relevant (install scripts) [Bug 3160]
+ 
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
