@@ -1477,7 +1477,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'complex_preg_chars' => @version_compare(PHP_VERSION, '4.3.3') != -1,
 	);
 	// A bug in some versions of IIS under CGI (older ones) makes cookie setting not work with Location: headers.
-	$context['server']['needs_login_fix'] = $context['server']['is_cgi'];
+	$context['server']['needs_login_fix'] = $context['server']['is_cgi'] && $context['server']['is_iis'];
 
 	// The following determines the user agent (browser) as best it can.
 	$context['browser'] = array(
