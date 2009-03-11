@@ -340,7 +340,8 @@ function template_main()
 					</div>';
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
-		echo '
+		if($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
+			echo '
 					<ul class="smalltext postingbuttons">';
 
 		// Maybe we can approve it, maybe we should?
@@ -383,10 +384,11 @@ function template_main()
 			echo '
 						<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
 
-		// Show the post itself, finally!
-		echo '
+		if($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
+			echo '
 					</ul>';
 
+		// Show the post itself, finally!
 		if ($ignoring)
 			echo '<div id="msg_', $message['id'], '_ignored_prompt" style="display: none; clear: left">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
 
