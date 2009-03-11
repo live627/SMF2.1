@@ -486,6 +486,18 @@ SET DEFAULT '';
 ---#
 
 /*****************************************************************************/
+--- Fixing aim on members for longer nicks.
+/*****************************************************************************/
+
+---# Changing 'aim' to varchar to allow using email...
+ALTER TABLE {$db_prefix}members
+ALTER COLUMN aim TYPE varchar(255);
+
+ALTER TABLE {$db_prefix}members
+ALTER COLUMN aim SET DEFAULT '';
+---#
+
+/*****************************************************************************/
 --- Fixing column types in log_errors
 /*****************************************************************************/
 

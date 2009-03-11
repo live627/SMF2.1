@@ -1335,7 +1335,7 @@ CREATE TABLE {$db_prefix}members (
   website_url varchar(255) NOT NULL,
   location varchar(255) NOT NULL,
   icq varchar(255) NOT NULL,
-  aim varchar(255) NOT NULL,
+  aim varchar(255) NOT NULL default '',
   yim varchar(32) NOT NULL default '',
   msn varchar(255) NOT NULL,
   hide_email smallint NOT NULL default '0',

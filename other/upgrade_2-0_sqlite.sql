@@ -256,6 +256,26 @@ $smcFunc['db_alter_table']('topics', array(
 ---#
 
 /******************************************************************************/
+--- Fixing aim on members for longer nicks.
+/******************************************************************************/
+
+---# Changing 'aim' to varchar to allow using email...
+---{
+$smcFunc['db_alter_table']('members', array(
+	'change' => array(
+		'aim' => array(
+			'name' => 'aim',
+			'null' => false,
+			'type' => 'varchar',
+			'size' => 255,
+			'default' => ''
+		)
+	)
+));
+---}
+---#
+
+/******************************************************************************/
 --- Making changes to the package manager.
 /******************************************************************************/
 
