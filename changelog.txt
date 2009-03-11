@@ -47,6 +47,7 @@ March 2009
  ! Advanced profile field radio set to 0 wouldn't show as selected, better fix (Profile.php) [Bug 3103]
  * Make nice with tabs and spacing (various files)
  ! Aim needs a default to avoid not-null error (install_2-0_postgresql.sql, install_2-0_sqlite.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3308]
+ ! Prevent ;debug from appearing in canonical tag (QueryString.php)
 
 February 2009
 --------------------------------------------------------------------------------
