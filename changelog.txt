@@ -30,6 +30,7 @@ March 2009
  ! In admin link to admin modlog instead of moderate version (ManageSettings.php) [Bug 3125]
  ! Warning system, make sure things which are disabled stay disabled. (Profile-View.php) [Bug 3104]
  * Search had some text appearing (Search.template.php) [Bug 3101]
+ * Reports had some extra spaces depending on conditionals (Reports.template.php) [Bug 3215]
  
 February 2009
 --------------------------------------------------------------------------------

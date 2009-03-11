@@ -127,12 +127,12 @@ function template_main()
 				// Shaded?
 				if ($column_number == 0 && !empty($table['shading']['left']))
 					echo '
-				<td align="', $table['align']['shaded'], '" class="titlebg" ', $table['width']['shaded'] != 'auto' ? 'width="' . $table['width']['shaded'] . '"' : '', '>
+				<td align="', $table['align']['shaded'], '" class="titlebg"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
 					', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
 				</td>';
 				else
 					echo '
-				<td align="', $table['align']['normal'], '" ', $table['width']['normal'] != 'auto' ? 'width="' . $table['width']['normal'] . '"' : '', ' ', !empty($data['style']) ? 'style="' . $data['style'] . '"' : '', '>
+				<td align="', $table['align']['normal'], '"', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
 					', $data['v'], '
 				</td>';
 
@@ -242,7 +242,7 @@ function template_print()
 	foreach ($context['tables'] as $table)
 	{
 		echo '
-		<div style="overflow: visible; ', $table['max_width'] != 'auto' ? 'width: ' . $table['max_width'] . 'px;' : '', '">
+		<div style="overflow: visible;', $table['max_width'] != 'auto' ? ' width: ' . $table['max_width'] . 'px;' : '', '">
 			<table border="0" cellspacing="1" cellpadding="4" width="100%" class="bordercolor">';
 
 		if (!empty($table['title']))
@@ -282,12 +282,12 @@ function template_print()
 				// Shaded?
 				if ($column_number == 0 && !empty($table['shading']['left']))
 					echo '
-					<td align="', $table['align']['shaded'], '" class="titlebg" ', $table['width']['shaded'] != 'auto' ? 'width="' . $table['width']['shaded'] . '"' : '', '>
+					<td align="', $table['align']['shaded'], '" class="titlebg"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
 						', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
 					</td>';
 				else
 					echo '
-					<td align="', $table['align']['normal'], '" ', $table['width']['normal'] != 'auto' ? 'width="' . $table['width']['normal'] . '"' : '', ' ', !empty($data['style']) ? 'style="' . $data['style'] . '"' : '', '>
+					<td align="', $table['align']['normal'], '"', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
 						', $data['v'], '
 					</td>';
 
