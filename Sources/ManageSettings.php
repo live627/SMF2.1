@@ -259,7 +259,7 @@ function ModifyCoreFeatures($return_config = false)
 		),
 		// ml = moderation log.
 		'ml' => array(
-			'url' => 'action=moderate;area=modlog',
+			'url' => 'action=admin;area=logs;sa=modlog',
 			'settings' => array(
 				'modlog_enabled' => 1,
 			),
