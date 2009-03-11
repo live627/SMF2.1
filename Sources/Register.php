@@ -436,7 +436,7 @@ function Register2($verifiedOpenID = false)
 			}
 
 			// Is this required but not there?
-			if (empty($value) && $row['show_reg'] > 1)
+			if (trim($value) == '' && $row['show_reg'] > 1)
 				$custom_field_errors[] = array('custom_field_empty', array($row['field_name']));
 		}
 	}
