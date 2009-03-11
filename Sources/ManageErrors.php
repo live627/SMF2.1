@@ -150,7 +150,7 @@ function ViewErrorLog()
 			'time' => timeformat($row['log_time']),
 			'timestamp' => $row['log_time'],
 			'url' => array(
-				'html' => htmlspecialchars($scripturl . $row['url']),
+				'html' => htmlspecialchars((strpos($row['url'], '?') === 0 ? $scripturl : '') . $row['url']),
 				'href' => base64_encode($smcFunc['db_escape_wildcard_string']($row['url']))
 			),
 			'message' => array(
