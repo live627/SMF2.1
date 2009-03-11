@@ -63,18 +63,18 @@ function template_summary()
 				', !isset($context['disabled_fields']['yim']) && !empty($context['member']['yim']['link']) ? '<li>' . $context['member']['yim']['link'] . '</li>' : '', '
 			</ul>
 			<span id="userstatus">', $context['can_send_pm'] ? '<a href="' . $context['member']['online']['href'] . '" title="' . $context['member']['online']['label'] . '" rel="nofollow">' : '', $settings['use_image_buttons'] ? '<img src="' . $context['member']['online']['image_href'] . '" alt="' . $context['member']['online']['text'] . '" align="middle" />' : $context['member']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $context['member']['online']['text'] . '</span>' : '';
-			
+
 	// Can they add this member as a buddy?
 	if (!empty($context['can_have_buddy']) && !$context['user']['is_owner'])
 		echo '
 			<br /><a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';', $context['session_var'], '=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
-					
+
 	echo '		
 			</span>';
-			
+
 	echo '
 			<p id="infolinks">';
-					
+
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '			
 				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '.</a><br />';
@@ -83,7 +83,6 @@ function template_summary()
 				<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '">', $txt['statPanel'], '</a>
 			</p>';
 
-			
 	echo '
 		</div>
 		<span class="botslice"><span></span></span>
@@ -92,13 +91,12 @@ function template_summary()
 		<span class="topslice"><span></span></span>
 		<div class="content">
 			<dl>';
-				
-				
+
 	if (!isset($context['disabled_fields']['posts']))
 		echo '
 				<dt>', $txt['profile_posts'], ': </dt>
 				<dd>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</dd>';
-				
+
 	// Only show the email address fully if it's not hidden - and we reveal the email.
 	if ($context['member']['show_email'] == 'yes')
 		echo '
@@ -116,7 +114,7 @@ function template_summary()
 		echo '
 				<dt>', $txt['custom_title'], ': </dt>
 				<dd>', $context['member']['title'], '</dd>';
-	
+
 	if (!empty($context['member']['blurb']))
 		echo '
 				<dt>', $txt['personal_text'], ': </dt>
@@ -132,7 +130,7 @@ function template_summary()
 		echo '
 				<dt>', $modSettings['karmaLabel'], ' </dt>
 				<dd>+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '</dd>';
-	
+
 	if (!isset($context['disabled_fields']['gender']) && !empty($context['member']['gender']['name']))
 		echo '
 				<dt>', $txt['gender'], ': </dt>
@@ -149,7 +147,7 @@ function template_summary()
 					
 	echo '
 			</dl>';
-						
+
 	// Are there any custom profile fields for the summary?
 	if (!empty($context['custom_fields']))
 	{
@@ -166,7 +164,7 @@ function template_summary()
 		echo '
 			</dl>';
 	}
-	
+
 	echo '
 			<dl', empty($context['signature_enabled']) ? ' class="noborder"' : '', '>';
 
@@ -184,7 +182,7 @@ function template_summary()
 
 		echo '</dd>';
 	}
-	
+
 	// Is this member requiring activation and/or banned?
 	if (!empty($context['activate_message']) || !empty($context['member']['bans']))
 	{
@@ -210,7 +208,7 @@ function template_summary()
 				</dt>';
 		}
 	}
-	
+
 	echo '
 				<dt>', $txt['date_registered'], ': </dt>
 				<dd>', $context['member']['registered'], '</dd>

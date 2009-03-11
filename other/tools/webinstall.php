@@ -448,7 +448,7 @@ function doStep1()
 
 		if ($_SESSION['is_team'])
 			$_SESSION['access'] = array(0,1,2);
-		elseif($_SESSION['is_charter'] || $_SESSION['is_beta_tester'])
+		elseif ($_SESSION['is_charter'] || $_SESSION['is_beta_tester'])
 			$_SESSION['access'] = array(0,2);
 		else
 			$_SESSION['access'] = array(0);
@@ -992,13 +992,14 @@ function extract_gzip($data)
 	function smf_crc32($number)
 	{
 		$crc = crc32($number);
-	
-		if($crc & 0x80000000){
+
+		if ($crc & 0x80000000)
+		{
 			$crc ^= 0xffffffff;
 			$crc += 1;
 			$crc = -$crc;
 		}
-	
+
 		return $crc;
 	}
 

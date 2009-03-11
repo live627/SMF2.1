@@ -341,8 +341,8 @@ function template_main()
 					</div>';
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
-		if($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
-			echo '	
+		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
+			echo '
 					<ul class="reset smalltext quickbuttons">';
 
 		// Maybe we can approve it, maybe we should?
@@ -385,10 +385,10 @@ function template_main()
 			echo '
 						<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
 
-		if($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
+		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
 					</ul>';
-					
+
 		// Show the post itself, finally!
 		if ($ignoring)
 			echo '<div id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';

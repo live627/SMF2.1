@@ -2868,7 +2868,8 @@ if (!function_exists('smf_crc32'))
 	{
 		$crc = crc32($number);
 
-		if($crc & 0x80000000){
+		if ($crc & 0x80000000)
+		{
 			$crc ^= 0xffffffff;
 			$crc += 1;
 			$crc = -$crc;

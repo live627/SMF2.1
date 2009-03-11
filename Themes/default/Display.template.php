@@ -340,7 +340,7 @@ function template_main()
 					</div>';
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
-		if($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
+		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
 					<ul class="smalltext postingbuttons">';
 
@@ -384,7 +384,7 @@ function template_main()
 			echo '
 						<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
 
-		if($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
+		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
 					</ul>';
 
