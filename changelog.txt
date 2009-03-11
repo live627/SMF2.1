@@ -35,6 +35,7 @@ March 2009
  * Messageindex top anchor wasn't getting included if there were no child boards (MessageIndex.template.php) [Bug 3318]
  ! Suppress apache_reset_timeout warning notices especially from safe mode. (Lots of files) [Bug 2811]
  ! Missing xmlns and other xhtml warnings (repair_settings.php) [Bug 3150]
+ ! Advanced profile field radio set to 0 wouldn't show as selected (Profile.php) [Bug 3103]
  
 February 2009
 --------------------------------------------------------------------------------
