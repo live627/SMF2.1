@@ -59,6 +59,7 @@ March 2009
  ! Users couldn't view their own warnings (Profile.php) [Bug 2707]
  ! Increase webinstall allowed memory limit to 64mb (Webinstall.php) [Bug 3126]
  & Removed help reference to birthday/calendar/holiday colors which are now css rather than settings (Help.english.php) [Bug 3222]
+ ! Errors from ssi would show as bad link in error logs when filtered (ManageErrors.php) [Bug 2896]
 
 
 February 2009
