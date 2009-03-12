@@ -62,7 +62,7 @@ March 2009
  ! Errors from ssi would show as bad link in error logs when filtered (ManageErrors.php) [Bug 2896]
  ! Strings accessed using braces, as in $str{42}, is deprecated as of PHP 6. Use square brackets instead. (Profile.php)
  ! Downloading languages should use different url (ManageServer.php) [Bug 3325]
-
+ ! Removing posts via profile wouldn't get added to mod log (Profile-View.php) [Bug 2336]
 
 February 2009
 --------------------------------------------------------------------------------
