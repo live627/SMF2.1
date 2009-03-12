@@ -409,7 +409,7 @@ function AddLanguage()
 		$context['smf_search_term'] = trim($_POST['smf_add']);
 
 		// We're going to use this URL.
-		$url = 'http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => '')));
+		$url = 'http://download.simplemachines.org/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => '')));
 
 		// Load the class file and stick it into an array.
 		loadClassFile('Class-Package.php');
