@@ -156,7 +156,7 @@ function ModifyProfile($post_errors = array())
 				),
 				'viewwarning' => array(
 					'label' => $txt['profile_view_warnings'],
-					'enabled' => $modSettings['warning_settings'][0] == 1 && (($context['user']['is_owner'] && $cur_profile['warning'] && !empty($modSettings['warning_show'])) || !$context['user']['is_owner']),
+					'enabled' => $modSettings['warning_settings'][0] == 1 && $cur_profile['warning'] && (($context['user']['is_owner'] && !empty($modSettings['warning_show'])) || !$context['user']['is_owner']),
 					'file' => 'Profile-View.php',
 					'function' => 'viewWarning',
 					'permission' => array(
