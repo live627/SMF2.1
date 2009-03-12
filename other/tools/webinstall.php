@@ -659,8 +659,8 @@ function doStep2()
 		}
 	}
 
-	if (@ini_get('memory_limit') < 16)
-		@ini_set('memory_limit', '16M');
+	if (@ini_get('memory_limit') < 64)
+		@ini_set('memory_limit', '64M');
 
 	foreach ($_SESSION['files_to_download'] as $i => $file)
 	{
@@ -773,8 +773,8 @@ function doStep3()
 
 	$chmod = isset($_SESSION['chmod']) ? $_SESSION['chmod'] : 0777;
 
-	if (@ini_get('memory_limit') < 16)
-		@ini_set('memory_limit', '16M');
+	if (@ini_get('memory_limit') < 64)
+		@ini_set('memory_limit', '64M');
 
 	foreach ($_SESSION['files_to_download'] as $i => $file)
 	{
