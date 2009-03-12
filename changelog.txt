@@ -65,6 +65,8 @@ March 2009
  ! Removing posts via profile wouldn't get added to mod log (Profile-View.php) [Bug 2336]
  ! Don't allow send topic if topic is using post moderation and is unapproved (SendTopic.php, Display.php, Errors.english.php) [Bug 3198]
  ! Couldn't add another row of bbcode buttons (Subs-Editor.php, GenericControls.template.php) [Bug 2248]
+ ! We can't create the db for Postgresql, so hide the part which says it does create it (install.php, Install.english.php) [Bug 1521]
+ ! Sqlite should come with a health warning (install.php) [Bug 3219]
 
 
 February 2009

@@ -117,12 +117,13 @@ $txt['db_settings_username_info'] = 'Fill in the username you need to connect to
 $txt['db_settings_password'] = 'Password';
 $txt['db_settings_password_info'] = 'Here, put the password you need to connect to your database.<br />If you don\'t know this, you should try the password to your ftp account.';
 $txt['db_settings_database'] = 'Database name';
-$txt['db_settings_database_info'] = 'Fill in the name of the database you want to use for SMF to store its data in.<br />If this database does not exist, this installer will try to create it.';
+$txt['db_settings_database_info'] = 'Fill in the name of the database you want to use for SMF to store its data in.';
+$txt['db_settings_database_info_note'] = 'If this database does not exist, this installer will try to create it.';
 $txt['db_settings_database_file'] = 'Database filename';
 $txt['db_settings_database_file_info'] = 'This is the name of the file in which to store the SMF data. We recommend you use the randomly generated name for this and set the path of this file to be outside of the public area of your webserver.';
 $txt['db_settings_prefix'] = 'Table prefix';
 $txt['db_settings_prefix_info'] = 'The prefix for every table in the database.  <b>Do not install two forums with the same prefix!</b><br />This value allows for multiple installations in one database.';
-
+$txt['db_sqlite_warning'] = 'Only recommended for small, low volume and/or intranet-type forums';
 $txt['db_populate'] = 'Populated Database';
 $txt['db_populate_info'] = 'Your settings have now been saved and the database has been populated with all the data required to get your forum up and running. Summary of population:';
 $txt['db_populate_info2'] = 'Click &quot;Continue&quot; to progress to the admin account creation page.';

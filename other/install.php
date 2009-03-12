@@ -2267,7 +2267,7 @@ function template_database_settings()
 						<option value="', $key, '"', isset($_POST['db_type']) && $_POST['db_type'] == $key ? ' selected="selected"' : '', '>', $db['name'], '</option>';
 
 	echo '
-					</select><br />
+					</select><div id="db_sqlite_warning" style="color: blue; display: none;" class="smalltext">', $txt['db_sqlite_warning'], '</div>
 					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_type_info'], '</div>
 				</td>
 			</tr>';
@@ -2301,7 +2301,8 @@ function template_database_settings()
 				<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database'], ':</label></td>
 				<td>
 					<input type="text" name="db_name" id="db_name_input" value="', empty($incontext['db']['name']) ? 'smf' : $incontext['db']['name'], '" size="30" /><br />
-					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_info'], '</div>
+					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_info'], '
+					<span id="db_name_info_warning">', $txt['db_settings_database_info_note'], '</span></div>
 				</td>
 			</tr><tr id="db_filename_contain" style="display: none;">
 				<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database_file'], ':</label></td>
@@ -2342,6 +2343,11 @@ function template_database_settings()
 			document.getElementById(\'db_user_contain\').style.display = showAll ? \'\' : \'none\';
 			document.getElementById(\'db_name_contain\').style.display = showAll ? \'\' : \'none\';
 			document.getElementById(\'db_filename_contain\').style.display = !showAll ? \'\' : \'none\';
+			document.getElementById(\'db_sqlite_warning\').style.display = !showAll ? \'\' : \'none\';
+			if (document.getElementById(\'db_type_input\').value == \'postgresql\')
+				document.getElementById(\'db_name_info_warning\').style.display = \'none\';
+			else
+				document.getElementById(\'db_name_info_warning\').style.display = \'\';
 		}
 		toggleDBInput();
 	// ]]></script>';
