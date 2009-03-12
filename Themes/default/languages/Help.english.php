@@ -319,9 +319,6 @@ $helptxt['cal_enabled'] = 'The calendar can be used for showing birthdays, or fo
 		<b>Allow events not linked to posts</b>:<br />Allow members to post events without requiring it to be linked with a post in a board.<br />
 		<b>Minimum year</b>:<br />Select the &quot;first&quot; year on the calendar list.<br />
 		<b>Maximum year</b>:<br />Select the &quot;last&quot; year on the calendar list<br />
-		<b>Birthday color</b>:<br />Select the color of the birthday text<br />
-		<b>Event color</b>:<br />Select the color of the event text<br />
-		<b>Holiday color</b>:<br />Select the color of the Holiday text<br />
 		<b>Allow events to span multiple days</b>:<br />Check to allow events to span multiple days.<br />
 		<b>Max number of days an event can span</b>:<br />Select the maximum days that an event can span.<br /><br />
 		Remember that usage of the calendar (posting events, viewing events, etc.) is controlled by permissions set on the permissions screen.';

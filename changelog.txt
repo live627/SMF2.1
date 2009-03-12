@@ -56,7 +56,9 @@ March 2009
  * Fatal error needs to be 100% width for profile to avoid uglyness (Errors.template.php) [Bug 3188]
  * Javascript error caused by auto-suggest script when editing bans as it wasn't needed (ManageBans.template.php) [Bug 3184]
  ! Errors from ssi would show as bad link in error logs (ManageErrors.php, Errors.php) [Bug 2896]
+ ! Users couldn't view their own warnings (Profile.php) [Bug 2707]
  ! Increase webinstall allowed memory limit to 64mb (Webinstall.php) [Bug 3126]
+ & Removed help reference to birthday/calendar/holiday colors which are now css rather than settings (Help.english.php) [Bug 3222]
 
 
 February 2009
