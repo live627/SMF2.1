@@ -64,6 +64,7 @@ March 2009
  ! Downloading languages should use different url (ManageServer.php) [Bug 3325]
  ! Removing posts via profile wouldn't get added to mod log (Profile-View.php) [Bug 2336]
  ! Don't allow send topic if topic is using post moderation and is unapproved (SendTopic.php, Display.php, Errors.english.php) [Bug 3198]
+ ! Couldn't add another row of bbcode buttons (Subs-Editor.php, GenericControls.template.php) [Bug 2248]
 
 
 February 2009

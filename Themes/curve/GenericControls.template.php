@@ -80,28 +80,38 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 							<option value="limeGreen">', $txt['lime_green'], '</option>
 							<option value="white">', $txt['white'], '</option>
 						</select>';
-		echo '<br />';
 
 		$found_button = false;
-		// Print the bottom row of buttons!
-		foreach ($context['bbc_tags'][1] as $image => $tag)
+
+		// Print the remaining rows of bbc buttons
+		$linebreak = true;
+		for ($i=1; $i < count($context['bbc_tags']); $i++)
 		{
-			if (isset($tag['before']))
-			{
-				// Is this tag disabled?
-				if (!empty($context['disabled_tags'][$tag['code']]))
-					continue;
+			// Start the new row
+			if ($linebreak)
+				echo '<br />';
+			$linebreak = false;
 
-				$found_button = true;
-
-				// Okay... we have the link. Now for the image and the closing </a>!
-				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
-			}
-			// I guess it's a divider...
-			elseif ($found_button)
+			foreach ($context['bbc_tags'][$i] as $image => $tag)
 			{
-				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
-				$found_button = false;
+				if (isset($tag['before']))
+				{
+					// Is this tag disabled?
+					if (!empty($context['disabled_tags'][$tag['code']]))
+						continue;
+
+					$found_button = true;
+
+					// Okay... we have the link. Now for the image and the closing </a>!
+					echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
+				}
+				// I guess it's a divider...
+				elseif ($found_button)
+				{
+					echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
+					$found_button = false;
+				}
+				$linebreak = true;
 			}
 		}
 	}

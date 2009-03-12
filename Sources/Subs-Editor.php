@@ -1264,9 +1264,9 @@ function create_control_richedit($editorOptions)
 		// Show the toggle?
 		if (empty($modSettings['disable_wysiwyg']))
 		{
-			$context['bbc_tags'][1][] = array();
-			$context['bbc_tags'][1]['unformat'] = array('code' => 'unformat', 'before' => '', 'description' => $txt['unformat_text']);
-			$context['bbc_tags'][1]['toggle'] = array('code' => 'toggle', 'before' => '', 'description' => $txt['toggle_view']);
+			$context['bbc_tags'][count($context['bbc_tags']) - 1][] = array();
+			$context['bbc_tags'][count($context['bbc_tags']) - 1]['unformat'] = array('code' => 'unformat', 'before' => '', 'description' => $txt['unformat_text']);
+			$context['bbc_tags'][count($context['bbc_tags']) - 1]['toggle'] = array('code' => 'toggle', 'before' => '', 'description' => $txt['toggle_view']);
 		}
 	}
 
