@@ -24,6 +24,7 @@ $txt['username_reserved'] = 'The username you tried to use contains the reserved
 $txt['numbers_one_to_nine'] = 'This field only accepts numbers from 0-9';
 $txt['not_a_user'] = 'The user whose profile you are trying to view does not exist.';
 $txt['not_a_topic'] = 'This topic doesn\'t exist on this board.';
+$txt['not_approved_topic'] = 'This topic has not been approved yet.';
 $txt['email_in_use'] = 'That email address (%s) is being used by a registered member already. If you feel this is a mistake, go to the login page and use the password reminder with that address.';
 
 $txt['didnt_select_vote'] = 'You didn\'t select a vote option.';

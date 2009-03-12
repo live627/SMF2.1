@@ -90,7 +90,7 @@ function summary($memID)
 		'page_title' => $txt['profile_of'] . ' ' . $memberContext[$memID]['name'],
 		'can_send_pm' => allowedTo('pm_send'),
 		'can_have_buddy' => allowedTo('profile_identity_own') && !empty($modSettings['enable_buddylist']),
-		'can_issue_warning' => allowedTo('issue_warning') && $modSettings['warning_settings']{0} == 1,
+		'can_issue_warning' => allowedTo('issue_warning') && $modSettings['warning_settings'][0] == 1,
 	);
 	$context['member'] = &$memberContext[$memID];
 	$context['can_view_warning'] = (allowedTo('issue_warning') && !$context['user']['is_owner']) || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $context['user']['is_owner']));

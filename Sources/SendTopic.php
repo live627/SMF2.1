@@ -92,7 +92,7 @@ function SendTopic()
 
 	// Get the topic's subject.
 	$request = $smcFunc['db_query']('', '
-		SELECT m.subject
+		SELECT m.subject, t.approved
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 		WHERE t.id_topic = {int:current_topic}
@@ -105,6 +105,10 @@ function SendTopic()
 		fatal_lang_error('not_a_topic', false);
 	$row = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
+
+	// Can't send topic if its unapproved and using post moderation.
+	if ($modSettings['postmod_active'] && !$row['approved'])
+		fatal_lang_error('not_approved_topic', false);
 
 	// Censor the subject....
 	censorText($row['subject']);

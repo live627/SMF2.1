@@ -63,6 +63,8 @@ March 2009
  ! Strings accessed using braces, as in $str{42}, is deprecated as of PHP 6. Use square brackets instead. (Profile.php)
  ! Downloading languages should use different url (ManageServer.php) [Bug 3325]
  ! Removing posts via profile wouldn't get added to mod log (Profile-View.php) [Bug 2336]
+ ! Don't allow send topic if topic is using post moderation and is unapproved (SendTopic.php, Display.php, Errors.english.php) [Bug 3198]
+
 
 February 2009
 --------------------------------------------------------------------------------

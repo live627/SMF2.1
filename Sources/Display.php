@@ -995,13 +995,14 @@ function Display()
 	$context['can_remove_poll'] &= $modSettings['pollMode'] == '1' && $topicinfo['id_poll'] > 0;
 	$context['can_reply'] &= empty($topicinfo['locked']) || allowedTo('moderate_board');
 	$context['can_reply_unapproved'] &= $modSettings['postmod_active'] && (empty($topicinfo['locked']) || allowedTo('moderate_board'));
-	$context['can_issue_warning'] &= $modSettings['warning_settings']{0} == 1;
+	$context['can_issue_warning'] &= $modSettings['warning_settings'][0] == 1;
 	// Handle approval flags...
 	$context['can_reply_approved'] = $context['can_reply'];
 	$context['can_reply'] |= $context['can_reply_unapproved'];
 	$context['can_mark_unread'] = !$user_info['is_guest'] && $settings['show_mark_read'];
 
-
+	$context['can_send_topic'] = !$modSettings['postmod_active'] || $topicinfo['approved'];
+	
 	// Start this off for quick moderation - it will be or'd for each post.
 	$context['can_remove_post'] = allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']);
 
