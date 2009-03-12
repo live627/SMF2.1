@@ -57,6 +57,7 @@ March 2009
  * Javascript error caused by auto-suggest script when editing bans as it wasn't needed (ManageBans.template.php) [Bug 3184]
  ! Errors from ssi would show as bad link in error logs (ManageErrors.php, Errors.php) [Bug 2896]
 
+
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]

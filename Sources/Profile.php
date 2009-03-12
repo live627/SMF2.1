@@ -155,12 +155,13 @@ function ModifyProfile($post_errors = array())
 					),
 				),
 				'viewwarning' => array(
+					'label' => $txt['profile_view_warnings'],
+					'enabled' => $modSettings['warning_settings']{0} == 1 && ($context['user']['is_owner'] && $cur_profile['warning'] && !empty($modSettings['warning_show'])) || !$context['user']['is_owner'],
 					'file' => 'Profile-View.php',
 					'function' => 'viewWarning',
-					'select' => 'summary',
 					'permission' => array(
 						'own' => array('profile_view_own'),
-						'any' => array('profile_view_any'),
+						'any' => array('issue_warning'),
 					),
 				),
 			),
@@ -280,8 +281,8 @@ function ModifyProfile($post_errors = array())
 					),
 				),
 				'issuewarning' => array(
-					'label' => $context['user']['is_owner'] && $cur_profile['warning'] ? $txt['profile_view_warnings'] : $txt['profile_issue_warning'],
-					'enabled' => $modSettings['warning_settings']{0} == 1 && (!$context['user']['is_owner'] || $cur_profile['warning']),
+					'label' => $txt['profile_issue_warning'],
+					'enabled' => $modSettings['warning_settings']{0} == 1 && !$context['user']['is_owner'],
 					'file' => 'Profile-Actions.php',
 					'function' => 'issueWarning',
 					'permission' => array(
