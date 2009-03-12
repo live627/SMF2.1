@@ -92,7 +92,7 @@ function ModifyProfile($post_errors = array())
 				string $sc:		Session check validation to do on save - note without this save will get unset - if set.
 				bool $hidden:		Does this not actually appear on the menu?
 				bool $password:		Whether to require the user's password in order to save the data in the area.
-				array $subsections:	Array of sucsections, in order of appearance.
+				array $subsections:	Array of subsections, in order of appearance.
 				array $permission:	Array of permissions to determine who can access this area. Should contain arrays $own and $any.
 	*/
 	$profile_areas = array(
@@ -156,12 +156,12 @@ function ModifyProfile($post_errors = array())
 				),
 				'viewwarning' => array(
 					'label' => $txt['profile_view_warnings'],
-					'enabled' => $modSettings['warning_settings'][0] == 1 && $cur_profile['warning'] && (($context['user']['is_owner'] && !empty($modSettings['warning_show'])) || !$context['user']['is_owner']),
+					'enabled' => $modSettings['warning_settings'][0] == 1 && $cur_profile['warning'] && $context['user']['is_owner'] && !empty($modSettings['warning_show']),
 					'file' => 'Profile-View.php',
 					'function' => 'viewWarning',
 					'permission' => array(
-						'own' => array('profile_view_own'),
-						'any' => array('issue_warning'),
+						'own' => 'profile_view_own',
+						'any' => 'issue_warning',
 					),
 				),
 			),

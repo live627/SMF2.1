@@ -204,17 +204,8 @@ function template_generic_menu_tabs(&$menu_context)
 	// Handy shortcut.
 	$tab_context = &$menu_context['tab_data'];
 
-
 	echo '
 	<h3 class="titlebg"><span class="left"></span><span class="right"></span>';
-	// Show a help item?
-	if (!empty($tab_context['help']))
-		echo '
-			<a href="', $scripturl, '?action=helpadmin;help=', $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
-	echo '
-			', $tab_context['title'], '
-	</h3>
-	<p class="windowbg description">';
 
 	// Exactly how many tabs do we have?
 	foreach ($context['tabs'] as $id => $tab)
@@ -241,6 +232,9 @@ function template_generic_menu_tabs(&$menu_context)
 		// Has it been deemed selected?
 		if (!empty($tab['is_selected']))
 			$tab_context['tabs'][$id]['is_selected'] = true;
+		// Does it have its own help?
+		if (!empty($tab['help']))
+			$tab_context['tabs'][$id]['help'] = $tab['help'];
 		// Is this the last one?
 		if (!empty($tab['is_last']) && !isset($tab_context['override_last']))
 			$tab_context['tabs'][$id]['is_last'] = true;
@@ -253,6 +247,15 @@ function template_generic_menu_tabs(&$menu_context)
 			$selected_tab = $tab;
 			$tab_context['tabs'][$sa]['is_selected'] = true;
 		}
+
+	// Show a help item?
+	if (!empty($selected_tab['help']) || !empty($tab_context['help']))
+		echo '
+			<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
+	echo '
+			', $tab_context['title'], '
+	</h3>
+	<p class="windowbg description">';
 
 	// Shall we use the tabs?
 	if (!empty($settings['use_tabs']))
