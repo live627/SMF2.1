@@ -72,6 +72,7 @@ March 2009
  * Up one level links on wireless messageindex equivalent had unwanted semi-colon (Wireless.template.php) [Bug 2363]
  * Using unsubscribe for notifications was confusing, and use unnotify in board/topics where notifed (Display.template.php, MessageIndex.template.php, Profile.english.php, Index.english.php, unnotify.gif) [Bug 2886]
  ! Viewwarning, effect would be in the wrong tense when shown to user (Profle-View.php, Profile.english.php) [Bug 3324]
+ ! Change a few more smf download urls for the download sub-domain (ManageServer.php & various in other/) [Bug 3325]
 
 
 February 2009

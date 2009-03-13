@@ -509,7 +509,7 @@ echo '
 if (window.smfVersion < "SMF 1.1" && window.smfVersion != "SMF 1.0.4")
 {
 	window.smfUpdateNotice = 'Please <a href="" id="update-link">update now</a>';
-	window.smfUpdatePackage = "http://mods.simplemachines.org/download/" + window.smfVersion.replace(/[\. ]/g, "_") + "_to_1-0-4.tar.gz";
+	window.smfUpdatePackage = "http://custom.simplemachines.org/mods/download/" + window.smfVersion.replace(/[\. ]/g, "_") + "_to_1-0-4.tar.gz";
 	window.smfUpdateTitle = "Update Title!";
 	window.smfUpdateCritical = true;
 }

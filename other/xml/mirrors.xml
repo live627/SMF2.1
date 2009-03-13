@@ -15,7 +15,7 @@
 		// Get the mirrors!
 		$data['mirrors'][] = array(
 			'name' => 'www.simplemachines.org',
-			'url' => 'http://www.simplemachines.org/download/index.php/',
+			'url' => 'http://download.simplemachines.org/index.php/',
 		);
 
 		// Get the releases!
