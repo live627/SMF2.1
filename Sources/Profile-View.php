@@ -1908,9 +1908,9 @@ function viewWarning($memID)
 	// Create some common text bits for the template.
 	$context['level_effects'] = array(
 		0 => '',
-		$modSettings['warning_watch'] => $txt['profile_warning_effect_watch'],
-		$modSettings['warning_moderate'] => $txt['profile_warning_effect_moderation'],
-		$modSettings['warning_mute'] => $txt['profile_warning_effect_mute'],
+		$modSettings['warning_watch'] => $txt['profile_warning_effect_own_watched'],
+		$modSettings['warning_moderate'] => $txt['profile_warning_effect_own_moderated'],
+		$modSettings['warning_mute'] => $txt['profile_warning_effect_own_muted'],
 	);
 	$context['current_level'] = 0;
 	foreach ($context['level_effects'] as $limit => $dummy)
