@@ -69,6 +69,7 @@ March 2009
  ! Sqlite should come with a health warning (install.php) [Bug 3219]
  ! View warning logic still not quite right (Profile.php)
  * Not able to use a different help for each tab section in admin (GenericMenu.template.php) [Bug 1849]
+ * Up one level links on wireless messageindex equivalent had unwanted semi-colon (Wireless.template.php) [Bug 2363]
 
 
 February 2009

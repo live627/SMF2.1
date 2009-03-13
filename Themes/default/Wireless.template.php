@@ -294,7 +294,7 @@ function template_imode_messageindex()
 	}
 	echo '
 			<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</td></tr>
-			<tr><td>&#59115; <a href="', $context['links']['up'], ';imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></td></tr>', !empty($context['links']['next']) ? '
+			<tr><td>&#59115; <a href="', $context['links']['up'], 'imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></td></tr>', !empty($context['links']['next']) ? '
 			<tr><td>&#59104; <a href="' . $context['links']['next'] . ';imode" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></td></tr>' : '', !empty($context['links']['prev']) ? '
 			<tr><td><b>[*]</b> <a href="' . $context['links']['prev'] . ';imode" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></td></tr>' : '', $context['can_post_new'] ? '
 			<tr><td><a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;imode">' . $txt['start_new_topic'] . '</a></td></tr>' : '', '
@@ -921,7 +921,7 @@ function template_wap2_messageindex()
 	}
 	echo '
 		<p class="titlebg">', $txt['wireless_navigation'], '</p>
-		<p class="windowbg">[0] <a href="', $context['links']['up'], ';wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>', !empty($context['links']['next']) ? '
+		<p class="windowbg">[0] <a href="', $context['links']['up'], 'wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>', !empty($context['links']['next']) ? '
 		<p class="windowbg">[#] <a href="' . $context['links']['next'] . ';wap2" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></p>' : '', !empty($context['links']['prev']) ? '
 		<p class="windowbg">[*] <a href="' . $context['links']['prev'] . ';wap2" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></p>' : '', $context['can_post_new'] ? '
 		<p class="windowbg"><a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;wap2">' . $txt['start_new_topic'] . '</a></p>' : '';
