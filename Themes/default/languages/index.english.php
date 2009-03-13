@@ -114,6 +114,7 @@ $txt['admin_login'] = 'Administration Login';
 $txt['topic'] = 'Topic';
 $txt['help'] = 'Help';
 $txt['notify'] = 'Notify';
+$txt['unnotify'] = 'Unnotify';
 $txt['notify_request'] = 'Do you want a notification email if someone replies to this topic?';
 // Use numeric entities in the below string.
 $txt['regards_team'] = 'Regards,' . "\n" . 'The ' . $context['forum_name'] . ' Team.';

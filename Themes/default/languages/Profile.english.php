@@ -113,7 +113,7 @@ $txt['notifications_boards'] = 'Current Board Notifications';
 $txt['notifications_boards_list'] = 'You are being notified of new topics posted in the following boards';
 $txt['notifications_boards_none'] = 'You aren\'t receiving notifications on any boards right now.';
 $txt['notifications_boards_howto'] = 'To request notifications from a specific board, click the &quot;notify&quot; button in the index of that board.';
-$txt['notifications_update'] = 'Unsubscribe';
+$txt['notifications_update'] = 'Unnotify';
 
 $txt['statPanel_showStats'] = 'User statistics for: ';
 $txt['statPanel_users_votes'] = 'Number of Votes Cast';
