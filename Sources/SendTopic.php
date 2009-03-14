@@ -81,7 +81,7 @@ function EmailUser()
 // Send a topic to a friend.
 function SendTopic()
 {
-	global $topic, $txt, $context, $scripturl, $sourcedir, $smcFunc;
+	global $topic, $txt, $context, $scripturl, $sourcedir, $smcFunc, $modSettings;
 
 	// Check permissions...
 	isAllowedTo('send_topic');
