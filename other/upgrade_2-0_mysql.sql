@@ -2339,6 +2339,35 @@ CHANGE ignore_boards ignore_boards text NOT NULL;
 ---#
 
 /******************************************************************************/
+--- Adding extra columns to polls.
+/******************************************************************************/
+
+---# Adding reset poll timestamp and guest voters counter...
+ALTER TABLE {$db_prefix}polls
+ADD COLUMN reset_poll int(10) unsigned NOT NULL default '0' AFTER guest_vote,
+ADD COLUMN num_guest_voters int(10) unsigned NOT NULL default '0' AFTER guest_vote;
+---#
+
+---# Fixing guest voter tallys on existing polls...
+---{
+$request = upgrade_query("
+	SELECT p.id_poll, count(lp.id_member) as guest_voters
+	FROM {$db_prefix}polls AS p
+		LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = 0)
+	WHERE lp.id_member = 0
+		AND p.num_guest_voters = 0
+	GROUP BY p.id_poll");
+
+while ($request && $row = $smcFunc['db_fetch_assoc']($request))
+	upgrade_query("
+		UPDATE {$db_prefix}polls
+		SET num_guest_voters = ". $row['guest_voters']. "
+		WHERE id_poll = " . $row['id_poll'] . "
+			AND num_guest_voters = 0");
+---}
+---#
+
+/******************************************************************************/
 --- Final clean up...
 /******************************************************************************/
 

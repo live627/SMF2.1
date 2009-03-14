@@ -399,7 +399,7 @@ else
 --- Adding restore topic from recycle.
 /******************************************************************************/
 
----# Adding restore topic form recycle feature...
+---# Adding restore topic from recycle feature...
 ---{
 if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 {
@@ -512,6 +512,80 @@ ALTER COLUMN ip SET DEFAULT '';
 ---# Changing 'error_type' from char to varchar
 ALTER TABLE {$db_prefix}log_errors
 ALTER COLUMN error_type TYPE varchar(15);
+---#
+
+
+/******************************************************************************/
+--- Adding extra columns to polls.
+/******************************************************************************/
+
+---# Adding reset poll timestamp and guest voters counter.
+---{
+if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ADD COLUMN reset_poll int(10) AFTER guest_votes");
+
+	upgrade_query("
+		UPDATE {$db_prefix}polls
+		SET reset_poll = '0'
+		WHERE reset_poll < 1");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ALTER COLUMN reset_poll SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ALTER COLUMN reset_poll SET default '0'");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ADD COLUMN num_guest_voters int(10) AFTER guest_votes");
+
+	upgrade_query("
+		UPDATE {$db_prefix}polls
+		SET num_guest_voters = '0'
+		WHERE num_guest_voters < 1");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ALTER COLUMN num_guest_voters SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ALTER COLUMN num_guest_voters SET default '0'");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ADD COLUMN reset_poll int(10) NOT NULL default '0'");
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ADD COLUMN num_guest_voters int(10) NOT NULL default '0'");
+}
+---}
+---#
+
+---# Fixing guest voter tallys on existing polls...
+---{
+$request = upgrade_query("
+	SELECT p.id_poll, count(lp.id_member) as guest_voters
+	FROM {$db_prefix}polls AS p
+		LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = 0)
+	WHERE lp.id_member = 0
+		AND p.num_guest_voters = 0
+	GROUP BY p.id_poll");
+
+while ($request && $row = $smcFunc['db_fetch_assoc']($request))
+	upgrade_query("
+		UPDATE {$db_prefix}polls
+		SET num_guest_voters = ". $row['guest_voters']. "
+		WHERE id_poll = " . $row['id_poll'] . "
+			AND num_guest_voters = 0");
+---}
 ---#
 
 /*****************************************************************************/

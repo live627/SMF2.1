@@ -348,7 +348,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				FROM {db_prefix}boards' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 				WHERE id_board != {int:recycle_board}' : ''),
 				array(
-					'recycle_board' => $modSettings['recycle_board'],
+					'recycle_board' => !empty($modSettings['recycle_board']) ? $modSettings['recycle_board'] : 0,
 				)
 			);
 			$row = $smcFunc['db_fetch_assoc']($result);

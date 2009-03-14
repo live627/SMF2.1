@@ -1537,6 +1537,8 @@ CREATE TABLE {$db_prefix}polls (
   hide_results tinyint(3) unsigned NOT NULL default '0',
   change_vote tinyint(3) unsigned NOT NULL default '0',
   guest_vote tinyint(3) unsigned NOT NULL default '0',
+  num_guest_voters int(10) unsigned NOT NULL default '0',
+  reset_poll int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) NOT NULL default '0',
   poster_name tinytext NOT NULL,
   PRIMARY KEY (id_poll)

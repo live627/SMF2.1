@@ -92,15 +92,16 @@ function Vote()
 	// Check if they have already voted, or voting is locked.
 	$request = $smcFunc['db_query']('', '
 		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.id_poll, p.expire_time, p.max_votes, p.change_vote,
-			p.guest_vote
+			p.guest_vote, p.reset_poll, p.num_guest_voters
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-			LEFT JOIN {db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = {int:current_member})
+			LEFT JOIN {db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = {int:current_member} AND lp.id_member != {int:not_guest})
 		WHERE t.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
 			'current_member' => $user_info['id'],
 			'current_topic' => $topic,
+			'not_guest' => 0,
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0)
@@ -115,8 +116,15 @@ function Vote()
 		if (!$row['guest_vote'])
 			fatal_lang_error('guest_vote_disabled');
 		// Already voted?
-		elseif (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))
-			fatal_lang_error('poll_error', false);
+		elseif (!empty($_COOKIE['guest_poll_vote_' . $row['id_poll']]) && preg_match('~^[0-9,]+$~', $_COOKIE['guest_poll_vote_' . $row['id_poll']]))
+		{
+			$guestinfo = explode(',', $_COOKIE['guest_poll_vote_' . $row['id_poll']]);
+			if($row['reset_poll'] < $guestinfo[0])
+				fatal_lang_error('poll_error', false);
+			else
+				// Poll has been reset, so ditch the cookie and let them vote again.
+				unset($_COOKIE['guest_poll_vote_' . $row['id_poll']]);
+		}
 	}
 
 	// Is voting locked or has it expired?
@@ -218,13 +226,24 @@ function Vote()
 	);
 
 	// If it's a guest don't let them vote again.
-	if ($user_info['is_guest'])
+	if ($user_info['is_guest'] && count($pollOptions) > 0)
 	{
-		$_COOKIE['guest_poll_vote'] = !empty($_COOKIE['guest_poll_vote']) ? ($_COOKIE['guest_poll_vote'] . ',' . $row['id_poll']) : $row['id_poll'];
+		// Time is stored in case the poll is reset later, plus what they voted for.
+		$_COOKIE['guest_poll_vote_' . $row['id_poll']] = time() . ',' . (count($pollOptions) > 1 ? explode(',' . $pollOptions) : $pollOptions[0] );
+
+		// Increase num guest voters count by 1
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}polls
+			SET num_guest_voters = num_guest_voters + 1
+			WHERE id_poll = {int:id_poll}',
+			array(
+				'id_poll' => $row['id_poll'],
+			)
+		);
 
 		require_once($sourcedir . '/Subs-Auth.php');
 		$cookie_url = url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies']));
-		setcookie('guest_poll_vote', $_COOKIE['guest_poll_vote'], time() + 2500000, $cookie_url[1], $cookie_url[0], 0);
+		setcookie('guest_poll_vote_' . $row['id_poll'], $_COOKIE['guest_poll_vote_'. $row['id_poll']], time() + 2500000, $cookie_url[1], $cookie_url[0], 0);
 	}
 
 	// Return to the post...
@@ -815,6 +834,16 @@ function EditPoll2()
 	// Shall I reset the vote count, sir?
 	if (isset($_POST['resetVoteCount']))
 	{
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}polls
+			SET num_guest_voters = {int:no_votes}, reset_poll = {int:time}
+			WHERE id_poll = {int:id_poll}',
+			array(
+				'no_votes' => 0,
+				'id_poll' => $bcinfo['id_poll'],
+				'time' => time(),
+			)
+		);
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}poll_choices
 			SET votes = {int:no_votes}

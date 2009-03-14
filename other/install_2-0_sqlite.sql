@@ -1678,6 +1678,8 @@ CREATE TABLE {$db_prefix}polls (
   hide_results smallint NOT NULL default '0',
   change_vote smallint NOT NULL default '0',
   guest_vote smallint NOT NULL default '0',
+  num_guest_voters int NOT NULL default '0',
+  reset_poll int NOT NULL default '0',
   id_member int NOT NULL default '0',
   poster_name varchar(255) NOT NULL
 );

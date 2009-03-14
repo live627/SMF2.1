@@ -693,7 +693,7 @@ function Display()
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes, p.change_vote,
-				p.guest_vote, p.id_member, IFNULL(mem.real_name, p.poster_name) AS poster_name
+				p.guest_vote, p.id_member, IFNULL(mem.real_name, p.poster_name) AS poster_name, p.num_guest_voters, p.reset_poll
 			FROM {db_prefix}polls AS p
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = p.id_member)
 			WHERE p.id_poll = {int:id_poll}
@@ -708,23 +708,29 @@ function Display()
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(DISTINCT id_member) AS total
 			FROM {db_prefix}log_polls
-			WHERE id_poll = {int:id_poll}',
+			WHERE id_poll = {int:id_poll}
+				AND id_member != {int:not_guest}',
 			array(
 				'id_poll' => $topicinfo['id_poll'],
+				'not_guest' => 0,
 			)
 		);
 		list ($pollinfo['total']) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 
+		// Total voters needs to include guest voters
+		$pollinfo['total'] += $pollinfo['num_guest_voters'];
+
 		// Get all the options, and calculate the total votes.
 		$request = $smcFunc['db_query']('', '
 			SELECT pc.id_choice, pc.label, pc.votes, IFNULL(lp.id_choice, -1) AS voted_this
 			FROM {db_prefix}poll_choices AS pc
-				LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_choice = pc.id_choice AND lp.id_poll = {int:id_poll} AND lp.id_member = {int:current_member})
+				LEFT JOIN {db_prefix}log_polls AS lp ON (lp.id_choice = pc.id_choice AND lp.id_poll = {int:id_poll} AND lp.id_member = {int:current_member} AND lp.id_member != {int:not_guest})
 			WHERE pc.id_poll = {int:id_poll}',
 			array(
 				'current_member' => $user_info['id'],
 				'id_poll' => $topicinfo['id_poll'],
+				'not_guest' => 0,
 			)
 		);
 		$pollOptions = array();
@@ -739,9 +745,28 @@ function Display()
 		}
 		$smcFunc['db_free_result']($request);
 
-		// If this is a guest we need to do our best to work out if they have voted.
+	
+		
+		// If this is a guest we need to do our best to work out if they have voted, and what they voted for.
 		if ($user_info['is_guest'] && $pollinfo['guest_vote'] && allowedTo('poll_vote'))
-			$pollinfo['has_voted'] = isset($_COOKIE['guest_poll_vote']) && in_array($topicinfo['id_poll'], explode(',', $_COOKIE['guest_poll_vote']));
+		{
+			if (!empty($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]) && preg_match('~^[0-9,]+$~', $_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]))
+			{
+				$guestinfo = explode(',', $_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
+				if($pollinfo['reset_poll'] < $guestinfo[0])
+				{
+					foreach($pollOptions as $choice => $details)
+					{
+						$pollOptions[$choice]['voted_this'] = in_array($choice, $guestinfo) ? 1 : -1;
+						$pollinfo['has_voted'] |= $pollOptions[$choice]['voted_this'] != -1;
+					}
+				}
+				else
+					// The poll has been reset, so unset our cookie to allow the guest to vote again
+					unset($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
+			}
+			unset($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
+		}
 
 		// Set up the basic poll information.
 		$context['poll'] = array(

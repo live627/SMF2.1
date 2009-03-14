@@ -74,6 +74,10 @@ March 2009
  ! Viewwarning, effect would be in the wrong tense when shown to user (Profle-View.php, Profile.english.php) [Bug 3324]
  ! Change a few more smf download urls for the download sub-domain (ManageServer.php & various in other/) [Bug 3325]
  ! Sendtopic was missing a global (SendTopic.php) [Bug 3332]
+ ! Guests couldn't revote if poll was reset (Display.php, Poll.php) [Bug 3247]
+ ! Guests voters were incorrectly counted (Display.php, Poll.php) [Bug 2186]
+ ! Guests were shown to have voted for options voted by other guests (Display.php)
+ ! Undefined index recycle_board (Subs.php)
 
 
 February 2009
