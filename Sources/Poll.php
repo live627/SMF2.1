@@ -119,11 +119,13 @@ function Vote()
 		elseif (!empty($_COOKIE['guest_poll_vote_' . $row['id_poll']]) && preg_match('~^[0-9,]+$~', $_COOKIE['guest_poll_vote_' . $row['id_poll']]))
 		{
 			$guestinfo = explode(',', $_COOKIE['guest_poll_vote_' . $row['id_poll']]);
-			if($row['reset_poll'] < $guestinfo[0])
+			if ($row['reset_poll'] < $guestinfo[0])
 				fatal_lang_error('poll_error', false);
 			else
 				// Poll has been reset, so ditch the cookie and let them vote again.
 				unset($_COOKIE['guest_poll_vote_' . $row['id_poll']]);
+
+			unset($guestinfo);
 		}
 	}
 

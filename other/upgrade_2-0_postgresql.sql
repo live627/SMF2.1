@@ -525,7 +525,7 @@ if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
-		ADD COLUMN reset_poll int(10) AFTER guest_votes");
+		ADD COLUMN reset_poll int AFTER guest_vote");
 
 	upgrade_query("
 		UPDATE {$db_prefix}polls
@@ -542,7 +542,7 @@ if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
-		ADD COLUMN num_guest_voters int(10) AFTER guest_votes");
+		ADD COLUMN num_guest_voters int AFTER guest_vote");
 
 	upgrade_query("
 		UPDATE {$db_prefix}polls
@@ -561,10 +561,10 @@ else
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
-		ADD COLUMN reset_poll int(10) NOT NULL default '0'");
+		ADD COLUMN reset_poll int NOT NULL default '0'");
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
-		ADD COLUMN num_guest_voters int(10) NOT NULL default '0'");
+		ADD COLUMN num_guest_voters int NOT NULL default '0'");
 }
 ---}
 ---#

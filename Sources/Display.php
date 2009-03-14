@@ -753,17 +753,19 @@ function Display()
 			if (!empty($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]) && preg_match('~^[0-9,]+$~', $_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]))
 			{
 				$guestinfo = explode(',', $_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
-				if($pollinfo['reset_poll'] < $guestinfo[0])
+				if ($pollinfo['reset_poll'] < $guestinfo[0])
 				{
-					foreach($pollOptions as $choice => $details)
+					foreach ($pollOptions as $choice => $details)
 					{
 						$pollOptions[$choice]['voted_this'] = in_array($choice, $guestinfo) ? 1 : -1;
 						$pollinfo['has_voted'] |= $pollOptions[$choice]['voted_this'] != -1;
 					}
+					unset($choice, $details);
 				}
 				else
 					// The poll has been reset, so unset our cookie to allow the guest to vote again
 					unset($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
+				unset($guestinfo);
 			}
 			unset($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
 		}

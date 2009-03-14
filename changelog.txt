@@ -78,6 +78,7 @@ March 2009
  ! Guests voters were incorrectly counted (Display.php, Poll.php) [Bug 2186]
  ! Guests were shown to have voted for options voted by other guests (Display.php)
  ! Undefined index recycle_board (Subs.php)
+ ! Postgresql doesn't support int(10) so just use int, and its guest_vote (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql, Display.php, Poll.php)
 
 
 February 2009
