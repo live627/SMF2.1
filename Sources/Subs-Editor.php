@@ -1627,7 +1627,7 @@ function AutoSuggestHandler($checkRegistered = null)
 // Search for a member - by real_name or member_name by default.
 function AutoSuggest_Search_Member()
 {
-	global $user_info, $txt, $smcFunc;
+	global $user_info, $txt, $smcFunc, $context;
 
 	$_REQUEST['search'] = trim($smcFunc['strtolower']($_REQUEST['search'])) . '*';
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
