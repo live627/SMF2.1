@@ -1878,13 +1878,18 @@ function ssi_recentAttachments($num_attachments = 10, $attachment_ext = array(),
 			LEFT JOIN {db_prefix}attachments AS thumb ON (thumb.id_attach = att.id_thumb)') . '
 		WHERE att.attachment_type = 0' . ($attachments_boards === array(0) ? '' : '
 			AND m.id_board IN ({array_int:boards_can_see})') . (!empty($attachment_ext) ? '
-			AND att.fileext IN ({array_string:attachment_ext})' : '') . '
+			AND att.fileext IN ({array_string:attachment_ext})' : '') .
+			(!$modSettings['postmod_active'] || allowedTo('approve_posts') ? '' : '
+			AND t.approved = {int:is_approved}
+			AND m.approved = {int:is_approved}
+			AND att.approved = {int:is_approved}') . '
 		ORDER BY att.id_attach DESC
 		LIMIT {int:num_attachments}',
 		array(
 			'boards_can_see' => $attachments_boards,
 			'attachment_ext' => $attachment_ext,
 			'num_attachments' => $num_attachments,
+			'is_approved' => 1,
 		)
 	);
 

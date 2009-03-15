@@ -97,6 +97,7 @@ March 2009
  ! Log warnings given for specific posts in the modlog, so they show in ModerationCenter under "Actions taken" (Profile-Actions.php, Modlog.english.php) [Bug 1934]
  * Babylon theme undefined index allow_return_vote (Display.template.php)
  ! If postmoderation is disabled, there is warning level "All posts will be moderated" (Profile-Actions.php, Profile-View.php) [Bug 3327]
+ ! ssi_recentAttachments didn't check whether attachments were approved if postmoderation was enabled (SSI.php) [Bug 3248]
 
 February 2009
 --------------------------------------------------------------------------------
