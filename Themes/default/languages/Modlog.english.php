@@ -15,6 +15,7 @@ $txt['modlog_total_entries'] = 'Total Entries';
 $txt['modlog_ac_approve_topic'] = 'Approved topic &quot;{topic}&quot; by &quot;{member}&quot;';
 $txt['modlog_ac_approve'] = 'Approved message &quot;{subject}&quot; in &quot;{topic}&quot; by &quot;{member}&quot;';
 $txt['modlog_ac_lock'] = 'Locked &quot;{topic}&quot;';
+$txt['modlog_ac_warning'] = 'Warned {member} for &quot;{message}&quot;';
 $txt['modlog_ac_unlock'] = 'Unlocked &quot;{topic}&quot;';
 $txt['modlog_ac_sticky'] = 'Stickied &quot;{topic}&quot;';
 $txt['modlog_ac_unsticky'] = 'Un-Stickied &quot;{topic}&quot;';
