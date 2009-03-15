@@ -11,7 +11,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 	if ($display_controls !== 'all' && !is_array($display_controls))
 		$display_controls = array($display_controls);
 
-	// Assuming BBC code is enabled then print the buttons and some javascript to handle it.
+	// Assuming BBCode is enabled then print the buttons and some javascript to handle it.
 	if ($context['show_bbc'] && ($display_controls == 'all' || in_array('bbc', $display_controls)))
 	{
 		$found_button = false;
