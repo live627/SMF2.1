@@ -98,6 +98,7 @@ March 2009
  * Babylon theme undefined index allow_return_vote (Display.template.php)
  ! If postmoderation is disabled, there is warning level "All posts will be moderated" (Profile-Actions.php, Profile-View.php) [Bug 3327]
  ! ssi_recentAttachments didn't check whether attachments were approved if postmoderation was enabled (SSI.php) [Bug 3248]
+ ! Defaults to "html,body" (theme_info.xml in curve/babylon/classic, Themes.php) [Bug 3267]
 
 February 2009
 --------------------------------------------------------------------------------

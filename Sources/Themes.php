@@ -1398,7 +1398,7 @@ function ThemeInstall()
 	<author name="Simple Machines">info@simplemachines.org</author>
 	<!-- Website... where to get updates and more information. -->
 	<website>http://www.simplemachines.org/</website>
-	<!-- Template layers to use, defaults to "main". -->
+	<!-- Template layers to use, defaults to "html,body". -->
 	<layers>' . (empty($theme_layers) ? 'html,body' : $theme_layers) . '</layers>
 	<!-- Templates to load on startup. Default is "index". -->
 	<templates>' . (empty($theme_templates) ? 'index' : $theme_templates) . '</templates>
