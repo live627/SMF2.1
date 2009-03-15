@@ -91,6 +91,7 @@ March 2009
  * Classic theme undefined index allow_return_vote (Display.template.php)
  ! Reminder fatal errors would log as general error rather than user related like password (Reminder.php) [Bug 2637]
  * Participation icon/legend on MessageIndex should be not be shown to guests (MessageIndex.template.php) [Bug 3235]
+ * "No topics have been posted yet." Also re-worded posts/attachment equivalent. (Profile.english.php, Profile.template.php) [Bug 2904]
 
 
 February 2009
