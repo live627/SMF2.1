@@ -38,8 +38,8 @@ function template_main()
 			echo '
 		</dl>';
 
-			if ($context['allow_poll_view'])
-				echo '
+		if ($context['allow_poll_view'])
+			echo '
 		<p><b>', $txt['poll_total_voters'], ':</b> ', $context['poll']['total_votes'], '</p>';
 
 		}

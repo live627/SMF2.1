@@ -161,7 +161,7 @@ function template_main()
 			// Allowed to view the results? (without voting!)
 			if ($context['allow_poll_view'])
 				echo '
-							<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';viewResults">', $txt['poll_results'], '</a><br />';
+							<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';viewresults">', $txt['poll_results'], '</a><br />';
 
 			// Show a link for locking the poll as well...
 			if ($context['poll']['lock'])

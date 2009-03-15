@@ -86,6 +86,7 @@ March 2009
  * Signature font-size shouldn't be bigger than the post font-size, thats madness (style.css) [Bug 2511]
  * Report to admin/Insert quote were too small due to nested smalltext tags. (Post.template.php, PersonalMessage.template.php) [Bug 3210]
  ! Move stripos into Subs-Compat.php where all <php5 functions can be found (Subs.php, Subs-Compat.php) [Bug 3216]
+ ! Change viewResults to lowercase, and ensuring backwards compatibilty/we don't break other themes (Display.template.php, Display.php) [Bug 2872]
 
 
 February 2009
