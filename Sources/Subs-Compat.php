@@ -30,6 +30,14 @@ if (!defined('SMF'))
 	versions.
 */
 
+if (!function_exists('stripos'))
+{
+	function stripos($haystack, $needle, $offset = 0)
+	{
+		return strpos(strtolower($haystack), strtolower($needle), $offset);
+	}
+}
+
 if (!function_exists('md5_file'))
 {
 	function md5_file($filename)

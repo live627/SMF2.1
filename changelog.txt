@@ -85,6 +85,7 @@ March 2009
  * Blurb padding wasn't working in curve (css/forum.css in curve) [Bug 2511]
  * Signature font-size shouldn't be bigger than the post font-size, thats madness (style.css) [Bug 2511]
  * Report to admin/Insert quote were too small due to nested smalltext tags. (Post.template.php, PersonalMessage.template.php) [Bug 3210]
+ ! Move stripos into Subs-Compat.php where all <php5 functions can be found (Subs.php, Subs-Compat.php) [Bug 3216]
 
 
 February 2009

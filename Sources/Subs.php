@@ -810,14 +810,6 @@ function un_htmlspecialchars($string)
 	return strtr($string, $translation);
 }
 
-if (!function_exists('stripos'))
-{
-	function stripos($haystack, $needle, $offset = 0)
-	{
-		return strpos(strtolower($haystack), strtolower($needle), $offset);
-	}
-}
-
 // Shorten a subject + internationalization concerns.
 function shorten_subject($subject, $len)
 {
