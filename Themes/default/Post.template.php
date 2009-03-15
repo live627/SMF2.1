@@ -789,7 +789,7 @@ function template_main()
 								</td>
 							</tr><tr class="windowbg2">
 								<td colspan="2" class="smalltext" id="msg', $post['id'], '" width="100%">
-									<div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
+									<div align="right"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
 									<div class="post">', $post['message'], '</div>
 								</td>
 							</tr>';

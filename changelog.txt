@@ -84,6 +84,7 @@ March 2009
  * Moderators on BoardIndex/MessageIndex were no longer shown in smalltext equivalent (css/forum.css in core/curve) [Bug 2511]
  * Blurb padding wasn't working in curve (css/forum.css in curve) [Bug 2511]
  * Signature font-size shouldn't be bigger than the post font-size, thats madness (style.css) [Bug 2511]
+ * Report to admin/Insert quote were too small due to nested smalltext tags. (Post.template.php, PersonalMessage.template.php) [Bug 3210]
 
 
 February 2009
