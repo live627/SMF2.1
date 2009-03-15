@@ -362,7 +362,7 @@ function SecretAnswer2()
 	// Check if the secret answer is correct.
 	if ($row['secret_question'] == '' || $row['secret_answer'] == '' || md5($_POST['secret_answer']) != $row['secret_answer'])
 	{
-		log_error(sprintf($txt['reminder_error'], $row['member_name']));
+		log_error(sprintf($txt['reminder_error'], $row['member_name']), 'user');
 		fatal_lang_error('incorrect_answer', false);
 	}
 
