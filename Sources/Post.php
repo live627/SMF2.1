@@ -1542,6 +1542,9 @@ function Post2()
 		else
 			$_POST['poll_max_votes'] = (int) $_POST['poll_max_votes'];
 
+		$_POST['poll_expire'] = (int) $_POST['poll_expire'];
+		$_POST['poll_expire'] = $_POST['poll_expire'] > 9999 ? 9999 : ($_POST['poll_expire'] < 0 ? 0 : $_POST['poll_expire']) ;
+
 		// Just set it to zero if it's not there..
 		if (!isset($_POST['poll_hide']))
 			$_POST['poll_hide'] = 0;

@@ -95,7 +95,7 @@ function template_main()
 								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
 							</tr><tr>
 								<td align="right"></td>
-								<td class="smalltext">', $txt['poll_run'], ' <input type="text" name="poll_expire" size="2" value="', $context['poll']['expiration'], '" onchange="this.form.poll_hide[2].disabled = isEmptyText(this) || this.value == 0; if (this.form.poll_hide[2].checked) this.form.poll_hide[1].checked = true;" /> ', $txt['poll_run_days'], '</td>
+								<td class="smalltext">', $txt['poll_run'], ' <input type="text" name="poll_expire" size="2" value="', $context['poll']['expiration'], '" onchange="this.form.poll_hide[2].disabled = isEmptyText(this) || this.value == 0; if (this.form.poll_hide[2].checked) this.form.poll_hide[1].checked = true;" maxlength="4" /> ', $txt['poll_run_days'], '</td>
 							</tr><tr>
 								<td align="right"></td>
 								<td class="smalltext">

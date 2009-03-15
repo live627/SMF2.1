@@ -391,7 +391,7 @@ function template_main()
 							</tr>
 							<tr>
 								<td align="right"></td>
-								<td class="smalltext">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" /> ', $txt['poll_run_days'], '</td>
+								<td class="smalltext">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" maxlength="4" /> ', $txt['poll_run_days'], '</td>
 							</tr>
 							<tr>
 								<td align="right"></td>
