@@ -90,6 +90,7 @@ March 2009
  ! Don't show viewresults button if we already see the results (poll expired/voted etc) (Display.template.php, Display.php) [Bug 2872]
  * Classic theme undefined index allow_return_vote (Display.template.php)
  ! Reminder fatal errors would log as general error rather than user related like password (Reminder.php) [Bug 2637]
+ * Participation icon/legend on MessageIndex should be not be shown to guests (MessageIndex.template.php) [Bug 3235]
 
 
 February 2009
