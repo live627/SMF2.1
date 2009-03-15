@@ -81,6 +81,9 @@ March 2009
  ! Postgresql doesn't support int(10) so just use int, and its guest_vote (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql, Display.php, Poll.php)
  ! Provide some context for buddies (Subs-Editor.php) [Bug 3335]
  ! Don't require moderate_board permission to show extra poll options when adding a poll to existing topic (Poll.php) [Bug 3008]
+ * Moderators on BoardIndex/MessageIndex were no longer shown in smalltext equivalent (css/forum.css in core/curve) [Bug 2511]
+ * Blurb padding wasn't working in curve (css/forum.css in curve) [Bug 2511]
+ * Signature font-size shouldn't be bigger than the post font-size, thats madness (style.css) [Bug 2511]
 
 
 February 2009

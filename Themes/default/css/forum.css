@@ -55,6 +55,8 @@ table.boardsframe td.info p
 }
 table.boardsframe td.info p.moderators
 {
+	font-size: 0.8em;
+	font-family: verdana, sans-serif;
 }
 table.boardsframe td.stats
 {

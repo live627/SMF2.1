@@ -558,6 +558,7 @@ code
 	width: 100%;
 	overflow: auto;
 	line-height: 1.3em;
+	font-size: 0.85em;
 }
 
 /* Sometimes there will be an error when you post */
