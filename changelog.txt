@@ -93,6 +93,7 @@ March 2009
  * Participation icon/legend on MessageIndex should be not be shown to guests (MessageIndex.template.php) [Bug 3235]
  * "No topics have been posted yet." Also re-worded posts/attachment equivalent. (Profile.english.php, Profile.template.php) [Bug 2904]
  ! Setting Poll too far in advance caused db error (Post.php, Poll.php, Post.template.php, Poll.template.php) [Bug 2819]
+ * Suggest causing js error for action=groups and guests, as it was unused (ManageMembergroups.template.php)
 
 
 February 2009

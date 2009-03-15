@@ -473,7 +473,10 @@ function template_group_members()
 
 	echo '
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>
+		</form>';
+
+	if (!empty($context['group']['assignable']))
+		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var oAddMemberSuggest = new smc_AutoSuggest({
