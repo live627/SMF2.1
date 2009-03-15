@@ -88,6 +88,7 @@ March 2009
  ! Move stripos into Subs-Compat.php where all <php5 functions can be found (Subs.php, Subs-Compat.php) [Bug 3216]
  ! Change viewResults to lowercase, and ensuring backwards compatibilty/we don't break other themes (Display.template.php, Display.php) [Bug 2872]
  ! Don't show viewresults button if we already see the results (poll expired/voted etc) (Display.template.php, Display.php) [Bug 2872]
+ * Classic theme undefined index allow_return_vote (Display.template.php)
 
 
 February 2009
