@@ -159,7 +159,7 @@ function template_main()
 						<td valign="bottom" style="padding-left: 15px;">';
 
 			// Allowed to view the results? (without voting!)
-			if ($context['allow_poll_view'])
+			if ($context['show_view_results_button'])
 				echo '
 							<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';viewresults">', $txt['poll_results'], '</a><br />';
 
