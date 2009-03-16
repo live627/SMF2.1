@@ -100,6 +100,7 @@ March 2009
  ! ssi_recentAttachments didn't check whether attachments were approved if postmoderation was enabled (SSI.php) [Bug 3248]
  ! Defaults to "html,body" (theme_info.xml in curve/babylon/classic, Themes.php) [Bug 3267]
  ! Content-Disposition wouldn't work properly properly for images on "save target as" (Display.php) [Bug 3111]
+ ! Iconv returning false would result in sending blank notification messages (Subs-Post.php) [Bug 2319]
 
 
 February 2009

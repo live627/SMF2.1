@@ -1230,7 +1230,11 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 		{
 			// Try to convert the string to UTF-8.
 			if (!$context['utf8'] && function_exists('iconv'))
-				$string = @iconv($context['character_set'], 'UTF-8', $string);
+			{
+				$newstring = @iconv($context['character_set'], 'UTF-8', $string);
+				if ($newstring)
+					$string = $newstring;
+			}
 
 			$fixchar = create_function('$n', '
 				if ($n < 128)
@@ -1253,7 +1257,10 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 	if ($hotmail_fix && ($context['utf8'] || function_exists('iconv') || $context['character_set'] === 'ISO-8859-1'))
 	{
 		if (!$context['utf8'] && function_exists('iconv'))
-			$string = @iconv($context['character_set'], 'UTF-8', $string);
+		{
+			$newstring = @iconv($context['character_set'], 'UTF-8', $string);
+			if ($newstring)
+				$string = $newstring;
 
 		$entityConvert = create_function('$c', '
 			if (strlen($c) === 1 && ord($c{0}) <= 0x7F)
