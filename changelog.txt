@@ -99,6 +99,8 @@ March 2009
  ! If postmoderation is disabled, there is warning level "All posts will be moderated" (Profile-Actions.php, Profile-View.php) [Bug 3327]
  ! ssi_recentAttachments didn't check whether attachments were approved if postmoderation was enabled (SSI.php) [Bug 3248]
  ! Defaults to "html,body" (theme_info.xml in curve/babylon/classic, Themes.php) [Bug 3267]
+ ! Content-Disposition wouldn't work properly properly for images on "save target as" (Display.php) [Bug 3111]
+
 
 February 2009
 --------------------------------------------------------------------------------

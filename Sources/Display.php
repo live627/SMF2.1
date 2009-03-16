@@ -1309,35 +1309,34 @@ function Download()
 			unset($_REQUEST['image']);
 	}
 
-	if (!isset($_REQUEST['image']))
-	{
-		// Convert the file to UTF-8, cuz most browsers dig that.
-		$utf8name = !$context['utf8'] && function_exists('iconv') ? iconv($context['character_set'], 'UTF-8', $real_filename) : (!$context['utf8'] && function_exists('mb_convert_encoding') ? mb_convert_encoding($real_filename, 'UTF-8', $context['character_set']) : $real_filename);
-		$fixchar = create_function('$n', '
-			if ($n < 32)
-				return \'\';
-			elseif ($n < 128)
-				return chr($n);
-			elseif ($n < 2048)
-				return chr(192 | $n >> 6) . chr(128 | $n & 63);
-			elseif ($n < 65536)
-				return chr(224 | $n >> 12) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);
-			else
-				return chr(240 | $n >> 18) . chr(128 | $n >> 12 & 63) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);');
-
-		// Different browsers like different standards...
-		if ($context['browser']['is_firefox'])
-			header('Content-Disposition: attachment; filename*="UTF-8\'\'' . preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name) . '"');
-
-		elseif ($context['browser']['is_opera'])
-			header('Content-Disposition: attachment; filename="' . preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name) . '"');
-
-		elseif ($context['browser']['is_ie'])
-			header('Content-Disposition: attachment; filename="' . urlencode(preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name)) . '"');
-
+	// Convert the file to UTF-8, cuz most browsers dig that.
+	$utf8name = !$context['utf8'] && function_exists('iconv') ? iconv($context['character_set'], 'UTF-8', $real_filename) : (!$context['utf8'] && function_exists('mb_convert_encoding') ? mb_convert_encoding($real_filename, 'UTF-8', $context['character_set']) : $real_filename);
+	$fixchar = create_function('$n', '
+		if ($n < 32)
+			return \'\';
+		elseif ($n < 128)
+			return chr($n);
+		elseif ($n < 2048)
+			return chr(192 | $n >> 6) . chr(128 | $n & 63);
+		elseif ($n < 65536)
+			return chr(224 | $n >> 12) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);
 		else
-			header('Content-Disposition: attachment; filename="' . $utf8name . '"');
-	}
+			return chr(240 | $n >> 18) . chr(128 | $n >> 12 & 63) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);');
+
+	$disposition = !isset($_REQUEST['image']) ? 'attachment' : 'inline' ;
+
+	// Different browsers like different standards...
+	if ($context['browser']['is_firefox'])
+		header('Content-Disposition: ' . $disposition . '; filename*="UTF-8\'\'' . preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name) . '"');
+
+	elseif ($context['browser']['is_opera'])
+		header('Content-Disposition: ' . $disposition . '; filename="' . preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name) . '"');
+
+	elseif ($context['browser']['is_ie'])
+		header('Content-Disposition: ' . $disposition . '; filename="' . urlencode(preg_replace('~&#(\d{3,8});~e', '$fixchar(\'$1\')', $utf8name)) . '"');
+
+	else
+		header('Content-Disposition: ' . $disposition . '; filename="' . $utf8name . '"');
 
 	// If this has an "image extension" - but isn't actually an image - then ensure it isn't cached cause of silly IE.
 	if (!isset($_REQUEST['image']) && in_array($file_ext, array('gif', 'jpg', 'bmp', 'png', 'jpeg', 'tiff')))
