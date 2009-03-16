@@ -1261,6 +1261,7 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 			$newstring = @iconv($context['character_set'], 'UTF-8', $string);
 			if ($newstring)
 				$string = $newstring;
+		}
 
 		$entityConvert = create_function('$c', '
 			if (strlen($c) === 1 && ord($c{0}) <= 0x7F)
