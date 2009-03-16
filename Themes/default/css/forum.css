@@ -353,9 +353,13 @@ ul.postingbuttons li
 {
 	float: right;
 }
+.attachments hr
+{
+	clear: both;
+	margin: 1em 0 1em 0;
+}
 .attachments
 {
-	clear: right;
 	padding-top: 1em;
 }
 .postfooter
