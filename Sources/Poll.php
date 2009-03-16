@@ -115,17 +115,31 @@ function Vote()
 		// Guest voting disabled?
 		if (!$row['guest_vote'])
 			fatal_lang_error('guest_vote_disabled');
-		// Already voted?
-		elseif (!empty($_COOKIE['guest_poll_vote_' . $row['id_poll']]) && preg_match('~^[0-9,]+$~', $_COOKIE['guest_poll_vote_' . $row['id_poll']]))
+		// Guest already voted?
+		elseif (!empty($_COOKIE['guest_poll_vote']) && preg_match('~^[0-9,;]+$~', $_COOKIE['guest_poll_vote']) && strpos($_COOKIE['guest_poll_vote'], ';' . $row['id_poll'] . ',') !== false)
 		{
-			$guestinfo = explode(',', $_COOKIE['guest_poll_vote_' . $row['id_poll']]);
-			if ($row['reset_poll'] < $guestinfo[0])
-				fatal_lang_error('poll_error', false);
+			// ;id,timestamp,[vote,vote...]; etc
+			$guestinfo = explode(';', $_COOKIE['guest_poll_vote']);
+			// Find the poll we're after.
+			foreach ($guestinfo as $i => $guestvoted)
+			{
+				$guestvoted = explode(',', $guestvoted);
+				if ($guestvoted[0] == $row['id_poll'])
+					break;
+			}
+			// Has the poll been reset since guest voted?
+			if ($row['reset_poll'] > $guestvoted[1])
+			{
+				// Remove the poll info from the cookie to allow guest to vote again
+				unset($guestinfo[$i]);
+				if (!empty($guestinfo))
+					$_COOKIE['guest_poll_vote'] = ';' . implode(';', $guestinfo);
+				else
+					unset($_COOKIE['guest_poll_vote']);
+			}
 			else
-				// Poll has been reset, so ditch the cookie and let them vote again.
-				unset($_COOKIE['guest_poll_vote_' . $row['id_poll']]);
-
-			unset($guestinfo);
+				fatal_lang_error('poll_error', false);
+			unset($guestinfo, $guestvoted, $i);
 		}
 	}
 
@@ -231,7 +245,9 @@ function Vote()
 	if ($user_info['is_guest'] && count($pollOptions) > 0)
 	{
 		// Time is stored in case the poll is reset later, plus what they voted for.
-		$_COOKIE['guest_poll_vote_' . $row['id_poll']] = time() . ',' . (count($pollOptions) > 1 ? explode(',' . $pollOptions) : $pollOptions[0] );
+		$_COOKIE['guest_poll_vote'] = empty($_COOKIE['guest_poll_vote']) ? '' : $_COOKIE['guest_poll_vote'] ;
+		// ;id,timestamp,[vote,vote...]; etc
+		$_COOKIE['guest_poll_vote'] .= ';' . $row['id_poll'] . ',' . time() . ',' . (count($pollOptions) > 1 ? explode(',' . $pollOptions) : $pollOptions[0] );
 
 		// Increase num guest voters count by 1
 		$smcFunc['db_query']('', '
@@ -245,7 +261,7 @@ function Vote()
 
 		require_once($sourcedir . '/Subs-Auth.php');
 		$cookie_url = url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies']));
-		setcookie('guest_poll_vote_' . $row['id_poll'], $_COOKIE['guest_poll_vote_'. $row['id_poll']], time() + 2500000, $cookie_url[1], $cookie_url[0], 0);
+		setcookie('guest_poll_vote', $_COOKIE['guest_poll_vote'], time() + 2500000, $cookie_url[1], $cookie_url[0], 0);
 	}
 
 	// Return to the post...

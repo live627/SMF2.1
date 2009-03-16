@@ -745,29 +745,43 @@ function Display()
 		}
 		$smcFunc['db_free_result']($request);
 
-	
-		
 		// If this is a guest we need to do our best to work out if they have voted, and what they voted for.
 		if ($user_info['is_guest'] && $pollinfo['guest_vote'] && allowedTo('poll_vote'))
 		{
-			if (!empty($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]) && preg_match('~^[0-9,]+$~', $_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]))
+			if (!empty($_COOKIE['guest_poll_vote']) && preg_match('~^[0-9,;]+$~', $_COOKIE['guest_poll_vote']) && strpos($_COOKIE['guest_poll_vote'], ';' . $topicinfo['id_poll'] . ',') !== false)
 			{
-				$guestinfo = explode(',', $_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
-				if ($pollinfo['reset_poll'] < $guestinfo[0])
+				// ;id,timestamp,[vote,vote...]; etc
+				$guestinfo = explode(';', $_COOKIE['guest_poll_vote']);
+				// Find the poll we're after.
+				foreach ($guestinfo as $i => $guestvoted)
 				{
-					foreach ($pollOptions as $choice => $details)
-					{
-						$pollOptions[$choice]['voted_this'] = in_array($choice, $guestinfo) ? 1 : -1;
-						$pollinfo['has_voted'] |= $pollOptions[$choice]['voted_this'] != -1;
-					}
-					unset($choice, $details);
+					$guestvoted = explode(',', $guestvoted);
+					if ($guestvoted[0] == $topicinfo['id_poll'])
+						break;
+				}
+				// Has the poll been reset since guest voted?
+				if ($pollinfo['reset_poll'] > $guestvoted[1])
+				{
+					// Remove the poll info from the cookie to allow guest to vote again
+					unset($guestinfo[$i]);
+					if (!empty($guestinfo))
+						$_COOKIE['guest_poll_vote'] = ';' . implode(';', $guestinfo);
+					else
+						unset($_COOKIE['guest_poll_vote']);
 				}
 				else
-					// The poll has been reset, so unset our cookie to allow the guest to vote again
-					unset($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
-				unset($guestinfo);
+				{
+					// What did they vote for?
+					unset($guestvoted[0], $guestvoted[1]);
+					foreach ($pollOptions as $choice => $details)
+					{
+						$pollOptions[$choice]['voted_this'] = in_array($choice, $guestvoted) ? 1 : -1;
+						$pollinfo['has_voted'] |= $pollOptions[$choice]['voted_this'] != -1;
+					}
+					unset($choice, $details, $guestvoted);
+				}
+				unset($guestinfo, $guestvoted, $i);
 			}
-			unset($_COOKIE['guest_poll_vote_' . $topicinfo['id_poll']]);
 		}
 
 		// Set up the basic poll information.

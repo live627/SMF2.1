@@ -105,6 +105,7 @@ March 2009
  * If theres no parent boards we can see, avoid showing an empty category. (BoardIndex.template.php in all 4 themes) [Bug 2841]
  ! mt_rand, lowest member interested in should be 1 not 0 (SSI.php) [Bug 3244]
  ! echo method should be last parameter (SSI.php) [Bug 3245]
+ ! Guest polls too greedy, just one cookie for you. (Display.php, Poll.php) [Bug 2186]
 
 
 February 2009
