@@ -104,6 +104,7 @@ March 2009
  * Attachments appeared floated to right in Chrome/Safari, fix copied from curve to core(css/forum.css) [Bug 3035]
  * If theres no parent boards we can see, avoid showing an empty category. (BoardIndex.template.php in all 4 themes) [Bug 2841]
  ! mt_rand, lowest member interested in should be 1 not 0 (SSI.php) [Bug 3244]
+ ! echo method should be last parameter (SSI.php) [Bug 3245]
 
 
 February 2009

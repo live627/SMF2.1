@@ -1007,11 +1007,11 @@ function ssi_login($redirect_to = '', $output_method = 'echo')
 function ssi_topPoll($output_method = 'echo')
 {
 	// Just use recentPoll, no need to duplicate code...
-	return ssi_recentPoll($output_method, true);
+	return ssi_recentPoll(true, $output_method);
 }
 
 // Show the most recently posted poll.
-function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
+function ssi_recentPoll($topPollInstead = false, $output_method = 'echo')
 {
 	global $db_prefix, $txt, $settings, $boardurl, $user_info, $context, $smcFunc, $modSettings;
 
