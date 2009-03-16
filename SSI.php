@@ -746,7 +746,7 @@ function ssi_randomMember($random_type = '', $output_method = 'echo')
 	}
 
 	// Get the lowest ID we're interested in.
-	$member_id = mt_rand(0, $modSettings['latestMember']);
+	$member_id = mt_rand(1, $modSettings['latestMember']);
 
 	$where_query = '
 		id_member >= {int:selected_member}

@@ -103,6 +103,7 @@ March 2009
  ! Iconv returning false would result in sending blank notification messages (Subs-Post.php) [Bug 2319]
  * Attachments appeared floated to right in Chrome/Safari, fix copied from curve to core(css/forum.css) [Bug 3035]
  * If theres no parent boards we can see, avoid showing an empty category. (BoardIndex.template.php in all 4 themes) [Bug 2841]
+ ! mt_rand, lowest member interested in should be 1 not 0 (SSI.php) [Bug 3244]
 
 
 February 2009
