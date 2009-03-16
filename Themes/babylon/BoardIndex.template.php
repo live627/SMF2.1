@@ -104,6 +104,10 @@ function template_main()
 		and boards. (see below.) */
 	foreach ($context['categories'] as $category)
 	{
+		// If theres no parent boards we can see, avoid showing an empty category.
+		if (empty($category['boards']))
+			continue;
+
 		echo '
 <div class="tborder"><table border="0" width="100%" cellspacing="1" cellpadding="5">
 	<tr class="catbg', $category['new'] ? '2' : '', '">

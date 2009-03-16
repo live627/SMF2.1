@@ -102,6 +102,8 @@ March 2009
  ! Content-Disposition wouldn't work properly properly for images on "save target as" (Display.php) [Bug 3111]
  ! Iconv returning false would result in sending blank notification messages (Subs-Post.php) [Bug 2319]
  * Attachments appeared floated to right in Chrome/Safari, fix copied from curve to core(css/forum.css) [Bug 3035]
+ * If theres no parent boards we can see, avoid showing an empty category. (BoardIndex.template.php in all 4 themes) [Bug 2841]
+
 
 February 2009
 --------------------------------------------------------------------------------
