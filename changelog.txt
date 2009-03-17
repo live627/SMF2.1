@@ -112,6 +112,7 @@ March 2009
  ! PostGreSql with all messageicons removed, can only add one with id = 0, and adding another replaces it (ManageSmileys.php) [Bug 3136]
  ! Removing own unapproved topic, where you don't have permission to approve (RemoveTopic.php) [Bug 3191]
  ! Undefined type used in query should specify the type in addition to the variable (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 3148]
+ ! Deleting members might take a while and need more memory (especially if purging inactives) (Subs-Members.php) [Bug 3013]
 
 
 February 2009
