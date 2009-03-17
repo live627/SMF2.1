@@ -106,6 +106,7 @@ March 2009
  ! mt_rand, lowest member interested in should be 1 not 0 (SSI.php) [Bug 3244]
  ! echo method should be last parameter (SSI.php) [Bug 3245]
  ! Guest polls too greedy, just one cookie for you. (Display.php, Poll.php) [Bug 2186]
+ ! Include member id in email pointing to profile, just in case they click it whilst not logged in (ManageMembers.php) [Bug 3291]
 
 
 February 2009

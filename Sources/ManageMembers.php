@@ -1147,7 +1147,7 @@ function AdminApprove()
 				$replacements = array(
 					'NAME' => $member['name'],
 					'USERNAME' => $member['username'],
-					'PROFILELINK' => $scripturl . '?action=profile',
+					'PROFILELINK' => $scripturl . '?action=profile;u=' . $member['id'],
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_accept', $replacements, $member['language']);
