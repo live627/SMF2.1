@@ -858,7 +858,7 @@ function getXmlProfile($xml_format)
 	else
 	{
 		$data = array(
-			'username' => cdata_parse($profile['username']),
+			'username' => $user_info['is_admin'] || $user_info['id'] == $profile['id'] ?  cdata_parse($profile['username']) : '',
 			'name' => cdata_parse($profile['name']),
 			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
 			'posts' => $profile['posts'],
