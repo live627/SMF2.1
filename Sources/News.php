@@ -623,7 +623,7 @@ function getXmlNews($xml_format)
 				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
 				'category' => '<![CDATA[' . $row['bname'] . ']]>',
 				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
-				'guid' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
+				'guid' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 			);
 		elseif ($xml_format == 'rdf')
 			$data[] = array(
@@ -644,28 +644,28 @@ function getXmlNews($xml_format)
 				),
 				'published' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
 				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modified_time']) ? $row['poster_time'] : $row['modified_time']),
-				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'icon' => $settings['images_url'] . '/icons/' . $row['icon'] . '.gif',
 			);
 		// The biggest difference here is more information.
 		else
 			$data[] = array(
 				'time' => htmlspecialchars(strip_tags(timeformat($row['poster_time']))),
-				'id' => $row['id_msg'],
+				'id' => $row['id_topic'],
 				'subject' => cdata_parse($row['subject']),
 				'body' => cdata_parse($row['body']),
 				'poster' => array(
 					'name' => cdata_parse($row['poster_name']),
 					'id' => $row['id_member'],
-					'link' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : ''
+					'link' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
 				),
 				'topic' => $row['id_topic'],
 				'board' => array(
 					'name' => cdata_parse($row['bname']),
 					'id' => $row['id_board'],
-					'link' => $scripturl . '?board=' . $row['id_board'] . '.0'
+					'link' => $scripturl . '?board=' . $row['id_board'] . '.0',
 				),
-				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0'
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 			);
 	}
 	$smcFunc['db_free_result']($request);
