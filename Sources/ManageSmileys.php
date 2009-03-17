@@ -1566,7 +1566,11 @@ function EditMessageIcons()
 			$iconInsert = array();
 			foreach ($context['icons'] as $id => $icon)
 			{
-				$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
+				// If there are no existing icons and this is a new one, set id as 1 (mainly for non-mysql)
+				if (empty($_GET['icon']) && empty($id))
+					$id = !empty($last_icon) ? $last_icon + 1 : 1 ;
+
+					$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
 			}
 
 			$smcFunc['db_insert']('replace',

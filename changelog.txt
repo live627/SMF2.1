@@ -109,7 +109,7 @@ March 2009
  ! Include member id in email pointing to profile, just in case they click it whilst not logged in (ManageMembers.php) [Bug 3291]
  ! Real username should only be shown in xml feed if owner of the profile or admin (News.php) [Bug 3340]
  ! Xml recent topics guid/id should be topic link instead of topic=10.msg234 (News.php) [Bug 2522]
-
+ ! PostGreSql with all messageicons removed, can only add one with id = 0, and adding another replaces it (ManageSmileys.php) [Bug 3136]
 
 February 2009
 --------------------------------------------------------------------------------
