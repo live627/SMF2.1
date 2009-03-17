@@ -589,8 +589,8 @@ function MessageIndex()
 		'child_level' => $board_info['child_level'],
 	);
 
-	// Is Quick Moderation active?
-	if (!empty($options['display_quick_mod']))
+	// Is Quick Moderation active/needed?
+	if (!empty($options['display_quick_mod']) && !empty($context['topics']))
 	{
 		$context['can_lock'] = allowedTo('lock_any');
 		$context['can_sticky'] = allowedTo('make_sticky') && !empty($modSettings['enableStickyTopics']);
@@ -601,7 +601,7 @@ function MessageIndex()
 		$context['can_approve'] = allowedTo('approve_posts');
 		// Can we restore topics?
 		$context['can_restore'] = allowedTo('move_any') && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board;
-
+		
 		// Set permissions for all the topics.
 		foreach ($context['topics'] as $t => $topic)
 		{
@@ -643,6 +643,12 @@ function MessageIndex()
 			if (empty($context['move_to_boards']))
 				$context['can_move'] = false;
 		}
+		// Can we use quick moderation checkboxes?
+		if ($options['display_quick_mod'] == 1)
+			$context['can_quick_mod'] = $context['user']['is_logged'] || $context['can_approve'] || $context['can_remove'] || $context['can_lock'] || $context['can_sticky'] || $context['can_move'] || $context['can_merge'] || $context['can_restore'];
+		// Or the icons?
+		else
+			$context['can_quick_mod'] = $context['can_remove'] || $context['can_lock'] || $context['can_sticky'] || $context['can_move'];
 	}
 
 	// If there are children, but no topics and no ability to post topics...
@@ -672,7 +678,7 @@ function QuickModeration()
 		$_SESSION['move_to_topic'] = $_REQUEST['move_to'];
 
 	// Only a few possible actions.
-	$possibleActions = array('markread');
+	$possibleActions = array();
 
 	if (!empty($board))
 	{
@@ -708,7 +714,9 @@ function QuickModeration()
 
 		$redirect_url = isset($_POST['redirect_url']) ? $_POST['redirect_url'] : (isset($_SESSION['old_url']) ? $_SESSION['old_url'] : '');
 	}
-
+	
+	if (!$user_info['is_guest'])
+		$possibleActions[] = 'markread';
 	if (!empty($boards_can['make_sticky']) && !empty($modSettings['enableStickyTopics']))
 		$possibleActions[] = 'sticky';
 	if (!empty($boards_can['move_any']) || !empty($boards_can['move_own']))

@@ -640,7 +640,7 @@ function showCodeImage($code)
 	$showReverseChars = $imageType == 4 ? true : false;
 	// Special case for not showing any characters.
 	$disableChars = $imageType == 0 ? true : false;
-	// What do we do with the font colours. Are they one color, close to one color or random?
+	// What do we do with the font colors. Are they one color, close to one color or random?
 	$fontColorType = $imageType == 1 ? 'plain' : ($imageType == 4 ? 'random' : 'cyclic');
 	// Are the fonts random sizes?
 	$fontSizeRandom = $imageType == 4 ? true : false;
@@ -770,11 +770,11 @@ function showCodeImage($code)
 			else
 				$angle = mt_rand(-100, 100) / ($rotationType == 'high' ? 6 : 10);
 
-			// What colour shall we do it?
+			// What color shall we do it?
 			if ($fontColorType == 'cyclic')
 			{
 				// Here we'll pick from a set of acceptance types.
-				$colours = array(
+				$colors = array(
 					array(10, 120, 95),
 					array(46, 81, 29),
 					array(4, 22, 154),
@@ -786,8 +786,8 @@ function showCodeImage($code)
 					$last_index = -1;
 				$new_index = $last_index;
 				while ($last_index == $new_index)
-					$new_index = mt_rand(0, count($colours) - 1);
-				$char_fg_color = $colours[$new_index];
+					$new_index = mt_rand(0, count($colors) - 1);
+				$char_fg_color = $colors[$new_index];
 				$last_index = $new_index;
 			}
 			elseif ($fontColorType == 'random')

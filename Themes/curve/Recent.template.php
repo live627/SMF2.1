@@ -111,24 +111,24 @@ function template_unread()
 
 	foreach ($context['topics'] as $topic)
 	{
-		// Calculate the colour class of the topic.
-		$colour_class = '';
+		// Calculate the color class of the topic.
+		$color_class = '';
 		if (strpos($topic['class'], 'sticky') !== false)
-			$colour_class = 'stickybg';
+			$color_class = 'stickybg';
 		if (strpos($topic['class'], 'locked') !== false)
-			$colour_class .= 'lockedbg';
+			$color_class .= 'lockedbg';
 		
-		$colour_class2 = !empty($colour_class) ? $colour_class . '2' : '';
+		$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
 		echo '
 				<tr>
-					<td class="', $colour_class, ' icon1 windowbg">
+					<td class="', $color_class, ' icon1 windowbg">
 						<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
 					</td>
-					<td class="', $colour_class, ' icon2 windowbg">
+					<td class="', $color_class, ' icon2 windowbg">
 						<img src="', $topic['first_post']['icon_url'], '" alt="" />
 					</td>
-					<td class="subject ', $colour_class2, ' windowbg2">
+					<td class="subject ', $color_class2, ' windowbg2">
 						<div>
 							', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
@@ -142,12 +142,12 @@ function template_unread()
 							</p>
 						</div>
 					</td>
-					<td class="', $colour_class, ' stats windowbg">
+					<td class="', $color_class, ' stats windowbg">
 						', $topic['replies'], ' ', $txt['replies'], '
 						<br />
 						', $topic['views'], ' ', $txt['views'], '
 					</td>
-					<td class="', $colour_class2, ' lastpost windowbg2">
+					<td class="', $color_class2, ' lastpost windowbg2">
 						<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" style="float: right;" /></a>
 						', $topic['last_post']['time'], '<br />
 						', $txt['by'], ' ', $topic['last_post']['member']['link'], '
@@ -282,24 +282,24 @@ function template_replies()
 
 	foreach ($context['topics'] as $topic)
 	{
-		// Calculate the colour class of the topic.
-		$colour_class = '';
+		// Calculate the color class of the topic.
+		$color_class = '';
 		if (strpos($topic['class'], 'sticky') !== false)
-			$colour_class = 'stickybg';
+			$color_class = 'stickybg';
 		if (strpos($topic['class'], 'locked') !== false)
-			$colour_class .= 'lockedbg';
+			$color_class .= 'lockedbg';
 		
-		$colour_class2 = !empty($colour_class) ? $colour_class . '2' : '';
+		$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
 		echo '
 				<tr>
-					<td class="', $colour_class, ' icon1 windowbg">
+					<td class="', $color_class, ' icon1 windowbg">
 						<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
 					</td>
-					<td class="', $colour_class, ' icon2 windowbg">
+					<td class="', $color_class, ' icon2 windowbg">
 						<img src="', $topic['first_post']['icon_url'], '" alt="" />
 					</td>
-					<td class="subject ', $colour_class2, ' windowbg2">
+					<td class="subject ', $color_class2, ' windowbg2">
 						<div>
 							', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
@@ -313,12 +313,12 @@ function template_replies()
 							</p>
 						</div>
 					</td>
-					<td class="', $colour_class, ' stats windowbg">
+					<td class="', $color_class, ' stats windowbg">
 						', $topic['replies'], ' ', $txt['replies'], '
 						<br />
 						', $topic['views'], ' ', $txt['views'], '
 					</td>
-					<td class="', $colour_class2, ' lastpost windowbg2">
+					<td class="', $color_class2, ' lastpost windowbg2">
 						<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" style="float: right;" /></a>
 						', $topic['last_post']['time'], '<br />
 						', $txt['by'], ' ', $topic['last_post']['member']['link'], '

@@ -1438,7 +1438,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_guest' => &$user_info['is_guest'],
 		'is_admin' => &$user_info['is_admin'],
 		'is_mod' => &$user_info['is_mod'],
-		// A user can mod if they have permission to see the mod centre, or they are a board/group moderator.
+		// A user can mod if they have permission to see the mod center, or they are a board/group moderator.
 		'can_mod' => allowedTo('access_mod_center') || (!$user_info['is_guest'] && ($user_info['mod_cache']['gq'] != '0=1' || $user_info['mod_cache']['bq'] != '0=1')),
 		'username' => $user_info['username'],
 		'language' => $user_info['language'],

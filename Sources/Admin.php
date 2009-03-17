@@ -72,7 +72,7 @@ function AdminMain()
 	// No indexing evil stuff.
 	$context['robot_no_index'] = true;
 
-	// The admin centre uses PNG sometimes.
+	// The admin center uses PNG sometimes.
 	$context['html_headers'] .= '
 		<!--[if lt IE 7]>
 		<script defer type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/pngfix.js"></script>

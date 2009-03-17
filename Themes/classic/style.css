@@ -153,7 +153,7 @@ code
 	color: black;
 }
 
-/* A more discreet highlight colour, for selected membergroups etc. */
+/* A more discreet highlight color, for selected membergroups etc. */
 .highlight2
 {
 	background-color: #B3F4B0;
@@ -236,7 +236,7 @@ a img{
 	border: 0;
 }
 
-/* Calendar colours for birthdays, events and holidays */
+/* Calendar colors for birthdays, events and holidays */
 .birthday
 {
 	color: #920AC4;
@@ -252,7 +252,7 @@ a img{
 	color: #000080;
 }
 
-/* Colours for warnings */
+/* Colors for warnings */
 .warn_mute
 {
 	color: red;

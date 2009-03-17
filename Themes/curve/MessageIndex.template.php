@@ -171,7 +171,7 @@ function template_main()
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($options['display_quick_mod']))
 				echo '
-							<th class="smalltext" width="4%"></th>';
+							<th class="smalltext" width="4%">&nbsp;</th>';
 		}
 		// No topics.... just say, "sorry bub".
 		else
@@ -210,28 +210,28 @@ function template_main()
 
 		foreach ($context['topics'] as $topic)
 		{
-			// Calculate the colour class of the topic.
-			$colour_class = '';
+			// Calculate the color class of the topic.
+			$color_class = '';
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
-				$colour_class = !$topic['approved'] ? 'approvetbg' : 'approvebg';
+				$color_class = !$topic['approved'] ? 'approvetbg' : 'approvebg';
 			else
 			{
 				if ($topic['is_sticky'])
-					$colour_class = 'stickybg';
+					$color_class = 'stickybg';
 				if ($topic['is_locked'])
-					$colour_class .= 'lockedbg';
+					$color_class .= 'lockedbg';
 			}
-			$colour_class2 = !empty($colour_class) ? $colour_class . '2' : '';
+			$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
 			echo '
 						<tr>
-							<td class="', $colour_class, ' icon1 windowbg">
+							<td class="', $color_class, ' icon1 windowbg">
 								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" />
 							</td>
-							<td class="', $colour_class, ' icon2 windowbg">
+							<td class="', $color_class, ' icon2 windowbg">
 								<img src="', $topic['first_post']['icon_url'], '" alt="" />
 							</td>
-							<td class="subject ', $colour_class2, ' windowbg2">
+							<td class="subject ', $color_class2, ' windowbg2">
 								<div ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>
 									', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
@@ -246,12 +246,12 @@ function template_main()
 									</p>
 								</div>
 							</td>
-							<td class="', $colour_class, ' stats windowbg">
+							<td class="', $color_class, ' stats windowbg">
 								', $topic['replies'], ' ', $txt['replies'], '
 								<br />
 								', $topic['views'], ' ', $txt['views'], '
 							</td>
-							<td class="', $colour_class2, ' lastpost windowbg2">
+							<td class="', $color_class2, ' lastpost windowbg2">
 								<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" style="float: right;" /></a>
 								', $topic['last_post']['time'], '<br />
 								', $txt['by'], ' ', $topic['last_post']['member']['link'], '
@@ -261,7 +261,7 @@ function template_main()
 			if (!empty($options['display_quick_mod']))
 			{
 				echo '
-							<td class="', $colour_class, ' moderation">';
+							<td class="', $color_class, ' moderation">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
 								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';

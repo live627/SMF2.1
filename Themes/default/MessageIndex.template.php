@@ -167,7 +167,7 @@ function template_main()
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($options['display_quick_mod']))
 				echo '
-							<th class="catbg3 headerpadding" width="4%"></th>';
+							<th class="catbg3 headerpadding" width="4%">&nbsp;</th>';
 			echo '
 						</tr>
 					</thead>';
@@ -215,7 +215,7 @@ function template_main()
 			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
 
-			// Calculate the colour class of the topic.
+			// Calculate the color class of the topic.
 			if ($context['can_approve_posts'] && $topic['unapproved_posts'])
 				$color_class = $topic['approved'] ? 'approvebg' : 'approvetbg';
 			else
