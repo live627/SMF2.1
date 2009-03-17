@@ -78,7 +78,7 @@ function RemoveTopic2()
 		isAllowedTo('remove_any');
 
 	// Can they see the topic?
-	if ($modSettings['postmod_active'] && !$approved)
+	if ($modSettings['postmod_active'] && !$approved && $starter != $user_info['id'])
 		isAllowedTo('approve_posts');
 
 	// Notify people that this topic has been removed.
