@@ -126,12 +126,15 @@ function getBoardIndex($boardIndexOptions)
 		// This is a parent board.
 		if ($row_board['id_parent'] == $boardIndexOptions['parent_id'])
 		{
+			// Avoid showing category unread link where it only has redirection boards.
+			$categories[$row_board['id_cat']]['show_unread'] = !empty($categories[$row_board['id_cat']]['show_unread']) ? 1 : !$row_board['is_redirect'];
+		
 			// Is this a new board, or just another moderator?
 			if (!isset($this_category[$row_board['id_board']]))
 			{
 				// Not a child.
 				$isChild = false;
-
+				
 				$this_category[$row_board['id_board']] = array(
 					'new' => empty($row_board['is_read']),
 					'id' => $row_board['id_board'],

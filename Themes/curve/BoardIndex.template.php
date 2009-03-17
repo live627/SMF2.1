@@ -61,8 +61,8 @@ function template_main()
 	and boards. (see below.) */
 	foreach ($context['categories'] as $category)
 	{
-		// If theres no parent boards we can see, avoid showing an empty category.
-		if (empty($category['boards']))
+		// If theres no parent boards we can see, avoid showing an empty category (unless its collapsed)
+		if (empty($category['boards']) && !$category['is_collapsed'])
 			continue;
 
 		echo '
@@ -75,7 +75,7 @@ function template_main()
 			echo '
 						<a class="collapse" href="', $category['collapse_href'], '">', $category['collapse_image'], '</a>';
 
-		if (!$context['user']['is_guest'])
+		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
 			echo '
 						<a class="unreadlink" href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>';
 

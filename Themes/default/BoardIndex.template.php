@@ -92,15 +92,15 @@ function template_main()
 	and boards. (see below.) */
 	foreach ($context['categories'] as $category)
 	{
-		// If theres no parent boards we can see, avoid showing an empty category.
-		if (empty($category['boards']))
+		// If theres no parent boards we can see, avoid showing an empty category (unless its collapsed)
+		if (empty($category['boards']) && !$category['is_collapsed'])
 			continue;
 
 		echo '
 	<div class="categoryframe tborder">
 		<h3 class="catbg', $category['new'] ? '2' : '', ' headerpadding">';
 
-		if (!$context['user']['is_guest'])
+		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
 			echo '
 			<a class="floatright" href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>';
 

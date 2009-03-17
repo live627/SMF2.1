@@ -104,8 +104,8 @@ function template_main()
 		and boards. (see below.) */
 	foreach ($context['categories'] as $category)
 	{
-		// If theres no parent boards we can see, avoid showing an empty category.
-		if (empty($category['boards']))
+		// If theres no parent boards we can see, avoid showing an empty category (unless its collapsed)
+		if (empty($category['boards']) && !$category['is_collapsed'])
 			continue;
 
 		echo '
@@ -113,7 +113,7 @@ function template_main()
 	<tr class="catbg', $category['new'] ? '2' : '', '">
 		<td colspan="', $context['user']['is_guest'] ? '5' : '4', '" height="18">';
 
-		if (!$context['user']['is_guest'])
+		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
 			echo '
 			<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">
 				<a href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>
