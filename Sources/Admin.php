@@ -1072,12 +1072,13 @@ function AdminLogs()
 				'description' => $txt['ban_log_description'],
 			),
 			'spiderlog' => array(
-				'description' => '',
+				'description' => $txt['spider_log_desc'],
 			),
 			'tasklog' => array(
 				'description' => $txt['scheduled_log_desc'],
 			),
 			'pruning' => array(
+				'description' => $txt['pruning_log_desc'],
 			),
 		),
 	);

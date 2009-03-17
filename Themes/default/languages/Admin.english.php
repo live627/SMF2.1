@@ -223,6 +223,8 @@ $txt['admin_log'] = 'Admin Log';
 $txt['admin_log_desc'] = 'Lists administrative tasks that have been performed by admins of your forum.';
 $txt['moderation_log'] = 'Moderation Log';
 $txt['moderation_log_desc'] = 'Lists moderation activities that have been performed by moderators on your forum.';
+$txt['spider_log_desc'] = 'Review the entries related to search engine spider activity on your forum.';
+$txt['pruning_log_desc'] = 'Use these tools to prune older entries in the various logs.';
 
 $txt['mailqueue_title'] = 'Mail';
 
