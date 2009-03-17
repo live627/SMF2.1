@@ -115,7 +115,7 @@ March 2009
  ! Deleting members might take a while and need more memory (especially if purging inactives) (Subs-Members.php) [Bug 3013]
  ! Spider log/Pruning logs had invalid section descriptions (Admin.english.php, Admin.php) [Bug 3089]
  ! If there are no real boards in the cat, don't show unread posts link. Plus bug fix for bug 2481 as collapsed cats were empty and gone (BoardIndex.template.php in all themes, Subs-BoardIndex.php) [Bug 3080]
-
+ ! Running a scheduled task manually wouldn't free a result (ManageScheduledTasks.php)
 
 
 February 2009

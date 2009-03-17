@@ -176,7 +176,7 @@ function ScheduledTasks()
 				);
 			}
 		}
-
+		$smcFunc['db_free_result']($request);
 		redirectexit('action=admin;area=scheduledtasks;done');
 	}
 
