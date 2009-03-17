@@ -193,7 +193,7 @@ function smf_db_replacement__callback($matches)
 		break;
 
 		default:
-			smf_db_error_backtrace('Undefined type used in the database query. (' . $matches[2] . ')', '', false, __FILE__, __LINE__);
+			smf_db_error_backtrace('Undefined type used in the database query. (' . $matches[1] . ':' . $matches[2] . ')', '', false, __FILE__, __LINE__);
 		break;
 	}
 }
