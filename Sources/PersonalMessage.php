@@ -1691,10 +1691,11 @@ function MessagePost()
 		if ($_REQUEST['u'] == 'all' && isset($row_quoted))
 		{
 			// Firstly, to reply to all we clearly already have $row_quoted - so have the original member from.
-			$context['recipients']['to'][] = array(
-				'id' => $row_quoted['id_member'],
-				'name' => htmlspecialchars($row_quoted['real_name']),
-			);
+			if ($row_quoted['id_member'] != $user_info['id'])
+				$context['recipients']['to'][] = array(
+					'id' => $row_quoted['id_member'],
+					'name' => htmlspecialchars($row_quoted['real_name']),
+				);
 
 			// Now to get the others.
 			$request = $smcFunc['db_query']('', '
