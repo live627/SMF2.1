@@ -138,7 +138,7 @@ March 2009
  ! 2.0 compatible, many changes (see commit for full list) (repair_settings.php) [Bug 3151]
  ! Newer teamies need adding to the credits list, plus fixed missing space bug when 2 in a group (Who.php, Who.english.php) [Bug 2768]
  ! Creation of attachment thumbnail might run out of memory. (Subs-Graphics.php) [Bug 2229]
-
+ * Fixed IE6 and menubar issue (index.css) [Bug 3161]
  
 February 2009
 --------------------------------------------------------------------------------
