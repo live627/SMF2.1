@@ -117,6 +117,7 @@ $txt['credits_removal_good'] = 'This forum has been authorized to remove the cop
 $txt['credits_forum'] = 'Forum';
 $txt['credits_modifications'] = 'Modifications';
 $txt['credits_groups_pm'] = 'Project Managers';
+$txt['credits_groups_site'] = 'Site Team';
 $txt['credits_groups_dev'] = 'Developers';
 $txt['credits_groups_support'] = 'Support Specialists';
 $txt['credits_groups_customize'] = 'Customizers';
@@ -125,7 +126,7 @@ $txt['credits_groups_marketing'] = 'Marketing';
 $txt['credits_groups_translators'] = 'Language Translators';
 $txt['credits_translators_message'] = 'Thank you for your efforts which make it possible for people all around the world to use SMF.';
 $txt['credits_groups_beta'] = 'Beta Testers';
-$txt['credits_beta_message'] = 'The hidden few who tirelessly find bugs, provide feedback, and drive the developers crazier.';
+$txt['credits_beta_message'] = 'The invaluable few who tirelessly find bugs, provide feedback, and drive the developers crazier.';
 $txt['credits_groups_founder'] = 'Founding Father of SMF';
 $txt['credits_groups_orignal_pm'] = 'Original Project Managers';
 ?>

@@ -136,6 +136,7 @@ March 2009
  ! Increased title length means convertors can use longer substr (invision and yabbse converters)
  * Depreciated div align, IE8 cal below the side panels. IE7 its tight no padding (Calendar.template.php) [Bug 3064, 3339]
  ! 2.0 compatible, many changes (see commit for full list) (repair_settings.php) [Bug 3151]
+ ! Newer teamies need adding to the credits list, plus fixed missing space bug when 2 in a group (Who.php, Who.english.php) [Bug 2768]
  
 February 2009
 --------------------------------------------------------------------------------
