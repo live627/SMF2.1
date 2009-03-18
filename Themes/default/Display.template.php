@@ -102,7 +102,7 @@ function template_main()
 	if (!empty($context['linked_calendar_events']))
 	{
 		echo '
-<div id="events" class="tborder marginbottom">
+<div id="events" class="tborder marginbottom margintop">
 	<h3 class="titlebg headerpadding">	', $txt['calendar_linked_events'], '</h3>
 	<ul class="windowbg largepadding">';
 		foreach ($context['linked_calendar_events'] as $event)

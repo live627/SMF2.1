@@ -126,7 +126,7 @@ March 2009
  ! Require re-activation of email address wasn't working due to missing variables (Profile-Modify.php) [Bug 3266]
  ! Noindex weekly calendar pages as duplicate content (Calendar.php) [Bug 3348]
  ! Some internal ip ranges were missed (QueryString.php) [Bug 1563]
-
+ * Poll tabs in topic with poll AND linked events are very close to events info [Bug 3232]
 
 February 2009
 --------------------------------------------------------------------------------
