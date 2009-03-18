@@ -135,7 +135,7 @@ function template_main()
 		</table>';
 
 		// If Quick Moderation is enabled start the form.
-		if (!empty($options['display_quick_mod']) && !empty($context['topics']))
+		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
 		<form action="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">';
 
@@ -155,13 +155,13 @@ function template_main()
 					<td width="24%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>';
 
 			// Show a "select all" box for quick moderation?
-			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+			if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 					<td width="24" valign="middle" align="center">
 						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
 					</td>';
 			// If it's on in "image" mode, don't show anything but the column.
-			elseif (!empty($options['display_quick_mod']))
+			elseif (!empty($context['can_quick_mod']))
 				echo '
 					<td width="4%" valign="middle" align="center">&nbsp;</td>';
 		}
@@ -178,7 +178,7 @@ function template_main()
 		{
 			echo '
 				<tr class="windowbg2">
-					<td colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '">
+					<td colspan="' , !empty($context['can_quick_mod']) ? '8' : '7' , '">
 						<small>
 							<span class="alert">!</span> ', $context['unapproved_posts_message'], '
 						</small>
@@ -230,7 +230,7 @@ function template_main()
 					</td>';
 
 			// Show the quick moderation options?
-			if (!empty($options['display_quick_mod']))
+			if (!empty($context['can_quick_mod']))
 			{
 				echo '
 					<td class="windowbg" valign="middle" align="center" width="4%">';
@@ -257,7 +257,7 @@ function template_main()
 				</tr>';
 		}
 
-		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
+		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 		{
 			echo '
 				<tr class="titlebg">
@@ -271,7 +271,7 @@ function template_main()
 							', $context['can_move'] ? '<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', '
 							', $context['can_merge'] ? '<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
 							', $context['can_restore'] ? '<option value="restore">' . $txt['quick_mod_restore'] . '</option>' : '', '
-							<option value="markread">', $txt['quick_mod_markread'], '</option>
+							', $context['user']['is_logged'] ? '<option value="markread">' . $txt['quick_mod_markread'] . '</option>' : '', '
 						</select>';
 
 			// Show a list of boards they can move the topic to.
@@ -304,7 +304,7 @@ function template_main()
 			</table>';
 
 		// Finish off the form - again, if Quick Moderation is being done with checkboxes. (1)
-		if (!empty($options['display_quick_mod']) && !empty($context['topics']))
+		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		</form>';

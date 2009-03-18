@@ -143,7 +143,7 @@ function template_main()
 		</div>';
 
 		// If Quick Moderation is enabled start the form.
-		if (!empty($options['display_quick_mod']) && !empty($context['topics']))
+		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
 	<form action="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" style="clear: both;" name="quickModForm" id="quickModForm">';
 
@@ -163,13 +163,13 @@ function template_main()
 							<th scope="col" class="smalltext" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
 
 			// Show a "select all" box for quick moderation?
-			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
+			if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 							<th scope="col" class="smalltext" width="24">
 								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
 							</th>';
 			// If it's on in "image" mode, don't show anything but the column.
-			elseif (!empty($options['display_quick_mod']))
+			elseif (!empty($context['can_quick_mod']))
 				echo '
 							<th class="smalltext" width="4%">&nbsp;</th>';
 		}
@@ -187,7 +187,7 @@ function template_main()
 		{
 			echo '
 						<tr class="windowbg2 whos_viewing">
-							<td colspan="' , !empty($options['display_quick_mod']) ? '6' : '5' , '" class="smalltext">';
+							<td colspan="' , !empty($context['can_quick_mod']) ? '6' : '5' , '" class="smalltext">';
 			if ($settings['display_who_viewing'] == 1)
 				echo count($context['view_members']), ' ', count($context['view_members']) == 1 ? $txt['who_member'] : $txt['members'];
 			else
@@ -202,7 +202,7 @@ function template_main()
 		{
 			echo '
 						<tr class="windowbg2">
-							<td colspan="' , !empty($options['display_quick_mod']) ? '6' : '5' , '">
+							<td colspan="' , !empty($context['can_quick_mod']) ? '6' : '5' , '">
 									<span class="alert">!</span> ', $context['unapproved_posts_message'], '
 							</td>
 						</tr>';
@@ -258,7 +258,7 @@ function template_main()
 							</td>';
 
 			// Show the quick moderation options?
-			if (!empty($options['display_quick_mod']))
+			if (!empty($context['can_quick_mod']))
 			{
 				echo '
 							<td class="', $color_class, ' moderation">';
@@ -290,7 +290,7 @@ function template_main()
 						</tr>';
 		}
 
-		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
+		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 		{
 			echo '
 						<tr class="catbg">
@@ -304,7 +304,7 @@ function template_main()
 									', $context['can_move'] ? '<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', '
 									', $context['can_merge'] ? '<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
 									', $context['can_restore'] ? '<option value="restore">' . $txt['quick_mod_restore'] . '</option>' : '', '
-									<option value="markread">', $txt['quick_mod_markread'], '</option>
+									', $context['user']['is_logged'] ? '<option value="markread">' . $txt['quick_mod_markread'] . '</option>' : '', '
 								</select>';
 
 			// Show a list of boards they can move the topic to.
@@ -340,7 +340,7 @@ function template_main()
 			<a name="bot"></a>';
 
 		// Finish off the form - again.
-		if (!empty($options['display_quick_mod']) && !empty($context['topics']))
+		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
 			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 	</form>';
