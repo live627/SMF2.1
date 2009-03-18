@@ -137,6 +137,8 @@ March 2009
  * Depreciated div align, IE8 cal below the side panels. IE7 its tight no padding (Calendar.template.php) [Bug 3064, 3339]
  ! 2.0 compatible, many changes (see commit for full list) (repair_settings.php) [Bug 3151]
  ! Newer teamies need adding to the credits list, plus fixed missing space bug when 2 in a group (Who.php, Who.english.php) [Bug 2768]
+ ! Creation of attachment thumbnail might run out of memory. (Subs-Graphics.php) [Bug 2229]
+
  
 February 2009
 --------------------------------------------------------------------------------
