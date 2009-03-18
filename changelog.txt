@@ -134,7 +134,8 @@ March 2009
  ! ssi_queryPosts 'where clause' should be conditional in case the user doesn't want to set one. (SSI.php) [Bug 3242]
  ! Max calendar holiday/event title limit to small. Bumped to 60 from 30 (Calendar.php, Subs-Calendar.php, ManageCalendar.php, ManageCalendar.template.php, Post.template.php, install and upgrade files) [Bug 1751]
  ! Increased title length means convertors can use longer substr (invision and yabbse converters)
-
+ * Depreciated div align, IE8 cal below the side panels. IE7 its tight no padding (Calendar.template.php) [Bug 3064, 3339]
+ 
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
