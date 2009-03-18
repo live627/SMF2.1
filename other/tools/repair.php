@@ -41,7 +41,7 @@ function initialize_inputs()
 	error_reporting(E_ALL);
 
 	// Add slashes, as long as they aren't already being added.
-	if (get_magic_quotes_gpc() == 0)
+	if (@get_magic_quotes_gpc() == 0)
 	{
 		foreach ($_POST as $k => $v)
 			$_POST[$k] = addslashes($v);

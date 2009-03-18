@@ -29,7 +29,7 @@ if (@ini_get('session.save_handler') == 'user')
 	@ini_set('session.save_handler', 'files');
 @session_start();
 
-if (get_magic_quotes_gpc() == 1)
+if (@get_magic_quotes_gpc() == 1)
 {
 	foreach ($_POST as $k => $v)
 		$_POST[$k] = stripslashes($v);

@@ -146,7 +146,7 @@ function initialize_inputs()
 	ignore_user_abort(true);
 
 	// Add slashes, as long as they aren't already being added.
-	if (get_magic_quotes_gpc() == 0)
+	if (@get_magic_quotes_gpc() == 0)
 	{
 		foreach ($_POST as $k => $v)
 		{

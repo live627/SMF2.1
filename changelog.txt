@@ -139,6 +139,7 @@ March 2009
  ! Newer teamies need adding to the credits list, plus fixed missing space bug when 2 in a group (Who.php, Who.english.php) [Bug 2768]
  ! Creation of attachment thumbnail might run out of memory. (Subs-Graphics.php) [Bug 2229]
  * Fixed IE6 and menubar issue (index.css) [Bug 3161]
+ ! Shutup magic quotes, as causes warnings in newer php builds (Install.php and few others)
  
 February 2009
 --------------------------------------------------------------------------------
