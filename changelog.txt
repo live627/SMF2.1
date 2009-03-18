@@ -118,7 +118,7 @@ March 2009
  ! Running a scheduled task manually wouldn't free a result (ManageScheduledTasks.php)
  ! &nsbp; for quick mod icons header column & don't mix your colo(u)?rs :P (Many many files)
  ! Quick Moderation might show when it wasn't needed (source change was accidentally committed already) (Messageindex.php, Messageindex.template.php in all themes) [Bug 3234]
-
+ * Babylon/Classic missing the errorbox related css classes (style.css) [Bug 3346]
 
 February 2009
 --------------------------------------------------------------------------------
