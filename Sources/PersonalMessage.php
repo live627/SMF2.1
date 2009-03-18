@@ -1700,7 +1700,7 @@ function MessagePost()
 			$request = $smcFunc['db_query']('', '
 				SELECT mem.id_member, mem.real_name
 				FROM {db_prefix}pm_recipients AS pmr
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+					INNER JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
 				WHERE pmr.id_pm = {int:id_pm}
 					AND pmr.id_member != {int:current_member}
 					AND pmr.bcc = {int:not_bcc}',

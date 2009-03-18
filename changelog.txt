@@ -129,6 +129,7 @@ March 2009
  * Poll tabs in topic with poll AND linked events are very close to events info [Bug 3232]
  ! language="JavaScript" is deprecated in favour of type="text/javascript" (Everywhere) [Bug 2672]
  ! PM notifications do not respect buddy lists (Subs-Post.php) [Bug 2932]
+ ! Reply to all, sending to 'guest' caused by left rather than inner join on members table (PersonalMesssage.php)
 
 
 February 2009
