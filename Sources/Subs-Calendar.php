@@ -251,6 +251,7 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 					'id_board' => $row['id_board'],
 					'href' => $row['id_topic'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
 					'link' => $row['id_topic'] == 0 ? $row['title'] : '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['title'] . '</a>',
+					'can_edit' => false,
 				);
 		}
 	}
