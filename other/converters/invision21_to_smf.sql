@@ -513,7 +513,7 @@ WHERE ID_HOLIDAY > 95;
 
 ---* {$to_prefix}calendar_holidays
 SELECT
-	SUBSTRING(event_title, 1, 30) AS title,
+	SUBSTRING(event_title, 1, 60) AS title,
 	event_unixstamp AS event_date
 FROM {$from_prefix}cal_events
 WHERE event_recurring = 1;

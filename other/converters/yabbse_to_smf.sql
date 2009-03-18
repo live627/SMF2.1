@@ -554,7 +554,7 @@ SELECT
 	id AS ID_EVENT, CONCAT(year, '-', month + 1, '-', day) AS start_date,
 	CONCAT(year, '-', month + 1, '-', day) AS end_date, id_board AS id_board,
 	id_topic AS id_topic, id_member AS id_member,
-	SUBSTRING(title, 1, 48) AS title
+	SUBSTRING(title, 1, 60) AS title
 FROM {$from_prefix}calendar;
 ---*
 

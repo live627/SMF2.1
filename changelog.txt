@@ -133,6 +133,7 @@ March 2009
  ! Prevent reply/quote for own pms sent. But still let them "reply all" for other recipients. (PersonalMessage.php, PersonalMessage.template.php) [Bug 1748]
  ! ssi_queryPosts 'where clause' should be conditional in case the user doesn't want to set one. (SSI.php) [Bug 3242]
  ! Max calendar holiday/event title limit to small. Bumped to 60 from 30 (Calendar.php, Subs-Calendar.php, ManageCalendar.php, ManageCalendar.template.php, Post.template.php, install and upgrade files) [Bug 1751]
+ ! Increased title length means convertors can use longer substr (invision and yabbse converters)
 
 February 2009
 --------------------------------------------------------------------------------

@@ -554,7 +554,7 @@ $row['end_date'] = date('Y-m-d', $row['end_date']);
 SELECT
 	event_id AS id_event,
 	event_unixstamp AS start_date, event_unixstamp AS end_date,
-	'0' AS id_board, '0' AS id_topic, SUBSTRING(event_title, 1, 30) AS title, event_member_id AS id_member
+	'0' AS id_board, '0' AS id_topic, SUBSTRING(event_title, 1, 60) AS title, event_member_id AS id_member
 FROM {$from_prefix}cal_events;
 WHERE event_recurring = 1;
 ---*

@@ -375,7 +375,7 @@ WHERE ID_HOLIDAY > 95;
 
 ---* {$to_prefix}calendar_holidays
 SELECT
-	SUBSTRING(title, 1, 30) AS title,
+	SUBSTRING(title, 1, 60) AS title,
 	CONCAT(year, '-', month, '-', mday) AS event_date
 FROM {$from_prefix}calendar_events
 WHERE event_repeat = 1
