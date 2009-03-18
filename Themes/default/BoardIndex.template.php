@@ -222,23 +222,25 @@ function template_main()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-	<div id="posticons" class="clearfix marginbottom">
-		<div class="smalltext floatleft headerpadding">
-			<img src="' . $settings['images_url'] . '/new_some.gif" alt="" align="middle" /> ', $txt['new_posts'], '
-			<img src="' . $settings['images_url'] . '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
-		</div>';
+	<div id="modbuttons_bottom" class="modbuttons clearfix">
+		<div id="posticons" class="clearfix marginbottom">
+			<div class="smalltext floatleft headerpadding">
+				<img src="' . $settings['images_url'] . '/new_some.gif" alt="" align="middle" /> ', $txt['new_posts'], '
+				<img src="' . $settings['images_url'] . '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
+			</div>';
 
-		// Mark read button.
-		$mark_read_button = array(
-			'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']),
-		);
+			// Mark read button.
+			$mark_read_button = array(
+				'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']),
+			);
 
 
-		// Show the mark all as read button?
-		if ($settings['show_mark_read'] && !empty($context['categories']))
-			template_button_strip($mark_read_button, 'top');
+			// Show the mark all as read button?
+			if ($settings['show_mark_read'] && !empty($context['categories']))
+				template_button_strip($mark_read_button, 'top');
 
-		echo '
+			echo '
+			</div>
 	</div>';
 	}
 
