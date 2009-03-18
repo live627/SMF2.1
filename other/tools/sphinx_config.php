@@ -454,7 +454,7 @@ function template_sphinx_config_above($title)
 	<head>
 		<meta name="robots" content="noindex" />
 		<title>SMF Sphinx Configuration Utility</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 	</head>
 	<body>

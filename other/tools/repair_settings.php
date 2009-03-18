@@ -93,7 +93,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 	<head>
  		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_repair_settings'], '</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
+		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<style type="text/css">
 			body
 			{
@@ -417,7 +417,7 @@ function show_settings()
 	}
 
 	echo '
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				// Get the inner HTML of an element.
 				function getInnerHTML(element)
 				{

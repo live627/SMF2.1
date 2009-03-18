@@ -76,9 +76,9 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js?b4"></script>
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?b4"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js?b4"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?b4"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
 		var smf_images_url = "', $settings['images_url'], '";
@@ -151,7 +151,7 @@ function template_html_above()
 
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'], '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
@@ -221,7 +221,7 @@ function template_body_above()
 		else
 		{
 			echo '
-				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
+				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 				<form id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 					<div class="info">' , $txt['login_or_register'], '</div>
 					<input type="text" name="user" size="10" />

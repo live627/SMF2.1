@@ -259,8 +259,8 @@ function template_main()
 				</td>
 			</tr>
 		</table>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/stats.js"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/stats.js"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[';
 
 	if (!empty($context['yearly']))
 	{

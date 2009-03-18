@@ -147,7 +147,7 @@ function template_permission_index()
 
 		// Javascript for the advanced stuff.
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var smfPermissionsPanelToggle = new smfToggle("smfPermissionsPanelToggle", ', empty($context['show_advanced_options']) ? 1 : 0, ');
 		smfPermissionsPanelToggle.addToggleImage("permissions_panel_toggle", "/sort_down.gif", "/selected.gif");
 		smfPermissionsPanelToggle.addTogglePanel("permissions_panel_advanced");
@@ -378,7 +378,7 @@ function template_modify_group()
 	else
 	{
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			window.smf_usedDeny = false;
 
 			function warnAboutDeny()
@@ -584,7 +584,7 @@ function template_modify_group_simple($type)
 	}
 	echo '
 						</table>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	<script type="text/javascript"><!-- // --><![CDATA[';
 
 	if ($context['profile']['can_modify'] && empty($context['simple_javascript_displayed']))
 	{
@@ -930,7 +930,7 @@ function template_inline_permissions()
 
 		<a href="javascript:void(0);" onclick="document.getElementById(\'', $context['current_permission'], '\').style.display = \'block\'; document.getElementById(\'', $context['current_permission'], '_groups_link\').style.display = \'none\'; return false;" id="', $context['current_permission'], '_groups_link" style="display: none;">[ ', $txt['avatar_select_permission'], ' ]</a>
 
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			document.getElementById("', $context['current_permission'], '").style.display = "none";
 			document.getElementById("', $context['current_permission'], '_groups_link").style.display = "";
 		// ]]></script>';

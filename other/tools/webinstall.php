@@ -707,7 +707,7 @@ function doStep2()
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
 						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="', $txt['continue'], '" /></div>
 					</form>
-					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
 						var countdown = 3;
 
@@ -745,7 +745,7 @@ function doStep2()
 					<form action="', $_SERVER['PHP_SELF'], '?step=3" method="post" name="autoSubmit">
 						<div align="right" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['continue'], '" /></div>
 					</form>
-					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
 						var countdown = 3;
 
@@ -826,7 +826,7 @@ function doStep3()
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
 						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 					</form>
-					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
 						var countdown = 3;
 

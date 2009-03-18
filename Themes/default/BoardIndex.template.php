@@ -17,7 +17,7 @@ function template_main()
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
 		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
@@ -35,7 +35,7 @@ function template_main()
 			<div id="smfFadeScroller"><span>', $context['news_lines'][0], '</span></div>
 		</div>
 	</div>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// The fading delay (in ms.)
 		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
 		// Fade from... what text color? To which background color?
@@ -83,7 +83,7 @@ function template_main()
 			"', $context['fader_news_lines']), '"
 		);
 	// ]]></script>
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>';
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>';
 	}
 
 	/* Each category in categories is made up of:
@@ -251,7 +251,7 @@ function template_info_center()
 
 	// Info center collapse object.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// And create the info center object.
 		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
 		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');

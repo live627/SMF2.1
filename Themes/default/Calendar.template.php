@@ -63,7 +63,7 @@ function template_event_post()
 
 	// Start the javascript for drop down boxes...
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 			function generateDays()
@@ -543,7 +543,7 @@ function template_bcd()
 		<tr class="even"><td colspan="6" align="center"><a href="', $scripturl, '?action=clock;rb">Are you hardcore?</a></td></tr>
 	</table>
 	</center>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 		var icons = new Object();';
 
 		foreach ($context['clockicons'] as $t => $v)
@@ -635,7 +635,7 @@ function template_hms()
 </table>
 </center>';
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 	var icons = new Object();';
 
 	foreach ($context['clockicons'] as $t => $v)
@@ -719,7 +719,7 @@ function template_omfg()
 </table>
 </center>';
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 	var icons = new Object();';
 
 	foreach ($context['clockicons'] as $t => $v)

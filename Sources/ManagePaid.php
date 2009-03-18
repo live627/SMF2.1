@@ -175,7 +175,7 @@ function ModifySubscriptionSettings($return_config = false)
 
 	// We want javascript for our currency options.
 	$context['settings_insert_below'] = '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function toggleOther()
 			{
 				var otherOn = document.getElementById("paid_currency").value == \'other\';

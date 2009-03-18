@@ -3123,7 +3123,7 @@ function setupThemeContext($forceload = false)
 	if ($modSettings['avatar_action_too_large'] == 'option_js_resize' && (!empty($modSettings['avatar_max_width_external']) || !empty($modSettings['avatar_max_height_external'])))
 	{
 		$context['html_headers'] .= '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_avatarMaxWidth = ' . (int) $modSettings['avatar_max_width_external'] . ';
 		var smf_avatarMaxHeight = ' . (int) $modSettings['avatar_max_height_external'] . ';';
 
@@ -3156,7 +3156,7 @@ function setupThemeContext($forceload = false)
 
 	if (empty($settings['theme_version']))
 		$context['html_headers'] .= '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_scripturl = "' . $scripturl . '";
 	// ]]></script>';
 

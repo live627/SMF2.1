@@ -17,7 +17,7 @@ function template_main()
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var smfNewsFadeToggle = new smfToggle("smfFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
 		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
@@ -42,7 +42,7 @@ function template_main()
 			
 	echo '</ul>
 	</div>
-	<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/fader.js"></script>';
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/fader.js"></script>';
 	}
 
 	echo '
@@ -236,7 +236,7 @@ function template_info_center()
 
 	// Info center collapse object.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// And create the info center object.
 		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
 		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');

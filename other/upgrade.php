@@ -3540,9 +3540,9 @@ function template_upgrade_above()
 	<head>
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
 			var smf_charset = \'', (empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set']), '\';
 			var startPercent = ', $upcontext['overall_percent'], ';
@@ -3679,7 +3679,7 @@ function template_upgrade_below()
 	if (!empty($upcontext['pause']))
 	{
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			window.onload = doAutoSubmit;
 			var countdown = 3;
 			var dontSubmit = false;
@@ -3744,8 +3744,8 @@ function template_welcome_message()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $txt;
 
 	echo '
-		<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . SMF_VERSION . '"></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
+		<script type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . SMF_VERSION . '"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 			<h3>', sprintf($txt['upgrade_ready_proceed'], SMF_VERSION), '</h3>
 	<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
 		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
@@ -3887,7 +3887,7 @@ function template_welcome_message()
 
 	// This defines whether javascript is going to work elsewhere :D
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			if (window.XMLHttpRequest && document.getElementById(\'js_works\'))
 			{
 				document.getElementById(\'js_works\').value = 1;
@@ -4028,7 +4028,7 @@ function template_backup_database()
 	if ($support_js)
 	{
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var lastTable = ', $upcontext['cur_table_num'], ';
 			function getNextTables()
 			{
@@ -4148,7 +4148,7 @@ function template_database_changes()
 	if ($support_js)
 	{
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var lastItem = ', $upcontext['current_debug_item_num'], ';
 			var sLastString = "', strtr($upcontext['current_debug_item_name'], array('"' => '&quot;')), '";
 			var curFile = ', $upcontext['cur_file_num'], ';
@@ -4610,7 +4610,7 @@ function template_upgrade_complete()
 	if (!empty($upcontext['can_delete_script']))
 		echo '
 			<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete(this);" /> Delete this upgrade.php and its data files now.</label> <i>(doesn\'t work on all servers.)</i>
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				function doTheDelete(theCheck)
 				{
 					var theImage = document.getElementById ? document.getElementById("delete_upgrader") : document.all.delete_upgrader;

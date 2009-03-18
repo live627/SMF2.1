@@ -127,6 +127,7 @@ March 2009
  ! Noindex weekly calendar pages as duplicate content (Calendar.php) [Bug 3348]
  ! Some internal ip ranges were missed (QueryString.php) [Bug 1563]
  * Poll tabs in topic with poll AND linked events are very close to events info [Bug 3232]
+ ! language="JavaScript" is deprecated in favour of type="text/javascript" (Everywhere) [Bug 2672]
 
 February 2009
 --------------------------------------------------------------------------------

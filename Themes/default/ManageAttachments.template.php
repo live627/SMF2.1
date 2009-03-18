@@ -9,7 +9,7 @@ function template_avatar_settings_above()
 function template_avatar_settings_below()
 {
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 	function updateStatus()
 	{
 		document.getElementById("avatar_max_width_external").disabled = document.getElementById("avatar_download_external").checked;

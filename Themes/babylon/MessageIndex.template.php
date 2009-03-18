@@ -355,7 +355,7 @@ function template_main()
 				<td class="smalltext" align="', !$context['right_to_left'] ? 'right' : 'left', '" valign="middle" id="message_index_jump_to">&nbsp;</td>
 			</tr>
 		</table>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			if (typeof(window.XMLHttpRequest) != "undefined")
 				aJumpTo[aJumpTo.length] = new JumpTo({
 					sContainerId: "message_index_jump_to",
@@ -373,8 +373,8 @@ function template_main()
 
 	// Javascript for inline editing.
 	echo '
-<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/xml_board.js"></script>
-<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/xml_board.js"></script>
+<script type="text/javascript"><!-- // --><![CDATA[
 
 	// Hide certain bits during topic edit.
 	hide_prefixes.push("pages", "newicon");

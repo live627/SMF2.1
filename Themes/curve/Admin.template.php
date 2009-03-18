@@ -145,12 +145,12 @@ function template_admin()
 	// The below functions include all the scripts needed from the simplemachines.org site. The language and format are passed for internationalization.
 	if (empty($modSettings['disable_smf_js']))
 		echo '
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>';
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>';
 
 	// This sets the announcements and current versions themselves ;).
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function smfSetAnnouncements()
 			{
 				if (typeof(window.smfAnnouncements) == "undefined" || typeof(window.smfAnnouncements.length) == "undefined")
@@ -366,7 +366,7 @@ function template_credits()
 
 	// This makes all the support information available to the support script...
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var smfSupportVersions = {};
 
 			smfSupportVersions.forum = "', $context['forum_version'], '";';
@@ -379,13 +379,13 @@ function template_credits()
 	// Now we just have to include the script and wait ;).
 	echo '
 		// ]]></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-support.js"></script>';
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-support.js"></script>';
 
 	// This sets the latest support stuff.
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function smfSetLatestSupport()
 			{
 				if (window.smfLatestSupport)
@@ -528,8 +528,8 @@ function template_view_versions()
 	   red.  It also contains the function, swapOption, that toggles showing the detailed information for each of the
 	   file catorgories. (sources, languages, and templates.) */
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var swaps = {};
 
 			function swapOption(sendingElement, name)
@@ -651,12 +651,12 @@ function template_view_versions()
 	// Internet Explorer 4 is tricky, it won't set any innerHTML until after load.
 	if ($context['browser']['is_ie4'])
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			add_load_event(smfDetermineVersions);
 		// ]]></script>';
 	else
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			smfDetermineVersions();
 		// ]]></script>';
 }
@@ -690,7 +690,7 @@ function template_edit_censored()
 										<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /></div>
 									</noscript>
 									<div id="moreCensoredWords"></div><div style="margin-top: 1ex; display: none;" id="moreCensoredWords_link"><a href="#;" onclick="addNewWord(); return false;">', $txt['censor_clickadd'], '</a></div>
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									<script type="text/javascript"><!-- // --><![CDATA[
 										document.getElementById("moreCensoredWords_link").style.display = "";
 
 										function addNewWord()
@@ -775,7 +775,7 @@ function template_not_done()
 			</form>
 		</div>
 	</div>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = ', $context['continue_countdown'], ';
 		doAutoSubmit();
 
@@ -800,7 +800,7 @@ function template_show_settings()
 	global $context, $txt, $settings, $scripturl;
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	<script type="text/javascript"><!-- // --><![CDATA[';
 
 	if (!empty($context['settings_pre_javascript']))
 		echo $context['settings_pre_javascript'];
@@ -1006,7 +1006,7 @@ function template_show_settings()
 
 	if (!empty($context['settings_post_javascript']))
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 	', $context['settings_post_javascript'], '
 	// ]]></script>';
 
@@ -1023,7 +1023,7 @@ function template_show_custom_profile()
 	template_show_list('standard_profile_fields');
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var iNumChecks = document.forms.standardProfileFields.length;
 		for (var i = 0; i < iNumChecks; i++)
 			if (document.forms.standardProfileFields[i].id.indexOf(\'reg_\') == 0)
@@ -1041,7 +1041,7 @@ function template_edit_profile_field()
 
 	// All the javascript for this page - quite a bit!
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function updateInputBoxes()
 		{
 			curType = document.getElementById("field_type").value;
@@ -1237,7 +1237,7 @@ function template_edit_profile_field()
 
 	// Get the java bits right!
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		updateInputBoxes();
 	// ]]></script>';
 }
@@ -1319,7 +1319,7 @@ function template_core_features()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function toggleItem(itemID)
 		{
 			// Toggle the hidden item.
@@ -1394,7 +1394,7 @@ function template_core_features()
 
 	// Turn on the pretty javascript if we can!
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById(\'js_worked\').value = "1";';
 		foreach ($context['features'] as $id => $feature)
 			echo '
@@ -1639,7 +1639,7 @@ function template_download_language()
 
 	// The javascript for expand and collapse of sections.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	<script type="text/javascript"><!-- // --><![CDATA[';
 
 	// Each theme gets its own handler.
 	foreach ($context['files']['images'] as $theme => $group)

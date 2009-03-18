@@ -33,7 +33,7 @@ function template_edit_news()
 				<tr class="windowbg2">
 					<td align="center">
 						<div id="moreNewsItems"></div><div id="moreNewsItems_link" style="display: none;"><a href="javascript:void(0);" onclick="addNewsItem(); return false;">', $txt['editnews_clickadd'], '</a></div>
-						<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+						<script type="text/javascript"><!-- // --><![CDATA[
 							document.getElementById("moreNewsItems_link").style.display = "";
 
 							function addNewsItem()
@@ -60,7 +60,7 @@ function template_email_members()
 
 	// This is some javascript for the simple/advanced toggling stuff.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function toggleAdvanced(mode)
 		{
 			// What styles are we doing?
@@ -181,8 +181,8 @@ function template_email_members()
 
 	// Make the javascript stuff visible.
 	echo '
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById("advanced_select_div").style.display = "";
 		toggleAdvanced(0);
 		var oMemberSuggest = new smc_AutoSuggest({
@@ -290,7 +290,7 @@ function template_email_members_send()
 
 	echo '
 		</form>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var countdown = 2;
 			doAutoSubmit();
 

@@ -781,7 +781,7 @@ function EditBoardSettings($return_config = false)
 
 	// Add some javascript stuff for the recycle box.
 	$context['settings_insert_below'] = '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			document.getElementById("recycle_board").disabled = !document.getElementById("recycle_enable").checked;
 		// ]]></script>';
 

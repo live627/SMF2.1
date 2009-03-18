@@ -43,7 +43,7 @@ function template_folder()
 
 	// The every helpful javascript!
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var allLabels = {};
 		var currentLabels = {};
 		function loadLabelChoices()
@@ -437,7 +437,7 @@ function template_subject_list()
 		echo '
 		<tr class="', $next_alternate ? 'windowbg' : 'windowbg2', '">
 			<td align="center" width="2%">
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				currentLabels[', $message['id'], '] = {';
 
 		if (!empty($message['labels']))
@@ -514,7 +514,7 @@ function template_search()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function expandCollapseLabels()
 		{
 			var current = document.getElementById("searchLabelsExpand").style.display != "none";
@@ -570,7 +570,7 @@ function template_search()
 						</tr><tr>
 							<td>
 								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
-								<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+								<script type="text/javascript"><!-- // --><![CDATA[
 									function initSearch()
 									{
 										if (document.forms.pmSearchForm.search.value.indexOf("%u") != -1)
@@ -1017,9 +1017,9 @@ function template_send()
 		</table>';
 
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc1"></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc1"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',
 				sSessionId: \'', $context['session_id'], '\',
@@ -1361,7 +1361,7 @@ function template_add_rule()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 			var criteriaNum = 0;
 			var actionNum = 0;
 			var groups = new Array()
@@ -1687,7 +1687,7 @@ function template_add_rule()
 
 	// Now setup all the bits!
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	<script type="text/javascript"><!-- // --><![CDATA[';
 
 	foreach ($context['rule']['criteria'] as $k => $c)
 		echo '

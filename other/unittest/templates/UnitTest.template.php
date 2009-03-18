@@ -11,8 +11,8 @@ function template_ut_index()
 		</div>
 	</div>
 
-	<script language="JavaScript" type="text/javascript" src="', $context['ut_js_url'], '/unittest.js"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="', $context['ut_js_url'], '/unittest.js"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		 var oUnitTest = new UnitTest({
 			aTests: [';
 	foreach ($context['tests'] as $test)

@@ -95,7 +95,7 @@ function template_generic_menu_dropdown_above()
 	$menu_context = &$context['menu_data_' . $context['cur_menu_id']];
 
 	echo '
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>';
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>';
 
 	if (!empty($menu_context['can_toggle_drop_down']))
 		echo '
@@ -185,7 +185,7 @@ function template_generic_menu_dropdown_above()
 
 	echo '
 		</ul></div>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var menuHandle = new smfMenu("dropdown_menu_', $context['cur_menu_id'], '");
 		// ]]></script>';
 

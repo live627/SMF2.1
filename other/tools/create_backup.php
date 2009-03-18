@@ -139,7 +139,7 @@ function step1($error_message = '')
 							</tr><tr>
 								<td width="20%" valign="top" class="textbox">Compress backup:</td>
 								<td>
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									<script type="text/javascript"><!-- // --><![CDATA[
 										function fixExtension(el)
 										{
 											if (el.form.path.value.substr(el.form.path.value.length - 4) == ".sql" && el.checked)
@@ -689,7 +689,7 @@ function nextRow($row, $table, $max_rows, $max_tables, $fp = null)
 
 				<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 			</form>
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;
 				var countdown = 2;
 

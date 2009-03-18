@@ -7,7 +7,7 @@ function template_main()
 
 	// Some javascript for adding more options.
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var pollOptionNum = 0;
 
 			function addPollOption()

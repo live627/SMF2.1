@@ -1679,7 +1679,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 			$ts = $type == 'mailq' ? $modSettings['mail_next_send'] : $modSettings['next_task_time'];
 
 			$context['html_headers'] .= '
-	<script language="JavaScript" type="text/javascript">
+	<script type="text/javascript">
 		function smfAutoTask()
 		{
 			var tempImage = new Image();

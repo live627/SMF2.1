@@ -2088,7 +2088,7 @@ function doStep3()
 				<div style="margin: 1ex; font-weight: bold;">
 					<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete();" /> Please check this box to delete the converter right now for security reasons.</label> (doesn\'t work on all servers.)
 				</div>
-				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+				<script type="text/javascript"><!-- // --><![CDATA[
 					function doTheDelete()
 					{
 						var theCheck = document.getElementById ? document.getElementById("delete_self") : document.all.delete_self;
@@ -2147,7 +2147,7 @@ function template_convert_above()
 <html>
 	<head>
 		<title>', isset($convert_data['name']) ? $convert_data['name'] . ' to ' : '', 'SMF Converter</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
+		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 	</head>
 	<body>
@@ -2256,7 +2256,7 @@ function pastTime($substep = null, $force = false)
 			<form action="', $_SERVER['PHP_SELF'], '?step=', $_GET['step'], isset($_GET['substep']) ? '&amp;substep=' . $_GET['substep'] : '', isset($_GET['cstep']) ? '&amp;cstep=' . $_GET['cstep'] : '', '&amp;start=', $_REQUEST['start'], '" method="post" name="autoSubmit">
 				<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 			</form>
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;
 				var countdown = 3;
 

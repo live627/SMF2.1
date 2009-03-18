@@ -24,7 +24,7 @@ function template_main()
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
 		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
@@ -42,7 +42,7 @@ function template_main()
 		// Prepare all the javascript settings.
 		echo '
 			<div id="smfFadeScroller" style="width: 90%; padding: 2px;"><b>', $context['news_lines'][0], '</b></div>
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				// The fading delay (in ms.)
 				var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
 				// Fade from... what text color?  To which background color?
@@ -88,7 +88,7 @@ function template_main()
 					"', $context['fader_news_lines']), '"
 				);
 			// ]]></script>
-			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
+			<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
 		</td>
 	</tr>
 </table><br />';

@@ -115,7 +115,7 @@ function template_select()
 			</table>
 		</td></tr></table>
 		</form>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var start = new Array();
 			start[0] = ', $context['not_selected']['start'], ';
 			start[1] = ', $context['selected']['start'], ';

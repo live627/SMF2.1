@@ -46,7 +46,7 @@ function template_modify_weights()
 		</table>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function calculateNewValues()
 		{
 			var total = 0;
@@ -230,7 +230,7 @@ function template_create_index_progress()
 		<input type="hidden" name="bytes_per_word" value="', $context['index_settings']['bytes_per_word'], '" />
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = 10;
 		doAutoSubmit();
 

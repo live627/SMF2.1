@@ -1989,7 +1989,7 @@ function template_install_above()
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
+		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 	</head>
 	<body>
@@ -2097,7 +2097,7 @@ function template_welcome_message()
 	global $incontext, $installurl, $txt;
 
 	echo '
-	<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
+	<script type="text/javascript" src="http://www.simplemachines.org/smf/current-version.js?version=' . $GLOBALS['current_smf_version'] . '"></script>
 	<form action="', $incontext['form_url'], '" method="post">
 		<h3>', sprintf($txt['install_welcome_desc'], $GLOBALS['current_smf_version']), '</h3>
 		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
@@ -2122,7 +2122,7 @@ function template_welcome_message()
 
 	// For the latest version stuff.
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			// Latest version?
 			function smfCurrentVersion()
 			{
@@ -2321,7 +2321,7 @@ function template_database_settings()
 
 	// Allow the toggling of input boxes for SQLite etc.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function toggleDBInput()
 		{
 			// What state is it?';
@@ -2525,7 +2525,7 @@ function template_delete_install()
 		<div style="margin: 1ex; font-weight: bold;">
 			<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete();" /> ', $txt['delete_installer'], !isset($_SESSION['installer_temp_ftp']) ? ' ' . $txt['delete_installer_maybe'] : '', '</label>
 		</div>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function doTheDelete()
 			{
 				var theCheck = document.getElementById ? document.getElementById("delete_self") : document.all.delete_self;

@@ -17,17 +17,17 @@ function template_editsets()
 			<td id="smileysLatest">', $txt['smiley_sets_latest_fetch'], '</td>
 		</tr>
 	</table>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		window.smfForum_scripturl = "', $scripturl, '";
 		window.smfForum_sessionid = "', $context['session_id'], '";
 	// ]]></script>';
 
 	if (empty($modSettings['disable_smf_js']))
 		echo '
-	<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-smileys.js"></script>';
+	<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-smileys.js"></script>';
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function smfSetLatestSmileys()
 		{
 			if (typeof(window.smfLatestSmileys) != "undefined")
@@ -208,7 +208,7 @@ function template_modifysmiley()
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		<input type="hidden" name="smiley" value="', $context['current_smiley']['id'], '" />
 	</form>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function updatePreview()
 		{
 			var currentImage = document.getElementById("preview");
@@ -223,7 +223,7 @@ function template_addsmiley()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function swapUploads()
 		{
 			document.getElementById("uploadMore").style.display = document.getElementById("uploadSmiley").disabled ? "none" : "";
@@ -339,7 +339,7 @@ function template_addsmiley()
 		</table>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function updatePreview()
 		{
 			var currentImage = document.getElementById("preview");

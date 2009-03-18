@@ -1154,7 +1154,7 @@ function create_control_richedit($editorOptions)
 		// This really has some WYSIWYG stuff.
 		loadTemplate('GenericControls', $context['browser']['is_ie'] ? 'editor_ie' : 'editor');
 		$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
 			var oEditorStrings= {
 				wont_work: \'' . addcslashes($txt['rich_edit_wont_work'], "'") . '\',
@@ -1165,13 +1165,13 @@ function create_control_richedit($editorOptions)
 				prompt_text_img: \'' . addcslashes($txt['prompt_text_img'], "'") . '\'
 			}
 		// ]]></script>
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js"></script>';
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js"></script>';
 
 		$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 		if ($context['show_spellchecking'])
 		{
 			$context['html_headers'] .= '
-				<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/spellcheck.js"></script>';
+				<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/spellcheck.js"></script>';
 
 			// Some hidden information is needed in order to make the spell checking work.
 			if (!isset($_REQUEST['xml']))
@@ -1182,7 +1182,7 @@ function create_control_richedit($editorOptions)
 
 			// Also make sure that spell check works with rich edit.
 			$context['html_headers'] .= '
-				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+				<script type="text/javascript"><!-- // --><![CDATA[
 				function spellCheckDone()
 				{
 					for (i = 0; i < smf_editorArray.length; i++)
@@ -1389,7 +1389,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 		// Some javascript ma'am?
 		if (!empty($verificationOptions['override_visual']) || (!empty($modSettings['visual_verification_type']) && !isset($verificationOptions['override_visual'])))
 			$context['html_headers'] .= '
-		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/captcha.js"></script>';
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/captcha.js"></script>';
 
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
 
@@ -1417,7 +1417,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 	// Add javascript for the object.
 	if ($context['controls']['verification'][$verificationOptions['id']]['show_visual'] && !WIRELESS)
 		$context['insert_after_template'] .= '
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				var verification' . $verificationOptions['id'] . 'Handle = new smfCaptcha("' . $thisVerification['image_href'] . '", "' . $verificationOptions['id'] . '", ' . ($context['use_graphic_library'] ? 1 : 0) . ');
 			// ]]></script>';
 

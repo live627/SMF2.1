@@ -8,8 +8,8 @@ function template_before()
 
 	// Make sure they've agreed to the terms and conditions.
 	echo '
-<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
-<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
+<script type="text/javascript"><!-- // --><![CDATA[
 	function verifyAgree()
 	{
 		if (currentAuthMethod == \'passwd\' && document.forms.creator.smf_autov_pwmain.value != document.forms.creator.smf_autov_pwverify.value)
@@ -383,7 +383,7 @@ function template_before()
 		<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
 	</div>
 </form>
-<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+<script type="text/javascript"><!-- // --><![CDATA[';
 
 	// Uncheck the agreement thing....
 	if ($context['require_agreement'] && empty($context['regagree']))
@@ -576,7 +576,7 @@ function template_admin_register()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '" name="postForm" id="postForm">
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function onCheckChange()
 			{
 				if (document.forms.postForm.emailActivate.checked)

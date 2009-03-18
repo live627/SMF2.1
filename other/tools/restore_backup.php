@@ -273,7 +273,7 @@ function step2()
 	{
 		echo '
 					<label for="fix_paths"><input type="checkbox" id="fix_paths" onclick="doThePaths(this);" /> Attempt to fix the database\'s paths for this server.</label><br />
-					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+					<script type="text/javascript"><!-- // --><![CDATA[
 						function doThePaths(theCheck)
 						{
 							var theImage = document.getElementById ? document.getElementById("auto_paths") : document.all.auto_paths;
@@ -663,7 +663,7 @@ function nextLine($line, $max, $failures)
 
 				<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 			</form>
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;
 				var countdown = 3;
 

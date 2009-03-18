@@ -720,7 +720,7 @@ function show_detailed_db()
 	
 	// Setup the javascript stuff here
 	echo '
-				<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+				<script type="text/javascript"><!-- // --><![CDATA[
 					window.databaseTables = {';
 	foreach ($context['database_tables'] as $table)
 		echo '
@@ -1148,9 +1148,9 @@ function show_footer()
 	   red.  It also contains the function, swapOption, that toggles showing the detailed information for each of the
 	   file catorgories. (sources, languages, and templates.) */
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $boardurl, '/Themes/default/', (strpos($context['forum_version'], '2.') !== false ? 'scripts/' : ''), 'script.js"></script>
-		<script language="JavaScript" type="text/javascript" src="http://www.simplemachines.org/smf/detailed-version.js?version=', $context['forum_version'], '"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $boardurl, '/Themes/default/', (strpos($context['forum_version'], '2.') !== false ? 'scripts/' : ''), 'script.js"></script>
+		<script type="text/javascript" src="http://www.simplemachines.org/smf/detailed-version.js?version=', $context['forum_version'], '"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var swaps = {};
 
 			function swapOption(sendingElement, name)
@@ -1284,7 +1284,7 @@ function show_footer()
 		// ]]></script>';
 
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			window.onload = function() {
 				smfDetermineVersions();
 				smfHideDbColumns();

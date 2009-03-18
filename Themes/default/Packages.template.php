@@ -299,7 +299,7 @@ function template_view_package()
 
 	// Toggle options.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function packageOperation(uniqueId, initialState)
 		{
 			// The id of the field.
@@ -335,7 +335,7 @@ function template_view_package()
 	// Some javascript for collapsing/expanded theme section.
 	if (!empty($context['theme_actions']))
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var theme_action_area = document.getElementById(\'custom_changes\');
 		var swap_theme_image = document.getElementById(\'swap_theme_image\');
 		var vis = ', empty($context['themes_locked']) ? 'false' : 'true', ';
@@ -352,7 +352,7 @@ function template_view_package()
 	// And a bit more for database changes.
 	if (!empty($context['database_changes']))
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var database_changes_area = document.getElementById(\'db_changes_div\');
 		var db_vis = false;
 		database_changes_area.style.display = "none";
@@ -372,7 +372,7 @@ function template_extract_package()
 	if (!empty($context['redirect_url']))
 	{
 		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		setTimeout("doRedirect();", ', empty($context['redirect_timeout']) ? '5000' : $context['redirect_timeout'], ');
 
 		function doRedirect()
@@ -564,7 +564,7 @@ function template_browse()
 				<td class="windowbg2" id="packagesLatest">', $txt['packages_latest_fetch'], '</td>
 			</tr>
 		</table>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			window.smfForum_scripturl = "', $scripturl, '";
 			window.smfForum_sessionid = "', $context['session_id'], '";';
 
@@ -576,10 +576,10 @@ function template_browse()
 
 	if (empty($modSettings['disable_smf_js']))
 		echo '
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-packages.js"></script>';
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-packages.js"></script>';
 
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var tempOldOnload;
 
 			function smfSetLatestPackages()
@@ -595,12 +595,12 @@ function template_browse()
 	// Gotta love IE4, and its hatefulness...
 	if ($context['browser']['is_ie4'])
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			add_load_event(smfSetLatestPackages);
 		// ]]></script>';
 	else
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			smfSetLatestPackages();
 		// ]]></script>';
 
@@ -884,7 +884,7 @@ function template_browse()
 			<input type="hidden" name="area" value="packages" />
 			<input type="hidden" name="sa" value="browse" />
 		</form>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			document.getElementById(\'advanced_box\').style.display = "none";
 			// ]]></script>';
 }
@@ -1178,7 +1178,7 @@ function template_package_list()
 		{
 			$section_count = count($context['package_list']);
 			echo '
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+			<script type="text/javascript"><!-- // --><![CDATA[';
 			foreach ($context['package_list'] as $section => $ps)
 			{
 				echo '
@@ -1335,13 +1335,13 @@ function template_control_chmod()
 	// Hide the details of the list.
 	if (empty($context['package_ftp']['form_elements_only']))
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			document.getElementById(\'need_writable_list\').style.display = \'none\';
 		// ]]></script>';
 
 	// Quick generate the test button.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// Generate a "test ftp" button.
 		var generatedButton = false;
 		function generateFTPTest()
@@ -1417,7 +1417,7 @@ function template_control_chmod()
 
 	// Make sure the button gets generated last.
 	$context['insert_after_template'] .= '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		generateFTPTest();
 	// ]]></script>';
 }
@@ -1448,8 +1448,8 @@ function template_view_operations()
 		<title>', $txt['operation_title'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
 	</head>
 	<body>
 	<div class="tborder" style="width: 100%;">
@@ -1479,7 +1479,7 @@ function template_file_permissions()
 
 	// This will handle expanding the selection.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var oRadioColors = {
 			0: "#D1F7BF",
 			1: "#FFBBBB",
@@ -1948,7 +1948,7 @@ function template_permission_show_contents($ident, $contents, $level, $has_more 
 
 		if ($level > 1 && !$isFound)
 			echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			expandFolder(\'', $js_ident, '\', \'\');
 		// ]]></script>';
 	}
@@ -2054,7 +2054,7 @@ function template_action_permissions()
 
 	// Just the countdown stuff
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = ', $countDown, ';
 		doAutoSubmit();
 

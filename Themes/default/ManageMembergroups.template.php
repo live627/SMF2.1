@@ -114,7 +114,7 @@ function template_new_group()
 	if ($context['undefined_group'])
 	{
 		echo '
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			<script type="text/javascript"><!-- // --><![CDATA[
 				function swapPostGroup(isChecked)
 				{
 					var min_posts_text = document.getElementById(\'min_posts_text\');
@@ -273,7 +273,7 @@ function template_edit_group()
 							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><i>', $txt['check_all'], '</i></label>
 						</fieldset>
 						<a href="javascript:void(0);" onclick="document.getElementById(\'visible_boards\').style.display = \'block\'; document.getElementById(\'visible_boards_link\').style.display = \'none\'; return false;" id="visible_boards_link" style="display: none;">[ ', $txt['membergroups_select_visible_boards'], ' ]</a>
-						<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+						<script type="text/javascript"><!-- // --><![CDATA[
 							document.getElementById("visible_boards_link").style.display = "";
 							document.getElementById("visible_boards").style.display = "none";
 						// ]]></script>
@@ -290,8 +290,8 @@ function template_edit_group()
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var oModeratorSuggest = new smc_AutoSuggest({
 				sSelf: \'oModeratorSuggest\',
 				sSessionId: \'', $context['session_id'], '\',
@@ -319,7 +319,7 @@ function template_edit_group()
 
 	if ($context['group']['allow_post_group'])
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function swapPostGroup(isChecked)
 			{
 				var min_posts_text = document.getElementById(\'min_posts_text\');
@@ -477,8 +477,8 @@ function template_group_members()
 
 	if (!empty($context['group']['assignable']))
 		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var oAddMemberSuggest = new smc_AutoSuggest({
 				sSelf: \'oAddMemberSuggest\',
 				sSessionId: \'', $context['session_id'], '\',

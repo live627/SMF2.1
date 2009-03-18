@@ -1266,7 +1266,7 @@ SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, s
 
 	this.oSmileyPopupWindow.document.write('</td></tr>\n\t\t\t<tr><td align="center" class="windowbg"><a href="javascript:window.close();">' + sCloseText + '</a></td></tr>\n\t\t</table>');
 	// Do the javascript required.
-	this.oSmileyPopupWindow.document.write('<script language="JavaScript" type="text/javascript">\n');
+	this.oSmileyPopupWindow.document.write('<script type="text/javascript">\n');
 	for (var iRow = 0; iRow < smileys.length; iRow++)
 	{
 		for (var i = 0; i < smileys[iRow].length; i++)

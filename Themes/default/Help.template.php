@@ -13,7 +13,7 @@ function template_popup()
 		<meta name="robots" content="noindex" />
 		<title>', $context['page_title'], '</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>';
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>';
 
 	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
 	if ($context['browser']['needs_size_fix'])
@@ -46,8 +46,8 @@ function template_find_members()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<meta name="robots" content="noindex" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var membersAdded = [];
 			function addMember(name)
 			{
@@ -148,7 +148,7 @@ function template_find_members()
 
 	if (empty($context['results']))
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			document.getElementById("search").focus();
 		// ]]></script>';
 
@@ -1552,7 +1552,7 @@ function template_manual_posting_topics()
 								<tr>
 									<td align="right"></td>
 									<td valign="middle">
-										<script language="JavaScript" type="text/javascript">
+										<script type="text/javascript">
 //<![CDATA[
 										function bbc_highlight(something, mode)
 										{
@@ -1703,7 +1703,7 @@ function template_manual_posting_topics()
 								</tr>
 								<tr>
 									<td align="center" colspan="2">
-										<script language="JavaScript" type="text/javascript">
+										<script type="text/javascript">
 //<![CDATA[
 										swapOptions();
 //]]>

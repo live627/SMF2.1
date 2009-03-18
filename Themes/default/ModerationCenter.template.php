@@ -74,9 +74,9 @@ function template_latest_news()
 	// This requires a lot of javascript...
 	//!!! Put this in it's own file!!
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
+		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function smfSetAnnouncements()
 			{
 				if (typeof(window.smfAnnouncements) == "undefined" || typeof(window.smfAnnouncements.length) == "undefined")

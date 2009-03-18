@@ -8,7 +8,7 @@ function template_main()
 
 	// Start the javascript... and boy is there a lot.
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+		<script type="text/javascript"><!-- // --><![CDATA[';
 
 	// Start with message icons - and any missing from this theme.
 	echo '
@@ -529,7 +529,7 @@ function template_main()
 		// Show more boxes only if they aren't approaching their limit.
 		if ($context['num_allowed_attachments'] > 1)
 			echo '
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									<script type="text/javascript"><!-- // --><![CDATA[
 										var allowed_attachments = ', $context['num_allowed_attachments'], ' - 1;
 
 										function addAttachment()
@@ -602,7 +602,7 @@ function template_main()
 		</form>';
 
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+		<script type="text/javascript"><!-- // --><![CDATA[';
 
 	// The functions used to preview a posts without loading a new page.
 	echo '
@@ -752,7 +752,7 @@ function template_main()
 		<br />
 		<br />
 
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function insertQuoteFast(messageid)
 			{
 				if (window.XMLHttpRequest)
@@ -845,13 +845,13 @@ function template_spellcheck()
 	// As you may expect - we need a lot of javascript for this... load it form the separate files.
 	echo '
 		</style>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var spell_formname = window.opener.spell_formname;
 			var spell_fieldname = window.opener.spell_fieldname;
 		// ]]></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
 			', $context['spell_js'], '
 		// ]]></script>
 	</head>
@@ -889,12 +889,12 @@ function template_quotefast()
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $txt['retrieving_quote'], '</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 	</head>
 	<body>
 		', $txt['retrieving_quote'], '
 		<div id="temporary_posting_area" style="display: none;"></div>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+		<script type="text/javascript"><!-- // --><![CDATA[';
 
 	if ($context['close_window'])
 		echo '
@@ -996,7 +996,7 @@ function template_announcement_send()
 			<input type="hidden" name="start" value="', $context['start'], '" />
 			<input type="hidden" name="membergroups" value="', $context['membergroups'], '" />
 		</form>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			var countdown = 2;
 			doAutoSubmit();
 

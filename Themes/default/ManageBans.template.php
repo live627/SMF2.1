@@ -187,8 +187,8 @@ function template_ban_edit()
 	}
 	echo '
 	</table>
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function updateStatus()
 		{
 			document.getElementById("expire_date").disabled = !document.getElementById("expires_one_day").checked;
@@ -274,8 +274,8 @@ function template_ban_edit_trigger()
 		<input type="hidden" name="bg" value="' . $context['ban_trigger']['group'] . '" />
 		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 	</form>
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',
 			sSessionId: \'', $context['session_id'], '\',

@@ -7,7 +7,7 @@ function template_profile_above()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
 
 	// If an error occurred while trying to save previously, give the user a clue!
 	if (!empty($context['post_errors']))
@@ -486,8 +486,8 @@ function template_editBuddies()
 			</tr>
 		</table>
 	</form>
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddBuddySuggest = new smc_AutoSuggest({
 			sSelf: \'oAddBuddySuggest\',
 			sSessionId: \'', $context['session_id'], '\',
@@ -1116,7 +1116,7 @@ function template_edit_options()
 
 	// Some javascript!
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function checkProfileSubmit()
 			{';
 
@@ -1542,7 +1542,7 @@ function template_groupMembership()
 
 		// Javascript for the selector stuff.
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 		var prevClass = "";
 		var prevDiv = "";
 		function highlightSelected(box)
@@ -1574,7 +1574,7 @@ function template_ignoreboards()
 	global $context, $txt, $settings, $scripturl;
 	// The main containing header.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function selectBoards(ids)
 		{
 			var toggle = true;
@@ -1730,7 +1730,7 @@ function template_issueWarning()
 	template_load_warning_variables();
 
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function setWarningBarPos(curEvent, isMove, changeAmount)
 		{
 			barWidth = ', $context['warningBarWidth'], ';
@@ -2055,7 +2055,7 @@ function template_issueWarning()
 
 	// Do our best to get pretty javascript enabled.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		document.getElementById(\'warndiv1\').style.display = "";
 		document.getElementById(\'warndiv2\').style.display = "none";';
 
@@ -2272,7 +2272,7 @@ function template_profile_group_manage()
 		echo '
 									</div>
 									<a href="javascript:void(0);" onclick="document.getElementById(\'additional_groupsList\').style.display = \'block\'; document.getElementById(\'additional_groupsLink\').style.display = \'none\'; return false;" id="additional_groupsLink" style="display: none;">', $txt['additional_membergroups_show'], '</a>
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									<script type="text/javascript"><!-- // --><![CDATA[
 										document.getElementById("additional_groupsList").style.display = "none";
 										document.getElementById("additional_groupsLink").style.display = "";
 									// ]]></script>
@@ -2355,11 +2355,11 @@ function template_profile_signature_modify()
 	// Load the spell checker?
 	if ($context['show_spellchecking'])
 		echo '
-									<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
+									<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
 
 	// Some javascript used to count how many characters have been used so far in the signature.
 	echo '
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									<script type="text/javascript"><!-- // --><![CDATA[
 										function tick()
 										{
 											if (typeof(document.forms.creator) != "undefined")
@@ -2430,7 +2430,7 @@ function template_profile_avatar_select()
 											<select name="file" id="file" size="10" style="display: none;" onchange="showAvatar()" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');" disabled="disabled"><option></option></select>
 										</td>
 									</tr></table>
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									<script type="text/javascript"><!-- // --><![CDATA[
 										var files = ["' . implode('", "', $context['avatar_list']) . '"];
 										var avatar = document.getElementById("avatar");
 										var cat = document.getElementById("cat");
@@ -2659,7 +2659,7 @@ function template_authentication_method()
 
 	// The main header!
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
 		<form action="', $scripturl, '?action=profile;area=authentication;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
 			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
@@ -2745,7 +2745,7 @@ function template_authentication_method()
 
 	// The password stuff.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 	var regTextStrings = {
 		"password_short": "', $txt['registration_password_short'], '",
 		"password_reserved": "', $txt['registration_password_reserved'], '",

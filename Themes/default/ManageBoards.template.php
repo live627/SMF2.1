@@ -474,8 +474,8 @@ function template_modify_board()
 		</tr>
 	</table>
 </form>
-<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
-<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+<script type="text/javascript"><!-- // --><![CDATA[
 	var oModeratorSuggest = new smc_AutoSuggest({
 		sSelf: \'oModeratorSuggest\',
 		sSessionId: \'', $context['session_id'], '\',
@@ -503,7 +503,7 @@ function template_modify_board()
 
 	// Javascript for deciding what to show.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		function refreshOptions()
 		{
 			var redirectEnabled = document.getElementById("redirect_enable").checked;

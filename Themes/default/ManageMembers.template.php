@@ -176,7 +176,7 @@ function template_admin_browse()
 	{
 		echo '
 	<form action="', $scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', $context['character_set'], '" name="postFormOutstanding" id="postFormOutstanding" onsubmit="return onOutstandingSubmit();">
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			function onOutstandingSubmit()
 			{
 				if (document.forms.postFormOutstanding.todo.value == "")

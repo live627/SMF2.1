@@ -133,7 +133,7 @@ function show_header()
 <html>
 	<head>
 		<title>SMF Package SDK</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js"></script>
+		<script type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
 			body
 			{

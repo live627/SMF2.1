@@ -315,7 +315,7 @@ function template_main()
 		<td class="smalltext" align="right" valign="middle" id="message_index_jump_to">&nbsp;</td>
 	</tr>
 </table>
-<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+<script type="text/javascript"><!-- // --><![CDATA[
 	if (typeof(window.XMLHttpRequest) != "undefined")
 		aJumpTo[aJumpTo.length] = new JumpTo({
 			sContainerId: "message_index_jump_to",

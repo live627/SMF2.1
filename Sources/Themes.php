@@ -2279,8 +2279,8 @@ function template_menu()
 
 	// Step 6: The javascript stuff.
 	$old_template = preg_replace('~\<head\>~i', '<head>
-	<script language="JavaScript" type="text/javascript" src="\', $settings[\'default_theme_url\'], \'/scripts/script.js"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript" src="\', $settings[\'default_theme_url\'], \'/scripts/script.js"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "\', $settings[\'theme_url\'], \'";
 		var smf_default_theme_url = "\', $settings[\'default_theme_url\'], \'";
 		var smf_images_url = "\', $settings[\'images_url\'], \'";

@@ -325,7 +325,7 @@ function show_header()
 				background-color: #F6F6F6;
 			}
 		</style>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		<script type="text/javascript"><!-- // --><![CDATA[
 			window.onload = doAutoSubmit;
 			var countdown = 3;
 

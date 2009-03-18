@@ -373,7 +373,7 @@ function show_header()
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<title>SMF Recount Category script</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
+		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 	</head>
 	<body>
