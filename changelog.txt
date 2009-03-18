@@ -124,7 +124,7 @@ March 2009
  ! Package manager does not parse require-file correctly if there's no space at the end of the element (Class-Package.php) [Bug 327]
  ! $use_permissions needed can_edit => false (Subs-Calendar.php) [Bug 248]
  ! Require re-activation of email address wasn't working due to missing variables (Profile-Modify.php) [Bug 3266]
-
+ ! Noindex weekly calendar pages as duplicate content (Calendar.php) [Bug 3348]
 
 February 2009
 --------------------------------------------------------------------------------
