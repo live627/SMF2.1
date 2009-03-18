@@ -120,7 +120,8 @@ March 2009
  ! Quick Moderation might show when it wasn't needed (source change was accidentally committed already) (Messageindex.php, Messageindex.template.php in all themes) [Bug 3234]
  * Babylon/Classic missing the errorbox related css classes (style.css) [Bug 3346]
  ! Ban log was missing no entries label, even though we had a language string prepared (ManageBans.php) [Bug 3063]
- & Missing helptxt string postmod (Help.english.php) [Bug 3347]
+ & Missing helptxt string postmod (Help.english.php) [Bug 3062]
+ ! Package manager does not parse require-file correctly if there's no space at the end of the element (Class-Package.php) [Bug 327]
 
 
 February 2009

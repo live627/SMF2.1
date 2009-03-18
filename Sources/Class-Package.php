@@ -341,7 +341,7 @@ class xmlArray
 		while ($data != '')
 		{
 			// Find and remove the next tag.
-			preg_match('/\A<([\w\-:]+)((?:\s+.+?)?)(\s\/)?' . '>/', $data, $match);
+			preg_match('/\A<([\w\-:]+)((?:\s+.+?)?)([\s]?\/)?' . '>/', $data, $match);
 			if (isset($match[0]))
 				$data = preg_replace('/' . preg_quote($match[0], '/') . '/s', '', $data, 1);
 
@@ -408,7 +408,7 @@ class xmlArray
 			$el['name'] = $match[1];
 
 			// If this ISN'T empty, remove the close tag and parse the inner data.
-			if ((!isset($match[3]) || $match[3] != ' /') && (!isset($match[2]) || $match[2] != ' /'))
+			if ((!isset($match[3]) || trim($match[3]) != '/') && (!isset($match[2]) || trim($match[2]) != '/'))
 			{
 				// Because PHP 5.2.0+ seems to croak using regex, we'll have to do this the less fun way.
 				$last_tag_end = strpos($data, '</' . $match[1]. '>');
