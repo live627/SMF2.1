@@ -86,7 +86,7 @@ function CalendarMain()
 	// Don't let search engines index weekly calendar pages.
 	if ($context['view_week'])
 		$context['robot_no_index'] = true;
-	
+
 	// Get the current day of month...
 	require_once($sourcedir . '/Subs-Calendar.php');
 	$today = getTodayInfo();
