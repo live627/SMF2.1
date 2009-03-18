@@ -1424,6 +1424,7 @@ function BanLog()
 		'get_count' => array(
 			'function' => 'list_getNumBanLogEntries',
 		),
+		'no_items_label' => $txt['ban_log_no_entries'],
 		'columns' => array(
 			'ip' => array(
 				'header' => array(
