@@ -29,7 +29,7 @@ if (file_exists(dirname(__FILE__) . '/Settings.php'))
 // Initialize everything and load the language files.
 initialize_inputs();
 
-$txt['smf_repair_settings'] = 'Settings Repair Tool';
+$txt['smf_repair_settings'] = 'SMF 2.0 Settings Repair Tool';
 $txt['no_value'] = '<i style="font-weight: normal; color: red;">Value not found!</i>';
 $txt['default_value'] = 'Recommended value';
 $txt['save_settings'] = 'Save Settings';
@@ -55,16 +55,23 @@ $txt['databaseSession_enable'] = 'Database driven sessions';
 $txt['databaseSession_enable0'] = 'Off (not recommended)';
 $txt['databaseSession_enable1'] = 'On (recommended)';
 
-$txt['database_settings'] = 'MySQL Database Info';
+$txt['database_settings'] = 'Database Info';
 $txt['database_settings_info'] = 'This is the server, username, password, and database for your server.';
 $txt['db_server'] = 'Server';
 $txt['db_name'] = 'Database name';
 $txt['db_user'] = 'Username';
 $txt['db_passwd'] = 'Password';
+$txt['ssi_db_user'] = 'SSI Username';
+$txt['ssi_db_passwd'] = 'SSI Password';
+$txt['ssi_db_user_desc'] = '(Optional)';
+$txt['ssi_db_passwd_desc'] = '(Optional)';
 $txt['db_prefix'] = 'Table prefix';
 $txt['db_persist'] = 'Connection type';
 $txt['db_persist0'] = 'Standard (recommended)';
 $txt['db_persist1'] = 'Persistent (might cause problems)';
+$txt['db_mysql'] = 'Mysql';
+$txt['db_postgresql'] = 'PostGreSql';
+$txt['db_sqlite'] = 'Sqlite';
 
 $txt['path_url_settings'] = 'Paths &amp; URLs';
 $txt['path_url_settings_info'] = 'These are the paths and URLs to your SMF installation, and can cause big problems when they are wrong.  Sorry, there are a lot of them.';
@@ -83,6 +90,11 @@ $txt['theme_dir'] = 'Default Theme Directory';
 
 $txt['theme_path_url_settings'] = 'Paths &amp; URLs For Themes';
 $txt['theme_path_url_settings_info'] = 'These are the paths and URLs to your SMF themes.';
+
+
+// Fix Database title to use $db_type if available
+if(!empty($db_type) && isset($txt['db_'.$db_type]))
+	$txt['database_settings'] = $txt['db_'.$db_type].' '. $txt['database_settings'];
 
 if (isset($_POST['submit']))
 	set_settings();
@@ -164,6 +176,11 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 				white-space: nowrap;
 				padding-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 2ex;
 			}
+			.smalltext
+			{
+				font-size: 0.8em;
+				font-weight: normal;
+			}
 		</style>
 	</head>
 	<body>
@@ -192,7 +209,7 @@ function initialize_inputs()
 	@session_start();
 
 	// Add slashes, as long as they aren't already being added.
-	if (get_magic_quotes_gpc() == 0)
+	if (!function_exists('get_magic_quotes_gpc') || @get_magic_quotes_gpc() == 0)
 	{
 		foreach ($_POST as $k => $v)
 		{
@@ -236,7 +253,7 @@ function initialize_inputs()
 
 function show_settings()
 {
-	global $txt, $smcFunc, $db_connection;
+	global $txt, $smcFunc, $db_connection, $db_type;
 
 	// Check to make sure Settings.php exists!
 	if (file_exists(dirname(__FILE__) . '/Settings.php'))
@@ -250,7 +267,7 @@ function show_settings()
 	$settings = array();
 	for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
 	{
-		$settingsArray[$i] = rtrim($settingsArray[$i]);
+		$settingsArray[$i] = rtrim(stripslashes($settingsArray[$i]));
 
 		if (substr($settingsArray[$i], 0, 1) == '$')
 		{
@@ -264,7 +281,7 @@ function show_settings()
 				elseif ($match[3] == '$boarddir . \'/Sources\'')
 					$settings[$match[1]] = $settings['boarddir'] . '/Sources';
 				else
-					$settings[$match[1]] = stripslashes($match[3]);
+					$settings[$match[1]] = $match[3];
 			}
 		}
 	}
@@ -314,8 +331,10 @@ function show_settings()
 		'database_settings' => array(
 			'db_server' => array('flat', 'string', 'localhost'),
 			'db_name' => array('flat', 'string'),
-			'db_user' => array('flat', 'string'),
-			'db_passwd' => array('flat', 'string'),
+			'db_user' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'db_passwd' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'ssi_db_user' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
+			'ssi_db_passwd' => array($db_type == 'sqlite' ? 'hidden' : 'flat', 'string'),
 			'db_prefix' => array('flat', 'string'),
 			'db_persist' => array('flat', 'int', 1),
 		),
@@ -404,7 +423,7 @@ function show_settings()
 		if ($request == true)
 		{
 			if ($smcFunc['db_num_rows']($request) == 1)
-				list ($known_settings['database_settings']['db_prefix'][2]) = preg_replace('~log_topics$~', '', mysql_fetch_row($request));
+				list ($known_settings['database_settings']['db_prefix'][2]) = preg_replace('~log_topics$~', '',  $smcFunc['db_fetch_row']($request));
 			$smcFunc['db_free_result']($request);
 		}
 	}
@@ -501,13 +520,17 @@ function show_settings()
 
 		foreach ($section as $setting => $info)
 		{
+			if($info[0] == 'hidden')
+				continue;
+			
 			if ($info[0] != 'flat' && empty($show_db_settings))
 				continue;
 
 			echo '
 							<td width="20%" valign="top" class="textbox" style="padding-bottom: 1ex;">
-								<label', $info[1] != 'int' ? ' for="'. $setting. '"' : '', '>', $txt[$setting], ':', '</label>',
-								!isset($settings[$setting]) && $info[1] != 'check' ? '<br />
+								<label', $info[1] != 'int' ? ' for="'. $setting. '"' : '', '>', $txt[$setting], ': '.
+									( isset($txt[$setting.'_desc']) ? '<span class="smalltext">'. $txt[$setting.'_desc'] .'</span>' : '' ).'
+								</label>', !isset($settings[$setting]) && $info[1] != 'check' ? '<br />
 								' . $txt['no_value'] : '', '
 							</td>
 							<td style="padding-bottom: 1ex;">';
@@ -634,7 +657,7 @@ function set_settings()
 
 	$setString = array();
 	foreach ($db_updates as $var => $val)
-		$setString[] = array($var, $val);
+		$setString[] = array($var, stripslashes($val));
 
 	if (!empty($setString))
 		$smcFunc['db_insert']('replace',
@@ -652,7 +675,7 @@ function set_settings()
 		if (empty($match[0]))
 			continue;
 
-		$setString[] = array($match[1], 0, $match[2], $val);
+		$setString[] = array($match[1], 0, $match[2], stripslashes($val));
 	}
 
 	if (!empty($setString))

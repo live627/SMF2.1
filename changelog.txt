@@ -135,6 +135,7 @@ March 2009
  ! Max calendar holiday/event title limit to small. Bumped to 60 from 30 (Calendar.php, Subs-Calendar.php, ManageCalendar.php, ManageCalendar.template.php, Post.template.php, install and upgrade files) [Bug 1751]
  ! Increased title length means convertors can use longer substr (invision and yabbse converters)
  * Depreciated div align, IE8 cal below the side panels. IE7 its tight no padding (Calendar.template.php) [Bug 3064, 3339]
+ ! 2.0 compatible, many changes (see commit for full list) (repair_settings.php) [Bug 3151]
  
 February 2009
 --------------------------------------------------------------------------------
