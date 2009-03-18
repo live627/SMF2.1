@@ -42,7 +42,7 @@ function template_edit_holiday()
 			<td colspan="2">', $context['page_title'], '</td>
 		</tr><tr class="windowbg2">
 			<td width="25%" align="right">', $txt['holidays_title_label'], ':</td>
-			<td><input type="text" name="title" value="', $context['holiday']['title'], '" size="60" maxlength="30" /></td>
+			<td><input type="text" name="title" value="', $context['holiday']['title'], '" size="60" maxlength="60" /></td>
 		</tr><tr class="windowbg2">
 			<td align="right">', $txt['calendar_year'], '</td>
 			<td>

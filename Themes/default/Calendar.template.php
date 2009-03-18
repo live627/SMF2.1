@@ -141,7 +141,7 @@ function template_event_post()
 									<b', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</b>
 								</td>
 								<td class="smalltext">
-									<input type="text" name="evtitle" maxlength="30" size="30" value="', $context['event']['title'], '" style="width: 90%;" />
+									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" style="width: 90%;" />
 								</td>
 							</tr><tr>
 								<td></td>

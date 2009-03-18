@@ -678,7 +678,7 @@ CREATE TABLE {$db_prefix}calendar (
   end_date date NOT NULL default '0001-01-01',
   id_board smallint NOT NULL default '0',
   id_topic int NOT NULL default '0',
-  title varchar(48) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   id_member int NOT NULL default '0',
   PRIMARY KEY (id_event)
 );
@@ -704,7 +704,7 @@ CREATE SEQUENCE {$db_prefix}calendar_holidays_seq;
 CREATE TABLE {$db_prefix}calendar_holidays (
   id_holiday smallint default nextval('{$db_prefix}calendar_holidays_seq'),
   event_date date NOT NULL default '0001-01-01',
-  title varchar(30) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   PRIMARY KEY (id_holiday)
 );
 

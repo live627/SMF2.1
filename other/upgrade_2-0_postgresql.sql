@@ -514,6 +514,19 @@ ALTER TABLE {$db_prefix}log_errors
 ALTER COLUMN error_type TYPE varchar(15);
 ---#
 
+/******************************************************************************/
+--- Allow for longer calendar event/holiday titles.
+/******************************************************************************/
+
+---# Changing event title column to a larger field type...
+ALTER TABLE {$db_prefix}calendar
+ALTER COLUMN title TYPE varchar(60);
+---#
+
+---# Changing holiday title column to a larger field type...
+ALTER TABLE {$db_prefix}calendar_holidays
+ALTER COLUMN title TYPE varchar(60);
+---#
 
 /******************************************************************************/
 --- Adding extra columns to polls.

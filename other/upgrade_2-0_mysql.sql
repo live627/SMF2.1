@@ -2339,6 +2339,20 @@ CHANGE ignore_boards ignore_boards text NOT NULL;
 ---#
 
 /******************************************************************************/
+--- Allow for longer calendar event/holiday titles.
+/******************************************************************************/
+
+---# Changing event title column to a larger field type...
+ALTER TABLE {$db_prefix}calendar
+CHANGE title title varchar(60) NOT NULL default '';
+---#
+
+---# Changing holidays title column to a larger field type...
+ALTER TABLE {$db_prefix}calendar_holidays
+CHANGE title title varchar(60) NOT NULL default '';
+---#
+
+/******************************************************************************/
 --- Adding extra columns to polls.
 /******************************************************************************/
 

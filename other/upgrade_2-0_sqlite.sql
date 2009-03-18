@@ -324,6 +324,42 @@ $smcFunc['db_alter_table']('members', array(
 ---#
 
 /******************************************************************************/
+--- Allow for longer calendar event/holiday titles.
+/******************************************************************************/
+
+---# Changing event title column to a larger field type...
+---{
+$smcFunc['db_alter_table']('calendar', array(
+	'change' => array(
+		'title' => array(
+			'name' => 'title',
+			'null' => false,
+			'type' => 'varchar',
+			'size' => 60,
+			'default' => ''
+		)
+	)
+));
+---}
+---#
+
+---# Changing holiday title column to a larger field type...
+---{
+$smcFunc['db_alter_table']('calendar_holidays', array(
+	'change' => array(
+		'title' => array(
+			'name' => 'title',
+			'null' => false,
+			'type' => 'varchar',
+			'size' => 60,
+			'default' => ''
+		)
+	)
+));
+---}
+---#
+
+/******************************************************************************/
 --- Making changes to the package manager.
 /******************************************************************************/
 

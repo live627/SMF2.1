@@ -511,7 +511,7 @@ CREATE TABLE {$db_prefix}calendar (
   end_date date NOT NULL default '0001-01-01',
   id_board smallint(5) unsigned NOT NULL default '0',
   id_topic mediumint(8) unsigned NOT NULL default '0',
-  title varchar(48) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   id_member mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (id_event),
   KEY start_date (start_date),
@@ -526,7 +526,7 @@ CREATE TABLE {$db_prefix}calendar (
 CREATE TABLE {$db_prefix}calendar_holidays (
   id_holiday smallint(5) unsigned NOT NULL auto_increment,
   event_date date NOT NULL default '0001-01-01',
-  title varchar(30) NOT NULL default '',
+  title varchar(60) NOT NULL default '',
   PRIMARY KEY (id_holiday),
   KEY event_date (event_date)
 ) ENGINE=MyISAM;

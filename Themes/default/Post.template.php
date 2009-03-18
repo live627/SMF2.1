@@ -245,7 +245,7 @@ function template_main()
 									', $txt['calendar_event_title'], '
 								</td>
 								<td class="smalltext">
-									<input type="text" name="evtitle" maxlength="30" size="30" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" />
+									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" />
 								</td>
 							</tr><tr>
 								<td></td>

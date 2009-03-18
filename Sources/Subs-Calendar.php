@@ -871,7 +871,7 @@ function insertEvent(&$eventOptions)
 	$smcFunc['db_insert']('',
 		'{db_prefix}calendar',
 		array(
-			'id_board' => 'int', 'id_topic' => 'int', 'title' => 'string-48', 'id_member' => 'int',
+			'id_board' => 'int', 'id_topic' => 'int', 'title' => 'string-60', 'id_member' => 'int',
 			'start_date' => 'date', 'end_date' => 'date',
 		),
 		array(
@@ -913,7 +913,7 @@ function modifyEvent($event_id, &$eventOptions)
 		SET
 			start_date = {date:start_date},
 			end_date = {date:end_date},
-			title = SUBSTRING({string:title}, 1, 48),
+			title = SUBSTRING({string:title}, 1, 60),
 			id_board = {int:id_board},
 			id_topic = {int:id_topic}
 		WHERE id_event = {int:id_event}',
