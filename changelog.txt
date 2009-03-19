@@ -140,7 +140,8 @@ March 2009
  ! Creation of attachment thumbnail might run out of memory. (Subs-Graphics.php) [Bug 2229]
  * Fixed IE6 and menubar issue (index.css) [Bug 3161]
  ! Shutup magic quotes, as causes warnings in newer php builds (Install.php and few others)
- ! IE6 and mark all as read wouldn't float to the right (BoardIndex.template.php) [Bug 2941]
+ * IE6 and mark all as read wouldn't float to the right (BoardIndex.template.php) [Bug 2941]
+ * IE6 didn't like the height of the calendar in info center (ie6.css) [Bug 2603]
  
 February 2009
 --------------------------------------------------------------------------------
