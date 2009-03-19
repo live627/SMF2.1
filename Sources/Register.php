@@ -317,7 +317,7 @@ function Register2($verifiedOpenID = false)
 	// By default assume email is hidden, only show it if we tell it to.
 	$_POST['hide_email'] = !empty($_POST['allow_email']) ? 0 : 1;
 
-	// Validate the passed langauge file.
+	// Validate the passed language file.
 	if (isset($_POST['lngfile']) && !empty($modSettings['userLanguage']))
 	{
 		$language_directories = array(
