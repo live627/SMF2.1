@@ -145,6 +145,7 @@ March 2009
  ! Backup database might need more memory (0kb backups/server error issues) (DumpDatabase.php)
  * Still using ?b4 for js/css on some templates (Several templates) [Bug 3060]
  ! Integrate wasn't getting called on registering as it was for login/logout (Register.php) [Bug 3352]
+ ! check whether language exists before using it (Load.php) [Bug 2944]
 
 
 February 2009

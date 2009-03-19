@@ -303,7 +303,7 @@ function reloadSettings()
 function loadUserSettings()
 {
 	global $modSettings, $user_settings, $sourcedir, $smcFunc;
-	global $cookiename, $user_info, $language;
+	global $cookiename, $user_info, $language, $settings;
 
 	// Check first the integration, then the cookie, and last the session.
 	if (isset($modSettings['integrate_verify_user']) && function_exists($modSettings['integrate_verify_user']))
@@ -508,10 +508,39 @@ function loadUserSettings()
 	if (!empty($user_info['ignoreboards']) && empty($user_info['ignoreboards'][$tmp = count($user_info['ignoreboards']) - 1]))
 		unset($user_info['ignoreboards'][$tmp]);
 
-	if (!empty($modSettings['userLanguage']) && !empty($_REQUEST['language']))
+	// Validate the passed language file.
+	if (isset($_REQUEST['language']) && !empty($modSettings['userLanguage']))
 	{
-		$user_info['language'] = strtr($_REQUEST['language'], './\\:', '____');
-		$_SESSION['language'] = $user_info['language'];
+		// Don't even bother trying anything naughty.
+		$_REQUEST['language'] = htmlspecialchars(strtr($_REQUEST['language'], array('/' => '', '\\' => '', '.' => '', '%' => '', '?' => '')));
+
+		$language_directories = array(
+			$settings['default_theme_dir'] . '/languages',
+			$settings['actual_theme_dir'] . '/languages',
+		);
+		if (!empty($settings['base_theme_dir']))
+			$language_directories[] = $settings['base_theme_dir'] . '/languages';
+		$language_directories = array_unique($language_directories);
+
+		foreach ($language_directories as $language_dir)
+		{
+			if (!file_exists($language_dir))
+				continue;
+
+			$dir = dir($language_dir);
+			while ($entry = $dir->read())
+				if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && $matches[1] == $_REQUEST['language'])
+				{
+					// Got it!
+					$found = true;
+					$user_info['language'] = $_SESSION['language'] = $_REQUEST['language'];
+					break 2;
+				}
+			$dir->close();
+		}
+
+		if (empty($found))
+			unset($_REQUEST['language'], $_SESSION['language']);
 	}
 	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']))
 		$user_info['language'] = strtr($_SESSION['language'], './\\:', '____');
