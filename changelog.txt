@@ -139,13 +139,13 @@ March 2009
  ! Newer teamies need adding to the credits list, plus fixed missing space bug when 2 in a group (Who.php, Who.english.php) [Bug 2768]
  ! Creation of attachment thumbnail might run out of memory. (Subs-Graphics.php) [Bug 2229]
  * Fixed IE6 and menubar issue (index.css) [Bug 3161]
- ! Shutup magic quotes, as causes warnings in newer php builds (Install.php and few others)
+ ! Shutup magic quotes, as causes warnings in newer php builds (install.php and few others)
  * IE6 and mark all as read wouldn't float to the right (BoardIndex.template.php) [Bug 2941]
  * IE6 didn't like the height of the calendar in info center (ie6.css) [Bug 2603]
- ! Creation of attachment thumbnail allowed too much memory. (Subs-Graphics.php) [Bug 2229]
  ! Backup database might need more memory (0kb backups/server error issues) (DumpDatabase.php)
  * Still using ?b4 for js/css on some templates (Several templates) [Bug 3060]
- 
+
+
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
