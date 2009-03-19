@@ -276,7 +276,7 @@ function createThumbnail($source, $max_width, $max_height)
 	$destName = $source . '_thumb.tmp';
 
 	// Ask for more memory: we need it for this, and it'll only happen once!
-	@ini_set('memory_limit', '256M');
+	@ini_set('memory_limit', '64M');
 
 	$success = false;
 	$sizes = getimagesize($source);
