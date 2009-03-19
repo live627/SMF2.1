@@ -511,6 +511,9 @@ function Register2($verifiedOpenID = false)
 	}
 	else
 	{
+		if (isset($modSettings['integrate_login']) && function_exists($modSettings['integrate_login']))
+			$modSettings['integrate_login']($regOptions['username'], $regOptions['password'], $modSettings['cookieTime']);
+			
 		setLoginCookie(60 * $modSettings['cookieTime'], $memberID, sha1(sha1(strtolower($regOptions['username']) . $regOptions['password']) . $regOptions['register_vars']['password_salt']));
 
 		redirectexit('action=login2;sa=check;member=' . $memberID, $context['server']['needs_login_fix']);
