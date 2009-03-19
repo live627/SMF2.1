@@ -143,6 +143,7 @@ March 2009
  * IE6 and mark all as read wouldn't float to the right (BoardIndex.template.php) [Bug 2941]
  * IE6 didn't like the height of the calendar in info center (ie6.css) [Bug 2603]
  ! Creation of attachment thumbnail allowed too much memory. (Subs-Graphics.php) [Bug 2229]
+ ! Backup database might need more memory (0kb backups/server error issues) (DumpDatabase.php)
  
 February 2009
 --------------------------------------------------------------------------------

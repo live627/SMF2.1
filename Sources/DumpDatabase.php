@@ -59,8 +59,8 @@ function DumpDatabase2()
 
 	// Attempt to stop from dying...
 	@set_time_limit(600);
-	if (@ini_get('memory_limit') < 128)
-		@ini_set('memory_limit', '128M');
+	if (@ini_get('memory_limit') < 256)
+		@ini_set('memory_limit', '256M');
 
 	// Start saving the output... (don't do it otherwise for memory reasons.)
 	if (isset($_REQUEST['compress']) && function_exists('gzencode'))
