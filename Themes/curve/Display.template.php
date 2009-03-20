@@ -394,7 +394,7 @@ function template_main()
 			echo '<div id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
 
 		echo '
-					<div class="post" id="msg_', $message['id'], '"', '>';
+					<div class="post">';
 
 		if (!$message['approved'] && $message['member']['id'] != 0 && $message['member']['id'] == $context['user']['id'])
 			echo '
@@ -402,7 +402,7 @@ function template_main()
 							', $txt['post_awaiting_approval'], '
 						</div>';
 		echo '
-						<div class="inner">', $message['body'], '</div>
+						<div class="inner" id="msg_', $message['id'], '"', '>', $message['body'], '</div>
 					</div>', $message['can_modify'] ? '
 					<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" class="modifybutton" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '';
 
@@ -673,8 +673,8 @@ function template_main()
 					</div>
 				</div>'), ',
 			sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%;" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />'), ',
-			sTemplateBodyNormal: ', JavaScriptEscape('<div class="inner">%body%</div>'), ',
-			sTemplateSubjectNormal: ', JavaScriptEscape('<a href="' . $scripturl . '?topic=' . $context['current_topic'] . '.msg%msg_id%#msg%msg_id%">%subject%</a>'), ',
+			sTemplateBodyNormal: ', JavaScriptEscape('%body%'), ',
+			sTemplateSubjectNormal: ', JavaScriptEscape('<a href="' . $scripturl . '?topic=' . $context['current_topic'] . '.msg%msg_id%#msg%msg_id%" rel="nofollow">%subject%</a>'), ',
 			sTemplateTopSubject: "' . $txt['topic'] . ': %subject% &nbsp;(' . $txt['read'] . ' ' . $context['num_views'] . ' ' . $txt['times'] . ')",
 			sErrorBorderStyle: "1px solid red"
 		});

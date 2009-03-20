@@ -145,6 +145,7 @@ March 2009
  ! Backup database might need more memory (0kb backups/server error issues) (DumpDatabase.php)
  * Still using ?b4 for js/css on some templates (Several templates) [Bug 3060]
  ! Integrate wasn't getting called on registering as it was for login/logout (Register.php) [Bug 3352]
+ * rel="nofollow" ajax msg subject JIC. Editing a message removes the unapproved message notice. [Bug 3192]
 
 
 February 2009
