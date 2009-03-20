@@ -512,7 +512,7 @@ function Register2($verifiedOpenID = false)
 	else
 	{
 		if (isset($modSettings['integrate_login']) && function_exists($modSettings['integrate_login']))
-			$modSettings['integrate_login']($regOptions['username'], $regOptions['password'], $modSettings['cookieTime']);
+			$modSettings['integrate_login']($regOptions['register_vars']['member_name'], $regOptions['register_vars']['passwd'], $modSettings['cookieTime']);
 			
 		setLoginCookie(60 * $modSettings['cookieTime'], $memberID, sha1(sha1(strtolower($regOptions['username']) . $regOptions['password']) . $regOptions['register_vars']['password_salt']));
 
