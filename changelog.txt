@@ -146,7 +146,7 @@ March 2009
  * Still using ?b4 for js/css on some templates (Several templates) [Bug 3060]
  ! Integrate wasn't getting called on registering as it was for login/logout (Register.php) [Bug 3352]
  * rel="nofollow" ajax msg subject JIC. Editing a message removes the unapproved message notice. [Bug 3192]
-
+ * <hr> between subject/body of post is missing when post is by user who is being ignored (Display.template.php, style.css) [Bug 3152]
 
 February 2009
 --------------------------------------------------------------------------------
