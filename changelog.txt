@@ -149,6 +149,7 @@ March 2009
  * <hr> between subject/body of post is missing when post is by user who is being ignored (Display.template.php, style.css) [Bug 3152]
  ! IE doesn't support RDF + application/xml+rdf, so use text/xml for IE only otherwise it will try to download the file (News.php) [Bug 1513]
  ! Fixed Integrate wasn't getting called on registering as it was for login/logout (Register.php) [Bug 3352]
+ ! Unnecessary $_GET['pid'] causing undefined index error when deleting permission profile (ManagePermissions.php) [Bug 3228]
 
 February 2009
 --------------------------------------------------------------------------------

@@ -1964,7 +1964,7 @@ function EditPermissionProfiles()
 				'profile_list' => $profiles,
 			)
 		);
-		if ($smcFunc['db_num_rows']($request) != 0 || $_GET['pid'] == 1)
+		if ($smcFunc['db_num_rows']($request) != 0)
 			fatal_lang_error('no_access');
 		$smcFunc['db_free_result']($request);
 
