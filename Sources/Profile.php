@@ -41,7 +41,7 @@ if (!defined('SMF'))
 function ModifyProfile($post_errors = array())
 {
 	global $txt, $scripturl, $user_info, $context, $sourcedir, $user_profile, $cur_profile;
-	global $modSettings, $memberContext, $profile_vars, $smcFunc, $post_errors;
+	global $modSettings, $memberContext, $profile_vars, $smcFunc, $post_errors, $options;
 
 	// Don't reload this as we may have processed error strings.
 	if (empty($post_errors))
@@ -334,7 +334,7 @@ function ModifyProfile($post_errors = array())
 		),
 	);
 
-	// Right to left should have home the last item etc.
+	// Right to left menu should be in reverse order.
 	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
 		$profile_areas = array_reverse($profile_areas, true);
 

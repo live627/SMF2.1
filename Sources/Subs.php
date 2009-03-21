@@ -3846,7 +3846,7 @@ function setupMenuContext()
 			),
 		);
 
-		// Right to left should have home the last item etc.
+		// Right to left menu should be in reverse order.
 		if ($context['right_to_left'])
 			$buttons = array_reverse($buttons, true);
 

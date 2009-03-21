@@ -347,7 +347,7 @@ function messageIndexBar($area)
 		),
 	);
 
-	// Right to left should have home the last item etc.
+	// Right to left menu should be in reverse order.
 	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
 		$pm_areas = array_reverse($pm_areas, true);
 

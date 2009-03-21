@@ -157,6 +157,10 @@ function ModerationMain($dont_call = false)
 		),
 	);
 
+	// Right to left menu should be in reverse order.
+	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
+		$moderation_areas = array_reverse($moderation_areas, true);
+
 	// I don't know where we're going - I don't know where we've been...
 	$menuOptions = array(
 		'action' => 'moderate',

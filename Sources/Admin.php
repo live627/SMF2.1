@@ -472,7 +472,7 @@ function AdminMain()
 		),
 	);
 
-	// Right to left should have home the last item etc.
+	// Right to left menu should be in reverse order.
 	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
 		$admin_areas = array_reverse($admin_areas, true);
 

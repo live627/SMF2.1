@@ -47,7 +47,7 @@ if (!defined('SMF'))
 // Redirect to the user help ;).
 function ShowHelp()
 {
-	global $settings, $user_info, $language, $context, $txt, $sourcedir;
+	global $settings, $user_info, $language, $context, $txt, $sourcedir, $options;
 
 	loadTemplate('Help');
 	loadLanguage('Manual');
@@ -167,7 +167,7 @@ function ShowHelp()
 		),
 	);
 
-	// Right to left should have home the last item etc.
+	// Right to left menu should be in reverse order.
 	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
 		$manual_areas = array_reverse($manual_areas, true);
 
