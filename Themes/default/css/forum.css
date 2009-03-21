@@ -20,6 +20,11 @@ h3#newsfader
 	font-size: 1em;
 	text-align: center;
 }
+#upshrink_ic
+{
+	margin-right: 2ex;
+	align: right;
+}
 .categoryframe
 {
 	margin-top: 0.4em;

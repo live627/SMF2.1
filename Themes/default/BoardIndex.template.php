@@ -266,7 +266,7 @@ function template_info_center()
 	echo '
 	<div class="tborder clearfix" id="infocenterframe">
 		<h3 class="catbg headerpadding">
-			<a href="#" onclick="infoHeader.toggle(); return false;"><img id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" style="margin-right: 2ex;" align="right" /></a>
+			<a href="#" onclick="infoHeader.toggle(); return false;"><img id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" /></a>
 			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
 		</h3>
 		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
