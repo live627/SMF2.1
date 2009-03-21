@@ -3678,6 +3678,7 @@ function setupMenuContext()
 				'show' => true,
 				'sub_buttons' => array(
 				),
+				'is_last' => $context['right_to_left'],
 			),
 			'help' => array(
 				'title' => $txt['help'],
@@ -3833,7 +3834,7 @@ function setupMenuContext()
 				'show' => $user_info['is_guest'],
 				'sub_buttons' => array(
 				),
-				'is_last' => true,
+				'is_last' => !$context['right_to_left'],
 			),
 			'logout' => array(
 				'title' => $txt['logout'],
@@ -3841,9 +3842,13 @@ function setupMenuContext()
 				'show' => !$user_info['is_guest'],
 				'sub_buttons' => array(
 				),
-				'is_last' => true,
+				'is_last' => !$context['right_to_left'],
 			),
 		);
+
+		// Right to left should have home the last item etc.
+		if ($context['right_to_left'])
+			$buttons = array_reverse($buttons, true);
 
 		$load_menu_js = false;
 		// Now we put the buttons in the context so the theme can use them.

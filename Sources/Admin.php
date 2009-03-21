@@ -472,7 +472,9 @@ function AdminMain()
 		),
 	);
 
-	$menuOptions = array();
+	// Right to left should have home the last item etc.
+	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
+		$admin_areas = array_reverse($admin_areas, true);
 
 	// Make sure the administrator has a valid session...
 	validateSession();

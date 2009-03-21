@@ -290,7 +290,7 @@ function MessageMain()
 // A sidebar to easily access different areas of the section
 function messageIndexBar($area)
 {
-	global $txt, $context, $scripturl, $sourcedir, $sc, $modSettings, $settings, $user_info;
+	global $txt, $context, $scripturl, $sourcedir, $sc, $modSettings, $settings, $user_info, $options;
 
 	$pm_areas = array(
 		'folders' => array(
@@ -346,6 +346,10 @@ function messageIndexBar($area)
 			),
 		),
 	);
+
+	// Right to left should have home the last item etc.
+	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
+		$pm_areas = array_reverse($pm_areas, true);
 
 	// Handle labels.
 	if (empty($context['currently_using_labels']))

@@ -167,6 +167,10 @@ function ShowHelp()
 		),
 	);
 
+	// Right to left should have home the last item etc.
+	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
+		$manual_areas = array_reverse($manual_areas, true);
+
 	// Set a few options for the menu.
 	$menu_options = array(
 		'disable_url_session_check' => true,
