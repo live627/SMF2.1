@@ -107,19 +107,6 @@ function template_html_above()
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?rc1" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc1" media="print" />';
 
-	// IE7 needs some fixes for styles.
-	if ($context['browser']['is_ie7'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie7.css" />';
-	// ..and IE6!
-	elseif ($context['browser']['is_ie6'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
-	// Firefox - all versions - too!
-	elseif ($context['browser']['is_firefox'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
-
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
 	<link rel="help" href="', $scripturl, '?action=help" />
@@ -150,7 +137,27 @@ function template_html_above()
 	}
 
 	// Output any remaining HTML headers. (from mods, maybe?)
-	echo $context['html_headers'], '
+	echo $context['html_headers'];
+
+	// IE7 needs some fixes for styles.
+	if ($context['browser']['is_ie7'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie7.css" />';
+	// ..and IE6!
+	elseif ($context['browser']['is_ie6'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie6.css" />';
+	// Firefox - all versions - too!
+	elseif ($context['browser']['is_firefox'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
+
+	// RTL languages require an additional stylesheet.
+	if ($context['right_to_left'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
+
+	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');

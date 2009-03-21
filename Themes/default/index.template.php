@@ -109,24 +109,6 @@ function template_html_above()
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc1" media="print" />';
 
-	// IE7 needs some fixes for styles.
-	if ($context['browser']['is_ie7'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie7.css" />';
-	// ..and IE6!
-	elseif ($context['browser']['is_ie6'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie6.css" />';
-	// Firefox - all versions - too!
-	elseif ($context['browser']['is_firefox'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
-
-	// RTL languages require an additional stylesheet.
-	if ($context['right_to_left'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
-
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
 	<link rel="help" href="', $scripturl, '?action=help" />
@@ -157,8 +139,28 @@ function template_html_above()
 	}
 
 	// Output any remaining HTML headers. (from mods, maybe?)
-	echo $context['html_headers'], '
-	<script type="text/javascript"><!-- // --><![CDATA[
+	echo $context['html_headers'];
+
+	// IE7 needs some fixes for styles.
+	if ($context['browser']['is_ie7'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie7.css" />';
+	// ..and IE6!
+	elseif ($context['browser']['is_ie6'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie6.css" />';
+	// Firefox - all versions - too!
+	elseif ($context['browser']['is_firefox'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
+
+	// RTL languages require an additional stylesheet.
+	if ($context['right_to_left'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
+
+	echo '
+		<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
@@ -427,7 +429,7 @@ function template_menu()
 		$classes = array();
 		if (!empty($button['active_button']))
 			$classes[] = 'active';
-		if (!empty($button['is_last']))
+		if ((!empty($button['is_last']) && !$context['right_to_left']) || (!empty($button['is_first']) && $context['right_to_left']))
 			$classes[] = 'last';
 		$classes = implode(' ', $classes);
 		
