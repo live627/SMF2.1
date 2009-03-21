@@ -167,10 +167,6 @@ function ShowHelp()
 		),
 	);
 
-	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
-		$manual_areas = array_reverse($manual_areas, true);
-
 	// Set a few options for the menu.
 	$menu_options = array(
 		'disable_url_session_check' => true,

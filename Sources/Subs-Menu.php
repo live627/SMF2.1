@@ -31,7 +31,7 @@ if (!defined('SMF'))
 // Create a menu...
 function createMenu($menuData, $menuOptions = array())
 {
-	global $context, $settings, $options, $txt, $modSettings, $scripturl, $smcFunc, $user_info, $sourcedir;
+	global $context, $settings, $options, $txt, $modSettings, $scripturl, $smcFunc, $user_info, $sourcedir, $options;
 
 	// First are we toggling use of the side bar generally?
 	if (isset($_GET['togglebar']) && !$user_info['is_guest'])
@@ -236,6 +236,10 @@ function createMenu($menuData, $menuOptions = array())
 		}
 	}
 
+	// Right to left menu should be in reverse order.
+	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
+		$menu_context['sections'] = array_reverse($menu_context['sections'], true);
+	
 	// If we didn't find the area we were looking for go to a default one.
 	if (isset($backup_area) && empty($found_section))
 		$menu_context['current_area'] = $backup_area;

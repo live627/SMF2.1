@@ -334,10 +334,6 @@ function ModifyProfile($post_errors = array())
 		),
 	);
 
-	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
-		$profile_areas = array_reverse($profile_areas, true);
-
 	// Do some cleaning ready for the menu function.
 	$context['password_areas'] = array();
 	$current_area = isset($_REQUEST['area']) ? $_REQUEST['area'] : '';

@@ -347,10 +347,6 @@ function messageIndexBar($area)
 		),
 	);
 
-	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
-		$pm_areas = array_reverse($pm_areas, true);
-
 	// Handle labels.
 	if (empty($context['currently_using_labels']))
 		unset($pm_areas['labels']);

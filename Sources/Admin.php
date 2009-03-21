@@ -472,10 +472,6 @@ function AdminMain()
 		),
 	);
 
-	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
-		$admin_areas = array_reverse($admin_areas, true);
-
 	// Make sure the administrator has a valid session...
 	validateSession();
 
