@@ -429,8 +429,12 @@ function template_menu()
 		$classes = array();
 		if (!empty($button['active_button']))
 			$classes[] = 'active';
-		if ((!empty($button['is_last']) && !$context['right_to_left']) || (!empty($button['is_first']) && $context['right_to_left']))
+		if (!empty($button['is_last']))
 			$classes[] = 'last';
+		/* IE6 can't do multiple class selectors */
+		if ($context['browser']['is_ie6'] && !empty($button['active_button']) && !empty($button['is_last']))
+			$classes[] = 'lastactive';
+
 		$classes = implode(' ', $classes);
 		
 		echo '

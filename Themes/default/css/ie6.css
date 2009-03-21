@@ -24,3 +24,12 @@
 {
 	height: 30px;
 }
+/* IE6 doesn't support multiple class selectors */
+#main_menu li.last.active
+{
+	padding: 0 0 0 0;
+}
+#main_menu li.lastactive
+{
+	padding: 0 8px 0 0;
+}

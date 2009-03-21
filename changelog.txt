@@ -151,6 +151,7 @@ March 2009
  ! Fixed Integrate wasn't getting called on registering as it was for login/logout (Register.php) [Bug 3352]
  ! Unnecessary $_GET['pid'] causing undefined index error when deleting permission profile (ManagePermissions.php) [Bug 3228]
  * Output $context['html_headers'] BEFORE the ie6,7 fixes/firefox fixes/and rtl css files (otherwise we can't override some classes) (index.template.php)
+ * IE6 doesn't support multiple class selectors so use a lastactive class (index.css, ie6.css, index.template.php) [Bug 3161]
 
 February 2009
 --------------------------------------------------------------------------------
