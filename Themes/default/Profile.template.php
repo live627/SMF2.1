@@ -1481,10 +1481,10 @@ function template_groupMembership()
 
 			echo '
 					<td>
-						<div style="float: left;">
+						<div class="floatleft">
 							<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
 						</div>
-						<div style="float: right">';
+						<div class="floatright">';
 
 			// Can they leave their group?
 			if ($group['can_leave'])
@@ -1526,10 +1526,10 @@ function template_groupMembership()
 				echo '
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>
-						<div style="float: left;">
+						<div class="floatleft">
 							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
-						<div style="float: right">
+						<div  class="floatright">
 							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 						</div>
 					</td>
@@ -2022,13 +2022,13 @@ function template_issueWarning()
 				<td class="smalltext">', $warning['issuer']['link'], '</td>
 				<td class="smalltext">', $warning['time'], '</td>
 				<td class="smalltext">
-					<div style="float: left;">
+					<div class="floatleft">
 						', $warning['reason'], '
 					</div>';
 
 		if (!empty($warning['id_notice']))
 			echo '
-					<div style="float: right;">
+					<div class="floatright">
 						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" class="new_win" title="', $txt['profile_warning_previous_notice'], '"><img src="', $settings['images_url'], '/filter.gif" alt="" /></a>
 					</div>';
 		echo '

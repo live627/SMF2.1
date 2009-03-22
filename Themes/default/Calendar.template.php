@@ -8,7 +8,7 @@ function template_main()
 	echo '
 		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div>
-			<div style="padding: 1px; margin: 0 auto; text-align: center; float: ', $context['right_to_left'] ? 'right' : 'left', '; width: 200px;">
+			<div style="padding: 1px; margin: 0 auto; text-align: center; width: 200px;" class="floatleft">
 					', template_show_month_grid('prev'), '
 					', template_show_month_grid('current'), '
 					', template_show_month_grid('next'), '

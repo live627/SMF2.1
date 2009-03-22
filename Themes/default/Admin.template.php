@@ -37,7 +37,7 @@ function template_admin()
 		echo '
 	<div class="bordercolor" style="padding: 1px; margin-top: 0.5em;">
 		<form class="titlebg2" style="margin: 0; padding: 5px 5px 5px 10px;" action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
-			<img src="' , $settings['images_url'] , '/filter.gif" alt="" style="float:', $context['right_to_left'] ? 'left' : 'right', ';" />
+			<img src="' , $settings['images_url'] , '/filter.gif" alt="" class="floatright" />
 			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
 			<select name="search_type">
 				<option value="internal"', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>

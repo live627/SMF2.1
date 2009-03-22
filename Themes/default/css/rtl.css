@@ -587,15 +587,10 @@ ul.admin_menu li ul li a
 }
 /*
 TODO 
- - reverse buttons in post reply/modify/delete/quote should be quote/delete/modify/reply
- - classic/babylon/curve class pm_buttons
- - report to admin in other themes too.
- - Menu items doesn't select the full width
- - group membership in profile
+ - admin_menu items doesn't select the full width in RTL
+ - admin_menu second layer causes IE to cause horizontal scrollbar in RTL
+ - linktree to close to tab menu in IE8. Margin-top?
  - unread/unread replies
- - viewing dropdown menu causes horizontal scrollbar to appear
- - link tree is has left margin in ie8.
- - navPages not going all the way to the right on display
- - post polls, not aligned 
- - save btn in core features
+ - displaynavPages not going all the way to the right on display
+ - post polls, question? field
 */
