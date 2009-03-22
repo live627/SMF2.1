@@ -515,7 +515,7 @@ ul.admin_menu li ul li a
 ul.admin_menu li ul li a.subsection
 {
 	background: url(../images/admin/subsection2.gif) no-repeat 2% 50%;
-	float: left;
+	width: 18.5em;
 }
 /* Hidden to the right must be hidden to left to over scrollbars */
 ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
@@ -524,17 +524,31 @@ ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 }
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {
-	left: -20em;
+	left: -19em;
 }
 ul.admin_menu li ul li a
 {
 	padding: 0.5em 0.5em 0.5em 2em;  /* Was: padding: 0.5em 2em 0.5em 0.5em; */
 	float: right;
 }
+
+.lastpost img
+{
+	float: left;
+}
 /*
- - admin_menu - items without section class won't left align, icons won't go to far right
  - last post on messageindex
  - report to moderator/ip switch around
  TODO in php
  - reverse buttons in post reply/modify/delete/quote should be quote/delete/modify/reply
+ - reverse calendar sidebar
+ - calendar padding
+ - sidemenus padding reverse
+ - classic/babylon/curve class pm_buttons
+ - report to admin in other themes too.
+ - Menu items doesn't select the full width
+ - menu icons need reversing?
+ - non-section menu items won't align
+ - group membership in profile
+ - pagination links reversed
 */

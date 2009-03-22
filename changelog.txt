@@ -157,6 +157,7 @@ March 2009
  * Togglebar >> image icon should be reversed in right to left mode (GenericMenu.template.php)
  * Reverse linktree in RTL mode (index.template.php)
  * RTL css (Mainly rtl.css, and few tweaks to other files)
+ * Inline class preventing rtl working on lastpost img (MessageIndex.template.php, forum.css)
 
 February 2009
 --------------------------------------------------------------------------------

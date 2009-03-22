@@ -222,8 +222,8 @@ function template_main()
 					<td class="windowbg" valign="middle" width="4%" align="center">
 						', $topic['views'], '
 					</td>
-					<td class="smalltext" valign="middle" width="22%">
-						<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" border="0" style="float: right;" /></a>
+					<td class="smalltext lastpost" valign="middle" width="22%">
+						<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
 
 						', $topic['last_post']['time'], '<br />
 						', $txt['by'], ' ', $topic['last_post']['member']['link'], '

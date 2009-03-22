@@ -241,6 +241,10 @@ table.table_list a.collapse
 {
 	margin-bottom: 1em;
 }
+.lastpost img
+{
+	float: right;
+}
 /* ************************************* */
 /* styles from Display.template          */
 /* ************************************* */

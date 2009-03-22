@@ -219,7 +219,10 @@ form#infocenter_login ul.horizlist label
 {
 	margin: 2em 4em 0 2em;
 }
-
+.lastpost img
+{
+	float: right;
+}
 /* ************************************* */
 /* styles from Display.template          */
 /* ************************************* */

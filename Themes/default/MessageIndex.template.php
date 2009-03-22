@@ -256,7 +256,7 @@ function template_main()
 								', $topic['views'], '
 							</td>
 							<td class="windowbg2 lastpost">
-								<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" style="float: right;" /></a>
+								<a href="', $topic['last_post']['href'], '"><img src="', $settings['images_url'], '/icons/last_post.gif" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
 								<span class="smalltext">
 									', $topic['last_post']['time'], '<br />
 									', $txt['by'], ' ', $topic['last_post']['member']['link'], '
