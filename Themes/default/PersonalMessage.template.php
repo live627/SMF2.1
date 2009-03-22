@@ -252,7 +252,7 @@ function template_folder()
 							</td>
 							<td class="', $windowcss, '" valign="top" width="85%" height="100%">
 								<table width="100%" border="0"><tr>
-									<td align="left" valign="middle">
+									<td align="', $context['right_to_left'] ? 'right' : 'left', '" valign="middle">
 										<b>', $message['subject'], '</b>';
 
 			// Show who the message was sent to.
@@ -279,7 +279,7 @@ function template_folder()
 
 			echo '
 									</td>
-									<td align="right" valign="bottom" height="20" nowrap="nowrap" style="font-size: smaller;">';
+									<td align="', !$context['right_to_left'] ? 'right' : 'left', '" valign="bottom" height="20" nowrap="nowrap" style="font-size: smaller;" width="30%" class="pm_buttons">';
 
 			// Show reply buttons if you have the permission to send PMs.
 			if ($context['can_send_pm'])
@@ -321,7 +321,7 @@ function template_folder()
 						</tr>
 						<tr class="', $windowcss, '">
 							<td valign="bottom" class="smalltext" width="85%">
-								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div style="margin: 0 auto; margin-bottom: 10px; text-align: right;"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
+								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div style="margin: 0 auto; margin-bottom: 10px; text-align: ' . ($context['right_to_left'] ? 'left' : 'right') . ';"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
 
 			// Show the member's signature?
 			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
@@ -394,8 +394,8 @@ function template_folder()
 		<table cellpadding="3" cellspacing="0" border="0" width="100%">
 			<tr class="catbg" valign="middle">
 				<td height="25">
-					<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
-					<div style="float: right;"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" /></div>
+					<div style="float: ', $context['right_to_left'] ? 'right' : 'left', ';">', $txt['pages'], ': ', $context['page_index'], '</div>
+					<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" /></div>
 				</td>
 			</tr>
 		</table>
@@ -473,8 +473,8 @@ function template_subject_list()
 	<div class="bordercolor" style="padding: 1px; ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'width: 100%;' : '', '">
 		<table width="100%" cellpadding="2" cellspacing="0" border="0"><tr class="catbg" valign="middle">
 			<td>
-				<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
-				<div style="float: right;">&nbsp;';
+				<div style="float: ', $context['right_to_left'] ? 'right' : 'left', ';">', $txt['pages'], ': ', $context['page_index'], '</div>
+				<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">&nbsp;';
 
 	if ($context['show_delete'])
 	{

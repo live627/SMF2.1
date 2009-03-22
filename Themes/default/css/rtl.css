@@ -21,3 +21,520 @@
 	background: url(../images/maintab_active_first.gif) left bottom no-repeat;
 	width: 6px;
 }
+
+/* 
+	- if any attribute differs from left vs right, then we reverse it.
+		Where {attribute}-left or {attribute}-right is used, we might have to undo it before repeating it for the opposite.
+	- float: is reversed
+	- padding: is reversed (if they differ)
+	- margin: is reversed
+	- border: is reversed
+	- clear: may need reversing but currently stays the same
+	EXCEPT menus/tabs, we flipped them in php. So we only need to reverse float.
+	- THEN we fix anything else that wasn't moved over
+
+*/
+
+/* ************************************* */
+/* Style.css					         */
+/* ************************************* */
+ul.normallist
+{
+	padding-left: 0; /* Was: padding-left: 2em; */
+	padding-right: 2em;
+}
+.floatright
+{
+	float: left; /* Was: float: right; */
+}
+.floatleft
+{
+	float: right; /* Was: float: left; */
+}
+ul.horizlist li
+{
+	float: right; /* Was: float: left; */
+}
+code
+{
+	margin: 1px auto 0 auto 0 auto 1px auto; /* Was: margin: 1px auto 1px auto; */
+}
+.bbc_list
+{
+	margin-left: 0; /* Was: margin-left: 2em; */
+	margin-right: 2em;
+}
+.errorbox p.alert
+{
+	float: right; /* Was: float: left; */
+}
+
+.postarea .post
+{
+	clear: right; /* Was: clear: right; NOT CHANGED, but may need to */
+	float: right; /* Was: float: left; */
+}
+.ignored
+{
+	clear: both;
+	float: left; /* Was: float: right; */
+}
+.signature
+{
+	clear: right; /* Was: clear: right; NOT CHANGED, but may need to */
+}
+.openid_login
+{
+	padding-left: 0; /* Was: padding-left: 18px; */
+	padding-right: 18px;
+}
+#ajax_in_progress a
+{
+	float: left; /* Was: float: right; */
+}
+/* ************************************* */
+/* forum.css                             */
+/* ************************************* */
+/* styles from BoardIndex.template     */
+p#stats
+{
+	text-align: left; /* Was: text-align: right; */
+}
+#upshrink_ic
+{
+	margin-right: 0; /* Was: margin-right: 2ex; */
+	margin-left: 2ex;
+	text-align: left; /* Was: align: right; */
+}
+#posticons .buttonlist
+{
+	margin-right: 0; /* Was: margin-right: 1em; */
+	margin-left: 1em;
+	float: left; /* Was: float: right; */
+}
+.infocenter_section p.section
+{
+	float: right; /* Was: float: left; */
+}
+.infocenter_section div.sectionbody
+{
+	border-left: solid #a0a0a0 0px; /* Was: border-left: solid #a0a0a0 1px; */
+	border-right: solid #a0a0a0 1px;
+}
+dl#infocenter_recentposts
+{
+	float: right; /* Was: float: left; */
+}
+dl#infocenter_recentposts dt
+{
+	clear: left; /* Was: clear: left; NOT CHANGED, but may need to */
+	float: right; /* Was: float: left; */
+}
+dl#infocenter_recentposts dd
+{
+	clear: right; /* Was: clear: right; NOT CHANGED, but may need to */
+	float: left; /* Was: float: right; */
+	text-align: left; /* Was: text-align: right; */
+}
+/* styles from MessageIndex.template     */
+.modbuttons .buttonlist, .modbuttons .buttonlist_bottom
+{
+	margin-right: 0; /* Was: margin-right: 1em; */
+	margin-left: 1em;
+	float: left; /* Was: float: right; */
+}
+#message_index_jump_to
+{
+	margin: 2em 2em 0 4em; /* Was: margin: 2em 4em 0 2em; */
+}
+/* styles from Display.template          */
+#moderationbuttons
+{
+	margin-left: 0; /* Was: margin-left: 0.5em; */
+	margin-right: 0.5em;
+}
+#postbuttons .nav, #postbuttons_lower .nav
+{
+	margin: 0.5em 0 0 0.5em; /* Was: margin: 0.5em 0.5em 0 0; */
+	text-align: left; /* Was: text-align: right; */
+}
+#postbuttons_lower .nav
+{
+	margin: 0em 0 0.5em 0.5em; /* Was: margin: 0em 0.5em 0.5em 0; */
+}
+#postbuttons, #postbuttons_lower
+{
+	text-align: left; /* Was: text-align: right; */
+}
+
+/* Poll question */
+h4#pollquestion
+{
+	padding: 1em 2em 1em 0; /* Was: padding: 1em 0 1em 2em; */
+}
+
+/* Poll vote options */
+#poll_options ul.options
+{
+	padding: 1em 2em 0 2.5em; /* Was: padding: 1em 2.5em 0 2em; */
+}
+#poll_options div.submitbutton
+{
+	padding: 0 2em 1em 0; /* Was: padding: 0 0 1em 2em; */
+}
+#poll_options dl.options
+{
+	padding: 1em 2em 0 2.5em; /* Was: padding: 1em 2.5em 0 2em; */
+}
+div#pollmoderation
+{
+	margin: -1em 2em 0 0; /* Was: margin: -1em 0 0 2em; */
+}
+#forumposts h3.catbg3 span
+{
+	padding-left: 0; /* Was: padding-left: 2%; */
+	padding-right: 2%;
+}
+#forumposts h3.catbg3 span#top_subject
+{
+	padding-left: 0; /* Was: padding-left: 9.5em; */
+	padding-right: 9.5em; 
+}
+.postarea
+{
+	margin-left: 0; /* Was: margin-left: 16em; */
+	margin-right: 16em;
+}
+.messageicon
+{
+	float: right; /* Was: float: left; */
+	margin: 0 0 0.5em 0.5em; /* Was: margin: 0 0.5em 0.5em 0; */
+}
+div.postarea .keyinfo
+{
+	float: right; /* Was: float: left; */
+}
+ul.postingbuttons
+{
+	float: left; /* Was: float: right; */
+	padding-right: 0; /* Was: padding-right: 1em; */
+	padding-left: 1em;
+	text-align: left; /* Was: text-align: right; */
+}
+.modifybutton
+{
+	float: left; /* Was: float: right; */
+}
+.postfooter
+{
+	margin-left: 0; /* Was: margin-left: 16em; */
+	margin-right: 16em;
+}
+.moderatorbar
+{
+	clear: right; /* Was: clear: right; NOT CHANGED, but may need to */
+	margin: 1em 16em 0 0; /* Was: margin: 1em 0 0 16em; */
+}
+#quickReplyOptions div
+{
+	border-left: solid 0px #aaa; /* Was: border-left: solid 1px #aaa; */
+	border-right: solid 1px #aaa;
+}
+#quickReplyOptions #quickReplyWarning
+{
+	text-align: right; /* text-align: left; */
+	float: right; /* Was: float: left; */
+}
+#quickReplyOptions #quickReplyContent
+{
+	float: right; /* Was: float: left; */
+}
+/* styles from Recent.template           */
+.readbuttons .buttonlist, .readbuttons .buttonlist_bottom
+{
+	margin-right: 0; /* Was: margin-right: 1em; */
+	margin-left: 1em;
+	float: left; /* Was: float: right; */
+}
+/* ************************************* */
+/* admin.css                             */
+/* ************************************* */
+.features_image
+{
+	float: right; /* Was: float: left; */
+	margin: 0.5em 1em 0.5em 2em; /* Was: margin: 0.5em 2em 0.5em 1em; */
+}
+.features_switch
+{
+	float: left; /* Was: float: right; */
+}
+.features h4
+{
+	padding: 2em 0.5 0.5em 0; /* Was: padding: 2em 0 0.5em 0.5em; */
+}
+/* admin home */
+.home_image
+{
+	float: right; /* Was: float: left; */
+}
+/* ************************************* */
+/* dropmenu.css                          */
+/* ************************************* */
+/* Container for the new admin menu */
+#adm_container
+{
+	float: right; /* Was: float: left; */
+	margin-left: 0px; /* Was: margin-left: 10px; */
+	margin-right: 10px;
+}
+/* First layer of menu items */
+ul.admin_menu li
+{
+	padding-right: 0; /* Was: padding-right: 4px; */
+	padding-left: 4px;
+}
+/* the menu dropdown toggle image */
+div#menu_toggle
+{
+	float: left; /* Was: float: right; */
+	margin: 0 0 0 10px; /* Was: margin: 0 10px 0 0; */
+}
+
+/* ************************************* */
+/* dropmenu_default.css                  */
+/* ************************************* */
+/* TODO */
+/* ************************************* */
+/* editor.css                            */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* editor_ie.css                         */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* ff.css                                */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* fonts-compat.css                      */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* help.css                              */
+/* ************************************* */
+#helpmain h3, #helpmain h4, #helpmain h5, #helpmain h6
+{
+	padding: 0 0.5em 0.5em 0; /* Was: padding: 0 0 0.5em 0.5em; */
+}
+
+#helpmain ol.la
+{
+	padding-left: 0; /* Was: padding-left: 1.5em; */
+	padding-right: 1.5em;
+}
+#helpmain ul
+{
+	margin: 0 2em 1em 0; /* Was: margin: 0 0 1em 2em; */
+	padding-left: 0; /* Was: padding-left: 1em; */
+	padding-right: 1em;
+}
+#helpmain ul li
+{
+	padding-left: 0; /* Was: padding-left: 0.2em; */
+	padding-right: 0.2em;
+}
+#helpmain .buttonlist_bottom ul, #helpmain .buttonlist ul
+{
+	padding: 0 1em 0 0 !important; /* Was: padding: 0 0 0 1em !important; */
+}
+
+#helpmain .buttonlist_bottom ul li, #helpmain .buttonlist ul li
+{
+	margin: 0 0 0 0.2em !important; /* Was: margin: 0 0.2em 0 0 !important; */
+}
+/* ************************************* */
+/* ie6.css                               */
+/* ************************************* */
+/* TODO make this only apply to IE6 ??? HOW ??? */
+.modbuttons .buttonlist_bottom ul, .modbuttons .buttonlist ul, .floatright .buttonlist ul, .floatright .buttonlist_bottom ul, .readbuttons .buttonlist ul, .readbuttons .buttonlist_bottom ul
+{
+	float: left; /* Was: float: right; */
+}
+/* ************************************* */
+/* ie7.css                               */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* index.css                             */
+/* ************************************* */
+/* Styles from index.template            */
+#greeting_section li#name
+{
+	padding-left: 0; /* Was: padding-left: 0.5em; */
+	padding-right: 0.5em;
+}
+/* the avatar, located to the left */
+#user_section #myavatar
+{
+	border-right: solid 0px #ADADAD; /* Was: border-right: solid 1px #ADADAD; */
+	border-left: solid 1px #ADADAD;
+	margin: 0 0 0 0.5em; /* Was: margin: 0 0.5em 0 0; */
+	float: right; /* Was: float: left; */
+}
+#random_news h3
+{
+	margin-right: 0; /* Was: margin-right: 1em; */
+	margin-left: 1em;
+}
+/* The main menu. */
+#main_menu
+{
+	float: right;
+	padding-left: 0; /* Was: padding-left: 1em; */
+	padding-right: 1em;
+
+}
+#footerarea p
+{
+	text-align: right; /* Was: text-align: left; */
+	padding-left: 0; /* Was: padding-left: 0.5em; */
+	padding-right: 0.5em;
+}
+/* the upshrink buttons */
+#upshrink, #advsearch
+{
+	margin: 0 0 0 1ex; /* margin: 0 1ex; */
+}
+/* ************************************* */
+/* moderate.css                          */
+/* ************************************* */
+.moderation_notes li
+{
+	padding: 4px 4px 4px 0px; /* padding: 4px 0px 4px 4px; */
+}
+/* ************************************* */
+/* packages.css                          */
+/* ************************************* */
+#package_list .tborder
+{
+	margin: .25em 26px .25em 0; /* margin: .25em 0 .25em 26px; */
+}
+
+#package_list ol, #package_list ol li
+{
+	margin-left: 0; /* margin-left: 50px; */
+	margin-right: 50px;
+}
+
+#package_list ol ul, #package_list ol ul li
+{
+	margin-left: 50px; /* margin-left: 0; */
+	margin-right: 0;
+}
+/* ************************************* */
+/* print.css                             */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* profile.css                           */
+/* ************************************* */
+#profileview #basicinfo .content
+{
+	padding: 0.7em 0.7em 0.7em 0; /* padding: 0.7em 0 0.7em 0.7em; */
+}
+#profileview #detailedinfo .content
+{
+	padding: 0.7em 1.2em; /* padding: 0.7em 1.2em; */
+}
+
+#basicinfo
+{
+	float: right; /* Was: float: left; */
+}
+#detailedinfo
+{
+	float: left; /* Was: float: right; */
+	border-left: 0px solid #696969; /* Was: border-left: 1px solid #696969; */
+	border-right: 1px solid #696969;
+}
+#basicinfo .content, #detailedinfo .content
+{
+	padding: 0px 0 0 10px; /* Was: padding: 0px 10px; */
+}
+#basicinfo ul li
+{
+	float: right; /* Was: float: left; */
+	margin-right: 0; /* Was: margin-right: 5px; */
+	margin-left: 5px;
+}
+#detailedinfo div.content dt
+{
+	float: right; /* Was: float: left; */
+
+}
+#detailedinfo div.content dd
+{
+	float: right; /* Was: float: left; */
+}
+div#profile_error, div#profile_success
+{
+	padding: 1ex 0 0 2ex; /* Was: padding: 1ex 2ex; */
+}
+/* ************************************* */
+/* who.css                               */
+/* ************************************* */
+#credits p, #credits h4
+{
+	padding: 0 0 0 10px; /* padding: 0 10px; */
+}
+/* ************************************* */
+/* wireless.css                          */
+/* ************************************* */
+/* none required */
+/* ************************************* */
+/* Lastly fix remaining RTL issues       */
+/* ************************************* */
+.pm_buttons a
+{
+	float: right;
+}
+ul.admin_menu li ul
+{
+	left: -12em;
+	top: 100%;
+}
+ul.admin_menu li ul li
+{
+	float: right;
+}
+ul.admin_menu li ul li a
+{
+	float: right;
+}
+ul.admin_menu li ul li a.subsection
+{
+	background: url(../images/admin/subsection2.gif) no-repeat 2% 50%;
+	float: left;
+}
+/* Hidden to the right must be hidden to left to over scrollbars */
+ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
+{
+	left: 999em;
+}
+ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
+{
+	left: -20em;
+}
+ul.admin_menu li ul li a
+{
+	padding: 0.5em 0.5em 0.5em 2em;  /* Was: padding: 0.5em 2em 0.5em 0.5em; */
+	float: right;
+}
+/*
+ - admin_menu - items without section class won't left align, icons won't go to far right
+ - last post on messageindex
+ - report to moderator/ip switch around
+ TODO in php
+ - reverse buttons in post reply/modify/delete/quote should be quote/delete/modify/reply
+*/

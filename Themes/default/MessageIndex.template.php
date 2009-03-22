@@ -471,6 +471,10 @@ function theme_show_buttons()
 	if ($context['can_post_poll'])
 		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;poll">' . $txt['new_poll'] . '</a>';
 
+	// Right to left menu should be in reverse order.
+	if ($context['right_to_left'])
+		$buttonArray = array_reverse($buttonArray, true);
+
 	return implode(' &nbsp;|&nbsp; ', $buttonArray);
 }
 

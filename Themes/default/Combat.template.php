@@ -10,6 +10,10 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	if (!is_array($strip_options))
 		$strip_options = array();
 
+	// Right to left menu should be in reverse order.
+	if ($context['right_to_left'])
+		$button_strip = array_reverse($button_strip, true);
+
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)

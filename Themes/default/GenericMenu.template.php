@@ -218,7 +218,6 @@ function template_generic_menu_tabs(&$menu_context)
 	// Handy shortcut.
 	$tab_context = &$menu_context['tab_data'];
 
-
 	echo '
 				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
 					<tr class="titlebg">

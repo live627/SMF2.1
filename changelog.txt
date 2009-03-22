@@ -156,6 +156,7 @@ March 2009
  * Memberlist rtl support for columns, change infocenter upshrink from inline style to class so can override in rtl  (Memberlist.template.php, BoardIndex.template.php, forum.css)
  * Togglebar >> image icon should be reversed in right to left mode (GenericMenu.template.php)
  * Reverse linktree in RTL mode (index.template.php)
+ * RTL css (Mainly rtl.css, and few tweaks to other files)
 
 February 2009
 --------------------------------------------------------------------------------
