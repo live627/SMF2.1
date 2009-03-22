@@ -22,6 +22,57 @@
 	width: 6px;
 }
 
+.mirrortab_back, .mirrortab_active_back
+{
+	color: white;
+	text-decoration: none;
+	font-size: 9px;
+	vertical-align: bottom;
+	padding: 6px 6px 2px 6px;
+	font-family: tahoma, sans-serif;
+}
+.mirrortab_first
+{
+	background: url(../images/mirrortab_first_prev.gif) no-repeat;
+	width: 10px;
+}
+.mirrortab_back
+{
+	background: url(../images/mirrortab_back.gif) repeat-x;
+}
+.mirrortab_last
+{
+	background: url(../images/mirrortab_last_prev.gif) no-repeat;
+	width: 6px;
+}
+.mirrortab_active_first
+{
+	background: url(../images/mirrortab_active_first.gif) no-repeat;
+	width: 6px;
+}
+.mirrortab_active_back
+{
+	background: url(../images/mirrortab_active_back.gif) repeat-x;
+}
+.mirrortab_active_last
+{
+	background: url(../images/mirrortab_active_last.gif) no-repeat;
+	width: 8px;
+}
+
+/* how links behave in mirror tab. */
+.mirrortab_back a:link , .mirrortab_back a:visited, .mirrortab_active_back a:link , .mirrortab_active_back a:visited
+{
+	color: white;
+	text-decoration: none;
+}
+
+.mirrortab_back a:hover, .mirrortab_active_back a:hover
+{
+	color: #e0e0ff;
+	text-decoration: none;
+}
+
 /* 
 	- if any attribute differs from left vs right, then we reverse it.
 		Where {attribute}-left or {attribute}-right is used, we might have to undo it before repeating it for the opposite.
@@ -120,6 +171,8 @@ p#stats
 {
 	border-left: solid #a0a0a0 0px; /* Was: border-left: solid #a0a0a0 1px; */
 	border-right: solid #a0a0a0 1px;
+	margin-left: 0%; /* Was: margin-left: 3%; */
+	margin-right: 3%;
 }
 dl#infocenter_recentposts
 {
@@ -188,6 +241,7 @@ h4#pollquestion
 }
 div#pollmoderation
 {
+	float: right;
 	margin: -1em 2em 0 0; /* Was: margin: -1em 0 0 2em; */
 }
 #forumposts h3.catbg3 span
@@ -220,6 +274,13 @@ ul.postingbuttons
 	padding-right: 0; /* Was: padding-right: 1em; */
 	padding-left: 1em;
 	text-align: left; /* Was: text-align: right; */
+}
+ul.postingbuttons li
+{
+	float: right;
+	text-align: left;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 .modifybutton
 {
@@ -536,9 +597,17 @@ ul.admin_menu li ul li a
 {
 	float: left;
 }
+.mlist_letters
+{
+	float: left;
+}
+.mlist_letters a
+{
+	float: right;
+	margin-left: 3px;
+}
+
 /*
- - last post on messageindex
- - report to moderator/ip switch around
  TODO in php
  - reverse buttons in post reply/modify/delete/quote should be quote/delete/modify/reply
  - reverse calendar sidebar
@@ -547,8 +616,6 @@ ul.admin_menu li ul li a
  - classic/babylon/curve class pm_buttons
  - report to admin in other themes too.
  - Menu items doesn't select the full width
- - menu icons need reversing?
- - non-section menu items won't align
  - group membership in profile
- - pagination links reversed
+ - unread/unread replies
 */

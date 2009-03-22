@@ -69,7 +69,7 @@ function template_main()
 				<table width="100%" cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<td>', $txt['pages'], ': ', $context['page_index'], '</td>
-						<td align="right">', $context['letter_links'] . '</td>
+						<td align="right" class="mlist_letters">', $context['letter_links'] . '</td>
 					</tr>
 				</table>';
 		// If this is a result of a search then just show the page numbers.
