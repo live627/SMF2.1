@@ -166,7 +166,7 @@ function template_main()
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($context['can_quick_mod']))
 				echo '
-							<th class="catbg3 headerpadding" width="4%"></th>';
+							<th class="catbg3 headerpadding" width="4%">&nbsp;</th>';
 			echo '
 						</tr>
 					</thead>';
