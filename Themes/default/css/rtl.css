@@ -110,6 +110,7 @@ code
 
 .postarea .post
 {
+	clear: none;
 	float: right; /* Was: float: left; */
 }
 .ignored
@@ -340,12 +341,7 @@ ul.postingbuttons li
 	margin-left: 0px; /* Was: margin-left: 10px; */
 	margin-right: 10px;
 }
-/* First layer of menu items */
-ul.admin_menu li
-{
-	padding-right: 0; /* Was: padding-right: 4px; */
-	padding-left: 4px;
-}
+
 /* the menu dropdown toggle image */
 div#menu_toggle
 {
@@ -573,7 +569,6 @@ ul.admin_menu li ul li a.subsection
 /* Hidden to the right must be hidden to left to over scrollbars */
 ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 {
-
 	left: 999em;
 }
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
@@ -590,15 +585,6 @@ ul.admin_menu li ul li a
 {
 	float: left;
 }
-.mlist_letters
-{
-	float: left;
-}
-.mlist_letters a
-{
-	float: right;
-	margin-left: 3px;
-}
 /*
 TODO 
  - reverse buttons in post reply/modify/delete/quote should be quote/delete/modify/reply
@@ -608,8 +594,8 @@ TODO
  - group membership in profile
  - unread/unread replies
  - viewing dropdown menu causes horizontal scrollbar to appear
- - link tree
- - memberlist a-z not going all the way to left
- - navPages not going all the way to the right
+ - link tree is has left margin in ie8.
+ - navPages not going all the way to the right on display
  - post polls, not aligned 
+ - save btn in core features
 */
