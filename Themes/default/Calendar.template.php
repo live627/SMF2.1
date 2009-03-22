@@ -8,12 +8,12 @@ function template_main()
 	echo '
 		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div>
-			<div style="padding: 1px; margin: 0 auto; text-align: center; float: left; width: 200px;">
+			<div style="padding: 1px; margin: 0 auto; text-align: center; float: ', $context['right_to_left'] ? 'right' : 'left', '; width: 200px;">
 					', template_show_month_grid('prev'), '
 					', template_show_month_grid('current'), '
 					', template_show_month_grid('next'), '
 			</div>
-			<div style="margin: 0 auto; text-align: center;', $context['browser']['is_ie'] && !$context['browser']['is_ie8'] ? 'float: right; padding-left: 20px;' : 'margin-left: 220px; ', '">
+			<div style="margin: 0 auto; text-align: center;', $context['browser']['is_ie'] && !$context['browser']['is_ie8'] ? 'float: ' . ($context['right_to_left'] ? 'right; padding-right' : 'left; padding-left') . ': 20px;' : 'margin-' . ($context['right_to_left'] ? 'right' : 'left') . ': 220px; ', '">
 				', $context['view_week'] ? template_show_week_grid('main') : template_show_month_grid('main'), '
 			</div>
 		</div>
