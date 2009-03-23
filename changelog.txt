@@ -222,6 +222,7 @@ February 2009
  ! The admin search function wasn't always using the correct page title. (Admin.php)
  ! Filtering errors by type wasn't working in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3130]
  ! Including quotes in the forum title would break newsletter sending. (ManageNews.php) [Bug 3289]
+ * Linked images in wysiwyg would have an 'orrible border (editor_ie.css) [Bug 2221]
 
 
 SMF 2.0 RC1                                                      4 February 2009

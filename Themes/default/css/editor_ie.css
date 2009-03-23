@@ -28,3 +28,7 @@
 	border-top-width: 0px;
 	cursor: s-resize;
 }
+.rich_editor a img
+{
+    border: 0;
+} 
