@@ -162,6 +162,7 @@ March 2009
  ! Removing own topics should be logged from Display for moderation purposes (RemoveTopic.php) [Bug 2385]
  ! Allow 'unsigned' integers for Mysql Only with 'unsigned' => true, for ints (DbPackages-mysql.php) [Bug 1267]
  * Watch Users - If no watched users theres a blank TH (GenericList.template.php) [Bug 3236]
+ * New PMs via wap2/imode does not indicate which pms are new (Wireless.template.php) [Bug 3276]
 
 February 2009
 --------------------------------------------------------------------------------
