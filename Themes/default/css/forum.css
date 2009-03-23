@@ -75,12 +75,6 @@ table.boardsframe td.lastpost
 	vertical-align: top;
 	padding: 0.5em;
 }
-table.boardsframe p.children
-{
-	border-top: solid 1px #ADADAD;
-	margin: 0;
-	padding: 0.5em;
-}
 #posticons
 {
 	clear: both;
