@@ -160,6 +160,7 @@ March 2009
  * Inline class preventing rtl working on lastpost img (MessageIndex.template.php, forum.css)
  ! Members can view membergroups but not the memberlist (Groups.php, ManagePermissions.english.php)[Bug 2396]
  ! Removing own topics should be logged from Display for moderation purposes (RemoveTopic.php) [Bug 2385]
+ ! Allow 'unsigned' integers for Mysql Only with 'unsigned' => true, for ints (DbPackages-mysql.php) [Bug 1267]
 
 February 2009
 --------------------------------------------------------------------------------

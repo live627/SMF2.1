@@ -175,11 +175,15 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		// Sort out the size... and stuff...
 		$column['size'] = isset($column['size']) && is_numeric($column['size']) ? $column['size'] : null;
 		list ($type, $size) = $smcFunc['db_calculate_type']($column['type'], $column['size']);
+
+		// Allow unsigned integers (mysql only)
+		$unsigned = in_array($type, array('int', 'tinyint', 'smallint', 'mediumint', 'bigint')) && !empty($column['unsigned']) ? 'unsigned ' : '';
+
 		if ($size !== null)
 			$type = $type . '(' . $size . ')';
 
 		// Now just put it together!
-		$table_query .= "\n\t`" .$column['name'] . '` ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default . ',';
+		$table_query .= "\n\t`" .$column['name'] . '` ' . $type . ' ' . (!empty($unsigned) ? $unsigned : '') . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default . ',';
 	}
 
 	// Loop through the indexes next...
@@ -345,14 +349,20 @@ function smf_db_change_column($table_name, $old_column, $column_info, $parameter
 		$column_info['type'] = $old_info['type'];
 	if (!isset($column_info['size']) || !is_numeric($column_info['size']))
 		$column_info['size'] = $old_info['size'];
+	if (!isset($column_info['unsigned']) || !in_array($column_info['type'], array('int', 'tinyint', 'smallint', 'mediumint', 'bigint')))
+		$column_info['unsigned'] = '';
 
 	list ($type, $size) = $smcFunc['db_calculate_type']($column_info['type'], $column_info['size']);
+
+	// Allow for unsigned integers (mysql only)
+	$unsigned = in_array($type, array('int', 'tinyint', 'smallint', 'mediumint', 'bigint')) && !empty($column_info['unsigned']) ? 'unsigned ' : '';
+
 	if ($size !== null)
 		$type = $type . '(' . $size . ')';
 
 	$smcFunc['db_query']('', '
 		ALTER TABLE ' . $table_name . '
-		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
+		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type  . ' ' . (!empty($unsigned) ? $unsigned : '') . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
 			(!isset($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ',
 		'security_override'
@@ -517,10 +527,12 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 			$auto = strpos($row['Extra'], 'auto_increment') !== false ? true : false;
 
 			// Can we split out the size?
-			if (preg_match('~(.+?)\s*\((\d+)\)~i', $row['Type'], $matches) === 1)
+			if (preg_match('~(.+?)\s*\((\d+)\)(?:(?:\s*)?(unsigned))?~i', $row['Type'], $matches) === 1)
 			{
 				$type = $matches[1];
 				$size = $matches[2];
+				if (!empty($matches[3]) && $matches[3] == 'unsigned')
+					$unsigned = true;
 			}
 			else
 			{
@@ -536,6 +548,12 @@ function smf_db_list_columns($table_name, $detail = false, $parameters = array()
 				'size' => $size,
 				'auto' => $auto,
 			);
+
+			if (isset($unsigned))
+			{
+				$columns[$row['Field']]['unsigned'] = $unsigned;
+				unset($unsigned);
+			}
 		}
 	}
 	$smcFunc['db_free_result']($result);
