@@ -79,6 +79,8 @@ function Groups()
 	// Otherwise add something to the link tree, for normal people.
 	else
 	{
+		isAllowedTo('view_mlist');
+
 		$context['linktree'][] = array(
 			'url' => $scripturl . '?action=groups',
 			'name' => $txt['groups'],

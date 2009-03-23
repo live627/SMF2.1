@@ -158,6 +158,7 @@ March 2009
  * Reverse linktree in RTL mode (index.template.php)
  * RTL css (Mainly rtl.css, and few tweaks to other files)
  * Inline class preventing rtl working on lastpost img (MessageIndex.template.php, forum.css)
+ ! Members can view membergroups but not the memberlist (Groups.php, ManagePermissions.english.php)[Bug 2936]
 
 February 2009
 --------------------------------------------------------------------------------
