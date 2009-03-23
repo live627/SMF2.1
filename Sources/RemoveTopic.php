@@ -87,7 +87,7 @@ function RemoveTopic2()
 	removeTopics($topic);
 
 	// Note, only log topic ID in native form if it's not gone forever.
-	if (allowedTo('remove_any') && (!allowedTo('remove_own') || $starter != $user_info['id']))
+	if (allowedTo('remove_any') || (allowedTo('remove_own') && $starter == $user_info['id']))
 		logAction('remove', array((empty($modSettings['recycle_enable']) || $modSettings['recycle_board'] != $board ? 'topic' : 'old_topic_id') => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
 
 	redirectexit('board=' . $board . '.0');
