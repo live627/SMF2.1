@@ -50,16 +50,19 @@ function template_show_list($list_id = null)
 		template_additional_rows('above_column_headers', $cur_list);
 
 	// Show the column headers.
-	echo '
-			<tr class="titlebg">';
-
-	// Loop through each column and add a table header.
-	foreach ($cur_list['headers'] as $col_header)
+	if(!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
+	{
 		echo '
-				<th valign="top"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
+				<tr class="titlebg">';
 
-	echo '
-			</tr>';
+		// Loop through each column and add a table header.
+		foreach ($cur_list['headers'] as $col_header)
+			echo '
+					<th valign="top"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
+
+		echo '
+				</tr>';
+	}
 
 	// Show a nice message informing there are no items in this list.
 	if (empty($cur_list['rows']) && !empty($cur_list['no_items_label']))
