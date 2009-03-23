@@ -165,6 +165,7 @@ March 2009
  * New PMs via wap2/imode does not indicate which pms are new (Wireless.template.php) [Bug 3276]
  * who.template.php - column for messenger icons not wide enough (Who.template.php) [Bug 3252]
  * Padding on grandchild board (on message index), not as good as when on board index (MessageIndex.template.php, forum.css) [Bug 3223]
+ & Show quick-moderation on message index as - no longer just message index, so re-word it (Profile.english.php, Manual.english.php) [Bug 3224]
 
 February 2009
 --------------------------------------------------------------------------------
