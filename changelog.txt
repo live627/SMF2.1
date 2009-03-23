@@ -163,6 +163,7 @@ March 2009
  ! Allow 'unsigned' integers for Mysql Only with 'unsigned' => true, for ints (DbPackages-mysql.php) [Bug 1267]
  * Watch Users - If no watched users theres a blank TH (GenericList.template.php) [Bug 3236]
  * New PMs via wap2/imode does not indicate which pms are new (Wireless.template.php) [Bug 3276]
+ * who.template.php - column for messenger icons not wide enough (Who.template.php) [Bug 3252]
 
 February 2009
 --------------------------------------------------------------------------------
