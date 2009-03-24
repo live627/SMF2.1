@@ -383,7 +383,7 @@ function fix_possible_url($val)
 	if (isset($modSettings['integrate_fix_url']) && function_exists($modSettings['integrate_fix_url']))
 		$val = call_user_func($modSettings['integrate_fix_url'], $val);
 
-	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0) || !$context['server']['is_apache'])
+	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0 || @get_cfg_var('cgi.fix_pathinfo') == 1) || !$context['server']['is_apache'])
 		return $val;
 
 	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . $scripturl . \'/\' . strtr(\'$1\', \'&;=\', \'//,\') . \'.html$2\'', $val);
