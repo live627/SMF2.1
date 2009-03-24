@@ -171,6 +171,7 @@ March 2009
  ! Gzip on attachments should only be used for filetypes that would benefit from it (Display.php) [Bug 2633]
  ! Queryless url cgi check may not always return correct results (Subs.php, Querystring.php, News.php) [Bug 2945]
  * Maxlength should be set on reporting message input, as its a tinytext field (SendTopic.template.php)
+ * Move 'Change Profile' button to left (Profile.template.php) [Bug 3162]
 
 
 February 2009

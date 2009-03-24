@@ -1099,7 +1099,7 @@ function template_edit_options()
 									<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" />';
 	else
 		echo '
-								<td align="right" colspan="2">';
+								<td align="left" colspan="2">';
 
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
@@ -1989,7 +1989,7 @@ function template_issueWarning()
 			</td>
 			</tr>
 			<tr class="catbg">
-				<td colspan="2" align="right">
+				<td colspan="2" align="left">
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" />
 				</td>
@@ -2204,7 +2204,7 @@ function template_profile_save()
 									<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" />';
 	else
 		echo '
-								<td align="right" colspan="2">';
+								<td align="left" colspan="2">';
 
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
@@ -2730,7 +2730,7 @@ function template_authentication_method()
 								</td>
 							</tr>
 							<tr>
-								<td align="right" colspan="3">
+								<td align="left" colspan="3">
 									<input type="submit" value="', $txt['change_profile'], '" />
 									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 									<input type="hidden" name="u" value="', $context['id_member'], '" />
