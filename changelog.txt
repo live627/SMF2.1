@@ -170,6 +170,7 @@ March 2009
  ! Queryless Urls don't work with session id in urls (Subs.php, Querystring.php) [Bug 1013]
  ! Gzip on attachments should only be used for filetypes that would benefit from it (Display.php) [Bug 2633]
  ! Queryless url cgi check may not always return correct results (Subs.php, Querystring.php, News.php) [Bug 2945]
+ * Maxlength should be set on reporting message input, as its a tinytext field (SendTopic.template.php)
 
 
 February 2009

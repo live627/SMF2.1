@@ -172,7 +172,7 @@ function template_report()
 			</tr><tr class="windowbg">
 				<td style="padding-bottom: 3ex;" align="center">
 					<div style="margin-top: 1ex; margin-bottom: 3ex;" align="left">', $txt['report_to_mod_func'], '</div>
-					', $txt['enter_comment'], ': <input type="text" name="comment" size="50" />
+					', $txt['enter_comment'], ': <input type="text" name="comment" size="50" maxlength="255" />
 					<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" />
 				</td>
 			</tr>
