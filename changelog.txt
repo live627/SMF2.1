@@ -168,6 +168,7 @@ March 2009
  & Show quick-moderation on message index as - no longer just message index, so re-word it (Profile.english.php, Manual.english.php) [Bug 3224]
  * help togglebar button on sidemenu is on next line down (GenericMenu.template.php {core}, index.css {curve}) [Bug 3274]
  ! Queryless Urls don't work with session id in urls (Subs.php, Querystring.php) [Bug 1013]
+ ! Gzip on attachments should only be used for filetypes that would benefit from it (Display.php) [Bug 2633]
 
 
 February 2009
