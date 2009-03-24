@@ -166,6 +166,8 @@ March 2009
  * who.template.php - column for messenger icons not wide enough (Who.template.php) [Bug 3252]
  * Padding on grandchild board (on message index), not as good as when on board index (MessageIndex.template.php, forum.css) [Bug 3223]
  & Show quick-moderation on message index as - no longer just message index, so re-word it (Profile.english.php, Manual.english.php) [Bug 3224]
+ * help togglebar button on sidemenu is on next line down (GenericMenu.template.php {core}, index.css {curve}) [Bug 3274]
+
 
 February 2009
 --------------------------------------------------------------------------------

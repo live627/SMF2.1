@@ -9,7 +9,7 @@ function template_generic_menu_sidebar_above()
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
 		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 0; clear: left;"><tr>
-			<td width="150" valign="top" style="width: 23ex; padding-', !$context['right_to_left'] ? 'right' : 'left', ': 10px; padding-bottom: 10px;">
+			<td width="160" valign="top" style="width: 24ex; padding-', !$context['right_to_left'] ? 'right' : 'left', ': 10px; padding-bottom: 10px;">
 				<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">';
 
 	// What one are we rendering?
