@@ -509,7 +509,6 @@ $txt['copyright_click_renew'] = 'Click <a href="http://www.simplemachines.org/co
 $txt['copyright_removal'] = 'Copyright Removal';
 $txt['copyright_removal_desc'] = 'In order to remove the copyright from your SMF installation you will need the code purchased from the Simple Machines website. If you have not yet purchased a code please click <a href="http://www.simplemachines.org/copyright/index.php">here</a>. Once the code has been entered and verified the copyright will be hidden until your subscription expires. The time remaining will be shown on the admin center.';
 $txt['copyright_code'] = 'Copyright Code';
-$txt['copyright_failed'] = 'Sorry - but the code you entered is incorrect. Please ensure that your forum URL matches that entered when purchasing the subscription.';
 $txt['copyright_proceed'] = 'Proceed';
 
 $txt['advanced'] = 'Advanced';
