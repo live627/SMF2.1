@@ -538,7 +538,6 @@ function Credits($in_admin = false)
 					'title' => $txt['credits_groups_support'],
 					'members' => array(
 						'Jeremy &quot;jerm&quot; Strike',
-						'Justin &quot;BlackMage&quot; O\'Leary',
 						'Kindred',
 						'Kevin &quot;greyknight17&quot; Hou',
 						'RedOne',
