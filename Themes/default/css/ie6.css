@@ -10,11 +10,6 @@
 	float: right;
 }
 
-.postarea .post
-{
-	clear: none;
-}
-
 /* Profile template */
 #detailedinfo div.content dl
 {

@@ -107,11 +107,17 @@ code
 {
 	float: right; /* Was: float: left; */
 }
-
+.poster
+{
+	text-align: right;
+}
 .postarea .post
 {
-	clear: none;
-	float: right; /* Was: float: left; */
+	clear: left;
+}
+.post .inner
+{
+	text-align: right;
 }
 .ignored
 {
@@ -120,7 +126,7 @@ code
 }
 .signature
 {
-	clear: right; /* Was: clear: right; NOT CHANGED, but may need to */
+	clear: both; /* Was: clear: right; NOT CHANGED, but may need to */
 }
 .openid_login
 {
@@ -254,7 +260,8 @@ div#pollmoderation
 }
 div.postarea .keyinfo
 {
-	float: right; /* Was: float: left; */
+	text-align: right;
+	float: right;
 }
 ul.postingbuttons
 {
@@ -274,6 +281,7 @@ ul.postingbuttons li
 .modifybutton
 {
 	float: left; /* Was: float: right; */
+	clear: both;
 }
 .postfooter
 {
@@ -580,7 +588,6 @@ ul.admin_menu li ul li a
 	padding: 0.5em 0.5em 0.5em 2em;  /* Was: padding: 0.5em 2em 0.5em 0.5em; */
 	float: right;
 }
-
 .lastpost img
 {
 	float: left;

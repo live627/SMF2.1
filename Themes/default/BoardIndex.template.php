@@ -97,7 +97,7 @@ function template_main()
 			continue;
 
 		echo '
-	<div class="categoryframe tborder">
+	<div class="categoryframe tborder clearfix">
 		<h3 class="catbg', $category['new'] ? '2' : '', ' headerpadding">';
 
 		if (!$context['user']['is_guest'] && !empty($category['show_unread']))

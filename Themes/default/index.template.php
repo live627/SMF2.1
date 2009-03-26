@@ -153,7 +153,11 @@ function template_html_above()
 	elseif ($context['browser']['is_firefox'])
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
-
+	// Safari / Chrome
+	elseif ($context['browser']['is_safari'])
+		echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/safari.css" />';
+	
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
 		echo '

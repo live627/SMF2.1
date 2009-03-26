@@ -173,6 +173,8 @@ March 2009
  * Maxlength should be set on reporting message input, as its a tinytext field (SendTopic.template.php)
  * Move 'Change Profile' button to left (Profile.template.php) [Bug 3162]
  & Error string should be in errors language file otherwise it won't get loaded. (Admin.english.php, Errors.english.php) [Bug 2018]
+ * Categories needed clearfix on h3 (BoardIndex.template.php)
+ * float:left on .postarea .post causes issues in IE browsers & cached search engine pages (style.css, ie6.css, ie7.css, forum.css, rtl.css, safari.css, ff.css index.template.php) [Bug 3298]
 
 
 February 2009

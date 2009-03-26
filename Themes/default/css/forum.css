@@ -338,6 +338,7 @@ div#pollmoderation
 div.postarea .keyinfo
 {
 	float: left;
+	clear: none;
 	width: 60%;
 	min-height: 3em;
 }

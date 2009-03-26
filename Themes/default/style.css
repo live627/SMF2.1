@@ -540,7 +540,6 @@ code
 .postarea .post
 {
 	clear: right;
-	float: left;
 }
 /* add a visual divider between subject and post */
 .post .inner
