@@ -176,6 +176,7 @@ March 2009
  * Categories needed clearfix on h3 (BoardIndex.template.php)
  * float:left on .postarea .post causes issues in IE browsers & cached search engine pages (style.css, ie6.css, ie7.css, forum.css, rtl.css, safari.css, ff.css index.template.php) [Bug 3298]
  ! Changing forum language shouldn't override the admins set profile language (Load.php) [Bug 2944]
+ * align should be text-align (forum.css, rtl.css) [Bug 3359]
 
 February 2009
 --------------------------------------------------------------------------------
