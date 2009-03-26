@@ -508,9 +508,9 @@ function loadUserSettings()
 	if (!empty($user_info['ignoreboards']) && empty($user_info['ignoreboards'][$tmp = count($user_info['ignoreboards']) - 1]))
 		unset($user_info['ignoreboards'][$tmp]);
 
-	if (!empty($modSettings['userLanguage']) && !empty($_REQUEST['language']))
+	if (!empty($modSettings['userLanguage']) && !empty($_GET['language']))
 	{
-		$user_info['language'] = strtr($_REQUEST['language'], './\\:', '____');
+		$user_info['language'] = strtr($_GET['language'], './\\:', '____');
 		$_SESSION['language'] = $user_info['language'];
 	}
 	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']))
