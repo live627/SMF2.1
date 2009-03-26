@@ -476,7 +476,7 @@ function AdminMain()
 	validateSession();
 
 	// Actually create the menu!
-	$admin_include_data = createMenu($admin_areas, $menuOptions);
+	$admin_include_data = createMenu($admin_areas);
 	unset($admin_areas);
 
 	// Nothing valid?
