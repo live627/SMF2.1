@@ -291,6 +291,7 @@ function createMenu($menuData, $menuOptions = array())
 		'current_action' => $menu_context['current_action'],
 		'current_area' => $menu_context['current_area'],
 		'current_section' => $menu_context['current_section'],
+		'current_subsection' => !empty($menu_context['current_subsection']) ? $menu_context['current_subsection'] : '',
 	);
 
 	return $include_data;

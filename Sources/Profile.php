@@ -420,7 +420,7 @@ function ModifyProfile($post_errors = array())
 	// Oh dear, some serious security lapse is going on here... we'll put a stop to that!
 	if (!$found_area)
 		fatal_lang_error('no_access');
-
+	
 	// Release this now.
 	unset($profile_areas);
 
@@ -442,6 +442,22 @@ function ModifyProfile($post_errors = array())
 		destroyMenu();
 		fatal_lang_error('no_access');
 	}
+
+	// Build the link tree.
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=profile' . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
+		'name' => $context['member']['name'],
+	);
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
+		'name' => $profile_include_data['label'],
+	);
+
+	if (!empty($profile_include_data['current_subsection']) && $profile_include_data['subsections'][$profile_include_data['current_subsection']][0] != $profile_include_data['label'])
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ';sa=' . $profile_include_data['current_subsection'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
+			'name' => $profile_include_data['subsections'][$profile_include_data['current_subsection']][0],
+		);
 
 	// Set the template for this area and add the profile layer.
 	$context['sub_template'] = $profile_include_data['function'];
