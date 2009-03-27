@@ -55,7 +55,7 @@ $txt['autoOptMaxOnline'] = 'Maximum users online when optimizing<div class="smal
 $txt['autoFixDatabase'] = 'Automatically fix broken tables';
 $txt['allow_disableAnnounce'] = 'Allow users to disable announcements';
 $txt['disallow_sendBody'] = 'Don\'t allow post text in notifications';
-$txt['queryless_urls'] = 'Search engine friendly URLs<div class="smalltext"><b>Apache only!</b></div>';
+$txt['queryless_urls'] = 'Search engine friendly URLs<div class="smalltext"><b>Apache/Lighttpd only!</b></div>';
 $txt['max_image_width'] = 'Max width of posted pictures (0 = disable)';
 $txt['max_image_height'] = 'Max height of posted pictures (0 = disable)';
 $txt['enableReportPM'] = 'Enable reporting of personal messages';
