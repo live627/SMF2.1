@@ -487,10 +487,11 @@ function MessageFolder()
 	$txt['delete_all'] = str_replace('PMBOX', $pmbox, $txt['delete_all']);
 
 	// Now, build the link tree!
-	$context['linktree'][] = array(
+	if ($context['current_label_id'] == -1)
+		$context['linktree'][] = array(
 		'url' => $scripturl . '?action=pm;f=' . $context['folder'],
 		'name' => $pmbox
-	);
+		);
 
 	// Build it further for a label.
 	if ($context['current_label_id'] != -1)
@@ -2950,6 +2951,12 @@ function MessageSettings()
 	$context['id_member'] = $user_info['id'];
 	$context['require_password'] = false;
 	$context['menu_item_selected'] = 'settings';
+
+	// Add our position to the linktree.
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=pm;sa=settings',
+		'name' => $txt['pm_settings']
+	);
 
 	// Are they saving?
 	if (isset($_REQUEST['save']))
