@@ -182,7 +182,8 @@ March 2009
  ! Profile linktree should use 'Profile of username', same for pagetitle.  Packages had some duplicate linktree items (Packages.php, PackageGet.php, Profile.php, Profile-View.php, Profile.english.php) [Bug 3116]
  ! Don't add the PM inbox folder to the linktree when viewing a label. (PersonalMessage.php)
  ! Add another chain to the linktree when changing PM settings. (PersonalMessage.php)   
-
+ + Wireless modes didn't have a link back to full version (index.php, Wireless.template.php, Wireless.english.php) [Bug 1141]
+ * Wap2/Imode up one level link in child boards wouldn't work as missing semi-colon (Wireless.template.php)
 
 February 2009
 --------------------------------------------------------------------------------

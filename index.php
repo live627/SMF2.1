@@ -113,7 +113,9 @@ set_error_handler('error_handler');
 loadSession();
 
 // Determine if this is using WAP, WAP2, or imode.  Technically, we should check that wap comes before application/xhtml or text/html, but this doesn't work in practice as much as it should.
-if (isset($_REQUEST['nowap']))
+if (isset($_REQUEST['wap']) || isset($_REQUEST['wap2']) || isset($_REQUEST['imode']))
+	unset($_SESSION['nowap']);
+elseif (isset($_REQUEST['nowap']))
 	$_SESSION['nowap'] = true;
 elseif (!isset($_SESSION['nowap']))
 {

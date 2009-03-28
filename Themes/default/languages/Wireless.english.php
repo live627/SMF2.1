@@ -46,5 +46,6 @@ $txt['wireless_ban_ip'] = 'Ban on IP';
 $txt['wireless_ban_hostname'] = 'Ban on Hostname';
 $txt['wireless_ban_email'] = 'Ban on Email';
 $txt['wireless_additional_info'] = 'Additional Information';
+$txt['wireless_go_to_full_version'] = 'Go to full version';
 
 ?>
