@@ -184,6 +184,8 @@ March 2009
  ! Add another chain to the linktree when changing PM settings. (PersonalMessage.php)   
  + Wireless modes didn't have a link back to full version (index.php, Wireless.template.php, Wireless.english.php) [Bug 1141]
  * Wap2/Imode up one level link in child boards wouldn't work as missing semi-colon (Wireless.template.php)
+ ! Do a better job at creating the linktree in the calendar section. (Calendar.php)
+
 
 February 2009
 --------------------------------------------------------------------------------

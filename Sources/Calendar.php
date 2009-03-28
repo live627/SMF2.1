@@ -146,15 +146,27 @@ function CalendarMain()
 
 	// Basic template stuff.
 	$context['can_post'] = allowedTo('calendar_post');
+	$context['current_day'] = $curPage['day'];
 	$context['current_month'] = $curPage['month'];
 	$context['current_year'] = $curPage['year'];
 	$context['show_all_birthdays'] = isset($_GET['showbd']);
 
 	// Load up the linktree!
 	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=calendar',
+		'name' => $txt['calendar']
+	);
+	// Add the current month to the linktree.
+	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=calendar;year=' . $context['current_year'] . ';month=' . $context['current_month'],
 		'name' => $txt['months'][$context['current_month']] . ' ' . $context['current_year']
 	);
+	// If applicable, add the current week to the linktree.
+	if ($context['view_week'])
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=calendar;viewweek;year=' . $context['current_year'] . ';month=' . $context['current_month'] . ';day=' . $context['current_day'],
+			'name' => $txt['calendar_week'] . ' ' . $context['calendar_grid_main']['week_number']
+		);
 }
 
 function CalendarPost()
