@@ -373,8 +373,7 @@ function ModifySubscription()
 	{
 		$smcFunc['db_query']('delete_subscription', '
 			DELETE FROM {db_prefix}subscriptions
-			WHERE id_subscribe = {int:current_subscription}
-			LIMIT 1',
+			WHERE id_subscribe = {int:current_subscription}',
 			array(
 				'current_subscription' => $context['sub_id'],
 			)

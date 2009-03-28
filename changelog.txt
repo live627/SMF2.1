@@ -187,7 +187,7 @@ March 2009
  ! Do a better job at creating the link tree in the calendar section. (Calendar.php)
  ! Add link trees to the help, login and registration sections as well. (Help.php, LogInOut.php, Register.php)
  * Wap mode messageindex showed Pages 1/0, and pages in different place than wap2 and imode (Wireless.template.php) [Bug 3362]
-
+ ! Limit on delete query won't work in PostGreSql/Sqlite so remove it (ManagePaid.php)
 
 February 2009
 --------------------------------------------------------------------------------
