@@ -47,7 +47,7 @@ if (!defined('SMF'))
 // Redirect to the user help ;).
 function ShowHelp()
 {
-	global $settings, $user_info, $language, $context, $txt, $sourcedir, $options;
+	global $settings, $user_info, $language, $context, $txt, $sourcedir, $options, $scripturl;
 
 	loadTemplate('Help');
 	loadLanguage('Manual');
@@ -187,6 +187,22 @@ function ShowHelp()
 	// Bring it on!
 	$context['sub_template'] = $manual_area_data['template'];
 	$context['page_title'] = $manual_area_data['label'] . ' - ' . $txt['manual_smf_user_help'];
+
+	// Build the link tree.
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=help',
+		'name' => $txt['help'],
+	);
+	if (isset($manual_area_data['current_area']) && $manual_area_data['current_area'] != 'index')
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=admin;area=' . $manual_area_data['current_area'],
+			'name' => $manual_area_data['label'],
+		);
+	if (!empty($manual_area_data['current_subsection']) && $manual_area_data['subsections'][$manual_area_data['current_subsection']][0] != $manual_area_data['label'])
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=admin;area=' . $manual_area_data['current_area'] . ';sa=' . $manual_area_data['current_subsection'],
+			'name' => $manual_area_data['subsections'][$manual_area_data['current_subsection']][0],
+		);
 
 	// !!! Temporary until all sections are completed.
 	if (!function_exists('template_' . $manual_area_data['template']))
