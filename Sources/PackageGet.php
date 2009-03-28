@@ -58,15 +58,6 @@ function PackageGet()
 	loadLanguage('Packages');
 	loadTemplate('Packages', 'packages');
 
-	// Add the appropriate items to the link tree.
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => $txt['package_manager']
-	);
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=admin;area=packages;get',
-		'name' => $txt['package_get']
-	);
 	$context['page_title'] = $txt['package'];
 
 	// Here is a list of all the potentially valid actions.

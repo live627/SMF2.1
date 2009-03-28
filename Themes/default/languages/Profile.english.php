@@ -142,6 +142,7 @@ $txt['deleteAccount_topics'] = 'Topics and Posts';
 $txt['deleteAccount_confirm'] = 'Are you completely sure you want to delete this account?';
 $txt['deleteAccount_approval'] = 'Please note that the forum moderators will have to approve this account\'s deletion before it will be removed.';
 
+$txt['profile_of_username'] = 'Profile of %1$s';
 $txt['profileInfo'] = 'Profile Info';
 $txt['showPosts'] = 'Show Posts';
 $txt['showPosts_help'] = 'This section allows you to view all posts made by this member. Note that you can only see posts made in areas you currently have access to.';

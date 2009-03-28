@@ -80,11 +80,6 @@ function Packages()
 	loadLanguage('Packages');
 	loadTemplate('Packages', 'packages');
 
-	// Set up the linktree and title so it's already done.
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => $txt['package_manager']
-	);
 	$context['page_title'] = $txt['package'];
 
 	// Delegation makes the world... that is, the package manager go 'round.
@@ -176,8 +171,8 @@ function PackageInstallTest()
 
 	$context['uninstalling'] = $_REQUEST['sa'] == 'uninstall';
 
-	// Set up the linktree...
-	$context['linktree'][] = array(
+	// Change our last link tree item for more information on this Packages area.
+	$context['linktree'][count($context['linktree']) - 1] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
 		'name' => $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['install_actions']
 	);
@@ -682,7 +677,7 @@ function PackageInstall()
 	$context['uninstalling'] = $_REQUEST['sa'] == 'uninstall2';
 
 	// Set up the linktree for other.
-	$context['linktree'][] = array(
+	$context['linktree'][count($context['linktree']) - 1] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
 		'name' => $context['uninstalling'] ? $txt['uninstall'] : $txt['extracting']
 	);
@@ -1120,7 +1115,7 @@ function ExamineFile()
 		obExit(false);
 	}
 
-	$context['linktree'][] = array(
+	$context['linktree'][count($context['linktree']) - 1] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=list;package=' . $_REQUEST['package'],
 		'name' => $txt['package_examine_file']
 	);
@@ -1151,11 +1146,6 @@ function InstalledList()
 {
 	global $txt, $scripturl, $context;
 
-	// Set up the linktree so things are purdy.
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=admin;area=packages;sa=installed',
-		'name' => $txt['view_and_remove']
-	);
 	$context['page_title'] .= ' - ' . $txt['installed_packages'];
 	$context['sub_template'] = 'view_installed';
 
@@ -1217,10 +1207,6 @@ function PackageBrowse()
 {
 	global $txt, $boarddir, $scripturl, $context, $forum_version;
 
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
-		'name' => $txt['browse_packages']
-	);
 	$context['page_title'] .= ' - ' . $txt['browse_packages'];
 	$context['sub_template'] = 'browse';
 
@@ -1395,10 +1381,6 @@ function PackageOptions()
 	else
 		$default_username = '';
 
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=admin;area=packages;sa=options',
-		'name' => $txt['package_install_options']
-	);
 	$context['page_title'] = $txt['package_settings'];
 	$context['sub_template'] = 'install_options';
 

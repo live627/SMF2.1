@@ -87,7 +87,7 @@ function summary($memID)
 
 	// Set up the stuff and load the user.
 	$context += array(
-		'page_title' => $txt['profile_of'] . ' ' . $memberContext[$memID]['name'],
+		'page_title' => sprintf($txt['profile_of_username'], $memberContext[$memID]['name']),
 		'can_send_pm' => allowedTo('pm_send'),
 		'can_have_buddy' => allowedTo('profile_identity_own') && !empty($modSettings['enable_buddylist']),
 		'can_issue_warning' => allowedTo('issue_warning') && $modSettings['warning_settings'][0] == 1,

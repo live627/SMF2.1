@@ -179,6 +179,7 @@ March 2009
  * align should be text-align (forum.css, rtl.css) [Bug 3359]
  + Admin, Moderation Center and Profile should have linktrees (Subs-Menu.php, Admin.php, ModerationCenter.php, Profile.php) [Bug 3116]
  + Lighttpd supports path_info and can do queryless urls too (Subs.php, Querystring.php, News.php, Load.php, ManageSettings.english.php, Help.english.php) [Bug 3357]
+ ! Profile linktree should use 'Profile of username', same for pagetitle.  Packages had some duplicate linktree items (Packages.php, PackageGet.php, Profile.php, Profile-View.php, Profile.english.php) [Bug 3116]
 
 
 February 2009
