@@ -68,7 +68,7 @@ if (!defined('SMF'))
 // Ask them for their login information.
 function Login()
 {
-	global $txt, $context;
+	global $txt, $context, $scripturl;
 
 	// In wireless?  If so, use the correct sub template.
 	if (WIRELESS)
@@ -86,6 +86,12 @@ function Login()
 	$context['default_username'] = &$_REQUEST['u'];
 	$context['default_password'] = '';
 	$context['never_expire'] = false;
+
+	// Add the login chain to the link tree.
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=login',
+		'name' => $txt['login'],
+	);
 
 	// Set the login URL - will be used when the login process is done.
 	if (isset($_SESSION['old_url']) && preg_match('~(board|topic)[=,]~', $_SESSION['old_url']) != 0)
@@ -176,6 +182,12 @@ function Login2()
 	$context['never_expire'] = $modSettings['cookieTime'] == 525600 || $modSettings['cookieTime'] == 3153600;
 	$context['login_errors'] = array($txt['error_occured']);
 	$context['page_title'] = $txt['login'];
+
+	// Add the login chain to the link tree.
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=login',
+		'name' => $txt['login'],
+	);
 
 	if (!empty($_REQUEST['openid_url']) && !empty($modSettings['enableOpenID']))
 	{

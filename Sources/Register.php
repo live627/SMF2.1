@@ -81,10 +81,16 @@ function Register($reg_errors = array())
 
 	$context['page_title'] = $txt['register'];
 
+	// Add the register chain to the link tree.
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=register',
+		'name' => $txt['register'],
+	);
+
 	// If you have to agree to the agreement, it needs to be fetched from the file.
 	if ($context['require_agreement'])
 	{
-		// Have we got a local one?
+		// Have we got a localized one?
 		if (file_exists($boarddir . '/agreement.' . $user_info['language'] . '.txt'))
 			$context['agreement'] = parse_bbc(file_get_contents($boarddir . '/agreement.' . $user_info['language'] . '.txt'), true, 'agreement_' . $user_info['language']);
 		elseif (file_exists($boarddir . '/agreement.txt'))
