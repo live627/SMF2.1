@@ -113,7 +113,7 @@ function template_generic_menu_dropdown_above()
 	{
 		$s ++;
 		$is_last = $s == count($menu_context['sections']);
-		
+
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '

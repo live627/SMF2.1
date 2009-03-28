@@ -1832,7 +1832,7 @@ function viewWarning($memID)
 	$modSettings['warning_watch'] = !empty($modSettings['warning_watch']) ? $modSettings['warning_watch'] : 110;
 	$modSettings['warning_moderate'] = !empty($modSettings['warning_moderate']) && !empty($modSettings['postmod_active']) ? $modSettings['warning_moderate'] : 110;
 	$modSettings['warning_mute'] = !empty($modSettings['warning_mute']) ? $modSettings['warning_mute'] : 110;
-	
+
 	// Let's use a generic list to get all the current warnings, and use the issue warnings grab-a-granny thing.
 	require_once($sourcedir . '/Subs-List.php');
 	require_once($sourcedir . '/Profile-Actions.php');

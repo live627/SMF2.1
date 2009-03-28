@@ -138,7 +138,7 @@ function template_before()
 					</span>				
 			</dd>';	
 		}
-		
+
 		if ($context['visual_verification'])
 		{
 			echo '
@@ -153,10 +153,10 @@ function template_before()
 			<dd>
 				<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <strong>', $context['coppa_desc'], '.</strong></label>
 			</dd>';
-			
+
 		echo '
 		</dl>';
-	
+
 		// If openID is enabled offer them the choice.
 		if (!empty($modSettings['enableOpenID']))
 		{
@@ -203,7 +203,7 @@ function template_before()
 		echo '
 		<hr />
 		<dl class="register_form">';
-		
+
 		// Any fields we particularly want?
 		foreach ($context['profile_fields'] as $key => $field)
 		{
@@ -219,42 +219,42 @@ function template_before()
 			{
 					echo '
 					<dt><b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
-	
+
 				// Does it have any subtext to show?
 				if (!empty($field['subtext']))
 					echo '
 						<span class="smalltext">', $field['subtext'], '</span>';
-	
+
 				echo '
 					</dt>
 					<dd>';
-	
+
 				// Want to put something infront of the box?
 				if (!empty($field['preinput']))
 					echo '
 						', $field['preinput'];
-	
+
 				// What type of data are we showing?
 				if ($field['type'] == 'label')
 					echo '
 						', $field['value'];
-	
+
 				// Maybe it's a text box - very likely!
 				elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
 					echo '
 						<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" tabindex="', $context['tabindex']++, '" ', $field['input_attr'], ' />';
-	
+
 				// You "checking" me out? ;)
 				elseif ($field['type'] == 'check')
 					echo '
 						<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" tabindex="', $context['tabindex']++, '" class="check" ', $field['input_attr'], ' />';
-	
+
 				// Always fun - select boxes!
 				elseif ($field['type'] == 'select')
 				{
 					echo '
 						<select name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '">';
-	
+
 					if (isset($field['options']))
 					{
 						// Is this some code to generate the options?
@@ -266,11 +266,11 @@ function template_before()
 								echo '
 									<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
 					}
-	
+
 					echo '
 						</select>';
 				}
-	
+
 				// Something to end with?
 				if (!empty($field['postinput']))
 					echo '

@@ -68,7 +68,7 @@ function ModifyProfile($post_errors = array())
 	list ($memID) = $memberResult;
 	$context['id_member'] = $memID;
 	$cur_profile = $user_profile[$memID];
-	
+
 	// Let's have some information about this member ready, too.
 	loadMemberContext($memID);
 	$context['member'] = $memberContext[$memID];
@@ -420,7 +420,7 @@ function ModifyProfile($post_errors = array())
 	// Oh dear, some serious security lapse is going on here... we'll put a stop to that!
 	if (!$found_area)
 		fatal_lang_error('no_access');
-	
+
 	// Release this now.
 	unset($profile_areas);
 

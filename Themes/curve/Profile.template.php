@@ -45,7 +45,7 @@ function template_summary()
 			<div class="username"><h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4></div>
 			', $context['member']['avatar']['image'], '
 			<ul class="reset">';
-			
+
 	// What about if we allow email only via the forum??
 	if ($context['member']['show_email'] == 'yes' || $context['member']['show_email'] == 'no_through_forum' || $context['member']['show_email'] == 'yes_permission_override')
 		echo '
@@ -109,7 +109,7 @@ function template_summary()
 				<dt>', $txt['email'], ': </dt>
 				<dd><i><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></i></dd>';
 
-								
+
 	if (!empty($modSettings['titlesEnable']) && !empty($context['member']['title']))
 		echo '
 				<dt>', $txt['custom_title'], ': </dt>
@@ -144,7 +144,7 @@ function template_summary()
 		echo '
 				<dt>', $txt['location'], ':</dt>
 				<dd>', $context['member']['location'], '</dd>';
-					
+
 	echo '
 			</dl>';
 
@@ -153,7 +153,7 @@ function template_summary()
 	{
 			echo '
 			<dl>';
-				
+
 		foreach ($context['custom_fields'] as $field)
 		{
 			echo '
@@ -214,7 +214,7 @@ function template_summary()
 				<dd>', $context['member']['registered'], '</dd>
 				<dt>', $txt['lastLoggedIn'], ': </dt>
 				<dd>', $context['member']['last_login'], '</dd>';
-				
+
 	// If the person looking is allowed, they can check the members IP address and hostname.
 	if ($context['can_see_ip'])
 	{
@@ -237,8 +237,6 @@ function template_summary()
 		echo '
 				<dt>', $txt['language'], ':</dt>
 				<dd>', $context['member']['language'], '</dd>';
-				
-
 
 	echo '
 			</dl>';

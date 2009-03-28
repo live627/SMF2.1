@@ -53,7 +53,7 @@ function template_main()
 				<span class="enhanced">
 					<strong>', $txt['search_for'], ':</strong>
 					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
-				
+
 				<script type="text/javascript"><!-- // --><![CDATA[
 					function initSearch()
 					{
@@ -145,7 +145,6 @@ function template_main()
 		echo '
 			<div><input type="submit" name="submit" value="', $txt['search'], '" /></div>
 		</div>';
-	
 	}
 
 	echo '

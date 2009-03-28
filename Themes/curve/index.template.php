@@ -60,7 +60,7 @@ function template_init()
 
 	/* Does this theme use post previews on the message index? */
 	$settings['message_index_preview'] = false;
-	
+
 	/* Set the following variable to true if this theme requires the optional theme strings file to be loaded. */
 	$settings['require_theme_strings'] = false;
 }
@@ -219,7 +219,7 @@ function template_body_above()
 			if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 				echo '				
 					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
-		
+
 			echo '
 					<li>' , $context['current_time'], '</li>
 				</ul>';
@@ -251,7 +251,7 @@ function template_body_above()
 					<input type="hidden" name="hash_passwrd" value="" />
 				</form>';
 		}
-	
+
 		echo '
 			</div>
 			<div class="news normaltext">
@@ -286,7 +286,7 @@ function template_body_above()
 
 		// Show the navigation tree.
 		theme_linktree();
-	
+
 		echo '
 	</div></div>';
 
@@ -430,7 +430,7 @@ function template_menu()
 						echo '
 							</ul>';
 					}
-				
+
 				echo '
 						</li>';
 			}	

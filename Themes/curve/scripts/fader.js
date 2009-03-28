@@ -39,10 +39,10 @@ else if (typeof(window.opera) == "undefined" && typeof(document.defaultView) != 
 
 // List all the lines of the news for display.
 var smfFadeContent = new Array();
-		
+
 // Get the news from the list in boardindex
 var newselement = document.getElementById('smfFadeScroller').getElementsByTagName('li');
-		
+
 // Fill the array that has previously been created
 for(i=0;i<newselement.length;i++)
 {

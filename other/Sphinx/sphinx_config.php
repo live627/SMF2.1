@@ -83,8 +83,6 @@ function step_0()
 	</form>
 	';
 
-	
-
 	template_sphinx_config_below();
 }
 
@@ -148,15 +146,8 @@ function step_1()
 		<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';">
 			<input type="submit" value="Proceed" />
 		</div>
-	</form>
-	
-	
-	';
-
-
-
+	</form>';
 }
-
 
 function step_2()
 {
@@ -319,8 +310,6 @@ function step_888()
 
 	echo 'Setting has been saved. This window can be closed.';
 }
-
-
 
 function step_999()
 {

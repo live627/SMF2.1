@@ -27,7 +27,7 @@ function template_main()
 		// The fading delay (in ms.)
 		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';		
 	// ]]></script>
-	
+
 	<div id="newsfader">
 		<h3 class="catbg">
 			<span class="left"></span><span class="right"></span>
@@ -36,10 +36,10 @@ function template_main()
 			</a>&nbsp;', $txt['news'], '
 		</h3>
 		<ul class="reset" id="smfFadeScroller"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
-			
+
 			foreach ($context['news_lines'] as $news)
 				echo '<li>', $news, '</li>';
-			
+
 	echo '</ul>
 	</div>
 	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/fader.js"></script>';
@@ -69,7 +69,7 @@ function template_main()
 			<tbody class="header">
 				<tr>
 					<td colspan="4" class="catbg"><span class="left"></span><span class="right"></span>';
-		
+
 		// If this category even can collapse, show a link to collapse it.
 		if ($category['can_collapse'])
 			echo '
@@ -126,7 +126,7 @@ function template_main()
 						<a href="', $scripturl, '?action=moderate;area=postmod;sa=', ($board['unapproved_topics'] > $board['unapproved_posts'] ? 'topics' : 'posts'), ';brd=', $board['id'], ';', $context['session_var'], '=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 
 				echo '
-						
+
 						<p>', $board['description'] , '</p>';
 
 				// Show the "Moderators: ". Each has name, href, link, and id. (but we're gonna use link_moderators.)
@@ -207,7 +207,7 @@ function template_main()
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'] && !empty($context['categories']))
 			template_button_strip($mark_read_button, 'right');
-		
+
 		echo '
 		<p>
 			<img src="' . $settings['images_url'] . '/new_some.png" alt=""  /> ', $txt['new_posts'], '

@@ -294,7 +294,7 @@ function loadForumTests()
 					createSalvageArea();
 					$row[\'id_board\'] = (int) $salvageBoardID;
 				}
-				
+
 				// Make sure that no topics claim the first/last message as theirs.
 				$smcFunc[\'db_query\'](\'\', \'
 					UPDATE {db_prefix}topics
@@ -312,7 +312,7 @@ function loadForumTests()
 						\'id_last_msg\' => $row[\'myid_last_msg\'],
 					)
 				);
-				
+
 				$memberStartedID = (int) getMsgMemberID($row[\'myid_first_msg\']);
 				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
 
@@ -1313,7 +1313,7 @@ function findForumErrors($do_fix = false)
 			$_GET['step']++;
 			continue;
 		}
-		
+
 		// Has it got substeps?
 		if (isset($test['substeps']))
 		{
@@ -1336,7 +1336,7 @@ function findForumErrors($do_fix = false)
 			// Make sure there's at least one ID to test.
 			if (isset($test['substeps']) && empty($step_max))
 				break;
-			
+
 			// What is the testing query (Changes if we are testing or fixing)
 			if (!$do_fix)
 				$test_query = 'check_query';
@@ -1350,13 +1350,13 @@ function findForumErrors($do_fix = false)
 				)
 			);
 			$needs_fix = false;
-			
+
 			// Does it need a fix?
 			if (!empty($test['check_type']) && $test['check_type'] == 'count')
 				list ($needs_fix) = $smcFunc['db_fetch_row']($request);
 			else
 				$needs_fix = $smcFunc['db_num_rows']($request);
-				
+
 			$total_queries++;
 
 			if ($needs_fix)
@@ -1369,7 +1369,7 @@ function findForumErrors($do_fix = false)
 
 					if (isset($test['message']))
 						$context['repair_errors'][] = $txt[$test['message']];
-						
+
 					// One per row!
 					elseif (isset($test['messages']))
 					{
@@ -1386,7 +1386,7 @@ function findForumErrors($do_fix = false)
 							$context['repair_errors'][] = call_user_func_array('sprintf', $variables);
 						}
 					}
-					
+
 					// A function to process?
 					elseif (isset($test['message_function']))
 					{
@@ -1400,7 +1400,7 @@ function findForumErrors($do_fix = false)
 					if ($found_errors)
 						$to_fix[] = $error_type;
 				}
-				
+
 				// We want to fix, we need to fix - so work out what exactly to do!
 				else
 				{
@@ -1416,7 +1416,7 @@ function findForumErrors($do_fix = false)
 							$test['fix_collect']['process']($ids);
 						}
 					}
-					
+
 					// Simply executing a fix it query?
 					elseif (isset($test['fix_it_query']))
 						$smcFunc['db_query']('',
@@ -1424,14 +1424,14 @@ function findForumErrors($do_fix = false)
 							array(
 							)
 						);
-						
+
 					// Do we have some processing to do?
 					elseif (isset($test['fix_processing']))
 					{
 						while ($row = $smcFunc['db_fetch_assoc']($request))
 							$test['fix_processing']($row);
 					}
-					
+
 					// What about the full set of processing?
 					elseif (isset($test['fix_full_processing']))
 						$test['fix_full_processing']($request);

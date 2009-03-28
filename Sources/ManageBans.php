@@ -356,7 +356,7 @@ function BanList()
 function list_getBans($start, $items_per_page, $sort)
 {
 	global $smcFunc;
-	
+
 	$request = $smcFunc['db_query']('', '
 		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(bi.id_ban) AS num_triggers
 		FROM {db_prefix}ban_groups AS bg

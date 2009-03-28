@@ -134,7 +134,7 @@ function getBoardIndex($boardIndexOptions)
 			{
 				// Not a child.
 				$isChild = false;
-				
+
 				$this_category[$row_board['id_board']] = array(
 					'new' => empty($row_board['is_read']),
 					'id' => $row_board['id_board'],

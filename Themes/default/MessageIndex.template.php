@@ -7,7 +7,8 @@ function template_main()
 
 	echo '
 		<a name="top"></a>';
-	
+
+
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '

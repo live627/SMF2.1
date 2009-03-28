@@ -491,7 +491,7 @@ function loadSettings()
 function findConvertScripts()
 {
 	global $convert_data;
-	
+
 	if (isset($_REQUEST['convert_script']))
 	{
 		if ($_REQUEST['convert_script'] != '' && preg_match('~^[a-z0-9\-_\.]*_to_smf\.(sql|php)$~i', $_REQUEST['convert_script']) != 0)
@@ -851,14 +851,14 @@ function doStep0($error_message = null)
 							<td style="padding-bottom: 1ex;">
 								<input type="hidden" name="', $param['id'], '" value="0" />
 								<label for="', $param['id'], '"><select name="', $param['id'], '" id="', $param['id'], '">';
-								
+
 					foreach ($param['options'] as $id => $option)
 						echo '
 									<option value="', $id, '"', (isset($param['default_option']) && $param['default_option'] == $id ? ' selected="selected"' : ''), '>', $option, '</option>';
-									
+
 				echo '
 								</select></label>';
-			
+
 			}
 			elseif ($param['type'] == 'password')
 				echo '
@@ -1695,7 +1695,7 @@ function doStep2()
 
 		// Make sure we have the function "getMsgMemberID"
 		require_once($sourcedir . '/Subs-Boards.php');
-			
+
 		while (true)
 		{
 			$resultTopic = convert_query("
@@ -2057,7 +2057,7 @@ function doStep2()
 				'type' => 'INDEX', // no key
 				'name' => 'id_topic',
 				'columns' => array('id_topic')));
-			
+
 		$_REQUEST['start'] = 0;
 		pastTime(14);
 	}
@@ -2877,7 +2877,7 @@ function alterDatabase($table, $type, $parms, $no_prefix = false)
 			}
 			$new_string = strtoupper($parms{($i + 1)});
 			$parms = substr($new_string, 0, $i) . substr($new_string, $i + 1);
-		
+
 			$smcFunc['db_remove_index']($table, $parms, $extra_parms);
 		}
 		// Its an id column, which is easier.

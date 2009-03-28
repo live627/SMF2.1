@@ -25,8 +25,8 @@ function template_admin()
 					<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
 				</form>
 			</div>';
-	
-	echo 	$txt['admin_center'], '
+
+	echo $txt['admin_center'], '
 		</h3>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe"><div class="innerframe">

@@ -80,7 +80,7 @@ class sphinx_search
 			return;
 		}
 	}
-	
+
 	// This function compares the length of two strings plus a little.
 	public function searchSort($a, $b)
 	{

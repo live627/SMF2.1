@@ -379,22 +379,19 @@ function html_to_bbc($text)
 		{
 			$end_length = strlen('</' . $matches[1] . '>');
 			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
-			
 
 			// Remove the align from that tag so it's never checked again.
 			$tag = substr($text, $start_pos, strlen($matches[0]));
 			$content = substr($text, $start_pos + strlen($matches[0]), $end_pos - $start_pos - strlen($matches[0]));
 			$tag = str_replace($matches[2], '', $tag);
-	
+
 			// Put the tags back into the body.
 			$text = substr($text, 0, $start_pos) . $tag . '[' . $matches[3] . ']' . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos);
-			
 		}
 		else
 		{
 			// Just get rid of this evil tag.
 			$text = substr($text, 0, $start_pos) . substr($text, $start_pos + strlen($matches[0]));
-			
 		}
 	}
 
@@ -517,13 +514,13 @@ function html_to_bbc($text)
 			if (preg_match('~^https?://~i', $src) === 0 && is_array($parsedURL = parse_url($scripturl)) && isset($parsedURL['host']))
 			{
 				$baseURL = (isset($parsedURL['scheme']) ? $parsedURL['scheme'] : 'http') . '://' . $parsedURL['host'] . (empty($parsedURL['port']) ? '' : ':' . $parsedURL['port']);
-				
+
 				if (substr($src, 0, 1) === '/')
 					$src = $baseURL . $src;
 				else
 					$src = $baseURL . (empty($parsedURL['path']) ?  '/' : preg_replace('~/(?:index\\.php)?$~', '', $parsedURL['path'])) . '/' . $src;
 			}
-			
+
 			$tag = '[img' . $params . ']' . $src . '[/img]';
 		}
 
@@ -588,23 +585,23 @@ function html_to_bbc($text)
 			if ($attrib == 'href')
 			{
 				$href = trim($value);
-				
+
 				// Are we dealing with an FTP link?				
 				if (preg_match('~^ftps?://~', $href) === 1)
 					$tag_type = 'ftp';
-					
+
 				// Or is this a link to an email address?
 				elseif (substr($href, 0, 7) == 'mailto:')
 				{
 					$tag_type = 'email';
 					$href = substr($href, 7);
 				}
-				
+
 				// No http(s), so attempt to fix this potential relative URL.
 				elseif (preg_match('~^https?://~i', $href) === 0 && is_array($parsedURL = parse_url($scripturl)) && isset($parsedURL['host']))
 				{
 					$baseURL = (isset($parsedURL['scheme']) ? $parsedURL['scheme'] : 'http') . '://' . $parsedURL['host'] . (empty($parsedURL['port']) ? '' : ':' . $parsedURL['port']);
-					
+
 					if (substr($href, 0, 1) === '/')
 						$href = $baseURL . $href;
 					else
@@ -1067,7 +1064,6 @@ function legalise_bbc($text)
 						// Then reopen them.
 						$parts[$i + 5] = '[' . implode('][', array_keys($inlineElements)) . ']' . $parts[$i + 5];
 					}
-					
 				}
 				// Inline tag.
 				else

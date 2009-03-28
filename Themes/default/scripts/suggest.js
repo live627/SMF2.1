@@ -516,7 +516,7 @@ smc_AutoSuggest.prototype.autoSuggestUpdate = function ()
 		if (!eval(this.oCallback.onBeforeUpdate + '(' + this.opt.sSelf + ');'))
 			return false;
 	}
-	
+
 	this.oRealTextHandle.value = this.oTextHandle.value;
 
 	if (isEmptyText(this.oTextHandle))

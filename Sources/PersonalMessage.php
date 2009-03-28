@@ -489,8 +489,8 @@ function MessageFolder()
 	// Now, build the link tree!
 	if ($context['current_label_id'] == -1)
 		$context['linktree'][] = array(
-		'url' => $scripturl . '?action=pm;f=' . $context['folder'],
-		'name' => $pmbox
+			'url' => $scripturl . '?action=pm;f=' . $context['folder'],
+			'name' => $pmbox
 		);
 
 	// Build it further for a label.
@@ -1786,7 +1786,7 @@ function MessagePost()
 	$context['post_box_name'] = $editorOptions['id'];
 
 	$context['bcc_value'] = '';
-	
+
 	$context['require_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
 	if ($context['require_verification'])
 	{
@@ -2016,7 +2016,7 @@ function MessagePost2()
 	$_REQUEST['subject'] = isset($_REQUEST['subject']) ? trim($_REQUEST['subject']) : '';
 	$_REQUEST['to'] = empty($_POST['to']) ? (empty($_GET['to']) ? '' : $_GET['to']) : $_POST['to'];
 	$_REQUEST['bcc'] = empty($_POST['bcc']) ? (empty($_GET['bcc']) ? '' : $_GET['bcc']) : $_POST['bcc'];
-	
+
 	// Route the input from the 'u' parameter to the 'to'-list.
 	if (!empty($_POST['u']))
 		$_POST['recipient_to'] = explode(',', $_POST['u']);
@@ -2027,7 +2027,7 @@ function MessagePost2()
 	$namesNotFound = array();
 	foreach (array('to', 'bcc') as $recipientType)
 	{
-		
+
 		// First, let's see if there's user ID's given.
 		$recipientList[$recipientType] = array();
 		if (!empty($_POST['recipient_' . $recipientType]) && is_array($_POST['recipient_' . $recipientType]))
@@ -2035,16 +2035,16 @@ function MessagePost2()
 			foreach ($_POST['recipient_' . $recipientType] as $recipient)
 				$recipientList[$recipientType][] = (int) $recipient;
 		}
-		
+
 		// Are there also literal names set?
 		if (!empty($_REQUEST[$recipientType]))
 		{
 			// We're going to take out the "s anyway ;).
 			$recipientString = strtr($_REQUEST[$recipientType], array('\\"' => '"'));
-			
+
 			preg_match_all('~"([^"]+)"~', $recipientString, $matches);
 			$namedRecipientList[$recipientType] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $recipientString))));
-			
+
 			foreach ($namedRecipientList[$recipientType] as $index => $recipient)
 			{
 				if (strlen(trim($recipient)) > 0)
@@ -2052,14 +2052,14 @@ function MessagePost2()
 				else
 					unset($namedRecipientList[$recipientType][$index]);
 			}
-			
+
 			if (!empty($namedRecipientList[$recipientType]))
 			{
 				$foundMembers = findMembers($namedRecipientList[$recipientType]);
 
 				// Assume all are not found, until proven otherwise.
 				$namesNotFound[$recipientType] = $namedRecipientList[$recipientType];
-				
+
 				foreach ($foundMembers as $member)
 				{
 					$testNames = array(
@@ -2067,11 +2067,11 @@ function MessagePost2()
 						$smcFunc['strtolower']($member['name']),
 						$smcFunc['strtolower']($member['email']),
 					);
-					
+
 					if (count(array_intersect($testNames, $namedRecipientList[$recipientType])) !== 0)
 					{
 						$recipientList[$recipientType][] = $member['id'];
-		
+
 						// Get rid of this username, since we found it.
 						$namesNotFound[$recipientType] = array_diff($namesNotFound[$recipientType], $testNames);
 					}
@@ -2082,7 +2082,7 @@ function MessagePost2()
 		// Selected a recipient to be deleted? Remove them now.
 		if (!empty($_POST['delete_recipient']))
 			$recipientList[$recipientType] = array_diff($recipientList[$recipientType], array((int) $_POST['delete_recipient']));
-		
+
 		// Make sure we don't include the same name twice
 		$recipientList[$recipientType] = array_unique($recipientList[$recipientType]);
 	}
@@ -2102,16 +2102,16 @@ function MessagePost2()
 			if (!empty($namesNotFound[$recipientType]))
 			{
 				$post_errors[] = 'bad_' . $recipientType;
-				
+
 				// Since we already have a post error, remove the previous one.
 				$post_errors = array_diff($post_errors, array('no_to'));
-				
+
 				foreach ($namesNotFound[$recipientType] as $name)
 					$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $name);
 			}
 		}		
 	}
-	
+
 	// Did they make any mistakes?
 	if ($_REQUEST['subject'] == '')
 		$post_errors[] = 'no_subject';
@@ -2160,7 +2160,7 @@ function MessagePost2()
 		// Pretend they messed up :P.
 		return messagePostError(array(), $namedRecipientList, $recipientList);
 	}
-	
+
 	// Adding a recipient cause javascript ain't working?
 	elseif ($is_recipient_change)
 	{
@@ -2200,7 +2200,7 @@ function MessagePost2()
 			'sent' => array(),
 			'failed' => array()
 		);
-	
+
 	// Mark the message as "replied to".
 	if (!empty($context['send_log']['sent']) && !empty($_REQUEST['replied_to']) && isset($_REQUEST['f']) && $_REQUEST['f'] == 'inbox')
 	{
@@ -2989,7 +2989,7 @@ function ReportMessage()
 		fatal_lang_error('no_access', false);
 
 	$pmsg = (int) $_REQUEST['pmsg'];
-	
+
 	if (!isAccessiblePM($pmsg, 'inbox'))
 		fatal_lang_error('no_access');
 

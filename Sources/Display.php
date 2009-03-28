@@ -1044,7 +1044,7 @@ function Display()
 	$context['can_mark_unread'] = !$user_info['is_guest'] && $settings['show_mark_read'];
 
 	$context['can_send_topic'] = !$modSettings['postmod_active'] || $topicinfo['approved'];
-	
+
 	// Start this off for quick moderation - it will be or'd for each post.
 	$context['can_remove_post'] = allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']);
 

@@ -179,14 +179,14 @@ function createMenu($menuData, $menuOptions = array())
 									// Custom URL?
 									if (isset($sub['url']))
 										$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['url'] = $sub['url'];
-	
+
 									// A bit complicated - but is this set?
 									if ($menu_context['current_area'] == $area_id)
 									{
 										// Save which is the first...
 										if (empty($first_sa))
 											$first_sa = $sa;
-	
+
 										// Is this the current subsection?
 										if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa)
 											$menu_context['current_subsection'] = $sa;
@@ -239,7 +239,7 @@ function createMenu($menuData, $menuOptions = array())
 	// Right to left menu should be in reverse order.
 	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
 		$menu_context['sections'] = array_reverse($menu_context['sections'], true);
-	
+
 	// If we didn't find the area we were looking for go to a default one.
 	if (isset($backup_area) && empty($found_section))
 		$menu_context['current_area'] = $backup_area;

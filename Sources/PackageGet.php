@@ -251,11 +251,11 @@ function PackageGBrowse()
 		if ($token !== true)
 		{
 			$context['sub_template'] = 'package_confirm';
-		
+
 			$context['page_title'] = $txt['smf183'];
 			$context['confirm_message'] = sprintf($txt['package_confirm_view_package_content'], htmlspecialchars($_GET['absolute']));
 			$context['proceed_href'] = $scripturl . '?action=packageget;sa=browse;absolute=' . urlencode($_GET['absolute']) . ';confirm=' . $token;
-			
+
 			return;
 		}
 	}

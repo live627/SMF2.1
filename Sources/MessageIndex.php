@@ -601,7 +601,7 @@ function MessageIndex()
 		$context['can_approve'] = allowedTo('approve_posts');
 		// Can we restore topics?
 		$context['can_restore'] = allowedTo('move_any') && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board;
-		
+
 		// Set permissions for all the topics.
 		foreach ($context['topics'] as $t => $topic)
 		{
@@ -714,7 +714,7 @@ function QuickModeration()
 
 		$redirect_url = isset($_POST['redirect_url']) ? $_POST['redirect_url'] : (isset($_SESSION['old_url']) ? $_SESSION['old_url'] : '');
 	}
-	
+
 	if (!$user_info['is_guest'])
 		$possibleActions[] = 'markread';
 	if (!empty($boards_can['make_sticky']) && !empty($modSettings['enableStickyTopics']))

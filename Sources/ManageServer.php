@@ -185,7 +185,7 @@ function ModifySettings()
 		// Warn the user if the backup of Settings.php failed.
 		$settings_not_writable = !is_writable($boarddir . '/Settings.php');
 		$settings_backup_fail = !@is_writable($boarddir . '/Settings_bak.php') || !@copy($boarddir . '/Settings.php', $boarddir . '/Settings_bak.php');
-	
+
 		if ($settings_not_writable)
 			$context['settings_message'] = '<div align="center"><b>' . $txt['settings_not_writable'] . '</b></div><br />';
 		elseif ($settings_backup_fail)
@@ -318,7 +318,7 @@ function ModifyCookieSettings($return_config = false)
 	if (isset($_REQUEST['save']))
 	{
 		saveSettings($config_vars);
-		
+
 		// If the cookie name was changed, reset the cookie.
 		if ($cookiename != $_POST['cookiename'])
 		{
@@ -1629,7 +1629,7 @@ function cleanLangString($string, $to_display = true)
 function prepareServerSettingsContext(&$config_vars)
 {
 	global $context, $modSettings;
-	
+
 	$context['config_vars'] = array();
 	foreach ($config_vars as $identifier => $config_var)
 	{

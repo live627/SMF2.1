@@ -259,7 +259,7 @@ function PackageInstallTest()
 			'current_package' => $packageInfo['id'],
 		)
 	);
-	
+
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$old_themes = explode(',', $row['themes_installed']);

@@ -198,8 +198,8 @@ show_footer();
 function show_header()
 {
 	global $txt, $smfInfo, $context;
-	
-echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta name="robots" content="noindex" />
@@ -217,10 +217,6 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 				color: #000000;
 				font-size: 11px;
 				font-family: verdana, sans-serif;
-			}
-			a
-			{
-				
 			}
 			div#header
 			{

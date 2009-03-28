@@ -60,7 +60,7 @@ function template_init()
 
 	/* Does this theme use post previews on the message index? */
 	$settings['message_index_preview'] = false;
-	
+
 	/* Set the following variable to true if this theme requires the optional theme strings file to be loaded. */
 	$settings['require_theme_strings'] = false;
 }

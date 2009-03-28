@@ -743,15 +743,15 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 function checkConfirm($action)
 {
 	global $modSettings;
-	
+
 	if (isset($_GET['confirm']) && isset($_SESSION['confirm_' . $action]) && md5($_GET['confirm'] . $_SERVER['HTTP_USER_AGENT']) !== $_SESSION['confirm_' . $action])
 		return true;
-		
+
 	else
 	{
 		$token = md5(mt_rand() . session_id() . (string) microtime() . $modSettings['rand_seed']);
 		$_SESSION['confirm_' . $action] = md5($token, $_SERVER['HTTP_USER_AGENT']);
-		
+
 		return $token;
 	}
 }

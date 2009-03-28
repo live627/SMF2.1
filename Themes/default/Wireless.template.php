@@ -77,7 +77,7 @@ function template_wap_messageindex()
 	{
 		echo '
 		<p>', $txt['pages'], ': ', !empty($context['links']['prev']) ? '<a href="' . $context['links']['first'] . ';wap">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';wap">&lt;</a> ' : '', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', !empty($context['links']['next']) ? ' <a href="' . $context['links']['next'] . ';wap">&gt;</a> <a href="' . $context['links']['last'] . ';wap">&gt;&gt;</a> ' : '', '<br /></p>';
-	
+
 		foreach ($context['topics'] as $topic)
 			echo '
 		<p><a href="', $scripturl, '?topic=', $topic['id'], '.0;wap">', $topic['first_post']['subject'], '</a> - ', $topic['first_post']['member']['name'], '<br /></p>';
@@ -383,17 +383,17 @@ function template_imode_post()
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;imode" method="post">
 			<table border="0" cellspacing="0" cellpadding="0">';
-	
+
 	if ($context['locked'])
 			echo '
 				<tr><td>' . $txt['topic_locked_no_reply'] . '</td></tr>';
-	
+
 	if (isset($context['name']) && isset($context['email']))
 	{
 		echo '
 				<tr><td>', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? '<font color="#cc0000">' . $txt['username'] . '</font>' : $txt['username'], ':</td></tr>
 				<tr><td><input type="text" name="guestname" value="', $context['name'], '" /></td></tr>';
-	
+
 		if (empty($modSettings['guest_post_no_email']))
 			echo '
 				<tr><td>', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? '<font color="#cc0000">' . $txt['email'] . '</font>' : $txt['email'], ':</td></tr>
@@ -1030,7 +1030,7 @@ function template_wap2_post()
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;wap2" method="post">
 			<p class="titlebg">', $context['page_title'], '</p>';
-			
+
 	if ($context['locked'])
 		echo '
 			<p class="windowbg">
@@ -1043,7 +1043,7 @@ function template_wap2_post()
 			<p class="windowbg"' . (isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? ' style="color: #ff0000"' : '') . '>
 				' . $txt['username'] . ': <input type="text" name="guestname" value="' . $context['name'] . '" />
 			</p>';
-	
+
 		if (empty($modSettings['guest_post_no_email']))
 			echo '
 			<p class="windowbg"' . (isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? ' style="color: #ff0000"' : '') . '>

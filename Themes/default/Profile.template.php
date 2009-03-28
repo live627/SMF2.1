@@ -45,7 +45,7 @@ function template_summary()
 			<h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4>
 			', $context['member']['avatar']['image'], '
 			<ul>';
-			
+
 	// What about if we allow email only via the forum??
 	if ($context['member']['show_email'] == 'yes' || $context['member']['show_email'] == 'no_through_forum' || $context['member']['show_email'] == 'yes_permission_override')
 		echo '
@@ -129,7 +129,7 @@ function template_summary()
 		echo '
 				<dt>', $modSettings['karmaLabel'], ' </dt>
 				<dd>+', $context['member']['karma']['good'], '/-', $context['member']['karma']['bad'], '</dd>';
-	
+
 	if (!isset($context['disabled_fields']['gender']) && !empty($context['member']['gender']['name']))
 		echo '
 				<dt>', $txt['gender'], ': </dt>
@@ -143,7 +143,7 @@ function template_summary()
 		echo '
 				<dt>', $txt['location'], ':</dt>
 				<dd>', $context['member']['location'], '</dd>';
-					
+
 	echo '
 			</dl>';
 
@@ -215,7 +215,7 @@ function template_summary()
 				<dd>', $context['member']['registered'], '</dd>
 				<dt>', $txt['lastLoggedIn'], ': </dt>
 				<dd>', $context['member']['last_login'], '</dd>';
-				
+
 	// If the person looking is allowed, they can check the members IP address and hostname.
 	if ($context['can_see_ip'])
 	{

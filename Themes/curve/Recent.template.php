@@ -117,7 +117,7 @@ function template_unread()
 			$color_class = 'stickybg';
 		if (strpos($topic['class'], 'locked') !== false)
 			$color_class .= 'lockedbg';
-		
+
 		$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
 		echo '
@@ -288,7 +288,7 @@ function template_replies()
 			$color_class = 'stickybg';
 		if (strpos($topic['class'], 'locked') !== false)
 			$color_class .= 'lockedbg';
-		
+
 		$color_class2 = !empty($color_class) ? $color_class . '2' : '';
 
 		echo '
@@ -346,7 +346,7 @@ function template_replies()
 		</table>
 	</div>
 	<div id="readbuttons">';
-	
+
 	if (!empty($settings['use_tabs']) && !empty($mark_read))
 		template_button_strip($mark_read, 'right');
 

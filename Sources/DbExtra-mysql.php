@@ -337,7 +337,7 @@ function smf_db_table_sql($tableName)
 				// If this field is numeric the default needs no escaping.
 				$type = strtolower($row['Type']);
 				$isNumericColumn = strpos($type, 'int') !== false || strpos($type, 'bool') !== false || strpos($type, 'bit') !== false || strpos($type, 'float') !== false || strpos($type, 'double') !== false || strpos($type, 'decimal') !== false;
-				
+
 				$schema_create .= ' default ' . ($isNumericColumn ? $row['Default'] : '\'' . $smcFunc['db_escape_string']($row['Default']) . '\'');
 			}
 		}

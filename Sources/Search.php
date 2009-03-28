@@ -189,7 +189,7 @@ function PlushSearch1()
 		);
 		// support for Curve
 		$context['categories'][$category['id']]['child_ids'] = array_keys($category['boards']);
-		
+
 		$temp_boards = array_merge($temp_boards, array_values($category['boards']));
 	}
 

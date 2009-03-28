@@ -118,7 +118,7 @@ function template_unread()
 	echo '
 	<div id="readbuttons_top" class="readbuttons clearfix margintop">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
-	
+
 	if (!empty($mark_read) && !empty($settings['use_tabs']))
 		template_button_strip($mark_read, 'bottom');
 
@@ -219,7 +219,7 @@ function template_unread()
 	</table>
 	<div class="readbuttons clearfix marginbottom">
 		<div class="floatleft middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
-	
+
 	if (!empty($settings['use_tabs']) && !empty($mark_read))
 		template_button_strip($mark_read, 'top');
 

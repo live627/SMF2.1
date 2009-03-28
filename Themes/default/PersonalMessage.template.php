@@ -291,7 +291,7 @@ function template_folder()
 					if ($message['number_recipients'] > 1 && (!empty($settings['use_buttons']) || !$settings['use_image_buttons']))
 						echo '
 										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $reply_all_button, '</a>', $context['menu_separator'];
-					
+
 					// No replying/quoting to yourself.
 					if($message['member']['id'] != $context['user']['id'])
                     {
@@ -1059,7 +1059,6 @@ function template_send()
 					<a href="#" id="bcc_link">' . $txt['make_bcc'] . '</a> <a href="' . $scripturl . '?action=helpadmin;help=pm_bcc" onclick="return reqWin(this.href);">(?)</a>'
 				), '
 			});
-		
 		';
 
 	echo '

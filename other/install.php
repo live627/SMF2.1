@@ -858,12 +858,12 @@ function ForumSettings()
 	// Let's see if we got the database type correct.
 	if (isset($_POST['db_type'], $databases[$_POST['db_type']]))
 		$db_type = $_POST['db_type'];
-	
+
 	// Else we'd better be able to get the connection.
 	else
 		load_database();
-		
-		
+
+
 	$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : $db_type;
 
 	// What host and port are we on?

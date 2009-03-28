@@ -60,7 +60,7 @@ function template_init()
 
 	/* Does this theme use post previews on the message index? */
 	$settings['message_index_preview'] = false;
-	
+
 	/* Set the following variable to true if this theme requires the optional theme strings file to be loaded. */
 	$settings['require_theme_strings'] = false;
 }
@@ -157,7 +157,7 @@ function template_html_above()
 	elseif ($context['browser']['is_safari'])
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/safari.css" />';
-	
+
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
 		echo '
@@ -391,7 +391,7 @@ function theme_linktree($force_show = false)
 	// Reverse the linktree in right to left mode.
 	if ($context['right_to_left'])
 		$context['linktree'] = array_reverse($context['linktree'], true);
-	
+
 	echo '
 	<ul id="linktree">';
 
@@ -400,11 +400,11 @@ function theme_linktree($force_show = false)
 	{
 		echo '
 		<li', ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '', '>';
-		
+
 		// Don't show a separator for the last one.
 		if ($link_num != count($context['linktree']) - 1 && $context['right_to_left'])
 			echo '&lt;&nbsp;';
-		
+
 		// Show something before the link?
 		if (isset($tree['extra_before']))
 			echo $tree['extra_before'];
@@ -449,7 +449,7 @@ function template_menu()
 			$classes[] = 'lastactive';
 
 		$classes = implode(' ', $classes);
-		
+
 		echo '
 			<li id="button_', $act, '"', !empty($classes) ? ' class="' . $classes . '"' : '', '>
 				<a title="', $button['title'], '" href="', $button['href'], '">

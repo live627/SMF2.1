@@ -522,7 +522,7 @@ function show_settings()
 		{
 			if($info[0] == 'hidden')
 				continue;
-			
+
 			if ($info[0] != 'flat' && empty($show_db_settings))
 				continue;
 
