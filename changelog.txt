@@ -189,6 +189,9 @@ March 2009
  * Wap mode messageindex showed Pages 1/0, and pages in different place than wap2 and imode (Wireless.template.php) [Bug 3362]
  ! Limit on delete query won't work in PostGreSql/Sqlite so remove it (ManagePaid.php)
  ! When moving a topic and ask to create a redirection topic, you must give a reason (MoveTopic.php, Errors.english.php) [Bug 3207]
+ ! When tracking profile edits, show the applicant's real name instead of his username. (Profile-View.php)
+ & Renamed the tabs of the tracking area to be more consistent. (Profile.php, Profile template, Profile language file)
+
 
 February 2009
 --------------------------------------------------------------------------------

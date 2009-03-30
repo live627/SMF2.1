@@ -815,15 +815,15 @@ function statPanel($memID)
 
 function tracking($memID)
 {
-	global $sourcedir, $context, $txt, $scripturl, $modSettings;
+	global $sourcedir, $context, $txt, $scripturl, $modSettings, $user_profile;
 
 	$subActions = array(
-		'edits' => array('trackEdits'),
-		'user' => array('trackUser'),
-		'ip' => array('TrackIP'),
+		'activity' => array('trackActivity', $txt['trackActivity']),
+		'ip' => array('TrackIP', $txt['trackIP']),
+		'edits' => array('trackEdits', $txt['trackEdits']),
 	);
 
-	$context['tracking_area'] = isset($_GET['sa']) && isset($subActions[$_GET['sa']]) ? $_GET['sa'] : 'user';
+	$context['tracking_area'] = isset($_GET['sa']) && isset($subActions[$_GET['sa']]) ? $_GET['sa'] : 'activity';
 
 	if (isset($types[$context['tracking_area']][1]))
 		require_once($sourcedir . '/' . $types[$context['tracking_area']][1]);
@@ -833,7 +833,7 @@ function tracking($memID)
 		'title' => $txt['tracking'],
 		'description' => $txt['tracking_description'],
 		'tabs' => array(
-			'user' => array(),
+			'activity' => array(),
 			'ip' => array(),
 			'edits' => array(),
 		),
@@ -843,20 +843,21 @@ function tracking($memID)
 	if (empty($modSettings['modlog_enabled']))
 		unset($context[$context['profile_menu_name']]['tab_data']['edits']);
 
+	// Set a page title.
+	$context['page_title'] = $txt['trackUser'] . ' - ' . $subActions[$context['tracking_area']][1] . ' - ' . $user_profile[$memID]['real_name'];
+
 	// Pass on to the actual function.
 	$context['sub_template'] = $subActions[$context['tracking_area']][0];
 	$subActions[$context['tracking_area']][0]($memID);
 }
 
-function trackUser($memID)
+function trackActivity($memID)
 {
 	global $scripturl, $txt, $modSettings, $sourcedir;
 	global $user_profile, $context, $smcFunc;
 
 	// Verify if the user has sufficient permissions.
 	isAllowedTo('moderate_forum');
-
-	$context['page_title'] = $txt['trackUser'] . ' - ' . $user_profile[$memID]['real_name'];
 
 	$context['last_ip'] = $user_profile[$memID]['member_ip'];
 	if ($context['last_ip'] != $user_profile[$memID]['member_ip2'])
@@ -1202,7 +1203,8 @@ function TrackIP($memID = 0)
 	$ip_var = str_replace('*', '%', $context['ip']);
 	$ip_string = strpos($ip_var, '%') === false ? '= {string:ip_address}' : 'LIKE {string:ip_address}';
 
-	$context['page_title'] = $txt['trackIP'] . ' - ' . $context['ip'];
+	if (empty($context['tracking_area']))
+		$context['page_title'] = $txt['trackIP'] . ' - ' . $context['ip'];
 
 	$request = $smcFunc['db_query']('', '
 		SELECT id_member, real_name AS display_name, member_ip
@@ -1622,7 +1624,7 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT
-				id_member, member_name
+				id_member, real_name
 			FROM {db_prefix}members
 			WHERE id_member IN ({array_int:members})',
 			array(
@@ -1631,7 +1633,7 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 		);
 		$members = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$members[$row['id_member']] = $row['member_name'];
+			$members[$row['id_member']] = $row['real_name'];
 		$smcFunc['db_free_result']($request);
 
 		foreach ($edits as $key => $value)

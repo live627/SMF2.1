@@ -152,7 +152,8 @@ $txt['showAttachments'] = 'Attachments';
 $txt['statPanel'] = 'Show Stats';
 $txt['editBuddies'] = 'Edit Buddies';
 $txt['trackUser'] = 'Track User';
-$txt['trackIP'] = 'Track IP';
+$txt['trackActivity'] = 'Activity';
+$txt['trackIP'] = 'IP Address';
 
 $txt['authentication'] = 'Authentication';
 $txt['change_authentication'] = 'From this section you can change how you login to the forum. You may choose to either use an OpenID account for your authentication, or alternatively switch to use a username and password.';

@@ -501,7 +501,7 @@ function template_editBuddies()
 }
 
 // This template shows an admin information on a users IP addresses used and errors attributed to them.
-function template_trackUser()
+function template_trackActivity()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
