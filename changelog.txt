@@ -193,6 +193,7 @@ March 2009
  & Renamed the tabs of the tracking area to be more consistent. (Profile.php, Profile template, Profile language file)
  ! Undefined index in wireless mode, so wireless a url for the linktree (Post.php) [Bug 3369]
  ! Wireless wouldn't give a nice error for calendar subactions (Calendar.php) [Bug 3371]
+ * Wap2/imode Pm - folder is now f, and was missing label/pm_head hidden variables. (Wireless.template.php) [Bug 2475]
 
 
 February 2009

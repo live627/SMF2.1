@@ -564,7 +564,9 @@ function template_imode_pm()
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 							<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
-							<input type="hidden" name="folder" value="', $context['folder'], '" />
+							<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
+							<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
+							<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
 						</tr></td>';
 			if ($context['reply'])
 				echo '
@@ -1184,7 +1186,9 @@ function template_wap2_pm()
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 						<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
-						<input type="hidden" name="folder" value="', $context['folder'], '" />
+						<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
+						<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
+						<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
 					</p>';
 			if ($context['reply'])
 				echo '
