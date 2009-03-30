@@ -169,7 +169,7 @@ function MoveTopic2()
 
 	// You can't choose to have a redirection topic and use an empty reason.
 	if (isset($_POST['postRedirect']) && (!isset($_POST['reason']) || trim($_POST['reason']) == ''))
-		fatal_lang_error('movetopic_no_reason');
+		fatal_lang_error('movetopic_no_reason', false);
 
 	// Make sure this form hasn't been submitted before.
 	checkSubmitOnce('check');
