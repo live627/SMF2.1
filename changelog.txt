@@ -192,6 +192,7 @@ March 2009
  ! When tracking profile edits, show the applicant's real name instead of his username. (Profile-View.php)
  & Renamed the tabs of the tracking area to be more consistent. (Profile.php, Profile template, Profile language file)
  ! Undefined index in wireless mode, so wireless a url for the linktree (Post.php) [Bug 3369]
+ ! Wireless wouldn't give a nice error for calendar subactions (Calendar.php) [Bug 3371]
 
 
 February 2009
