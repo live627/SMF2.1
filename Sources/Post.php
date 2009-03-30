@@ -1024,6 +1024,10 @@ function Post()
 			'extra_after' => '<span' . ($settings['linktree_inline'] ? ' class="smalltext"' : '') . '><b class="nav"> )</b></span>'
 		);
 
+	// Give wireless a linktree url to the post screen, so that they can switch to full version.
+	if (WIRELESS)
+		$context['linktree'][count($context['linktree']) - 1]['url'] = $scripturl . '?action=post;' . (!empty($topic) ? 'topic=' . $topic : 'board=' . $board) . '.' . $_REQUEST['start'] . (isset($_REQUEST['msg']) ? ';msg=' . (int) $_REQUEST['msg'] . ';' . $context['session_var'] . '=' . $context['session_id'] : '') ;
+
 	// If they've unchecked an attachment, they may still want to attach that many more files, but don't allow more than num_allowed_attachments.
 	// !!! This won't work if you're posting an event.
 	$context['num_allowed_attachments'] = empty($modSettings['attachmentNumPerPostLimit']) ? 50 : min($modSettings['attachmentNumPerPostLimit'] - count($context['current_attachments']) + (isset($deleted_attachments) ? $deleted_attachments : 0), $modSettings['attachmentNumPerPostLimit']);
