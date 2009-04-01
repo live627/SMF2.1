@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+April 2009
+--------------------------------------------------------------------------------
+ * Unread/unreplies lost the categories/boards/board variable (Recent.template.php) [Bug 3373]
+
+
 March 2009
 --------------------------------------------------------------------------------
  ! Including quotes in the forum title would break newsletter sending. (ManageNews.php) [Bug 3289]

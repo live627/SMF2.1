@@ -90,7 +90,7 @@ function template_unread()
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
 		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		<input type="hidden" name="qaction" value="markread" />
-		<input type="hidden" name="redirect_url" value="action=unread;start=', $context['start'], (!empty($context['showing_all_topics']) ? ';all' : ''), '" />';
+		<input type="hidden" name="redirect_url" value="action=unread', (!empty($context['showing_all_topics']) ? ';all' : ''), $context['querystring_board_limits'], '" />';
 
 	echo '
 	<table width="100%" border="0" cellspacing="0" cellpadding="3">
@@ -262,7 +262,7 @@ function template_replies()
 	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;">
 		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		<input type="hidden" name="qaction" value="markread" />
-		<input type="hidden" name="redirect_url" value="action=unreadreplies;start=', $context['start'], (!empty($context['showing_all_topics']) ? ';all' : ''), '" />';
+		<input type="hidden" name="redirect_url" value="action=unreadreplies', (!empty($context['showing_all_topics']) ? ';all' : ''), $context['querystring_board_limits'], '" />';
 
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 	{
