@@ -8,7 +8,6 @@ function template_main()
 	echo '
 		<a name="top"></a>';
 
-
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
@@ -97,6 +96,7 @@ function template_main()
 					// Has it posts awaiting approval?
 					if ($child['can_approve_posts'] && ($child['unapproved_posts'] || $child['unapproved_topics']))
 						$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > $child['unapproved_posts'] ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'] . $child['unapproved_topics'] . $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
+
 					$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 				}
 				echo '
@@ -361,8 +361,7 @@ function template_main()
 	</div>';
 	}
 
-
-	// Show breadcrumbs at the bottom too?
+	// Show breadcrumbs at the bottom too.
 	echo '
 	<div class="marginbottom">', theme_linktree(), '</div>';
 

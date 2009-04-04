@@ -49,7 +49,7 @@ function template_show_list($list_id = null)
 	if (isset($cur_list['additional_rows']['above_column_headers']))
 		template_additional_rows('above_column_headers', $cur_list);
 
-		// Show the column headers.
+	// Show the column headers.
 	if(!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
 	{
 		echo '

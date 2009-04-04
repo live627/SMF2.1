@@ -86,6 +86,7 @@ function template_main()
 			echo '
 				</td>
 			</tr>';
+
 			// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
 			if (!empty($board['children']))
 			{
@@ -116,7 +117,6 @@ function template_main()
 	</div>
 </div>';
 	}		
-
 
 	if (!empty($options['show_board_desc']) && $context['description'] != '')
 		echo '
@@ -350,11 +350,9 @@ function template_main()
 		', template_button_strip($normal_buttons, 'right'), '
 		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
 	</div>';
-
 	}
 
-
-	// Show breadcrumbs at the bottom
+	// Show breadcrumbs at the bottom too.
 	theme_linktree();
 
 	echo '

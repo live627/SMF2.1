@@ -142,7 +142,7 @@ function template_reported_posts_block()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" >
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=moderate;area=reports">', $txt['mc_recent_reports'], '</a>
@@ -177,7 +177,7 @@ function template_watched_users()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" >
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=moderate;area=userwatch">', $txt['mc_watched_users'], '</a>
@@ -479,7 +479,7 @@ function template_unapproved_attachments()
 					', $item['filename'], '
 				</td>
 				<td align="right">
-					', $item['size'], 'kB
+					', $item['size'], $txt['kilobyte'], '
 				</td>
 				<td>
 					', $item['poster']['link'], '

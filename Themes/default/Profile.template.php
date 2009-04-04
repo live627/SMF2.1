@@ -170,7 +170,7 @@ function template_summary()
 	// Can they view/issue a warning?
 	if ($context['can_view_warning'] && $context['member']['warning'])
 	{
-		echo '	
+		echo '
 				<dt>', $txt['profile_warning_level'], ': </dt>
 				<dd>
 					<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=', $context['can_issue_warning'] ? 'issuewarning' : 'viewwarning', '">', $context['member']['warning'], '%</a>';
@@ -1529,7 +1529,7 @@ function template_groupMembership()
 						<div class="floatleft">
 							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
-						<div  class="floatright">
+						<div class="floatright">
 							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 						</div>
 					</td>
@@ -2126,7 +2126,7 @@ function template_deleteAccount()
 	else
 	{
 		echo '
-								<div class="alert" style=" margin-bottom: 2ex;">', $txt['deleteAccount_warning'], '</div>
+								<div class="alert" style="margin-bottom: 2ex;">', $txt['deleteAccount_warning'], '</div>
 							</td>
 						</tr>';
 

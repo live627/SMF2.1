@@ -518,7 +518,11 @@ function template_admin_register()
 				</dt>
 				<dd>
 					<input type="password" name="password" id="password_input" tabindex="', $context['tabindex']++, '" size="30" />
-				</dd>
+				</dd>';
+
+	if (!empty($context['member_groups']))
+	{
+		echo '
 				<dt>
 					<label for="group_select">', $txt['admin_register_group'], ':</label>
 					<span class="smalltext">', $txt['admin_register_group_desc'], '</span>
@@ -526,12 +530,15 @@ function template_admin_register()
 				<dd>
 					<select name="group" id="group_select" tabindex="', $context['tabindex']++, '">';
 
-	foreach ($context['member_groups'] as $id => $name)
-		echo '
+		foreach ($context['member_groups'] as $id => $name)
+			echo '
 						<option value="', $id, '">', $name, '</option>';
-	echo '
+		echo  '
 					</select>
-				</dd>
+				</dd>';
+	}
+
+	echo '
 				<dt>
 					<label for="emailPassword_check">', $txt['admin_register_email_detail'], ':</label>
 					<span class="smalltext">', $txt['admin_register_email_detail_desc'], '</span>

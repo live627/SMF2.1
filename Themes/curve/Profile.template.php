@@ -69,7 +69,7 @@ function template_summary()
 		echo '
 			<br /><a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';', $context['session_var'], '=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
 
-	echo '		
+	echo '
 			</span>';
 
 	echo '
@@ -77,7 +77,7 @@ function template_summary()
 
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '			
-				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '.</a><br />';
+				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '</a><br />';
 	echo '
 				<a href="', $scripturl, '?action=profile;area=showposts;u=', $context['id_member'], '">', $txt['showPosts'], '</a><br />
 				<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '">', $txt['statPanel'], '</a>
@@ -108,7 +108,6 @@ function template_summary()
 		echo '
 				<dt>', $txt['email'], ': </dt>
 				<dd><i><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></i></dd>';
-
 
 	if (!empty($modSettings['titlesEnable']) && !empty($context['member']['title']))
 		echo '
@@ -178,9 +177,11 @@ function template_summary()
 
 		// Can we provide information on what this means?
 		if (!empty($context['warning_status']))
-			echo '<span class="smalltext">(', $context['warning_status'], ')</span>';
+			echo '
+					<span class="smalltext">(', $context['warning_status'], ')</span>';
 
-		echo '</dd>';
+		echo '
+				</dd>';
 	}
 
 	// Is this member requiring activation and/or banned?
@@ -190,7 +191,7 @@ function template_summary()
 		// If the person looking at the summary has permission, and the account isn't activated, give the viewer the ability to do it themselves.
 		if (!empty($context['activate_message']))
 			echo '
-				<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
+				<dt class="clear"><span class="alert">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;area=activateaccount;u=' . $context['id_member'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '"', ($context['activate_type'] == 4 ? ' onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)</dt>';
 
 		// If the current member is banned, show a message and possibly a link to the ban.
 		if (!empty($context['member']['bans']))
@@ -500,7 +501,7 @@ function template_editBuddies()
 }
 
 // This template shows an admin information on a users IP addresses used and errors attributed to them.
-function template_trackUser()
+function template_trackActivity()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
@@ -1098,7 +1099,7 @@ function template_edit_options()
 									<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" />';
 	else
 		echo '
-								<td align="right" colspan="2">';
+								<td align="left" colspan="2">';
 
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
@@ -1480,10 +1481,10 @@ function template_groupMembership()
 
 			echo '
 					<td>
-						<div style="float: left;">
+						<div class="floatleft">
 							<label for="primary_', $group['id'], '"><strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '</label>
 						</div>
-						<div style="float: right">';
+						<div class="floatright">';
 
 			// Can they leave their group?
 			if ($group['can_leave'])
@@ -1525,10 +1526,10 @@ function template_groupMembership()
 				echo '
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>
-						<div style="float: left;">
+						<div class="floatleft">
 							<strong>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</strong>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
-						<div style="float: right">
+						<div class="floatright">
 							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';area=groupmembership;' . $context['session_var'] . '=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';area=groupmembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 						</div>
 					</td>
@@ -1979,7 +1980,7 @@ function template_issueWarning()
 		echo '
 					</select>
 					<span class="smalltext" id="new_template_link" style="display: none;">[<a href="', $scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=0" target="_blank" class="new_win">', $txt['profile_warning_new_template'], '</a>]</span><br />
-					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;" >', $context['warning_data']['notify_body'], '</textarea>
+					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;">', $context['warning_data']['notify_body'], '</textarea>
 				</td>
 			</tr>';
 	}
@@ -1988,7 +1989,7 @@ function template_issueWarning()
 			</td>
 			</tr>
 			<tr class="catbg">
-				<td colspan="2" align="right">
+				<td colspan="2" align="left">
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="save" value="', $context['user']['is_owner'] ? $txt['change_profile'] : $txt['profile_warning_issue'], '" />
 				</td>
@@ -2021,13 +2022,13 @@ function template_issueWarning()
 				<td class="smalltext">', $warning['issuer']['link'], '</td>
 				<td class="smalltext">', $warning['time'], '</td>
 				<td class="smalltext">
-					<div style="float: left;">
+					<div class="floatleft">
 						', $warning['reason'], '
 					</div>';
 
 		if (!empty($warning['id_notice']))
 			echo '
-					<div style="float: right;">
+					<div class="floatright">
 						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" class="new_win" title="', $txt['profile_warning_previous_notice'], '"><img src="', $settings['images_url'], '/filter.gif" alt="" /></a>
 					</div>';
 		echo '
@@ -2111,7 +2112,7 @@ function template_deleteAccount()
 							</td>
 						</tr><tr>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'right' : 'left', '">
-								<b', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : ''), '>', $txt['current_password'], ': </strong>
+								<strong', (isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : ''), '>', $txt['current_password'], ': </strong>
 							</td>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'left' : 'right', '">
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2196,14 +2197,14 @@ function template_profile_save()
 	if ($context['user']['is_owner'] && $context['require_password'])
 		echo '
 								<td width="40%">
-									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong>
+									<strong', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' class="error"' : '', '>', $txt['current_password'], ': </strong>
 									<div class="smalltext">', $txt['required_security_reasons'], '</div>
 								</td>
 								<td>
 									<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" />';
 	else
 		echo '
-								<td align="right" colspan="2">';
+								<td align="left" colspan="2">';
 
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
@@ -2246,7 +2247,7 @@ function template_profile_group_manage()
 									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
 								</td>
 								<td>
-									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
+									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group_id'] == 1 ? 'onchange="if (this.value != 1 &amp;&amp; !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
 		// Fill the select box with all primary member groups that can be assigned to a member.
 		foreach ($context['member_groups'] as $member_group)
 			if (!empty($member_group['can_be_primary']))
@@ -2312,7 +2313,7 @@ function template_profile_ignore_list_modify()
 									<div class="smalltext">
 										', $txt['username_line'], '<br />
 										<br />
-										<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=LB;', $context['session_var'], '=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a>
+										[<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=LB;', $context['session_var'], '=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);">', $txt['find_members'], '</a>]
 									</div>
 								</td>
 								<td>
@@ -2409,7 +2410,7 @@ function template_profile_avatar_select()
 									<table width="100%" cellpadding="5" cellspacing="0" border="0" style="height: 25ex;"><tr>
 										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"', ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : ''), ' class="check" /></td>
 										<td valign="top" style="padding-left: 1ex;">
-											<b', (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
+											<strong', (isset($context['modify_error']['bad_avatar']) ? ' class="error"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></strong>
 											<div style="margin: 2ex;"><img name="avatar" id="avatar" src="', !empty($context['member']['avatar']['allow_external']) && $context['member']['avatar']['choice'] == 'external' ? $context['member']['avatar']['external'] : $modSettings['avatar_url'] . '/blank.gif', '" alt="Do Nothing" /></div>
 										</td>
 									</tr></table>
@@ -2617,7 +2618,7 @@ function template_profile_timeoffset_modify()
 
 	echo '
 							<tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' class="error"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
+								<td width="40%"><strong', (isset($context['modify_error']['bad_offset']) ? ' class="error"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
 								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="currentDate = new Date(', $context['current_forum_time_js'], '); document.getElementById(\'time_offset\').value = autoDetectTimeOffset(currentDate); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
 							</tr>';
 }
@@ -2663,7 +2664,7 @@ function template_authentication_method()
 		<form action="', $scripturl, '?action=profile;area=authentication;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
 			<table border="0" width="100%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
-					<td height="26" >
+					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
 						', $txt['authentication'], '
 					</td>
@@ -2730,7 +2731,7 @@ function template_authentication_method()
 								</td>
 							</tr>
 							<tr>
-								<td align="right" colspan="3">
+								<td align="left" colspan="3">
 									<input type="submit" value="', $txt['change_profile'], '" />
 									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 									<input type="hidden" name="u" value="', $context['id_member'], '" />
