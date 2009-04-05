@@ -399,10 +399,15 @@ function messageIndexBar($area)
 
 	require_once($sourcedir . '/Subs-Menu.php');
 
+	// What page is this, again?
+	$current_page = $scripturl . '?action=pm' . (!empty($_REQUEST['sa']) ? ';sa=' . $_REQUEST['sa'] : '') . (!empty($context['folder']) ? ';f=' . $context['folder'] : '') . (!empty($context['current_label_id']) ? ';l=' . $context['current_label_id'] : '');
+
 	// Set a few options for the menu.
 	$menuOptions = array(
 		'current_area' => $area,
 		'disable_url_session_check' => true,
+		'toggle_url' => $current_page . ';togglebar',
+		'toggle_redirect_url' => $current_page,
 	);
 
 	// Actually create the menu!

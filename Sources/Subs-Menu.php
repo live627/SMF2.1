@@ -57,7 +57,8 @@ function createMenu($menuData, $menuOptions = array())
 			cache_put_data('theme_settings-' . $theme . ':' . $user_info['id'], null, 60);
 
 		// Redirect as this seems to work best.
-		redirectexit('action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';' . $context['session_var'] . '=' . $context['session_id']);
+		$redirect_url = isset($menuOptions['toggle_redirect_url']) ? $menuOptions['toggle_redirect_url'] : 'action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . (isset($_GET['u']) ? ';u=' . $_GET['u'] : '') . ';' . $context['session_var'] . '=' . $context['session_id']; 
+		redirectexit($redirect_url);
 	}
 
 	// Work out where we should get our images from.
@@ -105,19 +106,14 @@ function createMenu($menuData, $menuOptions = array())
 		$menu_context['current_area'] = isset($menuOptions['current_area']) ? $menuOptions['current_area'] : $_GET['area'];
 
 	// Build a list of additional parameters that should go in the URL.
-	$extraUrlParameters = array();
+	$menu_context['extra_parameters'] = '';
 	if (!empty($menuOptions['extra_url_parameters']))
 		foreach ($menuOptions['extra_url_parameters'] as $key => $value)
-			$extraUrlParameters[$key] = $value;
+			$menu_context['extra_parameters'] .= ';' . $key . '=' . $value;
 
 	// Only include the session ID in the URL if it's strictly necessary.
 	if (empty($menuOptions['disable_url_session_check']))
-		$extraUrlParameters[$context['session_var']] = $context['session_id'];
-
-	// Flatten the extra parameters array and put it in the menu context array.
-	$menu_context['extra_parameters'] = '';
-	foreach ($extraUrlParameters as $key => $value)
-		$menu_context['extra_parameters'] .= ';' . $key . '=' . $value;
+		$menu_context['extra_parameters'] .= ';' . $context['session_var'] . '=' . $context['session_id'];
 
 	$include_data = array();
 
@@ -235,6 +231,12 @@ function createMenu($menuData, $menuOptions = array())
 			}
 		}
 	}
+
+	// Should we use a custom base url, or use the default? 
+	$menu_context['base_url'] = isset($menuOptions['base_url']) ? $menuOptions['base_url'] : $scripturl . '?action=' . $menu_context['current_action'];
+
+	// What about the toggle url?   
+	$menu_context['toggle_url'] = isset($menuOptions['toggle_url']) ? $menuOptions['toggle_url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : '') . $menu_context['extra_parameters'] . ';togglebar';
 
 	// Right to left menu should be in reverse order.
 	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
