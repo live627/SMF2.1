@@ -372,6 +372,10 @@ function ModifyProfile($post_errors = array())
 	// Actually create the menu!
 	$profile_include_data = createMenu($profile_areas, $menuOptions);
 
+	// No menu means no access.
+	if (!$profile_include_data)
+		fatal_lang_error('no_access');
+
 	// Make a note of the Unique ID for this menu.
 	$context['profile_menu_id'] = $context['max_menu_id'];
 	$context['profile_menu_name'] = 'menu_data_' . $context['profile_menu_id'];
