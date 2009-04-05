@@ -7,6 +7,7 @@ April 2009
 --------------------------------------------------------------------------------
  * Unread/unreplies lost the categories/boards/board variable (Recent.template.php) [Bug 3373]
  ! Tooltip might have html so provide an alt non-html title version (Subs.php, index.template.php {default only}) [Bug 3159]
+ *& Wap2/Rss/Xhtml strings were hard-coded (index.template.php, index.english.php) [Bug 3375]
 
 March 2009
 --------------------------------------------------------------------------------

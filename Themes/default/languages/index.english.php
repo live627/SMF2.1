@@ -441,7 +441,7 @@ $txt['go_down'] = 'Go Down';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">Powered by %s</a> |
  <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2009, Simple Machines LLC</a>';
-
+ 
 $txt['birthdays'] = 'Birthdays:';
 $txt['events'] = 'Events:';
 $txt['birthdays_upcoming'] = 'Upcoming Birthdays:';
@@ -561,11 +561,18 @@ $txt['who_viewing_topic'] = ' are viewing this topic.';
 $txt['who_viewing_board'] = ' are viewing this board.';
 $txt['who_member'] = 'Member';
 
+// No longer used by default theme, but for backwards compat
 $txt['powered_by_php'] = 'Powered by PHP';
 $txt['powered_by_mysql'] = 'Powered by MySQL';
+$txt['valid_css'] = 'Valid CSS!';
+
+// Current footer strings
 $txt['valid_html'] = 'Valid HTML 4.01!';
 $txt['valid_xhtml'] = 'Valid XHTML 1.0!';
-$txt['valid_css'] = 'Valid CSS!';
+$txt['wap2'] = 'WAP2';
+$txt['rss'] = 'RSS';
+$txt['xhtml'] = 'XHTML';
+$txt['html'] = 'HTML';
 
 $txt['guest'] = 'Guest';
 $txt['guests'] = 'Guests';
