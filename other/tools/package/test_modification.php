@@ -15,22 +15,22 @@ require_once($sourcedir . '/Subs-Package.php');
 show_header();
 
 // A file was uploaded... test it out.
-if (isset($_FILES['mod_file']['name']) && $_FILES['mod_file']['name'] != '' && is_uploaded_file($_FILES['mod_file']['tmp_name']) && file_exists($_FILES['mod_file']['tmp_name']))
+if (isset($_FILES['mod_file']['name']) && $_FILES['mod_file']['name'] != '' && is_uploaded_file($_FILES['mod_file']['tmp_name']))
 {
 	// A boardmod format file?
 	if (substr($_FILES['mod_file']['name'], -4) == '.mod')
-		$actions = parseBoardmod(@file_get_contents($_FILES['mod_file']['tmp_name']), true, false);
+		$actions = parseBoardmod(@implode('', @file($_FILES['mod_file']['tmp_name'])), true, false);
 	// Oh... an xml style one?
 	else
-		$actions = parseModification(@file_get_contents($_FILES['mod_file']['tmp_name']), true, false);
+		$actions = parseModification(@implode('', @file($_FILES['mod_file']['tmp_name'])), true, false);
 }
 // Path to the file... easier.
 elseif (isset($_REQUEST['mod_file']))
 {
 	if (substr($_REQUEST['mod_file'], -4) == '.mod')
-		$actions = parseBoardmod(@file_get_contents($_REQUEST['mod_file']), true, false);
+		$actions = parseBoardmod(@implode('', @file($_REQUEST['mod_file'])), true, false);
 	else
-		$actions = parseModification(@file_get_contents($_REQUEST['mod_file']), true, false);
+		$actions = parseModification(@implode('', @file($_REQUEST['mod_file'])), true, false);
 }
 
 // No actions, eh?  Guess they need to pick a file.
@@ -87,7 +87,7 @@ else
 		elseif ($action['type'] == 'failure')
 			echo '
 					<li><b>The following could not be found (or should not have been) in ', $action['filename'], ':</b> <i>(note that it may not look like you typed it, this is normal.)</i><br />
-					<pre style="width: 98%; overflow: auto; border: 1px solid red;">', htmlspecialchars($action['search']), '</pre></li>';
+					<pre style="width: 98%; overflow: auto; border: 1px solid red;">', $action['search'], '</pre></li>';
 		elseif ($action['type'] == 'result')
 		{
 			echo '
@@ -133,8 +133,8 @@ function show_header()
 <html>
 	<head>
 		<title>SMF Package SDK</title>
-		<script type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js"></script>
-		<style type="text/css">
+		<script type="text/javascript" src="', $settings['theme_url'], '/script.js"></script>
+		<style type="text/css"><!--
 			body
 			{
 				font-family: Verdana, sans-serif;
@@ -192,11 +192,11 @@ function show_header()
 			{
 				margin: 0;
 			}
-		</style>
+		--></style>
 	</head>
 	<body>
 		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $settings['default_images_url'], '/smflogo.gif" style="width: 250px; float: right;" alt="Simple Machines" border="0" /></a>
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $settings['default_images_url'], '/smflogo.gif" width="250" style="float: right;" alt="Simple Machines" border="0" /></a>
 			<div title="Dekar">SMF Package SDK</div>
 		</div>
 		<div id="content">';

@@ -4,7 +4,7 @@
 	ATTENTION: If you are trying to install this manually, you should try
 	the package manager.  If it will not work for you, please take a look
 	at the following for information on this format:
-		http://mods.simplemachines.org/docs/manual-install.php
+		http://www.simplemachines.org/redirect/manual_mod_install
 
 ================================================================================
 

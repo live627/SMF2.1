@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE package-list SYSTEM "http://www.simplemachines.org/xml/package-list">
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/package-list">
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	This is a package server listing file of SMF packages.
 
@@ -14,12 +14,12 @@
 	<!-- If you want to list an author (such as yourself) by default, this makes it easier. -->
 	<default-author email="youremail@domain.tld">Name</default-author>
 	<!-- A default website - sometimes a bit more distracting than not. -->
-	<default-website title="My Website">http://www.example.com/</default-website>
+	<default-website title="My Website">http://www.mywebsite.tld/</default-author>
 
 	<!-- Sections are grouped off only for organization really. -->
 	<section>
 		<!-- This is shown as the section's title. -->
-		<title>A section, such as RC2 compatible mods.</title>
+		<title>A section, such as RC1 compatible mods.</title>
 
 		<!-- You can include headings, text, and rules all the same way. -->
 		<heading>A heading, such as &quot;New Features&quot;.</heading>
