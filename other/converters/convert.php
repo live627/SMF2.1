@@ -3017,7 +3017,7 @@ function cmdStep0()
 	global $time_start;
 	$time_start = time();
 
-	ob_end_clean();
+	@ob_end_clean();
 	ob_implicit_flush(true);
 	@set_time_limit(0);
 

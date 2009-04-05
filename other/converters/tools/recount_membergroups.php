@@ -438,7 +438,7 @@ function script_query($query, $file = __FILE__, $line = __LINE__)
 
 		// We need to find our backtrace.
 		if ($return !== false)
-			return $query;
+			return $return;
 		else
 		{
 			echo 'The recount process has received an error<br />';

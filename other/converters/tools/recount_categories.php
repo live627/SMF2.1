@@ -293,7 +293,7 @@ function script_query($query)
 
 		// We need to find our backtrace.
 		if ($return !== false)
-			return $query;
+			return $return;
 		else
 		{
 			echo 'The recount process has received an error<br />';
