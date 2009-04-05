@@ -6,7 +6,6 @@ function template_main()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div class="middletext" style="margin-bottom: 1ex;">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	foreach ($context['posts'] as $post)
@@ -91,13 +90,6 @@ function template_unread()
 		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 		<input type="hidden" name="qaction" value="markread" />
 		<input type="hidden" name="redirect_url" value="action=unread', (!empty($context['showing_all_topics']) ? ';all' : ''), $context['querystring_board_limits'], '" />';
-
-	echo '
-	<table width="100%" border="0" cellspacing="0" cellpadding="3">
-		<tr>
-			<td>', theme_linktree(), '</td>
-		</tr>
-	</table>';
 
 	if ($settings['show_mark_read'])
 	{

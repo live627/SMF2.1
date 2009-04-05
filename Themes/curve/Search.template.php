@@ -382,9 +382,6 @@ function template_results()
 		echo '
 		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
-		if ($settings['linktree_inline'])
-			echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>';
 		echo '
 		<table cellpadding="0" cellspacing="0" width="100%">
 			<tr>
@@ -410,7 +407,6 @@ function template_results()
 	else
 	{
 		echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		if (empty($context['topics']))
@@ -472,10 +468,6 @@ function template_results()
 
 		echo '
 			<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
-
-		if ($settings['linktree_inline'])
-			echo '
-			<div style="padding: 3px;">', theme_linktree(), '</div>';
 	}
 }
 

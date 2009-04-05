@@ -334,6 +334,9 @@ function template_body_above()
 	echo '
 	<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
 		<td id="bodyarea" style="padding: 1ex 20px 2ex 20px;">';
+
+	// Show the navigation tree.
+	theme_linktree();
 }
 
 function template_body_below()

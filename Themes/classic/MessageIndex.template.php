@@ -8,7 +8,7 @@ function template_main()
 	echo '
 <table width="100%" cellpadding="3" cellspacing="0">
 	<tr>
-		<td><a name="top"></a>', theme_linktree(), '</td>';
+		<td><a name="top"></a>', '</td>';
 	if (!empty($settings['display_who_viewing']))
 	{
 		echo '

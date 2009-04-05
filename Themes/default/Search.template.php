@@ -7,11 +7,6 @@ function template_main()
 
 	echo '
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
-		<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-				<td>', theme_linktree(), '</td>
-			</tr>
-		</table>
 
 		<table border="0" cellspacing="0" cellpadding="8" align="center" class="tborder">
 			<tr class="titlebg">
@@ -290,7 +285,6 @@ function template_results()
 	if ($context['compact'])
 	{
 		echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>
 	<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		// Quick moderation set to checkboxes? Oh, how fun :/.
@@ -449,9 +443,6 @@ function template_results()
 		echo '
 		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
-		if ($settings['linktree_inline'])
-			echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>';
 		echo '
 		<table cellpadding="0" cellspacing="0" width="100%">
 			<tr>
@@ -477,7 +468,6 @@ function template_results()
 	else
 	{
 		echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		if (empty($context['topics']))
@@ -539,10 +529,6 @@ function template_results()
 
 		echo '
 			<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
-
-		if ($settings['linktree_inline'])
-			echo '
-			<div style="padding: 3px;">', theme_linktree(), '</div>';
 	}
 }
 

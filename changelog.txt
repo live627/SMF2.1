@@ -12,6 +12,7 @@ April 2009
  ! Allow better customisation of generic menu urls by making base_url, toggle_url and toggle_redirect_url optional. (Subs-Menu.php) [Feature 3128]
  * Adjusted the GenericMenu template to use the urls defined in $menu_context. (GenericMenu template) [Feature 3128]
  ! The personal messages section didn't respond well to toggling. (PersonalMessage.php) [Bug 3280]
+ * Lower linktrees wouldn't show, removed old traces of linktrees, re-added linktrees for babylon/classic (index.template.php, index.css, and many other templates) [Bug 3377]
 
 
 March 2009

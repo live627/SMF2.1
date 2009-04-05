@@ -205,6 +205,9 @@ function template_body_above()
 	<br />
 	<table cellspacing="0" cellpadding="10" border="0" align="center" width="95%" class="tborder">
 		<tr><td valign="top" style="background-color: #ffffff;">';
+		
+	// Show the navigation tree.
+	theme_linktree();
 }
 
 function template_body_below()

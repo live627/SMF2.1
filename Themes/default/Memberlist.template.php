@@ -6,10 +6,6 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// Show the link tree.
-	echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>';
-
 	// shall we use the tabs?
 	if (!empty($settings['use_tabs']))
 	{
@@ -186,10 +182,6 @@ function template_search()
 	// Start the submission form for the search!
 	echo '
 		<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">';
-
-	// Display that link tree...
-	echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>';
 
 	// Display links to view all/search.
 	if (!empty($settings['use_tabs']))

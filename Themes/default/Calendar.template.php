@@ -6,7 +6,6 @@ function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 	echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div>
 			<div style="padding: 1px; margin: 0 auto; text-align: center; width: 200px;" class="floatleft">
 					', template_show_month_grid('prev'), '
@@ -99,14 +98,7 @@ function template_event_post()
 			}
 		// ]]></script>
 
-		<form action="', $scripturl, '?action=calendar;sa=post" method="post" name="postevent" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);saveEntities();" style="margin: 0;">
-			<table width="55%" align="center" cellpadding="0" cellspacing="3">
-				<tr>
-					<td valign="bottom" colspan="2">
-						', theme_linktree(), '
-					</td>
-				</tr>
-			</table>';
+		<form action="', $scripturl, '?action=calendar;sa=post" method="post" name="postevent" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);saveEntities();" style="margin: 0;">';
 
 	if (!empty($context['event']['new']))
 		echo '

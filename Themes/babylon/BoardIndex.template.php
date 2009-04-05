@@ -9,7 +9,6 @@ function template_main()
 	echo '
 <table width="100%" cellpadding="3" cellspacing="0">
 	<tr>
-		<td valign="bottom">', theme_linktree(), '</td>
 		<td align="right">';
 	if (!$settings['show_stats_index'])
 		echo '

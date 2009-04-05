@@ -6,11 +6,6 @@ function template_main()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<table width="100%" cellpadding="3" cellspacing="0">
-			<tr>
-				<td>', theme_linktree(), '</td>
-			</tr>
-		</table>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
 				<td align="center" colspan="4">', $context['page_title'], '</td>

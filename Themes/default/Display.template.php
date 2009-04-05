@@ -526,8 +526,8 @@ function template_main()
 	<div style="clear: both;">', $context['previous_next'], '</div>
 </div>';
 
-	if ($settings['linktree_inline'])
-		theme_linktree();
+	// Show the lower breadcrumbs.
+	theme_linktree();
 
 	$mod_buttons = array(
 		'move' => array('test' => 'can_move', 'text' => 'move_topic', 'image' => 'admin_move.gif', 'lang' => true, 'url' => $scripturl . '?action=movetopic;topic=' . $context['current_topic'] . '.0'),

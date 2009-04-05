@@ -383,17 +383,12 @@ function theme_linktree($force_show = false)
 	if (empty($context['linktree']) || (!empty($context['dont_default_linktree']) && !$force_show))
 		return;
 
-	//!!! Temporarily don't do it twice.
-	if (!empty($shown_linktree))
-		return;
-	$shown_linktree = true;
-
 	// Reverse the linktree in right to left mode.
 	if ($context['right_to_left'])
 		$context['linktree'] = array_reverse($context['linktree'], true);
 
 	echo '
-	<ul id="linktree">';
+	<ul class="linktree" id="linktree_', empty($shown_linktree) ? 'upper' : 'lower', '">';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
 	foreach ($context['linktree'] as $link_num => $tree)
@@ -426,6 +421,8 @@ function theme_linktree($force_show = false)
 	}
 	echo '
 	</ul>';
+
+	$shown_linktree = true;
 }
 
 // Show the menu up top. Something like [home] [help] [profile] [logout]...

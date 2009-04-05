@@ -155,29 +155,29 @@ h2 em
 }
 
 /* the linktree */
-ul#linktree
+ul.linktree
 {
 	clear: both;
 	list-style: none;
 	margin: 1.5em 0.5em 0.5em 0.5em;
 	padding: 0;
 }
-ul#linktree li
+ul.linktree li
 {
 	margin: 0;
 	padding: 0;
 	display: inline;
 	font-size: 0.8em;
 }
-ul#linktree li a
+ul.linktree li a
 {
 	color: black;
 }
-ul#linktree li a:hover
+ul.linktree li a:hover
 {
 	color: #CC3333;
 }
-ul#linktree li span
+ul.linktree li span
 {
 	font-weight: bold;
 }

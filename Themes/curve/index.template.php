@@ -338,17 +338,12 @@ function theme_linktree($force_show = false)
 	if (empty($context['linktree']) || (!empty($context['dont_default_linktree']) && !$force_show))
 		return;
 
-	//!!! Temporarily don't do it twice.
-	if (!empty($shown_linktree))
-		return;
-	$shown_linktree = true;
-
 	// Reverse the linktree in right to left mode.
 	if ($context['right_to_left'])
 		$context['linktree'] = array_reverse($context['linktree'], true);
 
 	echo '
-	<div id="navigate_section">
+	<div id="navigate_section_', empty($shown_linktree) ? 'upper' : 'lower', '">
 		<ul>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
@@ -383,6 +378,8 @@ function theme_linktree($force_show = false)
 	echo '
 		</ul>
 	</div>';
+
+	$shown_linktree = true;
 }
 
 // Show the menu up top. Something like [home] [help] [profile] [logout]...

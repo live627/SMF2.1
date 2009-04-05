@@ -121,12 +121,12 @@ div#upper_section div.news form
 	overflow: hidden;
 }
 /* the navigation list */
-#navigate_section
+#navigate_section_upper, #navigate_section_lower
 {
 	margin-top: 10px;
 	padding: 10px 10px 0 3px;
 }
-#navigate_section ul
+#navigate_section_upper ul, #navigate_section_lower ul
 {
 	display: block;
 	margin: 0;
@@ -134,7 +134,7 @@ div#upper_section div.news form
 	padding: 0.4em;
 	border-top: solid #ccc 1px;
 }
-#navigate_section ul li
+#navigate_section_upper ul li, #navigate_section_lower ul li
 {
 	display: inline;
 	font-size: 0.95em;

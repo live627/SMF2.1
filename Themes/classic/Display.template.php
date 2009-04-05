@@ -13,8 +13,8 @@ function template_main()
 	// Show the linktree as well as the "Who's Viewing" information.
 	echo '
 <table width="100%" cellpadding="3" cellspacing="0">
-	<tr>
-		<td valign="bottom">', theme_linktree(), '</td>';
+	<tr>';
+
 	if (!empty($settings['display_who_viewing']))
 	{
 		echo '

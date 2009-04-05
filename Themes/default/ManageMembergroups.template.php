@@ -344,11 +344,6 @@ function template_group_members()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// If they can't moderate show a little link tree as it looks better.
-	if (!$context['group']['can_moderate'])
-		echo '
-		<div style="padding: 3px;">', theme_linktree(), '</div>';
-
 	echo '
 		<form action="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : '') , ';sa=members;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="tborder" align="center">

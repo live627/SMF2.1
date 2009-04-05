@@ -8,7 +8,6 @@ function template_main()
 
 	// Display the table header and linktree.
 	echo '
-	<div style="padding: 3px;">', theme_linktree(), '</div>
 	<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
 	<table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder">
 		<tr class="titlebg">

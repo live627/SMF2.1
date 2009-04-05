@@ -35,11 +35,6 @@ function template_main()
 	// Start the main poll form.
 	echo '
 		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); saveEntities();" name="postmodify" id="postmodify">
-			<table width="75%" align="center" cellpadding="3" cellspacing="0">
-				<tr>
-					<td valign="bottom" colspan="2">', theme_linktree(), '</td>
-				</tr>
-			</table>
 			<table border="0"  width="75%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
 				<tr class="titlebg">
 					<td>' . $context['page_title'] . '</td>

@@ -6,8 +6,6 @@ function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
-	theme_linktree();
-
 	echo '
 	<form action="', $scripturl, '?action=movetopic2;topic=', $context['current_topic'], '.0" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);">
 		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">

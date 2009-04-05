@@ -6,9 +6,6 @@ function template_pm_above()
 {
 	global $context, $settings, $options, $txt;
 
-	echo '
-			', theme_linktree();
-
 	// Show the capacity bar, if available.
 	if (!empty($context['limit_bar']))
 	{
