@@ -24,6 +24,7 @@ April 2009
  ! Boards/Cats were in wrong order in PostGreSql & Sqlite for boardindex, jumpto, and many dropdowns and other places. (Subs-Db-postgresql.php, Subs-Db-sqlite.php and 10 other source files) [Bug 3221]
  ! PostGreSql couldn't ban users as it incorrectly detected everyone as admin as it returns t or f (ManageBans.php)
  * Classic theme missing an on2.gif
+ * <s> tag is depreciated (Help.template.php) [Bug 3122]
 
 March 2009
 --------------------------------------------------------------------------------

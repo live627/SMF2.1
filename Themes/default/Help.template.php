@@ -1773,7 +1773,7 @@ function template_manual_smileys()
 			<td>', $txt['manual_posting_bbc_strike'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/strike.gif" alt="', $txt['manual_posting_bbc_strike'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_strike_code'], '</td>
-			<td><s>', $txt['manual_posting_strike_output'], '</s></td>
+			<td><del>', $txt['manual_posting_strike_output'], '</del></td>
 			<td>', $txt['manual_posting_strike_comment'], '</td>
 		</tr>
 		<tr>
