@@ -15,6 +15,7 @@ April 2009
  * Lower linktrees wouldn't show, removed old traces of linktrees, re-added linktrees for babylon/classic (index.template.php, index.css, and many other templates) [Bug 3377]
  ! Sleepy updated the Package SDK for 2.0 and fixing some old style links (Package SDK files) [Bug 3329]
  ! PostGreSql needs the column name name not our recipient alias. Plus pmr.id_pm should be pm.id_pm (PersonalMessage.php) [Bug 3190]
+ ! PostGresql requires all non-aggregate fields in the select must be referenced in the group by (Subs-Post.php) [Bug 3193]
 
 
 March 2009
