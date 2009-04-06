@@ -374,7 +374,7 @@ function ModifyProfile($post_errors = array())
 
 	// No menu means no access.
 	if (!$profile_include_data)
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Make a note of the Unique ID for this menu.
 	$context['profile_menu_id'] = $context['max_menu_id'];
@@ -398,7 +398,7 @@ function ModifyProfile($post_errors = array())
 			{
 				// This can't happen - but is a security check.
 				if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($area['enabled']) && $area['enabled'] == false))
-					fatal_lang_error('no_access');
+					fatal_lang_error('no_access', false);
 
 				// Are we saving data in a valid area?
 				if (isset($area['sc']) && isset($_REQUEST['save']))

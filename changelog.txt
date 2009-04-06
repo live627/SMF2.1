@@ -17,6 +17,7 @@ April 2009
  ! PostGreSql needs the column name name not our recipient alias. Plus pmr.id_pm should be pm.id_pm (PersonalMessage.php) [Bug 3190]
  ! PostGresql requires all non-aggregate fields in the select must be referenced in the group by (Subs-Post.php) [Bug 3193]
  ! Spiderlog would be shown regardless of whether sengines are enabled (Admin.php) [Bug 3182]
+ ! Don't log relatively trivial profile access errors as they may flood the error log otherwise. (Profile.php)
 
 
 March 2009
