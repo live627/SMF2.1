@@ -522,7 +522,7 @@ function BanEdit()
 			list ($memberid, $isAdmin) = $smcFunc['db_fetch_row']($request);
 			$smcFunc['db_free_result']($request);
 
-			if ($isAdmin)
+			if ($isAdmin && $isAdmin != 'f')
 				fatal_lang_error('no_ban_admin', 'critical');
 
 			$values['id_member'] = $memberid;
@@ -712,7 +712,7 @@ function BanEdit()
 						list ($_POST['bannedUser'], $isAdmin) = $smcFunc['db_fetch_row']($request);
 						$smcFunc['db_free_result']($request);
 
-						if ($isAdmin)
+						if ($isAdmin && $isAdmin != 'f')
 							fatal_lang_error('no_ban_admin', 'critical');
 					}
 
