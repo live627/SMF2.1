@@ -2623,8 +2623,8 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.deleted = {int:not_deleted})
 		WHERE pm.deleted_by_sender = {int:is_deleted}
 			' . str_replace('id_pm', 'pm.id_pm', $where) . '
-		GROUP BY pmr.id_pm, recipient
-		HAVING recipient IS null',
+		GROUP BY pm.id_pm, recipient
+		HAVING pmr.id_pm IS null',
 		array(
 			'not_deleted' => 0,
 			'is_deleted' => 1,
