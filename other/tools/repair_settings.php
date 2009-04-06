@@ -186,7 +186,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 	<body>
 		<div id="header">
 			<a href="http://www.simplemachines.org/" target="_blank"><img src="Themes/default/images/smflogo.gif" style="width: 250px; float: right;" alt="Simple Machines" border="0" /></a>
-			<div title="Zanarkand">', $txt['smf_repair_settings'], '</div>
+			<div>', $txt['smf_repair_settings'], '</div>
 		</div>
 		<div id="content">';
 
@@ -284,6 +284,8 @@ function show_settings()
 					$settings[$match[1]] = dirname(__FILE__) . '/Sources';
 				elseif ($match[3] == '$boarddir . \'/Sources\'')
 					$settings[$match[1]] = $settings['boarddir'] . '/Sources';
+				elseif ($match[3] == 'dirname(__FILE__) . \'/cache\'')
+					$settings[$match[1]] = dirname(__FILE__) . '/cache';
 				else
 					$settings[$match[1]] = $match[3];
 			}
@@ -347,7 +349,10 @@ function show_settings()
 			'boarddir' => array('flat', 'string'),
 			'sourcedir' => array('flat', 'string'),
 			'cachedir' => array('flat', 'string'),
-			'attachmentUploadDir' => array('db', 'string'),
+
+// !!! Currently broken, needs multipath support.
+//			'attachmentUploadDir' => array('db', 'string'),
+
 			'avatar_url' => array('db', 'string'),
 			'avatar_directory' => array('db', 'string'),
 			'smileys_url' => array('db', 'string'),
@@ -367,8 +372,8 @@ function show_settings()
 	if (file_exists(dirname(__FILE__) . '/cache'))
 		$known_settings['path_url_settings']['cachedir'][2] = realpath(dirname(__FILE__) . '/cache');
 
-	if (file_exists(dirname(__FILE__) . '/attachments'))
-		$known_settings['path_url_settings']['attachmentUploadDir'][2] = realpath(dirname(__FILE__) . '/attachments');
+//	if (file_exists(dirname(__FILE__) . '/attachments'))
+//		$known_settings['path_url_settings']['attachmentUploadDir'][2] = realpath(dirname(__FILE__) . '/attachments');
 
 	if (file_exists(dirname(__FILE__) . '/avatars'))
 	{
@@ -628,16 +633,18 @@ function set_settings()
 			$settingsArray[$i++] = '';
 			continue;
 		}
-
+		
 		if (substr($settingsArray[$i], 0, 1) == '$' && preg_match('~^[$]([a-zA-Z_]+)\s*=\s*(["\'])?(.*?)(?:\\2)?;~', $settingsArray[$i], $match) == 1)
 			$settings[$match[1]] = stripslashes($match[3]);
 
 		foreach ($file_updates as $var => $val)
+		{
 			if (strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
 			{
 				$comment = strstr($settingsArray[$i], '#');
 				$settingsArray[$i] = '$' . $var . ' = \'' . $val . '\';' . ($comment != '' ? "\t\t" . $comment : '');
 			}
+		}
 	}
 
 	// Blank out the file - done to fix a oddity with some servers.
