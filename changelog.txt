@@ -16,6 +16,7 @@ April 2009
  ! Sleepy updated the Package SDK for 2.0 and fixing some old style links (Package SDK files) [Bug 3329]
  ! PostGreSql needs the column name name not our recipient alias. Plus pmr.id_pm should be pm.id_pm (PersonalMessage.php) [Bug 3190]
  ! PostGresql requires all non-aggregate fields in the select must be referenced in the group by (Subs-Post.php) [Bug 3193]
+ ! Spiderlog would be shown regardless of whether sengines are enabled (Admin.php) [Bug 3182]
 
 
 March 2009
