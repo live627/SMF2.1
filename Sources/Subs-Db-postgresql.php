@@ -292,6 +292,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'top_topic_starters' => array(
 			'~ORDER BY FIND_IN_SET\(id_member,(.+?)\)~' => 'ORDER BY STRPOS(\',\' || $1 || \',\', \',\' || id_member|| \',\')',
 		),
+		'order_by_board_order' => array(
+			'~(.)$~' => '$1 ORDER BY b.board_order',
+		),
 	);
 
 	if (isset($replacements[$identifier]))

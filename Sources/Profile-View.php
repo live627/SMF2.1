@@ -1676,7 +1676,7 @@ function showPermissions($memID)
 	$curGroups[] = $user_profile[$memID]['id_post_group'];
 
 	// Load a list of boards for the jump box - except the defaults.
-	$request = $smcFunc['db_query']('', '
+	$request = $smcFunc['db_query']('order_by_board_order', '
 		SELECT b.id_board, b.name, b.id_profile, b.member_groups, IFNULL(mods.id_member, 0) AS is_mod
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})

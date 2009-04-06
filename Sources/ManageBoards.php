@@ -737,7 +737,7 @@ function EditBoardSettings($return_config = false)
 
 	// Load the boards list - for the recycle bin!
 	$recycle_boards = array('');
-	$request = $smcFunc['db_query']('', '
+	$request = $smcFunc['db_query']('order_by_board_order', '
 		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)

@@ -21,6 +21,7 @@ April 2009
  ! Default the repair settings' database type to MySQL to assure it always works properly. (repair_settings.php)
  ! Temporarily disabled changing attachment directory setting as it doesn't support multiple upload paths yet. (repair_settings.php)
  ! Fixed repair settings' support for the dynamic cache directory setting that's used in a default SMF install. (repair_settings.php)
+ ! Boards/Cats were in wrong order in PostGreSql & Sqlite for boardindex, jumpto, and many dropdowns and other places. (Subs-Db-postgresql.php, Subs-Db-sqlite.php and 10 other source files) [Bug 3221]
 
 
 March 2009
