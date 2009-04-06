@@ -239,6 +239,10 @@ function initialize_inputs()
 		if (empty($smcFunc))
 			$smcFunc = array();
 
+		// Default the database type to MySQL.
+		if (empty($db_type) || !file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+			$db_type = 'mysql';
+
 		require_once($sourcedir . '/Errors.php');
 		require_once($sourcedir . '/Subs.php');
 		require_once($sourcedir . '/Load.php');
