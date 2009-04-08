@@ -25,6 +25,8 @@ April 2009
  ! PostGreSql couldn't ban users as it incorrectly detected everyone as admin as it returns t or f (ManageBans.php)
  * Classic theme missing an on2.gif
  * <s> tag is depreciated (Help.template.php) [Bug 3122]
+ ! Round the relative activity by board in the profile stats panel down to two decimals. (Profile-View.php) 
+
 
 March 2009
 --------------------------------------------------------------------------------

@@ -754,7 +754,7 @@ function statPanel($memID)
 			'id' => $row['id_board'],
 			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
-			'percent' => $row['percentage'],
+			'percent' => comma_format((float) $row['percentage'], 2),
 		);
 	}
 	$smcFunc['db_free_result']($result);
