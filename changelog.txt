@@ -27,6 +27,7 @@ April 2009
  * <s> tag is depreciated (Help.template.php) [Bug 3122]
  ! Round the relative activity by board in the profile stats panel down to two decimals. (Profile-View.php) 
  * Renamed the Combat template to Compat. (Compat.template.php)
+ * Changes to several css styles and ditto templates, converted Search.template complete for Curve. 
 
 
 March 2009

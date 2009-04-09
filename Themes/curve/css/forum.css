@@ -51,8 +51,14 @@ p.moderators
 	line-height: 19px;
 	padding: 0 0 0 6px;
 }
-#postbuttons_upper .nextlinks
+
+.pagesection .nextlinks
 {
+	text-align: right;
+}
+.pagesection .nextlinks_bottom
+{
+	clear: right;
 	text-align: right;
 }
 
@@ -174,60 +180,6 @@ table.table_list a.collapse
 .pagesection .pagelinks
 {
 	padding: 1em 0 0.5em 0;
-}
-/* define the table */
-.topic_table table
-{
-	width: 100%;
-}
-.topic_table .icon1, .topic_table .icon2, .topic_table .stats
-{
-	text-align: center;
-}
-#topic_icons
-{
-	margin-top: 1em;
-}
-#topic_icons .description
-{
-	margin: 0;
-}
-.topic_table table thead
-{
-	border-bottom: solid 1px white;
-}
-/* the subject column */
-.topic_table td.subject
-{
-	padding: 4px;
-}
-.topic_table td.subject p, .topic_table td.stats, .topic_table td.lastpost
-{
-	font-size: 0.85em;
-	padding: 0;
-	margin: 0;
-}
-.topic_table td.lastpost,.topic_table td.lastpost
-{
-	font-size: 0.9em;
-	line-height: 100%;
-	padding: 4px;
-}
-.topic_table td.stickybg2
-{
-	background-image: url(../images/icons/quick_sticky.gif);
-	background-repeat: no-repeat;
-	background-position: 98% 4px;
-}
-.topic_table td.lockedbg2, .topic_table td.stickybglockedbg2
-{
-	background-image: url(../images/icons/quick_lock.gif);
-	background-repeat: no-repeat;
-	background-position: 98% 4px;
-}
-.topic_table td.lastpost
-{
-	background-image: none;
 }
 #childboards h3
 {
@@ -425,12 +377,55 @@ p#whoisviewing
 	clear: right;
 	float: right;
 	text-align: right;
+	font-family: arial, sans-serif;
+	font-weight: bold;
+	font-size: 0.85em;
 }
 .postarea ul.quickbuttons a:hover
 {
-	text-decoration: none;
 	color: #a70;
 }
+/* the icons for the quickbuttons */
+ul.quickbuttons li
+{
+	padding-left: 25px;
+	float: left;
+}
+ul.quickbuttons li a
+{
+	display: block;
+	height: 20px;
+	line-height: 18px;
+}
+ul.quickbuttons li.approve_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -90px;
+}
+ul.quickbuttons li.quote_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px 0;
+}
+ul.quickbuttons li.reply_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -180px;
+}
+ul.quickbuttons li.modify_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -60px;
+}
+ul.quickbuttons li.remove_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -30px;
+}
+ul.quickbuttons li.split_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -150px;
+}
+ul.quickbuttons li.restore_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -120px;
+}
+
 .postarea .post
 {
 	float: left;

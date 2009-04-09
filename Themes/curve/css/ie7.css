@@ -25,7 +25,7 @@
 	padding-top: 1em;
 	float: none;
 }
-#forumposts h3.catbg
+#content_section #forumposts h3.catbg
 {
 	margin-top: 8px;
 	clear: both;
@@ -33,4 +33,8 @@
 #moderationbuttons
 {
 	overflow: hidden;
+}
+#content_section .pagesection
+{
+	height: 1%;;
 }

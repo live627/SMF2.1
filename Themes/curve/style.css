@@ -153,47 +153,45 @@ ul.reset, ul.reset li
 /* ************************************* */
 
 /* A quote, perhaps from another post. */
-blockquote
+.codeheader, .quoteheader a
 {
+	font-size: 0.9em;
+	font-weight: bold;
+	padding-left: 5px;
+}
+blockquote,blockquote blockquote blockquote
+{
+	font-size: 0.9em;
 	color: #000000;
-	background-color: #D7DAEC;
-	border: 1px solid #000000;
-	margin: 1px;
-	padding: 1px;
-	font-size: x-small;
 	line-height: 1.4em;
+	background: url(images/theme/quote.png) 2px 2px no-repeat #D7DAEC;
+	border-top: solid 1px #000;
+	border-bottom: solid 1px #000;
+	padding: 1em 1em 1em 2em;
+	margin: 0.3em 0 0 0;
+}
+blockquote blockquote
+{
+	background: #e7eAfC;
 }
 
 /* A code block - maybe even PHP ;). */
 code
 {
-	color: #000000;
-	background-color: #dddddd;
 	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
+	background: #eee;
+	border-top: solid 1px #000;
+	border-bottom: solid 1px #000;
 	line-height: 1.3em;
 	/* Put a nice border around it. */
-	border: 1px solid #000000;
-	margin: 1px auto 1px auto;
-	padding: 1px;
 	width: 99%;
+	padding: 3px 1em;
 	overflow: auto;
 	white-space: nowrap;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
-}
-
-/* The "Quote:" and "Code:" header parts... */
-.quoteheader, .codeheader
-{
-	color: #000000;
-	text-decoration: none;
-	font-style: normal;
-	font-weight: bold;
-	font-size: x-small;
-	line-height: 1.2em;
-	width: 100%;
 }
 
 /* For links to change the code stuff... */
@@ -849,39 +847,41 @@ ul.tabbuttons li
 	display: block;
 	font-size: 0.8em;
 	color: black;
-	background: url(images/theme/button_bg_right.png) no-repeat top right;
-	padding: 0 8px 0 0;
-	margin-left: 5px;
+	background: url(images/theme/menu_gfx.png) no-repeat 0 -60px;
+	padding: 0;
+	margin-left: 12px;
 	text-transform: uppercase;
 }
 .buttonlist ul li a:hover
 {
-	background: url(images/theme/active_menu_right.png) no-repeat top right;
+	background: url(images/theme/menu_gfx.png) no-repeat 0 0;
 	color: #fff;
 	text-decoration: none;
 }
 .buttonlist ul li a span
 {
-	background: url(images/theme/button_bg_left.png) no-repeat top left;
+	background: url(images/theme/menu_gfx.png) no-repeat 100% -60px;
 	display: block;
 	height: 24px;
 	line-height: 17px;
-	padding: 0 0 0 6px;
+	padding: 0 8px 0 0;
+	position: relative;
+	right: -8px;
 }
 .buttonlist ul li a:hover span
 {
-	background: url(images/theme/active_menu_left.png) no-repeat;
+	background: url(images/theme/menu_gfx.png) no-repeat 100% 0;
 }
 /* the active one */
 .buttonlist ul li a.active
 {
-	background: url(images/theme/active_menu_right.png) no-repeat top right;
+	background: url(images/theme/menu_gfx.png) no-repeat 0 -30px;
 	color: white;
 	font-weight: bold;
 }
 .buttonlist ul li a.active span
 {
-	background: url(images/theme/active_menu_left.png) no-repeat top left;
+	background: url(images/theme/menu_gfx.png) no-repeat 100% -30px;
 }
 .buttonlist ul li a.active
 {
@@ -889,7 +889,7 @@ ul.tabbuttons li
 }
 .buttonlist ul li a.active:hover
 {
-	color: orange;
+	color: #ddf;
 }
 /* a smaller quick-button list */
 ul.quickbuttons li

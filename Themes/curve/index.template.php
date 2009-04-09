@@ -142,20 +142,20 @@ function template_html_above()
 	// IE7 needs some fixes for styles.
 	if ($context['browser']['is_ie7'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie7.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie7.css" />';
 	// ..and IE6!
 	elseif ($context['browser']['is_ie6'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie6.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
 	// Firefox - all versions - too!
 	elseif ($context['browser']['is_firefox'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ff.css" />';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css" />';
 
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[

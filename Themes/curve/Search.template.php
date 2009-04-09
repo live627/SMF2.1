@@ -181,198 +181,198 @@ function template_results()
 	if (isset($context['did_you_mean']) || empty($context['topics']))
 	{
 		echo '
-	<div class="tborder" style="margin-bottom: 2ex;">
-		<table width="100%" cellpadding="8" cellspacing="0" border="0">
-			<tr class="titlebg">
-				<td>', $txt['search_adjust_query'], '</td>
-			</tr>
-			<tr>
-				<td class="windowbg">';
+	<div class="tborder" id="search_results">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['search_adjust_query'], '
+		</h3>';
 
 		// Did they make any typos or mistakes, perhaps?
 		if (isset($context['did_you_mean']))
 			echo '
-					', $txt['search_did_you_mean'], ' <a href="', $scripturl, '?action=search2;params=', $context['did_you_mean_params'], '">', $context['did_you_mean'], '</a>.<br />';
+		<p>', $txt['search_did_you_mean'], ' <a href="', $scripturl, '?action=search2;params=', $context['did_you_mean_params'], '">', $context['did_you_mean'], '</a>.</p>';
 
 		echo '
-					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-						<b>', $txt['search_for'], ':</b>
-						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
-						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
+		<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
+			<strong>', $txt['search_for'], ':</strong>
+			<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
+			<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
 
-						<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
-						<input type="hidden" name="userspec" value="', !empty($context['search_params']['userspec']) ? $context['search_params']['userspec'] : '', '" />
-						<input type="hidden" name="show_complete" value="', !empty($context['search_params']['show_complete']) ? 1 : 0, '" />
-						<input type="hidden" name="subject_only" value="', !empty($context['search_params']['subject_only']) ? 1 : 0, '" />
-						<input type="hidden" name="minage" value="', !empty($context['search_params']['minage']) ? $context['search_params']['minage'] : '0', '" />
-						<input type="hidden" name="maxage" value="', !empty($context['search_params']['maxage']) ? $context['search_params']['maxage'] : '9999', '" />
-						<input type="hidden" name="sort" value="', !empty($context['search_params']['sort']) ? $context['search_params']['sort'] : 'relevance', '" />';
+			<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
+			<input type="hidden" name="userspec" value="', !empty($context['search_params']['userspec']) ? $context['search_params']['userspec'] : '', '" />
+			<input type="hidden" name="show_complete" value="', !empty($context['search_params']['show_complete']) ? 1 : 0, '" />
+			<input type="hidden" name="subject_only" value="', !empty($context['search_params']['subject_only']) ? 1 : 0, '" />
+			<input type="hidden" name="minage" value="', !empty($context['search_params']['minage']) ? $context['search_params']['minage'] : '0', '" />
+			<input type="hidden" name="maxage" value="', !empty($context['search_params']['maxage']) ? $context['search_params']['maxage'] : '9999', '" />
+			<input type="hidden" name="sort" value="', !empty($context['search_params']['sort']) ? $context['search_params']['sort'] : 'relevance', '" />';
 
 		if (!empty($context['search_params']['brd']))
 			foreach ($context['search_params']['brd'] as $board_id)
 				echo '
-						<input type="hidden" name="brd[', $board_id, ']" value="', $board_id, '" />';
+			<input type="hidden" name="brd[', $board_id, ']" value="', $board_id, '" />';
 
 		echo '
-					</form>
-				</td>
-			</tr>
-		</table>
+		</form>
 	</div>';
 	}
 
 	if ($context['compact'])
 	{
 		echo '
-	<div class="middletext pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
+	<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		// Quick moderation set to checkboxes? Oh, how fun :/.
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 			echo '
-	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="topicForm" style="margin: 0;">';
+	<form action="', $scripturl, '?action=quickmod" method="post" accept-charset="', $context['character_set'], '" name="topicForm">';
 
 		echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-			<tr class="titlebg">';
+			<div class="tborder topic_table" id="messageindex">
+				<table class="table_grid" cellspacing="0">
+					<thead>';
 		if (!empty($context['topics']))
 		{
 			echo '
-				<td width="4%">&nbsp;</td>
-				<td width="4%">&nbsp;</td>
-				<td width="56%">', $txt['subject'], '</td>
-				<td width="6%" align="center">', $txt['search_relevance'], '</td>
-				<td width="12%">', $txt['started_by'], '</td>
-				<td width="18%" align="center">', $txt['search_date_posted'], '</td>';
+						<tr class="catbg">
+							<th scope="col" class="smalltext" width="4%">&nbsp;</th>
+							<th scope="col" class="smalltext" width="4%">&nbsp;</th>
+							<th scope="col" class="smalltext" width="56%">', $txt['subject'], '</th>
+							<th scope="col" class="smalltext" width="6%" align="center">', $txt['search_relevance'], '</th>
+							<th scope="col" class="smalltext" width="12%">', $txt['started_by'], '</th>
+							<th scope="col" class="smalltext" width="18%" align="center">', $txt['search_date_posted'], '</th>';
 
 			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
-				<td width="24" valign="middle" align="center">
-						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
-				</td>';
+							<th scope="col" class="smalltext" width="24" align="center">
+								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+							</th>';
 			elseif (!empty($options['display_quick_mod']))
 				echo '
-				<td width="4%" valign="middle" align="center"></td>';
+							<th scope="col" class="smalltext" width="4%" valign="middle" align="center"></th>';
 		}
 		else
 			echo '
-				<td width="100%" colspan="5">', $txt['search_no_results'], '</td>';
+							<th class="smalltext" width="100%" colspan="5">', $txt['search_no_results'], '</th>';
 		echo '
-			</tr>';
+						</tr>
+					</thead>
+					<tbody>';
 
 		while ($topic = $context['get_topics']())
 		{
-			// Work out what the class is if we remove sticky and lock info.
-			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
-				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_sticky'));
-			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
-				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
+			$color_class = '';
+			if ($topic['is_sticky'])
+				$color_class = 'stickybg';
+			if ($topic['is_locked'])
+				$color_class .= 'lockedbg';
 
 			echo '
-			<tr>
-				<td class="windowbg2" valign="top" align="center" width="4%">
-					<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" /></td>
-				<td class="windowbg2" valign="top" align="center" width="4%">
-					<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
-				<td class="windowbg' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" valign="middle">
-					' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
-					' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><b>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</b>' : '' , '
-				<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div>';
+						<tr>
+							<td class="', $color_class, ' windowbg2 icon1">
+								<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" /></td>
+							<td class="', $color_class, ' windowbg2 icon2">
+								<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
+							<td class="subject ', $color_class, ' windowbg2">
+								<em>', $txt['in'], ' ', $topic['board']['link'], '</em>';
 
 			foreach ($topic['matches'] as $message)
 			{
-				echo '<br />
-					<div class="quoteheader" style="margin-left: 20px;"><a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a> ', $txt['by'], ' ', $message['member']['link'], '</div>';
+				echo '		<div class="quoteheader"><a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a> ', $txt['by'], ' ', $message['member']['link'], '</div>';
 
 				if ($message['body_highlighted'] != '')
 					echo '
-					<blockquote style="margin-left: 20px;">', $message['body_highlighted'], '</blockquote>';
+								<blockquote>', $message['body_highlighted'], '</blockquote>';
 			}
 
 			echo '
-				</td>
-				<td class="windowbg2" valign="top" width="6%" align="center">
-					', $topic['relevance'], '
-				</td><td class="windowbg" valign="top" width="12%">
-					', $topic['first_post']['member']['link'], '
-				</td><td class="windowbg" valign="top" width="18%" align="center">
-					', $topic['first_post']['time'], '
-				</td>';
+							</td>
+							<td class="', $color_class, ' windowbg2 stats" align="center">
+								', $topic['relevance'], '
+							</td><td class="', $color_class, ' windowbg stats">
+								', $topic['first_post']['member']['link'], '
+							</td><td class="', $color_class, ' windowbg lastpost">
+								', $topic['first_post']['time'], '
+							</td>';
 
 			if (!empty($options['display_quick_mod']))
 			{
 				echo '
-				<td class="windowbg" valign="middle" align="center" width="4%">';
+							<td class="', $color_class, ' windowbg moderation">';
 				if ($options['display_quick_mod'] == 1)
 						echo '
-					<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';
+								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';
 				else
 				{
 					if ($topic['quick_mod']['remove'])
 						echo '
-					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" /></a>';
+								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" /></a>';
 					if ($topic['quick_mod']['lock'])
 						echo '
-					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" /></a>';
+								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" /></a>';
 					if ($topic['quick_mod']['lock'] || $topic['quick_mod']['remove'])
-						echo '<br />';
+						echo '	<br />';
 					if ($topic['quick_mod']['sticky'])
 						echo '
-					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
+								<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
 					if ($topic['quick_mod']['move'])
 						echo '
-					<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
+								<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
 				}
 				echo '
-				</td>';
+							</td>';
 			}
 
 			echo '
-			</tr>';
+						</tr>';
 		}
 
+		echo '
+					</tbody>';
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 		{
 			echo '
-			<tr class="titlebg">
-				<td colspan="8" align="right">
-					<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
-						<option value="">--------</option>', $context['can_remove'] ? '
-						<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
-						<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
-						<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '',	$context['can_move'] ? '
-						<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', $context['can_merge'] ? '
-						<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
-						<option value="markread">', $txt['quick_mod_markread'], '</option>
-					</select>';
+					<tfoot>
+						<tr class="titlebg">
+							<td colspan="8" align="right">
+								<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
+									<option value="">--------</option>', $context['can_remove'] ? '
+									<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', $context['can_lock'] ? '
+									<option value="lock">' . $txt['quick_mod_lock'] . '</option>' : '', $context['can_sticky'] ? '
+									<option value="sticky">' . $txt['quick_mod_sticky'] . '</option>' : '',	$context['can_move'] ? '
+									<option value="move">' . $txt['quick_mod_move'] . ': </option>' : '', $context['can_merge'] ? '
+									<option value="merge">' . $txt['quick_mod_merge'] . '</option>' : '', '
+									<option value="markread">', $txt['quick_mod_markread'], '</option>
+								</select>';
 
 			if ($context['can_move'])
 			{
 					echo '
-					<select id="moveItTo" name="move_to" disabled="disabled">';
+								<select id="moveItTo" name="move_to" disabled="disabled">';
 
 					foreach ($context['move_to_boards'] as $category)
 					{
 						echo '
-						<optgroup label="', $category['name'], '">';
+									<optgroup label="', $category['name'], '">';
 						foreach ($category['boards'] as $board)
 								echo '
-							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+										<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 						echo '
-						</optgroup>';
+									</optgroup>';
 					}
 					echo '
-					</select>';
+								</select>';
 			}
 
 			echo '
-					<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
-					<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
-				</td>
-			</tr>';
+								<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
+								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
+							</td>
+						</tr>
+					</tfoot>';
 		}
 
 		echo '
-		</table>';
+				</table>
+			</div>';
 
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 			echo '
@@ -380,14 +380,10 @@ function template_results()
 		</form>';
 
 		echo '
-		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		echo '
-		<table cellpadding="0" cellspacing="0" width="100%">
-			<tr>
-				<td class="smalltext" align="right" valign="middle" id="search_jump_to">&nbsp;</td>
-			</tr>
-		</table>
+		<div class="smalltext" id="search_jump_to">&nbsp;</div>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			if (typeof(window.XMLHttpRequest) != "undefined")
 				aJumpTo[aJumpTo.length] = new JumpTo({
@@ -407,15 +403,11 @@ function template_results()
 	else
 	{
 		echo '
-		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		if (empty($context['topics']))
 			echo '
-		<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor"><tr><td>
-			<table border="0" width="100%" cellpadding="2" cellspacing="1" class="bordercolor"><tr class="windowbg2"><td><br />
-				<b>(', $txt['search_no_results'], ')</b><br /><br />
-			</td></tr></table>
-		</td></tr></table>';
+		<div class="information">(', $txt['search_no_results'], ')</div>';
 
 		while ($topic = $context['get_topics']())
 		{
@@ -435,39 +427,30 @@ function template_results()
 					$buttonArray[] = '<a href="' . $scripturl . '?action=notify;topic=' . $topic['id'] . '.' . $message['start'] . '">' . $notify_button . '</a>';
 
 				echo '
-			<div class="tborder">
-				<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor">
-					<tr>
-						<td>
-							<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
-								<tr class="titlebg">
-									<td>
-										<div style="float: left; width: 3ex;">&nbsp;', $message['counter'], '&nbsp;</div>
-										<div style="float: left;">&nbsp;', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></div>
-										<div align="right">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
-									</td>
-								</tr><tr class="catbg">
-									<td>
-										<div style="float: left;">', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '</div>
-										<div align="right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
-									</td>
-								</tr><tr>
-									<td width="100%" valign="top" class="windowbg2">
-										<div class="post">', $message['body_highlighted'], '</div>
-									</td>
-								</tr><tr class="windowbg">
-									<td class="middletext" align="right">&nbsp;', implode($context['menu_separator'], $buttonArray), '</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
+			<div class="tborder search_results_posts">
+				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+					<div class="align_right">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
+					<span class="counter">', $message['counter'], '</span>
+					', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a>
+				</h3>
+				<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+					<div class="align_right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
+					', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '
+				</h4>
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="inner">
+						<div class="post">', $message['body_highlighted'], '</div>
+						<div class="middletext align_right buttons">', implode($context['menu_separator'], $buttonArray), '&nbsp;</div>
+					</div>
+					<span class="botslice"><span></span></span>				
+				</div>
 			</div>';
 			}
 		}
 
 		echo '
-			<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+			<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 	}
 }
 

@@ -123,15 +123,16 @@ div#upper_section div.news form
 /* the navigation list */
 #navigate_section_upper, #navigate_section_lower
 {
-	margin-top: 10px;
-	padding: 10px 10px 0 3px;
+	overflow: hidden;
+	margin: 0;
+	padding: 0.5em;
 }
 #navigate_section_upper ul, #navigate_section_lower ul
 {
 	display: block;
 	margin: 0;
 	font-size: 1em;
-	padding: 0.4em;
+	padding: 0.5em 0;
 	border-top: solid #ccc 1px;
 }
 #navigate_section_upper ul li, #navigate_section_lower ul li
@@ -219,8 +220,9 @@ table.table_list tbody.content td.icon
 }
 
 /* setup the rounded header bars */
-h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, .table_list tbody.header td
+h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, .table_list tbody.header td
 {
+	overflow: hidden;
 	height: 31px;
 	line-height: 31px;
 	font-size: 1.2em;
@@ -259,12 +261,12 @@ h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.righ
 	width: 9px;
 	height: 31px;
 }
-h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
+h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
 {
 	float: left;
 	background: url(../images/theme/caps.png) no-repeat 0 -120px;
 }
-h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
+h4.catbg span.right, h4.catbg2 span.right, h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
 {
 	float: right;
 	background: url(../images/theme/caps.png) no-repeat 100% -120px;
@@ -276,7 +278,6 @@ h4.titlebg span.left,h4.titlebg span.right, h3.titlebg span.left,h3.titlebg span
 	height: 31px;
 }
 h4.titlebg span.left, h3.titlebg span.left
-
 {
 	float: left;
 	background: url(../images/theme/caps.png) no-repeat 0 -40px;
@@ -358,10 +359,17 @@ h3.titlebg, tr.titlebg td
 }
 
 /* the old style admin menus */
+.left_admmenu, .left_admmenu ul, .left_admmenu li
+{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
 #left_admsection
 {
 	width: 160px;
 	float: left;
+	padding-right: 10px;
 }
 .adm_section h4.titlebg
 {
@@ -383,7 +391,7 @@ h3.titlebg, tr.titlebg td
 }
 #main_admsection
 {
-	margin-left: 160px;
+	margin-left: 172px;
 }
 
 tr.windowbg td, tr.windowbg2 td
@@ -396,3 +404,64 @@ tr.windowbg td, tr.windowbg2 td
 	font-style: italic;
 	margin: 0;
 }
+
+/* define a generic table class */
+.topic_table table
+{
+	width: 100%;
+}
+.topic_table .icon1, .topic_table .icon2, .topic_table .stats
+{
+	text-align: center;
+}
+#topic_icons
+{
+	margin-top: 1em;
+}
+#topic_icons .description
+{
+	margin: 0;
+}
+.topic_table table thead
+{
+	border-bottom: solid 1px white;
+}
+/* the subject column */
+.topic_table td
+{
+	font-size: 1em;
+}
+.topic_table td.subject
+{
+	padding: 4px;
+}
+.topic_table td.subject p, .topic_table td.stats, .topic_table td.lastpost
+{
+	font-size: 0.85em;
+	padding: 0;
+	margin: 0;
+}
+.topic_table td.lastpost,.topic_table td.lastpost
+{
+	font-size: 0.9em;
+	line-height: 100%;
+	padding: 4px;
+}
+.topic_table td.stickybg2
+{
+	background-image: url(../images/icons/quick_sticky.gif);
+	background-repeat: no-repeat;
+	background-position: 98% 4px;
+}
+.topic_table td.lockedbg2, .topic_table td.stickybglockedbg2
+{
+	background-image: url(../images/icons/quick_lock.gif);
+	background-repeat: no-repeat;
+	background-position: 98% 4px;
+}
+.topic_table td.lastpost
+{
+	background-image: none;
+}
+
+

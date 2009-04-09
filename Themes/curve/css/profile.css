@@ -135,14 +135,15 @@
 /* Simple feedback messages */
 div#profile_error, div#profile_success
 {
-	margin-bottom: 0.5em;
-	padding: 1ex 2ex;
+	margin: 1em 0;
+	padding: 1em 2em;
 	border: 1px solid;
 }
 div#profile_error
 {
 	border-color: red;
 	color: red;
+	background: #fee;
 }
 
 div#profile_error span
@@ -154,4 +155,5 @@ div#profile_success
 {
 	border-color: green;
 	color: green;
+	background: #efe;
 }
