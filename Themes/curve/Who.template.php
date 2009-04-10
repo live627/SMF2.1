@@ -114,7 +114,7 @@ function template_credits()
 
 			// Try to make this read nicely.
 			if (count($group['members']) <= 2)
-				echo implode($txt['credits_and'], $group['members']);
+				echo implode(' ' . $txt['credits_and'] . ' ', $group['members']);
 			else
 			{
 				$last_peep = array_pop($group['members']);
