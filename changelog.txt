@@ -29,6 +29,7 @@ April 2009
  * Renamed the Combat template to Compat. (Compat.template.php)
  * Changes to several css styles and ditto templates, converted Search.template complete for Curve. 
  * Google attempts to browse image set by js but at the wrong location (Help.template.php) [Bug 3387]
+ & Mail Settings should be just Settings for consistency (admin.english.php) [Bug 3385]
 
 
 March 2009
