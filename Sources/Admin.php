@@ -468,6 +468,7 @@ function AdminMain()
 					'file' => 'RepairBoards.php',
 					'function' => 'RepairBoards',
 					'select' => 'maintain',
+					'hidden' => true,
 				),
 			),
 		),
