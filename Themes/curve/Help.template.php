@@ -1556,7 +1556,7 @@ function template_manual_posting_topics()
 //<![CDATA[
 										function bbc_highlight(something, mode)
 										{
-													something.style.backgroundImage = "url(" + smf_images_url + (mode ? "/bbc/bbc_hoverbg.gif)" : "/bbc/bbc_bg.gif)");
+													something.style.backgroundImage = "url(" + smf_images_url + "/bbc/" + (mode ? "bbc_hoverbg.gif)" : "bbc_bg.gif)");
 										}
 //]]>
 </script>
