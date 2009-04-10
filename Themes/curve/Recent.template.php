@@ -303,7 +303,7 @@ function template_replies()
 						<div>
 							', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
-		if ($topic['new'] && $context['user']['is_logged'])
+		if (!empty($topic['new']) && $context['user']['is_logged'])
 				echo '
 							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
 
