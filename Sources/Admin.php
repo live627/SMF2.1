@@ -464,6 +464,7 @@ function AdminMain()
 					),
 				),
 				'repairboards' => array(
+					'label' => $txt['admin_repair'],
 					'file' => 'RepairBoards.php',
 					'function' => 'RepairBoards',
 					'select' => 'maintain',
