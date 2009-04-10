@@ -560,7 +560,6 @@ function Credits($in_admin = false)
 						'JimM',
 						'Antechinus',
 						'Ralph "[n3rve]" Otowo',
-						'Marcus "Nas" Forsberg',
 						'Tyrsson',
 					),
 				),
@@ -584,6 +583,7 @@ function Credits($in_admin = false)
 						'Colin "Shadow82x" Blaber',
 						'Sinan "Blue Dream" &Ccedil;evik',
 						'Bulakbol',
+						'Marcus "Nas" Forsberg',
 					),
 				),
 				array(
