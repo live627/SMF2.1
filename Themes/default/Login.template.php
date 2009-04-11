@@ -50,7 +50,7 @@ function template_login()
 				</tr><tr class="windowbg">
 					<td align="right"><strong>', $txt['openid'], ':</strong></td>
 					<td>
-						<input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+						<input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 					</td>
 				</tr><tr class="windowbg">
 					<td colspan="2" align="center"><hr /></td>

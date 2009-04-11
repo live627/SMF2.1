@@ -625,7 +625,7 @@ function template_viewmodreport()
 
 			foreach ($entry['extra'] as $key => $value)
 				echo '
-				<i>', $key, '</i>: ', $value;
+				<em>', $key, '</em>: ', $value;
 			echo '
 			</td>
 		</tr>';

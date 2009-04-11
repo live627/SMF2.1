@@ -107,7 +107,7 @@ function template_summary()
 	elseif ($context['member']['show_email'] == 'yes_permission_override')
 		echo '
 				<dt>', $txt['email'], ': </dt>
-				<dd><i><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></i></dd>';
+				<dd><em><a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '">', $context['member']['email'], '</a></em></dd>';
 
 	if (!empty($modSettings['titlesEnable']) && !empty($context['member']['title']))
 		echo '
@@ -625,7 +625,7 @@ function template_trackIP()
 				</tr>';
 	if (empty($context['ips']))
 		echo '
-				<tr><td class="windowbg2" colspan="2"><i>', $txt['no_members_from_ip'], '</i></td></tr>';
+				<tr><td class="windowbg2" colspan="2"><em>', $txt['no_members_from_ip'], '</em></td></tr>';
 	else
 		// Loop through each of the members and display them.
 		foreach ($context['ips'] as $ip => $memberlist)
@@ -2619,7 +2619,7 @@ function template_profile_timeoffset_modify()
 	echo '
 							<tr>
 								<td width="40%"><strong', (isset($context['modify_error']['bad_offset']) ? ' class="error"' : ''), '>', $txt['time_offset'], ':</strong><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
-								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="currentDate = new Date(', $context['current_forum_time_js'], '); document.getElementById(\'time_offset\').value = autoDetectTimeOffset(currentDate); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
+								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="currentDate = new Date(', $context['current_forum_time_js'], '); document.getElementById(\'time_offset\').value = autoDetectTimeOffset(currentDate); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <em>', $context['current_forum_time'], '</em></td>
 							</tr>';
 }
 
@@ -2682,12 +2682,12 @@ function template_authentication_method()
 									<input type="radio" name="authenticate" value="openid" id="auth_openid" ', $context['auth_method'] == 'openid' ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
 								</td>
 								<td colspan="2">
-									<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+									<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<i>', $txt['authenticate_openid_url'], ':</i>
+									<em>', $txt['authenticate_openid_url'], ':</em>
 								</td>
 								<td width="60%">
 									<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', $context['member']['openid_uri'], '" />
@@ -2710,7 +2710,7 @@ function template_authentication_method()
 							</tr>
 							<tr>
 								<td>
-									<i>', $txt['choose_pass'], ':</i>
+									<em>', $txt['choose_pass'], ':</em>
 								</td>
 								<td width="60%">
 									<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
@@ -2721,7 +2721,7 @@ function template_authentication_method()
 							</tr>
 							<tr>
 								<td>
-									<i>', $txt['verify_pass'], ':</i>
+									<em>', $txt['verify_pass'], ':</em>
 								</td>
 								<td width="60%">
 									<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />

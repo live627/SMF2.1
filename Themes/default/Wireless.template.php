@@ -592,7 +592,7 @@ function template_imode_pm()
 			$count++;
 			echo '
 			<tr><td>
-				', $count < 10 ? '&#' . (59105 + $count) . '; ' : '', '<a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';l=', $context['current_label_id'], ';imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <i>', $txt['wireless_pm_by'], '</i> ', $message['member']['name'], '</a>', $message['is_unread'] ? ' [' . $txt['new'] . ']' : '', '
+				', $count < 10 ? '&#' . (59105 + $count) . '; ' : '', '<a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';l=', $context['current_label_id'], ';imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <em>', $txt['wireless_pm_by'], '</em> ', $message['member']['name'], '</a>', $message['is_unread'] ? ' [' . $txt['new'] . ']' : '', '
 			</td></tr>';
 		}
 
@@ -1212,7 +1212,7 @@ function template_wap2_pm()
 			$count++;
 			echo '
 			<p class="windowbg">
-				[', $count < 10 ? $count : '-', '] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';l=', $context['current_label_id'], ';wap2"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <i>', $txt['wireless_pm_by'], '</i> ', $message['member']['name'], '</a>', $message['is_unread'] ? ' [' . $txt['new'] . ']' : '', '
+				[', $count < 10 ? $count : '-', '] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';l=', $context['current_label_id'], ';wap2"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <em>', $txt['wireless_pm_by'], '</em> ', $message['member']['name'], '</a>', $message['is_unread'] ? ' [' . $txt['new'] . ']' : '', '
 			</p>';
 		}
 

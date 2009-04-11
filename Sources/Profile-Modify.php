@@ -1782,7 +1782,7 @@ function notification($memID)
 						if ($topic[\'new\'])
 							$link .= \' <a href="\' . $topic[\'new_href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
 
-						$link .= \'<br /><span class="smalltext"><i>\' . $txt[\'in\'] . \' \' . $topic[\'board_link\'] . \'</i></span>\';
+						$link .= \'<br /><span class="smalltext"><em>\' . $txt[\'in\'] . \' \' . $topic[\'board_link\'] . \'</em></span>\';
 
 						return $link;
 					'),

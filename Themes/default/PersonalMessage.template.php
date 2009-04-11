@@ -652,7 +652,7 @@ function template_search()
 					</table>
 
 					<br />
-					<input type="checkbox" name="all" id="check_all" value="" ', $context['check_all'] ? 'checked="checked"' : '', ' onclick="invertAll(this, this.form, \'searchlabel\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
+					<input type="checkbox" name="all" id="check_all" value="" ', $context['check_all'] ? 'checked="checked"' : '', ' onclick="invertAll(this, this.form, \'searchlabel\');" class="check" /><em> <label for="check_all">', $txt['check_all'], '</label></em><br />
 							</td>
 						</tr>';
 		}

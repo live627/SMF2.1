@@ -2104,7 +2104,7 @@ function template_welcome_message()
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
 			<strong style="text-decoration: underline;">', $txt['error_warning_notice'], '</strong><br />
 			<div style="padding-left: 6ex;">
-				', sprintf($txt['error_script_outdated'], '<i id="smfVersion" style="white-space: nowrap;">??</i>', '<i id="yourVersion" style="white-space: nowrap;">' . $GLOBALS['current_smf_version'] . '</i>'), '
+				', sprintf($txt['error_script_outdated'], '<em id="smfVersion" style="white-space: nowrap;">??</em>', '<em id="yourVersion" style="white-space: nowrap;">' . $GLOBALS['current_smf_version'] . '</em>'), '
 			</div>
 		</div>';
 
@@ -2516,7 +2516,7 @@ function template_delete_install()
 	// Install directory still writable?
 	if ($incontext['dir_still_writable'])
 		echo '
-		<i>', $txt['still_writable'], '</i><br />
+		<em>', $txt['still_writable'], '</em><br />
 		<br />';
 
 	// Don't show the box if it's like 99% sure it won't work :P.

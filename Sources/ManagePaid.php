@@ -269,7 +269,7 @@ function ViewSubscriptions()
 					'function' => create_function('$rowData', '
 						global $context, $txt;
 
-						return $rowData[\'flexible\'] ? \'<i>\' . $txt[\'flexible\'] . \'</i>\' : $rowData[\'cost\'] . \' / \' . $rowData[\'length\'];
+						return $rowData[\'flexible\'] ? \'<em>\' . $txt[\'flexible\'] . \'</em>\' : $rowData[\'cost\'] . \' / \' . $rowData[\'length\'];
 					'),
 				),
 			),

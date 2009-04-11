@@ -772,7 +772,7 @@ function StaffReport()
 
 		// What do they moderate?
 		if (in_array($row['id_member'], $global_mods))
-			$staffData['moderates'] = '<i>' . $txt['report_staff_all_boards'] . '</i>';
+			$staffData['moderates'] = '<em>' . $txt['report_staff_all_boards'] . '</em>';
 		elseif (isset($moderators[$row['id_member']]))
 		{
 			// Get the names
@@ -783,7 +783,7 @@ function StaffReport()
 			$staffData['moderates'] = implode(', ', $staffData['moderates']);
 		}
 		else
-			$staffData['moderates'] = '<i>' . $txt['report_staff_no_boards'] . '</i>';
+			$staffData['moderates'] = '<em>' . $txt['report_staff_no_boards'] . '</em>';
 
 		// Next add the main data.
 		addData($staffData);

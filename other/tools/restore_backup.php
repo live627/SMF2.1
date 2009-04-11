@@ -151,7 +151,7 @@ function step2()
 			CREATE DATABASE IF NOT EXISTS `$_POST[db_name]`", $db_connection);
 
 	if (!mysql_select_db($_POST['db_name'], $db_connection))
-		return step1(sprintf('This tool was unable to access the &quot;<i>%s</i>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.', $_POST['db_name']));
+		return step1(sprintf('This tool was unable to access the &quot;<em>%s</em>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.', $_POST['db_name']));
 
 	// This is going to *burn* memory...
 	if (@ini_get('memory_limit') < 24)

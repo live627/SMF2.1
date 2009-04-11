@@ -62,7 +62,7 @@ function template_main()
 
 			if (!empty($board['moderators']))
 				echo '
-					<div style="padding-top: 1px;" class="smalltext"><i>', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</i></div>';
+					<div style="padding-top: 1px;" class="smalltext"><em>', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</em></div>';
 
 			if (!empty($board['children']))
 			{
@@ -82,7 +82,7 @@ function template_main()
 				}
 
 				echo '
-					<div style="padding-top: 1px;" class="smalltext"><i>', $txt['parent_boards'], ': ', implode(', ', $children), '</i></div>';
+					<div style="padding-top: 1px;" class="smalltext"><em>', $txt['parent_boards'], ': ', implode(', ', $children), '</em></div>';
 			}
 
 			echo '

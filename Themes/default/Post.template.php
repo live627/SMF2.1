@@ -175,7 +175,7 @@ function template_main()
 							<tr>
 								<td></td>
 								<td align="left">
-									<i>', $txt['wait_for_approval'], '</i>
+									<em>', $txt['wait_for_approval'], '</em>
 									<input type="hidden" name="not_approved" value="1" />
 								</td>
 							</tr>';
@@ -944,11 +944,11 @@ function template_announce()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
+						<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
 						<br />
-						<label for="checkall"><input type="checkbox" id="checkall" class="check" onclick="invertAll(this, this.form);" checked="checked" /> <i>', $txt['check_all'], '</i></label>
+						<label for="checkall"><input type="checkbox" id="checkall" class="check" onclick="invertAll(this, this.form);" checked="checked" /> <em>', $txt['check_all'], '</em></label>
 					</td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">

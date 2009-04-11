@@ -166,7 +166,7 @@ function template_main()
 				// Show the "Moderators: ".  Each has name, href, link, and id. (but we're gonna use link_moderators.)
 				if (!empty($board['moderators']))
 					echo '
-			<div style="padding-top: 1px;" class="smalltext"><i>', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</i></div>';
+			<div style="padding-top: 1px;" class="smalltext"><em>', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</em></div>';
 
 				// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
 				if (!empty($board['children']))
@@ -192,7 +192,7 @@ function template_main()
 					}
 
 					echo '
-			<div style="padding-top: 1px;" class="smalltext"><i>', $txt['parent_boards'], ': ', implode(', ', $children), '</i></div>';
+			<div style="padding-top: 1px;" class="smalltext"><em>', $txt['parent_boards'], ': ', implode(', ', $children), '</em></div>';
 				}
 
 				// Show some basic information about the number of posts, etc.

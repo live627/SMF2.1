@@ -119,7 +119,7 @@ function ViewQuery()
 			</a><br />';
 		if (!empty($query_data['f']) && !empty($query_data['l']))
 			echo '
-			in <i>', $query_data['f'], '</i> line <i>', $query_data['l'], '</i>, ';
+			in <em>', $query_data['f'], '</em> line <em>', $query_data['l'], '</em>, ';
 		echo '
 			which took ', round($query_data['t'], 8), ' seconds.
 		</div>';

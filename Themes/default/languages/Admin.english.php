@@ -469,7 +469,7 @@ $txt['edit_disable_time'] = 'Maximum time after posting to allow edit';
 $txt['edit_disable_time_zero'] = '0 to disable';
 
 $txt['enableBBC'] = 'Enable bulletin board code (BBC)';
-$txt['enablePostHTML'] = 'Enable <i>basic</i> HTML in posts';
+$txt['enablePostHTML'] = 'Enable <em>basic</em> HTML in posts';
 $txt['autoLinkUrls'] = 'Automatically link posted URLs';
 $txt['disabledBBC'] = 'Enabled BBC tags';
 $txt['bbcTagsToUse'] = 'Enabled BBC tags';

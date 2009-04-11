@@ -348,7 +348,7 @@ function template_modify_board()
 		echo '
 				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 	echo '
-				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+				<em>', $txt['check_all'], '</em> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
 				<br />
 			</td>
 		</tr>';

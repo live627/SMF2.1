@@ -93,11 +93,11 @@ function template_email_members()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
+						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
 						<br />
-						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="check" /> <i>', $txt['check_all'], '</i></label><br />
+						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="check" /> <em>', $txt['check_all'], '</em></label><br />
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="middle" id="advanced_select_div" style="display: none;">
@@ -139,11 +139,11 @@ function template_email_members()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
+						<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
 						<br />
-						<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="check" /> <i>', $txt['check_all'], '</i></label><br />
+						<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="check" /> <em>', $txt['check_all'], '</em></label><br />
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_5">

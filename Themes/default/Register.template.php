@@ -207,7 +207,7 @@ function template_before()
 					</tr>
 					<tr>
 						<td>
-							<i>', $txt['choose_pass'], ':</i>
+							<em>', $txt['choose_pass'], ':</em>
 						</td>
 						<td width="60%">
 							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
@@ -217,7 +217,7 @@ function template_before()
 						</td>
 					</tr><tr>
 						<td>
-							<i>', $txt['verify_pass'], ':</i>
+							<em>', $txt['verify_pass'], ':</em>
 						</td>
 						<td width="60%">
 							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
@@ -231,12 +231,12 @@ function template_before()
 							<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
 						</td>
 						<td colspan="2">
-							<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+							<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<i>', $txt['authenticate_openid_url'], ':</i>
+							<em>', $txt['authenticate_openid_url'], ':</em>
 						</td>
 						<td width="60%">
 							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
@@ -505,14 +505,14 @@ function template_coppa_form()
 				<td align="left">', $context['forum_contacts'], '</td>
 			</tr><tr>
 				<td align="right">
-					<i>', $txt['coppa_form_address'], '</i>: ', $context['ul'], '<br />
+					<em>', $txt['coppa_form_address'], '</em>: ', $context['ul'], '<br />
 					', $context['ul'], '<br />
 					', $context['ul'], '<br />
 					', $context['ul'], '
 				</td>
 			</tr><tr>
 				<td align="right">
-					<i>', $txt['coppa_form_date'], '</i>: ', $context['ul'], '
+					<em>', $txt['coppa_form_date'], '</em>: ', $context['ul'], '
 					<br /><br />
 				</td>
 			</tr><tr>

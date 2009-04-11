@@ -94,7 +94,7 @@ function template_find_members()
 					<td>';
 
 	echo '
-						<span class="smalltext"><i>', $txt['find_wildcards'], '</i></span>
+						<span class="smalltext"><em>', $txt['find_wildcards'], '</em></span>
 					</td>
 				</tr>
 				<tr class="windowbg">
@@ -1021,7 +1021,7 @@ function template_manual_profile_summary()
 										</tr>
 										<tr>
 											<td><strong>', $txt['manual_profile_status'], ':</strong></td>
-											<td><i><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')  "><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></i></td>
+											<td><em><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')  "><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></em></td>
 										</tr>
 										<tr>
 											<td colspan="2">
@@ -1418,7 +1418,7 @@ function template_manual_posting_topics()
 						<td valign="bottom" colspan="2"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_forum_name'], '</a></strong><br />
 						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_cat_name'], '</a></strong><br />
 						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_posting_board_name'], '</a></strong><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><i>', $txt['manual_posting_start_topic'], '</i></strong></span></td>
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><em>', $txt['manual_posting_start_topic'], '</em></strong></span></td>
 					</tr>
 				</table>
 				<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
@@ -1759,7 +1759,7 @@ function template_manual_smileys()
 			<td>', $txt['manual_posting_bbc_italic'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/italicize.gif" alt="', $txt['manual_posting_bbc_italic'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_italic_code'], '</td>
-			<td><i>', $txt['manual_posting_italic_output'], '</i></td>
+			<td><em>', $txt['manual_posting_italic_output'], '</em></td>
 			<td>', $txt['manual_posting_italic_comment'], '</td>
 		</tr>
 		<tr>
@@ -2418,7 +2418,7 @@ function template_manual_searching()
 									<td width="50%"><input type="checkbox" id="brd1" name="brd[1]" value="1" checked="checked" class="check" /> <label for="brd1">', $txt['manual_searching_board_name'], '</label></td>
 								</tr>
 							</table><br />
-							<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="check" /><i><label for="check_all">', $txt['manual_searching_check_all'], '</label></i><br />
+							<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="check" /><em><label for="check_all">', $txt['manual_searching_check_all'], '</label></em><br />
 							<br />
 							<table border="0" cellpadding="2" cellspacing="0" align="left">
 								<tr>

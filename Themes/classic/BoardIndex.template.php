@@ -160,8 +160,8 @@ function template_main()
 
 				// Show the "Moderators: ".  Each has name, href, link, and id. (but we're gonna use link_moderators.)
 				if (!empty($board['moderators']))
-					echo '<i class="smalltext"><br />
-			', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</i>';
+					echo '<em class="smalltext"><br />
+			', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</em>';
 
 				// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
 				if (!empty($board['children']))
@@ -174,8 +174,8 @@ function template_main()
 						$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 
 					echo '
-			<i class="smalltext"><br />
-			', $txt['parent_boards'], ': ', implode(', ', $children), '</i>';
+			<em class="smalltext"><br />
+			', $txt['parent_boards'], ': ', implode(', ', $children), '</em>';
 				}
 
 				echo '

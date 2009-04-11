@@ -30,11 +30,11 @@ if (file_exists(dirname(__FILE__) . '/Settings.php'))
 initialize_inputs();
 
 $txt['smf_repair_settings'] = 'SMF 2.0 Settings Repair Tool';
-$txt['no_value'] = '<i style="font-weight: normal; color: red;">Value not found!</i>';
+$txt['no_value'] = '<em style="font-weight: normal; color: red;">Value not found!</em>';
 $txt['default_value'] = 'Recommended value';
 $txt['save_settings'] = 'Save Settings';
 $txt['not_writable'] = 'Settings.php cannot be written to by your webserver.  Please modify the permissions on this file to allow write access.';
-$txt['recommend_blank'] = '<i>(blank)</i>';
+$txt['recommend_blank'] = '<em>(blank)</em>';
 $txt['database_settings_hidden'] = 'Some settings are not being shown because the database connection information is incorrect.';
 
 $txt['critical_settings'] = 'Critical Settings';

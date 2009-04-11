@@ -568,7 +568,7 @@ function Post()
 				censorText($context['preview_message']);
 			}
 			else
-				$context['preview_subject'] = '<i>' . $txt['no_subject'] . '</i>';
+				$context['preview_subject'] = '<em>' . $txt['no_subject'] . '</em>';
 
 			// Protect any CDATA blocks.
 			if (isset($_REQUEST['xml']))
@@ -1014,7 +1014,7 @@ function Post()
 	// Build the link tree.
 	if (empty($topic))
 		$context['linktree'][] = array(
-			'name' => '<i>' . $txt['start_new_topic'] . '</i>'
+			'name' => '<em>' . $txt['start_new_topic'] . '</em>'
 		);
 	else
 		$context['linktree'][] = array(

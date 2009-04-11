@@ -129,7 +129,7 @@ function template_main()
 
 			echo '
 				</div>
-				<p><input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i></p>
+				<p><input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" /><em> <label for="check_all">', $txt['check_all'], '</label></em></p>
 			</fieldset> ';
 		}
 

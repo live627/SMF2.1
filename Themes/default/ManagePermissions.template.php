@@ -216,7 +216,7 @@ function template_by_board()
 		echo '
 				<tr class="windowbg">
 					<td colspan="2">
-						<i>', $category['name'], '</i>
+						<em>', $category['name'], '</em>
 					</td>
 				</tr>';
 

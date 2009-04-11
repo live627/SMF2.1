@@ -184,7 +184,7 @@ function template_main()
 
 			echo '
 						</table><br />
-						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" tabindex="', $context['tabindex']++, '" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
+						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" tabindex="', $context['tabindex']++, '" /><em> <label for="check_all">', $txt['check_all'], '</label></em><br />
 					</fieldset> ';
 		}
 
@@ -337,7 +337,7 @@ function template_results()
 				<td class="windowbg' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" valign="middle">
 					' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
 					' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><strong>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</strong>' : '' , '
-				<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div>';
+				<div class="smalltext"><em>', $txt['in'], ' ', $topic['board']['link'], '</em></div>';
 
 			foreach ($topic['matches'] as $message)
 			{

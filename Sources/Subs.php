@@ -1231,8 +1231,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'i',
-				'before' => '<i>',
-				'after' => '</i>',
+				'before' => '<em>',
+				'after' => '</em>',
 			),
 			array(
 				'tag' => 'iurl',
@@ -3396,11 +3396,11 @@ function db_debug_junk()
 
 	echo preg_replace('~</body>\s*</html>~', '', $temp), '
 <div class="smalltext" style="text-align: left; margin: 1ex;">
-	Templates: ', count($context['debug']['templates']), ': <i>', implode('</i>, <i>', $context['debug']['templates']), '</i>.<br />
-	Sub templates: ', count($context['debug']['sub_templates']), ': <i>', implode('</i>, <i>', $context['debug']['sub_templates']), '</i>.<br />
-	Language files: ', count($context['debug']['language_files']), ': <i>', implode('</i>, <i>', $context['debug']['language_files']), '</i>.<br />
-	Style sheets: ', count($context['debug']['sheets']), ': <i>', implode('</i>, <i>', $context['debug']['sheets']), '</i>.<br />
-	Files included: ', count($files), ' - ', round($total_size / 1024), 'KB. (<a href="javascript:void(0);" onclick="document.getElementById(\'debug_include_info\').style.display = \'inline\'; this.style.display = \'none\'; return false;">show</a><span id="debug_include_info" style="display: none;"><i>', implode('</i>, <i>', $files), '</i></span>)<br />';
+	Templates: ', count($context['debug']['templates']), ': <em>', implode('</em>, <em>', $context['debug']['templates']), '</em>.<br />
+	Sub templates: ', count($context['debug']['sub_templates']), ': <em>', implode('</em>, <em>', $context['debug']['sub_templates']), '</em>.<br />
+	Language files: ', count($context['debug']['language_files']), ': <em>', implode('</em>, <em>', $context['debug']['language_files']), '</em>.<br />
+	Style sheets: ', count($context['debug']['sheets']), ': <em>', implode('</em>, <em>', $context['debug']['sheets']), '</em>.<br />
+	Files included: ', count($files), ' - ', round($total_size / 1024), 'KB. (<a href="javascript:void(0);" onclick="document.getElementById(\'debug_include_info\').style.display = \'inline\'; this.style.display = \'none\'; return false;">show</a><span id="debug_include_info" style="display: none;"><em>', implode('</em>, <em>', $files), '</em></span>)<br />';
 
 	if (!empty($modSettings['cache_enable']) && !empty($cache_hits))
 	{
@@ -3415,7 +3415,7 @@ function db_debug_junk()
 		}
 
 		echo '
-	Cache hits: ', $cache_count, ': ', comma_format($total_t, 5), 's for ', comma_format($total_s), ' bytes (<a href="javascript:void(0);" onclick="document.getElementById(\'debug_cache_info\').style.display = \'inline\'; this.style.display = \'none\'; return false;">show</a><span id="debug_cache_info" style="display: none;"><i>', implode('</i>, <i>', $entries), '</i></span>)<br />';
+	Cache hits: ', $cache_count, ': ', comma_format($total_t, 5), 's for ', comma_format($total_s), ' bytes (<a href="javascript:void(0);" onclick="document.getElementById(\'debug_cache_info\').style.display = \'inline\'; this.style.display = \'none\'; return false;">show</a><span id="debug_cache_info" style="display: none;"><em>', implode('</em>, <em>', $entries), '</em></span>)<br />';
 	}
 
 	echo '
@@ -3431,7 +3431,7 @@ function db_debug_junk()
 	<strong>', $is_select ? '<a href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '" target="_blank" class="new_win" style="text-decoration: none;">' : '', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars(ltrim($qq['q'], "\n\r")))) . ($is_select ? '</a></strong>' : '</strong>') . '<br />
 	&nbsp;&nbsp;&nbsp;';
 			if (!empty($qq['f']) && !empty($qq['l']))
-				echo 'in <i>' . $qq['f'] . '</i> line <i>' . $qq['l'] . '</i>, ';
+				echo 'in <em>' . $qq['f'] . '</em> line <em>' . $qq['l'] . '</em>, ';
 			if (isset($qq['t']))
 				echo 'which took ' . round($qq['t'], 8) . ' seconds.<br />
 	<br />';

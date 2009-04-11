@@ -105,7 +105,7 @@ $txt['search_adjust_query'] = 'Adjust Search Parameters';
 $txt['search_adjust_submit'] = 'Revise Search';
 $txt['search_did_you_mean'] = 'You may have meant to search for';
 
-$txt['search_example'] = '<i>e.g.</i> Orwell "Animal Farm" -movie';
+$txt['search_example'] = '<em>e.g.</em> Orwell "Animal Farm" -movie';
 
 $txt['search_engines_description'] = 'From this area you can decide in what detail you wish to track search engines as they index your forum as well as review search engine logs.';
 $txt['spider_mode'] = 'Search Engine Tracking Level<div class="smalltext">Note higher level tracking increases server resource requirement.</div>';

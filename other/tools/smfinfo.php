@@ -149,13 +149,13 @@ $context['smfinfo'] = array (
 	'enable_error' => get_smf_setting('enableErrorLogging', 'on'),
 	'database_sessions' => get_smf_setting('databaseSession_enable', 'on'),
 	'database_loose' => get_smf_setting('databaseSession_loose', 'on'),
-	'session_timeout' => !empty($modSettings['databaseSession_lifetime']) ? $modSettings['databaseSession_lifetime'] . ' ' . $txt['seconds'] : '<i>' . $txt['empty'] . '</i>',
+	'session_timeout' => !empty($modSettings['databaseSession_lifetime']) ? $modSettings['databaseSession_lifetime'] . ' ' . $txt['seconds'] : '<em>' . $txt['empty'] . '</em>',
 	'maintenance_mode' => get_smf_setting('maintenance'),
 	'time_load' => get_smf_setting('timeLoadPageEnable'),
 	'hostname_lookup' => get_smf_setting('disableHostnameLookup', 'off'),
 	'cache' => !empty($modSettings['cache_enable']) ? $txt['cache_level'] . ' ' . $modSettings['cache_enable'] : $txt['off'],
-	'memcached_settings' => isset($modSettings['cache_memcached']) && trim($modSettings['cache_memcached']) != '' ? trim($modSettings['cache_memcached']) : '<i>' . $txt['empty'] . '</i>',
-	'cookie_name' => !empty($cookiename) ? $cookiename : '<i>' . $txt['empty'] . '</i>',
+	'memcached_settings' => isset($modSettings['cache_memcached']) && trim($modSettings['cache_memcached']) != '' ? trim($modSettings['cache_memcached']) : '<em>' . $txt['empty'] . '</em>',
+	'cookie_name' => !empty($cookiename) ? $cookiename : '<em>' . $txt['empty'] . '</em>',
 	'local_cookies' => get_smf_setting('localCookies', 'off'),
 	'global_cookies' => get_smf_setting('globalCookies'),
 	'log_pruning' => get_smf_setting('pruningOptions', 'on'),
@@ -530,13 +530,13 @@ function show_detailed_file()
 							<td width="50%"><strong>', $txt['file_version'], '</strong></td><td width="25%"><strong>', $txt['your_version'], '</strong></td><td width="25%"><strong>', $txt['current_version'], '</strong></td>
 						</tr>
 						<tr>
-							<td>', $txt['smf_version'], '</td><td><i id="yourSMF">SMF ', $context['forum_version'], '</i></td><td><i id="currentSMF">??</i></td>
+							<td>', $txt['smf_version'], '</td><td><em id="yourSMF">SMF ', $context['forum_version'], '</em></td><td><em id="currentSMF">??</em></td>
 						</tr>';
 
 	// Now list all the source file versions, starting with the overall version (if all match!).
 	echo '
 						<tr>
-							<td><a href="javascript:void(0);" onclick="return swapOption(this, \'Sources\');">', $txt['sources_version'], '</a></td><td><i id="yourSources">??</i></td><td><i id="currentSources">??</i></td>
+							<td><a href="javascript:void(0);" onclick="return swapOption(this, \'Sources\');">', $txt['sources_version'], '</a></td><td><em id="yourSources">??</em></td><td><em id="currentSources">??</em></td>
 						</tr>
 					</table>
 					<table id="Sources" width="60%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -545,7 +545,7 @@ function show_detailed_file()
 	foreach ($context['file_versions'] as $filename => $version)
 		echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><i id="yourSources', $filename, '">', $version, '</i></td><td width="25%"><i id="currentSources', $filename, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><em id="yourSources', $filename, '">', $version, '</em></td><td width="25%"><em id="currentSources', $filename, '">??</em></td>
 						</tr>';
 
 	// Default template files.
@@ -553,7 +553,7 @@ function show_detailed_file()
 					</table>
 					<table width="60%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Default\');">', $txt['template_version'], '</a></td><td width="25%"><i id="yourDefault">??</i></td><td width="25%"><i id="currentDefault">??</i></td>
+							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Default\');">', $txt['template_version'], '</a></td><td width="25%"><em id="yourDefault">??</em></td><td width="25%"><em id="currentDefault">??</em></td>
 						</tr>
 					</table>
 					<table id="Default" width="60%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -561,7 +561,7 @@ function show_detailed_file()
 	foreach ($context['default_template_versions'] as $filename => $version)
 		echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><i id="yourDefault', $filename, '">', $version, '</i></td><td width="25%"><i id="currentDefault', $filename, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><em id="yourDefault', $filename, '">', $version, '</em></td><td width="25%"><em id="currentDefault', $filename, '">??</em></td>
 						</tr>';
 
 	// Now the language files...
@@ -569,7 +569,7 @@ function show_detailed_file()
 					</table>
 					<table width="60%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Languages\');">', $txt['language_version'], '</a></td><td width="25%"><i id="yourLanguages">??</i></td><td width="25%"><i id="currentLanguages">??</i></td>
+							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Languages\');">', $txt['language_version'], '</a></td><td width="25%"><em id="yourLanguages">??</em></td><td width="25%"><em id="currentLanguages">??</em></td>
 						</tr>
 					</table>
 					<table id="Languages" width="60%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -579,7 +579,7 @@ function show_detailed_file()
 		foreach ($files as $filename => $version)
 			echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '.<i>', $language, '</i>.php</td><td width="25%"><i id="your', $filename, '.', $language, '">', $version, '</i></td><td width="25%"><i id="current', $filename, '.', $language, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '.<em>', $language, '</em>.php</td><td width="25%"><em id="your', $filename, '.', $language, '">', $version, '</em></td><td width="25%"><em id="current', $filename, '.', $language, '">??</em></td>
 						</tr>';
 	}
 
@@ -592,7 +592,7 @@ function show_detailed_file()
 		echo '
 					<table width="60%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Templates\');">', $txt['custom_template_version'], '</a></td><td width="25%"><i id="yourTemplates">??</i></td><td width="25%"><i id="currentTemplates">??</i></td>
+							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Templates\');">', $txt['custom_template_version'], '</a></td><td width="25%"><em id="yourTemplates">??</em></td><td width="25%"><em id="currentTemplates">??</em></td>
 						</tr>
 					</table>
 					<table id="Templates" width="60%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -600,7 +600,7 @@ function show_detailed_file()
 		foreach ($context['template_versions'] as $filename => $version)
 			echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><i id="yourTemplates', $filename, '">', $version, '</i></td><td width="25%"><i id="currentTemplates', $filename, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><em id="yourTemplates', $filename, '">', $version, '</em></td><td width="25%"><em id="currentTemplates', $filename, '">??</em></td>
 						</tr>';
 
 		echo '

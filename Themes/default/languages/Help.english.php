@@ -140,7 +140,7 @@ $helptxt['time_format'] = '<strong>Time Format</strong><br />
 	&nbsp;&nbsp;%Y - 4 digit year<br />
 	&nbsp;&nbsp;%% - a literal \'%\' character <br />
 	<br />
-	<i>* Does not work on Windows-based servers.</i></span>';
+	<em>* Does not work on Windows-based servers.</em></span>';
 
 $helptxt['live_news'] = '<strong>Live announcements</strong><br />
 	This box shows recently updated announcements from <a href="http://www.simplemachines.org/" target="_blank" class="new_win">www.simplemachines.org</a>.
@@ -253,7 +253,7 @@ $helptxt['trackStats'] = 'Stats:<br />This will allow users to see the latest po
 		It will also show several statistics, like the most members online, new members and new topics.<hr />
 		Page views:<br />Adds another column to the stats page with the number of pageviews on your forum.';
 $helptxt['titlesEnable'] = 'Switching Custom Titles on will allow members with the relevant permission to create a special title for themselves.
-		This will be shown underneath the name.<br /><i>For example:</i><br />Jeff<br />Cool Guy';
+		This will be shown underneath the name.<br /><em>For example:</em><br />Jeff<br />Cool Guy';
 $helptxt['topbottomEnable'] = 'This will add go up and go down buttons, so that member can go to the top and bottom of a page
 		without scrolling.';
 $helptxt['onlineEnable'] = 'This will show an image to indicate whether the member is online or offline';
@@ -283,7 +283,7 @@ $helptxt['enableErrorLogging'] = 'This will log any errors, like a failed login,
 $helptxt['enableErrorQueryLogging'] = 'This will include the full query sent to the database in with any database error.  Requires error logging to be turned on.<br /><br /><strong>Note:  This will affect the ability to filter the error log by the error message.</strong>';
 $helptxt['allow_disableAnnounce'] = 'This will allow users to opt out of notification of topics you announce by checking the &quot;announce topic&quot; checkbox when posting.';
 $helptxt['disallow_sendBody'] = 'This option removes the option to receive the text of replies and posts in notification emails.<br /><br />Often, members will reply to the notification email, which in most cases means the webmaster receives the reply.';
-$helptxt['compactTopicPagesEnable'] = 'This will just show a selection of the number of pages.<br /><i>Example:</i>
+$helptxt['compactTopicPagesEnable'] = 'This will just show a selection of the number of pages.<br /><em>Example:</em>
 		&quot;3&quot; to display: 1 ... 4 [5] 6 ... 9 <br />
 		&quot;5&quot; to display: 1 ... 3 4 [5] 6 7 ... 9';
 $helptxt['timeLoadPageEnable'] = 'This will show the time in seconds SMF took to create that page at the bottom of the board.';
@@ -359,7 +359,7 @@ $helptxt['globalCookies'] = 'Makes log in cookies available across subdomains.  
 	And your forum is at http://forum.simplemachines.org/,<br />
 	Using this option will allow you to access the forum\'s cookie on your site.  Do not enable this if there are other subdomains (like hacker.simplemachines.org) not controlled by you.';
 $helptxt['secureCookies'] = 'Enabling this option will force the cookies created for users on your forum to be marked as secure. Only enable this option if you are using HTTPS throughout your site as it will break cookie handling otherwise!';
-$helptxt['securityDisable'] = 'This <i>disables</i> the additional password check for the administration section. This is not recommended!';
+$helptxt['securityDisable'] = 'This <em>disables</em> the additional password check for the administration section. This is not recommended!';
 $helptxt['securityDisable_why'] = 'This is your current password. (the same one you use to login.)<br /><br />Having to type this helps ensure that you want to do whatever administration you are doing, and that it is <strong>you</strong> doing it.';
 $helptxt['emailmembers'] = 'In this message you can use a few &quot;variables&quot;.  These are:<br />
 	{$board_url} - The URL to your forum.<br />
@@ -378,7 +378,7 @@ $helptxt['attachmentEncryptFilenames'] = 'Encrypting attachment filenames allows
 $helptxt['failed_login_threshold'] = 'Set the number of failed login attempts before directing the user to the password reminder screen.';
 $helptxt['oldTopicDays'] = 'If this option is enabled a warning will be displayed to the user when attempting to reply to a topic which has not had any new replies for the amount of time, in days, specified by this setting. Set this setting to 0 to disable the feature.';
 $helptxt['edit_wait_time'] = 'Number of seconds allowed for a post to be edited before logging the last edit date.';
-$helptxt['edit_disable_time'] = 'Number of minutes allowed to pass before a user can no longer edit a post they have made. Set to 0 disable. <br /><br /><i>Note: This will not affect any user who has permission to edit other people\'s posts.</i>';
+$helptxt['edit_disable_time'] = 'Number of minutes allowed to pass before a user can no longer edit a post they have made. Set to 0 disable. <br /><br /><em>Note: This will not affect any user who has permission to edit other people\'s posts.</em>';
 $helptxt['posts_require_captcha'] = 'This setting will force users to pass anti-spam bot verification each time they make a post to a board. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
 $helptxt['enableSpellChecking'] = 'Enable spell checking. You MUST have the pspell library installed on your server and your PHP configuration set up to use the pspell library. Your server ' . (function_exists('pspell_new') ? 'DOES' : 'DOES NOT') . ' appear to have this set up.';
 $helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';

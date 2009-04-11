@@ -594,7 +594,7 @@ function MembergroupMembers()
 
 		// Italicize the online note if they aren't activated.
 		if ($row['is_activated'] % 10 != 1)
-			$last_online = '<i title="' . $txt['not_activated'] . '">' . $last_online . '</i>';
+			$last_online = '<em title="' . $txt['not_activated'] . '">' . $last_online . '</em>';
 
 		$context['members'][] = array(
 			'id' => $row['id_member'],

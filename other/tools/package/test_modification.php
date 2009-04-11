@@ -86,7 +86,7 @@ else
 					<li>', $action['debug'], ' (', $action['filename'], ')</li>';
 		elseif ($action['type'] == 'failure')
 			echo '
-					<li><strong>The following could not be found (or should not have been) in ', $action['filename'], ':</strong> <i>(note that it may not look like you typed it, this is normal.)</i><br />
+					<li><strong>The following could not be found (or should not have been) in ', $action['filename'], ':</strong> <em>(note that it may not look like you typed it, this is normal.)</em><br />
 					<pre style="width: 98%; overflow: auto; border: 1px solid red;">', $action['search'], '</pre></li>';
 		elseif ($action['type'] == 'result')
 		{

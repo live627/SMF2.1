@@ -142,7 +142,7 @@ function getMembersOnlineStats($membersOnlineOptions)
 		);
 
 		// This is the compact version, simply implode it to show.
-		$memberOnlineStats['list_users_online'][$row[$memberOnlineOptions['sort']] . $row['member_name']] = empty($row['show_online']) ? '<i>' . $link . '</i>' : $link;
+		$memberOnlineStats['list_users_online'][$row[$memberOnlineOptions['sort']] . $row['member_name']] = empty($row['show_online']) ? '<em>' . $link . '</em>' : $link;
 
 		// Store all distinct (primary) membergroups that are shown.
 		if (!isset($memberOnlineStats['online_groups'][$row['id_group']]))

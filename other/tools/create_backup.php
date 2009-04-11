@@ -181,7 +181,7 @@ function step2()
 		return step1('Cannot connect to the MySQL database server with the supplied data.<br /><br />If you are not sure about what to type in, please contact your host.');
 
 	if (!mysql_select_db($_POST['db_name'], $db_connection))
-		return step1(sprintf('This tool was unable to access the &quot;<i>%s</i>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.', $_POST['db_name']));
+		return step1(sprintf('This tool was unable to access the &quot;<em>%s</em>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.', $_POST['db_name']));
 
 	$_GET['table'] = (int) @$_GET['table'];
 	$_GET['row'] = (int) @$_GET['row'];
@@ -212,10 +212,10 @@ function step2()
 				return false;
 			$fp = @$fopen($_POST['path'], 'wb');
 			if (!$fp)
-				return step1(sprintf('Unable to create the specified backup file, &quot;<i>%s</i>&quot;.', $_POST['path']));
+				return step1(sprintf('Unable to create the specified backup file, &quot;<em>%s</em>&quot;.', $_POST['path']));
 		}
 		elseif (!$fp)
-			return step1(sprintf('Unable to create the specified backup file, &quot;<i>%s</i>&quot;.', $_POST['path']));
+			return step1(sprintf('Unable to create the specified backup file, &quot;<em>%s</em>&quot;.', $_POST['path']));
 
 		// SQL Dump Header.
 		$fwrite($fp,
@@ -473,19 +473,19 @@ function get_ftp_info()
 								<td width="26%" valign="top" class="textbox"><label for="ftp_username">Username:</label></td>
 								<td>
 									<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($_POST['ftp_username']) ? $_POST['ftp_username'] : '', '" style="width: 99%;" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">The username to login with. <i>This will not be saved anywhere.</i></div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">The username to login with. <em>This will not be saved anywhere.</em></div>
 								</td>
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_password">Password:</label></td>
 								<td>
 									<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
-									<div style="font-size: smaller; margin-bottom: 3ex;">The password to login with. <i>This will not be saved anywhere.</i></div>
+									<div style="font-size: smaller; margin-bottom: 3ex;">The password to login with. <em>This will not be saved anywhere.</em></div>
 								</td>
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_path">FTP Path:</label></td>
 								<td style="padding-bottom: 1ex;">
 									<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $_POST['ftp_path'], '" style="width: 99%;" />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($found_path) ? 'This path was automatically detected.' : 'This is the <i>relative</i> path to this file as seen in an FTP client.', '</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($found_path) ? 'This path was automatically detected.' : 'This is the <em>relative</em> path to this file as seen in an FTP client.', '</div>
 								</td>
 							</tr>
 						</table>

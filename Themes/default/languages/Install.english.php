@@ -20,7 +20,7 @@ $txt['congratulations'] = 'Congratulations, the installation process is complete
 $txt['congratulations_help'] = 'If at any time you need support, or SMF fails to work properly, please remember that <a href="http://www.simplemachines.org/community/index.php" target="_blank">help is available</a> if you need it.';
 $txt['still_writable'] = 'Your installation directory is still writable.  It\'s a good idea to chmod it so that it is not writable for security reasons.';
 $txt['delete_installer'] = 'Click here to delete this install.php file now.';
-$txt['delete_installer_maybe'] = '<i>(doesn\'t work on all servers.)</i>';
+$txt['delete_installer_maybe'] = '<em>(doesn\'t work on all servers.)</em>';
 $txt['go_to_your_forum'] = 'Now you can see <a href="%s">your newly installed forum</a> and begin to use it.  You should first make sure you are logged in, after which you will be able to access the administration center.';
 $txt['good_luck'] = 'Good luck!<br />Simple Machines';
 
@@ -81,7 +81,7 @@ $txt['default_police_smiley'] = 'Police';
 
 $txt['error_message_click'] = 'Click here';
 $txt['error_message_try_again'] = 'to try this step again.';
-$txt['error_message_bad_try_again'] = 'to try installing anyway, but note that this is <i>strongly</i> discouraged.';
+$txt['error_message_bad_try_again'] = 'to try installing anyway, but note that this is <em>strongly</em> discouraged.';
 
 $txt['install_settings'] = 'Forum Settings';
 $txt['install_settings_info'] = 'This page requires you to define a few key settings for your forum. SMF has automatically detected key settings for you.';
@@ -155,11 +155,11 @@ $txt['ftp_server'] = 'Server';
 $txt['ftp_server_info'] = 'This should be the server and port for your FTP server.';
 $txt['ftp_port'] = 'Port';
 $txt['ftp_username'] = 'Username';
-$txt['ftp_username_info'] = 'The username to login with. <i>This will not be saved anywhere.</i>';
+$txt['ftp_username_info'] = 'The username to login with. <em>This will not be saved anywhere.</em>';
 $txt['ftp_password'] = 'Password';
-$txt['ftp_password_info'] = 'The password to login with. <i>This will not be saved anywhere.</i>';
+$txt['ftp_password_info'] = 'The password to login with. <em>This will not be saved anywhere.</em>';
 $txt['ftp_path'] = 'Install Path';
-$txt['ftp_path_info'] = 'This is the <i>relative</i> path you use in your FTP server.';
+$txt['ftp_path_info'] = 'This is the <em>relative</em> path you use in your FTP server.';
 $txt['ftp_path_found_info'] = 'The path in the box above was automatically detected.';
 $txt['ftp_connect'] = 'Connect';
 $txt['ftp_setup_why'] = 'What is this step for?';
@@ -174,7 +174,7 @@ $txt['error_ftp_no_connect'] = 'Unable to connect to FTP server with this combin
 $txt['error_db_file'] = 'Cannot find database source script! Please check file %s is within your forum source directory.';
 $txt['error_db_connect'] = 'Cannot connect to the database server with the supplied data.<br /><br />If you are not sure about what to type in, please contact your host.';
 $txt['error_db_too_low'] = 'The version of your database server is very old, and does not meet SMF\'s minimum requirements.<br /><br />Please ask your host to either upgrade it or supply a new one, and if they won\'t, please try a different host.';
-$txt['error_db_database'] = 'The installer was unable to access the &quot;<i>%s</i>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.';
+$txt['error_db_database'] = 'The installer was unable to access the &quot;<em>%s</em>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.';
 $txt['error_db_queries'] = 'Some of the queries were not executed properly.  This could be caused by an unsupported (development or old) version of your database software.<br /><br />Technical information about the queries:';
 $txt['error_db_queries_line'] = 'Line #';
 $txt['error_db_missing'] = 'The installer was unable to detect any database support in PHP.  Please ask your host to ensure that PHP was compiled with the desired database, or that the proper extension is being loaded.';
@@ -227,6 +227,6 @@ $txt['upgrade_ready_proceed'] = 'Thank you for choosing to upgrade to SMF %1$s. 
 $txt['upgrade_error_script_js'] = 'The upgrade script cannot find script.js or it is out of date. Make sure your theme paths are correct. You can download a setting checker tool from the <a href="http://www.simplemachines.org">Simple Machines Website</a>';
 
 $txt['upgrade_warning_lots_data'] = 'This upgrade script has detected that your forum contains a lot of data which needs upgrading. This process may take quite some time depending on your server and forum size, and for very large forums (~300,000 messages) may take several hours to complete.';
-$txt['upgrade_warning_out_of_date'] = 'This upgrade script is out of date! The current version of SMF is <i id="smfVersion" style="white-space: nowrap;">??</i> but this upgrade script is for <i id="yourVersion" style="white-space: nowrap;">%1$s</i>.<br /><br />It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are upgrading to the latest version.';
+$txt['upgrade_warning_out_of_date'] = 'This upgrade script is out of date! The current version of SMF is <em id="smfVersion" style="white-space: nowrap;">??</em> but this upgrade script is for <em id="yourVersion" style="white-space: nowrap;">%1$s</em>.<br /><br />It is recommended that you visit the <a href="http://www.simplemachines.org">Simple Machines</a> website to ensure you are upgrading to the latest version.';
 
 ?>

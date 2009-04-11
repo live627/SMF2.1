@@ -78,9 +78,9 @@ function template_admin()
 						<td class="windowbg2" valign="top" style="height: 18ex;">
 							<strong>', $txt['support_versions'], ':</strong><br />
 							', $txt['support_versions_forum'], ':
-							<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i><br />
+							<em id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</em><br />
 							', $txt['support_versions_current'], ':
-							<i id="smfVersion" style="white-space: nowrap;">??</i><br />
+							<em id="smfVersion" style="white-space: nowrap;">??</em><br />
 							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />';
 
 	// Have they paid to remove copyright?
@@ -299,15 +299,15 @@ function template_credits()
 				<td class="windowbg2">
 					<strong>', $txt['support_versions'], ':</strong><br />
 					', $txt['support_versions_forum'], ':
-					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
+					<em id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</em>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
-					<i id="smfVersion" style="white-space: nowrap;">??</i><br />';
+					<em id="smfVersion" style="white-space: nowrap;">??</em><br />';
 
 	// Display all the variables we have server information for.
 	foreach ($context['current_versions'] as $version)
 		echo '
 					', $version['title'], ':
-					<i>', $version['version'], '</i><br />';
+					<em>', $version['version'], '</em><br />';
 
 	echo '
 				</td>
@@ -452,13 +452,13 @@ function template_view_versions()
 	// The current version of the core SMF package.
 	echo '
 						<tr>
-							<td>', $txt['admin_smfpackage'], '</td><td><i id="yourSMF">', $context['forum_version'], '</i></td><td><i id="currentSMF">??</i></td>
+							<td>', $txt['admin_smfpackage'], '</td><td><em id="yourSMF">', $context['forum_version'], '</em></td><td><em id="currentSMF">??</em></td>
 						</tr>';
 
 	// Now list all the source file versions, starting with the overall version (if all match!).
 	echo '
 						<tr>
-							<td><a href="javascript:void(0);" onclick="return swapOption(this, \'Sources\');">', $txt['dvc_sources'], '</a></td><td><i id="yourSources">??</i></td><td><i id="currentSources">??</i></td>
+							<td><a href="javascript:void(0);" onclick="return swapOption(this, \'Sources\');">', $txt['dvc_sources'], '</a></td><td><em id="yourSources">??</em></td><td><em id="currentSources">??</em></td>
 						</tr>
 					</table>
 					<table id="Sources" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -467,7 +467,7 @@ function template_view_versions()
 	foreach ($context['file_versions'] as $filename => $version)
 		echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><i id="yourSources', $filename, '">', $version, '</i></td><td width="25%"><i id="currentSources', $filename, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><em id="yourSources', $filename, '">', $version, '</em></td><td width="25%"><em id="currentSources', $filename, '">??</em></td>
 						</tr>';
 
 	// Default template files.
@@ -475,7 +475,7 @@ function template_view_versions()
 					</table>
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Default\');">', $txt['dvc_default'], '</a></td><td width="25%"><i id="yourDefault">??</i></td><td width="25%"><i id="currentDefault">??</i></td>
+							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Default\');">', $txt['dvc_default'], '</a></td><td width="25%"><em id="yourDefault">??</em></td><td width="25%"><em id="currentDefault">??</em></td>
 						</tr>
 					</table>
 					<table id="Default" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -483,7 +483,7 @@ function template_view_versions()
 	foreach ($context['default_template_versions'] as $filename => $version)
 		echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><i id="yourDefault', $filename, '">', $version, '</i></td><td width="25%"><i id="currentDefault', $filename, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><em id="yourDefault', $filename, '">', $version, '</em></td><td width="25%"><em id="currentDefault', $filename, '">??</em></td>
 						</tr>';
 
 	// Now the language files...
@@ -491,7 +491,7 @@ function template_view_versions()
 					</table>
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Languages\');">', $txt['dvc_languages'], '</a></td><td width="25%"><i id="yourLanguages">??</i></td><td width="25%"><i id="currentLanguages">??</i></td>
+							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Languages\');">', $txt['dvc_languages'], '</a></td><td width="25%"><em id="yourLanguages">??</em></td><td width="25%"><em id="currentLanguages">??</em></td>
 						</tr>
 					</table>
 					<table id="Languages" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -501,7 +501,7 @@ function template_view_versions()
 		foreach ($files as $filename => $version)
 			echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '.<i>', $language, '</i>.php</td><td width="25%"><i id="your', $filename, '.', $language, '">', $version, '</i></td><td width="25%"><i id="current', $filename, '.', $language, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '.<em>', $language, '</em>.php</td><td width="25%"><em id="your', $filename, '.', $language, '">', $version, '</em></td><td width="25%"><em id="current', $filename, '.', $language, '">??</em></td>
 						</tr>';
 	}
 
@@ -514,7 +514,7 @@ function template_view_versions()
 		echo '
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Templates\');">', $txt['dvc_templates'], '</a></td><td width="25%"><i id="yourTemplates">??</i></td><td width="25%"><i id="currentTemplates">??</i></td>
+							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Templates\');">', $txt['dvc_templates'], '</a></td><td width="25%"><em id="yourTemplates">??</em></td><td width="25%"><em id="currentTemplates">??</em></td>
 						</tr>
 					</table>
 					<table id="Templates" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -522,7 +522,7 @@ function template_view_versions()
 		foreach ($context['template_versions'] as $filename => $version)
 			echo '
 						<tr>
-							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><i id="yourTemplates', $filename, '">', $version, '</i></td><td width="25%"><i id="currentTemplates', $filename, '">??</i></td>
+							<td width="50%" style="padding-left: 3ex;">', $filename, '</td><td width="25%"><em id="yourTemplates', $filename, '">', $version, '</em></td><td width="25%"><em id="currentTemplates', $filename, '">??</em></td>
 						</tr>';
 
 		echo '
@@ -915,7 +915,7 @@ function template_show_settings()
 							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
 
 				echo '
-							<td valign="top"', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</td>
+							<td valign="top"', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</td>
 							<td class="windowbg2" width="50%">',
 								$config_var['preinput'];
 
@@ -971,7 +971,7 @@ function template_show_settings()
 					echo '
 										</tr>
 									</table><br />
-									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
+									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><em>', $txt['bbcTagsToUse_select_all'], '</em></label>
 								</fieldset>';
 				}
 				// A simple message?

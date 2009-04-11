@@ -34,6 +34,7 @@ April 2009
  & Admin log changed to Administration log in language strings and comments (Help.english.php, Modlog.english.php, Admin.english.php, and comments in Subs-Members.php and ModLog.php) [Bug 3386]
  ! Prevent deleting recycle bin board until has chosen alternative or disabled recycling (ManageBoards.php, ManageBoards.template.php, ManageBoards.english.php) [Bug 2981]
  ! Replaced all bold tags with semantically better strong tag. (117 files)
+ ! Replaced all italic tags with semantically better em tag (68 files)
 
 
 March 2009

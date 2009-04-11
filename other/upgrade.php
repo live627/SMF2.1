@@ -3448,11 +3448,11 @@ function template_chmod()
 	$txt['ftp_server_info'] = 'The address (often localhost) and port for your FTP server.';
 	$txt['ftp_port'] = 'Port';
 	$txt['ftp_username'] = 'Username';
-	$txt['ftp_username_info'] = 'The username to login with. <i>This will not be saved anywhere.</i>';
+	$txt['ftp_username_info'] = 'The username to login with. <em>This will not be saved anywhere.</em>';
 	$txt['ftp_password'] = 'Password';
-	$txt['ftp_password_info'] = 'The password to login with. <i>This will not be saved anywhere.</i>';
+	$txt['ftp_password_info'] = 'The password to login with. <em>This will not be saved anywhere.</em>';
 	$txt['ftp_path'] = 'Install Path';
-	$txt['ftp_path_info'] = 'This is the <i>relative</i> path you use in your FTP client <a href="' . $_SERVER['PHP_SELF'] . '?ftphelp" onclick="window.open(this.href, \'\', \'width=450,height=250\');return false;" target="_blank">(more help)</a>.';
+	$txt['ftp_path_info'] = 'This is the <em>relative</em> path you use in your FTP client <a href="' . $_SERVER['PHP_SELF'] . '?ftphelp" onclick="window.open(this.href, \'\', \'width=450,height=250\');return false;" target="_blank">(more help)</a>.';
 	$txt['ftp_path_found_info'] = 'The path in the box above was automatically detected.';
 	$txt['ftp_path_help'] = 'Your FTP path is the path you see when you log in to your FTP client.  It commonly starts with &quot;<tt>www</tt>&quot;, &quot;<tt>public_html</tt>&quot;, or &quot;<tt>httpdocs</tt>&quot; - but it should include the directory SMF is in too, such as &quot;/public_html/forum&quot;.  It is different from your URL and full path.<br /><br />Files in this path may be overwritten, so make sure it\'s correct.';
 	$txt['ftp_path_help_close'] = 'Close';
@@ -3640,7 +3640,7 @@ function template_upgrade_below()
 
 	if (!empty($upcontext['pause']))
 		echo '
-								<i>', $txt['upgrade_incomplete'], '.</i><br />
+								<em>', $txt['upgrade_incomplete'], '.</em><br />
 
 								<h2 style="margin-top: 2ex;">', $txt['upgrade_not_quite_done'], '</h2>
 								<h3>
@@ -4609,7 +4609,7 @@ function template_upgrade_complete()
 
 	if (!empty($upcontext['can_delete_script']))
 		echo '
-			<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete(this);" /> Delete this upgrade.php and its data files now.</label> <i>(doesn\'t work on all servers.)</i>
+			<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete(this);" /> Delete this upgrade.php and its data files now.</label> <em>(doesn\'t work on all servers.)</em>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				function doTheDelete(theCheck)
 				{

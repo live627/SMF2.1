@@ -248,7 +248,7 @@ $txt['package_file_perms_warning'] = 'Please Note';
 $txt['package_file_perms_warning_desc'] = '
 	<li>Be careful when changing file permissions from this section - incorrect permissions can adversely affect the operation of your forum!</li>
 	<li>On some server configurations selecting the wrong permissions may stop SMF from operating.</li>
-	<li>Certain directories such as <i>attachments</i> need to be writable to use that functionality.</li>
+	<li>Certain directories such as <em>attachments</em> need to be writable to use that functionality.</li>
 	<li>This functionality is mainly applicable on non-Windows based servers - it will not work as expected on Windows in regards to permission flags.</li>
 	<li>Before proceeding make sure you have an FTP client installed in case you do make an error and need to FTP into the server to remedy it.</li>';
 

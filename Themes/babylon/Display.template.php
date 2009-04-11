@@ -521,7 +521,7 @@ function template_main()
 		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
-									&#171; <i>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</i> &#187;';
+									&#171; <em>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</em> &#187;';
 
 		echo '
 								</td>
@@ -638,7 +638,7 @@ function template_main()
 	<tr id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
 		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_desc'], $context['is_locked'] ? '<br /><br /><strong>' . $txt['quick_reply_warning'] . '</strong>' : '', '</td>
 		<td class="windowbg" width="75%" align="center">
-			', $context['can_reply_approved'] ? '' : '<i>' . $txt['wait_for_approval'] . '</i>', '
+			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
 			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">

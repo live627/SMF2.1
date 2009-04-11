@@ -544,7 +544,7 @@ function template_pick()
 		</tr>
 		<tr class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
 			<td valign="bottom" align="right" style="padding: 6px; padding-top: 0;">
-				<div style="float: left;" class="smalltext"><i>', $theme['num_users'], ' ', ($theme['num_users'] == 1 ? $txt['theme_user'] : $txt['theme_users']), '</i></div>
+				<div style="float: left;" class="smalltext"><em>', $theme['num_users'], ' ', ($theme['num_users'] == 1 ? $txt['theme_user'] : $txt['theme_users']), '</em></div>
 				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_use_', $theme['id'], '">', $txt['theme_set'], '</a> |
 				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_preview_', $theme['id'], '">', $txt['theme_preview'], '</a>
 			</td>

@@ -583,7 +583,7 @@ function ViewMemberlist()
 
 						// Show it in italics if they\'re not activated...
 						if ($rowData[\'is_activated\'] % 10 != 1)
-							$difference = sprintf(\'<i title="%1$s">%2$s</i>\', $txt[\'not_activated\'], $difference);
+							$difference = sprintf(\'<em title="%1$s">%2$s</em>\', $txt[\'not_activated\'], $difference);
 
 						return $difference;
 					'),

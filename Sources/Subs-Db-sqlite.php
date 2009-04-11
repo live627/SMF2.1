@@ -645,9 +645,9 @@ function smf_db_error_backtrace($error_message, $log_message = '', $error_type =
 		exit;
 	}
 	elseif ($error_type)
-		trigger_error($error_message . ($line !== null ? '<i>(' . basename($file) . '-' . $line . ')</i>' : ''), $error_type);
+		trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''), $error_type);
 	else
-		trigger_error($error_message . ($line !== null ? '<i>(' . basename($file) . '-' . $line . ')</i>' : ''));
+		trigger_error($error_message . ($line !== null ? '<em>(' . basename($file) . '-' . $line . ')</em>' : ''));
 }
 
 // Emulate UNIX_TIMESTAMP.

@@ -2245,7 +2245,7 @@ function pastTime($substep = null, $force = false)
 		return;
 
 	echo '
-			<i>Incomplete.</i><br />
+			<em>Incomplete.</em><br />
 
 			<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
 			<h3>

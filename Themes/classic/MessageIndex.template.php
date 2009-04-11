@@ -45,7 +45,7 @@ function template_main()
 
 			if (!empty($board['moderators']))
 				echo '<br />
-			<i class="smalltext">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</i>';
+			<em class="smalltext">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</em>';
 
 			if (!empty($board['children']))
 			{
@@ -60,7 +60,7 @@ function template_main()
 
 				echo '
 			<br />
-			<br /><i class="smalltext">', $txt['parent_boards'], ': ', implode(', ', $children), '</i>';
+			<br /><em class="smalltext">', $txt['parent_boards'], ': ', implode(', ', $children), '</em>';
 			}
 
 			echo '

@@ -129,7 +129,7 @@ function template_custom_email()
 						<strong>', $txt['sendtopic_sender_email'], ':</strong>
 						<div class="smalltext">', $txt['send_email_disclosed'], '</div>
 					</td>
-					<td><i>', $context['user']['email'], '</i></td>
+					<td><em>', $context['user']['email'], '</em></td>
 				</tr>';
 
 	echo '
