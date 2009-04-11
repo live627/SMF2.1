@@ -31,7 +31,8 @@ April 2009
  * Google attempts to browse image set by js but at the wrong location (Help.template.php) [Bug 3387]
  & Mail Settings should be just Settings for consistency (admin.english.php) [Bug 3385]
  ! Repair boards missing a label (Admin.php)
- & Admin log changed to Administration log in language strings and comments (Help.english.php, Modlog.english.php, Admin.english.php, and comments in Subs-Members.php and ModLog.php)
+ & Admin log changed to Administration log in language strings and comments (Help.english.php, Modlog.english.php, Admin.english.php, and comments in Subs-Members.php and ModLog.php) [Bug 3386]
+ ! Prevent deleting recycle bin board until has chosen alternative or disabled recycling (ManageBoards.php, ManageBoards.template.php, ManageBoards.english.php) [Bug 2981]
 
 
 March 2009

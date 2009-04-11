@@ -426,7 +426,7 @@ function EditBoard()
 		$context['board']['name'] = htmlspecialchars(strtr($context['board']['name'], array('&amp;' => '&')));
 		$context['board']['description'] = htmlspecialchars($context['board']['description']);
 		$context['board']['no_children'] = empty($boards[$_REQUEST['boardid']]['tree']['children']);
-		$context['board']['is_recycle'] = !empty($modSettings['recycle_enable']) && $modSettings['recycle_enable'] == $context['board']['id'];
+		$context['board']['is_recycle'] = !empty($modSettings['recycle_enable']) && !empty($modSettings['recycle_board']) && $modSettings['recycle_board'] == $context['board']['id'];
 	}
 
 	// As we may have come from the permissions screen keep track of where we should go on save.
