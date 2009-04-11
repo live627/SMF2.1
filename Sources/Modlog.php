@@ -49,7 +49,7 @@ function ViewModlog()
 {
 	global $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smcFunc, $settings;
 
-	// Are we looking at the moderation log or the admin log.
+	// Are we looking at the moderation log or the administration log.
 	$context['log_type'] = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'adminlog' ? 3 : 1;
 	if ($context['log_type'] == 3)
 		isAllowedTo('admin_forum');

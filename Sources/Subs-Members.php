@@ -176,7 +176,7 @@ function deleteMembers($users, $check_not_admin = false)
 		if (isset($modSettings['integrate_delete_member']) && function_exists($modSettings['integrate_delete_member']))
 			call_user_func($modSettings['integrate_delete_member'], $user[0]);
 
-		// Add it to both the moderation and admin logs as it effects both.
+		// Add it to both the moderation and administration logs as it effects both.
 		$log_inserts[] = array(
 			time(), 3, $user_info['id'], $user_info['ip'], 'delete_member',
 			0, 0, 0, serialize(array('member' => $user[0], 'name' => $user[1], 'member_acted' => $user_info['name'])),

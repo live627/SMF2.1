@@ -176,7 +176,7 @@ $helptxt['registrations'] = '<b>Registration Management</b><br />
 $helptxt['modlog'] = '<b>Moderation Log</b><br />
 	This section allows members of the moderation team to track all the moderation actions that the forum moderators have performed. To ensure that
 	moderators cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.';
-$helptxt['adminlog'] = '<b>Admin Log</b><br />
+$helptxt['adminlog'] = '<b>Administration Log</b><br />
 	This section allows members of the admin team to track some of the administrative actions that have occurred on the forum. To ensure that
 	admins cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.';
 $helptxt['warning_enable'] = '<b>User Warning System</b><br />
