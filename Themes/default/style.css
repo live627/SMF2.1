@@ -128,6 +128,17 @@ ul.normallist li
 	list-style: disc;
 }
 
+/* Define strong as bold, and em as italics */
+strong
+{
+	font-weight: bold;
+}
+
+em
+{
+	font-style: italic;
+}
+
 /* ************************************* */
 /* Some handy custom classes             */
 /* ************************************* */

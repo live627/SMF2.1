@@ -67,6 +67,17 @@ select
 	font-family: tahoma, sans-serif;
 }
 
+/* Define strong as bold, and em as italics */
+strong
+{
+	font-weight: bold;
+}
+
+em
+{
+	font-style: italic;
+}
+
 /* Standard horizontal rule.. ([hr], etc.) */
 hr, .hrcolor
 {
