@@ -35,6 +35,7 @@ April 2009
  ! Prevent deleting recycle bin board until has chosen alternative or disabled recycling (ManageBoards.php, ManageBoards.template.php, ManageBoards.english.php) [Bug 2981]
  ! Replaced all bold tags with semantically better strong tag. (117 files)
  ! Replaced all italic tags with semantically better em tag (68 files)
+ & ThemeS Settings to Theme Settings (Admin.english.php) [Bug 3384]
 
 
 March 2009
