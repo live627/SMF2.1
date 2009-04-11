@@ -30,25 +30,25 @@ function template_login()
 		echo '
 				</tr><tr class="windowbg">
 					<td align="center" colspan="2">
-						<b>', $context['description'], '</b><br />
+						<strong>', $context['description'], '</strong><br />
 						<br />
 					</td>';
 
 	// Now just get the basic information - username, password, etc.
 	echo '
 				</tr><tr class="windowbg">
-					<td width="50%" align="right"><b>', $txt['username'], ':</b></td>
+					<td width="50%" align="right"><strong>', $txt['username'], ':</strong></td>
 					<td><input type="text" name="user" size="20" value="', $context['default_username'], '" /></td>
 				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt['password'], ':</b></td>
+					<td align="right"><strong>', $txt['password'], ':</strong></td>
 					<td><input type="password" name="passwrd" value="', $context['default_password'], '" size="20" /></td>
 				</tr>';
 
 	if (!empty($modSettings['enableOpenID']))
 		echo '<tr class="windowbg">
-					<td colspan="2" align="center"><b>&mdash;', $txt['or'], '&mdash;</b></td>
+					<td colspan="2" align="center"><strong>&mdash;', $txt['or'], '&mdash;</strong></td>
 				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt['openid'], ':</b></td>
+					<td align="right"><strong>', $txt['openid'], ':</strong></td>
 					<td>
 						<input type="text" name="openid_url" class="openid_login" size="17" />&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
 					</td>
@@ -57,10 +57,10 @@ function template_login()
 				</tr>';
 
 	echo '<tr class="windowbg">
-					<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
+					<td align="right"><strong>', $txt['mins_logged_in'], ':</strong></td>
 					<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '"', $context['never_expire'] ? ' disabled="disabled"' : '', ' /></td>
 				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt['always_logged_in'], ':</b></td>
+					<td align="right"><strong>', $txt['always_logged_in'], ':</strong></td>
 					<td><input type="checkbox" name="cookieneverexp"', $context['never_expire'] ? ' checked="checked"' : '', ' class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 				</tr><tr class="windowbg">';
 	// If they have deleted their account, give them a chance to change their mind.
@@ -116,28 +116,28 @@ function template_kick_guest()
 					<td class="windowbg">
 						<table border="0" cellpadding="3" cellspacing="0" align="center">
 							<tr>
-								<td align="right"><b>', $txt['username'], ':</b></td>
+								<td align="right"><strong>', $txt['username'], ':</strong></td>
 								<td><input type="text" name="user" size="20" /></td>
 							</tr><tr>
-								<td align="right"><b>', $txt['password'], ':</b></td>
+								<td align="right"><strong>', $txt['password'], ':</strong></td>
 								<td><input type="password" name="passwrd" size="20" /></td>
 							</tr>';
 
 	if (!empty($modSettings['enableOpenID']))
 		echo '<tr>
-								<td colspan="2" align="center"><b>&mdash;', $txt['or'], '&mdash;</b></td>
+								<td colspan="2" align="center"><strong>&mdash;', $txt['or'], '&mdash;</strong></td>
 							</tr><tr>
-								<td align="right"><b>', $txt['openid'], ':</b></td>
+								<td align="right"><strong>', $txt['openid'], ':</strong></td>
 								<td><input type="text" name="openid_url" class="openid_login" size="17" /></td>
 							</tr><tr>
 								<td colspan="2" align="center"><hr /></td>
 							</tr>';
 
 	echo '<tr>
-								<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
+								<td align="right"><strong>', $txt['mins_logged_in'], ':</strong></td>
 								<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></td>
 							</tr><tr>
-								<td align="right"><b>', $txt['always_logged_in'], ':</b></td>
+								<td align="right"><strong>', $txt['always_logged_in'], ':</strong></td>
 								<td><input type="checkbox" name="cookieneverexp" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 							</tr><tr>
 								<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
@@ -184,14 +184,14 @@ function template_maintenance()
 			<td colspan="2" class="windowbg">
 				<table border="0" width="90%" align="center">
 					<tr>
-						<td><b>', $txt['username'], ':</b></td>
+						<td><strong>', $txt['username'], ':</strong></td>
 						<td><input type="text" name="user" size="15" /></td>
-						<td><b>', $txt['password'], ':</b></td>
+						<td><strong>', $txt['password'], ':</strong></td>
 						<td><input type="password" name="passwrd" size="10" /> &nbsp;</td>
 					</tr><tr>
-						<td><b>', $txt['mins_logged_in'], ':</b></td>
+						<td><strong>', $txt['mins_logged_in'], ':</strong></td>
 						<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /> &nbsp;</td>
-						<td><b>', $txt['always_logged_in'], ':</b></td>
+						<td><strong>', $txt['always_logged_in'], ':</strong></td>
 						<td><input type="checkbox" name="cookieneverexp" class="check" /></td>
 					</tr><tr>
 						<td align="center" colspan="4"><input type="submit" value="', $txt['login'], '" style="margin-top: 1ex; margin-bottom: 1ex;" /></td>
@@ -224,7 +224,7 @@ function template_admin_login()
 	echo '
 		<tr class="windowbg">
 			<td align="center" style="padding: 1ex 0;">
-				<b>', $txt['password'], ':</b> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="middle" /></a><br />';
+				<strong>', $txt['password'], ':</strong> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="middle" /></a><br />';
 
 	if (!empty($context['incorrect_password']))
 		echo '

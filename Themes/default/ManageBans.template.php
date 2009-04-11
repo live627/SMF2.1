@@ -152,13 +152,13 @@ function template_ban_edit()
 						<tr class="windowbg2" align="left">
 							<td>';
 				if ($ban_item['type'] == 'ip')
-					echo '<b>', $txt['ip'], ':</b>&nbsp;', $ban_item['ip'];
+					echo '<strong>', $txt['ip'], ':</strong>&nbsp;', $ban_item['ip'];
 				elseif ($ban_item['type'] == 'hostname')
-					echo '<b>', $txt['hostname'], ':</b>&nbsp;', $ban_item['hostname'];
+					echo '<strong>', $txt['hostname'], ':</strong>&nbsp;', $ban_item['hostname'];
 				elseif ($ban_item['type'] == 'email')
-					echo '<b>', $txt['email'], ':</b>&nbsp;', $ban_item['email'];
+					echo '<strong>', $txt['email'], ':</strong>&nbsp;', $ban_item['email'];
 				elseif ($ban_item['type'] == 'user')
-					echo '<b>', $txt['username'], ':</b>&nbsp;', $ban_item['user']['link'];
+					echo '<strong>', $txt['username'], ':</strong>&nbsp;', $ban_item['user']['link'];
 				echo '
 						</td>
 						<td class="windowbg" align="center">', $ban_item['hits'], '</td>
@@ -171,7 +171,7 @@ function template_ban_edit()
 					<tr class="catbg3">
 						<td colspan="4" align="right">
 							<div style="float: left;">
-								[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '"><b>', $txt['ban_add_trigger'], '</b></a>]
+								[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '"><strong>', $txt['ban_add_trigger'], '</strong></a>]
 							</div>
 							<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" />
 							</div>

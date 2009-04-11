@@ -28,7 +28,7 @@ function template_main()
 				<tr class="titlebg2">
 						<td class="middletext">
 								<div style="float: left; width: 3ex;">&nbsp;', $post['counter'], '&nbsp;</div>
-								<div style="float: left;">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <b>', $post['link'], '</b></div>
+								<div style="float: left;">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></div>
 								<div align="right">&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
 						</td>
 				</tr>

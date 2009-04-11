@@ -116,7 +116,7 @@ function RepairBoards()
 						<br />', $context['repair_errors']) . '<br />
 						<br />
 						' . $txt['errors_fix'] . '<br />
-						<b><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></b>';
+						<strong><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></strong>';
 		}
 		else
 			$context['raw_data'] .= '

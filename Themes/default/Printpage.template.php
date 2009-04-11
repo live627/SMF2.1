@@ -90,8 +90,8 @@ function template_main()
 		echo '
 					<br />
 					<hr size="2" width="100%" />
-					', $txt['title'], ': <b>', $post['subject'], '</b><br />
-					', $txt['post_by'], ': <b>', $post['member'], '</b> ', $txt['search_on'], ' <b>', $post['time'], '</b>
+					', $txt['title'], ': <strong>', $post['subject'], '</strong><br />
+					', $txt['post_by'], ': <strong>', $post['member'], '</strong> ', $txt['search_on'], ' <strong>', $post['time'], '</strong>
 					<hr />
 					<div style="margin: 0 5ex;">', $post['body'], '</div>';
 }

@@ -22,7 +22,7 @@ $txt['age'] = 'Age';
 $txt['no_pic'] = '(no pic)';
 $txt['latest_posts'] = 'Latest posts of: ';
 $txt['additional_info'] = 'Additional Information';
-$txt['avatar_by_url'] = 'Specify your own avatar by URL. (ex: <b>http://www.mypage.com/mypic.gif</b>)';
+$txt['avatar_by_url'] = 'Specify your own avatar by URL. (ex: <strong>http://www.mypage.com/mypic.gif</strong>)';
 $txt['my_own_pic'] = 'I have my own pic';
 $txt['date_format'] = 'The format here will be used to show dates throughout this forum.';
 $txt['time_format'] = 'Time Format';
@@ -56,7 +56,7 @@ $txt['required_security_reasons'] = 'For security reasons, your current password
 $txt['timeoffset_autodetect'] = '(auto detect)';
 
 $txt['secret_question'] = 'Secret Question';
-$txt['secret_desc'] = 'To help retrieve your password, enter a question here with an answer that <b>only</b> you know.';
+$txt['secret_desc'] = 'To help retrieve your password, enter a question here with an answer that <strong>only</strong> you know.';
 $txt['secret_desc2'] = 'Choose carefully, you wouldn\'t want someone guessing your answer!';
 $txt['secret_answer'] = 'Answer';
 $txt['secret_ask'] = 'Ask me my question';
@@ -74,7 +74,7 @@ $txt['authentication_openid_secret'] = 'Answer my &quot;secret question&quot; to
 $txt['authentication_password_email'] = 'Email me a new password';
 $txt['authentication_password_secret'] = 'Let me set a new password by answering my &quot;secret question&quot;';
 $txt['openid_secret_reminder'] = 'Please enter your answer to the question below. If you get it correct your OpenID identity will be shown.';
-$txt['reminder_openid_is'] = 'The OpenID identity associated with your account is:<br />&nbsp;&nbsp;&nbsp;&nbsp;<b>%1$s</b><br /><br />Please make a note of this for future reference.';
+$txt['reminder_openid_is'] = 'The OpenID identity associated with your account is:<br />&nbsp;&nbsp;&nbsp;&nbsp;<strong>%1$s</strong><br /><br />Please make a note of this for future reference.';
 $txt['reminder_continue'] = 'Continue';
 
 $txt['current_theme'] = 'Current Theme';

@@ -13,7 +13,7 @@ function template_main()
 	if (!$settings['show_stats_index'])
 		echo '
 			', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
-			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <b>' . $context['common_stats']['latest_member']['link'] . '</b>' . $txt['newest_member'] : '');
+			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '');
 	echo '
 		</td>
 	</tr>
@@ -41,14 +41,14 @@ function template_main()
 
 		// Prepare all the javascript settings.
 		echo '
-				<div id="smfFadeScroller" style="width: 90%; padding: 2px;"><b>', $context['news_lines'][0], '</b></div>
+				<div id="smfFadeScroller" style="width: 90%; padding: 2px;"><strong>', $context['news_lines'][0], '</strong></div>
 				<script type="text/javascript"><!-- // --><![CDATA[
 					// The fading delay (in ms.)
 					var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
 					// Fade from... what text color?  To which background color?
 					var smfFadeFrom = {"r": 0, "g": 0, "b": 0}, smfFadeTo = {"r": 255, "g": 255, "b": 255};
 					// Surround each item with... anything special?
-					var smfFadeBefore = "<b>", smfFadeAfter = "</b>";
+					var smfFadeBefore = "<strong>", smfFadeAfter = "</strong>";
 
 					var foreColor, foreEl, backEl, backColor;
 
@@ -153,7 +153,7 @@ function template_main()
 
 				echo '</a></td>
 		<td>
-			<b><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a></b>';
+			<strong><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a></strong>';
 
 				// Has it outstanding posts for approval?
 				if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
@@ -188,7 +188,7 @@ function template_main()
 							$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > $child['unapproved_posts'] ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 						}
 
-						$children[] = $child['new'] ? '<b>' . $child['link'] . '</b>' : $child['link'];
+						$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 					}
 
 					echo '
@@ -278,7 +278,7 @@ function template_info_center()
 		{
 			// latest_post has link, href, time, subject, short_subject (shortened with...), and topic. (its id.)
 			echo '
-			<b><a href="', $scripturl, '?action=recent">', $txt['recent_posts'], '</a></b>
+			<strong><a href="', $scripturl, '?action=recent">', $txt['recent_posts'], '</a></strong>
 			<div class="smalltext">
 				', $txt['recent_view'], ' &quot;', $context['latest_post']['link'], '&quot; ', $txt['recent_updated'], ' (', $context['latest_post']['time'], ')<br />
 			</div>';
@@ -334,7 +334,7 @@ function template_info_center()
 				id, name (person), age (if they have one set?), is_last. (last in list?), and is_today (birthday is today?) */
 			foreach ($context['calendar_birthdays'] as $member)
 				echo '
-				<a href="', $scripturl, '?action=profile;u=', $member['id'], '">', $member['is_today'] ? '<b>' : '', $member['name'], $member['is_today'] ? '</b>' : '', isset($member['age']) ? ' (' . $member['age'] . ')' : '', '</a>', $member['is_last'] ? '<br />' : ', ';
+				<a href="', $scripturl, '?action=profile;u=', $member['id'], '">', $member['is_today'] ? '<strong>' : '', $member['name'], $member['is_today'] ? '</strong>' : '', isset($member['age']) ? ' (' . $member['age'] . ')' : '', '</a>', $member['is_last'] ? '<br />' : ', ';
 		}
 		// Events like community get-togethers.
 		if (!empty($context['calendar_events']))
@@ -345,7 +345,7 @@ function template_info_center()
 				title, href, is_last, can_edit (are they allowed?), modify_href, and is_today. */
 			foreach ($context['calendar_events'] as $event)
 				echo '
-				', $event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: #FF0000;">*</a> ' : '', $event['href'] == '' ? '' : '<a href="' . $event['href'] . '">', $event['is_today'] ? '<b>' . $event['title'] . '</b>' : $event['title'], $event['href'] == '' ? '' : '</a>', $event['is_last'] ? '<br />' : ', ';
+				', $event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: #FF0000;">*</a> ' : '', $event['href'] == '' ? '' : '<a href="' . $event['href'] . '">', $event['is_today'] ? '<strong>' . $event['title'] . '</strong>' : $event['title'], $event['href'] == '' ? '' : '</a>', $event['is_last'] ? '<br />' : ', ';
 
 			// Show a little help text to help them along ;).
 			if ($context['calendar_can_edit'])
@@ -370,7 +370,7 @@ function template_info_center()
 			', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' : '', '<img src="', $settings['images_url'], '/icons/members.gif" alt="', $txt['members_list'], '" border="0" />', $context['show_member_list'] ? '</a>' : '', '
 		</td>
 		<td class="windowbg2" width="100%">
-			<b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $txt['members_list'] . '</a>' : $txt['members_list'], '</b>
+			<strong>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $txt['members_list'] . '</a>' : $txt['members_list'], '</strong>
 			<div class="smalltext">', $txt['memberlist_searchable'], '</div>
 		</td>
 	</tr>';
@@ -391,18 +391,18 @@ function template_info_center()
 		<td class="windowbg2" width="100%">
 			<table border="0" width="90%"><tr>
 				<td class="smalltext">
-					<div style="float: ', !$context['right_to_left'] ? 'left' : 'right', '; width: 50%;">', $txt['total_topics'], ': <b>', $context['common_stats']['total_topics'], '</b></div>', $txt['total_posts'], ': <b>', $context['common_stats']['total_posts'], '</b><br />', !empty($context['latest_post']) ? '
+					<div style="float: ', !$context['right_to_left'] ? 'left' : 'right', '; width: 50%;">', $txt['total_topics'], ': <strong>', $context['common_stats']['total_topics'], '</strong></div>', $txt['total_posts'], ': <strong>', $context['common_stats']['total_posts'], '</strong><br />', !empty($context['latest_post']) ? '
 					' . $txt['latest_post'] . ': &quot;' . $context['latest_post']['link'] . '&quot;  (' . $context['latest_post']['time'] . ')<br />' : '', '
 					<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 					<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '
 				</td>
 				<td width="32%" class="smalltext" valign="top">
-					', $txt['total_members'], ': <b><a href="', $scripturl, '?action=mlist">', $context['common_stats']['total_members'], '</a></b><br />
-					', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <b> ' . $context['common_stats']['latest_member']['link'] . '</b><br />' : '';
+					', $txt['total_members'], ': <strong><a href="', $scripturl, '?action=mlist">', $context['common_stats']['total_members'], '</a></strong><br />
+					', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong><br />' : '';
 		// If they are logged in, show their unread message count, etc..
 		if ($context['user']['is_logged'])
 			echo '
-					', $txt['your_pms'], ': <b><a href="', $scripturl, '?action=pm">', $context['user']['messages'], '</a></b> ', $txt['newmessages3'], ': <b><a href="', $scripturl, '?action=pm">', $context['user']['unread_messages'], '</a></b>';
+					', $txt['your_pms'], ': <strong><a href="', $scripturl, '?action=pm">', $context['user']['messages'], '</a></strong> ', $txt['newmessages3'], ': <strong><a href="', $scripturl, '?action=pm">', $context['user']['unread_messages'], '</a></strong>';
 		echo '
 				</td>
 			</tr></table>
@@ -472,7 +472,7 @@ function template_info_center()
 			', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" border="0" />', $context['allow_pm'] ? '</a>' : '', '
 		</td>
 		<td class="windowbg2" valign="top">
-			<b><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></b>
+			<strong><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></strong>
 			<div class="smalltext">
 				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], ' <a href="', $scripturl, '?action=pm">', $txt['here'], '</a> ', $txt['to_view'], '
 			</div>
@@ -496,16 +496,16 @@ function template_info_center()
 			<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table border="0" cellpadding="2" cellspacing="0" width="100%"><tr>
 					<td valign="middle" align="left">
-						<label for="user"><b>', $txt['username'], ':</b><br /><input type="text" name="user" id="user" size="15" /></label>
+						<label for="user"><strong>', $txt['username'], ':</strong><br /><input type="text" name="user" id="user" size="15" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="passwrd"><b>', $txt['password'], ':</b><br /><input type="password" name="passwrd" id="passwrd" size="15" /></label>
+						<label for="passwrd"><strong>', $txt['password'], ':</strong><br /><input type="password" name="passwrd" id="passwrd" size="15" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="cookielength"><b>', $txt['mins_logged_in'], ':</b><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
+						<label for="cookielength"><strong>', $txt['mins_logged_in'], ':</strong><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="cookieneverexp"><b>', $txt['always_logged_in'], ':</b><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
+						<label for="cookieneverexp"><strong>', $txt['always_logged_in'], ':</strong><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
 					</td>
 					<td valign="middle" align="left">
 						<input type="submit" value="', $txt['login'], '" />

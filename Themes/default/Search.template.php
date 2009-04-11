@@ -32,7 +32,7 @@ function template_main()
 	if ($context['simple_search'])
 	{
 		echo '
-					<b>', $txt['search_for'], ':</b><br />
+					<strong>', $txt['search_for'], ':</strong><br />
 					<table border="0" cellpadding="2" cellspacing="0">
 						<tr>
 							<td>
@@ -54,7 +54,7 @@ function template_main()
 		{
 			echo '
 					<div style="padding: 0.1em;">
-						<b>', $txt['search_visual_verification_label'], ':</b>
+						<strong>', $txt['search_visual_verification_label'], ':</strong>
 						<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
 						<div style="text-align: right;">
 							<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" />
@@ -74,7 +74,7 @@ function template_main()
 						<table cellpadding="1" cellspacing="3" border="0">
 							<tr>
 								<td width="20%" align="right" valign="top">
-									<b>', $txt['search_for'], ':</b>
+									<strong>', $txt['search_for'], ':</strong>
 								</td>
 								<td>
 									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" />
@@ -109,7 +109,7 @@ function template_main()
 						<table cellpadding="1" cellspacing="3" border="0">
 							<tr>
 								<td width="20%" align="right">
-									<b>', $txt['by_user'], ':</b>
+									<strong>', $txt['by_user'], ':</strong>
 								</td>
 								<td>
 									<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" tabindex="', $context['tabindex']++, '" />
@@ -117,7 +117,7 @@ function template_main()
 							</tr>
 							<tr>
 								<td width="20%" align="right">
-									<b>', $txt['search_order'], ':</b>
+									<strong>', $txt['search_order'], ':</strong>
 								</td>
 								<td>
 									<select name="sort" tabindex="', $context['tabindex']++, '">
@@ -131,7 +131,7 @@ function template_main()
 							</tr>
 							<tr>
 								<td width="20%" align="right" valign="top">
-									<b>', $txt['search_options'], ':</b>
+									<strong>', $txt['search_options'], ':</strong>
 								</td>
 								<td>
 									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_show_complete_messages'], '</label><br />
@@ -141,7 +141,7 @@ function template_main()
 						</table>
 					</div>
 					<div style="text-align: center; padding: 1em;">
-						<b>', $txt['search_post_age'], ': </b> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" /> ', $txt['days_word'], '.
+						<strong>', $txt['search_post_age'], ': </strong> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" /> ', $txt['days_word'], '.
 					</div>';
 
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
@@ -153,7 +153,7 @@ function template_main()
 		{
 			echo '
 					<fieldset class="windowbg2" style="padding: 10px;">
-						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
+						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a><br />
 
 						<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex;', $context['boards_check_all'] ? ' display: none;' : '', '">';
 
@@ -193,7 +193,7 @@ function template_main()
 		{
 			echo '
 					<div style="padding: 1em;">
-						<b>', $txt['verification'], ':</b>
+						<strong>', $txt['verification'], ':</strong>
 						', template_control_verification($context['visual_verification_id'], 'all'), '
 					</div>';
 		}
@@ -257,7 +257,7 @@ function template_results()
 
 		echo '
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-						<b>', $txt['search_for'], ':</b>
+						<strong>', $txt['search_for'], ':</strong>
 						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
 						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
 
@@ -336,7 +336,7 @@ function template_results()
 					<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
 				<td class="windowbg' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" valign="middle">
 					' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
-					' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><b>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</b>' : '' , '
+					' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><strong>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</strong>' : '' , '
 				<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div>';
 
 			foreach ($topic['matches'] as $message)
@@ -474,7 +474,7 @@ function template_results()
 			echo '
 		<table border="0" width="100%" cellspacing="0" cellpadding="0" class="bordercolor"><tr><td>
 			<table border="0" width="100%" cellpadding="2" cellspacing="1" class="bordercolor"><tr class="windowbg2"><td><br />
-				<b>(', $txt['search_no_results'], ')</b><br /><br />
+				<strong>(', $txt['search_no_results'], ')</strong><br /><br />
 			</td></tr></table>
 		</td></tr></table>';
 

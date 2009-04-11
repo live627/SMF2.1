@@ -559,7 +559,7 @@ SmfEditor.prototype.updateEditorControls = function()
 				continue;
 		}
 
-		sTree += (i != 0 ? '&nbsp;<b>&gt;</b>' : '') + '&nbsp;' + sCrumbName;
+		sTree += (i != 0 ? '&nbsp;<strong>&gt;</strong>' : '') + '&nbsp;' + sCrumbName;
 		aAllCrumbs[aAllCrumbs.length] = sCrumbName;
 	}
 

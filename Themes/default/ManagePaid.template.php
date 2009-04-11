@@ -102,7 +102,7 @@ function template_modify_subscription()
 			</tr><tr class="windowbg">
 				<td colspan="2" align="left">
 					<input type="radio" name="duration_type" id="duration_type_fixed" value="fixed" ', empty($context['sub']['duration']) || $context['sub']['duration'] == 'fixed' ? 'checked="checked"' : '', ' class="check" onclick="toggleDuration(\'fixed\');" />
-					<b>', $txt['paid_mod_fixed_price'], '</b>
+					<strong>', $txt['paid_mod_fixed_price'], '</strong>
 				</td>
 			</tr><tr class="windowbg2">
 				<td align="left" colspan="2">
@@ -129,7 +129,7 @@ function template_modify_subscription()
 			</tr><tr class="windowbg">
 				<td colspan="2" align="left">
 					<input type="radio" name="duration_type" id="duration_type_flexible" value="flexible" ', !empty($context['sub']['duration']) && $context['sub']['duration'] == 'flexible' ? 'checked="checked"' : '', ' class="check" onclick="toggleDuration(\'flexible\');" />
-					<b>', $txt['paid_mod_flexible_price'], '</b>
+					<strong>', $txt['paid_mod_flexible_price'], '</strong>
 				</td>
 			</tr><tr class="windowbg2">
 				<td align="left" colspan="2">
@@ -262,7 +262,7 @@ function template_modify_user_subscription()
 	if ($context['action_type'] == 'add')
 		echo '
 			<tr class="windowbg2">
-				<td align="right"><b>', $txt['paid_username'], ':</b><br /><span class="smalltext">', $txt['one_username'], '</span></td>
+				<td align="right"><strong>', $txt['paid_username'], ':</strong><br /><span class="smalltext">', $txt['one_username'], '</span></td>
 				<td>
 					<input type="text" name="name" id="name_control" value="', $context['sub']['username'], '" size="30" />
 				</td>
@@ -270,7 +270,7 @@ function template_modify_user_subscription()
 
 	echo '
 			<tr class="windowbg2" valign="top">
-				<td width="50%" align="right"><b>', $txt['start_date_and_time'], ':</b></td>
+				<td width="50%" align="right"><strong>', $txt['start_date_and_time'], ':</strong></td>
 				<td>
 					<select name="year" id="year" onchange="generateDays(\'\');">';
 
@@ -305,7 +305,7 @@ function template_modify_user_subscription()
 					', $txt['minute'], ':<input type="text" name="minute" value="', $context['sub']['start']['min'], '" size="2" />
 				</td>
 			</tr><tr class="windowbg2" valign="top">
-				<td width="50%" align="right"><b>', $txt['end_date_and_time'], ':</b></td>
+				<td width="50%" align="right"><strong>', $txt['end_date_and_time'], ':</strong></td>
 				<td>
 					<select name="yearend" id="yearend" onchange="generateDays(\'end\');">';
 
@@ -340,7 +340,7 @@ function template_modify_user_subscription()
 					', $txt['minute'], ':<input type="text" name="minuteend" value="', $context['sub']['end']['min'], '" size="2" />
 				</td>
 			</tr><tr class="windowbg2">
-				<td align="right"><b>', $txt['paid_status'], ':</b></td>
+				<td align="right"><strong>', $txt['paid_status'], ':</strong></td>
 				<td>
 					<select name="status">
 						<option value="0" ', $context['sub']['status'] == 0 ? 'selected="selected"' : '', '>', $txt['paid_finished'], '</option>
@@ -458,12 +458,12 @@ function template_user_subscription()
 
 			if (!$subscription['flexible'])
 				echo '
-					<div style="float: left; height: 100%; margin: 2px;"><b>', $txt['paid_duration'], ':</b> ', $subscription['length'], '</div>';
+					<div style="float: left; height: 100%; margin: 2px;"><strong>', $txt['paid_duration'], ':</strong> ', $subscription['length'], '</div>';
 
 			if ($context['user']['is_owner'])
 			{
 				echo '
-					<b>', $txt['paid_cost'], ':</b>';
+					<strong>', $txt['paid_cost'], ':</strong>';
 
 				if ($subscription['flexible'])
 				{
@@ -535,7 +535,7 @@ function template_user_subscription()
 				<td>
 					', (allowedTo('admin_forum') ? '<a href="' . $scripturl . '?action=admin;area=paidsubscribe;sa=modifyuser;lid=' . $sub['id'] . '">' . $sub['name'] . '</a>' : $sub['name']), '
 				</td><td>
-					<span style="color: ', ($sub['status'] == 2 ? 'green' : ($sub['status'] == 1 ? 'red' : 'orange')), '"><b>', $sub['status_text'], '</b></span>
+					<span style="color: ', ($sub['status'] == 2 ? 'green' : ($sub['status'] == 1 ? 'red' : 'orange')), '"><strong>', $sub['status_text'], '</strong></span>
 				</td><td>
 					', $sub['start'], '
 				</td><td>
@@ -561,7 +561,7 @@ function template_choose_payment()
 				<td class="smalltext">', $txt['paid_confirm_desc'], '</td>
 			</tr>
 			<tr class="windowbg3">
-				<td><b>', $txt['subscription'], ':</b> ', $context['sub']['name'], ' | <b>', $txt['paid_cost'], ':</b> ', $context['cost'], '</td>
+				<td><strong>', $txt['subscription'], ':</strong> ', $context['sub']['name'], ' | <strong>', $txt['paid_cost'], ':</strong> ', $context['cost'], '</td>
 			</tr>';
 
 	// Do all the gateway options.
@@ -569,7 +569,7 @@ function template_choose_payment()
 	{
 		echo '
 			<tr class="catbg">
-				<td><b>', $gateway['title'], '</b></td>
+				<td><strong>', $gateway['title'], '</strong></td>
 			</tr>
 			<tr class="windowbg2">
 				<td>

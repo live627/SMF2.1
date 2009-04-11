@@ -549,7 +549,7 @@ while (1)																	\
 #define SMFLIB_FORMAT_CHECK_SPACE "%1$s - check database storage space."
 #define SMFLIB_FORMAT_ERROR_CONTEXT "%1$s<br />%2$s: %3$s<br />%4$s: %5$d"
 #define SMFLIB_FORMAT_ERROR_OR_WARNING "<br />\n\
-		<b>%1$s</b>: %2$s in <b>%3$s</b> on line <b>%4$d</b><br />"
+		<strong>%1$s</strong>: %2$s in <strong>%3$s</strong> on line <strong>%4$d</strong><br />"
 #define SMFLIB_FORMAT_IP_QUERY_PART "((%1$s BETWEEN bi.ip_low1 AND bi.ip_high1)\n\
 	AND (%2$s BETWEEN bi.ip_low2 AND bi.ip_high2)\n\
 	AND (%3$s BETWEEN bi.ip_low3 AND bi.ip_high3)\n\

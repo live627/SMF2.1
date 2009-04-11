@@ -86,7 +86,7 @@ else
 					<li>', $action['debug'], ' (', $action['filename'], ')</li>';
 		elseif ($action['type'] == 'failure')
 			echo '
-					<li><b>The following could not be found (or should not have been) in ', $action['filename'], ':</b> <i>(note that it may not look like you typed it, this is normal.)</i><br />
+					<li><strong>The following could not be found (or should not have been) in ', $action['filename'], ':</strong> <i>(note that it may not look like you typed it, this is normal.)</i><br />
 					<pre style="width: 98%; overflow: auto; border: 1px solid red;">', $action['search'], '</pre></li>';
 		elseif ($action['type'] == 'result')
 		{
@@ -94,7 +94,7 @@ else
 				</ol>
 
 				', $action['status'] ? 'The modification would have installed properly, had this not been a test.' : '
-				<b>Warning:</b> This modification had errors in it!';
+				<strong>Warning:</strong> This modification had errors in it!';
 			$done = true;
 		}
 	}

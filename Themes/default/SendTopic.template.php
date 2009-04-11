@@ -45,26 +45,26 @@ function template_main()
 	// Just show all the input boxes, in a line...
 	echo '
 				<tr class="windowbg">
-					<td align="right"><b>', $txt['sendtopic_sender_name'], ':</b></td>
+					<td align="right"><strong>', $txt['sendtopic_sender_name'], ':</strong></td>
 					<td align="left"><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" /></td>
 				</tr>
 				<tr class="windowbg">
-					<td align="right"><b>', $txt['sendtopic_sender_email'], ':</b></td>
+					<td align="right"><strong>', $txt['sendtopic_sender_email'], ':</strong></td>
 					<td align="left"><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" /></td>
 				</tr>
 				<tr class="windowbg">
-					<td align="right"><b>', $txt['sendtopic_comment'], ':</b></td>
+					<td align="right"><strong>', $txt['sendtopic_comment'], ':</strong></td>
 					<td align="left"><input type="text" name="comment" size="24" maxlength="100" /></td>
 				</tr>
 				<tr class="windowbg">
 					<td align="center" colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 				</tr>
 				<tr class="windowbg">
-					<td align="right"><b>', $txt['sendtopic_receiver_name'], ':</b></td>
+					<td align="right"><strong>', $txt['sendtopic_receiver_name'], ':</strong></td>
 					<td align="left"><input type="text" name="r_name" size="24" maxlength="40" /></td>
 				</tr>
 				<tr class="windowbg">
-					<td align="right"><b>', $txt['sendtopic_receiver_email'], ':</b></td>
+					<td align="right"><strong>', $txt['sendtopic_receiver_email'], ':</strong></td>
 					<td align="left"><input type="text" name="r_email" size="24" maxlength="50" /></td>
 				</tr>
 				<tr class="windowbg">
@@ -90,7 +90,7 @@ function template_custom_email()
 					</td>
 				</tr>
 				<tr class="windowbg">
-					<td width="30%"><b>', $txt['sendtopic_receiver_name'], ':</b></td>
+					<td width="30%"><strong>', $txt['sendtopic_receiver_name'], ':</strong></td>
 					<td>', $context['recipient']['link'], '</td>
 				</tr>';
 
@@ -98,7 +98,7 @@ function template_custom_email()
 	if ($context['can_view_receipient_email'])
 		echo '
 				<tr class="windowbg">
-					<td width="30%"><b>', $txt['sendtopic_receiver_email'], ':</b></td>
+					<td width="30%"><strong>', $txt['sendtopic_receiver_email'], ':</strong></td>
 					<td>', $context['recipient']['email_link'], '</td>
 				</tr>
 				<tr class="windowbg">
@@ -111,12 +111,12 @@ function template_custom_email()
 	if ($context['user']['is_guest'])
 		echo '
 				<tr class="windowbg" valign="top">
-					<td width="30%"><b>', $txt['sendtopic_sender_name'], ':</b></td>
+					<td width="30%"><strong>', $txt['sendtopic_sender_name'], ':</strong></td>
 					<td><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" /></td>
 				</tr>
 				<tr class="windowbg" valign="top">
 					<td width="30%">
-						<b>', $txt['sendtopic_sender_email'], ':</b>
+						<strong>', $txt['sendtopic_sender_email'], ':</strong>
 						<div class="smalltext">', $txt['send_email_disclosed'], '</div>
 					</td>
 					<td><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" /></td>
@@ -126,7 +126,7 @@ function template_custom_email()
 		echo '
 				<tr class="windowbg" valign="top">
 					<td width="30%">
-						<b>', $txt['sendtopic_sender_email'], ':</b>
+						<strong>', $txt['sendtopic_sender_email'], ':</strong>
 						<div class="smalltext">', $txt['send_email_disclosed'], '</div>
 					</td>
 					<td><i>', $context['user']['email'], '</i></td>
@@ -134,12 +134,12 @@ function template_custom_email()
 
 	echo '
 				<tr class="windowbg">
-					<td width="30%"><b>', $txt['send_email_subject'], ':</b></td>
+					<td width="30%"><strong>', $txt['send_email_subject'], ':</strong></td>
 					<td><input type="text" name="email_subject" size="50" maxlength="100" /></td>
 				</tr>
 				<tr class="windowbg" valign="top">
 					<td width="30%">
-						<b>', $txt['message'], ':</b>
+						<strong>', $txt['message'], ':</strong>
 					</td>
 					<td>
 						<textarea name="email_body" rows="10" cols="20" style="width: 90%;"></textarea>

@@ -1010,7 +1010,7 @@ function MembersAwaitingActivation()
 	if (isset($context['available_filters']) && count($context['available_filters']) > 1)
 	{
 		$filterOptions = '
-			<b>' . $txt['admin_browse_filter_by'] . ':</b>
+			<strong>' . $txt['admin_browse_filter_by'] . ':</strong>
 			<select name="filter" onchange="this.form.submit();">';
 		foreach ($context['available_filters'] as $filter)
 			$filterOptions .= '
@@ -1030,7 +1030,7 @@ function MembersAwaitingActivation()
 	if (!empty($context['show_filter']) && !empty($context['available_filters']))
 		$listOptions['additional_rows'][] = array(
 			'position' => 'above_column_headers',
-			'value' => '<span class="smalltext"><b>' . $txt['admin_browse_filter_show'] . ':</b> ' . $context['available_filters'][0]['desc'] . '</span>',
+			'value' => '<span class="smalltext"><strong>' . $txt['admin_browse_filter_show'] . ':</strong> ' . $context['available_filters'][0]['desc'] . '</span>',
 			'style' => 'text-align: left;',
 			'class' => 'windowbg2',
 		);

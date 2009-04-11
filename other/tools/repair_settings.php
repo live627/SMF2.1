@@ -557,7 +557,7 @@ function show_settings()
 
 				if (isset($info[2]))
 					echo '
-								<div style="font-size: smaller;">', $txt['default_value'], ': &quot;<b><a href="javascript:void(0);" onclick="document.getElementById(\'', $setting, '\').value = ', $info[2] == '' ? '\'\';">' . $txt['recommend_blank'] : 'getInnerHTML(this);">' . $info[2], '</a></b>&quot;.</div>';
+								<div style="font-size: smaller;">', $txt['default_value'], ': &quot;<strong><a href="javascript:void(0);" onclick="document.getElementById(\'', $setting, '\').value = ', $info[2] == '' ? '\'\';">' . $txt['recommend_blank'] : 'getInnerHTML(this);">' . $info[2], '</a></strong>&quot;.</div>';
 			}
 
 			echo '

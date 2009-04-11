@@ -124,7 +124,7 @@ function step1($error_message = '')
 						</table>
 
 						<h2>Database backup file</h2>
-						<h3>The database backup will be created as a file on your server.  Please specify where you want it saved.<br />', !function_exists('gzencode') ? '<b>Warning</b>: To create a compressed backups, the <b>zlib library</b> is needed, which you don\'t seem to have on this server.' : '', '</h3>
+						<h3>The database backup will be created as a file on your server.  Please specify where you want it saved.<br />', !function_exists('gzencode') ? '<strong>Warning</strong>: To create a compressed backups, the <strong>zlib library</strong> is needed, which you don\'t seem to have on this server.' : '', '</h3>
 
 						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
 							<tr>
@@ -465,7 +465,7 @@ function get_ftp_info()
 							<tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_server">Server:</label></td>
 								<td>
-									<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><b>Port:&nbsp;</b></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" /></div>
+									<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><strong>Port:&nbsp;</strong></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" /></div>
 									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost', '" style="width: 70%;" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">This should be the server and port for your FTP server.</div>
 								</td>

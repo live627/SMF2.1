@@ -196,7 +196,7 @@ function initialize_inputs()
 		<title>', $_GET['pass_string'], '</title>
 	</head>
 	<body style="background-color: #D4D4D4; margin-top: 16%; text-align: center; font-size: 16pt;">
-		<b>', $_GET['pass_string'], '</b>
+		<strong>', $_GET['pass_string'], '</strong>
 	</body>
 </html>';
 		exit;
@@ -790,7 +790,7 @@ function DatabaseSettings()
 		// Still no connection?  Big fat error message :P.
 		if (!$db_connection)
 		{
-			$incontext['error'] = $txt['error_db_connect'] . '<div style="margin: 2.5ex; font-family: monospace;"><b>' . $db_error . '</b></div>';
+			$incontext['error'] = $txt['error_db_connect'] . '<div style="margin: 2.5ex; font-family: monospace;"><strong>' . $db_error . '</strong></div>';
 			return false;
 		}
 
@@ -2102,7 +2102,7 @@ function template_welcome_message()
 		<h3>', sprintf($txt['install_welcome_desc'], $GLOBALS['current_smf_version']), '</h3>
 		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['error_warning_notice'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['error_warning_notice'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', sprintf($txt['error_script_outdated'], '<i id="smfVersion" style="white-space: nowrap;">??</i>', '<i id="yourVersion" style="white-space: nowrap;">' . $GLOBALS['current_smf_version'] . '</i>'), '
 			</div>
@@ -2155,7 +2155,7 @@ function template_warning_divs()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', $incontext['error'], '
 			</div>
@@ -2165,7 +2165,7 @@ function template_warning_divs()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_warning'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', $incontext['warning'], '
 			</div>
@@ -2210,7 +2210,7 @@ function template_chmod_files()
 				<tr>
 					<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
 					<td>
-						<div style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', '; margin-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 1px;"><label for="ftp_port" class="textbox"><b>', $txt['ftp_port'], ':&nbsp;</b></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $incontext['ftp']['port'], '" /></div>
+						<div style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', '; margin-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 1px;"><label for="ftp_port" class="textbox"><strong>', $txt['ftp_port'], ':&nbsp;</strong></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $incontext['ftp']['port'], '" /></div>
 						<input type="text" size="30" name="ftp_server" id="ftp_server" value="', $incontext['ftp']['server'], '" style="width: 70%;" />
 						<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_server_info'], '</div>
 					</td>
@@ -2438,7 +2438,7 @@ function template_populate_database()
 
 		foreach ($incontext['failures'] as $line => $fail)
 			echo '
-						<li><b>', $txt['error_db_queries_line'], $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '</li>';
+						<li><strong>', $txt['error_db_queries_line'], $line + 1, ':</strong> ', nl2br(htmlspecialchars($fail)), '</li>';
 
 		echo '
 				</ul>';

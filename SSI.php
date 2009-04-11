@@ -208,7 +208,7 @@ function ssi_welcome($output_method = 'echo')
 		if ($context['user']['is_guest'])
 			echo sprintf($txt['welcome_guest'], $txt['guest_title']);
 		else
-			echo $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', allowedTo('pm_read') ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt['message_lowercase'] : $txt['msg_alert_messages']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
+			echo $txt['hello_member'], ' <strong>', $context['user']['name'], '</strong>', allowedTo('pm_read') ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt['message_lowercase'] : $txt['msg_alert_messages']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
 	}
 	// Don't echo... then do what?!
 	else
@@ -1129,7 +1129,7 @@ function ssi_recentPoll($topPollInstead = false, $output_method = 'echo')
 			<input type="hidden" name="poll" value="', $return['id'], '" />
 			<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
 				<tr>
-					<td><b>', $return['question'], '</b></td>
+					<td><strong>', $return['question'], '</strong></td>
 				</tr>
 				<tr>
 					<td>', $return['allowed_warning'], '</td>
@@ -1290,7 +1290,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 				<input type="hidden" name="poll" value="', $return['id'], '" />
 				<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
 					<tr>
-						<td><b>', $return['question'], '</b></td>
+						<td><strong>', $return['question'], '</strong></td>
 					</tr>
 					<tr>
 						<td>', $return['allowed_warning'], '</td>
@@ -1313,7 +1313,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 		echo '
 				<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
 					<tr>
-						<td colspan="2"><b>', $return['question'], '</b></td>
+						<td colspan="2"><strong>', $return['question'], '</strong></td>
 					</tr>';
 		foreach ($return['options'] as $option)
 			echo '
@@ -1323,7 +1323,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 					</tr>';
 		echo '
 					<tr>
-						<td colspan="2"><b>', $txt['poll_total_voters'], ': ', $return['total_votes'], '</b></td>
+						<td colspan="2"><strong>', $txt['poll_total_voters'], ': ', $return['total_votes'], '</strong></td>
 					</tr>
 				</table>';
 	}
@@ -1730,7 +1730,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	{
 		echo '
 			<div>
-				<a href="', $news['href'], '">', $news['icon'], '</a> <b>', $news['subject'], '</b>
+				<a href="', $news['href'], '">', $news['icon'], '</a> <strong>', $news['subject'], '</strong>
 				<div class="smaller">', $news['time'], ' ', $txt['by'], ' ', $news['poster']['link'], '</div>
 
 				<div class="post" style="padding: 2ex 0;">', $news['body'], '</div>

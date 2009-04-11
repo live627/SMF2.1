@@ -55,7 +55,7 @@ $txt['autoOptMaxOnline'] = 'Maximum users online when optimizing<div class="smal
 $txt['autoFixDatabase'] = 'Automatically fix broken tables';
 $txt['allow_disableAnnounce'] = 'Allow users to disable announcements';
 $txt['disallow_sendBody'] = 'Don\'t allow post text in notifications';
-$txt['queryless_urls'] = 'Search engine friendly URLs<div class="smalltext"><b>Apache/Lighttpd only!</b></div>';
+$txt['queryless_urls'] = 'Search engine friendly URLs<div class="smalltext"><strong>Apache/Lighttpd only!</strong></div>';
 $txt['max_image_width'] = 'Max width of posted pictures (0 = disable)';
 $txt['max_image_height'] = 'Max height of posted pictures (0 = disable)';
 $txt['enableReportPM'] = 'Enable reporting of personal messages';
@@ -88,7 +88,7 @@ $txt['karmaLabel'] = 'Karma label';
 $txt['karmaApplaudLabel'] = 'Karma applaud label';
 $txt['karmaSmiteLabel'] = 'Karma smite label';
 
-$txt['caching_information'] = '<div align="center"><b><u>Important! Read this first before enabling these features.</b></u></div><br />
+$txt['caching_information'] = '<div align="center"><strong><u>Important! Read this first before enabling these features.</strong></u></div><br />
 	SMF supports caching through the use of accelerators. The currently supported accelerators include:<br />
 	<ul class="normallist">
 		<li>APC</li>
@@ -111,13 +111,13 @@ $txt['caching_information'] = '<div align="center"><b><u>Important! Read this fi
 	%s
 	<hr />';
 
-$txt['detected_no_caching'] = '<b class="alert">SMF has not been able to detect a compatible accelerator on your server.</b>';
-$txt['detected_APC'] = '<b style="color: green">SMF has detected that your server has APC installed.</b>';
-$txt['detected_eAccelerator'] = '<b style="color: green">SMF has detected that your server has eAccelerator installed.</b>';
-$txt['detected_MMCache'] = '<b style="color: green">SMF has detected that your server has MMCache installed.</b>';
-$txt['detected_Zend'] = '<b style="color: green">SMF has detected that your server has Zend installed.</b>';
-$txt['detected_Memcached'] = '<b style="color: green">SMF has detected that your server has Memcached installed.</b>';
-$txt['detected_XCache'] = '<b style="color: green">SMF has detected that your server has XCache installed.</b>';
+$txt['detected_no_caching'] = '<strong class="alert">SMF has not been able to detect a compatible accelerator on your server.</strong>';
+$txt['detected_APC'] = '<strong style="color: green">SMF has detected that your server has APC installed.</strong>';
+$txt['detected_eAccelerator'] = '<strong style="color: green">SMF has detected that your server has eAccelerator installed.</strong>';
+$txt['detected_MMCache'] = '<strong style="color: green">SMF has detected that your server has MMCache installed.</strong>';
+$txt['detected_Zend'] = '<strong style="color: green">SMF has detected that your server has Zend installed.</strong>';
+$txt['detected_Memcached'] = '<strong style="color: green">SMF has detected that your server has Memcached installed.</strong>';
+$txt['detected_XCache'] = '<strong style="color: green">SMF has detected that your server has XCache installed.</strong>';
 
 $txt['cache_enable'] = 'Caching Level';
 $txt['cache_off'] = 'No caching';
@@ -152,7 +152,7 @@ $txt['setting_image_verification_simple'] = 'Simple - Overlapping colored letter
 $txt['setting_image_verification_medium'] = 'Medium - Overlapping colored letters, with noise';
 $txt['setting_image_verification_high'] = 'High - Angled letters, considerable noise';
 $txt['setting_image_verification_sample'] = 'Sample';
-$txt['setting_image_verification_nogd'] = '<b>Note:</b> as this server does not have the GD library installed the different complexity settings will have no effect.';
+$txt['setting_image_verification_nogd'] = '<strong>Note:</strong> as this server does not have the GD library installed the different complexity settings will have no effect.';
 $txt['setup_verification_questions'] = 'Verification Questions';
 $txt['setup_verification_questions_desc'] = '<span class="smalltext">If you want users to answer verification questions in order to stop spam bots you should setup a number of questions in the table below. You should pick relatively simple questions; answers are not case sensitive. You may use BBC in the questions for formatting, to remove a question simply delete the contents of that line.</span>';
 $txt['setup_verification_question'] = 'Question';
@@ -280,8 +280,8 @@ $txt['languages_character_set'] = 'Character Set';
 $txt['languages_users'] = 'Users';
 $txt['language_settings_writable'] = 'Warning: Settings.php is not writable so the default language setting cannot be saved.';
 $txt['edit_languages'] = 'Edit Languages';
-$txt['lang_file_not_writable'] = '<b>Warning:</b> The primary language file (%1$s) is not writable. You must make this writable before you can make any changes.';
-$txt['lang_entries_not_writable'] = '<b>Warning:</b> The language file you wish to edit (%1$s) is not writable. You must make this writable before you can make any changes.';
+$txt['lang_file_not_writable'] = '<strong>Warning:</strong> The primary language file (%1$s) is not writable. You must make this writable before you can make any changes.';
+$txt['lang_entries_not_writable'] = '<strong>Warning:</strong> The language file you wish to edit (%1$s) is not writable. You must make this writable before you can make any changes.';
 $txt['languages_ltr'] = 'Right to Left';
 
 $txt['add_language'] = 'Add Language';

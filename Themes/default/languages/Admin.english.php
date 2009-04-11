@@ -173,7 +173,7 @@ $txt['ban_modify'] = 'Modify';
 $txt['ban_name'] = 'Ban name';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['ban_edit'] = 'Edit ban';
-$txt['ban_add_notes'] = '<b>Note</b>: after creating the above ban, you can add additional entries that trigger the ban, like IP addresses, hostnames and email addresses.';
+$txt['ban_add_notes'] = '<strong>Note</strong>: after creating the above ban, you can add additional entries that trigger the ban, like IP addresses, hostnames and email addresses.';
 $txt['ban_expired'] = 'Expired / disabled';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['ban_restriction_empty'] = 'No restriction selected.';
@@ -504,7 +504,7 @@ $txt['language_edit'] = 'Edit Languages';
 $txt['language_add'] = 'Add Language';
 $txt['language_settings'] = 'Settings';
 
-$txt['copyright_ends_in'] = 'Your subscription to remove the SMF copyright notice ends in <b>%1$s</b> days.';
+$txt['copyright_ends_in'] = 'Your subscription to remove the SMF copyright notice ends in <strong>%1$s</strong> days.';
 $txt['copyright_click_renew'] = 'Click <a href="http://www.simplemachines.org/copyright/renew.php?key=%1$s" class="alert">here</a> to renew';
 $txt['copyright_removal'] = 'Copyright Removal';
 $txt['copyright_removal_desc'] = 'In order to remove the copyright from your SMF installation you will need the code purchased from the Simple Machines website. If you have not yet purchased a code please click <a href="http://www.simplemachines.org/copyright/index.php">here</a>. Once the code has been entered and verified the copyright will be hidden until your subscription expires. The time remaining will be shown on the admin center.';

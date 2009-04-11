@@ -22,7 +22,7 @@ function template_wap_boardindex()
 	// This is the "main" card...
 	echo '
 	<card id="main" title="', $context['page_title'], '">
-		<p><b>', $context['forum_name_html_safe'], '</b><br /></p>';
+		<p><strong>', $context['forum_name_html_safe'], '</strong><br /></p>';
 
 	// Show an anchor for each category.
 	foreach ($context['categories'] as $category)
@@ -43,7 +43,7 @@ function template_wap_boardindex()
 		// Begin the card, and make the name available.
 		echo '
 	<card id="c', $category['id'], '" title="', strip_tags($category['name']), '">
-		<p><b>', strip_tags($category['name']), '</b><br /></p>';
+		<p><strong>', strip_tags($category['name']), '</strong><br /></p>';
 
 		// Now show a link for each board.
 		foreach ($category['boards'] as $board)
@@ -62,7 +62,7 @@ function template_wap_messageindex()
 
 	echo '
 	<card id="main" title="', $context['page_title'], '">
-		<p><b>', $context['name'], '</b></p>';
+		<p><strong>', $context['name'], '</strong></p>';
 
 	if (isset($context['boards']) && count($context['boards']) > 0)
 	{
@@ -96,8 +96,8 @@ function template_wap_display()
 
 	echo '
 	<card id="main" title="', $context['page_title'], '">
-		<p><b>' . $context['linktree'][1]['name'] . ' > ' . $context['linktree'][count($context['linktree']) - 2]['name'] . '</b></p>
-		<p><b>', $context['subject'], '</b></p>
+		<p><strong>' . $context['linktree'][1]['name'] . ' > ' . $context['linktree'][count($context['linktree']) - 2]['name'] . '</strong></p>
+		<p><strong>', $context['subject'], '</strong></p>
 		<p>', $txt['pages'], ': ', !empty($context['links']['prev']) ? '<a href="' . $context['links']['first'] . ';wap">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';wap">&lt;</a> ' : '', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', !empty($context['links']['next']) ? ' <a href="' . $context['links']['next'] . ';wap">&gt;</a> <a href="' . $context['links']['last'] . ';wap">&gt;&gt;</a> ' : '', '<br /><br /></p>';
 
 	while ($message = $context['get_message']())
@@ -142,7 +142,7 @@ function template_wap_login()
 	if (isset($context['login_errors']))
 		foreach ($context['login_errors'] as $error)
 			echo '
-			<p><b>', $error, '</b></p>';
+			<p><strong>', $error, '</strong></p>';
 
 	echo '
 		<p>', $txt['username'], ':<br />
@@ -167,7 +167,7 @@ function template_wap_recent()
 
 	echo '
 	<card id="recent" title="', $context['page_title'], '">
-		<p><b>', $_REQUEST['action'] == 'unread' ? $txt['wireless_recent_unread_posts'] : $txt['wireless_recent_unread_replies'], '</b></p>';
+		<p><strong>', $_REQUEST['action'] == 'unread' ? $txt['wireless_recent_unread_posts'] : $txt['wireless_recent_unread_replies'], '</strong></p>';
 
 	if (empty($context['topics']))
 		echo '
@@ -193,7 +193,7 @@ function template_wap_error()
 
 	echo '
 	<card id="main" title="', $context['page_title'], '">
-		<p><b>', $context['error_title'], '</b></p>
+		<p><strong>', $context['error_title'], '</strong></p>
 		<p>', $context['error_message'], '</p>
 		<p><a href="', $scripturl, '?wap">', $txt['wireless_error_home'], '</a></p>
 	</card>';
@@ -251,7 +251,7 @@ function template_imode_boardindex()
 		{
 			$count++;
 			echo '
-			<tr><td>', $board['new'] ? '<font color="#ff0000">' : '', $count < 10 ? '&#' . (59105 + $count) . ';' : '<b>-</b>', $board['new'] ? '</font>' : ($board['children_new'] ? '<font color="#ff0000">.</font>' : ''), ' <a href="', $scripturl, '?board=', $board['id'], '.0;imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $board['name'], '</a></td></tr>';
+			<tr><td>', $board['new'] ? '<font color="#ff0000">' : '', $count < 10 ? '&#' . (59105 + $count) . ';' : '<strong>-</strong>', $board['new'] ? '</font>' : ($board['children_new'] ? '<font color="#ff0000">.</font>' : ''), ' <a href="', $scripturl, '?board=', $board['id'], '.0;imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $board['name'], '</a></td></tr>';
 		}
 	}
 	echo '
@@ -307,7 +307,7 @@ function template_imode_messageindex()
 			<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</td></tr>
 			<tr><td>&#59115; <a href="', $context['links']['up'], ($context['links']['up'] == $scripturl . '?' ? '' : ';'), 'imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></td></tr>', !empty($context['links']['next']) ? '
 			<tr><td>&#59104; <a href="' . $context['links']['next'] . ';imode" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></td></tr>' : '', !empty($context['links']['prev']) ? '
-			<tr><td><b>[*]</b> <a href="' . $context['links']['prev'] . ';imode" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></td></tr>' : '', $context['can_post_new'] ? '
+			<tr><td><strong>[*]</strong> <a href="' . $context['links']['prev'] . ';imode" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></td></tr>' : '', $context['can_post_new'] ? '
 			<tr><td><a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;imode">' . $txt['start_new_topic'] . '</a></td></tr>' : '', '
 		</table>';
 }
@@ -346,7 +346,7 @@ function template_imode_display()
 		echo '
 			<tr><td>', $message['first_new'] ? '
 				<a name="new"></a>' : '',
-				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
+				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<strong>' . $message['member']['name'] . '</strong>', ':
 				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 				', $message['body'], '
 			</td></tr>';
@@ -438,7 +438,7 @@ function template_imode_login()
 	if (isset($context['login_errors']))
 		foreach ($context['login_errors'] as $error)
 		echo '
-				<tr><td><b><font color="#ff00000">', $error, '</b></td></tr>';
+				<tr><td><strong><font color="#ff00000">', $error, '</strong></td></tr>';
 	echo '
 				<tr><td>', $txt['username'], ':</td></tr>
 				<tr><td><input type="text" name="user" size="10" /></td></tr>
@@ -463,7 +463,7 @@ function template_imode_pm()
 				<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['wireless_pm_search_member'], '</font></td></tr>
 				<tr bgcolor="#b6dbff"><td>', $txt['find_members'], '</td></tr>
 				<tr><td>
-					<b>', $txt['wireless_pm_search_name'], ':</b>
+					<strong>', $txt['wireless_pm_search_name'], ':</strong>
 					<input type="text" name="search" value="', isset($context['last_search']) ? $context['last_search'] : '', '" />', empty($_REQUEST['u']) ? '' : '
 					<input type="hidden" name="u" value="' . $_REQUEST['u'] . '" />', '
 				</td></tr>
@@ -536,7 +536,7 @@ function template_imode_pm()
 						<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['new_message'], '</tr></td>', empty($context['post_error']['messages']) ? '' : '
 						<tr><td><font color="#ff0000">' . implode('<br />', $context['post_error']['messages']) . '</font></tr></td>', '
 						<tr><td>
-							<b>', $txt['pm_to'], ':</b> ';
+							<strong>', $txt['pm_to'], ':</strong> ';
 			if (empty($context['recipients']['to']))
 				echo $txt['wireless_pm_no_recipients'];
 			else
@@ -552,10 +552,10 @@ function template_imode_pm()
 							<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';imode">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 						</tr></td>
 						<tr><td>
-							<b>', $txt['subject'], ':</b> <input type="text" name="subject" value="', $context['subject'], '" />
+							<strong>', $txt['subject'], ':</strong> <input type="text" name="subject" value="', $context['subject'], '" />
 						</tr></td>
 						<tr><td>
-							<b>', $txt['message'], ':</b><br />
+							<strong>', $txt['message'], ':</strong><br />
 							<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
 						</tr></td>
 						<tr><td>
@@ -571,7 +571,7 @@ function template_imode_pm()
 			if ($context['reply'])
 				echo '
 						<tr bgcolor="#b6dbff"><td>', $txt['wireless_pm_reply_to'], '</tr></td>
-						<tr><td><b>', $context['quoted_message']['subject'], '</b></tr></td>
+						<tr><td><strong>', $context['quoted_message']['subject'], '</strong></tr></td>
 						<tr><td>', $context['quoted_message']['body'], '</tr></td>';
 			echo '
 						<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</tr></td>
@@ -642,8 +642,8 @@ function template_imode_pm()
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $message['subject'], '</td></tr>
 			<tr bgcolor="#b6dbff"><td>
-				<b>', $txt['wireless_pm_by'], ':</b> ', $message['member']['name'], '<br />
-				<b>', $txt['on'], ':</b> ', $message['time'], '
+				<strong>', $txt['wireless_pm_by'], ':</strong> ', $message['member']['name'], '<br />
+				<strong>', $txt['on'], ':</strong> ', $message['time'], '
 			</td></tr>
 			<tr><td>
 				', $message['body'], '
@@ -708,20 +708,20 @@ function template_imode_profile()
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['summary'], ' - ', $context['member']['name'], '</font></td></tr>
 			<tr><td>
-				<b>', $txt['name'], ':</b> ', $context['member']['name'], '
+				<strong>', $txt['name'], ':</strong> ', $context['member']['name'], '
 			</td></tr>
 			<tr><td>
-				<b>', $txt['position'], ': </b>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '
+				<strong>', $txt['position'], ': </strong>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '
 			</td></tr>
 			<tr><td>
-				<b>', $txt['lastLoggedIn'], ':</b> ', $context['member']['last_login'], '
+				<strong>', $txt['lastLoggedIn'], ':</strong> ', $context['member']['last_login'], '
 			</td></tr>';
 
 	if (!empty($context['member']['bans']))
 	{
 		echo '
 			<tr><td>
-				<font color="red"><b>', $txt['user_banned_by_following'], ':</b></font>';
+				<font color="red"><strong>', $txt['user_banned_by_following'], ':</strong></font>';
 
 		foreach ($context['member']['bans'] as $ban)
 				echo '
@@ -759,25 +759,25 @@ function template_imode_ban_edit()
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '</font></td></tr>
 			<tr><td>
-				<b>', $txt['ban_name'], ': </b>
+				<strong>', $txt['ban_name'], ': </strong>
 				<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="20" />
 			</td></tr>
 			<tr><td>
-				<b>', $txt['ban_expiration'], ': </b><br />
+				<strong>', $txt['ban_expiration'], ': </strong><br />
 				<input type="radio" name="expiration" value="never" ', $context['ban']['expiration']['status'] == 'never' ? ' checked="checked"' : '', ' class="check" /> ', $txt['never'], '<br />
 				<input type="radio" name="expiration" value="one_day" ', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_will_expire_within'], ' <input type="text" name="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" /> ', $txt['ban_days'], '<br />
 				<input type="radio" name="expiration" value="expired" ', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_expired'], '<br />
 			</td></tr>
 			<tr><td>
-				<b>', $txt['ban_reason'], ': </b>
+				<strong>', $txt['ban_reason'], ': </strong>
 				<input type="text" name="reason" value="', $context['ban']['reason'], '" size="20" />
 			</td></tr>
 			<tr><td>
-				<b>', $txt['ban_notes'], ': </b><br />
+				<strong>', $txt['ban_notes'], ': </strong><br />
 				<textarea name="notes" cols="20" rows="3">', $context['ban']['notes'], '</textarea>
 			</td></tr>
 			<tr><td>
-				<b>', $txt['ban_restriction'], ': </b><br />
+				<strong>', $txt['ban_restriction'], ': </strong><br />
 				<input type="checkbox" name="full_ban" value="1"', $context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_full_ban'], '<br />
 				<input type="checkbox" name="cannot_post" value="1"', $context['ban']['cannot']['post'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_post'], '<br />
 				<input type="checkbox" name="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_register'], '<br />
@@ -789,24 +789,24 @@ function template_imode_ban_edit()
 		echo '
 			<tr bgcolor="#b6dbff"><td>', $txt['ban_triggers'], '</td></tr>
 			<tr><td>
-				<input type="checkbox" name="ban_suggestion[]" value="main_ip" class="check" /> <b>', $txt['wireless_ban_ip'], ':</b><br />
+				<input type="checkbox" name="ban_suggestion[]" value="main_ip" class="check" /> <strong>', $txt['wireless_ban_ip'], ':</strong><br />
 				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="20" />
 			</td></tr>';
 
 		if (empty($modSettings['disableHostnameLookup']))
 			echo '
 			<tr><td>
-				<input type="checkbox" name="ban_suggestion[]" value="hostname" class="check" /> <b>', $txt['wireless_ban_hostname'], ':</b><br />
+				<input type="checkbox" name="ban_suggestion[]" value="hostname" class="check" /> <strong>', $txt['wireless_ban_hostname'], ':</strong><br />
 				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="20" />
 			</td></tr>';
 
 		echo '
 			<tr><td>
-				<input type="checkbox" name="ban_suggestion[]" value="email" class="check" /> <b>', $txt['wireless_ban_email'], ':</b><br />
+				<input type="checkbox" name="ban_suggestion[]" value="email" class="check" /> <strong>', $txt['wireless_ban_email'], ':</strong><br />
 				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="20" />
 			</td></tr>
 			<tr><td>
-				<input type="checkbox" name="ban_suggestion[]" value="user" class="check" /> <b>', $txt['ban_on_username'], ':</b><br />';
+				<input type="checkbox" name="ban_suggestion[]" value="user" class="check" /> <strong>', $txt['ban_on_username'], ':</strong><br />';
 
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '
@@ -976,7 +976,7 @@ function template_wap2_display()
 		echo $message['first_new'] ? '
 		<a name="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
-			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
+			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<strong>' . $message['member']['name'] . '</strong>', ':
 			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 			', $message['body'], '
 		</p>';
@@ -1013,7 +1013,7 @@ function template_wap2_login()
 	if (isset($context['login_errors']))
 		foreach ($context['login_errors'] as $error)
 			echo '
-			<p class="windowbg" style="color: #ff0000;"><b>', $error, '</b></p>';
+			<p class="windowbg" style="color: #ff0000;"><strong>', $error, '</strong></p>';
 	echo '
 			<p class="windowbg">', $txt['username'], ':</p>
 			<p class="windowbg"><input type="text" name="user" size="10" /></p>
@@ -1091,7 +1091,7 @@ function template_wap2_pm()
 					<p class="catbg">', $txt['wireless_pm_search_member'], '</p>
 					<p class="titlebg">', $txt['find_members'], '</p>
 					<p class="windowbg">
-						<b>', $txt['wireless_pm_search_name'], ':</b>
+						<strong>', $txt['wireless_pm_search_name'], ':</strong>
 						<input type="text" name="search" value="', isset($context['last_search']) ? $context['last_search'] : '', '" />', empty($_REQUEST['u']) ? '' : '
 						<input type="hidden" name="u" value="' . $_REQUEST['u'] . '" />', '
 					</p>
@@ -1158,7 +1158,7 @@ function template_wap2_pm()
 					<p class="catbg">', $txt['new_message'], '</p>', empty($context['post_error']['messages']) ? '' : '
 					<p class="windowbg error">' . implode('<br />', $context['post_error']['messages']) . '</p>', '
 					<p class="windowbg">
-						<b>', $txt['pm_to'], ':</b> ';
+						<strong>', $txt['pm_to'], ':</strong> ';
 			if (empty($context['recipients']['to']))
 				echo $txt['wireless_pm_no_recipients'];
 			else
@@ -1174,10 +1174,10 @@ function template_wap2_pm()
 						<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';wap2">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 					</p>
 					<p class="windowbg">
-						<b>', $txt['subject'], ':</b> <input type="text" name="subject" value="', $context['subject'], '" />
+						<strong>', $txt['subject'], ':</strong> <input type="text" name="subject" value="', $context['subject'], '" />
 					</p>
 					<p class="windowbg">
-						<b>', $txt['message'], ':</b><br />
+						<strong>', $txt['message'], ':</strong><br />
 						<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
 					</p>
 					<p class="windowbg">
@@ -1193,7 +1193,7 @@ function template_wap2_pm()
 			if ($context['reply'])
 				echo '
 					<p class="titlebg">', $txt['wireless_pm_reply_to'], '</p>
-					<p class="windowbg"><b>', $context['quoted_message']['subject'], '</b></p>
+					<p class="windowbg"><strong>', $context['quoted_message']['subject'], '</strong></p>
 					<p class="windowbg">', $context['quoted_message']['body'], '</p>';
 			echo '
 					<p class="titlebg">', $txt['wireless_navigation'], '</p>
@@ -1263,8 +1263,8 @@ function template_wap2_pm()
 		echo '
 			<p class="catbg">', $message['subject'], '</p>
 			<p class="titlebg">
-				<b>', $txt['wireless_pm_by'], ':</b> ', $message['member']['name'], '<br />
-				<b>', $txt['on'], ':</b> ', $message['time'], '
+				<strong>', $txt['wireless_pm_by'], ':</strong> ', $message['member']['name'], '<br />
+				<strong>', $txt['on'], ':</strong> ', $message['time'], '
 			</p>
 			<p class="windowbg">
 				', $message['body'], '
@@ -1322,14 +1322,14 @@ function template_wap2_profile()
 
 	echo '
 		<p class="catbg">', $txt['summary'], ' - ', $context['member']['name'], '</p>
-		<p class="windowbg"><b>', $txt['name'], ':</b> ', $context['member']['name'], '</p>
-		<p class="windowbg"><b>', $txt['position'], ': </b>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</p>
-		<p class="windowbg"><b>', $txt['lastLoggedIn'], ':</b> ', $context['member']['last_login'], '</p>';
+		<p class="windowbg"><strong>', $txt['name'], ':</strong> ', $context['member']['name'], '</p>
+		<p class="windowbg"><strong>', $txt['position'], ': </strong>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</p>
+		<p class="windowbg"><strong>', $txt['lastLoggedIn'], ':</strong> ', $context['member']['last_login'], '</p>';
 
 	if (!empty($context['member']['bans']))
 	{
 		echo '
-		<p class="titlebg"><b>', $txt['user_banned_by_following'], ':</b></p>';
+		<p class="titlebg"><strong>', $txt['user_banned_by_following'], ':</strong></p>';
 
 		foreach ($context['member']['bans'] as $ban)
 			echo '
@@ -1362,25 +1362,25 @@ function template_wap2_ban_edit()
 	<form action="', $scripturl, '?action=admin;area=ban;sa=add;wap2" method="post">
 		<p class="catbg">', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '</p>
 		<p class="windowbg">
-			<b>', $txt['ban_name'], ': </b>
+			<strong>', $txt['ban_name'], ': </strong>
 			<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="20" />
 		</p>
 		<p class="windowbg">
-			<b>', $txt['ban_expiration'], ': </b><br />
+			<strong>', $txt['ban_expiration'], ': </strong><br />
 			<input type="radio" name="expiration" value="never" ', $context['ban']['expiration']['status'] == 'never' ? ' checked="checked"' : '', ' class="check" /> ', $txt['never'], '<br />
 			<input type="radio" name="expiration" value="one_day" ', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_will_expire_within'], ' <input type="text" name="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" /> ', $txt['ban_days'], '<br />
 			<input type="radio" name="expiration" value="expired" ', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_expired'], '<br />
 		</p>
 		<p class="windowbg">
-			<b>', $txt['ban_reason'], ': </b>
+			<strong>', $txt['ban_reason'], ': </strong>
 			<input type="text" name="reason" value="', $context['ban']['reason'], '" size="20" />
 		</p>
 		<p class="windowbg">
-			<b>', $txt['ban_notes'], ': </b><br />
+			<strong>', $txt['ban_notes'], ': </strong><br />
 			<textarea name="notes" cols="20" rows="3">', $context['ban']['notes'], '</textarea>
 		</p>
 		<p class="windowbg">
-			<b>', $txt['ban_restriction'], ': </b><br />
+			<strong>', $txt['ban_restriction'], ': </strong><br />
 			<input type="checkbox" name="full_ban" value="1"', $context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_full_ban'], '<br />
 			<input type="checkbox" name="cannot_post" value="1"', $context['ban']['cannot']['post'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_post'], '<br />
 			<input type="checkbox" name="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_register'], '<br />
@@ -1392,24 +1392,24 @@ function template_wap2_ban_edit()
 		echo '
 		<p class="titlebg">', $txt['ban_triggers'], '</p>
 		<p class="windowbg">
-			<input type="checkbox" name="ban_suggestion[]" value="main_ip" class="check" /> <b>', $txt['wireless_ban_ip'], ':</b><br />
+			<input type="checkbox" name="ban_suggestion[]" value="main_ip" class="check" /> <strong>', $txt['wireless_ban_ip'], ':</strong><br />
 			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="20" />
 		</p>';
 
 		if (empty($modSettings['disableHostnameLookup']))
 			echo '
 		<p class="windowbg">
-			<input type="checkbox" name="ban_suggestion[]" value="hostname" class="check" /> <b>', $txt['wireless_ban_hostname'], ':</b><br />
+			<input type="checkbox" name="ban_suggestion[]" value="hostname" class="check" /> <strong>', $txt['wireless_ban_hostname'], ':</strong><br />
 			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="20" />
 		<p>';
 
 		echo '
 		<p class="windowbg">
-			<input type="checkbox" name="ban_suggestion[]" value="email" class="check" /> <b>', $txt['wireless_ban_email'], ':</b><br />
+			<input type="checkbox" name="ban_suggestion[]" value="email" class="check" /> <strong>', $txt['wireless_ban_email'], ':</strong><br />
 			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="20" />
 		</p>
 		<p class="windowbg">
-			<input type="checkbox" name="ban_suggestion[]" value="user" class="check" /> <b>', $txt['ban_on_username'], ':</b><br />';
+			<input type="checkbox" name="ban_suggestion[]" value="user" class="check" /> <strong>', $txt['ban_on_username'], ':</strong><br />';
 
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '

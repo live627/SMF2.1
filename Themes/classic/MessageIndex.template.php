@@ -40,7 +40,7 @@ function template_main()
 		<td class="windowbg" width="6%" align="center" valign="top">', $board['new'] ? '<img src="' . $settings['images_url'] . '/on.gif" alt="' . $txt['new_posts'] . '" title="' . $txt['new_posts'] . '" border="0" />' : '<img src="' . $settings['images_url'] . '/off.gif" alt="' . $txt['old_posts'] . '" title="' . $txt['old_posts'] . '" border="0" />', '</td>
 		<td class="windowbg2" align="left" width="60%">
 			<a name="b' . $board['id'] . '"></a>
-			<b>' . $board['link'] . '</b><br />
+			<strong>' . $board['link'] . '</strong><br />
 			' . $board['description'];
 
 			if (!empty($board['moderators']))
@@ -53,7 +53,7 @@ function template_main()
 				foreach ($board['children'] as $child)
 				{
 					if ($child['new'])
-						$children[] = '<b>' . $child['link'] . '</b>';
+						$children[] = '<strong>' . $child['link'] . '</strong>';
 					else
 						$children[] = $child['link'];
 				}
@@ -115,7 +115,7 @@ function template_main()
 		<td align="left" class="catbg" width="100%" height="30">
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
-					<td><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['go_down'] . '" border="0" align="top" />' : $txt['go_down']) . '</a>' : '', '</td>
+					<td><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['go_down'] . '" border="0" align="top" />' : $txt['go_down']) . '</a>' : '', '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 				</tr>
 			</table>
@@ -148,7 +148,7 @@ function template_main()
 		}
 		else
 			echo '
-		<td width="100%" colspan="7"><b>', $txt['msg_alert_none'], '</b></td>';
+		<td width="100%" colspan="7"><strong>', $txt['msg_alert_none'], '</strong></td>';
 		echo '
 	</tr>';
 
@@ -275,7 +275,7 @@ function template_main()
 		<td align="left" class="catbg" width="100%" height="30">
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
-					<td><a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
+					<td><a name="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 				</tr>
 			</table>

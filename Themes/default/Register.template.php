@@ -109,7 +109,7 @@ function template_before()
 				<table cellpadding="3" cellspacing="0" border="0" width="100%">
 					<tr>
 						<td width="40%">
-							<b>', $txt['choose_username'], ':</b>
+							<strong>', $txt['choose_username'], ':</strong>
 							<div class="smalltext">', $txt['identification_by_smf'], '</div>
 						</td>
 						<td>
@@ -122,7 +122,7 @@ function template_before()
 						</td>
 					</tr><tr>
 						<td width="40%">
-							<b>', $txt['email'], ':</b>
+							<strong>', $txt['email'], ':</strong>
 							<div class="smalltext">', $txt['valid_email'], '</div>
 						</td>
 						<td>
@@ -136,7 +136,7 @@ function template_before()
 		echo '
 					<tr>
 						<td width="40%">
-							<b>', $txt['choose_pass'], ':</b>
+							<strong>', $txt['choose_pass'], ':</strong>
 						</td>
 						<td>
 							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
@@ -146,7 +146,7 @@ function template_before()
 						</td>
 					</tr><tr>
 						<td width="40%">
-							<b>', $txt['verify_pass'], ':</b>
+							<strong>', $txt['verify_pass'], ':</strong>
 						</td>
 						<td>
 							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
@@ -161,7 +161,7 @@ function template_before()
 		echo '
 					<tr valign="top">
 						<td width="40%" valign="top">
-							<b>', $txt['verification'], ':</b>
+							<strong>', $txt['verification'], ':</strong>
 						</td>
 						<td>', template_control_verification($context['visual_verification_id'], 'all'), '</td>
 					</tr>';
@@ -172,7 +172,7 @@ function template_before()
 		echo '
 					<tr>
 						<td colspan="2" align="center" style="padding-top: 1ex;">
-							<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <b>', $context['coppa_desc'], '.</b></label>
+							<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <strong>', $context['coppa_desc'], '.</strong></label>
 						</td>
 					</tr>';
 
@@ -191,7 +191,7 @@ function template_before()
 		</tr>
 		<tr class="windowbg" style="padding-left: 3px;">
 			<td>
-				<b>', $txt['authenticate_label'], ':</b>
+				<strong>', $txt['authenticate_label'], ':</strong>
 			</td>
 		</tr>
 		<tr class="windowbg">
@@ -202,7 +202,7 @@ function template_before()
 							<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
 						</td>
 						<td colspan="2">
-							<label for="auth_pass"><b>', $txt['authenticate_password'], ':</b></label>
+							<label for="auth_pass"><strong>', $txt['authenticate_password'], ':</strong></label>
 						</td>
 					</tr>
 					<tr>
@@ -231,7 +231,7 @@ function template_before()
 							<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
 						</td>
 						<td colspan="2">
-							<label for="auth_openid"><b>', $txt['authenticate_openid'], ':</b></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
+							<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<i><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></i>
 						</td>
 					</tr>
 					<tr>
@@ -275,7 +275,7 @@ function template_before()
 			echo '
 					<tr valign="top">
 						<td width="40%">
-							<b', !empty($field['is_error']) ? ' class="error"' : '', '>', $field['label'], '</b>';
+							<strong', !empty($field['is_error']) ? ' class="error"' : '', '>', $field['label'], '</strong>';
 
 			// Does it have any subtext to show?
 			if (!empty($field['subtext']))
@@ -347,7 +347,7 @@ function template_before()
 		{
 			echo '
 					<tr valign="top">
-						<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+						<td width="40%"><strong>', $field['name'], ': </strong><div class="smalltext">', $field['desc'], '</div></td>
 						<td>', $field['input_html'], '</td>
 					</tr>';
 		}
@@ -372,7 +372,7 @@ function template_before()
 			</td>
 		</tr><tr>
 			<td align="center" class="windowbg2">
-				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <b>', $txt['agree'], '</b></label>
+				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <strong>', $txt['agree'], '</strong></label>
 			</td>
 		</tr>
 	</table>';
@@ -455,7 +455,7 @@ function template_coppa()
 	{
 		echo '
 			<tr class="windowbg">
-				<td align="left"><b>1) ', $txt['coppa_send_by_post'], '</b></td>
+				<td align="left"><strong>1) ', $txt['coppa_send_by_post'], '</strong></td>
 			</tr><tr class="windowbg">
 				<td align="left" style="padding-bottom: 1ex;">
 					<div style="padding: 4px; width: 32ex; background-color: white; color: black; margin-left: 5ex; border: 1px solid black;">
@@ -470,7 +470,7 @@ function template_coppa()
 	{
 		echo '
 			<tr class="windowbg">
-				<td align="left"><b>', !empty($context['coppa']['post']) ? '2' : '1', ') ', $txt['coppa_send_by_fax'], '</b></td>
+				<td align="left"><strong>', !empty($context['coppa']['post']) ? '2' : '1', ') ', $txt['coppa_send_by_fax'], '</strong></td>
 			</tr><tr class="windowbg">
 				<td align="left" style="padding-bottom: 1ex;">
 					<div style="padding: 4px; width: 32ex; background-color: white; color: black; margin-left: 5ex; border: 1px solid black;">
@@ -704,7 +704,7 @@ function template_edit_agreement()
 				<td align="center">
 					<div align="left" style="width: 94%">
 						<form action="', $scripturl, '?action=admin;area=regcenter;sa=agreement" id="change_reg" method="post" accept-charset="', $context['character_set'], '">
-							<b>', $txt['admin_agreement_select_language'], ':</b>&nbsp;
+							<strong>', $txt['admin_agreement_select_language'], ':</strong>&nbsp;
 							<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();" tabindex="', $context['tabindex']++, '">';
 
 		foreach ($context['editable_agreements'] as $file => $name)

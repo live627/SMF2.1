@@ -49,7 +49,7 @@ function template_main()
 
 			echo '</a></td>
 				<td align="left">
-					<b><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a></b>';
+					<strong><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a></strong>';
 
 			// Has it outstanding posts for approval?
 			if ($board['can_approve_posts'] && ($board['unapproved_posts'] | $board['unapproved_topics']))
@@ -78,7 +78,7 @@ function template_main()
 					if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
 						$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > $child['unapproved_posts'] ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'] . $child['unapproved_topics'] . $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 
-					$children[] = $child['new'] ? '<b>' . $child['link'] . '</b>' : $child['link'];
+					$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 				}
 
 				echo '
@@ -126,7 +126,7 @@ function template_main()
 				<td class="catbg" height="30">
 					<table cellpadding="3" cellspacing="0" width="100%">
 						<tr>
-							<td><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['go_down'] . '" border="0" align="top" />' : $txt['go_down']) . '</a>' : '', '</td>
+							<td><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['go_down'] . '" border="0" align="top" />' : $txt['go_down']) . '</a>' : '', '</td>
 							<td align="', !$context['right_to_left'] ? 'right' : 'left', '" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 						</tr>
 					</table>
@@ -168,7 +168,7 @@ function template_main()
 		// No topics.... just say, "sorry bub".
 		else
 			echo '
-					<td width="100%" colspan="7"><b>', $txt['msg_alert_none'], '</b></td>';
+					<td width="100%" colspan="7"><strong>', $txt['msg_alert_none'], '</strong></td>';
 
 		echo '
 				</tr>';
@@ -315,7 +315,7 @@ function template_main()
 				<td class="catbg" width="100%" height="30">
 					<table cellpadding="3" cellspacing="0" width="100%">
 						<tr>
-							<td><a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
+							<td><a name="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
 							<td align="', !$context['right_to_left'] ? 'right' : 'left', '" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 						</tr>
 					</table>

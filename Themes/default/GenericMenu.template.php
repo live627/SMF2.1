@@ -45,7 +45,7 @@ function template_generic_menu_sidebar_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-							<b><a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a></b><br />';
+							<strong><a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a></strong><br />';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
@@ -320,7 +320,7 @@ function template_generic_menu_tabs(&$menu_context)
 	else
 	{
 		echo '
-						<td align="left"><b>';
+						<td align="left"><strong>';
 
 		// Print out all the items in this tab.
 		foreach ($tab_context['tabs'] as $sa => $tab)
@@ -331,7 +331,7 @@ function template_generic_menu_tabs(&$menu_context)
 			if (!empty($tab['is_selected']))
 			{
 				echo '
-							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></b>';
+							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <strong><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></strong>';
 			}
 			else
 				echo '
@@ -342,7 +342,7 @@ function template_generic_menu_tabs(&$menu_context)
 		}
 
 		echo '
-						</b></td>
+						</strong></td>
 					</tr>
 					<tr class="windowbg">
 						<td class="smalltext" style="padding: 2ex;">', isset($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '</td>

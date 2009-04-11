@@ -555,7 +555,7 @@ function smf_logError($error_message, $file = null, $line = null)
 
 	// Basically, htmlspecialchars it minus &. (for entities!)
 	$error_message = strtr($error_message, array('<' => '&lt;', '>' => '&gt;', '"' => '&quot;'));
-	$error_message = strtr($error_message, array('&lt;br /&gt;' => '<br />', '&lt;b&gt;' => '<b>', '&lt;/b&gt;' => '</b>', "\n" => '<br />'));
+	$error_message = strtr($error_message, array('&lt;br /&gt;' => '<br />', '&lt;b&gt;' => '<strong>', '&lt;/b&gt;' => '</strong>', "\n" => '<br />'));
 
 	// Add a file and line to the error message?
 	if ($file != null)

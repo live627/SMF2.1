@@ -459,7 +459,7 @@ function BoardPermissionsReport()
 
 				// Embolden those permissions different from global (makes it a lot easier!)
 				if (@$board_permissions[0][$id_group][$ID_PERM] != @$group_permissions[$ID_PERM])
-					$curData[$id_group] = '<b>' . $curData[$id_group] . '</b>';
+					$curData[$id_group] = '<strong>' . $curData[$id_group] . '</strong>';
 			}
 
 			// Now add the data for this permission.

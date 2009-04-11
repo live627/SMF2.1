@@ -13,7 +13,7 @@ function template_main()
 				<td>', $txt['move_topic'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center" style="padding-bottom: 1ex; padding-top: 2ex;">
-					<b>', $txt['move_to'], ':</b> <select name="toboard">';
+					<strong>', $txt['move_to'], ':</strong> <select name="toboard">';
 
 	foreach ($context['categories'] AS $category)
 	{

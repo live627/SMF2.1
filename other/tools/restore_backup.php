@@ -116,7 +116,7 @@ function step1($error_message = '')
 						</table>
 
 						<h2>Database backup file</h2>
-						<h3>Please upload your database backup file (it may be a <tt>.sql</tt> file, <tt>.sql.gz</tt> file, or a <tt>.sql.zip</tt> file) through FTP or other means, and enter the path here.<br />', !function_exists('gzcompress') ? '<b>Warning</b>: To restore compressed backups, the <b>zlib library</b> is needed, which you don\'t seem to have on this server.' : 'Please note that if this file is compressed, it may be replaced by an uncompressed version during this process.', @ini_get('allow_url_fopen') ? '<br />If your backup is uncompressed, you can also specify a URL to it here.' : '', '</h3>
+						<h3>Please upload your database backup file (it may be a <tt>.sql</tt> file, <tt>.sql.gz</tt> file, or a <tt>.sql.zip</tt> file) through FTP or other means, and enter the path here.<br />', !function_exists('gzcompress') ? '<strong>Warning</strong>: To restore compressed backups, the <strong>zlib library</strong> is needed, which you don\'t seem to have on this server.' : 'Please note that if this file is compressed, it may be replaced by an uncompressed version during this process.', @ini_get('allow_url_fopen') ? '<br />If your backup is uncompressed, you can also specify a URL to it here.' : '', '</h3>
 
 						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
 							<tr>
@@ -255,7 +255,7 @@ function step2()
 
 		foreach ($failures as $line => $fail)
 			echo '
-						<b>Line #', $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '<br />';
+						<strong>Line #', $line + 1, ':</strong> ', nl2br(htmlspecialchars($fail)), '<br />';
 
 		echo '
 					</div>
@@ -633,7 +633,7 @@ function nextLine($line, $max, $failures)
 
 		foreach ($failures as $line => $fail)
 			echo '
-						<b>Line #', $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '<br />';
+						<strong>Line #', $line + 1, ':</strong> ', nl2br(htmlspecialchars($fail)), '<br />';
 
 		echo '
 					</div>

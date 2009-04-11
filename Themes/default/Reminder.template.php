@@ -14,7 +14,7 @@ function template_main()
 			</tr><tr class="windowbg">
 				<td colspan="2" class="smalltext">', $txt['password_reminder_desc'], '</td>
 			</tr><tr class="windowbg2">
-				<td width="40%"><b>', $txt['user_email'], ':</b></td>
+				<td width="40%"><strong>', $txt['user_email'], ':</strong></td>
 				<td><input type="text" name="user" size="30" /></td>
 			</tr><tr class="windowbg2">
 				<td colspan="2" align="center"><input type="submit" value="', $txt['reminder_continue'], '" /></td>
@@ -36,7 +36,7 @@ function template_reminder_pick()
 				<td colspan="2">', $txt['authentication_reminder'], '</td>
 			</tr><tr class="windowbg2">
 				<td colspan="2">
-					<b>', $txt['authentication_options'], ':</b>
+					<strong>', $txt['authentication_options'], ':</strong>
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="2%">
@@ -91,7 +91,7 @@ function template_set_password()
 				<td colspan="2">', $context['page_title'], '</td>
 			</tr><tr class="windowbg">
 				<td width="45%">
-					<b>', $txt['choose_pass'], ': </b>
+					<strong>', $txt['choose_pass'], ': </strong>
 				</td>
 				<td valign="top">
 					<input type="password" name="passwrd1" id="smf_autov_pwmain" size="22" />
@@ -100,7 +100,7 @@ function template_set_password()
 					</span>
 				</td>
 			</tr><tr class="windowbg">
-				<td width="45%"><b>', $txt['verify_pass'], ': </b></td>
+				<td width="45%"><strong>', $txt['verify_pass'], ': </strong></td>
 				<td>
 					<input type="password" name="passwrd2" id="smf_autov_pwverify" size="22" />
 					<span id="smf_autov_pwverify_div" style="display: none;">
@@ -141,10 +141,10 @@ function template_ask()
 			</tr><tr class="windowbg">
 				<td colspan="2" class="smalltext" style="padding: 2ex;">', $context['account_type'] == 'password' ? $txt['enter_new_password'] : $txt['openid_secret_reminder'], '</td>
 			</tr><tr class="windowbg2">
-				<td width="45%"><b>', $txt['secret_question'], ':</b></td>
+				<td width="45%"><strong>', $txt['secret_question'], ':</strong></td>
 				<td>', $context['secret_question'], '</td>
 			</tr><tr class="windowbg2">
-				<td width="45%"><b>', $txt['secret_answer'], ':</b> </td>
+				<td width="45%"><strong>', $txt['secret_answer'], ':</strong> </td>
 				<td><input type="text" name="secret_answer" size="22" /></td>';
 
 	if ($context['account_type'] == 'password')
@@ -152,7 +152,7 @@ function template_ask()
 
 			</tr><tr class="windowbg2">
 				<td width="45%">
-					<b>', $txt['choose_pass'], ': </b>
+					<strong>', $txt['choose_pass'], ': </strong>
 				</td>
 				<td valign="top">
 					<input type="password" name="passwrd1" id="smf_autov_pwmain" size="22" />
@@ -162,7 +162,7 @@ function template_ask()
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="45%">
-					<b>', $txt['verify_pass'], ': </b>
+					<strong>', $txt['verify_pass'], ': </strong>
 				</td>
 				<td>
 					<input type="password" name="passwrd2" id="smf_autov_pwverify" size="22" />

@@ -38,7 +38,7 @@ function template_main()
 					<form action="', $scripturl, '?action=admin;area=manageboards;sa=newboard;cat=', $category['id'], '" method="post" accept-charset="', $context['character_set'], '">
 						<table width="100%" border="0" cellpadding="1" cellspacing="0">
 							<tr>
-								<td style="padding-left: 1ex;" colspan="4"><b>', $txt['mboards_name'], '</b></td>
+								<td style="padding-left: 1ex;" colspan="4"><strong>', $txt['mboards_name'], '</strong></td>
 							</tr>';
 
 		if (!empty($category['move_link']))
@@ -110,7 +110,7 @@ function template_modify_category()
 	{
 		echo '
 			<td>
-				<b>', $txt['order'], ':</b><br />
+				<strong>', $txt['order'], ':</strong><br />
 				<br /><br />
 			</td>
 			<td valign="top" align="right">
@@ -128,7 +128,7 @@ function template_modify_category()
 	// Allow the user to edit the category name and/or choose whether you can collapse the category.
 	echo '
 			<td>
-				<b>', $txt['full_name'], ':</b><br />
+				<strong>', $txt['full_name'], ':</strong><br />
 				', $txt['name_on_display'], '<br /><br />
 			</td>
 			<td valign="top" align="right">
@@ -137,7 +137,7 @@ function template_modify_category()
 		</tr>
 		<tr class="windowbg2">
 			<td>
-				<b>' . $txt['collapse_enable'] . '</b><br />
+				<strong>' . $txt['collapse_enable'] . '</strong><br />
 				' . $txt['collapse_desc'] . '<br /><br />
 			</td>
 			<td valign="top" align="right">
@@ -250,7 +250,7 @@ function template_modify_board()
 	echo '
 		<tr class="windowbg2">
 			<td>
-				<b>', $txt['mboards_category'], ':</b><br />
+				<strong>', $txt['mboards_category'], ':</strong><br />
 				<br />
 			</td>
 			<td valign="top" align="left">
@@ -269,7 +269,7 @@ function template_modify_board()
 	{
 		echo '
 			<td>
-				<b>', $txt['order'], ':</b><br />
+				<strong>', $txt['order'], ':</strong><br />
 				<br />
 			</td>
 			<td valign="top" align="left">';
@@ -300,7 +300,7 @@ function template_modify_board()
 	// Options for board name and description.
 	echo '
 			<td>
-				<b>', $txt['full_name'], ':</b><br />
+				<strong>', $txt['full_name'], ':</strong><br />
 				<span class="smalltext">', $txt['name_on_display'], '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -309,7 +309,7 @@ function template_modify_board()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['mboards_description'], ':</b><br />
+				<strong>', $txt['mboards_description'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_description_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -318,7 +318,7 @@ function template_modify_board()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['permission_profile'], ':</b><br />
+				<strong>', $txt['permission_profile'], ':</strong><br />
 				<span class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;' . $context['session_var'] . '=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -338,7 +338,7 @@ function template_modify_board()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
-				<b>', $txt['mboards_groups'], ':</b><br />
+				<strong>', $txt['mboards_groups'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_groups_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">';
@@ -357,7 +357,7 @@ function template_modify_board()
 	echo '
 		<tr class="windowbg2">
 			<td>
-				<b>', $txt['mboards_moderators'], ':</b><br />
+				<strong>', $txt['mboards_moderators'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_moderators_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left" style="white-space: nowrap;">
@@ -372,7 +372,7 @@ function template_modify_board()
 		</tr>
 		<tr class="windowbg2">
 			<td>
-				<b', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</b><br />
+				<strong', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_redirect_desc'], '</span><br />
 				', $context['board']['topics'] ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled'] . '</span><br />' : '', '
 				', !empty($context['board']['is_recycle']) ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled_recycle'] . '</span><br />' : '', '
@@ -387,7 +387,7 @@ function template_modify_board()
 		echo '
 		<tr class="windowbg2" id="redirect_address_div">
 			<td>
-				<b>', $txt['mboards_redirect_url'], ':</b><br />
+				<strong>', $txt['mboards_redirect_url'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_redirect_url_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -399,7 +399,7 @@ function template_modify_board()
 			echo '
 		<tr class="windowbg2" id="reset_redirect_div">
 			<td>
-				<b>', $txt['mboards_redirect_reset'], ':</b><br />
+				<strong>', $txt['mboards_redirect_reset'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_redirect_reset_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -412,7 +412,7 @@ function template_modify_board()
 	echo '
 		<tr class="windowbg2" id="count_posts_div">
 			<td>
-				<b>', $txt['mboards_count_posts'], ':</b><br />
+				<strong>', $txt['mboards_count_posts'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_count_posts_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -424,7 +424,7 @@ function template_modify_board()
 	echo '
 		<tr class="windowbg2" id="board_theme_div">
 			<td>
-				<b>', $txt['mboards_theme'], ':</b><br />
+				<strong>', $txt['mboards_theme'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_theme_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
@@ -441,7 +441,7 @@ function template_modify_board()
 		</tr>
 		<tr class="windowbg2" id="override_theme_div">
 			<td>
-				<b>', $txt['mboards_override_theme'], ':</b><br />
+				<strong>', $txt['mboards_override_theme'], ':</strong><br />
 				<span class="smalltext">', $txt['mboards_override_theme_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">

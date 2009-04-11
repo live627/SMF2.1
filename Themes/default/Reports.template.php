@@ -30,7 +30,7 @@ function template_report_type()
 					</td>
 					<td align="left" width="100%">
 						<label for="rt_', $type['id'], '">
-							<b>', $type['title'], '</b>';
+							<strong>', $type['title'], '</strong>';
 		if (isset($type['description']))
 			echo '
 							<br /><span class="smalltext">', $type['description'], '</span>';
@@ -60,7 +60,7 @@ function template_main()
 	echo '
 		<div class="tborder">
 			<div class="titlebg" style="padding: 4px;">
-				<div style="float: left;"><b>', $txt['results'], '</b></div>
+				<div style="float: left;"><strong>', $txt['results'], '</strong></div>
 				<div style="text-align: right;">&nbsp;';
 	if (empty($settings['use_tabs']))
 		echo '
@@ -119,7 +119,7 @@ function template_main()
 				{
 					echo '
 				<td colspan="', $table['column_count'], '" class="catbg">
-					<b>', $data['v'], ':</b>
+					<strong>', $data['v'], ':</strong>
 				</td>';
 					break;
 				}
@@ -274,7 +274,7 @@ function template_print()
 				{
 					echo '
 					<td colspan="', $table['column_count'], '" class="catbg">
-						<b>', $data['v'], ':</b>
+						<strong>', $data['v'], ':</strong>
 					</td>';
 					break;
 				}

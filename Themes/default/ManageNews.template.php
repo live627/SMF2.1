@@ -86,7 +86,7 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="top">
 					<td width="50%">
-						<b>', $txt['admin_news_select_group'], ':</b>
+						<strong>', $txt['admin_news_select_group'], ':</strong>
 						<div class="smalltext">', $txt['admin_news_select_group_desc'], '</div>
 					</td>
 					<td width="50%">';
@@ -102,13 +102,13 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="middle" id="advanced_select_div" style="display: none;">
 					<td colspan="2">
-						<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<b>', $txt['advanced'], '</b></a>
-						<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<b>', $txt['simple'], '</b></a>
+						<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<strong>', $txt['advanced'], '</strong></a>
+						<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<strong>', $txt['simple'], '</strong></a>
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_1">
 					<td width="50%">
-						<b>', $txt['admin_news_select_email'], ':</b>
+						<strong>', $txt['admin_news_select_email'], ':</strong>
 						<div class="smalltext">', $txt['admin_news_select_email_desc'], '</div>
 					</td>
 					<td width="50%">
@@ -117,7 +117,7 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_2">
 					<td width="50%">
-						<b>', $txt['admin_news_select_members'], ':</b>
+						<strong>', $txt['admin_news_select_members'], ':</strong>
 						<div class="smalltext">', $txt['admin_news_select_members_desc'], '</div>
 					</td>
 					<td width="50%">
@@ -132,7 +132,7 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_4">
 					<td width="50%">
-						<b>', $txt['admin_news_select_excluded_groups'], ':</b>
+						<strong>', $txt['admin_news_select_excluded_groups'], ':</strong>
 						<div class="smalltext">', $txt['admin_news_select_excluded_groups_desc'], '</div>
 					</td>
 					<td width="50%">';
@@ -148,7 +148,7 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_5">
 					<td width="50%">
-						<b>', $txt['admin_news_select_excluded_members'], ':</b>
+						<strong>', $txt['admin_news_select_excluded_members'], ':</strong>
 						<div class="smalltext">', $txt['admin_news_select_excluded_members_desc'], '</div>
 					</td>
 					<td width="50%">
@@ -163,7 +163,7 @@ function template_email_members()
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_7">
 					<td width="50%">
-						<label for="email_force"><b>', $txt['admin_news_select_override_notify'], ':</b></label>
+						<label for="email_force"><strong>', $txt['admin_news_select_override_notify'], ':</strong></label>
 						<div class="smalltext">', $txt['email_force'], '</div>
 					</td>
 					<td width="50%">
@@ -266,7 +266,7 @@ function template_email_members_send()
 						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 					</td>
 				</tr><tr>
-					<td class="windowbg2"><b>', $context['percentage_done'], '% ', $txt['email_done'], '</b></td>
+					<td class="windowbg2"><strong>', $context['percentage_done'], '% ', $txt['email_done'], '</strong></td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
 						<input type="submit" name="b" value="', $txt['email_continue'], '" />

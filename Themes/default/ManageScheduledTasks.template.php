@@ -35,14 +35,14 @@ function template_edit_scheduled_tasks()
 				</td>
 			</tr><tr class="windowbg" valign="top">
 				<td width="30%">
-					<b>', $txt['scheduled_tasks_name'], ':</b>
+					<strong>', $txt['scheduled_tasks_name'], ':</strong>
 				</td><td width="70%">
 					', $context['task']['name'], '</a><br />
 					<span class="smalltext">', $context['task']['desc'], '</span>
 				</td>
 			</tr><tr class="windowbg">
 				<td width="30%">
-					<b>', $txt['scheduled_task_edit_interval'], ':</b>
+					<strong>', $txt['scheduled_task_edit_interval'], ':</strong>
 				</td><td width="70%">
 					', $txt['scheduled_task_edit_repeat'], '
 					<input type="text" name="regularity" value="', empty($context['task']['regularity']) ? 1 : $context['task']['regularity'], '" onchange="if (this.value < 1) this.value = 1;" size="2" maxlength="2" />
@@ -57,14 +57,14 @@ function template_edit_scheduled_tasks()
 				</td>
 			</tr><tr class="windowbg" valign="top">
 				<td width="30%">
-					<b>', $txt['scheduled_task_edit_start_time'], ':</b><br />
+					<strong>', $txt['scheduled_task_edit_start_time'], ':</strong><br />
 					<span class="smalltext">', $txt['scheduled_task_edit_start_time_desc'], '</span>
 				</td><td width="70%">
 					<input type="text" name="offset" value="', $context['task']['offset_formatted'], '" size="6" maxlength="5" />
 				</td>
 			</tr><tr class="windowbg">
 				<td width="30%">
-					<b>', $txt['scheduled_tasks_enabled'], ':</b>
+					<strong>', $txt['scheduled_tasks_enabled'], ':</strong>
 				</td><td width="70%">
 					<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="check" />
 				</td>

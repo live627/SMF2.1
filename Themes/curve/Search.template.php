@@ -107,7 +107,7 @@ function template_main()
 			echo '
 			<fieldset>
 				<h4 class="titlebg"><span class="left"></span><span class="right"></span>
-					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a>
+					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
 				</h4>
 				<div id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>';
 

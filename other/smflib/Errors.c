@@ -89,11 +89,11 @@ PHP_FUNCTION(smflib_log_error)
 	SMFLIB_CALL_FUNCTION_ZZ("strtr", input_str, html_convert_array, _error_message);
 	zval_ptr_dtor(&input_str);
 
-	// PHP: $error_message = strtr($error_message, array('&lt;br /&gt;' => '<br />', '&lt;b&gt;' => '<b>', '&lt;/b&gt;' => '</b>', "\n" => '<br />'));
+	// PHP: $error_message = strtr($error_message, array('&lt;br /&gt;' => '<br />', '&lt;b&gt;' => '<strong>', '&lt;/b&gt;' => '</strong>', "\n" => '<br />'));
 	SMFLIB_EMPTY_ARR_Z(html_convert_array);
 	SMFLIB_SET_KEY_VAL_ZCC(html_convert_array, "&lt;br /&gt;", "<br />");
-	SMFLIB_SET_KEY_VAL_ZCC(html_convert_array, "&lt;b&gt;", "<b>");
-	SMFLIB_SET_KEY_VAL_ZCC(html_convert_array, "&lt;/b&gt", "</b>");
+	SMFLIB_SET_KEY_VAL_ZCC(html_convert_array, "&lt;b&gt;", "<strong>");
+	SMFLIB_SET_KEY_VAL_ZCC(html_convert_array, "&lt;/b&gt", "</strong>");
 	SMFLIB_SET_KEY_VAL_ZCC(html_convert_array, "\n", "<br />");
 	input_str = _error_message;
 	SMFLIB_CALL_FUNCTION_ZZ("strtr", input_str, html_convert_array, _error_message);
@@ -989,7 +989,7 @@ PHP_FUNCTION(smflib_error_handler)
 			zval_ptr_dtor(&temporary);
 		}
 		/* PHP: echo '<br />
-		<b>', $error_level % 255 == E_ERROR ? 'Error' : ($error_level % 255 == E_WARNING ? 'Warning' : 'Notice'), '</b>: ', $error_string, ' in <b>', $file, '</b> on line <b>', $line, '</b><br />';*/
+		<strong>', $error_level % 255 == E_ERROR ? 'Error' : ($error_level % 255 == E_WARNING ? 'Warning' : 'Notice'), '</strong>: ', $error_string, ' in <strong>', $file, '</strong> on line <strong>', $line, '</strong><br />';*/
 		ALLOC_INIT_ZVAL(errShown);
 		if (Z_LVAL_P(error_level) % 255 == E_ERROR)
 		{

@@ -42,7 +42,7 @@ function template_show_list($list_id = null)
 		echo '
 			<tr class="catbg">
 				<td align="left" colspan="', $cur_list['num_columns'], '">
-					<b>', $txt['pages'], ':</b> ', $cur_list['page_index'], '
+					<strong>', $txt['pages'], ':</strong> ', $cur_list['page_index'], '
 				</td>
 			</tr>';
 
@@ -94,7 +94,7 @@ function template_show_list($list_id = null)
 		echo '
 			<tr class="catbg">
 				<td align="left" colspan="', $cur_list['num_columns'], '">
-					<b>', $txt['pages'], ':</b> ', $cur_list['page_index'], '
+					<strong>', $txt['pages'], ':</strong> ', $cur_list['page_index'], '
 				</td>
 			</tr>';
 

@@ -104,7 +104,7 @@ function template_search_members()
 
 		<table width="100%" cellpadding="0" cellspacing="0" class="tborder" style="margin-top: 2ex;">
 			<tr class="catbg3">
-				<td colspan="2" height="28"><b>', $txt['member_part_of_these_membergroups'], ':</b></td>
+				<td colspan="2" height="28"><strong>', $txt['member_part_of_these_membergroups'], ':</strong></td>
 			</tr>
 			<tr>
 				<td class="windowbg" width="50%" valign="top">

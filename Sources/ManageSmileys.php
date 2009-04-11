@@ -381,7 +381,7 @@ function EditSmileySets()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return $rowData[\'selected\'] ? \'<b>*</b>\' : \'\';
+						return $rowData[\'selected\'] ? \'<strong>*</strong>\' : \'\';
 					'),
 					'style' => 'text-align: center;',
 				),
@@ -408,7 +408,7 @@ function EditSmileySets()
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => $modSettings['smileys_url'] . '/<b>%1$s</b>/...',
+						'format' => $modSettings['smileys_url'] . '/<strong>%1$s</strong>/...',
 						'params' => array(
 							'path' => true,
 						),
@@ -995,7 +995,7 @@ function EditSmileys()
 							$description = htmlspecialchars($rowData[\'description\']);
 
 							if (!empty($missing_sets))
-								$description .= sprintf(\'<br /><span class="smalltext"><b>%1$s:</b> %2$s</span>\', $txt[\'smileys_not_found_in_set\'], implode(\', \', $missing_sets));
+								$description .= sprintf(\'<br /><span class="smalltext"><strong>%1$s:</strong> %2$s</span>\', $txt[\'smileys_not_found_in_set\'], implode(\', \', $missing_sets));
 
 							return $description;
 						'),

@@ -59,7 +59,7 @@ function template_main()
 
 	echo '
 							<tr>
-								<td align="right" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '><b>' . $txt['poll_question'] . ':</b></td>
+								<td align="right" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '><strong>' . $txt['poll_question'] . ':</strong></td>
 								<td align="left"><input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" /></td>
 							</tr><tr>
 								<td></td>
@@ -86,7 +86,7 @@ function template_main()
 	if ($context['can_moderate_poll'])
 	{
 		echo '
-								<td align="right"><b>', $txt['poll_options'], ':</b></td>
+								<td align="right"><strong>', $txt['poll_options'], ':</strong></td>
 								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
 							</tr><tr>
 								<td align="right"></td>
@@ -107,7 +107,7 @@ function template_main()
 	}
 	else
 		echo '
-								<td align="right" valign="top"><b>', $txt['poll_options'], ':</b></td>';
+								<td align="right" valign="top"><strong>', $txt['poll_options'], ':</strong></td>';
 
 	echo '
 								<td class="smalltext">
@@ -120,7 +120,7 @@ function template_main()
 	if ($context['is_edit'])
 		echo '
 							</tr><tr>
-								<td align="right"><b>' . $txt['reset_votes'] . ':</b></td>
+								<td align="right"><strong>' . $txt['reset_votes'] . ':</strong></td>
 								<td class="smalltext"><input type="checkbox" name="resetVoteCount" value="on" class="check" /> ' . $txt['reset_votes_check'] . '</td>';
 	echo '
 							</tr><tr>

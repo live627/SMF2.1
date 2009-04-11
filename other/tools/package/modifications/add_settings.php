@@ -30,7 +30,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 // Hmm... no SSI.php and no SMF?
 elseif (!defined('SMF'))
-	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
+	die('<strong>Error:</strong> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 
 // Turn the array defined above into a string of MySQL data.
 $string = '';
@@ -47,6 +47,6 @@ if ($string != '')
 
 // Uh-oh spaghetti-oh!
 if ($result === false)
-	echo '<b>Error:</b> Database modifications failed!';
+	echo '<strong>Error:</strong> Database modifications failed!';
 
 ?>

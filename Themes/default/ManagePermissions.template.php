@@ -74,7 +74,7 @@ function template_permission_index()
 				<tr class="windowbg" id="permissions_panel_advanced">
 					<td colspan="6" style="padding-top: 1ex; padding-bottom: 1ex; text-align: right;">
 						<table width="100%" cellspacing="0" cellpadding="3" border="0"><tr><td>
-							<div style="margin-bottom: 1ex;"><b>', $txt['permissions_with_selection'], '...</b></div>
+							<div style="margin-bottom: 1ex;"><strong>', $txt['permissions_with_selection'], '...</strong></div>
 							', $txt['permissions_apply_pre_defined'], ' <a href="' . $scripturl . '?action=helpadmin;help=permissions_quickgroups" onclick="return reqWin(this.href);">(?)</a>:
 							<select name="predefined">
 								<option value="">(' . $txt['permissions_select_pre_defined'] . ')</option>
@@ -332,7 +332,7 @@ function template_edit_profiles()
 				</tr>
 				<tr class="windowbg2">
 					<td width="50%">
-						<b>', $txt['permissions_profile_name'], ':</b>
+						<strong>', $txt['permissions_profile_name'], ':</strong>
 					</td>
 					<td width="50%">
 						<input type="text" name="profile_name" value="" />
@@ -340,7 +340,7 @@ function template_edit_profiles()
 				</tr>
 				<tr class="windowbg2">
 					<td width="50%">
-						<b>', $txt['permissions_profile_copy_from'], ':</b>
+						<strong>', $txt['permissions_profile_copy_from'], ':</strong>
 					</td>
 					<td width="50%">
 						<select name="copy_from">';
@@ -507,7 +507,7 @@ function template_modify_group_simple($type)
 							<tr class="windowbg2">
 								<td colspan="2" width="100%" align="left"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">
 									<a href="#" onclick="return toggleBreakdown(\'', $id_group, '\');">
-										<img src="', $settings['images_url'], '/sort_down.gif" id="group_toggle_img_', $id_group, '" alt="*" />&nbsp;<b>', $permissionGroup['name'], '</b>
+										<img src="', $settings['images_url'], '/sort_down.gif" id="group_toggle_img_', $id_group, '" alt="*" />&nbsp;<strong>', $permissionGroup['name'], '</strong>
 									</a>
 								</div></td>';
 				if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
@@ -777,7 +777,7 @@ function template_modify_group_classic($type)
 				{
 					echo '
 							<tr class="windowbg2">
-								<td colspan="2" width="100%" align="left"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;"><b>', $permissionGroup['name'], '</b></div></td>';
+								<td colspan="2" width="100%" align="left"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;"><strong>', $permissionGroup['name'], '</strong></div></td>';
 					if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 						echo '
 								<td colspan="3" width="10"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">&nbsp;</div></td>';
@@ -1044,7 +1044,7 @@ function template_postmod_permissions()
 			</table>
 		</form>
 	<p class="smalltext" style="padding-left: 10px;">
-		<b>', $txt['permissions_post_moderation_legend'], ':</b><br />
+		<strong>', $txt['permissions_post_moderation_legend'], ':</strong><br />
 		<img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />
 		<img src="', $settings['default_images_url'], '/admin/post_moderation_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /> - ', $txt['permissions_post_moderation_moderate'], '<br />
 		<img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /> - ', $txt['permissions_post_moderation_disallow'], '

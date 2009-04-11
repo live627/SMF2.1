@@ -507,7 +507,7 @@ function Display()
 
 			$is_buddy = in_array($row['id_member'], $user_info['buddies']);
 			if ($is_buddy)
-				$link = '<b>' . $link . '</b>';
+				$link = '<strong>' . $link . '</strong>';
 
 			// Add them both to the list and to the more detailed list.
 			if (!empty($row['show_online']) || allowedTo('moderate_forum'))
@@ -570,7 +570,7 @@ function Display()
 		{
 			// No limit! (actually, there is a limit, but...)
 			$context['messages_per_page'] = -1;
-			$context['page_index'] .= empty($modSettings['compactTopicPagesEnable']) ? '<b>' . $txt['all'] . '</b> ' : '[<b>' . $txt['all'] . '</b>] ';
+			$context['page_index'] .= empty($modSettings['compactTopicPagesEnable']) ? '<strong>' . $txt['all'] . '</strong> ' : '[<strong>' . $txt['all'] . '</strong>] ';
 
 			// Set start back to 0...
 			$_REQUEST['start'] = 0;

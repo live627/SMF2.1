@@ -261,7 +261,7 @@ function MessageIndex()
 
 			$is_buddy = in_array($row['id_member'], $user_info['buddies']);
 			if ($is_buddy)
-				$link = '<b>' . $link . '</b>';
+				$link = '<strong>' . $link . '</strong>';
 
 			if (!empty($row['show_online']) || allowedTo('moderate_forum'))
 				$context['view_members_list'][$row['log_time'] . $row['member_name']] = empty($row['show_online']) ? '<i>' . $link . '</i>' : $link;

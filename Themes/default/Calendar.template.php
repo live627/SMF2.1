@@ -120,7 +120,7 @@ function template_event_post()
 							<tr>
 								<td></td>
 								<td>
-									', $context['error_type'] == 'serious' ? '<b>' . $txt['error_while_submitting'] . '</b>' : '', '
+									', $context['error_type'] == 'serious' ? '<strong>' . $txt['error_while_submitting'] . '</strong>' : '', '
 									<div class="error" style="margin: 1ex 0 2ex 3ex;">
 										', implode('<br />', $context['post_error']['messages']), '
 									</div>
@@ -130,7 +130,7 @@ function template_event_post()
 	echo '
 							<tr>
 								<td align="right">
-									<b', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</b>
+									<strong', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</strong>
 								</td>
 								<td class="smalltext">
 									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" style="width: 90%;" />
@@ -176,7 +176,7 @@ function template_event_post()
 	{
 		echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar_numb_days'], '</b></td>
+								<td align="right"><strong>', $txt['calendar_numb_days'], '</strong></td>
 								<td class="smalltext">
 									<select name="span">';
 
@@ -195,13 +195,13 @@ function template_event_post()
 	{
 		echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar_link_event'], '</b></td>
+								<td align="right"><strong>', $txt['calendar_link_event'], '</strong></td>
 								<td class="smalltext">
 									<input type="checkbox" class="check" name="link_to_board" checked="checked" onclick="toggleLinked(this.form);" />
 								</td>
 							</tr>
 							<tr>
-								<td align="right"><b>', $txt['calendar_post_in'], '</b></td>
+								<td align="right"><strong>', $txt['calendar_post_in'], '</strong></td>
 								<td class="smalltext">
 									<select id="board" name="board" onchange="this.form.submit();">';
 		foreach ($context['event']['categories'] as $category)
@@ -265,11 +265,11 @@ function template_show_month_grid($grid_name)
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'])
 			echo '
-						<b style="display: block; float: left;"><a href="', $calendar_data['previous_calendar']['href'], '">&#171;</a></b>';
+						<strong style="display: block; float: left;"><a href="', $calendar_data['previous_calendar']['href'], '">&#171;</a></strong>';
 
 		if (empty($calendar_data['next_calendar']['disabled']) && $calendar_data['show_next_prev'])
 			echo '
-						<b style="display: block; float: right;"><a href="', $calendar_data['next_calendar']['href'], '">&#187;</a></b>';
+						<strong style="display: block; float: right;"><a href="', $calendar_data['next_calendar']['href'], '">&#187;</a></strong>';
 
 		if ($calendar_data['show_next_prev'])
 			echo '
@@ -429,11 +429,11 @@ function template_show_week_grid($grid_name)
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
-						<b style="float: left; display: block;"><a href="', $calendar_data['previous_week']['href'], '">&#171;</a></b>';
+						<strong style="float: left; display: block;"><a href="', $calendar_data['previous_week']['href'], '">&#171;</a></strong>';
 
 		if (empty($calendar_data['next_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
-						<b style="float: right; display: block;"><a href="', $calendar_data['next_week']['href'], '">&#187;</a></b>';
+						<strong style="float: right; display: block;"><a href="', $calendar_data['next_week']['href'], '">&#187;</a></strong>';
 
 		echo '
 						<a href="', $scripturl, '?action=calendar;month=', $month_data['current_month'], ';year=', $month_data['current_year'], '">', $txt['months_titles'][$month_data['current_month']], ' ', $month_data['current_year'], '</a>', empty($done_title) && !empty($calendar_data['week_number']) ? (' - ' . $txt['calendar_week'] . ' ' . $calendar_data['week_number']) : '' , '

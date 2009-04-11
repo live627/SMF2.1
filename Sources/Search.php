@@ -680,7 +680,7 @@ function PlushSearch2()
 	// Create an array of replacements for highlighting.
 	$context['mark'] = array();
 	foreach ($searchArray as $word)
-		$context['mark'][$word] = '<b class="highlight">' . $word . '</b>';
+		$context['mark'][$word] = '<strong class="highlight">' . $word . '</strong>';
 
 	// Initialize two arrays storing the words that have to be searched for.
 	$orParts = array();
@@ -816,7 +816,7 @@ function PlushSearch2()
 			{
 				$suggestions = array_values($suggestions);
 				$did_you_mean['search'][] = $suggestions[0];
-				$did_you_mean['display'][] = '<em><b>' . $smcFunc['htmlspecialchars']($suggestions[0]) . '</b></em>';
+				$did_you_mean['display'][] = '<em><strong>' . $smcFunc['htmlspecialchars']($suggestions[0]) . '</strong></em>';
 				$found_misspelling = true;
 			}
 			else
@@ -1874,7 +1874,7 @@ function prepareSearchContext($reset = false)
 		if (strlen($message['body']) > $charLimit)
 		{
 			if (empty($context['key_words']))
-				$message['body'] = $smcFunc['strlen']($message['body']) > $charLimit ? $smcFunc['substr']($message['body'], 0, $charLimit) . '<b>...</b>' : $message['body'];
+				$message['body'] = $smcFunc['strlen']($message['body']) > $charLimit ? $smcFunc['substr']($message['body'], 0, $charLimit) . '<strong>...</strong>' : $message['body'];
 			else
 			{
 				$matchString = '';
@@ -1900,7 +1900,7 @@ function prepareSearchContext($reset = false)
 				foreach ($matches[0] as $index => $match)
 				{
 					$match = strtr(htmlspecialchars($match, ENT_QUOTES), array("\n" => '<br />'));
-					$message['body'] .= '<b>...</b>&nbsp;' . $match . '&nbsp;<b>...</b><br />';
+					$message['body'] .= '<strong>...</strong>&nbsp;' . $match . '&nbsp;<strong>...</strong><br />';
 				}
 			}
 
@@ -2033,9 +2033,9 @@ function prepareSearchContext($reset = false)
 		// Fix the international characters in the keyword too.
 		$query = strtr($smcFunc['htmlspecialchars']($query), array('\\\'' => '\''));
 
-		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? stripslashes('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
-		//$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), '\'$2\' == \'$1\' ? \'$1\' : \'<b class="highlight">$1</b>\'', $body_highlighted);
-		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<b class="highlight">$1</b>', $subject_highlighted);
+		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? stripslashes('\$1') : '<strong class=\"highlight\">\$1</strong>'", $body_highlighted);
+		//$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), '\'$2\' == \'$1\' ? \'$1\' : \'<strong class="highlight">$1</strong>\'', $body_highlighted);
+		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<strong class="highlight">$1</strong>', $subject_highlighted);
 	}
 
 	$output['matches'][] = array(

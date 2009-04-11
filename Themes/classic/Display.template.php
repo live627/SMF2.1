@@ -47,7 +47,7 @@ function template_main()
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
 					<td>
-						<b>', $txt['pages'], ':</b> ', $context['page_index'];
+						<strong>', $txt['pages'], ':</strong> ', $context['page_index'];
 
 	// Show a "go down" link?
 	if (!empty($modSettings['topbottomEnable']))
@@ -73,7 +73,7 @@ function template_main()
 		</td>
 	</tr>
 	<tr class="windowbg">
-		<td width="5%" valign="top"><b>', $txt['poll_question'], ':</b></td>
+		<td width="5%" valign="top"><strong>', $txt['poll_question'], ':</strong></td>
 		<td>
 			', $context['poll']['question'];
 
@@ -128,7 +128,7 @@ function template_main()
 					</td>
 				</tr>', $context['allow_poll_view'] ? '
 				<tr>
-					<td colspan="2"><b>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</b></td>
+					<td colspan="2"><strong>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</strong></td>
 				</tr>' : '', '
 			</table><br />';
 		}
@@ -210,7 +210,7 @@ function template_main()
 		{
 			echo '
 				<li>
-					<b>', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), $event['title'], '</b>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : '');
+					<strong>', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), $event['title'], '</strong>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : '');
 			echo '
 				</li>';
 		}
@@ -265,7 +265,7 @@ function template_main()
 				<table width="100%" cellpadding="5" cellspacing="0">
 					<tr>
 						<td valign="top" width="15%" rowspan="2">
-							<b>', $message['member']['link'], '</b><br />
+							<strong>', $message['member']['link'], '</strong><br />
 							<span class="smalltext">';
 
 		// Show the member's custom title, if they have one.
@@ -394,7 +394,7 @@ function template_main()
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
 		echo '
-									<span class="smalltext">&#171; <b>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</b> ', $message['time'], ' &#187;</span></td>
+									<span class="smalltext">&#171; <strong>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</span></td>
 								<td align="right" valign="bottom" height="20" nowrap="nowrap" style="font-size: smaller;">';
 
 		// Maybe we can approve it, maybe we should?
@@ -557,7 +557,7 @@ function template_main()
 				<table cellpadding="3" cellspacing="0" width="100%">
 					<tr>
 						<td>
-							<a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : ''), '
+							<a name="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : ''), '
 						</td>
 						<td align="right" style="font-size: smaller;">
 							', theme_show_main_buttons(), '&nbsp;
@@ -604,7 +604,7 @@ function template_main()
 		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a></td>
 	</tr>
 	<tr id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_desc'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', '</td>
+		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_desc'], $context['is_locked'] ? '<br /><br /><strong>' . $txt['quick_reply_warning'] . '</strong>' : '', '</td>
 		<td class="windowbg" width="75%" align="center">
 			', $context['can_reply_approved'] ? '' : '<i>' . $txt['wait_for_approval'] . '</i>', '
 			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '

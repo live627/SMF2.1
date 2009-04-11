@@ -364,7 +364,7 @@ function messageIndexBar($area)
 
 			// Add the label to the menu.
 			$pm_areas['labels']['areas']['label' . $label['id']] = array(
-				'label' => $label['name'] . (!empty($label['unread_messages']) ? ' (<b>' . $label['unread_messages'] . '</b>)' : ''),
+				'label' => $label['name'] . (!empty($label['unread_messages']) ? ' (<strong>' . $label['unread_messages'] . '</strong>)' : ''),
 				'custom_url' => $scripturl . '?action=pm;l=' . $label['id'],
 				'unread_messages' => $label['unread_messages'],
 				'messages' => $label['messages'],
@@ -379,7 +379,7 @@ function messageIndexBar($area)
  	$pm_areas['folders']['areas']['inbox']['messages'] = &$context['labels'][-1]['messages'];
 	if (!empty($context['labels'][-1]['unread_messages']))
 	{
-		$pm_areas['folders']['areas']['inbox']['label'] .= ' (<b>' . $context['labels'][-1]['unread_messages'] . '</b>)';
+		$pm_areas['folders']['areas']['inbox']['label'] .= ' (<strong>' . $context['labels'][-1]['unread_messages'] . '</strong>)';
 		$pm_areas['folders']['title'] .= ' (' . $context['labels'][-1]['unread_messages'] . ')';
 	}
 
@@ -1310,7 +1310,7 @@ function MessageSearch2()
 	// Create an array of replacements for highlighting.
 	$context['mark'] = array();
 	foreach ($searchArray as $word)
-		$context['mark'][$word] = '<b class="highlight">' . $word . '</b>';
+		$context['mark'][$word] = '<strong class="highlight">' . $word . '</strong>';
 
 	// This contains *everything*
 	$searchWords = array_merge($searchArray, $excludedWords);

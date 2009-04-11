@@ -200,7 +200,7 @@ function template_body_above()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-							', $txt['hello_member'], ' <b>', $context['user']['name'], '</b>';
+							', $txt['hello_member'], ' <strong>', $context['user']['name'], '</strong>';
 
 		// Only tell them about their messages if they can read their messages!
 		if ($context['allow_pm'])
@@ -210,7 +210,7 @@ function template_body_above()
 		// Is the forum in maintenance mode?
 		if ($context['in_maintenance'] && $context['user']['is_admin'])
 			echo '
-							<b>', $txt['maintain_mode_on'], '</b><br />';
+							<strong>', $txt['maintain_mode_on'], '</strong><br />';
 
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
@@ -275,7 +275,7 @@ function template_body_above()
 
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 						<div style="margin-top: 7px;">
-							<b>', $txt['search'], ': </b><input type="text" name="search" value="" style="width: 190px;" />&nbsp;
+							<strong>', $txt['search'], ': </strong><input type="text" name="search" value="" style="width: 190px;" />&nbsp;
 							<input type="submit" name="submit" value="', $txt['search'], '" style="width: 8ex;" />&nbsp;
 							<a href="', $scripturl, '?action=search;advanced">', $txt['search_advanced'], '</a>
 							<input type="hidden" name="advanced" value="0" />';
@@ -312,8 +312,8 @@ function template_body_above()
 					<div class="headerbodies" style="width: 260px; position: relative; background-image: url(', $settings['images_url'], '/box_bg.gif);">
 						<img src="', $settings['lang_images_url'], '/keystats.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
 						<div style="', !$context['browser']['is_ie'] ? 'min-height: 35px;' : 'height: 4em;', ' padding: 5px;" class="smalltext">
-							<b>', $context['common_stats']['total_posts'], '</b> ', $txt['posts_made'], ' ', $txt['in'], ' <b>', $context['common_stats']['total_topics'], '</b> ', $txt['topics'], ' ', $txt['by'], ' <span style="white-space: nowrap;"><b>', $context['common_stats']['total_members'], '</b> ', $txt['members'], '</span><br />
-							', $txt['latest_member'], ': <b> ', $context['common_stats']['latest_member']['link'], '</b>
+							<strong>', $context['common_stats']['total_posts'], '</strong> ', $txt['posts_made'], ' ', $txt['in'], ' <strong>', $context['common_stats']['total_topics'], '</strong> ', $txt['topics'], ' ', $txt['by'], ' <span style="white-space: nowrap;"><strong>', $context['common_stats']['total_members'], '</strong> ', $txt['members'], '</span><br />
+							', $txt['latest_member'], ': <strong> ', $context['common_stats']['latest_member']['link'], '</strong>
 						</div>
 					</div>';
 
@@ -465,7 +465,7 @@ function theme_linktree()
 			echo $tree['extra_before'];
 
 		// Show the link, including a URL if it should have one.
-		echo '<b>', $settings['linktree_link'] && isset($tree['url']) ? '<a href="' . $tree['url'] . '" class="nav">' . $tree['name'] . '</a>' : $tree['name'], '</b>';
+		echo '<strong>', $settings['linktree_link'] && isset($tree['url']) ? '<a href="' . $tree['url'] . '" class="nav">' . $tree['name'] . '</a>' : $tree['name'], '</strong>';
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))

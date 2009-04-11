@@ -190,7 +190,7 @@ function initialize_inputs()
 	</head>
 	<body style="background-color: #D4D4D4; margin-top: 5%; font: 10pt Verdana, sans-serif;">
 		<div style="border: 1px solid gray; background-color: #F0F0F0; margin: 1ex 0; padding: 1.2ex;">
-			<b>', $txt['ftp_path'], '</b><br />
+			<strong>', $txt['ftp_path'], '</strong><br />
 			<br />
 			', $txt['ftp_path_help'], '<br />
 			<br />
@@ -576,7 +576,7 @@ function doStep1()
 							<tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
 								<td>
-									<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><b>', $txt['ftp_port'], ':&nbsp;</b></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" /></div>
+									<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><strong>', $txt['ftp_port'], ':&nbsp;</strong></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" /></div>
 									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost', '" style="width: 70%;" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_server_info'], '</div>
 								</td>
@@ -698,7 +698,7 @@ function doStep2()
 						', $txt['download_paused'], '
 					</h3>
 					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<b>', $txt['download_progress'], ':</b>
+						<strong>', $txt['download_progress'], ':</strong>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $percent_done_total, '%</div>
 							<div style="width: ', $percent_done_total, '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
@@ -817,7 +817,7 @@ function doStep3()
 						', $txt['extraction_paused'], '
 					</h3>
 					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<b>', $txt['extraction_progress'], ':</b>
+						<strong>', $txt['extraction_progress'], ':</strong>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $percent_done_total, '%</div>
 							<div style="width: ', $percent_done_total, '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
@@ -1255,13 +1255,13 @@ function load_language_data()
 	$txt['error_message_click'] = 'Click here';
 	$txt['error_message_try_again'] = 'to try this step again.';
 	$txt['error_message_bad_try_again'] = 'to try installing anyway, but note that this is <i>strongly</i> discouraged.';
-	$txt['error_php_too_low'] = 'Warning!  You do not appear to have a version of PHP installed on your webserver that meets SMF\'s <b>minimum installations requirements</b>.<br />If you are not the host, you will need to ask your host to upgrade, or use a different host - otherwise, please upgrade PHP to a recent version.<br /><br />If you know for a fact that your PHP version is high enough you may continue, although this is strongly discouraged.';
-	$txt['error_session_save_path'] = 'Please inform your host that the <b>session.save_path specified in php.ini</b> is not valid!  It needs to be changed to a directory that <b>exists</b>, and is <b>writable</b> by the user PHP is running under.<br />';
+	$txt['error_php_too_low'] = 'Warning!  You do not appear to have a version of PHP installed on your webserver that meets SMF\'s <strong>minimum installations requirements</strong>.<br />If you are not the host, you will need to ask your host to upgrade, or use a different host - otherwise, please upgrade PHP to a recent version.<br /><br />If you know for a fact that your PHP version is high enough you may continue, although this is strongly discouraged.';
+	$txt['error_session_save_path'] = 'Please inform your host that the <strong>session.save_path specified in php.ini</strong> is not valid!  It needs to be changed to a directory that <strong>exists</strong>, and is <strong>writable</strong> by the user PHP is running under.<br />';
 	$txt['error_mysql_missing'] = 'The installer was unable to detect MySQL support in PHP.  Please ask your host to ensure that PHP was compiled with MySQL, or that the proper extension is being loaded.';
 	$txt['error_not_right_path'] = 'Sorry, the path must exist and point to the same place this installer was uploaded to.';
 	$txt['error_unable_download'] = 'The installer was unable to download the archive (%1$s) from the server.  <a href="%1$s" target="_blank">Please try using the regular installer package instead.</a>';
 	$txt['error_ftp_no_connect'] = 'Unable to connect to FTP server with this combination of details.';
-	$txt['ftp_please_note'] = 'Before you proceed, please note that <b>the contents of the directory this file is in may be overwritten</b>.  This installer will check to make sure that the path you specify points to where this file is, but please be careful not to overwrite anything important!';
+	$txt['ftp_please_note'] = 'Before you proceed, please note that <strong>the contents of the directory this file is in may be overwritten</strong>.  This installer will check to make sure that the path you specify points to where this file is, but please be careful not to overwrite anything important!';
 	$txt['ftp_login'] = 'Your FTP connection information';
 	$txt['ftp_login_info'] = 'This web installer needs your FTP information in order to automate the installation for you.  Please note that none of this information is saved in your installation, it is just used to setup SMF.';
 	$txt['ftp_server'] = 'Server';

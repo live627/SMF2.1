@@ -352,9 +352,9 @@ function template_group_members()
 				</tr>
 				<tr class="windowbg2">
 					<td align="left">
-						<b>', $txt['name'], ':</b> <span ', $context['group']['online_color'] ? 'style="color: ' . $context['group']['online_color'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
-						', $context['group']['description'] ? '<br /><b>' . $txt['membergroups_members_description'] . ':</b> ' . $context['group']['description'] : '', '
-						<br /><b>', $txt['membergroups_members_top'], ':</b> ', $context['total_members'];
+						<strong>', $txt['name'], ':</strong> <span ', $context['group']['online_color'] ? 'style="color: ' . $context['group']['online_color'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
+						', $context['group']['description'] ? '<br /><strong>' . $txt['membergroups_members_description'] . ':</strong> ' . $context['group']['description'] : '', '
+						<br /><strong>', $txt['membergroups_members_top'], ':</strong> ', $context['total_members'];
 	// Any group moderators to show?
 	if (!empty($context['group']['moderators']))
 	{
@@ -363,7 +363,7 @@ function template_group_members()
 			$moderators[] = '<a href="' . $scripturl . '?action=profile;u=' . $moderator['id'] . '">' . $moderator['name'] . '</a>';
 
 		echo '
-						<br /><b>', $txt['membergroups_members_group_moderators'], ':</b> ', implode(', ', $moderators);
+						<br /><strong>', $txt['membergroups_members_group_moderators'], ':</strong> ', implode(', ', $moderators);
 	}
 
 	echo '
@@ -453,7 +453,7 @@ function template_group_members()
 				<tr class="titlebg">
 					<td align="left" colspan="2">', $txt['membergroups_members_add_title'], '</td>
 				</tr><tr class="windowbg2" valign="top">
-					<td align="right" width="50%"><b>', $txt['membergroups_members_add_desc'], ':</b></td>
+					<td align="right" width="50%"><strong>', $txt['membergroups_members_add_desc'], ':</strong></td>
 					<td align="left">
 						<input type="text" name="toAdd" id="toAdd" value="" />
 						<div id="toAddItemContainer"></div>
@@ -508,7 +508,7 @@ function template_group_request_reason()
 		echo '
 			<tr class="windowbg2">
 				<td>
-					<b>', sprintf($txt['mc_groupr_reason_desc'], $request['member_link'], $request['group_link']), ':</b>
+					<strong>', sprintf($txt['mc_groupr_reason_desc'], $request['member_link'], $request['group_link']), ':</strong>
 					<input type="hidden" name="groupr[]" value="', $request['id'], '" />
 				</td>
 			</tr>

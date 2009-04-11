@@ -13,7 +13,7 @@ function template_ask()
 				<td>', $txt['split'], '</td>
 			</tr><tr class="windowbg">
 				<td align="center" style="padding-top: 2ex; padding-bottom: 1ex;">
-					<b><label for="subname">', $txt['subject_new_topic'], '</label>:</b> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" /><br />
+					<strong><label for="subname">', $txt['subject_new_topic'], '</label>:</strong> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" /><br />
 					<br />
 					<input type="radio" name="step2" value="onlythis" checked="checked" class="check" /> ', $txt['split_this_post'], '<br />
 					<input type="radio" name="step2" value="afterthis" class="check" /> ', $txt['split_after_and_this_post'], '<br />
@@ -70,7 +70,7 @@ function template_select()
 				</tr>
 				<tr class="catbg">
 					<td colspan="2" height="18">
-						<b>', $txt['pages'], ':</b> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
+						<strong>', $txt['pages'], ':</strong> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
 					</td>
 				</tr>';
 	foreach ($context['not_selected']['messages'] as $message)
@@ -98,7 +98,7 @@ function template_select()
 				</tr>
 				<tr class="catbg">
 					<td colspan="2" height="18">
-						<b>', $txt['pages'], ':</b> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
+						<strong>', $txt['pages'], ':</strong> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
 					</td>
 				</tr>';
 	if (!empty($context['selected']['messages']))
@@ -228,7 +228,7 @@ function template_merge()
 			<tr>
 				<td colspan="2" class="titlebg">
 					<table cellpadding="0" cellspacing="0" border="0"><tr>
-						<td><b>' . $txt['pages'] . ':</b> ' . $context['page_index'] . '</td>
+						<td><strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '</td>
 					</tr></table>
 				</td>
 			</tr>
@@ -236,10 +236,10 @@ function template_merge()
 				<td class="windowbg" valign="middle" align="center">
 					<table border="0">
 						<tr>
-							<td align="right"><b>' . $txt['topic_to_merge'] . ':</b> <br /></td>
+							<td align="right"><strong>' . $txt['topic_to_merge'] . ':</strong> <br /></td>
 							<td align="left">' . $context['origin_subject'] . '</td>
 						</tr><tr>
-							<td align="right"><br /><b>', $txt['merge_to_topic_id'], ': </b></td>
+							<td align="right"><br /><strong>', $txt['merge_to_topic_id'], ': </strong></td>
 							<td align="left">
 								<br />
 								<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
@@ -253,7 +253,7 @@ function template_merge()
 	if (!empty($context['boards']) && count($context['boards']) > 1)
 	{
 		echo '
-							<td align="right"><br /><b>' . $txt['target_board'] . ':</b></td>
+							<td align="right"><br /><strong>' . $txt['target_board'] . ':</strong></td>
 							<td align="left"><br />
 								<form action="' . $scripturl . '?action=mergetopics;from=' . $context['origin_topic'] . ';targetboard=' . $context['target_board'] . ';board=' . $context['current_board'] . '.0" method="post" accept-charset="', $context['character_set'], '">
 									<input type="hidden" name="from" value="' . $context['origin_topic'] . '" />
@@ -269,7 +269,7 @@ function template_merge()
 
 	echo '
 						</tr><tr>
-							<td align="right" valign="top"><b>' . $txt['target_topic'] . ':</b></td>
+							<td align="right" valign="top"><strong>' . $txt['target_topic'] . ':</strong></td>
 							<td align="left" style="white-space: nowrap;">
 								<table>';
 
@@ -294,7 +294,7 @@ function template_merge()
 			<tr>
 				<td colspan="2" class="titlebg">
 					<table cellpadding="0" cellspacing="0" border="0"><tr>
-						<td><b>' . $txt['pages'] . ':</b> ' . $context['page_index'] . '</td>
+						<td><strong>' . $txt['pages'] . ':</strong> ' . $context['page_index'] . '</td>
 					</tr></table>
 				</td>
 			</tr>

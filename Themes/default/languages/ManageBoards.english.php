@@ -90,7 +90,7 @@ $txt['recycle_board_unselected_notice'] = 'You have enabled the recycling of top
 $txt['countChildPosts'] = 'Count child\'s posts in parent\'s totals';
 $txt['allow_ignore_boards'] = 'Allow boards to be ignored';
 
-$txt['mboards_select_destination'] = 'Select destination for board \'<b>%1$s</b>\'';
+$txt['mboards_select_destination'] = 'Select destination for board \'<strong>%1$s</strong>\'';
 $txt['mboards_cancel_moving'] = 'Cancel moving';
 $txt['mboards_move'] = 'move';
 

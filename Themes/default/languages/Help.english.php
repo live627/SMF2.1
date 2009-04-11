@@ -8,7 +8,7 @@ global $helptxt;
 $txt['close_window'] = 'Close window';
 
 $helptxt['manage_boards'] = '
-	<b>Edit Boards</b><br />
+	<strong>Edit Boards</strong><br />
 	In this menu you can create/reorder/remove boards, and the categories
 	above them. For example, if you had a wide-ranging
 	site that offered information on &quot;Sports&quot; and &quot;Cars&quot; and &quot;Music&quot;, these
@@ -17,21 +17,21 @@ $helptxt['manage_boards'] = '
 	or &quot;Boards&quot; for topics within each. It\'s a simple hierarchy, with this structure: <br />
 	<ul class="normallist">
 		<li>
-			<b>Sports</b>
+			<strong>Sports</strong>
 			&nbsp;- A &quot;category&quot;
 		</li>
 		<ul class="normallist">
 			<li>
-				<b>Baseball</b>
+				<strong>Baseball</strong>
 				&nbsp;- A board under the category of &quot;Sports&quot;
 			</li>
 			<ul class="normallist">
 				<li>
-					<b>Stats</b>
+					<strong>Stats</strong>
 					&nbsp;- A child board under the board of &quot;Baseball&quot;
 				</li>
 			</ul>
-			<li><b>Football</b>
+			<li><strong>Football</strong>
 			&nbsp;- A board under the category of &quot;Sports&quot;</li>
 		</ul>
 	</ul>
@@ -54,16 +54,16 @@ $helptxt['manage_boards'] = '
 $helptxt['edit_news'] = '
 	<ul class="normallist">
 		<li>
-			<b>News</b><br />
+			<strong>News</strong><br />
 			This section allows you to set the text for news items displayed on the Board Index page.
 			Add any item you want (e.g., &quot;Don\'t miss the conference this Tuesday&quot;). Each news item is displayed randomly and should be placed in a separate box.
 		</li>
 		<li>
-			<b>Newsletters</b><br />
+			<strong>Newsletters</strong><br />
 			This section allows you to send out newsletters to the members of the forum via personal message or email. First select the groups that you want to receive the newsletter, and those you don\’t want to receive the newsletter. If you wish, you can add additional members and email addresses that will receive the newsletter. Finally, input the message you want to send and select whether you want it to be sent to members as a personal message or as an email.
 		</li>
 		<li>
-			<b>Settings</b><br />
+			<strong>Settings</strong><br />
 				This section contains a few settings that relate to news and newsletters, including selecting what groups can edit forum news or send newsletters. There is also an setting to configure whether you want news feeds enabled on the forum, as well as a setting to configure the length (how many characters are displayed) for each news post from a news feed.
 		</li>
 	</ul>';
@@ -71,14 +71,14 @@ $helptxt['edit_news'] = '
 $helptxt['view_members'] = '
 	<ul class="normallist">
 		<li>
-			<b>View all Members</b><br />
+			<strong>View all Members</strong><br />
 			View all members in the board. You are presented with a hyperlinked list of member names. You may click
 			on any of the names to find details of the members (homepage, age, etc.), and as Administrator
 			you are able to modify these parameters. You have complete control over members, including the
 			ability to delete them from the forum.<br /><br />
 		</li>
 		<li>
-			<b>Awaiting Approval</b><br />
+			<strong>Awaiting Approval</strong><br />
 			This section is only shown if you have enabled admin approval of all new registrations. Anyone who registers to join your
 			forum will only become a full member once they have been approved by an admin. The section lists all those members who
 			are still awaiting approval, along with their email and IP address. You can choose to either accept or reject (delete)
@@ -86,7 +86,7 @@ $helptxt['view_members'] = '
 			of the screen. When rejecting a member you can choose to delete the member either with or without notifying them of your decision.<br /><br />
 		</li>
 		<li>
-			<b>Awaiting Activation</b><br />
+			<strong>Awaiting Activation</strong><br />
 			This section will only be visible if you have activation of member accounts enabled on the forum. This section will list all
 			members who have still not activated their new accounts. From this screen you can choose to either accept, reject or remind
 			members with outstanding registrations. As above you can also choose to email the member to inform them of the
@@ -94,28 +94,28 @@ $helptxt['view_members'] = '
 		</li>
 	</ul>';
 
-$helptxt['ban_members'] = '<b>Ban Members</b><br />
+$helptxt['ban_members'] = '<strong>Ban Members</strong><br />
 	SMF provides the ability to &quot;ban&quot; users, to prevent people who have violated the trust of the board
 	by spamming, trolling, etc. This allows you to those users who are detrimental to your forum. As an admin,
 	when you view messages, you can see each user\'s IP address used to post at that time. In the ban list,
 	you simply type that IP address in, save, and they can no longer post from that location.<br />You can also
 	ban people through their email address.';
 
-$helptxt['featuresettings'] = '<b>Edit Features and Options</b><br />
+$helptxt['featuresettings'] = '<strong>Edit Features and Options</strong><br />
 	There are several features in this section that can be changed to your preference.';
 
-$helptxt['securitysettings'] = '<b>Security and Moderation</b><br />
+$helptxt['securitysettings'] = '<strong>Security and Moderation</strong><br />
 	This section contains settings relating to the security and moderation of your forum.';
 
-$helptxt['modsettings'] = '<b>Modification Settings</b><br />
+$helptxt['modsettings'] = '<strong>Modification Settings</strong><br />
 	This section should contain any settings added by modifications installed on your forum.';
 
-$helptxt['number_format'] = '<b>Number Format</b><br />
+$helptxt['number_format'] = '<strong>Number Format</strong><br />
 	You can use this setting to format the way in which numbers on your forum will be displayed to the user. The format of this setting is:<br />
 	<div style="margin-left: 2ex;">1,234.00</div><br />
 	Where \',\' is the character used to split up groups of thousands, \'.\' is the character used as the decimal point and the number of zeros dictate the accuracy of rounding.';
 
-$helptxt['time_format'] = '<b>Time Format</b><br />
+$helptxt['time_format'] = '<strong>Time Format</strong><br />
 	You have the power to adjust how the time and date look for yourself. There are a lot of little letters, but it\'s quite simple.
 	The conventions follow PHP\'s strftime function and are described as below (more details can be found at <a href="http://www.php.net/manual/function.strftime.php" target="_blank" class="new_win">php.net</a>).<br />
 	<br />
@@ -126,118 +126,118 @@ $helptxt['time_format'] = '<b>Time Format</b><br />
 	&nbsp;&nbsp;%b - abbreviated month name<br />
 	&nbsp;&nbsp;%B - full month name<br />
 	&nbsp;&nbsp;%d - day of the month (01 to 31) <br />
-	&nbsp;&nbsp;%D<b>*</b> - same as %m/%d/%y <br />
-	&nbsp;&nbsp;%e<b>*</b> - day of the month (1 to 31) <br />
+	&nbsp;&nbsp;%D<strong>*</strong> - same as %m/%d/%y <br />
+	&nbsp;&nbsp;%e<strong>*</strong> - day of the month (1 to 31) <br />
 	&nbsp;&nbsp;%H - hour using a 24-hour clock (range 00 to 23) <br />
 	&nbsp;&nbsp;%I - hour using a 12-hour clock (range 01 to 12) <br />
 	&nbsp;&nbsp;%m - month as a number (01 to 12) <br />
 	&nbsp;&nbsp;%M - minute as a number <br />
 	&nbsp;&nbsp;%p - either &quot;am&quot; or &quot;pm&quot; according to the given time<br />
-	&nbsp;&nbsp;%R<b>*</b> - time in 24 hour notation <br />
+	&nbsp;&nbsp;%R<strong>*</strong> - time in 24 hour notation <br />
 	&nbsp;&nbsp;%S - second as a decimal number <br />
-	&nbsp;&nbsp;%T<b>*</b> - current time, equal to %H:%M:%S <br />
+	&nbsp;&nbsp;%T<strong>*</strong> - current time, equal to %H:%M:%S <br />
 	&nbsp;&nbsp;%y - 2 digit year (00 to 99) <br />
 	&nbsp;&nbsp;%Y - 4 digit year<br />
 	&nbsp;&nbsp;%% - a literal \'%\' character <br />
 	<br />
 	<i>* Does not work on Windows-based servers.</i></span>';
 
-$helptxt['live_news'] = '<b>Live announcements</b><br />
+$helptxt['live_news'] = '<strong>Live announcements</strong><br />
 	This box shows recently updated announcements from <a href="http://www.simplemachines.org/" target="_blank" class="new_win">www.simplemachines.org</a>.
 	You should check here every now and then for updates, new releases, and important information from Simple Machines.';
 
-$helptxt['registrations'] = '<b>Registration Management</b><br />
+$helptxt['registrations'] = '<strong>Registration Management</strong><br />
 	This section contains all the functions that could be necessary to manage new registrations on the forum. It contains up to four
 	sections which are visible depending on your forum settings. These are:<br /><br />
 	<ul class="normallist">
 		<li>
-			<b>Register new member</b><br />
+			<strong>Register new member</strong><br />
 			From this screen you can choose to register accounts for new members on their behalf. This can be useful in forums where registration is closed
 			to new members, or in cases where the admin wishes to create a test account. If the option to require activation of the account
 			is selected the member will be emailed a activation link which must be clicked before they can use the account. Similarly you can
 			select to email the users new password to the stated email address.<br /><br />
 		</li>
 		<li>
-			<b>Edit Registration Agreement</b><br />
+			<strong>Edit Registration Agreement</strong><br />
 			This allows you to set the text for the registration agreement displayed when members sign up for your forum.
 			You can add or remove anything from the default registration agreement, which is included in SMF.<br /><br />
 		</li>
 		<li>
-			<b>Set Reserved Names</b><br />
+			<strong>Set Reserved Names</strong><br />
 			Using this interface you can specify words or names which may not be used by your users.<br /><br />
 		</li>
 		<li>
-			<b>Settings</b><br />
+			<strong>Settings</strong><br />
 			This section will only be visible if you have permission to administrate the forum. From this screen you can decide on the registration method
 			is use on your forum, as well as other registration related settings.
 		</li>
 	</ul>';
 
-$helptxt['modlog'] = '<b>Moderation Log</b><br />
+$helptxt['modlog'] = '<strong>Moderation Log</strong><br />
 	This section allows members of the moderation team to track all the moderation actions that the forum moderators have performed. To ensure that
 	moderators cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.';
-$helptxt['adminlog'] = '<b>Administration Log</b><br />
+$helptxt['adminlog'] = '<strong>Administration Log</strong><br />
 	This section allows members of the admin team to track some of the administrative actions that have occurred on the forum. To ensure that
 	admins cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.';
-$helptxt['warning_enable'] = '<b>User Warning System</b><br />
+$helptxt['warning_enable'] = '<strong>User Warning System</strong><br />
 	This feature enables members of the admin and moderation team to issue warnings to users - and to use a users warning level to determine the
 	actions available to them on the forum. Upon enabling this feature a permission will be available within the permissions section to define
 	which groups may assign warnings to users. Warning levels can be adjusted from a users profile. The following additional options are available:
 	<ul class="normallist">
 		<li>
-			<b>Warning Level for User Watch</b><br />
+			<strong>Warning Level for User Watch</strong><br />
 			This setting defines the percentage warning level a user must reach to automatically assign a &quot;watch&quot; to the user.
 			Any user who is being &quot;watched&quot; will appear in the relevant area of the moderation center.
 		</li>
 		<li>
-			<b>Warning Level for Post Moderation</b><br />
+			<strong>Warning Level for Post Moderation</strong><br />
 			Any user passing the value of this setting will find all their posts require moderator approval before they appear to the forum
 			community. This will override any local board permissions which may exist related to post moderation.
 		</li>
 		<li>
-			<b>Warning Level for User Muting</b><br />
+			<strong>Warning Level for User Muting</strong><br />
 			If this warning level is passed by a user they will find themselves under a post ban. The user will lose all posting rights.
 		</li>
 		<li>
-			<b>Maximum User Warning Point per Day</b><br />
+			<strong>Maximum User Warning Point per Day</strong><br />
 			This setting limits the amount of points a moderator may add/remove to any particular user in a twenty four hour period. This will
 			can be used to limit what a moderator can do in a small period of time. This setting can be disabled by setting to a value of zero. Note that
 			any users with administrator permissions are not affected by this value.
 		</li>
 	</ul>';
-$helptxt['error_log'] = '<b>Error Log</b><br />
+$helptxt['error_log'] = '<strong>Error Log</strong><br />
 	The error log tracks logs every serious error encountered by users using your forum. It lists all of these errors by date which can be sorted
 	by clicking the black arrow next to each date. Additionally you can filter the errors by clicking the picture next to each error statistic. This
 	allows you to filter, for example, by member. When a filter is active the only results that will be displayed will be those that match that filter.';
-$helptxt['theme_settings'] = '<b>Theme Settings</b><br />
+$helptxt['theme_settings'] = '<strong>Theme Settings</strong><br />
 	The settings screen allows you to change settings specific to a theme. These settings include options such as the themes directory and URL information but
 	also options that affect the layout of a theme on your forum. Most themes will have a variety of user configurable options, allowing you to adapt a theme
 	to suit your individual forum needs.';
-$helptxt['smileys'] = '<b>Smiley Center</b><br />
+$helptxt['smileys'] = '<strong>Smiley Center</strong><br />
 	Here you can add and remove smileys, and smiley sets.  Note importantly that if a smiley is in one set, it\'s in all sets - otherwise, it might
 	get confusing for your users using different sets.<br /><br />
 
 	You are also able to edit message icons from here, if you have them enabled on the settings page.';
-$helptxt['calendar'] = '<b>Manage Calendar</b><br />
+$helptxt['calendar'] = '<strong>Manage Calendar</strong><br />
 	Here you can modify the current calendar settings as well as add and remove holidays that appear on the calendar.';
 
-$helptxt['serversettings'] = '<b>Server Settings</b><br />
+$helptxt['serversettings'] = '<strong>Server Settings</strong><br />
 	Here you can perform the core configuration for your forum. This section includes the database and url settings, as well as other
 	important configuration items such as mail settings and caching. Think carefully whenever editing these settings as an error may
 	render the forum inaccessible';
 $helptxt['manage_files'] = '
 	<ul class="normallist">
 		<li>
-			<b>Browse Files</b><br />
+			<strong>Browse Files</strong><br />
 			Browse through all the attachments, avatars and thumbnails stored by SMF.<br /><br />
 		</li><li>
-			<b>Attachment Settings</b><br />
+			<strong>Attachment Settings</strong><br />
 			Configure where attachments are stored and set restrictions on the types of attachments.<br /><br />
 		</li><li>
-			<b>Avatar Settings</b><br />
+			<strong>Avatar Settings</strong><br />
 			Configure where avatars are stored and manage resizing of avatars.<br /><br />
 		</li><li>
-			<b>File Maintenance</b><br />
+			<strong>File Maintenance</strong><br />
 			Check and repair any error in the attachment directory and delete selected attachments.<br /><br />
 		</li>
 	</ul>';
@@ -258,7 +258,7 @@ $helptxt['topbottomEnable'] = 'This will add go up and go down buttons, so that 
 		without scrolling.';
 $helptxt['onlineEnable'] = 'This will show an image to indicate whether the member is online or offline';
 $helptxt['todayMod'] = 'This will show &quot;Today&quot; or &quot;Yesterday&quot; instead of the date.<br /><br />
-		<b>Examples:</b><br /><br />
+		<strong>Examples:</strong><br /><br />
 		<dt>
 			<dt>Disabled</dt>
 			<dd>October 3, 2009 at 12:59:18 am</dd>
@@ -292,16 +292,16 @@ $helptxt['simpleSearch'] = 'This will show a simple search form and a link to a 
 $helptxt['max_image_width'] = 'This allows you to set a maximum size for posted pictures. Pictures smaller than the maximum will not be affected.';
 $helptxt['mail_type'] = 'This setting allows you to choose either PHP\'s default settings, or to override those settings with SMTP.  PHP doesn\'t support using authentication with SMTP (which many hosts require, now) so if you want that you should select SMTP.  Please note that SMTP can be slower, and some servers will not take usernames and passwords.<br /><br />You don\'t need to fill in the SMTP settings if this is set to PHP\'s default.';
 $helptxt['attachment_manager_settings'] = 'Attachments are files that members can upload, and attach to a post.<br /><br />
-		<b>Check attachment extension</b>:<br /> Do you want to check the extension of the files?<br />
-		<b>Allowed attachment extensions</b>:<br /> You can set the allowed extensions of attached files.<br />
-		<b>Attachments directory</b>:<br /> The path to your attachment folder<br />(example: /home/sites/yoursite/www/forum/attachments)<br />
-		<b>Max attachment folder space</b> (in KB):<br /> Select how large the attachment folder can be, including all files within it.<br />
-		<b>Max attachment size per post</b> (in KB):<br /> Select the maximum filesize of all attachments made per post.  If this is lower than the per-attachment limit, this will be the limit.<br />
-		<b>Max size per attachment</b> (in KB):<br /> Select the maximum filesize of each separate attachment.<br />
-		<b>Max number of attachments per post</b>:<br /> Select the number of attachments a person can make, per post.<br />
-		<b>Display attachment as picture in posts</b>:<br /> If the uploaded file is a picture, this will show it underneath the post.<br />
-		<b>Resize images when showing under posts</b>:<br /> If the above option is selected, this will save a separate (smaller) attachment for the thumbnail to decrease bandwidth.<br />
-		<b>Maximum width and height of thumbnails</b>:<br /> Only used with the &quot;Resize images when showing under posts&quot; option, the maximum width and height to resize attachments down from.  They will be resized proportionally.';
+		<strong>Check attachment extension</strong>:<br /> Do you want to check the extension of the files?<br />
+		<strong>Allowed attachment extensions</strong>:<br /> You can set the allowed extensions of attached files.<br />
+		<strong>Attachments directory</strong>:<br /> The path to your attachment folder<br />(example: /home/sites/yoursite/www/forum/attachments)<br />
+		<strong>Max attachment folder space</strong> (in KB):<br /> Select how large the attachment folder can be, including all files within it.<br />
+		<strong>Max attachment size per post</strong> (in KB):<br /> Select the maximum filesize of all attachments made per post.  If this is lower than the per-attachment limit, this will be the limit.<br />
+		<strong>Max size per attachment</strong> (in KB):<br /> Select the maximum filesize of each separate attachment.<br />
+		<strong>Max number of attachments per post</strong>:<br /> Select the number of attachments a person can make, per post.<br />
+		<strong>Display attachment as picture in posts</strong>:<br /> If the uploaded file is a picture, this will show it underneath the post.<br />
+		<strong>Resize images when showing under posts</strong>:<br /> If the above option is selected, this will save a separate (smaller) attachment for the thumbnail to decrease bandwidth.<br />
+		<strong>Maximum width and height of thumbnails</strong>:<br /> Only used with the &quot;Resize images when showing under posts&quot; option, the maximum width and height to resize attachments down from.  They will be resized proportionally.';
 $helptxt['karmaMode'] = 'Karma is a feature that shows the popularity of a member. Members, if allowed, can
 		\'applaud\' or \'smite\' other members, which is how their popularity is calculated. You can change the
 		number of posts needed to have a &quot;karma&quot;, the time between smites or applauds, and if administrators
@@ -309,18 +309,18 @@ $helptxt['karmaMode'] = 'Karma is a feature that shows the popularity of a membe
 		a permission.  If you have trouble getting this feature to work for everyone, double check your permissions.';
 // !!! This should be reused or removed.
 $helptxt['cal_enabled'] = 'The calendar can be used for showing birthdays, or for showing important moments happening in your community.<br /><br />
-		<b>Show days as link to \'Post Event\'</b>:<br />This will allow members to post events for that day, when they click on that date<br />
-		<b>Show week numbers</b>:<br />Show which week it is.<br />
-		<b>Max days in advance on board index</b>:<br />If this is set to 7, the next week\'s worth of events will be shown.<br />
-		<b>Show holidays on board index</b>:<br />Show today\'s holidays in a calendar bar on the board index.<br />
-		<b>Show birthdays on board index</b>:<br />Show today\'s birthdays in a calendar bar on the board index.<br />
-		<b>Show events on board index</b>:<br />Show today\'s events in a calendar bar on the board index.<br />
-		<b>Default Board to Post In</b>:<br />What\'s the default board to post events in?<br />
-		<b>Allow events not linked to posts</b>:<br />Allow members to post events without requiring it to be linked with a post in a board.<br />
-		<b>Minimum year</b>:<br />Select the &quot;first&quot; year on the calendar list.<br />
-		<b>Maximum year</b>:<br />Select the &quot;last&quot; year on the calendar list<br />
-		<b>Allow events to span multiple days</b>:<br />Check to allow events to span multiple days.<br />
-		<b>Max number of days an event can span</b>:<br />Select the maximum days that an event can span.<br /><br />
+		<strong>Show days as link to \'Post Event\'</strong>:<br />This will allow members to post events for that day, when they click on that date<br />
+		<strong>Show week numbers</strong>:<br />Show which week it is.<br />
+		<strong>Max days in advance on board index</strong>:<br />If this is set to 7, the next week\'s worth of events will be shown.<br />
+		<strong>Show holidays on board index</strong>:<br />Show today\'s holidays in a calendar bar on the board index.<br />
+		<strong>Show birthdays on board index</strong>:<br />Show today\'s birthdays in a calendar bar on the board index.<br />
+		<strong>Show events on board index</strong>:<br />Show today\'s events in a calendar bar on the board index.<br />
+		<strong>Default Board to Post In</strong>:<br />What\'s the default board to post events in?<br />
+		<strong>Allow events not linked to posts</strong>:<br />Allow members to post events without requiring it to be linked with a post in a board.<br />
+		<strong>Minimum year</strong>:<br />Select the &quot;first&quot; year on the calendar list.<br />
+		<strong>Maximum year</strong>:<br />Select the &quot;last&quot; year on the calendar list<br />
+		<strong>Allow events to span multiple days</strong>:<br />Check to allow events to span multiple days.<br />
+		<strong>Max number of days an event can span</strong>:<br />Select the maximum days that an event can span.<br /><br />
 		Remember that usage of the calendar (posting events, viewing events, etc.) is controlled by permissions set on the permissions screen.';
 $helptxt['localCookies'] = 'SMF uses cookies to store login information on the client computer.
 	Cookies can be stored globally (myserver.com) or locally (myserver.com/path/to/forum).<br />
@@ -360,7 +360,7 @@ $helptxt['globalCookies'] = 'Makes log in cookies available across subdomains.  
 	Using this option will allow you to access the forum\'s cookie on your site.  Do not enable this if there are other subdomains (like hacker.simplemachines.org) not controlled by you.';
 $helptxt['secureCookies'] = 'Enabling this option will force the cookies created for users on your forum to be marked as secure. Only enable this option if you are using HTTPS throughout your site as it will break cookie handling otherwise!';
 $helptxt['securityDisable'] = 'This <i>disables</i> the additional password check for the administration section. This is not recommended!';
-$helptxt['securityDisable_why'] = 'This is your current password. (the same one you use to login.)<br /><br />Having to type this helps ensure that you want to do whatever administration you are doing, and that it is <b>you</b> doing it.';
+$helptxt['securityDisable_why'] = 'This is your current password. (the same one you use to login.)<br /><br />Having to type this helps ensure that you want to do whatever administration you are doing, and that it is <strong>you</strong> doing it.';
 $helptxt['emailmembers'] = 'In this message you can use a few &quot;variables&quot;.  These are:<br />
 	{$board_url} - The URL to your forum.<br />
 	{$current_time} - The current time.<br />
@@ -386,9 +386,9 @@ $helptxt['lastActive'] = 'Set the number of minutes to show people are active in
 
 $helptxt['customoptions'] = 'This section defines the options that a user may choose from a drop down list. There are a few key points to note in this section:
 	<ul class="normallist">
-		<li><b>Default Option:</b> Whichever option box has the &quot;radio button&quot; next to it selected will be the default selection for the user when they enter their profile.</li>
-		<li><b>Removing Options:</b> To remove an option simply empty the text box for that option - all users with that selected will have their option cleared.</li>
-		<li><b>Reordering Options:</b> You can reorder the options by moving text around between the boxes. However - an important note - you must make sure you do <b>not</b> change the text when reordering options as otherwise user data will be lost.</li>
+		<li><strong>Default Option:</strong> Whichever option box has the &quot;radio button&quot; next to it selected will be the default selection for the user when they enter their profile.</li>
+		<li><strong>Removing Options:</strong> To remove an option simply empty the text box for that option - all users with that selected will have their option cleared.</li>
+		<li><strong>Reordering Options:</strong> You can reorder the options by moving text around between the boxes. However - an important note - you must make sure you do <strong>not</strong> change the text when reordering options as otherwise user data will be lost.</li>
 	</ul>';
 
 $helptxt['autoOptDatabase'] = 'This option optimizes the database every so many days.  Set it to 1 to make a daily optimization.  You can also specify a maximum number of online users, so that you won\'t overload your server or inconvenience too many users.';
@@ -423,20 +423,20 @@ $helptxt['guest_hideContacts'] = 'If selected this option will hide the email ad
 $helptxt['registration_method'] = 'This option determines what method of registration is used for people wishing to join your forum. You can select from:<br /><br />
 	<ul class="normallist">
 		<li>
-			<b>Registration Disabled:</b><br />
+			<strong>Registration Disabled:</strong><br />
 				Disables the registration process, which means that no new members can register to join your forum.<br />
 		</li><li>
-			<b>Immediate Registration</b><br />
+			<strong>Immediate Registration</strong><br />
 				New members can login and post immediately after registering on your forum.<br />
 		</li><li>
-			<b>Member Activation</b><br />
+			<strong>Member Activation</strong><br />
 				When this option is enabled any members registering with the forum will have an activation link emailed to them which they must click before they can become full members.<br />
 		</li><li>
-			<b>Member Approval</b><br />
+			<strong>Member Approval</strong><br />
 				This option will make it so all new members registering to your forum will need to be approved by the admin before they become members.
 		</li>
 	</ul>';
-$helptxt['register_openid'] = '<b>Authenticate with OpenID</b><br />
+$helptxt['register_openid'] = '<strong>Authenticate with OpenID</strong><br />
 	OpenID is a means of using one username across different websites, to simplify the online experience. To use OpenID you first need to create an OpenID account - a list of providers can be found on the <a href="http://openid.net/" target="_blank">OpenID Official Site</a><br /><br />
 	Once you have an OpenID account simply enter your unique identification URL into the OpenID input box and submit. You will then be taken to your providers site to verify your identity before being passed back to this site.<br /><br />
 	On your first visit to this site you will be asked to confirm a couple of details before you will be recognized, after which you can login to this site and change your profile settings using just your OpenID.<br /><br />
@@ -447,9 +447,9 @@ $helptxt['send_welcomeEmail'] = 'When this option is enabled all new members wil
 $helptxt['password_strength'] = 'This setting determines the strength required for passwords selected by your forum users. The stronger the password, the harder it should be to compromise member\'s accounts.
 	Its possible options are:
 	<ul class="normallist">
-		<li><b>Low:</b> The password must be at least four characters long.</li>
-		<li><b>Medium:</b> The password must be at least eight characters long, and can not be part of a users name or email address.</li>
-		<li><b>High:</b> As for medium, except the password must also contain a mixture of upper and lower case letters, and at least one number.</li>
+		<li><strong>Low:</strong> The password must be at least four characters long.</li>
+		<li><strong>Medium:</strong> The password must be at least eight characters long, and can not be part of a users name or email address.</li>
+		<li><strong>High:</strong> As for medium, except the password must also contain a mixture of upper and lower case letters, and at least one number.</li>
 	</ul>';
 
 $helptxt['coppaAge'] = 'The value specified in this box will determine the minimum age that new members must be to be granted immediate access to the forums.
@@ -458,10 +458,10 @@ $helptxt['coppaAge'] = 'The value specified in this box will determine the minim
 $helptxt['coppaType'] = 'If age restrictions are enabled, then this setting will define that happens when a user below the minimum age attempts to register with your forum. There are two possible choices:
 	<ul class="normallist">
 		<li>
-			<b>Reject Their Registration:</b><br />
+			<strong>Reject Their Registration:</strong><br />
 				Any new member below the minimum age will have their registration rejected immediately.<br />
 		</li><li>
-			<b>Require Parent/Guardian Approval</b><br />
+			<strong>Require Parent/Guardian Approval</strong><br />
 				Any new member who attempts to register and is below the minimum permitted age will have their account marked as awaiting approval, and will be presented with a form upon which their parents must give permission to become a member of the forums.
 				They will also be presented with the forum contact details entered on the settings page, so they can send the form to the administrator by mail or fax.
 		</li>
@@ -469,7 +469,7 @@ $helptxt['coppaType'] = 'If age restrictions are enabled, then this setting will
 $helptxt['coppaPost'] = 'The contact boxes are required so that forms granting permission for underage registration can be sent to the forum administrator. These details will be shown to all new minors, and are required for parent/guardian approval. At the very least a postal address or fax number must be provided.';
 
 $helptxt['allow_hideOnline'] = 'With this option enabled all members will be able to hide their online status from other users (except administrators). If disabled only users who can moderate the forum can hide their presence. Note that disabling this option will not change any existing member\'s status - it just stops them from hiding themselves in the future.';
-$helptxt['make_email_viewable'] = 'If this option is enabled instead of users email addresses being hidden to normal members and guests they will be publicly viewable on the forum. Enabling this will put your users at greater risk of being victims of spam as a result of email harvesters visiting your forum. Note this setting does not override the user setting for hiding their email address from users. Enabling this setting is <b>not</b> recommended.';
+$helptxt['make_email_viewable'] = 'If this option is enabled instead of users email addresses being hidden to normal members and guests they will be publicly viewable on the forum. Enabling this will put your users at greater risk of being victims of spam as a result of email harvesters visiting your forum. Note this setting does not override the user setting for hiding their email address from users. Enabling this setting is <strong>not</strong> recommended.';
 $helptxt['meta_keywords'] = 'These keywords are sent in the output of every page to indicate to search engines (etc) the key content of your site. They should be a comma seperated list of words, and should not use HTML. If this is left blank the default set is sent. As means of an example the default set is:<br /><div class="smalltext">&quot;PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum&quot;</div>';
 
 $helptxt['latest_support'] = 'This panel shows you some of the most common problems and questions on your server configuration. Don\'t worry, this information isn\'t logged or anything.<br /><br />If this stays as &quot;Retrieving support information...&quot;, your computer probably cannot connect to <a href="http://www.simplemachines.org/" target="_blank" class="new_win">www.simplemachines.org</a>.';
@@ -490,15 +490,15 @@ $helptxt['membergroup_administrator'] = 'The administrator can, per definition, 
 $helptxt['membergroup_moderator'] = 'The Moderator membergroup is a special membergroup. Permissions and settings assigned to this group apply to moderators but only <em>on the boards they moderate</em>. Outside these boards they\'re just like any other member.';
 $helptxt['membergroups'] = 'In SMF there are two types of groups that your members can be part of. These are:
 	<ul class="normallist">
-		<li><b>Regular Groups:</b> A regular group is a group to which members are not automatically put into. To assign a member to be in a group simply go to their profile and click &quot;Account Settings&quot;. From here you can assign them any number of regular groups to which they will be part.</li>
-		<li><b>Post Groups:</b> Unlike regular groups post based groups cannot be assigned. Instead, members are automatically assigned to a post based group when they reach the minimum number of posts required to be in that group.</li>
+		<li><strong>Regular Groups:</strong> A regular group is a group to which members are not automatically put into. To assign a member to be in a group simply go to their profile and click &quot;Account Settings&quot;. From here you can assign them any number of regular groups to which they will be part.</li>
+		<li><strong>Post Groups:</strong> Unlike regular groups post based groups cannot be assigned. Instead, members are automatically assigned to a post based group when they reach the minimum number of posts required to be in that group.</li>
 	</ul>';
 
 $helptxt['calendar_how_edit'] = 'You can edit these events by clicking on the red asterisk (*) next to their names.';
 
 $helptxt['maintenance_backup'] = 'This area allows you to save a copy of all the posts, settings, members, and other information in your forum to a very large file.<br /><br />It is recommended that you do this often, perhaps weekly, for safety and security.';
-$helptxt['maintenance_rot'] = 'This allows you to <b>completely</b> and <b>irrevocably</b> remove old topics.  It is recommended that you try to make a backup first, just in case you remove something you didn\'t mean to.<br /><br />Use this option with care.';
-$helptxt['maintenance_members'] = 'This allows you to <b>completely</b> and <b>irrevocably</b> remove member accounts from your forum.  It is <b>highly</b> recommended that you try to make a backup first, just in case you remove something you didn\'t mean to.<br /><br />Use this option with care.';
+$helptxt['maintenance_rot'] = 'This allows you to <strong>completely</strong> and <strong>irrevocably</strong> remove old topics.  It is recommended that you try to make a backup first, just in case you remove something you didn\'t mean to.<br /><br />Use this option with care.';
+$helptxt['maintenance_members'] = 'This allows you to <strong>completely</strong> and <strong>irrevocably</strong> remove member accounts from your forum.  It is <strong>highly</strong> recommended that you try to make a backup first, just in case you remove something you didn\'t mean to.<br /><br />Use this option with care.';
 
 $helptxt['avatar_server_stored'] = 'This allows your members to pick from avatars stored on your server itself.  They are, generally, in the same place as SMF under the avatars folder.<br />As a tip, if you create directories in that folder, you can make &quot;categories&quot; of avatars.';
 $helptxt['avatar_external'] = 'With this enabled, your members can type in a URL to their own avatar.  The downside of this is that, in some cases, they may use avatars that are overly large or portray images you don\'t want on your forum.';
@@ -526,16 +526,16 @@ $helptxt['ban_cannot_post'] = 'The \'cannot post\' restriction turns the forum i
 $helptxt['posts_and_topics'] = '
 	<ul class="normallist">
 		<li>
-			<b>Post Settings</b><br />
+			<strong>Post Settings</strong><br />
 			Modify the settings related to the posting of messages and the way messages are shown. You can also enable the spell check here.
 		</li><li>
-			<b>Bulletin Board Code</b><br />
+			<strong>Bulletin Board Code</strong><br />
 			Enable the code that shows forum messages in the right layout. Also adjust which codes are allowed and which aren\'t.
 		</li><li>
-			<b>Censored Words</b>
+			<strong>Censored Words</strong>
 			In order to keep the language on your forum under control, you can censor certain words. This function allows you to convert forbidden words into innocent versions.
 		</li><li>
-			<b>Topic Settings</b>
+			<strong>Topic Settings</strong>
 			Modify the settings related to topics. The number of topics per page, whether sticky topics are enabled or not, the number of messages needed for a topic to be hot, etc.
 		</li>
 	</ul>';
@@ -543,16 +543,16 @@ $helptxt['spider_group'] = 'By selecting a restrictive group, when a guest is de
 $helptxt['show_spider_online'] = 'This setting allows you to select whether spiders should be listed in the who\'s online list on the board index and &quot;Who\'s Online&quot; page. Options are:
 	<ul class="normallist">
 		<li>
-			<b>Not at All</b><br />
+			<strong>Not at All</strong><br />
 			Spiders will simply appear as guests to all users.
 		</li><li>
-			<b>Show Spider Quantity</b><br />
+			<strong>Show Spider Quantity</strong><br />
 			The Board Index will display the number of spiders currently visiting the forum.
 		</li><li>
-			<b>Show Spider Names</b><br />
+			<strong>Show Spider Names</strong><br />
 			Each spider name will be revealed, so users can see how many of each spider is currently visiting the forum - this takes effect in both the Board Index and Who\'s Online page.
 		</li><li>
-			<b>Show Spider Names - Admin Only</b><br />
+			<strong>Show Spider Names - Admin Only</strong><br />
 			As above except only Administrators can see spider status - to all other users spiders appear as guests.
 		</li>
 	</ul>';

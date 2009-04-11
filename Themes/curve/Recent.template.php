@@ -27,7 +27,7 @@ function template_main()
 		<h3 class="titlebg2 recent">
 				<span class="recent_date">', $txt['on'], ': ', $post['time'], '</span>		
 				<span>', $post['counter'], '</span>
-				<span>', $post['category']['link'], ' / ', $post['board']['link'], ' / <b>', $post['link'], '</b></span>
+				<span>', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></span>
 		</h3>
 		<h4 class="catbg recent_author">
 			<span> ', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>

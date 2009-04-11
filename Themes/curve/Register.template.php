@@ -218,7 +218,7 @@ function template_before()
 			else
 			{
 					echo '
-					<dt><b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
+					<dt><strong', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</strong>';
 
 				// Does it have any subtext to show?
 				if (!empty($field['subtext']))

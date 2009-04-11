@@ -311,7 +311,7 @@ function template_generic_menu_tabs(&$menu_context)
 			if (!empty($tab['is_selected']))
 			{
 				echo '
-		<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></b>';
+		<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <strong><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></strong>';
 			}
 			else
 				echo '

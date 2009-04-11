@@ -2825,7 +2825,7 @@ function upgrade_query($string, $unbuffered = false)
 
 	// Otherwise we have to display this somewhere appropriate if possible.
 	$upcontext['forced_error_message'] = '
-			<b>Unsuccessful!</b><br />
+			<strong>Unsuccessful!</strong><br />
 
 			<div style="margin: 2ex;">
 				This query:
@@ -3498,7 +3498,7 @@ function template_chmod()
 			<tr>
 				<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
 				<td>
-					<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><b>', $txt['ftp_port'], ':&nbsp;</b></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($upcontext['chmod']['port']) ? $upcontext['chmod']['port'] : '21', '" /></div>
+					<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><strong>', $txt['ftp_port'], ':&nbsp;</strong></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($upcontext['chmod']['port']) ? $upcontext['chmod']['port'] : '21', '" /></div>
 					<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($upcontext['chmod']['server']) ? $upcontext['chmod']['server'] : 'localhost', '" style="width: 70%;" />
 					<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_server_info'], '</div>
 				</td>
@@ -3651,7 +3651,7 @@ function template_upgrade_below()
 		echo '
 								<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 									<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-									<b style="text-decoration: underline;">', $txt['upgrade_note'], '</b><br />
+									<strong style="text-decoration: underline;">', $txt['upgrade_note'], '</stong><br />
 									<div style="padding-left: 6ex;">', $upcontext['custom_warning'], '</div>
 								</div>';
 
@@ -3750,7 +3750,7 @@ function template_welcome_message()
 	<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
 		<div id="version_warning" style="margin: 2ex; padding: 2ex; border: 2px dashed #A92174; color: black; background-color: #FBBBE2; display: none;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_warning'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', sprintf($txt['upgrade_warning_out_of_date'], SMF_VERSION), '
 			</div>
@@ -3764,7 +3764,7 @@ function template_welcome_message()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_warning'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', $txt['upgrade_warning_lots_data'], '
 			</div>
@@ -3775,7 +3775,7 @@ function template_welcome_message()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_warning'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', $upcontext['warning'], '
 			</div>
@@ -3785,7 +3785,7 @@ function template_welcome_message()
 	echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #804840; color: black; background-color: #FE5A44; ', (file_exists($settings['default_theme_dir'] . '/scripts/script.js') ? 'display: none;' : ''), '" id="js_script_missing_error">
 			<div style="float: left; width: 2ex; font-size: 2em; color: black;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_critical_error'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				', $txt['upgrade_error_script_js'], '
 			</div>
@@ -3813,7 +3813,7 @@ function template_welcome_message()
 		echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['upgrade_warning'], '</b><br />
+			<strong style="text-decoration: underline;">', $txt['upgrade_warning'], '</strong><br />
 			<div style="padding-left: 6ex;">
 				&quot;', $upcontext['user']['name'], '&quot; has been running the upgrade script for the last ', $ago, ' - and was last active ', $updated, ' ago.';
 
@@ -3834,11 +3834,11 @@ function template_welcome_message()
 	}
 
 	echo '
-			<b>Admin Login: ', $disable_security ? '(DISABLED)' : '', '</b>
+			<strong>Admin Login: ', $disable_security ? '(DISABLED)' : '', '</strong>
 			<h3>For security purposes please login with your admin account to proceed with the upgrade.</h3>
 			<table>
 				<tr valign="top">
-					<td><b ', $disable_security ? 'style="color: gray;"' : '', '>Username:</b></td>
+					<td><strong ', $disable_security ? 'style="color: gray;"' : '', '>Username:</strong></td>
 					<td>
 						<input type="text" name="user" value="', !empty($upcontext['username']) ? $upcontext['username'] : '', '" ', $disable_security ? 'disabled="disabled"' : '', ' />';
 
@@ -3850,7 +3850,7 @@ function template_welcome_message()
 					</td>
 				</tr>
 				<tr valign="top">
-					<td><b ', $disable_security ? 'style="color: gray;"' : '', '>Password:</b></td>
+					<td><strong ', $disable_security ? 'style="color: gray;"' : '', '>Password:</strong></td>
 					<td>
 						<input type="password" name="passwrd" value="" ', $disable_security ? 'disabled="disabled"' : '', '/>
 						<input type="hidden" name="hash_passwrd" value="" />';
@@ -3877,7 +3877,7 @@ function template_welcome_message()
 	echo '
 			</table><br />
 			<span class="smalltext">
-				<b>Note:</b> If necessary the above security check can be bypassed for users who may administrate a server but not have admin rights on the forum. In order to bypass the above check simply open &quot;upgrade.php&quot; in a text editor and replace &quot;$disable_security = 0;&quot; with &quot;$disable_security = 1;&quot; and refresh this page.
+				<strong>Note:</strong> If necessary the above security check can be bypassed for users who may administrate a server but not have admin rights on the forum. In order to bypass the above check simply open &quot;upgrade.php&quot; in a text editor and replace &quot;$disable_security = 0;&quot; with &quot;$disable_security = 1;&quot; and refresh this page.
 			</span>
 			<input type="hidden" name="login_attempt" id="login_attempt" value="1" />
 			<input type="hidden" name="js_works" id="js_works" value="0" />';
@@ -3933,7 +3933,7 @@ function template_upgrade_options()
 		echo '
 		<div style="margin: 1ex; padding: 1ex; border: 1px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Warning!</b><br />
+			<strong style="text-decoration: underline;">Warning!</strong><br />
 			<div style="padding-left: 4ex;">
 				', $upcontext['upgrade_options_warning'], '
 			</div>
@@ -3956,9 +3956,9 @@ function template_upgrade_options()
 						<td width="100%">
 							<label for="maint">Put the forum into maintenance mode during upgrade.</label> <span class="smalltext">(<a href="#" onclick="document.getElementById(\'mainmess\').style.display = document.getElementById(\'mainmess\').style.display == \'\' ? \'none\' : \'\'">Customize</a>)</span>
 							<div id="mainmess" style="display: none;">
-								<b class="smalltext">Maintenance Title: </b><br />
+								<strong class="smalltext">Maintenance Title: </strong><br />
 								<input type="text" name="maintitle" size="30" value="', htmlspecialchars($mtitle), '" /><br />
-								<b class="smalltext">Maintenance Message: </b><br />
+								<strong class="smalltext">Maintenance Message: </strong><br />
 								<textarea name="mainmessage" rows="3" cols="50">', htmlspecialchars($mmessage), '</textarea>
 							</div>
 						</td>
@@ -4008,7 +4008,7 @@ function template_backup_database()
 	echo '
 			<form action="', $upcontext['form_url'], '" name="upform"  id="upform" method="post">
 			<input type="hidden" name="backup_done" id="backup_done" value="0" />
-			<b>Completed <span id="tab_done">', $upcontext['cur_table_num'], '</span> out of ', $upcontext['table_count'], ' tables.</b>
+			<strong>Completed <span id="tab_done">', $upcontext['cur_table_num'], '</span> out of ', $upcontext['table_count'], ' tables.</strong>
 			<span id="debuginfo"></span>';
 
 	// Dont any tables so far?
@@ -4111,11 +4111,11 @@ function template_database_changes()
 		// Tell them how many files we have in total.
 		if ($upcontext['file_count'] > 1)
 			echo '
-		<b id="info1">Executing upgrade script <span id="file_done">', $upcontext['cur_file_num'], '</span> of ', $upcontext['file_count'], '.</b>';
+		<strong id="info1">Executing upgrade script <span id="file_done">', $upcontext['cur_file_num'], '</span> of ', $upcontext['file_count'], '.</strong>';
 
 
 		echo '
-		<h3 id="info2"><b>Executing:</b> &quot;<span id="cur_item_name">', $upcontext['current_item_name'], '</span>&quot; (<span id="item_num">', $upcontext['current_item_num'], '</span> of <span id="total_items"><span id="item_count">', $upcontext['total_items'], '</span>', $upcontext['file_count'] > 1 ? ' - of this script' : '', ').</span></h3>
+		<h3 id="info2"><strong>Executing:</strong> &quot;<span id="cur_item_name">', $upcontext['current_item_name'], '</span>&quot; (<span id="item_num">', $upcontext['current_item_num'], '</span> of <span id="total_items"><span id="item_count">', $upcontext['total_items'], '</span>', $upcontext['file_count'] > 1 ? ' - of this script' : '', ').</span></h3>
 		<br /><span id="commess" style="font-weight: bold; display: ', !empty($upcontext['changes_complete']) || $upcontext['current_debug_item_num'] == $upcontext['debug_items'] ? 'inline' : 'none', ';">Database Updates Complete! Click Continue to Proceed.</span>';
 
 		if ($is_debug)
@@ -4135,7 +4135,7 @@ function template_database_changes()
 	echo '
 		<div id="error_block" style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9; display: ', empty($upcontext['error_message']) ? 'none' : '', ';">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">Error!</b><br />
+			<strong style="text-decoration: underline;">Error!</strong><br />
 			<div style="padding-left: 6ex;" id="error_message">', isset($upcontext['error_message']) ? $upcontext['error_message'] : 'Unknown Error!', '</div>
 		</div>';
 
@@ -4432,11 +4432,11 @@ function template_clean_mods()
 	echo '
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
-				<td width="40%"><b>Modification Name</b></td>
-				<td width="10%" align="center"><b>Version</b></td>
-				<td width="15%"><b>Files Affected</b></td>
-				<td width="20%"><b>Status</b></td>
-				<td width="5%" align="center"><b>Fix?</b></td>
+				<td width="40%"><strong>Modification Name</strong></td>
+				<td width="10%" align="center"><strong>Version</strong></td>
+				<td width="15%"><strong>Files Affected</strong></td>
+				<td width="20%"><strong>Status</strong></td>
+				<td width="5%" align="center"><strong>Fix?</strong></td>
 			</tr>';
 
 	foreach ($upcontext['packages'] as $package)
@@ -4477,7 +4477,7 @@ function template_cleanup_done()
 	<form action="', $upcontext['form_url'], '&amp;ssi=1" name="upform"  id="upform" method="post">
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
-				<td width="100%"><b>Actions Completed:</b></td>
+				<td width="100%"><strong>Actions Completed:</strong></td>
 			</tr>';
 
 	foreach ($upcontext['packages'] as $package)
@@ -4515,8 +4515,8 @@ function template_upgrade_templates()
 		The following template files will be updated to ensure they are compatible with this version of SMF. Note that this can only fix a limited number of compatibility issues and in general you should seek out the latest version of these themes/language files.
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
-				<td width="80%"><b>Area</b></td>
-				<td width="20%" align="center"><b>Changes Required</b></td>
+				<td width="80%"><strong>Area</strong></td>
+				<td width="20%" align="center"><strong>Changes Required</strong></td>
 			</tr>';
 
 		foreach ($upcontext['languages'] as $language)
@@ -4568,7 +4568,7 @@ function template_upgrade_templates()
 		if (!empty($upcontext['themes']))
 			foreach ($upcontext['themes'] as $theme)
 				$themeFiles += count($theme['files']);
-		echo sprintf('Found <b>%d</b> language files and <b>%d</b> templates requiring an update so far.', $langFiles, $themeFiles) . '<br />';
+		echo sprintf('Found <strong>%d</strong> language files and <strong>%d</strong> templates requiring an update so far.', $langFiles, $themeFiles) . '<br />';
 
 		// What we're currently doing?
 		if (!empty($upcontext['current_message']))

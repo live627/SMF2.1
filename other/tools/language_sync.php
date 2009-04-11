@@ -291,7 +291,7 @@ function readLanguage($filename)
 				$cur_line['tokens'][] = $tokens[$i];
 			$keyname = substr($cur_line['var_name'], 1) . '_' . trim($cur_line['hash'], "'");
 			if (isset($file['lines'][$keyname]))
-				echo '<b>Warning:</b> ', $cur_line['var_name'], $cur_line['hash'] === null ? '' : '[' . (empty($cur_line['hash']) ? '' : $cur_line['hash']) . ']', ' already set before in file ', $filename, '<br />';
+				echo '<strong>Warning:</strong> ', $cur_line['var_name'], $cur_line['hash'] === null ? '' : '[' . (empty($cur_line['hash']) ? '' : $cur_line['hash']) . ']', ' already set before in file ', $filename, '<br />';
 			else
 				$file['lines'][$keyname] = $cur_line;
 			$cur_line = array(

@@ -7,15 +7,15 @@ require_once($dirname . '/help-list.php');
 $current_version = '2.0 RC1';
 
 // Start with an index validation.
-echo '<b>Starting Verification of help index</b><br />';
+echo '<strong>Starting Verification of help index</strong><br />';
 foreach ($txt as $index => $codes)
 {
-	echo 'Verifying <b>' . $index . '</b> entries.<br />';
+	echo 'Verifying <strong>' . $index . '</strong> entries.<br />';
 	$found = array();
 	foreach ($codes as $line => $key)
 	{
 		if (in_array($key, $found))
-			echo '<b style="color: red;">Error: &quot;' . $key . '&quot; on line ' . $line . ' is already declared!</b><br />';
+			echo '<strong style="color: red;">Error: &quot;' . $key . '&quot; on line ' . $line . ' is already declared!</strong><br />';
 		else
 			$found[] = $key;
 	}
@@ -73,10 +73,10 @@ while (($filename = readdir($dh)) !== false)
 			'<option>' => '<strong>', '</option>' => '</strong>',
 			'<screen>' => '<strong>', '</screen>' => '</strong>',
 			'<dialog>' => '<strong>', '</dialog>' => '</strong>',
-			'<html-b>' => '<b>', '</html-b>' => '</b>',
+			'<html-b>' => '<strong>', '</html-b>' => '</strong>',
 			'<![CDATA[' => '', ']]>' => '',
 			'<emphasis>' => '<em>', '</emphasis>' => '</em>',
-			'<html-i>' => '<i>', '</html-i>' => '</i>',
+			'<html-i>' => '<em>', '</html-i>' => '</em>',
 			'<icon>' => '<strong>', '</icon>' => '</strong>', '<sort-by>' => '<strong>', '</sort-by>' => '</strong>'));
 		if ($real_line == 157 && $page == 'posting')
 			$current = substr($current, 4);

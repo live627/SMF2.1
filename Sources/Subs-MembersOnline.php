@@ -125,7 +125,7 @@ function getMembersOnlineStats($membersOnlineOptions)
 		if ($is_buddy)
 		{
 			$memberOnlineStats['num_buddies']++;
-			$link = '<b>' . $link . '</b>';
+			$link = '<strong>' . $link . '</strong>';
 		}
 
 		// A lot of useful information for each member.

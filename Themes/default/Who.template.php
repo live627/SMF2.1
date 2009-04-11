@@ -72,7 +72,7 @@ function template_main()
 		<tr class="catbg">
 			<td colspan="3">
 				<div style="float: left;">
-					<b>', $txt['pages'], ':</b> ', $context['page_index'], '
+					<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
 				</div>
 				<div class="smalltext" style="float: right; font-weight: normal;">', $txt['who_show1'], '
 					<select name="show" onchange="document.forms.whoFilter.submit();">';

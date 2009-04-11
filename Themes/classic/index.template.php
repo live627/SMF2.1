@@ -155,7 +155,7 @@ function template_body_above()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-				', $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', $context['allow_pm'] ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
+				', $txt['hello_member'], ' <strong>', $context['user']['name'], '</strong>', $context['allow_pm'] ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
 
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
@@ -165,7 +165,7 @@ function template_body_above()
 		// Is the forum in maintenance mode?
 		if ($context['in_maintenance'] && $context['user']['is_admin'])
 			echo '<br />
-				<b>', $txt['maintain_mode_on'], '</b>';
+				<strong>', $txt['maintain_mode_on'], '</strong>';
 
 		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 			echo '<br />
@@ -195,7 +195,7 @@ function template_body_above()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2" height="24" class="tborder" style="border-width: 1px 0 0 0; padding-left: 1ex;">
-				<b>', $txt['news'], ':</b> ', $context['random_news_line'], '
+				<strong>', $txt['news'], ':</strong> ', $context['random_news_line'], '
 			</td>
 		</tr>';
 
@@ -315,7 +315,7 @@ function theme_linktree()
 			echo $tree['extra_before'];
 
 		// Show the link, including a URL if it should have one.
-		echo '<b>', $settings['linktree_link'] && isset($tree['url']) ? '<a href="' . $tree['url'] . '" class="nav">' . $tree['name'] . '</a>' : $tree['name'], '</b>';
+		echo '<strong>', $settings['linktree_link'] && isset($tree['url']) ? '<a href="' . $tree['url'] . '" class="nav">' . $tree['name'] . '</a>' : $tree['name'], '</strong>';
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))

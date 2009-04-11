@@ -11,7 +11,7 @@ function template_main()
 				<td align="center" colspan="4">', $context['page_title'], '</td>
 			</tr>
 			<tr>
-				<td class="catbg" colspan="4"><b>', $txt['general_stats'], '</b></td>
+				<td class="catbg" colspan="4"><strong>', $txt['general_stats'], '</strong></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_info.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" valign="top">
@@ -80,8 +80,8 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_posters'], '</b></td>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_boards'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><strong>', $txt['top_posters'], '</strong></td>
+				<td class="catbg" colspan="2" width="50%"><strong>', $txt['top_boards'], '</strong></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_posters.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" width="50%" valign="top">
@@ -110,8 +110,8 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_topics_replies'], '</b></td>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_topics_views'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><strong>', $txt['top_topics_replies'], '</strong></td>
+				<td class="catbg" colspan="2" width="50%"><strong>', $txt['top_topics_views'], '</strong></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_replies.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" width="50%" valign="top">
@@ -140,8 +140,8 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_starters'], '</b></td>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['most_time_online'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><strong>', $txt['top_starters'], '</strong></td>
+				<td class="catbg" colspan="2" width="50%"><strong>', $txt['most_time_online'], '</strong></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_replies.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" width="50%" valign="top">
@@ -170,7 +170,7 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="4"><b>', $txt['forum_history'], '</b></td>
+				<td class="catbg" colspan="4"><strong>', $txt['forum_history'], '</strong></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_history.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" colspan="4">';

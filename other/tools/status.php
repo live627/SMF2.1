@@ -1001,7 +1001,7 @@ function generate_status()
 
 			if (isset($stat['max']) || isset($stat['min']))
 				echo '
-						', $warning ? '<b>' : '', '(should be ', isset($stat['min']) ? '&gt;= ' . $stat['min'] . ' ' : '', isset($stat['max'], $stat['min']) ? 'and ' : '', isset($stat['max']) ? '&lt;= ' . $stat['max'] : '', ')', $warning ? '</b>' : '';
+						', $warning ? '<strong>' : '', '(should be ', isset($stat['min']) ? '&gt;= ' . $stat['min'] . ' ' : '', isset($stat['max'], $stat['min']) ? 'and ' : '', isset($stat['max']) ? '&lt;= ' . $stat['max'] : '', ')', $warning ? '</strong>' : '';
 
 			echo '
 					</td>

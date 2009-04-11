@@ -76,7 +76,7 @@ function template_find_members()
 				</tr>
 				<tr class="windowbg">
 					<td align="left" colspan="2">
-						<b>', $txt['find_username'], ':</b><br />
+						<strong>', $txt['find_username'], ':</strong><br />
 						<input type="text" name="search" id="search" value="', isset($context['last_search']) ? $context['last_search'] : '', '" style="margin-top: 4px; width: 96%;" /><br />
 					</td>
 				</tr>
@@ -229,7 +229,7 @@ function template_manual_board_index()
 		<div style="padding: 2px 30px;">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></b></span></td>
+					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong></span></td>
 				</tr>
 			</table><script language="JavaScript1.2" type="text/javascript">
 //<![CDATA[
@@ -255,7 +255,7 @@ function template_manual_board_index()
 					</tr>
 					<tr id="collapseCategory" class="windowbg2">
 						<td class="windowbg" width="6%" align="center" valign="top"><img src="', $settings['images_url'], '/on.gif" id="board-new-or-not" alt="', $txt['manual_index_new_posts'], '" name="board-new-or-not" /></td>
-						<td align="left" class="windowbg"><b><a href="', $scripturl, '?action=help;area=message_view" class="board">', $txt['manual_index_board_name'], '</a></b><br />
+						<td align="left" class="windowbg"><strong><a href="', $scripturl, '?action=help;area=message_view" class="board">', $txt['manual_index_board_name'], '</a></strong><br />
 						', $txt['manual_index_board_desc'], '</td>
 						<td class="windowbg" valign="middle" align="center" style="width: 12ex;"><span class="smalltext">', $txt['manual_index_topics_posts'], '</span></td>
 						<td valign="middle" width="22%" class="windowbg">', $txt['manual_index_date_time'], '</td>
@@ -345,9 +345,9 @@ function template_manual_message_view()
 </script>
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_index_board_name'], '</a></b></span></td>
+					<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong><br />
+					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></strong><br />
+					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_index_board_name'], '</a></strong></span></td>
 				</tr>
 			</table>';
 
@@ -363,7 +363,7 @@ function template_manual_message_view()
 	{
 		echo '
 				<div class="clearfix margintop" id="modbuttons_top">
-					<div class="margintop middletext floatleft"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</div>
+					<div class="margintop middletext floatleft"><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</div>
 					<div class="nav floatright">', template_button_strip($mindex_buttons, 'bottom'), '</div>
 				</div>';
 	}
@@ -375,7 +375,7 @@ function template_manual_message_view()
 					<td align="left" class="catbg" width="100%" height="30">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
+								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 								<td>
 									', template_button_strip($mindex_buttons, 'bottom', 'align="right"  style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
@@ -415,7 +415,7 @@ function template_manual_message_view()
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div class="middletext floatleft">', $txt['manual_index_pages'], ': [<b>1</b>]</div>
+			<div class="middletext floatleft">', $txt['manual_index_pages'], ': [<strong>1</strong>]</div>
 			<div class="nav floatright">', template_button_strip($mindex_buttons, 'top'), '</div>';
 	}
 	else
@@ -426,7 +426,7 @@ function template_manual_message_view()
 					<td align="left" class="catbg" width="100%" height="30">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
+								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 								<td>
 									', template_button_strip($mindex_buttons, 'bottom', 'align="right"  style="white-space: nowrap; font-size: smaller;"'), '
 								</td>
@@ -510,17 +510,17 @@ function template_manual_topic_view()
 		<div style="padding: 2px 30px;">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=message_view" class="nav">', $txt['manual_index_board_name'], '</a></b><br />
-					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=topic_view" class="nav">', $txt['manual_index_topic_subject'], '</a></b></span></td>
+					<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_forum_name'], '</a></strong><br />
+					<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_index_cat_name'], '</a></strong><br />
+					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_view" class="nav">', $txt['manual_index_board_name'], '</a></strong><br />
+					<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=topic_view" class="nav">', $txt['manual_index_topic_subject'], '</a></strong></span></td>
 				</tr>
 			</table>';
 
 	if (!empty($settings['use_tabs']))
 	{
 		echo '
-			<div class="margintop middletext floatleft"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</div>
+			<div class="margintop middletext floatleft"><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</div>
 			<div class="nav floatright">', template_button_strip($display_buttons, 'bottom'), '</div>';
 	}
 	else
@@ -531,7 +531,7 @@ function template_manual_topic_view()
 					<td align="left" class="catbg" width="100%" height="35">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
+								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 								<td>
 									', template_button_strip($display_buttons, 'bottom', 'align="right" style="font-size: smaller;"'), '
 								</td>
@@ -557,7 +557,7 @@ function template_manual_topic_view()
 								<td class="windowbg">
 									<table width="100%" cellpadding="5" cellspacing="0" style="table-layout: fixed;">
 										<tr>
-											<td valign="top" width="15%" rowspan="2" style="overflow: hidden;"><b><a href="', $scripturl, '?action=help;area=profile_summary" class="board" title="', $txt['manual_index_view_author_profile'], '">', $txt['manual_index_author'], '</a></b><br />
+											<td valign="top" width="15%" rowspan="2" style="overflow: hidden;"><strong><a href="', $scripturl, '?action=help;area=profile_summary" class="board" title="', $txt['manual_index_view_author_profile'], '">', $txt['manual_index_author'], '</a></strong><br />
 											<span class="smalltext">', $txt['manual_index_member_group'], '<br />
 											', $txt['manual_index_post_group'], '<br />
 											<img src="', $settings['images_url'], '/star.gif" alt="*" border="0" /><br />
@@ -571,7 +571,7 @@ function template_manual_topic_view()
 													<tr>
 														<td width="20" align="left" valign="middle"><img src="', $settings['images_url'], '/post/xx.gif" alt="" border="0" /></td>
 														<td align="left" valign="middle">
-															<b><a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_index_topic_subject'], '</a></b>
+															<strong><a href="', $scripturl, '?action=help;area=topic_view" class="board">', $txt['manual_index_topic_subject'], '</a></strong>
 															<div class="smalltext">
 																&laquo; ', $txt['manual_index_post_date_time'], ' &raquo;
 															</div>
@@ -607,7 +607,7 @@ function template_manual_topic_view()
 			<div class="nav floatright">', template_button_strip($display_buttons, 'top'), '</div>
 			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 				<tr>
-					<td class="middletext"><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
+					<td class="middletext"><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 				</tr>
 			</table>';
 	}
@@ -619,7 +619,7 @@ function template_manual_topic_view()
 					<td align="left" class="catbg" width="100%" height="30">
 						<table cellpadding="3" cellspacing="0" width="100%">
 							<tr>
-								<td><b>', $txt['manual_index_pages'], ':</b> [<b>1</b>]</td>
+								<td><strong>', $txt['manual_index_pages'], ':</strong> [<strong>1</strong>]</td>
 								<td>
 									', template_button_strip($display_buttons, 'top', 'align="right" style="font-size: smaller;"'), '
 								</td>
@@ -705,19 +705,19 @@ function template_manual_logging_in()
 				<td colspan="2"><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['manual_loginout_login'], '</td>
 			</tr>
 			<tr class="windowbg">
-				<td width="50%" align="right"><b>', $txt['manual_loginout_username'], ':</b></td>
+				<td width="50%" align="right"><strong>', $txt['manual_loginout_username'], ':</strong></td>
 				<td><input type="text" size="20" value="" /></td>
 			</tr>
 			<tr class="windowbg">
-				<td align="right"><b>', $txt['manual_loginout_password'], ':</b></td>
+				<td align="right"><strong>', $txt['manual_loginout_password'], ':</strong></td>
 				<td><input type="password" value="" size="20" /></td>
 			</tr>
 			<tr class="windowbg">
-				<td align="right"><b>', $txt['manual_loginout_how_long'], ':</b></td>
+				<td align="right"><strong>', $txt['manual_loginout_how_long'], ':</strong></td>
 				<td><input name="cookielength" type="text" size="4" maxlength="4" value="60" /></td>
 			</tr>
 			<tr class="windowbg">
-				<td align="right"><b>', $txt['manual_loginout_always'], ':</b></td>
+				<td align="right"><strong>', $txt['manual_loginout_always'], ':</strong></td>
 				<td><input type="checkbox" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 			</tr>
 			<tr class="windowbg">
@@ -845,9 +845,9 @@ function template_manual_sending_pms()
 			<form action="', $scripturl, '?action=help;area=sending_pms" method="post" accept-charset="', $context['character_set'], '">
 				<table border="0" width="100%" cellspacing="0" cellpadding="3">
 					<tr>
-						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></b></span></td>
+						<td valign="bottom"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_pm_forum_name'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_personal_msgs'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="nav">', $txt['manual_pm_inbox'], '</a></strong></span></td>
 					</tr>
 				</table>
 				<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
@@ -859,7 +859,7 @@ function template_manual_sending_pms()
 							<tr class="windowbg">
 								<td class="smalltext" style="padding-bottom: 2ex;">
 								' , $txt['manual_pm_new_msg'] , '<br /><br />
-								<b>' , $txt['manual_pm_inbox'] , '</b><br />
+								<strong>' , $txt['manual_pm_inbox'] , '</strong><br />
 								' , $txt['manual_pm_outbox'] , '<br />
 							</td>
 						</tr>
@@ -890,7 +890,7 @@ function template_manual_sending_pms()
 									</tr>
 									<tr>
 										<td colspan="6" class="catbg" height="25">
-											<div style="float: left;"><b>', $txt['manual_pm_pages'], ':</b> [<b>1</b>]</div>
+											<div style="float: left;"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
 											<div style="float: right;">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" /></div>
 										</td>
 									</tr>
@@ -971,23 +971,23 @@ function template_manual_profile_summary()
 								<td class="windowbg" width="420" align="left">
 									<table border="0" cellspacing="0" cellpadding="2" width="100%">
 										<tr>
-											<td><b>', $txt['manual_profile_name'], ':</b></td>
+											<td><strong>', $txt['manual_profile_name'], ':</strong></td>
 											<td>', $txt['manual_profile_screen_name'], '</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_posts'], ':</b></td>
+											<td><strong>', $txt['manual_profile_posts'], ':</strong></td>
 											<td>', $txt['manual_profile_member_posts'], '</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_position'], ':</b></td>
+											<td><strong>', $txt['manual_profile_position'], ':</strong></td>
 											<td>', $txt['manual_profile_membergroup'], '</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_date_reg'], ':</b></td>
+											<td><strong>', $txt['manual_profile_date_reg'], ':</strong></td>
 											<td>', $txt['manual_profile_date_time_reg'], '</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_last_active'], ':</b></td>
+											<td><strong>', $txt['manual_profile_last_active'], ':</strong></td>
 											<td>', $txt['manual_profile_date_time_active'], '</td>
 										</tr>
 										<tr>
@@ -996,31 +996,31 @@ function template_manual_profile_summary()
 											</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['icq'], ':</b></td>
+											<td><strong>', $txt['icq'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['aim'], ':</b></td>
+											<td><strong>', $txt['aim'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['msn'], ':</b></td>
+											<td><strong>', $txt['msn'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['yim'], ':</b></td>
+											<td><strong>', $txt['yim'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_email'], ':</b></td>
+											<td><strong>', $txt['manual_profile_email'], ':</strong></td>
 											<td><a href="mailto:', $txt['manual_profile_email_user'], '" class="board">', $txt['manual_profile_email_user'], '</a></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_website'], ':</b></td>
+											<td><strong>', $txt['manual_profile_website'], ':</strong></td>
 											<td><a href="http://www.simplemachines.org/" target="_blank" class="new_win"></a></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_status'], ':</b></td>
+											<td><strong>', $txt['manual_profile_status'], ':</strong></td>
 											<td><i><a href="', $scripturl, '?action=help;area=sending_pms" title="', $txt['manual_profile_pm'], ' (', $txt['manual_profile_online'], ')  "><img src="', $settings['images_url'], '/useron.gif" border="0" align="middle" alt="', $txt['manual_profile_online'], '" /></a> <span class="smalltext">', $txt['manual_profile_online'], '</span></i></td>
 										</tr>
 										<tr>
@@ -1029,23 +1029,23 @@ function template_manual_profile_summary()
 											</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_gender'], ':</b></td>
+											<td><strong>', $txt['manual_profile_gender'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_age'], ':</b></td>
+											<td><strong>', $txt['manual_profile_age'], ':</strong></td>
 											<td>', $txt['manual_profile_n_a'], '</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_location'], ':</b></td>
+											<td><strong>', $txt['manual_profile_location'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_local_time'], ':</b></td>
+											<td><strong>', $txt['manual_profile_local_time'], ':</strong></td>
 											<td>', $txt['manual_profile_current_date_time'], '</td>
 										</tr>
 										<tr>
-											<td><b>', $txt['manual_profile_language'], ':</b></td>
+											<td><strong>', $txt['manual_profile_language'], ':</strong></td>
 											<td></td>
 										</tr>
 										<tr>
@@ -1057,7 +1057,7 @@ function template_manual_profile_summary()
 											<td colspan="2" height="25">
 												<table border="0">
 													<tr>
-														<td><b>', $txt['manual_profile_sig'], ':</b></td>
+														<td><strong>', $txt['manual_profile_sig'], ':</strong></td>
 													</tr>
 													<tr>
 														<td colspan="2"></td>
@@ -1128,7 +1128,7 @@ function template_manual_modifying_profiles()
 							<tr class="windowbg2">
 								<td class="windowbg"><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_acct_settings'], '</a><br />
 								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_forum_profile'], '</a><br />
-								<b><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a></b><br />
+								<strong><a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_look_and_layout'], '</a></strong><br />
 								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_notify_email'], '</a><br />
 								<a href="', $scripturl, '?action=help;area=modifying_profiles" style="font-size: x-small;" class="board">', $txt['manual_profile_pm_options1'], '</a><br />
 								<br /></td>
@@ -1157,7 +1157,7 @@ function template_manual_modifying_profiles()
 									<td class="windowbg2" align="left">
 										<table border="0" width="100%" cellpadding="3">
 											<tr>
-												<td colspan="2" width="40%"><b>', $txt['manual_profile_current_theme'], ':</b>&nbsp;', $txt['manual_profile_board_default'], '&nbsp;<a href="', $scripturl, '?action=help;area=modifying_profiles" class="board">(', $txt['manual_profile_change'], ')</a></td>
+												<td colspan="2" width="40%"><strong>', $txt['manual_profile_current_theme'], ':</strong>&nbsp;', $txt['manual_profile_board_default'], '&nbsp;<a href="', $scripturl, '?action=help;area=modifying_profiles" class="board">(', $txt['manual_profile_change'], ')</a></td>
 											</tr>
 											<tr>
 												<td colspan="2">
@@ -1165,7 +1165,7 @@ function template_manual_modifying_profiles()
 												</td>
 											</tr>
 											<tr>
-												<td width="40%"><b>', $txt['manual_profile_time_format'], ':</b><br />
+												<td width="40%"><strong>', $txt['manual_profile_time_format'], ':</strong><br />
 												<a href="', $scripturl, '/index.php?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['manual_profile_help'], '" border="0" align="left" style="padding-right: 1ex;" /></a> <span class="smalltext">', $txt['manual_profile_caption_date'], '</span></td>
 												<td><select style="margin-bottom: 4px;">
 													<option selected="selected">
@@ -1191,7 +1191,7 @@ function template_manual_modifying_profiles()
 											</tr>
 											<tr>
 												<td width="40%">
-													<b>', $txt['manual_profile_time_offset'], ':</b>
+													<strong>', $txt['manual_profile_time_offset'], ':</strong>
 													<div class="smalltext">
 														', $txt['manual_profile_offset_hours'], '
 													</div>
@@ -1311,7 +1311,7 @@ function template_manual_modifying_profiles()
 					<td class="catbg">', $txt['manual_profile_profile_info'], '</td>
 				</tr>
 				<tr class="windowbg2">
-					<td class="windowbg"><b><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a></b><br />
+					<td class="windowbg"><strong><a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_summary2'], '</a></strong><br />
 					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_stats'], '</a><br />
 					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_show_posts'], '</a><br />
 					<a href="', $scripturl, '?action=help;area=modifying_profiles#admins" style="font-size: x-small;" class="board">', $txt['manual_profile_track_user'], '</a><br />
@@ -1415,10 +1415,10 @@ function template_manual_posting_topics()
 			<form action="', $scripturl, '?action=help;area=posting_topics" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table width="100%" align="center" cellpadding="0" cellspacing="3">
 					<tr>
-						<td valign="bottom" colspan="2"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_forum_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_cat_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_posting_board_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><i>', $txt['manual_posting_start_topic'], '</i></b></span></td>
+						<td valign="bottom" colspan="2"><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_forum_name'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_posting_cat_name'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=message_index" class="nav">', $txt['manual_posting_board_name'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_main.gif" alt="| " border="0" /> <img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><i>', $txt['manual_posting_start_topic'], '</i></strong></span></td>
 					</tr>
 				</table>
 				<table border="0" width="100%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
@@ -1432,7 +1432,7 @@ function template_manual_posting_topics()
 									<td colspan="2" align="center"><a href="', $scripturl, '?action=help;area=posting_topics#standard">', $txt['manual_posting_std_options'], '&nbsp;', $txt['manual_posting_omit_clarity'], '</a></td>
 								</tr>
 								<tr>
-									<td align="right"><b>', $txt['manual_posting_subject'], ':</b></td>
+									<td align="right"><strong>', $txt['manual_posting_subject'], ':</strong></td>
 									<td><input type="text" name="subject" size="80" maxlength="80" tabindex="1" /></td>
 								</tr>
 								<tr>
@@ -1509,7 +1509,7 @@ function template_manual_posting_topics()
 						<td class="windowbg">
 							<table border="0" cellpadding="3" width="100%">
 								<tr>
-									<td align="right"><b>', $txt['manual_posting_msg_icon'], ':</b></td>
+									<td align="right"><strong>', $txt['manual_posting_msg_icon'], ':</strong></td>
 									<td><select name="icon" id="icon" onchange="showimage();">
 										<option value="xx" selected="selected">
 											', $txt['manual_posting_standard_icon'], '
@@ -1674,7 +1674,7 @@ function template_manual_posting_topics()
 						<td class="windowbg">
 							<table border="0" cellpadding="3" width="100%">
 								<tr>
-									<td colspan="2" style="padding-left: 5ex;"><a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" border="0" id="postMoreExpand" name="postMoreExpand" /></a> <a href="javascript:swapOptions();" class="board"><b>', $txt['manual_posting_sec_additional_options'], '...</b></a></td>
+									<td colspan="2" style="padding-left: 5ex;"><a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" border="0" id="postMoreExpand" name="postMoreExpand" /></a> <a href="javascript:swapOptions();" class="board"><strong>', $txt['manual_posting_sec_additional_options'], '...</strong></a></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -1695,7 +1695,7 @@ function template_manual_posting_topics()
 									</td>
 								</tr>
 								<tr id="post', $txt['manual_posting_attach'], 'ment2">
-									<td align="right" valign="top"><b>', $txt['manual_posting_attach'], ':</b></td>
+									<td align="right" valign="top"><strong>', $txt['manual_posting_attach'], ':</strong></td>
 									<td class="smalltext"><input type="file" size="48" name="attachment[]" /><br />
 									<input type="file" size="48" name="attachment[]" /><br />
 									', $txt['manual_posting_allowed_types'], '<br />
@@ -1752,7 +1752,7 @@ function template_manual_smileys()
 			<td>', $txt['manual_posting_bbc_bold'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/bold.gif" alt="', $txt['manual_posting_bbc_bold'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_bold_code'], '</td>
-			<td><b>', $txt['manual_posting_bold_output'], '</b></td>
+			<td><strong>', $txt['manual_posting_bold_output'], '</strong></td>
 			<td>', $txt['manual_posting_bold_comment'], '</td>
 		</tr>
 		<tr>
@@ -2256,7 +2256,7 @@ function template_manual_registration_screen()
 							<table cellpadding="3" cellspacing="0" border="0" width="100%">
 								<tr>
 									<td width="40%">
-										<b>', $txt['manual_registering_choose_username'], ':</b>
+										<strong>', $txt['manual_registering_choose_username'], ':</strong>
 										<div class="smalltext">
 											', $txt['manual_registering_caption_username'], '
 										</div>
@@ -2265,7 +2265,7 @@ function template_manual_registration_screen()
 								</tr>
 								<tr>
 									<td width="40%">
-										<b>', $txt['manual_registering_email'], ':</b>
+										<strong>', $txt['manual_registering_email'], ':</strong>
 										<div class="smalltext">
 											', $txt['manual_registering_caption_email'], '
 										</div>
@@ -2273,11 +2273,11 @@ function template_manual_registration_screen()
 									<td><input type="text" size="30" /> <input type="checkbox" class="check" /> <label>', $txt['manual_registering_hide_email'], '</label></td>
 								</tr>
 								<tr>
-									<td width="40%"><b>', $txt['manual_registering_choose_pass'], ':</b></td>
+									<td width="40%"><strong>', $txt['manual_registering_choose_pass'], ':</strong></td>
 									<td><input type="password" size="30" /></td>
 								</tr>
 								<tr>
-									<td width="40%"><b>', $txt['manual_registering_verify_pass'], ':</b></td>
+									<td width="40%"><strong>', $txt['manual_registering_verify_pass'], ':</strong></td>
 									<td><input type="password" size="30" /></td>
 								</tr>
 							</table>
@@ -2289,7 +2289,7 @@ function template_manual_registration_screen()
 						<td class="windowbg2" style="padding-top: 8px; padding-bottom: 8px;">', $txt['manual_registering_agreement'], '</td>
 					</tr>
 					<tr>
-						<td align="center" class="windowbg2"><label><input type="checkbox" class="check" /> <b>', $txt['manual_registering_agree'], '</b></label></td>
+						<td align="center" class="windowbg2"><label><input type="checkbox" class="check" /> <strong>', $txt['manual_registering_agree'], '</strong></label></td>
 					</tr>
 				</table><br />
 				<div align="center">
@@ -2344,8 +2344,8 @@ function template_manual_searching()
 			<form action="', $scripturl, '?action=help;area=searching" method="post" accept-charset="', $context['character_set'], '">
 				<table width="80%" border="0" cellspacing="0" cellpadding="3" align="center">
 					<tr>
-						<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_searching_forum_name'], '</a></b><br />
-						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <b><a href="', $scripturl, '?action=help;area=searching#advanced" class="nav">', $txt['manual_searching_search'], '</a></b></span></td>
+						<td><span class="nav"><img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=board_index" class="nav">', $txt['manual_searching_forum_name'], '</a></strong><br />
+						<img src="', $settings['images_url'], '/icons/linktree_side.gif" alt="|-" border="0" /> <img src="', $settings['images_url'], '/icons/folder_open.gif" alt="+" border="0" />&nbsp; <strong><a href="', $scripturl, '?action=help;area=searching#advanced" class="nav">', $txt['manual_searching_search'], '</a></strong></span></td>
 					</tr>
 				</table>
 				<table width="80%" border="0" cellspacing="0" cellpadding="4" align="center" class="tborder">
@@ -2356,9 +2356,9 @@ function template_manual_searching()
 						<td class="windowbg">
 							<table>
 								<tr>
-									<td><b>', $txt['manual_searching_search_for'], ':</b></td>
+									<td><strong>', $txt['manual_searching_search_for'], ':</strong></td>
 									<td>&nbsp;</td>
-									<td><b>', $txt['manual_searching_by_user'], ':</b></td>
+									<td><strong>', $txt['manual_searching_by_user'], ':</strong></td>
 								</tr>
 								<tr>
 									<td><input type="text" size="40" /></td>
@@ -2376,8 +2376,8 @@ function template_manual_searching()
 									<td colspan="3">&nbsp;</td>
 								</tr>
 																<tr>
-									<td colspan="2"><b>', $txt['manual_searching_options'], ':</b></td>
-									<td><b>', $txt['manual_searching_msg_age'], ':</b></td>
+									<td colspan="2"><strong>', $txt['manual_searching_options'], ':</strong></td>
+									<td><strong>', $txt['manual_searching_msg_age'], ':</strong></td>
 								</tr>
 								<tr>
 									<td colspan="2"><input type="checkbox" class="check" /> <label>', $txt['manual_searching_show_results'], '</label><br />
@@ -2385,7 +2385,7 @@ function template_manual_searching()
 									<td>', $txt['manual_searching_between'], '<input type="text" value="0" size="5" maxlength="5" />', $txt['manual_searching_and'], '<input type="text" value="9999" size="5" maxlength="5" />', $txt['manual_searching_days'], '.</td>
 								</tr>
 								<tr>
-									<td colspan="3" style="padding-top: 2ex;"><b>', $txt['manual_searching_search_order'], ':</b></td>
+									<td colspan="3" style="padding-top: 2ex;"><strong>', $txt['manual_searching_search_order'], ':</strong></td>
 								</tr>
 								<tr>
 									<td colspan="3"><select>
@@ -2407,7 +2407,7 @@ function template_manual_searching()
 									</select></td>
 								</tr>
 							</table><br />
-							<b>', $txt['manual_searching_choose'], ':</b><br />
+							<strong>', $txt['manual_searching_choose'], ':</strong><br />
 							<br />
 							<table width="80%" border="0" cellpadding="1" cellspacing="0">
 								<tr>

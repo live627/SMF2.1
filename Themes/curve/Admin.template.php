@@ -78,7 +78,7 @@ function template_admin()
 						<td class="catbg"><a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a></td>
 					</tr><tr>
 						<td class="windowbg2" valign="top" style="height: 18ex;">
-							<b>', $txt['support_versions'], ':</b><br />
+							<strong>', $txt['support_versions'], ':</strong><br />
 							', $txt['support_versions_forum'], ':
 							<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i><br />
 							', $txt['support_versions_current'], ':
@@ -101,7 +101,7 @@ function template_admin()
 	// Display all the members who can administrate the forum.
 	echo '
 							<br />
-							<b>', $txt['administrators'], ':</b>
+							<strong>', $txt['administrators'], ':</strong>
 							', implode(', ', $context['administrators']);
 	// If we have lots of admins... don't show them all.
 	if (!empty($context['more_admins_link']))
@@ -272,7 +272,7 @@ function template_manage_copyright()
 				</td>
 			</tr><tr class="windowbg">
 				<td width="50%">
-					<b>', $txt['copyright_code'], ':</b>
+					<strong>', $txt['copyright_code'], ':</strong>
 				</td>
 				<td width="50%">
 					<input type="text" name="copy_code" value="" />
@@ -299,7 +299,7 @@ function template_credits()
 				<td>', $txt['support_title'], '</td>
 			</tr><tr>
 				<td class="windowbg2">
-					<b>', $txt['support_versions'], ':</b><br />
+					<strong>', $txt['support_versions'], ':</strong><br />
 					', $txt['support_versions_forum'], ':
 					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
@@ -435,7 +435,7 @@ function template_view_versions()
 				<td class="windowbg2" style="padding: 1ex 0 1ex 0;">
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><b>', $txt['admin_smffile'], '</b></td><td width="25%"><b>', $txt['dvc_your'], '</b></td><td width="25%"><b>', $txt['dvc_current'], '</b></td>
+							<td width="50%"><strong>', $txt['admin_smffile'], '</strong></td><td width="25%"><strong>', $txt['dvc_your'], '</strong></td><td width="25%"><strong>', $txt['dvc_current'], '</strong></td>
 						</tr>';
 
 	// The current version of the core SMF package.
@@ -984,7 +984,7 @@ function template_show_settings()
 							<td colspan="3" class="windowbg2"><hr size="1" width="100%" class="hrcolor" /></td>';
 			else
 				echo '
-							<td colspan="3" class="windowbg2" align="center"><b>' . $config_var . '</b></td>';
+							<td colspan="3" class="windowbg2" align="center"><strong>' . $config_var . '</strong></td>';
 		}
 		echo '
 						</tr>';
@@ -1079,18 +1079,18 @@ function template_edit_profile_field()
 			</tr><tr class="catbg">
 				<td colspan="2">', $txt['custom_edit_general'], ':</td>
 			</tr><tr class="windowbg2">
-				<td width="50%"><b>', $txt['custom_edit_name'], ':</b></td>
+				<td width="50%"><strong>', $txt['custom_edit_name'], ':</strong></td>
 				<td width="50%">
 					<input type="text" name="field_name" value="', $context['field']['name'], '" size="20" maxlength="40" />
 				</td>
 			</tr><tr class="windowbg2" valign="top">
-				<td width="50%"><b>', $txt['custom_edit_desc'], ':</b></td>
+				<td width="50%"><strong>', $txt['custom_edit_desc'], ':</strong></td>
 				<td width="50%">
 					<textarea name="field_desc" rows="3" cols="40">', $context['field']['desc'], '</textarea>
 				</td>
 			</tr><tr class="windowbg2" valign="top">
 				<td width="50%">
-					<b>', $txt['custom_edit_profile'], ':</b>
+					<strong>', $txt['custom_edit_profile'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_profile_desc'], '</div>
 				</td>
 				<td width="50%">
@@ -1102,7 +1102,7 @@ function template_edit_profile_field()
 					</select>
 				</td>
 			</tr><tr class="windowbg2">
-				<td width="50%"><b>', $txt['custom_edit_registration'], ':</b></td>
+				<td width="50%"><strong>', $txt['custom_edit_registration'], ':</strong></td>
 				<td width="50%">
 					<select name="reg" id="reg">
 						<option value="0"', $context['field']['reg'] == 0 ? ' selected="selected"' : '', '>', $txt['custom_edit_registration_disable'], '</option>
@@ -1111,7 +1111,7 @@ function template_edit_profile_field()
 					</select>
 				</td>
 			</tr><tr class="windowbg2">
-				<td width="50%"><b>', $txt['custom_edit_display'], ':</b></td>
+				<td width="50%"><strong>', $txt['custom_edit_display'], ':</strong></td>
 				<td width="50%">
 					<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
@@ -1119,7 +1119,7 @@ function template_edit_profile_field()
 				<td colspan="2">', $txt['custom_edit_input'], ':</td>
 			</tr><tr class="windowbg2" valign="top">
 				<td width="50%">
-					<b>', $txt['custom_edit_picktype'], ':</b>
+					<strong>', $txt['custom_edit_picktype'], ':</strong>
 				</td>
 				<td width="50%">
 					<select name="field_type" id="field_type" onchange="updateInputBoxes();">
@@ -1132,7 +1132,7 @@ function template_edit_profile_field()
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="max_length_div">
 				<td width="50%">
-					<b>', $txt['custom_edit_max_length'], ':</b>
+					<strong>', $txt['custom_edit_max_length'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_max_length_desc'], '</div>
 				</td>
 				<td width="50%">
@@ -1140,21 +1140,21 @@ function template_edit_profile_field()
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="dimension_div">
 				<td width="50%">
-					<b>', $txt['custom_edit_dimension'], ':</b>
+					<strong>', $txt['custom_edit_dimension'], ':</strong>
 				</td>
 				<td width="50%">
-					<b>', $txt['custom_edit_dimension_row'], ':</b> <input type="text" name="rows" value="', $context['field']['rows'], '" size="5" maxlength="3" />
-					<b>', $txt['custom_edit_dimension_col'], ':</b> <input type="text" name="cols" value="', $context['field']['cols'], '" size="5" maxlength="3" />
+					<strong>', $txt['custom_edit_dimension_row'], ':</strong> <input type="text" name="rows" value="', $context['field']['rows'], '" size="5" maxlength="3" />
+					<strong>', $txt['custom_edit_dimension_col'], ':</strong> <input type="text" name="cols" value="', $context['field']['cols'], '" size="5" maxlength="3" />
 				</td>
 			</tr><tr class="windowbg2" id="bbc_div">
-				<td width="50%"><b>', $txt['custom_edit_bbc'], '</b></td>
+				<td width="50%"><strong>', $txt['custom_edit_bbc'], '</strong></td>
 				<td width="50%">
 					<input type="checkbox" name="bbc"', $context['field']['bbc'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="options_div">
 				<td width="50%">
 					<a href="', $scripturl, '?action=helpadmin;help=customoptions" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
-					<b>', $txt['custom_edit_options'], ':</b>
+					<strong>', $txt['custom_edit_options'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_options_desc'], '</div>
 				</td>
 				<td width="50%">';
@@ -1169,7 +1169,7 @@ function template_edit_profile_field()
 					[<a href="" onclick="addOption(); return false;">', $txt['custom_edit_options_more'], '</a>]
 				</td>
 			</tr><tr class="windowbg2" id="default_div">
-				<td width="50%"><b>', $txt['custom_edit_default'], ':</b></td>
+				<td width="50%"><strong>', $txt['custom_edit_default'], ':</strong></td>
 				<td width="50%">
 					<input type="checkbox" name="default_check"', $context['field']['default_check'] ? ' checked="checked"' : '', ' class="check" />
 				</td>
@@ -1177,7 +1177,7 @@ function template_edit_profile_field()
 				<td colspan="2">', $txt['custom_edit_advanced'], ':</td>
 			</tr><tr class="windowbg2" valign="top" id="mask_div">
 				<td width="50%">
-					<b>', $txt['custom_edit_mask'], ':</b>
+					<strong>', $txt['custom_edit_mask'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_mask_desc'], '</div>
 				</td>
 				<td width="50%">
@@ -1193,7 +1193,7 @@ function template_edit_profile_field()
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%">
-					<b>', $txt['custom_edit_privacy'], ':</b>
+					<strong>', $txt['custom_edit_privacy'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_privacy_desc'], '</div>
 				</td>
 				<td width="50%">
@@ -1206,7 +1206,7 @@ function template_edit_profile_field()
 				</td>
 			</tr><tr class="windowbg2" id="can_search_div">
 				<td width="50%">
-					<b>', $txt['custom_edit_can_search'], ':</b>
+					<strong>', $txt['custom_edit_can_search'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_can_search_desc'], '</div>
 				</td>
 				<td width="50%">
@@ -1214,7 +1214,7 @@ function template_edit_profile_field()
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%">
-					<b>', $txt['custom_edit_active'], ':</b>
+					<strong>', $txt['custom_edit_active'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_active_desc'], '</div>
 				</td>
 				<td width="50%">
@@ -1419,7 +1419,7 @@ function template_add_language()
 		</tr>
 		<tr class="windowbg">
 			<td>
-				<b>', $txt['add_language_smf'], ':</b>
+				<strong>', $txt['add_language_smf'], ':</strong>
 				<div class="smalltext">', $txt['add_language_smf_browse'], '</div>';
 
 	if (!empty($context['smf_error']))
@@ -1449,11 +1449,11 @@ function template_add_language()
 			<td align="center">
 				<table width="100%" align="center" cellpadding="3" cellspacing="1" border="0" style="border: 1px black solid;">
 					<tr class="catbg">
-						<td align="left"><b>', $txt['name'], '</b></td>
-						<td align="left"><b>', $txt['add_language_smf_desc'], '</b></td>
-						<td align="left"><b>', $txt['add_language_smf_version'], '</b></td>
-						<td align="center"><b>', $txt['add_language_smf_utf8'], '</b></td>
-						<td align="left"><b>', $txt['add_language_smf_install'], '</b></td>
+						<td align="left"><strong>', $txt['name'], '</strong></td>
+						<td align="left"><strong>', $txt['add_language_smf_desc'], '</strong></td>
+						<td align="left"><strong>', $txt['add_language_smf_version'], '</strong></td>
+						<td align="center"><strong>', $txt['add_language_smf_utf8'], '</strong></td>
+						<td align="left"><strong>', $txt['add_language_smf_install'], '</strong></td>
 					</tr>';
 
 		foreach ($context['smf_languages'] as $language)
@@ -1694,7 +1694,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_lang_name'], ':</b>
+				<strong>', $txt['languages_lang_name'], ':</strong>
 			</td>
 			<td>
 				', $context['primary_settings']['name'], '
@@ -1702,7 +1702,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_character_set'], ':</b>
+				<strong>', $txt['languages_character_set'], ':</strong>
 			</td>
 			<td>
 				<input type="text" name="character_set" size="20" value="', $context['primary_settings']['character_set'], '" />
@@ -1710,7 +1710,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_locale'], ':</b>
+				<strong>', $txt['languages_locale'], ':</strong>
 			</td>
 			<td>
 				<input type="text" name="locale" size="20" value="', $context['primary_settings']['locale'], '" />
@@ -1718,7 +1718,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_dictionary'], ':</b>
+				<strong>', $txt['languages_dictionary'], ':</strong>
 			</td>
 			<td>
 				<input type="text" name="dictionary" size="20" value="', $context['primary_settings']['dictionary'], '" />
@@ -1726,7 +1726,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_spelling'], ':</b>
+				<strong>', $txt['languages_spelling'], ':</strong>
 			</td>
 			<td>
 				<input type="text" name="spelling" size="20" value="', $context['primary_settings']['spelling'], '" />
@@ -1734,7 +1734,7 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="windowbg">
 			<td width="50%">
-				<b>', $txt['languages_rtl'], ':</b>
+				<strong>', $txt['languages_rtl'], ':</strong>
 			</td>
 			<td>
 				<input type="checkbox" name="rtl"', $context['primary_settings']['rtl'] ? ' checked="checked"' : '', ' class="check" />

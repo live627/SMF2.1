@@ -99,7 +99,7 @@ $txt['execute_database_changes'] = 'Adapt Database';
 $txt['package_install_actions'] = 'Installations actions for';
 $txt['package_will_fail_title'] = 'Error in Package Installation';
 $txt['package_will_fail_warning'] = 'At least one error was encountered during a test installation of this package.
-	It is <b>strongly</b> recommended that you do not continue with installation unless you know what you are doing, and have made a backup very recently.
+	It is <strong>strongly</strong> recommended that you do not continue with installation unless you know what you are doing, and have made a backup very recently.
 	This error may be caused by a conflict between the package you\'re trying to install and another package you have already installed, an error in the package, a package which requires another package that you don\'t have installed yet, or a package designed for another version of SMF.';
 // Don't use entities in the below string.
 $txt['package_will_fail_popup'] = 'Are you sure you wish to continue installing this modification, even though it will not install successfully?';
@@ -113,11 +113,11 @@ $txt['package_theme_failure_warning'] = 'At least one error was encountered duri
 
 $txt['package_bytes'] = 'bytes';
 
-$txt['package_action_missing'] = '<b class="error">File not found</b>';
-$txt['package_action_error'] = '<b class="error">Modification parse error</b>';
-$txt['package_action_failure'] = '<b class="error">Test failed</b>';
-$txt['package_action_success'] = '<b>Test successful</b>';
-$txt['package_action_skipping'] = '<b>Skipping file</b>';
+$txt['package_action_missing'] = '<strong class="error">File not found</strong>';
+$txt['package_action_error'] = '<strong class="error">Modification parse error</strong>';
+$txt['package_action_failure'] = '<strong class="error">Test failed</strong>';
+$txt['package_action_success'] = '<strong>Test successful</strong>';
+$txt['package_action_skipping'] = '<strong>Skipping file</strong>';
 
 $txt['package_uninstall_actions'] = 'Uninstall Actions';
 $txt['package_uninstall_done'] = 'The package has been uninstalled, it should no longer take effect.';
@@ -158,7 +158,7 @@ $txt['package_uploaded_successfully'] = 'The package has been uploaded successfu
 
 $txt['package_modification_malformed'] = 'Malformed or invalid modification file.';
 $txt['package_modification_missing'] = 'The file could not be found.';
-$txt['package_no_zlib'] = 'Sorry, your PHP configuration doesn\'t have support for <b>zlib</b>.  Without this, the package manager cannot function.  Please contact your host about this for more information.';
+$txt['package_no_zlib'] = 'Sorry, your PHP configuration doesn\'t have support for <strong>zlib</strong>.  Without this, the package manager cannot function.  Please contact your host about this for more information.';
 
 $txt['package_cleanperms_title'] = 'Cleanup Permissions';
 $txt['package_cleanperms_desc'] = 'This interface allows you to reset the permissions for files throughout your installation, so as to increase security or solve any permission problems you may encounter while installing packages.';

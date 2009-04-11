@@ -2217,7 +2217,7 @@ function theme_linktree()
 
 		if (isset($tree[\'extra_before\']))
 			echo $tree[\'extra_before\'];
-		echo \'<b>\', $settings[\'linktree_link\'] && isset($tree[\'url\']) ? \'<a href="\' . $tree[\'url\'] . \'" class="nav">\' . $tree[\'name\'] . \'</a>\' : $tree[\'name\'], \'</b>\';
+		echo \'<strong>\', $settings[\'linktree_link\'] && isset($tree[\'url\']) ? \'<a href="\' . $tree[\'url\'] . \'" class="nav">\' . $tree[\'name\'] . \'</a>\' : $tree[\'name\'], \'</strong>\';
 		if (isset($tree[\'extra_after\']))
 			echo $tree[\'extra_after\'];
 
@@ -2303,7 +2303,7 @@ function template_menu()
 	if ($context[\'user\'][\'is_logged\'])
 	{
 		echo \'
-				\', $txt[\'hello_member\'], \' <b>\', $context[\'user\'][\'name\'], \'</b>, \';
+				\', $txt[\'hello_member\'], \' <strong>\', $context[\'user\'][\'name\'], \'</strong>, \';
 
 		// Are there any members waiting for approval?
 		if (!empty($context[\'unapproved_members\']))
@@ -2313,7 +2313,7 @@ function template_menu()
 		// Is the forum in maintenance mode?
 		if ($context[\'in_maintenance\'] && $context[\'user\'][\'is_admin\'])
 			echo \'<br />
-				<b>\', $txt[\'maintain_mode_on\'], \'</b>\';
+				<strong>\', $txt[\'maintain_mode_on\'], \'</strong>\';
 	}
 	// Otherwise they\'re a guest - so politely ask them to register or login.
 	else
@@ -2342,7 +2342,7 @@ function template_menu()
 
 	// Show a random news item? (or you could pick one from news_lines...)
 	if (!empty($settings[\'enable_news\']))
-		echo \'<b>\', $txt[\'news\'], \':</b> \', $context[\'random_news_line\'];
+		echo \'<strong>\', $txt[\'news\'], \':</strong> \', $context[\'random_news_line\'];
 
 	echo ' . '\'',
 		// <yabb main>

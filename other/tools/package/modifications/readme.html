@@ -137,14 +137,14 @@
 &nbsp; &nbsp;&lt;operation&gt;<br />
 <br />
 &nbsp; &nbsp; &nbsp; <span class="comment">The position attribute should tell the position relative to the code you want to add.</span><br />
-&nbsp; &nbsp; &nbsp; &lt;search position=&quot;before&quot;&gt;&lt;![CDATA[<b><br />
+&nbsp; &nbsp; &nbsp; &lt;search position=&quot;before&quot;&gt;&lt;![CDATA[<strong><br />
 Search for some code to add stuff after.<br />
-</b>]]&gt;&lt;/search&gt;<br />
+</strong>]]&gt;&lt;/search&gt;<br />
 <br />
 &nbsp; &nbsp; &nbsp; <span class="comment">The code to add in the described location.</span><br />
-&nbsp; &nbsp; &nbsp; &lt;add&gt;&lt;![CDATA[<b><br />
+&nbsp; &nbsp; &nbsp; &lt;add&gt;&lt;![CDATA[<strong><br />
 This is what to add.<br />
-</b>]]&gt;&lt;/add&gt;<br />
+</strong>]]&gt;&lt;/add&gt;<br />
 <br />
 &nbsp; &nbsp;&lt;/operation&gt;<br />
 <br />
@@ -157,7 +157,7 @@ This is what to add.<br />
 				<br />
 				You may notice the &lt;![CDATA[...]]&gt; used there.  This simply makes it so you can use &lt;, &gt;, &quot;, &amp;, and etc., without using &amp;amp; or something.  And, the letters &quot;CDATA&quot; stand for &quot;character data&quot;, meaning that it takes what's inside there literally - not as html/xml.  The only restriction is that you cannot have ]]&gt; inside it (because that's how it closes.)<br />
 				<br />
-				Once you have the modification file sorted out, you need to modify the package-info file to make use of it.  Open up package-info.xml, and make sure the <tt>&lt;type&gt;</tt> part says <b>modification</b>.  Then make <tt>&lt;install&gt;</tt> look something like this: (not the blue parts!)<br />
+				Once you have the modification file sorted out, you need to modify the package-info file to make use of it.  Open up package-info.xml, and make sure the <tt>&lt;type&gt;</tt> part says <strong>modification</strong>.  Then make <tt>&lt;install&gt;</tt> look something like this: (not the blue parts!)<br />
 
 				<div class="code">
 &lt;install&gt;<br />

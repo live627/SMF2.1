@@ -94,7 +94,7 @@ function template_main()
 	// Warn them if theme creation isn't possible!
 	if (!$context['can_create_new'])
 		echo '
-		<b>', $txt['theme_install_writable'], '</b><br /><br />';
+		<strong>', $txt['theme_install_writable'], '</strong><br /><br />';
 
 		echo '
 		<form action="', $scripturl, '?action=admin;area=theme;sa=install" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data" onsubmit="return confirm(\'', $txt['theme_install_new_confirm'], '\');">
@@ -195,7 +195,7 @@ function template_list_themes()
 		echo '
 			<tr class="catbg">
 				<td>
-					<div style="float: left;"><b><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></b>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '</div>';
+					<div style="float: left;"><strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></strong>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '</div>';
 
 		// You *cannot* delete the default theme. It's important!
 		if ($theme['id'] != 1)
@@ -207,9 +207,9 @@ function template_list_themes()
 			</tr>
 			<tr class="windowbg2">
 				<td style="padding-left: 5ex;" class="smalltext">
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex; padding-bottom: 2px;">', $txt['themeadmin_list_theme_dir'], ':</div> <b style="white-space: nowrap;"', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], '</b>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</div>
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_theme_url'], ':</div> <b style="white-space: nowrap;">', $theme['theme_url'], '</b></div>
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_images_url'], ':</div> <b style="white-space: nowrap;">', $theme['images_url'], '</b></div>
+					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex; padding-bottom: 2px;">', $txt['themeadmin_list_theme_dir'], ':</div> <strong style="white-space: nowrap;"', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], '</strong>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</div>
+					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_theme_url'], ':</div> <strong style="white-space: nowrap;">', $theme['theme_url'], '</strong></div>
+					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_images_url'], ':</div> <strong style="white-space: nowrap;">', $theme['images_url'], '</strong></div>
 				</td>
 			</tr>';
 	}
@@ -257,7 +257,7 @@ function template_reset_list()
 		echo '
 			<tr class="windowbg2">
 				<td style="padding-bottom: 1ex;">
-					<b><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></b><br />
+					<strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></strong><br />
 					<div style="padding-left: 5ex; line-height: 3ex;" class="smalltext">
 						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset">', $txt['themeadmin_reset_defaults'], '</a> (', $theme['num_default_options'], ' ', $txt['themeadmin_reset_defaults_current'], ')<br />
 						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=reset;who=1">', $txt['themeadmin_reset_members'], '</a><br />
@@ -515,14 +515,14 @@ function template_pick()
 			<td valign="top" style="padding-top: 5px;">
 				<div>
 					<div style="font-size: larger; float: left;">
-						<b><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $theme['name'], '</a></b>
+						<strong><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $theme['name'], '</a></strong>
 					</div>
 					<div style="float: right;">';
 
 		if (!empty($theme['variants']))
 		{
 			echo '
-						<b>', $theme['pick_label'], '</b>: <select name="vrt[', $theme['id'], ']" onchange="changeVariant', $theme['id'], '(this.value);">';
+						<strong>', $theme['pick_label'], '</strong>: <select name="vrt[', $theme['id'], ']" onchange="changeVariant', $theme['id'], '(this.value);">';
 
 			foreach ($theme['variants'] as $key => $variant)
 			{
@@ -622,7 +622,7 @@ function template_edit_list()
 		echo '
 			<tr class="windowbg2">
 				<td style="padding-bottom: 1ex;">
-					<b><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $theme['name'], '</a></b>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '<br />
+					<strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $theme['name'], '</a></strong>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '<br />
 					<div style="padding-left: 5ex; line-height: 3ex;" class="smalltext">
 						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $txt['themeadmin_edit_browse'], '</a><br />', $theme['can_edit_style'] ? '
 						<a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;filename=style.css">' . $txt['themeadmin_edit_style'] . '</a><br />' : '', '

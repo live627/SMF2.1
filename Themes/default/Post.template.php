@@ -221,7 +221,7 @@ function template_main()
 		echo '
 							<tr>
 								<td align="right" valign="top"', !empty($context['post_error']['need_qr_verification']) ? ' class="error"' : '', '>
-									<b>', $txt['verification'], ':</b>
+									<strong>', $txt['verification'], ':</strong>
 								</td>
 								<td>
 									', template_control_verification($context['visual_verification_id'], 'all'), '
@@ -281,7 +281,7 @@ function template_main()
 		{
 			echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar_numb_days'], '</b></td>
+								<td align="right"><strong>', $txt['calendar_numb_days'], '</strong></td>
 								<td class="smalltext">
 									<select name="span">';
 
@@ -300,7 +300,7 @@ function template_main()
 		{
 			echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar_post_in'], '</b></td>
+								<td align="right"><strong>', $txt['calendar_post_in'], '</strong></td>
 								<td class="smalltext">
 									<select name="board">';
 			foreach ($context['event']['categories'] as $category)
@@ -332,7 +332,7 @@ function template_main()
 							</tr>
 							<tr>
 								<td align="right">
-									<b>', $txt['message_icon'], ':</b>
+									<strong>', $txt['message_icon'], ':</strong>
 								</td>
 								<td>
 									<select name="icon" id="icon" onchange="showimage()">';
@@ -379,7 +379,7 @@ function template_main()
 								</td>
 							</tr>
 							<tr>
-								<td align="right"><b>', $txt['poll_options'], ':</b></td>
+								<td align="right"><strong>', $txt['poll_options'], ':</strong></td>
 								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
 							</tr>
 							<tr>
@@ -444,7 +444,7 @@ function template_main()
 		echo '
 									<tr>
 										<td valign="top" align="right">
-											<b>', $txt['last_edit'], ':</b>
+											<strong>', $txt['last_edit'], ':</strong>
 										</td>
 										<td>
 											', $context['last_modified'], '
@@ -456,7 +456,7 @@ function template_main()
 		echo '
 									<tr>
 										<td colspan="2" style="padding-left: 5ex;">
-											<a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="postMoreExpand" /></a> <a href="javascript:swapOptions();"><b>', $txt['post_additionalopt'], '</b></a>
+											<a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="postMoreExpand" /></a> <a href="javascript:swapOptions();"><strong>', $txt['post_additionalopt'], '</strong></a>
 										</td>
 									</tr>';
 
@@ -494,7 +494,7 @@ function template_main()
 		echo '
 							<tr id="postAttachment">
 								<td align="right" valign="top">
-									<b>', $txt['attached'], ':</b>
+									<strong>', $txt['attached'], ':</strong>
 								</td>
 								<td class="smalltext">
 									<input type="hidden" name="attach_del[]" value="0" />
@@ -514,7 +514,7 @@ function template_main()
 		echo '
 							<tr id="postAttachment2">
 								<td align="right" valign="top">
-									<b>', $txt['attach'], ':</b>
+									<strong>', $txt['attach'], ':</strong>
 								</td>
 								<td class="smalltext">
 									<input type="file" size="48" name="attachment[]" />';
@@ -975,7 +975,7 @@ function template_announcement_send()
 						', $txt['announce_sending'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0" target="_blank" class="new_win">', $context['topic_subject'], '</a>
 					</td>
 				</tr><tr>
-					<td class="windowbg2"><b>', $context['percentage_done'], '% ', $txt['announce_done'], '</b></td>
+					<td class="windowbg2"><strong>', $context['percentage_done'], '% ', $txt['announce_done'], '</strong></td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
 						<input type="submit" name="b" value="', $txt['announce_continue'], '" />

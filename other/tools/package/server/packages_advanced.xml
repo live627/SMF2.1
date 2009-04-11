@@ -40,7 +40,7 @@
 
 			<!-- A description for this mod! (required)  The CDATA makes it so you can type html in here. -->
 			<description><![CDATA[
-				This is a really <b>awesome</b> modification ;).
+				This is a really <strong>awesome</strong> modification ;).
 			]]></description>
 
 			<!-- If this has its own website, or author, you can specify them as with default-author. -->

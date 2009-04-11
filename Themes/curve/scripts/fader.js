@@ -2,7 +2,7 @@
 var smfFadeFrom = {"r": 0, "g": 0, "b": 0}, smfFadeTo = {"r": 255, "g": 255, "b": 255};
 
 // Surround each item with... anything special?
-var smfFadeBefore = "<b>", smfFadeAfter = "</b>";
+var smfFadeBefore = "<strong>", smfFadeAfter = "</strong>";
 
 var foreColor, foreEl, backEl, backColor;
 

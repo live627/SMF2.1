@@ -35,7 +35,7 @@ function template_modify_weights()
 				<td><input type="text" name="search_weight_sticky" id="weight6_val" value="', empty($modSettings['search_weight_sticky']) ? '0' : $modSettings['search_weight_sticky'], '" onchange="calculateNewValues()" size="3" /></td>
 				<td id="weight6">', $context['relative_weights']['search_weight_sticky'], '%</td>
 			</tr><tr class="windowbg2">
-				<td align="right"><b>', $txt['search_weights_total'], '</b></td>
+				<td align="right"><strong>', $txt['search_weights_total'], '</strong></td>
 				<td id="weighttotal" style="font-weight: bold;">', $context['relative_weights']['total'], '</td>
 				<td style="font-weight: bold;">100%</td>
 			</tr><tr class="windowbg2">
@@ -77,8 +77,8 @@ function template_select_search_method()
 		echo '
 			<tr class="windowbg2">
 				<td colspan="3">
-					<b>', $txt['search_method_messages_table_space'], ':</b> ', $context['table_info']['data_length'], ' <br />
-					<b>', $txt['search_method_messages_index_space'], ':</b> ', $context['table_info']['index_length'], ' <br />', $context['double_index'] ? '
+					<strong>', $txt['search_method_messages_table_space'], ':</strong> ', $context['table_info']['data_length'], ' <br />
+					<strong>', $txt['search_method_messages_index_space'], ':</strong> ', $context['table_info']['index_length'], ' <br />', $context['double_index'] ? '
 					' . $txt['search_double_index'] . '<br />' : '', '
 					<br />
 				</td>
@@ -102,14 +102,14 @@ function template_select_search_method()
 					<span class="smalltext">';
 	if (empty($context['fulltext_index']) && empty($context['cannot_create_fulltext']))
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createfulltext;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_method_fulltext_create'], '</a>]';
+						<strong>', $txt['search_index_label'], ':</strong> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createfulltext;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_method_fulltext_create'], '</a>]';
 	elseif (empty($context['fulltext_index']) && !empty($context['cannot_create_fulltext']))
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_fulltext_cannot_create'];
+						<strong>', $txt['search_index_label'], ':</strong> ', $txt['search_method_fulltext_cannot_create'];
 	else
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
-						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['fulltext_length'];
+						<strong>', $txt['search_index_label'], ':</strong> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removefulltext;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_method_fulltext_remove'], '</a>]<br />
+						<strong>', $txt['search_index_size'], ':</strong> ', $context['table_info']['fulltext_length'];
 	echo '
 					</span>
 				</td>';
@@ -124,15 +124,15 @@ function template_select_search_method()
 					<span class="smalltext">';
 	if ($context['custom_index'])
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
-						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
+						<strong>', $txt['search_index_label'], ':</strong> ', $txt['search_method_index_already_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>]<br />
+						<strong>', $txt['search_index_size'], ':</strong> ', $context['table_info']['custom_index_length'];
 	elseif ($context['partial_custom_index'])
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ', $txt['search_method_index_partial'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>] [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;resume;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_resume'], '</a>]<br />
-						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['custom_index_length'];
+						<strong>', $txt['search_index_label'], ':</strong> ', $txt['search_method_index_partial'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=removecustom;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_remove'], '</a>] [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;resume;', $context['session_var'], '=', $context['session_id'], '">', $txt['search_index_custom_resume'], '</a>]<br />
+						<strong>', $txt['search_index_size'], ':</strong> ', $context['table_info']['custom_index_length'];
 	else
 		echo '
-						<b>', $txt['search_index_label'], ':</b> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex">', $txt['search_index_create_custom'], '</a>]';
+						<strong>', $txt['search_index_label'], ':</strong> ',  $txt['search_method_no_index_exists'], ' [<a href="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex">', $txt['search_index_create_custom'], '</a>]';
 	echo '
 					</span>
 				</td>';
@@ -217,7 +217,7 @@ function template_create_index_progress()
 				</td>
 			</tr><tr>
 				<td class="windowbg2" align="center">
-					<b>', $txt['search_create_index_progress'], ': ', $context['percentage'], '%
+					<strong>', $txt['search_create_index_progress'], ': ', $context['percentage'], '%
 				</td>
 			</tr><tr>
 				<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
@@ -284,7 +284,7 @@ function template_spider_edit()
 			</tr>
 			<tr class="windowbg">
 				<td>
-					<b>', $txt['spider_name'], ':</b>
+					<strong>', $txt['spider_name'], ':</strong>
 					<div class="smalltext">', $txt['spider_name_desc'], '</div>
 				</td>
 				<td>
@@ -293,7 +293,7 @@ function template_spider_edit()
 			</tr>
 			<tr class="windowbg">
 				<td>
-					<b>', $txt['spider_agent'], ':</b>
+					<strong>', $txt['spider_agent'], ':</strong>
 					<div class="smalltext">', $txt['spider_agent_desc'], '</div>
 				</td>
 				<td>
@@ -302,7 +302,7 @@ function template_spider_edit()
 			</tr>
 			<tr class="windowbg" valign="top">
 				<td>
-					<b>', $txt['spider_ip_info'], ':</b>
+					<strong>', $txt['spider_ip_info'], ':</strong>
 					<div class="smalltext">', $txt['spider_ip_info_desc'], '</div>
 				</td>
 				<td>

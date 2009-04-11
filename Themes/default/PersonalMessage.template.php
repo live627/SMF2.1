@@ -13,7 +13,7 @@ function template_pm_above()
 		echo '
 			<table width="100%" cellspacing="1" cellpadding="3" class="bordercolor" style="margin-bottom: 1em">
 				<tr class="titlebg2">
-					<td width="200" align="right"><b>', $txt['pm_capacity'], ':</b></td>
+					<td width="200" align="right"><strong>', $txt['pm_capacity'], ':</strong></td>
 					<td width="50%" align="center">
 						<div align="left" style="background: #fff; border: 1px solid black; height: 7px; width: 75%">
 							<div style="border: 0; background: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], '%;"></div>
@@ -163,7 +163,7 @@ function template_folder()
 					<table width="100%" cellpadding="4" cellspacing="1" style="table-layout: fixed;">
 						<tr>
 							<td valign="top" width="16%" rowspan="2" style="overflow: hidden;">
-								<b>', $message['member']['link'], '</b>
+								<strong>', $message['member']['link'], '</strong>
 								<div class="smalltext">';
 			if (isset($message['member']['title']) && $message['member']['title'] != '')
 				echo '
@@ -250,11 +250,11 @@ function template_folder()
 							<td class="', $windowcss, '" valign="top" width="85%" height="100%">
 								<table width="100%" border="0"><tr>
 									<td align="', $context['right_to_left'] ? 'right' : 'left', '" valign="middle">
-										<b>', $message['subject'], '</b>';
+										<strong>', $message['subject'], '</strong>';
 
 			// Show who the message was sent to.
 			echo '
-										<div class="smalltext">&#171; <b> ', $txt['sent_to'], ':</b> ';
+										<div class="smalltext">&#171; <strong> ', $txt['sent_to'], ':</strong> ';
 
 			// People it was sent directly to....
 			if (!empty($message['recipients']['to']))
@@ -263,12 +263,12 @@ function template_folder()
 			elseif ($context['folder'] != 'sent')
 				echo '(', $txt['pm_undisclosed_recipients'], ')';
 
-			echo ' <b> ', $txt['on'], ':</b> ', $message['time'], ' &#187;</div>';
+			echo ' <strong> ', $txt['on'], ':</strong> ', $message['time'], ' &#187;</div>';
 
 			// If we're in the sent items, show who it was sent to besides the "To:" people.
 			if (!empty($message['recipients']['bcc']))
 				echo '
-										<div class="smalltext">&#171; <b> ', $txt['pm_bcc'], ':</b> ', implode(', ', $message['recipients']['bcc']), ' &#187;</div>';
+										<div class="smalltext">&#171; <strong> ', $txt['pm_bcc'], ':</strong> ', implode(', ', $message['recipients']['bcc']), ' &#187;</div>';
 
 			if (!empty($message['is_replied_to']))
 				echo '
@@ -550,7 +550,7 @@ function template_search()
 	if ($context['simple_search'])
 	{
 		echo '
-					<b>', $txt['pm_search_text'], ':</b><br />
+					<strong>', $txt['pm_search_text'], ':</strong><br />
 					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />&nbsp;
 					<input type="submit" name="submit" value="', $txt['pm_search_go'], '" /><br />
 					<a href="', $scripturl, '?action=pm;sa=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.pmSearchForm.search.value);">', $txt['pm_search_advanced'], '</a>
@@ -563,11 +563,11 @@ function template_search()
 					<table cellpadding="1" cellspacing="3" border="0">
 						<tr>
 							<td>
-								<b>', $txt['pm_search_text'], ':</b>
+								<strong>', $txt['pm_search_text'], ':</strong>
 							</td>
 							<td></td>
 							<td>
-								<b>', $txt['pm_search_user'], ':</b>
+								<strong>', $txt['pm_search_user'], ':</strong>
 							</td>
 						</tr><tr>
 							<td>
@@ -590,8 +590,8 @@ function template_search()
 								<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" />
 							</td>
 						</tr><tr>
-							<td style="padding-top: 2ex;" colspan="2"><b>', $txt['pm_search_options'], ':</b></td>
-							<td style="padding-top: 2ex;"><b>', $txt['pm_search_post_age'], ': </b></td>
+							<td style="padding-top: 2ex;" colspan="2"><strong>', $txt['pm_search_options'], ':</strong></td>
+							<td style="padding-top: 2ex;"><strong>', $txt['pm_search_post_age'], ': </strong></td>
 						</tr><tr>
 							<td colspan="2">
 								<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['pm_search_show_complete'], '</label><br />
@@ -601,7 +601,7 @@ function template_search()
 								', $txt['pm_search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['pm_search_between_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['pm_search_between_days'], '.
 							</td>
 						</tr><tr>
-							<td style="padding-top: 2ex;" colspan="2"><b>', $txt['pm_search_order'], ':</b></td>
+							<td style="padding-top: 2ex;" colspan="2"><strong>', $txt['pm_search_order'], ':</strong></td>
 							<td></td>
 						</tr><tr>
 							<td colspan="2">
@@ -620,7 +620,7 @@ function template_search()
 			echo '
 						<tr>
 							<td colspan="4">
-					<a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandLabelsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><b>', $txt['pm_search_choose_label'], '</b></a><br />
+					<a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandLabelsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseLabels(); return false;"><strong>', $txt['pm_search_choose_label'], '</strong></a><br />
 
 					<table id="searchLabelsExpand" width="90%" border="0" cellpadding="1" cellspacing="0" align="center" ', $context['check_all'] ? 'style="display: none;"' : '', '>';
 
@@ -684,7 +684,7 @@ function template_search_results()
 				<td colspan="3">', $txt['pm_search_results'], '</td>
 			</tr>
 			<tr class="catbg" height="30">
-				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><strong>', $txt['pages'], ':</strong> ', $context['page_index'], '</td>
 			</tr>
 		</table>';
 	}
@@ -696,7 +696,7 @@ function template_search_results()
 				<td colspan="3">', $txt['pm_search_results'], '</td>
 			</tr>
 			<tr class="catbg">
-				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><strong>', $txt['pages'], ':</strong> ', $context['page_index'], '</td>
 			</tr>
 			<tr class="titlebg">
 				<td width="30%">', $txt['date'], '</td>
@@ -799,7 +799,7 @@ function template_search_results()
 		echo '
 		<table width="100%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
 			<tr class="catbg" height="30">
-				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><strong>', $txt['pages'], ':</strong> ', $context['page_index'], '</td>
 			</tr>
 		</table>';
 	}
@@ -813,7 +813,7 @@ function template_search_results()
 
 		echo '
 			<tr class="catbg">
-				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><strong>', $txt['pages'], ':</strong> ', $context['page_index'], '</td>
 			</tr>
 		</table>';
 	}
@@ -876,7 +876,7 @@ function template_send()
 							<tr>
 								<td></td>
 								<td align="left">
-									<b>', $txt['error_while_submitting'], '</b>
+									<strong>', $txt['error_while_submitting'], '</strong>
 									<div class="error" style="margin: 1ex 0 2ex 3ex;">
 										', implode('<br />', $context['post_error']['messages']), '
 									</div>
@@ -887,7 +887,7 @@ function template_send()
 	// To and bcc. Include a button to search for members.
 	echo '
 							<tr valign="top">
-								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_to'], ':</b></td>
+								<td align="right"><strong', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' class="error"' : ''), '>', $txt['pm_to'], ':</strong></td>
 								<td>';
 
 	// Autosuggest will be added by the JavaScript later on.
@@ -909,7 +909,7 @@ function template_send()
 	// This BCC row will be hidden by default if JavaScript is enabled.
 	echo '
 							<tr valign="top" id="bcc_div">
-								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_bcc']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</b></td>
+								<td align="right"><strong', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_bcc']) ? ' class="error"' : ''), '>', $txt['pm_bcc'], ':</strong></td>
 								<td>
 									<input type="text" name="bcc" id="bcc_control" value="', $context['bcc_value'], '" tabindex="', $context['tabindex']++, '" size="40" style="width: 130px;" />
 									<div id="bcc_item_list_container"></div>
@@ -919,7 +919,7 @@ function template_send()
 	// The subject of the PM.
 	echo '
 							<tr>
-								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</b></td>
+								<td align="right"><strong', (isset($context['post_error']['no_subject']) ? ' class="error"' : ''), '>', $txt['subject'], ':</strong></td>
 								<td><input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" /></td>
 							</tr>';
 
@@ -929,7 +929,7 @@ function template_send()
 		echo '
 							<tr>
 								<td align="right" valign="top">
-									<b>', $txt['pm_visual_verification_label'], ':</b>
+									<strong>', $txt['pm_visual_verification_label'], ':</strong>
 								</td>
 								<td>
 									', template_control_verification($context['visual_verification_id'], 'all'), '
@@ -1001,7 +1001,7 @@ function template_send()
 		<br />
 		<table width="100%" border="0" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr>
-				<td colspan="2" class="windowbg"><b>', $txt['subject'], ': ', $context['quoted_message']['subject'], '</b></td>
+				<td colspan="2" class="windowbg"><strong>', $txt['subject'], ': ', $context['quoted_message']['subject'], '</strong></td>
 			</tr>
 			<tr>
 				<td class="windowbg2">
@@ -1085,7 +1085,7 @@ function template_ask_delete()
 				<td class="windowbg">
 					', $txt['delete_all_confirm'], '<br />
 					<br />
-					<b><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></b>
+					<strong><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></strong>
 				</td>
 			</tr>
 		</table>';
@@ -1177,7 +1177,7 @@ function template_labels()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%">
-					<b>', $txt['pm_label_name'], ':</b>
+					<strong>', $txt['pm_label_name'], ':</strong>
 				</td>
 				<td align="left">
 					<input type="text" name="label" value="" size="30" maxlength="30" />
@@ -1218,7 +1218,7 @@ function template_report_message()
 		echo '
 			<tr class="windowbg">
 				<td align="left">
-					<b>', $txt['pm_report_admins'], ':</b>
+					<strong>', $txt['pm_report_admins'], ':</strong>
 					<select name="ID_ADMIN">
 						<option value="0">', $txt['pm_report_all_admins'], '</option>';
 		foreach ($context['admins'] as $id => $name)
@@ -1233,7 +1233,7 @@ function template_report_message()
 	echo '
 			<tr class="windowbg">
 				<td align="left">
-					<b>', $txt['pm_report_reason'], ':</b>
+					<strong>', $txt['pm_report_reason'], ':</strong>
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -1541,7 +1541,7 @@ function template_add_rule()
 			</tr>
 			<tr class="windowbg">
 				<td>
-					<b>', $txt['pm_rule_name'], ':</b>
+					<strong>', $txt['pm_rule_name'], ':</strong>
 					<div class="smalltext">', $txt['pm_rule_name_desc'], '</div>
 				</td>
 				<td width="50%">

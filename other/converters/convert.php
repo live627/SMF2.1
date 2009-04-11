@@ -580,7 +580,7 @@ function findConvertScripts()
 		echo '
 			<h3>The converter did not find any conversion data files.  Please check to see if the one you want is available for download at <a href="http://www.simplemachines.org/">www.simplemachines.org</a>.  If it isn\'t, we may be able to write one for you - just ask us!</h3>
 
-			After you download it, simply upload it into the same folder as <b>this convert.php file</b>.  If you\'re having any other problems with this converter, don\'t hesitate to look for help on our <a href="http://www.simplemachines.org/community/index.php">forum</a>.<br />
+			After you download it, simply upload it into the same folder as <strong>this convert.php file</strong>.  If you\'re having any other problems with this converter, don\'t hesitate to look for help on our <a href="http://www.simplemachines.org/community/index.php">forum</a>.<br />
 			<br />
 			<a href="', $_SERVER['PHP_SELF'], '?convert_script=">Try again</a>';
 	}
@@ -801,7 +801,7 @@ function doStep0($error_message = null)
 			<div class="panel">
 				<form action="', $_SERVER['PHP_SELF'], '?step=1', isset($_REQUEST['debug']) ? '&amp;debug=' . $_REQUEST['debug'] : '', '" method="post">
 					<h2>Before you continue</h2>
-					<div style="margin-bottom: 2ex;">This converter assumes you have already installed SMF and that your installation is working properly.  It copies posts and data from your &quot;source&quot; installation of ', $convert_data['name'], ' into SMF, so it won\'t work without an installation of SMF.  All or some of the data in your installation of SMF will be <b>overwritten</b>.</div>';
+					<div style="margin-bottom: 2ex;">This converter assumes you have already installed SMF and that your installation is working properly.  It copies posts and data from your &quot;source&quot; installation of ', $convert_data['name'], ' into SMF, so it won\'t work without an installation of SMF.  All or some of the data in your installation of SMF will be <strong>overwritten</strong>.</div>';
 
 	if (empty($convert_data['flatfile']))
 		echo '
@@ -1078,7 +1078,7 @@ function doStep1()
 				{
 					if (eval($current_data) === false)
 						print_error('
-			<b>Error in convert script ', $_SESSION['convert_script'], ' on line ', $line_number, '!</b><br />');
+			<strong>Error in convert script ', $_SESSION['convert_script'], ' on line ', $line_number, '!</strong><br />');
 				}
 
 				// Done with code!
@@ -2250,7 +2250,7 @@ function pastTime($substep = null, $force = false)
 			<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
 			<h3>
 				This conversion has paused to avoid overloading your server, and hence not working properly.<br />
-				Don\'t worry though, <b>nothing\'s wrong</b> - simply click the <label for="continue">continue button</label> below to start the converter from where it left off.
+				Don\'t worry though, <strong>nothing\'s wrong</strong> - simply click the <label for="continue">continue button</label> below to start the converter from where it left off.
 			</h3>
 
 			<form action="', $_SERVER['PHP_SELF'], '?step=', $_GET['step'], isset($_GET['substep']) ? '&amp;substep=' . $_GET['substep'] : '', isset($_GET['cstep']) ? '&amp;cstep=' . $_GET['cstep'] : '', '&amp;start=', $_REQUEST['start'], '" method="post" name="autoSubmit">
@@ -2622,7 +2622,7 @@ function convert_query($string, $return_error = false)
 	}
 
 	echo '
-			<b>Unsuccessful!</b><br />
+			<strong>Unsuccessful!</strong><br />
 
 			This query:<blockquote>' . nl2br(htmlspecialchars(trim($string))) . ';</blockquote>
 

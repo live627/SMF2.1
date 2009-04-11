@@ -527,7 +527,7 @@ function show_detailed_file()
 	echo '
 					<table width="60%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><b>', $txt['file_version'], '</b></td><td width="25%"><b>', $txt['your_version'], '</b></td><td width="25%"><b>', $txt['current_version'], '</b></td>
+							<td width="50%"><strong>', $txt['file_version'], '</strong></td><td width="25%"><strong>', $txt['your_version'], '</strong></td><td width="25%"><strong>', $txt['current_version'], '</strong></td>
 						</tr>
 						<tr>
 							<td>', $txt['smf_version'], '</td><td><i id="yourSMF">SMF ', $context['forum_version'], '</i></td><td><i id="currentSMF">??</i></td>
@@ -1076,7 +1076,7 @@ function show_status()
 
 			if (isset($stat['max']) || isset($stat['min']))
 				echo '
-						', $warning ? '<b>' : '', '(should be ', isset($stat['min']) ? '&gt;= ' . $stat['min'] . ' ' : '', isset($stat['max'], $stat['min']) ? 'and ' : '', isset($stat['max']) ? '&lt;= ' . $stat['max'] : '', ')', $warning ? '</b>' : '';
+						', $warning ? '<strong>' : '', '(should be ', isset($stat['min']) ? '&gt;= ' . $stat['min'] . ' ' : '', isset($stat['max'], $stat['min']) ? 'and ' : '', isset($stat['max']) ? '&lt;= ' . $stat['max'] : '', ')', $warning ? '</strong>' : '';
 
 			echo '
 					</td>
@@ -1304,7 +1304,7 @@ function initialize()
 		require_once(dirname($_SERVER['SCRIPT_FILENAME']) . '/SSI.php');
 	// Hmm... no SSI.php and no SMF?
 	elseif(!defined('SMF'))
-		die('<b>Error:</b> Cannot start - please verify you put this in the same place as SMF\'s SSI.php.');
+		die('<strong>Error:</strong> Cannot start - please verify you put this in the same place as SMF\'s SSI.php.');
 
 	$forum_version = get_file_versions(true);
 	
@@ -1541,7 +1541,7 @@ function get_php_setting($val, $rec = '')
 	global $txt;
 	$r = (@ini_get($val) == '1' ? 1 : 0) ? $txt['on'] : $txt['off'];
 	if (!empty($rec) && strcmp($r, $txt[$rec]) != 0)
-		$r .= '&nbsp;<b>(' . $txt['recommended'] . ': ' . $txt[$rec] . ')</b>';
+		$r .= '&nbsp;<strong>(' . $txt['recommended'] . ': ' . $txt[$rec] . ')</strong>';
 	return $r;
 }
 
@@ -1551,7 +1551,7 @@ function get_smf_setting($val, $rec = '')
 	global $modSettings, $settings;
 	$r = (!empty($GLOBALS[$val]) ? $txt['on'] : (!empty($modSettings[$val]) ? $txt['on'] : (!empty($settings[$val]) ? $txt['on'] : $txt['off'])));
 	if (!empty($rec) && strcmp($r, $txt[$rec]) != 0)
-		$r .= '&nbsp;<b>(' . $txt['recommended'] . ': ' . $txt[$rec] . ')</b>';
+		$r .= '&nbsp;<strong>(' . $txt['recommended'] . ': ' . $txt[$rec] . ')</strong>';
 	return $r;
 }
 

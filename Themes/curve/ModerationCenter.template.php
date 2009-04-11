@@ -12,7 +12,7 @@ function template_moderation_center()
 				<td align="center" colspan="2" class="largetext headerpadding">', $txt['moderation_center'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="top" style="padding: 7px;">
-					<b>', $txt['hello_guest'], ' ', $context['user']['name'], '!</b>
+					<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>
 					<div style="font-size: 0.85em; padding-top: 1ex;">', $txt['mc_description'], '</div>
 				</td>
 			</tr>
@@ -128,7 +128,7 @@ function template_group_requests_block()
 		echo '
 		<tr>
 			<td class="windowbg2" align="center" valign="top" style="height: 14em; padding: 2px;">
-				<b class="smalltext">', $txt['mc_group_requests_none'], '</b>
+				<strong class="smalltext">', $txt['mc_group_requests_none'], '</strong>
 			</td>
 		</tr>';
 
@@ -164,7 +164,7 @@ function template_reported_posts_block()
 		echo '
 		<tr>
 			<td class="windowbg2" align="center" valign="top" style="height: 14em; padding: 2px;">
-				<b class="smalltext">', $txt['mc_recent_reports_none'], '</b>
+				<strong class="smalltext">', $txt['mc_recent_reports_none'], '</strong>
 			</td>
 		</tr>';
 
@@ -199,7 +199,7 @@ function template_watched_users()
 		echo '
 		<tr>
 			<td class="windowbg2" align="center" valign="top" style="height: 14em; padding: 2px;">
-				<b class="smalltext">', $txt['mc_watched_users_none'], '</b>
+				<strong class="smalltext">', $txt['mc_watched_users_none'], '</strong>
 			</td>
 		</tr>';
 
@@ -231,7 +231,7 @@ function template_notes()
 		// Cycle through the notes.
 		foreach ($context['notes'] as $note)
 			echo '
-						<li class="smalltext"><a href="', $note['delete_href'], '"><img src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="" /></a> <b>', $note['author']['link'], ':</b> ', $note['text'], '</li>';
+						<li class="smalltext"><a href="', $note['delete_href'], '"><img src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="" /></a> <strong>', $note['author']['link'], ':</strong> ', $note['text'], '</li>';
 
 		echo '
 					</ul>';
@@ -286,7 +286,7 @@ function template_reported_posts()
 				<td>
 					<div>
 						<div style="float: left">
-							<b><a href="', $report['topic_href'], '">', $report['subject'], '</a></b> ', $txt['mc_reportedp_by'], ' <b>', $report['author']['link'], '</b>
+							<strong><a href="', $report['topic_href'], '">', $report['subject'], '</a></strong> ', $txt['mc_reportedp_by'], ' <strong>', $report['author']['link'], '</strong>
 						</div>
 						<div style="float: right">
 							<a href="', $report['report_href'], '">', $details_button, '</a>
@@ -651,7 +651,7 @@ function template_user_watch_post_callback($post)
 	$output_html = '
 					<div>
 						<div style="float: left">
-							<b><a href="' . $scripturl . '?topic=' . $post['id_topic'] . '.' . $post['id'] . '#msg' . $post['id'] . '">' . $post['subject'] . '</a></b> ' . $txt['mc_reportedp_by'] . ' <b>' . $post['author_link'] . '</b>
+							<strong><a href="' . $scripturl . '?topic=' . $post['id_topic'] . '.' . $post['id'] . '#msg' . $post['id'] . '">' . $post['subject'] . '</a></strong> ' . $txt['mc_reportedp_by'] . ' <strong>' . $post['author_link'] . '</strong>
 						</div>
 						<div style="float: right">';
 
@@ -692,7 +692,7 @@ function template_moderation_settings()
 			</tr>
 			<tr class="windowbg2" valign="top">
 				<td width="50%">
-					<b>', $txt['mc_prefs_homepage'], ':</b>
+					<strong>', $txt['mc_prefs_homepage'], ':</strong>
 				</td>
 				<td width="50%">';
 
@@ -710,7 +710,7 @@ function template_moderation_settings()
 		echo '
 			<tr class="windowbg2" valign="top">
 				<td width="50%">
-					<b>', $txt['mc_prefs_show_reports'], ':</b>
+					<strong>', $txt['mc_prefs_show_reports'], ':</strong>
 				</td>
 				<td width="50%">
 					<input type="checkbox" name="mod_show_reports" ', $context['mod_settings']['show_reports'] ? 'checked="checked"' : '', ' class="check" />
@@ -718,7 +718,7 @@ function template_moderation_settings()
 			</tr>
 			<tr class="windowbg2" valign="top">
 				<td width="50%">
-					<b>', $txt['mc_prefs_notify_report'], ':</b>
+					<strong>', $txt['mc_prefs_notify_report'], ':</strong>
 				</td>
 				<td width="50%">
 					<select name="mod_notify_report">
@@ -730,7 +730,7 @@ function template_moderation_settings()
 			</tr>
 			<tr class="windowbg2" valign="top">
 				<td width="50%">
-					<b>', $txt['mc_prefs_notify_approval'], ':</b>
+					<strong>', $txt['mc_prefs_notify_approval'], ':</strong>
 				</td>
 				<td width="50%">
 					<input type="checkbox" name="mod_notify_approval" ', $context['mod_settings']['notify_approval'] ? 'checked="checked"' : '', ' class="check" />
@@ -778,12 +778,12 @@ function template_show_notice()
 			</tr>
 			<tr>
 				<td class="titlebg2">
-					<b>', $txt['show_notice_subject'], '</b>: ', $context['notice_subject'], '
+					<strong>', $txt['show_notice_subject'], '</strong>: ', $context['notice_subject'], '
 				</td>
 			</tr>
 			<tr>
 				<td class="windowbg">
-					<b>', $txt['show_notice_text'], ':</b>
+					<strong>', $txt['show_notice_text'], ':</strong>
 					<div class="tborder" style="padding: 10px;">', $context['notice_body'], '</div>
 				</td>
 			</tr>
@@ -809,7 +809,7 @@ function template_warn_template()
 				</tr>
 				<tr class="windowbg2" valign="top">
 					<td width="50%" colspan="2">
-						<b>', $txt['mc_warning_template_title'], ':</b>
+						<strong>', $txt['mc_warning_template_title'], ':</strong>
 					</td>
 					<td width="50%">
 						<input type="text" name="template_title" value="', $context['template_data']['title'], '" size="30" />
@@ -817,7 +817,7 @@ function template_warn_template()
 				</tr>
 				<tr class="windowbg2" valign="top">
 					<td width="50%" colspan="2">
-						<b>', $txt['profile_warning_notify_body'], ':</b>
+						<strong>', $txt['profile_warning_notify_body'], ':</strong>
 						<div class="smalltext">', $txt['mc_warning_template_body_desc'], '</div>
 					</td>
 					<td width="50%">
@@ -833,7 +833,7 @@ function template_warn_template()
 					</td>
 					<td colspan="2">
 						<label for="make_personal">
-							 <b>', $txt['mc_warning_template_personal'], '</b>
+							 <strong>', $txt['mc_warning_template_personal'], '</strong>
 						</label>
 						<div class="smalltext">', $txt['mc_warning_template_personal_desc'], '</div>
 					</td>

@@ -40,7 +40,7 @@ function template_main()
 
 			if ($context['allow_poll_view'])
 				echo '
-		<p><b>', $txt['poll_total_voters'], ':</b> ', $context['poll']['total_votes'], '</p>';
+		<p><strong>', $txt['poll_total_voters'], ':</strong> ', $context['poll']['total_votes'], '</p>';
 
 		}
 		// They are allowed to vote! Go to it!
@@ -75,7 +75,7 @@ function template_main()
 		// Is the clock ticking?
 		if (!empty($context['poll']['expire_time']))
 			echo '
-		<p><b>', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ':</b> ', $context['poll']['expire_time'], '</p>';
+		<p><strong>', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ':</strong> ', $context['poll']['expire_time'], '</p>';
 
 		echo '
 	</div>

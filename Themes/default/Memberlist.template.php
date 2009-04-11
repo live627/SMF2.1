@@ -237,7 +237,7 @@ function template_search()
 				<tr>
 					<td colspan="2" align="left">
 						<br />
-						<b>', $txt['search_for'], ':</b> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" /><br />
+						<strong>', $txt['search_for'], ':</strong> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" /><br />
 						<br />
 					</td>
 				</tr>

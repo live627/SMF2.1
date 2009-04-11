@@ -1982,7 +1982,7 @@ function template_include($filename, $once = false)
 		{
 			$txt['template_parse_error'] = 'Template Parse Error!';
 			$txt['template_parse_error_message'] = 'It seems something has gone sour on the forum with the template system.  This problem should only be temporary, so please come back later and try again.  If you continue to see this message, please contact the administrator.<br /><br />You can also try <a href="javascript:location.reload();">refreshing this page</a>.';
-			$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s" class="extern">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
+			$txt['template_parse_error_details'] = 'There was a problem loading the <tt><strong>%1$s</strong></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s" class="extern">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
 		}
 
 		// First, let's get the doctype and language information out of the way.
@@ -2018,7 +2018,9 @@ function template_include($filename, $once = false)
 			$error = fetch_web_data($boardurl . strtr($filename, array($boarddir => '', strtr($boarddir, '\\', '/') => '')));
 			if (empty($error))
 				$error = $php_errormsg;
-
+			
+			$error = strtr($error, array('<b>' => '<strong>', '</b>' => '</strong>'));
+			
 			echo '
 		<title>', $txt['template_parse_error'], '</title>
 	</head>
@@ -2030,10 +2032,11 @@ function template_include($filename, $once = false)
 				echo '
 		<hr />
 
-		<div style="margin: 0 20px;"><tt>', strtr(strtr($error, array('<b>' . $boarddir => '<b>...', '<b>' . strtr($boarddir, '\\', '/') => '<b>...')), '\\', '/'), '</tt></div>';
+		<div style="margin: 0 20px;"><tt>', strtr(strtr($error, array('<strong>' . $boarddir => '<strong>...', '<strong>' . strtr($boarddir, '\\', '/') => '<strong>...')), '\\', '/'), '</tt></div>';
 
+		
 			// I know, I know... this is VERY COMPLICATED.  Still, it's good.
-			if (preg_match('~ <b>(\d+)</b><br( /)?' . '>$~i', $error, $match) != 0)
+			if (preg_match('~ <strong>(\d+)</strong><br( /)?' . '>$~i', $error, $match) != 0)
 			{
 				$data = file($filename);
 				$data2 = highlight_php_code(implode('', $data));
@@ -2041,11 +2044,11 @@ function template_include($filename, $once = false)
 
 				// Fix the PHP code stuff...
 				if ($context['browser']['is_ie4'] || $context['browser']['is_ie5'] || $context['browser']['is_ie5.5'])
-					$data2 = str_replace("\t", '<pre style=\"display: inline;\">' . "\t" . '</pre>', $data2);
+					$data2 = str_replace("\t", '<pre style="display: inline;">' . "\t" . '</pre>', $data2);
 				elseif (!$context['browser']['is_gecko'])
-					$data2 = str_replace("\t", '<span style=\"white-space: pre;\">' . "\t" . '</span>', $data2);
+					$data2 = str_replace("\t", '<span style="white-space: pre;">' . "\t" . '</span>', $data2);
 				else
-					$data2 = str_replace('<pre style=\"display: inline;\">' . "\t" . '</pre>', "\t", $data2);
+					$data2 = str_replace('<pre style="display: inline;">' . "\t" . '</pre>', "\t", $data2);
 
 				// Now we get to work around a bug in PHP where it doesn't escape <br />s!
 				$j = -1;

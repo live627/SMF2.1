@@ -19,7 +19,7 @@ function template_view_package()
 
 	if ($context['is_installed'])
 		echo '
-					<b>', $txt['package_installed_warning1'], '</b><br />
+					<strong>', $txt['package_installed_warning1'], '</strong><br />
 					<br />
 					', $txt['package_installed_warning2'], '<br />
 					<br />';
@@ -37,7 +37,7 @@ function template_view_package()
 		echo '
 				<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9; margin-top: 0;">
 					<div style="float: left; width: 2ex; font-size: 2em;" class="alert">!!</div>
-						<b style="text-decoration: underline;">', $txt['package_will_fail_title'], '</b><br />
+						<strong style="text-decoration: underline;">', $txt['package_will_fail_title'], '</strong><br />
 						<div style="padding-left: 6ex;">
 							', $txt['package_will_fail_warning'], '
 						</div>
@@ -94,7 +94,7 @@ function template_view_package()
 
 	if (empty($context['actions']) && empty($context['database_changes']))
 		echo '
-					<b>', $txt['corrupt_compatable'], '</b>';
+					<strong>', $txt['corrupt_compatable'], '</strong>';
 	else
 	{
 		echo '
@@ -103,9 +103,9 @@ function template_view_package()
 						<tr>
 							<td width="20"></td>
 							<td width="30"></td>
-							<td><b>', $txt['package_install_type'], '</b></td>
-							<td width="50%"><b>', $txt['package_install_action'], '</b></td>
-							<td width="20%"><b>', $txt['package_install_desc'], '</b></td>
+							<td><strong>', $txt['package_install_type'], '</strong></td>
+							<td width="50%"><strong>', $txt['package_install_action'], '</strong></td>
+							<td width="20%"><strong>', $txt['package_install_desc'], '</strong></td>
 						</tr>';
 
 		$alternate = true;
@@ -218,7 +218,7 @@ function template_view_package()
 							</td>
 							<td style="padding-right: 2ex;">', $action['type'], '</td>
 							<td width="50%" style="padding-right: 2ex;">', $action['action'], '</td>
-							<td width="20%" style="padding-right: 2ex;"><b>', $action['description'], '</b></td>
+							<td width="20%" style="padding-right: 2ex;"><strong>', $action['description'], '</strong></td>
 						</tr>';
 
 					// Is there water on the knee? Operation!
@@ -865,7 +865,7 @@ function template_browse()
 			</tr>
 			<tr class="windowbg2">
 				<td width="50%">
-					<b>', $txt['package_emulate'], ':</b>
+					<strong>', $txt['package_emulate'], ':</strong>
 					<div class="smalltext">
 						<a href="#" onclick="document.getElementById(\'ve\').value = \'', $forum_version, '\'; return false">', $txt['package_emulate_revert'], '</a>
 					</div>
@@ -976,10 +976,10 @@ function template_servers()
 					<form action="' . $scripturl . '?action=admin;area=packages;get;sa=add" method="post" accept-charset="', $context['character_set'], '">
 						<table border="0" cellspacing="0" cellpadding="4">
 							<tr>
-								<td valign="top"><b>' . $txt['server_name'] . ':</b></td>
+								<td valign="top"><strong>' . $txt['server_name'] . ':</strong></td>
 								<td valign="top"><input type="text" name="servername" size="40" value="SMF" /></td>
 							</tr><tr>
-								<td valign="top"><b>' . $txt['serverurl'] . ':</b></td>
+								<td valign="top"><strong>' . $txt['serverurl'] . ':</strong></td>
 								<td valign="top"><input type="text" name="serverurl" size="50" value="http://" /></td>
 							</tr><tr>
 								<td colspan="2"><input type="submit" value="' . $txt['add_server'] . '" /></td>
@@ -995,10 +995,10 @@ function template_servers()
 					<form action="', $scripturl, '?action=admin;area=packages;get;sa=download;byurl;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 						<table border="0" cellspacing="0" cellpadding="4">
 							<tr>
-								<td valign="top"><b>' . $txt['serverurl'] . ':</b></td>
+								<td valign="top"><strong>' . $txt['serverurl'] . ':</strong></td>
 								<td valign="top"><input type="text" name="package" size="50" value="http://" /></td>
 							</tr><tr>
-								<td valign="top"><b>', $txt['package_download_filename'], ':</b></td>
+								<td valign="top"><strong>', $txt['package_download_filename'], ':</strong></td>
 								<td valign="top">
 									<input type="text" name="filename" size="50" /><br />
 									<span class="smalltext">', $txt['package_download_filename_info'], '</span>
@@ -1018,7 +1018,7 @@ function template_servers()
 			</tr><tr>
 				<td class="windowbg2" style="padding: 8px;">
 					<form action="' . $scripturl . '?action=admin;area=packages;get;sa=upload" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data" style="margin-bottom: 0;">
-						<b>' . $txt['package_upload_select'] . ':</b> <input type="file" name="package" size="38" />
+						<strong>' . $txt['package_upload_select'] . ':</strong> <input type="file" name="package" size="38" />
 						<div style="margin: 1ex;" align="right"><input type="submit" value="' . $txt['package_upload'] . '" /></div>
 						<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 					</form>
@@ -1100,20 +1100,20 @@ function template_package_list()
 				elseif ($package['is_remote'])
 				{
 					echo '
-									<b>', $package['link'], '</b>';
+									<strong>', $package['link'], '</strong>';
 				}
 				// A title?
 				elseif ($package['is_heading'] || $package['is_title'])
 				{
 					echo '
-									<b>', $package['name'], '</b>';
+									<strong>', $package['name'], '</strong>';
 				}
 				// Otherwise, it's a package.
 				else
 				{
 					// 1. Some mod [ Download ].
 					echo '
-									<h4><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
+									<h4><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
@@ -1754,7 +1754,7 @@ function template_file_permissions()
 		echo '
 	<div style="margin: 2ex; padding: 1ex; border: 1px dashed #C16409; color: black; background-color: #FCDBBA; margin-top: 0;">
 		<div>
-			<b style="text-decoration: underline;">', $txt['package_file_perms_warning'], ':</b>
+			<strong style="text-decoration: underline;">', $txt['package_file_perms_warning'], ':</strong>
 			<div class="smalltext">
 				<ol style="margin-top: 2px; margin-bottom: 2px">
 					', $txt['package_file_perms_warning_desc'], '
@@ -1819,7 +1819,7 @@ function template_file_permissions()
 					<input type="radio" name="method" value="individual" checked="checked" id="method_individual" />
 				</td>
 				<td>
-					<label for="method_individual"><b>', $txt['package_file_perms_apply'], '</b></label><br />
+					<label for="method_individual"><strong>', $txt['package_file_perms_apply'], '</strong></label><br />
 					<em class="smalltext">', $txt['package_file_perms_custom'], ': <input type="text" name="custom_value" value="0755" maxlength="4" size="5" />&nbsp;<a href="', $scripturl, '?action=helpadmin;help=chmod_flags" onclick="return reqWin(this.href);" class="help">(?)</a></em>
 				</td>
 			</tr>
@@ -1828,7 +1828,7 @@ function template_file_permissions()
 					<input type="radio" name="method" value="predefined" id="method_predefined" />
 				</td>
 				<td>
-					<label for="method_predefined"><b>', $txt['package_file_perms_predefined'], ':</b></label>
+					<label for="method_predefined"><strong>', $txt['package_file_perms_predefined'], ':</strong></label>
 					<select name="predefined" onchange="document.getElementById(\'method_predefined\').checked = \'checked\';">
 						<option value="restricted" selected="selected">', $txt['package_file_perms_pre_restricted'], '</option>
 						<option value="standard">', $txt['package_file_perms_pre_standard'], '</option>

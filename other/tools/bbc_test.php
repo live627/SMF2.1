@@ -250,7 +250,7 @@ function action_test()
 
 			<div class="code"><pre style="margin: 0;">', htmlspecialchars($testcases[$_GET['t']]['text']), '</pre></div>
 
-			<div style="margin-bottom: 2ex;">Took <b>', round($results['parse_time'], 5), '</b> seconds to parse ', $results['times'], ' times, and <b>', round($results['preparse_time'], 5), '</b> seconds to preparse ', $results['times'], ' times.</div>';
+			<div style="margin-bottom: 2ex;">Took <strong>', round($results['parse_time'], 5), '</strong> seconds to parse ', $results['times'], ' times, and <strong>', round($results['preparse_time'], 5), '</strong> seconds to preparse ', $results['times'], ' times.</div>';
 
 	if ($results['preparsed_good'] === true)
 	{

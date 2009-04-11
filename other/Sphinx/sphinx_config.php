@@ -112,23 +112,23 @@ function step_1()
 	<br />
 
 	<div style="background-color: white; overflow: auto; margin: 10px;">
-		<small><b>Find (src/sphinx.cpp):</b></small><br />
+		<small><strong>Find (src/sphinx.cpp):</strong></small><br />
 		<pre>			if (!( GetPriority(iEntry) < GetPriority(iParent) ))</pre><br />
-		<small><b>Replace:</b></small><br />
+		<small><strong>Replace:</strong></small><br />
 		<pre>			if ( !COMP::IsLess ( m_dMatches [ m_dIndexes[iEntry] ], m_dMatches [ m_dIndexes[iParent] ], m_tState ) )</pre>
 	</div>
 
 	<div style="background-color: white; overflow: auto; margin: 10px;">
-		<small><b>Find (src/sphinx.cpp):</b></small><br />
+		<small><strong>Find (src/sphinx.cpp):</strong></small><br />
 		<pre>				if ( GetPriority(iChild+1) < GetPriority(iChild) )</pre><br />
-		<small><b>Replace:</b></small><br />
+		<small><strong>Replace:</strong></small><br />
 		<pre>				if ( COMP::IsLess ( m_dMatches [ m_dIndexes[iChild+1] ], m_dMatches [ m_dIndexes[iChild] ], m_tState ) )</pre>
 	</div>
 
 	<div style="background-color: white; overflow: auto; margin: 10px;">
-		<small><b>Find (src/sphinx.cpp):</b></small><br />
+		<small><strong>Find (src/sphinx.cpp):</strong></small><br />
 		<pre>			if ( GetPriority(iChild) < GetPriority(iEntry) )</pre><br />
-		<small><b>Replace:</b></small><br />
+		<small><strong>Replace:</strong></small><br />
 		<pre>			if ( COMP::IsLess ( m_dMatches [ m_dIndexes[iChild] ], m_dMatches [ m_dIndexes[iEntry] ], m_tState ) )</pre>
 	</div>
 
