@@ -3651,7 +3651,7 @@ function template_upgrade_below()
 		echo '
 								<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 									<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-									<strong style="text-decoration: underline;">', $txt['upgrade_note'], '</stong><br />
+									<strong style="text-decoration: underline;">', $txt['upgrade_note'], '</strong><br />
 									<div style="padding-left: 6ex;">', $upcontext['custom_warning'], '</div>
 								</div>';
 
