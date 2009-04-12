@@ -38,7 +38,7 @@ April 2009
  & ThemeS Settings to Theme Settings (Admin.english.php) [Bug 3384]
  ! .xml action should respect guest setting (index.php) [Bug 3389]
  * RSS hard-coded text, and rss link in footer shown when .xml disabled or not available to guests. (index.template.php)
-
+ ! Banned member showing as latest member, and member totals not be updated (ManageBans.php) [Bug 3381]
 
 March 2009
 --------------------------------------------------------------------------------

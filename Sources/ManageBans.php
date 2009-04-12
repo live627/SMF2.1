@@ -1741,6 +1741,9 @@ function updateBanMembers()
 	if (!empty($updates))
 		foreach ($updates as $newStatus => $members)
 			updateMemberData($members, array('is_activated' => $newStatus));
+
+	// Update the latest member and our total members as banning may change them.
+	updateStats('member');
 }
 
 ?>
