@@ -521,8 +521,8 @@ function template_main()
 
 	echo '
 <div class="clearfix marginbottom" id="postbuttons_lower">
-	<div class="middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
 	<div class="nav floatright">', template_button_strip($normal_buttons, 'top'), '</div>
+	<div class="middletext floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
 	<div style="clear: both;">', $context['previous_next'], '</div>
 </div>';
 

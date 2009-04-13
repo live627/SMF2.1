@@ -39,6 +39,7 @@ April 2009
  ! .xml action should respect guest setting (index.php) [Bug 3389]
  * RSS hard-coded text, and rss link in footer shown when .xml disabled or not available to guests. (index.template.php)
  ! Banned member showing as latest member, and member totals not be updated (ManageBans.php) [Bug 3381]
+ * Expand Pagination with lots of pages pushed buttons down (MessageIndex.template.php, Display.template.php) [Bug 3341]
 
 March 2009
 --------------------------------------------------------------------------------
