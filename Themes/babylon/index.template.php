@@ -374,15 +374,15 @@ function template_body_below()
 	echo '
 		</div>';
 
-	// This is an interesting bug in Internet Explorer AND Safari.  Rather annoying, it makes overflows just not tall enough.
-	if (($context['browser']['is_ie'] && !$context['browser']['is_ie4']) || $context['browser']['is_mac_ie'] || $context['browser']['is_safari'] || $context['browser']['is_firefox'])
+	// This is an interesting bug in Internet Explorer AND Safari/Webkit.  Rather annoying, it makes overflows just not tall enough.
+	if (($context['browser']['is_ie'] && !$context['browser']['is_ie4']) || $context['browser']['is_mac_ie'] || $context['browser']['is_webkit'] || $context['browser']['is_firefox'])
 	{
 		// The purpose of this code is to fix the height of overflow: auto div blocks, because IE can't figure it out for itself.
 		echo '
 		<script type="text/javascript"><!-- // --><![CDATA[';
 
-		// Unfortunately, Safari does not have a "getComputedStyle" implementation yet, so we have to just do it to code...
-		if ($context['browser']['is_safari'])
+		// Unfortunately, Safari/Webkit didn't support "getComputedStyle" implementation until Safari 3 and its buggy, so we have to just do it to code...
+		if ($context['browser']['is_webkit'])
 			echo '
 			window.addEventListener("load", smf_codeFix, false);
 

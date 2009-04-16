@@ -40,6 +40,8 @@ April 2009
  * RSS hard-coded text, and rss link in footer shown when .xml disabled or not available to guests. (index.template.php)
  ! Banned member showing as latest member, and member totals not be updated (ManageBans.php) [Bug 3381]
  * Expand Pagination with lots of pages pushed buttons down (MessageIndex.template.php, Display.template.php) [Bug 3341]
+ ! Opera 10 couldn't use wysiwyg, added is_chrome and is_webkit variables, changed as necessary is_safari in templates), re-ordered IE browser conditions to be unnoticeably faster (Load.php, script.js, index.template.php, Admin.template.php, Packages.template.php, renamed safari.css to webkit.css)
+
 
 March 2009
 --------------------------------------------------------------------------------

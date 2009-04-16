@@ -1487,8 +1487,9 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_opera7' => strpos($_SERVER['HTTP_USER_AGENT'], 'Opera 7') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Opera/7') !== false,
 		'is_opera8' => strpos($_SERVER['HTTP_USER_AGENT'], 'Opera 8') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Opera/8') !== false,
 		'is_opera9' => strpos($_SERVER['HTTP_USER_AGENT'], 'Opera 9') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Opera/9') !== false,
+		'is_opera10' => strpos($_SERVER['HTTP_USER_AGENT'], 'Opera 10') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Opera/10') !== false,
 		'is_ie4' => strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 4') !== false && strpos($_SERVER['HTTP_USER_AGENT'], 'WebTV') === false,
-		'is_safari' => strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false,
+		'is_webkit' => strpos($_SERVER['HTTP_USER_AGENT'], 'AppleWebKit') !== false,
 		'is_mac_ie' => strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.') !== false && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false,
 		'is_web_tv' => strpos($_SERVER['HTTP_USER_AGENT'], 'WebTV') !== false,
 		'is_konqueror' => strpos($_SERVER['HTTP_USER_AGENT'], 'Konqueror') !== false,
@@ -1499,14 +1500,16 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_iphone' => strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'iPod') !== false,
 	);
 
-	$context['browser']['is_gecko'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Gecko') !== false && !$context['browser']['is_safari'] && !$context['browser']['is_konqueror'];
+	$context['browser']['is_chrome'] = $context['browser']['is_webkit'] && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') !== false;
+	$context['browser']['is_safari'] = !$context['browser']['is_chrome'] && strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false;
+	$context['browser']['is_gecko'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Gecko') !== false && !$context['browser']['is_webkit'] && !$context['browser']['is_konqueror'];
 
 	// Internet Explorer 5 and 6 are often "emulated".
-	$context['browser']['is_ie8'] = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 8') !== false && !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'];
-	$context['browser']['is_ie7'] = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 7') !== false && !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'];
-	$context['browser']['is_ie6'] = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6') !== false && !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'];
-	$context['browser']['is_ie5.5'] = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.5') !== false && !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'];
-	$context['browser']['is_ie5'] = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.0') !== false && !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'];
+	$context['browser']['is_ie8'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 8') !== false;
+	$context['browser']['is_ie7'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 7') !== false;
+	$context['browser']['is_ie6'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6') !== false;
+	$context['browser']['is_ie5.5'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.5') !== false;
+	$context['browser']['is_ie5'] = !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.0') !== false;
 
 	$context['browser']['is_ie'] = $context['browser']['is_ie4'] || $context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] || $context['browser']['is_ie6'] || $context['browser']['is_ie7'] || $context['browser']['is_ie8'];
 	// Before IE8 we need to fix IE... lots!
