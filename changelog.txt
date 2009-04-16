@@ -43,6 +43,7 @@ April 2009
  ! Opera 10 couldn't use wysiwyg, added is_chrome and is_webkit variables, changed as necessary is_safari in templates), re-ordered IE browser conditions to be unnoticeably faster (Load.php, script.js, index.template.php, Admin.template.php, Packages.template.php, renamed safari.css to webkit.css)
  ! Safari/webkit wraps lines in Wysiwyg in <div>'s instead of <br /> and was losing linebreaks as a result. (Subs-Editor.php) [Bug 2680]
  ! Empty boards have an impossible where in query due to limit 0, 0 (MessageIndex.php) [Bug 3343]
+ * Undefined is_recycle error as the variable isn't setup when adding a new board (ManageBoards.template.php)
 
 
 March 2009

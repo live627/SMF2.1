@@ -471,7 +471,7 @@ function template_modify_board()
 				<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '"', $context['board']['is_recycle'] ? ' disabled="disabled"' : ' onclick="return confirm(\'', $txt['boardConfirm'], '\');"', ' />';
 				
 
-	echo $context['board']['is_recycle'] ? '
+	echo !empty($context['board']['is_recycle']) ? '
 				<br /><br /><span class="smalltext"><strong><em>' . $txt['mboards_recycle_disabled_delete'] . '</em></strong></span>' : '';
 
 	echo '
