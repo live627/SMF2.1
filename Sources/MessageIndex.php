@@ -338,7 +338,7 @@ function MessageIndex()
 
 	// Sequential pages are often not optimized, so we add an additional query.
 	$pre_query = $start > 0;
-	if ($pre_query)
+	if ($pre_query && $maxindex > 0)
 	{
 		$request = $smcFunc['db_query']('', '
 			SELECT t.id_topic
