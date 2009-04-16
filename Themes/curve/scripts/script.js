@@ -13,13 +13,15 @@ var is_opera8 = ua.indexOf("opera/8") != -1 || ua.indexOf("opera 8") != -1;
 var is_opera9 = ua.indexOf("opera/9") != -1 || ua.indexOf("opera 9") != -1;
 var is_opera95 = ua.indexOf("opera/9.5") != -1 || ua.indexOf("opera 9.5") != -1;
 var is_opera96 = ua.indexOf("opera/9.6") != -1 || ua.indexOf("opera 9.6") != -1;
-var is_opera95up = is_opera95 || is_opera96;
+var is_opera10 = ua.indexOf("opera/10.0") != -1 || ua.indexOf("opera 10.0") != -1;
+var is_opera95up = is_opera95 || is_opera96 || is_opera10;
 
 var is_ff = (ua.indexOf("firefox") != -1 || ua.indexOf("iceweasel") != -1 || ua.indexOf("icecat") != -1) && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
 var is_chrome = ua.indexOf('chrome') != -1;
 var is_safari = ua.indexOf('applewebkit') != -1 && !is_chrome;
+var is_webkit = ua.indexOf('applewebkit') != -1;
 
 var is_ie = ua.indexOf("msie") != -1  && !is_opera;
 var is_ie4 = is_ie && ua.indexOf("msie 4") != -1;

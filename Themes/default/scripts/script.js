@@ -21,6 +21,7 @@ var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
 var is_chrome = ua.indexOf('chrome') != -1;
 var is_safari = ua.indexOf('applewebkit') != -1 && !is_chrome;
+var is_webkit = ua.indexOf('applewebkit') != -1;
 
 var is_ie = ua.indexOf("msie") != -1  && !is_opera;
 var is_ie4 = is_ie && ua.indexOf("msie 4") != -1;
