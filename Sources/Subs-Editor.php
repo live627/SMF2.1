@@ -132,13 +132,17 @@ function bbc_to_html($text)
 // The harder one - wysiwyg to BBC!
 function html_to_bbc($text)
 {
-	global $modSettings, $smcFunc, $sourcedir, $scripturl;
+	global $modSettings, $smcFunc, $sourcedir, $scripturl, $context;
 
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ' ', "\r" => ''));
 
 	// Though some of us love paragraphs the parser will do better with breaks.
 	$text = preg_replace('~</p>(\s*?)<p~i', '</p><br /><p', $text);
+
+	// Safari/webkit wraps lines in Wysiwyg in <div>'s.
+	if ($context['browser']['is_webkit'])
+		$text = preg_replace(array('~<div(?:\s(?:[^<>]*?))?>~i', '</div>'), array('<br />', ''), $text);
 
 	// If there's a trailing break get rid of it - Firefox tends to add one.
 	$text = preg_replace('~<br\s?/?>$~i', '', $text);
