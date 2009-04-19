@@ -449,15 +449,26 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'profile_identity',
 			'prehtml' => allowedTo('admin_forum') && isset($_GET['changeusername']) ? '<div class="alert">' . $txt['username_warning'] . '</div>' : '',
 			'input_validate' => create_function('&$value', '
-				global $sourcedir, $context;
+				global $sourcedir, $context, $user_info;
 
 				if (allowedTo(\'admin_forum\'))
 				{
 					// We\'ll need this...
 					require_once($sourcedir . \'/Subs-Auth.php\');
 
+					// Maybe they are trying to change their password as well?
+					$resetPassword = true;
+					if (isset($_POST[\'passwrd2\']) && isset($_POST[\'passwrd1\']) && (($_POST[\'passwrd1\'] != $_POST[\'passwrd2\']) || (validatePassword($value, $value, array($user_info[\'name\'], $user_info[\'email\'])) == null)))
+						$resetPassword = false;
+
 					// Do the reset... this will send them an email too.
-					resetPassword($context[\'id_member\'], $value);
+					if ($resetPassword)
+						resetPassword($context[\'id_member\'], $value);
+					elseif ($value !== null)
+					{
+						validateUsername($context[\'id_member\'], $value);
+						updateMemberData($context[\'id_member\'], array(\'member_name\' => $value));
+					}
 				}
 				return false;
 			'),
@@ -490,7 +501,7 @@ function loadProfileFields($force_reload = false)
 			'save_key' => 'passwd',
 			// Note this will only work if passwrd2 also exists!
 			'input_validate' => create_function('&$value', '
-				global $sourcedir, $user_info, $smcFunc, $old_profile;
+				global $sourcedir, $user_info, $smcFunc, $cur_profile;
 
 				// If we didn\'t try it then ignore it!
 				if ($value == \'\')
@@ -502,14 +513,14 @@ function loadProfileFields($force_reload = false)
 
 				// Let\'s get the validation function into play...
 				require_once($sourcedir . \'/Subs-Auth.php\');
-				$passwordErrors = validatePassword($value, $user_info[\'username\'], array($user_info[\'name\'], $user_info[\'email\']));
+				$passwordErrors = validatePassword($value, $cur_profile[\'member_name\'], array($cur_profile[\'real_name\'], $user_info[\'username\'], $user_info[\'name\'], $user_info[\'email\']));
 
 				// Were there errors?
 				if ($passwordErrors != null)
 					return \'password_\' . $passwordErrors;
 
 				// Set up the new password variable... ready for storage.
-				$value = sha1(strtolower($old_profile[\'member_name\']) . un_htmlspecialchars($value));
+				$value = sha1(strtolower($cur_profile[\'member_name\']) . un_htmlspecialchars($value));
 				return true;
 			'),
 		),

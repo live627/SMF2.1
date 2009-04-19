@@ -50,6 +50,8 @@ April 2009
  * Numbered List does not format properly (index.template.php, Profile.template.php, Display.template.php, BoardIndex.template.php, style.css, Compat.template.php) [Bug 2892]
  ! Alternate Formatted Lists get bbcode changed when toggled (Subs-Editor.php, Subs.php)[Bug 2925]
  ! MoveTopics redirection topic not increasing users post count (MoveTopic.php) [Bug 3396]
+ ! Accounts inaccessable after real name and password change (Profile-Modify.php) [Bug 2960]
+
 
 March 2009
 --------------------------------------------------------------------------------
