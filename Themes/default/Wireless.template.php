@@ -335,11 +335,11 @@ function template_imode_display()
 				$txt['code_select'],
 			),
 			array(
-				'<br>',
-				'<br>--- ' . $txt['wireless_end_quote'] . ' ---<br>',
-				'<br>',
-				'<br>--- ' . $txt['wireless_end_code'] . ' ---<br>',
-				'<br>* ',
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_quote'] . ' ---<br />',
+				'<br />',
+				'<br />--- ' . $txt['wireless_end_code'] . ' ---<br />',
+				'<br />* ',
 				'',
 			), $message['body']), '<br>');
 
