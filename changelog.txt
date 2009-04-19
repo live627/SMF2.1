@@ -45,6 +45,7 @@ April 2009
  ! Empty boards have an impossible where in query due to limit 0, 0 (MessageIndex.php) [Bug 3343]
  * Undefined is_recycle error as the variable isn't setup when adding a new board (ManageBoards.template.php)
  * Missing some is_safari, is_webkit changes for curve / default js files (script.js, theme.js)
+ ! Database error when removing members due to PM alias (PersonalMessages.php) [Bug 3397]
 
 
 March 2009

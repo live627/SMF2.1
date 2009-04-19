@@ -2618,12 +2618,12 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 
 	// If sender and recipients all have deleted their message, it can be removed.
 	$request = $smcFunc['db_query']('', '
-		SELECT pm.id_pm, pmr.id_pm AS recipient
+		SELECT pm.id_pm as sender, pmr.id_pm
 		FROM {db_prefix}personal_messages AS pm
 			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.deleted = {int:not_deleted})
 		WHERE pm.deleted_by_sender = {int:is_deleted}
 			' . str_replace('id_pm', 'pm.id_pm', $where) . '
-		GROUP BY pm.id_pm, recipient
+		GROUP BY sender, pmr.id_pm
 		HAVING pmr.id_pm IS null',
 		array(
 			'not_deleted' => 0,
@@ -2633,7 +2633,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 	);
 	$remove_pms = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-		$remove_pms[] = $row['id_pm'];
+		$remove_pms[] = $row['sender'];
 	$smcFunc['db_free_result']($request);
 
 	if (!empty($remove_pms))
