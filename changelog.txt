@@ -49,6 +49,7 @@ April 2009
  ! Quick lists not using styles (Subs.php) [Bug 3391]
  * Numbered List does not format properly (index.template.php, Profile.template.php, Display.template.php, BoardIndex.template.php, style.css, Compat.template.php) [Bug 2892]
  ! Alternate Formatted Lists get bbcode changed when toggled (Subs-Editor.php, Subs.php)[Bug 2925]
+ ! MoveTopics redirection topic not increasing users post count (MoveTopic.php) [Bug 3396]
 
 March 2009
 --------------------------------------------------------------------------------

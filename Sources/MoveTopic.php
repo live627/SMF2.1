@@ -325,7 +325,7 @@ function MoveTopic2()
 		);
 		$posterOptions = array(
 			'id' => $user_info['id'],
-			'update_post_count' => !empty($pcounter),
+			'update_post_count' => empty($pcounter),
 		);
 		createPost($msgOptions, $topicOptions, $posterOptions);
 	}
