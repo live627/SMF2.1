@@ -1274,7 +1274,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'parameters' => array(
 					'type' => array('match' => '(none|disc|circle|square|decimal|decimal-leading-zero|lower-roman|upper-roman|lower-alpha|upper-alpha|lower-greek|lower-latin|upper-latin|hebrew|armenian|georgian|cjk-ideographic|hiragana|katakana|hiragana-iroha|katakana-iroha)'),
 				),
-				'before' => '<ul style="list-style-type: {type};" class="bbc_list">',
+				'before' => '<ul class="bbc_list" style="list-style-type: {type};">',
 				'after' => '</ul>',
 				'trim' => 'inside',
 				'require_children' => array('li'),
@@ -1533,7 +1533,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 		// So the parser won't skip them.
 		$itemcodes = array(
-			'*' => '',
+			'*' => 'disc',
 			'@' => 'disc',
 			'+' => 'square',
 			'x' => 'square',
@@ -2025,7 +2025,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'require_children' => array('li'),
 					'disallow_children' => isset($inside['disallow_children']) ? $inside['disallow_children'] : null,
 				);
-				$code = '<ul style="margin-top: 0; margin-bottom: 0;">';
+				$code = '<ul class="bbc_list">';
 			}
 			// We're in a list item already: another itemcode?  Close it first.
 			elseif ($inside['tag'] == 'li')

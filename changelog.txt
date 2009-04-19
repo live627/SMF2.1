@@ -46,7 +46,9 @@ April 2009
  * Undefined is_recycle error as the variable isn't setup when adding a new board (ManageBoards.template.php)
  * Missing some is_safari, is_webkit changes for curve / default js files (script.js, theme.js)
  ! Database error when removing members due to PM alias (PersonalMessages.php) [Bug 3397]
-
+ ! Quick lists not using styles (Subs.php) [Bug 3391]
+ * Numbered List does not format properly (index.template.php, Profile.template.php, Display.template.php, BoardIndex.template.php, style.css, Compat.template.php) [Bug 2892]
+ ! Alternate Formatted Lists get bbcode changed when toggled (Subs-Editor.php, Subs.php)[Bug 2925]
 
 March 2009
 --------------------------------------------------------------------------------

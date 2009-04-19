@@ -44,7 +44,7 @@ function template_summary()
 		<div class="content">
 			<h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4>
 			', $context['member']['avatar']['image'], '
-			<ul>';
+			<ul class="reset">';
 
 	// What about if we allow email only via the forum??
 	if ($context['member']['show_email'] == 'yes' || $context['member']['show_email'] == 'no_through_forum' || $context['member']['show_email'] == 'yes_permission_override')
@@ -2223,7 +2223,7 @@ function template_error_message()
 	echo '
 		<div class="windowbg" id="profile_error">
 			<span>', !empty($context['custom_error_title']) ? $context['custom_error_title'] : $txt['profile_errors_occurred'], ':</span>
-			<ul>';
+			<ul class="reset">';
 
 		// Cycle through each error and display an error message.
 		foreach ($context['post_errors'] as $error)

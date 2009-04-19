@@ -135,7 +135,7 @@ function html_to_bbc($text)
 	global $modSettings, $smcFunc, $sourcedir, $scripturl, $context;
 
 	// Remove any newlines - as they are useless.
-	$text = strtr($text, array("\n" => ' ', "\r" => ''));
+	$text = strtr($text, array("\n" => '', "\r" => ''));
 
 	// Though some of us love paragraphs the parser will do better with breaks.
 	$text = preg_replace('~</p>(\s*?)<p~i', '</p><br /><p', $text);
@@ -481,9 +481,18 @@ function html_to_bbc($text)
 		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '\' . strtr(\'$5\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
 	}
 	$last_text = '';
+
+	// Quick lists
 	while ($text != $last_text)
 	{
 		$last_text = $text;
+		$text = preg_replace('~<li type="?(disc|square|circle)"?[^<>]*?>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
+	}
+
+	while ($text != $last_text)
+	{
+		$last_text = $text;
+
 		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', '[li]$1[/li]' . "\n", $text);
 	}
 

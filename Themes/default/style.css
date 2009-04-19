@@ -109,14 +109,6 @@ a
 	outline: none;
 }
 
-/* Reset all lists. */
-ul, ul li
-{
-	padding: 0;
-	margin: 0;
-	list-style: none;
-}
-
 /* We can define lists to be lists tho! */
 ul.normallist
 {
@@ -245,6 +237,13 @@ ul.nolist li
 }
 /* End hide from IE-mac. */
 
+/* a quick reset list class. */
+ul.reset, ul.reset li
+{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
 /* ************************************* */
 /* Some specific SMF elements            */
 /* ************************************* */
@@ -308,28 +307,6 @@ code
 .bbc_img
 {
 	border: 0;
-}
-
-.bbc_list
-{
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-left: 2em;
-}
-
-.bbc_list li
-{
-	list-style: disc;
-}
-
-.bbc_list li li
-{
-	list-style: circle;
-}
-
-.bbc_size
-{
-	line-height: 1.3em;
 }
 
 .bbc_table

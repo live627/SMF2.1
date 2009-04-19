@@ -55,7 +55,7 @@ function template_main()
 			<p class="smallpadding">', $context['poll']['allowed_warning'], '</p>';
 
 			echo '
-			<ul class="options">';
+			<ul class="reset options">';
 
 			// Show each option with its button - a radio likely.
 			foreach ($context['poll']['options'] as $option)
@@ -104,7 +104,7 @@ function template_main()
 		echo '
 <div id="events" class="tborder marginbottom margintop">
 	<h3 class="titlebg headerpadding">	', $txt['calendar_linked_events'], '</h3>
-	<ul class="windowbg largepadding">';
+	<ul class="reset windowbg largepadding">';
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
 		<li>
@@ -201,7 +201,7 @@ function template_main()
 		echo '
 				<div class="floatleft poster">
 					<h4>', $message['member']['link'], '</h4>
-					<ul class="smalltext" id="msg_', $message['id'], '_extra_info">';
+					<ul class="reset smalltext" id="msg_', $message['id'], '_extra_info">';
 
 		// Show the member's custom title, if they have one.
 		if (isset($message['member']['title']) && $message['member']['title'] != '')
@@ -276,7 +276,7 @@ function template_main()
 			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
 				echo '
 						<li class="margintop">
-							<ul class="nolist">
+							<ul class="reset nolist">
 								', !isset($context['disabled_fields']['icq']) && !empty($message['member']['icq']['link']) ? '<li>' . $message['member']['icq']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['msn']) && !empty($message['member']['msn']['link']) ? '<li>' . $message['member']['msn']['link'] . '</li>' : '', '
 								', !isset($context['disabled_fields']['aim']) && !empty($message['member']['aim']['link']) ? '<li>' . $message['member']['aim']['link'] . '</li>' : '', '
@@ -289,7 +289,7 @@ function template_main()
 			{
 				echo '
 						<li class="margintop">
-							<ul class="nolist">';
+							<ul class="reset nolist">';
 				// Don't show the profile button if you're not allowed to view the profile.
 				if ($message['member']['can_view_profile'])
 					echo '
@@ -342,7 +342,7 @@ function template_main()
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
 		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
-					<ul class="smalltext postingbuttons">';
+					<ul class="reset smalltext postingbuttons">';
 
 		// Maybe we can approve it, maybe we should?
 		if ($message['can_approve'])

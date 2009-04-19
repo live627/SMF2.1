@@ -467,7 +467,7 @@ function template_info_center()
 					</p>
 					<div class="windowbg2 sectionbody">
 						<form id="infocenter_login" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
-							<ul class="horizlist clearfix">
+							<ul class="reset horizlist clearfix">
 								<li>
 									<label for="user">', $txt['username'], ':<br />
 									<input type="text" name="user" id="user" size="15" /></label>

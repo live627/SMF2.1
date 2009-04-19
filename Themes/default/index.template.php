@@ -202,7 +202,7 @@ function template_body_above()
 
 	// Display user name and time.
 	echo '
-		<ul id="greeting_section" class="titlebg2">
+		<ul id="greeting_section" class="reset titlebg2">
 			<li id="time" class="smalltext floatright">
 				' , $context['current_time'], '
 				<a href="#" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" /></a>
@@ -228,7 +228,7 @@ function template_body_above()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-				<ul>
+				<ul class="reset">
 					<li><a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a></li>
 					<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';
 
@@ -349,7 +349,7 @@ function template_body_below()
 	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!
 	echo '
 	<div id="footerarea" class="headerpadding topmargin clearfix">
-		<ul class="smalltext">
+		<ul class="reset smalltext">
 			<li class="copywrite">', theme_copyright(), '</li>
 			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win" title="', $txt['valid_xhtml'], '"><span>', $txt['xhtml'], '</span></a></li>
 			', !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']) ? '<li><a id="button_rss" href="' . $scripturl . '?type=rss;action=.xml" class="new_win"><span>' . $txt['rss'] . '</span></a></li>' : '', '
@@ -432,7 +432,7 @@ function template_menu()
 
 	echo '
 	<div id="main_menu">
-		<ul class="clearfix">';
+		<ul class="reset clearfix">';
 
 	foreach ($context['menu_buttons'] as $act => $button)
 	{
@@ -486,7 +486,7 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 
 	echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
-			<ul class="clearfix">
+			<ul class="reset clearfix">
 				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>
 		</div>';
