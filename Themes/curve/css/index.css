@@ -261,6 +261,11 @@ h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.righ
 	width: 9px;
 	height: 31px;
 }
+h3.catbg img.icon
+{
+   float: left;
+   margin: 5px 8px 0 0;
+}
 h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
 {
 	float: left;
@@ -463,5 +468,3 @@ tr.windowbg td, tr.windowbg2 td
 {
 	background-image: none;
 }
-
-

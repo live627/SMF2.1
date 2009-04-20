@@ -1,0 +1,195 @@
+.stat_toppad
+{
+	clear: both;
+	padding-top: 0.4em;
+}
+#stats_left, #stats_right
+{
+	padding: 0.4em;
+}
+#stats_left
+{
+	float: left; 
+	width: 48.5%
+}
+#stats_right
+{
+	float: right; 
+	width: 49%
+}
+.stat_left_splitter, .stat_right_splitter
+{
+	padding-top: 0.4em;
+}
+.stat_left_splitter
+{
+	float: left; 
+	width: 49.5%;
+}
+.stat_right_splitter
+{
+	float: right; 
+	width: 50%; 
+	padding-left: 0.4em;
+}
+#stats_totals, #stats_averages
+{
+	padding: 0;
+	margin: 0;
+	font-size: 1em;
+}
+#stats_totals dt, #stats_averages dt
+{
+	width: 20em;
+	float: left;
+}
+#stats_totals dd, #stats_averages dd
+
+{
+	text-align: right;
+	margin-left: 10em;
+	padding-left: 1em;
+}
+.stats_topten_left, .stats_topten_right
+{
+	padding-bottom: 0.5em;
+	min-height: 14em;
+}
+.stats_topten_left
+{
+	float: left; 
+	width: 49.5%; 
+}
+.stats_topten_right
+{
+	float: right;
+	width: 50%; 
+}
+.stats_topten_left ul, .stats_topten_right ul
+{
+	margin-top: 0.5em;
+}
+.stats_topten ul
+{
+	float: left;
+	width: 100%;
+}
+.stats_topten li, .stats_topten li.left, .stats_topten li.middle
+{
+	padding: 0;
+}
+.stats_topten li, .stats_topten li.left
+{
+	margin: 0;
+}
+.stats_topten li
+{
+	float: left;
+	list-style: none;
+	height: 1.4em;
+}
+.stats_topten li.right
+{
+	width: 20%;
+	padding-left: 2.7em;
+	text-align: right;
+}
+.stats_topten li.left
+{
+	width: 60%;
+	margin-left: -3em;
+	overflow: hidden;
+}
+.stats_topten li.middle
+{
+	width: 20%;
+	text-align: left;
+}
+#forum_history
+{
+	clear: both; 
+	margin-top: -0.9em;
+	padding-bottom: 0.4em;
+	width: 100%;
+}
+.forumhistory
+{
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
+.forumhistory ul
+{
+	float: left;
+	width: 100%;
+}
+.forumhistory li
+{
+	float: left;
+	margin: 0;
+	list-style: none;
+	height: 1.4em;
+	width: 16%;
+	text-align: center;
+}
+.forumhistory li#main
+{
+	float: left;
+	width: 20%;
+	text-align: left;
+}
+#history_cell
+{
+	clear: both; 
+	margin-top: -0.7em; 
+	padding-bottom: 0.4em;
+	width: 100%;
+} 
+.history_text
+{ 
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+	text-align: center 
+}
+.history_year ul, .history_month ul, .history_day ul
+{
+	float: left;
+	width: 100%;
+	list-style: none;
+}
+.history_year li, .history_month li, .history_day li
+{
+	float: left;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	height: 1.4em;
+	width: 16%;
+	text-align: center;
+}
+.history_year li, .history_month li
+{
+	font-weight: bold;
+}
+.history_year li.year, .history_year li.month, .history_year li.day
+{
+	float: left;
+	list-style: none;
+	height: 1.4em;
+}
+.history_year li.year
+{
+	text-align: left;
+	width: 20%;
+}
+.history_month li.month
+{
+	text-align: left;
+	width: 19%;
+	padding-left: 1%;
+}
+.history_day li.day
+{
+	text-align: left;
+	width: 17%;
+	padding-left: 3%;
+}

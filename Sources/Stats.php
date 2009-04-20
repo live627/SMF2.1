@@ -87,7 +87,7 @@ function DisplayStats()
 	}
 
 	loadLanguage('Stats');
-	loadTemplate('Stats');
+	loadTemplate('Stats', 'stats');
 
 	isAllowedTo('view_stats');
 
