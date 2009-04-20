@@ -44,7 +44,6 @@
 	float: left;
 }
 #stats_totals dd, #stats_averages dd
-
 {
 	text-align: right;
 	margin-left: 10em;
@@ -104,92 +103,4 @@
 {
 	width: 20%;
 	text-align: left;
-}
-#forum_history
-{
-	clear: both; 
-	margin-top: -0.9em;
-	padding-bottom: 0.4em;
-	width: 100%;
-}
-.forumhistory
-{
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
-}
-.forumhistory ul
-{
-	float: left;
-	width: 100%;
-}
-.forumhistory li
-{
-	float: left;
-	margin: 0;
-	list-style: none;
-	height: 1.4em;
-	width: 16%;
-	text-align: center;
-}
-.forumhistory li#main
-{
-	float: left;
-	width: 20%;
-	text-align: left;
-}
-#history_cell
-{
-	clear: both; 
-	margin-top: -0.7em; 
-	padding-bottom: 0.4em;
-	width: 100%;
-} 
-.history_text
-{ 
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
-	text-align: center 
-}
-.history_year ul, .history_month ul, .history_day ul
-{
-	float: left;
-	width: 100%;
-	list-style: none;
-}
-.history_year li, .history_month li, .history_day li
-{
-	float: left;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	height: 1.4em;
-	width: 16%;
-	text-align: center;
-}
-.history_year li, .history_month li
-{
-	font-weight: bold;
-}
-.history_year li.year, .history_year li.month, .history_year li.day
-{
-	float: left;
-	list-style: none;
-	height: 1.4em;
-}
-.history_year li.year
-{
-	text-align: left;
-	width: 20%;
-}
-.history_month li.month
-{
-	text-align: left;
-	width: 19%;
-	padding-left: 1%;
-}
-.history_day li.day
-{
-	text-align: left;
-	width: 17%;
-	padding-left: 3%;
 }
