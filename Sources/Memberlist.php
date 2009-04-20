@@ -63,7 +63,7 @@ function Memberlist()
 	// Make sure they can view the memberlist.
 	isAllowedTo('view_mlist');
 
-	loadTemplate('Memberlist');
+	loadTemplate('Memberlist', 'memberlist');
 
 	$context['listing_by'] = !empty($_GET['sa']) ? $_GET['sa'] : 'all';
 

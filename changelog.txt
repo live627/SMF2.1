@@ -55,6 +55,7 @@ April 2009
  * Website should use website title for title and alt instead of www (Various)
  ! Undefined index for some themes where use_sidemenu isn't setup (Subs-Menu.php)
  * Updated the help popup to match Curve's style better. (Help template, style.css)
+ * Rewrote the memberlist template's HTML to match Curve's style. (Memberlist template, memberlist.css, Memberlist.php) 
 
 
 March 2009
