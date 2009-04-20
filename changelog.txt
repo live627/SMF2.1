@@ -54,6 +54,7 @@ April 2009
  * Consistency use the same line break style for imode (Wireless.template.php) [Bug 3284]
  * Website should use website title for title and alt instead of www (Various)
  ! Undefined index for some themes where use_sidemenu isn't setup (Subs-Menu.php)
+ * Updated the help popup to match Curve's style better. (Help template, style.css)
 
 
 March 2009

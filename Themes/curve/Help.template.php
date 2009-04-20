@@ -25,11 +25,11 @@ function template_popup()
 	// Just show the help text and a "close window" link.
 	echo '
 	</head>
-	<body style="margin: 1ex;">
-		<div class="popuptext">
+	<body id="help_popup">
+		<div class="tborder windowbg description">
 			', $context['help_text'], '<br />
 			<br />
-			<div align="center"><a href="javascript:self.close();">', $txt['close_window'], '</a></div>
+			<a href="javascript:self.close();">', $txt['close_window'], '</a>
 		</div>
 	</body>
 </html>';

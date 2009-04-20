@@ -35,6 +35,14 @@ body
 	min-width: 600px;
 }
 
+/* Help popups require a different styling of the body element. */
+body#help_popup
+{
+	width: auto;
+	padding: 1em;
+	min-width: 0;
+}
+
 /* use dark grey for the text, leaving black for headers etc */
 body, td, th , tr
 {
