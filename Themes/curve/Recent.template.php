@@ -24,21 +24,33 @@ function template_main()
 			$button_set['notify'] = array('text' => 'notify_replies', 'image' => 'notify_sm.gif', 'lang' => true, 'url' => $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start']);
 
 		echo '
-		<h3 class="titlebg2 recent">
-				<span class="recent_date">', $txt['on'], ': ', $post['time'], '</span>		
-				<span>', $post['counter'], '</span>
-				<span>', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></span>
-		</h3>
-		<h4 class="catbg recent_author">
-			<span> ', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
+		<h4 class="titlebg recent"><span class="left"></span><span class="right"></span>
+			<span class="recent_counter">', $post['counter'], '</span>
+			<span class="recent_link">', $post['category']['link'], ' / ', $post['board']['link'], ' / <b>', $post['link'], '</b></span>	
 		</h4>
-		<div class=" windowbg2 recent_post">' . $post['message'] . '</div>';
-
+		<h3 class="catbg recent">
+			<span class="left"></span><span class="right"></span><span class="recent_author">', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
+			<span class="recent_date">', $txt['on'], ': ', $post['time'], '</span>		
+		</h3>
+		<div class="windowbg2 recent_post">
+			<span class="topslice">
+				<span></span>
+			</span>
+				<div class="recentarea">', $post['message'], '
+				</div>
+			<span class="botslice">
+				<span></span>
+			</span>
+		</div>';
+		
 		if (!empty($button_set))
-			template_button_strip($button_set, 'top');
+			template_button_strip($button_set, 'right');
 	}
+
 	echo '
-		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+		<div class="pagesection">
+			<div class="pagelinks middletext">', $txt['pages'], ': ', $context['page_index'], '</div>
+		</div>';
 }
 
 function template_unread()

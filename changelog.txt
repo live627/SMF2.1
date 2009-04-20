@@ -57,6 +57,7 @@ April 2009
  * Updated the help popup to match Curve's style better. (Help template, style.css)
  * Rewrote the memberlist template's HTML to match Curve's style. (Memberlist template, memberlist.css, Memberlist.php) 
  * Rewrote the statistics template's HTML to match Curve's style. (Stats template, stats.css, index.css, Stats.php)
+ * Updated the recent messages template to match Curve's style better. (Recent template, recent.css, Recent.php)
 
 
 March 2009

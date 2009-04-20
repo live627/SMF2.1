@@ -93,7 +93,7 @@ function RecentPosts()
 {
 	global $txt, $scripturl, $user_info, $context, $modSettings, $sourcedir, $board, $smcFunc;
 
-	loadTemplate('Recent', 'forum');
+	loadTemplate('Recent', 'recent');
 	$context['page_title'] = $txt['recent_posts'];
 
 	if (isset($_REQUEST['start']) && $_REQUEST['start'] > 95)
