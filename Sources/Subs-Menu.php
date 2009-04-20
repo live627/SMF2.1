@@ -239,7 +239,7 @@ function createMenu($menuData, $menuOptions = array())
 	$menu_context['toggle_url'] = isset($menuOptions['toggle_url']) ? $menuOptions['toggle_url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : '') . $menu_context['extra_parameters'] . ';togglebar';
 
 	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'] && !$options['use_sidebar_menu'])
+	if ($context['right_to_left'] && empty($options['use_sidebar_menu']))
 		$menu_context['sections'] = array_reverse($menu_context['sections'], true);
 
 	// If we didn't find the area we were looking for go to a default one.

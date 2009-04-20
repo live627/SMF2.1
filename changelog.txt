@@ -53,6 +53,7 @@ April 2009
  ! Accounts inaccessable after real name and password change (Profile-Modify.php) [Bug 2960]
  * Consistency use the same line break style for imode (Wireless.template.php) [Bug 3284]
  * Website should use website title for title and alt instead of www (Various)
+ ! Undefined index for some themes where use_sidemenu isn't setup (Subs-Menu.php)
 
 
 March 2009
