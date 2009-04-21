@@ -869,6 +869,7 @@ ul.tabbuttons li
 	padding: 0;
 	margin-left: 12px;
 	text-transform: uppercase;
+	cursor: pointer;
 }
 .buttonlist ul li a:hover
 {
