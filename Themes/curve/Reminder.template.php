@@ -9,7 +9,7 @@ function template_main()
 	<br />
 	<form action="', $scripturl, '?action=reminder;sa=picktype" method="post" accept-charset="', $context['character_set'], '">
 		<div class="tborder login">
-			<h3 class="catbg"><span class="left"></span class="right"></span>
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['authentication_reminder'], '
 			</h3>
 			<span class="upperframe"><span></span></span>
