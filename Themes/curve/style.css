@@ -693,6 +693,7 @@ span.lowerframe span
 {
 	border: 1px solid black;
 	position: absolute;
+	visibility: hidden;
 }
 
 /* An auto suggest item */

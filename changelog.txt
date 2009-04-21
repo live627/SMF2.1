@@ -58,6 +58,7 @@ April 2009
  * Rewrote the memberlist template's HTML to match Curve's style. (Memberlist template, memberlist.css, Memberlist.php) 
  * Rewrote the statistics template's HTML to match Curve's style. (Stats template, stats.css, index.css, Stats.php)
  * Updated the recent messages template to match Curve's style better. (Recent template, recent.css, Recent.php)
+ * Black smudge caused by auto suggest div. Start with visibility hidden(style.css) [Bug 3077]
 
 
 March 2009

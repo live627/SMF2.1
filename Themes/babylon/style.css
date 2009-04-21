@@ -484,6 +484,7 @@ a.moderation_link, a.moderation_link:visited
 {
 	border: 1px solid black;
 	position: absolute;
+	visibility: hidden;
 }
 
 /* An auto suggest item */

@@ -875,6 +875,7 @@ a.moderation_link, a.moderation_link:visited
 	border: 1px solid #505050;
 	position: absolute;
 	font-size: .7em;
+	visibility: hidden;
 }
 
 /* An auto suggest item */
