@@ -850,7 +850,6 @@ ul.tabbuttons li
 .buttonlist ul
 {
 	z-index: 100;
-	display: table;
 	padding: 5px;
 	margin: 0;
 }

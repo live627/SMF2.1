@@ -60,6 +60,7 @@ April 2009
  * Updated the recent messages template to match Curve's style better. (Recent template, recent.css, Recent.php)
  * Black smudge caused by auto suggest div. Start with visibility hidden(style.css) [Bug 3077]
  * Curve Reminder page - right side curve missing (Reminder.template.php) [Bug 3070]
+ * display: table; causing issues in Opera (style.css) [Bug 3049] [Bug 3038]
 
 
 March 2009
