@@ -141,6 +141,10 @@ function ShowHelp()
 					'label' => $txt['manual_section_smileys'],
 					'template' => 'manual_smileys',
 				),
+				'bbcode' => array(
+					'label' => $txt['manual_section_bbcode'],
+					'template' => 'manual_bbcode',
+				),
 			),
 		),
 		'personal_messages' => array(
@@ -228,6 +232,10 @@ function ShowHelp()
 	$context['html_headers'] .= '
 		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/css/help.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/css/help.css" />';
 
+	// The smiley info page needs some cheesy information.
+	if ($manual_area_data['current_area'] == 'smileys')
+		ShowSmileyHelp();
+
 	// Does this section require any additional stylesheets?
 	if (isset($manual_area_data['require_stylesheets']))
 	{
@@ -237,6 +245,49 @@ function ShowHelp()
 		foreach ($manual_area_data['require_stylesheets'] as $stylesheet)
 			$context['html_headers'] .= '
 		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/css/' . $stylesheet . '.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/css/' . $stylesheet . '.css" />';
+	}
+}
+
+function ShowSmileyHelp()
+{
+	global $context, $smcFunc, $modSettings, $user_info;
+
+	// Load the smileys in reverse order by length so they don't get parsed wrong.
+	if (($temp = cache_get_data('parsing_smileys', 480)) == null)
+	{
+		$result = $smcFunc['db_query']('', '
+			SELECT code, filename, description
+			FROM {db_prefix}smileys',
+			array(
+			)
+		);
+		$smileysfrom = array();
+		$smileysto = array();
+		$smileysdescs = array();
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+		{
+			$smileysfrom[] = $row['code'];
+			$smileysto[] = $row['filename'];
+			$smileysdescs[] = $row['description'];
+		}
+		$smcFunc['db_free_result']($result);
+
+		cache_put_data('parsing_smileys', array($smileysfrom, $smileysto, $smileysdescs), 480);
+	}
+	else
+		list ($smileysfrom, $smileysto, $smileysdescs) = $temp;
+
+	// So, let's get this into $context.
+	$context['smileys'] = array();
+	for ($i = 0; $i < count($smileysfrom); $i ++)
+	{
+		$smileyCode = '<img src="' . $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/' . $smileysto[$i] . '" alt="' . strtr(htmlspecialchars($smileysfrom[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')). '" title="' . strtr(htmlspecialchars($smileysdescs[$i]), array(':' => '&#58;', '(' => '&#40;', ')' => '&#41;', '$' => '&#36;', '[' => '&#091;')) . '" border="0" class="smiley" />';
+		
+		$context['smileys'][] = array(
+			'name' => $smileysdescs[$i],
+			'to' => $smileyCode,
+			'from' => $smileysfrom[$i],
+		);
 	}
 }
 

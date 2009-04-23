@@ -1741,14 +1741,13 @@ function template_manual_posting_topics()
 	</ul>';
 }
 
-function template_manual_smileys()
+function template_manual_bbcode()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<h3 id="bbcref">', $txt['manual_posting_sub_SMF_bbc'], '</h3>
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
-	<table id="reference1" cellspacing="4" cellpadding="2">
+	<table id="reference1" cellspacing="2" cellpadding="2">
 		<tr>
 			<th>', $txt['manual_posting_header_name'], '</th>
 			<th>', $txt['manual_posting_header_button'], '</th>
@@ -2132,95 +2131,31 @@ Simple
 			<td><acronym title="Simple Machines Forum">', $txt['manual_posting_acro_output'], '</acronym></td>
 			<td>', $txt['manual_posting_acro_comment'], '</td>
 		</tr>
-	</table><br />
-	<h3 id="smileysref">', $txt['manual_posting_sub_help_smileys'], '</h3>
+	</table>';
+}
+
+function template_manual_smileys()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	echo '
 	<p>', $txt['manual_posting_smileys_help_desc'], '</p>
-	<table id="reference2" cellspacing="4" cellpadding="2">
+	<table id="reference2" cellspacing="2" cellpadding="2">
 		<tr>
 			<th>', $txt['manual_posting_smileys_help_name'], '</th>
 			<th>', $txt['manual_posting_smileys_help_img'], '</th>
 			<th>', $txt['manual_posting_smileys_help_code'], '</th>
-		</tr>
+		</tr>';
+
+	foreach ($context['smileys'] as $smiley)
+		echo '
 		<tr>
-			<td>', $txt['manual_posting_smiley_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/smiley.gif" alt="" /></td>
-			<td>:)</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_wink_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/wink.gif" alt="" /></td>
-			<td>;)</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_cheesy_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/cheesy.gif" alt="" /></td>
-			<td>:D</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_grin_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/grin.gif" alt="" /></td>
-			<td>;D</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_angry_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/angry.gif" alt="" /></td>
-			<td>&gt;:(</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_sad_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/sad.gif" alt="" /></td>
-			<td>:(</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_shocked_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/shocked.gif" alt="" /></td>
-			<td>:o</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_cool_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/cool.gif" alt="" /></td>
-			<td>8)</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_huh_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/huh.gif" alt="" /></td>
-			<td>???</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_rolleyes_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/rolleyes.gif" alt="" /></td>
-			<td>::)</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_tongue_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/tongue.gif" alt="" /></td>
-			<td>:P</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_embarrassed_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/embarrassed.gif" alt="" /></td>
-			<td>:-[</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_lipsrsealed_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/lipsrsealed.gif" alt="" /></td>
-			<td>:-X</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_undecided_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/undecided.gif" alt="" /></td>
-			<td>:-\</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_kiss_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/kiss.gif" alt="" /></td>
-			<td>:-*</td>
-		</tr>
-		<tr>
-			<td>', $txt['manual_posting_cry_help_name'], '</td>
-			<td><img src="', $modSettings['smileys_url'], '/', $context['user']['smiley_set'], '/cry.gif" alt="" /></td>
-			<td>:\'(</td>
-		</tr>
+			<td>', $smiley['name'], '</td>
+			<td>', $smiley['to'], '</td>
+			<td>', $smiley['from'], '</td>
+		</tr>';
+
+	echo '
 	</table><br />
 	<p>', $txt['manual_posting_smiley_parse'], '</p>';
 }

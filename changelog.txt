@@ -63,6 +63,8 @@ April 2009
  * Curve: display: table; causing issues in Opera (style.css) [Bug 3049] [Bug 3038]
  * Curve: Most buttons have text cursor when hover over text on button (style.css) [Bug 3054]
  * Allow pages in the manual to use extra stylesheets. (Help.php, Help template)
+ * Show all configured smileys instead of just the default smileys on the smiley reference page. (Help.php, Help.template.php)
+ & Removed some now-obsolete language strings. (Help language file)
 
 
 March 2009
