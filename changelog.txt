@@ -62,6 +62,7 @@ April 2009
  * Curve Reminder page - right side curve missing (Reminder.template.php) [Bug 3070]
  * Curve: display: table; causing issues in Opera (style.css) [Bug 3049] [Bug 3038]
  * Curve: Most buttons have text cursor when hover over text on button (style.css) [Bug 3054]
+ * Allow pages in the manual to use extra stylesheets. (Help.php, Help template)
 
 
 March 2009

@@ -1,7 +1,12 @@
+#help_container
+{
+   margin: 8px 0 0 0;
+   padding: 0 0 8px 0;
+}
+
 #helpmain
 {
-	padding: 1em;
-	border: 1px solid #696969;
+	padding: 0 1em;
 }
 
 #helpmain h1

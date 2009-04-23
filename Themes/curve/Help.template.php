@@ -163,15 +163,23 @@ function template_manual_above()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<div id="helpmain" class="windowbg2">
-			<h2>', $context['manual_area_data']['label'], '</h2>';
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['help'], '</h3>
+		<h4 class="titlebg"><span class="left"></span><span class="right"></span>', $context['manual_area_data']['label'], '</h4>
+		<div id="help_container">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div id="helpmain">';
 }
 
+// Bottom half of the help template.
 function template_manual_below()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
 		</div>';
 }
 
