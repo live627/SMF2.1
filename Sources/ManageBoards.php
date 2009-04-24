@@ -396,6 +396,10 @@ function EditBoard()
 
 	if ($_REQUEST['sa'] == 'newboard')
 	{
+		// Category doesn't exist, man... sorry.
+		if (empty($_REQUEST['cat']))
+			redirectexit('action=admin;area=manageboards');
+
 		// Some things that need to be setup for a new board.
 		$curBoard = array(
 			'member_groups' => array(0, -1),
@@ -475,6 +479,10 @@ function EditBoard()
 		);
 	}
 	$smcFunc['db_free_result']($request);
+
+	// Category doesn't exist, man... sorry.
+	if (empty($boardList[$curBoard['category']]))
+		redirectexit('action=admin;area=manageboards');
 
 	foreach ($boardList[$curBoard['category']] as $boardid)
 	{

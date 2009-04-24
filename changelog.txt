@@ -67,6 +67,7 @@ April 2009
  & Removed some now-obsolete language strings. (Manual language file)
  * Core Memberlist using depreciated tab menu / classes, plus few minor upgrades (Memberlist.template.php, added memberlist.css) [Bug 3358]
  ! Unable to load the 'wap_pm' template - use wireless_error_notyet instead (PersonalMessage.php) [Bug 3363]
+ ! Manageboards - non-existant boards/category causes errors (ManageBoards.php) [Bug 3398]
 
 
 March 2009
