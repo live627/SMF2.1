@@ -6,36 +6,25 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// shall we use the tabs?
-	if (!empty($settings['use_tabs']))
+	// Build the memberlist button array.	
+	$memberlist_buttons = array(
+		'mlist_menu_view' => array('text' => 'mlist_menu_view', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all'),
+		'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search'),
+	);
+
+	echo '
+	<div id="memberlistbuttons_top">
+		<div class="middletext pagelinks margintop floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
+
+	if (!empty($memberlist_buttons) && !empty($settings['use_tabs']))
 	{
-		// Display links to view all/search.
-		echo '
-	<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
-		<tr>
-			<td class="mirrortab_first">&nbsp;</td>';
-
-		foreach ($context['sort_links'] as $link)
-		{
-			if ($link['selected'])
-				echo '
-				<td class="mirrortab_active_first">&nbsp;</td>
-				<td valign="top" class="mirrortab_active_back">
-					<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">', $link['label'], '</a>
-				</td>
-				<td class="mirrortab_active_last">&nbsp;</td>';
-			else
-				echo '
-				<td valign="top" class="mirrortab_back">
-					<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">', $link['label'], '</a>
-				</td>';
-		}
-
-		echo '
-			<td class="mirrortab_last">&nbsp;</td>
-		</tr>
-	</table>';
+		echo '<div class="margintop floatright">';
+			template_button_strip($memberlist_buttons, 'right');
+		echo '</div>';
 	}
+
+	echo '
+	</div>';
 
 	echo '
 	<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor">';
@@ -64,7 +53,7 @@ function template_main()
 			echo '
 				<table width="100%" cellpadding="0" cellspacing="0" border="0">
 					<tr>
-						<td>', $txt['pages'], ': ', $context['page_index'], '</td>
+						<td><span class="mlist_title">', $txt['members_list'], '</span></td>
 						<td align="right">', $context['letter_links'] . '</td>
 					</tr>
 				</table>';
@@ -162,10 +151,8 @@ function template_main()
 
 	// Show the page numbers again. (makes 'em easier to find!)
 	echo '
-		<tr>
-			<td class="titlebg" colspan="', $context['colspan'], '">', $txt['pages'], ': ', $context['page_index'], '</td>
-		</tr>
-	</table>';
+	</table>
+		<div class="margintop middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	// If it is displaying the result of a search show a "search again" link to edit their criteria.
 	if (isset($context['old_search']))
@@ -179,59 +166,31 @@ function template_search()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
+	// Build the memberlist button array.	
+	$memberlist_buttons = array(
+			'mlist_menu_view' => array('text' => 'mlist_menu_view', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all'),
+			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search'),
+		);
+
 	// Start the submission form for the search!
 	echo '
-		<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">';
+		<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
+			<div id="memberlistbuttons_top">';
 
-	// Display links to view all/search.
-	if (!empty($settings['use_tabs']))
-	{
-		echo '
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
-			<tr>
-				<td class="mirrortab_first">&nbsp;</td>';
-
-		foreach ($context['sort_links'] as $link)
+		if (!empty($memberlist_buttons) && !empty($settings['use_tabs']))
 		{
-			if ($link['selected'])
-				echo '
-				<td class="mirrortab_active_first">&nbsp;</td>
-				<td valign="top" class="mirrortab_active_back">
-					<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">', $link['label'], '</a>
-				</td>
-				<td class="mirrortab_active_last">&nbsp;</td>';
-			else
-				echo '
-				<td valign="top" class="mirrortab_back">
-					<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">', $link['label'], '</a>
-				</td>';
+			echo '<div class="floatright">';
+				template_button_strip($memberlist_buttons, 'right');
+			echo '</div>';
 		}
-
 		echo '
-				<td class="mirrortab_last">&nbsp;</td>
-			</tr>
-		</table>
-		<div class="tborder">';
-	}
-	else
-	{
-		echo '
-		<div class="bordercolor" style="padding: 1px;">
-			<div class="titlebg" style="padding: 4px 4px 4px 10px;">';
-				$links = array();
-				foreach ($context['sort_links'] as $link)
-					$links[] = ($link['selected'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '') . '<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">' . $link['label'] . '</a>';
-
-				echo '
-					', implode(' | ', $links), '
-			</div>
-		</div>
-		<div class="bordercolor" style="padding: 1px">';
-	}
+				<div class="bordercolor" style="padding: 1px">
+				<h3 class="titlebg mlist"><span class="left"></span><span class="right"></span>
+					', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['mlist_search'], '
+				</h3>';
 
 	// Display the input boxes for the form.
 	echo '
-
 		<div class="windowbg" align="center" style="padding-bottom: 1ex;">
 			<table width="440" border="0" cellpadding="0" cellspacing="0">
 				<tr>

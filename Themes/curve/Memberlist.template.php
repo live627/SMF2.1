@@ -141,13 +141,13 @@ function template_main()
 function template_search()
 {
 	global $context, $settings, $options, $scripturl, $txt;
-	
+
 	// Build the memberlist button array.	
 	$memberlist_buttons = array(
 			'mlist_menu_view' => array('text' => 'mlist_menu_view', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all'),
 			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search'),
 		);
-	
+
 
 	// Start the submission form for the search!
 	echo '

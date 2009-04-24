@@ -65,6 +65,7 @@ April 2009
  * Allow pages in the manual to use extra stylesheets. (Help.php, Help template)
  * Show all configured smileys instead of just the default smileys on the smiley reference page. (Help.php, Help.template.php)
  & Removed some now-obsolete language strings. (Manual language file)
+ * Core Memberlist using depreciated tab menu / classes, plus few minor upgrades (Memberlist.template.php, added memberlist.css) [Bug 3358]
 
 
 March 2009

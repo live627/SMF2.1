@@ -1,0 +1,50 @@
+/* ************************************* */
+/* styles from Memberlist.template       */
+/* ************************************* */
+h3.mlist, h4.mlist
+{
+	padding: 0.1em 0 0.1em 0;
+	clear: both;
+}
+
+#mlist
+{
+	padding-bottom: 0.6em;
+}
+
+#mlist tr, #memberlist_search
+{
+	text-align: center;
+}
+
+#mlist_search
+{
+	width: 480px;
+	overflow: hidden;	
+	margin: 0;
+	padding: 0.5em;
+	margin:0px auto;
+}
+
+.mlist_letter
+{
+	color: white;
+	float: right;
+	display: block;
+	font-size: 85%;
+}
+
+.mlist_title
+{
+	float: left;
+	display: block;
+}
+
+.mlist_search_options
+{
+	float: left;
+	padding: 0.6em;
+	display: block;
+	text-align: left;
+	z-index: auto;
+}
