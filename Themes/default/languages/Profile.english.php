@@ -91,7 +91,7 @@ $txt['lastLoggedIn'] = 'Last Active';
 
 $txt['notify_settings'] = 'Notification Settings:';
 $txt['notify_save'] = 'Save settings';
-$txt['notify_important_email'] = 'Receive forum announcements and important notifications by email.';
+$txt['notify_important_email'] = 'Receive forum newsletters, announcements and important notifications by email.';
 $txt['notify_regularity'] = 'For topics and boards I\'ve requested notification on, notify me';
 $txt['notify_regularity_instant'] = 'Instantly';
 $txt['notify_regularity_first_only'] = 'Instantly - but only for the first unread reply';

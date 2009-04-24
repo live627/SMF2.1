@@ -69,6 +69,7 @@ April 2009
  ! Unable to load the 'wap_pm' template - use wireless_error_notyet instead (PersonalMessage.php) [Bug 3363]
  ! Manageboards - non-existant boards/category causes errors (ManageBoards.php) [Bug 3398]
  ! db_name_input already defined (install.php) [Bug 2984]
+ & Profile language string regarding receiving emails didn't refer to newsletters (Profile.english.php)
 
 
 March 2009
