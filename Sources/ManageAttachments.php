@@ -245,7 +245,7 @@ function ManageAvatarSettings($return_config = false)
 			array('permissions', 'profile_upload_avatar', 0, $txt['avatar_upload_groups']),
 			array('text', 'avatar_max_width_upload', 6),
 			array('text', 'avatar_max_height_upload', 6),
-			array('check', 'avatar_resize_upload'),
+			array('check', 'avatar_resize_upload', 'subtext' => $txt['avatar_resize_upload_note']),
 			array('check', 'avatar_download_png'),
 			array('select', 'custom_avatar_enabled', array($txt['option_attachment_dir'], $txt['option_specified_dir']), 'onchange' => 'updateStatus();'),
 			array('text', 'custom_avatar_dir', 40, 'subtext' => $txt['custom_avatar_dir_desc'], 'invalid' => !$context['valid_custom_avatar_dir']),

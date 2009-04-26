@@ -2511,7 +2511,8 @@ function profileSaveAvatarData(&$value)
 					@chmod($uploadDir . '/avatar_tmp_' . $memID, 0644);
 
 					require_once($sourcedir . '/Subs-Graphics.php');
-					downloadAvatar($uploadDir . '/avatar_tmp_' . $memID, $memID, $modSettings['avatar_max_width_upload'], $modSettings['avatar_max_height_upload']);
+					if (!downloadAvatar($uploadDir . '/avatar_tmp_' . $memID, $memID, $modSettings['avatar_max_width_upload'], $modSettings['avatar_max_height_upload']));
+						return 'bad_avatar';
 				}
 				else
 					return 'bad_avatar';
