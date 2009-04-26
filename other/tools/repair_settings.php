@@ -257,7 +257,7 @@ function initialize_inputs()
 
 function show_settings()
 {
-	global $txt, $smcFunc, $db_connection, $db_type;
+	global $txt, $smcFunc, $db_connection, $db_type, $db_name, $db_prefix;
 
 	// Check to make sure Settings.php exists!
 	if (file_exists(dirname(__FILE__) . '/Settings.php'))
@@ -329,7 +329,7 @@ function show_settings()
 		'critical_settings' => array(
 			'maintenance' => array('flat', 'int', 2),
 			'language' => array('flat', 'string', 'english'),
-			'cookiename' => array('flat', 'string', 'SMFCookie11'),
+			'cookiename' => array('flat', 'string', 'SMFCookie' . (!empty($db_name) ? abs(crc32($db_name . preg_replace('~[^A-Za-z0-9_$]~', '', $db_prefix)) % 1000) : '20')),
 			'queryless_urls' => array('db', 'int', 1),
 			'enableCompressedOutput' => array('db', 'int', 1),
 			'databaseSession_enable' => array('db', 'int', 1),

@@ -70,6 +70,7 @@ April 2009
  ! Manageboards - non-existant boards/category causes errors (ManageBoards.php) [Bug 3398]
  ! db_name_input already defined (install.php) [Bug 2984]
  & Profile language string regarding receiving emails didn't refer to newsletters (Profile.english.php)
+ ! Instead of SMFCookie11, generate the same cookie name as install.php would (repair_settings.php) [Bug 3407]
 
 
 March 2009
