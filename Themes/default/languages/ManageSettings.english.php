@@ -88,7 +88,7 @@ $txt['karmaLabel'] = 'Karma label';
 $txt['karmaApplaudLabel'] = 'Karma applaud label';
 $txt['karmaSmiteLabel'] = 'Karma smite label';
 
-$txt['caching_information'] = '<div align="center"><strong><u>Important! Read this first before enabling these features.</strong></u></div><br />
+$txt['caching_information'] = '<div align="center"><strong><u>Important! Read this first before enabling these features.</u></strong></div><br />
 	SMF supports caching through the use of accelerators. The currently supported accelerators include:<br />
 	<ul class="normallist">
 		<li>APC</li>
@@ -98,7 +98,7 @@ $txt['caching_information'] = '<div align="center"><strong><u>Important! Read th
 		<li>Zend Platform/Performance Suite (Not Zend Optimizer)</li>
 		<li>XCache</li>
 	</ul>
-	Caching will work best of you have PHP compiled with one of the above optimizers, or have memcache
+	Caching will work best if you have PHP compiled with one of the above optimizers, or have memcache
 	available. If you do not have any optimizer installed SMF will do file based caching.<br /><br />
 	SMF performs caching at a variety of levels. The higher the level of caching enabled the more CPU time will be spent
 	retrieving cached information. If caching is available on your machine it is recommended that you try caching at level 1 first.
