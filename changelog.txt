@@ -75,6 +75,7 @@ April 2009
  ! Hard-coded strings related to debug (Subs.php, ViewQuery.php) [Bug 3241]
  * Javascript should use smf_scripturl where possible (Display.template.php) [Bug 3406]
  & Updated some language strings with member instead of user, and group requests (Help.english.php, ModerationCenter.english.php, ModerationCenter.php) [Bug 3360, 3383]
+ & Remove instead of delete for quick mod (index.english.php) [Bug 3100]
 
 
 March 2009
