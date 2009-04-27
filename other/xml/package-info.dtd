@@ -1,5 +1,5 @@
 <!-- Notes:
-   - the "for" attribute is a comma separated string like the following: "1.0-1.5,2.0,3.*".
+   - the "for" attribute is a comma separated string like the following: "1.0-1.5,2.0".
    - the "from" attribute of "upgrade" works the same way.
    -->
 
@@ -15,16 +15,17 @@
 	<!ELEMENT version (#PCDATA)>
 
 	<!-- Installation, uninstallation..  Note that more than one mod file can be used. -->
-	<!ELEMENT install (readme?, redirect?, error?, code*, database*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
+	<!-- Note that %packageoptions is defined at the end of this file -->
+	<!ELEMENT install %packageoptions;>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST install for CDATA #IMPLIED>
 
-	<!ELEMENT uninstall (readme?, redirect?, error?, code*, database*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
+	<!ELEMENT uninstall %packageoptions;>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST uninstall for CDATA #IMPLIED>
 
 	<!-- Upgrade from another version. -->
-	<!ELEMENT upgrade (readme?, redirect?, error?, code*, database*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
+	<!ELEMENT upgrade %packageoptions;>
 		<!ATTLIST upgrade from CDATA #IMPLIED>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST upgrade for CDATA #IMPLIED>
@@ -33,26 +34,15 @@
 		<!ELEMENT readme (#PCDATA)>
 			<!-- Can be inline (ie. CDATA) or a file. -->
 			<!ATTLIST readme type (inline|file) "file">
+			<!-- We can use bbc code if this is true -->
 			<!ATTLIST readme parsebbc (true|false) "false">
-
-		<!-- Force a redirect to happen at the end of installation. -->
-		<!ELEMENT redirect (#PCDATA)>
-			<!-- Is the text inline or file? -->
-			<!ATTLIST redirect type (inline|file) "file">
-			<!-- The URL to redirect to. -->
-			<!ATTLIST redirect url CDATA #REQUIRED>
-			<!-- Optional timeout parameter for auto redirect. -->
-			<!ATTLIST redirect timeout CDATA #IMPLIED>
-
-		<!-- Prevent installation with this version. -->
-		<!ELEMENT error EMPTY>
 
 		<!-- Executable PHP code... -->
 		<!ELEMENT code (#PCDATA)>
 			<!-- Inline or in a file? -->
 			<!ATTLIST code type (inline|file) "file">
 
-		<!-- Executable PHP code - specifically doing database work... -->
+		<!-- Database code... Note: THIS ONLY EXISTS IN SMF 2.0+ -->
 		<!ELEMENT database (#PCDATA)>
 			<!-- Inline or in a file? -->
 			<!ATTLIST database type (inline|file) "file">
@@ -82,8 +72,6 @@
 			<!ATTLIST require-dir from CDATA #IMPLIED>
 			<!ATTLIST require-dir name CDATA #REQUIRED>
 			<!ATTLIST require-dir destination CDATA #REQUIRED>
-			<!-- SMF will try to put folders going into the theme directory, which are normally theme specific, into other themes. Override with the below. (no = don't copy, yes = do copy, auto = SMF decides) -->
-			<!ATTLIST require-dir themes (no|yes|auto) "auto">
 
 		<!-- Require a file from inside the package. -->
 		<!ELEMENT require-file (#PCDATA)>
@@ -91,8 +79,6 @@
 			<!ATTLIST require-file from CDATA #IMPLIED>
 			<!ATTLIST require-file name CDATA #REQUIRED>
 			<!ATTLIST require-file destination CDATA #REQUIRED>
-			<!-- SMF will try to put files going into the theme directory, which are normally theme specific, into other themes. Override with the below. (no = don't copy, yes = do copy, auto = SMF decides) -->
-			<!ATTLIST require-file themes (no|yes|auto) "auto">
 
 		<!-- Move an entire directory, named name, to destination. -->
 		<!ELEMENT move-dir (#PCDATA)>
@@ -116,7 +102,14 @@
 		<!ELEMENT remove-file (#PCDATA)>
 			<!ATTLIST remove-file name CDATA #REQUIRED>
 
+		<!-- Redirect to a file or URL -->
+		<!ELEMENT redirect (#PCDATA)>
+			<!ATTLIST redirect url CDATA #REQUIRED>
+			<!ATTLIST redirect type CDATA #IMPLIED>
+			<!ATTLIST redirect timeout CDATA #IMPLIED>
+
 <!-- These are really common... -->
+<!ENTITY % packageoptions "(readme?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)">
 <!ENTITY nbsp "&#160;">
 <!ENTITY reg "&#174;">
 <!ENTITY copy "&#169;">

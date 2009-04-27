@@ -31,11 +31,12 @@
 			<!ATTLIST remote href CDATA #REQUIRED>
 
 		<!-- Modifications, and so forth.  The whole purpose of package lists. -->
-		<!ELEMENT modification (id, name, filename, description, version, author?, website?)>
-		<!ELEMENT language (id, name, filename, description, version, author?, website?)>
-		<!ELEMENT avatar-pack (id, name, filename, description, version, author?, website?)>
-		<!ELEMENT theme (id, name, filename, description, version, author?, website?)>
-		<!ELEMENT smiley-set (id, name, filename, description, version, author?, website?)>
+		<!-- Note that % pserveroptions is defined at the end of this file -->
+		<!ELEMENT modification %pserveroptions;>
+		<!ELEMENT language %pserveroptions;>
+		<!ELEMENT avatar-pack %pserveroptions;>
+		<!ELEMENT theme %pserveroptions;>
+		<!ELEMENT smiley-set %pserveroptions;>
 			<!-- Package id: used for upgrading. -->
 			<!ELEMENT id (#PCDATA)>
 			<!-- Name, filename, description... simple stuff. -->
@@ -57,6 +58,7 @@
 				<!ATTLIST website title CDATA #IMPLIED>
 
 <!-- These are really common... -->
+<!ENTITY % pserveroptions "(id, name, filename, description, version, author?, website?)">
 <!ENTITY nbsp "&#160;">
 <!ENTITY reg "&#174;">
 <!ENTITY copy "&#169;">
