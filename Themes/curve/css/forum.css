@@ -30,7 +30,6 @@ p.moderators
 /* the posting icons */
 #posting_icons
 {
-	font-size: 0.8em;
 	padding: 0 1em 0.5em 2em;
 	margin: 0;
 	line-height: 1em;
@@ -51,7 +50,10 @@ p.moderators
 	line-height: 19px;
 	padding: 0 0 0 6px;
 }
-
+#posting_icons p
+{
+	font-size: 0.8em;
+}
 .pagesection .nextlinks
 {
 	text-align: right;
