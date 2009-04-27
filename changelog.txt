@@ -78,6 +78,7 @@ April 2009
  & Remove instead of delete for quick mod (index.english.php) [Bug 3100]
  * Curve: Message age: Between isn't fully on the same line (search.css) [Bug 3040]
  * Curve: Lower Navigation Bar Alignment with Small Screen Resolution (index.css) [Bug 3400]
+ * Curve: >> << icons were invisible white on white (change_menu.png, change_menu2.png) [Bug 3413]
 
 
 March 2009
