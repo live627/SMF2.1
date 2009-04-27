@@ -39,7 +39,7 @@ if (!defined('SMF'))
 // See the queries....
 function ViewQuery()
 {
-	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $smcFunc;
+	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $smcFunc, $txt;
 
 	// Don't allow except for administrators.
 	isAllowedTo('admin_forum');
@@ -117,11 +117,10 @@ function ViewQuery()
 			<a', $is_select_query ? ' href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '"' : '', ' style="font-weight: bold; color: black; text-decoration: none;">
 				', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars($query_data['q']))), '
 			</a><br />';
-		if (!empty($query_data['f']) && !empty($query_data['l']))
-			echo '
-			in <em>', $query_data['f'], '</em> line <em>', $query_data['l'], '</em>, ';
-		echo '
-			which took ', round($query_data['t'], 8), ' seconds.
+			if (!empty($query_data['f']) && !empty($query_data['l']))
+				echo sprintf($txt['debug_query_in_line'], $query_data['f'], $query_data['l']);
+
+			echo sprintf($txt['debug_query_which_took'], round($query_data['t'], 8)) . '
 		</div>';
 
 		// Explain the query.

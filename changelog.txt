@@ -72,6 +72,7 @@ April 2009
  & Profile language string regarding receiving emails didn't refer to newsletters (Profile.english.php)
  ! Instead of SMFCookie11, generate the same cookie name as install.php would (repair_settings.php) [Bug 3407]
  ! Without GD, uploading and requiring resize of oversized avatars fails but says succeeded (Profile-Modify.php, ManageAttachments.php) [Bug 3408]
+ ! Hard-coded strings related to debug (Subs.php, ViewQuery.php) [Bug 3241]
 
 
 March 2009
