@@ -80,6 +80,7 @@ April 2009
  * Curve: Lower Navigation Bar Alignment with Small Screen Resolution (index.css) [Bug 3400]
  * Curve: >> << icons were invisible white on white (change_menu.png, change_menu2.png) [Bug 3413]
  * Long/Wide code blocks causing page disruption in show posts (PersonalMessage.template.php) [Bug 3409]
+ ! Selecting Specified Directory to store uploaded avatars, but not specifying dir, results in undefined index  [Bug 3202]
 
 
 March 2009
