@@ -655,7 +655,7 @@ function template_main()
 		bDefaultCollapsed: ', !empty($options['display_quick_reply']) && $options['display_quick_reply'] == 2 ? 'false' : 'true', ',
 		iTopicId: ', $context['current_topic'], ',
 		iStart: ', $context['start'], ',
-		sScriptUrl: "', $scripturl, '",
+		sScriptUrl: smf_scripturl,
 		sImagesUrl: "', $settings['images_url'], '",
 		sContainerId: "quickReplyOptions",
 		sImageId: "quickReplyExpand",
@@ -688,7 +688,7 @@ function template_main()
 	if (typeof(window.XMLHttpRequest) != "undefined")
 	{
 		var oQuickModify = new QuickModify({
-			sScriptUrl: ', JavaScriptEscape($scripturl), ',
+			sScriptUrl: smf_scripturl,
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
 			sTemplateBodyEdit: ', JavaScriptEscape('
@@ -725,7 +725,7 @@ function template_main()
 		aIconLists[aIconLists.length] = new IconList({
 			sBackReference: "aIconLists[" + aIconLists.length + "]",
 			sIconIdPrefix: "msg_icon_",
-			sScriptUrl: "', $scripturl, '",
+			sScriptUrl: smf_scripturl,
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iBoardId: ', $context['current_board'], ',
 			iTopicId: ', $context['current_topic'], ',
