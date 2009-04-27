@@ -1122,7 +1122,7 @@ function ViewWatchedUsers()
 		'columns' => array(
 			'member' => array(
 				'header' => array(
-					'value' => $txt['name'],
+					'value' => $txt['mc_watched_users_member'],
 				),
 				'data' => array(
 					'sprintf' => array(

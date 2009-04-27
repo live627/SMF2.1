@@ -8,14 +8,14 @@ global $scripturl;
 $txt['moderation_center'] = 'Moderation Center';
 $txt['mc_main'] = 'Main';
 $txt['mc_posts'] = 'Posts';
-$txt['mc_groups'] = 'Groups';
+$txt['mc_groups'] = 'Membergroups';
 
-$txt['mc_view_groups'] = 'View Groups';
+$txt['mc_view_groups'] = 'View Membergroups';
 
 $txt['mc_description'] = 'This is your &quot;Moderation Center&quot;. From here you can perform all the moderation actions assigned to yourself by the Administrator. This home page contains a summary of all the latest happenings in your community. You can personalize the layout by clicking <a href="' . $scripturl . '?action=moderate;area=settings">here</a>.';
-$txt['mc_group_requests'] = 'Group Requests';
+$txt['mc_group_requests'] = 'Membergroup Requests';
 $txt['mc_unapproved_posts'] = 'Unapproved Posts';
-$txt['mc_watched_users'] = 'Recent Watched Users';
+$txt['mc_watched_users'] = 'Recent Watched Members';
 $txt['mc_watched_topics'] = 'Watched Topics';
 $txt['mc_scratch_board'] = 'Moderator Scratch Board';
 $txt['mc_latest_news'] = 'Simple Machines Latest News';
@@ -49,10 +49,10 @@ $txt['mc_reportedp_unignore'] = 'Un-Ignore';
 $txt['mc_reportedp_ignore_confirm'] = 'Are you sure you wish to ignore further reports about this message?\\n\\nThis will turn off further reports for all moderators of the forum.';
 $txt['mc_reportedp_close_selected'] = 'Close Selected';
 
-$txt['mc_groupr_group'] = 'Group';
+$txt['mc_groupr_group'] = 'Membergroups';
 $txt['mc_groupr_member'] = 'Member';
 $txt['mc_groupr_reason'] = 'Reason';
-$txt['mc_groupr_none_found'] = 'There are currently no outstanding group requests';
+$txt['mc_groupr_none_found'] = 'There are currently no outstanding membergroup requests.';
 $txt['mc_groupr_submit'] = 'Submit';
 $txt['mc_groupr_reason_desc'] = 'Reason to reject %s\'s request to join &quot;%s&quot;';
 $txt['mc_groups_reason_title'] = 'Reasons for Rejection';
@@ -87,20 +87,21 @@ $txt['show_notice'] = 'Notice Text';
 $txt['show_notice_subject'] = 'Subject';
 $txt['show_notice_text'] = 'Text';
 
-$txt['mc_watched_users_title'] = 'Watched Users';
-$txt['mc_watched_users_desc'] = 'Here you can keep a track of all users who have been assigned a &quot;watch&quot; by the moderation team.';
+$txt['mc_watched_users_title'] = 'Watched Members';
+$txt['mc_watched_users_desc'] = 'Here you can keep a track of all members who have been assigned a &quot;watch&quot; by the moderation team.';
 $txt['mc_watched_users_member'] = 'View by Member';
 $txt['mc_watched_users_post'] = 'View by Post';
 $txt['mc_watched_users_warning'] = 'Warning Level';
 $txt['mc_watched_users_last_login'] = 'Last Login';
 $txt['mc_watched_users_last_post'] = 'Last Post';
-$txt['mc_watched_users_no_posts'] = 'There are no posts from watched users.';
+$txt['mc_watched_users_no_posts'] = 'There are no posts from watched members.';
 // Don't use entities in the two strings below.
 $txt['mc_watched_users_delete_post'] = 'Are you sure you want to delete this post?';
 $txt['mc_watched_users_delete_posts'] = 'Are you sure you want to delete these posts?';
 $txt['mc_watched_users_posted'] = 'Posted';
+$txt['mc_watched_users_member'] = 'Member';
 
-$txt['mc_warnings_description'] = 'From this section you can see which warnings have been issued to members of the forum. You can also add and modify the notification templates used when sending a warning to a user.';
+$txt['mc_warnings_description'] = 'From this section you can see which warnings have been issued to members of the forum. You can also add and modify the notification templates used when sending a warning to a member.';
 $txt['mc_warning_log'] = 'Log';
 $txt['mc_warning_templates'] = 'Custom Templates';
 $txt['mc_warning_log_title'] = 'Viewing Warning Log';
