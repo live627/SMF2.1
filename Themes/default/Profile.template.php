@@ -293,15 +293,15 @@ function template_showPosts()
 		<table border="0" width="100%" cellspacing="1" cellpadding="0" class="bordercolor" align="center">
 			<tr>
 				<td width="100%">
-					<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor" align="center">
+					<table border="0" width="100%" cellspacing="0" cellpadding="4" class="bordercolor" align="center" style="table-layout: fixed;">
 						<tr class="titlebg2">
-							<td style="padding: 0 1ex;">
+							<td width="5%" style="padding: 0 1ex;">
 								', $post['counter'], '
 							</td>
-							<td width="75%" class="middletext">
+							<td width="70%" class="middletext">
 								&nbsp;<a href="', $scripturl, '#c', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a>
 							</td>
-							<td class="middletext" align="right" style="padding: 0 1ex; white-space: nowrap;">
+							<td width="25%" class="middletext" align="right" style="white-space: nowrap;">
 								', $txt['on'], ': ', $post['time'], '
 							</td>
 						</tr>
