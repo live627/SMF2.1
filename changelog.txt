@@ -77,6 +77,7 @@ April 2009
  & Updated some language strings with member instead of user, and group requests (Help.english.php, ModerationCenter.english.php, ModerationCenter.php) [Bug 3360, 3383]
  & Remove instead of delete for quick mod (index.english.php) [Bug 3100]
  * Curve: Message age: Between isn't fully on the same line (search.css) [Bug 3040]
+ * Curve: Lower Navigation Bar Alignment with Small Screen Resolution (index.css) [Bug 3400]
 
 
 March 2009
