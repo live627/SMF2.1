@@ -27,6 +27,7 @@
 	text-align: right;
 	width: 20%;
 	float: left;
+	line-height: 1.4em;
 }
 #advanced_search dt.options
 {
@@ -36,6 +37,7 @@
 {
 	padding: 0.2em;
 	text-align: left;
+	line-height: 1.4em;
 }
 #advanced_search dd.options
 {
