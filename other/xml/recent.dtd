@@ -1,0 +1,23 @@
+<!-- This is the root recent element ;). -->
+<!ELEMENT smf:xml-feed (recent-post*)>
+	<!ATTLIST smf:xml-feed xmlns CDATA "http://www.simplemachines.org/xml/recent">
+	<!ATTLIST smf:xml-feed xmlns:smf CDATA "http://www.simplemachines.org/">
+
+	<!-- A file to modify... -->
+	<!ELEMENT recent (time, id, subject, body)>
+		<!-- The time of the post. -->
+		<!ELEMENT recent time CDATA #REQUIRED>
+
+		<!-- The id_msg of the post. -->
+		<!ELEMENT recent id CDATA #REQUIRED>
+
+		<!-- The subject of the post. -->
+		<!ELEMENT recent subject CDATA #REQUIRED>
+
+		<!-- The body of the post. -->
+		<!ELEMENT recent body CDATA #REQUIRED>
+
+<!-- These are really common... -->
+<!ENTITY nbsp "&#160;">
+<!ENTITY reg "&#174;">
+<!ENTITY copy "&#169;">
