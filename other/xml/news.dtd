@@ -1,0 +1,50 @@
+<!-- This is the root news element ;). -->
+<!ELEMENT smf:xml-feed (news*)>
+	<!ATTLIST smf:xml-feed xmlns CDATA "http://www.simplemachines.org/xml/news">
+	<!ATTLIST smf:xml-feed xmlns:smf CDATA "http://www.simplemachines.org/">
+
+	<!-- Some news... -->
+	<!ELEMENT news (time, id, subject, body, poster, board, link)>
+		<!-- The time of the news. -->
+		<!ELEMENT news time CDATA #REQUIRED>
+
+		<!-- The id the news post. -->
+		<!ELEMENT news id CDATA #REQUIRED>
+
+		<!-- The subject of the post. -->
+		<!ELEMENT news subject CDATA #REQUIRED>
+
+		<!-- The body of the post. -->
+		<!ELEMENT news body CDATA #REQUIRED>
+
+		<!-- The poster information. -->
+		<!ELEMENT poster (name, id, link)>
+
+			<!-- The name of the poster. -->
+			<!ELEMENT poster name CDATA #REQUIRED>
+
+			<!-- The id the news poster. -->
+			<!ELEMENT poster id CDATA #REQUIRED>
+
+			<!-- The link to the poster. -->
+			<!ELEMENT poster name CDATA #REQUIRED>
+
+		<!-- The board information. -->
+		<!ELEMENT board CDATA (name, id, link)>
+
+			<!-- The name of the board. -->
+			<!ELEMENT board name CDATA #REQUIRED>
+
+			<!-- The id the news board. -->
+			<!ELEMENT board id CDATA #REQUIRED>
+
+			<!-- The link to the board. -->
+			<!ELEMENT board link CDATA #REQUIRED>
+
+		<!-- The link to the post. -->
+		<!ATTLIST news link CDATA #REQUIRED>
+
+<!-- These are really common... -->
+<!ENTITY nbsp "&#160;">
+<!ENTITY reg "&#174;">
+<!ENTITY copy "&#169;">
