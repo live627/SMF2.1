@@ -1766,7 +1766,7 @@ function template_manual_smileys()
 			<td>', $txt['manual_posting_bbc_underline'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/underline.gif" alt="', $txt['manual_posting_bbc_underline'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_underline_code'], '</td>
-			<td><u>', $txt['manual_posting_underline_output'], '</u></td>
+			<td><span class="underline">', $txt['manual_posting_underline_output'], '</span></td>
 			<td>', $txt['manual_posting_underline_comment'], '</td>
 		</tr>
 		<tr>

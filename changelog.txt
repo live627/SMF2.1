@@ -81,6 +81,7 @@ April 2009
  * Curve: >> << icons were invisible white on white (change_menu.png, change_menu2.png) [Bug 3413]
  * Long/Wide code blocks causing page disruption in show posts (PersonalMessage.template.php) [Bug 3409]
  ! Selecting Specified Directory to store uploaded avatars, but not specifying dir, results in undefined index  [Bug 3202]
+ * Don't use depreciated u tags, use css class (Help.template.php, ManageSettings.english.php) [Bug 3119]
 
 
 March 2009

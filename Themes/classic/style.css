@@ -242,6 +242,23 @@ code
 {
 	font-size: large;
 }
+.centertext
+{
+	margin: 0 auto;
+	text-align: center;
+}
+.righttext
+{
+	margin-left: auto;
+	margin-right: 0;
+	text-align: right;
+}
+.lefttext
+{
+	margin-left: 0;
+	margin-right: auto;
+	text-align: left;
+}
 /* No image should have a border when linked */
 a img{
 	border: 0;

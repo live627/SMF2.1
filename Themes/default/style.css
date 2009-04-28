@@ -130,11 +130,15 @@ em
 {
 	font-style: italic;
 }
+/* Alternative for u tag */
+.underline
+{
+	text-decoration: underline;
+}
 
 /* ************************************* */
 /* Some handy custom classes             */
 /* ************************************* */
-
 .floatright
 {
 	float: right;
@@ -162,7 +166,23 @@ em
 {
 	font-size: 1.4em;
 }
-
+.centertext
+{
+	margin: 0 auto;
+	text-align: center;
+}
+.righttext
+{
+	margin-left: auto;
+	margin-right: 0;
+	text-align: right;
+}
+.lefttext
+{
+	margin-left: 0;
+	margin-right: auto;
+	text-align: left;
+}
 /* This style will make sure all headers use the same padding throughout. */
 .headerpadding
 {

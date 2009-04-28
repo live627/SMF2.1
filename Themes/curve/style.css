@@ -125,6 +125,11 @@ em
 {
 	font-style: italic;
 }
+/* Alternative for u tag */
+.underline
+{
+	text-decoration: underline;
+}
 /* ************************************* */
 /* Some handy custom classes             */
 /* ************************************* */
@@ -152,7 +157,20 @@ em
 }
 .centertext
 {
+	margin: 0 auto;
 	text-align: center;
+}
+.righttext
+{
+	margin-left: auto;
+	margin-right: 0;
+	text-align: right;
+}
+.lefttext
+{
+	margin-left: 0;
+	margin-right: auto;
+	text-align: left;
 }
 /* a common padding style */
 .padding

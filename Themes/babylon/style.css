@@ -256,7 +256,23 @@ code
 {
 	font-size: large;
 }
-
+.centertext
+{
+	margin: 0 auto;
+	text-align: center;
+}
+.righttext
+{
+	margin-left: auto;
+	margin-right: 0;
+	text-align: right;
+}
+.lefttext
+{
+	margin-left: 0;
+	margin-right: auto;
+	text-align: left;
+}
 /* This is the white header area where the title, menu bars, and header boxes are. */
 #headerarea
 {
