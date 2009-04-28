@@ -1,65 +1,50 @@
 /* ************************************* */
-/* styles from Who.template           */
+/* styles from Who.template              */
 /* ************************************* */
 
-#whos_online h4.titlebg span.who, #whos_online h4.titlebg span.time,#whos_online h4.titlebg span.action,
-#whos_online li.who, #whos_online li.time,#whos_online li.action
+#whos_online
 {
-	display: block;
-	float: left;
-	width: 58%;
+	overflow: hidden;
 }
-#whos_online h4.titlebg span.time,#whos_online li.time
+
+.members_list
 {
-	width: 10%;
+	overflow: hidden;
+	margin-bottom: 1em;
 }
-#whos_online h4.titlebg span.who,#whos_online li.who
-{
-	width: 30%;
-}
-#whos_online div.clearfix, #whos_none 
-{
-	padding: 0.3em 0.4em;
-	margin: 2px 0;
-}
-#whos_none 
+
+span.member.hidden
 {
 	font-style: italic;
-	font-size: 90%;
-	text-align: right;
 }
-#whos_online li.who span
-{
-	display: block;
-	float: right;
-	padding-right: 1em;
-}
-#whos_online h4#pages_below 
-{
-	font-weight: normal;
-	font-size: 95%;
-}
-#whos_online h4#pages_below span.selectbox 
+
+span.contact_info
 {
 	float: right;
-}
-/* Credits page */
-#credits p, #credits h4
-{
-	padding: 0 10px;
+	width: 14ex;
 }
 
-#credits h3
+.margin_lower
 {
-	margin: 0;
+	margin: 0 0 0.5em 0;
 }
 
-#credits ul
+#credits p
 {
-	list-style-type: none;
+	margin: 0 1em;
 }
 
-#credits ul li
+#credits p.posttext
 {
-	margin-bottom: 0.5em;
+	margin-top: 1em;
+}
+
+#credits dl
+{
+	margin: 0 1em;
+}
+
+#credits dt
+{
+	font-weight: bold;
 }
