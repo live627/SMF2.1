@@ -1841,9 +1841,9 @@ Simple
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/center.gif" alt="', $txt['manual_posting_bbc_centered'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_centered_code'], '</td>
 			<td>
-				<center>
+				<span class="centertext">
 					', $txt['manual_posting_centered_output'], '
-				</center>
+				</span>
 			</td>
 			<td>', $txt['manual_posting_centered_comment'], '</td>
 		</tr>

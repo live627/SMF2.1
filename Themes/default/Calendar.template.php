@@ -513,8 +513,7 @@ function template_bcd()
 	global $context, $scripturl;
 
 		echo '
-	<center>
-	<table class="site" cellpadding="0" cellspacing="0">
+	<table class="site" cellpadding="0" cellspacing="0" align="center">
 		<caption>BCD Clock</caption>
 		<tr class="odd">';
 		$alt = false;
@@ -534,7 +533,7 @@ function template_bcd()
 		</tr>
 		<tr class="even"><td colspan="6" align="center"><a href="', $scripturl, '?action=clock;rb">Are you hardcore?</a></td></tr>
 	</table>
-	</center>
+
 		<script type="text/javascript"><!-- // --><![CDATA[
 		var icons = new Object();';
 
@@ -604,8 +603,7 @@ function template_hms()
 {
 	global $context, $scripturl;
 	echo '
-<center>
-<table class="site" cellpadding="0" cellspacing="0" border="1">
+<table class="site" cellpadding="0" cellspacing="0" border="1" align="center">
 	<caption>Binary Clock</caption>';
 	$alt = false;
 	foreach ($context['clockicons'] as $t => $v)
@@ -624,8 +622,8 @@ function template_hms()
 	echo '
 	</tr>
 	<tr class="', $alt ? 'windowbg2' : 'windowbg', '"><td colspan="6" align="center"><a href="', $scripturl, '?action=clock">Too tough for you?</a></td></tr>
-</table>
-</center>';
+</table>';
+
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
 	var icons = new Object();';
@@ -689,8 +687,7 @@ function template_omfg()
 	global $context, $scripturl;
 
 	echo '
-<center>
-<table class="site" cellpadding="0" cellspacing="0" border="1">
+<table class="site" cellpadding="0" cellspacing="0" border="1" align="center">
 	<caption>OMFG Binary Clock</caption>';
 	$alt = false;
 	foreach ($context['clockicons'] as $t => $v)
@@ -708,8 +705,8 @@ function template_omfg()
 
 	echo '
 	</tr>
-</table>
-</center>';
+</table>';
+
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
 	var icons = new Object();';
@@ -777,8 +774,7 @@ function template_thetime()
 	global $context, $scripturl;
 
 	echo '
-<center>
-<table class="site" cellpadding="0" cellspacing="0" border="1">
+<table class="site" cellpadding="0" cellspacing="0" border="1" align="center">
 	<caption>The time you requested</caption>';
 	$alt = false;
 	foreach ($context['clockicons'] as $t => $v)
@@ -796,8 +792,7 @@ function template_thetime()
 
 	echo '
 	</tr>
-</table>
-</center>';
+</table>';
 
 }
 

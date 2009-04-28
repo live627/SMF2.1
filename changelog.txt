@@ -83,7 +83,8 @@ April 2009
  ! Selecting Specified Directory to store uploaded avatars, but not specifying dir, results in undefined index  [Bug 3202]
  * Don't use depreciated u tags, use css class (Help.template.php, ManageSettings.english.php) [Bug 3119]
  * Curve: updated the Who template to match Curve's look and feel. (Who template, who.css)
- ! Use css class instead of div align, use existing classes instead of inline floats [Bug 3149](60 files)
+ ! Use css class instead of div align, use existing classes instead of inline floats (60 files) [Bug 3149]
+ * Banish center tags in favor of css (Few files) [Bug 3121]
 
 
 March 2009

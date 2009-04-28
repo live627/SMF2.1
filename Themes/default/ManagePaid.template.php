@@ -612,7 +612,7 @@ function template_paid_done()
 			<tr class="windowbg">
 				<td>
 					', $txt['paid_done_desc'], '<br />
-					<center><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';area=subscriptions">', $txt['paid_sub_return'], '</a></center>
+					<div class="centertext"><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';area=subscriptions">', $txt['paid_sub_return'], '</a></div>
 				</td>
 			</tr>
 		</table>';
