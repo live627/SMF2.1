@@ -253,7 +253,7 @@ function template_body_above()
 							<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 							<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-								<div style="text-align: right;">
+								<div class="righttext">
 									<input type="text" name="user" size="10" /> <input type="password" name="passwrd" size="10" />
 									<select name="cookielength">
 										<option value="60">', $txt['one_hour'], '</option>

@@ -122,7 +122,7 @@ function doStep0()
 	{
 		echo '
 		<form action="convert_languages.php?step=1" method="post">
-			<div align="center">
+			<div class="centertext">
 				<input type="submit" value="Start Conversion" />
 			</div>
 		</form><br />';
@@ -273,7 +273,7 @@ function doStep1()
 
 	echo '
 		<form action="convert_languages.php?step=2" method="post">
-			<div align="center">
+			<div class="centertext">
 				<input type="submit" value="Continue to index changes" />
 			</div>
 		</form><br />';
@@ -340,7 +340,7 @@ function doStep2()
 	{
 		echo '
 		<form action="convert_languages.php?step=3" method="post">
-			<div align="center">
+			<div class="centertext">
 				<input type="submit" value="Make The Changes" />
 			</div>
 		</form><br />';
@@ -350,7 +350,7 @@ function doStep2()
 	{
 		echo '
 		<form action="convert_languages.php?step=4" method="post">
-			<div align="center">
+			<div class="centertext">
 				<input type="submit" value="Skip" />
 			</div>
 		</form><br />';
@@ -409,7 +409,7 @@ function doStep3()
 	// On to theme changes
 	echo '
 		<form action="convert_languages.php?step=4" method="post">
-			<div align="center">
+			<div class="centertext">
 				<input type="submit" value="Continue to Theme Conversion" />
 			</div>
 		</form><br />';
@@ -485,7 +485,7 @@ function doStep4()
 	// Actually do the work!
 	echo '
 		<form action="convert_languages.php?step=5" method="post">
-			<div align="center">
+			<div class="centertext">
 				<input type="submit" value="Continue" />
 			</div>
 		</form><br />';
@@ -662,6 +662,23 @@ function show_header()
 				font-weight: bold;
 				white-space: nowrap;
 				padding-right: 2ex;
+			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
 			}
 		--></style>
 	</head>

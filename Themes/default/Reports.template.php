@@ -60,8 +60,8 @@ function template_main()
 	echo '
 		<div class="tborder">
 			<div class="titlebg" style="padding: 4px;">
-				<div style="float: left;"><strong>', $txt['results'], '</strong></div>
-				<div style="text-align: right;">&nbsp;';
+				<div class="floatleft"><strong>', $txt['results'], '</strong></div>
+				<div class="righttext">&nbsp;';
 	if (empty($settings['use_tabs']))
 		echo '
 
@@ -312,7 +312,7 @@ function template_print_below()
 	global $context, $settings, $options;
 
 	echo '
-		<div align="center" style="margin-top: 2ex;" class="smalltext">', theme_copyright(), '</div>
+		<div class="smalltext centertext" style="margin-top: 2ex;">', theme_copyright(), '</div>
 	</body>
 </html>';
 }

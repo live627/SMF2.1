@@ -161,7 +161,7 @@ function template_search_members()
 			</tr>
 		</table>
 
-		<div align="center" style="margin: 2ex;"><input type="submit" value="', $txt['search'], '" /></div>
+		<div class="centertext" style="margin: 2ex;"><input type="submit" value="', $txt['search'], '" /></div>
 	</form>';
 }
 

@@ -2063,7 +2063,7 @@ function template_install_below()
 	if (!empty($incontext['continue']) || !empty($incontext['skip']))
 	{
 		echo '
-								<div align="right" style="margin: 1ex;">';
+								<div class="righttext" style="margin: 1ex;">';
 
 		if (!empty($incontext['continue']))
 			echo '

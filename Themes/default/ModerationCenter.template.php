@@ -241,10 +241,10 @@ function template_notes()
 			</tr>
 			<tr class="windowbg">
 				<td>
-					<div style="float: left; width: 90%;">
+					<div class="floatleft" style="width: 90%;">
 						<input type="text" name="new_note" value="', $txt['mc_click_add_note'], '" style="width: 95%;" onclick="if (this.value == \'', $txt['mc_click_add_note'], '\') this.value = \'\';" />
 					</div>
-					<div style="float: right;">
+					<div class="floatright">
 						<input type="submit" name="makenote" value="', $txt['mc_add_note'], '" style="width: 100%;" />
 					</div>
 				</td>
@@ -285,10 +285,10 @@ function template_reported_posts()
 			<tr class="', $report['ignore'] ? 'windowbg3' : ($alternate ? 'windowbg' : 'windowbg2'), '">
 				<td>
 					<div>
-						<div style="float: left">
+						<div class="floatleft">
 							<strong><a href="', $report['topic_href'], '">', $report['subject'], '</a></strong> ', $txt['mc_reportedp_by'], ' <strong>', $report['author']['link'], '</strong>
 						</div>
-						<div style="float: right">
+						<div class="floatright">
 							<a href="', $report['report_href'], '">', $details_button, '</a>
 							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';ignore=', (int) !$report['ignore'], ';rid=', $report['id'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], '" ', !$report['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $report['ignore'] ? $unignore_button : $ignore_button, '</a>
 							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';close=', (int) !$report['closed'], ';rid=', $report['id'], ';start=', $context['start'], ';', $context['session_var'], '=', $context['session_id'], '">', $close_button, '</a>
@@ -322,10 +322,10 @@ function template_reported_posts()
 	echo '
 			<tr class="catbg">
 				<td>
-					<div style="float: left;">
+					<div class="floatleft">
 						', $txt['pages'], ': ', $context['page_index'], '
 					</div>
-					<div style="float: right;">
+					<div class="floatright">
 						', !$context['view_closed'] ? '<input type="submit" name="close_selected" value="' . $txt['mc_reportedp_close_selected'] . '" />' : '', '
 					</div>
 				</td>
@@ -525,10 +525,10 @@ function template_viewmodreport()
 			</td>
 		</tr><tr class="catbg">
 			<td colspan="2">
-				<div style="float: left">
+				<div class="floatleft">
 					', sprintf($txt['mc_modreport_summary'], $context['report']['num_reports'], $context['report']['last_updated']), '
 				</div>
-				<div style="float: right">';
+				<div class="floatright">';
 
 	// Make the buttons.
 	$close_button = create_button('close.gif', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', 'align="middle"');
@@ -650,10 +650,10 @@ function template_user_watch_post_callback($post)
 
 	$output_html = '
 					<div>
-						<div style="float: left">
+						<div class="floatleft">
 							<strong><a href="' . $scripturl . '?topic=' . $post['id_topic'] . '.' . $post['id'] . '#msg' . $post['id'] . '">' . $post['subject'] . '</a></strong> ' . $txt['mc_reportedp_by'] . ' <strong>' . $post['author_link'] . '</strong>
 						</div>
-						<div style="float: right">';
+						<div class="floatright">';
 
 	if ($post['can_delete'])
 		$output_html .= '

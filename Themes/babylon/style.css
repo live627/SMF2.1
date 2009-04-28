@@ -241,7 +241,14 @@ code
 	background-color: #FFFFFF;
 	padding: 2px;
 }
-
+.floatright
+{
+	float: right;
+}
+.floatleft
+{
+	float: left;
+}
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
 .smalltext
 {

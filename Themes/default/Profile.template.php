@@ -1380,7 +1380,7 @@ function template_notification()
 								<option value="4"', $context['member']['notify_types'] == 4 ? ' selected="selected"' : '', '>', $txt['notify_send_type_nothing'], '</option>
 							</select><br />
 
-							<div align="', !$context['right_to_left'] ? 'right' : 'left', '">
+							<div class="righttext">
 								<input type="submit" style="margin: 0 1ex 1ex 1ex;" value="', $txt['notify_save'], '" />
 								<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 								<input type="hidden" name="u" value="', $context['id_member'], '" />

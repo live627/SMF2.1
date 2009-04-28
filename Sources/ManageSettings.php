@@ -1178,7 +1178,7 @@ function ModifySignatureSettings($return_config = false)
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
 	$context['settings_title'] = $txt['signature_settings'];
 
-	$context['settings_message'] = '<div align="center" class="smalltext alert">' . sprintf($txt['signature_settings_warning'], $sc) . '</div>';
+	$context['settings_message'] = '<div class="centertext smalltext alert">' . sprintf($txt['signature_settings_warning'], $sc) . '</div>';
 
 	prepareDBSettingContext($config_vars);
 }
@@ -1945,7 +1945,7 @@ function ModifyGeneralModSettings($return_config = false)
 	if (empty($config_vars))
 	{
 		$context['settings_save_dont_show'] = true;
-		$context['settings_message'] = '<div style="text-align: center">' . $txt['modification_no_misc_settings'] . '</div>';
+		$context['settings_message'] = '<div class="centertext">' . $txt['modification_no_misc_settings'] . '</div>';
 
 		return prepareDBSettingContext($config_vars);
 	}

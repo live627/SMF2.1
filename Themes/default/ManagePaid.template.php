@@ -458,7 +458,7 @@ function template_user_subscription()
 
 			if (!$subscription['flexible'])
 				echo '
-					<div style="float: left; height: 100%; margin: 2px;"><strong>', $txt['paid_duration'], ':</strong> ', $subscription['length'], '</div>';
+					<div class="floatleft" style="height: 100%; margin: 2px;"><strong>', $txt['paid_duration'], ':</strong> ', $subscription['length'], '</div>';
 
 			if ($context['user']['is_owner'])
 			{

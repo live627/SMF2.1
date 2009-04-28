@@ -36,7 +36,7 @@ function template_view_package()
 	{
 		echo '
 				<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9; margin-top: 0;">
-					<div style="float: left; width: 2ex; font-size: 2em;" class="alert">!!</div>
+					<div class="floatleft alert" style="width: 2ex; font-size: 2em;">!!</div>
 						<strong style="text-decoration: underline;">', $txt['package_will_fail_title'], '</strong><br />
 						<div style="padding-left: 6ex;">
 							', $txt['package_will_fail_warning'], '
@@ -920,7 +920,7 @@ function template_servers()
 							<tr>
 								<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
 								<td style="padding-bottom: 1ex;">
-									<div style="float: right; margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $context['package_ftp']['port'], '" /></div>
+									<div class="floatright" style="margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $context['package_ftp']['port'], '" /></div>
 									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', $context['package_ftp']['server'], '" style="width: 70%;" />
 								</td>
 							</tr><tr>
@@ -940,7 +940,7 @@ function template_servers()
 								</td>
 							</tr>
 						</table>
-						<div align="right" style="margin-right: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
+						<div class="righttext" style="margin-right: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
 					</form>
 				</td>
 			</tr>';
@@ -1252,7 +1252,7 @@ function template_install_options()
 					<br />
 
 					<label for="package_make_backups"><input type="checkbox" name="package_make_backups" id="package_make_backups" value="1" class="check"', $context['package_make_backups'] ? ' checked="checked"' : '', ' /> ', $txt['package_install_options_make_backups'], '</label><br />
-					<div align="center" style="padding-top: 2ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['save'], '" /></div>
+					<div class="centertext" style="padding-top: 2ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['save'], '" /></div>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</div>
@@ -1298,7 +1298,7 @@ function template_control_chmod()
 						<tr>
 							<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<div style="float: right; margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $context['package_ftp']['port'], '" /></div>
+								<div class="floatright" style="margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', $context['package_ftp']['port'], '" /></div>
 								<input type="text" size="30" name="ftp_server" id="ftp_server" value="', $context['package_ftp']['server'], '" style="width: 70%;" />
 							</td>
 						</tr><tr>
@@ -1322,7 +1322,7 @@ function template_control_chmod()
 	if (empty($context['package_ftp']['form_elements_only']))
 		echo '
 
-					<div align="right" style="margin: 1ex;">
+					<div class="righttext" style="margin: 1ex;">
 						<span id="test_ftp_placeholder_full"></span>
 						<input type="submit" value="', $txt['package_proceed'], '" />
 					</div>';

@@ -102,7 +102,7 @@ function template_print_below()
 
 	echo '
 					<br /><br />
-					<div align="center" class="smalltext">', theme_copyright(), '</div>
+					<div class="centertext smalltext">', theme_copyright(), '</div>
 				</td>
 			</tr>
 		</table>

@@ -195,21 +195,21 @@ function template_list_themes()
 		echo '
 			<tr class="catbg">
 				<td>
-					<div style="float: left;"><strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></strong>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '</div>';
+					<div class="floatleft"><strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=settings">', $theme['name'], '</a></strong>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '</div>';
 
 		// You *cannot* delete the default theme. It's important!
 		if ($theme['id'] != 1)
 			echo '
-					<div style="text-align: right;"><a href="', $scripturl, '?action=admin;area=theme;sa=remove;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['theme_remove_confirm'], '\');"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['theme_remove'], '" title="', $txt['theme_remove'], '" /></a></div>';
+					<div class="righttext"><a href="', $scripturl, '?action=admin;area=theme;sa=remove;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', $txt['theme_remove_confirm'], '\');"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['theme_remove'], '" title="', $txt['theme_remove'], '" /></a></div>';
 
 		echo '
 				</td>
 			</tr>
 			<tr class="windowbg2">
 				<td style="padding-left: 5ex;" class="smalltext">
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex; padding-bottom: 2px;">', $txt['themeadmin_list_theme_dir'], ':</div> <strong style="white-space: nowrap;"', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], '</strong>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</div>
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_theme_url'], ':</div> <strong style="white-space: nowrap;">', $theme['theme_url'], '</strong></div>
-					<div style="padding-bottom: 2px;"><div style="float: left; width: 38ex;">', $txt['themeadmin_list_images_url'], ':</div> <strong style="white-space: nowrap;">', $theme['images_url'], '</strong></div>
+					<div style="padding-bottom: 2px;"><div class="floatleft" style="width: 38ex; padding-bottom: 2px;">', $txt['themeadmin_list_theme_dir'], ':</div> <strong style="white-space: nowrap;"', $theme['valid_path'] ? '' : ' class="error"', '>', $theme['theme_dir'], '</strong>', $theme['valid_path'] ? '' : ' ' . $txt['themeadmin_list_invalid'], '</div>
+					<div style="padding-bottom: 2px;"><div class="floatleft" style="width: 38ex;">', $txt['themeadmin_list_theme_url'], ':</div> <strong style="white-space: nowrap;">', $theme['theme_url'], '</strong></div>
+					<div style="padding-bottom: 2px;"><div class="floatleft" style="width: 38ex;">', $txt['themeadmin_list_images_url'], ':</div> <strong style="white-space: nowrap;">', $theme['images_url'], '</strong></div>
 				</td>
 			</tr>';
 	}
@@ -517,7 +517,7 @@ function template_pick()
 					<div style="font-size: larger; float: left;">
 						<strong><a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '">', $theme['name'], '</a></strong>
 					</div>
-					<div style="float: right;">';
+					<div class="floatright">';
 
 		if (!empty($theme['variants']))
 		{
@@ -544,7 +544,7 @@ function template_pick()
 		</tr>
 		<tr class="', $theme['selected'] ? 'windowbg' : 'windowbg2', '">
 			<td valign="bottom" align="right" style="padding: 6px; padding-top: 0;">
-				<div style="float: left;" class="smalltext"><em>', $theme['num_users'], ' ', ($theme['num_users'] == 1 ? $txt['theme_user'] : $txt['theme_users']), '</em></div>
+				<div class="floatleft smalltext"><em>', $theme['num_users'], ' ', ($theme['num_users'] == 1 ? $txt['theme_user'] : $txt['theme_users']), '</em></div>
 				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_use_', $theme['id'], '">', $txt['theme_set'], '</a> |
 				<a href="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';theme=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], '" id="theme_preview_', $theme['id'], '">', $txt['theme_preview'], '</a>
 			</td>
@@ -897,7 +897,7 @@ function template_edit_template()
 	foreach ($context['file_parts'] as $part)
 		echo '
 						', $txt['themeadmin_edit_on_line'], ' ', $part['line'], ':<br />
-						<div align="center"><textarea name="entire_file[]" cols="80" rows="', $part['lines'] > 14 ? '14' : $part['lines'], '" style="width: 96%; font-family: monospace; margin-top: 1ex; white-space: pre;">', $part['data'], '</textarea></div>';
+						<div class="centertext"><textarea name="entire_file[]" cols="80" rows="', $part['lines'] > 14 ? '14' : $part['lines'], '" style="width: 96%; font-family: monospace; margin-top: 1ex; white-space: pre;">', $part['data'], '</textarea></div>';
 
 	echo '
 						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" />

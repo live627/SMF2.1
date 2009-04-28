@@ -22,7 +22,7 @@
 	width: 6px;
 }
 
-/* Almost entirely depreciated.  Memberlist only? */
+/* Almost entirely depreciated. */
 .mirrortab_back, .mirrortab_active_back
 {
 	color: white;
@@ -136,6 +136,18 @@ code
 #ajax_in_progress a
 {
 	float: left; /* Was: float: right; */
+}
+.righttext
+{
+	margin-left: 0;
+	margin-right: auto;
+	text-align: left;
+}
+.lefttext
+{
+	margin-left: auto;
+	margin-right: 0;
+	text-align: right;
 }
 /* ************************************* */
 /* forum.css                             */

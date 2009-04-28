@@ -264,7 +264,7 @@ function ScheduledTasks()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<div style="float: right;">
+					<div class="floatright">
 						<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" />
 						<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" />
 					</div>',

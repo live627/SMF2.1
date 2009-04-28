@@ -720,7 +720,7 @@ function template_main()
 				{
 					var newTable = \'<span id="new_replies"><\' + \'/span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /><\' + \'/div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'<\' + \'/td><\' + \'/tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a><\' + \'/div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div><\' + \'/td><\' + \'/tr>\';
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div class="floatright">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /><\' + \'/div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'<\' + \'/td><\' + \'/tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div class="righttext smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '<\' + \'/a><\' + \'/div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'<\' + \'/div><\' + \'/td><\' + \'/tr>\';
 					newTable += \'<\' + \'/table>\';
 					setOuterHTML(document.getElementById("new_replies"), newTable);
 				}
@@ -777,12 +777,12 @@ function template_main()
 			echo '
 							<tr class="catbg">
 								<td colspan="2" align="left" class="smalltext">
-									<div style="float: right;">', $txt['posted_on'], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
+									<div class="floatright">', $txt['posted_on'], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
 									', $txt['posted_by'], ': ', $post['poster'], '
 								</td>
 							</tr><tr class="windowbg2">
 								<td colspan="2" class="smalltext" id="msg', $post['id'], '" width="100%">
-									<div align="right"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
+									<div class="righttext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
 									<div class="post">', $post['message'], '</div>
 								</td>
 							</tr>';
@@ -862,7 +862,7 @@ function template_spellcheck()
 					</select>
 				</td>
 			</tr></table>
-			<div align="right" style="padding: 4px;">
+			<div class="righttext" style="padding: 4px;">
 				<input type="button" name="change" value="', $txt['spellcheck_change'], '" onclick="replaceWord();" />
 				<input type="button" name="changeall" value="', $txt['spellcheck_change_all'], '" onclick="replaceAll();" />
 				<input type="button" name="ignore" value="', $txt['spellcheck_ignore'], '" onclick="nextWord(false);" />

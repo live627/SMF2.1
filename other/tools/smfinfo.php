@@ -377,6 +377,23 @@ function show_header()
 				background-color:#fff;
 				font-size:8px;
 			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
+			}
 		</style>
 		<script type="text/javascript">
 			function hasSupport(){if(typeof hasSupport.support!="undefined"){return hasSupport.support}var A=/msie 5\.[56789]/i.test(navigator.userAgent);hasSupport.support=(typeof document.implementation!="undefined"&&document.implementation.hasFeature("html","1.0")||A);if(A){document._getElementsByTagName=document.getElementsByTagName;document.getElementsByTagName=function(B){if(B=="*"){return document.all}else{return document._getElementsByTagName(B)}}}return hasSupport.support}function WebFXTabPane(E,B){if(!hasSupport()||E==null){return }this.element=E;this.element.tabPane=this;this.pages=[];this.selectedIndex=null;this.useCookie=B!=null?B:true;this.element.className=this.classNameTag+" "+this.element.className;this.tabRow=document.createElement("div");this.tabRow.className="tab-row";E.insertBefore(this.tabRow,E.firstChild);var A=0;if(this.useCookie){A=Number(WebFXTabPane.getCookie("webfxtab_"+this.element.id));if(isNaN(A)){A=0}}this.selectedIndex=A;var D=E.childNodes;var F;for(var C=0;C<D.length;C++){if(D[C].nodeType==1&&D[C].className=="tab-page"){this.addTabPage(D[C])}}}WebFXTabPane.prototype.classNameTag="dynamic-tab-pane-control";WebFXTabPane.prototype.setSelectedIndex=function(A){if(this.selectedIndex!=A){if(this.selectedIndex!=null&&this.pages[this.selectedIndex]!=null){this.pages[this.selectedIndex].hide()}this.selectedIndex=A;this.pages[this.selectedIndex].show();if(this.useCookie){WebFXTabPane.setCookie("webfxtab_"+this.element.id,A)}}};WebFXTabPane.prototype.getSelectedIndex=function(){return this.selectedIndex};WebFXTabPane.prototype.addTabPage=function(A){if(!hasSupport()){return }if(A.tabPage==this){return A.tabPage}var C=this.pages.length;var B=this.pages[C]=new WebFXTabPage(A,this,C);B.tabPane=this;this.tabRow.appendChild(B.tab);if(C==this.selectedIndex){B.show()}else{B.hide()}return B};WebFXTabPane.prototype.dispose=function(){this.element.tabPane=null;this.element=null;this.tabRow=null;for(var A=0;A<this.pages.length;A++){this.pages[A].dispose();this.pages[A]=null}this.pages=null};WebFXTabPane.setCookie=function(C,E,B){var A="";if(B){var D=new Date();D.setTime(D.getTime()+B*24*60*60*1000);A="; expires="+D.toGMTString()}document.cookie=C+"="+E+A+"; path=/"};WebFXTabPane.getCookie=function(C){var B=new RegExp("(;|^)[^;]*("+C+")=([^;]*)(;|$)");var A=B.exec(document.cookie);return A!=null?A[3]:null};WebFXTabPane.removeCookie=function(A){setCookie(A,"",-1)};function WebFXTabPage(G,C,A){if(!hasSupport()||G==null){return }this.element=G;this.element.tabPage=this;this.index=A;var F=G.childNodes;for(var E=0;E<F.length;E++){if(F[E].nodeType==1&&F[E].className=="tab"){this.tab=F[E];break}}var B=document.createElement("A");this.aElement=B;B.href="#";B.onclick=function(){return false};while(this.tab.hasChildNodes()){B.appendChild(this.tab.firstChild)}this.tab.appendChild(B);var D=this;this.tab.onclick=function(){D.select()};this.tab.onmouseover=function(){WebFXTabPage.tabOver(D)};this.tab.onmouseout=function(){WebFXTabPage.tabOut(D)}}WebFXTabPage.prototype.show=function(){var B=this.tab;var A=B.className+" selected";A=A.replace(/ +/g," ");B.className=A;this.element.style.display="block"};WebFXTabPage.prototype.hide=function(){var B=this.tab;var A=B.className;A=A.replace(/ selected/g,"");B.className=A;this.element.style.display="none"};WebFXTabPage.prototype.select=function(){this.tabPane.setSelectedIndex(this.index)};WebFXTabPage.prototype.dispose=function(){this.aElement.onclick=null;this.aElement=null;this.element.tabPage=null;this.tab.onclick=null;this.tab.onmouseover=null;this.tab.onmouseout=null;this.tab=null;this.tabPane=null;this.element=null};WebFXTabPage.tabOver=function(A){var C=A.tab;var B=C.className+" hover";B=B.replace(/ +/g," ");C.className=B};WebFXTabPage.tabOut=function(A){var C=A.tab;var B=C.className;B=B.replace(/ hover/g,"");C.className=B};function setupAllTabs(){if(!hasSupport()){return }var G=document.getElementsByTagName("*");var B=G.length;var D=/tab\-pane/;var C=/tab\-page/;var H,F;var A;for(var E=0;E<B;E++){F=G[E];H=F.className;if(H==""){continue}if(D.test(H)&&!F.tabPane){new WebFXTabPane(F)}else{if(C.test(H)&&!F.tabPage&&D.test(F.parentNode.className)){F.parentNode.tabPane.addTabPage(F)}}}}function disposeAllTabs(){if(!hasSupport()){return }var F=document.getElementsByTagName("*");var A=F.length;var C=/tab\-pane/;var G,E;var B=[];for(var D=0;D<A;D++){E=F[D];G=E.className;if(G==""){continue}if(C.test(G)&&E.tabPane){B[B.length]=E.tabPane}}for(var D=B.length-1;D>=0;D--){B[D].dispose();B[D]=null}}if(typeof window.addEventListener!="undefined"){window.addEventListener("load",setupAllTabs,false)}else{if(typeof window.attachEvent!="undefined"){window.attachEvent("onload",setupAllTabs);window.attachEvent("onunload",disposeAllTabs)}else{if(window.onload!=null){var oldOnload=window.onload;window.onload=function(A){oldOnload(A);setupAllTabs()}}else{window.onload=setupAllTabs}}}
@@ -886,7 +903,7 @@ function show_status()
 		<div class="panel">
 			<h2>Basic Information</h2>
 
-			<div style="text-align: right;">', $context['current_time'], '</div>
+			<div class="righttext">', $context['current_time'], '</div>
 			<table width="100%" cellpadding="2" cellspacing="0" border="0">';
 
 	if (!empty($context['operating_system']['name']))
@@ -1058,7 +1075,7 @@ function show_status()
 		<div class="panel">
 			<h2>MySQL Statistics</h2>
 
-			<div style="text-align: right;">MySQL ', $context['mysql_version'], '</div>
+			<div class="righttext">MySQL ', $context['mysql_version'], '</div>
 			<table width="100%" cellpadding="2" cellspacing="0" border="0">';
 
 		foreach ($context['mysql_statistics'] as $stat)

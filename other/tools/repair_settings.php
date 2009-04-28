@@ -181,6 +181,23 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 				font-size: 0.8em;
 				font-weight: normal;
 			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
+			}
 		</style>
 	</head>
 	<body>
@@ -573,7 +590,7 @@ function show_settings()
 
 	echo '
 
-					<div align="right" style="margin: 1ex;">';
+					<div class="righttext" style="margin: 1ex;">';
 
 	$failure = false;
 	if (substr(__FILE__, 1, 2) != ':\\')

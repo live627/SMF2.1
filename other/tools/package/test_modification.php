@@ -46,7 +46,7 @@ if (empty($actions))
 					<br />
 					Upload it instead: <input type="file" name="mod_file" size="40" /><br />
 					<br />
-					<div align="right" style="margin: 1ex;"><input type="submit" value="Test it!" /></div>
+					<div class="righttext" style="margin: 1ex;"><input type="submit" value="Test it!" /></div>
 				</form>
 			</div>';
 }
@@ -191,6 +191,23 @@ function show_header()
 			form
 			{
 				margin: 0;
+			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
 			}
 		--></style>
 	</head>

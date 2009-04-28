@@ -36,7 +36,7 @@ function template_main()
 		if (!$member['is_guest'])
 		{
 			echo '
-				<div style="float: right; width: 15ex;">
+				<div class="floatright" style="width: 15ex;">
 					', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="middle" />' : $member['online']['text'], $context['can_send_pm'] ? '</a>' : '', '
 					', $member['icq']['link'], ' ', $member['msn']['link'], ' ', $member['yim']['link'], ' ', $member['aim']['link'], '
 				</div>';
@@ -71,10 +71,10 @@ function template_main()
 	echo '
 		<tr class="catbg">
 			<td colspan="3">
-				<div style="float: left;">
+				<div class="floatleft">
 					<strong>', $txt['pages'], ':</strong> ', $context['page_index'], '
 				</div>
-				<div class="smalltext" style="float: right; font-weight: normal;">', $txt['who_show1'], '
+				<div class="smalltext floatright" style="font-weight: normal;">', $txt['who_show1'], '
 					<select name="show" onchange="document.forms.whoFilter.submit();">';
 
 	foreach ($context['show_methods'] as $value => $label)

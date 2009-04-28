@@ -272,7 +272,7 @@ function template_body_below()
 	// Show the load time?
 	if ($context['show_load_time'])
 		echo '
-	<div align="center" class="smalltext">
+	<div class="centertext smalltext">
 		', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '
 	</div>';
 }

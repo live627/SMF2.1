@@ -379,7 +379,7 @@ function template_before()
 
 	echo '
 	<br />
-	<div align="center">
+	<div class="centertext">
 		<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
 	</div>
 </form>
@@ -702,7 +702,7 @@ function template_edit_agreement()
 		echo '
 			<tr class="windowbg2">
 				<td align="center">
-					<div align="left" style="width: 94%">
+					<div class="lefttext" style="width: 94%">
 						<form action="', $scripturl, '?action=admin;area=regcenter;sa=agreement" id="change_reg" method="post" accept-charset="', $context['character_set'], '">
 							<strong>', $txt['admin_agreement_select_language'], ':</strong>&nbsp;
 							<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();" tabindex="', $context['tabindex']++, '">';
@@ -757,7 +757,7 @@ function template_edit_reserved_words()
 							<div style="margin-bottom: 2ex;">', $txt['admin_reserved_line'], '</div>
 							<textarea cols="30" rows="6" name="reserved" style="width: 98%;">', implode("\n", $context['reserved_words']), '</textarea><br />
 
-							<div align="left" style="margin-top: 2ex;">
+							<div class="lefttext" style="margin-top: 2ex;">
 								<label for="matchword"><input type="checkbox" name="matchword" id="matchword" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_whole'], '</label><br />
 								<label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_case'], '</label><br />
 								<label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_user'], '</label><br />

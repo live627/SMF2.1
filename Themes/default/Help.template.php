@@ -29,7 +29,7 @@ function template_popup()
 		<div class="popuptext">
 			', $context['help_text'], '<br />
 			<br />
-			<div align="center"><a href="javascript:self.close();">', $txt['close_window'], '</a></div>
+			<div class="centertext"><a href="javascript:self.close();">', $txt['close_window'], '</a></div>
 		</div>
 	</body>
 </html>';
@@ -631,7 +631,7 @@ function template_manual_topic_view()
 	}
 	echo '
 			<div style="padding-top: 4px; padding-bottom: 4px;"></div>
-			<div align="right" style="float: right; margin-bottom: 1ex;">
+			<div class="righttext floatright" style="margin-bottom: 1ex;">
 				<form action="', $scripturl, '?action=help;area=topic_view" method="get" accept-charset="', $context['character_set'], '">
 					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.options[this.selectedIndex].value;">
 						<option value="">
@@ -890,8 +890,8 @@ function template_manual_sending_pms()
 									</tr>
 									<tr>
 										<td colspan="6" class="catbg" height="25">
-											<div style="float: left;"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
-											<div style="float: right;">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" /></div>
+											<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
+											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" /></div>
 										</td>
 									</tr>
 								</table>
@@ -2292,7 +2292,7 @@ function template_manual_registration_screen()
 						<td align="center" class="windowbg2"><label><input type="checkbox" class="check" /> <strong>', $txt['manual_registering_agree'], '</strong></label></td>
 					</tr>
 				</table><br />
-				<div align="center">
+				<div class="centertext">
 					<input type="button" value="', $txt['manual_registering_register'], '" />
 				</div>
 			</form>

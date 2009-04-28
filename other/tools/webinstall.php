@@ -110,6 +110,23 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 				font-size: x-small;
 				font-family: verdana, sans-serif;
 			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
+			}
 		</style>
 	</head>
 	<body>
@@ -194,7 +211,7 @@ function initialize_inputs()
 			<br />
 			', $txt['ftp_path_help'], '<br />
 			<br />
-			<div align="right"><a href="javascript:self.close();">', $txt['ftp_path_help_close'], '</a></div>
+			<div class="righttext"><a href="javascript:self.close();">', $txt['ftp_path_help_close'], '</a></div>
 		</div>
 	</body>
 </html>';
@@ -417,7 +434,7 @@ function doStep0()
 						<div style="margin: 0 1ex 2ex 1ex; padding: 1.5ex; border: 2px dashed #33cc44; background-color: #dfffe9;">
 							<div style="float: left; width: 1.5ex; font-size: 2em; color: #33cc44;">!</div>
 							', $txt['read_the_license'], '<br />
-							<div align="right" style="margin-top: 1ex;"><label for="agree"><input type="checkbox" name="agree" id="agree" /> ', $txt['read_the_license_done'], '</label></div>
+							<div class="righttext" style="margin-top: 1ex;"><label for="agree"><input type="checkbox" name="agree" id="agree" /> ', $txt['read_the_license_done'], '</label></div>
 						</div>
 
 						<div style="margin-right: 1ex;" align="right"><input type="submit" value="', $txt['package_info_ready'], '" /></div>
@@ -601,7 +618,7 @@ function doStep1()
 							</tr>
 						</table>
 
-						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['ftp_connect'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="', $txt['ftp_connect'], '" /></div>
 					</div>';
 }
 
@@ -705,7 +722,7 @@ function doStep2()
 						</div>
 					</div>
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
-						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="', $txt['continue'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="', $txt['continue'], '" /></div>
 					</form>
 					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -743,7 +760,7 @@ function doStep2()
 					<h3>', $txt['download_successful_info'], '</h3>
 
 					<form action="', $_SERVER['PHP_SELF'], '?step=3" method="post" name="autoSubmit">
-						<div align="right" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['continue'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['continue'], '" /></div>
 					</form>
 					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -824,7 +841,7 @@ function doStep3()
 						</div>
 					</div>
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
-						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+						<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 					</form>
 					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -867,7 +884,7 @@ function doStep3()
 					<h3>', $txt['extraction_complete_info'], '</h3>
 
 					<form action="', strtr(dirname($_SERVER['PHP_SELF']), array(basename(__FILE__) => 'install.php')), '" method="post">
-						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['continue'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="', $txt['continue'], '" /></div>
 					</form>
 				</div>';
 

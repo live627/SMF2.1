@@ -141,7 +141,7 @@ function show_form()
 	if ($_GET['step'] === 0)
 		echo '
 				<form action="', $_SERVER['PHP_SELF'], '?step=1;start=', $_GET['start'], '" method="post">
-					<div align="right" style="margin: 1ex;"><input name="letsgo" type="submit" value="Start" /></div>
+					<div class="righttext" style="margin: 1ex;"><input name="letsgo" type="submit" value="Start" /></div>
 				</form>';
 
 	if ($_GET['step'] === 1)
@@ -185,7 +185,7 @@ function show_form()
 		if ($_GET['step'] == 1)
 			echo '
 				<form action="', $_SERVER['PHP_SELF'], '?step=', $_GET['step'], ';start=', $_GET['start'], '" method="post" name="autoSubmit">
-					<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+					<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 				</form>';
 	}
 
@@ -323,6 +323,23 @@ function show_header()
 			{
 				color: #000000;
 				background-color: #F6F6F6;
+			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
 			}
 		</style>
 		<script type="text/javascript"><!-- // --><![CDATA[

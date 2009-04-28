@@ -114,7 +114,7 @@ function template_main()
 
 		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
 			echo '
-			<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">
+			<div class="floatright">
 				<a href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>
 			</div>';
 
@@ -391,7 +391,7 @@ function template_info_center()
 		<td class="windowbg2" width="100%">
 			<table border="0" width="90%"><tr>
 				<td class="smalltext">
-					<div style="float: ', !$context['right_to_left'] ? 'left' : 'right', '; width: 50%;">', $txt['total_topics'], ': <strong>', $context['common_stats']['total_topics'], '</strong></div>', $txt['total_posts'], ': <strong>', $context['common_stats']['total_posts'], '</strong><br />', !empty($context['latest_post']) ? '
+					<div class="floatleft" style="width: 50%;">', $txt['total_topics'], ': <strong>', $context['common_stats']['total_topics'], '</strong></div>', $txt['total_posts'], ': <strong>', $context['common_stats']['total_posts'], '</strong><br />', !empty($context['latest_post']) ? '
 					' . $txt['latest_post'] . ': &quot;' . $context['latest_post']['link'] . '&quot;  (' . $context['latest_post']['time'] . ')<br />' : '', '
 					<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 					<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '

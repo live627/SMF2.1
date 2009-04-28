@@ -661,7 +661,7 @@ function template_main()
 					<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 					<input type="hidden" name="msg" value="%msg_id%" />
-					<div style="text-align: center;">
+					<div class="centertext">
 						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
 					</div>
 				</div>'), ',

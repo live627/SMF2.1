@@ -237,7 +237,7 @@ function template_email_members_compose()
 						<label for="send_html"><input type="checkbox" name="send_html" id="send_html" class="check" onclick="this.form.parse_html.disabled = !this.checked;" /> ', $txt['email_as_html'], '</label><br />
 						<label for="parse_html"><input type="checkbox" name="parse_html" id="parse_html" checked="checked" disabled="disabled" class="check" /> ', $txt['email_parsed_html'], '</label><br />
 						<br />
-						<div align="center"><input type="submit" value="', $txt['sendtopic_send'], '" /></div>
+						<div class="centertext"><input type="submit" value="', $txt['sendtopic_send'], '" /></div>
 					</td>
 				</tr>
 			</table>

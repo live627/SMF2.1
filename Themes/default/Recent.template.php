@@ -24,23 +24,23 @@ function template_main()
 			$button_set['notify'] = array('text' => 'notify_replies', 'image' => 'notify_sm.gif', 'lang' => true, 'url' => $scripturl . '?action=notify;topic=' . $post['topic'] . '.' . $post['start']);
 
 		echo '
-		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
+			<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
 				<tr class="titlebg2">
-						<td class="middletext">
-								<div style="float: left; width: 3ex;">&nbsp;', $post['counter'], '&nbsp;</div>
-								<div style="float: left;">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></div>
-								<div align="right">&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
-						</td>
+					<td class="middletext">
+						<div class="floatleft" style="width: 3ex;">&nbsp;', $post['counter'], '&nbsp;</div>
+							<div class="floatleft">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></div>
+							<div class="righttext>&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
+					</td>
 				</tr>
 				<tr>
-						<td class="catbg" colspan="3">
-							<span class="middletext"> ', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
-						</td>
+					<td class="catbg" colspan="3">
+						<span class="middletext"> ', $txt['started_by'], ' ' . $post['first_poster']['link'] . ' - ' . $txt['last_post'] . ' ' . $txt['by'] . ' ' . $post['poster']['link'] . ' </span>
+					</td>
 				</tr>
 				<tr>
-						<td class="windowbg2" colspan="3" valign="top" height="80">
-								<div class="post">' . $post['message'] . '</div>
-						</td>
+					<td class="windowbg2" colspan="3" valign="top" height="80">
+						<div class="post">' . $post['message'] . '</div>
+					</td>
 				</tr>';
 
 		// Are we using tabs?

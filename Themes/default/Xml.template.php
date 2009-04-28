@@ -361,7 +361,7 @@ function template_webslice_recent_posts()
 	echo '
 	</div>
 	<div style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0 0 0 0; font: 100.01%/100% Verdana, Helvetica, sans-serif;">
-		<div style="font-size: xx-small; text-align: right;">';
+		<div style="font-size: xx-small;" class="righttext">';
 
 	if ($context['user']['is_guest'])
 		echo '

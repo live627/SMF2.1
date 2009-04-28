@@ -15,7 +15,7 @@ function template_pm_above()
 				<tr class="titlebg2">
 					<td width="200" align="right"><strong>', $txt['pm_capacity'], ':</strong></td>
 					<td width="50%" align="center">
-						<div align="left" style="background: #fff; border: 1px solid black; height: 7px; width: 75%">
+						<div class="lefttext" style="background: #fff; border: 1px solid black; height: 7px; width: 75%">
 							<div style="border: 0; background: ', $context['limit_bar']['percent'] > 85 ? '#A53D05' : ($context['limit_bar']['percent'] > 40 ? '#EEA800' : '#468008'), '; height: 7px; width: ', $context['limit_bar']['bar'], '%;"></div>
 						</div>
 					</td>
@@ -387,8 +387,8 @@ function template_folder()
 		<table cellpadding="3" cellspacing="0" border="0" width="100%">
 			<tr class="catbg" valign="middle">
 				<td height="25">
-					<div style="float: ', $context['right_to_left'] ? 'right' : 'left', ';">', $txt['pages'], ': ', $context['page_index'], '</div>
-					<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" /></div>
+					<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
+					<div class="floatright"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" /></div>
 				</td>
 			</tr>
 		</table>
@@ -466,8 +466,8 @@ function template_subject_list()
 	<div class="bordercolor" style="padding: 1px; ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'width: 100%;' : '', '">
 		<table width="100%" cellpadding="2" cellspacing="0" border="0"><tr class="catbg" valign="middle">
 			<td>
-				<div style="float: ', $context['right_to_left'] ? 'right' : 'left', ';">', $txt['pages'], ': ', $context['page_index'], '</div>
-				<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">&nbsp;';
+				<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>
+				<div class="floatright">&nbsp;';
 
 	if ($context['show_delete'])
 	{
@@ -714,10 +714,10 @@ function template_search_results()
 		<table width="100%" align="center" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td align="left">
-					<div style="float: left;">
+					<div class="floatleft">
 					', $message['counter'], '&nbsp;&nbsp;<a href="', $message['href'], '">', $message['subject'], '</a>
 					</div>
-					<div style="float: right;">
+					<div class="floatright">
 						', $txt['search_on'], ': ', $message['time'], '
 					</div>
 				</td>
@@ -1125,7 +1125,7 @@ function template_labels()
 			</tr>
 			<tr class="catbg3">
 				<td colspan="2">
-					<div style="float: right; width: 4%; text-align: center;"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></div>
+					<div class="floatright centertext" style="width: 4%;"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></div>
 					', $txt['pm_label_name'], '
 				</td>
 			</tr>';
@@ -1328,7 +1328,7 @@ function template_rules()
 	echo '
 			<tr class="catbg">
 				<td colspan="2">
-					<div style="float: left;">
+					<div class="floatleft">
 						[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]';
 
 	if (!empty($context['rules']))
@@ -1340,7 +1340,7 @@ function template_rules()
 
 	if (!empty($context['rules']))
 		echo '
-					<div style="float: right;">
+					<div class="floatright">
 						<input type="submit" name="delselected" value="', $txt['pm_delete_selected_rule'], '" onclick="return confirm(\'', $txt['pm_js_delete_rule_confirm'], '\');" />
 					</div>';
 

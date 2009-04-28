@@ -929,7 +929,7 @@ function doStep0($error_message = null)
 
 	echo '
 					</table>
-					<div align="right" style="margin: 1ex; margin-top: 0;"><input name="b" type="submit" value="Continue" class="submit" /></div>
+					<div class="righttext" style="margin: 1ex; margin-top: 0;"><input name="b" type="submit" value="Continue" class="submit" /></div>
 				</form>
 			</div>';
 
@@ -2254,7 +2254,7 @@ function pastTime($substep = null, $force = false)
 			</h3>
 
 			<form action="', $_SERVER['PHP_SELF'], '?step=', $_GET['step'], isset($_GET['substep']) ? '&amp;substep=' . $_GET['substep'] : '', isset($_GET['cstep']) ? '&amp;cstep=' . $_GET['cstep'] : '', '&amp;start=', $_REQUEST['start'], '" method="post" name="autoSubmit">
-				<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 			</form>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;

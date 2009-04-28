@@ -56,7 +56,7 @@ function template_main()
 					<div style="padding: 0.1em;">
 						<strong>', $txt['search_visual_verification_label'], ':</strong>
 						<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
-						<div style="text-align: right;">
+						<div class="centertext">
 							<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" />
 						</div>
 					</div>';
@@ -140,7 +140,7 @@ function template_main()
 							</tr>
 						</table>
 					</div>
-					<div style="text-align: center; padding: 1em;">
+					<div style="padding: 1em;" class="centertext">
 						<strong>', $txt['search_post_age'], ': </strong> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" /> ', $txt['days_word'], '.
 					</div>';
 
@@ -503,14 +503,14 @@ function template_results()
 							<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
 								<tr class="titlebg">
 									<td>
-										<div style="float: left; width: 3ex;">&nbsp;', $message['counter'], '&nbsp;</div>
-										<div style="float: left;">&nbsp;', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></div>
-										<div align="right">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
+										<div class="floatleft" style="width: 3ex;">&nbsp;', $message['counter'], '&nbsp;</div>
+										<div class="floatleft">&nbsp;', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></div>
+										<div class="righttext">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
 									</td>
 								</tr><tr class="catbg">
 									<td>
-										<div style="float: left;">', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '</div>
-										<div align="right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
+										<div class="floatleft">', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '</div>
+										<div class="righttext">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
 									</td>
 								</tr><tr>
 									<td width="100%" valign="top" class="windowbg2">

@@ -763,10 +763,10 @@ function ViewSubscribedUsers()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<div style="float: left;">
+					<div class="floatleft">
 						<input type="submit" name="add" value="' . $txt['paid_add_subscription'] . '" />
 					</div>
-					<div style="float: right;">
+					<div class="floatright">
 						<input type="submit" name="finished" value="' . $txt['complete_selected'] . '" onclick="return confirm(\'' . $txt['complete_are_sure'] . '\');" />
 						<input type="submit" name="delete" value="' . $txt['delete_selected'] . '" onclick="return confirm(\'' . $txt['delete_are_sure'] . '\');" />
 					</div>
@@ -776,10 +776,10 @@ function ViewSubscribedUsers()
 			array(
 				'position' => 'top_of_list',
 				'value' => '
-					<div style="float: left;">
+					<div class="floatleft">
 						' . sprintf($txt['view_users_subscribed'], $row['name']) . '
 					</div>
-					<div style="float: right;">
+					<div class="floatright">
 						<input type="text" name="sub_search" value="" />
 						<input type="submit" name="ssearch" value="' . $txt['search_sub'] . '" />
 					</div>

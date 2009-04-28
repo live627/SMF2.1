@@ -27,7 +27,7 @@ function template_permission_index()
 					<td width="10%" align="center" valign="middle">', $txt['membergroups_members_top'], '</td>
 					<td width="16%" align="center"', empty($modSettings['permission_enable_deny']) ? '' : ' class="smalltext"', '>
 						', $txt['membergroups_permissions'], empty($modSettings['permission_enable_deny']) ? '' : '<br />
-						<div style="float: left; width: 50%;">' . $txt['permissions_allowed'] . '</div> ' . $txt['permissions_denied'], '
+						<div class="floatleft" style="width: 50%;">' . $txt['permissions_allowed'] . '</div> ' . $txt['permissions_denied'], '
 					</td>
 					<td width="10%" align="center" valign="middle">', $context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view'], '</td>
 					<td width="4%" align="center" valign="middle">
@@ -54,7 +54,7 @@ function template_permission_index()
 						', $group['num_permissions']['allowed'];
 		else
 			echo '
-						<div style="float: left; width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<span style="font-style: italic;">' . $group['num_permissions']['denied'] . '</span>' : '<span style="color: red;">' . $group['num_permissions']['denied'] . '</span>');
+						<div class="floatleft" style="width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<span style="font-style: italic;">' . $group['num_permissions']['denied'] . '</span>' : '<span style="color: red;">' . $group['num_permissions']['denied'] . '</span>');
 		echo '
 					</td>
 					<td class="windowbg2" align="center">', $group['allow_modify'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=modify;group=' . $group['id'] . (empty($context['profile']) ? '' : ';pid=' . $context['profile']['id']) . '">' . ($context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view']). '</a>' : '', '</td>

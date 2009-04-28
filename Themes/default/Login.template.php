@@ -327,7 +327,7 @@ function template_admin_openid_disabled()
 
 	// Tell them they can't do this - really sorry!
 	echo '
-	<div style="text-align: center">
+	<div class="centertext">
 		<table border="0" width="480" cellspacing="0" cellpadding="3" class="tborder" align="center">
 			<tr class="titlebg">
 				<td align="left">

@@ -228,7 +228,14 @@ code
 {
 	border: 1px solid #6394bd;
 }
-
+.floatright
+{
+	float: right;
+}
+.floatleft
+{
+	float: left;
+}
 /* Default font sizes. */
 .smalltext
 {

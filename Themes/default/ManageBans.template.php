@@ -170,7 +170,7 @@ function template_ban_edit()
 		echo '
 					<tr class="catbg3">
 						<td colspan="4" align="right">
-							<div style="float: left;">
+							<div class="floatleft">
 								[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '"><strong>', $txt['ban_add_trigger'], '</strong></a>]
 							</div>
 							<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" />

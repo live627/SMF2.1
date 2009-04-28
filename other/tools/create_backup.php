@@ -155,7 +155,7 @@ function step1($error_message = '')
 							</tr>
 						</table>
 
-						<div align="right" style="margin: 1ex;"><input type="submit" value="Proceed" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="Proceed" /></div>
 					</form>
 				</div>';
 
@@ -498,7 +498,7 @@ function get_ftp_info()
 						<input type="hidden" name="path" value="', $_POST['path'], '" />
 						<input type="hidden" name="compress" value="', !empty($_POST['compress']) ? '1' : '0', '" />
 
-						<div align="right" style="margin: 1ex; margin-top: 2ex;"><input type="submit" value="Connect" /></div>
+						<div class="righttext" style="margin: 1ex; margin-top: 2ex;"><input type="submit" value="Connect" /></div>
 					</form>
 				</div>';
 	}
@@ -580,6 +580,23 @@ function show_header()
 				font-weight: bold;
 				white-space: nowrap;
 				padding-right: 2ex;
+			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
 			}
 		</style>
 	</head>
@@ -687,7 +704,7 @@ function nextRow($row, $table, $max_rows, $max_tables, $fp = null)
 				<input type="hidden" name="path" value="', $_POST['path'], '" />
 				<input type="hidden" name="compress" value="', !empty($_POST['compress']) ? '1' : '0', '" />
 
-				<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 			</form>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;

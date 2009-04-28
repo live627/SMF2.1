@@ -1267,10 +1267,10 @@ function template_admin_search_results()
 		</tr>
 		<tr>
 			<td class="titlebg">
-				<div style="float: left;">
+				<div class="floatleft">
 					', sprintf($txt['admin_search_results_desc'], $context['search_term']), '
 				</div>
-				<div style="float: right;">
+				<div class="floatright">
 					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
 						<input type="text" name="search_term" value="', $context['search_term'], '" />
 						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
@@ -1362,10 +1362,10 @@ function template_core_features()
 	if ($context['is_new_install'])
 	{
 		echo '
-		<div align="center">
-			<div align="center" style="padding: 3px; width: 80%; border: 2px dashed darkblue; background-color: white;">
-				<h2 style="text-decoration: underline; display: inline;">', $txt['core_settings_welcome_msg'], '</h2>
-				<div align="left">
+		<div class="centertext">
+			<div class="centertext" style="padding: 3px; width: 80%; border: 2px dashed darkblue; background-color: white;">
+				<h2 class="underline" style="text-decoration: underline; display: inline;">', $txt['core_settings_welcome_msg'], '</h2>
+				<div class="lefttext">
 					<h5 style="display: inline;">', $txt['core_settings_welcome_msg_desc'], '</h5>
 				</div>
 			</div>
@@ -1632,7 +1632,7 @@ function template_download_language()
 					<tr>
 						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
 						<td style="padding-bottom: 1ex;">
-							<div style="float: right; margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($context['package_ftp']['port']) ? $context['package_ftp']['port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'), '" /></div>
+							<div class="floatright" style="margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($context['package_ftp']['port']) ? $context['package_ftp']['port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'), '" /></div>
 							<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($context['package_ftp']['server']) ? $context['package_ftp']['server'] : (isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost'), '" style="width: 70%;" />
 						</td>
 					</tr><tr>
@@ -1657,7 +1657,7 @@ function template_download_language()
 
 	// Install?
 	echo '
-	<div align="right" style="margin: 1ex;"><input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" /></div>
+	<div class="righttext" style="margin: 1ex;"><input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" /></div>
 	</form>';
 
 	// The javascript for expand and collapse of sections.

@@ -131,7 +131,7 @@ function step1($error_message = '')
 						<h2>Before you continue...</h2>
 						<h3>Please note that any existing tables will be deleted.  Please verify your connection info and create any necessary backups before continuing!</h3>
 
-						<div align="right" style="margin: 1ex;"><input type="submit" value="Proceed" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="Proceed" /></div>
 					</form>
 				</div>';
 
@@ -472,6 +472,23 @@ function show_header()
 				white-space: nowrap;
 				padding-right: 2ex;
 			}
+			.centertext
+			{
+				margin: 0 auto;
+				text-align: center;
+			}
+			.righttext
+			{
+				margin-left: auto;
+				margin-right: 0;
+				text-align: right;
+			}
+			.lefttext
+			{
+				margin-left: 0;
+				margin-right: auto;
+				text-align: left;
+			}
 		</style>
 	</head>
 	<body>
@@ -661,7 +678,7 @@ function nextLine($line, $max, $failures)
 				<input type="hidden" name="db_name" value="', $_POST['db_name'], '" />
 				<input type="hidden" name="path" value="', $_POST['path'], '" />
 
-				<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
 			</form>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;
