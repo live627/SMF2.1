@@ -50,11 +50,9 @@ body, td, th , tr
 }
 
 /* lets give all forms zero padding/margins */
-/* except the bottom padding which prevents gaps in our layout before the footer */
 form
 {
 	padding: 0px;
-	padding-bottom: 0.2em;
 	margin: 0px;
 }
 
