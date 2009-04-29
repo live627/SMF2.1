@@ -363,7 +363,10 @@ function template_coppa()
 	// Formulate a nice complicated message!
 	echo '
 		<div>
-			<h3 class="titlebg">', $context['page_title'], '</h3>
+			<h3 class="titlebg">
+				<span class="left"></span><span class="right"></span>
+				', $context['page_title'], '
+			</h3>
 			<p>', $context['coppa']['body'], '</p>
 				<span><a href="', $scripturl, '?action=coppa;form;member=', $context['coppa']['id'], '" target="_blank" class="new_win">', $txt['coppa_form_link_popup'], '</a> | <a href="', $scripturl, '?action=coppa;form;dl;member=', $context['coppa']['id'], '">', $txt['coppa_form_link_download'], '</a></span>
 			</p>
@@ -490,6 +493,7 @@ function template_admin_register()
 			}
 		// ]]></script>
 		<h3 class="titlebg">
+			<span class="left"></span><span class="right"></span>
 			', $txt['admin_browse_register_new'], '
 		</h3>
 		<div id="register_screen">';
@@ -552,13 +556,12 @@ function template_admin_register()
 				<dd>
 					<input type="checkbox" name="emailActivate" id="emailActivate_check" tabindex="', $context['tabindex']++, '"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' checked="checked"' : '', ' onclick="onCheckChange();" class="check" />
 				</dd>
-				<dt>
-				</dt>
-				<dd>
-					<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
-					<input type="hidden" name="sa" value="register" />			
-				</dd>
 			</dl>
+			<p class="centertext">
+				<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
+				<input type="hidden" name="sa" value="register" />
+			</p>
+
 		</div>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 	</form>';
@@ -572,7 +575,10 @@ function template_edit_agreement()
 	// Just a big box to edit the text file ;).
 	echo '
 		<div class="tborder">
-			<h3 class="titlebg">', $txt['registration_agreement'], '</h3>';
+			<h3 class="titlebg">
+				<span class="left"></span><span class="right"></span>
+				', $txt['registration_agreement'], '
+			</h3>';
 
 	// Warning for if the file isn't writable.
 	if (!empty($context['warning']))
@@ -611,7 +617,7 @@ function template_edit_agreement()
 					<p>
 						<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" value="1" /> ', $txt['admin_agreement'], '.</label>
 					</p>
-					<p><input type="submit" value="', $txt['save'], '" tabindex="', $context['tabindex']++, '" /></p>
+					<p class="centertext"><input type="submit" value="', $txt['save'], '" tabindex="', $context['tabindex']++, '" /></p>
 					<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
 					<input type="hidden" name="sa" value="agreement" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -627,7 +633,10 @@ function template_edit_reserved_words()
 	echo '
 		<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 			<div class="tborder">
-				<h3 class="titlebg">', $txt['admin_reserved_set'], '</h3>
+				<h3 class="titlebg">
+					<span class="left"></span><span class="right"></span>
+					', $txt['admin_reserved_set'], '
+				</h3>
 					<div style="width: 80%;">
 						<h4>', $txt['admin_reserved_line'], '</h4>
 						<textarea cols="30" rows="6" name="reserved" style="width: 98%;">', implode("\n", $context['reserved_words']), '</textarea>
@@ -637,7 +646,9 @@ function template_edit_reserved_words()
 							<li><label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_user'], '</label></li>
 							<li><label for="matchname"><input type="checkbox" name="matchname" id="matchname" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_name'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_display'], '</label></li>
 						</ul>
-						<input type="submit" value="', $txt['save'], '" name="save_reserved_names" tabindex="', $context['tabindex']++, '" style="margin: 1ex;" />
+						<p class="centertext">
+							<input type="submit" value="', $txt['save'], '" name="save_reserved_names" tabindex="', $context['tabindex']++, '" style="margin: 1ex;" />
+						</p>
 					</div>
 			</div>
 			<input type="hidden" name="sa" value="reservednames" />

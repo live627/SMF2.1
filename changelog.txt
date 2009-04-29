@@ -85,6 +85,7 @@ April 2009
  * Curve: updated the Who template to match Curve's look and feel. (Who template, who.css)
  ! Use css class instead of div align, use existing classes instead of inline floats (60 files) [Bug 3149]
  * Banish center tags in favor of css (Few files) [Bug 3121]
+ * Curve: Admin register member was badly laid out. And missing rounded titles. (Register.template.php, login.css) [Bug 3320]
 
 
 March 2009

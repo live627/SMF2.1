@@ -22,13 +22,12 @@ dl.register_form
 }
 .register_form dt
 {
-	float: none;
-	margin: 0;
-	width:  35%;
-	position: absolute;
-	padding: 0;
+	float: left;
 	text-align: right;
+	width: 50%;
 	font-weight: bold;
+	margin-right: 10px;
+
 }
 .register_form dt em
 {
@@ -41,10 +40,7 @@ dl.register_form
 }
 .register_form dd
 {
-	min-height: 3em;
-	float: none;
-	padding: 0 0 0 90px;
-	margin: 0 0 0 35%;
+	margin: 0 0 1.5em 0;
 }
 .register_form dt span
 {
