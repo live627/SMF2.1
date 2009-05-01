@@ -86,6 +86,7 @@ April 2009
  ! Use css class instead of div align, use existing classes instead of inline floats (60 files) [Bug 3149]
  * Banish center tags in favor of css (Few files) [Bug 3121]
  * Curve: Admin register member was badly laid out. And missing rounded titles. (Register.template.php, login.css) [Bug 3320]
+ * In profile in ie6/7 some text/chars can get cropped at bottom. (Profile.css) [Bugs 3382, 3419]
 
 
 March 2009
