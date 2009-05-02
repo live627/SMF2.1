@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+May 2009
+--------------------------------------------------------------------------------
+ * Remove CSS reference to image that doesn't exist (style.css) [Bug 3323]
+
+
 April 2009
 --------------------------------------------------------------------------------
  * Unread/unreplies lost the categories/boards/board variable (Recent.template.php) [Bug 3373]

@@ -908,7 +908,6 @@ a.moderation_link, a.moderation_link:visited
 /* hovered auto suggest item */
 .auto_suggest_item_hover
 {
-	background: url(images/autosuggest_back.gif) repeat-x;
 	background-color: #7897B4;
 	padding: 2px;
 	cursor: pointer;
