@@ -6,6 +6,7 @@ SMF 2.0 RC2                                                                  ???
 May 2009
 --------------------------------------------------------------------------------
  * Remove CSS reference to image that doesn't exist (style.css) [Bug 3323]
+ * Signature gap in IE6/7 (ie6.css, ie7.css) [Bug 3194]
 
 
 April 2009
