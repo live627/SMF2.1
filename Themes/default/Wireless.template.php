@@ -207,7 +207,7 @@ function template_wap_below()
 	<card id="switch" title="', $txt['wireless_go_to_full_version'], '">
 		<p>
 			<a href="', $context['linktree'][count($context['linktree']) - 1]['url'], (count($context['linktree']) > 1 ? ';' : '?'), 'nowap" rel="nofollow">', $txt['wireless_go_to_full_version'], '</a>
-		<p>
+		</p>
 	</card>
 </wml>';
 }

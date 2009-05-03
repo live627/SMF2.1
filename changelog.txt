@@ -18,7 +18,7 @@ May 2009
  ! Whitespace in Settings.php could cause redirectexit to fail (index.php)
  * Curve: MessageIndex Legend not middle aligned (ie6.css, ie7.css) [Bug 3039]
  * IE6 doesn't support multiple class selectors (ie6.css, GenericMenu.template.php) [Bug 3421]
-
+ * Missing closing p tag (Wireless.template.php) [Bug 3425]
 
 April 2009
 --------------------------------------------------------------------------------
