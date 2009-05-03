@@ -16,6 +16,7 @@ May 2009
  ! Activate message may result error due to missing/extra math (Profile-View.php) [Bug 1430]
  ! Trim the Settings.php file for whitespace prior to updating it (Subs-Admin.php) [Bug 3423]
  ! Whitespace in Settings.php could cause redirectexit to fail (index.php)
+ * Curve: MessageIndex Legend not middle aligned (ie6.css, ie7.css) [Bug 3039]
 
 
 April 2009
