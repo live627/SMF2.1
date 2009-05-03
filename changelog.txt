@@ -7,6 +7,7 @@ May 2009
 --------------------------------------------------------------------------------
  * Remove CSS reference to image that doesn't exist (style.css) [Bug 3323]
  * Signature gap in IE6/7 (ie6.css, ie7.css) [Bug 3194]
+ ! Table optimization was optimizing to many tables. (ManageMaintenance.php) [Bug 3142] 
 
 
 April 2009

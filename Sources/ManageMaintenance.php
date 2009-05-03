@@ -923,7 +923,7 @@ function ConvertEntities()
 // Optimize the database's tables.
 function OptimizeTables()
 {
-	global $db_name, $txt, $context, $scripturl, $sourcedir, $smcFunc;
+	global $db_name, $db_prefix, $txt, $context, $scripturl, $sourcedir, $smcFunc;
 
 	isAllowedTo('admin_forum');
 
@@ -938,8 +938,11 @@ function OptimizeTables()
 	$context['page_title'] = $txt['database_optimize'];
 	$context['sub_template'] = 'optimize';
 
+	// Only optimize the tables related to this smf install, not all the tables in the db
+	$real_prefix = preg_match('~^(`?)(.+?)\\1\\.(.*?)$~', $db_prefix, $match) === 1 ? $match[3] : $db_prefix;
+
 	// Get a list of tables, as well as how many there are.
-	$temp_tables = $smcFunc['db_list_tables']();
+	$temp_tables = $smcFunc['db_list_tables'](false, $real_prefix . '%');
 	$tables = array();
 	foreach ($temp_tables as $table)
 		$tables[] = array('table_name' => $table);
