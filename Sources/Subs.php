@@ -2622,7 +2622,12 @@ function redirectexit($setLocation = '', $refresh = false)
 function obExit($header = null, $do_footer = null, $from_index = false)
 {
 	global $context, $settings, $modSettings, $txt, $smcFunc;
-	static $header_done = false, $footer_done = false;
+	static $header_done = false, $footer_done = false, $level = 0;
+
+	// Attempt to prevent a recursive loop.
+	++$level;
+	if ($level > 1)
+		exit;
 
 	// Clear out the stat cache.
 	trackStats();

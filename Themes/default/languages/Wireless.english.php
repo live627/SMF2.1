@@ -4,7 +4,6 @@
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
 $txt['wireless_error_home'] = 'Board index';
-$txt['wireless_error_notyet'] = 'Sorry, this section isn\'t available for wireless users at this time.';
 
 $txt['wireless_options'] = 'Additional options';
 $txt['wireless_options_login'] = 'Login';

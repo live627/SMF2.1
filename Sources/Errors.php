@@ -275,6 +275,12 @@ function error_handler($error_level, $error_string, $file, $line)
 function setup_fatal_error_context($error_message)
 {
 	global $context, $txt, $ssi_on_error_method;
+	static $level = 0;
+
+	// Attempt to prevent a recursive loop.
+	++$level;
+	if ($level > 1)
+		return false;
 
 	// Don't bother indexing errors mate...
 	$context['robot_no_index'] = true;
