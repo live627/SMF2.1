@@ -47,7 +47,7 @@ function smf_addButton(sButtonStripId, bUseImage, oOptions)
 	if (aItems.length > 0)
 	{
 		var oLastSpan = aItems[aItems.length - 1];
-		oLastSpan.className = oLastSpan.className.replace(/\s*last/, '');
+		oLastSpan.className = oLastSpan.className.replace(/\s*last/, 'position_holder');
 	}
 
 	// Add the button.

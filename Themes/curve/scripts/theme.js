@@ -44,8 +44,11 @@ function smf_addButton(sButtonStripId, bUseImage, oOptions)
 	var aItems = oButtonStrip.getElementsByTagName('span');
 
 	// Remove the 'last' class from the last item.
-	var oLastSpan = aItems[aItems.length - 1];
-	oLastSpan.className = oLastSpan.className.replace(/\s*last/, '');
+	if (aItems.length > 0)
+	{
+		var oLastSpan = aItems[aItems.length - 1];
+		oLastSpan.className = oLastSpan.className.replace(/\s*last/, 'position_holder');
+	}
 
 	// Add the button.
 	var oButtonStripList = oButtonStrip.getElementsByTagName('ul')[0];

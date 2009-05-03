@@ -11,6 +11,7 @@ May 2009
  ! It was possible for a infinite loop to occur if a database error occurrs in obExit (Subs.php, Errors.php, Errors.english.php, Wireless.english.php) [Bug 3364]
  ! Emails where deleted from the queue when smtp failed to send the email. (ScheduledTasks.php) [Bug 2123]
  ! Database creation should use UTF-8 as default character set if we are using UTF-8 (install.php) [Bug 997]
+ * Delete/Remove selected should not show if there is no selected items (xml_topic.js, theme.js) [Bug 3233]
 
 
 April 2009

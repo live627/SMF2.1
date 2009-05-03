@@ -313,10 +313,30 @@ InTopicModeration.prototype.handleClick = function(oCheckbox)
 
 	// Show the number of messages selected in the button.
 	if (this.opt.bCanRemove && !this.opt.bUseImageButton)
+	{
 		setInnerHTML(document.getElementById(this.opt.sSelf + '_remove_button'), this.opt.sRemoveButtonLabel + ' [' + this.iNumSelected + ']');
+		document.getElementById(this.opt.sSelf + '_remove_button').style.display = this.iNumSelected < 1 ? "none" : "";
+	}
 
 	if (this.opt.bCanRestore && !this.opt.bUseImageButton)
+	{
 		setInnerHTML(document.getElementById(this.opt.sSelf + '_restore_button'), this.opt.sRestoreButtonLabel + ' [' + this.iNumSelected + ']');
+		document.getElementById(this.opt.sSelf + '_restore_button').style.display = this.iNumSelected < 1 ? "none" : "";
+	}
+
+	// Try to restore the correct position.
+	var aItems = document.getElementById(this.opt.sButtonStrip).getElementsByTagName('span');
+	if (this.iNumSelected < 1)
+	{
+		aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*position_holder/, 'last');
+		aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*position_holder/, 'last');
+	}
+	else
+	{
+		aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*last/, 'position_holder');
+		aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*last/, 'position_holder');
+	}
+
 }
 
 InTopicModeration.prototype.handleSubmit = function (sSubmitType)
