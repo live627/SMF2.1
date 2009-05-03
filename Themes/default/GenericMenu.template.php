@@ -117,7 +117,7 @@ function template_generic_menu_dropdown_above()
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li class="chosen', $is_last ? ' last' : '', '"><h4>', $section['title'] , '</h4>
+			<li class="chosen', $is_last ? ' last last_chosen' : '', '"><h4>', $section['title'] , '</h4>
 				<ul>';
 		}
 		else

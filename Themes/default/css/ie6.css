@@ -42,3 +42,9 @@
     padding: 0.7em 0 0 0.7em;
 	height: 100%;
 }
+/* IE6 does't support multiple class selectors */
+ul.admin_menu li.last_chosen h4
+{
+	background: url(../images/admintab_active_last.gif) top right no-repeat;
+	padding-right: 17px;
+}

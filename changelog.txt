@@ -17,6 +17,7 @@ May 2009
  ! Trim the Settings.php file for whitespace prior to updating it (Subs-Admin.php) [Bug 3423]
  ! Whitespace in Settings.php could cause redirectexit to fail (index.php)
  * Curve: MessageIndex Legend not middle aligned (ie6.css, ie7.css) [Bug 3039]
+ * IE6 doesn't support multiple class selectors (ie6.css, GenericMenu.template.php) [Bug 3421]
 
 
 April 2009
