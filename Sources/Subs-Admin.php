@@ -252,7 +252,7 @@ function updateSettingsFile($config_vars)
 	global $boarddir;
 
 	// Load the file.  Break it up based on \r or \n, and then clean out extra characters.
-	$settingsArray = file_get_contents($boarddir . '/Settings.php');
+	$settingsArray = trim(file_get_contents($boarddir . '/Settings.php'));
 	if (strpos($settingsArray, "\n") !== false)
 		$settingsArray = explode("\n", $settingsArray);
 	elseif (strpos($settingsArray, "\r") !== false)

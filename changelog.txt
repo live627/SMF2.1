@@ -14,6 +14,8 @@ May 2009
  * Delete/Remove selected should not show if there is no selected items (xml_topic.js, theme.js) [Bug 3233]
  ! un_preparsecode didn't put spaces back as they were (Subs-Post.php) [Bug 3109, 2202]
  ! Activate message may result error due to missing/extra math (Profile-View.php) [Bug 1430]
+ ! Trim the Settings.php file for whitespace prior to updating it (Subs-Admin.php) [Bug 3423]
+ ! Whitespace in Settings.php could cause redirectexit to fail (index.php)
 
 
 April 2009

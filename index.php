@@ -43,6 +43,9 @@ if (function_exists('set_magic_quotes_runtime'))
 error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
 $time_start = microtime();
 
+// This makes it so headers can be sent!
+ob_start();
+
 // Do some cleaning, just in case.
 foreach (array('db_character_set', 'cachedir') as $variable)
 	if (isset($GLOBALS[$variable]))
@@ -94,17 +97,17 @@ if (isset($_GET['scheduled']))
 }
 
 // Check if compressed output is enabled, supported, and not already being done.
-if (!empty($modSettings['enableCompressedOutput']) && !headers_sent() && ob_get_length() == 0)
+if (!empty($modSettings['enableCompressedOutput']) && !headers_sent())
 {
 	// If zlib is being used, turn off output compression.
 	if (@ini_get('zlib.output_compression') == '1' || @ini_get('output_handler') == 'ob_gzhandler' || @version_compare(PHP_VERSION, '4.2.0') == -1)
 		$modSettings['enableCompressedOutput'] = '0';
 	else
+	{
+		ob_end_clean();
 		ob_start('ob_gzhandler');
+	}
 }
-// This makes it so headers can be sent!
-if (empty($modSettings['enableCompressedOutput']))
-	ob_start();
 
 // Register an error handler.
 set_error_handler('error_handler');
