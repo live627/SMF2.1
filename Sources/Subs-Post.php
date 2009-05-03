@@ -404,8 +404,8 @@ function un_preparsecode($message)
 		}
 	}
 
-	// Change breaks back to \n's.
-	return preg_replace('~<br( /)?' . '>~', "\n", implode('', $parts));
+	// Change breaks back to \n's and &nsbp; back to spaces.
+	return preg_replace('~<br( /)?' . '>~', "\n", str_replace('&nbsp;', ' ', implode('', $parts)));
 }
 
 // Fix any URLs posted - ie. remove 'javascript:'.
