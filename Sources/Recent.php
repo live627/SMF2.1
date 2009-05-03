@@ -1234,8 +1234,8 @@ function UnreadTopics()
 			'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.gif',
 			'subject' => $row['first_subject'],
 			'pages' => $pages,
-			'replies' => $row['num_replies'],
-			'views' => $row['num_views'],
+			'replies' => comma_format($row['num_replies']),
+			'views' => comma_format($row['num_views']),
 			'board' => array(
 				'id' => $row['id_board'],
 				'name' => $row['bname'],
