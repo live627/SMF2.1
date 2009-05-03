@@ -967,7 +967,8 @@ function ReduceMailQueue($number = false, $override_limit = false)
 		require_once($sourcedir . '/Subs-Post.php');
 
 	// Send each email, yea!
-	foreach ($emails as $email)
+	$failed_emails = array();
+	foreach ($emails as $key => $email)
 	{
 		if (empty($modSettings['mail_type']) || $modSettings['smtp_host'] == '')
 		{
@@ -979,7 +980,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 			}
 
 			// No point logging a specific error here, as we have no language. PHP error is helpful anyway...
-			mail(strtr($email['to'], array("\r" => '', "\n" => '')), $email['subject'], $email['body'], $email['headers']);
+			$result = mail(strtr($email['to'], array("\r" => '', "\n" => '')), $email['subject'], $email['body'], $email['headers']);
 
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);
@@ -987,8 +988,57 @@ function ReduceMailQueue($number = false, $override_limit = false)
 				@apache_reset_timeout();
 		}
 		else
-			smtp_mail(array($email['to']), $email['subject'], $email['body'], $email['send_html'] ? $email['headers'] : 'Mime-Version: 1.0' . "\r\n" . $email['headers']);
+			$result = smtp_mail(array($email['to']), $email['subject'], $email['body'], $email['send_html'] ? $email['headers'] : 'Mime-Version: 1.0' . "\r\n" . $email['headers']);
+
+		// Hopefully it sent?
+		if (!$result)
+			$failed_emails[] = array($email['to'], $email['body'], $email['subject'], $email['headers'], $email['send_html']);
 	}
+
+	// Any emails that didn't send?
+	if (!empty($failed_emails))
+	{
+		// Update the failed attempts check.
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}settings',
+			array('variable' => 'string', 'value' => 'string'),
+			array('mail_failed_attempts', empty($modSettings['mail_failed_attempts']) ? 1 : ++$modSettings['mail_failed_attempts']),
+			array('variable')
+		);
+
+		// If we have failed to many times, tell mail to wait a bit and try again.
+		if ($modSettings['mail_failed_attempts'] > 5)
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}settings
+				SET value = {string:next_mail_send}
+				WHERE variable = {string:mail_next_send}
+					AND value = {string:last_send}',
+				array(
+					'next_mail_send' => time() + 60,
+					'mail_next_send' => 'mail_next_send',
+					'last_send' => $modSettings['mail_next_send'],
+			));
+
+		// Add our email back to the queue, manually.
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}mail_queue',
+			array('recipient' => 'string', 'body' => 'string', 'subject' => 'string', 'headers' => 'string', 'send_html' => 'string'),
+			$failed_emails,
+			array('id_mail')
+		);
+
+		return false;
+	}
+	// We where unable to send the email, clear our failed attempts.
+	elseif (!empty($modSettings['mail_failed_attempts']))
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}settings
+			SET value = {string:zero}
+			WHERE variable = {string:mail_failed_attempts}',
+			array(
+				'zero' => '0',
+				'mail_failed_attempts' => 'mail_failed_attempts',
+		));
 
 	// Had something to send...
 	return true;
