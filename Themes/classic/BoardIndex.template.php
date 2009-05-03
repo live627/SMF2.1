@@ -12,7 +12,7 @@ function template_main()
 		<td align="right">';
 	if (!$settings['show_stats_index'])
 		echo '
-			', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
+			', $txt['members'], ': ', comma_format($context['common_stats']['total_members']), ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', comma_format($context['common_stats']['total_posts']), ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', comma_format($context['common_stats']['total_topics']), '
 			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '');
 	echo '
 		</td>
@@ -183,11 +183,11 @@ function template_main()
 
 	if (!$board['is_redirect'])
 		echo '
-		<td class="windowbg" valign="middle" align="center" width="6%">', $board['topics'], '</td>
-		<td class="windowbg" valign="middle" align="center" width="6%">', $board['posts'], '</td>';
+		<td class="windowbg" valign="middle" align="center" width="6%">', comma_format($board['topics']), '</td>
+		<td class="windowbg" valign="middle" align="center" width="6%">', comma_format($board['posts']), '</td>';
 	else
 		echo '
-		<td class="windowbg" valign="middle" align="center" colspan="2" width="12%">', $board['posts'], ' ', $txt['redirects'], '</td>';
+		<td class="windowbg" valign="middle" align="center" colspan="2" width="12%">', comma_format($board['posts']), ' ', $txt['redirects'], '</td>';
 
 				/* The board's and children's 'last_post's have:
 					time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
@@ -375,14 +375,14 @@ function template_info_center()
 		<td class="windowbg2" width="100%">
 			<table border="0" width="90%"><tr>
 				<td class="smalltext">
-					', $txt['total_topics'], ': <strong>', $context['common_stats']['total_topics'], '</strong> &nbsp;&nbsp;&nbsp;&nbsp; ', $txt['total_posts'], ': <strong>', $context['common_stats']['total_posts'], '</strong><br />
+					', $txt['total_topics'], ': <strong>', comma_format($context['common_stats']['total_topics']), '</strong> &nbsp;&nbsp;&nbsp;&nbsp; ', $txt['total_posts'], ': <strong>', comma_format($context['common_stats']['total_posts']), '</strong><br />
 					', !empty($context['latest_post']) ? $txt['latest_post'] . ':
 					&quot;' . $context['latest_post']['link'] . '&quot;  (' . $context['latest_post']['time'] . ')<br />' : '', '
 					<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 					<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '
 				</td>
 				<td class="smalltext">
-					', $txt['total_members'], ': <strong>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['common_stats']['total_members'] . '</a>' : $context['common_stats']['total_members'], '</strong><br />
+					', $txt['total_members'], ': <strong>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . comma_format($context['common_stats']['total_members']) . '</a>' : comma_format($context['common_stats']['total_members']), '</strong><br />
 					', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong><br />' : '';
 		// If they are logged in, show their unread message count, etc..
 		if ($context['user']['is_logged'] && $context['allow_pm'])
@@ -409,16 +409,16 @@ function template_info_center()
 		echo '
 			<a href="', $scripturl, '?action=who">';
 
-	echo $context['num_guests'], ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . $context['num_users_online'], ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
+	echo comma_format($context['num_guests']), ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . comma_format($context['num_users_online']), ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	// Handle hidden users and buddies.
 	$bracketList = array();
 	if ($context['show_buddies'])
-		$bracketList[] = $context['num_buddies'] . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+		$bracketList[] = comma_format($context['num_buddies']) . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
 	if (!empty($context['num_spiders']))
-		$bracketList[] = $context['num_spiders'] . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+		$bracketList[] = comma_format($context['num_spiders']) . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
 	if (!empty($context['num_users_hidden']))
-		$bracketList[] = $context['num_users_hidden'] . ' ' . $txt['hidden'];
+		$bracketList[] = comma_format($context['num_users_hidden']) . ' ' . $txt['hidden'];
 
 	if (!empty($bracketList))
 		echo ' (' . implode(', ', $bracketList) . ')';
@@ -452,7 +452,7 @@ function template_info_center()
 		<td class="windowbg2" valign="top">
 			<strong><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></strong><br />
 			<span class="smalltext">
-				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt['here'] . '</a>' : '', ' ', $txt['to_view'], '
+				', $txt['you_have'], ' ', comma_format($context['user']['messages']), ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt['here'] . '</a>' : '', ' ', $txt['to_view'], '
 			</span>
 		</td>
 	</tr>';

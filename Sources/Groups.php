@@ -233,6 +233,7 @@ function GroupList()
 					'value' => $txt['membergroups_members_top'],
 				),
 				'data' => array(
+					'comma_format' => true,
 					'db' => 'num_members',
 				),
 			),
@@ -569,6 +570,7 @@ function MembergroupMembers()
 	);
 	list ($context['total_members']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
+	$context['total_members'] = comma_format($context['total_members']);
 
 	// Create the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=' . ($context['group']['can_moderate'] ? 'moderate;area=viewgroups' : 'groups') . ';sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
@@ -604,7 +606,7 @@ function MembergroupMembers()
 			'ip' => '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['member_ip'] . '">' . $row['member_ip'] . '</a>',
 			'registered' => timeformat($row['date_registered']),
 			'last_online' => $last_online,
-			'posts' => $row['posts'],
+			'posts' => comma_format($row['posts']),
 			'is_activated' => $row['is_activated'] % 10 == 1,
 		);
 	}

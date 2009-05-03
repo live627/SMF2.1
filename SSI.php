@@ -619,8 +619,8 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 		echo '
 			<tr>
 				<td>', $board['link'], $board['new'] ? ' <a href="' . $board['href'] . '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>' : '', '</td>
-				<td align="right">', $board['num_topics'], '</td>
-				<td align="right">', $board['num_posts'], '</td>
+				<td align="right">', comma_format($board['num_topics']), '</td>
+				<td align="right">', comma_format($board['num_posts']), '</td>
 			</tr>';
 	echo '
 		</table>';
@@ -702,8 +702,8 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 				<td align="left">
 					', $topic['link'], '
 				</td>
-				<td align="right">', $topic['num_views'], '</td>
-				<td align="right">', $topic['num_replies'], '</td>
+				<td align="right">', comma_format($topic['num_views']), '</td>
+				<td align="right">', comma_format($topic['num_replies']), '</td>
 			</tr>';
 	echo '
 		</table>';
@@ -942,15 +942,15 @@ function ssi_whosOnline($output_method = 'echo')
 		);
 
 	echo '
-		', $return['num_guests'], ' ', $return['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', $return['num_users_online'], ' ', $return['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
+		', comma_format($return['num_guests']), ' ', $return['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', comma_format($return['num_users_online']), ' ', $return['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	$bracketList = array();
 	if (!empty($user_info['buddies']))
-		$bracketList[] = $return['num_buddies'] . ' ' . ($return['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+		$bracketList[] = comma_format($return['num_buddies']) . ' ' . ($return['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
 	if (!empty($return['num_spiders']))
-		$bracketList[] = $return['num_spiders'] . ' ' . ($return['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+		$bracketList[] = comma_format($return['num_spiders']) . ' ' . ($return['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
 	if (!empty($return['num_users_hidden']))
-		$bracketList[] = $return['num_users_hidden'] . ' ' . $txt['hidden'];
+		$bracketList[] = comma_format($return['num_users_hidden']) . ' ' . $txt['hidden'];
 
 	if (!empty($bracketList))
 		echo ' (' . implode(', ', $bracketList) . ')';

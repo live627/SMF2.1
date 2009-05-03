@@ -157,6 +157,12 @@ function createList($listOptions)
 			else
 				$cur_data['value'] = '';
 
+			// Allow for basic formatting.
+			if (!empty($column['data']['comma_format']))
+				$cur_data['value'] = comma_format($cur_data['value']);
+			elseif (!empty($column['data']['timeformat']))
+				$cur_data['value'] = timeformat($cur_data['value']);
+
 			// Set a style class for this column?
 			if (isset($column['data']['class']))
 				$cur_data['class'] = $column['data']['class'];
