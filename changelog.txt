@@ -13,6 +13,7 @@ May 2009
  ! Database creation should use UTF-8 as default character set if we are using UTF-8 (install.php) [Bug 997]
  * Delete/Remove selected should not show if there is no selected items (xml_topic.js, theme.js) [Bug 3233]
  ! un_preparsecode didn't put spaces back as they were (Subs-Post.php) [Bug 3109, 2202]
+ ! Activate message may result error due to missing/extra math (Profile-View.php) [Bug 1430]
 
 
 April 2009
