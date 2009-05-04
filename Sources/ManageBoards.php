@@ -481,7 +481,7 @@ function EditBoard()
 	$smcFunc['db_free_result']($request);
 
 	// Category doesn't exist, man... sorry.
-	if (empty($boardList[$curBoard['category']]))
+	if (!isset($boardList[$curBoard['category']]))
 		redirectexit('action=admin;area=manageboards');
 
 	foreach ($boardList[$curBoard['category']] as $boardid)
