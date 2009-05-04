@@ -1691,15 +1691,13 @@ function EditTheme()
 			SELECT id_theme, variable, value
 			FROM {db_prefix}themes
 			WHERE variable IN ({string:name}, {string:theme_dir}, {string:theme_templates}, {string:theme_layers})
-				AND id_member = {int:no_member}
-				AND id_theme != {int:default_theme}',
+				AND id_member = {int:no_member}',
 			array(
 				'name' => 'name',
 				'theme_dir' => 'theme_dir',
 				'theme_templates' => 'theme_templates',
 				'theme_layers' => 'theme_layers',
 				'no_member' => 0,
-				'default_theme' => 1,
 			)
 		);
 		$context['themes'] = array();
@@ -1750,7 +1748,7 @@ function EditTheme()
 
 		$context['sub_template'] = 'edit_list';
 
-		return;
+		return 'no_themes';
 	}
 
 	$context['session_error'] = false;

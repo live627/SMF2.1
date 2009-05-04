@@ -80,6 +80,7 @@ $txt['smileys_location_popup_description'] = 'These smileys will be shown in a p
 $txt['smileys_move_select_destination'] = 'Select smiley destination';
 $txt['smileys_move_select_smiley'] = 'Select smiley to move';
 $txt['smileys_move_here'] = 'Move smiley to this location';
+$txt['smileys_no_entries'] = 'There are currently no smiley entries.';
 
 $txt['icons_edit_icons_explain'] = 'From here you can change which message icons are available throughout your board. You can add, edit and remove icons, as well as limit their use to certain boards.';
 $txt['icons_edit_icons_all_boards'] = 'Available In All Boards';
@@ -92,5 +93,5 @@ $txt['icons_new_icon'] = 'New Message Icon';
 $txt['icons_location_first_icon'] = 'As First Icon';
 $txt['icons_location_after'] = 'After';
 $txt['icons_filename_all_gif'] = 'All files must be &quot;gif&quot; files';
-
+$txt['icons_no_entries'] = 'There are currently no smiley entries.';
 ?>

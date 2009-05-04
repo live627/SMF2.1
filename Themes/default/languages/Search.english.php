@@ -133,6 +133,7 @@ $txt['spiders_add'] = 'Add New Spider';
 $txt['spiders_edit'] = 'Edit Spider';
 $txt['spiders_remove_selected'] = 'Remove Selected Spiders';
 $txt['spider_remove_selected_confirm'] = 'Are you sure you wish to remove these spiders?\\n\\nAll associated statistics will also be deleted!';
+$txt['spiders_no_entries'] = 'There are currently no spiders.';
 
 $txt['add_spider_desc'] = 'From this page you can edit the parameters against which a spider is categorised. If a guest\'s user agent/IP address matches those entered below it will be detected as a search engine spider and tracked as per the forum preferences.';
 $txt['spider_name_desc'] = 'Name by which the spider will be referred.';
@@ -142,7 +143,7 @@ $txt['spider_ip_info_desc'] = 'Comma separated list of IP addresses associated w
 $txt['spider'] = 'Spider';
 $txt['spider_time'] = 'Time';
 $txt['spider_viewing'] = 'Viewing';
-$txt['spider_logs_empty'] = 'There are no logs at this time.';
+$txt['spider_logs_empty'] = 'There are currently no spider log entries.';
 $txt['spider_logs_info'] = 'Note that logging of every spider action only occurs if tracking is set to either &quot;high&quot; or &quot;very high&quot;. Detail of every spiders action is only logged if tracking is set to &quot;very high&quot;.';
 $txt['spider_disabled'] = 'Disabled';
 
@@ -155,5 +156,7 @@ $txt['spider_logs_delete_confirm'] = 'Are you sure you wish to empty out all log
 
 $txt['spider_stats_select_month'] = 'Jump To Month';
 $txt['spider_stats_page_hits'] = 'Page Hits';
+$txt['spider_stats_no_entries'] = 'There are currently no spider stats entries.';
+
 
 ?>

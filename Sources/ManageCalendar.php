@@ -97,6 +97,7 @@ function ModifyHolidays()
 			'file' => $sourcedir . '/Subs-Calendar.php',
 			'function' => 'list_getNumHolidays',
 		),
+		'no_items_label' => $txt['holidays_no_entries'],
 		'columns' => array(
 			'name' => array(
 				'header' => array(

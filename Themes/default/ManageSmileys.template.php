@@ -409,12 +409,12 @@ function template_editicons()
 	<form action="', $scripturl, '?action=admin;area=smileys;sa=editicons" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="tborder">
 			<tr class="titlebg">
-				<td></td>
+				<td>&nbsp;</td>
 				<td>', $txt['smileys_filename'], '</td>
 				<td>', $txt['smileys_description'], '</td>
 				<td>', $txt['icons_board'], '</td>
 				<td>', $txt['smileys_modify'], '</td>
-				<td width="4%"></td>
+				<td width="4%">&nsbp;</td>
 			</tr>';
 		foreach ($context['icons'] as $icon)
 			echo '

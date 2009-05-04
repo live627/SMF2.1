@@ -157,7 +157,7 @@ function template_error_log()
 	else
 		echo '
 				<tr>
-					<td colspan="2" class="windowbg2">', $txt['msg_alert_none'], '</td>
+					<td colspan="2" class="windowbg2 centertext">', $txt['errlog_no_entries'], '</td>
 				</tr>';
 
 	echo '

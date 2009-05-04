@@ -246,6 +246,7 @@ function ViewSubscriptions()
 				return count($context[\'subscriptions\']);
 			'),
 		),
+		'no_items_label' => $txt['paid_none_yet'],
 		'columns' => array(
 			'name' => array(
 				'header' => array(
@@ -657,6 +658,7 @@ function ViewSubscribedUsers()
 				$search_vars,
 			),
 		),
+		'no_items_label' => $txt['no_subscribers'],
 		'columns' => array(
 			'name' => array(
 				'header' => array(

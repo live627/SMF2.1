@@ -50,7 +50,7 @@ $txt['scheduled_task_edit_start_time_desc'] = 'Time the first instance of the da
 $txt['scheduled_task_time_offset'] = 'Note the start time should be the offset against the current server time. Current server time is: %1$s';
 
 $txt['scheduled_view_log'] = 'View Log';
-$txt['scheduled_log_empty'] = 'There are currently no items in the log.';
+$txt['scheduled_log_empty'] = 'There are currently no task log entries.';
 $txt['scheduled_log_time_run'] = 'Time Run';
 $txt['scheduled_log_time_taken'] = 'Time taken';
 $txt['scheduled_log_time_taken_seconds'] = '%1$d seconds';

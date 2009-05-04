@@ -20,6 +20,15 @@ function template_main()
 				<td style="padding: 20px;">', $context['move_title'], ' [<a href="', $scripturl, '?action=admin;area=manageboards">', $txt['mboards_cancel_moving'], '</a>]</td>
 			</tr>';
 
+	// No categories so show a label.
+	if (empty($context['categories']))
+		echo '
+			<tr>
+				<td class="windowbg centertext">
+					', $txt['mboards_no_cats'], '
+				</td>
+			</tr>';
+
 	// Loop through every categories, listing the boards in each as we go.
 	foreach ($context['categories'] as $category)
 	{

@@ -1712,7 +1712,6 @@ function ViewWarningTemplates()
 			'delete' => array(
 				'header' => array(
 					'style' => 'width: 4%;',
-					'value' => '&nbsp;',
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '

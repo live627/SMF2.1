@@ -207,6 +207,7 @@ function BanList()
 		'get_count' => array(
 			'function' => 'list_getNumBans',
 		),
+		'no_items_label' => $txt['ban_no_entries'],
 		'columns' => array(
 			'name' => array(
 				'header' => array(

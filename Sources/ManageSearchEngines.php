@@ -218,6 +218,7 @@ function ViewSpiders()
 		'get_count' => array(
 			'function' => 'list_getNumSpiders',
 		),
+		'no_items_label' => $txt['spiders_no_entries'],
 		'columns' => array(
 			'name' => array(
 				'header' => array(
@@ -917,6 +918,7 @@ function SpiderStats()
 		'get_count' => array(
 			'function' => 'list_getNumSpiderStats',
 		),
+		'no_items_label' => $txt['spider_stats_no_entries'],
 		'columns' => array(
 			'stat_date' => array(
 				'header' => array(

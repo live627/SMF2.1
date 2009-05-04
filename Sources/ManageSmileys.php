@@ -914,9 +914,9 @@ function EditSmileys()
 			'get_count' => array(
 				'function' => 'list_getNumSmileys',
 			),
+			'no_items_label' => $txt['smileys_no_entries'],
 			'columns' => array(
 				'picture' => array(
-
 					'data' => array(
 						'sprintf' => array(
 							'format' => '<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifysmiley;smiley=%1$d"><img src="' . $modSettings['smileys_url'] . '/' . $modSettings['smiley_sets_default'] . '/%2$s" alt="%3$s" style="padding: 2px;" id="smiley%1$d" /><input type="hidden" name="smileys[%1$d][filename]" value="%2$s" /></a>',
@@ -1603,6 +1603,7 @@ function EditMessageIcons()
 		'get_items' => array(
 			'function' => 'list_getMessageIcons',
 		),
+		'no_items_label' => $txt['icons_no_entries'],
 		'columns' => array(
 			'icon' => array(
 				'data' => array(

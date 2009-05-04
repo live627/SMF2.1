@@ -185,6 +185,8 @@ $txt['ban_edit_trigger'] = 'Modify';
 $txt['ban_edit_trigger_title'] = 'Edit ban trigger';
 $txt['ban_edit_trigger_submit'] = 'Modify';
 $txt['ban_remove_selected_triggers'] = 'Remove selected ban triggers';
+$txt['ban_no_entries'] = 'There are currently no bans in effect.';
+
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['ban_remove_selected_triggers_confirm'] = 'Are you sure you want to remove the selected ban triggers?';
 $txt['ban_trigger_browse'] = 'Browse Ban Triggers';
@@ -192,7 +194,7 @@ $txt['ban_trigger_browse_description'] = 'This screen shows all banned entities 
 
 $txt['ban_log'] = 'Ban Log';
 $txt['ban_log_description'] = 'The ban log shows all attempts to enter the forum by banned users (\'full ban\' and \'cannot register\' ban only).';
-$txt['ban_log_no_entries'] = 'No ban log entries';
+$txt['ban_log_no_entries'] = 'There are currently no ban log entries.';
 $txt['ban_log_ip'] = 'IP';
 $txt['ban_log_email'] = 'Email address';
 $txt['ban_log_member'] = 'Member';
@@ -201,7 +203,7 @@ $txt['ban_log_remove_all'] = 'Remove all';
 $txt['ban_log_remove_all_confirm'] = 'Are you sure you want to delete all ban log entries?';
 $txt['ban_log_remove_selected'] = 'Remove selected';
 $txt['ban_log_remove_selected_confirm'] = 'Are you sure you want to delete all selected ban log entries?';
-$txt['ban_no_triggers'] = 'No ban triggers';
+$txt['ban_no_triggers'] = 'There are currently no ban triggers.';
 
 $txt['settings_not_writable'] = 'These settings cannot be changed because Settings.php is read only.';
 
@@ -239,6 +241,7 @@ $txt['maintenance_subject'] = 'Subject for display';
 $txt['maintenance_message'] = 'Message for display';
 
 $txt['errlog_desc'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the %1$s button at the bottom of the page.';
+$txt['errlog_no_entries'] = 'There are currently no error log entries';
 
 $txt['theme_settings'] = 'Theme Settings';
 $txt['theme_current_settings'] = 'Current Theme';
@@ -317,6 +320,10 @@ $txt['attachment_manager_last_active'] = 'Last Active';
 $txt['attachment_manager_member'] = 'Member';
 $txt['attachment_manager_avatars_older'] = 'Remove avatars from members not active for more than';
 $txt['attachment_manager_total_avatars'] = 'Total Avatars';
+
+$txt['attachment_manager_avatars_no_entries'] = 'There are currently no avatars.';
+$txt['attachment_manager_attachments_no_entries'] = 'There are currently no attachments.';
+$txt['attachment_manager_thumbs_no_entries'] = 'There are currently no thumbnails.';
 
 $txt['attachment_manager_settings'] = 'Attachment Settings';
 $txt['attachment_manager_avatar_settings'] = 'Avatar Settings';

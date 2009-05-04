@@ -21,6 +21,7 @@ May 2009
  * Missing closing p tag (Wireless.template.php) [Bug 3425]
  ! Add support for comma_format/timeformat for use generic lists (Subs-List.php)
  * comma_format was missing in a few places (BoardIndex.template.php, SSI.php, Groups.php) [Bug 3264]
+ ! Ensure tables have a label when there are no entries. (Many files) [Bug 3394]
 
 April 2009
 --------------------------------------------------------------------------------
