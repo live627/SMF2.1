@@ -133,7 +133,7 @@ $txt['spiders_add'] = 'Add New Spider';
 $txt['spiders_edit'] = 'Edit Spider';
 $txt['spiders_remove_selected'] = 'Remove Selected Spiders';
 $txt['spider_remove_selected_confirm'] = 'Are you sure you wish to remove these spiders?\\n\\nAll associated statistics will also be deleted!';
-$txt['spiders_no_entries'] = 'There are currently no spiders.';
+$txt['spiders_no_entries'] = 'There are currently no spiders configured.';
 
 $txt['add_spider_desc'] = 'From this page you can edit the parameters against which a spider is categorised. If a guest\'s user agent/IP address matches those entered below it will be detected as a search engine spider and tracked as per the forum preferences.';
 $txt['spider_name_desc'] = 'Name by which the spider will be referred.';
@@ -156,7 +156,6 @@ $txt['spider_logs_delete_confirm'] = 'Are you sure you wish to empty out all log
 
 $txt['spider_stats_select_month'] = 'Jump To Month';
 $txt['spider_stats_page_hits'] = 'Page Hits';
-$txt['spider_stats_no_entries'] = 'There are currently no spider stats entries.';
-
+$txt['spider_stats_no_entries'] = 'There are currently no spider statistics available.';
 
 ?>
