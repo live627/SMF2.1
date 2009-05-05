@@ -3463,7 +3463,7 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 	// Grab the file hash if it wasn't added.
 	if ($file_hash === '')
 	{
-		$request = $smcFunc['db_auery']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT file_hash
 			FROM {db_prefix}attachments
 			WHERE ID_ATTACH = {int:id_attach}',
