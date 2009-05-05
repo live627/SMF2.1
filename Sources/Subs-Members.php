@@ -615,6 +615,29 @@ function registerMember(&$regOptions, $return_errors = false)
 	if (!empty($reg_errors))
 		return $reg_errors;
 
+	$reservedVars = array(
+		'actual_theme_url',
+		'actual_images_url',
+		'base_theme_dir',
+		'base_theme_url',
+		'default_images_url',
+		'default_theme_dir',
+		'default_theme_url',
+		'default_template',
+		'images_url',
+		'number_recent_posts',
+		'smiley_sets_default',
+		'theme_dir',
+		'theme_id',
+		'theme_layers',
+		'theme_templates',
+		'theme_url',
+	);
+
+	// Can't change reserved vars.
+	if (array_intersect($regOptions['theme_vars'], $reservedVars) != array())
+		fatal_lang_error('no_theme');
+
 	// Some of these might be overwritten. (the lower ones that are in the arrays below.)
 	$regOptions['register_vars'] = array(
 		'member_name' => $regOptions['username'],

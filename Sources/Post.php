@@ -888,7 +888,7 @@ function Post()
 				$total_size += filesize($current_attach_dir . '/' . $attachID);
 
 				$context['current_attachments'][] = array(
-					'name' => getAttachmentFilename($name, false, null, true),
+					'name' => $name,
 					'id' => $attachID,
 					'approved' => 1,
 				);

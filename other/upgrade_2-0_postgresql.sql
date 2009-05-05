@@ -395,6 +395,14 @@ else
 ---}
 ---#
 
+---# Adding file hash.
+---{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}attachments
+		ADD COLUMN file_hash varchar(40)");
+---}
+---#
+
 /******************************************************************************/
 --- Adding restore topic from recycle.
 /******************************************************************************/

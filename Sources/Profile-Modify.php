@@ -1107,6 +1107,29 @@ function makeThemeChanges($memID, $id_theme)
 {
 	global $modSettings, $smcFunc, $context;
 
+	$reservedVars = array(
+		'actual_theme_url',
+		'actual_images_url',
+		'base_theme_dir',
+		'base_theme_url',
+		'default_images_url',
+		'default_theme_dir',
+		'default_theme_url',
+		'default_template',
+		'images_url',
+		'number_recent_posts',
+		'smiley_sets_default',
+		'theme_dir',
+		'theme_id',
+		'theme_layers',
+		'theme_templates',
+		'theme_url',
+	);
+
+	// Can't change reserved vars.
+	if (array_intersect($_POST['options'], $reservedVars) != array() || array_intersect($_POST['default_options'], $reservedVars) != array())
+		fatal_lang_error('no_access');
+
 	// Don't allow any overriding of custom fields with default or non-default options.
 	$request = $smcFunc['db_query']('', '
 		SELECT col_name
@@ -2502,6 +2525,24 @@ function profileSaveAvatarData(&$value)
 			}
 			elseif (is_array($sizes))
 			{
+				// Though not an exhaustive list, better safe than sorry.
+				$fp = fopen($_FILES['attachment']['tmp_name'], 'rb');
+				if (!$fp)
+					fatal_lang_error('attach_timeout');
+
+				// Now try to find an infection.
+				while (!feof($fp))
+				{
+					if (preg_match('~(iframe|\\<\\?php|\\<\\?|\\<%|html|eval|body|script)~', fgets($fp, 4096)) === 1)
+					{
+						if (file_exists($uploadDir . '/avatar_tmp_' . $memID))
+							@unlink($uploadDir . '/avatar_tmp_' . $memID);
+
+						fatal_lang_error('smf124');
+					}
+				}
+				fclose($fp);
+
 				$extensions = array(
 					'1' => 'gif',
 					'2' => 'jpg',

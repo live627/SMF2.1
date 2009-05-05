@@ -2108,9 +2108,9 @@ function createAttachment(&$attachmentOptions)
 		}
 	}
 
-	// Remove special foreign characters from the filename.
-	if (empty($modSettings['attachmentEncryptFilenames']))
-		$attachmentOptions['name'] = getAttachmentFilename($attachmentOptions['name'], false, $id_folder, true);
+	// Get the hash if no hash has been given yet.
+	if (empty($attachmentOptions['file_hash']))
+		$attachmentOptions['file_hash'] = getAttachmentFilename($attachmentOptions['name'], false, null, true);
 
 	// Is the file too big?
 	if (!empty($modSettings['attachmentSizeLimit']) && $attachmentOptions['size'] > $modSettings['attachmentSizeLimit'] * 1024)
@@ -2200,12 +2200,12 @@ function createAttachment(&$attachmentOptions)
 	$smcFunc['db_insert']('',
 		'{db_prefix}attachments',
 		array(
-			'id_folder' => 'int', 'id_msg' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8',
+			'id_folder' => 'int', 'id_msg' => 'int', 'filename' => 'string-255', 'file_hash' => 'string-40', 'fileext' => 'string-8',
 			'size' => 'int', 'width' => 'int', 'height' => 'int',
 			'mime_type' => 'string-20', 'approved' => 'int',
 		),
 		array(
-			$id_folder, (int) $attachmentOptions['post'], $attachmentOptions['name'], $attachmentOptions['fileext'],
+			$id_folder, (int) $attachmentOptions['post'], $attachmentOptions['name'], $attachmentOptions['file_hash'], $attachmentOptions['fileext'],
 			(int) $attachmentOptions['size'], (empty($attachmentOptions['width']) ? 0 : (int) $attachmentOptions['width']), (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']),
 			(!empty($attachmentOptions['mime_type']) ? $attachmentOptions['mime_type'] : ''), (int) $attachmentOptions['approved'],
 		),
@@ -2229,7 +2229,7 @@ function createAttachment(&$attachmentOptions)
 			array()
 		);
 
-	$attachmentOptions['destination'] = $attach_dir . '/' . getAttachmentFilename(basename($attachmentOptions['name']), $attachmentOptions['id'], $id_folder, true);
+	$attachmentOptions['destination'] = getAttachmentFilename(basename($attachmentOptions['name']), $attachmentOptions['id'], $id_folder, false, $attachmentOptions['file_hash']);
 
 	if ($already_uploaded)
 		rename($attachmentOptions['tmp_name'], $attachmentOptions['destination']);
@@ -2293,16 +2293,17 @@ function createAttachment(&$attachmentOptions)
 
 			$thumb_filename = $attachmentOptions['name'] . '_thumb';
 			$thumb_size = filesize($attachmentOptions['destination'] . '_thumb');
+			$thumb_file_hash = getAttachmentFilename($thumb_filename, false, null, true);
 
 			// To the database we go!
 			$smcFunc['db_insert']('',
 				'{db_prefix}attachments',
 				array(
-					'id_folder' => 'int', 'id_msg' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8',
+					'id_folder' => 'int', 'id_msg' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'file_hash' => 'string-40', 'fileext' => 'string-8',
 					'size' => 'int', 'width' => 'int', 'height' => 'int', 'mime_type' => 'string-20', 'approved' => 'int',
 				),
 				array(
-					$id_folder, (int) $attachmentOptions['post'], 3, $thumb_filename, $attachmentOptions['fileext'],
+					$id_folder, (int) $attachmentOptions['post'], 3, $thumb_filename, $thumb_file_hash, $attachmentOptions['fileext'],
 					$thumb_size, $thumb_width, $thumb_height, $thumb_mime, (int) $attachmentOptions['approved'],
 				),
 				array('id_attach')
@@ -2321,7 +2322,7 @@ function createAttachment(&$attachmentOptions)
 					)
 				);
 
-				rename($attachmentOptions['destination'] . '_thumb', $attach_dir . '/' . getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], $id_folder, true));
+				rename($attachmentOptions['destination'] . '_thumb', getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], $id_folder, false, $thumb_file_hash));
 			}
 		}
 	}

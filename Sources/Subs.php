@@ -3452,7 +3452,51 @@ function db_debug_junk()
 }
 
 // Get an attachment's encrypted filename.  If $new is true, won't check for file existence.
-function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = false)
+function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = false, $file_hash = '')
+{
+	global $modSettings, $smcFunc;
+
+	// Just make up a nice hash...
+	if ($new)
+		return sha1(md5($filename . time()) . mt_rand());
+
+	// Grab the file hash if it wasn't added.
+	if ($file_hash === '')
+	{
+		$request = $smcFunc['db_auery']('', '
+			SELECT file_hash
+			FROM {db_prefix}attachments
+			WHERE ID_ATTACH = {int:id_attach}',
+			array(
+				'id_attach' => $attachment_id
+		));
+
+		if ($smcFunc['db_num_rows']($request) === 0)
+			return false;
+
+		list ($file_hash) = $smcFunc['db_fetch_row']($request);
+	}
+	$smcFunc['db_free_result']($request);
+
+	// In case of files from the old system, do a legacy call.
+	if ($file_hash === null)
+		return getLegacyAttachmentFilename($filename, $attachment_id, $new);
+
+	// Are we using multiple directories?
+	if (!empty($modSettings['currentAttachmentUploadDir']))
+	{
+		if (!is_array($modSettings['attachmentUploadDir']))
+			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+		$path = $modSettings['attachmentUploadDir'][$dir];
+	}
+	else
+		$path = $modSettings['attachmentUploadDir'];
+
+	return $path . '/' . $attachment_id . '_' . $file_hash;
+}
+
+// Older attachments may still use this function.
+function getLegacyAttachmentFilename($filename, $attachment_id, $new = false)
 {
 	global $modSettings;
 

@@ -184,6 +184,7 @@ CREATE TABLE {$db_prefix}attachments (
   id_folder smallint NOT NULL default '1',
   attachment_type smallint NOT NULL default '0',
   filename varchar(255) NOT NULL,
+  file_hash varchar(40) NOT NULL default '',
   fileext varchar(8) NOT NULL default '',
   size int NOT NULL default '0',
   downloads int NOT NULL default '0',

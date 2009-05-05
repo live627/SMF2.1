@@ -228,6 +228,23 @@ $smcFunc['db_alter_table']('attachments', array(
 ---}
 ---#
 
+---# Adding file hash.
+---{
+$smcFunc['db_alter_table']('attachments', array(
+	'add' => array(
+		'file_hash' => array(
+			'name' => 'file_hash',
+			'null' => false,
+			'default' => '',
+			'type' => 'varchar',
+			'size' => 40,
+			'auto' => false,
+		),
+	)
+));
+---}
+---#
+
 /******************************************************************************/
 --- Adding extra columns to polls.
 /******************************************************************************/

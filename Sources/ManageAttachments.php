@@ -475,7 +475,7 @@ function list_getFiles($start, $items_per_page, $sort, $browse_type)
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				{string:blank_text} AS id_msg, IFNULL(mem.real_name, {string:not_applicable_text}) AS poster_name,
-				mem.last_login AS poster_time, 0 AS id_topic, a.id_member, a.id_attach, a.filename, a.attachment_type,
+				mem.last_login AS poster_time, 0 AS id_topic, a.id_member, a.id_attach, a.filename, a.file_hash, a.attachment_type,
 				a.size, a.width, a.height, a.downloads, {string:blank_text} AS subject, 0 AS id_board
 			FROM {db_prefix}attachments AS a
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = a.id_member)
@@ -495,7 +495,7 @@ function list_getFiles($start, $items_per_page, $sort, $browse_type)
 		$request = $smcFunc['db_query']('', '
 			SELECT
 				m.id_msg, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.id_topic, m.id_member,
-				a.id_attach, a.filename, a.attachment_type, a.size, a.width, a.height, a.downloads, mf.subject, t.id_board
+				a.id_attach, a.filename, a.file_hash, a.attachment_type, a.size, a.width, a.height, a.downloads, mf.subject, t.id_board
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
@@ -640,7 +640,7 @@ function MoveAvatars()
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT id_attach, id_folder, id_member, filename
+		SELECT id_attach, id_folder, id_member, filename, file_hash
 		FROM {db_prefix}attachments
 		WHERE attachment_type = {int:attachment_type}
 			AND id_member > {int:guest_id_member}',
@@ -652,7 +652,7 @@ function MoveAvatars()
 	$updatedAvatars = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+		$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
 
 		if (rename($filename, $modSettings['custom_avatar_dir'] . '/' . $row['filename']))
 			$updatedAvatars[] = $row['id_attach'];
@@ -841,8 +841,8 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	// Get all the attachment names and id_msg's.
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			a.id_folder, a.filename, a.attachment_type, a.id_attach, a.id_member' . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ',
-			thumb.id_folder AS thumb_folder, IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb_parent.id_attach AS id_parent
+			a.id_folder, a.filename, a.file_hash, a.attachment_type, a.id_attach, a.id_member' . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ',
+			thumb.id_folder AS thumb_folder, IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb.file_hash as thumb_file_hash, thumb_parent.id_attach AS id_parent
 		FROM {db_prefix}attachments AS a' .($query_type == 'members' ? '
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = a.id_member)' : ($query_type == 'messages' ? '
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)' : '')) . '
@@ -858,7 +858,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			@unlink($modSettings['custom_avatar_dir'] . '/' . $row['filename']);
 		else
 		{
-			$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+			$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
 			@unlink($filename);
 
 			// If this was a thumb, the parent attachment should know about it.
@@ -868,7 +868,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			// If this attachments has a thumb, remove it as well.
 			if (!empty($row['id_thumb']) && $autoThumbRemoval)
 			{
-				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb'], $row['thumb_folder']);
+				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb'], $row['thumb_folder'], false, $row['file_hash']);
 				@unlink($thumb_filename);
 				$attach[] = $row['id_thumb'];
 			}
@@ -979,7 +979,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smcFunc['db_query']('', '
-				SELECT thumb.id_attach, thumb.id_folder, thumb.filename
+				SELECT thumb.id_attach, thumb.id_folder, thumb.filename, thumb.file_hash
 				FROM {db_prefix}attachments AS thumb
 					LEFT JOIN {db_prefix}attachments AS tparent ON (tparent.id_thumb = thumb.id_attach)
 				WHERE thumb.id_attach BETWEEN {int:substep} AND {int:substep} + 499
@@ -1001,7 +1001,7 @@ function RepairAttachments()
 					// If we are repairing remove the file from disk now.
 					if ($fix_errors && in_array('missing_thumbnail_parent', $to_fix))
 					{
-						$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+						$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
 						@unlink($filename);
 					}
 				}
@@ -1107,7 +1107,7 @@ function RepairAttachments()
 			$errors_found = array();
 
 			$result = $smcFunc['db_query']('', '
-				SELECT id_attach, id_folder, filename, size, attachment_type
+				SELECT id_attach, id_folder, filename, file_hash, size, attachment_type
 				FROM {db_prefix}attachments
 				WHERE id_attach BETWEEN {int:substep} AND {int:substep} + 249',
 				array(
@@ -1120,7 +1120,7 @@ function RepairAttachments()
 				if ($row['attachment_type'] == 1)
 					$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 				else
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
 
 				// File doesn't exist?
 				if (!file_exists($filename))
@@ -1129,14 +1129,14 @@ function RepairAttachments()
 					if (!empty($modSettings['currentAttachmentUploadDir']))
 					{
 						// Get the attachment name with out the folder.
-						$attachment_name = getAttachmentFilename($row['filename'], $row['id_attach'], null, true);
+						$attachment_name = getAttachmentFilename($row['filename'], $row['id_attach'], null, false, $row['file_hash']);
 
 						if (!is_array($modSettings['attachmentUploadDir']))
 							$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
 
 						// Loop through the other folders.
 						foreach ($modSettings['attachmentUploadDir'] as $id => $dir)
-							if (file_exists($dir . '/' . $attachment_name))
+							if (file_exists($dir . '/' . $row['id_attach'] . '_' . $row['file_hash']))
 							{
 								$context['repair_errors']['wrong_folder']++;
 								$errors_found[] = 'wrong_folder';
@@ -1250,7 +1250,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smcFunc['db_query']('', '
-				SELECT a.id_attach, a.id_folder, a.filename, a.attachment_type
+				SELECT a.id_attach, a.id_folder, a.filename, a.file_hash, a.file_hash, a.attachment_type
 				FROM {db_prefix}attachments AS a
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = a.id_member)
 				WHERE a.id_attach BETWEEN {int:substep} AND {int:substep} + 499
@@ -1274,7 +1274,7 @@ function RepairAttachments()
 					if ($row['attachment_type'] == 1)
 						$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 					else
-						$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+						$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
 					@unlink($filename);
 				}
 			}
@@ -1321,7 +1321,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smcFunc['db_query']('', '
-				SELECT a.id_attach, a.id_folder, a.filename
+				SELECT a.id_attach, a.id_folder, a.filename, a.file_hash
 				FROM {db_prefix}attachments AS a
 					LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				WHERE a.id_attach BETWEEN {int:substep} AND {int:substep} + 499
@@ -1342,7 +1342,7 @@ function RepairAttachments()
 				// If we are repairing remove the file from disk now.
 				if ($fix_errors && in_array('attachment_no_msg', $to_fix))
 				{
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
 					@unlink($filename);
 				}
 			}

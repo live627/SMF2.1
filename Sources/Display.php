@@ -921,7 +921,7 @@ function Display()
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT
-					a.id_attach, a.id_folder, a.id_msg, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
+					a.id_attach, a.id_folder, a.id_msg, a.filename, a.file_hash, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
 					a.width, a.height' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ',
 					IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
 				FROM {db_prefix}attachments AS a' . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : '
@@ -1205,7 +1205,7 @@ function Download()
 	if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'avatar')
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_folder, filename, fileext, id_attach, attachment_type, mime_type, approved
+			SELECT id_folder, filename, fileext, id_attach, attachment_type, mime_type, approved, file_hash
 			FROM {db_prefix}attachments
 			WHERE id_attach = {int:id_attach}
 				AND id_member > {int:blank_id_member}
@@ -1224,7 +1224,7 @@ function Download()
 
 		// Make sure this attachment is on this board.
 		$request = $smcFunc['db_query']('', '
-			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
+			SELECT a.id_folder, a.filename, a.file_hash, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {db_prefix}attachments AS a
 				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
@@ -1237,7 +1237,7 @@ function Download()
 	}
 	if ($smcFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access', false);
-	list ($id_folder, $real_filename, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved) = $smcFunc['db_fetch_row']($request);
+	list ($id_folder, $real_filename, $file_hash, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
 	// If it isn't yet approved, do they have permission to view it?
@@ -1255,7 +1255,7 @@ function Download()
 			)
 		);
 
-	$filename = getAttachmentFilename($real_filename, $_REQUEST['attach'], $id_folder);
+	$filename = getAttachmentFilename($real_filename, $_REQUEST['attach'], $id_folder, false, $file_hash);
 
 	// This is done to clear any output that was made before now. (would use ob_clean(), but that's PHP 4.2.0+...)
 	ob_end_clean();
@@ -1314,7 +1314,7 @@ function Download()
 	header('ETag: ' . $file_md5);
 
 	// Does this have a mime type?
-	if ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'bmp', 'png', 'psd', 'tiff', 'iff'))))
+	if ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'x-ms-bmp', 'png', 'psd', 'tiff', 'iff'))))
 		header('Content-Type: ' . $mime_type);
 	else
 	{
@@ -1482,12 +1482,13 @@ function loadAttachmentContext($id_msg)
 						$thumb_size = filesize($filename . '_thumb');
 
 						$thumb_filename = $attachment['filename'] . '_thumb';
+						$thumb_hash = getAttachmentFilename($thumb_filename, false, null, true);
 
 						// Add this beauty to the database.
 						$smcFunc['db_insert']('',
 							'{db_prefix}attachments',
-							array('id_folder' => 'int', 'id_msg' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'size' => 'int', 'width' => 'int', 'height' => 'int'),
-							array($id_folder_thumb, $id_msg, 3, $thumb_filename, (int) $thumb_size, (int) $attachment['thumb_width'], (int) $attachment['thumb_height']),
+							array('id_folder' => 'int', 'id_msg' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'size' => 'int', 'width' => 'int', 'height' => 'int'),
+							array($id_folder_thumb, $id_msg, 3, $thumb_filename, $thumb_hash, (int) $thumb_size, (int) $attachment['thumb_width'], (int) $attachment['thumb_height']),
 							array('id_attach')
 						);
 						$attachment['id_thumb'] = $smcFunc['db_insert_id']('{db_prefix}attachments', 'id_attach');
@@ -1503,8 +1504,8 @@ function loadAttachmentContext($id_msg)
 								)
 							);
 
-							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['id_thumb'], $id_folder_thumb, true);
-							rename($filename . '_thumb', $path . '/' . $thumb_realname);
+							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['id_thumb'], $id_folder_thumb, false, $thumb_hash);
+							rename($filename . '_thumb', $thumb_realname);
 						}
 					}
 				}
