@@ -195,34 +195,24 @@ function EditAgreement()
 	// By default we look at agreement.txt.
 	$context['current_agreement'] = '';
 
-	// What potential languages are there?
-	$language_directories = array(
-		$settings['default_theme_dir'] . '/languages',
-		$settings['actual_theme_dir'] . '/languages',
-	);
-	if (!empty($settings['base_theme_dir']))
-		$language_directories[] = $settings['base_theme_dir'] . '/languages';
-	$language_directories = array_unique($language_directories);
-
 	// Is there more than one to edit?
 	$context['editable_agreements'] = array(
 		'' => $txt['admin_agreement_default'],
 	);
-	foreach ($language_directories as $language_dir)
-	{
-		if (!file_exists($language_dir))
-			continue;
 
-		$dir = dir($language_dir);
-		while ($entry = $dir->read())
-			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && file_exists($boarddir . '/agreement.' . $matches[1] . '.txt'))
-			{
-				$context['editable_agreements']['.' . $matches[1]] = $smcFunc['ucwords'](strtr($matches[1], '_', ' '));
-				// Are we editing this?
-				if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '.' . $matches[1])
-					$context['current_agreement'] = '.' . $matches[1];
-			}
-		$dir->close();
+	// Get our languages.
+	getLanguages();
+
+	// Try to figure out if we have more agreements.
+	foreach ($context['languages'] as $lang)
+	{
+		if (file_exists($boarddir . '/agreement.' . $lang['filename'] . '.txt'))
+		{
+			$context['editable_agreements']['.' . $lang['filename']] = $lang['name'];
+			// Are we editing this?
+			if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '.' . $lang['filename'])
+				$context['current_agreement'] = '.' . $lang['filename'];
+		}
 	}
 
 	if (isset($_POST['agreement']))

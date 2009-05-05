@@ -956,53 +956,45 @@ function list_getNumLanguages()
 {
 	global $settings;
 
-	$count = 0;
-
-	$dir = dir($settings['default_theme_dir'] . '/languages');
-	while ($entry = $dir->read())
-	{
-		// We're only after the index.language.php file.
-		if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
-			continue;
-
-		$count++;
-	}
-	$dir->close();
-
 	// Return how many we have.
-	return $count;
+	return count(getLanguages());
 }
 
 // Fetch the actual language information.
 function list_getLanguages()
 {
-	global $settings, $smcFunc, $language, $txt;
+	global $settings, $smcFunc, $language, $context, $txt;
 
 	$languages = array();
 	// Keep our old entries.
 	$old_txt = $txt;
+	$backup_actual_theme_dir = $settings['actual_theme_dir'];
+	$backup_base_theme_dir = !empty($settings['base_theme_dir']) ? $settings['base_theme_dir'] : '';
+
+	// Override these for now.
+	$settings['actual_theme_dir'] = $settings['base_theme_dir'] = $settings['default_theme_dir'];
+	getLanguages(true, false);
+
+	// Put them back.
+	$settings['actual_theme_dir'] = $backup_actual_theme_dir;
+	if (!empty($backup_base_theme_dir))
+		$settings['base_theme_dir'] = $backup_base_theme_dir;
 
 	// Get the language files and data...
-	$dir = dir($settings['default_theme_dir'] . '/languages');
-	while ($entry = $dir->read())
+	foreach ($context['languages'] as $lang)
 	{
-		// We're only after the index.language.php file.
-		if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
-			continue;
-
 		// Load the file to get the character set.
-		require_once($settings['default_theme_dir'] . '/languages/' . $matches[0]);
+		require_once($settings['default_theme_dir'] . '/languages/index.' . $lang['filename'] . '.php');
 
-		$languages[$matches[1]] = array(
-			'id' => $matches[1],
+		$languages[$lang['filename']] = array(
+			'id' => $lang['filename'],
 			'count' => 0,
 			'char_set' => $txt['lang_character_set'],
-			'default' => $language == $matches[1] || ($language == '' && $matches[1] == 'english'),
+			'default' => $language == $lang['filename'] || ($language == '' && $lang['filename'] == 'english'),
 			'locale' => $txt['lang_locale'],
-			'name' => $smcFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
+			'name' => $smcFunc['ucwords'](strtr($lang['filename'], array('_' => ' ', '-utf8' => ''))),
 		);
 	}
-	$dir->close();
 
 	// Work out how many people are using each language.
 	$request = $smcFunc['db_query']('', '
@@ -1054,27 +1046,10 @@ function ModifyLanguageSettings($return_config = false)
 	if ($return_config)
 		return $config_vars;
 
-	// Find the available language files.
-	$language_directories = array(
-		$settings['default_theme_dir'] . '/languages',
-		$settings['actual_theme_dir'] . '/languages',
-	);
-	if (!empty($settings['base_theme_dir']))
-		$language_directories[] = $settings['base_theme_dir'] . '/languages';
-	$language_directories = array_unique($language_directories);
-
-	// Find available language files.
-	foreach ($language_directories as $language_dir)
-	{
-		if (!file_exists($language_dir))
-			continue;
-
-		$dir = dir($language_dir);
-		while ($entry = $dir->read())
-			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches))
-				$config_vars['language'][4][$matches[1]] = array($matches[1], $smcFunc['ucwords'](strtr($matches[1], '_', ' ')));
-		$dir->close();
-	}
+	// Get our languages. No cache and use utf8.
+	getLanguages(false, false);
+	foreach ($context['languages'] as $lang)
+		$config_vars['language'][4][$lang['filename']] = array($lang['filename'], $lang['name']);
 
 	// Saving settings?
 	if (isset($_REQUEST['save']))

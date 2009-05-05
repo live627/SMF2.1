@@ -508,12 +508,17 @@ function loadUserSettings()
 	if (!empty($user_info['ignoreboards']) && empty($user_info['ignoreboards'][$tmp = count($user_info['ignoreboards']) - 1]))
 		unset($user_info['ignoreboards'][$tmp]);
 
-	if (!empty($modSettings['userLanguage']) && !empty($_GET['language']))
+	// Do we have any languages to validate this?
+	if (!empty($modSettings['userLanguage']) && (!empty($_GET['language']) || !empty($_SESSION['language'])))
+		$languages = getLanguages();
+
+	// Allow the user to change their language if its valid.
+	if (!empty($modSettings['userLanguage']) && !empty($_GET['language']) && isset($languages[strtr($_GET['language'], './\\:', '____')]))
 	{
 		$user_info['language'] = strtr($_GET['language'], './\\:', '____');
 		$_SESSION['language'] = $user_info['language'];
 	}
-	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']))
+	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']) && isset($languages[strtr($_GET['language'], './\\:', '____')]))
 		$user_info['language'] = strtr($_SESSION['language'], './\\:', '____');
 
 	// Just build this here, it makes it easier to change/use - administrators can see all boards.
@@ -1897,6 +1902,69 @@ function getBoardParents($id_parent)
 	return $boards;
 }
 
+// Attempt to reload our languages.
+function getLanguages($use_cache = true, $ignore_utf8 = true)
+{
+	global $context, $smcFunc, $settings, $modSettings;
+
+	// Either we don't use the cache, or its expired.
+	if (!$use_cache || ($context['languages'] = cache_get_data('known_languages', !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600)) == null)
+	{
+		// If we don't have our theme information yet, lets get it.
+		if (empty($settings['default_theme_dir']))
+			loadTheme(0, false);
+
+		// Default language directories to try.
+		$language_directories = array(
+			$settings['default_theme_dir'] . '/languages',
+			$settings['actual_theme_dir'] . '/languages',
+		);
+
+		// We possibly have a base theme directory.
+		if (!empty($settings['base_theme_dir']))
+			$language_directories[] = $settings['base_theme_dir'] . '/languages';
+
+		// Remove any duplicates.
+		$language_directories = array_unique($language_directories);
+
+		foreach ($language_directories as $language_dir)
+		{
+			// Can't look in here... doesn't exist!
+			if (!file_exists($language_dir))
+				continue;
+
+			$dir = dir($language_dir);
+			while ($entry = $dir->read())
+			{
+				// Look for the index language file....
+				if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
+					continue;
+
+				$context['languages'][$matches[1]] = array(
+					'name' => $smcFunc['ucwords'](strtr($matches[1], array('_' => ' '))),
+					'selected' => false,
+					'filename' => $matches[1],
+					'location' => $language_dir . '/index.' . $matches[1] . '.php',
+				);
+
+			}
+			$dir->close();
+		}
+
+		// Lets cash in on this deal.
+		if (!empty($modSettings['cache_enable']))
+			cache_put_data('known_languages', $context['languages'], !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+	}
+
+	return $context['languages'];
+
+	// Make this easier to access.
+	$languages = array();
+	foreach ($context['languages'] as $lang)
+		$languages[] = $lang['name'];
+	return $languages;
+}
+
 // Replace all vulgar words with respective proper words. (substring or whole words..)
 function &censorText(&$text, $force = false)
 {
@@ -2298,6 +2366,7 @@ function sessionGC($max_lifetime)
 	);
 }
 
+// Load up a database connection.
 function loadDatabase()
 {
 	global $db_persist, $db_connection, $db_server, $db_user, $db_passwd;
@@ -2436,7 +2505,7 @@ function cache_put_data($key, $value, $ttl = 120)
 			{
 				// Write the header.
 				@flock($fp, LOCK_EX);
-				fwrite($fp, '<?php if(!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}?>');
+				fwrite($fp, '<' . '?' . 'php if(!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\\\'') . '\';}' . '?' . '>');
 				@flock($fp, LOCK_UN);
 				fclose($fp);
 			}

@@ -103,34 +103,18 @@ function Register($reg_errors = array())
 	{
 		$selectedLanguage = empty($_SESSION['language']) ? $language : $_SESSION['language'];
 
-		$language_directories = array(
-			$settings['default_theme_dir'] . '/languages',
-			$settings['actual_theme_dir'] . '/languages',
-		);
-		if (!empty($settings['base_theme_dir']))
-			$language_directories[] = $settings['base_theme_dir'] . '/languages';
-		$language_directories = array_unique($language_directories);
+		// Do we have any languages?
+		if (empty($context['languages']))
+			getLanguages();
 
-		foreach ($language_directories as $language_dir)
+		// Try to find our selected language.
+		foreach ($context['languages'] as $key => $lang)
 		{
-			// Can't look in here... doesn't exist!
-			if (!file_exists($language_dir))
-				continue;
+			$context['languages'][$key]['name'] = strtr($lang['name'], array('-utf8' => ''));
 
-			$dir = dir($language_dir);
-			while ($entry = $dir->read())
-			{
-				// Look for the index language file....
-				if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
-					continue;
-
-				$context['languages'][] = array(
-					'name' => $smcFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
-					'selected' => $selectedLanguage == $matches[1],
-					'filename' => $matches[1],
-				);
-			}
-			$dir->close();
+			// Found it!
+			if ($selectedLanguage == $lang['filename'])
+				$context['languages'][$key]['selected'] = true;
 		}
 	}
 
@@ -326,32 +310,14 @@ function Register2($verifiedOpenID = false)
 	// Validate the passed language file.
 	if (isset($_POST['lngfile']) && !empty($modSettings['userLanguage']))
 	{
-		$language_directories = array(
-			$settings['default_theme_dir'] . '/languages',
-			$settings['actual_theme_dir'] . '/languages',
-		);
-		if (!empty($settings['base_theme_dir']))
-			$language_directories[] = $settings['base_theme_dir'] . '/languages';
-		$language_directories = array_unique($language_directories);
+		// Do we have any languages?
+		if (empty($context['languages']))
+			getLanguages();
 
-		foreach ($language_directories as $language_dir)
-		{
-			if (!file_exists($language_dir))
-				continue;
-
-			$dir = dir($language_dir);
-			while ($entry = $dir->read())
-				if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && $matches[1] == $_POST['lngfile'])
-				{
-					// Got it!
-					$found = true;
-					$_SESSION['language'] = $_POST['lngfile'];
-					break 2;
-				}
-			$dir->close();
-		}
-
-		if (empty($found))
+		// Did we find it?
+		if (isset($context['languages'][$_POST['lngfile']]))
+			$_SESSION['language'] = $_POST['lngfile'];
+		else
 			unset($_POST['lngfile']);
 	}
 	else

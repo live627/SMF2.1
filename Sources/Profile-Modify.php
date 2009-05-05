@@ -2126,30 +2126,13 @@ function profileLoadLanguages()
 	// Select the default language if the user has no language selected yet.
 	$selectedLanguage = empty($cur_profile['lngfile']) ? $language : $cur_profile['lngfile'];
 
-	$language_directories = array(
-		$settings['default_theme_dir'] . '/languages',
-		$settings['actual_theme_dir'] . '/languages',
-	);
-	if (!empty($settings['base_theme_dir']))
-		$language_directories[] = $settings['base_theme_dir'] . '/languages';
-	$language_directories = array_unique($language_directories);
+	// Do we have any languages?
+	if (empty($context['languages']))
+		getLanguages();
 
-	foreach ($language_directories as $language_dir)
-	{
-		if (!file_exists($language_dir))
-			continue;
-
-		$dir = dir($language_dir);
-		while ($entry = $dir->read())
-		{
-			// Each language file must *at least* have a 'index.LANGUAGENAME.php' file.
-			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) == 0)
-				continue;
-
-			$context['profile_languages'][$matches[1]] = $smcFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => '')));
-		}
-		$dir->close();
-	}
+	// Setup our languages.
+	foreach ($context['languages'] as $lang)
+		$context['profile_languages'][$lang['filename']] = strtr($lang['name'], array('-utf8' => ''));
 
 	// Return whether we should proceed with this.
 	return count($context['profile_languages']) > 1 ? true : false;
