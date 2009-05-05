@@ -22,6 +22,10 @@ May 2009
  ! Add support for comma_format/timeformat for use generic lists (Subs-List.php)
  * comma_format was missing in a few places (BoardIndex.template.php, SSI.php, Groups.php) [Bug 3264]
  ! Ensure tables have a label when there are no entries. (Many files) [Bug 3394]
+ + Use a generic language function when finding and validating languages (Load.php, ManageRegistration.php, ManageServer.php, Profile-Modify.php, Register.php) [Feature 2225]
+ ! Improve sanitation for avatars. (Subs-Members.php, Profile-Modify.php)
+ ! IE bmp mime sniffing fix (Display.php)
+ ! Change the way we handle attachments (Display.php, ManageAttachments.php, Post.php, Subs-Post.php, Subs.php, install_2-0_*.sql, upgrade_2-0_*.sql)
 
 April 2009
 --------------------------------------------------------------------------------
