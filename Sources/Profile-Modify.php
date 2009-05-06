@@ -1127,7 +1127,7 @@ function makeThemeChanges($memID, $id_theme)
 	);
 
 	// Can't change reserved vars.
-	if (array_intersect($_POST['options'], $reservedVars) != array() || array_intersect($_POST['default_options'], $reservedVars) != array())
+	if ((isset($_POST['options']) && array_intersect($_POST['options'], $reservedVars) != array()) || (isset($_POST['default_options']) && array_intersect($_POST['default_options'], $reservedVars) != array()))
 		fatal_lang_error('no_access');
 
 	// Don't allow any overriding of custom fields with default or non-default options.
@@ -2554,21 +2554,19 @@ function profileSaveAvatarData(&$value)
 				$mime_type = 'image/' . ($extension == 'jpg' ? 'jpeg' : $extension);
 				$destName = 'avatar_' . $memID . '_' . time() . '.' . $extension;
 				list ($width, $height) = getimagesize($_FILES['attachment']['tmp_name']);
+				$file_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : null;
 
 				// Remove previous attachments this member might have had.
 				removeAttachments(array('id_member' => $memID));
 
-				if (!rename($_FILES['attachment']['tmp_name'], $uploadDir . '/' . $destName))
-					fatal_lang_error('attach_timeout', 'critical');
-
 				$smcFunc['db_insert']('',
 					'{db_prefix}attachments',
 					array(
-						'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'fileext' => 'string', 'size' => 'int',
+						'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string', 'file_hash' => 'string', 'fileext' => 'string', 'size' => 'int',
 						'width' => 'int', 'height' => 'int', 'mime_type' => 'string', 'id_folder' => 'int',
 					),
 					array(
-						$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $extension, filesize($uploadDir . '/' . $destName),
+						$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $file_hash, $extension, filesize($_FILES['attachment']['tmp_name']),
 						(int) $width, (int) $height, $mime_type, $id_folder,
 					),
 					array('id_attach')
@@ -2577,6 +2575,14 @@ function profileSaveAvatarData(&$value)
 				$cur_profile['id_attach'] = $smcFunc['db_insert_id']('{db_prefix}attachments', 'id_attach');
 				$cur_profile['filename'] = $destName;
 				$cur_profile['attachment_type'] = empty($modSettings['custom_avatar_enabled']) ? 0 : 1;
+
+				$destinationPath = $uploadDir . '/' . ($file_hash === null ? $destName : $cur_profile['id_attach'] . '_' . $file_hash);
+				if (!rename($_FILES['attachment']['tmp_name'], $destinationPath))
+				{
+					// I guess a man can try.
+					removeAttachments(array('id_member' => $memID));
+					fatal_lang_error('attach_timeout', 'critical');
+				}
 
 				// Attempt to chmod it.
 				@chmod($uploadDir . '/' . $destName, 0644);

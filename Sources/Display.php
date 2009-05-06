@@ -1205,7 +1205,7 @@ function Download()
 	if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'avatar')
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_folder, filename, fileext, id_attach, attachment_type, mime_type, approved, file_hash
+			SELECT id_folder, filename, file_hash, fileext, id_attach, attachment_type, mime_type, approved
 			FROM {db_prefix}attachments
 			WHERE id_attach = {int:id_attach}
 				AND id_member > {int:blank_id_member}
