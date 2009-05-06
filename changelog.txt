@@ -26,6 +26,8 @@ May 2009
  ! Improve sanitation for avatars. (Subs-Members.php, Profile-Modify.php)
  ! IE bmp mime sniffing fix (Display.php)
  ! Change the way we handle attachments (Display.php, ManageAttachments.php, Post.php, Subs-Post.php, Subs.php, install_2-0_*.sql, upgrade_2-0_*.sql)
+ * Curve: unclosed div tag (Admin.template.php)
+ 
 
 April 2009
 --------------------------------------------------------------------------------

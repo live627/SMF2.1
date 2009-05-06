@@ -140,7 +140,8 @@ function template_admin()
 
 	echo '
 			</tr>
-		</table>';
+		</table>
+	</div>';
 
 	// The below functions include all the scripts needed from the simplemachines.org site. The language and format are passed for internationalization.
 	if (empty($modSettings['disable_smf_js']))
