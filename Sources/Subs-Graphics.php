@@ -177,6 +177,13 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			while (!feof($fp2))
 				fwrite($fp, fread($fp2, 8192));
 			fclose($fp2);
+
+			// Though not an exhaustive list, better safe than sorry.
+			if (preg_match('~(iframe|\\<\\?php|\\<\\?|\\<%|html|eval|body|script)~', $destName) === 1)
+			{
+				unlink($destName);
+				return false;
+			}
 		}
 		else
 			$sizes = array(-1, -1, -1);
