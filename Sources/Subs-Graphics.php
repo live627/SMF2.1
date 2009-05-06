@@ -127,10 +127,11 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	removeAttachments(array('id_member' => $memID));
 
 	$id_folder = !empty($modSettings['currentAttachmentUploadDir']) ? $modSettings['currentAttachmentUploadDir'] : 1;
+	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : null;
 	$smcFunc['db_insert']('',
 		'{db_prefix}attachments',
 		array(
-			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'fileext' => 'string-8', 'size' => 'int',
+			'id_member' => 'int', 'attachment_type' => 'int', 'filename' => 'string-255', 'file_hash' => 'string-255', 'fileext' => 'string-8', 'size' => 'int',
 			'id_folder' => 'int',
 		),
 		array(
@@ -218,7 +219,17 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	if ($success)
 	{
 		// Remove the .tmp extension from the attachment.
-		if (rename($destName . '.tmp', $destName))
+		if (!empty($modSettings['currentAttachmentUploadDir']))
+		{
+			if (!is_array($modSettings['attachmentUploadDir']))
+				$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+			$path = $modSettings['attachmentUploadDir'][$dir];
+		}
+		else
+			$path = $modSettings['attachmentUploadDir'];
+
+		// Remove the .tmp extension from the attachment.
+		if (rename($destName . '.tmp', $avatar_hash === null ? $destName : $path . '/' . $attachID . '_' . $avatar_hash))
 		{
 			list ($width, $height) = getimagesize($destName);
 			$mime_type = 'image/' . $ext;
