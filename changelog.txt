@@ -28,6 +28,7 @@ May 2009
  ! Change the way we handle attachments (Display.php, ManageAttachments.php, Post.php, Subs-Post.php, Subs.php, install_2-0_*.sql, upgrade_2-0_*.sql)
  * Curve: unclosed div tag (Admin.template.php)
  * Curve: updated the GenericList template to match Curve's look and feel. (GenericList template, style.css, admin.css, forum.css, moderate.css)
+ * Curve: rewrote the Notify template to match Curve's look and feel. (Notify.template.php)
 
 April 2009
 --------------------------------------------------------------------------------
