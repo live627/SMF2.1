@@ -174,15 +174,6 @@ table.table_list a.collapse
 	clear: both;
 }
 /* the page navigation area */
-.pagesection
-{
-	font-size: 0.9em;
-	padding-left: 0.5em;
-}
-.pagesection .pagelinks
-{
-	padding: 1em 0 0.5em 0;
-}
 #childboards h3
 {
 	padding: 0;

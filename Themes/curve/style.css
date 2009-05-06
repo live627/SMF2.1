@@ -141,6 +141,17 @@ em
 {
 	float: left;
 }
+.flow_auto
+{
+	overflow: auto;
+	margin-top: 0.3em;
+	padding-bottom: 0.5em;
+}
+.flow_hidden
+{
+	overflow: hidden;
+}
+
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
 .smalltext, tr.smalltext th
 {
@@ -384,6 +395,23 @@ tr.catbg th.smalltext
 {
 	color: #000000;
 	background-color: #cacdd3;
+}
+
+/* the page navigation area */
+.pagesection
+{
+	font-size: 0.9em;
+	padding-left: 0.5em;
+}
+.pagesection .pagelinks
+{
+	padding: 1em 0 0.5em 0;
+}
+
+/* GenericList buttons */
+.additional_row input
+{
+	margin-left: 1em;
 }
 
 /* Color for background of posts requiring approval */

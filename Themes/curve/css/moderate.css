@@ -12,3 +12,7 @@
 	padding: 4px 0px 4px 4px;
 	border-bottom: 1px solid #cccccc;
 }
+h3.titlebg, tr.titlebg td 
+{
+padding-left: 0 !important;
+}

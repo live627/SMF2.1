@@ -15,10 +15,15 @@ function template_show_list($list_id = null)
 
 	if (isset($cur_list['form']))
 		echo '
-	<form action="', $cur_list['form']['href'], '" method="post"', empty($cur_list['form']['name']) ? '' : ' name="'. $cur_list['form']['name'] . '" id="' . $cur_list['form']['name'] . '"', ' accept-charset="', $context['character_set'], '">';
-
-	echo '
-		<table border="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
+	<form action="', $cur_list['form']['href'], '" method="post"', empty($cur_list['form']['name']) ? '' : ' name="'. $cur_list['form']['name'] . '" id="' . $cur_list['form']['name'] . '"', ' accept-charset="', $context['character_set'], '">
+		<div class="generic_list">';
+	
+	// Show the title of the table (if any).
+	if (!empty($cur_list['title']))
+		echo '
+			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $cur_list['title'], '
+			</h3>';
 
 	// This is for the old style menu with the arrows "> Test | Test 1"
 	if (empty($settings['use_tabs']) && isset($cur_list['list_menu'], $cur_list['list_menu']['show_on']) && ($cur_list['list_menu']['show_on'] == 'both' || $cur_list['list_menu']['show_on'] == 'top'))
@@ -26,42 +31,49 @@ function template_show_list($list_id = null)
 
 	if (isset($cur_list['additional_rows']['top_of_list']))
 		template_additional_rows('top_of_list', $cur_list);
-
-	// Show the title of the table (if any).
-	if (!empty($cur_list['title']))
-		echo '
-			<tr class="titlebg">
-				<td colspan="', $cur_list['num_columns'], '">', $cur_list['title'], '</td>
-			</tr>';
-
+				
 	if (isset($cur_list['additional_rows']['after_title']))
+	{	
+		echo '
+			<div class="information">';
 		template_additional_rows('after_title', $cur_list);
+		echo '
+			</div>';
+	}
+		
+	if (isset($cur_list['additional_rows']['above_column_headers']))
+	{
+		echo '	
+			<div class="floatright">';
+		template_additional_rows('above_column_headers', $cur_list);
+		echo '
+			</div>';
+	}
 
 	// Show the page index (if this list doesn't intend to show all items).
 	if (!empty($cur_list['items_per_page']))
 		echo '
-			<tr class="catbg">
-				<td align="left" colspan="', $cur_list['num_columns'], '">
-					<strong>', $txt['pages'], ':</strong> ', $cur_list['page_index'], '
-				</td>
-			</tr>';
+		<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>';
+	
+	
+	echo '
+		<table class="table_grid" cellspacing="0" width="', !empty($cur_list['width']) ? $cur_list['width'] : '100%', '">';
 
-	if (isset($cur_list['additional_rows']['above_column_headers']))
-		template_additional_rows('above_column_headers', $cur_list);
-
+	
 	// Show the column headers.
 	if(!(count($cur_list['headers']) < 2 && empty($cur_list['headers'][0]['label'])))
 	{
-		echo '
-				<tr class="titlebg">';
+		echo '	<thead>
+					<tr class="catbg">';
 
 		// Loop through each column and add a table header.
 		foreach ($cur_list['headers'] as $col_header)
 			echo '
-					<th valign="top"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', empty($col_header['label']) ? '&nbsp;' : $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
+						<th scope="col" class="smalltext"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', empty($col_header['colspan']) ? '' : ' colspan="' . $col_header['colspan'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '" rel="nofollow">', empty($col_header['label']) ? '&nbsp;' : $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
 
 		echo '
-				</tr>';
+					</tr>
+				</thead>';
 	}
 
 	// Show a nice message informing there are no items in this list.
@@ -86,30 +98,47 @@ function template_show_list($list_id = null)
 		}
 	}
 
-	if (isset($cur_list['additional_rows']['below_table_data']))
-		template_additional_rows('below_table_data', $cur_list);
-
-	// Show the page index again.
-	if (!empty($cur_list['items_per_page']))
-		echo '
-			<tr class="catbg">
-				<td align="left" colspan="', $cur_list['num_columns'], '">
-					<strong>', $txt['pages'], ':</strong> ', $cur_list['page_index'], '
-				</td>
-			</tr>';
-
-	if (isset($cur_list['additional_rows']['bottom_of_list']))
-		template_additional_rows('bottom_of_list', $cur_list);
-
 	echo '
 		</table>';
+	
+	echo '
+		<div class="flow_auto">';
+	
+	// Show the page index (if this list doesn't intend to show all items).
+	if (!empty($cur_list['items_per_page']))
+		echo '
+			<div class="align_left">
+				<div class="pagesection">', $txt['pages'], ': ', $cur_list['page_index'], '</div>
+			</div>';
 
+		
+	if (isset($cur_list['additional_rows']['below_table_data']))
+	{
+		echo '	
+			<div class="floatright">';
+		template_additional_rows('below_table_data', $cur_list);
+		echo '
+			</div>';
+	}
+	
+	if (isset($cur_list['additional_rows']['bottom_of_list']))
+	{
+		echo '
+			<div class="floatright">';
+		template_additional_rows('bottom_of_list', $cur_list);
+		echo '
+			</div>';
+	}	
+	echo '
+		</div>';
+	
 	if (isset($cur_list['form']))
 	{
 		foreach ($cur_list['form']['hidden_fields'] as $name => $value)
 			echo '
 		<input type="hidden" name="', $name, '" value="', $value, '" />';
 		echo '
+		</div>	
 	</form>';
 	}
 
@@ -130,9 +159,7 @@ function template_additional_rows($row_position, $cur_list)
 
 	foreach ($cur_list['additional_rows'][$row_position] as $row)
 		echo '
-			<tr', empty($row['class']) ? '' : ' class="' . $row['class'] . '"', '>
-				<td', empty($row['style']) ? '' : ' style="' . $row['style'] . '"', empty($row['align']) ? '' : ' align="' . $row['align'] . '"', empty($row['valign']) ? '' : ' valign="' . $row['valign'] . '"', ' colspan="', $cur_list['num_columns'], '">', $row['value'], '</td>
-			</tr>';
+			<div class="additional_row">', $row['value'], '</div>';
 }
 
 function template_create_list_menu($list_menu, $direction = 'top')

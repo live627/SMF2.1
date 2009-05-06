@@ -71,3 +71,15 @@ h3.titlebg form
 {
 	padding: 0.5em;
 }
+
+/* common admin classes */
+.table_caption, tr.table_caption td
+{
+	color:black;
+	font-size:10px;
+	font-weight:bold;
+}
+.additional_row input
+{
+	margin-left: 2em;
+}
