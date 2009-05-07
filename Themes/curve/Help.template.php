@@ -639,7 +639,7 @@ function template_manual_topic_view()
 	}
 	echo '
 			<div style="padding-top: 4px; padding-bottom: 4px;"></div>
-			<div class="righttext floatright" margin-bottom: 1ex;">
+			<div class="righttext floatright" style="margin-bottom: 1ex;">
 				<form action="', $scripturl, '?action=help;area=topic_view" method="get" accept-charset="', $context['character_set'], '">
 					<label for="jump2">', $txt['manual_index_jump_to'], '</label>: <select name="jump2" id="jump2" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.options[this.selectedIndex].value;">
 						<option value="">
