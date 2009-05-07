@@ -3468,7 +3468,7 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 			FROM {db_prefix}attachments
 			WHERE ID_ATTACH = {int:id_attach}',
 			array(
-				'id_attach' => $attachment_id
+				'id_attach' => $attachment_id,
 		));
 
 		if ($smcFunc['db_num_rows']($request) === 0)
@@ -3479,8 +3479,8 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 	}
 
 	// In case of files from the old system, do a legacy call.
-	if ($file_hash === null)
-		return getLegacyAttachmentFilename($filename, $attachment_id, $new);
+	if (empty($file_hash))
+		return getLegacyAttachmentFilename($filename, $attachment_id, $dir, $new);
 
 	// Are we using multiple directories?
 	if (!empty($modSettings['currentAttachmentUploadDir']))
@@ -3496,7 +3496,7 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 }
 
 // Older attachments may still use this function.
-function getLegacyAttachmentFilename($filename, $attachment_id, $new = false)
+function getLegacyAttachmentFilename($filename, $attachment_id, $dir = null, $new = false)
 {
 	global $modSettings;
 
