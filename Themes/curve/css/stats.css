@@ -10,12 +10,12 @@
 #stats_left
 {
 	float: left; 
-	width: 48.5%
+	width: 48.5%;
 }
 #stats_right
 {
 	float: right; 
-	width: 49%
+	width: 49%;
 }
 .stat_left_splitter, .stat_right_splitter
 {
