@@ -35,6 +35,7 @@ May 2009
  * Curve: small stats on Board Index not properly aligned (forum.css) [Bug 3429]
  * Curve: typos (stats.css)
  * Curve: button_strip was not active, wrong language string (Memberlist.template.php)
+ * Curve: fixed more invalid xhtml (Search.template.php)
 
 April 2009
 --------------------------------------------------------------------------------

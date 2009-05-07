@@ -251,11 +251,20 @@ function template_results()
 		}
 		else
 			echo '
-							<th class="smalltext" width="100%" colspan="5">', $txt['search_no_results'], '</th>';
+						<tr>
+							<th class="smalltext" width="100%" colspan="5"></th>';
 		echo '
 						</tr>
 					</thead>
 					<tbody>';
+		if (empty($context['topics']))
+		{
+			echo '
+						<tr>
+							<th class="smalltext" width="100%" colspan="5">', $txt['search_no_results'], '</th>';
+			echo '
+						</tr>';
+		}
 
 		while ($topic = $context['get_topics']())
 		{
