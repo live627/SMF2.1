@@ -129,6 +129,17 @@ form#ic_login ul li label
 {
 	display: block;
 }
+/*the small stats*/
+#stats
+{
+    display: block;
+    margin: 0 0 0.5em 0;
+    text-align: right;
+    font-size: 0.9em;
+    position: relative;
+    top: -20px;
+    line-height: 1px;
+}
 /* rounded bars needs a different background here */
 #upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
 {

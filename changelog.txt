@@ -32,6 +32,7 @@ May 2009
  ! Curve: Spaces in 'name' attribute of <a> tag causes invalid XHTML. (GenericMenu.template.php)
  ! Session languages where not validated correctly (Load.php) [Bug 3430]
  * Curve: fixed an xhtml typo (Search.template.php) [Bug 3431]
+ * Curve: small stats on Board Index not properly aligned (forum.css) [Bug 3429]
 
 April 2009
 --------------------------------------------------------------------------------
