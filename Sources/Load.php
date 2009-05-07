@@ -518,7 +518,7 @@ function loadUserSettings()
 		$user_info['language'] = strtr($_GET['language'], './\\:', '____');
 		$_SESSION['language'] = $user_info['language'];
 	}
-	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']) && isset($languages[strtr($_GET['language'], './\\:', '____')]))
+	elseif (!empty($modSettings['userLanguage']) && !empty($_SESSION['language']) && isset($languages[strtr($_SESSION['language'], './\\:', '____')]))
 		$user_info['language'] = strtr($_SESSION['language'], './\\:', '____');
 
 	// Just build this here, it makes it easier to change/use - administrators can see all boards.
