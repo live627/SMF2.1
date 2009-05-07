@@ -2,6 +2,27 @@
 /* styles from Profile.template       */
 /* ************************************* */
 
+/* Some overloading styles */
+h3.titlebg
+{
+	padding-left: 0;
+}
+
+dl
+{
+	overflow: hidden;
+	height: 0.1%;
+	margin: 0;
+	padding: 0;
+}
+
+.profile_error
+{
+	border: 2px dashed red;
+	padding: 5px;
+	margin: 0 1ex 1ex 1ex;
+}
+
 /* The basic user info on the left */
 #basicinfo
 {
@@ -13,7 +34,7 @@
 	width: 79%;
 	float: right;
 }
-#basicinfo .content, #detailedinfo .content
+.content
 {
 	padding: 0px 10px;
 }
@@ -57,7 +78,7 @@
 {
 	vertical-align: middle;
 }
-#detailedinfo div.content dl
+#detailedinfo div.content dl, #tracking div.content dl
 {
 	clear: both;
 	overflow: auto;
@@ -66,7 +87,7 @@
 	padding: 0 0 15px 0;
 	border-bottom: 1px #ccc solid;
 }
-#detailedinfo div.content dt
+#detailedinfo div.content dt, #tracking div.content dt
 {
 	width: 30%;
 	float: left;
@@ -75,7 +96,7 @@
 	font-weight: bold;
 	clear: both;
 }
-#detailedinfo div.content dd
+#detailedinfo div.content dd, #tracking div.content dd
 {
 	width: 70%;
 	float: left;
@@ -156,4 +177,233 @@ div#profile_success
 	border-color: green;
 	color: green;
 	background: #efe;
+}
+
+#generalstats
+{
+	float: left;
+	width: 54%;
+}
+
+#activitytime
+{
+	width: 54%;
+	float: left;
+	clear: left;
+	margin-top: 3px;
+}
+
+#popularposts, #popularactivity
+{
+	width: 45%;
+	float: right;
+	padding-left: 1%;
+}
+
+#generalstats h4, #popularposts h4, #popularactivity h4, #activitytime h4
+{
+	margin: 3px 0;
+}
+
+#generalstats div.content dt
+{
+	width: 50%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+	font-weight: bold;
+	clear: both;
+}
+#generalstats div.content dd
+{
+	width: 50%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+
+#popularposts div.content dt, #popularactivity div.content dt
+{
+	width: 65%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+	font-weight: bold;
+	clear: both;
+}
+#popularposts div.content dd, #popularactivity div.content dd
+{
+	width: 35%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+
+#activitytime div.content dt
+{
+	width: 50px;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0 3px 0 0;
+	font-weight: bold;
+	clear: both;
+	text-align: right;
+}
+#activitytime div.content dd
+{
+	width: 70%;
+	float: left;
+	margin: 0 0 3px 2px;
+	padding: 0;
+}
+
+.profile_pie
+{
+	background-image: url(../images/stats_pie.png);
+	float: left;
+	height: 20px;
+	width: 20px;
+	margin: 0;
+	padding: 0;
+	margin-right: 1em;
+}
+
+.profile_bar
+{
+	background-image: url(../images/bar.png);
+	height: 16px;
+	display: block;
+	background-position: top right;
+	text-align: right;
+}
+
+.bar_border
+{
+	border: 1px solid black;
+}
+
+.topic .time
+{
+	float: right;
+}
+.topic .counter
+{
+	margin-right: 1em;
+}
+.topic h4
+{
+	margin: 3px 0;
+}
+
+.topic .post
+{
+	margin: 0 1em;
+	min-height: 80px;
+	height: auto !important;
+	height: 80px;
+}
+
+.topic .mod_icons
+{
+	text-align: right;
+	margin-right: 1em;
+}
+
+#permissions dt
+{
+	width: 40%;
+	float: left;
+	margin: 0 0 -500px;
+	padding: 1% 1% 500px;
+	clear: both;
+	border-top: 1px solid white;
+}
+
+#permissions dd
+{
+	width: 56%;
+	float: left;
+	margin: 0;
+	padding: 1%;
+	border-top: 1px solid white;
+}
+
+#tracking div.content dl
+{
+	border-bottom: 0px;
+	margin: 0;
+	padding: 0;
+}
+
+#ip_list
+{
+	padding: 0;
+	margin: 0 0 3px 0;
+	list-style: none;
+	clear: both;
+	display: block;
+}
+
+#ip_list li.header
+{
+	display: block;
+	height: .1%;
+}
+
+#ip_list li.header, #ip_list li.ip
+{
+	float: left;
+	width: 49%;
+	padding: .5%;
+}
+
+#creator dl
+{
+	margin: 0;
+}
+#creator dt
+{
+	width: 40%;
+	float: left;
+	clear: both;
+	margin: 0 0 10px 0;
+}
+#creator dd
+{
+	float: left;
+	width: 60%;
+	margin: 0 0 10px 0;
+	height: 0.1%;
+	*float: none;
+	*width: auto;
+}
+
+#ignoreboards
+{
+	overflow: auto;
+	height: 0.1%;
+}
+
+#ignoreboards li
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	float: left;
+	width: 49%;
+}
+
+#theme_settings
+{
+	overflow: auto;
+	height: 0.1%;
+	margin: 0;
+	padding: 0;
+}
+
+#theme_settings li
+{
+	list-style: none;
+	margin: 10px 0;
+	padding: 0;
 }

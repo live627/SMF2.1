@@ -29,13 +29,14 @@ May 2009
  * Curve: unclosed div tag (Admin.template.php)
  * Curve: updated the GenericList template to match Curve's look and feel. (GenericList template, style.css, admin.css, forum.css, moderate.css)
  * Curve: rewrote the Notify template to match Curve's look and feel. (Notify.template.php)
- ! Curve: Spaces in 'name' attribute of <a> tag causes invalid XHTML. (GenericMenu.template.php)
+ * Curve: Spaces in 'name' attribute of <a> tag causes invalid XHTML. (GenericMenu.template.php)
  ! Session languages where not validated correctly (Load.php) [Bug 3430]
  * Curve: fixed an xhtml typo (Search.template.php) [Bug 3431]
  * Curve: small stats on Board Index not properly aligned (forum.css) [Bug 3429]
  * Curve: typos (stats.css)
  * Curve: button_strip was not active, wrong language string (Memberlist.template.php)
  * Curve: fixed more invalid xhtml (Search.template.php)
+ * Curve: Profile.template.php updated for Curve's look and feel (Profile.template.php, profile.css)
 
 April 2009
 --------------------------------------------------------------------------------
