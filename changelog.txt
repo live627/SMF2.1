@@ -37,6 +37,8 @@ May 2009
  * Curve: button_strip was not active, wrong language string (Memberlist.template.php)
  * Curve: fixed more invalid xhtml (Search.template.php)
  * Curve: Profile.template.php updated for Curve's look and feel (Profile.template.php, profile.css)
+ ! Add a theme check to prevent usaage of invalid themes (Load.php)
+
 
 April 2009
 --------------------------------------------------------------------------------

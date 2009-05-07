@@ -1129,14 +1129,14 @@ function RepairAttachments()
 					if (!empty($modSettings['currentAttachmentUploadDir']))
 					{
 						// Get the attachment name with out the folder.
-						$attachment_name = getAttachmentFilename($row['filename'], $row['id_attach'], null, false, $row['file_hash']);
+						$attachment_name = !empty($row['file_hash']) ? $row['id_attach'] . '_' . $row['file_hash'] : getLegacyAttachmentFilename($row['filename'], $row['id_attach'], null, true);
 
 						if (!is_array($modSettings['attachmentUploadDir']))
 							$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
 
 						// Loop through the other folders.
 						foreach ($modSettings['attachmentUploadDir'] as $id => $dir)
-							if (file_exists($dir . '/' . $row['id_attach'] . '_' . $row['file_hash']))
+							if (file_exists($dir . '/' . $attachment_name))
 							{
 								$context['repair_errors']['wrong_folder']++;
 								$errors_found[] = 'wrong_folder';
