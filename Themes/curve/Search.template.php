@@ -85,7 +85,7 @@ function template_main()
 							<option value="id_msg|desc">', $txt['search_orderby_recent_first'], '</option>
 							<option value="id_msg|asc">', $txt['search_orderby_old_first'], '</option>
 						</select>
-					</ldd>
+					</dd>
 					<dt class="options">', $txt['search_options'], ':</dt>
 					<dd class="options">
 						<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_show_complete_messages'], '</label><br />

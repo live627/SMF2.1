@@ -31,6 +31,7 @@ May 2009
  * Curve: rewrote the Notify template to match Curve's look and feel. (Notify.template.php)
  ! Curve: Spaces in 'name' attribute of <a> tag causes invalid XHTML. (GenericMenu.template.php)
  ! Session languages where not validated correctly (Load.php) [Bug 3430]
+ * Curve: fixed an xhtml typo (Search.template.php) [Bug 3431]
 
 April 2009
 --------------------------------------------------------------------------------
