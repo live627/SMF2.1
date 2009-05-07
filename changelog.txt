@@ -29,6 +29,7 @@ May 2009
  * Curve: unclosed div tag (Admin.template.php)
  * Curve: updated the GenericList template to match Curve's look and feel. (GenericList template, style.css, admin.css, forum.css, moderate.css)
  * Curve: rewrote the Notify template to match Curve's look and feel. (Notify.template.php)
+ ! Curve: Spaces in 'name' attribute of <a> tag causes invalid XHTML. (GenericMenu.template.php)
 
 April 2009
 --------------------------------------------------------------------------------
