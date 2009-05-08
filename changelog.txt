@@ -38,6 +38,8 @@ May 2009
  * Curve: fixed more invalid xhtml (Search.template.php)
  * Curve: Profile.template.php updated for Curve's look and feel (Profile.template.php, profile.css)
  ! Add a theme check to prevent usaage of invalid themes (Load.php)
+ ! Remove uneeded html from package servers, only allowing BBC. (PackageGet.php)
+ ! Token confirmation was flawed. (Security.php)
 
 
 April 2009

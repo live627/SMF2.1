@@ -252,9 +252,9 @@ function PackageGBrowse()
 		{
 			$context['sub_template'] = 'package_confirm';
 
-			$context['page_title'] = $txt['smf183'];
+			$context['page_title'] = $txt['package_servers'];
 			$context['confirm_message'] = sprintf($txt['package_confirm_view_package_content'], htmlspecialchars($_GET['absolute']));
-			$context['proceed_href'] = $scripturl . '?action=packageget;sa=browse;absolute=' . urlencode($_GET['absolute']) . ';confirm=' . $token;
+			$context['proceed_href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;absolute=' . urlencode($_GET['absolute']) . ';confirm=' . $token;
 
 			return;
 		}
@@ -314,17 +314,17 @@ function PackageGBrowse()
 	// Get default author and email if they exist.
 	if ($listing->exists('default-author'))
 	{
-		$default_author = $listing->fetch('default-author');
+		$default_author = $smcFunc['htmlspecialchars']($listing->fetch('default-author'));
 		if ($listing->exists('default-author/@email'))
-			$default_email = $listing->fetch('default-author/@email');
+			$default_email = $smcFunc['htmlspecialchars']($listing->fetch('default-author/@email'));
 	}
 
 	// Get default web site if it exists.
 	if ($listing->exists('default-website'))
 	{
-		$default_website = $listing->fetch('default-website');
+		$default_website = $smcFunc['htmlspecialchars']($listing->fetch('default-website'));
 		if ($listing->exists('default-website/@title'))
-			$default_title = $listing->fetch('default-website/@title');
+			$default_title = $smcFunc['htmlspecialchars']($listing->fetch('default-website/@title'));
 	}
 
 	$the_version = strtr($forum_version, array('SMF ' => ''));
@@ -351,10 +351,10 @@ function PackageGBrowse()
 			);
 
 			if (in_array($package['type'], array('title', 'text')))
-				$context['package_list'][$packageSection][$package['type']] = $thisPackage->fetch('.');
+				$context['package_list'][$packageSection][$package['type']] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
 			// It's a Title, Heading, Rule or Text.
 			elseif (in_array($package['type'], array('heading', 'rule')))
-				$package['name'] = $thisPackage->fetch('.');
+				$package['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
 			// It's a Remote link.
 			elseif ($package['type'] == 'remote')
 			{
@@ -381,7 +381,7 @@ function PackageGBrowse()
 					$package['href'] = $scripturl . '?action=admin;area=packages;get;sa=browse;absolute=' . $current_url;
 				}
 
-				$package['name'] = $thisPackage->fetch('.');
+				$package['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('.'));
 				$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
 			}
 			// It's a package...
@@ -404,6 +404,8 @@ function PackageGBrowse()
 
 				if ($package['description'] == '')
 					$package['description'] = $txt['package_no_description'];
+				else
+					$package['description'] = parse_bbc(preg_replace('~\[[/]?html\]~i', '', $smcFunc['htmlspecialchars']($package['description'])));				
 
 				$package['is_installed'] = isset($installed_mods[$package['id']]);
 				$package['is_current'] = $package['is_installed'] && ($installed_mods[$package['id']] == $package['version']);
@@ -423,6 +425,7 @@ function PackageGBrowse()
 				$package['download_conflict'] = is_array($already_exists) && $already_exists['id'] == $package['id'] && $already_exists['version'] != $package['version'];
 
 				$package['href'] = $url . '/' . $package['filename'];
+				$package['name'] = $smcFunc['htmlspecialchars']($package['name']);
 				$package['link'] = '<a href="' . $package['href'] . '">' . $package['name'] . '</a>';
 				$package['download']['href'] = $scripturl . '?action=admin;area=packages;get;sa=download' . $server_att . ';package=' . $current_url . $package['filename'] . ($package['download_conflict'] ? ';conflict' : '') . ';' . $context['session_var'] . '=' . $context['session_id'];
 				$package['download']['link'] = '<a href="' . $package['download']['href'] . '">' . $package['name'] . '</a>';
@@ -435,7 +438,7 @@ function PackageGBrowse()
 						$package['author']['email'] = $default_email;
 
 					if ($thisPackage->exists('author') && $thisPackage->fetch('author') != '')
-						$package['author']['name'] = $thisPackage->fetch('author');
+						$package['author']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('author'));
 					else
 						$package['author']['name'] = $default_author;
 
@@ -450,11 +453,11 @@ function PackageGBrowse()
 				if ($thisPackage->exists('website') || isset($default_website))
 				{
 					if ($thisPackage->exists('website') && $thisPackage->exists('website/@title'))
-						$package['author']['website']['name'] = $thisPackage->fetch('website/@title');
+						$package['author']['website']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('website/@title'));
 					elseif (isset($default_title))
 						$package['author']['website']['name'] = $default_title;
 					elseif ($thisPackage->exists('website'))
-						$package['author']['website']['name'] = $thisPackage->fetch('website');
+						$package['author']['website']['name'] = $smcFunc['htmlspecialchars']($thisPackage->fetch('website'));
 					else
 						$package['author']['website']['name'] = $default_website;
 
