@@ -623,7 +623,7 @@ function EditBoard2()
 		{
 			$moderators = array();
 			foreach ($_POST['moderator_list'] as $moderator)
-				$moderators[] = (int) $moderator;
+				$moderators[(int) $moderator] = (int) $moderator;
 			$boardOptions['moderators'] = $moderators;
 		}
 
