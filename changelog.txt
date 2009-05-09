@@ -40,6 +40,7 @@ May 2009
  ! Add a theme check to prevent usaage of invalid themes (Load.php)
  ! Remove uneeded html from package servers, only allowing BBC. (PackageGet.php)
  ! Token confirmation was flawed. (Security.php)
+ ! Avatar hash was not handled correctly (Subs-Graphics.php) [Bug 3433]
 
 
 April 2009

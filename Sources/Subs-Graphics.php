@@ -135,7 +135,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			'id_folder' => 'int',
 		),
 		array(
-			$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $ext, 1,
+			$memID, (empty($modSettings['custom_avatar_enabled']) ? 0 : 1), $destName, $avatar_hash, $ext, 1,
 			$id_folder,
 		),
 		array('id_attach')
