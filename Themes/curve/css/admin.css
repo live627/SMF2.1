@@ -102,6 +102,65 @@ h3.titlebg form
 	margin: 0 0 3px 0;
 	padding: 0;
 }
+/* ManageMaintenance */
+#maintenance
+{
+	padding-bottom: 0.5em;
+}
+#maintenance p
+{
+	margin-top: 0;
+}
+#maintenance div.content dl
+{
+	clear: both;
+	overflow: auto;
+	height: 0.1%;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+#maintenance div.content dt
+{
+	width: 30%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+	font-weight: bold;
+	clear: both;
+}
+#maintenance div.content dd
+{
+	width: 70%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+#maintenance #rotPanel
+{
+	overflow: auto;
+}
+.maintain_left
+{
+	float: left;
+	display: block;
+	margin-left: 2em;
+	width: 40%;
+}
+
+.maintain_right
+{
+	float: left;
+	display: block;
+	margin-left: 2em;
+}
+.maintenance_finished
+{
+	margin: 1ex; 
+	padding: 1ex 2ex; 
+	border: 1px dashed green; 
+	color: green;
+	background: #efe;
+}
 
 /* ************************************* */
 /* only for backward compability   */
