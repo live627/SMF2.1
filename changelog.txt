@@ -41,6 +41,7 @@ May 2009
  ! Remove uneeded html from package servers, only allowing BBC. (PackageGet.php)
  ! Token confirmation was flawed. (Security.php)
  ! Avatar hash was not handled correctly (Subs-Graphics.php) [Bug 3433]
+ * Curve: changed the way we handle old admin templates (admin.css)
 
 
 April 2009
