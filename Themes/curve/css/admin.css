@@ -43,12 +43,6 @@ ol.search_results li
 	float: left;
 	margin: 0 1em 1em 1em;
 }
-
-.windowbg, .windowbg2
-{
-	padding-left: 1em;
-	padding-right: 1em;
-}
 h3.titlebg
 {
 	padding-left: 0;
@@ -69,7 +63,7 @@ h3.titlebg form
 }
 .content
 {
-	padding: 0.5em;
+	padding: 0 0.5em;
 }
 
 /* common admin classes */
@@ -82,4 +76,18 @@ h3.titlebg form
 .additional_row input
 {
 	margin-left: 2em;
+}
+/* ************************************* */
+/* only for backward compability   */
+/* ************************************* */
+/*this one is for Backward compatibility with older templates*/
+td.windowbg, td.windowbg2
+{
+	padding-left: 1em;
+	padding-right: 1em;
+}
+/* remove the lower gap from some old templates */
+form
+{
+	padding-bottom: 0.5em;
 }
