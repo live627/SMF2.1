@@ -12,7 +12,7 @@ function template_main()
 		<td align="right">';
 	if (!$settings['show_stats_index'])
 		echo '
-			', $txt['members'], ': ', comma_format($context['common_stats']['total_members']), ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', comma_format($context['common_stats']['total_posts']), ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', comma_format($context['common_stats']['total_topics']), '
+			', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
 			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '');
 	echo '
 		</td>
@@ -391,13 +391,13 @@ function template_info_center()
 		<td class="windowbg2" width="100%">
 			<table border="0" width="90%"><tr>
 				<td class="smalltext">
-					<div class="floatleft" style="width: 50%;">', $txt['total_topics'], ': <strong>', comma_format($context['common_stats']['total_topics']), '</strong></div>', $txt['total_posts'], ': <strong>', comma_format($context['common_stats']['total_posts']), '</strong><br />', !empty($context['latest_post']) ? '
+					<div class="floatleft" style="width: 50%;">', $txt['total_topics'], ': <strong>', $context['common_stats']['total_topics'], '</strong></div>', $txt['total_posts'], ': <strong>', $context['common_stats']['total_posts'], '</strong><br />', !empty($context['latest_post']) ? '
 					' . $txt['latest_post'] . ': &quot;' . $context['latest_post']['link'] . '&quot;  (' . $context['latest_post']['time'] . ')<br />' : '', '
 					<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 					<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '
 				</td>
 				<td width="32%" class="smalltext" valign="top">
-					', $txt['total_members'], ': <strong><a href="', $scripturl, '?action=mlist">', comma_format($context['common_stats']['total_members']), '</a></strong><br />
+					', $txt['total_members'], ': <strong><a href="', $scripturl, '?action=mlist">', $context['common_stats']['total_members'], '</a></strong><br />
 					', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong><br />' : '';
 		// If they are logged in, show their unread message count, etc..
 		if ($context['user']['is_logged'])

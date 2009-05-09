@@ -9,7 +9,7 @@ function template_main()
 	if (!$settings['show_stats_index'])
 		echo '
 	<p id="stats">
-		', $txt['members'], ': ', comma_format($context['common_stats']['total_members']), ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', comma_format($context['common_stats']['total_posts']), ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', comma_format($context['common_stats']['total_topics']), '
+		', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
 		', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '') , '
 	</p>';
 
@@ -377,7 +377,7 @@ function template_info_center()
 						<a href="', $scripturl, '?action=stats"><img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
 					</p>
 					<div class="windowbg2 sectionbody middletext">
-						', comma_format($context['common_stats']['total_posts']), ' ', $txt['posts_made'], ' ', $txt['in'], ' ', comma_format($context['common_stats']['total_topics']), ' ', $txt['topics'], ' ', $txt['by'], ' ', comma_format($context['common_stats']['total_members']), ' ', $txt['members'], '. ', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
+						', $context['common_stats']['total_posts'], ' ', $txt['posts_made'], ' ', $txt['in'], ' ', $context['common_stats']['total_topics'], ' ', $txt['topics'], ' ', $txt['by'], ' ', $context['common_stats']['total_members'], ' ', $txt['members'], '. ', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
 						', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
 						<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 						<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '

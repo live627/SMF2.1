@@ -46,6 +46,7 @@ May 2009
  * Curve: rewrote the ManageMaintenance template to match Curve's look and feel. (ManageMaintenance.template.php, admin.css)
  * Curve: rewrote the ManageAttachments template to match Curve's look and feel. (ManageAttachments.template.php)
  * Curve: changed some css classes (admin.css)
+ * Forum stats already have comma_format applied to them (BoardIndex.template.php) [Bug 3432]
 
 
 April 2009
