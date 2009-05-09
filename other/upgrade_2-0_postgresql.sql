@@ -399,7 +399,7 @@ else
 ---{
 	upgrade_query("
 		ALTER TABLE {$db_prefix}attachments
-		ADD COLUMN file_hash varchar(40)");
+		ADD COLUMN file_hash varchar(40) NOT NULL default ''");
 ---}
 ---#
 

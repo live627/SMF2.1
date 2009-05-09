@@ -1341,7 +1341,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 
 ---# Adding file hash.
 ALTER TABLE {$db_prefix}attachments
-ADD COLUMN file_hash char(40) NOT NULL default '';
+ADD COLUMN file_hash varchar(40) NOT NULL default '';
 ---#
 
 /******************************************************************************/
