@@ -297,7 +297,7 @@ function EditCategory()
 	{
 		if ($catid == $_REQUEST['cat'] && $prevCat > 0)
 			$context['category_order'][$prevCat]['selected'] = true;
-		else
+		elseif ($catid != $_REQUEST['cat'])
 			$context['category_order'][$catid] = array(
 				'id' => $catid,
 				'name' => $txt['mboards_order_after'] . $tree['node']['name'],
