@@ -1367,7 +1367,7 @@ function template_manual_posting_topics()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-	<p>', $txt['manual_posting_forum_about_part1'], '<a href="', $scripturl, '?action=help;area=smileys">', $txt['manual_posting_forum_about_link_bbcref'], '</a>', $txt['manual_posting_forum_about_part2'], '<a href="', $scripturl, '?action=help;area=smileys#smileysref">', $txt['manual_posting_forum_about_link_bbcref_smileysref'], '</a>', $txt['manual_posting_forum_about_part3'], '</p>
+	<p>', $txt['manual_posting_forum_about_part1'], '<a href="', $scripturl, '?action=help;area=bbcode">', $txt['manual_posting_forum_about_link_bbcref'], '</a>', $txt['manual_posting_forum_about_part2'], '<a href="', $scripturl, '?action=help;area=smileys">', $txt['manual_posting_forum_about_link_bbcref_smileysref'], '</a>', $txt['manual_posting_forum_about_part3'], '</p>
 	<p>', $txt['manual_posting_please_note'], '</p>
 	<ol>
 		<li>
@@ -1397,13 +1397,6 @@ function template_manual_posting_topics()
 				<li><a href="', $scripturl, '?action=help;area=posting_topics#return">', $txt['manual_posting_return'], '</a></li>
 				<li><a href="', $scripturl, '?action=help;area=posting_topics#nosmileys">', $txt['manual_posting_no_smiley'], '</a></li>
 				<li><a href="', $scripturl, '?action=help;area=posting_topics#attachments">', $txt['manual_posting_sub_attach'], '</a></li>
-			</ol>
-		</li>
-		<li>
-			<a href="', $scripturl, '?action=help;area=posting_topics#references">', $txt['manual_posting_sec_references'], '</a>
-			<ol class="la">
-				<li><a href="', $scripturl, '?action=help;area=posting_topics#bbcref">', $txt['manual_posting_sub_SMF_bbc'], '</a></li>
-				<li><a href="', $scripturl, '?action=help;area=posting_topics#smileysref">', $txt['manual_posting_sub_help_smileys'], '</a></li>
 			</ol>
 		</li>
 	</ol>
