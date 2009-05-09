@@ -44,6 +44,8 @@ May 2009
  * Curve: changed the way we handle old admin templates (admin.css)
  * Curve: rewrote the ManageMail template to match Curve's look and feel. (ManageMail.template.php, admin.css)
  * Curve: rewrote the ManageMaintenance template to match Curve's look and feel. (ManageMaintenance.template.php, admin.css)
+ * Curve: rewrote the ManageAttachments template to match Curve's look and feel. (ManageAttachments.template.php)
+ * Curve: changed some css classes (admin.css)
 
 
 April 2009

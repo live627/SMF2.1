@@ -69,72 +69,47 @@ h3.titlebg form
 /* common admin classes */
 .table_caption, tr.table_caption td
 {
-	color:black;
-	font-size:10px;
-	font-weight:bold;
+	color: black;
+	font-size: 10px;
+	font-weight: bold;
 }
 .additional_row input
 {
 	margin-left: 2em;
 }
-/* manage mails  */
-#manage_mail div.content dl
+#manage_mail div.content dl, #manage_attachments div.content dl, #maintenance div.content dl
 {
 	clear: both;
 	overflow: auto;
-	height: 0.1%;
 	margin: 0 0 3px 0;
-	padding: 0 0 0 0;
+	padding: 0;
 }
-#manage_mail div.content dt
+#manage_mail div.content dt, #manage_attachments div.content dt, #maintenance div.content dt
 {
-	width: 30%;
+	width: 45%;
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0;
 	font-weight: bold;
 	clear: both;
 }
-#manage_mail div.content dd
+#manage_mail div.content dd, #manage_attachments div.content dd, #maintenance div.content dd
 {
-	width: 70%;
+	width: 50%;
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0;
 }
-/* ManageMaintenance */
-#maintenance
+#maintenance, #manage_attachments, #manage_mail
 {
 	padding-bottom: 0.5em;
 }
-#maintenance p
+#manage_mail p, #manage_attachments p, #manage_mail p
 {
 	margin-top: 0;
 }
-#maintenance div.content dl
-{
-	clear: both;
-	overflow: auto;
-	height: 0.1%;
-	margin: 0 0 3px 0;
-	padding: 0;
-}
-#maintenance div.content dt
-{
-	width: 30%;
-	float: left;
-	margin: 0 0 3px 0;
-	padding: 0;
-	font-weight: bold;
-	clear: both;
-}
-#maintenance div.content dd
-{
-	width: 70%;
-	float: left;
-	margin: 0 0 3px 0;
-	padding: 0;
-}
+
+/* ManageMaintenance */
 #maintenance #rotPanel
 {
 	overflow: auto;
