@@ -2538,7 +2538,7 @@ function profileSaveAvatarData(&$value)
 						if (file_exists($uploadDir . '/avatar_tmp_' . $memID))
 							@unlink($uploadDir . '/avatar_tmp_' . $memID);
 
-						fatal_lang_error('smf124');
+						fatal_lang_error('attach_timeout');
 					}
 				}
 				fclose($fp);
