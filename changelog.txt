@@ -42,6 +42,7 @@ May 2009
  ! Token confirmation was flawed. (Security.php)
  ! Avatar hash was not handled correctly (Subs-Graphics.php) [Bug 3433]
  * Curve: changed the way we handle old admin templates (admin.css)
+ * Curve: rewrote the ManageMail template to match Curve's look and feel. (ManageMail.template.php, admin.css)
 
 
 April 2009
