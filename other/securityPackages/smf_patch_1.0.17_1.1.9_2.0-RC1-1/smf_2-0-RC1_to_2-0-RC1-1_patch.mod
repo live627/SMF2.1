@@ -566,12 +566,19 @@ $sourcedir/Profile-Modify.php
 
 
 <search for>
+				// Remove previous attachments this member might have had.
+				removeAttachments(array('id_member' => $memID));
+
 				if (!rename($_FILES['attachment']['tmp_name'], $uploadDir . '/' . $destName))
 					fatal_lang_error('attach_timeout', 'critical');
 
 </search for>
 
-<replace></replace>
+<replace>
+				// Remove previous attachments this member might have had.
+				removeAttachments(array('id_member' => $memID));
+
+</replace>
 
 
 
