@@ -2733,17 +2733,13 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 // Usage: logAction('remove', array('starter' => $id_member_started));
 function logAction($action, $extra = array(), $log_type = 'moderate')
 {
-	global $modSettings, $user_info, $smcFunc;
+	global $modSettings, $user_info, $smcFunc, $sourcedir;
 
 	$log_types = array(
 		'moderate' => 1,
 		'user' => 2,
 		'admin' => 3,
 	);
-
-	// No point in doing anything if the log isn't even enabled.
-	if (empty($modSettings['modlog_enabled']) || !isset($log_types[$log_type]))
-		return false;
 
 	if (!is_array($extra))
 		trigger_error('logAction(): data is not an array with action \'' . $action . '\'', E_USER_NOTICE);
@@ -2758,6 +2754,43 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 	}
 	else
 		$topic_id = '0';
+
+	if (isset($extra['message']))
+	{
+		if (!is_numeric($extra['message']))
+			trigger_error('logAction(): data\'s message is not a number', E_USER_NOTICE);
+		$msg_id = empty($extra['message']) ? '0' : (int)$extra['message'];
+		unset($extra['message']);
+	}
+	else
+		$msg_id = '0';
+
+	// Is there an associated report on this?
+	if (in_array($action, array('move', 'remove', 'split', 'merge')))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_report
+			FROM {db_prefix}log_reported
+			WHERE {raw:column_name} = {int:reported}
+			LIMIT 1',
+			array(
+				'column_name' => !empty($msg_id) ? 'id_msg' : 'id_topic',
+				'reported' => !empty($msg_id) ? $msg_id : $topic_id,
+		));
+	
+		// Alright, if we get any result back, update open reports.
+		if ($smcFunc['db_num_rows']($request) > 0)
+		{
+			require_once($sourcedir . '/ModerationCenter.php');
+			updateSettings(array('last_mod_report_action' => time()));
+			recountOpenReports();
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
+	// No point in doing anything else, if the log isn't even enabled.
+	if (empty($modSettings['modlog_enabled']) || !isset($log_types[$log_type]))
+		return false;
 
 	if (isset($extra['member']) && !is_numeric($extra['member']))
 		trigger_error('logAction(): data\'s member is not a number', E_USER_NOTICE);
@@ -2782,16 +2815,6 @@ function logAction($action, $extra = array(), $log_type = 'moderate')
 			unset($extra['board_to']);
 		}
 	}
-
-	if (isset($extra['message']))
-	{
-		if (!is_numeric($extra['message']))
-			trigger_error('logAction(): data\'s message is not a number', E_USER_NOTICE);
-		$msg_id = empty($extra['message']) ? '0' : (int)$extra['message'];
-		unset($extra['message']);
-	}
-	else
-		$msg_id = '0';
 
 	$smcFunc['db_insert']('',
 		'{db_prefix}log_actions',

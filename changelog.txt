@@ -49,6 +49,7 @@ May 2009
  * Forum stats already have comma_format applied to them (BoardIndex.template.php) [Bug 3432]
  ! Deleting category was offering to move boards to itself (ManageBoards.php)
  ! Adding a moderator more than once doesn't make them do more work (ManageBoards.php) [Bug 3428]
+ ! Taking action against a reported post did not update Report count if needed (Subs.php) [Bug 3434]
 
 
 April 2009
