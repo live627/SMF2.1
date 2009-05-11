@@ -317,7 +317,7 @@ $sourcedir/Subs-Graphics.php
 			$path = $modSettings['attachmentUploadDir'];
 
 		// Remove the .tmp extension from the attachment.
-		if (rename($destName . '.tmp', $avatar_hash === null ? $destName : $path . '/' . $attachID . '_' . $avatar_hash))
+		if (rename($destName . '.tmp', $avatar_hash ? $destName : $path . '/' . $attachID . '_' . $avatar_hash))
 </replace>
 
 
@@ -327,7 +327,7 @@ $sourcedir/Subs-Graphics.php
 </search for>
 
 <replace>
-					'filesize' => filesize($avatar_hash === null ? $destName : $path . '/' . $attachID . '_' . $avatar_hash),
+					'filesize' => filesize($avatar_hash ? $destName : $path . '/' . $attachID . '_' . $avatar_hash),
 					'width' => (int) $width,
 </replace>
 
@@ -608,7 +608,7 @@ $sourcedir/Profile-Modify.php
 </search for>
 
 <replace>
-				$destinationPath = $uploadDir . '/' . ($file_hash === null ? $destName : $cur_profile['id_attach'] . '_' . $file_hash);
+				$destinationPath = $uploadDir . '/' . ($file_hash ? $destName : $cur_profile['id_attach'] . '_' . $file_hash);
 				if (!rename($_FILES['attachment']['tmp_name'], $destinationPath))
 				{
 					removeAttachments(array('id_member' => $memID));

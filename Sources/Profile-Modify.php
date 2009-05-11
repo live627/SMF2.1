@@ -2576,7 +2576,7 @@ function profileSaveAvatarData(&$value)
 				$cur_profile['filename'] = $destName;
 				$cur_profile['attachment_type'] = empty($modSettings['custom_avatar_enabled']) ? 0 : 1;
 
-				$destinationPath = $uploadDir . '/' . ($file_hash === null ? $destName : $cur_profile['id_attach'] . '_' . $file_hash);
+				$destinationPath = $uploadDir . '/' . ($file_hash ? $destName : $cur_profile['id_attach'] . '_' . $file_hash);
 				if (!rename($_FILES['attachment']['tmp_name'], $destinationPath))
 				{
 					// I guess a man can try.
