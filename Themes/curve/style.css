@@ -786,7 +786,7 @@ ul.tabbuttons li
 .dropmenu, .dropmenu ul 
 {
 	float: left;
-	width: 98%;
+	width: 95%;
 	list-style: none;
 	line-height: 1;
 	padding: 0;
@@ -992,6 +992,7 @@ ul#navigation li
 {
 	float: right;
 	margin-right: 10px;
+	padding-top: 3px;
 }
 #menu_toggle span
 {

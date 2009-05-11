@@ -53,6 +53,7 @@ May 2009
  ! Don't allow flash attachments to be shown as images - reported by Alejandro Rusell. (Display.php)
  ! Try to prevent custom avatar settings from being empty, causing errors (ManageAttachments.php, Admin.template.php, Admin.english.php) [Bug 3414]
  ! Present a login form to guests trying to view profiles without sufficient permissions. (Profile.php) 
+ * Curve: Toggle link not floated right (style.css) [Bug 3438]
 
 
 April 2009
