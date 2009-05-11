@@ -1345,51 +1345,63 @@ function smfSelectText(oCurElement, bActOnElement)
 	return false;
 }
 
-main_menu = function() {
-   var cssRule;
-   var newSelector;
-   for (var i = 0; i < document.styleSheets.length; i++)
-      for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
-         {
-         cssRule = document.styleSheets[i].rules[x];
-         if (cssRule.selectorText.indexOf("LI:hover") != -1)
-         {
-             newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
-            document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
-         }
-      }
-   var getElm = document.getElementById("main_menu").getElementsByTagName("LI");
-   for (var i=0; i<getElm.length; i++) {
-      getElm[i].onmouseover=function() {
-         this.className+=" iehover";
-      }
-      getElm[i].onmouseout=function() {
-         this.className=this.className.replace(new RegExp(" iehover\\b"), "");
-      }
-   }
+main_menu = function() 
+{
+	var cssRule;
+	var newSelector;
+	for (var i = 0; i < document.styleSheets.length; i++)
+		for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
+		{
+			cssRule = document.styleSheets[i].rules[x];
+			if (cssRule.selectorText.indexOf("LI:hover") != -1)
+			{
+				newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
+				document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
+			}
+		}
+		var getElm = document.getElementById("main_menu").getElementsByTagName("LI");
+		for (var i=0; i<getElm.length; i++) 
+		{
+				getElm[i].onmouseover=function() {
+				this.className+=" iehover";
+		}
+		getElm[i].onmouseout=function() 
+		{
+			this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+		}
+	}
 }
-adm_menu = function() {
-   var cssRule;
-   var newSelector;
-   for (var i = 0; i < document.styleSheets.length; i++)
-      for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
-         {
-         cssRule = document.styleSheets[i].rules[x];
-         if (cssRule.selectorText.indexOf("LI:hover") != -1)
-         {
-             newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
-            document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
-         }
-      }
-   var getElm = document.getElementById("admin_menu").getElementsByTagName("LI");
-   for (var i=0; i<getElm.length; i++) {
-      getElm[i].onmouseover=function() {
-         this.className+=" iehover";
-      }
-      getElm[i].onmouseout=function() {
-         this.className=this.className.replace(new RegExp(" iehover\\b"), "");
-      }
-   }
+adm_menu = function() 
+{
+	var cssRule;
+	var newSelector;
+	for (var i = 0; i < document.styleSheets.length; i++)
+	for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
+	{
+		cssRule = document.styleSheets[i].rules[x];
+		if (cssRule.selectorText.indexOf("LI:hover") != -1)
+		{
+			newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
+			document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
+		}
+	}
+	//check the parent element fist!
+	var possibleAdminMenu = document.getElementById("admin_menu");
+	if (possibleAdminMenu)
+	{
+		var getElm = document.getElementById("admin_menu").getElementsByTagName("LI");
+		for (var i=0; i<getElm.length; i++) 
+		{
+			getElm[i].onmouseover=function() 
+			{
+				this.className+=" iehover";
+			}
+            getElm[i].onmouseout=function() 
+			{
+				this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+            }
+        }
+   } 
 }
 
 if (window.attachEvent && is_ie6) 
