@@ -221,7 +221,7 @@ function ModerationHome()
 	);
 
 	if (empty($user_settings['mod_prefs']))
-		$user_blocks = 'nwrg';
+		$user_blocks = 'nw' . ($user_info['mod_cache']['bq'] == '0=1' ? '' : 'r') . ($user_info['mod_cache']['gq'] == '0=1' ? '' : 'g');
 	else
 		list (, $user_blocks) = explode('|', $user_settings['mod_prefs']);
 
@@ -1961,7 +1961,7 @@ function ModerationSettings()
 	// Does the user have any settings yet?
 	if (empty($user_settings['mod_prefs']))
 	{
-		$mod_blocks = 'npwgr';
+		$mod_blocks = 'nw' . ($user_info['mod_cache']['bq'] == '0=1' ? '' : 'r') . ($user_info['mod_cache']['gq'] == '0=1' ? '' : 'g');
 		$pref_binary = 5;
 		$show_reports = 1;
 	}

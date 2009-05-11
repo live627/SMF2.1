@@ -1665,12 +1665,12 @@ function authentication($memID, $saving = false)
 
 			if (empty($post_errors))
 			{
-				// Go then.
-				$_POST['passwrd1'] = sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd1']));
-
 				// Integration?
 				if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 					call_user_func($modSettings['integrate_reset_pass'], $cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']);
+
+				// Go then.
+				$_POST['passwrd1'] = sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd1']));
 
 				// Do the important bits.
 				updateMemberData($memID, array('openid_uri' => '', 'passwd' => $_POST['passwrd1']));

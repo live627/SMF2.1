@@ -386,6 +386,15 @@ function deleteMembers($users, $check_not_admin = false)
 		)
 	);
 
+	// They no longer exist, so we don't know who it was sent to.
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}pm_recipients
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);
+
 	// Delete avatar.
 	require_once($sourcedir . '/ManageAttachments.php');
 	removeAttachments(array('id_member' => $users));

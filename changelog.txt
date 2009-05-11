@@ -61,6 +61,9 @@ May 2009
  * Curve: removed a gap from BoardIndex (BoardIndex.template.php, forum.css) [Bug 3417]
  * Curve: Polls in topic need curve effect (Display.template.php, forum.css) [Bug 3055]
  * Curve: Updating Activity icons to reflect curve looks (images/topic/*.gif) [Bug 3444]
+ ! Default Moderation center settings should hide areas the moderator may not have access to (ModerationCenter.php) [Bug 2839]
+ ! Deleting a user, should remove entries from the recipients table as well (Subs-Member.php) [Bug 2289]
+ ! When using Intergration, we should send the raw password rather than the SMF sha1 verison (Profile-Modify.php) [Bug 2933]
 
 
 April 2009
