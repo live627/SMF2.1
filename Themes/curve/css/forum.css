@@ -164,6 +164,11 @@ form#ic_login ul li label
 {
 	background: url(../images/theme/caps.png) no-repeat 100% 0;
 }
+#upshrinkHeaderIC p.pminfo
+{
+    margin: 0;
+    padding: 0.5em;
+}
 img#upshrink_ic
 {
 	float: right;

@@ -414,7 +414,7 @@ function template_info_center()
 				', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img class="icon" src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" />', $context['allow_pm'] ? '</a>' : '', '
 				<span>', $txt['personal_message'], '</span>
 			</h4>
-			<p>
+			<p class="pminfo">
 				<strong><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></strong>
 				<span class="smalltext">
 					', $txt['you_have'], ' ', comma_format($context['user']['messages']), ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], ' <a href="', $scripturl, '?action=pm">', $txt['here'], '</a> ', $txt['to_view'], '
