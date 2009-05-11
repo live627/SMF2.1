@@ -51,6 +51,7 @@ May 2009
  ! Adding a moderator more than once doesn't make them do more work (ManageBoards.php) [Bug 3428]
  ! Taking action against a reported post did not update Report count if needed (Subs.php) [Bug 3434]
  ! Don't allow flash attachments to be shown as images - reported by Alejandro Rusell. (Display.php)
+ ! Try to prevent custom avatar settings from being empty, causing errors (ManageAttachments.php, Admin.template.php, Admin.english.php) [Bug 3414]
 
 
 April 2009
