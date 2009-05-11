@@ -1980,7 +1980,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				WHERE id_member = {int:current_member}
 					AND id_topic = {int:id_topic}',
 				array(
-					'current_member' => $user_info['id'],
+					'current_member' => $posterOptions['id'],
 					'id_msg' => $msgOptions['id'],
 					'id_topic' => $topicOptions['id'],
 				)
@@ -1994,7 +1994,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}log_topics',
 				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
-				array($topicOptions['id'], $user_info['id'], $msgOptions['id'] + 1),
+				array($topicOptions['id'], $posterOptions['id'], $msgOptions['id'] + 1),
 				array('id_topic', 'id_member')
 			);
 		}

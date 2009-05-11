@@ -3654,9 +3654,12 @@ function text2words($text, $max_chars = 20, $encrypt = false)
 }
 
 // Creates an image/text button
-function create_button($name, $alt, $label = '', $custom = '')
+function create_button($name, $alt, $label = '', $custom = '', $force_use = false)
 {
 	global $settings, $txt, $context;
+
+	if (!$force_use && function_exists('template_create_button'))
+		return template_create_button($name, $alt, $label = '', $custom = '');
 
 	if (!$settings['use_image_buttons'])
 		return $txt[$alt];

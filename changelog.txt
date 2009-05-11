@@ -64,6 +64,8 @@ May 2009
  ! Default Moderation center settings should hide areas the moderator may not have access to (ModerationCenter.php) [Bug 2839]
  ! Deleting a user, should remove entries from the recipients table as well (Subs-Member.php) [Bug 2289]
  ! When using Intergration, we should send the raw password rather than the SMF sha1 verison (Profile-Modify.php) [Bug 2933]
+ ! Use posterOptions when marking new topics read instead of user_info (Subs-Post.php) [Bug 2913]
+ ! Allow themes to use "template_create_button" to create their own buttons (Subs.php) [Bug 1878]
 
 
 April 2009
