@@ -57,6 +57,7 @@ May 2009
  * Curve: Layout issues in IE6 (ie6.css) [Bug 3440]
  * Curve: prevent from a linebreak in GenericList table headers (style.css) [Bug 3441]
  * Curve: check the existence of parent element before using getElementById for a child (script.js) [Bug 3439]
+ * Curve: fixed the missing buttonlist transparency for IE6 (ie6.css) [Bug 3442]
 
 
 April 2009

@@ -40,6 +40,28 @@
 {
 	background: url(../images/theme/menu_gfx.gif) no-repeat 0 -31px;
 }
+.buttonlist ul li a
+{
+    background: url(../images/theme/menu_gfx.gif) no-repeat 0 -60px;
+}
+
+.buttonlist ul li a span
+{
+    background: url(../images/theme/menu_gfx.gif) no-repeat 100% -60px;
+}
+.buttonlist ul li a:hover span
+{
+    background: url(../images/theme/menu_gfx.gif) no-repeat 100% 0;
+}
+/* the active one */
+.buttonlist ul li a.active
+{
+    background: url(../images/theme/menu_gfx.gif) no-repeat 0 -30px;
+}
+.buttonlist ul li a.active span
+{
+    background: url(../images/theme/menu_gfx.gif) no-repeat 100% -30px;
+}
 /* the user section needs some attention */
 #main_menu
 {
