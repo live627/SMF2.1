@@ -557,7 +557,7 @@ $sourcedir/Profile-Modify.php
 </search for>
 
 <replace>
-				$file_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : null;
+				$file_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : '';
 
 				// Remove previous attachments this member might have had.
 				removeAttachments(array('id_member' => $memID));
