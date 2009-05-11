@@ -240,7 +240,7 @@ table.table_list a.collapse
 /* Poll question */
 h4#pollquestion
 {
-	padding: 1em 0 1em 2em;
+	padding: 0.5em 0 0.5em 2em;
 }
 
 /* Poll vote options */

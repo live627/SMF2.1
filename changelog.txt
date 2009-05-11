@@ -59,6 +59,7 @@ May 2009
  * Curve: check the existence of parent element before using getElementById for a child (script.js) [Bug 3439]
  * Curve: fixed the missing buttonlist transparency for IE6 (ie6.css) [Bug 3442]
  * Curve: removed a gap from BoardIndex (BoardIndex.template.php, forum.css) [Bug 3417]
+ * Curve: Polls in topic need curve effect (Display.template.php, forum.css) [Bug 3055]
 
 
 April 2009

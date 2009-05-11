@@ -14,14 +14,16 @@ function template_main()
 	if ($context['is_poll'])
 	{
 		echo '
-<div class="tborder marginbottom" id="poll">
-	<h3 class="titlebg headerpadding">
+<div id="poll">
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>
 		<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
 	</h3>
-	<h4 class="windowbg headerpadding" id="pollquestion">
-		', $context['poll']['question'], '
-	</h4>
-	<div class="windowbg clearfix" id="poll_options">';
+	<div class="windowbg">
+		<span class="topslice"><span></span></span>
+		<div class="content" id="poll_options">
+			<h4 id="pollquestion">
+				', $context['poll']['question'], '
+			</h4>';
 
 		// Are they not allowed to vote but allowed to view the options?
 		if ($context['poll']['show_results'] || !$context['allow_vote'])
@@ -78,6 +80,8 @@ function template_main()
 		<p><strong>', ($context['poll']['is_expired'] ? $txt['poll_expired_on'] : $txt['poll_expires_on']), ':</strong> ', $context['poll']['expire_time'], '</p>';
 
 		echo '
+		</div>
+		<span class="botslice"><span></span></span>
 	</div>
 </div>
 <div id="pollmoderation">';
