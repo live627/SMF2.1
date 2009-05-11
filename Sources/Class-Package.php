@@ -804,7 +804,7 @@ if (!class_exists('ftp_connection'))
 			$time = time();
 			do
 				$this->last_message = fgets($this->connection, 1024);
-			while (substr($this->last_message, 3, 1) != ' ' && time() - $time < 5);
+			while ((strlen($this->last_message) < 4 || substr($this->last_message, 0, 1) == ' ' || substr($this->last_message, 3, 1) != ' ') && time() - $time < 5);
 
 			// Was the desired response returned?
 			return is_array($desired) ? in_array(substr($this->last_message, 0, 3), $desired) : substr($this->last_message, 0, 3) == $desired;

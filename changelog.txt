@@ -66,6 +66,8 @@ May 2009
  ! When using Intergration, we should send the raw password rather than the SMF sha1 verison (Profile-Modify.php) [Bug 2933]
  ! Use posterOptions when marking new topics read instead of user_info (Subs-Post.php) [Bug 2913]
  ! Allow themes to use "template_create_button" to create their own buttons (Subs.php) [Bug 1878]
+ ! If you can't post a new topic, you can't start a poll in it (MessageIndex.php) [Bug 3230]
+ ! Try to better detect some servers who send non default responses (Class-Package.php) [Bug 3112]
 
 
 April 2009

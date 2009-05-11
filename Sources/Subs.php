@@ -3658,7 +3658,8 @@ function create_button($name, $alt, $label = '', $custom = '', $force_use = fals
 {
 	global $settings, $txt, $context;
 
-	if (!$force_use && function_exists('template_create_button'))
+	// Does the current loaded theme have this and we are not forcing the usage of this function?
+	if (function_exists('template_create_button') && !$force_use)
 		return template_create_button($name, $alt, $label = '', $custom = '');
 
 	if (!$settings['use_image_buttons'])
