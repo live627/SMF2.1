@@ -127,7 +127,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	removeAttachments(array('id_member' => $memID));
 
 	$id_folder = !empty($modSettings['currentAttachmentUploadDir']) ? $modSettings['currentAttachmentUploadDir'] : 1;
-	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : null;
+	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : '';
 	$smcFunc['db_insert']('',
 		'{db_prefix}attachments',
 		array(

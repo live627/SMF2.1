@@ -250,7 +250,7 @@ $sourcedir/Subs-Graphics.php
 </search for>
 
 <replace>
-	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : null;
+	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, null, true) : '';
 	$smcFunc['db_insert']('',
 		'{db_prefix}attachments',
 		array(
