@@ -3489,7 +3489,7 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 		$request = $smcFunc['db_query']('', '
 			SELECT file_hash
 			FROM {db_prefix}attachments
-			WHERE ID_ATTACH = {int:id_attach}',
+			WHERE id_attach = {int:id_attach}',
 			array(
 				'id_attach' => $attachment_id,
 		));
