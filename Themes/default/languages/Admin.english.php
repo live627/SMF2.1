@@ -397,6 +397,7 @@ $txt['option_specified_dir'] = 'Specific directory...';
 $txt['custom_avatar_dir'] = 'Upload directory';
 $txt['custom_avatar_dir_desc'] = 'This should not be the same as the server-stored directory.';
 $txt['custom_avatar_url'] = 'Upload URL';
+$txt['custom_avatar_check_empty'] = 'The custom avatar directory you have specified may be empty or invalid. Please ensure these settings are correct.';
 
 $txt['repair_attachments'] = 'Maintain Attachments';
 $txt['repair_attachments_complete'] = 'Maintenance Complete';

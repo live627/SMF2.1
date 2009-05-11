@@ -262,9 +262,16 @@ function ManageAvatarSettings($return_config = false)
 	// Saving avatar settings?
 	if (isset($_GET['save']))
 	{
+		// Just incase the admin forgot to set both custom avatar values, we disable it to prevent errors.
+		if (isset($_POST['custom_avatar_enabled']) && $_POST['custom_avatar_enabled'] == 1 && (empty($_POST['custom_avatar_dir']) || empty($_POST['custom_avatar_url'])))
+			$_POST['custom_avatar_enabled'] = 0;
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=manageattachments;sa=avatars');
 	}
+
+	// Attempt to figure out if the admin is trying to break things.
+	$context['settings_save_onclick'] = 'return document.getElementById(\'custom_avatar_enabled\').value == 1 && (document.getElementById(\'custom_avatar_dir\').value == \'\' || document.getElementById(\'custom_avatar_url\').value == \'\') ? confirm(\'' . $txt['custom_avatar_check_empty'] . '\') : true;';
 
 	// Prepare the context.
 	$context['post_url'] = $scripturl . '?action=admin;area=manageattachments;save;sa=avatars';
