@@ -55,6 +55,7 @@ May 2009
  ! Present a login form to guests trying to view profiles without sufficient permissions. (Profile.php) 
  * Curve: Toggle link not floated right (style.css) [Bug 3438]
  * Curve: Layout issues in IE6 (ie6.css) [Bug 3440]
+ * Curve: prevent from a linebreak in GenericList table headers (style.css) [Bug 3441]
 
 
 April 2009

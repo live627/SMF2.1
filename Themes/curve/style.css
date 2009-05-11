@@ -408,10 +408,14 @@ tr.catbg th.smalltext
 	padding: 1em 0 0.5em 0;
 }
 
-/* GenericList buttons */
+/* GenericList */
 .additional_row input
 {
 	margin-left: 1em;
+}
+table.table_grid thead tr.catbg th.smalltext
+{
+    white-space: nowrap;
 }
 
 /* Color for background of posts requiring approval */
