@@ -289,7 +289,7 @@ $sourcedir/Profile.php
 				db_query("
 					INSERT INTO {$db_prefix}attachments
 						(ID_MEMBER, attachmentType, filename, file_hash, size, width, height)
-					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . (empty($file_hash) ? "" : "'$file_hash'") . ", " . filesize($_FILES['attachment']['tmp_name']) . ", " . (int) $width . ", " . (int) $height . ")", __FILE__, __LINE__);
+					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', '" . (empty($file_hash) ? "" : "$file_hash") . "', " . filesize($_FILES['attachment']['tmp_name']) . ", " . (int) $width . ", " . (int) $height . ")", __FILE__, __LINE__);
 				$attachID = db_insert_id();
 
 				// Try to move this avatar.
@@ -405,7 +405,7 @@ $sourcedir/Subs-Graphics.php
 	db_query("
 		INSERT INTO {$db_prefix}attachments
 			(ID_MEMBER, attachmentType, filename, file_hash, size)
-		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . (empty($avatar_hash) ? "" : "'$avatar_hash'") . ", 1)", __FILE__, __LINE__);
+		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', '" . (empty($avatar_hash) ? "" : "$avatar_hash") . "', 1)", __FILE__, __LINE__);
 </replace>
 
 
