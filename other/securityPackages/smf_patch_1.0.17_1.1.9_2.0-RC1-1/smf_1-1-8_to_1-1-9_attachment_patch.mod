@@ -432,7 +432,7 @@ $sourcedir/Subs-Graphics.php
 </search for>
 
 <replace>
-		if (rename($destName . '.tmp', emtpy($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash))
+		if (rename($destName . '.tmp', empty($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash))
 </replace>
 
 
