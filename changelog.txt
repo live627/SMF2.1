@@ -69,6 +69,7 @@ May 2009
  ! If you can't post a new topic, you can't start a poll in it (MessageIndex.php) [Bug 3230]
  ! Try to better detect some servers who send non default responses (Class-Package.php) [Bug 3112]
  ! Refunding a double subscription would end both subscriptions (subscriptions.php) [Bug 3426]
+ ! Line breaks would be lost with item codes, so use an ugly workaround (Subs.php) [Bug 1655]
 
 
 April 2009
