@@ -71,6 +71,7 @@ May 2009
  ! Refunding a double subscription would end both subscriptions (subscriptions.php) [Bug 3426]
  ! Line breaks would be lost with item codes, so use an ugly workaround (Subs.php) [Bug 1655]
  ! Update convert_themes to use new menu system and other missing details (Themes.php) [Bug 3337]
+ * Curve: missing overflow for polls (forum.css) [Bug 3055]
 
 
 April 2009

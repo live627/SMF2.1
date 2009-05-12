@@ -238,6 +238,10 @@ table.table_list a.collapse
 }
 
 /* Poll question */
+#poll
+{
+overflow: hidden;
+}
 h4#pollquestion
 {
 	padding: 0.5em 0 0.5em 2em;
@@ -286,6 +290,7 @@ div#pollmoderation
 {
 	margin: 0 0 0 1em;
 	padding: 0;
+	overflow: auto;
 }
 
 /* onto the posts */
