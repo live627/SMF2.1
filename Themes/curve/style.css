@@ -405,7 +405,7 @@ tr.catbg th.smalltext
 }
 .pagesection .pagelinks
 {
-	padding: 1em 0 0.5em 0;
+	padding: 0.5em 0 0.5em 0;
 }
 
 /* GenericList */
@@ -590,10 +590,6 @@ a.moderation_link, a.moderation_link:visited
 .align_left
 {
 	float: left;
-}
-.pagesection
-{
-	height: 2em;	
 }
 /* a general table class */
 table.table_grid

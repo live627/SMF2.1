@@ -72,6 +72,7 @@ May 2009
  ! Line breaks would be lost with item codes, so use an ugly workaround (Subs.php) [Bug 1655]
  ! Update convert_themes to use new menu system and other missing details (Themes.php) [Bug 3337]
  * Curve: missing overflow for polls (forum.css) [Bug 3055]
+ * Curve: pagesection needs a variable height (style.css)
 
 
 April 2009
