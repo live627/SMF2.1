@@ -121,7 +121,7 @@ $smcFunc['db_free_result']($request);
 
 // We wish to check the pending payments to make sure we are expecting this.
 $request = $smcFunc['db_query']('', '
-	SELECT id_sublog, payments_pending, pending_details
+	SELECT id_sublog, payments_pending, pending_details, end_time
 	FROM {db_prefix}log_subscribed
 	WHERE id_subscribe = {int:current_subscription}
 		AND id_member = {int:current_member}
@@ -139,8 +139,20 @@ $smcFunc['db_free_result']($request);
 // Is this a refund etc?
 if ($gatewayClass->isRefund())
 {
-	// Delete user subscription.
-	removeSubscription($subscription_id, $member_id);
+	// If the end time subtracted by current time, is not greater than the duration (ie length of subscription), then we close it.
+	if ($subscription_info['end_time'] - time() < $subscription_info['length'])
+	{
+		// Delete user subscription.
+		removeSubscription($subscription_id, $member_id);
+		$subscription_act = time();
+		$status = 0;
+	}
+	else
+	{
+		loadSubscriptions();
+		$subscription_act = $subscription_info['end_time'] - $context['subscriptions'][$subscription_id]['num_length'];
+		$status = 1;
+	}
 
 	// Mark it as complete so we have a record.
 	$smcFunc['db_query']('', '
@@ -148,12 +160,12 @@ if ($gatewayClass->isRefund())
 		SET end_time = {int:current_time}
 		WHERE id_subscribe = {int:current_subscription}
 			AND id_member = {int:current_member}
-			AND status = {int:not_active}',
+			AND status = {int:status}',
 		array(
-			'current_time' => time(),
+			'current_time' => $subscription_act,
 			'current_subscription' => $subscription_id,
 			'current_member' => $member_id,
-			'not_active' => 0,
+			'status' => $status,
 		)
 	);
 
