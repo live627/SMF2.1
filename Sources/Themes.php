@@ -2195,21 +2195,29 @@ function template_main_above()
 }
 
 // Show a linktree.  This is that thing that shows "My Community | General Category | General Discussion"..
-function theme_linktree()
+function theme_linktree($force_show = false)
 {
 	global $context, $settings, $options;
+
+	// If linktree is empty, just return - also allow an override.
+	if (empty($context[\'linktree\']) || (!empty($context[\'dont_default_linktree\']) && !$force_show))
+		return;
+
+	// Reverse the linktree in right to left mode.
+	if ($context[\'right_to_left\'])
+		$context[\'linktree\'] = array_reverse($context[\'linktree\'], true);
 
 	// Folder style or inline?  Inline has a smaller font.
 	echo \'<span class="nav"\', $settings[\'linktree_inline\'] ? \' style="font-size: smaller;"\' : \'\', \'>\';
 
 	// Each tree item has a URL and name.  Some may have extra_before and extra_after.
-	foreach ($context[\'linktree\'] as $k => $tree)
+	foreach ($context[\'linktree\'] as $link_num => $tree)
 	{
 		// Show the | | |-[] Folders.
-		if (!$settings[\'linktree_inline\'])
+		if (empty($settings[\'linktree_inline\']))
 		{
-			if ($k > 0)
-				echo str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_main.gif" alt="| " border="0" />\', $k - 1), \'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_side.gif" alt="|-" border="0" />\';
+			if ($link_num > 0)
+				echo str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_main.gif" alt="| " border="0" />\', $link_num - 1), \'<img src="\' . $settings[\'images_url\'] . \'/icons/linktree_side.gif" alt="|-" border="0" />\';
 			echo \'<img src="\' . $settings[\'images_url\'] . \'/icons/folder_open.gif" alt="+" border="0" />&nbsp; \';
 		}
 
@@ -2220,7 +2228,7 @@ function theme_linktree()
 			echo $tree[\'extra_after\'];
 
 		// Don\'t show a separator for the last one.
-		if ($k != count($context[\'linktree\']) - 1)
+		if ($link_num != count($context[\'linktree\']) - 1)
 			echo $settings[\'linktree_inline\'] ? \' &nbsp;|&nbsp; \' : \'<br />\';
 	}
 
@@ -2232,42 +2240,23 @@ function template_menu()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// Show the [home] and [help] buttons.
-	echo \'
-				<a href="\', $scripturl, \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[\'home\'] . \'" border="0" />\' : $txt[\'home\']), \'</a>\', $context[\'menu_separator\'], \'
-				<a href="\', $scripturl, \'?action=help" target="_blank" class="new_win">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/help.gif" alt="\' . $txt[\'help\'] . \'" border="0" />\' : $txt[\'help\']), \'</a>\', $context[\'menu_separator\'];
-
-	// How about the [search] button?
-	if ($context[\'allow_search\'])
-		echo \'
-				<a href="\', $scripturl, \'?action=search">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/search.gif" alt="\' . $txt[\'search\'] . \'" border="0" />\' : $txt[\'search\']), \'</a>\', $context[\'menu_separator\'];
-
-	// Is the user allowed to administrate at all? ([admin])
-	if ($context[\'allow_admin\'])
-		echo \'
-				<a href="\', $scripturl, \'?action=admin">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/admin.gif" alt="\' . $txt[\'admin\'] . \'" border="0" />\' : $txt[\'admin\']), \'</a>\', $context[\'menu_separator\'];
-
-	// Edit Profile... [profile]
-	if ($context[\'allow_edit_profile\'])
-		echo \'
-				<a href="\', $scripturl, \'?action=profile">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/profile.gif" alt="\' . $txt[\'profile\'] . \'" border="0" />\' : $txt[\'profile\']), \'</a>\', $context[\'menu_separator\'];
-
-	// The [calendar]!
-	if ($context[\'allow_calendar\'])
-		echo \'
-				<a href="\', $scripturl, \'?action=calendar">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/calendar.gif" alt="\' . $txt[\'calendar\'] . \'" border="0" />\' : $txt[\'calendar\']), \'</a>\', $context[\'menu_separator\'];
-
-	// If the user is a guest, show [login] and [register] buttons.
-	if ($context[\'user\'][\'is_guest\'])
+	foreach ($context[\'menu_buttons\'] as $act => $button)
 	{
+		$classes = array();
+		if (!empty($button[\'active_button\']))
+			$classes[] = \'active\';
+		if (!empty($button[\'is_last\']))
+			$classes[] = \'last\';
+		/* IE6 can\'t do multiple class selectors */
+		if ($context[\'browser\'][\'is_ie6\'] && !empty($button[\'active_button\']) && !empty($button[\'is_last\']))
+			$classes[] = \'lastactive\';
+
+		$classes = implode(' ', $classes);
+
 		echo \'
-				<a href="\', $scripturl, \'?action=login">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/login.gif" alt="\' . $txt[\'login\'] . \'" border="0" />\' : $txt[\'login\']), \'</a>\', $context[\'menu_separator\'], \'
-				<a href="\', $scripturl, \'?action=register">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/register.gif" alt="\' . $txt[\'register\'] . \'" border="0" />\' : $txt[\'register\']), \'</a>\';
+				<a id="button_\', $act, \'"\', !empty($classes) ? \' class="\' . $classes . \'"\' : \'\', \' title="\', !empty($button[\'alttitle\']) ? $button[\'alttitle\'] : $button[\'title\'], \'" href="\', $button[\'href\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[\'home\'] . \'" border="0" />\' : $txt[\'home\']), \'</a>\', (empty($button[\'is_last\']) ? $context[\'menu_separator\'] : \'\');
+
 	}
-	// Otherwise, they might want to [logout]...
-	else
-		echo \'
-				<a href="\', $scripturl, \'?action=logout;\', $context[\'session_var\'], \'=\', $context[\'session_id\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/logout.gif" alt="\' . $txt[\'logout\'] . \'" border="0" />\' : $txt[\'logout\']), \'</a>\';
 }
 
 ?>';
@@ -2282,8 +2271,47 @@ function template_menu()
 		var smf_theme_url = "\', $settings[\'theme_url\'], \'";
 		var smf_default_theme_url = "\', $settings[\'default_theme_url\'], \'";
 		var smf_images_url = "\', $settings[\'images_url\'], \'";
+		var smf_scripturl = "\', $scripturl, \'";
+		var smf_iso_case_folding = \', $context[\'server\'][\'iso_case_folding\'] ? \'true\' : \'false\', \';
+		var smf_charset = "\', $context[\'character_set\'], \'";\', $context[\'show_pm_popup\'] ? \'
+		if (confirm("\' . $txt[\'show_personal_messages\'] . \'"))
+			window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");\' : \'\', \'
+		var ajax_notification_text = "\', $txt[\'ajax_in_progress\'], \'";
+		var ajax_notification_cancel_text = "\', $txt[\'modify_cancel\'], \'";
 	// ]]></script>
-	\' . $context[\'html_headers\'] . \'', $old_template);
+	\' . $context[\'html_headers\'] . \'
+
+	// Please don\'t index these Mr Robot.
+	if (!empty($context[\'robot_no_index\']))
+		echo \'
+	<meta name="robots" content="noindex" />\';
+
+	// Present a canonical url for search engines to prevent duplicate content in their indices.
+	if (!empty($context[\'canonical_url\']))
+		echo \'
+	<link rel="canonical" href="\', $context[\'canonical_url\'], \'" />\';
+
+	// Show all the relative links, such as help, search, contents, and the like.
+	echo \'
+	<link rel="help" href="\', $scripturl, \'?action=help" />
+	<link rel="search" href="\' . $scripturl . \'?action=search" />
+	<link rel="contents" href="\', $scripturl, \'" />\';
+
+	// If RSS feeds are enabled, advertise the presence of one.
+	if (!empty($modSettings[\'xmlnews_enable\']) && (!empty($modSettings[\'allow_guestAccess\']) || $context[\'user\'][\'is_logged\']))
+		echo \'
+	<link rel="alternate" type="application/rss+xml" title="\', $context[\'forum_name_html_safe\'], \' - \', $txt[\'rss\'], \'" href="\', $scripturl, \'?type=rss;action=.xml" />\';
+
+	// If we\'re viewing a topic, these should be the previous and next topics, respectively.
+	if (!empty($context[\'current_topic\']))
+		echo \'
+	<link rel="prev" href="\', $scripturl, \'?topic=\', $context[\'current_topic\'], \'.0;prev_next=prev" />
+	<link rel="next" href="\', $scripturl, \'?topic=\', $context[\'current_topic\'], \'.0;prev_next=next" />\';
+
+	// If we\'re in a board, or a topic for that matter, the index will be the board's index.
+	if (!empty($context[\'current_board\']))
+		echo \'
+	<link rel="index" href="\', $scripturl, \'?board=\', $context[\'current_board\'], \'.0" />\';', $old_template);
 
 	// Step 7: The character set.
 	$old_template = preg_replace('~\<meta[^>]+http-equiv=["]?Content-Type["]?[^>]*?\>~i', '<meta http-equiv="Content-Type" content="text/html; charset=\', $context[\'character_set\'], \'" />', $old_template);
