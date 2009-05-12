@@ -86,11 +86,12 @@ div#upper_section div.user
 {
 	width: 50%;
 	float: left;
+	overflow: auto;
 }
 div#upper_section div.user p
 {
 	float: left;
-	margin: 0 1em 3em 0;
+	margin: 0 1em 1em 0;
 	padding: 0;
 }
 div#upper_section div.user ul

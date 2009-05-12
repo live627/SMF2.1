@@ -29,7 +29,6 @@ May 2009
  * Curve: unclosed div tag (Admin.template.php)
  * Curve: updated the GenericList template to match Curve's look and feel. (GenericList template, style.css, admin.css, forum.css, moderate.css)
  * Curve: rewrote the Notify template to match Curve's look and feel. (Notify.template.php)
- * Curve: Spaces in 'name' attribute of <a> tag causes invalid XHTML. (GenericMenu.template.php)
  ! Session languages where not validated correctly (Load.php) [Bug 3430]
  * Curve: fixed an xhtml typo (Search.template.php) [Bug 3431]
  * Curve: small stats on Board Index not properly aligned (forum.css) [Bug 3429]
@@ -75,7 +74,8 @@ May 2009
  * Curve: pagesection needs a variable height (style.css)
  * Curve: invalid xhtml (Display.template.php)
  * Curve: Quick Buttons need float (forum.css) [Bug 3443]
- 
+ * Curve: style the errors as pretty as the rest. (Error template) 
+
 
 April 2009
 --------------------------------------------------------------------------------

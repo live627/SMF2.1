@@ -19,19 +19,13 @@ table
 	empty-cells: show;
 }
 
-/* set the background gradient */
-html
-{
-	background: url(images/theme/backdrop.png) repeat-x #E9EEF2;
-}
-
-/* set a fontsize that will look the same in all browsers. */
+/* Set a fontsize that will look the same in all browsers. */
 body
 {
+	background: #E9EEF2 url(images/theme/backdrop.png) repeat-x;
 	font: 75%/125% verdana, Helvetica, sans-serif;
 	margin: 0 auto;
-	width: 85%;
-	padding: 15px 0 20px 0;
+	padding: 15px 5%;
 	min-width: 600px;
 }
 
@@ -96,7 +90,7 @@ hr, .hrcolor
 }
 
 /* By default set the color on these tags as black. */
-h1, h2, h3, h4, h5, h6, h7
+h1, h2, h3, h4, h5, h6
 {
 	color: black;
 	font-size: 1em;
@@ -323,22 +317,22 @@ code
 	color: black; 
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
- }
- .errorbox p.alert
- {
+}
+.errorbox p.alert
+{
 	padding: 0;
 	margin: 0;
 	float: left; 
 	width: 1em; 
 	font-size: 1.5em;
- }
-  .errorbox h3
- {
+}
+.errorbox h3
+{
 	padding: 0;
 	margin: 0;
 	font-size: 1.1em;
 	text-decoration: underline;
- }
+}
 /* ************************************* */
 /* Real common classes                   */
 /* ************************************* */
@@ -603,8 +597,6 @@ table.table_grid td
 	border-right: solid 1px white;
 }
 
-/* End hide from IE-mac. */
-
 /* ************************************* */
 /* Buttons and menus                     */
 /* ************************************* */
@@ -771,26 +763,18 @@ ul.tabbuttons li
 /*****************************************/
 #main_menu 
 {
-	width: 100%;
 	text-align: left;
-	padding: 2em 0 1em 7px;
+	padding: 0 0 0 0.5em;
 	margin: 0;
-}
-/* center the main menu */
-#main_menu .dropmenu
-{
-	padding: 0 0 0 5px; 
-	margin: 0;
+	overflow: auto;
 }
 
 .dropmenu, .dropmenu ul 
 {
-	float: left;
-	width: 95%;
 	list-style: none;
 	line-height: 1;
 	padding: 0;
-	margin: 0 0 1em 0;
+	margin: 0;
 }
 .dropmenu
 {
@@ -899,6 +883,7 @@ ul.tabbuttons li
 {
 	left: auto;
 }
+
 /* the button lists used everywhere */
 .buttonlist ul
 {
@@ -935,7 +920,7 @@ ul.tabbuttons li
 	background: url(images/theme/menu_gfx.png) no-repeat 100% -60px;
 	display: block;
 	height: 24px;
-	line-height: 17px;
+	line-height: 20px;
 	padding: 0 8px 0 0;
 	position: relative;
 	right: -8px;
@@ -1008,5 +993,3 @@ ul#navigation li
 	height: 3em;
 	overflow: auto;
 }
-
-

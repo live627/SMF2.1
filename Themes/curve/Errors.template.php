@@ -13,16 +13,20 @@ function template_fatal_error()
 	global $context, $settings, $options, $txt;
 
 	echo '
-<div id="fatal_error">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		', $context['error_title'], '
-	</h3>
-	<p class="error centertext">', $context['error_message'], '</p>
-</div>';
+	<div id="fatal_error">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $context['error_title'], '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="padding">', $context['error_message'], '</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>';
 
 	// Show a back button (using javascript.)
 	echo '
-<div class="centertext"><a href="javascript:history.go(-1)">', $txt['back'], '</a></div>';
+	<div class="centertext"><a href="javascript:history.go(-1)">', $txt['back'], '</a></div>';
 }
 
 function template_error_log()

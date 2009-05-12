@@ -111,12 +111,12 @@ function template_generic_menu_dropdown_above()
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li><a class="active firstlevel" href="#" name="', str_replace(' ', '_', $section['title']) , '"><span class="firstlevel">', $section['title'] , '</span></a>
+			<li><a class="active firstlevel" href="#"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 		}
 		else
 			echo '
-			<li><a class="firstlevel" href="#" name="', str_replace(' ', '_', $section['title']) , '"><span class="firstlevel">', $section['title'] , '</span></a>
+			<li><a class="firstlevel" href="#"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)

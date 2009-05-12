@@ -505,6 +505,13 @@ ul.quickbuttons li.restore_button
 {
 	overflow: hidden;
 }
+/* The jump to box */
+#display_jump_to
+{
+	clear: both;
+	padding: 5px;
+}
+
 /* ************************************* */
 /* styles from Recent.template           */
 /* ************************************* */
