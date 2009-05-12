@@ -284,16 +284,16 @@ $sourcedir/Profile.php
 </search for>
 
 <replace>
-				$file_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, true) : null;
+				$file_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, true) : '';
 
 				db_query("
 					INSERT INTO {$db_prefix}attachments
 						(ID_MEMBER, attachmentType, filename, file_hash, size, width, height)
-					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . ($file_hash === null ? "NULL" : "'$file_hash'") . ", " . filesize($_FILES['attachment']['tmp_name']) . ", " . (int) $width . ", " . (int) $height . ")", __FILE__, __LINE__);
+					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . (empty($file_hash) ? "" : "'$file_hash'") . ", " . filesize($_FILES['attachment']['tmp_name']) . ", " . (int) $width . ", " . (int) $height . ")", __FILE__, __LINE__);
 				$attachID = db_insert_id();
 
 				// Try to move this avatar.
-				$destinationPath = $uploadDir . '/' . ($file_hash === null ? $destName : $attachID . '_' . $file_hash);
+				$destinationPath = $uploadDir . '/' . (empty($file_hash) ? $destName : $attachID . '_' . $file_hash);
 				if (!rename($_FILES['attachment']['tmp_name'], $destinationPath))
 				{
 					// The move failed, get rid of it and die.
@@ -400,12 +400,12 @@ $sourcedir/Subs-Graphics.php
 
 <replace>
 
-	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, true) : null;
+	$avatar_hash = empty($modSettings['custom_avatar_enabled']) ? getAttachmentFilename($destName, false, true) : '';
 
 	db_query("
 		INSERT INTO {$db_prefix}attachments
 			(ID_MEMBER, attachmentType, filename, file_hash, size)
-		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . ($avatar_hash === null ? "NULL" : "'$avatar_hash'") . ", 1)", __FILE__, __LINE__);
+		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . (empty($avatar_hash) ? "" : "'$avatar_hash'") . ", 1)", __FILE__, __LINE__);
 </replace>
 
 
@@ -432,7 +432,7 @@ $sourcedir/Subs-Graphics.php
 </search for>
 
 <replace>
-		if (rename($destName . '.tmp', $avatar_hash === null ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash))
+		if (rename($destName . '.tmp', emtpy($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash))
 </replace>
 
 
