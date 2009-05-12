@@ -73,7 +73,7 @@ May 2009
  ! Update convert_themes to use new menu system and other missing details (Themes.php) [Bug 3337]
  * Curve: missing overflow for polls (forum.css) [Bug 3055]
  * Curve: pagesection needs a variable height (style.css)
-
+ * Curve: invalid xhtml (Display.template.php)
 
 April 2009
 --------------------------------------------------------------------------------
