@@ -74,7 +74,8 @@ May 2009
  * Curve: pagesection needs a variable height (style.css)
  * Curve: invalid xhtml (Display.template.php)
  * Curve: Quick Buttons need float (forum.css) [Bug 3443]
- * Curve: style the errors as pretty as the rest. (Error template) 
+ * Curve: style the errors as pretty as the rest. (Error template)
+ ! Approving posts was not possible without access to the Moderation Center (Security.php, Subs-Auth.php) [Bug 3404]
 
 
 April 2009

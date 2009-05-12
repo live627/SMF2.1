@@ -905,18 +905,22 @@ function isAllowedTo($permission, $boards = null)
 
 	// If you're doing something on behalf of some "heavy" permissions, validate your session.
 	// (take out the heavy permissions, and if you can't do anything but those, you need a validated session.)
-	if (!allowedTo(array_diff($permission, $heavy_permissions), $boards))
+	if (!allowedTo(array_diff($permissions, $heavy_permissions), $boards))
 		validateSession();
 }
 
 // Return the boards a user has a certain (board) permission on. (array(0) if all.)
-function boardsAllowedTo($permission, $check_access = true)
+function boardsAllowedTo($permissions, $check_access = true)
 {
 	global $user_info, $modSettings, $smcFunc;
 
 	// Administrators are all powerful, sorry.
 	if ($user_info['is_admin'])
 		return array(0);
+
+	// Arrays are nice, most of the time.
+	if (!is_array($permissions))
+		$permissions = array($permissions);
 
 	// All groups the user is in except 'moderator'.
 	$groups = array_diff($user_info['groups'], array(3));
@@ -927,14 +931,14 @@ function boardsAllowedTo($permission, $check_access = true)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_profile = bp.id_profile)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
 		WHERE bp.id_group IN ({array_int:group_list}, {int:moderator_group})
-			AND bp.permission = {string:permission}
+			AND bp.permission IN ({array_string:permissions})
 			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})' .
 			($check_access ? ' AND {query_see_board}' : ''),
 		array(
 			'current_member' => $user_info['id'],
 			'group_list' => $groups,
 			'moderator_group' => 3,
-			'permission' => $permission,
+			'permissions' => $permissions,
 		)
 	);
 	$boards = array();
