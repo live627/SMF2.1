@@ -74,6 +74,8 @@ May 2009
  * Curve: missing overflow for polls (forum.css) [Bug 3055]
  * Curve: pagesection needs a variable height (style.css)
  * Curve: invalid xhtml (Display.template.php)
+ * Curve: Quick Buttons need float (forum.css) [Bug 3443]
+ 
 
 April 2009
 --------------------------------------------------------------------------------

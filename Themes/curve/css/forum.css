@@ -410,6 +410,7 @@ ul.quickbuttons li a
 	display: block;
 	height: 20px;
 	line-height: 18px;
+	float: left;
 }
 ul.quickbuttons li.approve_button
 {
