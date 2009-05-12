@@ -62,6 +62,19 @@ $sourcedir/Display.php
 
 
 <search for>
+	if (filesize($filename) != 0)
+</search for>
+
+<replace>
+	// IE 6 just doesn't play nice. As dirty as this seems, it works.
+	if ($context['browser']['is_ie6'] && isset($_REQUEST['image']))
+		unset($_REQUEST['image']);
+
+	elseif (filesize($filename) != 0)
+</replace>
+
+
+<search for>
 				6 => 'bmp',
 </search for>
 

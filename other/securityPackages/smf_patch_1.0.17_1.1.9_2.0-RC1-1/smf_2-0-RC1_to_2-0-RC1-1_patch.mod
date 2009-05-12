@@ -1134,15 +1134,21 @@ $sourcedir/Display.php
 
 <search for>
 	// Does this have a mime type?
-	if ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'bmp', 'png', 'psd', 'tiff', 'iff'))))
+	elseif ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'bmp', 'png', 'psd', 'tiff', 'iff'))))
 		header('Content-Type: ' . $mime_type);
 </search for>
 
 <replace>
+	// IE 6 just doesn't play nice. As dirty as this seems, it works.
+	if ($context['browser']['is_ie6'] && isset($_REQUEST['image']))
+		unset($_REQUEST['image']);
+
 	// Does this have a mime type?
-	if ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'x-ms-bmp', 'png', 'psd', 'tiff', 'iff'))))
+	elseif ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'x-ms-bmp', 'png', 'psd', 'tiff', 'iff'))))
 		header('Content-Type: ' . strtr($mime_type, array('image/bmp' => 'image/x-ms-bmp')));
+
 </replace>
+
 
 <search for>
 

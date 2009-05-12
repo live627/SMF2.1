@@ -1313,9 +1313,14 @@ function Download()
 	header('Connection: close');
 	header('ETag: ' . $file_md5);
 
+	// IE 6 just doesn't play nice. As dirty as this seems, it works.
+	if ($context['browser']['is_ie6'] && isset($_REQUEST['image']))
+		unset($_REQUEST['image']);
+
 	// Does this have a mime type?
-	if (!empty($mime_type) && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'x-ms-bmp', 'png', 'psd', 'tiff', 'iff'))))
+	elseif (!empty($mime_type) && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'x-ms-bmp', 'png', 'psd', 'tiff', 'iff'))))
 		header('Content-Type: ' . strtr($mime_type, array('image/bmp' => 'image/x-ms-bmp')));
+
 	else
 	{
 		header('Content-Type: ' . ($context['browser']['is_ie'] || $context['browser']['is_opera'] ? 'application/octetstream' : 'application/octet-stream'));
