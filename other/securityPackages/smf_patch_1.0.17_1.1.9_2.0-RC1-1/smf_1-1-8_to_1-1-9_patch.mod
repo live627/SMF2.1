@@ -306,7 +306,7 @@ $sourcedir/Profile.php
 				// Now try to find an infection.
 				while (!feof($fp))
 				{
-					if (preg_match('~(iframe|\\<\\?php|\\<\\?\s|\\<%\s|html|eval|body|script)~', fgets($fp, 4096)) === 1)
+					if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script)~', fgets($fp, 4096)) === 1)
 					{
 						if (file_exists($uploadDir . '/avatar_tmp_' . $memID))
 							@unlink($uploadDir . '/avatar_tmp_' . $memID);
