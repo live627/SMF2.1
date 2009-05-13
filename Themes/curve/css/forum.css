@@ -236,6 +236,10 @@ table.table_list a.collapse
 {
 	padding-top: 1em;
 }
+#moderationbuttons
+{
+	overflow: hidden;
+}
 
 /* Poll question */
 #poll
