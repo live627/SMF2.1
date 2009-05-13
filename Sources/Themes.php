@@ -2251,7 +2251,7 @@ function template_menu()
 		if ($context[\'browser\'][\'is_ie6\'] && !empty($button[\'active_button\']) && !empty($button[\'is_last\']))
 			$classes[] = \'lastactive\';
 
-		$classes = implode(' ', $classes);
+		$classes = implode(\' \', $classes);
 
 		echo \'
 				<a id="button_\', $act, \'"\', !empty($classes) ? \' class="\' . $classes . \'"\' : \'\', \' title="\', !empty($button[\'alttitle\']) ? $button[\'alttitle\'] : $button[\'title\'], \'" href="\', $button[\'href\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[\'home\'] . \'" border="0" />\' : $txt[\'home\']), \'</a>\', (empty($button[\'is_last\']) ? $context[\'menu_separator\'] : \'\');
@@ -2308,7 +2308,7 @@ function template_menu()
 	<link rel="prev" href="\', $scripturl, \'?topic=\', $context[\'current_topic\'], \'.0;prev_next=prev" />
 	<link rel="next" href="\', $scripturl, \'?topic=\', $context[\'current_topic\'], \'.0;prev_next=next" />\';
 
-	// If we\'re in a board, or a topic for that matter, the index will be the board's index.
+	// If we\'re in a board, or a topic for that matter, the index will be the board\'s index.
 	if (!empty($context[\'current_board\']))
 		echo \'
 	<link rel="index" href="\', $scripturl, \'?board=\', $context[\'current_board\'], \'.0" />\';', $old_template);
