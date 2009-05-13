@@ -77,6 +77,7 @@ May 2009
  * Curve: style the errors as pretty as the rest. (Error template)
  ! Approving posts was not possible without access to the Moderation Center (Security.php, Subs-Auth.php) [Bug 3404]
  * Curve: Moderation buttons not properly aligned (forum.css, ie7.css) [Bug 3447]
+ * Curve: Memberlist should use common css classes (Memberlist.template.php, style.css, memberlist.css, ie6.css)
 
 
 April 2009
