@@ -905,7 +905,7 @@ function isAllowedTo($permission, $boards = null)
 
 	// If you're doing something on behalf of some "heavy" permissions, validate your session.
 	// (take out the heavy permissions, and if you can't do anything but those, you need a validated session.)
-	if (!allowedTo(array_diff($permissions, $heavy_permissions), $boards))
+	if (!allowedTo(array_diff($permission, $heavy_permissions), $boards))
 		validateSession();
 }
 
