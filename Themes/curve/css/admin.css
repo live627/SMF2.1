@@ -77,57 +77,8 @@ h3.titlebg form
 {
 	margin-left: 2em;
 }
-#manage_mail div.content dl, #manage_attachments div.content dl, #maintenance div.content dl
-{
-	clear: both;
-	overflow: auto;
-	margin: 0 0 3px 0;
-	padding: 0;
-}
-#manage_mail div.content dt, #manage_attachments div.content dt, #maintenance div.content dt
-{
-	width: 45%;
-	float: left;
-	margin: 0 0 3px 0;
-	padding: 0;
-	font-weight: bold;
-	clear: both;
-}
-#manage_mail div.content dd, #manage_attachments div.content dd, #maintenance div.content dd
-{
-	width: 50%;
-	float: left;
-	margin: 0 0 3px 0;
-	padding: 0;
-}
-#maintenance, #manage_attachments, #manage_mail
-{
-	padding-bottom: 0.5em;
-}
-#manage_mail p, #manage_attachments p, #manage_mail p
-{
-	margin-top: 0;
-}
 
 /* ManageMaintenance */
-#maintenance #rotPanel
-{
-	overflow: auto;
-}
-.maintain_left
-{
-	float: left;
-	display: block;
-	margin-left: 2em;
-	width: 40%;
-}
-
-.maintain_right
-{
-	float: left;
-	display: block;
-	margin-left: 2em;
-}
 .maintenance_finished
 {
 	margin: 1ex; 
@@ -147,7 +98,7 @@ td.windowbg, td.windowbg2
 	padding-right: 1em;
 }
 /* remove the lower gap from some old templates */
-form
+#admin_content
 {
 	padding-bottom: 0.5em;
 }

@@ -384,8 +384,8 @@ function template_maintain_topics()
 						<div>
 							<a href="#rotLink" onclick="swapRot();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="rotIcon" /></a> <a href="#rotLink" onclick="swapRot();" id="rotText" style="font-weight: bold;">', $txt['maintain_old_all'], '</a>
 					
-							<div style="display: none;" id="rotPanel">
-								<div class="maintain_left">';
+							<div style="display: none;" id="rotPanel" class="flow_hidden">
+								<div class="align_left">';
 
 	// This is the "middle" of the list.
 	$middle = count($context['categories']) / 2;
@@ -394,20 +394,21 @@ function template_maintain_topics()
 	foreach ($context['categories'] as $category)
 	{
 		echo '
-									<span style="text-decoration: underline;">', $category['name'], '</span><br />';
+									<fieldset style="width:20em;">
+										<legend>', $category['name'], '</legend>';
 
 		// Display a checkbox with every board.
 		foreach ($category['boards'] as $board)
 			echo '
-									<label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
+											<label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
 		echo '
-									<br />';
+									</fieldset>';
 
 		// Increase $i, and check if we're at the middle yet.
 		if (++$i == $middle)
 			echo '
 								</div>
-								<div class="maintain_right">';
+								<div  class="align_left">';
 	}
 
 	echo '
@@ -524,17 +525,17 @@ function template_convert_utf8()
 						<p>', $txt['utf8_introduction'], '</p>
 						<div>', $txt['utf8_warning'], '</div>
 						
-						<dl class="options">
-							<dt>', $txt['utf8_source_charset'], ': </dt>
+						<dl class="settings">
+							<dt><strong>', $txt['utf8_source_charset'], ':</strong></dt>
 							<dd><select name="src_charset">';
 	foreach ($context['charset_list'] as $charset)
 		echo '
 								<option value="', $charset, '"', $charset === $context['charset_detected'] ? ' selected="selected"' : '', '>', $charset, '</option>';
 	echo '
 								</select></dd>
-							<dt>', $txt['utf8_database_charset'], ': </dt>
+							<dt><strong>', $txt['utf8_database_charset'], ':</strong></dt>
 							<dd>', $context['database_charset'], '</dd>
-							<dt>', $txt['utf8_target_charset'], ': </dt>
+							<dt><strong>', $txt['utf8_target_charset'], ': </strong></dt>
 							<dd>', $txt['utf8_utf8'], '</dd>
 						</dl>
 						<input type="submit" value="', $txt['utf8_proceed'], '" />

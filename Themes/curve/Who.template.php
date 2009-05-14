@@ -8,12 +8,16 @@ function template_main()
 
 	// Display the table header and linktree.
 	echo '
-	<div class="tborder topic_table" id="whos_online">
+	<div class="main_section" id="whos_online">
 		<form action="', $scripturl, '?action=who" method="post" id="whoFilter" accept-charset="', $context['character_set'], '">
-			<h4 class="titlebg margin_lower"><span class="left"></span><span class="right"></span>', $txt['who_title'], '</h4>
+			<h4 class="titlebg margin_lower"><span class="left"></span><span class="right"></span>
+				', $txt['who_title'], '
+			</h4>
 			<div class="tborder topic_table" id="mlist">
-				<div class="middletext pagelinks margin_lower">', $txt['pages'], ': ', $context['page_index'], '</div>
-				<table class="table_grid margin_lower" cellspacing="0">
+				<div class="pagesection">
+					<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
+				</div>
+				<table class="table_grid" cellspacing="0">
 					<thead>
 						<tr class="catbg">
 							<th scope="col" class="smalltext" width="40%"><a href="' . $scripturl . '?action=who;start=', $context['start'], ';show=', $context['show_by'], ';sort=user', $context['sort_direction'] != 'down' && $context['sort_by'] == 'user' ? '' : ';asc', '" rel="nofollow">', $txt['who_user'], ' ', $context['sort_by'] == 'user' ? '<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
@@ -77,20 +81,22 @@ function template_main()
 					</tbody>
 				</table>
 			</div>
-			<div class="middletext pagelinks margin_lower align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
+			<div class="pagesection">
+				<div class="pagelinks align_left">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	echo '
-			<div class="selectbox align_right">', $txt['who_show1'], '
-				<select name="show" onchange="document.forms.whoFilter.submit();">';
+				<div class="selectbox align_right">', $txt['who_show1'], '
+					<select name="show" onchange="document.forms.whoFilter.submit();">';
 
 	foreach ($context['show_methods'] as $value => $label)
 		echo '
-					<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
+						<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
 	echo '
-				</select>
-				<noscript>
-					<input type="submit" value="', $txt['go'], '" />
-				</noscript>
+					</select>
+					<noscript>
+						<input type="submit" value="', $txt['go'], '" />
+					</noscript>
+				</div>
 			</div>
 		</form>
 	</div>';
@@ -102,8 +108,10 @@ function template_credits()
 
 	// The most important part - the credits :P.
 	echo '
-	<div class="tborder padding" id="credits">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['credits'], '</h3>';
+	<div class="main_section" id="credits">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['credits'], '
+		</h3>';
 
 	foreach ($context['credits'] as $section)
 	{
@@ -111,25 +119,32 @@ function template_credits()
 		echo '
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-			<p class="pretext">', $section['pretext'], '</p>
+			<div class="content">
+				<p>', $section['pretext'], '</p>
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 
 		if (isset($section['title']))
 			echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $section['title'], '</h3>';
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $section['title'], '
+		</h3>';
 
 		echo '
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
-			<dl>';
+			<div class="content">
+				<dl>';
 
 		foreach ($section['groups'] as $group)
 		{
 			if (isset($group['title']))
 				echo '
-				<dt class="strong">', $group['title'], '</dt>
-				<dd>';
+					<dt>
+						<strong>', $group['title'], '</strong>
+					</dt>
+					<dd>';
 
 			// Try to make this read nicely.
 			if (count($group['members']) <= 2)
@@ -141,47 +156,53 @@ function template_credits()
 			}
 			
 			echo '
-				</dd>';
+					</dd>';
 		}
 
 		echo '
-			</dl>';
+				</dl>';
 
 		if (isset($section['posttext']))
 			echo '
-			<p class="posttext">', $section['posttext'], '</p>';
-
-		echo '
+				<p class="posttext">', $section['posttext'], '</p>';
+		
+		echo'
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 	}
 
 	echo '
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['credits_copyright'], '</h3>
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['credits_copyright'], '
+		</h3>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-			<dl>
-				<dt>', $txt['credits_forum'], '</dt>', '
-				<dd>', $context['copyrights']['smf'];
+			<div class="content">
+				<dl>
+					<dt><strong>', $txt['credits_forum'], '</strong></dt>', '
+					<dd>', $context['copyrights']['smf'];
 
 	if (!empty($context['copyright_removal_validate']))
 		echo '<br />', $context['copyright_removal_validate'];
 
-	echo '</dd>
-			</dl>
-			<span class="botslice"><span></span></span>
-		</div>';
+	echo '
+					</dd>
+				</dl>';
 
 	if (!empty($context['copyrights']['mods']))
 	{
 		echo '
-		<dl>
-			<dt>', $txt['credits_modifications'], '</dt>
-			<dd>', implode('</dd><dd>', $context['copyrights']['mods']), '</dd>
-		</dl>';
+				<dl>
+					<dt><strong>', $txt['credits_modifications'], '</strong></dt>
+					<dd>', implode('</dd><dd>', $context['copyrights']['mods']), '</dd>
+				</dl>';
 	}
-
+				
 	echo '
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
 	</div>';
 }
 ?>
