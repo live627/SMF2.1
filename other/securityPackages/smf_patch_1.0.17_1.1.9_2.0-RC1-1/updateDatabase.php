@@ -65,7 +65,7 @@ else
 }
 
 // Maybe we can try to update the SMF version as well.
-if (!empty($request) && mysql_num_rows($reuqest) > 0)
+if (!empty($request) && mysql_num_rows($request) > 0)
 {
 	list($old_version) = mysql_fetch_row($request);
 
@@ -82,16 +82,19 @@ if (!empty($request) && mysql_num_rows($reuqest) > 0)
 
 		// Hopefully the last item is a int, otherwise we failed.
 		if (is_int($parts[count($parts - 1)]))
-			$new_version = $parts[count($parts - 1)] += 1;
+		{
+			$parts[count($parts - 1)] = $parts[count($parts - 1)] += 1;
+			$new_version = implode('.', $parts);
+		}
 	}
 
 	// Now make the changes, first try db_query.
-	if (!empty($version) && function_exists('db_query'))
+	if (!empty($new_version) && function_exists('db_query'))
 		db_query('UPDATE ' . $db_prefix . 'settings
 			SET value = "' . $new_version . '"
 			WHERE variable = "smfVersion"
 				AND value = "' . $old_version . '"', false, false);
-	elseif (!empty($version))
+	elseif (!empty($new_version))
 		mysql_query('UPDATE ' . $db_prefix . 'settings
 			SET value = "' . $new_version . '"
 			WHERE variable = "smfVersion"
