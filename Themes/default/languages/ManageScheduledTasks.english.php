@@ -34,7 +34,7 @@ $txt['scheduled_task_desc_weekly_maintenance'] = 'Runs essential weekly maintena
 $txt['scheduled_task_paid_subscriptions'] = 'Paid Subscription Checks';
 $txt['scheduled_task_desc_paid_subscriptions'] = 'Sends out any necessary paid subscription reminders and removes expired member subscriptions.';
 
-$txt['scheduled_task_reg_starting'] = 'Starting at %s';
+$txt['scheduled_task_reg_starting'] = 'Starting at %1$s';
 $txt['scheduled_task_reg_repeating'] = 'repeating every %1$d %2$s';
 $txt['scheduled_task_reg_unit_m'] = 'minute(s)';
 $txt['scheduled_task_reg_unit_h'] = 'hour(s)';

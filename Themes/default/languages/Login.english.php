@@ -14,7 +14,7 @@ $txt['registration_successful'] = 'Registration successful';
 $txt['now_a_member'] = 'Success! You are now a member of the Forum.';
 // Use numeric entities in the below string.
 $txt['your_password'] = 'and your password is';
-$txt['valid_email_needed'] = 'Please enter a valid email address, %s.';
+$txt['valid_email_needed'] = 'Please enter a valid email address, %1$s.';
 $txt['required_info'] = 'Required Information';
 $txt['identification_by_smf'] = 'Used to identify you on the forum.';
 $txt['agree'] = 'I Agree';
@@ -23,17 +23,17 @@ $txt['warning'] = 'Warning!';
 $txt['only_members_can_access'] = 'Only registered members are allowed to access this section.';
 $txt['login_below'] = 'Please login below or';
 $txt['register_an_account'] = 'register an account';
-$txt['login_with_forum'] = 'with %s.';
+$txt['login_with_forum'] = 'with %1$s.';
 // Use numeric entities in the below two strings.
 $txt['may_change_in_profile'] = 'You may change it after you login by going to the profile page, or by visiting this page after you login:';
 $txt['your_username_is'] = 'Your username is: ';
 
 $txt['login_hash_error'] = 'Password security has recently been upgraded.  Please enter your password again.';
 
-$txt['register_age_confirmation'] = 'I am at least %d years old';
+$txt['register_age_confirmation'] = 'I am at least %1$d years old';
 
 $txt['ban_register_prohibited'] = 'Sorry, you are not allowed to register on this forum.';
-$txt['under_age_registration_prohibited'] = 'Sorry, but users under the age of %d are not allowed to register on this forum.';
+$txt['under_age_registration_prohibited'] = 'Sorry, but users under the age of %1$d are not allowed to register on this forum.';
 
 $txt['activate_account'] = 'Account activation';
 $txt['activate_success'] = 'Your account has been successfully activated. You can now proceed to login.';
@@ -106,7 +106,7 @@ $txt['admin_register_email_activate'] = 'Require user to activate the account';
 $txt['admin_register_group'] = 'Primary Membergroup';
 $txt['admin_register_group_desc'] = 'Primary membergroup new member will belong to';
 $txt['admin_register_group_none'] = '(no primary membergroup)';
-$txt['admin_register_done'] = 'Member %s has been registered successfully!';
+$txt['admin_register_done'] = 'Member %1$s has been registered successfully!';
 
 $txt['coppa_title'] = 'Age Restricted Forum';
 $txt['coppa_after_registration'] = 'Thank you for registering with ' . $context['forum_name_html_safe'] . '.<br /><br />Because you fall under the age of {MINIMUM_AGE}, it is a legal requirement

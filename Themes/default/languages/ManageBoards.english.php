@@ -77,7 +77,7 @@ $txt['mboards_order_before'] = 'Before';
 $txt['mboards_order_child_of'] = 'Child of';
 $txt['mboards_order_in_category'] = 'In category';
 $txt['mboards_current_position'] = 'Current Position';
-$txt['no_valid_parent'] = 'Board %s does not have a valid parent. Use the \'find and repair errors\' function to fix this.';
+$txt['no_valid_parent'] = 'Board %1$s does not have a valid parent. Use the \'find and repair errors\' function to fix this.';
 
 $txt['mboards_recycle_disabled_delete'] = 'Note: You must select an alternative recycle bin board or disable recycling before you can delete this board.';
 

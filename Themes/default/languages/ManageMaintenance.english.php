@@ -4,38 +4,38 @@
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
 $txt['repair_zero_ids'] = 'Found topics and/or messages with topic or message IDs of 0.';
-$txt['repair_missing_topics'] = 'Message #%d is in non-existent topic #%d.';
-$txt['repair_missing_messages'] = 'Topic #%d contains no (actual) messages.';
-$txt['repair_stats_topics_1'] = 'Topic #%d has the first message ID %d, which is incorrect.';
-$txt['repair_stats_topics_2'] = 'Topic #%d has the last message ID %d, which is incorrect.';
-$txt['repair_stats_topics_3'] = 'Topic #%d has the wrong number of replies, %d.';
-$txt['repair_stats_topics_4'] = 'Topic #%d has the wrong number of unapproved posts, %d.';
+$txt['repair_missing_topics'] = 'Message #%1$d is in non-existent topic #%2$d.';
+$txt['repair_missing_messages'] = 'Topic #%1$d contains no (actual) messages.';
+$txt['repair_stats_topics_1'] = 'Topic #%1$d has the first message ID %2$d, which is incorrect.';
+$txt['repair_stats_topics_2'] = 'Topic #%1$d has the last message ID %2$d, which is incorrect.';
+$txt['repair_stats_topics_3'] = 'Topic #%1$d has the wrong number of replies, %2$d.';
+$txt['repair_stats_topics_4'] = 'Topic #%1$d has the wrong number of unapproved posts, %2$d.';
 $txt['repair_stats_topics_5'] = 'Topic #%d has the wrong approval flag set.';
-$txt['repair_missing_boards'] = 'Topic #%d is in board #%d, which is missing.';
-$txt['repair_missing_categories'] = 'Board #%d is in category #%d, which is missing.';
-$txt['repair_missing_posters'] = 'Message #%d was posted by member #%d, who is now missing.';
-$txt['repair_missing_parents'] = 'Board #%d is a child of board #%d, which is missing.';
-$txt['repair_missing_polls'] = 'Topic #%d is tied to non-existent poll #%d.';
-$txt['repair_missing_calendar_topics'] = 'Event #%d is tied to topic #%d, which is missing.';
-$txt['repair_missing_log_topics'] = 'Topic #%d is marked as read for one or more people, but does not exist.';
-$txt['repair_missing_log_topics_members'] = 'Member #%d has marked one or more topics as read, but does not exist.';
-$txt['repair_missing_log_boards'] = 'Board #%d is marked as read for one or more people, but does not exist.';
-$txt['repair_missing_log_boards_members'] = 'Member #%d has marked one or more boards as read, but does not exist.';
-$txt['repair_missing_log_mark_read'] = 'Board #%d is marked as read for one or more people, but does not exist.';
-$txt['repair_missing_log_mark_read_members'] = 'Member #%d has marked one or more boards as read, but does not exist.';
-$txt['repair_missing_pms'] = 'Personal message #%d has been sent to one or more people, but does not exist.';
-$txt['repair_missing_recipients'] = 'Member #%d has received one or more personal messages, but does not exist.';
-$txt['repair_missing_senders'] = 'Personal message #%d was sent by member #%d, who does not exist.';
-$txt['repair_missing_notify_members'] = 'Notifications have been requested by member #%d, who does not exist.';
-$txt['repair_missing_cached_subject'] = 'The subject of topic #%d is currently not stored in the subject cache.';
-$txt['repair_missing_topic_for_cache'] = 'Cached word \'%s\' is linked to a non-existent topic.';
+$txt['repair_missing_boards'] = 'Topic #%1$d is in board #%2$d, which is missing.';
+$txt['repair_missing_categories'] = 'Board #%1$d is in category #%2$d, which is missing.';
+$txt['repair_missing_posters'] = 'Message #%1$d was posted by member #%2$d, who is now missing.';
+$txt['repair_missing_parents'] = 'Board #%1$d is a child of board #%2$d, which is missing.';
+$txt['repair_missing_polls'] = 'Topic #%1$d is tied to non-existent poll #%2$d.';
+$txt['repair_missing_calendar_topics'] = 'Event #%1$d is tied to topic #%2$d, which is missing.';
+$txt['repair_missing_log_topics'] = 'Topic #%1$d is marked as read for one or more people, but does not exist.';
+$txt['repair_missing_log_topics_members'] = 'Member #%1$d has marked one or more topics as read, but does not exist.';
+$txt['repair_missing_log_boards'] = 'Board #%1$d is marked as read for one or more people, but does not exist.';
+$txt['repair_missing_log_boards_members'] = 'Member #%1$d has marked one or more boards as read, but does not exist.';
+$txt['repair_missing_log_mark_read'] = 'Board #%1$d is marked as read for one or more people, but does not exist.';
+$txt['repair_missing_log_mark_read_members'] = 'Member #%1$d has marked one or more boards as read, but does not exist.';
+$txt['repair_missing_pms'] = 'Personal message #%1$d has been sent to one or more people, but does not exist.';
+$txt['repair_missing_recipients'] = 'Member #%1$d has received one or more personal messages, but does not exist.';
+$txt['repair_missing_senders'] = 'Personal message #%1$d was sent by member #%2$d, who does not exist.';
+$txt['repair_missing_notify_members'] = 'Notifications have been requested by member #%1$d, who does not exist.';
+$txt['repair_missing_cached_subject'] = 'The subject of topic #%1$d is currently not stored in the subject cache.';
+$txt['repair_missing_topic_for_cache'] = 'Cached word \'%1$s\' is linked to a non-existent topic.';
 $txt['repair_missing_log_poll_member'] = 'Poll #%1$d has been given a vote from member #%2$d , who is now missing.';
 $txt['repair_missing_log_poll_vote'] = 'A vote was cast by member #%1$d on a non-existent poll #%2$d.';
-$txt['repair_missing_thumbnail_parent'] = 'A thumbnail exists called %s, but it doesn\'t have a parent.';
-$txt['repair_report_missing_comments'] = 'Report #%d of topic: &quot;%s&quot; has no comments.';
-$txt['repair_comments_missing_report'] = 'Report comment #%d submitted by %s has no related report.';
-$txt['repair_group_request_missing_member'] = 'A group request still exists for deleted member #%d.';
-$txt['repair_group_request_missing_group'] = 'A group request still exists for deleted group #%d.';
+$txt['repair_missing_thumbnail_parent'] = 'A thumbnail exists called %1$s, but it doesn\'t have a parent.';
+$txt['repair_report_missing_comments'] = 'Report #%1$d of topic: &quot;%2$s&quot; has no comments.';
+$txt['repair_comments_missing_report'] = 'Report comment #%1$d submitted by %2$s has no related report.';
+$txt['repair_group_request_missing_member'] = 'A group request still exists for deleted member #%1$d.';
+$txt['repair_group_request_missing_group'] = 'A group request still exists for deleted group #%1$d.';
 
 $txt['repair_currently_checking'] = 'Checking: &quot;%1$s&quot;';
 $txt['repair_currently_fixing'] = 'Fixing: &quot;%1$s&quot;';
@@ -78,7 +78,7 @@ $txt['salvaged_board_description'] = 'Topics created for messages with non-exist
 $txt['salvaged_board_error'] = 'Unable to create Salvaged Topics board!';
 
 $txt['database_optimize'] = 'Optimize Database';
-$txt['database_numb_tables'] = 'Your database contains %d tables.';
+$txt['database_numb_tables'] = 'Your database contains %1$d tables.';
 $txt['database_optimize_attempt'] = 'Attempting to optimize your database...';
 $txt['database_optimizing'] = 'Optimizing %1$s... %2$01.2f kb optimized.';
 $txt['database_already_optimized'] = 'All of the tables were already optimized.';
@@ -172,7 +172,7 @@ $txt['utf8_warning'] = 'If you want to convert your data and database to UTF-8, 
 	<li>Because UTF-8 is a richer character set than most other character sets, there\'s no way back, unless by restoring your database to before the conversion.</li>
 	<li>After converting your data and database to UTF-8, you will need UTF-8 compatible language files.</li>
 </ul>';
-$txt['utf8_charset_not_supported'] = 'Conversion from %s to UTF-8 is not supported.';
+$txt['utf8_charset_not_supported'] = 'Conversion from %1$s to UTF-8 is not supported.';
 $txt['utf8_detected_charset'] = 'Based on your default language file (\'%1$s\'), the character set of your data would most likely be \'%2$s\'.';
 $txt['utf8_already_utf8'] = 'Your database and data already seem to be configured as UTF-8 data. No conversion is needed.';
 $txt['utf8_source_charset'] = 'Data character set';

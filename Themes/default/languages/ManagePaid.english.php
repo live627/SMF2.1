@@ -130,7 +130,7 @@ $txt['year'] = 'Year';
 
 // View subscribed users.
 $txt['viewing_users_subscribed'] = 'Viewing Users';
-$txt['view_users_subscribed'] = 'Viewing users subscribed to: &quot;%s&quot;';
+$txt['view_users_subscribed'] = 'Viewing users subscribed to: &quot;%1$s&quot;';
 $txt['no_subscribers'] = 'There are currently no subscribers to this subscription!';
 $txt['add_subscriber'] = 'Add New Subscriber';
 $txt['edit_subscriber'] = 'Edit Subscriber';
@@ -189,7 +189,7 @@ $txt['paid_sub_not_active'] = 'That subscription is not taking any new users!';
 $txt['paid_disabled'] = 'Paid subscriptions are currently disabled!';
 $txt['paid_unknown_transaction_type'] = 'Unknown Paid Subscriptions transaction type.';
 $txt['paid_empty_member'] = 'Paid subscription handler could not recover member ID';
-$txt['paid_could_not_find_member'] = 'Paid subscription handler could not find member with ID: %d';
+$txt['paid_could_not_find_member'] = 'Paid subscription handler could not find member with ID: %1$d';
 $txt['paid_count_not_find_subscription'] = 'Paid subscription handler could not find subscription for member ID: %1$s, subscription ID: %2$s';
 $txt['paid_count_not_find_subscription_log'] = 'Paid subscription handler could not find subscription log entry for member ID: %1$s, subscription ID: %2$s';
 $txt['paid_count_not_find_outstanding_payment'] = 'Could not find outstanding payment entry for member ID: %1$s, subscription ID: %2$s so ignoring';

@@ -247,8 +247,8 @@ $txt['no_matches'] = 'Sorry, no matches were found';
 
 $txt['notification'] = 'Notification';
 
-$txt['your_ban'] = 'Sorry %s, you are banned from using this forum!';
-$txt['your_ban_expires'] = 'Your ban is set to expire %s.';
+$txt['your_ban'] = 'Sorry %1$s, you are banned from using this forum!';
+$txt['your_ban_expires'] = 'Your ban is set to expire %1$s.';
 $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 $txt['ban_continue_browse'] = 'You may continue to browse the forum as a guest.';
 
@@ -326,11 +326,11 @@ $txt['print_page'] = 'Print Page';
 $txt['valid_email'] = 'This must be a valid email address.';
 
 $txt['geek'] = 'I am a geek!!';
-$txt['info_center_title'] = '%s - Info Center';
+$txt['info_center_title'] = '%1$s - Info Center';
 
 $txt['send_topic'] = 'Send this topic';
 
-$txt['sendtopic_title'] = 'Send the topic &quot;%s&quot; to a friend.';
+$txt['sendtopic_title'] = 'Send the topic &quot;%1$s&quot; to a friend.';
 $txt['sendtopic_sender_name'] = 'Your name';
 $txt['sendtopic_sender_email'] = 'Your email address';
 $txt['sendtopic_receiver_name'] = 'Recipient\'s name';
@@ -348,7 +348,7 @@ $txt['file'] = 'File';
 $txt['line'] = 'Line';
 // Use numeric entities in the below string.
 $txt['tried_to_repair'] = 'SMF has detected and automatically tried to repair an error in your database.  If you continue to have problems, or continue to receive these emails, please contact your host.';
-$txt['database_error_versions'] = '<strong>Note:</strong> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version %s, while your database is at version %s. The above error might possibly go away if you execute the latest version of upgrade.php.';
+$txt['database_error_versions'] = '<strong>Note:</strong> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version %1$s, while your database is at version %1$s. The above error might possibly go away if you execute the latest version of upgrade.php.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'It seems something has gone sour on the forum with the template system.  This problem should only be temporary, so please come back later and try again.  If you continue to see this message, please contact the administrator.<br /><br />You can also try <a href="javascript:location.reload();">refreshing this page</a>.';
 $txt['template_parse_error_details'] = 'There was a problem loading the <tt><strong>%1$s</strong></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
@@ -439,7 +439,7 @@ $txt['status'] = 'Status';
 $txt['go_up'] = 'Go Up';
 $txt['go_down'] = 'Go Down';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">Powered by %s</a> |
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank" class="new_win">Powered by %1$s</a> |
  <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank" class="new_win">SMF &copy; 2006&ndash;2009, Simple Machines LLC</a>';
  
 $txt['birthdays'] = 'Birthdays:';
@@ -475,8 +475,8 @@ $txt['moveTopic3'] = 'New subject';
 $txt['moveTopic4'] = 'Change every message\'s subject';
 $txt['move_topic_unapproved_js'] = 'Warning! This topic has not yet been approved.\\n\\nIt is not recommended that you create a redirection topic unless you intend to approve the post immediately following the move.';
 
-$txt['theme_template_error'] = 'Unable to load the \'%s\' template.';
-$txt['theme_language_error'] = 'Unable to load the \'%s\' language file.';
+$txt['theme_template_error'] = 'Unable to load the \'%1$s\' template.';
+$txt['theme_language_error'] = 'Unable to load the \'%1$s\' language file.';
 
 $txt['parent_boards'] = 'Child Boards';
 
@@ -484,7 +484,7 @@ $txt['smtp_no_connect'] = 'Could not connect to SMTP host';
 $txt['smtp_port_ssl'] = 'SMTP port setting incorrect; it should be 465 for SSL servers.';
 $txt['smtp_bad_response'] = 'Couldn\'t get mail server response codes';
 $txt['smtp_error'] = 'Ran into problems sending Mail. Error: ';
-$txt['mail_send_unable'] = 'Unable to send mail to the email address \'%s\'';
+$txt['mail_send_unable'] = 'Unable to send mail to the email address \'%1$s\'';
 
 $txt['mlist_search'] = 'Search For Members';
 $txt['mlist_search_again'] = 'Search again';
@@ -506,13 +506,13 @@ $txt['never'] = 'Never';
 $txt['more'] = 'more';
 
 $txt['hostname'] = 'Hostname';
-$txt['you_are_post_banned'] = 'Sorry %s, you are banned from posting or sending personal messages on this forum.';
+$txt['you_are_post_banned'] = 'Sorry %1$s, you are banned from posting or sending personal messages on this forum.';
 $txt['ban_reason'] = 'Reason';
 
 $txt['tables_optimized'] = 'Database tables optimized';
 
 $txt['add_poll'] = 'Add poll';
-$txt['poll_options6'] = 'You may only select up to %s options.';
+$txt['poll_options6'] = 'You may only select up to %1$s options.';
 $txt['poll_remove'] = 'Remove Poll';
 $txt['poll_remove_warn'] = 'Are you sure you want to remove this poll from the topic?';
 $txt['poll_results_expire'] = 'Results will be shown when voting has closed';
@@ -653,7 +653,7 @@ $txt['upshrink_description'] = 'Shrink or expand the header.';
 
 $txt['mark_unread'] = 'Mark unread';
 
-$txt['ssi_not_direct'] = 'Please don\'t access SSI.php by URL directly; you may want to use the path (%s) or add ?ssi_function=something.';
+$txt['ssi_not_direct'] = 'Please don\'t access SSI.php by URL directly; you may want to use the path (%1$s) or add ?ssi_function=something.';
 $txt['ssi_session_broken'] = 'SSI.php was unable to load a session!  This may cause problems with logout and other functions - please make sure SSI.php is included before *anything* else in all your scripts!';
 
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
@@ -661,7 +661,7 @@ $txt['preview_title'] = 'Preview post';
 $txt['preview_fetch'] = 'Fetching preview...';
 $txt['preview_new'] = 'New message';
 $txt['error_while_submitting'] = 'The following error or errors occurred while posting this message:';
-$txt['error_old_topic'] = 'Warning: this topic has not been posted in for at least %d days.<br />Unless you\'re sure you want to reply, please consider starting a new topic.';
+$txt['error_old_topic'] = 'Warning: this topic has not been posted in for at least %1$d days.<br />Unless you\'re sure you want to reply, please consider starting a new topic.';
 
 $txt['split_selected_posts'] = 'Selected posts';
 $txt['split_selected_posts_desc'] = 'The posts below will form a new topic after splitting.';
@@ -676,7 +676,7 @@ $txt['pm_menu_send'] = 'Send a message';
 
 $txt['hello_member_ndt'] = 'Hello';
 
-$txt['unapproved_posts'] = 'Unapproved Posts (Topics: %d, Posts: %d)';
+$txt['unapproved_posts'] = 'Unapproved Posts (Topics: %1$d, Posts: %2$d)';
 
 $txt['ajax_in_progress'] = 'Loading...';
 

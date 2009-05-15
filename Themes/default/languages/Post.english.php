@@ -107,7 +107,7 @@ $txt['reported_post'] = 'Reported post';
 $txt['reported_to_mod_by'] = 'by';
 $txt['rtm10'] = 'Submit';
 // Use numeric entities in the below four strings.
-$txt['report_following_post'] = 'The following post, "%s" by';
+$txt['report_following_post'] = 'The following post, "%1$s" by';
 $txt['reported_by'] = 'has been reported by';
 $txt['board_moderate'] = 'on a board you moderate';
 $txt['report_comment'] = 'The reporter has made the following comment';
@@ -136,7 +136,7 @@ $txt['poll_results_voted'] = 'Only show the results after someone has voted.';
 $txt['poll_results_expire'] = 'Only show the results after the poll has expired.';
 $txt['poll_max_votes'] = 'Maximum votes per user.';
 $txt['poll_do_change_vote'] = 'Allow user to change vote.';
-$txt['poll_too_many_votes'] = 'You selected too many options.  For this poll, you may only select %s options.';
+$txt['poll_too_many_votes'] = 'You selected too many options.  For this poll, you may only select %1$s options.';
 $txt['poll_add_option'] = 'Add Option';
 $txt['poll_guest_vote'] = 'Allow guests to vote.';
 
@@ -158,9 +158,9 @@ $txt['more_smileys_pick'] = 'Pick a smiley';
 $txt['more_smileys_close_window'] = 'Close Window';
 
 $txt['error_new_reply'] = 'Warning - while you were typing a new reply has been posted. You may wish to review your post.';
-$txt['error_new_replies'] = 'Warning - while you were typing %d new replies have been posted. You may wish to review your post.';
+$txt['error_new_replies'] = 'Warning - while you were typing %1$d new replies have been posted. You may wish to review your post.';
 $txt['error_new_reply_reading'] = 'Warning - while you were reading a new reply has been posted. You may wish to review your post.';
-$txt['error_new_replies_reading'] = 'Warning - while you were reading %d new replies have been posted. You may wish to review your post.';
+$txt['error_new_replies_reading'] = 'Warning - while you were reading %1$d new replies have been posted. You may wish to review your post.';
 
 $txt['announce_this_topic'] = 'Send an announcement about this topic to the members:';
 $txt['announce_title'] = 'Send an announcement';
@@ -173,20 +173,20 @@ $txt['announce_regular_members'] = 'Regular Members';
 
 $txt['digest_subject_daily'] = 'Daily Digest';
 $txt['digest_subject_weekly'] = 'Weekly Digest';
-$txt['digest_intro_daily'] = 'Below is a summary of all activity in your subscribed boards and topics at %s today. To unsubscribe please visit the link below.';
-$txt['digest_intro_weekly'] = 'Below is a summary of all activity in your subscribed boards and topics at %s this week. To unsubscribe please visit the link below.';
+$txt['digest_intro_daily'] = 'Below is a summary of all activity in your subscribed boards and topics at %1$s today. To unsubscribe please visit the link below.';
+$txt['digest_intro_weekly'] = 'Below is a summary of all activity in your subscribed boards and topics at %1$s this week. To unsubscribe please visit the link below.';
 $txt['digest_new_topics'] = 'The following topics have been started';
-$txt['digest_new_topics_line'] = '"%s" in "%s"';
+$txt['digest_new_topics_line'] = '"%1$s" in "%1$s"';
 $txt['digest_new_replies'] = 'Replies have been made in the following topics';
-$txt['digest_new_replies_one'] = '1 reply in "%s"';
-$txt['digest_new_replies_many'] = '%d replies in "%s"';
+$txt['digest_new_replies_one'] = '1 reply in "%1$s"';
+$txt['digest_new_replies_many'] = '%1$d replies in "%2$s"';
 $txt['digest_mod_actions'] = 'The following moderation actions have taken place';
-$txt['digest_mod_act_sticky'] = '"%s" was stickied';
-$txt['digest_mod_act_lock'] = '"%s" was locked';
-$txt['digest_mod_act_unlock'] = '"%s" was unlocked';
-$txt['digest_mod_act_remove'] = '"%s" was removed';
-$txt['digest_mod_act_move'] = '"%s" was moved';
-$txt['digest_mod_act_merge'] = '"%s" was merged';
-$txt['digest_mod_act_split'] = '"%s" was split';
+$txt['digest_mod_act_sticky'] = '"%1$s" was stickied';
+$txt['digest_mod_act_lock'] = '"%1$s" was locked';
+$txt['digest_mod_act_unlock'] = '"%1$s" was unlocked';
+$txt['digest_mod_act_remove'] = '"%1$s" was removed';
+$txt['digest_mod_act_move'] = '"%1$s" was moved';
+$txt['digest_mod_act_merge'] = '"%1$s" was merged';
+$txt['digest_mod_act_split'] = '"%1$s" was split';
 
 ?>

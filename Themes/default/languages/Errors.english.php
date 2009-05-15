@@ -21,12 +21,12 @@ $txt['register_to_use'] = 'Sorry, you must register before using this feature.';
 $txt['password_invalid_character'] = 'Invalid character used in password.';
 $txt['name_invalid_character'] = 'Invalid character used in name.';
 $txt['email_invalid_character'] = 'Invalid character used in email.';
-$txt['username_reserved'] = 'The username you tried to use contains the reserved name \'%s\'. Please try another username.';
+$txt['username_reserved'] = 'The username you tried to use contains the reserved name \'%1$s\'. Please try another username.';
 $txt['numbers_one_to_nine'] = 'This field only accepts numbers from 0-9';
 $txt['not_a_user'] = 'The user whose profile you are trying to view does not exist.';
 $txt['not_a_topic'] = 'This topic doesn\'t exist on this board.';
 $txt['not_approved_topic'] = 'This topic has not been approved yet.';
-$txt['email_in_use'] = 'That email address (%s) is being used by a registered member already. If you feel this is a mistake, go to the login page and use the password reminder with that address.';
+$txt['email_in_use'] = 'That email address (%1$s) is being used by a registered member already. If you feel this is a mistake, go to the login page and use the password reminder with that address.';
 
 $txt['didnt_select_vote'] = 'You didn\'t select a vote option.';
 $txt['poll_error'] = 'Either that poll doesn\'t exist, the poll has been locked, or you tried to vote twice.';
@@ -37,7 +37,7 @@ $txt['cant_change_own_karma'] = 'Sorry, you are not permitted to modify your own
 $txt['karma_wait_time'] = 'Sorry, you can\'t repeat a karma action without waiting %1$s %2$s.';
 $txt['feature_disabled'] = 'Sorry, this feature is disabled.';
 $txt['cant_access_upload_path'] = 'Cannot access attachments upload path!';
-$txt['file_too_big'] = 'Your file is too large. The maximum attachment size allowed is %d KB.';
+$txt['file_too_big'] = 'Your file is too large. The maximum attachment size allowed is %1$d KB.';
 $txt['attach_timeout'] = 'Your attachment couldn\'t be saved. This might happen because it took too long to upload or the file is bigger than the server will allow.<br /><br />Please consult your server administrator for more information.';
 $txt['filename_exists'] = 'Sorry! There is already an attachment with the same filename as the one you tried to upload. Please rename the file and try again.';
 $txt['ran_out_of_space'] = 'The upload folder is full. Please try a smaller file and/or contact an administrator.';
@@ -200,14 +200,14 @@ $txt['who_off'] = 'You cannot access Who\'s Online right now because it is disab
 $txt['merge_create_topic_failed'] = 'Error creating a new topic.';
 $txt['merge_need_more_topics'] = 'Merge topics require at least two topics to merge.';
 
-$txt['postWaitTime_broken'] = 'The last posting from your IP was less than %d seconds ago. Please try again later.';
-$txt['registerWaitTime_broken'] = 'You already registered just %d seconds ago!';
-$txt['loginWaitTime_broken'] = 'You will have to wait about %d seconds to login again, sorry.';
-$txt['pmWaitTime_broken'] = 'The last personal message from your IP was less than %d seconds ago. Please try again later.';
-$txt['reporttmWaitTime_broken'] = 'The last topic report from your IP was less than %d seconds ago. Please try again later.';
-$txt['sendtopcWaitTime_broken'] = 'The last topic sent from your IP was less than %d seconds ago. Please try again later.';
-$txt['sendmailWaitTime_broken'] = 'The last email sent from your IP was less than %d seconds ago. Please try again later.';
-$txt['searchWaitTime_broken'] = 'Your last search was less than %d seconds ago. Please try again later.';
+$txt['postWaitTime_broken'] = 'The last posting from your IP was less than %1$d seconds ago. Please try again later.';
+$txt['registerWaitTime_broken'] = 'You already registered just %1$d seconds ago!';
+$txt['loginWaitTime_broken'] = 'You will have to wait about %1$d seconds to login again, sorry.';
+$txt['pmWaitTime_broken'] = 'The last personal message from your IP was less than %1$d seconds ago. Please try again later.';
+$txt['reporttmWaitTime_broken'] = 'The last topic report from your IP was less than %1$d seconds ago. Please try again later.';
+$txt['sendtopcWaitTime_broken'] = 'The last topic sent from your IP was less than %1$d seconds ago. Please try again later.';
+$txt['sendmailWaitTime_broken'] = 'The last email sent from your IP was less than %1$d seconds ago. Please try again later.';
+$txt['searchWaitTime_broken'] = 'Your last search was less than %1$d seconds ago. Please try again later.';
 
 $txt['email_missing_data'] = 'You must enter something in both the subject and message boxes.';
 
@@ -215,14 +215,14 @@ $txt['topic_gone'] = 'The topic or board you are looking for appears to be eithe
 $txt['theme_edit_missing'] = 'The file you are trying to edit... can\'t even be found!';
 
 $txt['attachments_no_write'] = 'The attachments upload directory is not writable.  Your attachment or avatar cannot be saved.';
-$txt['attachments_limit_per_post'] = 'You may not upload more than %d attachments per post';
+$txt['attachments_limit_per_post'] = 'You may not upload more than %1$d attachments per post';
 
 $txt['no_dump_database'] = 'Only administrators can make database backups!';
 $txt['pm_not_yours'] = 'The personal message you\'re trying to quote is not your own or does not exist, please go back and try again.';
 $txt['mangled_post'] = 'Mangled form data - please go back and try again.';
 $txt['quoted_post_deleted'] = 'The post you are trying to quote either does not exist, was deleted, or is no longer viewable by you.';
-$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
-$txt['labels_too_many'] = 'Sorry, %s messages already had the maximum amount of labels allowed!';
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %1$d personal messages per hour.';
+$txt['labels_too_many'] = 'Sorry, %1$s messages already had the maximum amount of labels allowed!';
 
 $txt['register_only_once'] = 'Sorry, but you\'re not allowed to register multiple accounts at the same time from the same computer.';
 $txt['admin_setting_coppa_require_contact'] = 'You must enter either a postal or fax contact if parent/guardian approval is required.';
@@ -268,7 +268,7 @@ $txt['search_invalid_weights'] = 'Search weights are not properly configured. At
 $txt['unable_to_create_temporary'] = 'The search function was unable to create temporary tables.  Please try again.';
 
 $txt['package_no_file'] = 'Unable to find package file!';
-$txt['packageget_unable'] = 'Unable to connect to the server.  Please try using <a href="%s" target="_blank" class="new_win">this URL</a> instead.';
+$txt['packageget_unable'] = 'Unable to connect to the server.  Please try using <a href="%1$s" target="_blank" class="new_win">this URL</a> instead.';
 $txt['not_on_simplemachines'] = 'Sorry, packages can only be downloaded like this from the simplemachines.org server.';
 $txt['package_cant_uninstall'] = 'This package was either never installed or was already uninstalled - you can\'t uninstall it now.';
 $txt['package_cant_download'] = 'You cannot download or install new packages because the Packages directory or one of the files in it are not writable!';
@@ -321,7 +321,7 @@ $txt['icon_not_found'] = 'The icon image could not be found in the default theme
 $txt['icon_after_itself'] = 'The icon cannot be positioned after itself!';
 $txt['icon_name_too_long'] = 'Icon filenames cannot be more than 16 characters long';
 
-$txt['name_censored'] = 'Sorry, the name you tried to use, %s, contains words which have been censored.  Please try another name.';
+$txt['name_censored'] = 'Sorry, the name you tried to use, %1$s, contains words which have been censored.  Please try another name.';
 
 $txt['poll_already_exists'] = 'A topic can only have one poll associated with it!';
 $txt['poll_not_found'] = 'There is no poll associated with this topic!';
@@ -376,7 +376,7 @@ $txt['openid_sig_invalid'] = 'The signature from the identity provider is invali
 $txt['openid_load_data'] = 'Could not load the data from your login request.  Please try again.';
 $txt['openid_not_verified'] = 'The OpenID address given has not been verified yet.  Please log in to verify.';
 
-$txt['error_custom_field_too_long'] = 'The &quot;%1$s&quot; field cannot be greater than %1$d characters in length.';
+$txt['error_custom_field_too_long'] = 'The &quot;%1$s&quot; field cannot be greater than %2$d characters in length.';
 $txt['error_custom_field_invalid_email'] = 'The &quot;%1$s&quot; field must be a valid email address.';
 $txt['error_custom_field_not_number'] = 'The &quot;%1$s&quot; field must be numeric.';
 $txt['error_custom_field_inproper_format'] = 'The &quot;%1$s&quot; field is an invalid format.';

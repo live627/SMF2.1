@@ -54,17 +54,17 @@ $txt['whoall_pm_send'] = 'Sending a message.';
 $txt['whoall_pm_send2'] = 'Sending a message.';
 
 $txt['whotopic_dlattach'] = 'Viewing an attachment.';
-$txt['whotopic_editpoll'] = 'Editing the poll in &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot;.';
-$txt['whotopic_mergetopics'] = 'Merging the topic &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot; with another topic.';
-$txt['whotopic_movetopic'] = 'Moving the topic &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot; to another board.';
-$txt['whotopic_post'] = 'Posting in <a href="' . $scripturl . '?topic=%d.0">%s</a>.';
-$txt['whotopic_post2'] = 'Posting in <a href="' . $scripturl . '?topic=%d.0">%s</a>.';
-$txt['whotopic_printpage'] = 'Printing the topic &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot;.';
-$txt['whotopic_sendtopic'] = 'Sending the topic &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot; to a friend.';
-$txt['whotopic_splittopics'] = 'Splitting the topic &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot; into two topics.';
-$txt['whotopic_vote'] = 'Voting in <a href="' . $scripturl . '?topic=%d.0">%s</a>.';
+$txt['whotopic_editpoll'] = 'Editing the poll in &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot;.';
+$txt['whotopic_mergetopics'] = 'Merging the topic &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot; with another topic.';
+$txt['whotopic_movetopic'] = 'Moving the topic &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot; to another board.';
+$txt['whotopic_post'] = 'Posting in <a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>.';
+$txt['whotopic_post2'] = 'Posting in <a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>.';
+$txt['whotopic_printpage'] = 'Printing the topic &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot;.';
+$txt['whotopic_sendtopic'] = 'Sending the topic &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot; to a friend.';
+$txt['whotopic_splittopics'] = 'Splitting the topic &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot; into two topics.';
+$txt['whotopic_vote'] = 'Voting in <a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>.';
 
-$txt['whopost_quotefast'] = 'Quoting a post from &quot;<a href="' . $scripturl . '?topic=%d.0">%s</a>&quot;.';
+$txt['whopost_quotefast'] = 'Quoting a post from &quot;<a href="' . $scripturl . '?topic=%1$d.0">%1$s</a>&quot;.';
 
 $txt['whoadmin_editagreement'] = 'Editing the registration agreement.';
 $txt['whoadmin_featuresettings'] = 'Editing forum features and options.';
@@ -97,13 +97,13 @@ $txt['whoallow_stats'] = 'Viewing the <a href="' . $scripturl . '?action=stats">
 $txt['whoallow_viewErrorLog'] = 'Viewing the error log.';
 $txt['whoallow_viewmembers'] = 'Viewing a list of members.';
 
-$txt['who_topic'] = 'Viewing the topic <a href="' . $scripturl . '?topic=%d.0">%s</a>.';
-$txt['who_board'] = 'Viewing the board <a href="' . $scripturl . '?board=%d.0">%s</a>.';
+$txt['who_topic'] = 'Viewing the topic <a href="' . $scripturl . '?topic=%1$d.0">%1$s</a>.';
+$txt['who_board'] = 'Viewing the board <a href="' . $scripturl . '?board=%1$d.0">%2$s</a>.';
 $txt['who_index'] = 'Viewing the board index of <a href="' . $scripturl . '">' . $context['forum_name'] . '</a>.';
-$txt['who_viewprofile'] = 'Viewing <a href="' . $scripturl . '?action=profile;u=%d">%s</a>\'s profile.';
-$txt['who_profile'] = 'Editing the profile of <a href="' . $scripturl . '?action=profile;u=%d">%s</a>.';
-$txt['who_post'] = 'Posting a new topic in <a href="' . $scripturl . '?board=%d.0">%s</a>.';
-$txt['who_poll'] = 'Posting a new poll in <a href="' . $scripturl . '?board=%d.0">%s</a>.';
+$txt['who_viewprofile'] = 'Viewing <a href="' . $scripturl . '?action=profile;u=%1$d">%2$s</a>\'s profile.';
+$txt['who_profile'] = 'Editing the profile of <a href="' . $scripturl . '?action=profile;u=%1$d">%2$s</a>.';
+$txt['who_post'] = 'Posting a new topic in <a href="' . $scripturl . '?board=%1$d.0">%2$s</a>.';
+$txt['who_poll'] = 'Posting a new poll in <a href="' . $scripturl . '?board=%1$d.0">%2$s</a>.';
 
 // Credits text
 $txt['credits'] = 'Credits';

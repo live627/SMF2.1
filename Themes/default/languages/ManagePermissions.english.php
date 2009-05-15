@@ -19,7 +19,7 @@ $txt['permission_profile_inherit'] = 'Inherit from parent board';
 
 $txt['permissions_profile'] = 'Profile';
 $txt['permissions_profiles_desc'] = 'Permission profiles are assigned to individual boards to allow you to easily manage your security settings. From this area you can create, edit and delete permission profiles.';
-$txt['permissions_profiles_change_for_board'] = 'Edit Permission Profile For: &quot;%s&quot;';
+$txt['permissions_profiles_change_for_board'] = 'Edit Permission Profile For: &quot;%1$s&quot;';
 $txt['permissions_profile_default'] = 'Default';
 $txt['permissions_profile_no_polls'] = 'No Polls';
 $txt['permissions_profile_reply_only'] = 'Reply Only';
@@ -32,7 +32,7 @@ $txt['permissions_profile_new_create'] = 'Create';
 $txt['permissions_profile_name'] = 'Profile Name';
 $txt['permissions_profile_used_by'] = 'Used By';
 $txt['permissions_profile_used_by_one'] = '1 Board';
-$txt['permissions_profile_used_by_many'] = '%d Boards';
+$txt['permissions_profile_used_by_many'] = '%1$d Boards';
 $txt['permissions_profile_used_by_none'] = 'No Boards';
 $txt['permissions_profile_do_edit'] = 'Edit';
 $txt['permissions_profile_do_delete'] = 'Delete';

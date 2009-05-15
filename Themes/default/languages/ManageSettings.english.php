@@ -5,7 +5,7 @@
 
 global $scripturl;
 
-$txt['modSettings_desc'] = 'This page allows you to change the settings of features and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
+$txt['modSettings_desc'] = 'This page allows you to change the settings of features and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=%1$s;sesc=%1$s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
 $txt['security_settings_desc'] = 'This page allows you to set options specifically related to the security and moderation of your forum, including anti-spam options.';
 $txt['modification_settings_desc'] = 'This page contains settings added by any modifications to your forum';
 
@@ -108,7 +108,7 @@ $txt['caching_information'] = '<div class="aligncenter underline"><strong>Import
 	&quot;server1,server2,server3:port,server4&quot;<br /><br />
 	Note that if no port is specified SMF will use port 11211. SMF will attempt to perform rough/random load balancing across the servers.
 	<br /><br />
-	%s
+	%1$s
 	<hr />';
 
 $txt['detected_no_caching'] = '<strong class="alert">SMF has not been able to detect a compatible accelerator on your server.</strong>';

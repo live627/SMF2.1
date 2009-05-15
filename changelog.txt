@@ -79,6 +79,7 @@ May 2009
  * Curve: Moderation buttons not properly aligned (forum.css, ie7.css) [Bug 3447]
  * Curve: Memberlist should use common css classes (Memberlist.template.php, style.css, memberlist.css, ie6.css)
  * Curve: added some useful common css classes, Templates should use common css classes (style.css, Who.template.php, Recent.template.php and many other files)
+ & Updated language strings to use numbered sprintf variables. (Many language files) [Bug 3402]
 
 
 April 2009
