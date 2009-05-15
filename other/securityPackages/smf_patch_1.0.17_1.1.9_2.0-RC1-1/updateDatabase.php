@@ -21,6 +21,8 @@ if (!empty($smcFunc) && isset($smcFunc['db_query']))
 		'type' => 'varchar',
 		'size' => 40,
 	));
+
+	updateSettings(array('smfVersion', 'SMF 2.0 RC1-1'));
 }
 elseif (function_exists('db_query'))
 {
@@ -29,6 +31,11 @@ elseif (function_exists('db_query'))
 		ALTER IGNORE TABLE ' . $db_prefix . 'attachments
 		ADD COLUMN file_hash varchar(40) NOT NULL default \'\'
 	', false, false);
+
+	$request = db_query('
+		SELECT value
+		FROM ' . $db_prefix . 'settings
+		WHERE variable = "smfVersion"', false, false);
 }
 else
 {
@@ -50,6 +57,45 @@ else
 		ALTER IGNORE TABLE ' . $db_prefix . 'attachments
 		ADD COLUMN file_hash varchar(40) NOT NULL default \'\'
 	');
+
+	$request = mysql_query('
+		SELECT value
+		FROM ' . $db_prefix . 'settings
+		WHERE variable = "smfVersion"');
+}
+
+// Maybe we can try to update the SMF version as well.
+if (!empty($request) && mysql_num_rows($reuqest) > 0)
+{
+	list($old_version) = mysql_fetch_row($request);
+
+	// Hopefully it is easy to find.
+	if (substr($old_version, 0, 3) == '1.0')
+		$new_version = '1.0.17';
+	elseif (substr($old_version, 0, 3) == '1.1')
+		$new_version = '1.1.9';
+	elseif (substr($old_version, 0, 3) == '2.0')
+		$new_version = '2.0 RC1-1';
+	else
+	{
+		$parts = explode('.', $old_version);
+
+		// Hopefully the last item is a int, otherwise we failed.
+		if (is_int($parts[count($parts - 1)]))
+			$new_version = $parts[count($parts - 1)] += 1;
+	}
+
+	// Now make the changes, first try db_query.
+	if (!empty($version) && function_exists('db_query'))
+		db_query('UPDATE ' . $db_prefx . 'settings
+			SET value = "' . $new_version . '"
+			WHERE variable = "smfVersion"
+				AND value = "' . $old_version . '"', false, false);
+	elseif (!empty($version))
+		mysql_query('UPDATE ' . $db_prefx . 'settings
+			SET value = "' . $new_version . '"
+			WHERE variable = "smfVersion"
+				AND value = "' . $old_version . '"');
 }
 
 ?>

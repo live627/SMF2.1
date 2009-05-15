@@ -257,10 +257,20 @@ $sourcedir/Subs-Graphics.php
 
 <search for>
 		if (rename($destName . '.tmp', $destName))
+		{
+			// Write filesize in the database.
+			db_query("
+				UPDATE {$db_prefix}attachments
+				SET size = " . filesize($destName) . "
 </search for>
 
 <replace>
 		if (rename($destName . '.tmp', empty($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash))
+		{
+			// Write filesize in the database.
+			db_query("
+				UPDATE {$db_prefix}attachments
+				SET size = " . filesize(empty($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash) . "
 </replace>
 
 
