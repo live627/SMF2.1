@@ -87,12 +87,12 @@ if (!empty($request) && mysql_num_rows($reuqest) > 0)
 
 	// Now make the changes, first try db_query.
 	if (!empty($version) && function_exists('db_query'))
-		db_query('UPDATE ' . $db_prefx . 'settings
+		db_query('UPDATE ' . $db_prefix . 'settings
 			SET value = "' . $new_version . '"
 			WHERE variable = "smfVersion"
 				AND value = "' . $old_version . '"', false, false);
 	elseif (!empty($version))
-		mysql_query('UPDATE ' . $db_prefx . 'settings
+		mysql_query('UPDATE ' . $db_prefix . 'settings
 			SET value = "' . $new_version . '"
 			WHERE variable = "smfVersion"
 				AND value = "' . $old_version . '"');
