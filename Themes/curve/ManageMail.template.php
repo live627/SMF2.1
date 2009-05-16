@@ -13,10 +13,10 @@ function template_browse()
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
-					<dl>
-						<dt>', $txt['mailqueue_size'], '</dt>
+					<dl class="settings">
+						<dt><strong>', $txt['mailqueue_size'], '</strong></dt>
 						<dd>', $context['mail_queue_size'], '</dd>
-						<dt>', $txt['mailqueue_oldest'], '</dt>
+						<dt><strong>', $txt['mailqueue_oldest'], '</strong></dt>
 						<dd>', $context['oldest_mail'], '</dd>
 					</dl>
 				</div>

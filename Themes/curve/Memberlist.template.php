@@ -13,7 +13,7 @@ function template_main()
 		);
 	
 	echo '
-	<div id="memberlist">
+	<div class="main_section" id="memberlist">
 		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
 			<span class="align_left">', $txt['members_list'], '</span>';
 	if (!isset($context['old_search']))
