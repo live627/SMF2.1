@@ -22,18 +22,18 @@ function template_main()
 		var smfNewsFadeToggle = new smfToggle("smfFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
 		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
 		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '");
-		smfNewsFadeToggle.addToggleImage("newsupshrink", "/upshrink.png", "/upshrink2.png");
+		smfNewsFadeToggle.addToggleImage("newsupshrink", "/upshrink.gif", "/upshrink2.gif");
 		smfNewsFadeToggle.addTogglePanel("smfFadeScroller");
 		// The fading delay (in ms.)
 		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';		
 	// ]]></script>
 
 	<div id="newsfader">
-		<h3 class="catbg">
-			<span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<a href="#" onclick="smfNewsFadeToggle.toggle(); return false;">
-				<img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'upshrink2.gif' : 'upshrink.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" />
-			</a>&nbsp;', $txt['news'], '
+				<img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" />
+			</a>
+			', $txt['news'], '
 		</h3>
 		<ul class="reset" id="smfFadeScroller"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
 
@@ -241,7 +241,7 @@ function template_info_center()
 		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
 		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
 		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
-		infoHeader.addToggleImage("upshrink_ic", "/upshrink.png", "/upshrink2.png");
+		infoHeader.addToggleImage("upshrink_ic", "/upshrink.gif", "/upshrink2.gif");
 		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>';
 
@@ -250,7 +250,7 @@ function template_info_center()
 	<span class="upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<a href="#" onclick="infoHeader.toggle(); return false;"><img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'upshrink.png' : 'upshrink2.png', '" alt="*" title="', $txt['upshrink_description'], '" /></a>
+			<a href="#" onclick="infoHeader.toggle(); return false;"><img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" /></a>
 			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
 		</h3>
 		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';

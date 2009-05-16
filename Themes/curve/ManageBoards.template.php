@@ -45,12 +45,11 @@ function template_main()
 			<div class="windowbg">
 			<span class="topslice"><span></span></span>
 				<div class="content">
-					<div class="padding">
-						<ul id="board_' , $category['id'] , '">';
+					<ul id="category_' , $category['id'] , '">';
 
 		if (!empty($category['move_link']))
 			echo '
-							<li><a href="', $category['move_link']['href'], '" title="', $category['move_link']['label'], '"><img src="', $settings['images_url'], '/smiley_select_spot.gif" alt="', $category['move_link']['label'], '" /></a></li>';
+						<li><a href="', $category['move_link']['href'], '" title="', $category['move_link']['label'], '"><img src="', $settings['images_url'], '/smiley_select_spot.gif" alt="', $category['move_link']['label'], '" /></a></li>';
 
 		$alternate = false;
 
@@ -60,29 +59,31 @@ function template_main()
 			$alternate = !$alternate;
 
 			echo '
-							<li', !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? ' id="recycle_board" ': ' ' ,'class="windowbg', $alternate ? '' : '2', '" style="padding-left: ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '"><span class="align_left">', $board['name'], !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"> <img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a></span>' : '</span>', '
-								<span class="align_right">', $context['can_manage_permissions'] ? '<span class="content"><a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a></span>' : '', '
-								<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;move=', $board['id'], '">', $txt['mboards_move'], '</a></span>
-								<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span></span><br style="clear: both;" />
-							</li>
-							';
+						<li', !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? ' id="recycle_board" ': ' ' ,'class="windowbg', $alternate ? '' : '2', '" style="padding-left: ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '"><span class="align_left">', $board['name'], !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"> <img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a></span>' : '</span>', '
+							<span class="align_right">', $context['can_manage_permissions'] ? '<span class="content"><a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a></span>' : '', '
+							<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;move=', $board['id'], '">', $txt['mboards_move'], '</a></span>
+							<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span></span><br style="clear: both;" />
+						</li>';
+
 			if (!empty($board['move_links']))
 			{
 				$alternate = !$alternate;
+
 				echo '
-							<li class="windowbg', $alternate ? '' : '2', '" style="padding-left: ', 5 + 30 * $board['move_links'][0]['child_level'], 'px;">';
+						<li class="windowbg', $alternate ? '' : '2', '" style="padding-', $context['right_to_left'] ? 'right' : 'left', ': ', 5 + 30 * $board['move_links'][0]['child_level'], 'px;">';
+
 				foreach ($board['move_links'] as $link)
 					echo '
-								<a href="', $link['href'], '" style="padding-right: 13px;padding-left: 0px;" title="', $link['label'], '"><img src="', $settings['images_url'], '/board_select_spot' , $link['child_level']>0 ? '_child' : '' , '.gif" alt="', $link['label'], '" border="0" style="padding: 0px; margin: 0px;" /></a>';
+							<a href="', $link['href'], '" class="move_links" title="', $link['label'], '"><img src="', $settings['images_url'], '/board_select_spot' , $link['child_level']>0 ? '_child' : '' , '.gif" alt="', $link['label'], '" border="0" style="padding: 0px; margin: 0px;" /></a>';
+
 				echo '
-							</li>';
+						</li>';
 			}
 		}
 
 		// Button to add a new board.
 		echo '				
-						</ul>
-					</div>
+					</ul>
 					<input type="submit" value="', $txt['mboards_new_board'], '" />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</div>

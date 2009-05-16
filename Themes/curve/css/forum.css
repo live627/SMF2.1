@@ -169,7 +169,7 @@ form#ic_login ul li label
     margin: 0;
     padding: 0.5em;
 }
-img#upshrink_ic
+img#upshrink_ic, img#newsupshrink
 {
 	float: right;
 	margin: 10px 5px 0 0;

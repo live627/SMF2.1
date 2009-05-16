@@ -81,26 +81,30 @@ h3.titlebg form
 #manage_boards ul
 {
 	padding: 0;
-	margin: 0;
+	margin: 0 0 0.6em 0;
 }
 #manage_boards li
 {
 	list-style-type: none;
 	border: 1px solid #cacdd3;
-	padding: 0 0 0 0.5em;
-	height: 2.5em;
-	line-height: 2.5em;
-	margin: 2px;
+	padding: 0.2em;
+	margin: 1px;
 }
 #manage_boards li img
 {
 	vertical-align: middle;
 	padding-bottom: 3px;
 }
-#recycle_board 
+#manage_boards li#recycle_board 
 {
-	background-color: #cacdd3;
+	background-color: #dee;
 }
+
+.move_links
+{
+	padding: 0 13px 0 0;
+}
+
 /* ManageMaintenance */
 .maintenance_finished
 {

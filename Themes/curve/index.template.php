@@ -163,13 +163,13 @@ function template_html_above()
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
 		mainHeader.setOptions("collapse_header", "', $context['session_id'], '");
-		mainHeader.addToggleImage("upshrink", "/upshrink2.png", "/upshrink.png");
+		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
 		mainHeader.addTogglePanel("upper_section");
 	// ]]></script>';
 
 	echo '
 </head>
-<body', !empty($settings['forum_width']) ? ' style="width: ' . $settings['forum_width'] . ';"' : '', '>';
+<body>';
 }
 
 function template_body_above()
@@ -186,7 +186,7 @@ function template_body_above()
 	// the upshrink image, right-floated
 	echo '
 			<a href="#" onclick="mainHeader.toggle(); return false;">
-				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink2.png' : 'upshrink.png', '" alt="*" title="', $txt['upshrink_description'], '" />
+				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink.gif', '" alt="*" title="', $txt['upshrink_description'], '" />
 			</a>';
 	echo '
 			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 

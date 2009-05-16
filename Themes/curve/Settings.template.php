@@ -155,12 +155,12 @@ function template_settings()
 			'description' => $txt['site_slogan_desc'],
 			'type' => 'text',
 		),
-		array(
+/*		array(
 			'id' => 'forum_width',
 			'label' => $txt['forum_width'],
 			'description' => $txt['forum_width_desc'],
 			'type' => 'text',
-		),
+		),*/
 		array(
 			'id' => 'number_recent_posts',
 			'label' => $txt['number_recent_posts'],
