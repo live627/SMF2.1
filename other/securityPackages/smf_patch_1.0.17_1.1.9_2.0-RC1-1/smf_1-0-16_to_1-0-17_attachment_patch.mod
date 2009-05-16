@@ -149,7 +149,7 @@ $sourcedir/Profile.php
 				db_query("
 					INSERT INTO {$db_prefix}attachments
 						(ID_MEMBER, filename, file_hash, size)
-					VALUES ($memID, '$destName', '" . (empty($file_hash))  ? "" : "$file_hash") . "', " . filesize($_FILES['attachment']['tmp_name']) . ")", __FILE__, __LINE__);
+					VALUES ($memID, '$destName', '" . (empty($file_hash)  ? "" : "$file_hash") . "', " . filesize($_FILES['attachment']['tmp_name']) . ")", __FILE__, __LINE__);
 				$attachID = db_insert_id();
 
 				$destName = $modSettings['attachmentUploadDir'] . '/' . (empty($file_hash) ? $destName : $attachID . '_' . $file_hash);
