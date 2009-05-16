@@ -1,4 +1,36 @@
 <edit file>
+$sourcedir/ModSettings.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.0.10                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.0.17                                          *
+</replace>
+
+
+<search for>
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+<search for>
+			array('check', 'attachmentShowImages'),
+			array('check', 'attachmentEncryptFilenames'),
+</search for>
+
+<replace>
+			array('check', 'attachmentShowImages'),
+</replace>
+
+
+
+<edit file>
 $sourcedir/Display.php
 </edit file>
 

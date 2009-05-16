@@ -105,6 +105,18 @@ $sourcedir/ManageAttachments.php
 </replace>
 
 
+
+<search for>
+			'attachmentShowImages' => empty($_POST['attachmentShowImages']) ? '0' : '1',
+			'attachmentEncryptFilenames' => empty($_POST['attachmentEncryptFilenames']) ? '0' : '1',
+</search for>
+
+<replace>
+			'attachmentShowImages' => empty($_POST['attachmentShowImages']) ? '0' : '1',
+</replace>
+
+
+
 <search for>
 		SELECT ID_ATTACH, ID_MEMBER, filename
 </search for>
@@ -497,4 +509,29 @@ $sourcedir/Subs-Post.php
 
 <replace>
 				rename($attachmentOptions['destination'] . '_thumb', getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], false, $thumb_file_hash));
+</replace>
+
+
+
+<edit file>
+$themedir/ManageAttachments.template.php
+</edit file>
+
+<search for>
+// Version: 1.1; ManageAttachments
+</search for>
+
+<replace>
+// Version: 1.1.9; ManageAttachments
+</replace>
+
+<search for>
+			<td><input type="text" name="attachmentExtensions" id="attachmentExtensions" value="', $modSettings['attachmentExtensions'], '" size="40" /></td>
+		</tr><tr class="windowbg2">
+			<td width="50%" align="right"><label for="attachmentEncryptFilenames">', $txt['attachmentEncryptFilenames'], ' <a href="', $scripturl, '?action=helpadmin;help=attachmentEncryptFilenames" onclick="return reqWin(this.href);" class="help">(?)</a>:</label></td>
+			<td><input type="checkbox" name="attachmentEncryptFilenames" id="attachmentEncryptFilenames" value="1" class="check"', empty($modSettings['attachmentEncryptFilenames']) ? '' : ' checked="checked"', ' /></td>
+</search for>
+
+<replace>
+			<td><input type="text" name="attachmentExtensions" id="attachmentExtensions" value="', $modSettings['attachmentExtensions'], '" size="40" /></td>
 </replace>

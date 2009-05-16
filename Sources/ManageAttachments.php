@@ -173,7 +173,6 @@ function ManageAttachmentSettings($return_config = false)
 			// Extension checks etc.
 			array('check', 'attachmentCheckExtensions'),
 			array('text', 'attachmentExtensions', 40),
-			array('check', 'attachmentEncryptFilenames'),
 		'',
 			// Directory and size limits.
 			empty($modSettings['currentAttachmentUploadDir']) ? array('text', 'attachmentUploadDir', 40, 'invalid' => !$context['valid_upload_dir']) : array('var_message', 'attachmentUploadDir_multiple', 'message' => 'attachmentUploadDir_multiple_configure'),

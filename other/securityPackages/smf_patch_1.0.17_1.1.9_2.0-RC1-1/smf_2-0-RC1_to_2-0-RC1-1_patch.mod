@@ -815,6 +815,18 @@ $sourcedir/ManageAttachments.php
 </replace>
 
 
+
+<search for>
+			array('text', 'attachmentExtensions', 40),
+			array('check', 'attachmentEncryptFilenames'),
+</search for>
+
+<replace>
+			array('text', 'attachmentExtensions', 40),
+</replace>
+
+
+
 <search for>
 				{string:blank_text} AS id_msg, IFNULL(mem.real_name, {string:not_applicable_text}) AS poster_name,
 				mem.last_login AS poster_time, 0 AS id_topic, a.id_member, a.id_attach, a.filename, a.attachment_type,
