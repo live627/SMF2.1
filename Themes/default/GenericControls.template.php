@@ -204,7 +204,7 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		editorHandle', $editor_id, '.addSelect(\'face\');
 		editorHandle', $editor_id, '.addSelect(\'size\');
 		editorHandle', $editor_id, '.addSelect(\'color\');
-		editorHandle', $editor_id, '.sFormID = \'', $editor_context['form'], '\';
+		editorHandle', $editor_id, '.sFormId = \'', $editor_context['form'], '\';
 		smf_editorArray[smf_editorArray.length] = editorHandle', $editor_id, ';
 	// ]]></script>';
 	}
