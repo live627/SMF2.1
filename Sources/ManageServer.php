@@ -1075,7 +1075,7 @@ function ModifyLanguageSettings($return_config = false)
 // Edit a particular set of language entries.
 function ModifyLanguage()
 {
-	global $settings, $context, $smcFunc, $txt;
+	global $settings, $context, $smcFunc, $txt, $modSettings, $boarddir, $sourcedir;
 
 	loadLanguage('ManageSettings');
 
@@ -1148,7 +1148,7 @@ function ModifyLanguage()
 				$context['possible_files'][$theme] = array(
 					'id' => $theme,
 					'name' => $themes[$theme]['name'],
-					'files' => array()
+					'files' => array(),
 				);
 
 			$context['possible_files'][$theme]['files'][] = array(
@@ -1160,9 +1160,50 @@ function ModifyLanguage()
 		$dir->close();
 	}
 
-	$madeSave = false;
+	// We no longer wish to speak this language.
+	if (!empty($_POST['delete_main']) && $context['lang_id'] != 'english')
+	{
+		// !!! Todo: FTP Controls?
+		require_once($sourcedir . '/Subs-Package.php');
+
+		// First, Make a backup?
+		if (!empty($modSettings['package_make_backups']) && (!isset($_SESSION['last_backup_for']) || $_SESSION['last_backup_for'] != $context['lang_id'] .'$$$'))
+		{
+			$_SESSION['last_backup_for'] = $context['lang_id'] .'$$$';
+			package_create_backup('backup_lang_' . $context['lang_id']);
+		}
+
+		// Second, loop through the array to remove the files.
+		foreach ($lang_dirs as $curPath)
+		{
+			foreach ($context['possible_files'][1]['files'] as $lang)
+				if (file_exists($curPath . '/' . $lang['id'] . '.' . $context['lang_id'] . '.php'))
+					unlink($curPath . '/' . $lang['id'] . '.' . $context['lang_id'] . '.php');
+
+			// Check for the email template.
+			if (file_exists($curPath . '/EmailTemplates.' . $context['lang_id'] . '.php'))
+				unlink($curPath . '/EmailTemplates.' . $context['lang_id'] . '.php');
+		}
+
+		// Third, the agreement file.
+		if (file_exists($boarddir . '/agreement.' . $context['lang_id'] . '.txt'))
+			unlink($boarddir . '/agreement.' . $context['lang_id'] . '.txt');
+
+		// Fourth, a related images folder?
+		foreach ($lang_dirs as $curPath)
+			if (is_dir($curPath . '/../images/' . 	$context['lang_id']));
+				deltree($curPath . '/../images/' . 	$context['lang_id']);
+
+		// Fifth, update getLanguages() cache.
+		if (!empty($modSettings['cache_enable']))
+			cache_put_data('known_languages', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+
+		// Sixth, get out of here.
+		redirectexit('action=admin;area=languages;sa=edit;' . $context['session_var'] . '=' . $context['session_id']);
+	}
 
 	// Saving primary settings?
+	$madeSave = false;
 	if (!empty($_POST['save_main']))
 	{
 		// Read in the current file.

@@ -329,5 +329,6 @@ $txt['languages_download_not_chmod'] = 'You cannot proceed with the installation
 $txt['languages_download_illegal_paths'] = 'Package contains illegal paths - please contact Simple Machines';
 $txt['languages_download_complete'] = 'Installation Complete';
 $txt['languages_download_complete_desc'] = 'Language pack installed successfully. Please click <a href="%1$s">here</a> to return to the languages page';
+$txt['languages_delete_confirm'] = 'Are you sure you want to delete this language?';
 
 ?>

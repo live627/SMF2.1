@@ -1765,7 +1765,14 @@ function template_modify_language_entries()
 		</tr>
 		<tr class="titlebg">
 			<td colspan="2" align="right">
-				<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' />
+				<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' />';
+
+	// English can't be deleted.
+	if ($context['lang_id'] != 'english')
+		echo '
+				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" />';
+
+	echo '
 			</td>
 		</tr>
 	</table>
