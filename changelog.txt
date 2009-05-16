@@ -80,7 +80,8 @@ May 2009
  * Curve: Memberlist should use common css classes (Memberlist.template.php, style.css, memberlist.css, ie6.css)
  * Curve: added some useful common css classes, Templates should use common css classes (style.css, Who.template.php, Recent.template.php and many other files)
  & Updated language strings to use numbered sprintf variables. (Many language files) [Bug 3402]
- + Add ability to delete languages (ManageServer.php, Admin.template.php, Admin.english.php) [Bug 3124] 
+ + Add ability to delete languages (ManageServer.php, Admin.template.php, Admin.english.php) [Bug 3124]
+ ! An empty linktree would cause wireless mode to throw php errors at the error screen (Load.php) [Bug 3451]
 
 
 April 2009
