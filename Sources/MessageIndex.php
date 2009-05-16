@@ -92,9 +92,9 @@ function MessageIndex()
 
 	// Make sure the starting place makes sense and construct the page index.
 	if (isset($_REQUEST['sort']))
-		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%d;sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
+		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%1$d;sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
 	else
-		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%d', $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
+		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%1$d', $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
 	$context['start'] = &$_REQUEST['start'];
 
 	// Set a canonical URL for this page.
@@ -451,24 +451,16 @@ function MessageIndex()
 			}
 
 			// Decide how many pages the topic should have.
-			$topic_length = $row['num_replies'] + 1;
-			if ($topic_length > $context['messages_per_page'])
+			if ($row['num_replies'] + 1 > $context['messages_per_page'])
 			{
-				$tmppages = array();
-				$tmpa = 1;
-				for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $context['messages_per_page'])
-				{
-					$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . $tmpb . '">' . $tmpa . '</a>';
-					$tmpa++;
-				}
-				// Show links to all the pages?
-				if (count($tmppages) <= 5)
-					$pages = '&#171; ' . implode(' ', $tmppages);
-				// Or skip a few?
-				else
-					$pages = '&#171; ' . $tmppages[0] . ' ' . $tmppages[1] . ' ... ' . $tmppages[count($tmppages) - 2] . ' ' . $tmppages[count($tmppages) - 1];
+				$pages = '&#171; ';
 
-				if (!empty($modSettings['enableAllMessages']) && $topic_length < $modSettings['enableAllMessages'])
+				// We can't pass start by reference.
+				$start = -1;
+				$pages .= constructPageIndex($scripturl . '?topic=' . $row['id_topic'] . '.%1$d', $start, $row['num_replies'] + 1, $context['messages_per_page'], true);
+
+				// If we can use all, show all.
+				if (!empty($modSettings['enableAllMessages']) && $row['num_replies'] + 1 < $modSettings['enableAllMessages'])
 					$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;all">' . $txt['all'] . '</a>';
 				$pages .= ' &#187;';
 			}

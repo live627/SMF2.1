@@ -230,7 +230,7 @@ function RecentPosts()
 			$query_parameters['max_id_msg'] = max(0, $modSettings['maxMsgID'] - 600 - $_REQUEST['start'] * 10);
 		}
 
-		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%d', $_REQUEST['start'], min(100, $total_posts), 10, true);
+		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%1$d', $_REQUEST['start'], min(100, $total_posts), 10, true);
 	}
 	else
 	{
@@ -485,7 +485,7 @@ function UnreadTopics()
 	{
 		$query_this_board = 'id_board = {int:board}';
 		$query_parameters['board'] = $board;
-		$context['querystring_board_limits'] = ';board=' . $board . '.%d';
+		$context['querystring_board_limits'] = ';board=' . $board . '.%1$d';
 	}
 	elseif (!empty($_REQUEST['boards']))
 	{
@@ -512,7 +512,7 @@ function UnreadTopics()
 
 		$query_this_board = 'id_board IN ({array_int:boards})';
 		$query_parameters['boards'] = $boards;
-		$context['querystring_board_limits'] = ';boards=' . implode(',', $boards) . ';start=%d';
+		$context['querystring_board_limits'] = ';boards=' . implode(',', $boards) . ';start=%1$d';
 	}
 	elseif (!empty($_REQUEST['c']))
 	{
@@ -540,7 +540,7 @@ function UnreadTopics()
 
 		$query_this_board = 'id_board IN ({array_int:boards})';
 		$query_parameters['boards'] = $boards;
-		$context['querystring_board_limits'] = ';c=' . implode(',', $_REQUEST['c']) . ';start=%d';
+		$context['querystring_board_limits'] = ';c=' . implode(',', $_REQUEST['c']) . ';start=%1$d';
 	}
 	else
 	{
