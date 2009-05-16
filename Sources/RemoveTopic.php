@@ -979,16 +979,6 @@ function RestoreTopic()
 {
 	global $context, $smcFunc, $modSettings, $sourcedir;
 
-	// TODO: Moderation Log
-	//	Count deleted posts. DONE
-	//	Remove empty topics. DONE
-	//	Check first post in topic. DONE
-	//	Restore full topic. DONE
-	//	Quick Moderation Topics. BETA 3
-	//	Quick Moderation Posts ??? Maybe ???
-	//	Recount stats when restoring a deleted posts to a deleted topic.
-	//	Anything else???
-
 	// Check session.
 	checkSession('get');
 
