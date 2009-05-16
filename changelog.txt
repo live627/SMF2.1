@@ -82,6 +82,7 @@ May 2009
  & Updated language strings to use numbered sprintf variables. (Many language files) [Bug 3402]
  + Add ability to delete languages (ManageServer.php, Admin.template.php, Admin.english.php) [Bug 3124]
  ! An empty linktree would cause wireless mode to throw php errors at the error screen (Load.php) [Bug 3451]
+ * Curve: updated the ManageBoards template to match Curve's look and feel. (ManageBoards.template.php, admin.css) [Bug 3076]
 
 
 April 2009
