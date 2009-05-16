@@ -336,11 +336,12 @@ function showPosts($memID)
 			FROM {db_prefix}topics AS t' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board AND {query_see_board})') . '
 			WHERE t.id_member_started = {int:current_member}' . (!empty($board) ? '
-				AND t.id_board = ' . $board : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
+				AND t.id_board = {int:board}' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 				AND t.approved = {int:is_approved}'),
 			array(
 				'current_member' => $memID,
 				'is_approved' => 1,
+				'board' => $board,
 			)
 		);
 	else
@@ -349,11 +350,12 @@ function showPosts($memID)
 			FROM {db_prefix}messages AS m' . ($user_info['query_see_board'] == '1=1' ? '' : '
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})') . '
 			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-				AND m.id_board = ' . $board : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
+				AND m.id_board = {int:board}' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 				AND m.approved = {int:is_approved}'),
 			array(
 				'current_member' => $memID,
 				'is_approved' => 1,
+				'board' => $board,
 			)
 		);
 	list ($msgCount) = $smcFunc['db_fetch_row']($request);
@@ -363,11 +365,12 @@ function showPosts($memID)
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {db_prefix}messages AS m
 		WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-			AND m.id_board = ' . $board : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
+			AND m.id_board = {int:board}' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}'),
 		array(
 			'current_member' => $memID,
 			'is_approved' => 1,
+			'board' => $board,
 		)
 	);
 	list ($min_msg_member, $max_msg_member) = $smcFunc['db_fetch_row']($request);
@@ -415,7 +418,7 @@ function showPosts($memID)
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 			WHERE m.id_member = {int:current_member}' . (!empty($board) ? '
-				AND m.id_board=' . $board : '') . (empty($range_limit) ? '' : '
+				AND m.id_board = {int:board}' : '') . (empty($range_limit) ? '' : '
 				AND ' . $range_limit) . '
 				AND {query_see_board}' . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 				AND m.approved = {int:is_approved} AND t.approved = {int:is_approved}') . '
@@ -424,6 +427,7 @@ function showPosts($memID)
 			array(
 				'current_member' => $memID,
 				'is_approved' => 1,
+				'board' => $board,
 			)
 		);
 
@@ -539,7 +543,7 @@ function showPosts($memID)
 // Show all the attachments of a user.
 function showAttachments($memID)
 {
-	global $txt, $user_info, $scripturl, $modSettings;
+	global $txt, $user_info, $scripturl, $modSettings, $board;
 	global $context, $user_profile, $sourcedir, $smcFunc;
 
 	// OBEY permissions!
@@ -553,11 +557,11 @@ function showAttachments($memID)
 		SELECT COUNT(*)
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 		WHERE a.attachment_type = {int:attachment_type}
 			AND a.id_msg != {int:no_message}
-			AND m.id_member = {int:current_member}
-			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
+			AND m.id_member = {int:current_member}' . (!empty($board) ? '
+			AND b.id_board = {int:board}' : '') . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_list})' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}'),
 		array(
@@ -566,6 +570,7 @@ function showAttachments($memID)
 			'no_message' => 0,
 			'current_member' => $memID,
 			'is_approved' => 1,
+			'board' => $board,
 		)
 	);
 	list ($attachCount) = $smcFunc['db_fetch_row']($request);
@@ -594,11 +599,11 @@ function showAttachments($memID)
 			m.poster_time, m.subject, b.name
 		FROM {db_prefix}attachments AS a
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = a.id_msg)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND {query_see_board})
 		WHERE a.attachment_type = {int:attachment_type}
 			AND a.id_msg != {int:no_message}
-			AND m.id_member = {int:current_member}
-			AND {query_see_board}' . (!in_array(0, $boardsAllowed) ? '
+			AND m.id_member = {int:current_member}' . (!empty($board) ? '
+			AND b.id_board = {int:board}' : '') . (!in_array(0, $boardsAllowed) ? '
 			AND b.id_board IN ({array_int:boards_list})' : '') . (!$modSettings['postmod_active'] || $context['user']['is_owner'] ? '' : '
 			AND m.approved = {int:is_approved}') . '
 		ORDER BY {raw:sort}
@@ -609,6 +614,7 @@ function showAttachments($memID)
 			'no_message' => 0,
 			'current_member' => $memID,
 			'is_approved' => 1,
+			'board' => $board,
 			'sort' => $sort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC'),
 			'offset' => $context['start'],
 			'limit' => $maxIndex,
