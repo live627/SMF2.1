@@ -619,6 +619,7 @@ $sourcedir/Profile-Modify.php
 
 				// Attempt to chmod it.
 				@chmod($uploadDir . '/' . $destinationPath, 0644);
+			}
 </replace>
 
 <edit file>
