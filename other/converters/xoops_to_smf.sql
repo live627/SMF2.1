@@ -224,7 +224,7 @@ foreach ($attachments as $attachment)
 		$attachmentExtention = '';
 
 	$oldFilename = $row['oldfilename'];
-	$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+	$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 	if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 	{
 

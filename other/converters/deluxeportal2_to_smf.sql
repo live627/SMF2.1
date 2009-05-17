@@ -245,7 +245,7 @@ GROUP BY id_topic, id_member;
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) > 255)
 	return;
 $fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');

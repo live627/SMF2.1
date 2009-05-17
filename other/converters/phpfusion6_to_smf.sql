@@ -213,7 +213,7 @@ $yAttachmentDir = $_POST['path_from'] . '/forum/attachments';
 if (!file_exists($yAttachmentDir))
 	return;
 
-$newfilename = getAttachmentFilename($row['filename'], $row['id_attach']);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $row['id_attach']);
 if (strlen($newfilename) > 255)
 	return;
 

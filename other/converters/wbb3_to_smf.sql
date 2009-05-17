@@ -336,7 +336,7 @@ ALTER TABLE {$to_prefix}poll_choices
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 
 if (copy($_POST['path_from'] . '/wcf/attachments/attachment-' . $row['attachmentID'] , $attachmentUploadDir . '/' . $newfilename))
 {
@@ -439,7 +439,7 @@ FROM {$from_prefix}{$wcf_prefix}pm_to_user;
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (copy($_POST['path_from'] . '/wcf/images/avatars/avatar-' . $row['avatarID'] . '.' . $row['avatarExtension'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";

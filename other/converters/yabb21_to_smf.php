@@ -1222,7 +1222,7 @@ return true;
 			while ($row = mysql_fetch_assoc($result))
 			{
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
-				$filename = getAttachmentFilename($row['temp_filename'], $id_attach);
+				$filename = getLegacyAttachmentFilename($row['temp_filename'], $id_attach);
 
 				// Is this an image???
 				$attachmentExtension = strtolower(substr(strrchr($row['temp_filename'], '.'), 1));

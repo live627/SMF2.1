@@ -78,7 +78,7 @@ foreach ($allowedExt as $ext)
 
 if (!empty($row['filename']))
 {
-	$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+	$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 	if (copy($oldAttachmentDir . '/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
 	{
 		$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";

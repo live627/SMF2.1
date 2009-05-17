@@ -250,7 +250,7 @@ $row['size'] = filesize($_POST['path_from'] . '/attachments/' . $row['attach_fil
 if (!is_integer($row['size']))
 	continue;
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";

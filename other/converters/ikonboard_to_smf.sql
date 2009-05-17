@@ -310,7 +310,7 @@ $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 $real_filename = preg_replace('~^post-\d+-\d+-~', '', $row['filename']);
-$newfilename = getAttachmentFilename($real_filename, $id_attach);
+$newfilename = getLegacyAttachmentFilename($real_filename, $id_attach);
 if (strlen($newfilename) <= 255 && copy($ib_uploads . '/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($real_filename) . "', $row[id_msg], $row[downloads]";

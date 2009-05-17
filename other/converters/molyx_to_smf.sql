@@ -260,7 +260,7 @@ WHERE forumid != 0;
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename(basename($row['filename']), $id_attach);
+$newfilename = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
 $oldfile = $_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'] ;
 if (file_exists($oldfile) && strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/data/uploads/' . $row['attachpath'] . '/' . $row['location'], $attachmentUploadDir . '/' . $newfilename))
 {

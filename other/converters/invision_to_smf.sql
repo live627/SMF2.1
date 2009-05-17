@@ -730,7 +730,7 @@ $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($INFO['upload_dir'] . '/' . $row['old_encrypt'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
@@ -758,7 +758,7 @@ if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
 $oldFileName = substr($row['avatar'], 7);
-$newfilename = getAttachmentFilename($oldFileName, $id_attach);
+$newfilename = getLegacyAttachmentFilename($oldFileName, $id_attach);
 if (strlen($newfilename) <= 255 && copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($oldFileName) . "', $row[id_member]";

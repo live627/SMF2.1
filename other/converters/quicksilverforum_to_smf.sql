@@ -245,7 +245,7 @@ $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 // Get the filesize!
 $row['size'] = filesize($_POST['path_from'] . '/attachments/' . $row['attach_file']);
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['attach_file'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
@@ -272,7 +272,7 @@ $originalName = str_replace('./avatars/uploaded/', '', $row['filename']);
 
 $row['size'] = filesize($_POST['path_from'] . '/avatars/uploaded/' . $originalName);
 $fileName = str_replace(array('.avtr', './avatars/uploaded/'), array('.jpg', ''), $row['filename']);
-$newFileName = getAttachmentFileName($fileName, $id_attach);
+$newFileName = getLegacyAttachmentFilename($fileName, $id_attach);
 
 if (strlen($newFileName) <= 225 && (file_exists($_POST['path_from'] . '/avatars/uploaded/' . $originalName) && copy($_POST['path_from'] . '/avatars/uploaded/' . $originalName, $attachmentUploadDir . '/' . $newFileName)))
 	$rows[] = "$row[id_member], '$newFileName', $row[width], $row[height], $row[size]";

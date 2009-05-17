@@ -1286,7 +1286,7 @@ if (empty($preparsing))
 			while ($row = convert_fetch_assoc($result))
 			{
 				$size = filesize($yabb['uploaddir'] . '/' . $row['temp_filename']);
-				$filename = getAttachmentFilename($row['temp_filename'], $id_attach);
+				$filename = getLegacyAttachmentFilename($row['temp_filename'], $id_attach);
 
 				if (strlen($filename) <= 255 &&  copy($yabb['uploaddir'] . '/' . $row['temp_filename'], $attachmentUploadDir . '/' . $filename))
 				{

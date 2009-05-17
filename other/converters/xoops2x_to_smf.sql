@@ -310,7 +310,7 @@ convert_free_result($request);
 $attachments = unserialize(base64_decode($row['attachment']));	
 foreach ($attachments as $attachedfile)
 	{
-		$newfilename = getAttachmentFilename(basename($attachedfile['name_display']), $id_attach);
+		$newfilename = getLegacyAttachmentFilename(basename($attachedfile['name_display']), $id_attach);
 		$oldfile=$_POST['path_from'] . '/'.$xoops_attachment_path.'/'.$attachedfile['name_saved'];
 				
 			if (file_exists($oldfile))

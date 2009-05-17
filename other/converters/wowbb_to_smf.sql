@@ -736,7 +736,7 @@ AND user_avatar !='';
 ---{
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
-$newfilename = getAttachmentFilename(basename($row['filename']), $id_attach);
+$newfilename = getLegacyAttachmentFilename(basename($row['filename']), $id_attach);
 
 $file=fopen($attachmentUploadDir . '/' . $newfilename,'wb');
 fwrite($file,$row['file_contents']);

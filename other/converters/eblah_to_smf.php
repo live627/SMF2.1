@@ -1330,7 +1330,7 @@ if (empty($preparsing))
 					if (trim($file) != '' && file_exists($eblah['uploaddir'] . '/' . $file))
 					{
 						$size = filesize($eblah['uploaddir'] . '/' . $file);
-						$filename = getAttachmentFilename($file, $id_attach);
+						$filename = getLegacyAttachmentFilename($file, $id_attach);
 
 						if (strlen($file) <= 255 && copy($eblah['uploaddir'] . '/' . $file, $attachmentUploadDir . '/' . $filename))
 						{

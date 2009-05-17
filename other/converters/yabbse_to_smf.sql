@@ -357,7 +357,7 @@ if (!isset($yAttachmentDir))
 	convert_free_result($result);
 }
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) > 255)
 	return;
 $fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');

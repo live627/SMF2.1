@@ -305,7 +305,7 @@ if (!isset($vb_settings))
 	convert_free_result($result);
 }
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (empty($vb_settings['attachfile']))
 {
 	$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
@@ -362,7 +362,7 @@ if (!isset($vb_settings))
 }
 
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) > 255)
 	return;
 elseif (empty($vb_settings['usefileavatar']))

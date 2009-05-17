@@ -280,7 +280,7 @@ $oldFilename = $row['ID_MDG'] . '-' .$row['filename'];
 $row['filename'] = strpos($oldFilename, '-') !== false ? substr($oldFilename, strpos($oldFilename, '-') + 1) : $oldFilename;
 $row['size'] = filesize($GLOBALS['config']['files'] . '/' . $row['filename']);
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";

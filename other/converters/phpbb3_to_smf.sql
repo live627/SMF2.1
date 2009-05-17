@@ -655,7 +655,7 @@ if (empty($id_attach))
 	$id_attach = empty($id_attach) ? 1 : $id_attach;
 }
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 
 // Set the default empty values.
 $width = '0';
@@ -666,7 +666,7 @@ $attachmentExtension = strtolower(substr(strrchr($row['filename'], '.'), 1));
 if (in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png', 'bmp')))
 	list ($width, $height) = getimagesize($oldAttachmentDir . '/' . $row['physical_filename']);
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['physical_filename'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads], '$width', '$height'";

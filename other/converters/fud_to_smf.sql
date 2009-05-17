@@ -375,7 +375,7 @@ if (!empty($rows))
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255) && copy($row['location'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";

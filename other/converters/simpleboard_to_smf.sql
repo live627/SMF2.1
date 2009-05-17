@@ -210,7 +210,7 @@ if (!empty($rows))
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename(basename($row['filelocation']), $id_attach);
+$newfilename = getLegacyAttachmentFilename(basename($row['filelocation']), $id_attach);
 if (strlen($newfilename) <= 255 && copy($row['filelocation'], $attachmentUploadDir . '/' . $newfilename))
 {
 	@touch($attachmentUploadDir . '/' . $newfilename, filemtime($row['filelocation']));

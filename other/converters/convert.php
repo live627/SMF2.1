@@ -1937,7 +1937,7 @@ function doStep2()
 					$filename = $custom_avatar_dir . '/' . $row['filename'];
 				}
 				else
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+					$filename = getLegacyAttachmentFilename($row['filename'], $row['id_attach']);
 
 				// Probably not one of the converted ones, then?
 				if (!file_exists($filename))
@@ -2313,9 +2313,9 @@ function removeAllAttachments()
 	$smcFunc['db_free_result']($result);
 }
 
-if (!function_exists('getAttachmentFilename'))
+if (!function_exists('getLegacyAttachmentFilename'))
 {
-	function getAttachmentFilename($filename, $attachment_id)
+	function getLegacyAttachmentFilename($filename, $attachment_id)
 	{
 		// Remove special accented characters - ie. sí (because they won't write to the filesystem well.)
 		$clean_name = strtr($filename, 'ŠšŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜİàáâãäåçèéêëìíîïñòóôõöøùúûüıÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');

@@ -934,7 +934,7 @@ while (true)
 			continue;
 
 		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
-		$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+		$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 
 		if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $newfilename))
 		{

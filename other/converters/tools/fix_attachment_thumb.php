@@ -90,7 +90,7 @@ function fixAttachments()
 	while ($row = mysql_fetch_assoc($request))
 	{
 		// Need to find out the correct name to loop up the image.
-		$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+		$filename = getLegacyAttachmentFilename($row['filename'], $row['ID_ATTACH']);
 
 		// Get the width and height for it.
 		list ($width, $height) = getimagesize($filename);

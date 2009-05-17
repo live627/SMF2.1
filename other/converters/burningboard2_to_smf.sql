@@ -144,7 +144,7 @@ FROM {$from_prefix}users AS u
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_member');
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (copy($_POST['path_from'] . '/images/avatars/avatar-' . $row['avatarid'] . '.' . $row['avatarextension'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
@@ -535,7 +535,7 @@ if (!empty($rows))
 $no_add = true;
 $keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (copy($_POST['path_from'] . '/attachments/attachment-' . $row['attachmentid'] . '.' . $row['attachmentextension'], $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";

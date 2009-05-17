@@ -967,7 +967,7 @@ if (!in_array($attachmentExtension, array('jpg', 'jpeg', 'gif', 'png')))
 	$attachmentExtention = '';
 
 $oldFilename = strtr($row['old_encrypt'], array('upload:' => ''));
-$newfilename = getAttachmentFilename($row['filename'], $id_attach);
+$newfilename = getLegacyAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
 	// Set the default empty values.
