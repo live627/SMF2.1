@@ -303,6 +303,7 @@ $sourcedir/Subs-Graphics.php
 <search for>
 		// Remove the .tmp extension from the attachment.
 		if (rename($destName . '.tmp', $destName))
+		{
 </search for>
 
 <replace>
@@ -318,18 +319,11 @@ $sourcedir/Subs-Graphics.php
 
 		// Remove the .tmp extension from the attachment.
 		if (rename($destName . '.tmp', empty($avatar_hash) ? $destName : $path . '/' . $attachID . '_' . $avatar_hash))
+		{
+			$destName = empty($avatar_hash) ? $destName : $path . '/' . $attachID . '_' . $avatar_hash;
 </replace>
 
 
-<search for>
-					'filesize' => filesize($destName),
-					'width' => (int) $width,
-</search for>
-
-<replace>
-					'filesize' => filesize(empty($avatar_hash) ? $destName : $path . '/' . $attachID . '_' . $avatar_hash),
-					'width' => (int) $width,
-</replace>
 
 <edit file>
 $sourcedir/Security.php

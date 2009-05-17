@@ -231,6 +231,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		// Remove the .tmp extension from the attachment.
 		if (rename($destName . '.tmp', empty($avatar_hash) ? $destName : $path . '/' . $attachID . '_' . $avatar_hash))
 		{
+			$destName = empty($avatar_hash) ? $destName : $path . '/' . $attachID . '_' . $avatar_hash;
 			list ($width, $height) = getimagesize($destName);
 			$mime_type = 'image/' . $ext;
 
@@ -241,7 +242,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 					mime_type = {string:mime_type}
 				WHERE id_attach = {int:current_attachment}',
 				array(
-					'filesize' => filesize(empty($avatar_hash) ? $destName : $path . '/' . $attachID . '_' . $avatar_hash),
+					'filesize' => filesize($destName),
 					'width' => (int) $width,
 					'height' => (int) $height,
 					'current_attachment' => $attachID,

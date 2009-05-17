@@ -441,10 +441,13 @@ $sourcedir/Subs-Graphics.php
 
 <search for>
 		if (rename($destName . '.tmp', $destName))
+		{
 </search for>
 
 <replace>
 		if (rename($destName . '.tmp', empty($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash))
+		{
+			$destName = empty($avatar_hash) ? $destName : $modSettings['attachmentUploadDir'] . '/' . $attachID . '_' . $avatar_hash;
 </replace>
 
 
