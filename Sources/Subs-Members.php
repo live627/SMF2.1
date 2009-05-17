@@ -346,6 +346,13 @@ function deleteMembers($users, $check_not_admin = false)
 		)
 	);
 	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_subscribed
+		WHERE id_member IN ({array_int:users})',
+		array(
+			'users' => $users,
+		)
+	);
+	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_topics
 		WHERE id_member IN ({array_int:users})',
 		array(

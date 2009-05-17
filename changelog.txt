@@ -86,6 +86,7 @@ May 2009
  ! View attachments in Profile didn't respect $board, if it set (Profile-View.php)
  ! constructPageIndex should use numbered sprintf as well (Display.php, Subs.php, Recent.php, Subs-List.php, SplitTopics.php, script.js)
  ! Multi-page topics on MessageIndex didn't use constructPageIndex (MessageIndex.php)
+ ! Deleting a member, should delete their subscription (Subs-Members.php) [Bug 3454]
 
 
 April 2009
