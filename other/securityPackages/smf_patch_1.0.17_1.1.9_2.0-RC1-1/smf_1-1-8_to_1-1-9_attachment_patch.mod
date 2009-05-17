@@ -83,6 +83,22 @@ $sourcedir/Display.php
 
 
 
+<search for>
+	if (!isset($_REQUEST['image']))
+	{
+		header('Content-Disposition: attachment; filename="' . $real_filename . '"');
+		header('Content-Type: application/octet-stream');
+	}
+</search for>
+
+<replace>
+	header('Content-Disposition: ' . (isset($_REQUEST['image']) ? 'inline' : 'attachment') . '; filename="' . $real_filename . '"');
+	if (!isset($_REQUEST['image']))
+		header('Content-Type: application/octet-stream');
+</replace>
+
+
+
 <edit file>
 $sourcedir/ManageAttachments.php
 </edit file>
