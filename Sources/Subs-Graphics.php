@@ -223,7 +223,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		{
 			if (!is_array($modSettings['attachmentUploadDir']))
 				$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
-			$path = $modSettings['attachmentUploadDir'][$dir];
+			$path = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
 		}
 		else
 			$path = $modSettings['attachmentUploadDir'];

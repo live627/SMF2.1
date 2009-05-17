@@ -54,7 +54,7 @@ function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = fa
 	{
 		if (!is_array($modSettings['attachmentUploadDir']))
 			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
-		$path = $modSettings['attachmentUploadDir'][$dir];
+		$path = $modSettings['attachmentUploadDir'][$modSettings['attachmentUploadDir']];
 	}
 	else
 		$path = $modSettings['attachmentUploadDir'];
