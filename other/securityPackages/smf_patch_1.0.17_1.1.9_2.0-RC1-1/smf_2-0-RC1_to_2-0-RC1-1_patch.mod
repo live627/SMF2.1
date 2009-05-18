@@ -965,11 +965,13 @@ $sourcedir/ManageAttachments.php
 <search for>
 			$result = $smcFunc['db_query']('', '
 				SELECT a.id_attach, a.id_folder, a.filename, a.attachment_type
+				FROM {db_prefix}attachments AS a
 </search for>
 
 <replace>
 			$result = $smcFunc['db_query']('', '
 				SELECT a.id_attach, a.id_folder, a.filename, a.file_hash, a.attachment_type
+				FROM {db_prefix}attachments AS a
 </replace>
 
 
@@ -987,11 +989,13 @@ $sourcedir/ManageAttachments.php
 <search for>
 			$result = $smcFunc['db_query']('', '
 				SELECT a.id_attach, a.id_folder, a.filename
+				FROM {db_prefix}attachments AS a
 </search for>
 
 <replace>
 			$result = $smcFunc['db_query']('', '
 				SELECT a.id_attach, a.id_folder, a.filename, a.file_hash
+				FROM {db_prefix}attachments AS a
 </replace>
 
 
