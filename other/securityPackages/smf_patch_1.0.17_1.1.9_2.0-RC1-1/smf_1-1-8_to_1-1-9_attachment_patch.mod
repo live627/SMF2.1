@@ -430,6 +430,19 @@ $sourcedir/Subs-Graphics.php
 
 
 <search for>
+		if (preg_match('~(iframe|\\<\\?php|\\<\\?|\\<%|html|eval|body|script)~', $fileContents) === 1)
+		{
+			fclose($fp);
+</search for>
+
+<replace>
+		if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script\W)~', $fileContents) === 1)
+		{
+			fclose($fp);
+</replace>
+
+
+<search for>
 	}
 	// We can't get to the file.
 </search for>
@@ -437,7 +450,7 @@ $sourcedir/Subs-Graphics.php
 <replace>
 
 		// Though not an exhaustive list, better safe than sorry.
-		if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script)~', file_get_contents($destName)) === 1)
+		if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script\W)~', file_get_contents($destName)) === 1)
 		{
 			unlink($destName);
 			return false;

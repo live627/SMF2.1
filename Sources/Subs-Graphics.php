@@ -180,7 +180,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			fclose($fp2);
 
 			// Though not an exhaustive list, better safe than sorry.
-			if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script)~', file_get_contents($destName)) === 1)
+			if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script\W)~', file_get_contents($destName)) === 1)
 			{
 				unlink($destName);
 				return false;
