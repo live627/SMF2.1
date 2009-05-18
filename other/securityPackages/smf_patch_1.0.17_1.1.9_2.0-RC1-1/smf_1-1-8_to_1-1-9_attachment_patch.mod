@@ -351,14 +351,6 @@ $sourcedir/Post.php
 </replace>
 
 <search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-<search for>
 					'name' => getAttachmentFilename($name, false, true),
 </search for>
 

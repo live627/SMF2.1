@@ -12,15 +12,6 @@ $boarddir/index.php
 
 
 <search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-
-<search for>
 $forum_version = 'SMF 1.1.8';
 </search for>
 
@@ -49,15 +40,6 @@ $sourcedir/Display.php
 
 <replace>
 * Software Version:           SMF 1.1.9                                           *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -130,6 +112,16 @@ $sourcedir/PackageGet.php
 <replace>
 * Software Version:           SMF 1.1.9                                           *
 </replace>
+
+
+<search for>
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
 
 
 <search for>
@@ -249,15 +241,6 @@ $sourcedir/Profile.php
 
 <replace>
 * Software Version:           SMF 1.1.9                                           *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -445,15 +428,6 @@ $sourcedir/Subs.php
 
 
 <search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-
-<search for>
 			<div style="white-space: normal;">The administrator doesn\'t want a copyright notice saying this is copyright 2006 - 2007 by <a href="http://www.simplemachines.org/about/copyright.php" target="_blank">Simple Machines LLC</a>, and named <a href="http://www.simplemachines.org/">SMF</a>, so the forum will honor this request and be quiet.</div>';
 </search for>
 
@@ -477,15 +451,6 @@ $sourcedir/Subs-Graphics.php
 
 
 <search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-
-<search for>
 	$code_image = imagecreate($total_width, $max_height);
 </search for>
 
@@ -505,15 +470,6 @@ $sourcedir/Subs-Members.php
 
 <replace>
 * Software Version:           SMF 1.1.9                                           *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -560,15 +516,6 @@ $sourcedir/Subs-Post.php
 
 <replace>
 * Software Version:           SMF 1.1.9                                           *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
