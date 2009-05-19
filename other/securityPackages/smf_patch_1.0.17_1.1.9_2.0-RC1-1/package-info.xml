@@ -32,9 +32,7 @@
 			This patch file will update your forum to SMF 1.0.17.
 		</readme>
 		<modification type="file" format="boardmod">smf_1-0-16_to_1-0-17_patch.mod</modification>
-		<modification type="file" format="boardmod">smf_1-0-16_to_1-0-17_attachment_patch.mod</modification>
 		<modification type="file" format="xml">smf_1-0-17_can_fail.xml</modification>
-
 		<code>updateDatabase.php</code>
 	</install>
 	<install for="2.0 RC1">
@@ -60,7 +58,6 @@
 			This will downgrade your forum back to SMF 1.0.16.
 		</readme>
 		<modification type="file" format="boardmod" reverse="true">smf_1-0-16_to_1-0-17_patch.mod</modification>
-		<modification type="file" format="boardmod" reverse="true">smf_1-0-16_to_1-0-17_attachment_patch.mod</modification>
 		<modification type="file" format="xml" reverse="true">smf_1-0-17_can_fail.xml</modification>
 
 	</uninstall>
