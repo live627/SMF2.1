@@ -548,6 +548,12 @@ function DownloadLanguage()
 				$context_data['exists'] = 'same';
 				$context_data['default_copy'] = false;
 			}
+			// Attempt to discover newline character differences.
+			elseif ($file['md5'] == md5(preg_replace("~[\r]?\n~", "\r\n", file_get_contents($boarddir . '/' . $file['filename']))))
+			{
+				$context_data['exists'] = 'same';
+				$context_data['default_copy'] = false;
+			}
 			else
 				$context_data['exists'] = 'different';
 		}
