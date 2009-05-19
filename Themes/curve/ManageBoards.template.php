@@ -8,7 +8,7 @@ function template_main()
 
 	// Table header.
 	echo '
-	<div id="manage_boards">
+	<div id="manage_boards" class="align_left">
 		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 			', $txt['boardsEdit'], '
 		</h3>';
@@ -92,7 +92,8 @@ function template_main()
 		</form>';
 	}
 	echo '
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 }
 
 // Template for editing/adding a category on the forum.
@@ -102,7 +103,7 @@ function template_modify_category()
 
 	// Print table header.
 	echo '
-	<div id="manage_boards">
+	<div id="manage_boards" class="align_left">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="cat" value="', $context['category']['id'], '" />
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
@@ -167,7 +168,8 @@ function template_modify_category()
 				<span class="botslice"><span></span></span>
 			</div>
 		</form>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 }
 
 // A template to confirm if a user wishes to delete a category - and whether they want to save the boards.
@@ -177,7 +179,7 @@ function template_confirm_category_delete()
 
 	// Print table header.
 	echo '
-	<div id="manage_boards">
+	<div id="manage_boards" class="align_left">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="cat" value="', $context['category']['id'], '" />
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
@@ -225,7 +227,8 @@ function template_confirm_category_delete()
 				<span class="botslice"><span></span></span>
 			</div>
 		</form>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 }
 
 // Below is the template for adding/editing an board on the forum.
@@ -235,7 +238,7 @@ function template_modify_board()
 
 	// The main table header.
 	echo '
-	<div id="manage_boards">
+	<div id="manage_boards" class="align_left">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
@@ -482,6 +485,7 @@ function template_modify_board()
 			</div>
 		</form>
 	</div>
+	<br style="clear: both;" />
 <script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 <script type="text/javascript"><!-- // --><![CDATA[
 	var oModeratorSuggest = new smc_AutoSuggest({
@@ -549,7 +553,7 @@ function template_confirm_board_delete()
 
 	// Print table header.
 	echo '
-	<div id="manage_boards">
+	<div id="manage_boards" class="align_left">
 		<form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
 
@@ -598,7 +602,8 @@ function template_confirm_board_delete()
 			<span class="botslice"><span></span></span>
 			</div>
 		</form>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 }
 
 ?>

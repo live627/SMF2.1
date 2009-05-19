@@ -6,7 +6,7 @@ function template_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="manage_mail">
+	<div id="manage_mail" class="align_left">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['mailqueue_stats'], '
 		</h3>
@@ -21,10 +21,13 @@ function template_browse()
 					</dl>
 				</div>
 			<span class="botslice"><span></span></span>
-		</div>
-	</div>';
-
+		</div>';
+	
 	template_show_list('mail_queue');
+	
+	echo'
+	</div>
+	<br style="clear: both;" />';
 }
 
 ?>

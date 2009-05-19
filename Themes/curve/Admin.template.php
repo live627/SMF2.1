@@ -9,11 +9,13 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>';
+		<h3 class="titlebg"><span class="left"></span><span class="right"></span>'
+			,$txt['admin_center'], '
+		</h3>';
 
 	if ($context['user']['is_admin'])
 		echo '
-			<div class="align_right">
+			<div id="taskpad" class="align_right">
 				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
 					<img src="' , $settings['images_url'] , '/filter.gif" alt="" />
 					<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
@@ -26,11 +28,10 @@ function template_admin()
 				</form>
 			</div>';
 
-	echo $txt['admin_center'], '
-		</h3>
+	echo '
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe"><div class="innerframe">
-			<div class="content">
+			<div id="welcome" class="content">
 				<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>
 				', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '
 			</div>
@@ -39,45 +40,49 @@ function template_admin()
 
 	// Is there an update available?
 	echo '
-	<div id="update_section" style="display: none;">
-		<tr class="titlebg">
-				<td id="update_title">', $txt['update_available'], '</td>
-			</tr><tr>
-				<td class="windowbg" valign="top" style="padding: 0;">
-					<div id="update_message" style="font-size: 0.85em; padding: 4px;">', $txt['update_message'], '</div>
-				</td>
-			</tr>
-		</table>
-	</div>';
+		<div id="update_section" style="display: none;">
+			<h3 id="update_title" class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['update_available'], '
+			</h3>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<div id="update_message" class="smalltext">
+						', $txt['update_message'], '
+					</div>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</div>';
 
 	echo '
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 0.5em;"><tr>';
+		<div id="admin_main_section">';
 
 	// Display the "live news" from simplemachines.org.
 	echo '
-			<td valign="top">
-				<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-					<tr>
-						<td class="catbg">
-							<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['live'], '
-						</td>
-					</tr><tr>
-						<td class="windowbg2" valign="top" style="height: 18ex; padding: 0;">
-							<div id="smfAnnouncements" style="height: 18ex; overflow: auto; padding-right: 1ex;"><div style="margin: 4px; font-size: 0.85em;">', $txt['lfyi'], '</div></div>
-						</td>
-					</tr>
-				</table>
-			</td>
-			<td style="width: 1ex;">&nbsp;</td>';
+			<div id="live_news" class="align_left">
+				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['live'], '
+				</h3>
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<div id="smfAnnouncements">', $txt['lfyi'], '</div>
+					</div>
+				<span class="botslice"><span></span></span>
+				</div>
+			</div>';
 
 	// Show the user version information from their server.
 	echo '
-			<td valign="top" style="width: 40%;">
-				<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" id="supportVersionsTable">
-					<tr>
-						<td class="catbg"><a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a></td>
-					</tr><tr>
-						<td class="windowbg2" valign="top" style="height: 18ex;">
+			<div id="supportVersionsTable" class="align_right">
+				<h3 class="catbg"><span class="left"></span><span class="right"></span>
+					<a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a>
+				</h3>
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<div id="version_details">
 							<strong>', $txt['support_versions'], ':</strong><br />
 							', $txt['support_versions_forum'], ':
 							<em id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</em><br />
@@ -109,39 +114,43 @@ function template_admin()
 							(', $context['more_admins_link'], ')';
 
 	echo '
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr></table>';
+						</div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div>			
+		</div>';
 
 
 	echo '
-		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 1.5ex;">
-			<tr valign="top" class="windowbg2">';
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					<ul id="quick_tasks" class="flow_hidden">';
 
 	$row = false;
 	foreach ($context['quick_admin_tasks'] as $task)
 	{
 		echo '
-				<td style="padding: 1em 1em 2em 1em;" width="50%">
-					', (!empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['default_images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : ''), '
-					<div style="font-weight: bold; font-size: 1.1em;">', $task['link'], '</div>
-					', $task['description'], '
-				</td>';
+						<li>
+							', (!empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['default_images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : ''), '
+							<h5>', $task['link'], '</h5>
+							<span class="task">', $task['description'],'</span></li>';
 
 		if ($row && !$task['is_last'])
-			echo '
-			</tr>
-			<tr valign="top" class="windowbg2">';
+			echo '	
+						';
 
 		$row = !$row;
 	}
 
 	echo '
-			</tr>
-		</table>
-	</div>';
+					</ul>
+				</div>
+				<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 
 	// The below functions include all the scripts needed from the simplemachines.org site. The language and format are passed for internationalization.
 	if (empty($modSettings['disable_smf_js']))
@@ -263,29 +272,33 @@ function template_manage_copyright()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=copyright" method="post" accept-charset="', $context['character_set'], '">
-		<table width="80%" align="center" cellpadding="2" cellspacing="0" border="0" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['copyright_removal'], '</td>
-			</tr><tr>
-				<td colspan="2" class="windowbg2">
+	<div id="admincenter">
+		<form action="', $scripturl, '?action=admin;area=copyright" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['copyright_removal'], '
+			</h3>
+			<div class="windowbg">
+			<span class="topslice"><span></span></span>
+				<div class="content">
 					<span class="smalltext">', $txt['copyright_removal_desc'], '</span>
-				</td>
-			</tr><tr class="windowbg">
-				<td width="50%">
-					<strong>', $txt['copyright_code'], ':</strong>
-				</td>
-				<td width="50%">
-					<input type="text" name="copy_code" value="" />
-				</td>
-			</tr><tr>
-				<td colspan="2" align="center" class="windowbg2">
-					<input type="submit" value="', $txt['copyright_proceed'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form>';
+					<dl class="settings">
+						<dt>
+							<strong>', $txt['copyright_code'], ':</strong>
+						</dt>
+						<dd>
+							<input type="text" name="copy_code" value="" />
+						</dd>
+					</dl>
+					<p>
+						<input type="submit" value="', $txt['copyright_proceed'], '" />
+					</p>
+				</div>
+			<span class="botslice"><span></span></span>
+			</div>
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+		</form>
+	</div>
+	<br style="clear: both;" />';
 }
 
 // Show some support information and credits to those who helped make this.
@@ -295,65 +308,77 @@ function template_credits()
 
 	// Show the user version information from their server.
 	echo '
-		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder">
-			<tr class="titlebg">
-				<td>', $txt['support_title'], '</td>
-			</tr><tr>
-				<td class="windowbg2">
-					<strong>', $txt['support_versions'], ':</strong><br />
+		
+	<div id="admincenter">		
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['support_title'], '
+		</h3>
+		<div class="windowbg">
+		<span class="topslice"><span></span></span>
+			<div class="content">
+				<strong>', $txt['support_versions'], ':</strong><br />
 					', $txt['support_versions_forum'], ':
-					<em id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</em>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
+				<em id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</em>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=maintain;sa=routine;activity=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
-					<em id="smfVersion" style="white-space: nowrap;">??</em><br />';
-
+				<em id="smfVersion" style="white-space: nowrap;">??</em><br />';
+	
 	// Display all the variables we have server information for.
 	foreach ($context['current_versions'] as $version)
 		echo '
 					', $version['title'], ':
-					<em>', $version['version'], '</em><br />';
-
+				<em>', $version['version'], '</em><br />';
+		
 	echo '
-
-				</td>
-			</tr>
-		</table>';
+		</div>
+		<span class="botslice"><span></span></span>
+		</div>
+	';
 
 	// Display latest support questions from simplemachines.org.
 	echo '
-		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 2ex;">
-			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['support_latest'], '</td>
-			</tr><tr>
-				<td class="windowbg2">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['support_latest'], '
+		</h3>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
 					<div id="latestSupport">', $txt['support_latest_fetch'], '</div>
-				</td>
-			</tr>
-		</table>';
+				</div>
+			<span class="botslice"><span></span></span>
+		</div>';
 
 	// The most important part - the credits :P.
 	echo '
-		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 2ex;">
-			<tr class="titlebg">
-				<td>', $txt['admin_credits'], '</td>
-			</tr><tr>
-				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">';
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['admin_credits'], '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+				<div class="content">';
+		
 
 	foreach ($context['credits'] as $section)
 	{
 		if (isset($section['pretext']))
 			echo '
 					<p>', $section['pretext'], '</p>';
+		
+		echo '
+					<dl>';
 
 		foreach ($section['groups'] as $group)
 		{
-			echo '
-					<div style="margin-top: 1ex;">';
-
 			if (isset($group['title']))
-				echo '<strong>', $group['title'], ':</strong> ';
+				echo '
+						<dt>
+							<strong>', $group['title'], ':</strong>
+						</dt><dd>';
 
-			echo implode(', ', $group['members']), '</div>';
+			echo implode(', ', $group['members']), '</dd>';
 		}
+		
+		echo '
+					</dl>'; 
 
 		if (isset($section['posttext']))
 			echo '
@@ -361,9 +386,11 @@ function template_credits()
 	}
 
 	echo '
-				</span></td>
-			</tr>
-		</table>';
+				</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 
 	// This makes all the support information available to the support script...
 	echo '
@@ -427,12 +454,17 @@ function template_view_versions()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
+	<div id="admincenter" class="align_left">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['admin_version_check'], '
+		</h3>
+		<div class="information">', $txt['version_check_desc'], '</div>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+				
 		<table width="100%" cellpadding="4" cellspacing="1" border="0" align="center" class="bordercolor">
-			<tr class="titlebg">
-				<td>', $txt['admin_version_check'], '</td>
-			</tr><tr class="windowbg">
-				<td class="smalltext" style="padding: 2ex;">', $txt['version_check_desc'], '</td>
-			</tr><tr>
+			<tr>
 				<td class="windowbg2" style="padding: 1ex 0 1ex 0;">
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
@@ -522,7 +554,12 @@ function template_view_versions()
 	echo '
 				</td>
 			</tr>
-		</table>';
+		</table>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 
 	/* Below is the hefty javascript for this. Upon opening the page it checks the current file versions with ones
 	   held at simplemachines.org and works out if they are up to date.  If they aren't it colors that files number
@@ -669,74 +706,75 @@ function template_edit_censored()
 
 	// First section is for adding/removing words from the censored list.
 	echo '
+	<div id="admincenter" class="align_right">
 		<form action="', $scripturl, '?action=admin;area=postsettings;sa=censor" method="post" accept-charset="', $context['character_set'], '">
-			<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
-				<tr class="titlebg">
-					<td colspan="2">', $txt['admin_censored_words'], '</td>
-				</tr><tr class="windowbg2">
-					<td align="center">
-						<table width="100%">
-							<tr>
-								<td colspan="2" align="center">
-									', $txt['admin_censored_where'], '<br />';
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['admin_censored_words'], '
+			</h3>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>', $txt['admin_censored_where'], '</p>';
 
 	// Show text boxes for censoring [bad   ] => [good  ].
 	foreach ($context['censored_words'] as $vulgar => $proper)
 		echo '
-									<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" value="', $vulgar, '" size="20" /> => <input type="text" name="censor_proper[]" value="', $proper, '" size="20" /></div>';
+					<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" value="', $vulgar, '" size="20" /> => <input type="text" name="censor_proper[]" value="', $proper, '" size="20" /></div>';
 
 	// Now provide a way to censor more words.
 	echo '
-									<noscript>
-										<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /></div>
-									</noscript>
-									<div id="moreCensoredWords"></div><div style="margin-top: 1ex; display: none;" id="moreCensoredWords_link"><a href="#;" onclick="addNewWord(); return false;">', $txt['censor_clickadd'], '</a></div>
-									<script type="text/javascript"><!-- // --><![CDATA[
-										document.getElementById("moreCensoredWords_link").style.display = "";
+					<noscript>
+						<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /></div>
+					</noscript>
+					<div id="moreCensoredWords"></div><div style="margin-top: 1ex; display: none;" id="moreCensoredWords_link"><a href="#;" onclick="addNewWord(); return false;">', $txt['censor_clickadd'], '</a></div>
+						<script type="text/javascript"><!-- // --><![CDATA[
+							document.getElementById("moreCensoredWords_link").style.display = "";
 
-										function addNewWord()
-										{
-											setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
-										}
-									// ]]></script><br />
-								</td>
-							</tr><tr>
-								<td colspan="2"><hr /></td>
-							</tr><tr>
-								<th width="50%" align="right"><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></th>
-								<td align="left"><input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="check" /></td>
-							</tr><tr>
-								<th align="right"><label for="censorIgnoreCase_check">', $txt['censor_case'], ':</label></th>
-								<td align="left">
-									<input type="checkbox" name="censorIgnoreCase" value="1" id="censorIgnoreCase_check"', empty($modSettings['censorIgnoreCase']) ? '' : ' checked="checked"', ' class="check" />
-								</td>
-							</tr><tr>
-								<td colspan="2" align="right">
-									<input type="submit" name="save_censor" value="', $txt['save'], '" />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-
-			<br />';
+							function addNewWord()
+							{
+								setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
+							}
+						// ]]></script>
+						<hr width="100%" size="1" class="hrcolor" />
+						<dl class="settings">
+							<dt>
+								<strong><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></strong>
+							</dt>
+							<dd>
+								<input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="check" />
+							</dd>
+							<dt>
+								<strong><label for="censorIgnoreCase_check">', $txt['censor_case'], ':</label></strong>
+							</dt>
+							<dd>
+								<input type="checkbox" name="censorIgnoreCase" value="1" id="censorIgnoreCase_check"', empty($modSettings['censorIgnoreCase']) ? '' : ' checked="checked"', ' class="check" />
+							</dd>
+						</dl>
+						<input type="submit" name="save_censor" value="', $txt['save'], '" />
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
 
 	// This table lets you test out your filters by typing in rude words and seeing what comes out.
 	echo '
-			<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
-				<tr class="titlebg">
-					<td>', $txt['censor_test'], '</td>
-				</tr><tr class="windowbg2">
-					<td align="center">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['censor_test'], '
+			</h3>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<p class="centertext">
 						<input type="text" name="censortest" value="', empty($context['censor_test']) ? '' : $context['censor_test'], '" />
 						<input type="submit" value="', $txt['censor_test_save'], '" />
-					</td>
-				</tr>
-			</table>
+					</p>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
 
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>';
+		</form>
+	</div>
+	<br style="clear:both;" />';
 }
 
 // Maintenance is a lovely thing, isn't it?
@@ -745,37 +783,44 @@ function template_not_done()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div class="tborder">
-		<div class="titlebg" style="padding: 4px;">', $txt['not_done_title'], '</div>
-		<div class="windowbg" style="padding: 4px;">
-			', $txt['not_done_reason'];
+	<div id="admincenter" class="align_left">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['not_done_title'], '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+				<div class="content">
+					', $txt['not_done_reason'];
 
 	if (!empty($context['continue_percent']))
 		echo '
-			<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
-					<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['continue_percent'], '%</div>
-					<div style="width: ', $context['continue_percent'], '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
-				</div>
-			</div>';
+					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+							<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['continue_percent'], '%</div>
+							<div style="width: ', $context['continue_percent'], '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
+						</div>
+					</div>';
 
 	if (!empty($context['substep_enabled']))
 		echo '
-			<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-				<span class="smalltext">', $context['substep_title'], '</span>
-				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
-					<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['substep_continue_percent'], '%</div>
-					<div style="width: ', $context['substep_continue_percent'], '%; height: 12pt; z-index: 1; background-color: blue;">&nbsp;</div>
-				</div>
-			</div>';
+					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+						<span class="smalltext">', $context['substep_title'], '</span>
+						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+							<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['substep_continue_percent'], '%</div>
+							<div style="width: ', $context['substep_continue_percent'], '%; height: 12pt; z-index: 1; background-color: blue;">&nbsp;</div>
+						</div>
+					</div>';
 
 	echo '
 			<form action="', $scripturl, $context['continue_get_data'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;" name="autoSubmit" id="autoSubmit">
 				<div style="margin: 1ex; text-align: right;"><input type="submit" name="cont" value="', $txt['not_done_continue'], '" /></div>
 				', $context['continue_post_data'], '
 			</form>
+			</div>
+			<span class="botslice"><span></span></span>
 		</div>
 	</div>
+	<br style="clear: both;" />
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var countdown = ', $context['continue_countdown'], ';
 		doAutoSubmit();
@@ -829,25 +874,26 @@ function template_show_settings()
 		echo $context['settings_insert_above'];
 
 	echo '
-	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '"', !empty($context['force_form_onsubmit']) ? ' onsubmit="' . $context['force_form_onsubmit'] . '"' : '', '>
-		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
-			<tr>
-				<td>
-					<table border="0" cellspacing="0" cellpadding="4" width="100%">';
-
+	<div id="admincenter">
+		<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '"', !empty($context['force_form_onsubmit']) ? ' onsubmit="' . $context['force_form_onsubmit'] . '"' : '', '>';
+	
 	// Is there a custom title?
 	if (isset($context['settings_title']))
 		echo '
-						<tr class="titlebg">
-							<td colspan="3">', $context['settings_title'], '</td>
-						</tr>';
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $context['settings_title'], '
+			</h3>';
 
 	// Have we got some custom code to insert?
 	if (!empty($context['settings_message']))
 		echo '
-						<tr>
-							<td class="windowbg2" colspan="3">', $context['settings_message'], '</td>
-						</tr>';
+			<div class="information">', $context['settings_message'], '</div>';
+		
+	echo '
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<dl class="settings">';
 
 	// Now actually loop through all the variables.
 	foreach ($context['config_vars'] as $config_var)
@@ -856,12 +902,11 @@ function template_show_settings()
 		if (is_array($config_var) && $config_var['type'] == 'title')
 		{
 			echo '
-						<tr class="', !empty($config_var['class']) ? $config_var['class'] : 'titlebg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
-							<td colspan="3">
-								', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
-								', $config_var['label'], '
-							</td>
-						</tr>';
+					<dt class="', !empty($config_var['class']) ? $config_var['class'] : 'settings_title', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
+												', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
+						', $config_var['label'], '
+					</dt>
+					';
 
 			continue;
 		}
@@ -875,18 +920,17 @@ function template_show_settings()
 
 		}
 
-		echo '
-						<tr class="windowbg2"', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
-
 		if (is_array($config_var))
 		{
+			echo '
+					<dt', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
 			// First off, is this a span like a message?
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
 				echo '
-							<td colspan="3" align="center"', $config_var['type'] == 'warning' ? ' class="alert" style="padding: 2em;"' : '', '>
+						<dd', $config_var['type'] == 'warning' ? ' class="alert"' : '', '>
 								', $config_var['label'], '
-							</td>';
+						</dd>';
 			}
 			// Otherwise it's an input box of some kind.
 			else
@@ -899,14 +943,13 @@ function template_show_settings()
 				// Show the [?] button.
 				if ($config_var['help'])
 					echo '
-							<td class="windowbg2" valign="top" width="16"><a name="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>';
+							<a name="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span></dt>';
 				else
 					echo '
-							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
+							<a name="setting_', $config_var['name'], '"></a> <span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span></dt>';
 
 				echo '
-							<td valign="top"', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</td>
-							<td class="windowbg2" width="50%">',
+							<dd>',
 								$config_var['preinput'];
 
 				// Show a check box.
@@ -945,22 +988,15 @@ function template_show_settings()
 				{
 					echo '
 								<fieldset id="', $config_var['name'], '">
-									<legend>', $txt['bbcTagsToUse_select'], '</legend>
-									<table width="100%">
-										<tr>';
+									<legend>', $txt['bbcTagsToUse_select'], '</legend>';
+									
 					foreach ($context['bbc_columns'] as $bbcColumn)
 					{
-						echo '
-											<td valign="top">';
 						foreach ($bbcColumn as $bbcTag)
 							echo '
 												<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
-						echo '
-											</td>';
 					}
-					echo '
-										</tr>
-									</table><br />
+					echo '				<br />
 									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><em>', $txt['bbcTagsToUse_select_all'], '</em></label>
 								</fieldset>';
 				}
@@ -974,36 +1010,40 @@ function template_show_settings()
 
 				echo '
 								', $config_var['postinput'], '
-							</td>';
+							</dd>';
 			}
 		}
+			
 		else
 		{
 			// Just show a separator.
 			if ($config_var == '')
 				echo '
-							<td colspan="3" class="windowbg2"><hr size="1" width="100%" class="hrcolor" /></td>';
+							</dl><hr size="1" width="100%" class="hrcolor" style="clear: both;" /><dl class="settings">';
 			else
 				echo '
-							<td colspan="3" class="windowbg2" align="center"><strong>' . $config_var . '</strong></td>';
+							<strong>' . $config_var . '</strong>';
 		}
-		echo '
-						</tr>';
 	}
-
+	
 	if (empty($context['settings_save_dont_show']))
 		echo '
-						<tr>
-							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' /></td>
-						</tr>';
+					</dl>
+					<p>
+						<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' />
+					</p>';
+	else 
+		echo '
+					</dl>';
 
 	echo '
-					</table>
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-	</form>';
+					</div>
+				<span class="botslice"><span></span></span>
+			</div>
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+		</form>
+	</div>
+	<br style="clear: both;" />';
 
 	if (!empty($context['settings_post_javascript']))
 		echo '
@@ -1854,45 +1894,39 @@ function template_callback_question_answer_list()
 	global $txt, $context;
 
 	echo '
-		<tr class="catbg" style="border: 1px solid black;">
-			<td colspan="2">
-				', $txt['setup_verification_question'], '
-			</td>
-			<td>
-				', $txt['setup_verification_answer'], '
-			</td>
-		</tr>';
+			<dt>
+				<strong>', $txt['setup_verification_question'], '</strong>
+			</dt>
+			<dd>
+				<strong>', $txt['setup_verification_answer'], '</strong>
+			</dd>';
 
 	foreach ($context['question_answers'] as $data)
 		echo '
-		<tr class="windowbg2">
-			<td colspan="2">
-				<input type="text" name="question[', $data['id'], ']" value="', $data['question'], '" size="40" style="width: 98%" />
-			</td>
-			<td>
-				<input type="text" name="answer[', $data['id'], ']" value="', $data['answer'], '" size="40" style="width: 98%" />
-			</td>
-		</tr>';
+		
+			<dt>
+				<input type="text" name="question[', $data['id'], ']" value="', $data['question'], '" size="50" class="verification_question" />
+			</dt>
+			<dd>
+				<input type="text" name="answer[', $data['id'], ']" value="', $data['answer'], '" size="50" class="verification_answer" />
+			</dd>';
 
 	// Some blank ones.
 	for ($count = 0; $count < 3; $count++)
 		echo '
-		<tr class="windowbg2">
-			<td colspan="2">
-				<input type="text" name="question[]" size="40" style="width: 98%" />
-			</td>
-			<td>
-				<input type="text" name="answer[]" size="40" style="width: 98%" />
-			</td>
-		</tr>';
+			<dt>
+				<input type="text" name="question[]" size="50" class="verification_question" />
+			</dt>
+			<dd>
+				<input type="text" name="answer[]" size="50" class="verification_answer" />
+			</dd>';
 
 	echo '
-		<tr class="windowbg2" id="add_more_question_placeholder" style="display: none;"><td colspan="3"></td></tr>
-		<tr class="windowbg2" id="add_more_link_div" style="display: none;">
-			<td colspan="3" align="right" class="smalltext">
-				<a href="#" onclick="addAnotherQuestion(); return false;">&#171; ', $txt['setup_verification_add_more'], ' &#187;</a>
-			</td>
-		</tr>';
+		<dt id="add_more_question_placeholder" style="display: none;"></dt><dd></dd>
+		<dt id="add_more_link_div" style="display: none;">
+			<a href="#" onclick="addAnotherQuestion(); return false;">&#171; ', $txt['setup_verification_add_more'], ' &#187;</a>
+			
+		</dt><dd></dd>';
 
 	// The javascript needs to go at the end but we'll put it in this template for looks.
 	$context['settings_post_javascript'] .= '
@@ -1926,28 +1960,24 @@ function template_callback_question_answer_list()
 
 		function addAnotherQuestion()
 		{
-			var newRow = document.createElement("tr");
-			newRow.className = "windowbg2";
-			newRow.style.display = "";
-
-			var newCol = document.createElement("td");
-			newCol.colSpan = 2;
-			newRow.appendChild(newCol);
-
+			var newDT = document.createElement("dt");
+			
 			var newInput = createNamedElement("input", "question[]");
 			newInput.type = "text";
-			newInput.style.width = "98%";
-			newCol.appendChild(newInput);
+			newInput.size = "50";
+			newInput.setAttribute("class", "verification_question");
+			newDT.appendChild(newInput);
 
-			newCol = document.createElement("td");
-			newRow.appendChild(newCol);
-
+			newDD = document.createElement("dd");
+			
 			newInput = createNamedElement("input", "answer[]");
 			newInput.type = "text";
-			newInput.style.width = "98%";
-			newCol.appendChild(newInput);
+			newInput.size = "50";
+			newInput.setAttribute("class", "verification_answer");
+			newDD.appendChild(newInput);
 
-			placeHolder.parentNode.insertBefore(newRow, placeHolder);
+			placeHolder.parentNode.insertBefore(newDT, placeHolder);
+			placeHolder.parentNode.insertBefore(newDD, placeHolder);
 		}
 		document.getElementById(\'add_more_link_div\').style.display = \'\';
 	';

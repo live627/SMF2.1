@@ -87,6 +87,8 @@ May 2009
  ! constructPageIndex should use numbered sprintf as well (Display.php, Subs.php, Recent.php, Subs-List.php, SplitTopics.php, script.js)
  ! Multi-page topics on MessageIndex didn't use constructPageIndex (MessageIndex.php)
  ! Deleting a member, should delete their subscription (Subs-Members.php) [Bug 3454]
+ * Curve: ToogleBar shouldn't break float (ManageMembers.template.php, ManageAttachments.template.php, ManageMaintenance.template.php, ManageMail.template.php)
+ * Curve: updated the Admin template to match Curve's look and feel - part 1 (Admin.template.php, admin.css, style.css, ie6.css)
 
 
 April 2009

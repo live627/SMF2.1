@@ -8,7 +8,11 @@ ol.search_results li
 {
 	padding-top: 5px;
 }
-
+#admincenter, #manage_mail, #manage_attachments, #manage_maintenance, #manage_boards
+{
+	float: left;
+	width: 100%;
+}
 /* new features settings screen */
 .features
 {
@@ -36,16 +40,70 @@ ol.search_results li
 	padding: 0 1em 1em 1em;
 	margin: 0;
 }
-
 /* admin home */
+#taskpad
+{
+	position: relative;
+	top: -27px;
+	right: 5px;
+}
+#admin_main_section
+{
+	overflow: hidden;
+	padding-top: 0.5em;
+}
+#live_news
+{
+	width: 64%;
+	font-size: 0.85em;
+}
+#supportVersionsTable
+{
+	width: 34%;
+}
+#version_details
+{
+	overflow: auto;
+	height: 100px;
+}
+#smfAnnouncements
+{
+	height: 100px; 
+	overflow: auto;
+}
+#quick_tasks, #quick_tasks ul
+{
+	margin: 0;
+	padding: 0;
+}
+#quick_tasks li
+{
+	clear: both;
+	list-style-type: none;
+	margin: 0;
+	padding: 0.5em 0;
+}
+.quick_task
+{
+	display: block;
+	width: 100%;
+	margin: 0 1em;
+	padding: 0;
+}
 .home_image
 {
 	float: left;
 	margin: 0 1em 1em 1em;
 }
+hr.hrcolor
+{
+	margin: 10px 0;
+}
 h3.titlebg
 {
-	padding-left: 0;
+	padding: 0;
+	margin: 0 0 3px 0;
+	width: 100%;
 }
 h3.titlebg form
 {
@@ -60,10 +118,6 @@ h3.titlebg form
 {
 	margin-top: 0;
 	margin-bottom: 0;
-}
-.content
-{
-	padding: 0 0.5em;
 }
 
 /* common admin classes */
@@ -99,7 +153,6 @@ h3.titlebg form
 {
 	background-color: #dee;
 }
-
 .move_links
 {
 	padding: 0 13px 0 0;

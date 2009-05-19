@@ -29,7 +29,7 @@ function template_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="manage_attachments">
+	<div id="manage_attachments" class="align_left">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['attachment_manager_browse_files'], '
 			</h3>
@@ -44,7 +44,8 @@ function template_browse()
 				</div>
 			<span class="botslice"><span></span></span>
 		</div>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 
 	template_show_list('file_list');
 	
@@ -55,7 +56,7 @@ function template_maintenance()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="manage_attachments">
+	<div id="manage_attachments" class="align_left">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['attachment_stats'], '
 		</h3>
@@ -101,7 +102,8 @@ function template_maintenance()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 }
 
 function template_attachment_repair()
@@ -112,7 +114,7 @@ function template_attachment_repair()
 	if ($context['completed'])
 	{
 		echo '
-	<div id="manage_attachments">
+	<div id="manage_attachments" class="align_left">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
 		</h3>		
@@ -123,14 +125,15 @@ function template_attachment_repair()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 	}
 
 	// What about if no errors were even found?
 	elseif (!$context['errors_found'])
 	{
 		echo '
-	<div id="manage_attachments">
+	<div id="manage_attachments" class="align_left">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
 		</h3>		
@@ -141,13 +144,14 @@ function template_attachment_repair()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 	}
 	// Otherwise, I'm sad to say, we have a problem!
 	else
 	{
 		echo '
-	<div id="manage_attachments">
+	<div id="manage_attachments" class="align_left">
 		<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<img src="',$settings['images_url'], '/admin/post_moderation_deny.gif" alt="" /> ', $txt['repair_attachments'], '
@@ -175,7 +179,8 @@ function template_attachment_repair()
 				<span class="botslice"><span></span></span>
 			</div>
 		</form>
-	</div>';
+	</div>
+	<br style="clear: both;" />';
 	}
 }
 

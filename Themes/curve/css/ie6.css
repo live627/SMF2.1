@@ -119,6 +119,10 @@
 /* ******************* */
 /* Admin.template */
 /* ************************ */
+#main_admsection
+{
+	height: 655px;
+}
 #main_admsection table
 {
 	width: 99%;
