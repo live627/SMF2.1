@@ -30,18 +30,16 @@ function template_browse()
 
 	echo '
 	<div id="manage_attachments" class="align_left">
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>
-				', $txt['attachment_manager_browse_files'], '
-			</h3>
-			<div class="windowbg2">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['attachment_manager_browse_files'], '
+		</h3>
+		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
-				<div class="content">';
-
-		echo '
-					<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a> | 
-					<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a> | 
-					<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
-				</div>
+			<div class="content">
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a> | 
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a> | 
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
+			</div>
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>

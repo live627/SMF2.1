@@ -889,27 +889,44 @@ function template_show_settings()
 		echo '
 			<div class="information">', $context['settings_message'], '</div>';
 		
-	echo '
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<dl class="settings">';
-
 	// Now actually loop through all the variables.
+	$is_open = false;
 	foreach ($context['config_vars'] as $config_var)
 	{
 		// Is it a title?
 		if (is_array($config_var) && $config_var['type'] == 'title')
 		{
+			// Not a list yet?
+			if ($is_open)
+			{
+				$is_open = false;
+				echo '
+					</dl>
+					</div>
+				</div>';
+			}
+
 			echo '
-					<dt class="', !empty($config_var['class']) ? $config_var['class'] : 'settings_title', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
-												', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
+					<h3 class="', !empty($config_var['class']) ? $config_var['class'] : 'catbg', '"', !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>
+						<span class="left"></span><span class="right"></span>
+						', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 						', $config_var['label'], '
-					</dt>
-					';
+					</h3>';
 
 			continue;
 		}
+
+		// Not a list yet?
+		if (!$is_open)
+		{
+			$is_open = true;
+			echo '
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<dl class="settings">';
+		}
+
 		// Hang about? Are you pulling my leg - a callback?!
 		if (is_array($config_var) && $config_var['type'] == 'callback')
 		{
@@ -917,20 +934,19 @@ function template_show_settings()
 				call_user_func('template_callback_' . $config_var['name']);
 
 			continue;
-
 		}
 
 		if (is_array($config_var))
 		{
 			echo '
-					<dt', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
+							<dt', is_array($config_var) && !empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '"' : '', '>';
 			// First off, is this a span like a message?
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
 				echo '
-						<dd', $config_var['type'] == 'warning' ? ' class="alert"' : '', '>
+							<dd', $config_var['type'] == 'warning' ? ' class="alert"' : '', '>
 								', $config_var['label'], '
-						</dd>';
+							</dd>';
 			}
 			// Otherwise it's an input box of some kind.
 			else
@@ -943,10 +959,12 @@ function template_show_settings()
 				// Show the [?] button.
 				if ($config_var['help'])
 					echo '
-							<a name="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span></dt>';
+								<a name="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span>
+							</dt>';
 				else
 					echo '
-							<a name="setting_', $config_var['name'], '"></a> <span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span></dt>';
+								<a name="setting_', $config_var['name'], '"></a> <span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span>
+							</dt>';
 
 				echo '
 							<dd>',
@@ -1013,28 +1031,29 @@ function template_show_settings()
 							</dd>';
 			}
 		}
-			
+
 		else
 		{
 			// Just show a separator.
 			if ($config_var == '')
 				echo '
-							</dl><hr size="1" width="100%" class="hrcolor" style="clear: both;" /><dl class="settings">';
+						</dl>
+						<hr size="1" width="100%" class="hrcolor" style="clear: both;" />
+						<dl class="settings">';
 			else
 				echo '
-							<strong>' . $config_var . '</strong>';
+						<strong>' . $config_var . '</strong>';
 		}
 	}
-	
+
+	echo '
+						</dl>';
+
 	if (empty($context['settings_save_dont_show']))
 		echo '
-					</dl>
-					<p>
-						<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' />
-					</p>';
-	else 
-		echo '
-					</dl>';
+						<p>
+							<input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' />
+						</p>';
 
 	echo '
 					</div>
