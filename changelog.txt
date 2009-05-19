@@ -50,6 +50,8 @@ May 2009
  ! Adding a moderator more than once doesn't make them do more work (ManageBoards.php) [Bug 3428]
  ! Taking action against a reported post did not update Report count if needed (Subs.php) [Bug 3434]
  ! Don't allow flash attachments to be shown as images - reported by Alejandro Rusell. (Display.php)
+ ! Strings passed to install.php weren't properly sanitized - reported by Alejandro Rusell. (install.php)
+ ! Added more protection against IE's image XSS vulnerability  - reported by Jacques Copeau (Display.php)
  ! Try to prevent custom avatar settings from being empty, causing errors (ManageAttachments.php, Admin.template.php, Admin.english.php) [Bug 3414]
  ! Present a login form to guests trying to view profiles without sufficient permissions. (Profile.php) 
  * Curve: Toggle link not floated right (style.css) [Bug 3438]

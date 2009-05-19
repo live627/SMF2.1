@@ -193,10 +193,10 @@ function initialize_inputs()
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>', $_GET['pass_string'], '</title>
+		<title>', htmlspecialchars($_GET['pass_string']), '</title>
 	</head>
 	<body style="background-color: #D4D4D4; margin-top: 16%; text-align: center; font-size: 16pt;">
-		<strong>', $_GET['pass_string'], '</strong>
+		<strong>', htmlspecialchars($_GET['pass_string']), '</strong>
 	</body>
 </html>';
 		exit;
