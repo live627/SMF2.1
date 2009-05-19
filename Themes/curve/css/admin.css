@@ -78,10 +78,12 @@ ol.search_results li
 }
 #quick_tasks li
 {
-	clear: both;
+	float: left;
 	list-style-type: none;
 	margin: 0;
 	padding: 0.5em 0;
+	width: 50%;
+	height: 4.5em;
 }
 .quick_task
 {
