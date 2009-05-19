@@ -175,8 +175,23 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		$fp2 = fopen($url, 'rb');
 		if ($fp2 !== false)
 		{
+			$prev_chunk = '';
 			while (!feof($fp2))
-				fwrite($fp, fread($fp2, 8192));
+			{
+				$cur_chunk = fread($fp2, 8192);
+
+				// Make sure nothing odd came through.
+				if (preg_match('~(iframe|\\<\\?php|\\<\\?[\s=]|\\<%[\s=]|html|eval|body|script\W)~', $prev_chunk . $cur_chunk) === 1)
+				{
+					fclose($fp2);
+					fclose($fp);
+					unlink($destName);
+					return false;
+				}
+
+				fwrite($fp, $cur_chunk);
+				$prev_chunk = $cur_chunk;
+			}
 			fclose($fp2);
 
 			// Though not an exhaustive list, better safe than sorry.
