@@ -34,7 +34,7 @@ elseif (function_exists('db_query'))
 		LIKE 'file_hash'"
 	, false, false);
 
-	if (mysql_num_rows($has_column) != 1)
+	if (empty($has_column) || mysql_num_rows($has_column) != 1)
 	{
 		// Simpler times.
 		db_query('
@@ -74,7 +74,8 @@ else
 		LIKE "file_hash"
 	');
 
-	if (mysql_num_rows($has_column) != 1)
+	// Does the column already exist?
+	if (empty($has_column) || mysql_num_rows($has_column) != 1)
 	{
 		// Simpler times.
 		mysql_query('
@@ -84,15 +85,14 @@ else
 	}
 	mysql_free_result($has_column);
 
+	// Maybe we can try to update the SMF version as well.
 	$request = mysql_query('
 		SELECT value
 		FROM ' . $db_prefix . 'settings
 		WHERE variable = "smfVersion"');
-}
 
-// Maybe we can try to update the SMF version as well.
-if (!empty($request) && (empty($db_type) || $db_type == 'mysql') && mysql_num_rows($request) > 0)
-{
+	if (empty($request) || mysql_num_rows($request) > 0)
+		exit;
 	list($old_version) = mysql_fetch_row($request);
 	mysql_free_result($request);
 
@@ -115,13 +115,8 @@ if (!empty($request) && (empty($db_type) || $db_type == 'mysql') && mysql_num_ro
 		}
 	}
 
-	// Now make the changes, first try db_query.
-	if (!empty($new_version) && function_exists('db_query'))
-		db_query('UPDATE ' . $db_prefix . 'settings
-			SET value = "' . $new_version . '"
-			WHERE variable = "smfVersion"
-				AND value = "' . $old_version . '"', false, false);
-	elseif (!empty($new_version))
+	// Now make the changes.
+	if (!empty($new_version))
 		mysql_query('UPDATE ' . $db_prefix . 'settings
 			SET value = "' . $new_version . '"
 			WHERE variable = "smfVersion"
