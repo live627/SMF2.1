@@ -16,29 +16,28 @@ window.smfForum_scripturl . '?action=pgdownload;auto;package=' + url_to_package 
 
 */
 
-include_once('/home/simple/public_html/community/SSI.php');
-include_once('/home/simple/public_html/custom/mods/ModSiteSettings.php');
+include_once('/home/sites/simplemachines.org/public_html/community/SSI.php');
+include_once('/home/sites/custom.simplemachines.org/public_html/mods/ModSiteSettings.php');
+include_once('/home/sites/custom.simplemachines.org/public_html/mods/ModSiteDBSettings.php');
+include_once('/home/sites/simplemachines.org/security/settings_customize.php');
 
 unset($_SESSION['language']);
 
-eaccelerator_cache_page('smf/latest-packages.js', 20);
-
 // SMF 1.0 and SMF 1.1 Used a different URL then SMF 2.0.
 if (!isset($_REQUEST['version']) || in_array(substr($_REQUEST['version'], 0, 7), array('SMF 1.0', 'SMF 1.1')))
-{
-	echo "
-var actionurl = '?action=pgdownload;auto;package=';";
-}
+	echo "var actionurl = '?action=pgdownload;auto;package=';";
 else
-{
-	echo "
-var actionurl = '?action=admin;area=packages;sa=download;get;package=';";
-}
+	echo "var actionurl = '?action=admin;area=packages;sa=download;get;package=';";
+
 // Pull the smf versions out of the table.
 $result = $smcFunc['db_query']('', "
 	SELECT id_ver, ver_name
-	FROM {$customize_prefix}smfVersions
-	WHERE public = 1", __FILE__, __LINE__);
+	FROM {raw:customize_prefix}smfVersions
+	WHERE public = 1",
+	array(
+		'customize_prefix' => $customize_prefix,
+	)
+);
 
 $mod_site['smf_versions'] = array();
 while ($row = $smcFunc['db_fetch_assoc']($result))
@@ -50,35 +49,68 @@ $smcFunc['db_free_result']($result);
 header('Content-Type: text/javascript');
 
 ?>
+if (typeof(window.smfForum_sessionvar) == "undefined")
+	window.smfForum_sessionvar = 'sesc';
 
 if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0")
-	window.smfLatestPackages = 'As was inevitable, a few small mistakes have been found in 1.0.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-1_update.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'As was inevitable, a few small mistakes have been found in 1.0.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-1_update.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.1")
-	window.smfLatestPackages = 'A few problems have been found in the package manager\'s modification code, among a few other issues.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-2_update.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A few problems have been found in the package manager\'s modification code, among a few other issues.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-2_update.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.2")
-	window.smfLatestPackages = 'A problem has been found in the system that sends critical database messages.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-3_package.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A problem has been found in the system that sends critical database messages.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-3_package.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.3")
-	window.smfLatestPackages = 'A few bugs have been fixed since SMF 1.0.3, and a problem with parsing nested BBC tags addressed. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-4_package.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled. Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A few bugs have been fixed since SMF 1.0.3, and a problem with parsing nested BBC tags addressed. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-4_package.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled. Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.4")
-	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.4.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-5_package.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.4.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-5_package.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.5")
-	window.smfLatestPackages = 'A bbc security issue has been identified in SMF 1.0.5.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A bbc security issue has been identified in SMF 1.0.5.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.6")
-	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.6.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.6.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.7")
-	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.7.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-8_package.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.7.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-8_package.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.8")
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.8.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1-0-9_1-1-rc3-1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.9")
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.9.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-0-10_patch.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.10")
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.0.10.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.1.3_1.0.11.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.11")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.11 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.12_1.1.4_2.0.b1.1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.12.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.12")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.12 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.13_1.1.5_2.0-b3.1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.12.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.13")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.13 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.14_1.1.6.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.14.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.14")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.14. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.15_1.1.7.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.15.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.0.15")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.0.15. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.16_1.1.8.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.0.16.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1 Beta 2" && !in_array("smf:smf_1-1-beta2-fix1", window.smfInstalledPackages))
-	window.smfLatestPackages = 'A few bugs have been fixed since SMF 1.1 Beta 2, and a problem with parsing nested BBC tags addressed.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-beta2-fix1.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily fix the problem.<br /><br />Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> or in the helpdesk if you need more help.';
+	window.smfLatestPackages = 'A few bugs have been fixed since SMF 1.1 Beta 2, and a problem with parsing nested BBC tags addressed.  You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-beta2-fix1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily fix the problem.<br /><br />Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> or in the helpdesk if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1 RC2" && !in_array("smf:smf-1.0.7", window.smfInstalledPackages))
-	window.smfLatestPackages = 'A security issue has been identified in SMF 1.1 RC2. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A security issue has been identified in SMF 1.1 RC2. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to easily update yourself to the latest version.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1 RC2" && !in_array("smf:smf_1-1-rc2-2", window.smfInstalledPackages))
-	window.smfLatestPackages = 'A bug in PHP causes a vulnerability in SMF 1.1 RC2-1. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-rc2-2_package.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to patch your version of 1.1 RC2 to 1.1 RC2-2.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A bug in PHP causes a vulnerability in SMF 1.1 RC2-1. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-rc2-2_package.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to patch your version of 1.1 RC2 to 1.1 RC2-2.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1")
-	window.smfLatestPackages = 'A number of small bugs and a security issue have been identified in SMF 1.1 Final. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-1_patch.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A number of small bugs and a security issue have been identified in SMF 1.1 Final. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-1_patch.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.1")
-	window.smfLatestPackages = 'A number of bugs and a couple of low risk security issues have been identified in SMF 1.1.1 - and some improvements have been made to the visual verification images on registration. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-2_patch.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.2.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A number of bugs and a couple of low risk security issues have been identified in SMF 1.1.1 - and some improvements have been made to the visual verification images on registration. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_1-1-2_patch.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.2.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.2")
-	window.smfLatestPackages = 'A number of bugs and a couple of low risk security issues have been identified in SMF 1.1.2 - and some improvements have been made to the package manager. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.1.3_1.0.11.tar.gz;sesc=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.3.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+	window.smfLatestPackages = 'A number of bugs and a couple of low risk security issues have been identified in SMF 1.1.2 - and some improvements have been made to the package manager. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.1.3_1.0.11.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.3.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.3")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.3 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.12_1.1.4_2.0.b1.1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.4.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.4")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.4 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.13_1.1.5_2.0-b3.1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.5.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.5")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.5 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.14_1.1.6.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.6.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.6")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.6. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.15_1.1.7.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.7.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 1.1.7")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 1.1.7. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.16_1.1.8.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 1.1.8.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 2.0 beta 1")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 2.0 beta 1 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.12_1.1.4_2.0.b1.1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 2.0 beta 1.1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
+else if (typeof(window.smfVersion) != "undefined" && window.smfVersion == "SMF 2.0 Beta 3 Public")
+	window.smfLatestPackages = 'A few security vulnerabilities have been identified in SMF 2.0 beta 3 as well as a few small bugs. You can install <a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.13_1.1.5_2.0-b3.1.zip;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">this patch (click here to install)</a> to update your version of SMF to 2.0 beta 3.1.<br /><br />If you have any problems applying it, you can use the version posted on the downloads page - although, any modifications you have installed will need to be uninstalled.  Please post on the <a href="http://www.simplemachines.org/community/index.php">forum</a> if you need more help.';
 else if (typeof(window.smfVersion) == "undefined")
 	window.smfLatestPackages = 'For the package manager to function properly, please upgrade to the latest version of SMF.';
 else
@@ -86,13 +118,13 @@ else
 var smf_modificationInfo = {
 <?php
 
-$request = $smcFunc['db_query']('', "
+$request = $smcFunc['db_query']('', '
 	(
 		SELECT
 			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 1 AS type,
 			ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
-		FROM {$mod_prefix}mods AS ms
-			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
+		FROM {raw:mod_prefix}mods AS ms
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
 		WHERE ms.approved = 1
 			AND ms.id_attach_package != 0
 			AND ms.id_type != 11
@@ -104,14 +136,18 @@ $request = $smcFunc['db_query']('', "
 		SELECT
 			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 2 AS type,
 			ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
-		FROM {$mod_prefix}mods AS ms
-			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
+		FROM {raw:mod_prefix}mods AS ms
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
 		WHERE ms.approved = 1
 			AND ms.id_attach_package != 0
 			AND ms.id_type != 11
 		ORDER BY RAND()
 		LIMIT 1
-	)", __FILE__, __LINE__);
+	)',
+	array(
+		'mod_prefix' => $mod_site_db_name . '.' . $mod_site_db_prefix,
+	)
+);
 $mods = array();
 while ($row = $smcFunc['db_fetch_assoc']($request))
 {
@@ -127,7 +163,7 @@ while ($row = $smcFunc['db_fetch_assoc']($request))
 		'version' => $row['latest_version'],
 		'submit_time' => timeformat($row['submit_time']),
 		'modify_time' => timeformat($row['modified_time']),
-		'description' => doUBBC($row['description']),
+		'description' => parse_bbc($row['description']),
 		'downloads' => $row['downloads'],
 		'smf_versions' => explode(',', $row['smf_versions']),
 		'is_latest' => $row['type'] == 1,
@@ -171,9 +207,9 @@ function smf_packagesMoreInfo(id)
 	window.smfLatestPackages_temp = getOuterHTML(document.getElementById("smfLatestPackagesWindow"));
 
 	setOuterHTML(document.getElementById("smfLatestPackagesWindow"),
-	'<div id="smfLatestPackagesWindow" class="tborder">\
-		<h3 class="catbg" style="margin: 0; padding: 4px;">' + smf_modificationInfo[id].name + '</h3>\
-			<h4 class="titlebg" style="padding: 4px; margin: 0;"><a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/' + id + '/' + smf_modificationInfo[id].file + ';sesc=' + window.smfForum_sessionid + '">Install Now!</a></h4>\
+	'<div id="smfLatestPackagesWindow">\
+		<h3 style="margin: 0; padding: 4px;">' + smf_modificationInfo[id].name + '</h3>\
+			<h4 style="padding: 4px; margin: 0;"><a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/' + id + '/' + smf_modificationInfo[id].file + ';' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">Install Now!</a></h4>\
 			<div style="margin: 4px;">' + smf_modificationInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
 			<div class="titlebg" style="padding: 4px; margin: 0;"><a href="javascript:smf_packagesBack();void(0);">(go back)</a></div>\
 	</div>');
@@ -186,8 +222,8 @@ function smf_packagesBack()
 }
 
 window.smfLatestPackages = '\
-	<div id="smfLatestPackagesWindow" class="tborder" style="overflow: auto;">\
-		<h3 class="titlebg" style="margin: 0; padding: 4px;">New Packages:</h3>\
+	<div id="smfLatestPackagesWindow"style="overflow: auto;">\
+		<h3 style="margin: 0; padding: 4px;">New Packages:</h3>\
 		<img src="http://www.simplemachines.org/smf/images/package.png" width="102" height="98" style="float: right; margin: 4px;" alt="(package)" />\
 		<ul style="list-style: none; margin-top: 3px; padding: 0 4px;">';
 
@@ -205,7 +241,7 @@ if (typeof(window.smfVersion) != "undefined" && (window.smfVersion < "SMF 1.0.6"
 	window.smfLatestPackages += '\
 		<h3 class="error" style="margin: 0; padding: 4px;">Updates for SMF:</h3>\
 		<div style="padding: 0 4px;">\
-			<a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;sesc=' + window.smfForum_sessionid + '">Security update (X-Forwarded-For header vulnerability)</a>\
+			<a href="' + window.smfForum_scripturl + actionurl + 'http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;' + window.smfForum_sessionvar + '=' + window.smfForum_sessionid + '">Security update (X-Forwarded-For header vulnerability)</a>\
 		</div>';
 else
 	window.smfLatestPackages += '\

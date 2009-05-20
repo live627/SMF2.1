@@ -27,7 +27,7 @@ function template_main()
 		// Create the main header object.
 		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
 		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '");
+		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '", "', $context['session_var'], '");
 		smfNewsFadeToggle.addToggleImage("newsupshrink", "/collapse.gif", "/expand.gif");
 		smfNewsFadeToggle.addTogglePanel("smfNewsFader");
 	// ]]></script>

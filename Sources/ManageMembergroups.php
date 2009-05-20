@@ -56,7 +56,7 @@ if (!defined('SMF'))
 
 	void DeleteMembergroup()
 		- deletes a membergroup by URL.
-		- called by ?action=admin;area=membergroups;sa=delete;group=x;sesc=y.
+		- called by ?action=admin;area=membergroups;sa=delete;group=x;session_var=y.
 		- requires the manage_membergroups permission.
 		- redirects to ?action=admin;area=membergroups.
 

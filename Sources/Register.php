@@ -432,7 +432,7 @@ function Register2($verifiedOpenID = false)
 		// What do we need to save?
 		$save_variables = array();
 		foreach ($_POST as $k => $v)
-			if (!in_array($k, array('sc', 'sesc', 'passwrd1', 'passwrd2', 'regSubmit')))
+			if (!in_array($k, array('sc', 'sesc', $context['session_var'], 'passwrd1', 'passwrd2', 'regSubmit')))
 				$save_variables[$k] = $v;
 
 		require_once($sourcedir . '/Subs-OpenID.php');

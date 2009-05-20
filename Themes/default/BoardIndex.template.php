@@ -21,7 +21,7 @@ function template_main()
 		// Create the main header object.
 		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
 		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '");
+		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '", "', $context['session_var'], '");
 		smfNewsFadeToggle.addToggleImage("newsupshrink", "/collapse.gif", "/expand.gif");
 		smfNewsFadeToggle.addTogglePanel("smfNewsFader");
 	// ]]></script>
@@ -257,7 +257,7 @@ function template_info_center()
 		// And create the info center object.
 		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
 		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
+		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '", "', $context['session_var'], '");
 		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
 		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>';

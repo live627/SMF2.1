@@ -2612,7 +2612,7 @@ function template_authentication_method()
 				</dd>
 			</dl>
 			<div class="floatright">
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				<input type="hidden" name="u" value="', $context['id_member'], '" />
 				<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 				<input type="submit" value="', $txt['change_profile'], '" />

@@ -142,6 +142,7 @@ function template_main()
 		<script type="text/javascript"><!-- // --><![CDATA[
 			window.smfForum_scripturl = "', $scripturl, '";
 			window.smfForum_sessionid = "', $context['session_id'], '";
+			window.smfForum_sessionvar = "', $context['session_var'], '";
 			window.smfThemes_writable = ', $context['can_create_new'] ? 'true' : 'false', ';
 		// ]]></script>';
 

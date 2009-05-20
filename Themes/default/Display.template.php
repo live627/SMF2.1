@@ -159,7 +159,7 @@ function template_main()
 	}
 
 	echo '
-	<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : false">';
+	<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\') : false">';
 
 	// These are some cache image buttons we may want.
 	$reply_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -352,7 +352,7 @@ function template_main()
 		// Can they reply? Have they turned on quick reply?
 		if ($context['can_reply'] && !empty($options['display_quick_reply']))
 			echo '
-						<li><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\', true);">', $reply_button, '</a></li>';
+						<li><a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';', $context['session_var'], '=', $context['session_id'], '" onclick="return oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\', \'', $context['session_var'], '\', true);">', $reply_button, '</a></li>';
 
 		// So... quick reply is off, but they *can* reply?
 		elseif ($context['can_reply'])
@@ -403,7 +403,7 @@ function template_main()
 		echo '
 						<div class="inner" id="msg_', $message['id'], '"', '>', $message['body'], '</div>
 					</div>', $message['can_modify'] ? '
-					<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" class="modifybutton" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '';
+					<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" class="modifybutton" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\')" />' : '';
 
 		// Now for the attachments, signature, ip logged, etc...
 		echo '
@@ -633,6 +633,7 @@ function template_main()
 		sCheckboxContainerMask: \'in_topic_mod_check_\',
 		aMessageIds: [\'', implode('\', \'', $removableMessageIDs), '\'],
 		sSessionId: \'', $context['session_id'], '\',
+		sSessionVar: \'', $context['session_var'], '\',
 		sButtonStrip: \'moderationbuttons\',
 		sButtonStripDisplay: \'moderationbuttons_strip\',
 		bUseImageButton: false,
@@ -662,7 +663,7 @@ function template_main()
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 					<input type="hidden" name="msg" value="%msg_id%" />
 					<div class="centertext">
-						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
+						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
 					</div>
 				</div>'), ',
 			sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />'), ',
@@ -693,6 +694,7 @@ function template_main()
 			iBoardId: ', $context['current_board'], ',
 			iTopicId: ', $context['current_topic'], ',
 			sSessionId: "', $context['session_id'], '",
+			sSessionVar: "', $context['session_var'], '",
 			sLabelIconList: "', $txt['message_icon'], '",
 			sBoxBackground: "transparent",
 			sBoxBackgroundHover: "#ffffff",

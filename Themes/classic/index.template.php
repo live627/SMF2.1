@@ -281,10 +281,6 @@ function template_html_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// The following will be used to let the user know that some AJAX process is running
-	echo '
-	<div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '">', $txt['ajax_in_progress'], '</div>';
-
 	// And then we're done!
 	echo '
 </body>

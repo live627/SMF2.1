@@ -254,7 +254,7 @@ function template_main()
 	</tr>
 </table>
 
-<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\') : false;">
+<form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickModify.bInEditMode ? oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\') : false;">
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
@@ -455,7 +455,7 @@ function template_main()
 							</tr></table>
 							<hr width="100%" size="1" class="hrcolor" />
 							<div class="post"', $message['can_modify'] ? ' id="msg_' . $message['id'] . '"' : '', '>', $message['body'], '</div>', $message['can_modify'] ? '
-							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" align="right" id="modify_button_' . $message['id'] . '" style="cursor: pointer;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '' , '
+							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" title="' . $txt['modify_msg'] . '" align="right" id="modify_button_' . $message['id'] . '" style="cursor: pointer;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\')" />' : '' , '
 						</td>
 					</tr>';
 
@@ -704,6 +704,7 @@ function template_main()
 		sCheckboxContainerMask: \'in_topic_mod_check_\',
 		aMessageIds: [\'', implode('\', \'', $removableMessageIDs), '\'],
 		sSessionId: \'', $context['session_id'], '\',
+		sSessionVar: \'', $context['session_var'], '\',
 		sButtonStrip: \'moderationbuttons\',
 		bUseImageButton: true,
 		bCanRemove: ', $context['can_remove_post'] ? 'true' : 'false', ',
@@ -732,7 +733,7 @@ function template_main()
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 					<input type="hidden" name="msg" value="%msg_id%" />
 					<div class="centertext">
-						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
+						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
 					</div>
 				</div>'), ',
 			sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />'), ',
@@ -762,6 +763,7 @@ function template_main()
 			iBoardId: ', $context['current_board'], ',
 			iTopicId: ', $context['current_topic'], ',
 			sSessionId: "', $context['session_id'], '",
+			sSessionVar: "', $context['session_var'], '",
 			sLabelIconList: "', $txt['message_icon'], '",
 			sBoxBackground: "transparent",
 			sBoxBackgroundHover: "#ffffff",

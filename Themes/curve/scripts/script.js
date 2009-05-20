@@ -610,7 +610,7 @@ function smf_sessionKeepAlive()
 window.setTimeout("smf_sessionKeepAlive();", 1200000);
 
 // Set a theme option through javascript.
-function smf_setThemeOption(option, value, theme, cur_session_id, additional_vars)
+function smf_setThemeOption(option, value, theme, cur_session_id, cur_session_var, additional_vars)
 {
 	// Compatibility.
 	if (cur_session_id == null)
@@ -620,7 +620,7 @@ function smf_setThemeOption(option, value, theme, cur_session_id, additional_var
 		additional_vars = '';
 
 	var tempImage = new Image();
-	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";sesc=" + cur_session_id + additional_vars + (theme == null ? "" : "&id=" + theme) + ";" + (new Date().getTime());
+	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";" + cur_session_var + "=" + cur_session_id + additional_vars + (theme == null ? "" : "&id=" + theme) + ";t" + (new Date().getTime());
 }
 
 function smf_avatarResize()
@@ -732,7 +732,7 @@ function smfToggle(uniqueId, initialState)
 	this.state = initialState;
 	this.use_cookie = 0;
 	// Needed for setting theme options - kept hidden!
-	var themeOptions = Array(5);
+	var themeOptions = Array(6);
 	themeOptions[0] = null;
 	this.useCookie = useCookie;
 	this.toggle = toggleHeader;
@@ -762,8 +762,8 @@ function smfToggle(uniqueId, initialState)
 		// Set a theme option?
 		if (themeOptions[0] != null)
 		{
-			var curMode = themeOptions[2] ? !mode : mode;
-			smf_setThemeOption(themeOptions[0], curMode ? 1 : 0, themeOptions[3] == 0 ? null : themeOptions[3], themeOptions[1], themeOptions[4]);
+			var curMode = themeOptions[3] ? !mode : mode;
+			smf_setThemeOption(themeOptions[0], curMode ? 1 : 0, themeOptions[4] == 0 ? null : themeOptions[3], themeOptions[1], themeOptions[2], themeOptions[5]);
 		}
 
 		// Toggle the images.
@@ -789,13 +789,14 @@ function smfToggle(uniqueId, initialState)
 	}
 
 	// Set the theme option that should change with this.
-	function setOptions(newThemeOptions, sessID, flip, themeID, preferenceKey)
+	function setOptions(newThemeOptions, sessID, sessVar, flip, themeID, preferenceKey)
 	{
 		themeOptions[0] = newThemeOptions;
 		themeOptions[1] = sessID;
-		themeOptions[2] = flip == null ? 0 : 1;
-		themeOptions[3] = themeID == null ? 0 : themeID;
-		themeOptions[4] = preferenceKey == null ? '' : ';admin_key=' + preferenceKey;
+		themeOptions[2] = sessVar;
+		themeOptions[3] = flip == null ? 0 : 1;
+		themeOptions[4] = themeID == null ? 0 : themeID;
+		themeOptions[5] = preferenceKey == null ? '' : ';admin_key=' + preferenceKey;
 	}
 
 	// Add an image to toggle (id, mode = 0 image, mode = 1 image)
@@ -1179,7 +1180,7 @@ IconList.prototype.onItemMouseDown = function (oDiv, sNewIcon)
 	{
 		ajax_indicator(true);
 		this.tmpMethod = getXMLDocument;
-		var oXMLDoc = this.tmpMethod(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=jsmodify;topic=' + this.opt.iTopicId + ';msg=' + this.iCurMessageId + ';sesc=' + this.opt.sSessionId + ';icon=' + sNewIcon + ';xml');
+		var oXMLDoc = this.tmpMethod(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=jsmodify;topic=' + this.opt.iTopicId + ';msg=' + this.iCurMessageId + ';' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';icon=' + sNewIcon + ';xml');
 		delete this.tmpMethod;
 		ajax_indicator(false);
 

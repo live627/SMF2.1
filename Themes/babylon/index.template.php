@@ -146,7 +146,7 @@ function template_html_above()
 		// Create the main header object.
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		mainHeader.setOptions("collapse_header", "', $context['session_id'], '");
+		mainHeader.setOptions("collapse_header", "', $context['session_id'], '", "', $context['session_var'], '");
 		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
 		mainHeader.addTogglePanel("upshrinkHeader");
 		mainHeader.addTogglePanel("upshrinkHeader2");

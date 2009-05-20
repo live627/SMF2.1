@@ -1731,7 +1731,7 @@ function ManageAttachmentPaths()
 // Prepare the actual attachment directories to be displayed in the list.
 function list_getAttachDirs()
 {
-	global $smcFunc, $modSettings, $sc, $txt;
+	global $smcFunc, $modSettings, $context, $txt;
 
 	// The dirs should already have been unserialized but just in case...
 	if (!is_array($modSettings['attachmentUploadDir']))
@@ -1766,7 +1766,7 @@ function list_getAttachDirs()
 			'path' => $dir,
 			'current_size' => $size,
 			'num_files' => $expected_files[$id],
-			'status' => ($error ? '<span class="error">' : '') . sprintf($txt['attach_dir_' . $status], $sc) . ($error ? '</span>' : ''),
+			'status' => ($error ? '<span class="error">' : '') . sprintf($txt['attach_dir_' . $status], $context['session_id'], $context['session_var']) . ($error ? '</span>' : ''),
 		);
 	}
 

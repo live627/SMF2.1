@@ -2436,7 +2436,7 @@ function highlight_php_code($code)
 // Put this user in the online log.
 function writeLog($force = false)
 {
-	global $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smcFunc, $sourcedir;
+	global $user_info, $user_settings, $context, $modSettings, $settings, $topic, $board, $smcFunc, $sourcedir;
 
 	// If we are showing who is viewing a topic, let's see if we are, and force an update if so - to make it accurate.
 	if (!empty($settings['display_who_viewing']) && ($topic || $board))
@@ -2466,7 +2466,7 @@ function writeLog($force = false)
 	if (!empty($modSettings['who_enabled']))
 	{
 		$serialized = $_GET + array('USER_AGENT' => $_SERVER['HTTP_USER_AGENT']);
-		unset($serialized['sesc']);
+		unset($serialized['sesc'], $serialized[$context['session_var']]);
 		$serialized = serialize($serialized);
 	}
 	else

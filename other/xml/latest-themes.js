@@ -16,24 +16,29 @@ window.smfForum_scripturl + '?action=theme=sa=install;theme_gz=' + url_to_packag
 */
 
 // Some required files to make everything work
-require_once('/home/simple/public_html/community/SSI.php');
-require_once('/home/simple/public_html/custom/themes/ThemeSiteSettings.php');
-unset($_SESSION['language']);
+require_once('/home/sites/simplemachines.org/public_html/community/SSI.php');
+require_once('/home/sites/custom.simplemachines.org/public_html/themes/ThemeSiteSettings.php');
+include_once('/home/sites/custom.simplemachines.org/public_html/themes/ThemeSiteDBSettings.php');
+include_once('/home/sites/simplemachines.org/security/settings_customize.php');
 
-//eaccelerator_cache_page('smf/latest_themes.js', 20);
+unset($_SESSION['language']);
 
 // Get a featured theme
 $themes = array();
-$request = $smcFunc['db_query']('', "
+$request = $smcFunc['db_query']('', '
 	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
 		th.submit_time, th.id_type, a.filename, th.description, th.author_name
-	FROM {$theme_prefix}featured AS fe
-		LEFT JOIN {$theme_prefix}themes AS th ON (th.id_theme=fe.id_theme)
-		LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
-		LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+	FROM {raw:theme_prefix}featured AS fe
+		LEFT JOIN {raw:theme_prefix}themes AS th ON (th.id_theme=fe.id_theme)
+		LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
 	WHERE th.status=1
 	ORDER BY RAND()
-	LIMIT 1", __FILE__, __LINE__);
+	LIMIT 1',
+	array(
+		'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
+	)
+);
 if ( $smcFunc['db_num_rows']($request) )
 {
 	$row = $smcFunc['db_fetch_assoc']($request);
@@ -59,16 +64,21 @@ else
 	$featured = 0;
 
 // Load the theme data
-$request = $smcFunc['db_query']('', "
+$request = $smcFunc['db_query']('', '
 	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
 		th.submit_time, th.id_type, a.filename, th.description, th.author_name
-	FROM {$theme_prefix}themes AS th
-	LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
-	LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+	FROM {raw:theme_prefix}themes AS th
+	LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
+	LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
 	WHERE th.status=1
-		AND th.id_theme != $featured
+		AND th.id_theme != {int:featured}
 	ORDER BY submit_time DESC
-	LIMIT 3", __FILE__, __LINE__);
+	LIMIT 3',
+	array(
+		'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
+		'featured' => $featured,
+	)
+);
 $latest_ids = array();
 while ( $row = $smcFunc['db_fetch_assoc']($request) )
 {
@@ -95,12 +105,17 @@ while ( $row = $smcFunc['db_fetch_assoc']($request) )
 $request = $smcFunc['db_query']('', "
 	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
 		th.submit_time, th.id_type, a.filename, th.description, th.author_name
-	FROM {$theme_prefix}themes AS th
-		LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
-		LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
-	WHERE th.status=1 AND th.id_theme NOT IN ($featured" . (empty($latest_ids) ? '' : ',' . implode(',',$latest_ids)) . ")
+	FROM {raw:theme_prefix}themes AS th
+		LEFT JOIN {raw:theme_prefix}files AS f ON (f.id_file=th.id_package)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+	WHERE th.status=1 AND th.id_theme NOT IN ({array_int:ids})
 	ORDER BY RAND()
-	LIMIT 1", __FILE__, __LINE__);
+	LIMIT 1",
+	array(
+		'theme_prefix' => $theme_site_db_name . '.' . $theme_site_db_prefix,
+		'ids' => array_merge(array($featured), $latest_ids),
+	)
+);
 while ( $row = $smcFunc['db_fetch_assoc']($request) )
 {
 	censorText($row['theme_name']);
@@ -129,7 +144,7 @@ header('Content-Type: text/javascript');
 echo '
 var smf_themeInfo = {';
 $temp_output = array();
-foreach($themes as $theme)
+foreach($themes AS $theme)
 {
 
 	$temp_output[] = '
@@ -151,14 +166,14 @@ function smf_themesMoreInfo(id)
 {
 	window.smfLatestThemes_temp = getOuterHTML(document.getElementById("smfLatestThemesWindow"));
 	setOuterHTML(document.getElementById("smfLatestThemesWindow"),
-	'<div id="smfLatestThemesWindow" class="tborder" style="overflow: auto;">\
-		<h3 class="catbg" style="margin: 0; padding: 4px;">' + smf_themeInfo[id].name + '</h3>\
-		<h4 class="titlebg2" style="margin: 0;padding: 4px;"><a href="http://themes.simplemachines.org?lemma=' + id + '">View Theme Now!</a></h4>\
-		<div style="padding: 5px; overflow: auto;">\
-			<img src="http://themes.simplemachines.org?action=download;lemma='+id+';image=thumb" alt="" style="float: right; margin: 10px;" />\
+	'<div id="smfLatestThemesWindow" style="overflow: auto;">\
+		<h3 style="margin: 0; padding: 4px;">' + smf_themeInfo[id].name + '</h3>\
+		<h4 style="margin: 0;padding: 4px;"><a href="http://custom.simplemachines.org/themes/index.php?lemma=' + id + '">View Theme Now!</a></h4>\
+		<div style="overflow: auto;">\
+			<img src="http://custom.simplemachines.org/themes/index.php?action=download;lemma='+id+';image=thumb" alt="" style="float: right; margin: 10px;" />\
 			<div style="padding:8px;">' + smf_themeInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
 		</div>\
-		<div style="padding: 8px;" class="catbg smalltext"><a href="javascript:smf_themesBack();void(0);">(go back)</a></div>\
+		<div style="padding: 4px;" class="smalltext"><a href="javascript:smf_themesBack();void(0);">(go back)</a></div>\
 	</div>');
 }
 
@@ -188,13 +203,13 @@ if ( smf_featured !=0 || smf_random != 0 )
 	if ( smf_featured != 0 )
 		window.smfLatestThemes += '\
 				<h4 style="padding: 4px 4px 0 4px; margin: 0;">Featured Theme</h4>\
-				<p style="padding: 0 8px; margin: 0;">\
+				<p style="padding: 0 4px; margin: 0;">\
 					<a href="javascript:smf_themesMoreInfo('+smf_featured+');void(0);">'+smf_themeInfo[smf_featured].name + ' by ' + smf_themeInfo[smf_featured].author+'</a>\
 				</p>';
 	if ( smf_random != 0 )
 		window.smfLatestThemes += '\
 				<h4 style="padding: 4px 4px 0 4px;margin: 0;">Theme of the Moment</h4>\
-				<p style="padding: 0 4px;">\
+				<p style="padding: 0 4px; margin: 0;">\
 					<a href="javascript:smf_themesMoreInfo('+smf_random+');void(0);">'+smf_themeInfo[smf_random].name + ' by ' + smf_themeInfo[smf_random].author+'</a>\
 				</p>';
 }

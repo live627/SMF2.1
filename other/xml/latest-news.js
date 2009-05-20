@@ -1,22 +1,71 @@
 <?php
 
-error_reporting(E_ALL);
-
 header('Content-Type: text/javascript');
 
 if (empty($_GET['format']))
 	$_GET['format'] = '%B %d, %Y, %I:%M:%S %p';
 
-$latest_news = Array(
+$latest_news = array(
+	array(
+		'time' => 1233807001,
+		
+		'subject_english' => 'SMF 2.0 RC1 Public Released',
+		'message_english' => 'Simple Machines are very pleased to annouce the release of the first Release Candidate of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=290609.0',
+		'author_english' => 'Compuart',
+	),
+
+	array(
+		'time' => 1233806924,
+
+		'subject_english' => 'SMF 1.1.8',
+		'message_english' => 'A patch has been released, addressing multiple security vulnerabilites.  We urge all forum administrators to upgrade to SMF 1.1.8&mdash;simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=290608.0',
+		'author_english' => 'Compuart',
+	),
+
+	array(
+		'time' => 1226085336,
+
+		'subject_english' => 'SMF 1.1.7',
+		'message_english' => 'A patch has been released, addressing multiple security vulnerabilites.  We urge all forum administrators to upgrade to SMF 1.1.7&mdash;simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=272861.0',
+		'author_english' => 'Compuart',
+	),
+
+	array(
+		'time' => 1220776685,
+
+		'subject_english' => 'SMF 1.1.6',
+		'message_english' => 'A patch has been released fixing a few bugs and addressing a security vulnerability.  We urge all forum administrators to upgrade to SMF 1.1.6&mdash;simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=260145.0',
+		'author_english' => 'Compuart',
+	),
+
+	array(
+		'time' => 1208742974,
+		
+		'subject_english' => 'SMF 1.1.5',
+		'message_english' => 'A patch has been released fixing a few bugs and addressing some security vulnerabilities.  We urge all forum administrators to upgrade to SMF 1.1.5&mdash;simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=236816.0',
+		'author_english' => 'Compuart',
+	),
 	array(
 		'time' => 1205781621,
-
-		'subject_english' => 'SMF 2.0 Beta 4 Released',
-		'message_english' => 'Simple Machines are very pleased to announce the release of the first public beta of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
+		
+		'subject_english' => 'SMF 2.0 Beta 3 Public Released',
+		'message_english' => 'Simple Machines are very pleased to annouce the release of the first public beta of SMF 2.0. Please visit the Simple Machines site for more information on how you can help test this new release.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=228921.0',
 		'author_english' => 'Grudge',
 	),
-
+	array(
+		'time' => 1190682456,
+		
+		'subject_english' => 'SMF 1.1.4',
+		'message_english' => 'A patch has been released to address some security vulnerabilities discovered in SMF 1.1.3.  We urge all forum administrators to upgrade to SMF 1.1.4&mdash;simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=196380.0',
+		'author_english' => 'Compuart',
+	),
 	array(
 		'time' => 1188041365,
 
@@ -79,7 +128,7 @@ $latest_news = Array(
 		'time' => 1156203139,
 
 		'subject_english' => 'SMF 1.1 RC3',
-		'message_english' => 'Release Candidate 3 of SMF 1.1 has been released! This is the final update to SMF 1.1 before it goes final - and includes UTF support as well as numerous bug fixes. Please read the announcement for details - and only upgrade if you are comfortable running software yet to go gold.',
+		'message_english' => 'Release Candidate 3 of SMF 1.1 has been released! This is the final update to SMF 1.1 before it goes final - and includes UTF support as well as numerous bug fixes. Please read the annoucement for details - and only upgrade if you are comfortable running software yet to go gold.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=107112.0',
 		'author_english' => 'Grudge',
 	),
@@ -120,7 +169,7 @@ $latest_news = Array(
 		'message_turkish' => 'SMF nin 1.0.6 sürümü çikti.  Bu sürümde 1.0.5 de bulunan bazi küçük hatalar ve potansiyel bir güvenlik açigi düzeltilmis bulunuyor. Bu güncellemeyi paket yöneticinizi veya diger metotlari kullanarak hemen uygulamaniz önerilir.',
 
 		'subject_german' => 'SMF 1.0.6',
-		'message_german' => 'SMF 1.0.6 wurde ver&ouml;ffentlicht. Diese Version behebt ein potentielles Sicherheitsrisiko und mehrere kleine Fehler, die nach Version 1.0.5 gefunden worden sind. Sie k&ouml;nnen Ihr Forum sofort mit Hilfe des Paket-Managers aktualisieren oder das Update-Paket herunterladen. Diese Version darf nicht mit SMF 1.1 benutzt werden!',
+		'message_german' => 'SMF 1.0.6 wurde ver&ouml;ffentlicht. Diese Version behebt ein potentielles Sicherheitsrisiko und mehrere kleine Fehler, die nach Version 1.0.5 gefunden worden sind. Sie k&ouml;nnen Ihr Forum sofort mit Hilfe des Paket-Managers aktualisieren oder das Update-Paket herunterladen. Diese Version darf nicht mit SMF 1.1 benutzt werden!', 
 	),
 	array(
 		'time' => 1138108185,
@@ -172,18 +221,18 @@ $latest_news = Array(
 	array(
 		'time' => 1120005510,
 
-		'subject_english' => 'SMF 1.1 Beta 4',
+		'subject_english' => 'SMF 1.1 Beta 3 Public',
 		'message_english' => 'The first public beta of SMF 1.1 has been released!  Please read the announcement for details - and only update if you are certain you are comfortable with beta software.  There is no package manager style update for this version.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=40085.0',
 		'author_english' => '[Unknown]',
 
-		'subject_finnish' => 'SMF 1.1 Beta 4',
+		'subject_finnish' => 'SMF 1.1 Beta 3 Public',
 		'message_finnish' => 'Ensimmäinen julkinen beta SMF 1.1:stä on julkaistu! Ole hyvä ja lue tiedotteesta tarkemmin - ja päivitä vain jos olet varma että haluat käyttää beta vaiheessa olevaa ohjelmistoa.  Tähän versioon ei voi päivittää pakettien hallinnan kautta.',
 
 		'subject_french' => 'SMF 1.1 Beta 3 &Eacute;dition Publique',
 		'message_french' => 'La premi&egrave;re version beta publique de SMF 1.1 est sortie&nbsp;!  Veuillez lire le sujet d\'annonces pour plus de d&eacute;tails - et veuillez ne mettre &agrave; jour votre forum que si vous &ecirc;tes confortable avec les logiciels en version de test.  Il n\'y a aucune mise &agrave; jour via le Gestionnaire de paquets possible pour cette version.',
 
-		'subject_german' => 'SMF 1.1 Beta 4',
+		'subject_german' => 'SMF 1.1 Beta 3 Public',
 		'message_german' => 'Die erste &ouml;ffentliche Beta von SMF 1.1 steht zum Download bereit! Bitte lesen Sie das Ank&uuml;ndigungsthema f&uuml;r weitere Informationen und aktualisieren Sie Ihr Forum nur, wenn Sie sich mit Beta Software gen&uuml;gend auskennen! F&uuml;r diese Version gibt es kein Paket-Manager Update.',
 	),
 
@@ -258,7 +307,7 @@ $latest_news = Array(
 		'author_english' => 'Meriadoc',
 
 		'subject_german' => 'SMF 1.0.2',
-		'message_german' => 'Ein paar kleine Fehler wurden in SMF gefunden, die meisten jedoch nur Server betreffend und einer im Paket-Manager. Ein Update wird dringend empfohlen! Im Paket-Manager oder auf der Downloadseite von Simplemachines finden Sie das neue Update..',
+ 		'message_german' => 'Ein paar kleine Fehler wurden in SMF gefunden, die meisten jedoch nur Server betreffend und einer im Paket-Manager. Ein Update wird dringend empfohlen! Im Paket-Manager oder auf der Downloadseite von Simplemachines finden Sie das neue Update..',
 
 		'subject_finnish' => 'SMF 1.0.2',
 
@@ -315,7 +364,7 @@ $latest_news = Array(
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=22008.0',
 		'author_english' =>  'Peter Duggan',
 
-		'subject_german' => 'Eine PHP Sicherheitsl&uuml;cke!',
+ 		'subject_german' => 'Eine PHP Sicherheitsl&uuml;cke!',
 		'message_german' => 'Eine neue Sicherheitsl&uuml;cke wurde in PHP gefunden (Programmiersprache von SMF). Fragen Sie bei Ihrem Host an, ob er so bald wie m&ouml;glich auf PHP 4.3.10 oder 5.0.3 aktualisiert. Sie k&ouml;nnen bis dahin auch einen Patch installieren, den Sie im Paket-Manager finden.',
 	),
 
@@ -528,7 +577,9 @@ if (document.getElementById("yourVersion"))
 {
 	var yourVersion = getInnerHTML(document.getElementById("yourVersion"));
 	if (yourVersion == "SMF 1.0.4")
+	{
 		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-0-5_package.tar.gz";
+	}
 	else if (yourVersion == "SMF 1.0.5" || yourVersion == "SMF 1.0.6")
 	{
 		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz";
@@ -538,9 +589,41 @@ if (document.getElementById("yourVersion"))
 	{
 		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-0-8_package.tar.gz";
 	}
+	else if (yourVersion == "SMF 1.0.8")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1-0-9_1-1-rc3-1.tar.gz";
+	}
 	else if (yourVersion == "SMF 1.0.9")
 	{
 		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-0-10_patch.tar.gz";
+	}
+	else if (yourVersion == "SMF 1.0.10" || yourVersion == "SMF 1.1.2")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.1.3_1.0.11.tar.gz";
+	}
+	else if (yourVersion == "SMF 1.0.11" || yourVersion == "SMF 1.1.3" || yourVersion == "SMF 2.0 beta 1")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.12_1.1.4_2.0.b1.1.tar.gz";
+		window.smfUpdateCritical = true;
+	}
+	else if (yourVersion == "SMF 1.0.12" || yourVersion == "SMF 1.1.4" || yourVersion == "SMF 2.0 beta 3 Public")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.13_1.1.5_2.0-b3.1.zip";
+	}
+	else if (yourVersion == "SMF 1.0.13" || yourVersion == "SMF 1.1.5")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.14_1.1.6.zip";
+		window.smfUpdateCritical = true;
+	}
+	else if (yourVersion == "SMF 1.0.14" || yourVersion == "SMF 1.1.6")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.15_1.1.7.zip";
+		window.smfUpdateCritical = true;
+	}
+	else if (yourVersion == "SMF 1.0.15" || yourVersion == "SMF 1.1.7")
+	{
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.16_1.1.8.zip";
+		window.smfUpdateCritical = false;
 	}
 	else if (yourVersion == "SMF 1.1")
 	{

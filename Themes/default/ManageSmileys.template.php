@@ -20,6 +20,7 @@ function template_editsets()
 	<script type="text/javascript"><!-- // --><![CDATA[
 		window.smfForum_scripturl = "', $scripturl, '";
 		window.smfForum_sessionid = "', $context['session_id'], '";
+		window.smfForum_sessionvar = "', $context['session_var'], '";
 	// ]]></script>';
 
 	if (empty($modSettings['disable_smf_js']))

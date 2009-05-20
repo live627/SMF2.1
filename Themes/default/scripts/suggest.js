@@ -597,7 +597,7 @@ smc_AutoSuggest.prototype.autoSuggestUpdate = function ()
 
 	// Get the document.
 	this.tmpMethod = getXMLDocument;
-	this.oXmlRequestHandle = this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=' + this.opt.sSearchType + ';search=' + sSearchString + ';sesc=' + this.opt.sSessionId + ';xml;time=' + (new Date().getTime()), this.onSuggestionReceived);
+	this.oXmlRequestHandle = this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=' + this.opt.sSearchType + ';search=' + sSearchString + ';' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml;time=' + (new Date().getTime()), this.onSuggestionReceived);
 	delete this.tmpMethod;
 
 	return true;

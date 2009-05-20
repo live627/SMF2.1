@@ -151,7 +151,7 @@ function template_permission_index()
 		var smfPermissionsPanelToggle = new smfToggle("smfPermissionsPanelToggle", ', empty($context['show_advanced_options']) ? 1 : 0, ');
 		smfPermissionsPanelToggle.addToggleImage("permissions_panel_toggle", "/sort_down.gif", "/selected.gif");
 		smfPermissionsPanelToggle.addTogglePanel("permissions_panel_advanced");
-		smfPermissionsPanelToggle.setOptions("admin_preferences", "', $context['session_id'], '", true, 1, "app");';
+		smfPermissionsPanelToggle.setOptions("admin_preferences", "', $context['session_id'], '", "', $context['session_var'], '", true, 1, "app");';
 
 		if (empty($context['show_advanced_options']))
 			echo '

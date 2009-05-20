@@ -1,7 +1,7 @@
 var cur_topic_id, cur_msg_id, buff_subject, cur_subject_div, in_edit_mode = 0;
 var hide_prefixes = Array();
 
-function modify_topic(topic_id, first_msg_id, cur_session_id)
+function modify_topic(topic_id, first_msg_id, cur_session_id, cur_session_var)
 {
 	if (!window.XMLHttpRequest)
 		return;
@@ -26,7 +26,7 @@ function modify_topic(topic_id, first_msg_id, cur_session_id)
 
 	if (typeof window.ajax_indicator == "function")
 		ajax_indicator(true);
-	getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + first_msg_id + ";sesc=" + cur_session_id + ";modify;xml", onDocReceived_modify_topic);
+	getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + first_msg_id + ";" + cur_session_var + "=" + cur_session_id + ";modify;xml", onDocReceived_modify_topic);
 }
 
 function onDocReceived_modify_topic(XMLDoc)
@@ -53,7 +53,7 @@ function modify_topic_cancel()
 	return false;
 }
 
-function modify_topic_save(cur_session_id)
+function modify_topic_save(cur_session_id, cur_session_var)
 {
 	if (!in_edit_mode)
 		return true;
@@ -65,7 +65,7 @@ function modify_topic_save(cur_session_id)
 
 	if (typeof window.ajax_indicator == "function")
 		ajax_indicator(true);
-	sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=jsmodify;topic=" + parseInt(document.forms.quickModForm.elements['topic'].value) + ";sesc=" + cur_session_id + ";xml", x.join("&"), modify_topic_done);
+	sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=jsmodify;topic=" + parseInt(document.forms.quickModForm.elements['topic'].value) + ";" + cur_session_var + "=" + cur_session_id + ";xml", x.join("&"), modify_topic_done);
 
 	return false;
 }

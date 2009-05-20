@@ -1,8 +1,6 @@
-
 // Make an editor!!
-function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight, bRichEditOff)
+function SmfEditor(sSessionId, sSessionVar, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight, bRichEditOff)
 {
-
 	// Create some links to the editor object.
 	this.sUniqueId = sUniqueId;
 	this.oTextHandle = null;
@@ -27,6 +25,7 @@ function SmfEditor(sSessionId, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeig
 
 	this.oSmileyPopupWindow = null;
 	this.sCurSessionId = sSessionId;
+	this.sCurSessionVar = sSessionVar;
 
 	// Kinda holds all the useful stuff.
 	this.aButtonControls = new Array();
@@ -1195,7 +1194,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	var sText = this.getText(true, !bView).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 
 	this.tmpMethod = sendXMLDocument;
-	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=' + (bView ? 1 : 0) + ';sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
+	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=' + (bView ? 1 : 0) + ';' + this.sCurSessionVar + '=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
 	delete tmpMethod;
 }
 
@@ -1300,7 +1299,7 @@ SmfEditor.prototype.spellCheckStart = function()
 		var sText = escape(this.getText(true, 1));
 
 		this.tmpMethod = sendXMLDocument;
-		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=0;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
+		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=0;' + this.sCurSessionVar + '=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
 		delete tmpMethod;
 	}
 	// Otherwise start spellchecking right away.
@@ -1332,7 +1331,7 @@ SmfEditor.prototype.spellCheckEnd = function()
 		var sText = escape(this.getText(true, 0));
 
 		this.tmpMethod = sendXMLDocument;
-		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=1;sesc=' + this.sCurSessionId + ';xml', 'message=' + sText, smf_editorArray[this.iArrayPosition].onSpellCheckCompleteDataReceived);
+		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=1;' + this.sCurSessionVar + '=' + this.sCurSessionId + ';xml', 'message=' + sText, smf_editorArray[this.iArrayPosition].onSpellCheckCompleteDataReceived);
 		delete tmpMethod;
 	}
 	else

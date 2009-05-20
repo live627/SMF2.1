@@ -87,7 +87,7 @@ if (!defined('SMF'))
 		- can be used with javascript, via a dummy image... (which doesn't
 		  require the page to reload.)
 		- requires someone who is logged in.
-		- accessed via ?action=jsoption;var=variable;val=value;sesc=sess_id.
+		- accessed via ?action=jsoption;var=variable;val=value;session_var=sess_id.
 		- does not log access to the Who's Online log. (in index.php..)
 
 	void EditTheme()

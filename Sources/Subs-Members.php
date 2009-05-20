@@ -82,7 +82,7 @@ if (!defined('SMF'))
 	void BuddyListToggle()
 		- add a member to your buddy list or remove it.
 		- requires profile_identity_own permission.
-		- called by ?action=buddy;u=x;sesc=y.
+		- called by ?action=buddy;u=x;session_id=y.
 		- redirects to ?action=profile;u=x.
 
 	void populateDuplicateMembers(&array members)

@@ -121,7 +121,7 @@ function ModifyFeatureSettings()
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['modSettings_title'],
 		'help' => 'featuresettings',
-		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
+		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id'], $context['session_var']),
 		'tabs' => array(
 			'basic' => array(
 			),
@@ -866,7 +866,7 @@ function ModifySpamSettings($return_config = false)
 // You'll never guess what this function does...
 function ModifySignatureSettings($return_config = false)
 {
-	global $context, $txt, $modSettings, $sig_start, $smcFunc, $helptxt, $scripturl, $sc;
+	global $context, $txt, $modSettings, $sig_start, $smcFunc, $helptxt, $scripturl;
 
 	$config_vars = array(
 			// Are signatures even enabled?
@@ -1178,7 +1178,7 @@ function ModifySignatureSettings($return_config = false)
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
 	$context['settings_title'] = $txt['signature_settings'];
 
-	$context['settings_message'] = '<div class="centertext smalltext alert">' . sprintf($txt['signature_settings_warning'], $sc) . '</div>';
+	$context['settings_message'] = '<div class="centertext smalltext alert">' . sprintf($txt['signature_settings_warning'], $context['session_id'], $context['session_var']) . '</div>';
 
 	prepareDBSettingContext($config_vars);
 }

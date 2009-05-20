@@ -566,7 +566,8 @@ function template_browse()
 		</table>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			window.smfForum_scripturl = "', $scripturl, '";
-			window.smfForum_sessionid = "', $context['session_id'], '";';
+			window.smfForum_sessionid = "', $context['session_id'], '";
+			window.smfForum_sessionvar = "', $context['session_var'], '";';
 
 	// Make a list of already installed mods so nothing is listed twice ;).
 	echo '
