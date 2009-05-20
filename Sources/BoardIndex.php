@@ -54,7 +54,7 @@ function BoardIndex()
 	$context['canonical_url'] = $scripturl;
 
 	// Do not let search engines index anything if there is a random thing in $_GET.
-	if (!empty($_GET) && (count($_GET) > 1 || !isset($_GET[session_name()])))
+	if (!empty($_GET))
 		$context['robot_no_index'] = true;
 
 	// Retrieve the categories and boards.

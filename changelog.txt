@@ -92,6 +92,7 @@ May 2009
  * Curve: ToogleBar shouldn't break float (ManageMembers.template.php, ManageAttachments.template.php, ManageMaintenance.template.php, ManageMail.template.php)
  * Curve: updated the Admin template to match Curve's look and feel - part 1 (Admin.template.php, admin.css, style.css, ie6.css)
  ! When adding languages, attempt to find out if different existing files just have newline character differences (ManageServer.php) [Bug 3209]
+ ! Don't indexing BoardIndex when they is any $_GET (BoardIndex.php)
 
 
 April 2009
