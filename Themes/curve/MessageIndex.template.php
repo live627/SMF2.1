@@ -232,7 +232,7 @@ function template_main()
 								<img src="', $topic['first_post']['icon_url'], '" alt="" />
 							</td>
 							<td class="subject ', $color_class2, ' windowbg2">
-								<div ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>
+								<div ', (!empty($topic['quick_mod']['modify']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');"' : ''), '>
 									', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
 
 			// Is this topic new? (assuming they are logged in!)
@@ -410,14 +410,14 @@ function template_main()
 	function modify_topic_click()
 	{
 		if (in_edit_mode == 1 && mouse_on_div == 0)
-			modify_topic_save("', $context['session_id'], '");
+			modify_topic_save("', $context['session_id'], '", "', $context['session_var'], '");
 	}
 
 	function modify_topic_keypress(oEvent)
 	{
 		if (typeof(oEvent.keyCode) != "undefined" && oEvent.keyCode == 13)
 		{
-			modify_topic_save("', $context['session_id'], '");
+			modify_topic_save("', $context['session_id'], '", "', $context['session_var'], '");
 			if (typeof(oEvent.preventDefault) == "undefined")
 				oEvent.returnValue = false;
 			else

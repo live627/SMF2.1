@@ -759,6 +759,14 @@ function DisplayAdminFile()
 	list ($file_data, $filetype) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
+	// !!! Temp.
+	// Figure out if sesc is still being used.
+	if (strpos($file_data, ';sesc=') !== false)
+		$file_data = '
+if (typeof(window.smfForum_sessionvar) == "undefined")
+	window.smfForum_sessionvar = \'sesc\';
+' . strtr($file_data, array(';sesc=' => ';\' + window.smfForum_sessionvar + \'='));
+
 	$context['template_layers'] = array();
 	// Lets make sure we aren't going to output anything nasty.
 	@ob_end_clean();
