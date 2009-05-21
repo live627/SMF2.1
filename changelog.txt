@@ -94,6 +94,8 @@ May 2009
  ! When adding languages, attempt to find out if different existing files just have newline character differences (ManageServer.php) [Bug 3209]
  ! Don't indexing BoardIndex when they is any $_GET (BoardIndex.php)
  ! Remove the last of sesc/sc remnants (Many files) [Bug 3019]
+ ! Paid subscription erorrs should contain more detail for our error log (subscriptions.php) [Bug 3278]
+ ! Improve some safety checks (Subs.php)
 
 
 April 2009
