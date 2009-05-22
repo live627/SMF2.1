@@ -620,7 +620,7 @@ function smf_setThemeOption(option, value, theme, cur_session_id, cur_session_va
 		additional_vars = '';
 
 	var tempImage = new Image();
-	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";" + cur_session_var + "=" + cur_session_id + additional_vars + (theme == null ? "" : "&id=" + theme) + ";t" + (new Date().getTime());
+	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";" + cur_session_var + "=" + cur_session_id + additional_vars + (theme == null ? "" : "&id=" + theme) + ";time=" + (new Date().getTime());
 }
 
 function smf_avatarResize()

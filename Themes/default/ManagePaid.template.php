@@ -360,6 +360,7 @@ function template_modify_user_subscription()
 		var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',
 			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'name_subscriber\',
 			sControlId: \'name_control\',
 			sSearchType: \'member\',

@@ -188,6 +188,7 @@ function template_email_members()
 		var oMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oMemberSuggest\',
 			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'members\',
 			sControlId: \'members\',
 			sSearchType: \'member\',
@@ -201,6 +202,7 @@ function template_email_members()
 		var oExcludeMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oExcludeMemberSuggest\',
 			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'exclude_members\',
 			sControlId: \'exclude_members\',
 			sSearchType: \'member\',

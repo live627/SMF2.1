@@ -295,6 +295,7 @@ function template_edit_group()
 			var oModeratorSuggest = new smc_AutoSuggest({
 				sSelf: \'oModeratorSuggest\',
 				sSessionId: \'', $context['session_id'], '\',
+				sSessionVar: \'', $context['session_var'], '\',
 				sSuggestId: \'group_moderators\',
 				sControlId: \'group_moderators\',
 				sSearchType: \'member\',

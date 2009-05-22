@@ -314,6 +314,7 @@ function template_maintain_members()
 		var oAttributeMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAttributeMemberSuggest\',
 			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'attributeMember\',
 			sControlId: \'to\',
 			sSearchType: \'member\',

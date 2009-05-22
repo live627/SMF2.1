@@ -491,6 +491,7 @@ function template_modify_board()
 	var oModeratorSuggest = new smc_AutoSuggest({
 		sSelf: \'oModeratorSuggest\',
 		sSessionId: \'', $context['session_id'], '\',
+		sSessionVar: \'', $context['session_var'], '\',
 		sSuggestId: \'moderators\',
 		sControlId: \'moderators\',
 		sSearchType: \'member\',

@@ -475,6 +475,7 @@ function template_editBuddies()
 		var oAddBuddySuggest = new smc_AutoSuggest({
 			sSelf: \'oAddBuddySuggest\',
 			sSessionId: \'', $context['session_id'], '\',
+			sSessionVar: \'', $context['session_var'], '\',
 			sSuggestId: \'new_buddy\',
 			sControlId: \'new_buddy\',
 			sSearchType: \'member\',

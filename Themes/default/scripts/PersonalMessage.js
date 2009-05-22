@@ -36,6 +36,7 @@ smf_PersonalMessageSend.prototype.init = function()
 	this.oToAutoSuggest = new smc_AutoSuggest({
 		sSelf: this.opt.sSelf + '.oToAutoSuggest',
 		sSessionId: this.opt.sSessionId,
+		sSessionVar: this.opt.sSessionVar,
 		sSuggestId: 'to_suggest',
 		sControlId: this.opt.sToControlId,
 		sSearchType: 'member',
@@ -51,6 +52,7 @@ smf_PersonalMessageSend.prototype.init = function()
 	this.oBccAutoSuggest = new smc_AutoSuggest({
 		sSelf: this.opt.sSelf + '.oBccAutoSuggest',
 		sSessionId: this.opt.sSessionId,
+		sSessionVar: this.opt.sSessionVar,
 		sSuggestId: 'bcc_suggest',
 		sControlId: this.opt.sBccControlId,
 		sSearchType: 'member',

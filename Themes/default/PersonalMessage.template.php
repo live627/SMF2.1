@@ -1021,6 +1021,7 @@ function template_send()
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',
 				sSessionId: \'', $context['session_id'], '\',
+				sSessionVar: \'', $context['session_var'], '\',
 				sTextDeleteItem: \'', $txt['autosuggest_delete_item'], '\',
 				sToControlId: \'to_control\',
 				aToRecipients: [';
