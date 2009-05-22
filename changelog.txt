@@ -96,6 +96,7 @@ May 2009
  ! Remove the last of sesc/sc remnants (Many files) [Bug 3019]
  ! Paid subscription erorrs should contain more detail for our error log (subscriptions.php) [Bug 3278]
  ! Improve some safety checks (Subs.php)
+ ! Try to detect if certain columns have altered their type, and use it instead of the default (upgrade.php, upgrade_2-0_mysql.sql) [Bug 2712]
 
 
 April 2009

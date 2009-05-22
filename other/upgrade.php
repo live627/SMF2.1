@@ -3027,6 +3027,41 @@ function textfield_alter($change, $substep)
 	nextSubstep($substep);
 }
 
+// Check if we need to alter this query.
+function checkChange(&$change)
+{
+	global $smcFunc;
+
+	// Not a column we need to check on?
+	if (!in_array($change['name'], array('memberGroups', 'passwordSalt')))
+		return $change;
+
+	// Break it up you (six|seven).
+	$temp = explode(' ', str_replace('NOT NULL', 'NOT_NULL', $change['text']));
+	
+	// Get the details about this change.
+	$request = $smcFunc['db_query']('', '
+		SHOW FIELDS
+		FROM {db_prefix}{raw:table}
+		WHERE Field = {string:old_name} OR Field = {string:new_name}',
+		array(
+			'table' => $change['table'],
+			'old_name' => $temp[1],
+			'new_name' => $temp[2],
+	));
+	list (, $current_type) = $smcFunc['db_fetch_assoc']($request);
+	$smcFunc['db_free_result']($request);
+
+	// If this doesn't match, the column may of been altered for a reason.
+	if (trim($current_type) != trim($temp[3]))
+		$temp[3] = $current_type;
+
+
+	// Piece this back together.
+	$change['text'] = implode(' ', $temp);
+}
+
+// The next substep.
 function nextSubstep($substep)
 {
 	global $start_time, $timeLimitThreshold, $command_line, $file_steps, $modSettings, $custom_warning;
