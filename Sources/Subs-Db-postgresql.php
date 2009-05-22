@@ -263,6 +263,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			'~LOW_PRIORITY~' => '',
 		),
 		'boardindex_fetch_boards' => array(
+			'~IFNULL\(lb.id_msg, 0\) >= b.id_msg_updated~' => 'CASE WHEN IFNULL(lb.id_msg, 0) >= b.id_msg_updated THEN 1 ELSE 0 END) AS is_read',
 			'~(.)$~' => '$1 ORDER BY b.board_order',
 		),
 		'get_random_number' => array(
