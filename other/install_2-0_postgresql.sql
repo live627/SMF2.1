@@ -102,8 +102,8 @@ CREATE OR REPLACE FUNCTION CONCAT (text, text) RETURNS text AS
   'SELECT $1 || $2 AS result'
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION INSTR (text, text) RETURNS boolean AS
-  'SELECT (POSITION($2 in $1) != 0) AS result'
+CREATE OR REPLACE FUNCTION INSTR (text, text) RETURNS integer AS
+  'SELECT POSITION($2 in $1) != 0 AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION bool_not_eq_int (boolean, integer) RETURNS boolean AS

@@ -643,8 +643,8 @@ ALTER COLUMN ip TYPE int8;
 /*****************************************************************************/
 
 ---# Adding instr()
-CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS boolean AS
-  'SELECT (POSITION($2 IN $1) != 0) AS result'
+CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS integer AS
+  'SELECT POSITION($2 IN $1) AS result'
 LANGUAGE 'sql';
 ---#
 
