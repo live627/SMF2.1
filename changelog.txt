@@ -99,6 +99,9 @@ May 2009
  ! Paid subscription erorrs should contain more detail for our error log (subscriptions.php) [Bug 3278]
  ! Improve some safety checks (Subs.php)
  ! Try to detect if certain columns have altered their type, and use it instead of the default (upgrade.php, upgrade_2-0_mysql.sql) [Bug 2712]
+ ! Boards with new posts in them weren't being marked as such on the boardindex in PostgreSQL [Bug 3158]
+ ! The INSTR() function in PostgreSQL should act just like the one in MySQL (Display.php, MessageIndex.php, install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 2657]
+ ! Prevent users from using * as a valid character in a username (Subs-Members.php) [Bug 3376]
 
 
 April 2009

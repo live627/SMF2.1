@@ -942,6 +942,14 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 				return true;
 	}
 
+	// Charaters we just shouldn't allow, regardless.
+	foreach (array('*') as $char)
+		if (strpos($checkName, $char) !== false)
+			if ($fatal)
+				fatal_lang_error('username_reserved', 'password', array($char));
+			else
+				return true;
+
 	// Get rid of any SQL parts of the reserved name...
 	$checkName = strtr($name, array('_' => '\\_', '%' => '\\%'));
 
