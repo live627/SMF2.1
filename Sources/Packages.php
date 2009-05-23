@@ -1596,7 +1596,24 @@ function PackagePermissions()
 			'writable_on' => 'standard',
 		);
 	}
-	if (substr($modSettings['attachmentUploadDir'], 0, strlen($boarddir)) != $boarddir)
+
+	// Are we using multiple attachment directories?
+	if (!empty($modSettings['currentAttachmentUploadDir']))
+	{
+		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['attachments']);
+
+		if (!is_array($modSettings['attachmentUploadDir']))
+			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+		// !!! Should we suggest non-current directories be read only?
+		foreach ($modSettings['attachmentUploadDir'] as $dir)
+			$context['file_tree'][strtr($dir, array('\\' => '/'))] = array(
+			'type' => 'dir',
+			'writable_on' => 'restrictive',
+		);
+
+	}
+	elseif (substr($modSettings['attachmentUploadDir'], 0, strlen($boarddir)) != $boarddir)
 	{
 		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['attachments']);
 		$context['file_tree'][strtr($modSettings['attachmentUploadDir'], array('\\' => '/'))] = array(
@@ -1604,6 +1621,7 @@ function PackagePermissions()
 			'writable_on' => 'restrictive',
 		);
 	}
+
 	if (substr($modSettings['smileys_dir'], 0, strlen($boarddir)) != $boarddir)
 	{
 		unset($context['file_tree'][strtr($boarddir, array('\\' => '/'))]['contents']['Smileys']);

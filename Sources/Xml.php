@@ -68,9 +68,7 @@ function GetJumpTo()
 	{
 		$context['jump_to'][$id_cat]['name'] = un_htmlspecialchars(strip_tags($cat['name']));
 		foreach ($cat['boards'] as $id_board => $board)
-		{
 			$context['jump_to'][$id_cat]['boards'][$id_board]['name'] = un_htmlspecialchars(strip_tags($board['name']));
-		}
 	}
 
 	$context['sub_template'] = 'jump_to';

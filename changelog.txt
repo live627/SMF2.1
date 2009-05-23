@@ -105,6 +105,7 @@ May 2009
  ! ssiTopTopics would not accept more than 100 topics, even when requested on forums with 100000+ messages (SSI.php) [Bug 3243]
  ! Download avatar at url could fail if the url contained spaces (Profile-Modify.php) [Bug 3200]
  ! Oversized extrnal avatars would fail if they contained spaces (Profile-Modify.php) [Bug 3201]
+ ! Package Manager permissions didn't support multiple attachment directories (Packages.php)
 
 
 April 2009
