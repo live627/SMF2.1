@@ -102,6 +102,7 @@ May 2009
  ! Boards with new posts in them weren't being marked as such on the boardindex in PostgreSQL [Bug 3158]
  ! The INSTR() function in PostgreSQL should act just like the one in MySQL (Display.php, MessageIndex.php, install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 2657]
  ! Prevent users from using * as a valid character in a username (Subs-Members.php) [Bug 3376]
+ ! Meta keywords needed htmlspecialchars cleaning (Subs.php) [Bug 2902]
 
 
 April 2009
