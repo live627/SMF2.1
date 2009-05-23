@@ -5,8 +5,6 @@ SMF 2.0 RC2                                                                  ???
 ================================================================================
 May 2009
 --------------------------------------------------------------------------------
- ! Boards with new posts in them weren't being marked as such on the boardindex in PostgreSQL (Subs-Db-Postgresql.php) [Bug 3158]
- ! The INSTR() function in PostgreSQL should act just like the one in MySQL (Display.php, MessageIndex.php, install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 2657]
  * Remove CSS reference to image that doesn't exist (style.css) [Bug 3323]
  * Signature gap in IE6/7 (ie6.css, ie7.css) [Bug 3194]
  ! Table optimization was optimizing to many tables. (ManageMaintenance.php) [Bug 3142]

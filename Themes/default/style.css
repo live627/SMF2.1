@@ -691,7 +691,7 @@ a.moderation_link, a.moderation_link:visited
 {
 	background: url(images/maintab_back.gif) repeat-x bottom left;
 	display: block;
-	padding: 0.2em 0.5em 0.6em 0.5em;
+	padding: 0.1em 0.5em 0.5em 0.5em;
 }
 .buttonlist ul li a.active, .buttonlist_bottom ul li a.active
 {
@@ -700,7 +700,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .buttonlist ul li a.active span em, .buttonlist_bottom ul li a.active span em
 {
-	padding: 0.2em 0.5em 0.6em 0.5em;
+	padding: 0.1em 0.5em 0.5em 0.5em;
 	display: block;
 	font-style: normal;
 	background: url(images/maintab_active_back.gif) repeat-x bottom right;
@@ -713,7 +713,7 @@ a.moderation_link, a.moderation_link:visited
 .buttonlist ul li a span.last, .buttonlist_bottom ul li a span.last
 {
 	background: url(images/maintab_last.gif) no-repeat bottom right;
-	padding: 0.2em 1.5em 0.6em 0.5em;
+	padding: 0.1em 1.5em 0.5em 0.5em;
 }
 
 /* For links that are basically submit buttons. */
@@ -741,7 +741,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .buttonlist_bottom ul li a span
 {
-	padding: 0.6em 0.5em 0.2em 0.5em;
+	padding: 0.5em 0.5em 0.1em 0.5em;
 	background: url(images/mirrortab_back.gif) repeat-x top left;
 }
 .buttonlist_bottom ul li a.active
@@ -758,7 +758,7 @@ a.moderation_link, a.moderation_link:visited
 }
 .buttonlist_bottom ul li a span.last
 {
-	padding: 0.6em 1.5em 0.2em 0.5em;
+	padding: 0.5em 1.5em 0.1em 0.5em;
 	background: url(images/mirrortab_last.gif) no-repeat top right;
 }
 /* the old type of menu, with images */
