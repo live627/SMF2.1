@@ -134,7 +134,7 @@ function template_wap_display()
 
 function template_wap_login()
 {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $modSettings, $scripturl, $txt;
 
 	echo '
 	<card id="login" title="', $context['page_title'], '">';
@@ -149,8 +149,17 @@ function template_wap_login()
 		<input type="text" name="user" /></p>
 
 		<p>', $txt['password'], ':<br />
-		<input type="password" name="passwrd" /></p>
+		<input type="password" name="passwrd" /></p>';
 
+	// Open ID?
+	if (!empty($modSettings['enableOpenID']))
+		echo '
+		<p><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
+
+		<p>', $txt['openid'], ':<br />
+		<input type="text" name="openid_url" class="openid_login" size="17" /></p>';
+
+	echo '
 		<p><do type="accept" label="', $txt['login'], '">
 			<go method="post" href="', $scripturl, '?action=login2;wap">
 				<postfield name="user" value="$user" />
@@ -443,7 +452,16 @@ function template_imode_login()
 				<tr><td>', $txt['username'], ':</td></tr>
 				<tr><td><input type="text" name="user" size="10" /></td></tr>
 				<tr><td>', $txt['password'], ':</td></tr>
-				<tr><td><input type="password" name="passwrd" size="10" /></td></tr>
+				<tr><td><input type="password" name="passwrd" size="10" /></td></tr>';
+
+	// Open ID?
+	if (!empty($modSettings['enableOpenID']))
+		echo '
+				<tr><td><strong>&mdash;', $txt['or'], '&mdash;</strong></td></tr>
+				<tr><td>', $txt['openid'], ':</td></tr>
+				<tr><td><input type="text" name="openid_url" class="openid_login" size="17" /></td></tr>';
+
+	echo '
 				<tr><td><input type="submit" value="', $txt['login'], '" /><input type="hidden" name="cookieneverexp" value="1" /></td></tr>
 				<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</td></tr>
 				<tr><td>[0] <a href="', $scripturl, '?imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></td></tr>
@@ -1005,20 +1023,31 @@ function template_wap2_display()
 
 function template_wap2_login()
 {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $modSettings, $scripturl, $txt;
 
 	echo '
 		<form action="', $scripturl, '?action=login2;wap2" method="post">
 			<p class="catbg">', $txt['login'], '</p>';
+
 	if (isset($context['login_errors']))
 		foreach ($context['login_errors'] as $error)
 			echo '
 			<p class="windowbg" style="color: #ff0000;"><strong>', $error, '</strong></p>';
+
 	echo '
 			<p class="windowbg">', $txt['username'], ':</p>
 			<p class="windowbg"><input type="text" name="user" size="10" /></p>
 			<p class="windowbg">', $txt['password'], ':</p>
-			<p class="windowbg"><input type="password" name="passwrd" size="10" /></p>
+			<p class="windowbg"><input type="password" name="passwrd" size="10" /></p>';
+
+	// Open ID?
+	if (!empty($modSettings['enableOpenID']))
+		echo '
+			<p class="windowbg"><strong>&mdash;', $txt['or'], '&mdash;</strong></p>
+			<p class="windowbg">', $txt['openid'], ':</p>
+			<p class="windowbg"><input type="text" name="openid_url" class="openid_login" size="17" /></p>';
+
+	echo '
 			<p class="windowbg"><input type="submit" value="', $txt['login'], '" /><input type="hidden" name="cookieneverexp" value="1" /></p>
 			<p class="catbg">', $txt['wireless_navigation'], '</p>
 			<p class="windowbg">[0] <a href="', $scripturl, '?wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>

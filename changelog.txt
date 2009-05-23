@@ -101,6 +101,8 @@ May 2009
  ! The INSTR() function in PostgreSQL should act just like the one in MySQL (Display.php, MessageIndex.php, install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 2657]
  ! Prevent users from using * as a valid character in a username (Subs-Members.php) [Bug 3376]
  ! Meta keywords needed htmlspecialchars cleaning (Subs.php) [Bug 2902]
+ ! Enable OpenID on ssi_login() and wirless templates (SSI.php, Wireless.template.php) [Bug 3246]
+ ! ssiTopTopics would not accept more than 100 topics, even when requested on forums with 100000+ messages (SSI.php) [Bug 3243]
 
 
 April 2009

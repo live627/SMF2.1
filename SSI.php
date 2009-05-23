@@ -633,15 +633,17 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 
 	if ($modSettings['totalMessages'] > 100000)
 	{
+		// !!! Why don't we use {query(_wanna)_see_board}?
 		$request = $smcFunc['db_query']('', '
 			SELECT id_topic
 			FROM {db_prefix}topics
 			WHERE num_' . ($type != 'replies' ? 'views' : 'replies') . ' != 0' . ($modSettings['postmod_active'] ? '
 				AND approved = {int:is_approved}' : '') . '
 			ORDER BY num_' . ($type != 'replies' ? 'views' : 'replies') . ' DESC
-			LIMIT 100',
+			LIMIT {int:limit}',
 			array(
 				'is_approved' => 1,
+				'limit' => $num_topics > 100 ? ($num_topics + ($num_topics / 2)) : 100,
 			)
 		);
 		$topic_ids = array();
@@ -659,15 +661,15 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE {query_wanna_see_board}' . ($modSettings['postmod_active'] ? '
 			AND t.approved = {int:is_approved}' : '') . (!empty($topic_ids) ? '
-			AND t.id_topic IN ({array_int:topic_list})' : '') . '
-			AND {query_wanna_see_board}' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND t.id_topic IN ({array_int:topic_list})' : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
 			AND b.id_board != {int:recycle_enable}' : '') . '
 		ORDER BY t.num_' . ($type != 'replies' ? 'views' : 'replies') . ' DESC
-		LIMIT ' . $num_topics,
+		LIMIT {int:limit}',
 		array(
 			'topic_list' => $topic_ids,
 			'is_approved' => 1,
 			'recycle_enable' => $modSettings['recycle_board'],
+			'limit' => $num_topics,
 		)
 	);
 	$topics = array();
@@ -978,7 +980,7 @@ function ssi_logOnline($output_method = 'echo')
 // Shows a login box.
 function ssi_login($redirect_to = '', $output_method = 'echo')
 {
-	global $scripturl, $txt, $user_info, $context;
+	global $scripturl, $txt, $user_info, $context, $modSettings;
 
 	if ($redirect_to != '')
 		$_SESSION['login_url'] = $redirect_to;
@@ -995,12 +997,24 @@ function ssi_login($redirect_to = '', $output_method = 'echo')
 				</tr><tr>
 					<td align="right"><label for="passwrd">', $txt['password'], ':</label>&nbsp;</td>
 					<td><input type="password" name="passwrd" id="passwrd" size="9" /></td>
+				</tr>';
+
+	// Open ID?
+	if (!empty($modSettings['enableOpenID']))
+		echo '<tr>
+					<td colspan="2" align="center"><strong>&mdash;', $txt['or'], '&mdash;</strong></td>
 				</tr><tr>
+					<td align="right"><label for="openid_url">', $txt['openid'], ':</label>&nbsp;</td>
+					<td><input type="text" name="openid_url" class="openid_login" size="17" /></td>
+				</tr>';
+
+	echo '<tr>
 					<td><input type="hidden" name="cookielength" value="-1" /></td>
 					<td><input type="submit" value="', $txt['login'], '" /></td>
 				</tr>
 			</table>
 		</form>';
+
 }
 
 // Show the most-voted-in poll.
