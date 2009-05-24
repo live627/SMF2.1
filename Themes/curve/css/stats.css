@@ -1,106 +1,83 @@
-.stat_toppad
+h4.titlebg
 {
-	clear: both;
-	padding-top: 0.4em;
+	text-align: center;
+	margin-bottom: 5px;
 }
-#stats_left, #stats_right
-{
-	padding: 0.4em;
-}
-#stats_left
-{
-	float: left; 
-	width: 48.5%;
-}
-#stats_right
-{
-	float: right; 
-	width: 49%;
-}
-.stat_left_splitter, .stat_right_splitter
-{
-	padding-top: 0.4em;
-}
-.stat_left_splitter
-{
-	float: left; 
-	width: 49.5%;
-}
-.stat_right_splitter
-{
-	float: right; 
-	width: 50%; 
-	padding-left: 0.4em;
-}
-#stats_totals, #stats_averages
-{
-	padding: 0;
-	margin: 0;
-	font-size: 1em;
-}
-#stats_totals dt, #stats_averages dt
-{
-	width: 20em;
-	float: left;
-}
-#stats_totals dd, #stats_averages dd
-{
-	text-align: right;
-	margin-left: 10em;
-	padding-left: 1em;
-}
-.stats_topten_left, .stats_topten_right
+#statistics
 {
 	padding-bottom: 0.5em;
-	min-height: 14em;
 }
-.stats_topten_left
+#stats_left, #top_posters, #top_topics_replies,#top_topics_starter
 {
-	float: left; 
-	width: 49.5%; 
+	float:left;
+	width: 49.5%;
 }
-.stats_topten_right
+#stats_right, #top_boards, #top_topics_views, #most_online
 {
 	float: right;
-	width: 50%; 
+	width: 49.5%;
 }
-.stats_topten_left ul, .stats_topten_right ul
+dl.stats
 {
-	margin-top: 0.5em;
-}
-.stats_topten ul
-{
-	float: left;
-	width: 100%;
-}
-.stats_topten li, .stats_topten li.left, .stats_topten li.middle
-{
+	clear: both;
+	overflow: hidden;
+	margin: 0;
 	padding: 0;
 }
-.stats_topten li, .stats_topten li.left
+dl.stats dt
 {
-	margin: 0;
+	width: 50%;
+	float: left;
+	margin: 0 0 4px 0;
+	line-height: 16px;
+	padding: 0;
+	clear: both;
+	font-size: 1em;
 }
-.stats_topten li
+dl.stats dd
+{
+	text-align: right;
+	width: 49%;
+	font-size: 1em;
+	float: right;
+	margin: 0 0 4px 0;
+	line-height: 16px;
+	padding: 0;
+	*float: none;
+	*width: auto;
+}
+dd.statsbar span.left
 {
 	float: left;
-	list-style: none;
-	height: 1.4em;
+	background: url(../images/bar_stats.png) no-repeat;
+	display: block;
+	width: 6px;
+	height: 16px;
 }
-.stats_topten li.right
+dd.statsbar span.right
 {
-	width: 20%;
-	padding-left: 2.7em;
-	text-align: right;
+	float: left;
+	background: url(../images/bar_stats.png) no-repeat 100%;
+	width: 6px;
+	height: 16px;
 }
-.stats_topten li.left
+.stats_bar
 {
-	width: 60%;
-	margin-left: -3em;
-	overflow: hidden;
-}
-.stats_topten li.middle
-{
-	width: 20%;
+	float: left;
+	background-image: url(../images/bar_stats.png);
+	height: 16px;
+	font-size: 0.9em;
+	display: block;
 	text-align: left;
+	color: white;
+	font-weight: bold;
+	background-position: top center;
+}
+.stats_bar span
+{
+	padding-left: 2px;
+}
+.content
+{
+	min-height: 8em;
 }

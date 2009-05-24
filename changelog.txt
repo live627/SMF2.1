@@ -106,6 +106,7 @@ May 2009
  ! Download avatar at url could fail if the url contained spaces (Profile-Modify.php) [Bug 3200]
  ! Oversized extrnal avatars would fail if they contained spaces (Profile-Modify.php) [Bug 3201]
  ! Package Manager permissions didn't support multiple attachment directories (Packages.php)
+ * Curve: Stats wasn't properly algigned with small Screen-Resolutions[Bug 3401]
 
 
 April 2009

@@ -6,187 +6,297 @@ function template_main()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
-		<h4 class="titlebg" align="center"><span class="left"></span><span class="right"></span>
+	<div id="statistics" class="main_section">
+		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
 			<span>', $context['page_title'], '</span>
 		</h4>
 
-		<div class="stat_toppad">
+		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<img src="', $settings['images_url'], '/stats_info.gif" class="icon" alt="" /> ', $txt['general_stats'], '
 			</h3>
-		</div>
-
-		<div id="stats_left" class="windowbg">
-			<dl id="stats_totals">
-				<dt>', $txt['total_members'], ':</dt>
-				<dd>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['num_members'] . '</a>' : $context['num_members'], '</dd>
-				<dt>', $txt['total_posts'], ':</dt>
-				<dd>', $context['num_posts'], '</dd>
-				<dt>', $txt['total_topics'], ':</dt>
-				<dd>', $context['num_topics'], '</dd>
-				<dt>', $txt['total_cats'], ':</dt>
-				<dd>', $context['num_categories'], '</dd>
-				<dt>', $txt['users_online'], ':</dt>
-				<dd>', $context['users_online'], '</dd>
-				<dt>', $txt['most_online'], ':</dt>
-				<dd>', $context['most_members_online']['number'], ' - ', $context['most_members_online']['date'], '</dd>
-				<dt>', $txt['users_online_today'], ':</dt>
-				<dd>', $context['online_today'], '</dd>';
-
-	if (!empty($modSettings['hitStats']))
-		echo '
-				<dt>', $txt['num_hits'], ':</dt>
-				<dd>', $context['num_hits'], '</dd>';
-
-	echo '
-			</dl>
-		</div>
-
-		<div id="stats_right" class="windowbg2">
-			<dl id="stats_averages">
-				<dt>', $txt['average_members'], ':</dt>
-				<dd>', $context['average_members'], '</dd>
-				<dt>', $txt['average_posts'], ':</dt>
-				<dd>', $context['average_posts'], '</dd>
-				<dt>', $txt['average_topics'], ':</dt>
-				<dd>', $context['average_topics'], '</dd>
-				<dt>', $txt['total_boards'], ':</dt>
-				<dd>', $context['num_boards'], '</dd>
-				<dt>', $txt['latest_member'], ':</dt>
-				<dd>', $context['common_stats']['latest_member']['link'], '</dd>
-				<dt>', $txt['average_online'], ':</dt>
-				<dd>', $context['average_online'], '</dd>
-				<dt>', $txt['gender_ratio'], ':</dt>
-				<dd>', $context['gender']['ratio'], '</dd>';
+			<div id="stats_left">
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl class="stats">
+							<dt>', $txt['total_members'], ':</dt>
+							<dd>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['num_members'] . '</a>' : $context['num_members'], '</dd>
+							<dt>', $txt['total_posts'], ':</dt>
+							<dd>', $context['num_posts'], '</dd>
+							<dt>', $txt['total_topics'], ':</dt>
+							<dd>', $context['num_topics'], '</dd>
+							<dt>', $txt['total_cats'], ':</dt>
+							<dd>', $context['num_categories'], '</dd>
+							<dt>', $txt['users_online'], ':</dt>
+							<dd>', $context['users_online'], '</dd>
+							<dt>', $txt['most_online'], ':</dt>
+							<dd>', $context['most_members_online']['number'], ' - ', $context['most_members_online']['date'], '</dd>
+							<dt>', $txt['users_online_today'], ':</dt>
+							<dd>', $context['online_today'], '</dd>';
 
 	if (!empty($modSettings['hitStats']))
 		echo '
-				<dt>', $txt['average_hits'], ':</dt>
-				<dd>', $context['average_hits'], '</dd>';
+							<dt>', $txt['num_hits'], ':</dt>
+							<dd>', $context['num_hits'], '</dd>';
 
 	echo '
-			</dl>
+						</dl>
+						<div style="clear: both;"></div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div>
+			
+			
+			<div id="stats_right">
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl class="stats">
+							<dt>', $txt['average_members'], ':</dt>
+							<dd>', $context['average_members'], '</dd>
+							<dt>', $txt['average_posts'], ':</dt>
+							<dd>', $context['average_posts'], '</dd>
+							<dt>', $txt['average_topics'], ':</dt>
+							<dd>', $context['average_topics'], '</dd>
+							<dt>', $txt['total_boards'], ':</dt>
+							<dd>', $context['num_boards'], '</dd>
+							<dt>', $txt['latest_member'], ':</dt>
+							<dd>', $context['common_stats']['latest_member']['link'], '</dd>
+							<dt>', $txt['average_online'], ':</dt>
+							<dd>', $context['average_online'], '</dd>
+							<dt>', $txt['gender_ratio'], ':</dt>
+							<dd>', $context['gender']['ratio'], '</dd>';
+
+	if (!empty($modSettings['hitStats']))
+		echo '
+							<dt>', $txt['average_hits'], ':</dt>
+							<dd>', $context['average_hits'], '</dd>';
+
+	echo '
+						</dl>
+						<div style="clear: both;"></div>
+					</div>
+				<span class="botslice"><span></span></span>
+				</div>
+			</div>
 		</div>
 
-		<div>
-			<div class="stat_left_splitter">
+		<div class="flow_hidden">
+			<div id="top_posters">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					<img src="', $settings['images_url'], '/stats_posters.gif" class="icon" alt="" /> ', $txt['top_posters'], '
 				</h3>
-			</div>
-			<div class="stat_right_splitter">
+					<div class="windowbg2">
+						<span class="topslice"><span></span></span>
+						<div class="content">
+							<dl class="stats">';
+
+	foreach ($context['top_posters'] as $poster)
+	{
+		echo '
+								<dt>
+									', $poster['link'], '
+								</dt>
+								<dd class="statsbar">';
+		if (!empty($poster['post_percent']))
+			echo '
+									<span class="left"></span>
+										<div style="width: ', $poster['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $poster['num_posts'] . '</span></div>
+									<span class="right"></span>';
+		
+		echo '							
+								</dd>';
+	}
+	
+	echo '
+							</dl>
+							<div style="clear: both;"></div>
+						</div>
+					<span class="botslice"><span></span></span>
+					</div>
+			</div>			
+			<div id="top_boards">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					<img src="', $settings['images_url'], '/stats_board.gif" class="icon" alt="" /> ', $txt['top_boards'], '
 				</h3>
-			</div>
-		</div>
-
-		<div class="stats_topten_left windowbg2">
-			<ul class="stats_topten">';
-
-	foreach ($context['top_posters'] as $poster)
-		echo '
-				<li class="left">', $poster['link'], '</li>
-				<li class="middle">', $poster['num_posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</li>
-				<li class="right">', $poster['num_posts'], '</li>';
-
-	echo '
-			</ul>
-		</div>
-		<div class="stats_topten_right windowbg">
-			<ul class="stats_topten">';
+					<div class="windowbg">
+						<span class="topslice"><span></span></span>
+						<div class="content">
+							<dl class="stats">';
 
 	foreach ($context['top_boards'] as $board)
+	{
 		echo '
-				<li class="left">', $board['link'], '</li>
-				<li class="middle">', $board['num_posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $board['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</li>
-				<li class="right">', $board['num_posts'], '</li>';
+								<dt>
+									', $board['link'], '
+								</dt>
+								<dd class="statsbar">';
+								
+		if (!empty($board['post_percent']))
+			echo '
+									<span class="left"></span>
+										<div style="width: ', $board['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $board['num_posts'] . '</span></div>
+									<span class="right"></span>';
+		echo '
+								</dd>';
+	}
 
 	echo '
-			</ul>
+							</dl>
+							<div style="clear: both;"></div>
+						</div>
+						<span class="botslice"><span></span></span>
+					</div>
+			</div>
 		</div>
-
-		<div class="stat_poppad">
-			<div class="stat_left_splitter">
+		
+		<div class="flow_hidden">
+			<div id="top_topics_replies">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_topics_replies'], '
 				</h3>
+					<div class="windowbg">
+						<span class="topslice"><span></span></span>
+						<div class="content">
+							<dl class="stats">';
+
+	foreach ($context['top_topics_replies'] as $topic)
+	{
+		echo '
+								<dt>
+									', $topic['link'], '
+								</dt>
+								<dd class="statsbar">';
+		if (!empty($topic['post_percent']))
+			echo '
+									<span class="left"></span>
+										<div style="width: ', $topic['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $topic['num_replies'] . '</span></div>
+									<span class="right"></span>';
+									
+		echo '
+								</dd>';
+	}
+	echo '
+							</dl>
+							<div style="clear: both;"></div>
+						</div>
+						<span class="botslice"><span></span></span>
+					</div>
 			</div>
-			<div class="stat_right_splitter">
+			
+			<div id="top_topics_views">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['top_topics_views'], '
 				</h3>
-			</div>
-		</div>
-
-		<div class="stats_topten_left windowbg">
-			<ul class="stats_topten">';
-
-	foreach ($context['top_topics_replies'] as $topic)
-		echo '
-				<li class="left">', $topic['link'], '</li>
-				<li class="middle">', $topic['num_replies'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $topic['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</li>
-				<li class="right">', $topic['num_replies'], '</li>';
-
-	echo '
-			</ul>
-		</div>
-		<div class="stats_topten_right windowbg2">
-			<ul class="stats_topten">';
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl class="stats">';
 
 	foreach ($context['top_topics_views'] as $topic)
+	{
 		echo '
-				<li class="left">', $topic['link'], '</li>
-				<li class="middle">', $topic['num_views'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $topic['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</li>
-				<li class="right">', $topic['num_views'], '</li>';
+							<dt>', $topic['link'], '</dt>
+							<dd class="statsbar">';
+							
+		if (!empty($topic['post_percent']))
+			echo '
+								<span class="left"></span>
+									<div style="width: ', $topic['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $topic['num_views'] . '</span></div>
+								<span class="right"></span>';
+
+		echo '
+							</dd>';
+	}
 
 	echo '
-			</ul>
+						</dl>
+						<div style="clear: both;"></div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div>
 		</div>
-
-		<div class="stat_poppad">
-			<div class="stat_left_splitter">
+		
+		<div class="flow_hidden">
+			<div id="top_topics_starter">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					<img src="', $settings['images_url'], '/stats_replies.gif" class="icon" alt="" /> ', $txt['top_starters'], '
 				</h3>
+				<div class="windowbg2">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl class="stats">';
+
+	foreach ($context['top_starters'] as $poster)
+	{
+		echo '
+							<dt>
+								', $poster['link'], '
+							</dt>
+							<dd class="statsbar">';
+		
+		if (!empty($poster['post_percent']))
+			echo '
+								<span class="left"></span>
+									<div style="width: ', $poster['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $poster['num_topics'] . '</span></div>
+								<span class="right"></span>';
+
+		echo '				
+							</dd>';
+	}
+
+	echo '
+						</dl>
+						<div style="clear: both;"></div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
 			</div>
-			<div class="stat_right_splitter">
+			<div id="most_online">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
 					<img src="', $settings['images_url'], '/stats_views.gif" class="icon" alt="" /> ', $txt['most_time_online'], '
 				</h3>
-			</div>
-		</div>
-
-		<div class="stats_topten_left windowbg2">
-			<ul class="stats_topten">';
-
-	foreach ($context['top_starters'] as $poster)
-		echo '
-				<li class="left">', $poster['link'], '</li>
-				<li class="middle">', $poster['num_topics'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['post_percent'] . '" height="15" alt="" />' : '&nbsp;', '</li>
-				<li class="right">', $poster['num_topics'], '</li>';
-
-	echo '
-			</ul>
-		</div>
-		<div class="stats_topten_right windowbg">
-			<ul class="stats_topten">';
+				<div class="windowbg">
+					<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl class="stats">';
 
 	foreach ($context['top_time_online'] as $poster)
+	{
 		echo '
-				<li class="left">', $poster['link'], '</li>
-				<li class="middle">', $poster['time_online'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $poster['time_percent'] . '" height="15" alt="" />' : '&nbsp;', '</li>
-				<li class="right">', $poster['time_online'], '</li>';
+							<dt>
+								', $poster['link'], '
+							</dt>
+							<dd class="statsbar">';
+		
+		if (!empty($poster['time_online']))
+			echo '
+								<span class="left"></span>
+									<div style="', $poster['time_percent'] > 20 ? '' : 'min-', 'width: ', $poster['time_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $poster['time_online'] . '</span></div>
+								<span class="right"></span>';
+								
+		echo '
+							</dd>';
+	}
 
 	echo '
-			</ul>
+						</dl>
+						<div style="clear: both;"></div>
+					</div>
+					<span class="botslice"><span></span></span>
+				</div>
+			</div>
 		</div>
+		<div style="clear: both;"></div>
 
-		<div class="stat_toppad">
+		<div class="flow_hidden">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<img src="', $settings['images_url'], '/stats_history.gif" class="icon" alt="" /> ', $txt['forum_history'], '
 			</h3>
-		</div>';
+		';
 
 	if (!empty($context['yearly']))
 	{
@@ -268,7 +378,9 @@ function template_main()
 		}
 
 		echo '
-		</table>';
+		</table>
+		</div>
+	</div>';
 	}
 
 	echo '
