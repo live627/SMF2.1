@@ -133,6 +133,16 @@ h3.titlebg form
 {
 	margin-left: 2em;
 }
+fieldset
+{
+	margin-bottom: 0.5em;
+	border: 1px solid #cacdd3;
+	padding: 0.5em;
+}
+legend
+{
+	font-weight: bold;
+}
 /*ManageBoards*/
 #manage_boards ul
 {
