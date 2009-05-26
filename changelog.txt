@@ -108,6 +108,7 @@ May 2009
  ! Package Manager permissions didn't support multiple attachment directories (Packages.php)
  * Curve: Stats wasn't properly algigned with small Screen-Resolutions (Stats template) [Bug 3401]
  ! The send topic button was appearing when it shouldn't. (Display.php) [Bug 3462]
+ * Curve: updated the ManageScheduledTasks and ManageCalendar template to match Curve's look and feel. (ManageCalendar.template.php, ManageScheduledTasks.template.php, admin.css)
 
 
 April 2009

@@ -169,9 +169,8 @@ legend
 {
 	padding: 0 13px 0 0;
 }
-
 /* ManageMaintenance */
-.maintenance_finished
+.maintenance_finished, #task_completed
 {
 	margin: 1ex; 
 	padding: 1ex 2ex; 
@@ -179,7 +178,24 @@ legend
 	color: green;
 	background: #efe;
 }
-
+/*Manage Calendar */
+dl.settings dt.small_caption
+{
+	width: 20%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+	clear: both;
+}
+dl.settings dd.small_caption
+{
+	width: 79%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+	*float: none;
+	*width: auto;
+}
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */
