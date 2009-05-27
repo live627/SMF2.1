@@ -886,7 +886,7 @@ function template_browse()
 			<input type="hidden" name="sa" value="browse" />
 		</form>
 		<script type="text/javascript"><!-- // --><![CDATA[
-			document.getElementById(\'advanced_box\').style.display = "none";
+			document.getElementById(\'advanced_box\').style.display = "";
 			// ]]></script>';
 }
 

@@ -913,6 +913,13 @@ function ModifyMembergroup2()
 
 	$givePerms = array('membergroup' => array(), 'board' => array());
 
+	// Guest group, we need illegal, guest permissions.
+	if ($_GET['group'] == -1)
+	{
+		loadIllegalGuestPermissions();
+		$context['illegal_permissions'] = array_merge($context['illegal_permissions'], $context['non_guest_permissions']);
+	}
+
 	// Prepare all permissions that were set or denied for addition to the DB.
 	if (isset($_POST['perm']) && is_array($_POST['perm']))
 	{
@@ -1587,6 +1594,10 @@ function loadAllPermissions($loadType = 'classic')
 		);
 		foreach ($permissionList as $permission => $permissionArray)
 		{
+			// If this is a guest permission we don't do it if it's the guest group.
+			if (isset($context['group']['id']) && $context['group']['id'] == -1 && in_array($permission, $context['non_guest_permissions']))
+				continue;
+
 			// What groups will this permission be in?
 			$own_group = $permissionArray[($loadType == 'classic' ? 1 : 2)];
 			$any_group = $loadType == 'simple' && !empty($permissionArray[3]) ? $permissionArray[3] : ($loadType == 'simple' && $permissionArray[0] ? $permissionArray[2] : '');
@@ -1602,8 +1613,28 @@ function loadAllPermissions($loadType = 'classic')
 
 			// If the groups have not yet been created be sure to create them.
 			$bothGroups = array('own' => $own_group);
+			$bothGroups = array();
+
+/*
+			// For guests, just reset the array.
+			if (!isset($context['group']['id']) || !($context['group']['id'] == -1 && $any_group))
+				$bothGroups['own'] = $own_group;
+
 			if ($any_group)
+			{
 				$bothGroups['any'] = $any_group;
+
+			}
+*/
+			// For guests, just reset the array.
+			if (!isset($context['group']['id']) || !($context['group']['id'] == -1 && $any_group))
+				$bothGroups['own'] = $own_group;
+
+			if ($any_group)
+			{
+				$bothGroups['any'] = $any_group;
+
+			}
 
 			foreach ($bothGroups as $group)
 				if (!isset($context['permissions'][$permissionType]['columns'][$position][$group]))
@@ -1616,10 +1647,6 @@ function loadAllPermissions($loadType = 'classic')
 						'hidden' => false,
 						'permissions' => array()
 					);
-
-			// If this is a guest permission we don't do it if it's the guest group.
-			if (isset($context['group']['id']) && $context['group']['id'] == -1 && in_array($permission, $context['non_guest_permissions']))
-				continue;
 
 			// This is where we set up the permission dependant on the view.
 			if ($loadType == 'classic')
@@ -2152,7 +2179,9 @@ function loadIllegalGuestPermissions()
 	global $context;
 
 	$context['non_guest_permissions'] = array(
+		'delete_replies',
 		'karma_edit',
+		'poll_add_own',
 		'pm_read',
 		'pm_send',
 		'profile_identity',
@@ -2162,6 +2191,7 @@ function loadIllegalGuestPermissions()
 		'profile_server_avatar',
 		'profile_upload_avatar',
 		'profile_remote_avatar',
+		'profile_view_own',
 		'mark_any_notify',
 		'mark_notify',
 		'admin_forum',
@@ -2175,7 +2205,10 @@ function loadIllegalGuestPermissions()
 		'manage_membergroups',
 		'manage_permissions',
 		'manage_bans',
+		'move_own',
+		'modify_replies',
 		'send_mail',
+		'approve_posts',
 	);
 }
 

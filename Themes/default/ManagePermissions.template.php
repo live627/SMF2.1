@@ -802,9 +802,15 @@ function template_modify_group_classic($type)
 								<td>';
 
 					if ($permission['has_own_any'])
+					{
+						// Guests can't have own permissions.
+						if ($context['group']['id'] != -1)
+							echo '
+									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']" value="', $permission['own']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['own']['select'], '" />';
+
 						echo '
-									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']" value="', $permission['own']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['own']['select'], '" />
 									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']" value="', $permission['any']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['any']['select'], '" />';
+					}
 					else
 						echo '
 									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['id'], ']" value="', $permission['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['select'], '" />';
@@ -819,25 +825,34 @@ function template_modify_group_classic($type)
 								<td valign="top" width="10" style="padding-right: 1ex;">
 									', $permission['show_help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=permissionhelp_' . $permission['id'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : '', '
 								</td>';
+
 					if ($permission['has_own_any'])
 					{
 						echo '
 								<td colspan="4" width="100%" valign="top" align="left">', $permission['name'], '</td>
-							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">';
+
+						// Guests can't do their own thing.
+						if ($context['group']['id'] != -1)
+						{
+							echo '
 								<td></td>
 								<td width="100%" class="smalltext" align="right">', $permission['own']['name'], ':</td>';
 
-						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-							echo '
+							if (empty($modSettings['permission_enable_deny']))
+								echo '
 								<td colspan="3"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" ', $disable_field, '/></td>';
-						else
-							echo '
+							else
+								echo '
 								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" ', $disable_field, '/></td>
 								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" ', $disable_field, '/></td>
 								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" class="check" ', $disable_field, '/></td>';
 
+							echo '
+							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">';
+						}
+
 						echo '
-							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 								<td></td>
 								<td width="100%" class="smalltext" align="right" style="padding-bottom: 1.5ex;">', $permission['any']['name'], ':</td>';
 
