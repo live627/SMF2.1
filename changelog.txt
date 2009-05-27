@@ -111,6 +111,7 @@ May 2009
  * Curve: updated the ManageScheduledTasks and ManageCalendar template to match Curve's look and feel. (ManageCalendar.template.php, ManageScheduledTasks.template.php, admin.css)
  ! Guests can't do "own" permissions (ManagePermissions.php, ManagePermissions.template.php) [Bug 3227]
  ! Users should be able to delete their own unapproved replies, It just saves us time approving them (RemoveTopic.php) [Bug 3195]
+ * Curve: The profile summary wasn't properly aligned on some browsers (profile.css) [Bug 3043]
 
 
 April 2009
