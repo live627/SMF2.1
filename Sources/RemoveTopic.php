@@ -121,7 +121,7 @@ function DeleteMessage()
 	$smcFunc['db_free_result']($request);
 
 	// Verify they can see this!
-	if ($modSettings['postmod_active'] && !$approved)
+	if ($modSettings['postmod_active'] && !$approved && $poster != $user_info['id'])
 		isAllowedTo('approve_posts');
 
 	if ($poster == $user_info['id'])
@@ -609,7 +609,7 @@ function removeMessage($message, $decreasePostCount = true)
 		}
 
 		// Can't delete an unapproved message, if you can't see it!
-		if ($modSettings['postmod_active'] && !$row['approved'])
+		if ($modSettings['postmod_active'] && !$row['approved'] && $row['id_member'] != $user_info['id'] && !$delete_own)
 		{
 			$approve_posts = boardsAllowedTo('approve_posts');
 			if (!in_array(0, $approve_posts) && !in_array($row['id_board'], $approve_posts))
@@ -636,7 +636,7 @@ function removeMessage($message, $decreasePostCount = true)
 		else
 			isAllowedTo('delete_any');
 
-		if ($modSettings['postmod_active'] && !$row['approved'])
+		if ($modSettings['postmod_active'] && !$row['approved'] && $row['id_member'] != $user_info['id'] && !allowedTo('delete_own'))
 			isAllowedTo('approve_posts');
 	}
 
