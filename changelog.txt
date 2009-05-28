@@ -112,7 +112,7 @@ May 2009
  ! Guests can't do "own" permissions (ManagePermissions.php, ManagePermissions.template.php) [Bug 3227]
  ! Users should be able to delete their own unapproved replies, It just saves us time approving them (RemoveTopic.php) [Bug 3195]
  * Curve: The profile summary wasn't properly aligned on some browsers (profile.css) [Bug 3043]
- ! Passwording upgrading would announce that you had logged in (LogInOut.php)
+ ! Password upgrading would announce that you had logged in (LogInOut.php)
 
 
 April 2009
