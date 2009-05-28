@@ -270,6 +270,7 @@ function Login2()
 		{
 			$context['login_errors'] = array($txt['login_hash_error']);
 			$context['disable_login_hashing'] = true;
+			unset($user_settings);
 			return;
 		}
 		// Challenge passed.
@@ -290,6 +291,7 @@ function Login2()
 
 				$context['disable_login_hashing'] = true;
 				$context['login_errors'] = array($txt['incorrect_password']);
+				unset($user_settings);
 				return;
 			}
 		}
