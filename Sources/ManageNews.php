@@ -356,7 +356,7 @@ function ComposeMailing()
 			INNER JOIN {db_prefix}ban_items AS bi ON (bg.id_ban_group = bi.id_ban_group)
 			INNER JOIN {db_prefix}members AS mem ON (bi.id_member = mem.id_member)
 		WHERE (bg.cannot_access = {int:cannot_access} OR bg.cannot_login = {int:cannot_login})
-			AND (COALESCE(bg.expire_time, 1=1) OR bg.expire_time > {int:current_time})',
+			AND (bg.expire_time IS NULL OR bg.expire_time > {int:current_time})',
 		array(
 			'cannot_access' => 1,
 			'cannot_login' => 1,

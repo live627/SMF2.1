@@ -428,7 +428,7 @@ function updateMemberData($members, $data)
 		$parameters['members'] = $members;
 	}
 	elseif ($members === null)
-		$condition = '1';
+		$condition = '1=1';
 	else
 	{
 		$condition = 'id_member = {int:member}';
