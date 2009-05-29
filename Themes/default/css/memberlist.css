@@ -1,50 +1,31 @@
 /* ************************************* */
 /* styles from Memberlist.template       */
 /* ************************************* */
-h3.mlist, h4.mlist
+.mlistbuttons
 {
-	padding: 0.1em 0 0.1em 0;
 	clear: both;
+	width: 100%;
 }
-
+.mlistbuttons .buttonlist_bottom
+{
+	margin-right: 1em;
+	float: right;
+}
 #mlist
 {
-	padding-bottom: 0.6em;
-}
-
-#mlist tr, #memberlist_search
-{
-	text-align: center;
-}
-
+    margin-bottom: 3px;
+} 
 #mlist_search
 {
-	width: 480px;
-	overflow: hidden;	
-	margin: 0;
-	padding: 0.5em;
-	margin:0px auto;
+	margin: auto;
+	width: 460px;
 }
-
-.mlist_letter
+#mlist_search span
 {
-	color: white;
-	float: right;
-	display: block;
-	font-size: 85%;
+	margin: 0 8px 0 8px;
 }
-
-.mlist_title
+.enhanced
 {
-	float: left;
+	text-align: center;
 	display: block;
-}
-
-.mlist_search_options
-{
-	float: left;
-	padding: 0.6em;
-	display: block;
-	text-align: left;
-	z-index: auto;
 }

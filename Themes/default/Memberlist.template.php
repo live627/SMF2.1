@@ -6,66 +6,33 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	// Build the memberlist button array.	
+	// Build the memberlist button array.
 	$memberlist_buttons = array(
-		'mlist_menu_view' => array('text' => 'mlist_menu_view', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all'),
-		'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search'),
+		'view_all_members' => array('text' => 'view_all_members', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all', 'active' => true),
+		'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist;sa=search'),
 	);
 
 	echo '
-	<div id="memberlistbuttons_top">
-		<div class="middletext pagelinks margintop floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
-
-	if (!empty($memberlist_buttons) && !empty($settings['use_tabs']))
-	{
-		echo '<div class="margintop floatright">';
-			template_button_strip($memberlist_buttons, 'right');
-		echo '</div>';
-	}
+	<div class="main_section clearfix" id="memberlist">
+		<div id="modbuttons_top" class="mlistbuttons clearfix margintop">
+			<div class="floatleft middletext">
+				', $txt['pages'], ': ', $context['page_index'], '
+			</div>
+			', template_button_strip($memberlist_buttons, 'bottom'), '
+		</div>';
 
 	echo '
-	</div>';
-
-	echo '
-	<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="bordercolor">';
-
-	// Old style tabs?
-	if (empty($settings['use_tabs']))
-	{
+		<div id="mlist" class="tborder topic_table">
+			<h4 class="catbg headerpadding clearfix">
+				<span class="floatleft">', $txt['members_list'], '</span>';
+	if (!isset($context['old_search']))
 		echo '
-		<tr class="titlebg">
-			<td colspan="', $context['colspan'], '">';
-				$links = array();
-				foreach ($context['sort_links'] as $link)
-					$links[] = ($link['selected'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '') . '<a href="' . $scripturl . '?action=mlist' . (!empty($link['action']) ? ';sa=' . $link['action'] : '') . '">' . $link['label'] . '</a>';
-
-				echo '
-					', implode(' | ', $links), '
-			</td>
-		</tr>';
-	}
+				<span class="floatright">', $context['letter_links'], '</span>';
 	echo '
-		<tr>
-			<td colspan="', $context['colspan'], '" class="', empty($settings['use_tabs']) ? 'catbg' : 'titlebg', '">';
-
-		// Display page numbers and the a-z links for sorting by name if not a result of a search.
-		if (!isset($context['old_search']))
-			echo '
-				<table width="100%" cellpadding="0" cellspacing="0" border="0">
-					<tr>
-						<td><span class="mlist_title">', $txt['members_list'], '</span></td>
-						<td align="right">', $context['letter_links'] . '</td>
-					</tr>
-				</table>';
-		// If this is a result of a search then just show the page numbers.
-		else
-			echo '
-				', $txt['pages'], ': ', $context['page_index'];
-
-		echo '
-			</td>
-		</tr>
-		<tr class="', empty($settings['use_tabs']) ? 'titlebg' : 'catbg3', '">';
+			</h4>		
+			<table class="bordercolor boardsframe" cellspacing="1" cellpadding="4" width="100%">
+			<thead>
+				<tr class="titlebg">';
 
 	// Display each of the column headers of the table.
 	foreach ($context['columns'] as $column)
@@ -73,21 +40,23 @@ function template_main()
 		// We're not able (through the template) to sort the search results right now...
 		if (isset($context['old_search']))
 			echo '
-			<td', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
-				', $column['label'], '</td>';
-		// This is a selected solumn, so underline it or some such.
+					<th class="headerpadding" scope="col" ', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
+						', $column['label'], '</th>';
+		// This is a selected column, so underline it or some such.
 		elseif ($column['selected'])
 			echo '
-			<td style="width: auto;"' . (isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '') . ' nowrap="nowrap">
-				<a href="' . $column['href'] . '" rel="nofollow">' . $column['label'] . ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" /></a></td>';
+					<th class="headerpadding" scope="col"  style="width: auto;"' . (isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '') . ' nowrap="nowrap">
+						<a href="' . $column['href'] . '" rel="nofollow">' . $column['label'] . ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" /></a></th>';
 		// This is just some column... show the link and be done with it.
 		else
 			echo '
-			<td', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
-				', $column['link'], '</td>';
+					<th class="headerpadding" scope="col" ', isset($column['width']) ? ' width="' . $column['width'] . '"' : '', isset($column['colspan']) ? ' colspan="' . $column['colspan'] . '"' : '', '>
+						', $column['link'], '</th>';
 	}
 	echo '
-		</tr>';
+				</tr>
+			</thead>
+			<tbody>';
 
 	// Assuming there are members loop through each one displaying their data.
 	if (!empty($context['members']))
@@ -95,70 +64,79 @@ function template_main()
 		foreach ($context['members'] as $member)
 		{
 			echo '
-		<tr style="text-align: center;"', empty($member['sort_letter']) ? '' : ' id="letter' . $member['sort_letter'] . '"', '>
-			<td class="windowbg2">
-				', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['text'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="middle" />' : $member['online']['label'], $context['can_send_pm'] ? '</a>' : '', '
-			</td>
-			<td class="windowbg" align="', $context['right_to_left'] ? 'right' : 'left', '">', $member['link'], '</td>
-			<td class="windowbg2">', $member['show_email'] == 'no' ? '' : '<a href="' . $scripturl . '?action=emailuser;sa=email;uid=' . $member['id'] . '" rel="nofollow"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $member['name'] . '" /></a>', '</td>';
+				<tr ', empty($member['sort_letter']) ? '' : ' id="letter' . $member['sort_letter'] . '"', '>
+					<td align="center" class="windowbg2">
+						', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['text'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="middle" />' : $member['online']['label'], $context['can_send_pm'] ? '</a>' : '', '
+					</td>
+					<td class="windowbg" align="', $context['right_to_left'] ? 'right' : 'left', '">', $member['link'], '</td>
+					<td class="windowbg2" align="center">', $member['show_email'] == 'no' ? '' : '<a href="' . $scripturl . '?action=emailuser;sa=email;uid=' . $member['id'] . '" rel="nofollow"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $member['name'] . '" /></a>', '</td>';
 
 		if (!isset($context['disabled_fields']['website']))
 			echo '
-			<td class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" target="_blank" class="new_win"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>';
+					<td align="center" class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" target="_blank" class="new_win"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>';
 
 		// ICQ?
 		if (!isset($context['disabled_fields']['icq']))
 			echo '
-			<td class="windowbg2">', $member['icq']['link'], '</td>';
+					<td align="center" class="windowbg2">', $member['icq']['link'], '</td>';
 
 		// AIM?
 		if (!isset($context['disabled_fields']['aim']))
 			echo '
-			<td class="windowbg2">', $member['aim']['link'], '</td>';
+					<td align="center" class="windowbg2">', $member['aim']['link'], '</td>';
 
 		// YIM?
 		if (!isset($context['disabled_fields']['yim']))
 			echo '
-			<td class="windowbg2">', $member['yim']['link'], '</td>';
+					<td align="center" class="windowbg2">', $member['yim']['link'], '</td>';
 
 		// MSN?
 		if (!isset($context['disabled_fields']['msn']))
 			echo '
-			<td class="windowbg2">', $member['msn']['link'], '</td>';
+					<td align="center" class="windowbg2">', $member['msn']['link'], '</td>';
 
 		// Group and date.
 		echo '
-			<td class="windowbg" align="', $context['right_to_left'] ? 'right' : 'left', '">', empty($member['group']) ? $member['post_group'] : $member['group'], '</td>
-			<td class="windowbg" align="', $context['right_to_left'] ? 'right' : 'left', '">', $member['registered_date'], '</td>';
+					<td class="windowbg" align="', $context['right_to_left'] ? 'right' : 'left', '">', empty($member['group']) ? $member['post_group'] : $member['group'], '</td>
+					<td align="center" class="windowbg">', $member['registered_date'], '</td>';
 
 		if (!isset($context['disabled_fields']['posts']))
 			echo '
-			<td class="windowbg2" width="15">', $member['posts'], '</td>
-			<td class="windowbg" width="100" align="', $context['right_to_left'] ? 'right' : 'left', '">
-				', $member['posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $member['post_percent'] . '" height="15" alt="" />' : '', '
-			</td>';
+					<td class="windowbg2" align="', $context['right_to_left'] ? 'left' : 'right', '" width="15">', $member['posts'], '</td>
+					<td class="windowbg" width="100" align="', $context['right_to_left'] ? 'right' : 'left', '">
+						', $member['posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $member['post_percent'] . '" height="15" alt="" />' : '', '
+					</td>';
 
 		echo '
-		</tr>';
+				</tr>';
 		}
 	}
 	// No members?
 	else
 		echo '
-		<tr>
-			<td colspan="', $context['colspan'], '" class="windowbg">', $txt['search_no_results'], '</td>
-		</tr>';
+				<tr>
+					<td colspan="', $context['colspan'], '" class="windowbg">', $txt['search_no_results'], '</td>
+				</tr>';
 
 	// Show the page numbers again. (makes 'em easier to find!)
 	echo '
-	</table>
-		<div class="margintop middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
+			</tbody>
+			</table>
+		</div>';
+
+	echo '
+		<div class="middletext clearfix">
+			<div class="floatleft">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	// If it is displaying the result of a search show a "search again" link to edit their criteria.
 	if (isset($context['old_search']))
 		echo '
-			<br />
-				<a href="', $scripturl, '?action=mlist;sa=search;search=', $context['old_search_value'], '">', $txt['mlist_search_again'], '</a>';
+			<div class="floatright">
+				<a href="', $scripturl, '?action=mlist;sa=search;search=', $context['old_search_value'], '">', $txt['mlist_search_again'], '</a>
+			</div>';
+	echo '
+		</div>
+	</div>';
 }
 
 // A page allowing people to search the member list.
@@ -167,62 +145,50 @@ function template_search()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	// Build the memberlist button array.	
-	$memberlist_buttons = array(
-			'mlist_menu_view' => array('text' => 'mlist_menu_view', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' . ';sa=all'),
-			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist' .';sa=search'),
-		);
+	$membersearch_buttons = array(
+			'view_all_members' => array('text' => 'view_all_members', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist;sa=all'),
+			'mlist_search' => array('text' => 'mlist_search', 'image' => 'mlist.gif', 'lang' => true, 'url' => $scripturl . '?action=mlist;sa=search', 'active' => true),
+	);
 
 	// Start the submission form for the search!
 	echo '
-		<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
-			<div id="memberlistbuttons_top">';
-
-		if (!empty($memberlist_buttons) && !empty($settings['use_tabs']))
-		{
-			echo '<div class="floatright">';
-				template_button_strip($memberlist_buttons, 'right');
-			echo '</div>';
-		}
-		echo '
-				<div class="bordercolor" style="padding: 1px">
-				<h3 class="titlebg mlist"><span class="left"></span><span class="right"></span>
+	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
+		<div id="memberlist">
+			<div id="modbuttons_top" class="mlistbuttons clearfix margintop">
+				', template_button_strip($membersearch_buttons, 'right'), '
+			</div>
+			<div class="tborder">
+				<h3 class="titlebg headerpadding clearfix">
 					', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['mlist_search'], '
 				</h3>';
 
 	// Display the input boxes for the form.
 	echo '
-		<div class="windowbg" align="center" style="padding-bottom: 1ex;">
-			<table width="440" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td colspan="2" align="left">
-						<br />
-						<strong>', $txt['search_for'], ':</strong> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" /><br />
-						<br />
-					</td>
-				</tr>
-				<tr>
-					<td align="left">';
+				<div class="windowbg2">
+					<span id="mlist_search" class="windowbg2 largepadding clearfix">
+						<span class="enhanced">
+							<strong>', $txt['search_for'], ':</strong> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" />
+						</span>
+						<span class="floatleft">';
 
 	$count = 0;
 	foreach ($context['search_fields'] as $id => $title)
 	{
 		echo '
-					<label for="fields-', $id, '"><input type="checkbox" name="fields[]" id="fields-', $id, '" value="', $id, '" ', in_array($id, $context['search_defaults']) ? 'checked="checked"' : '', ' class="check" /> ', $title, '</label><br />';
-
-		// Half way through?
+							<label for="fields-', $id, '"><input type="checkbox" name="fields[]" id="fields-', $id, '" value="', $id, '" ', in_array($id, $context['search_defaults']) ? 'checked="checked"' : '', ' class="check" /> ', $title, '</label><br />';
+		// Halfway through?
 		if (round(count($context['search_fields']) / 2) == ++$count)
 			echo '
-
-					</td>
-					<td align="left" valign="top">';
+						</span>
+						<span class="floatright">';
 	}
-	echo '
-		</td>
-				</tr>
-			</table>
+		echo '
+						</span>
+					</span>
+				</div>
+			</div>
 		</div>
-	</div>
-</form>';
+	</form>';
 }
 
 ?>
