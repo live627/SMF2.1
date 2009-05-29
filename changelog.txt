@@ -113,6 +113,7 @@ May 2009
  ! Users should be able to delete their own unapproved replies, It just saves us time approving them (RemoveTopic.php) [Bug 3195]
  * Curve: The profile summary wasn't properly aligned on some browsers (profile.css) [Bug 3043]
  ! Password upgrading would announce that you had logged in (LogInOut.php)
+ ! .xml feed titles where not handled properly for rss/atom/rdf (News.php)
 
 
 April 2009

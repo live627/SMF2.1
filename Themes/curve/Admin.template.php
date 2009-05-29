@@ -1906,7 +1906,14 @@ function template_modify_language_entries()
 						</dd>
 					</dl>
 					</fieldset>
-					<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' />
+					<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' />';
+
+	// English can't be deleted.
+	if ($context['lang_id'] != 'english')
+		echo '
+				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" />';
+
+	echo '
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>
@@ -1996,7 +2003,9 @@ function template_modify_language_entries()
 						
 		echo '
 					</dl>
-					<input type="submit" name="save_entries" value="', $txt['save'], '"', !empty($context['entries_not_writable_message']) ? ' disabled="disabled"' : '', ' />
+					<input type="submit" name="save_entries" value="', $txt['save'], '"', !empty($context['entries_not_writable_message']) ? ' disabled="disabled"' : '', ' />';
+
+		echo '
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';

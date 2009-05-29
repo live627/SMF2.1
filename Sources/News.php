@@ -738,7 +738,7 @@ function getXmlRecent($xml_format)
 		// Doesn't work as well as news, but it kinda does..
 		if ($xml_format == 'rss' || $xml_format == 'rss2')
 			$data[] = array(
-				'title' => cdata_parse($row['subject']),
+				'title' => $row['subject'],
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'description' => cdata_parse($row['body']),
 				'author' => in_array(showEmailAddress(!empty($row['hide_email']), $row['id_member']), array('yes', 'yes_permission_override')) ? $row['poster_email'] : null,
@@ -749,13 +749,13 @@ function getXmlRecent($xml_format)
 			);
 		elseif ($xml_format == 'rdf')
 			$data[] = array(
-				'title' => cdata_parse($row['subject']),
+				'title' => $row['subject'],
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'description' => cdata_parse($row['body']),
 			);
 		elseif ($xml_format == 'atom')
 			$data[] = array(
-				'title' => cdata_parse($row['subject']),
+				'title' => $row['subject'],
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'summary' => cdata_parse($row['body']),
 				'category' => array(
