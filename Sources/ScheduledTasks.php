@@ -498,6 +498,7 @@ function scheduled_auto_optimize()
 
 	// By default do it now!
 	$delay = false;
+
 	// As a kind of hack, if the server load is too great delay, but only by a bit!
 	if (!empty($modSettings['load_average']) && !empty($modSettings['loadavg_auto_opt']) && $modSettings['load_average'] >= $modSettings['loadavg_auto_opt'])
 		$delay = true;
@@ -1400,7 +1401,8 @@ function scheduled_weekly_maintenance()
 	// Ok should we prune the logs?
 	if (!empty($modSettings['pruningOptions']))
 	{
-		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = explode(',', $modSettings['pruningOptions']);
+		if (!empty($modSettings['pruningOptions']) && strpos($modSettings['pruningOptions'], ',') !== false)
+			list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = explode(',', $modSettings['pruningOptions']);
 
 		if (!empty($modSettings['pruneErrorLog']))
 		{
