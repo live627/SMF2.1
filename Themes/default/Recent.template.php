@@ -29,7 +29,7 @@ function template_main()
 					<td class="middletext">
 						<div class="floatleft" style="width: 3ex;">&nbsp;', $post['counter'], '&nbsp;</div>
 							<div class="floatleft">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / <strong>', $post['link'], '</strong></div>
-							<div class="righttext>&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
+							<div class="righttext">&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
 					</td>
 				</tr>
 				<tr>
