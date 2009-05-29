@@ -25,6 +25,10 @@
 	background: url(../images/theme/frame_repeat.png) repeat-y right;
 	display: block;
 	padding: 0px 20px 0px 0;
+}
+#main_content_section
+{
+	width: 100%;
 	min-height: 200px;
 }
 

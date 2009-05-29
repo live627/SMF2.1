@@ -292,7 +292,8 @@ function template_body_above()
 
 	// The main content should go here.
 	echo '
-	<div id="content_section"><div class="frame">';
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">';
 }
 
 function template_body_below()
@@ -300,6 +301,7 @@ function template_body_below()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
+		</div>
 	</div></div>';
 
 	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!
