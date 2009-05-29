@@ -476,18 +476,21 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<a href="' . $value['url'] . '"' . (isset($value['active']) ? ' class="active"' : '') . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
+			$buttons[] = '<li' . (isset($value['active']) ? ' class="active"' : '') . '><a href="' . $value['url'] . '"' . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . (isset($value['active']) ? '<em>' : '') . $txt[$value['text']] . (isset($value['active']) ? '</em>' : '') . '</span></a></li>';
 
 	if (!empty($buttons))
 	{
 		// Make the last one, as easy as possible.
-		$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
+		$list_item = array('<li>','<li class="active">');
+		$active_item = array('<li class="last">','<li class="active last">');
+		
+		$buttons[count($buttons) - 1] = str_replace($list_item, $active_item, $buttons[count($buttons) - 1]);
 	}
 
 	echo '
 		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
 			<ul class="reset clearfix">
-				<li>', implode('</li><li>', $buttons), '</li>
+				', implode('', $buttons), '
 			</ul>
 		</div>';
 }

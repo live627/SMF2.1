@@ -661,19 +661,16 @@ a.moderation_link, a.moderation_link:visited
 /* ************************************* */
 /* Buttons and menus                     */
 /* ************************************* */
-
-.buttonlist ul, .buttonlist_bottom ul
+.buttonlist ul 
 {
-	background: url(images/maintab_first.gif) no-repeat bottom left;
-	padding-left: 10px;
+	background:transparent url(images/maintab_first.gif) no-repeat scroll left bottom;
+	padding:0 0 0 10px;
 }
 .buttonlist ul li, .buttonlist_bottom ul li
 {
-	margin: 0;
-	padding: 0;
 	display: inline;
 }
-.buttonlist ul li a, .buttonlist ul li a:visited, .buttonlist_bottom ul li a, .buttonlist_bottom ul li a:visited
+.buttonlist ul li a, .buttonlist_bottom ul li a
 {
 	float: left;
 	display: block;
@@ -682,40 +679,45 @@ a.moderation_link, a.moderation_link:visited
 	font-family: tahoma, sans-serif;
 	text-transform: uppercase;
 }
-.buttonlist ul li a:hover, .buttonlist_bottom ul li a:hover
+.buttonlist ul li a:hover .buttonlist_bottom ul li a:hover
 {
 	color: #e0e0ff;
 	text-decoration: none;
 }
-.buttonlist ul li a span, .buttonlist_bottom ul li a span
+.buttonlist ul li a span
 {
 	background: url(images/maintab_back.gif) repeat-x bottom left;
 	display: block;
 	padding: 0.1em 0.5em 0.5em 0.5em;
 }
-.buttonlist ul li a.active, .buttonlist_bottom ul li a.active
+.buttonlist ul li.last a span
 {
-	background: url(images/maintab_active_last.gif) no-repeat bottom right;
-	padding-right: 8px;
+	background: url(images/maintab_last.gif) no-repeat bottom right;
+	padding: 0.1em 1em 0.5em 0.5em;
 }
-.buttonlist ul li a.active span em, .buttonlist_bottom ul li a.active span em
+.buttonlist ul li.active a span em
 {
 	padding: 0.1em 0.5em 0.5em 0.5em;
 	display: block;
 	font-style: normal;
 	background: url(images/maintab_active_back.gif) repeat-x bottom right;
 }
-.buttonlist ul li a.active span, .buttonlist_bottom ul li a.active span
+.buttonlist ul li.active a span
 {
 	background: url(images/maintab_active_first.gif) no-repeat bottom left;
 	padding: 0 0 0 8px;
 }
-.buttonlist ul li a span.last, .buttonlist_bottom ul li a span.last
+.buttonlist ul li.last.active
 {
+	float: left;
 	background: url(images/maintab_last.gif) no-repeat bottom right;
-	padding: 0.1em 1.5em 0.5em 0.5em;
+	padding: 0 8px 0 0;
 }
-
+.buttonlist ul li.active a
+{
+	background: url(images/maintab_active_last.gif) no-repeat bottom right;
+	padding-right: 8px;
+}
 /* For links that are basically submit buttons. */
 .buttonlist_submit
 {
@@ -728,38 +730,49 @@ a.moderation_link, a.moderation_link:visited
 	font-family: tahoma, sans-serif;
 	border: 0;
 }
-
 .buttonlist_submit:hover
 {
 	color: #e0e0ff;
 }
-
 /* ..for the "bottom" menu */
-.buttonlist_bottom ul
+.buttonlist_bottom ul 
 {
-	background: url(images/mirrortab_first.gif) no-repeat top left;
+	background:transparent url(images/mirrortab_first.gif) no-repeat scroll left top;
+	padding:0 0 0 10px;
 }
 .buttonlist_bottom ul li a span
 {
-	padding: 0.5em 0.5em 0.1em 0.5em;
 	background: url(images/mirrortab_back.gif) repeat-x top left;
+	display: block;
+	padding: 0.4em 0.5em 0.2em 0.5em;
 }
-.buttonlist_bottom ul li a.active
+.buttonlist_bottom ul li.last a span
 {
-	background: url(images/mirrortab_active_last.gif) no-repeat top right;
+	background: url(images/mirrortab_last.gif) no-repeat top right;
+	padding: 0.4em 1em 0.2em 0.5em;
 }
-.buttonlist_bottom ul li a.active span em
+.buttonlist_bottom ul li.active a span em
 {
+	padding: 0.4em 0.5em 0.2em 0.5em;
+	display: block;
+	font-style: normal;
 	background: url(images/mirrortab_active_back.gif) repeat-x top right;
 }
-.buttonlist_bottom ul li a.active span
+.buttonlist_bottom ul li.active a span
 {
 	background: url(images/mirrortab_active_first.gif) no-repeat top left;
+	padding: 0 0 0 8px;
 }
-.buttonlist_bottom ul li a span.last
+.buttonlist_bottom ul li.last.active
 {
-	padding: 0.5em 1.5em 0.1em 0.5em;
+	float: left;
 	background: url(images/mirrortab_last.gif) no-repeat top right;
+	padding: 0 8px 0 0;
+}
+.buttonlist_bottom ul li.active a
+{
+	background: url(images/mirrortab_active_last.gif) no-repeat top right;
+	padding-right: 8px;
 }
 /* the old type of menu, with images */
 .oldbuttonlist

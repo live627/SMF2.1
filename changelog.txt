@@ -115,6 +115,8 @@ May 2009
  ! Password upgrading would announce that you had logged in (LogInOut.php)
  ! .xml feed titles where not handled properly for rss/atom/rdf (News.php)
  ! Attempt to prevent automatic prunning from failing with errors if there is missing mod settings (ScheduledTasks.php) [Bug 3461]
+ * Memberlist was not displaying correctly in Core (Memberlist.template.php, memberlist.css)
+ * Template button strip needed updated in Core (index.template.php, style.css) [Bug 3468]
 
 
 April 2009
