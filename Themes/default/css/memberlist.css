@@ -18,7 +18,7 @@
 #mlist_search
 {
 	margin: auto;
-	width: 470px;
+	width: 500px;
 }
 #mlist_search span span
 {
@@ -28,5 +28,5 @@
 {
 	text-align: center;
 	display: block;
-	margin-bottom: 0.5em;
+	margin-bottom: 8px 0;
 }
