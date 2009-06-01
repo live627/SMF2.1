@@ -3,6 +3,11 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+June 2009
+--------------------------------------------------------------------------------
+ * Curve: rewrote the ManageMembers template to match Curve's look and feel. (ManageMembers.template.php, admin.css)
+
+ 
 May 2009
 --------------------------------------------------------------------------------
  ! Some things still weren't working in PostgreSQL (ManageNews.php, Subs.php) [Bug 3118]

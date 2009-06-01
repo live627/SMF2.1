@@ -169,6 +169,17 @@ legend
 {
 	padding: 0 13px 0 0;
 }
+/* ManageMembers */
+.msearch_details
+{
+	display: block;
+	width: 49%;
+}
+dl.right dt
+{
+	padding-right: 10px;
+}
+
 /* ManageMaintenance */
 .maintenance_finished, #task_completed
 {

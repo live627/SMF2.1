@@ -605,7 +605,7 @@ dl.settings
 {
 	clear: both;
 	overflow: auto;
-	margin: 0 0 3px 0;
+	margin: 0 0 10px 0;
 	padding: 0;
 
 }
@@ -613,7 +613,7 @@ dl.settings dt
 {
 	width: 48%;
 	float: left;
-	margin: 0 0 3px 0;
+	margin: 0 0 10px 0;
 	padding: 0;
 	clear: both;
 }
@@ -621,7 +621,7 @@ dl.settings dt.settings_title
 {
 	width: 100%;
 	float: none;
-	margin: 0 0 px 0;
+	margin: 0 0 10px 0;
 	padding: 5px 0 0 0;
 	font-weight: bold;
 	clear: both;
@@ -645,7 +645,7 @@ dl.settings dd
 }
 dl.settings img
 {
-margin: 0 5px 0 0;
+margin: 0 10px 0 0;
 }
 /* ************************************* */
 /* Buttons and menus                     */
