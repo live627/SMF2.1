@@ -78,7 +78,7 @@ function CalendarMain()
 		fatal_lang_error('calendar_off', false);
 
 	// Set the page title to mention the calendar ;).
-	$context['page_title'] = $context['forum_name'] . ': ' . $txt['calendar'];
+	$context['page_title'] = $txt['calendar'];
 
 	// Is this a week view?
 	$context['view_week'] = isset($_GET['viewweek']);
@@ -118,7 +118,7 @@ function CalendarMain()
 		'show_birthdays' => in_array($modSettings['cal_showbdays'], array(1, 2)),
 		'show_events' => in_array($modSettings['cal_showevents'], array(1, 2)),
 		'show_holidays' => in_array($modSettings['cal_showholidays'], array(1, 2)),
-		'show_week_num' => !empty($modSettings['cal_showweeknum']),
+		'show_week_num' => true,
 		'short_day_titles' => false,
 		'show_next_prev' => true,
 		'show_week_links' => true,
@@ -150,6 +150,9 @@ function CalendarMain()
 	$context['current_month'] = $curPage['month'];
 	$context['current_year'] = $curPage['year'];
 	$context['show_all_birthdays'] = isset($_GET['showbd']);
+
+	// Set the page title to mention the month or week, too
+	$context['page_title'] .= ' - ' . ($context['view_week'] ? sprintf($txt['calendar_week_title'], $context['calendar_grid_main']['week_number'], $context['current_year']) : $txt['months'][$context['current_month']] . ' ' . $context['current_year']);
 
 	// Load up the linktree!
 	$context['linktree'][] = array(

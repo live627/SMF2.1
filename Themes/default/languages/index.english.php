@@ -462,6 +462,7 @@ $txt['calendar_link'] = 'Link to Calendar';
 $txt['calendar_upcoming'] = 'Upcoming Calendar';
 $txt['calendar_today'] = 'Today\'s Calendar';
 $txt['calendar_week'] = 'Week';
+$txt['calendar_week_title'] = 'Week %1$d of %2$d';
 $txt['calendar_numb_days'] = 'Number of Days:';
 $txt['calendar_how_edit'] = 'how do you edit these events?';
 $txt['calendar_link_event'] = 'Link Event To Post:';

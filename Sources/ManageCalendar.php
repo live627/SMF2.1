@@ -300,10 +300,6 @@ function ModifyCalendarSettings($return_config = false)
 			array('permissions', 'calendar_edit_own'),
 			array('permissions', 'calendar_edit_any'),
 		'',
-			// Some visual settings.
-			array('check', 'cal_daysaslink'),
-			array('check', 'cal_showweeknum'),
-		'',
 			// How many days to show on board index, and where to display events etc?
 			array('int', 'cal_days_for_index'),
 			array('select', 'cal_showholidays', array(0 => $txt['setting_cal_show_never'], 1 => $txt['setting_cal_show_cal'], 3 => $txt['setting_cal_show_index'], 2 => $txt['setting_cal_show_all'])),
@@ -312,6 +308,7 @@ function ModifyCalendarSettings($return_config = false)
 		'',
 			// Linking events etc...
 			array('select', 'cal_defaultboard', $boards),
+			array('check', 'cal_daysaslink'),
 			array('check', 'cal_allow_unlinked'),
 			array('check', 'cal_showInTopic'),
 		'',

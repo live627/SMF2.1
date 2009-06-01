@@ -14,7 +14,6 @@ $txt['groups_calendar_edit_own'] = 'Membergroups allowed to edit their own event
 $txt['groups_calendar_edit_any'] = 'Membergroups allowed to edit any events';
 $txt['setting_cal_enabled'] = 'Enable the calendar';
 $txt['setting_cal_daysaslink'] = 'Show days as links to \'Post Event\'';
-$txt['setting_cal_showweeknum'] = 'Show week numbers';
 $txt['setting_cal_days_for_index'] = 'Max days in advance on board index';
 $txt['setting_cal_showholidays'] = 'Show holidays';
 $txt['setting_cal_showbdays'] = 'Show birthdays';
