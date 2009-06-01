@@ -6,7 +6,8 @@ SMF 2.0 RC2                                                                  ???
 June 2009
 --------------------------------------------------------------------------------
  * Curve: rewrote the ManageMembers template to match Curve's look and feel. (ManageMembers.template.php, admin.css)
-
+ * Added some more padding to memberlist search (memberlist.css) [Bug 3415]
+ 
  
 May 2009
 --------------------------------------------------------------------------------
