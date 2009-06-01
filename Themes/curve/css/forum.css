@@ -532,3 +532,23 @@ ul.quickbuttons li.restore_button
 {
 	clear: both;
 }
+
+/* ************************************* */
+/* styles from MoveTopic.template        */
+/* ************************************* */
+#move_topic dl
+{
+	margin-bottom: 0;
+}
+.move_topic
+{
+	width: 600px;
+	margin: auto;
+	text-align: left;
+}
+div.move_topic fieldset
+{
+	margin: 0.5em 0;
+	border: 1px solid #cacdd3;
+	padding: 0.5em;
+}

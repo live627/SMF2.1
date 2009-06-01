@@ -7,6 +7,7 @@ June 2009
 --------------------------------------------------------------------------------
  * Curve: rewrote the ManageMembers template to match Curve's look and feel. (ManageMembers.template.php, admin.css)
  * Added some more padding to memberlist search (memberlist.css) [Bug 3415]
+ * Curve: rewrote the MoveTopic template to match Curve's look and feel. (MoveTopic.template.php, forum.css, MoveTopic.php)
  
  
 May 2009

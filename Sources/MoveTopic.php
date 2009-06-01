@@ -93,7 +93,7 @@ function MoveTopic()
 	//else
 		//$boards = boardsAllowedTo('move_any');
 
-	loadTemplate('MoveTopic');
+	loadTemplate('MoveTopic','forum');
 
 	// Get a list of boards this moderator can move to.
 	$request = $smcFunc['db_query']('order_by_board_order', '
