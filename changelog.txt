@@ -13,6 +13,7 @@ June 2009
  & Removed some hardcoded span tags from the ManageMembers langauge file. (ManageMembers.english.php) 
  * Curve: rewrote the ManageBans template to match Curve's look and feel. (ManageBans.template.php, admin.css)
  * Curve: rewrote the ManageNews template to match Curve's look and feel. (ManageNews.template.php)
+ * color: orange should use a hex value instead to css validate (style.css, index.css) [Bug 3483]
  
 
 May 2009

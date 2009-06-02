@@ -517,7 +517,7 @@ table.table_grid thead tr.catbg th.smalltext
 
 .warn_moderate
 {
-	color: orange;
+	color: #FFA500;
 }
 
 .warn_watch
@@ -1018,7 +1018,7 @@ ul.quickbuttons li
 ul.quickbuttons li a:hover img
 {
 	text-decoration: none;
-	color: orange;
+	color: #FFA500;
 }
 /* the navigation list */
 ul#navigation

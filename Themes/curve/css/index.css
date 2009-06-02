@@ -258,7 +258,7 @@ h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
 }
 h3.titlebg a:hover, h4.titlebg a:hover
 {
-	color: orange;
+	color: #FFA500;
 	text-decoration: none;
 }
 h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right,.table_list tbody.header td span.right,.table_list tbody.header td span.left
