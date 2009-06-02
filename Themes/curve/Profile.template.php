@@ -165,7 +165,7 @@ function template_summary()
 	}
 
 	echo '
-			<dl', empty($context['signature_enabled']) ? ' class="noborder"' : '', '>';
+			<dl', empty($context['signature_enabled']) || empty($context['member']['signature']) ? ' class="noborder"' : '', '>';
 
 	// Can they view/issue a warning?
 	if ($context['can_view_warning'] && $context['member']['warning'])
@@ -243,7 +243,7 @@ function template_summary()
 			</dl>';
 
 	// Show the users signature.
-	if ($context['signature_enabled'])
+	if ($context['signature_enabled'] && !empty($context['member']['signature']))
 		echo '
 			<div class="signature">
 				<h5>', $txt['signature'], ':</h5>
