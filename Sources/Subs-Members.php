@@ -1358,7 +1358,7 @@ function populateDuplicateMembers(&$members)
 			{
 				if (in_array($duplicate_member['id'], $member_track))
 				{
-					unset($members[$duplicate_id_member]['duplicate_members'][$duplicate_id_member]);
+					unset($members[$key]['duplicate_members'][$duplicate_id_member]);
 					continue;
 				}
 
