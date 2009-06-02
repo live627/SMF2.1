@@ -8,7 +8,7 @@ ol.search_results li
 {
 	padding-top: 5px;
 }
-#admincenter, #manage_mail, #manage_attachments, #manage_maintenance, #manage_boards
+#admincenter, #manage_mail, #manage_attachments, #manage_maintenance, #manage_boards, #manage_bans
 {
 	float: left;
 	width: 100%;
@@ -207,6 +207,24 @@ dl.settings dd.small_caption
 	*float: none;
 	*width: auto;
 }
+/*Manage Bans*/
+.ban_restriction
+{
+	margin: 0.2em 0 0.2em 2.2em;
+}
+.ban_settings
+{
+	width: 47%;
+}
+#manage_bans dl
+{
+	margin-bottom: 1em;
+}
+#manage_bans fieldset dl.settings
+{
+	margin-bottom: 0;
+}
+
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */

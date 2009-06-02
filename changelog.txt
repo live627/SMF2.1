@@ -11,7 +11,8 @@ June 2009
  & Showing week numbers in the calendar is no longer optional, as they're needed for the linktree anyway. (Calendar.php, ManageCalendar.php, ManageCalendar language file) [Bug 3475]
  & Do a better job at handling the page titles in the calendar section. (Calendar.php, index language file) [Bug 3475]
  & Removed some hardcoded span tags from the ManageMembers langauge file. (ManageMembers.english.php) 
-
+ * Curve: rewrote the ManageBans template to match Curve's look and feel. (ManageBans.template.php, admin.css)
+ 
 
 May 2009
 --------------------------------------------------------------------------------
