@@ -12,6 +12,7 @@ June 2009
  & Do a better job at handling the page titles in the calendar section. (Calendar.php, index language file) [Bug 3475]
  & Removed some hardcoded span tags from the ManageMembers langauge file. (ManageMembers.english.php) 
  * Curve: rewrote the ManageBans template to match Curve's look and feel. (ManageBans.template.php, admin.css)
+ * Curve: rewrote the ManageNews template to match Curve's look and feel. (ManageNews.template.php)
  
 
 May 2009
