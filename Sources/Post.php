@@ -1670,12 +1670,18 @@ function Post2()
 			// Have we reached the maximum number of files we are allowed?
 			$quantity++;
 			if (!empty($modSettings['attachmentNumPerPostLimit']) && $quantity > $modSettings['attachmentNumPerPostLimit'])
+			{
+				checkSubmitOnce('free');
 				fatal_lang_error('attachments_limit_per_post', false, array($modSettings['attachmentNumPerPostLimit']));
+			}
 
 			// Check the total upload size for this post...
 			$total_size += $_FILES['attachment']['size'][$n];
 			if (!empty($modSettings['attachmentPostLimit']) && $total_size > $modSettings['attachmentPostLimit'] * 1024)
+			{
+				checkSubmitOnce('free');
 				fatal_lang_error('file_too_big', false, array($modSettings['attachmentPostLimit']));
+			}
 
 			$attachmentOptions = array(
 				'post' => isset($_REQUEST['msg']) ? $_REQUEST['msg'] : 0,
@@ -1695,17 +1701,35 @@ function Post2()
 			else
 			{
 				if (in_array('could_not_upload', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
 					fatal_lang_error('attach_timeout', 'critical');
+				}
 				if (in_array('too_large', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
 					fatal_lang_error('file_too_big', false, array($modSettings['attachmentSizeLimit']));
+				}
 				if (in_array('bad_extension', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
 					fatal_error($attachmentOptions['name'] . '.<br />' . $txt['cant_upload_type'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
+				}
 				if (in_array('directory_full', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
 					fatal_lang_error('ran_out_of_space', 'critical');
+				}
 				if (in_array('bad_filename', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
 					fatal_error(basename($attachmentOptions['name']) . '.<br />' . $txt['restricted_filename'] . '.', 'critical');
+				}
 				if (in_array('taken_filename', $attachmentOptions['errors']))
+				{
+					checkSubmitOnce('free');
 					fatal_lang_error('filename_exists');
+				}
 			}
 		}
 	}

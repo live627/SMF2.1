@@ -16,6 +16,7 @@ June 2009
  * color: orange should use a hex value instead to css validate (style.css, index.css) [Bug 3483]
  * Profile shouldn't show signature space if no signature is set (Profile.template.php) [Bug 3478]
  ! Manage Members could detect the same duplicate members more than once (Subs-Members.php)
+ ! Fatal error doesn't release the form for re-submitting (Post.template.php, Post.php) [Bug 3374]
  
 
 May 2009

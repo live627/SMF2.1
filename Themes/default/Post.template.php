@@ -10,6 +10,13 @@ function template_main()
 	echo '
 		<script type="text/javascript"><!-- // --><![CDATA[';
 
+	// When using Go Back due to fatal_error, allow the form to be re-submitted with changes.
+	if ($context['browser']['is_firefox'])
+		echo '
+			window.onunload = function(){
+				document.forms.postmodify.readOnly = false;
+			};';
+
 	// Start with message icons - and any missing from this theme.
 	echo '
 			var icon_urls = {';
