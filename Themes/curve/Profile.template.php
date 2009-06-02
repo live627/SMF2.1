@@ -92,6 +92,11 @@ function template_summary()
 		<div class="content">
 			<dl>';
 
+	if ($context['user']['is_owner'] || $context['user']['is_admin'])
+		echo '
+				<dt>', $txt['username'], ': </dt>
+				<dd>', $context['member']['username'], '</dd>';
+
 	if (!isset($context['disabled_fields']['posts']))
 		echo '
 				<dt>', $txt['profile_posts'], ': </dt>
