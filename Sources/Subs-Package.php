@@ -2762,7 +2762,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 			// Open the socket on the port we want...
 			$fp = @fsockopen(($match[2] ? 'ssl://' : '') . $match[3], empty($match[5]) ? ($match[2] ? 443 : 80) : $match[5], $err, $err, 5);
 			if (!$fp)
-				return 'BAD_SOCKET'; //return false;
+				return false;
 		}
 
 		if ($keep_alive)
@@ -2819,7 +2819,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false, $redirection
 
 		// Make sure we get a 200 OK.
 		elseif (preg_match('~^HTTP/\S+\s+20[01]~i', $response) === 0)
-			return 'BAD_RESPONSE' . $response; //return false;
+			return false;
 
 		// Skip the headers...
 		while (!feof($fp) && trim($header = fgets($fp, 4096)) != '')

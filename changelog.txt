@@ -17,7 +17,9 @@ June 2009
  * Profile shouldn't show signature space if no signature is set (Profile.template.php) [Bug 3478]
  ! Manage Members could detect the same duplicate members more than once (Subs-Members.php)
  ! Fatal error doesn't release the form for re-submitting (Post.template.php, Post.php) [Bug 3374]
- 
+ ! Show username in profile summary (Profile.template.php) [Bug 3477]
+ * Provide backwards compatbility for older themes on recent sesc/sc changes (script.js, xml_topic.js, xml_board.js)
+
 
 May 2009
 --------------------------------------------------------------------------------
@@ -134,8 +136,6 @@ May 2009
  ! Attempt to prevent automatic prunning from failing with errors if there is missing mod settings (ScheduledTasks.php) [Bug 3461]
  * Memberlist was not displaying correctly in Core (Memberlist.template.php, memberlist.css)
  * Template button strip needed updated in Core (index.template.php, style.css) [Bug 3468]
- ! Show username in profile summary (Profile.template.php) [Bug 3477]
- * Provide backwards compatbility for older themes on recent sesc/sc changes (script.js, xml_topic.js, xml_board.js)
 
 
 April 2009
