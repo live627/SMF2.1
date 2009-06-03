@@ -615,6 +615,8 @@ function smf_setThemeOption(option, value, theme, cur_session_id, cur_session_va
 	// Compatibility.
 	if (cur_session_id == null)
 		cur_session_id = smf_session_id;
+	if (typeof(cur_session_var) == 'undefined')
+		cur_session_var = 'sesc';
 
 	if (additional_vars == null)
 		additional_vars = '';
@@ -1068,6 +1070,10 @@ function IconList(oOptions)
 {
 	if (!window.XMLHttpRequest)
 		return;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(this.opt.sSessionVar) == 'undefined')
+		this.opt.sSessionVar = 'sesc';
 
 	this.opt = oOptions;
 	this.bListLoaded = false;

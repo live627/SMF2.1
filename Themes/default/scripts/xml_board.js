@@ -12,6 +12,10 @@ function modify_topic(topic_id, first_msg_id, cur_session_id, cur_session_var)
 			return;
 	}
 
+	// Add backwards compatibility with old themes.
+	if (typeof(cur_session_var) == 'undefined')
+		cur_session_var = 'sesc';
+
 	if (in_edit_mode == 1)
 	{
 		if (cur_topic_id == topic_id)
@@ -57,6 +61,10 @@ function modify_topic_save(cur_session_id, cur_session_var)
 {
 	if (!in_edit_mode)
 		return true;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(cur_session_var) == 'undefined')
+		cur_session_var = 'sesc';
 
 	var i, x = new Array();
 	x[x.length] = 'subject=' + document.forms.quickModForm['subject'].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();

@@ -8,6 +8,14 @@ function QuickReply(oOptions)
 // When a user presses quote, put it in the quick reply box (if expanded).
 QuickReply.prototype.quote = function (iMessageId, sSessionId, sSessionVar, bTemplateUpgraded)
 {
+	// Add backwards compatibility with old themes.
+	if (sSessionVar == true)
+	{
+		bTemplateUpgraded = true;
+		sSessionVar = 'sesc';
+	}
+
+
 	if (this.bCollapsed)
 	{
 		// This is for compatibility.
@@ -107,6 +115,10 @@ QuickModify.prototype.modifyMsg = function (iMessageId, sSessionId, sSessionVar)
 	if (!this.bXmlHttpCapable)
 		return;
 
+	// Add backwards compatibility with old themes.
+	if (typeof(sSessionVar) == 'undefined')
+		sSessionVar = 'sesc';
+
 	// First cancel if there's another message still being edited.
 	if (this.bInEditMode)
 		this.modifyCancel();
@@ -183,6 +195,10 @@ QuickModify.prototype.modifySave = function (sSessionId, sSessionVar)
 	if (!this.bInEditMode)
 		return true;
 
+	// Add backwards compatibility with old themes.
+	if (typeof(sSessionVar) == 'undefined')
+		sSessionVar = 'sesc';
+
 	var i, x = new Array();
 	x[x.length] = 'subject=' + escape(document.forms.quickModForm['subject'].value.replace(/&#/g, "&#38;#").php_to8bit()).replace(/\+/g, "%2B");
 	x[x.length] = 'message=' + escape(document.forms.quickModForm['message'].value.replace(/&#/g, "&#38;#").php_to8bit()).replace(/\+/g, "%2B");
@@ -247,6 +263,10 @@ QuickModify.prototype.onModifyDone = function (XMLDoc)
 
 function InTopicModeration(oOptions)
 {
+	// Add backwards compatibility with old themes.
+	if (typeof(this.opt.sSessionVar) == 'undefined')
+		this.opt.sSessionVar = 'sesc';
+
 	this.opt = oOptions;
 	this.bButtonsShown = false;
 	this.iNumSelected = 0;
@@ -346,7 +366,7 @@ InTopicModeration.prototype.handleSubmit = function (sSubmitType)
 	// Make sure this form isn't submitted in another way than this function.
 	var oInput = document.createElement('input');
 	oInput.type = 'hidden';
-	oInput.name = 'sc';
+	oInput.name = this.opt.sSessionVar;
 	oInput.value = this.opt.sSessionId;
 	oForm.appendChild(oInput);
 

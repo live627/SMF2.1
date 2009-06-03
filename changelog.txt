@@ -135,6 +135,8 @@ May 2009
  * Memberlist was not displaying correctly in Core (Memberlist.template.php, memberlist.css)
  * Template button strip needed updated in Core (index.template.php, style.css) [Bug 3468]
  ! Show username in profile summary (Profile.template.php) [Bug 3477]
+ * Provide backwards compatbility for older themes on recent sesc/sc changes (script.js, xml_topic.js, xml_board.js)
+
 
 April 2009
 --------------------------------------------------------------------------------
