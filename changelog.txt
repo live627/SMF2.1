@@ -19,7 +19,8 @@ June 2009
  ! Fatal error doesn't release the form for re-submitting (Post.template.php, Post.php) [Bug 3374]
  ! Show username in profile summary (Profile.template.php) [Bug 3477]
  * Provide backwards compatbility for older themes on recent sesc/sc changes (script.js, xml_topic.js, xml_board.js)
-
+ * Curve: rewrote the ManageMembergroups template to match Curve's look and feel. (ManageMembergroups.template.php)
+ 
 
 May 2009
 --------------------------------------------------------------------------------
