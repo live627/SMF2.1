@@ -20,6 +20,7 @@ June 2009
  ! Show username in profile summary (Profile.template.php) [Bug 3477]
  * Provide backwards compatbility for older themes on recent sesc/sc changes (script.js, xml_topic.js, xml_board.js)
  * Curve: rewrote the ManageMembergroups template to match Curve's look and feel. (ManageMembergroups.template.php)
+ * Curve: rewrote the ManageSearch template to match Curve's look and feel. (ManageSearch.template.php, admin.css)
  
 
 May 2009
