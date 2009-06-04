@@ -490,6 +490,22 @@ function DoLogin()
 	// Don't stick the language or theme after this point.
 	unset($_SESSION['language'], $_SESSION['id_theme']);
 
+	// First login?
+	$request = $smcFunc['db_query']('', '
+		SELECT last_login
+		FROM {db_prefix}members
+		WHERE id_member = {int:id_member}
+			AND last_login = 0',
+		array(
+			'id_member' => $user_info['id'],
+		)
+	);
+	if ($smcFunc['db_num_rows']($request) == 1)
+		$_SESSION['first_login'] = true;
+	else
+		unset($_SESSION['first_login']);
+	$smcFunc['db_free_result']($request);
+
 	// You've logged in, haven't you?
 	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => $user_info['ip'], 'member_ip2' => $_SERVER['BAN_CHECK_IP']));
 
@@ -527,6 +543,9 @@ function Logout($internal = false, $redirect = true)
 	// They cannot be open ID verified any longer.
 	if (isset($_SESSION['openid']))
 		unset($_SESSION['openid']);
+
+	// It won't be first login anymore.
+	unset($_SESSION['first_login']);
 
 	// Just ensure they aren't a guest!
 	if (!$user_info['is_guest'])

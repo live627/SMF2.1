@@ -762,15 +762,13 @@ function UnreadTopics()
 			FROM {db_prefix}topics AS t
 				LEFT JOIN {db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
-			WHERE t.' . $query_this_board . ($context['showing_all_topics'] && !empty($earliest_msg) ? '
-				AND t.id_last_msg > {int:earliest_msg}' : '
-				AND t.id_last_msg > {int:id_msg_last_visit}') . '
+			WHERE t.' . $query_this_board . (!empty($earliest_msg) ? '
+				AND t.id_last_msg > {int:earliest_msg}' : '') . '
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . ($modSettings['postmod_active'] ? '
 				AND t.approved = {int:is_approved}' : ''),
 			array_merge($query_parameters, array(
 				'current_member' => $user_info['id'],
 				'earliest_msg' => !empty($earliest_msg) ? $earliest_msg : 0,
-				'id_msg_last_visit' => !empty($_SESSION['id_msg_last_visit']) ? $_SESSION['id_msg_last_visit'] : 0,
 				'is_approved' => 1,
 			))
 		);
@@ -840,8 +838,8 @@ function UnreadTopics()
 				LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})') . '
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = {int:current_member})
 			WHERE t.' . $query_this_board . ($context['showing_all_topics'] && !empty($earliest_msg) ? '
-				AND t.id_last_msg > {int:earliest_msg}' : '
-				AND t.id_last_msg > {int:id_msg_last_visit}') . '
+				AND t.id_last_msg > {int:earliest_msg}' : (!$context['showing_all_topics'] && empty($_SESSION['first_login']) ? '
+				AND t.id_last_msg > {int:id_msg_last_visit}' : '')) . '
 				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg' . ($modSettings['postmod_active'] ? '
 				AND t.approved = {int:is_approved}' : ''),
 			array_merge($query_parameters, array(
