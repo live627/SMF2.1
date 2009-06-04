@@ -225,7 +225,7 @@ function template_body_above()
 				</ul>';
 		}
 		// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
-		else
+		elseif (!empty($context['show_login_bar']))
 		{
 			echo '
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>

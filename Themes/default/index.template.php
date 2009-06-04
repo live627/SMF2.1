@@ -216,7 +216,10 @@ function template_body_above()
 			<li id="name">', $txt['hello_guest'], ' <em>', $txt['guest'], '</em></li>';
 
 	echo '
-		</ul>
+		</ul>';
+
+	if ($context['user']['is_logged'] || !empty($context['show_login_bar']))
+		echo '
 		<div id="user_section" class="bordercolor"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<div class="windowbg2 clearfix">';
 
@@ -268,7 +271,7 @@ function template_body_above()
 				</ul>';
 	}
 	// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
-	else
+	elseif (!empty($context['show_login_bar']))
 	{
 		echo '
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
@@ -296,9 +299,12 @@ function template_body_above()
 				</form>';
 	}
 
-	echo '
+	if ($context['user']['is_logged'] || !empty($context['show_login_bar']))
+		echo '
 			</div>
-		</div>
+		</div>';
+		
+	echo '
 		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 				<a href="', $scripturl, '?action=search;advanced" title="', $txt['search_advanced'], '"><img id="advsearch" src="'.$settings['images_url'].'/filter.gif" align="middle" alt="', $txt['search_advanced'], '" /></a>
