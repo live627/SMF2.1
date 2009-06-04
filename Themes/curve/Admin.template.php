@@ -1600,6 +1600,7 @@ function template_add_language()
 						
 					</fieldset>
 					<p>
+						', $context['browser']['is_ie'] ? '<input type="text" name="ie_fix" style="display: none;" /> ' : '', '
 						<input type="submit" name="smf_add_sub" value="', $txt['search'], '" />
 					</p>
 				</div>

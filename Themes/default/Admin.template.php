@@ -1455,6 +1455,7 @@ function template_add_language()
 		<tr class="windowbg">
 			<td align="right">
 				<input type="text" name="smf_add" size="40" value="', !empty($context['smf_search_term']) ? $context['smf_search_term'] : '', '" />
+				', $context['browser']['is_ie'] ? '<input type="text" name="ie_fix" style="display: none;" /> ' : '', '
 				<input type="submit" name="smf_add_sub" value="', $txt['search'], '" />
 			</td>
 		</tr>';
