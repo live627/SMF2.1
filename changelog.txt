@@ -28,6 +28,7 @@ June 2009
  ! Unread wasn't showing all unread topics, and for new users all topics should be shown unread (LogInOut.php, Recent.php) [Bug 3164]
  * In IE hitting enter will not submit the form with one textbox and one submit button (Admin.template.php) [Bug 2104]
  * Quick Login Setting didn't work for login boxes in theme header (index.template.php) [Bug 3305]
+ * this.opt doesn't exist yet, so relocate the backwards compatibility check (script.js) [Bug 3488]
 
 
 May 2009

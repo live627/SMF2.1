@@ -1078,6 +1078,10 @@ function IconList(oOptions)
 	this.iCurMessageId = 0;
 	this.iCurTimeout = 0;
 
+	// Add backwards compatibility with old themes.
+	if (typeof(this.opt.sSessionVar) == 'undefined')
+		this.opt.sSessionVar = 'sesc';
+
 	this.initIcons();
 }
 

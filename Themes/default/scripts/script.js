@@ -1071,10 +1071,6 @@ function IconList(oOptions)
 	if (!window.XMLHttpRequest)
 		return;
 
-	// Add backwards compatibility with old themes.
-	if (typeof(this.opt.sSessionVar) == 'undefined')
-		this.opt.sSessionVar = 'sesc';
-
 	this.opt = oOptions;
 	this.bListLoaded = false;
 	this.oContainerDiv = null;
@@ -1082,6 +1078,10 @@ function IconList(oOptions)
 	this.funcParent = this;
 	this.iCurMessageId = 0;
 	this.iCurTimeout = 0;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(this.opt.sSessionVar) == 'undefined')
+		this.opt.sSessionVar = 'sesc';
 
 	this.initIcons();
 }
