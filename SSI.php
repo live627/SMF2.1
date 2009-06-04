@@ -138,8 +138,7 @@ else
 }
 
 // Get rid of $board and $topic... do stuff loadBoard would do.
-unset($board);
-unset($topic);
+unset($board, $topic);
 $user_info['is_mod'] = false;
 $context['user']['is_mod'] = &$user_info['is_mod'];
 $context['linktree'] = array();

@@ -856,6 +856,10 @@ function ReduceMailQueue($number = false, $override_limit = false)
 {
 	global $modSettings, $smcFunc, $sourcedir;
 
+	// Are we intending another script to be sending out the queue?
+	if (!empty($modSettings['mail_queue_use_cron']))
+		return false;
+
 	// By default send 5 at once.
 	if (!$number)
 		$number = empty($modSettings['mail_quantity']) ? 5 : $modSettings['mail_quantity'];
@@ -867,7 +871,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	// By default move the next sending on by 10 seconds, and require an affected row.
 	if (!$override_limit)
 	{
-		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 5;
+		$delay = !empty($modSettings['mail_queue_delay']) ? $modSettings['mail_queue_delay'] : (!empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 5);
 
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}settings

@@ -933,8 +933,7 @@ function RepairAttachments()
 	// Don't recall the session just in case.
 	if ($_GET['step'] == 0 && $_GET['substep'] == 0)
 	{
-		unset($_SESSION['attachments_to_fix']);
-		unset($_SESSION['attachments_to_fix2']);
+		unset($_SESSION['attachments_to_fix'], $_SESSION['attachments_to_fix2']);
 
 		// If we're actually fixing stuff - work out what.
 		if (isset($_GET['fixErrors']))

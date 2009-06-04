@@ -555,7 +555,9 @@ function template_main()
 	{
 		echo '
 <a name="quickreply"></a>
-<div class="tborder" id="quickreplybox">
+<div class="tborder" id="quickreplybox">';
+
+		echo '
 	<h3 class="catbg headerpadding">
 		<a href="javascript:oQuickReply.swap();">
 			<img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" />
@@ -569,7 +571,7 @@ function template_main()
 		<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
 			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
-			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
+			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);saveEntities();" style="margin: 0;">
 				<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 				<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
 				<input type="hidden" name="icon" value="xx" />

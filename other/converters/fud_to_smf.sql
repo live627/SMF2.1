@@ -125,9 +125,7 @@ $row['body'] = substr(strtr(fread($fp, $row['length']), array("\n" => '')), 0, 6
 fclose($fp);
 
 // Clean up...
-unset($row['file_id']);
-unset($row['foff']);
-unset($row['length']);
+unset($row['file_id'], $row['foff'], $row['length']);
 ---}
 SELECT
 	m.id AS id_msg, m.thread_id AS id_topic, t.forum_id AS id_board,
@@ -243,8 +241,7 @@ $row['body'] = substr(strtr(fread($fp, $row['length']), array("\n" => '')), 0, 6
 fclose($fp);
 
 // Clean up...
-unset($row['foff']);
-unset($row['length']);
+unset($row['foff'], $row['length']);
 ---}
 SELECT
 	pm.id AS id_pm, pm.ouser_id AS id_member_from, pm.post_stamp AS msgtime,

@@ -596,9 +596,7 @@ while (true)
 				$groupID = $row['id_group'];
 		}
 
-		unset($row['id_group']);
-		unset($row['group_name']);
-		unset($row['max_messages']);
+		unset($row['id_group'], $row['group_name'], $row['max_messages']);
 
 		foreach ($row as $key => $value)
 			if ($value == 1)

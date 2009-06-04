@@ -752,10 +752,7 @@ function ModifySpamSettings($return_config = false)
 			$_POST['posts_require_captcha'] = -1;
 
 		$save_vars = $config_vars;
-		unset($save_vars['pm1']);
-		unset($save_vars['pm2']);
-		unset($save_vars['pm3']);
-		unset($save_vars['guest_verify']);
+		unset($save_vars['pm1'], $save_vars['pm2'], $save_vars['pm3'], $save_vars['guest_verify']);
 
 		$save_vars[] = array('text', 'pm_spam_settings');
 

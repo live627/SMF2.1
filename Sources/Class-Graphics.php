@@ -45,10 +45,7 @@ class gif_lzw_compression
 	public function __construct()
 	{
 		$this->MAX_LZW_BITS = 12;
-		unset($this->Next);
-		unset($this->Vals);
-		unset($this->Stack);
-		unset($this->Buf);
+		unset($this->Next, $this->Vals, $this->Stack, $this->Buf);
 
 		$this->Next  = range(0, (1 << $this->MAX_LZW_BITS)       - 1);
 		$this->Vals  = range(0, (1 << $this->MAX_LZW_BITS)       - 1);
@@ -262,8 +259,7 @@ class gif_color_table
 
 	public function __construct()
 	{
-		unset($this->m_nColors);
-		unset($this->m_arColors);
+		unset($this->m_nColors, $this->m_arColors);
 	}
 
 	public function load($lpData, $num)
@@ -333,16 +329,8 @@ class gif_file_header
 
 	public function __construct()
 	{
-		unset($this->m_lpVer);
-		unset($this->m_nWidth);
-		unset($this->m_nHeight);
-		unset($this->m_bGlobalClr);
-		unset($this->m_nColorRes);
-		unset($this->m_bSorted);
-		unset($this->m_nTableSize);
-		unset($this->m_nBgColor);
-		unset($this->m_nPixelRatio);
-		unset($this->m_colorTable);
+		unset($this->m_lpVer, $this->m_nWidth, $this->m_nHeight, $this->m_bGlobalClr, $this->m_nColorRes);
+		unset($this->m_bSorted, $this->m_nTableSize, $this->m_nBgColor, $this->m_nPixelRatio, $this->m_colorTable);
 	}
 
 	public function load($lpData, &$hdrLen)
@@ -387,15 +375,8 @@ class gif_image_header
 
 	public function __construct()
 	{
-		unset($this->m_nLeft);
-		unset($this->m_nTop);
-		unset($this->m_nWidth);
-		unset($this->m_nHeight);
-		unset($this->m_bLocalClr);
-		unset($this->m_bInterlace);
-		unset($this->m_bSorted);
-		unset($this->m_nTableSize);
-		unset($this->m_colorTable);
+		unset($this->m_nLeft, $this->m_nTop, $this->m_nWidth, $this->m_nHeight, $this->m_bLocalClr);
+		unset($this->m_bInterlace, $this->m_bSorted, $this->m_nTableSize, $this->m_colorTable);
 	}
 
 	public function load($lpData, &$hdrLen)
@@ -435,12 +416,7 @@ class gif_image
 
 	public function __construct()
 	{
-		unset($this->m_disp);
-		unset($this->m_bUser);
-		unset($this->m_nDelay);
-		unset($this->m_nTrans);
-		unset($this->m_lpComm);
-		unset($this->m_data);
+		unset($this->m_disp, $this->m_bUser, $this->m_nDelay, $this->m_nTrans, $this->m_lpComm, $this->m_data);
 		$this->m_gih = new gif_image_header();
 		$this->m_lzw = new gif_lzw_compression();
 	}

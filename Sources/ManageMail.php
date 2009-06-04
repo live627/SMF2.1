@@ -286,8 +286,7 @@ function ModifyMailSettings($return_config = false)
 		checkSession();
 
 		// We don't want to save the subject and body previews.
-		unset($config_vars['birthday_subject']);
-		unset($config_vars['birthday_body']);
+		unset($config_vars['birthday_subject'], $config_vars['birthday_body']);
 
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=mailqueue;sa=settings');

@@ -1667,10 +1667,7 @@ function sendNotifications($topics, $type, $exclude = array(), $members_only = a
 		);
 
 		if ($type == 'remove')
-		{
-			unset($replacements['TOPICLINK']);
-			unset($replacements['UNSUBSCRIBELINK']);
-		}
+			unset($replacements['TOPICLINK'], $replacements['UNSUBSCRIBELINK']);
 		// Do they want the body of the message sent too?
 		if (!empty($row['notify_send_body']) && $type == 'reply' && empty($modSettings['disallow_sendBody']))
 		{

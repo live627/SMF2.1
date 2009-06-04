@@ -648,6 +648,9 @@ function html_to_bbc($text)
 	// Some tags often end up as just dummy tags - remove those.
 	$text = preg_replace('~\[[bisu]\]\s*\[/[bisu]\]~', '', $text);
 
+	// Fix up entities.
+	$text = preg_replace('~&#38;~i', '&#38;#38;', $text);
+
 	$text = legalise_bbc($text);
 
 	return $text;

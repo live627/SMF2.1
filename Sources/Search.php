@@ -930,17 +930,7 @@ function PlushSearch2()
 	// Store the last search string to allow pages of results to be browsed.
 	$_SESSION['last_ss'] = $search_params['search'];
 
-/*	// !!! This doesn't seem too urgent anymore. Can we remove it?
-	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-	{
-		// !!! Change error message...
-		if (cache_get_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $user_info['id']), 90) == 1)
-			fatal_lang_error('loadavg_search_disabled', false);
-		cache_put_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $user_info['id']), 1, 90);
-	}*/
-
 	// *** Reserve an ID for caching the search results.
-
 	$query_params = array_merge($search_params, array(
 		'min_msg_id' => isset($minMsgID) ? (int) $minMsgID : 0,
 		'max_msg_id' => isset($maxMsgID) ? (int) $maxMsgID : 0,

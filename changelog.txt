@@ -22,7 +22,10 @@ June 2009
  * Curve: rewrote the ManageMembergroups template to match Curve's look and feel. (ManageMembergroups.template.php)
  * Curve: rewrote the ManageSearch template to match Curve's look and feel. (ManageSearch.template.php, admin.css)
  * Curve: rewrote the ManageSmileys template to match Curve's look and feel. (ManageSmileys.template.php)
- 
+ ! Cleaned up some repeated unsets (Many files)
+ ! Added two hidden mod settings for scheduled tasks, now allowing for custom delays and for an external cron script to process the queue (ScheduledTasks.php, Load.php, mailQueueCron.php)
+ ! Make WYSIWYG and quick reply also use the saveEntities method (Subs-Editor.php, Display.template.php) [Bug 2450]
+
 
 May 2009
 --------------------------------------------------------------------------------

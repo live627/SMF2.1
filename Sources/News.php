@@ -924,8 +924,7 @@ function getXmlProfile($xml_format)
 	}
 
 	// Save some memory.
-	unset($profile);
-	unset($memberContext[$_GET['u']]);
+	unset($profile, $memberContext[$_GET['u']]);
 
 	return $data;
 }

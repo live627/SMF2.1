@@ -468,7 +468,6 @@ if (empty($preparsing))
 
 	function convertStep5()
 	{
-//return true;	
 		global $to_prefix, $yabb, $block_settings;
 
 		// Change the block size as needed
@@ -495,7 +494,7 @@ if (empty($preparsing))
 				break;
 			if ($file_n++ < $_GET['substep'])
 				continue;
-			if (strrchr($entry, '.') != '.msg' && strrchr($entry, '.') != '.outbox')
+			if (strrchr($entry, '.') != '.outbox')
 				continue;
 
 			$is_outbox = strrchr($entry, '.') == '.outbox';
@@ -1214,7 +1213,7 @@ return true;
 			$setString = '';
 
 			$result = convert_query("
-				SELECT m.id_msg, con.temp
+				SELECT m.id_msg, con.temp as temp_filename
 				FROM {$to_prefix}messages AS m
 					INNER JOIN {$to_prefix}convert AS con ON (con.real_id = CONCAT(m.poster_time, ':', m.poster_name))
 				WHERE con.type = 'msg_attach'

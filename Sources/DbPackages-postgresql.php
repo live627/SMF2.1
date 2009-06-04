@@ -295,8 +295,7 @@ function smf_db_add_column($table_name, $column_info, $parameters = array(), $if
 	);
 
 	// If there's more attributes they need to be done via a change on PostgreSQL.
-	unset($column_info['type']);
-	unset($column_info['size']);
+	unset($column_info['type'], $column_info['size']);
 
 	if (count($column_info) != 1)
 		return $smcFunc['db_change_column']($table_name, $column_info['name'], $column_info, array('no_prefix' => true));

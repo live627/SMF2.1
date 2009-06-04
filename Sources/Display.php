@@ -1066,6 +1066,20 @@ function Display()
 		$context['name'] = isset($_SESSION['guest_name']) ? $_SESSION['guest_name'] : '';
 		$context['email'] =isset($_SESSION['guest_email']) ? $_SESSION['guest_email'] :  '';
 	}
+
+	// Add some javascript for quick reply, so we can save entities correclty
+	if ($context['can_reply'] && !empty($options['display_quick_reply']))
+		$context['html_headers'] .= '
+		<script type="text/javascript"><!-- // --><![CDATA[
+			function saveEntities()
+			{
+				var textFields = ["subject", "message", "guestname", "evtitle", "question"];
+				for (i in textFields)
+					if (document.forms.postmodify.elements[textFields[i]])
+						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
+			}
+		// ]]></script>';
+
 }
 
 // Callback for the message display.

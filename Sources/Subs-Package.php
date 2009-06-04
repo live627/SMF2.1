@@ -716,9 +716,7 @@ function create_chmod_control($chmodFiles = array(), $chmodOptions = array(), $r
 		if (!empty($_POST['restore_perms']))
 		{
 			$listOptions['additional_rows'][1]['value'] = sprintf($txt['package_restore_permissions_action_done'], $scripturl . '?action=admin;area=packages;sa=perms;' . $context['session_var'] . '=' . $context['session_id']);
-			unset($listOptions['columns']['check']);
-			unset($listOptions['form']);
-			unset($listOptions['additional_rows'][0]);
+			unset($listOptions['columns']['check'], $listOptions['form'], $listOptions['additional_rows'][0]);
 
 			$context['sub_template'] = 'show_list';
 			$context['default_list'] = 'restore_file_permissions';

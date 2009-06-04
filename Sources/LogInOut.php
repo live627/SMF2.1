@@ -488,8 +488,7 @@ function DoLogin()
 	}
 
 	// Don't stick the language or theme after this point.
-	unset($_SESSION['language']);
-	unset($_SESSION['id_theme']);
+	unset($_SESSION['language'], $_SESSION['id_theme']);
 
 	// You've logged in, haven't you?
 	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => $user_info['ip'], 'member_ip2' => $_SERVER['BAN_CHECK_IP']));
