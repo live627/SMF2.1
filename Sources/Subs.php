@@ -2056,11 +2056,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			if ($pos2 !== false && ($pos2 <= $pos3 || $pos3 === false))
 			{
 				preg_match('~^(<br />|&nbsp;|\s|\[)+~', substr($message, $pos2 + 6), $matches);
-				$linebreaks = $pos2 !== false && strpos($message, '<br /><br />') == $pos2 ? true : false;
-
 				$message = substr($message, 0, $pos2) . (!empty($matches[0]) && substr($matches[0], -1) == '[' ? '[/li]' : '[/li][/list]') . substr($message, $pos2);
 
-				$open_tags[count($open_tags) - 2]['after'] = '</ul>' . ($linebreaks ? '<br /><br />' : '');
+				$open_tags[count($open_tags) - 2]['after'] = '</ul>';
 			}
 			// Tell the [list] that it needs to close specially.
 			else
