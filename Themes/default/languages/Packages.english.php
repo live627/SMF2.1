@@ -23,7 +23,8 @@ $txt['download'] = 'Download';
 $txt['download_success'] = 'Package downloaded successfully';
 $txt['package_downloaded_successfully'] = 'Package has been downloaded successfully';
 $txt['package_manager'] = 'Package Manager';
-$txt['apply_mod'] = 'Apply Mod';
+$txt['install_mod'] = 'Install Mod';
+$txt['uninstall_mod'] = 'Uninstall Mod';
 $txt['sql_file'] = 'Modification file was extracted, this modification also comes with a SQL file with modifications the database needs.  It is a good idea to run it.';
 $txt['sql_queries'] = 'SQL Queries';
 $txt['no_mods_installed'] = 'No mods currently installed';
@@ -44,7 +45,6 @@ $txt['modification_package'] = 'Modification Packages';
 $txt['avatar_package'] = 'Avatar Packages';
 $txt['language_package'] = 'Language Packages';
 $txt['unknown_package'] = 'Unknown Packages';
-$txt['mod_apply'] = 'Apply Mod';
 $txt['use_avatars'] = 'Use Avatars';
 $txt['add_languages'] = 'Add Language';
 $txt['list_files'] = 'List Files';
@@ -79,6 +79,7 @@ $txt['packages_latest'] = 'Latest Packages';
 $txt['packages_latest_fetch'] = 'Attempting to fetch the most popular and recent packages from www.simplemachines.org...';
 
 $txt['package_upgrade'] = 'Upgrade';
+$txt['package_uninstall_readme'] = 'Uninstallation Readme';
 $txt['package_install_readme'] = 'Installation Readme';
 $txt['package_install_type'] = 'Type';
 $txt['package_install_action'] = 'Action';
@@ -256,4 +257,7 @@ $txt['package_confirm_view_package_content'] = 'Are you sure you want to view th
 $txt['package_confirm_proceed'] = 'Proceed';
 $txt['package_confirm_go_back'] = 'Go back';
 
+// Backwards compatibility for older 2.0 themes
+$txt['apply_mod'] = 'Apply Mod';
+$txt['mod_apply'] = 'Apply Mod';
 ?>

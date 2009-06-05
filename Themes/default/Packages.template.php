@@ -13,7 +13,7 @@ function template_view_package()
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['apply_mod'], '</td>
+				<td>', $txt[($context['uninstalling'] ? 'un' : '') . 'install_mod'], '</td>
 			</tr><tr>
 				<td class="windowbg2">';
 
@@ -49,7 +49,7 @@ function template_view_package()
 		echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['package_install_readme'], '</td>
+				<td>', $txt['package_' . ($context['uninstalling'] ? 'un' : '') . 'install_readme'], '</td>
 			</tr><tr>
 				<td class="windowbg2">', $context['package_readme'], '</td>
 			</tr>
