@@ -565,7 +565,9 @@ function html_to_bbc($text)
 		'~</strong>~i' => '[/b]',
 		'~<em(\s(.)*?)*?' . '>~i' => '[i]',
 		'~</em>~i' => '[/i]',
-		'~<strike(\s(.)*?)*?' . '>~i' => '[s]',
+		'~<s(\s(.)*?)*?>~i' => "[s]",
+		'~</s>~i' => "[/s]",
+		'~<strike(\s(.)*?)*?>~i' => '[s]',
 		'~</strike>~i' => '[/s]',
 		'~<del(\s(.)*?)*?' . '>~i' => '[s]',
 		'~</del>~i' => '[/s]',
@@ -589,7 +591,12 @@ function html_to_bbc($text)
 		'~<br\s*/*>~i' => "\n",
 		'~(.+?)(<hr[^<>]*>)~si' => "$1\n\$2",
 		'~<hr[^<>]*>~i' => "[hr]\n",
+		'~<blockquote(\s(.)*?)*?>~i' => "&lt;blockquote&gt;",
+		'~</blockquote>~i' => "&lt;/blockquote&gt;",
+		'~<ins(\s(.)*?)*?>~i' => "&lt;ins&gt;",
+		'~</ins>~i' => "&lt;/ins&gt;",
 	);
+
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
 	// Please give us just a little more time.

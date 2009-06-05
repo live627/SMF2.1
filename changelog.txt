@@ -35,6 +35,7 @@ June 2009
  & Who wasn't using the topic subject for whopost_quotefast (Who.english.php) [Bug 3473]
  * Pm popup should not be shown until after page has loaded (index.template.php) [Bug 3395]
  * Curve: partially rewrote the Packages template to match Curve's look and feel. (Packages.template.php, admin.css, style.css) [Bug 3059]
+ ! Strike, ins and blockquote lost when toggling wysiwyg (Subs-Editor.php) [Bug 2954]
 
 May 2009
 --------------------------------------------------------------------------------
