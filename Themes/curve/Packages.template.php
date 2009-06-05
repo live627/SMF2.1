@@ -375,7 +375,7 @@ function template_extract_package()
 	}
 
 	echo '
-		fdfd<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">';
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">';
 
 	if (empty($context['redirect_url']))
 	{
@@ -558,7 +558,7 @@ function template_browse()
 	echo '
 	<div id="admincenter" class="align_left">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '
+			<a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img class="icon" src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '
 		</h3>
 		<div class="windowbg2">
 				<span class="topslice"><span></span></span>
@@ -970,7 +970,7 @@ function template_servers()
 					<ul class="reset">';
 	foreach ($context['servers'] as $server)
 		echo '
-						<li>
+						<li class="reset">
 							<span class="align_left">' . $server['name'] . '</span>
 							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . '">[ ' . $txt['delete'] . ' ]</a></span>
 							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['package_browse'] . ' ]</a></span>
@@ -1188,7 +1188,6 @@ function template_package_list()
 				</td>
 			</tr>
 		</table>
-		dfsaff
 		<table border="0" width="100%" cellspacing="1" cellpadding="4">
 			<tr>
 				<td class="smalltext">
@@ -1245,7 +1244,7 @@ function template_downloaded()
 			<div class="content">
 				<p>' . (!isset($context['package_server']) ? $txt['package_uploaded_successfully'] : $txt['package_downloaded_successfully']) . '</p>
 					<ul class="reset">
-							<li><span class="align_left"><strong>' . $context['package']['name'] . '</strong></span>
+							<li class="reset"><span class="align_left"><strong>' . $context['package']['name'] . '</strong></span>
 								<span class="package_server align_right">' . $context['package']['list_files']['link'] . '</span>
 								<span class="package_server align_right">' . $context['package']['install']['link'] . '</span>
 							</li>
