@@ -33,6 +33,7 @@ June 2009
  * Old font tags needed euthanizing (Help.template.php) [Bug 3120]
  ! When Uninstalling mods, use some more relevant titles (Packages.english.php, Packages.template.php, PackagesGet.php) [Bug 3466]
  & Who wasn't using the topic subject for whopost_quotefast (Who.english.php) [Bug 3473]
+ * Pm popup should not be shown until after page has loaded (index.template.php) [Bug 3395]
 
 May 2009
 --------------------------------------------------------------------------------

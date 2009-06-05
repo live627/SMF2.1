@@ -85,8 +85,10 @@ function template_html_above()
 		var smf_scripturl = "', $scripturl, '";
 		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
 		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
-		if (confirm("' . $txt['show_personal_messages'] . '"))
-			window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");' : '', '
+		window.onload = function() {
+			if (confirm("' . $txt['show_personal_messages'] . '"))
+				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
+		};' : '', '
 	// ]]></script>
 	<title>', $context['page_title_html_safe'], '</title>';
 
