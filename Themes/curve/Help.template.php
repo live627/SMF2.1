@@ -2069,7 +2069,7 @@ Simple
 					Code:
 				</div>
 				<div class="code">
-					<font color="#000000"><font color="#0000BB">&lt;?php phpinfo</font><font color="#007700">();</font> <font color="#0000BB">?&gt;</font></font>
+					<span style="color: #0000BB;">&lt;?php phpinfo</span><span style="color: #007700;">();</span> <span style="color: #0000BB;">?&gt;</span>
 				</div>
 			</td>
 			<td>', $txt['manual_posting_code_comment'], '</td>

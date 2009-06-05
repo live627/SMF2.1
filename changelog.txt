@@ -30,6 +30,7 @@ June 2009
  * Quick Login Setting didn't work for login boxes in theme header (index.template.php) [Bug 3305]
  * this.opt doesn't exist yet, so relocate the backwards compatibility check (script.js) [Bug 3488]
  ! Try to buy more time when processing large pages from WYSIWYG (Subs-Editor.php) [Bug 3422]
+ * Old font tags needed euthanizing (Help.template.php) [Bug 3120]
 
 
 May 2009
