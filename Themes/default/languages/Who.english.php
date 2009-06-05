@@ -64,7 +64,7 @@ $txt['whotopic_sendtopic'] = 'Sending the topic &quot;<a href="' . $scripturl . 
 $txt['whotopic_splittopics'] = 'Splitting the topic &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot; into two topics.';
 $txt['whotopic_vote'] = 'Voting in <a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>.';
 
-$txt['whopost_quotefast'] = 'Quoting a post from &quot;<a href="' . $scripturl . '?topic=%1$d.0">%1$s</a>&quot;.';
+$txt['whopost_quotefast'] = 'Quoting a post from &quot;<a href="' . $scripturl . '?topic=%1$d.0">%2$s</a>&quot;.';
 
 $txt['whoadmin_editagreement'] = 'Editing the registration agreement.';
 $txt['whoadmin_featuresettings'] = 'Editing forum features and options.';
