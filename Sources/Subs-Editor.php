@@ -142,15 +142,15 @@ function html_to_bbc($text)
 
 	// Safari/webkit wraps lines in Wysiwyg in <div>'s.
 	if ($context['browser']['is_webkit'])
-		$text = preg_replace(array('~<div(?:\s(?:[^<>]*?))?>~i', '</div>'), array('<br />', ''), $text);
+		$text = preg_replace(array('~<div(?:\s(?:[^<>]*?))?' . '>~i', '</div>'), array('<br />', ''), $text);
 
 	// If there's a trailing break get rid of it - Firefox tends to add one.
-	$text = preg_replace('~<br\s?/?>$~i', '', $text);
+	$text = preg_replace('~<br\s?/?' . '>$~i', '', $text);
 
 	// Remove any formatting within code tags.
 	if (strpos($text, '[code') !== false)
 	{
-		$text = preg_replace('~<br\s?/?>~i', '#smf_br_spec_grudge_cool!#', $text);
+		$text = preg_replace('~<br\s?/?' . '>~i', '#smf_br_spec_grudge_cool!#', $text);
 		$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		// Only mess with stuff outside [code] tags.
@@ -219,6 +219,10 @@ function html_to_bbc($text)
 		// Now sort out spaces
 		$text = str_replace(array('-[]-smf_smily_end#|#-[]-smf_smily_start#|#', '-[]-smf_smily_end#|#', '-[]-smf_smily_start#|#'), ' ', $text);
 	}
+
+	// Only try to by more time if the client didn't quit.
+	if (connection_aborted() && $context['server']['is_apache'])
+		@apache_reset_timeout();
 
 	$parts = preg_split('~(<[A-Za-z]+\s*[^<>]*?style="?[^<>"]+"?[^<>]*?(?:/?)>|</[A-Za-z]+>)~', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 	$replacement = '';
@@ -370,6 +374,10 @@ function html_to_bbc($text)
 	// Now put back the replacement in the text.
 	$text = $replacement;
 
+	// We are not finished yet, request more time.
+	if (connection_aborted() && $context['server']['is_apache'])
+		@apache_reset_timeout();
+
 	// Let's pull out any legacy alignments.
 	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(align="*(left|center|right)"*)[^<>]*?(/?)>~i', $text, $matches) === 1)
 	{
@@ -471,6 +479,10 @@ function html_to_bbc($text)
 		$text = substr($text, 0, $start_pos) . $before . $content . $after . substr($text, $end_pos + 7);
 	}
 
+	// Almost there, just a little more time.
+	if (connection_aborted() && $context['server']['is_apache'])
+		@apache_reset_timeout();
+
 	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
 	$text = preg_replace('~<li>\s*</li>~i', '', $text);
 	$text = preg_replace('~<(ul|ol)[^<>]*>\s*</(ul|ol)>~i', '', $text);
@@ -478,7 +490,7 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(<br\s*/?>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '\' . strtr(\'$5\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
+		$text = preg_replace('~(<br\s*/?' . '>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'$2\' == \'ol\' || \'$2\' == \'OL\' ? \' type=decimal\' : (strlen(\'$4\') > 1 ? \' type=$4\' : \'\')) . \']' . "\n" . '\' . strtr(\'$5\', array(\'\\"\' => \'"\')) . \'[/list]\'', $text);
 	}
 	$last_text = '';
 
@@ -486,14 +498,14 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~<li type="?(disc|square|circle)"?[^<>]*?>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
+		$text = preg_replace('~<li type="?(disc|square|circle)"?[^<>]*?' . '>(.+?)</li>~ie', '\'[\' . (strtolower(\'$1\') == \'disc\' ? \'*\' : (strtolower(\'$1\') == \'square\' ? \'+\' : \'o\')) . \']$2<br />\'', $text);
 	}
 
 	while ($text != $last_text)
 	{
 		$last_text = $text;
 
-		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', '[li]$1[/li]' . "\n", $text);
+		$text = preg_replace('~<li\s*[^<>]*?' . '>(.+?)</li>~i', '[li]$1[/li]' . "\n", $text);
 	}
 
 	// I love my own image...
@@ -543,42 +555,46 @@ function html_to_bbc($text)
 
 	// The final bits are the easy ones - tags which map to tags which map to tags - etc etc.
 	$tags = array(
-		'~<b(\s(.)*?)*?>~i' => '[b]',
+		'~<b(\s(.)*?)*?' . '>~i' => '[b]',
 		'~</b>~i' => '[/b]',
-		'~<i(\s(.)*?)*?>~i' => '[i]',
+		'~<i(\s(.)*?)*?' . '>~i' => '[i]',
 		'~</i>~i' => '[/i]',
-		'~<u(\s(.)*?)*?>~i' => '[u]',
+		'~<u(\s(.)*?)*?' . '>~i' => '[u]',
 		'~</u>~i' => '[/u]',
-		'~<strong(\s(.)*?)*?>~i' => '[b]',
+		'~<strong(\s(.)*?)*?' . '>~i' => '[b]',
 		'~</strong>~i' => '[/b]',
-		'~<em(\s(.)*?)*?>~i' => '[i]',
+		'~<em(\s(.)*?)*?' . '>~i' => '[i]',
 		'~</em>~i' => '[/i]',
-		'~<strike(\s(.)*?)*?>~i' => '[s]',
+		'~<strike(\s(.)*?)*?' . '>~i' => '[s]',
 		'~</strike>~i' => '[/s]',
-		'~<del(\s(.)*?)*?>~i' => '[s]',
+		'~<del(\s(.)*?)*?' . '>~i' => '[s]',
 		'~</del>~i' => '[/s]',
-		'~<center(\s(.)*?)*?>~i' => '[center]',
+		'~<center(\s(.)*?)*?' . '>~i' => '[center]',
 		'~</center>~i' => '[/center]',
-		'~<pre(\s(.)*?)*?>~i' => '[pre]',
+		'~<pre(\s(.)*?)*?' . '>~i' => '[pre]',
 		'~</pre>~i' => '[/pre]',
-		'~<sub(\s(.)*?)*?>~i' => '[sub]',
+		'~<sub(\s(.)*?)*?' . '>~i' => '[sub]',
 		'~</sub>~i' => '[/sub]',
-		'~<sup(\s(.)*?)*?>~i' => '[sup]',
+		'~<sup(\s(.)*?)*?' . '>~i' => '[sup]',
 		'~</sup>~i' => '[/sup]',
-		'~<tt(\s(.)*?)*?>~i' => '[tt]',
+		'~<tt(\s(.)*?)*?' . '>~i' => '[tt]',
 		'~</tt>~i' => '[/tt]',
-		'~<table(\s(.)*?)*?>~i' => '[table]',
+		'~<table(\s(.)*?)*?' . '>~i' => '[table]',
 		'~</table>~i' => '[/table]',
-		'~<tr(\s(.)*?)*?>~i' => '[tr]',
+		'~<tr(\s(.)*?)*?' . '>~i' => '[tr]',
 		'~</tr>~i' => '[/tr]',
-		'~<(td|th)\s[^<>]*?colspan="?(\d{1,2})"?.*?>~ie' => 'str_repeat(\'[td][/td]\', $2 - 1) . \'[td]\'',
-		'~<(td|th)(\s(.)*?)*?>~i' => '[td]',
+		'~<(td|th)\s[^<>]*?colspan="?(\d{1,2})"?.*?' . '>~ie' => 'str_repeat(\'[td][/td]\', $2 - 1) . \'[td]\'',
+		'~<(td|th)(\s(.)*?)*?' . '>~i' => '[td]',
 		'~</(td|th)>~i' => '[/td]',
 		'~<br\s*/*>~i' => "\n",
 		'~(.+?)(<hr[^<>]*>)~si' => "$1\n\$2",
 		'~<hr[^<>]*>~i' => "[hr]\n",
 	);
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
+
+	// Please give us just a little more time.
+	if (connection_aborted() && $context['server']['is_apache'])
+		@apache_reset_timeout();
 
 	// What about URL's - the pain in the ass of the tag world.
 	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) === 1)
