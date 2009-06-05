@@ -261,6 +261,49 @@ span.search_weight
 {
 	margin-bottom: 0;
 }
+
+/*Packages */
+.filepermissions
+{
+	font-size: 0.8em;
+	white-space: nowrap;
+}
+.fperm
+{
+	display: block;
+	width: 35%;
+	text-align: center;
+}
+.perm_read
+{
+	background-color: #D1F7BF;
+}
+.perm_write
+{
+	background-color: #FFBBBB;
+}
+.perm_execute
+{
+	background-color: #FDD7AF;
+}
+.perm_custom
+{
+	background-color: #C2C6C0;
+}
+.perm_nochange
+{
+	background-color: #eee;
+}
+span.package_server
+{
+	padding: 0 3em;
+}
+pre.file_content
+{
+	overflow: auto; 
+	width: 100%; 
+	padding-bottom: 1em;
+}
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */

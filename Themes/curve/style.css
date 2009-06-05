@@ -520,7 +520,7 @@ table.table_grid thead tr.catbg th.smalltext
 	color: #FFA500;
 }
 
-.warn_watch
+.warn_watch, .success
 {
 	color: green;
 }
