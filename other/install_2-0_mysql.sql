@@ -7,11 +7,11 @@
 
 CREATE TABLE {$db_prefix}admin_info_files (
   id_file tinyint(4) unsigned NOT NULL auto_increment,
-  filename tinytext NOT NULL,
-  path tinytext NOT NULL,
-  parameters tinytext NOT NULL,
+  filename varchar(255) NOT NULL default '',
+  path varchar(255) NOT NULL default '',
+  parameters varchar(255) NOT NULL default '',
   data text NOT NULL,
-  filetype tinytext NOT NULL,
+  filetype varchar(255) NOT NULL default '',
   PRIMARY KEY (id_file),
   KEY filename (filename(30))
 ) ENGINE=MYISAM;
@@ -53,7 +53,7 @@ CREATE TABLE {$db_prefix}attachments (
   id_member mediumint(8) unsigned NOT NULL default '0',
   id_folder tinyint(3) NOT NULL default '1',
   attachment_type tinyint(3) unsigned NOT NULL default '0',
-  filename tinytext NOT NULL,
+  filename varchar(255) NOT NULL default '',
   file_hash varchar(40) NOT NULL default '',
   fileext varchar(8) NOT NULL default '',
   size int(10) unsigned NOT NULL default '0',
@@ -80,7 +80,7 @@ CREATE TABLE {$db_prefix}ban_groups (
   cannot_register tinyint(3) unsigned NOT NULL default '0',
   cannot_post tinyint(3) unsigned NOT NULL default '0',
   cannot_login tinyint(3) unsigned NOT NULL default '0',
-  reason tinytext NOT NULL,
+  reason varchar(255) NOT NULL default '',
   notes text NOT NULL,
   PRIMARY KEY (id_ban_group)
 ) ENGINE=MyISAM;
@@ -100,8 +100,8 @@ CREATE TABLE {$db_prefix}ban_items (
   ip_high3 tinyint(3) unsigned NOT NULL default '0',
   ip_low4 tinyint(3) unsigned NOT NULL default '0',
   ip_high4 tinyint(3) unsigned NOT NULL default '0',
-  hostname tinytext NOT NULL,
-  email_address tinytext NOT NULL,
+  hostname varchar(255) NOT NULL default '',
+  email_address varchar(255) NOT NULL default '',
   id_member mediumint(8) unsigned NOT NULL default '0',
   hits mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (id_ban),
@@ -476,7 +476,7 @@ CREATE TABLE {$db_prefix}boards (
   id_msg_updated int(10) unsigned NOT NULL default '0',
   member_groups varchar(255) NOT NULL default '-1,0',
   id_profile smallint(5) unsigned NOT NULL default '1',
-  name tinytext NOT NULL,
+  name varchar(255) NOT NULL default '',
   description text NOT NULL,
   num_topics mediumint(8) unsigned NOT NULL default '0',
   num_posts mediumint(8) unsigned NOT NULL default '0',
@@ -681,7 +681,7 @@ VALUES ('Independence Day', '0004-07-04'),
 CREATE TABLE {$db_prefix}categories (
   id_cat tinyint(4) unsigned NOT NULL auto_increment,
   cat_order tinyint(4) NOT NULL default '0',
-  name tinytext NOT NULL,
+  name varchar(255) NOT NULL default '',
   can_collapse tinyint(1) NOT NULL default '1',
   PRIMARY KEY (id_cat)
 ) ENGINE=MyISAM;
@@ -712,11 +712,11 @@ CREATE TABLE {$db_prefix}custom_fields (
   id_field smallint(5) NOT NULL auto_increment,
   col_name varchar(12) NOT NULL default '',
   field_name varchar(40) NOT NULL default '',
-  field_desc tinytext NOT NULL,
+  field_desc varchar(255) NOT NULL default '',
   field_type varchar(8) NOT NULL default 'text',
   field_length smallint(5) NOT NULL default '255',
-  field_options tinytext NOT NULL,
-  mask tinytext NOT NULL,
+  field_options varchar(255) NOT NULL default '',
+  mask varchar(255) NOT NULL default '',
   show_reg tinyint(3) NOT NULL default '0',
   show_display tinyint(3) NOT NULL default '0',
   show_profile varchar(20) NOT NULL default 'forumProfile',
@@ -724,7 +724,7 @@ CREATE TABLE {$db_prefix}custom_fields (
   active tinyint(3) NOT NULL default '1',
   bbc tinyint(3) NOT NULL default '0',
   can_search tinyint(3) NOT NULL default '0',
-  default_value tinytext NOT NULL,
+  default_value varchar(255) NOT NULL default '',
   PRIMARY KEY (id_field),
   UNIQUE col_name (col_name)
 ) ENGINE=MyISAM;
@@ -786,7 +786,7 @@ CREATE TABLE {$db_prefix}log_banned (
   id_ban_log mediumint(8) unsigned NOT NULL auto_increment,
   id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
-  email tinytext NOT NULL,
+  email varchar(255) NOT NULL default '',
   log_time int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (id_ban_log),
   KEY log_time (log_time)
@@ -813,7 +813,7 @@ CREATE TABLE {$db_prefix}log_comments (
   member_name varchar(80) NOT NULL default '',
   comment_type varchar(8) NOT NULL default 'warning',
   id_recipient mediumint(8) unsigned NOT NULL default '0',
-  recipient_name tinytext NOT NULL,
+  recipient_name varchar(255) NOT NULL default '',
   log_time int(10) NOT NULL default '0',
   id_notice mediumint(8) unsigned NOT NULL default '0',
   counter tinyint(3) NOT NULL default '0',
@@ -849,7 +849,7 @@ CREATE TABLE {$db_prefix}log_errors (
   message text NOT NULL,
   session char(32) NOT NULL default '                                ',
   error_type char(15) NOT NULL default 'general',
-  file tinytext NOT NULL,
+  file varchar(255) NOT NULL default '',
   line mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (id_error),
   KEY log_time (log_time),
@@ -912,7 +912,7 @@ CREATE TABLE {$db_prefix}log_mark_read (
 
 CREATE TABLE {$db_prefix}log_member_notices (
   id_notice mediumint(8) unsigned NOT NULL auto_increment,
-  subject tinytext NOT NULL,
+  subject varchar(255) NOT NULL default '',
   body text NOT NULL,
   PRIMARY KEY (id_notice)
 ) ENGINE=MyISAM;
@@ -952,19 +952,19 @@ CREATE TABLE {$db_prefix}log_online (
 
 CREATE TABLE {$db_prefix}log_packages (
   id_install int(10) NOT NULL auto_increment,
-  filename tinytext NOT NULL,
-  package_id tinytext NOT NULL,
-  name tinytext NOT NULL,
-  version tinytext NOT NULL,
+  filename varchar(255) NOT NULL default '',
+  package_id varchar(255) NOT NULL default '',
+  name varchar(255) NOT NULL default '',
+  version varchar(255) NOT NULL default '',
   id_member_installed mediumint(8) NOT NULL default '0',
-  member_installed tinytext NOT NULL,
+  member_installed varchar(255) NOT NULL default '',
   time_installed int(10) NOT NULL default '0',
   id_member_removed mediumint(8) NOT NULL default '0',
-  member_removed tinytext NOT NULL,
+  member_removed varchar(255) NOT NULL default '',
   time_removed int(10) NOT NULL default '0',
   install_state tinyint(3) NOT NULL default '1',
   failed_steps text NOT NULL,
-  themes_installed tinytext NOT NULL,
+  themes_installed varchar(255) NOT NULL default '',
   db_changes text NOT NULL,
   PRIMARY KEY (id_install),
   KEY filename (filename(15))
@@ -991,8 +991,8 @@ CREATE TABLE {$db_prefix}log_reported (
   id_topic mediumint(8) unsigned NOT NULL default '0',
   id_board smallint(5) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
-  membername tinytext NOT NULL,
-  subject tinytext NOT NULL,
+  membername varchar(255) NOT NULL default '',
+  subject varchar(255) NOT NULL default '',
   body text NOT NULL,
   time_started int(10) NOT NULL default '0',
   time_updated int(10) NOT NULL default '0',
@@ -1015,8 +1015,8 @@ CREATE TABLE {$db_prefix}log_reported_comments (
   id_comment mediumint(8) unsigned NOT NULL auto_increment,
   id_report mediumint(8) NOT NULL default '0',
   id_member mediumint(8) NOT NULL,
-  membername tinytext NOT NULL,
-  comment tinytext NOT NULL,
+  membername varchar(255) NOT NULL default '',
+  comment varchar(255) NOT NULL default '',
   time_sent int(10) NOT NULL,
   PRIMARY KEY (id_comment),
   KEY id_report (id_report),
@@ -1088,7 +1088,7 @@ CREATE TABLE {$db_prefix}log_spider_hits (
 	id_hit int(10) unsigned NOT NULL auto_increment,
   id_spider smallint(5) unsigned NOT NULL default '0',
   log_time int(10) unsigned NOT NULL default '0',
-  url tinytext NOT NULL,
+  url varchar(255) NOT NULL default '',
   processed tinyint(3) NOT NULL default '0',
   PRIMARY KEY (id_hit),
   KEY id_spider(id_spider),
@@ -1123,7 +1123,7 @@ CREATE TABLE {$db_prefix}log_subscribed (
   payments_pending tinyint(3) NOT NULL default '0',
   pending_details text NOT NULL,
   reminder_sent tinyint(3) NOT NULL default '0',
-  vendor_ref tinytext NOT NULL,
+  vendor_ref varchar(255) NOT NULL default '',
   PRIMARY KEY (id_sublog),
   UNIQUE KEY id_subscribe (id_subscribe, id_member),
   KEY end_time (end_time),
@@ -1152,9 +1152,9 @@ CREATE TABLE {$db_prefix}log_topics (
 CREATE TABLE {$db_prefix}mail_queue (
   id_mail int(10) unsigned NOT NULL auto_increment,
   time_sent int(10) NOT NULL default '0',
-  recipient tinytext NOT NULL,
+  recipient varchar(255) NOT NULL default '',
   body text NOT NULL,
-  subject tinytext NOT NULL,
+  subject varchar(255) NOT NULL default '',
   headers text NOT NULL,
   send_html tinyint(3) NOT NULL default '0',
   priority tinyint(3) NOT NULL default '1',
@@ -1174,7 +1174,7 @@ CREATE TABLE {$db_prefix}membergroups (
   online_color varchar(20) NOT NULL default '',
   min_posts mediumint(9) NOT NULL default '-1',
   max_messages smallint(5) unsigned NOT NULL default '0',
-  stars tinytext NOT NULL,
+  stars varchar(255) NOT NULL default '',
   group_type tinyint(3) NOT NULL default '0',
   hidden tinyint(3) NOT NULL default '0',
   id_parent smallint(5) NOT NULL default '-2',
@@ -1208,53 +1208,53 @@ CREATE TABLE {$db_prefix}members (
   date_registered int(10) unsigned NOT NULL default '0',
   posts mediumint(8) unsigned NOT NULL default '0',
   id_group smallint(5) unsigned NOT NULL default '0',
-  lngfile tinytext NOT NULL,
+  lngfile varchar(255) NOT NULL default '',
   last_login int(10) unsigned NOT NULL default '0',
-  real_name tinytext NOT NULL,
+  real_name varchar(255) NOT NULL default '',
   instant_messages smallint(5) NOT NULL default 0,
   unread_messages smallint(5) NOT NULL default 0,
   new_pm tinyint(3) unsigned NOT NULL default '0',
   buddy_list text NOT NULL,
-  pm_ignore_list tinytext NOT NULL,
+  pm_ignore_list varchar(255) NOT NULL default '',
   pm_prefs mediumint(8) NOT NULL default '0',
   mod_prefs varchar(20) NOT NULL default '',
   message_labels text NOT NULL,
   passwd varchar(64) NOT NULL default '',
   openid_uri text NOT NULL,
-  email_address tinytext NOT NULL,
-  personal_text tinytext NOT NULL,
+  email_address varchar(255) NOT NULL default '',
+  personal_text varchar(255) NOT NULL default '',
   gender tinyint(4) unsigned NOT NULL default '0',
   birthdate date NOT NULL default '0001-01-01',
-  website_title tinytext NOT NULL,
-  website_url tinytext NOT NULL,
-  location tinytext NOT NULL,
-  icq tinytext NOT NULL,
-  aim tinytext NOT NULL,
+  website_title varchar(255) NOT NULL default '',
+  website_url varchar(255) NOT NULL default '',
+  location varchar(255) NOT NULL default '',
+  icq varchar(255) NOT NULL default '',
+  aim varchar(255) NOT NULL default '',
   yim varchar(32) NOT NULL default '',
-  msn tinytext NOT NULL,
+  msn varchar(255) NOT NULL default '',
   hide_email tinyint(4) NOT NULL default '0',
   show_online tinyint(4) NOT NULL default '1',
   time_format varchar(80) NOT NULL default '',
   signature text NOT NULL,
   time_offset float NOT NULL default '0',
-  avatar tinytext NOT NULL,
+  avatar varchar(255) NOT NULL default '',
   pm_email_notify tinyint(4) NOT NULL default '0',
   karma_bad smallint(5) unsigned NOT NULL default '0',
   karma_good smallint(5) unsigned NOT NULL default '0',
-  usertitle tinytext NOT NULL,
+  usertitle varchar(255) NOT NULL default '',
   notify_announcements tinyint(4) NOT NULL default '1',
   notify_regularity tinyint(4) NOT NULL default '1',
   notify_send_body tinyint(4) NOT NULL default '0',
   notify_types tinyint(4) NOT NULL default '2',
-  member_ip tinytext NOT NULL,
-  member_ip2 tinytext NOT NULL,
-  secret_question tinytext NOT NULL,
+  member_ip varchar(255) NOT NULL default '',
+  member_ip2 varchar(255) NOT NULL default '',
+  secret_question varchar(255) NOT NULL default '',
   secret_answer varchar(64) NOT NULL default '',
   id_theme tinyint(4) unsigned NOT NULL default '0',
   is_activated tinyint(3) unsigned NOT NULL default '1',
   validation_code varchar(10) NOT NULL default '',
   id_msg_last_visit int(10) unsigned NOT NULL default '0',
-  additional_groups tinytext NOT NULL,
+  additional_groups varchar(255) NOT NULL default '',
   smiley_set varchar(48) NOT NULL default '',
   id_post_group smallint(5) unsigned NOT NULL default '0',
   total_time_logged_in int(10) unsigned NOT NULL default '0',
@@ -1320,13 +1320,13 @@ CREATE TABLE {$db_prefix}messages (
   poster_time int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
   id_msg_modified int(10) unsigned NOT NULL default '0',
-  subject tinytext NOT NULL,
-  poster_name tinytext NOT NULL,
-  poster_email tinytext NOT NULL,
-  poster_ip tinytext NOT NULL,
+  subject varchar(255) NOT NULL default '',
+  poster_name varchar(255) NOT NULL default '',
+  poster_email varchar(255) NOT NULL default '',
+  poster_ip varchar(255) NOT NULL default '',
   smileys_enabled tinyint(4) NOT NULL default '1',
   modified_time int(10) unsigned NOT NULL default '0',
-  modified_name tinytext NOT NULL,
+  modified_name varchar(255) NOT NULL default '',
   body text NOT NULL,
   icon varchar(16) NOT NULL default 'xx',
   approved tinyint(3) NOT NULL default '1',
@@ -1366,7 +1366,7 @@ CREATE TABLE {$db_prefix}moderators (
 
 CREATE TABLE {$db_prefix}openid_assoc (
   server_url text NOT NULL,
-  handle tinytext NOT NULL,
+  handle varchar(255) NOT NULL default '',
   secret text NOT NULL,
   issued int(10) NOT NULL default '0',
   expires int(10) NOT NULL default '0',
@@ -1381,8 +1381,8 @@ CREATE TABLE {$db_prefix}openid_assoc (
 
 CREATE TABLE {$db_prefix}package_servers (
   id_server smallint(5) unsigned NOT NULL auto_increment,
-  name tinytext NOT NULL,
-  url tinytext NOT NULL,
+  name varchar(255) NOT NULL default '',
+  url varchar(255) NOT NULL default '',
   PRIMARY KEY (id_server)
 ) ENGINE=MyISAM;
 
@@ -1401,7 +1401,7 @@ VALUES ('Simple Machines Third-party Mod Site', 'http://custom.simplemachines.or
 
 CREATE TABLE {$db_prefix}permission_profiles (
   id_profile smallint(5) NOT NULL auto_increment,
-  profile_name tinytext NOT NULL,
+  profile_name varchar(255) NOT NULL default '',
   PRIMARY KEY (id_profile)
 ) ENGINE=MyISAM;
 
@@ -1482,9 +1482,9 @@ CREATE TABLE {$db_prefix}personal_messages (
   id_pm_head int(10) unsigned NOT NULL default '0',
   id_member_from mediumint(8) unsigned NOT NULL default '0',
   deleted_by_sender tinyint(3) unsigned NOT NULL default '0',
-  from_name tinytext NOT NULL,
+  from_name varchar(255) NOT NULL default '',
   msgtime int(10) unsigned NOT NULL default '0',
-  subject tinytext NOT NULL,
+  subject varchar(255) NOT NULL default '',
   body text NOT NULL,
   PRIMARY KEY (id_pm),
   KEY id_member (id_member_from, deleted_by_sender),
@@ -1531,7 +1531,7 @@ CREATE TABLE {$db_prefix}pm_rules (
 
 CREATE TABLE {$db_prefix}polls (
   id_poll mediumint(8) unsigned NOT NULL auto_increment,
-  question tinytext NOT NULL,
+  question varchar(255) NOT NULL default '',
   voting_locked tinyint(1) NOT NULL default '0',
   max_votes tinyint(3) unsigned NOT NULL default '1',
   expire_time int(10) unsigned NOT NULL default '0',
@@ -1541,7 +1541,7 @@ CREATE TABLE {$db_prefix}polls (
   num_guest_voters int(10) unsigned NOT NULL default '0',
   reset_poll int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) NOT NULL default '0',
-  poster_name tinytext NOT NULL,
+  poster_name varchar(255) NOT NULL default '',
   PRIMARY KEY (id_poll)
 ) ENGINE=MyISAM;
 
@@ -1552,7 +1552,7 @@ CREATE TABLE {$db_prefix}polls (
 CREATE TABLE {$db_prefix}poll_choices (
   id_poll mediumint(8) unsigned NOT NULL default '0',
   id_choice tinyint(3) unsigned NOT NULL default '0',
-  label tinytext NOT NULL,
+  label varchar(255) NOT NULL default '',
   votes smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY (id_poll, id_choice)
 ) ENGINE=MyISAM;
@@ -1599,7 +1599,7 @@ VALUES
 #
 
 CREATE TABLE {$db_prefix}settings (
-  variable tinytext NOT NULL,
+  variable varchar(255) NOT NULL default '',
   value text NOT NULL,
   PRIMARY KEY (variable(30))
 ) ENGINE=MyISAM;
@@ -1835,9 +1835,9 @@ VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0),
 
 CREATE TABLE {$db_prefix}spiders (
   id_spider smallint(5) unsigned NOT NULL auto_increment,
-  spider_name tinytext NOT NULL,
-  user_agent tinytext NOT NULL,
-  ip_info tinytext NOT NULL,
+  spider_name varchar(255) NOT NULL default '',
+  user_agent varchar(255) NOT NULL default '',
+  ip_info varchar(255) NOT NULL default '',
   PRIMARY KEY id_spider(id_spider)
 ) ENGINE=MyISAM;
 
@@ -1875,7 +1875,7 @@ VALUES (1, 'Google', 'googlebot', ''),
 CREATE TABLE {$db_prefix}subscriptions(
   id_subscribe mediumint(8) unsigned NOT NULL auto_increment,
   name varchar(60) NOT NULL default '',
-  description tinytext NOT NULL,
+  description varchar(255) NOT NULL default '',
   cost text NOT NULL,
   length varchar(6) NOT NULL default '',
   id_group smallint(5) NOT NULL default '0',
@@ -1896,7 +1896,7 @@ CREATE TABLE {$db_prefix}subscriptions(
 CREATE TABLE {$db_prefix}themes (
   id_member mediumint(8) NOT NULL default '0',
   id_theme tinyint(4) unsigned NOT NULL default '1',
-  variable tinytext NOT NULL,
+  variable varchar(255) NOT NULL default '',
   value text NOT NULL,
   PRIMARY KEY (id_theme, id_member, variable(30)),
   KEY id_member (id_member)

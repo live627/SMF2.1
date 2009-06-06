@@ -79,10 +79,10 @@ $nameChanges = array(
 		'ID_FIELD' => 'ID_FIELD id_field smallint(5) NOT NULL auto_increment',
 		'colName' => 'colName col_name varchar(12) NOT NULL default \'\'',
 		'fieldName' => 'fieldName field_name varchar(40) NOT NULL default \'\'',
-		'fieldDesc' => 'fieldDesc field_desc tinytext NOT NULL',
+		'fieldDesc' => 'fieldDesc field_desc varchar(255) NOT NULL default \'\'',
 		'fieldType' => 'fieldType field_type varchar(8) NOT NULL default \'text\'',
 		'fieldLength' => 'fieldLength field_length smallint(5) NOT NULL default \'255\'',
-		'fieldOptions' => 'fieldOptions field_options tinytext NOT NULL',
+		'fieldOptions' => 'fieldOptions field_options varchar(255) NOT NULL default \'\'',
 		'showReg' => 'showReg show_reg tinyint(3) NOT NULL default \'0\'',
 		'showDisplay' => 'showDisplay show_display tinyint(3) NOT NULL default \'0\'',
 		'showProfile' => 'showProfile show_profile varchar(20) NOT NULL default \'forumProfile\'',
@@ -213,18 +213,18 @@ $nameChanges = array(
 		'dateRegistered' => 'dateRegistered date_registered int(10) unsigned NOT NULL default \'0\'',
 		'ID_GROUP' => 'ID_GROUP id_group smallint(5) unsigned NOT NULL default \'0\'',
 		'lastLogin' => 'lastLogin last_login int(10) unsigned NOT NULL default \'0\'',
-		'realName' => 'realName real_name tinytext NOT NULL',
+		'realName' => 'realName real_name varchar(255) NOT NULL default \'\'',
 		'instantMessages' => 'instantMessages instant_messages smallint(5) NOT NULL default \'0\'',
 		'unreadMessages' => 'unreadMessages unread_messages smallint(5) NOT NULL default \'0\'',
 		'messageLabels' => 'messageLabels message_labels text NOT NULL',
-		'emailAddress' => 'emailAddress email_address tinytext NOT NULL',
-		'personalText' => 'personalText personal_text tinytext NOT NULL',
-		'websiteTitle' => 'websiteTitle website_title tinytext NOT NULL',
-		'websiteUrl' => 'websiteUrl website_url tinytext NOT NULL',
-		'ICQ' => 'ICQ icq tinytext NOT NULL',
-		'AIM' => 'AIM aim tinytext NOT NULL',
+		'emailAddress' => 'emailAddress email_address varchar(255) NOT NULL default \'\'',
+		'personalText' => 'personalText personal_text varchar(255) NOT NULL default \'\'',
+		'websiteTitle' => 'websiteTitle website_title varchar(255) NOT NULL default \'\'',
+		'websiteUrl' => 'websiteUrl website_url varchar(255) NOT NULL default \'\'',
+		'ICQ' => 'ICQ icq varchar(255) NOT NULL default \'\'',
+		'AIM' => 'AIM aim varchar(255) NOT NULL default \'\'',
 		'YIM' => 'YIM yim varchar(32) NOT NULL default \'\'',
-		'MSN' => 'MSN msn tinytext NOT NULL',
+		'MSN' => 'MSN msn varchar(255) NOT NULL default \'\'',
 		'hideEmail' => 'hideEmail hide_email tinyint(4) NOT NULL default \'0\'',
 		'showOnline' => 'showOnline show_online tinyint(4) NOT NULL default \'1\'',
 		'timeFormat' => 'timeFormat time_format varchar(80) NOT NULL default \'\'',
@@ -235,18 +235,18 @@ $nameChanges = array(
 		'notifyRegularity' => 'notifyRegularity notify_regularity tinyint(4) NOT NULL default \'1\'',
 		'notifySendBody' => 'notifySendBody notify_send_body tinyint(4) NOT NULL default \'0\'',
 		'notifyTypes' => 'notifyTypes notify_types tinyint(4) NOT NULL default \'2\'',
-		'memberIP' => 'memberIP member_ip tinytext NOT NULL',
-		'secretQuestion' => 'secretQuestion secret_question tinytext NOT NULL',
+		'memberIP' => 'memberIP member_ip varchar(255) NOT NULL default \'\'',
+		'secretQuestion' => 'secretQuestion secret_question varchar(255) NOT NULL default \'\'',
 		'secretAnswer' => 'secretAnswer secret_answer varchar(64) NOT NULL default \'\'',
 		'ID_THEME' => 'ID_THEME id_theme tinyint(4) unsigned NOT NULL default \'0\'',
 		'ID_MSG_LAST_VISIT' => 'ID_MSG_LAST_VISIT id_msg_last_visit int(10) unsigned NOT NULL default \'0\'',
-		'additionalGroups' => 'additionalGroups additional_groups tinytext NOT NULL',
+		'additionalGroups' => 'additionalGroups additional_groups varchar(255) NOT NULL default \'\'',
 		'smileySet' => 'smileySet smiley_set varchar(48) NOT NULL default \'\'',
 		'ID_POST_GROUP' => 'ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default \'0\'',
 		'totalTimeLoggedIn' => 'totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default \'0\'',
 		'passwordSalt' => 'passwordSalt password_salt varchar(255) NOT NULL default \'\'',
 		'ignoreBoards' => 'ignoreBoards ignore_boards text NOT NULL',
-		'memberIP2' => 'memberIP2 member_ip2 tinytext NOT NULL',
+		'memberIP2' => 'memberIP2 member_ip2 varchar(255) NOT NULL default \'\'',
 	),
 	'messages' => array(
 		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL auto_increment',
@@ -255,12 +255,12 @@ $nameChanges = array(
 		'posterTime' => 'posterTime poster_time int(10) unsigned NOT NULL default \'0\'',
 		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
 		'ID_MSG_MODIFIED' => 'ID_MSG_MODIFIED id_msg_modified int(10) unsigned NOT NULL default \'0\'',
-		'posterName' => 'posterName poster_name tinytext NOT NULL',
-		'posterEmail' => 'posterEmail poster_email tinytext NOT NULL',
-		'posterIP' => 'posterIP poster_ip tinytext NOT NULL',
+		'posterName' => 'posterName poster_name varchar(255) NOT NULL default \'\'',
+		'posterEmail' => 'posterEmail poster_email varchar(255) NOT NULL default \'\'',
+		'posterIP' => 'posterIP poster_ip varchar(255) NOT NULL default \'\'',
 		'smileysEnabled' => 'smileysEnabled smileys_enabled tinyint(4) NOT NULL default \'1\'',
 		'modifiedTime' => 'modifiedTime modified_time int(10) unsigned NOT NULL default \'0\'',
-		'modifiedName' => 'modifiedName modified_name tinytext NOT NULL',
+		'modifiedName' => 'modifiedName modified_name varchar(255) NOT NULL default \'\'',
 	),
 	'membergroups' => array(
 		'ID_GROUP' => 'ID_GROUP id_group smallint(5) unsigned NOT NULL auto_increment',
@@ -287,7 +287,7 @@ $nameChanges = array(
 		'ID_PM' => 'ID_PM id_pm int(10) unsigned NOT NULL auto_increment',
 		'ID_MEMBER_FROM' => 'ID_MEMBER_FROM id_member_from mediumint(8) unsigned NOT NULL default \'0\'',
 		'deletedBySender' => 'deletedBySender deleted_by_sender tinyint(3) unsigned NOT NULL default \'0\'',
-		'fromName' => 'fromName from_name tinytext NOT NULL',
+		'fromName' => 'fromName from_name varchar(255) NOT NULL default \'\'',
 	),
 	'permission_profiles' => array(
 		'ID_PROFILE' => 'ID_PROFILE id_profile smallint(5) NOT NULL auto_increment',
@@ -308,7 +308,7 @@ $nameChanges = array(
 		'expireTime' => 'expireTime expire_time int(10) unsigned NOT NULL default \'0\'',
 		'hideResults' => 'hideResults hide_results tinyint(3) unsigned NOT NULL default \'0\'',
 		'changeVote' => 'changeVote change_vote tinyint(3) unsigned NOT NULL default \'0\'',
-		'posterName' => 'posterName poster_name tinytext NOT NULL',
+		'posterName' => 'posterName poster_name varchar(255) NOT NULL default \'\'',
 	),
 	'poll_choices' => array(
 		'ID_CHOICE' => 'ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default \'0\'',
@@ -388,10 +388,10 @@ foreach ($nameChanges as $table_name => $table)
 			'method' => 'change_remove',
 			'text' => 'CHANGE ' . $coldef,
 		);
-
+		
 		// Check if this change may need a special edit.
 		checkChange($change);
-
+		
 		if (protected_alter($change, $substep, true) == false)
 			$actualChanges[] = ' CHANGE COLUMN ' . $coldef;
 	}
@@ -451,9 +451,9 @@ ADD COLUMN redirect varchar(255) NOT NULL default '';
 ---# Creating spider table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}spiders (
 	id_spider smallint(5) unsigned NOT NULL auto_increment,
-	spider_name tinytext NOT NULL,
-	user_agent tinytext NOT NULL,
-	ip_info tinytext NOT NULL,
+	spider_name varchar(255) NOT NULL default '',
+	user_agent varchar(255) NOT NULL default '',
+	ip_info varchar(255) NOT NULL default '',
 	PRIMARY KEY id_spider(id_spider)
 ) ENGINE=MyISAM{$db_collation};
 
@@ -520,7 +520,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_hits (
 	id_hit int(10) unsigned NOT NULL auto_increment,
 	id_spider smallint(5) unsigned NOT NULL default '0',
 	log_time int(10) unsigned NOT NULL default '0',
-	url tinytext NOT NULL,
+	url varchar(255) NOT NULL default '',
 	processed tinyint(3) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_hit),
 	KEY id_spider(id_spider),
@@ -846,18 +846,18 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 	id_field smallint(5) NOT NULL auto_increment,
 	col_name varchar(12) NOT NULL default '',
 	field_name varchar(40) NOT NULL default '',
-	field_desc tinytext NOT NULL,
+	field_desc varchar(255) NOT NULL default '',
 	field_type varchar(8) NOT NULL default 'text',
 	field_length smallint(5) NOT NULL default '255',
-	field_options tinytext NOT NULL,
-	mask tinytext NOT NULL,
+	field_options varchar(255) NOT NULL default '',
+	mask varchar(255) NOT NULL default '',
 	show_reg tinyint(3) NOT NULL default '0',
 	show_display tinyint(3) NOT NULL default '0',
 	show_profile varchar(20) NOT NULL default 'forumProfile',
 	private tinyint(3) NOT NULL default '0',
 	active tinyint(3) NOT NULL default '1',
 	bbc tinyint(3) NOT NULL default '0',
-	default_value tinytext NOT NULL,
+	default_value varchar(255) NOT NULL default '',
 	PRIMARY KEY (id_field),
 	UNIQUE col_name (col_name)
 ) ENGINE=MyISAM{$db_collation};
@@ -870,7 +870,7 @@ ADD COLUMN can_search tinyint(3) NOT NULL default '0' AFTER bbc;
 
 ---# Fixing default value field length.
 ALTER TABLE {$db_prefix}custom_fields
-CHANGE COLUMN default_value default_value tinytext NOT NULL;
+CHANGE COLUMN default_value default_value varchar(255) NOT NULL default '';
 ---#
 
 ---# Enhancing privacy settings for custom fields.
@@ -947,19 +947,19 @@ CHANGE COLUMN notifyOnce notify_regularity tinyint(4) unsigned NOT NULL default 
 ---# Creating "log_packages" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
 	id_install int(10) NOT NULL auto_increment,
-	filename tinytext NOT NULL,
-	package_id tinytext NOT NULL,
-	name tinytext NOT NULL,
-	version tinytext NOT NULL,
+	filename varchar(255) NOT NULL default '',
+	package_id varchar(255) NOT NULL default '',
+	name varchar(255) NOT NULL default '',
+	version varchar(255) NOT NULL default '',
 	id_member_installed mediumint(8) NOT NULL default '0',
-	member_installed tinytext NOT NULL,
+	member_installed varchar(255) NOT NULL default '',
 	time_installed int(10) NOT NULL default '0',
 	id_member_removed mediumint(8) NOT NULL default '0',
-	member_removed tinytext NOT NULL,
+	member_removed varchar(255) NOT NULL default '',
 	time_removed int(10) NOT NULL default '0',
 	install_state tinyint(3) NOT NULL default '1',
 	failed_steps text NOT NULL,
-	themes_installed tinytext NOT NULL,
+	themes_installed varchar(255) NOT NULL default '',
 	db_changes text NOT NULL,
 	PRIMARY KEY (id_install),
 	KEY filename (filename(15))
@@ -985,9 +985,9 @@ WHERE url = 'http://mods.simplemachines.org';
 CREATE TABLE IF NOT EXISTS {$db_prefix}mail_queue (
 	id_mail int(10) unsigned NOT NULL auto_increment,
 	time_sent int(10) NOT NULL default '0',
-	recipient tinytext NOT NULL,
+	recipient varchar(255) NOT NULL default '',
 	body text NOT NULL,
-	subject tinytext NOT NULL,
+	subject varchar(255) NOT NULL default '',
 	headers text NOT NULL,
 	send_html tinyint(3) NOT NULL default '0',
 	priority tinyint(3) NOT NULL default '1',
@@ -1030,8 +1030,8 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 	id_topic mediumint(8) unsigned NOT NULL default '0',
 	id_board smallint(5) unsigned NOT NULL default '0',
 	id_member mediumint(8) unsigned NOT NULL default '0',
-	membername tinytext NOT NULL,
-	subject tinytext NOT NULL,
+	membername varchar(255) NOT NULL default '',
+	subject varchar(255) NOT NULL default '',
 	body text NOT NULL,
 	time_started int(10) NOT NULL default '0',
 	time_updated int(10) NOT NULL default '0',
@@ -1052,8 +1052,8 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported_comments (
 	id_comment mediumint(8) unsigned NOT NULL auto_increment,
 	id_report mediumint(8) NOT NULL default '0',
 	id_member mediumint(8) NOT NULL,
-	membername tinytext NOT NULL,
-	comment tinytext NOT NULL,
+	membername varchar(255) NOT NULL default '',
+	comment varchar(255) NOT NULL default '',
 	time_sent int(10) NOT NULL,
 	PRIMARY KEY (id_comment),
 	KEY id_report (id_report),
@@ -1101,7 +1101,7 @@ ADD mod_prefs varchar(20) NOT NULL default '';
 ---# Creating member notices table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_member_notices (
 	id_notice mediumint(8) unsigned NOT NULL auto_increment,
-	subject tinytext NOT NULL,
+	subject varchar(255) NOT NULL default '',
 	body text NOT NULL,
 	PRIMARY KEY (id_notice)
 ) ENGINE=MyISAM{$db_collation};
@@ -1114,7 +1114,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_comments (
 	member_name varchar(80) NOT NULL default '',
 	comment_type varchar(8) NOT NULL default 'warning',
 	id_recipient mediumint(8) unsigned NOT NULL default '0',
-	recipient_name tinytext NOT NULL,
+	recipient_name varchar(255) NOT NULL default '',
 	log_time int(10) NOT NULL default '0',
 	id_notice mediumint(8) unsigned NOT NULL default '0',
 	counter tinyint(3) NOT NULL default '0',
@@ -1425,7 +1425,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 ALTER TABLE {$db_prefix}log_errors
 ADD error_type char(15) NOT NULL default 'general';
 ALTER TABLE {$db_prefix}log_errors
-ADD file tinytext NOT NULL,
+ADD file varchar(255) NOT NULL default '',
 ADD line mediumint(8) unsigned NOT NULL default '0';
 ---#
 
@@ -1583,7 +1583,7 @@ if (!isset($modSettings['next_task_time']))
 ---# Creating "permission_profiles" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}permission_profiles (
 	id_profile smallint(5) NOT NULL auto_increment,
-	profile_name tinytext NOT NULL,
+	profile_name varchar(255) NOT NULL default '',
 	PRIMARY KEY (id_profile)
 ) ENGINE=MyISAM{$db_collation};
 ---#
@@ -1640,7 +1640,7 @@ if (!empty($profiles))
 ---}
 ---#
 
----# Migrating old board profiles to profile sysetem
+---# Migrating old board profiles to profile system
 ---{
 
 // Doing this twice would be awful!
@@ -1871,11 +1871,6 @@ DROP PRIMARY KEY,
 ADD PRIMARY KEY (ip(16), log_type(8));
 ---#
 
----# Adding support for longer AIM nicknames.
-ALTER TABLE {$db_prefix}members
-CHANGE COLUMN aim aim tinytext NOT NULL;
----#
-
 ---# Adding guest voting ...
 ALTER TABLE {$db_prefix}polls
 ADD guest_vote tinyint(3) NOT NULL default '0';
@@ -2031,11 +2026,11 @@ unset($_GET['m']);
 ---# Creating repository table ...
 CREATE TABLE IF NOT EXISTS {$db_prefix}admin_info_files (
   id_file tinyint(4) unsigned NOT NULL auto_increment,
-  filename tinytext NOT NULL,
-  path tinytext NOT NULL,
-  parameters tinytext NOT NULL,
+  filename varchar(255) NOT NULL default '',
+  path varchar(255) NOT NULL default '',
+  parameters varchar(255) NOT NULL default '',
   data text NOT NULL,
-  filetype tinytext NOT NULL,
+  filetype varchar(255) NOT NULL default '',
   PRIMARY KEY (id_file),
   KEY filename (filename(30))
 ) ENGINE=MyISAM{$db_collation};
@@ -2056,7 +2051,7 @@ VALUES
 
 ---# Ensure that the table has the filetype column
 ALTER TABLE {$db_prefix}admin_info_files
-ADD filetype tinytext NOT NULL;
+ADD filetype varchar(255) NOT NULL default '';
 ---#
 
 ---# Set the filetype for the files
@@ -2141,7 +2136,7 @@ WHERE id_pm_head = 0;
 ---# Adding Open ID Assocation table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}openid_assoc (
 	server_url text NOT NULL,
-	handle tinytext NOT NULL,
+	handle varchar(255) NOT NULL default '',
 	secret text NOT NULL,
 	issued int(10) NOT NULL default '0',
 	expires int(10) NOT NULL default '0',
@@ -2164,7 +2159,7 @@ ADD openid_uri text NOT NULL;
 CREATE TABLE IF NOT EXISTS {$db_prefix}subscriptions(
 	id_subscribe mediumint(8) unsigned NOT NULL auto_increment,
 	name varchar(60) NOT NULL default '',
-	description tinytext NOT NULL,
+	description varchar(255) NOT NULL default '',
 	cost text NOT NULL,
 	length varchar(6) NOT NULL default '',
 	id_group smallint(5) NOT NULL default '0',
@@ -2191,7 +2186,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_subscribed(
 	payments_pending tinyint(3) NOT NULL default '0',
 	pending_details text NOT NULL,
 	reminder_sent tinyint(3) NOT NULL default '0',
-	vendor_ref tinytext NOT NULL,
+	vendor_ref varchar(255) NOT NULL default '',
 	PRIMARY KEY (id_sublog),
 	UNIQUE KEY id_subscribe (id_subscribe, id_member),
 	KEY end_time (end_time),
@@ -2268,7 +2263,7 @@ if (isset($new_cols['reminder_sent']))
 if (isset($new_cols['vendor_ref']))
 	upgrade_query("
 		ALTER TABLE {$db_prefix}log_subscribed
-		ADD COLUMN vendor_ref tinytext NOT NULL");
+		ADD COLUMN vendor_ref varchar(255) NOT NULL default ''");
 if (isset($new_cols['payments_pending']))
 	upgrade_query("
 		ALTER TABLE {$db_prefix}log_subscribed
@@ -2387,6 +2382,230 @@ while ($request && $row = $smcFunc['db_fetch_assoc']($request))
 		SET num_guest_voters = ". $row['guest_voters']. "
 		WHERE id_poll = " . $row['id_poll'] . "
 			AND num_guest_voters = 0");
+---}
+---#
+
+/******************************************************************************/
+--- Changing all tinytext columns to tinytext.
+/******************************************************************************/
+
+---# Changing all tinytext columns to varchar(255)...
+---{
+// The array holding all the changes.
+$nameChanges = array(
+	'admin_info_files' => array(
+		'filename' => 'filename filename varchar(255) NOT NULL default \'\'',
+		'path' => 'path path varchar(255) NOT NULL default \'\'',
+		'parameters' => 'parameters parameters varchar(255) NOT NULL default \'\'',
+		'filetype' => 'filetype filetype varchar(255) NOT NULL default \'\'',
+	),
+	'attachments' => array(
+		'filename' => 'filename filename varchar(255) NOT NULL default \'\'',
+	),
+	'ban_groups' => array(
+		'reason' => 'reason reason varchar(255) NOT NULL default \'\'',
+	),
+	'ban_items' => array(
+		'hostname' => 'hostname hostname varchar(255) NOT NULL default \'\'',
+		'email_address' => 'email_address email_address varchar(255) NOT NULL default \'\'',
+	),
+	'boards' => array(
+		'name' => 'name name varchar(255) NOT NULL default \'\'',
+	),
+	'categories' => array(
+		'name' => 'name name varchar(255) NOT NULL default \'\'',
+	),
+	'custom_fields' => array(
+		'field_desc' => 'field_desc field_desc varchar(255) NOT NULL default \'\'',
+		'field_options' => 'field_options field_options varchar(255) NOT NULL default \'\'',
+		'mask' => 'mask mask varchar(255) NOT NULL default \'\'',
+		'default_value' => 'default_value default_value varchar(255) NOT NULL default \'\'',
+	),
+	'log_banned' => array(
+		'email' => 'email email varchar(255) NOT NULL default \'\'',
+	),
+	'log_comments' => array(
+		'recipient_name' => 'recipient_name recipient_name varchar(255) NOT NULL default \'\'',
+	),
+	'log_errors' => array(
+		'file' => 'file file varchar(255) NOT NULL default \'\'',
+	),
+	'log_member_notices' => array(
+		'subject' => 'subject subject varchar(255) NOT NULL default \'\'',
+	),
+	'log_packages' => array(
+		'filename' => 'filename filename varchar(255) NOT NULL default \'\'',
+		'package_id' => 'package_id package_id varchar(255) NOT NULL default \'\'',
+		'name' => 'name name varchar(255) NOT NULL default \'\'',
+		'version' => 'version version varchar(255) NOT NULL default \'\'',
+		'member_installed' => 'member_installed member_installed varchar(255) NOT NULL default \'\'',
+		'member_removed' => 'member_removed member_removed varchar(255) NOT NULL default \'\'',
+		'themes_installed' => 'themes_installed themes_installed varchar(255) NOT NULL default \'\'',
+	),
+	'log_reported' => array(
+		'membername' => 'membername membername varchar(255) NOT NULL default \'\'',
+		'subject' => 'subject subject varchar(255) NOT NULL default \'\'',
+	),
+	'log_reported_comments' => array(
+		'membername' => 'membername membername varchar(255) NOT NULL default \'\'',
+		'comment' => 'comment comment varchar(255) NOT NULL default \'\'',
+	),
+	'log_spider_hits' => array(
+		'url' => 'url url varchar(255) NOT NULL default \'\'',
+	),
+	'log_subscribed' => array(
+		'vendor_ref' => 'vendor_ref vendor_ref varchar(255) NOT NULL default \'\'',
+	),
+	'mail_queue' => array(
+		'recipient' => 'recipient recipient varchar(255) NOT NULL default \'\'',
+		'subject' => 'subject subject varchar(255) NOT NULL default \'\'',
+	),
+	'membergroups' => array(
+		'stars' => 'stars stars varchar(255) NOT NULL default \'\'',
+	),
+	'members' => array(
+		'lngfile' => 'lngfile lngfile varchar(255) NOT NULL default \'\'',
+		'real_name' => 'real_name real_name varchar(255) NOT NULL default \'\'',
+		'pm_ignore_list' => 'pm_ignore_list pm_ignore_list varchar(255) NOT NULL default \'\'',
+		'email_address' => 'email_address email_address varchar(255) NOT NULL default \'\'',
+		'personal_text' => 'personal_text personal_text varchar(255) NOT NULL default \'\'',
+		'website_title' => 'website_title website_title varchar(255) NOT NULL default \'\'',
+		'website_url' => 'website_url website_url varchar(255) NOT NULL default \'\'',
+		'location' => 'location location varchar(255) NOT NULL default \'\'',
+		'icq' => 'icq icq varchar(255) NOT NULL default \'\'',
+		'aim' => 'aim aim varchar(255) NOT NULL default \'\'',
+		'msn' => 'msn msn varchar(255) NOT NULL default \'\'',
+		'avatar' => 'avatar avatar varchar(255) NOT NULL default \'\'',
+		'usertitle' => 'usertitle usertitle varchar(255) NOT NULL default \'\'',
+		'member_ip' => 'member_ip member_ip varchar(255) NOT NULL default \'\'',
+		'member_ip2' => 'member_ip2 member_ip2 varchar(255) NOT NULL default \'\'',
+		'secret_question' => 'secret_question secret_question varchar(255) NOT NULL default \'\'',
+		'additional_groups' => 'additional_groups additional_groups varchar(255) NOT NULL default \'\'',
+	),
+	'messages' => array(
+		'subject' => 'subject subject varchar(255) NOT NULL default \'\'',
+		'poster_name' => 'poster_name poster_name varchar(255) NOT NULL default \'\'',
+		'poster_email' => 'poster_email poster_email varchar(255) NOT NULL default \'\'',
+		'poster_ip' => 'poster_ip poster_ip varchar(255) NOT NULL default \'\'',
+		'modified_name' => 'modified_name modified_name varchar(255) NOT NULL default \'\'',
+	),
+	'openid_assoc' => array(
+		'handle' => 'handle handle varchar(255) NOT NULL default \'\'',
+	),
+	'package_servers' => array(
+		'name' => 'name name varchar(255) NOT NULL default \'\'',
+		'url' => 'url url varchar(255) NOT NULL default \'\'',
+	),
+	'permission_profiles' => array(
+		'profile_name' => 'profile_name profile_name varchar(255) NOT NULL default \'\'',
+	),
+	'personal_messages' => array(
+		'from_name' => 'from_name from_name varchar(255) NOT NULL default \'\'',
+		'subject' => 'subject subject varchar(255) NOT NULL default \'\'',
+	),
+	'polls' => array(
+		'question' => 'question question varchar(255) NOT NULL default \'\'',
+		'poster_name' => 'poster_name poster_name varchar(255) NOT NULL default \'\'',
+	),
+	'poll_choices' => array(
+		'label' => 'label label varchar(255) NOT NULL default \'\'',
+	),
+	'settings' => array(
+		'variable' => 'variable variable varchar(255) NOT NULL default \'\'',
+	),
+	'spiders' => array(
+		'spider_name' => 'spider_name spider_name varchar(255) NOT NULL default \'\'',
+		'user_agent' => 'user_agent user_agent varchar(255) NOT NULL default \'\'',
+		'ip_info' => 'ip_info ip_info varchar(255) NOT NULL default \'\'',
+	),
+	'subscriptions' => array(
+		'description' => 'description description varchar(255) NOT NULL default \'\'',
+	),
+	'themes' => array(
+		'variable' => 'variable variable varchar(255) NOT NULL default \'\'',
+	),
+);
+
+$_GET['ren_col'] = isset($_GET['ren_col']) ? (int) $_GET['ren_col'] : 0;
+$step_progress['name'] = 'Changing tinytext columns to varchar(255)';
+$step_progress['current'] = $_GET['ren_col'];
+$step_progress['total'] = count($nameChanges);
+
+$count = 0;
+// Now do every table...
+foreach ($nameChanges as $table_name => $table)
+{
+	// Already done this?
+	$count++;
+	if ($_GET['ren_col'] > $count)
+		continue;
+	$_GET['ren_col'] = $count;
+
+	// Check the table exists!
+	$request = upgrade_query("
+		SHOW TABLES
+		LIKE '{$db_prefix}$table_name'");
+	if (mysql_num_rows($request) == 0)
+	{
+		mysql_free_result($request);
+		continue;
+	}
+	mysql_free_result($request);
+
+	// Converting is intensive, so make damn sure that we need to do it.
+	$request = upgrade_query("
+		SHOW FIELDS
+		FROM `{$db_prefix}$table_name`");
+	$tinytextColumns = array();
+	while($row = mysql_fetch_assoc($request))
+	{
+		// Tinytext detected so store column name.
+		if ($row['Type'] == 'tinytext')
+			$tinytextColumns[$row['Field']] = $row['Field'];
+	}
+	mysql_free_result($request);
+	
+	// Check each column!
+	$actualChanges = array();
+	foreach ($table as $colname => $coldef)
+	{
+		// Column was not detected as tinytext so skip it
+		// Either it was already converted or was changed eg text (so do not break it)
+		if (!isset($tinytextColumns[$colname]))
+			continue;
+
+		$change = array(
+			'table' => $table_name,
+			'name' => $colname,
+			'type' => 'column',
+			'method' => 'change_remove',
+			'text' => 'CHANGE ' . $coldef,
+		);
+		if (protected_alter($change, $substep, true) == false)
+			$actualChanges[] = ' CHANGE COLUMN ' . $coldef;
+	}
+
+	// Do the query - if it needs doing.
+	if (!empty($actualChanges))
+	{
+		$change = array(
+			'table' => $table_name,
+			'name' => 'na',
+			'type' => 'table',
+			'method' => 'full_change',
+			'text' => implode(', ', $actualChanges),
+		);
+
+		// Here we go - hold on!
+		protected_alter($change, $substep);
+	}
+
+	// Update where we are!
+	$step_progress['current'] = $_GET['ren_col'];
+}
+
+// All done!
+unset($_GET['ren_col']);
 ---}
 ---#
 
