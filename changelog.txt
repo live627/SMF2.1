@@ -36,7 +36,6 @@ June 2009
  * Pm popup should not be shown until after page has loaded (index.template.php) [Bug 3395]
  * Curve: partially rewrote the Packages template to match Curve's look and feel. (Packages.template.php, admin.css, style.css) [Bug 3059]
  ! Strike, ins and blockquote lost when toggling wysiwyg (Subs-Editor.php) [Bug 2954]
- ! Gecko browsers for code blocks had spaces instead of tabs (Subs.php)
 
 May 2009
 --------------------------------------------------------------------------------
