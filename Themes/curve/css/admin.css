@@ -305,6 +305,10 @@ pre.file_content
 	width: 100%; 
 	padding-bottom: 1em;
 }
+.operation
+{
+	padding: 0 1em;
+}
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */

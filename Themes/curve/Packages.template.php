@@ -1479,12 +1479,14 @@ function template_ftp_required()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<div class="tborder">
-			<div class="titlebg" style="padding: 4px;">', $txt['package_ftp_necessary'], '</div>
-			<div class="windowbg" style="padding: 4px;">
+		<fieldset>
+			<legend>
+				', $txt['package_ftp_necessary'], '
+			</legend>
+			<div class="ftp_details">
 				', template_control_chmod(), '
 			</div>
-		</div>';
+		</fieldset>';
 }
 
 function template_view_operations()
@@ -1500,23 +1502,25 @@ function template_view_operations()
 		<title>', $txt['operation_title'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
+		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
+		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/admin.css" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
 	</head>
 	<body>
-	<div class="tborder" style="width: 100%;">
-		<div class="titlebg" style="padding: 6px;">
+	<div class="content">
+		<h3 class="catbg operation">
 			', $txt['operation_find'], '
 			<a href="javascript:void(0);" onclick="return smfSelectText(\'find_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-		</div>
-		<div class="windowbg2" style="padding: 4px;">
+		</h3>
+		<div class="tborder windowbg description">
 			<code id="find_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</code>
 		</div>
-		<div class="titlebg" style="padding: 6px;">
+		<h3 class="catbg operation">
 			', $txt[$operation_text], '
 			<a href="javascript:void(0);" onclick="return smfSelectText(\'replace_code\', true);" class="smalltext" style="font-weight: normal;">' . $txt['code_select'] . '</a>
-		</div>
-		<div class="windowbg2" style="padding: 4px;">
+		</h3>
+		<div class="tborder windowbg description">
 			<code id="replace_code" style="overflow: auto; max-height: 200px; white-space: pre;">', $context['operations']['replace'], '</code>
 		</div>
 	</div>
