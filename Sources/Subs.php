@@ -1082,6 +1082,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$data = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data);
 						else
 							$data = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $data);
+
+						// Recent Opera bug requiring temporary fix. &nsbp; is needed before </code> to avoid broken selection.
+						if ($context[\'browser\'][\'is_opera\'])
+							$data .= \'&nbsp;\';
 					}'),
 				'block_level' => true,
 			),
@@ -1122,6 +1126,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$data = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data);
 						else
 							$data = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $data);
+
+						// Recent Opera bug requiring temporary fix. &nsbp; is needed before </code> to avoid broken selection.
+						if ($context[\'browser\'][\'is_opera\'])
+							$data[0] .= \'&nbsp;\';
 					}'),
 				'block_level' => true,
 			),

@@ -38,6 +38,8 @@ June 2009
  ! Strike, ins and blockquote lost when toggling wysiwyg (Subs-Editor.php) [Bug 2954]
  ! Mysql changed all tinytext fields to varchar(255) for faster/better performance (install_2-0_mysql.sql, upgrade_2-0_mysql.sql) [Bug 3012]
  * New Opera 10 beta uses useragent Opera/9.8.  Add support so can use wysiwyg (script.js)
+ ! Opera >9.63 bug - &nsbp; is needed before </code> to avoid broken selection. (Subs.php) [Bug 3351]
+
 
 May 2009
 --------------------------------------------------------------------------------
