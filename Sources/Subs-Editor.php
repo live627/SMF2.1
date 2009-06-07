@@ -588,7 +588,7 @@ function html_to_bbc($text)
 		'~<(td|th)\s[^<>]*?colspan="?(\d{1,2})"?.*?' . '>~ie' => 'str_repeat(\'[td][/td]\', $2 - 1) . \'[td]\'',
 		'~<(td|th)(\s(.)*?)*?' . '>~i' => '[td]',
 		'~</(td|th)>~i' => '[/td]',
-		'~<br\s*/*>~i' => "\n",
+		'~<br(?:\s[^<>]*?)?>~i' => "\n",
 		'~(.+?)(<hr[^<>]*>)~si' => "$1\n\$2",
 		'~<hr[^<>]*>~i' => "[hr]\n",
 		'~<blockquote(\s(.)*?)*?>~i' => "&lt;blockquote&gt;",
