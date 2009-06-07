@@ -13,7 +13,7 @@ var is_opera8 = ua.indexOf("opera/8") != -1 || ua.indexOf("opera 8") != -1;
 var is_opera9 = ua.indexOf("opera/9") != -1 || ua.indexOf("opera 9") != -1;
 var is_opera95 = ua.indexOf("opera/9.5") != -1 || ua.indexOf("opera 9.5") != -1;
 var is_opera96 = ua.indexOf("opera/9.6") != -1 || ua.indexOf("opera 9.6") != -1;
-var is_opera10 = ua.indexOf("opera/10.0") != -1 || ua.indexOf("opera 10.0") != -1;
+var is_opera10 = ua.indexOf("opera/9.8") != -1 || ua.indexOf("opera 9.8") != -1 || ua.indexOf("opera/10.0") != -1 || ua.indexOf("opera 10.0") != -1;
 var is_opera95up = is_opera95 || is_opera96 || is_opera10;
 
 var is_ff = (ua.indexOf("firefox") != -1 || ua.indexOf("iceweasel") != -1 || ua.indexOf("icecat") != -1) && !is_opera;
