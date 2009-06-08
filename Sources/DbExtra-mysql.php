@@ -64,6 +64,31 @@ function smf_db_backup_table($table, $backup_table)
 
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
+	// Can we do this the quick way?
+	$result = $smcFunc['db_query']('', '
+		CREATE TABLE {raw:backup_table} LIKE {raw:table}',
+		array(
+			'backup_table' => $backup_table,
+			'table' => $table
+	));
+	// If this failed, we go old school.
+	if ($result)
+	{
+		$request = $smcFunc['db_query']('', '
+			INSERT INTO {raw:backup_table}
+			SELECT *
+			FROM {raw:table}',
+			array(
+				'backup_table' => $backup_table,
+				'table' => $table
+			));
+
+		// Old school or no school?
+		if ($request)
+			return $request;
+	}
+
+	// At this point, the quick method failed.
 	$result = $smcFunc['db_query']('', '
 		SHOW CREATE TABLE {raw:table}',
 		array(
