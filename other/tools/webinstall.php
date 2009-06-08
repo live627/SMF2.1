@@ -454,9 +454,9 @@ function doStep1()
 
 	if (!empty($_POST['verify']) || (!empty($_POST['member_username']) && !empty($_POST['member_password'])))
 	{
-		$pass_data = 'web_user=' . base64_encode($_POST['member_username']) . '&web_pass=' . sha1(sha1(strtolower($_POST['member_username']) . $_POST['member_password']) . 'w$--IN5~2a');
+		$pass_data = 'web_user=' . base64_encode($_POST['member_username']) . '&check&web_pass=' . sha1(sha1(strtolower($_POST['member_username']) . $_POST['member_password']) . 'w$--IN5~2a');
 
-		$data = (int) fetch_web_data('http://download.simplemachines.org/index.php', $pass_data);
+		$data = (int) fetch_web_data('http://download.simplemachines.org/index.php', $pass_data . '&verify');
 
 		$_SESSION['is_logged_in'] = !empty($data);
 		$_SESSION['is_charter'] = $data === 2;
