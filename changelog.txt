@@ -52,6 +52,8 @@ June 2009
  ! Prevent errors on a database refresh when creating unique indexes (install.php) [Bug 3220]
  ! Fix addslashes from escaping more than it should for the board name (install.php) [Bug 2900]
  ! Try to use a quicker method of creating backup tables for MySQL (DbExtra-mysql.php) [Bug 3026]
+ ! Empty the language cache when adding a new language (ManageServer.php) [Bug 3494]
+ ! Make sure we delete all language files when removing a language (ManageServer.php)
 
 
 May 2009

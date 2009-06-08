@@ -449,7 +449,7 @@ function AddLanguage()
 // Download a language file from the Simple Machines website.
 function DownloadLanguage()
 {
-	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smcFunc, $scripturl;
+	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smcFunc, $scripturl, $modSettings;
 
 	loadLanguage('ManageSettings');
 	require_once($sourcedir . '/Subs-Package.php');
@@ -796,6 +796,10 @@ function DownloadLanguage()
 		),
 	);
 
+	// Kill the cache, as it is now invalid..
+	if (!empty($modSettings['cache_enable']))
+		cache_put_data('known_languages', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
+
 	require_once($sourcedir . '/Subs-List.php');
 	createList($listOptions);
 
@@ -1130,6 +1134,10 @@ function ModifyLanguage()
 			unset($themes[$id]);
 		elseif (is_dir($data['theme_dir'] . '/languages'))
 			$lang_dirs[$id] = $data['theme_dir'] . '/languages';
+
+		// How about image directories?
+		if (is_dir($data['theme_dir'] . '/images/' . $context['lang_id']))
+			$images_dirs[$id] = $data['theme_dir'] . '/images/' . $context['lang_id'];
 	}
 
 	$current_file = $file_id ? $lang_dirs[$theme_id] . '/' . $file_id . '.' . $context['lang_id'] . '.php' : '';
@@ -1196,9 +1204,9 @@ function ModifyLanguage()
 			unlink($boarddir . '/agreement.' . $context['lang_id'] . '.txt');
 
 		// Fourth, a related images folder?
-		foreach ($lang_dirs as $curPath)
-			if (is_dir($curPath . '/../images/' . 	$context['lang_id']));
-				deltree($curPath . '/../images/' . 	$context['lang_id']);
+		foreach ($images_dirs as $curPath)
+			if (is_dir($curPath))
+				deltree($curPath);
 
 		// Fifth, update getLanguages() cache.
 		if (!empty($modSettings['cache_enable']))
