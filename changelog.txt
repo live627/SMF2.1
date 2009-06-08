@@ -47,6 +47,7 @@ June 2009
  * Curve: finished missing functions from Packages template to match Curve's look and feel. (Packages.template.php)
  * Debug window for editor was causing a gap before resizer in IE (editor.js) [Bug 2386]
  ! Allow the autosuggest retrieve URL to be customized. (suggest.js)
+ * Profile: move users last active time to end of section (Profile.template.php) [Bug 3479]
 
 
 May 2009
