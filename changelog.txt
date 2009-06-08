@@ -46,6 +46,7 @@ June 2009
  ! The message_id was lost when quick changing the message icon (script.js) [Bug 3450]
  * Curve: finished missing functions from Packages template to match Curve's look and feel. (Packages.template.php)
  * Debug window for editor was causing a gap before resizer in IE (editor.js) [Bug 2386]
+ ! Allow the autosuggest retrieve URL to be customized. (suggest.js)
 
 
 May 2009

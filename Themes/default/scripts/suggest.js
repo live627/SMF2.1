@@ -14,6 +14,8 @@ function smc_AutoSuggest(oOptions)
 	this.aCache = [];
 	this.aDisplayData = [];
 
+	this.sRetrieveURL = typeof(this.opt.sRetrieveURL) == 'string' ? this.opt.sRetrieveURL : '%scripturl%action=suggest;suggest_type=%suggest_type%;search=%search%;%sessionVar%=%sessionID%;xml;time=%time%';
+
 	// How many objects can we show at once?
 	this.iMaxDisplayQuantity = typeof(this.opt.iMaxDisplayQuantity) == 'integer' ? this.opt.iMaxDisplayQuantity : 15;
 
@@ -597,7 +599,7 @@ smc_AutoSuggest.prototype.autoSuggestUpdate = function ()
 
 	// Get the document.
 	this.tmpMethod = getXMLDocument;
-	this.oXmlRequestHandle = this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=suggest;suggest_type=' + this.opt.sSearchType + ';search=' + sSearchString + ';' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml;time=' + (new Date().getTime()), this.onSuggestionReceived);
+	this.oXmlRequestHandle = this.tmpMethod(this.sRetrieveURL.replace(/%scripturl%/g, smf_prepareScriptUrl(smf_scripturl)).replace(/%suggest_type%/g, this.opt.sSearchType).replace(/%search%/g, sSearchString).replace(/%sessionVar%/g, this.opt.sSessionVar).replace(/%sessionID%/g, this.opt.sSessionId).replace(/%time%/g, new Date().getTime()), this.onSuggestionReceived);
 	delete this.tmpMethod;
 
 	return true;
