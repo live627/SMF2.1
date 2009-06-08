@@ -1228,13 +1228,13 @@ SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
 		}
 	}
 
+	// First we focus.
+	this.setFocus();
+
 	this.insertText(sText, true);
 
 	// Record the new status.
 	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
-
-	// Focus, focus, focus.
-	this.setFocus();
 
 	// Rebuild the bread crumb!
 	this.updateEditorControls();
@@ -1279,7 +1279,7 @@ SmfEditor.prototype.showMoreSmileys = function(postbox, sTitleText, sPickText, s
 }
 
 // Set the focus for the editing window.
-SmfEditor.prototype.setFocus = function()
+SmfEditor.prototype.setFocus = function(force_both)
 {
 	if (!this.bRichTextEnabled)
 		this.oTextHandle.focus();
