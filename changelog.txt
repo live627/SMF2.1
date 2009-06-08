@@ -43,6 +43,7 @@ June 2009
  && corrected set_perameters in search language and template files (Search.english.php, Search.template.php) [Bug 3487]
  ! Downloading packages didn't work as expected (PackageGet.php) [Bug 3084]
  ! When toggling WYSIWYG editor, set the focus prior to inserting text (editor.js) [Bug 3067]
+ ! The message_id was lost when quick changing the message icon (script.js) [Bug 3450] 
 
 
 May 2009
