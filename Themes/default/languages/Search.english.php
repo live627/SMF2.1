@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
-$txt['set_perameters'] = 'Set Search Parameters';
+$txt['set_parameters'] = 'Set Search Parameters';
 $txt['choose_board'] = 'Choose a board to search in, or search all';
 $txt['all_words'] = 'Match all words';
 $txt['any_words'] = 'Match any words';

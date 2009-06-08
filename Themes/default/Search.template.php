@@ -10,7 +10,7 @@ function template_main()
 
 		<table border="0" cellspacing="0" cellpadding="8" align="center" class="tborder">
 			<tr class="titlebg">
-				<td>', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" align="right" style="margin-right: 4px;" alt="" />' : '', $txt['set_perameters'], '</td>
+				<td>', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" align="right" style="margin-right: 4px;" alt="" />' : '', $txt['set_parameters'], '</td>
 			</tr>';
 
 	if (!empty($context['search_errors']))

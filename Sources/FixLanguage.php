@@ -853,6 +853,7 @@ $txtChanges = array(
 		343 => 'all_words',
 		344 => 'any_words',
 		583 => 'by_user',
+		'set_perameters' => 'set_parameters',
 	),
 	'Stats' => array(
 		888 => 'most_online',

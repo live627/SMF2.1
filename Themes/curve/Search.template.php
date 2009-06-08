@@ -8,7 +8,7 @@ function template_main()
 	echo '
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['set_perameters'], '
+			', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['set_parameters'], '
 		</h3>';
 
 	if (!empty($context['search_errors']))
