@@ -375,61 +375,57 @@ function template_extract_package()
 	}
 
 	echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">';
+	<div id="admincenter" class="align_left">';
 
 	if (empty($context['redirect_url']))
 	{
 		echo '
-			<tr class="titlebg">
-				<td>', $context['uninstalling'] ? $txt['uninstall'] : $txt['extracting'], '</td>
-			</tr>
-			<tr>
-				<td class="catbg">', $txt['package_installed_extract'], '</td>
-			</tr>';
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $context['uninstalling'] ? $txt['uninstall'] : $txt['extracting'], '
+		</h3>
+		<div class="information">', $txt['package_installed_extract'], '</div>';
 	}
 	else
 		echo '
-			<tr class="titlebg">
-				<td>', $txt['package_installed_redirecting'], '</td>
-			</tr>';
-
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['package_installed_redirecting'], '
+		</h3>';
+	
 	echo '
-			<tr>
-				<td class="windowbg2" width="100%">';
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">';
 
 	// If we are going to redirect we have a slightly different agenda.
 	if (!empty($context['redirect_url']))
 	{
 		echo '
-					', $context['redirect_text'], '<br /><br />
-				</td>
-			</tr><tr>
-				<td class="windowbg2" width="100%" align="center">
-					<a href="', $context['redirect_url'], '">', $txt['package_installed_redirect_go_now'], '</a> | <a href="', $scripturl, '?action=admin;area=packages;sa=browse">', $txt['package_installed_redirect_cancel'], '</a>';
+				', $context['redirect_text'], '<br /><br />
+				<a href="', $context['redirect_url'], '">', $txt['package_installed_redirect_go_now'], '</a> | <a href="', $scripturl, '?action=admin;area=packages;sa=browse">', $txt['package_installed_redirect_cancel'], '</a>';
 	}
 	elseif ($context['uninstalling'])
 		echo '
-					', $txt['package_uninstall_done'];
+				', $txt['package_uninstall_done'];
 	elseif ($context['install_finished'])
 	{
 		if ($context['extract_type'] == 'avatar')
 			echo '
-					', $txt['avatars_extracted'];
+				', $txt['avatars_extracted'];
 		elseif ($context['extract_type'] == 'language')
 			echo '
-					', $txt['language_extracted'];
+				', $txt['language_extracted'];
 		else
 			echo '
-					', $txt['package_installed_done'];
+				', $txt['package_installed_done'];
 	}
 	else
 		echo '
-					', $txt['corrupt_compatable'];
+				', $txt['corrupt_compatable'];
 
 	echo '
-				</td>
-			</tr>
-		</table>';
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
 
 	// Show the "restore permissions" screen?
 	if (function_exists('template_show_list') && !empty($context['restore_file_permissions']['rows']))
@@ -437,6 +433,10 @@ function template_extract_package()
 		echo '<br />';
 		template_show_list('restore_file_permissions');
 	}
+	
+	echo '
+	</div>
+	<br style="clear: both;" />';
 }
 
 function template_list()
