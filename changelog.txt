@@ -41,6 +41,7 @@ June 2009
  ! Opera >9.63 bug - &nsbp; is needed before </code> to avoid broken selection. (Subs.php) [Bug 3351]
  ! Code unparsed_equals_content version, some should be $data[0] not $data (Subs.php)
  && corrected set_perameters in search language and template files (Search.english.php, Search.template.php) [Bug 3487]
+ ! Downloading packages didn't work as expected (PackageGet.php) [Bug 3084]
 
 
 May 2009
