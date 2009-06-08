@@ -967,10 +967,10 @@ function template_servers()
 			<div class="content">
 				<fieldset>
 					<legend>' . $txt['package_servers'] . '</legend>
-					<ul class="reset">';
+					<ul class="package_servers">';
 	foreach ($context['servers'] as $server)
 		echo '
-						<li class="reset">
+						<li>
 							<span class="align_left">' . $server['name'] . '</span>
 							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . '">[ ' . $txt['delete'] . ' ]</a></span>
 							<span class="package_server align_right"><a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['package_browse'] . ' ]</a></span>

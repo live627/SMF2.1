@@ -299,6 +299,15 @@ span.package_server
 {
 	padding: 0 3em;
 }
+ul.package_servers
+{
+	margin: 0;
+	padding: 0;
+}
+ul.package_servers li
+{
+	list-style-type: none;
+}
 pre.file_content
 {
 	overflow: auto; 
@@ -308,6 +317,11 @@ pre.file_content
 .operation
 {
 	padding: 0 1em;
+}
+/*Manage Paid */
+#fixed_area
+{
+	width: 97%;
 }
 /* ************************************* */
 /* only for backward compability   */
