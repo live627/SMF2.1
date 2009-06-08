@@ -1075,128 +1075,129 @@ function template_package_list()
 	global $context, $settings, $options, $txt, $scripturl, $smcFunc;
 
 	echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-			<tr class="titlebg">
-				<td>' . $context['page_title'] . '</td>
-			</tr>
-			<tr>
-				<td width="100%" align="left" valign="middle" class="windowbg2">';
+	<div id="admincenter" class="align_left">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			' . $context['page_title'] . '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">';
 
 	// No packages, as yet.
 	if (empty($context['package_list']))
 		echo '
-					<ul>
-						<li>', $txt['no_packages'], '</li>
-					</ul>';
+				<ul>
+					<li>', $txt['no_packages'], '</li>
+				</ul>';
 	// List out the packages...
 	else
 	{
 		echo '
-					<ul id="package_list">';
+				<ul id="package_list">';
 		foreach ($context['package_list'] as $i => $packageSection)
 		{
 			echo '
-						<li>
-							<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
+					<li>
+						<strong><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</strong>';
 
 			if (!empty($packageSection['text']))
 				echo '
-							<h3>', $packageSection['text'], '</h3>';
+						<div class="information">', $packageSection['text'], '</div>';
 
 			echo '
-							<', $context['list_type'], ' id="package_section_', $i, '" class="tborder">';
+						<', $context['list_type'], ' id="package_section_', $i, '" class="packages">';
 
 			$alt = false;
 
 			foreach ($packageSection['items'] as $id => $package)
 			{
 				echo '
-								<li>';
+							<li>';
 				// Textual message. Could be empty just for a blank line...
 				if ($package['is_text'])
 					echo '
-									', empty($package['name']) ? '&nbsp;' : $package['name'];
+								', empty($package['name']) ? '&nbsp;' : $package['name'];
 				// This is supposed to be a rule..
 				elseif ($package['is_line'])
 					echo '
-									<hr />';
+							<hr class="hrcolor" />';
 				// A remote link.
 				elseif ($package['is_remote'])
 				{
 					echo '
-									<strong>', $package['link'], '</strong>';
+							<strong>', $package['link'], '</strong>';
 				}
 				// A title?
 				elseif ($package['is_heading'] || $package['is_title'])
 				{
 					echo '
-									<strong>', $package['name'], '</strong>';
+							<strong>', $package['name'], '</strong>';
 				}
 				// Otherwise, it's a package.
 				else
 				{
 					// 1. Some mod [ Download ].
 					echo '
-									<h4><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
+							<strong><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
 						echo '<img src="', $settings['images_url'], '/icons/package_', $package['is_current'] ? 'installed' : 'old', '.gif" width="12" height="11" align="middle" style="margin-left: 2ex;" alt="', $package['is_current'] ? $txt['package_installed_current'] : $txt['package_installed_old'], '" />';
 
 					echo '
-									</h4>
-									<ul id="package_section_', $i, '_pkg_', $id, '">';
+							</strong>
+							<ul id="package_section_', $i, '_pkg_', $id, '" class="package_section">';
 
 					// Show the mod type?
 					if ($package['type'] != '')
 						echo '
-										<li>', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '</li>';
+								<li class="package_section">', $txt['package_type'], ':&nbsp; ', $smcFunc['ucwords']($smcFunc['strtolower']($package['type'])), '</li>';
 					// Show the version number?
 					if ($package['version'] != '')
 						echo '
-										<li>', $txt['mod_version'], ':&nbsp; ', $package['version'], '</li>';
+								<li class="package_section">', $txt['mod_version'], ':&nbsp; ', $package['version'], '</li>';
 					// How 'bout the author?
 					if (!empty($package['author']) && $package['author']['name'] != '' && isset($package['author']['link']))
 						echo '
-										<li>', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '</li>';
+								<li class="package_section">', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '</li>';
 					// The homepage....
 					if ($package['author']['website']['link'] != '')
 						echo '
-										<li>', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '</li>';
+								<li class="package_section">', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '</li>';
 
 					// Desciption: bleh bleh!
 					// Location of file: http://someplace/.
 					echo '
-										<li>', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a></li>
-										<li class="description">', $txt['package_description'], ':&nbsp; ', $package['description'], '</li>
-									</ul>';
+								<li class="package_section">', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a></li>
+								<li class="package_section"><div class="information">', $txt['package_description'], ':&nbsp; ', $package['description'], '</div></li>
+							</ul>';
 				}
 				$alt = !$alt;
 				echo '
-								</li>';
+						</li>';
 			}
 			echo '
-							</', $context['list_type'], '>
+					</', $context['list_type'], '>
 						</li>';
 		}
 		echo '
-					</ul>';
+				</ul>';
 
 	}
 
 	echo '
-				</td>
-			</tr>
-		</table>
-		<table border="0" width="100%" cellspacing="1" cellpadding="4">
-			<tr>
-				<td class="smalltext">
-					', $txt['package_installed_key'], '
-					<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" width="12" height="11" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
-					<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" width="12" height="11" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
-				</td>
-			</tr>
-		</table>';
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+		<div class="padding smalltext align_left">
+			', $txt['package_installed_key'], '
+			<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
+			<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
+		</div>
+	</div>
+	<br style="clear: both;" />
+		
+		';
 		// Now go through and turn off all the sections.
 		if (!empty($context['package_list']))
 		{
@@ -2015,21 +2016,17 @@ function template_action_permissions()
 	$countDown = 3;
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" id="perm_submit" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" align="center" width="60%" cellspacing="" cellpadding="2" class="tborder">
-			<tr class="titlebg">
-				<td>', $txt['package_file_perms_applying'], '</td>
-			</tr>';
+	<div id="admincenter" class="align_left">
+		<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" id="perm_submit" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['package_file_perms_applying'], '
+			</h3>';
 
 	if (!empty($context['skip_ftp']))
 		echo '
-			<tr class="windowbg">
-				<td>
-					<div style="border: 2px dashed red; margin: 5px; padding: 4px;">
-						', $txt['package_file_perms_skipping_ftp'], '
-					</div>
-				</td>
-			</tr>';
+			<div class="errorbox">
+				', $txt['package_file_perms_skipping_ftp'], '
+			</div>';
 
 	// How many have we done?
 	$remaining_items = count($context['method'] == 'individual' ? $context['to_process'] : $context['directory_list']);
@@ -2037,17 +2034,16 @@ function template_action_permissions()
 	$progress_percent = round(($context['total_items'] - $remaining_items) / $context['total_items'] * 100, 1);
 
 	echo '
-			<tr class="windowbg">
-				<td>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
 					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
 						<strong>', $progress_message, '</strong>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $progress_percent, '%</div>
 							<div style="width: ', $progress_percent, '%; height: 12pt; z-index: 1; background-color: #98B8F4;">&nbsp;</div>
 						</div>
-					</div>
-				</td>
-			</tr>';
+					</div>';
 
 	// Second progress bar for a specific directory?
 	if ($context['method'] != 'individual' && !empty($context['total_files']))
@@ -2056,22 +2052,18 @@ function template_action_permissions()
 		$file_progress_percent = round($context['file_offset'] / $context['total_files'] * 100, 1);
 
 		echo '
-			<tr class="windowbg">
-				<td>
+					<br />
 					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
 						<strong>', $file_progress_message, '</strong>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: ', $context['browser']['is_webkit'] || $context['browser']['is_konqueror'] ? '2pt' : '1pt', '; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $file_progress_percent, '%</div>
 							<div style="width: ', $file_progress_percent, '%; height: 12pt; z-index: 1; background-color: #C1FFC1;">&nbsp;</div>
 						</div>
-					</div>
-				</td>
-			</tr>';
+					</div>';
 	}
 
 	echo '
-			<tr class="titlebg">
-				<td>';
+					<br />';
 
 	// Put out the right hidden data.
 	if ($context['method'] == 'individual')
@@ -2101,10 +2093,12 @@ function template_action_permissions()
 					<input type="hidden" name="method" value="', $context['method'], '" />
 					<input type="hidden" name="action_changes" value="1" />
 					<input type="submit" name="go" id="cont" value="', $txt['not_done_continue'], '" />
-				</td>
-			</tr>
-		</table>
-	</form>';
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</form>
+	</div>
+	<br style="clear: both;" />';
 
 	// Just the countdown stuff
 	echo '
