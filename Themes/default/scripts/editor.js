@@ -1210,7 +1210,8 @@ SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
 	if (this.bRichTextEnabled)
 	{
 		this.oFrameHandle.style.display = '';
-		this.oBreadHandle.style.display = '';
+		if (this.showDebug)
+			this.oBreadHandle.style.display = '';
 		this.oTextHandle.style.display = 'none';
 	}
 	else
