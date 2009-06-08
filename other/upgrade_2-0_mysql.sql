@@ -2386,7 +2386,7 @@ while ($request && $row = $smcFunc['db_fetch_assoc']($request))
 ---#
 
 /******************************************************************************/
---- Changing all tinytext columns to tinytext.
+--- Changing all tinytext columns to varchar(255).
 /******************************************************************************/
 
 ---# Changing all tinytext columns to varchar(255)...
