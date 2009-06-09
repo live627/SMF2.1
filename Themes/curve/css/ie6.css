@@ -96,9 +96,15 @@
 /* **************** */
 /* from Display.template */
 /* **************** */
+#forumposts .postarea
+{
+	margin-left: 0px;
+	float: right;
+}
 #forumposts .postarea .post
 {
 	float: none;
+	margin-top: 10px;
 }
 .buttonlist ul li
 {
@@ -114,7 +120,7 @@
 {
 	margin-top: 8px;
 	clear: both;
-}		
+}
 
 /* ******************* */
 /* Admin.template */
