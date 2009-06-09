@@ -546,14 +546,7 @@ function PackageDownload()
 	checkSession('get');
 
 	// To download something, we need a valid server or url.
-// index.php?action=admin;area=packages;sa=download;get;package=xxxxx
-	if (
-		empty($_GET['server']) &&
-		(
-//			!(isset($_REQUEST['byurl']) && !empty($_POST['filename'])) ||
-			(!empty($_GET['get']) && !empty($_REQUEST['package']))
-		)
-	)
+	if (empty($_GET['server']) && (!empty($_GET['get']) && !empty($_REQUEST['package'])))
 		fatal_lang_error('package_get_error_is_zero', false);
 
 	if (isset($_GET['server']))
