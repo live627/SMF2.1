@@ -41,11 +41,40 @@ ol.search_results li
 	margin: 0;
 }
 /* admin home */
-#taskpad
+div.titlebg
 {
-	position: relative;
-	top: -27px;
-	right: 5px;
+	overflow: hidden;
+	height: 31px;
+	line-height: 31px;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 0.4em;
+}
+div.titlebg span.left,div.titlebg span.right
+{
+	display: block;
+	width: 9px;
+	height: 31px;
+}
+div.titlebg span.left
+{
+	float: left;
+	background: url(../images/theme/caps.png) no-repeat 0 -40px;
+}
+div.titlebg span.right
+{
+	float: right;
+	background: url(../images/theme/caps.png) no-repeat 100% -40px;
+}
+div.titlebg img.icon
+{
+	float: left;
+	margin: 5px 8px 0 0;
+}
+#quick_search
+{
+	height: 31px;
+	margin-top: 2px;
 }
 #admin_main_section
 {
@@ -64,11 +93,11 @@ ol.search_results li
 #version_details
 {
 	overflow: auto;
-	height: 100px;
+	height: 120px;
 }
 #smfAnnouncements
 {
-	height: 100px; 
+	height: 120px; 
 	overflow: auto;
 }
 #quick_tasks, #quick_tasks ul

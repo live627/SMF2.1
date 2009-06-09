@@ -8,14 +8,15 @@ function template_admin()
 
 	// Welcome message for the admin.
 	echo '
-	<div id="admincenter">
-		<h3 class="titlebg"><span class="left"></span><span class="right"></span>'
-			,$txt['admin_center'], '
-		</h3>';
+	<div id="admincenter" class="align_right">
+		<div class="titlebg"><span class="left"></span><span class="right"></span>
+			<h3 class="align_left">'
+				,$txt['admin_center'], '
+			</h3>';
 
 	if ($context['user']['is_admin'])
 		echo '
-			<div id="taskpad" class="align_right">
+			<div id="quick_search" class="align_right">
 				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
 					<img src="' , $settings['images_url'] , '/filter.gif" alt="" />
 					<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
@@ -29,6 +30,7 @@ function template_admin()
 			</div>';
 
 	echo '
+		</div>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe"><div class="innerframe">
 			<div id="welcome" class="content">
@@ -62,7 +64,7 @@ function template_admin()
 	echo '
 			<div id="live_news" class="align_left">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
-					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['live'], '
+					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" align="top" /></a> ', $txt['live'], '
 				</h3>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>

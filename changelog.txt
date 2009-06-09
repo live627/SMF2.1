@@ -56,6 +56,7 @@ June 2009
  ! Make sure we delete all language files when removing a language (ManageServer.php)
  ! Webinstall would incorrectly verify a user (webinstall.php) [Bug 853]
  ! Hr parsing was very inefficient and could cause editor to fail with large pages (Subs-Editor.php) [Bug 3472]
+ * Curve: the Welcome message wasn't properly aligned (Admin.template.php, admin.css) [Bug 3495]
 
 
 May 2009
