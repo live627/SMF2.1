@@ -110,7 +110,7 @@ function bbc_to_html($text)
 	$text = parse_bbc($text, true, '', $allowed_tags);
 
 	// Fix for having a line break then a thingy.
-	$text = strtr($text, array('<br /><hr />' => '<hr />', '<br /><div' => '<div', "\n" => '', "\r" => ''));
+	$text = strtr($text, array('<br /><div' => '<div', "\n" => '', "\r" => ''));
 
 	// Note that IE doesn't understand spans really - make them something "legacy"
 	$working_html = array(
@@ -589,14 +589,14 @@ function html_to_bbc($text)
 		'~<(td|th)(\s(.)*?)*?' . '>~i' => '[td]',
 		'~</(td|th)>~i' => '[/td]',
 		'~<br(?:\s[^<>]*?)?>~i' => "\n",
-		'~(.+?)(<hr[^<>]*>)~si' => "$1\n\$2",
-		'~<hr[^<>]*>~i' => "[hr]\n",
+		'~<hr[^<>]*>(\n)?~i' => "[hr]\n$1",
+		'~(\n)?\\[hr\\]~i' => "\n[hr]",
+		'~^\n\\[hr\\]~i' => "[hr]",
 		'~<blockquote(\s(.)*?)*?>~i' => "&lt;blockquote&gt;",
 		'~</blockquote>~i' => "&lt;/blockquote&gt;",
 		'~<ins(\s(.)*?)*?>~i' => "&lt;ins&gt;",
 		'~</ins>~i' => "&lt;/ins&gt;",
 	);
-
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
 	// Please give us just a little more time.

@@ -55,6 +55,7 @@ June 2009
  ! Empty the language cache when adding a new language (ManageServer.php) [Bug 3494]
  ! Make sure we delete all language files when removing a language (ManageServer.php)
  ! Webinstall would incorrectly verify a user (webinstall.php) [Bug 853]
+ ! Hr parsing was very inefficient and could cause editor to fail with large pages (Subs-Editor.php) [Bug 3472]
 
 
 May 2009
