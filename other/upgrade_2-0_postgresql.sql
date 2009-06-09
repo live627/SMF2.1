@@ -537,6 +537,15 @@ ALTER COLUMN title TYPE varchar(60);
 ---#
 
 /******************************************************************************/
+--- Providing more room for apf options.
+/******************************************************************************/
+
+---# Changing field_options column to a larger field type...
+ALTER TABLE {$db_prefix}custom_fields
+ALTER COLUMN field_options TYPE text;
+---#
+
+/******************************************************************************/
 --- Adding extra columns to polls.
 /******************************************************************************/
 

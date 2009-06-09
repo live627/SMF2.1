@@ -82,7 +82,7 @@ $nameChanges = array(
 		'fieldDesc' => 'fieldDesc field_desc varchar(255) NOT NULL default \'\'',
 		'fieldType' => 'fieldType field_type varchar(8) NOT NULL default \'text\'',
 		'fieldLength' => 'fieldLength field_length smallint(5) NOT NULL default \'255\'',
-		'fieldOptions' => 'fieldOptions field_options varchar(255) NOT NULL default \'\'',
+		'fieldOptions' => 'fieldOptions field_options text NOT NULL',
 		'showReg' => 'showReg show_reg tinyint(3) NOT NULL default \'0\'',
 		'showDisplay' => 'showDisplay show_display tinyint(3) NOT NULL default \'0\'',
 		'showProfile' => 'showProfile show_profile varchar(20) NOT NULL default \'forumProfile\'',
@@ -849,7 +849,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 	field_desc varchar(255) NOT NULL default '',
 	field_type varchar(8) NOT NULL default 'text',
 	field_length smallint(5) NOT NULL default '255',
-	field_options varchar(255) NOT NULL default '',
+	field_options text NOT NULL,
 	mask varchar(255) NOT NULL default '',
 	show_reg tinyint(3) NOT NULL default '0',
 	show_display tinyint(3) NOT NULL default '0',
@@ -2334,6 +2334,15 @@ ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
 ---#
 
 /******************************************************************************/
+--- Providing more room for apf options.
+/******************************************************************************/
+
+---# Changing field_options column to a larger field type...
+ALTER TABLE {$db_prefix}custom_fields
+CHANGE field_options field_options text NOT NULL;
+---#
+
+/******************************************************************************/
 --- Providing more room for ignoring boards.
 /******************************************************************************/
 
@@ -2417,7 +2426,6 @@ $nameChanges = array(
 	),
 	'custom_fields' => array(
 		'field_desc' => 'field_desc field_desc varchar(255) NOT NULL default \'\'',
-		'field_options' => 'field_options field_options varchar(255) NOT NULL default \'\'',
 		'mask' => 'mask mask varchar(255) NOT NULL default \'\'',
 		'default_value' => 'default_value default_value varchar(255) NOT NULL default \'\'',
 	),

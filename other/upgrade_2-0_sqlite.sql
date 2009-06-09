@@ -246,6 +246,25 @@ $smcFunc['db_alter_table']('attachments', array(
 ---#
 
 /******************************************************************************/
+--- Providing more room for apf options.
+/******************************************************************************/
+
+---# Changing field_options column to a larger field type...
+---{
+$smcFunc['db_alter_table']('custom_fields', array(
+	'change' => array(
+		'aim' => array(
+			'name' => 'field_options',
+			'null' => false,
+			'type' => 'text',
+			'default' => ''
+		)
+	)
+));
+---}
+---#
+
+/******************************************************************************/
 --- Adding extra columns to polls.
 /******************************************************************************/
 
