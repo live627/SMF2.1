@@ -61,6 +61,7 @@ June 2009
  ! Changed apf fields options to larger file type (text) to allow specifying more possible options (install/upgrade sql files) [Bug 3146]
  * name attribute for links is deprecated in xhtml in favor of id (Many files) [Bug 3500]
  ! Temporary tables created in earlier queries are not explainable for debug (ViewQuery.php, Subs.php) [Bug 3342]
+ * Curve: the (new) icon was missing in unread and unreadreplies (Recent.template.php) [Bug 3492]
 
 
 May 2009

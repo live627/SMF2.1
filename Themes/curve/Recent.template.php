@@ -149,13 +149,8 @@ function template_unread()
 						</td>
 						<td class="subject ', $color_class2, ' windowbg2">
 							<div>
-							', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
-
-		if ($topic['new'] && $context['user']['is_logged'])
-				echo '
-								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
-
-		echo '
+							', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ,'
+								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
 								<p>', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
 									<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>
 								</p>
@@ -321,13 +316,8 @@ function template_replies()
 						</td>
 						<td class="subject ', $color_class2, ' windowbg2">
 							<div>
-								', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '' ;
-
-		if (!empty($topic['new']) && $context['user']['is_logged'])
-				echo '
-								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
-
-		echo '
+								', $topic['is_sticky'] ? '<strong>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', '
+								<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>
 								<p>', $txt['started_by'], ' ', $topic['first_post']['member']['link'], '
 									<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>
 								</p>
