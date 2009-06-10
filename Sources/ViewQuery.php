@@ -111,10 +111,20 @@ function ViewQuery()
 			$is_select_query = true;
 			$select = $matches[1];
 		}
+		// Temporary tables created in earlier queries are not explainable.
+		if ($is_select_query)
+		{
+			foreach (array('log_topics_unread', 'topics_posted_in', 'tmp_log_search_topics', 'tmp_log_search_messages') as $tmp)
+				if (strpos($select, $tmp) !== false)
+				{
+					$is_select_query = false;
+					break;
+				}
+		}
 
 		echo '
 		<div id="qq', $q, '" style="margin-bottom: 2ex;">
-			<a', $is_select_query ? ' href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '"' : '', ' style="font-weight: bold; color: black; text-decoration: none;">
+			<a', $is_select_query ? ' href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '"' : '', ' style="font-weight: bold; text-decoration: none;">
 				', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars($query_data['q']))), '
 			</a><br />';
 			if (!empty($query_data['f']) && !empty($query_data['l']))

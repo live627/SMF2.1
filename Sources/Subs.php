@@ -3468,7 +3468,20 @@ function db_debug_junk()
 		foreach ($db_cache as $q => $qq)
 		{
 			$is_select = substr(trim($qq['q']), 0, 6) == 'SELECT' || preg_match('~^INSERT(?: IGNORE)? INTO \w+(?:\s+\([^)]+\))?\s+SELECT .+$~s', trim($qq['q'])) != 0;
-
+			// Temporary tables created in earlier queries are not explainable.
+			if ($is_select)
+			{
+				foreach (array('log_topics_unread', 'topics_posted_in', 'tmp_log_search_topics', 'tmp_log_search_messages') as $tmp)
+					if (strpos(trim($qq['q']), $tmp) !== false)
+					{
+						$is_select = false;
+						break;
+					}
+			}
+			// But actual creation of the temporary tables are.
+			elseif (preg_match('~^CREATE TEMPORARY TABLE .+?SELECT .+$~s', trim($qq['q'])) != 0)
+				$is_select = true;
+			
 			echo '
 	<strong>', $is_select ? '<a href="' . $scripturl . '?action=viewquery;qq=' . ($q + 1) . '#qq' . $q . '" target="_blank" class="new_win" style="text-decoration: none;">' : '', nl2br(str_replace("\t", '&nbsp;&nbsp;&nbsp;', htmlspecialchars(ltrim($qq['q'], "\n\r")))) . ($is_select ? '</a></strong>' : '</strong>') . '<br />
 	&nbsp;&nbsp;&nbsp;';
