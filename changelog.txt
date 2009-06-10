@@ -59,6 +59,7 @@ June 2009
  * Curve: the Welcome message wasn't properly aligned (Admin.template.php, admin.css) [Bug 3495]
  * Curve: display of posts had a gap in IE6 (ie6.css) [Bug 3496]
  ! Changed apf fields options to larger file type (text) to allow specifying more possible options (install/upgrade sql files) [Bug 3146]
+ * name attribute for links is deprecated in xhtml in favor of id (Many files) [Bug 3500]
 
 
 May 2009

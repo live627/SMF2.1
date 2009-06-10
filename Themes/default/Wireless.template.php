@@ -354,7 +354,7 @@ function template_imode_display()
 
 		echo '
 			<tr><td>', $message['first_new'] ? '
-				<a name="new"></a>' : '',
+				<a id="new"></a>' : '',
 				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<strong>' . $message['member']['name'] . '</strong>', ':
 				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 				', $message['body'], '
@@ -992,7 +992,7 @@ function template_wap2_display()
 			), $message['body']), '<br>');
 
 		echo $message['first_new'] ? '
-		<a name="new"></a>' : '', '
+		<a id="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
 			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<strong>' . $message['member']['name'] . '</strong>', ':
 			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />

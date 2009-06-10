@@ -705,7 +705,7 @@ function template_showPermissions()
 			<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 				<h3 class="catbg">
 					<span class="left"></span><span class="right"></span>
-					<a name="board_permissions"></a>
+					<a id="board_permissions"></a>
 					', $txt['showPermissions_select'], ':
 					<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
 						<option value="0"', $context['board'] == 0 ? ' selected="selected"' : '', '>', $txt['showPermissions_global'], '</option>';

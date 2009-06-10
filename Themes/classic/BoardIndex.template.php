@@ -154,7 +154,7 @@ function template_main()
 				echo '
 		</td>
 		<td class="windowbg2" align="left" width="60%">
-			<a name="b', $board['id'], '"></a>
+			<a id="b', $board['id'], '"></a>
 			<strong>', $board['link'], '</strong><br />
 			', $board['description'];
 

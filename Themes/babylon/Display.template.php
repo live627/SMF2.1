@@ -7,8 +7,8 @@ function template_main()
 
 	// Show the anchor for the top and for the first message.  If the first message is new, say so.
 	echo '
-<a name="top"></a>
-<a name="msg', $context['first_message'], '"></a>', $context['first_new_message'] ? '<a name="new"></a>' : '';
+<a id="top"></a>
+<a id="msg', $context['first_message'], '"></a>', $context['first_new_message'] ? '<a id="new"></a>' : '';
 
 	// Show the linktree as well as the "Who's Viewing" information.
 	echo '
@@ -272,7 +272,7 @@ function template_main()
 		// Show the message anchor and a "new" anchor if this message is new.
 		if ($message['id'] != $context['first_message'])
 			echo '
-		<a name="msg', $message['id'], '"></a>', $message['first_new'] ? '<a name="new"></a>' : '';
+		<a id="msg', $message['id'], '"></a>', $message['first_new'] ? '<a id="new"></a>' : '';
 
 		echo '
 		<table width="100%" cellpadding="3" cellspacing="0" border="0">
@@ -572,7 +572,7 @@ function template_main()
 	echo '
 	<tr><td style="padding: 0 0 1px 0;"></td></tr>
 </table>
-<a name="lastPost"></a>
+<a id="lastPost"></a>
 
 <table width="100%" cellpadding="3" cellspacing="0" border="0" class="tborder" style="margin-top: 1ex;">
 	<tr>
@@ -580,7 +580,7 @@ function template_main()
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
 					<td>
-						<a name="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : ''), '
+						<a id="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : ''), '
 					</td>
 					<td align="', !$context['right_to_left'] ? 'right' : 'left', '" style="font-size: smaller;">';
 
@@ -630,7 +630,7 @@ function template_main()
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
 	{
 		echo '
-<a name="quickreply"></a>
+<a id="quickreply"></a>
 <table border="0" cellspacing="1" cellpadding="3" class="bordercolor" width="100%" style="clear: both;">
 	<tr>
 		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a></td>

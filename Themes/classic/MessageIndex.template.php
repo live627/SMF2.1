@@ -8,7 +8,7 @@ function template_main()
 	echo '
 <table width="100%" cellpadding="3" cellspacing="0">
 	<tr>
-		<td><a name="top"></a>', '</td>';
+		<td><a id="top"></a>', '</td>';
 	if (!empty($settings['display_who_viewing']))
 	{
 		echo '
@@ -39,7 +39,7 @@ function template_main()
 	<tr>
 		<td class="windowbg" width="6%" align="center" valign="top">', $board['new'] ? '<img src="' . $settings['images_url'] . '/on.gif" alt="' . $txt['new_posts'] . '" title="' . $txt['new_posts'] . '" border="0" />' : '<img src="' . $settings['images_url'] . '/off.gif" alt="' . $txt['old_posts'] . '" title="' . $txt['old_posts'] . '" border="0" />', '</td>
 		<td class="windowbg2" align="left" width="60%">
-			<a name="b' . $board['id'] . '"></a>
+			<a id="b' . $board['id'] . '"></a>
 			<strong>' . $board['link'] . '</strong><br />
 			' . $board['description'];
 
@@ -275,7 +275,7 @@ function template_main()
 		<td align="left" class="catbg" width="100%" height="30">
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
-					<td><a name="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
+					<td><a id="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 				</tr>
 			</table>

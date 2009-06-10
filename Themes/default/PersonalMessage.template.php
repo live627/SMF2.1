@@ -157,7 +157,7 @@ function template_folder()
 
 			echo '
 		<tr><td style="padding: 1px 1px 0 1px;">
-			<a name="msg', $message['id'], '"></a>
+			<a id="msg', $message['id'], '"></a>
 			<table width="100%" cellpadding="3" cellspacing="0" border="0">
 				<tr><td colspan="2" class="', $windowcss, '">
 					<table width="100%" cellpadding="4" cellspacing="1" style="table-layout: fixed;">

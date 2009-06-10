@@ -7,8 +7,8 @@ function template_main()
 
 	// Show the anchor for the top and for the first message. If the first message is new, say so.
 	echo '
-<a name="top"></a>
-<a name="msg', $context['first_message'], '"></a>', $context['first_new_message'] ? '<a name="new"></a>' : '';
+<a id="top"></a>
+<a id="msg', $context['first_message'], '"></a>', $context['first_new_message'] ? '<a id="new"></a>' : '';
 
 	// Is this topic also a poll?
 	if ($context['is_poll'])
@@ -188,7 +188,7 @@ function template_main()
 		// Show the message anchor and a "new" anchor if this message is new.
 		if ($message['id'] != $context['first_message'])
 			echo '
-			<a name="msg', $message['id'], '"></a>', $message['first_new'] ? '<a name="new"></a>' : '';
+			<a id="msg', $message['id'], '"></a>', $message['first_new'] ? '<a id="new"></a>' : '';
 
 		echo '
 			<div class="', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', '">
@@ -515,7 +515,7 @@ function template_main()
 	</form>';
 	echo '
 </div>
-<a name="lastPost"></a>';
+<a id="lastPost"></a>';
 
 	// Show the page index... "Pages: [1]".
 	echo '
@@ -553,7 +553,7 @@ function template_main()
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
 	{
 		echo '
-<a name="quickreply"></a>
+<a id="quickreply"></a>
 <div class="tborder" id="quickreplybox">
 	<h3 class="catbg"><span class="left"></span><span class="right"></span>
 		<a href="javascript:oQuickReply.swap();">

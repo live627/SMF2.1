@@ -250,7 +250,7 @@ function template_maintain_members()
 		<tr class="windowbg">
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=members;activity=purgeinactive" method="post" accept-charset="', $context['character_set'], '" id="membersForm">
-					<p><a name="membersLink"></a>', $txt['maintain_members_since1'], '
+					<p><a id="membersLink"></a>', $txt['maintain_members_since1'], '
 					<select name="del_type">
 						<option value="activated" selected="selected">', $txt['maintain_members_activated'], '</option>
 						<option value="logged">', $txt['maintain_members_logged_in'], '</option>
@@ -331,7 +331,7 @@ function template_maintain_topics()
 
 	// The otherwise hidden "choose which boards to prune".
 	echo '
-					<a name="rotLink"></a>', $txt['maintain_old_since_days1'], '<input type="text" name="maxdays" value="30" size="3" />', $txt['maintain_old_since_days2'], '<br />
+					<a id="rotLink"></a>', $txt['maintain_old_since_days1'], '<input type="text" name="maxdays" value="30" size="3" />', $txt['maintain_old_since_days2'], '<br />
 					<div style="padding-left: 3ex;">
 						<label for="delete_type_nothing"><input type="radio" name="delete_type" id="delete_type_nothing" value="nothing" class="check" checked="checked" /> ', $txt['maintain_old_nothing_else'], '</label><br />
 						<label for="delete_type_moved"><input type="radio" name="delete_type" id="delete_type_moved" value="moved" class="check" /> ', $txt['maintain_old_are_moved'], '</label><br />

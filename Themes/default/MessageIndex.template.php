@@ -6,7 +6,7 @@ function template_main()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<a name="top"></a>';
+		<a id="top"></a>';
 
 	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
@@ -346,7 +346,7 @@ function template_main()
 					</tbody>
 				</table>
 			</div>
-			<a name="bot"></a>';
+			<a id="bot"></a>';
 
 		// Finish off the form - again.
 		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))

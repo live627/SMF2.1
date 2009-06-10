@@ -608,7 +608,7 @@ function template_manual_topic_view()
 						</table>
 					</td>
 				</tr>
-			</table><a name="lastPost" id="lastPost"></a>';
+			</table><a id="lastPost"></a>';
 	if (!empty($settings['use_tabs']))
 	{
 		echo '

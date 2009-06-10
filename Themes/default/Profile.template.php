@@ -731,7 +731,7 @@ function template_showPermissions()
 		echo '
 			<tr class="catbg">
 				<td align="left" colspan="2">
-					<a name="board_permissions"></a>
+					<a id="board_permissions"></a>
 					<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';area=permissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 						', $txt['showPermissions_select'], ':
 						<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">

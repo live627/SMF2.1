@@ -8,7 +8,7 @@ function template_main()
 	echo '
 		<table width="100%" cellpadding="3" cellspacing="0">
 			<tr>
-				<td><a name="top"></a>', '</td>';
+				<td><a id="top"></a>', '</td>';
 	if (!empty($settings['display_who_viewing']))
 	{
 		echo '
@@ -315,7 +315,7 @@ function template_main()
 				<td class="catbg" width="100%" height="30">
 					<table cellpadding="3" cellspacing="0" width="100%">
 						<tr>
-							<td><a name="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
+							<td><a id="bot"></a><strong>', $txt['pages'], ':</strong> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
 							<td align="', !$context['right_to_left'] ? 'right' : 'left', '" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 						</tr>
 					</table>
