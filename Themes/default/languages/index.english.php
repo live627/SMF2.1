@@ -355,7 +355,7 @@ $txt['template_parse_error_details'] = 'There was a problem loading the <tt><str
 
 $txt['today'] = '<strong>Today</strong> at ';
 $txt['yesterday'] = '<strong>Yesterday</strong> at ';
-$txt['new_poll'] = 'Post new poll';
+$txt['new_poll'] = 'New poll';
 $txt['poll_question'] = 'Question';
 $txt['poll_vote'] = 'Submit Vote';
 $txt['poll_total_voters'] = 'Total Members Voted';
