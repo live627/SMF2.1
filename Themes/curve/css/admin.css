@@ -352,6 +352,15 @@ pre.file_content
 {
 	width: 97%;
 }
+ul.pending_payments
+{
+	margin: 0;
+	padding: 0;
+}
+ul.pending_payments li
+{
+	list-style-type: none;
+}
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */
