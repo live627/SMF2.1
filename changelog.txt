@@ -62,6 +62,11 @@ June 2009
  * name attribute for links is deprecated in xhtml in favor of id (Many files) [Bug 3500]
  ! Temporary tables created in earlier queries are not explainable for debug (ViewQuery.php, Subs.php) [Bug 3342]
  * Curve: the (new) icon was missing in unread and unreadreplies (Recent.template.php) [Bug 3492]
+ ! Verification questions/answers did not accept special characters (ManageSettings.php) [Bug 2923]
+ ! Install and upgrade now do a ping check to see if they should load remote or local css files (install.php, upgrade.php) [Bug 2782]
+ ! Single quotes could break the Language Editor (ManageServer.php) [Bug 3326]
+ ! Disable Language specific settings panel while editing entries to prevent confusion (ManageServer.php, Admin.template.php) [Bug 1464]
+ ! Updated Sphinx API to allow search by relevance (SearchAPI-Sphinx.php) [Bug 3107]
 
 
 May 2009

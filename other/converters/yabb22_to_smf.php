@@ -940,11 +940,12 @@ if (empty($preparsing))
 				$_GET['substep'] += count($block);
 				list($first, $last) = doBlock('messages', $block, false, true, true);
 
-				convert_query("
-					UPDATE {$to_prefix}topics
-					SET id_first_msg = {$first},
-						id_last_msg = {$last}
-					WHERE id_topic = {$topic['id_topic']}");
+				if (!empty($first) && !empty($last))
+					convert_query("
+						UPDATE {$to_prefix}topics
+						SET id_first_msg = {$first},
+							id_last_msg = {$last}
+						WHERE id_topic = {$topic['id_topic']}");
 
 				pastTime($_GET['substep']);
 			}

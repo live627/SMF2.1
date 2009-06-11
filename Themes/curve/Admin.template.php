@@ -1866,7 +1866,7 @@ function template_modify_language_entries()
 			<div class="errorbox">
 				<p class="alert">', $context['lang_file_not_writable_message'], '</p>
 			</div>';
-			
+
 	echo '
 			<div class="information">
 				', $txt['edit_language_entries_primary'], '
@@ -1881,40 +1881,40 @@ function template_modify_language_entries()
 							', $txt['languages_character_set'], ':
 						</dt>
 						<dd>
-							<input type="text" name="character_set" size="20" value="', $context['primary_settings']['character_set'], '" />
+							<input type="text" name="character_set" size="20" value="', $context['primary_settings']['character_set'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
 						</dd>
 						<dt>
 							', $txt['languages_locale'], ':
 						</dt>
 						<dd>
-							<input type="text" name="locale" size="20" value="', $context['primary_settings']['locale'], '" />
+							<input type="text" name="locale" size="20" value="', $context['primary_settings']['locale'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
 						</dd>
 						<dt>
 							', $txt['languages_dictionary'], ':
 						</dt>
 						<dd>
-							<input type="text" name="dictionary" size="20" value="', $context['primary_settings']['dictionary'], '" />
+							<input type="text" name="dictionary" size="20" value="', $context['primary_settings']['dictionary'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
 						</dd>
 						<dt>
 							', $txt['languages_spelling'], ':
 						</dt>
 						<dd>
-							<input type="text" name="spelling" size="20" value="', $context['primary_settings']['spelling'], '" />
+							<input type="text" name="spelling" size="20" value="', $context['primary_settings']['spelling'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
 						</dd>
 						<dt>
 							', $txt['languages_rtl'], ':
 						</dt>
 						<dd>
-							<input type="checkbox" name="rtl"', $context['primary_settings']['rtl'] ? ' checked="checked"' : '', ' class="check" />
+							<input type="checkbox" name="rtl"', $context['primary_settings']['rtl'] ? ' checked="checked"' : '', ' class="check"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
 						</dd>
 					</dl>
 					</fieldset>
-					<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' />';
+					<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' />';
 
 	// English can't be deleted.
 	if ($context['lang_id'] != 'english')
 		echo '
-				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" />';
+				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" />';
 
 	echo '
 				</div>

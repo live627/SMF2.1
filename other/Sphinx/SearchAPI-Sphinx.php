@@ -146,6 +146,10 @@ class sphinx_search
 			}
 			$query = count($orResults) === 1 ? $orResults[0]  : '(' . implode(') | (', $orResults) . ')';
 
+			// Subject only searches need to be specified.
+			if ($search_params['subject_only'])
+				$query = '@(subject) ' . $query;
+
 			// Execute the search query.
 			$request = $mySphinx->Query($query, 'smf_index');
 
@@ -164,13 +168,30 @@ class sphinx_search
 				'num_results' => $request['total'],
 			);
 			if (isset($request['matches']))
+			{
+				//Sorting by message age?
+				if ($search_params['sort'] == 'id_msg')
+				{
+					if ($search_params['sort_dir'] == 'asc')
+						ksort($request['matches']);
+					else
+						krsort($request['matches']);
+				}
+				//Sorting by number of replies?
+				elseif ($search_params['sort'] == 'num_replies')
+					uasort($request['matches'], 'smc_replies_compare_' . $search_params['sort_dir']);
+				//Sorting by relevance
+				else
+					uasort($request['matches'], 'smc_relevance_compare');
+
 				foreach ($request['matches'] as $msgID => $match)
 					$cached_results['matches'][$msgID] = array(
 						'id' => $match['attrs']['id_topic'],
 						'relevance' => round($match['attrs']['relevance'] / 10000, 1) . '%',
-						'num_matches' => $match['attrs']['@count'],
+						'num_matches' => empty($search_params['topic']) ? $match['attrs']['@count'] : 0,
 						'matches' => array(),
 					);
+			}
 
 			// Store the search results in the cache.
 			cache_put_data('search_results_' . md5($user_info['query_see_board'] . '_' . $context['params']), $cached_results, 600);
@@ -190,6 +211,28 @@ class sphinx_search
 
 		return $cached_results['num_results'];
 	}
+}
+
+// Sort by "relevance".
+function smc_relevance_compare($match1, $match2)
+{
+	if ($match1['attrs']['relevance'] == $match2['attrs']['relevance'])
+		return $match1['attrs']['poster_time'] > $match2['attrs']['poster_time'] ? -1 : 1;
+	return (float) $match1['attrs']['relevance'] > (float) $match2['attrs']['relevance'] ? -1 : 1;
+}
+
+// Sort by number of topic replies, in descending order.
+function smc_replies_compare_desc($match1, $match2)
+{
+	if ($match1['attrs']['num_replies'] == $match2['attrs']['num_replies'])
+		return relevance_compare($match1, $match2);
+	return (int) $match1['attrs']['num_replies'] > (int) $match2['attrs']['num_replies'] ? -1 : 1;
+}
+
+// Sort by number of topic replies, in ascending order.
+function smc_replies_compare_asc($match1, $match2)
+{
+	return replies_compare_desc($match2, $match1);
 }
 
 ?>

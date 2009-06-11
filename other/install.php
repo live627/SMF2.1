@@ -1988,10 +1988,11 @@ function template_install_above()
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
-		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
+		<link rel="stylesheet" type="text/css" href="', ($upcontext['remote_files_available'] ? $smfsite . '/style.css' : $upgradeurl . '?infile_css'), '" />
 	</head>
 	<body>
 		<div id="header">
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="', ($upcontext['remote_files_available'] ? $smfsite : 'Themes/default/images'), '/smflogo.gif" style=" float: right;" alt="Simple Machines" border="0" /></a>
 			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $smfsite, '/smflogo.gif" style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';" alt="Simple Machines" border="0" /></a>
 			<div title="Moogle Express!">', $txt['smf_installer'], '</div>
 		</div>
@@ -2087,6 +2088,150 @@ function template_install_below()
 		</div>
 	</body>
 </html>';
+}
+
+// This is just a backup, incase simplemachines.org is not responding.
+function template_css()
+{
+	echo 'body
+{
+	background-color: #E5E5E8;
+	margin: 0px;
+	padding: 0px;
+}
+body, td
+{
+	color: #000000;
+	font-size: small;
+	font-family: verdana, sans-serif;
+}
+div#header
+{
+	background-image: url(Themes/default/images/catbg.jpg);
+	background-repeat: repeat-x;
+	background-color: #88A6C0;
+	padding: 22px 4% 12px 4%;
+	color: white;
+	font-family: Georgia, serif;
+	font-size: xx-large;
+	border-bottom: 1px solid black;
+	height: 40px;
+}
+div#content
+{
+	padding: 20px 30px;
+}
+div.error_message
+{
+	border: 2px dashed red;
+	background-color: #E1E1E1;
+	margin: 1ex 4ex;
+	padding: 1.5ex;
+}
+div.panel
+{
+	border: 1px solid gray;
+	background-color: #F6F6F6;
+	margin: 0 0 10px 0;
+	padding: 1.2ex;
+	overflow: auto;
+}
+div.panel h2
+{
+	margin: 0;
+	margin-bottom: 0.5ex;
+	padding-bottom: 3px;
+	border-bottom: 1px dashed black;
+	font-size: 14pt;
+	font-weight: normal;
+}
+div.panel h3
+{
+	margin: 0;
+	margin-bottom: 2ex;
+	font-size: 10pt;
+	font-weight: normal;
+}
+form
+{
+	margin: 0;
+}
+td.textbox
+{
+	padding-top: 2px;
+	font-weight: bold;
+	white-space: nowrap;
+	padding-left: 2ex;
+}
+td.leftcol
+{
+	width: 20%;
+	vertical-align: text-top;
+}
+/* This is used for tables that have a grid/border background color (such as the topic listing.) */
+.bordercolor
+{
+	background-color: #ADADAD;
+	padding: 0px;
+}
+.stepdone
+{
+	color: darkgreen;
+	font-size: xx-small;
+}
+.stepcurrent
+{
+	color: darkblue;
+	font-size: xx-small;
+	font-weight: bold;
+}
+.stepwaiting
+{
+	color: black;
+	font-size: xx-small;
+}
+.smalltext
+{
+	font-size: x-small;
+	font-family: verdana, sans-serif;
+}
+/* This is used on tables that should just have a border around them. */
+.tborder
+{
+	padding: 1px;
+	border: 1px solid #696969;
+	background-color: #FFFFFF;
+}
+/* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
+.titlebg, tr.titlebg th, tr.titlebg td
+{
+	color: black;
+	font-style: normal;
+	background: url(Themes/default/images/titlebg.jpg) #E9F0F6 repeat-x;
+	border-bottom: solid 1px #9BAEBF;
+	border-top: solid 1px #FFFFFF;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.titlebg, .titlebg a:link, .titlebg a:visited
+{
+	font-weight: bold;
+	color: black;
+	font-style: normal;
+}
+
+.titlebg a:hover
+{
+	color: #404040;
+}
+
+
+.windowbg
+{
+	color: #000000;
+	background-color: #ECEDF3;
+}';
+
 }
 
 // Welcome them to the wonderful world of SMF!

@@ -887,6 +887,24 @@ function initialize_inputs()
 		exit;
 	}
 
+	// Are we calling the backup css file?
+	if (isset($_GET['infile_css']))
+	{
+		header('Content-Type: text/css');
+		template_css();
+		exit;
+	}
+	
+	// Anybody home?
+	if (!isset($_GET['xml']))
+	{
+		$upcontext['remote_files_available'] = false;
+		$test = fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
+		if ($test)
+			$upcontext['remote_files_available'] = true;
+		fclose($test);
+	}
+
 	// Something is causing this to happen, and it's annoying.  Stop it.
 	$temp = 'upgrade_php?step';
 	while (strlen($temp) > 4)
@@ -3576,7 +3594,7 @@ function template_upgrade_above()
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
-		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
+		<link rel="stylesheet" type="text/css" href="', ($upcontext['remote_files_available'] ? $smfsite . '/style.css' : $upgradeurl . '?infile_css'), '" />
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
 			var smf_charset = \'', (empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set']), '\';
@@ -3603,7 +3621,7 @@ function template_upgrade_above()
 	</head>
 	<body>
 		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $smfsite, '/smflogo.gif" style=" float: right;" alt="Simple Machines" border="0" /></a>
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="', ($upcontext['remote_files_available'] ? $smfsite : 'Themes/default/images'), '/smflogo.gif" style=" float: right;" alt="Simple Machines" border="0" /></a>
 			<div title="Radical Dreamers">', $txt['upgrade_upgrade_utility'], '</div>
 		</div>
 		<div id="content">
@@ -3737,6 +3755,150 @@ function template_upgrade_below()
 	echo '
 	</body>
 </html>';
+}
+
+// This is just a backup, incase simplemachines.org is not responding.
+function template_css()
+{
+	echo 'body
+{
+	background-color: #E5E5E8;
+	margin: 0px;
+	padding: 0px;
+}
+body, td
+{
+	color: #000000;
+	font-size: small;
+	font-family: verdana, sans-serif;
+}
+div#header
+{
+	background-image: url(Themes/default/images/catbg.jpg);
+	background-repeat: repeat-x;
+	background-color: #88A6C0;
+	padding: 22px 4% 12px 4%;
+	color: white;
+	font-family: Georgia, serif;
+	font-size: xx-large;
+	border-bottom: 1px solid black;
+	height: 40px;
+}
+div#content
+{
+	padding: 20px 30px;
+}
+div.error_message
+{
+	border: 2px dashed red;
+	background-color: #E1E1E1;
+	margin: 1ex 4ex;
+	padding: 1.5ex;
+}
+div.panel
+{
+	border: 1px solid gray;
+	background-color: #F6F6F6;
+	margin: 0 0 10px 0;
+	padding: 1.2ex;
+	overflow: auto;
+}
+div.panel h2
+{
+	margin: 0;
+	margin-bottom: 0.5ex;
+	padding-bottom: 3px;
+	border-bottom: 1px dashed black;
+	font-size: 14pt;
+	font-weight: normal;
+}
+div.panel h3
+{
+	margin: 0;
+	margin-bottom: 2ex;
+	font-size: 10pt;
+	font-weight: normal;
+}
+form
+{
+	margin: 0;
+}
+td.textbox
+{
+	padding-top: 2px;
+	font-weight: bold;
+	white-space: nowrap;
+	padding-left: 2ex;
+}
+td.leftcol
+{
+	width: 20%;
+	vertical-align: text-top;
+}
+/* This is used for tables that have a grid/border background color (such as the topic listing.) */
+.bordercolor
+{
+	background-color: #ADADAD;
+	padding: 0px;
+}
+.stepdone
+{
+	color: darkgreen;
+	font-size: xx-small;
+}
+.stepcurrent
+{
+	color: darkblue;
+	font-size: xx-small;
+	font-weight: bold;
+}
+.stepwaiting
+{
+	color: black;
+	font-size: xx-small;
+}
+.smalltext
+{
+	font-size: x-small;
+	font-family: verdana, sans-serif;
+}
+/* This is used on tables that should just have a border around them. */
+.tborder
+{
+	padding: 1px;
+	border: 1px solid #696969;
+	background-color: #FFFFFF;
+}
+/* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
+.titlebg, tr.titlebg th, tr.titlebg td
+{
+	color: black;
+	font-style: normal;
+	background: url(Themes/default/images/titlebg.jpg) #E9F0F6 repeat-x;
+	border-bottom: solid 1px #9BAEBF;
+	border-top: solid 1px #FFFFFF;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.titlebg, .titlebg a:link, .titlebg a:visited
+{
+	font-weight: bold;
+	color: black;
+	font-style: normal;
+}
+
+.titlebg a:hover
+{
+	color: #404040;
+}
+
+
+.windowbg
+{
+	color: #000000;
+	background-color: #ECEDF3;
+}';
+
 }
 
 function template_xml_above()
