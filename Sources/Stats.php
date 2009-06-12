@@ -499,7 +499,6 @@ function DisplayStats()
 	}
 
 	// Time online top 10.
-	// !!!SLOW This query is sorta slow.  Should we just add a key? (or would that be bad in the long run?)
 	$temp = cache_get_data('stats_total_time_members', 600);
 	$members_result = $smcFunc['db_query']('', '
 		SELECT id_member, real_name, total_time_logged_in

@@ -1655,6 +1655,7 @@ CREATE INDEX {$db_prefix}members_last_login ON {$db_prefix}members (last_login);
 CREATE INDEX {$db_prefix}members_lngfile ON {$db_prefix}members (lngfile);
 CREATE INDEX {$db_prefix}members_id_post_group ON {$db_prefix}members (id_post_group);
 CREATE INDEX {$db_prefix}members_warning ON {$db_prefix}members (warning);
+CREATE INDEX {$db_prefix}members_total_time_logged_in ON {$db_prefix}members (total_time_logged_in);
 
 #
 # Sequence for table `message_icons`

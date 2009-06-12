@@ -2334,6 +2334,15 @@ ADD INDEX last_message_sticky (id_board, is_sticky, id_last_msg);
 ---#
 
 /******************************************************************************/
+--- Adding indexes to optimize stats.
+/******************************************************************************/
+
+---# Adding index on total_time_logged_in...
+ALTER TABLE {$db_prefix}members
+ADD INDEX total_time_logged_in (total_time_logged_in);
+---#
+
+/******************************************************************************/
 --- Providing more room for apf options.
 /******************************************************************************/
 

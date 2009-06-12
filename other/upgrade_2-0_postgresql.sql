@@ -469,6 +469,14 @@ CREATE INDEX {$db_prefix}topics_member_started ON {$db_prefix}topics (id_member_
 ---#
 
 /******************************************************************************/
+--- Adding indexes to optimize stats.
+/******************************************************************************/
+
+---# Adding index on total_time_logged_in...
+CREATE INDEX {$db_prefix}members_total_time_logged_in ON {$db_prefix}members (total_time_logged_in);
+---#
+
+/******************************************************************************/
 --- Providing more room for ignoring boards.
 /******************************************************************************/
 
