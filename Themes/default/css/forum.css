@@ -10,12 +10,10 @@ h3#newsfader
 {
 	font-size: 1em;
 }
-#smfNewsFader span
+#smfNewsFader
 {
 	font-weight: bold;
-}
-#smfFadeScroller
-{
+	line-height: 1.4em;
 	padding: 2em;
 	font-size: 1em;
 	text-align: center;

@@ -31,52 +31,13 @@ function template_main()
 				<img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" />
 			</a>&nbsp;', $txt['news'], '
 		</h3>
-		<div id="smfNewsFader"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>
+		<div class="windowbg2" id="smfNewsFader"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>
 			<div id="smfFadeScroller"><span>', $context['news_lines'][0], '</span></div>
 		</div>
 	</div>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		// The fading delay (in ms.)
 		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
-		// Fade from... what text color? To which background color?
-		var smfFadeFrom = {"r": 0, "g": 0, "b": 0}, smfFadeTo = {"r": 255, "g": 255, "b": 255};
-		// Surround each item with... anything special?
-		var smfFadeBefore = "<strong>", smfFadeAfter = "</strong>";
-
-		var foreColor, foreEl, backEl, backColor;
-
-		if (typeof(document.getElementById(\'smfFadeScroller\').currentStyle) != "undefined")
-		{
-			foreColor = document.getElementById(\'smfFadeScroller\').currentStyle.color.match(/#([\da-f][\da-f])([\da-f][\da-f])([\da-f][\da-f])/);
-			smfFadeFrom = {"r": parseInt(foreColor[1]), "g": parseInt(foreColor[2]), "b": parseInt(foreColor[3])};
-
-			backEl = document.getElementById(\'smfFadeScroller\');
-			while (backEl.currentStyle.backgroundColor == "transparent" && typeof(backEl.parentNode) != "undefined")
-				backEl = backEl.parentNode;
-
-			backColor = backEl.currentStyle.backgroundColor.match(/#([\da-f][\da-f])([\da-f][\da-f])([\da-f][\da-f])/);
-			smfFadeTo = {"r": eval("0x" + backColor[1]), "g": eval("0x" + backColor[2]), "b": eval("0x" + backColor[3])};
-		}
-		else if (typeof(window.opera) == "undefined" && typeof(document.defaultView) != "undefined")
-		{
-
-			foreEl = document.getElementById(\'smfFadeScroller\');
-
-			while (document.defaultView.getComputedStyle(foreEl, null).getPropertyCSSValue("color") == null && typeof(foreEl.parentNode) != "undefined" && typeof(foreEl.parentNode.tagName) != "undefined")
-				foreEl = foreEl.parentNode;
-
-			foreColor = document.defaultView.getComputedStyle(foreEl, null).getPropertyValue("color").match(/rgb\((\d+), (\d+), (\d+)\)/);
-			smfFadeFrom = {"r": parseInt(foreColor[1]), "g": parseInt(foreColor[2]), "b": parseInt(foreColor[3])};
-
-			backEl = document.getElementById(\'smfFadeScroller\');
-
-			while (document.defaultView.getComputedStyle(backEl, null).getPropertyCSSValue("background-color") == null && typeof(backEl.parentNode) != "undefined" && typeof(backEl.parentNode.tagName) != "undefined")
-				backEl = backEl.parentNode;
-
-			backColor = document.defaultView.getComputedStyle(backEl, null).getPropertyValue("background-color");//.match(/rgb\((\d+), (\d+), (\d+)\)/);
-			smfFadeTo = {"r": parseInt(backColor[1]), "g": parseInt(backColor[2]), "b": parseInt(backColor[3])};
-		}
-
 		// List all the lines of the news for display.
 		var smfFadeContent = new Array(
 			"', implode('",

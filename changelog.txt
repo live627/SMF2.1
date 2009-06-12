@@ -70,6 +70,7 @@ June 2009
  * Curve: rewrote the ManagePaid Template to match Curve's look and feel (ManagePaid.template.php, admin.css, profile.css)
  ! Canonical on wireless should only show to guests (wireless.template.php)
  * Re-order messageindex/display buttons to more logical order, and text 'new poll' alteration (messageindex.template.php, display.template.php, index.english.php, Manage.english.php) [Bug 3504]
+ * Newsfader didn't always have a background color, move some newsjader js to the fader.js like curve (fader.js, BoardIndex.template.php, forum.css) [Bug 3506]
 
 
 May 2009

@@ -32,63 +32,26 @@ function template_main()
 		smfNewsFadeToggle.addTogglePanel("smfNewsFader");
 	// ]]></script>
 <div class="tborder" style="margin-bottom: 2ex;">
-	<table border="0" width="100%" cellspacing="1" cellpadding="4">
+	<table border="0" width="100%" cellspacing="1" cellpadding="0">
 		<tr class="titlebg" align="center">
 			<td><a href="#" onclick="smfNewsFadeToggle.toggle(); return false;"><img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>', $txt['news'], '</td>
 		</tr>
 		<tr>
-			<td valign="middle" align="center" style="height: 60px;" id="smfNewsFader"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
+			<td valign="middle" align="center" style="height: 60px;', empty($options['collapse_news_fader']) ? '' : ' display: none;', '">';
 
 		// Prepare all the javascript settings.
 		echo '
-				<div id="smfFadeScroller" style="width: 90%; padding: 2px;"><strong>', $context['news_lines'][0], '</strong></div>
+				<div class="windowbg2" id="smfNewsFader">
+					<div id="smfFadeScroller"><strong>', $context['news_lines'][0], '</strong></div>
+				</div>
 				<script type="text/javascript"><!-- // --><![CDATA[
-					// The fading delay (in ms.)
-					var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
-					// Fade from... what text color?  To which background color?
-					var smfFadeFrom = {"r": 0, "g": 0, "b": 0}, smfFadeTo = {"r": 255, "g": 255, "b": 255};
-					// Surround each item with... anything special?
-					var smfFadeBefore = "<strong>", smfFadeAfter = "</strong>";
-
-					var foreColor, foreEl, backEl, backColor;
-
-					if (typeof(document.getElementById(\'smfFadeScroller\').currentStyle) != "undefined")
-					{
-						foreColor = document.getElementById(\'smfFadeScroller\').currentStyle.color.match(/#([\da-f][\da-f])([\da-f][\da-f])([\da-f][\da-f])/);
-						smfFadeFrom = {"r": parseInt(foreColor[1]), "g": parseInt(foreColor[2]), "b": parseInt(foreColor[3])};
-
-						backEl = document.getElementById(\'smfFadeScroller\');
-						while (backEl.currentStyle.backgroundColor == "transparent" && typeof(backEl.parentNode) != "undefined")
-							backEl = backEl.parentNode;
-
-						backColor = backEl.currentStyle.backgroundColor.match(/#([\da-f][\da-f])([\da-f][\da-f])([\da-f][\da-f])/);
-						smfFadeTo = {"r": eval("0x" + backColor[1]), "g": eval("0x" + backColor[2]), "b": eval("0x" + backColor[3])};
-					}
-					else if (typeof(window.opera) == "undefined" && typeof(document.defaultView) != "undefined")
-					{
-
-						foreEl = document.getElementById(\'smfFadeScroller\');
-
-						while (document.defaultView.getComputedStyle(foreEl, null).getPropertyCSSValue("color") == null && typeof(foreEl.parentNode) != "undefined" && typeof(foreEl.parentNode.tagName) != "undefined")
-							foreEl = foreEl.parentNode;
-
-						foreColor = document.defaultView.getComputedStyle(foreEl, null).getPropertyValue("color").match(/rgb\((\d+), (\d+), (\d+)\)/);
-						smfFadeFrom = {"r": parseInt(foreColor[1]), "g": parseInt(foreColor[2]), "b": parseInt(foreColor[3])};
-
-						backEl = document.getElementById(\'smfFadeScroller\');
-
-						while (document.defaultView.getComputedStyle(backEl, null).getPropertyCSSValue("background-color") == null && typeof(backEl.parentNode) != "undefined" && typeof(backEl.parentNode.tagName) != "undefined")
-							backEl = backEl.parentNode;
-
-						backColor = document.defaultView.getComputedStyle(backEl, null).getPropertyValue("background-color");//.match(/rgb\((\d+), (\d+), (\d+)\)/);
-						smfFadeTo = {"r": parseInt(backColor[1]), "g": parseInt(backColor[2]), "b": parseInt(backColor[3])};
-					}
-
-					// List all the lines of the news for display.
-					var smfFadeContent = new Array(
-						"', implode('",
-						"', $context['fader_news_lines']), '"
-					);
+						// The fading delay (in ms.)
+						var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
+						// List all the lines of the news for display.
+						var smfFadeContent = new Array(
+							"', implode('",
+							"', $context['fader_news_lines']), '"
+						);
 				// ]]></script>
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
 			</td>

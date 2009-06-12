@@ -25,7 +25,7 @@ function template_main()
 		smfNewsFadeToggle.addToggleImage("newsupshrink", "/upshrink.gif", "/upshrink2.gif");
 		smfNewsFadeToggle.addTogglePanel("smfFadeScroller");
 		// The fading delay (in ms.)
-		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';		
+		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
 	// ]]></script>
 
 	<div id="newsfader">
