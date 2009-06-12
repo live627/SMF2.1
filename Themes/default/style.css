@@ -574,7 +574,6 @@ code
 	padding: 1em 0 3px 0;
 	border-top: solid 1px #888;
 	width: 100%;
-	overflow: auto;
 	line-height: 1.3em;
 	font-size: 0.85em;
 }

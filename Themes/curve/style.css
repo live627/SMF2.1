@@ -475,10 +475,11 @@ table.table_grid thead tr.catbg th.smalltext
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
 .signature
 {
+	clear: right;
+	padding: 1em 0 3px 0;
 	width: 100%;
-	overflow: auto;
-	padding-bottom: 3px;
-	line-height: 1.3em;
+	line-height: 1.4em;
+	font-size: 0.85em;
 }
 
 /* Sometimes there will be an error when you post */

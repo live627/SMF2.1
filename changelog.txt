@@ -71,6 +71,7 @@ June 2009
  ! Canonical on wireless should only show to guests (wireless.template.php)
  * Re-order messageindex/display buttons to more logical order, and text 'new poll' alteration (messageindex.template.php, display.template.php, index.english.php, Manage.english.php) [Bug 3504]
  * Newsfader didn't always have a background color, move some newsjader js to the fader.js like curve (fader.js, BoardIndex.template.php, forum.css) [Bug 3506]
+ * Large text in signature caused horizontal scrolling (style.css, profile.css) [Bug 3507]
 
 
 May 2009

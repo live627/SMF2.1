@@ -109,14 +109,10 @@ dl
 {
 	width: 100%;
 }
-.signature
-{
-	overflow: auto;
-}
 .signature h5
 {
 	font-size: 100%;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 
 #main_admsection #basicinfo, #main_admsection #detailedinfo
