@@ -16,7 +16,7 @@ function template_main()
 	// Show the news fader?  (assuming there are things to show...)
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
-	echo '
+		echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
@@ -35,16 +35,20 @@ function template_main()
 			<div id="smfFadeScroller"><span>', $context['news_lines'][0], '</span></div>
 		</div>
 	</div>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
-		// The fading delay (in ms.)
-		var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
-		// List all the lines of the news for display.
-		var smfFadeContent = new Array(
-			"', implode('",
-			"', $context['fader_news_lines']), '"
-		);
-	// ]]></script>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>';
+		// Create a news fader object.
+		var oNewsFader = new smf_NewsFader({
+			sSelf: \'oNewsFader\',
+			sFaderControlId: \'smfFadeScroller\',
+			aFaderItems: [
+				"',
+				implode('",
+				"', $context['fader_news_lines']), '"],
+			sItemTemplate: \'<strong>%1$s</strong>\',
+			iFadeDelay: ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], '
+		});
+	// ]]></script>';
 	}
 
 	/* Each category in categories is made up of:

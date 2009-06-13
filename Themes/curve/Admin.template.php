@@ -1517,39 +1517,39 @@ function template_core_features()
 		<form action="', $scripturl, '?action=admin;area=corefeatures;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				', $txt['core_settings_title'], '
-			</h3>
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">';
+			</h3>';
 
+	$alternate = true;
 	foreach ($context['features'] as $id => $feature)
 	{
 		echo '
-					<div class="features">
-						<img class="features_image png_fix" src="', $settings['default_images_url'], '/admin/feature_', $id, '.png" alt="', $feature['title'], '" />
-						<div class="features_switch" id="js_feature_', $id, '" style="display: none;">
-							<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;', $context['session_var'], '=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');">
-								<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.', $context['browser']['is_ie6']? 'gif' : 'png', '" id="switch_', $id, '" style="margin-top: 1.3em;" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" title="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
-							</a>
-						</div>
+			<div class="windowbg', $alternate ? '2' : '', '">
+				<span class="topslice"><span></span></span>
+				<div class="content features">
+					<img class="features_image png_fix" src="', $settings['default_images_url'], '/admin/feature_', $id, '.png" alt="', $feature['title'], '" />
+					<div class="features_switch" id="js_feature_', $id, '" style="display: none;">
+						<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;', $context['session_var'], '=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');">
+							<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.', $context['browser']['is_ie6']? 'gif' : 'png', '" id="switch_', $id, '" style="margin-top: 1.3em;" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" title="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
+						</a>
+					</div>
 					<h4>', ($feature['enabled'] && $feature['url'] ? '<a href="' . $feature['url'] . '">' . $feature['title'] . '</a>' : $feature['title']), '</h4>
 					<p>', $feature['desc'], '</p>
 					<div id="plain_feature_', $id, '">
 						<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1"', $feature['enabled'] ? ' checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
 						<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0"', !$feature['enabled'] ? ' checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
 					</div>
-				</div>';
-
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
+		
+		$alternate = !$alternate;
 	}
 
 	echo '
-					<p class="padding">
-						<input type="hidden" value="0" name="js_worked" id="js_worked" />
-						<input type="submit" value="', $txt['save'], '" name="save" />
-					</p>
-				</div>
-				<span class="botslice"><span></span></span>
-			</div>
+			<p class="padding">
+				<input type="hidden" value="0" name="js_worked" id="js_worked" />
+				<input type="submit" value="', $txt['save'], '" name="save" />
+			</p>
 		</form>
 	</div>
 	<br style="clear: both;" />';

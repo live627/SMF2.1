@@ -78,6 +78,9 @@ June 2009
  * Curve: rewrote the ManagePermissions template to match Curve's look and feel (ManagePermissions.template.php, admin.css)
  * Always show a login bar in the header if the user's a guest, not just on the board index. (index templates)
  ! Move show_login_bar variable so it is setup for every page (Load.php, BoardIndex.php, index.template.php)
+ * Rewrote the news fader script to be object orientated. (fader.js, BoardIndex templates)
+ * Curve: spiced up the Core Features template. (Admin template)
+ * Curve: color matched the collapse images. (collapse.gif, expand.gif)
 
 
 May 2009

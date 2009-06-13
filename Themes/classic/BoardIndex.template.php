@@ -43,16 +43,20 @@ function template_main()
 			<div id="smfNewsFader">
 				<div id="smfFadeScroller"><strong>', $context['news_lines'][0], '</strong></div>
 			</div>
-			<script type="text/javascript"><!-- // --><![CDATA[
-				// The fading delay (in ms.)
-				var smfFadeDelay = ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], ';
-				// List all the lines of the news for display.
-				var smfFadeContent = new Array(
-					"', implode('",
-					"', $context['fader_news_lines']), '"
-				);
-			// ]]></script>
 			<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
+			<script type="text/javascript"><!-- // --><![CDATA[
+				// Create a news fader object.
+				var oNewsFader = new smf_NewsFader({
+					sSelf: \'oNewsFader\',
+					sFaderControlId: \'smfFadeScroller\',
+					aFaderItems: [
+						"',
+						implode('",
+						"', $context['fader_news_lines']), '"],
+					sItemTemplate: \'<strong>%1$s</strong>\',
+					iFadeDelay: ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], '
+				});
+			// ]]></script>
 		</td>
 	</tr>
 </table><br />';
