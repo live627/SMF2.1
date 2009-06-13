@@ -235,11 +235,6 @@ function template_main()
 				echo '
 						<li class="postcount">', $txt['member_postcount'], ': ', $message['member']['posts'], '</li>';
 
-			// Show their personal text?
-			if (!empty($settings['show_blurb']) && $message['member']['blurb'] != '')
-				echo '
-						<li class="blurb">', $message['member']['blurb'], '</li>';
-
 			// Is karma display enabled?  Total or +/-?
 			if ($modSettings['karmaMode'] == '1')
 				echo '
@@ -260,6 +255,11 @@ function template_main()
 			if (!empty($settings['show_gender']) && $message['member']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
 				echo '
 						<li class="gender">', $txt['gender'], ': ', $message['member']['gender']['image'], '</li>';
+
+			// Show their personal text?
+			if (!empty($settings['show_blurb']) && $message['member']['blurb'] != '')
+				echo '
+						<li class="blurb">', $message['member']['blurb'], '</li>';
 
 			// This shows the popular messaging icons.
 			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
@@ -379,7 +379,7 @@ function template_main()
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
 			echo '
-						<li style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
+						<li class="inline_mod_check" style="display: none;" id="in_topic_mod_check_', $message['id'], '"></li>';
 
 		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'])
 			echo '
@@ -508,7 +508,8 @@ function template_main()
 				</div>
 			<span class="botslice"><span></span></span>
 			</div>
-		</div>';
+		</div>
+		<hr class="post_separator" />';
 	}
 
 	echo '

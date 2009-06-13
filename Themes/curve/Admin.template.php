@@ -69,7 +69,7 @@ function template_admin()
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content">
-						<div id="smfAnnouncements">', $txt['lfyi'], '</div>
+						<dt id="smfAnnouncements">', $txt['lfyi'], '</dt>
 					</div>
 				<span class="botslice"><span></span></span>
 				</div>
@@ -130,21 +130,13 @@ function template_admin()
 				<div class="content">
 					<ul id="quick_tasks" class="flow_hidden">';
 
-	$row = false;
 	foreach ($context['quick_admin_tasks'] as $task)
-	{
 		echo '
 						<li>
 							', (!empty($task['icon']) ? '<a href="' . $task['href'] . '"><img src="' . $settings['default_images_url'] . '/admin/' . $task['icon'] . '" alt="" class="home_image png_fix" /></a>' : ''), '
 							<h5>', $task['link'], '</h5>
-							<span class="task">', $task['description'],'</span></li>';
-
-		if ($row && !$task['is_last'])
-			echo '	
-						';
-
-		$row = !$row;
-	}
+							<span class="task">', $task['description'],'</span>
+						</li>';
 
 	echo '
 					</ul>
@@ -168,14 +160,14 @@ function template_admin()
 				if (typeof(window.smfAnnouncements) == "undefined" || typeof(window.smfAnnouncements.length) == "undefined")
 					return;
 
-				var str = "<div style=\"margin: 4px; font-size: 0.85em;\">";
+				var str = "";
 
 				for (var i = 0; i < window.smfAnnouncements.length; i++)
 				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "<" + "/div>";
-					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
+					str += "\n	<dt><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</dt>";
+					str += "\n	<dd>"
 					str += "\n		" + window.smfAnnouncements[i].message;
-					str += "\n	<" + "/div>";
+					str += "\n	</dd>";
 				}
 
 				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");

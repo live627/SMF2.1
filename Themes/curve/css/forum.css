@@ -305,13 +305,11 @@ div#pollmoderation
 /* author and topic informaton */
 #forumposts h3 span#author, #forumposts h3 span#top_subject
 {
-	width: 20%;
-	display: block;
 	float: left;
 }
 #forumposts h3 span#top_subject
 {
-	width: 70%;
+	margin: 0 0 0 8em;
 }
 #forumposts h3 img
 {
@@ -327,19 +325,15 @@ p#whoisviewing
 	margin: 0;
 	padding: 0.5em;
 }
-/* to adress a single post, also using "bordercolor" class */
-#forumposts .singlepost
-{
-}
 /* poster and postarea + moderation area underneath */
 .poster
 {
 	float: left;
-	width: 17%;
+	width: 15em;
 }
 .postarea, .moderatorbar
 {
-	margin-left: 18%;
+	margin: 0 0 0 16em;
 }
 .moderatorbar
 {
@@ -369,14 +363,14 @@ p#whoisviewing
 {
 	display: inline;
 }
-.poster li.stars, .poster li.blurb, li.postcount, li.im_icons ul
+.poster li.stars, .poster li.avatar, .poster li.blurb, li.postcount, li.im_icons ul
 {
-	padding-top: 0.7em;
+	margin-top: 0.5em;
 }
 .postarea .keyinfo .messageicon
 {
 	float: left;
-	margin: 0 0.5em 2em 0;
+	margin: 0 0.5em 0.5em 0;
 }
 .postarea .keyinfo
 {
@@ -406,7 +400,7 @@ p#whoisviewing
 /* the icons for the quickbuttons */
 ul.quickbuttons li
 {
-	padding-left: 25px;
+	padding: 0 5px 0 25px;
 	float: left;
 }
 ul.quickbuttons li a
@@ -443,6 +437,10 @@ ul.quickbuttons li.split_button
 ul.quickbuttons li.restore_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 5px -120px;
+}
+ul.quickbuttons li.inline_mod_check
+{
+	padding: 0 1em 0 0;
 }
 
 .postarea .post
@@ -514,6 +512,12 @@ ul.quickbuttons li.restore_button
 {
 	clear: both;
 	padding: 5px;
+}
+
+/* Separator of posts. More useful in the print stylesheet. */
+#forumposts .post_separator
+{
+	display: none;
 }
 
 /* ************************************* */

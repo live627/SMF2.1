@@ -1136,7 +1136,7 @@ function template_profile_pm_settings()
 	echo '
 							<dd></dd>
 						</dl>
-						<ul>
+						<ul class="reset">
 							<li>
 								<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
 								<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 &amp;&amp; !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
