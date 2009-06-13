@@ -6,7 +6,7 @@
 	padding: 0.5em;
 	margin: 0;
 }
-#simple_search, #advanced_search
+#simple_search, #simple_search p, #advanced_search
 {
 	text-align: center !important;
 	margin: 0;
