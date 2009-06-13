@@ -361,6 +361,49 @@ ul.pending_payments li
 {
 	list-style-type: none;
 }
+/*Manage Permissions */
+.perm_name, .perm_profile, .perm_board
+{
+	display: block;
+	width: 40%;
+}
+.perm_boards
+{
+	padding: 0;
+	margin: 0 0 0.6em 0;
+}
+.perm_boards li 
+{
+	list-style-type: none;
+	border: 1px solid #cacdd3;
+	padding: 0.2em;
+	margin: 1px;
+}
+.perm_groups
+{
+	background-color: white;
+}
+.perm_classic
+{
+	margin: 0.2em;
+}
+.permission_groups
+{
+	padding: 0;
+	margin: 0;
+}
+.permission_groups li 
+{
+	list-style-type: none;
+	padding: 0.2em;
+	margin: 1px;
+}
+.perms
+{
+	width: 20px;
+	display: inline-block;
+	text-align: center;
+}
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */
