@@ -40,7 +40,7 @@ June 2009
  * New Opera 10 beta uses useragent Opera/9.8.  Add support so can use wysiwyg (script.js)
  ! Opera >9.63 bug - &nsbp; is needed before </code> to avoid broken selection. (Subs.php) [Bug 3351]
  ! Code unparsed_equals_content version, some should be $data[0] not $data (Subs.php)
- && corrected set_perameters in search language and template files (Search.english.php, Search.template.php) [Bug 3487]
+ & Corrected set_perameters in search language and template files (Search.english.php, Search.template.php) [Bug 3487]
  ! Downloading packages didn't work as expected (PackageGet.php) [Bug 3084]
  ! When toggling WYSIWYG editor, set the focus prior to inserting text (editor.js) [Bug 3067]
  ! The message_id was lost when quick changing the message icon (script.js) [Bug 3450]

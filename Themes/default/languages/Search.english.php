@@ -7,10 +7,10 @@ $txt['set_parameters'] = 'Set Search Parameters';
 $txt['choose_board'] = 'Choose a board to search in, or search all';
 $txt['all_words'] = 'Match all words';
 $txt['any_words'] = 'Match any words';
-$txt['by_user'] = 'by user';
+$txt['by_user'] = 'By user';
 
 $txt['search_post_age'] = 'Message age';
-$txt['search_between'] = 'Between';
+$txt['search_between'] = 'between';
 $txt['search_and'] = 'and';
 $txt['search_options'] = 'Options';
 $txt['search_show_complete_messages'] = 'Show results as messages';

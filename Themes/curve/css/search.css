@@ -1,11 +1,6 @@
 /* ************************************* */
-/* styles from Search.template           */
+/* styles for Search.template            */
 /* ************************************* */
-#search_error
-{
-	font-style: italic;
-	padding: 0.3em 1em;
-}
 #searchform, #simple_search p 
 {
 	padding: 0.5em;
@@ -13,80 +8,83 @@
 }
 #simple_search, #advanced_search
 {
-	text-align: center;
-	padding-top: 1em;
+	text-align: center !important;
+	margin: 0;
 }
-#advanced_search dl
+#search_error
 {
-	margin: auto;
-	width: 500px;
-}
-#advanced_search dt
-{
-	padding: 0.2em;
-	text-align: right;
-	width: 20%;
-	float: left;
-	line-height: 1.4em;
-}
-#advanced_search dt.options
-{
-	padding-bottom: 4em;
-}
-#advanced_search dd
-{
-	padding: 0.2em;
-	text-align: left;
-	line-height: 1.4em;
-}
-#advanced_search dd.options
-{
-	padding-bottom: 3em;
-}
-dl#search_options
-{
-	padding-top: 1em;
+	font-style: italic;
+	padding: 0.3em 1em;
 }
 span.enhanced
 {
 	font-size: 115%;
 	display: block;
 }
-fieldset
+
+/* Options for the advanced search form */
+#searchform fieldset
 {
 	text-align: left;
 	padding: 0;
+	margin: 0.5em 0;
 	border: none;
-	margin: 1em 0 0 0;
 }
-fieldset ul
+#advanced_search dl#search_options
+{
+	margin: 0 auto;
+	width: 450px;
+	padding-top: 1em;
+	overflow: hidden;
+}
+#advanced_search dt
+{
+	clear: both;
+	float: left;
+	padding: 0.2em;
+	text-align: right;
+	width: 20%;
+}
+#advanced_search dd
+{
+	width: 75%;
+	float: left;
+	padding: 0.2em;
+	margin: 0 0 0 0.5em;
+	text-align: left;
+}
+#searchform p.clear
+{
+	clear: both;
+}
+
+/* Boards picker */
+#searchform fieldset ul#searchBoardsExpand
 {
 	overflow: hidden;
-	padding: 5px;
-}
-fieldset ul li
-{
-	float: left;
-	width: 32%;
-}
-fieldset h5
-{
-	padding: 10px 4px;
-}
-fieldset h5 a
-{
-	text-decoration: none;
-}
-fieldset p
-{
-	padding: 4px;
-	text-align: center;
-	margin-top: 5px;
-}
-#searchBoardsExpand
-{
 	padding: 0.3em 1em;
 }
+#searchform fieldset ul#searchBoardsExpand li.category
+{
+	font-weight: bold;
+	width: 49%;
+	float: left;
+	overflow: hidden;
+	padding: 0.2em 0;
+	margin: 0;
+}
+#searchform fieldset ul#searchBoardsExpand li.board
+{
+	font-weight: normal;
+}
+#searchform fieldset p
+{
+	padding: 4px;
+	text-align: left;
+	margin-top: 5px;
+}
+
+/* Search results */
 #search_results form
 {
 	padding: 1em;

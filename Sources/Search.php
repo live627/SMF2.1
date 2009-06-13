@@ -187,10 +187,10 @@ function PlushSearch1()
 			'name' => $category['name'],
 			'child_ids' => array_keys($category['boards'])
 		);
-		// support for Curve
-		$context['categories'][$category['id']]['child_ids'] = array_keys($category['boards']);
-
 		$temp_boards = array_merge($temp_boards, array_values($category['boards']));
+
+		// Include a list of boards per category for easy toggling.
+		$context['categories'][$category['id']]['child_ids'] = array_keys($category['boards']);
 	}
 
 	$max_boards = ceil(count($temp_boards) / 2);

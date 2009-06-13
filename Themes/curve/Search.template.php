@@ -15,38 +15,44 @@ function template_main()
 		echo '
 		<p id="search_error" class="error">', implode('<br />', $context['search_errors']['messages']), '</p>';
 
+	// Simple Search?
 	if ($context['simple_search'])
 	{
 		echo '
-		<div id="simple_search">
-			<span class="enhanced">
-				<strong>', $txt['search_for'], ':</strong>
-				<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
-				', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />
-			</span>';
+		<fieldset id="simple_search">
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">
+				<span class="enhanced">
+					<strong>', $txt['search_for'], ':</strong>
+					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
+					', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />
+				</span>';
 
 		if (empty($modSettings['search_simple_fulltext']))
 			echo '
-			<p class="smalltext">', $txt['search_example'], '</p>';
+				<p class="smalltext">', $txt['search_example'], '</p>';
 
 		if ($context['require_verification'])
-		{
 			echo '
-			<p>
-				<strong>', $txt['search_visual_verification_label'], ':</strong>
-				<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
-				<input id="submit" type="submit" name="submit" value="' . $txt['search'] . '" />
-			</p>';
-		}
+				<p>
+					<strong>', $txt['search_visual_verification_label'], ':</strong>
+					<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
+					<input id="submit" type="submit" name="submit" value="' . $txt['search'] . '" />
+				</p>';
+
 		echo '
-			<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['search_advanced'], '</a>
-			<input type="hidden" name="advanced" value="0" />
-		</div>';
+				<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['search_advanced'], '</a>
+				<input type="hidden" name="advanced" value="0" />
+			</div></div>
+			<span class="lowerframe"><span></span></span>
+		</fieldset>';
 	}
+
+	// Advanced search!
 	else
 	{
 		echo '
-		<div id="advanced_search">
+		<fieldset id="advanced_search">
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe"><div class="innerframe">
 				<input type="hidden" name="advanced" value="1" />
@@ -92,59 +98,72 @@ function template_main()
 						<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_subject_only'], '</label>
 					</dd>
 					<dt class="between">', $txt['search_post_age'], ': </dt>
-					<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.</dd>
-				</dl>
-			</div></div>
-			<span class="lowerframe"><span></span></span>';
-
-		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
-		if (!empty($context['search_params']['topic']))
-			echo '
-			', $txt['search_specific_topic'], ' &quot;', $context['search_topic']['link'], '&quot;.<br />
-			<input type="hidden" name="topic" value="', $context['search_topic']['id'], '" />';
-		else
-		{
-			echo '
-			<fieldset>
-				<h4 class="titlebg"><span class="left"></span><span class="right"></span>
-					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
-				</h4>
-				<div id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>';
-
-			foreach($context['categories'] as $cat)
-			{
-				echo '
-					<h5>
-						<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $cat['child_ids']), ']); return false;">', $cat['name'], '</a>
-					</h5>
-					<ul class="reset">';
-				foreach ($cat['boards'] as $board)
-				{
-				echo '
-						<li><label for="brd', $board['id'], '">', str_repeat('-',$board['child_level']), '<input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="check" />', $board['name'], '</label></li>';
-				}
-				echo '
-					</ul>';
-			}
-
-			echo '
-				</div>
-				<p><input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" /><em> <label for="check_all">', $txt['check_all'], '</label></em></p>
-			</fieldset> ';
-		}
+					<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '</dd>
+				</dl>';
 
 		// Require an image to be typed to save spamming?
 		if ($context['require_verification'])
 		{
 			echo '
-			<p>
-				<strong>', $txt['verification'], ':</strong>
-				', template_control_verification($context['visual_verification_id'], 'all'), '
-			</p>';
+				<p>
+					<strong>', $txt['verification'], ':</strong>
+					', template_control_verification($context['visual_verification_id'], 'all'), '
+				</p>';
 		}
+
+		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
+		if (!empty($context['search_params']['topic']))
+			echo '
+				<p>', $txt['search_specific_topic'], ' &quot;', $context['search_topic']['link'], '&quot;.</p>
+				<input type="hidden" name="topic" value="', $context['search_topic']['id'], '" />';
+
 		echo '
-			<div><input type="submit" name="submit" value="', $txt['search'], '" /></div>
-		</div>';
+			</div></div>
+			<span class="lowerframe"><span></span></span>
+		</fieldset>';
+
+		if (empty($context['search_params']['topic']))
+		{
+			echo '
+		<fieldset>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">
+				<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+					<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><strong>', $txt['choose_board'], '</strong></a>
+				</h4>
+				<ul class="reset" id="searchBoardsExpand"', $context['boards_check_all'] ? ' style="display: none;"' : '', '>';
+
+			foreach($context['categories'] as $category)
+			{
+				echo '
+					<li class="category">
+						<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $category['child_ids']), ']); return false;">', $category['name'], '</a>
+						<ul class="reset">';
+
+				foreach ($category['boards'] as $board)
+					echo '
+							<li class="board"', !empty($board['child_level']) ? ' style="margin-left: ' . $board['child_level'] . 'em"' : '', '>
+								<label for="brd', $board['id'], '"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="check" />', $board['name'], '</label>
+							</li>';
+
+				echo '
+						</ul>
+					</li>';
+			}
+
+			echo '
+				</ul>
+				<p>
+					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" />
+					<label for="check_all">', $txt['check_all'], '</label>
+				</p>
+			</div></div>
+			<span class="lowerframe"><span></span></span>
+		</fieldset>';
+		}
+
+		echo '
+			<div><input type="submit" name="submit" value="', $txt['search'], '" /></div>';
 	}
 
 	echo '
