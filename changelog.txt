@@ -76,6 +76,7 @@ June 2009
  * Curve: The registration form wasn't properly aligned (login.css) [Bug 3508]
  * Curve: min-height isn't supported in IE6 (index.css) [Bug 3448]
  * Curve: rewrote the ManagePermissions template to match Curve's look and feel (ManagePermissions.template.php, admin.css)
+ * Reply to all in wap/imode could cause indefined index (Wireless.template.php) [Bug 3372]
 
 
 May 2009
