@@ -1740,43 +1740,43 @@ function template_manual_bbcode()
 
 	echo '
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
-	<table id="reference1" cellspacing="2" cellpadding="2">
+	<table cellspacing="1" cellpadding="3">
 		<tr>
-			<th>', $txt['manual_posting_header_name'], '</th>
-			<th>', $txt['manual_posting_header_button'], '</th>
-			<th>', $txt['manual_posting_header_code'], '</th>
-			<th>', $txt['manual_posting_header_output'], '</th>
-			<th>', $txt['manual_posting_header_comments'], '</th>
+			<th class="catbg">', $txt['manual_posting_header_name'], '</th>
+			<th class="catbg">', $txt['manual_posting_header_button'], '</th>
+			<th class="catbg">', $txt['manual_posting_header_code'], '</th>
+			<th class="catbg">', $txt['manual_posting_header_output'], '</th>
+			<th class="catbg">', $txt['manual_posting_header_comments'], '</th>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_bold'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/bold.gif" alt="', $txt['manual_posting_bbc_bold'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_bold_code'], '</td>
 			<td><strong>', $txt['manual_posting_bold_output'], '</strong></td>
 			<td>', $txt['manual_posting_bold_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_italic'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/italicize.gif" alt="', $txt['manual_posting_bbc_italic'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_italic_code'], '</td>
 			<td><em>', $txt['manual_posting_italic_output'], '</em></td>
 			<td>', $txt['manual_posting_italic_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_underline'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/underline.gif" alt="', $txt['manual_posting_bbc_underline'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_underline_code'], '</td>
 			<td><span class="underline">', $txt['manual_posting_underline_output'], '</span></td>
 			<td>', $txt['manual_posting_underline_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_strike'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/strike.gif" alt="', $txt['manual_posting_bbc_strike'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_strike_code'], '</td>
 			<td><del>', $txt['manual_posting_strike_output'], '</del></td>
 			<td>', $txt['manual_posting_strike_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_glow'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/glow.gif" alt="', $txt['manual_posting_bbc_glow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_glow_code'], '</td>
@@ -1787,7 +1787,7 @@ function template_manual_bbcode()
 			</td>
 			<td>', $txt['manual_posting_glow_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_shadow'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/shadow.gif" alt="', $txt['manual_posting_bbc_shadow'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_shadow_code'], '</td>
@@ -1798,14 +1798,14 @@ function template_manual_bbcode()
 			</td>
 			<td>', $txt['manual_posting_shadow_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_move'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/move.gif" alt="', $txt['manual_posting_bbc_move'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_move_code'], '</td>
 			<td>', $context['browser']['is_ie'] ? '<marquee>' . $txt['manual_posting_move_output'] . '</marquee>' : '', '</td>
 			<td>', $txt['manual_posting_move_comment'], '</td>
 		</tr>
-				<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_pre'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/pre.gif" alt="', $txt['manual_posting_bbc_pre'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>[pre]Simple<br />
@@ -1820,7 +1820,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_pre_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_left'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/left.gif" alt="', $txt['manual_posting_bbc_left'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_left_code'], '</td>
@@ -1829,7 +1829,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_left_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_centered'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/center.gif" alt="', $txt['manual_posting_bbc_centered'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_centered_code'], '</td>
@@ -1840,7 +1840,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_centered_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_right'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/right.gif" alt="', $txt['manual_posting_bbc_right'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_right_code'], '</td>
@@ -1849,7 +1849,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_right_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_rtl'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_rtl_code'], '</td>
@@ -1860,7 +1860,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_rtl_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_ltr'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_ltr_code'], '</td>
@@ -1871,7 +1871,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_ltr_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_hr'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/hr.gif" alt="', $txt['manual_posting_bbc_hr'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_hr_code'], '</td>
@@ -1880,21 +1880,21 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_hr_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_size'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/size.gif" alt="', $txt['manual_posting_bbc_size'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_size_code'], '</td>
 			<td><span style="font-size: 10pt;">', $txt['manual_posting_size_output'], '</span></td>
 			<td>', $txt['manual_posting_size_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_font'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/face.gif" alt="', $txt['manual_posting_bbc_font'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_font_code'], '</td>
 			<td><span style="font-family: Verdana;">', $txt['manual_posting_font_output'], '</span></td>
 			<td>', $txt['manual_posting_font_comment'], '</td>
 		</tr>
-				<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_color'], '</td>
 			<td><select>
 				<option value="" selected="selected">
@@ -1947,68 +1947,68 @@ Simple
 			<td><span style="color: red;">', $txt['manual_posting_color_output'], '</span></td>
 			<td>', $txt['manual_posting_color_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_flash'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/flash.gif" alt="', $txt['manual_posting_bbc_flash'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_flash_code'], '</td>
 			<td><a href="http://somesite/somefile.swf" class="board new_win" target="_blank">', $txt['manual_posting_flash_output'], '</a></td>
 			<td>', $txt['manual_posting_flash_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td rowspan="2">', $txt['manual_posting_bbc_img'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/img.gif" alt="', $txt['manual_posting_bbc_img'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_img_top_code'], '</td>
 			<td><img src="', $settings['images_url'], '/on.gif" alt="" /></td>
 			<td rowspan="2">', $txt['manual_posting_img_top_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_img_bottom_code'], '</td>
 			<td><img src="', $settings['images_url'], '/on.gif" width="48" height="48" alt="" /></td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td rowspan="2">', $txt['manual_posting_bbc_url'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/url.gif" alt="', $txt['manual_posting_bbc_url'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_url_code'], '</td>
 			<td><a href="http://somesite" class="board new_win" target="_blank">', $txt['manual_posting_url_output'], '</a></td>
 			<td rowspan="2">', $txt['manual_posting_url_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_url_bottom_code'], '</td>
 			<td><a href="http://somesite" class="board new_win" target="_blank">', $txt['manual_posting_url_bottom_output'], '</a></td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_email'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/email.gif" alt="', $txt['manual_posting_bbc_email'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_email_code'], '</td>
 			<td><a href="mailto:someone@somesite" class="board">', $txt['manual_posting_email_output'], '</a></td>
 			<td>', $txt['manual_posting_email_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td rowspan="2">', $txt['manual_posting_bbc_ftp'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/ftp.gif" alt="', $txt['manual_posting_bbc_ftp'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_ftp_code'], '</td>
 			<td><a href="ftp://somesite/somefile" class="board new_win" target="_blank">', $txt['manual_posting_ftp_output'], '</a></td>
 			<td rowspan="2">', $txt['manual_posting_ftp_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_ftp_bottom_code'], '</td>
 			<td><a href="ftp://somesite/somefile" class="board new_win" target="_blank">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_table'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/table.gif" alt="', $txt['manual_posting_bbc_table'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_table_code'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_table_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_row'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/tr.gif" alt="', $txt['manual_posting_bbc_row'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_row_code'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_row_comment'], '</td>
 		</tr>
-				<tr>
+		<tr class="windowbg">
 			<td rowspan="2">', $txt['manual_posting_bbc_column'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/td.gif" alt="', $txt['manual_posting_bbc_column'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_column_code'], '</td>
@@ -2021,7 +2021,7 @@ Simple
 			</td>
 			<td rowspan="2">', $txt['manual_posting_column_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>[table][tr][td]SMF[/td]<br />
 			[td]Bulletin[/td][/tr]<br />
 			[tr][td]Board[/td]<br />
@@ -2039,28 +2039,28 @@ Simple
 				</table>
 			</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_sup'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/sup.gif" alt="', $txt['manual_posting_bbc_sup'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_sup_code'], '</td>
 			<td><sup>', $txt['manual_posting_sup_output'], '</sup></td>
 			<td>', $txt['manual_posting_sup_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_sub'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/sub.gif" alt="', $txt['manual_posting_bbc_sub'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_sub_code'], '</td>
 			<td><sub>', $txt['manual_posting_sub_output'], '</sub></td>
 			<td>', $txt['manual_posting_sub_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_tt'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/tele.gif" alt="', $txt['manual_posting_bbc_tt'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_tt_code'], '</td>
 			<td><tt>', $txt['manual_posting_tt_output'], '</tt></td>
 			<td>', $txt['manual_posting_tt_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_code'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/code.gif" alt="', $txt['manual_posting_bbc_code'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_code_code'], '</td>
@@ -2074,7 +2074,7 @@ Simple
 			</td>
 			<td>', $txt['manual_posting_code_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td rowspan="2">', $txt['manual_posting_bbc_quote'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/quote.gif" alt="', $txt['manual_posting_bbc_quote'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_quote_code'], '</td>
@@ -2088,7 +2088,7 @@ Simple
 			</td>
 			<td rowspan="2">', $txt['manual_posting_quote_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_quote_buttom_code'], '</td>
 			<td>
 				<div class="', $txt['manual_posting_quote_buttom_output'], 'header">
@@ -2099,25 +2099,25 @@ Simple
 				</div>
 			</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td rowspan="2">', $txt['manual_posting_bbc_list'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/list.gif" alt="', $txt['manual_posting_bbc_list'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_list_code'], '</td>
 			<td>', $txt['manual_posting_list_output'], '</td>
 			<td rowspan="2">', $txt['manual_posting_list_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_list_buttom_code'], '</td>
 			<td>', $txt['manual_posting_list_buttom_output'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg2">
 			<td>', $txt['manual_posting_bbc_abbr'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_abbr_code'], '</td>
 			<td><abbr title="exempli gratia">', $txt['manual_posting_abbr_output'], '</abbr></td>
 			<td>', $txt['manual_posting_abbr_comment'], '</td>
 		</tr>
-		<tr>
+		<tr class="windowbg">
 			<td>', $txt['manual_posting_bbc_acro'], '</td>
 			<td>*</td>
 			<td>', $txt['manual_posting_acro_code'], '</td>
@@ -2133,20 +2133,24 @@ function template_manual_smileys()
 
 	echo '
 	<p>', $txt['manual_posting_smileys_help_desc'], '</p>
-	<table id="reference2" cellspacing="2" cellpadding="2">
+	<table cellspacing="1" cellpadding="3">
 		<tr>
-			<th>', $txt['manual_posting_smileys_help_name'], '</th>
-			<th>', $txt['manual_posting_smileys_help_img'], '</th>
-			<th>', $txt['manual_posting_smileys_help_code'], '</th>
+			<th class="catbg">', $txt['manual_posting_smileys_help_name'], '</th>
+			<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>
+			<th class="catbg">', $txt['manual_posting_smileys_help_code'], '</th>
 		</tr>';
 
+	$alternate = false;
 	foreach ($context['smileys'] as $smiley)
+	{
 		echo '
-		<tr>
+		<tr class="windowbg', $alternate ? '2' : '', '">
 			<td>', $smiley['name'], '</td>
 			<td>', $smiley['to'], '</td>
 			<td>', $smiley['from'], '</td>
 		</tr>';
+		$alternate = !$alternate;
+	}
 
 	echo '
 	</table><br />

@@ -54,20 +54,6 @@ div.footer
 	margin: 0 0 1em 0;
 	line-height: 2;
 }
-table#reference1, table#reference2
-{
-	border: 1px solid;
-}
-table#reference1 td, table#reference2 td
-{
-	vertical-align: top;
-	border: 1px solid;
-	font-size: x-small;
- }
-table#reference1 th, table#reference2 th
-{
-	font-size: x-small;
-}
 #helpmain ol
 {
 	font-weight: bold;

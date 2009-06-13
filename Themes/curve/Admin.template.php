@@ -64,7 +64,7 @@ function template_admin()
 	echo '
 			<div id="live_news" class="align_left">
 				<h3 class="catbg"><span class="left"></span><span class="right"></span>
-					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" align="top" /></a> ', $txt['live'], '
+					<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" class="icon" alt="', $txt['help'], '" /></a> ', $txt['live'], '
 				</h3>
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
@@ -331,7 +331,7 @@ function template_credits()
 	// Display latest support questions from simplemachines.org.
 	echo '
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['support_latest'], '
+			<a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a> ', $txt['support_latest'], '
 		</h3>
 		<div class="windowbg2">
 			<span class="topslice"><span></span></span>
@@ -1044,7 +1044,7 @@ function template_show_settings()
 				// Show the [?] button.
 				if ($config_var['help'])
 					echo '
-								<a id="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span>
+								<a id="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" /></a><span', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' class="error"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], '</label>', $subtext, ($config_var['type'] == 'password' ? '<br /><em>' . $txt['admin_confirm_password'] . '</em>' : ''), '</span>
 							</dt>';
 				else
 					echo '
@@ -1314,7 +1314,7 @@ function template_edit_profile_field()
 								<input type="checkbox" name="bbc"', $context['field']['bbc'] ? ' checked="checked"' : '', ' class="check" />
 							</dd>
 							<dt id="options_dt">
-								<a href="', $scripturl, '?action=helpadmin;help=customoptions" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
+								<a href="', $scripturl, '?action=helpadmin;help=customoptions" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" /></a>
 								<strong>', $txt['custom_edit_options'], ':</strong><br />
 								<span class="smalltext">', $txt['custom_edit_options_desc'], '</span>
 							</dt>
