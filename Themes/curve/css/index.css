@@ -69,6 +69,7 @@ img#smflogo
 #upper_section
 {
 	padding: 5px;
+	margin-bottom: 1.5em;
 }
 #upper_section ul li.greeting
 {
@@ -102,7 +103,6 @@ div#upper_section div.user ul
 {
 	margin: 0;
 	padding-left: 10px;
-	min-height: 70px;
 }
 div#upper_section div.user ul li
 {
