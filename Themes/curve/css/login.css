@@ -19,6 +19,7 @@
 dl.register_form
 {
 	padding: 0;
+	overflow: auto;
 }
 .register_form dt
 {
@@ -40,8 +41,11 @@ dl.register_form
 }
 .register_form dd
 {
-	margin: 0 0 1.5em 0;
-}
+    margin: 0 0 1.5em 0;
+    float: left;
+    *float: none;
+    *width: auto;
+} 
 .register_form dt span
 {
 	display: block;

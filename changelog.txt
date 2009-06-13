@@ -73,6 +73,7 @@ June 2009
  * Newsfader didn't always have a background color, move some newsjader js to the fader.js like curve (fader.js, BoardIndex.template.php, forum.css) [Bug 3506]
  * Large text in signature caused horizontal scrolling (style.css, profile.css) [Bug 3507]
  ! SQL query optimization in forum stats (Stats.php, install/upgrade sql files) [Bug 0691]
+ * Curve: The registration form wasn't properly aligned (login.css) [Bug 3508]
 
 
 May 2009
