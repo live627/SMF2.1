@@ -50,7 +50,7 @@ h1.forumtitle
 	float: right;
 	line-height: 3em;
 }
-h3
+h3, h4
 {
 	padding-bottom: 3px;
 }
@@ -355,7 +355,7 @@ h3.titlebg img
 	vertical-align: middle;
 	margin-right: 0.5em;
 }
-h3.titlebg, tr.titlebg td
+tr.titlebg td
 {
 	padding-left: 0.7em;
 }

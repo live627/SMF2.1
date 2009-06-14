@@ -51,6 +51,7 @@ function Register($reg_errors = array())
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
 	global $language, $scripturl, $smcFunc, $sourcedir, $smcFunc, $cur_profile;
 
+	// Is this an incoming AJAX check?
 	if (isset($_GET['sa']) && $_GET['sa'] == 'usernamecheck')
 		return RegisterCheckUsername();
 
@@ -61,25 +62,46 @@ function Register($reg_errors = array())
 	// If this user is an admin - redirect them to the admin registration page.
 	if (allowedTo('moderate_forum') && !$user_info['is_guest'])
 		redirectexit('action=admin;area=regcenter;sa=register');
-	// You are not a guest so you are a member - and members don't get to register twice!
+	// You are not a guest, so you are a member - and members don't get to register twice!
 	elseif (empty($user_info['is_guest']))
 		redirectexit();
 
 	loadLanguage('Login');
-	loadTemplate('Register','login');
+	loadTemplate('Register', 'login');
 
-	// All the basic template information...
-	$context['sub_template'] = 'before';
+	// Do we need them to agree to the registration agreement, first?
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
+	$context['registration_passed_agreement'] = !empty($_SESSION['registration_agreed']);
 
 	// Under age restrictions?
 	if (!empty($modSettings['coppaAge']))
 	{
 		$context['show_coppa'] = true;
-		$context['coppa_desc'] = sprintf($txt['register_age_confirmation'], $modSettings['coppaAge']);
+		$context['skip_coppa'] = false;
+		$context['coppa_agree_above'] = sprintf($txt['agreement_agree_coppa_above'], $modSettings['coppaAge']);
+		$context['coppa_agree_below'] = sprintf($txt['agreement_agree_coppa_below'], $modSettings['coppaAge']);
 	}
 
-	$context['page_title'] = $txt['register'];
+	// What step are we at?
+	$current_step = isset($_REQUEST['step']) ? (int) $_REQUEST['step'] : ($context['require_agreement'] ? 1 : 2);
+
+	// Does this user agree to the registation agreement?
+	if ($current_step == 1 && (isset($_POST['accept_agreement']) || isset($_POST['accept_agreement_coppa'])))
+	{
+		$context['registration_passed_agreement'] = $_SESSION['registration_agreed'] = true;
+		$current_step = 2;
+
+		// Skip the coppa procedure if the user says he's old enough.
+		if ($context['show_coppa'])
+			$_SESSION['skip_coppa'] = !empty($_POST['accept_agreement']);
+	}
+	// Make sure they don't squeeze through without agreeing.
+	elseif ($current_step > 1 && $context['require_agreement'] && !$context['registration_passed_agreement'])
+		$current_step = 1;
+
+	// Show the user the right form.
+	$context['sub_template'] = $current_step == 1 ? 'registration_agreement' : 'registration_form';
+	$context['page_title'] = $current_step == 1 ? $txt['registration_agreement'] : $txt['registration_form'];
 
 	// Add the register chain to the link tree.
 	$context['linktree'][] = array(
@@ -177,11 +199,7 @@ function Register($reg_errors = array())
 		);
 	}
 
-	$context += array(
-		'skip_coppa' => !empty($_POST['skip_coppa']) ? true : false,
-		'regagree' => !empty($_POST['regagree']) && !empty($_SESSION['openid']['verified']) && !empty($_SESSION['openid']['openid_uri']) ? true : false,
-	);
-
+	// !!! Why isn't this a simple set operation?
 	// Were there any errors?
 	$context['registration_errors'] = array();
 	if (!empty($reg_errors))
@@ -213,7 +231,7 @@ function Register2($verifiedOpenID = false)
 	if (!$verifiedOpenID)
 	{
 		// Well, if you don't agree, you can't register.
-		if (!empty($modSettings['requireAgreement']) && (empty($_POST['regagree']) || $_POST['regagree'] == 'no'))
+		if (!empty($modSettings['requireAgreement']) && empty($_SESSION['registration_agreed']))
 			redirectexit();
 
 		// Make sure they came from *somewhere*, have a session.
@@ -221,7 +239,7 @@ function Register2($verifiedOpenID = false)
 			redirectexit('action=register');
 
 		// Are they under age, and under age users are banned?
-		if (!empty($modSettings['coppaAge']) && empty($modSettings['coppaType']) && !isset($_POST['skip_coppa']))
+		if (!empty($modSettings['coppaAge']) && empty($modSettings['coppaType']) && empty($_SESSION['skip_coppa']))
 		{
 			// !!! This should be put in Errors, imho.
 			loadLanguage('Login');
@@ -336,7 +354,7 @@ function Register2($verifiedOpenID = false)
 		'check_password_strength' => true,
 		'check_email_ban' => true,
 		'send_welcome_email' => !empty($modSettings['send_welcomeEmail']),
-		'require' => !empty($modSettings['coppaAge']) && !$verifiedOpenID && !isset($_POST['skip_coppa']) ? 'coppa' : (empty($modSettings['registration_method']) ? 'nothing' : ($modSettings['registration_method'] == 1 ? 'activation' : 'approval')),
+		'require' => !empty($modSettings['coppaAge']) && !$verifiedOpenID && empty($_SESSION['skip_coppa']) ? 'coppa' : (empty($modSettings['registration_method']) ? 'nothing' : ($modSettings['registration_method'] == 1 ? 'activation' : 'approval')),
 		'extra_register_vars' => array(),
 		'theme_vars' => array(),
 	);
@@ -468,7 +486,7 @@ function Register2($verifiedOpenID = false)
 	}
 
 	// If COPPA has been selected then things get complicated, setup the template.
-	if (!empty($modSettings['coppaAge']) && !isset($_POST['skip_coppa']))
+	if (!empty($modSettings['coppaAge']) && empty($_SESSION['skip_coppa']))
 		redirectexit('action=coppa;member=' . $memberID);
 	// Basic template variable setup.
 	elseif (!empty($modSettings['registration_method']))

@@ -82,7 +82,9 @@ June 2009
  * Curve: spiced up the Core Features template. (Admin template)
  * Curve: color matched the collapse images. (collapse.gif, expand.gif)
  ! In some rare cases, adding a new custom field could result in a database error. (ManageSettings.php)
- * Curve: rewrote the Themes template to match Curve's look and feel (Themes.template.php, admin.css)
+ * Curve: rewrote the Themes template to match Curve's look and feel. (Themes.template.php, admin.css)
+ * Split up the registration template into two steps, giving the registration agreement its own step. (Register.php, Register template) [Feature 3437]
+ * Curve: revamped the registration screen to match Curve's look and feel. (Register template, login.css) [Feature 3437]
 
 
 May 2009

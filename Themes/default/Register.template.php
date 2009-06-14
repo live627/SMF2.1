@@ -1,8 +1,42 @@
 <?php
 // Version: 2.0 RC1; Register
 
+// Before showing users a registration form, show them the registration agreement.
+function template_registration_agreement()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	echo '
+	<form action="', $scripturl, '?action=register" method="post" accept-charset="', $context['character_set'], '" id="registration">
+		<table width="100%" align="center" border="0" cellspacing="1" cellpadding="5" class="tborder">
+			<tr>
+				<td class="titlebg">', $txt['registration_agreement'], '</td>
+			</tr><tr>
+				<td class="windowbg2">
+					', $context['agreement'], '
+				</td>
+			</tr><tr>
+				<td align="center" class="windowbg2">';
+
+	// Age restriction in effect?
+	if ($context['show_coppa'])
+		echo '
+					<input type="submit" name="accept_agreement" value="', $context['coppa_agree_above'], '" /><br /><br />
+					<input type="submit" name="accept_agreement_coppa" value="', $context['coppa_agree_below'], '" />';
+	else
+		echo '
+					<input type="submit" name="accept_agreement" value="', $txt['agreement_agree'], '" />'; 
+
+	echo '
+					<input type="hidden" name="step" value="1" />
+				</td>
+			</tr>
+		</table>
+	</form>';
+}
+
 // Before registering - get their information.
-function template_before()
+function template_registration_form()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
@@ -167,16 +201,7 @@ function template_before()
 					</tr>';
 	}
 
-	// Are there age restrictions in place?
-	if (!empty($modSettings['coppaAge']))
-		echo '
-					<tr>
-						<td colspan="2" align="center" style="padding-top: 1ex;">
-							<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="input_check" /> <strong>', $context['coppa_desc'], '.</strong></label>
-						</td>
-					</tr>';
-
-		echo '
+	echo '
 				</table>
 			</td>
 		</tr>';
@@ -299,7 +324,7 @@ function template_before()
 			// Maybe it's a text box - very likely!
 			elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
 				echo '
-							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' class="input_', $field['type'] == 'password' ? 'password' : 'text', ' />';
+							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' class="input_', $field['type'] == 'password' ? 'password' : 'text', '" />';
 
 			// You "checking" me out? ;)
 			elseif ($field['type'] == 'check')
@@ -362,37 +387,13 @@ function template_before()
 	echo '
 	</table>';
 
-	// Require them to agree here?
-	if ($context['require_agreement'])
-		echo '
-	<table width="100%" align="center" border="0" cellspacing="0" cellpadding="5" class="tborder" style="border-top: 0;">
-		<tr>
-			<td class="windowbg2" style="padding-top: 8px; padding-bottom: 8px;">
-				', $context['agreement'], '
-			</td>
-		</tr><tr>
-			<td align="center" class="windowbg2">
-				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="input_check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <strong>', $txt['agree'], '</strong></label>
-			</td>
-		</tr>
-	</table>';
-
 	echo '
 	<br />
 	<div class="centertext">
 		<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
 	</div>
 </form>
-<script type="text/javascript"><!-- // --><![CDATA[';
-
-	// Uncheck the agreement thing....
-	if ($context['require_agreement'] && empty($context['regagree']))
-		echo '
-	document.forms.creator.regagree.checked = false;
-	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;';
-
-	// Clever registration stuff...
-	echo '
+<script type="text/javascript"><!-- // --><![CDATA[
 	var regTextStrings = {
 		"username_valid": "', $txt['registration_username_available'], '",
 		"username_invalid": "', $txt['registration_username_unavailable'], '",

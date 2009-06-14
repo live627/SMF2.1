@@ -1,11 +1,6 @@
 /* ************************************* */
 /* styles from Register.template       */
 /* ************************************* */
-#register_screen
-{
-	width: 100%;
-	min-width: 600px;
-}
 .register_error
 {
 	border: 1px dashed red;
@@ -16,44 +11,81 @@
 {
 	text-decoration: underline;
 }
-dl.register_form
+
+#username_group, #password1_group, #authentication_group, #openid_group
 {
-	padding: 0;
-	overflow: auto;
+	clear: both;
 }
+
+.register_form
+{
+	overflow: hidden;
+	float: left;
+	margin: 0 0 0.75em 0;
+	width: 50%;
+}
+
 .register_form dt
 {
-	float: left;
-	text-align: right;
-	width: 50%;
 	font-weight: bold;
-	margin-right: 10px;
+	margin: 0 0 0.75em 0;
+}
 
-}
-.register_form dt em
-{
-	font-weight: normal;
-	font-style: normal;
-}
-.register_form dt span.smalltext
-{
-	font-weight: normal;
-}
 .register_form dd
 {
-    margin: 0 0 1.5em 0;
-    float: left;
-    *float: none;
-    *width: auto;
-} 
-.register_form dt span
+	margin: 0;
+	padding: 0;
+}
+
+#email_group dd label
+{
+	display: block;
+	margin: 0.5em 0 0 0;
+}
+
+/* Additional profile fields */
+#custom_group
+{
+	margin: 0;
+}
+
+#custom_group dt
+{
+	font-weight: normal;
+	float: left;
+	clear: both;
+	width: 50%;
+	margin: 0.5em 0 0 0;
+}
+
+#custom_group dt strong
+{
+	font-weight: bold;
+}
+
+#custom_group dt span
 {
 	display: block;
 }
-.register_captcha
+
+#custom_group dd
 {
-	height: 85px;
+	float: left;
+	clear: right;
+	margin: 0.5em 0 0 0;
 }
+
+#confirm_buttons
+{
+	text-align: center;
+	padding: 1em 0;
+}
+
+#confirm_buttons input
+{
+	cursor: pointer;
+}
+
 .coppa_contact
 {
 	padding: 4px;
@@ -63,6 +95,7 @@ dl.register_form
 	margin-left: 5ex;
 	border: 1px solid black;
 }
+
 /* ************************************* */
 /* styles from Login.template       */
 /* ************************************* */

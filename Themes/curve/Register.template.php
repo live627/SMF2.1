@@ -1,209 +1,224 @@
 <?php
 // Version: 2.0 RC1; Register
 
-// Before registering - get their information.
-function template_before()
+// Before showing users a registration form, show them the registration agreement.
+function template_registration_agreement()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// Make sure they've agreed to the terms and conditions.
 	echo '
-<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
-<script type="text/javascript"><!-- // --><![CDATA[
-	function verifyAgree()
-	{
-		if (currentAuthMethod == \'passwd\' && document.forms.creator.smf_autov_pwmain.value != document.forms.creator.smf_autov_pwverify.value)
-		{
-			alert("', $txt['register_passwords_differ_js'], '");
-			return false;
-		}';
+		<form action="', $scripturl, '?action=register" method="post" accept-charset="', $context['character_set'], '" id="registration">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['registration_agreement'], '
+			</h3>
+			<span class="upperframe"><span></span></span>
+			<div class="roundframe"><div class="innerframe">
+				<p>', $context['agreement'], '</p>
+			</div></div>
+			<span class="lowerframe"><span></span></span>
+			<div id="confirm_buttons">';
 
-	// If they haven't checked the "I agree" box, tell them and don't submit.
-	if ($context['require_agreement'])
+	// Age restriction in effect?
+	if ($context['show_coppa'])
 		echo '
-
-		if (!document.forms.creator.regagree.checked)
-		{
-			alert("', $txt['register_agree'], '");
-			return false;
-		}';
-
-	// Otherwise, let it through.
-	echo '
-
-		return true;
-	}
-
-	var currentAuthMethod = \'passwd\';
-	function updateAuthMethod()
-	{
-		// What authentication method is being used?
-		if (!document.getElementById(\'auth_openid\') || !document.getElementById(\'auth_openid\').checked)
-			currentAuthMethod = \'passwd\';
-		else
-			currentAuthMethod = \'openid\';
-
-		// No openID?
-		if (!document.getElementById(\'auth_openid\'))
-			return true;
-
-		document.forms.creator.openid_url.disabled = currentAuthMethod == \'openid\' ? false : true;
-		document.forms.creator.smf_autov_pwmain.disabled = currentAuthMethod == \'passwd\' ? false : true;
-		document.forms.creator.smf_autov_pwverify.disabled = currentAuthMethod == \'passwd\' ? false : true;
-		document.getElementById(\'smf_autov_pwmain_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
-		document.getElementById(\'smf_autov_pwverify_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
-
-		if (currentAuthMethod == \'passwd\')
-		{
-			verificationHandle.refreshMainPassword();
-			verificationHandle.refreshVerifyPassword();
-			document.forms.creator.openid_url.style.backgroundColor = \'\';
-		}
-		else
-		{
-			document.forms.creator.smf_autov_pwmain.style.backgroundColor = \'\';
-			document.forms.creator.smf_autov_pwverify.style.backgroundColor = \'\';
-			document.forms.creator.openid_url.style.backgroundColor = \'#FCE184\';
-		}
-
-		return true;
-	}';
-
-	if ($context['require_agreement'])
+				<input type="submit" name="accept_agreement" value="', $context['coppa_agree_above'], '" /><br /><br />
+				<input type="submit" name="accept_agreement_coppa" value="', $context['coppa_agree_below'], '" />';
+	else
 		echo '
-	function checkAgree()
-	{
-		document.forms.creator.regSubmit.disabled =  (currentAuthMethod == "passwd" && (isEmptyText(document.forms.creator.smf_autov_pwmain) || isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email))) || (currentAuthMethod == "openid" && isEmptyText(document.forms.creator.openid_url)) || !document.forms.creator.regagree.checked;
-		setTimeout("checkAgree();", 1000);
-	}
-	setTimeout("checkAgree();", 1000);';
+				<input type="submit" name="accept_agreement" value="', $txt['agreement_agree'], '" />'; 
 
 	echo '
-// ]]></script>';
+			</div>
+			<input type="hidden" name="step" value="1" />
+		</form>';
+
+}
+
+// Before registering - get their information.
+function template_registration_form()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	echo '
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[
+			function verifyAgree()
+			{
+				if (currentAuthMethod == \'passwd\' && document.forms.registration.smf_autov_pwmain.value != document.forms.registration.smf_autov_pwverify.value)
+				{
+					alert("', $txt['register_passwords_differ_js'], '");
+					return false;
+				}
+		
+				return true;
+			}
+		
+			var currentAuthMethod = \'passwd\';
+			function updateAuthMethod()
+			{
+				// What authentication method is being used?
+				if (!document.getElementById(\'auth_openid\') || !document.getElementById(\'auth_openid\').checked)
+					currentAuthMethod = \'passwd\';
+				else
+					currentAuthMethod = \'openid\';
+		
+				// No openID?
+				if (!document.getElementById(\'auth_openid\'))
+					return true;
+		
+				document.forms.registration.openid_url.disabled = currentAuthMethod == \'openid\' ? false : true;
+				document.forms.registration.smf_autov_pwmain.disabled = currentAuthMethod == \'passwd\' ? false : true;
+				document.forms.registration.smf_autov_pwverify.disabled = currentAuthMethod == \'passwd\' ? false : true;
+				document.getElementById(\'smf_autov_pwmain_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
+				document.getElementById(\'smf_autov_pwverify_div\').style.display = currentAuthMethod == \'passwd\' ? \'\' : \'none\';
+		
+				if (currentAuthMethod == \'passwd\')
+				{
+					verificationHandle.refreshMainPassword();
+					verificationHandle.refreshVerifyPassword();
+					document.forms.registration.openid_url.style.backgroundColor = \'\';
+					document.getElementById(\'password1_group\').style.display = \'\';
+					document.getElementById(\'password2_group\').style.display = \'\';
+					document.getElementById(\'openid_group\').style.display = \'none\';
+				}
+				else
+				{
+					document.forms.registration.smf_autov_pwmain.style.backgroundColor = \'\';
+					document.forms.registration.smf_autov_pwverify.style.backgroundColor = \'\';
+					document.forms.registration.openid_url.style.backgroundColor = \'#FFF0F0\';
+					document.getElementById(\'password1_group\').style.display = \'none\';
+					document.getElementById(\'password2_group\').style.display = \'none\';
+					document.getElementById(\'openid_group\').style.display = \'\';
+				}
+		
+				return true;
+			}';
+
+	echo '
+		// ]]></script>';
 
 	// Any errors?
 	if (!empty($context['registration_errors']))
 	{
 		echo '
-	<div class="register_error">
-		<span>', $txt['registration_errors_occurred'], '</span>
-		<ul class="reset">';
+		<div class="register_error">
+			<span>', $txt['registration_errors_occurred'], '</span>
+			<ul class="reset">';
 
 		// Cycle through each error and display an error message.
 		foreach ($context['registration_errors'] as $error)
 				echo '
-			<li>', $error, '</li>';
+				<li>', $error, '</li>';
 
 		echo '
-		</ul>
-	</div>';
+			</ul>
+		</div>';
 	}
 
 	echo '
-<form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>
-		', $txt['register'], ' - ', $txt['required_info'], '
-	</h3>
-	<div id="register_screen">
-		<dl class="register_form">
-			<dt>', $txt['choose_username'], ': <span class="smalltext">', $txt['identification_by_smf'], '</span></dt>
-			<dd><input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" />
-				<span id="smf_autov_username_div" style="display: none;">
-					<a id="smf_autov_username_link" href="#">
-						<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
-					</a>
-				</span>
-			</dd>
-			<dt>', $txt['email'], ': <span class="smalltext">', $txt['valid_email'], '</span></dt>
-			<dd>
-				<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" />
-				<label for="allow_email"><input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="check" /> ', $txt['allow_user_email'], '</label>			
-			</dd>';
-		// With openID disabled we put the password here.
-		if (empty($modSettings['enableOpenID']))
-		{
-			echo'
-			<dt>', $txt['choose_pass'], ':</dt>
-			<dd>
-				<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
-				<span id="smf_autov_pwmain_div" style="display: none;">
-					<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
-				</span>
-			</dd>
-			<dt>', $txt['verify_pass'], ':</dt>
-			<dd>
-					<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
-					<span id="smf_autov_pwverify_div" style="display: none;">
-						<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
-					</span>				
-			</dd>';	
-		}
+		<form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="registration" id="registration" onsubmit="return verifyAgree();">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $txt['registration_form'], '
+			</h3>
+			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $txt['required_info'], '
+			</h4>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<fieldset class="content">
+					<dl class="register_form" id="username_group">
+						<dt><label for="smf_autov_username">', $txt['username'], ':</label></dt>
+						<dd>
+							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" />
+							<span id="smf_autov_username_div" style="display: none;">
+								<a id="smf_autov_username_link" href="#">
+									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
+								</a>
+							</span>
+						</dd>
+					</dl>
+					<dl class="register_form" id="email_group">
+						<dt><label for="smf_autov_reserve1">', $txt['email'], ':</label></dt>
+						<dd>
+							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" />
+							<label for="allow_email"><input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="check" /> ', $txt['allow_user_email'], '</label>			
+						</dd>
+					</dl>';
 
-		if ($context['visual_verification'])
-		{
-			echo '
-			<dt class="register_captcha">', $txt['verification'], ':</dt>
-			<dd>', template_control_verification($context['visual_verification_id'], 'all'), '</dd>';
-		}		
-
-		// Are there age restrictions in place?
-		if (!empty($modSettings['coppaAge']))
-			echo '
-			<dt></dt>
-			<dd>
-				<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <strong>', $context['coppa_desc'], '.</strong></label>
-			</dd>';
-
+	// If OpenID is enabled, give the user a choice between password and OpenID.
+	if (!empty($modSettings['enableOpenID']))
+	{
 		echo '
-		</dl>';
+					<dl class="register_form" id="authentication_group">
+						<dt>', $txt['authenticate_label'], ':</dt>
+						<dd>
+							<label for="auth_pass" id="option_auth_pass">
+								<input type="radio" name="authenticate" value="passwd" id="auth_pass" tabindex="', $context['tabindex']++, '" ', empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
+								', $txt['authenticate_password'], '
+							</label>
+							<label for="auth_openid" id="option_auth_openid">
+								<input type="radio" name="authenticate" value="openid" id="auth_openid" tabindex="', $context['tabindex']++, '" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
+								', $txt['authenticate_openid'], ' <a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a>
+							</label>
+						</dd>
+					</dl>';
+	}
 
-		// If openID is enabled offer them the choice.
-		if (!empty($modSettings['enableOpenID']))
-		{
-			echo '
-		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
-			', $txt['authenticate_label'], ':
-		</h4>
-		<dl class="register_form">
-			<dt>
-				<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
-				<label for="auth_pass">', $txt['authenticate_password'], ':</label>
-			</dt>	
-			<dd></dd>
-			<dt><em>', $txt['choose_pass'], ':</em></dt>
-			<dd>
-				<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
-				<span id="smf_autov_pwmain_div" style="display: none;">
-					<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
-				</span>			
-			</dd>
-			<dt><em>', $txt['verify_pass'], ':</em></dt>
-			<dd>
-				<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
-				<span id="smf_autov_pwverify_div" style="display: none;">
-					<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
-				</span>			
-			</dd>
-			<dt>
-				<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" />
-				<label for="auth_openid"><strong>', $txt['authenticate_openid'], ':</strong></label>&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em>
-			</dt>
-			<dd>
-			</dd>
-			<dt><em>', $txt['authenticate_openid_url'], ':</em></dt>
-			<dd>
-				<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
-				<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>				
-			</dd>
-		</dl>';
-		}
+	echo'
+					<dl class="register_form" id="password1_group">
+						<dt><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></dt>
+						<dd>
+							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
+							<span id="smf_autov_pwmain_div" style="display: none;">
+								<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+							</span>
+						</dd>
+					</dl>
+					<dl class="register_form" id="password2_group">
+						<dt><label for="smf_autov_pwverify">', $txt['verify_pass'], ':</label></dt>
+						<dd>
+							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
+							<span id="smf_autov_pwverify_div" style="display: none;">
+								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+							</span>				
+						</dd>
+					</dl>';
+
+	// If OpenID is enabled, give the user a choice between password and OpenID.
+	if (!empty($modSettings['enableOpenID']))
+	{
+		echo '
+
+					<dl class="register_form" id="openid_group">
+						<dt>', $txt['authenticate_openid_url'], ':</dt>
+						<dd>
+							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
+							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>				
+						</dd>
+					</dl>';
+
+	}
+
+	echo '
+				</fieldset>
+				<span class="botslice"><span></span></span>
+			</div>';
+
+	// If we have either of these, show the extra group.
+	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
+	{
+		echo '
+			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $txt['additional_information'], '
+			</h4>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<fieldset class="content">
+					<dl id="custom_group">';
+	}
 
 	if (!empty($context['profile_fields']))
 	{
-		echo '
-		<hr />
-		<dl class="register_form">';
-
 		// Any fields we particularly want?
 		foreach ($context['profile_fields'] as $key => $field)
 		{
@@ -218,42 +233,43 @@ function template_before()
 			else
 			{
 					echo '
-					<dt><strong', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</strong>';
+						<dt>
+							<strong', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], ':</strong>';
 
 				// Does it have any subtext to show?
 				if (!empty($field['subtext']))
 					echo '
-						<span class="smalltext">', $field['subtext'], '</span>';
+							<span class="smalltext">', $field['subtext'], '</span>';
 
 				echo '
-					</dt>
-					<dd>';
+						</dt>
+						<dd>';
 
 				// Want to put something infront of the box?
 				if (!empty($field['preinput']))
 					echo '
-						', $field['preinput'];
+							', $field['preinput'];
 
 				// What type of data are we showing?
 				if ($field['type'] == 'label')
 					echo '
-						', $field['value'];
+							', $field['value'];
 
 				// Maybe it's a text box - very likely!
 				elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
 					echo '
-						<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" tabindex="', $context['tabindex']++, '" ', $field['input_attr'], ' />';
+							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" tabindex="', $context['tabindex']++, '" ', $field['input_attr'], ' />';
 
 				// You "checking" me out? ;)
 				elseif ($field['type'] == 'check')
 					echo '
-						<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" tabindex="', $context['tabindex']++, '" class="check" ', $field['input_attr'], ' />';
+							<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" tabindex="', $context['tabindex']++, '" class="check" ', $field['input_attr'], ' />';
 
 				// Always fun - select boxes!
 				elseif ($field['type'] == 'select')
 				{
 					echo '
-						<select name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '">';
+							<select name="', $key, '" id="', $key, '" tabindex="', $context['tabindex']++, '">';
 
 					if (isset($field['options']))
 					{
@@ -264,82 +280,82 @@ function template_before()
 						if (is_array($field['options']))
 							foreach ($field['options'] as $value => $name)
 								echo '
-									<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
+								<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
 					}
 
 					echo '
-						</select>';
+							</select>';
 				}
 
 				// Something to end with?
 				if (!empty($field['postinput']))
 					echo '
-						', $field['postinput'];
+							', $field['postinput'];
 
+				echo '
+						</dd>';		
 			}
 		}
-	echo '
-			</dd>
-		</dl>';		
 	}
 
 	// Are there any custom fields?
 	if (!empty($context['custom_fields']))
 	{
-		echo '
-		<dl class="register_form">';
 		foreach ($context['custom_fields'] as $field)
-		{
 			echo '
-			<dt>', $field['name'], ': <span class="smalltext">', $field['desc'], '</span></dt>
-			<dd>', $field['input_html'], '</dd>';
-		}
+						<dt>
+							<strong', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['name'], ':</strong>
+							<span class="smalltext">', $field['desc'], '</span>
+						</dt>
+						<dd>', $field['input_html'], '</dd>';
+	}
+
+	// If we have either of these, close the list like a proper gent.
+	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
+	{
 		echo '
-		</dl>';
+					</dl>
+				</fieldset>
+				<span class="botslice"><span></span></span>
+			</div>';
+	}
+
+	if ($context['visual_verification'])
+	{
+		echo '
+			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+				', $txt['verification'], '
+			</h4>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<fieldset class="content centertext">
+					', template_control_verification($context['visual_verification_id'], 'all'), '
+				</fieldset>
+				<span class="botslice"><span></span></span>
+			</div>';
 	}
 
 	echo '
-	</div>';
-
-	// Require them to agree here?
-	if ($context['require_agreement'])
-		echo '
-	<p class="description">', $context['agreement'], '</p>
-	<p class="centertext">
-		<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" tabindex="', $context['tabindex']++, '" class="check" ', !empty($context['regagree']) ? 'checked="checked"' : '', ' /> <strong>', $txt['agree'], '</strong></label>
-	</p>';
-
-	echo '
-	<div class="centertext">
-		<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
-	</div>
-</form>
-<script type="text/javascript"><!-- // --><![CDATA[';
-
-	// Uncheck the agreement thing....
-	if ($context['require_agreement'] && empty($context['regagree']))
-		echo '
-	document.forms.creator.regagree.checked = false;
-	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;';
-
-	// Clever registration stuff...
-	echo '
-	var regTextStrings = {
-		"username_valid": "', $txt['registration_username_available'], '",
-		"username_invalid": "', $txt['registration_username_unavailable'], '",
-		"username_check": "', $txt['registration_username_check'], '",
-		"password_short": "', $txt['registration_password_short'], '",
-		"password_reserved": "', $txt['registration_password_reserved'], '",
-		"password_numbercase": "', $txt['registration_password_numbercase'], '",
-		"password_no_match": "', $txt['registration_password_no_match'], '",
-		"password_valid": "', $txt['registration_password_valid'], '"
-	};
-	var verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
-	// Update the authentication status.
-	updateAuthMethod();';
-
-	echo '
-// ]]></script>';
+			<div id="confirm_buttons">
+				<input type="submit" name="regSubmit" value="', $txt['register'], '" tabindex="', $context['tabindex']++, '" />
+			</div>
+			<input type="hidden" name="step" value="2" />
+		</form>
+		<script type="text/javascript"><!-- // --><![CDATA[
+			var regTextStrings = {
+				"username_valid": "', $txt['registration_username_available'], '",
+				"username_invalid": "', $txt['registration_username_unavailable'], '",
+				"username_check": "', $txt['registration_username_check'], '",
+				"password_short": "', $txt['registration_password_short'], '",
+				"password_reserved": "', $txt['registration_password_reserved'], '",
+				"password_numbercase": "', $txt['registration_password_numbercase'], '",
+				"password_no_match": "', $txt['registration_password_no_match'], '",
+				"password_valid": "', $txt['registration_password_valid'], '"
+			};
+			var verificationHandle = new smfRegister("registration", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
+			// Update the authentication status.
+			updateAuthMethod();
+		// ]]></script>';
 }
 
 // After registration... all done ;).
@@ -349,9 +365,16 @@ function template_after()
 
 	// Not much to see here, just a quick... "you're now registered!" or what have you.
 	echo '
-		<div>
-			<h3 class="catbg"><span class="left"></span><span class="right"></span>', $context['page_title'], '</h3>
-			<p>', $context['description'], '</p>
+		<div id="registration_success">
+			<h3 class="catbg">
+				<span class="left"></span><span class="right"></span>
+				', $txt['registration_successful'], '
+			</h3>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<p class="content">', $context['description'], '</p>
+				<span class="botslice"><span></span></span>
+			</div>
 		</div>';
 }
 
@@ -362,44 +385,49 @@ function template_coppa()
 
 	// Formulate a nice complicated message!
 	echo '
-		<div>
 			<h3 class="titlebg">
 				<span class="left"></span><span class="right"></span>
 				', $context['page_title'], '
 			</h3>
-			<p>', $context['coppa']['body'], '</p>
-				<span><a href="', $scripturl, '?action=coppa;form;member=', $context['coppa']['id'], '" target="_blank" class="new_win">', $txt['coppa_form_link_popup'], '</a> | <a href="', $scripturl, '?action=coppa;form;dl;member=', $context['coppa']['id'], '">', $txt['coppa_form_link_download'], '</a></span>
-			</p>
-			<p>', $context['coppa']['many_options'] ? $txt['coppa_send_to_two_options'] : $txt['coppa_send_to_one_option'], '</p>';
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>', $context['coppa']['body'], '</p>
+					<p>
+						<span><a href="', $scripturl, '?action=coppa;form;member=', $context['coppa']['id'], '" target="_blank" class="new_win">', $txt['coppa_form_link_popup'], '</a> | <a href="', $scripturl, '?action=coppa;form;dl;member=', $context['coppa']['id'], '">', $txt['coppa_form_link_download'], '</a></span>
+					</p>
+					<p>', $context['coppa']['many_options'] ? $txt['coppa_send_to_two_options'] : $txt['coppa_send_to_one_option'], '</p>';
 
 	// Can they send by post?
 	if (!empty($context['coppa']['post']))
 	{
 		echo '
-			<h4>1) ', $txt['coppa_send_by_post'], '</h4>
-			<div class="coppa_contact">
-				', $context['coppa']['post'], '
-			</div>';
+					<h4>1) ', $txt['coppa_send_by_post'], '</h4>
+					<div class="coppa_contact">
+						', $context['coppa']['post'], '
+					</div>';
 	}
 
 	// Can they send by fax??
 	if (!empty($context['coppa']['fax']))
 	{
 		echo '
-			<h4>', !empty($context['coppa']['post']) ? '2' : '1', ') ', $txt['coppa_send_by_fax'], '</h4>
-			<div class="coppa_contact">
-				', $context['coppa']['fax'], '
-			</div>';
+					<h4>', !empty($context['coppa']['post']) ? '2' : '1', ') ', $txt['coppa_send_by_fax'], '</h4>
+					<div class="coppa_contact">
+						', $context['coppa']['fax'], '
+					</div>';
 	}
 
 	// Offer an alternative Phone Number?
 	if ($context['coppa']['phone'])
 	{
 		echo '
-			<p>', $context['coppa']['phone'], '</p>';
+					<p>', $context['coppa']['phone'], '</p>';
 	}
 	echo '
-		</div>';
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
 }
 
 // An easily printable form for giving permission to access the forum for a minor.

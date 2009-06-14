@@ -5,20 +5,27 @@
 
 global $context;
 
+// Registration agreement page.
+$txt['registration_agreement'] = 'Registration Agreement';
+$txt['agreement_agree'] = 'I accept the terms of the agreement.';
+$txt['agreement_agree_coppa_above'] = 'I accept the terms of the agreement and I am at least %1$d years old.';
+$txt['agreement_agree_coppa_below'] = 'I accept the terms of the agreement and I am younger than %1$d years old.';
+
+// Registration form.
+$txt['registration_form'] = 'Registration Form';
 $txt['need_username'] = 'You should fill in a username.';
 $txt['no_password'] = 'You didn\'t enter your password.';
 $txt['incorrect_password'] = 'Password incorrect';
 $txt['choose_username'] = 'Choose username';
 $txt['maintain_mode'] = 'Maintenance Mode';
-$txt['registration_successful'] = 'Registration successful';
-$txt['now_a_member'] = 'Success! You are now a member of the Forum.';
+$txt['registration_successful'] = 'Registration Successful';
+$txt['now_a_member'] = 'Success! You are now a member of the forum.';
 // Use numeric entities in the below string.
 $txt['your_password'] = 'and your password is';
 $txt['valid_email_needed'] = 'Please enter a valid email address, %1$s.';
 $txt['required_info'] = 'Required Information';
 $txt['identification_by_smf'] = 'Used to identify you on the forum.';
-$txt['agree'] = 'I Agree';
-$txt['decline'] = 'I Do Not Agree';
+$txt['additional_information'] = 'Additional Information';
 $txt['warning'] = 'Warning!';
 $txt['only_members_can_access'] = 'Only registered members are allowed to access this section.';
 $txt['login_below'] = 'Please login below or';
@@ -29,8 +36,6 @@ $txt['may_change_in_profile'] = 'You may change it after you login by going to t
 $txt['your_username_is'] = 'Your username is: ';
 
 $txt['login_hash_error'] = 'Password security has recently been upgraded.  Please enter your password again.';
-
-$txt['register_age_confirmation'] = 'I am at least %1$d years old';
 
 $txt['ban_register_prohibited'] = 'Sorry, you are not allowed to register on this forum.';
 $txt['under_age_registration_prohibited'] = 'Sorry, but users under the age of %1$d are not allowed to register on this forum.';
@@ -140,7 +145,7 @@ $txt['registration_password_valid'] = 'Password is valid';
 
 $txt['registration_errors_occurred'] = 'The following errors were detected in your registration. Please correct them to continue:';
 
-$txt['authenticate_label'] = 'Authenticate Method';
+$txt['authenticate_label'] = 'Authentication Method';
 $txt['authenticate_password'] = 'Password';
 $txt['authenticate_openid'] = 'OpenID';
 $txt['authenticate_openid_url'] = 'OpenID Authentication URL';
