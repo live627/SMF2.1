@@ -213,15 +213,15 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 	if ($display_controls == 'all' || in_array('buttons', $display_controls))
 	{
 		echo '
-			<input type="submit" value="', isset($editor_context['labels']['post_button']) ? $editor_context['labels']['post_button'] : $txt['post'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />';
+			<input type="submit" value="', isset($editor_context['labels']['post_button']) ? $editor_context['labels']['post_button'] : $txt['post'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />';
 
 		if ($editor_context['preview_type'])
 			echo '
-			<input type="submit" name="preview" value="', isset($editor_context['labels']['preview_button']) ? $editor_context['labels']['preview_button'] : $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="', $editor_context['preview_type'] == 2 ? 'return event.ctrlKey || previewPost();' : 'return submitThisOnce(this);', '" accesskey="p" />';
+			<input type="submit" name="preview" value="', isset($editor_context['labels']['preview_button']) ? $editor_context['labels']['preview_button'] : $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="', $editor_context['preview_type'] == 2 ? 'return event.ctrlKey || previewPost();' : 'return submitThisOnce(this);', '" accesskey="p" class="button_submit" />';
 
 		if ($context['show_spellchecking'])
 			echo '
-			<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="editorHandle', $editor_id, '.spellCheckStart();" />';
+			<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="editorHandle', $editor_id, '.spellCheckStart();" class="button_submit" />';
 	}
 }
 
@@ -270,13 +270,13 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 
 			if (WIRELESS)
 				echo '<br />
-				<input type="text" name="', $verify_id, '_vv[code]" value="', !empty($verify_context['text_value']) ? $verify_context['text_value'] : '', '" size="30" tabindex="', $context['tabindex']++, '" />';
+				<input type="text" name="', $verify_id, '_vv[code]" value="', !empty($verify_context['text_value']) ? $verify_context['text_value'] : '', '" size="30" tabindex="', $context['tabindex']++, '" class="input_text" />';
 			else
 				echo '
 				<div class="smalltext" style="margin: 4px 0 8px 0;">
 					<a href="', $verify_context['image_href'], ';sound" id="visual_verification_', $verify_id, '_sound" rel="nofollow">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_', $verify_id, '_refresh">', $txt['visual_verification_request_new'], '</a><br /><br />
 					', $txt['visual_verification_description'], ':<br />
-					<input type="text" name="', $verify_id, '_vv[code]" value="', !empty($verify_context['text_value']) ? $verify_context['text_value'] : '', '" size="30" tabindex="', $context['tabindex']++, '" />
+					<input type="text" name="', $verify_id, '_vv[code]" value="', !empty($verify_context['text_value']) ? $verify_context['text_value'] : '', '" size="30" tabindex="', $context['tabindex']++, '" class="input_text" />
 				</div>';
 		}
 		else
@@ -287,7 +287,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 			echo '
 				<div class="smalltext">
 					', $verify_context['questions'][$qIndex]['q'], ':<br />
-					<input type="text" name="', $verify_id, '_vv[q][', $verify_context['questions'][$qIndex]['id'], ']" size="30" value="', $verify_context['questions'][$qIndex]['a'], '" ', $verify_context['questions'][$qIndex]['is_error'] ? 'style="border: 1px red solid;"' : '', ' tabindex="', $context['tabindex']++, '" />
+					<input type="text" name="', $verify_id, '_vv[q][', $verify_context['questions'][$qIndex]['id'], ']" size="30" value="', $verify_context['questions'][$qIndex]['a'], '" ', $verify_context['questions'][$qIndex]['is_error'] ? 'style="border: 1px red solid;"' : '', ' tabindex="', $context['tabindex']++, '" class="input_text" />
 				</div>';
 		}
 

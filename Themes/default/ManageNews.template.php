@@ -12,7 +12,7 @@ function template_edit_news()
 				<tr class="titlebg">
 					<th width="50%">', $txt['admin_edit_news'], '</th>
 					<th align="left" width="45%">', $txt['preview'], '</th>
-					<th align="center" width="5%"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></th>
+					<th align="center" width="5%"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></th>
 				</tr>';
 
 	// Loop through all the current news items so you can edit/remove them.
@@ -24,7 +24,7 @@ function template_edit_news()
 					</td><td align="left" valign="top">
 						<div style="overflow: auto; width: 100%; height: 10ex;">', $admin_news['parsed'], '</div>
 					</td><td align="center">
-						<input type="checkbox" name="remove[]" value="', $admin_news['id'], '" class="check" />
+						<input type="checkbox" name="remove[]" value="', $admin_news['id'], '" class="input_check" />
 					</td>
 				</tr>';
 
@@ -46,7 +46,7 @@ function template_edit_news()
 						</noscript>
 					</td>
 					<td colspan="2" valign="bottom" align="right" style="padding: 1ex;">
-						<input type="submit" name="save_items" value="', $txt['save'], '" /> <input type="submit" name="delete_selection" value="', $txt['editnews_remove_selected'], '" onclick="return confirm(\'', $txt['editnews_remove_confirm'], '\');" />
+						<input type="submit" name="save_items" value="', $txt['save'], '" class="button_submit" /> <input type="submit" name="delete_selection" value="', $txt['editnews_remove_selected'], '" onclick="return confirm(\'', $txt['editnews_remove_confirm'], '\');" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -93,11 +93,11 @@ function template_email_members()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
+						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
 						<br />
-						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="check" /> <em>', $txt['check_all'], '</em></label><br />
+						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label><br />
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="middle" id="advanced_select_div" style="display: none;">
@@ -121,7 +121,7 @@ function template_email_members()
 						<div class="smalltext">', $txt['admin_news_select_members_desc'], '</div>
 					</td>
 					<td width="50%">
-						<input type="text" name="members" id="members" value="" size="30" />
+						<input type="text" name="members" id="members" value="" size="30" class="input_text" />
 						<div id="members_container"></div>
 					</td>
 				</tr>
@@ -139,11 +139,11 @@ function template_email_members()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
+						<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
 						<br />
-						<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="check" /> <em>', $txt['check_all'], '</em></label><br />
+						<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="input_check" /> <em>', $txt['check_all'], '</em></label><br />
 					</td>
 				</tr>
 				<tr class="windowbg2" valign="top" id="advanced_div_5">
@@ -152,7 +152,7 @@ function template_email_members()
 						<div class="smalltext">', $txt['admin_news_select_excluded_members_desc'], '</div>
 					</td>
 					<td width="50%">
-						<input type="text" name="exclude_members" id="exclude_members" value="" size="30" />
+						<input type="text" name="exclude_members" id="exclude_members" value="" size="30" class="input_text" />
 						<div id="exclude_members_container"></div>
 					</td>
 				</tr>
@@ -167,12 +167,12 @@ function template_email_members()
 						<div class="smalltext">', $txt['email_force'], '</div>
 					</td>
 					<td width="50%">
-						<input type="checkbox" name="email_force" id="email_force" value="1" class="check" />
+						<input type="checkbox" name="email_force" id="email_force" value="1" class="input_check" />
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="windowbg2" style="padding-bottom: 1ex;" align="center">
-						<input type="submit" value="', $txt['admin_next'], '" />
+						<input type="submit" value="', $txt['admin_next'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -231,15 +231,15 @@ function template_email_members_compose()
 					<td class="smalltext" style="padding: 2ex;">', $txt['email_variables'], '</td>
 				</tr><tr>
 					<td class="windowbg2">
-						<input type="text" name="subject" size="60" value="', $context['default_subject'], '" /><br />
+						<input type="text" name="subject" size="60" value="', $context['default_subject'], '" class="input_text" /><br />
 						<br />
 						<textarea cols="70" rows="9" name="message" class="editor">', $context['default_message'], '</textarea><br />
 						<br />
-						<label for="send_pm"><input type="checkbox" name="send_pm" id="send_pm" class="check" onclick="if (this.checked && ', $context['total_emails'], ' != 0 && !confirm(\'', $txt['admin_news_cannot_pm_emails_js'], '\')) return false; this.form.parse_html.disabled = this.checked; this.form.send_html.disabled = this.checked; " /> ', $txt['email_as_pms'], '</label><br />
-						<label for="send_html"><input type="checkbox" name="send_html" id="send_html" class="check" onclick="this.form.parse_html.disabled = !this.checked;" /> ', $txt['email_as_html'], '</label><br />
-						<label for="parse_html"><input type="checkbox" name="parse_html" id="parse_html" checked="checked" disabled="disabled" class="check" /> ', $txt['email_parsed_html'], '</label><br />
+						<label for="send_pm"><input type="checkbox" name="send_pm" id="send_pm" class="input_check" onclick="if (this.checked && ', $context['total_emails'], ' != 0 && !confirm(\'', $txt['admin_news_cannot_pm_emails_js'], '\')) return false; this.form.parse_html.disabled = this.checked; this.form.send_html.disabled = this.checked; " /> ', $txt['email_as_pms'], '</label><br />
+						<label for="send_html"><input type="checkbox" name="send_html" id="send_html" class="input_check" onclick="this.form.parse_html.disabled = !this.checked;" /> ', $txt['email_as_html'], '</label><br />
+						<label for="parse_html"><input type="checkbox" name="parse_html" id="parse_html" checked="checked" disabled="disabled" class="input_check" /> ', $txt['email_parsed_html'], '</label><br />
 						<br />
-						<div class="centertext"><input type="submit" value="', $txt['sendtopic_send'], '" /></div>
+						<div class="centertext"><input type="submit" value="', $txt['sendtopic_send'], '" class="button_submit" /></div>
 					</td>
 				</tr>
 			</table>
@@ -271,7 +271,7 @@ function template_email_members_send()
 					<td class="windowbg2"><strong>', $context['percentage_done'], '% ', $txt['email_done'], '</strong></td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
-						<input type="submit" name="b" value="', $txt['email_continue'], '" />
+						<input type="submit" name="b" value="', $txt['email_continue'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>

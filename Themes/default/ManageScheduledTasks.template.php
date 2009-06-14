@@ -45,7 +45,7 @@ function template_edit_scheduled_tasks()
 					<strong>', $txt['scheduled_task_edit_interval'], ':</strong>
 				</td><td width="70%">
 					', $txt['scheduled_task_edit_repeat'], '
-					<input type="text" name="regularity" value="', empty($context['task']['regularity']) ? 1 : $context['task']['regularity'], '" onchange="if (this.value < 1) this.value = 1;" size="2" maxlength="2" />
+					<input type="text" name="regularity" value="', empty($context['task']['regularity']) ? 1 : $context['task']['regularity'], '" onchange="if (this.value < 1) this.value = 1;" size="2" maxlength="2" class="input_text" />
 					<select name="unit">
 						<option value="0">', $txt['scheduled_task_edit_pick_unit'], '</option>
 						<option value="0">---------------------</option>
@@ -60,18 +60,18 @@ function template_edit_scheduled_tasks()
 					<strong>', $txt['scheduled_task_edit_start_time'], ':</strong><br />
 					<span class="smalltext">', $txt['scheduled_task_edit_start_time_desc'], '</span>
 				</td><td width="70%">
-					<input type="text" name="offset" value="', $context['task']['offset_formatted'], '" size="6" maxlength="5" />
+					<input type="text" name="offset" value="', $context['task']['offset_formatted'], '" size="6" maxlength="5" class="input_text" />
 				</td>
 			</tr><tr class="windowbg">
 				<td width="30%">
 					<strong>', $txt['scheduled_tasks_enabled'], ':</strong>
 				</td><td width="70%">
-					<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="input_check" />
 				</td>
 			</tr><tr class="windowbg">
 				<td colspan="2" align="center">
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" />
+					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>

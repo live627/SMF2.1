@@ -38,13 +38,13 @@ function template_admin()
 	<div class="bordercolor" style="padding: 1px; margin-top: 0.5em;">
 		<form class="titlebg2" style="margin: 0; padding: 5px 5px 5px 10px;" action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
 			<img src="' , $settings['images_url'] , '/filter.gif" alt="" class="floatright" />
-			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
+			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" class="input_text" />
 			<select name="search_type">
 				<option value="internal"', (empty($context['admin_preferences']['sb']) || $context['admin_preferences']['sb'] == 'internal' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_internal'], '</option>
 				<option value="member"', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'member' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_member'], '</option>
 				<option value="online"', (!empty($context['admin_preferences']['sb']) && $context['admin_preferences']['sb'] == 'online' ? ' selected="selected"' : ''), '>', $txt['admin_search_type_online'], '</option>
 			</select>
-			<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
+			<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" class="button_submit" />
 		</form>
 	</div>';
 
@@ -273,11 +273,11 @@ function template_manage_copyright()
 					<strong>', $txt['copyright_code'], ':</strong>
 				</td>
 				<td width="50%">
-					<input type="text" name="copy_code" value="" />
+					<input type="text" name="copy_code" value="" class="input_text"/>
 				</td>
 			</tr><tr>
 				<td colspan="2" align="center" class="windowbg2">
-					<input type="submit" value="', $txt['copyright_proceed'], '" />
+					<input type="submit" value="', $txt['copyright_proceed'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -693,12 +693,12 @@ function template_edit_censored()
 	// Show text boxes for censoring [bad   ] => [good  ].
 	foreach ($context['censored_words'] as $vulgar => $proper)
 		echo '
-									<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" value="', $vulgar, '" size="20" /> => <input type="text" name="censor_proper[]" value="', $proper, '" size="20" /></div>';
+									<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" value="', $vulgar, '" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" value="', $proper, '" size="20" class="input_text" /></div>';
 
 	// Now provide a way to censor more words.
 	echo '
 									<noscript>
-										<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /></div>
+										<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /></div>
 									</noscript>
 									<div id="moreCensoredWords"></div><div style="margin-top: 1ex; display: none;" id="moreCensoredWords_link"><a href="#;" onclick="addNewWord(); return false;">', $txt['censor_clickadd'], '</a></div>
 									<script type="text/javascript"><!-- // --><![CDATA[
@@ -706,7 +706,7 @@ function template_edit_censored()
 
 										function addNewWord()
 										{
-											setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" /> => <input type="text" name="censor_proper[]" size="20" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
+											setOuterHTML(document.getElementById("moreCensoredWords"), \'<div style="margin-top: 1ex;"><input type="text" name="censor_vulgar[]" size="20" class="input_text" /> => <input type="text" name="censor_proper[]" size="20" class="input_text" /><\' + \'/div><div id="moreCensoredWords"><\' + \'/div>\');
 										}
 									// ]]></script><br />
 								</td>
@@ -714,15 +714,15 @@ function template_edit_censored()
 								<td colspan="2"><hr /></td>
 							</tr><tr>
 								<th width="50%" align="right"><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></th>
-								<td align="left"><input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="check" /></td>
+								<td align="left"><input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="input_check" /></td>
 							</tr><tr>
 								<th align="right"><label for="censorIgnoreCase_check">', $txt['censor_case'], ':</label></th>
 								<td align="left">
-									<input type="checkbox" name="censorIgnoreCase" value="1" id="censorIgnoreCase_check"', empty($modSettings['censorIgnoreCase']) ? '' : ' checked="checked"', ' class="check" />
+									<input type="checkbox" name="censorIgnoreCase" value="1" id="censorIgnoreCase_check"', empty($modSettings['censorIgnoreCase']) ? '' : ' checked="checked"', ' class="input_check" />
 								</td>
 							</tr><tr>
 								<td colspan="2" align="right">
-									<input type="submit" name="save_censor" value="', $txt['save'], '" />
+									<input type="submit" name="save_censor" value="', $txt['save'], '" class="button_submit" />
 								</td>
 							</tr>
 						</table>
@@ -739,8 +739,8 @@ function template_edit_censored()
 					<td>', $txt['censor_test'], '</td>
 				</tr><tr class="windowbg2">
 					<td align="center">
-						<input type="text" name="censortest" value="', empty($context['censor_test']) ? '' : $context['censor_test'], '" />
-						<input type="submit" value="', $txt['censor_test_save'], '" />
+						<input type="text" name="censortest" value="', empty($context['censor_test']) ? '' : $context['censor_test'], '" class="input_text" />
+						<input type="submit" value="', $txt['censor_test_save'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -781,7 +781,7 @@ function template_not_done()
 
 	echo '
 			<form action="', $scripturl, $context['continue_get_data'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;" name="autoSubmit" id="autoSubmit">
-				<div style="margin: 1ex; text-align: right;"><input type="submit" name="cont" value="', $txt['not_done_continue'], '" /></div>
+				<div style="margin: 1ex; text-align: right;"><input type="submit" name="cont" value="', $txt['not_done_continue'], '" class="button_submit" /></div>
 				', $context['continue_post_data'], '
 			</form>
 		</div>
@@ -922,12 +922,12 @@ function template_show_settings()
 				// Show a check box.
 				if ($config_var['type'] == 'check')
 					echo '
-								<input type="checkbox"', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="check" />';
+								<input type="checkbox"', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="input_check" />';
 				// Escape (via htmlspecialchars.) the text box.
 				elseif ($config_var['type'] == 'password')
 					echo '
-								<input type="password"', $disabled, $javascript, ' name="', $config_var['name'], '[0]"', ($config_var['size'] ? ' size="' . $config_var['size'] . '"' : ''), ' value="*#fakepass#*" onfocus="this.value = \'\'; this.form.', $config_var['name'], '.disabled = false;" /><br />
-								<input type="password" disabled="disabled" id="', $config_var['name'], '" name="', $config_var['name'], '[1]"', ($config_var['size'] ? ' size="' . $config_var['size'] . '"' : ''), ' />';
+								<input type="password"', $disabled, $javascript, ' name="', $config_var['name'], '[0]"', ($config_var['size'] ? ' size="' . $config_var['size'] . '"' : ''), ' value="*#fakepass#*" onfocus="this.value = \'\'; this.form.', $config_var['name'], '.disabled = false;" class="input_password" /><br />
+								<input type="password" disabled="disabled" id="', $config_var['name'], '" name="', $config_var['name'], '[1]"', ($config_var['size'] ? ' size="' . $config_var['size'] . '"' : ''), ' class="input_password" />';
 				// Show a selection box.
 				elseif ($config_var['type'] == 'select')
 				{
@@ -964,14 +964,14 @@ function template_show_settings()
 											<td valign="top">';
 						foreach ($bbcColumn as $bbcTag)
 							echo '
-												<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
+												<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="input_check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
 						echo '
 											</td>';
 					}
 					echo '
 										</tr>
 									</table><br />
-									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><em>', $txt['bbcTagsToUse_select_all'], '</em></label>
+									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="input_check" /> <label for="select_all"><em>', $txt['bbcTagsToUse_select_all'], '</em></label>
 								</fieldset>';
 				}
 				// A simple message?
@@ -1004,7 +1004,7 @@ function template_show_settings()
 	if (empty($context['settings_save_dont_show']))
 		echo '
 						<tr>
-							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' /></td>
+							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), (!empty($context['settings_save_onclick']) ? ' onclick="' . $context['settings_save_onclick'] . '"' : ''), ' class="button_submit" /></td>
 						</tr>';
 
 	echo '
@@ -1077,7 +1077,7 @@ function template_edit_profile_field()
 		var startOptID = ', count($context['field']['options']), ';
 		function addOption()
 		{
-			setOuterHTML(document.getElementById("addopt"), \'<br /><input type="radio" name="default_select" value="\' + startOptID + \'" id="\' + startOptID + \'" /><input type="text" name="select_option[\' + startOptID + \']" value="" /><span id="addopt"></span>\');
+			setOuterHTML(document.getElementById("addopt"), \'<br /><input type="radio" name="default_select" value="\' + startOptID + \'" id="\' + startOptID + \'" class="input_radio" /><input type="text" name="select_option[\' + startOptID + \']" value="" class="input_text" /><span id="addopt"></span>\');
 			startOptID++;
 		}
 	// ]]></script>';
@@ -1092,7 +1092,7 @@ function template_edit_profile_field()
 			</tr><tr class="windowbg2">
 				<td width="50%"><strong>', $txt['custom_edit_name'], ':</strong></td>
 				<td width="50%">
-					<input type="text" name="field_name" value="', $context['field']['name'], '" size="20" maxlength="40" />
+					<input type="text" name="field_name" value="', $context['field']['name'], '" size="20" maxlength="40" class="input_text" />
 				</td>
 			</tr><tr class="windowbg2" valign="top">
 				<td width="50%"><strong>', $txt['custom_edit_desc'], ':</strong></td>
@@ -1124,7 +1124,7 @@ function template_edit_profile_field()
 			</tr><tr class="windowbg2">
 				<td width="50%"><strong>', $txt['custom_edit_display'], ':</strong></td>
 				<td width="50%">
-					<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="input_check" />
 				</td>
 			</tr><tr class="catbg">
 				<td colspan="2">', $txt['custom_edit_input'], ':</td>
@@ -1147,20 +1147,20 @@ function template_edit_profile_field()
 					<div class="smalltext">', $txt['custom_edit_max_length_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="text" name="max_length" value="', $context['field']['max_length'], '" size="7" maxlength="6" />
+					<input type="text" name="max_length" value="', $context['field']['max_length'], '" size="7" maxlength="6" class="input_text" />
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="dimension_div">
 				<td width="50%">
 					<strong>', $txt['custom_edit_dimension'], ':</strong>
 				</td>
 				<td width="50%">
-					<strong>', $txt['custom_edit_dimension_row'], ':</strong> <input type="text" name="rows" value="', $context['field']['rows'], '" size="5" maxlength="3" />
-					<strong>', $txt['custom_edit_dimension_col'], ':</strong> <input type="text" name="cols" value="', $context['field']['cols'], '" size="5" maxlength="3" />
+					<strong>', $txt['custom_edit_dimension_row'], ':</strong> <input type="text" name="rows" value="', $context['field']['rows'], '" size="5" maxlength="3" class="input_text" />
+					<strong>', $txt['custom_edit_dimension_col'], ':</strong> <input type="text" name="cols" value="', $context['field']['cols'], '" size="5" maxlength="3" class="input_text" />
 				</td>
 			</tr><tr class="windowbg2" id="bbc_div">
 				<td width="50%"><strong>', $txt['custom_edit_bbc'], '</strong></td>
 				<td width="50%">
-					<input type="checkbox" name="bbc"', $context['field']['bbc'] ? ' checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="bbc"', $context['field']['bbc'] ? ' checked="checked"' : '', ' class="input_check" />
 				</td>
 			</tr><tr class="windowbg2" valign="top" id="options_div">
 				<td width="50%">
@@ -1173,7 +1173,7 @@ function template_edit_profile_field()
 	foreach ($context['field']['options'] as $k => $option)
 	{
 		echo '
-					', $k == 0 ? '' : '<br />', '<input type="radio" name="default_select" value="', $k, '"', $context['field']['default_select'] == $option ? ' checked="checked"' : '', ' /><input type="text" name="select_option[', $k, ']" value="', $option, '" />';
+					', $k == 0 ? '' : '<br />', '<input type="radio" name="default_select" value="', $k, '"', $context['field']['default_select'] == $option ? ' checked="checked"' : '', ' class="input_radio" /><input type="text" name="select_option[', $k, ']" value="', $option, '" class="input_text" />';
 	}
 	echo '
 					<span id="addopt"></span>
@@ -1182,7 +1182,7 @@ function template_edit_profile_field()
 			</tr><tr class="windowbg2" id="default_div">
 				<td width="50%"><strong>', $txt['custom_edit_default'], ':</strong></td>
 				<td width="50%">
-					<input type="checkbox" name="default_check"', $context['field']['default_check'] ? ' checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="default_check"', $context['field']['default_check'] ? ' checked="checked"' : '', ' class="input_check" />
 				</td>
 			</tr><tr class="catbg">
 				<td colspan="2">', $txt['custom_edit_advanced'], ':</td>
@@ -1199,7 +1199,7 @@ function template_edit_profile_field()
 						<option value="regex"', substr($context['field']['mask'], 0, 5) == 'regex' ? ' selected="selected"' : '', '>', $txt['custom_edit_mask_regex'], '</option>
 					</select>
 					<div id="regex_div">
-						<input type="text" name="regex" value="', $context['field']['regex'], '" size="30" />
+						<input type="text" name="regex" value="', $context['field']['regex'], '" size="30" class="input_text" />
 					</div>
 				</td>
 			</tr><tr class="windowbg2">
@@ -1221,7 +1221,7 @@ function template_edit_profile_field()
 					<div class="smalltext">', $txt['custom_edit_can_search_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="checkbox" name="can_search"', $context['field']['can_search'] ? ' checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="can_search"', $context['field']['can_search'] ? ' checked="checked"' : '', ' class="input_check" />
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%">
@@ -1229,15 +1229,15 @@ function template_edit_profile_field()
 					<div class="smalltext">', $txt['custom_edit_active_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="checkbox" name="active"', $context['field']['active'] ? ' checked="checked"' : '', ' class="check" />
+					<input type="checkbox" name="active"', $context['field']['active'] ? ' checked="checked"' : '', ' class="input_check" />
 				</td>
 			</tr><tr class="titlebg">
 				<td colspan="4" align="center">
-					<input type="submit" name="save" value="', $txt['save'], '" />';
+					<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />';
 
 	if ($context['fid'])
 		echo '
-					<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" />';
+					<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" class="button_submit" />';
 
 	echo '
 				</td>
@@ -1272,9 +1272,9 @@ function template_admin_search_results()
 				</div>
 				<div class="floatright">
 					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
-						<input type="text" name="search_term" value="', $context['search_term'], '" />
+						<input type="text" name="search_term" value="', $context['search_term'], '" class="input_text" />
 						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
-						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" />
+						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" class="button_submit" />
 					</form>
 				</div>
 			</td>
@@ -1396,8 +1396,8 @@ function template_core_features()
 					<h4>', ($feature['enabled'] && $feature['url'] ? '<a href="' . $feature['url'] . '">' . $feature['title'] . '</a>' : $feature['title']), '</h4>
 					<p>', $feature['desc'], '</p>
 					<div id="plain_feature_', $id, '">
-						<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1"', $feature['enabled'] ? ' checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
-						<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0"', !$feature['enabled'] ? ' checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
+						<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1"', $feature['enabled'] ? ' checked="checked"' : '', ' class="input_radio" />', $txt['core_settings_enabled'], '</label>
+						<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0"', !$feature['enabled'] ? ' checked="checked"' : '', ' class="input_radio" />', $txt['core_settings_disabled'], '</label>
 					</div>
 				</div>';
 
@@ -1409,7 +1409,7 @@ function template_core_features()
 		<tr class="catbg">
 			<td colspan="3" align="right">
 				<input type="hidden" value="0" name="js_worked" id="js_worked" />
-				<input type="submit" value="', $txt['save'], '" name="save" />
+				<input type="submit" value="', $txt['save'], '" name="save" class="button_submit" />
 			</td>
 		</tr>
 	</table>
@@ -1454,9 +1454,9 @@ function template_add_language()
 		</tr>
 		<tr class="windowbg">
 			<td align="right">
-				<input type="text" name="smf_add" size="40" value="', !empty($context['smf_search_term']) ? $context['smf_search_term'] : '', '" />
+				<input type="text" name="smf_add" size="40" value="', !empty($context['smf_search_term']) ? $context['smf_search_term'] : '', '" class="input_text" />
 				', $context['browser']['is_ie'] ? '<input type="text" name="ie_fix" style="display: none;" /> ' : '', '
-				<input type="submit" name="smf_add_sub" value="', $txt['search'], '" />
+				<input type="submit" name="smf_add_sub" value="', $txt['search'], '" class="button_submit" />
 			</td>
 		</tr>';
 
@@ -1603,7 +1603,7 @@ function template_download_language()
 				', $file['exists'] ? ($file['exists'] == 'same' ? $txt['languages_download_exists_same'] : $txt['languages_download_exists_different']) : $txt['no'], '
 			</td>
 			<td>
-				<input type="checkbox" name="copy_file[]" value="', $file['generaldest'], '"', ($file['default_copy'] ? ' checked="checked"' : ''), ' class="check" />
+				<input type="checkbox" name="copy_file[]" value="', $file['generaldest'], '"', ($file['default_copy'] ? ' checked="checked"' : ''), ' class="input_check" />
 			</td>
 		</tr>';
 		}
@@ -1633,23 +1633,23 @@ function template_download_language()
 					<tr>
 						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
 						<td style="padding-bottom: 1ex;">
-							<div class="floatright" style="margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($context['package_ftp']['port']) ? $context['package_ftp']['port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'), '" /></div>
-							<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($context['package_ftp']['server']) ? $context['package_ftp']['server'] : (isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost'), '" style="width: 70%;" />
+							<div class="floatright" style="margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($context['package_ftp']['port']) ? $context['package_ftp']['port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'), '" class="input_text" /></div>
+							<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($context['package_ftp']['server']) ? $context['package_ftp']['server'] : (isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost'), '" style="width: 70%;"  class="input_text" />
 						</td>
 					</tr><tr>
 						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_username">', $txt['package_ftp_username'], ':</label></td>
 						<td style="padding-bottom: 1ex;">
-							<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($context['package_ftp']['username']) ? $context['package_ftp']['username'] : (isset($modSettings['package_username']) ? $modSettings['package_username'] : ''), '" style="width: 99%;" />
+							<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($context['package_ftp']['username']) ? $context['package_ftp']['username'] : (isset($modSettings['package_username']) ? $modSettings['package_username'] : ''), '" style="width: 99%;" class="input_text" />
 						</td>
 					</tr><tr>
 						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_password">', $txt['package_ftp_password'], ':</label></td>
 						<td style="padding-bottom: 1ex;">
-							<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
+							<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" class="input_password" />
 						</td>
 					</tr><tr>
 						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_path">', $txt['package_ftp_path'], ':</label></td>
 						<td style="padding-bottom: 1ex;">
-							<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" />
+							<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" class="input_text" />
 						</td>
 					</tr>
 				</table><br />
@@ -1658,7 +1658,7 @@ function template_download_language()
 
 	// Install?
 	echo '
-	<div class="righttext" style="margin: 1ex;"><input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" /></div>
+	<div class="righttext" style="margin: 1ex;"><input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" class="button_submit" /></div>
 	</form>';
 
 	// The javascript for expand and collapse of sections.
@@ -1729,7 +1729,7 @@ function template_modify_language_entries()
 				<strong>', $txt['languages_character_set'], ':</strong>
 			</td>
 			<td>
-				<input type="text" name="character_set" size="20" value="', $context['primary_settings']['character_set'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
+				<input type="text" name="character_set" size="20" value="', $context['primary_settings']['character_set'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' class="input_text" />
 			</td>
 		</tr>
 		<tr class="windowbg">
@@ -1737,7 +1737,7 @@ function template_modify_language_entries()
 				<strong>', $txt['languages_locale'], ':</strong>
 			</td>
 			<td>
-				<input type="text" name="locale" size="20" value="', $context['primary_settings']['locale'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
+				<input type="text" name="locale" size="20" value="', $context['primary_settings']['locale'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' class="input_text" />
 			</td>
 		</tr>
 		<tr class="windowbg">
@@ -1745,7 +1745,7 @@ function template_modify_language_entries()
 				<strong>', $txt['languages_dictionary'], ':</strong>
 			</td>
 			<td>
-				<input type="text" name="dictionary" size="20" value="', $context['primary_settings']['dictionary'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
+				<input type="text" name="dictionary" size="20" value="', $context['primary_settings']['dictionary'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' class="input_text" />
 			</td>
 		</tr>
 		<tr class="windowbg">
@@ -1753,7 +1753,7 @@ function template_modify_language_entries()
 				<strong>', $txt['languages_spelling'], ':</strong>
 			</td>
 			<td>
-				<input type="text" name="spelling" size="20" value="', $context['primary_settings']['spelling'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
+				<input type="text" name="spelling" size="20" value="', $context['primary_settings']['spelling'], '"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' class="input_text" />
 			</td>
 		</tr>
 		<tr class="windowbg">
@@ -1761,17 +1761,17 @@ function template_modify_language_entries()
 				<strong>', $txt['languages_rtl'], ':</strong>
 			</td>
 			<td>
-				<input type="checkbox" name="rtl"', $context['primary_settings']['rtl'] ? ' checked="checked"' : '', ' class="check"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
+				<input type="checkbox" name="rtl"', $context['primary_settings']['rtl'] ? ' checked="checked"' : '', ' class="input_check"', (empty($context['file_entries']) ? '' : ' disabled="disabled"'), ' />
 			</td>
 		</tr>
 		<tr class="titlebg">
 			<td colspan="2" align="right">
-				<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' />';
+				<input type="submit" name="save_main" value="', $txt['save'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' class="button_submit" />';
 
 	// English can't be deleted.
 	if ($context['lang_id'] != 'english')
 		echo '
-				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" />';
+				<input type="submit" name="delete_main" value="', $txt['delete'], '"', $context['lang_file_not_writable_message'] || !empty($context['file_entries']) ? ' disabled="disabled"' : '', ' onclick="confirm(\'', $txt['languages_delete_confirm'], '\');" class="button_submit" />';
 
 	echo '
 			</td>
@@ -1803,7 +1803,7 @@ function template_modify_language_entries()
 
 	echo '
 				</select>
-				<input type="submit" value="', $txt['go'], '" />
+				<input type="submit" value="', $txt['go'], '" class="button_submit" />
 			</td>
 		</tr>';
 
@@ -1871,7 +1871,7 @@ function template_modify_language_entries()
 	echo '
 		<tr class="titlebg">
 			<td colspan="2" align="right">
-				<input type="submit" name="save_entries" value="', $txt['save'], '"', !empty($context['entries_not_writable_message']) ? ' disabled="disabled"' : '', ' />
+				<input type="submit" name="save_entries" value="', $txt['save'], '"', !empty($context['entries_not_writable_message']) ? ' disabled="disabled"' : '', ' class="button_submit" />
 			</td>
 		</tr>
 	</table>
@@ -1897,10 +1897,10 @@ function template_callback_question_answer_list()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2">
-				<input type="text" name="question[', $data['id'], ']" value="', $data['question'], '" size="40" style="width: 98%" />
+				<input type="text" name="question[', $data['id'], ']" value="', $data['question'], '" size="40" style="width: 98%" class="input_text" />
 			</td>
 			<td>
-				<input type="text" name="answer[', $data['id'], ']" value="', $data['answer'], '" size="40" style="width: 98%" />
+				<input type="text" name="answer[', $data['id'], ']" value="', $data['answer'], '" size="40" style="width: 98%" class="input_text" />
 			</td>
 		</tr>';
 
@@ -1909,10 +1909,10 @@ function template_callback_question_answer_list()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2">
-				<input type="text" name="question[]" size="40" style="width: 98%" />
+				<input type="text" name="question[]" size="40" style="width: 98%" class="input_text" />
 			</td>
 			<td>
-				<input type="text" name="answer[]" size="40" style="width: 98%" />
+				<input type="text" name="answer[]" size="40" style="width: 98%" class="input_text" />
 			</td>
 		</tr>';
 
@@ -1974,6 +1974,7 @@ function template_callback_question_answer_list()
 
 			newInput = createNamedElement("input", "answer[]");
 			newInput.type = "text";
+			newInput.className = "input_text";
 			newInput.style.width = "98%";
 			newCol.appendChild(newInput);
 

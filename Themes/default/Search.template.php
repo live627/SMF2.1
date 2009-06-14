@@ -36,10 +36,10 @@ function template_main()
 					<table border="0" cellpadding="2" cellspacing="0">
 						<tr>
 							<td>
-								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" />
+								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" class="input_text" />
 							</td>
 							<td>
-								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="' . $context['tabindex']++ . '" />', '
+								', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="' . $context['tabindex']++ . '" class="button_submit" />', '
 							</td>
 						</tr>';
 		if (empty($modSettings['search_simple_fulltext']))
@@ -57,7 +57,7 @@ function template_main()
 						<strong>', $txt['search_visual_verification_label'], ':</strong>
 						<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
 						<div class="centertext">
-							<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" />
+							<input type="submit" name="submit" value="' . $txt['search'] . '" tabindex="', $context['tabindex']++, '" class="button_submit" />
 						</div>
 					</div>';
 		}
@@ -77,7 +77,7 @@ function template_main()
 									<strong>', $txt['search_for'], ':</strong>
 								</td>
 								<td>
-									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" />
+									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" tabindex="', $context['tabindex']++, '" class="input_text" />
 									<script type="text/javascript"><!-- // --><![CDATA[
 										function initSearch()
 										{
@@ -112,7 +112,7 @@ function template_main()
 									<strong>', $txt['by_user'], ':</strong>
 								</td>
 								<td>
-									<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" tabindex="', $context['tabindex']++, '" />
+									<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" tabindex="', $context['tabindex']++, '" class="input_text" />
 								</td>
 							</tr>
 							<tr>
@@ -134,14 +134,14 @@ function template_main()
 									<strong>', $txt['search_options'], ':</strong>
 								</td>
 								<td>
-									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_show_complete_messages'], '</label><br />
-									<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_subject_only'], '</label>
+									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="input_check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_show_complete_messages'], '</label><br />
+									<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="input_check" tabindex="', $context['tabindex']++, '" /> ', $txt['search_subject_only'], '</label>
 								</td>
 							</tr>
 						</table>
 					</div>
 					<div style="padding: 1em;" class="centertext">
-						<strong>', $txt['search_post_age'], ': </strong> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" /> ', $txt['days_word'], '.
+						<strong>', $txt['search_post_age'], ': </strong> ', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" class="input_text" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" tabindex="', $context['tabindex']++, '" class="input_text" /> ', $txt['days_word'], '.
 					</div>';
 
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
@@ -168,7 +168,7 @@ function template_main()
 
 				if (!empty($board) && empty($board['child_ids']))
 					echo '
-									<label for="brd', $board['id'], '" style="margin-left: ', $board['child_level'], 'ex;"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="check" tabindex="', $context['tabindex']++, '" />', $board['name'], '</label>';
+									<label for="brd', $board['id'], '" style="margin-left: ', $board['child_level'], 'ex;"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" tabindex="', $context['tabindex']++, '" />', $board['name'], '</label>';
 				elseif (!empty($board))
 					echo '
 									<a href="javascript:void(0);" onclick="selectBoards([', implode(', ', $board['child_ids']), ']); return false;" style="text-decoration: underline;">', $board['name'], '</a>';
@@ -184,7 +184,7 @@ function template_main()
 
 			echo '
 						</table><br />
-						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" tabindex="', $context['tabindex']++, '" /><em> <label for="check_all">', $txt['check_all'], '</label></em><br />
+						<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check" tabindex="', $context['tabindex']++, '" /><em> <label for="check_all">', $txt['check_all'], '</label></em><br />
 					</fieldset> ';
 		}
 
@@ -202,7 +202,7 @@ function template_main()
 					<br />';
 
 		echo '
-					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt['search'], '" tabindex="', $context['tabindex']++, '" /></div>';
+					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt['search'], '" tabindex="', $context['tabindex']++, '" class="button_submit" /></div>';
 	}
 
 	echo '
@@ -258,8 +258,8 @@ function template_results()
 		echo '
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 						<strong>', $txt['search_for'], ':</strong>
-						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
-						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
+						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
+						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" class="button_submit" />
 
 						<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
 						<input type="hidden" name="userspec" value="', !empty($context['search_params']['userspec']) ? $context['search_params']['userspec'] : '', '" />
@@ -308,7 +308,7 @@ function template_results()
 			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 				<td width="24" valign="middle" align="center">
-						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 				</td>';
 			elseif (!empty($options['display_quick_mod']))
 				echo '
@@ -365,7 +365,7 @@ function template_results()
 				<td class="windowbg" valign="middle" align="center" width="4%">';
 				if ($options['display_quick_mod'] == 1)
 						echo '
-					<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';
+					<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
 				else
 				{
 					if ($topic['quick_mod']['remove'])
@@ -427,7 +427,7 @@ function template_results()
 
 			echo '
 					<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
-					<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
+					<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
 				</td>
 			</tr>';
 		}

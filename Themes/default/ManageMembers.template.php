@@ -25,9 +25,9 @@ function template_search_members()
 						<option value="++">&gt;</option>
 					</select>
 				</td>
-				<td align="left"><input type="text" name="mem_id" value="" size="6" /></td>
+				<td align="left"><input type="text" name="mem_id" value="" size="6" class="input_text" /></td>
 				<th align="right">', $txt['username'], ':</th>
-				<td align="left"><input type="text" name="membername" value="" /> </td>
+				<td align="left"><input type="text" name="membername" value="" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">', $txt['age'], ':</th>
 				<td align="center">
@@ -39,9 +39,9 @@ function template_search_members()
 						<option value="++">&gt;</option>
 					</select>
 				</td>
-				<td align="left"><input type="text" name="age" value="" size="6" /></td>
+				<td align="left"><input type="text" name="age" value="" size="6" class="input_text" /></td>
 				<th align="right">', $txt['email_address'], ':</th>
-				<td align="left"><input type="text" name="email" value="" /></td>
+				<td align="left"><input type="text" name="email" value="" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">', $txt['member_postcount'], ':</th>
 				<td align="center">
@@ -53,9 +53,9 @@ function template_search_members()
 						<option value="++">&gt;</option>
 					</select>
 				</td>
-				<td align="left"><input type="text" name="posts" value="" size="6" /></td>
+				<td align="left"><input type="text" name="posts" value="" size="6" class="input_text" /></td>
 				<th align="right">', $txt['website'], ':</th>
-				<td align="left"><input type="text" name="website" value="" /></td>
+				<td align="left"><input type="text" name="website" value="" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">', $txt['date_registered'], ':</th>
 				<td align="center">
@@ -67,9 +67,9 @@ function template_search_members()
 						<option value="++">&gt;</option>
 					</select>
 				</td>
-				<td align="left"><input type="text" name="reg_date" value="" /> <span class="smalltext">', $txt['date_format'], '</span></td>
+				<td align="left"><input type="text" name="reg_date" value="" class="input_text" /> <span class="smalltext">', $txt['date_format'], '</span></td>
 				<th align="right">', $txt['location'], ':</th>
-				<td align="left"><input type="text" name="location" value="" /></td>
+				<td align="left"><input type="text" name="location" value="" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">', $txt['viewmembers_online'], ':</th>
 				<td align="center">
@@ -81,23 +81,23 @@ function template_search_members()
 						<option value="++">&gt;</option>
 					</select>
 				</td>
-				<td align="left"><input type="text" name="last_online" value="" /> <span class="smalltext">', $txt['date_format'], '</span></td>
+				<td align="left"><input type="text" name="last_online" value="" class="input_text" /> <span class="smalltext">', $txt['date_format'], '</span></td>
 				<th align="right">', $txt['ip_address'], ':</th>
-				<td align="left"><input type="text" name="ip" value="" /></td>
+				<td align="left"><input type="text" name="ip" value="" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">', $txt['gender'], ':</th>
 				<td align="left" colspan="2">
-					<label for="gender-0"><input type="checkbox" name="gender[]" value="0" id="gender-0" checked="checked" class="check" /> ', $txt['undefined_gender'], '</label>&nbsp;&nbsp;
-					<label for="gender-1"><input type="checkbox" name="gender[]" value="1" id="gender-1" checked="checked" class="check" /> ', $txt['male'], '</label>&nbsp;&nbsp;
-					<label for="gender-2"><input type="checkbox" name="gender[]" value="2" id="gender-2" checked="checked" class="check" /> ', $txt['female'], '</label>
+					<label for="gender-0"><input type="checkbox" name="gender[]" value="0" id="gender-0" checked="checked" class="input_check" /> ', $txt['undefined_gender'], '</label>&nbsp;&nbsp;
+					<label for="gender-1"><input type="checkbox" name="gender[]" value="1" id="gender-1" checked="checked" class="input_check" /> ', $txt['male'], '</label>&nbsp;&nbsp;
+					<label for="gender-2"><input type="checkbox" name="gender[]" value="2" id="gender-2" checked="checked" class="input_check" /> ', $txt['female'], '</label>
 				</td>
 				<th align="right">', $txt['messenger_address'], ':</th>
-				<td align="left"><input type="text" name="messenger" value="" /></td>
+				<td align="left"><input type="text" name="messenger" value="" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">', $txt['activation_status'], ':</th>
 				<td align="left" colspan="2">
-					<label for="activated-0"><input type="checkbox" name="activated[]" value="1" id="activated-0" checked="checked" class="check" /> ', $txt['activated'], '</label>&nbsp;&nbsp;
-					<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked="checked" class="check" /> ', $txt['not_activated'], '</label>
+					<label for="activated-0"><input type="checkbox" name="activated[]" value="1" id="activated-0" checked="checked" class="input_check" /> ', $txt['activated'], '</label>&nbsp;&nbsp;
+					<label for="activated-1"><input type="checkbox" name="activated[]" value="0" id="activated-1" checked="checked" class="input_check" /> ', $txt['not_activated'], '</label>
 				</td>
 			</tr>
 		</table></div>
@@ -120,18 +120,18 @@ function template_search_members()
 						<tr class="windowbg2">
 							<td>', $membergroup['name'], '</td>
 							<td align="center">
-								<input type="checkbox" name="membergroups[1][]" value="', $membergroup['id'], '" checked="checked" class="check" />
+								<input type="checkbox" name="membergroups[1][]" value="', $membergroup['id'], '" checked="checked" class="input_check" />
 							</td>
 							<td align="center">
-								', $membergroup['can_be_additional'] ? '<input type="checkbox" name="membergroups[2][]" value="' . $membergroup['id'] . '" checked="checked" class="check" />' : '', '
+								', $membergroup['can_be_additional'] ? '<input type="checkbox" name="membergroups[2][]" value="' . $membergroup['id'] . '" checked="checked" class="input_check" />' : '', '
 							</td>
 						</tr>';
 
 			echo '
 						<tr class="windowbg2">
 							<td><em>', $txt['check_all'], '</em></td>
-							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[1]\');" checked="checked" class="check" /></td>
-							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[2]\');" checked="checked" class="check" /></td>
+							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[1]\');" checked="checked" class="input_check" /></td>
+							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[2]\');" checked="checked" class="input_check" /></td>
 						</tr>
 					</table>
 				</td>
@@ -147,21 +147,21 @@ function template_search_members()
 						<tr class="windowbg2">
 							<td>', $postgroup['name'], '</td>
 							<td width="40" align="center">
-								<input type="checkbox" name="postgroups[]" value="', $postgroup['id'], '" checked="checked" class="check" />
+								<input type="checkbox" name="postgroups[]" value="', $postgroup['id'], '" checked="checked" class="input_check" />
 							</td>
 						</tr>';
 
 			echo '
 						<tr class="windowbg2">
 							<td><em>', $txt['check_all'], '</em></td>
-							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'postgroups[]\');" checked="checked" class="check" /></td>
+							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'postgroups[]\');" checked="checked" class="input_check" /></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
 
-		<div class="centertext" style="margin: 2ex;"><input type="submit" value="', $txt['search'], '" /></div>
+		<div class="centertext" style="margin: 2ex;"><input type="submit" value="', $txt['search'], '" class="button_submit" /></div>
 	</form>';
 }
 
@@ -207,7 +207,7 @@ function template_admin_browse()
 					', $txt['admin_browse_outstanding_days_1'], ':
 				</td>
 				<td align="left">
-					<input type="text" name="time_passed" value="14" maxlength="4" size="3" /> ', $txt['admin_browse_outstanding_days_2'], '.
+					<input type="text" name="time_passed" value="14" maxlength="4" size="3" class="input_text" /> ', $txt['admin_browse_outstanding_days_2'], '.
 				</td>
 			</tr>
 			<tr class="windowbg2">
@@ -230,7 +230,7 @@ function template_admin_browse()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" colspan="2">
-					<input type="submit" value="', $txt['admin_browse_outstanding_go'], '" />
+					<input type="submit" value="', $txt['admin_browse_outstanding_go'], '" class="button_submit" />
 					<input type="hidden" name="type" value="', $context['browse_type'], '" />
 					<input type="hidden" name="sort" value="', $context['approve_list']['sort']['id'], '" />
 					<input type="hidden" name="start" value="', $context['approve_list']['start'], '" />

@@ -281,8 +281,8 @@ function template_body_above()
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 				<form class="windowbg" id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 					' , $txt['login_or_register'], '<br />
-					<input type="text" name="user" size="10" />
-					<input type="password" name="passwrd" size="10" />
+					<input type="text" name="user" size="10" class="input_text" />
+					<input type="password" name="passwrd" size="10" class="input_password" />
 					<select name="cookielength">
 						<option value="60">', $txt['one_hour'], '</option>
 						<option value="1440">', $txt['one_day'], '</option>
@@ -290,13 +290,13 @@ function template_body_above()
 						<option value="43200">', $txt['one_month'], '</option>
 						<option value="-1" selected="selected">', $txt['forever'], '</option>
 					</select>
-					<input type="submit" value="', $txt['login'], '" /><br />
+					<input type="submit" value="', $txt['login'], '" class="button_submit" /><br />
 					', $txt['quick_login_dec'];
 
 		if (!empty($modSettings['enableOpenID']))
 			echo'
 					<br />
-					<input type="text" name="openid_url" id="openid_url" size="25" class="openid_login" />';
+					<input type="text" name="openid_url" id="openid_url" size="25" class="input_text openid_login" />';
 
 		echo '
 					<input type="hidden" name="hash_passwrd" value="" />
@@ -312,8 +312,8 @@ function template_body_above()
 		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
 			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 				<a href="', $scripturl, '?action=search;advanced" title="', $txt['search_advanced'], '"><img id="advsearch" src="'.$settings['images_url'].'/filter.gif" align="middle" alt="', $txt['search_advanced'], '" /></a>
-				<input type="text" name="search" value="" style="width: 190px;" />&nbsp;
-				<input type="submit" name="submit" value="', $txt['search'], '" style="width: 11ex;" />
+				<input type="text" name="search" value="" style="width: 190px;" class="input_text" />&nbsp;
+				<input type="submit" name="submit" value="', $txt['search'], '" style="width: 11ex;" class="button_submit" />
 				<input type="hidden" name="advanced" value="0" />';
 
 	// Search within current topic?

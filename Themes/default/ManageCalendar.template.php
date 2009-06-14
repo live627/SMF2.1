@@ -42,7 +42,7 @@ function template_edit_holiday()
 			<td colspan="2">', $context['page_title'], '</td>
 		</tr><tr class="windowbg2">
 			<td width="25%" align="right">', $txt['holidays_title_label'], ':</td>
-			<td><input type="text" name="title" value="', $context['holiday']['title'], '" size="60" maxlength="60" /></td>
+			<td><input type="text" name="title" value="', $context['holiday']['title'], '" size="60" maxlength="60" class="input_text" /></td>
 		</tr><tr class="windowbg2">
 			<td align="right">', $txt['calendar_year'], '</td>
 			<td>
@@ -80,11 +80,11 @@ function template_edit_holiday()
 			<td colspan="2" align="center">';
 	if ($context['is_new'])
 		echo '
-				<input type="submit" value="', $txt['holidays_button_add'], '" />';
+				<input type="submit" value="', $txt['holidays_button_add'], '" class="button_submit" />';
 	else
 		echo '
-				<input type="submit" name="edit" value="', $txt['holidays_button_edit'], '" />
-				<input type="submit" name="delete" value="', $txt['holidays_button_remove'], '" />
+				<input type="submit" name="edit" value="', $txt['holidays_button_edit'], '" class="button_submit" />
+				<input type="submit" name="delete" value="', $txt['holidays_button_remove'], '" class="button_submit" />
 				<input type="hidden" name="holiday" value="', $context['holiday']['id'], '" />';
 	echo '
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />

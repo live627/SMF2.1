@@ -140,7 +140,7 @@ function template_unread()
 		if ($showCheckboxes)
 			echo '
 					<td>
-						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 					</td>';
 	}
 	else
@@ -182,7 +182,7 @@ function template_unread()
 			if ($showCheckboxes)
 				echo '
 					<td class="windowbg2" valign="middle" align="center">
-						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />
+						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />
 					</td>';
 
 			echo '
@@ -299,7 +299,7 @@ function template_replies()
 		if ($showCheckboxes)
 			echo '
 					<td>
-						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+						<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 					</td>';
 	}
 	else
@@ -342,7 +342,7 @@ function template_replies()
 		if ($showCheckboxes)
 			echo '
 					<td class="windowbg2" valign="middle" align="center">
-						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />
+						<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />
 					</td>';
 
 		echo '

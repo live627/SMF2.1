@@ -13,13 +13,13 @@ function template_ask()
 				<td>', $txt['split'], '</td>
 			</tr><tr class="windowbg">
 				<td align="center" style="padding-top: 2ex; padding-bottom: 1ex;">
-					<strong><label for="subname">', $txt['subject_new_topic'], '</label>:</strong> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" /><br />
+					<strong><label for="subname">', $txt['subject_new_topic'], '</label>:</strong> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" class="input_text" /><br />
 					<br />
-					<input type="radio" name="step2" value="onlythis" checked="checked" class="check" /> ', $txt['split_this_post'], '<br />
-					<input type="radio" name="step2" value="afterthis" class="check" /> ', $txt['split_after_and_this_post'], '<br />
-					<input type="radio" name="step2" value="selective" class="check" /> ', $txt['select_split_posts'], '<br />
+					<input type="radio" name="step2" value="onlythis" checked="checked" class="input_radio" /> ', $txt['split_this_post'], '<br />
+					<input type="radio" name="step2" value="afterthis" class="input_radio" /> ', $txt['split_after_and_this_post'], '<br />
+					<input type="radio" name="step2" value="selective" class="input_radio" /> ', $txt['select_split_posts'], '<br />
 					<br />
-					<input type="submit" value="', $txt['split'], '" />
+					<input type="submit" value="', $txt['split'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -54,7 +54,7 @@ function template_select()
 		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '"><input type="hidden" name="topic" value="', $context['current_topic'], '" />
 		<table width="100%"><tr><td colspan="2" align="center">
 			<input type="hidden" name="subname" value="', $context['new_subject'], '" />
-			<input type="submit" value="', $txt['split'], '" />
+			<input type="submit" value="', $txt['split'], '" class="button_submit" />
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</td></tr><tr><td valign="top" width="50%">
 			<table id="table_not_selected" border="0" width="98%" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
@@ -244,8 +244,8 @@ function template_merge()
 								<br />
 								<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
 									<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
-									<input type="text" name="topics[]" />
-									<input type="submit" value="', $txt['merge'], '" />
+									<input type="text" name="topics[]" class="input_text" />
+									<input type="submit" value="', $txt['merge'], '" class="button_submit" />
 								</form>
 							</td>
 						</tr><tr>';
@@ -262,7 +262,7 @@ function template_merge()
 			echo '
 										<option value="', $board['id'], '"', $board['id'] == $context['target_board'] ? ' selected="selected"' : '', '>', $board['category'], ' - ', $board['name'], '</option>';
 		echo '
-									</select> <noscript><input type="submit" value="', $txt['go_caps'], '" /></noscript>
+									</select> <noscript><input type="submit" value="', $txt['go_caps'], '" class="button_submit" /></noscript>
 								</form>
 							</td>';
 	}
@@ -326,7 +326,7 @@ function template_merge_extra_options()
 		echo '
 							<tr>
 								<td class="windowbg2" valign="middle">
-									<input type="checkbox" class="check" name="topics[]" value="' . $topic['id'] . '" checked="checked" />
+									<input type="checkbox" class="input_check" name="topics[]" value="' . $topic['id'] . '" checked="checked" />
 								</td>
 								<td class="windowbg2" valign="middle">
 									<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank" class="new_win">' . $topic['subject'] . '</a>
@@ -340,7 +340,7 @@ function template_merge_extra_options()
 									<span class="smalltext">' . $topic['updated']['time'] . '</span>
 								</td>
 								<td class="windowbg2" valign="middle">
-									<input type="checkbox" class="check" name="notifications[]" value="' . $topic['id'] . '" checked="checked" />
+									<input type="checkbox" class="input_check" name="notifications[]" value="' . $topic['id'] . '" checked="checked" />
 								</td>
 							</tr>';
 	echo '
@@ -355,9 +355,9 @@ function template_merge_extra_options()
 							<option value="', $topic['id'], '"' . ($topic['selected'] ? ' selected="selected"' : '') . '>', $topic['subject'], '</option>';
 	echo '
 							<option value="0">', $txt['merge_custom_subject'], ':</option>
-						</select> <input type="text" name="custom_subject" size="60" disabled="disabled" id="customSubject" /><br />
+						</select> <input type="text" name="custom_subject" size="60" disabled="disabled" id="customSubject" class="input_text" /><br />
 						<br />
-						<label for="enforce_subject"><input type="checkbox" class="check" name="enforce_subject" id="enforce_subject" value="1" /> ', $txt['merge_enforce_subject'], '</label>
+						<label for="enforce_subject"><input type="checkbox" class="input_check" name="enforce_subject" id="enforce_subject" value="1" /> ', $txt['merge_enforce_subject'], '</label>
 					</td>
 				</tr>';
 
@@ -372,7 +372,7 @@ function template_merge_extra_options()
 			echo '
 						<tr>
 							<td>
-								<input type="radio" name="board" value="' . $board['id'] . '"' . ($board['selected'] ? ' checked="checked"' : '') . ' class="check" /> ' . $board['name'] . '
+								<input type="radio" name="board" value="' . $board['id'] . '"' . ($board['selected'] ? ' checked="checked"' : '') . ' class="input_radio" /> ' . $board['name'] . '
 							</td>
 						</tr>';
 		echo '
@@ -390,13 +390,13 @@ function template_merge_extra_options()
 			echo '
 						<tr>
 							<td>
-								<input type="radio" name="poll" value="' . $poll['id'] . '"' . ($poll['selected'] ? ' checked="checked"' : '') . ' class="check" /> ' . $poll['question'] . ' (' . $txt['topic'] . ': <a href="' . $scripturl . '?topic=' . $poll['topic']['id'] . '.0" target="_blank" class="new_win">' . $poll['topic']['subject'] . '</a>)
+								<input type="radio" name="poll" value="' . $poll['id'] . '"' . ($poll['selected'] ? ' checked="checked"' : '') . ' class="input_radio" /> ' . $poll['question'] . ' (' . $txt['topic'] . ': <a href="' . $scripturl . '?topic=' . $poll['topic']['id'] . '.0" target="_blank" class="new_win">' . $poll['topic']['subject'] . '</a>)
 							</td>
 						</tr>';
 		echo '
 						<tr>
 							<td>
-								<input type="radio" name="poll" value="-1" class="check" /> (' . $txt['merge_no_poll'] . ')
+								<input type="radio" name="poll" value="-1" class="input_radio" /> (' . $txt['merge_no_poll'] . ')
 							</td>
 						</tr>
 					</table></td>
@@ -405,7 +405,7 @@ function template_merge_extra_options()
 	echo '
 				<tr>
 					<td class="windowbg" align="right">
-						<input type="submit" value="' . $txt['merge'] . '" />
+						<input type="submit" value="' . $txt['merge'] . '" class="button_submit" />
 						<input type="hidden" name="sa" value="execute" />
 					</td>
 				</tr>

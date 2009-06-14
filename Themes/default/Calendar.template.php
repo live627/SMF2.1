@@ -41,7 +41,7 @@ function template_main()
 							<option value="', $year, '"', $year == $context['current_year'] ? ' selected="selected"' : '', '>', $year, '</option>';
 	echo '
 						</select>&nbsp;
-						<input type="submit" value="', $txt['view'], '" />
+						<input type="submit" value="', $txt['view'], '" class="button_submit" />
 					</td>
 					<td align="center">';
 	// Show another post button just for symmetry.
@@ -133,7 +133,7 @@ function template_event_post()
 									<strong', isset($context['post_error']['no_event']) ? ' class="error"' : '', '>', $txt['calendar_event_title'], '</strong>
 								</td>
 								<td class="smalltext">
-									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" style="width: 90%;" />
+									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" style="width: 90%;" class="input_text" />
 								</td>
 							</tr><tr>
 								<td></td>
@@ -197,7 +197,7 @@ function template_event_post()
 							<tr>
 								<td align="right"><strong>', $txt['calendar_link_event'], '</strong></td>
 								<td class="smalltext">
-									<input type="checkbox" class="check" name="link_to_board" checked="checked" onclick="toggleLinked(this.form);" />
+									<input type="checkbox" class="input_check" name="link_to_board" checked="checked" onclick="toggleLinked(this.form);" />
 								</td>
 							</tr>
 							<tr>
@@ -223,11 +223,11 @@ function template_event_post()
 	echo '
 							<tr align="center">
 								<td colspan="2">
-									<input type="submit" value="', empty($context['event']['new']) ? $txt['save'] : $txt['post'], '" />';
+									<input type="submit" value="', empty($context['event']['new']) ? $txt['save'] : $txt['post'], '" class="button_submit" />';
 	// Delete button?
 	if (empty($context['event']['new']))
 		echo '
-									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" />';
+									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" class="button_submit" />';
 
 	echo '
 									<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />

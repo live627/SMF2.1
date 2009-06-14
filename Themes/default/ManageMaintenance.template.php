@@ -22,7 +22,7 @@ function template_maintain_database()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=optimize" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['maintain_optimize_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -33,10 +33,10 @@ function template_maintain_database()
 		<tr class="windowbg">
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=backup" method="post" accept-charset="', $context['character_set'], '">
-					<p><label for="struct"><input type="checkbox" name="struct" id="struct" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" class="check" checked="checked" /> ', $txt['maintain_backup_struct'], '</label><br />
-					<label for="data"><input type="checkbox" name="data" id="data" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" checked="checked" class="check" /> ', $txt['maintain_backup_data'], '</label><br />
-					<label for="compress"><input type="checkbox" name="compress" id="compress" value="gzip" checked="checked" class="check" /> ', $txt['maintain_backup_gz'], '</label></p>
-					<p><input type="submit" value="', $txt['maintain_backup_save'], '" id="submitDump" onclick="return document.getElementById(\'struct\').checked || document.getElementById(\'data\').checked;" /></p>
+					<p><label for="struct"><input type="checkbox" name="struct" id="struct" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" class="input_check" checked="checked" /> ', $txt['maintain_backup_struct'], '</label><br />
+					<label for="data"><input type="checkbox" name="data" id="data" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" checked="checked" class="input_check" /> ', $txt['maintain_backup_data'], '</label><br />
+					<label for="compress"><input type="checkbox" name="compress" id="compress" value="gzip" checked="checked" class="input_check" /> ', $txt['maintain_backup_gz'], '</label></p>
+					<p><input type="submit" value="', $txt['maintain_backup_save'], '" id="submitDump" onclick="return document.getElementById(\'struct\').checked || document.getElementById(\'data\').checked;" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -53,7 +53,7 @@ function template_maintain_database()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertutf8" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['utf8_introduction'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -71,7 +71,7 @@ function template_maintain_database()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertentities" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['entity_convert_introduction'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -104,7 +104,7 @@ function template_maintain_routine()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=routine;activity=version" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['maintain_version_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -116,7 +116,7 @@ function template_maintain_routine()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=repairboards" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['maintain_errors_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -128,7 +128,7 @@ function template_maintain_routine()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=routine;activity=recount" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['maintain_recount_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -140,7 +140,7 @@ function template_maintain_routine()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=routine;activity=logs" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['maintain_logs_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -152,7 +152,7 @@ function template_maintain_routine()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=routine;activity=cleancache" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['maintain_cache_info'], '</p>
-					<p><input type="submit" value="', $txt['maintain_run_now'], '" /></p>
+					<p><input type="submit" value="', $txt['maintain_run_now'], '" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -232,14 +232,14 @@ function template_maintain_members()
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=members;activity=reattribute" method="post" accept-charset="', $context['character_set'], '">
 					<p>', $txt['reattribute_guest_posts'], ':<br />
-					<label for="type_email"><input type="radio" name="type" id="type_email" value="email" checked="checked" class="check" />', $txt['reattribute_email'], '</label>
-					<input type="text" name="from_email" id="from_email" value="" onclick="document.getElementById(\'type_email\').checked = \'checked\'; document.getElementById(\'from_name\').value = \'\';" /><br />
-					<label for="type_name"><input type="radio" name="type" id="type_name" value="name" class="check" />', $txt['reattribute_username'], '</label>
-					<input type="text" name="from_name" id="from_name" value="" onclick="document.getElementById(\'type_name\').checked = \'checked\'; document.getElementById(\'from_email\').value = \'\';" /></p>
-					<p>', $txt['reattribute_current_member'], ': <input type="text" name="to" id="to" value="" /></p>
-					<p><input type="checkbox" name="posts" id="posts" checked="checked" class="check" />
+					<label for="type_email"><input type="radio" name="type" id="type_email" value="email" checked="checked" class="input_radio" />', $txt['reattribute_email'], '</label>
+					<input type="text" name="from_email" id="from_email" value="" onclick="document.getElementById(\'type_email\').checked = \'checked\'; document.getElementById(\'from_name\').value = \'\';" class="input_text" /><br />
+					<label for="type_name"><input type="radio" name="type" id="type_name" value="name" class="input_radio" />', $txt['reattribute_username'], '</label>
+					<input type="text" name="from_name" id="from_name" value="" onclick="document.getElementById(\'type_name\').checked = \'checked\'; document.getElementById(\'from_email\').value = \'\';" class="input_text" /></p>
+					<p>', $txt['reattribute_current_member'], ': <input type="text" name="to" id="to" value="" class="input_text" /></p>
+					<p><input type="checkbox" name="posts" id="posts" checked="checked" class="input_check" />
 					<label for="posts">', $txt['reattribute_increase_posts'], '</label></p>
-					<p><input type="submit" id="do_attribute" value="', $txt['reattribute'], '" onclick="if (!checkAttributeValidity()) return false; return confirm(warningMessage);" /></p>
+					<p><input type="submit" id="do_attribute" value="', $txt['reattribute'], '" onclick="if (!checkAttributeValidity()) return false; return confirm(warningMessage);" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -254,7 +254,7 @@ function template_maintain_members()
 					<select name="del_type">
 						<option value="activated" selected="selected">', $txt['maintain_members_activated'], '</option>
 						<option value="logged">', $txt['maintain_members_logged_in'], '</option>
-					</select> ', $txt['maintain_members_since2'], ' <input type="text" name="maxdays" value="30" size="3" />', $txt['maintain_members_since3'], '</p>';
+					</select> ', $txt['maintain_members_since2'], ' <input type="text" name="maxdays" value="30" size="3" class="input_text" />', $txt['maintain_members_since3'], '</p>';
 
 	echo '
 					<p><a href="#membersLink" onclick="swapMembers();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="membersIcon" /></a> <a href="#membersLink" onclick="swapMembers();" id="membersText" style="font-weight: bold;">', $txt['maintain_members_all'], '</a></p>
@@ -262,11 +262,11 @@ function template_maintain_members()
 
 	foreach ($context['membergroups'] as $group)
 		echo '
-						<label for="groups', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label><br />';
+						<label for="groups', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label><br />';
 
 	echo '
 					</div>
-					<p><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_members_confirm'], '\');" /></p>
+					<p><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_members_confirm'], '\');" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -331,17 +331,17 @@ function template_maintain_topics()
 
 	// The otherwise hidden "choose which boards to prune".
 	echo '
-					<a id="rotLink"></a>', $txt['maintain_old_since_days1'], '<input type="text" name="maxdays" value="30" size="3" />', $txt['maintain_old_since_days2'], '<br />
+					<a id="rotLink"></a>', $txt['maintain_old_since_days1'], '<input type="text" name="maxdays" value="30" size="3" class="input_text" />', $txt['maintain_old_since_days2'], '<br />
 					<div style="padding-left: 3ex;">
-						<label for="delete_type_nothing"><input type="radio" name="delete_type" id="delete_type_nothing" value="nothing" class="check" checked="checked" /> ', $txt['maintain_old_nothing_else'], '</label><br />
-						<label for="delete_type_moved"><input type="radio" name="delete_type" id="delete_type_moved" value="moved" class="check" /> ', $txt['maintain_old_are_moved'], '</label><br />
-						<label for="delete_type_locked"><input type="radio" name="delete_type" id="delete_type_locked" value="locked" class="check" /> ', $txt['maintain_old_are_locked'], '</label><br />
+						<label for="delete_type_nothing"><input type="radio" name="delete_type" id="delete_type_nothing" value="nothing" class="input_radio" checked="checked" /> ', $txt['maintain_old_nothing_else'], '</label><br />
+						<label for="delete_type_moved"><input type="radio" name="delete_type" id="delete_type_moved" value="moved" class="input_radio" /> ', $txt['maintain_old_are_moved'], '</label><br />
+						<label for="delete_type_locked"><input type="radio" name="delete_type" id="delete_type_locked" value="locked" class="input_radio" /> ', $txt['maintain_old_are_locked'], '</label><br />
 					</div>';
 
 	if (!empty($modSettings['enableStickyTopics']))
 		echo '
 					<div style="padding-left: 3ex; padding-top: 1ex;">
-						<label for="delete_old_not_sticky"><input type="checkbox" name="delete_old_not_sticky" id="delete_old_not_sticky" class="check" checked="checked" /> ', $txt['maintain_old_are_not_stickied'], '</label><br />
+						<label for="delete_old_not_sticky"><input type="checkbox" name="delete_old_not_sticky" id="delete_old_not_sticky" class="input_check" checked="checked" /> ', $txt['maintain_old_are_not_stickied'], '</label><br />
 					</div>';
 
 	echo '
@@ -364,7 +364,7 @@ function template_maintain_topics()
 		// Display a checkbox with every board.
 		foreach ($category['boards'] as $board)
 			echo '
-									<label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
+									<label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="input_check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
 		echo '
 									<br />';
 
@@ -380,7 +380,7 @@ function template_maintain_topics()
 							</tr>
 						</table>
 					</div>
-					<p><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_old_confirm'], '\');" /></p>
+					<p><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_old_confirm'], '\');" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -428,7 +428,7 @@ function template_maintain_topics()
 	}
 	echo '
 					</select></p>
-					<p><input type="submit" value="', $txt['move_topics_now'], '" onclick="if (document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_from\').selectedIndex].disabled || document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_to\').selectedIndex].disabled) return false; var confirmText = \'', $txt['move_topics_confirm'] . '\'; return confirm(confirmText.replace(/%board_from%/, document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_from\').selectedIndex].text.replace(/^=+&gt;&nbsp;/, \'\')).replace(/%board_to%/, document.getElementById(\'id_board_to\').options[document.getElementById(\'id_board_to\').selectedIndex].text.replace(/^=+&gt;&nbsp;/, \'\')));" /></p>
+					<p><input type="submit" value="', $txt['move_topics_now'], '" onclick="if (document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_from\').selectedIndex].disabled || document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_to\').selectedIndex].disabled) return false; var confirmText = \'', $txt['move_topics_confirm'] . '\'; return confirm(confirmText.replace(/%board_from%/, document.getElementById(\'id_board_from\').options[document.getElementById(\'id_board_from\').selectedIndex].text.replace(/^=+&gt;&nbsp;/, \'\')).replace(/%board_to%/, document.getElementById(\'id_board_to\').options[document.getElementById(\'id_board_to\').selectedIndex].text.replace(/^=+&gt;&nbsp;/, \'\')));" class="button_submit" /></p>
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
@@ -504,7 +504,7 @@ function template_convert_utf8()
 							<td>', $txt['utf8_utf8'], '</td>
 						</tr><tr>
 							<td colspan="2" align="right"><br />
-								<input type="submit" value="', $txt['utf8_proceed'], '" />
+								<input type="submit" value="', $txt['utf8_proceed'], '" class="button_submit" />
 							</td>
 						</tr></table>
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -531,7 +531,7 @@ function template_convert_entities()
 			<tr>
 				<td class="windowbg2" align="center">
 					<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=convertentities;start=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-						<input type="submit" value="', $txt['entity_convert_proceed'], '" />
+						<input type="submit" value="', $txt['entity_convert_proceed'], '" class="button_submit" />
 					</form>
 				</td>
 			</tr>

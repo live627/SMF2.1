@@ -83,7 +83,7 @@ function template_main()
 	echo '
 					</select>
 					<noscript>
-						<input type="submit" value="', $txt['go'], '" />
+						<input type="submit" value="', $txt['go'], '" class="button_submit" />
 					</noscript>
 				</div>
 			</td>

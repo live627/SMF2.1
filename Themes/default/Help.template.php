@@ -77,7 +77,7 @@ function template_find_members()
 				<tr class="windowbg">
 					<td align="left" colspan="2">
 						<strong>', $txt['find_username'], ':</strong><br />
-						<input type="text" name="search" id="search" value="', isset($context['last_search']) ? $context['last_search'] : '', '" style="margin-top: 4px; width: 96%;" /><br />
+						<input type="text" name="search" id="search" value="', isset($context['last_search']) ? $context['last_search'] : '', '" style="margin-top: 4px; width: 96%;" class="input_text" /><br />
 					</td>
 				</tr>
 				<tr class="windowbg" valign="top">';
@@ -86,7 +86,7 @@ function template_find_members()
 	if (!empty($context['show_buddies']))
 		echo '
 					<td align="left">
-						<span class="smalltext"><label for="buddies"><input type="checkbox" class="check" name="buddies" id="buddies"', !empty($context['buddy_search']) ? ' checked="checked"' : '', ' /> ', $txt['find_buddies'], '</label></span>
+						<span class="smalltext"><label for="buddies"><input type="checkbox" class="input_check" name="buddies" id="buddies"', !empty($context['buddy_search']) ? ' checked="checked"' : '', ' /> ', $txt['find_buddies'], '</label></span>
 					</td>
 					<td align="right">';
 	else
@@ -99,8 +99,8 @@ function template_find_members()
 				</tr>
 				<tr class="windowbg">
 					<td align="right" colspan="2">
-						<input type="submit" value="', $txt['search'], '" />
-						<input type="button" value="', $txt['find_close'], '" onclick="window.close();" />
+						<input type="submit" value="', $txt['search'], '" class="button_submit" />
+						<input type="button" value="', $txt['find_close'], '" onclick="window.close();" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -467,7 +467,7 @@ function template_manual_message_view()
 								<option value="#message">
 									=&gt; ', $txt['manual_index_another_board'], '
 								</option>
-							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
+							</select>&nbsp; <input type="button" onclick="if (this.form.jumpto.options[this.form.jumpto.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jumpto.options[this.form.jumpto.selectedIndex].value;" value="', $txt['manual_index_go'], '" class="button_submit" />
 						</form>
 					</td>
 				</tr>
@@ -652,7 +652,7 @@ function template_manual_topic_view()
 						<option value="#message">
 							=&gt; ', $txt['manual_index_another_board'], '
 						</option>
-					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" />
+					</select>&nbsp; <input type="button" onclick="if (this.form.jump2.options[this.form.jump2.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl) + \'action=help;area=topic_view\' + this.form.jump2.options[this.form.jump2.selectedIndex].value;" value="', $txt['manual_index_go'], '" class="button_submit" />
 				</form>
 			</div><br />
 			<br clear="all" />
@@ -706,22 +706,22 @@ function template_manual_logging_in()
 			</tr>
 			<tr class="windowbg">
 				<td width="50%" align="right"><strong>', $txt['manual_loginout_username'], ':</strong></td>
-				<td><input type="text" size="20" value="" /></td>
+				<td><input type="text" size="20" value="" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg">
 				<td align="right"><strong>', $txt['manual_loginout_password'], ':</strong></td>
-				<td><input type="password" value="" size="20" /></td>
+				<td><input type="password" value="" size="20" class="input_password" /></td>
 			</tr>
 			<tr class="windowbg">
 				<td align="right"><strong>', $txt['manual_loginout_how_long'], ':</strong></td>
-				<td><input name="cookielength" type="text" size="4" maxlength="4" value="60" /></td>
+				<td><input name="cookielength" type="text" size="4" maxlength="4" value="60" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg">
 				<td align="right"><strong>', $txt['manual_loginout_always'], ':</strong></td>
-				<td><input type="checkbox" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
+				<td><input type="checkbox" class="input_check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 			</tr>
 			<tr class="windowbg">
-				<td align="center" colspan="2"><input type="button" style="margin-top: 2ex;" value="Login" /></td>
+				<td align="center" colspan="2"><input type="button" style="margin-top: 2ex;" value="Login" class="button_submit" /></td>
 			</tr>
 			<tr class="windowbg">
 				<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=help;area=password_reminders" style="font-size: x-small;" class="board">', $txt['manual_loginout_forgot'], '?</a><br />
@@ -739,7 +739,7 @@ function template_manual_logging_in()
 					<tr>
 						<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;">
 							<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0; text-align:right;">
-								<input type="text" size="10" /> <input type="password" size="10" /> <select>
+								<input type="text" size="10" class="input_text" /> <input type="password" size="10" class="input_password" /> <select>
 									<option>
 										', $txt['manual_loginout_hour'], '
 									</option>
@@ -755,7 +755,7 @@ function template_manual_logging_in()
 									<option selected="selected">
 										', $txt['manual_loginout_forever'], '
 									</option>
-								</select> <input type="button" value="Login" /><br />
+								</select> <input type="button" value="Login" class="button_submit" /><br />
 								', $txt['manual_loginout_login_all'], '
 							</form>
 						</td>
@@ -785,13 +785,13 @@ function template_manual_password_reminders()
 			</tr>
 			<tr class="windowbg2">
 				<td width="40%">', $txt['manual_loginout_username_email'], ':</td>
-				<td><input type="text" name="user" size="30" /></td>
+				<td><input type="text" name="user" size="30" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
-				<td colspan="2" align="center"><label for="secret"><input type="checkbox" name="sa" value="secret" id="secret" class="check" /> ', $txt['manual_loginout_ask_q'], '.</label></td>
+				<td colspan="2" align="center"><label for="secret"><input type="checkbox" name="sa" value="secret" id="secret" class="input_check" /> ', $txt['manual_loginout_ask_q'], '.</label></td>
 			</tr>
 			<tr class="windowbg2">
-				<td colspan="2" align="center"><input type="button" value="', $txt['manual_loginout_send'], '" /></td>
+				<td colspan="2" align="center"><input type="button" value="', $txt['manual_loginout_send'], '" class="button_submit" /></td>
 			</tr>
 		</table>
 	</form>
@@ -876,14 +876,14 @@ function template_manual_sending_pms()
 										<td style="width: 32ex;"><a href="javascript:sortLastPM();">', $txt['manual_pm_date'], '&nbsp; <img id="sort-arrow" src="', $settings['images_url'], '/sort_up.gif" alt="" border="0" name="sort-arrow" /></a></td>
 										<td width="46%"><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_subject2'], '</a></td>
 										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface">', $txt['manual_pm_from'], '</a></td>
-										<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
+										<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
 									</tr>
 									<tr class="windowbg">
 										<td align="center" width="2%"><img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="" /></td>
 										<td>', $txt['manual_pm_date_and_time'], '</td>
 										<td><a href="', $scripturl, '?action=help;area=sending_pms#interface" class="board">', $txt['manual_pm_subject'], '</a></td>
 										<td>', $txt['manual_pm_another_member'], '</td>
-										<td align="center"><input type="checkbox" class="check" /></td>
+										<td align="center"><input type="checkbox" class="input_check" /></td>
 									</tr>
 									<tr>
 										<td class="windowbg" style="padding: 2px;" align="right" colspan="6"></td>
@@ -891,7 +891,7 @@ function template_manual_sending_pms()
 									<tr>
 										<td colspan="6" class="catbg" height="25">
 											<div class="floatleft"><strong>', $txt['manual_pm_pages'], ':</strong> [<strong>1</strong>]</div>
-											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" /></div>
+											<div class="floatright">&nbsp;<input type="button" value="', $txt['manual_pm_delete_selected'], '" class="button_submit" /></div>
 										</td>
 									</tr>
 								</table>
@@ -1187,7 +1187,7 @@ function template_manual_modifying_profiles()
 														', $txt['manual_profile_date_option_5'], '
 													</option>
 												</select><br />
-												<input type="text" value="" size="30" /></td>
+												<input type="text" value="" size="30" class="input_text" /></td>
 											</tr>
 											<tr>
 												<td width="40%">
@@ -1196,7 +1196,7 @@ function template_manual_modifying_profiles()
 														', $txt['manual_profile_offset_hours'], '
 													</div>
 												</td>
-												<td class="smalltext"><input type="text" size="5" maxlength="5" value="0" /><br />
+												<td class="smalltext"><input type="text" size="5" maxlength="5" value="0" class="input_text" /><br />
 												<em>(', $txt['manual_profile_forum_time'], ')</em></td>
 											</tr>
 											<tr>
@@ -1209,31 +1209,31 @@ function template_manual_modifying_profiles()
 													<br />
 													<table width="100%" cellspacing="0" cellpadding="3">
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_board_descriptions'], '</td>
 														</tr>
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_show_child'], '</td>
 														</tr>
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_no_ava'], '</td>
 														</tr>
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_no_sig'], '</td>
 														</tr>
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_return_to_topic'], '</td>
 														</tr>
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_recent_posts'], '</td>
 														</tr>
 														<tr>
-															<td width="28"><input type="checkbox" class="check" /></td>
+															<td width="28"><input type="checkbox" class="input_check" /></td>
 															<td>', $txt['manual_profile_recent_pms'], '</td>
 														</tr>
 														<tr>
@@ -1282,7 +1282,7 @@ function template_manual_modifying_profiles()
 												</td>
 											</tr>
 											<tr>
-												<td align="right" colspan="2"><input type="button" value="', $txt['manual_profile_change_profile'], '" /></td>
+												<td align="right" colspan="2"><input type="button" value="', $txt['manual_profile_change_profile'], '" class="button_submit" /></td>
 											</tr>
 										</table><br />
 									</td>
@@ -1426,7 +1426,7 @@ function template_manual_posting_topics()
 								</tr>
 								<tr>
 									<td align="right"><strong>', $txt['manual_posting_subject'], ':</strong></td>
-									<td><input type="text" name="subject" size="80" maxlength="80" tabindex="1" /></td>
+									<td><input type="text" name="subject" size="80" maxlength="80" tabindex="1" class="input_text" /></td>
 								</tr>
 								<tr>
 									<td valign="top" align="right"></td>
@@ -1440,7 +1440,7 @@ function template_manual_posting_topics()
 								<tr>
 									<td align="center" colspan="2"><span class="smalltext"><br />
 									', $txt['manual_posting_shortcuts'], '</span><br />
-									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" /></td>
+									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
 								</tr>
 							</table>
 						</td>
@@ -1675,13 +1675,13 @@ function template_manual_posting_topics()
 										<div id="postMoreOptions">
 											<table width="80%" cellpadding="0" cellspacing="0" border="0">
 												<tr>
-													<td class="smalltext"><input type="checkbox" class="check" />&nbsp;', $txt['manual_posting_notify'], '</td>
+													<td class="smalltext"><input type="checkbox" class="input_check" />&nbsp;', $txt['manual_posting_notify'], '</td>
 												</tr>
 												<tr>
-													<td class="smalltext"><input type="checkbox" class="check" />&nbsp;', $txt['manual_posting_return'], '</td>
+													<td class="smalltext"><input type="checkbox" class="input_check" />&nbsp;', $txt['manual_posting_return'], '</td>
 												</tr>
 												<tr>
-													<td class="smalltext"><input type="checkbox" class="check" />&nbsp;', $txt['manual_posting_no_smiley'], '</td>
+													<td class="smalltext"><input type="checkbox" class="input_check" />&nbsp;', $txt['manual_posting_no_smiley'], '</td>
 												</tr>
 											</table>
 										</div>
@@ -1689,8 +1689,8 @@ function template_manual_posting_topics()
 								</tr>
 								<tr id="post', $txt['manual_posting_attach'], 'ment2">
 									<td align="right" valign="top"><strong>', $txt['manual_posting_attach'], ':</strong></td>
-									<td class="smalltext"><input type="file" size="48" name="attachment[]" /><br />
-									<input type="file" size="48" name="attachment[]" /><br />
+									<td class="smalltext"><input type="file" size="48" name="attachment[]" class="input_file" /><br />
+									<input type="file" size="48" name="attachment[]" class="input_file" /><br />
 									', $txt['manual_posting_allowed_types'], '<br />
 									', $txt['manual_posting_max_size'], '</td>
 								</tr>
@@ -1702,7 +1702,7 @@ function template_manual_posting_topics()
 //]]>
 </script> <span class="smalltext"><br />
 										', $txt['manual_posting_shortcuts'], '</span><br />
-										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" />
+										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" />
 									</td>
 								</tr>
 							</table>
@@ -2193,7 +2193,7 @@ function template_manual_registration_screen()
 											', $txt['manual_registering_caption_username'], '
 										</div>
 									</td>
-									<td><input type="text" size="20" maxlength="18" /></td>
+									<td><input type="text" size="20" maxlength="18" class="input_text" /></td>
 								</tr>
 								<tr>
 									<td width="40%">
@@ -2202,15 +2202,15 @@ function template_manual_registration_screen()
 											', $txt['manual_registering_caption_email'], '
 										</div>
 									</td>
-									<td><input type="text" size="30" /> <input type="checkbox" class="check" /> <label>', $txt['manual_registering_hide_email'], '</label></td>
+									<td><input type="text" size="30" class="input_text" /> <input type="checkbox" class="input_check" /> <label>', $txt['manual_registering_hide_email'], '</label></td>
 								</tr>
 								<tr>
 									<td width="40%"><strong>', $txt['manual_registering_choose_pass'], ':</strong></td>
-									<td><input type="password" size="30" /></td>
+									<td><input type="password" size="30" class="input_password" /></td>
 								</tr>
 								<tr>
 									<td width="40%"><strong>', $txt['manual_registering_verify_pass'], ':</strong></td>
-									<td><input type="password" size="30" /></td>
+									<td><input type="password" size="30" class="input_password" /></td>
 								</tr>
 							</table>
 						</td>
@@ -2221,11 +2221,11 @@ function template_manual_registration_screen()
 						<td class="windowbg2" style="padding-top: 8px; padding-bottom: 8px;">', $txt['manual_registering_agreement'], '</td>
 					</tr>
 					<tr>
-						<td align="center" class="windowbg2"><label><input type="checkbox" class="check" /> <strong>', $txt['manual_registering_agree'], '</strong></label></td>
+						<td align="center" class="windowbg2"><label><input type="checkbox" class="input_check" /> <strong>', $txt['manual_registering_agree'], '</strong></label></td>
 					</tr>
 				</table><br />
 				<div class="centertext">
-					<input type="button" value="', $txt['manual_registering_register'], '" />
+					<input type="button" value="', $txt['manual_registering_register'], '" class="button_submit" />
 				</div>
 			</form>
 		</div>
@@ -2293,7 +2293,7 @@ function template_manual_searching()
 									<td><strong>', $txt['manual_searching_by_user'], ':</strong></td>
 								</tr>
 								<tr>
-									<td><input type="text" size="40" /></td>
+									<td><input type="text" size="40" class="input_text" /></td>
 									<td><select>
 										<option selected="selected">
 											', $txt['manual_searching_match_all'], '
@@ -2302,7 +2302,7 @@ function template_manual_searching()
 											', $txt['manual_searching_match_any'], '
 										</option>
 									</select>&nbsp;&nbsp;&nbsp;</td>
-									<td><input type="text" value="*" size="40" />&nbsp;</td>
+									<td><input type="text" value="*" size="40" class="input_text" />&nbsp;</td>
 								</tr>
 								<tr>
 									<td colspan="3">&nbsp;</td>
@@ -2312,9 +2312,9 @@ function template_manual_searching()
 									<td><strong>', $txt['manual_searching_msg_age'], ':</strong></td>
 								</tr>
 								<tr>
-									<td colspan="2"><input type="checkbox" class="check" /> <label>', $txt['manual_searching_show_results'], '</label><br />
-									<input type="checkbox" class="check" /> <label>', $txt['manual_searching_subject_only'], '</label><br /></td>
-									<td>', $txt['manual_searching_between'], '<input type="text" value="0" size="5" maxlength="5" />', $txt['manual_searching_and'], '<input type="text" value="9999" size="5" maxlength="5" />', $txt['manual_searching_days'], '.</td>
+									<td colspan="2"><input type="checkbox" class="input_check" /> <label>', $txt['manual_searching_show_results'], '</label><br />
+									<input type="checkbox" class="input_check" /> <label>', $txt['manual_searching_subject_only'], '</label><br /></td>
+									<td>', $txt['manual_searching_between'], '<input type="text" value="0" size="5" maxlength="5" class="input_text" />', $txt['manual_searching_and'], '<input type="text" value="9999" size="5" maxlength="5" class="input_text" />', $txt['manual_searching_days'], '.</td>
 								</tr>
 								<tr>
 									<td colspan="3" style="padding-top: 2ex;"><strong>', $txt['manual_searching_search_order'], ':</strong></td>
@@ -2344,17 +2344,17 @@ function template_manual_searching()
 							<table width="80%" border="0" cellpadding="1" cellspacing="0">
 								<tr>
 									<td width="50%"><span style="text-decoration: underline;">', $txt['manual_searching_cat'], '</span></td>
-									<td width="50%"><input type="checkbox" id="brd2" name="brd[2]" value="2" checked="checked" class="check" /> <label for="brd2">', $txt['manual_searching_another_board'], '</label></td>
+									<td width="50%"><input type="checkbox" id="brd2" name="brd[2]" value="2" checked="checked" class="input_check" /> <label for="brd2">', $txt['manual_searching_another_board'], '</label></td>
 								</tr>
 								<tr>
-									<td width="50%"><input type="checkbox" id="brd1" name="brd[1]" value="1" checked="checked" class="check" /> <label for="brd1">', $txt['manual_searching_board_name'], '</label></td>
+									<td width="50%"><input type="checkbox" id="brd1" name="brd[1]" value="1" checked="checked" class="input_check" /> <label for="brd1">', $txt['manual_searching_board_name'], '</label></td>
 								</tr>
 							</table><br />
-							<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="check" /><em><label for="check_all">', $txt['manual_searching_check_all'], '</label></em><br />
+							<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="input_check" /><em><label for="check_all">', $txt['manual_searching_check_all'], '</label></em><br />
 							<br />
 							<table border="0" cellpadding="2" cellspacing="0" align="left">
 								<tr>
-									<td valign="bottom"><input type="button" value="', $txt['manual_searching_search'], '" /></td>
+									<td valign="bottom"><input type="button" value="', $txt['manual_searching_search'], '" class="button_submit" /></td>
 								</tr>
 							</table>
 						</td>

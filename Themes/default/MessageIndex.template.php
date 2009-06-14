@@ -164,7 +164,7 @@ function template_main()
 			if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 							<th class="catbg3 headerpadding" width="24">
-								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 							</th>';
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($context['can_quick_mod']))
@@ -273,7 +273,7 @@ function template_main()
 							<td class="windowbg' , $topic['is_sticky'] ? '3' : '' , ' moderation">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
-								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';
+								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
 				else
 				{
 					// Check permissions on each and show only the ones they are allowed to use.
@@ -337,7 +337,7 @@ function template_main()
 			}
 
 			echo '
-								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return document.forms.quickModForm.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
+								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return document.forms.quickModForm.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
 							</td>
 						</tr>';
 		}
@@ -439,7 +439,7 @@ function template_main()
 	function modify_topic_show_edit(subject)
 	{
 		// Just template the subject.
-		setInnerHTML(cur_subject_div, \'<input type="text" name="subject" value="\' + subject + \'" size="60" style="width: 95%;"  maxlength="80" onkeypress="modify_topic_keypress(event)" /><input type="hidden" name="topic" value="\' + cur_topic_id + \'" /><input type="hidden" name="msg" value="\' + cur_msg_id.substr(4) + \'" />\');
+		setInnerHTML(cur_subject_div, \'<input type="text" name="subject" value="\' + subject + \'" size="60" style="width: 95%;"  maxlength="80" onkeypress="modify_topic_keypress(event)" class="input_text" /><input type="hidden" name="topic" value="\' + cur_topic_id + \'" /><input type="hidden" name="msg" value="\' + cur_msg_id.substr(4) + \'" />\');
 	}
 
 	// And the reverse for hiding it.

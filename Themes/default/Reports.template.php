@@ -26,7 +26,7 @@ function template_report_type()
 		echo '
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" valign="top">
 					<td width="20">
-						<input type="radio" id="rt_', $type['id'], '" name="rt" value="', $type['id'], '"', $type['is_first'] ? ' checked="checked"' : '', ' class="check" />
+						<input type="radio" id="rt_', $type['id'], '" name="rt" value="', $type['id'], '"', $type['is_first'] ? ' checked="checked"' : '', ' class="input_radio" />
 					</td>
 					<td align="left" width="100%">
 						<label for="rt_', $type['id'], '">
@@ -44,7 +44,7 @@ function template_report_type()
 	echo '
 				<tr class="titlebg">
 					<td align="right" colspan="2">
-						<input type="submit" name="continue" value="', $txt['generate_reports_continue'], '" />
+						<input type="submit" name="continue" value="', $txt['generate_reports_continue'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>

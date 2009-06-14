@@ -20,7 +20,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="25" /><span id="pollMoreOptions"></span>\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="25" class="input_text" /><span id="pollMoreOptions"></span>\');
 			}
 
 			function saveEntities()
@@ -60,7 +60,7 @@ function template_main()
 	echo '
 							<tr>
 								<td align="right" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '><strong>' . $txt['poll_question'] . ':</strong></td>
-								<td align="left"><input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" /></td>
+								<td align="left"><input type="text" name="question" size="40" value="' . $context['poll']['question'] . '" class="input_text" /></td>
 							</tr><tr>
 								<td></td>
 								<td>';
@@ -68,7 +68,7 @@ function template_main()
 	foreach ($context['choices'] as $choice)
 	{
 		echo '
-									<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" />';
+									<label for="options-', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' class="error"' : ''), '>', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" size="25" value="', $choice['label'], '" class="input_text" />';
 
 		// Does this option have a vote count yet, or is it new?
 		if ($choice['votes'] != -1)
@@ -87,18 +87,18 @@ function template_main()
 	{
 		echo '
 								<td align="right"><strong>', $txt['poll_options'], ':</strong></td>
-								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
+								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" class="input_text" /> ', $txt['poll_max_votes'], '</td>
 							</tr><tr>
 								<td align="right"></td>
-								<td class="smalltext">', $txt['poll_run'], ' <input type="text" name="poll_expire" size="2" value="', $context['poll']['expiration'], '" onchange="this.form.poll_hide[2].disabled = isEmptyText(this) || this.value == 0; if (this.form.poll_hide[2].checked) this.form.poll_hide[1].checked = true;" maxlength="4" /> ', $txt['poll_run_days'], '</td>
+								<td class="smalltext">', $txt['poll_run'], ' <input type="text" name="poll_expire" size="2" value="', $context['poll']['expiration'], '" onchange="this.form.poll_hide[2].disabled = isEmptyText(this) || this.value == 0; if (this.form.poll_hide[2].checked) this.form.poll_hide[1].checked = true;" maxlength="4" class="input_text" /> ', $txt['poll_run_days'], '</td>
 							</tr><tr>
 								<td align="right"></td>
 								<td class="smalltext">
-									<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_do_change_vote'], '</label>';
+									<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll']['change_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_do_change_vote'], '</label>';
 
 		if ($context['poll']['guest_vote_allowed'])
 			echo '
-									<br /><label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll']['guest_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_guest_vote'], '</label>';
+									<br /><label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll']['guest_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_guest_vote'], '</label>';
 
 		echo '
 								</td>
@@ -111,9 +111,9 @@ function template_main()
 
 	echo '
 								<td class="smalltext">
-									<input type="radio" name="poll_hide" value="0"', $context['poll']['hide_results'] == 0 ? ' checked="checked"' : '', ' class="check" /> ' . $txt['poll_results_anyone'] . '<br />
-									<input type="radio" name="poll_hide" value="1"', $context['poll']['hide_results'] == 1 ? ' checked="checked"' : '', ' class="check" /> ' . $txt['poll_results_voted'] . '<br />
-									<input type="radio" name="poll_hide" value="2"', $context['poll']['hide_results'] == 2 ? ' checked="checked"' : '', empty($context['poll']['expiration']) ? 'disabled="disabled"' : '', ' class="check" /> ' . $txt['poll_results_expire'] . '<br />
+									<input type="radio" name="poll_hide" value="0"', $context['poll']['hide_results'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> ' . $txt['poll_results_anyone'] . '<br />
+									<input type="radio" name="poll_hide" value="1"', $context['poll']['hide_results'] == 1 ? ' checked="checked"' : '', ' class="input_radio" /> ' . $txt['poll_results_voted'] . '<br />
+									<input type="radio" name="poll_hide" value="2"', $context['poll']['hide_results'] == 2 ? ' checked="checked"' : '', empty($context['poll']['expiration']) ? 'disabled="disabled"' : '', ' class="input_radio" /> ' . $txt['poll_results_expire'] . '<br />
 									<br />
 								</td>';
 	// If this is an edit, we can allow them to reset the vote counts.
@@ -121,11 +121,11 @@ function template_main()
 		echo '
 							</tr><tr>
 								<td align="right"><strong>' . $txt['reset_votes'] . ':</strong></td>
-								<td class="smalltext"><input type="checkbox" name="resetVoteCount" value="on" class="check" /> ' . $txt['reset_votes_check'] . '</td>';
+								<td class="smalltext"><input type="checkbox" name="resetVoteCount" value="on" class="input_check" /> ' . $txt['reset_votes_check'] . '</td>';
 	echo '
 							</tr><tr>
 								<td align="center" colspan="2">
-									<input type="submit" name="post" value="', $txt['save'],  '" onclick="return submitThisOnce(this);" accesskey="s" />
+									<input type="submit" name="post" value="', $txt['save'],  '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />
 								</td>
 							</tr><tr>
 								<td colspan="2"></td>

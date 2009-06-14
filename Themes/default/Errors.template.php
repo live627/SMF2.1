@@ -76,8 +76,8 @@ function template_error_log()
 		echo '
 				<tr>
 					<td colspan="2" align="left" class="windowbg2">
-						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" /></div>
-						<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="check" /> <strong>', $txt['check_all'], '</strong></label>
+						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" class="button_submit" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" class="button_submit" /></div>
+						<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="input_check" /> <strong>', $txt['check_all'], '</strong></label>
 					</td>
 				</tr>';
 
@@ -86,7 +86,7 @@ function template_error_log()
 		echo '
 				<tr>
 					<td width="15" align="center" class="windowbg2">
-						<input type="checkbox" name="delete[]" value="', $error['id'], '" class="check" />
+						<input type="checkbox" name="delete[]" value="', $error['id'], '" class="input_check" />
 					</td><td class="windowbg2" width="100%">
 						<table width="100%" class="windowbg2" border="0" cellspacing="7" cellpadding="0">
 							<tr>
@@ -150,8 +150,8 @@ function template_error_log()
 		echo '
 				<tr>
 					<td colspan="2" class="windowbg2">
-						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" /></div>
-						<label for="check_all2"><input type="checkbox" id="check_all2" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all1.checked = this.checked;" class="check" /> <strong>', $txt['check_all'], '</strong></label>
+						<div class="floatright"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" class="button_submit" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" class="button_submit" /></div>
+						<label for="check_all2"><input type="checkbox" id="check_all2" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all1.checked = this.checked;" class="input_check" /> <strong>', $txt['check_all'], '</strong></label>
 					</td>
 				</tr>';
 	else

@@ -99,7 +99,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'<\' + \'/label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" /><span id="pollMoreOptions"><\' + \'/span>\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'<\' + \'/label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" class="input_text" /><span id="pollMoreOptions"><\' + \'/span>\');
 			}';
 
 	// If we are making a calendar event we want to ensure we show the current days in a month etc... this is done here.
@@ -206,7 +206,7 @@ function template_main()
 									', $txt['name'], ':
 								</td>
 								<td>
-									<input type="text" name="guestname" size="25" value="', $context['name'], '" tabindex="', $context['tabindex']++, '" />
+									<input type="text" name="guestname" size="25" value="', $context['name'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
 								</td>
 							</tr>';
 
@@ -217,7 +217,7 @@ function template_main()
 									', $txt['email'], ':
 								</td>
 								<td>
-									<input type="text" name="email" size="25" value="', $context['email'], '" tabindex="', $context['tabindex']++, '" />
+									<input type="text" name="email" size="25" value="', $context['email'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
 								</td>
 							</tr>';
 	}
@@ -245,7 +245,7 @@ function template_main()
 									', $txt['calendar_event_title'], '
 								</td>
 								<td class="smalltext">
-									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" />
+									<input type="text" name="evtitle" maxlength="60" size="60" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" class="input_text" />
 								</td>
 							</tr><tr>
 								<td></td>
@@ -334,7 +334,7 @@ function template_main()
 									', $txt['subject'], ':
 								</td>
 								<td>
-									<input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' tabindex="', $context['tabindex']++, '" size="80" maxlength="80" />
+									<input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' tabindex="', $context['tabindex']++, '" size="80" maxlength="80" class="input_text" />
 								</td>
 							</tr>
 							<tr>
@@ -364,7 +364,7 @@ function template_main()
 									', $txt['poll_question'], ':
 								</td>
 								<td align="left">
-									<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" />
+									<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" class="input_text" />
 								</td>
 							</tr>
 							<tr>
@@ -375,7 +375,7 @@ function template_main()
 		foreach ($context['choices'] as $choice)
 		{
 			echo '
-									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" />';
+									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" class="input_text" />';
 
 			if (!$choice['is_last'])
 				echo '<br />';
@@ -387,20 +387,20 @@ function template_main()
 							</tr>
 							<tr>
 								<td align="right"><strong>', $txt['poll_options'], ':</strong></td>
-								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
+								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" class="input_text" /> ', $txt['poll_max_votes'], '</td>
 							</tr>
 							<tr>
 								<td align="right"></td>
-								<td class="smalltext">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" maxlength="4" /> ', $txt['poll_run_days'], '</td>
+								<td class="smalltext">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" maxlength="4" class="input_text" /> ', $txt['poll_run_days'], '</td>
 							</tr>
 							<tr>
 								<td align="right"></td>
 								<td class="smalltext">
-									<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_do_change_vote'], '</label>';
+									<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_do_change_vote'], '</label>';
 
 		if ($context['poll_options']['guest_vote_enabled'])
 			echo '
-									<br /><label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll_options']['guest_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_guest_vote'], '</label>';
+									<br /><label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll_options']['guest_vote']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['poll_guest_vote'], '</label>';
 
 		echo '
 								</td>
@@ -408,9 +408,9 @@ function template_main()
 							<tr>
 								<td align="right"></td>
 								<td class="smalltext">
-									<input type="radio" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_anyone'], '<br />
-									<input type="radio" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_voted'], '<br />
-									<input type="radio" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="check" /> ', $txt['poll_results_expire'], '<br />
+									<input type="radio" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_anyone'], '<br />
+									<input type="radio" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt['poll_results_voted'], '<br />
+									<input type="radio" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="input_radio" /> ', $txt['poll_results_expire'], '<br />
 									<br />
 								</td>
 							</tr>';
@@ -475,20 +475,20 @@ function template_main()
 											<div id="postMoreOptions">
 												<table width="80%" cellpadding="0" cellspacing="0" border="0">
 													<tr>
-														<td class="smalltext">', $context['can_notify'] ? '<input type="hidden" name="notify" value="0" /><label for="check_notify"><input type="checkbox" name="notify" id="check_notify"' . ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['notify_replies'] . '</label>' : '', '</td>
-														<td class="smalltext">', $context['can_lock'] ? '<input type="hidden" name="lock" value="0" /><label for="check_lock"><input type="checkbox" name="lock" id="check_lock"' . ($context['locked'] ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['lock_topic'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_notify'] ? '<input type="hidden" name="notify" value="0" /><label for="check_notify"><input type="checkbox" name="notify" id="check_notify"' . ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['notify_replies'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_lock'] ? '<input type="hidden" name="lock" value="0" /><label for="check_lock"><input type="checkbox" name="lock" id="check_lock"' . ($context['locked'] ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['lock_topic'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
-														<td class="smalltext"><label for="check_back"><input type="checkbox" name="goback" id="check_back"' . ($context['back_to_topic'] || !empty($options['return_to_post']) ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['back_to_topic'] . '</label></td>
-														<td class="smalltext">', $context['can_sticky'] ? '<input type="hidden" name="sticky" value="0" /><label for="check_sticky"><input type="checkbox" name="sticky" id="check_sticky"' . ($context['sticky'] ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['sticky_after'] . '</label>' : '', '</td>
+														<td class="smalltext"><label for="check_back"><input type="checkbox" name="goback" id="check_back"' . ($context['back_to_topic'] || !empty($options['return_to_post']) ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['back_to_topic'] . '</label></td>
+														<td class="smalltext">', $context['can_sticky'] ? '<input type="hidden" name="sticky" value="0" /><label for="check_sticky"><input type="checkbox" name="sticky" id="check_sticky"' . ($context['sticky'] ? ' checked="checked"' : '') . ' value="1" class="input_check" /> ' . $txt['sticky_after'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
-														<td class="smalltext"><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="check" /> ', $txt['dont_use_smileys'], '</label></td>', '
-														<td class="smalltext">', $context['can_move'] ? '<input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="check" ' . (!empty($context['move']) ? 'checked="checked" ' : '') . '/> ' . $txt['move_after2'] . '</label>' : '', '</td>
+														<td class="smalltext"><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="input_check" /> ', $txt['dont_use_smileys'], '</label></td>', '
+														<td class="smalltext">', $context['can_move'] ? '<input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="input_check" ' . (!empty($context['move']) ? 'checked="checked" ' : '') . '/> ' . $txt['move_after2'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
-														<td class="smalltext">', $context['can_announce'] && $context['is_first_post'] ? '<label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="check" ' . (!empty($context['announce']) ? 'checked="checked" ' : '') . '/> ' . $txt['announce_topic'] . '</label>' : '', '</td>
-														<td class="smalltext">', $context['show_approval'] ? '<label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="check" ' . ($context['show_approval'] === 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_announce'] && $context['is_first_post'] ? '<label for="check_announce"><input type="checkbox" name="announce_topic" id="check_announce" value="1" class="input_check" ' . (!empty($context['announce']) ? 'checked="checked" ' : '') . '/> ' . $txt['announce_topic'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['show_approval'] ? '<label for="approve"><input type="checkbox" name="approve" id="approve" value="2" class="input_check" ' . ($context['show_approval'] === 2 ? 'checked="checked"' : '') . ' /> ' . $txt['approve_this_post'] . '</label>' : '', '</td>
 													</tr>
 												</table>
 											</div>
@@ -508,7 +508,7 @@ function template_main()
 									', $txt['uncheck_unwatchd_attach'], ':<br />';
 		foreach ($context['current_attachments'] as $attachment)
 			echo '
-									<input type="checkbox" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '<br />';
+									<input type="checkbox" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '<br />';
 		echo '
 									<br />
 								</td>
@@ -524,7 +524,7 @@ function template_main()
 									<strong>', $txt['attach'], ':</strong>
 								</td>
 								<td class="smalltext">
-									<input type="file" size="48" name="attachment[]" />';
+									<input type="file" size="48" name="attachment[]" class="input_file" />';
 
 		// Show more boxes only if they aren't approaching their limit.
 		if ($context['num_allowed_attachments'] > 1)
@@ -537,14 +537,14 @@ function template_main()
 											if (allowed_attachments <= 0)
 												return alert("', $txt['more_attachments_error'], '");
 
-											setOuterHTML(document.getElementById("moreAttachments"), \'<br /><input type="file" size="48" name="attachment[]" /><span id="moreAttachments"><\' + \'/span>\');
+											setOuterHTML(document.getElementById("moreAttachments"), \'<br /><input type="file" size="48" name="attachment[]" class="input_file" /><span id="moreAttachments"><\' + \'/span>\');
 											allowed_attachments = allowed_attachments - 1;
 
 											return true;
 										}
 									// ]]></script>
 									<span id="moreAttachments"></span> <a href="#" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')</a><br />
-									<noscript><input type="file" size="48" name="attachment[]" /><br /></noscript>';
+									<noscript><input type="file" size="48" name="attachment[]" class="input_file" /><br /></noscript>';
 		else
 			echo '
 									<br />';
@@ -577,7 +577,7 @@ function template_main()
 	// Option to delete an event if user is editing one.
 	if ($context['make_event'] && !$context['event']['new'])
 		echo '
-									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['event_delete_confirm'], '\');" />';
+									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['event_delete_confirm'], '\');" class="button_submit" />';
 
 	echo '
 								</td>
@@ -861,7 +861,7 @@ function template_spellcheck()
 			<table border="0" cellpadding="4" cellspacing="0" width="100%"><tr class="windowbg">
 				<td width="50%" valign="top">
 					', $txt['spellcheck_change_to'], '<br />
-					<input type="text" name="changeto" style="width: 98%;" />
+					<input type="text" name="changeto" style="width: 98%;" class="input_text" />
 				</td>
 				<td width="50%">
 					', $txt['spellcheck_suggest'], '<br />
@@ -870,10 +870,10 @@ function template_spellcheck()
 				</td>
 			</tr></table>
 			<div class="righttext" style="padding: 4px;">
-				<input type="button" name="change" value="', $txt['spellcheck_change'], '" onclick="replaceWord();" />
-				<input type="button" name="changeall" value="', $txt['spellcheck_change_all'], '" onclick="replaceAll();" />
-				<input type="button" name="ignore" value="', $txt['spellcheck_ignore'], '" onclick="nextWord(false);" />
-				<input type="button" name="ignoreall" value="', $txt['spellcheck_ignore_all'], '" onclick="nextWord(true);" />
+				<input type="button" name="change" value="', $txt['spellcheck_change'], '" onclick="replaceWord();" class="button_submit" />
+				<input type="button" name="changeall" value="', $txt['spellcheck_change_all'], '" onclick="replaceAll();" class="button_submit" />
+				<input type="button" name="ignore" value="', $txt['spellcheck_ignore'], '" onclick="nextWord(false);" class="button_submit" />
+				<input type="button" name="ignoreall" value="', $txt['spellcheck_ignore_all'], '" onclick="nextWord(true);" class="button_submit" />
 			</div>
 		</form>
 	</body>
@@ -951,15 +951,15 @@ function template_announce()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
+						<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="input_check" /> ', $group['name'], '</label> <em>(', $group['member_count'], ')</em><br />';
 
 	echo '
 						<br />
-						<label for="checkall"><input type="checkbox" id="checkall" class="check" onclick="invertAll(this, this.form);" checked="checked" /> <em>', $txt['check_all'], '</em></label>
+						<label for="checkall"><input type="checkbox" id="checkall" class="input_check" onclick="invertAll(this, this.form);" checked="checked" /> <em>', $txt['check_all'], '</em></label>
 					</td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
-						<input type="submit" value="', $txt['post'], '" />
+						<input type="submit" value="', $txt['post'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -985,7 +985,7 @@ function template_announcement_send()
 					<td class="windowbg2"><strong>', $context['percentage_done'], '% ', $txt['announce_done'], '</strong></td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
-						<input type="submit" name="b" value="', $txt['announce_continue'], '" />
+						<input type="submit" name="b" value="', $txt['announce_continue'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>

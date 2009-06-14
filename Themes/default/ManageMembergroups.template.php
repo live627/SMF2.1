@@ -21,7 +21,7 @@ function template_new_group()
 					<td colspan="2" align="left">', $txt['membergroups_new_group'], '</td>
 				</tr><tr class="windowbg2">
 					<th align="left" width="50%"><label for="group_name_input">', $txt['membergroups_group_name'], ':</label></th>
-					<td><input type="text" name="group_name" id="group_name_input" size="30" /></td>
+					<td><input type="text" name="group_name" id="group_name_input" size="30" class="input_text" /></td>
 				</tr>';
 	if ($context['undefined_group'])
 		echo '
@@ -30,10 +30,10 @@ function template_new_group()
 					<td>
 						<fieldset id="group_type" style="width: 95%;">
 							<legend>', $txt['membergroups_edit_select_group_type'], '</legend>
-							<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" checked="checked" class="check" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
-							<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" class="check"  onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
-							<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="2" class="check"  onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
-							<label for="group_type_post"><input type="radio" name="group_type" id="group_type_post" value="-1" class="check"  onclick="swapPostGroup(1);" />', $txt['membergroups_group_type_post'], '</label><br />
+							<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" checked="checked" class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
+							<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" class="input_radio"  onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
+							<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="2" class="input_radio"  onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
+							<label for="group_type_post"><input type="radio" name="group_type" id="group_type_post" value="-1" class="input_radio"  onclick="swapPostGroup(1);" />', $txt['membergroups_group_type_post'], '</label><br />
 						</fieldset>
 					</td>
 				</tr>';
@@ -43,7 +43,7 @@ function template_new_group()
 				<tr class="windowbg2">
 					<th align="left" id="min_posts_text">', $txt['membergroups_min_posts'], ':</th>
 					<td>
-						<input type="text" name="min_posts" id="min_posts_input" size="5" />
+						<input type="text" name="min_posts" id="min_posts_input" size="5" class="input_text" />
 					</td>
 				</tr>';
 	if (!$context['post_group'] || !empty($modSettings['permission_enable_postgroups']))
@@ -57,7 +57,7 @@ function template_new_group()
 					<td>
 						<fieldset id="permission_base" style="width: 95%;">
 							<legend>', $txt['membergroups_select_permission_type'], '</legend>
-							<input type="radio" name="perm_type" id="perm_type_inherit" value="inherit" checked="checked" class="check" />
+							<input type="radio" name="perm_type" id="perm_type_inherit" value="inherit" checked="checked" class="input_radio" />
 							<label for="perm_type_inherit">', $txt['membergroups_new_as_inherit'], ':</label>
 							<select name="inheritperm" id="inheritperm_select" onclick="document.getElementById(\'perm_type_inherit\').checked = true;">
 								<option value="-1">', $txt['membergroups_guests'], '</option>
@@ -68,7 +68,7 @@ function template_new_group()
 		echo '
 							</select><br />
 
-							<input type="radio" name="perm_type" id="perm_type_copy" value="copy" class="check" />
+							<input type="radio" name="perm_type" id="perm_type_copy" value="copy" class="input_radio" />
 							<label for="perm_type_copy">', $txt['membergroups_new_as_copy'], ':</label>
 							<select name="copyperm" id="copyperm_select" onclick="document.getElementById(\'perm_type_copy\').checked = true;">
 								<option value="-1">', $txt['membergroups_guests'], '</option>
@@ -79,7 +79,7 @@ function template_new_group()
 		echo '
 							</select><br />
 
-							<input type="radio" name="perm_type" id="perm_type_predefined" value="predefined" class="check" />
+							<input type="radio" name="perm_type" id="perm_type_predefined" value="predefined" class="input_radio" />
 							<label for="perm_type_predefined">', $txt['membergroups_new_as_type'], ':</label>
 							<select name="level" id="level_select" onclick="document.getElementById(\'perm_type_predefined\').checked = true;">
 								<option value="restrict">', $txt['permitgroups_restrict'], '</option>
@@ -101,14 +101,14 @@ function template_new_group()
 							<legend>', $txt['membergroups_new_board_desc'], '</legend>';
 	foreach ($context['boards'] as $board)
 		echo '
-							<div style="margin-left: ', $board['child_level'], 'em;"><input type="checkbox" name="boardaccess[]" id="boardaccess_', $board['id'], '" value="', $board['id'], '" ', $board['selected'] ? ' checked="checked" disabled="disabled"' : '', ' class="check" /> <label for="boardaccess_', $board['id'], '">', $board['name'], '</label></div>';
+							<div style="margin-left: ', $board['child_level'], 'em;"><input type="checkbox" name="boardaccess[]" id="boardaccess_', $board['id'], '" value="', $board['id'], '" ', $board['selected'] ? ' checked="checked" disabled="disabled"' : '', ' class="input_check" /> <label for="boardaccess_', $board['id'], '">', $board['name'], '</label></div>';
 
 	echo '<br />
-							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><em>', $txt['check_all'], '</em></label>
+							<input type="checkbox" id="checkall_check" class="input_check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><em>', $txt['check_all'], '</em></label>
 						</fieldset>
 					</td>
 				</tr><tr class="windowbg2">
-					<td colspan="2" align="right"><br /><input type="submit" value="', $txt['membergroups_add_group'], '" /></td>
+					<td colspan="2" align="right"><br /><input type="submit" value="', $txt['membergroups_add_group'], '" class="button_submit" /></td>
 				</tr>
 			</table>';
 	if ($context['undefined_group'])
@@ -141,7 +141,7 @@ function template_edit_group()
 				</tr>
 				<tr class="windowbg2">
 					<th align="left" width="50%"><label for="group_name_input">', $txt['membergroups_edit_name'], ':</label></th>
-					<td><input type="text" name="group_name" id="group_name_input" value="', $context['group']['editable_name'], '" size="30" /></td>
+					<td><input type="text" name="group_name" id="group_name_input" value="', $context['group']['editable_name'], '" size="30" class="input_text" /></td>
 				</tr>';
 
 	if ($context['group']['id'] != 3 && $context['group']['id'] != 4)
@@ -162,10 +162,10 @@ function template_edit_group()
 					<td>
 						<fieldset id="group_type" style="width: 95%;">
 							<legend>', $txt['membergroups_edit_select_group_type'], '</legend>
-							<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" ', !$context['group']['is_post_group'] && $context['group']['type'] == 0 ? 'checked="checked"' : '', ' class="check" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
-							<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" ', $context['group']['type'] == 1 ? 'checked="checked"' : '', ' class="check"  onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
-							<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="2" ', $context['group']['type'] == 2 ? 'checked="checked"' : '', ' class="check"  onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
-							<label for="group_type_post"><input type="radio" name="group_type" id="group_type_post" value="-1" ', $context['group']['is_post_group'] ? 'checked="checked"' : '', ' class="check"  onclick="swapPostGroup(1);" />', $txt['membergroups_group_type_post'], '</label><br />
+							<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" ', !$context['group']['is_post_group'] && $context['group']['type'] == 0 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
+							<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" ', $context['group']['type'] == 1 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_request'], '</label><br />
+							<label for="group_type_free"><input type="radio" name="group_type" id="group_type_free" value="2" ', $context['group']['type'] == 2 ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_free'], '</label><br />
+							<label for="group_type_post"><input type="radio" name="group_type" id="group_type_post" value="-1" ', $context['group']['is_post_group'] ? 'checked="checked"' : '', ' class="input_radio" onclick="swapPostGroup(1);" />', $txt['membergroups_group_type_post'], '</label><br />
 						</fieldset>
 					</td>
 				</tr>';
@@ -177,7 +177,7 @@ function template_edit_group()
 				<tr class="windowbg2" valign="middle">
 					<th align="left" id="group_moderators_text"><label for="group_moderators">', $txt['moderators'], ':</label></th>
 					<td>
-						<input type="text" name="group_moderators" id="group_moderators" value="', $context['group']['moderator_list'], '" size="30" />
+						<input type="text" name="group_moderators" id="group_moderators" value="', $context['group']['moderator_list'], '" size="30" class="input_text" />
 						<div id="moderator_container"></div>
 					</td>
 				</tr>
@@ -224,16 +224,16 @@ function template_edit_group()
 		echo '
 				<tr class="windowbg2">
 					<th align="left" id="min_posts_text"><label for="min_posts_input">', $txt['membergroups_min_posts'], ':</label></th>
-					<td><input type="text" name="min_posts" id="min_posts_input"', $context['group']['is_post_group'] ? ' value="' . $context['group']['min_posts'] . '"' : '', ' size="6" /></td>
+					<td><input type="text" name="min_posts" id="min_posts_input"', $context['group']['is_post_group'] ? ' value="' . $context['group']['min_posts'] . '"' : '', ' size="6" class="input_text" /></td>
 				</tr>';
 	echo '
 				<tr class="windowbg2">
 					<th align="left"><label for="online_color_input">', $txt['membergroups_online_color'], ':</label></th>
-					<td><input type="text" name="online_color" id="online_color_input" value="', $context['group']['color'], '" size="20" /></td>
+					<td><input type="text" name="online_color" id="online_color_input" value="', $context['group']['color'], '" size="20" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
 					<th align="left"><label for="star_count_input">', $txt['membergroups_star_count'], ':</label></th>
-					<td style="padding-bottom: 0;"><input type="text" name="star_count" id="star_count_input" value="', $context['group']['star_count'], '" size="4" onkeyup="if (this.value.length > 2) this.value = 99;" onkeydown="this.onkeyup();" onchange="if (this.value != 0) this.form.star_image.onchange();" /></td>
+					<td style="padding-bottom: 0;"><input type="text" name="star_count" id="star_count_input" value="', $context['group']['star_count'], '" size="4" onkeyup="if (this.value.length > 2) this.value = 99;" onkeydown="this.onkeyup();" onchange="if (this.value != 0) this.form.star_image.onchange();" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
 					<th align="left" style="padding-top: 1em;">
@@ -242,7 +242,7 @@ function template_edit_group()
 					</th>
 					<td>
 						', $txt['membergroups_images_url'], '
-						<input type="text" name="star_image" id="star_image_input" value="', $context['group']['star_image'], '" onchange="if (this.value &amp;&amp; this.form.star_count.value == 0) this.form.star_count.value = 1; else if (!this.value) this.form.star_count.value = 0; document.getElementById(\'star_preview\').src = smf_images_url + \'/\' + (this.value &amp;&amp; this.form.star_count.value > 0 ? this.value.replace(/\$language/g, \'', $context['user']['language'], '\') : \'blank.gif\');" size="20" />
+						<input type="text" name="star_image" id="star_image_input" value="', $context['group']['star_image'], '" onchange="if (this.value &amp;&amp; this.form.star_count.value == 0) this.form.star_count.value = 1; else if (!this.value) this.form.star_count.value = 0; document.getElementById(\'star_preview\').src = smf_images_url + \'/\' + (this.value &amp;&amp; this.form.star_count.value > 0 ? this.value.replace(/\$language/g, \'', $context['user']['language'], '\') : \'blank.gif\');" size="20" class="input_text" />
 						<img id="star_preview" src="', $settings['images_url'], '/', $context['group']['star_image'] == '' ? 'blank.gif' : $context['group']['star_image'], '" alt="*" />
 					</td>
 				</tr>
@@ -252,7 +252,7 @@ function template_edit_group()
 						<div class="smalltext" style="font-weight: normal">', $txt['membergroups_max_messages_note'], '</div>
 					</th>
 					<td>
-						<input type="text" name="max_messages" id="max_messages_input" value="', $context['group']['id'] == 1 ? 0 : $context['group']['max_messages'], '" size="6" ', $context['group']['id'] == 1 ? 'disabled="disabled"' : '', '/>
+						<input type="text" name="max_messages" id="max_messages_input" value="', $context['group']['id'] == 1 ? 0 : $context['group']['max_messages'], '" size="6"', $context['group']['id'] == 1 ? ' disabled="disabled"' : '', ' class="input_text" />
 					</td>
 				</tr>';
 	if (!empty($context['boards']))
@@ -267,10 +267,10 @@ function template_edit_group()
 							<legend><a href="javascript:void(0);" onclick="document.getElementById(\'visible_boards\').style.display = \'none\';document.getElementById(\'visible_boards_link\').style.display = \'block\'; return false;">', $txt['membergroups_new_board_desc'], '</a></legend>';
 		foreach ($context['boards'] as $board)
 			echo '
-							<div style="margin-left: ', $board['child_level'], 'em;"><input type="checkbox" name="boardaccess[]" id="boardaccess_', $board['id'], '" value="', $board['id'], '" ', $board['selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="boardaccess_', $board['id'], '">', $board['name'], '</label></div>';
+							<div style="margin-left: ', $board['child_level'], 'em;"><input type="checkbox" name="boardaccess[]" id="boardaccess_', $board['id'], '" value="', $board['id'], '" ', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" /> <label for="boardaccess_', $board['id'], '">', $board['name'], '</label></div>';
 
 		echo '<br />
-							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><em>', $txt['check_all'], '</em></label>
+							<input type="checkbox" id="checkall_check" class="input_check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><em>', $txt['check_all'], '</em></label>
 						</fieldset>
 						<a href="javascript:void(0);" onclick="document.getElementById(\'visible_boards\').style.display = \'block\'; document.getElementById(\'visible_boards_link\').style.display = \'none\'; return false;" id="visible_boards_link" style="display: none;">[ ', $txt['membergroups_select_visible_boards'], ' ]</a>
 						<script type="text/javascript"><!-- // --><![CDATA[
@@ -283,8 +283,8 @@ function template_edit_group()
 	echo '
 				<tr class="windowbg2">
 					<td colspan="2" align="right" style="padding-top: 1ex;">
-						<input type="submit" name="submit" value="', $txt['membergroups_edit_save'], '" />', $context['group']['allow_delete'] ? '
-						<input type="submit" name="delete" value="' . $txt['membergroups_delete'] . '" onclick="return confirm(\'' . $txt['membergroups_confirm_delete'] . '\');" />' : '', '
+						<input type="submit" name="submit" value="', $txt['membergroups_edit_save'], '" class="button_submit" />', $context['group']['allow_delete'] ? '
+						<input type="submit" name="delete" value="' . $txt['membergroups_delete'] . '" onclick="return confirm(\'' . $txt['membergroups_confirm_delete'] . '\');" class="button_submit" />' : '', '
 					</td>
 				</tr>
 			</table>
@@ -386,7 +386,7 @@ function template_group_members()
 					<td', empty($context['group']['assignable']) ? ' colspan="2"' : '', '><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=posts', $context['sort_by'] == 'posts' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt['posts'], $context['sort_by'] == 'posts' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>';
 	if (!empty($context['group']['assignable']))
 		echo '
-					<td width="4%" align="center"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>';
+					<td width="4%" align="center"><input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" /></td>';
 	echo '
 				</tr>';
 
@@ -427,7 +427,7 @@ function template_group_members()
 					<td', empty($context['group']['assignable']) ? ' colspan="2"' : '', '>', $member['posts'], '</td>';
 		if (!empty($context['group']['assignable']))
 			echo '
-					<td align="center" width="4%"><input type="checkbox" name="rem[]" value="', $member['id'], '" class="check" ', ($context['user']['id'] == $member['id'] && $context['group']['id'] == 1 ? 'onclick="if (this.checked) return confirm(\'' . $txt['membergroups_members_deadmin_confirm'] . '\')" ' : ''), '/></td>';
+					<td align="center" width="4%"><input type="checkbox" name="rem[]" value="', $member['id'], '" class="input_check" ', ($context['user']['id'] == $member['id'] && $context['group']['id'] == 1 ? 'onclick="if (this.checked) return confirm(\'' . $txt['membergroups_members_deadmin_confirm'] . '\')" ' : ''), '/></td>';
 		echo '
 				</tr>';
 	}
@@ -441,7 +441,7 @@ function template_group_members()
 		echo '
 				<tr class="titlebg">
 					<td colspan="6" align="right">
-						<input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" style="font-weight: normal;" />
+						<input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" style="font-weight: normal;" class="button_submit" />
 					</td>
 				</tr>';
 	echo '
@@ -456,12 +456,12 @@ function template_group_members()
 				</tr><tr class="windowbg2" valign="top">
 					<td align="right" width="50%"><strong>', $txt['membergroups_members_add_desc'], ':</strong></td>
 					<td align="left">
-						<input type="text" name="toAdd" id="toAdd" value="" />
+						<input type="text" name="toAdd" id="toAdd" value="" class="input_text" />
 						<div id="toAddItemContainer"></div>
 					</td>
 				</tr><tr class="windowbg2">
 					<td colspan="2" align="center">
-						<input type="submit" name="add" value="', $txt['membergroups_members_add'], '" />
+						<input type="submit" name="add" value="', $txt['membergroups_members_add'], '" class="button_submit" />
 					</td>
 				</tr>
 			</table>';
@@ -523,7 +523,7 @@ function template_group_request_reason()
 	echo '
 			<tr class="catbg">
 				<td align="right">
-					<input type="submit" name="go" value="', $txt['mc_groupr_submit'], '" />
+					<input type="submit" name="go" value="', $txt['mc_groupr_submit'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>

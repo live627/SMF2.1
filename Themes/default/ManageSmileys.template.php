@@ -84,7 +84,7 @@ function template_modifyset()
 		echo '
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_sets_name">', $txt['smiley_sets_name'], '</label>: </strong></td>
-				<td><input type="text" name="smiley_sets_name" id="smiley_sets_name" value="', $context['current_set']['name'], '" /></td>
+				<td><input type="text" name="smiley_sets_name" id="smiley_sets_name" value="', $context['current_set']['name'], '" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_sets_path">', $txt['smiley_sets_url'], '</label>: </strong></td>
@@ -94,7 +94,7 @@ function template_modifyset()
 			echo '<strong>default</strong><input type="hidden" name="smiley_sets_path" id="smiley_sets_path" value="default" />';
 		elseif (empty($context['smiley_set_dirs']))
 			echo '
-					<input type="text" name="smiley_sets_path" id="smiley_sets_path" value="', $context['current_set']['path'], '" /> ';
+					<input type="text" name="smiley_sets_path" id="smiley_sets_path" value="', $context['current_set']['path'], '" class="input_text" /> ';
 		else
 		{
 			echo '
@@ -110,7 +110,7 @@ function template_modifyset()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_sets_default">', $txt['smiley_set_select_default'], '</label>: </strong></td>
-				<td><input type="checkbox" name="smiley_sets_default" id="smiley_sets_default" value="1"', $context['current_set']['selected'] ? ' checked="checked"' : '', ' class="check" /></td>
+				<td><input type="checkbox" name="smiley_sets_default" id="smiley_sets_default" value="1"', $context['current_set']['selected'] ? ' checked="checked"' : '', ' class="input_check" /></td>
 			</tr>';
 
 		// If this is a new smiley set they have the option to import smileys already in the directory.
@@ -118,13 +118,13 @@ function template_modifyset()
 			echo '
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_sets_import">', $txt['smiley_set_import_directory'], '</label>: </strong></td>
-				<td><input type="checkbox" name="smiley_sets_import" id="smiley_sets_import" value="1" class="check" /></td>
+				<td><input type="checkbox" name="smiley_sets_import" id="smiley_sets_import" value="1" class="input_check" /></td>
 			</tr>';
 
 		echo '
 			<tr class="windowbg2">
 				<td align="right" colspan="2">
-					<input type="submit" value="', $txt['smiley_sets_save'], '" />
+					<input type="submit" value="', $txt['smiley_sets_save'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -158,14 +158,14 @@ function template_modifysmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_code">', $txt['smileys_code'], '</label>: </strong></td>
-				<td><input type="text" name="smiley_code" id="smiley_code" value="', $context['current_smiley']['code'], '" /></td>
+				<td><input type="text" name="smiley_code" id="smiley_code" value="', $context['current_smiley']['code'], '" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_filename">', $txt['smileys_filename'], '</label>: </strong></td>
 				<td>';
 			if (empty($context['filenames']))
 				echo '
-					<input type="text" name="smiley_filename" id="smiley_filename" value="', $context['current_smiley']['filename'], '" />';
+					<input type="text" name="smiley_filename" id="smiley_filename" value="', $context['current_smiley']['filename'], '" class="input_text" />';
 			else
 			{
 				echo '
@@ -181,7 +181,7 @@ function template_modifysmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_description">', $txt['smileys_description'], '</label>: </strong></td>
-				<td><input type="text" name="smiley_description" id="smiley_description" value="', $context['current_smiley']['description'], '" /></td>
+				<td><input type="text" name="smiley_description" id="smiley_description" value="', $context['current_smiley']['description'], '" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="smiley_location">', $txt['smileys_location'], '</label>: </strong></td>
@@ -201,8 +201,8 @@ function template_modifysmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" colspan="2">
-					<input type="submit" value="', $txt['smileys_save'], '" />
-					<input type="submit" name="deletesmiley" value="', $txt['smileys_delete'], '" onclick="return confirm(\'', $txt['smileys_delete_confirm'], '\');" />
+					<input type="submit" value="', $txt['smileys_save'], '" class="button_submit" />
+					<input type="submit" name="deletesmiley" value="', $txt['smileys_delete'], '" onclick="return confirm(\'', $txt['smileys_delete_confirm'], '\');" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -244,7 +244,7 @@ function template_addsmiley()
 				<td colspan="2">', $txt['smileys_add_method'], ':</td>
 			</tr>
 			<tr class="windowbg">
-				<td width="40%"><label for="method-existing"><input type="radio" name="method" id="method-existing" value="existing" checked="checked" class="check" /> ', $txt['smileys_add_existing'], '</label></td>
+				<td width="40%"><label for="method-existing"><input type="radio" name="method" id="method-existing" value="existing" checked="checked" class="input_radio" /> ', $txt['smileys_add_existing'], '</label></td>
 				<td>
 					<img src="', $modSettings['smileys_url'], '/', $modSettings['smiley_sets_default'], '/', $context['filenames'][0]['id'], '" id="preview" alt="" />  (', $txt['smiley_preview_using'], ': <select name="set" onchange="updatePreview();selectMethod(\'existing\');">';
 
@@ -263,7 +263,7 @@ function template_addsmiley()
 				<td style="padding-bottom: 2ex;" width="60%">';
 	if (empty($context['filenames']))
 		echo '
-					<input type="text" name="smiley_filename" id="smiley_filename" value="', $context['current_smiley']['filename'], '" onchange="selectMethod(\'existing\');" />';
+					<input type="text" name="smiley_filename" id="smiley_filename" value="', $context['current_smiley']['filename'], '" onchange="selectMethod(\'existing\');" class="input_text" />';
 	else
 	{
 		echo '
@@ -281,15 +281,15 @@ function template_addsmiley()
 				</td>
 			</tr>
 			<tr class="windowbg2">
-				<td colspan="2"><label for="method-upload"><input type="radio" name="method" id="method-upload" value="upload" class="check" /> ', $txt['smileys_add_upload'], '</label></td>
+				<td colspan="2"><label for="method-upload"><input type="radio" name="method" id="method-upload" value="upload" class="input_radio" /> ', $txt['smileys_add_upload'], '</label></td>
 			</tr>
 			<tr class="windowbg2">
 				<td style="padding-bottom: 2ex;" width="40%" align="right"><strong>', $txt['smileys_add_upload_choose'], ':</strong><div class="smalltext">', $txt['smileys_add_upload_choose_desc'], '</div></td>
-				<td style="padding-bottom: 2ex;" width="60%"><input type="file" name="uploadSmiley" id="uploadSmiley" onchange="selectMethod(\'upload\');" /></td>
+				<td style="padding-bottom: 2ex;" width="60%"><input type="file" name="uploadSmiley" id="uploadSmiley" onchange="selectMethod(\'upload\');" class="input_file" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td width="40%" align="right"><strong><label for="sameall">', $txt['smileys_add_upload_all'], ':</label></strong></td>
-				<td width="60%"><input type="checkbox" name="sameall" id="sameall" checked="checked" class="check" onclick="swapUploads(); selectMethod(\'upload\');" /></td>
+				<td width="60%"><input type="checkbox" name="sameall" id="sameall" checked="checked" class="input_check" onclick="swapUploads(); selectMethod(\'upload\');" /></td>
 			</tr>
 			<tr class="windowbg2" id="uploadMore" style="display: none;">
 				<td colspan="2">
@@ -298,7 +298,7 @@ function template_addsmiley()
 		echo '
 						<tr class="windowbg2">
 							<td width="40%" align="right">', $txt['smileys_add_upload_for1'], ' <strong>', $smiley_set['name'], '</strong> ', $txt['smileys_add_upload_for2'], ':</td>
-							<td width="60%"><input type="file" name="individual_', $smiley_set['name'], '" onchange="selectMethod(\'upload\');" /></td>
+							<td width="60%"><input type="file" name="individual_', $smiley_set['name'], '" onchange="selectMethod(\'upload\');" class="input_file" /></td>
 						</tr>';
 	echo '
 					</table>
@@ -312,11 +312,11 @@ function template_addsmiley()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%"><strong><label for="smiley_code">', $txt['smileys_code'], '</label>: </strong></td>
-				<td width="60%"><input type="text" name="smiley_code" id="smiley_code" value="" /></td>
+				<td width="60%"><input type="text" name="smiley_code" id="smiley_code" value="" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%"><strong><label for="smiley_description">', $txt['smileys_description'], '</label>: </strong></td>
-				<td width="60%"><input type="text" name="smiley_description" id="smiley_description" value="" /></td>
+				<td width="60%"><input type="text" name="smiley_description" id="smiley_description" value="" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" width="40%"><strong><label for="smiley_location">', $txt['smileys_location'], '</label>: </strong></td>
@@ -335,7 +335,7 @@ function template_addsmiley()
 				</td>
 			</tr>
 			<tr class="windowbg">
-				<td align="right" colspan="2"><input type="submit" value="', $txt['smileys_save'], '" /></td>
+				<td align="right" colspan="2"><input type="submit" value="', $txt['smileys_save'], '" class="button_submit" /></td>
 			</tr>
 		</table>
 		<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -431,15 +431,15 @@ function template_editicons()
 				</td><td valign="top">
 					<a href="', $scripturl, '?action=admin;area=smileys;sa=editicon;icon=', $icon['id'], '">', $txt['smileys_modify'], '</a>
 				</td><td valign="top" align="center" width="4%">
-					<input type="checkbox" name="checked_icons[]" value="', $icon['id'], '" class="check" />
+					<input type="checkbox" name="checked_icons[]" value="', $icon['id'], '" class="input_check" />
 				</td>
 			</tr>';
 		echo '
 			<tr class="windowbg">
 				<td colspan="6" align="right">
 					<br />
-					<input type="submit" name="add" value="', $txt['icons_add_new'], '" />
-					<input type="submit" name="delete" value="', $txt['smileys_remove'], '" onclick="return confirm(\'', $txt['icons_confirm'], '\');" />
+					<input type="submit" name="add" value="', $txt['icons_add_new'], '" class="button_submit" />
+					<input type="submit" name="delete" value="', $txt['smileys_remove'], '" onclick="return confirm(\'', $txt['icons_confirm'], '\');" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -467,11 +467,11 @@ function template_editicon()
 	echo '
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="icon_filename">', $txt['smileys_filename'], '</label>: </strong><br /><span class="smalltext">', $txt['icons_filename_all_gif'], '</span></td>
-				<td><input type="text" name="icon_filename" id="icon_filename" value="', !empty($context['icon']['filename']) ? $context['icon']['filename'] . '.gif' : '', '" /></td>
+				<td><input type="text" name="icon_filename" id="icon_filename" value="', !empty($context['icon']['filename']) ? $context['icon']['filename'] . '.gif' : '', '" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="icon_description">', $txt['smileys_description'], '</label>: </strong></td>
-				<td><input type="text" name="icon_description" id="icon_description" value="', !empty($context['icon']['title']) ? $context['icon']['title'] : '', '" /></td>
+				<td><input type="text" name="icon_description" id="icon_description" value="', !empty($context['icon']['title']) ? $context['icon']['title'] : '', '" class="input_text" /></td>
 			</tr>
 			<tr class="windowbg2">
 				<td align="right"><strong><label for="icon_board_select">', $txt['icons_board'], '</label>: </strong></td>
@@ -511,7 +511,7 @@ function template_editicon()
 			</tr>
 			<tr class="windowbg2">
 				<td align="right" colspan="2">
-					<input type="submit" value="', $txt['smileys_save'], '" />
+					<input type="submit" value="', $txt['smileys_save'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>';

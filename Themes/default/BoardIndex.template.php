@@ -435,22 +435,22 @@ function template_info_center()
 							<ul class="reset horizlist clearfix">
 								<li>
 									<label for="user">', $txt['username'], ':<br />
-									<input type="text" name="user" id="user" size="15" /></label>
+									<input type="text" name="user" id="user" size="15" class="input_text" /></label>
 								</li>
 								<li>
 									<label for="passwrd">', $txt['password'], ':<br />
-									<input type="password" name="passwrd" id="passwrd" size="15" /></label>
+									<input type="password" name="passwrd" id="passwrd" size="15" class="input_password" /></label>
 								</li>
 								<li>
 									<label for="cookielength">', $txt['mins_logged_in'], ':<br />
-									<input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
+									<input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" class="input_text" /></label>
 								</li>
 								<li>
 									<label for="cookieneverexp">', $txt['always_logged_in'], ':<br />
-									<input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
+									<input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="input_check" /></label>
 								</li>
 								<li>
-									<input type="submit" value="', $txt['login'], '" />
+									<input type="submit" value="', $txt['login'], '" class="button_submit" />
 								</li>
 							</ul>
 						</form>

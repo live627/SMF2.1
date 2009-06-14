@@ -12,27 +12,27 @@ function template_modify_weights()
 				<td colspan="3">', $txt['search_weights'], '</td>
 			</tr><tr class="windowbg2">
 				<td align="right">', $txt['search_weight_frequency'], ' (<a href="', $scripturl, '?action=helpadmin;help=search_weight_frequency" onclick="return reqWin(this.href);">?</a>):</td>
-				<td><input type="text" name="search_weight_frequency" id="weight1_val" value="', empty($modSettings['search_weight_frequency']) ? '0' : $modSettings['search_weight_frequency'], '" onchange="calculateNewValues()" size="3" /></td>
+				<td><input type="text" name="search_weight_frequency" id="weight1_val" value="', empty($modSettings['search_weight_frequency']) ? '0' : $modSettings['search_weight_frequency'], '" onchange="calculateNewValues()" size="3" class="input_text" /></td>
 				<td id="weight1">', $context['relative_weights']['search_weight_frequency'], '%</td>
 			</tr><tr class="windowbg2">
 				<td align="right">', $txt['search_weight_age'], ' (<a href="', $scripturl, '?action=helpadmin;help=search_weight_age" onclick="return reqWin(this.href);">?</a>):</td>
-				<td><input type="text" name="search_weight_age" id="weight2_val" value="', empty($modSettings['search_weight_age']) ? '0' : $modSettings['search_weight_age'], '" onchange="calculateNewValues()" size="3" /></td>
+				<td><input type="text" name="search_weight_age" id="weight2_val" value="', empty($modSettings['search_weight_age']) ? '0' : $modSettings['search_weight_age'], '" onchange="calculateNewValues()" size="3" class="input_text" /></td>
 				<td id="weight2">', $context['relative_weights']['search_weight_age'], '%</td>
 			</tr><tr class="windowbg2">
 				<td align="right">', $txt['search_weight_length'], ' (<a href="', $scripturl, '?action=helpadmin;help=search_weight_length" onclick="return reqWin(this.href);">?</a>):</td>
-				<td><input type="text" name="search_weight_length" id="weight3_val" value="', empty($modSettings['search_weight_length']) ? '0' : $modSettings['search_weight_length'], '" onchange="calculateNewValues()" size="3" /></td>
+				<td><input type="text" name="search_weight_length" id="weight3_val" value="', empty($modSettings['search_weight_length']) ? '0' : $modSettings['search_weight_length'], '" onchange="calculateNewValues()" size="3" class="input_text" /></td>
 				<td id="weight3">', $context['relative_weights']['search_weight_length'], '%</td>
 			</tr><tr class="windowbg2">
 				<td align="right">', $txt['search_weight_subject'], ' (<a href="', $scripturl, '?action=helpadmin;help=search_weight_subject" onclick="return reqWin(this.href);">?</a>):</td>
-				<td><input type="text" name="search_weight_subject" id="weight4_val" value="', empty($modSettings['search_weight_subject']) ? '0' : $modSettings['search_weight_subject'], '" onchange="calculateNewValues()" size="3" /></td>
+				<td><input type="text" name="search_weight_subject" id="weight4_val" value="', empty($modSettings['search_weight_subject']) ? '0' : $modSettings['search_weight_subject'], '" onchange="calculateNewValues()" size="3" class="input_text" /></td>
 				<td id="weight4">', $context['relative_weights']['search_weight_subject'], '%</td>
 			</tr><tr class="windowbg2">
 				<td align="right">', $txt['search_weight_first_message'], ' (<a href="', $scripturl, '?action=helpadmin;help=search_weight_first_message" onclick="return reqWin(this.href);">?</a>):</td>
-				<td><input type="text" name="search_weight_first_message" id="weight5_val" value="', empty($modSettings['search_weight_first_message']) ? '0' : $modSettings['search_weight_first_message'], '" onchange="calculateNewValues()" size="3" /></td>
+				<td><input type="text" name="search_weight_first_message" id="weight5_val" value="', empty($modSettings['search_weight_first_message']) ? '0' : $modSettings['search_weight_first_message'], '" onchange="calculateNewValues()" size="3" class="input_text" /></td>
 				<td id="weight5">', $context['relative_weights']['search_weight_first_message'], '%</td>
 			</tr><tr class="windowbg2">
 				<td align="right">', $txt['search_weight_sticky'], ' (<a href="', $scripturl, '?action=helpadmin;help=search_weight_sticky" onclick="return reqWin(this.href);">?</a>):</td>
-				<td><input type="text" name="search_weight_sticky" id="weight6_val" value="', empty($modSettings['search_weight_sticky']) ? '0' : $modSettings['search_weight_sticky'], '" onchange="calculateNewValues()" size="3" /></td>
+				<td><input type="text" name="search_weight_sticky" id="weight6_val" value="', empty($modSettings['search_weight_sticky']) ? '0' : $modSettings['search_weight_sticky'], '" onchange="calculateNewValues()" size="3" class="input_text" /></td>
 				<td id="weight6">', $context['relative_weights']['search_weight_sticky'], '%</td>
 			</tr><tr class="windowbg2">
 				<td align="right"><strong>', $txt['search_weights_total'], '</strong></td>
@@ -40,7 +40,7 @@ function template_modify_weights()
 				<td style="font-weight: bold;">100%</td>
 			</tr><tr class="windowbg2">
 				<td align="right" colspan="3">
-					<input type="submit" name="save" value="', $txt['search_weights_save'], '" />
+					<input type="submit" name="save" value="', $txt['search_weights_save'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -86,7 +86,7 @@ function template_select_search_method()
 	echo '
 			<tr class="windowbg2">
 				<th width="47%" align="right">', $txt['search_index'], ':<div class="smalltext" style="font-weight: normal;"><a href="', $scripturl, '?action=helpadmin;help=search_why_use_index" onclick="return reqWin(this.href);">', $txt['search_create_index_why'], '</a></div></th>
-				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value=""', empty($modSettings['search_index']) ? ' checked="checked"' : '', ' /></td>
+				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value=""', empty($modSettings['search_index']) ? ' checked="checked"' : '', ' class="input_radio" /></td>
 				<td>
 					', $txt['search_index_none'], '
 				</td>';
@@ -96,7 +96,7 @@ function template_select_search_method()
 		echo '
 			</tr><tr class="windowbg2">
 				<td></td>
-				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="fulltext"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'fulltext' ? ' checked="checked"' : '', empty($context['fulltext_index']) ? ' onclick="alert(\'' . $txt['search_method_fulltext_warning'] . '\'); selectRadioByName(this.form.search_index, \'fulltext\');"': '', ' /></td>
+				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="fulltext"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'fulltext' ? ' checked="checked"' : '', empty($context['fulltext_index']) ? ' onclick="alert(\'' . $txt['search_method_fulltext_warning'] . '\'); selectRadioByName(this.form.search_index, \'fulltext\');"': '', ' class="input_radio" /></td>
 				<td>
 					', $txt['search_method_fulltext_index'], '<br />
 					<span class="smalltext">';
@@ -118,7 +118,7 @@ function template_select_search_method()
 	echo '
 			</tr><tr class="windowbg2">
 				<td align="right"></td>
-				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="custom"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom' ? ' checked="checked"' : '', $context['custom_index'] ? '' : ' onclick="alert(\'' . $txt['search_index_custom_warning'] . '\'); selectRadioByName(this.form.search_method, \'1\');"', ' /></td>
+				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="custom"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom' ? ' checked="checked"' : '', $context['custom_index'] ? '' : ' onclick="alert(\'' . $txt['search_index_custom_warning'] . '\'); selectRadioByName(this.form.search_method, \'1\');"', ' class="input_radio" /></td>
 				<td>
 					', $txt['search_index_custom'], '<br />
 					<span class="smalltext">';
@@ -145,7 +145,7 @@ function template_select_search_method()
 		echo '
 			</tr><tr class="windowbg2">
 				<td align="right"></td>
-				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="', $api['setting_index'], '"', !empty($modSettings['search_index']) && $modSettings['search_index'] == $api['setting_index'] ? ' checked="checked"' : '', ' /></td>
+				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="', $api['setting_index'], '"', !empty($modSettings['search_index']) && $modSettings['search_index'] == $api['setting_index'] ? ' checked="checked"' : '', ' class="input_radio" /></td>
 				<td>
 					', $api['label'];
 
@@ -160,14 +160,14 @@ function template_select_search_method()
 	echo '
 			</tr><tr class="windowbg2">
 				<th align="right"><label for="search_force_index_check">', $txt['search_force_index'], ':</label></th>
-				<td colspan="2"><input type="checkbox" name="search_force_index" id="search_force_index_check" value="1"', empty($modSettings['search_force_index']) ? '' : ' checked="checked"', ' /></td>
+				<td colspan="2"><input type="checkbox" name="search_force_index" id="search_force_index_check" value="1"', empty($modSettings['search_force_index']) ? '' : ' checked="checked"', ' class="input_check" /></td>
 			</tr><tr class="windowbg2">
 				<th align="right"><label for="search_match_words_check">', $txt['search_match_words'], ':</label></th>
-				<td colspan="2"><input type="checkbox" name="search_match_words" id="search_match_words_check" value="1"', empty($modSettings['search_match_words']) ? '' : ' checked="checked"', ' /></td>
+				<td colspan="2"><input type="checkbox" name="search_match_words" id="search_match_words_check" value="1"', empty($modSettings['search_match_words']) ? '' : ' checked="checked"', ' class="input_check" /></td>
 			</tr><tr class="windowbg2">
 				<td></td>
 				<td align="right" colspan="2">
-					<input type="submit" name="save" value="', $txt['search_method_save'], '" />
+					<input type="submit" name="save" value="', $txt['search_method_save'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -195,7 +195,7 @@ function template_create_index()
 				</td>
 			</tr><tr class="windowbg2">
 				<td align="right" colspan="2">
-					<input type="submit" name="save" value="', $txt['search_create_index_start'], '" />
+					<input type="submit" name="save" value="', $txt['search_create_index_start'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -221,7 +221,7 @@ function template_create_index_progress()
 				</td>
 			</tr><tr>
 				<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
-					<input type="submit" name="b" value="', $txt['search_create_index_continue'], '" />
+					<input type="submit" name="b" value="', $txt['search_create_index_continue'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -288,7 +288,7 @@ function template_spider_edit()
 					<div class="smalltext">', $txt['spider_name_desc'], '</div>
 				</td>
 				<td>
-					<input type="text" name="spider_name" value="', $context['spider']['name'], '" />
+					<input type="text" name="spider_name" value="', $context['spider']['name'], '" class="input_text" />
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -297,7 +297,7 @@ function template_spider_edit()
 					<div class="smalltext">', $txt['spider_agent_desc'], '</div>
 				</td>
 				<td>
-					<input type="text" name="spider_agent" value="', $context['spider']['agent'], '" />
+					<input type="text" name="spider_agent" value="', $context['spider']['agent'], '" class="input_text" />
 				</td>
 			</tr>
 			<tr class="windowbg" valign="top">
@@ -311,7 +311,7 @@ function template_spider_edit()
 			</tr>
 			<tr class="titlebg">
 				<td align="center" colspan="2">
-					<input type="submit" name="save" value="', $context['page_title'], '" />
+					<input type="submit" name="save" value="', $context['page_title'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -338,14 +338,14 @@ function template_show_spider_logs()
 		<tr class="windowbg">
 			<td>
 				', $txt['spider_logs_delete_older'], '
-				<input type="text" name="older" id="older" value="7" size="3" />
+				<input type="text" name="older" id="older" value="7" size="3" class="input_text" />
 				', $txt['spider_logs_delete_day'], '
 			</td>
 		</tr>
 		<tr class="catbg">
 			<td align="right">
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" onclick="if (document.getElementById(\'older\').value &lt; 1 &amp;&amp; !confirm(\'' . addcslashes($txt['spider_logs_delete_confirm'], "'") . '\')) return false; return true;" />
+				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" onclick="if (document.getElementById(\'older\').value &lt; 1 &amp;&amp; !confirm(\'' . addcslashes($txt['spider_logs_delete_confirm'], "'") . '\')) return false; return true;" class="button_submit" />
 			</td>
 		</tr>
 	</table>

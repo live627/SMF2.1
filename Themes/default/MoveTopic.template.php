@@ -29,21 +29,21 @@ function template_main()
 	echo '
 					</select><br />
 					<br />
-					<label for="reset_subject"><input type="checkbox" name="reset_subject" id="reset_subject" onclick="document.getElementById(\'subjectArea\').style.display = this.checked ? \'block\' : \'none\';" class="check" /> ', $txt['moveTopic2'], '.</label><br />
+					<label for="reset_subject"><input type="checkbox" name="reset_subject" id="reset_subject" onclick="document.getElementById(\'subjectArea\').style.display = this.checked ? \'block\' : \'none\';" class="input_check" /> ', $txt['moveTopic2'], '.</label><br />
 					<div id="subjectArea" style="display: none; margin-top: 1ex; margin-bottom: 2ex;">
-						', $txt['moveTopic3'], ': <input type="text" name="custom_subject" size="30" value="', $context['subject'], '" /><br />
-						<label for="enforce_subject"><input type="checkbox" name="enforce_subject" id="enforce_subject" class="check" /> ', $txt['moveTopic4'], '.</label>
+						', $txt['moveTopic3'], ': <input type="text" name="custom_subject" size="30" value="', $context['subject'], '" class="input_text" /><br />
+						<label for="enforce_subject"><input type="checkbox" name="enforce_subject" id="enforce_subject" class="input_check" /> ', $txt['moveTopic4'], '.</label>
 					</div>';
 
 	// Disable the reason textarea when the postRedirect checkbox is unchecked...
 	echo '
-					<label for="postRedirect"><input type="checkbox" name="postRedirect" id="postRedirect" ', $context['is_approved'] ? 'checked="checked"' : '', ' onclick="', $context['is_approved'] ? '' : 'if (this.checked && !confirm(\'' . $txt['move_topic_unapproved_js'] . '\')) return false; ', 'document.getElementById(\'reasonArea\').style.display = this.checked ? \'block\' : \'none\';" class="check" /> ', $txt['moveTopic1'], '.</label><br />
+					<label for="postRedirect"><input type="checkbox" name="postRedirect" id="postRedirect" ', $context['is_approved'] ? 'checked="checked"' : '', ' onclick="', $context['is_approved'] ? '' : 'if (this.checked && !confirm(\'' . $txt['move_topic_unapproved_js'] . '\')) return false; ', 'document.getElementById(\'reasonArea\').style.display = this.checked ? \'block\' : \'none\';" class="input_check" /> ', $txt['moveTopic1'], '.</label><br />
 					<div id="reasonArea" style="margin-top: 1ex;', $context['is_approved'] ? '' : 'display: none;', '">
 						', $txt['moved_why'], '<br />
 						<textarea name="reason" rows="3" cols="40">', $txt['movetopic_default'], '</textarea><br />
 					</div>
 					<br />
-					<input type="submit" value="', $txt['move_topic'], '" onclick="return submitThisOnce(this);" accesskey="s" />
+					<input type="submit" value="', $txt['move_topic'], '" onclick="return submitThisOnce(this);" accesskey="s" class="button_submit" />
 				</td>
 			</tr>
 		</table>';

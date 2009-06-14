@@ -21,7 +21,7 @@ function template_main()
 					<td colspan="3" class="smalltext" style="padding: 2ex;">', $txt['themeadmin_explain'], '</td>
 				</tr>
 				<tr class="windowbg2">
-					<td colspan="3"><label for="options-theme_allow"><input type="checkbox" name="options[theme_allow]" id="options-theme_allow" value="1"', !empty($modSettings['theme_allow']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['theme_allow'], '</label></td>
+					<td colspan="3"><label for="options-theme_allow"><input type="checkbox" name="options[theme_allow]" id="options-theme_allow" value="1"', !empty($modSettings['theme_allow']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['theme_allow'], '</label></td>
 				</tr>
 				<tr class="windowbg2">
 					<td valign="top">', $txt['themeadmin_selectable'], ':</td>
@@ -29,7 +29,7 @@ function template_main()
 						<div id="known_themes_list">';
 		foreach ($context['themes'] as $theme)
 			echo '
-							<label for="options-known_themes_', $theme['id'], '"><input type="checkbox" name="options[known_themes][]" id="options-known_themes_', $theme['id'], '" value="', $theme['id'], '"', $theme['known'] ? ' checked="checked"' : '', ' class="check" /> ', $theme['name'], '</label><br />';
+							<label for="options-known_themes_', $theme['id'], '"><input type="checkbox" name="options[known_themes][]" id="options-known_themes_', $theme['id'], '" value="', $theme['id'], '"', $theme['known'] ? ' checked="checked"' : '', ' class="input_check" /> ', $theme['name'], '</label><br />';
 
 		echo '
 						</div>
@@ -74,7 +74,7 @@ function template_main()
 					<td class="smalltext">&nbsp; <a href="', $scripturl, '?action=theme;sa=pick;u=0;', $context['session_var'], '=', $context['session_id'], '">', $txt['theme_select'], '</a></td>
 				</tr>
 				<tr class="windowbg2">
-					<td colspan="3" align="center" valign="middle" style="padding-top: 2ex; padding-bottom: 2ex;"><input type="submit" name="submit" value="' . $txt['save'] . '" /></td>
+					<td colspan="3" align="center" valign="middle" style="padding-top: 2ex; padding-bottom: 2ex;"><input type="submit" name="submit" value="' . $txt['save'] . '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -111,7 +111,7 @@ function template_main()
 					<td valign="top"><label for="theme_gz">', $txt['theme_install_file'], '</label>:</td>
 				</tr>
 				<tr class="windowbg2">
-					<td style="padding-left: 20%;"><input type="file" name="theme_gz" id="theme_gz" value="theme_gz" size="40" onchange="this.form.copy.disabled = this.value != \'\'; this.form.theme_dir.disabled = this.value != \'\';" /></td>
+					<td style="padding-left: 20%;"><input type="file" name="theme_gz" id="theme_gz" value="theme_gz" size="40" onchange="this.form.copy.disabled = this.value != \'\'; this.form.theme_dir.disabled = this.value != \'\';" class="input_file" /></td>
 				</tr>';
 
 	echo '
@@ -119,7 +119,7 @@ function template_main()
 					<td valign="top" style="padding-bottom: 0;"><label for="theme_dir">', $txt['theme_install_dir'], '</label>:</td>
 				</tr>
 				<tr class="windowbg2">
-					<td style="padding-left: 20%;"><input type="text" name="theme_dir" id="theme_dir" value="', $context['new_theme_dir'], '" size="40" style="width: 70%;" /></td>
+					<td style="padding-left: 20%;"><input type="text" name="theme_dir" id="theme_dir" value="', $context['new_theme_dir'], '" size="40" style="width: 70%;" class="input_text" /></td>
 				</tr>';
 
 	if ($context['can_create_new'])
@@ -128,12 +128,12 @@ function template_main()
 					<td valign="top" style="padding-bottom: 0;"><label for="copy">', $txt['theme_install_new'], ':</label></td>
 				</tr>
 				<tr class="windowbg2">
-					<td style="padding-left: 20%;"><input type="text" name="copy" id="copy" value="', $context['new_theme_name'], '" size="40" /></td>
+					<td style="padding-left: 20%;"><input type="text" name="copy" id="copy" value="', $context['new_theme_name'], '" size="40" class="input_text" /></td>
 				</tr>';
 
 	echo '
 				<tr class="windowbg2">
-					<td align="right"><input type="submit" name="submit" value="', $txt['theme_install_go'], '" /></td>
+					<td align="right"><input type="submit" name="submit" value="', $txt['theme_install_go'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -225,14 +225,14 @@ function template_list_themes()
 				</tr>
 				<tr class="windowbg2">
 					<td width="30%">', $txt['themeadmin_list_reset_dir'], ':</td>
-					<td><input type="text" name="reset_dir" value="', $context['reset_dir'], '" size="40" style="width: 80%;" /></td>
+					<td><input type="text" name="reset_dir" value="', $context['reset_dir'], '" size="40" style="width: 80%;" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
 					<td width="30%">', $txt['themeadmin_list_reset_url'], ':</td>
-					<td><input type="text" name="reset_url" value="', $context['reset_url'], '" size="40" style="width: 80%;" /></td>
+					<td><input type="text" name="reset_url" value="', $context['reset_url'], '" size="40" style="width: 80%;" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
-					<td colspan="2" align="center" style="padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['themeadmin_list_reset_go'], '" /></td>
+					<td colspan="2" align="center" style="padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['themeadmin_list_reset_go'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -306,7 +306,7 @@ function template_set_options()
 		{
 			echo '
 						<input type="hidden" name="' . (!empty($setting['default']) ? 'default_' : '') . 'options[' . $setting['id'] . ']" value="0" />
-						<label for="options_', $setting['id'], '"><input type="checkbox" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="options_', $setting['id'], '"', !empty($setting['value']) ? ' checked="checked"' : '', $context['theme_options_reset'] ? ' disabled="disabled"' : '', ' value="1" class="check" /> ', $setting['label'], '</label>';
+						<label for="options_', $setting['id'], '"><input type="checkbox" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="options_', $setting['id'], '"', !empty($setting['value']) ? ' checked="checked"' : '', $context['theme_options_reset'] ? ' disabled="disabled"' : '', ' value="1" class="input_check" /> ', $setting['label'], '</label>';
 		}
 		elseif ($setting['type'] == 'list')
 		{
@@ -339,7 +339,7 @@ function template_set_options()
 
 	echo '
 				<tr class="windowbg2">
-					<td align="center" colspan="2"><br /><input type="submit" name="submit" value="', $txt['save'], '" /></td>
+					<td align="center" colspan="2"><br /><input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -376,19 +376,19 @@ function template_set_settings()
 				</tr>
 				<tr class="windowbg2">
 					<td>', $txt['actual_theme_name'], '</td>
-					<td><input type="text" name="options[name]" value="', $context['theme_settings']['name'], '" size="32" /></td>
+					<td><input type="text" name="options[name]" value="', $context['theme_settings']['name'], '" size="32" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
 					<td>', $txt['actual_theme_url'], '</td>
-					<td><input type="text" name="options[theme_url]" value="', $context['theme_settings']['actual_theme_url'], '" size="50" style="max-width: 100%; width: 50ex;" /></td>
+					<td><input type="text" name="options[theme_url]" value="', $context['theme_settings']['actual_theme_url'], '" size="50" style="max-width: 100%; width: 50ex;" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
 					<td>', $txt['actual_images_url'], '</td>
-					<td><input type="text" name="options[images_url]" value="', $context['theme_settings']['actual_images_url'], '" size="50" style="max-width: 100%; width: 50ex;" /></td>
+					<td><input type="text" name="options[images_url]" value="', $context['theme_settings']['actual_images_url'], '" size="50" style="max-width: 100%; width: 50ex;" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg2">
 					<td style="padding-bottom: 2ex;">', $txt['actual_theme_dir'], '</td>
-					<td style="padding-bottom: 2ex;"><input type="text" name="options[theme_dir]" value="', $context['theme_settings']['actual_theme_dir'], '" size="50" style="max-width: 100%; width: 50ex;" /></td>
+					<td style="padding-bottom: 2ex;"><input type="text" name="options[theme_dir]" value="', $context['theme_settings']['actual_theme_dir'], '" size="50" style="max-width: 100%; width: 50ex;" class="input_text" /></td>
 				</tr>';
 
 	// Do we allow theme variants?
@@ -415,7 +415,7 @@ function template_set_settings()
 				<tr class="windowbg2">
 					<td colspan="2">
 						<input type="hidden" name="options[disable_user_variant]" value="0" />
-						<label for="disable_user_variant"><input type="checkbox" name="options[disable_user_variant]" id="disable_user_variant"', !empty($context['theme_settings']['disable_user_variant']) ? ' checked="checked"' : '', ' value="1" class="check" /> ', $txt['theme_variants_user_disable'], '</label>
+						<label for="disable_user_variant"><input type="checkbox" name="options[disable_user_variant]" id="disable_user_variant"', !empty($context['theme_settings']['disable_user_variant']) ? ' checked="checked"' : '', ' value="1" class="input_check" /> ', $txt['theme_variants_user_disable'], '</label>
 					</td>
 				</tr>';
 	}
@@ -434,7 +434,7 @@ function template_set_settings()
 		if ($setting['type'] == 'checkbox')
 			echo '
 					<input type="hidden" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" value="0" />
-					<label for="', $setting['id'], '"><input type="checkbox" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '"', !empty($setting['value']) ? ' checked="checked"' : '', ' value="1" class="check" /> ', $setting['label'], '</label>';
+					<label for="', $setting['id'], '"><input type="checkbox" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '"', !empty($setting['value']) ? ' checked="checked"' : '', ' value="1" class="input_check" /> ', $setting['label'], '</label>';
 		elseif ($setting['type'] == 'list')
 		{
 			echo '
@@ -453,7 +453,7 @@ function template_set_settings()
 		else
 			echo '
 					<label for="', $setting['id'], '">', $setting['label'], '</label>
-					<input type="text" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '" value="', $setting['value'], '"', $setting['type'] == 'number' ? ' size="5"' : ' size="40"', ' />';
+					<input type="text" name="', !empty($setting['default']) ? 'default_' : '', 'options[', $setting['id'], ']" id="', $setting['id'], '" value="', $setting['value'], '"', $setting['type'] == 'number' ? ' size="5"' : ' size="40"', ' class="input_text" />';
 
 		if (isset($setting['description']))
 			echo '
@@ -466,7 +466,7 @@ function template_set_settings()
 
 	echo '
 				<tr class="windowbg2">
-					<td align="center" colspan="2" style="padding-top: 1ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['save'], '" /></td>
+					<td align="center" colspan="2" style="padding-top: 1ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['save'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -533,7 +533,7 @@ function template_pick()
 			echo '
 						</select>
 						<noscript>
-							<input type="submit" name="save[', $theme['id'], ']" value="', $txt['save'], '" />
+							<input type="submit" name="save[', $theme['id'], ']" value="', $txt['save'], '" class="button_submit" />
 						</noscript>';
 		}
 
@@ -852,8 +852,8 @@ function template_edit_style()
 
 	echo '
 						<textarea name="entire_file" cols="80" rows="20" style="width: 96%; font-family: monospace; margin-top: 1ex; white-space: pre;" onkeyup="setPreviewTimeout();" onchange="refreshPreview(true);">', $context['entire_file'], '</textarea><br />
-						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" />
-						<input type="button" value="', $txt['themeadmin_edit_preview'], '" onclick="refreshPreview(false);" />
+						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" class="button_submit" />
+						<input type="button" value="', $txt['themeadmin_edit_preview'], '" onclick="refreshPreview(false);" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -901,7 +901,7 @@ function template_edit_template()
 						<div class="centertext"><textarea name="entire_file[]" cols="80" rows="', $part['lines'] > 14 ? '14' : $part['lines'], '" style="width: 96%; font-family: monospace; margin-top: 1ex; white-space: pre;">', $part['data'], '</textarea></div>';
 
 	echo '
-						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" />
+						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" class="button_submit" />
 					</td>
 				</tr>
 			</table>
@@ -937,7 +937,7 @@ function template_edit_file()
 
 	echo '
 						<textarea name="entire_file" cols="80" rows="20" style="width: 96%; font-family: monospace; margin-top: 1ex; white-space: pre;">', $context['entire_file'], '</textarea><br />
-						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" />
+						<input type="submit" name="submit" value="', $txt['theme_edit_save'], '"', $context['allow_save'] ? '' : ' disabled="disabled"', ' style="margin-top: 1ex;" class="button_submit" />
 					</td>
 				</tr>
 			</table>

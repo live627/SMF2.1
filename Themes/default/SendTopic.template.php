@@ -46,29 +46,29 @@ function template_main()
 	echo '
 				<tr class="windowbg">
 					<td align="right"><strong>', $txt['sendtopic_sender_name'], ':</strong></td>
-					<td align="left"><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" /></td>
+					<td align="left"><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg">
 					<td align="right"><strong>', $txt['sendtopic_sender_email'], ':</strong></td>
-					<td align="left"><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" /></td>
+					<td align="left"><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg">
 					<td align="right"><strong>', $txt['sendtopic_comment'], ':</strong></td>
-					<td align="left"><input type="text" name="comment" size="24" maxlength="100" /></td>
+					<td align="left"><input type="text" name="comment" size="24" maxlength="100" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg">
 					<td align="center" colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 				</tr>
 				<tr class="windowbg">
 					<td align="right"><strong>', $txt['sendtopic_receiver_name'], ':</strong></td>
-					<td align="left"><input type="text" name="r_name" size="24" maxlength="40" /></td>
+					<td align="left"><input type="text" name="r_name" size="24" maxlength="40" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg">
 					<td align="right"><strong>', $txt['sendtopic_receiver_email'], ':</strong></td>
-					<td align="left"><input type="text" name="r_email" size="24" maxlength="50" /></td>
+					<td align="left"><input type="text" name="r_email" size="24" maxlength="50" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg">
-					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" /></td>
+					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -112,14 +112,14 @@ function template_custom_email()
 		echo '
 				<tr class="windowbg" valign="top">
 					<td width="30%"><strong>', $txt['sendtopic_sender_name'], ':</strong></td>
-					<td><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" /></td>
+					<td><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg" valign="top">
 					<td width="30%">
 						<strong>', $txt['sendtopic_sender_email'], ':</strong>
 						<div class="smalltext">', $txt['send_email_disclosed'], '</div>
 					</td>
-					<td><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" /></td>
+					<td><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" class="input_text" /></td>
 				</tr>';
 	// Otherwise show the user that we know their email.
 	else
@@ -135,7 +135,7 @@ function template_custom_email()
 	echo '
 				<tr class="windowbg">
 					<td width="30%"><strong>', $txt['send_email_subject'], ':</strong></td>
-					<td><input type="text" name="email_subject" size="50" maxlength="100" /></td>
+					<td><input type="text" name="email_subject" size="50" maxlength="100" class="input_text" /></td>
 				</tr>
 				<tr class="windowbg" valign="top">
 					<td width="30%">
@@ -146,7 +146,7 @@ function template_custom_email()
 					</td>
 				</tr>
 				<tr class="windowbg">
-					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" /></td>
+					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" class="button_submit" /></td>
 				</tr>
 			</table>';
 
@@ -173,7 +173,7 @@ function template_report()
 				<td style="padding-bottom: 3ex;" align="center">
 					<div style="margin-top: 1ex; margin-bottom: 3ex;" align="left">', $txt['report_to_mod_func'], '</div>
 					', $txt['enter_comment'], ': <input type="text" name="comment" size="50" maxlength="255" />
-					<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" />
+					<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" class="button_submit" />
 				</td>
 			</tr>
 		</table>
