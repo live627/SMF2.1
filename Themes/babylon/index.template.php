@@ -258,7 +258,7 @@ function template_body_above()
 
 							<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 								<div class="righttext">
-									<input type="text" name="user" size="10" /> <input type="password" name="passwrd" size="10" />
+									<input type="text" name="user" size="10" class="input_text" /> <input type="password" name="passwrd" size="10" class="input_password" />
 									<select name="cookielength">
 										<option value="60">', $txt['one_hour'], '</option>
 										<option value="1440">', $txt['one_day'], '</option>
@@ -266,7 +266,7 @@ function template_body_above()
 										<option value="43200">', $txt['one_month'], '</option>
 										<option value="-1" selected="selected">', $txt['forever'], '</option>
 									</select>
-									<input type="submit" value="', $txt['login'], '" /><br />
+									<input type="submit" value="', $txt['login'], '" class="button_submit" /><br />
 									', $txt['quick_login_dec'], '
 									<input type="hidden" name="hash_passwrd" value="" />
 								</div>
@@ -279,8 +279,8 @@ function template_body_above()
 
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 						<div style="margin-top: 7px;">
-							<strong>', $txt['search'], ': </strong><input type="text" name="search" value="" style="width: 190px;" />&nbsp;
-							<input type="submit" name="submit" value="', $txt['search'], '" style="width: 8ex;" />&nbsp;
+							<strong>', $txt['search'], ': </strong><input type="text" name="search" value="" style="width: 190px;" class="input_text" />&nbsp;
+							<input type="submit" name="submit" value="', $txt['search'], '" style="width: 8ex;" class="button_submit" />&nbsp;
 							<a href="', $scripturl, '?action=search;advanced">', $txt['search_advanced'], '</a>
 							<input type="hidden" name="advanced" value="0" />';
 

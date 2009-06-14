@@ -180,7 +180,7 @@ function template_main()
 			echo '
 						</td>
 					</tr><tr>
-						<td colspan="2"><input type="submit" value="', $txt['poll_vote'], '" /></td>
+						<td colspan="2"><input type="submit" value="', $txt['poll_vote'], '" class="button_submit" /></td>
 					</tr>
 				</table>
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -622,15 +622,15 @@ function template_main()
 		// Guests just need more.
 		if ($context['user']['is_guest'])
 			echo '
-				<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" />
-				<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" /><br />';
+				<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" class="input_text" />
+				<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" class="input_text" /><br />';
 		echo '
 				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
-				<input type="submit" name="post" value="' . $txt['post'] . '" accesskey="s" tabindex="2" />
-				<input type="submit" name="preview" value="' . $txt['preview'] . '" accesskey="p" tabindex="4" />';
+				<input type="submit" name="post" value="' . $txt['post'] . '" accesskey="s" tabindex="2" class="button_submit" />
+				<input type="submit" name="preview" value="' . $txt['preview'] . '" accesskey="p" tabindex="4" class="button_submit" />';
 		if ($context['show_spellchecking'])
 			echo '
-				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" />';
+				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" class="button_submit" />';
 		echo '
 				<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
 				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
@@ -700,10 +700,10 @@ function template_main()
 					<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 					<input type="hidden" name="msg" value="%msg_id%" />
 					<div class="centertext">
-						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');" accesskey="s" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" />
+						<input type="submit" name="post" value="' . $txt['save'] . '" tabindex="8" onclick="return oQuickModify.modifySave(\'' . $context['session_id'] . '\', \'' . $context['session_var'] . '\');" accesskey="s" class="button_submit" />&nbsp;&nbsp;' . ($context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" tabindex="9" onclick="spellCheck(\'quickModForm\', \'message\');" class="button_submit" />&nbsp;&nbsp;' : '') . '<input type="submit" name="cancel" value="' . $txt['modify_cancel'] . '" tabindex="9" onclick="return oQuickModify.modifyCancel();" class="button_submit" />
 					</div>
 				</div>'), ',
-			sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" />'), ',
+			sTemplateSubjectEdit: ', JavaScriptEscape('<input type="text" style="width: 90%" name="subject" value="%subject%" size="80" maxlength="80" tabindex="6" class="input_text" />'), ',
 			sTemplateBodyNormal: ', JavaScriptEscape('%body%'), ',
 			sTemplateSubjectNormal: ', JavaScriptEscape('<a href="' . $scripturl . '?topic=' . $context['current_topic'] . '.msg%msg_id%#msg%msg_id%" rel="nofollow">%subject%</a>'), ',
 			sTemplateTopSubject: ', JavaScriptEscape($txt['topic'] . ': %subject% &nbsp;(' . $txt['read'] . ' ' . $context['num_views'] . ' ' . $txt['times'] . ')'), ',

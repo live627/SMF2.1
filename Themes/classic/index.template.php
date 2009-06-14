@@ -231,8 +231,8 @@ function template_body_below()
 			<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 			<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '><br />
-				<input type="text" name="user" size="7" />
-				<input type="password" name="passwrd" size="7" />
+				<input type="text" name="user" size="7" class="input_text" />
+				<input type="password" name="passwrd" size="7" class="input_password" />
 				<select name="cookielength">
 					<option value="60">', $txt['one_hour'], '</option>
 					<option value="1440">', $txt['one_day'], '</option>
@@ -240,7 +240,7 @@ function template_body_below()
 					<option value="43200">', $txt['one_month'], '</option>
 					<option value="-1" selected="selected">', $txt['forever'], '</option>
 				</select>
-				<input type="submit" value="', $txt['login'], '" /><br />
+				<input type="submit" value="', $txt['login'], '" class="button_submit" /><br />
 				', $txt['quick_login_dec'], '
 				<input type="hidden" name="hash_passwrd" value="" />
 			</form>

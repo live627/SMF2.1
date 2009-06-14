@@ -143,7 +143,7 @@ function template_main()
 			if (!empty($context['can_quick_mod']))
 				echo '
 		<td width="8%" valign="middle" align="center">', $options['display_quick_mod'] != 1 ? '&nbsp;' : '
-			<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+			<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 		', '</td>';
 		}
 		else
@@ -197,7 +197,7 @@ function template_main()
 		<td class="windowbg" valign="middle" align="center" width="8%">';
 				if ($options['display_quick_mod'] == 1)
 					echo '
-			<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';
+			<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
 				else
 				{
 					if ($topic['quick_mod']['remove'])
@@ -255,7 +255,7 @@ function template_main()
 			}
 
 			echo '
-			<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
+			<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
 		</td>
 	</tr>';
 		}

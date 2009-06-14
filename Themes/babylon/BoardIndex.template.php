@@ -463,19 +463,19 @@ function template_info_center()
 			<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table border="0" cellpadding="2" cellspacing="0" width="100%"><tr>
 					<td valign="middle" align="left">
-						<label for="user"><strong>', $txt['username'], ':</strong><br /><input type="text" name="user" id="user" size="15" /></label>
+						<label for="user"><strong>', $txt['username'], ':</strong><br /><input type="text" name="user" id="user" size="15" class="input_text" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="passwrd"><strong>', $txt['password'], ':</strong><br /><input type="password" name="passwrd" id="passwrd" size="15" /></label>
+						<label for="passwrd"><strong>', $txt['password'], ':</strong><br /><input type="password" name="passwrd" id="passwrd" size="15" class="input_password" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="cookielength"><strong>', $txt['mins_logged_in'], ':</strong><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
+						<label for="cookielength"><strong>', $txt['mins_logged_in'], ':</strong><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" class="input_text" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="cookieneverexp"><strong>', $txt['always_logged_in'], ':</strong><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
+						<label for="cookieneverexp"><strong>', $txt['always_logged_in'], ':</strong><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="input_check" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<input type="submit" value="', $txt['login'], '" />
+						<input type="submit" value="', $txt['login'], '" class="button_submit" />
 					</td>
 				</tr></table>
 			</form>
