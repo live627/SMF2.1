@@ -1632,7 +1632,7 @@ function EditCustomProfiles()
 		// Come up with the unique name?
 		if (empty($context['fid']))
 		{
-			$colname = strtr(substr($_POST['field_name'], 0, 8), array(' ' => ''));
+			$colname = strtr(substr($_POST['field_name'], 0, 7), array(' ' => ''));
 			preg_match('~([\w\d_-]+)~', $colname, $matches);
 			if (!isset($matches[1]))
 				fatal_lang_error('custom_option_not_unique');

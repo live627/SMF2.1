@@ -81,6 +81,7 @@ June 2009
  * Rewrote the news fader script to be object orientated. (fader.js, BoardIndex templates)
  * Curve: spiced up the Core Features template. (Admin template)
  * Curve: color matched the collapse images. (collapse.gif, expand.gif)
+ ! In some rare cases, adding a new custom field could result in a database error. (ManageSettings.php)
 
 
 May 2009
