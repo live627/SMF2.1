@@ -145,7 +145,7 @@ function template_maintenance()
 	// Display the administrator's message at the top.
 	echo '
 <form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
-	<div class="tborder login" id="maintenace">
+	<div class="tborder login" id="maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $context['title'], '
 		</h3>

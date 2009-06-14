@@ -85,6 +85,7 @@ June 2009
  * Curve: rewrote the Themes template to match Curve's look and feel. (Themes.template.php, admin.css)
  * Split up the registration template into two steps, giving the registration agreement its own step. (Register.php, Register template) [Feature 3437]
  * Curve: revamped the registration screen to match Curve's look and feel. (Register template, login.css) [Feature 3437]
+ * Spell maintenace correctly (index.css, Login.Template.php) [Bug 3514]
 
 
 May 2009
