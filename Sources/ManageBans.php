@@ -321,11 +321,11 @@ function BanList()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="remove[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="remove[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id_ban_group' => false,
 						),
@@ -340,7 +340,7 @@ function BanList()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="removeBans" value="' . $txt['ban_remove_selected'] . '" onclick="return confirm(\'' . $txt['ban_remove_selected_confirm'] . '\');" />',
+				'value' => '<input type="submit" name="removeBans" value="' . $txt['ban_remove_selected'] . '" onclick="return confirm(\'' . $txt['ban_remove_selected_confirm'] . '\');" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
@@ -1213,11 +1213,11 @@ function BanBrowseTriggers()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="remove[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="remove[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id_ban' => false,
 						),
@@ -1239,7 +1239,7 @@ function BanBrowseTriggers()
 			),
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="remove_triggers" value="' . $txt['ban_remove_selected_triggers'] . '" onclick="return confirm(\'' . $txt['ban_remove_selected_triggers_confirm'] . '\');" />',
+				'value' => '<input type="submit" name="remove_triggers" value="' . $txt['ban_remove_selected_triggers'] . '" onclick="return confirm(\'' . $txt['ban_remove_selected_triggers_confirm'] . '\');" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
@@ -1492,11 +1492,11 @@ function BanLog()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="remove[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="remove[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id_ban_log' => false,
 						),
@@ -1514,8 +1514,8 @@ function BanLog()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<input type="submit" name="removeSelected" value="' . $txt['ban_log_remove_selected'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_selected_confirm'] . '\');" />
-					<input type="submit" name="removeAll" value="' . $txt['ban_log_remove_all'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_all_confirm'] . '\');" />',
+					<input type="submit" name="removeSelected" value="' . $txt['ban_log_remove_selected'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_selected_confirm'] . '\');" class="button_submit" />
+					<input type="submit" name="removeAll" value="' . $txt['ban_log_remove_all'] . '" onclick="return confirm(\'' . $txt['ban_log_remove_all_confirm'] . '\');" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),

@@ -788,7 +788,7 @@ function DownloadLanguage()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return \'<input type="checkbox" name="copy_file[]" value="\' . $rowData[\'generaldest\'] . \'" \' . ($rowData[\'default_copy\'] ? \'checked="checked"\' : \'\') . \' class="check" />\';
+						return \'<input type="checkbox" name="copy_file[]" value="\' . $rowData[\'generaldest\'] . \'" \' . ($rowData[\'default_copy\'] ? \'checked="checked"\' : \'\') . \' class="input_check" />\';
 					'),
 					'style' => 'text-align: center; width: 4%;',
 				),
@@ -873,7 +873,7 @@ function ModifyLanguages()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return \'<input type="radio" name="def_language" value="\' . $rowData[\'id\'] . \'" \' . ($rowData[\'default\'] ? \'checked="checked"\' : \'\') . \' onclick="highlightSelected(\\\'list_language_list_\' . $rowData[\'id\'] . \'\\\');" class="check" />\';
+						return \'<input type="radio" name="def_language" value="\' . $rowData[\'id\'] . \'" \' . ($rowData[\'default\'] ? \'checked="checked"\' : \'\') . \' onclick="highlightSelected(\\\'list_language_list_\' . $rowData[\'id\'] . \'\\\');" class="input_radio" />\';
 					'),
 					'style' => 'text-align: center; width: 4%;',
 				),
@@ -922,7 +922,7 @@ function ModifyLanguages()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="set_default" value="' . $txt['save'] . '" ' . (is_writable($boarddir . '/Settings.php') ? '' : 'disabled="disabled"') . '/>',
+				'value' => '<input type="submit" name="set_default" value="' . $txt['save'] . '"' . (is_writable($boarddir . '/Settings.php') ? '' : ' disabled="disabled"') . ' class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),

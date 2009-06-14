@@ -1213,7 +1213,7 @@ function ViewWatchedUsers()
 			array(
 				'position' => 'bottom_of_list',
 				'value' => '
-					<input type="submit" name="delete_selected" value="' . $txt['quickmod_delete_selected'] . '" />',
+					<input type="submit" name="delete_selected" value="' . $txt['quickmod_delete_selected'] . '" class="button_submit" />',
 				'class' => 'windowbg',
 				'align' => 'right',
 			) : array(),
@@ -1717,7 +1717,7 @@ function ViewWarningTemplates()
 					'function' => create_function('$rowData', '
 						global $context, $txt, $scripturl;
 
-						return \'<input type="checkbox" name="deltpl[]" value="\' . $rowData[\'id_comment\'] . \'" class="check" />\';
+						return \'<input type="checkbox" name="deltpl[]" value="\' . $rowData[\'id_comment\'] . \'" class="input_check" />\';
 					'),
 					'style' => 'text-align: center;',
 				),
@@ -1730,8 +1730,8 @@ function ViewWarningTemplates()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<input type="submit" name="add" value="' . $txt['mc_warning_template_add'] . '" />
-					<input type="submit" name="delete" value="' . $txt['mc_warning_template_delete'] . '" onclick="return confirm(\'' . $txt['mc_warning_template_delete_confirm'] . '\');" />',
+					<input type="submit" name="add" value="' . $txt['mc_warning_template_add'] . '" class="button_submit" />
+					<input type="submit" name="delete" value="' . $txt['mc_warning_template_delete'] . '" onclick="return confirm(\'' . $txt['mc_warning_template_delete_confirm'] . '\');" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),

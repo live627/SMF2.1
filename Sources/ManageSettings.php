@@ -1288,7 +1288,7 @@ function ShowCustomProfiles()
 					'function' => create_function('$rowData', '
 						$isChecked = $rowData[\'disabled\'] ? \'\' : \' checked="checked"\';
 						$onClickHandler = $rowData[\'can_show_register\'] ? sprintf(\'onclick="document.getElementById(\\\'reg_%1$s\\\').disabled = !this.checked;"\', $rowData[\'id\']) : \'\';
-						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$s" value="%1$s" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
+						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$s" value="%1$s" class="input_check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
 					'),
 					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
@@ -1302,7 +1302,7 @@ function ShowCustomProfiles()
 					'function' => create_function('$rowData', '
 						$isChecked = $rowData[\'on_register\'] && !$rowData[\'disabled\'] ? \' checked="checked"\' : \'\';
 						$isDisabled = $rowData[\'can_show_register\'] ? \'\' : \' disabled="disabled"\';
-						return sprintf(\'<input type="checkbox" name="reg[]" id="reg_%1$s" value="%1$s" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $isDisabled);
+						return sprintf(\'<input type="checkbox" name="reg[]" id="reg_%1$s" value="%1$s" class="input_check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $isDisabled);
 					'),
 					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
@@ -1316,7 +1316,7 @@ function ShowCustomProfiles()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="save" value="' . $txt['save'] . '" />',
+				'value' => '<input type="submit" name="save" value="' . $txt['save'] . '" class="button_submit" />',
 				'style' => 'text-align: right;',
 				'class' => 'titlebg',
 			),
@@ -1419,7 +1419,7 @@ function ShowCustomProfiles()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="new" value="' . $txt['custom_profile_make_new'] . '" />',
+				'value' => '<input type="submit" name="new" value="' . $txt['custom_profile_make_new'] . '" class="button_submit" />',
 				'style' => 'text-align: right;',
 				'class' => 'titlebg',
 			),

@@ -1743,12 +1743,12 @@ function notification($memID)
 			),
 			'delete' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'value' => '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" />',
 					'style' => 'width: 4%;',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="notify_boards[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="notify_boards[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id' => false,
 						),
@@ -1770,7 +1770,7 @@ function notification($memID)
 		'additional_rows' => array(
 			array(
 				'position' => 'bottom_of_list',
-				'value' => '<input type="submit" name="edit_notify_boards" value="' . $txt['notifications_update'] . '" />',
+				'value' => '<input type="submit" name="edit_notify_boards" value="' . $txt['notifications_update'] . '" class="button_submit" />',
 				'class' => 'windowbg',
 				'align' => 'right',
 			),
@@ -1858,12 +1858,12 @@ function notification($memID)
 			),
 			'delete' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'value' => '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" />',
 					'style' => 'width: 4%;',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="notify_topics[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="notify_topics[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id' => false,
 						),
@@ -1885,7 +1885,7 @@ function notification($memID)
 		'additional_rows' => array(
 			array(
 				'position' => 'bottom_of_list',
-				'value' => '<input type="submit" name="edit_notify_topics" value="' . $txt['notifications_update'] . '" />',
+				'value' => '<input type="submit" name="edit_notify_topics" value="' . $txt['notifications_update'] . '" class="button_submit" />',
 				'class' => 'windowbg',
 				'align' => 'right',
 			),

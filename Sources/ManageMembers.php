@@ -607,13 +607,13 @@ function ViewMemberlist()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $user_info;
 
-						return \'<input type="checkbox" name="delete[]" value="\' . $rowData[\'id_member\'] . \'" class="check" \' . ($rowData[\'id_member\'] == $user_info[\'id\'] || $rowData[\'id_group\'] == 1 || in_array(1, explode(\',\', $rowData[\'additional_groups\'])) ? \'disabled="disabled"\' : \'\') . \' />\';
+						return \'<input type="checkbox" name="delete[]" value="\' . $rowData[\'id_member\'] . \'" class="input_check" \' . ($rowData[\'id_member\'] == $user_info[\'id\'] || $rowData[\'id_group\'] == 1 || in_array(1, explode(\',\', $rowData[\'additional_groups\'])) ? \'disabled="disabled"\' : \'\') . \' />\';
 					'),
 					'class' => 'windowbg',
 					'style' => 'text-align: center',
@@ -628,7 +628,7 @@ function ViewMemberlist()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="delete_members" value="' . $txt['admin_delete_members'] . '" onclick="return confirm(\'' . $txt['confirm_delete_members'] . '\');" />',
+				'value' => '<input type="submit" name="delete_members" value="' . $txt['admin_delete_members'] . '" onclick="return confirm(\'' . $txt['confirm_delete_members'] . '\');" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
@@ -954,11 +954,11 @@ function MembersAwaitingActivation()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="todoAction[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="todoAction[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id_member' => false,
 						),
@@ -989,7 +989,7 @@ function MembersAwaitingActivation()
 						<select name="todo" onchange="onSelectChange();">
 							' . $allowed_actions . '
 						</select>
-						<noscript><input type="submit" value="' . $txt['go'] . '" /></noscript>
+						<noscript><input type="submit" value="' . $txt['go'] . '" class="button_submit" /></noscript>
 					</div>',
 				'class' => 'titlebg',
 			),
@@ -1017,7 +1017,7 @@ function MembersAwaitingActivation()
 				<option value="' . $filter['type'] . '"' . ($filter['selected'] ? ' selected="selected"' : '') . '>' . $filter['desc'] . ' - ' . $filter['amount'] . ' ' . ($filter['amount'] == 1 ? $txt['user'] : $txt['users']) . '</option>';
 		$filterOptions .= '
 			</select>
-			<noscript><input type="submit" value="' . $txt['go'] . '" name="filter" /></noscript>';
+			<noscript><input type="submit" value="' . $txt['go'] . '" name="filter" class="button_submit" /></noscript>';
 		$listOptions['additional_rows'][] = array(
 			'position' => 'above_column_headers',
 			'value' => $filterOptions,

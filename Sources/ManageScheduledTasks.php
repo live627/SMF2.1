@@ -231,7 +231,7 @@ function ScheduledTasks()
 				'data' => array(
 					'sprintf' => array(
 						'format' =>
-							'<input type="hidden" name="task[%1$d]" id="task_%1$d" value="0" /><input type="checkbox" name="task[%1$d]" id="task_check_%1$d" %2$s class="check" />',
+							'<input type="hidden" name="task[%1$d]" id="task_%1$d" value="0" /><input type="checkbox" name="task[%1$d]" id="task_check_%1$d" %2$s class="input_check" />',
 						'params' => array(
 							'id' => false,
 							'checked_state' => false,
@@ -248,7 +248,7 @@ function ScheduledTasks()
 				'data' => array(
 					'sprintf' => array(
 						'format' =>
-							'<input type="checkbox" name="run_task[%1$d]" id="run_task_%1$d" class="check" />',
+							'<input type="checkbox" name="run_task[%1$d]" id="run_task_%1$d" class="input_check" />',
 						'params' => array(
 							'id' => false,
 						),
@@ -265,8 +265,8 @@ function ScheduledTasks()
 				'position' => 'below_table_data',
 				'value' => '
 					<div class="floatright">
-						<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" />
-						<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" />
+						<input type="submit" name="save" value="' . $txt['scheduled_tasks_save_changes'] . '" class="button_submit" />
+						<input type="submit" name="run" value="' . $txt['scheduled_tasks_run_now'] . '" class="button_submit" />
 					</div>',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
@@ -506,7 +506,7 @@ function TaskLog()
 			array(
 				'position' => 'below_table_data',
 				'value' => '
-					<input type="submit" name="removeAll" value="' . $txt['scheduled_log_empty_log'] . '" />',
+					<input type="submit" name="removeAll" value="' . $txt['scheduled_log_empty_log'] . '" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),

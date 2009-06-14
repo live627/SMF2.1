@@ -866,12 +866,12 @@ function GroupRequests()
 			),
 			'action' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'value' => '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" />',
 					'style' => 'width: 4%;',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="groupr[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="groupr[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id' => false,
 						),
@@ -899,7 +899,7 @@ function GroupRequests()
 						<option value="reject">' . $txt['mc_groupr_reject'] . '</option>
 						<option value="reason">' . $txt['mc_groupr_reject_w_reason'] . '</option>
 					</select>
-					<input type="submit" name="go" value="' . $txt['go'] . '" onclick="var sel = document.getElementById(\'req_action\'); if (sel.value != 0 &amp;&amp; sel.value != \'reason\' &amp;&amp; !confirm(\'' . $txt['mc_groupr_warning'] . '\')) return false;" />',
+					<input type="submit" name="go" value="' . $txt['go'] . '" onclick="var sel = document.getElementById(\'req_action\'); if (sel.value != 0 &amp;&amp; sel.value != \'reason\' &amp;&amp; !confirm(\'' . $txt['mc_groupr_warning'] . '\')) return false;" class="button_submit" />',
 				'class' => 'windowbg',
 				'align' => 'right',
 			),

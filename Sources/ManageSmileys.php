@@ -436,11 +436,11 @@ function EditSmileySets()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return $rowData[\'id\'] == 0 ? \'\' : sprintf(\'<input type="checkbox" name="smiley_set[%1$d]" class="check" />\', $rowData[\'id\']);
+						return $rowData[\'id\'] == 0 ? \'\' : sprintf(\'<input type="checkbox" name="smiley_set[%1$d]" class="input_check" />\', $rowData[\'id\']);
 					'),
 					'style' => 'text-align: center',
 				),
@@ -452,7 +452,7 @@ function EditSmileySets()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="delete" value="' . $txt['smiley_sets_delete'] . '" onclick="return confirm(\'' . $txt['smiley_sets_confirm'] . '\');" style="float: right;" /> [<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifyset' . '">' . $txt['smiley_sets_add'] . '</a>]',
+				'value' => '<input type="submit" name="delete" value="' . $txt['smiley_sets_delete'] . '" onclick="return confirm(\'' . $txt['smiley_sets_confirm'] . '\');" style="float: right;" class="button_submit" /> [<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifyset' . '">' . $txt['smiley_sets_add'] . '</a>]',
 				'class' => 'titlebg',
 			),
 		),
@@ -1022,11 +1022,11 @@ function EditSmileys()
 				),
 				'check' => array(
 					'header' => array(
-						'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+						'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 					),
 					'data' => array(
 						'sprintf' => array(
-							'format' => '<input type="checkbox" name="checked_smileys[]" value="%1$d" class="check" />',
+							'format' => '<input type="checkbox" name="checked_smileys[]" value="%1$d" class="input_check" />',
 							'params' => array(
 								'id_smiley' => false,
 							),
@@ -1057,7 +1057,7 @@ function EditSmileys()
 							<option value="popup">' . $txt['smileys_show_on_popup'] . '</option>
 							<option value="delete">' . $txt['smileys_remove'] . '</option>
 						</select>
-						<noscript><input type="submit" name="perform_action" value="'. $txt['go'] . '" /></noscript>',
+						<noscript><input type="submit" name="perform_action" value="'. $txt['go'] . '" class="button_submit" /></noscript>',
 					'style' => 'text-align: right;',
 					'class' => 'titlebg',
 				),
@@ -1666,11 +1666,11 @@ function EditMessageIcons()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="checked_icons[]" value="%1$d" class="check" />',
+						'format' => '<input type="checkbox" name="checked_icons[]" value="%1$d" class="input_check" />',
 						'params' => array(
 							'id_icon' => false,
 						),
@@ -1685,7 +1685,7 @@ function EditMessageIcons()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" style="float: right" />[<a href="'. $scripturl . '?action=admin;area=smileys;sa=editicon">' . $txt['icons_add_new'] . '</a>]',
+				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" style="float: right" class="button_submit" />[<a href="'. $scripturl . '?action=admin;area=smileys;sa=editicon">' . $txt['icons_add_new'] . '</a>]',
 				'class' => 'titlebg',
 			),
 		),

@@ -436,11 +436,11 @@ function BrowseFiles()
 			),
 			'check' => array(
 				'header' => array(
-					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />',
 				),
 				'data' => array(
 					'sprintf' => array(
-						'format' => '<input type="checkbox" name="remove[%1$d]" class="check" />',
+						'format' => '<input type="checkbox" name="remove[%1$d]" class="input_check" />',
 						'params' => array(
 							'id_attach' => false,
 						),
@@ -460,7 +460,7 @@ function BrowseFiles()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="remove_submit" value="' . $txt['quickmod_delete_selected'] . '" onclick="return confirm(\'' . $txt['confirm_delete_attachments'] . '\');" />',
+				'value' => '<input type="submit" name="remove_submit" class="button_submit" value="' . $txt['quickmod_delete_selected'] . '" onclick="return confirm(\'' . $txt['confirm_delete_attachments'] . '\');" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
@@ -1661,7 +1661,7 @@ function ManageAttachmentPaths()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return \'<input type="radio" name="current_dir" value="\' . $rowData[\'id\'] . \'" \' . ($rowData[\'current\'] ? \'checked="checked"\' : \'\') . \' class="check" />\';
+						return \'<input type="radio" name="current_dir" value="\' . $rowData[\'id\'] . \'" \' . ($rowData[\'current\'] ? \'checked="checked"\' : \'\') . \' class="input_radio" />\';
 					'),
 					'style' => 'text-align: center; width: 15%;',
 				),
@@ -1672,7 +1672,7 @@ function ManageAttachmentPaths()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						return \'<input type="text" size="50" name="dirs[\' . $rowData[\'id\'] . \']" value="\' . $rowData[\'path\'] . \'" />\';
+						return \'<input type="text" size="50" name="dirs[\' . $rowData[\'id\'] . \']" value="\' . $rowData[\'path\'] . \'" class="input_text" />\';
 					'),
 					'style' => 'text-align: center; width: 30%;',
 				),
@@ -1711,7 +1711,7 @@ function ManageAttachmentPaths()
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '<input type="submit" name="new_path" value="' . $txt['attach_add_path'] . '" />&nbsp;<input type="submit" name="save" value="' . $txt['save'] . '" />',
+				'value' => '<input type="submit" name="new_path" value="' . $txt['attach_add_path'] . '" class="button_submit" />&nbsp;<input type="submit" name="save" value="' . $txt['save'] . '" class="button_submit" />',
 				'class' => 'titlebg',
 				'style' => 'text-align: right;',
 			),
