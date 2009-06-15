@@ -91,25 +91,25 @@ function step1($error_message = '')
 							<tr>
 								<td width="20%" valign="top" class="textbox"><label for="db_server">MySQL server name:</label></td>
 								<td>
-									<input type="text" name="db_server" id="db_server" value="', $db_server, '" size="30" /><br />
+									<input type="text" name="db_server" id="db_server" value="', $db_server, '" size="30" class="input_text" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">This is nearly always localhost - so if you don\'t know, try localhost.</div>
 								</td>
 							</tr><tr>
 								<td valign="top" class="textbox"><label for="db_user">MySQL username:</label></td>
 								<td>
-									<input type="text" name="db_user" id="db_user" value="', $db_user, '" size="30" /><br />
+									<input type="text" name="db_user" id="db_user" value="', $db_user, '" size="30" class="input_text" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">Fill in the username you need to connect to your MySQL database here.<br />If you don\'t know what it is, try the username of your ftp account, most of the time they are the same.</div>
 								</td>
 							</tr><tr>
 								<td valign="top" class="textbox"><label for="db_passwd">MySQL password:</label></td>
 								<td>
-									<input type="password" name="db_passwd" id="db_passwd" value="', $db_passwd, '" size="30" /><br />
+									<input type="password" name="db_passwd" id="db_passwd" value="', $db_passwd, '" size="30" class="input_password" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">Here, put the password you need to connect to your MySQL database.<br />If you don\'t know this, you should try the password to your ftp account.</div>
 								</td>
 							</tr><tr>
 								<td valign="top" class="textbox"><label for="db_name">MySQL database name:</label></td>
 								<td>
-									<input type="text" name="db_name" id="db_name" value="', empty($db_name) ? 'smf' : $db_name, '" size="30" /><br />
+									<input type="text" name="db_name" id="db_name" value="', empty($db_name) ? 'smf' : $db_name, '" size="30" class="input_text" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">Fill in the name of the database you want to use for SMF to store its data in.<br />If this database does not exist, this installer will try to create it.</div>
 								</td>
 							</tr>
@@ -122,7 +122,7 @@ function step1($error_message = '')
 							<tr>
 								<td width="20%" valign="top" class="textbox"><label for="path">Path/URL to backup file:</label></td>
 								<td>
-									<input type="text" name="path" id="path" value="', isset($_POST['path']) ? $_POST['path'] : substr(__FILE__, 0, strlen(dirname(__FILE__)) + 1), '" size="60" style="width: 90%;" /><br />
+									<input type="text" name="path" id="path" value="', isset($_POST['path']) ? $_POST['path'] : substr(__FILE__, 0, strlen(dirname(__FILE__)) + 1), '" size="60" style="width: 90%;" class="input_text" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">The default value for this field is the path to this file.<br />If you put the database dump in the same place, just add its name.</div>
 								</td>
 							</tr>
@@ -131,7 +131,7 @@ function step1($error_message = '')
 						<h2>Before you continue...</h2>
 						<h3>Please note that any existing tables will be deleted.  Please verify your connection info and create any necessary backups before continuing!</h3>
 
-						<div class="righttext" style="margin: 1ex;"><input type="submit" value="Proceed" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="Proceed" class="button_submit" /></div>
 					</form>
 				</div>';
 
@@ -272,7 +272,7 @@ function step2()
 	if (file_exists(dirname(__FILE__) . '/Settings.php') && is_writable(dirname(__FILE__) . '/Settings.php') && defined('SID') && SID == '')
 	{
 		echo '
-					<label for="fix_paths"><input type="checkbox" id="fix_paths" onclick="doThePaths(this);" /> Attempt to fix the database\'s paths for this server.</label><br />
+					<label for="fix_paths"><input type="checkbox" id="fix_paths" onclick="doThePaths(this);" class="input_check" /> Attempt to fix the database\'s paths for this server.</label><br />
 					<script type="text/javascript"><!-- // --><![CDATA[
 						function doThePaths(theCheck)
 						{
@@ -678,7 +678,7 @@ function nextLine($line, $max, $failures)
 				<input type="hidden" name="db_name" value="', $_POST['db_name'], '" />
 				<input type="hidden" name="path" value="', $_POST['path'], '" />
 
-				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" class="button_submit" /></div>
 			</form>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;

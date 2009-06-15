@@ -42,11 +42,11 @@ if (empty($actions))
 				<h4>This tool is a development utility for testing xml style modification files and making sure they work as planned.  It does not require that you package it up, just that you type the path in below.</h4>
 
 				<form action="', $_SERVER['PHP_SELF'], '" method="post" enctype="multipart/form-data">
-					Path to file: <input type="text" name="mod_file" size="40" value="" /><br />
+					Path to file: <input type="text" name="mod_file" size="40" value="" class="input_text" /><br />
 					<br />
-					Upload it instead: <input type="file" name="mod_file" size="40" /><br />
+					Upload it instead: <input type="file" name="mod_file" size="40" class="input_file" /><br />
 					<br />
-					<div class="righttext" style="margin: 1ex;"><input type="submit" value="Test it!" /></div>
+					<div class="righttext" style="margin: 1ex;"><input type="submit" value="Test it!" class="button_submit" /></div>
 				</form>
 			</div>';
 }

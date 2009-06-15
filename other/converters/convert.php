@@ -816,7 +816,7 @@ function doStep0($error_message = null)
 						<tr>
 							<td width="20%" valign="top" class="textbox"><label for="path_to">Path to SMF:</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="text" name="path_to" id="path_to" value="', $_POST['path_to'], '" size="60" />
+								<input type="text" name="path_to" id="path_to" value="', $_POST['path_to'], '" size="60" class="input_text" />
 								<div style="font-style: italic; font-size: smaller;">', $test_to ? 'This may be the right path.' : 'You will need to change the value in this box.', '</div>
 							</td>';
 
@@ -825,7 +825,7 @@ function doStep0($error_message = null)
 						</tr><tr>
 							<td valign="top" class="textbox"><label for="path_from">Path to ', $convert_data['name'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="text" name="path_from" id="path_from" value="', $_POST['path_from'], '" size="60" />
+								<input type="text" name="path_from" id="path_from" value="', $_POST['path_from'], '" size="60" class="input_text" />
 								<div style="font-style: italic; font-size: smaller;">', $test_from ? 'This may be the right path.' : 'You will need to change the value in this box.', '</div>
 							</td>';
 
@@ -842,7 +842,7 @@ function doStep0($error_message = null)
 							<td valign="top" class="textbox"></td>
 							<td style="padding-bottom: 1ex;">
 								<input type="hidden" name="', $param['id'], '" value="0" />
-								<label for="', $param['id'], '"><input type="checkbox" name="', $param['id'], '" id="', $param['id'], '" value="1"', $param['type'] == 'checked' ? ' checked="checked"' : '', ' /> ', $param['label'], '</label>';
+								<label for="', $param['id'], '"><input type="checkbox" name="', $param['id'], '" id="', $param['id'], '" value="1"', $param['type'] == 'checked' ? ' checked="checked"' : '', ' class="input_check" /> ', $param['label'], '</label>';
 			// How about a list?
 			elseif (($param['type'] == 'list' || $param['type'] == 'select') && isset($param['options']) && is_array($param['options']))
 			{
@@ -864,13 +864,13 @@ function doStep0($error_message = null)
 				echo '
 							<td valign="top" class="textbox"><label for="', $param['id'], '">', $param['label'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="password" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" />';
+								<input type="password" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" class="input_password" />';
 			// Fall back to text.
 			else
 				echo '
 							<td valign="top" class="textbox"><label for="', $param['id'], '">', $param['label'], ':</label></td>
 							<td style="padding-bottom: 1ex;">
-								<input type="text" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" />';
+								<input type="text" name="', $param['id'], '" id="', $param['id'], '" value="" size="60" class="input_text" />';
 
 			echo '
 							</td>';
@@ -881,7 +881,7 @@ function doStep0($error_message = null)
 						</tr><tr>
 							<td valign="top" class="textbox" style="padding-top: 2ex;"><label for="db_pass">SMF database password:</label></td>
 							<td valign="top" style="padding-top: 2ex; padding-bottom: 1ex;">
-								<input type="password" name="db_pass" size="30" class="text" />
+								<input type="password" name="db_pass" size="30" class="text input_password" />
 								<div style="font-style: italic; font-size: smaller;">The Database password (for verification only.)</div>
 							</td>
 						</tr>';
@@ -912,7 +912,7 @@ function doStep0($error_message = null)
 							<td valign="top" style="padding-top: 2ex; padding-bottom: 1ex;">';
 		foreach ($steps as $key => $step)
 			echo '
-								<input type="checkbox" name="do_steps[', $step['next_step_line'], ']" id="do_steps[', $step['next_step_line'], ']" value="', $step['count'], '" checked="checked" /><label for="do_steps[', $step['next_step_line'], ']">', ucfirst(str_replace('Converting ', '', $step['name'])), '</label><br />';
+								<input type="checkbox" name="do_steps[', $step['next_step_line'], ']" id="do_steps[', $step['next_step_line'], ']" value="', $step['count'], '" checked="checked" class="input_check" /><label for="do_steps[', $step['next_step_line'], ']">', ucfirst(str_replace('Converting ', '', $step['name'])), '</label><br />';
 		echo '
 							</td>
 						</tr>';
@@ -923,13 +923,13 @@ function doStep0($error_message = null)
 						</tr><tr>
 							<td valign="top" class="textbox" style="padding-top: 2ex;"><label for="empty_error_log">Empty the convert error log?</label></td>
 							<td valign="top" style="padding-top: 2ex; padding-bottom: 1ex;">
-								<input type="checkbox" name="empty_error_log" value="1" />
+								<input type="checkbox" name="empty_error_log" value="1" class="input_check" />
 							</td>
 						</tr>';
 
 	echo '
 					</table>
-					<div class="righttext" style="margin: 1ex; margin-top: 0;"><input name="b" type="submit" value="Continue" class="submit" /></div>
+					<div class="righttext" style="margin: 1ex; margin-top: 0;"><input name="b" type="submit" value="Continue" class="submit button_submit" /></div>
 				</form>
 			</div>';
 
@@ -2086,7 +2086,7 @@ function doStep3()
 	if (is_writable(dirname(__FILE__)) && is_writable(__FILE__))
 		echo '
 				<div style="margin: 1ex; font-weight: bold;">
-					<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete();" /> Please check this box to delete the converter right now for security reasons.</label> (doesn\'t work on all servers.)
+					<label for="delete_self"><input type="checkbox" id="delete_self" onclick="doTheDelete();" class="input_check" /> Please check this box to delete the converter right now for security reasons.</label> (doesn\'t work on all servers.)
 				</div>
 				<script type="text/javascript"><!-- // --><![CDATA[
 					function doTheDelete()
@@ -2254,7 +2254,7 @@ function pastTime($substep = null, $force = false)
 			</h3>
 
 			<form action="', $_SERVER['PHP_SELF'], '?step=', $_GET['step'], isset($_GET['substep']) ? '&amp;substep=' . $_GET['substep'] : '', isset($_GET['cstep']) ? '&amp;cstep=' . $_GET['cstep'] : '', '&amp;start=', $_REQUEST['start'], '" method="post" name="autoSubmit">
-				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+				<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" class="button_submit" /></div>
 			</form>
 			<script type="text/javascript"><!-- // --><![CDATA[
 				window.onload = doAutoSubmit;
@@ -2630,7 +2630,7 @@ function convert_query($string, $return_error = false)
 			<blockquote>' . nl2br(htmlspecialchars($db_error)) . '</blockquote>
 
 			<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post">
-				<input type="submit" value="Try again" />
+				<input type="submit" value="Try again" class="button_submit" />
 			</form>
 		</div>';
 

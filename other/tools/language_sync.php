@@ -80,7 +80,7 @@ if (empty($_REQUEST['step']))
 			</tr><tr>
 				<td align="right" colspan="2">
 					<input type="hidden" name="step" value="2" />
-					<input type="submit" value="Continue" />
+					<input type="submit" value="Continue" class="button_submit" />
 				</td>
 			</tr>
 		</table>
@@ -101,22 +101,22 @@ elseif ($_REQUEST['step'] == 2)
 				</select></td>
 			</tr><tr>
 				<th align="right">Target name:</th>
-				<td><input type="text" name="target_name" value="', $_REQUEST['target_version'], '_', strftime('%Y%m%d_%H%M%S'), '" style="width: 20em;" /></td>
+				<td><input type="text" name="target_name" value="', $_REQUEST['target_version'], '_', strftime('%Y%m%d_%H%M%S'), '" style="width: 20em;" class="input_text" /></td>
 			</tr><tr>
 				<th align="right">Create .tar.gz archive:</th>
-				<td><input type="checkbox" name="create_gz" value="1" checked="checked" /></td>
+				<td><input type="checkbox" name="create_gz" value="1" checked="checked" class="input_check" /></td>
 			</tr><tr>
 				<th align="right">Create .tar.bz2 archive:</th>
-				<td><input type="checkbox" name="create_bz2" value="1" checked="checked" /></td>
+				<td><input type="checkbox" name="create_bz2" value="1" checked="checked" class="input_check" /></td>
 			</tr><tr>
 				<th align="right">Create .zip archive:</th>
-				<td><input type="checkbox" name="create_zip" value="1" checked="checked" /></td>
+				<td><input type="checkbox" name="create_zip" value="1" checked="checked" class="input_check" /></td>
 			</tr><tr>
 				<td align="right" colspan="2">
 					<input type="hidden" name="step" value="3" />
 					<input type="hidden" name="target_language" value="', $_REQUEST['target_language'], '" />
 					<input type="hidden" name="target_version" value="', $_REQUEST['target_version'], '" />
-					<input type="submit" value="Continue" />
+					<input type="submit" value="Continue" class="button_submit" />
 				</td>
 			</tr>
 		</table>

@@ -332,8 +332,8 @@ function doStep0()
 
 	if (empty($_SESSION['is_logged_in']))
 		echo '
-									<span style="white-space: nowrap;"><label for="member_username">', $txt['member_username'], ':</label> <input type="text" size="20" name="member_username" id="member_username" value="', isset($_POST['member_username']) ? $_POST['member_username'] : '', '" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span>
-									<span style="white-space: nowrap;"><label for="member_password">', $txt['member_password'], ':</label> <input type="password" size="20" name="member_password" id="member_password" value="" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span> <input type="submit" name="verify" value="', $txt['member_verify'], '" />
+									<span style="white-space: nowrap;"><label for="member_username">', $txt['member_username'], ':</label> <input type="text" size="20" name="member_username" id="member_username" value="', isset($_POST['member_username']) ? $_POST['member_username'] : '', '" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" class="input_text" /></span>
+									<span style="white-space: nowrap;"><label for="member_password">', $txt['member_password'], ':</label> <input type="password" size="20" name="member_password" id="member_password" value="" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span> <input type="submit" name="verify" value="', $txt['member_verify'], '" class="input_password" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['member_login_info'], '</div>';
 	else
 		echo $txt['member_verify_done'], ' (<a href="', $_SERVER['PHP_SELF'], '?step=1&amp;logout=1">', $txt['member_verify_logout'], '</a>)';
@@ -369,7 +369,7 @@ function doStep0()
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label for="use_cvs">', $txt['download_cvs'], ':</label></td>
 								<td style="padding-bottom: 1ex;">
-									<input type="checkbox" name="use_cvs" id="use_cvs" value="1" /> ', $txt['yes'], '
+									<input type="checkbox" name="use_cvs" id="use_cvs" value="1" class="input_check" /> ', $txt['yes'], '
 								</td>';
 
 	if (count($install_info['mirrors']) > 1)
@@ -411,7 +411,7 @@ function doStep0()
 		echo '
 											<td>
 												<label for="language-', $file, '">
-													<input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" />
+													<input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" class="input_check" />
 													<strong>', $data['name'], '</strong> <span class="smalltext">(SMF ', implode(', SMF ', $data['versions']), ')</span>
 												</label>
 											</td>';
@@ -434,15 +434,15 @@ function doStep0()
 						<div style="margin: 0 1ex 2ex 1ex; padding: 1.5ex; border: 2px dashed #33cc44; background-color: #dfffe9;">
 							<div style="float: left; width: 1.5ex; font-size: 2em; color: #33cc44;">!</div>
 							', $txt['read_the_license'], '<br />
-							<div class="righttext" style="margin-top: 1ex;"><label for="agree"><input type="checkbox" name="agree" id="agree" /> ', $txt['read_the_license_done'], '</label></div>
+							<div class="righttext" style="margin-top: 1ex;"><label for="agree"><input type="checkbox" name="agree" id="agree" class="input_check" /> ', $txt['read_the_license_done'], '</label></div>
 						</div>
 
-						<div style="margin-right: 1ex;" align="right"><input type="submit" value="', $txt['package_info_ready'], '" /></div>
+						<div style="margin-right: 1ex;" align="right"><input type="submit" value="', $txt['package_info_ready'], '" class="button_submit" /></div>
 					</div>
 					<div class="panel">
 						<h2>', $txt['chmod_header'], '</h2>
 						', $txt['chmod_desc'], '<br />
-						<label for="chmod_input">', $txt['chmod_header'], ':</label> <input type="text" id="chmod_input" name="chmod" value="', isset($_SESSION['chmod']) ? decoct($_SESSION['chmod']) : '777', '" />
+						<label for="chmod_input">', $txt['chmod_header'], ':</label> <input type="text" id="chmod_input" name="chmod" value="', isset($_SESSION['chmod']) ? decoct($_SESSION['chmod']) : '777', '" class="input_text" />
 					</div>
 					<input type="hidden" name="verify" value="0" />
 				</form>';
@@ -593,32 +593,32 @@ function doStep1()
 							<tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
 								<td>
-									<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><strong>', $txt['ftp_port'], ':&nbsp;</strong></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" /></div>
-									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost', '" style="width: 70%;" />
+									<div style="float: right; margin-right: 1px;"><label for="ftp_port" class="textbox"><strong>', $txt['ftp_port'], ':&nbsp;</strong></label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($_POST['ftp_port']) ? $_POST['ftp_port'] : '21', '" class="input_text" /></div>
+									<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($_POST['ftp_server']) ? $_POST['ftp_server'] : 'localhost', '" style="width: 70%;" class="input_text" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_server_info'], '</div>
 								</td>
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_username">', $txt['ftp_username'], ':</label></td>
 								<td>
-									<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($_POST['ftp_username']) ? $_POST['ftp_username'] : '', '" style="width: 99%;" />
+									<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($_POST['ftp_username']) ? $_POST['ftp_username'] : '', '" style="width: 99%;" class="Input_text" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['ftp_username_info'], '</div>
 								</td>
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_password">', $txt['ftp_password'], ':</label></td>
 								<td>
-									<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
+									<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" class="input_password" />
 									<div style="font-size: smaller; margin-bottom: 3ex;">', $txt['ftp_password_info'], '</div>
 								</td>
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label for="ftp_path">', $txt['ftp_path'], ':</label></td>
 								<td style="padding-bottom: 1ex;">
-									<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $_POST['ftp_path'], '" style="width: 99%;" />
+									<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $_POST['ftp_path'], '" style="width: 99%;" class="input_text" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($found_path) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'], '</div>
 								</td>
 							</tr>
 						</table>
 
-						<div class="righttext" style="margin: 1ex;"><input type="submit" value="', $txt['ftp_connect'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="', $txt['ftp_connect'], '" class="button_submit" /></div>
 					</div>';
 }
 
@@ -722,7 +722,7 @@ function doStep2()
 						</div>
 					</div>
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
-						<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="', $txt['continue'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="', $txt['continue'], '" class="button_submit" /></div>
 					</form>
 					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -760,7 +760,7 @@ function doStep2()
 					<h3>', $txt['download_successful_info'], '</h3>
 
 					<form action="', $_SERVER['PHP_SELF'], '?step=3" method="post" name="autoSubmit">
-						<div class="righttext" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['continue'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['continue'], '" class="button_submit" /></div>
 					</form>
 					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -841,7 +841,7 @@ function doStep3()
 						</div>
 					</div>
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
-						<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+						<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" class="button_submit" /></div>
 					</form>
 					<script type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -884,7 +884,7 @@ function doStep3()
 					<h3>', $txt['extraction_complete_info'], '</h3>
 
 					<form action="', strtr(dirname($_SERVER['PHP_SELF']), array(basename(__FILE__) => 'install.php')), '" method="post">
-						<div class="righttext" style="margin: 1ex;"><input type="submit" value="', $txt['continue'], '" /></div>
+						<div class="righttext" style="margin: 1ex;"><input type="submit" value="', $txt['continue'], '" class="button_submit" /></div>
 					</form>
 				</div>';
 

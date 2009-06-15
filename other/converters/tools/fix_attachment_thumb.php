@@ -141,7 +141,7 @@ function show_form()
 	if ($_GET['step'] === 0)
 		echo '
 				<form action="', $_SERVER['PHP_SELF'], '?step=1;start=', $_GET['start'], '" method="post">
-					<div class="righttext" style="margin: 1ex;"><input name="letsgo" type="submit" value="Start" /></div>
+					<div class="righttext" style="margin: 1ex;"><input name="letsgo" type="submit" value="Start" class="button_submit" /></div>
 				</form>';
 
 	if ($_GET['step'] === 1)
@@ -185,7 +185,7 @@ function show_form()
 		if ($_GET['step'] == 1)
 			echo '
 				<form action="', $_SERVER['PHP_SELF'], '?step=', $_GET['step'], ';start=', $_GET['start'], '" method="post" name="autoSubmit">
-					<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+					<div class="righttext" style="margin: 1ex;"><input name="b" type="submit" value="Continue" class="button_submit" /></div>
 				</form>';
 	}
 

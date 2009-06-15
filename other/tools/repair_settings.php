@@ -565,12 +565,12 @@ function show_settings()
 			{
 				for ($i = 0; $i <= $info[2]; $i++)
 					echo '
-								<label for="', $setting, $i, '"><input type="radio" name="', $info[0], 'settings[', $setting, ']" id="', $setting, $i, '" value="', $i, '"', isset($settings[$setting]) && $settings[$setting] == $i ? ' checked="checked"' : '', ' class="check" /> ', $txt[$setting . $i], '</label><br />';
+								<label for="', $setting, $i, '"><input type="radio" name="', $info[0], 'settings[', $setting, ']" id="', $setting, $i, '" value="', $i, '"', isset($settings[$setting]) && $settings[$setting] == $i ? ' checked="checked"' : '', ' class="input_radio" /> ', $txt[$setting . $i], '</label><br />';
 			}
 			elseif ($info[1] == 'string')
 			{
 				echo '
-								<input type="text" name="', $info[0], 'settings[', $setting, ']" id="', $setting, '" value="', isset($settings[$setting]) ? $settings[$setting] : '', '" size="', $settings_section == 'path_url_settings' || $settings_section == 'theme_path_url_settings' ? '60" style="width: 80%;' : '30', '" />';
+								<input type="text" name="', $info[0], 'settings[', $setting, ']" id="', $setting, '" value="', isset($settings[$setting]) ? $settings[$setting] : '', '" size="', $settings_section == 'path_url_settings' || $settings_section == 'theme_path_url_settings' ? '60" style="width: 80%;' : '30', '" class="input_text" />';
 
 				if (isset($info[2]))
 					echo '
@@ -615,10 +615,10 @@ function show_settings()
 
 	if ($failure)
 		echo '
-				<input type="submit" name="submit" value="', $txt['save_settings'], '" disabled="disabled" /><br />', $txt['not_writable'];
+				<input type="submit" name="submit" value="', $txt['save_settings'], '" disabled="disabled" class="button_submit" /><br />', $txt['not_writable'];
 	else
 		echo '
-				<input type="submit" name="submit" value="', $txt['save_settings'], '" />';
+				<input type="submit" name="submit" value="', $txt['save_settings'], '" class="button_submit" />';
 
 	echo '
 				</div>

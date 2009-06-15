@@ -59,7 +59,7 @@ echo '
 		<p>Welcome to the recount Category ID script.</p>
 		<div class="error_message">BE SURE TO RUN BACKUPS BEFORE PROCEEDING WITH THIS!!!</div>
 		<p>This script will recount all your category IDs to use lower numbers. Why? Well some people during conversions may receive extremely high Category IDs that can cause issues. The purpose of this script to to help prevent that by recounting the ids.</p>
-		<p>Are you ready? Click <input type="submit" name="submit" value="submit" /> to start</p>	
+		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to start</p>	
 	</div>
 </form>';
 
@@ -218,7 +218,7 @@ function show_pause($next_step)
 	<div class="panel">
 		<h2>Process paused</h2>
 		<p>The script has been halted here to prevent overloading the server.</p>
-		<p>Are you ready? Click <input type="submit" name="submit" value="submit" /> to continue</p>	
+		<p>Are you ready? Click <input type="submit" name="submit" value="submit" class="button_submit" /> to continue</p>	
 	</div>
 </form>';
 }

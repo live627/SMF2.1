@@ -166,7 +166,7 @@ function protectTimeOut($request)
 		<em>This repair has paused to avoid overloading your server, please click continue.</em><br />
 		<br />
 		<form action="', $_SERVER['PHP_SELF'], '?', $request, '" method="post">
-			<input type="submit" value="Continue" />
+			<input type="submit" value="Continue" class="button_submit" />
 		</form>';
 	exit;
 }

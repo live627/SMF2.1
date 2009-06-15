@@ -123,7 +123,7 @@ function doStep0()
 		echo '
 		<form action="convert_languages.php?step=1" method="post">
 			<div class="centertext">
-				<input type="submit" value="Start Conversion" />
+				<input type="submit" value="Start Conversion" class="button_submit" />
 			</div>
 		</form><br />';
 	}
@@ -274,7 +274,7 @@ function doStep1()
 	echo '
 		<form action="convert_languages.php?step=2" method="post">
 			<div class="centertext">
-				<input type="submit" value="Continue to index changes" />
+				<input type="submit" value="Continue to index changes" class="button_submit" />
 			</div>
 		</form><br />';
 }
@@ -341,7 +341,7 @@ function doStep2()
 		echo '
 		<form action="convert_languages.php?step=3" method="post">
 			<div class="centertext">
-				<input type="submit" value="Make The Changes" />
+				<input type="submit" value="Make The Changes" class="button_submit" />
 			</div>
 		</form><br />';
 	}
@@ -351,7 +351,7 @@ function doStep2()
 		echo '
 		<form action="convert_languages.php?step=4" method="post">
 			<div class="centertext">
-				<input type="submit" value="Skip" />
+				<input type="submit" value="Skip" class="button_submit" />
 			</div>
 		</form><br />';
 	}
@@ -410,7 +410,7 @@ function doStep3()
 	echo '
 		<form action="convert_languages.php?step=4" method="post">
 			<div class="centertext">
-				<input type="submit" value="Continue to Theme Conversion" />
+				<input type="submit" value="Continue to Theme Conversion" class="button_submit" />
 			</div>
 		</form><br />';
 }
@@ -486,7 +486,7 @@ function doStep4()
 	echo '
 		<form action="convert_languages.php?step=5" method="post">
 			<div class="centertext">
-				<input type="submit" value="Continue" />
+				<input type="submit" value="Continue" class="button_submit" />
 			</div>
 		</form><br />';
 }
