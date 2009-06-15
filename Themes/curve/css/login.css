@@ -44,12 +44,12 @@
 }
 
 /* Additional profile fields */
-#custom_group
+#custom_group, #admin_register_form
 {
 	margin: 0;
 }
 
-#custom_group dt
+#custom_group dt, #admin_register_form dt
 {
 	font-weight: normal;
 	float: left;
@@ -58,17 +58,17 @@
 	margin: 0.5em 0 0 0;
 }
 
-#custom_group dt strong
+#custom_group dt strong, #admin_register_form dt strong
 {
 	font-weight: bold;
 }
 
-#custom_group dt span
+#custom_group dt span, #admin_register_form dt span
 {
 	display: block;
 }
 
-#custom_group dd
+#custom_group dd, #admin_register_form dd
 {
 	float: left;
 	clear: right;
@@ -79,6 +79,7 @@
 {
 	text-align: center;
 	padding: 1em 0;
+	clear: both;
 }
 
 .coppa_contact
