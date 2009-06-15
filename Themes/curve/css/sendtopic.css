@@ -1,0 +1,18 @@
+fieldset.send_topic 
+{
+	margin-bottom: 0.5em;
+	border: none;
+	padding: 0.5em;
+}
+dl.send_topic
+{
+	margin-bottom: 0;
+}
+dl.send_mail dt
+{
+	width: 35%;
+}
+dl.send_mail dd
+{
+	width: 64%;
+}

@@ -65,7 +65,7 @@ function EmailUser()
 	$context['robot_no_index'] = true;
 
 	// Load the template.
-	loadTemplate('SendTopic');
+	loadTemplate('SendTopic','sendtopic');
 
 	$sub_actions = array(
 		'email' => 'CustomEmail',
@@ -336,7 +336,7 @@ function ReportToModerator()
 
 	// Show the inputs for the comment, etc.
 	loadLanguage('Post');
-	loadTemplate('SendTopic');
+	loadTemplate('SendTopic','sendtopic');
 
 	// This is here so that the user could, in theory, be redirected back to the topic.
 	$context['start'] = $_REQUEST['start'];

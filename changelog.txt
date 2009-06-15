@@ -88,6 +88,7 @@ June 2009
  * Spell maintenace correctly (index.css, Login.Template.php) [Bug 3514]
  * Maintenance css class wasn't unique (index.css, Login.template.php) [Bug 3514]
  * Added styling for all input elements to make them look uniform in all browsers and operating systems. (many, many files) 
+ * Curve: rewrote the SendTopic template to match Curve's look and feel. (SendTopic.php, SendTopic.template.php, sendtopic.css)
 
 
 May 2009
