@@ -87,6 +87,7 @@ June 2009
  * Curve: revamped the registration screen to match Curve's look and feel. (Register template, login.css) [Feature 3437]
  * Spell maintenace correctly (index.css, Login.Template.php) [Bug 3514]
  * Maintenance css class wasn't unique (index.css, Login.template.php) [Bug 3514]
+ * Added styling for all input elements to make them look uniform in all browsers and operating systems. (many, many files) 
 
 
 May 2009

@@ -72,11 +72,11 @@ function Register($reg_errors = array())
 	// Do we need them to agree to the registration agreement, first?
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
 	$context['registration_passed_agreement'] = !empty($_SESSION['registration_agreed']);
+	$context['show_coppa'] = !empty($modSettings['coppaAge']);
 
 	// Under age restrictions?
-	if (!empty($modSettings['coppaAge']))
+	if ($context['show_coppa'])
 	{
-		$context['show_coppa'] = true;
 		$context['skip_coppa'] = false;
 		$context['coppa_agree_above'] = sprintf($txt['agreement_agree_coppa_above'], $modSettings['coppaAge']);
 		$context['coppa_agree_below'] = sprintf($txt['agreement_agree_coppa_below'], $modSettings['coppaAge']);

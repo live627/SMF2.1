@@ -50,34 +50,50 @@ form
 	margin: 0px;
 }
 
-/* Input boxes - just a bit smaller than normal so they align well. */
-input, textarea, button
+/* Style the input buttons to be uniform thoughout different operating systems and their colour themes.
+   .button_submit - tackles input[type=submit] and button[type=submit] thoughout all browsers
+   .button_reset  - tackles input[type=reset] and button[type=reset] thoughout all browsers
+   .input_check   - tackles input[type=checkbox] thoughout all browsers
+   .input_radio   - tackles input[type=radio] thoughout all browsers
+   .input_text    - tackles input[type=text] thoughout all browsers */
+
+input, button, select, textarea
 {
+	font: 90%/105% verdana, Helvetica, sans-serif;
 	color: #000000;
-	font: 80%/105% verdana, Helvetica, sans-serif;
-}
-input, button
-{
-	font-size: 90%;
+	background: #fff;
+	border: 1px solid #7f9db9;
 }
 
+/* The font size of textareas should be just a little bit larger. */  
 textarea
 {
-	color: #000000;
 	font: 100%/130% verdana, Helvetica, sans-serif;
 }
 
-/* All input elements that are checkboxes or radio buttons. */
-input.check
+/* Buttons should be styled a bit differently, in order to make them look more button'ish. */
+.button_submit, .button_reset
 {
+	background: #f5f5f5;
+	border: 1px solid #aaa;
+	cursor: pointer;
 }
 
-/* Selects are a bit smaller, because it makes them look even better 8). */
-select
+input:hover, textarea:hover, button:hover, select:hover
 {
-	font-weight: normal;
-	color: #000000;
-	font: 90%/105% verdana, Helvetica, sans-serif;
+	border: 1px solid #74869a;
+}
+
+input:focus, textarea:focus, button:focus, select:focus
+{
+	border: 1px solid #4b6685;
+}
+
+/* All input elements that are checkboxes or radio buttons shouldn't have a border around them. */
+input.input_check input.input_radio
+{
+	border: none;
+	background: none;
 }
 
 /* Standard horizontal rule.. ([hr], etc.) */
@@ -787,6 +803,7 @@ span.lowerframe span
 {
 	padding: 0 0.5em;
 	margin: 0;
+	border: none;
 }
 .content p
 {
