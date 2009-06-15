@@ -339,13 +339,13 @@ h4.titlebg img.icon
 	margin: 4px 0.5em 0 0;
 }
 /* for maintenance mode */
-#maintenance
+#maintenance_mode
 {
 	width: 75%;
 	min-width: 520px;
 	text-align: left;
 }
-#maintenance img.align_left
+#maintenance_mode img.align_left
 {
 	margin-right: 1em;
 }
