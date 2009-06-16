@@ -103,10 +103,11 @@ function template_main()
 		if (!empty($poster['post_percent']))
 			echo '
 									<span class="left"></span>
-										<div style="width: ', $poster['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $poster['num_posts'] . '</span></div>
+										<div style="width: ', $poster['post_percent'], 'px;" class="stats_bar"></div>
 									<span class="right"></span>';
 		
-		echo '							
+		echo '					
+							<span class="righttext">' . $poster['num_posts'] . '</span>
 								</dd>';
 	}
 	
@@ -137,9 +138,10 @@ function template_main()
 		if (!empty($board['post_percent']))
 			echo '
 									<span class="left"></span>
-										<div style="width: ', $board['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $board['num_posts'] . '</span></div>
+										<div style="width: ', $board['post_percent'], 'px;" class="stats_bar"></div>
 									<span class="right"></span>';
 		echo '
+									<span class="righttext">' . $board['num_posts'] . '</span>
 								</dd>';
 	}
 
@@ -172,10 +174,11 @@ function template_main()
 		if (!empty($topic['post_percent']))
 			echo '
 									<span class="left"></span>
-										<div style="width: ', $topic['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $topic['num_replies'] . '</span></div>
+										<div style="width: ', $topic['post_percent'], 'px;" class="stats_bar"></div>
 									<span class="right"></span>';
 									
 		echo '
+									<span class="righttext">' . $topic['num_replies'] . '</span>
 								</dd>';
 	}
 	echo '
@@ -204,10 +207,11 @@ function template_main()
 		if (!empty($topic['post_percent']))
 			echo '
 								<span class="left"></span>
-									<div style="width: ', $topic['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $topic['num_views'] . '</span></div>
+									<div style="width: ', $topic['post_percent'], 'px;" class="stats_bar"></div>
 								<span class="right"></span>';
 
 		echo '
+								<span class="righttext">' . $topic['num_views'] . '</span>
 							</dd>';
 	}
 
@@ -241,10 +245,11 @@ function template_main()
 		if (!empty($poster['post_percent']))
 			echo '
 								<span class="left"></span>
-									<div style="width: ', $poster['post_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $poster['num_topics'] . '</span></div>
+									<div style="width: ', $poster['post_percent'], 'px;" class="stats_bar"></div>
 								<span class="right"></span>';
 
 		echo '				
+								<span class="righttext">' . $poster['num_topics'] . '</span>
 							</dd>';
 	}
 
@@ -275,10 +280,11 @@ function template_main()
 		if (!empty($poster['time_online']))
 			echo '
 								<span class="left"></span>
-									<div style="', $poster['time_percent'] > 20 ? '' : 'min-', 'width: ', $poster['time_percent'] * 1.3, 'px;" class="stats_bar"><span>' . $poster['time_online'] . '</span></div>
+									<div style="width: ', $poster['time_percent'], 'px;" class="stats_bar"></div>
 								<span class="right"></span>';
 								
 		echo '
+								<span>', $poster['time_online'], '</span>
 							</dd>';
 	}
 

@@ -94,6 +94,7 @@ June 2009
  ! In some cases the theme_dir may not be set when saving theme options (Themes.php)
  ! One remaining font tag was missed (Subs.php)
  ! A couple of old language strings should be removed and fixed (FixLanguage.php, Packages.english.php)
+ * Curve: moved the numerical values outside the stats bar (Stats.template.php stats.css) [Bug 3518]
 
 
 May 2009
