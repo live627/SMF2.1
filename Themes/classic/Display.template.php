@@ -608,7 +608,6 @@ function template_main()
 		<td class="windowbg" width="75%" align="center">
 			', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
 			', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
-			', $context['verification_message'] ? '<span class="smalltext">' . $context['verification_message'] . '</span>' : '', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" style="margin:0px;">
 				<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
 				<input type="hidden" name="subject" value="' . $context['response_prefix'] . $context['subject'] . '" />
@@ -624,6 +623,12 @@ function template_main()
 			echo '
 				<strong>', $txt['name'], ':</strong> <input type="text" name="guestname" value="', $context['name'], '" size="25" class="input_text" />
 				<strong>', $txt['email'], ':</strong> <input type="text" name="email" value="', $context['email'], '" size="25" class="input_text" /><br />';
+
+		// Is visual verification enabled?
+		if ($context['require_verification'])
+			echo '
+				<strong>', $txt['verification'], ':</strong>', template_control_verification($context['visual_verification_id'], 'quick_reply'), '<br />';
+
 		echo '
 				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
 				<input type="submit" name="post" value="' . $txt['post'] . '" accesskey="s" tabindex="2" class="button_submit" />

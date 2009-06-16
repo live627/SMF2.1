@@ -401,6 +401,11 @@ ul.postingbuttons li
 	margin-bottom: .5em;
 }
 
+#verification_control, #verification_control .smalltext
+{
+	display: inline;
+}
+
 /* ************************************* */
 /* styles from Recent.template           */
 /* ************************************* */

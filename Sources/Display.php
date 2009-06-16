@@ -356,7 +356,18 @@ function Display()
 
 	// Check if spellchecking is both enabled and actually working. (for quick reply.)
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
-	$context['verification_message'] = !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1)) ? sprintf($txt['quick_reply_verification'], ($modSettings['posts_require_captcha'] == -1 ? $txt['quick_reply_verification_guests'] : sprintf($txt['quick_reply_verification_posts'], $modSettings['posts_require_captcha']))) : '';
+
+	// Do we need to show the visual verification image?
+	$context['require_verification'] = !$user_info['is_mod'] && !$user_info['is_admin'] && !empty($modSettings['posts_require_captcha']) && ($user_info['posts'] < $modSettings['posts_require_captcha'] || ($user_info['is_guest'] && $modSettings['posts_require_captcha'] == -1));
+	if ($context['require_verification'])
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'post',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
+	}
 
 	// Are we showing signatures - or disabled fields?
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;

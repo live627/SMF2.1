@@ -90,6 +90,8 @@ June 2009
  * Added styling for all input elements to make them look uniform in all browsers and operating systems. (many, many files)
  * Curve: rewrote the SendTopic template to match Curve's look and feel. (SendTopic.php, SendTopic.template.php, sendtopic.css)
  ! Private message subjects could be shown in rare cases (install_2-0_*.sql, upgrade_2-0_*.sql, SendTopic.php, Subs-Post.php, ManageMail.php) [Bug 3292]
+ ! Show a verificaiton image on quick reply (Display.php, Display Template, GenericControls Template) [Bug 3154]
+ ! In some cases the theme_dir may not be set when saving theme options (Themes.php)
 
 
 May 2009

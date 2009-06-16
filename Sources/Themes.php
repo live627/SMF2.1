@@ -448,12 +448,10 @@ function SetThemeOptions()
 			$context['themes'][$row['id_theme']]['num_members'] = $row['value'];
 		$smcFunc['db_free_result']($request);
 
+		// There has to be a Settings template!
 		foreach ($context['themes'] as $k => $v)
-		{
-			// There has to be a Settings template!
-			if (!file_exists($v['theme_dir'] . '/Settings.template.php') && empty($v['num_members']))
+			if (empty($v['theme_dir'])  || (!file_exists($v['theme_dir'] . '/Settings.template.php') && empty($v['num_members'])))
 				unset($context['themes'][$k]);
-		}
 
 		loadTemplate('Themes');
 		$context['sub_template'] = 'reset_list';

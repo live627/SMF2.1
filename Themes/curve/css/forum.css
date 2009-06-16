@@ -507,6 +507,10 @@ ul.quickbuttons li.inline_mod_check
 {
 	overflow: hidden;
 }
+#verification_control, #verification_control .smalltext
+{
+	display: inline;
+}
 /* The jump to box */
 #display_jump_to
 {
