@@ -93,6 +93,7 @@ June 2009
  ! Show a verificaiton image on quick reply (Display.php, Display Template, GenericControls Template) [Bug 3154]
  ! In some cases the theme_dir may not be set when saving theme options (Themes.php)
  ! One remaining font tag was missed (Subs.php)
+ ! A couple of old language strings should be removed and fixed (FixLanguage.php, Packages.english.php)
 
 
 May 2009

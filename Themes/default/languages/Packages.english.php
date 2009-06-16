@@ -257,7 +257,4 @@ $txt['package_confirm_view_package_content'] = 'Are you sure you want to view th
 $txt['package_confirm_proceed'] = 'Proceed';
 $txt['package_confirm_go_back'] = 'Go back';
 
-// Backwards compatibility for older 2.0 themes
-$txt['apply_mod'] = 'Apply Mod';
-$txt['mod_apply'] = 'Apply Mod';
 ?>

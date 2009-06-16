@@ -609,7 +609,7 @@ $txtChanges = array(
 		'smf192' => 'download_success',
 		'smf193' => 'package_downloaded_successfully',
 		'smf198' => 'package_manager',
-		'smf159b' => 'apply_mod',
+		'smf159b' => 'install_mod',
 		'smf162b' => 'sql_file',
 		'smf174b' => 'sql_queries',
 		'smf189b' => 'no_mods_installed',
@@ -654,6 +654,8 @@ $txtChanges = array(
 		'package55' => 'package_tree',
 		'package56' => 'execute_modification',
 		'package57' => 'execute_code',
+		'apply_mod' => 'install_mod',
+		'mod_apply' => 'install_mod',
 	),
 	'PersonalMessage' => array(
 		143 => 'pm_inbox',
