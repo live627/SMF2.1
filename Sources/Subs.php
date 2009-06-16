@@ -1420,8 +1420,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
 				'test' => '[1-9]\]',
-				'before' => '<font size="$1" class="bbc_size">',
-				'after' => '</font>',
+				'before' => '<span style="font-size: $1;" class="bbc_size">',
+				'after' => '</span>',
 			),
 			array(
 				'tag' => 'sub',

@@ -92,6 +92,7 @@ June 2009
  ! Private message subjects could be shown in rare cases (install_2-0_*.sql, upgrade_2-0_*.sql, SendTopic.php, Subs-Post.php, ManageMail.php) [Bug 3292]
  ! Show a verificaiton image on quick reply (Display.php, Display Template, GenericControls Template) [Bug 3154]
  ! In some cases the theme_dir may not be set when saving theme options (Themes.php)
+ ! One remaining font tag was missed (Subs.php)
 
 
 May 2009
