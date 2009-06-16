@@ -95,6 +95,7 @@ June 2009
  ! One remaining font tag was missed (Subs.php)
  ! A couple of old language strings should be removed and fixed (FixLanguage.php, Packages.english.php)
  * Curve: moved the numerical values outside the stats bar (Stats.template.php stats.css) [Bug 3518]
+ + Ability for packages to support multiple readmes for different languages with lang="" parameter (Packages.english.php, Packages.template.php, Subs-Package.php)
 
 
 May 2009

@@ -1059,7 +1059,7 @@ function packageRequireFTP($destination_url, $files = null, $return = false)
 // Parses a package-info.xml file - method can be 'install', 'upgrade', or 'uninstall'.
 function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install', $previous_version = '')
 {
-	global $boarddir, $forum_version, $context, $temp_path;
+	global $boarddir, $forum_version, $context, $temp_path, $language;
 
 	// Mayday!  That action doesn't exist!!
 	if (empty($packageXML) || !$packageXML->exists($method))
@@ -1109,6 +1109,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 	$temp_auto = 0;
 	$temp_path = $boarddir . '/Packages/temp/' . (isset($context['base_path']) ? $context['base_path'] : '');
 
+	$context['readmes'] = array();
 	// This is the testing phase... nothing shall be done yet.
 	foreach ($actions as $action)
 	{
@@ -1116,6 +1117,42 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 
 		if ($actionType == 'readme' || $actionType == 'code' || $actionType == 'database' || $actionType == 'modification' || $actionType == 'redirect')
 		{
+			// Allow for translated readme files.
+			if ($actionType == 'readme')
+			{
+				if ($action->exists('@lang'))
+				{
+					// Auto-select a readme language based on either request variable or current language.
+					if ((isset($_REQUEST['readme']) && $action->fetch('@lang') == $_REQUEST['readme']) || (!isset($_REQUEST['readme']) && $action->fetch('@lang') == $language))
+					{
+						// In case the user put the readme blocks in the wrong order.
+						if (isset($context['readmes']['selected']) && $context['readmes']['selected'] == 'default')
+							$context['readmes'][] = 'default';
+						
+						$context['readmes']['selected'] = htmlspecialchars($action->fetch('@lang'));
+					}
+					else
+					{
+						// We don't want this readme now, but we'll allow the user to select to read it.
+						$context['readmes'][] = htmlspecialchars($action->fetch('@lang'));
+						continue;
+					}
+				}
+				// Fallback readme. Without lang parameter.
+				else
+				{
+					
+					// Already selected a readme.
+					if (isset($context['readmes']['selected']))
+					{
+						$context['readmes'][] = 'default';
+						continue;
+					}
+					else
+						$context['readmes']['selected'] = 'default';
+				}
+			}
+
 			// !!! TODO: Make sure the file actually exists?  Might not work when testing?
 			if ($action->exists('@type') && $action->fetch('@type') == 'inline')
 			{
@@ -1135,6 +1172,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				'redirect_url' => $action->exists('@url') ? $action->fetch('@url') : '',
 				'redirect_timeout' => $action->exists('@timeout') ? (int) $action->fetch('@timeout') : '',
 				'parse_bbc' => $action->exists('@parsebbc') && $action->fetch('@parsebbc') == 'true',
+				'language' => ($actionType == 'readme' && $action->exists('@lang') && $action->fetch('@lang') == $language) ? $language : '',
 			);
 
 			continue;

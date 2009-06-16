@@ -36,6 +36,8 @@
 			<!ATTLIST readme type (inline|file) "file">
 			<!-- We can use bbc code if this is true -->
 			<!ATTLIST readme parsebbc (true|false) "false">
+			<!-- We can provide translated versions... Note: THIS ONLY EXISTS IN SMF 2.0 RC2+ -->
+			<!ATTLIST readme lang CDATA "false">
 
 		<!-- Executable PHP code... -->
 		<!ELEMENT code (#PCDATA)>

@@ -46,15 +46,25 @@ function template_view_package()
 	}
 
 	if (isset($context['package_readme']))
+	{
 		echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['package_' . ($context['uninstalling'] ? 'un' : '') . 'install_readme'], '</td>
+				<td>', $txt['package_' . ($context['uninstalling'] ? 'un' : '') . 'install_readme'], '
+					<span class="floatright">', $txt['package_available_readme_language'], '
+						<select name="readme_language" id="readme_language" onchange="if (this.options[this.selectedIndex].value) window.location.href = smf_prepareScriptUrl(smf_scripturl + \'', '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', ';package=', $context['filename'], ';readme=\' + this.options[this.selectedIndex].value);">';
+							foreach ($context['readmes'] as $a => $b)
+								echo '<option value="', $b, '"', $a === 'selected' ? ' selected="selected"' : '', '>', $b == 'default' ? $txt['package_readme_default'] : ucfirst($b), '</option>';
+		echo '
+						</select>
+					</span>
+				</td>
 			</tr><tr>
 				<td class="windowbg2">', $context['package_readme'], '</td>
 			</tr>
 		</table>
 		<br />';
+	}
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', $context['ftp_needed'] ? '' : '2', ';package=', $context['filename'], ';pid=', $context['install_id'], '" onsubmit="submitonce(this);" method="post" accept-charset="', $context['character_set'], '">
