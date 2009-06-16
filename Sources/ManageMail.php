@@ -201,14 +201,20 @@ function BrowseMailQueue()
 
 function list_getMailQueue($start, $items_per_page, $sort)
 {
-	global $smcFunc;
+	global $smcFunc, $txt;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT id_mail, time_sent, recipient, priority, subject
+		SELECT
+			id_mail, time_sent, recipient, priority,
+			IF(private = 1, {string:personal_message}, subject) AS subject
 		FROM {db_prefix}mail_queue
-		ORDER BY ' . $sort . '
-		LIMIT ' . $start . ', ' . $items_per_page,
+		ORDER BY {raw:sort}
+		LIMIT {int:start}, {int:items_per_page}',
 		array(
+			'start' => $start,
+			'sort' => $sort,
+			'items_per_page' => $items_per_page,
+			'personal_message' => $txt['personal_message'],
 		)
 	);
 	$mails = array();

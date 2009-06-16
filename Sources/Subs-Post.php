@@ -617,7 +617,7 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 }
 
 // Send off an email.
-function sendmail($to, $subject, $message, $from = null, $message_id = null, $send_html = false, $priority = 3, $hotmail_fix = null)
+function sendmail($to, $subject, $message, $from = null, $message_id = null, $send_html = false, $priority = 3, $hotmail_fix = null, $is_private = true)
 {
 	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
 	global $smcFunc;
@@ -741,7 +741,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 
 	// Are we using the mail queue, if so this is where we butt in...
 	if (!empty($modSettings['mail_queue']) && $priority != 0)
-		return AddMailQueue(false, $to_array, $subject, $message, $headers, $send_html, $priority);
+		return AddMailQueue(false, $to_array, $subject, $message, $headers, $send_html, $priority, $is_private);
 
 	// If it's a priority mail, send it now - note though that this should NOT be used for sending many at once.
 	elseif (!empty($modSettings['mail_queue']) && !empty($modSettings['mail_limit']))
@@ -787,7 +787,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 }
 
 // Add an email to the mail queue.
-function AddMailQueue($flush = false, $to_array = array(), $subject = '', $message = '', $headers = '', $send_html = false, $priority = 3)
+function AddMailQueue($flush = false, $to_array = array(), $subject = '', $message = '', $headers = '', $send_html = false, $priority = 3, $is_private = false)
 {
 	global $context, $modSettings, $smcFunc;
 
@@ -808,7 +808,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 			'{db_prefix}mail_queue',
 			array(
 				'time_sent' => 'int', 'recipient' => 'string-255', 'body' => 'string-65534', 'subject' => 'string-255',
-				'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int',
+				'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int', 'private' => 'int',
 			),
 			$cur_insert,
 			array('id_mail')
@@ -854,7 +854,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 				'{db_prefix}mail_queue',
 				array(
 					'time_sent' => 'int', 'recipient' => 'string-255', 'body' => 'string-65534', 'subject' => 'string-255',
-					'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int'
+					'headers' => 'string-65534', 'send_html' => 'int', 'priority' => 'int', 'private' => 'int',
 				),
 				$cur_insert,
 				array('id_mail')
@@ -866,7 +866,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		}
 
 		// Now add the current insert to the array...
-		$cur_insert[] = array(time(), (string) $to, (string) $message, (string) $subject, (string) $headers, ($send_html ? 1 : 0), $priority);
+		$cur_insert[] = array(time(), (string) $to, (string) $message, (string) $subject, (string) $headers, ($send_html ? 1 : 0), $priority, (int) $is_private);
 		$cur_insert_len += $this_insert_len;
 	}
 
@@ -1189,7 +1189,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		$mailmessage .= "\n\n" . $txt['instant_reply'] . ' ' . $scripturl . '?action=pm;sa=send;f=inbox;pmsg=' . $id_pm . ';quote;u=' . $from['id'];
 
 		// Off the notification email goes!
-		sendmail($notification_list, $mailsubject, $mailmessage, null, 'p' . $id_pm, false, 2);
+		sendmail($notification_list, $mailsubject, $mailmessage, null, 'p' . $id_pm, false, 2, null, true);
 	}
 
 	// Back to what we were on before!

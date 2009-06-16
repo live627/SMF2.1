@@ -277,7 +277,7 @@ function CustomEmail()
 
 		// Get the template and get out!
 		$emaildata = loadEmailTemplate('send_email', $replacements);
-		sendmail($context['recipient']['email'], $emaildata['subject'], $emaildata['body'], $from_email);
+		sendmail($context['recipient']['email'], $emaildata['subject'], $emaildata['body'], $from_email, null, false, 3, null, true);
 
 		// Don't let them send too many!
 		spamProtection('sendmail');

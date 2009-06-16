@@ -363,6 +363,15 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30
 ---#
 
 /******************************************************************************/
+--- Updating mail queue functionality.
+/******************************************************************************/
+
+---# Adding type to mail queue...
+ALTER TABLE {$db_prefix}mail_queue
+ADD private tinyint(1) NOT NULL default '0';
+---#
+
+/******************************************************************************/
 --- Updating attachments.
 /******************************************************************************/
 

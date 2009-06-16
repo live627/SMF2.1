@@ -87,8 +87,9 @@ June 2009
  * Curve: revamped the registration screen to match Curve's look and feel. (Register template, login.css) [Feature 3437]
  * Spell maintenace correctly (index.css, Login.Template.php) [Bug 3514]
  * Maintenance css class wasn't unique (index.css, Login.template.php) [Bug 3514]
- * Added styling for all input elements to make them look uniform in all browsers and operating systems. (many, many files) 
+ * Added styling for all input elements to make them look uniform in all browsers and operating systems. (many, many files)
  * Curve: rewrote the SendTopic template to match Curve's look and feel. (SendTopic.php, SendTopic.template.php, sendtopic.css)
+ ! Private message subjects could be shown in rare cases (install_2-0_*.sql, upgrade_2-0_*.sql, SendTopic.php, Subs-Post.php, ManageMail.php) [Bug 3292]
 
 
 May 2009
@@ -230,9 +231,9 @@ April 2009
  ! PostGreSql couldn't ban users as it incorrectly detected everyone as admin as it returns t or f (ManageBans.php)
  * Classic theme was missing an on2.gif
  * <s> tag is depreciated (Help.template.php) [Bug 3122]
- ! Round the relative activity by board in the profile stats panel down to two decimals. (Profile-View.php) 
+ ! Round the relative activity by board in the profile stats panel down to two decimals. (Profile-View.php)
  * Renamed the Combat template to Compat. (Compat.template.php)
- * Changes to several css styles and ditto templates, converted Search.template complete for Curve. 
+ * Changes to several css styles and ditto templates, converted Search.template complete for Curve.
  * Google attempts to browse image set by js but at the wrong location (Help.template.php) [Bug 3387]
  & Mail Settings should be just Settings for consistency (admin.english.php) [Bug 3385]
  ! Repair boards missing a label (Admin.php)
@@ -260,7 +261,7 @@ April 2009
  * Website should use website title for title and alt instead of www (Various)
  ! Undefined index for some themes where use_sidemenu isn't setup (Subs-Menu.php)
  * Updated the help popup to match Curve's style better. (Help template, style.css)
- * Rewrote the memberlist template's HTML to match Curve's style. (Memberlist template, memberlist.css, Memberlist.php) 
+ * Rewrote the memberlist template's HTML to match Curve's style. (Memberlist template, memberlist.css, Memberlist.php)
  * Rewrote the statistics template's HTML to match Curve's style. (Stats template, stats.css, index.css, Stats.php)
  * Updated the recent messages template to match Curve's style better. (Recent template, recent.css, Recent.php)
  * Black smudge caused by auto suggest div. Start with visibility hidden(style.css) [Bug 3077]
@@ -472,7 +473,7 @@ March 2009
  + Lighttpd supports path_info and can do queryless urls too (Subs.php, Querystring.php, News.php, Load.php, ManageSettings.english.php, Help.english.php) [Bug 3357]
  ! Profile linktree should use 'Profile of username', same for pagetitle.  Packages had some duplicate linktree items (Packages.php, PackageGet.php, Profile.php, Profile-View.php, Profile.english.php) [Bug 3116]
  ! Don't add the PM inbox folder to the linktree when viewing a label. (PersonalMessage.php)
- ! Add another chain to the linktree when changing PM settings. (PersonalMessage.php)   
+ ! Add another chain to the linktree when changing PM settings. (PersonalMessage.php)  
  + Wireless modes didn't have a link back to full version (index.php, Wireless.template.php, Wireless.english.php) [Bug 1141]
  * Wap2/Imode up one level link in child boards wouldn't work as missing semi-colon (Wireless.template.php)
  ! Do a better job at creating the link tree in the calendar section. (Calendar.php)
@@ -490,7 +491,7 @@ March 2009
 February 2009
 --------------------------------------------------------------------------------
  ! The log pruning section and custom search index creation section were missing their page titles. (ManageSettings.php, ManageSearch.php) [Bug 3023]
- * Use a font instead of screen size dependant width for the mini profile in the Display template. (forum.css) 
+ * Use a font instead of screen size dependant width for the mini profile in the Display template. (forum.css)
  ! Sending newsletters would sometimes end prematurely. (ManageNews.php) [Bug 2245]
  ! Don't allow people to move topics from the maintenance area to a redirection board. (ManageMaintenance.php) [Bug 3086]
  ! Version check link from admin page was wrong. (Admin template) [Bug 3085,3078]
@@ -507,7 +508,7 @@ February 2009
  ! PostgreSQL doesn't support LIMIT in DELETE queries (ManagePaid.php, Subs-Db-postgresql.php) [Bug 3133]
  + Present a canonical url for search engines to prevent duplicate content in their indices. (BoardIndex.php, Display.php, MessageIndex.php, Profile-View.php, index template, Printpage template, Wireless template) [Bug 3135]
  ! Change username was broken. (Subs-Auth.php) [Bug 3168]
- ! Some queries were causing DB errors in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3176] 
+ ! Some queries were causing DB errors in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3176]
  ! Don't allow numeric db prefixes in PostgreSQL (install.php) [Bug 3180]
  ! Installing multiple copies of SMF on the same DB caused an error in PostgreSQL (install_2-0_postgresql.sql) [Bug 3181]
  ! Trying to delete an account could cause an error in PostgreSQL (install_2-0_postgresql.sql, upgrade_2-0_postgresql.sql) [Bug 3186]
@@ -605,19 +606,19 @@ January 2009
  ! Autocomplete was not turned off in Opera by the JavaScript auto suggest function. (suggest.js) [Bug 2888]
  ! The pruning options assignment was done incorrectly (ManageSettings.php) [Bug 2884]
  * Moved the 'remove poll' button from the moderation button strip to the poll buton strip. (Display template) [Bug 2873]
- * The lower button strip wasn't getting the proper amount of padding. (style.css)  
+ * The lower button strip wasn't getting the proper amount of padding. (style.css) 
  ! The banned email check on registration did not work properly for bans that were set to never expire. (Security.php) [Bug 2883]
  * The signature was displayed with two lines above in both the profile summary and the Personal Messages index. (Profile template, PersonalMessage template) [Bug 2882]
  ! Fixed a typo in an AutoSuggest method name. (suggest.js) [Bug 2881]
  ! No longer support mb_convert_case as UTF8 alternative for ucwords as it behaves differently than ucwords. (Load.php) [Bug 2880]
  * The calendar board index icon in some cases was positioned too low. (forum.css) [Bug 2603]
  ! Both the Postgresql and sqlite database layers did not replace the random function properly. (Subs-Db-postgresql.php, Subs-Db-sqlite.php) [Bug 2878]
- * Added a bit more padding to the AJAX in progress bar. (style.css) [Bug 2653] 
- ! The current theme area should act like a shortcut to the current theme's settings. (Admin.php) [Bug 2863] 
+ * Added a bit more padding to the AJAX in progress bar. (style.css) [Bug 2653]
+ ! The current theme area should act like a shortcut to the current theme's settings. (Admin.php) [Bug 2863]
  ! Selecting a membergroup when registering someone from the admin area now requires the manage_membergroups permission. (ManageRegistration.php, Register template) [Bug 2816]
  ! Fixed approving posts on boards with 'Count Posts' disabled increased the posters post count. (Subs-Post.php) [Bug 2814]
  * Restructured the dropmenu styles to make the generic menus more flexible. (dropmenu.css, GenericMenu template) [Bug 1187], [Bug 2866]
- ! Notifications regarding the (un)locking of topics weren't always reporting the right status. (MessageIndex.php) [Bug 2891]   
+ ! Notifications regarding the (un)locking of topics weren't always reporting the right status. (MessageIndex.php) [Bug 2891]  
  ! Made the 'delete item' text for autosuggest items translatable. (suggest.js, PersonalMessage.js, various template files)
  & Added a language new string to support this change. (index language file)
  ! Internet Explorer 7 doesn't require a javascript fix for the dropdown menu's, so don't override its mouseover events. (script.js, menu.js)
@@ -630,18 +631,18 @@ January 2009
  ! The amount of line breaks was incorrect for [hr]-tags when switching from WYSIWYG to normal text mode. (Subs-Editor.php) [Bug 2179]
  ! The WYSIWYG table cell alignment conversion wasn't working properly, causing pasted tables to be parsed incorrectly. (Subs-Editor.php)
  * The message index produced invalid xHTML code in case there were no messages. (MessageIndex templates) [Bug 2889]
- * Make sure the tabs in the help section align properly. (Help template, help.css) [Bug 2698] 
- * Prevent feedback messages from creating a gap between menu and content. (Profile template, profile.css) [Bug 2893] 
+ * Make sure the tabs in the help section align properly. (Help template, help.css) [Bug 2698]
+ * Prevent feedback messages from creating a gap between menu and content. (Profile template, profile.css) [Bug 2893]
  ! The container of the inline message icon changer wasn't getting the proper width in all browsers. (script.js) [Bug 2176]
  ! Do a proper check on the availability of a Personal Message. (PersonalMessage.php)
  * Don't show a border below vote options if there's no expiration date set. (Display template, forum.css)
  ! Always load the English version of the Modifications and (if applicable) ThemeStrings language files as a means of fallback. (Load.php) [Bug 2743]
  ! Update the session check system to make it a bit less predictable. (several files)
  ! Highlight the login tab when asking for a password reminder. (Subs.php) [Bug 2911]
- ! Upgrading an SQLite forum failed on adding the passwd_flood column. (upgrade_2-0_sqlite.sql) [Bug 2907] 
+ ! Upgrading an SQLite forum failed on adding the passwd_flood column. (upgrade_2-0_sqlite.sql) [Bug 2907]
  ! Renamed 'Show Contributions' back to 'Show Posts' to prevent unnecessary confusion. (Profile.php, Profile-View.php, Subs.php, Profile template, Profile language file)
  * Show a link back to the message index when starting a new topic in wireless mode. (Wireless template) [Bug 2906]
- ! A few maintenance areas weren't properly redirecting to their new location yet. (ManageMaintenance.php, ManageMaintenance template) [Bug 2927] 
+ ! A few maintenance areas weren't properly redirecting to their new location yet. (ManageMaintenance.php, ManageMaintenance template) [Bug 2927]
  ! The captcha class was sometimes instantiated unnecessary, causing a JavaScript error. (Subs-Editor.php)
  ! The visual and non-visual verification did not work properly on imode and WAP2. (Subs-Editor.php, GenericControls template, Wireless template) [Bug 2930]
  ! Several links to 'track IP' were losing the user ID. (Profile-View.php, Profile template) [Bug 2936]
@@ -660,7 +661,7 @@ January 2009
  * The wireless boardindex could add too many spans in case both the board and its children contained new messages. (Wireless template) [Bug 2928]
  ! Fixed a few database errors that could occur in certain Personal Message screens when using PostgreSQL. (PersonalMessage.php, Subs-Db-Postgresql.php) [Bug 2921]
  ! The password salt should remain flexible in length, so that it doesn't interfere with converted forums. (upgrade_2-0_mysql.php, install_2-0_sqlite.sql, install_2-0_postgresql.sql, install_2-0_mysql.sql) [Bug 2943]
- * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css)  
+ * Added an extra stylesheet for special styles to support RTL-languages. (index template, rtl.css) 
  ! Fixed recount totals and statistics resulting in a session timeout. (ManageMaintenance.php) [Bug 2962]
  & $txt['remove_message'] appeared twice in the index language file. (index language file) [Bug 2961]
  ! Updating message icons caused a database error for the SQLite database layer. (ManageSmileys.php) [Bug 2950]

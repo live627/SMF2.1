@@ -1158,6 +1158,7 @@ CREATE TABLE {$db_prefix}mail_queue (
   headers text NOT NULL,
   send_html tinyint(3) NOT NULL default '0',
   priority tinyint(3) NOT NULL default '1',
+  private tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (id_mail),
   KEY time_sent (time_sent),
   KEY mail_priority (priority, id_mail)

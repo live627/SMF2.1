@@ -1255,7 +1255,8 @@ CREATE TABLE {$db_prefix}mail_queue (
   subject varchar(255) NOT NULL,
   headers text NOT NULL,
   send_html smallint NOT NULL default '0',
-  priority smallint NOT NULL default '1'
+  priority smallint NOT NULL default '1',
+  private tinyint(1) NOT NULL default '0'
 );
 
 #

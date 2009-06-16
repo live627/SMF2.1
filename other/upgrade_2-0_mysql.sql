@@ -1019,6 +1019,11 @@ ALTER TABLE {$db_prefix}mail_queue
 ADD INDEX mail_priority (priority, id_mail);
 ---#
 
+---# Adding type to mail queue...
+ALTER TABLE {$db_prefix}mail_queue
+ADD private tinyint(1) NOT NULL default '0';
+---#
+
 /******************************************************************************/
 --- Creating moderation center tables.
 /******************************************************************************/
