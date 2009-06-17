@@ -97,6 +97,7 @@ June 2009
  * Curve: moved the numerical values outside the stats bar (Stats.template.php stats.css) [Bug 3518]
  + Ability for packages to support multiple readmes for different languages with lang="" parameter (Packages.english.php, Packages.template.php, Subs-Package.php)
  ! File permissions page still was not W3C valid (Packages.template.php) [Bug 1739]
+ * Curve: rewrote the Reports template to match Curve's Look and Feel (Reports.template.php, report.css)
 
 
 May 2009
