@@ -50,8 +50,8 @@ input, textarea
 	background-color: #afc6db;
 }
 
-/* Checkboxes shouldn't have a background color. */
-input.check
+/* Checkboxes/radios shouldn't have a background color. */
+input.check, input.input_radio, input.input_check
 {
 	background-color: transparent;
 }

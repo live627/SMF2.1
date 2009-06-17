@@ -273,7 +273,7 @@ function template_manage_copyright()
 					<strong>', $txt['copyright_code'], ':</strong>
 				</td>
 				<td width="50%">
-					<input type="text" name="copy_code" value="" class="input_text"/>
+					<input type="text" name="copy_code" value="" class="input_text" />
 				</td>
 			</tr><tr>
 				<td colspan="2" align="center" class="windowbg2">

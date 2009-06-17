@@ -78,21 +78,21 @@ function template_maintenance()
 				<span class="topslice"><span></span></span>
 				<div class="content">
 					<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-						', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
-						', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+						', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" class="input_text" /><br />
+						', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" class="input_text" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
 						<input type="hidden" name="type" value="attachments" />
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="hidden" name="sa" value="byAge" />
 					</form>
 					<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-						', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
-						', $txt['attachment_remove_size'], ' <input type="text" name="size" id="size" value="100" size="4" /> ', $txt['kilobyte'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+						', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" class="input_text" /><br />
+						', $txt['attachment_remove_size'], ' <input type="text" name="size" id="size" value="100" size="4" class="input_text" /> ', $txt['kilobyte'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
 						<input type="hidden" name="type" value="attachments" />
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="hidden" name="sa" value="bySize" />
 					</form>
 					<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-						', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+						', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" class="input_text" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
 						<input type="hidden" name="type" value="avatars" />
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						<input type="hidden" name="sa" value="byAge" />
@@ -166,13 +166,13 @@ function template_attachment_repair()
 		{
 			if (!empty($number))
 			echo '
-					<input type="checkbox" name="to_fix[]" id="', $error, '" value="', $error, '" />
+					<input type="checkbox" name="to_fix[]" id="', $error, '" value="', $error, '" class="input_check" />
 					<label for="', $error, '">', sprintf($txt['attach_repair_' . $error], $number), '</label><br />';
 		}
 
 		echo '		<br />
-					<input type="submit" value="', $txt['repair_attachments_continue'], '" />
-					<input type="submit" name="cancel" value="', $txt['repair_attachments_cancel'], '" />
+					<input type="submit" value="', $txt['repair_attachments_continue'], '" class="button_submit" />
+					<input type="submit" name="cancel" value="', $txt['repair_attachments_cancel'], '" class="button_submit" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

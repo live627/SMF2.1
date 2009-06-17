@@ -46,8 +46,17 @@ form
 	margin: 0px;
 }
 
+/* We can style the different types of input buttons to be uniform thoughout different browsers and their colour themes.
+	.button_submit - covers input[type=submit], input[type=button], button[type=submit] and button[type=button] in all browsers
+	.button_reset  - covers input[type=reset] and button[type=reset] thoughout all browsers
+	.input_check   - covers input[type=checkbox] thoughout all browsers
+	.input_radio   - covers input[type=radio] thoughout all browsers
+	.input_text    - covers input[type=text] thoughout all browsers
+	.input_file    - covers input[type=file] thoughout all browsers
+*/
+
 /* Input boxes - just a bit smaller than normal so they align well. */
-input, textarea, button
+input, textarea
 {
 	color: #000000;
 	font-family: verdana, sans-serif;
@@ -62,12 +71,6 @@ textarea
 	font-size: 100%;
 	color: #000000;
 	font-family: verdana, sans-serif;
-}
-
-/* All input elements that are checkboxes or radio buttons. */
-input.check
-{
-	border: none;
 }
 
 /* Selects are a bit smaller, because it makes them look even better 8). */
@@ -783,6 +786,12 @@ a.moderation_link, a.moderation_link:visited
 /* ************************************* */
 /* The below is deprecated.              */
 /* ************************************* */
+
+/* All input elements that are checkboxes or radio buttons. */
+input.check
+{
+	border: none;
+}
 
 /* definitions for the main tab, active means the tab reflects which page is displayed */
 .maintab_first, .maintab_back, .maintab_last, .maintab_active_first, .maintab_active_back, .maintab_active_last

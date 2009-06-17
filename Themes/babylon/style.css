@@ -54,7 +54,7 @@ input, textarea, button
 }
 
 /* All input elements that are checkboxes or radio buttons. */
-input.check
+input.input_radio, input.input_check
 {
 }
 

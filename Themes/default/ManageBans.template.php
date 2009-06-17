@@ -78,7 +78,7 @@ function template_ban_edit()
 											', $txt['ban_on_username'], ':<br />';
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '
-											<input type="text" name="user" id="user" value="" size="40" class="input_text"/>';
+											<input type="text" name="user" id="user" value="" size="40" class="input_text" />';
 		else
 			echo '
 											', $context['ban_suggestions']['member']['link'], '

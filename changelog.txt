@@ -98,6 +98,7 @@ June 2009
  + Ability for packages to support multiple readmes for different languages with lang="" parameter (Packages.english.php, Packages.template.php, Subs-Package.php)
  ! File permissions page still was not W3C valid (Packages.template.php) [Bug 1739]
  * Curve: rewrote the Reports template to match Curve's Look and Feel (Reports.template.php, report.css)
+ ! All inputs should have a class because IE6 doesn't support css attribute selectors (All over) [Bug 2957]
 
 
 May 2009

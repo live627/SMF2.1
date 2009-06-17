@@ -102,7 +102,7 @@ function template_set_password()
 			</tr><tr class="windowbg">
 				<td width="45%"><strong>', $txt['verify_pass'], ': </strong></td>
 				<td>
-					<input type="password" name="passwrd2" id="smf_autov_pwverify" size="22" class="input_password"/>
+					<input type="password" name="passwrd2" id="smf_autov_pwverify" size="22" class="input_password" />
 					<span id="smf_autov_pwverify_div" style="display: none;">
 						<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
 					</span>

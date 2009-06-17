@@ -24,8 +24,8 @@ function template_main()
 			<div class="roundframe"><div class="innerframe">
 				<span class="enhanced">
 					<strong>', $txt['search_for'], ':</strong>
-					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
-					', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />
+					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
+					', $context['require_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" class="button_submit" />
 				</span>';
 
 		if (empty($modSettings['search_simple_fulltext']))
@@ -37,7 +37,7 @@ function template_main()
 				<p>
 					<strong>', $txt['search_visual_verification_label'], ':</strong>
 					<br />', template_control_verification($context['visual_verification_id'], 'all'), '<br />
-					<input id="submit" type="submit" name="submit" value="' . $txt['search'] . '" />
+					<input id="submit" type="submit" name="submit" value="' . $txt['search'] . '" class="button_submit" />
 				</p>';
 
 		echo '
@@ -58,7 +58,7 @@ function template_main()
 				<input type="hidden" name="advanced" value="1" />
 				<span class="enhanced">
 					<strong>', $txt['search_for'], ':</strong>
-					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
+					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
 
 				<script type="text/javascript"><!-- // --><![CDATA[
 					function initSearch()
@@ -81,7 +81,7 @@ function template_main()
 		echo '
 				<dl id="search_options">
 					<dt>', $txt['by_user'], ':</dt>
-					<dd><input id="userspec" type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" /></dd>
+					<dd><input id="userspec" type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" class="input_text" /></dd>
 					<dt>', $txt['search_order'], ':</dt>
 					<dd>
 						<select id="sort" name="sort">
@@ -94,11 +94,11 @@ function template_main()
 					</dd>
 					<dt class="options">', $txt['search_options'], ':</dt>
 					<dd class="options">
-						<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_show_complete_messages'], '</label><br />
-						<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_subject_only'], '</label>
+						<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['search_show_complete_messages'], '</label><br />
+						<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['search_subject_only'], '</label>
 					</dd>
 					<dt class="between">', $txt['search_post_age'], ': </dt>
-					<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '</dd>
+					<dd>', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" class="input_text" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" class="input_text" /> ', $txt['days_word'], '</dd>
 				</dl>';
 
 		// Require an image to be typed to save spamming?
@@ -143,7 +143,7 @@ function template_main()
 				foreach ($category['boards'] as $board)
 					echo '
 							<li class="board"', !empty($board['child_level']) ? ' style="margin-left: ' . $board['child_level'] . 'em"' : '', '>
-								<label for="brd', $board['id'], '"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="check" />', $board['name'], '</label>
+								<label for="brd', $board['id'], '"><input type="checkbox" id="brd', $board['id'], '" name="brd[', $board['id'], ']" value="', $board['id'], '"', $board['selected'] ? ' checked="checked"' : '', ' class="input_check" />', $board['name'], '</label>
 							</li>';
 
 				echo '
@@ -154,7 +154,7 @@ function template_main()
 			echo '
 				</ul>
 				<p>
-					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="check" />
+					<input type="checkbox" name="all" id="check_all" value=""', $context['boards_check_all'] ? ' checked="checked"' : '', ' onclick="invertAll(this, this.form, \'brd\');" class="input_check" />
 					<label for="check_all">', $txt['check_all'], '</label>
 				</p>
 			</div></div>
@@ -163,7 +163,7 @@ function template_main()
 		}
 
 		echo '
-			<div><input type="submit" name="submit" value="', $txt['search'], '" /></div>';
+			<div><input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" /></div>';
 	}
 
 	echo '
@@ -213,8 +213,8 @@ function template_results()
 		echo '
 		<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 			<strong>', $txt['search_for'], ':</strong>
-			<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
-			<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
+			<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" class="input_text" />
+			<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" class="button_submit" />
 
 			<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
 			<input type="hidden" name="userspec" value="', !empty($context['search_params']['userspec']) ? $context['search_params']['userspec'] : '', '" />
@@ -262,7 +262,7 @@ function template_results()
 			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
 							<th scope="col" class="smalltext" width="24" align="center">
-								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="check" />
+								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
 							</th>';
 			elseif (!empty($options['display_quick_mod']))
 				echo '
@@ -327,7 +327,7 @@ function template_results()
 							<td class="', $color_class, ' windowbg moderation">';
 				if ($options['display_quick_mod'] == 1)
 						echo '
-								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="check" />';
+								<input type="checkbox" name="topics[]" value="', $topic['id'], '" class="input_check" />';
 				else
 				{
 					if ($topic['quick_mod']['remove'])
@@ -392,7 +392,7 @@ function template_results()
 
 			echo '
 								<input type="hidden" name="redirect_url" value="', $scripturl . '?action=search2;params=' . $context['params'], '" />
-								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" />
+								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return this.form.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
 							</td>
 						</tr>
 					</tfoot>';

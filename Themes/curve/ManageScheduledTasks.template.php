@@ -47,7 +47,7 @@ function template_edit_scheduled_tasks()
 						</dt>
 						<dd>
 							', $txt['scheduled_task_edit_repeat'], '
-							<input type="text" name="regularity" value="', empty($context['task']['regularity']) ? 1 : $context['task']['regularity'], '" onchange="if (this.value < 1) this.value = 1;" size="2" maxlength="2" />
+							<input type="text" name="regularity" value="', empty($context['task']['regularity']) ? 1 : $context['task']['regularity'], '" onchange="if (this.value < 1) this.value = 1;" size="2" maxlength="2" class="input_text" />
 							<select name="unit">
 								<option value="0">', $txt['scheduled_task_edit_pick_unit'], '</option>
 								<option value="0">---------------------</option>
@@ -62,17 +62,17 @@ function template_edit_scheduled_tasks()
 							<span class="smalltext">', $txt['scheduled_task_edit_start_time_desc'], '</span>
 						</dt>
 						<dd>
-							<input type="text" name="offset" value="', $context['task']['offset_formatted'], '" size="6" maxlength="5" />
+							<input type="text" name="offset" value="', $context['task']['offset_formatted'], '" size="6" maxlength="5" class="input_text" />
 						</dd>
 						<dt>
 							<strong>', $txt['scheduled_tasks_enabled'], ':</strong>
 						</dt>
 						<dd>
-							<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="check" />
+							<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="input_check" />
 						</dd>
 					</dl>			
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" />
+					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" class="button_submit" />
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>

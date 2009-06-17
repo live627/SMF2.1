@@ -992,10 +992,10 @@ function ssi_login($redirect_to = '', $output_method = 'echo')
 			<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
 				<tr>
 					<td align="right"><label for="user">', $txt['username'], ':</label>&nbsp;</td>
-					<td><input type="text" id="user" name="user" size="9" value="', $user_info['username'], '" /></td>
+					<td><input type="text" id="user" name="user" size="9" value="', $user_info['username'], '" class="input_text" /></td>
 				</tr><tr>
 					<td align="right"><label for="passwrd">', $txt['password'], ':</label>&nbsp;</td>
-					<td><input type="password" name="passwrd" id="passwrd" size="9" /></td>
+					<td><input type="password" name="passwrd" id="passwrd" size="9" class="input_password" /></td>
 				</tr>';
 
 	// Open ID?
@@ -1004,12 +1004,12 @@ function ssi_login($redirect_to = '', $output_method = 'echo')
 					<td colspan="2" align="center"><strong>&mdash;', $txt['or'], '&mdash;</strong></td>
 				</tr><tr>
 					<td align="right"><label for="openid_url">', $txt['openid'], ':</label>&nbsp;</td>
-					<td><input type="text" name="openid_url" class="openid_login" size="17" /></td>
+					<td><input type="text" name="openid_url" class="input_text openid_login" size="17" /></td>
 				</tr>';
 
 	echo '<tr>
 					<td><input type="hidden" name="cookielength" value="-1" /></td>
-					<td><input type="submit" value="', $txt['login'], '" /></td>
+					<td><input type="submit" value="', $txt['login'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 		</form>';
@@ -1126,7 +1126,7 @@ function ssi_recentPoll($topPollInstead = false, $output_method = 'echo')
 			'votes' => $option[1],
 			'bar' => '<span style="white-space: nowrap;"><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'right' : 'left') . '.gif" alt="" /><img src="' . $settings['images_url'] . '/poll_middle.gif" width="' . $barWide . '" height="12" alt="-" /><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'left' : 'right') . '.gif" alt="" /></span>',
 			'option' => parse_bbc($option[0]),
-			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . ($topPollInstead ? 'top-' : 'recent-') . $i . '" value="' . $i . '" class="check" />'
+			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . ($topPollInstead ? 'top-' : 'recent-') . $i . '" value="' . $i . '" class="input_' . ($row['max_votes'] > 1 ? 'check' : 'radio') . '" />'
 		);
 	}
 
@@ -1154,7 +1154,7 @@ function ssi_recentPoll($topPollInstead = false, $output_method = 'echo')
 				</tr>';
 		echo '
 				<tr>
-					<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
+					<td><input type="submit" value="', $txt['poll_vote'], '" class="button_submit" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -1287,7 +1287,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 			'votes' => $option[1],
 			'bar' => '<span style="white-space: nowrap;"><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'right' : 'left') . '.gif" alt="" /><img src="' . $settings['images_url'] . '/poll_middle.gif" width="' . $barWide . '" height="12" alt="-" /><img src="' . $settings['images_url'] . '/poll_' . ($context['right_to_left'] ? 'left' : 'right') . '.gif" alt="" /></span>',
 			'option' => parse_bbc($option[0]),
-			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="check" />'
+			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="input_' . ($row['max_votes'] > 1 ? 'check' : 'radio') . '" />'
 		);
 	}
 
@@ -1315,7 +1315,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 					</tr>';
 		echo '
 					<tr>
-						<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
+						<td><input type="submit" value="', $txt['poll_vote'], '" class="button_submit" /></td>
 					</tr>
 				</table>
 				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
@@ -1464,7 +1464,7 @@ function ssi_quickSearch($output_method = 'echo')
 
 	echo '
 		<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-			<input type="hidden" name="advanced" value="0" /><input type="text" name="search" size="30" /> <input type="submit" name="submit" value="', $txt['search'], '" />
+			<input type="hidden" name="advanced" value="0" /><input type="text" name="search" size="30" class="input_text" /> <input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
 		</form>';
 }
 
