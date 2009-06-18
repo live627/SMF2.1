@@ -61,6 +61,11 @@ function db_extra_init()
 function smf_db_backup_table($table, $backup_table)
 {
 	global $smcFunc, $db_prefix;
+	static $no_engine_support = null;
+
+	// We check for engine support this way to save time repeatedly performind this check.
+	if (is_null($no_engine_support))
+		$no_engine_support = version_compare('4', $smcFunc['db_get_version']) > 0;
 
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
@@ -152,7 +157,7 @@ function smf_db_backup_table($table, $backup_table)
 
 	$request = $smcFunc['db_query']('', '
 		CREATE TABLE {raw:backup_table} {raw:create}
-		TYPE={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
+		{raw:engine_type}={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
 		SELECT *
 		FROM {raw:table}',
 		array(
@@ -162,6 +167,8 @@ function smf_db_backup_table($table, $backup_table)
 			'engine' => $engine,
 			'charset' => empty($charset) ? '' : $charset,
 			'collate' => empty($collate) ? '' : $collate,
+			// MySQL users below v4 can't use engine.
+			'engine_type' => $no_engine_support ? 'TYPE' : 'ENGINE',
 		)
 	);
 
@@ -325,6 +332,11 @@ function smf_db_insert_sql($tableName)
 function smf_db_table_sql($tableName)
 {
 	global $smcFunc, $db_prefix;
+	static $no_engine_support = null;
+
+	// We check for engine support this way to save time repeatedly performind this check.
+	if (is_null($no_engine_support))
+		$no_engine_support = version_compare('4', $smcFunc['db_get_version']) > 0;
 
 	$tableName = str_replace('{db_prefix}', $db_prefix, $tableName);
 
@@ -422,7 +434,7 @@ function smf_db_table_sql($tableName)
 	$smcFunc['db_free_result']($result);
 
 	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
+	$schema_create .= $crlf . ') ' . ($no_engine_support ? 'TYPE' : 'ENGINE') . '=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 
 	return $schema_create;
 }
