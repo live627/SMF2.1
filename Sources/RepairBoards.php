@@ -64,7 +64,7 @@ function RepairBoards()
 
 	// Print out the top of the webpage.
 	$context['page_title'] = $txt['admin_repair'];
-	$context['sub_template'] = 'rawdata';
+	$context['sub_template'] = 'repair_boards';
 	$context[$context['admin_menu_name']]['current_subsection'] = 'general';
 
 	// Load the language file.
@@ -89,49 +89,23 @@ function RepairBoards()
 	// if you would like to continue, the other fixes the errors.
 	if (!isset($_GET['fixErrors']))
 	{
+		$context['error_search'] = true;
 		$context['repair_errors'] = array();
-		$to_fix = findForumErrors();
+		$context['to_fix'] = findForumErrors();
 
-		if (!empty($to_fix))
+		if (!empty($context['to_fix']))
 		{
-			$_SESSION['repairboards_to_fix'] = $to_fix;
+			$_SESSION['repairboards_to_fix'] = $context['to_fix'];
 			$_SESSION['repairboards_to_fix2'] = null;
 
 			if (empty($context['repair_errors']))
 				$context['repair_errors'][] = '???';
 		}
-
-		$context['raw_data'] = '
-			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
-				<tr class="titlebg">
-					<td>' . $txt['errors_list'] . '</td>
-				</tr><tr>
-					<td class="windowbg">';
-
-		if (!empty($to_fix))
-		{
-			$context['raw_data'] .= '
-						' . $txt['errors_found'] . ':<br />
-						' . implode('
-						<br />', $context['repair_errors']) . '<br />
-						<br />
-						' . $txt['errors_fix'] . '<br />
-						<strong><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></strong>';
-		}
-		else
-			$context['raw_data'] .= '
-						' . $txt['maintain_no_errors'] . '<br />
-						<br />
-						<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine">' . $txt['maintain_return'] . '</a>';
-
-		$context['raw_data'] .= '
-					</td>
-				</tr>
-			</table>';
 	}
 	else
 	{
-		$to_fix = isset($_SESSION['repairboards_to_fix']) ? $_SESSION['repairboards_to_fix'] : array();
+		$context['error_search'] = false;
+		$context['to_fix'] = isset($_SESSION['repairboards_to_fix']) ? $_SESSION['repairboards_to_fix'] : array();
 
 		require_once($sourcedir . '/Subs-Boards.php');
 
@@ -150,19 +124,6 @@ function RepairBoards()
 		updateSettings(array(
 			'calendar_updated' => time(),
 		));
-
-		$context['raw_data'] = '
-			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
-				<tr class="titlebg">
-					<td>' . $txt['errors_fixing'] . '</td>
-				</tr><tr>
-					<td class="windowbg">
-						' . $txt['errors_fixed'] . '<br />
-						<br />
-						<a href="' . $scripturl . '?action=admin;area=maintain;sa=routine">' . $txt['maintain_return'] . '</a>
-					</td>
-				</tr>
-			</table>';
 
 		$_SESSION['repairboards_to_fix'] = null;
 		$_SESSION['repairboards_to_fix2'] = null;

@@ -103,6 +103,7 @@ June 2009
  ! Some operations could fail on MySQL6/5.4 (DbExtra-mysql.php, DbPackages-mysql.php, DbSearh-mysql.php) [Bug 3522]
  ! Prevent errors while replying to all via wireless mod (Wireless.template.php) [Bug 3372]
  * Curve: Recent template caused undefined index error (Recent.template.php) [Bug 3521]
+ ! Move the repair boards html outside of the sources (RepairBoards.php, Admin Template) [Bug 3511]
 
 
 May 2009

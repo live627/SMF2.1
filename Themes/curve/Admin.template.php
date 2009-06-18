@@ -2108,4 +2108,65 @@ function template_callback_question_answer_list()
 	';
 }
 
+// Repairing boards.
+function template_repair_boards()
+{
+	global $context, $txt, $scripturl;
+
+	// Are we actually fixing them, or is this just a prompt?
+	if ($context['error_search'])
+	{
+		echo '
+			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
+				<tr class="titlebg">
+					<td>', $txt['errors_list'], '</td>
+				</tr><tr>
+					<td class="windowbg">';
+
+
+		if (!empty($context['to_fix']))
+		{
+			echo '
+						', $txt['errors_found'], ':<br />';
+
+			foreach ($context['repair_errors'] as $error)
+				echo '
+						<br />', $error;
+
+			echo '
+						<br /><br />
+						', $txt['errors_fix'], '<br />
+						<strong><a href="', $scripturl, '?action=admin;area=repairboards;fixErrors;', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=maintain">', $txt['no'], '</a></strong>';
+		}
+		else
+			echo '
+						', $txt['maintain_no_errors'], '<br />
+						<br />
+						<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>';
+
+		echo '
+					</td>
+				</tr>
+			</table>';
+	
+	}
+	else
+	{
+		echo '
+			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
+				<tr class="titlebg">
+					<td>', $txt['errors_fixing'], '</td>
+				</tr><tr>
+					<td class="windowbg">
+						' , $txt['errors_fixed'], '<br />
+						<br />
+						<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
+					</td>
+				</tr>
+			</table>';
+	
+	
+	}
+}
+
 ?>
