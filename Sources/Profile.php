@@ -452,10 +452,12 @@ function ModifyProfile($post_errors = array())
 		'url' => $scripturl . '?action=profile' . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
 		'name' => sprintf($txt['profile_of_username'], $context['member']['name']),
 	);
-	$context['linktree'][] = array(
-		'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
-		'name' => $profile_include_data['label'],
-	);
+	
+	if (!empty($profile_include_data['label']))
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=profile;area=' . $profile_include_data['current_area'] . ($memID != $user_info['id'] ? ';u=' . $memID : ''),
+			'name' => $profile_include_data['label'],
+		);
 
 	if (!empty($profile_include_data['current_subsection']) && $profile_include_data['subsections'][$profile_include_data['current_subsection']][0] != $profile_include_data['label'])
 		$context['linktree'][] = array(
