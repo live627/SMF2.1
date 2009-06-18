@@ -79,6 +79,7 @@ textarea
 	background: #f5f5f5;
 	border: 1px solid #aaa;
 	cursor: pointer;
+	font-weight: normal;
 }
 
 input:hover, textarea:hover, button:hover, select:hover

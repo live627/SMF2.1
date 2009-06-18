@@ -497,7 +497,7 @@ function template_subject_list()
 		}
 
 		echo '
-				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" class="button_submit" />';
+				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" class="button_submit" />';
 	}
 
 	echo '
@@ -1156,8 +1156,8 @@ function template_labels()
 		echo '
 			<tr class="catbg3">
 				<td align="right" colspan="2">
-					<input type="submit" name="save" value="', $txt['save'], '" style="font-weight: normal;" class="button_submit" />
-					<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="return confirm(\'', $txt['pm_labels_delete'], '\');" class="button_submit" />
+					<input type="submit" name="save" value="', $txt['save'], '" class="button_submit" />
+					<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" onclick="return confirm(\'', $txt['pm_labels_delete'], '\');" class="button_submit" />
 				</td>
 			</tr>';
 	}
@@ -1182,7 +1182,7 @@ function template_labels()
 			</tr>
 			<tr class="catbg3">
 				<td colspan="2" align="right">
-					<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" style="font-weight: normal;" class="button_submit" />
+					<input type="submit" name="add" value="', $txt['pm_label_add_new'], '" class="button_submit" />
 				</td>
 			</tr>
 		</table>

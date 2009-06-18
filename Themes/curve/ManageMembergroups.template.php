@@ -488,7 +488,7 @@ function template_group_members()
 				
 	if (!empty($context['group']['assignable']))
 		echo '
-				<div class="align_right"><input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" style="font-weight: normal;" class="button_submit" /></div>';			
+				<div class="align_right"><input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" class="button_submit" /></div>';			
 	echo '		
 			</div>
 			<br />';

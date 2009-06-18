@@ -65,6 +65,10 @@ input, button
 {
 	font-size: 90%;
 }
+.button_submit, .button_reset
+{
+	font-weight: normal;
+}
 
 textarea
 {

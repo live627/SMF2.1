@@ -1507,7 +1507,7 @@ function template_groupMembership()
 			echo '
 				<tr class="catbg">
 					<td colspan="2" align="right">
-						<input type="submit" value="', $txt['make_primary'], '" style="font-weight: normal;" class="button_submit" />
+						<input type="submit" value="', $txt['make_primary'], '" class="button_submit" />
 					</td>
 				</tr>';
 

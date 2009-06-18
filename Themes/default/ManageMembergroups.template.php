@@ -441,7 +441,7 @@ function template_group_members()
 		echo '
 				<tr class="titlebg">
 					<td colspan="6" align="right">
-						<input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" style="font-weight: normal;" class="button_submit" />
+						<input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" class="button_submit" />
 					</td>
 				</tr>';
 	echo '
