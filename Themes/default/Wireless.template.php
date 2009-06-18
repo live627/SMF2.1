@@ -560,14 +560,19 @@ function template_imode_pm()
 			else
 			{
 				$to_names = array();
+				$ids = array();
 				foreach ($context['recipients']['to'] as $to)
+				{
+					$ids[] = $to['id'];
 					$to_names[] = $to['name'];
+				}
 				echo implode(', ', $to_names);
+				$ids = implode(',', $ids);
 			}
 			echo '
-				', empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
-							<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';', $context['session_var'], '=', $context['session_id'], ';imode">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
-							<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';imode">' . $txt['wireless_pm_add_buddy'] . '</a>', '
+				', empty($ids) ? '' : '<input type="hidden" name="u" value="' . $ids . '" />', '<br />
+							<a href="', $scripturl, '?action=findmember', empty($ids) ? '' : ';u=' . $ids, ';', $context['session_var'], '=', $context['session_id'], ';imode">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
+							<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($ids) ? '' : ';u=' . $ids) . ';imode">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 						</tr></td>
 						<tr><td>
 							<strong>', $txt['subject'], ':</strong> <input type="text" name="subject" value="', $context['subject'], '" class="input_text" />
@@ -1193,14 +1198,19 @@ function template_wap2_pm()
 			else
 			{
 				$to_names = array();
+				$ids = array();
 				foreach ($context['recipients']['to'] as $to)
+				{
+					$ids[] = $to['id'];
 					$to_names[] = $to['name'];
+				}
 				echo implode(', ', $to_names);
+				$ids = implode(',', $ids);
 			}
 			echo '
-				', empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
-						<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';', $context['session_var'], '=', $context['session_id'], ';wap2">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
-						<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';wap2">' . $txt['wireless_pm_add_buddy'] . '</a>', '
+				', empty($ids) ? '' : '<input type="hidden" name="u" value="' . $ids . '" />', '<br />
+						<a href="', $scripturl, '?action=findmember', empty($ids) ? '' : ';u=' . $ids, ';', $context['session_var'], '=', $context['session_id'], ';wap2">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
+						<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($ids) ? '' : ';u=' . implode(',', $ids)) . ';wap2">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 					</p>
 					<p class="windowbg">
 						<strong>', $txt['subject'], ':</strong> <input type="text" name="subject" value="', $context['subject'], '" />
