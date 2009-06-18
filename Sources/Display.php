@@ -455,7 +455,7 @@ function Display()
 				array(
 					'current_board' => $board,
 					'current_member' => $user_info['id'],
-					'id_msg_last_visit' => $_SESSION['id_msg_last_visit'],
+					'id_msg_last_visit' => (int) $_SESSION['id_msg_last_visit'],
 				)
 			);
 			list ($numNewTopics) = $smcFunc['db_fetch_row']($request);
