@@ -2112,61 +2112,64 @@ function template_callback_question_answer_list()
 function template_repair_boards()
 {
 	global $context, $txt, $scripturl;
+	
+	echo '
+	<div id="admincenter" class="align_left">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>',
+			$context['error_search'] ? $txt['errors_list'] : $txt['errors_fixing'] , '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">';
 
 	// Are we actually fixing them, or is this just a prompt?
 	if ($context['error_search'])
 	{
-		echo '
-			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
-				<tr class="titlebg">
-					<td>', $txt['errors_list'], '</td>
-				</tr><tr>
-					<td class="windowbg">';
-
-
 		if (!empty($context['to_fix']))
 		{
 			echo '
-						', $txt['errors_found'], ':<br />';
+				', $txt['errors_found'], ':
+				<ul>';
 
 			foreach ($context['repair_errors'] as $error)
 				echo '
-						<br />', $error;
+					<li>
+						', $error, '
+					</li>';
 
 			echo '
-						<br /><br />
-						', $txt['errors_fix'], '<br />
-						<strong><a href="', $scripturl, '?action=admin;area=repairboards;fixErrors;', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=maintain">', $txt['no'], '</a></strong>';
+				</ul>
+				<p>
+					', $txt['errors_fix'], '
+				</p>
+				<p class="padding">
+					<strong><a href="', $scripturl, '?action=admin;area=repairboards;fixErrors;', $context['session_var'], '=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $scripturl, '?action=admin;area=maintain">', $txt['no'], '</a></strong>
+				</p>';
 		}
 		else
 			echo '
-						', $txt['maintain_no_errors'], '<br />
-						<br />
-						<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>';
-
-		echo '
-					</td>
-				</tr>
-			</table>';
+				<p>', $txt['maintain_no_errors'], '</p>
+				<p class="padding">
+					<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
+				</p>';
 	
 	}
 	else
 	{
 		echo '
-			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
-				<tr class="titlebg">
-					<td>', $txt['errors_fixing'], '</td>
-				</tr><tr>
-					<td class="windowbg">
-						' , $txt['errors_fixed'], '<br />
-						<br />
-						<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
-					</td>
-				</tr>
-			</table>';
-	
+				<p>' , $txt['errors_fixed'], '</p>
+				<p class="padding">
+					<a href="', $scripturl, '?action=admin;area=maintain;sa=routine">', $txt['maintain_return'], '</a>
+				</p>';
 	
 	}
+	
+	echo '
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 }
 
 ?>
