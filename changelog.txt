@@ -106,6 +106,7 @@ June 2009
  ! Move the repair boards html outside of the sources (RepairBoards.php, Admin Template) [Bug 3511]
  ! Clicking activate via profile could cause undefined index error (Profile.php)
  * Curve: rewrote the Calendar template to match Curve's look and feel. (Calendar template, calendar.css)
+ * Curve: Login page gaps in IE (Login.template.php, index.css) [Bug 3532]
 
 
 May 2009

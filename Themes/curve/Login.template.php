@@ -58,7 +58,7 @@ function template_login()
 	echo '
 				</dl>
 				<p><input type="submit" value="', $txt['login'], '" class="button_submit" /></p>
-				<p class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</p>
+				<p class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a></p>
 				<input type="hidden" name="hash_passwrd" value="" />
 			</div></div>
 			<span class="lowerframe"><span></span></span>
