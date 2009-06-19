@@ -71,7 +71,7 @@ function CalendarMain()
 		return $subActions[$_GET['sa']]();
 
 	// This is gonna be needed...
-	loadTemplate('Calendar');
+	loadTemplate('Calendar', 'calendar');
 
 	// You can't do anything if the calendar is off.
 	if (empty($modSettings['cal_enabled']))

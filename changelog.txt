@@ -105,6 +105,7 @@ June 2009
  * Curve: Recent template caused undefined index error (Recent.template.php) [Bug 3521]
  ! Move the repair boards html outside of the sources (RepairBoards.php, Admin Template) [Bug 3511]
  ! Clicking activate via profile could cause undefined index error (Profile.php)
+ * Curve: rewrote the Calendar template to match Curve's look and feel. (Calendar template, calendar.css)
 
 
 May 2009
