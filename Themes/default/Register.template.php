@@ -50,20 +50,7 @@ function template_registration_form()
 		{
 			alert("', $txt['register_passwords_differ_js'], '");
 			return false;
-		}';
-
-	// If they haven't checked the "I agree" box, tell them and don't submit.
-	if ($context['require_agreement'])
-		echo '
-
-		if (!document.forms.creator.regagree.checked)
-		{
-			alert("', $txt['register_agree'], '");
-			return false;
-		}';
-
-	// Otherwise, let it through.
-	echo '
+		}
 
 		return true;
 	}
@@ -101,18 +88,7 @@ function template_registration_form()
 		}
 
 		return true;
-	}';
-
-	if ($context['require_agreement'])
-		echo '
-	function checkAgree()
-	{
-		document.forms.creator.regSubmit.disabled =  (currentAuthMethod == "passwd" && (isEmptyText(document.forms.creator.smf_autov_pwmain) || isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email))) || (currentAuthMethod == "openid" && isEmptyText(document.forms.creator.openid_url)) || !document.forms.creator.regagree.checked;
-		setTimeout("checkAgree();", 1000);
 	}
-	setTimeout("checkAgree();", 1000);';
-
-	echo '
 // ]]></script>';
 
 	// Any errors?
@@ -137,7 +113,9 @@ function template_registration_form()
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
 	<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
 		<tr class="titlebg">
-			<td>', $txt['register'], ' - ', $txt['required_info'], '</td>
+			<td>', $txt['registration_form'], '</td>
+		</tr><tr class="catbg">
+			<td>', $txt['required_info'], '</td>
 		</tr><tr class="windowbg">
 			<td width="100%">
 				<table cellpadding="3" cellspacing="0" border="0" width="100%">
@@ -275,8 +253,8 @@ function template_registration_form()
 	// If we have some optional fields show them too!
 	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
 		echo '
-		<tr class="windowbg">
-			<td><hr /></td>
+		<tr class="catbg">
+			<td>', $txt['additional_information'], '</td>
 		</tr>
 		<tr class="windowbg">
 			<td width="100%">

@@ -92,9 +92,7 @@ function template_registration_form()
 				}
 		
 				return true;
-			}';
-
-	echo '
+			}
 		// ]]></script>';
 
 	// Any errors?
