@@ -419,23 +419,32 @@ ul.theme_options
 	padding: 0;
 	margin: 0;
 }
- ul.theme_options li
- {
+ul.theme_options li
+{
 	list-style: none;
 	padding: 0.4em;
- }
- .is_directory
- {
+}
+.is_directory
+{
 	padding-left: 18px;
 	background: url(../images/admin/boards.gif) no-repeat;
  }
- .edit_file
- {
+.edit_file
+{
 	width: 96%; 
 	font-family: monospace; 
 	margin-top: 1ex; 
 	white-space: pre;
- }
+}
+/*Regcenter*/
+.agreement, .reserved_names
+{
+	padding: 0 5px;
+}
+#agreement 
+{
+	width: 100%;
+}
 /* ************************************* */
 /* only for backward compability   */
 /* ************************************* */

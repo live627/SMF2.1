@@ -110,6 +110,7 @@ June 2009
  * Curve: the profile success box should not break the layout (profile.css) [Bug 3533]
  * Curve: revamped the SplitTopics template to match Curve's look and feel. (SplitTopics template, splittopics.css, SplitTopics.php)
  * Curve: the profile change theme section had a fixed width (Themes.php, Themes template, profile.css) [Bug 3536]
+ * Curve: some areas need a small padding for a better look and feel (Register template, admin.css) [Bug 3538]
 
 
 May 2009

@@ -643,7 +643,9 @@ function template_edit_agreement()
 
 	// Show the actual agreement in an oversized text box.
 	echo '
-					<textarea cols="70" rows="20" name="agreement" style="width: 100%;">', $context['agreement'], '</textarea>
+					<p class="agreement">
+						<textarea cols="70" rows="20" name="agreement" id="agreement">', $context['agreement'], '</textarea>
+					</p>
 					<p>
 						<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' tabindex="', $context['tabindex']++, '" value="1" class="input_check" /> ', $txt['admin_agreement'], '.</label>
 					</p>
@@ -670,7 +672,9 @@ function template_edit_reserved_words()
 			<span class="topslice"><span></span></span>
 			<div class="content">
 				<h4>', $txt['admin_reserved_line'], '</h4>
-				<textarea cols="30" rows="6" name="reserved" style="width: 98%;">', implode("\n", $context['reserved_words']), '</textarea>
+				<p class="reserved_names">
+					<textarea cols="30" rows="6" name="reserved" style="width: 100%;">', implode("\n", $context['reserved_words']), '</textarea>
+				</p>
 				<ul class="reset">
 					<li><label for="matchword"><input type="checkbox" name="matchword" id="matchword" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="input_check" /> ', $txt['admin_match_whole'], '</label></li>
 					<li><label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" tabindex="', $context['tabindex']++, '" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="input_check" /> ', $txt['admin_match_case'], '</label></li>
