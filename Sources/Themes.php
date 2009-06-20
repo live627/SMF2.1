@@ -962,7 +962,7 @@ function PickTheme()
 	global $txt, $context, $modSettings, $user_info, $language, $smcFunc, $settings;
 
 	loadLanguage('Profile');
-	loadTemplate('Themes');
+	loadTemplate('Themes','profile');
 
 	$_SESSION['id_theme'] = 0;
 

@@ -414,3 +414,9 @@ dl.settings dd, dl.settings dt
 {
 	margin-bottom: 4px;
 }
+/*pick theme*/
+#pick_theme
+{
+	width: 100%;
+	float: left;
+}
