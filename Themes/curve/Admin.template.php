@@ -987,8 +987,9 @@ function template_show_settings()
 				$is_open = false;
 				echo '
 					</dl>
-					</div>
-				</div>';
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
 			}
 
 			echo '
@@ -1029,7 +1030,7 @@ function template_show_settings()
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
 				echo '
-							<dd', $config_var['type'] == 'warning' ? ' class="alert"' : '', '>
+							<dd', $config_var['type'] == 'warning' ? ' class="alert"' : '', (!empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '_dd"' : ''), '>
 								', $config_var['label'], '
 							</dd>';
 			}
@@ -1052,7 +1053,7 @@ function template_show_settings()
 							</dt>';
 
 				echo '
-							<dd>',
+							<dd' , (!empty($config_var['force_div_id']) ? ' id="' . $config_var['force_div_id'] . '_dd"' : ''), '>',
 								$config_var['preinput'];
 
 				// Show a check box.

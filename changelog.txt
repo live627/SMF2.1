@@ -111,7 +111,8 @@ June 2009
  * Curve: revamped the SplitTopics template to match Curve's look and feel. (SplitTopics template, splittopics.css, SplitTopics.php)
  * Curve: the profile change theme section had a fixed width (Themes.php, Themes template, profile.css) [Bug 3536]
  * Curve: some areas need a small padding for a better look and feel (Register template, admin.css) [Bug 3538]
- * Curve: removed the huge gap when toggle bar was enabled (Register template) [Bug 3540] 
+ * Curve: removed the huge gap when toggle bar was enabled (Register template) [Bug 3540]
+ * Curve: the currency boxes should only be visible if needed (Admin template, ManagePaid.php) [Bug 3537]
 
 
 May 2009
