@@ -150,7 +150,7 @@ dl
 /* Simple feedback messages */
 div#profile_error, div#profile_success
 {
-	margin: 1em 0;
+	margin: 0 0 1em 0;
 	padding: 1em 2em;
 	border: 1px solid;
 }
