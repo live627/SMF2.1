@@ -110,12 +110,6 @@ a img
 	border: 0;
 }
 
-/* No lines around buttons in Firefox! */
-a
-{
-	outline: none;
-}
-
 /* We can define lists to be lists tho! */
 ul.normallist
 {
@@ -688,7 +682,7 @@ a.moderation_link, a.moderation_link:visited
 .buttonlist ul li a:hover .buttonlist_bottom ul li a:hover
 {
 	color: #e0e0ff;
-	text-decoration: none;
+	text-decoration: none !important;
 }
 .buttonlist ul li a span
 {

@@ -122,11 +122,6 @@ a img
 {
 	border: 0;
 }
-/* No lines around buttons in Firefox! */
-a
-{
-	outline: none;
-}
 
 /* Define strong as bold, and em as italics */
 strong
