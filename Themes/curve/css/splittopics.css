@@ -1,0 +1,28 @@
+#selected, #not_selected
+{
+	width: 49%;
+}
+ul.merge_topics li
+{
+	list-style-type: none;
+}
+dl.merge_topic dt
+{
+	width: 25%;
+}
+dl.merge_topic dd
+{
+	width: 74%;
+}
+fieldset.merge_options
+{
+	margin-bottom: 0.5em;
+}
+fieldset.merge_options legend
+{
+	font-weight: bold;
+}
+.custom_subject
+{
+	margin: 0.5em 0;
+}

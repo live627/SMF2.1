@@ -108,6 +108,7 @@ June 2009
  * Curve: rewrote the Calendar template to match Curve's look and feel. (Calendar template, calendar.css)
  * Curve: Login page gaps in IE (Login.template.php, index.css) [Bug 3532]
  * Curve: the profile success box should not break the layout (profile.css) [Bug 3533]
+ * Curve: revamped the SplitTopics template to match Curve's look and feel. (SplitTopics template, splittopics.css, SplitTopics.php)
 
 
 May 2009

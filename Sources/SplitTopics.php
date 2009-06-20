@@ -130,7 +130,7 @@ function SplitTopics()
 
 	// Load up the "dependencies" - the template, getMsgMemberID(), and sendNotifications().
 	if (!isset($_REQUEST['xml']))
-		loadTemplate('SplitTopics');
+		loadTemplate('SplitTopics','splittopics');
 	require_once($sourcedir . '/Subs-Boards.php');
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -806,7 +806,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 function MergeTopics()
 {
 	// Load the template....
-	loadTemplate('SplitTopics');
+	loadTemplate('SplitTopics','splittopics');
 
 	$subActions = array(
 		'done' => 'MergeDone',
@@ -968,7 +968,7 @@ function MergeExecute($topics = array())
 	if (!empty($topics))
 	{
 		isAllowedTo('merge_any');
-		loadTemplate('SplitTopics');
+		loadTemplate('SplitTopics','splittopics');
 	}
 
 	// Handle URLs from MergeIndex.
