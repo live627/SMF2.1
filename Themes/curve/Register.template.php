@@ -124,8 +124,8 @@ function template_registration_form()
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<fieldset class="content">
-					<dl class="register_form" id="username_group">
-						<dt><label for="smf_autov_username">', $txt['username'], ':</label></dt>
+					<dl class="register_form">
+						<dt><strong><label for="smf_autov_username">', $txt['username'], ':</label></strong></dt>
 						<dd>
 							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" class="input_text" />
 							<span id="smf_autov_username_div" style="display: none;">
@@ -134,12 +134,13 @@ function template_registration_form()
 								</a>
 							</span>
 						</dd>
-					</dl>
-					<dl class="register_form" id="email_group">
-						<dt><label for="smf_autov_reserve1">', $txt['email'], ':</label></dt>
+						<dt><strong><label for="smf_autov_reserve1">', $txt['email'], ':</label></strong></dt>
 						<dd>
 							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" class="input_text" />
-							<label for="allow_email"><input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" /> ', $txt['allow_user_email'], '</label>			
+						</dd>
+						<dt><strong><label for="allow_email">', $txt['allow_user_email'], ':</label></strong></dt>
+						<dd>
+							<input type="checkbox" name="allow_email" id="allow_email" tabindex="', $context['tabindex']++, '" class="input_check" />			
 						</dd>
 					</dl>';
 
@@ -148,7 +149,10 @@ function template_registration_form()
 	{
 		echo '
 					<dl class="register_form" id="authentication_group">
-						<dt>', $txt['authenticate_label'], ':</dt>
+						<dt>
+							<strong>', $txt['authenticate_label'], ':</strong>
+							 <a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a>
+					 	</dt>
 						<dd>
 							<label for="auth_pass" id="option_auth_pass">
 								<input type="radio" name="authenticate" value="passwd" id="auth_pass" tabindex="', $context['tabindex']++, '" ', empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" class="input_radio" />
@@ -156,7 +160,7 @@ function template_registration_form()
 							</label>
 							<label for="auth_openid" id="option_auth_openid">
 								<input type="radio" name="authenticate" value="openid" id="auth_openid" tabindex="', $context['tabindex']++, '" ', !empty($context['openid']) ? 'checked="checked" ' : '', ' onclick="updateAuthMethod();" class="input_radio" />
-								', $txt['authenticate_openid'], ' <a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a>
+								', $txt['authenticate_openid'], '
 							</label>
 						</dd>
 					</dl>';
@@ -164,7 +168,7 @@ function template_registration_form()
 
 	echo'
 					<dl class="register_form" id="password1_group">
-						<dt><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></dt>
+						<dt><strong><label for="smf_autov_pwmain">', $txt['choose_pass'], ':</label></strong></dt>
 						<dd>
 							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
 							<span id="smf_autov_pwmain_div" style="display: none;">
@@ -173,7 +177,7 @@ function template_registration_form()
 						</dd>
 					</dl>
 					<dl class="register_form" id="password2_group">
-						<dt><label for="smf_autov_pwverify">', $txt['verify_pass'], ':</label></dt>
+						<dt><strong><label for="smf_autov_pwverify">', $txt['verify_pass'], ':</label></strong></dt>
 						<dd>
 							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
 							<span id="smf_autov_pwverify_div" style="display: none;">
@@ -188,7 +192,7 @@ function template_registration_form()
 		echo '
 
 					<dl class="register_form" id="openid_group">
-						<dt>', $txt['authenticate_openid_url'], ':</dt>
+						<dt><strong>', $txt['authenticate_openid_url'], ':</strong></dt>
 						<dd>
 							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" class="input_text" />
 							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>				
@@ -212,7 +216,7 @@ function template_registration_form()
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 				<fieldset class="content">
-					<dl id="custom_group">';
+					<dl class="register_form" id="custom_group">';
 	}
 
 	if (!empty($context['profile_fields']))
@@ -529,7 +533,7 @@ function template_admin_register()
 		echo '
 				<p>', $context['registration_done'], '</p><hr />';
 	echo '
-				<dl id="admin_register_form">
+				<dl class="register_form" id="admin_register_form">
 					<dt>
 						<strong><label for="user_input">', $txt['admin_register_username'], ':</label></strong>
 						<span class="smalltext">', $txt['admin_register_username_desc'], '</span>

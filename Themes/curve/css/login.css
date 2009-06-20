@@ -12,44 +12,13 @@
 	text-decoration: underline;
 }
 
-#username_group, #password1_group, #authentication_group, #openid_group
-{
-	clear: both;
-}
-
-.register_form
-{
-	overflow: hidden;
-	float: left;
-	margin: 0 0 0.75em 0;
-	width: 50%;
-}
-
-.register_form dt
-{
-	font-weight: bold;
-	margin: 0 0 0.75em 0;
-}
-
-.register_form dd
-{
-	margin: 0;
-	padding: 0;
-}
-
-#email_group dd label
-{
-	display: block;
-	margin: 0.5em 0 0 0;
-}
-
 /* Additional profile fields */
-#custom_group, #admin_register_form
+dl.register_form
 {
 	margin: 0;
 }
 
-#custom_group dt, #admin_register_form dt
+dl.register_form dt
 {
 	font-weight: normal;
 	float: left;
@@ -58,17 +27,17 @@
 	margin: 0.5em 0 0 0;
 }
 
-#custom_group dt strong, #admin_register_form dt strong
+dl.register_form dt strong
 {
 	font-weight: bold;
 }
 
-#custom_group dt span, #admin_register_form dt span
+dl.register_form dt span
 {
 	display: block;
 }
 
-#custom_group dd, #admin_register_form dd
+dl.register_form dd
 {
 	float: left;
 	clear: right;
