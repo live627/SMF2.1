@@ -75,7 +75,13 @@
 #top_section
 {
     height: 65px;
-} 
+}
+/*  the tabled definition lists */
+dl.settings dd, #creator dd, dl.stats dd
+{
+	float: none;
+	width: auto;
+}
 /* **************** */
 /* from MessageIndex.template */
 /* **************** */

@@ -43,8 +43,6 @@ dl.stats dd
 	margin: 0 0 4px 0;
 	line-height: 16px;
 	padding: 0;
-	*float: none;
-	*width: auto;
 }
 dd.statsbar span.left
 {

@@ -368,8 +368,6 @@ div#profile_success
 	width: 60%;
 	margin: 0 0 10px 0;
 	height: 0.1%;
-	*float: none;
-	*width: auto;
 }
 
 #ignoreboards

@@ -113,6 +113,7 @@ June 2009
  * Curve: some areas need a small padding for a better look and feel (Register template, admin.css) [Bug 3538]
  * Curve: removed the huge gap when toggle bar was enabled (Register template) [Bug 3540]
  * Curve: the currency boxes should only be visible if needed (Admin template, ManagePaid.php) [Bug 3537]
+ * Curve: a CSS hack caused invalid css (style.css, admin.css, profile.css, stats.css, ie6.css, ie7.css) [Bug 3531] 
 
 
 May 2009

@@ -660,8 +660,6 @@ dl.settings dd
 	float: left;
 	margin: 0 0 3px 0;
 	padding: 0;
-	*float: none;
-	*width: auto;
 }
 dl.settings img
 {
