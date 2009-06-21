@@ -119,6 +119,7 @@ June 2009
  * Curve: rewrote the Poll template to match Curve's look and feel. (Poll.php, Poll.template.php, poll.css)
  * Curve: The admin registration form wasn't properly aligned in some browsers (login.css, ie6.css, ie7.css) [Bug 3541]
  * Curve: Shrink header icon is wrong if shrunk on loading (index.template.php) [Bug 3542]
+ ! Use CSS3 text-shadow for non-IE browsers for glow (Subs.php) [Bug 3539]
 
 
 May 2009
