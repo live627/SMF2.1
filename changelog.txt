@@ -116,6 +116,7 @@ June 2009
  * Curve: a CSS hack caused invalid css (style.css, admin.css, profile.css, stats.css, ie6.css, ie7.css) [Bug 3531] 
  * Curve: Javascript error was caused by smfAnnouncements (Admin template) [Bug 3530]
  * Curve: large gaps on profile activity and stats when left menu was enabled (Profile template) [Bug 3535]
+ * Curve: rewrote the Poll template to match Curve's look and feel. (Poll.php, Poll.template.php, poll.css)
 
 
 May 2009

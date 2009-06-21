@@ -331,7 +331,7 @@ function EditPoll()
 		fatal_lang_error('no_access', false);
 
 	loadLanguage('Post');
-	loadTemplate('Poll');
+	loadTemplate('Poll','poll');
 
 	$context['can_moderate_poll'] = isset($_REQUEST['add']) ? 1 : allowedTo('moderate_board');
 	$context['start'] = (int) $_REQUEST['start'];
