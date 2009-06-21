@@ -69,7 +69,7 @@ function template_admin()
 				<div class="windowbg">
 					<span class="topslice"><span></span></span>
 					<div class="content">
-						<dt id="smfAnnouncements">', $txt['lfyi'], '</dt>
+						<div id="smfAnnouncements">', $txt['lfyi'], '</div>
 					</div>
 				<span class="botslice"><span></span></span>
 				</div>
@@ -161,7 +161,8 @@ function template_admin()
 					return;
 
 				var str = "";
-
+				str += "\n	<dl>"
+				
 				for (var i = 0; i < window.smfAnnouncements.length; i++)
 				{
 					str += "\n	<dt><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</dt>";
@@ -169,7 +170,8 @@ function template_admin()
 					str += "\n		" + window.smfAnnouncements[i].message;
 					str += "\n	</dd>";
 				}
-
+				
+				str += "\n	</dl>"
 				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
 			}
 
