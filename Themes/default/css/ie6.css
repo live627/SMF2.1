@@ -48,3 +48,7 @@ ul.admin_menu li.last_chosen h4
 	background: url(../images/admintab_active_last.gif) top right no-repeat;
 	padding-right: 17px;
 }
+.signature
+{
+	padding: 0 0 0.8em 0;
+}

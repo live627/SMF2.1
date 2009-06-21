@@ -44,3 +44,8 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	height: 1%;
 }
+
+.signature
+{
+	padding: 0 0 0.8em 0;
+}

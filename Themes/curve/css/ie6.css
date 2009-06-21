@@ -127,7 +127,10 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 	margin-top: 8px;
 	clear: both;
 }
-
+.signature
+{
+	padding: 0 0 0.8em 0;
+}
 /* ******************* */
 /* Admin.template */
 /* ************************ */
