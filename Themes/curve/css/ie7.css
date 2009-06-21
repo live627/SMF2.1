@@ -5,7 +5,7 @@
 	position: static;  
 }  
 /*  the tabled definition lists */
-dl.settings dd, #creator dd, dl.stats dd
+dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	float: none;
 	width: auto;

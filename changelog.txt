@@ -117,6 +117,7 @@ June 2009
  * Curve: Javascript error was caused by smfAnnouncements (Admin template) [Bug 3530]
  * Curve: large gaps on profile activity and stats when left menu was enabled (Profile template) [Bug 3535]
  * Curve: rewrote the Poll template to match Curve's look and feel. (Poll.php, Poll.template.php, poll.css)
+ * Curve: The admin registration form wasn't properly aligned in some browsers (login.css, ie6.css, ie7.css) [Bug 3541]
 
 
 May 2009
