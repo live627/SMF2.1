@@ -190,7 +190,7 @@ function template_body_above()
 	// the upshrink image, right-floated
 	echo '
 			<a href="#" onclick="mainHeader.toggle(); return false;">
-				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink.gif', '" alt="*" title="', $txt['upshrink_description'], '" />
+				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" />
 			</a>';
 	echo '
 			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 
