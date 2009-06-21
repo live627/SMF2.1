@@ -115,6 +115,7 @@ June 2009
  * Curve: the currency boxes should only be visible if needed (Admin template, ManagePaid.php) [Bug 3537]
  * Curve: a CSS hack caused invalid css (style.css, admin.css, profile.css, stats.css, ie6.css, ie7.css) [Bug 3531] 
  * Curve: Javascript error was caused by smfAnnouncements (Admin template) [Bug 3530]
+ * Curve: large gaps on profile activity and stats when left menu was enabled (Profile template) [Bug 3535]
 
 
 May 2009

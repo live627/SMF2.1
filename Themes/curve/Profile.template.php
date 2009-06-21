@@ -497,6 +497,7 @@ function template_trackActivity()
 
 	// The first table shows IP information about the user.
 	echo '
+	<div id="profileview" class="align_left">
 			<h3 class="titlebg">
 				<span class="left"></span><span class="right"></span>
 				<strong>', $txt['view_ips_by'], ' ', $context['member']['name'], '</strong>
@@ -547,6 +548,10 @@ function template_trackActivity()
 
 	// Show the track user list.
 	template_show_list('track_user_list');
+	
+	echo '
+	</div>
+	<br style="clear: both;" />';
 }
 
 // The template for trackIP, allowing the admin to see where/who a certain IP has been used.
@@ -769,6 +774,7 @@ function template_statPanel()
 
 	// First, show a few text statistics such as post/topic count.
 	echo '
+	<div id="profileview" class="align_left">
 		<div id="generalstats">
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				<img src="', $settings['images_url'], '/stats_info.gif" alt="" />
@@ -898,7 +904,9 @@ function template_statPanel()
 		</div>';
 	
 	echo '
-		<div style="clear: both;"></div>';
+		<div style="clear: both;"></div>
+	</div>
+	<br style="clear: both;" />';
 }
 
 // Template for editing profile options.
