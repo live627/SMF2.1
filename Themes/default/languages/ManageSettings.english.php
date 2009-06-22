@@ -244,10 +244,9 @@ $txt['custom_edit_mask_number'] = 'Numeric';
 $txt['custom_edit_mask_regex'] = 'Regex (Advanced)';
 $txt['custom_edit_enclose'] = 'Show Enclosed Within Text (Optional)';
 $txt['custom_edit_enclose_desc'] = 'Enclose the user input between some text or html.  This will allow you to add more instant message providers, images or an embed etc.<br />
-eg
-&lt;a href="http://website.com/{INPUT}"&gt;&lt;img src="{DEFAULT_IMAGES_URL}/icon.gif" alt="{INPUT}" /&gt;&lt;/a&gt;
-<p/>
-Note that you can use the following shortcuts.
+e.g.:
+&lt;a href="http://website.com/{INPUT}"&gt;&lt;img src="{DEFAULT_IMAGES_URL}/icon.gif" alt="{INPUT}" /&gt;&lt;/a&gt;<br />
+Note that you can use the following variables:<br />
 <ul style="margin-top: 0px;"><li>{INPUT} - The input specified by the user.</li><li>{SCRIPTURL} - Web address of forum.</li><li>{IMAGES_URL} - Url to images folder in the users current theme.</li><li>{DEFAULT_IMAGES_URL} - Url to the images folder in the default theme.</li></ul>
 It is <strong>ESSENTIAL</strong> to use an input mask (below) to validate the input supplied by the user, not doing so could put your forum at risk!</p>';
 

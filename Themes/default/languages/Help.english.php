@@ -566,7 +566,7 @@ $helptxt['chmod_flags'] = 'You can manually set the permissions you wish to set 
 
 $helptxt['postmod'] = 'This section allows members of the moderation team (with sufficient permissions) to approve any posts and topics before they are shown.';
 
-$helptxt['custom_mask'] = 'The input mask is important for your forums security. Validating the input from a user can help ensure that data is not used in a way in which you do not expect it. We have provided some simple regular expressions as hints.<br /><br />
+$helptxt['custom_mask'] = 'The input mask is important for your forum\'s security. Validating the input from a user can help ensure that data is not used in a way you do not expect. We have provided some simple regular expressions as hints.<br /><br />
 	<span class="smalltext">
 		&nbsp;&nbsp;"[A-Za-z]+" - Match all upper and lower case alphabet characters.<br />
 		&nbsp;&nbsp;"[0-9]+" - Match all numeric characters.<br />
@@ -574,7 +574,7 @@ $helptxt['custom_mask'] = 'The input mask is important for your forums security.
 		&nbsp;&nbsp;"[^0-9]?" - Forbid any number from being matched.<br />		
 		&nbsp;&nbsp;"^([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$" - Only allow 3 or 6 character hexcodes.<br />		
 	</span><br /><br />
-	Additionally, Special meatacharacters ?+*^$ and {xx} can be defined.
+	Additionally, special metacharacters ?+*^$ and {xx} can be defined.
 	<span class="smalltext">
 		&nbsp;&nbsp;? - None or one match of previous expression.<br />
 		&nbsp;&nbsp;+ - One or more of previous expression.<br />
@@ -587,7 +587,6 @@ $helptxt['custom_mask'] = 'The input mask is important for your forums security.
 		&nbsp;&nbsp;^ - End of string.<br />
 		&nbsp;&nbsp;\ - Escapes the next character.<br />
 	</span><br /><br />
-	For more information and advance technices, searching the internet will provide helpful hints.
-';
+	More information and advanced techniques may be found on the internet.';
 
 ?>
