@@ -2067,9 +2067,20 @@ function doStep2()
 	return doStep3();
 }
 
+// This isn't a step, its the finish line.
 function doStep3()
 {
 	global $boardurl, $convert_data, $command_line, $current_step;
+
+	// Replace the conversion information.
+	convert_insert('settings',
+		array('variable' => 'string', 'value' => 'string',
+		array(
+			array(
+				'conversion_time', time(),
+				'conversion_from', $_SESSION['convert_script'],
+		)),
+		'replace');
 
 	$current_step = 3;
 	if ($command_line)

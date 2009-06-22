@@ -11,28 +11,30 @@
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
 * Support, News, Updates at:  http://www.simplemachines.org                       *
 ***********************************************************************************
-* This file, and ONLY this file is released under the terms of the BSD License.
-*
-* Redistribution and use in source and binary forms, with or without modification, are permitted 
-* provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this list of conditions and 
-* the following disclaimer. 
-* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and 
-* the following disclaimer in the documentation and/or other materials provided with the distribution. 
-* Neither the name of Simple Machines LLC nor the names of its contributors may be used to endorse 
-* or promote products derived from this software without specific prior written permission. 
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
-* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
-* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
-* THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+* This file, and ONLY this file is released under the terms of the BSD License.   *
+*                                                                                 *
+* Redistribution and use in source and binary forms, with or without              *
+* modification, are permitted provided that the following conditions are met:     *
+*                                                                                 *
+* Redistributions of source code must retain the above copyright notice, this     *
+* list of conditions and the following disclaimer.                                *
+* Redistributions in binary form must reproduce the above copyright notice, this  *
+* list of conditions and the following disclaimer in the documentation and/or     *
+* other materials provided with the distribution.                                 *
+* Neither the name of Simple Machines LLC nor the names of its contributors may   *
+* be used to endorse or promote products derived from this software without       *
+* specific prior written permission.                                              *
+*                                                                                 *
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"     *
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE       *
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE      *
+* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE        *
+* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR             *
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE *
+* GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)     *
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT      *
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT   *
+* OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *
 **********************************************************************************/
 
 
@@ -160,20 +162,30 @@ require_once(dirname(__FILE__) . '/Settings.php');
 global $smf_settings, $smf_user_info, $smf_connection;
 
 // If $maintenance is set to 2, don't connect to the database at all.
-if ($maintenance != 2)
+if ($maintenance != 2 )
 {
-	// Ignore connection errors, because this is just an API file.
-	if (empty($db_persist))
-		$smf_connection = @mysql_connect($db_server, $db_user, $db_passwd);
-	else
-		$smf_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
-	$db_prefix = '`' . $db_name . '`.' . $db_prefix;
+	define('SMF', 1);
 
-	$request = smf_query("
+	if (empty($smcFunc))
+		$smcFunc = array();
+
+	// Default the database type to MySQL.
+	if (empty($db_type) || !file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+		$db_type = 'mysql';
+
+	require_once($sourcedir . '/Errors.php');
+	require_once($sourcedir . '/Subs.php');
+	require_once($sourcedir . '/Load.php');
+	require_once($sourcedir . '/Security.php');
+	require_once($sourcedir . '/Subs-Auth.php');
+	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+
+	$request = $smcFunc['db_query']('', '
 		SELECT variable, value
-		FROM {$db_prefix}settings", __FILE__, __LINE__);
+		FROM {db_prefix}settings', array());
 	$smf_settings = array();
-	while ($row = @mysql_fetch_row($request))
+	while ($row = @$smcFunc['db_fech_row']($request))
 		$smf_settings[$row[0]] = $row[1];
 	mysql_free_result($request);
 }
@@ -203,13 +215,17 @@ function smf_setLoginCookie($cookie_length, $id, $password = '', $encrypted = tr
 		// Save for later use.
 		$username = $id;
 
-		$result = smf_query("
+		$result = $smcFunc['db_query']('', '
 			SELECT id_member
-			FROM $smf_settings[db_prefix]members
-			WHERE member_name = '$username'
-			LIMIT 1", __FILE__, __LINE__);
-		list ($id) = mysql_fetch_row($result);
-		mysql_free_result($result);
+			FROM {raw:smf_db_prefix}members
+			WHERE member_name = {string:username}
+			LIMIT 1',
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+				'username' => $username,
+		));
+		list ($id) = $smcFunc['db_fetch_row']($result);
+		$smcFunc['db_free_result']($result);
 
 		// It wasn't found, after all?
 		if (empty($id))
