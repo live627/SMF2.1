@@ -561,6 +561,9 @@ function Credits($in_admin = false)
 						'Antechinus',
 						'Ralph "[n3rve]" Otowo',
 						'Tyrsson',
+						'MrPhil',
+						'LexArma',
+						'JBlaze',
 					),
 				),
 				array(
@@ -584,6 +587,8 @@ function Credits($in_admin = false)
 						'Sinan "Blue Dream" &Ccedil;evik',
 						'Bulakbol',
 						'Marcus "Nas" Forsberg',
+						'Brad &quot;IchBin&trade;&quot; Grow',
+						'Steven &quot;Fustrate&quot; Hoffman',
 					),
 				),
 				array(
@@ -591,7 +596,6 @@ function Credits($in_admin = false)
 					'members' => array(
 						'Jack &quot;akabugeyes&quot; Thorsen',
 						'Daniel Diehl',
-						'Brad &quot;IchBin&trade;&quot; Grow',
 						'Jade &quot;Alundra&quot; Elizabeth',
 						'Peter Duggan',
 						'Dannii Willis',
@@ -606,6 +610,14 @@ function Credits($in_admin = false)
 						'Tony Reid',
 					),
 				),
+				array(
+					'title' => $txt['credits_groups_internationalizers'],
+					'members' => array(
+						'GravuTrad',
+						'akyhne',
+					),
+				),
+
 			),
 		),
 		array(

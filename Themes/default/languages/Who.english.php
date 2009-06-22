@@ -123,6 +123,7 @@ $txt['credits_groups_support'] = 'Support Specialists';
 $txt['credits_groups_customize'] = 'Customizers';
 $txt['credits_groups_docs'] = 'Documentation Writers';
 $txt['credits_groups_marketing'] = 'Marketing';
+$txt['credits_groups_internationalizers'] = 'Internationalizers';
 $txt['credits_groups_translators'] = 'Language Translators';
 $txt['credits_translators_message'] = 'Thank you for your efforts which make it possible for people all around the world to use SMF.';
 $txt['credits_groups_beta'] = 'Beta Testers';
