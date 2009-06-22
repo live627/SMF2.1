@@ -401,7 +401,7 @@ function template_menu()
 	{
 		echo '
 				<li id="button_', $act, '">
-					<a class="', $button['active_button'] ? 'active ' : '', 'firstlevel" href="', $button['href'], '">
+					<a class="', $button['active_button'] ? 'active ' : '', 'firstlevel" href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
 						<span class="', isset($button['is_last']) ? 'last ' : '', 'firstlevel">', $button['title'], '</span>
 					</a>';
 		if (!empty($button['sub_buttons']))
@@ -413,7 +413,7 @@ function template_menu()
 			{
 				echo '
 						<li>
-							<a href="', $childbutton['href'], '">
+							<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
 								<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
 							</a>';
 				// 3rd level menus :)				
@@ -425,7 +425,7 @@ function template_menu()
 					foreach($childbutton['sub_buttons'] as $grandchildbutton)
 						echo '
 								<li>
-									<a', $grandchildbutton['active_button'] ? ' class="active"' : '', ' href="', $grandchildbutton['href'], '">
+									<a', $grandchildbutton['active_button'] ? ' class="active"' : '', ' href="', $grandchildbutton['href'], '"', isset($grandchildbutton['target']) ? ' target="' . $grandchildbutton['target'] . '"' : '', '>
 										<span', isset($grandchildbutton['is_last']) ? ' class="last"' : '', '>', $grandchildbutton['title'], '</span>
 									</a>
 								</li>';

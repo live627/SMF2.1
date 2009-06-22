@@ -123,6 +123,7 @@ June 2009
  ! Custom profile fields were not loaded for action=pm (PersonalMessage.php)
  + Enclose within text/html and placement of field options for custom profile fields (Many)
  + Added BurningBoard3 login support (LogInOut.php)
+ + Allow setting a target for menu tabs (index.template.php, Subs.php) [Bug 2084]
 
 
 May 2009

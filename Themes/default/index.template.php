@@ -459,7 +459,7 @@ function template_menu()
 
 		echo '
 			<li id="button_', $act, '"', !empty($classes) ? ' class="' . $classes . '"' : '', '>
-				<a title="', !empty($button['alttitle']) ? $button['alttitle'] : $button['title'], '" href="', $button['href'], '">
+				<a title="', !empty($button['alttitle']) ? $button['alttitle'] : $button['title'], '" href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
 					<span>', ($button['active_button'] ? '<em>' : ''), $button['title'], ($button['active_button'] ? '</em>' : ''), '</span>
 				</a>
 			</li>';
