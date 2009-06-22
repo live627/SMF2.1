@@ -52,58 +52,71 @@ require_once($path_to_settings . '/SSI.php');
 $time_threshold = time() - $max_unread_days * 24 * 3600;
 
 // First thing's first - get the boards.
-$request = db_query("
+$request = $smcFunc['db_query']('', '
 	SELECT id_board
-	FROM {$db_prefix}boards", __FILE__, __LINE__);
+	FROM {db_prefix}boards');
 $boards = array();
 while ($row = mysql_fetch_assoc($request))
 	$boards[$row['id_board']] = $row['id_board'];
 mysql_free_result($request);
 
-$request = db_query("
+$request = $smcFunc['db_query']('', '
 	SELECT DISTINCT id_member
-	FROM {$db_prefix}log_topics
-	WHERE id_topic > 0
-		AND log_time < $time_threshold
-	LIMIT 400", __FILE__, __LINE__);
+	FROM {db_prefix}log_topics
+	WHERE id_topic > {int:id_topic}
+		AND log_time < {int:threshold}
+	LIMIT {int:limit}',
+	array(
+		'id_topic' => 0,
+		'threshold' => $time_threshold,
+		'limit' => 400,
+));
 // Note that this will only do 400 members at a time.
 $members = array();
-$setString = '';
+$inserts = array();
 while ($row = mysql_fetch_assoc($request))
 {
 	$members[] = $row['id_member'];
 	$this_boards = $boards;
 
 	// Don't reset boards that are newer!
-	$request2 = db_query("
+	$request2 = $smcFunc['db_query']('', '
 		SELECT id_board, log_time
-		FROM {$db_prefix}log_boards
-		WHERE id_board > 0
-			AND id_member = $row[id_member]", __FILE__, __LINE__);
+		FROM {db_prefix}log_boards
+		WHERE id_board > {int:id_board}
+			AND id_member = {int:id_member}',
+		array(
+			'id_board' => 0,
+			'id_member' => $row['id_member'],
+	));
 	while ($row2 = mysql_fetch_assoc($request2))
-	{
 		if ($row2['log_time'] >= $time_threshold)
 			unset($this_boards[$row2['id_board']]);
-	}
 	mysql_free_result($request2);
 
 	foreach ($this_boards as $board)
-		$setString .= "
-			($time_threshold, $row[id_member], $board),";
+		$inserts[] = array($time_threshold, $row['id_member'], $board);
 }
 mysql_free_result($request);
 
-if ($setString != '')
-	db_query("
-		REPLACE INTO {$db_prefix}log_mark_read
-			(log_time, id_member, id_board)
-		VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+if (!empty($inserts))
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}log_mark_read',
+		array('log_time' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
+		$inserts,
+		array('log_time', 'id_member', 'id_board')
+	);
 
 if (!empty($members))
-	db_query("
-		DELETE FROM {$db_prefix}log_topics
-		WHERE id_topic > 0
-			AND id_member IN (" . implode(', ', $members) . ")
-			AND log_time < $time_threshold", __FILE__, __LINE__);
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_topics
+		WHERE id_topic > {int:id_topic}
+			AND id_member IN ({array_int:members})
+			AND log_time < {int:threshold}',
+		array(
+			'id_topic' => 0,
+			'threshold' => $time_threshold,
+			'members' => $members,
+	));
 
 ?>

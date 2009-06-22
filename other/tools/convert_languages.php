@@ -241,9 +241,7 @@ function doStep1()
 				}
 				// Put back in any variables.
 				if ($type != 'Install' && $type != 'Help' && preg_match('~#(context|settings|txt|boardurl|scripturl)~', $fileContents, $match))
-				{
 					$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$1", $fileContents);
-				}
 
 				if ($needs_edit)
 				{
@@ -337,24 +335,20 @@ function doStep2()
 
 	// Actually do the work?
 	if ($needsRunning)
-	{
 		echo '
 		<form action="convert_languages.php?step=3" method="post">
 			<div class="centertext">
 				<input type="submit" value="Make The Changes" class="button_submit" />
 			</div>
 		</form><br />';
-	}
 	// Otherwise onwards!
 	else
-	{
 		echo '
 		<form action="convert_languages.php?step=4" method="post">
 			<div class="centertext">
 				<input type="submit" value="Skip" class="button_submit" />
 			</div>
 		</form><br />';
-	}
 }
 
 // Test the changes to be made.

@@ -29,11 +29,9 @@ if (@ini_get('session.save_handler') == 'user')
 	@ini_set('session.save_handler', 'files');
 @session_start();
 
-if (@get_magic_quotes_gpc() == 1)
-{
+if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() == 1)
 	foreach ($_POST as $k => $v)
 		$_POST[$k] = stripslashes($v);
-}
 
 show_header();
 
@@ -52,6 +50,7 @@ function step1($error_message = '')
 	if (!isset($db_server))
 	{
 		// Set up the defaults.
+		$db_type = isset($_POST['db_type']) ? $_POST['db_type'] : 'mysql';
 		$db_server = isset($_POST['db_server']) ? $_POST['db_server'] : @ini_get('mysql.default_host') or $db_server = 'localhost';
 		$db_user = isset($_POST['db_user']) ? $_POST['db_user'] : @ini_get('mysql.default_user');
 		$db_name = isset($_POST['db_name']) ? $_POST['db_name'] : @ini_get('mysql.default_user');
@@ -91,25 +90,34 @@ function step1($error_message = '')
 
 						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
 							<tr>
-								<td width="20%" valign="top" class="textbox"><label for="db_server">MySQL server name:</label></td>
+								<td width="20%" valign="top" class="textbox"><label for="db_server">Database Type:</label></td>
+								<td>
+									<select name="db_type" id="db_type">
+										<option value="mysql"', $db_type == 'mysql' ? ' selected="selected"' : '', '>MySQL</option>
+										<option value="postgresql"', $db_type == 'postgresql' ? ' selected="selected"' : '', '>PostgreSQL</option>
+										<option value="sqlite"', $db_type == 'sqlite' ? ' selected="selected"' : '', '>SQLite</option>
+									</select>
+								</td>
+							<tr>
+								<td width="20%" valign="top" class="textbox"><label for="db_server">Database server name:</label></td>
 								<td>
 									<input type="text" name="db_server" id="db_server" value="', $db_server, '" size="30" class="input_text" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">This is nearly always localhost - so if you don\'t know, try localhost.</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_user">MySQL username:</label></td>
+								<td valign="top" class="textbox"><label for="db_user">Database username:</label></td>
 								<td>
 									<input type="text" name="db_user" id="db_user" value="', $db_user, '" size="30" class="input_text" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">Fill in the username you need to connect to your MySQL database here.<br />If you don\'t know what it is, try the username of your ftp account, most of the time they are the same.</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">Fill in the username you need to connect to your database here.<br />If you don\'t know what it is, try the username of your ftp account, most of the time they are the same.</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_passwd">MySQL password:</label></td>
+								<td valign="top" class="textbox"><label for="db_passwd">Database password:</label></td>
 								<td>
 									<input type="password" name="db_passwd" id="db_passwd" value="', $db_passwd, '" size="30" class="input_password" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">Here, put the password you need to connect to your MySQL database.<br />If you don\'t know this, you should try the password to your ftp account.</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">Here, put the password you need to connect to your database.<br />If you don\'t know this, you should try the password to your ftp account.</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_name">MySQL database name:</label></td>
+								<td valign="top" class="textbox"><label for="db_name">database name:</label></td>
 								<td>
 									<input type="text" name="db_name" id="db_name" value="', empty($db_name) ? 'smf' : $db_name, '" size="30" class="input_text" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">Fill in the name of the database you want to backup.</div>
@@ -164,24 +172,11 @@ function step1($error_message = '')
 
 function step2()
 {
-	global $start_time, $table_sizes, $total_size, $before_length, $write_data;
+	global $start_time, $table_sizes, $total_size, $before_length, $write_data, $smcFunc;
 
-	// Gonna need a lot of memory.
-	if (@ini_get('memory_limit') < 128)
-		@ini_set('memory_limit', '128M');
-	@set_time_limit(300);
-	ignore_user_abort(true);
-	if (function_exists('apache_reset_timeout'))
-		@apache_reset_timeout();
-
-	$db_connection = @mysql_pconnect($_POST['db_server'], $_POST['db_user'], $_POST['db_passwd']);
+	$db_connection = smc_combat_database($_POST['db_type'], $_POST['db_server'], $_POST['db_user'], $_POST['db_password']);
 	if (!$db_connection)
-		$db_connection = @mysql_connect($_POST['db_server'], $_POST['db_user'], $_POST['db_passwd']);
-	if (!$db_connection)
-		return step1('Cannot connect to the MySQL database server with the supplied data.<br /><br />If you are not sure about what to type in, please contact your host.');
-
-	if (!mysql_select_db($_POST['db_name'], $db_connection))
-		return step1(sprintf('This tool was unable to access the &quot;<em>%s</em>&quot; database.  With some hosts, you have to create the database in your administration panel before SMF can use it.  Some also add prefixes - like your username - to your database names.', $_POST['db_name']));
+		return step1('Cannot connect to the database server with the supplied data.<br /><br />If you are not sure about what to type in, please contact your host.');
 
 	$_GET['table'] = (int) @$_GET['table'];
 	$_GET['row'] = (int) @$_GET['row'];
@@ -232,26 +227,28 @@ function step2()
 
 	$start_time = time();
 
-	$result = mysql_query("
-		SHOW TABLE STATUS" . ($_POST['db_prefix'] == '' ? '' : "
-		LIKE '" . strtr($_POST['db_prefix'], array('_' => '\_')) . "%'"));
+	$result = $smcFunc['db_query']('', '
+		SHOW TABLE STATUS{raw:like}'
+		array(
+		'like' => $_POST['db_prefix'] == '' ? '' : '
+		LIKE "' . strtr($_POST['db_prefix'], array('_' => '\_')) . '"'
+		));
 	$tables = array();
 	$table_row_lengths = array();
 	$table_sizes = array();
 	$total_size = 0;
-	while ($table = mysql_fetch_assoc($result))
+	while ($table = $smcFunc['db_fetch_assoc']($result))
 	{
 		$tables[] = $table['Name'];
 		$table_row_lengths[] = @$table['Avg_row_length'];
 		$table_sizes[] = $table['Data_length'] + 1024;
 		$total_size += $table['Data_length'] + 1024;
 	}
-	mysql_free_result($result);
+	$smcFunc['db_free_result'](result);
 
-	$result = mysql_query("
-		SELECT VERSION()");
-	list ($mysql_version) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	$result = $smcFunc['db_get_version']
+	list ($database_version) = $smcFunc['db_fetch_row']($result);
+	$smcFunc['db_free_result']($result);
 
 	// At first, this says "memory hog", but second it says "you can hit F5 if something goes wrong + no constant file access."
 	$write_data = '';
@@ -267,11 +264,11 @@ function step2()
 		if ($table < $_GET['table'])
 			continue;
 
-		if (version_compare($mysql_version, '4.1.8') >= 0)
-			mysql_query("START TRANSACTION WITH CONSISTENT SNAPSHOT");
+		if ($_POST['db_type'] == 'mysql' && version_compare($database_version, '4.1.8') >= 0)
+			$smcFunc['db_query']('', 'START TRANSACTION WITH CONSISTENT SNAPSHOT');
 		else
-			mysql_query("/*!32317 BEGIN */");
-		mysql_query("/*!32317 SET AUTOCOMMIT = 0 */");
+			$smcFunc['db_query']('', '/*!32317 BEGIN */');
+		$smcFunc['db_query']('', "/*!32317 SET AUTOCOMMIT = 0 */", array());
 
 		if (empty($_GET['row']))
 			$write_data .= "\n" .
@@ -283,11 +280,13 @@ function step2()
 				"\n" .
 				getCreateTable($tables[$table]) . ';' . "\n";
 
-		$result = mysql_query("
+		$result = $smcFunc('', '
 			SELECT COUNT(*)
-			FROM `" . $tables[$table] . "`");
-		list ($num_rows) = mysql_fetch_row($result);
-		mysql_free_result($result);
+			FROM {raw:table}',
+			array(
+				'table' => '`' . $tables[$table] . '`');
+		list ($num_rows) = $smcFunc['db_fetch_row']($result);
+		$smcFunc['db_free_result']($result);
 
 		if ($num_rows == 0)
 		{
@@ -310,13 +309,17 @@ function step2()
 		$row = $_GET['row'];
 		while ($row < $num_rows)
 		{
-			$result = mysql_query("
+			$result = $smcFunc['db_query']('', '
 				SELECT /*!40001 SQL_NO_CACHE */ *
-				FROM `" . $tables[$table] . "`
-				LIMIT $row, " . ($table_row_lengths[$table] >= 100 ? 96 : 192));
+				FROM {raw:table}
+				LIMIT {int:row}, {int:limit}',
+				array(
+					'table' => '`' . $tables[$table] . '`',
+					'row' => $row,
+					'limit' => $table_row_lengths[$table] >= 100 ? 96 : 192);
 			$data = '';
 			$i = 0;
-			while ($values = mysql_fetch_assoc($result))
+			while ($values = $smcFunc['db_fetch_assoc']($result))
 			{
 				if ($data == '')
 					$data = 'INSERT INTO `' . $tables[$table] . '`' . "\n" .
@@ -332,7 +335,7 @@ function step2()
 					elseif (is_numeric($value))
 						$field_list[] = $value;
 					else
-						$field_list[] = "'" . mysql_escape_string($value) . "'";
+						$field_list[] = $smcFunc(['db_quote']('{string:value}', array('value' => $value));
 				}
 
 				$data .= '(' . implode(', ', $field_list) . '),' . "\n\t";
@@ -344,7 +347,7 @@ function step2()
 			$write_data .= substr($data, 0, -3) . ';' . "\n";
 
 			$row += $i;
-			mysql_free_result($result);
+			$smcFunc['db_free_result']($result);
 
 			nextRow($row, $table, $num_rows, $num_tables, $fp);
 		}
@@ -355,7 +358,7 @@ function step2()
 			'# --------------------------------------------------------' . "\n";
 		$_GET['row'] = 0;
 
-		mysql_query("/*!32317 COMMIT */");
+		$smcFunc['db_query']('', "/*!32317 COMMIT */", array());
 	}
 
 	$fwrite($fp, $write_data);
@@ -696,6 +699,7 @@ function nextRow($row, $table, $max_rows, $max_tables, $fp = null)
 			<p>Data is currently being written at approximately ', round($speed / 1024, 3), ' kilobytes per second.</p>
 
 			<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
+				<input type="hidden" name="db_type" value="', $_POST['db_type'], '" />
 				<input type="hidden" name="db_server" value="', $_POST['db_server'], '" />
 				<input type="hidden" name="db_user" value="', $_POST['db_user'], '" />
 				<input type="hidden" name="db_passwd" value="', $_POST['db_passwd'], '" />
@@ -736,32 +740,38 @@ function getCreateTable($tableName)
 	$schema_create = 'CREATE TABLE `' . $tableName . '` (' . "\n";
 
 	// Find all the fields.
-	$result = mysql_query("
+	$result = $smcFunc['db_query']('', '
 		SHOW FIELDS
-		FROM `$tableName`");
-	while ($row = mysql_fetch_assoc($result))
+		FROM {raw:table}}',
+		array(
+			'table' => '`' . $tableName . '`',
+	));
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		// Make the CREATE for this column.
 		$schema_create .= '  `' . $row['Field'] . '` ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
 		if (isset($row['Default']))
-			$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . mysql_escape_string($row['Default']) . "'");
+			$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : $smcFunc['db_quote']('{string:value}', array('value' => $row['Default'])));
 
 		// And now any extra information. (such as auto_increment.)
 		$schema_create .= ($row['Extra'] != '' ? ' ' . $row['Extra'] : '') . ',' . "\n";
 	}
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	// Take off the last comma.
 	$schema_create = substr($schema_create, 0, -2);
 
 	// Find the keys.
-	$result = mysql_query("
+	$result = $smcFunc['db_query']('', '
 		SHOW KEYS
-		FROM `$tableName`");
+		FROM {raw:table}}',
+		array(
+			'table' => '`' . $tableName . '`',
+	));
 	$indexes = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 	{
 		// IS this a primary key, unique index, or regular index?
 		$row['Key_name'] = $row['Key_name'] == 'PRIMARY' ? 'PRIMARY KEY' : (empty($row['Non_unique']) ? 'UNIQUE ' : ($row['Comment'] == 'FULLTEXT' || (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT') ? 'FULLTEXT ' : 'KEY ')) . '`' . $row['Key_name'] . '`';
@@ -776,7 +786,7 @@ function getCreateTable($tableName)
 		else
 			$indexes[$row['Key_name']][$row['Seq_in_index']] = '`' . $row['Column_name'] . '`';
 	}
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	// Build the CREATEs for the keys.
 	foreach ($indexes as $keyname => $columns)
@@ -791,11 +801,11 @@ function getCreateTable($tableName)
 	$result = mysql_query("
 		SHOW TABLE STATUS
 		LIKE '" . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . "'");
-	$row = mysql_fetch_assoc($result);
-	mysql_free_result($result);
+	$row = $smcFunc['db_fetch_assoc']($result);
+	$smcFunc['db_free_result']($result);
 
 	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= "\n" . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
+	$schema_create .= "\n" . ') ' . (!empty($row['Engine']) ? 'ENGINE' : 'TYPE') . '=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
 
 	return $schema_create;
 }
@@ -1140,4 +1150,306 @@ class ftp_connection
 	}
 }
 
+// Combat mode!
+function smc_combat_initiate(, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
+{
+	global $mysql_set_mod, $sourcedir, $db_connection, $db_prefix, $smcFunc;
+
+	if (!empty($db_options['persist']))
+		$db_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
+	else
+		$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
+
+	// Something's wrong, show an error if its fatal (which we assume it is)
+	if (!$db_connection)
+	{
+		if (!empty($db_options['non_fatal']))
+			return null;
+		else
+		{
+			if (file_exists($sourcedir . '/Subs-Auth.php'))
+			{
+				require_once($sourcedir . '/Subs-Auth.php');
+				show_db_error();
+			}
+			exit('Sorry, SMF was unable to connect to database.');
+		}
+	}
+
+	// Select the database, unless told not to
+	if (empty($db_options['dont_select_db']) && !@mysql_select_db($db_name, $connection) && empty($db_options['non_fatal']))
+	{
+		if (file_exists($sourcedir . '/Subs-Auth.php'))
+		{
+			require_once($sourcedir . '/Subs-Auth.php');
+			show_db_error();
+		}
+		exit('Sorry, SMF was unable to connect to database.');
+	}
+	else
+		$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
+
+	// Some core functions.
+	function smf_db_replacement__callback($matches)
+	{
+		global $db_callback, $user_info, $db_prefix;
+
+		list ($values, $connection) = $db_callback;
+
+		if ($matches[1] === 'db_prefix')
+			return $db_prefix;
+
+		if ($matches[1] === 'query_see_board')
+			return $user_info['query_see_board'];
+
+		if ($matches[1] === 'query_wanna_see_board')
+			return $user_info['query_wanna_see_board'];
+
+		if (!isset($matches[2]))
+			smf_db_error_backtrace('Invalid value inserted or no type specified.', '', E_USER_ERROR, __FILE__, __LINE__);
+
+		if (!isset($values[$matches[2]]))
+			smf_db_error_backtrace('The database value you\'re trying to insert does not exist: ' . htmlspecialchars($matches[2]), '', E_USER_ERROR, __FILE__, __LINE__);
+
+		$replacement = $values[$matches[2]];
+
+		switch ($matches[1])
+		{
+			case 'int':
+				if (!is_numeric($replacement) || (string) $replacement !== (string) (int) $replacement)
+					smf_db_error_backtrace('Wrong value type sent to the database. Integer expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+				return (string) (int) $replacement;
+			break;
+
+			case 'string':
+			case 'text':
+				return sprintf('\'%1$s\'', mysql_real_escape_string($replacement, $connection));
+			break;
+
+			case 'array_int':
+				if (is_array($replacement))
+				{
+					if (empty($replacement))
+						smf_db_error_backtrace('Database error, given array of integer values is empty. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+					foreach ($replacement as $key => $value)
+					{
+						if (!is_numeric($value) || (string) $value !== (string) (int) $value)
+							smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+						$replacement[$key] = (string) (int) $value;
+					}
+
+					return implode(', ', $replacement);
+				}
+				else
+					smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+			break;
+
+			case 'array_string':
+				if (is_array($replacement))
+				{
+					if (empty($replacement))
+						smf_db_error_backtrace('Database error, given array of string values is empty. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+					foreach ($replacement as $key => $value)
+						$replacement[$key] = sprintf('\'%1$s\'', mysql_real_escape_string($value, $connection));
+
+					return implode(', ', $replacement);
+				}
+				else
+					smf_db_error_backtrace('Wrong value type sent to the database. Array of strings expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+			break;
+
+			case 'date':
+				if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
+					return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
+				else
+					smf_db_error_backtrace('Wrong value type sent to the database. Date expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+			break;
+
+			case 'float':
+				if (!is_numeric($replacement))
+					smf_db_error_backtrace('Wrong value type sent to the database. Floating point number expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+				return (string) (float) $replacement;
+			break;
+
+			case 'identifier':
+				// Backticks inside identifiers are supported as of MySQL 4.1. We don't need them for SMF.
+				return '`' . strtr($replacement, array('`' => '', '.' => '')) . '`';
+			break;
+
+			case 'raw':
+				return $replacement;
+			break;
+
+			default:
+				smf_db_error_backtrace('Undefined type used in the database query. (' . $matches[1] . ':' . $matches[2] . ')', '', false, __FILE__, __LINE__);
+			break;
+		}
+	}
+
+	// Because this is just combat mode, this is good enough.
+	function smf_db_query($execute = true, $db_string, $db_values)
+	{
+		global $db_callback, $db_connection;
+
+		// Only bother if there's something to replace.
+		if (strpos($db_string, '{') !== false)
+		{
+			// This is needed by the callback function.
+			$db_callback = array($db_values, $db_connection);
+
+			// Do the quoting and escaping
+			$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
+
+			// Clear this global variable.
+			$db_callback = array();
+		}
+
+		// We actually make the query in combat mode.
+		if ($execute === false)
+			return $db_string;
+		return mysql_query($db_string, $db_connection);
+	}
+
+	// Insert some data...
+	function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
+	{
+		global $smcFunc, $db_connection, $db_prefix;
+
+		// With nothing to insert, simply return.
+		if (empty($data))
+			return;
+
+		// Replace the prefix holder with the actual prefix.
+		$table = str_replace('{db_prefix}', $db_prefix, $table);
+
+		// Inserting data as a single row can be done as a single array.
+		if (!is_array($data[array_rand($data)]))
+			$data = array($data);
+
+		// Create the mold for a single row insert.
+		$insertData = '(';
+		foreach ($columns as $columnName => $type)
+		{
+			// Are we restricting the length?
+			if (strpos($type, 'string-') !== false)
+				$insertData .= sprintf('SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
+			else
+				$insertData .= sprintf('{%1$s:%2$s}, ', $type, $columnName);
+		}
+		$insertData = substr($insertData, 0, -2) . ')';
+
+		// Create an array consisting of only the columns.
+		$indexed_columns = array_keys($columns);
+
+		// Here's where the variables are injected to the query.
+		$insertRows = array();
+		foreach ($data as $dataRow)
+			$insertRows[] = smf_db_query(true, $insertData, array_combine($indexed_columns, $dataRow));
+
+		// Determine the method of insertion.
+		$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
+
+		// Do the insert.
+		$smcFunc['db_query']('', '
+			' . $queryTitle . ' INTO ' . $table . '(`' . implode('`, `', $indexed_columns) . '`)
+			VALUES
+				' . implode(',
+				', $insertRows),
+			array(
+				'security_override' => true,
+			)
+		);
+	}
+
+	// Now, go functions, spread your love.
+	$smcFunc['db_free_result'] = 'mysql_free_result';
+	$smcFunc['db_fetch_row'] = 'mysql_fetch_row';
+	$smcFunc['db_fetch_assoc'] = 'mysql_fetch_assoc';
+	$smcFunc['db_num_rows'] = 'mysql_num_rows';
+	$smcFunc['db_insert'] = 'smf_db_insert';
+	$smcFunc['db_query'] = 'smf_db_query';
+	$smcFunc['db_quote'] = 'smf_db_query';
+
+	return $db_connection;
+}
+
+function smc_combat_database($db_type, $db_server, $db_user, $db_passwd, $db_name)
+{
+	global $smcFunc, $db_connection;
+
+	// Gonna need a lot of memory.
+	if (@ini_get('memory_limit') < 128)
+		@ini_set('memory_limit', '128M');
+	@set_time_limit(300);
+	ignore_user_abort(true);
+	if (function_exists('apache_reset_timeout'))
+		@apache_reset_timeout();
+
+	// Attempt to make a connection.
+	$db_connection = false;
+	if (file_exists(dirname(__FILE__) . '/Settings.php'))
+		require_once(dirname(__FILE__) . '/Settings.php');
+	if (isset($sourcedir))
+	{
+		define('SMF', 1);
+
+		if (empty($smcFunc))
+			$smcFunc = array();
+
+		// Default the database type to MySQL.
+		if (empty($db_type) || !file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+			$db_type = 'mysql';
+
+		require_once($sourcedir . '/Errors.php');
+		require_once($sourcedir . '/Subs.php');
+		require_once($sourcedir . '/Load.php');
+		require_once($sourcedir . '/Security.php');
+		require_once($sourcedir . '/Subs-Auth.php');
+
+		// Combat mode. Active!
+		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php') && $db_type == 'mysql')
+		{
+			// First try a persistent connection.
+			$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+
+			if (!$db_connection)
+				$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+		}
+		else
+		{
+			require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+			$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+
+			if (!$db_connection)
+				$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+		}
+	}
+	else
+	{
+		$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+
+		if (!$db_connection)
+			$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+	}
+
+	// No version?
+	if (empty($smcFunc['db_get_version']) && function_exists('db_extend'))
+		db_extend('extra');
+	if (empty($smcFunc['db_get_version'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT VERSION()',
+			array(
+			)
+		);
+		list ($smcFunc['db_get_version']) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	}
+
+	return $db_connection;
+}
 ?>
