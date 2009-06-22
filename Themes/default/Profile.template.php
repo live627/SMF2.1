@@ -56,6 +56,15 @@ function template_summary()
 		echo '
 				<li><a href="', $context['member']['website']['url'], '" title="' . $context['member']['website']['title'] . '" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $context['member']['website']['title'] . '" border="0" />' : $txt['www']), '</a></li>';
 
+	// Are there any custom profile fields for the summary?
+	if (!empty($context['custom_fields']))
+	{
+		foreach ($context['custom_fields'] as $field)
+			if ($field['placement'] == 1)
+				echo '
+				<li>', $field['output_html'], '</li>';
+	}
+
 	echo '
 				', !isset($context['disabled_fields']['icq']) && !empty($context['member']['icq']['link']) ? '<li>' . $context['member']['icq']['link'] . '</li>' : '', '
 				', !isset($context['disabled_fields']['msn']) && !empty($context['member']['msn']['link']) ? '<li>' . $context['member']['msn']['link'] . '</li>' : '', '
@@ -152,21 +161,30 @@ function template_summary()
 	echo '
 			</dl>';
 
-	// Are there any custom profile fields for the summary?
+	// Any custom fields for standard placement?
 	if (!empty($context['custom_fields']))
 	{
-			echo '
-			<dl>';
-
+		$dl = false;
 		foreach ($context['custom_fields'] as $field)
 		{
+			if ($field['placement'] != 0)
+				continue;
+
+			if (empty($dl))
+			{
+				echo '
+					<dl>';
+				$dl = true;
+			}
+				
 			echo '
 				<dt>', $field['name'], ':</dt>
 				<dd>', $field['output_html'], '</dd>';
 		}
-
-		echo '
-			</dl>';
+		
+		if (!empty($dl))
+			echo '
+				</dl>';
 	}
 
 	echo '
@@ -246,6 +264,29 @@ function template_summary()
 				<dt>', $txt['lastLoggedIn'], ': </dt>
 				<dd>', $context['member']['last_login'], '</dd>
 			</dl>';
+
+	// Are there any custom profile fields for the summary?
+	if (!empty($context['custom_fields']))
+	{
+		$shown = false;
+		foreach ($context['custom_fields'] as $field)
+		{
+			if ($field['placement'] != 2)
+				continue;
+			
+			if (!$shown)
+			{
+				$shown = true;
+				echo '<div class="custom_fields_above_signature">
+						<ul class="reset nolist>';
+			}
+				echo '
+							<li>', $field['output_html'], '</li>';
+		}
+		if ($shown)
+			echo '</ul>
+			</div>';
+	}
 
 	// Show the users signature.
 	if ($context['signature_enabled'] && !empty($context['member']['signature']))

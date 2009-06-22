@@ -1279,6 +1279,23 @@ function template_edit_profile_field()
 							<dd>
 								<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="input_check" />
 							</dd>
+							
+							<dt>
+								<strong>', $txt['custom_edit_placement'], ':</strong>
+							</dt>
+							<dd>
+								<select name="placement" id="placement">
+									<option value="0"', $context['field']['placement'] == '0' ? ' selected="selected"' : '', '>', $txt['custom_edit_placement_standard'], '</option>
+									<option value="1"', $context['field']['placement'] == '1' ? ' selected="selected"' : '', '>', $txt['custom_edit_placement_withicons'], '</option>
+									<option value="2"', $context['field']['placement'] == '2' ? ' selected="selected"' : '', '>', $txt['custom_edit_placement_abovesignature'], '</option>
+								</select>
+							</dd>
+							<dt>
+								<strong>', $txt['custom_edit_enclose'], ':</strong><br /><span class="smalltext">', $txt['custom_edit_enclose_desc'], '</span>
+							</dt>
+							<dd>
+								<textarea name="enclose" rows="10" cols="50">', @$context['field']['enclose'], '</textarea>
+							</dd>
 						</dl>
 					</fieldset>
 					<fieldset>
@@ -1346,6 +1363,7 @@ function template_edit_profile_field()
 						<legend>', $txt['custom_edit_advanced'], '</legend>
 						<dl class="settings">
 							<dt id="mask_dt">
+								<a id="custom_mask" href="', $scripturl, '?action=helpadmin;help=custom_mask" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" border="0"></a>
 								<strong>', $txt['custom_edit_mask'], ':</strong><br />
 								<span class="smalltext">', $txt['custom_edit_mask_desc'], '</span>
 							</dt>

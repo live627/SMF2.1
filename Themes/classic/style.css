@@ -481,3 +481,29 @@ ol.search_results li
 	width: 1em; 
 	font-size: 1.5em;
 }
+/* a quick reset list class. */
+ul.reset, ul.reset li
+{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+/* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
+.signature
+{
+	clear: right;
+	padding: 1em 0 3px 0;
+	border-top: solid 1px #6394bd;
+	width: 100%;
+	line-height: 1.3em;
+	font-size: 0.85em;
+}
+.custom_fields_above_signature
+{
+	clear: right;
+	padding: 1em 0 3px 0;
+	border-top: solid 1px #6394bd;
+	width: 100%;
+	line-height: 1.3em;
+	font-size: 0.85em;
+}

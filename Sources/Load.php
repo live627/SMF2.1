@@ -1228,13 +1228,33 @@ function loadMemberContext($user, $display_custom_fields = false)
 		$memberContext[$user]['custom_fields'] = array();
 		if (!isset($context['display_fields']))
 			$context['display_fields'] = unserialize($modSettings['displayFields']);
+			
 		foreach ($context['display_fields'] as $custom)
 		{
-			if (!empty($custom['f']) && !empty($profile['options'][$custom['c']]))
-				$memberContext[$user]['custom_fields'][] = array(
-					'title' => $custom['f'],
-					'value' => !empty($custom['b']) ? parse_bbc($profile['options'][$custom['c']]) : $profile['options'][$custom['c']],
-				);
+			if (empty($custom['title']) || empty($profile['options'][$custom['colname']]))
+				continue;
+			
+			$value = $profile['options'][$custom['colname']];
+
+			// BBC?
+			if ($custom['bbc'])
+				$value = parse_bbc($value);
+			
+			// Enclosing the user input within some other text?
+			if (!empty($custom['enclose']))
+				$value = strtr($custom['enclose'], array(
+					'{SCRIPTURL}' => $scripturl,
+					'{IMAGES_URL}' => $settings['images_url'],
+					'{DEFAULT_IMAGES_URL}' => $settings['default_images_url'],
+					'{INPUT}' => $value,
+				));
+
+			$memberContext[$user]['custom_fields'][] = array(
+				'title' => $custom['title'],
+				'colname' => $custom['colname'],
+				'value' => $value,
+				'placement' => !empty($custom['placement']) ? $custom['placement'] : 0,
+			);
 		}
 	}
 

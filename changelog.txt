@@ -120,6 +120,8 @@ June 2009
  * Curve: The admin registration form wasn't properly aligned in some browsers (login.css, ie6.css, ie7.css) [Bug 3541]
  * Curve: Shrink header icon is wrong if shrunk on loading (index.template.php) [Bug 3542]
  ! Use CSS3 text-shadow for non-IE browsers for glow (Subs.php) [Bug 3539]
+ ! Custom profile fields were not loaded for action=pm (PersonalMessage.php)
+ + Enclose within text/html and placement of field options for custom profile fields (Many)
 
 
 May 2009

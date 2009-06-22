@@ -211,6 +211,15 @@ function template_folder()
 									', $txt['member_postcount'], ': ', $message['member']['posts'], '<br />
 									<br />';
 
+				// Any custom fields for standard placement?
+				if (!empty($message['member']['custom_fields']))
+				{
+					foreach ($message['member']['custom_fields'] as $custom)
+						if (empty($custom['placement']))
+							echo '
+									', $custom['title'], ': ', $custom['value'], '<br />';
+				}
+
 				// Show avatars, images, etc.?
 				if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']))
 					echo '
@@ -221,6 +230,15 @@ function template_folder()
 					echo '
 									', $message['member']['blurb'], '<br />
 									<br />';
+
+				// Any custom fields to show as icons?
+				if (!empty($message['member']['custom_fields']))
+				{
+					foreach ($message['member']['custom_fields'] as $custom)
+						if ($custom['placement'] == 1)
+							echo '
+									', $custom['value'];
+				}
 				echo '
 									', $message['member']['icq']['link'], '
 									', $message['member']['msn']['link'], '
@@ -315,6 +333,30 @@ function template_folder()
 						<tr class="', $windowcss, '">
 							<td valign="bottom" class="smalltext" width="85%">
 								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div style="margin: 0 auto; margin-bottom: 10px; text-align: ' . ($context['right_to_left'] ? 'left' : 'right') . ';"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
+
+			// Are there any custom profile fields for above the signature?
+			if (!empty($message['member']['custom_fields']))
+			{
+				$shown = false;
+				foreach ($message['member']['custom_fields'] as $custom)
+				{
+					if ($custom['placement'] != 2)
+						continue;
+					if (!$shown)
+					{
+						$shown = true;
+						echo '
+								<div class="custom_fields_above_signature">
+									<ul class="reset nolist>';
+					}
+					echo '
+										<li>', $custom['value'], '</li>';
+				}
+				if ($shown)
+					echo '
+									</ul>
+								</div>';
+			}
 
 			// Show the member's signature?
 			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])

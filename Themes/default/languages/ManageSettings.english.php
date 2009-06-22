@@ -191,6 +191,7 @@ $txt['custom_profile_fieldname'] = 'Field Name';
 $txt['custom_profile_fieldtype'] = 'Field Type';
 $txt['custom_profile_make_new'] = 'New Field';
 $txt['custom_profile_none'] = 'You have not created any custom profile fields yet!';
+$txt['custom_profile_icon'] = 'Icon';
 
 $txt['custom_profile_type_text'] = 'Text';
 $txt['custom_profile_type_textarea'] = 'Large Text';
@@ -241,6 +242,23 @@ $txt['custom_edit_mask_none'] = 'None';
 $txt['custom_edit_mask_email'] = 'Valid Email';
 $txt['custom_edit_mask_number'] = 'Numeric';
 $txt['custom_edit_mask_regex'] = 'Regex (Advanced)';
+$txt['custom_edit_enclose'] = 'Show Enclosed Within Text (Optional)';
+$txt['custom_edit_enclose_desc'] = 'Enclose the user input between some text or html.  This will allow you to add more instant message providers, images or an embed etc.<br />
+eg
+&lt;a href="http://website.com/{INPUT}"&gt;&lt;img src="{DEFAULT_IMAGES_URL}/icon.gif" alt="{INPUT}" /&gt;&lt;/a&gt;
+<p/>
+Note that you can use the following shortcuts.
+<ul style="margin-top: 0px;"><li>{INPUT} - The input specified by the user.</li><li>{SCRIPTURL} - Web address of forum.</li><li>{IMAGES_URL} - Url to images folder in the users current theme.</li><li>{DEFAULT_IMAGES_URL} - Url to the images folder in the default theme.</li></ul>
+It is <strong>ESSENTIAL</strong> to use an input mask (below) to validate the input supplied by the user, not doing so could put your forum at risk!</p>';
+
+$txt['custom_edit_placement'] = 'Choose Placement';
+$txt['custom_edit_placement_standard'] = 'Standard (with title)';
+$txt['custom_edit_placement_withicons'] = 'With Icons';
+$txt['custom_edit_placement_abovesignature'] = 'Above Signature';
+$txt['custom_profile_placement'] = 'Placement';
+$txt['custom_profile_placement_standard'] = 'Standard';
+$txt['custom_profile_placement_withicons'] = 'With Icons';
+$txt['custom_profile_placement_abovesignature'] = 'Above Signature';
 
 // Use numeric entities in the string below!
 $txt['custom_edit_delete_sure'] = 'Are you sure you wish to delete this field - all related user data will be lost!';

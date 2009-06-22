@@ -472,10 +472,7 @@ ul.quickbuttons li.inline_mod_check
 }
 #forumposts .signature
 {
-	clear: right;
 	width: 98%;
-	border-top: solid 1px #aaa;
-	padding-top: 0.5em;
 }
 #forumposts span.botslice
 {

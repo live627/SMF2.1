@@ -921,6 +921,14 @@ upgrade_query("
 ---}
 ---#
 
+---# Adding new custom fields columns.
+ALTER TABLE {$db_prefix}custom_fields
+ADD enclose text NOT NULL;
+
+ALTER TABLE {$db_prefix}custom_fields
+ADD placement tinyint(3) NOT NULL default '0';
+---#
+
 /******************************************************************************/
 --- Adding email digest functionality.
 /******************************************************************************/

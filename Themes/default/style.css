@@ -579,6 +579,16 @@ code
 	font-size: 0.85em;
 }
 
+.custom_fields_above_signature
+{
+	clear: right;
+	padding: 1em 0 3px 0;
+	border-top: solid 1px #888;
+	width: 100%;
+	line-height: 1.3em;
+	font-size: 0.85em;
+}
+
 /* Sometimes there will be an error when you post */
 .error
 {

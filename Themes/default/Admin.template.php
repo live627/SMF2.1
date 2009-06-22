@@ -1126,6 +1126,22 @@ function template_edit_profile_field()
 				<td width="50%">
 					<input type="checkbox" name="display" id="display"', $context['field']['display'] ? ' checked="checked"' : '', ' class="input_check" />
 				</td>
+			</tr>
+			<tr class="windowbg2">
+				<td width="50%"><strong>', $txt['custom_edit_placement'], ':</strong></td>
+				<td width="50%">
+					<select name="placement" id="placement">
+						<option value="0"', $context['field']['placement'] == '0' ? ' selected="selected"' : '', '>', $txt['custom_edit_placement_standard'], '</option>
+						<option value="1"', $context['field']['placement'] == '1' ? ' selected="selected"' : '', '>', $txt['custom_edit_placement_withicons'], '</option>
+						<option value="2"', $context['field']['placement'] == '2' ? ' selected="selected"' : '', '>', $txt['custom_edit_placement_abovesignature'], '</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="windowbg2">
+				<td width="50%"><strong>', $txt['custom_edit_enclose'], ':</strong><br /><span class="smalltext">', $txt['custom_edit_enclose_desc'], '</span></td>
+				<td width="50%">
+					<textarea name="enclose" rows="10" cols="50">', @$context['field']['enclose'], '</textarea>
+				</td>
 			</tr><tr class="catbg">
 				<td colspan="2">', $txt['custom_edit_input'], ':</td>
 			</tr><tr class="windowbg2" valign="top">
@@ -1188,6 +1204,7 @@ function template_edit_profile_field()
 				<td colspan="2">', $txt['custom_edit_advanced'], ':</td>
 			</tr><tr class="windowbg2" valign="top" id="mask_div">
 				<td width="50%">
+					<a id="custom_mask" href="', $scripturl, '?action=helpadmin;help=custom_mask" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" border="0" /></a>
 					<strong>', $txt['custom_edit_mask'], ':</strong>
 					<div class="smalltext">', $txt['custom_edit_mask_desc'], '</div>
 				</td>

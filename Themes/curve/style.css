@@ -491,7 +491,17 @@ table.table_grid thead tr.catbg th.smalltext
 {
 	clear: right;
 	padding: 1em 0 3px 0;
-	width: 100%;
+	width: 98%;
+	border-top: solid 1px #aaa;
+	line-height: 1.4em;
+	font-size: 0.85em;
+}
+.custom_fields_above_signature
+{
+	clear: right;
+	padding: 1em 0 3px 0;
+	width: 98%;
+	border-top: solid 1px #aaa;
 	line-height: 1.4em;
 	font-size: 0.85em;
 }

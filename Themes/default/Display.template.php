@@ -254,11 +254,12 @@ function template_main()
 				echo '
 						<li>', $txt['member_postcount'], ': ', $message['member']['posts'], '</li>';
 
-			// Any custom fields?
+			// Any custom fields for standard placement?
 			if (!empty($message['member']['custom_fields']))
 			{
 				foreach ($message['member']['custom_fields'] as $custom)
-					echo '
+					if (empty($custom['placement']))
+						echo '
 						<li>', $custom['title'], ': ', $custom['value'], '</li>';
 			}
 
@@ -271,6 +272,30 @@ function template_main()
 			if (!empty($settings['show_blurb']) && $message['member']['blurb'] != '')
 				echo '
 						<li class="margintop">', $message['member']['blurb'], '</li>';
+
+			// Any custom fields to show as icons?
+			if (!empty($message['member']['custom_fields']))
+			{
+				$shown = false;
+				foreach ($message['member']['custom_fields'] as $custom)
+				{
+					if ($custom['placement'] != 1)
+						continue;
+					if (!$shown)
+					{
+						$shown = true;
+						echo '
+						<li class="margintop">
+							<ul class="reset nolist">';
+					}
+					echo '
+								<li>', $custom['value'], '</li>';
+				}
+				if ($shown)
+					echo '
+							</ul>
+						</li>';
+			}
 
 			// This shows the popular messaging icons.
 			if ($message['member']['has_messenger'] && $message['member']['can_view_profile'])
@@ -501,7 +526,29 @@ function template_main()
 
 		echo '
 					</div>';
-
+		// Are there any custom profile fields for above the signature?
+		if (!empty($message['member']['custom_fields']))
+		{
+			$shown = false;
+			foreach ($message['member']['custom_fields'] as $custom)
+			{
+				if ($custom['placement'] != 2)
+					continue;
+				if (!$shown)
+				{
+					$shown = true;
+					echo '
+						<div class="custom_fields_above_signature">
+							<ul class="reset nolist>';
+				}
+				echo '
+								<li>', $custom['value'], '</li>';
+			}
+			if ($shown)
+				echo '
+							</ul>
+						</div>';
+		}
 		// Show the member's signature?
 		if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 			echo '

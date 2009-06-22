@@ -73,6 +73,14 @@ ALTER TABLE {$db_prefix}custom_fields
 ALTER COLUMN default_value TYPE varchar(255);
 ---#
 
+---# Adding new custom fields columns.
+ALTER TABLE {$db_prefix}custom_fields
+ADD enclose text NOT NULL;
+
+ALTER TABLE {$db_prefix}custom_fields
+ADD placement smallint NOT NULL default '0';
+---#
+
 /******************************************************************************/
 --- Adding new board specific features.
 /******************************************************************************/

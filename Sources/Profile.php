@@ -643,7 +643,7 @@ function ModifyProfile($post_errors = array())
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.
 function loadCustomFields($memID, $area = 'summary')
 {
-	global $context, $txt, $user_profile, $smcFunc, $user_info;
+	global $context, $txt, $user_profile, $smcFunc, $user_info, $settings, $scripturl;
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';
@@ -663,8 +663,9 @@ function loadCustomFields($memID, $area = 'summary')
 
 	// Load all the relevant fields - and data.
 	$request = $smcFunc['db_query']('', '
-		SELECT col_name, field_name, field_desc, field_type, field_length, field_options,
-			default_value, bbc
+		SELECT
+			col_name, field_name, field_desc, field_type, field_length, field_options,
+			default_value, bbc, enclose, placement
 		FROM {db_prefix}custom_fields
 		WHERE ' . $where,
 		array(
@@ -730,12 +731,23 @@ function loadCustomFields($memID, $area = 'summary')
 		if ($row['bbc'])
 			$output_html = parse_bbc($output_html);
 
+		// Enclosing the user input within some other text?
+		if (!empty($row['enclose']))
+			$output_html = strtr($row['enclose'], array(
+				'{SCRIPTURL}' => $scripturl,
+				'{IMAGES_URL}' => $settings['images_url'],
+				'{DEFAULT_IMAGES_URL}' => $settings['default_images_url'],
+				'{INPUT}' => $output_html,
+			));
+
 		$context['custom_fields'][] = array(
 			'name' => $row['field_name'],
 			'desc' => $row['field_desc'],
 			'type' => $row['field_type'],
 			'input_html' => $input_html,
 			'output_html' => $output_html,
+			'placement' => $row['placement'],
+			'colname' => $row['col_name'],
 			'value' => $value,
 		);
 	}

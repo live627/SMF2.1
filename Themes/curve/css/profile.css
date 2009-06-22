@@ -109,6 +109,11 @@ dl
 {
 	width: 100%;
 }
+.signature, .custom_fields_above_signature
+{
+	width: 100%;
+	border-top: 1px #ccc solid;
+}
 .signature h5
 {
 	font-size: 100%;

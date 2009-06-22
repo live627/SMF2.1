@@ -29,6 +29,34 @@ upgrade_query("
 ---}
 ---#
 
+---# Adding new custom fields columns.
+---{
+$smcFunc['db_alter_table']('custom_fields', array(
+	'add' => array(
+		'enclose' => array(
+			'name' => 'enclose',
+			'null' => false,
+			'default' => '',
+			'type' => 'text',
+			'auto' => false,
+		),
+	)
+));
+
+$smcFunc['db_alter_table']('custom_fields', array(
+	'add' => array(
+		'placement' => array(
+			'name' => 'placement',
+			'null' => false,
+			'default' => '',
+			'type' => 'smallint',
+			'auto' => false,
+		),
+	)
+));
+---}
+---#
+
 /******************************************************************************/
 --- Adding search engine tracking.
 /******************************************************************************/

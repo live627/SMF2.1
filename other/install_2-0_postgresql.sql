@@ -915,6 +915,8 @@ CREATE TABLE {$db_prefix}custom_fields (
   bbc smallint NOT NULL default '0',
   can_search smallint NOT NULL default '0',
   default_value varchar(255) NOT NULL,
+  enclose text NOT NULL,
+  placement smallint NOT NULL default '0',
   PRIMARY KEY (id_field)
 );
 

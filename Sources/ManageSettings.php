@@ -1396,6 +1396,24 @@ function ShowCustomProfiles()
 					'reverse' => 'active',
 				),
 			),
+			'placement' => array(
+				'header' => array(
+					'value' => $txt['custom_profile_placement'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $txt;
+
+						return $txt[\'custom_profile_placement_\' . (empty($rowData[\'placement\']) ? \'standard\' : ($rowData[\'placement\'] == 1 ? \'withicons\' : \'abovesignature\'))];
+					'),
+					'class' => 'windowbg2',
+					'style' => 'width: 8%; text-align: center;',
+				),
+				'sort' => array(
+					'default' => 'placement DESC',
+					'reverse' => 'placement',
+				),
+			),
 			'show_on_registration' => array(
 				'header' => array(
 					'value' => $txt['modify'],
@@ -1454,11 +1472,14 @@ function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 	{
 		// Load all the fields.
 		$request = $smcFunc['db_query']('', '
-			SELECT id_field, col_name, field_name, field_desc, field_type, active
+			SELECT id_field, col_name, field_name, field_desc, field_type, active, placement
 			FROM {db_prefix}custom_fields
-			ORDER BY ' . $sort . '
-			LIMIT ' . $start . ', ' . $items_per_page,
+			ORDER BY {raw:sort}
+			LIMIT {int:start}, {int:items_per_page}',
 			array(
+				'sort' => $sort,
+				'start' => $start,
+				'items_per_page' => $items_per_page,
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -1503,8 +1524,10 @@ function EditCustomProfiles()
 	if ($context['fid'])
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
-				show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask
+			SELECT
+				id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
+				show_reg, show_display, show_profile, private, active, default_value, can_search,
+				bbc, mask, enclose, placement
 			FROM {db_prefix}custom_fields
 			WHERE id_field = {int:current_field}',
 			array(
@@ -1542,6 +1565,8 @@ function EditCustomProfiles()
 				'can_search' => $row['can_search'],
 				'mask' => $row['mask'],
 				'regex' => substr($row['mask'], 0, 5) == 'regex' ? substr($row['mask'], 5) : '',
+				'enclose' => $row['enclose'],
+				'placement' => $row['placement'],
 			);
 		}
 		$smcFunc['db_free_result']($request);
@@ -1551,6 +1576,7 @@ function EditCustomProfiles()
 	if (empty($context['field']))
 		$context['field'] = array(
 			'name' => '',
+			'colname' => '???',
 			'desc' => '',
 			'profile_area' => 'forumprofile',
 			'reg' => false,
@@ -1568,6 +1594,8 @@ function EditCustomProfiles()
 			'can_search' => false,
 			'mask' => 'none',
 			'regex' => '',
+			'enclose' => '',
+			'placement' => 0,
 		);
 
 	// Are we saving?
@@ -1596,6 +1624,8 @@ function EditCustomProfiles()
 			$mask .= $_POST['regex'];
 
 		$field_length = isset($_POST['max_length']) ? (int) $_POST['max_length'] : 255;
+		$enclose = isset($_POST['enclose']) ? $_POST['enclose'] : '';
+		$placement = isset($_POST['placement']) ? (int) $_POST['placement'] : 0;
 
 		// Select options?
 		$field_options = '';
@@ -1731,11 +1761,14 @@ function EditCustomProfiles()
 		{
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}custom_fields
-				SET field_name = {string:field_name}, field_desc = {string:field_desc},
+				SET
+					field_name = {string:field_name}, field_desc = {string:field_desc},
 					field_type = {string:field_type}, field_length = {int:field_length},
-					field_options = {string:field_options}, show_reg = {int:show_reg}, show_display = {int:show_display},
-					show_profile = {string:show_profile}, private = {int:private}, active = {int:active}, default_value = {string:default_value},
-					can_search = {int:can_search}, bbc = {int:bbc}, mask = {string:mask}
+					field_options = {string:field_options}, show_reg = {int:show_reg},
+					show_display = {int:show_display}, show_profile = {string:show_profile},
+					private = {int:private}, active = {int:active}, default_value = {string:default_value},
+					can_search = {int:can_search}, bbc = {int:bbc}, mask = {string:mask},
+					enclose = {string:enclose}, placement = {int:placement}
 				WHERE id_field = {int:current_field}',
 				array(
 					'field_length' => $field_length,
@@ -1753,6 +1786,8 @@ function EditCustomProfiles()
 					'show_profile' => $show_profile,
 					'default_value' => $default,
 					'mask' => $mask,
+					'enclose' => $enclose,
+					'placement' => $placement,
 				)
 			);
 
@@ -1775,16 +1810,18 @@ function EditCustomProfiles()
 			$smcFunc['db_insert']('',
 				'{db_prefix}custom_fields',
 				array(
-					'col_name' => 'string', 'field_name' => 'string', 'field_desc' => 'string', 'field_type' => 'string',
-					'field_length' => 'string', 'field_options' => 'string', 'show_reg' => 'int', 'show_display' => 'int',
-					'show_profile' => 'string', 'private' => 'int', 'active' => 'int', 'default_value' => 'string',
-					'can_search' => 'int', 'bbc' => 'int', 'mask' => 'string',
+					'col_name' => 'string', 'field_name' => 'string', 'field_desc' => 'string',
+					'field_type' => 'string', 'field_length' => 'string', 'field_options' => 'string',
+					'show_reg' => 'int', 'show_display' => 'int', 'show_profile' => 'string',
+					'private' => 'int', 'active' => 'int', 'default_value' => 'string', 'can_search' => 'int',
+					'bbc' => 'int', 'mask' => 'string', 'enclose' => 'string', 'placement' => 'int',
 				),
 				array(
-					$colname, $_POST['field_name'], $_POST['field_desc'], $_POST['field_type'],
-					$field_length, $field_options, $show_reg, $show_display,
-					$show_profile, $private, $active, $default,
-					$can_search, $bbc, $mask,
+					$colname, $_POST['field_name'], $_POST['field_desc'],
+					$_POST['field_type'], $field_length, $field_options,
+					$show_reg, $show_display, $show_profile,
+					$private, $active, $default, $can_search,
+					$bbc, $mask, $enclose, $placement,
 				),
 				array('id_field')
 			);
@@ -1821,7 +1858,7 @@ function EditCustomProfiles()
 		checkSession();
 
 		$request = $smcFunc['db_query']('', '
-			SELECT col_name, field_name, bbc
+			SELECT col_name, field_name, bbc, enclose, placement
 			FROM {db_prefix}custom_fields
 			WHERE show_display = {int:is_displayed}
 				AND active = {int:active}
@@ -1839,9 +1876,11 @@ function EditCustomProfiles()
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 		{
 			$fields[] = array(
-				'c' => strtr($row['col_name'], array('|' => '', ';' => '')),
-				'f' => strtr($row['field_name'], array('|' => '', ';' => '')),
-				'b' => ($row['bbc'] ? '1' : '0')
+				'colname' => strtr($row['col_name'], array('|' => '', ';' => '')),
+				'title' => strtr($row['field_name'], array('|' => '', ';' => '')),
+				'bbc' => $row['bbc'] ? '1' : '0',
+				'placement' => !empty($row['placement']) ? $row['placement'] : '0',
+				'enclose' => !empty($row['enclose']) ? $row['enclose'] : '',
 			);
 		}
 		$smcFunc['db_free_result']($request);

@@ -994,7 +994,7 @@ function prepareMessageContext($type = 'subject', $reset = false)
 	$message['subject'] = $message['subject'] == '' ? $txt['no_subject'] : $message['subject'];
 
 	// Load the message's information - if it's not there, load the guest information.
-	if (!loadMemberContext($message['id_member_from']))
+	if (!loadMemberContext($message['id_member_from'], true))
 	{
 		$memberContext[$message['id_member_from']]['name'] = $message['from_name'];
 		$memberContext[$message['id_member_from']]['id'] = 0;
@@ -1483,7 +1483,7 @@ function MessageSearch2()
 			$row['subject'] = $row['subject'] == '' ? $txt['no_subject'] : $row['subject'];
 
 			// Load this posters context info, if it ain't there then fill in the essentials...
-			if (!loadMemberContext($row['id_member_from']))
+			if (!loadMemberContext($row['id_member_from'], true))
 			{
 				$memberContext[$row['id_member_from']]['name'] = $row['from_name'];
 				$memberContext[$row['id_member_from']]['id'] = 0;

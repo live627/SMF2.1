@@ -322,14 +322,32 @@ code
 	line-height: 1.3em;
 }
 
+/* a quick reset list class. */
+ul.reset, ul.reset li
+{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
 .signature
 {
+	clear: right;
+	padding: 1em 0 3px 0;
+	border-top: solid 1px #666;
 	width: 100%;
-	padding-bottom: 3px;
 	line-height: 1.3em;
+	font-size: 0.85em;
 }
-
+.custom_fields_above_signature
+{
+	clear: right;
+	padding: 1em 0 3px 0;
+	border-top: solid 1px #666;
+	width: 100%;
+	line-height: 1.3em;
+	font-size: 0.85em;
+}
 /* Sometimes there will be an error when you post */
 .error
 {

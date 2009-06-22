@@ -725,6 +725,8 @@ CREATE TABLE {$db_prefix}custom_fields (
   bbc tinyint(3) NOT NULL default '0',
   can_search tinyint(3) NOT NULL default '0',
   default_value varchar(255) NOT NULL default '',
+  enclose text NOT NULL,
+  placement tinyint(3) NOT NULL default '0',
   PRIMARY KEY (id_field),
   UNIQUE col_name (col_name)
 ) ENGINE=MyISAM;
