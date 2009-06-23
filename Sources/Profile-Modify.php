@@ -1318,6 +1318,8 @@ function makeCustomFieldChanges($memID, $area, $sanitize = true)
 				{
 					$value = (int) $value;
 				}
+				elseif ($row['mask'] == 'nohtml' && preg_match('~<[^>]*>~', $value) === 0)
+					$value = '';
 				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $value) === 0)
 					$value = '';
 			}

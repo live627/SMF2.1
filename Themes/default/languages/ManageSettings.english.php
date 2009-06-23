@@ -241,6 +241,7 @@ $txt['custom_edit_mask_desc'] = 'For text fields an input mask can be selected t
 $txt['custom_edit_mask_none'] = 'None';
 $txt['custom_edit_mask_email'] = 'Valid Email';
 $txt['custom_edit_mask_number'] = 'Numeric';
+$txt['custom_edit_mask_nohtml'] = 'No HTML';
 $txt['custom_edit_mask_regex'] = 'Regex (Advanced)';
 $txt['custom_edit_enclose'] = 'Show Enclosed Within Text (Optional)';
 $txt['custom_edit_enclose_desc'] = 'Enclose the user input between some text or html.  This will allow you to add more instant message providers, images or an embed etc.<br />

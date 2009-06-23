@@ -730,7 +730,7 @@ function set_settings()
 }
 
 // Combat mode!
-function smc_combat_initiate(, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
+function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
 	global $mysql_set_mod, $sourcedir, $db_connection, $db_prefix, $smcFunc;
 

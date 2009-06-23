@@ -124,6 +124,8 @@ June 2009
  + Enclose within text/html and placement of field options for custom profile fields (Many)
  + Added BurningBoard3 login support (LogInOut.php)
  + Allow setting a target for menu tabs (index.template.php, Subs.php) [Bug 2084]
+ ! Upgrade could fail if there was an if before $upgradeData (upgrade.php)
+ + Added "No HTML" option for custom profile fields (ManageSettings Template, Profile-Modify.php, ManageSettings.english.php)
 
 
 May 2009
