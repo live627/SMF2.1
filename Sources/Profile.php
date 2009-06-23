@@ -732,7 +732,7 @@ function loadCustomFields($memID, $area = 'summary')
 			$output_html = parse_bbc($output_html);
 
 		// Enclosing the user input within some other text?
-		if (!empty($row['enclose']))
+		if (!empty($row['enclose']) && !empty($output_html))
 			$output_html = strtr($row['enclose'], array(
 				'{SCRIPTURL}' => $scripturl,
 				'{IMAGES_URL}' => $settings['images_url'],

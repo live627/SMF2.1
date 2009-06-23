@@ -126,6 +126,7 @@ June 2009
  + Allow setting a target for menu tabs (index.template.php, Subs.php) [Bug 2084]
  ! Upgrade could fail if there was an if before $upgradeData (upgrade.php)
  + Added "No HTML" option for custom profile fields (ManageSettings Template, Profile-Modify.php, ManageSettings.english.php)
+ ! A custom profile field would show regardless if any input existed or not (Profile.php)
 
 
 May 2009
