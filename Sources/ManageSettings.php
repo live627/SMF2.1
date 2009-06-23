@@ -1592,7 +1592,7 @@ function EditCustomProfiles()
 			'active' => true,
 			'private' => false,
 			'can_search' => false,
-			'mask' => 'none',
+			'mask' => 'nohtml',
 			'regex' => '',
 			'enclose' => '',
 			'placement' => 0,
