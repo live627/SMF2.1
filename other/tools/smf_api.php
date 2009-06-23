@@ -245,11 +245,15 @@ function smf_setLoginCookie($cookie_length, $id, $password = '', $encrypted = tr
 		if (!$smf_connection)
 			return false;
 
-		$result = smf_query("
+		$result = $smcFunc['db_query']('', '
 			SELECT member_name, password_salt
-			FROM $smf_settings[db_prefix]members
-			WHERE id_member = '" . (int) $id . "'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {raw:smf_db_prefix}members
+			WHERE id_member = {int:id_member}
+			LIMIT 1',
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+				'id_member' => (int) $id,
+		));
 		list ($username, $salt) = mysql_fetch_row($result);
 		mysql_free_result($result);
 
@@ -339,11 +343,14 @@ function smf_authenticateUser()
 	// Don't even bother if they have no authentication data.
 	if (!empty($id_member))
 	{
-		$request = smf_query("
+		$request = $smcFunc['db_query']('', "
 			SELECT *
 			FROM $smf_settings[db_prefix]members
 			WHERE id_member = $id_member
-			LIMIT 1", __FILE__, __LINE__);
+			LIMIT 1",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
 		// Did we find 'im?  If not, junk it.
 		if (mysql_num_rows($request) != 0)
 		{
@@ -452,30 +459,45 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 
 	$register_vars = $extra_fields + $register_vars;
 
-	smf_query("
-		INSERT INTO $smf_settings[db_prefix]members
+	$smcFunc['db_query']('', "
+		INSERT INTO {raw:smf_db_prefix}members
 			(" . implode(', ', array_keys($register_vars)) . ")
-		VALUES (" . implode(', ', $register_vars) . ')', __FILE__, __LINE__);
-	$id_member = smf_insert_id();
+		VALUES (" . implode(', ', $register_vars) . ')',
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
+	$id_member = $smcFunc['db_insert_id']($smf_connection);
 
-	smf_query("
+	$smcFunc['db_query']('', "
 		UPDATE $smf_settings[db_prefix]settings
 		SET value = value + 1
-		WHERE variable = 'totalMembers'", __FILE__, __LINE__);
-	smf_query("
+		WHERE variable = 'totalMembers'",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
+	$smcFunc['db_query']('', "
 		REPLACE INTO $smf_settings[db_prefix]settings
 			(variable, value)
 		VALUES ('latestMember', $id_member),
-			('latestRealName', '$username')", __FILE__, __LINE__);
-	smf_query("
+			('latestRealName', '$username')",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
+	$smcFunc['db_query']('', "
 		UPDATE {$db_prefix}log_activity
 		SET registers = registers + 1
-		WHERE date = '" . strftime('%Y-%m-%d') . "'", __FILE__, __LINE__);
-	if (smf_affected_rows() == 0)
-		smf_query("
+		WHERE date = '" . strftime('%Y-%m-%d') . "'",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
+	if ($smcFunc['db_affected_rows']($smf_connection) == 0)
+		$smcFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}log_activity
 				(date, registers)
-			VALUES ('" . strftime('%Y-%m-%d') . "', 1)", __FILE__, __LINE__);
+			VALUES ('" . strftime('%Y-%m-%d') . "', 1)",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
 
 	// Theme variables too?
 	if (!empty($theme_options))
@@ -484,10 +506,13 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		foreach ($theme_options as $var => $val)
 			$setString .= "
 				($memberID, SUBSTRING('$var', 1, 255), SUBSTRING('$val', 1, 65534)),";
-		smf_query("
-			INSERT INTO $smf_settings[db_prefix]themes
+		$smcFunc['db_query']('', "
+			INSERT INTO {raw:smf_db_prefix}themes
 				(id_member, variable, value)
-			VALUES " . substr($setString, 0, -1), __FILE__, __LINE__);
+			VALUES " . substr($setString, 0, -1),
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
 	}
 
 	return $id_member;
@@ -521,23 +546,35 @@ function smf_logOnline($action = null)
 	// Guests use 0, members use id_member.
 	if ($smf_user_info['is_guest'])
 	{
-		smf_query("
-			DELETE FROM $smf_settings[db_prefix]log_online
-			WHERE log_time < " . (time() - $lastActive) . " OR session = 'ip$_SERVER[REMOTE_ADDR]'", __FILE__, __LINE__);
-		smf_query("
+		$smcFunc['db_query']('', "
+			DELETE FROM {raw:smf_db_prefix}log_online
+			WHERE log_time < " . (time() - $lastActive) . " OR session = 'ip$_SERVER[REMOTE_ADDR]'",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
+		$smcFunc['db_query']('', "
 			INSERT IGNORE INTO $smf_settings[db_prefix]log_online
 				(session, id_member, ip, url, log_time)
-			VALUES ('ip$_SERVER[REMOTE_ADDR]', 0, IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized', " . time() . ")", __FILE__, __LINE__);
+			VALUES ('ip$_SERVER[REMOTE_ADDR]', 0, IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized', " . time() . ")",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
 	}
 	else
 	{
-		smf_query("
-			DELETE FROM $smf_settings[db_prefix]log_online
-			WHERE log_time < " . (time() - $lastActive) . " OR id_member = $smf_user_info[id] OR session = '" . @session_id() . "'", __FILE__, __LINE__);
-		smf_query("
+		$smcFunc['db_query']('', "
+			DELETE FROM {raw:smf_db_prefix}log_online
+			WHERE log_time < " . (time() - $lastActive) . " OR id_member = $smf_user_info[id] OR session = '" . @session_id() . "'",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
+		$smcFunc['db_query']('', "
 			INSERT IGNORE INTO $smf_settings[db_prefix]log_online
 				(session, id_member, ip, url, log_time)
-			VALUES ('" . @session_id() . "', $smf_user_info[id], IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized', " . time() . ")", __FILE__, __LINE__);
+			VALUES ('" . @session_id() . "', $smf_user_info[id], IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized', " . time() . ")",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
 	}
 }
 
@@ -548,12 +585,15 @@ function smf_is_online($user)
 	if (!$smf_connection)
 		return false;
 
-	$result = smf_query("
+	$result = $smcFunc['db_query']('', "
 		SELECT lo.id_member
-		FROM $smf_settings[db_prefix]log_online AS lo" . (!is_integer($user) ? "
+		FROM {raw:smf_db_prefix}log_online AS lo" . (!is_integer($user) ? "
 			LEFT JOIN $smf_settings[db_prefix]members AS mem ON (mem.id_member = lo.id_member)" : '') . "
 		WHERE lo.id_member = " . (int) $user . (!is_integer($user) ? " OR mem.member_name = '$user'" : '') . "
-		LIMIT 1", __FILE__, __LINE__);
+		LIMIT 1",
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+		));
 	$return = mysql_num_rows($result) != 0;
 	mysql_free_result($result);
 
@@ -584,10 +624,15 @@ function smf_logError($error_message, $file = null, $line = null)
 		$smf_user_info['id'] = 0;
 
 	// Insert the error into the database.
-	smf_query("
-		INSERT INTO $smf_settings[db_prefix]log_errors
-			(id_member, log_time, ip, url, message, session)
-		VALUES ($smf_user_info[id], " . time() . ", SUBSTRING('$_SERVER[REMOTE_ADDR]', 1, 16), SUBSTRING('" . (empty($_SERVER['QUERY_STRING']) ? '' : addslashes(htmlspecialchars('?' . $_SERVER['QUERY_STRING']))) . "', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), SUBSTRING('" . @session_id() . "', 1, 32))", __FILE__, __LINE__);
+	$smcFunc['db_insert']('insert', 
+		$smf_settings['db_prefix'] . 'log_errors'
+		array(
+			'id_member' => 'int', 'log_time' => 'int', 'ip' => 'string', 'url' => 'string', 'message' => 'string', 'session' => 'string'
+		),
+		array($smf_user_info['id'], time(), $_SERVER['REMOTE_ADDR'], empty($_SERVER['QUERY_STRING']) ? '' : addslashes(htmlspecialchars('?' . $_SERVER['QUERY_STRING']))), addslashes($error_message), @session_id(),
+		array(
+			'id_error'
+	));
 
 	// Return the message to make things simpler.
 	return $error_message;
@@ -605,38 +650,6 @@ function smf_formatTime($log_time)
 	return strftime(strtr(!empty($smf_user_info['time_format']) ? $smf_user_info['time_format'] : $smf_settings['time_format'], array('%a' => ucwords(strftime('%a', $time)), '%A' => ucwords(strftime('%A', $time)), '%b' => ucwords(strftime('%b', $time)), '%B' => ucwords(strftime('%B', $time)))), $time);
 }
 
-// Do a query, and if it fails log an error in the SMF error log.
-function smf_query($string, $file, $line)
-{
-	global $smf_settings, $smf_connection;
-
-	if (!$smf_connection)
-		return false;
-
-	$smf_settings['db_count'] = @$smf_settings['db_count'] + 1;
-
-	$ret = mysql_query($string, $smf_connection);
-
-	if ($ret === false)
-		smf_logError(mysql_error($smf_connection), $file, $line);
-
-	return $ret;
-}
-
-function smf_affected_rows()
-{
-	global $smf_connection;
-
-	return mysql_affected_rows($smf_connection);
-}
-
-function smf_insert_id()
-{
-	global $smf_connection;
-
-	return mysql_insert_id($smf_connection);
-}
-
 // Mother, may I?
 function smf_allowedTo($permission)
 {
@@ -651,10 +664,14 @@ function smf_allowedTo($permission)
 
 	if (!isset($smf_user_info['permissions']))
 	{
-		$result = smf_query("
+		$result = $smcFunc['db_query']('', '
 			SELECT permission, add_deny
-			FROM $smf_settings[db_prefix]permissions
-			WHERE id_group IN (" . implode(', ', $smf_user_info['groups']) . ")", __FILE__, __LINE__);
+			FROM {raw:smf_db_prefix}permissions
+			WHERE id_group IN ({array_int:user_groups})',
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+				'user_groups' => $smf_user_info['groups'],
+		));
 		$removals = array();
 		$smf_user_info['permissions'] = array();
 		while ($row = mysql_fetch_assoc($result))
@@ -721,11 +738,16 @@ function smf_loadThemeData($id_theme = 0)
 	$member = empty($smf_user_info['id']) ? -1 : $smf_user_info['id'];
 
 	// Load variables from the current or default theme, global or this user's.
-	$result = smf_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT variable, value, id_member, id_theme
-		FROM $smf_settings[db_prefix]themes
-		WHERE id_member IN (-1, 0, $member)
-			AND id_theme" . ($theme == 1 ? ' = 1' : " IN ($theme, 1)"), __FILE__, __LINE__);
+		FROM {raw:smf_db_prefix}themes
+		WHERE id_member IN (-1, 0, {int:current_member})
+			AND id_theme' . ($theme == 1 ? ' = 1' : ' IN ({int:current_theme}, 1)'),
+			array(
+				'smf_db_prefix' => $smf_settings['db_prefix'],
+				'current_member' => $member,
+				'current_theme' => $theme,
+		));
 	// Pick between $smf_settings['theme'] and $smf_user_info['theme'] depending on whose data it is.
 	$themeData = array(0 => array(), $member => array());
 	while ($row = mysql_fetch_assoc($result))
@@ -818,13 +840,18 @@ function smf_sessionRead($session_id)
 		return false;
 
 	// Look for it in the database.
-	$result = smf_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT data
-		FROM $smf_settings[db_prefix]sessions
-		WHERE session_id = '" . addslashes($session_id) . "'
-		LIMIT 1", __FILE__, __LINE__);
-	list ($sess_data) = mysql_fetch_row($result);
-	mysql_free_result($result);
+		FROM {raw:smf_db_prefix}sessions
+		WHERE session_id = {string:session_id}
+		LIMIT 1',
+		array(
+			'smf_db_prefix' => $smf_settings['db_prefix'],
+			'session_id' => $session_id,
+		)
+	);
+	list ($sess_data) = $smcFunc['db_fetch_row']($result);
+	$smcFunc['db_free_result']($result);
 
 	return $sess_data;
 }
@@ -837,17 +864,26 @@ function smf_sessionWrite($session_id, $data)
 		return false;
 
 	// First try to update an existing row...
-	$result = smf_query("
-		UPDATE $smf_settings[db_prefix]sessions
-		SET data = '" . addslashes($data) . "', last_update = " . time() . "
-		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
+	$result = $smcFunc['db_query']('', '
+		UPDATE {raw:smf_db_prefix}sessions
+		SET data = {string:data}, last_update = {int:last_update}
+		WHERE session_id = {string:session_id}',
+		array(
+			'smf_db_prefix' => $smf_settings['db_prefix'],
+			'last_update' => time(),
+			'data' => $data,
+			'session_id' => $session_id,
+		)
+	);
 
 	// If that didn't work, try inserting a new one.
-	if (mysql_affected_rows($smf_connection) == 0)
-		$result = smf_query("
-			INSERT IGNORE INTO $smf_settings[db_prefix]sessions
-				(session_id, data, last_update)
-			VALUES ('" . addslashes($session_id) . "', '" . addslashes($data) . "', " . time() . ")", __FILE__, __LINE__);
+	if ($smcFunc['db_affected_rows']() == 0)
+		$result = $smcFunc['db_insert']('ignore',
+			$smf_settings['db_prefix'] . 'sessions',
+			array('session_id' => 'string', 'data' => 'string', 'last_update' => 'int'),
+			array($session_id, $data, time()),
+			array('session_id')
+		);
 
 	return $result;
 }
@@ -860,9 +896,13 @@ function smf_sessionDestroy($session_id)
 		return false;
 
 	// Just delete the row...
-	return smf_query("
-		DELETE FROM $smf_settings[db_prefix]sessions
-		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
+	return $smcFunc['db_query']('', '
+		DELETE FROM {raw:smf_db_prefix}sessions
+		WHERE session_id = {string:session_id}',
+		array(
+			'smf_db_prefix' => $smf_settings['db_prefix'],
+			'session_id' => $session_id,
+		));
 }
 
 function smf_sessionGC($max_lifetime)
@@ -874,9 +914,13 @@ function smf_sessionGC($max_lifetime)
 		$max_lifetime = max($smf_settings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return smf_query("
-		DELETE FROM $smf_settings[db_prefix]sessions
-		WHERE last_update < " . (time() - $max_lifetime), __FILE__, __LINE__);
+	return $smcFunc['db_query']('', '
+		DELETE FROM {raw:smf_db_prefix}sessions
+		WHERE last_update < {int:old_sessions}',
+		array(
+			'smf_db_prefix' => $smf_settings['db_prefix'],
+			'old_sessions' => time() - $max_lifetime,
+		));
 }
 
 // Define the sha1 function, if it doesn't exist (but the built in one would be faster.)
