@@ -174,7 +174,7 @@ function step2()
 {
 	global $start_time, $table_sizes, $total_size, $before_length, $write_data, $smcFunc;
 
-	$db_connection = smc_combat_database($_POST['db_type'], $_POST['db_server'], $_POST['db_user'], $_POST['db_password']);
+	$db_connection = smc_compat_database($_POST['db_type'], $_POST['db_server'], $_POST['db_user'], $_POST['db_password']);
 	if (!$db_connection)
 		return step1('Cannot connect to the database server with the supplied data.<br /><br />If you are not sure about what to type in, please contact your host.');
 
@@ -1150,8 +1150,8 @@ class ftp_connection
 	}
 }
 
-// Combat mode!
-function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
+// Compat mode!
+function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
 	global $mysql_set_mod, $sourcedir, $db_connection, $db_prefix, $smcFunc;
 
@@ -1290,7 +1290,7 @@ function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		}
 	}
 
-	// Because this is just combat mode, this is good enough.
+	// Because this is just compat mode, this is good enough.
 	function smf_db_query($execute = true, $db_string, $db_values)
 	{
 		global $db_callback, $db_connection;
@@ -1308,7 +1308,7 @@ function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 			$db_callback = array();
 		}
 
-		// We actually make the query in combat mode.
+		// We actually make the query in compat mode.
 		if ($execute === false)
 			return $db_string;
 		return mysql_query($db_string, $db_connection);
@@ -1377,7 +1377,7 @@ function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 	return $db_connection;
 }
 
-function smc_combat_database($db_type, $db_server, $db_user, $db_passwd, $db_name)
+function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_name)
 {
 	global $smcFunc, $db_connection;
 
@@ -1410,14 +1410,14 @@ function smc_combat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 		require_once($sourcedir . '/Security.php');
 		require_once($sourcedir . '/Subs-Auth.php');
 
-		// Combat mode. Active!
+		// compat mode. Active!
 		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php') && $db_type == 'mysql')
 		{
 			// First try a persistent connection.
-			$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+			$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
 
 			if (!$db_connection)
-				$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+				$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
 		}
 		else
 		{
@@ -1430,10 +1430,10 @@ function smc_combat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 	}
 	else
 	{
-		$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+		$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
 
 		if (!$db_connection)
-			$db_conneciton = smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+			$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
 	}
 
 	// No version?

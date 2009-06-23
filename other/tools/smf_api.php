@@ -162,7 +162,7 @@ require_once(dirname(__FILE__) . '/Settings.php');
 global $smf_settings, $smf_user_info, $smf_connection;
 
 // If $maintenance is set to 2, don't connect to the database at all.
-if ($maintenance != 2 )
+if ($maintenance != 2)
 {
 	define('SMF', 1);
 

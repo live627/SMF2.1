@@ -127,6 +127,7 @@ June 2009
  ! Upgrade could fail if there was an if before $upgradeData (upgrade.php)
  + Added "No HTML" option for custom profile fields (ManageSettings Template, Profile-Modify.php, ManageSettings.english.php)
  ! A custom profile field would show regardless if any input existed or not (Profile.php)
+ ! Few bugs in extra scripts (create_backup.php, repair_settings.php, smf_api.php) [Bug 3543]
 
 
 May 2009

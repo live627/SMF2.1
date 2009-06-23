@@ -266,10 +266,10 @@ function initialize_inputs()
 		require_once($sourcedir . '/Security.php');
 		require_once($sourcedir . '/Subs-Auth.php');
 
-		// Combat mode. Active!
+		// compat mode. Active!
 		$context['is_legacy'] = true;
 		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php') && $db_type == 'mysql')
-			smc_combat_initiate($smcFunc, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+			smc_compat_initiate($smcFunc, $db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
 		else
 		{
 			// Far as I know, this is 2.0.
@@ -729,8 +729,8 @@ function set_settings()
 		);
 }
 
-// Combat mode!
-function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
+// Compat mode!
+function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
 	global $mysql_set_mod, $sourcedir, $db_connection, $db_prefix, $smcFunc;
 
@@ -869,7 +869,7 @@ function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 		}
 	}
 
-	// Because this is just combat mode, this is good enough.
+	// Because this is just compat mode, this is good enough.
 	function smf_db_query($execute = true, $db_string, $db_values)
 	{
 		global $db_callback, $db_connection;
@@ -887,7 +887,7 @@ function smc_combat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 			$db_callback = array();
 		}
 
-		// We actually make the query in combat mode.
+		// We actually make the query in compat mode.
 		if ($execute === false)
 			return $db_string;
 		return mysql_query($db_string, $db_connection);
