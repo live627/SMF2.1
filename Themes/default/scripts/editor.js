@@ -938,7 +938,7 @@ SmfEditor.prototype.selectEventHandler = function(oSrcElement)
 	{
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
-			surroundText('[size=' + sValue + ']', '[/size]', this.oTextHandle)
+			surroundText('[size=' + this.aFontSizes[sValue] + 'pt]', '[/size]', this.oTextHandle)
 
 		else
 			this.smf_execCommand('fontsize', false, sValue);

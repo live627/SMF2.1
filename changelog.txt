@@ -129,6 +129,7 @@ June 2009
  ! A custom profile field would show regardless if any input existed or not (Profile.php)
  ! Few bugs in extra scripts (create_backup.php, repair_settings.php, smf_api.php) [Bug 3543]
  ! Improve the nohtml check as htmlspecialchars may of been applied already (Profile-Modify.php)
+ * Font sizes weren't applied correctly in non-wysiwyg mode. (editor.js)
 
 
 May 2009
