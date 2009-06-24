@@ -258,7 +258,7 @@ function template_main()
 			if (!empty($message['member']['custom_fields']))
 			{
 				foreach ($message['member']['custom_fields'] as $custom)
-					if (empty($custom['placement']))
+					if (empty($custom['placement']) && !empty($custom['value']))
 						echo '
 						<li>', $custom['title'], ': ', $custom['value'], '</li>';
 			}
@@ -279,9 +279,9 @@ function template_main()
 				$shown = false;
 				foreach ($message['member']['custom_fields'] as $custom)
 				{
-					if ($custom['placement'] != 1)
+					if ($custom['placement'] != 1 || empty($custom['value']))
 						continue;
-					if (!$shown)
+					if (empty($shown))
 					{
 						$shown = true;
 						echo '
@@ -526,15 +526,16 @@ function template_main()
 
 		echo '
 					</div>';
+
 		// Are there any custom profile fields for above the signature?
 		if (!empty($message['member']['custom_fields']))
 		{
 			$shown = false;
 			foreach ($message['member']['custom_fields'] as $custom)
 			{
-				if ($custom['placement'] != 2)
+				if ($custom['placement'] != 2 || empty($custom['value']))
 					continue;
-				if (!$shown)
+				if (empty($shown))
 				{
 					$shown = true;
 					echo '
@@ -549,6 +550,7 @@ function template_main()
 							</ul>
 						</div>';
 		}
+
 		// Show the member's signature?
 		if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 			echo '

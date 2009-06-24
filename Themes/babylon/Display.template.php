@@ -341,7 +341,7 @@ function template_main()
 			if (!empty($message['member']['custom_fields']))
 			{
 				foreach ($message['member']['custom_fields'] as $custom)
-					if (empty($custom['placement']))
+					if (empty($custom['placement']) || empty($custom['value']))
 						echo '
 								', $custom['title'], ': ', $custom['value'], '<br />';
 			}
@@ -363,7 +363,7 @@ function template_main()
 			if (!empty($message['member']['custom_fields']))
 			{
 				foreach ($message['member']['custom_fields'] as $custom)
-					if ($custom['placement'] == 1)
+					if ($custom['placement'] == 1 || empty($custom['value']))
 						echo '
 								', $custom['value'];
 			}
@@ -571,22 +571,22 @@ function template_main()
 			$shown = false;
 			foreach ($message['member']['custom_fields'] as $custom)
 			{
-				if ($custom['placement'] != 2)
+				if ($custom['placement'] != 2 || empty($custom['value']))
 					continue;
-				if (!$shown)
+				if (empty($shown))
 				{
 					$shown = true;
 					echo '
-						<div class="custom_fields_above_signature">
-							<ul class="reset nolist>';
+							<div class="custom_fields_above_signature">
+								<ul class="reset nolist>';
 				}
 				echo '
-								<li>', $custom['value'], '</li>';
+									<li>', $custom['value'], '</li>';
 			}
 			if ($shown)
 				echo '
-							</ul>
-						</div>';
+								</ul>
+							</div>';
 		}
 
 		// Show the member's signature?

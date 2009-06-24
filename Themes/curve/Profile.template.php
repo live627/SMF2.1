@@ -60,7 +60,7 @@ function template_summary()
 	if (!empty($context['custom_fields']))
 	{
 		foreach ($context['custom_fields'] as $field)
-			if ($field['placement'] == 1)
+			if ($field['placement'] == 1 || empty($field['output_html']))
 				echo '
 				<li>', $field['output_html'], '</li>';
 	}
@@ -164,17 +164,17 @@ function template_summary()
 	// Any custom fields for standard placement?
 	if (!empty($context['custom_fields']))
 	{
-		$dl = false;
+		$shown = false;
 		foreach ($context['custom_fields'] as $field)
 		{
 			if ($field['placement'] != 0)
 				continue;
 
-			if (empty($dl))
+			if (empty($shown))
 			{
 				echo '
-					<dl>';
-				$dl = true;
+			<dl>';
+				$shown = true;
 			}
 				
 			echo '
@@ -182,9 +182,9 @@ function template_summary()
 				<dd>', $field['output_html'], '</dd>';
 		}
 		
-		if (!empty($dl))
+		if (!empty($shown))
 			echo '
-				</dl>';
+			</dl>';
 	}
 
 	echo '
@@ -271,21 +271,22 @@ function template_summary()
 		$shown = false;
 		foreach ($context['custom_fields'] as $field)
 		{
-			if ($field['placement'] != 2)
+			if ($field['placement'] != 2 || empty($field['output_html']))
 				continue;
-			if (!$shown)
+			if (empty($shown))
 			{
 				$shown = true;
-				echo '<div class="custom_fields_above_signature">
-						<ul class="reset nolist>';
+				echo '
+			<div class="custom_fields_above_signature">
+				<ul class="reset nolist>';
 			}
 			echo '
-							<li>', $field['output_html'], '</li>';
+					<li>', $field['output_html'], '</li>';
 		}
 		if ($shown)
 				echo '
-							</ul>
-						</div>';
+				</ul>
+			</div>';
 	}
 
 	// Show the users signature.
