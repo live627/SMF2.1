@@ -442,8 +442,10 @@ function Register2($verifiedOpenID = false)
 
 	// Lets check for other errors before trying to register the member.
 	if (!empty($reg_errors))
+	{
+		$_REQUEST['step'] = 2;
 		return Register($reg_errors);
-
+}
 	// If they're wanting to use OpenID we need to validate them first.
 	if (empty($_SESSION['openid']['verified']) && !empty($_POST['authenticate']) && $_POST['authenticate'] == 'openid')
 	{
@@ -471,6 +473,7 @@ function Register2($verifiedOpenID = false)
 	if (is_array($memberID))
 	{
 		$reg_errors = array_merge($reg_errors, $memberID);
+		$_REQUEST['step'] = 2;
 		return Register($reg_errors);
 	}
 

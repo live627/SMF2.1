@@ -132,6 +132,7 @@ June 2009
  * Font sizes weren't applied correctly in non-wysiwyg mode. (editor.js)
  ! BurningBoard3 login support causing undefined error related to password salt (LogInOut.php) [Bug 3545]
  ! Sending http 500 error caused some mobiles not to show our error page (Errors.php)
+ ! Failed registration would return to first step (Register.php) [Bug 3544]
 
 
 May 2009
