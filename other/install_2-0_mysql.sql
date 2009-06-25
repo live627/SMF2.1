@@ -1274,8 +1274,8 @@ CREATE TABLE {$db_prefix}members (
   KEY last_login (last_login),
   KEY lngfile (lngfile(30)),
   KEY id_post_group (id_post_group),
-  KEY warning (warning)
-  KEY total_time_logged_in(total_time_logged_in)
+  KEY warning (warning),
+  KEY total_time_logged_in (total_time_logged_in)
 ) ENGINE=MyISAM;
 
 #
