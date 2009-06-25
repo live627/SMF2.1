@@ -354,7 +354,7 @@ function Login2()
 			$other_passwords[] = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($_POST['passwrd']));
 
 			// BurningBoard3 style of hashing.
-			$other_passwords[] = sha1($user_settings['passwordSalt'] . sha1($user_settings['passwordSalt'] . sha1($_REQUEST['passwrd'])));
+			$other_passwords[] = sha1($user_settings['password_salt'] . sha1($user_settings['password_salt'] . sha1($_REQUEST['passwrd'])));
 		}
 
 		// SMF's sha1 function can give a funny result on Linux (Not our fault!). If we've now got the real one let the old one be valid!
