@@ -131,6 +131,7 @@ June 2009
  ! Improve the nohtml check as htmlspecialchars may of been applied already (Profile-Modify.php)
  * Font sizes weren't applied correctly in non-wysiwyg mode. (editor.js)
  ! BurningBoard3 login support causing undefined error related to password salt (LogInOut.php) [Bug 3545]
+ ! Sending http 500 error caused some mobiles not to show our error page (Errors.php)
 
 
 May 2009
