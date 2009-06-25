@@ -154,7 +154,7 @@ installExit();
 
 function initialize_inputs()
 {
-	global $databases;
+	global $databases, $incontext;
 
 	// Just so people using older versions of PHP aren't left in the cold.
 	if (!isset($_SERVER['PHP_SELF']))
@@ -200,6 +200,24 @@ function initialize_inputs()
 	</body>
 </html>';
 		exit;
+	}
+
+	// Are we calling the backup css file?
+	if (isset($_GET['infile_css']))
+	{
+		header('Content-Type: text/css');
+		template_css();
+		exit;
+	}
+
+	// Anybody home?
+	if (!isset($_GET['xml']))
+	{
+		$incontext['remote_files_available'] = false;
+		$test = fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
+		if ($test)
+			$incontext['remote_files_available'] = true;
+		fclose($test);
 	}
 
 	// Add slashes, as long as they aren't already being added.
@@ -1988,12 +2006,12 @@ function template_install_above()
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
-		<link rel="stylesheet" type="text/css" href="', ($upcontext['remote_files_available'] ? $smfsite . '/style.css' : $upgradeurl . '?infile_css'), '" />
+		<link rel="stylesheet" type="text/css" href="', ($incontext['remote_files_available'] ? $smfsite . '/style.css' : $installurl . '?infile_css'), '" />
 	</head>
 	<body>
 		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="', ($upcontext['remote_files_available'] ? $smfsite : 'Themes/default/images'), '/smflogo.gif" style=" float: right;" alt="Simple Machines" border="0" /></a>
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="', $smfsite, '/smflogo.gif" style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';" alt="Simple Machines" border="0" /></a>
+			<a href="http://www.simplemachines.org/" target="_blank"><img src="', ($incontext['remote_files_available'] ? $smfsite : 'Themes/default/images'), '/smflogo.gif" style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';" alt="Simple Machines" border="0" /></a>
+
 			<div title="Moogle Express!">', $txt['smf_installer'], '</div>
 		</div>
 		<div id="content">
