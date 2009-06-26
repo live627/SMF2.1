@@ -1266,6 +1266,10 @@ function MergeExecute($topics = array())
 	);
 	list ($member_started) = $smcFunc['db_fetch_row']($request);
 	list ($member_updated) = $smcFunc['db_fetch_row']($request);
+	// First and last message are the same, so only row was returned.
+	if ($member_updated === NULL)
+		$member_updated = $member_started;
+
 	$smcFunc['db_free_result']($request);
 
 	// Assign the first topic ID to be the merged topic.
