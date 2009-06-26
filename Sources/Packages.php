@@ -435,7 +435,7 @@ function PackageInstallTest()
 							'failed' => $failed,
 						);
 					}
-					else
+					elseif (!isset($context['actions'][$actual_filename]))
 					{
 						$context['actions'][$actual_filename] = array(
 							'type' => $txt['execute_modification'],
@@ -443,6 +443,11 @@ function PackageInstallTest()
 							'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success'],
 							'failed' => $failed,
 						);
+					}
+					else
+					{
+							$context['actions'][$actual_filename]['failed'] |= $failed;
+							$context['actions'][$actual_filename]['description'] = $context['actions'][$actual_filename]['failed'] ? $txt['package_action_failure'] : $txt['package_action_success'];
 					}
 				}
 				elseif ($mod_action['type'] == 'skipping')
