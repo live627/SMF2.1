@@ -593,6 +593,8 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 			else
 				$replace = $protocols[0] . '://' . $replace;
 		}
+		elseif (!$found && $protocols[0] == 'ftp')
+			$replace = $protocols[0] . '://' . preg_replace('~^(?!ftps?)[^:]+://~', '', $replace);
 		elseif (!$found)
 			$replace = $protocols[0] . '://' . $replace;
 
