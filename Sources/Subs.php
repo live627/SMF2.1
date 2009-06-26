@@ -300,7 +300,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$smcFunc['db_free_result']($result);
 
 			updateSettings(array(
-				'totalMessages' => $row['total_messages'],
+				'totalMessages' => $row['total_messages'] === null ? 0 : $row['total_messages'],
 				'maxMsgID' => $row['max_msg_id'] === null ? 0 : $row['max_msg_id']
 			));
 		}
@@ -354,7 +354,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$row = $smcFunc['db_fetch_assoc']($result);
 			$smcFunc['db_free_result']($result);
 
-			updateSettings(array('totalTopics' => $row['total_topics']));
+			updateSettings(array('totalTopics' => $row['total_topics'] === null ? 0 : $row['total_topics']));
 		}
 		break;
 
