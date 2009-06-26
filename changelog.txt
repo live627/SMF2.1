@@ -138,6 +138,7 @@ June 2009
  ! Package Manager marked the file test as successful sometimes when one edit failed (Packages.php) [Bug 3361]
  ! Deleting the last board caused db error (Subs.php)[Bug 3503]
  ! Merging an unapproved topic with an approved one caused db error (SplitTopics.php) [Bug 3505]
+ ! Null check was being applied twice to db_create_column (DbPackages-mysql.php)
 
 
 May 2009

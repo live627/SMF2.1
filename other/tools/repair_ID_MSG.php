@@ -17,39 +17,44 @@ $maxOnce = 500;
 // Step 0: Create the temporary table.
 if ($_GET['step'] <= 0)
 {
-	mysql_query("
-		DROP TABLE {$db_prefix}temp_messages");
+	$smcFunc['db_drop_table']('temp_messages');
 
 	// Create a new messages table.
-	db_query("
-		CREATE TABLE {$db_prefix}temp_messages (
-		  id_msg int(10) unsigned NOT NULL auto_increment,
-		  id_topic mediumint(8) unsigned NOT NULL default '0',
-		  poster_time int(10) unsigned NOT NULL default '0',
-		  id_member mediumint(8) unsigned NOT NULL default '0',
-		  subject tinytext NOT NULL default '',
-		  poster_name tinytext NOT NULL default '',
-		  poster_email tinytext NOT NULL default '',
-		  poster_ip tinytext NOT NULL default '',
-		  smileys_enabled tinyint(4) NOT NULL default '1',
-		  modified_time int(10) unsigned NOT NULL default '0',
-		  modified_name tinytext,
-		  body text,
-		  icon varchar(16) NOT NULL default 'xx',
-		  id_board smallint(5) unsigned NOT NULL default '0',
-		  old_id_msg int(10) unsigned NOT NULL default '0',
-		  PRIMARY KEY (id_msg),
-		  UNIQUE topic (id_topic, id_msg),
-		  KEY id_topic (id_topic),
-		  KEY id_member (id_member),
-		  KEY poster_time (poster_time),
-		  KEY ipIndex (poster_ip(15), id_topic),
-		  KEY participation (id_topic, id_member)
-		) TYPE=MyISAM", __FILE__, __LINE__);
+	$smcFunc['db_create_table']('temp_messages',
+		// Columns.
+		array(
+			array('name' => 'id_msg', 'type' => 'int', 'size' => 10, 'unsigned' => true, 'auto' => true),
+			array('name' => 'id_topic', 'type' => 'mediumint', 'size' => 8, 'unsigned' => true, 'default' => '0'),
+			array('name' => 'id_board', 'type' => 'smallint', 'size' => 5, 'unsigned' => true, 'default' => '0'),
+			array('name' => 'poster_time', 'type' => 'int', 'size' => 10, 'unsigned' => true, 'default' => '0'),
+			array('name' => 'id_member', 'type' => 'mediumint', 'size' => 8, 'unsigned' => true, 'default' => '0'),
+			array('name' => 'id_msg_modified', 'type' => 'int', 'size' => 10, 'unsigned' => true, 'default' => '0'),
+			array('name' => 'subject', 'type' => 'tinytext', 'default' => ''),
+			array('name' => 'poster_name', 'type' => 'tinytext', 'default' => ''),
+			array('name' => 'poster_email', 'type' => 'tinytext', 'default' => ''),
+			array('name' => 'poster_ip', 'type' => 'tinytext', 'default' => ''),
+			array('name' => 'smileys_enabled', 'type' => 'tinyint', 'size' => 4, 'default' => '1'),
+			array('name' => 'modified_time', 'type' => 'int', 'size' => 10, 'unsigned' => true, 'default' => '0'),
+			array('name' => 'modified_name', 'type' => 'tinytext'),
+			array('name' => 'body', 'type' => 'text'),
+			array('name' => 'icon', 'type' => 'varchar', 'size' => 16, 'default' => 'xx'),
+			array('name' => 'old_id_msg', 'type' => 'int', 'size' => 10, 'unsigned' => true, 'default' => '0'),
+		),
+		// Keys
+		array(
+			array('type' => 'primary', 'columns' => array('id_msg')),
+			array('name' => 'topic', 'type' => 'unique', 'columns' => array('id_topic', 'id_msg')),
+			array('name' => 'id_board', 'type' => 'unique', 'columns' => array('id_board', 'id_msg')),
+			array('name' => 'id_member', 'type' => 'unique', 'columns' => array('id_member', 'id_msg')),
+			array('name' => 'approved', 'columns' => array('approved')),
+			array('name' => 'ip_index', 'columns' => array('poster_ip(15)', 'id_topic')),
+			array('name' => 'participation', 'columns' => array('id_topic', 'id_member')),
+			array('name' => 'show_posts', 'columns' => array('id_member', 'id_board')),
+			array('name' => 'id_topic', 'columns' => array('id_topic')),
+	));
 
 	// Drop the old table if it's there.
-	mysql_query("
-		DROP TABLE {$db_prefix}old_messages");
+	$smcFunc['db_drop_table']('old_messages');
 }
 
 // Step 1: Copy in the data from the old table.
@@ -59,17 +64,21 @@ if ($_GET['step'] <= 1)
 	{
 		protectTimeOut('step=1;start=' . $start);
 
-		db_query("
-			INSERT INTO {$db_prefix}temp_messages
+		$smcFunc['db_query']('
+			INSERT INTO {db_prefix}temp_messages
 			SELECT
-				NULL, id_topic, poster_time, id_member, subject, poster_name, poster_email, poster_ip,
-				smileys_enabled, modified_time, modified_name, body, icon, id_board, id_msg
-			FROM {$db_prefix}messages
+				NULL, id_topic, id_board, poster_time, id_member, id_msg_modified, subject, poster_name, poster_email, poster_ip,
+				smileys_enabled, modified_time, modified_name, body, icon, approved, id_msg
+			FROM {db_prefix}messages
 			ORDER BY poster_time
-			LIMIT $start, $maxOnce", __FILE__, __LINE__);
+			LIMIT {int:start}, {int:max_once}',
+			array(
+				'start' = $start,
+				'max_once' => $maxOnce,
+		));
 
 		// If less rows were inserted than selected, we're done!
-		if (db_affected_rows() < $maxOnce)
+		if ($smcFunc['db_affected_rows']() < $maxOnce)
 			break;
 	}
 
@@ -83,23 +92,31 @@ if ($_GET['step'] <= 2)
 	{
 		protectTimeOut('step=2;start=' . $start);
 
-		$result = db_query("
+		$result = $smcFunc['db_query']('', '
 			SELECT a.id_attach, m.id_msg
-			FROM {$db_prefix}attachments AS a
-				INNER JOIN {$db_prefix}temp_messages AS m ON (m.old_id_msg = a.id_msg)
-			LIMIT $start, $maxOnce", __FILE__, __LINE__);
+			FROM {db_prefix}attachments AS a
+				INNER JOIN {db_prefix}temp_messages AS m ON (m.old_id_msg = a.id_msg)
+			LIMIT {int:start}, {int:max_once}',
+			array(
+				'start' => $start,
+				'max_once' => $maxOnce,
+		));
 
 		// All done!  No more attachments!
-		if (mysql_num_rows($result) < $maxOnce)
+		if ($smcFunc['db_num_rows']($result) < $maxOnce)
 			break;
 
-		while ($row = mysql_fetch_assoc($result))
-			db_query("
-				UPDATE {$db_prefix}attachments
-				SET id_msg = $row[id_msg]
-				WHERE id_attach = $row[id_attach]
-				LIMIT 1", __FILE__, __LINE__);
-		mysql_free_result($result);
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}attachments
+				SET id_msg = {int:id_msg}
+				WHERE id_attach = {int:id_attach}
+				LIMIT 1',
+				array(
+					'id_msg' => $row['id_msg'],
+					'id_attach' => $row['id_attach'],
+			));
+		$smcFunc['db_free_result']($result);
 	}
 
 	$_GET['start'] = -1;
@@ -112,51 +129,54 @@ if ($_GET['step'] <= 3)
 
 	if ($_GET['start'] == -1)
 	{
-		db_query("
-			RENAME TABLE {$db_prefix}messages TO {$db_prefix}old_messages,
-				{$db_prefix}temp_messages TO {$db_prefix}messages", __FILE__, __LINE__);
-		db_query("
-			ALTER TABLE {$db_prefix}messages
-			DROP COLUMN old_id_msg", __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			RENAME TABLE {db_prefix}messages TO {db_prefix}old_messages,
+				{db_prefix}temp_messages TO {db_prefix}messages', array());
+		$smcFunc['db_remove_column']('messages', 'old_id_msg');
 		$_GET['start'] = 0;
 
-		mysql_query("
-			ALTER TABLE {$db_prefix}topics
-			DROP INDEX firstMessage,
-			DROP INDEX lastMessage");
+		$smcFunc['db_remove_index']('topics', 'first_message');
+		$smcFunc['db_remove_index']('topics', 'last_message');
 	}
 
 	for ($start = $_GET['start']; true; $start += $maxOnce)
 	{
 		protectTimeOut('step=3;start=' . $start);
 
-		$result = db_query("
+		$result = $smcFunc['db_query']('', '
 			SELECT id_topic, MAX(id_msg) AS id_last_msg, MIN(id_msg) AS id_first_msg
-			FROM {$db_prefix}messages
+			FROM {db_prefix}messages
 			GROUP BY id_topic
-			LIMIT $start, $maxOnce", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($result))
-			db_query("
-				UPDATE {$db_prefix}topics
-				SET id_first_msg = $row[id_first_msg],
-					id_last_msg = $row[id_last_msg]
-				WHERE id_topic = $row[id_topic]
-				LIMIT 1", __FILE__, __LINE__);
+			LIMIT {int:start}, {int:maxOnce}',
+			array(
+				'start' => $start,
+				'max_once' => $maxOnce
+		));
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}topics
+				SET id_first_msg = {int:id_first_msg},
+					id_last_msg = {int:id_last_msg}
+				WHERE id_topic = {int:id_topic}
+				LIMIT 1',
+				array(
+					'id_first_msg' => $row['id_first_msg'],
+					'id_last_msg' => $row['id_last_msg'],
+					'id_topic' => $row['id_topic']
+			));
 
 		// No more rows... hurrah.
-		if (mysql_num_rows($result) < $maxOnce)
+		if ($smcFunc['db_num_rows']($result) < $maxOnce)
 			break;
 
-		mysql_free_result($result);
+		$smcFunc['db_free_result']($result);
 	}
 }
 
 if ($_GET['step'] <= 4)
 {
-	mysql_query("
-		ALTER TABLE {$db_prefix}topics
-		ADD UNIQUE firstMessage (id_first_msg, id_board),
-		ADD UNIQUE lastMessage (id_last_msg, id_board)");
+	$smcFunc['db_add_index']('topics', array('name' => 'first_message', 'type' => 'unique', 'columns' => array('id_first_msg', 'id_board')));
+	$smcFunc['db_add_index']('topics', array('name' => 'last_message', 'type' => 'unique', 'columns' => array('id_last_msg', 'id_board')));
 
 	echo 'Done!';
 }

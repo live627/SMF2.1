@@ -14,21 +14,26 @@ $_GET['step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
 if ($_GET['step'] <= 0)
 {
 	// Messages received by deleted members.
-	$result = db_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT DISTINCT pmr.id_member
-		FROM {$db_prefix}pm_recipients AS pmr
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
-		WHERE mem.id_member IS NULL", __FILE__, __LINE__);
+		FROM {db_prefix}pm_recipients AS pmr
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+		WHERE mem.id_member IS NULL', array());
 	$array = array();
-	while ($row = mysql_fetch_row($result))
+	while ($row = $smcFunc['db_fetch_row']($result))
 		$array[] = $row[0];
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	if (!empty($array))
-		db_query("
-			UPDATE {$db_prefix}pm_recipients
-			SET id_member = 0, deleted = 1
-			WHERE id_member IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}pm_recipients
+			SET id_member = {int:guest_id}, deleted = {int:deleted}
+			WHERE id_member IN ({array_int:members})',
+			array(
+				'guest_id' => 0,
+				'deleted' => 1,
+				'members' => $array,
+		));
 }
 
 // Step 1: Update the messages of any senders who are no more.
@@ -37,21 +42,26 @@ if ($_GET['step'] <= 1)
 	protectTimeOut('step=1');
 
 	// Messages sent by deleted members.
-	$result = db_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT DISTINCT pm.id_member_from
-		FROM {$db_prefix}personal_messages AS pm
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-		WHERE mem.id_member IS NULL", __FILE__, __LINE__);
+		FROM {db_prefix}personal_messages AS pm
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+		WHERE mem.id_member IS NULL', array());
 	$array = array();
-	while ($row = mysql_fetch_row($result))
+	while ($row = $smcFunc['db_fetch_row']($result))
 		$array[] = $row[0];
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	if (!empty($array))
-		db_query("
-			UPDATE {$db_prefix}personal_messages
-			SET id_member_from = 0, deleted_by_sender = 1
-			WHERE id_member_from IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}personal_messages
+			SET id_member_from = {int:id_from}, deleted_by_sender = {int:deleted}
+			WHERE id_member_from IN ({array_int:members})',
+			array(
+				'id_from' => 0,
+				'deleted' => 1,
+				'members' => $array
+			));
 }
 
 // Step 2: Remove any messages that should but haven't been deleted yet.
@@ -60,27 +70,38 @@ if ($_GET['step'] <= 2)
 	protectTimeOut('step=2');
 
 	// First check for deleted messages by all of the recipients.
-	$result = db_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT pm.id_pm, MIN(pmr.deleted) AS allDeleted
-		FROM {$db_prefix}personal_messages AS pm
-			INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
-		WHERE pm.deleted_by_sender = 1
+		FROM {db_prefix}personal_messages AS pm
+			INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
+		WHERE pm.deleted_by_sender = {int:deleted}
 		GROUP BY pm.id_pm
-		HAVING allDeleted = 1", __FILE__, __LINE__);
+		HAVING allDeleted = {int:all_deleted}',
+		array(
+			'deleted' => 1,
+			'all_deleted' => 1
+		));
 	$array = array();
-	while ($row = mysql_fetch_row($result))
+	while ($row = $smcFunc['db_fetch_row']($result))
 		$array[] = $row[0];
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	if (!empty($array))
 	{
-		db_query("
-			DELETE FROM {$db_prefix}pm_recipients
-			WHERE id_pm IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
-		db_query("
-			DELETE FROM {$db_prefix}personal_messages
-			WHERE id_pm IN (" . implode(', ', $array) . ")
-			LIMIT " . count($array), __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}pm_recipients
+			WHERE id_pm IN ({array_int:pms})',
+			array(
+				'pms' => $array
+		));
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}personal_messages
+			WHERE id_pm IN ({array_int:pms})
+			LIMIT {int:count}',
+			array(
+				'pms' => $array,
+				'count' => count($array),
+		));
 	}
 }
 
@@ -90,37 +111,44 @@ if ($_GET['step'] <= 3)
 	protectTimeOut('step=3');
 
 	// id_pm is in the pm_recipients table but not the personal_messages table.
-	$result = db_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT pm.id_pm
-		FROM {$db_prefix}personal_messages AS pm
-			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
-		WHERE pmr.id_pm IS NULL", __FILE__, __LINE__);
+		FROM {db_prefix}personal_messages AS pm
+			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
+		WHERE pmr.id_pm IS NULL', array());
 	$array = array();
-	while ($row = mysql_fetch_row($result))
+	while ($row = $smcFunc['db_fetch_row']($result))
 		$array[] = $row[0];
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	if (!empty($array))
-		db_query("
-			DELETE FROM {$db_prefix}personal_messages
-			WHERE id_pm IN (" . implode(', ', $array) . ")
-			LIMIT " . count($array), __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}personal_messages
+			WHERE id_pm IN ({array_int:pms})
+			LIMIT {int:count}',
+			array(
+				'pms' => $array,
+				'count' => count($array),
+		));
 
 	// id_pm is in the personal_messages table but not the pm_recipients table.
-	$result = db_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT pmr.id_pm
-		FROM {$db_prefix}pm_recipients AS pmr
-			LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
-		WHERE pm.id_pm IS NULL", __FILE__, __LINE__);
+		FROM {db_prefix}pm_recipients AS pmr
+			LEFT JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+		WHERE pm.id_pm IS NULL', array());
 	$array = array();
-	while ($row = mysql_fetch_row($result))
+	while ($row = $smcFunc['db_fetch_row']($result))
 		$array[] = $row[0];
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	if (!empty($array))
-		db_query("
-			DELETE FROM {$db_prefix}pm_recipients
-			WHERE id_pm IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}pm_recipients
+			WHERE id_pm IN ({array_int:pms})',
+			array(
+				'pms' => $array
+		));
 }
 
 // Step 3: Recount the total number of IM's for all the members.
@@ -128,24 +156,30 @@ if ($_GET['step'] <= 4)
 {
 	protectTimeOut('step=4');
 
-	$result = db_query("
+	$result = $smcFunc['db_query']('', '
 		SELECT mem.id_member, mem.instant_messages, COUNT(*) AS count
 		FROM {$db_prefix}members AS mem
-			INNER JOIN {$db_prefix}pm_recipients AS pm ON (pm.id_member = mem.id_member)
-		WHERE pm.deleted != 1
+			INNER JOIN {db_prefix}pm_recipients AS pm ON (pm.id_member = mem.id_member)
+		WHERE pm.deleted != {int:deleted}
 		GROUP BY mem.id_member
-		HAVING count != instant_messages", __FILE__, __LINE__);
+		HAVING count != instant_messages',
+		array(
+			'deleted' => 1);
 	$array = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smcFunc['db_fetch_assoc']($result))
 		$array[] = $row;
-	mysql_free_result($result);
+	$smcFunc['db_free_result']($result);
 
 	foreach ($array as $member)
-		db_query("
-			UPDATE {$db_prefix}members
-			SET instant_messages = $member[count]
-			WHERE id_member = $member[id_member]
-			LIMIT 1", __FILE__, __LINE__);
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}members
+			SET instant_messages = {int:ims}
+			WHERE id_member = {int:id_mem}
+			LIMIT 1',
+			array(
+				'ims' => $member['count'],
+				'id_mem' => $member['id_member'],
+		));
 }
 
 if ($_GET['step'] <= 5)

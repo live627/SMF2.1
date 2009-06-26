@@ -23,7 +23,8 @@
 **********************************************************************************/
 
 
-@set_magic_quotes_runtime(0);
+if (function_exists('set_magic_quotes_runtime'))
+	@set_magic_quotes_runtime(0);
 error_reporting(E_ALL);
 if (@ini_get('session.save_handler') == 'user')
 	@ini_set('session.save_handler', 'files');
@@ -174,7 +175,7 @@ function step2()
 {
 	global $start_time, $table_sizes, $total_size, $before_length, $write_data, $smcFunc;
 
-	$db_connection = smc_compat_database($_POST['db_type'], $_POST['db_server'], $_POST['db_user'], $_POST['db_password']);
+	$db_connection = smc_compat_database($_POST['db_type'], $_POST['db_server'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
 	if (!$db_connection)
 		return step1('Cannot connect to the database server with the supplied data.<br /><br />If you are not sure about what to type in, please contact your host.');
 
@@ -1373,6 +1374,7 @@ function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_pre
 	$smcFunc['db_insert'] = 'smf_db_insert';
 	$smcFunc['db_query'] = 'smf_db_query';
 	$smcFunc['db_quote'] = 'smf_db_query';
+	$smcFunc['db_error'] = 'mysql_error';
 
 	return $db_connection;
 }
@@ -1452,4 +1454,5 @@ function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 
 	return $db_connection;
 }
+
 ?>

@@ -34,11 +34,12 @@ generate_status();
 
 function initialize_inputs()
 {
-	global $db_prefix;
+	global $db_prefix, $context, $db_show_debug;
 
 	// Turn off magic quotes runtime and enable error reporting.
 	@set_magic_quotes_runtime(0);
 	error_reporting(E_ALL);
+	$db_show_debug = false;
 
 	$possible = array(
 		dirname(__FILE__),
@@ -81,7 +82,6 @@ function initialize_inputs()
 			}
 			$dp->close();
 		}
-
 		if (!@file_exists($dir . '/Settings.php'))
 			return;
 	}
@@ -106,12 +106,14 @@ function get_linux_data()
 	$context['load_averages'] = @implode('', @get_file_data('/proc/loadavg'));
 	if (!empty($context['load_averages']) && preg_match('~^([^ ]+?) ([^ ]+?) ([^ ]+)~', $context['load_averages'], $matches) != 0)
 		$context['load_averages'] = array($matches[1], $matches[2], $matches[3]);
-	elseif (($context['load_averages'] = @`uptime 2>/dev/null`) != null && preg_match('~load average[s]?: (\d+\.\d+), (\d+\.\d+), (\d+\.\d+)~i', $context['load_averages'], $matches) != 0)
+	elseif (($context['load_averages'] = @`uptime 2>/dev/null`) != null && preg_match('~load average[s]?: (\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)~i', $context['load_averages'], $matches) != 0)
 		$context['load_averages'] = array($matches[1], $matches[2], $matches[3]);
 	else
 		unset($context['load_averages']);
 
-	$context['cpu_info'] = array();
+	$context['cpu_info'] = array(
+		'frequency' => 'MHz',
+	);
 	$cpuinfo = @implode('', @get_file_data('/proc/cpuinfo'));
 	if (!empty($cpuinfo))
 	{
@@ -119,7 +121,7 @@ function get_linux_data()
 		if (preg_match('~model name\s+:\s*([^\n]+)~i', $cpuinfo, $match) != 0)
 			$context['cpu_info']['model'] = $match[1];
 		if (preg_match('~cpu mhz\s+:\s*([^\n]+)~i', $cpuinfo, $match) != 0)
-			$context['cpu_info']['mhz'] = $match[1];
+			$context['cpu_info']['hz'] = $match[1];
 	}
 	else
 	{
@@ -128,20 +130,32 @@ function get_linux_data()
 		if (!empty($cpuinfo))
 		{
 			if (preg_match('~clock (\d+)~', $cpuinfo, $match) != 0)
-				$context['cpu_info']['mhz'] = $match[1];
+				$context['cpu_info']['hz'] = $match[1];
 			$cpuinfo = explode("\n", $cpuinfo);
 			if (isset($cpuinfo[2]))
 				$context['cpu_info']['model'] = trim($cpuinfo[2]);
 		}
 		else
 		{
+			// Mac OS X?
+			if (strpos(strtolower(PHP_OS), 'darwin') === 0)
+			{
+				$cpuinfo = @`sysctl machdep.cpu.brand_string 2>/dev/null`;
+				if (preg_match('~machdep\.cpu\.brand_string:(.+)@([\s\d\.]+)(.+)~', $cpuinfo, $match) != 0)
+				{
+					$context['cpu_info']['model'] = trim($match[1]);
+					$context['cpu_info']['hz'] = trim($match[2]);
+					$context['cpu_info']['frequency'] = strtolower(trim($match[3])) == 'ghz' ? 'GHz' : 'MHz';
+				}
+			}
+
 			// BSD?
 			$cpuinfo = @`sysctl hw.model 2>/dev/null`;
-			if (preg_match('~hw\.model:(.+)~', $cpuinfo, $match) != 0)
+			if (empty($context['cpu_info']['model']) && preg_match('~hw\.model:(.+)~', $cpuinfo, $match) != 0)
 				$context['cpu_info']['model'] = trim($match[1]);
 			$cpuinfo = @`sysctl dev.cpu.0.freq 2>/dev/null`;
-			if (preg_match('~dev\.cpu\.0\.freq:(.+)~', $cpuinfo, $match) != 0)
-				$context['cpu_info']['mhz'] = trim($match[1]);
+			if (empty($context['cpu_info']['hz']) && preg_match('~dev\.cpu\.0\.freq:(.+)~', $cpuinfo, $match) != 0)
+				$context['cpu_info']['hz'] = trim($match[1]);
 		}
 	}
 
@@ -252,7 +266,7 @@ function get_linux_data()
 	{
 		// FreeBSD should have hw.physmem.
 		$meminfo = @`sysctl hw.physmem 2>/dev/null`;
-		if (!empty($meminfo) && preg_match('~hw\.physmem: (\d+)~i', $meminfo, $match) != 0)
+		if (strpos(strtolower(PHP_OS), 'darwin') !== 0 && !empty($meminfo) && preg_match('~hw\.physmem: (\d+)~i', $meminfo, $match) != 0)
 		{
 			$context['memory_usage']['total'] = unix_memsize($match[1]);
 
@@ -276,13 +290,29 @@ function get_linux_data()
 		{
 			$meminfo = @`top -l1 2>/dev/null`;
 
-			if (!empty($meminfo) && preg_match('~PhysMem: (?:.+?) ([\d\.]+\w) used, ([\d\.]+\w) free~', $meminfo, $match) != 0)
+			if (!empty($meminfo) && preg_match('~PhysMem:\s+(?:.+?)\s+([\d\.]+\w) used,\s+([\d\.]+\w) free~', $meminfo, $match) != 0)
 			{
 				$context['memory_usage']['used'] = unix_memsize($match[1]);
 				$context['memory_usage']['free'] = unix_memsize($match[2]);
-				$context['memory_usage']['total'] = $context['memory_usage']['used'] + $context['memory_usage']['total'];
+				$context['memory_usage']['total'] = $context['memory_usage']['used'] + $context['memory_usage']['free'];
 			}
 		}
+	}
+
+	// Can we obtain an uptime?
+	$lastreboot = @get_file_data('/proc/uptime');
+	if (!empty($lastreboot))
+	{
+		$lastreboot = explode(' ', $lastreboot[0]);
+		$context['lastserverreboot'] = time() - trim($lastreboot[0]);
+	}
+	// Mac OS X and others?
+	if (empty($context['lastserverreboot']))
+	{
+		$lastreboot = @`sysctl kern.boottime 2>/dev/null`;
+
+		if (!empty($lastreboot) && preg_match('~kern\.boottime: { sec\s+=\s+(\d+),~', $lastreboot, $match) != 0)
+			$context['lastserverreboot'] = $match[1];
 	}
 
 	$context['operating_system']['type'] = 'unix';
@@ -440,7 +470,7 @@ function get_windows_data()
 			if (preg_match('~\[01\]: (.+?) (\~?\d+) Mhz$~i', $values[$i], $match) != 0)
 			{
 				$context['cpu_info']['model'] = $match[1];
-				$context['cpu_info']['mhz'] = $match[2];
+				$context['cpu_info']['hz'] = $match[2];
 			}
 
 		$context['memory_usage'] = array();
@@ -750,8 +780,9 @@ function get_mysql_data()
 
 function generate_status()
 {
-	global $context, $command_line;
+	global $context, $command_line, $db_show_debug;
 
+	$context['debug'] = empty($db_show_debug) ? false : true;
 	show_header();
 
 	if (strpos(strtolower(PHP_OS), 'win') === 0)
@@ -765,7 +796,9 @@ function generate_status()
 		if (!empty($context['operating_system']['name']))
 			echo 'Operating System:   ', trim($context['operating_system']['name']), "\n";
 		if (!empty($context['cpu_info']))
-			echo 'Processor:          ', trim($context['cpu_info']['model']), ' (', trim($context['cpu_info']['mhz']), 'MHz)', "\n";
+			echo 'Processor:          ', trim($context['cpu_info']['model']), ' (', trim($context['cpu_info']['hz']), $context['cpu_info']['frequency'], ')', "\n";
+		if ($context['debug'] && !empty($context['lastserverreboot']))
+			echo 'Server Last Reboot:        ', date(DATE_RSS, $context['lastserverreboot']), "\n";
 		if (isset($context['load_averages']))
 			echo 'Load averages:      ', implode(', ', $context['load_averages']), "\n";
 		if (!empty($context['running_processes']))
@@ -825,7 +858,14 @@ function generate_status()
 		echo '
 				<tr>
 					<th valign="top" style="text-align: left; width: 30%;">Processor:</th>
-					<td>', strtr($context['cpu_info']['model'], array('(R)' => '&reg;')), ' (', $context['cpu_info']['mhz'], 'MHz)</td>
+					<td>', strtr($context['cpu_info']['model'], array('(R)' => '&reg;')), ' (', $context['cpu_info']['hz'], $context['cpu_info']['frequency'], ')</td>
+				</tr>';
+
+	if ($context['debug'] && !empty($context['lastserverreboot']))
+		echo '
+				<tr>
+					<th valign="top" style="text-align: left; width: 30%;">Server Last Reboot:</th>
+					<td>', date(DATE_RSS, $context['lastserverreboot']), '</td>
 				</tr>';
 
 	if (isset($context['load_averages']))
@@ -986,6 +1026,13 @@ function generate_status()
 			<div class="righttext">MySQL ', $context['mysql_version'], '</div>
 			<table width="100%" cellpadding="2" cellspacing="0" border="0">';
 
+		// Has this server been running less than 1 day?
+		if (!empty($context['lastserverreboot']) && time() - $context['lastserverreboot'] < 86400)
+			echo '
+				<tr>
+					<th valign="top" colspan="2" style="color:red;">We have detected this server was restarted less than 24 Hours ago. These recommendations may not be accurate.</td>
+				</tr>';
+			
 		foreach ($context['mysql_statistics'] as $stat)
 		{
 			$warning = (isset($stat['max']) && $stat['value'] > $stat['max']) || (isset($stat['min']) && $stat['value'] < $stat['min']);
@@ -1075,13 +1122,13 @@ function show_header()
 		<style type="text/css">
 			body
 			{
-				background-color: #E5E5E8;
+				background-color: #E9EEF2;
 				margin: 0px;
 				padding: 0px;
 			}
 			body, td
 			{
-				color: #000000;
+				color: #444444;
 				font-size: small;
 				font-family: verdana, sans-serif;
 			}
@@ -1111,7 +1158,7 @@ function show_header()
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F6F6F6;
+				background-color: #f0f4f7;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
