@@ -37,50 +37,32 @@ show_footer();
 function initialize_inputs()
 {
 	// Turn off magic quotes runtime and enable error reporting.
-	@set_magic_quotes_runtime(0);
+	if (function_exists('set_magic_quotes_runtime'))
+		@set_magic_quotes_runtime(0);
 	error_reporting(E_ALL);
 
 	// Add slashes, as long as they aren't already being added.
-	if (@get_magic_quotes_gpc() == 0)
-	{
+	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() == 0)
 		foreach ($_POST as $k => $v)
 			$_POST[$k] = addslashes($v);
-	}
 
 	$_GET['a'] = (string) @$_GET['a'];
 	$GLOBALS['this_url'] = 'http://' . (empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST']) . $_SERVER['PHP_SELF'];
 }
 
-function initialize_database()
+function db_query($id, $query, $values)
 {
-	global $db_prefix;
+	global $smcFunc;
 
-	if (!file_exists(dirname(__FILE__) . '/Settings.php'))
-	{
-		echo '
-		<div class="error_message">
-			This utility was unable to find your Settings.php file!  Please make sure this script exists in the same directory as SMF is installed.
-		</div>';
+	$string = $smcFunc['db_quote']($query, $values);
 
-		show_footer();
-		die;
-	}
-
-	// For now.
-	require_once(dirname(__FILE__) . '/Settings.php');
-	mysql_connect($db_server, $db_user, $db_passwd);
-	mysql_select_db($db_name);
-}
-
-function db_query($string)
-{
 	echo 'I would run: <pre>', $string, '</pre>';
 
 	if (substr(trim($string), 0, 6) == 'SELECT')
 	{
-		$ret = mysql_query($string);
+		$ret = $smcFunc['db_query']($id, $string, array());
 		if (!$ret)
-			die(mysql_error());
+			exit($smcFunc['db_error']());
 		return $ret;
 	}
 }
@@ -168,7 +150,7 @@ function action_resort()
 {
 	global $db_prefix;
 
-	initialize_database();
+	smc_compat_dtabase();
 
 	$tables = array(
 		'topics' => array(
@@ -267,16 +249,12 @@ function action_resort()
 	$_GET['start'] = isset($_GET['start']) ? (int) $_GET['start'] : 0;
 
 	if ($_GET['step'] <= 0)
-	{
-		db_query("
-			ALTER TABLE {$db_prefix}$table
-			ADD COLUMN resort_id int(10) unsigned NOT NULL default 0");
-
-		// Timeout?
-	}
+		$smcFunc['db_add_column']($table, array('name' => 'resort_id', 'type' => 'int', 'size' => 10, 'unsigned' => true, 'default' => '0'));
 
 	if ($_GET['step'] <= 1)
 	{
+		protectTimeOut('step=1');
+
 		$rows = 500;
 
 		$query = '
@@ -294,20 +272,29 @@ function action_resort()
 
 		while (true)
 		{
-			// Timeout?
+			protectTimeOut('step=1&start=' . $_GET['start']);
 
-			$request = db_query($query . "
-				LIMIT $_GET[start], $rows");
-			while ($row = mysql_fetch_assoc($request))
-				db_query("
-					UPDATE {$db_prefix}$table
-					SET resort_id = " . (++$_GET['start']) . "
-					WHERE " . $table_data['primary'] . " = $row[id]
-					LIMIT 1");
+			$request = $smcFunc['db_query']('', $query . '
+				LIMIT {int:start}, {int:limit}',
+				array(
+					'start' => $_GET['start'],
+					'limit' => $rows);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}{raw:table}
+					SET resort_id = {int:resort_id}
+					WHERE {raw:column} = {raw:value}
+					LIMIT 1',
+					array(
+						'table' => $table,
+						'resort_id' => ++$_GET['start'],
+						'column' => $table_data['primary'],
+						'value' => $row['id'],
+				));
 
-			if (mysql_num_rows($request) < $rows)
+			if ($smcFunc['db_num_rows']($request) < $rows)
 				break;
-			mysql_free_result($request);
+			$smcFunc['db_free_result']($request);
 		}
 
 		$_GET['start'] = 0;
@@ -315,19 +302,11 @@ function action_resort()
 
 	if ($_GET['step'] <= 2)
 	{
+		protectTimeOut('step=2');
+
 		foreach ($table_data['depends'] as $t => $dep)
-		{
-			$add = array();
 			foreach ($dep as $c)
-				$add[] = "ADD COLUMN resort_$c int(10) unsigned NOT NULL default 0";
-
-			db_query("
-				ALTER TABLE {$db_prefix}$t
-				" . implode(',
-				', $add));
-		}
-
-		// Timeout?
+				$smcFunc['db_add_column']($table, array('name' => 'resort_' . $c, 'type' => 'int', 'size' => 10, 'unsigned' => true, 'default' => '0'));
 	}
 
 	if ($_GET['step'] <= 3)
@@ -336,27 +315,34 @@ function action_resort()
 
 		while (true)
 		{
-			// Timeout?
+			protectTimeOut('step=3&start=' . $_GET['start']);
 
-			$request = db_query("
-				SELECT $table_data[primary] AS id, resort_id
-				FROM {$db_prefix}$table
-				LIMIT $_GET[start], $rows");
-			while ($row = mysql_fetch_assoc($request))
-			{
+			$request = $smcFunc['db_query']('', '
+				SELECT {raw:column_id} AS id, resort_id
+				FROM {db_prefix}{raw:table}
+				LIMIT {int:start}, {int:limit}',
+				array(
+					'table' => $table,
+					'column_id' => $table_data['primary'],
+					'start' => $_GET['start'],
+					'limit' => $rows,
+			));
+			while ($row = $smcFunc['db_fetch_assoc']($request))
 				foreach ($table_data['depends'] as $t => $dep)
 					foreach ($dep as $c)
-					{
-						db_query("
-							UPDATE {$db_prefix}$t
-							SET resort_$c = $row[resort_id]
-							WHERE $c = $row[id]");
-					}
-			}
-
-			if (mysql_num_rows($request) < $rows)
+						$smcFunc['db_query']('', '
+							UPDATE {db_prefix}{raw:table}
+							SET resort_{raw:column} = {int:value}
+							WHERE {raw:column} = {int:id}',
+							array(
+								'table' => $t,
+								'column' => $c,
+								'value' => $row['resort_id'],
+								'id' => $row['id'],
+						));
+			if ($smcFunc['db_num_rows']($request) < $rows)
 				break;
-			mysql_free_result($request);
+			$smcFunc['db_free_result']($request);
 		}
 
 		$_GET['start'] = 0;
@@ -364,33 +350,37 @@ function action_resort()
 
 	if ($_GET['step'] <= 4)
 	{
-		db_query("
-			UPDATE {$db_prefix}$table
-			SET $table_data[primary] = resort_id");
+		protectTimeOut('step=4');
 
-		db_query("
-			ALTER TABLE {$db_prefix}$table
-			DROP COLUMN resort_id");
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}{raw:table}
+			SET {raw:column} = resort_id',
+			array(
+				'table' => $table,
+				'column' => $table_data['primary'],
+		));
 
-		// Timeout?
+		$smcFunc['db_remove_column']($table, 'resort_id');
 	}
 
 	if ($_GET['step'] <= 5)
 	{
+		protectTimeOut('step=5');
+
 		foreach ($table_data['depends'] as $t => $dep)
 		{
 			foreach ($dep as $c)
 			{
-				db_query("
-					UPDATE {$db_prefix}$t
-					SET $c = resort_$c");
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}{raw:table}
+					SET {raw:column} = resort_{raw:column}',
+					array(
+						'table' => $t,
+						'column' => $c
+				));
 
-				db_query("
-					ALTER TABLE {$db_prefix}$t
-					DROP COLUMN resort_$c");
+				$smcFunc['db_remove_column']($t, 'resort_' . $c);
 			}
-
-			// Timeout?
 		}
 	}
 }
@@ -557,6 +547,375 @@ function show_footer()
 		</div>
 	</body>
 </html>';
+}
+
+// Don't let the script timeout on us...
+function protectTimeOut($request)
+{
+	global $startTime;
+
+	@set_time_limit(300);
+
+	if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $startTime)) < 10)
+		return;
+
+	echo '
+		<em>This repair has paused to avoid overloading your server, please click continue.</em><br />
+		<br />
+		<form action="', $_SERVER['PHP_SELF'], '?action=' $_REQUEST['action'], '&', (isset($_REQUEST['sa']) ? 'sa=' . $_REQUEST['sa'] : '') . '&' . $request, '" method="post" name="autoSubmit">
+			<input type="submit" value="Continue" class="button_submit" />
+		</form>
+		<script type="text/javascript"><!-- // --><![CDATA[
+			window.onload = doAutoSubmit;
+			var countdown = 3;
+
+			function doAutoSubmit()
+			{
+				if (countdown == 0)
+					document.autoSubmit.submit();
+				else if (countdown == -1)
+					return;
+
+				document.autoSubmit.b.value = "Continue (" + countdown + ")";
+				countdown--;
+
+				setTimeout("doAutoSubmit();", 1000);
+			}
+		// ]]></script>';
+	exit;
+}
+
+// Compat mode!
+function smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
+{
+	global $mysql_set_mod, $sourcedir, $db_connection, $db_prefix, $smcFunc;
+
+	if (!empty($db_options['persist']))
+		$db_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
+	else
+		$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
+
+	// Something's wrong, show an error if its fatal (which we assume it is)
+	if (!$db_connection)
+	{
+		if (!empty($db_options['non_fatal']))
+			return null;
+		else
+		{
+			if (file_exists($sourcedir . '/Subs-Auth.php'))
+			{
+				require_once($sourcedir . '/Subs-Auth.php');
+				show_db_error();
+			}
+			exit('Sorry, SMF was unable to connect to database.');
+		}
+	}
+
+	// Select the database, unless told not to
+	if (empty($db_options['dont_select_db']) && !@mysql_select_db($db_name, $connection) && empty($db_options['non_fatal']))
+	{
+		if (file_exists($sourcedir . '/Subs-Auth.php'))
+		{
+			require_once($sourcedir . '/Subs-Auth.php');
+			show_db_error();
+		}
+		exit('Sorry, SMF was unable to connect to database.');
+	}
+	else
+		$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
+
+	// Some core functions.
+	function smf_db_replacement__callback($matches)
+	{
+		global $db_callback, $user_info, $db_prefix;
+
+		list ($values, $connection) = $db_callback;
+
+		if ($matches[1] === 'db_prefix')
+			return $db_prefix;
+
+		if ($matches[1] === 'query_see_board')
+			return $user_info['query_see_board'];
+
+		if ($matches[1] === 'query_wanna_see_board')
+			return $user_info['query_wanna_see_board'];
+
+		if (!isset($matches[2]))
+			smf_db_error_backtrace('Invalid value inserted or no type specified.', '', E_USER_ERROR, __FILE__, __LINE__);
+
+		if (!isset($values[$matches[2]]))
+			smf_db_error_backtrace('The database value you\'re trying to insert does not exist: ' . htmlspecialchars($matches[2]), '', E_USER_ERROR, __FILE__, __LINE__);
+
+		$replacement = $values[$matches[2]];
+
+		switch ($matches[1])
+		{
+			case 'int':
+				if (!is_numeric($replacement) || (string) $replacement !== (string) (int) $replacement)
+					smf_db_error_backtrace('Wrong value type sent to the database. Integer expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+				return (string) (int) $replacement;
+			break;
+
+			case 'string':
+			case 'text':
+				return sprintf('\'%1$s\'', mysql_real_escape_string($replacement, $connection));
+			break;
+
+			case 'array_int':
+				if (is_array($replacement))
+				{
+					if (empty($replacement))
+						smf_db_error_backtrace('Database error, given array of integer values is empty. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+					foreach ($replacement as $key => $value)
+					{
+						if (!is_numeric($value) || (string) $value !== (string) (int) $value)
+							smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+						$replacement[$key] = (string) (int) $value;
+					}
+
+					return implode(', ', $replacement);
+				}
+				else
+					smf_db_error_backtrace('Wrong value type sent to the database. Array of integers expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+			break;
+
+			case 'array_string':
+				if (is_array($replacement))
+				{
+					if (empty($replacement))
+						smf_db_error_backtrace('Database error, given array of string values is empty. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+
+					foreach ($replacement as $key => $value)
+						$replacement[$key] = sprintf('\'%1$s\'', mysql_real_escape_string($value, $connection));
+
+					return implode(', ', $replacement);
+				}
+				else
+					smf_db_error_backtrace('Wrong value type sent to the database. Array of strings expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+			break;
+
+			case 'date':
+				if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
+					return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
+				else
+					smf_db_error_backtrace('Wrong value type sent to the database. Date expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+			break;
+
+			case 'float':
+				if (!is_numeric($replacement))
+					smf_db_error_backtrace('Wrong value type sent to the database. Floating point number expected. (' . $matches[2] . ')', '', E_USER_ERROR, __FILE__, __LINE__);
+				return (string) (float) $replacement;
+			break;
+
+			case 'identifier':
+				// Backticks inside identifiers are supported as of MySQL 4.1. We don't need them for SMF.
+				return '`' . strtr($replacement, array('`' => '', '.' => '')) . '`';
+			break;
+
+			case 'raw':
+				return $replacement;
+			break;
+
+			default:
+				smf_db_error_backtrace('Undefined type used in the database query. (' . $matches[1] . ':' . $matches[2] . ')', '', false, __FILE__, __LINE__);
+			break;
+		}
+	}
+
+	// Because this is just compat mode, this is good enough.
+	function smf_db_query($execute = true, $db_string, $db_values)
+	{
+		global $db_callback, $db_connection;
+
+		// Only bother if there's something to replace.
+		if (strpos($db_string, '{') !== false)
+		{
+			// This is needed by the callback function.
+			$db_callback = array($db_values, $db_connection);
+
+			// Do the quoting and escaping
+			$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
+
+			// Clear this global variable.
+			$db_callback = array();
+		}
+
+		// We actually make the query in compat mode.
+		if ($execute === false)
+			return $db_string;
+		return mysql_query($db_string, $db_connection);
+	}
+
+	// Insert some data...
+	function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
+	{
+		global $smcFunc, $db_connection, $db_prefix;
+
+		// With nothing to insert, simply return.
+		if (empty($data))
+			return;
+
+		// Replace the prefix holder with the actual prefix.
+		$table = str_replace('{db_prefix}', $db_prefix, $table);
+
+		// Inserting data as a single row can be done as a single array.
+		if (!is_array($data[array_rand($data)]))
+			$data = array($data);
+
+		// Create the mold for a single row insert.
+		$insertData = '(';
+		foreach ($columns as $columnName => $type)
+		{
+			// Are we restricting the length?
+			if (strpos($type, 'string-') !== false)
+				$insertData .= sprintf('SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
+			else
+				$insertData .= sprintf('{%1$s:%2$s}, ', $type, $columnName);
+		}
+		$insertData = substr($insertData, 0, -2) . ')';
+
+		// Create an array consisting of only the columns.
+		$indexed_columns = array_keys($columns);
+
+		// Here's where the variables are injected to the query.
+		$insertRows = array();
+		foreach ($data as $dataRow)
+			$insertRows[] = smf_db_query(true, $insertData, array_combine($indexed_columns, $dataRow));
+
+		// Determine the method of insertion.
+		$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
+
+		// Do the insert.
+		$smcFunc['db_query']('', '
+			' . $queryTitle . ' INTO ' . $table . '(`' . implode('`, `', $indexed_columns) . '`)
+			VALUES
+				' . implode(',
+				', $insertRows),
+			array(
+				'security_override' => true,
+			)
+		);
+	}
+
+	// Now, go functions, spread your love.
+	$smcFunc['db_free_result'] = '$smcFunc['db_free_result']';
+	$smcFunc['db_fetch_row'] = 'mysql_fetch_row';
+	$smcFunc['db_fetch_assoc'] = 'mysql_fetch_assoc';
+	$smcFunc['db_num_rows'] = 'mysql_num_rows';
+	$smcFunc['db_insert'] = 'smf_db_insert';
+	$smcFunc['db_query'] = 'smf_db_query';
+	$smcFunc['db_quote'] = 'smf_db_query';
+	$smcFunc['db_error'] = 'mysql_error';
+
+	return $db_connection;
+}
+
+function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_name)
+{
+	global $smcFunc, $db_connection, $modSettings;
+
+	// Gonna need a lot of memory.
+	if (@ini_get('memory_limit') < 128)
+		@ini_set('memory_limit', '128M');
+	@set_time_limit(300);
+	ignore_user_abort(true);
+	if (function_exists('apache_reset_timeout'))
+		@apache_reset_timeout();
+
+	// Attempt to make a connection.
+	$db_connection = false;
+	if (file_exists(dirname(__FILE__) . '/Settings.php'))
+		require_once(dirname(__FILE__) . '/Settings.php');
+	if (isset($sourcedir))
+	{
+		define('SMF', 1);
+
+		if (empty($smcFunc))
+			$smcFunc = array();
+
+		// Default the database type to MySQL.
+		if (empty($db_type) || !file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+			$db_type = 'mysql';
+
+		require_once($sourcedir . '/Errors.php');
+		require_once($sourcedir . '/Subs.php');
+		require_once($sourcedir . '/Load.php');
+		require_once($sourcedir . '/Security.php');
+		require_once($sourcedir . '/Subs-Auth.php');
+
+		// compat mode. Active!
+		if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php') && $db_type == 'mysql')
+		{
+			// First try a persistent connection.
+			$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+
+			if (!$db_connection)
+				$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+		}
+		else
+		{
+			require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+			$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+
+			if (!$db_connection)
+				$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+		}
+	}
+	else
+	{
+		$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'persist' => true));
+
+		if (!$db_connection)
+			$db_connection = smc_compat_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+	}
+
+	// No version?
+	if (empty($smcFunc['db_get_version']) && function_exists('db_extend'))
+		db_extend('extra');
+	if (empty($smcFunc['db_get_version'])
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT VERSION()',
+			array(
+			)
+		);
+		list ($smcFunc['db_get_version']) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	}
+
+	// For create backup, we tell it to ignore security checks.
+	$modSettings['disableQueryCheck'] = 1;
+
+	return $db_connection;
+}
+
+// Compat array_combine
+if (!function_exists('array_combine'))
+{
+	function array_combine($keys, $values)
+	{
+		$ret = array();
+		if (($array_error = !is_array($keys) || !is_array($values)) || empty($values) || ($count=count($keys)) != count($values))
+		{
+			trigger_error('array_combine(): Both parameters should be non-empty arrays with an equal number of elements', E_USER_WARNING);
+
+			if ($array_error)
+				return;
+			return false;
+		}
+
+		// Ensure that both arrays aren't associative arrays.
+		$keys = array_values($keys);
+		$values = array_values($values);
+
+		for($i=0; $i < $count; $i++)
+			$ret[$keys[$i]] = $values[$i];
+
+		return $ret;
+	}
 }
 
 ?>

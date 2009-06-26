@@ -38,15 +38,14 @@ show_footer();
 function initialize_inputs()
 {
 	// Turn off magic quotes runtime and enable error reporting.
-	@set_magic_quotes_runtime(0);
+	if (function_exists('set_magic_quotes_runtime'))
+		@set_magic_quotes_runtime(0);
 	error_reporting(E_ALL);
 
 	// Add slashes, as long as they aren't already being added.
-	if (@get_magic_quotes_gpc() == 0)
-	{
+	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc() == 0)
 		foreach ($_POST as $k => $v)
 			$_POST[$k] = addslashes($v);
-	}
 
 	$_GET['a'] = (string) @$_GET['a'];
 	$GLOBALS['this_url'] = 'http://' . (empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST']) . $_SERVER['PHP_SELF'];
@@ -64,10 +63,8 @@ function initialize_inputs()
 	);
 
 	foreach ($possible as $dir)
-	{
 		if (file_exists($dir . '/SSI.php'))
 			break;
-	}
 
 	require_once($dir . '/SSI.php');
 }

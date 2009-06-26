@@ -1455,4 +1455,30 @@ function smc_compat_database($db_type, $db_server, $db_user, $db_passwd, $db_nam
 	return $db_connection;
 }
 
+// Compat array_combine
+if (!function_exists('array_combine'))
+{
+	function array_combine($keys, $values)
+	{
+		$ret = array();
+		if (($array_error = !is_array($keys) || !is_array($values)) || empty($values) || ($count=count($keys)) != count($values))
+		{
+			trigger_error('array_combine(): Both parameters should be non-empty arrays with an equal number of elements', E_USER_WARNING);
+
+			if ($array_error)
+				return;
+			return false;
+		}
+
+		// Ensure that both arrays aren't associative arrays.
+		$keys = array_values($keys);
+		$values = array_values($values);
+
+		for($i=0; $i < $count; $i++)
+			$ret[$keys[$i]] = $values[$i];
+
+		return $ret;
+	}
+}
+
 ?>

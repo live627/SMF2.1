@@ -56,9 +56,9 @@ $request = $smcFunc['db_query']('', '
 	SELECT id_board
 	FROM {db_prefix}boards');
 $boards = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = $smcFunc['db_fetch_asoc']($request))
 	$boards[$row['id_board']] = $row['id_board'];
-mysql_free_result($request);
+$smcFunc['db_free_result']($request);
 
 $request = $smcFunc['db_query']('', '
 	SELECT DISTINCT id_member
@@ -74,7 +74,7 @@ $request = $smcFunc['db_query']('', '
 // Note that this will only do 400 members at a time.
 $members = array();
 $inserts = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = $smcFunc['db_fetch_assoc']($request))
 {
 	$members[] = $row['id_member'];
 	$this_boards = $boards;
@@ -89,15 +89,15 @@ while ($row = mysql_fetch_assoc($request))
 			'id_board' => 0,
 			'id_member' => $row['id_member'],
 	));
-	while ($row2 = mysql_fetch_assoc($request2))
+	while ($row2 = $smcFunc['db_fetch_asoc']($request2))
 		if ($row2['log_time'] >= $time_threshold)
 			unset($this_boards[$row2['id_board']]);
-	mysql_free_result($request2);
+	$smcFunc['db_free_result']($request2);
 
 	foreach ($this_boards as $board)
 		$inserts[] = array($time_threshold, $row['id_member'], $board);
 }
-mysql_free_result($request);
+$smcFunc['db_free_result']($request);
 
 if (!empty($inserts))
 	$smcFunc['db_insert']('replace',

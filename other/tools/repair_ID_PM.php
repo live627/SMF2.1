@@ -199,9 +199,26 @@ function protectTimeOut($request)
 	echo '
 		<em>This repair has paused to avoid overloading your server, please click continue.</em><br />
 		<br />
-		<form action="', $_SERVER['PHP_SELF'], '?', $request, '" method="post">
+		<form action="', $_SERVER['PHP_SELF'], '?' . $request, '" method="post" name="autoSubmit">
 			<input type="submit" value="Continue" class="button_submit" />
-		</form>';
+		</form>
+		<script type="text/javascript"><!-- // --><![CDATA[
+			window.onload = doAutoSubmit;
+			var countdown = 3;
+
+			function doAutoSubmit()
+			{
+				if (countdown == 0)
+					document.autoSubmit.submit();
+				else if (countdown == -1)
+					return;
+
+				document.autoSubmit.b.value = "Continue (" + countdown + ")";
+				countdown--;
+
+				setTimeout("doAutoSubmit();", 1000);
+			}
+		// ]]></script>';
 	exit;
 }
 
