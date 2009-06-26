@@ -134,6 +134,7 @@ June 2009
  ! Sending http 500 error caused some mobiles not to show our error page (Errors.php)
  ! Failed registration would return to first step (Register.php) [Bug 3544]
  ! Install was missing css backup and checking (install.php)
+ ! SEF urls/urls without index.php caused extra get parameters (Querystring.php) [Bug 3418]
 
 
 May 2009
