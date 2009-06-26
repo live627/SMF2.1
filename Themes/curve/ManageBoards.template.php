@@ -338,7 +338,7 @@ function template_modify_board()
 	// List all the membergroups so the user can choose who may access this board.
 	foreach ($context['groups'] as $group)
 		echo '
-							<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
+							<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' class="input_check" /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 	echo '
 								<em>', $txt['check_all'], '</em> <input type="checkbox" class="input_check" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
 								<br />
