@@ -140,6 +140,7 @@ June 2009
  ! Merging an unapproved topic with an approved one caused db error (SplitTopics.php) [Bug 3505]
  ! Null check was being applied twice to db_create_column (DbPackages-mysql.php)
  ! Force ftp protocol over http within ftp tags (Subs-Post.php) [Bug 3295]
+ ! Deleting non-english language pack set as default, didn't update Settings.php (ManageServer.php)
 
 
 May 2009

@@ -1085,7 +1085,7 @@ function ModifyLanguageSettings($return_config = false)
 // Edit a particular set of language entries.
 function ModifyLanguage()
 {
-	global $settings, $context, $smcFunc, $txt, $modSettings, $boarddir, $sourcedir;
+	global $settings, $context, $smcFunc, $txt, $modSettings, $boarddir, $sourcedir, $language;
 
 	loadLanguage('ManageSettings');
 
@@ -1212,7 +1212,15 @@ function ModifyLanguage()
 		if (!empty($modSettings['cache_enable']))
 			cache_put_data('known_languages', null, !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] < 1 ? 86400 : 3600);
 
-		// Sixth, get out of here.
+		// Sixth, if we deleted the default language, set us back to english?
+		if ($context['lang_id'] == $language)
+		{
+			require_once($sourcedir . '/Subs-Admin.php');
+			$language = 'english';
+			updateSettingsFile(array('language' => '\'' . $language . '\''));
+		}
+
+		// Seventh, get out of here.
 		redirectexit('action=admin;area=languages;sa=edit;' . $context['session_var'] . '=' . $context['session_id']);
 	}
 
