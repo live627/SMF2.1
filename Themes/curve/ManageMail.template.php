@@ -6,7 +6,7 @@ function template_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="manage_mail" class="align_left">
+	<div id="manage_mail">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['mailqueue_stats'], '
 		</h3>

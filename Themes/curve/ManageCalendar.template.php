@@ -36,7 +36,7 @@ function template_edit_holiday()
 
 	// Show a form for all the holiday information.
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managecalendar;sa=editholiday" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $context['page_title'], '

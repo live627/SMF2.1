@@ -7,7 +7,7 @@ function template_editsets()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 	
 	echo '
-	<div id="admincenter" class="align_left">';
+	<div id="admincenter">';
 	
 	template_show_list('smiley_set_list');
 
@@ -71,7 +71,7 @@ function template_modifyset()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsets" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $context['current_set']['is_new'] ? $txt['smiley_set_new'] : $txt['smiley_set_modify_existing'], '
@@ -156,7 +156,7 @@ function template_modifysmiley()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editsmileys" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['smiley_modify_existing'], '
@@ -270,7 +270,7 @@ function template_addsmiley()
 			document.getElementById("method-upload").checked = element == "upload";
 		}
 	// ]]></script>
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=addsmiley" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm" enctype="multipart/form-data">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['smileys_add_method'], '
@@ -419,7 +419,7 @@ function template_setorder()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 	
 	echo '
-	<div id="admincenter" class="align_left">';
+	<div id="admincenter">';
 
 	foreach ($context['smileys'] as $location)
 	{
@@ -482,7 +482,7 @@ function template_editicon()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=smileys;sa=editicon;icon=', $context['new_icon'] ? '0' : $context['icon']['id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $context['new_icon'] ? $txt['icons_new_icon'] : $txt['icons_edit_icon'], '

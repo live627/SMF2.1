@@ -8,7 +8,7 @@ function template_admin()
 
 	// Welcome message for the admin.
 	echo '
-	<div id="admincenter" class="align_right">
+	<div id="admincenter">
 		<div class="titlebg"><span class="left"></span><span class="right"></span>
 			<h3 class="align_left">'
 				,$txt['admin_center'], '
@@ -450,7 +450,7 @@ function template_view_versions()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['admin_version_check'], '
 		</h3>
@@ -793,7 +793,7 @@ function template_edit_censored()
 
 	// First section is for adding/removing words from the censored list.
 	echo '
-	<div id="admincenter" class="align_right">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=postsettings;sa=censor" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['admin_censored_words'], '
@@ -870,7 +870,7 @@ function template_not_done()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['not_done_title'], '
 		</h3>
@@ -2136,7 +2136,7 @@ function template_repair_boards()
 	global $context, $txt, $scripturl;
 	
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>',
 			$context['error_search'] ? $txt['errors_list'] : $txt['errors_fixing'] , '
 		</h3>

@@ -29,7 +29,7 @@ function template_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="manage_attachments" class="align_left">
+	<div id="manage_attachments">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['attachment_manager_browse_files'], '
 		</h3>
@@ -54,7 +54,7 @@ function template_maintenance()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="manage_attachments" class="align_left">
+	<div id="manage_attachments">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['attachment_stats'], '
 		</h3>
@@ -112,7 +112,7 @@ function template_attachment_repair()
 	if ($context['completed'])
 	{
 		echo '
-	<div id="manage_attachments" class="align_left">
+	<div id="manage_attachments">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
 		</h3>		
@@ -131,7 +131,7 @@ function template_attachment_repair()
 	elseif (!$context['errors_found'])
 	{
 		echo '
-	<div id="manage_attachments" class="align_left">
+	<div id="manage_attachments">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
 		</h3>		
@@ -149,7 +149,7 @@ function template_attachment_repair()
 	else
 	{
 		echo '
-	<div id="manage_attachments" class="align_left">
+	<div id="manage_attachments">
 		<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<img src="',$settings['images_url'], '/admin/post_moderation_deny.gif" alt="" /> ', $txt['repair_attachments'], '

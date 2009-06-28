@@ -80,58 +80,59 @@ function template_select()
 	<div id="split_topics">
 		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '"><input type="hidden" name="topic" value="', $context['current_topic'], '" />
 			<div id="not_selected" class="align_left">
-			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
-				', $txt['split'], ' - ', $txt['select_split_posts'], '
-			</h3>
-			<div class="information">
-				', $txt['please_select_split'], '
-			</div>
-			<div class="pagesection">
-				<strong>', $txt['pages'], ':</strong> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
-			</div>
-			<table id="table_not_selected" width="100%" class="table_grid bordercolor">';
+				<h3 class="catbg">
+					<span class="left"></span><span class="right"></span>
+					', $txt['split'], ' - ', $txt['select_split_posts'], '
+				</h3>
+				<div class="information">
+					', $txt['please_select_split'], '
+				</div>
+				<div class="pagesection">
+					<strong>', $txt['pages'], ':</strong> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
+				</div>
+				<table id="table_not_selected" width="100%" class="table_grid bordercolor">';
+
 	foreach ($context['not_selected']['messages'] as $message)
 		echo '
-				<tr class="windowbg" id="not_selected_', $message['id'], '">
-					<td class="smalltext">
-						', $message['subject'], ' - ', $message['poster'], '
-						<div class="post">', $message['body'], '</div>
-					</td>
-					<td valign="middle" align="center" width="5%">
-						<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=down;msg=', $message['id'], '" onclick="return select(\'down\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_select.gif" alt="-&gt;" /></a>
-					</td>
-				</tr>';
+					<tr class="windowbg" id="not_selected_', $message['id'], '">
+						<td class="smalltext">
+							', $message['subject'], ' - ', $message['poster'], '
+							<div class="post">', $message['body'], '</div>
+						</td>
+						<td valign="middle" align="center" width="5%">
+							<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=down;msg=', $message['id'], '" onclick="return select(\'down\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_select.gif" alt="-&gt;" /></a>
+						</td>
+					</tr>';
 	echo '
-			</table>
+				</table>
 			</div>
 			<div id="selected" class="align_right">
-			<h3 class="catbg">
-				<span class="left"></span><span class="right"></span>
-				', $txt['split_selected_posts'], ' (<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=reset;msg=0" onclick="return select(\'reset\', 0);">', $txt['split_reset_selection'], '</a>)
-			</h3>
-			<div class="information">
-				', $txt['split_selected_posts_desc'], '
-			</div>
-			<div class="pagesection">
-				<strong>', $txt['pages'], ':</strong> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
-			</div>
-			<table id="table_selected" width="100%" class="table_grid bordercolor">
-				';
+				<h3 class="catbg">
+					<span class="left"></span><span class="right"></span>
+					', $txt['split_selected_posts'], ' (<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=reset;msg=0" onclick="return select(\'reset\', 0);">', $txt['split_reset_selection'], '</a>)
+				</h3>
+				<div class="information">
+					', $txt['split_selected_posts_desc'], '
+				</div>
+				<div class="pagesection">
+					<strong>', $txt['pages'], ':</strong> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
+				</div>
+				<table id="table_selected" width="100%" class="table_grid bordercolor">';
+
 	if (!empty($context['selected']['messages']))
 		foreach ($context['selected']['messages'] as $message)
 			echo '
-				<tr class="windowbg" id="selected_', $message['id'], '">
-					<td width="5%" valign="middle" align="center">
-						<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=up;msg=', $message['id'], '" onclick="return select(\'up\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_deselect.gif" alt="&lt;-" /></a>
-					</td>
-					<td class="smalltext">
-						', $message['subject'], ' - ', $message['poster'], '
-						<div class="post">', $message['body'], '</div>
-					</td>
-				</tr>';
+					<tr class="windowbg" id="selected_', $message['id'], '">
+						<td width="5%" valign="middle" align="center">
+							<a href="', $scripturl, '?action=splittopics;sa=selectTopics;subname=', $context['topic']['subject'], ';topic=', $context['topic']['id'], '.', $context['not_selected']['start'], ';start2=', $context['selected']['start'], ';move=up;msg=', $message['id'], '" onclick="return select(\'up\', ', $message['id'], ');"><img src="', $settings['images_url'], '/split_deselect.gif" alt="&lt;-" /></a>
+						</td>
+						<td class="smalltext">
+							', $message['subject'], ' - ', $message['poster'], '
+							<div class="post">', $message['body'], '</div>
+						</td>
+					</tr>';
 	echo '
-			</table>
+				</table>
 			</div>
 			<br style="clear: both;" />
 			<p>

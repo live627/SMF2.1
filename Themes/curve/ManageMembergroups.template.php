@@ -16,7 +16,7 @@ function template_new_group()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=add" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['membergroups_new_group'], '
@@ -143,7 +143,7 @@ function template_edit_group()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=edit;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '" name="groupForm" id="groupForm">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['membergroups_edit_group'], ' - ', $context['group']['name'], '
@@ -360,7 +360,7 @@ function template_group_members()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : '') , ';sa=members;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $context['page_title'], '
@@ -543,7 +543,7 @@ function template_group_request_reason()
 
 	// Show a welcome message to the user.
 	echo '
-	<div id="moderationcenter" class="align_left">
+	<div id="moderationcenter">
 		<form action="', $scripturl, '?action=groups;sa=requests" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['mc_groups_reason_title'], '

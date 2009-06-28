@@ -6,7 +6,7 @@ function template_search_members()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=viewmembers" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				<span class="align_left">', $txt['search_for'], '</span>
@@ -225,7 +225,7 @@ function template_admin_browse()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">';
+	<div id="admincenter">';
 
 	template_show_list('approve_list');
 

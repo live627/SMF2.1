@@ -539,7 +539,7 @@ function template_trackActivity()
 
 	// The first table shows IP information about the user.
 	echo '
-	<div id="profileview" class="align_left">
+	<div id="profileview">
 			<h3 class="titlebg">
 				<span class="left"></span><span class="right"></span>
 				<strong>', $txt['view_ips_by'], ' ', $context['member']['name'], '</strong>
@@ -816,7 +816,7 @@ function template_statPanel()
 
 	// First, show a few text statistics such as post/topic count.
 	echo '
-	<div id="profileview" class="align_left">
+	<div id="profileview">
 		<div id="generalstats">
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				<img src="', $settings['images_url'], '/stats_info.gif" alt="" />

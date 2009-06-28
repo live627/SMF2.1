@@ -7,7 +7,7 @@ function template_moderation_center()
 
 	// Show a welcome message to the user.
 	echo '
-	<div id="modcenter" class="align_left">
+	<div id="modcenter">
 		<h3 class="catbg">
 			<span class="left"></span><span class="right"></span>
 			', $txt['moderation_center'], '
@@ -332,7 +332,7 @@ function template_unapproved_posts()
 
 	// Just a big table of it all really...
 	echo '
-	<div id="modcenter" class="align_left">
+	<div id="modcenter">
 	<form action="', $scripturl, '?action=moderate;area=postmod;start=', $context['start'], ';sa=', $context['current_view'], '" method="post" accept-charset="', $context['character_set'], '">
 		<h3 class="catbg"><span class="left">
 			</span><span class="right"></span>
@@ -418,7 +418,7 @@ function template_unapproved_attachments()
 
 	// Show all the attachments still oustanding.
 	echo '
-	<div id="modcenter" class="align_left">
+	<div id="modcenter">
 		<form action="', $scripturl, '?action=moderate;area=attachmod;sa=attachments;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg">
 				<span class="left"></span><span class="right"></span>
@@ -504,7 +504,7 @@ function template_viewmodreport()
 	global $context, $scripturl, $txt;
 
 	echo '
-	<div id="modcenter" class="align_left">
+	<div id="modcenter">
 		<form action="', $scripturl, '?action=moderate;area=reports;report=', $context['report']['id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg">
 				<span class="left"></span><span class="right"></span>
@@ -670,7 +670,7 @@ function template_moderation_settings()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<div id="modcenter" class="align_left">
+	<div id="modcenter">
 		<form action="', $scripturl, '?action=moderate;area=settings" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left">
 				</span><span class="right"></span>
@@ -789,7 +789,7 @@ function template_warn_template()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="modcenter" class="align_left">
+	<div id="modcenter">
 		<form action="', $scripturl, '?action=moderate;area=warnings;sa=templateedit;tid=', $context['id_template'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg">
 				<span class="left"></span><span class="right"></span>

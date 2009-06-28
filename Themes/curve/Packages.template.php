@@ -11,7 +11,7 @@ function template_view_package()
 	global $context, $settings, $options, $txt, $scripturl, $smcFunc;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt[($context['uninstalling'] ? 'un' : '') . 'install_mod'], '
 		</h3>
@@ -384,7 +384,7 @@ function template_extract_package()
 	}
 
 	echo '
-	<div id="admincenter" class="align_left">';
+	<div id="admincenter">';
 
 	if (empty($context['redirect_url']))
 	{
@@ -453,7 +453,7 @@ function template_list()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['list_file'], '
 		</h3>
@@ -485,7 +485,7 @@ function template_examine()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['package_examine_file'], '
 		</h3>
@@ -509,7 +509,7 @@ function template_view_installed()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 			' . $txt['view_and_remove'] . '
 		</h3>';
@@ -565,7 +565,7 @@ function template_browse()
 	global $context, $settings, $options, $txt, $scripturl, $modSettings, $forum_version;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			<a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img class="icon" src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '
 		</h3>
@@ -918,7 +918,7 @@ function template_servers()
 					</div>';
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['download_new_package'], '
 		</h3>';
@@ -1063,7 +1063,7 @@ function template_package_confirm()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $context['page_title'], '
 		</h3>
@@ -1084,7 +1084,7 @@ function template_package_list()
 	global $context, $settings, $options, $txt, $scripturl, $smcFunc;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			' . $context['page_title'] . '
 		</h3>
@@ -1245,7 +1245,7 @@ function template_downloaded()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			' . $context['page_title'] . '
 		</h3>
@@ -1273,7 +1273,7 @@ function template_install_options()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['package_install_options'], '
 		</h3>
@@ -2025,7 +2025,7 @@ function template_action_permissions()
 	$countDown = 3;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" id="perm_submit" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['package_file_perms_applying'], '

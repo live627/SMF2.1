@@ -14,7 +14,7 @@ function template_maintain_database()
 			</div>';
 
 	echo '
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['maintain_optimize'], '
 		</h3>
@@ -107,7 +107,7 @@ function template_maintain_routine()
 
 	// Starts off with general maintenance procedures.
 	echo '
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['maintain_version'], '
 		</h3>
@@ -245,7 +245,7 @@ function template_maintain_members()
 		}
 		setTimeout("checkAttributeValidity();", 500);
 	// ]]></script>
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['maintain_reattribute_posts'], '
 		</h3>
@@ -358,7 +358,7 @@ function template_maintain_topics()
 		// ]]></script>';
 
 	echo '
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['maintain_old'], '
 		</h3>
@@ -485,7 +485,7 @@ function template_optimize()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['maintain_optimize'], '
 		</h3>
@@ -520,7 +520,7 @@ function template_convert_utf8()
 	global $context, $txt, $settings, $scripturl;
 
 	echo '
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['utf8_title'], '
 		</h3>
@@ -560,7 +560,7 @@ function template_convert_entities()
 	global $context, $txt, $settings, $scripturl;
 
 	echo '
-	<div id="manage_maintenance" class="align_left">
+	<div id="manage_maintenance">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['entity_convert_title'], '
 		</h3>

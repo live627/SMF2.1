@@ -509,7 +509,7 @@ function template_admin_register()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg">
 			<span class="left"></span><span class="right"></span>
 			', $txt['admin_browse_register_new'], '

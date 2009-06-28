@@ -7,7 +7,7 @@ function template_report_type()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=reports" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg">
 				<span class="left"></span><span class="right"></span>
@@ -61,7 +61,7 @@ function template_main()
 		);
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 			', $txt['results'], '
 		</h3>

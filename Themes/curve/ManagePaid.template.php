@@ -27,7 +27,7 @@ function template_modify_subscription()
 		// ]]></script>';
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=paidsubscribe;sa=modify;sid=', $context['sub_id'], '" method="post">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['paid_' . $context['action_type'] . '_subscription'], '
@@ -213,7 +213,7 @@ function template_delete_subscription()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=paidsubscribe;sa=modify;sid=', $context['sub_id'], ';delete" method="post">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['paid_delete_subscription'], '
@@ -268,7 +268,7 @@ function template_modify_user_subscription()
 		// ]]></script>';
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=paidsubscribe;sa=modifyuser;sid=', $context['sub_id'], ';lid=', $context['log_id'], '" method="post">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['paid_' . $context['action_type'] . '_subscription'], ' - ', $context['current_subscription']['name'], '
@@ -435,7 +435,7 @@ function template_user_subscription()
 	global $context, $txt, $scripturl, $modSettings;
 
 	echo '
-	<div id="paid_subscription" class="align_left">
+	<div id="paid_subscription">
 		<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';area=subscriptions;confirm" method="post">
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				', $txt['subscriptions'], '
@@ -572,7 +572,7 @@ function template_choose_payment()
 	global $context, $txt, $modSettings, $scripturl;
 
 	echo '
-	<div id="paid_subscription" class="align_left">
+	<div id="paid_subscription">
 		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 			', $txt['paid_confirm_payment'], '
 		</h3>
@@ -642,7 +642,7 @@ function template_paid_done()
 	global $context, $txt, $modSettings, $scripturl;
 
 	echo '
-	<div id="paid_subscription" class="align_left">
+	<div id="paid_subscription">
 		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 			', $txt['paid_done'], '
 		</h3>

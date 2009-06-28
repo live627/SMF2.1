@@ -6,7 +6,7 @@ function template_modify_weights()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=weights" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['search_weights'], '
@@ -101,7 +101,7 @@ function template_select_search_method()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=method" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['search_method'], '
@@ -230,7 +230,7 @@ function template_create_index()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;step=1" method="post" accept-charset="', $context['character_set'], '" name="create_index">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['search_create_index'], '
@@ -265,7 +265,7 @@ function template_create_index_progress()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=managesearch;sa=createmsgindex;step=1" name="autoSubmit" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['search_create_index'], '
@@ -314,7 +314,7 @@ function template_create_index_done()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['search_create_index'], '
 		</h3>
@@ -337,7 +337,7 @@ function template_spider_edit()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=sengines;sa=editspiders;sid=', $context['spider']['id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $context['page_title'], '
@@ -386,7 +386,7 @@ function template_show_spider_logs()
 	global $context, $txt, $settings, $scripturl;
 
 	echo '
-	<div id="admincenter" class="align_left">';
+	<div id="admincenter">';
 	
 	// Standard fields.
 	template_show_list('spider_logs');

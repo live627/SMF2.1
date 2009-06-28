@@ -7,7 +7,7 @@ function template_main()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;sa=admin" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" value="0" name="options[theme_allow]" />
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
@@ -198,7 +198,7 @@ function template_list_themes()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['themeadmin_list_heading'], '
 		</h3>
@@ -272,7 +272,7 @@ function template_reset_list()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['themeadmin_reset_title'], '
 		</h3>
@@ -324,7 +324,7 @@ function template_set_options()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';sa=reset" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="who" value="', $context['theme_options_reset'] ? 1 : 0, '" />
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
@@ -402,7 +402,7 @@ function template_set_settings()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;sa=settings;th=', $context['theme_settings']['theme_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="titlebg"><span class="left"></span><span class="right"></span>
 				<a href="', $scripturl, '?action=helpadmin;help=theme_settings" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" class="icon" /></a> ', $txt['theme_settings'], ' - ', $context['theme_settings']['name'], '
@@ -618,7 +618,7 @@ function template_pick()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="pick_theme" class="align_left">
+	<div id="pick_theme">
 		<form action="', $scripturl, '?action=theme;sa=pick;u=', $context['current_member'], ';', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">';
 
 	// Just go through each theme and show its information - thumbnail, etc.
@@ -713,7 +713,7 @@ function template_installed()
 
 	// Not much to show except a link back...
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $context['page_title'], '
 		</h3>
@@ -738,7 +738,7 @@ function template_edit_list()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['themeadmin_edit_title'], '
 		</h3>';
@@ -780,7 +780,7 @@ function template_copy_template()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
 			', $txt['themeadmin_edit_filename'], '
 		</h3>
@@ -827,7 +827,7 @@ function template_edit_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<table width="100%" class="table_grid tborder">
 		<thead>
 			<tr class="catbg">
@@ -884,7 +884,7 @@ function template_edit_style()
 
 	// From now on no one can complain that editing css is difficult. If you disagree, go to www.w3schools.com.
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var previewData = "";
 			var previewTimeout;
@@ -1050,7 +1050,7 @@ function template_edit_template()
 
 	// Just show a big box.... grey out the Save button if it's not saveable... (ie. not 777.)
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;th=', $context['theme_id'], ';sa=edit" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['theme_edit'], ' - ', $context['edit_filename'], '
@@ -1100,7 +1100,7 @@ function template_edit_file()
 
 	// Just show a big box.... grey out the Save button if it's not saveable... (ie. not 777.)
 	echo '
-	<div id="admincenter" class="align_left">
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=theme;th=', $context['theme_id'], ';sa=edit" method="post" accept-charset="', $context['character_set'], '">
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
 				', $txt['theme_edit'], ' - ', $context['edit_filename'], '

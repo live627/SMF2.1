@@ -1,4 +1,13 @@
 /* styling the admin section */
+#quick_search
+{
+	height: 31px;
+}
+div#quick_search input, div#quick_search select
+{
+	font-size: 0.8em !important;
+}
+
 ol.search_results
 {
 	margin-top: 0;
@@ -7,11 +16,6 @@ ol.search_results
 ol.search_results li
 {
 	padding-top: 5px;
-}
-#admincenter, #manage_mail, #manage_attachments, #manage_maintenance, #manage_boards, #manage_bans
-{
-	float: left;
-	width: 100%;
 }
 /* new features settings screen */
 .features
@@ -69,11 +73,6 @@ div.titlebg img.icon
 {
 	float: left;
 	margin: 5px 8px 0 0;
-}
-#quick_search
-{
-	height: 31px;
-	margin-top: 2px;
 }
 #admin_main_section
 {
