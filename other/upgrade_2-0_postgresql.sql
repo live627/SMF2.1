@@ -147,7 +147,7 @@ $additional_spiders = array(
 	'slurp' => array('Yahoo!', 'slurp', ''),
 	'YahooSeeker/M1A1-R2D2' => array('Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
 	'Yahoo-MMCrawler' => array('Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
-	'yahoo' => array('Yahoo! (Publisher)', 'YahooFeedSeeker', ''),
+	'yahoo' => array('Yahoo! (Publisher)', 'yahoo', ''),
 	'MSNBOT_Mobile' => array('MSN (Mobile)', 'MSNBOT_Mobile', ''),
 	'msnbot-media' => array('MSN (Media)', 'msnbot-media', ''),
 	'msnbot' => array('MSN', 'msnbot', ''),
@@ -208,13 +208,6 @@ CREATE TABLE {$db_prefix}log_spider_stats (
 );
 ---#
 
----# Updating Yahoo Feed Seeker
-UPDATE
-	SET user_agent = "YahooFeedSeeker"
-WHERE
-	spider_name = "Yahoo! (Publisher)"
-	AND user_agent = "yahoo";
----#
 
 /******************************************************************************/
 --- Adding new forum settings.
