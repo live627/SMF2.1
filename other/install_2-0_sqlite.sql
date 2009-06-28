@@ -748,7 +748,7 @@ CREATE TABLE {$db_prefix}custom_fields (
   can_search smallint NOT NULL default '0',
   default_value varchar(255) NOT NULL,
   enclose text NOT NULL,
-  placement smallint NOT NULL default '0',
+  placement smallint NOT NULL default '0'
 );
 
 #
