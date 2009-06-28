@@ -146,6 +146,7 @@ June 2009
  ! Boardindex failed in postgresql due to bug 3158 (Subs-Db-postgresql.php) [Bug 3158]
  ! Fixed undefined error in repair_settings.php (repair_settings.php)
  ! Updated readme files for multiple database support information and to reference webinstall.php (readme_*.html)
+ * Curve: updated the ModerationCenter template to match Curve's look and feel (ModerationCenter template, moderate.css, ModerationCenter.php)
 
 
 May 2009

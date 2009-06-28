@@ -1,18 +1,61 @@
+#modcenter
+{
+	display: block;
+	width: 100%;
+}
+.modblock_left
+{
+	width: 49%;
+	float: left;
+	clear: right;
+	margin: 0 0 1em 0;
+}
+.modblock_right
+{
+	width: 49%;
+	float: right;
+	margin: 0 0 1em 0;
+}
+
+/* Announcements*/
+#smfAnnouncements
+{
+	height: 150px; 
+	overflow: auto;
+}
+#smfAnnouncements dt
+{
+	border-bottom: 1px dashed #000;
+}
+#smfAnnouncements dd
+{
+	padding: 0;
+	margin: 0 0 1em 1.5em;
+}
+.modbox
+{
+	height: 150px; 
+	overflow: auto;
+}
 /* Moderation Notes */
-.moderation_notes
+ul.moderation_notes
 {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 	overflow: auto;
-	height: 9.5em;
+	height: 8.5em;
 }
-.moderation_notes li
+ul.moderation_notes li
 {
 	padding: 4px 0px 4px 4px;
 	border-bottom: 1px solid #cccccc;
 }
-h3.titlebg, tr.titlebg td 
+.notes
 {
-padding-left: 0 !important;
+	margin: 0.5em 0;
+}
+.post_note
+{
+	width: 85%;
 }
