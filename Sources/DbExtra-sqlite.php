@@ -66,49 +66,36 @@ function smf_db_backup_table($table, $backup_table)
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
 	$result = $smcFunc['db_query']('', '
-		SHOW CREATE TABLE {raw:table}',
+		SELECT sql
+		FROM sqlite_master
+		WHERE type = {string:txttable}
+			AND name = {string:table}',
 		array(
 			'table' => $table,
+			'txttable' => 'table'
 		)
 	);
-	list (, $create) = $smcFunc['db_fetch_row']($result);
+	list ($create) = $smcFunc['db_fetch_row']($result);
 	$smcFunc['db_free_result']($result);
 
 	$create = preg_split('/[\n\r]/', $create);
-
 	$auto_inc = '';
-	// Default engine type.
-	$engine = 'MyISAM';
-	$charset = '';
-	$collate = '';
+
+	// Remove the first line and check to see if the second one contain useless info.
+	unset($create[0]);
+	if (trim($create[1]) == '(')
+		unset($create[1]);
+	if (trim($create[count($create)]) == ')')
+		unset($create[count($create)]);
 
 	foreach ($create as $k => $l)
 	{
 		// Get the name of the auto_increment column.
-		if (strpos($l, 'auto_increment'))
+		if (strpos($l, 'primary') || strpos($l, 'PRIMARY'))
 			$auto_inc = trim($l);
 
-		// For the engine type, see if we can work out what it is.
-		if (strpos($l, 'ENGINE') !== false || strpos($l, 'TYPE') !== false)
-		{
-			// Extract the engine type.
-			preg_match('~(ENGINE|TYPE)=(\w+)(\sDEFAULT)?(\sCHARSET=(\w+))?(\sCOLLATE=(\w+))?~', $l, $match);
-
-			if (!empty($match[1]))
-				$engine = $match[1];
-
-			if (!empty($match[2]))
-				$engine = $match[2];
-
-			if (!empty($match[5]))
-				$charset = $match[5];
-
-			if (!empty($match[7]))
-				$collate = $match[7];
-		}
-
 		// Skip everything but keys...
-		if (strpos($l, 'KEY') === false)
+		if ((strpos($l, 'KEY') !== false && strpos($l, 'PRIMARY KEY') === false) || strpos($l, $table) !== false || strpos(trim($l), 'PRIMARY KEY') === 0)
 			unset($create[$k]);
 	}
 
@@ -119,43 +106,42 @@ function smf_db_backup_table($table, $backup_table)
 	else
 		$create = '';
 
+	// Is there an extra junk at the end?
+	if (substr($create, -2, 1) == ',')
+		$create = substr($create, 0, -2) . ')';
+	if (substr($create, -2) == '))')
+		$create = substr($create, 0, -1);
+
 	$smcFunc['db_query']('', '
-		DROP TABLE IF EXISTS {raw:backup_table}',
+		DROP TABLE {raw:backup_table}',
 		array(
 			'backup_table' => $backup_table,
+			'db_error_skip' => true,
 		)
 	);
 
+	$request = $smcFunc['db_quote']('
+		CREATE TABLE {raw:backup_table} {raw:create}',
+		array(
+			'backup_table' => $backup_table,
+			'create' => $create,
+	));
+
+	$smcFunc['db_query']('', '
+		CREATE TABLE {raw:backup_table} {raw:create}',
+		array(
+			'backup_table' => $backup_table,
+			'create' => $create,
+	));
+
 	$request = $smcFunc['db_query']('', '
-		CREATE TABLE {raw:backup_table} {raw:create}
-		TYPE={raw:engine}' . (empty($charset) ? '' : ' CHARACTER SET {raw:charset}' . (empty($collate) ? '' : ' COLLATE {raw:collate}')) . '
+		INSERT INTO {raw:backup_table}
 		SELECT *
 		FROM {raw:table}',
 		array(
 			'backup_table' => $backup_table,
 			'table' => $table,
-			'create' => $create,
-			'engine' => $engine,
-			'charset' => empty($charset) ? '' : $charset,
-			'collate' => empty($collate) ? '' : $collate,
-		)
-	);
-
-	if ($auto_inc != '')
-	{
-		if (preg_match('~\`(.+?)\`\s~', $auto_inc, $match) != 0 && substr($auto_inc, -1, 1) == ',')
-			$auto_inc = substr($auto_inc, 0, -1);
-
-		$smcFunc['db_query']('', '
-			ALTER TABLE {raw:backup_table}
-			CHANGE COLUMN {raw:column_detail} {raw:auto_inc}',
-			array(
-				'backup_table' => $backup_table,
-				'column_detail' => $match[1],
-				'auto_inc' => $auto_inc,
-			)
-		);
-	}
+	));
 
 	return $request;
 }
@@ -188,7 +174,7 @@ function smf_db_list_tables($db = false, $filter = false)
 {
 	global $smcFunc;
 
-	$filter = $filter == false ? '' : ' AND name LIKE \'' . $filter . '\'';
+	$filter = $filter == false ? '' : ' AND name LIKE \'' . str_replace("\_", "_", $filter) . '\'';
 
 	$request = $smcFunc['db_query']('', '
 		SELECT name

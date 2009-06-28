@@ -113,7 +113,13 @@
 							<li>the <a href="http://www.php.net/configuration.directives#ini.upload-tmp-dir" target="_blank">upload_tmp_dir</a> must be set to a valid directory.</li>
 						</ul>
 					</li>
-					<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 3.23.28 or higher.</li>
+					<li>Any of the following database systems (MySQL only for 1.0 and 1.1)
+						<ul>
+							<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 3.23.28 or higher.</li>
+							<li><a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a> 7.4.10 or higher.</li>
+							<li><a href="http://www.sqlite.org/" target="_blank">SQLite</a> 2.8 or higher.</li>
+						</ul>
+					</li>
 					<li>at least 512 kilobytes of storage space in the database, although more is highly recommended.</li>
 					<li>about two and a half megabytes of storage space on the web server, although more is recommended.</li>
 				</ul>
@@ -125,7 +131,7 @@
 					<li>the <a href="http://aspell.sf.net/" target="_blank">GNU Aspell</a> and <a href="http://ftp.gnu.org/gnu/aspell/dict/" target="_blank">its dictionaries</a> for spell checking support.</li>
 					<li><a href="http://httpd.apache.org/" target="_blank">Apache</a> with <a href="http://httpd.apache.org/docs-2.0/mod/core.html#acceptpathinfo" target="_blank">AcceptPathInfo</a> set to On (Apache 2 and later only) for queryless URL support.</li>
 					<li>
-						<a href="http://www.php.net" target="_blank">PHP</a> 4.3.0 or higher, with the following set in php.ini:
+						<a href="http://www.php.net" target="_blank">PHP</a> 5.0.0 or higher, with the following set in php.ini:
 						<ul>
 							<li>the <a href="http://www.php.net/ref.info#ini.max-input-time" target="_blank">max_input_time</a> directive is set to a value of at least 30.</li>
 							<li>the <a href="http://www.php.net/configuration.directives#ini.post-max-size" target="_blank">post_max_size</a> and <a href="http://www.php.net/configuration.directives#ini.upload-max-filesize" target="_blank">upload_max_filesize</a> directives are set to the size of the largest attachments you wish to be able to upload.</li>
@@ -136,6 +142,13 @@
 						</ul>
 					</li>
 					<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 4.0.15 or higher with query caching enabled.</li>
+					<li>Any of the following database systems (MySQL only for 1.0 and 1.1)
+						<ul>
+							<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 5.0 or higher.</li>
+							<li><a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a> 8.2.13 or higher.</li>
+							<li><a href="http://www.sqlite.org/" target="_blank">SQLite</a> 2.8 or higher.</li>
+						</ul>
+					</li>
 					<li><a href="http://www.boutell.com/gd/" target="_blank">GD Graphics Library</a> 2.0 or higher.</li>
 				</ul>
 
@@ -143,10 +156,30 @@
 			</div>
 
 			<div class="panel">
-				<h2 id="uploading">Uploading the files</h2>
+				<h2 id="backups">Backing up data</h2>
 
-				Before uploading anything, make sure to make a backup of what's there.  Some administration panels allow you to download a backup of everything, and if yours does this would be highly recommendable.  It's best to backup both the MySQL database and the files.  Additionally, if you are using any languages other than English please make sure to upload their versions as well to the same directory you uploaded everything else to.<br />
+				Before uploading anything, make sure to make a backup of what's there.  Some administration panels allow you to download a backup of everything, and if yours does this would be highly recommendable.  It's best to backup both the database and the files.  Additionally, if you are using any languages other than English please make sure to upload their versions as well to the same directory you uploaded everything else to.<br />
+			</div>
+			<div class="panel">
+				<h2 id="webinstall">Upload files method 1: Using webinstall.php</h2>
+
+				Your server may support webinstall.php. This script will automatically download SMF to your server. This may not work on all servers and also may require providing it with FTP details.<br />
 				<br />
+				The first thing you need to do is upload webinstall.php to the location of where SMF is to exist on your server.
+				<br />
+				After you have finished uploading the file, point your browser to http://www.yourdomain.tld/forum/webinstall.php - where www.yourdomain.tld/forum is the URL to where you uploaded it.  You should then see the webinstall interface.<br />
+				<br />
+				The first page you see may request your FTP information.  If you see this screen, it is because the webinstaller found some files or folders with inadequate permissions for SMF to run properly.  If you enter your FTP information here, the webinstaller can automatically fix these permissions for you.  Please note that the path should be the same path you see in your FTP client.  For example, it might be &quot;public_html/forum&quot;.  And remember, the webinstaller will not save your FTP password anywhere.
+				<br />
+				On the webinstall interface you have an option to login, this is useful for charter members to easily download early releases. You may have an option to select multiple versions of SMF to download. It is up to you to decide which version of SMF you wish to install. Additionally you may have options of additional languages to download.
+				<br />
+				After specifying these options and agreeing to the agreement, webinstall will attempt to download al SMF files and decompress them in the same folder as webinstall.php. If successful you will be prompted to the SMF upgrade screen. If this fails you will need to follow the process below to upload files.
+				<br />
+				In most cases, you'll want to have &quot;Put the forum into maintenance mode during upgrade.&quot; checked, because it will ensure that nothing is messed with while the upgrader is working.  You may also wish to check &quot;Backup tables in your database...&quot;, which will make a backup of your old information and tables before making any changes in the database.
+			</div>
+
+			<div class="panel">
+				<h2 id="uploading">Uploading the files</h2>
 				After that, you need to do is upload all of the files in this package, excluding this file itself, to your server.  You should upload it to the same directory as your previous installation of SMF or YaBB SE.  If you are given the option to &quot;resume&quot; uploads, make sure you do not do that - you must upload all of the files.  You may wish to make sure that all of the files were uploaded, such as those in <tt>Themes/default/languages</tt>, because some FTP clients have been known to drop files.<br />
 				<br />
 				After you have finished uploading the files, point your browser to http://www.yourdomain.tld/forum/upgrade.php - where www.yourdomain.tld/forum is the URL to where you uploaded it.  You should then see a page asking you for a few bits of information.<br />

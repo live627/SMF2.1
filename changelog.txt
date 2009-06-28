@@ -141,6 +141,11 @@ June 2009
  ! Null check was being applied twice to db_create_column (DbPackages-mysql.php)
  ! Force ftp protocol over http within ftp tags (Subs-Post.php) [Bug 3295]
  ! Deleting non-english language pack set as default, didn't update Settings.php (ManageServer.php)
+ ! Backing up tables failed for sqlite (DbExtra-sqlite.php) [Bug 3523]
+ ! Upgrades in postgresql failed with recent changes (upgrade_2-0_postgresql.php)
+ ! Boardindex failed in postgresql due to bug 3158 (Subs-Db-postgresql.php) [Bug 3158]
+ ! Fixed undefined error in repair_settings.php (repair_settings.php)
+ ! Updated readme files for multiple database support information and to reference webinstall.php (readme_*.html)
 
 
 May 2009

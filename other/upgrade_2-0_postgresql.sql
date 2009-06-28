@@ -374,9 +374,33 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30
 --- Updating mail queue functionality.
 /******************************************************************************/
 
----# Adding type to mail queue...
-ALTER TABLE {$db_prefix}mail_queue
-ADD private tinyint(1) NOT NULL default '0';
+---# Adding private to mail queue...
+---{
+if ($smcFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}mail_queue
+		ADD COLUMN private smallint");
+
+	upgrade_query("
+		UPDATE {$db_prefix}mail_queue
+		SET private = 0");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}mail_queue
+		ALTER COLUMN private SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}mail_queue
+		ALTER COLUMN private SET default '0'");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}mail_queue
+		ADD COLUMN private smallint NOT NULL default '0'");
+}
+---}
 ---#
 
 /******************************************************************************/
@@ -576,11 +600,11 @@ ALTER COLUMN field_options TYPE text;
 
 ---# Adding reset poll timestamp and guest voters counter.
 ---{
-if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
+if ($smcFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
-		ADD COLUMN reset_poll int AFTER guest_vote");
+		ADD COLUMN reset_poll int");
 
 	upgrade_query("
 		UPDATE {$db_prefix}polls
@@ -597,7 +621,7 @@ if ($db_type == 'postgresql' && $smcFunc['db_server_info'] < 8.0)
 
 	upgrade_query("
 		ALTER TABLE {$db_prefix}polls
-		ADD COLUMN num_guest_voters int AFTER guest_vote");
+		ADD COLUMN num_guest_voters int");
 
 	upgrade_query("
 		UPDATE {$db_prefix}polls
@@ -682,26 +706,37 @@ CREATE OR REPLACE FUNCTION INSTR(text, text) RETURNS integer AS
 LANGUAGE 'sql';
 ---#
 
+---# Adding daty()
 CREATE OR REPLACE FUNCTION day(date) RETURNS integer AS
   'SELECT EXTRACT(DAY FROM DATE($1))::integer AS result'
 LANGUAGE 'sql';
+---#
 
+---# Adding IFNULL(varying, varying)
 CREATE OR REPLACE FUNCTION IFNULL (character varying, character varying) RETURNS character varying AS
   'SELECT COALESCE($1, $2) AS result'
 LANGUAGE 'sql';
+---#
 
+---# Adding IFNULL(varying, bool)
 CREATE OR REPLACE FUNCTION IFNULL(character varying, boolean) RETURNS character varying AS
   'SELECT COALESCE($1, CAST(CAST($2 AS int) AS varchar)) AS result'
 LANGUAGE 'sql';
+---#
 
+---# Adding IFNULL(int, bool)
 CREATE OR REPLACE FUNCTION IFNULL(int, boolean) RETURNS int AS
   'SELECT COALESCE($1, CAST($2 AS int)) AS result'
 LANGUAGE 'sql';
+---#
 
+---# Adding bool_not_eq_int()
 CREATE OR REPLACE FUNCTION bool_not_eq_int (boolean, integer) RETURNS boolean AS
   'SELECT CAST($1 AS integer) != $2 AS result'
 LANGUAGE 'sql';
+---#
 
+---# Creating operator bool_not_eq_int()
 ---{
 $result = upgrade_query("SELECT oprname FROM pg_operator WHERE oprcode='bool_not_eq_int'");
 if($smcFunc['db_num_rows']($result) == 0)
@@ -710,3 +745,4 @@ if($smcFunc['db_num_rows']($result) == 0)
 		CREATE OPERATOR != (PROCEDURE = bool_not_eq_int, LEFTARG = boolean, RIGHTARG = integer)");
 }
 ---}
+---#

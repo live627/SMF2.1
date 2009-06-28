@@ -114,7 +114,13 @@
 							<li>the <a href="http://www.php.net/configuration.directives#ini.upload-tmp-dir" target="_blank">upload_tmp_dir</a> must be set to a valid directory.</li>
 						</ul>
 					</li>
-					<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 3.23.28 or higher.</li>
+					<li>Any of the following database systems (MySQL only for 1.0 and 1.1)
+						<ul>
+							<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 3.23.28 or higher.</li>
+							<li><a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a> 7.4.10 or higher.</li>
+							<li><a href="http://www.sqlite.org/" target="_blank">SQLite</a> 2.8 or higher.</li>
+						</ul>
+					</li>
 					<li>at least 512 kilobytes of storage space in the database, although more is highly recommended.</li>
 					<li>about two and a half megabytes of storage space on the web server, although more is recommended.</li>
 				</ul>
@@ -126,7 +132,7 @@
 					<li>the <a href="http://aspell.sf.net/" target="_blank">GNU Aspell</a> and <a href="http://ftp.gnu.org/gnu/aspell/dict/" target="_blank">its dictionaries</a> for spell checking support.</li>
 					<li><a href="http://httpd.apache.org/" target="_blank">Apache</a> with <a href="http://httpd.apache.org/docs-2.0/mod/core.html#acceptpathinfo" target="_blank">AcceptPathInfo</a> set to On (Apache 2 and later only) for queryless URL support.</li>
 					<li>
-						<a href="http://www.php.net" target="_blank">PHP</a> 4.3.0 or higher, with the following set in php.ini:
+						<a href="http://www.php.net" target="_blank">PHP</a> 5.0.0 or higher, with the following set in php.ini:
 						<ul>
 							<li>the <a href="http://www.php.net/ref.info#ini.max-input-time" target="_blank">max_input_time</a> directive is set to a value of at least 30.</li>
 							<li>the <a href="http://www.php.net/configuration.directives#ini.post-max-size" target="_blank">post_max_size</a> and <a href="http://www.php.net/configuration.directives#ini.upload-max-filesize" target="_blank">upload_max_filesize</a> directives are set to the size of the largest attachments you wish to be able to upload.</li>
@@ -137,6 +143,13 @@
 						</ul>
 					</li>
 					<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 4.0.15 or higher with query caching enabled.</li>
+					<li>Any of the following database systems (MySQL only for 1.0 and 1.1)
+						<ul>
+							<li><a href="http://www.mysql.com/" target="_blank">MySQL</a> 5.0 or higher.</li>
+							<li><a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a> 8.2.13 or higher.</li>
+							<li><a href="http://www.sqlite.org/" target="_blank">SQLite</a> 2.8 or higher.</li>
+						</ul>
+					</li>
 					<li><a href="http://www.boutell.com/gd/" target="_blank">GD Graphics Library</a> 2.0 or higher.</li>
 				</ul>
 
@@ -154,7 +167,7 @@
 				<br />
 				The first page you see may request your FTP information.  If you see this screen, it is because the installer found some files or folders with inadequate permissions for SMF to run properly.  If you enter your FTP information here, the installer can automatically fix these permissions for you.  Please note that the path should be the same path you see in your FTP client.  For example, it might be &quot;public_html/forum&quot;.  And remember, the installer will not save your FTP password anywhere.<br />
 				<br />
-				When you are asked for MySQL login information, make sure the user you specify has access to the database your current software is using (if it uses MySQL.)  Often, the easiest way to do this is to install with the same database name, username, and password as your other software (but with a prefix like &quot;smf_&quot;.)
+				When you are asked for database login information, make sure the user you specify has access to the database your current software is using (if it uses MySQL.)  Often, the easiest way to do this is to install with the same database name, username, and password as your other software (but with a prefix like &quot;smf_&quot;.)
 			</div>
 
 			<div class="panel">
@@ -164,7 +177,7 @@
 				<br />
 				To begin, download the converter you want from <a href="http://download.simplemachines.org/?converters">the download page</a>.  If there is no converter available for the software or version you're using, please check our forum for information about one.  Otherwise, download the file (for example, it might be yoursoftware_to_smf.zip) and upload its contents to the same folder as SMF.<br />
 				<br />
-				Once that's done, use your browser to go to http://www.example.com/forum/convert.php or http://www.example.com/forum/yoursoftware_to_smf.php, where www.example.com/forum is the URL to where you have installed SMF, and yoursoftware_to_smf.php is the name of the converter (if the downloaded file does not include convert.php.)  For most converters, you should be presented with two boxes - one the path to SMF, which should already be correct, and another for your software.  The converters will detect if the path is correct for you, so if it takes a few tries, don't worry.  You will also see a box for the current password - this should be the password for the MySQL account you installed SMF with.<br />
+				Once that's done, use your browser to go to http://www.example.com/forum/convert.php, where www.example.com/forum is the URL to where you have installed SMF.  For most converters, you should be presented with two boxes - one the path to SMF, which should already be correct, and another for your software.  The converters will detect if the path is correct for you, so if it takes a few tries, don't worry.  You will also see a box for the current password - this should be the password for the database account you installed SMF with.<br />
 				<br />
 				After you hit continue, the conversion process will begin.  Depending on the size of your forum, it may take quite some time, but it will continue for you automatically.  You may, near the end, be prompted to specify whether you wish for some extra feature converted, but that is very converter-specific.
 			</div>

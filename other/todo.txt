@@ -1,11 +1,3 @@
-CHANGES TO BE MADE FOR 1.1:
--------------------------------------------------------------------------------
-Add interface for cache_enable setting, at least turning it on.
-Message icons of longer than 16 characters - disallow or fix?
-After vote on confidential poll, show what you voted for.
-The installer should detect mod_security, if possible.
-
-
 FEATURES OR CHANGES CONSIDERED FOR 1.1 OR LATER:
 -------------------------------------------------------------------------------
 Consider adding a way to disallow the default smiley set for Owdy.
@@ -15,7 +7,7 @@ Site RSS feeds.
 Add If-Modified-Since to rss feeds...?
 Installer -> Client does not support authentication protocol requested by server; consider upgrading MySQL client.
 Permission for just seeing the darn board for guests without entrance?
-$txt[130]
+$txt['regards_team']
 Member by member "mark topics older than xx read" and same for admins?
 Merged notice liked moved, when crossing boards with a merge?
 Set login cookie using HTTP_HOST too?  This might work out well.
@@ -36,34 +28,22 @@ Search for "// !!! TODO" for other things... (only doing this for package manage
 Move --> check for post_new?
 Group by group theme permissions <-- much later, just adding because everyone seems to think I'm ignoring it.
 context -> x amount of time ago.
-Reply to all interface? (PMs)
 Search in all templates with options.
 WAP 1.1 posting, login, etc.?
-Use style="width: Zpx;" instead of width="Z"? (good in all browsers.)
 Investigate using form {margin: 0;} and table {border: 0;} in default theme.
-Use white-space: nowrap instead of nowrap="nowrap"?  Only works in IE 5.5+ :'(?
 You are here/disabled/etc. in MoveTopic with javascript to block submit.
 Attachments optionally using FTP instead of the filesystem.
 Possibly separate the different types of packages less?
 Better support from running scripts, with options and cool stuff ^_^.
-Use $txt['smf173'] for running scripts?
+Use $txt['script_output'] for running scripts?
 Add strings to the Packages language files for modifications to use. (like about what's being done to the database!)
 Don't change email address until it's *for sure* verified as a real address.
 Login should have a checkbox for "invisible"?
 meta keywords/description
 Report bug?
-When you vote on a poll, also allow a reply easily? / Show poll results on reply? <-- notice the ?!
+When you vote on a poll, also allow a reply easily? <-- notice the ?!
 Actually make repair.php do something.
 Access child + no access parent = child is parent?  Maybe this is bad.
 Profile and Recent should have quickmod.
 Add ability to flag (sticky) personal messages.
-Add ability to use folders for personal messages, and rules to sort them.
-Attachment hash code?
 Change the attachmentType of the avatars in the attachment directory to '2'
-Browse, search and maintain attachments of all types
-Move avatars from the attachment dir -> custom avatar dir and v.v.
-
-
-CHANGES FOR AFTER 1.1:
--------------------------------------------------------------------------------
-.

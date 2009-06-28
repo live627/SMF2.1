@@ -282,7 +282,7 @@ function initialize_inputs()
 
 function show_settings()
 {
-	global $txt, $smcFunc, $db_connection, $db_type, $db_name, $db_prefix;
+	global $txt, $smcFunc, $db_connection, $db_type, $db_name, $db_prefix, $context;
 
 	// Check to make sure Settings.php exists!
 	if (file_exists(dirname(__FILE__) . '/Settings.php'))

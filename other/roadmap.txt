@@ -3,17 +3,9 @@ Tentative Roadmap for SMF 1.1:
 
 SMF 1.1 RC2
 --------------------------------------------------------------------------------
- - resolve any bugs found in Beta 3 or Beta 4.
- - clean up and split some templates to make it easier to modify themes.
- - more comments and better organized code, aka code review.
- - attempt to track down any and all possible injections, and fix them.
- - write up tutorials for very advanced things, introduction to coding style,
-   how to write common things for modifications, etc.
-
 
 Later
 --------------------------------------------------------------------------------
- - reply to all, conversations, and such things in PersonalMessage.
  - new download page with options for default language, theme, etc.
  - Dreamweaver/Frontpage "friendly" theme, if possible, using inline PHP.
  - better handling of children and parents where access is absent from parents
