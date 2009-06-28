@@ -2324,7 +2324,7 @@ INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VA
 INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (6, 'Yahoo!', 'slurp', '');
 INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (7, 'Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', '');
 INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (8, 'Yahoo! (Image)', 'Yahoo-MMCrawler', '');
-INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (9, 'Yahoo! (Publisher)', 'yahoo', '');
+INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (9, 'Yahoo! (Publisher)', 'YahooFeedSeeker', '');
 INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (10, 'MSN (Mobile)', 'MSNBOT_Mobile', '');
 INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (11, 'MSN (Media)', 'msnbot-media', '');
 INSERT INTO {$db_prefix}spiders (id_spider, spider_name, user_agent, ip_info) VALUES (12, 'MSN', 'msnbot', '');

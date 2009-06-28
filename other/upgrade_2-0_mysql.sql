@@ -476,7 +476,7 @@ $additional_spiders = array(
 	'slurp' => array('Yahoo!', 'slurp', ''),
 	'YahooSeeker/M1A1-R2D2' => array('Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
 	'Yahoo-MMCrawler' => array('Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
-	'yahoo' => array('Yahoo! (Publisher)', 'yahoo', ''),
+	'yahoo' => array('Yahoo! (Publisher)', 'YahooFeedSeeker', ''),
 	'MSNBOT_Mobile' => array('MSN (Mobile)', 'MSNBOT_Mobile', ''),
 	'msnbot-media' => array('MSN (Media)', 'msnbot-media', ''),
 	'msnbot' => array('MSN', 'msnbot', ''),
@@ -543,6 +543,14 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_stats (
 	stat_date date NOT NULL default '0001-01-01',
 	PRIMARY KEY (stat_date, id_spider)
 ) ENGINE=MyISAM{$db_collation};
+---#
+
+---# Updating Yahoo Feed Seeker
+UPDATE
+	SET user_agent = "YahooFeedSeeker"
+WHERE
+	spider_name = "Yahoo! (Publisher)"
+	AND user_agent = "yahoo";
 ---#
 
 /******************************************************************************/
