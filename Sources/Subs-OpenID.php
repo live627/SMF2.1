@@ -256,17 +256,17 @@ function smf_openID_return()
 
 	if ($smcFunc['db_num_rows']($result) == 0)
 	{
-		// Need to this user over to the registration page.
+		// Store the received openid info for the user when returned to the registration page.
 		$_SESSION['openid'] = array(
 			'verified' => true,
 			'openid_uri' => $openid_uri,
-			'nickname' => $_GET['openid_sreg_nickname'],
-			'email' => $_GET['openid_sreg_email'],
 		);
-
+		if (isset($_GET['openid_sreg_nickname']))
+			$_SESSION['openid']['nickname'] = $_GET['openid_sreg_nickname'],
+		if (isset($_GET['openid_sreg_email']))
+			$_SESSION['openid']['email'] = $_GET['openid_sreg_email'],
 		if (isset($_GET['openid_sreg_dob']))
 			$_SESSION['openid']['dob'] = $_GET['openid_sreg_dob'];
-
 		if (isset($_GET['openid_sreg_gender']))
 			$_SESSION['openid']['gender'] = $_GET['openid_sreg_gender'];
 
