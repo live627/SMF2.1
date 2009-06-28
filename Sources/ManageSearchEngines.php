@@ -452,9 +452,7 @@ function SpiderCheck()
 
 	// We cache the spider data for five minutes if we can.
 	if (!empty($modSettings['cache_enable']))
-	{
 		$spider_data = cache_get_data('spider_search', 300);
-	}
 
 	if (!isset($spider_data) || $spider_data === NULL)
 	{

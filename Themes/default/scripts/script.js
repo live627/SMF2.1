@@ -695,7 +695,7 @@ function hashAdminPassword(doForm, username, cur_session_id)
 	if (typeof(hex_sha1) == "undefined")
 		return;
 
-	doForm.admin_hash_pass.value = hex_sha1(hex_sha1(username.toLowerCase() + doForm.admin_pass.value) + cur_session_id);
+	doForm.admin_hash_pass.value = hex_sha1(hex_sha1(username.php_to8bit().php_strtolower() + doForm.admin_pass.value) + cur_session_id);
 	doForm.admin_pass.value = doForm.admin_pass.value.replace(/./g, "*");
 }
 
