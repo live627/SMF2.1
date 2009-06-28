@@ -151,6 +151,7 @@ June 2009
  ! OpenID undefined indexes when requested info wasn't returned (Subs-OpenID.php) [Bug 3097]
  ! Backing up tables would report the wrong current table (upgrade.php, DbExtra-mysql.php, upgrade_2-0_mysql.sql) [Bug 3073]
  - Removed old button headers for babylon theme from default and curve (english/keystats.gif, english/newsbox.gif, english/userinfo.gif) [Bug 3515]
+ * Sqlite is a flatfile backup so don't show the backup options (ManageMaintenance.template.php, ManageMaintenance.english.php) [Bug 2956]
 
 
 May 2009

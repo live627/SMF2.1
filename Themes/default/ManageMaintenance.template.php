@@ -4,7 +4,7 @@
 // Template for the database maintenance tasks.
 function template_maintain_database()
 {
-	global $context, $settings, $options, $txt, $scripturl;
+	global $context, $settings, $options, $txt, $scripturl, $db_type;
 
 	// If maintenance has finished tell the user.
 	if (!empty($context['maintenance_finished']))
@@ -33,10 +33,19 @@ function template_maintain_database()
 		<tr class="windowbg">
 			<td>
 				<form action="', $scripturl, '?action=admin;area=maintain;sa=database;activity=backup" method="post" accept-charset="', $context['character_set'], '">
+					<p>', $txt['maintain_backup_info'], '</p>';
+
+	if ($db_type == 'sqlite')
+		echo '
+					<p><input type="submit" value="', $txt['maintain_backup_save'], '" id="submitDump" class="button_submit" /></p>';
+	else
+		echo '
 					<p><label for="struct"><input type="checkbox" name="struct" id="struct" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" class="input_check" checked="checked" /> ', $txt['maintain_backup_struct'], '</label><br />
 					<label for="data"><input type="checkbox" name="data" id="data" onclick="document.getElementById(\'submitDump\').disabled = !document.getElementById(\'struct\').checked &amp;&amp; !document.getElementById(\'data\').checked;" checked="checked" class="input_check" /> ', $txt['maintain_backup_data'], '</label><br />
 					<label for="compress"><input type="checkbox" name="compress" id="compress" value="gzip" checked="checked" class="input_check" /> ', $txt['maintain_backup_gz'], '</label></p>
-					<p><input type="submit" value="', $txt['maintain_backup_save'], '" id="submitDump" onclick="return document.getElementById(\'struct\').checked || document.getElementById(\'data\').checked;" class="button_submit" /></p>
+					<p><input type="submit" value="', $txt['maintain_backup_save'], '" id="submitDump" onclick="return document.getElementById(\'struct\').checked || document.getElementById(\'data\').checked;" class="button_submit" /></p>';
+
+	echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 				</form>
 			</td>
