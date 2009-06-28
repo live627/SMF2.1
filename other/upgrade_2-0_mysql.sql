@@ -170,7 +170,7 @@ $nameChanges = array(
 	),
 	'log_scheduled_tasks' => array(
 		'ID_LOG' => 'ID_LOG id_log mediumint(8) NOT NULL auto_increment',
-		'ID_TASK' => 'ID_TASK id_task smallint(5) NOT NULL default default \'0\'',
+		'ID_TASK' => 'ID_TASK id_task smallint(5) NOT NULL default \'0\'',
 		'timeRun' => 'timeRun time_run int(10) NOT NULL default \'0\'',
 		'timeTaken' => 'timeTaken time_taken float NOT NULL default \'0\'',
 	),
@@ -391,7 +391,7 @@ foreach ($nameChanges as $table_name => $table)
 		
 		// Check if this change may need a special edit.
 		checkChange($change);
-		
+
 		if (protected_alter($change, $substep, true) == false)
 			$actualChanges[] = ' CHANGE COLUMN ' . $coldef;
 	}

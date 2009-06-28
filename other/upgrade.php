@@ -1378,7 +1378,7 @@ function BackupDatabase()
 		// Backup each table!
 		for ($substep = $_GET['substep'], $n = count($table_names); $substep < $n; $substep++)
 		{
-			$upcontext['cur_table_name'] = str_replace($db_prefix, '', $table_names[$substep]);
+			$upcontext['cur_table_name'] = str_replace($db_prefix, '', (isset($table_names[$substep + 1]) ? $table_names[$substep + 1] : $table_names[$substep]));
 			$upcontext['cur_table_num'] = $substep + 1;
 
 			$upcontext['step_progress'] = (int) (($upcontext['cur_table_num'] / $upcontext['table_count']) * 100);
@@ -2945,7 +2945,7 @@ function protected_alter($change, $substep, $is_test = false)
 		{
 			$smcFunc['db_free_result']($request);
 
-			$success = upgrade_query( '
+			$success = upgrade_query('
 				ALTER TABLE ' . $db_prefix . $change['table'] . '
 				' . $change['text'], true) !== false;
 
@@ -3082,9 +3082,8 @@ function checkChange(&$change)
 	if (trim($current_type) != trim($temp[3]))
 		$temp[3] = $current_type;
 
-
 	// Piece this back together.
-	$change['text'] = implode(' ', $temp);
+	$change['text'] = str_replace('NOT_NULL', 'NOT NULL', implode(' ', $temp));
 }
 
 // The next substep.
@@ -4243,22 +4242,23 @@ function template_backup_database()
 			// Got an update!
 			function onBackupUpdate(oXMLDoc)
 			{
-				var sTableName = "";
+				var sCurrentTableName = "";
 				var iTableNum = 0;
+				var sCompletedTableName = getInnerHTML(document.getElementById(\'current_table\'));
 				for (var i = 0; i < oXMLDoc.getElementsByTagName("table")[0].childNodes.length; i++)
-					sTableName += oXMLDoc.getElementsByTagName("table")[0].childNodes[i].nodeValue;
+					sCurrentTableName += oXMLDoc.getElementsByTagName("table")[0].childNodes[i].nodeValue;
 				iTableNum = oXMLDoc.getElementsByTagName("table")[0].getAttribute("num");
 
 				// Update the page.
 				setInnerHTML(document.getElementById(\'tab_done\'), iTableNum);
-				setInnerHTML(document.getElementById(\'current_table\'), sTableName);
+				setInnerHTML(document.getElementById(\'current_table\'), sCurrentTableName);
 				lastTable = iTableNum;
 				updateStepProgress(iTableNum, ', $upcontext['table_count'], ', ', $upcontext['step_weight'] * ((100 - $upcontext['step_progress']) / 100), ');';
 
 		// If debug flood the screen.
 		if ($is_debug)
 			echo '
-				setOuterHTML(document.getElementById(\'debuginfo\'), \'<br />Completed Table: &quot;\' + sTableName + \'&quot;.<span id="debuginfo"><\' + \'/span>\');
+				setOuterHTML(document.getElementById(\'debuginfo\'), \'<br />Completed Table: &quot;\' + sCompletedTableName	 + \'&quot;.<span id="debuginfo"><\' + \'/span>\');
 				window.scroll(0,99999);';
 
 		echo '

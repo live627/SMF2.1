@@ -69,6 +69,14 @@ function smf_db_backup_table($table, $backup_table)
 
 	$table = str_replace('{db_prefix}', $db_prefix, $table);
 
+	// First, get rid of the old table.
+	$smcFunc['db_query']('', '
+		DROP TABLE IF EXISTS {raw:backup_table}',
+		array(
+			'backup_table' => $backup_table,
+		)
+	);
+
 	// Can we do this the quick way?
 	$result = $smcFunc['db_query']('', '
 		CREATE TABLE {raw:backup_table} LIKE {raw:table}',
@@ -147,13 +155,6 @@ function smf_db_backup_table($table, $backup_table)
 			', $create) . ')';
 	else
 		$create = '';
-
-	$smcFunc['db_query']('', '
-		DROP TABLE IF EXISTS {raw:backup_table}',
-		array(
-			'backup_table' => $backup_table,
-		)
-	);
 
 	$request = $smcFunc['db_query']('', '
 		CREATE TABLE {raw:backup_table} {raw:create}

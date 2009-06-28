@@ -149,6 +149,7 @@ June 2009
  * Curve: updated the ModerationCenter template to match Curve's look and feel (ModerationCenter template, moderate.css, ModerationCenter.php)
  ! Sqlite install broke due to extra comma (install_2-0_sqlite.sql) [Bug 3549]
  ! OpenID undefined indexes when requested info wasn't returned (Subs-OpenID.php) [Bug 3097]
+ ! Backing up tables would report the wrong current table (upgrade.php, DbExtra-mysql.php, upgrade_2-0_mysql.sql) [Bug 3073]
 
 
 May 2009
