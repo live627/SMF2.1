@@ -205,8 +205,7 @@ function list_getMailQueue($start, $items_per_page, $sort)
 
 	$request = $smcFunc['db_query']('', '
 		SELECT
-			id_mail, time_sent, recipient, priority,
-			IF(private = 1, {string:personal_message}, subject) AS subject
+			id_mail, time_sent, recipient, priority, private, subject
 		FROM {db_prefix}mail_queue
 		ORDER BY {raw:sort}
 		LIMIT {int:start}, {int:items_per_page}',
@@ -214,12 +213,17 @@ function list_getMailQueue($start, $items_per_page, $sort)
 			'start' => $start,
 			'sort' => $sort,
 			'items_per_page' => $items_per_page,
-			'personal_message' => $txt['personal_message'],
 		)
 	);
 	$mails = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		// Private PM/email subjects and similar shouldn't be shown in the mailbox area.
+		if (!empty($row['private']))
+			$row['subject'] = $txt['personal_message'];
+
 		$mails[] = $row;
+	}
 	$smcFunc['db_free_result']($request);
 
 	return $mails;

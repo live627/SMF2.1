@@ -153,6 +153,7 @@ June 2009
  - Removed old button headers for babylon theme from default and curve (english/keystats.gif, english/newsbox.gif, english/userinfo.gif) [Bug 3515]
  * Sqlite is a flatfile backup so don't show the backup options (ManageMaintenance.template.php, ManageMaintenance.english.php) [Bug 2956]
  ! Hashing admin passwords didn't accept unicode characters (script.js) [Bug 3114]
+ ! Mailbox and IF causing db error for Sqlite. (ManageMail.php)
 
 
 May 2009
