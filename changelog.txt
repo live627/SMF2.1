@@ -154,6 +154,7 @@ June 2009
  * Sqlite is a flatfile backup so don't show the backup options (ManageMaintenance.template.php, ManageMaintenance.english.php) [Bug 2956]
  ! Hashing admin passwords didn't accept unicode characters (script.js) [Bug 3114]
  ! Mailbox and IF causing db error for Sqlite. (ManageMail.php)
+ ! Recount stats caused inapproved topics/posts to ceased to be counted towards forum stats (Subs.php) [Bug 3557]
 
 
 May 2009
