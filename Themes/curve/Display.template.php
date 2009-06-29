@@ -618,7 +618,7 @@ function template_main()
 				', $txt['quick_reply_desc'], $context['is_locked'] ? '<p><strong>' . $txt['quick_reply_warning'] . '</strong></p>' : '', $context['oldTopicError'] ? '<p><strong>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</strong></p>' : '', '
 			</div>
 			<div id="quickReplyContent">', $context['can_reply_approved'] ? '' : '<em>' . $txt['wait_for_approval'] . '</em>', '
-				', !$context['can_reply_approved'] && $context['verification_message'] ? '<br />' : '', '
+				', !$context['can_reply_approved'] && $context['require_verification'] ? '<br />' : '', '
 				<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">
 					<input type="hidden" name="topic" value="', $context['current_topic'], '" />
 					<input type="hidden" name="subject" value="', $context['response_prefix'], $context['subject'], '" />
