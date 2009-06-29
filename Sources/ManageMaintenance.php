@@ -1018,14 +1018,14 @@ function AdminBoardRecount()
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.num_replies) AS num_replies, MAX(t.unapproved_posts) AS unapproved_posts,
-					COUNT(ma.id_msg) AS real_num_replies, COUNT(mu.id_msg) AS real_unapproved_posts
+					CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END AS real_num_replies, COUNT(mu.id_msg) AS real_unapproved_posts
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = {int:is_approved})
 					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = {int:not_approved})
 				WHERE t.id_topic > {int:start}
 					AND t.id_topic <= {int:max_id}
 				GROUP BY t.id_topic
-				HAVING COUNT(ma.id_msg) != MAX(t.num_replies)
+				HAVING CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END != MAX(t.num_replies)
 					OR COUNT(mu.id_msg) != MAX(t.unapproved_posts)',
 				array(
 					'is_approved' => 1,
