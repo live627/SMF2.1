@@ -156,6 +156,7 @@ June 2009
  ! Mailbox and IF causing db error for Sqlite. (ManageMail.php)
  ! Recount stats caused inapproved topics/posts to ceased to be counted towards forum stats (Subs.php) [Bug 3557]
  * Undefined verification related variable causing errors in log (Display.template.php) [Bug 3556]
+ ! Find and repair any errors was incorrectly working out the no. of approved and unapproved posts in a topic (ManageMaintenance.php) [Bug 3424]
 
 
 May 2009
