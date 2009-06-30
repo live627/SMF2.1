@@ -262,9 +262,9 @@ function smf_openID_return()
 			'openid_uri' => $openid_uri,
 		);
 		if (isset($_GET['openid_sreg_nickname']))
-			$_SESSION['openid']['nickname'] = $_GET['openid_sreg_nickname'],
+			$_SESSION['openid']['nickname'] = $_GET['openid_sreg_nickname'];
 		if (isset($_GET['openid_sreg_email']))
-			$_SESSION['openid']['email'] = $_GET['openid_sreg_email'],
+			$_SESSION['openid']['email'] = $_GET['openid_sreg_email'];
 		if (isset($_GET['openid_sreg_dob']))
 			$_SESSION['openid']['dob'] = $_GET['openid_sreg_dob'];
 		if (isset($_GET['openid_sreg_gender']))
