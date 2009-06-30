@@ -63,7 +63,7 @@ function smf_db_backup_table($table, $backup_table)
 	global $smcFunc, $db_prefix;
 	static $no_engine_support = null;
 
-	// We check for engine support this way to save time repeatedly performind this check.
+	// We check for engine support this way to save time repeatedly performing this check.
 	if (is_null($no_engine_support))
 		$no_engine_support = version_compare('4', $smcFunc['db_get_version']) > 0;
 
@@ -335,7 +335,7 @@ function smf_db_table_sql($tableName)
 	global $smcFunc, $db_prefix;
 	static $no_engine_support = null;
 
-	// We check for engine support this way to save time repeatedly performind this check.
+	// We check for engine support this way to save time repeatedly performing this check.
 	if (is_null($no_engine_support))
 		$no_engine_support = version_compare('4', $smcFunc['db_get_version']) > 0;
 
