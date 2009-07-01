@@ -6,6 +6,7 @@ SMF 2.0 RC2                                                                  ???
 July 2009
 --------------------------------------------------------------------------------
  ! Sqlite error no such column: variable (Subs-Db-Sqlite.php) [Bug 3259]
+ - Removed inline link tree option from babylon, curve and core (Settings.template.php) [Feature 3174] 
 
 June 2009
 --------------------------------------------------------------------------------

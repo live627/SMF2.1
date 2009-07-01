@@ -180,10 +180,6 @@ function template_settings()
 			'label' => $txt['member_list_bar'],
 		),
 		array(
-			'id' => 'linktree_link',
-			'label' => $txt['current_pos_text_img'],
-		),
-		array(
 			'id' => 'show_profile_buttons',
 			'label' => $txt['show_view_profile_button'],
 		),

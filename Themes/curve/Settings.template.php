@@ -204,11 +204,6 @@ function template_settings()
 			'label' => $txt['enable_mark_as_read'],
 		),
 		array(
-			'id' => 'linktree_inline',
-			'label' => $txt['enable_inline_links'],
-			'description' => $txt['inline_desc'],
-		),
-		array(
 			'id' => 'show_stats_index',
 			'label' => $txt['show_stats_index'],
 		),
