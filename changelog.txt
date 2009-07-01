@@ -3,6 +3,10 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 RC2                                                                  ???
 ================================================================================
+July 2009
+--------------------------------------------------------------------------------
+ ! Sqlite error no such column: variable (Subs-Db-Sqlite.php) [Bug 3259]
+
 June 2009
 --------------------------------------------------------------------------------
  * Curve: rewrote the ManageMembers template to match Curve's look and feel. (ManageMembers.template.php, admin.css)
