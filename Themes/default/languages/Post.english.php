@@ -85,6 +85,7 @@ $txt['lock_after_post'] = 'Lock after Post';
 $txt['notify_replies'] = 'Notify me of replies.';
 $txt['lock_topic'] = 'Lock this topic.';
 $txt['shortcuts'] = 'shortcuts: hit alt+s to submit/post or alt+p to preview';
+$txt['shortcuts_firefox'] = 'shortcuts: hit shift+alt+s to submit/post or shift+alt+p to preview';
 $txt['option'] = 'Option';
 $txt['reset_votes'] = 'Reset Vote Count';
 $txt['reset_votes_check'] = 'Check this if you want to reset all vote counts to 0.';

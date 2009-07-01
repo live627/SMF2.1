@@ -1447,7 +1447,7 @@ function template_manual_posting_topics()
 								</tr>
 								<tr>
 									<td align="center" colspan="2"><span class="smalltext"><br />
-									', $txt['manual_posting_shortcuts'], '</span><br />
+									', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
 									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
 								</tr>
 							</table>
@@ -1709,7 +1709,7 @@ function template_manual_posting_topics()
 										swapOptions();
 //]]>
 </script> <span class="smalltext"><br />
-										', $txt['manual_posting_shortcuts'], '</span><br />
+										', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
 										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" />
 									</td>
 								</tr>

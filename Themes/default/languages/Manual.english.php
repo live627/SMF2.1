@@ -329,6 +329,7 @@ $txt['manual_posting_add_options'] = 'Additional Options';
 $txt['manual_posting_omit_clarity'] = 'omitted for clarity and demonstrated below.';
 $txt['manual_posting_subject'] = 'Subject';
 $txt['manual_posting_shortcuts'] = 'shortcuts: hit alt+s to submit/post or alt+p to preview';
+$txt['manual_posting_shortcuts_firefox'] = 'shortcuts: hit shift+alt+s to submit/post or shift+alt+p to preview';
 $txt['manual_posting_posts'] = 'Post';
 $txt['manual_posting_preview'] = 'Preview';
 $txt['manual_posting_nav_tree'] = 'Some forums show the <strong>navigation tree</strong> at the top in a space-saving horizontal mode.';

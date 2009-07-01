@@ -1016,7 +1016,7 @@ function template_send()
 							</tr>
 							<tr>
 								<td align="center" colspan="2">
-									<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
+									<span class="smalltext"><br />', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
 									', template_control_richedit($context['post_box_name'], 'buttons'), '
 								</td>
 							</tr>

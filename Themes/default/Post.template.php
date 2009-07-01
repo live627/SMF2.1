@@ -571,7 +571,7 @@ function template_main()
 	echo '
 							<tr>
 								<td align="center" colspan="2">
-									<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
+									<span class="smalltext"><br />', $context['browser']['is_firefox'] ? $txt['shortcuts_firefox'] : $txt['shortcuts'], '</span><br />
 									', template_control_richedit($context['post_box_name'], 'buttons');
 
 	// Option to delete an event if user is editing one.
