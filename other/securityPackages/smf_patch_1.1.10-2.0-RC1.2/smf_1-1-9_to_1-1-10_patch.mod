@@ -21,6 +21,7 @@ $forum_version = 'SMF 1.1.10';
 </replace>
 
 
+
 <edit file>
 $sourcedir/Post.php
 </edit file>
