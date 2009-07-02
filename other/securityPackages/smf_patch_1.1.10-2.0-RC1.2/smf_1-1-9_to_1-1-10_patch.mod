@@ -257,3 +257,28 @@ $sourcedir/ManageBans.php
 	updateStats('member');
 </replace>
 
+
+
+<edit file>
+$sourcedir/Subs-Auth.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.6                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0)
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
+</search for>
+
+<replace>
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0 || $_COOKIE[session_name()] != session_id())
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
+</replace>

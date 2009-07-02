@@ -144,3 +144,29 @@ $sourcedir/Post.php
 		unset($_REQUEST['msg'], $_POST['msg'], $_GET['msg']);
 
 </replace>
+
+
+
+<edit file>
+$sourcedir/Subs-Auth.php
+</edit file>
+<search for>
+* Software Version:           SMF 2.0 RC1                                         *
+</search for>
+
+<replace>
+* Software Version:           SMF 2.0 RC1.2                                       *
+</replace>
+
+
+<search for>
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0)
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
+</search for>
+
+<replace>
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0 || $_COOKIE[session_name()] != session_id())
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
+</replace>
