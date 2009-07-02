@@ -210,6 +210,7 @@ $sourcedir/Profile.php
 				'url' => 'http://www.apnic.net/apnic-bin/whois2.pl?searchtext=' . $context['ip'],
 </replace>
 
+
 <search for>
 				'url' => 'http://ws.arin.net/whois/?queryinput=' . $context['ip'],
 </search for>
@@ -218,6 +219,7 @@ $sourcedir/Profile.php
 				'url' => 'http://ws.arin.net/cgi-bin/whois.pl?queryinput=' . $context['ip'],
 </replace>
 
+
 <search for>
 				'url' => 'http://www.db.ripe.net/whois?searchtext=' . $context['ip'],
 </search for>
@@ -225,3 +227,33 @@ $sourcedir/Profile.php
 <replace>
 				'url' => 'http://www.ripe.net/perl/whois?searchtext=' . $context['ip'],
 </replace>
+
+
+
+<edit file>
+$sourcedir/ManageBans.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1                                             *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+	if (!empty($updates))
+		foreach ($updates as $newStatus => $members)
+			updateMemberData($members, array('is_activated' => $newStatus));
+</search for>
+
+<replace>
+	if (!empty($updates))
+		foreach ($updates as $newStatus => $members)
+			updateMemberData($members, array('is_activated' => $newStatus));
+
+	// Update the amount of members awaiting approval
+	updateStats('member');
+</replace>
+
