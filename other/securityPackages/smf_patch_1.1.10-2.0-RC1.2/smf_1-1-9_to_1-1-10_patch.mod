@@ -187,3 +187,41 @@ $sourcedir/ManageAttachments.php
 <replace>
 				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
 </replace>
+
+
+
+<edit file>
+$sourcedir/Profile.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.9                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+				'url' => 'http://wq.apnic.net/apnic-bin/whois.pl?searchtext=' . $context['ip'],
+</search for>
+
+<replace>
+				'url' => 'http://www.apnic.net/apnic-bin/whois2.pl?searchtext=' . $context['ip'],
+</replace>
+
+<search for>
+				'url' => 'http://ws.arin.net/whois/?queryinput=' . $context['ip'],
+</search for>
+
+<replace>
+				'url' => 'http://ws.arin.net/cgi-bin/whois.pl?queryinput=' . $context['ip'],
+</replace>
+
+<search for>
+				'url' => 'http://www.db.ripe.net/whois?searchtext=' . $context['ip'],
+</search for>
+
+<replace>
+				'url' => 'http://www.ripe.net/perl/whois?searchtext=' . $context['ip'],
+</replace>
