@@ -135,3 +135,55 @@ $sourcedir/Post.php
 		unset($_REQUEST['msg'], $_POST['msg'], $_GET['msg']);
 
 </replace>
+
+
+
+<edit file>
+$sourcedir/PersonalMessage.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.6                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+		$context['post_error'][$error_type] = true;
+		if (isset($txt['error_' . $error_type]))
+			$context['post_error']['messages'][] = $txt['error_' . $error_type];
+</search for>
+
+<replace>
+		// There is no compatible language string. So lets work around that.
+		if ($error_type == 'wrong_verification_code')
+			$txt['error_wrong_verification_code'] = $txt['visual_verification_failed'];
+
+		$context['post_error'][$error_type] = true;
+		if (isset($txt['error_' . $error_type]))
+			$context['post_error']['messages'][] = $txt['error_' . $error_type];
+</replace>
+
+
+
+<edit file>
+$sourcedir/ManageAttachments.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.9                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \'' . ($modSettings['custom_avatar_url'] ? '' : ';image') . '\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
+</search for>
+
+<replace>
+				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
+</replace>
