@@ -34,7 +34,7 @@
 	with the URL index.php?action=action-in-url.  Relatively simple, no?
 */
 
-$forum_version = 'SMF 2.0 RC1.2';
+$forum_version = 'SMF 2.0 RC1-1';
 
 // Get everything started up...
 define('SMF', 1);
