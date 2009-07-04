@@ -10,6 +10,7 @@ July 2009
  ! Firefox broke our access keys so FF users will have to use shift+alt+s (Help.template, Post.template.php, Personal Message.template.php) [Bug 3558]
  ! Validate previewing a message better (Post.php, index.php)
  ! In some rare cases, the cookie did not get updated with the new session id (Subs-Auth.php) [Bug 1183]
+ ! If WYSIWYG editor was disabled, this could cause resizing to fail (editor.js)
 
 
 June 2009
