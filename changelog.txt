@@ -11,6 +11,7 @@ July 2009
  ! Validate previewing a message better (Post.php, index.php)
  ! In some rare cases, the cookie did not get updated with the new session id (Subs-Auth.php) [Bug 1183]
  ! If WYSIWYG editor was disabled, this could cause resizing to fail (editor.js)
+ ! phpsessionid may not be always be stored in the cookie (Subs-Auth.php) [Bug 3570]
 
 
 June 2009

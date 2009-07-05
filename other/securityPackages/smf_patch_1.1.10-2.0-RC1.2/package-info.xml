@@ -24,7 +24,7 @@
 		<modification type="file" format="boardmod">smf_1-1-9_to_1-1-10_patch.mod</modification>
 	</install>
 	<!-- This may fail due to the - in the version -->
-	<install for="2.0 RC1-1">
+	<install for="2.0 RC1-1, 2.0 RC1 1, 2.0 RC1.1">
 		<readme type="inline">
 			This patch file will update your forum to SMF 2.0 RC1.2.
 		</readme>
