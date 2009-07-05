@@ -282,3 +282,25 @@ $sourcedir/Subs-Auth.php
 		if (version_compare(PHP_VERSION, '4.3.2') === 0 || $_COOKIE[session_name()] != session_id())
 			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
 </replace>
+
+
+
+<edit file>
+$sourcedir/Register.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.6                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+		if (trim($_POST['realName']) != '' && !isReservedName($_POST['realName'], $memID) && $func['strlen']($_POST['realName']) <= 60)
+</search for>
+
+<replace>
+		if (trim($_POST['realName']) != '' && !isReservedName($_POST['realName']) && $func['strlen']($_POST['realName']) <= 60)
+</replace>

@@ -14,6 +14,7 @@ July 2009
  ! phpsessionid may not be always be stored in the cookie (Subs-Auth.php) [Bug 3570]
  ! JumpTo doesn't strip HTML from active option (Display.php, MessageIndex.php) [Bug 3565]
  ! Sending newsletter wasn't logged as an admin action (ManageNews.php, Modlog.english.php) [Bug 3571]
+ ! Undefined $memID (Register.php)
 
 
 June 2009
