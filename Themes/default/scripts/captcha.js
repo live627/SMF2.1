@@ -12,7 +12,7 @@ function smfCaptcha(imageURL, uniqueID, useLibrary, letterCount)
 	// Automatically get the captcha event handlers in place and the like.
 	function autoCreate()
 	{
-		// Is there anything to cycle images with - if so attach the refresh image functio.?
+		// Is there anything to cycle images with - if so attach the refresh image function?
 		var cycleHandle = document.getElementById('visual_verification' + uniqueID + '_refresh');
 		if (cycleHandle)
 		{
