@@ -74,6 +74,7 @@ $txt['modlog_ac_removed_all_groups'] = 'Removed &quot;{member}&quot; from all gr
 
 $txt['modlog_ac_remind_member'] = 'Sent out a reminder to &quot;{member}&quot; to activate their account';
 $txt['modlog_ac_approve_member'] = 'Approved/Activated the account of &quot;{member}&quot;';
+$txt['modlog_ac_newsletter'] = 'Sent Newsletter';
 
 // Restore topic.
 $txt['modlog_ac_restore_topic'] = 'Restored topic &quot;{topic}&quot; from &quot;{board}&quot; to &quot;{board_to}&quot;';

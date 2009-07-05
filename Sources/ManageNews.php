@@ -755,7 +755,12 @@ function SendMailing($clean_only = false)
 		$last_id_member = $context['start'] + $num_at_once;
 	// If we have no id_member then we're done.
 	elseif (empty($last_id_member) && empty($context['recipients']['emails']))
+	{
+		// Log this into the admin log.
+		logAction('newsletter', array(), 'admin');
+
 		redirectexit('action=admin');
+	}
 
 	$context['start'] = $last_id_member;
 
