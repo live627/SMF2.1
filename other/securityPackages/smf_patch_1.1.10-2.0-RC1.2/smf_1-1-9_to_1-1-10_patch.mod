@@ -40,7 +40,7 @@ $sourcedir/Post.php
 </search for>
 
 <replace>
-	// No message is comlete without a topic.
+	// No message is complete without a topic.
 	if (empty($topic) && !empty($_REQUEST['msg']))
 	{
 		$request = db_query("
