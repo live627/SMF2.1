@@ -12,6 +12,7 @@ July 2009
  ! In some rare cases, the cookie did not get updated with the new session id (Subs-Auth.php) [Bug 1183]
  ! If WYSIWYG editor was disabled, this could cause resizing to fail (editor.js)
  ! phpsessionid may not be always be stored in the cookie (Subs-Auth.php) [Bug 3570]
+ ! JumpTo doesn't strip HTML from active option (Display.php, MessageIndex.php) [Bug 3565]
 
 
 June 2009
