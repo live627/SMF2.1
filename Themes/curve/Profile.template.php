@@ -804,9 +804,9 @@ function template_showPermissions()
 		else
 			echo '
 			<p class="windowbg2 description">', $txt['showPermissions_none_board'], '</p>';
-	}
 	echo '
 		</div><br />';
+	}
 }
 
 // Template for user statistics, showing graphs and the like.
