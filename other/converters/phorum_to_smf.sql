@@ -102,7 +102,7 @@ TRUNCATE {$to_prefix}attachments;
 ---* {$to_prefix}messages 200
 SELECT
 	m.message_id AS id_msg, m.thread AS id_topic, m.datestamp AS poster_time,
-	m.user_id AS id_member, SUBSTRING(m.subject, 1, 255),
+	m.user_id AS id_member, SUBSTRING(m.subject, 1, 255) AS subject,
 	SUBSTRING(IFNULL(u.email, m.email), 1, 255) AS poster_email,
 	SUBSTRING(IFNULL(u.username, m.author), 1, 255) AS poster_name,
 	m.forum_id AS id_board,

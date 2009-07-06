@@ -1639,6 +1639,22 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	// The non-breaking-space looks a bit different each time.
 	$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : "\xC2\xA0") : '\xA0';
 
+	// This saves time by doing our break long words checks here.
+	if (!empty($modSettings['fixLongWords']) && $modSettings['fixLongWords'] > 5)
+	{
+		if ($context['browser']['is_gecko'] || $context['browser']['is_konqueror'])
+			$breaker = '<span style="margin: 0 -0.5ex 0 0;"> </span>';
+		// Opera...
+		elseif ($context['browser']['is_opera'])
+			$breaker = '<span style="margin: 0 -0.65ex 0 -1px;"> </span>';
+		// Internet Explorer...
+		else
+			$breaker = '<span style="width: 0; margin: 0 -0.6ex 0 -1px;"> </span>';
+
+		// PCRE will not be happy if we don't give it a short.
+		$modSettings['fixLongWords'] = (int) min(65535, $modSettings['fixLongWords']);
+	}
+
 	$pos = -1;
 	while ($pos !== false)
 	{
@@ -1763,26 +1779,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 			if (!empty($modSettings['fixLongWords']) && $modSettings['fixLongWords'] > 5)
 			{
-				// This is SADLY and INCREDIBLY browser dependent.
-				if ($context['browser']['is_gecko'] || $context['browser']['is_konqueror'])
-					$breaker = '<span style="margin: 0 -0.5ex 0 0;"> </span>';
-				// Opera...
-				elseif ($context['browser']['is_opera'])
-					$breaker = '<span style="margin: 0 -0.65ex 0 -1px;"> </span>';
-				// Internet Explorer...
-				else
-					$breaker = '<span style="width: 0; margin: 0 -0.6ex 0 -1px;"> </span>';
-
-				// PCRE will not be happy if we don't give it a short.
-				$modSettings['fixLongWords'] = (int) min(65535, $modSettings['fixLongWords']);
-
 				// The idea is, find words xx long, and then replace them with xx + space + more.
 				if (strlen($data) > $modSettings['fixLongWords'])
 				{
 					// This is done in a roundabout way because $breaker has "long words" :P.
 					$data = strtr($data, array($breaker => '< >', '&nbsp;' => $context['utf8'] ? "\xC2\xA0" : "\xA0"));
 					$data = preg_replace(
-						'~(?<=[>;:!? ' . $non_breaking_space . '\]()]|^)([\w\.]{' . $modSettings['fixLongWords'] . ',})~e' . ($context['utf8'] ? 'u' : ''),
+						'~(?<=[>;:!? ' . $non_breaking_space . '\]()]|^)([\w' . ($context['utf8'] ? '\pL' : '') . '\.]{' . $modSettings['fixLongWords'] . ',})~e' . ($context['utf8'] ? 'u' : ''),
 						'preg_replace(\'/(.{' . ($modSettings['fixLongWords'] - 1) . '})/' . ($context['utf8'] ? 'u' : '') . '\', \'\\$1< >\', \'$1\')',
 						$data);
 					$data = strtr($data, array('< >' => $breaker, $context['utf8'] ? "\xC2\xA0" : "\xA0" => '&nbsp;'));

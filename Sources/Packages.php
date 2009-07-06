@@ -380,7 +380,7 @@ function PackageInstallTest()
 
 				$context['actions'][] = array(
 					'type' => $txt['execute_modification'],
-					'action' => strtr($action['filename'], array($boarddir => '.')),
+					'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.'))),
 					'description' => $txt['package_action_error']
 				);
 			}
@@ -430,7 +430,7 @@ function PackageInstallTest()
 
 						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename] = array(
 							'type' => $txt['execute_modification'],
-							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 							'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success'],
 							'failed' => $failed,
 						);
@@ -439,7 +439,7 @@ function PackageInstallTest()
 					{
 						$context['actions'][$actual_filename] = array(
 							'type' => $txt['execute_modification'],
-							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 							'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success'],
 							'failed' => $failed,
 						);
@@ -454,7 +454,7 @@ function PackageInstallTest()
 				{
 					$context['actions'][$actual_filename] = array(
 						'type' => $txt['execute_modification'],
-						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 						'description' => $txt['package_action_skipping']
 					);
 				}
@@ -463,14 +463,14 @@ function PackageInstallTest()
 					$context['has_failure'] = true;
 					$context['actions'][$actual_filename] = array(
 						'type' => $txt['execute_modification'],
-						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 						'description' => $txt['package_action_missing']
 					);
 				}
 				elseif ($mod_action['type'] == 'error')
 					$context['actions'][$actual_filename] = array(
 						'type' => $txt['execute_modification'],
-						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 						'description' => $txt['package_action_error']
 					);
 			}
@@ -492,7 +492,7 @@ function PackageInstallTest()
 					if (empty($mod_action['is_custom']))
 						$context['actions'][$actual_filename]['operations'][] = array(
 							'type' => $txt['execute_modification'],
-							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 							'description' => $mod_action['failed'] ? $txt['package_action_failure'] : $txt['package_action_success'],
 							'position' => $mod_action['position'],
 							'operation_key' => $operation_key,
@@ -506,7 +506,7 @@ function PackageInstallTest()
 					if (isset($mod_action['is_custom']) && isset($context['theme_actions'][$mod_action['is_custom']]))
 						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename]['operations'][] = array(
 							'type' => $txt['execute_modification'],
-							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
 							'description' => $mod_action['failed'] ? $txt['package_action_failure'] : $txt['package_action_success'],
 							'position' => $mod_action['position'],
 							'operation_key' => $operation_key,
@@ -524,26 +524,26 @@ function PackageInstallTest()
 		elseif ($action['type'] == 'code')
 			$thisAction = array(
 				'type' => $txt['execute_code'],
-				'action' => $action['filename']
+				'action' => $smcFunc['htmlspecialchars']($action['filename']),
 			);
 		elseif ($action['type'] == 'database')
 		{
 			$thisAction = array(
 				'type' => $txt['execute_database_changes'],
-				'action' => $action['filename']
+				'action' => $smcFunc['htmlspecialchars']($action['filename']),
 			);
 		}
 		elseif (in_array($action['type'], array('create-dir', 'create-file')))
 			$thisAction = array(
 				'type' => $txt['package_create'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package_tree'] : $txt['package_file']),
-				'action' => strtr($action['destination'], array($boarddir => '.'))
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
 			);
 		elseif (in_array($action['type'], array('require-dir', 'require-file')))
 		{
 			// Do this one...
 			$thisAction = array(
 				'type' => $txt['package_extract'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
-				'action' => strtr($action['destination'], array($boarddir => '.'))
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
 			);
 
 			// Could this be theme related?
@@ -569,12 +569,12 @@ function PackageInstallTest()
 		elseif (in_array($action['type'], array('move-dir', 'move-file')))
 			$thisAction = array(
 				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package_tree'] : $txt['package_file']),
-				'action' => strtr($action['source'], array($boarddir => '.')) . ' => ' . strtr($action['destination'], array($boarddir => '.'))
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['source'], array($boarddir => '.'))) . ' => ' . $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
 			);
 		elseif (in_array($action['type'], array('remove-dir', 'remove-file')))
 			$thisAction = array(
 				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package_tree'] : $txt['package_file']),
-				'action' => strtr($action['filename'], array($boarddir => '.'))
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.')))
 			);
 
 		if (empty($thisAction))
