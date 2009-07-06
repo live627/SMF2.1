@@ -106,6 +106,7 @@ $sourcedir/Post.php
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_any');
+
 </replace>
 
 
@@ -181,11 +182,11 @@ $sourcedir/ManageAttachments.php
 
 
 <search for>
-				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \'' . ($modSettings['custom_avatar_url'] ? '' : ';image') . '\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
+				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
 </search for>
 
 <replace>
-				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
+				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \'' . ($modSettings['custom_avatar_url'] ? '' : ';image') . '\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . htmlspecialchars($row['filename']) . '</a>'
 </replace>
 
 
@@ -203,29 +204,29 @@ $sourcedir/Profile.php
 
 
 <search for>
-				'url' => 'http://wq.apnic.net/apnic-bin/whois.pl?searchtext=' . $context['ip'],
-</search for>
-
-<replace>
 				'url' => 'http://www.apnic.net/apnic-bin/whois2.pl?searchtext=' . $context['ip'],
+</search for>
+
+<replace>
+				'url' => 'http://wq.apnic.net/apnic-bin/whois.pl?searchtext=' . $context['ip'],
 </replace>
 
 
 <search for>
-				'url' => 'http://ws.arin.net/whois/?queryinput=' . $context['ip'],
-</search for>
-
-<replace>
 				'url' => 'http://ws.arin.net/cgi-bin/whois.pl?queryinput=' . $context['ip'],
+</search for>
+
+<replace>
+				'url' => 'http://ws.arin.net/whois/?queryinput=' . $context['ip'],
 </replace>
 
 
 <search for>
-				'url' => 'http://www.db.ripe.net/whois?searchtext=' . $context['ip'],
+				'url' => 'http://www.ripe.net/perl/whois?searchtext=' . $context['ip'],
 </search for>
 
 <replace>
-				'url' => 'http://www.ripe.net/perl/whois?searchtext=' . $context['ip'],
+				'url' => 'http://www.db.ripe.net/whois?searchtext=' . $context['ip'],
 </replace>
 
 
@@ -425,5 +426,5 @@ $sourcedir/Packages.php
 
 <replace>
 				'type' => $txt['package52'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package54']),
-				'action' => htmlspecialchars(strtr($action['destination'], array($boarddir => '.')))
+				'action' => htmlspecialchars(strtr($action['filename'], array($boarddir => '.')))
 </replace>
