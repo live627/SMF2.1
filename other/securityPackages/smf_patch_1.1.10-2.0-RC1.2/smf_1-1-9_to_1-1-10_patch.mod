@@ -304,3 +304,126 @@ $sourcedir/Register.php
 <replace>
 		if (trim($_POST['realName']) != '' && !isReservedName($_POST['realName']) && $func['strlen']($_POST['realName']) <= 60)
 </replace>
+
+
+
+<edit file>
+$sourcedir/Packages.php
+</edit file>
+<search for>
+* Software Version:           SMF 1.1.8                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                          *
+</replace>
+
+
+<search for>
+					'type' => $txt['package56'],
+					'action' => strtr($action['filename'], array($boarddir => '.')),
+</search for>
+
+<replace>
+					'type' => $txt['package56'],
+					'action' => htmlspecialchars(strtr($action['filename'], array($boarddir => '.'))),
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success']
+</search for>
+
+<replace>
+						'action' => htmlspecialchars(strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success']
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_skipping']
+</search for>
+
+<replace>
+						'action' => htmlspecialchars(strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $txt['package_action_skipping']
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_missing']
+</search for>
+
+<replace>
+						'action' => htmlspecialchars(strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $txt['package_action_missing']
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_error']
+</search for>
+
+<replace>
+						'action' => htmlspecialchars(strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $txt['package_action_error']
+</replace>
+
+
+<search for>
+				'type' => $txt['package57'],
+				'action' => $action['filename']
+</search for>
+
+<replace>
+				'type' => $txt['package57'],
+				'action' => htmlspecialchars($action['filename'])
+</replace>
+
+
+<search for>
+				'type' => $txt['package50'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => strtr($action['destination'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package50'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => htmlspecialchars(strtr($action['destination'], array($boarddir => '.')))
+</replace>
+
+
+<search for>
+				'type' => $txt['package53'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => strtr($action['destination'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package53'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => htmlspecialchars(strtr($action['destination'], array($boarddir => '.')))
+</replace>
+
+
+<search for>
+				'type' => $txt['package51'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => strtr($action['source'], array($boarddir => '.')) . ' => ' . strtr($action['destination'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package51'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => htmlspecialchars(strtr($action['source'], array($boarddir => '.'))) . ' => ' . htmlspecialchars(strtr($action['destination'], array($boarddir => '.')))
+</replace>
+
+
+<search for>
+				'type' => $txt['package52'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => strtr($action['filename'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package52'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package54']),
+				'action' => htmlspecialchars(strtr($action['destination'], array($boarddir => '.')))
+</replace>
