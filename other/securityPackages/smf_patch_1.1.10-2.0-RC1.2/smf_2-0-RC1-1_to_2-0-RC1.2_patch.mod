@@ -170,3 +170,178 @@ $sourcedir/Subs-Auth.php
 		if (version_compare(PHP_VERSION, '4.3.2') === 0 || (isset($_COOKIE[session_name()]) && $_COOKIE[session_name()] != session_id()))
 			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
 </replace>
+
+
+
+<edit file>
+$sourcedir/Packages.php
+</edit file>
+<search for>
+* Software Version:           SMF 2.0 RC1                                         *
+</search for>
+
+<replace>
+* Software Version:           SMF 2.0 RC1.2                                       *
+</replace>
+
+
+<search for>
+					'type' => $txt['execute_modification'],
+					'action' => strtr($action['filename'], array($boarddir => '.')),
+</search for>
+
+<replace>
+					'type' => $txt['execute_modification'],
+					'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.'))),
+</replace>
+
+
+<search for>
+						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename] = array(
+							'type' => $txt['execute_modification'],
+							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+</search for>
+
+<replace>
+						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename] = array(
+							'type' => $txt['execute_modification'],
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+</replace>
+
+
+<search for>
+						$context['actions'][$actual_filename] = array(
+							'type' => $txt['execute_modification'],
+							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+</search for>
+
+<replace>
+						$context['actions'][$actual_filename] = array(
+							'type' => $txt['execute_modification'],
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_skipping']
+</search for>
+
+<replace>
+						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $txt['package_action_skipping']
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_missing']
+</search for>
+
+<replace>
+						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $txt['package_action_missing']
+</replace>
+
+
+<search for>
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_error']
+</search for>
+
+<replace>
+						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+						'description' => $txt['package_action_error']
+</replace>
+
+
+<search for>
+						$context['actions'][$actual_filename]['operations'][] = array(
+							'type' => $txt['execute_modification'],
+							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+</search for>
+
+<replace>
+						$context['actions'][$actual_filename]['operations'][] = array(
+							'type' => $txt['execute_modification'],
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+</replace>
+
+
+<search for>
+						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename]['operations'][] = array(
+							'type' => $txt['execute_modification'],
+							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+</search for>
+
+<replace>
+						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename]['operations'][] = array(
+							'type' => $txt['execute_modification'],
+							'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
+</replace>
+
+
+<search for>
+				'type' => $txt['execute_code'],
+				'action' => $action['filename']
+</search for>
+
+<replace>
+				'type' => $txt['execute_code'],
+				'action' => $smcFunc['htmlspecialchars']($action['filename'])
+</replace>
+
+
+<search for>
+				'type' => $txt['execute_database_changes'],
+				'action' => $action['filename']
+</search for>
+
+<replace>
+				'type' => $txt['execute_database_changes'],
+				'action' => $smcFunc['htmlspecialchars']($action['filename'])
+</replace>
+
+
+<search for>
+				'type' => $txt['package_create'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => strtr($action['destination'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package_create'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
+</replace>
+
+
+<search for>
+				'type' => $txt['package_extract'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => strtr($action['destination'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package_extract'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
+</replace>
+
+
+<search for>
+				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => strtr($action['source'], array($boarddir => '.')) . ' => ' . strtr($action['destination'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['source'], array($boarddir => '.'))) . ' => ' . $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
+</replace>
+
+
+<search for>
+				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => strtr($action['filename'], array($boarddir => '.'))
+</search for>
+
+<replace>
+				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package_tree'] : $txt['package_file']),
+				'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.')))
+</replace>
