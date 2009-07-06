@@ -602,7 +602,7 @@ function PackageInstallTest()
 
 			if (!empty($matches[3]))
 				$path .= $matches[3];
-			$path .= '/' . $action_data['filename'];
+			$path .= '/' . basename($action_data['filename']);
 
 			// Loop through each custom theme to note it's candidacy!
 			foreach ($theme_paths as $id => $theme_data)

@@ -15,6 +15,7 @@ July 2009
  ! JumpTo doesn't strip HTML from active option (Display.php, MessageIndex.php) [Bug 3565]
  ! Sending newsletter wasn't logged as an admin action (ManageNews.php, Modlog.english.php) [Bug 3571]
  ! Undefined $memID (Register.php)
+ ! Multi-theme install breaks package installing (Packages.php) [Bug 1576]
 
 
 June 2009
