@@ -16,6 +16,7 @@ July 2009
  ! Sending newsletter wasn't logged as an admin action (ManageNews.php, Modlog.english.php) [Bug 3571]
  ! Undefined $memID (Register.php)
  ! Multi-theme install breaks package installing (Packages.php) [Bug 1576]
+ * Curve: Links seem to have 100% width on BoardIndex, pushing (!) down. (forum.css) [Bug 3568]
 
 
 June 2009
