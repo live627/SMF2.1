@@ -167,6 +167,6 @@ $sourcedir/Subs-Auth.php
 
 <replace>
 		// Version 4.3.2 didn't store the cookie of the new session.
-		if (version_compare(PHP_VERSION, '4.3.2') === 0 || $_COOKIE[session_name()] != session_id())
+		if (version_compare(PHP_VERSION, '4.3.2') === 0 || (isset($_COOKIE[session_name()]) && $_COOKIE[session_name()] != session_id()))
 			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', !empty($modSettings['secureCookies']));
 </replace>
