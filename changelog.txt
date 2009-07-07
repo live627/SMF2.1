@@ -20,7 +20,7 @@ July 2009
  ! Package actions should be cleaned better (Packages.php)
  ! Break up long words would fail for UTF-8 and do some optimization (Subs.php) [Bug 3365,2520,2666]
  ! Upgrading had some errors for CLI (upgrade.php)
-
+ ! Registering a member via admin should force sending password to email if we're randomly generating it (ManageRegistration.php, Register.template.php) [Bug 3577]
 
 June 2009
 --------------------------------------------------------------------------------

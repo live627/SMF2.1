@@ -136,7 +136,7 @@ function AdminRegister()
 			'check_reserved_name' => true,
 			'check_password_strength' => false,
 			'check_email_ban' => false,
-			'send_welcome_email' => isset($_POST['emailPassword']),
+			'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
 			'require' => isset($_POST['emailActivate']) ? 'activation' : 'nothing',
 			'memberGroup' => empty($_POST['group']) || !allowedTo('manage_membergroups') ? 0 : (int) $_POST['group'],
 		);
