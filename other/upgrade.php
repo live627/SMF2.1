@@ -702,6 +702,9 @@ function upgradeExit($fallThrough = false)
 		// This should not happen my dear... HELP ME DEVELOPERS!!
 		if (!empty($command_line))
 		{
+			if (function_exists('debug_print_backtrace'))
+				debug_print_backtrace();
+
 			echo "\n" . 'Error: Unexpected call to use the ' . (isset($upcontext['sub_template']) ? $upcontext['sub_template'] : '') . ' template. Please copy and paste all the text above and visit the SMF support forum to tell the Developers that they\'ve made a boo boo; they\'ll get you up and running again.';
 			flush();
 			die();
