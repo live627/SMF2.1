@@ -21,6 +21,7 @@ July 2009
  ! Break up long words would fail for UTF-8 and do some optimization (Subs.php) [Bug 3365,2520,2666]
  ! Upgrading had some errors for CLI (upgrade.php)
  ! Registering a member via admin should force sending password to email if we're randomly generating it (ManageRegistration.php, Register.template.php) [Bug 3577]
+ ! Sending PMs not using indexes so add index on real_name (install/upgrade sql files) [Bug 3110]
 
 June 2009
 --------------------------------------------------------------------------------

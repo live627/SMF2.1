@@ -519,6 +519,14 @@ CREATE INDEX {$db_prefix}members_total_time_logged_in ON {$db_prefix}members (to
 ---#
 
 /******************************************************************************/
+--- Adding indexes on real_name.
+/******************************************************************************/
+
+---# Adding index on real_name...
+CREATE INDEX {$db_prefix}members_real_name ON {$db_prefix}members (real_name);
+---#
+
+/******************************************************************************/
 --- Providing more room for ignoring boards.
 /******************************************************************************/
 
