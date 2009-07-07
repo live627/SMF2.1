@@ -19,6 +19,7 @@ July 2009
  * Curve: Links seem to have 100% width on BoardIndex, pushing (!) down. (forum.css) [Bug 3568]
  ! Package actions should be cleaned better (Packages.php)
  ! Break up long words would fail for UTF-8 and do some optimization (Subs.php) [Bug 3365,2520,2666]
+ ! Upgrading had some errors for CLI (upgrade.php)
 
 
 June 2009

@@ -87,6 +87,15 @@ if (!empty($_SERVER['argv']) && php_sapi_name() == 'cli' && empty($_SERVER['REMO
 			$upgrade_path = substr($match[1], -1) == '/' ? substr($match[1], 0, -1) : $match[1];
 	}
 
+// Are we from the client?
+if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
+{
+	$command_line = true;
+	$_GET['ssi'] = 1; // The client can't redirect. So always have SSI set.
+}
+else
+	$command_line = false;
+
 // Load this now just because we can.
 require_once($upgrade_path . '/Settings.php');
 
@@ -627,14 +636,8 @@ $upcontext['page_title'] = isset($modSettings['smfVersion']) ? 'Updating Your SM
 
 $upcontext['right_to_left'] = isset($txt['lang_rtl']) ? $txt['lang_rtl'] : false;
 
-if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
-{
-	$command_line = true;
-
+if ($command_line)
 	cmdStep0();
-}
-else
-	$command_line = false;
 
 // Don't error if we're using xml.
 if (isset($_GET['xml']))
@@ -752,7 +755,11 @@ function upgradeExit($fallThrough = false)
 // Used to direct the user to another location.
 function redirectLocation($location, $addForm = true)
 {
-	global $upgradeurl, $upcontext;
+	global $upgradeurl, $upcontext, $command_line;
+
+	// Command line users can't be redirected.
+	if ($command_line)
+		upgradeExit(true);
 
 	// Are we providing the core info?
 	if ($addForm)
@@ -1526,7 +1533,11 @@ function DatabaseChanges()
 // Clean up any mods installed...
 function CleanupMods()
 {
-	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smcFunc;
+	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smcFunc, $command_line;
+
+	// Sorry. Not supported for command line users.
+	if ($command_line)
+		return true;
 
 	// Skipping first?
 	if (!empty($_POST['skip']))
@@ -2149,7 +2160,7 @@ function DeleteUpgrade()
 	global $command_line, $language, $upcontext, $boarddir, $sourcedir, $forum_version, $user_info, $maintenance, $smcFunc, $db_type;
 
 	// Now it's nice to have some of the basic SMF source files.
-	if (!isset($_GET['ssi']))
+	if (!isset($_GET['ssi']) && !$command_line)
 		redirectLocation('&ssi=1');
 
 	$upcontext['sub_template'] = 'upgrade_complete';
@@ -3060,7 +3071,7 @@ function checkChange(&$change)
 
 	// Not a column we need to check on?
 	if (!in_array($change['name'], array('memberGroups', 'passwordSalt')))
-		return $change;
+		return;
 
 	// Break it up you (six|seven).
 	$temp = explode(' ', str_replace('NOT NULL', 'NOT_NULL', $change['text']));
@@ -3075,6 +3086,9 @@ function checkChange(&$change)
 			'old_name' => $temp[1],
 			'new_name' => $temp[2],
 	));
+	if ($smcFunc['db_num_rows'] != 1)
+		return;
+
 	list (, $current_type) = $smcFunc['db_fetch_assoc']($request);
 	$smcFunc['db_free_result']($request);
 
