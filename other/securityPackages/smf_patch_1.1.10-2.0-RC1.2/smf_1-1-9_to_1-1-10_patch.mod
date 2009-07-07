@@ -428,3 +428,67 @@ $sourcedir/Packages.php
 				'type' => $txt['package52'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package54']),
 				'action' => htmlspecialchars(strtr($action['filename'], array($boarddir => '.')))
 </replace>
+
+
+
+<edit file>
+$sourcedir/ManageRegistration.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.1.6                                           *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.1.10                                           *
+</replace>
+
+
+<search for>
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+
+<search for>
+			'send_welcome_email' => isset($_POST['emailPassword']),
+</search for>
+
+<replace>
+			'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
+</replace>
+
+
+
+<edit file>
+$themedir/Register.template.php
+</edit file>
+
+<search for>
+				if (document.forms.postForm.emailActivate.checked)
+</search for>
+
+<replace>
+				if (document.forms.postForm.emailActivate.checked || document.forms.postForm.password.value == \'\')
+</replace>
+
+
+<search for>
+					<input type="password" name="password" id="password_input" size="30" /><br />
+</search for>
+
+<replace>
+					<input type="password" name="password" id="password_input" size="30" onchange="onCheckChange();" /><br />
+</replace>
+
+
+<search for>
+					<input type="checkbox" name="emailPassword" id="emailPassword_check" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="check" /><br />
+</search for>
+
+<replace>
+					<input type="checkbox" name="emailPassword" id="emailPassword_check" checked="checked" disabled="disabled" class="check" /><br />
+</replace>

@@ -345,3 +345,58 @@ $sourcedir/Packages.php
 				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.')))
 </replace>
+
+
+
+<edit file>
+$sourcedir/ManageRegistration.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 2.0 RC1                                         *
+</search for>
+
+<replace>
+* Software Version:           SMF 2.0 RC1.2                                       *
+</replace>
+
+
+<search for>
+			'send_welcome_email' => isset($_POST['emailPassword']),
+</search for>
+
+<replace>
+			'send_welcome_email' => isset($_POST['emailPassword']) || empty($_POST['password']),
+</replace>
+
+
+
+<edit file>
+$themedir/Register.template.php
+</edit file>
+
+<search for>
+				if (document.forms.postForm.emailActivate.checked)
+</search for>
+
+<replace>
+				if (document.forms.postForm.emailActivate.checked || document.forms.postForm.password.value == \'\')
+</replace>
+
+
+<search for>
+					<input type="password" name="password" id="password_input" tabindex="', $context['tabindex']++, '" size="30" /><br />
+</search for>
+
+<replace>
+					<input type="password" name="password" id="password_input" tabindex="', $context['tabindex']++, '" size="30" onchange="onCheckChange();" /><br />
+</replace>
+
+
+<search for>
+					<input type="checkbox" name="emailPassword" id="emailPassword_check" tabindex="', $context['tabindex']++, '" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="check" /><br />
+</search for>
+
+<replace>
+					<input type="checkbox" name="emailPassword" id="emailPassword_check" tabindex="', $context['tabindex']++, '" checked="checked" disabled="disabled" class="check" /><br />
+</replace>
