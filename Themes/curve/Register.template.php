@@ -519,7 +519,7 @@ function template_admin_register()
 			<script type="text/javascript"><!-- // --><![CDATA[
 				function onCheckChange()
 				{
-					if (document.forms.postForm.emailActivate.checked)
+					if (document.forms.postForm.emailActivate.checked || document.forms.postForm.password.value == \'\')
 					{
 						document.forms.postForm.emailPassword.disabled = true;
 						document.forms.postForm.emailPassword.checked = true;
@@ -553,7 +553,7 @@ function template_admin_register()
 						<span class="smalltext">', $txt['admin_register_password_desc'], '</span>
 					</dt>
 					<dd>
-						<input type="password" name="password" id="password_input" tabindex="', $context['tabindex']++, '" size="30" class="input_password" />
+						<input type="password" name="password" id="password_input" tabindex="', $context['tabindex']++, '" size="30" class="input_password" onchange="onCheckChange();" />
 					</dd>';
 
 	if (!empty($context['member_groups']))
@@ -580,7 +580,7 @@ function template_admin_register()
 						<span class="smalltext">', $txt['admin_register_email_detail_desc'], '</span>
 					</dt>
 					<dd>
-						<input type="checkbox" name="emailPassword" id="emailPassword_check" tabindex="', $context['tabindex']++, '" checked="checked"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? ' disabled="disabled"' : '', ' class="input_check" />
+						<input type="checkbox" name="emailPassword" id="emailPassword_check" tabindex="', $context['tabindex']++, '" checked="checked" disabled="disabled" class="input_check" />
 					</dd>
 					<dt>
 						<strong><label for="emailActivate_check">', $txt['admin_register_email_activate'], ':</label></strong>
