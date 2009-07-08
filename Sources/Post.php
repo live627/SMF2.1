@@ -2434,7 +2434,7 @@ function notifyMembersBoard(&$topicData)
 			{
 				$emailtype .= $send_body ? '_body' : '';
 				$emaildata = loadEmailTemplate($emailtype, $replacements, $langloaded);
-				sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
+				sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
 			}
 
 			$sentOnceAlready = 1;

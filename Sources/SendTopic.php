@@ -277,7 +277,7 @@ function CustomEmail()
 
 		// Get the template and get out!
 		$emaildata = loadEmailTemplate('send_email', $replacements);
-		sendmail($context['recipient']['email'], $emaildata['subject'], $emaildata['body'], $from_email, null, false, 3, null, true);
+		sendmail($context['recipient']['email'], $emaildata['subject'], $emaildata['body'], $from_email, null, false, 1, null, true);
 
 		// Don't let them send too many!
 		spamProtection('sendmail');
@@ -515,7 +515,7 @@ function ReportToModerator2()
 		$emaildata = loadEmailTemplate('report_to_moderator', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		// Send it to the moderator.
-		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], $user_info['email'], null, false, 0);
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], $user_info['email'], null, false, 2);
 	}
 	$smcFunc['db_free_result']($request);
 

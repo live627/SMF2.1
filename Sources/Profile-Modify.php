@@ -3145,7 +3145,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 				);
 
 				$emaildata = loadEmailTemplate('request_membership', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
-				sendmail($row['email_address'], $emaildata['subject'], $emaildata['body']);
+				sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 2);
 			}
 			$smcFunc['db_free_result']($request);
 		}

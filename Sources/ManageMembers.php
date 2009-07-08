@@ -1208,7 +1208,7 @@ function AdminApprove()
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_reject', $replacements, $member['language']);
-				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 1);
 			}
 		}
 	}
@@ -1228,7 +1228,7 @@ function AdminApprove()
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_delete', $replacements, $member['language']);
-				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 1);
 			}
 		}
 	}
@@ -1243,7 +1243,7 @@ function AdminApprove()
 			);
 
 			$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);
-			sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+			sendmail($member['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 1);
 		}
 	}
 
