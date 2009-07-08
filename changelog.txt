@@ -25,6 +25,7 @@ July 2009
  ! When checking simplemachines.org, suppress the fsockopen/fclose error (install.php, upgrade.php)
  ! WYSIWYG - Basic Html enabled - <a> link when toggled is only half converted (Subs.php) [Bug 2952]
  * Added language string for shorter/abb send pm text string, mainly for non-english languages (Profile.template.php, Profile.english.php) [Bug 3481]
+ ! upgrade had a few failing queries for mysql 4.1 and didn't quite work with CLI still (upgrade.php)
 
 June 2009
 --------------------------------------------------------------------------------

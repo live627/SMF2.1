@@ -91,7 +91,7 @@ if (!empty($_SERVER['argv']) && php_sapi_name() == 'cli' && empty($_SERVER['REMO
 if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 {
 	$command_line = true;
-	$_GET['ssi'] = 1; // The client can't redirect. So always have SSI set.
+	$disable_security = 1;
 }
 else
 	$command_line = false;
@@ -2203,14 +2203,32 @@ function DeleteUpgrade()
 	$upcontext['can_delete_script'] = is_writable(dirname(__FILE__)) || is_writable(__FILE__);
 
 	// Now is the perfect time to fetch the SM files.
-	require_once($sourcedir . '/ScheduledTasks.php');
-	$forum_version = SMF_VERSION;  // The variable is usually defined in index.php so lets just use the constant to do it for us.
-	scheduled_fetchSMfiles(); // Now go get those files!
+	if ($command_line)
+		cli_scheduled_fetchSMfiles();
+	else
+	{
+		require_once($sourcedir . '/ScheduledTasks.php');
+		$forum_version = SMF_VERSION;  // The variable is usually defined in index.php so lets just use the constant to do it for us.
+		scheduled_fetchSMfiles(); // Now go get those files!
+	}
 
 	// Log what we've done.
 	if (empty($user_info['id']))
 		$user_info['id'] = !empty($upcontext['user']['id']) ? $upcontext['user']['id'] : 0;
-	logAction('upgrade', array('version' => $forum_version, 'member' => $user_info['id']), 'admin');
+
+	// Log the action manually, so CLI still works.
+	$smcFunc['db_insert']('',
+		'{db_prefix}log_actions',
+		array(
+			'log_time' => 'int', 'id_log' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action' => 'string',
+			'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534',
+		),
+		array(
+			time(), 3, $user_info['id'], $command_line ? '127.0.0.1' : $user_info['ip'], 'upgrade',
+			0, 0, 0, serialize(array('version' => $forum_version, 'member' => $user_info['id'])),
+		),
+		array('id_action')
+	);
 	$user_info['id'] = 0;
 
 	// Save the current database version.
@@ -2233,6 +2251,63 @@ function DeleteUpgrade()
 
 	$_GET['substep'] = 0;
 	return false;
+}
+
+// Just like the built in one, but setup for CLI to not use themes.
+function cli_scheduled_fetchSMfiles()
+{
+	global $sourcedir, $txt, $language, $settings, $forum_version, $modSettings, $smcFunc;
+
+	if (empty($modSettings['time_format']))
+		$modSettings['time_format'] = '%B %d, %Y, %I:%M:%S %p';
+
+	// What files do we want to get
+	$request = $smcFunc['db_query']('', '
+		SELECT id_file, filename, path, parameters
+		FROM {db_prefix}admin_info_files',
+		array(
+		)
+	);
+
+	$js_files = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$js_files[$row['id_file']] = array(
+			'filename' => $row['filename'],
+			'path' => $row['path'],
+			'parameters' => sprintf($row['parameters'], $language, urlencode($modSettings['time_format']), urlencode($forum_version)),
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	// We're gonna need fetch_web_data() to pull this off.
+	require_once($sourcedir . '/Subs-Package.php');
+
+	foreach ($js_files as $ID_FILE => $file)
+	{
+		// Create the url
+		$server = empty($file['path']) || substr($file['path'], 0, 7) != 'http://' ? 'http://www.simplemachines.org' : '';
+		$url = $server . (!empty($file['path']) ? $file['path'] : $file['path']) . $file['filename'] . (!empty($file['parameters']) ? '?' . $file['parameters'] : '');
+
+		// Get the file
+		$file_data = fetch_web_data($url);
+
+		// If we got an error - give up - the site might be down.
+		if ($file_data === false)
+			return throw_error(sprintf('Could not retrieve the file %1$s.', $url));
+
+		// Save the file to the database.
+		$smcFunc['db_query']('substring', '
+			UPDATE {db_prefix}admin_info_files
+			SET data = SUBSTRING({string:file_data}, 1, 65534)
+			WHERE id_file = {int:id_file}',
+			array(
+				'id_file' => $ID_FILE,
+				'file_data' => $file_data,
+			)
+		);
+	}
+	return true;
 }
 
 function convertSettingsToTheme()
@@ -3070,7 +3145,15 @@ function textfield_alter($change, $substep)
 // Check if we need to alter this query.
 function checkChange(&$change)
 {
-	global $smcFunc;
+	global $smcFunc, $db_type, $databases;
+	static $database_version, $where_field_support;
+
+	// Attempt to find a database_version.
+	if (empty($database_version))
+	{
+		$database_version = $databases[$db_type]['version_check'];
+		$where_field_support = $db_type == 'mysql' && version_compare('5.0', $database_version) <= 0;
+	}
 
 	// Not a column we need to check on?
 	if (!in_array($change['name'], array('memberGroups', 'passwordSalt')))
@@ -3078,22 +3161,47 @@ function checkChange(&$change)
 
 	// Break it up you (six|seven).
 	$temp = explode(' ', str_replace('NOT NULL', 'NOT_NULL', $change['text']));
-	
-	// Get the details about this change.
-	$request = $smcFunc['db_query']('', '
-		SHOW FIELDS
-		FROM {db_prefix}{raw:table}
-		WHERE Field = {string:old_name} OR Field = {string:new_name}',
-		array(
-			'table' => $change['table'],
-			'old_name' => $temp[1],
-			'new_name' => $temp[2],
-	));
-	if ($smcFunc['db_num_rows'] != 1)
-		return;
 
-	list (, $current_type) = $smcFunc['db_fetch_assoc']($request);
-	$smcFunc['db_free_result']($request);
+	// Can we support a shortcut method?
+	if ($where_field_support)
+	{
+		// Get the details about this change.
+		$request = $smcFunc['db_query']('', '
+			SHOW FIELDS
+			FROM {db_prefix}{raw:table}
+			WHERE Field = {string:old_name} OR Field = {string:new_name}',
+			array(
+				'table' => $change['table'],
+				'old_name' => $temp[1],
+				'new_name' => $temp[2],
+		));
+		if ($smcFunc['db_num_rows'] != 1)
+			return;
+	
+		list (, $current_type) = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
+	}
+	else
+	{
+		// Do this the old fashion, sure method way.
+		$request = $smcFunc['db_query']('', '
+			SHOW FIELDS
+			FROM {db_prefix}{raw:table}',
+			array(
+				'table' => $change['table'],
+		));
+		// Mayday!
+		if ($smcFunc['db_num_rows'] == 0)
+			return;
+
+		// Oh where, oh where has my little field gone. Oh where can it be...
+		while ($row = $smcFunc['db_query']($request))
+			if ($row['Field'] == $temp[1] || $row['Field'] == $temp[2])
+			{
+				$current_type = $row['Type'];
+				break;
+			}
+	}
 
 	// If this doesn't match, the column may of been altered for a reason.
 	if (trim($current_type) != trim($temp[3]))
