@@ -1675,7 +1675,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			// Take care of some HTML!
 			if (!empty($modSettings['enablePostHTML']) && strpos($data, '&lt;') !== false)
 			{
-				$data = preg_replace('~&lt;a\s+href=(?:&quot;)?((?:http://|ftp://|https://|ftps://|mailto:).+?)(?:&quot;)?&gt;~i', '[url=$1]', $data);
+				$data = preg_replace('~&lt;a\s+href=(?:&quot;|")?((?:http://|ftp://|https://|ftps://|mailto:).+?)(?:&quot;|")?&gt;~i', '[url=$1]', $data);
 				$data = preg_replace('~&lt;/a&gt;~i', '[/url]', $data);
 
 				// <br /> should be empty.
