@@ -86,7 +86,7 @@ function template_summary()
 
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '			
-				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profileSendIm'], '</a><br />';
+				<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['profile_sendpm_short'], '</a><br />';
 	echo '
 				<a href="', $scripturl, '?action=profile;area=showposts;u=', $context['id_member'], '">', $txt['showPosts'], '</a><br />
 				<a href="', $scripturl, '?action=profile;area=statistics;u=', $context['id_member'], '">', $txt['statPanel'], '</a>
