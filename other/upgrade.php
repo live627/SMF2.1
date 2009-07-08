@@ -909,10 +909,10 @@ function initialize_inputs()
 	if (!isset($_GET['xml']))
 	{
 		$upcontext['remote_files_available'] = false;
-		$test = fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
+		$test = @fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
 		if ($test)
 			$upcontext['remote_files_available'] = true;
-		fclose($test);
+		@fclose($test);
 	}
 
 	// Something is causing this to happen, and it's annoying.  Stop it.

@@ -214,10 +214,10 @@ function initialize_inputs()
 	if (!isset($_GET['xml']))
 	{
 		$incontext['remote_files_available'] = false;
-		$test = fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
+		$test = @fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
 		if ($test)
 			$incontext['remote_files_available'] = true;
-		fclose($test);
+		@fclose($test);
 	}
 
 	// Add slashes, as long as they aren't already being added.

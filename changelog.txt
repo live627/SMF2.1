@@ -22,6 +22,7 @@ July 2009
  ! Upgrading had some errors for CLI (upgrade.php)
  ! Registering a member via admin should force sending password to email if we're randomly generating it (ManageRegistration.php, Register.template.php) [Bug 3577]
  ! Sending PMs not using indexes so add index on real_name (install/upgrade sql files) [Bug 3110]
+ ! When checking simplemachines.org, suppress the fsockopen/fclose error (install.php, upgrade.php)
 
 June 2009
 --------------------------------------------------------------------------------
