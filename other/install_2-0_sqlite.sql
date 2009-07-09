@@ -1465,7 +1465,7 @@ CREATE INDEX {$db_prefix}messages_ip_index ON {$db_prefix}messages (poster_ip, i
 CREATE INDEX {$db_prefix}messages_participation ON {$db_prefix}messages (id_member, id_topic);
 CREATE INDEX {$db_prefix}messages_show_posts ON {$db_prefix}messages (id_member, id_board);
 CREATE INDEX {$db_prefix}messages_id_topic ON {$db_prefix}messages (id_topic);
-
+CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_member, approved, id_msg);
 #
 # Dumping data for table `messages`
 #

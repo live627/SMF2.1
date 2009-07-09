@@ -2365,6 +2365,15 @@ ADD INDEX real_name (real_name(30));
 ---#
 
 /******************************************************************************/
+--- Adding index on member id and message id.
+/******************************************************************************/
+
+---# Adding index on member id and message id...
+ALTER TABLE {$db_prefix}messages
+ADD INDEX id_member_msg (id_member, approved, id_msg);
+---#
+
+/******************************************************************************/
 --- Providing more room for apf options.
 /******************************************************************************/
 
