@@ -343,6 +343,11 @@ SmfEditor.prototype.init = function()
 	{
 		// Cannot have WYSIWYG anyway!
 		this.bRichTextEnabled = false;
+
+		// We need some of the event handlers.
+		createEventListener(this.oTextHandle);
+		createEventListener(window);
+		createEventListener(document);
 	}
 
 	// Make sure we set the message mode correctly.
@@ -1526,9 +1531,12 @@ SmfEditor.prototype.startResize = function(oEvent)
 	// Set the necessary events for resizing.
 	var oResizeEntity = is_ie ? document : window;
 	oResizeEntity.addEventListener('mousemove', this.aEventWrappers.resizeOverDocument, false);
+
 	if (this.bRichTextPossible)
 		this.oFrameDocument.addEventListener('mousemove', this.aEventWrappers.resizeOverIframe, false);
+
 	document.addEventListener('mouseup', this.aEventWrappers.endResize, true);
+
 	if (this.bRichTextPossible)
 		this.oFrameDocument.addEventListener('mouseup', this.aEventWrappers.endResize, true);
 
@@ -1593,9 +1601,12 @@ SmfEditor.prototype.endResize = function (oEvent)
 	// Remove the event...
 	var oResizeEntity = is_ie ? document : window;
 	oResizeEntity.removeEventListener('mousemove', this.aEventWrappers.resizeOverDocument, false);
+
 	if (this.bRichTextPossible)
 		this.oFrameDocument.removeEventListener('mousemove', this.aEventWrappers.resizeOverIframe, false);
+
 	document.removeEventListener('mouseup', this.aEventWrappers.endResize, true);
+
 	if (this.bRichTextPossible)
 		this.oFrameDocument.removeEventListener('mouseup', this.aEventWrappers.endResize, true);
 

@@ -28,6 +28,7 @@ July 2009
  ! upgrade had a few failing queries for mysql 4.1 and didn't quite work with CLI still (upgrade.php)
  ! Changed mail priorities (Several files) [Bug 3513]
  + Slow query on showPosts so add an index on id_member, approved, id_msg (install/upgrade files) [Bug 1742]
+ * When WYSIWYG was disabled we were missing event listener handlers helping with resizer (editor.js) [Bug 3534]
 
 June 2009
 --------------------------------------------------------------------------------
