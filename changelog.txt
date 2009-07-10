@@ -32,6 +32,7 @@ July 2009
  ! Upgrade sql update query was buggy (upgrade_2-0_mysql.sql)
  & Email Activation/Admin Approval string changed (Login.english.php, Help.english.php)
  ! Wrong recount when topic has at least 1 approved and 1 unapproved post (ManageMaintenance.php) [Bug 3424]
+ & Use "Modification Settings" to avoid confusion with Package Manager (Admin.english.php)
 
 
 June 2009
