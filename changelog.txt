@@ -34,6 +34,8 @@ July 2009
  ! Wrong recount when topic has at least 1 approved and 1 unapproved post (ManageMaintenance.php) [Bug 3424]
  & Use "Modification Settings" to avoid confusion with Package Manager (Admin.english.php)
  ! Spiders would be mis-detected in sqlite/postgresql (ManageSearchEngines.php, Subs-Db-Sqlite.php, Subs-Db-PostGresql.php) [Bug 3143]
+ ! Upgrading could re-add all the same spiders (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3179]
+ - Removed Yahoo (Publisher) spider (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql)
 
 
 June 2009

@@ -133,50 +133,32 @@ CREATE TABLE {$db_prefix}spiders (
 
 INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (1, 'Google', 'googlebot', '');
 INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (2, 'Yahoo!', 'slurp', '');
-INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (3, 'MSN', 'msn', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (3, 'MSN', 'msnbot', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (4, 'Google (Mobile)', 'Googlebot-Mobile', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (5, 'Google (Image)', 'Googlebot-Image', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (6, 'Google (AdSense)', 'Mediapartners-Google', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (7, 'Google (Adwords)', 'AdsBot-Google', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (8, 'Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (9, 'Yahoo! (Image)', 'Yahoo-MMCrawler', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (10, 'MSN (Mobile)', 'MSNBOT_Mobile', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (11, 'MSN (Media)', 'msnbot-media', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (12, 'Cuil', 'twiceler', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (13, 'Ask', 'Teoma', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (14, 'Baidu', 'Baiduspider', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (15, 'Gigablast', 'Gigabot', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (16, 'InternetArchive', 'ia_archiver-web.archive.org', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (17, 'Alexa', 'ia_archiver', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (18, 'Omgili', 'omgilibot', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (19, 'EntireWeb', 'Speedy Spider', '');
 ---#
 
----# Adding additional spiders.
+---# Removing a spider.
 ---{
-$additional_spiders = array(
-	'googlebot' => array('Google', 'googlebot', ''),
-	'Googlebot-Mobile' => array('Google (Mobile)', 'Googlebot-Mobile', ''),
-	'Googlebot-Image' => array('Google (Image)', 'Googlebot-Image', ''),
-	'Mediapartners-Google' => array('Google (AdSense)', 'Mediapartners-Google', ''),
-	'AdsBot-Google' => array('Google (Adwords)', 'AdsBot-Google', ''),
-	'slurp' => array('Yahoo!', 'slurp', ''),
-	'YahooSeeker/M1A1-R2D2' => array('Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
-	'Yahoo-MMCrawler' => array('Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
-	'yahoo' => array('Yahoo! (Publisher)', 'yahoo', ''),
-	'MSNBOT_Mobile' => array('MSN (Mobile)', 'MSNBOT_Mobile', ''),
-	'msnbot-media' => array('MSN (Media)', 'msnbot-media', ''),
-	'msnbot' => array('MSN', 'msnbot', ''),
-	'twiceler' => array('Cuil', 'twiceler', ''),
-	'Teoma' => array('Ask', 'Teoma', ''),
-	'Baiduspider' => array('Baidu', 'Baiduspider', ''),
-	'Gigabot' => array('Gigablast', 'Gigabot', ''),
-	'ia_archiver-web.archive.org' => array('InternetArchive', 'ia_archiver-web.archive.org', ''),
-	'ia_archiver' => array('Alexa', 'ia_archiver', ''),
-	'omgilibot' => array('Omgili', 'omgilibot', ''),
-	'Speedy Spider' => array('EntireWeb', 'Speedy Spider', ''),
-);
-
-// Lets get the current spiders.
-$request = upgrade_query("
-		SELECT user_agent
-		FROM {$db_prefix}spiders");
-
-while ($row = $smcFunc['db_fetch_assoc']($request))
-	if (isset($additional_spiders[$row['user_agent']]))
-		unset($additional_spiders[$row['user_agent']]);
-
-// Do we have anything to insert?
-if (!empty($additional_spiders))
-{
-	foreach ($additional_spiders as $spider)
-		upgrade_query("
-			INSERT INTO {$db_prefix}spiders (spider_name, user_agent, ip_info) VALUES ('$spider[0]', '$spider[1]', '$spider[2]')");
-}
+	upgrade_query("
+		DELETE FROM {$db_prefix}spiders
+		WHERE user_agent = 'yahoo' 
+			AND spider_name = 'Yahoo! (Publisher)'
+	");
 ---}
 ---#
 

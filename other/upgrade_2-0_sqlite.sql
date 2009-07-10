@@ -74,58 +74,40 @@ CREATE TABLE {$db_prefix}spiders (
 ---{
 $smcFunc['db_insert']('ignore',
 	'{db_prefix}spiders',
-	array('spider_name' => 'string-255', 'user_agent' => 'string-255', 'ip_info' => 'string-255'),
+	array('id_spider' => 'int', 'spider_name' => 'string-255', 'user_agent' => 'string-255', 'ip_info' => 'string-255'),
 	array(
-		array('Google', 'googlebot', ''),
-		array('Yahoo!', 'slurp', ''),
-		array('MSN', 'msn', ''),
+		array(1, 'Google', 'googlebot', ''),
+		array(2, 'Yahoo!', 'slurp', ''),
+		array(3, 'MSN', 'msnbot', ''),
+		array(4, 'Google (Mobile)', 'Googlebot-Mobile', ''),
+		array(5, 'Google (Image)', 'Googlebot-Image', ''),
+		array(6, 'Google (AdSense)', 'Mediapartners-Google', ''),
+		array(7, 'Google (Adwords)', 'AdsBot-Google', ''),
+		array(8, 'Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
+		array(9, 'Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
+		array(10, 'MSN (Mobile)', 'MSNBOT_Mobile', ''),
+		array(11, 'MSN (Media)', 'msnbot-media', ''),
+		array(12, 'Cuil', 'twiceler', ''),
+		array(13, 'Ask', 'Teoma', ''),
+		array(14, 'Baidu', 'Baiduspider', ''),
+		array(15, 'Gigablast', 'Gigabot', ''),
+		array(16, 'InternetArchive', 'ia_archiver-web.archive.org', ''),
+		array(17, 'Alexa', 'ia_archiver', ''),
+		array(18, 'Omgili', 'omgilibot', ''),
+		array(19, 'EntireWeb', 'Speedy Spider', '')
 	),
 	array('user_agent')
 );
 ---}
 ---#
 
----# Adding additional spiders.
+---# Removing a spider.
 ---{
-$additional_spiders = array(
-	'googlebot' => array('Google', 'googlebot', ''),
-	'Googlebot-Mobile' => array('Google (Mobile)', 'Googlebot-Mobile', ''),
-	'Googlebot-Image' => array('Google (Image)', 'Googlebot-Image', ''),
-	'Mediapartners-Google' => array('Google (AdSense)', 'Mediapartners-Google', ''),
-	'AdsBot-Google' => array('Google (Adwords)', 'AdsBot-Google', ''),
-	'slurp' => array('Yahoo!', 'slurp', ''),
-	'YahooSeeker/M1A1-R2D2' => array('Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
-	'Yahoo-MMCrawler' => array('Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
-	'yahoo' => array('Yahoo! (Publisher)', 'yahoo', ''),
-	'MSNBOT_Mobile' => array('MSN (Mobile)', 'MSNBOT_Mobile', ''),
-	'msnbot-media' => array('MSN (Media)', 'msnbot-media', ''),
-	'msnbot' => array('MSN', 'msnbot', ''),
-	'twiceler' => array('Cuil', 'twiceler', ''),
-	'Teoma' => array('Ask', 'Teoma', ''),
-	'Baiduspider' => array('Baidu', 'Baiduspider', ''),
-	'Gigabot' => array('Gigablast', 'Gigabot', ''),
-	'ia_archiver-web.archive.org' => array('InternetArchive', 'ia_archiver-web.archive.org', ''),
-	'ia_archiver' => array('Alexa', 'ia_archiver', ''),
-	'omgilibot' => array('Omgili', 'omgilibot', ''),
-	'Speedy Spider' => array('EntireWeb', 'Speedy Spider', ''),
-);
-
-// Lets get the current spiders.
-$request = upgrade_query("
-		SELECT user_agent
-		FROM {$db_prefix}spiders");
-
-while ($row = $smcFunc['db_fetch_assoc']($request))
-	if (isset($additional_spiders[$row['user_agent']]))
-		unset($additional_spiders[$row['user_agent']]);
-
-// Do we have anything to insert?
-if (!empty($additional_spiders))
-{
-	foreach ($additional_spiders as $spider)
-		upgrade_query("
-			INSERT INTO {$db_prefix}spiders (spider_name, user_agent, ip_info) VALUES ('$spider[0]', '$spider[1]', '$spider[2]')");
-}
+	upgrade_query("
+		DELETE FROM {$db_prefix}spiders
+		WHERE user_agent = 'yahoo' 
+			AND spider_name = 'Yahoo! (Publisher)'
+	");
 ---}
 ---#
 

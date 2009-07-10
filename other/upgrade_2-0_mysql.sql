@@ -462,56 +462,32 @@ INSERT IGNORE INTO {$db_prefix}spiders
 VALUES
 	(1, 'Google', 'googlebot', ''),
 	(2, 'Yahoo!', 'slurp', ''),
-	(3, 'MSN', 'msn', '');
+	(3, 'MSN', 'msnbot', '');
+	(4, 'Google (Mobile)', 'Googlebot-Mobile', ''),
+	(5, 'Google (Image)', 'Googlebot-Image', ''),
+	(6, 'Google (AdSense)', 'Mediapartners-Google', ''),
+	(7, 'Google (Adwords)', 'AdsBot-Google', ''),
+	(8, 'Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
+	(9, 'Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
+	(10, 'MSN (Mobile)', 'MSNBOT_Mobile', ''),
+	(11, 'MSN (Media)', 'msnbot-media', ''),
+	(12, 'Cuil', 'twiceler', ''),
+	(13, 'Ask', 'Teoma', ''),
+	(14, 'Baidu', 'Baiduspider', ''),
+	(15, 'Gigablast', 'Gigabot', ''),
+	(16, 'InternetArchive', 'ia_archiver-web.archive.org', ''),
+	(17, 'Alexa', 'ia_archiver', ''),
+	(18, 'Omgili', 'omgilibot', ''),
+	(19, 'EntireWeb', 'Speedy Spider', ''),
 ---#
 
----# Adding additional spiders.
+---# Removing a spider.
 ---{
-$additional_spiders = array(
-	'googlebot' => array('Google', 'googlebot', ''),
-	'Googlebot-Mobile' => array('Google (Mobile)', 'Googlebot-Mobile', ''),
-	'Googlebot-Image' => array('Google (Image)', 'Googlebot-Image', ''),
-	'Mediapartners-Google' => array('Google (AdSense)', 'Mediapartners-Google', ''),
-	'AdsBot-Google' => array('Google (Adwords)', 'AdsBot-Google', ''),
-	'slurp' => array('Yahoo!', 'slurp', ''),
-	'YahooSeeker/M1A1-R2D2' => array('Yahoo! (Mobile)', 'YahooSeeker/M1A1-R2D2', ''),
-	'Yahoo-MMCrawler' => array('Yahoo! (Image)', 'Yahoo-MMCrawler', ''),
-	'yahoo' => array('Yahoo! (Publisher)', 'yahoo', ''),
-	'MSNBOT_Mobile' => array('MSN (Mobile)', 'MSNBOT_Mobile', ''),
-	'msnbot-media' => array('MSN (Media)', 'msnbot-media', ''),
-	'msnbot' => array('MSN', 'msnbot', ''),
-	'twiceler' => array('Cuil', 'twiceler', ''),
-	'Teoma' => array('Ask', 'Teoma', ''),
-	'Baiduspider' => array('Baidu', 'Baiduspider', ''),
-	'Gigabot' => array('Gigablast', 'Gigabot', ''),
-	'ia_archiver-web.archive.org' => array('InternetArchive', 'ia_archiver-web.archive.org', ''),
-	'ia_archiver' => array('Alexa', 'ia_archiver', ''),
-	'omgilibot' => array('Omgili', 'omgilibot', ''),
-	'Speedy Spider' => array('EntireWeb', 'Speedy Spider', ''),
-);
-
-// Lets get the current spiders.
-$request = upgrade_query("
-		SELECT user_agent
-		FROM {$db_prefix}spiders");
-
-while ($row = mysql_fetch_assoc($request))
-	if (isset($additional_spiders[$row['user_agent']]))
-		unset($additional_spiders[$row['user_agent']]);
-
-// Do we have anything to insert?
-if (!empty($additional_spiders))
-{
-	$inserts = array();
-	foreach ($additional_spiders as $spider)
-		$inserts[] = "('$spider[0]', '$spider[1]', '$spider[2]')";
-
 	upgrade_query("
-		INSERT INTO {$db_prefix}spiders
-			(spider_name, user_agent, ip_info)
-		VALUES " . implode(',
-			', $inserts));
-}
+		DELETE FROM {$db_prefix}spiders
+		WHERE user_agent = 'yahoo' 
+			AND spider_name = 'Yahoo! (Publisher)'
+	");
 ---}
 ---#
 
