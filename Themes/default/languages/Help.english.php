@@ -429,10 +429,10 @@ $helptxt['registration_method'] = 'This option determines what method of registr
 			<strong>Immediate Registration</strong><br />
 				New members can login and post immediately after registering on your forum.<br />
 		</li><li>
-			<strong>Member Activation</strong><br />
+			<strong>Email Activation</strong><br />
 				When this option is enabled any members registering with the forum will have an activation link emailed to them which they must click before they can become full members.<br />
 		</li><li>
-			<strong>Member Approval</strong><br />
+			<strong>Admin Approval</strong><br />
 				This option will make it so all new members registering to your forum will need to be approved by the admin before they become members.
 		</li>
 	</ul>';

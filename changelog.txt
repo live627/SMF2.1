@@ -30,6 +30,7 @@ July 2009
  + Slow query on showPosts so add an index on id_member, approved, id_msg (install/upgrade files) [Bug 1742]
  * When WYSIWYG was disabled we were missing event listener handlers helping with resizer (editor.js) [Bug 3534]
  ! Upgrade sql update query was buggy (upgrade_2-0_mysql.sql)
+ & Email Activation/Admin Approval string changed (Login.english.php, Help.english.php)
 
 
 June 2009

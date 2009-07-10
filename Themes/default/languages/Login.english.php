@@ -82,8 +82,8 @@ $txt['setting_enableOpenID'] = 'Allow users to register using OpenID';
 $txt['setting_registration_method'] = 'Method of registration employed for new members';
 $txt['setting_registration_disabled'] = 'Registration Disabled';
 $txt['setting_registration_standard'] = 'Immediate Registration';
-$txt['setting_registration_activate'] = 'Member Activation';
-$txt['setting_registration_approval'] = 'Member Approval';
+$txt['setting_registration_activate'] = 'Email Activation';
+$txt['setting_registration_approval'] = 'Admin Approval';
 $txt['setting_notify_new_registration'] = 'Notify administrators when a new member joins';
 $txt['setting_send_welcomeEmail'] = 'Send welcome email to new members';
 
