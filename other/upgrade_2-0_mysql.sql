@@ -624,8 +624,7 @@ if (mysql_num_rows($request) != 0)
 
 		upgrade_query("
 			UPDATE {$db_prefix}settings
-			SET variable = 'visual_verification_type'
-				AND value = $oldValue
+			SET variable = 'visual_verification_type', value = $oldValue
 			WHERE variable = 'disable_visual_verification'");
 	}
 }
