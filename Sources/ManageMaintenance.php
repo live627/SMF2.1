@@ -1016,19 +1016,45 @@ function AdminBoardRecount()
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
+			// Recount approved messages
 			$request = $smcFunc['db_query']('', '
-				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.num_replies) AS num_replies, MAX(t.unapproved_posts) AS unapproved_posts,
-					CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END AS real_num_replies, COUNT(mu.id_msg) AS real_unapproved_posts
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.num_replies) AS num_replies,
+					CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END AS real_num_replies
 				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = {int:is_approved})
+				WHERE t.id_topic > {int:start}
+					AND t.id_topic <= {int:max_id}
+				GROUP BY t.id_topic
+				HAVING CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END != MAX(t.num_replies)',
+				array(
+					'is_approved' => 1,
+					'start' => $_REQUEST['start'],
+					'max_id' => $_REQUEST['start'] + $increment,
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$smcFunc['db_query']('', '
+					UPDATE {db_prefix}topics
+					SET num_replies = {int:num_replies}
+					WHERE id_topic = {int:id_topic}',
+					array(
+						'num_replies' => $row['real_num_replies'],
+						'id_topic' => $row['id_topic'],
+					)
+				);
+			$smcFunc['db_free_result']($request);
+			
+			// Recount unapproved messages
+			$request = $smcFunc['db_query']('', '
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.unapproved_posts) AS unapproved_posts,
+					COUNT(mu.id_msg) AS real_unapproved_posts
+				FROM {db_prefix}topics AS t
 					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = {int:not_approved})
 				WHERE t.id_topic > {int:start}
 					AND t.id_topic <= {int:max_id}
 				GROUP BY t.id_topic
-				HAVING CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END != MAX(t.num_replies)
-					OR COUNT(mu.id_msg) != MAX(t.unapproved_posts)',
+				HAVING COUNT(mu.id_msg) != MAX(t.unapproved_posts)',
 				array(
-					'is_approved' => 1,
 					'not_approved' => 0,
 					'start' => $_REQUEST['start'],
 					'max_id' => $_REQUEST['start'] + $increment,
@@ -1037,10 +1063,9 @@ function AdminBoardRecount()
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$smcFunc['db_query']('', '
 					UPDATE {db_prefix}topics
-					SET num_replies = {int:num_replies}, unapproved_posts = {int:unapproved_posts}
+					SET unapproved_posts = {int:unapproved_posts}
 					WHERE id_topic = {int:id_topic}',
 					array(
-						'num_replies' => $row['real_num_replies'],
 						'unapproved_posts' => $row['real_unapproved_posts'],
 						'id_topic' => $row['id_topic'],
 					)

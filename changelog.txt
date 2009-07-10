@@ -31,6 +31,7 @@ July 2009
  * When WYSIWYG was disabled we were missing event listener handlers helping with resizer (editor.js) [Bug 3534]
  ! Upgrade sql update query was buggy (upgrade_2-0_mysql.sql)
  & Email Activation/Admin Approval string changed (Login.english.php, Help.english.php)
+ ! Wrong recount when topic has at least 1 approved and 1 unapproved post (ManageMaintenance.php) [Bug 3424]
 
 
 June 2009
