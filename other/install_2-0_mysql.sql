@@ -1343,7 +1343,7 @@ CREATE TABLE {$db_prefix}messages (
   KEY ip_index (poster_ip(15), id_topic),
   KEY participation (id_member, id_topic),
   KEY show_posts (id_member, id_board),
-  KEY id_topic (id_topic)
+  KEY id_topic (id_topic),
   KEY id_member_msg (id_member, approved, id_msg)
 ) ENGINE=MyISAM;
 

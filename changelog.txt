@@ -36,7 +36,7 @@ July 2009
  ! Spiders would be mis-detected in sqlite/postgresql (ManageSearchEngines.php, Subs-Db-Sqlite.php, Subs-Db-PostGresql.php) [Bug 3143]
  ! Upgrading could re-add all the same spiders (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql) [Bug 3179]
  - Removed Yahoo (Publisher) spider (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql)
-
+ ! Missing comma caused sql error (install_2-0_mysql.sql) [Bug 3580]
 
 June 2009
 --------------------------------------------------------------------------------
