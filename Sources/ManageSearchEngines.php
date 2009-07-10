@@ -456,7 +456,7 @@ function SpiderCheck()
 
 	if (!isset($spider_data) || $spider_data === NULL)
 	{
-		$request = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query']('spider_check', '
 			SELECT id_spider, user_agent, ip_info
 			FROM {db_prefix}spiders',
 			array(

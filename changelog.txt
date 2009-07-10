@@ -33,6 +33,7 @@ July 2009
  & Email Activation/Admin Approval string changed (Login.english.php, Help.english.php)
  ! Wrong recount when topic has at least 1 approved and 1 unapproved post (ManageMaintenance.php) [Bug 3424]
  & Use "Modification Settings" to avoid confusion with Package Manager (Admin.english.php)
+ ! Spiders would be mis-detected in sqlite/postgresql (ManageSearchEngines.php, Subs-Db-Sqlite.php, Subs-Db-PostGresql.php) [Bug 3143]
 
 
 June 2009

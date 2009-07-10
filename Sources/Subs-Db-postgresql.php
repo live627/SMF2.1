@@ -296,6 +296,9 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		'order_by_board_order' => array(
 			'~(.)$~' => '$1 ORDER BY b.board_order',
 		),
+		'spider_check' => array(
+			'~(.)$~' => '$1 ORDER BY LENGTH(user_agent) DESC',
+		),
 	);
 
 	if (isset($replacements[$identifier]))
