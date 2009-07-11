@@ -467,3 +467,11 @@ CREATE INDEX {$db_prefix}members_real_name ON {$db_prefix}members (real_name);
 ---# Adding index on member id and message id...
 CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_member, approved, id_msg);
 ---#
+
+/******************************************************************************/
+--- Adding index on id_topic, id_msg, id_member, approved.
+/******************************************************************************/
+
+---# Adding index on id_topic, id_msg, id_member, approved...
+CREATE INDEX {$db_prefix}messages_current_topic ON {$db_prefix}messages (id_topic, id_msg, id_member, approved);
+---#

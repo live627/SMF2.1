@@ -1748,6 +1748,7 @@ CREATE INDEX {$db_prefix}messages_participation ON {$db_prefix}messages (id_memb
 CREATE INDEX {$db_prefix}messages_show_posts ON {$db_prefix}messages (id_member, id_board);
 CREATE INDEX {$db_prefix}messages_id_topic ON {$db_prefix}messages (id_topic);
 CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_member, approved, id_msg);
+CREATE INDEX {$db_prefix}messages_current_topic ON {$db_prefix}messages (id_topic, id_msg, id_member, approved);
 
 #
 # Dumping data for table `messages`

@@ -517,6 +517,14 @@ CREATE INDEX {$db_prefix}messages_id_member_msg ON {$db_prefix}messages (id_memb
 ---#
 
 /******************************************************************************/
+--- Adding index on id_topic, id_msg, id_member, approved.
+/******************************************************************************/
+
+---# Adding index on id_topic, id_msg, id_member, approved...
+CREATE INDEX {$db_prefix}messages_current_topic ON {$db_prefix}messages (id_topic, id_msg, id_member, approved);
+---#
+
+/******************************************************************************/
 --- Providing more room for ignoring boards.
 /******************************************************************************/
 

@@ -38,6 +38,7 @@ July 2009
  - Removed Yahoo (Publisher) spider (upgrade_2-0_mysql.sql, upgrade_2-0_postgresql.sql, upgrade_2-0_sqlite.sql)
  ! Missing comma caused sql error (install_2-0_mysql.sql) [Bug 3580]
  & Clearing cache isn't a link its a button/function so re-wrote the language string (ManageMaintenance.english.php) [Bug 3581]
+ + Slow query on display/pagination so add an index on id_topic, id_msg, id_member, approved (install/upgrade files) [Bug 1741]
 
 
 June 2009

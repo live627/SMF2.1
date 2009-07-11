@@ -2349,6 +2349,15 @@ ADD INDEX id_member_msg (id_member, approved, id_msg);
 ---#
 
 /******************************************************************************/
+--- Adding index on id_topic, id_msg, id_member, approved.
+/******************************************************************************/
+
+---# Adding index on id_topic, id_msg, id_member, approved...
+ALTER TABLE {$db_prefix}messages
+ADD INDEX current_topic (id_topic, id_msg, id_member, approved);
+---#
+
+/******************************************************************************/
 --- Providing more room for apf options.
 /******************************************************************************/
 
