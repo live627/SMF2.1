@@ -461,6 +461,27 @@ function smf_db_error($db_string, $connection = null)
 	if (function_exists('log_error'))
 		log_error($txt['database_error'] . ': ' . $query_error . (!empty($modSettings['enableErrorQueryLogging']) ? "\n\n" .$db_string : ''), 'database', $file, $line);
 
+	// Sqlite optimizing - the actual error message isn't helpful or user friendly.
+	if (strpos($query_error, 'no_access') !== false || strpos($query_error, 'database schema has changed') !== false)
+	{
+		if (!empty($context) && !empty($txt) && !empty($txt['error_sqlite_optimizing']))
+			fatal_error($txt['error_sqlite_optimizing'], false);
+		else
+		{
+			// Don't cache this page!
+			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+			header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+			header('Cache-Control: no-cache');
+
+			// Send the right error codes.
+			header('HTTP/1.1 503 Service Temporarily Unavailable');
+			header('Status: 503 Service Temporarily Unavailable');
+			header('Retry-After: 3600');
+
+			die('Sqlite is optimizing the database, the forum can not be accessed until it has finished.  Please try refreshing this page momentarily.');
+		}
+	}
+
 	// Nothing's defined yet... just die with it.
 	if (empty($context) || empty($txt))
 		die($query_error);
