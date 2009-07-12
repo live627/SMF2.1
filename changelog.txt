@@ -40,6 +40,7 @@ July 2009
  & Clearing cache isn't a link its a button/function so re-wrote the language string (ManageMaintenance.english.php) [Bug 3581]
  + Slow query on display/pagination so add an index on id_topic, id_msg, id_member, approved (install/upgrade files) [Bug 1741]
  ! Sqlite error messages when optimizing are not useful (Subs-Db-Sqlite.php, Errors.english.php) [Bug 3177]
+ ! Slight/changes/re-order inner joins for faster performance on recent topics query (Recent.php) [Bug 1941]
 
 
 June 2009
