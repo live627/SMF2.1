@@ -1,6 +1,7 @@
 <edit file>
 $boarddir/index.php
 </edit file>
+
 <search for>
 * Software Version:           SMF 1.0.17                                          *
 </search for>
@@ -23,6 +24,7 @@ $forum_version = 'SMF 1.0.18';
 <edit file>
 $sourcedir/ManageMembers.php
 </edit file>
+
 <search for>
 * Software Version:           SMF 1.0.13                                          *
 </search for>
@@ -30,6 +32,16 @@ $sourcedir/ManageMembers.php
 <replace>
 * Software Version:           SMF 1.0.18                                          *
 </replace>
+
+
+<search for>
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
 
 <search for>
 				'url' => 'http://www.apnic.net/apnic-bin/whois2.pl?searchtext=' . $searchip
@@ -60,10 +72,11 @@ $sourcedir/ManageMembers.php
 
 
 <edit file>
-$sourcedir/Subs-Auth.php
+$sourcedir/Packages.php
 </edit file>
+
 <search for>
-* Software Version:           SMF 1.0.14                                          *
+* Software Version:           SMF 1.0.15                                          *
 </search for>
 
 <replace>
@@ -72,28 +85,11 @@ $sourcedir/Subs-Auth.php
 
 
 <search for>
-		// Version 4.3.2 didn't store the cookie of the new session.
-		if (version_compare(PHP_VERSION, '4.3.2') === 0)
-			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 </search for>
 
 <replace>
-		// Version 4.3.2 didn't store the cookie of the new session.
-		if (version_compare(PHP_VERSION, '4.3.2') === 0 || (isset($_COOKIE[session_name()]) && $_COOKIE[session_name()] != session_id()))
-			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
-</replace>
-
-
-
-<edit file>
-$sourcedir/Packages.php
-</edit file>
-<search for>
-* Software Version:           SMF 1.0.15                                          *
-</search for>
-
-<replace>
-* Software Version:           SMF 1.1.10                                          *
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -205,6 +201,42 @@ $sourcedir/Register.php
 
 <replace>
 		elseif (isset($_POST['emailPassword']) || empty($_POST['password']))
+</replace>
+
+
+
+<edit file>
+$sourcedir/Subs-Auth.php
+</edit file>
+
+<search for>
+* Software Version:           SMF 1.0.14                                          *
+</search for>
+
+<replace>
+* Software Version:           SMF 1.0.18                                          *
+</replace>
+
+
+<search for>
+* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+</search for>
+
+<replace>
+* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
+</replace>
+
+
+<search for>
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0)
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
+</search for>
+
+<replace>
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0 || (isset($_COOKIE[session_name()]) && $_COOKIE[session_name()] != session_id()))
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
 </replace>
 
 
