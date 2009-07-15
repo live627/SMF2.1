@@ -462,7 +462,7 @@ INSERT IGNORE INTO {$db_prefix}spiders
 VALUES
 	(1, 'Google', 'googlebot', ''),
 	(2, 'Yahoo!', 'slurp', ''),
-	(3, 'MSN', 'msnbot', '');
+	(3, 'MSN', 'msnbot', ''),
 	(4, 'Google (Mobile)', 'Googlebot-Mobile', ''),
 	(5, 'Google (Image)', 'Googlebot-Image', ''),
 	(6, 'Google (AdSense)', 'Mediapartners-Google', ''),

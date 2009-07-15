@@ -41,6 +41,7 @@ July 2009
  + Slow query on display/pagination so add an index on id_topic, id_msg, id_member, approved (install/upgrade files) [Bug 1741]
  ! Sqlite error messages when optimizing are not useful (Subs-Db-Sqlite.php, Errors.english.php) [Bug 3177]
  ! Slight/changes/re-order inner joins for faster performance on recent topics query (Recent.php) [Bug 1941]
+ ! Typo preventing sql from working on upgrade (upgrade_2-0_mysql.sql) [Bug 3587]
 
 
 June 2009
