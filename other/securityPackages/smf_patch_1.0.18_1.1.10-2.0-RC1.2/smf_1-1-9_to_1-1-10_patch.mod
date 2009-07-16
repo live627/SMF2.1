@@ -98,15 +98,6 @@ $sourcedir/ManageRegistration.php
 
 
 <search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</replace>
-
-
-<search for>
 			'send_welcome_email' => isset($_POST['emailPassword']),
 </search for>
 
@@ -126,15 +117,6 @@ $sourcedir/Packages.php
 
 <replace>
 * Software Version:           SMF 1.1.10                                          *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -259,15 +241,6 @@ $sourcedir/PersonalMessage.php
 
 <replace>
 * Software Version:           SMF 1.1.10                                          *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
@@ -457,15 +430,6 @@ $sourcedir/Register.php
 
 <replace>
 * Software Version:           SMF 1.1.10                                          *
-</replace>
-
-
-<search for>
-* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
-</search for>
-
-<replace>
-* Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 </replace>
 
 
