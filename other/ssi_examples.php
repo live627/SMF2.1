@@ -15,13 +15,7 @@ require(dirname(__FILE__) . '/SSI.php');
 			body
 			{
 				margin: 1ex;
-			}';
-
-	if ($context['browser']['needs_size_fix'])
-		echo '
-			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
-
-	echo '
+			}
 		</style>';
 
 ?>

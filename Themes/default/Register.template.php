@@ -515,16 +515,6 @@ function template_verification_sound()
 		<title>', $context['page_title'], '</title>
 		<meta name="robots" content="noindex" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<style type="text/css">';
-
-	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
-	if ($context['browser']['needs_size_fix'])
-		echo '
-			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
-
-	// Just show the help text and a "close window" link.
-	echo '
-		</style>
 	</head>
 	<body style="margin: 1ex;">
 		<div class="popuptext" style="text-align: center;">';

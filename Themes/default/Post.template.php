@@ -838,10 +838,6 @@ function template_spellcheck()
 				background: #ffffff;
 			}';
 
-	if ($context['browser']['needs_size_fix'])
-		echo '
-			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
-
 	// As you may expect - we need a lot of javascript for this... load it form the separate files.
 	echo '
 		</style>

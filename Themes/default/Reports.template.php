@@ -219,17 +219,7 @@ function template_print_above()
 				color: black;
 				background-color: #F1F1F1;
 			}
-		</style>';
-
-	/* Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are big...)
-		Thus, in Internet Explorer 4, 5, and Opera 6 this will show fonts one size smaller than usual.
-		Note that this is affected by whether IE 6 is in standards compliance mode.. if not, it will also be big.
-		Standards compliance mode happens when you use xhtml... */
-	if ($context['browser']['needs_size_fix'])
-		echo '
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/fonts-compat.css" />';
-
-	echo '
+		</style>
 	</head>
 	<body>';
 }

@@ -759,15 +759,6 @@ function template_show_notice()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $context['page_title'], '</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<style type="text/css">';
-
-	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
-	if ($context['browser']['needs_size_fix'])
-		echo '
-			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
-
-	echo '
-		</style>
 	</head>
 	<body>
 		<table width="100%" cellpadding="5" cellspacing="0" class="tborder">
