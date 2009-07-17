@@ -42,7 +42,7 @@ July 2009
  ! Sqlite error messages when optimizing are not useful (Subs-Db-Sqlite.php, Errors.english.php) [Bug 3177]
  ! Slight/changes/re-order inner joins for faster performance on recent topics query (Recent.php) [Bug 1941]
  ! Typo preventing sql from working on upgrade (upgrade_2-0_mysql.sql) [Bug 3587]
-
+ ! Install queries for spiders hadn't been updated (install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_sqlite.sql) [Bug 3588]
 
 June 2009
 --------------------------------------------------------------------------------
