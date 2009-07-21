@@ -108,6 +108,7 @@ $txt['package_will_fail_popup_uninstall'] = 'Are you sure you wish to continue u
 $txt['package_install_now'] = 'Install Now';
 $txt['package_uninstall_now'] = 'Uninstall Now';
 $txt['package_other_themes'] = 'Install in Other Themes';
+$txt['package_other_themes_uninstall'] = 'UnInstall in Other Themes';
 $txt['package_other_themes_desc'] = 'To use this modification in themes other than the default, the package manager needs to make additional changes to the other themes. If you\'d like to install this modification in the other themes, please select these themes below.';
 // Don't use entities in the below string.
 $txt['package_theme_failure_warning'] = 'At least one error was encountered during a test install of this theme. Are you sure you wish to attempt installation?';

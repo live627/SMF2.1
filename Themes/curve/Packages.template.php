@@ -183,7 +183,7 @@ function template_view_package()
 			echo '
 			<br />
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
-				<a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $txt['package_other_themes'], '
+				<a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $context['uninstalling'] ? $txt['package_other_themes_uninstall'] : $txt['package_other_themes'], '
 			</h3>
 			<div id="custom_changes">
 				<div class="information">

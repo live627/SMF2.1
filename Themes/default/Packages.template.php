@@ -186,7 +186,7 @@ function template_view_package()
 		{
 			echo '
 			<tr class="catbg">
-				<td colspan="6"><a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $txt['package_other_themes'], '</td>
+				<td colspan="6"><a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" alt="', $txt['package_other_themes'], '" /></a> ', $context['uninstalling'] ? $txt['package_other_themes_uninstall'] : $txt['package_other_themes'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" id="custom_changes">

@@ -226,9 +226,7 @@ function PackageInstallTest()
 	);
 	$theme_paths = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
 		$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
-	}
 	$smcFunc['db_free_result']($request);
 
 	// Get the package info...
@@ -572,10 +570,34 @@ function PackageInstallTest()
 				'action' => $smcFunc['htmlspecialchars'](strtr($action['source'], array($boarddir => '.'))) . ' => ' . $smcFunc['htmlspecialchars'](strtr($action['destination'], array($boarddir => '.')))
 			);
 		elseif (in_array($action['type'], array('remove-dir', 'remove-file')))
+		{
 			$thisAction = array(
 				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.')))
 			);
+
+			// Could this be theme related?
+			if (!empty($action['unparsed_filename']) && preg_match('~^\$(languagedir|languages_dir|imagesdir|themedir|themes_dir)~i', $action['unparsed_filename'], $matches))
+			{
+
+				// Is the action already stated?
+				$theme_action = !empty($action['theme_action']) && in_array($action['theme_action'], array('no', 'yes', 'auto')) ? $action['theme_action'] : 'auto';
+				$action['unparsed_destination'] = $action['unparsed_filename'];
+				// If it's not auto do we think we have something we can act upon?
+				if ($theme_action != 'auto' && !in_array($matches[1], array('languagedir', 'languages_dir', 'imagesdir', 'themedir')))
+					$theme_action = '';
+				// ... or if it's auto do we even want to do anything?
+				elseif ($theme_action == 'auto' && $matches[1] != 'imagesdir')
+					$theme_action = '';
+
+				// So, we still want to do something?
+				if ($theme_action != '')
+					$themeFinds['candidates'][] = $action;
+				// Otherwise is this is going into another theme record it.
+				elseif ($matches[1] == 'themes_dir')
+					$themeFinds['other_themes'][] = strtolower(strtr(parse_path($action['unparsed_filename']), array('\\' => '/')) . '/' . basename($action['filename']));
+			}
+		}
 
 		if (empty($thisAction))
 			continue;
@@ -587,7 +609,7 @@ function PackageInstallTest()
 
 	// Have we got some things which we might want to do "multi-theme"?
 	if (!empty($themeFinds['candidates']))
-	{
+	{	
 		foreach ($themeFinds['candidates'] as $action_data)
 		{
 			// Get the part of the file we'll be dealing with.
@@ -602,7 +624,9 @@ function PackageInstallTest()
 
 			if (!empty($matches[3]))
 				$path .= $matches[3];
-			$path .= '/' . basename($action_data['filename']);
+			
+			if (!$context['uninstalling'])
+				$path .= '/' . basename($action_data['filename']);
 
 			// Loop through each custom theme to note it's candidacy!
 			foreach ($theme_paths as $id => $theme_data)
@@ -629,13 +653,22 @@ function PackageInstallTest()
 								'actions' => array(),
 							);
 
-						$context['theme_actions'][$id]['actions'][] = array(
-							'type' => $txt['package_extract'] . ' ' . ($action_data['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
-							'action' => strtr($theme_data['theme_dir'] . $path, array('\\' => '/', $boarddir => '.')),
-							'description' => '',
-							'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['destination'], 'future' => $theme_data['theme_dir'] . $path))),
-							'not_mod' => true,
-						);
+						if ($context['uninstalling'])
+							$context['theme_actions'][$id]['actions'][] = array(
+								'type' => $txt['package_delete'] . ' ' . ($action_data['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
+								'action' => strtr($theme_data['theme_dir'] . $path, array('\\' => '/', $boarddir => '.')),
+								'description' => '',
+								'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['filename'], 'future' => $theme_data['theme_dir'] . $path, 'id' => $id))),
+								'not_mod' => true,
+							);
+						else
+							$context['theme_actions'][$id]['actions'][] = array(
+								'type' => $txt['package_extract'] . ' ' . ($action_data['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
+								'action' => strtr($theme_data['theme_dir'] . $path, array('\\' => '/', $boarddir => '.')),
+								'description' => '',
+								'value' => base64_encode(serialize(array('type' => $action_data['type'], 'orig' => $action_data['destination'], 'future' => $theme_data['theme_dir'] . $path, 'id' => $id))),
+								'not_mod' => true,
+							);
 					}
 				}
 			}
@@ -750,10 +783,9 @@ function PackageInstall()
 		)
 	);
 	$theme_paths = array();
+	$themes_installed = array(1);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
 		$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
-	}
 	$smcFunc['db_free_result']($request);
 
 	// Are there any theme copying that we want to take place?
@@ -771,6 +803,7 @@ function PackageInstall()
 			if (empty($theme_data['type']))
 				continue;
 
+			$themes_installed[] = $theme_data['id'];
 			$context['theme_copies'][$theme_data['type']][$theme_data['orig']][] = $theme_data['future'];
 		}
 	}
@@ -868,7 +901,6 @@ function PackageInstall()
 	{
 		$failed_steps = array();
 		$failed_count = 0;
-		$themes_installed = array(1);
 
 		foreach ($install_log as $action)
 		{
@@ -891,9 +923,10 @@ function PackageInstall()
 							'sub_step' => $key,
 							'theme' => 1,
 						);
+
 					// Gather the themes we installed into.
 					if (!empty($action['is_custom']))
-						$themes_installed[] = $action['is_custom'];
+						$themes_installed[] = $action['theme'];
 				}
 			}
 			elseif ($action['type'] == 'code' && !empty($action['filename']))
@@ -928,6 +961,7 @@ function PackageInstall()
 				$urls = array(
 					'$boardurl' => $boardurl,
 					'$scripturl' => $scripturl,
+					'$session_var' => $context['session_var'],
 					'$session_id' => $context['session_id'],
 				);
 

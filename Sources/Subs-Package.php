@@ -1395,7 +1395,14 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 			$failure |= !rename($action['source'], $action['destination']);
 		}
 		elseif ($action['type'] == 'remove-dir')
+		{
 			deltree($action['filename']);
+
+			// Any other theme folders?
+			if (!empty($context['theme_copies']) && !empty($context['theme_copies'][$action['type']][$action['filename']]))
+				foreach ($context['theme_copies'][$action['type']][$action['filename']] as $theme_destination)
+					deltree($theme_destination);
+		}
 		elseif ($action['type'] == 'remove-file')
 		{
 			// Make sure the file exists before deleting it.
@@ -1404,10 +1411,17 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 				package_chmod($action['filename']);
 				$failure |= !unlink($action['filename']);
 			}
-
 			// The file that was supposed to be deleted couldn't be found.
 			else
 				$failure = true;
+
+			// Any other theme folders?
+			if (!empty($context['theme_copies']) && !empty($context['theme_copies'][$action['type']][$action['filename']]))
+				foreach ($context['theme_copies'][$action['type']][$action['filename']] as $theme_destination)
+					if (file_exists($theme_destination))
+						$failure |= !unlink($theme_destination);
+					else
+						$failure = true;
 		}
 	}
 
@@ -1838,7 +1852,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						'type' => 'failure',
 						'filename' => $working_file,
 						'search' => $search['search'],
-						'is_custom' => $theme != 1,
+						'is_custom' => $theme > 1 ? $theme : 0,
 					);
 
 					// Skip to the next operation.
@@ -1859,7 +1873,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 									'type' => 'failure',
 									'filename' => $working_file,
 									'search' => $search['search'],
-									'is_custom' => $theme != 1,
+									'is_custom' => $theme > 1 ? $theme : 0,
 								);
 
 							// Continue to the next operation.
