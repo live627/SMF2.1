@@ -610,7 +610,7 @@ function template_browse()
 	if ($context['browser']['is_ie4'])
 		echo '
 			<script type="text/javascript"><!-- // --><![CDATA[
-				add_load_event(smfSetLatestPackages);
+				addLoadEvent(smfSetLatestPackages);
 			// ]]></script>';
 	else
 		echo '

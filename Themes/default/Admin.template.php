@@ -228,7 +228,7 @@ function template_admin()
 	// IE 4 won't like it if you try to change the innerHTML before load...
 	echo '
 
-			var func = function ()
+			var fSetupAdmin = function ()
 			{
 				smfSetAnnouncements();
 				smfCurrentVersion();
@@ -250,7 +250,7 @@ function template_admin()
 
 	echo '
 			}
-			add_load_event(func);
+			addLoadEvent(fSetupAdmin);
 		// ]]></script>';
 }
 
@@ -422,12 +422,12 @@ function template_credits()
 
 	// IE 4 is rather annoying, this wouldn't be necessary...
 	echo '
-			var func = function ()
+			var fSetupCredits = function ()
 			{
 				smfSetLatestSupport();
 				smfCurrentVersion()
 			}
-			add_load_event(func);
+			addLoadEvent(fSetupCredits);
 		// ]]></script>';
 }
 
@@ -663,7 +663,7 @@ function template_view_versions()
 	if ($context['browser']['is_ie4'])
 		echo '
 		<script type="text/javascript"><!-- // --><![CDATA[
-			add_load_event(smfDetermineVersions);
+			addLoadEvent(smfDetermineVersions);
 		// ]]></script>';
 	else
 		echo '

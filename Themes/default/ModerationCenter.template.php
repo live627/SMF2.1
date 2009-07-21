@@ -95,7 +95,7 @@ function template_latest_news()
 				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
 			}
 
-			add_load_event(smfSetAnnouncements);
+			addLoadEvent(smfSetAnnouncements);
 		// ]]></script>';
 
 }

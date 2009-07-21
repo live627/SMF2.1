@@ -1,6 +1,6 @@
 // Add a fix for code stuff?
 if ((is_ie && !is_ie4) || is_webkit || is_ff)
-	add_load_event(smf_codeBoxFix);
+	addLoadEvent(smf_codeBoxFix);
 
 // The purpose of this code is to fix the height of overflow: auto div blocks, because IE can't figure it out for itself.
 function smf_codeBoxFix()

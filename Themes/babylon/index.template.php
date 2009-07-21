@@ -85,12 +85,12 @@ function template_html_above()
 		var smf_scripturl = "', $scripturl, '";
 		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
 		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
-		var func = function ()
+		var fPmPopup = function ()
 		{
 			if (confirm("' . $txt['show_personal_messages'] . '"))
 				window.open(smf_prepareScriptUrl(smf_scripturl) + "action=pm");
 		}
-		add_load_event(func);' : '', '
+		addLoadEvent(fPmPopup);' : '', '
 	// ]]></script>
 	<title>', $context['page_title_html_safe'], '</title>';
 
@@ -408,8 +408,6 @@ function template_body_below()
 		else
 		{
 			echo '
-			add_load_event(smf_codeFix);
-
 			function smf_codeFix()
 			{
 				var codeFix = document.getElementsByTagName ? document.getElementsByTagName("div") : document.all.tags("div");
@@ -419,7 +417,8 @@ function template_body_below()
 					if (typeof(codeFix[i].currentStyle) != \'undefined\' && codeFix[i].currentStyle.overflow == "auto" && (codeFix[i].currentStyle.height == "" || codeFix[i].currentStyle.height == "auto") && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0) && (codeFix[i].offsetHeight != 0 || codeFix[i].className == "code"))
 						codeFix[i].style.height = (codeFix[i].offsetHeight + 36) + "px";
 				}
-			}';
+			}
+			addLoadEvent(smf_codeFix);';
 		}
 
 		echo '

@@ -168,7 +168,7 @@ function template_main()
 	if ($context['browser']['is_ie4'])
 		echo '
 		<script type="text/javascript"><!-- // --><![CDATA[
-			add_load_event(smfSetLatestThemes);
+			addLoadEvent(smfSetLatestThemes);
 		// ]]></script>';
 	else
 		echo '

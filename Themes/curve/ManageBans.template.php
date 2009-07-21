@@ -226,14 +226,14 @@ function template_ban_edit()
 	<br style="clear: both;" /> 
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
-		function updateStatus()
+		var fUpdateStatus = function ()
 		{
 			document.getElementById("expire_date").disabled = !document.getElementById("expires_one_day").checked;
 			document.getElementById("cannot_post").disabled = document.getElementById("full_ban").checked;
 			document.getElementById("cannot_register").disabled = document.getElementById("full_ban").checked;
 			document.getElementById("cannot_login").disabled = document.getElementById("full_ban").checked;
 		}
-		add_load_event(updateStatus);';
+		addLoadEvent(fUpdateStatus);';
 
 	// Auto suggest only needed for adding new bans, not editing
 	if ($context['ban']['is_new'])

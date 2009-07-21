@@ -45,6 +45,8 @@ July 2009
  ! Install queries for spiders hadn't been updated (install_2-0_mysql.sql, install_2-0_postgresql.sql, install_2-0_sqlite.sql) [Bug 3588]
  * The Printpage template was still using old CSS selectors for code and quote blocks. (Printpage template)
  - Removed the fonts-compat stylesheet, as it is no longer considered a necessary. (lots of files)
+ ! Login username match could cause collation errors. (LogInOut.php)
+ ! Small JavaScript fixes/cleanup (several JavaScript files)
 
 
 June 2009

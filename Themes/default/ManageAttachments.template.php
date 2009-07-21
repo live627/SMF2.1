@@ -10,7 +10,7 @@ function template_avatar_settings_below()
 {
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
-	function updateStatus()
+	var fUpdateStatus = function()
 	{
 		document.getElementById("avatar_max_width_external").disabled = document.getElementById("avatar_download_external").checked;
 		document.getElementById("avatar_max_height_external").disabled = document.getElementById("avatar_download_external").checked;
@@ -19,7 +19,7 @@ function template_avatar_settings_below()
 		document.getElementById("custom_avatar_url").disabled = document.getElementById("custom_avatar_enabled").value == 0;
 
 	}
-	add_load_event(updateStatus);
+	addLoadEvent(fUpdateStatus);
 // ]]></script>
 ';
 }

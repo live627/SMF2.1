@@ -1270,37 +1270,30 @@ function smf_prepareScriptUrl(sUrl)
 	return sUrl.indexOf('?') == -1 ? sUrl + '?' : sUrl + (sUrl.charAt(sUrl.length - 1) == '?' || sUrl.charAt(sUrl.length - 1) == '&' || sUrl.charAt(sUrl.length - 1) == ';' ? '' : ';');
 }
 
-var onload_events = new Array();
-function add_load_event(func)
+var aOnloadEvents = new Array();
+function addLoadEvent(fNewOnload)
 {
-	// Get the old event if there is one.
-	var oldOnload = window.onload;
+	// If there's no event set, just set this one
+	if (typeof(window.onload) != 'function')
+		window.onload = fNewOnload;
 
-	// Was the old event really an event?
-	if (typeof(oldOnload) != 'function')
+	// If there's just one event, setup the array.
+	else if(aOnloadEvents.length == 0)
 	{
-		// Since we don't have anything at this point just add it stright in.
-		window.onload = func;
-	}
-	// So it is a function but is it our special function?
-	else if(onload_events.length == 0)
-	{
-		// Nope it is just a regular function...
-		onload_events[0] = oldOnload;
-		onload_events[1] = func;
+		aOnloadEvents[0] = window.onload;
+		aOnloadEvents[1] = fNewOnload;
 		window.onload = function() {
-			for (var i=0; i < onload_events.length; i++)
+			for (var i = 0, n = aOnloadEvents.length; i < n; i++)
 			{
-				if (onload_events[i])
-				{
-					onload_events[i]();
-				}
+				if (typeof(aOnloadEvents[i]) == 'function')
+					aOnloadEvents[i]();
 			}
 		}
 	}
+
+	// This isn't the first event function, add it to the list.
 	else
-		// Ok just add it to the list of functions to call.
-		onload_events[onload_events.length] = func;
+		aOnloadEvents[aOnloadEvents.length] = fNewOnload;
 }
 
 function smfFooterHighlight(element, value)
