@@ -675,7 +675,13 @@ function template_imode_pm()
 			<tr><td>[0] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';l=', $context['current_label_id'], ';imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></tr></td>';
 			if ($context['can_send_pm'])
 				echo '
-			<tr><td><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=', $message['member']['id'], ';reply;imode">', $txt['wireless_pm_reply'], '</a></tr></td>
+			<tr><td><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=', $message['member']['id'], ';reply;imode">', $txt['wireless_pm_reply'], '</a></tr></td>';
+
+			if ($context['can_send_pm'] && $message['number_recipients'] > 1)
+				echo '
+			<tr><td><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=all;reply;imode">', $txt['wireless_pm_reply_all'], '</a></tr></td>';
+		
+		echo '
 		</table>';
 	}
 }
@@ -1313,6 +1319,11 @@ function template_wap2_pm()
 			if ($context['can_send_pm'])
 				echo '
 			<p class="windowbg"><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=', $message['member']['id'], ';reply;wap2">', $txt['wireless_pm_reply'], '</a></p>';
+
+			if ($context['can_send_pm'] && $message['number_recipients'] > 1)
+				echo '
+			<p class="windowbg"><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=all;reply;wap2">', $txt['wireless_pm_reply_all'], '</a></p>';
+
 	}
 }
 

@@ -25,6 +25,7 @@ $txt['wireless_pm_search_member'] = 'Search member';
 $txt['wireless_pm_search_name'] = 'Name';
 $txt['wireless_pm_no_recipients'] = 'No recipients (yet)';
 $txt['wireless_pm_reply'] = 'Reply';
+$txt['wireless_pm_reply_all'] = 'Reply All';
 $txt['wireless_pm_reply_to'] = 'Reply to';
 
 $txt['wireless_recent_unread_posts'] = 'Unread posts';

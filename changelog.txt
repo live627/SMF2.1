@@ -48,6 +48,7 @@ July 2009
  ! Login username match could cause collation errors. (LogInOut.php)
  ! Small JavaScript fixes/cleanup (several JavaScript files)
  ! Non mod actions didn't uninstall in other themes (Packages.php, Subs-Package.php, Packages Template, Packages English) [Bug 3573]
+ ! Wireless mode should support reply to all (Wireless Template, Wireless English) [Bug 3596]
 
 
 June 2009
