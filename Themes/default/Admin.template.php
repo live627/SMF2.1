@@ -390,7 +390,7 @@ function template_view_versions()
 	// Now list all the source file versions, starting with the overall version (if all match!).
 	echo '
 						<tr>
-							<td><a href="javascript:void(0);" onclick="return swapOption(this, \'Sources\');">', $txt['dvc_sources'], '</a></td><td><em id="yourSources">??</em></td><td><em id="currentSources">??</em></td>
+							<td><a href="#" id="Sources-link">', $txt['dvc_sources'], '</a></td><td><em id="yourSources">??</em></td><td><em id="currentSources">??</em></td>
 						</tr>
 					</table>
 					<table id="Sources" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -407,7 +407,7 @@ function template_view_versions()
 					</table>
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Default\');">', $txt['dvc_default'], '</a></td><td width="25%"><em id="yourDefault">??</em></td><td width="25%"><em id="currentDefault">??</em></td>
+							<td width="50%"><a href="#" id="Default-link">', $txt['dvc_default'], '</a></td><td width="25%"><em id="yourDefault">??</em></td><td width="25%"><em id="currentDefault">??</em></td>
 						</tr>
 					</table>
 					<table id="Default" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -423,7 +423,7 @@ function template_view_versions()
 					</table>
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Languages\');">', $txt['dvc_languages'], '</a></td><td width="25%"><em id="yourLanguages">??</em></td><td width="25%"><em id="currentLanguages">??</em></td>
+							<td width="50%"><a href="#" id="Languages-link">', $txt['dvc_languages'], '</a></td><td width="25%"><em id="yourLanguages">??</em></td><td width="25%"><em id="currentLanguages">??</em></td>
 						</tr>
 					</table>
 					<table id="Languages" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -446,7 +446,7 @@ function template_view_versions()
 		echo '
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><a href="javascript:void(0);" onclick="return swapOption(this, \'Templates\');">', $txt['dvc_templates'], '</a></td><td width="25%"><em id="yourTemplates">??</em></td><td width="25%"><em id="currentTemplates">??</em></td>
+							<td width="50%"><a href="#" id="Templates-link">', $txt['dvc_templates'], '</a></td><td width="25%"><em id="yourTemplates">??</em></td><td width="25%"><em id="currentTemplates">??</em></td>
 						</tr>
 					</table>
 					<table id="Templates" width="88%" cellpadding="2" cellspacing="0" border="0" align="center">';
@@ -472,135 +472,20 @@ function template_view_versions()
 	   file catorgories. (sources, languages, and templates.) */
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
-		<script type="text/javascript"><!-- // --><![CDATA[
-			var swaps = {};
-
-			function swapOption(sendingElement, name)
-			{
-				// If it is undefined, or currently off, turn it on - otherwise off.
-				swaps[name] = typeof(swaps[name]) == "undefined" || !swaps[name];
-				document.getElementById(name).style.display = swaps[name] ? "" : "none";
-
-				// Unselect the link and return false.
-				sendingElement.blur();
-				return false;
-			}
-
-			function smfDetermineVersions()
-			{
-				var highYour = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
-				var highCurrent = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
-				var lowVersion = {"Sources": false, "Default": false, "Languages" : false, "Templates": false};
-				var knownLanguages = [".', implode('", ".', $context['default_known_languages']), '"];
-
-				document.getElementById("Sources").style.display = "none";
-				document.getElementById("Languages").style.display = "none";
-				document.getElementById("Default").style.display = "none";
-				if (document.getElementById("Templates"))
-					document.getElementById("Templates").style.display = "none";
-
-				if (typeof(window.smfVersions) == "undefined")
-					window.smfVersions = {};
-
-				for (var filename in window.smfVersions)
-				{
-					if (!document.getElementById("current" + filename))
-						continue;
-
-					var yourVersion = getInnerHTML(document.getElementById("your" + filename));
-
-					var versionType;
-					for (var verType in lowVersion)
-						if (filename.substr(0, verType.length) == verType)
-						{
-							versionType = verType;
-							break;
-						}
-
-					if (typeof(versionType) != "undefined")
-					{
-						if ((highYour[versionType] < yourVersion || highYour[versionType] == "??") && !lowVersion[versionType])
-							highYour[versionType] = yourVersion;
-						if (highCurrent[versionType] < smfVersions[filename] || highCurrent[versionType] == "??")
-							highCurrent[versionType] = smfVersions[filename];
-
-						if (yourVersion < smfVersions[filename])
-						{
-							lowVersion[versionType] = yourVersion;
-							document.getElementById("your" + filename).style.color = "red";
-						}
-					}
-					else if (yourVersion < smfVersions[filename])
-						lowVersion[versionType] = yourVersion;
-
-					setInnerHTML(document.getElementById("current" + filename), smfVersions[filename]);
-					setInnerHTML(document.getElementById("your" + filename), yourVersion);
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc1"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[ 
+			var oViewVersions = new smf_ViewVersions({
+				aKnownLanguages: [
+					\'.', implode('\',
+					\'.', $context['default_known_languages']), '\'
+				],
+				oSectionContainerIds: {
+					Sources: \'Sources\',
+					Default: \'Default\',
+					Languages: \'Languages\',
+					Templates: \'Templates\'
 				}
-
-				if (typeof(window.smfLanguageVersions) == "undefined")
-					window.smfLanguageVersions = {};
-
-				for (filename in window.smfLanguageVersions)
-				{
-					for (var i = 0; i < knownLanguages.length; i++)
-					{
-						if (!document.getElementById("current" + filename + knownLanguages[i]))
-							continue;
-
-						setInnerHTML(document.getElementById("current" + filename + knownLanguages[i]), smfLanguageVersions[filename]);
-
-						yourVersion = getInnerHTML(document.getElementById("your" + filename + knownLanguages[i]));
-						setInnerHTML(document.getElementById("your" + filename + knownLanguages[i]), yourVersion);
-
-						if ((highYour["Languages"] < yourVersion || highYour["Languages"] == "??") && !lowVersion["Languages"])
-							highYour["Languages"] = yourVersion;
-						if (highCurrent["Languages"] < smfLanguageVersions[filename] || highCurrent["Languages"] == "??")
-							highCurrent["Languages"] = smfLanguageVersions[filename];
-
-						if (yourVersion < smfLanguageVersions[filename])
-						{
-							lowVersion["Languages"] = yourVersion;
-							document.getElementById("your" + filename + knownLanguages[i]).style.color = "red";
-						}
-					}
-				}
-
-				setInnerHTML(document.getElementById("yourSources"), lowVersion["Sources"] ? lowVersion["Sources"] : highYour["Sources"]);
-				setInnerHTML(document.getElementById("currentSources"), highCurrent["Sources"]);
-				if (lowVersion["Sources"])
-					document.getElementById("yourSources").style.color = "red";
-
-				setInnerHTML(document.getElementById("yourDefault"), lowVersion["Default"] ? lowVersion["Default"] : highYour["Default"]);
-				setInnerHTML(document.getElementById("currentDefault"), highCurrent["Default"]);
-				if (lowVersion["Default"])
-					document.getElementById("yourDefault").style.color = "red";
-
-				if (document.getElementById("Templates"))
-				{
-					setInnerHTML(document.getElementById("yourTemplates"), lowVersion["Templates"] ? lowVersion["Templates"] : highYour["Templates"]);
-					setInnerHTML(document.getElementById("currentTemplates"), highCurrent["Templates"]);
-
-					if (lowVersion["Templates"])
-						document.getElementById("yourTemplates").style.color = "red";
-				}
-
-				setInnerHTML(document.getElementById("yourLanguages"), lowVersion["Languages"] ? lowVersion["Languages"] : highYour["Languages"]);
-				setInnerHTML(document.getElementById("currentLanguages"), highCurrent["Languages"]);
-				if (lowVersion["Languages"])
-					document.getElementById("yourLanguages").style.color = "red";
-			}
-		// ]]></script>';
-
-	// Internet Explorer 4 is tricky, it won't set any innerHTML until after load.
-	if ($context['browser']['is_ie4'])
-		echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-			addLoadEvent(smfDetermineVersions);
-		// ]]></script>';
-	else
-		echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-			smfDetermineVersions();
+			});
 		// ]]></script>';
 }
 

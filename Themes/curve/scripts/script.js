@@ -5,69 +5,65 @@ var smf_editorArray = new Array();
 // Some very basic browser detection - from Mozilla's sniffer page.
 var ua = navigator.userAgent.toLowerCase();
 
-var is_opera = ua.indexOf("opera") != -1;
-var is_opera5 = ua.indexOf("opera/5") != -1 || ua.indexOf("opera 5") != -1;
-var is_opera6 = ua.indexOf("opera/6") != -1 || ua.indexOf("opera 6") != -1;
-var is_opera7 = ua.indexOf("opera/7") != -1 || ua.indexOf("opera 7") != -1;
-var is_opera8 = ua.indexOf("opera/8") != -1 || ua.indexOf("opera 8") != -1;
-var is_opera9 = ua.indexOf("opera/9") != -1 || ua.indexOf("opera 9") != -1;
-var is_opera95 = ua.indexOf("opera/9.5") != -1 || ua.indexOf("opera 9.5") != -1;
-var is_opera96 = ua.indexOf("opera/9.6") != -1 || ua.indexOf("opera 9.6") != -1;
-var is_opera10 = ua.indexOf("opera/9.8") != -1 || ua.indexOf("opera 9.8") != -1 || ua.indexOf("opera/10.0") != -1 || ua.indexOf("opera 10.0") != -1;
+var is_opera = ua.indexOf('opera') != -1;
+var is_opera5 = ua.indexOf('opera/5') != -1 || ua.indexOf('opera 5') != -1;
+var is_opera6 = ua.indexOf('opera/6') != -1 || ua.indexOf('opera 6') != -1;
+var is_opera7 = ua.indexOf('opera/7') != -1 || ua.indexOf('opera 7') != -1;
+var is_opera8 = ua.indexOf('opera/8') != -1 || ua.indexOf('opera 8') != -1;
+var is_opera9 = ua.indexOf('opera/9') != -1 || ua.indexOf('opera 9') != -1;
+var is_opera95 = ua.indexOf('opera/9.5') != -1 || ua.indexOf('opera 9.5') != -1;
+var is_opera96 = ua.indexOf('opera/9.6') != -1 || ua.indexOf('opera 9.6') != -1;
+var is_opera10 = ua.indexOf('opera/9.8') != -1 || ua.indexOf('opera 9.8') != -1 || ua.indexOf('opera/10.0') != -1 || ua.indexOf('opera 10.0') != -1;
 var is_opera95up = is_opera95 || is_opera96 || is_opera10;
 
-var is_ff = (ua.indexOf("firefox") != -1 || ua.indexOf("iceweasel") != -1 || ua.indexOf("icecat") != -1) && !is_opera;
+var is_ff = (ua.indexOf('firefox') != -1 || ua.indexOf('iceweasel') != -1 || ua.indexOf('icecat') != -1) && !is_opera;
 var is_gecko = ua.indexOf('gecko') != -1 && !is_opera;
 
 var is_chrome = ua.indexOf('chrome') != -1;
 var is_safari = ua.indexOf('applewebkit') != -1 && !is_chrome;
 var is_webkit = ua.indexOf('applewebkit') != -1;
 
-var is_ie = ua.indexOf("msie") != -1  && !is_opera;
-var is_ie4 = is_ie && ua.indexOf("msie 4") != -1;
-var is_ie5 = is_ie && ua.indexOf("msie 5") != -1;
-var is_ie50 = is_ie && ua.indexOf("msie 5.0") != -1;
-var is_ie55 = is_ie && ua.indexOf("msie 5.5") != -1;
+var is_ie = ua.indexOf('msie') != -1  && !is_opera;
+var is_ie4 = is_ie && ua.indexOf('msie 4') != -1;
+var is_ie5 = is_ie && ua.indexOf('msie 5') != -1;
+var is_ie50 = is_ie && ua.indexOf('msie 5.0') != -1;
+var is_ie55 = is_ie && ua.indexOf('msie 5.5') != -1;
 var is_ie5up = is_ie && !is_ie4;
-var is_ie6 = is_ie && ua.indexOf("msie 6") != -1;
+var is_ie6 = is_ie && ua.indexOf('msie 6') != -1;
 var is_ie6up = is_ie5up && !is_ie55 && !is_ie5;
 var is_ie6down = is_ie6 || is_ie5 || is_ie4;
-var is_ie7 = is_ie && ua.indexOf("msie 7") != -1;
+var is_ie7 = is_ie && ua.indexOf('msie 7') != -1;
 var is_ie7up = is_ie6up && !is_ie6;
 var is_ie7down = is_ie7 || is_ie6 || is_ie5 || is_ie4;
 
-var is_ie8 = is_ie && ua.indexOf("msie 8") != -1;
+var is_ie8 = is_ie && ua.indexOf('msie 8') != -1;
 var is_ie8up = is_ie8 && !is_ie7down;
 
-var is_phone = ua.indexOf("iphone") != -1 || ua.indexOf("ipod") != -1;
+var is_phone = ua.indexOf('iphone') != -1 || ua.indexOf('ipod') != -1;
 
 var ajax_indicator_ele = null;
 
 // Define document.getElementById for Internet Explorer 4.
-if (typeof(document.getElementById) == "undefined")
-	document.getElementById = function (id)
-	{
-		// Just return the corresponding index of all.
-		return document.all[id];
+if (!('getElementById' in document) && 'all' in document)
+	document.getElementById = function (sId) {
+		return document.all[sId];
 	}
+
 // Define XMLHttpRequest for IE 5 and above. (don't bother for IE 4 :/.... works in Opera 7.6 and Safari 1.2!)
-else if (!window.XMLHttpRequest && window.ActiveXObject)
-	window.XMLHttpRequest = function ()
-	{
-		return new ActiveXObject(is_ie5 ? "Microsoft.XMLHTTP" : "MSXML2.XMLHTTP");
+else if (!('XMLHttpRequest' in window) && 'ActiveXObject' in window)
+	window.XMLHttpRequest = function () {
+		return new ActiveXObject(is_ie5 ? 'Microsoft.XMLHTTP' : 'MSXML2.XMLHTTP');
 	};
 
 // Ensure the getElementsByTagName exists.
-if (typeof(document.getElementsByTagName) == "undefined")
-	document.getElementsByTagName = function (name)
-	{
-		// Just return the tags with this name.
-		return document.all.tags[name];
+if (!'getElementsByTagName' in document && 'all' in document)
+	document.getElementsByTagName = function (sName) {
+		return document.all.tags[sName];
 	}
 
 // Some older versions of Mozilla don't have this, for some reason.
-if (typeof(document.forms) == "undefined")
-	document.forms = document.getElementsByTagName("form");
+if (!('forms' in document))
+	document.forms = document.getElementsByTagName('form');
 
 // Load an XML document using XMLHttpRequest.
 function getXMLDocument(sUrl, funcCallback)
@@ -80,8 +76,7 @@ function getXMLDocument(sUrl, funcCallback)
 	var oCaller = this;
 	if (bAsync)
 	{
-		oMyDoc.onreadystatechange = function ()
-		{
+		oMyDoc.onreadystatechange = function () {
 			if (oMyDoc.readyState != 4)
 				return;
 
@@ -113,39 +108,40 @@ function sendXMLDocument(sUrl, sContent, funcCallback)
 	if (!window.XMLHttpRequest)
 		return false;
 
-	var sendDoc = new window.XMLHttpRequest();
+	var oSendDoc = new window.XMLHttpRequest();
 	var oCaller = this;
 	if (typeof(funcCallback) != 'undefined')
 	{
-		sendDoc.onreadystatechange = function ()
-		{
-			if (sendDoc.readyState != 4)
+		oSendDoc.onreadystatechange = function () {
+			if (oSendDoc.readyState != 4)
 				return;
 
-			if (sendDoc.responseXML != null && sendDoc.status == 200)
-				funcCallback.call(oCaller, sendDoc.responseXML);
+			if (oSendDoc.responseXML != null && oSendDoc.status == 200)
+				funcCallback.call(oCaller, oSendDoc.responseXML);
 			else
 				funcCallback.call(oCaller, false);
 		};
 	}
-	sendDoc.open('POST', sUrl, true);
-	if (typeof(sendDoc.setRequestHeader) != 'undefined')
-		sendDoc.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	sendDoc.send(sContent);
+	oSendDoc.open('POST', sUrl, true);
+	if ('setRequestHeader' in oSendDoc)
+		oSendDoc.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	oSendDoc.send(sContent);
 
 	return true;
 }
 
 // Character-level replacement function.
-String.prototype.php_strtr = function (sFrom, sTo) {
+String.prototype.php_strtr = function (sFrom, sTo) 
+{
 	return this.replace(new RegExp('[' + sFrom + ']', 'g'), function (sMatch) {
 		return sTo.charAt(sFrom.indexOf(sMatch));
 	});
 }
 
 // Simulate PHP's strtolower (in SOME cases PHP uses ISO-8859-1 case folding).
-String.prototype.php_strtolower = function () {
-	return typeof(smf_iso_case_folding) != "undefined" && smf_iso_case_folding == true ? this.php_strtr(
+String.prototype.php_strtolower = function ()
+{
+	return typeof(smf_iso_case_folding) == 'boolean' && smf_iso_case_folding == true ? this.php_strtr(
 		'ABCDEFGHIJKLMNOPQRSTUVWXYZ\x8a\x8c\x8e\x9f\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde',
 		'abcdefghijklmnopqrstuvwxyz\x9a\x9c\x9e\xff\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe'
 	) : this.php_strtr('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
@@ -158,7 +154,8 @@ String.prototype.oCharsetConversion = {
 };
 
 // Convert a string to an 8 bit representation (like in PHP).
-String.prototype.php_to8bit = function () {
+String.prototype.php_to8bit = function ()
+{
 	if (smf_charset == 'UTF-8')
 	{
 		var n, sReturn = '';
@@ -179,7 +176,7 @@ String.prototype.php_to8bit = function () {
 		return sReturn;
 	}
 
-	else if (typeof(this.oCharsetConversion) == 'undefined')
+	else if (!('oCharsetConversion' in this))
 	{
 		switch (smf_charset)
 		{
@@ -305,7 +302,7 @@ function reqWin(desktopURL, alternateWidth, alternateHeight, noScrollbars)
 		alternateHeight = Math.min(alternateHeight, self.screen.availHeight * 0.8);
 	}
 	else
-		noScrollbars = typeof(noScrollbars) != "undefined" && noScrollbars == true;
+		noScrollbars = typeof(noScrollbars) == 'boolean' && noScrollbars == true;
 
 	window.open(desktopURL, 'requested_popup', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=' + (noScrollbars ? 'no' : 'yes') + ',width=' + (alternateWidth ? alternateWidth : 480) + ',height=' + (alternateHeight ? alternateHeight : 220) + ',resizable=no');
 
@@ -314,93 +311,93 @@ function reqWin(desktopURL, alternateWidth, alternateHeight, noScrollbars)
 }
 
 // Remember the current position.
-function storeCaret(text)
+function storeCaret(oTextHandle)
 {
 	// Only bother if it will be useful.
-	if (typeof(text.createTextRange) != "undefined")
-		text.caretPos = document.selection.createRange().duplicate();
+	if ('createTextRange' in oTextHandle)
+		oTextHandle.caretPos = document.selection.createRange().duplicate();
 }
 
 // Replaces the currently selected text with the passed text.
-function replaceText(text, textarea)
+function replaceText(text, oTextHandle)
 {
 	// Attempt to create a text range (IE).
-	if (typeof(textarea.caretPos) != "undefined" && textarea.createTextRange)
+	if ('caretPos' in oTextHandle && 'createTextRange' in oTextHandle)
 	{
-		var caretPos = textarea.caretPos;
+		var caretPos = oTextHandle.caretPos;
 
 		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ? text + ' ' : text;
 		caretPos.select();
 	}
 	// Mozilla text range replace.
-	else if (typeof(textarea.selectionStart) != "undefined")
+	else if ('selectionStart' in oTextHandle)
 	{
-		var begin = textarea.value.substr(0, textarea.selectionStart);
-		var end = textarea.value.substr(textarea.selectionEnd);
-		var scrollPos = textarea.scrollTop;
+		var begin = oTextHandle.value.substr(0, oTextHandle.selectionStart);
+		var end = oTextHandle.value.substr(oTextHandle.selectionEnd);
+		var scrollPos = oTextHandle.scrollTop;
 
-		textarea.value = begin + text + end;
+		oTextHandle.value = begin + text + end;
 
-		if (textarea.setSelectionRange)
+		if (oTextHandle.setSelectionRange)
 		{
-			textarea.focus();
-			textarea.setSelectionRange(begin.length + text.length, begin.length + text.length);
+			oTextHandle.focus();
+			oTextHandle.setSelectionRange(begin.length + text.length, begin.length + text.length);
 		}
-		textarea.scrollTop = scrollPos;
+		oTextHandle.scrollTop = scrollPos;
 	}
 	// Just put it on the end.
 	else
 	{
-		textarea.value += text;
-		textarea.focus(textarea.value.length - 1);
+		oTextHandle.value += text;
+		oTextHandle.focus(oTextHandle.value.length - 1);
 	}
 }
 
 // Surrounds the selected text with text1 and text2.
-function surroundText(text1, text2, textarea)
+function surroundText(text1, text2, oTextHandle)
 {
 	// Can a text range be created?
-	if (typeof(textarea.caretPos) != "undefined" && textarea.createTextRange)
+	if ('caretPos' in oTextHandle != 'undefined' && 'createTextRange' in oTextHandle)
 	{
-		var caretPos = textarea.caretPos, temp_length = caretPos.text.length;
+		var caretPos = oTextHandle.caretPos, temp_length = caretPos.text.length;
 
 		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ? text1 + caretPos.text + text2 + ' ' : text1 + caretPos.text + text2;
 
 		if (temp_length == 0)
 		{
-			caretPos.moveStart("character", -text2.length);
-			caretPos.moveEnd("character", -text2.length);
+			caretPos.moveStart('character', -text2.length);
+			caretPos.moveEnd('character', -text2.length);
 			caretPos.select();
 		}
 		else
-			textarea.focus(caretPos);
+			oTextHandle.focus(caretPos);
 	}
 	// Mozilla text range wrap.
-	else if (typeof(textarea.selectionStart) != "undefined")
+	else if ('selectionStart' in oTextHandle)
 	{
-		var begin = textarea.value.substr(0, textarea.selectionStart);
-		var selection = textarea.value.substr(textarea.selectionStart, textarea.selectionEnd - textarea.selectionStart);
-		var end = textarea.value.substr(textarea.selectionEnd);
-		var newCursorPos = textarea.selectionStart;
-		var scrollPos = textarea.scrollTop;
+		var begin = oTextHandle.value.substr(0, oTextHandle.selectionStart);
+		var selection = oTextHandle.value.substr(oTextHandle.selectionStart, oTextHandle.selectionEnd - oTextHandle.selectionStart);
+		var end = oTextHandle.value.substr(oTextHandle.selectionEnd);
+		var newCursorPos = oTextHandle.selectionStart;
+		var scrollPos = oTextHandle.scrollTop;
 
-		textarea.value = begin + text1 + selection + text2 + end;
+		oTextHandle.value = begin + text1 + selection + text2 + end;
 
-		if (textarea.setSelectionRange)
+		if (oTextHandle.setSelectionRange)
 		{
 			if (selection.length == 0)
-				textarea.setSelectionRange(newCursorPos + text1.length, newCursorPos + text1.length);
+				oTextHandle.setSelectionRange(newCursorPos + text1.length, newCursorPos + text1.length);
 			else
-				textarea.setSelectionRange(newCursorPos, newCursorPos + text1.length + selection.length + text2.length);
-			textarea.focus();
+				oTextHandle.setSelectionRange(newCursorPos, newCursorPos + text1.length + selection.length + text2.length);
+			oTextHandle.focus();
 		}
-		textarea.scrollTop = scrollPos;
+		oTextHandle.scrollTop = scrollPos;
 	}
 	// Just put them on the end, then.
 	else
 	{
-		textarea.value += text1 + text2;
-		textarea.focus(textarea.value.length - 1);
+		oTextHandle.value += text1 + text2;
+		oTextHandle.focus(oTextHandle.value.length - 1);
 	}
 }
 
@@ -432,117 +429,117 @@ function submitonce(theform)
 	for (var i = 0; i < smf_editorArray.length; i++)
 		smf_editorArray[i].doSubmit();
 }
-function submitThisOnce(form)
+function submitThisOnce(oControl)
 {
 	// Hateful, hateful fix for Safari 1.3 beta.
 	if (is_safari)
 		return !smf_formSubmitted;
 
-	if (typeof(form.form) != "undefined")
-		form = form.form;
+	// oControl might also be a form.
+	var oForm = 'form' in oControl ? oControl.form : oControl;
 
-	for (var i = 0; i < form.length; i++)
-		if (typeof(form[i]) != "undefined" && form[i].tagName.toLowerCase() == "textarea")
-			form[i].readOnly = true;
+	var aTextareas = oForm.getElementsByTagName('textarea');
+	for (var i = 0, n = aTextareas.length; i < n; i++)
+		aTextareas[i].readOnly = true;
 
 	return !smf_formSubmitted;
 }
 
 // Set the "inside" HTML of an element.
-function setInnerHTML(element, toValue)
+function setInnerHTML(oElement, sToValue)
 {
 	// IE has this built in...
-	if (typeof(element.innerHTML) != 'undefined')
-		element.innerHTML = toValue;
+	if ('innerHTML' in oElement)
+		oElement.innerHTML = sToValue;
 	// Otherwise, try createContextualFragment().
 	else
 	{
 		var range = document.createRange();
-		range.selectNodeContents(element);
+		range.selectNodeContents(oElement);
 		range.deleteContents();
-		element.appendChild(range.createContextualFragment(toValue));
+		oElement.appendChild(range.createContextualFragment(sToValue));
 	}
 }
 
 // Set the "outer" HTML of an element.
-function setOuterHTML(element, toValue)
+function setOuterHTML(oElement, sToValue)
 {
-	if (typeof(element.outerHTML) != 'undefined')
-		element.outerHTML = toValue;
+	if ('outerHTML' in oElement)
+		oElement.outerHTML = sToValue;
 	else
 	{
 		var range = document.createRange();
-		range.setStartBefore(element);
-		element.parentNode.replaceChild(range.createContextualFragment(toValue), element);
+		range.setStartBefore(oElement);
+		oElement.parentNode.replaceChild(range.createContextualFragment(sToValue), oElement);
 	}
 }
 
 // Get the inner HTML of an element.
-function getInnerHTML(element)
+function getInnerHTML(oElement)
 {
-	if (typeof(element.innerHTML) != 'undefined')
-		return element.innerHTML;
+	if ('innerHTML' in oElement)
+		return oElement.innerHTML;
 	else
 	{
-		var returnStr = '';
-		for (var i = 0; i < element.childNodes.length; i++)
-			returnStr += getOuterHTML(element.childNodes[i]);
+		var sReturnValue = '';
+		for (var i = 0; i < oElement.childNodes.length; i++)
+			sReturnValue += getOuterHTML(oElement.childNodes[i]);
 
-		return returnStr;
+		return sReturnValue;
 	}
 }
 
-function getOuterHTML(node)
+function getOuterHTML(oNode)
 {
-	if (typeof(node.outerHTML) != 'undefined')
-		return node.outerHTML;
+	if ('outerHTML' in oNode)
+		return oNode.outerHTML;
 
-	var str = '';
+	var sReturnValue = '';
 
-	switch (node.nodeType)
+	switch (oNode.nodeType)
 	{
-	// An element.
-	case 1:
-		str += '<' + node.nodeName;
+		// An element.
+		case 1:
+			sReturnValue += '<' + oNode.nodeName;
 
-		for (var i = 0; i < node.attributes.length; i++)
-		{
-			if (node.attributes[i].nodeValue != null)
-				str += ' ' + node.attributes[i].nodeName + '="' + node.attributes[i].nodeValue + '"';
-		}
+			for (var i = 0; i < oNode.attributes.length; i++)
+			{
+				if (oNode.attributes[i].nodeValue != null)
+					sReturnValue += ' ' + oNode.attributes[i].nodeName + '="' + oNode.attributes[i].nodeValue + '"';
+			}
 
-		if (node.childNodes.length == 0 && in_array(node.nodeName.toLowerCase(), ['hr', 'input', 'img', 'link', 'meta', 'br']))
-			str += ' />';
-		else
-			str += '>' + getInnerHTML(node) + '</' + node.nodeName + '>';
+			if (oNode.childNodes.length == 0 && in_array(oNode.nodeName.toLowerCase(), ['hr', 'input', 'img', 'link', 'meta', 'br']))
+				sReturnValue += ' />';
+			else
+				sReturnValue += '>' + getInnerHTML(oNode) + '</' + oNode.nodeName + '>';
 		break;
 
-	// 2 is an attribute.
+		// 2 is an attribute.
 
-	// Just some text..
-	case 3:
-		str += node.nodeValue;
+		// Just some text..
+		case 3:
+			sReturnValue += oNode.nodeValue;
 		break;
 
-	// A CDATA section.
-	case 4:
-		str += '<![CDATA' + '[' + node.nodeValue + ']' + ']>';
+		// A CDATA section.
+		case 4:
+			sReturnValue += '<![CDATA' + '[' + oNode.nodeValue + ']' + ']>';
 		break;
 
-	// Entity reference..
-	case 5:
-		str += '&' + node.nodeName + ';';
+		// Entity reference..
+		case 5:
+			sReturnValue += '&' + oNode.nodeName + ';';
 		break;
 
-	// 6 is an actual entity, 7 is a PI.
+		// 6 is an actual entity, 7 is a PI.
 
-	// Comment.
-	case 8:
-		str += '<!--' + node.nodeValue + '-->';
+		// Comment.
+		case 8:
+			sReturnValue += '<!--' + oNode.nodeValue + '-->';
 		break;
 	}
 
-	return str;
+	return sReturnValue;
 }
 
 // Checks for variable in theArray.
@@ -566,28 +563,28 @@ function array_search(variable, theArray)
 }
 
 // Find a specific radio button in its group and select it.
-function selectRadioByName(radioGroup, name)
+function selectRadioByName(oRadioGroup, sName)
 {
-	if (typeof(radioGroup.length) == "undefined")
-		return radioGroup.checked = true;
+	if (!('length' in oRadioGroup))
+		return oRadioGroup.checked = true;
 
-	for (var i = 0; i < radioGroup.length; i++)
-		if (radioGroup[i].value == name)
-			return radioGroup[i].checked = true;
+	for (var i = 0, n = oRadioGroup.length; i < n; i++)
+		if (oRadioGroup[i].value == sName)
+			return oRadioGroup[i].checked = true;
 
 	return false;
 }
 
 // Invert all checkboxes at once by clicking a single checkbox.
-function invertAll(headerfield, checkform, mask, ignore_disabled)
+function invertAll(oInvertCheckbox, oForm, sMask, bIgnoreDisabled)
 {
-	for (var i = 0; i < checkform.length; i++)
+	for (var i = 0; i < oForm.length; i++)
 	{
-		if (typeof(checkform[i].name) == "undefined" || (typeof(mask) != "undefined" && checkform[i].name.substr(0, mask.length) != mask && checkform[i].id.substr(0, mask.length) != mask))
+		if (!('name' in oForm[i]) || (typeof(sMask) == 'string' && oForm[i].name.substr(0, sMask.length) != sMask && oForm[i].id.substr(0, sMask.length) != sMask))
 			continue;
 
-		if (!checkform[i].disabled || typeof(ignore_disabled) != "undefined")
-			checkform[i].checked = headerfield.checked;
+		if (!oForm[i].disabled || (typeof(bIgnoreDisabled) == 'boolean' && bIgnoreDisabled))
+			oForm[i].checked = oInvertCheckbox.checked;
 	}
 }
 
@@ -605,9 +602,9 @@ function smf_sessionKeepAlive()
 		lastKeepAliveCheck = curTime;
 	}
 
-	window.setTimeout("smf_sessionKeepAlive();", 1200000);
+	window.setTimeout('smf_sessionKeepAlive();', 1200000);
 }
-window.setTimeout("smf_sessionKeepAlive();", 1200000);
+window.setTimeout('smf_sessionKeepAlive();', 1200000);
 
 // Set a theme option through javascript.
 function smf_setThemeOption(option, value, theme, cur_session_id, cur_session_var, additional_vars)
@@ -615,21 +612,23 @@ function smf_setThemeOption(option, value, theme, cur_session_id, cur_session_va
 	// Compatibility.
 	if (cur_session_id == null)
 		cur_session_id = smf_session_id;
+	if (typeof(cur_session_var) == 'undefined')
+		cur_session_var = 'sesc';
 
 	if (additional_vars == null)
 		additional_vars = '';
 
 	var tempImage = new Image();
-	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";" + cur_session_var + "=" + cur_session_id + additional_vars + (theme == null ? "" : "&id=" + theme) + ";time=" + (new Date().getTime());
+	tempImage.src = smf_scripturl + (smf_scripturl.indexOf('?') == -1 ? '?' : '&') + 'action=jsoption;var=' + option + ';val=' + value + ';' + cur_session_var + '=' + cur_session_id + additional_vars + (theme == null ? '' : '&id=' + theme) + ';time=' + (new Date().getTime());
 }
 
 function smf_avatarResize()
 {
-	var possibleAvatars = document.getElementsByTagName("img");
+	var possibleAvatars = document.getElementsByTagName('img');
 
 	for (var i = 0; i < possibleAvatars.length; i++)
 	{
-		if (possibleAvatars[i].className != "avatar")
+		if (possibleAvatars[i].className != 'avatar')
 			continue;
 
 		var tempAvatar = new Image();
@@ -652,7 +651,7 @@ function smf_avatarResize()
 		}
 	}
 
-	if (typeof(window_oldAvatarOnload) != "undefined" && window_oldAvatarOnload)
+	if (typeof(window_oldAvatarOnload) != 'undefined' && window_oldAvatarOnload)
 	{
 		window_oldAvatarOnload();
 		window_oldAvatarOnload = null;
@@ -665,23 +664,23 @@ function hashLoginPassword(doForm, cur_session_id)
 	if (cur_session_id == null)
 		cur_session_id = smf_session_id;
 
-	if (typeof(hex_sha1) == "undefined")
+	if (typeof(hex_sha1) == 'undefined')
 		return;
 	// Are they using an email address?
-	if (doForm.user.value.indexOf("@") != -1)
+	if (doForm.user.value.indexOf('@') != -1)
 		return;
 
 	// Unless the browser is Opera, the password will not save properly.
-	if (typeof(window.opera) == "undefined")
-		doForm.passwrd.autocomplete = "off";
+	if (!('opera' in window))
+		doForm.passwrd.autocomplete = 'off';
 
 	doForm.hash_passwrd.value = hex_sha1(hex_sha1(doForm.user.value.php_to8bit().php_strtolower() + doForm.passwrd.value.php_to8bit()) + cur_session_id);
 
 	// It looks nicer to fill it with asterisks, but Firefox will try to save that.
 	if (is_ff != -1)
-		doForm.passwrd.value = "";
+		doForm.passwrd.value = '';
 	else
-		doForm.passwrd.value = doForm.passwrd.value.replace(/./g, "*");
+		doForm.passwrd.value = doForm.passwrd.value.replace(/./g, '*');
 }
 
 function hashAdminPassword(doForm, username, cur_session_id)
@@ -690,11 +689,11 @@ function hashAdminPassword(doForm, username, cur_session_id)
 	if (cur_session_id == null)
 		cur_session_id = smf_session_id;
 
-	if (typeof(hex_sha1) == "undefined")
+	if (typeof(hex_sha1) == 'undefined')
 		return;
 
-	doForm.admin_hash_pass.value = hex_sha1(hex_sha1(username.toLowerCase() + doForm.admin_pass.value) + cur_session_id);
-	doForm.admin_pass.value = doForm.admin_pass.value.replace(/./g, "*");
+	doForm.admin_hash_pass.value = hex_sha1(hex_sha1(username.php_to8bit().php_strtolower() + doForm.admin_pass.value) + cur_session_id);
+	doForm.admin_pass.value = doForm.admin_pass.value.replace(/./g, '*');
 }
 
 // Shows the page numbers by clicking the dots (in compact view).
@@ -782,7 +781,7 @@ function smfToggle(uniqueId, initialState)
 			var curMode = this.panelToggles[x][1] ? !mode : mode;
 			var curPanel = document.getElementById(this.panelToggles[x][0]);
 			if (curPanel)
-				curPanel.style.display = curMode ? "none" : "";
+				curPanel.style.display = curMode ? 'none' : '';
 		}
 
 		this.state = mode;
@@ -823,7 +822,7 @@ function ajax_indicator(turn_on)
 {
 	if (ajax_indicator_ele == null)
 	{
-		ajax_indicator_ele = document.getElementById("ajax_in_progress");
+		ajax_indicator_ele = document.getElementById('ajax_in_progress');
 
 		if (ajax_indicator_ele == null && typeof(ajax_notification_text) != null)
 		{
@@ -833,31 +832,31 @@ function ajax_indicator(turn_on)
 
 	if (ajax_indicator_ele != null)
 	{
-		if (navigator.appName == "Microsoft Internet Explorer" && !is_ie7up)
+		if (navigator.appName == 'Microsoft Internet Explorer' && !is_ie7up)
 		{
-			ajax_indicator_ele.style.position = "absolute";
+			ajax_indicator_ele.style.position = 'absolute';
 			ajax_indicator_ele.style.top = document.documentElement.scrollTop;
 		}
 
-		ajax_indicator_ele.style.display = turn_on ? "block" : "none";
+		ajax_indicator_ele.style.display = turn_on ? 'block' : 'none';
 	}
 }
 
 function create_ajax_indicator_ele()
 {
 	// Create the div for the indicator.
-	ajax_indicator_ele = document.createElement("div");
+	ajax_indicator_ele = document.createElement('div');
 
 	// Set the id so it'll load the style properly.
-	ajax_indicator_ele.id = "ajax_in_progress";
+	ajax_indicator_ele.id = 'ajax_in_progress';
 
 	// Add the image in and link to turn it off.
-	var cancel_link = document.createElement("a");
-	cancel_link.href = "javascript:ajax_indicator(false)";
-	var cancel_img = document.createElement("img");
-	cancel_img.src = smf_images_url + "/icons/quick_remove.gif";
+	var cancel_link = document.createElement('a');
+	cancel_link.href = 'javascript:ajax_indicator(false)';
+	var cancel_img = document.createElement('img');
+	cancel_img.src = smf_images_url + '/icons/quick_remove.gif';
 
-	if (typeof(ajax_notification_cancel_text) != null)
+	if (typeof(ajax_notification_cancel_text) != 'undefined')
 	{
 		cancel_img.alt = ajax_notification_cancel_text;
 		cancel_img.title = ajax_notification_cancel_text;
@@ -872,7 +871,6 @@ function create_ajax_indicator_ele()
 
 	// Finally attach the element to the body.
 	document.body.appendChild(ajax_indicator_ele);
-
 }
 
 // Mimics the PHP version of this function.
@@ -907,27 +905,23 @@ function smf_addslashes(text)
 
 function createEventListener(oTarget)
 {
-	if (typeof(oTarget.addEventListener) == 'undefined')
+	if (!('addEventListener' in oTarget))
 	{
 		if (oTarget.attachEvent)
 		{
-			oTarget.addEventListener = function (sEvent, funcHandler, bCapture)
-			{
+			oTarget.addEventListener = function (sEvent, funcHandler, bCapture) {
 				oTarget.attachEvent('on' + sEvent, funcHandler);
 			}
-			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture)
-			{
+			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture) {
 				oTarget.detachEvent('on' + sEvent, funcHandler);
 			}
 		}
 		else
 		{
-			oTarget.addEventListener = function (sEvent, funcHandler, bCapture)
-			{
+			oTarget.addEventListener = function (sEvent, funcHandler, bCapture) {
 				oTarget['on' + sEvent] = funcHandler;
 			}
-			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture)
-			{
+			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture) {
 				oTarget['on' + sEvent] = null;
 			}
 		}
@@ -937,7 +931,7 @@ function createEventListener(oTarget)
 // This function will retrieve the contents needed for the jump to boxes.
 function grabJumpToContent()
 {
-	var oXMLDoc = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=xmlhttp;sa=jumpto;xml");
+	var oXMLDoc = getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + 'action=xmlhttp;sa=jumpto;xml');
 	var aBoardsAndCategories = new Array();
 
 	ajax_indicator(true);
@@ -980,14 +974,14 @@ JumpTo.prototype.showSelect = function ()
 	var sChildLevelPrefix = '';
 	for (var i = this.opt.iCurBoardChildLevel; i > 0; i--)
 		sChildLevelPrefix += this.opt.sBoardChildLevelIndicator;
-	setInnerHTML(document.getElementById(this.opt.sContainerId), this.opt.sJumpToTemplate.replace(/%select_id%/, this.opt.sContainerId + '_select').replace(/%dropdown_list%/, '<select name="' + this.opt.sContainerId + '_select" id="' + this.opt.sContainerId + '_select" ' + (typeof(document.implementation) == 'undefined' ? 'onmouseover="grabJumpToContent();" ' : '') + (typeof(document.onbeforeactivate) == 'undefined' ? 'onfocus' : 'onbeforeactivate') + '="grabJumpToContent();"><option value="?board=' + this.opt.iCurBoardId + '.0">' + sChildLevelPrefix + this.opt.sBoardPrefix + this.opt.sCurBoardName.removeEntities() + '</option></select>&nbsp;<input type="button" value="' + this.opt.sGoButtonLabel + '" onclick="window.location.href = \'' + smf_scripturl + '?board=' + this.opt.iCurBoardId + '.0\';" />'));
+	setInnerHTML(document.getElementById(this.opt.sContainerId), this.opt.sJumpToTemplate.replace(/%select_id%/, this.opt.sContainerId + '_select').replace(/%dropdown_list%/, '<select name="' + this.opt.sContainerId + '_select" id="' + this.opt.sContainerId + '_select" ' + ('implementation' in document ? '' : 'onmouseover="grabJumpToContent();" ') + ('onbeforeactivate' in document ? 'onbeforeactivate' : 'onfocus') + '="grabJumpToContent();"><option value="?board=' + this.opt.iCurBoardId + '.0">' + sChildLevelPrefix + this.opt.sBoardPrefix + this.opt.sCurBoardName.removeEntities() + '</option></select>&nbsp;<input type="button" value="' + this.opt.sGoButtonLabel + '" onclick="window.location.href = \'' + smf_scripturl + '?board=' + this.opt.iCurBoardId + '.0\';" />'));
 	this.dropdownList = document.getElementById(this.opt.sContainerId + '_select');
 }
 
 // Fill the jump to box with entries. Method of the JumpTo class.
 JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 {
-	var bIE5x = typeof(document.implementation) == 'undefined';
+	var bIE5x = !('implementation' in document);
 	var iIndexPointer = 0;
 
 	// Create an option that'll be above and below the category.
@@ -1002,10 +996,10 @@ JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 		this.dropdownList.onmouseover = null;
 		this.dropdownList.remove(0);
 	}
-	if (typeof(document.onbeforeactivate) == 'undefined')
-		this.dropdownList.onfocus = null;
-	else
+	if ('onbeforeactivate' in document)
 		this.dropdownList.onbeforeactivate = null;
+	else
+		this.dropdownList.onfocus = null;
 
 	// Create a document fragment that'll allowing inserting big parts at once.
 	var oListFragment = bIE5x ? this.dropdownList : document.createDocumentFragment();
@@ -1054,8 +1048,7 @@ JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 	this.dropdownList.focus();
 
 	// Add an onchange action
-	this.dropdownList.onchange = function()
-	{
+	this.dropdownList.onchange = function() {
 		if (this.selectedIndex > 0 && this.options[this.selectedIndex].value)
 			window.location.href = smf_scripturl + this.options[this.selectedIndex].value.substr(smf_scripturl.indexOf('?') == -1 || this.options[this.selectedIndex].value.substr(0, 1) != '?' ? 0 : 1);
 	}
@@ -1079,7 +1072,7 @@ function IconList(oOptions)
 	this.iCurTimeout = 0;
 
 	// Add backwards compatibility with old themes.
-	if (typeof(this.opt.sSessionVar) == 'undefined')
+	if (!('sSessionVar' in this.opt))
 		this.opt.sSessionVar = 'sesc';
 
 	this.initIcons();
@@ -1152,7 +1145,7 @@ IconList.prototype.onIconsReceived = function (oXMLDoc)
 	var sItems = '';
 
 	for (var i = 0, n = icons.length; i < n; i++)
-		sItems += '<div onmouseover="' + this.opt.sBackReference + '.onItemHover(this, true)" onmouseout="' + this.opt.sBackReference + '.onItemHover(this, false);" onmousedown="' + this.opt.sBackReference + '.onItemMouseDown(this, \'' + icons[i].getAttribute('value') + '\');" style="padding: 3px 0px 3px 0px; margin-left: auto; margin-right: auto; border: ' + this.opt.sItemBorder + '; background: ' + this.opt.sItemBackground + '"><img src="' + icons[i].getAttribute('url') + '" alt="' + icons[i].getAttribute('name') + '" id="msg_icon_' + this.iCurMessageId + '" title="' + icons[i].firstChild.nodeValue + '" border="0" /></div>';
+		sItems += '<div onmouseover="' + this.opt.sBackReference + '.onItemHover(this, true)" onmouseout="' + this.opt.sBackReference + '.onItemHover(this, false);" onmousedown="' + this.opt.sBackReference + '.onItemMouseDown(this, \'' + icons[i].getAttribute('value') + '\');" style="padding: 3px 0px 3px 0px; margin-left: auto; margin-right: auto; border: ' + this.opt.sItemBorder + '; background: ' + this.opt.sItemBackground + '"><img src="' + icons[i].getAttribute('url') + '" alt="' + icons[i].getAttribute('name') + '" title="' + icons[i].firstChild.nodeValue + '" border="0" /></div>';
 
 	setInnerHTML(this.oContainerDiv, sItems);
 	this.oContainerDiv.style.display = 'block';
@@ -1244,7 +1237,7 @@ function smf_itemPos(itemHandle)
 	var itemX = 0;
 	var itemY = 0;
 
-	if (typeof(itemHandle.offsetParent) != 'undefined')
+	if ('offsetParent' in itemHandle)
 	{
 		itemX = itemHandle.offsetLeft;
 		itemY = itemHandle.offsetTop;
@@ -1255,7 +1248,7 @@ function smf_itemPos(itemHandle)
 			itemY += itemHandle.offsetTop;
 		}
 	}
-	else if (typeof(itemHandle.x) != 'undefined')
+	else if ('x' in itemHandle)
 	{
 		itemX = itemHandle.x;
 		itemY = itemHandle.y;
@@ -1274,7 +1267,7 @@ var aOnloadEvents = new Array();
 function addLoadEvent(fNewOnload)
 {
 	// If there's no event set, just set this one
-	if (typeof(window.onload) != 'function')
+	if (!('onload' in window) || typeof(window.onload) != 'function')
 		window.onload = fNewOnload;
 
 	// If there's just one event, setup the array.
@@ -1298,7 +1291,7 @@ function addLoadEvent(fNewOnload)
 
 function smfFooterHighlight(element, value)
 {
-	element.src = smf_images_url + "/" + (value ? "h_" : "") + element.id + ".gif";
+	element.src = smf_images_url + '/' + (value ? 'h_' : '') + element.id + '.gif';
 }
 
 // Get the text in a code tag.
@@ -1314,7 +1307,7 @@ function smfSelectText(oCurElement, bActOnElement)
 		return false;
 
 	// Start off with my favourite, internet explorer.
-	if (document.body.createTextRange)
+	if ('createTextRange' in document.body)
 	{
 		var oCurRange = document.body.createTextRange();
 		oCurRange.moveToElementText(oCodeArea);
@@ -1328,7 +1321,7 @@ function smfSelectText(oCurElement, bActOnElement)
 		if (oCurSelection.setBaseAndExtent)
 		{
 			var oLastChild = oCodeArea.lastChild;
-			oCurSelection.setBaseAndExtent(oCodeArea, 0, oLastChild, typeof(oLastChild.innerText) == 'undefined' ? oLastChild.textContent.length : oLastChild.innerText.length);
+			oCurSelection.setBaseAndExtent(oCodeArea, 0, oLastChild, 'innerText' in oLastChild ? oLastChild.innerText.length : oLastChild.textContent.length);
 		}
 		else
 		{
@@ -1341,69 +1334,4 @@ function smfSelectText(oCurElement, bActOnElement)
 	}
 
 	return false;
-}
-
-main_menu = function() 
-{
-	var cssRule;
-	var newSelector;
-	for (var i = 0; i < document.styleSheets.length; i++)
-		for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
-		{
-			cssRule = document.styleSheets[i].rules[x];
-			if (cssRule.selectorText.indexOf("LI:hover") != -1)
-			{
-				newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
-				document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
-			}
-		}
-		var getElm = document.getElementById("main_menu").getElementsByTagName("LI");
-		for (var i=0; i<getElm.length; i++) 
-		{
-				getElm[i].onmouseover=function() {
-				this.className+=" iehover";
-		}
-		getElm[i].onmouseout=function() 
-		{
-			this.className=this.className.replace(new RegExp(" iehover\\b"), "");
-		}
-	}
-}
-adm_menu = function() 
-{
-	var cssRule;
-	var newSelector;
-	for (var i = 0; i < document.styleSheets.length; i++)
-	for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
-	{
-		cssRule = document.styleSheets[i].rules[x];
-		if (cssRule.selectorText.indexOf("LI:hover") != -1)
-		{
-			newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
-			document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
-		}
-	}
-	//check the parent element fist!
-	var possibleAdminMenu = document.getElementById("admin_menu");
-	if (possibleAdminMenu)
-	{
-		var getElm = document.getElementById("admin_menu").getElementsByTagName("LI");
-		for (var i=0; i<getElm.length; i++) 
-		{
-			getElm[i].onmouseover=function() 
-			{
-				this.className+=" iehover";
-			}
-            getElm[i].onmouseout=function() 
-			{
-				this.className=this.className.replace(new RegExp(" iehover\\b"), "");
-            }
-        }
-   } 
-}
-
-if (window.attachEvent && is_ie6) 
-{
-	window.attachEvent("onload", main_menu);
-	window.attachEvent("onload", adm_menu);
 }

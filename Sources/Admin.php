@@ -740,7 +740,7 @@ function DisplayAdminFile()
 
 	@ini_set('memory_limit', '32M');
 
-	if (empty($_REQUEST['filename']))
+	if (empty($_REQUEST['filename']) || !is_string($_REQUEST['filename']))
 		fatal_lang_error('no_access');
 
 	$request = $smcFunc['db_query']('', '

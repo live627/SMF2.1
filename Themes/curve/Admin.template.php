@@ -42,20 +42,7 @@ function template_admin()
 
 	// Is there an update available?
 	echo '
-		<div id="update_section" style="display: none;">
-			<h3 id="update_title" class="catbg"><span class="left"></span><span class="right"></span>
-				', $txt['update_available'], '
-			</h3>
-			<div class="windowbg">
-				<span class="topslice"><span></span></span>
-				<div class="content">
-					<div id="update_message" class="smalltext">
-						', $txt['update_message'], '
-					</div>
-				</div>
-				<span class="botslice"><span></span></span>
-			</div>
-		</div>';
+		<div id="update_section"></div>';
 
 	echo '
 		<div id="admin_main_section">';
@@ -154,111 +141,54 @@ function template_admin()
 
 	// This sets the announcements and current versions themselves ;).
 	echo '
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc1"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
-			function smfSetAnnouncements()
-			{
-				if (typeof(window.smfAnnouncements) == "undefined" || typeof(window.smfAnnouncements.length) == "undefined")
-					return;
+			var oAdminIndex = new smf_AdminIndex({
+				sSelf: \'oAdminCenter\',
 
-				var str = "";
-				str += "\n	<dl>"
-				
-				for (var i = 0; i < window.smfAnnouncements.length; i++)
-				{
-					str += "\n	<dt><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</dt>";
-					str += "\n	<dd>"
-					str += "\n		" + window.smfAnnouncements[i].message;
-					str += "\n	</dd>";
-				}
-				
-				str += "\n	</dl>"
-				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
-			}
+				bLoadAnnouncements: true,
+				sAnnouncementTemplate: ', JavaScriptEscape('
+					<dl>
+						%content%
+					</dl>
+				'), ',
+				sAnnouncementMessageTemplate: ', JavaScriptEscape('
+					<dt><a href="%href%">%subject%</a> ' . $txt['on'] . ' %time%</dt>
+					<dd>
+						%message%
+					</dd>
+				'), ',
+				sAnnouncementContainerId: \'smfAnnouncements\',
 
-			function smfAnnouncementsFixHeight()
-			{
-				if (document.getElementById("supportVersionsTable").offsetHeight)
-					document.getElementById("smfAnnouncements").style.height = (document.getElementById("supportVersionsTable").offsetHeight - 10) + "px";
-			}
+				bLoadVersions: true,
+				sSmfVersionContainerId: \'smfVersion\',
+				sYourVersionContainerId: \'yourVersion\',
+				sVersionOutdatedTemplate: ', JavaScriptEscape('
+					<span class="alert">%currentVersion%</span>
+				'), ',
 
-			function smfCurrentVersion()
-			{
-				var smfVer, yourVer;
+				bLoadUpdateNotification: true,
+				sUpdateNotificationContainerId: \'update_section\',
+				sUpdateNotificationDefaultTitle: ', JavaScriptEscape($txt['update_available']), ',
+				sUpdateNotificationDefaultMessage: ', JavaScriptEscape($txt['update_message']), ',
+				sUpdateNotificationTemplate: ', JavaScriptEscape('
+					<h3 id="update_title" class="catbg"><span class="left"></span><span class="right"></span>
+						%title%
+					</h3>
+					<div class="windowbg">
+						<span class="topslice"><span></span></span>
+						<div class="content">
+							<div id="update_message" class="smalltext">
+								%message%
+							</div>
+						</div>
+						<span class="botslice"><span></span></span>
+					</div>
+				'), ',
+				sUpdateNotificationLink: ', JavaScriptEscape($scripturl . '?action=admin;area=packages;pgdownload;auto;package=%package%;' . $context['session_var'] . '=' . $context['session_id']), '
 
-				if (typeof(window.smfVersion) != "string")
-					return;
 
-				smfVer = document.getElementById("smfVersion");
-				yourVer = document.getElementById("yourVersion");
-
-				setInnerHTML(smfVer, window.smfVersion);
-
-				var currentVersion = getInnerHTML(yourVer);
-				if (currentVersion != window.smfVersion)
-					setInnerHTML(yourVer, "<span class=\"alert\">" + currentVersion + "<" + "/span>");
-			}
-
-			// Sort out the update window
-			function smfUpdateAvailable()
-			{
-				var updateBody;
-
-				// Nothing to declare?
-				if (typeof(window.smfUpdatePackage) == "undefined")
-					return;
-
-				updateBody = document.getElementById("update_message");
-
-				// Are we setting a custom message?
-				if (typeof(window.smfUpdateNotice) != "undefined")
-					setInnerHTML(updateBody, window.smfUpdateNotice);
-
-				// Parse in the package download URL if it exists in the string.
-				document.getElementById("update-link").href = "', $scripturl, '?action=admin;area=packages;pgdownload;auto;package=" + window.smfUpdatePackage + ";', $context['session_var'], '=', $context['session_id'], '";
-
-				// If we decide to override life into "red" mode, do it.
-				if (typeof(window.smfUpdateCritical) != "undefined")
-				{
-					document.getElementById("update_table").style.backgroundColor = "#aa2222";
-					document.getElementById("update_title").style.backgroundColor = "#dd2222";
-					document.getElementById("update_title").style.color = "white";
-					document.getElementById("update_message").style.backgroundColor = "#eebbbb";
-					document.getElementById("update_message").style.color = "black";
-				}
-				// And we can override the title if we really want.
-				if (typeof(window.smfUpdateTitle) != "undefined")
-					setInnerHTML(document.getElementById("update_title"), window.smfUpdateTitle);
-
-				// Finally, make the box visible.
-				document.getElementById("update_section").style.display = "";
-			}';
-
-	// IE 4 won't like it if you try to change the innerHTML before load...
-	echo '
-
-			var fSetupAdmin = function ()
-			{
-				smfSetAnnouncements();
-				smfCurrentVersion();
-				smfUpdateAvailable();';
-
-	if ($context['browser']['is_ie'] && !$context['browser']['is_ie4'])
-		echo '
-				if (typeof(smf_codeFix) != "undefined")
-					window.detachEvent("onload", smf_codeFix);
-				window.attachEvent("onload",
-					function ()
-					{
-						with (document.all.supportVersionsTable)
-							style.height = parentNode.offsetHeight;
-					}
-				);
-				if (typeof(smf_codeFix) != "undefined")
-					window.attachEvent("onload", smf_codeFix);';
-
-	echo '
-			}
-			addLoadEvent(fSetupAdmin);
+			});
 		// ]]></script>';
 }
 
@@ -489,7 +419,7 @@ function template_view_versions()
 	echo '
 				<tr>
 					<td class="windowbg">
-						<a href="javascript:void(0);" onclick="return swapOption(this, \'Sources\');">', $txt['dvc_sources'], '</a>
+						<a href="#" id="Sources-link">', $txt['dvc_sources'], '</a>
 					</td>
 					<td class="windowbg">
 						<em id="yourSources">??</em>
@@ -528,7 +458,7 @@ function template_view_versions()
 			<tbody>
 				<tr>
 					<td class="windowbg" width="50%">
-						<a href="javascript:void(0);" onclick="return swapOption(this, \'Default\');">', $txt['dvc_default'], '</a>
+						<a href="#" id="Default-link">', $txt['dvc_default'], '</a>
 					</td>
 					<td class="windowbg" width="25%">
 						<em id="yourDefault">??</em>
@@ -566,7 +496,7 @@ function template_view_versions()
 			<tbody>
 				<tr>
 					<td class="windowbg" width="50%">
-						<a href="javascript:void(0);" onclick="return swapOption(this, \'Languages\');">', $txt['dvc_languages'], '</a>
+						<a href="#" id="Languages-link">', $txt['dvc_languages'], '</a>
 					</td>
 					<td class="windowbg" width="25%">
 						<em id="yourLanguages">??</em>
@@ -610,7 +540,7 @@ function template_view_versions()
 			<tbody>
 				<tr>
 					<td class="windowbg" width="50%">
-						<a href="javascript:void(0);" onclick="return swapOption(this, \'Templates\');">', $txt['dvc_templates'], '</a>
+						<a href="#" id="Templates-link">', $txt['dvc_templates'], '</a>
 					</td>
 					<td class="windowbg" width="25%">
 						<em id="yourTemplates">??</em>
@@ -654,136 +584,22 @@ function template_view_versions()
 	   file catorgories. (sources, languages, and templates.) */
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=detailed-version.js"></script>
-		<script type="text/javascript"><!-- // --><![CDATA[
-			var swaps = {};
-
-			function swapOption(sendingElement, name)
-			{
-				// If it is undefined, or currently off, turn it on - otherwise off.
-				swaps[name] = typeof(swaps[name]) == "undefined" || !swaps[name];
-				document.getElementById(name).style.display = swaps[name] ? "" : "none";
-
-				// Unselect the link and return false.
-				sendingElement.blur();
-				return false;
-			}
-
-			function smfDetermineVersions()
-			{
-				var highYour = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
-				var highCurrent = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
-				var lowVersion = {"Sources": false, "Default": false, "Languages" : false, "Templates": false};
-				var knownLanguages = [".', implode('", ".', $context['default_known_languages']), '"];
-
-				document.getElementById("Sources").style.display = "none";
-				document.getElementById("Languages").style.display = "none";
-				document.getElementById("Default").style.display = "none";
-				if (document.getElementById("Templates"))
-					document.getElementById("Templates").style.display = "none";
-
-				if (typeof(window.smfVersions) == "undefined")
-					window.smfVersions = {};
-
-				for (var filename in window.smfVersions)
-				{
-					if (!document.getElementById("current" + filename))
-						continue;
-
-					var yourVersion = getInnerHTML(document.getElementById("your" + filename));
-
-					var versionType;
-					for (var verType in lowVersion)
-						if (filename.substr(0, verType.length) == verType)
-						{
-							versionType = verType;
-							break;
-						}
-
-					if (typeof(versionType) != "undefined")
-					{
-						if ((highYour[versionType] < yourVersion || highYour[versionType] == "??") && !lowVersion[versionType])
-							highYour[versionType] = yourVersion;
-						if (highCurrent[versionType] < smfVersions[filename] || highCurrent[versionType] == "??")
-							highCurrent[versionType] = smfVersions[filename];
-
-						if (yourVersion < smfVersions[filename])
-						{
-							lowVersion[versionType] = yourVersion;
-							document.getElementById("your" + filename).style.color = "red";
-						}
-					}
-					else if (yourVersion < smfVersions[filename])
-						lowVersion[versionType] = yourVersion;
-
-					setInnerHTML(document.getElementById("current" + filename), smfVersions[filename]);
-					setInnerHTML(document.getElementById("your" + filename), yourVersion);
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc1"></script>
+		<script type="text/javascript"><!-- // --><![CDATA[ 
+			var oViewVersions = new smf_ViewVersions({
+				aKnownLanguages: [
+					\'.', implode('\',
+					\'.', $context['default_known_languages']), '\'
+				],
+				oSectionContainerIds: {
+					Sources: \'Sources\',
+					Default: \'Default\',
+					Languages: \'Languages\',
+					Templates: \'Templates\'
 				}
-
-				if (typeof(window.smfLanguageVersions) == "undefined")
-					window.smfLanguageVersions = {};
-
-				for (filename in window.smfLanguageVersions)
-				{
-					for (var i = 0; i < knownLanguages.length; i++)
-					{
-						if (!document.getElementById("current" + filename + knownLanguages[i]))
-							continue;
-
-						setInnerHTML(document.getElementById("current" + filename + knownLanguages[i]), smfLanguageVersions[filename]);
-
-						yourVersion = getInnerHTML(document.getElementById("your" + filename + knownLanguages[i]));
-						setInnerHTML(document.getElementById("your" + filename + knownLanguages[i]), yourVersion);
-
-						if ((highYour["Languages"] < yourVersion || highYour["Languages"] == "??") && !lowVersion["Languages"])
-							highYour["Languages"] = yourVersion;
-						if (highCurrent["Languages"] < smfLanguageVersions[filename] || highCurrent["Languages"] == "??")
-							highCurrent["Languages"] = smfLanguageVersions[filename];
-
-						if (yourVersion < smfLanguageVersions[filename])
-						{
-							lowVersion["Languages"] = yourVersion;
-							document.getElementById("your" + filename + knownLanguages[i]).style.color = "red";
-						}
-					}
-				}
-
-				setInnerHTML(document.getElementById("yourSources"), lowVersion["Sources"] ? lowVersion["Sources"] : highYour["Sources"]);
-				setInnerHTML(document.getElementById("currentSources"), highCurrent["Sources"]);
-				if (lowVersion["Sources"])
-					document.getElementById("yourSources").style.color = "red";
-
-				setInnerHTML(document.getElementById("yourDefault"), lowVersion["Default"] ? lowVersion["Default"] : highYour["Default"]);
-				setInnerHTML(document.getElementById("currentDefault"), highCurrent["Default"]);
-				if (lowVersion["Default"])
-					document.getElementById("yourDefault").style.color = "red";
-
-				if (document.getElementById("Templates"))
-				{
-					setInnerHTML(document.getElementById("yourTemplates"), lowVersion["Templates"] ? lowVersion["Templates"] : highYour["Templates"]);
-					setInnerHTML(document.getElementById("currentTemplates"), highCurrent["Templates"]);
-
-					if (lowVersion["Templates"])
-						document.getElementById("yourTemplates").style.color = "red";
-				}
-
-				setInnerHTML(document.getElementById("yourLanguages"), lowVersion["Languages"] ? lowVersion["Languages"] : highYour["Languages"]);
-				setInnerHTML(document.getElementById("currentLanguages"), highCurrent["Languages"]);
-				if (lowVersion["Languages"])
-					document.getElementById("yourLanguages").style.color = "red";
-			}
+			});
 		// ]]></script>';
 
-	// Internet Explorer 4 is tricky, it won't set any innerHTML until after load.
-	if ($context['browser']['is_ie4'])
-		echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-			addLoadEvent(smfDetermineVersions);
-		// ]]></script>';
-	else
-		echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-			smfDetermineVersions();
-		// ]]></script>';
 }
 
 // Form for stopping people using naughty words, etc.
