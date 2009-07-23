@@ -763,7 +763,7 @@ function DisplayAdminFile()
 	// Figure out if sesc is still being used.
 	if (strpos($file_data, ';sesc=') !== false)
 		$file_data = '
-if (typeof(window.smfForum_sessionvar) == "undefined")
+if (!(\'smfForum_sessionvar\' in window))
 	window.smfForum_sessionvar = \'sesc\';
 ' . strtr($file_data, array(';sesc=' => ';\' + window.smfForum_sessionvar + \'='));
 

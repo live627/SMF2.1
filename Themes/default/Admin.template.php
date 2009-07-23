@@ -19,19 +19,9 @@ function template_admin()
 			</tr>
 		</table>';
 
-	// Is there an update available?
+	// Is there an update available? Placeholder filled by JavaScript.
 	echo '
-	<div id="update_section" style="display: none;">
-		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor" style="margin-top: 1.5ex;" id="update_table">
-			<tr class="titlebg">
-				<td id="update_title">', $txt['update_available'], '</td>
-			</tr><tr>
-				<td class="windowbg" valign="top" style="padding: 0;">
-					<div id="update_message" style="font-size: 0.85em; padding: 4px;">', $txt['update_message'], '</div>
-				</td>
-			</tr>
-		</table>
-	</div>';
+	<div id="update_section"></div>';
 
 	if ($context['user']['is_admin'])
 		echo '
@@ -148,109 +138,51 @@ function template_admin()
 
 	// This sets the announcements and current versions themselves ;).
 	echo '
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc1"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
-			function smfSetAnnouncements()
-			{
-				if (typeof(window.smfAnnouncements) == "undefined" || typeof(window.smfAnnouncements.length) == "undefined")
-					return;
+			var oAdminIndex = new smf_AdminIndex({
+				sSelf: \'oAdminCenter\',
 
-				var str = "<div style=\"margin: 4px; font-size: 0.85em;\">";
+				bLoadAnnouncements: true,
+				sAnnouncementTemplate: ', JavaScriptEscape('
+					<div style="margin: 4px; font-size: 0.85em;">
+						%content%
+					</div>
+				'), ',
+				sAnnouncementMessageTemplate: ', JavaScriptEscape('
+					<div style="padding-bottom: 2px;"><a href="%href%">%subject%</a> ' . $txt['on'] . ' %time%</div>
+					<div style="padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;">
+						%message%
+					</div>
+				'), ',
+				sAnnouncementContainerId: \'smfAnnouncements\',
 
-				for (var i = 0; i < window.smfAnnouncements.length; i++)
-				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "<" + "/div>";
-					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
-					str += "\n		" + window.smfAnnouncements[i].message;
-					str += "\n	<" + "/div>";
-				}
+				bLoadVersions: true,
+				sSmfVersionContainerId: \'smfVersion\',
+				sYourVersionContainerId: \'yourVersion\',
+				sVersionOutdatedTemplate: ', JavaScriptEscape('
+					<span class="alert">%currentVersion%</span>
+				'), ',
 
-				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
-			}
+				bLoadUpdateNotification: true,
+				sUpdateNotificationContainerId: \'update_section\',
+				sUpdateNotificationDefaultTitle: ', JavaScriptEscape($txt['update_available']), ',
+				sUpdateNotificationDefaultMessage: ', JavaScriptEscape($txt['update_message']), ',
+				sUpdateNotificationTemplate: ', JavaScriptEscape('
+					<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor" style="margin-top: 1.5ex;" id="update_table">
+						<tr class="titlebg">
+							<td id="update_title">%title%</td>
+						</tr><tr>
+							<td class="windowbg" valign="top" style="padding: 0;">
+								<div id="update_message" style="font-size: 0.85em; padding: 4px;">%message%</div>
+							</td>
+						</tr>
+					</table>
+				'), ',
+				sUpdateNotificationLink: ', JavaScriptEscape($scripturl . '?action=admin;area=packages;pgdownload;auto;package=%package%;' . $context['session_var'] . '=' . $context['session_id']), '
 
-			function smfAnnouncementsFixHeight()
-			{
-				if (document.getElementById("supportVersionsTable").offsetHeight)
-					document.getElementById("smfAnnouncements").style.height = (document.getElementById("supportVersionsTable").offsetHeight - 10) + "px";
-			}
 
-			function smfCurrentVersion()
-			{
-				var smfVer, yourVer;
-
-				if (typeof(window.smfVersion) != "string")
-					return;
-
-				smfVer = document.getElementById("smfVersion");
-				yourVer = document.getElementById("yourVersion");
-
-				setInnerHTML(smfVer, window.smfVersion);
-
-				var currentVersion = getInnerHTML(yourVer);
-				if (currentVersion != window.smfVersion)
-					setInnerHTML(yourVer, "<span class=\"alert\">" + currentVersion + "<" + "/span>");
-			}
-
-			// Sort out the update window
-			function smfUpdateAvailable()
-			{
-				var updateBody;
-
-				// Nothing to declare?
-				if (typeof(window.smfUpdatePackage) == "undefined")
-					return;
-
-				updateBody = document.getElementById("update_message");
-
-				// Are we setting a custom message?
-				if (typeof(window.smfUpdateNotice) != "undefined")
-					setInnerHTML(updateBody, window.smfUpdateNotice);
-
-				// Parse in the package download URL if it exists in the string.
-				document.getElementById("update-link").href = "', $scripturl, '?action=admin;area=packages;pgdownload;auto;package=" + window.smfUpdatePackage + ";', $context['session_var'], '=', $context['session_id'], '";
-
-				// If we decide to override life into "red" mode, do it.
-				if (typeof(window.smfUpdateCritical) != "undefined")
-				{
-					document.getElementById("update_table").style.backgroundColor = "#aa2222";
-					document.getElementById("update_title").style.backgroundColor = "#dd2222";
-					document.getElementById("update_title").style.color = "white";
-					document.getElementById("update_message").style.backgroundColor = "#eebbbb";
-					document.getElementById("update_message").style.color = "black";
-				}
-				// And we can override the title if we really want.
-				if (typeof(window.smfUpdateTitle) != "undefined")
-					setInnerHTML(document.getElementById("update_title"), window.smfUpdateTitle);
-
-				// Finally, make the box visible.
-				document.getElementById("update_section").style.display = "";
-			}';
-
-	// IE 4 won't like it if you try to change the innerHTML before load...
-	echo '
-
-			var fSetupAdmin = function ()
-			{
-				smfSetAnnouncements();
-				smfCurrentVersion();
-				smfUpdateAvailable();';
-
-	if ($context['browser']['is_ie'] && !$context['browser']['is_ie4'])
-		echo '
-				if (typeof(smf_codeFix) != "undefined")
-					window.detachEvent("onload", smf_codeFix);
-				window.attachEvent("onload",
-					function ()
-					{
-						with (document.all.supportVersionsTable)
-							style.height = parentNode.offsetHeight;
-					}
-				);
-				if (typeof(smf_codeFix) != "undefined")
-					window.attachEvent("onload", smf_codeFix);';
-
-	echo '
-			}
-			addLoadEvent(fSetupAdmin);
+			});
 		// ]]></script>';
 }
 

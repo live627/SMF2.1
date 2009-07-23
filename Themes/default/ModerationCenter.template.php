@@ -76,26 +76,25 @@ function template_latest_news()
 	echo '
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
 		<script type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/admin.js?rc1"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
-			function smfSetAnnouncements()
-			{
-				if (typeof(window.smfAnnouncements) == "undefined" || typeof(window.smfAnnouncements.length) == "undefined")
-					return;
+			var oAdminIndex = new smf_AdminIndex({
+				sSelf: \'oAdminCenter\',
 
-				var str = "<div style=\"margin: 4px; font-size: 0.85em;\">";
-
-				for (var i = 0; i < window.smfAnnouncements.length; i++)
-				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "<" + "/a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "<" + "/div>";
-					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
-					str += "\n		" + window.smfAnnouncements[i].message;
-					str += "\n	<" + "/div>";
-				}
-
-				setInnerHTML(document.getElementById("smfAnnouncements"), str + "<" + "/div>");
-			}
-
-			addLoadEvent(smfSetAnnouncements);
+				bLoadAnnouncements: true,
+				sAnnouncementTemplate: ', JavaScriptEscape('
+					<div style="margin: 4px; font-size: 0.85em;">
+						%content%
+					</div>
+				'), ',
+				sAnnouncementMessageTemplate: ', JavaScriptEscape('
+					<div style="padding-bottom: 2px;"><a href="%href%">%subject%</a> ' . $txt['on'] . ' %time%</div>
+					<div style="padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;">
+						%message%
+					</div>
+				'), ',
+				sAnnouncementContainerId: \'smfAnnouncements\'
+			});
 		// ]]></script>';
 
 }
