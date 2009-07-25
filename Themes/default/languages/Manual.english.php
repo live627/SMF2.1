@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Manual
+// Version: 2.0 RC2; Manual
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
@@ -613,7 +613,7 @@ $txt['manual_posting_list_comment'] = 'While you can add as many items as you wi
 $txt['manual_posting_list_buttom_code'] = '[list]<br />[o]circle<br />[O]circle<br />[0]circle<br />[*]disc<br />[@]disc<br />[+]square<br />[x]square<br />[#]square<br />[/list]';
 $txt['manual_posting_list_buttom_output'] = '<ul class="normallist"><li style="list-style-type: circle;">circle</li><li style="list-style-type: circle;">circle</li><li style="list-style-type: circle;">circle</li><li style="list-style-type: disc;">disc</li><li style="list-style-type: disc;">disc</li><li style="list-style-type: square;">square</li><li style="list-style-type: square;">square</li><li style="list-style-type: square;">square</li></ul>';
 $txt['manual_posting_bbc_abbr'] = 'Abbreviation';
-$txt['manual_posting_abbr_code'] = '[abbr=exemlpi gratia]eg[/abbr]';
+$txt['manual_posting_abbr_code'] = '[abbr=exempli gratia]eg[/abbr]';
 $txt['manual_posting_abbr_output'] = 'eg';
 $txt['manual_posting_abbr_comment'] = 'Displays the full expression for the abbreviation on mouseover.';
 $txt['manual_posting_bbc_acro'] = 'Acronym';

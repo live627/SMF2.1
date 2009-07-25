@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1-1                                       *
+* Software Version:           SMF 2.0 RC2-1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -1617,7 +1617,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 		// Load each template...
 		foreach ($templates as $template)
-			loadTemplate($template, $template);
+			loadTemplate($template);
 
 		// ...and attempt to load their associated language files.
 		$required_files = implode('+', array_merge($templates, array('Modifications')));
@@ -1632,6 +1632,10 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Initialize the theme.
 	loadSubTemplate('init', 'ignore');
+
+	// Load the compatibility stylesheet if the theme hasn't been updated for 2.0 RC2 (yet).
+	if (version_compare($settings['theme_version'], '2.0 RC2', '<'))
+		loadTemplate(null, 'compat');
 
 	// Any theme-related strings that need to be loaded?
 	if (!empty($settings['require_theme_strings']))

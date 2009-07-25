@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; PersonalMessage
+// Version: 2.0 RC2; PersonalMessage
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

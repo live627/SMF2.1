@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Profile
+// Version: 2.0 RC2; Profile
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
@@ -22,7 +22,7 @@ $txt['age'] = 'Age';
 $txt['no_pic'] = '(no pic)';
 $txt['latest_posts'] = 'Latest posts of: ';
 $txt['additional_info'] = 'Additional Information';
-$txt['avatar_by_url'] = 'Specify your own avatar by URL. (ex: <strong>http://www.mypage.com/mypic.gif</strong>)';
+$txt['avatar_by_url'] = 'Specify your own avatar by URL. (e.g.: <i>http://www.mypage.com/mypic.gif</i>)';
 $txt['my_own_pic'] = 'I have my own pic';
 $txt['date_format'] = 'The format here will be used to show dates throughout this forum.';
 $txt['time_format'] = 'Time Format';

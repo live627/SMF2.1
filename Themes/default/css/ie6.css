@@ -1,33 +1,107 @@
 /* special styles for IE6 */
-* html #poll_options ul.horizlist dl.options dd, * html #poll_options ul.horizlist dl.options dt
+/* the main menu */
+.dropmenu
 {
-	margin: 0;
-	padding: 0;
+	height: 1%;
+}
+.dropmenu li
+{
+	width: 1px;
+}
+.dropmenu li a span
+{
+	white-space: nowrap;
+}
+.dropmenu li a:hover
+{
+	text-decoration: none;
+}
+/* use gif for ie6 */
+.dropmenu li ul 
+{
+	background: url(../images/theme/menu_gfx.gif) 0 -100px no-repeat;
 }
 
-.modbuttons .buttonlist_bottom ul, .modbuttons .buttonlist ul, .floatright .buttonlist ul, .floatright .buttonlist_bottom ul, .readbuttons .buttonlist ul, .readbuttons .buttonlist_bottom ul
+/* the active button */
+.dropmenu li a.active
 {
-	float: right;
+	background: url(../images/theme/menu_gfx.gif) no-repeat 100% 0;
+}
+.dropmenu li a.active span.firstlevel
+{
+	background: url(../images/theme/menu_gfx.gif) no-repeat 0 0;
+}
+/* the hover effects */
+.dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
+{
+	background: url(../images/theme/menu_gfx.gif) no-repeat 100% -31px;
+}
+.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
+{
+	background: url(../images/theme/menu_gfx.gif) no-repeat 0 -31px;
+}
+.buttonlist ul li a
+{
+    background: url(../images/theme/menu_gfx.gif) no-repeat 0 -60px;
 }
 
-/* Profile template */
-#detailedinfo div.content dl
+.buttonlist ul li a span
 {
-	height: 0.1%;
+    background: url(../images/theme/menu_gfx.gif) no-repeat 100% -60px;
 }
-.infocenter_section div.sectionbody
+.buttonlist ul li a:hover span
 {
-	height: 30px;
+    background: url(../images/theme/menu_gfx.gif) no-repeat 100% 0;
 }
-/* IE6 doesn't support multiple class selectors */
-#main_menu li.last.active
+/* the active one */
+.buttonlist ul li a.active
 {
-	padding: 0 0 0 0;
+    background: url(../images/theme/menu_gfx.gif) no-repeat 0 -30px;
 }
-#main_menu li.lastactive
+.buttonlist ul li a.active span
 {
-	padding: 0 8px 0 0;
+    background: url(../images/theme/menu_gfx.gif) no-repeat 100% -30px;
 }
+/* the page section*/
+.pagesecttion 
+{
+	overflow: auto;
+}
+/* the user section needs some attention */
+#main_menu
+{
+    width: 98%;
+}
+#top_section
+{
+    height: 65px;
+}
+/*  the tabled definition lists */
+dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
+{
+	float: none;
+	width: auto;
+}
+/* **************** */
+/* from MessageIndex.template */
+/* **************** */
+#messageindex table
+{
+	margin-top: 5px;
+}
+#messageindex table th
+{
+	border-bottom: solid 1px white;
+}
+.description
+{
+	padding: 2em 1em 1em 1em;
+	overflow: auto;
+}
+
+/* **************** */
+/* from Display.template */
+/* **************** */
 #forumposts .postarea
 {
 	margin-left: 0px;
@@ -35,20 +109,36 @@
 }
 #forumposts .postarea .post
 {
+	float: none;
 	margin-top: 10px;
 }
-#profileview #basicinfo .content
+.buttonlist ul li
 {
-    padding: 0.7em 0 0 0.7em;
-	height: 100%;
+	width: 1%;
+	white-space: nowrap;
 }
-/* IE6 does't support multiple class selectors */
-ul.admin_menu li.last_chosen h4
+#forumposts .buttonlist ul
 {
-	background: url(../images/admintab_active_last.gif) top right no-repeat;
-	padding-right: 17px;
+	clear: right;
+	height: 1%;
+}
+#forumposts h3.catbg
+{
+	margin-top: 8px;
+	clear: both;
 }
 .signature
 {
 	padding: 0 0 0.8em 0;
+}
+/* ******************* */
+/* Admin.template */
+/* ************************ */
+#main_admsection
+{
+	height: 655px;
+}
+#main_admsection table
+{
+	width: 99%;
 }

@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Help
+// Version: 2.0 RC2; Help
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

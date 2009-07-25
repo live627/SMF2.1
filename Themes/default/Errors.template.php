@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Errors
+// Version: 2.0 RC2; Errors
 
 // !!!
 /*	This template file contains only the sub template fatal_error. It is
@@ -13,22 +13,20 @@ function template_fatal_error()
 	global $context, $settings, $options, $txt;
 
 	echo '
-<div>
-	<table border="0" width="100%" cellspacing="0" align="center" cellpadding="4" class="tborder">
-		<tr class="titlebg">
-			<td>', $context['error_title'], '</td>
-		</tr>
-		<tr class="windowbg">
-			<td style="padding: 3ex;">
-				', $context['error_message'], '
-			</td>
-		</tr>
-	</table>
-</div>';
+	<div id="fatal_error">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $context['error_title'], '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="padding">', $context['error_message'], '</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>';
 
 	// Show a back button (using javascript.)
 	echo '
-<div class="centertext" style="margin-top: 2ex;"><a href="javascript:history.go(-1)">', $txt['back'], '</a></div>';
+	<div class="centertext"><a href="javascript:history.go(-1)">', $txt['back'], '</a></div>';
 }
 
 function template_error_log()
@@ -157,7 +155,7 @@ function template_error_log()
 	else
 		echo '
 				<tr>
-					<td colspan="2" class="windowbg2 centertext">', $txt['errlog_no_entries'], '</td>
+					<td colspan="2" class="windowbg2">', $txt['errlog_no_entries'], '</td>
 				</tr>';
 
 	echo '

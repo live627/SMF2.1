@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; index
+// Version: 2.0 RC2; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of

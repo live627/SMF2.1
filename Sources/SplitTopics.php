@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -130,7 +130,7 @@ function SplitTopics()
 
 	// Load up the "dependencies" - the template, getMsgMemberID(), and sendNotifications().
 	if (!isset($_REQUEST['xml']))
-		loadTemplate('SplitTopics','splittopics');
+		loadTemplate('SplitTopics');
 	require_once($sourcedir . '/Subs-Boards.php');
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -806,7 +806,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 function MergeTopics()
 {
 	// Load the template....
-	loadTemplate('SplitTopics','splittopics');
+	loadTemplate('SplitTopics');
 
 	$subActions = array(
 		'done' => 'MergeDone',
@@ -968,7 +968,7 @@ function MergeExecute($topics = array())
 	if (!empty($topics))
 	{
 		isAllowedTo('merge_any');
-		loadTemplate('SplitTopics','splittopics');
+		loadTemplate('SplitTopics');
 	}
 
 	// Handle URLs from MergeIndex.

@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; GenericMenu
+// Version: 2.0 RC2; GenericMenu
 
 // This contains the html for the side bar of the admin center, which is used for all admin pages.
 function template_generic_menu_sidebar_above()
@@ -8,9 +8,8 @@ function template_generic_menu_sidebar_above()
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 0; clear: left;"><tr>
-			<td width="160" valign="top" style="width: 24ex; padding-', !$context['right_to_left'] ? 'right' : 'left', ': 10px; padding-bottom: 10px;">
-				<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">';
+	<div id="main_container">
+		<div id="left_admsection"><span id="admin_menu"></span>';
 
 	// What one are we rendering?
 	$context['cur_menu_id'] = isset($context['cur_menu_id']) ? $context['cur_menu_id'] + 1 : 1;
@@ -22,17 +21,16 @@ function template_generic_menu_sidebar_above()
 	{
 		// Show the section header - and pump up the line spacing for readability.
 		echo '
-					<tr>
-						<td class="catbg">', $section['title'];
+			<div class="adm_section">
+				<h4 class="catbg"><span class="left"></span><span class="right"></span>
+					', $section['title'];
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
 			echo '
-						<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>';
+					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], (!empty($menu_context['current_subsection']) ? ';sa=' . $menu_context['current_subsection'] : ''), $menu_context['extra_parameters'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '' : '2', '.png" alt="!" /></a>';
 		echo '
-						</td>
-					</tr>
-					<tr class="windowbg2">
-						<td class="smalltext" style="line-height: 1.3; padding-bottom: 3ex;">';
+				</h4>
+				<ul class="smalltext left_admmenu">';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)
 		foreach ($section['areas'] as $i => $area)
@@ -41,32 +39,35 @@ function template_generic_menu_sidebar_above()
 			if (empty($area['label']))
 				continue;
 
+			echo '
+					<li>';
 			// Is this the current area, or just some area?
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-							<strong><a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a></strong><br />';
+						<strong><a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a></strong>';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
 			}
 			else
 				echo '
-							<a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a><br />';
+						<a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">', $area['label'], '</a>';
+			echo '
+					</li>';
 		}
 
 		echo '
-						</td>
-					</tr>';
+				</ul>
+			</div>';
 
 		$firstSection = false;
 	}
 
 	// This is where the actual "main content" area for the admin section starts.
 	echo '
-			</table>
-		</td>
-		<td valign="top">';
+		</div>	
+		<div id="main_admsection">';
 
 	// If there are any "tabs" setup, this is the place to shown them.
 	//!!! Clean this up!
@@ -80,9 +81,8 @@ function template_generic_menu_sidebar_below()
 	global $context, $settings, $options;
 
 	echo '
-			</td>
-		</tr>
-	</table>';
+		</div>
+	</div><br style="clear: both;" />';
 }
 
 // This contains the html for the side bar of the admin center, which is used for all admin pages.
@@ -99,30 +99,24 @@ function template_generic_menu_dropdown_above()
 
 	if (!empty($menu_context['can_toggle_drop_down']))
 		echo '
-		<div id="menu_toggle">
-			<a href="', $menu_context['toggle_url'], '"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '2' : '', '.png" alt="*" /></a>
-		</div>';
+	<a href="', $menu_context['toggle_url'], '"><img id="menu_toggle" src="' , $context['menu_image_path'], '/change_menu', $context['right_to_left'] ? '2' : '', '.png" alt="*" /></a>';
 
 	echo '
-	<div id="adm_container">
-		<ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
+<div id="admin_menu">
+	<ul class="dropmenu" id="dropdown_menu_', $context['cur_menu_id'], '">';
 
 	// Main areas first.
-	$s = 0;
 	foreach ($menu_context['sections'] as $section)
 	{
-		$s ++;
-		$is_last = $s == count($menu_context['sections']);
-
 		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
-			<li class="chosen', $is_last ? ' last last_chosen' : '', '"><h4>', $section['title'] , '</h4>
+			<li><a class="active firstlevel" href="#"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 		}
 		else
 			echo '
-			<li', $is_last ? ' class="last"' : '', '><h4>', $section['title'] , '</h4>
+			<li><a class="firstlevel" href="#"><span class="firstlevel">', $section['title'] , '</span></a>
 				<ul>';
 
 		// For every area of this section show a link to that area (bold if it's currently selected.)
@@ -139,14 +133,14 @@ function template_generic_menu_dropdown_above()
 			if ($i == $menu_context['current_area'])
 			{
 				echo '
-						<a class="chosen', !empty($area['subsections']) ? ' subsection' : '' , '" href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '">' , $area['icon'] , $area['label'], '</a>';
+						<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '"><span>' , $area['icon'] , $area['label'], '</span></a>';
 
 				if (empty($context['tabs']))
 					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
 			}
 			else
 				echo '
-						<a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '"', !empty($area['subsections']) ? ' class="subsection"' : '' , '>' , $area['icon'] , $area['label'] , '</a>';
+						<a href="', (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i), $menu_context['extra_parameters'], '"><span>' , $area['icon'] , $area['label'] , !empty($area['subsections']) ? '...' : '' , '</span></a>';
 
 			// Is there any subsections?
 			if (!empty($area['subsections']))
@@ -165,7 +159,7 @@ function template_generic_menu_dropdown_above()
 					$url = isset($sub['url']) ? $sub['url'] : (isset($area['url']) ? $area['url'] : $menu_context['base_url'] . ';area=' . $i) . ';sa=' . $sa;
 
 					echo '
-								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, $menu_context['extra_parameters'], '">' , $sub['label'], '</a>';
+								<a ', !empty($sub['selected']) ? 'class="active" ' : '', 'href="', $url, $menu_context['extra_parameters'], '"><span>' , $sub['label'], '</span></a>';
 
 					echo '
 							</li>';
@@ -184,15 +178,12 @@ function template_generic_menu_dropdown_above()
 	}
 
 	echo '
-		</ul></div>
-		<script type="text/javascript"><!-- // --><![CDATA[
-			var menuHandle = new smfMenu("dropdown_menu_', $context['cur_menu_id'], '");
-		// ]]></script>';
+	</ul>
+</div>';
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 0; clear: both;"><tr>
-			<td valign="top">';
+<div id="admin_content">';
 
 	// It's possible that some pages have their own tabs they wanna force...
 	if (!empty($context['tabs']))
@@ -205,9 +196,7 @@ function template_generic_menu_dropdown_below()
 	global $context, $settings, $options;
 
 	echo '
-			</td>
-		</tr>
-	</table>';
+</div>';
 }
 
 // Some code for showing a tabbed view.
@@ -219,9 +208,7 @@ function template_generic_menu_tabs(&$menu_context)
 	$tab_context = &$menu_context['tab_data'];
 
 	echo '
-				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
-					<tr class="titlebg">
-						<td>';
+	<h3 class="catbg"><span class="left"></span><span class="right"></span>';
 
 	// Exactly how many tabs do we have?
 	foreach ($context['tabs'] as $id => $tab)
@@ -267,26 +254,22 @@ function template_generic_menu_tabs(&$menu_context)
 	// Show a help item?
 	if (!empty($selected_tab['help']) || !empty($tab_context['help']))
 		echo '
-							<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
+			<a href="', $scripturl, '?action=helpadmin;help=', !empty($selected_tab['help']) ? $selected_tab['help'] : $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
 	echo '
-							', $tab_context['title'], '
-						</td>
-					</tr>
-					<tr class="windowbg">';
+			', $tab_context['title'], '
+	</h3>
+	<p class="windowbg description">';
 
 	// Shall we use the tabs?
 	if (!empty($settings['use_tabs']))
 	{
-		echo '
-						<td class="smalltext" style="padding: 2ex;">', !empty($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '</td>
-					</tr>
-				</table>';
+		echo !empty($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '
+	</p>';
 
 		// The admin tabs.
 		echo '
-				<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
-					<tr>
-						<td class="maintab_first">&nbsp;</td>';
+	<div id="adm_submenus">
+		<ul class="dropmenu">';
 
 		// Print out all the items in this tab.
 		foreach ($tab_context['tabs'] as $sa => $tab)
@@ -297,30 +280,27 @@ function template_generic_menu_tabs(&$menu_context)
 			if (!empty($tab['is_selected']))
 			{
 				echo '
-						<td class="maintab_active_first">&nbsp;</td>
-						<td valign="top" class="maintab_active_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
-						</td>
-						<td class="maintab_active_last">&nbsp;</td>';
+			<li>
+				<a class="active firstlevel" href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '"><span class="firstlevel">' , $tab['label'], '</span></a>
+			</li>';
 			}
 			else
 				echo '
-						<td valign="top" class="maintab_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
-						</td>';
+			<li>
+				<a class="firstlevel" href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], isset($tab['add_params']) ? $tab['add_params'] : '', '"><span class="firstlevel">' , $tab['label'], '</span></a>
+			</li>';
 		}
 
 		// the end of tabs
 		echo '
-						<td class="maintab_last">&nbsp;</td>
-					</tr>
-				</table><br />';
+		</ul>
+	</div>';
 	}
 	// ...if not use the old style
 	else
 	{
 		echo '
-						<td align="left"><strong>';
+	<p class="tabs">';
 
 		// Print out all the items in this tab.
 		foreach ($tab_context['tabs'] as $sa => $tab)
@@ -331,23 +311,19 @@ function template_generic_menu_tabs(&$menu_context)
 			if (!empty($tab['is_selected']))
 			{
 				echo '
-							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <strong><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></strong>';
+		<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <strong><a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a></strong>';
 			}
 			else
 				echo '
-							<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a>';
+		<a href="', (isset($tab['url']) ? $tab['url'] : $menu_context['base_url'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), $menu_context['extra_parameters'], '">' , $tab['label'], '</a>';
 
 			if (empty($tab['is_last']))
 				echo ' | ';
 		}
 
 		echo '
-						</strong></td>
-					</tr>
-					<tr class="windowbg">
-						<td class="smalltext" style="padding: 2ex;">', isset($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '</td>
-					</tr>
-				</table>';
+	</p>
+	<p class="windowbg description">', isset($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '</p>';
 	}
 }
 

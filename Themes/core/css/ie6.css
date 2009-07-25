@@ -1,0 +1,54 @@
+/* special styles for IE6 */
+* html #poll_options ul.horizlist dl.options dd, * html #poll_options ul.horizlist dl.options dt
+{
+	margin: 0;
+	padding: 0;
+}
+
+.modbuttons .buttonlist_bottom ul, .modbuttons .buttonlist ul, .floatright .buttonlist ul, .floatright .buttonlist_bottom ul, .readbuttons .buttonlist ul, .readbuttons .buttonlist_bottom ul
+{
+	float: right;
+}
+
+/* Profile template */
+#detailedinfo div.content dl
+{
+	height: 0.1%;
+}
+.infocenter_section div.sectionbody
+{
+	height: 30px;
+}
+/* IE6 doesn't support multiple class selectors */
+#main_menu li.last.active
+{
+	padding: 0 0 0 0;
+}
+#main_menu li.lastactive
+{
+	padding: 0 8px 0 0;
+}
+#forumposts .postarea
+{
+	margin-left: 0px;
+	float: right;
+}
+#forumposts .postarea .post
+{
+	margin-top: 10px;
+}
+#profileview #basicinfo .content
+{
+    padding: 0.7em 0 0 0.7em;
+	height: 100%;
+}
+/* IE6 does't support multiple class selectors */
+ul.admin_menu li.last_chosen h4
+{
+	background: url(../images/admintab_active_last.gif) top right no-repeat;
+	padding-right: 17px;
+}
+.signature
+{
+	padding: 0 0 0.8em 0;
+}

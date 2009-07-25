@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; index
+// Version: 2.0 RC2; index
 
 /*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
@@ -44,7 +44,7 @@ function template_init()
 
 	/* The version this template/theme is for.
 		This should probably be the version of SMF it was created for. */
-	$settings['theme_version'] = '2.0 RC1';
+	$settings['theme_version'] = '2.0 RC2';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
 	$settings['use_tabs'] = true;
@@ -76,7 +76,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/script.js?rc1"></script>
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
@@ -108,9 +108,7 @@ function template_html_above()
 
 	// The ?rc1 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style', $context['theme_variant'], '.css?rc1" />';
-
-	echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc1" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc1" media="print" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
@@ -148,34 +146,29 @@ function template_html_above()
 	// IE7 needs some fixes for styles.
 	if ($context['browser']['is_ie7'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie7.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie7.css" />';
 	// ..and IE6!
 	elseif ($context['browser']['is_ie6'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ie6.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
 	// Firefox - all versions - too!
 	elseif ($context['browser']['is_firefox'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/ff.css" />';
-	// Safari / Chrome and other webkit based browsers.
-	elseif ($context['browser']['is_webkit'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/webkit.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ff.css" />';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/rtl.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css" />';
 
 	echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
+	<script type="text/javascript"><!-- // --><![CDATA[
 		// Create the main header object.
 		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
 		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
 		mainHeader.setOptions("collapse_header", "', $context['session_id'], '", "', $context['session_var'], '");
 		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
-		mainHeader.addTogglePanel("user_section");
-		mainHeader.addTogglePanel("news_section");
+		mainHeader.addTogglePanel("upper_section");
 	// ]]></script>';
 
 	echo '
@@ -188,99 +181,60 @@ function template_body_above()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-<div id="mainframe">
-	<div class="tborder">
-		<div class="catbg">
-			<img class="floatright" id="smflogo" src="' , $settings['images_url'] , '/smflogo.gif" alt="Simple Machines Forum" />
-			<h1>';
+	<div id="header"><div class="frame">
+		<div id="top_section">
+			<h1 class="forumtitle">
+				<a href="', $scripturl, '">', empty($settings['header_logo_url']) ? $context['forum_name'] : '<img src="' . $settings['header_logo_url'] . '" alt="' . $context['forum_name'] . '" />' , '</a>
+			</h1>';
 
-	if (empty($settings['header_logo_url']))
-		echo $context['forum_name_html_safe'];
-	else
-		echo '
-				<img src="', $settings['header_logo_url'], '" alt="', $context['forum_name_html_safe'], '" />';
-
+	// the upshrink image, right-floated
 	echo '
-			</h1>
-		</div>';
-
-	// Display user name and time.
+			<a href="#" onclick="mainHeader.toggle(); return false;">
+				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" />
+			</a>';
 	echo '
-		<ul id="greeting_section" class="reset titlebg2">
-			<li id="time" class="smalltext floatright">
-				' , $context['current_time'], '
-				<a href="#" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" /></a>
-			</li>';
+			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.' . ($context['browser']['is_ie6'] ? 'gif' : 'png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 
+		</div>
+		<div id="upper_section" class="middletext"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
+			<div class="user">';
 
-	if ($context['user']['is_logged'])
-		echo '
-			<li id="name">', $txt['hello_member_ndt'], ' <em>', $context['user']['name'], '</em></li>';
-	else
-		echo '
-			<li id="name">', $txt['hello_guest'], ' <em>', $txt['guest'], '</em></li>';
-
-	echo '
-		</ul>';
-
-	if ($context['user']['is_logged'] || !empty($context['show_login_bar']))
-		echo '
-		<div id="user_section" class="bordercolor"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
-			<div class="windowbg2 clearfix">';
-
-	if (!empty($context['user']['avatar']))
-		echo '
-				<div id="myavatar">', $context['user']['avatar']['image'], '</div>';
-
-	// If the user is logged in, display stuff like their name, new messages, etc.
-	if ($context['user']['is_logged'])
-	{
-		echo '
+		// If the user is logged in, display stuff like their name, new messages, etc.
+		if ($context['user']['is_logged'])
+		{
+			if (!empty($context['user']['avatar']))
+				echo '
+				<p class="avatar">', $context['user']['avatar']['image'], '</p>';
+			echo '
 				<ul class="reset">
+					<li class="greeting">', $txt['hello_member_ndt'], ' <span>', $context['user']['name'], '</span></li>
 					<li><a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a></li>
 					<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';
 
-		// Is the forum in maintenance mode?
-		if ($context['in_maintenance'] && $context['user']['is_admin'])
-			echo '
+			// Is the forum in maintenance mode?
+			if ($context['in_maintenance'] && $context['user']['is_admin'])
+				echo '
 					<li class="notice">', $txt['maintain_mode_on'], '</li>';
 
-		// Are there any members waiting for approval?
-		if (!empty($context['unapproved_members']))
-			echo '
+			// Are there any members waiting for approval?
+			if (!empty($context['unapproved_members']))
+				echo '				
 					<li>', $context['unapproved_members'] == 1 ? $txt['approve_thereis'] : $txt['approve_thereare'], ' <a href="', $scripturl, '?action=admin;area=viewmembers;sa=browse;type=approve">', $context['unapproved_members'] == 1 ? $txt['approve_member'] : $context['unapproved_members'] . ' ' . $txt['approve_members'], '</a> ', $txt['approve_members_waiting'], '</li>';
 
-		// Show the total time logged in?
-		if (!empty($context['user']['total_time_logged_in']))
+			if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
+				echo '				
+					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
+
+			echo '
+					<li>' , $context['current_time'], '</li>
+				</ul>';
+		}
+		// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
+		elseif (!empty($context['show_login_bar']))
 		{
 			echo '
-					<li>', $txt['totalTimeLogged1'];
-
-			// If days is just zero, don't bother to show it.
-			if ($context['user']['total_time_logged_in']['days'] > 0)
-				echo $context['user']['total_time_logged_in']['days'] . $txt['totalTimeLogged2'];
-
-			// Same with hours - only show it if it's above zero.
-			if ($context['user']['total_time_logged_in']['hours'] > 0)
-				echo $context['user']['total_time_logged_in']['hours'] . $txt['totalTimeLogged3'];
-
-			// But, let's always show minutes - Time wasted here: 0 minutes ;).
-			echo $context['user']['total_time_logged_in']['minutes'], $txt['totalTimeLogged4'], '
-					</li>';
-		}
-
-		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
-			echo '
-					<li><a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a></li>';
-		echo '
-				</ul>';
-	}
-	// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
-	elseif (!empty($context['show_login_bar']))
-	{
-		echo '
 				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
-				<form class="windowbg" id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-					' , $txt['login_or_register'], '<br />
+				<form id="guest_form" action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
+					<div class="info">' , $txt['login_or_register'], '</div>
 					<input type="text" name="user" size="10" class="input_text" />
 					<input type="password" name="passwrd" size="10" class="input_password" />
 					<select name="cookielength">
@@ -291,62 +245,59 @@ function template_body_above()
 						<option value="-1" selected="selected">', $txt['forever'], '</option>
 					</select>
 					<input type="submit" value="', $txt['login'], '" class="button_submit" /><br />
-					', $txt['quick_login_dec'];
+					<div class="info">', $txt['quick_login_dec'], '</div>';
 
-		if (!empty($modSettings['enableOpenID']))
-			echo'
-					<br />
-					<input type="text" name="openid_url" id="openid_url" size="25" class="input_text openid_login" />';
+			if (!empty($modSettings['enableOpenID']))
+				echo'
+					<br /><input type="text" name="openid_url" id="openid_url" size="25" class="input_text openid_login" />';
 
-		echo '
+			echo '
 					<input type="hidden" name="hash_passwrd" value="" />
 				</form>';
-	}
+		}
 
-	if ($context['user']['is_logged'] || !empty($context['show_login_bar']))
+		echo '
+			</div>
+			<div class="news normaltext">
+				<form id="search_form" style="margin: 0;" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
+					<input type="text" name="search" value="" class="input_text" />&nbsp;
+					<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
+					<input type="hidden" name="advanced" value="0" />';
+
+		// Search within current topic?
+		if (!empty($context['current_topic']))
+			echo '
+					<input type="hidden" name="topic" value="', $context['current_topic'], '" />';
+			// If we're on a certain board, limit it to this board ;).
+		elseif (!empty($context['current_board']))
+			echo '
+					<input type="hidden" name="brd[', $context['current_board'], ']" value="', $context['current_board'], '" />';
+
+		echo '</form>';
+
+		// Show a random news item? (or you could pick one from news_lines...)
+		if (!empty($settings['enable_news']))
+			echo '
+				<h2>', $txt['news'], ': </h2>
+				<p>', $context['random_news_line'], '</p>';
+
 		echo '
 			</div>
 		</div>';
-		
-	echo '
-		<div id="news_section" class="titlebg2 clearfix"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>
-			<form class="floatright" id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-				<a href="', $scripturl, '?action=search;advanced" title="', $txt['search_advanced'], '"><img id="advsearch" src="'.$settings['images_url'].'/filter.gif" align="middle" alt="', $txt['search_advanced'], '" /></a>
-				<input type="text" name="search" value="" style="width: 190px;" class="input_text" />&nbsp;
-				<input type="submit" name="submit" value="', $txt['search'], '" style="width: 11ex;" class="button_submit" />
-				<input type="hidden" name="advanced" value="0" />';
 
-	// Search within current topic?
-	if (!empty($context['current_topic']))
+		// Show the menu here, according to the menu sub template.
+		template_menu();
+
+		// Show the navigation tree.
+		theme_linktree();
+
 		echo '
-				<input type="hidden" name="topic" value="', $context['current_topic'], '" />';
-		// If we're on a certain board, limit it to this board ;).
-	elseif (!empty($context['current_board']))
-		echo '
-				<input type="hidden" name="brd[', $context['current_board'], ']" value="', $context['current_board'], '" />';
-
-	echo '
-			</form>';
-
-	// Show a random news item? (or you could pick one from news_lines...)
-	if (!empty($settings['enable_news']))
-		echo '
-			<div id="random_news"><h3>', $txt['news'], ':</h3><p>', $context['random_news_line'], '</p></div>';
-
-	echo '
-		</div>
-	</div>';
-
-
-	// Show the menu here, according to the menu sub template.
-	template_menu();
-
-	// Show the navigation tree.
-	theme_linktree();
+	</div></div>';
 
 	// The main content should go here.
 	echo '
-	<div id="bodyarea">';
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">';
 }
 
 function template_body_below()
@@ -354,26 +305,26 @@ function template_body_below()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	</div>';
+		</div>
+	</div></div>';
 
 	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!
 	echo '
-	<div id="footerarea" class="headerpadding topmargin clearfix">
-		<ul class="reset smalltext">
-			<li class="copywrite">', theme_copyright(), '</li>
+	<div id="footer_section"><div class="frame">
+		<ul class="reset">
+			<li class="copyright">', theme_copyright(), '</li>
 			<li><a id="button_xhtml" href="http://validator.w3.org/check/referer" target="_blank" class="new_win" title="', $txt['valid_xhtml'], '"><span>', $txt['xhtml'], '</span></a></li>
-			', !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']) ? '<li><a id="button_rss" href="' . $scripturl . '?type=rss;action=.xml" class="new_win"><span>' . $txt['rss'] . '</span></a></li>' : '', '
+			', !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']) ? '<li><a id="button_rss" href="' . $scripturl . '?action=.xml" class="new_win"><span>' . $txt['rss'] . '</span></a></li>' : '', '
 			<li class="last"><a id="button_wap2" href="', $scripturl , '?wap2" class="new_win"><span>', $txt['wap2'], '</span></a></li>
 		</ul>';
 
 	// Show the load time?
 	if ($context['show_load_time'])
 		echo '
-		<p class="smalltext" id="show_loadtime">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
+		<p>', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
 
 	echo '
-	</div>
-</div>';
+	</div></div>';
 }
 
 function template_html_below()
@@ -398,25 +349,26 @@ function theme_linktree($force_show = false)
 		$context['linktree'] = array_reverse($context['linktree'], true);
 
 	echo '
-	<ul class="linktree" id="linktree_', empty($shown_linktree) ? 'upper' : 'lower', '">';
+	<div id="navigate_section_', empty($shown_linktree) ? 'upper' : 'lower', '">
+		<ul>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
 	foreach ($context['linktree'] as $link_num => $tree)
 	{
 		echo '
-		<li', ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '', '>';
+			<li', ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '', '>';
 
-		// Don't show a separator for the last one.
+		// Don't show a separator for the last one (RTL mode)
 		if ($link_num != count($context['linktree']) - 1 && $context['right_to_left'])
-			echo '&lt;&nbsp;';
+			echo '&#171;&nbsp;';
 
-		// Show something before the link?
+			// Show something before the link?
 		if (isset($tree['extra_before']))
 			echo $tree['extra_before'];
 
 		// Show the link, including a URL if it should have one.
 		echo $settings['linktree_link'] && isset($tree['url']) ? '
-			<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>' : '<span>' . $tree['name'] .'</span>';
+				<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>' : '<span>' . $tree['name'] .'</span>';
 
 		// Show something after the link...?
 		if (isset($tree['extra_after']))
@@ -424,13 +376,14 @@ function theme_linktree($force_show = false)
 
 		// Don't show a separator for the last one.
 		if ($link_num != count($context['linktree']) - 1 && !$context['right_to_left'])
-			echo '&nbsp;&gt;';
+			echo '&nbsp;&#187;';
 
 		echo '
-		</li>';
+			</li>';
 	}
 	echo '
-	</ul>';
+		</ul>
+	</div>';
 
 	$shown_linktree = true;
 }
@@ -441,33 +394,59 @@ function template_menu()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<div id="main_menu">
-		<ul class="reset clearfix">';
+		<div id="main_menu">
+			<ul class="dropmenu" id="menu_nav">';
 
 	foreach ($context['menu_buttons'] as $act => $button)
 	{
-		$classes = array();
-		if (!empty($button['active_button']))
-			$classes[] = 'active';
-		if (!empty($button['is_last']))
-			$classes[] = 'last';
-		/* IE6 can't do multiple class selectors */
-		if ($context['browser']['is_ie6'] && !empty($button['active_button']) && !empty($button['is_last']))
-			$classes[] = 'lastactive';
-
-		$classes = implode(' ', $classes);
-
 		echo '
-			<li id="button_', $act, '"', !empty($classes) ? ' class="' . $classes . '"' : '', '>
-				<a title="', !empty($button['alttitle']) ? $button['alttitle'] : $button['title'], '" href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
-					<span>', ($button['active_button'] ? '<em>' : ''), $button['title'], ($button['active_button'] ? '</em>' : ''), '</span>
-				</a>
-			</li>';
+				<li id="button_', $act, '">
+					<a class="', $button['active_button'] ? 'active ' : '', 'firstlevel" href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
+						<span class="', isset($button['is_last']) ? 'last ' : '', 'firstlevel">', $button['title'], '</span>
+					</a>';
+		if (!empty($button['sub_buttons']))
+		{
+			echo '
+					<ul>';
+
+			foreach($button['sub_buttons'] as $childbutton)
+			{
+				echo '
+						<li>
+							<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
+								<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
+							</a>';
+				// 3rd level menus :)				
+				if (!empty($childbutton['sub_buttons']))
+				{
+					echo '
+							<ul>';
+
+					foreach($childbutton['sub_buttons'] as $grandchildbutton)
+						echo '
+								<li>
+									<a', $grandchildbutton['active_button'] ? ' class="active"' : '', ' href="', $grandchildbutton['href'], '"', isset($grandchildbutton['target']) ? ' target="' . $grandchildbutton['target'] . '"' : '', '>
+										<span', isset($grandchildbutton['is_last']) ? ' class="last"' : '', '>', $grandchildbutton['title'], '</span>
+									</a>
+								</li>';
+
+						echo '
+							</ul>';
+					}
+
+				echo '
+						</li>';
+			}	
+			echo '
+					</ul>';
+			}
+		echo '
+				</li>';
 	}
 
 	echo '
-		</ul>
-	</div>';
+			</ul>
+		</div>';
 }
 
 // Generate a strip of buttons.
@@ -478,29 +457,24 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 	if (!is_array($strip_options))
 		$strip_options = array();
 
-	// Right to left menu should be in reverse order.
-	if ($context['right_to_left'])
-		$button_strip = array_reverse($button_strip, true);
-
 	// Create the buttons...
 	$buttons = array();
 	foreach ($button_strip as $key => $value)
+	{
 		if (!isset($value['test']) || !empty($context[$value['test']]))
-			$buttons[] = '<li' . (isset($value['active']) ? ' class="active"' : '') . '><a href="' . $value['url'] . '"' . (isset($value['custom']) ? ' ' . $value['custom'] : '') . '><span>' . (isset($value['active']) ? '<em>' : '') . $txt[$value['text']] . (isset($value['active']) ? '</em>' : '') . '</span></a></li>';
+			$buttons[] = '<a ' . (isset($value['active']) ? 'class="active" ' : '') . 'href="' . $value['url'] . '" ' . (isset($value['custom']) ? $value['custom'] : '') . '><span>' . $txt[$value['text']] . '</span></a>';
+	}
 
 	if (!empty($buttons))
 	{
 		// Make the last one, as easy as possible.
-		$list_item = array('<li>','<li class="active">');
-		$active_item = array('<li class="last">','<li class="active last">');
-		
-		$buttons[count($buttons) - 1] = str_replace($list_item, $active_item, $buttons[count($buttons) - 1]);
+		$buttons[count($buttons) - 1] = str_replace('<span>', '<span class="last">', $buttons[count($buttons) - 1]);
 	}
 
 	echo '
-		<div class="buttonlist', $direction != 'top' ? '_bottom' : '', '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
-			<ul class="reset clearfix">
-				', implode('', $buttons), '
+		<div class="buttonlist', !empty($direction) ? ' align_' . $direction : '' , '"', (empty($buttons) ? ' style="display: none;"' : ''), (!empty($strip_options['id']) ? ' id="' . $strip_options['id'] . '"': ''), '>
+			<ul>
+				<li>', implode('</li><li>', $buttons), '</li>
 			</ul>
 		</div>';
 }

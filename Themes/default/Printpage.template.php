@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Printpage
+// Version: 2.0 RC2; Printpage
 
 function template_print_above()
 {
@@ -15,36 +15,59 @@ function template_print_above()
 		<style type="text/css">
 			body
 			{
-				color: black;
-				background-color: white;
+				color: #000;
+				background: #fff;
 			}
 			body, td, .normaltext
 			{
 				font-family: Verdana, arial, helvetica, serif;
 				font-size: small;
 			}
-			*, a:link, a:visited, a:hover, a:active
+			h1#title
 			{
-				color: black !important;
+				font-size: large;
+				font-weight: bold;
+			}
+			h2#linktree
+			{
+				margin: 1em 0;
+				font-size: small;
+				font-weight: bold;
+			}
+			dl#posts
+			{
+				width: 90%;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			dt.postheader
+			{
+				border: solid #000;
+				border-width: 1px 0;
+				padding: 4px 0;
+			}
+			dd.postbody
+			{
+				margin: 1em 0;
 			}
 			table
 			{
 				empty-cells: show;
 			}
-			code
+			blockquote, code
 			{
-				font-size: x-small;
-				font-family: monospace;
-				border: 1px solid black;
+				border: 1px solid #000;
 				margin: 1px;
 				padding: 1px;
+			}
+			code
+			{
+				font: x-small monospace;
 			}
 			blockquote
 			{
 				font-size: x-small;
-				border: 1px solid black;
-				margin: 1px;
-				padding: 1px;
 			}
 			.smalltext, .quoteheader, .codeheader
 			{
@@ -53,6 +76,10 @@ function template_print_above()
 			.largetext
 			{
 				font-size: large;
+			}
+			.centertext
+			{
+				text-align: center;
 			}
 			hr
 			{
@@ -64,12 +91,9 @@ function template_print_above()
 		</style>
 	</head>
 	<body>
-		<h1 class="largetext">', $context['forum_name_html_safe'], '</h1>
-		<h2 class="normaltext">', $context['category_name'], ' => ', (!empty($context['parent_boards']) ? implode(' => ', $context['parent_boards']) . ' => ' : ''), $context['board_name'], ' => ', $txt['topic_started'], ': ', $context['poster_name'], ' ', $txt['search_on'], ' ', $context['post_time'] . '</h2>
-
-		<table width="90%" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td>';
+		<h1 id="title">', $context['forum_name_html_safe'], '</h1>
+		<h2 id="linktree">', $context['category_name'], ' => ', (!empty($context['parent_boards']) ? implode(' => ', $context['parent_boards']) . ' => ' : ''), $context['board_name'], ' => ', $txt['topic_started'], ': ', $context['poster_name'], ' ', $txt['search_on'], ' ', $context['post_time'], '</h2>
+		<dl id="posts">';
 }
 
 function template_main()
@@ -78,12 +102,13 @@ function template_main()
 
 	foreach ($context['posts'] as $post)
 		echo '
-					<br />
-					<hr size="2" width="100%" />
-					', $txt['title'], ': <strong>', $post['subject'], '</strong><br />
-					', $txt['post_by'], ': <strong>', $post['member'], '</strong> ', $txt['search_on'], ' <strong>', $post['time'], '</strong>
-					<hr />
-					<div style="margin: 0 5ex;">', $post['body'], '</div>';
+			<dt class="postheader">
+				', $txt['title'], ': <strong>', $post['subject'], '</strong><br />
+				', $txt['post_by'], ': <strong>', $post['member'], '</strong> ', $txt['search_on'], ' <strong>', $post['time'], '</strong>
+			</dt>
+			<dd class="postbody">
+				', $post['body'], '
+			</dd>';
 }
 
 function template_print_below()
@@ -91,11 +116,10 @@ function template_print_below()
 	global $context, $settings, $options;
 
 	echo '
-					<br /><br />
-					<div class="centertext smalltext">', theme_copyright(), '</div>
-				</td>
-			</tr>
-		</table>
+		</dl>
+		<div id="footer" class="smalltext centertext">
+			', theme_copyright(), '
+		</div>
 	</body>
 </html>';
 }

@@ -2086,14 +2086,10 @@ INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'allow_no_
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'additional_options_collapsable', '1');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'use_image_buttons', '1');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'enable_news', '1');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'name', '{$default_classic_theme_name}');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'theme_url', '{$boardurl}/Themes/classic');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'images_url', '{$boardurl}/Themes/classic/images');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'theme_dir', '{$boarddir}/Themes/classic');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'name', '{$default_babylon_theme_name}');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_url', '{$boardurl}/Themes/babylon');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'images_url', '{$boardurl}/Themes/babylon/images');
-INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_dir', '{$boarddir}/Themes/babylon');
+INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'name', '{$default_core_theme_name}');
+INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'theme_url', '{$boardurl}/Themes/core');
+INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'images_url', '{$boardurl}/Themes/core/images');
+INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (2, 'theme_dir', '{$boarddir}/Themes/core');
 INSERT INTO {$db_prefix}themes (id_member, id_theme, variable, value) VALUES (-1, 1, 'display_quick_reply', '1');
 COMMIT;
 

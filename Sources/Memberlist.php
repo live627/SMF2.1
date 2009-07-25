@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -63,7 +63,7 @@ function Memberlist()
 	// Make sure they can view the memberlist.
 	isAllowedTo('view_mlist');
 
-	loadTemplate('Memberlist', 'memberlist');
+	loadTemplate('Memberlist');
 
 	$context['listing_by'] = !empty($_GET['sa']) ? $_GET['sa'] : 'all';
 

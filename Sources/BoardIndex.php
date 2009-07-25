@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -48,7 +48,7 @@ function BoardIndex()
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_boardindex';
 	else
-		loadTemplate('BoardIndex', 'forum');
+		loadTemplate('BoardIndex');
 
 	// Set a canonical URL for this page.
 	$context['canonical_url'] = $scripturl;

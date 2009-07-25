@@ -1,156 +1,193 @@
 <?php
-// Version: 2.0 RC1; ManageBans
+// Version: 2.0 RC2; ManageBans
 
 function template_ban_edit()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '<br />
-	<table border="0" align="center" cellspacing="1" cellpadding="4" class="tborder" width="60%">
-		<tr class="catbg">
-			<td>', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '</td>
-		</tr><tr class="windowbg2">
-			<td align="center">
+	echo '
+	<div id="manage_bans">
+	
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '
+		</h3>';
+	
+	if($context['ban']['is_new'])
+		echo ' 
+		<div class="information">', $txt['ban_add_notes'], '</div>';
+	
+	echo '
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
 				<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '" onsubmit="if (this.ban_name.value == \'\') {alert(\'', $txt['ban_name_empty'], '\'); return false;} if (this.partial_ban.checked &amp;&amp; !(this.cannot_post.checked || this.cannot_register.checked || this.cannot_login.checked)) {alert(\'', $txt['ban_restriction_empty'], '\'); return false;}">
-					<table cellpadding="4">
-						<tr>
-							<th align="right">', $txt['ban_name'], ':</th>
-							<td align="left"><input type="text" name="ban_name" value="', $context['ban']['name'], '" size="50" class="input_text" /></td>
-						</tr><tr>
-							<th align="right" valign="top">', $txt['ban_expiration'], ':</th>
-							<td align="left"><input type="radio" name="expiration" value="never" id="never_expires" onclick="updateStatus();"', $context['ban']['expiration']['status'] == 'never' ? ' checked="checked"' : '', ' class="input_radio" />&nbsp;&nbsp;<label for="never_expires">', $txt['never'], '</label><br />
-							<input type="radio" name="expiration" value="one_day" id="expires_one_day" onclick="updateStatus();"', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="input_radio" />&nbsp;&nbsp;<label for="expires_one_day">', $txt['ban_will_expire_within'], '</label>: <input type="text" name="expire_date" id="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" /> ', $txt['ban_days'], '<br />
-							<input type="radio" name="expiration" value="expired" id="already_expired" onclick="updateStatus();"', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="input_radio" />&nbsp;&nbsp;<label for="already_expired">', $txt['ban_expired'], '</label>
-							</td>
-						</tr><tr>
-							<th align="right" valign="bottom">', $txt['ban_reason'], ':</th>
-							<td align="left">
-								<div class="smalltext">', $txt['ban_reason_desc'], '</div>
-								<input type="text" name="reason" value="', $context['ban']['reason'], '" size="50" class="input_text" />
-							</td>
-						</tr><tr>
-							<th align="right" valign="middle">', $txt['ban_notes'], ':</th>
-							<td align="left">
-								<div class="smalltext">', $txt['ban_notes_desc'], '</div>
-								<textarea name="notes" cols="50" rows="3">', $context['ban']['notes'], '</textarea>
-							</td>
-						</tr><tr>
-							<th align="right" valign="top">', $txt['ban_restriction'], ':</th>
-							<td align="left">
-								<input type="radio" name="full_ban" id="full_ban" value="1" onclick="updateStatus();"', $context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="input_radio" />&nbsp;&nbsp;<label for="full_ban">', $txt['ban_full_ban'], '</label><br />
-								<input type="radio" name="full_ban" id="partial_ban" value="0" onclick="updateStatus();"', !$context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="input_radio" />&nbsp;&nbsp;<label for="partial_ban">', $txt['ban_partial_ban'], '</label><br />
-								&nbsp;&nbsp;&nbsp;<input type="checkbox" name="cannot_post" id="cannot_post" value="1"', $context['ban']['cannot']['post'] ? ' checked="checked"' : '', ' class="input_check" /> <label for="cannot_post">', $txt['ban_cannot_post'], '</label> (<a href="', $scripturl, '?action=helpadmin;help=ban_cannot_post" onclick="return reqWin(this.href);">?</a>)<br />
-								&nbsp;&nbsp;&nbsp;<input type="checkbox" name="cannot_register" id="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="input_check" /> <label for="cannot_register">', $txt['ban_cannot_register'], '</label><br />
-								&nbsp;&nbsp;&nbsp;<input type="checkbox" name="cannot_login" id="cannot_login" value="1"', $context['ban']['cannot']['login'] ? ' checked="checked"' : '', ' class="input_check" /> <label for="cannot_login">', $txt['ban_cannot_login'], '</label><br />
-							</td>
-						</tr>';
+					<dl class="settings">
+						<dt>
+							<strong>', $txt['ban_name'], ':</strong>
+						</dt>
+						<dd>
+							<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="50" class="input_text" />
+						</dd>
+						<dt>
+							<strong>', $txt['ban_reason'], ':</strong><br />
+							<span class="smalltext">', $txt['ban_reason_desc'], '</span>
+						</dt>
+						<dd>
+							<input type="text" name="reason" value="', $context['ban']['reason'], '" size="50" class="input_text" />
+						</dd>
+						<dt>
+							<strong>', $txt['ban_notes'], ':</strong><br />
+							<span class="smalltext">', $txt['ban_notes_desc'], '</span>
+						</dt>
+						<dd>
+							<textarea name="notes" cols="50" rows="3">', $context['ban']['notes'], '</textarea>
+						</dd>
+					</dl>
+					<fieldset class="ban_settings align_left">
+						<legend>
+							', $txt['ban_expiration'], '
+						</legend>
+						<input type="radio" name="expiration" value="never" id="never_expires" onclick="updateStatus();"', $context['ban']['expiration']['status'] == 'never' ? ' checked="checked"' : '', ' class="input_radio" /> <label for="never_expires">', $txt['never'], '</label><br />
+						<input type="radio" name="expiration" value="one_day" id="expires_one_day" onclick="updateStatus();"', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="input_radio" /> <label for="expires_one_day">', $txt['ban_will_expire_within'], '</label>: <input type="text" name="expire_date" id="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" class="input_text" /> ', $txt['ban_days'], '<br />
+						<input type="radio" name="expiration" value="expired" id="already_expired" onclick="updateStatus();"', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="input_radio" /> <label for="already_expired">', $txt['ban_expired'], '</label>
+					</fieldset>
+					<fieldset class="ban_settings align_right">
+						<legend>
+							', $txt['ban_restriction'], '
+						</legend>
+						<input type="radio" name="full_ban" id="full_ban" value="1" onclick="updateStatus();"', $context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="input_radio" /> <label for="full_ban">', $txt['ban_full_ban'], '</label><br />
+						<input type="radio" name="full_ban" id="partial_ban" value="0" onclick="updateStatus();"', !$context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="input_radio" /> <label for="partial_ban">', $txt['ban_partial_ban'], '</label><br />
+						<input type="checkbox" name="cannot_post" id="cannot_post" value="1"', $context['ban']['cannot']['post'] ? ' checked="checked"' : '', ' class="ban_restriction input_radio" /> <label for="cannot_post">', $txt['ban_cannot_post'], '</label> (<a href="', $scripturl, '?action=helpadmin;help=ban_cannot_post" onclick="return reqWin(this.href);">?</a>)<br />
+						<input type="checkbox" name="cannot_register" id="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="ban_restriction input_radio" /> <label for="cannot_register">', $txt['ban_cannot_register'], '</label><br />
+						<input type="checkbox" name="cannot_login" id="cannot_login" value="1"', $context['ban']['cannot']['login'] ? ' checked="checked"' : '', ' class="ban_restriction input_radio" /> <label for="cannot_login">', $txt['ban_cannot_login'], '</label><br />
+					</fieldset>
+					<br style="clear: both;" />';
+
 	if (!empty($context['ban_suggestions']))
 	{
 		echo '
-						<tr>
-							<th align="right" valign="top">', $txt['ban_triggers'], ':</th>
-							<td>
-								<table cellpadding="4">
-									<tr>
-										<td valign="bottom"><input type="checkbox" name="ban_suggestion[]" id="main_ip_check" value="main_ip" class="input_check" /></td>
-										<td align="left" valign="top">
-											', $txt['ban_on_ip'], ':<br />
-											<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="50" onfocus="document.getElementById(\'main_ip_check\').checked = true;" class="input_text" />
-										</td>
-									</tr><tr>';
+					<fieldset>
+						<legend>
+							', $txt['ban_triggers'], '
+						</legend>
+						<dl class="settings">
+							<dt>
+								<input type="checkbox" name="ban_suggestion[]" id="main_ip_check" value="main_ip" class="input_check" />
+								', $txt['ban_on_ip'], '
+							</dt>
+							<dd>
+								<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="50" onfocus="document.getElementById(\'main_ip_check\').checked = true;" class="input_text" />
+							</dd>';
+							
 		if (empty($modSettings['disableHostnameLookup']))
 			echo '
-										<td valign="bottom"><input type="checkbox" name="ban_suggestion[]" id="hostname_check" value="hostname" class="input_check" /></td>
-										<td align="left" valign="top">
-											', $txt['ban_on_hostname'], ':<br />
-											<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="50" onfocus="document.getElementById(\'hostname_check\').checked = true;" class="input_text" />
-										</td>
-									</tr><tr>';
+							<dt>
+								<input type="checkbox" name="ban_suggestion[]" id="hostname_check" value="hostname" class="input_check" /></td>
+								', $txt['ban_on_hostname'], '
+							</dt>
+							<dd>
+								<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="50" onfocus="document.getElementById(\'hostname_check\').checked = true;" class="input_text" />
+							</dd>';
+
 		echo '
-										<td valign="bottom"><input type="checkbox" name="ban_suggestion[]" id="email_check" value="email" class="input_check" /></td>
-										<td align="left" valign="top">
-											', $txt['ban_on_email'], ':<br />
-											<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="50" onfocus="document.getElementById(\'email_check\').checked = true;" class="input_text" />
-										</td>
-									</tr><tr>
-										<td valign="bottom"><input type="checkbox" name="ban_suggestion[]" id="user_check" value="user" class="input_check" /></td>
-										<td align="left" valign="top">
-											', $txt['ban_on_username'], ':<br />';
+							<dt>
+								<input type="checkbox" name="ban_suggestion[]" id="email_check" value="email" class="input_check" />
+								', $txt['ban_on_email'], '
+							</dt>
+							<dd>
+								<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="50" onfocus="document.getElementById(\'email_check\').checked = true;" class="input_text" />
+							</dd>
+							<dt>
+								<input type="checkbox" name="ban_suggestion[]" id="user_check" value="user" class="input_check" />
+								', $txt['ban_on_username'], ':
+							</dt>
+							<dd>';
+
 		if (empty($context['ban_suggestions']['member']['id']))
 			echo '
-											<input type="text" name="user" id="user" value="" size="40" class="input_text" />';
+								<input type="text" name="user" id="user" value="" size="40" class="input_text" />';
 		else
 			echo '
-											', $context['ban_suggestions']['member']['link'], '
-											<input type="hidden" name="bannedUser" value="', $context['ban_suggestions']['member']['id'], '" />';
+								', $context['ban_suggestions']['member']['link'], '
+								<input type="hidden" name="bannedUser" value="', $context['ban_suggestions']['member']['id'], '" />';
 		echo '
-										</td>
-									</tr>';
+							</dd>';
+							
 		if (!empty($context['ban_suggestions']['message_ips']))
 		{
 			echo '
-									<tr>
-										<th align="left" colspan="2"><br />', $txt['ips_in_messages'], ':</th>
-									</tr>';
+						</dl>
+						<div>', $txt['ips_in_messages'], ':</div>
+						<dl class="settings">';
+
 			foreach ($context['ban_suggestions']['message_ips'] as $ip)
 				echo '
-									<tr>
-										<td><input type="checkbox" name="ban_suggestion[ips][]" value="', $ip, '" class="input_check" /></td>
-										<td align="left">', $ip, '</td>
-									</tr>';
+							<dt>
+								<input type="checkbox" name="ban_suggestion[ips][]" value="', $ip, '" class="input_check" />
+							</dt>
+							<dd>
+								', $ip, '
+							</dd>';
 		}
+
 		if (!empty($context['ban_suggestions']['error_ips']))
 		{
 			echo '
-									<tr>
-										<th align="left" colspan="2"><br />', $txt['ips_in_errors'], ':</th>
-									</tr>';
+						</dl>
+						<div>', $txt['ips_in_errors'], '</div>
+						<dl class="settings">';
+
 			foreach ($context['ban_suggestions']['error_ips'] as $ip)
 				echo '
-									<tr>
-										<td><input type="checkbox" name="ban_suggestion[ips][]" value="', $ip, '" class="input_check" /></td>
-										<td align="left">', $ip, '</td>
-									</tr>';
+							<dt>
+								<input type="checkbox" name="ban_suggestion[ips][]" value="', $ip, '" class="input_check" />
+							</dt>
+							<dd>
+								', $ip, '
+							</dd>';
 		}
+
 		echo '
-								</table>
-							</td>
-						</tr>';
+							</dl>
+						</fieldset>';
 	}
+	
 	echo '
-						<tr>
-							<td colspan="2" align="right"><input type="submit" name="', $context['ban']['is_new'] ? 'add_ban' : 'modify_ban', '" value="', $context['ban']['is_new'] ? $txt['ban_add'] : $txt['ban_modify'], '" class="button_submit" /></td>
-						</tr>
-					</table>', $context['ban']['is_new'] ? '<br />
-					' . $txt['ban_add_notes'] : '', '
-					<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
-					<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				</form>
-			</td>
-		</tr>';
+						<input type="submit" name="', $context['ban']['is_new'] ? 'add_ban' : 'modify_ban', '" value="', $context['ban']['is_new'] ? $txt['ban_add'] : $txt['ban_modify'], '" class="button_submit" />
+						<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
+						<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					</form>
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
+
 	if (!$context['ban']['is_new'] && empty($context['ban_suggestions']))
 	{
 		echo '
-		<tr>
-			<td align="center" style="padding: 0px;">
-				<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '" style="padding: 0px;margin: 0px;" onsubmit="return confirm(\'', $txt['ban_remove_selected_triggers_confirm'], '\');">
-					<table cellpadding="4" cellspacing="1" width="100%"><tr class="titlebg">
+			<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '" style="padding: 0px;margin: 0px;" onsubmit="return confirm(\'', $txt['ban_remove_selected_triggers_confirm'], '\');">
+				<table class="table_grid" width="100%">
+				<thead>
+					<tr class="catbg">
 						<td width="65%" align="left">', $txt['ban_banned_entity'], '</td>
 						<td width="15%" align="center">', $txt['ban_hits'], '</td>
 						<td width="15%" align="center">', $txt['ban_actions'], '</td>
 						<td width="5%" align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'ban_items\');" class="input_check" /></td>
-					</tr>';
+					</tr>
+				</thead>
+				<tbody>';
 		if (empty($context['ban_items']))
 			echo '
-					<tr class="windowbg2"><td colspan="4">(', $txt['ban_no_triggers'], ')</td></tr>';
+					<tr class="windowbg2">
+						<td colspan="4">(', $txt['ban_no_triggers'], ')</td>
+					</tr>';
 		else
 		{
 			foreach ($context['ban_items'] as $ban_item)
 			{
 				echo '
-						<tr class="windowbg2" align="left">
-							<td>';
+					<tr class="windowbg2" align="left">
+						<td>';
 				if ($ban_item['type'] == 'ip')
 					echo '<strong>', $txt['ip'], ':</strong>&nbsp;', $ban_item['ip'];
 				elseif ($ban_item['type'] == 'hostname')
@@ -167,26 +204,26 @@ function template_ban_edit()
 					</tr>';
 			}
 		}
+
 		echo '
-					<tr class="catbg3">
-						<td colspan="4" align="right">
-							<div class="floatleft">
-								[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '"><strong>', $txt['ban_add_trigger'], '</strong></a>]
-							</div>
-							<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" class="button_submit" />
-							</div>
-						</td>
-					</tr>
-					</table>
-					<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				</form>
-			</td>
-		</tr>';
+				</tbody>
+				</table>
+				<div class="align_left">
+					[<a href="', $scripturl, '?action=admin;area=ban;sa=edittrigger;bg=', $context['ban']['id'], '"><strong>', $txt['ban_add_trigger'], '</strong></a>]
+				</div>
+				<div class="align_right">
+					<input type="submit" name="remove_selection" value="', $txt['ban_remove_selected_triggers'], '" class="button_submit" />
+				</div>
+				<br class="clear: both;" />
+				<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />		
+			</form>';
 
 	}
-	echo '
-	</table>
+
+	echo ' 
+	</div>
+	<br style="clear: both;" /> 
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var fUpdateStatus = function ()
@@ -227,54 +264,62 @@ function template_ban_edit_trigger()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-	<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" align="center" cellspacing="0" cellpadding="4" class="tborder" width="60%">
-			<tr class="titlebg">
-				<td>', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger'] : $txt['ban_edit_trigger_title'], '</td>
-			</tr>
-			<tr class="windowbg">
-				<td align="center">
-					<table cellpadding="4">
-						<tr>
-							<td valign="bottom"><input type="radio" name="bantype" value="ip_ban"', $context['ban_trigger']['ip']['selected'] ? ' checked="checked"' : '', ' /></td>
-							<td align="left" valign="top">
-								', $txt['ban_on_ip'], ':<br />
+	<div id="manage_bans">
+		<form action="', $scripturl, '?action=admin;area=ban;sa=edit" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger'] : $txt['ban_edit_trigger_title'], '
+			</h3>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<fieldset>
+						<legend>
+							', $txt['ban_triggers'], '
+						</legend>	
+						<dl class="settings">
+							<dt>
+								<input type="radio" name="bantype" value="ip_ban"', $context['ban_trigger']['ip']['selected'] ? ' checked="checked"' : '', ' class="input_radio" />
+								', $txt['ban_on_ip'], '
+							</dt>
+							<dd>
 								<input type="text" name="ip" value="', $context['ban_trigger']['ip']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'ip_ban\');" class="input_text" />
-							</td>
-						</tr><tr>';
+							</dd>';
 				if (empty($modSettings['disableHostnameLookup']))
 				echo '
-							<td valign="bottom"><input type="radio" name="bantype" value="hostname_ban"', $context['ban_trigger']['hostname']['selected'] ? ' checked="checked"' : '', ' class="input_radio" /></td>
-							<td align="left" valign="top">
-								', $txt['ban_on_hostname'], ':<br />
+							<dt>
+								<input type="radio" name="bantype" value="hostname_ban"', $context['ban_trigger']['hostname']['selected'] ? ' checked="checked"' : '', ' class="input_radio" />
+								', $txt['ban_on_hostname'], '
+							</dt>
+							<dd>
 								<input type="text" name="hostname" value="', $context['ban_trigger']['hostname']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'hostname_ban\');" class="input_text" />
-							</td>
-						</tr><tr>';
+							</dd>';
 				echo '
-							<td valign="bottom"><input type="radio" name="bantype" value="email_ban"', $context['ban_trigger']['email']['selected'] ? ' checked="checked"' : '', ' class="input_radio" /></td>
-							<td align="left" valign="top">
-								', $txt['ban_on_email'], ':<br />
+							<dt>
+								<input type="radio" name="bantype" value="email_ban"', $context['ban_trigger']['email']['selected'] ? ' checked="checked"' : '', ' class="input_radio" />
+								', $txt['ban_on_email'], '
+							</dt>
+							<dd>
 								<input type="text" name="email" value="', $context['ban_trigger']['email']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'email_ban\');" class="input_text" />
-							</td>
-						</tr><tr>
-							<td valign="bottom"><input type="radio" name="bantype" value="user_ban"', $context['ban_trigger']['banneduser']['selected'] ? ' checked="checked"' : '', ' class="input_radio" /></td>
-							<td align="left" valign="top">
-								', $txt['ban_on_username'], ':<br />
-								<input type="text" name="user" id="user" value="', $context['ban_trigger']['banneduser']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'user_ban\');" c;ass="input_text" />
-							</td>
-						</tr><tr>
-							<td colspan="2" align="right"><br />
-								<input type="submit" name="', $context['ban_trigger']['is_new'] ? 'add_new_trigger' : 'edit_trigger', '" value="', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger_submit'] : $txt['ban_edit_trigger_submit'], '" class="button_submit" />
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="bi" value="' . $context['ban_trigger']['id'] . '" />
-		<input type="hidden" name="bg" value="' . $context['ban_trigger']['group'] . '" />
-		<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
-	</form>
+							</dd>
+							<dt>
+								<input type="radio" name="bantype" value="user_ban"', $context['ban_trigger']['banneduser']['selected'] ? ' checked="checked"' : '', ' class="input_radio" />
+								', $txt['ban_on_username'], '								
+							</dt>
+							<dd>
+								<input type="text" name="user" id="user" value="', $context['ban_trigger']['banneduser']['value'], '" size="50" onfocus="selectRadioByName(this.form.bantype, \'user_ban\');" class="input_text" />
+							</dd>
+						</dl>
+					</fieldset>
+					<input type="submit" name="', $context['ban_trigger']['is_new'] ? 'add_new_trigger' : 'edit_trigger', '" value="', $context['ban_trigger']['is_new'] ? $txt['ban_add_trigger_submit'] : $txt['ban_edit_trigger_submit'], '" class="button_submit" />
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+			<input type="hidden" name="bi" value="' . $context['ban_trigger']['id'] . '" />
+			<input type="hidden" name="bg" value="' . $context['ban_trigger']['group'] . '" />
+			<input type="hidden" name="' . $context['session_var'] . '" value="' . $context['session_id'] . '" />
+		</form>
+	</div>
+	<br style="clear: both;" /> 
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({

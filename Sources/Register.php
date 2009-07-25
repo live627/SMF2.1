@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -67,7 +67,7 @@ function Register($reg_errors = array())
 		redirectexit();
 
 	loadLanguage('Login');
-	loadTemplate('Register', 'login');
+	loadTemplate('Register');
 
 	// Do we need them to agree to the registration agreement, first?
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
@@ -445,7 +445,7 @@ function Register2($verifiedOpenID = false)
 	{
 		$_REQUEST['step'] = 2;
 		return Register($reg_errors);
-}
+	}
 	// If they're wanting to use OpenID we need to validate them first.
 	if (empty($_SESSION['openid']['verified']) && !empty($_POST['authenticate']) && $_POST['authenticate'] == 'openid')
 	{
@@ -494,7 +494,7 @@ function Register2($verifiedOpenID = false)
 	// Basic template variable setup.
 	elseif (!empty($modSettings['registration_method']))
 	{
-		loadTemplate('Register', 'login');
+		loadTemplate('Register');
 
 		$context += array(
 			'page_title' => $txt['register'],
@@ -518,7 +518,7 @@ function Activate()
 	global $context, $txt, $modSettings, $scripturl, $sourcedir, $smcFunc, $language;
 
 	loadLanguage('Login');
-	loadTemplate('Login', 'login');
+	loadTemplate('Login');
 
 	if (empty($_REQUEST['u']) && empty($_POST['user']))
 	{
@@ -669,7 +669,7 @@ function CoppaForm()
 	global $context, $modSettings, $txt, $smcFunc;
 
 	loadLanguage('Login');
-	loadTemplate('Register','login');
+	loadTemplate('Register');
 
 	// No User ID??
 	if (!isset($_GET['member']))
@@ -760,7 +760,7 @@ function VerificationCode()
 	elseif (isset($_REQUEST['sound']))
 	{
 		loadLanguage('Login');
-		loadTemplate('Register', 'login');
+		loadTemplate('Register');
 
 		$context['verification_sound_href'] = $scripturl . '?action=verificationcode;rand=' . md5(mt_rand()) . ($verification_id ? ';vid=' . $verification_id : '') . ';format=.wav';
 		$context['sub_template'] = 'verification_sound';

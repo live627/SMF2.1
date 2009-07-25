@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -74,7 +74,7 @@ function PlushSearch1()
 	loadLanguage('Search');
 	// Don't load this in XML mode.
 	if (!isset($_REQUEST['xml']))
-		loadTemplate('Search', 'search');
+		loadTemplate('Search');
 
 	// Check the user's permissions.
 	isAllowedTo('search_posts');
@@ -306,7 +306,7 @@ function PlushSearch2()
 
 	loadLanguage('Search');
 	if (!isset($_REQUEST['xml']))
-		loadTemplate('Search', 'search');
+		loadTemplate('Search');
 	//If we're doing XML we need to use the results template regardless really.
 	else
 		$context['sub_template'] = 'results';

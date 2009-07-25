@@ -3,14 +3,9 @@
 /* ************************************* */
 
 /* Normal, standard links. */
-a:link
+a:link, a:visited
 {
-	color: #476C8E;
-	text-decoration: none;
-}
-a:visited
-{
-	color: #476C8E;
+	color: #346;
 	text-decoration: none;
 }
 a:hover
@@ -24,13 +19,22 @@ table
 	empty-cells: show;
 }
 
-/* set a fontsize that will look the same in all browsers. */
+/* Set a fontsize that will look the same in all browsers. */
 body
 {
-	font: 95%/90% Verdana, Helvetica, sans-serif;
-	background: #E5E5E8;
-	margin: 0;
-	padding: 12px 0 4px 0;
+	background: #E9EEF2 url(images/theme/backdrop.png) repeat-x;
+	font: 75%/125% verdana, Helvetica, sans-serif;
+	margin: 0 auto;
+	padding: 15px 5%;
+	min-width: 600px;
+}
+
+/* Help popups require a different styling of the body element. */
+body#help_popup
+{
+	width: auto;
+	padding: 1em;
+	min-width: 0;
 }
 
 /* use dark grey for the text, leaving black for headers etc */
@@ -55,35 +59,44 @@ form
 	.input_file    - covers input[type=file] thoughout all browsers
 */
 
-/* Input boxes - just a bit smaller than normal so they align well. */
-input, textarea
+input, button, select, textarea
 {
+	font: 90%/105% verdana, Helvetica, sans-serif;
 	color: #000000;
-	font-family: verdana, sans-serif;
-}
-input, button
-{
-	font-size: 90%;
-}
-.button_submit, .button_reset
-{
-	font-weight: normal;
+	background: #fff;
+	border: 1px solid #7f9db9;
 }
 
+/* The font size of textareas should be just a little bit larger. */  
 textarea
 {
-	font-size: 100%;
-	color: #000000;
-	font-family: verdana, sans-serif;
+	font: 100%/130% verdana, Helvetica, sans-serif;
 }
 
-/* Selects are a bit smaller, because it makes them look even better 8). */
-select
+/* Buttons should be styled a bit differently, in order to make them look more button'ish. */
+.button_submit, .button_reset
 {
-	font-size: 90%;
+	background: #f5f5f5;
+	border: 1px solid #aaa;
+	cursor: pointer;
 	font-weight: normal;
-	color: #000000;
-	font-family: verdana, sans-serif;
+}
+
+input:hover, textarea:hover, button:hover, select:hover
+{
+	border: 1px solid #74869a;
+}
+
+input:focus, textarea:focus, button:focus, select:focus
+{
+	border: 1px solid #4b6685;
+}
+
+/* All input elements that are checkboxes or radio buttons shouldn't have a border around them. */
+input.input_check, input.input_radio
+{
+	border: none;
+	background: none;
 }
 
 /* Standard horizontal rule.. ([hr], etc.) */
@@ -96,7 +109,7 @@ hr, .hrcolor
 }
 
 /* By default set the color on these tags as black. */
-h1, h2, h3, h4, h5, h6, h7
+h1, h2, h3, h4, h5, h6
 {
 	color: black;
 	font-size: 1em;
@@ -108,17 +121,6 @@ h1, h2, h3, h4, h5, h6, h7
 a img
 {
 	border: 0;
-}
-
-/* We can define lists to be lists tho! */
-ul.normallist
-{
-	padding-left: 2em;
-}
-
-ul.normallist li
-{
-	list-style: disc;
 }
 
 /* Define strong as bold, and em as italics */
@@ -136,7 +138,6 @@ em
 {
 	text-decoration: underline;
 }
-
 /* ************************************* */
 /* Some handy custom classes             */
 /* ************************************* */
@@ -148,20 +149,31 @@ em
 {
 	float: left;
 }
+.flow_auto
+{
+	overflow: auto;
+}
+.flow_hidden
+{
+	overflow: hidden;
+}
 
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
-.smalltext
+.smalltext, tr.smalltext th
 {
-	font-size: 0.8em;
+	font-size: 0.85em;
 	font-family: verdana, sans-serif;
 }
 .middletext
 {
-	font-size: 0.85em;
+	font-size: 0.9em;
+	line-height: 1em; 
+	font-family: verdana, sans-serif;
 }
 .normaltext
 {
 	font-size: 1em;
+	line-height: 1.2em; 
 }
 .largetext
 {
@@ -184,80 +196,15 @@ em
 	margin-right: auto;
 	text-align: left;
 }
-/* This style will make sure all headers use the same padding throughout. */
-.headerpadding
-{
-	padding: 0.5em;
-}
-/* smaller padding used in paragraphs, sections etc */
-.smallpadding
-{
-	padding: 0.2em;
-}
-/* larger padding used in paragraphs, sections etc */
-.largepadding
+/* some common padding styles */
+.padding
 {
 	padding: 0.7em;
 }
-
-/* A small space to the next section. */
-.marginbottom
+.main_section, .lower_padding
 {
-	margin-bottom: 1em;
+	padding-bottom: 0.5em;
 }
-/* On the top too. */
-.margintop
-{
-	margin-top: 1em;
-}
-/* remove bold/italic styles */
-span.plainstyle
-{
-	font-weight: normal;
-	font-style: normal;
-}
-/* float a list horizontally */
-ul.horizlist
-{
-	width: 100%;
-}
-ul.horizlist li
-{
-	float: left;
-	padding: 0.2em 0.4em 0.2em 0.4em;
-	vertical-align: top;
-}
-/* make a inline-list */
-ul.nolist li
-{
-	display: inline;
-}
-/* Helping style to clear floated items. */
-.clearfix:after
-{
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
-
-.clearfix
-{
-	display: inline-block;
-}
-
-/* Hides from IE-mac. \*/
-* html .clearfix
-{
-	height: 1%;
-}
-.clearfix
-{
-	display: block;
-}
-/* End hide from IE-mac. */
-
 /* a quick reset list class. */
 ul.reset, ul.reset li
 {
@@ -270,47 +217,45 @@ ul.reset, ul.reset li
 /* ************************************* */
 
 /* A quote, perhaps from another post. */
-blockquote
+.codeheader, .quoteheader a
 {
+	font-size: 0.9em;
+	font-weight: bold;
+	padding-left: 5px;
+}
+blockquote,blockquote blockquote blockquote
+{
+	font-size: 0.9em;
 	color: #000000;
-	background-color: #D7DAEC;
-	border: 1px solid #000000;
-	margin: 1px;
-	padding: 1px;
-	font-size: x-small;
 	line-height: 1.4em;
+	background: url(images/theme/quote.png) 2px 2px no-repeat #D7DAEC;
+	border-top: solid 1px #000;
+	border-bottom: solid 1px #000;
+	padding: 1em 1em 1em 2em;
+	margin: 0.3em 0 0 0;
+}
+blockquote blockquote
+{
+	background: #e7eAfC;
 }
 
 /* A code block - maybe even PHP ;). */
 code
 {
-	color: #000000;
-	background-color: #dddddd;
 	display: block;
 	font-family: "courier new", "times new roman", monospace;
 	font-size: x-small;
+	background: #eee;
+	border-top: solid 1px #000;
+	border-bottom: solid 1px #000;
 	line-height: 1.3em;
 	/* Put a nice border around it. */
-	border: 1px solid #000000;
-	margin: 1px auto 1px auto;
-	padding: 1px;
-	width: 99%;
+	width: 97%;
+	padding: 3px 1em;
 	overflow: auto;
 	white-space: nowrap;
 	/* Stop after about 24 lines, and just show a scrollbar. */
 	max-height: 24em;
-}
-
-/* The "Quote:" and "Code:" header parts... */
-.quoteheader, .codeheader
-{
-	color: #000000;
-	text-decoration: none;
-	font-style: normal;
-	font-weight: bold;
-	font-size: x-small;
-	line-height: 1.2em;
-	width: 100%;
 }
 
 /* For links to change the code stuff... */
@@ -380,8 +325,7 @@ code
 	background-color: #B3F4B0;
 	color: black;
 }
-
-/* Error messages */
+/* the error messages */
 .errorbox
 {
 	padding: 1em;
@@ -389,17 +333,6 @@ code
 	color: black; 
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
-}
-.errorbox h3
-{
-	padding: 0;
-	margin: 0;
-	font-size: 1.1em;
-	text-decoration: underline;
-}
-.errorbox p
-{
-	margin: 1em 0 0 0;
 }
 .errorbox p.alert
 {
@@ -409,33 +342,98 @@ code
 	width: 1em; 
 	font-size: 1.5em;
 }
-
+.errorbox h3
+{
+	padding: 0;
+	margin: 0;
+	font-size: 1.1em;
+	text-decoration: underline;
+}
 /* ************************************* */
 /* Real common classes                   */
 /* ************************************* */
 
+.titlebg, .titlebg2, tr.titlebg td, tr.titlebg2 td
+{
+	color: black;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 1.1em;
+	font-weight: bold;
+	background: url(images/theme/caps.png) repeat-x 0 -160px;
+}
+.catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
+{
+	color: white;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 1.1em;
+	font-weight: bold;
+	background: url(images/theme/caps.png) repeat-x 0 -200px;
+}
+/* adjust the table versions of headers */
+tr.titlebg td, tr.titlebg2 td
+{
+	padding: 6px;
+}
+tr.catbg td, tr.catbg2 td, td.catbg, td.catbg2, tr.catbg th, tr.catbg2 th, th.catbg, th.catbg2
+{
+	padding: 6px;
+}
+tr.titlebg td a, tr.titlebg2 td a
+{
+	color: black;
+}
+tr.catbg td a, tr.catbg2 td a, .catbg a
+{
+	color: white;
+}
+tr.catbg th.smalltext
+{
+	font-size: 0.9em;
+}
 /* Alternating backgrounds for posts, and several other sections of the forum. */
 .windowbg, #preview_body
 {
 	color: #000000;
-	background-color: #ECEDF3;
+	background-color: #e7eaef;
 }
 .windowbg2
 {
 	color: #000000;
-	background-color: #F6F6F6;
+	background-color: #f0f4f7;
 }
 .windowbg3
 {
 	color: #000000;
-	background-color: #E0E1E8;
+	background-color: #cacdd3;
+}
+
+/* the page navigation area */
+.pagesection
+{
+	font-size: 0.9em;
+	padding: 0 0.5em;
+	overflow: hidden;
+}
+.pagesection .pagelinks
+{
+	padding: 0.5em 0;
+}
+
+/* GenericList */
+.additional_row input
+{
+	margin-left: 1em;
+}
+table.table_grid thead tr.catbg th.smalltext
+{
+    white-space: nowrap;
 }
 
 /* Color for background of posts requiring approval */
 .approvebg
 {
 	color: #000000;
-	background-color: #F6E0D4;
+	background-color: #ffeaea;
 }
 /* Color for background of *topics* requiring approval */
 .approvetbg
@@ -443,129 +441,49 @@ code
 	color: #000000;
 	background-color: #E4A17C;
 }
-
+/* sticky posts have a different background */
+.stickybg
+{
+	background: #e8d8cf;
+}
+.stickybg2
+{
+	background: #f2e3d9;
+}
+/* locked posts too! */
+.lockedbg
+{
+	background: #d4dce2;
+	font-style: italic;
+}
+.lockedbg2
+{
+	background: #d8e1e7;
+	font-style: italic;
+}
+/* finally - sticky and locked */
+.stickybglockedbg
+{
+	background: #d4dce2;
+	font-style: italic;
+}
+.stickybglockedbg2
+{
+	font-style: italic;
+	background: #d8e1e7;
+}
 /* the today container in calendar */
 .calendar_today
 {
 	background-color: #FFFFFF;
 }
 
-/* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
-.titlebg, tr.titlebg th, tr.titlebg td, .titlebg2, tr.titlebg2 th, tr.titlebg2 td, #credits h3
-{
-	color: black;
-	font-style: normal;
-	background: url(images/titlebg.jpg) #E9F0F6 repeat-x;
-	border-bottom: solid 1px #9BAEBF;
-	border-top: solid 1px #FFFFFF;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-.titlebg, .titlebg a:link, .titlebg a:visited
-{
-	font-weight: bold;
-	color: black;
-	font-style: normal;
-}
-
-.titlebg a:hover
-{
-	color: #404040;
-}
-/* same as titlebg, but used where bold text is not needed */
-.titlebg2 a:link, .titlebg2 a:visited
-{
-	color: black;
-	font-style: normal;
-	text-decoration: underline;
-}
-
-.titlebg2 a:hover
-{
-	text-decoration: underline;
-}
-
-/* This is used for categories, page indexes, and several other areas in the forum.
-.catbg and .catbg2 is for boardindex, while .catbg3 is for messageindex and display headers. */
-.catbg , tr.catbg td , .catbg3 , tr.catbg3 td
-{
-	background: url(images/catbg.jpg) #88A6C0 repeat-x;
-	color: #ffffff;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-.catbg2 , tr.catbg2 td
-{
-	background: url(images/catbg2.jpg) #A1BFD9 repeat-x;
-	color: #ffffff;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-.catbg, .catbg2, .catbg3
-{
-	border-bottom: solid 1px #375576;
-}
-.catbg, .catbg2
-{
-	font-weight: bold;
-}
-.catbg3, tr.catbg3 td, .catbg3 a:link, .catbg3 a:visited
-{
-	font-size: 95%;
-	color: white;
-	text-decoration: none;
-}
-.catbg a:link, .catbg a:visited , .catbg2 a:link, .catbg2 a:visited
-{
-	color: white;
-	text-decoration: none;
-}
-.catbg a:hover, .catbg2 a:hover, .catbg3 a:hover
-{
-	color: #e0e0ff;
-}
-/* This is used for tables that have a grid/border background color (such as the topic listing.) */
-.bordercolor
-{
-	background-color: #ADADAD;
-	padding: 0px;
-}
-
-/* This is used on tables that should just have a border around them. */
-.tborder
-{
-	padding: 1px;
-	border: 1px solid #696969;
-	background-color: #FFFFFF;
-}
-
 /* Posts and personal messages displayed throughout the forum. */
 .post, .personalmessage
 {
-	overflow: auto;
-	line-height: 1.3em;
 	width: 100%;
-}
-.postarea .post
-{
-	clear: right;
-}
-/* add a visual divider between subject and post */
-.post .inner
-{
-	padding-top: 0.7em;
-	border-top: solid 1px #888;
-}
-/* adds the visual divider when post is ignored */
-.ignored
-{
 	overflow: auto;
-	line-height: 1.3em;
-	width: 100%;
-	clear: both;
-	float: left;
-	padding-top: 0.7em;
-	border-top: solid 1px #888;
+	line-height: 1.4em;
 }
 
 /* All the signatures used in the forum.  If your forum users use Mozilla, Opera, or Safari, you might add max-height here ;). */
@@ -573,19 +491,18 @@ code
 {
 	clear: right;
 	padding: 1em 0 3px 0;
-	border-top: solid 1px #888;
-	width: 100%;
-	line-height: 1.3em;
+	width: 98%;
+	border-top: solid 1px #aaa;
+	line-height: 1.4em;
 	font-size: 0.85em;
 }
-
 .custom_fields_above_signature
 {
 	clear: right;
 	padding: 1em 0 3px 0;
-	border-top: solid 1px #888;
-	width: 100%;
-	line-height: 1.3em;
+	width: 98%;
+	border-top: solid 1px #aaa;
+	line-height: 1.4em;
 	font-size: 0.85em;
 }
 
@@ -628,7 +545,7 @@ code
 	color: #FFA500;
 }
 
-.warn_watch
+.warn_watch, .success
 {
 	color: green;
 }
@@ -653,7 +570,7 @@ a.moderation_link, a.moderation_link:visited
 	text-align: center;
 	font-weight: bold;
 	font-size: 18pt;
-	padding: 0.4em;
+	padding: 3px;
 	width: 100%;
 	position: fixed;
 	top: 0;
@@ -667,278 +584,498 @@ a.moderation_link, a.moderation_link:visited
 	font-size: smaller;
 	float: right;
 }
+/* a descriptive style */
+.description
+{
+	padding: 1em;
+	font-size: 0.9em;
+	line-height: 1.5em;
+	border: solid 1px #bbb;
+	background: #f5f5f0;
+	margin: 0 0 1em 0;
+	overflow: auto;
+}
+/* an informative style */
+.information
+{
+	padding: 1em;
+	font-size: 0.9em;
+	line-height: 1.5em;
+	border: solid 1px #bbb;
+	background: #f0f6f0;
+	margin: 0 0 1em 0;
+}
+/* some helping classes to place buttonlists */
+.align_right
+{
+	float: right;
+}
+.align_left
+{
+	float: left;
+}
+/* a general table class */
+table.table_grid
+{
+	border-collapse: collapse;
+}
+table.table_grid td
+{
+	padding: 3px;
+	border-bottom: solid 1px white;
+	border-right: solid 1px white;
+}
+/*a general definition list */
+dl.settings
+{
+	clear: both;
+	overflow: auto;
+	margin: 0 0 10px 0;
+	padding: 0;
 
+}
+dl.settings dt
+{
+	width: 48%;
+	float: left;
+	margin: 0 0 10px 0;
+	padding: 0;
+	clear: both;
+}
+dl.settings dt.settings_title
+{
+	width: 100%;
+	float: none;
+	margin: 0 0 10px 0;
+	padding: 5px 0 0 0;
+	font-weight: bold;
+	clear: both;
+}
+dl.settings dt.windowbg
+{
+	width: 98%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0 0 5px 0;
+	clear: both;
+}
+dl.settings dd
+{
+	width: 48%;
+	float: left;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+dl.settings img
+{
+	margin: 0 10px 0 0;
+}
 /* ************************************* */
 /* Buttons and menus                     */
 /* ************************************* */
-.buttonlist ul 
-{
-	background:transparent url(images/maintab_first.gif) no-repeat scroll left bottom;
-	padding:0 0 0 10px;
-}
-.buttonlist ul li, .buttonlist_bottom ul li
-{
-	display: inline;
-}
-.buttonlist ul li a, .buttonlist_bottom ul li a
-{
-	float: left;
-	display: block;
-	color: white;
-	font-size: 0.8em;
-	font-family: tahoma, sans-serif;
-	text-transform: uppercase;
-}
-.buttonlist ul li a:hover .buttonlist_bottom ul li a:hover
-{
-	color: #e0e0ff;
-	text-decoration: none !important;
-}
-.buttonlist ul li a span
-{
-	background: url(images/maintab_back.gif) repeat-x bottom left;
-	display: block;
-	padding: 0.1em 0.5em 0.5em 0.5em;
-}
-.buttonlist ul li.last a span
-{
-	background: url(images/maintab_last.gif) no-repeat bottom right;
-	padding: 0.1em 1em 0.5em 0.5em;
-}
-.buttonlist ul li.active a span em
-{
-	padding: 0.1em 0.5em 0.5em 0.5em;
-	display: block;
-	font-style: normal;
-	background: url(images/maintab_active_back.gif) repeat-x bottom right;
-}
-.buttonlist ul li.active a span
-{
-	background: url(images/maintab_active_first.gif) no-repeat bottom left;
-	padding: 0 0 0 8px;
-}
-.buttonlist ul li.last.active
-{
-	float: left;
-	background: url(images/maintab_last.gif) no-repeat bottom right;
-	padding: 0 8px 0 0;
-}
-.buttonlist ul li.active a
-{
-	background: url(images/maintab_active_last.gif) no-repeat bottom right;
-	padding-right: 8px;
-}
-/* For links that are basically submit buttons. */
-.buttonlist_submit
-{
-	background: transparent;
-	color: white;
-	text-transform: uppercase;
-	vertical-align: top;
-	text-decoration: none;
-	font-size: 9px;
-	font-family: tahoma, sans-serif;
-	border: 0;
-}
-.buttonlist_submit:hover
-{
-	color: #e0e0ff;
-}
-/* ..for the "bottom" menu */
-.buttonlist_bottom ul 
-{
-	background:transparent url(images/mirrortab_first.gif) no-repeat scroll left top;
-	padding:0 0 0 10px;
-}
-.buttonlist_bottom ul li a span
-{
-	background: url(images/mirrortab_back.gif) repeat-x top left;
-	display: block;
-	padding: 0.4em 0.5em 0.2em 0.5em;
-}
-.buttonlist_bottom ul li.last a span
-{
-	background: url(images/mirrortab_last.gif) no-repeat top right;
-	padding: 0.4em 1em 0.2em 0.5em;
-}
-.buttonlist_bottom ul li.active a span em
-{
-	padding: 0.4em 0.5em 0.2em 0.5em;
-	display: block;
-	font-style: normal;
-	background: url(images/mirrortab_active_back.gif) repeat-x top right;
-}
-.buttonlist_bottom ul li.active a span
-{
-	background: url(images/mirrortab_active_first.gif) no-repeat top left;
-	padding: 0 0 0 8px;
-}
-.buttonlist_bottom ul li.last.active
-{
-	float: left;
-	background: url(images/mirrortab_last.gif) no-repeat top right;
-	padding: 0 8px 0 0;
-}
-.buttonlist_bottom ul li.active a
-{
-	background: url(images/mirrortab_active_last.gif) no-repeat top right;
-	padding-right: 8px;
-}
+
 /* the old type of menu, with images */
 .oldbuttonlist
 {
 	text-align: right;
 	padding: 0.5em;
 }
-
 /* ************************************* */
-/* The below is deprecated.              */
+/* the round corners of curved boxes */
 /* ************************************* */
-
-/* All input elements that are checkboxes or radio buttons. */
-input.check
+.windowbg span.topslice
 {
+	display: block;
+	background: url(images/theme/windowbg_topslice.png) top left no-repeat;
+}
+.windowbg span.topslice span
+{
+	display: block;
+	background: url(images/theme/windowbg_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.windowbg span.botslice
+{
+	display: block;
+	background: url(images/theme/windowbg_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.windowbg span.botslice span
+{
+	display: block;
+	background: url(images/theme/windowbg_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+
+.windowbg2 span.topslice
+{
+	display: block;
+	background: url(images/theme/windowbg2_topslice.png) top left no-repeat;
+}
+.windowbg2 span.topslice span
+{
+	display: block;
+	background: url(images/theme/windowbg2_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.windowbg2 span.botslice
+{
+	display: block;
+	background: url(images/theme/windowbg2_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.windowbg2 span.botslice span
+{
+	display: block;
+	background: url(images/theme/windowbg2_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+
+.approvebg span.topslice
+{
+	display: block;
+	background: url(images/theme/approvebg_topslice.png) top left no-repeat;
+}
+.approvebg span.topslice span
+{
+	display: block;
+	background: url(images/theme/approvebg_topslice2.png) top right no-repeat;
+	height: 11px;
+}
+.approvebg span.botslice
+{
+	display: block;
+	background: url(images/theme/approvebg_botslice.png) top left no-repeat;
+	margin-bottom: 0.2em;
+}
+.approvebg span.botslice span
+{
+	display: block;
+	background: url(images/theme/approvebg_botslice2.png) top right no-repeat;
+	height: 11px;
+}
+/* alternative framing */
+.roundframe
+{
+	background: url(images/theme/roundframe_repeat.png) repeat-y top left;
+	padding-left: 10px;
+}
+.roundframe div.innerframe
+{
+	padding: 0 10px 0 0;
+	display: block;
+	background: url(images/theme/roundframe_repeat.png) top right repeat-y;
+}
+div.innerframe dl,div.innerframe dt,div.innerframe p
+{
+	margin: 0;
+}
+div.innerframe p
+{
+	padding: 0.5em;
+}
+span.upperframe
+{
+	padding: 0;
+	display: block;
+	background: url(images/theme/roundframe.png) top left no-repeat;
+	padding-left: 20px;
+}
+span.upperframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(images/theme/roundframe.png) top right no-repeat;
+}
+span.lowerframe
+{
+	padding: 0;
+	display: block;
+	background: url(images/theme/roundframe.png) bottom left no-repeat;
+	padding-left: 20px;
+}
+span.lowerframe span
+{
+	padding: 0;
+	height: 12px;
+	display: block;
+	background: url(images/theme/roundframe.png) bottom right no-repeat;
+}
+/* ************************************* */
+/* the main content area                 */
+/* ************************************* */
+.content
+{
+	padding: 0 0.5em;
+	margin: 0;
 	border: none;
 }
-
-/* definitions for the main tab, active means the tab reflects which page is displayed */
-.maintab_first, .maintab_back, .maintab_last, .maintab_active_first, .maintab_active_back, .maintab_active_last
+.content p
 {
-	color: white;
-	text-transform: uppercase;
-	vertical-align: top;
+	margin: 0 0 0.5em 0;
 }
-.maintab_back, .maintab_active_back
-{
-	color: white;
-	text-decoration: none;
-	font-size:  9px;
-	vertical-align: top;
-	padding: 2px 6px 6px 6px;
-	font-family: tahoma, sans-serif;
-}
-
-.maintab_first
-{
-	background: url(images/maintab_first_prev.gif) left bottom no-repeat;
-	width: 10px;
-}
-.maintab_back
-{
-	background: url(images/maintab_back.gif) left bottom repeat-x;
-}
-.maintab_last
-{
-	background: url(images/maintab_last_prev.gif) left bottom no-repeat;
-	width: 8px;
-}
-.maintab_active_first
-{
-	background: url(images/maintab_active_first.gif) left bottom no-repeat;
-	width: 6px;
-}
-.maintab_active_back
-{
-	background: url(images/maintab_active_back.gif) left bottom repeat-x;
-}
-.maintab_active_last
-{
-	background: url(images/maintab_active_last.gif) left bottom no-repeat;
-	width: 8px;
-}
-
-/* how links behave in main tab. */
-.maintab_back a:link , .maintab_back a:visited, .maintab_active_back a:link , .maintab_active_back a:visited
-{
-	color: white;
-	text-decoration: none;
-}
-
-.maintab_back a:hover, .maintab_active_back a:hover
-{
-	color: #e0e0ff;
-	text-decoration: none;
-}
-/* definitions for the mirror tab */
-.mirrortab_first, .mirrortab_back, .mirrortab_last, .mirrortab_active_first, .mirrortab_active_back, .mirrortab_active_last
-{
-	color: white;
-	text-transform: uppercase;
-	vertical-align: top;
-}
-.mirrortab_back, .mirrortab_active_back
-{
-	color: white;
-	text-decoration: none;
-	font-size: 9px;
-	vertical-align: bottom;
-	padding: 6px 6px 2px 6px;
-	font-family: tahoma, sans-serif;
-}
-
-.mirrortab_first
-{
-	background: url(images/mirrortab_first_prev.gif) no-repeat;
-	width: 10px;
-}
-.mirrortab_back
-{
-	background: url(images/mirrortab_back.gif) repeat-x;
-}
-.mirrortab_last
-{
-	background: url(images/mirrortab_last_prev.gif) no-repeat;
-	width: 6px;
-}
-.mirrortab_active_first
-{
-	background: url(images/mirrortab_active_first.gif) no-repeat;
-	width: 6px;
-}
-.mirrortab_active_back
-{
-	background: url(images/mirrortab_active_back.gif) repeat-x;
-}
-.mirrortab_active_last
-{
-	background: url(images/mirrortab_active_last.gif) no-repeat;
-	width: 8px;
-}
-
-/* how links behave in mirror tab. */
-.mirrortab_back a:link , .mirrortab_back a:visited, .mirrortab_active_back a:link , .mirrortab_active_back a:visited
-{
-	color: white;
-	text-decoration: none;
-}
-
-.mirrortab_back a:hover, .mirrortab_active_back a:hover
-{
-	color: #e0e0ff;
-	text-decoration: none;
-}
+/* ************************************* */
+/* AutoSuggest                           */
+/* ************************************* */
 
 /* These are for the auto suggest floating div type thing. */
 .auto_suggest_div
 {
-	border: 1px solid #505050;
+	border: 1px solid black;
 	position: absolute;
-	font-size: .7em;
 	visibility: hidden;
 }
 
 /* An auto suggest item */
 .auto_suggest_item
 {
-	background-color: #FAFAFA;
-	padding: 2px;
+	background-color: #DDDDDD;
 }
 
 /* hovered auto suggest item */
 .auto_suggest_item_hover
 {
-	background-color: #7897B4;
-	padding: 2px;
+	background-color: #888888;
 	cursor: pointer;
+	color: #EEEEEE;
+}
+ul.tabbuttons li
+{
+	float: left;
+}
+/******************************************/
+/*     Dropdown menus   */
+/*****************************************/
+#main_menu 
+{
+	text-align: left;
+	padding: 0 0 0 0.5em;
+	margin: 0;
+	overflow: auto;
+}
+
+.dropmenu, .dropmenu ul 
+{
+	list-style: none;
+	line-height: 1;
+	padding: 0;
+	margin: 0;
+}
+.dropmenu
+{
+	padding: 0 0 0 1%;
+}
+.dropmenu a 
+{
+	display: block;
+	color: #000000;
+	text-decoration: none;
+}
+.dropmenu a span
+{
+	display: block;
+	padding: 0 0 0 5px;
+	font-size: 0.9em;
+}
+/* the backgrounds first level only*/
+.dropmenu li a.firstlevel
+{
+	margin-right: 8px;
+}
+.dropmenu li a.firstlevel span.firstlevel
+{
+	display: block;
+	position: relative;
+	left: -5px;
+	padding-left: 5px;
+	height: 22px;
+	line-height: 19px;
+}
+.dropmenu li 
+{
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+.dropmenu li ul 
+{
+	position: absolute;
+	left: -999em;
+	height: auto;
+	width: 19.2em;
+	font-weight: normal;
+	margin: 0 0 0 -5px;
+	border-bottom: solid 1px #999;
+	background: url(images/theme/menu_gfx.png) 0 -100px no-repeat;
+	padding: 7px 0 0 0;
+	z-index: 90;
+}
+
+.dropmenu li li 
+{
+	width: 19em;
+	margin: 0;
+	border-left: solid 1px #999;
+	border-right: solid 1px #999;
+}
+.dropmenu li li a span
+{
+	display: block;
+	padding: 8px;
+}
+.dropmenu li ul ul 
+{
+	margin: -1.8em 0 0 13em;
+}
+
+/* the active button */
+.dropmenu li a.active
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% 0;
+	color: #ffffff;
+	font-weight: bold;
+}
+.dropmenu li a.active span.firstlevel
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 0 0;
+}
+/* the hover effects */
+.dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% -31px;
+	color: #ffffff;
+	cursor: pointer;
+	text-decoration: none;
+}
+.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 0 -31px;
+}
+/* the hover effects on level2 and 3*/
+.dropmenu li li a:hover
+{
+	background: #D4DBE4;
+	color: #000;
+	text-decoration: none;
+}
+.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul, .dropmenu li.over ul ul, .dropmenu li.over ul ul ul 
+{
+	left: -999em;
+}
+
+.dropmenu li:hover ul, .dropmenu li li:hover ul, .dropmenu li li li:hover ul, .dropmenu li.over ul, .dropmenu li li.over ul, .dropmenu li li li.over ul 
+{
+	left: auto;
+}
+
+/* the button lists used everywhere */
+.buttonlist ul
+{
+	z-index: 100;
+	padding: 5px;
+	margin: 0;
+}
+.buttonlist ul li
+{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+}
+.buttonlist ul li a
+{
+	display: block;
+	font-size: 0.8em;
+	color: black;
+	background: url(images/theme/menu_gfx.png) no-repeat 0 -60px;
+	padding: 0;
+	margin-left: 12px;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.buttonlist ul li a:hover
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 0 0;
+	color: #fff;
+	text-decoration: none;
+}
+.buttonlist ul li a span
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% -60px;
+	display: block;
+	height: 24px;
+	line-height: 20px;
+	padding: 0 8px 0 0;
+	position: relative;
+	right: -8px;
+}
+.buttonlist ul li a:hover span
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% 0;
+}
+/* the active one */
+.buttonlist ul li a.active
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 0 -30px;
 	color: white;
+	font-weight: bold;
+}
+.buttonlist ul li a.active span
+{
+	background: url(images/theme/menu_gfx.png) no-repeat 100% -30px;
+}
+.buttonlist ul li a.active
+{
+	font-weight: bold;
+}
+.buttonlist ul li a.active:hover
+{
+	color: #ddf;
+}
+/* a smaller quick-button list */
+ul.quickbuttons li
+{
+	display: inline;
+}
+ul.quickbuttons li a:hover img
+{
+	text-decoration: none;
+	color: #FFA500;
+}
+/* the navigation list */
+ul#navigation
+{
+	margin: 0;
+	font-size: 0.9em;
+	padding: 1em 0.4em;
+}
+ul#navigation li
+{
+	float: none;
+	font-size: 0.95em;
+	display: inline;
+}
+
+/* the menu dropdown toggle image */
+#menu_toggle
+{
+	float: right;
+	margin-right: 10px;
+	padding-top: 3px;
+}
+#menu_toggle span
+{
+	position: relative;
+	right: 5000px;
+}
+#adm_submenus
+{
+	padding-left: 2em;
+}
+#adm_submenus, #adm_submenus ul
+{
+	height: 3em;
+	overflow: auto;
 }

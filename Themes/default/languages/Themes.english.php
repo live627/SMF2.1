@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Themes
+// Version: 2.0 RC2; Themes
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 
@@ -56,6 +56,11 @@ $txt['current_theme_style'] = 'This theme\'s style: ';
 
 $txt['theme_variants_default'] = 'Default theme variant';
 $txt['theme_variants_user_disable'] = 'Disable user variant selection';
+
+$txt['site_slogan'] = 'Site slogan';
+$txt['site_slogan_desc'] = 'Add your own text for a slogan here. It will replace the SMF logo.';
+$txt['forum_width'] = 'Forum width';
+$txt['forum_width_desc'] = 'Set the forum width. Examples: 950px, 80%, 1240px.';
 
 $txt['show_group_key'] = 'Show group key on board index';
 $txt['additional_options_collapsable'] = 'Enable collapsible additional post options';

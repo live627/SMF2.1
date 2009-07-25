@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Help
+// Version: 2.0 RC2; Help
 
 function template_popup()
 {
@@ -15,11 +15,11 @@ function template_popup()
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 	</head>
-	<body style="margin: 1ex;">
-		<div class="popuptext">
+	<body id="help_popup">
+		<div class="tborder windowbg description">
 			', $context['help_text'], '<br />
 			<br />
-			<div class="centertext"><a href="javascript:self.close();">', $txt['close_window'], '</a></div>
+			<a href="javascript:self.close();">', $txt['close_window'], '</a>
 		</div>
 	</body>
 </html>';
@@ -153,15 +153,23 @@ function template_manual_above()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<div id="helpmain" class="windowbg2">
-			<h2>', $context['manual_area_data']['label'], '</h2>';
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['help'], '</h3>
+		<h4 class="titlebg"><span class="left"></span><span class="right"></span>', $context['manual_area_data']['label'], '</h4>
+		<div id="help_container">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+				<div id="helpmain">';
 }
 
+// Bottom half of the help template.
 function template_manual_below()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
 		</div>';
 }
 
@@ -729,7 +737,7 @@ function template_manual_logging_in()
 					<tr>
 						<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;">
 							<form action="', $scripturl, '?action=help;area=logging_in" method="post" accept-charset="', $context['character_set'], '" style="margin: 3px 1ex 1px 0; text-align:right;">
-								<input type="text" size="10" class="input_text" /> <input type="password" size="10" class="input_password" /> <select>
+								<input type="text" size="10" class="input_text" /> <input type="password" size="10" class="input_text" /> <select>
 									<option>
 										', $txt['manual_loginout_hour'], '
 									</option>
@@ -1430,7 +1438,7 @@ function template_manual_posting_topics()
 								<tr>
 									<td align="center" colspan="2"><span class="smalltext"><br />
 									', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
-									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
+									<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" /></td>
 								</tr>
 							</table>
 						</td>
@@ -1692,7 +1700,7 @@ function template_manual_posting_topics()
 //]]>
 </script> <span class="smalltext"><br />
 										', $context['browser']['is_firefox'] ? $txt['manual_posting_shortcuts_firefox'] : $txt['manual_posting_shortcuts'], '</span><br />
-										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" class="button_submit" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" />
+										<input type="button" accesskey="s" tabindex="3" value="', $txt['manual_posting_posts'], '" /> <input type="button" accesskey="p" tabindex="4" value="', $txt['manual_posting_preview'], '" class="button_submit" />
 									</td>
 								</tr>
 							</table>
@@ -1722,7 +1730,7 @@ function template_manual_bbcode()
 
 	echo '
 	<p>', $txt['manual_posting_sub_smf_bbc_desc'], '</p>
-	<table class="bordercolor" cellspacing="1" cellpadding="3">
+	<table cellspacing="1" cellpadding="3">
 		<tr>
 			<th class="catbg">', $txt['manual_posting_header_name'], '</th>
 			<th class="catbg">', $txt['manual_posting_header_button'], '</th>
@@ -2064,9 +2072,9 @@ Simple
 				<div class="', $txt['manual_posting_quote_output'], 'header">
 					Quote
 				</div>
-				<div class="quote">
+				<blockquote>
 					', $txt['manual_posting_quote_output'], '
-				</div>
+				</blockquote>
 			</td>
 			<td rowspan="2">', $txt['manual_posting_quote_comment'], '</td>
 		</tr>
@@ -2076,9 +2084,9 @@ Simple
 				<div class="', $txt['manual_posting_quote_buttom_output'], 'header">
 					Quote from: author
 				</div>
-				<div class="quote">
+				<blockquote>
 					', $txt['manual_posting_quote_buttom_output'], '
-				</div>
+				</blockquote>
 			</td>
 		</tr>
 		<tr class="windowbg">
@@ -2115,7 +2123,7 @@ function template_manual_smileys()
 
 	echo '
 	<p>', $txt['manual_posting_smileys_help_desc'], '</p>
-	<table class="bordercolor" cellspacing="1" cellpadding="3">
+	<table cellspacing="1" cellpadding="3">
 		<tr>
 			<th class="catbg">', $txt['manual_posting_smileys_help_name'], '</th>
 			<th class="catbg">', $txt['manual_posting_smileys_help_img'], '</th>

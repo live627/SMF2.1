@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Install
+// Version: 2.0 RC2; Install
 
 // These should be the same as those in index.language.php.
 $txt['lang_character_set'] = 'ISO-8859-1';
@@ -44,7 +44,8 @@ $txt['default_karmaApplaudLabel'] = '[applaud]';
 $txt['default_reserved_names'] = 'Admin\nWebmaster\nGuest\nroot';
 $txt['default_smileyset_name'] = 'Default';
 $txt['default_classic_smileyset_name'] = 'Classic';
-$txt['default_theme_name'] = 'SMF Default Theme - Core';
+$txt['default_theme_name'] = 'SMF Default Theme - Curve';
+$txt['default_core_theme_name'] = 'Core Theme';
 $txt['default_classic_theme_name'] = 'Classic YaBB SE Theme';
 $txt['default_babylon_theme_name'] = 'Babylon Theme';
 

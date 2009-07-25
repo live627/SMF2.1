@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -54,7 +54,7 @@ function RemindMe()
 	global $txt, $context;
 
 	loadLanguage('Profile');
-	loadTemplate('Reminder', 'login');
+	loadTemplate('Reminder');
 
 	$context['page_title'] = $txt['authentication_reminder'];
 	$context['robot_no_index'] = true;
@@ -276,7 +276,7 @@ function setPassword2()
 	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $username, $username, $_POST['passwrd1']);
 
-	loadTemplate('Login', 'login');
+	loadTemplate('Login');
 	$context += array(
 		'page_title' => $txt['reminder_password_set'],
 		'sub_template' => 'login',
@@ -397,7 +397,7 @@ function SecretAnswer2()
 		call_user_func($modSettings['integrate_reset_pass'], $row['member_name'], $row['member_name'], $_POST['passwrd1']);
 
 	// Tell them it went fine.
-	loadTemplate('Login', 'login');
+	loadTemplate('Login');
 	$context += array(
 		'page_title' => $txt['reminder_password_set'],
 		'sub_template' => 'login',

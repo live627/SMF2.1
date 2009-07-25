@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; ModerationCenter
+// Version: 2.0 RC2; ModerationCenter
 
 // Important! Before editing these language files please read the text at the top of index.english.php.
 

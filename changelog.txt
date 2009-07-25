@@ -49,6 +49,10 @@ July 2009
  ! Small JavaScript fixes/cleanup (several JavaScript files)
  ! Non mod actions didn't uninstall in other themes (Packages.php, Subs-Package.php, Packages Template, Packages English) [Bug 3573]
  ! Wireless mode should support reply to all (Wireless Template, Wireless English) [Bug 3596]
+ ! Increased the version number to SMF 2.0 RC2.
+ * Switched the Curve and Core themes, putting Curve in the default folder and splitting out Core to its own. (core theme, default theme)
+ * Merged all user frontend styles into one stylesheet: index.css. style.css is no more. (default theme)
+ ! The upgrade script will add the Core theme to the database if the registered SMF version is lower than 2.0 RC2.
 
 
 June 2009

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -265,16 +265,6 @@ function createMenu($menuData, $menuOptions = array())
 	}
 	else
 		$menu_context['can_toggle_drop_down'] = !empty($menuOptions['can_toggle_drop_down']);
-
-	// We want a menu, but missing the stylesheet? Get the fallback stylesheet then!
-	if ($context['max_menu_id'] == 1 && $menuOptions['menu_type'] == '_dropdown' && !isset($context['dropdown_html_inserted']))
-	{
-		$context['dropdown_html_inserted'] = true;
-		if (file_exists($settings['theme_dir']. '/css/dropmenu.css'))
-			$context['html_headers'] .= "\n\t" . '<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/dropmenu.css" />';
-		else
-			$context['html_headers'] .= "\n\t" . '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/dropmenu_default.css" />';
-	}
 
 	// Almost there - load the template and add to the template layers.
 	if (!WIRELESS)

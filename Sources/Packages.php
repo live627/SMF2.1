@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1.2                                       *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -78,7 +78,7 @@ function Packages()
 	// Load all the basic stuff.
 	require_once($sourcedir . '/Subs-Package.php');
 	loadLanguage('Packages');
-	loadTemplate('Packages', 'packages');
+	loadTemplate('Packages', 'admin');
 
 	$context['page_title'] = $txt['package'];
 

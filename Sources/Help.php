@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -64,22 +64,18 @@ function ShowHelp()
 				'main_menu' => array(
 					'label' => $txt['manual_section_main_menu'],
 					'template' => 'manual_main_menu',
-					'require_stylesheets' => array('forum'),
 				),
 				'board_index' => array(
 					'label' => $txt['manual_section_board_index'],
 					'template' => 'manual_board_index',
-					'require_stylesheets' => array('forum'),
 				),
 				'message_view' => array(
 					'label' => $txt['manual_section_message_view'],
 					'template' => 'manual_message_view',
-					'require_stylesheets' => array('forum'),
 				),
 				'topic_view' => array(
 					'label' => $txt['manual_section_topic_view'],
 					'template' => 'manual_topic_view',
-					'require_stylesheets' => array('forum'),
 				),
 			),
 		),
@@ -90,22 +86,18 @@ function ShowHelp()
 				'registration_screen' => array(
 					'label' => $txt['manual_section_registration_screen'],
 					'template' => 'manual_registration_screen',
-					'require_stylesheets' => array('login'),
 				),
 				'activating_account' => array(
 					'label' => $txt['manual_section_activating_account'],
 					'template' => 'manual_activating_account',
-					'require_stylesheets' => array('login'),
 				),
 				'logging_in' => array(
 					'label' => $txt['manual_section_logging_in'],
 					'template' => 'manual_logging_in',
-					'require_stylesheets' => array('login'),
 				),
 				'password_reminders' => array(
 					'label' => $txt['manual_section_password_reminders'],
 					'template' => 'manual_password_reminders',
-					'require_stylesheets' => array('login'),
 				),
 			),
 		),
@@ -116,12 +108,10 @@ function ShowHelp()
 				'profile_summary' => array(
 					'label' => $txt['manual_section_profile_summary'],
 					'template' => 'manual_profile_summary',
-					'require_stylesheets' => array('profile'),
 				),
 				'modifying_profiles' => array(
 					'label' => $txt['manual_section_modifying_profiles'],
 					'template' => 'manual_modifying_profiles',
-					'require_stylesheets' => array('profile'),
 				),
 			),
 		),
@@ -168,12 +158,10 @@ function ShowHelp()
 				'searching' => array(
 					'label' => $txt['manual_section_searching'],
 					'template' => 'manual_searching',
-					'require_stylesheets' => array('search'),
 				),
 				'member_list' => array(
 					'label' => $txt['manual_section_member_list'],
 					'template' => 'manual_member_list',
-					'require_stylesheets' => array('memberlist'),
 				),
 				'calendar' => array(
 					'label' => $txt['manual_section_calendar'],
@@ -229,23 +217,10 @@ function ShowHelp()
 
 	// We actually need a special style sheet for help ;)
 	$context['template_layers'][] = 'manual';
-	$context['html_headers'] .= '
-		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/css/help.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/css/help.css" />';
 
 	// The smiley info page needs some cheesy information.
 	if ($manual_area_data['current_area'] == 'smileys')
 		ShowSmileyHelp();
-
-	// Does this section require any additional stylesheets?
-	if (isset($manual_area_data['require_stylesheets']))
-	{
-		if (!is_array($manual_area_data['require_stylesheets']))
-			$manual_area_data['require_stylesheets'] = array($manual_area_data['require_stylesheets']);
-
-		foreach ($manual_area_data['require_stylesheets'] as $stylesheet)
-			$context['html_headers'] .= '
-		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/css/' . $stylesheet . '.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/css/' . $stylesheet . '.css" />';
-	}
 }
 
 function ShowSmileyHelp()

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -93,7 +93,7 @@ function RecentPosts()
 {
 	global $txt, $scripturl, $user_info, $context, $modSettings, $sourcedir, $board, $smcFunc;
 
-	loadTemplate('Recent', 'recent');
+	loadTemplate('Recent');
 	$context['page_title'] = $txt['recent_posts'];
 
 	if (isset($_REQUEST['start']) && $_REQUEST['start'] > 95)
@@ -635,7 +635,7 @@ function UnreadTopics()
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_recent';
 	else
 	{
-		loadTemplate('Recent', 'forum');
+		loadTemplate('Recent');
 		$context['sub_template'] = $_REQUEST['action'] == 'unread' ? 'unread' : 'replies';
 	}
 

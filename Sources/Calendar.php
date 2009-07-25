@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -71,7 +71,7 @@ function CalendarMain()
 		return $subActions[$_GET['sa']]();
 
 	// This is gonna be needed...
-	loadTemplate('Calendar', 'calendar');
+	loadTemplate('Calendar');
 
 	// You can't do anything if the calendar is off.
 	if (empty($modSettings['cal_enabled']))

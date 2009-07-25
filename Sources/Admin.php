@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -635,10 +635,6 @@ function AdminHome()
 
 	$context['sub_template'] = $context['admin_area'] == 'credits' ? 'credits' : 'admin';
 	$context['page_title'] = $context['admin_area'] == 'credits' ? $txt['support_credits_title'] : $txt['admin_center'];
-
-	// Load the right CSS.
-	if ($context['admin_area'] == 'credits')
-		loadTemplate(false, 'who');
 
 	// The format of this array is: permission, action, title, description, icon.
 	$quick_admin_tasks = array(

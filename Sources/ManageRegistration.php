@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1.2                                       *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -87,7 +87,7 @@ function RegCenter()
 
 	// Loading, always loading.
 	loadLanguage('Login');
-	loadTemplate('Register', 'login');
+	loadTemplate('Register');
 
 	// Next create the tabs for the template.
 	$context[$context['admin_menu_name']]['tab_data'] = array(

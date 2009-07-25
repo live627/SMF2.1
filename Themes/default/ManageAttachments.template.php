@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; ManageAttachments
+// Version: 2.0 RC2; ManageAttachments
 
 // Template template wraps around the simple settings page to add javascript functionality.
 function template_avatar_settings_above()
@@ -10,7 +10,7 @@ function template_avatar_settings_below()
 {
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
-	var fUpdateStatus = function()
+	var fUpdateStatus = function ()
 	{
 		document.getElementById("avatar_max_width_external").disabled = document.getElementById("avatar_download_external").checked;
 		document.getElementById("avatar_max_height_external").disabled = document.getElementById("avatar_download_external").checked;
@@ -29,57 +29,24 @@ function template_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
-		<tr class="titlebg">
-			<td colspan="5">', $txt['attachment_manager_browse_files'], '</td>
-		</tr>';
-
-	// shall we use the tabs?
-	if (!empty($settings['use_tabs']))
-	{
-		echo '
-	</table>';
-
-		echo '
-	<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 1ex; margin-left: 10px;">
-		<tr>
-			<td class="maintab_first">&nbsp;</td>';
-
-		echo $context['browse_type'] == 'attachments' ? '
-			<td class="maintab_active_first">&nbsp;</td>' : '' , '
-			<td class="maintab_' , $context['browse_type'] == 'attachments' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $txt['attachment_manager_attachments'], '</a></td>' , $context['browse_type'] == 'attachments' ? '
-			<td class="maintab_active_last">&nbsp;</td>' : '';
-
-		echo $context['browse_type'] == 'avatars' ? '
-			<td class="maintab_active_first">&nbsp;</td>' : '' , '
-			<td class="maintab_' , $context['browse_type'] == 'avatars' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $txt['attachment_manager_avatars'], '</a></td>' , $context['browse_type'] == 'avatars' ? '
-			<td class="maintab_active_last">&nbsp;</td>' : '';
-
-		echo $context['browse_type'] == 'thumbs' ? '
-			<td class="maintab_active_first">&nbsp;</td>' : '' , '
-			<td class="maintab_' , $context['browse_type'] == 'thumbs' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $txt['attachment_manager_thumbs'], '</a></td>' , $context['browse_type'] == 'thumbs' ? '
-			<td class="maintab_active_last">&nbsp;</td>' : '';
-
-		echo '
-			<td class="maintab_last">&nbsp;</td>
-		</tr>
-	</table>';
-	}
-	// If not, use the old style.
-	else
-	{
-		echo '
-		<tr class="catbg">
-			<td colspan="5">
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a>&nbsp;|&nbsp;
-				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a>&nbsp;|&nbsp;
+	<div id="manage_attachments">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['attachment_manager_browse_files'], '
+		</h3>
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $context['browse_type'] == 'attachments' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_attachments'], '</a> | 
+				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a> | 
 				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
-			</td>
-		</tr>
-	</table>';
-	}
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 
 	template_show_list('file_list');
+	
 }
 
 function template_maintenance()
@@ -87,124 +54,131 @@ function template_maintenance()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
-		<tr>
-			<td class="titlebg">', $txt['attachment_stats'], '</td>
-		</tr><tr>
-			<td class="windowbg2" width="100%" valign="top" style="padding-bottom: 2ex;">
-				<table border="0" cellspacing="0" cellpadding="3">
-					<tr>
-						<td>', $txt['attachment_total'], ':</td><td>', $context['num_attachments'], '</td>
-					</tr><tr>
-						<td>', $txt['attachment_manager_total_avatars'], ':</td><td>', $context['num_avatars'], '</td>
-					</tr><tr>
-						<td>', $txt['attachmentdir_size' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;', $context['session_var'], '=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
-					</tr><tr>
-						<td>', $txt['attachment_space' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<br />
-	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
-		<tr>
-			<td class="titlebg">', $txt['attachment_options'], '</td>
-		</tr><tr>
-			<td class="windowbg2" width="100%" valign="top">
-				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" class="input_text" /><br />
-					', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" class="input_text" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
-					<input type="hidden" name="type" value="attachments" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="hidden" name="sa" value="byAge" />
-				</form>
-				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" class="input_text" /><br />
-					', $txt['attachment_remove_size'], ' <input type="text" name="size" id="size" value="100" size="4" class="input_text" /> ', $txt['kilobyte'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
-					<input type="hidden" name="type" value="attachments" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="hidden" name="sa" value="bySize" />
-				</form>
-				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" class="input_text" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
-					<input type="hidden" name="type" value="avatars" />
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="hidden" name="sa" value="byAge" />
-				</form>
-			</td>
-		</tr>
-	</table>';
+	<div id="manage_attachments">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['attachment_stats'], '
+		</h3>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<dl class="settings">
+					<dt><strong>', $txt['attachment_total'], ':</strong></dt><dd>', $context['num_attachments'], '</dd>
+					<dt><strong>', $txt['attachment_manager_total_avatars'], ':</strong></dt><dd>', $context['num_avatars'], '</dd>
+					<dt><strong>', $txt['attachmentdir_size' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</strong></dt><dd>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;', $context['session_var'], '=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></dd>
+					<dt><strong>', $txt['attachment_space' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</strong></dt><dd>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</dd>
+				</dl>			
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+		
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			', $txt['attachment_options'], '
+		</h3>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
+						', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" class="input_text" /><br />
+						', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" class="input_text" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
+						<input type="hidden" name="type" value="attachments" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="hidden" name="sa" value="byAge" />
+					</form>
+					<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
+						', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" class="input_text" /><br />
+						', $txt['attachment_remove_size'], ' <input type="text" name="size" id="size" value="100" size="4" class="input_text" /> ', $txt['kilobyte'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
+						<input type="hidden" name="type" value="attachments" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="hidden" name="sa" value="bySize" />
+					</form>
+					<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
+						', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" class="input_text" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" class="button_submit" />
+						<input type="hidden" name="type" value="avatars" />
+						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="hidden" name="sa" value="byAge" />
+					</form>	
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 }
 
 function template_attachment_repair()
 {
-	global $context, $txt, $scripturl;
+	global $context, $txt, $scripturl, $settings;
 
 	// If we've completed just let them know!
 	if ($context['completed'])
 	{
 		echo '
-	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
-		<tr>
-			<td class="titlebg">', $txt['repair_attachments_complete'], '</td>
-		</tr><tr>
-			<td class="windowbg2" width="100%">
+	<div id="manage_attachments">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
+		</h3>		
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
 				', $txt['repair_attachments_complete_desc'], '
-			</td>
-		</tr>
-	</table>';
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 	}
+
 	// What about if no errors were even found?
 	elseif (!$context['errors_found'])
 	{
 		echo '
-	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
-		<tr>
-			<td class="titlebg">', $txt['repair_attachments_complete'], '</td>
-		</tr><tr>
-			<td class="windowbg2" width="100%">
+	<div id="manage_attachments">
+		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+			<img src="', $settings['images_url'], '/admin/post_moderation_allow.gif" alt="" /> ', $txt['repair_attachments_complete'], '
+		</h3>		
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
 				', $txt['repair_attachments_no_errors'], '
-			</td>
-		</tr>
-	</table>';
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br style="clear: both;" />';
 	}
 	// Otherwise, I'm sad to say, we have a problem!
 	else
 	{
 		echo '
-	<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
-		<tr>
-			<td class="titlebg">', $txt['repair_attachments'], '</td>
-		</tr><tr>
-			<td class="windowbg2">
-				', $txt['repair_attachments_error_desc'], '
-			</td>
-		</tr>';
+	<div id="manage_attachments">
+		<form action="', $scripturl, '?action=admin;area=manageattachments;sa=repair;fixErrors=1;step=0;substep=0;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+			<h3 class="catbg"><span class="left"></span><span class="right"></span>
+				<img src="',$settings['images_url'], '/admin/post_moderation_deny.gif" alt="" /> ', $txt['repair_attachments'], '
+			</h3>	
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+					<p>', $txt['repair_attachments_error_desc'], '</p>
+';
+			
 
 		// Loop through each error reporting the status
 		foreach ($context['repair_errors'] as $error => $number)
 		{
 			if (!empty($number))
 			echo '
-		<tr class="windowbg2">
-			<td>
-				<input type="checkbox" name="to_fix[]" id="', $error, '" value="', $error, '" class="input_check" />
-				<label for="', $error, '">', sprintf($txt['attach_repair_' . $error], $number), '</label>
-			</td>
-		</tr>';
+					<input type="checkbox" name="to_fix[]" id="', $error, '" value="', $error, '" class="input_check" />
+					<label for="', $error, '">', sprintf($txt['attach_repair_' . $error], $number), '</label><br />';
 		}
 
-		echo '
-		<tr>
-			<td align="center" class="windowbg2">
-				<input type="submit" value="', $txt['repair_attachments_continue'], '" class="button_submit" />
-				<input type="submit" name="cancel" value="', $txt['repair_attachments_cancel'], '" class="button_submit" />
-			</td>
-		</tr>
-	</table>
-	</form>';
+		echo '		<br />
+					<input type="submit" value="', $txt['repair_attachments_continue'], '" class="button_submit" />
+					<input type="submit" name="cancel" value="', $txt['repair_attachments_cancel'], '" class="button_submit" />
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</form>
+	</div>
+	<br style="clear: both;" />';
 	}
 }
 

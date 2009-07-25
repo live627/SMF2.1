@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -65,7 +65,7 @@ function EmailUser()
 	$context['robot_no_index'] = true;
 
 	// Load the template.
-	loadTemplate('SendTopic','sendtopic');
+	loadTemplate('SendTopic');
 
 	$sub_actions = array(
 		'email' => 'CustomEmail',
@@ -336,7 +336,7 @@ function ReportToModerator()
 
 	// Show the inputs for the comment, etc.
 	loadLanguage('Post');
-	loadTemplate('SendTopic','sendtopic');
+	loadTemplate('SendTopic');
 
 	// This is here so that the user could, in theory, be redirected back to the topic.
 	$context['start'] = $_REQUEST['start'];

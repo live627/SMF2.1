@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Settings
+// Version: 2.0 RC2; Settings
 
 function template_options()
 {
@@ -150,6 +150,18 @@ function template_settings()
 			'type' => 'text',
 		),
 		array(
+			'id' => 'site_slogan',
+			'label' => $txt['site_slogan'],
+			'description' => $txt['site_slogan_desc'],
+			'type' => 'text',
+		),
+/*		array(
+			'id' => 'forum_width',
+			'label' => $txt['forum_width'],
+			'description' => $txt['forum_width_desc'],
+			'type' => 'text',
+		),*/
+		array(
 			'id' => 'number_recent_posts',
 			'label' => $txt['number_recent_posts'],
 			'description' => $txt['number_recent_posts_desc'],
@@ -180,17 +192,16 @@ function template_settings()
 			'label' => $txt['member_list_bar'],
 		),
 		array(
+			'id' => 'linktree_link',
+			'label' => $txt['current_pos_text_img'],
+		),
+		array(
 			'id' => 'show_profile_buttons',
 			'label' => $txt['show_view_profile_button'],
 		),
 		array(
 			'id' => 'show_mark_read',
 			'label' => $txt['enable_mark_as_read'],
-		),
-		array(
-			'id' => 'linktree_inline',
-			'label' => $txt['enable_inline_links'],
-			'description' => $txt['inline_desc'],
 		),
 		array(
 			'id' => 'show_stats_index',

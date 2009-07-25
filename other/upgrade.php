@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1.2                                       *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -2019,7 +2019,7 @@ function UpgradeTemplate()
 		$theme_name = isset($matches[1]) ? $matches[1] : $themedir;
 
 		//!!! Uncomment before release!
-		//if (in_array($theme_name, array('default', 'classic', 'babylon')))
+		//if (in_array($theme_name, array('default', 'core')))
 			//continue;
 
 		if (!file_exists($themedir))

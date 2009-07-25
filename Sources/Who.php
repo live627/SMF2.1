@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 RC1                                         *
+* Software Version:           SMF 2.0 RC2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2009 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -75,7 +75,7 @@ function Who()
 		fatal_lang_error('who_off', false);
 
 	// Load the 'Who' template.
-	loadTemplate('Who', 'who');
+	loadTemplate('Who');
 	loadLanguage('Who');
 
 	// Sort out... the column sorting.
@@ -683,7 +683,7 @@ function Credits($in_admin = false)
 
 	if (!$in_admin)
 	{
-		loadTemplate('Who', 'who');
+		loadTemplate('Who');
 		$context['sub_template'] = 'credits';
 		$context['robot_no_index'] = true;
 		$context['page_title'] = $txt['credits'];

@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 RC1; Reports
+// Version: 2.0 RC2; Reports
 
 // Choose which type of report to run?
 function template_report_type()
@@ -7,96 +7,86 @@ function template_report_type()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
+	<div id="admincenter">
 		<form action="', $scripturl, '?action=admin;area=reports" method="post" accept-charset="', $context['character_set'], '">
-			<table border="0" cellspacing="0" cellpadding="4" width="100%" class="tborder">
-				<tr class="titlebg">
-					<td colspan="2">', $txt['generate_reports'], '</td>
-				</tr>
-				<tr class="windowbg">
-					<td class="smalltext" style="padding: 2ex;" colspan="2">', $txt['generate_reports_desc'], '</td>
-				</tr>
-				<tr class="titlebg">
-					<td colspan="2">', $txt['generate_reports_type'], ':</td>
-				</tr>';
-
-	$alternate = false;
+			<h3 class="titlebg">
+				<span class="left"></span><span class="right"></span>
+				', $txt['generate_reports'], '
+			</h3>
+			<div class="information">
+				', $txt['generate_reports_desc'], '
+			</div>
+			<h3 class="catbg"><span class="left">
+				</span><span class="right"></span>
+				', $txt['generate_reports_type'], '
+			</h3>
+			<div class="windowbg">
+				<span class="topslice">	<span></span></span>
+				<div class="content">
+					<dl class="generate_report">';
+			
 	// Go through each type of report they can run.
 	foreach ($context['report_types'] as $type)
 	{
 		echo '
-				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" valign="top">
-					<td width="20">
-						<input type="radio" id="rt_', $type['id'], '" name="rt" value="', $type['id'], '"', $type['is_first'] ? ' checked="checked"' : '', ' class="input_radio" />
-					</td>
-					<td align="left" width="100%">
-						<label for="rt_', $type['id'], '">
-							<strong>', $type['title'], '</strong>';
+						<dt>
+							<input type="radio" id="rt_', $type['id'], '" name="rt" value="', $type['id'], '"', $type['is_first'] ? ' checked="checked"' : '', ' class="input_radio" />
+							<strong><label for="rt_', $type['id'], '">', $type['title'], '</label></strong>
+						</dt>';
 		if (isset($type['description']))
 			echo '
-							<br /><span class="smalltext">', $type['description'], '</span>';
-		echo '
-						</label>
-					</td>
-				</tr>';
-
-		$alternate = !$alternate;
+						<dd>', $type['description'], '</dd>';			
 	}
-	echo '
-				<tr class="titlebg">
-					<td align="right" colspan="2">
-						<input type="submit" name="continue" value="', $txt['generate_reports_continue'], '" class="button_submit" />
-					</td>
-				</tr>
-			</table>
-			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-		</form>';
+		echo '
+					</dl>
+					<input type="submit" name="continue" value="', $txt['generate_reports_continue'], '" class="button_submit" />
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />			
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>
+		</form>
+	</div>
+	<br style="clear: both;" />';
 }
 
 // This is the standard template for showing reports in.
 function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	
+	// Build the reports button array.	
+	$report_buttons = array(
+			'generate_reports' => array('text' => 'generate_reports', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=admin;area=reports', 'active' => true ),
+			'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'url' => $scripturl . '?action=admin;area=reports;rt=' . $context['report_type']. ';st=print', 'custom' => 'target="_blank"'),
+		);
 
 	echo '
-		<div class="tborder">
-			<div class="titlebg" style="padding: 4px;">
-				<div class="floatleft"><strong>', $txt['results'], '</strong></div>
-				<div class="righttext">&nbsp;';
-	if (empty($settings['use_tabs']))
-		echo '
-
-					<a href="', $scripturl, '?action=admin;area=reports;rt=', $context['report_type'], ';st=print" target="_blank" class="new_win">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']), '</a>';
+	<div id="admincenter">
+		<h3 class="titlebg"><span class="left"></span><span class="right"></span>
+			', $txt['results'], '
+		</h3>
+		<div id="report_buttons">';
+		
+	if (!empty($report_buttons) && !empty($settings['use_tabs']))
+		template_button_strip($report_buttons, 'right');
+		
 	echo '
-				</div>
-			</div>
 		</div>';
-	if (!empty($settings['use_tabs']))
-		echo '
-		<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-			<td align="right">
-				<table cellpadding="0" cellspacing="0" border="0">
-					<tr>
-						<td class="maintab_first">&nbsp;</td>
-						<td valign="top" class="maintab_back">
-							<a href="', $scripturl, '?action=admin;area=reports;rt=', $context['report_type'], ';st=print" target="_blank" class="new_win">', $txt['print'], '</a>
-						</td>
-						<td class="maintab_last">&nbsp;</td>
-					</tr>
-				</table>
-			</td>
-		</tr></table><br />';
-
+		
 	// Go through each table!
 	foreach ($context['tables'] as $table)
 	{
 		echo '
-		<table border="0" cellspacing="1" cellpadding="3" width="100%" class="bordercolor">';
+		<table class="table_grid" width="100%">';
 
 		if (!empty($table['title']))
 			echo '
+		<thead>
 			<tr class="catbg">
-				<td colspan="', $table['column_count'], '">', $table['title'], '</td>
-			</tr>';
+				<th scope="col" class="smalltext" colspan="', $table['column_count'], '">', $table['title'], '</th>
+			</tr>
+		</thead>
+		<tbody>';
 
 		// Now do each row!
 		$row_number = 0;
@@ -105,21 +95,22 @@ function template_main()
 		{
 			if ($row_number == 0 && !empty($table['shading']['top']))
 				echo '
-			<tr class="titlebg" valign="top">';
+			<tr class="windowbg table_caption">';
 			else
 				echo '
 			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" valign="top">';
 
 			// Now do each column.
 			$column_number = 0;
+			
 			foreach ($row as $key => $data)
 			{
 				// If this is a special seperator, skip over!
 				if (!empty($data['seperator']) && $column_number == 0)
 				{
 					echo '
-				<td colspan="', $table['column_count'], '" class="catbg">
-					<strong>', $data['v'], ':</strong>
+				<td colspan="', $table['column_count'], '" class="catbg smalltext">
+					', $data['v'], ':
 				</td>';
 					break;
 				}
@@ -127,12 +118,12 @@ function template_main()
 				// Shaded?
 				if ($column_number == 0 && !empty($table['shading']['left']))
 					echo '
-				<td align="', $table['align']['shaded'], '" class="titlebg"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
+				<td align="', $table['align']['shaded'], '" class="table_caption"', $table['width']['shaded'] != 'auto' ? ' width="' . $table['width']['shaded'] . '"' : '', '>
 					', $data['v'] == $table['default_value'] ? '' : ($data['v'] . (empty($data['v']) ? '' : ':')), '
 				</td>';
 				else
 					echo '
-				<td align="', $table['align']['normal'], '"', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
+				<td class="smalltext" align="', $table['align']['normal'], '"', $table['width']['normal'] != 'auto' ? ' width="' . $table['width']['normal'] . '"' : '', !empty($data['style']) ? ' style="' . $data['style'] . '"' : '', '>
 					', $data['v'], '
 				</td>';
 
@@ -146,9 +137,12 @@ function template_main()
 			$alternate = !$alternate;
 		}
 		echo '
-		</table>
-		<br />';
+		</tbody>
+		</table>';
 	}
+	echo '
+	</div>
+	<br style="clear: both;" />';
 }
 
 // Header of the print page!
@@ -161,65 +155,7 @@ function template_print_above()
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $context['page_title'], '</title>
-		<style type="text/css">
-			body
-			{
-				color: black;
-				background-color: white;
-			}
-			body, td, .normaltext
-			{
-				font-family: Verdana, arial, helvetica, serif;
-				font-size: small;
-			}
-			*, a:link, a:visited, a:hover, a:active
-			{
-				color: black !important;
-			}
-			table
-			{
-				empty-cells: show;
-			}
-			.smalltext, .quoteheader, .codeheader
-			{
-				font-size: x-small;
-			}
-			.largetext
-			{
-				font-size: large;
-			}
-			hr
-			{
-				height: 1px;
-				border: 0;
-				color: black;
-				background-color: black;
-			}
-			.catbg
-			{
-				background-color: #D6D6D6;
-				font-weight: bold;
-			}
-			.titlebg, tr.titlebg td, .titlebg a:link, .titlebg a:visited
-			{
-				font-style: normal;
-				background-color: #F5EDED;
-			}
-			.bordercolor
-			{
-				background-color: #333;
-			}
-			.windowbg
-			{
-				color: black;
-				background-color: white;
-			}
-			.windowbg2
-			{
-				color: black;
-				background-color: #F1F1F1;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/report.css" />
 	</head>
 	<body>';
 }
@@ -302,7 +238,7 @@ function template_print_below()
 	global $context, $settings, $options;
 
 	echo '
-		<div class="smalltext centertext" style="margin-top: 2ex;">', theme_copyright(), '</div>
+		<div class="copyright">', theme_copyright(), '</div>
 	</body>
 </html>';
 }
