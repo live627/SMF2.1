@@ -53,6 +53,7 @@ July 2009
  * Switched the Curve and Core themes, putting Curve in the default folder and splitting out Core to its own. (core theme, default theme)
  * Merged all user frontend styles into one stylesheet: index.css. style.css is no more. (default theme)
  ! The upgrade script will add the Core theme to the database if the registered SMF version is lower than 2.0 RC2.
+ * Rewrote the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, index.css, quickbuttons.png)
 
 
 June 2009

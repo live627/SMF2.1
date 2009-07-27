@@ -1749,6 +1749,10 @@ ul.quickbuttons li.reply_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 5px -180px;
 }
+ul.quickbuttons li.reply_all_button
+{
+	background: url(../images/theme/quickbuttons.png) no-repeat 5px -180px;
+}
 ul.quickbuttons li.modify_button
 {
 	background: url(../images/theme/quickbuttons.png) no-repeat 5px -60px;
