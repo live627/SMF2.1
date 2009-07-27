@@ -1454,9 +1454,25 @@ function matchPackageVersion($version, $versions)
 			continue;
 
 		list ($lower, $upper) = explode('-', $list);
+		$lower = explode('.', $lower);
+		$upper = explode('.', $upper);
+		$version = explode('.', $version);
+echo $version . '||';
 
-		if (trim($lower) <= $version && trim($upper) >= $version)
-			return true;
+		foreach ($lower as $key => $low)
+		{
+			// What do to do if this doesn't exist!
+			if (!isset($upper[$key]))
+				$upper[$key] = $low . 'z';
+
+			// What if this doesn't exist!
+			//if (!isset($version[$key]))
+				//return false;
+
+			if (trim($low) > $version[$key] || trim($upper[$key]) < $version[$key])
+				return false;
+		}
+		return true;
 	}
 
 	// Well, I guess it doesn't match...
