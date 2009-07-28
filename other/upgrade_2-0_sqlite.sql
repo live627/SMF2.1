@@ -611,10 +611,10 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '2.0 RC
 			// Only base themes if there are templates that need a fall-back.
 			$insertRows = array();
 			$request = upgrade_query("
-				SELECT ID_THEME, value AS theme_dir
+				SELECT id_theme, value AS theme_dir
 				FROM {$db_prefix}themes
-				WHERE ID_THEME IN (" . implode(', ', $coreBasedThemes) . ")
-					AND ID_MEMBER = 0
+				WHERE id_theme IN (" . implode(', ', $coreBasedThemes) . ")
+					AND id_member = 0
 					AND variable = 'theme_dir'");
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{

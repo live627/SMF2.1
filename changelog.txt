@@ -55,6 +55,7 @@ July 2009
  ! The upgrade script will add the Core theme to the database if the registered SMF version is lower than 2.0 RC2.
  * Rewrote the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, index.css, quickbuttons.png)
  * Just because post_event isn't convertered to Cuve, doesn't mean we should remove it (Calendar Template) [Bug 3609]
+ ! Old column names prevented the core and curve switchout from working properly (upgrade_2-0_*.sql)
 
 
 June 2009

@@ -24,8 +24,8 @@
 
 
 // Version information...
-define('SMF_VERSION', '2.0 RC1.2');
-define('SMF_LANG_VERSION', '2.0 RC1');
+define('SMF_VERSION', '2.0 RC2');
+define('SMF_LANG_VERSION', '2.0 RC2');
 
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';
