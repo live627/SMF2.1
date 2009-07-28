@@ -1634,7 +1634,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	loadSubTemplate('init', 'ignore');
 
 	// Load the compatibility stylesheet if the theme hasn't been updated for 2.0 RC2 (yet).
-	if (version_compare($settings['theme_version'], '2.0 RC2', '<'))
+	if (isset($settings['theme_version']) && version_compare($settings['theme_version'], '2.0 RC2', '<'))
 		loadTemplate(null, 'compat');
 
 	// Any theme-related strings that need to be loaded?

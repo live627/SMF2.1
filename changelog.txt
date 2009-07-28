@@ -57,6 +57,7 @@ July 2009
  * Just because post_event isn't convertered to Cuve, doesn't mean we should remove it (Calendar Template) [Bug 3609]
  ! Old column names prevented the core and curve switchout from working properly (upgrade_2-0_*.sql)
  * The help icon wasn't properly aligned (GenericMenu Template) [Bug 3608]
+ ! Fixed undefined index error in case the theme loader wants to show an XML template. (Load.php)
 
 
 June 2009
