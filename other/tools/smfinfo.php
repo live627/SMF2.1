@@ -396,7 +396,7 @@ function show_header()
 			}
 		</style>
 		<script type="text/javascript">
-			function hasSupport(){if(typeof hasSupport.support!="undefined"){return hasSupport.support}var A=/msie 5\.[56789]/i.test(navigator.userAgent);hasSupport.support=(typeof document.implementation!="undefined"&&document.implementation.hasFeature("html","1.0")||A);if(A){document._getElementsByTagName=document.getElementsByTagName;document.getElementsByTagName=function(B){if(B=="*"){return document.all}else{return document._getElementsByTagName(B)}}}return hasSupport.support}function WebFXTabPane(E,B){if(!hasSupport()||E==null){return }this.element=E;this.element.tabPane=this;this.pages=[];this.selectedIndex=null;this.useCookie=B!=null?B:true;this.element.className=this.classNameTag+" "+this.element.className;this.tabRow=document.createElement("div");this.tabRow.className="tab-row";E.insertBefore(this.tabRow,E.firstChild);var A=0;if(this.useCookie){A=Number(WebFXTabPane.getCookie("webfxtab_"+this.element.id));if(isNaN(A)){A=0}}this.selectedIndex=A;var D=E.childNodes;var F;for(var C=0;C<D.length;C++){if(D[C].nodeType==1&&D[C].className=="tab-page"){this.addTabPage(D[C])}}}WebFXTabPane.prototype.classNameTag="dynamic-tab-pane-control";WebFXTabPane.prototype.setSelectedIndex=function(A){if(this.selectedIndex!=A){if(this.selectedIndex!=null&&this.pages[this.selectedIndex]!=null){this.pages[this.selectedIndex].hide()}this.selectedIndex=A;this.pages[this.selectedIndex].show();if(this.useCookie){WebFXTabPane.setCookie("webfxtab_"+this.element.id,A)}}};WebFXTabPane.prototype.getSelectedIndex=function(){return this.selectedIndex};WebFXTabPane.prototype.addTabPage=function(A){if(!hasSupport()){return }if(A.tabPage==this){return A.tabPage}var C=this.pages.length;var B=this.pages[C]=new WebFXTabPage(A,this,C);B.tabPane=this;this.tabRow.appendChild(B.tab);if(C==this.selectedIndex){B.show()}else{B.hide()}return B};WebFXTabPane.prototype.dispose=function(){this.element.tabPane=null;this.element=null;this.tabRow=null;for(var A=0;A<this.pages.length;A++){this.pages[A].dispose();this.pages[A]=null}this.pages=null};WebFXTabPane.setCookie=function(C,E,B){var A="";if(B){var D=new Date();D.setTime(D.getTime()+B*24*60*60*1000);A="; expires="+D.toGMTString()}document.cookie=C+"="+E+A+"; path=/"};WebFXTabPane.getCookie=function(C){var B=new RegExp("(;|^)[^;]*("+C+")=([^;]*)(;|$)");var A=B.exec(document.cookie);return A!=null?A[3]:null};WebFXTabPane.removeCookie=function(A){setCookie(A,"",-1)};function WebFXTabPage(G,C,A){if(!hasSupport()||G==null){return }this.element=G;this.element.tabPage=this;this.index=A;var F=G.childNodes;for(var E=0;E<F.length;E++){if(F[E].nodeType==1&&F[E].className=="tab"){this.tab=F[E];break}}var B=document.createElement("A");this.aElement=B;B.href="#";B.onclick=function(){return false};while(this.tab.hasChildNodes()){B.appendChild(this.tab.firstChild)}this.tab.appendChild(B);var D=this;this.tab.onclick=function(){D.select()};this.tab.onmouseover=function(){WebFXTabPage.tabOver(D)};this.tab.onmouseout=function(){WebFXTabPage.tabOut(D)}}WebFXTabPage.prototype.show=function(){var B=this.tab;var A=B.className+" selected";A=A.replace(/ +/g," ");B.className=A;this.element.style.display="block"};WebFXTabPage.prototype.hide=function(){var B=this.tab;var A=B.className;A=A.replace(/ selected/g,"");B.className=A;this.element.style.display="none"};WebFXTabPage.prototype.select=function(){this.tabPane.setSelectedIndex(this.index)};WebFXTabPage.prototype.dispose=function(){this.aElement.onclick=null;this.aElement=null;this.element.tabPage=null;this.tab.onclick=null;this.tab.onmouseover=null;this.tab.onmouseout=null;this.tab=null;this.tabPane=null;this.element=null};WebFXTabPage.tabOver=function(A){var C=A.tab;var B=C.className+" hover";B=B.replace(/ +/g," ");C.className=B};WebFXTabPage.tabOut=function(A){var C=A.tab;var B=C.className;B=B.replace(/ hover/g,"");C.className=B};function setupAllTabs(){if(!hasSupport()){return }var G=document.getElementsByTagName("*");var B=G.length;var D=/tab\-pane/;var C=/tab\-page/;var H,F;var A;for(var E=0;E<B;E++){F=G[E];H=F.className;if(H==""){continue}if(D.test(H)&&!F.tabPane){new WebFXTabPane(F)}else{if(C.test(H)&&!F.tabPage&&D.test(F.parentNode.className)){F.parentNode.tabPane.addTabPage(F)}}}}function disposeAllTabs(){if(!hasSupport()){return }var F=document.getElementsByTagName("*");var A=F.length;var C=/tab\-pane/;var G,E;var B=[];for(var D=0;D<A;D++){E=F[D];G=E.className;if(G==""){continue}if(C.test(G)&&E.tabPane){B[B.length]=E.tabPane}}for(var D=B.length-1;D>=0;D--){B[D].dispose();B[D]=null}}if(typeof window.addEventListener!="undefined"){window.addEventListener("load",setupAllTabs,false)}else{if(typeof window.attachEvent!="undefined"){window.attachEvent("onload",setupAllTabs);window.attachEvent("onunload",disposeAllTabs)}else{if(window.onload!=null){var oldOnload=window.onload;window.onload=function(A){oldOnload(A);setupAllTabs()}}else{window.onload=setupAllTabs}}}
+			function hasSupport(){if(\'support\' in hasSupport){return hasSupport.support}var A=/msie 5\.[56789]/i.test(navigator.userAgent);hasSupport.support=(\'implementation\' in  document&&document.implementation.hasFeature(\'html\',\'1.0\')||A);if(A){document._getElementsByTagName=document.getElementsByTagName;document.getElementsByTagName=function(B){if(B==\'*\'){return document.all}else{return document._getElementsByTagName(B)}}}return hasSupport.support}function WebFXTabPane(E,B){if(!hasSupport()||E==null){return }this.element=E;this.element.tabPane=this;this.pages=[];this.selectedIndex=null;this.useCookie=B!=null?B:true;this.element.className=this.classNameTag+\' \'+this.element.className;this.tabRow=document.createElement(\'div\');this.tabRow.className=\'tab-row\';E.insertBefore(this.tabRow,E.firstChild);var A=0;if(this.useCookie){A=Number(WebFXTabPane.getCookie(\'webfxtab_\'+this.element.id));if(isNaN(A)){A=0}}this.selectedIndex=A;var D=E.childNodes;var F;for(var C=0;C<D.length;C++){if(D[C].nodeType==1&&D[C].className==\'tab-page\'){this.addTabPage(D[C])}}}WebFXTabPane.prototype.classNameTag=\'dynamic-tab-pane-control\';WebFXTabPane.prototype.setSelectedIndex=function(A){if(this.selectedIndex!=A){if(this.selectedIndex!=null&&this.pages[this.selectedIndex]!=null){this.pages[this.selectedIndex].hide()}this.selectedIndex=A;this.pages[this.selectedIndex].show();if(this.useCookie){WebFXTabPane.setCookie(\'webfxtab_\'+this.element.id,A)}}};WebFXTabPane.prototype.getSelectedIndex=function(){return this.selectedIndex};WebFXTabPane.prototype.addTabPage=function(A){if(!hasSupport()){return }if(A.tabPage==this){return A.tabPage}var C=this.pages.length;var B=this.pages[C]=new WebFXTabPage(A,this,C);B.tabPane=this;this.tabRow.appendChild(B.tab);if(C==this.selectedIndex){B.show()}else{B.hide()}return B};WebFXTabPane.prototype.dispose=function(){this.element.tabPane=null;this.element=null;this.tabRow=null;for(var A=0;A<this.pages.length;A++){this.pages[A].dispose();this.pages[A]=null}this.pages=null};WebFXTabPane.setCookie=function(C,E,B){var A=\'\';if(B){var D=new Date();D.setTime(D.getTime()+B*24*60*60*1000);A=\'; expires=\'+D.toGMTString()}document.cookie=C+\'=\'+E+A+\'; path=/\'};WebFXTabPane.getCookie=function(C){var B=new RegExp(\'(;|^)[^;]*(\'+C+\')=([^;]*)(;|$)\');var A=B.exec(document.cookie);return A!=null?A[3]:null};WebFXTabPane.removeCookie=function(A){setCookie(A,\'\',-1)};function WebFXTabPage(G,C,A){if(!hasSupport()||G==null){return }this.element=G;this.element.tabPage=this;this.index=A;var F=G.childNodes;for(var E=0;E<F.length;E++){if(F[E].nodeType==1&&F[E].className==\'tab\'){this.tab=F[E];break}}var B=document.createElement(\'A\');this.aElement=B;B.href=\'#\';B.onclick=function(){return false};while(this.tab.hasChildNodes()){B.appendChild(this.tab.firstChild)}this.tab.appendChild(B);var D=this;this.tab.onclick=function(){D.select()};this.tab.onmouseover=function(){WebFXTabPage.tabOver(D)};this.tab.onmouseout=function(){WebFXTabPage.tabOut(D)}}WebFXTabPage.prototype.show=function(){var B=this.tab;var A=B.className+\' selected\';A=A.replace(/ +/g,\' \');B.className=A;this.element.style.display=\'block\'};WebFXTabPage.prototype.hide=function(){var B=this.tab;var A=B.className;A=A.replace(/ selected/g,\'\');B.className=A;this.element.style.display=\'none\'};WebFXTabPage.prototype.select=function(){this.tabPane.setSelectedIndex(this.index)};WebFXTabPage.prototype.dispose=function(){this.aElement.onclick=null;this.aElement=null;this.element.tabPage=null;this.tab.onclick=null;this.tab.onmouseover=null;this.tab.onmouseout=null;this.tab=null;this.tabPane=null;this.element=null};WebFXTabPage.tabOver=function(A){var C=A.tab;var B=C.className+\' hover\';B=B.replace(/ +/g,\' \');C.className=B};WebFXTabPage.tabOut=function(A){var C=A.tab;var B=C.className;B=B.replace(/ hover/g,\'\');C.className=B};function setupAllTabs(){if(!hasSupport()){return }var G=document.getElementsByTagName(\'*\');var B=G.length;var D=/tab\-pane/;var C=/tab\-page/;var H,F;var A;for(var E=0;E<B;E++){F=G[E];H=F.className;if(H==\'\'){continue}if(D.test(H)&&!F.tabPane){new WebFXTabPane(F)}else{if(C.test(H)&&!F.tabPage&&D.test(F.parentNode.className)){F.parentNode.tabPane.addTabPage(F)}}}}function disposeAllTabs(){if(!hasSupport()){return }var F=document.getElementsByTagName(\'*\');var A=F.length;var C=/tab\-pane/;var G,E;var B=[];for(var D=0;D<A;D++){E=F[D];G=E.className;if(G==\'\'){continue}if(C.test(G)&&E.tabPane){B[B.length]=E.tabPane}}for(var D=B.length-1;D>=0;D--){B[D].dispose();B[D]=null}}if(\'addEventListener\' in window){window.addEventListener(\'load\',setupAllTabs,false)}else{if(\'attachEvent\'  in window){window.attachEvent(\'onload\',setupAllTabs);window.attachEvent(\'onunload\',disposeAllTabs)}else{if(window.onload!=null){var oldOnload=window.onload;window.onload=function(A){oldOnload(A);setupAllTabs()}}else{window.onload=setupAllTabs}}}
 		</script>
 	</head>
 	<body>
@@ -1169,8 +1169,8 @@ function show_footer()
 			function swapOption(sendingElement, name)
 			{
 				// If it is undefined, or currently off, turn it on - otherwise off.
-				swaps[name] = typeof(swaps[name]) == "undefined" || !swaps[name];
-				document.getElementById(name).style.display = swaps[name] ? "" : "none";
+				swaps[name] = !(\'name\' in swaps) || !swaps[name];
+				document.getElementById(name).style.display = swaps[name] ? \'\' : \'none\';
 
 				// Unselect the link and return false.
 				sendingElement.blur();
@@ -1179,26 +1179,26 @@ function show_footer()
 
 			function smfDetermineVersions()
 			{
-				var highYour = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
-				var highCurrent = {"Sources": "??", "Default" : "??", "Languages": "??", "Templates": "??"};
-				var lowVersion = {"Sources": false, "Default": false, "Languages" : false, "Templates": false};
-				var knownLanguages = [".', implode('", ".', $context['default_known_languages']), '"];
+				var highYour = {\'Sources\': \'??\', \'Default\' : \'??\', \'Languages\': \'??\', \'Templates\': \'??\'};
+				var highCurrent = {\'Sources\': \'??\', \'Default\' : \'??\', \'Languages\': \'??\', \'Templates\': \'??\'};
+				var lowVersion = {\'Sources\': false, \'Default\': false, \'Languages\' : false, \'Templates\': false};
+				var knownLanguages = [\'.', implode('\', \'.', $context['default_known_languages']), '\'];
 
-				document.getElementById("Sources").style.display = "none";
-				document.getElementById("Languages").style.display = "none";
-				document.getElementById("Default").style.display = "none";
-				if (document.getElementById("Templates"))
-					document.getElementById("Templates").style.display = "none";
+				document.getElementById(\'Sources\').style.display = \'none\';
+				document.getElementById(\'Languages\').style.display = \'none\';
+				document.getElementById(\'Default\').style.display = \'none\';
+				if (document.getElementById(\'Templates\'))
+					document.getElementById(\'Templates\').style.display = \'none\';
 
-				if (typeof(window.smfVersions) == "undefined")
+				if (!(\'smfVersions\' in window))
 					window.smfVersions = {};
 
 				for (var filename in window.smfVersions)
 				{
-					if (!document.getElementById("current" + filename))
+					if (!document.getElementById(\'current\' + filename))
 						continue;
 
-					var yourVersion = getInnerHTML(document.getElementById("your" + filename));
+					var yourVersion = getInnerHTML(document.getElementById(\'your\' + filename));
 
 					var versionType;
 					for (var verType in lowVersion)
@@ -1208,82 +1208,82 @@ function show_footer()
 							break;
 						}
 
-					if (typeof(versionType) != "undefined")
+					if (typeof(versionType) != \'undefined\')
 					{
-						if ((highYour[versionType] < yourVersion || highYour[versionType] == "??") && !lowVersion[versionType])
+						if ((highYour[versionType] < yourVersion || highYour[versionType] == \'??\') && !lowVersion[versionType])
 							highYour[versionType] = yourVersion;
-						if (highCurrent[versionType] < smfVersions[filename] || highCurrent[versionType] == "??")
+						if (highCurrent[versionType] < smfVersions[filename] || highCurrent[versionType] == \'??\')
 							highCurrent[versionType] = smfVersions[filename];
 
 						if (yourVersion < smfVersions[filename])
 						{
 							lowVersion[versionType] = yourVersion;
-							document.getElementById("your" + filename).style.color = "red";
+							document.getElementById(\'your\' + filename).style.color = \'red\';
 						}
 					}
 					else if (yourVersion < smfVersions[filename])
 						lowVersion[versionType] = yourVersion;
 
-					setInnerHTML(document.getElementById("current" + filename), smfVersions[filename]);
-					setInnerHTML(document.getElementById("your" + filename), yourVersion);
+					setInnerHTML(document.getElementById(\'current\' + filename), smfVersions[filename]);
+					setInnerHTML(document.getElementById(\'your\' + filename), yourVersion);
 				}
 
-				if (typeof(window.smfLanguageVersions) == "undefined")
+				if (!(\'smfLanguageVersions\' in window))
 					window.smfLanguageVersions = {};
 
 				for (filename in window.smfLanguageVersions)
 				{
 					for (var i = 0; i < knownLanguages.length; i++)
 					{
-						if (!document.getElementById("current" + filename + knownLanguages[i]))
+						if (!document.getElementById(\'current\' + filename + knownLanguages[i]))
 							continue;
 
-						setInnerHTML(document.getElementById("current" + filename + knownLanguages[i]), smfLanguageVersions[filename]);
+						setInnerHTML(document.getElementById(\'current\' + filename + knownLanguages[i]), smfLanguageVersions[filename]);
 
-						yourVersion = getInnerHTML(document.getElementById("your" + filename + knownLanguages[i]));
-						setInnerHTML(document.getElementById("your" + filename + knownLanguages[i]), yourVersion);
+						yourVersion = getInnerHTML(document.getElementById(\'your\' + filename + knownLanguages[i]));
+						setInnerHTML(document.getElementById(\'your\' + filename + knownLanguages[i]), yourVersion);
 
-						if ((highYour["Languages"] < yourVersion || highYour["Languages"] == "??") && !lowVersion["Languages"])
-							highYour["Languages"] = yourVersion;
-						if (highCurrent["Languages"] < smfLanguageVersions[filename] || highCurrent["Languages"] == "??")
-							highCurrent["Languages"] = smfLanguageVersions[filename];
+						if ((highYour[\'Languages\'] < yourVersion || highYour[\'Languages\'] == \'??\') && !lowVersion[\'Languages\'])
+							highYour[\'Languages\'] = yourVersion;
+						if (highCurrent[\'Languages\'] < smfLanguageVersions[filename] || highCurrent[\'Languages\'] == \'??\')
+							highCurrent[\'Languages\'] = smfLanguageVersions[filename];
 
 						if (yourVersion < smfLanguageVersions[filename])
 						{
-							lowVersion["Languages"] = yourVersion;
-							document.getElementById("your" + filename + knownLanguages[i]).style.color = "red";
+							lowVersion[\'Languages\'] = yourVersion;
+							document.getElementById(\'your\' + filename + knownLanguages[i]).style.color = \'red\';
 						}
 					}
 				}
 
-				setInnerHTML(document.getElementById("yourSources"), lowVersion["Sources"] ? lowVersion["Sources"] : highYour["Sources"]);
-				setInnerHTML(document.getElementById("currentSources"), highCurrent["Sources"]);
-				if (lowVersion["Sources"])
-					document.getElementById("yourSources").style.color = "red";
+				setInnerHTML(document.getElementById(\'yourSources\'), lowVersion[\'Sources\'] ? lowVersion[\'Sources\'] : highYour[\'Sources\']);
+				setInnerHTML(document.getElementById(\'currentSources\'), highCurrent[\'Sources\']);
+				if (lowVersion[\'Sources\'])
+					document.getElementById(\'yourSources\').style.color = \'red\';
 
-				setInnerHTML(document.getElementById("yourDefault"), lowVersion["Default"] ? lowVersion["Default"] : highYour["Default"]);
-				setInnerHTML(document.getElementById("currentDefault"), highCurrent["Default"]);
-				if (lowVersion["Default"])
-					document.getElementById("yourDefault").style.color = "red";
+				setInnerHTML(document.getElementById(\'yourDefault\'), lowVersion[\'Default\'] ? lowVersion[\'Default\'] : highYour[\'Default\']);
+				setInnerHTML(document.getElementById(\'currentDefault\'), highCurrent[\'Default\']);
+				if (lowVersion[\'Default\'])
+					document.getElementById(\'yourDefault\').style.color = \'red\';
 
-				if (document.getElementById("Templates"))
+				if (document.getElementById(\'Templates\'))
 				{
-					setInnerHTML(document.getElementById("yourTemplates"), lowVersion["Templates"] ? lowVersion["Templates"] : highYour["Templates"]);
-					setInnerHTML(document.getElementById("currentTemplates"), highCurrent["Templates"]);
+					setInnerHTML(document.getElementById(\'yourTemplates\'), lowVersion[\'Templates\'] ? lowVersion[\'Templates\'] : highYour[\'Templates\']);
+					setInnerHTML(document.getElementById(\'currentTemplates\'), highCurrent[\'Templates\']);
 
-					if (lowVersion["Templates"])
-						document.getElementById("yourTemplates").style.color = "red";
+					if (lowVersion[\'Templates\'])
+						document.getElementById(\'yourTemplates\').style.color = \'red\';
 				}
 
-				setInnerHTML(document.getElementById("yourLanguages"), lowVersion["Languages"] ? lowVersion["Languages"] : highYour["Languages"]);
-				setInnerHTML(document.getElementById("currentLanguages"), highCurrent["Languages"]);
-				if (lowVersion["Languages"])
-					document.getElementById("yourLanguages").style.color = "red";
+				setInnerHTML(document.getElementById(\'yourLanguages\'), lowVersion[\'Languages\'] ? lowVersion[\'Languages\'] : highYour[\'Languages\']);
+				setInnerHTML(document.getElementById(\'currentLanguages\'), highCurrent[\'Languages\']);
+				if (lowVersion[\'Languages\'])
+					document.getElementById(\'yourLanguages\').style.color = \'red\';
 			}
 			
 			function smfHideDbColumns()
 			{
-				if (typeof(window.databaseTables) == "undefined")
+				if (!(\'databaseTables\' in window))
 					window.databaseTables = {};
 
 				for (var filename in window.databaseTables)
@@ -1291,7 +1291,7 @@ function show_footer()
 					if (!document.getElementById(filename))
 						continue;
 					
-					document.getElementById(filename).style.display = "none";
+					document.getElementById(filename).style.display = \'none\';
 				}
 			}
 		// ]]></script>';

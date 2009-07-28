@@ -480,11 +480,11 @@ function show_settings()
 				// Get the inner HTML of an element.
 				function getInnerHTML(element)
 				{
-					if (typeof(element.innerHTML) != "undefined")
+					if (\'innerHTML\' in element)
 						return element.innerHTML;
 					else
 					{
-						var returnStr = "";
+						var returnStr = \'\';
 						for (var i = 0; i < element.childNodes.length; i++)
 							returnStr += getOuterHTML(element.childNodes[i]);
 
@@ -494,27 +494,27 @@ function show_settings()
 
 				function getOuterHTML(node)
 				{
-					if (typeof(node.outerHTML) != "undefined")
+					if (\'outerHTML\' in node)
 						return node.outerHTML;
 
-					var str = "";
+					var str = \'\';
 
 					switch (node.nodeType)
 					{
 					// An element.
 					case 1:
-						str += "<" + node.nodeName;
+						str += \'<\' + node.nodeName;
 
 						for (var i = 0; i < node.attributes.length; i++)
 						{
 							if (node.attributes[i].nodeValue != null)
-								str += " " + node.attributes[i].nodeName + "=\"" + node.attributes[i].nodeValue + "\"";
+								str += \' \' + node.attributes[i].nodeName + \'="\' + node.attributes[i].nodeValue + \'"\';
 						}
 
-						if (node.childNodes.length == 0 && in_array(node.nodeName.toLowerCase(), ["hr", "input", "img", "link", "meta", "br"]))
-							str += " />";
+						if (node.childNodes.length == 0 && in_array(node.nodeName.toLowerCase(), [\'hr\', \'input\', \'img\', \'link\', \'meta\', \'br\']))
+							str += \' />\';
 						else
-							str += ">" + getInnerHTML(node) + "</" + node.nodeName + ">";
+							str += \'>\' + getInnerHTML(node) + \'</\' + node.nodeName + \'>\';
 						break;
 
 					// 2 is an attribute.
@@ -526,19 +526,19 @@ function show_settings()
 
 					// A CDATA section.
 					case 4:
-						str += "<![CDATA" + "[" + node.nodeValue + "]" + "]>";
+						str += \'<![CDATA\' + \'[\' + node.nodeValue + \']\' + \']>\';
 						break;
 
 					// Entity reference..
 					case 5:
-						str += "&" + node.nodeName + ";";
+						str += \'&\' + node.nodeName + \';\';
 						break;
 
 					// 6 is an actual entity, 7 is a PI.
 
 					// Comment.
 					case 8:
-						str += "<!--" + node.nodeValue + "-->";
+						str += \'<!--\' + node.nodeValue + \'-->\';
 						break;
 					}
 

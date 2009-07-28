@@ -2411,7 +2411,7 @@ function template_profile_signature_modify()
 									<script type="text/javascript"><!-- // --><![CDATA[
 										function tick()
 										{
-											if (typeof(document.forms.creator) != "undefined")
+											if (\'creator\' in document.forms)
 											{
 												calcCharLeft();
 												setTimeout("tick()", 1000);

@@ -43,8 +43,9 @@ function template_find_members()
 			{
 				var theTextBox = window.opener.document.getElementById("', $context['input_box_name'], '");
 
-				if (typeof(membersAdded[name]) != "undefined")
+				if (name in membersAdded)
 					return;
+
 				// If we only accept one name don\'t remember what is there.
 				if (\'', $context['delimiter'], '\' != \'null\')
 					membersAdded[name] = true;

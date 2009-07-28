@@ -388,7 +388,7 @@ function template_main()
 
 	echo '
 			<script type="text/javascript"><!-- // --><![CDATA[
-				if (typeof(window.XMLHttpRequest) != "undefined")
+				if (\'XMLHttpRequest\' in window)
 					aJumpTo[aJumpTo.length] = new JumpTo({
 						sContainerId: "message_index_jump_to",
 						sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':<" + "/label> %dropdown_list%",
@@ -425,13 +425,13 @@ function template_main()
 
 	function modify_topic_keypress(oEvent)
 	{
-		if (typeof(oEvent.keyCode) != "undefined" && oEvent.keyCode == 13)
+		if (\'keyCode\' in oEvent && oEvent.keyCode == 13)
 		{
 			modify_topic_save("', $context['session_id'], '");
-			if (typeof(oEvent.preventDefault) == "undefined")
-				oEvent.returnValue = false;
-			else
+			if (\'preventDefault\' in oEvent)
 				oEvent.preventDefault();
+			else
+				oEvent.returnValue = false;
 		}
 	}
 

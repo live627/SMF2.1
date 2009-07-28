@@ -2289,8 +2289,9 @@ function template_welcome_message()
 			{
 				var smfVer, yourVer;
 
-				if (typeof(window.smfVersion) != "string")
+				if (!(\'smfVersion\' in window))
 					return;
+
 				window.smfVersion = window.smfVersion.replace(/SMF\s?/g, \'\');
 
 				smfVer = document.getElementById("smfVersion");

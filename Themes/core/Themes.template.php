@@ -156,7 +156,7 @@ function template_main()
 
 			function smfSetLatestThemes()
 			{
-				if (typeof(window.smfLatestThemes) != "undefined")
+				if (\'smfLatestThemes\' in window)
 					setInnerHTML(document.getElementById("themeLatest"), window.smfLatestThemes);
 
 				if (tempOldOnload)

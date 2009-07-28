@@ -4217,21 +4217,21 @@ function template_welcome_message()
 	// This defines whether javascript is going to work elsewhere :D
 	echo '
 		<script type="text/javascript"><!-- // --><![CDATA[
-			if (window.XMLHttpRequest && document.getElementById(\'js_works\'))
-			{
+			if (\'XMLHttpRequest\' in window && document.getElementById(\'js_works\'))
 				document.getElementById(\'js_works\').value = 1;
-			}
+
 			// Latest version?
 			function smfCurrentVersion()
 			{
 				var smfVer, yourVer;
 
-				if (typeof(window.smfVersion) != "string")
+				if (!(\'smfVersion\' in window))
 					return;
+
 				window.smfVersion = window.smfVersion.replace(/SMF\s?/g, \'\');
 
-				smfVer = document.getElementById("smfVersion");
-				yourVer = document.getElementById("yourVersion");
+				smfVer = document.getElementById(\'smfVersion\');
+				yourVer = document.getElementById(\'yourVersion\');
 
 				setInnerHTML(smfVer, window.smfVersion);
 
@@ -4243,9 +4243,8 @@ function template_welcome_message()
 
 			// This checks that the script file even exists!
 			if (typeof(smfSelectText) == \'undefined\')
-			{
 				document.getElementById(\'js_script_missing_error\').style.display = \'\';
-			}
+
 		// ]]></script>';
 }
 

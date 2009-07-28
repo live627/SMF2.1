@@ -54,7 +54,7 @@ function template_folder()
 
 	// This is done this way for internationalization reasons.
 	echo '
-			if (typeof(allLabels[-1]) == "undefined")
+			if (!(\'-1\' in allLabels))
 			{
 				for (var o = 0; o < theSelect.options.length; o++)
 					if (theSelect.options[o].value.substr(0, 4) == "rem_")
@@ -69,7 +69,7 @@ function template_folder()
 				var alreadyThere = [], x;
 				for (x in currentLabels[listing[i].value])
 				{
-					if (typeof(toRemove[x]) == "undefined")
+					if (!(x in toRemove))
 					{
 						toRemove[x] = allLabels[x];
 						toRemove.length++;
@@ -79,7 +79,7 @@ function template_folder()
 
 				for (x in allLabels)
 				{
-					if (typeof(alreadyThere[x]) == "undefined")
+					if (!(x in alreadyThere))
 					{
 						toAdd[x] = allLabels[x];
 						toAdd.length++;

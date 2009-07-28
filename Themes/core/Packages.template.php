@@ -595,7 +595,7 @@ function template_browse()
 
 			function smfSetLatestPackages()
 			{
-				if (typeof(window.smfLatestPackages) != "undefined")
+				if (\'smfLatestPackages\' in window)
 					setInnerHTML(document.getElementById("packagesLatest"), window.smfLatestPackages);
 
 				if (tempOldOnload)

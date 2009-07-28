@@ -704,7 +704,7 @@ function template_main()
 	});';
 
 	echo '
-	if (typeof(window.XMLHttpRequest) != "undefined")
+	if (\'XMLHttpRequest\' in window)
 	{
 		var oQuickModify = new QuickModify({
 			sScriptUrl: smf_scripturl,

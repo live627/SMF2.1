@@ -414,7 +414,7 @@ function template_body_below()
 
 				for (var i = codeFix.length - 1; i > 0; i--)
 				{
-					if (typeof(codeFix[i].currentStyle) != \'undefined\' && codeFix[i].currentStyle.overflow == "auto" && (codeFix[i].currentStyle.height == "" || codeFix[i].currentStyle.height == "auto") && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0) && (codeFix[i].offsetHeight != 0 || codeFix[i].className == "code"))
+					if (\'currentStyle\' in codeFix[i] && codeFix[i].currentStyle.overflow == "auto" && (codeFix[i].currentStyle.height == "" || codeFix[i].currentStyle.height == "auto") && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0) && (codeFix[i].offsetHeight != 0 || codeFix[i].className == "code"))
 						codeFix[i].style.height = (codeFix[i].offsetHeight + 36) + "px";
 				}
 			}

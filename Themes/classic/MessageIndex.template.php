@@ -316,7 +316,7 @@ function template_main()
 	</tr>
 </table>
 <script type="text/javascript"><!-- // --><![CDATA[
-	if (typeof(window.XMLHttpRequest) != "undefined")
+	if (\'XMLHttpRequest\' in window)
 		aJumpTo[aJumpTo.length] = new JumpTo({
 			sContainerId: "message_index_jump_to",
 			sJumpToTemplate: "<label class=\"smalltext\" for=\"%select_id%\">', $context['jump_to']['label'], ':<" + "/label> %dropdown_list%",
