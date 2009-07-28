@@ -51,7 +51,7 @@ function template_main()
 		</div>';
 }
 
-+// Template for posting a calendar event.
+// Template for posting a calendar event.
 function template_event_post()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
