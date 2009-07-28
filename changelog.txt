@@ -56,6 +56,7 @@ July 2009
  * Rewrote the PersonalMessage template to match Curve's look and feel. (PersonalMessage.template.php, index.css, quickbuttons.png)
  * Just because post_event isn't convertered to Cuve, doesn't mean we should remove it (Calendar Template) [Bug 3609]
  ! Old column names prevented the core and curve switchout from working properly (upgrade_2-0_*.sql)
+ * The help icon wasn't properly aligned (GenericMenu Template) [Bug 3608]
 
 
 June 2009
