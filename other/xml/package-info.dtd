@@ -15,17 +15,16 @@
 	<!ELEMENT version (#PCDATA)>
 
 	<!-- Installation, uninstallation..  Note that more than one mod file can be used. -->
-	<!-- Note that %packageoptions is defined at the end of this file -->
-	<!ELEMENT install %packageoptions;>
+	<!ELEMENT install (readme?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST install for CDATA #IMPLIED>
 
-	<!ELEMENT uninstall %packageoptions;>
+	<!ELEMENT uninstall (readme?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST uninstall for CDATA #IMPLIED>
 
 	<!-- Upgrade from another version. -->
-	<!ELEMENT upgrade %packageoptions;>
+	<!ELEMENT upgrade (readme?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
 		<!ATTLIST upgrade from CDATA #IMPLIED>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST upgrade for CDATA #IMPLIED>
@@ -36,8 +35,6 @@
 			<!ATTLIST readme type (inline|file) "file">
 			<!-- We can use bbc code if this is true -->
 			<!ATTLIST readme parsebbc (true|false) "false">
-			<!-- We can provide translated versions... Note: THIS ONLY EXISTS IN SMF 2.0 RC2+ -->
-			<!ATTLIST readme lang CDATA "false">
 
 		<!-- Executable PHP code... -->
 		<!ELEMENT code (#PCDATA)>
@@ -111,7 +108,6 @@
 			<!ATTLIST redirect timeout CDATA #IMPLIED>
 
 <!-- These are really common... -->
-<!ENTITY % packageoptions "(readme?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)">
 <!ENTITY nbsp "&#160;">
 <!ENTITY reg "&#174;">
 <!ENTITY copy "&#169;">
