@@ -156,7 +156,6 @@ String.prototype.oCharsetConversion = {
 // Convert a string to an 8 bit representation (like in PHP).
 String.prototype.php_to8bit = function ()
 {
-	alert(typeof(this.oCharsetConversion));
 	if (smf_charset == 'UTF-8')
 	{
 		var n, sReturn = '';
