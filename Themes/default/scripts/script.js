@@ -156,6 +156,7 @@ String.prototype.oCharsetConversion = {
 // Convert a string to an 8 bit representation (like in PHP).
 String.prototype.php_to8bit = function ()
 {
+	alert(typeof(this.oCharsetConversion));
 	if (smf_charset == 'UTF-8')
 	{
 		var n, sReturn = '';
@@ -176,7 +177,7 @@ String.prototype.php_to8bit = function ()
 		return sReturn;
 	}
 
-	else if (!('oCharsetConversion' in this))
+	else if (this.oCharsetConversion.from.length == 0)
 	{
 		switch (smf_charset)
 		{
@@ -271,7 +272,7 @@ String.prototype.php_to8bit = function ()
 	for (var i = 0, n = this.length; i < n; i++)
 	{
 		iOffsetFrom = this.oCharsetConversion.from.indexOf(this.charAt(i));
-		sReturn += iOffsetFrom > - 1 ? this.oCharsetConversion.to.charAt(iOffsetFrom) : (this.charCodeAt(i) > 127 ? '&#' +  this.charCodeAt(i) + ';' : this.charAt(i));
+		sReturn += iOffsetFrom > -1 ? this.oCharsetConversion.to.charAt(iOffsetFrom) : (this.charCodeAt(i) > 127 ? '&#' +  this.charCodeAt(i) + ';' : this.charAt(i));
 	}
 
 	return sReturn
@@ -1334,4 +1335,21 @@ function smfSelectText(oCurElement, bActOnElement)
 	}
 
 	return false;
+}
+
+// A function needed to discern HTML entities from non-western characters.
+function smc_saveEntities(sFormName, aElementNames, sMask)
+{
+	if (typeof(sMask) == 'string')
+	{
+		for (var i = 0, n = document.forms[sFormName].elements.length; i < n; i++)
+			if (document.forms[sFormName].elements[i].id.substr(0, sMask.length) == sMask)
+				aElementNames[aElementNames.length] = document.forms[sFormName].elements[i].name;
+	}
+
+	for (var i = 0, n = aElementNames.length; i < n; i++)
+	{
+		if (aElementNames[i] in document.forms[sFormName])
+			document.forms[sFormName][aElementNames[i]].value = document.forms[sFormName][aElementNames[i]].value.replace(/&#/g, '&#38;#');
+	}
 }

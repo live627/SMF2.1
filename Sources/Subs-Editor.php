@@ -789,7 +789,7 @@ function getMessageIcons($board_id)
 		$icons = array();
 		foreach ($icon_data as $icon)
 		{
-			$icons[] = array(
+			$icons[$icon['filename']] = array(
 				'value' => $icon['filename'],
 				'name' => $icon['title'],
 				'url' => $settings[file_exists($settings['theme_dir'] . '/images/post/' . $icon['filename'] . '.gif') ? 'images_url' : 'default_images_url'] . '/post/' . $icon['filename'] . '.gif',
@@ -798,7 +798,7 @@ function getMessageIcons($board_id)
 		}
 	}
 
-	return $icons;
+	return array_values($icons);
 }
 
 // This is an important yet frustrating function - it attempts to clean up illegal BBC caused by browsers like Opera which don't obey the rules!!!

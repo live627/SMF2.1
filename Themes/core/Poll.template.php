@@ -22,19 +22,11 @@ function template_main()
 
 				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'" ', (isset($context['poll_error']['no_question']) ? ' class="error"' : ''), '>', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + (pollOptionNum - 1) + \']" id="options-\' + (pollOptionNum - 1) + \'" value="" size="25" class="input_text" /><span id="pollMoreOptions"></span>\');
 			}
-
-			function saveEntities()
-			{
-				document.forms.postmodify.question.value = document.forms.postmodify.question.value.replace(/&#/g, "&#38;#");
-				for (var i = 0; i < document.forms.postmodify.elements.length; i++)
-					if (document.forms.postmodify.elements[i].id.substr(0, 8) == "options-")
-						document.forms.postmodify[i].value = document.forms.postmodify[i].value.replace(/&#/g, "&#38;#");
-			}
 		// ]]></script>';
 
 	// Start the main poll form.
 	echo '
-		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); saveEntities();" name="postmodify" id="postmodify">
+		<form action="' . $scripturl . '?action=editpoll2', $context['is_edit'] ? '' : ';add', ';topic=' . $context['current_topic'] . '.' . $context['start'] . '" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this); smc_saveEntities(\'postmodify\', [\'question\'], \'options-\');" name="postmodify" id="postmodify">
 			<table border="0"  width="75%" align="center" cellspacing="1" cellpadding="3" class="bordercolor">
 				<tr class="titlebg">
 					<td>' . $context['page_title'] . '</td>

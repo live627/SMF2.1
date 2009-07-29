@@ -3,12 +3,13 @@ var hide_prefixes = Array();
 
 function modify_topic(topic_id, first_msg_id, cur_session_id, cur_session_var)
 {
-	if (!window.XMLHttpRequest)
+	if (!('XMLHttpRequest' in window))
 		return;
-	if (typeof(window.opera) != "undefined")
+
+	if ('opera' in window)
 	{
-		var test = new XMLHttpRequest();
-		if (typeof(test.setRequestHeader) != "function")
+		var oTest = new XMLHttpRequest();
+		if (!('setRequestHeader' in oTest))
 			return;
 	}
 

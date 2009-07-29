@@ -1451,10 +1451,10 @@ SmfEditor.prototype.checkShortcut = function(oEvent)
 	if (!oEvent.altKey && !oEvent.ctrlKey)
 		return false;
 
-	sReturnCode = false;
+	var sReturnCode = false;
 
 	// Let's take a look at each of our shortcuts shall we?
-	for (i = 0; i < this.aKeyboardShortcuts.length; i++)
+	for (var i = 0, n = this.aKeyboardShortcuts.length; i < n; i++)
 	{
 		// Found something?
 		if (oEvent.altKey == this.aKeyboardShortcuts[i].alt && oEvent.ctrlKey == this.aKeyboardShortcuts[i].ctrl && oEvent.keyCode == this.aKeyboardShortcuts[i].key)
@@ -1467,38 +1467,42 @@ SmfEditor.prototype.checkShortcut = function(oEvent)
 // The actual event check for the above!
 SmfEditor.prototype.shortcutCheck = function(oEvent)
 {
-	sFoundCode = this.checkShortcut(oEvent);
+	var sFoundCode = this.checkShortcut(oEvent);
 
 	// Run it and exit.
-	if (sFoundCode)
+	if (typeof(sFoundCode) == 'string' && sReturnCode != '')
 	{
-		cancelEvent = false;
+		var bCancelEvent = false;
 		if (sFoundCode == 'submit')
 		{
 			// So much to do!
-			submitThisOnce(document.getElementById(this.sFormId));
-			submitonce(document.getElementById(this.sFormId));
-			saveEntities();
-			document.getElementById(this.sFormId).submit();
+			var oForm = document.getElementById(this.sFormId);
+			submitThisOnce(oForm);
+			submitonce(oForm);
+			smc_saveEntities(oForm.name, ['subject', this.sUniqueId, 'guestname', 'evtitle', 'question']);
+			oForm.submit();
 
-			cancelEvent = true;
+			bCancelEvent = true;
 		}
+
 		if (sFoundCode == 'preview')
 		{
 			previewPost();
-			cancelEvent = true;
+			bCancelEvent = true;
 		}
+
 		if (document.getElementById('cmd_' + sFoundCode))
 		{
 			oEmulateObject = document.getElementById('cmd_' + sFoundCode);
 			this.buttonEventHandler(oEmulateObject, 'click');
-			cancelEvent = true;
+			bCancelEvent = true;
 		}
 
-		if (cancelEvent)
+		if (bCancelEvent)
 		{
 			if (is_ie && oEvent.cancelBubble)
 				oEvent.cancelBubble = true;
+
 			else if (oEvent.stopPropagation)
 			{
 				oEvent.stopPropagation();

@@ -33,19 +33,6 @@ function template_main()
 				document.images.icons.src = icon_urls[document.forms.postmodify.icon.options[document.forms.postmodify.icon.selectedIndex].value];
 			}';
 
-	// A function needed to discern HTML entities from non-western characters.
-	echo '
-			function saveEntities()
-			{
-				var textFields = ["subject", "', $context['post_box_name'], '", "guestname", "evtitle", "question"];
-				for (i in textFields)
-					if (document.forms.postmodify.elements[textFields[i]])
-						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
-				for (var i = document.forms.postmodify.elements.length - 1; i >= 0; i--)
-					if (document.forms.postmodify.elements[i].name.indexOf("options") == 0)
-						document.forms.postmodify.elements[i].value = document.forms.postmodify.elements[i].value.replace(/&#/g, "&#38;#");
-			}';
-
 	// Code for showing and hiding additional options.
 	if (!empty($settings['additional_options_collapsable']))
 		echo '
@@ -129,7 +116,7 @@ function template_main()
 	echo '
 		// ]]></script>
 
-		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);saveEntities();" enctype="multipart/form-data" style="margin: 0;">';
+		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'', $context['post_box_name'], '\', \'guestname\', \'evtitle\', \'question\'], \'options\');" enctype="multipart/form-data" style="margin: 0;">';
 
 	// If the user wants to see how their message looks - the preview table is where it's at!
 	echo '
@@ -621,7 +608,7 @@ function template_main()
 				if (window.XMLHttpRequest)
 				{
 					// Opera didn\'t support setRequestHeader() before 8.01.
-					if (typeof(window.opera) != "undefined")
+					if (\'opera\' in window)
 					{
 						var test = new XMLHttpRequest();
 						if (typeof(test.setRequestHeader) != "function")
@@ -902,18 +889,18 @@ function template_quotefast()
 			var quote = \'', $context['quote']['text'], '\';
 			var stage = document.createElement ? document.createElement("DIV") : document.getElementById("temporary_posting_area");
 
-			if (typeof(DOMParser) != "undefined" && typeof(window.opera) == "undefined")
+			if (\'DOMParser\' in window && !(\'opera\' in window))
 			{
 				var xmldoc = new DOMParser().parseFromString("<temp>" + \'', $context['quote']['mozilla'], '\'.replace(/\n/g, "_SMF-BREAK_").replace(/\t/g, "_SMF-TAB_") + "</temp>", "text/xml");
 				quote = xmldoc.childNodes[0].textContent.replace(/_SMF-BREAK_/g, "\n").replace(/_SMF-TAB_/g, "\t");
 			}
-			else if (typeof(stage.innerText) != "undefined")
+			else if (\'innerText\' in stage != "undefined")
 			{
 				setInnerHTML(stage, quote.replace(/\n/g, "_SMF-BREAK_").replace(/\t/g, "_SMF-TAB_").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 				quote = stage.innerText.replace(/_SMF-BREAK_/g, "\n").replace(/_SMF-TAB_/g, "\t");
 			}
 
-			if (typeof(window.opera) != "undefined")
+			if (\'opera\' in window)
 				quote = quote.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, \'"\').replace(/&amp;/g, "&");
 
 			window.opener.editorHandle', $context['post_box_name'], '.InsertText(quote);

@@ -923,7 +923,7 @@ function template_send()
 	<div class="windowbg2">
 		<span class="topslice"><span></span></span>
 		<div class="content">
-			<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);saveEntities();">
+			<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
 						<table border="0" cellpadding="3" width="100%">';
 
 	// To and bcc. Include a button to search for members.
@@ -1102,15 +1102,6 @@ function template_send()
 				), '
 			});
 		';
-
-	echo '
-			function saveEntities()
-			{
-				var textFields = ["subject", "message"];
-				for (i in textFields)
-					if (document.forms.postmodify.elements[textFields[i]])
-						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
-			}';
 
 	echo '
 		// ]]></script>';

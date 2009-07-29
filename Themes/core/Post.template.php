@@ -22,7 +22,7 @@ function template_main()
 			var icon_urls = {';
 	foreach ($context['icons'] as $icon)
 		echo '
-				"', $icon['value'], '": "', $icon['url'], '"', $icon['is_last'] ? '' : ',';
+				', $icon['value'], ': \'', $icon['url'], '\'', $icon['is_last'] ? '' : ',';
 	echo '
 			};';
 
@@ -31,19 +31,6 @@ function template_main()
 			function showimage()
 			{
 				document.images.icons.src = icon_urls[document.forms.postmodify.icon.options[document.forms.postmodify.icon.selectedIndex].value];
-			}';
-
-	// A function needed to discern HTML entities from non-western characters.
-	echo '
-			function saveEntities()
-			{
-				var textFields = ["subject", "', $context['post_box_name'], '", "guestname", "evtitle", "question"];
-				for (i in textFields)
-					if (document.forms.postmodify.elements[textFields[i]])
-						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
-				for (var i = document.forms.postmodify.elements.length - 1; i >= 0; i--)
-					if (document.forms.postmodify.elements[i].name.indexOf("options") == 0)
-						document.forms.postmodify.elements[i].value = document.forms.postmodify.elements[i].value.replace(/&#/g, "&#38;#");
 			}';
 
 	// Code for showing and hiding additional options.
@@ -129,7 +116,7 @@ function template_main()
 	echo '
 		// ]]></script>
 
-		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);saveEntities();" enctype="multipart/form-data" style="margin: 0;">';
+		<form action="', $scripturl, '?action=', $context['destination'], ';', empty($context['current_board']) ? '' : 'board=' . $context['current_board'], '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="', ($context['becomes_approved'] ? '' : 'alert(\'' . $txt['js_post_will_require_approval'] . '\');'), 'submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'', $context['post_box_name'], '\', \'guestname\', \'evtitle\', \'question\'], \'options\');" enctype="multipart/form-data" style="margin: 0;">';
 
 	// If the user wants to see how their message looks - the preview table is where it's at!
 	echo '

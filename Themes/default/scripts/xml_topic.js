@@ -99,10 +99,10 @@ QuickModify.prototype.isXmlHttpCapable = function ()
 		return false;
 
 	// Opera didn't always support POST requests. So test it first.
-	if (typeof(window.opera) != 'undefined')
+	if ('opera' in window)
 	{
-		var test = new XMLHttpRequest();
-		if (typeof(test.setRequestHeader) != 'function')
+		var oTest = new XMLHttpRequest();
+		if (!('setRequestHeader' in oTest))
 			return false;
 	}
 
@@ -233,7 +233,7 @@ QuickModify.prototype.onModifyDone = function (XMLDoc)
 	{
 		// Show new body.
 		var bodyText = '';
-		for (i = 0; i < body.childNodes.length; i++)
+		for (var i = 0; i < body.childNodes.length; i++)
 			bodyText += body.childNodes[i].nodeValue;
 
 		this.sMessageBuffer = this.opt.sTemplateBodyNormal.replace(/%body%/, bodyText.replace(/\$/g, '{&dollarfix;$}')).replace(/\{&dollarfix;\$\}/g,'$');

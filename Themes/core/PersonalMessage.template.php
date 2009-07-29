@@ -904,7 +904,7 @@ function template_send()
 				<td><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</td>
 			</tr><tr>
 				<td class="windowbg">
-					<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);saveEntities();">
+					<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
 						<table border="0" cellpadding="3" width="100%">';
 
 	// If there were errors for sending the PM, show them.
@@ -1096,15 +1096,6 @@ function template_send()
 				), '
 			});
 		';
-
-	echo '
-			function saveEntities()
-			{
-				var textFields = ["subject", "message"];
-				for (i in textFields)
-					if (document.forms.postmodify.elements[textFields[i]])
-						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
-			}';
 
 	echo '
 		// ]]></script>';
