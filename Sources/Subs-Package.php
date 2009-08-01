@@ -1457,20 +1457,21 @@ function matchPackageVersion($version, $versions)
 		$lower = explode('.', $lower);
 		$upper = explode('.', $upper);
 		$version = explode('.', $version);
-echo $version . '||';
 
-		foreach ($lower as $key => $low)
+		foreach ($upper as $key => $high)
 		{
-			// What do to do if this doesn't exist!
-			if (!isset($upper[$key]))
-				$upper[$key] = $low . 'z';
-
-			// What if this doesn't exist!
-			//if (!isset($version[$key]))
-				//return false;
-
-			if (trim($low) > $version[$key] || trim($upper[$key]) < $version[$key])
+			// Let's check that this is at or below the upper... obviously.
+			if (isset($version[$key]) && trim($version[$key]) > trim($high))
 				return false;
+
+			// OK, let's check it's above the lower key... if it exists!
+			if (isset($lower[$key]))
+			{
+				// The version either needs to have something here (i.e. can't be 1.0 on a 1.0.11) AND needs to be greater or equal to.
+				// Note that if it's a range lower[key] might be blank, in that case version can not be set!
+				if (!empty($lower[$key]) && (!isset($version[$key]) || trim($version[$key]) < trim($lower[$key])))
+					return false;
+			}
 		}
 		return true;
 	}
