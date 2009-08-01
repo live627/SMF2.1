@@ -71,10 +71,11 @@ $upcontext['steps'] = array(
 	0 => array(1, 'Login', 'WelcomeLogin', 2),
 	1 => array(2, 'Upgrade Options', 'UpgradeOptions', 2),
 	2 => array(3, 'Backup', 'BackupDatabase', 10),
-	3 => array(4, 'Database Changes', 'DatabaseChanges', 65),
-	4 => array(5, 'Cleanup Mods', 'CleanupMods', 10),
-	5 => array(6, 'Upgrade Templates', 'UpgradeTemplate', 10),
-	6 => array(7, 'Delete Upgrade', 'DeleteUpgrade', 1),
+	3 => array(4, 'Database Changes', 'DatabaseChanges', 70),
+	// This is removed as it doesn't really work right at the moment.
+	//4 => array(5, 'Cleanup Mods', 'CleanupMods', 10),
+	4 => array(5, 'Upgrade Templates', 'UpgradeTemplate', 15),
+	5 => array(6, 'Delete Upgrade', 'DeleteUpgrade', 1),
 );
 // Just to remember which one has files in it.
 $upcontext['database_step'] = 3;
@@ -1858,6 +1859,10 @@ function CleanupMods()
 function UpgradeTemplate()
 {
 	global $upcontext, $boarddir, $boardurl, $db_prefix, $command_line, $is_debug, $sourcedir, $txtChanges, $smcFunc;
+
+	// If we get here withOUT SSI we need to redirect to ensure we get it!
+	if (!isset($_GET['ssi']) || !function_exists('mktree'))
+		redirectLocation('&ssi=1');
 
 	$upcontext['page_title'] = 'Upgrade Templates';
 	$upcontext['sub_template'] = 'upgrade_templates';
