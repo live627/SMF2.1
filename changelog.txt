@@ -8,6 +8,7 @@ August 2009
  ! Hashing admin passwords didn't accept unicode characters (script.js) [Bug 3628]
  ! The ModerationCenter should load admin.css [MederationCenter.php) [Bug 3610]
  ! The LoadTemplate function expected false instead of null for not loading a template (Load.php) [Bug 3619]
+ ! Quick modify was logging the author of a reply incorrectly. (Post.php) [Bug 3627]
 
 
 July 2009

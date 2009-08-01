@@ -2814,7 +2814,7 @@ function JavaScriptModify()
 		}
 
 		if (!empty($moderationAction))
-			logAction('modify', array('topic' => $topic, 'message' => $row['id_msg'], 'member' => $row['id_member_started'], 'board' => $board));
+			logAction('modify', array('topic' => $topic, 'message' => $row['id_msg'], 'member' => $row['id_member'], 'board' => $board));
 	}
 
 	if (isset($_REQUEST['xml']))
