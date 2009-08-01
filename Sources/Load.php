@@ -1635,7 +1635,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Load the compatibility stylesheet if the theme hasn't been updated for 2.0 RC2 (yet).
 	if (isset($settings['theme_version']) && version_compare($settings['theme_version'], '2.0 RC2', '<'))
-		loadTemplate(null, 'compat');
+		loadTemplate(false, 'compat');
 
 	// Any theme-related strings that need to be loaded?
 	if (!empty($settings['require_theme_strings']))
