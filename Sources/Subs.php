@@ -3339,11 +3339,11 @@ function theme_copyright($get_it = false)
 		$data = substr(file_get_contents(__FILE__), 0, 4096);
 		if (preg_match('~\*\s*Software\s+Version:\s+(SMF\s+.+?)[\s]{2}~i', $data, $match) == 0)
 			$match = array('', 'SMF');
-		$forum_copyright = preg_replace('~(<a href="http://www.simplemachines.org/"[^>]+>)</a>~', '$1' . $match[1] . '</a>', $forum_copyright);
+		$forum_copyright = sprintf($forum_copyright, $match[1]);
 	}
-
 	// Put in the version...
-	$forum_copyright = sprintf($forum_copyright, $forum_version);
+	else
+		$forum_copyright = sprintf($forum_copyright, $forum_version);
 
 	echo '
 		<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">';
