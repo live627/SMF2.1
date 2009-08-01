@@ -61,6 +61,7 @@ July 2009
  ! Centralize the saveEntities JavaScript function. (script.js, Display.php, Calendar template, Display template, PersonalMessages template, Poll template, Post template)
  ! Prevent non-unique message icons to be sent to the template, as they are causing a JavaScript error. (Subs-Editor.php)
  ! The JavaScript function php_to8bit didn't capture all 8-bit character set characters. (script.js) [Bug 3004]
+ ! Hashing admin passwords didn't accept unicode characters (script.js) [Bug 3628]
 
 
 June 2009
