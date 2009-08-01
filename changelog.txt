@@ -12,6 +12,7 @@ August 2009
  ! If SMF couldn't find the right language file and fell back, it would cache all other files in the fall back language too. (ManageMaintenance.php) [Bug 3622]
  ! matchPackageVersion wasn't working for all version types. (Subs-Package.php) [Bug 3603]
  ! The copyright wasn't always displayed as intended if someone wants the footer shown in SSI. (Subs.php) [Bug 2596]
+ ! When adding moderators to a board using auto complete, if you didn't click the last one you lost the list. (Subs-Boards.php) [Bug 3288]
 
 
 July 2009

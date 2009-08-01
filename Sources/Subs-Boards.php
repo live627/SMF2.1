@@ -674,7 +674,8 @@ function modifyBoard($board_id, &$boardOptions)
 			}
 
 			// Find all the id_member's for the member_name's in the list.
-			$boardOptions['moderators'] = array();
+			if (empty($boardOptions['moderators']))
+				$boardOptions['moderators'] = array();
 			if (!empty($moderators))
 			{
 				$request = $smcFunc['db_query']('', '
