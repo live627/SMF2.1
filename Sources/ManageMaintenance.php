@@ -1555,7 +1555,9 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		}
 
 		// Try to find the language file.
+		$found = false;
 		foreach ($attempts as $k => $file)
+		{
 			if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
 			{
 				// Are we caching?
@@ -1578,15 +1580,15 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				// Include it for fun.
 				require($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php');
 
-				// Hmmm... do we really still need this?
-				$language_url = $file[3];
-				$lang = $file[2];
+				// Note that we found it.
+				$found = true;
 
 				break;
 			}
+		}
 
 		// That couldn't be found!  Log the error, but *try* to continue normally.
-		if (!isset($language_url))
+		if (!$found)
 		{
 			$invalid_file_found = true;
 
