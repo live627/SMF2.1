@@ -15,20 +15,20 @@
 
 TRUNCATE {$to_prefix}members;
 ALTER TABLE {$to_prefix}members
-CHANGE COLUMN _ _ varchar(8) NOT NULL default '';
+CHANGE COLUMN password_salt password_salt varchar(8) NOT NULL default '';
 
 ---* {$to_prefix}members
 SELECT
-	uid AS id_member, SUBSTRING(username, 1, 255) AS _,
-	SUBSTRING(username, 1, 255) AS _, email AS _,
-	SUBSTRING(password, 1, 64) AS passwd, SUBSTRING(salt, 1, 8) AS _,
+	uid AS id_member, SUBSTRING(username, 1, 255) AS member_name,
+	SUBSTRING(username, 1, 255) AS real_name, email AS email_address,
+	SUBSTRING(password, 1, 64) AS passwd, SUBSTRING(salt, 1, 8) AS password_salt,
 	postnum AS posts, SUBSTRING(usertitle, 1, 255) AS usertitle,
-	lastvisit AS _, IF(usergroup = 4, 1, 0) AS id_group,
-	regdate AS _, SUBSTRING(website, 1, 255) AS _,
-	SUBSTRING(website, 1, 255) AS _,
+	lastvisit AS last_login, IF(usergroup = 4, 1, 0) AS id_group,
+	regdate AS date_registered, SUBSTRING(website, 1, 255) AS website_url,
+	SUBSTRING(website, 1, 255) AS website_title,
 	SUBSTRING(icq, 1, 255) AS icq, SUBSTRING(aim, 1, 16) AS aim,
 	SUBSTRING(yahoo, 1, 32) AS yim, SUBSTRING(msn, 1, 255) AS msn,
-	SUBSTRING(signature, 1, 65534) AS signature, hideemail AS _,
+	SUBSTRING(signature, 1, 65534) AS signature, hideemail AS hide_email,
 	SUBSTRING(buddylist, 1, 255) AS buddy_list,
 	SUBSTRING(regip, 1, 255) AS member_ip, SUBSTRING(regip, 1, 255) AS member_ip2,
 	SUBSTRING(ignorelist, 1, 255) AS pm_ignore_list,
@@ -47,7 +47,7 @@ FROM {$from_prefix}users;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT fid AS id_cat, SUBSTRING(name, 1, 255) AS name, disporder AS _
+SELECT fid AS id_cat, SUBSTRING(name, 1, 255) AS name, disporder AS cat_order
 FROM {$from_prefix}forums
 WHERE type = 'c';
 ---*
@@ -65,9 +65,9 @@ WHERE id_board != 0;
 ---* {$to_prefix}boards
 SELECT
 	fid AS id_board, SUBSTRING(name, 1, 255) AS name,
-	SUBSTRING(description, 1, 65534) AS description, disporder AS _,
-	posts AS _, threads AS _, pid AS id_parent,
-	usepostcounts != 'yes' AS _, '-1,0' AS _
+	SUBSTRING(description, 1, 65534) AS description, disporder AS board_order,
+	posts AS num_posts, threads AS num_topics, pid AS id_parent,
+	usepostcounts != 'yes' AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}forums
 WHERE type = 'f';
 ---*
@@ -83,9 +83,9 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.tid AS id_topic, t.fid AS id_board, t.sticky AS _,
-	t.poll AS id_poll, t.views AS _, t.uid AS id_member_started,
-	ul.uid AS id_member_updated, t.replies AS _, t.closed AS locked,
+	t.tid AS id_topic, t.fid AS id_board, t.sticky AS is_sticky,
+	t.poll AS id_poll, t.views AS num_views, t.uid AS id_member_started,
+	ul.uid AS id_member_updated, t.replies AS num_replies, t.closed AS locked,
 	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg
 FROM {$from_prefix}threads AS t
 	INNER JOIN {$from_prefix}posts AS p
@@ -106,13 +106,13 @@ TRUNCATE {$to_prefix}attachments;
 ---* {$to_prefix}messages 200
 SELECT
 	p.pid AS id_msg, p.tid AS id_topic, t.fid AS id_board, p.uid AS id_member,
-	SUBSTRING(p.username, 1, 255) AS _, p.dateline AS _,
+	SUBSTRING(p.username, 1, 255) AS poster_name, p.dateline AS poster_time,
 	SUBSTRING(p.ipaddress, 1, 255) AS poster_ip,
 	SUBSTRING(IF(p.subject = '', t.subject, p.subject), 1, 255) AS subject,
-	SUBSTRING(u.email, 1, 255) AS _,
-	p.smilieoff = 'no' AS _,
-	SUBSTRING(edit_u.username, 1, 255) AS _,
-	p.edittime AS _,
+	SUBSTRING(u.email, 1, 255) AS poster_email,
+	p.smilieoff = 'no' AS smileys_enabled,
+	SUBSTRING(edit_u.username, 1, 255) AS modified_name,
+	p.edittime AS modified_time,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
 FROM {$from_prefix}posts AS p
@@ -132,10 +132,10 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.pid AS id_poll, SUBSTRING(p.question, 1, 255) AS question, p.closed AS _,
+	p.pid AS id_poll, SUBSTRING(p.question, 1, 255) AS question, p.closed AS voting_locked,
 	t.uid AS id_member,
-	IF(p.timeout = 0, 0, p.dateline + p.timeout * 86400) AS _,
-	SUBSTRING(t.username, 1, 255) AS _
+	IF(p.timeout = 0, 0, p.dateline + p.timeout * 86400) AS expire_time,
+	SUBSTRING(t.username, 1, 255) AS poster_name
 FROM {$from_prefix}polls AS p
 	LEFT JOIN {$from_prefix}threads AS t ON (t.tid = p.tid);
 ---*
@@ -176,7 +176,7 @@ TRUNCATE {$to_prefix}personal_messages;
 ---* {$to_prefix}personal_messages
 SELECT
 	pm.pmid AS id_pm, pm.fromid AS id_member_from, pm.dateline AS msgtime,
-	SUBSTRING(uf.username, 1, 255) AS _,
+	SUBSTRING(uf.username, 1, 255) AS from_name,
 	SUBSTRING(pm.subject, 1, 255) AS subject,
 	SUBSTRING(REPLACE(pm.message, '<br>', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}privatemessages AS pm
