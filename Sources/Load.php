@@ -1753,6 +1753,10 @@ function loadTemplate($template_name, $style_sheets = array(), $fatal = true)
 
 		foreach ($style_sheets as $sheet)
 		{
+			// Prevent the style sheet from being included twice.
+			if (strpos($context['html_headers'], 'id="' . $sheet . '_css"') !== false)
+				continue;
+
 			$sheet_path = file_exists($settings['theme_dir']. '/css/' . $sheet . '.css') ? 'theme_url' : (file_exists($settings['default_theme_dir']. '/css/' . $sheet . '.css') ? 'default_theme_url' : '');
 			if ($sheet_path)
 			{
