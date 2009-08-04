@@ -29,6 +29,9 @@ $txt['lang_rtl'] = false;
 // Capitalize day and month names?
 $txt['lang_capitalize_dates'] = true;
 
+// List of people that have contributed to this translation. (blank for English)
+$txt['translation_credits'] = array();
+
 $txt['days'] = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 $txt['days_short'] = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
 // Months must start with 1 => 'January'. (or translated, of course.)

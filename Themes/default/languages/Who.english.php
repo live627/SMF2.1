@@ -124,6 +124,8 @@ $txt['credits_groups_customize'] = 'Customizers';
 $txt['credits_groups_docs'] = 'Documentation Writers';
 $txt['credits_groups_marketing'] = 'Marketing';
 $txt['credits_groups_internationalizers'] = 'Internationalizers';
+// Replace "English" with the name of this language pack in the string below.
+$txt['credits_groups_translation'] = 'English Translation';
 $txt['credits_groups_translators'] = 'Language Translators';
 $txt['credits_translators_message'] = 'Thank you for your efforts which make it possible for people all around the world to use SMF.';
 $txt['credits_groups_beta'] = 'Beta Testers';

@@ -620,35 +620,48 @@ function Credits($in_admin = false)
 
 			),
 		),
-		array(
-			'title' => $txt['credits_special'],
-			'posttext' => $txt['credits_anyone'],
+	);
+
+	// Give the translators some credit for their hard work.
+	if (!empty($txt['translation_credits']))
+		$context['credits'][] = array(
+			'title' => $txt['credits_groups_translation'],
 			'groups' => array(
 				array(
-					'title' => $txt['credits_groups_translators'],
-					'members' => array(
-						$txt['credits_translators_message'],
-					),
+					'title' => $txt['credits_groups_translation'],
+					'members' => $txt['translation_credits'],
 				),
-				array(
-					'title' => $txt['credits_groups_beta'],
-					'members' => array(
-						$txt['credits_beta_message'],
-					),
+			),
+		);
+
+	$context['credits'][] = array(
+		'title' => $txt['credits_special'],
+		'posttext' => $txt['credits_anyone'],
+		'groups' => array(
+			array(
+				'title' => $txt['credits_groups_translators'],
+				'members' => array(
+					$txt['credits_translators_message'],
 				),
-				array(
-					'title' => $txt['credits_groups_founder'],
-					'members' => array(
-						'Unknown W. &quot;[Unknown]&quot; Brackets',
-					),
+			),
+			array(
+				'title' => $txt['credits_groups_beta'],
+				'members' => array(
+					$txt['credits_beta_message'],
 				),
-				array(
-					'title' => $txt['credits_groups_orignal_pm'],
-					'members' => array(
-						'Jeff Lewis',
-						'Joseph Fung',
-						'David Recordon',
-					),
+			),
+			array(
+				'title' => $txt['credits_groups_founder'],
+				'members' => array(
+					'Unknown W. &quot;[Unknown]&quot; Brackets',
+				),
+			),
+			array(
+				'title' => $txt['credits_groups_orignal_pm'],
+				'members' => array(
+					'Jeff Lewis',
+					'Joseph Fung',
+					'David Recordon',
 				),
 			),
 		),
