@@ -16,7 +16,7 @@ function template_main()
 	if (!empty($context['move_board']))
 		echo '
 		<div class="information">
-			', $context['move_title'], ' [<a href="', $scripturl, '?action=admin;area=manageboards">', $txt['mboards_cancel_moving'], '</a>]', '
+			<p>', $context['move_title'], ' [<a href="', $scripturl, '?action=admin;area=manageboards">', $txt['mboards_cancel_moving'], '</a>]', '</p>
 		</div>';
 
 	// No categories so show a label.
@@ -62,7 +62,7 @@ function template_main()
 						<li', !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? ' id="recycle_board"' : ' ', ' class="windowbg', $alternate ? '' : '2', '" style="padding-left: ', 5 + 30 * $board['child_level'], 'px;', $board['move'] ? 'color: red;' : '', '"><span class="align_left">', $board['name'], !empty($modSettings['recycle_board']) && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] == $board['id'] ? '<a href="' . $scripturl . '?action=admin;area=manageboards;sa=settings"> <img src="' . $settings['images_url'] . '/post/recycled.gif" alt="' . $txt['recycle_board'] . '" border="0" /></a></span>' : '</span>', '
 							<span class="align_right">', $context['can_manage_permissions'] ? '<span class="content"><a href="' . $scripturl . '?action=admin;area=permissions;sa=index;pid=' . $board['permission_profile'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '">' . $txt['mboards_permissions'] . '</a></span>' : '', '
 							<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;move=', $board['id'], '">', $txt['mboards_move'], '</a></span>
-							<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span></span><br style="clear: both;" />
+							<span class="content"><a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], '">', $txt['mboards_modify'], '</a></span></span><br style="clear: right;" />
 						</li>';
 
 			if (!empty($board['move_links']))
@@ -298,22 +298,22 @@ function template_modify_board()
 	// Options for board name and description.
 	echo '
 						<dt>
-							<strong>', $txt['full_name'], ':</strong><br />
-							<span class="smalltext">', $txt['name_on_display'], '</span><br />
+							<strong>', $txt['full_name'], ':</strong>
+							<p class="smalltext">', $txt['name_on_display'], '</p>
 						</dt>
 						<dd>
 							<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" class="input_text" />
 						</dd>
 						<dt>
-							<strong>', $txt['mboards_description'], ':</strong><br />
-							<span class="smalltext">', $txt['mboards_description_desc'], '</span><br />
+							<strong>', $txt['mboards_description'], ':</strong> 
+							<p class="smalltext">', $txt['mboards_description_desc'], '</p>
 						</dt>
 						<dd>
 							<textarea name="desc" rows="3" cols="35">', $context['board']['description'], '</textarea>
 						</dd>
 						<dt>
-							<strong>', $txt['permission_profile'], ':</strong><br />
-							<span class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;' . $context['session_var'] . '=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</span><br />
+							<strong>', $txt['permission_profile'], ':</strong>
+							<p class="smalltext">', $context['can_manage_permissions'] ? sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;' . $context['session_var'] . '=' . $context['session_id']) : strip_tags($txt['permission_profile_desc']), '</p>
 						</dt>
 						<dd>
 							<select name="profile">';
@@ -330,8 +330,8 @@ function template_modify_board()
 							</select>
 						</dd>
 						<dt>
-							<strong>', $txt['mboards_groups'], ':</strong><br />
-							<span class="smalltext">', $txt['mboards_groups_desc'], '</span><br />
+							<strong>', $txt['mboards_groups'], ':</strong>
+							<p class="smalltext">', $txt['mboards_groups_desc'], '</p>
 						</dt>
 						<dd>';
 
@@ -375,8 +375,9 @@ function template_modify_board()
 	if (empty($context['board']['is_recycle']) && !empty($context['board']['topics']))
 		echo '			
 						<div class="information">
-							<p><strong>', $txt['mboards_redirect'],'</strong></p>
-							', $txt['mboards_redirect_disabled'], '</div>';
+							<strong>', $txt['mboards_redirect'],'</strong><br />
+							', $txt['mboards_redirect_disabled'], '
+						</div>';
 	
 	if (!$context['board']['topics'] && empty($context['board']['is_recycle']))
 	{

@@ -942,7 +942,7 @@ function template_show_settings()
 			if ($config_var == '')
 				echo '
 						</dl>
-						<hr size="1" width="100%" class="hrcolor" style="clear: both;" />
+						<hr size="1" width="100%" class="hrcolor" />
 						<dl class="settings">';
 			else
 				echo '

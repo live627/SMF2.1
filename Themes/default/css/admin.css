@@ -255,6 +255,7 @@ ul.packages li
 	border: 1px solid #cacdd3;
 	padding: 0.2em;
 	margin: 1px;
+	clear: right;
 }
 #manage_boards li img
 {
@@ -528,6 +529,62 @@ ul.moderation_notes li
 .post_note
 {
 	width: 85%;
+}
+
+/* Styles for the error log.
+------------------------------------------------- */
+
+h3.grid_header
+{
+	height: 25px;
+}
+
+#error_log
+{
+	width: 100%;
+	border: solid #BBBBBB;
+	border-width: 1px 1px 0;
+}
+
+#error_log td
+{
+	padding: 5px;
+	border-bottom: 1px solid #AFAFAF;
+}
+
+#error_log td.noborder
+{
+	border: none;
+	width: 50%;
+}
+
+#error_log td.border_r
+{
+	border-right: 1px solid #BBBBBB;
+}
+
+#error_log td.windowbg2
+{
+	padding: 8px;
+	line-height: 160%;	
+}
+
+#error_log td.font
+{
+	font: 1.1em bold arial, helvetica, sans-serif;
+}
+
+#error_log .filter_url
+{
+	overflow: hidden; 
+	width: 100%; 
+	white-space: nowrap;
+}
+
+#error_log td div.marginleft
+{
+	float: left;
+	margin: 0 0 0 1ex;
 }
 
 /* ************************************* */

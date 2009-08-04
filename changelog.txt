@@ -15,6 +15,11 @@ August 2009
  ! When adding moderators to a board using auto complete, if you didn't click the last one you lost the list. (Subs-Boards.php) [Bug 3288]
  - No longer attempt to clean up mods on upgrade until this functionality can be proved stable. (upgrade.php) [Bug 1669]
  ! Prevent the loadTemplate function to include CSS files multiple times. (Load.php)
+ - Rid us of the evil known as pngfix.js (Admin.php, pngfix.js)
+ * Use 8-bit PNG's instead of 24-bit PNG's for compatibilty with IE6.
+ * Merged the images for the rounded corners into one file. (index.css, several images)
+ * Made buttons look more like buttons again, and added a bit more padding to things. (index.css, admin.css)
+ * Cleaned up the looks of the Error log. (Errors template)
 
 
 July 2009

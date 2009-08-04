@@ -22,7 +22,7 @@ table
 body
 {
 	background: #E9EEF2 url(../images/theme/backdrop.png) repeat-x;
-	font: 75%/125% verdana, Helvetica, sans-serif;
+	font: 78%/130% verdana, Helvetica, sans-serif;
 	margin: 0 auto;
 	padding: 15px 5%;
 	min-width: 600px;
@@ -60,10 +60,11 @@ form
 
 input, button, select, textarea
 {
-	font: 90%/105% verdana, Helvetica, sans-serif;
+	font: 95%/115% verdana, Helvetica, sans-serif;
 	color: #000000;
 	background: #fff;
 	border: 1px solid #7f9db9;
+	padding: 2px;
 }
 
 /* The font size of textareas should be just a little bit larger. */  
@@ -75,20 +76,23 @@ textarea
 /* Buttons should be styled a bit differently, in order to make them look more button'ish. */
 .button_submit, .button_reset
 {
-	background: #f5f5f5;
+	background: #cde7ff url(../images/theme/submit_bg.png) no-repeat #cde7ff;
 	border: 1px solid #aaa;
 	cursor: pointer;
 	font-weight: normal;
 }
-
 input:hover, textarea:hover, button:hover, select:hover
 {
-	border: 1px solid #74869a;
+	border: solid 1px #454545;
 }
-
+.button_submit:hover, .button_reset:hover
+{
+	border: 1px solid #aaa;
+	background: url(../images/theme/submit_bg.png) no-repeat 0 -218px #cde7ff;
+}
 input:focus, textarea:focus, button:focus, select:focus
 {
-	border: 1px solid #4b6685;
+	border: solid 1px #454545;
 }
 
 /* All input elements that are checkboxes or radio buttons shouldn't have a border around them. */
@@ -115,7 +119,12 @@ h1, h2, h3, h4, h5, h6
 	margin: 0;
 	padding: 0;
 }
-
+.content fieldset
+{
+	border: groove #fff 2px;
+	padding: 1em;
+	margin: 0 0 0.3em 0;
+}
 /* No image should have a border when linked. */
 a img
 {
@@ -531,25 +540,28 @@ a.moderation_link, a.moderation_link:visited
 /* a descriptive style */
 .description
 {
-	padding: 1em;
+	padding: 0.5em 1em 1em 1em;
 	font-size: 0.9em;
-	line-height: 1.5em;
+	line-height: 1.4em;
 	border: solid 1px #bbb;
 	background: #f5f5f0;
 	margin: 0 0 1em 0;
-	overflow: auto;
 }
 /* an informative style */
 .information
 {
-	padding: 1em;
+	padding: 0.5em 1em 1em 1em;
 	font-size: 0.9em;
-	line-height: 1.5em;
+	line-height: 1.3em;
 	border: solid 1px #bbb;
 	background: #f0f6f0;
-	margin: 0 0 1em 0;
+	margin: 0.3em 0 1em 0;
 }
-
+.information p
+{
+	padding: 1em;
+	margin: 0;
+}
 /* AJAX notification bar
 ------------------------------------------------------- */
 #ajax_in_progress
@@ -590,7 +602,7 @@ table.table_grid td
 ------------------------------------------------------- */
 dl.settings
 {
-	clear: both;
+	clear: right;
 	overflow: auto;
 	margin: 0 0 10px 0;
 	padding: 0;
@@ -637,72 +649,85 @@ dl.settings img
 .windowbg span.topslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_topslice.png) top left no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 100% -24px no-repeat;\
+	height: 11px;
 }
 .windowbg span.topslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_topslice2.png) top right no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 0 -24px  no-repeat;
 	height: 11px;
+	width: 12px;
 }
 .windowbg span.botslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_botslice.png) top left no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 100% -35px no-repeat;
+	height: 11px;
 	margin-bottom: 0.2em;
 }
 .windowbg span.botslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_botslice2.png) top right no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 0 -35px no-repeat;
 	height: 11px;
+	width: 12px;
 }
 
 .windowbg2 span.topslice
 {
 	display: block;
-	background: url(../images/theme/windowbg2_topslice.png) top left no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 100% -48px no-repeat;
+	height: 11px;
 }
 .windowbg2 span.topslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg2_topslice2.png) top right no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 0 -48px no-repeat;
 	height: 11px;
+	width: 12px;	
 }
 .windowbg2 span.botslice
 {
 	display: block;
-	background: url(../images/theme/windowbg2_botslice.png) top left no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 100% -59px no-repeat;
+	height: 11px;
 	margin-bottom: 0.2em;
 }
 .windowbg2 span.botslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg2_botslice2.png) top right no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 0 -59px no-repeat;
 	height: 11px;
+	width: 12px;
 }
+
 .approvebg span.topslice
 {
 	display: block;
-	background: url(../images/theme/approvebg_topslice.png) top left no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 100% 0 no-repeat;
+	height: 11px;
 }
 .approvebg span.topslice span
 {
 	display: block;
-	background: url(../images/theme/approvebg_topslice2.png) top right no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 0 0 no-repeat;
 	height: 11px;
+	width: 12px;	
 }
 .approvebg span.botslice
 {
 	display: block;
-	background: url(../images/theme/approvebg_botslice.png) top left no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 100% -11px no-repeat;
+	height: 11px;
 	margin-bottom: 0.2em;
 }
 .approvebg span.botslice span
 {
 	display: block;
-	background: url(../images/theme/approvebg_botslice2.png) top right no-repeat;
+	background: url(../images/theme/windowbg_slices.png) 0 -11px no-repeat;
 	height: 11px;
+	width: 12px;
 }
 
 /* Used for sections that need somewhat larger corners.
@@ -759,7 +784,7 @@ span.lowerframe span
 ------------------------------------------------------- */
 .content
 {
-	padding: 0 0.5em;
+	padding: 1em 1.5em;
 	margin: 0;
 	border: none;
 }
@@ -1162,8 +1187,8 @@ div#upper_section div.news form
 {
 	display: block;
 	margin: 0;
-	font-size: 1em;
-	padding: 0.5em 0;
+	font-size: 0.9em;
+	padding: 1em 0 1.5em 0;
 	border-top: solid #ccc 1px;
 }
 #navigate_section_upper ul li, #navigate_section_lower ul li
@@ -1283,7 +1308,7 @@ h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.righ
 	width: 9px;
 	height: 31px;
 }
-h3.catbg img.icon
+h3.catbg img.icon, h3.catbg img
 {
    float: left;
    margin: 5px 8px 0 0;
@@ -2081,6 +2106,7 @@ tr.titlebg td
 #admin_content
 {
 	clear: left;
+	padding-top: 0.5em;
 }
 #admin_login .centertext
 {
@@ -2089,6 +2115,12 @@ tr.titlebg td
 
 /* Styles for sidebar menus.
 ------------------------------------------------------- */
+#left_admsection h4.catbg span.left,
+#left_admsection h4.catbg span.right
+{
+	width: 9px;
+	height: 31px;
+}
 .left_admmenu, .left_admmenu ul, .left_admmenu li
 {
 	padding: 0;
@@ -2261,10 +2293,6 @@ dl
 {
 	width: 79%;
 	float: right;
-}
-.content
-{
-	padding: 0px 10px;
 }
 #basicinfo h4
 {
