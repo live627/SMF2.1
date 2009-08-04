@@ -20,6 +20,7 @@ August 2009
  * Merged the images for the rounded corners into one file. (index.css, several images)
  * Made buttons look more like buttons again, and added a bit more padding to things. (index.css, admin.css)
  * Cleaned up the looks of the Error log. (Errors template)
+ & Added an extra section to the credits area for crediting translators of the active language pack. (Who.php, index language file, Who language file)
 
 
 July 2009
