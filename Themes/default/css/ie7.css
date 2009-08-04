@@ -1,18 +1,20 @@
-/* special styles for IE7 */
+/* The dropdown menus
+------------------------------------------------------- */
+
 /* the hover effects */
 .dropmenu li:hover, .dropmenu li.hover 
 {  
 	position: static;  
 }  
-/*  the tabled definition lists */
+/* the tabled definition lists */
 dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	float: none;
 	width: auto;
 }
-/* **************** */
-/* from MessageIndex.template */
-/* **************** */
+
+/* Overrides for the messageindex template
+------------------------------------------------------- */
 #messageindex table
 {
 	margin-top: 5px;
@@ -27,9 +29,8 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 	overflow: auto;
 }
 
-/* **************** */
-/* from Display.template */
-/* **************** */
+/* Overrides for the display template
+------------------------------------------------------- */
 #forumposts .postarea .post
 {
 	padding-top: 1em;
@@ -44,7 +45,6 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	height: 1%;
 }
-
 .signature
 {
 	padding: 0 0 0.8em 0;

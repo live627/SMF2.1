@@ -1,5 +1,6 @@
-/* special styles for IE6 */
-/* the main menu */
+/* The dropdown menus
+------------------------------------------------------- */
+
 .dropmenu
 {
 	height: 1%;
@@ -16,52 +17,7 @@
 {
 	text-decoration: none;
 }
-/* use gif for ie6 */
-.dropmenu li ul 
-{
-	background: url(../images/theme/menu_gfx.gif) 0 -100px no-repeat;
-}
 
-/* the active button */
-.dropmenu li a.active
-{
-	background: url(../images/theme/menu_gfx.gif) no-repeat 100% 0;
-}
-.dropmenu li a.active span.firstlevel
-{
-	background: url(../images/theme/menu_gfx.gif) no-repeat 0 0;
-}
-/* the hover effects */
-.dropmenu li a.firstlevel:hover, .dropmenu li.over a.firstlevel
-{
-	background: url(../images/theme/menu_gfx.gif) no-repeat 100% -31px;
-}
-.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li.over a.firstlevel span.firstlevel
-{
-	background: url(../images/theme/menu_gfx.gif) no-repeat 0 -31px;
-}
-.buttonlist ul li a
-{
-    background: url(../images/theme/menu_gfx.gif) no-repeat 0 -60px;
-}
-
-.buttonlist ul li a span
-{
-    background: url(../images/theme/menu_gfx.gif) no-repeat 100% -60px;
-}
-.buttonlist ul li a:hover span
-{
-    background: url(../images/theme/menu_gfx.gif) no-repeat 100% 0;
-}
-/* the active one */
-.buttonlist ul li a.active
-{
-    background: url(../images/theme/menu_gfx.gif) no-repeat 0 -30px;
-}
-.buttonlist ul li a.active span
-{
-    background: url(../images/theme/menu_gfx.gif) no-repeat 100% -30px;
-}
 /* the page section*/
 .pagesecttion 
 {
@@ -76,15 +32,16 @@
 {
     height: 65px;
 }
-/*  the tabled definition lists */
+
+/* the tabled definition lists */
 dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	float: none;
 	width: auto;
 }
-/* **************** */
-/* from MessageIndex.template */
-/* **************** */
+
+/* Overrides for the message index template
+------------------------------------------------------- */
 #messageindex table
 {
 	margin-top: 5px;
@@ -99,9 +56,8 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 	overflow: auto;
 }
 
-/* **************** */
-/* from Display.template */
-/* **************** */
+/* Overrides for the display template
+------------------------------------------------------- */
 #forumposts .postarea
 {
 	margin-left: 0px;
@@ -131,9 +87,9 @@ dl.settings dd, #creator dd, dl.stats dd, dl.register_form dd
 {
 	padding: 0 0 0.8em 0;
 }
-/* ******************* */
-/* Admin.template */
-/* ************************ */
+
+/* Overrides for the admin template
+------------------------------------------------------- */
 #main_admsection
 {
 	height: 655px;

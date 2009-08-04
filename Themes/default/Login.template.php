@@ -150,7 +150,7 @@ function template_maintenance()
 			', $context['title'], '
 		</h3>
 		<p class="description">
-			<img class="align_left" src="', $settings['images_url'], '/construction.gif" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
+			<img class="align_left" src="', $settings['images_url'], '/construction.png" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
 			', $context['description'], '<br style="clear: both;" />
 		</p>
 		<h4 class="titlebg"><span class="left"></span><span class="right"></span>

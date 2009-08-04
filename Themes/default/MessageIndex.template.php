@@ -15,12 +15,6 @@ function template_main()
 	<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['parent_boards'], '</h3>
 	<div class="table_frame">
 		<table class="table_list">
-			<thead>
-				<tr><th colspan="4"></th></tr>
-			</thead>
-			<tfoot>
-				<tr><td colspan="4"></td></tr>
-			</tfoot>
 			<tbody class="content">	';
 
 		foreach ($context['boards'] as $board)

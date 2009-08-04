@@ -1,4 +1,4 @@
-/* Styles for the general looks for the Curve theme.
+/* Styles for the general looks for the Core theme.
 ------------------------------------------------------- */
 
 /* Normal, standard links. */
@@ -41,7 +41,7 @@ body#help_popup
 }
 
 /* use dark grey for the text, leaving black for headers etc */
-body, td, th , tr
+body, td, th, tr
 {
 	color: #444444;
 }
@@ -318,7 +318,7 @@ code
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
-	background: url(../images/theme/caps.png) repeat-x 0 -160px;
+	background: url(../images/titlebg.jpg) #E9F0F6 repeat-x;
 }
 .catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
 {
@@ -326,8 +326,13 @@ code
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
-	background: url(../images/theme/caps.png) repeat-x 0 -200px;
+	background: url(../images/catbg.jpg) #88A6C0 repeat-x;
 }
+.catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
+{
+	background: url(../images/catbg2.jpg) #A1BFD9 repeat-x;
+}
+
 /* adjust the table versions of headers */
 tr.titlebg td, tr.titlebg2 td
 {
@@ -614,134 +619,11 @@ dl.settings img
 	margin: 0 10px 0 0;
 }
 
-/* Common styles used to add corners to divisions.
-------------------------------------------------------- */
-.windowbg span.topslice
-{
-	display: block;
-	background: url(../images/theme/windowbg_topslice.png) top left no-repeat;
-}
-.windowbg span.topslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg_topslice2.png) top right no-repeat;
-	height: 11px;
-}
-.windowbg span.botslice
-{
-	display: block;
-	background: url(../images/theme/windowbg_botslice.png) top left no-repeat;
-	margin-bottom: 0.2em;
-}
-.windowbg span.botslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg_botslice2.png) top right no-repeat;
-	height: 11px;
-}
-
-.windowbg2 span.topslice
-{
-	display: block;
-	background: url(../images/theme/windowbg2_topslice.png) top left no-repeat;
-}
-.windowbg2 span.topslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg2_topslice2.png) top right no-repeat;
-	height: 11px;
-}
-.windowbg2 span.botslice
-{
-	display: block;
-	background: url(../images/theme/windowbg2_botslice.png) top left no-repeat;
-	margin-bottom: 0.2em;
-}
-.windowbg2 span.botslice span
-{
-	display: block;
-	background: url(../images/theme/windowbg2_botslice2.png) top right no-repeat;
-	height: 11px;
-}
-.approvebg span.topslice
-{
-	display: block;
-	background: url(../images/theme/approvebg_topslice.png) top left no-repeat;
-}
-.approvebg span.topslice span
-{
-	display: block;
-	background: url(../images/theme/approvebg_topslice2.png) top right no-repeat;
-	height: 11px;
-}
-.approvebg span.botslice
-{
-	display: block;
-	background: url(../images/theme/approvebg_botslice.png) top left no-repeat;
-	margin-bottom: 0.2em;
-}
-.approvebg span.botslice span
-{
-	display: block;
-	background: url(../images/theme/approvebg_botslice2.png) top right no-repeat;
-	height: 11px;
-}
-
-/* Used for sections that need somewhat larger corners.
------------------------------------------------------------ */
-.roundframe
-{
-	background: url(../images/theme/roundframe_repeat.png) repeat-y top left;
-	padding-left: 10px;
-}
-.roundframe div.innerframe
-{
-	padding: 0 10px 0 0;
-	display: block;
-	background: url(../images/theme/roundframe_repeat.png) top right repeat-y;
-}
-div.innerframe dl,div.innerframe dt,div.innerframe p
-{
-	margin: 0;
-}
-div.innerframe p
-{
-	padding: 0.5em;
-}
-span.upperframe
-{
-	padding: 0;
-	display: block;
-	background: url(../images/theme/roundframe.png) top left no-repeat;
-	padding-left: 20px;
-}
-span.upperframe span
-{
-	padding: 0;
-	height: 12px;
-	display: block;
-	background: url(../images/theme/roundframe.png) top right no-repeat;
-}
-span.lowerframe
-{
-	padding: 0;
-	display: block;
-	background: url(../images/theme/roundframe.png) bottom left no-repeat;
-	padding-left: 20px;
-}
-span.lowerframe span
-{
-	padding: 0;
-	height: 12px;
-	display: block;
-	background: url(../images/theme/roundframe.png) bottom right no-repeat;
-}
-
 /* The main content area.
 ------------------------------------------------------- */
 .content
 {
-	padding: 0 0.5em;
+	padding: 0 0.8em;
 	margin: 0;
 	border: none;
 }
@@ -931,6 +813,15 @@ div#menu_toggle a
 	background: #E5E5E8 url('../images/mirrortab_last.gif') top right no-repeat;
 	padding: 8px 12px 3px 6px;
 }
+#adm_submenus
+{
+	padding: 0 0 0 2em;
+}
+#adm_submenus, #adm_submenus ul
+{
+	height: 3em;
+	overflow: auto;
+}
 
 /* Styles for the standard button lists.
 ------------------------------------------------------- */
@@ -1079,32 +970,7 @@ ul#navigation li
 	display: inline;
 }
 
-/* the menu dropdown toggle image */
-div#menu_toggle
-{
-	float: right;
-	margin: 0 10px 0 0;
-	background: url('../images/mirrortab_first.gif') top left no-repeat;
-	padding: 0 0 0 7px;
-}
-
-div#menu_toggle a
-{
-	display: block;
-	background: #E5E5E8 url('../images/mirrortab_last.gif') top right no-repeat;
-	padding: 8px 12px 3px 6px;
-}
-#adm_submenus
-{
-	padding-left: 2em;
-}
-#adm_submenus, #adm_submenus ul
-{
-	height: 3em;
-	overflow: auto;
-}
-
-/* Styles for the general looks for the Curve theme.
+/* Styles for the general looks for the Core theme.
 ------------------------------------------------------- */
 
 /* this is the main container surrounding everything, use this to set forum width, font-size  etc. */
@@ -1416,14 +1282,14 @@ table.table_list tbody.content td.icon
 
 /* This is used for categories, page indexes, and several other areas in the forum.
 .catbg and .catbg2 is for boardindex, while .catbg3 is for messageindex and display headers. */
-.catbg , tr.catbg td , .catbg3 , tr.catbg3 td
+.catbg, tr.catbg td, .catbg3, tr.catbg3 td
 {
 	background: url(../images/catbg.jpg) #88A6C0 repeat-x;
 	color: #ffffff;
 	padding-left: 10px;
 	padding-right: 10px;
 }
-.catbg2 , tr.catbg2 td
+.catbg2, tr.catbg2 td
 {
 	background: url(../images/catbg2.jpg) #A1BFD9 repeat-x;
 	color: #ffffff;
@@ -1444,7 +1310,7 @@ table.table_list tbody.content td.icon
 	color: white;
 	text-decoration: none;
 }
-.catbg a:link, .catbg a:visited , .catbg2 a:link, .catbg2 a:visited
+.catbg a:link, .catbg a:visited, .catbg2 a:link, .catbg2 a:visited
 {
 	color: white;
 	text-decoration: none;
@@ -1836,6 +1702,10 @@ ul.postingbuttons li
 	clear: right;
 	margin: 1em 0 0 16em;
 }
+
+/* Styles for the quick reply area.
+---------------------------------------------------- */
+
 #quickReplyOptions div
 {
 	text-align: center;
@@ -1866,9 +1736,6 @@ ul.postingbuttons li
 	display: inline;
 }
 
-/* Styles for the quick reply area.
----------------------------------------------------- */
-
 #quickReplyWarning
 {
 	width: 20%;
@@ -1885,10 +1752,7 @@ ul.postingbuttons li
 {
 	overflow: hidden;
 }
-#verification_control, #verification_control .smalltext
-{
-	display: inline;
-}
+
 /* The jump to box */
 #display_jump_to
 {
@@ -2324,10 +2188,6 @@ dl
 {
 	width: 79%;
 	float: right;
-}
-.content
-{
-	padding: 0px 10px;
 }
 #basicinfo h4
 {
@@ -3152,7 +3012,7 @@ span.hidelink
 }
 
 /* how links behave in main tab. */
-.maintab_back a:link , .maintab_back a:visited, .maintab_active_back a:link , .maintab_active_back a:visited
+.maintab_back a:link, .maintab_back a:visited, .maintab_active_back a:link, .maintab_active_back a:visited
 {
 	color: white;
 	text-decoration: none;
@@ -3210,7 +3070,7 @@ span.hidelink
 }
 
 /* how links behave in mirror tab. */
-.mirrortab_back a:link , .mirrortab_back a:visited, .mirrortab_active_back a:link , .mirrortab_active_back a:visited
+.mirrortab_back a:link, .mirrortab_back a:visited, .mirrortab_active_back a:link, .mirrortab_active_back a:visited
 {
 	color: white;
 	text-decoration: none;
