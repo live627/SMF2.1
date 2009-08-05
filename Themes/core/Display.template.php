@@ -415,7 +415,7 @@ function template_main()
 
 		// Show the post itself, finally!
 		if ($ignoring)
-			echo '<div class="ignored" id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#msg', $message['id'], '" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
+			echo '<div class="ignored" id="msg_', $message['id'], '_ignored_prompt">', $txt['ignoring_user'], ' <a href="#" id="msg_', $message['id'], '_ignored_link" style="display: none;">', $txt['show_ignore_user_post'], '</a></div>';
 
 		echo '
 					<div class="post">';
@@ -554,7 +554,7 @@ function template_main()
 		// Show the member's signature?
 		if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 			echo '
-					<div class="signature">', $message['member']['signature'], '</div>';
+					<div class="signature" id="msg_', $message['id'], '_signature">', $message['member']['signature'], '</div>';
 
 		echo '
 				</div>
@@ -767,19 +767,31 @@ function template_main()
 	if (!empty($ignoredMsgs))
 	{
 		echo '
-	var ignoreToggles = new Array()';
+	var aIgnoreToggles = new Array();';
 
 		foreach ($ignoredMsgs as $msgid)
 		{
 			echo '
-		ignoreToggles[', $msgid, '] = new smfToggle("ignore_msg_', $msgid, '", false);
-			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_extra_info");
-			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '");
-			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_footer");
-			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_quick_mod");
-			ignoreToggles[', $msgid, '].addTogglePanel("modify_button_', $msgid, '");
-			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_ignored_prompt", true);
-		ignoreToggles[', $msgid, '].toggle()';
+	aIgnoreToggles[', $msgid, '] = new smc_Toggle({
+		bToggleEnabled: true,
+		bCurrentlyCollapsed: true,
+		aSwapableContainers: [
+			\'msg_', $msgid, '_extra_info\',
+			\'msg_', $msgid, '\',
+			\'msg_', $msgid, '_footer\',
+			\'msg_', $msgid, '_quick_mod\',
+			\'modify_button_', $msgid, '\',
+			\'msg_', $msgid, '_signature\'
+			
+		],
+		aSwapLinks: [
+			{
+				sId: \'msg_', $msgid, '_ignored_link\',
+				msgExpanded: \'\',
+				msgCollapsed: ', JavaScriptEscape($txt['show_ignore_user_post']), '
+			}
+		]
+	});';
 		}
 	}
 

@@ -77,7 +77,7 @@ function template_permission_index()
 	{
 		echo '
 			<h3 class="catbg"><span class="left"></span><span class="right"></span>
-				<a href="#" onclick="smfPermissionsPanelToggle.toggle(); return false;"><img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '</a>
+				<img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'selected' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '
 			</h3>
 			<div id="permissions_panel_advanced" class="windowbg">
 			<span class="topslice"><span></span></span>
@@ -169,14 +169,30 @@ function template_permission_index()
 		// Javascript for the advanced stuff.
 		echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
-		var smfPermissionsPanelToggle = new smfToggle("smfPermissionsPanelToggle", ', empty($context['show_advanced_options']) ? 1 : 0, ');
-		smfPermissionsPanelToggle.addToggleImage("permissions_panel_toggle", "/sort_down.gif", "/selected.gif");
-		smfPermissionsPanelToggle.addTogglePanel("permissions_panel_advanced");
-		smfPermissionsPanelToggle.setOptions("admin_preferences", "', $context['session_id'], '", "', $context['session_var'], '", true, 1, "app");';
-
-		if (empty($context['show_advanced_options']))
-			echo '
-		document.getElementById(\'permissions_panel_advanced\').style.display = "none";';
+		var oPermissionsPanelToggle = new smc_Toggle({
+			bToggleEnabled: true,
+			bCurrentlyCollapsed: ', empty($context['show_advanced_options']) ? 'true' : 'false', ',
+			aSwapableContainers: [
+				\'permissions_panel_advanced\'
+			],
+			aSwapImages: [
+				{
+					sId: \'permissions_panel_toggle\',
+					srcExpanded: smf_images_url + \'/sort_down.gif\',
+					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+					srcCollapsed: smf_images_url + \'/selected.gif\',
+					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+				}
+			],
+			oThemeOptions: {
+				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+				sOptionName: \'admin_preferences\',
+				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+				sSessionId: ', JavaScriptEscape($context['session_id']), ',
+				sThemeId: \'1\',
+				sAdditionalVars: \';admin_key=app\'
+			}
+		});';
 
 		echo '
 

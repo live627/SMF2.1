@@ -136,17 +136,7 @@ function template_html_above()
 		$options['collapse_header'] = !empty($_COOKIE['upshrink']);
 
 	// Output any remaining HTML headers. (from mods, maybe?)
-	echo $context['html_headers'], '
-
-	<script type="text/javascript"><!-- // --><![CDATA[
-		// Create the main header object.
-		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
-		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		mainHeader.setOptions("collapse_header", "', $context['session_id'], '", "', $context['session_var'], '");
-		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
-		mainHeader.addTogglePanel("upshrinkHeader");
-		mainHeader.addTogglePanel("upshrinkHeader2");
-	// ]]></script>';
+	echo $context['html_headers']; 
 
 	echo '
 </head>
@@ -318,10 +308,43 @@ function template_body_above()
 			</tr>
 		</table>
 
-		<a href="javascript:void(0);" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" style="margin: 2px 2ex 2px 0;" border="0" /></a>';
+		<img id="upshrink" src="', $settings['images_url'], '/upshrink.gif" alt="*" title="', $txt['upshrink_description'], '" style="margin: 2px 2ex 2px 0; display: none;" border="0" />';
 
 		// Show the menu here, according to the menu sub template.
 		template_menu();
+
+
+	// Define the upper_section toggle in JavaScript.
+	echo '
+		<script type="text/javascript"><!-- // --><![CDATA[
+			var oMainHeaderToggle = new smc_Toggle({
+				bToggleEnabled: true,
+				bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
+				aSwapableContainers: [
+					\'upshrinkHeader\',
+					\'upshrinkHeader2\'
+				],
+				aSwapImages: [
+					{
+						sId: \'upshrink\',
+						srcExpanded: smf_images_url + \'/upshrink.gif\',
+						altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+						srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+						altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+					}
+				],
+				oThemeOptions: {
+					bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+					sOptionName: \'collapse_header\',
+					sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+					sSessionId: ', JavaScriptEscape($context['session_id']), '
+				},
+				oCookieOptions: {
+					bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
+					sCookieName: \'upshrink\'
+				}
+			});
+		// ]]></script>';
 
 	echo '
 	</div>';

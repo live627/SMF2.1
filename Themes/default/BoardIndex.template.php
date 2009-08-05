@@ -17,19 +17,9 @@ function template_main()
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
 		echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		// Create the main header object.
-		var smfNewsFadeToggle = new smfToggle("smfFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
-		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '", "', $context['session_var'], '");
-		smfNewsFadeToggle.addToggleImage("newsupshrink", "/collapse.gif", "/expand.gif");
-		smfNewsFadeToggle.addTogglePanel("smfFadeScroller");
-	</script>
 	<div id="newsfader">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<a href="#" onclick="smfNewsFadeToggle.toggle(); return false;">
-				<img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" />
-			</a>
+			<img id="newsupshrink" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="display: none;" />
 			', $txt['news'], '
 		</h3>
 		<ul class="reset" id="smfFadeScroller"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
@@ -43,12 +33,41 @@ function template_main()
 	</div>
 	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/fader.js"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
+
 		// Create a news fader object.
 		var oNewsFader = new smf_NewsFader({
 			sSelf: \'oNewsFader\',
 			sFaderControlId: \'smfFadeScroller\',
-			sItemTemplate: \'<strong>%1$s</strong>\',
+			sItemTemplate: ', JavaScriptEscape('<strong>%1$s</strong>'), ',
 			iFadeDelay: ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], '
+		});
+
+		// Create the news fader toggle.
+		var smfNewsFadeToggle = new smc_Toggle({
+			bToggleEnabled: true,
+			bCurrentlyCollapsed: ', empty($options['collapse_news_fader']) ? 'false' : 'true', ',
+			aSwapableContainers: [
+				\'smfFadeScroller\'
+			],
+			aSwapImages: [
+				{
+					sId: \'newsupshrink\',
+					srcExpanded: smf_images_url + \'/collapse.gif\',
+					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+					srcCollapsed: smf_images_url + \'/expand.gif\',
+					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+				}
+			],
+			oThemeOptions: {
+				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+				sOptionName: \'collapse_news_fader\',
+				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+				sSessionId: ', JavaScriptEscape($context['session_id']), '
+			},
+			oCookieOptions: {
+				bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
+				sCookieName: \'newsupshrink\'
+			}
 		});
 	// ]]></script>';
 	}
@@ -242,23 +261,12 @@ function template_info_center()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
-	// Info center collapse object.
-	echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		// And create the info center object.
-		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
-		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '", "', $context['session_var'], '");
-		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
-		infoHeader.addTogglePanel("upshrinkHeaderIC");
-	// ]]></script>';
-
 	// Here's where the "Info Center" starts...
 	echo '
 	<span class="upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
 		<h3 class="catbg"><span class="left"></span><span class="right"></span>
-			<a href="#" onclick="infoHeader.toggle(); return false;"><img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" /></a>
+			<img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />
 			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
 		</h3>
 		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
@@ -432,7 +440,40 @@ function template_info_center()
 
 	echo '
 		</div>
-	</div></div>
+	</div></div>';
+
+	// Info center collapse object.
+	echo '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		var oInfoCenterToggle = new smc_Toggle({
+			bToggleEnabled: true,
+			bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
+			aSwapableContainers: [
+				\'upshrinkHeaderIC\'
+			],
+			aSwapImages: [
+				{
+					sId: \'upshrink_ic\',
+					srcExpanded: smf_images_url + \'/collapse.gif\',
+					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+					srcCollapsed: smf_images_url + \'/expand.gif\',
+					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+				}
+			],
+			oThemeOptions: {
+				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+				sOptionName: \'collapse_header\',
+				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+				sSessionId: ', JavaScriptEscape($context['session_id']), '
+			},
+			oCookieOptions: {
+				bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
+				sCookieName: \'upshrinkIC\'
+			}
+		});
+	// ]]></script>';
+
+	echo '
 	<span class="lowerframe"><span></span></span>';
 }
 ?>

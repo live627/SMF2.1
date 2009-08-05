@@ -23,44 +23,66 @@ function template_main()
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
 		echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		// Create the main header object.
-		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
-		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '", "', $context['session_var'], '");
-		smfNewsFadeToggle.addToggleImage("newsupshrink", "/collapse.gif", "/expand.gif");
-		smfNewsFadeToggle.addTogglePanel("smfNewsFader");
-	// ]]></script>
 <div class="tborder" style="margin-bottom: 2ex;">
 	<table border="0" width="100%" cellspacing="1" cellpadding="0">
 		<tr class="titlebg" align="center">
-			<td><a href="#" onclick="smfNewsFadeToggle.toggle(); return false;"><img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>', $txt['news'], '</td>
+			<td><img id="newsupshrink" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex; display: none;" />', $txt['news'], '</td>
 		</tr>
 		<tr>
-			<td valign="middle" align="center" style="height: 60px;', empty($options['collapse_news_fader']) ? '' : ' display: none;', '">';
+			<td valign="middle" align="center" style="height: 60px;" id="smfNewsFaderContainer">';
 
 		// Prepare all the javascript settings.
 		echo '
 				<div class="windowbg2" id="smfNewsFader">
 					<div id="smfFadeScroller"><strong>', $context['news_lines'][0], '</strong></div>
 				</div>
-				<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
-				<script type="text/javascript"><!-- // --><![CDATA[
-					// Create a news fader object.
-					var oNewsFader = new smf_NewsFader({
-						sSelf: \'oNewsFader\',
-						sFaderControlId: \'smfFadeScroller\',
-						aFaderItems: [
-							"',
-							implode('",
-							"', $context['fader_news_lines']), '"],
-						sItemTemplate: \'<strong>%1$s</strong>\',
-						iFadeDelay: ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], '
-					});
-				// ]]></script>
 			</td>
 		</tr>
 	</table>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
+	<script type="text/javascript"><!-- // --><![CDATA[
+
+		// Create a news fader object.
+		var oNewsFader = new smf_NewsFader({
+			sSelf: \'oNewsFader\',
+			sFaderControlId: \'smfFadeScroller\',
+			aFaderItems: [
+				"',
+				implode('",
+				"', $context['fader_news_lines']), '"],
+			sItemTemplate: ', JavaScriptEscape('<strong>%1$s</strong>'), ',
+			iFadeDelay: ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], '
+		});
+
+		// Create the news fader toggle.
+		var smfNewsFadeToggle = new smc_Toggle({
+			bToggleEnabled: true,
+			bCurrentlyCollapsed: ', empty($options['collapse_news_fader']) ? 'false' : 'true', ',
+			aSwapableContainers: [
+				\'smfNewsFaderContainer\'
+			],
+			aSwapImages: [
+				{
+					sId: \'newsupshrink\',
+					srcExpanded: smf_images_url + \'/collapse.gif\',
+					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+					srcCollapsed: smf_images_url + \'/expand.gif\',
+					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+				}
+			],
+			oThemeOptions: {
+				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+				sOptionName: \'collapse_news_fader\',
+				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+				sSessionId: ', JavaScriptEscape($context['session_id']), '
+			},
+			oCookieOptions: {
+				bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
+				sCookieName: \'newsupshrink\'
+			}
+		});
+	// ]]></script>
+
 </div>';
 	}
 

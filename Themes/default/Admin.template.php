@@ -1564,7 +1564,7 @@ function template_download_language()
 		echo '
 				<tr class="titlebg">
 					<td colspan="4">
-						<a href="#" onclick="togglePanel', $theme, '.toggle(); return false;"><img src="', $settings['images_url'], '/sort_down.gif" id="toggle_image_', $theme, '" alt="*" />&nbsp;', isset($context['theme_names'][$theme]) ? $context['theme_names'][$theme] : $theme, '</a>
+						<img src="', $settings['images_url'], '/sort_down.gif" id="toggle_image_', $theme, '" alt="*" />&nbsp;', isset($context['theme_names'][$theme]) ? $context['theme_names'][$theme] : $theme, '
 					</td>
 				</tr>';
 
@@ -1661,17 +1661,26 @@ function template_download_language()
 	{
 		$count = 0;
 		echo '
-		var togglePanel', $theme, ' = new smfToggle("togglePanel', $theme, '", true);
-		togglePanel', $theme, '.addToggleImage("toggle_image_', $theme, '", "/sort_down.gif", "/selected.gif");';
-
-		// Stick in all the panels.
+			var oTogglePanel_', $theme, ' = new smc_Toggle({
+				bToggleEnabled: true,
+				bCurrentlyCollapsed: true,
+				aSwapableContainers: [';
 		foreach ($group as $file)
 			echo '
-		togglePanel', $theme, '.addTogglePanel("', $theme, '-', $count++, '");';
-
-		// Now do the toggle...
+					', JavaScriptEscape($theme . '-' . $count++), ',';
 		echo '
-		togglePanel', $theme, '.toggle(1);';
+					null
+				],
+				aSwapImages: [
+					{
+						sId: \'toggle_image_', $theme, '\',
+						srcExpanded: smf_images_url + \'/sort_down.gif\',
+						altExpanded: \'*\',
+						srcCollapsed: smf_images_url + \'/selected.gif\',
+						altCollapsed: \'*\'
+					}
+				]
+			});';
 	}
 
 	echo '

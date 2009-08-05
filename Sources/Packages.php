@@ -346,6 +346,9 @@ function PackageInstallTest()
 	// Now prepare things for the template.
 	foreach ($actions as $action)
 	{
+		// Not failed until proven otherwise.
+		$failed = false;
+
 		if ($action['type'] == 'chmod')
 		{
 			$chmod_files[] = $action['filename'];
@@ -379,7 +382,8 @@ function PackageInstallTest()
 				$context['actions'][] = array(
 					'type' => $txt['execute_modification'],
 					'action' => $smcFunc['htmlspecialchars'](strtr($action['filename'], array($boarddir => '.'))),
-					'description' => $txt['package_action_error']
+					'description' => $txt['package_action_error'],
+					'failed' => true,
 				);
 			}
 
@@ -462,14 +466,16 @@ function PackageInstallTest()
 					$context['actions'][$actual_filename] = array(
 						'type' => $txt['execute_modification'],
 						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
-						'description' => $txt['package_action_missing']
+						'description' => $txt['package_action_missing'],
+						'failed' => true,
 					);
 				}
 				elseif ($mod_action['type'] == 'error')
 					$context['actions'][$actual_filename] = array(
 						'type' => $txt['execute_modification'],
 						'action' => $smcFunc['htmlspecialchars'](strtr($mod_action['filename'], array($boarddir => '.'))),
-						'description' => $txt['package_action_error']
+						'description' => $txt['package_action_error'],
+						'failed' => true,
 					);
 			}
 

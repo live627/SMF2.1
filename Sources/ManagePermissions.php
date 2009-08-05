@@ -160,7 +160,7 @@ function PermissionIndex()
 	loadPermissionProfiles();
 
 	// Are we going to show the advanced options?
-	$context['show_advanced_options'] = !empty($context['admin_preferences']['app']);
+	$context['show_advanced_options'] = empty($context['admin_preferences']['app']);
 
 	// Determine the number of ungrouped members.
 	$request = $smcFunc['db_query']('', '

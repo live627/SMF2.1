@@ -106,7 +106,7 @@ function template_view_package()
 			<thead>
 				<tr class="catbg">
 					<th scope="col" width="20"></th>
-					<th scope="col" "width="30"></th>
+					<th scope="col" width="30"></th>
 					<th scope="col">', $txt['package_install_type'], '</th>
 					<th scope="col" width="50%">', $txt['package_install_action'], '</th>
 					<th scope="col" width="20%">', $txt['package_install_desc'], '</th>
@@ -125,7 +125,7 @@ function template_view_package()
 
 			echo '
 				<tr class="windowbg', $alternate ? '' : '2', '">
-					<td>', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" /></a>' : '', '</td>
+					<td>', isset($packageaction['operations']) ? '<img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" style="display: none;" />' : '', '</td>
 					<td>', $i++, '.</td>
 					<td>', $packageaction['type'], '</td>
 					<td>', $packageaction['action'], '</td>
@@ -216,7 +216,7 @@ function template_view_package()
 				{
 					echo '
 					<tr class="windowbg', $alternate ? '' : '2', '">
-						<td>', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" /></a>' : '', '</td>
+						<td>', isset($packageaction['operations']) ? '<img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" style="display: none;" />' : '', '</td>
 						<td width="30">
 							<input type="checkbox" name="theme_changes[]" value="', !empty($action['value']) ? $action['value'] : '', '" id="dummy_theme_', $id, '" class="input_check" ', (!empty($action['not_mod']) ? '' : 'disabled="disabled"'), ' ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
 						</td>
@@ -300,33 +300,28 @@ function template_view_package()
 	// Toggle options.
 	echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
-		function packageOperation(uniqueId, initialState)
-		{
-			// The id of the field.
-			this.uid = uniqueId;
-			this.operationToggle = new smfToggle(\'operation_\' + uniqueId, initialState);
-			this.operationToggle.addToggleImage(\'operation_img_\' + uniqueId, \'/sort_down.gif\', \'/selected.gif\');
-			this.operationToggle.addTogglePanel(\'operation_\' + uniqueId);
-			this.toggle = toggleOperation;
-
-			function toggleOperation()
-			{
-				this.operationToggle.toggle();
-			}
-		}
-
-		var operationElements = new Array();';
+		var aOperationElements = new Array();';
 
 		// Operations.
 		foreach ($js_operations as $key => $operation)
 		{
 			echo '
-			operationElements[', $key, '] = new packageOperation(', $key, ', false);';
-
-			// Failed?
-			if (!$operation)
-				echo '
-			operationElements[', $key, '].toggle();';
+		aOperationElements[', $key, '] = new smc_Toggle({
+			bToggleEnabled: true,
+			bCurrentlyCollapsed: ', $operation ? 'false' : 'true', ',
+			aSwapableContainers: [
+				\'operation_', $key, '\'
+			],
+			aSwapImages: [
+				{
+					sId: \'operation_img_', $key, '\',
+					srcExpanded: smf_images_url + \'/sort_down.gif\',
+					altExpanded: \'*\',
+					srcCollapsed: smf_images_url + \'/selected.gif\',
+					altCollapsed: \'*\'
+				}
+			]
+		});';
 		}
 
 	echo '
@@ -1107,7 +1102,7 @@ function template_package_list()
 		{
 			echo '
 					<li>
-						<strong><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</strong>';
+						<strong><img id="ps_img_', $i, '" src="', $settings['images_url'], '/upshrink.gif" alt="*" style="display: none;" /> ', $packageSection['title'], '</strong>';
 
 			if (!empty($packageSection['text']))
 				echo '
@@ -1147,7 +1142,7 @@ function template_package_list()
 				{
 					// 1. Some mod [ Download ].
 					echo '
-							<strong><a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
+							<strong><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/upshrink.gif" alt="*" style="display: none;" /> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
@@ -1216,23 +1211,43 @@ function template_package_list()
 			foreach ($context['package_list'] as $section => $ps)
 			{
 				echo '
-
-					var ps_', $section, ' = new smfToggle("package_section_', $section, '", false);
-					ps_', $section, '.useCookie(0);
-					ps_', $section, '.addToggleImage("ps_img_', $section, '", "/upshrink.gif", "/upshrink2.gif");
-					ps_', $section, '.addTogglePanel("package_section_', $section, '");
-					ps_', $section, '.toggle(', count($ps['items']) == 1 || $section_count == 1 ? 'false' : 'true', ');';
+				var oPackageServerToggle_', $section, ' = new smc_Toggle({
+					bToggleEnabled: true,
+					bCurrentlyCollapsed: ', count($ps['items']) == 1 || $section_count == 1 ? 'false' : 'true', ',
+					aSwapableContainers: [
+						\'package_section_', $section, '\'
+					],
+					aSwapImages: [
+						{
+							sId: \'ps_img_', $section, '\',
+							srcExpanded: smf_images_url + \'/upshrink.gif\',
+							altExpanded: \'*\',
+							srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+							altCollapsed: \'*\'
+						}
+					]
+				});';
 
 				foreach ($ps['items'] as $id => $package)
 				{
 					if (!$package['is_text'] && !$package['is_line'] && !$package['is_remote'])
 						echo '
-
-						var ps_', $section, '_pkg_', $id, ' = new smfToggle("package_section_', $section, '_pkg_', $id, '", false);
-						ps_', $section, '_pkg_', $id, '.useCookie(0);
-						ps_', $section, '_pkg_', $id, '.addToggleImage("ps_img_', $section, '_pkg_', $id, '", "/upshrink.gif", "/upshrink2.gif");
-						ps_', $section, '_pkg_', $id, '.addTogglePanel("package_section_', $section, '_pkg_', $id, '");
-						ps_', $section, '_pkg_', $id, '.toggle()';
+				var oPackageToggle_', $section, '_pkg_', $id, ' = new smc_Toggle({
+					bToggleEnabled: true,
+					bCurrentlyCollapsed: true,
+					aSwapableContainers: [
+						\'package_section_', $section, '_pkg_', $id, '\'
+					],
+					aSwapImages: [
+						{
+							sId: \'ps_img_', $section, '_pkg_', $id, '\',
+							srcExpanded: smf_images_url + \'/upshrink.gif\',
+							altExpanded: \'*\',
+							srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+							altCollapsed: \'*\'
+						}
+					]
+				});';
 				}
 			}
 			echo '

@@ -133,13 +133,6 @@ function template_html_above()
 		echo '
 	<link rel="index" href="', $scripturl, '?board=', $context['current_board'], '.0" />';
 
-	// We'll have to use the cookie to remember the header...
-	if ($context['user']['is_guest'])
-	{
-		$options['collapse_header'] = !empty($_COOKIE['upshrink']);
-		$options['collapse_header_ic'] = !empty($_COOKIE['upshrinkIC']);
-	}
-
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'];
 
@@ -162,16 +155,6 @@ function template_html_above()
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css" />';
 
 	echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		// Create the main header object.
-		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
-		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		mainHeader.setOptions("collapse_header", "', $context['session_id'], '", "', $context['session_var'], '");
-		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
-		mainHeader.addTogglePanel("upper_section");
-	// ]]></script>';
-
-	echo '
 </head>
 <body>';
 }
@@ -189,9 +172,7 @@ function template_body_above()
 
 	// the upshrink image, right-floated
 	echo '
-			<a href="#" onclick="mainHeader.toggle(); return false;">
-				<img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" />
-			</a>';
+			<img id="upshrink" src="', $settings['images_url'], '/upshrink.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />';
 	echo '
 			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 
 		</div>
@@ -284,6 +265,37 @@ function template_body_above()
 		echo '
 			</div>
 		</div>';
+
+	// Define the upper_section toggle in JavaScript.
+	echo '
+		<script type="text/javascript"><!-- // --><![CDATA[
+			var oMainHeaderToggle = new smc_Toggle({
+				bToggleEnabled: true,
+				bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
+				aSwapableContainers: [
+					\'upper_section\'
+				],
+				aSwapImages: [
+					{
+						sId: \'upshrink\',
+						srcExpanded: smf_images_url + \'/upshrink.gif\',
+						altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
+						srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+						altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
+					}
+				],
+				oThemeOptions: {
+					bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
+					sOptionName: \'collapse_header\',
+					sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+					sSessionId: ', JavaScriptEscape($context['session_id']), '
+				},
+				oCookieOptions: {
+					bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
+					sCookieName: \'upshrink\'
+				}
+			});
+		// ]]></script>';
 
 		// Show the menu here, according to the menu sub template.
 		template_menu();

@@ -267,7 +267,7 @@ String.prototype.php_to8bit = function ()
 		this.oCharsetConversion.to = this.oCharsetConversion.to.replace(/.\-./g, funcExpandString);
 	}
 
-	var sReturn = '', iOffsetFrom = 0, iOffsetTo = 0;
+	var sReturn = '', iOffsetFrom = 0;
 	for (var i = 0, n = this.length; i < n; i++)
 	{
 		iOffsetFrom = this.oCharsetConversion.from.indexOf(this.charAt(i));
@@ -724,99 +724,191 @@ function expandPages(spanNode, baseURL, firstPage, lastPage, perPage)
 	setInnerHTML(spanNode, replacement);
 }
 
-// An show/hide object - like a header.
-function smfToggle(uniqueId, initialState)
+
+// *** smc_Cookie class.
+function smc_Cookie(oOptions)
 {
-	this.uid = uniqueId;
-	this.state = initialState;
-	this.use_cookie = 0;
-	// Needed for setting theme options - kept hidden!
-	var themeOptions = Array(6);
-	themeOptions[0] = null;
-	this.useCookie = useCookie;
-	this.toggle = toggleHeader;
-	this.setOptions = setOptions;
-	this.imageToggles = new Array();
-	this.panelToggles = new Array();
-	this.addToggleImage = addToggleImage;
-	this.addTogglePanel = addTogglePanel;
+	this.opt = oOptions;
+	this.oCookies = {};
+	this.init();
+}
 
-	// Should the shrinker use a cookie?
-	function useCookie(mode)
+smc_Cookie.prototype.init = function()
+{
+	if ('cookie' in document && document.cookie != '')
 	{
-		this.use_cookie = mode ? 1 : 0;
-	}
-
-	// Actually shrink the header!
-	function toggleHeader(mode)
-	{
-		// Just a toggle?
-		if (mode == null)
-			mode = !this.state;
-
-		// Do we need to set a cookie?
-		if (this.use_cookie)
-			document.cookie = this.uid + '=' + (mode ? 1 : 0);
-
-		// Set a theme option?
-		if (themeOptions[0] != null)
+		var aCookieList = document.cookie.split(';');
+		for (var i = 0, n = aCookieList.length; i < n; i++)
 		{
-			var curMode = themeOptions[3] ? !mode : mode;
-			smf_setThemeOption(themeOptions[0], curMode ? 1 : 0, themeOptions[4] == 0 ? null : themeOptions[3], themeOptions[1], themeOptions[2], themeOptions[5]);
+			var aNameValuePair = aCookieList[i].split('=');
+			this.oCookies[aNameValuePair[0].replace(/^\s+|\s+$/g, '')] = decodeURIComponent(aNameValuePair[1]);
 		}
-
-		// Toggle the images.
-		var x = 0;
-		for (x = 0; x < this.imageToggles.length; x++)
-		{
-			var curImage = document.getElementById(this.imageToggles[x][0]);
-			if (curImage)
-				curImage.src = mode ? this.imageToggles[x][2] : this.imageToggles[x][1];
-		}
-
-		// Now toggle the panels.
-		for (x = 0; x < this.panelToggles.length; x++)
-		{
-			// Inverse?
-			var curMode = this.panelToggles[x][1] ? !mode : mode;
-			var curPanel = document.getElementById(this.panelToggles[x][0]);
-			if (curPanel)
-				curPanel.style.display = curMode ? 'none' : '';
-		}
-
-		this.state = mode;
-	}
-
-	// Set the theme option that should change with this.
-	function setOptions(newThemeOptions, sessID, sessVar, flip, themeID, preferenceKey)
-	{
-		themeOptions[0] = newThemeOptions;
-		themeOptions[1] = sessID;
-		themeOptions[2] = sessVar;
-		themeOptions[3] = flip == null ? 0 : 1;
-		themeOptions[4] = themeID == null ? 0 : themeID;
-		themeOptions[5] = preferenceKey == null ? '' : ';admin_key=' + preferenceKey;
-	}
-
-	// Add an image to toggle (id, mode = 0 image, mode = 1 image)
-	function addToggleImage(imageID, mode0Image, mode1Image, useImagePath)
-	{
-		var curIndex = this.imageToggles.length;
-		this.imageToggles[curIndex] = Array(3);
-		this.imageToggles[curIndex][0] = imageID;
-		this.imageToggles[curIndex][1] = (useImagePath == null ? smf_images_url : '') + mode0Image;
-		this.imageToggles[curIndex][2] = (useImagePath == null ? smf_images_url : '') + mode1Image;
-	}
-
-	// Add a panel which should toggle with the header.
-	function addTogglePanel(panelID, flip)
-	{
-		var curIndex = this.panelToggles.length;
-		this.panelToggles[curIndex] = Array(2);
-		this.panelToggles[curIndex][0] = panelID;
-		this.panelToggles[curIndex][1] = flip == null ? 0 : 1;
 	}
 }
+
+smc_Cookie.prototype.get = function(sKey)
+{
+	return sKey in this.oCookies ? this.oCookies[sKey] : null;
+}
+
+smc_Cookie.prototype.set = function(sKey, sValue)
+{
+	document.cookie = sKey + '=' + encodeURIComponent(sValue);
+}
+
+
+// *** smc_Toggle class.
+function smc_Toggle(oOptions)
+{
+	this.opt = oOptions;
+	this.bCollapsed = false;
+	this.oCookie = null;
+	this.init();
+}
+
+smc_Toggle.prototype.init = function ()
+{
+	// The master switch can disable this toggle fully.
+	if ('bToggleEnabled' in this.opt && !this.opt.bToggleEnabled)
+		return;
+
+	// If cookies are enabled and they were set, override the initial state.
+	if ('oCookieOptions' in this.opt && this.opt.oCookieOptions.bUseCookie)
+	{
+		// Initialize the cookie handler.
+		this.oCookie = new smc_Cookie({});
+
+		// Check if the cookie is set.
+		var cookieValue = this.oCookie.get(this.opt.oCookieOptions.sCookieName)
+		if (cookieValue != null)
+			this.opt.bCurrentlyCollapsed = cookieValue == '1';
+	}
+
+	// If the init state is set to be collapsed, collapse it.
+	if (this.opt.bCurrentlyCollapsed)
+		this.changeState(true);
+
+	// Initialize the images to be clickable.
+	if ('aSwapImages' in this.opt)
+	{
+		for (var i = 0, n = this.opt.aSwapImages.length; i < n; i++)
+		{
+			var oImage = document.getElementById(this.opt.aSwapImages[i].sId);
+			if (typeof(oImage) == 'object' && oImage != null)
+			{
+				// Display the image in case it was hidden.
+				if (oImage.style.display == 'none')
+					oImage.style.display = '';
+
+				oImage.instanceRef = this;
+				oImage.onclick = function () {
+					this.instanceRef.toggle();
+					this.blur();
+				}
+				oImage.style.cursor = 'pointer';
+
+				// Preload the collapsed image.
+				var oCollapsedImg = new Image();
+				oCollapsedImg.src = this.opt.aSwapImages[i].srcCollapsed;
+			}
+		}
+	}
+
+	// Initialize links.
+	if ('aSwapLinks' in this.opt)
+	{
+		for (var i = 0, n = this.opt.aSwapLinks.length; i < n; i++)
+		{
+			var oLink = document.getElementById(this.opt.aSwapLinks[i].sId);
+			if (typeof(oLink) == 'object' && oLink != null)
+			{
+				// Display the link in case it was hidden.
+				if (oLink.style.display == 'none')
+					oLink.style.display = '';
+
+				oLink.instanceRef = this;
+				oLink.onclick = function () {
+					this.instanceRef.toggle();
+					this.blur();
+					return false;
+				}
+			}
+		}
+	}
+}
+
+// Collapse or expand the section.
+smc_Toggle.prototype.changeState = function(bCollapse)
+{
+	// Handle custom function hook before collapse.
+	if (bCollapse && 'funcOnBeforeCollapse' in this.opt)
+	{
+		this.tmpMethod = this.opt.funcOnBeforeCollapse;
+		this.tmpMethod();
+		delete this.tmpMethod;
+	}
+
+	// Handle custom function hook before expand.
+	else if (!bCollapse && 'funcOnBeforeExpand' in this.opt)
+	{
+		this.tmpMethod = this.opt.funcOnBeforeExpand;
+		this.tmpMethod();
+		delete this.tmpMethod;
+	}
+
+	// Loop through all the images that need to be toggled.
+	if ('aSwapImages' in this.opt)
+	{
+		for (var i = 0, n = this.opt.aSwapImages.length; i < n; i++)
+		{
+			var oImage = document.getElementById(this.opt.aSwapImages[i].sId);
+			if (typeof(oImage) == 'object' && oImage != null)
+			{
+				oImage.src = bCollapse ? this.opt.aSwapImages[i].srcCollapsed : this.opt.aSwapImages[i].srcExpanded;
+				oImage.alt = oImage.title = bCollapse ? this.opt.aSwapImages[i].altCollapsed : this.opt.aSwapImages[i].altExpanded;
+			}
+		}
+	}
+
+	// Loop through all the links that need to be toggled.
+	if ('aSwapLinks' in this.opt)
+	{
+		for (var i = 0, n = this.opt.aSwapLinks.length; i < n; i++)
+		{
+			var oLink = document.getElementById(this.opt.aSwapLinks[i].sId);
+			if (typeof(oLink) == 'object' && oLink != null)
+				setInnerHTML(oLink, bCollapse ? this.opt.aSwapLinks[i].msgCollapsed : this.opt.aSwapLinks[i].msgExpanded);
+		}
+	}
+
+	// Now go through all the sections to be collapsed.
+	for (var i = 0, n = this.opt.aSwapableContainers.length; i < n; i++)
+	{
+		if (this.opt.aSwapableContainers[i] == null)
+			continue;
+
+		var oContainer = document.getElementById(this.opt.aSwapableContainers[i]);
+		if (typeof(oContainer) == 'object' && oContainer != null)
+			oContainer.style.display = bCollapse ? 'none' : '';
+	}
+
+	// Update the new state.
+	this.bCollapsed = bCollapse;
+
+	// Update the cookie, if desired.
+	if ('oCookieOptions' in this.opt && this.opt.oCookieOptions.bUseCookie)
+		this.oCookie.set(this.opt.oCookieOptions.sCookieName, this.bCollapsed ? '1' : '0');
+
+	if ('oThemeOptions' in this.opt && this.opt.oThemeOptions.bUseThemeSettings)
+		smf_setThemeOption(this.opt.oThemeOptions.sOptionName, this.bCollapsed ? '1' : '0', 'sThemeId' in this.opt.oThemeOptions ? this.opt.oThemeOptions.sThemeId : null, this.opt.oThemeOptions.sSessionId, this.opt.oThemeOptions.sSessionVar, 'sAdditionalVars' in this.opt.oThemeOptions ? this.opt.oThemeOptions.sAdditionalVars : null);
+}
+
+smc_Toggle.prototype.toggle = function()
+{
+	// Change the state by reversing the current state.
+	this.changeState(!this.bCollapsed);
+}
+
 
 function ajax_indicator(turn_on)
 {
