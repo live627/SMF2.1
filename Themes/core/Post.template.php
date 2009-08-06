@@ -33,28 +33,6 @@ function template_main()
 				document.images.icons.src = icon_urls[document.forms.postmodify.icon.options[document.forms.postmodify.icon.selectedIndex].value];
 			}';
 
-	// Code for showing and hiding additional options.
-	if (!empty($settings['additional_options_collapsable']))
-		echo '
-			var currentSwap = false;
-			function swapOptions()
-			{
-				document.getElementById("postMoreExpand").src = smf_images_url + "/" + (currentSwap ? "collapse.gif" : "expand.gif");
-				document.getElementById("postMoreExpand").alt = currentSwap ? "-" : "+";
-
-				document.getElementById("postMoreOptions").style.display = currentSwap ? "" : "none";
-
-				if (document.getElementById("postAttachment"))
-					document.getElementById("postAttachment").style.display = currentSwap ? "" : "none";
-				if (document.getElementById("postAttachment2"))
-					document.getElementById("postAttachment2").style.display = currentSwap ? "" : "none";
-
-				if (\'postmodify\' in document.forms)
-					document.forms.postmodify.additional_options.value = currentSwap ? "1" : "0";
-
-				currentSwap = !currentSwap;
-			}';
-
 	// If this is a poll - use some javascript to ensure the user doesn't create a poll with illegal option combinations.
 	if ($context['make_poll'])
 		echo '
@@ -450,7 +428,7 @@ function template_main()
 		echo '
 									<tr>
 										<td colspan="2" style="padding-left: 5ex;">
-											<a href="javascript:swapOptions();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="postMoreExpand" /></a> <a href="javascript:swapOptions();"><strong>', $txt['post_additionalopt'], '</strong></a>
+											<img src="', $settings['images_url'], '/collapse.gif" alt="-" id="postMoreExpand" style="display: none;" /> <strong><a href="#" id="postMoreExpandLink">', $txt['post_additionalopt'], '</a></strong>
 										</td>
 									</tr>';
 
@@ -583,7 +561,7 @@ function template_main()
 			<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />';
 
 	echo '
-			<input type="hidden" name="additional_options" value="', $context['show_additional_options'] ? 1 : 0, '" />
+			<input type="hidden" name="additional_options" id="additional_options" value="', $context['show_additional_options'] ? '1' : '0', '" />
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 			<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 		</form>';
@@ -637,7 +615,7 @@ function template_main()
 								x[x.length] = textFields[i] + "=" + document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 						}
 					for (i in numericFields)
-						if (numericFields[i] in document.forms.postmodify.elements && \'value\' in document.forms.postmodify[numericFields[i]]))
+						if (numericFields[i] in document.forms.postmodify.elements && \'value\' in document.forms.postmodify[numericFields[i]])
 							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
 					for (i in checkboxFields)
 						if (checkboxFields[i] in document.forms.postmodify.elements && checked in document.forms.postmodify.elements[checkboxFields[i]])
@@ -723,11 +701,40 @@ function template_main()
 					smf_codeFix();
 			}';
 
-	// Now some javascript to hide the additional options on load...
-	if (!empty($settings['additional_options_collapsable']) && !$context['show_additional_options'])
+	// Code for showing and hiding additional options.
+	if (!empty($settings['additional_options_collapsable']))
 		echo '
-
-			swapOptions();';
+			var oSwapAdditionalOptions = new smc_Toggle({
+				bToggleEnabled: true,
+				bCurrentlyCollapsed:  ', $context['show_additional_options'] ? 'false' : 'true', ',
+				funcOnBeforeCollapse: function () {
+					document.getElementById(\'additional_options\').value = \'0\';
+				},
+				funcOnBeforeExpand: function () {
+					document.getElementById(\'additional_options\').value = \'1\';
+				},
+				aSwapableContainers: [
+					\'postMoreOptions\',
+					\'postAttachment\',
+					\'postAttachment2\'
+				],
+				aSwapImages: [
+					{
+						sId: \'postMoreExpand\',
+						srcExpanded: smf_images_url + \'/collapse.gif\',
+						altExpanded: \'-\',
+						srcCollapsed: smf_images_url + \'/expand.gif\',
+						altCollapsed: \'+\'
+					}
+				],
+				aSwapLinks: [
+					{
+						sId: \'postMoreExpandLink\',
+						msgExpanded: ', JavaScriptEscape($txt['post_additionalopt']), ',
+						msgCollapsed: ', JavaScriptEscape($txt['post_additionalopt']), '
+					}
+				]
+			});';
 
 	echo '
 		// ]]></script>';
