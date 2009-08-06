@@ -152,7 +152,16 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		// Now it's all drawn out we'll actually setup the box.
 		echo '
 	<script type="text/javascript"><!-- // --><![CDATA[
-		var editorHandle', $editor_id, ' = new SmfEditor(\'', $context['session_id'], '\', \'', $context['session_var'], '\', \'', $editor_id, '\', ', $editor_context['rich_active'] ? 'true' : 'false', ', \'', $editor_context['rich_active'] ? $editor_context['rich_value'] : '', '\', \'', $editor_context['width'], '\', \'', $editor_context['height'], '\', ', empty($modSettings['disable_wysiwyg']) ? 0 : 1, ');';
+		var editorHandle', $editor_id, ' = new SmfEditor({
+			sSessionId: ', JavaScriptEscape($context['session_id']), ',
+			sSessionVar: ', JavaScriptEscape($context['session_var']), ',
+			sUniqueId: ', JavaScriptEscape($editor_id), ',
+			bWysiwyg: ', $editor_context['rich_active'] ? 'true' : 'false', ',
+			sText: ', JavaScriptEscape($editor_context['rich_active'] ? $editor_context['rich_value'] : ''), ',
+			sEditWidth: ', JavaScriptEscape($editor_context['width']), ',
+			sEditHeight: ', JavaScriptEscape($editor_context['height']), ',
+			bRichEditOff: ', empty($modSettings['disable_wysiwyg']) ? 'false' : 'true', '
+		});';
 
 		// Create the controls.
 		if (!empty($context['bbc_tags']) && $context['show_bbc'])
@@ -179,15 +188,15 @@ function template_control_richedit($editor_id, $display_controls = 'all')
 		if (!empty($context['smileys']['popup']) && !$editor_context['disable_smiley_box'])
 		{
 			echo '
-			var smileys = [';
+		var smileys = [';
 			foreach ($context['smileys']['popup'] as $smiley_row)
 			{
 				echo '
-					[';
+			[';
 				foreach ($smiley_row['smileys'] as $smiley)
 				{
 					echo '
-						["', $smiley['code'], '","', $smiley['filename'], '","', $smiley['js_description'], '"]';
+				[', JavaScriptEscape($smiley['code']), ', ', JavaScriptEscape($smiley['filename']), ', ', JavaScriptEscape($smiley['js_description']), ']';
 					if (empty($smiley['last']))
 						echo ',';
 				}

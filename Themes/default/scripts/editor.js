@@ -1,19 +1,20 @@
 // Make an editor!!
-function SmfEditor(sSessionId, sSessionVar, sUniqueId, bWysiwyg, sText, sEditWidth, sEditHeight, bRichEditOff)
+function SmfEditor(oOptions)
 {
+	this.opt = oOptions
+
 	// Create some links to the editor object.
-	this.sUniqueId = sUniqueId;
 	this.oTextHandle = null;
-	this.sCurrentText = typeof(sText) != 'undefined' ? sText : '';
+	this.sCurrentText = 'sText' in this.opt ? this.opt.sText : '';
 
 	// How big?
-	this.sEditWidth = typeof(sEditWidth) != 'undefined' ? sEditWidth : '70%';
-	this.sEditHeight = typeof(sEditHeight) != 'undefined' ? sEditHeight : '150px';
+	this.sEditWidth = 'sEditWidth' in this.opt ? this.opt.sEditWidth : '70%';
+	this.sEditHeight = 'sEditHeight' in this.opt ? this.opt.sEditHeight : '150px';
 
 	this.showDebug = false;
-	this.bRichTextEnabled = typeof(bWysiwyg) != 'undefined' && bWysiwyg ? true : false;
+	this.bRichTextEnabled = 'bWysiwyg' in this.opt && this.opt.bWysiwyg;
 	// This doesn't work on Opera as they cannot restore focus after clicking a BBC button.
-	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari || is_chrome) && !bRichEditOff;
+	this.bRichTextPossible = ((is_ie5up && !is_ie50) || is_ff || is_opera95up || is_safari || is_chrome) && !this.opt.bRichEditOff;
 
 	this.oFrameHandle = null;
 	this.oFrameDocument = null;
@@ -24,8 +25,6 @@ function SmfEditor(sSessionId, sSessionVar, sUniqueId, bWysiwyg, sText, sEditWid
 	this.oResizerElement = null;
 
 	this.oSmileyPopupWindow = null;
-	this.sCurSessionId = sSessionId;
-	this.sCurSessionVar = sSessionVar;
 
 	// Kinda holds all the useful stuff.
 	this.aButtonControls = new Array();
@@ -172,7 +171,7 @@ SmfEditor.prototype.init = function()
 	};
 
 	// Set the textHandle.
-	this.oTextHandle = document.getElementById(this.sUniqueId);
+	this.oTextHandle = document.getElementById(this.opt.sUniqueId);
 
 	// Ensure the currentText is set correctly depending on the mode.
 	if (this.sCurrentText == '' && !this.bRichTextEnabled)
@@ -184,7 +183,7 @@ SmfEditor.prototype.init = function()
 		// Make the iframe itself, stick it next to the current text area, and give it an ID.
 		this.oFrameHandle = document.createElement('iframe');
 		this.oFrameHandle.src = 'about:blank';
-		this.oFrameHandle.id = 'html_' + this.sUniqueId;
+		this.oFrameHandle.id = 'html_' + this.opt.sUniqueId;
 		this.oFrameHandle.className = 'rich_editor_frame';
 		this.oFrameHandle.style.display = 'none';
 		this.oFrameHandle.tabIndex = this.oTextHandle.tabIndex;
@@ -351,15 +350,15 @@ SmfEditor.prototype.init = function()
 	}
 
 	// Make sure we set the message mode correctly.
-	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
+	document.getElementById(this.opt.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
 
 	// Show the resizer.
-	if (document.getElementById(this.sUniqueId + '_resizer') && (!is_opera || is_opera95up) && !(is_chrome && !this.bRichTextEnabled))
+	if (document.getElementById(this.opt.sUniqueId + '_resizer') && (!is_opera || is_opera95up) && !(is_chrome && !this.bRichTextEnabled))
 	{
 		// Currently nothing is being resized...I assume!
 		window.smf_oCurrentResizeEditor = null;
 
-		this.oResizerElement = document.getElementById(this.sUniqueId + '_resizer');
+		this.oResizerElement = document.getElementById(this.opt.sUniqueId + '_resizer');
 		this.oResizerElement.style.display = '';
 
 		createEventListener(this.oResizerElement);
@@ -1199,7 +1198,7 @@ SmfEditor.prototype.requestParsedMessage = function(bView)
 	var sText = this.getText(true, !bView).replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
 
 	this.tmpMethod = sendXMLDocument;
-	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=' + (bView ? 1 : 0) + ';' + this.sCurSessionVar + '=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
+	this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=' + (bView ? 1 : 0) + ';' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml', 'message=' + sText, this.onToggleDataReceived);
 	delete tmpMethod;
 }
 
@@ -1240,7 +1239,7 @@ SmfEditor.prototype.onToggleDataReceived = function(oXMLDoc)
 	this.insertText(sText, true);
 
 	// Record the new status.
-	document.getElementById(this.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
+	document.getElementById(this.opt.sUniqueId + '_mode').value = this.bRichTextEnabled ? 1 : 0;
 
 	// Rebuild the bread crumb!
 	this.updateEditorControls();
@@ -1305,12 +1304,12 @@ SmfEditor.prototype.spellCheckStart = function()
 		var sText = escape(this.getText(true, 1));
 
 		this.tmpMethod = sendXMLDocument;
-		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=0;' + this.sCurSessionVar + '=' + this.sCurSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
+		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=0;' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml', 'message=' + sText, this.onSpellCheckDataReceived);
 		delete tmpMethod;
 	}
 	// Otherwise start spellchecking right away.
 	else
-		spellCheck(this.sFormId, this.sUniqueId);
+		spellCheck(this.sFormId, this.opt.sUniqueId);
 
 	return true;
 }
@@ -1325,7 +1324,7 @@ SmfEditor.prototype.onSpellCheckDataReceived = function(oXMLDoc)
 	sText = sText.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
 	this.oTextHandle.value = sText;
-	spellCheck(this.sFormId, this.sUniqueId);
+	spellCheck(this.sFormId, this.opt.sUniqueId);
 }
 
 // Function called when the Spellchecker is finished and ready to pass back.
@@ -1337,7 +1336,7 @@ SmfEditor.prototype.spellCheckEnd = function()
 		var sText = escape(this.getText(true, 0));
 
 		this.tmpMethod = sendXMLDocument;
-		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=1;' + this.sCurSessionVar + '=' + this.sCurSessionId + ';xml', 'message=' + sText, smf_editorArray[this.iArrayPosition].onSpellCheckCompleteDataReceived);
+		this.tmpMethod(smf_prepareScriptUrl(smf_scripturl) + 'action=jseditor;view=1;' + this.opt.sSessionVar + '=' + this.opt.sSessionId + ';xml', 'message=' + sText, smf_editorArray[this.iArrayPosition].onSpellCheckCompleteDataReceived);
 		delete tmpMethod;
 	}
 	else
@@ -1479,7 +1478,7 @@ SmfEditor.prototype.shortcutCheck = function(oEvent)
 			var oForm = document.getElementById(this.sFormId);
 			submitThisOnce(oForm);
 			submitonce(oForm);
-			smc_saveEntities(oForm.name, ['subject', this.sUniqueId, 'guestname', 'evtitle', 'question']);
+			smc_saveEntities(oForm.name, ['subject', this.opt.sUniqueId, 'guestname', 'evtitle', 'question']);
 			oForm.submit();
 
 			bCancelEvent = true;
