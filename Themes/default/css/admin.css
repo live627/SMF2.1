@@ -44,36 +44,6 @@ ol.search_results li
 	margin: 0;
 }
 /* admin home */
-div.titlebg
-{
-	overflow: hidden;
-	height: 31px;
-	line-height: 31px;
-	font-size: 1.2em;
-	font-weight: bold;
-	margin-bottom: 0.4em;
-}
-div.titlebg span.left,div.titlebg span.right
-{
-	display: block;
-	width: 9px;
-	height: 31px;
-}
-div.titlebg span.left
-{
-	float: left;
-	background: url(../images/theme/caps.png) no-repeat 0 -40px;
-}
-div.titlebg span.right
-{
-	float: right;
-	background: url(../images/theme/caps.png) no-repeat 100% -40px;
-}
-div.titlebg img.icon
-{
-	float: left;
-	margin: 5px 8px 0 0;
-}
 #admin_main_section
 {
 	overflow: hidden;

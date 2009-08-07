@@ -25,7 +25,6 @@ body
 	font: 78%/130% verdana, Helvetica, sans-serif;
 	margin: 0 auto;
 	padding: 15px 5%;
-	min-width: 600px;
 }
 
 /* Help popups require a different styling of the body element. */
@@ -37,7 +36,7 @@ body#help_popup
 }
 
 /* use dark grey for the text, leaving black for headers etc */
-body, td, th , tr
+body, td, th, tr
 {
 	color: #444444;
 }
@@ -259,7 +258,6 @@ code
 	border-top: solid 1px #000;
 	border-bottom: solid 1px #000;
 	line-height: 1.3em;
-	/* Put a nice border around it. */
 	width: 97%;
 	padding: 3px 1em;
 	overflow: auto;
@@ -338,7 +336,6 @@ code
 
 /* Generic, mostly colour-related, classes.
 ------------------------------------------------------- */
-
 .titlebg, .titlebg2, tr.titlebg td, tr.titlebg2 td
 {
 	color: black;
@@ -355,6 +352,39 @@ code
 	font-weight: bold;
 	background: url(../images/theme/caps.png) repeat-x 0 -200px;
 }
+
+/* slightly alternate titlebg */
+div.titlebg
+{
+	overflow: hidden;
+	height: 31px;
+	line-height: 31px;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 0.4em;
+}
+div.titlebg span.left, div.titlebg span.right
+{
+	display: block;
+	width: 9px;
+	height: 31px;
+}
+div.titlebg span.left
+{
+	float: left;
+	background: url(../images/theme/caps.png) no-repeat 0 -40px;
+}
+div.titlebg span.right
+{
+	float: right;
+	background: url(../images/theme/caps.png) no-repeat 100% -40px;
+}
+div.titlebg img.icon
+{
+	float: left;
+	margin: 5px 8px 0 0;
+}
+
 /* adjust the table versions of headers */
 tr.titlebg td, tr.titlebg2 td
 {
@@ -937,6 +967,19 @@ span.lowerframe span
 	left: auto;
 }
 
+/* The dropdown menu toggle image */
+#menu_toggle
+{
+	float: right;
+	margin-right: 10px;
+	padding-top: 3px;
+}
+#menu_toggle span
+{
+	position: relative;
+	right: 5000px;
+}
+
 /* Styles for the standard button lists.
 ------------------------------------------------------- */
 
@@ -1027,18 +1070,6 @@ ul#navigation li
 	display: inline;
 }
 
-/* the menu dropdown toggle image */
-#menu_toggle
-{
-	float: right;
-	margin-right: 10px;
-	padding-top: 3px;
-}
-#menu_toggle span
-{
-	position: relative;
-	right: 5000px;
-}
 #adm_submenus
 {
 	padding-left: 2em;
@@ -1310,8 +1341,8 @@ h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.righ
 }
 h3.catbg img.icon, h3.catbg img
 {
-   float: left;
-   margin: 5px 8px 0 0;
+	float: left;
+	margin: 5px 8px 0 0;
 }
 h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
 {
