@@ -22,6 +22,7 @@ August 2009
  * Cleaned up the looks of the Error log. (Errors template)
  & Added an extra section to the credits area for crediting translators of the active language pack. (Who.php, index language file, Who language file)
  * Added missing CSS for the Edit Poll template (index.css) [Bug 3611]
+ + Allow use of the rgb color syntax in the color tag. (Subs.php) [Bug 3646]
 
 
 July 2009
