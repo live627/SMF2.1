@@ -18,7 +18,7 @@ function template_main()
 	{
 		echo '
 	<div class="tborder marginbottom">
-		<h3 id="newsfader" class="catbg headerpadding">
+		<h3 id="newsfader" class="catbg">
 			<img id="newsupshrink" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="display: none;" />
 			', $txt['news'], '
 		</h3>
@@ -83,7 +83,7 @@ function template_main()
 
 		echo '
 	<div class="categoryframe tborder clearfix">
-		<h3 class="catbg', $category['new'] ? '2' : '', ' headerpadding">';
+		<h3 class="catbg', $category['new'] ? '2' : '', '">';
 
 		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
 			echo '
@@ -209,7 +209,7 @@ function template_main()
 		echo '
 	<div id="modbuttons_bottom" class="modbuttons clearfix">
 		<div id="posticons" class="clearfix marginbottom">
-			<div class="smalltext floatleft headerpadding">
+			<div class="smalltext floatleft">
 				<img src="' . $settings['images_url'] . '/new_some.gif" alt="" align="middle" /> ', $txt['new_posts'], '
 				<img src="' . $settings['images_url'] . '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
 			</div>';
@@ -239,7 +239,7 @@ function template_info_center()
 	// Here's where the "Info Center" starts...
 	echo '
 	<div class="tborder clearfix" id="infocenterframe">
-		<h3 class="catbg headerpadding">
+		<h3 class="catbg">
 			<img id="upshrink_ic" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />
 			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
 		</h3>
@@ -250,7 +250,7 @@ function template_info_center()
 	{
 		echo '
 			<div class="infocenter_section">
-				<h4 class="headerpadding titlebg">', $txt['recent_posts'], '</h4>
+				<h4 class="titlebg">', $txt['recent_posts'], '</h4>
 				<div class="windowbg">
 					<p class="section">
 						<a href="', $scripturl, '?action=recent"><img src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" /></a>
@@ -294,7 +294,7 @@ function template_info_center()
 	{
 		echo '
 			<div class="infocenter_section">
-				<h4 class="headerpadding titlebg">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</h4>
+				<h4 class="titlebg">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</h4>
 				<div class="windowbg">
 					<p class="section">
 						<a href="', $scripturl, '?action=calendar' . '"><img src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a>
@@ -345,7 +345,7 @@ function template_info_center()
 	{
 		echo '
 			<div class="infocenter_section">
-				<h4 class="headerpadding titlebg">', $txt['forum_stats'], '</h4>
+				<h4 class="titlebg">', $txt['forum_stats'], '</h4>
 				<div class="windowbg">
 					<p class="section">
 						<a href="', $scripturl, '?action=stats"><img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
@@ -363,7 +363,7 @@ function template_info_center()
 	// "Users online" - in order of activity.
 	echo '
 			<div class="infocenter_section">
-				<h4 class="headerpadding titlebg">', $txt['online_users'], '</h4>
+				<h4 class="titlebg">', $txt['online_users'], '</h4>
 				<div class="windowbg">
 					<p class="section">
 						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who' . '">' : '', '<img src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
@@ -414,7 +414,7 @@ function template_info_center()
 	{
 		echo '
 			<div class="infocenter_section">
-				<h4 class="headerpadding titlebg">', $txt['personal_message'], '</h4>
+				<h4 class="titlebg">', $txt['personal_message'], '</h4>
 				<div class="windowbg">
 					<p class="section">
 						', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" />', $context['allow_pm'] ? '</a>' : '', '
@@ -434,7 +434,7 @@ function template_info_center()
 	{
 		echo '
 			<div class="infocenter_section">
-				<h4 class="headerpadding titlebg">', $txt['login'], ' <a href="', $scripturl, '?action=reminder" class="smalltext">', $txt['forgot_your_password'], '</a></h4>
+				<h4 class="titlebg">', $txt['login'], ' <a href="', $scripturl, '?action=reminder" class="smalltext">', $txt['forgot_your_password'], '</a></h4>
 				<div class="windowbg">
 					<p class="section">
 						<a href="', $scripturl,  '?action=login"><img src="', $settings['images_url'], '/icons/login.gif', '" alt="', $txt['login'], '" /></a>

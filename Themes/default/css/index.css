@@ -2318,6 +2318,17 @@ tr.windowbg td, tr.windowbg2 td
 	background-color: #ffe4e9;
 	margin-bottom: 1em;
 }
+.errorbox h3
+{
+	padding: 0;
+	margin: 0;
+	font-size: 1.1em;
+	text-decoration: underline;
+}
+.errorbox p
+{
+	margin: 1em 0 0 0;
+}
 .errorbox p.alert
 {
 	padding: 0;
@@ -2326,22 +2337,9 @@ tr.windowbg td, tr.windowbg2 td
 	width: 1em; 
 	font-size: 1.5em;
 }
-.errorbox h3
-{
-	padding: 0;
-	margin: 0;
-	font-size: 1.1em;
-	text-decoration: underline;
-}
 
 /* Styles for the profile section.
 ------------------------------------------------- */
-
-/* Some overloading styles */
-h3.titlebg
-{
-	padding-left: 0;
-}
 
 dl
 {
