@@ -21,6 +21,7 @@ August 2009
  * Made buttons look more like buttons again, and added a bit more padding to things. (index.css, admin.css)
  * Cleaned up the looks of the Error log. (Errors template)
  & Added an extra section to the credits area for crediting translators of the active language pack. (Who.php, index language file, Who language file)
+ * Added missing CSS for the Edit Poll template (index.css) [Bug 3611]
 
 
 July 2009

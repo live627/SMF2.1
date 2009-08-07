@@ -1880,6 +1880,49 @@ ul.quickbuttons li.inline_mod_check
 	display: none;
 }
 
+/* Styles for edit poll section.
+---------------------------------------------------- */
+
+#edit_poll fieldset
+{
+	margin-bottom: 0.5em;
+	border: none;
+	border-bottom: 1px solid #666666;
+	padding: 0.5em;
+	clear: both;
+}
+#edit_poll legend
+{
+	font-weight: bold;
+	color: black;
+}
+#edit_poll div.poll_options 
+{
+	width: 49%;
+	float: left;
+}
+#edit_poll ul.poll_main, ul.poll_options
+{
+	padding: 0;
+	overflow: hidden;
+}
+#edit_poll ul.poll_main li
+{
+	list-style-type: none;
+	margin: 0.2em 0;
+	width: 49%;
+	float: left;
+}
+#edit_poll ul.poll_options
+{
+	margin: 0;
+}
+#edit_poll ul.poll_options li
+{
+	list-style-type: none;
+	margin: 0.3em 0 0 0;
+}
+
 /* Styles for the recent messages section.
 ---------------------------------------------------- */
 
