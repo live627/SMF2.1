@@ -76,8 +76,8 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
-	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc1"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -95,8 +95,8 @@ function template_html_above()
 		var ajax_notification_cancel_text = "', $txt['modify_cancel'], '";
 	// ]]></script>
 	<title>', $context['page_title_html_safe'], '</title>
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc1" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc1" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
 
 	// Please don't index these Mr Robot.
 	if (!empty($context['robot_no_index']))

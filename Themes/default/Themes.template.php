@@ -422,7 +422,7 @@ function template_set_settings()
 							<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit;filename=index.template.php">', $txt['theme_edit_index'], '</a>
 						</li>
 						<li>
-							<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit;filename=style.css">', $txt['theme_edit_style'], '</a>
+							<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit;filename=css/index.css">', $txt['theme_edit_style'], '</a>
 						</li>
 					</ul>
 				</div>
@@ -760,7 +760,7 @@ function template_edit_list()
 				<dd>
 					<ul class="reset">
 						<li><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $txt['themeadmin_edit_browse'], '</a></li>', $theme['can_edit_style'] ? '
-						<li><a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;filename=style.css">' . $txt['themeadmin_edit_style'] . '</a></li>' : '', '
+						<li><a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;filename=css/index.css">' . $txt['themeadmin_edit_style'] . '</a></li>' : '', '
 						<li><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=copy">', $txt['themeadmin_edit_copy_template'], '</a></li>
 					</ul>
 				</dd>

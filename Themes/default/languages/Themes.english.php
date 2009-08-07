@@ -38,7 +38,7 @@ $txt['theme_users'] = 'people are using this theme.';
 $txt['theme_pick_variant'] = 'Select Variant';
 
 $txt['theme_edit'] = 'Edit Theme';
-$txt['theme_edit_style'] = 'Modify the style.css file. (colors, fonts, etc.)';
+$txt['theme_edit_style'] = 'Modify the index.css file. (colors, fonts, etc.)';
 $txt['theme_edit_index'] = 'Modify the index template. (the main template)';
 $txt['theme_edit_no_save'] = 'This file cannot be saved because it is not writable!  Please make sure the following file is 777 or has the proper permissions';
 $txt['theme_edit_save'] = 'Save Changes';

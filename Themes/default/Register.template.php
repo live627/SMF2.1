@@ -474,7 +474,7 @@ function template_verification_sound()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $context['page_title'], '</title>
 		<meta name="robots" content="noindex" />
-		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
+		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
 		<style type="text/css">';
 
 	// Just show the help text and a "close window" link.

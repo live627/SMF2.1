@@ -1473,9 +1473,9 @@ function template_view_operations()
 	<head>
 		<title>', $txt['operation_title'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
-		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
+		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
 	</head>
 	<body>
 	<div class="tborder" style="width: 100%;">

@@ -376,7 +376,7 @@ function template_modify_user_subscription()
 			</div>
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 		</form>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',

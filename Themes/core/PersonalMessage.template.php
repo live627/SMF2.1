@@ -1057,8 +1057,8 @@ function template_send()
 		</table>';
 
 	echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc1"></script>
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?rc2"></script>
+		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var oPersonalMessageSend = new smf_PersonalMessageSend({
 				sSelf: \'oPersonalMessageSend\',

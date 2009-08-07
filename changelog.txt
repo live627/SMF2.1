@@ -23,6 +23,8 @@ August 2009
  & Added an extra section to the credits area for crediting translators of the active language pack. (Who.php, index language file, Who language file)
  * Added missing CSS for the Edit Poll template (index.css) [Bug 3611]
  + Allow use of the rgb color syntax in the color tag. (Subs.php) [Bug 3646]
+ * Updated all remaining references to style.css to css/index.css (several files) [Bug 3649]
+ * Changed file request urls to include ?rc2 instead of ?rc1. (several files)
 
 
 July 2009

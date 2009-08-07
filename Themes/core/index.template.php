@@ -76,8 +76,8 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title_html_safe'], '" />
 	<meta name="keywords" content="', $context['meta_keywords'], '" />
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc1"></script>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc1"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/theme.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -106,12 +106,12 @@ function template_html_above()
 		echo '
 	<link rel="canonical" href="', $context['canonical_url'], '" />';
 
-	// The ?rc1 part of this link is just here to make sure browsers don't cache it wrongly.
+	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc1" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?rc2" />';
 
 	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc1" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '

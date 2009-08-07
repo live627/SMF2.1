@@ -514,7 +514,7 @@ function template_verification_sound()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $context['page_title'], '</title>
 		<meta name="robots" content="noindex" />
-		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
+		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css" />
 	</head>
 	<body style="margin: 1ex;">
 		<div class="popuptext" style="text-align: center;">';

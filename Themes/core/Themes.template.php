@@ -366,7 +366,7 @@ function template_set_settings()
 				<tr class="windowbg2">
 					<td colspan="2" style="padding-bottom: 2ex;">
 						<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit;filename=index.template.php">', $txt['theme_edit_index'], '</a><br />
-						<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit;filename=style.css">', $txt['theme_edit_style'], '</a>
+						<a href="', $scripturl, '?action=admin;area=theme;th=', $context['theme_settings']['theme_id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit;filename=css/index.css">', $txt['theme_edit_style'], '</a>
 					</td>
 				</tr>';
 
@@ -626,7 +626,7 @@ function template_edit_list()
 					<strong><a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $theme['name'], '</a></strong>', !empty($theme['version']) ? ' <em>(' . $theme['version'] . ')</em>' : '', '<br />
 					<div style="padding-left: 5ex; line-height: 3ex;" class="smalltext">
 						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=edit">', $txt['themeadmin_edit_browse'], '</a><br />', $theme['can_edit_style'] ? '
-						<a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;filename=style.css">' . $txt['themeadmin_edit_style'] . '</a><br />' : '', '
+						<a href="' . $scripturl . '?action=admin;area=theme;th=' . $theme['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . ';sa=edit;filename=css/index.css">' . $txt['themeadmin_edit_style'] . '</a><br />' : '', '
 						<a href="', $scripturl, '?action=admin;area=theme;th=', $theme['id'], ';', $context['session_var'], '=', $context['session_id'], ';sa=copy">', $txt['themeadmin_edit_copy_template'], '</a><br />
 					</div>
 				</td>

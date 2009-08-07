@@ -1344,7 +1344,7 @@ function ThemeInstall()
 		mkdir($theme_dir . '/css', 0777);
 
 		// Copy over the default non-theme files.
-		$to_copy = array('/style.css', '/index.php', '/index.template.php', '/css/index.css', '/css/dropmenu.css');
+		$to_copy = array('/index.php', '/index.template.php', '/css/index.css');
 		foreach ($to_copy as $file)
 		{
 			copy($settings['default_theme_dir'] . $file, $theme_dir . $file);
@@ -1714,7 +1714,7 @@ function EditTheme()
 		foreach ($context['themes'] as $key => $theme)
 		{
 			// There has to be a Settings template!
-			if (!file_exists($theme['theme_dir'] . '/index.template.php') && !file_exists($theme['theme_dir'] . '/style.css'))
+			if (!file_exists($theme['theme_dir'] . '/index.template.php') && !file_exists($theme['theme_dir'] . '/css/index.css'))
 				unset($context['themes'][$key]);
 			else
 			{
@@ -1740,7 +1740,7 @@ function EditTheme()
 						}
 					}
 
-				$context['themes'][$key]['can_edit_style'] = file_exists($theme['theme_dir'] . '/style.css');
+				$context['themes'][$key]['can_edit_style'] = file_exists($theme['theme_dir'] . '/css/index.css');
 			}
 		}
 

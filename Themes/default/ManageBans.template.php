@@ -224,7 +224,7 @@ function template_ban_edit()
 	echo ' 
 	</div>
 	<br style="clear: both;" /> 
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var fUpdateStatus = function ()
 		{
@@ -320,7 +320,7 @@ function template_ban_edit_trigger()
 		</form>
 	</div>
 	<br style="clear: both;" /> 
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc1"></script>
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/suggest.js?rc2"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var oAddMemberSuggest = new smc_AutoSuggest({
 			sSelf: \'oAddMemberSuggest\',
