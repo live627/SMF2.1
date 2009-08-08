@@ -1,87 +1,100 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>SMF 2.0 RC1 Update Guide</title>
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
 		<style type="text/css">
-			body
+			#upper_section .user
 			{
-				background-color: #E5E5E8;
-				margin: 0px;
-				padding: 0px;
+				height: 4em;
 			}
-			body, td
+			#upper_section .news
 			{
-				color: #000000;
-				font-size: small;
-				font-family: verdana, sans-serif;
+				height: 80px;
 			}
-			div#header
+			#main_screen
 			{
-				background-image: url(Themes/default/images/catbg.jpg);
-				background-repeat: repeat-x;
-				background-color: #88A6C0;
-				padding: 22px 4% 12px 4%;
-				color: white;
-				font-family: Georgia, serif;
-				font-size: xx-large;
-				border-bottom: 1px solid black;
-				height: 40px;
+				padding: 0 40px;
 			}
-			div#content
+			#main_screen h2
 			{
-				padding: 20px 30px;
+				font-size: 2em;
+				border-bottom: solid 1px #d05800;
+				line-height: 2em;
+				margin: 0 0 0.5em 0;
+				color: #d05800;
 			}
-
-			div.panel
+			#content_section
 			{
-				border: 1px solid gray;
-				background-color: #F6F6F6;
-				margin: 1ex 0 3ex 0;
-				padding: 1.2ex;
+				position: relative; 
+				top: -20px;
 			}
-			div.panel h2
+			#main_content_section
 			{
-				margin: 0;
-				margin-bottom: 2ex;
-				padding-bottom: 3px;
-				border-bottom: 1px dashed black;
-				font-size: 14pt;
+			}
+			#main_content_section .panel
+			{
+				padding: 1em 2em 1em 1em;
+				line-height: 1.6em;
+			}
+			#main_content_section h2
+			{
+				font-size: 1.5em;
+				border-bottom: solid 1px #d05800;
+				line-height: 1.5em;
+				margin: 0 2em 0.5em 0;
+				color: #d05800;
+			}
+			#main_content_section li
+			{
+				line-height: 1.6em;
+				font-weight: bold;
+			}
+			#main_content_section li li
+			{
 				font-weight: normal;
+				line-height: 1.6em;
 			}
-
-			dl
+			#liftup
 			{
-				margin-left: 3ex;
+				position: relative; 
+				top: -70px;
 			}
-			dt
+			#footer_section
 			{
+				position: relative; 
+				top: -20px;
+			}
+			#footer_section
+			{
+				position: relative; 
+				top: -20px;
+			}
+			tt
+			{
+				font-family: verdana, sans-serif;
+				letter-spacing: 1px;
+				font-weight: bold;
+				font-size: 90%;
 				font-style: italic;
-			}
-			dd
-			{
-				margin-bottom: 1ex;
-			}
-
-			div.code
-			{
-				margin: 1ex 3ex 2ex 3ex;
-				padding: 3px;
-				background-color: #FAFAFA;
-				font-family: monospace;
-				overflow: auto;
-			}
-			div.code span.comment
-			{
-				font-style: italic;
-				color: #000066;
 			}
 		</style>
 	</head>
 	<body>
-		<div id="header">
-			<div title="Belgimine">SMF 2.0 RC1 Update Guide</div>
+	<div id="header"><div class="frame">
+		<div id="top_section">
+			<h1 class="forumtitle">SMF 2.0 RC1 Update Guide</h1>
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
 		</div>
-		<div id="content">
+		<div id="upper_section" class="middletext" style="overflow: hidden;">
+			<div class="user"></div>
+			<div class="news normaltext">
+			</div>
+		</div>
+	</div></div>
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">
+			<div id="liftup">
 			<div class="panel">
 				<h2 id="contents">Updating your forum</h2>
 
@@ -135,6 +148,11 @@
 				Good luck!<br />
 				Simple Machines
 			</div>
+			</div>
 		</div>
+	</div></div>
+	<div id="footer_section"><div class="frame" style="height: 50px;">
+		<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+	</div></div>
 	</body>
 </html>

@@ -1863,7 +1863,6 @@ function UpgradeTemplate()
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
 	if (!isset($_GET['ssi']) || !function_exists('mktree'))
 		redirectLocation('&ssi=1');
-
 	$upcontext['page_title'] = 'Upgrade Templates';
 	$upcontext['sub_template'] = 'upgrade_templates';
 	$endl = $command_line ? "\n" : '<br />' . "\n";
@@ -3731,7 +3730,8 @@ function template_upgrade_above()
 		<meta name="robots" content="noindex" />
 		<title>', $txt['upgrade_upgrade_utility'], '</title>
 		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
-		<link rel="stylesheet" type="text/css" href="', ($upcontext['remote_files_available'] ? $smfsite . '/style.css' : $upgradeurl . '?infile_css'), '" />
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css?rc2" />
+		<link rel="stylesheet" type="text/css" href="upgrade.css?rc2" />
 		<script type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
 			var smf_charset = \'', (empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set']), '\';
@@ -3757,52 +3757,50 @@ function template_upgrade_above()
 		// ]]></script>
 	</head>
 	<body>
-		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="', ($upcontext['remote_files_available'] ? $smfsite : 'Themes/default/images'), '/smflogo.gif" style=" float: right;" alt="Simple Machines" border="0" /></a>
-			<div title="Radical Dreamers">', $txt['upgrade_upgrade_utility'], '</div>
+	<div id="header"><div class="frame">
+		<div id="top_section">
+			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
 		</div>
-		<div id="content">
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
-			<tr>
-				<td width="250" valign="top" style="padding-right: 10px;">
-					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
-						<tr>
-							<td class="titlebg">', $txt['upgrade_steps'], '</td>
-						</tr>
-						<tr>
-							<td class="windowbg2">';
+		<div id="upper_section" class="middletext" style="overflow: hidden;">
+			<div class="user"></div>
+			<div class="news normaltext">
+			</div>
+		</div>
+	</div></div>
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">
+			<div id="main-steps">
+				<h2>', $txt['upgrade_progress'], '</h2>
+				<ul>';
 
 	foreach ($upcontext['steps'] as $num => $step)
 		echo '
-						<span class="', $num < $upcontext['current_step'] ? 'stepdone' : ($num == $upcontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">', $txt['upgrade_step'], ' ', $step[0], ': ', $step[1], '</span><br />';
+						<li class="', $num < $upcontext['current_step'] ? 'stepdone' : ($num == $upcontext['current_step'] ? 'stepcurrent' : 'stepwaiting'), '">', $txt['upgrade_step'], ' ', $step[0], ': ', $step[1], '</li>';
 
 	echo '
-							</td>
-						</tr>
-						<tr>
-							<td class="titlebg">', $txt['upgrade_progress'], '</td>
-						</tr>
-						<tr>
-							<td class="windowbg2">
-								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">', $txt['upgrade_overall_progress'], ':</div>
-								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
-									<div id="overall_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $upcontext['overall_percent'], '%</div>
-									<div id="overall_progress" style="width: ', $upcontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
-								</div>';
+					</ul>
+			</div>
+			<div style="float: left; width: 40%;">
+				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: auto;">
+					<div id="overall_text" style="color: #000; position: absolute; margin-left: -5em;">', $upcontext['overall_percent'], '%</div>
+					<div id="overall_progress" style="width: ', $upcontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
+				</div>
+				';
 
 	if (isset($upcontext['step_progress']))
 		echo '
-								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">', $txt['upgrade_step_progress'], ':</div>
-								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
-									<div id="step_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $upcontext['step_progress'], '%</div>
-									<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #FFD000;">&nbsp;</div>
-								</div>';
+				<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: 5px auto; ">
+					<div id="step_text" style="color: #000; position: absolute; margin-left: -5em;">', $upcontext['step_progress'], '%</div>
+					<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #FFD000;">&nbsp;</div>
+				</div>
+				';
 
 	echo '
-								<div id="substep_bar_div" class="smalltext" style="display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">', isset($upcontext['substep_progress_name']) ? trim(strtr($upcontext['substep_progress_name'], array('.' => ''))) : '', ':</div>
-								<div id="substep_bar_div2" style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative; display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">
-									<div id="substep_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : '', '%</div>
-									<div id="substep_progress" style="width: ', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : 0, '%; height: 12pt; z-index: 1; background-color: #EEBAF4;">&nbsp;</div>
+				<div id="substep_bar_div" class="smalltext" style="display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">', isset($upcontext['substep_progress_name']) ? trim(strtr($upcontext['substep_progress_name'], array('.' => ''))) : '', ':</div>
+				<div id="substep_bar_div2" style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; width: 50%; margin: 5px auto; display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">
+					<div id="substep_text" style="color: #000; position: absolute; margin-left: -5em;">', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : '', '%</div>
+				<div id="substep_progress" style="width: ', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : 0, '%; height: 12pt; z-index: 1; background-color: #EEBAF4;">&nbsp;</div>
 								</div>';
 
 	// How long have we been running this?
@@ -3810,18 +3808,15 @@ function template_upgrade_above()
 	$mins = (int) ($elapsed / 60);
 	$seconds = $elapsed - $mins * 60;
 	echo '
-								<div class="smalltext" style="padding: 5px; text-align: center;">', $txt['upgrade_time_elapsed'], ':</div>
-								<div class="smalltext" style="color: blue; text-align: center;"><span id="mins_elapsed">', $mins, '</span> ', $txt['upgrade_time_mins'], ', <span id="secs_elapsed">', $seconds, '</span> ', $txt['upgrade_time_secs'], '.</div>';
-
+								<div class="smalltext" style="padding: 5px; text-align: center;">', $txt['upgrade_time_elapsed'], ':
+									<span id="mins_elapsed">', $mins, '</span> ', $txt['upgrade_time_mins'], ', <span id="secs_elapsed">', $seconds, '</span> ', $txt['upgrade_time_secs'], '.
+								</div>';
 	echo '
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td width="100%" valign="top">
-					<div class="panel">
-						<h2>', $upcontext['page_title'], '</h2>
-						<div style="max-height: 360px; overflow: auto;">';
+			</div>
+			<div id="main_screen" style="clear: both;">
+				<h2>', $upcontext['page_title'], '</h2>
+				<div class="panel">
+					<div style="max-height: 360px; overflow: auto;">';
 }
 
 function template_upgrade_below()
@@ -3859,11 +3854,15 @@ function template_upgrade_below()
 								</div>
 							</form>
 						</div>
-					</div>
-				</td>
-			</tr>
-		</table>
-		</div>';
+				</div>
+			</div>
+		</div>
+	</div></div>
+	<div id="footer_section"><div class="frame" style="height: 40px;">
+		<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+	</div></div>
+	</body>
+</html>';
 
 	// Are we on a pause?
 	if (!empty($upcontext['pause']))
@@ -3888,154 +3887,6 @@ function template_upgrade_below()
 			}
 		// ]]></script>';
 	}
-
-	echo '
-	</body>
-</html>';
-}
-
-// This is just a backup, incase simplemachines.org is not responding.
-function template_css()
-{
-	echo 'body
-{
-	background-color: #E5E5E8;
-	margin: 0px;
-	padding: 0px;
-}
-body, td
-{
-	color: #000000;
-	font-size: small;
-	font-family: verdana, sans-serif;
-}
-div#header
-{
-	background-image: url(Themes/default/images/catbg.jpg);
-	background-repeat: repeat-x;
-	background-color: #88A6C0;
-	padding: 22px 4% 12px 4%;
-	color: white;
-	font-family: Georgia, serif;
-	font-size: xx-large;
-	border-bottom: 1px solid black;
-	height: 40px;
-}
-div#content
-{
-	padding: 20px 30px;
-}
-div.error_message
-{
-	border: 2px dashed red;
-	background-color: #E1E1E1;
-	margin: 1ex 4ex;
-	padding: 1.5ex;
-}
-div.panel
-{
-	border: 1px solid gray;
-	background-color: #F6F6F6;
-	margin: 0 0 10px 0;
-	padding: 1.2ex;
-	overflow: auto;
-}
-div.panel h2
-{
-	margin: 0;
-	margin-bottom: 0.5ex;
-	padding-bottom: 3px;
-	border-bottom: 1px dashed black;
-	font-size: 14pt;
-	font-weight: normal;
-}
-div.panel h3
-{
-	margin: 0;
-	margin-bottom: 2ex;
-	font-size: 10pt;
-	font-weight: normal;
-}
-form
-{
-	margin: 0;
-}
-td.textbox
-{
-	padding-top: 2px;
-	font-weight: bold;
-	white-space: nowrap;
-	padding-left: 2ex;
-}
-td.leftcol
-{
-	width: 20%;
-	vertical-align: text-top;
-}
-/* This is used for tables that have a grid/border background color (such as the topic listing.) */
-.bordercolor
-{
-	background-color: #ADADAD;
-	padding: 0px;
-}
-.stepdone
-{
-	color: darkgreen;
-	font-size: xx-small;
-}
-.stepcurrent
-{
-	color: darkblue;
-	font-size: xx-small;
-	font-weight: bold;
-}
-.stepwaiting
-{
-	color: black;
-	font-size: xx-small;
-}
-.smalltext
-{
-	font-size: x-small;
-	font-family: verdana, sans-serif;
-}
-/* This is used on tables that should just have a border around them. */
-.tborder
-{
-	padding: 1px;
-	border: 1px solid #696969;
-	background-color: #FFFFFF;
-}
-/* These are used primarily for titles, but also for headers (the row that says what everything in the table is.) */
-.titlebg, tr.titlebg th, tr.titlebg td
-{
-	color: black;
-	font-style: normal;
-	background: url(Themes/default/images/titlebg.jpg) #E9F0F6 repeat-x;
-	border-bottom: solid 1px #9BAEBF;
-	border-top: solid 1px #FFFFFF;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-.titlebg, .titlebg a:link, .titlebg a:visited
-{
-	font-weight: bold;
-	color: black;
-	font-style: normal;
-}
-
-.titlebg a:hover
-{
-	color: #404040;
-}
-
-
-.windowbg
-{
-	color: #000000;
-	background-color: #ECEDF3;
-}';
-
 }
 
 function template_xml_above()
@@ -4388,7 +4239,7 @@ function template_backup_database()
 		if ($is_debug)
 			echo '
 				setOuterHTML(document.getElementById(\'debuginfo\'), \'<br />Completed Table: &quot;\' + sCompletedTableName	 + \'&quot;.<span id="debuginfo"><\' + \'/span>\');
-				window.scroll(0,99999);';
+				';
 
 		echo '
 				// Get the next update...
@@ -4663,7 +4514,6 @@ function template_database_changes()
 				}
 				else
 					setOuterHTML(document.getElementById(\'debuginfo\'), \'...<span id="debuginfo"><\' + \'/span>\');
-				window.scroll(0,99999);
 				if (document.getElementById(\'debug_section\').scrollHeight)
 					document.getElementById(\'debug_section\').scrollTop = document.getElementById(\'debug_section\').scrollHeight';
 

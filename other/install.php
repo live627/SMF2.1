@@ -1999,6 +1999,9 @@ function template_install_above()
 {
 	global $incontext, $txt, $smfsite, $installurl;
 
+
+
+
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"', !empty($txt['lang_rtl']) ? ' dir="rtl"' : '', '>
 	<head>
@@ -2006,16 +2009,20 @@ function template_install_above()
 		<meta name="robots" content="noindex" />
 		<title>', $txt['smf_installer'], '</title>
 		<script type="text/javascript" src="Themes/default/scripts/script.js"></script>
-		<link rel="stylesheet" type="text/css" href="', ($incontext['remote_files_available'] ? $smfsite . '/style.css' : $installurl . '?infile_css'), '" />
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
 	</head>
 	<body>
-		<div id="header">
-			<a href="http://www.simplemachines.org/" target="_blank"><img src="', ($incontext['remote_files_available'] ? $smfsite : 'Themes/default/images'), '/smflogo.gif" style="float: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';" alt="Simple Machines" border="0" /></a>
-
-			<div title="Moogle Express!">', $txt['smf_installer'], '</div>
+	<div id="header"><div class="frame">
+		<div id="top_section">
+			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
+			<img id="smflogo" src="Themes/default/images/smflogo.png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
 		</div>
-		<div id="content">
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
+	</div></div>
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">	
+	
+
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 			<tr>
 				<td width="250" valign="top" style="padding-right: 10px;">
 					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
@@ -2103,7 +2110,8 @@ function template_install_below()
 				</td>
 			</tr>
 		</table>
-		</div>
+		</div></div>
+	</div>
 	</body>
 </html>';
 }

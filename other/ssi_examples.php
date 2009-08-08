@@ -2,28 +2,108 @@
 
 require(dirname(__FILE__) . '/SSI.php');
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<title> &lt;&lt; :: SMF SSI.php 2.0 RC2 :: &gt;&gt; </title><?php
-
-	echo '
-		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/index.css" />
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
-		<style type="text/css">
-			body
-			{
-				margin: 1ex;
-			}
-		</style>';
-
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>SMF 2.0 RC1 Installation Guide</title>
+		<link rel="stylesheet" type="text/css" href="Themes/default/css/index.css?rc2" />
+		<style type="text/css">
+			#upper_section .user
+			{
+				height: 4em;
+			}
+			#upper_section .news
+			{
+				height: 80px;
+			}
+			#main_screen
+			{
+				padding: 0 40px;
+			}
+			#main_screen h2
+			{
+				font-size: 2em;
+				border-bottom: solid 1px #d05800;
+				line-height: 2em;
+				margin: 0 0 0.5em 0;
+				color: #d05800;
+			}
+			#content_section
+			{
+				position: relative; 
+				top: -20px;
+			}
+			#main_content_section
+			{
+			}
+			#main_content_section .panel
+			{
+				padding: 1em 2em 1em 1em;
+				line-height: 1.6em;
+			}
+			#main_content_section h3
+			{
+				font-size: 1.1em;
+				line-height: 1.3em;
+				color: #902800;
+			}
+			#main_content_section li
+			{
+				line-height: 1.6em;
+				font-weight: bold;
+			}
+			#main_content_section li li
+			{
+				font-weight: normal;
+				line-height: 1.6em;
+			}
+			#liftup
+			{
+				position: relative; 
+				top: -70px;
+			}
+			#footer_section
+			{
+				position: relative; 
+				top: -20px;
+			}
+			#footer_section
+			{
+				position: relative; 
+				top: -20px;
+			}
+			tt
+			{
+				font-family: verdana, sans-serif;
+				letter-spacing: 1px;
+				font-weight: bold;
+				font-size: 90%;
+				font-style: italic;
+			}
+			hr
+			{
+				margin: 1em 0;
+				color: #ccc;
+				background: #ccc;
+			}
+		</style>
 	</head>
 	<body>
-			<h1>SMF SSI.php Functions</h1>
-			Current Version: 2.0 RC2<br />
-			<br />
+	<div id="header"><div class="frame">
+		<div id="top_section">
+			<h1 class="forumtitle">SSI.php functions (SMF 2.0 RC1)</h1>
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
+		</div>
+		<div id="upper_section" class="middletext" style="overflow: hidden;">
+			<div class="user"></div>
+			<div class="news normaltext">
+			</div>
+		</div>
+	</div></div>
+	<div id="content_section"><div class="frame">
+		<div id="main_content_section">
+			<div id="liftup">
 			This file is used to demonstrate the capabilities of SSI.php using PHP include functions.<br />
 			The examples show the include tag, then the results of it. Examples are separated by horizontal rules.<br />
 
@@ -31,9 +111,9 @@ require(dirname(__FILE__) . '/SSI.php');
 
 			<br />
 			To use SSI.php in your page add at the very top of your page before the &lt;html&gt; tag on line 1:<br />
-			<div style="font-family: monospace;">
+			<tt>
 				&lt;?php require(&quot;<?php echo ($user_info['is_admin'] ? realpath($boarddir . '/SSI.php') : 'SSI.php'); ?>&quot;); ?&gt;
-			</div>
+			</tt>
 			<br />
 
 		<hr />
@@ -190,5 +270,12 @@ require(dirname(__FILE__) . '/SSI.php');
 			?>
 			*ssi_examples.php last modified on <?php echo date('m/j/y', filemtime(__FILE__)); ?>
 		</span>
+			</div>
+			</div>
+		</div>
+	</div></div>
+	<div id="footer_section"><div class="frame" style="height: 50px;">
+		<div class="smalltext"><a href="http://www.simplemachines.org">Simple Machines Forum</a></div>
+	</div></div>
 	</body>
 </html>
