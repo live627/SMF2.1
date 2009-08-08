@@ -14,7 +14,7 @@ function template_main()
 	
 	echo '
 	<div class="main_section" id="memberlist">
-		<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+		<h4 class="catbg"><span class="left"></span>
 			<span class="align_left">', $txt['members_list'], '</span>';
 	if (!isset($context['old_search']))
 			echo '	
@@ -30,7 +30,7 @@ function template_main()
 		<div id="mlist" class="tborder topic_table">
 			<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
-				<tr class="catbg">';
+				<tr class="titlebg">';
 
 	// Display each of the column headers of the table.
 	foreach ($context['columns'] as $column)
@@ -154,7 +154,7 @@ function template_search()
 	echo '
 	<form action="', $scripturl, '?action=mlist;sa=search" method="post" accept-charset="', $context['character_set'], '">
 		<div id="memberlist">	
-			<h3 class="catbg mlist"><span class="left"></span><span class="right"></span>
+			<h3 class="catbg mlist"><span class="left"></span>
 				', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" alt="" />' : '', $txt['mlist_search'], '
 			</h3>
 			<div class="pagesection">
@@ -163,9 +163,9 @@ function template_search()
 	// Display the input boxes for the form.
 	echo '	<div id="memberlist_search">
 				<span class="upperframe"><span></span></span>
-				<div class="roundframe"><div class="innerframe">
+				<div class="roundframe">
 					<div id="mlist_search" class="flow_hidden">
-						<div id="search_term_input">
+						<div id="search_term_input"><br />
 							<strong>', $txt['search_for'], ':</strong>
 							<input type="text" name="search" value="', $context['old_search'], '" size="35" class="input_text" /> <input type="submit" name="submit" value="' . $txt['search'] . '" class="button_submit" />
 						</div>
@@ -185,7 +185,7 @@ function template_search()
 		echo '		
 						</span>
 					</div>
-				</div></div>
+				</div>
 				<span class="lowerframe"><span></span></span>
 			</div>
 		</div>

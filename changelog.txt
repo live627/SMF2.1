@@ -32,6 +32,7 @@ August 2009
  * converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other) 
  * Changed frames around theme to use one image (css/index.css, index.template, BoardIndex.template, MessageIndex.template)
  * Newsfader lacked overflow: auto for longer news (index.css) [Bug 3595]
+ * minor adjustments to paddings and markup (ManageSettings.php, Admin.template, Profile.template, Memberlist.template, css/admin.css)
 
 July 2009
 --------------------------------------------------------------------------------

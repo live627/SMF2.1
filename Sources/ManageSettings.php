@@ -1175,7 +1175,7 @@ function ModifySignatureSettings($return_config = false)
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
 	$context['settings_title'] = $txt['signature_settings'];
 
-	$context['settings_message'] = '<div class="centertext smalltext alert">' . sprintf($txt['signature_settings_warning'], $context['session_id'], $context['session_var']) . '</div>';
+	$context['settings_message'] = '<p class="centertext">' . sprintf($txt['signature_settings_warning'], $context['session_id'], $context['session_var']) . '</p>';
 
 	prepareDBSettingContext($config_vars);
 }

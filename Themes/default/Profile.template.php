@@ -316,7 +316,7 @@ function template_showPosts()
 			<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" />
 			', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showMessages'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
 		</h3>
-		<div>', $txt['pages'], ': ', $context['page_index'], '</div>';
+		<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 	// Button shortcuts
 	$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
@@ -333,7 +333,7 @@ function template_showPosts()
 			echo '
 		<div class="topic">
 			<h3 class="titlebg">
-				<span class="left"></span><span class="right"></span>
+				<span class="left"></span>
 				<span class="time">', $txt['on'], ': ', $post['time'], '</span>
 				<span class="counter">', $post['counter'], '</span>
 				<span class="subject"><a href="', $scripturl, '#c', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a></span>
@@ -588,8 +588,7 @@ function template_trackActivity()
 	template_show_list('track_user_list');
 	
 	echo '
-	</div>
-	<br style="clear: both;" />';
+	</div>';
 }
 
 // The template for trackIP, allowing the admin to see where/who a certain IP has been used.

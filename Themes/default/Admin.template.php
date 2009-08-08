@@ -9,10 +9,7 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<div class="titlebg"><span class="left"></span><span class="right"></span>
-			<h3 class="align_left">'
-				,$txt['admin_center'], '
-			</h3>';
+		<h3 class="titlebg"><span class="left"></span><span class="right"></span>'; 
 
 	if ($context['user']['is_admin'])
 		echo '
@@ -28,9 +25,9 @@ function template_admin()
 					<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" class="button_submit" />
 				</form>
 			</div>';
-
-	echo '
-		</div>
+			
+	echo $txt['admin_center'], '
+		</h3>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe"><div class="innerframe">
 			<div id="welcome" class="content">

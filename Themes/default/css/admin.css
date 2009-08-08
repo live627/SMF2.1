@@ -1,7 +1,15 @@
+/* we need to redefine the header dimensions here */
+#left_admsection h4.catbg span.left,
+#left_admsection h4.catbg span.right
+{
+	width: 9px;
+	height: 31px;
+}
 /* styling the admin section */
 #quick_search
 {
 	height: 31px;
+	margin-right: 5px;
 }
 div#quick_search input, div#quick_search select
 {
@@ -49,6 +57,11 @@ ol.search_results li
 	overflow: hidden;
 	padding-top: 0.5em;
 }
+#admincenter .content
+{
+	padding: 1em;
+}
+
 #live_news
 {
 	width: 64%;
