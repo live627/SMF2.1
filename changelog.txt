@@ -26,6 +26,7 @@ August 2009
  * Updated all remaining references to style.css to css/index.css (several files) [Bug 3649]
  * Changed file request urls to include ?rc2 instead of ?rc1. (several files)
  ! Search min/max age should be limited to 4 digits (Search.php, Search.template.php) [Bug 3650]
+ ! Do not URL decode the entire query string. (QueryString.php) [Bug 3034]
 
 
 July 2009
