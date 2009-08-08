@@ -25,6 +25,7 @@ August 2009
  + Allow use of the rgb color syntax in the color tag. (Subs.php) [Bug 3646]
  * Updated all remaining references to style.css to css/index.css (several files) [Bug 3649]
  * Changed file request urls to include ?rc2 instead of ?rc1. (several files)
+ ! Search min/max age should be limited to 4 digits (Search.php, Search.template.php) [Bug 3650]
 
 
 July 2009
