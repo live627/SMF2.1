@@ -426,7 +426,7 @@ function AddLanguage()
 			foreach ($lang_files as $file)
 			{
 				// Were we searching?
-				if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $context['smf_search_term']) === false)
+				if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $smcFunc['strtolower']($context['smf_search_term'])) === false)
 					continue;
 
 				$context['smf_languages'][] = array(

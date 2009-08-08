@@ -28,6 +28,7 @@ August 2009
  ! Search min/max age should be limited to 4 digits (Search.php, Search.template.php) [Bug 3650]
  ! Do not URL decode the entire query string. (QueryString.php) [Bug 3034]
  & "The selected username has already been taken" should refer to display name (Errors.english.php)
+ ! Searching for a new language was case sensitive (ManageServer.php)
 
 July 2009
 --------------------------------------------------------------------------------
