@@ -18,7 +18,7 @@ function template_main()
 	{
 		echo '
 	<div id="newsfader">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<img id="newsupshrink" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="display: none;" />
 			', $txt['news'], '
 		</h3>
@@ -95,7 +95,7 @@ function template_main()
 		echo '
 			<tbody class="header">
 				<tr>
-					<td colspan="4" class="catbg"><span class="left"></span><span class="right"></span>';
+					<td colspan="4" class="catbg"><span class="left"></span>';
 
 		// If this category even can collapse, show a link to collapse it.
 		if ($category['can_collapse'])
@@ -131,15 +131,15 @@ function template_main()
 				// If the board or children is new, show an indicator.
 				if ($board['new'] || $board['children_new'])
 					echo '
-							<img src="', $settings['images_url'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+							<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
 				// Is it a redirection board?
 				elseif ($board['is_redirect'])
 					echo '
-							<img src="', $settings['images_url'], '/redirect.png" alt="*" title="*" border="0" />';
+							<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/redirect.png" alt="*" title="*" border="0" />';
 				// No new posts at all! The agony!!
 				else
 					echo '
-							<img src="', $settings['images_url'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
+							<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
 
 				echo '
 						</a>
@@ -237,9 +237,9 @@ function template_main()
 
 		echo '
 		<p>
-			<img src="' . $settings['images_url'] . '/new_some.png" alt=""  /> ', $txt['new_posts'], '
-			<img src="' . $settings['images_url'] . '/new_none.png" alt="" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
-			<img src="' . $settings['images_url'] . '/new_redirect.png" alt="" style="margin-left: 4ex;" /> ', $txt['redirects'], '
+			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_some.png" alt=""  /> ', $txt['new_posts'], '
+			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_none.png" alt="" style="margin-left: 4ex;" /> ', $txt['old_posts'], '
+			<img src="' . $settings['images_url'] . '/' .$context['theme_variant'], '/new_redirect.png" alt="" style="margin-left: 4ex;" /> ', $txt['redirects'], '
 		</p>	
 	</div>';
 	}
@@ -265,7 +265,7 @@ function template_info_center()
 	echo '
 	<span class="upperframe"><span></span></span>
 	<div class="roundframe"><div class="innerframe">
-		<h3 class="catbg"><span class="left"></span><span class="right"></span>
+		<h3 class="catbg"><span class="left"></span>
 			<img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />
 			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
 		</h3>
@@ -275,7 +275,7 @@ function template_info_center()
 	if (!empty($settings['number_recent_posts']))
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				<a href="', $scripturl, '?action=recent"><img class="icon" src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" /></a>
 				<span>', $txt['recent_posts'], '</span>
 			</h4>
@@ -319,7 +319,7 @@ function template_info_center()
 	if ($context['show_calendar'])
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				<a href="', $scripturl, '?action=calendar' . '"><img class="icon" src="', $settings['images_url'], '/icons/calendar.gif', '" alt="', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '" /></a>
 				<span>', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</span>
 			</h4>
@@ -366,7 +366,7 @@ function template_info_center()
 	if ($settings['show_stats_index'])
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				<a href="', $scripturl, '?action=stats"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
 				<span>', $txt['forum_stats'], '</span>
 			</h4>
@@ -380,7 +380,7 @@ function template_info_center()
 
 	// "Users online" - in order of activity.
 	echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				', $context['show_who'] ? '<a href="' . $scripturl . '?action=who' . '">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
 				<span>', $txt['online_users'], '</span>
 			</h4>
@@ -426,7 +426,7 @@ function template_info_center()
 	if ($context['user']['is_logged'] && !$settings['show_stats_index'])
 	{
 		echo '
-			<h4 class="titlebg"><span class="left"></span><span class="right"></span>
+			<h4 class="titlebg"><span class="left"></span>
 				', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img class="icon" src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" />', $context['allow_pm'] ? '</a>' : '', '
 				<span>', $txt['personal_message'], '</span>
 			</h4>

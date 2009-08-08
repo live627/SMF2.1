@@ -1102,7 +1102,7 @@ function template_package_list()
 		{
 			echo '
 					<li>
-						<strong><img id="ps_img_', $i, '" src="', $settings['images_url'], '/upshrink.gif" alt="*" style="display: none;" /> ', $packageSection['title'], '</strong>';
+						<strong><img id="ps_img_', $i, '" src="', $settings['images_url'], '/upshrink.png" alt="*" style="display: none;" /> ', $packageSection['title'], '</strong>';
 
 			if (!empty($packageSection['text']))
 				echo '
@@ -1142,7 +1142,7 @@ function template_package_list()
 				{
 					// 1. Some mod [ Download ].
 					echo '
-							<strong><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/upshrink.gif" alt="*" style="display: none;" /> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
+							<strong><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/upshrink.png" alt="*" style="display: none;" /> ', $package['can_install'] ? '<strong>' . $package['name'] . '</strong> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
@@ -1220,9 +1220,9 @@ function template_package_list()
 					aSwapImages: [
 						{
 							sId: \'ps_img_', $section, '\',
-							srcExpanded: smf_images_url + \'/upshrink.gif\',
+							srcExpanded: smf_images_url + \'/upshrink.png\',
 							altExpanded: \'*\',
-							srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+							srcCollapsed: smf_images_url + \'/upshrink2.png\',
 							altCollapsed: \'*\'
 						}
 					]
@@ -1241,9 +1241,9 @@ function template_package_list()
 					aSwapImages: [
 						{
 							sId: \'ps_img_', $section, '_pkg_', $id, '\',
-							srcExpanded: smf_images_url + \'/upshrink.gif\',
+							srcExpanded: smf_images_url + \'/upshrink.png\',
 							altExpanded: \'*\',
-							srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+							srcCollapsed: smf_images_url + \'/upshrink2.png\',
 							altCollapsed: \'*\'
 						}
 					]

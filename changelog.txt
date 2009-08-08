@@ -29,6 +29,8 @@ August 2009
  ! Do not URL decode the entire query string. (QueryString.php) [Bug 3034]
  & "The selected username has already been taken" should refer to display name (Errors.english.php)
  ! Searching for a new language was case sensitive (ManageServer.php)
+ * converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other) 
+ * Changed frames around theme to use one image (css/index.css, index.template, BoardIndex.template, MessageIndex.template)
 
 July 2009
 --------------------------------------------------------------------------------

@@ -336,13 +336,14 @@ code
 
 /* Generic, mostly colour-related, classes.
 ------------------------------------------------------- */
-.titlebg, .titlebg2, tr.titlebg td, tr.titlebg2 td
+
+.titlebg, .titlebg2, thead tr.titlebg th, tr.titlebg td, tr.titlebg2 td
 {
 	color: black;
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
-	background: url(../images/theme/caps.png) repeat-x 0 -160px;
+	background: url(../images/theme/main_block.png) no-repeat -10px -120px;
 }
 .catbg, .catbg2, tr.catbg td, tr.catbg2 td, tr.catbg th, tr.catbg2 th
 {
@@ -350,39 +351,7 @@ code
 	font-family: arial, helvetica, sans-serif;
 	font-size: 1.1em;
 	font-weight: bold;
-	background: url(../images/theme/caps.png) repeat-x 0 -200px;
-}
-
-/* slightly alternate titlebg */
-div.titlebg
-{
-	overflow: hidden;
-	height: 31px;
-	line-height: 31px;
-	font-size: 1.2em;
-	font-weight: bold;
-	margin-bottom: 0.4em;
-}
-div.titlebg span.left, div.titlebg span.right
-{
-	display: block;
-	width: 9px;
-	height: 31px;
-}
-div.titlebg span.left
-{
-	float: left;
-	background: url(../images/theme/caps.png) no-repeat 0 -40px;
-}
-div.titlebg span.right
-{
-	float: right;
-	background: url(../images/theme/caps.png) no-repeat 100% -40px;
-}
-div.titlebg img.icon
-{
-	float: left;
-	margin: 5px 8px 0 0;
+	background: url(../images/theme/main_block.png) no-repeat -10px -160px;
 }
 
 /* adjust the table versions of headers */
@@ -406,6 +375,12 @@ tr.catbg th.smalltext
 {
 	font-size: 0.9em;
 }
+tr.titlebg th.smalltext, thead tr.titlebg th a:link, thead tr.titlebg th a:visited
+{
+	color: black;
+	font-size: 0.95em;
+}
+
 /* Alternating backgrounds for posts, and several other sections of the forum. */
 .windowbg, #preview_body
 {
@@ -674,104 +649,238 @@ dl.settings img
 	margin: 0 10px 0 0;
 }
 
+/* Styles for rounded headers.
+------------------------------------------------------- */
+h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, .table_list tbody.header td
+{
+	overflow: hidden;
+	height: 31px;
+	line-height: 31px;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+h3.catbg a, h3.catbg, .table_list tbody.header td, .table_list tbody.header td a
+{
+	color: white;
+}
+h3.catbg2 a, h3.catbg2
+{
+	color: #feb;
+}
+h3.catbg a:hover, .table_list tbody.header td a:hover
+{
+	color: #fd9;
+	text-decoration: none;
+}
+h3.catbg2 a:hover
+{
+	color: #fff;
+	text-decoration: none;
+}
+h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
+{
+	color: black;
+}
+h3.titlebg a:hover, h4.titlebg a:hover
+{
+	color: #FFA500;
+	text-decoration: none;
+}
+h3.catbg img.icon
+{
+   float: left;
+   margin: 5px 8px 0 0;
+}
+h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left, .table_list tbody.header td span.left
+{
+	float: left;
+    display: block;
+	width: 9px;
+	height: 31px;
+	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
+}
+
+h4.catbg, h4.catbg2 , h3.catbg , h3.catbg2 , .table_list tbody.header td.catbg
+{
+	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
+	padding-right: 9px;
+}
+
+h4.titlebg span.left, h3.titlebg span.left
+{
+	float: left;
+	display: block;
+	width: 9px;
+	height: 31px;
+	background: url(../images/theme/main_block.png) no-repeat 0 -200px;
+}
+
+h4.titlebg, h3.titlebg 
+{
+	background: url(../images/theme/main_block.png) no-repeat 100% -200px;
+	padding-right: 9px;
+}
+
+h4.titlebg img.icon
+{
+	float: left;
+	margin: 5px 8px 0 0;
+}
+
+/* rounded bars needs a different background here */
+#upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
+{
+	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
+}
+#upshrinkHeaderIC h3.catbg, #upshrinkHeaderIC h3.catbg2 
+{
+	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
+}
+#upshrinkHeaderIC h4.titlebg span.left
+{
+	background: url(../images/theme/main_block.png) no-repeat 0 -120px;
+}
+#upshrinkHeaderIC h4.titlebg
+{
+	background: url(../images/theme/main_block.png) no-repeat 100% -120px;
+}
+#upshrinkHeaderIC p.pminfo
+{
+    margin: 0;
+    padding: 0.5em;
+}
+img#upshrink_ic, img#newsupshrink
+{
+	float: right;
+	margin: 10px 5px 0 0;
+}
+table.table_list a.unreadlink,table.table_list a.collapse
+{
+	float: right;
+}
+table.table_list a.collapse
+{
+	margin: 10px 5px 0 1em;
+}
+
+/* The half-round header bars for some tables. */
+.table_grid thead th
+{
+    height: 28px;
+	color: white;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 1.1em;
+	font-weight: bold;
+	background: url(../images/theme/main_block.png) no-repeat -10px -160px;	
+}
+.table_grid thead th a:link, .table_grid thead th a:visited
+{
+	color: white;
+}
+.table_grid th.first_th
+{
+	background: url(../images/theme/main_block.png) no-repeat 0 -160px;
+}
+.table_grid th.last_th
+{
+	background: url(../images/theme/main_block.png) no-repeat 100% -160px;
+}
+
 /* Common styles used to add corners to divisions.
 ------------------------------------------------------- */
 .windowbg span.topslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 100% -24px no-repeat;\
-	height: 11px;
+	padding-left: 20px;
+	background: url(../images/theme/main_block.png) 0 -30px no-repeat;
 }
 .windowbg span.topslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 0 -24px  no-repeat;
+	background: url(../images/theme/main_block.png) 100% -30px no-repeat;
 	height: 11px;
-	width: 12px;
 }
 .windowbg span.botslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 100% -35px no-repeat;
-	height: 11px;
+	padding-left: 20px;
+	background: url(../images/theme/main_block.png) 0 -40px no-repeat;
 	margin-bottom: 0.2em;
 }
 .windowbg span.botslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 0 -35px no-repeat;
+	background: url(../images/theme/main_block.png) 100% -40px no-repeat;
 	height: 11px;
-	width: 12px;
 }
 
 .windowbg2 span.topslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 100% -48px no-repeat;
-	height: 11px;
+	padding-left: 20px;	
+	background: url(../images/theme/main_block.png) 0 -60px no-repeat;
 }
 .windowbg2 span.topslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 0 -48px no-repeat;
+	background: url(../images/theme/main_block.png) 100% -60px no-repeat;
 	height: 11px;
-	width: 12px;	
 }
 .windowbg2 span.botslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 100% -59px no-repeat;
-	height: 11px;
+	padding-left: 20px;	
+	background: url(../images/theme/main_block.png) 0 -71px no-repeat;
 	margin-bottom: 0.2em;
 }
 .windowbg2 span.botslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 0 -59px no-repeat;
+	background: url(../images/theme/main_block.png) 100% -71px no-repeat;
 	height: 11px;
-	width: 12px;
 }
-
 .approvebg span.topslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 100% 0 no-repeat;
-	height: 11px;
+	padding-left: 20px;	
+	background: url(../images/theme/main_block.png) 0 0 no-repeat;
 }
 .approvebg span.topslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 0 0 no-repeat;
+	background: url(../images/theme/main_block.png) 100% 0 no-repeat;
 	height: 11px;
-	width: 12px;	
 }
 .approvebg span.botslice
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 100% -11px no-repeat;
-	height: 11px;
+	padding-left: 20px;	
+	background: url(../images/theme/main_block.png) 0 -11px no-repeat;
 	margin-bottom: 0.2em;
 }
 .approvebg span.botslice span
 {
 	display: block;
-	background: url(../images/theme/windowbg_slices.png) 0 -11px no-repeat;
+	background: url(../images/theme/main_block.png) 100% -11px no-repeat;
 	height: 11px;
-	width: 12px;
 }
+.postbg { border-left: 1px solid #7F7F7F; border-right: 1px solid #7F7F7F;}
+
 
 /* Used for sections that need somewhat larger corners.
 ----------------------------------------------------------- */
 .roundframe
 {
-	background: url(../images/theme/roundframe_repeat.png) repeat-y top left;
-	padding-left: 10px;
+	padding: 0 10px;
+	background: #f5f5f5;
+	border-left: 1px solid #c5c5c5;	
+	border-right: 1px solid #c5c5c5;
 }
 .roundframe div.innerframe
 {
-	padding: 0 10px 0 0;
+	padding: 0 0 0 0;
 	display: block;
-	background: url(../images/theme/roundframe_repeat.png) top right repeat-y;
+	background: none;
 }
 div.innerframe dl,div.innerframe dt,div.innerframe p
 {
@@ -785,7 +894,7 @@ span.upperframe
 {
 	padding: 0;
 	display: block;
-	background: url(../images/theme/roundframe.png) top left no-repeat;
+	background: url(../images/theme/main_block.png) 0 -90px no-repeat;
 	padding-left: 20px;
 }
 span.upperframe span
@@ -793,13 +902,13 @@ span.upperframe span
 	padding: 0;
 	height: 12px;
 	display: block;
-	background: url(../images/theme/roundframe.png) top right no-repeat;
+	background: url(../images/theme/main_block.png) 100% -90px no-repeat;
 }
 span.lowerframe
 {
 	padding: 0;
 	display: block;
-	background: url(../images/theme/roundframe.png) bottom left no-repeat;
+	background: url(../images/theme/main_block.png) 0 -102px no-repeat;
 	padding-left: 20px;
 }
 span.lowerframe span
@@ -807,7 +916,7 @@ span.lowerframe span
 	padding: 0;
 	height: 12px;
 	display: block;
-	background: url(../images/theme/roundframe.png) bottom right no-repeat;
+	background: url(../images/theme/main_block.png) 100% -102px no-repeat;
 }
 
 /* The main content area.
@@ -1009,8 +1118,7 @@ span.lowerframe span
 }
 .buttonlist ul li a:hover
 {
-	background: url(../images/theme/menu_gfx.png) no-repeat 0 0;
-	color: #fff;
+	color: #448;
 	text-decoration: none;
 }
 .buttonlist ul li a span
@@ -1025,7 +1133,6 @@ span.lowerframe span
 }
 .buttonlist ul li a:hover span
 {
-	background: url(../images/theme/menu_gfx.png) no-repeat 100% 0;
 }
 /* the active one */
 .buttonlist ul li a.active
@@ -1086,12 +1193,12 @@ ul#navigation li
 /* the framing graphics */
 #header
 {
-	background: url(../images/theme/frame.png) #fefefe no-repeat top left;
+	background: url(../images/theme/main_block.png) #fefefe no-repeat 0 -240px;
 	padding-left: 20px;
 }
 #header div.frame
 {
-	background: url(../images/theme/frame.png) no-repeat top right;
+	background: url(../images/theme/main_block.png) no-repeat 100% -240px;
 	display: block;
 	padding: 5px 20px 0 0px;
 }
@@ -1221,6 +1328,7 @@ div#upper_section div.news form
 	font-size: 0.9em;
 	padding: 1em 0 1.5em 0;
 	border-top: solid #ccc 1px;
+	z-index: 0.8;
 }
 #navigate_section_upper ul li, #navigate_section_lower ul li
 {
@@ -1232,7 +1340,7 @@ div#upper_section div.news form
 #footer_section
 {
 	text-align: center;
-	background: url(../images/theme/frame.png) no-repeat bottom left;
+	background: url(../images/theme/main_block.png) no-repeat 0 -620px;
 	padding-left: 20px;
 }
 #footer_section span.smalltext
@@ -1241,7 +1349,7 @@ div#upper_section div.news form
 }
 #footer_section div.frame
 {
-	background: url(../images/theme/frame.png) no-repeat bottom right;
+	background: url(../images/theme/main_block.png) no-repeat 100% -620px;
 	display: block;
 	padding: 60px 0 0 0;
 }
@@ -1258,6 +1366,9 @@ div#upper_section div.news form
 {
 	display: block;
 }
+select.qaction, input.qaction { font-size: 0.7em; padding: 0; }
+#mlist table tbody td.windowbg2 { text-align: center; }
+#mlist_search { width: 430px; }
 
 /* Styles for a typical table.
 ------------------------------------------------------- */
@@ -1296,85 +1407,6 @@ table.table_list tbody.content td.icon
 	width: 6%;
 }
 
-/* Styles for rounded headers.
-------------------------------------------------------- */
-h3.catbg, h3.catbg2, h3.titlebg, h4.titlebg, h4.catbg, .table_list tbody.header td
-{
-	overflow: hidden;
-	height: 31px;
-	line-height: 31px;
-	font-size: 1.2em;
-	font-weight: bold;
-}
-h3.catbg a, h3.catbg, .table_list tbody.header td, .table_list tbody.header td a
-{
-	color: white;
-}
-h3.catbg2 a, h3.catbg2
-{
-	color: #feb;
-}
-h3.catbg a:hover, .table_list tbody.header td a:hover
-{
-	color: #fd9;
-	text-decoration: none;
-}
-h3.catbg2 a:hover
-{
-	color: #fff;
-	text-decoration: none;
-}
-h3.titlebg a, h3.titlebg, h4.titlebg, h4.titlebg a
-{
-	color: black;
-}
-h3.titlebg a:hover, h4.titlebg a:hover
-{
-	color: #FFA500;
-	text-decoration: none;
-}
-h3.catbg span.left,h3.catbg span.right, h3.catbg2 span.left, h3.catbg2 span.right,.table_list tbody.header td span.right,.table_list tbody.header td span.left
-{
-	display: block;
-	width: 9px;
-	height: 31px;
-}
-h3.catbg img.icon, h3.catbg img
-{
-	float: left;
-	margin: 5px 8px 0 0;
-}
-h4.catbg span.left, h4.catbg2 span.left, h3.catbg span.left, h3.catbg2 span.left,.table_list tbody.header td span.left
-{
-	float: left;
-	background: url(../images/theme/caps.png) no-repeat 0 -120px;
-}
-h4.catbg span.right, h4.catbg2 span.right, h3.catbg span.right, h3.catbg2 span.right, .table_list tbody.header td span.right
-{
-	float: right;
-	background: url(../images/theme/caps.png) no-repeat 100% -120px;
-}
-h4.titlebg span.left,h4.titlebg span.right, h3.titlebg span.left,h3.titlebg span.right
-{
-	display: block;
-	width: 9px;
-	height: 31px;
-}
-h4.titlebg span.left, h3.titlebg span.left
-{
-	float: left;
-	background: url(../images/theme/caps.png) no-repeat 0 -40px;
-}
-h4.titlebg span.right, h3.titlebg span.right
-{
-	float: right;
-	background: url(../images/theme/caps.png) no-repeat 100% -40px;
-}
-h4.titlebg img.icon
-{
-	float: left;
-	margin: 5px 8px 0 0;
-}
 
 /* Styles for the board index.
 ------------------------------------------------- */
@@ -1520,30 +1552,6 @@ form#ic_login ul li label
     line-height: 1px;
 }
 
-/* rounded bars needs a different background here */
-#upshrinkHeaderIC h3.catbg span.left, #upshrinkHeaderIC h3.catbg2 span.left
-{
-	background: url(../images/theme/caps.png) no-repeat 0 -80px;
-}
-#upshrinkHeaderIC h3.catbg
-{
-}
-#upshrinkHeaderIC h3.catbg span.right, #upshrinkHeaderIC h3.catbg2 span.right
-{
-	background: url(../images/theme/caps.png) no-repeat 100% -80px;
-}
-#upshrinkHeaderIC h4.titlebg span.left
-{
-	background: url(../images/theme/caps.png) no-repeat 0 0;
-}
-#upshrinkHeaderIC h4.titlebg
-{
-	background: url(../images/theme/caps.png) repeat-x 0 -240px;
-}
-#upshrinkHeaderIC h4.titlebg span.right
-{
-	background: url(../images/theme/caps.png) no-repeat 100% 0;
-}
 #upshrinkHeaderIC p.pminfo
 {
     margin: 0;
@@ -2408,7 +2416,7 @@ dl
 }
 #detailedinfo div.content dl, #tracking div.content dl
 {
-	clear: both;
+	clear: right;
 	overflow: auto;
 	margin: 0 0 18px 0;
 	padding: 0 0 15px 0;
@@ -3130,3 +3138,13 @@ span.hidelink
 	list-style-type: disc;
 	padding-left: 0.2em;
 }
+#helpmain #messageindex
+{
+	clear: right;
+}
+
+
+
+
+
+

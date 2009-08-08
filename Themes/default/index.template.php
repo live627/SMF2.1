@@ -144,10 +144,6 @@ function template_html_above()
 	elseif ($context['browser']['is_ie6'])
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ie6.css" />';
-	// Firefox - all versions - too!
-	elseif ($context['browser']['is_firefox'])
-		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/ff.css" />';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
@@ -172,7 +168,7 @@ function template_body_above()
 
 	// the upshrink image, right-floated
 	echo '
-			<img id="upshrink" src="', $settings['images_url'], '/upshrink.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />';
+			<img id="upshrink" src="', $settings['images_url'], '/upshrink.png" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />';
 	echo '
 			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="align_right">' . $settings['site_slogan'] . '</div>', ' 
 		</div>
@@ -278,9 +274,9 @@ function template_body_above()
 				aSwapImages: [
 					{
 						sId: \'upshrink\',
-						srcExpanded: smf_images_url + \'/upshrink.gif\',
+						srcExpanded: smf_images_url + \'/upshrink.png\',
 						altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
-						srcCollapsed: smf_images_url + \'/upshrink2.gif\',
+						srcCollapsed: smf_images_url + \'/upshrink2.png\',
 						altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
 					}
 				],

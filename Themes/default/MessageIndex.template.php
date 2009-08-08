@@ -12,7 +12,7 @@ function template_main()
 	{
 		echo '
 <div class="tborder" id="childboards">
-	<h3 class="catbg"><span class="left"></span><span class="right"></span>', $txt['parent_boards'], '</h3>
+	<h3 class="catbg"><span class="left"></span>', $txt['parent_boards'], '</h3>
 	<div class="table_frame">
 		<table class="table_list">
 			<tbody class="content">	';
@@ -27,15 +27,15 @@ function template_main()
 			// If the board or children is new, show an indicator.
 			if ($board['new'] || $board['children_new'])
 				echo '
-						<img src="', $settings['images_url'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+						<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
 			// Is it a redirection board?
 			elseif ($board['is_redirect'])
 				echo '
-						<img src="', $settings['images_url'], '/redirect.png" alt="*" title="*" border="0" />';
+						<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/redirect.png" alt="*" title="*" border="0" />';
 			// No new posts at all! The agony!!
 			else
 				echo '
-						<img src="', $settings['images_url'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
+						<img src="', $settings['images_url'], '/' .$context['theme_variant'], '/off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
 
 			echo '
 					</a>
@@ -145,32 +145,39 @@ function template_main()
 			<div class="tborder topic_table" id="messageindex">
 				<table class="table_grid" cellspacing="0">
 					<thead>
-						<tr class="catbg">';
+						<tr class>';
 
 		// Are there actually any topics to show?
 		if (!empty($context['topics']))
 		{
 			echo '
-							<th scope="col" class="smalltext" width="8%" colspan="2">&nbsp;</th>
+							<th scope="col" class="smalltext first_th" width="8%" colspan="2">&nbsp;</th>
 							<th scope="col" class="smalltext"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a> / <a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-							<th scope="col" class="smalltext" width="14%" align="center"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a> / <a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['views'], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>
-							<th scope="col" class="smalltext" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
-
+							<th scope="col" class="smalltext center" width="14%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a> / <a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['views'], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
+			// Show a "select all" box for quick moderation?
+			if (empty($context['can_quick_mod']))
+			    echo '
+							<th scope="col" class="smalltext last_th" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
+            else
+			    echo '
+				         	<th scope="col" class="smalltext" width="22%"><a href="', $scripturl, '?board=', $context['current_board'], '.', $context['start'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></th>';
+  
 			// Show a "select all" box for quick moderation?
 			if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1)
 				echo '
-							<th scope="col" class="smalltext" width="24">
-								<input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" />
-							</th>';
+							<th scope="col" class="smalltext last_th" width="24"><input type="checkbox" onclick="invertAll(this, this.form, \'topics[]\');" class="input_check" /></th>';
+							
 			// If it's on in "image" mode, don't show anything but the column.
 			elseif (!empty($context['can_quick_mod']))
 				echo '
-							<th class="smalltext" width="4%">&nbsp;</th>';
+							<th class="smalltext last_th" width="4%">&nbsp;</th>';
 		}
 		// No topics.... just say, "sorry bub".
 		else
 			echo '
-							<th class="smalltext" colspan="5"><strong>', $txt['msg_alert_none'], '</strong></th>';
+							<th scope="col" class="smalltext first_th" width="8%">&nbsp;</th>
+							<th class="smalltext" colspan="3"><strong>', $txt['msg_alert_none'], '</strong></th>
+							<th scope="col" class="smalltext last_th" width="8%">&nbsp;</th>';
 
 		echo '
 						</tr>
@@ -284,9 +291,9 @@ function template_main()
 		if (!empty($context['can_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']))
 		{
 			echo '
-						<tr class="catbg">
+						<tr class="titlebg">
 							<td colspan="6" align="right">
-								<select name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
+								<select class="qaction" name="qaction"', $context['can_move'] ? ' onchange="this.form.moveItTo.disabled = (this.options[this.selectedIndex].value != \'move\');"' : '', '>
 									<option value="">--------</option>
 									', $context['can_approve'] ? '<option value="approve">' . $txt['quick_mod_approve'] . '</option>' : '', '
 									', $context['can_remove'] ? '<option value="remove">' . $txt['quick_mod_remove'] . '</option>' : '', '
@@ -302,7 +309,7 @@ function template_main()
 			if ($context['can_move'])
 			{
 					echo '
-								<select id="moveItTo" name="move_to" disabled="disabled">';
+								<select class="qaction" id="moveItTo" name="move_to" disabled="disabled">';
 
 					foreach ($context['move_to_boards'] as $category)
 					{
@@ -319,7 +326,7 @@ function template_main()
 			}
 
 			echo '
-								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return document.forms.quickModForm.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="button_submit" />
+								<input type="submit" value="', $txt['quick_mod_go'], '" onclick="return document.forms.quickModForm.qaction.value != \'\' &amp;&amp; confirm(\'', $txt['quickmod_confirm'], '\');" class="qaction"/>
 							</td>
 						</tr>';
 		}
@@ -379,7 +386,7 @@ function template_main()
 						sBoardPrefix: "=> ",
 						sCatSeparator: "-----------------------------",
 						sCatPrefix: "",
-						sGoButtonLabel: "', $txt['go'], '"
+						sGoButtonLabel: "', $txt['quick_mod_go'], '"
 					});
 			// ]]></script>
 			<br style="clear: both;" />
