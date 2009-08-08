@@ -1475,8 +1475,10 @@ p.moderators
 #smfFadeScroller
 {
 	text-align: center;
-	padding: 2em;
-	height: 40px;
+	padding: 0 2em;
+	height: 6em;
+	overflow: auto;
+	margin: 1em 0;
 }
 
 /* Styles for the info centre on the  board index.

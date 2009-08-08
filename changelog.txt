@@ -31,6 +31,7 @@ August 2009
  ! Searching for a new language was case sensitive (ManageServer.php)
  * converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other) 
  * Changed frames around theme to use one image (css/index.css, index.template, BoardIndex.template, MessageIndex.template)
+ * Newsfader lacked overflow: auto for longer news (index.css) [Bug 3595]
 
 July 2009
 --------------------------------------------------------------------------------
