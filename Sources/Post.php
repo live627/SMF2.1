@@ -2021,7 +2021,6 @@ function Post2()
 	if (isset($_POST['sticky']) && !empty($modSettings['enableStickyTopics']))
 		logAction('sticky', array('topic' => $topicOptions['id'], 'board' => $topicOptions['board']));
 
-
 	// Notify any members who have notification turned on for this topic - only do this if it's going to be approved(!)
 	if ($becomesApproved)
 	{
