@@ -1,10 +1,3 @@
-/* we need to redefine the header dimensions here */
-#left_admsection h4.catbg span.left,
-#left_admsection h4.catbg span.right
-{
-	width: 9px;
-	height: 31px;
-}
 /* styling the admin section */
 #quick_search
 {

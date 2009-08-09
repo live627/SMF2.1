@@ -1366,9 +1366,19 @@ div#upper_section div.news form
 {
 	display: block;
 }
-select.qaction, input.qaction { font-size: 0.7em; padding: 0; }
-#mlist table tbody td.windowbg2 { text-align: center; }
-#mlist_search { width: 430px; }
+select.qaction, input.qaction
+{
+	font-size: 0.7em;
+	padding: 0;
+}
+#mlist table tbody td.windowbg2
+{
+	text-align: center;
+}
+#mlist_search
+{
+	width: 430px;
+}
 
 /* Styles for a typical table.
 ------------------------------------------------------- */
