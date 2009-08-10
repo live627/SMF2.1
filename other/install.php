@@ -2015,7 +2015,7 @@ function template_install_above()
 	<div id="header"><div class="frame">
 		<div id="top_section">
 			<h1 class="forumtitle">', $txt['smf_installer'], '</h1>
-			<img id="smflogo" src="Themes/default/images/smflogo.png') . '" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
+			<img id="smflogo" src="Themes/default/images/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" /> 
 		</div>
 	</div></div>
 	<div id="content_section"><div class="frame">
