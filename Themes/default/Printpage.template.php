@@ -13,7 +13,7 @@ function template_print_above()
 		<link rel="canonical" href="', $context['canonical_url'], '" />
 		<title>', $txt['print_page'], ' - ', $context['topic_subject'], '</title>
 		<style type="text/css">
-			body
+			body, a
 			{
 				color: #000;
 				background: #fff;
@@ -30,7 +30,7 @@ function template_print_above()
 			}
 			h2#linktree
 			{
-				margin: 1em 0;
+				margin: 1em 0 2.5em 0;
 				font-size: small;
 				font-weight: bold;
 			}
@@ -49,7 +49,7 @@ function template_print_above()
 			}
 			dd.postbody
 			{
-				margin: 1em 0;
+				margin: 1em 0 2em 2em;
 			}
 			table
 			{
@@ -117,7 +117,7 @@ function template_print_below()
 
 	echo '
 		</dl>
-		<div id="footer" class="smalltext centertext">
+		<div id="footer" class="smalltext">
 			', theme_copyright(), '
 		</div>
 	</body>
