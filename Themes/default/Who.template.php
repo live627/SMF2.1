@@ -13,7 +13,7 @@ function template_main()
 			<h4 class="titlebg margin_lower"><span class="left"></span><span class="right"></span>
 				', $txt['who_title'], '
 			</h4>
-			<div class="tborder topic_table" id="mlist">
+			<div class="topic_table" id="mlist">
 				<div class="pagesection">
 					<div class="pagelinks">', $txt['pages'], ': ', $context['page_index'], '</div>
 				</div>

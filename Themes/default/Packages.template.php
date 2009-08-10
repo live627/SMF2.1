@@ -19,10 +19,10 @@ function template_view_package()
 
 	if ($context['is_installed'])
 		echo '
-					<strong>', $txt['package_installed_warning1'], '</strong><br />
-					<br />
-					', $txt['package_installed_warning2'], '<br />
-					<br />';
+			<strong>', $txt['package_installed_warning1'], '</strong><br />
+			<br />
+			', $txt['package_installed_warning2'], '<br />
+			<br />';
 
 	echo $txt['package_installed_warning3'], '
 		</div>';
@@ -896,10 +896,7 @@ function template_browse()
 			<input type="hidden" name="sa" value="browse" />
 		</form>
 	</div>
-	<br style="clear: both;" />
-		<script type="text/javascript"><!-- // --><![CDATA[
-			document.getElementById(\'advanced_box\').style.display = "";
-			// ]]></script>';
+	<br style="clear: both;" />';
 }
 
 function template_servers()

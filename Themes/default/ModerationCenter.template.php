@@ -71,15 +71,15 @@ function template_latest_news()
 
 				bLoadAnnouncements: true,
 				sAnnouncementTemplate: ', JavaScriptEscape('
-					<div style="margin: 4px; font-size: 0.85em;">
+					<dl>
 						%content%
-					</div>
+					</dl>
 				'), ',
 				sAnnouncementMessageTemplate: ', JavaScriptEscape('
-					<div style="padding-bottom: 2px;"><a href="%href%">%subject%</a> ' . $txt['on'] . ' %time%</div>
-					<div style="padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;">
+					<dt><a href="%href%">%subject%</a> ' . $txt['on'] . ' %time%</dt>
+					<dd>
 						%message%
-					</div>
+					</dd>
 				'), ',
 				sAnnouncementContainerId: \'smfAnnouncements\'
 			});

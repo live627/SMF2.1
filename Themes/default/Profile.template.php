@@ -502,7 +502,7 @@ function template_editBuddies()
 			</h3>
 			<span class="upperframe"><span></span></span>
 			<div class="roundframe">
-				<div class="innerframe">
+				<div class="innerframe content">
 					<label for="new_buddy">
 						<strong>', $txt['who_member'], ':</strong>
 					</label>
@@ -2629,44 +2629,50 @@ function template_authentication_method()
 				', $txt['authentication'], '
 			</h3>
 			<p class="windowbg description">', $txt['change_authentication'], '</p>
-			<dl>
-				<dt>
-					<input type="radio" onclick="updateAuthMethod();" name="authenticate" value="openid" id="auth_openid"', $context['auth_method'] == 'openid' ? ' checked="checked"' : '', ' class="input_radio" /><label for="auth_openid"><strong>', $txt['authenticate_openid'], '</strong></label>&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em><br />
-					<input type="radio" onclick="updateAuthMethod();" name="authenticate" value="passwd" id="auth_pass"', $context['auth_method'] == 'password' ? ' checked="checked"' : '', ' class="input_radio" /><label for="auth_pass"><strong>', $txt['authenticate_password'], '</strong></label>
-				</dt>
-				<dd>
-					<dl id="auth_openid_div">
-						<dt>
-							<em>', $txt['authenticate_openid_url'], ':</em>
-						</dt>
-						<dd>
-							<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', $context['member']['openid_uri'], '" class="input_text" />
-							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
-						</dd>
-					</dl>
-					<dl id="auth_pass_div">
-						<dt>
-							<em>', $txt['choose_pass'], ':</em>
-						</dt>
-						<dd>
-							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
-							<span id="smf_autov_pwmain_div" style="display: none;"><img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" /></span>
-						</dd>
-						<dt>
-							<em>', $txt['verify_pass'], ':</em>
-						</dt>
-						<dd>
-							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
-							<span id="smf_autov_pwverify_div" style="display: none;"><img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" /></span>
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-			<div class="floatright">
-				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-				<input type="hidden" name="u" value="', $context['id_member'], '" />
-				<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
-				<input type="submit" value="', $txt['change_profile'], '" class="button_submit" />
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+					<div class="content">
+						<dl>
+							<dt>
+								<input type="radio" onclick="updateAuthMethod();" name="authenticate" value="openid" id="auth_openid"', $context['auth_method'] == 'openid' ? ' checked="checked"' : '', ' class="input_radio" /><label for="auth_openid"><strong>', $txt['authenticate_openid'], '</strong></label>&nbsp;<em><a href="', $scripturl, '?action=helpadmin;help=register_openid" onclick="return reqWin(this.href);" class="help">(?)</a></em><br />
+								<input type="radio" onclick="updateAuthMethod();" name="authenticate" value="passwd" id="auth_pass"', $context['auth_method'] == 'password' ? ' checked="checked"' : '', ' class="input_radio" /><label for="auth_pass"><strong>', $txt['authenticate_password'], '</strong></label>
+							</dt>
+							<dd>
+								<dl id="auth_openid_div">
+									<dt>
+										<em>', $txt['authenticate_openid_url'], ':</em>
+									</dt>
+									<dd>
+										<input type="text" name="openid_url" id="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', $context['member']['openid_uri'], '" class="input_text" />
+										<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
+									</dd>
+								</dl>
+								<dl id="auth_pass_div">
+									<dt>
+										<em>', $txt['choose_pass'], ':</em>
+									</dt>
+									<dd>
+										<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
+										<span id="smf_autov_pwmain_div" style="display: none;"><img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" /></span>
+									</dd>
+									<dt>
+										<em>', $txt['verify_pass'], ':</em>
+									</dt>
+									<dd>
+										<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" class="input_password" />
+										<span id="smf_autov_pwverify_div" style="display: none;"><img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" /></span>
+									</dd>
+								</dl>
+							</dd>
+						</dl>
+						<div class="righttext">
+							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+							<input type="hidden" name="u" value="', $context['id_member'], '" />
+							<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
+							<input type="submit" value="', $txt['change_profile'], '" class="button_submit" />
+						</div>
+					</div>
+				<span class="botslice"><span></span></span>
 			</div>
 		</form>';
 

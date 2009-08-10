@@ -30,7 +30,7 @@ function template_admin()
 		</h3>
 		<span class="upperframe"><span></span></span>
 		<div class="roundframe"><div class="innerframe">
-			<div id="welcome" class="content">
+			<div id="welcome">
 				<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>
 				', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '
 			</div>

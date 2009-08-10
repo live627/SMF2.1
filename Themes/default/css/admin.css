@@ -48,7 +48,7 @@ ol.search_results li
 #admin_main_section
 {
 	overflow: hidden;
-	padding-top: 0.5em;
+	margin: 1em 0;
 }
 #admincenter .content
 {
@@ -60,6 +60,15 @@ ol.search_results li
 	width: 64%;
 	font-size: 0.85em;
 }
+#live_news div.content
+{
+	padding: 0;
+}
+#live_news div.content dl
+{
+	padding: 0.5em 0 0 0.5em;
+}
+
 #supportVersionsTable
 {
 	width: 34%;
@@ -67,11 +76,11 @@ ol.search_results li
 #version_details
 {
 	overflow: auto;
-	height: 120px;
+	height: 9.5em;
 }
 #smfAnnouncements
 {
-	height: 120px; 
+	height: 13.5em; 
 	overflow: auto;
 }
 #smfAnnouncements dt
