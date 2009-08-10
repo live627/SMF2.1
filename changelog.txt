@@ -29,10 +29,12 @@ August 2009
  ! Do not URL decode the entire query string. (QueryString.php) [Bug 3034]
  & "The selected username has already been taken" should refer to display name (Errors.english.php)
  ! Searching for a new language was case sensitive (ManageServer.php)
- * converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other) 
+ * Converted readme files, ssi_examples.pp and install.php/upgrade.php to using Curve theme (several files in Other) 
  * Changed frames around theme to use one image (css/index.css, index.template, BoardIndex.template, MessageIndex.template)
  * Newsfader lacked overflow: auto for longer news (index.css) [Bug 3595]
- * minor adjustments to paddings and markup (ManageSettings.php, Admin.template, Profile.template, Memberlist.template, css/admin.css)
+ * Minor adjustments to paddings and markup (ManageSettings.php, Admin.template, Profile.template, Memberlist.template, css/admin.css)
+ * Server stored avatars not were not aligned properly in the forum profile section. (index.css) [Bug 3661]
+
 
 July 2009
 --------------------------------------------------------------------------------
